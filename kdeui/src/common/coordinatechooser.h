@@ -58,7 +58,7 @@ class CoordinateChooser : public KComboBox {
         /**
          * Constructor that creates an empty combo box.
          */
-        CoordinateChooser(QWidget* parent, const char* name = 0);
+        CoordinateChooser();
 
         /**
          * Used to fill the combo box with coordinate systems.
@@ -74,12 +74,11 @@ class CoordinateChooser : public KComboBox {
         int getCurrentSystem();
 };
 
-inline CoordinateChooser::CoordinateChooser(QWidget* parent,
-        const char* name) : KComboBox(parent, name) {
+inline CoordinateChooser::CoordinateChooser() : KComboBox() {
 }
 
 inline int CoordinateChooser::getCurrentSystem() {
-    return systems[currentItem()];
+    return systems[currentIndex()];
 }
 
 #endif

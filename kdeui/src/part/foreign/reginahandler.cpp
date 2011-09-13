@@ -35,7 +35,7 @@
 #include <kmessagebox.h>
 #include <qfile.h>
 
-regina::NPacket* ReginaHandler::import(const QString& fileName,
+regina::NPacket* ReginaHandler::importData(const QString& fileName,
         QWidget* parentWidget) const {
     regina::NPacket* ans = regina::readFileMagic(
         static_cast<const char*>(QFile::encodeName(fileName)));

@@ -34,7 +34,7 @@
 #ifndef __EXPORTDIALOG_H
 #define __EXPORTDIALOG_H
 
-#include <kdialogbase.h>
+#include <KDialog>
 
 class PacketChooser;
 class PacketFilter;
@@ -46,7 +46,7 @@ namespace regina {
 /**
  * A dialog used to select a packet or packet subtree to export.
  */
-class ExportDialog : public KDialogBase {
+class ExportDialog : public KDialog {
     Q_OBJECT
 
     private:
@@ -93,7 +93,7 @@ class ExportDialog : public KDialogBase {
 
     protected slots:
         /**
-         * KDialogBase overrides.
+         * Ok has been clicked.
          */
         virtual void slotOk();
 };

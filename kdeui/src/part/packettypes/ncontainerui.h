@@ -38,7 +38,6 @@
 #include "../packetui.h"
 
 class QLabel;
-class QVBox;
 
 namespace regina {
     class NContainer;
@@ -60,7 +59,7 @@ class NContainerUI : public PacketReadOnlyUI, public regina::NPacketListener {
         /**
          * Internal components
          */
-        QVBox* interface;
+        QWidget* interface;
         QLabel* children;
         QLabel* descendants;
 

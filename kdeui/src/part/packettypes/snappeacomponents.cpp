@@ -32,11 +32,12 @@
 // UI includes:
 #include "snappeacomponents.h"
 
+#include <climits>
 #include <klocale.h>
 
 NoSnapPea::NoSnapPea(regina::NTriangulation* useTri, bool allowClosed,
-        QWidget* parent, const char* name, bool delayedRefresh) :
-        QLabel(parent, name), tri(useTri) {
+        QWidget* parent, bool delayedRefresh) :
+        QLabel(parent), tri(useTri) {
     if (! delayedRefresh)
         refresh(allowClosed);
 }
@@ -78,4 +79,3 @@ void NoSnapPea::refresh(bool allowClosed) {
     setText(msg);
 }
 
-#include "snappeacomponents.moc"

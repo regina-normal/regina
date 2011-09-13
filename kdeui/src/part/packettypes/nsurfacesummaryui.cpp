@@ -34,12 +34,12 @@
 // UI includes:
 #include "nsurfacesummaryui.h"
 
-#include <klistview.h>
 #include <klocale.h>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qscrollview.h>
-#include <qwhatsthis.h>
+#include <QHeaderView>
+#include <QScrollArea>
+#include <QTreeWidget>
 #include <map>
 
 namespace {
@@ -73,61 +73,73 @@ namespace {
 NSurfaceSummaryUI::NSurfaceSummaryUI(
         regina::NNormalSurfaceList* packet, PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet) {
-    QScrollView* scroller = new QScrollView();
-    scroller->setResizePolicy(QScrollView::AutoOneFit);
+    QScrollArea* scroller = new QScrollArea();
+    scroller->setWidgetResizable(true);
     scroller->setFrameStyle(QFrame::NoFrame);
+    // Transparency must be applied to both the QScrollArea *and* some of its
+    // internal components (possibly the widget that holds the viewport?).
+    scroller->setStyleSheet("QScrollArea, .QWidget { "
+                                "background-color:transparent; "
+                            "}");
     ui = scroller;
 
-    pane = new QVBox(scroller->viewport());
-    scroller->addChild(pane);
+    pane = new QWidget(scroller);
+    QVBoxLayout* paneLayout = new QVBoxLayout;
+    pane->setLayout(paneLayout);
+    scroller->setWidget(pane);
 
-    pane->setMargin(5);
-    pane->setSpacing(5);
-
-    tot = new QLabel(pane);
-    QWhatsThis::add(tot, i18n("Counts the total number of surfaces "
+    tot = new QLabel();
+    tot->setWhatsThis(i18n("Counts the total number of surfaces "
         "in this list."));
+    paneLayout->addWidget(tot);
 
-    totClosed = new QLabel(pane);
-    QWhatsThis::add(totClosed, i18n("Counts the total number of closed compact "
+    totClosed = new QLabel();
+    totClosed->setWhatsThis(i18n("Counts the total number of closed compact "
         "surfaces in this list (i.e., closed surfaces with finitely many "
         "discs)."));
+    paneLayout->addWidget(totClosed);
 
-    tableClosed = new KListView(pane);
-    tableClosed->setItemsMovable(false);
-    tableClosed->addColumn(QString());
-    tableClosed->setSorting(-1);
-    tableClosed->setSelectionMode(QListView::NoSelection);
-    QWhatsThis::add(tableClosed, i18n("<qt>Breaks down the total count "
+    tableClosed = new QTreeWidget();
+    tableClosed->setRootIsDecorated(false);
+    tableClosed->setAlternatingRowColors(false);
+    tableClosed->header()->setStretchLastSection(false);
+    tableClosed->header()->setResizeMode(QHeaderView::ResizeToContents);
+    tableClosed->setSelectionMode(QAbstractItemView::NoSelection);
+    tableClosed->setWhatsThis(i18n("<qt>Breaks down the total count "
         "for closed compact surfaces (i.e., closed surfaces with "
         "finitely many discs).<p>"
         "Each entry in this table counts the number of "
-        "bounded surfaces with a particular orientability, 1/2-sidedness and "
-        "Euler characteristic.</qt>"));
+        "bounded surfaces with a particular orientability, "
+        "1-or-2-sidedness and Euler characteristic.</qt>"));
+    paneLayout->addWidget(tableClosed, 3);
 
-    totBounded = new QLabel(pane);
-    QWhatsThis::add(totBounded, i18n("Counts the total number of compact "
+    totBounded = new QLabel();
+    totBounded->setWhatsThis(i18n("Counts the total number of compact "
         "surfaces in this list with real boundary (i.e., bounded surfaces with "
         "finitely many discs)."));
+    paneLayout->addWidget(totBounded);
 
-    tableBounded = new KListView(pane);
-    tableBounded->setItemsMovable(false);
-    tableBounded->addColumn(QString());
-    tableBounded->setSorting(-1);
-    tableBounded->setSelectionMode(QListView::NoSelection);
-    QWhatsThis::add(tableBounded, i18n("<qt>Breaks down the total "
+    tableBounded = new QTreeWidget();
+    tableBounded->setRootIsDecorated(false);
+    tableBounded->setAlternatingRowColors(false);
+    tableBounded->header()->setStretchLastSection(false);
+    tableBounded->header()->setResizeMode(QHeaderView::ResizeToContents);
+    tableBounded->setSelectionMode(QAbstractItemView::NoSelection);
+    tableBounded->setWhatsThis(i18n("<qt>Breaks down the total "
         "count for surfaces with real boundary (i.e., bounded surfaces with "
         "finitely many discs).<p>"
         "Each entry in this table counts the number of "
-        "bounded surfaces with a particular orientability, 1/2-sidedness and "
-        "Euler characteristic.</qt>"));
+        "bounded surfaces with a particular orientability, "
+        "1-or-2-sidedness and Euler characteristic.</qt>"));
+    paneLayout->addWidget(tableBounded, 3);
 
-    totSpun = new QLabel(pane);
-    QWhatsThis::add(totSpun, i18n("Counts the total number of non-compact "
+    totSpun = new QLabel();
+    totSpun->setWhatsThis(i18n("Counts the total number of non-compact "
         "surfaces in this list (i.e., surfaces with infinitely many discs)."));
+    paneLayout->addWidget(totSpun);
 
     // Add some space at the end.
-    pane->setStretchFactor(new QWidget(pane), 1);
+    paneLayout->addStretch(1);
 }
 
 NSurfaceSummaryUI::~NSurfaceSummaryUI() {
@@ -194,12 +206,10 @@ void NSurfaceSummaryUI::refresh() {
     std::set<std::pair<int, int> >::const_iterator typeIt;
     std::set<regina::NLargeInteger>::const_iterator ECIt;
     std::map<regina::NLargeInteger, unsigned long>::const_iterator countIt;
-    QListViewItem* row;
+    QTreeWidgetItem *row, *header;
     int col;
 
     tableClosed->clear();
-    while (tableClosed->columns() > 1)
-        tableClosed->removeColumn(tableClosed->columns() - 1);
 
     if (closed == 0) {
         totClosed->setText(i18n("No closed surfaces."));
@@ -211,23 +221,32 @@ void NSurfaceSummaryUI::refresh() {
             totClosed->setText(i18n("%1 closed surfaces, breakdown below:").
                 arg(closed));
 
-        for (typeIt = allTypesClosed.begin(); typeIt != allTypesClosed.end();
-                ++typeIt) {
-            col = tableClosed->addColumn(
-                tableHeader(typeIt->first, typeIt->second));
-            tableClosed->setColumnAlignment(col, Qt::AlignRight);
+        tableClosed->setColumnCount(allTypesClosed.size() + 1);
+        header = new QTreeWidgetItem();
+        for (i = 1, typeIt = allTypesClosed.begin();
+                typeIt != allTypesClosed.end(); ++i, ++typeIt) {
+            header->setText(i, tableHeader(typeIt->first, typeIt->second));
+            header->setTextAlignment(i, Qt::AlignRight);
         }
-        for (ECIt = allECsClosed.begin(); ECIt != allECsClosed.end(); ++ECIt) {
-            row = new QListViewItem(tableClosed);
-            row->setText(0, i18n("Euler = %1").arg(ECIt->stringValue()));
+        tableClosed->setHeaderItem(header);
+
+        for (i = 1, ECIt = allECsClosed.begin();
+                ECIt != allECsClosed.end(); ++i, ++ECIt) {
+            row = new QTreeWidgetItem();
+            row->setText(0, i18n("Euler = %1").
+                arg(ECIt->stringValue().c_str()));
+            row->setTextAlignment(0, Qt::AlignLeft);
             for (typeIt = allTypesClosed.begin(), col = 1;
                     typeIt != allTypesClosed.end(); ++typeIt, ++col) {
                 countIt = countClosed[typeIt->first][typeIt->second].
                     find(*ECIt);
                 if (countIt !=
-                        countClosed[typeIt->first][typeIt->second].end())
+                        countClosed[typeIt->first][typeIt->second].end()) {
                     row->setText(col, QString::number(countIt->second));
+                    row->setTextAlignment(col, Qt::AlignRight);
+                }
             }
+            tableClosed->addTopLevelItem(row);
         }
 
         tableClosed->show();
@@ -235,8 +254,6 @@ void NSurfaceSummaryUI::refresh() {
 
     if (surfaces->getTriangulation()->hasBoundaryFaces()) {
         tableBounded->clear();
-        while (tableBounded->columns() > 1)
-            tableBounded->removeColumn(tableBounded->columns() - 1);
 
         if (bounded == 0) {
             totBounded->setText(i18n("No bounded surfaces."));
@@ -249,24 +266,32 @@ void NSurfaceSummaryUI::refresh() {
                 totBounded->setText(i18n(
                     "%1 bounded surfaces, breakdown below:").arg(bounded));
 
-            for (typeIt = allTypesBounded.begin();
-                    typeIt != allTypesBounded.end(); ++typeIt) {
-                col = tableBounded->addColumn(
-                    tableHeader(typeIt->first, typeIt->second));
-                tableBounded->setColumnAlignment(col, Qt::AlignRight);
+            tableBounded->setColumnCount(allTypesBounded.size() + 1);
+            header = new QTreeWidgetItem();
+            for (i = 1, typeIt = allTypesBounded.begin();
+                    typeIt != allTypesBounded.end(); ++i, ++typeIt) {
+                header->setText(i, tableHeader(typeIt->first, typeIt->second));
+                header->setTextAlignment(i, Qt::AlignRight);
             }
-            for (ECIt = allECsBounded.begin(); ECIt != allECsBounded.end();
-                    ++ECIt) {
-                row = new QListViewItem(tableBounded);
-                row->setText(0, i18n("Euler = %1").arg(ECIt->stringValue()));
+            tableBounded->setHeaderItem(header);
+
+            for (i = 0, ECIt = allECsBounded.begin();
+                    ECIt != allECsBounded.end(); ++i, ++ECIt) {
+                row = new QTreeWidgetItem();
+                row->setText(0, i18n("Euler = %1").
+                    arg(ECIt->stringValue().c_str()));
+                row->setTextAlignment(0, Qt::AlignLeft);
                 for (typeIt = allTypesBounded.begin(), col = 1;
                         typeIt != allTypesBounded.end(); ++typeIt, ++col) {
                     countIt = countBounded[typeIt->first][typeIt->second].
                         find(*ECIt);
                     if (countIt !=
-                            countBounded[typeIt->first][typeIt->second].end())
+                            countBounded[typeIt->first][typeIt->second].end()) {
                         row->setText(col, QString::number(countIt->second));
+                        row->setTextAlignment(col, Qt::AlignRight);
+                    }
                 }
+                tableBounded->addTopLevelItem(row);
             }
 
             tableBounded->show();
@@ -288,12 +313,12 @@ void NSurfaceSummaryUI::refresh() {
             ! surfaces->getTriangulation()->isValid()) &&
             (surfaces->allowsSpun())) {
         if (spun == 0) {
-            totSpun->setText(i18n("No non-compact (spun) surfaces."));
+            totSpun->setText(i18n("No spun (non-compact) surfaces."));
         } else {
             if (spun == 1)
-                totSpun->setText(i18n("1 non-compact (spun) surface."));
+                totSpun->setText(i18n("1 spun (non-compact) surface."));
             else
-                totSpun->setText(i18n("%1 non-compact (spun) surfaces.").arg(spun));
+                totSpun->setText(i18n("%1 spun (non-compact) surfaces.").arg(spun));
         }
     } else {
         // The triangulation is not ideal and/or the coordinate system
@@ -302,5 +327,4 @@ void NSurfaceSummaryUI::refresh() {
     }
 }
 
-#include "nsurfacesummaryui.moc"
 

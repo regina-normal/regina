@@ -70,8 +70,7 @@ class NoSnapPea : public QLabel {
          * the refresh() documentation for an explanation of what it means.
          */
         NoSnapPea(regina::NTriangulation* useTri, bool allowClosed,
-            QWidget* parent = 0, const char* name = 0,
-            bool delayedRefresh = false);
+            QWidget* parent = 0, bool delayedRefresh = false);
 
         /**
          * Updates the explanation in case the triangulation has changed.

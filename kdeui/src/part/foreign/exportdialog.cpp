@@ -35,32 +35,37 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qframe.h>
-#include <qhbox.h>
+#include <QHBoxLayout>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qwhatsthis.h>
 
-#define HORIZONTAL_SPACING 10
-
 ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
         regina::NPacket* defaultSelection, PacketFilter* useFilter,
         const QString& dialogTitle) :
-        KDialogBase(Plain, dialogTitle, Ok|Cancel, Ok, parent),
+        KDialog(parent),
         tree(packetTree), chosenPacket(0) {
-    QFrame* page = plainPage();
-    QVBoxLayout* layout = new QVBoxLayout(page, 0, spacingHint());
+    setCaption(dialogTitle);
+    setButtons(KDialog::Ok|KDialog::Cancel);
 
-    QHBox* chosenStrip = new QHBox(page);
-    chosenStrip->setSpacing(HORIZONTAL_SPACING);
-    layout->addWidget(chosenStrip);
-    new QLabel(i18n("Data to export:"), chosenStrip);
-    chooser = new PacketChooser(tree, useFilter, false, defaultSelection,
-        chosenStrip);
-    chosenStrip->setStretchFactor(chooser, 1);
-    QWhatsThis::add(chosenStrip,
-        i18n("Select the piece of data that you wish to export."));
+    QWidget* page = new QWidget(this);
+    setMainWidget(page);
+    QVBoxLayout* layout = new QVBoxLayout(page);
+    layout->setContentsMargins(0, 0, 0, 0); // Margins come from the dialog.
 
+    QHBoxLayout* chosenStrip = new QHBoxLayout;
+    QLabel* label = new QLabel(i18n("Data to export:"));
+    chosenStrip->addWidget(label);
+    chooser = new PacketChooser(tree, useFilter, false, defaultSelection);
+    chosenStrip->addWidget(chooser, 1);
+    QString expln = i18n("Select the piece of data that you wish to export.");
+    label->setWhatsThis(expln);
+    chooser->setWhatsThis(expln);
+
+    layout->addLayout(chosenStrip);
     layout->addStretch(1);
+
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOk()));
 }
 
 bool ExportDialog::validate() {
@@ -87,9 +92,5 @@ void ExportDialog::slotOk() {
             arg(chosenPacket->getPacketLabel().c_str()));
         return;
     }
-
-    // We're done!
-    KDialogBase::slotOk();
 }
 
-#include "exportdialog.moc"

@@ -37,11 +37,13 @@
 #include "reginapref.h"
 #include "../part/reginapart.h"
 
-#include <qdragobject.h>
-#include <qvbox.h>
-#include <kaccel.h>
+#include <QDrag>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QWhatsThis>
+#include <kaboutapplicationdialog.h>
 #include <kaction.h>
-#include <kactionclasses.h>
+#include <kactioncollection.h>
 #include <kapplication.h>
 #include <kconfig.h>
 #include <kdebug.h>
@@ -50,30 +52,34 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <kio/netaccess.h>
-#include <kkeydialog.h>
 #include <klibloader.h>
 #include <klocale.h>
 #include <kmenubar.h>
 #include <kmessagebox.h>
 #include <kparts/event.h>
 #include <kparts/partmanager.h>
+#include <krecentfilesaction.h>
+#include <kshortcutsdialog.h>
 #include <kstdaccel.h>
 #include <kstdaction.h>
 #include <ktexteditor/document.h>
 #include <ktexteditor/editorchooser.h>
 #include <ktexteditor/view.h>
+#include <ktoggleaction.h>
+#include <ktoolbar.h>
 #include <ktip.h>
 #include <kurl.h>
 
 unsigned ReginaMain::objectNumber = 1;
 
-ReginaMain::ReginaMain() : KParts::MainWindow( 0, "Regina#",
-        WType_TopLevel | WDestructiveClose | WStyle_ContextHelp),
-        currentPart(0) {
+ReginaMain::ReginaMain(bool showAdvice) : KParts::MainWindow(),
+        currentPart(0), aboutApp(0) {
+
+    setAttribute(Qt::WA_DeleteOnClose);
     // Select a unique DCOP interface name.
-    QCString objNumStr;
-    objNumStr.setNum(objectNumber++);
-    setObjId("ReginaMainInterface#" + objNumStr);
+    //QCString objNumStr;
+    //objNumStr.setNum(objectNumber++);
+    //setObjId("ReginaMainInterface#" + objNumStr);
 
     // Resize ourselves nicely.
     if (! initialGeometrySet())
@@ -81,6 +87,9 @@ ReginaMain::ReginaMain() : KParts::MainWindow( 0, "Regina#",
 
     // Accept drag and drop.
     setAcceptDrops(true);
+
+    // Don't use the standard Help menu; we'll provide our own.
+    setHelpMenuEnabled(false);
 
     // Set up our actions and status bar.
     setXMLFile("reginamain.rc");
@@ -97,6 +106,29 @@ ReginaMain::ReginaMain() : KParts::MainWindow( 0, "Regina#",
     manager = new KParts::PartManager(this);
     connect(manager, SIGNAL(activePartChanged(KParts::Part*)),
         this, SLOT(createGUI(KParts::Part*)));
+
+    if (showAdvice) {
+        // Until we actually have a part loaded, give the user something
+        // helpful to start with.
+        QLabel* advice = new QLabel(i18n("<qt>To start, try:<p>"
+            "File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
+            "Introductory Examples</qt>"));
+        advice->setAlignment(Qt::AlignCenter);
+        advice->setWhatsThis(i18n("<qt>If you select "
+            "<i>File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
+            "Introductory Examples</i> from the menu, "
+            "Regina will open a sample data file that you can "
+            "play around with.<p>"
+            "You can also read the Regina Handbook, which walks "
+            "you through what Regina can do.  Just press F1, or select "
+            "<i>Help&nbsp;&rarr;&nbsp;Regina Handbook</i> from the "
+            "menu.</qt>"));
+        setCentralWidget(advice);
+    }
+}
+
+ReginaMain::~ReginaMain() {
+    delete aboutApp;
 }
 
 void ReginaMain::setPreferences(const ReginaPrefSet& prefs) {
@@ -106,48 +138,48 @@ void ReginaMain::setPreferences(const ReginaPrefSet& prefs) {
 }
 
 void ReginaMain::dragEnterEvent(QDragEnterEvent *event) {
-    // Accept uri drops only.
-    event->accept(QUriDrag::canDecode(event));
+    if( event->mimeData()->hasUrls() )
+      event->acceptProposedAction();
+    
 }
 
 void ReginaMain::dropEvent(QDropEvent *event) {
-    // Accept a dropped URL.
-    QStrList uri;
+    // Accept a dropped URL (or URLs).
 
     // See if we can decode a URI.  If not, just ignore it.
-    if (QUriDrag::decode(event, uri)) {
+    if (event->mimeData()->hasUrls()) {
         // We have a URI, so process it.
-        QString url, target;
-        url = uri.first();
-
-        // Load in the file.
-        openURL(KURL(url));
+        // Load in each file.
+        const QList<QUrl>& urls(event->mimeData()->urls());
+        for (QList<QUrl>::const_iterator it = urls.begin();
+                it != urls.end(); ++it)
+            openUrl(*it);
     }
 }
 
-void ReginaMain::saveProperties(KConfig *config) {
+void ReginaMain::saveProperties(KConfigGroup& config) {
     // Argument config represents the session managed config file.
     if (currentPart) {
-        KURL url = currentPart->url();
+        KUrl url = currentPart->url();
         if (url.isEmpty())
-            url = lastURL;
+            url = lastUrl;
         if (! url.isEmpty())
-            config->writeEntry("lastURL", url.url());
+            config.writeEntry("lastUrl", url.url());
     }
 }
 
-void ReginaMain::readProperties(KConfig *config) {
+void ReginaMain::readProperties(const KConfigGroup& config) {
     // Argument config represents the session managed config file.
-    QString url = config->readEntry("lastURL"); 
+    QString url = config.readEntry("lastUrl"); 
     if (url != QString::null)
-        openURL(KURL(url));
+        openUrl(KUrl(url));
 }
 
 bool ReginaMain::queryClose() {
     consoles.closeAllConsoles();
     if (currentPart) {
-        lastURL = currentPart->url();
-        return currentPart->closeURL();
+        lastUrl = currentPart->url();
+        return currentPart->closeUrl();
     } else
         return true;
 }
@@ -169,26 +201,14 @@ void ReginaMain::newTopology() {
     embedPart();
 }
 
-void ReginaMain::newPython() {
-    if (currentPart) {
-        ReginaMain* top = new ReginaMain;
-        top->show();
-        top->newPython();
-        return;
-    }
-
-    currentPart = newTextEditorPart();
-    embedPart();
-}
-
-bool ReginaMain::openURL(const KURL& url) {
+bool ReginaMain::openUrl(const KUrl& url) {
     // Do we already have a document open?
     if (currentPart) {
         // Open the new document in a new window.
         // If the document failed to open, close this new window before
         // it's shown.
         ReginaMain* top = new ReginaMain;
-        if (top->openURL(url)) {
+        if (top->openUrl(url)) {
             top->show();
             return true;
         } else {
@@ -197,42 +217,31 @@ bool ReginaMain::openURL(const KURL& url) {
         }
     }
 
-    // Semi-intelligently try to work out what type of file we're
-    // trying to open.  We'll look first at the extension (since we assume
-    // no Regina mimetype is registered) and then look at the mimetype.
-    //
-    // Type codes:
-    //   'r' : Regina data file
-    //   'p' : Python library
-    //   0 : Unknown
-
-    char type = 0;
+    // As of Regina 4.90, we only support Regina data files.
+    // Python scripts should be opened in a real python editor, not Regina.
+    bool isReg = false;
     QString name;
 
     // Variable name will initially contain the mimetype name, but if
     // the mimetype is not suitable it will be changed to the mimetype
     // comment so we can display it to the user.
-    if (url.fileName().right(ReginaAbout::regDataExt.length()).lower() ==
+    if (url.fileName().right(ReginaAbout::regDataExt.length()).toLower() ==
             ReginaAbout::regDataExt)
-        type = 'r';
+        isReg = true;
     else {
         // Try to guess it from the mimetype.
-        KMimeType::Ptr mimetype = KMimeType::findByURL(url);
+        KMimeType::Ptr mimetype = KMimeType::findByUrl(url);
         name = mimetype->name();
         if (name == "application/x-regina" || name == "text/xml" ||
                 name == "application/x-gzip" ||
                 name == "application/octet-stream")
-            type = 'r';
-        else if (name == "application/x-python" || name.startsWith("text/"))
-            type = 'p';
+            isReg = true;
         else
             name = mimetype->comment();
     }
 
-    if (type == 'r')
+    if (isReg)
         currentPart = newTopologyPart();
-    else if (type == 'p')
-        currentPart = newTextEditorPart();
     else
         KMessageBox::sorry(this, i18n(
             "I do not know how to open files of type %1.").arg(name));
@@ -242,15 +251,15 @@ bool ReginaMain::openURL(const KURL& url) {
 
     // We now have a part with which to edit the given data file.
     embedPart();
-    return currentPart->openURL(url);
+    return currentPart->openUrl(url);
 }
 
-bool ReginaMain::openURL(const QString& url) {
-    return openURL(KURL(url));
+bool ReginaMain::openUrl(const QString& url) {
+    return openUrl(KUrl(url));
 }
 
-bool ReginaMain::openExample(const KURL& url) {
-    // Same as openURL(), but give a pleasant message if the file
+bool ReginaMain::openExample(const KUrl& url) {
+    // Same as openUrl(), but give a pleasant message if the file
     // doesn't seem to exist.
     QFile file(url.path());
     if (! file.exists()) {
@@ -261,7 +270,7 @@ bool ReginaMain::openExample(const KURL& url) {
             arg(url.fileName()).arg(url.directory()).arg(PACKAGE_BUGREPORT));
         return false;
     }
-    return openURL(url);
+    return openUrl(url);
 }
 
 void ReginaMain::pythonConsole() {
@@ -281,21 +290,23 @@ void ReginaMain::quit() {
 }
 
 void ReginaMain::fileOpen() {
-    KURL url = KFileDialog::getOpenURL(QString::null, i18n(FILTER_SUPPORTED),
+    KUrl url = KFileDialog::getOpenUrl(KUrl(), i18n(FILTER_SUPPORTED),
         this, i18n("Open Data File"));
     if (!url.isEmpty())
-        openURL(url);
+        openUrl(url);
 }
 
+/*
 void ReginaMain::optionsShowToolbar() {
-    QPtrListIterator<KToolBar> bar = toolBarIterator();
+    QListIterator<KToolBar*> bar(toolBars());
     if (showToolbar->isChecked())
-        for ( ; *bar; ++bar)
-            (*bar)->show();
+        while (bar.hasNext() )
+            bar.next()->show();
     else
-        for ( ; *bar; ++bar)
-            (*bar)->hide();
+        while (bar.hasNext() )
+            bar.next()->hide();
 }
+*/
 
 /*
 void ReginaMain::optionsShowStatusbar() {
@@ -307,14 +318,14 @@ void ReginaMain::optionsShowStatusbar() {
 */
 
 void ReginaMain::optionsConfigureKeys() {
-    KKeyDialog::configure(actionCollection());
+    KShortcutsDialog::configure(actionCollection());
 }
 
 void ReginaMain::optionsConfigureToolbars() {
-    saveMainWindowSettings(KGlobal::config(),
-        QString::fromLatin1("MainWindow"));
+    saveMainWindowSettings(KConfigGroup(KGlobal::config(),
+        QString::fromLatin1("MainWindow")));
 
-    KEditToolbar dlg(factory());
+    KEditToolBar dlg(factory());
     connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(newToolbarConfig()));
     dlg.exec();
 }
@@ -329,23 +340,42 @@ void ReginaMain::optionsPreferences() {
     dlg.exec();
 }
 
+void ReginaMain::helpAboutApp() {
+    if (! aboutApp)
+        aboutApp = new KAboutApplicationDialog(
+            KGlobal::mainComponent().aboutData(), this);
+    aboutApp->show();
+}
+
+void ReginaMain::helpHandbook() {
+    globalPrefs.openHandbook("index", 0, this);
+}
+
+void ReginaMain::helpXMLRef() {
+    globalPrefs.openHandbook("index", "regina-xml", this);
+}
+
+void ReginaMain::helpWhatsThis() {
+    QWhatsThis::enterWhatsThisMode();
+}
+
 void ReginaMain::helpTipOfDay() {
     KTipDialog::showTip(this, QString::null, true);
 }
 
 void ReginaMain::helpTrouble() {
-    KApplication::kApplication()->invokeHelp("troubleshooting");
+    globalPrefs.openHandbook("troubleshooting", 0, this);
 }
 
 void ReginaMain::helpNoHelp() {
     KMessageBox::information(this,
-        i18n("<qt>If you cannot view the Regina Handbook, it is probably "
-            "because you do not have the KDE3 Help Center installed.<p>"
-            "Some users can fix this easily by installing the appropriate "
-            "package (such as <tt>khelpcenter</tt> or <tt>kdebase3</tt>).<p>"
-            "Some users cannot fix this problem, because their "
-            "GNU/Linux distribution has moved to KDE4 and no longer supports "
-            "KDE3.<p>"
+        i18n("<qt>If you cannot view the Regina Handbook, it is possibly "
+            "because you do not have the KDE Help Center installed.<p>"
+            "Try editing Regina's preferences: in the General Options "
+            "panel, uncheck the box "
+            "<i>\"Open handbook in KDE Help Center\"</i>.  "
+            "This will make the handbook open in your default web browser "
+            "instead.<p>"
             "If all else fails, remember that you can always read the "
             "Regina Handbook online at "
             "<a href=\"http://regina.sourceforge.net/\">regina.sourceforge.net</a>.  "
@@ -371,106 +401,150 @@ void ReginaMain::newToolbarConfig() {
     createGUI(currentPart);
     */
 
-    applyMainWindowSettings(KGlobal::config(),
-        QString::fromLatin1("MainWindow"));
+    applyMainWindowSettings(KConfigGroup(KGlobal::config(),
+        QString::fromLatin1("MainWindow")));
 }
 
 void ReginaMain::setupActions() {
     KAction* act;
 
     // File actions:
-    act = new KAction(i18n("&New Topology Data"), "filenew", CTRL+Key_N, this,
-        SLOT(newTopology()), actionCollection(), "new_topology");
+    act = actionCollection()->addAction("new_topology");
+    act->setText(i18n("&New Topology Data"));
+    act->setIcon(KIcon("document-new"));
+    act->setShortcut(tr("Ctrl+n"));
     act->setWhatsThis(i18n("Create a new topology data file.  This is "
         "the standard type of data file used by Regina."));
+    connect(act, SIGNAL(triggered()), this, SLOT(newTopology()));
+    
+    act = KStandardAction::open(this, SLOT(fileOpen()), actionCollection());
+    act->setWhatsThis(i18n("Open a topology data file."));
+    fileOpenRecent = KStandardAction::openRecent(this, 
+        SLOT(openUrl(const KUrl&)), actionCollection());
 
-    act = new KAction(i18n("New &Python Library"), "filenew", 0, this,
-        SLOT(newPython()), actionCollection(), "new_python");
-    act->setWhatsThis(i18n("Create a new Python library.  This is "
-        "a Python file that can be loaded when a script is run or a "
-        "new Python session is started."));
-
-    KStdAction::open(this, SLOT(fileOpen()), actionCollection());
-    fileOpenRecent = KStdAction::openRecent(this, SLOT(openURL(const KURL&)),
-        actionCollection());
-    fileOpenExample = new ExamplesAction(this, SLOT(openExample(const KURL&)),
-        actionCollection(), "file_open_example");
+    fileOpenExample = new ExamplesAction(this);
     fillExamples();
-    KStdAction::close(this, SLOT(close()), actionCollection());
-    KStdAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
+    connect(fileOpenExample, SIGNAL(urlSelected(const KUrl&)),
+        this, SLOT(openExample(const KUrl&)));
+    actionCollection()->addAction("file_open_example", fileOpenExample);
+
+    act = KStandardAction::close(this, SLOT(close()), actionCollection());
+    act->setWhatsThis(i18n("Close this topology data file."));
+    act = KStandardAction::quit(kapp, SLOT(closeAllWindows()),
+        actionCollection());
+    act->setWhatsThis(i18n("Close all files and quit Regina."));
 
     // Toolbar and status bar:
-    showToolbar = KStdAction::showToolbar(this,
-        SLOT(optionsShowToolbar()), actionCollection());
+    //showToolbar = KStandardAction::showToolbar(this,
+    //    SLOT(optionsShowToolbar()), actionCollection());
+    setStandardToolBarMenuEnabled(true);
+    
     /*
-    showStatusbar = KStdAction::showStatusbar(this,
+    showStatusbar = KStandardAction::showStatusbar(this,
         SLOT(optionsShowStatusbar()), actionCollection());
     */
 
     // Preferences:
-    act = new KAction(i18n("Choose Text &Editor..."), "configure", 0,
-        this, SLOT(optionsConfigureEditor()), actionCollection(),
-        "configure_editor");
-    KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()),
+    act = actionCollection()->addAction("configure_editor");
+    act->setText(i18n("Choose Text &Editor..."));
+    act->setIcon(KIcon("configure"));
+    connect(act, SIGNAL(triggered()), this, SLOT(optionsConfigureEditor()));
+    KStandardAction::keyBindings(this, SLOT(optionsConfigureKeys()),
         actionCollection());
-    KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()),
+    KStandardAction::configureToolbars(this, SLOT(optionsConfigureToolbars()),
         actionCollection());
-    KStdAction::preferences(this, SLOT(optionsPreferences()),
+    act = KStandardAction::preferences(this, SLOT(optionsPreferences()),
         actionCollection());
+    act->setWhatsThis(i18n("Configure Regina.  Here you can set "
+        "your own preferences for how Regina behaves."));
 
     // Tools:
-    actPython = new KAction(i18n("&Python Console"), "python_console",
-        ALT+Key_Y, this, SLOT(pythonConsole()), actionCollection(),
-        "python_console");
+    actPython = actionCollection()->addAction("python_console");
+    actPython->setText(i18n("&Python Console"));
+    actPython->setIcon(KIcon("python_console"));
+    actPython->setShortcut(tr("Alt+y"));
     actPython->setWhatsThis(i18n("Open a new Python console.  You can "
         "use a Python console to interact directly with Regina's "
         "mathematical engine."));
+    connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
 
     // Help:
-    act = new KAction(i18n("&Python Reference"), "python_console", 0, this,
-        SLOT(pythonReference()), actionCollection(), "help_engine");
+    act = KStandardAction::aboutApp(this, SLOT(helpAboutApp()),
+        actionCollection());
+    act->setWhatsThis(i18n("Display information about Regina, such as "
+        "the authors, license and website."));
+
+    act = actionCollection()->addAction("help_handbook_custom");
+    act->setText(i18n("Regina &Handbook"));
+    act->setIcon(KIcon("help-contents"));
+    act->setShortcut(tr("F1"));
+    act->setWhatsThis(i18n("Open the Regina handbook.  "
+        "This is the main users' guide for how to use Regina."));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpHandbook()));
+
+    KStandardAction::whatsThis(this, SLOT(helpWhatsThis()), actionCollection());
+
+    act = actionCollection()->addAction("help_engine");
+    act->setText(i18n("&Python API Reference"));
+    act->setIcon(KIcon("python_console"));
     act->setWhatsThis(i18n("Open the detailed documentation for Regina's "
         "mathematical engine.  This describes the classes, methods and "
         "routines that Regina makes available to Python scripts.<p>"
         "See the <i>Python Scripting</i> chapter of the user's handbook "
         "for more information (the handbook is "
         "accessed through <i>Regina Handbook</i> in the <i>Help</i> menu)."));
+    connect(act, SIGNAL(triggered()), this, SLOT(pythonReference()));
 
-    new KAction(i18n("&Tip of the Day"), "idea", 0, this,
-        SLOT(helpTipOfDay()), actionCollection(), "help_tipofday");
-    new KAction(i18n("Tr&oubleshooting"), "messagebox_warning", 0, this,
-        SLOT(helpTrouble()), actionCollection(), "help_trouble");
-    new KAction(i18n("Handbook won't open?"), "", 0, this,
-        SLOT(helpNoHelp()), actionCollection(), "help_nohelp");
+    act = actionCollection()->addAction("help_xmlref");
+    act->setText(i18n("&File Format Reference"));
+    act->setIcon(KIcon("application-xml"));
+    act->setWhatsThis(i18n("Open the file format reference manual.  "
+        "This give full details of the XML file format that Regina "
+        "uses to store its data files."));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpXMLRef()));
 
+    act = KStandardAction::tipOfDay(this, SLOT(helpTipOfDay()),
+        actionCollection());
+    act->setWhatsThis(i18n("View tips and hints on how to use Regina."));
+    
+    act = actionCollection()->addAction("help_trouble");
+    act->setText(i18n("Tr&oubleshooting"));
+    act->setIcon(KIcon("dialog-warning"));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpTrouble()));
+   
+    act = actionCollection()->addAction("help_nohelp");
+    act->setText(i18n("Handbook won't open?"));
+    act->setIcon(KIcon("dialog-cancel"));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpNoHelp()));
+    
     // All done!  Build the GUI.
     createGUI(0);
 }
 
 void ReginaMain::fillExamples() {
-    fileOpenExample->addURL("sample-misc.rga",
+    fileOpenExample->addUrl("sample-misc.rga",
         i18n("Introductory Examples"));
-    fileOpenExample->addURL("closed-hyp-census.rga",
+    fileOpenExample->addUrl("closed-hyp-census.rga",
         i18n("Closed Hyperbolic Census"));
-    fileOpenExample->addURL("closed-or-census.rga",
+    fileOpenExample->addUrl("closed-or-census.rga",
         i18n("Closed Orientable Census (Small)"));
-    fileOpenExample->addURL("closed-or-census-large.rga",
+    fileOpenExample->addUrl("closed-or-census-large.rga",
         i18n("Closed Orientable Census (Large)"));
-    fileOpenExample->addURL("closed-nor-census.rga",
+    fileOpenExample->addUrl("closed-nor-census.rga",
         i18n("Closed Non-Orientable Census"));
-    fileOpenExample->addURL("snappea-census.rga",
+    fileOpenExample->addUrl("snappea-census.rga",
         i18n("Cusped Hyperbolic Census"));
-    fileOpenExample->addURL("knot-link-census.rga",
+    fileOpenExample->addUrl("knot-link-census.rga",
         i18n("Knot / Link Complements"));
-    fileOpenExample->addURL("sig-3mfd-census.rga",
+    fileOpenExample->addUrl("sig-3mfd-census.rga",
         i18n("Splitting Surface Sigs (General)"));
-    fileOpenExample->addURL("sig-prime-min-census.rga",
+    fileOpenExample->addUrl("sig-prime-min-census.rga",
         i18n("Splitting Surface Sigs (Prime, Minimal)"));
 }
 
 void ReginaMain::addRecentFile() {
     if (currentPart && ! currentPart->url().isEmpty()) {
-        fileOpenRecent->addURL(currentPart->url());
+        fileOpenRecent->addUrl(currentPart->url());
 
         // Save the new file list to the global configuration.
         // Note that the other main windows will be updated because of this.
@@ -478,25 +552,17 @@ void ReginaMain::addRecentFile() {
     }
 }
 
-void ReginaMain::readOptions(KConfig* config) {
+void ReginaMain::readOptions(KSharedConfigPtr config) {
+    
     // Read in new preferences.
-    config->setGroup("Dim4");
-    QString str = config->readEntry("InitialTab");
-    if (str == "Dim4Skeleton")
-        globalPrefs.dim4InitialTab = ReginaPrefSet::Dim4Skeleton;
-    else if (str == "Dim4Algebra")
-        globalPrefs.dim4InitialTab = ReginaPrefSet::Dim4Algebra;
-    else
-        globalPrefs.dim4InitialTab = ReginaPrefSet::Dim4Gluings; /* default */
-
-    config->setGroup("Display");
-    globalPrefs.autoDock = config->readBoolEntry("PacketDocking", true);
-    globalPrefs.displayIcon = config->readBoolEntry("DisplayIcon", true);
-    globalPrefs.displayTagsInTree = config->readBoolEntry("DisplayTagsInTree",
+    KConfigGroup* configGroup = new KConfigGroup(config,"Display");
+    globalPrefs.autoDock = configGroup->readEntry("PacketDocking", true);
+    globalPrefs.displayTagsInTree = configGroup->readEntry("DisplayTagsInTree",
         false);
 
-    config->setGroup("Census");
-    QStringList censusStrings = config->readListEntry("Files");
+    configGroup = new KConfigGroup(config, "Census");
+    QStringList censusStrings = configGroup->readEntry("Files", 
+        QStringList());
     if (censusStrings.empty())
         globalPrefs.censusFiles = ReginaPrefSet::defaultCensusFiles();
     else {
@@ -508,7 +574,7 @@ void ReginaMain::readOptions(KConfig* config) {
                 it != censusStrings.end(); it++) {
             if ((*it).isEmpty())
                 continue;
-            switch ((*it)[0]) {
+            switch ((*it)[0].toAscii()) {
                 case '+':
                     // Active file.
                     globalPrefs.censusFiles.push_back(ReginaFilePref(
@@ -523,45 +589,55 @@ void ReginaMain::readOptions(KConfig* config) {
         }
     }
 
-    config->setGroup("File");
-    globalPrefs.autoFileExtension = config->readBoolEntry(
-        "AutomaticExtension", true);
-    fileOpenRecent->loadEntries(config);
+    configGroup = new KConfigGroup(config, "Doc");
+    globalPrefs.handbookInKHelpCenter = configGroup->readEntry(
+        "HandbookInKHelpCenter", false);
 
-    config->setGroup("PDF");
-    globalPrefs.pdfAutoClose = config->readBoolEntry("AutoClose", true);
-    globalPrefs.pdfEmbed = config->readBoolEntry("Embed", true);
-    globalPrefs.pdfExternalViewer = config->readEntry("ExternalViewer").
-        stripWhiteSpace();
+    configGroup = new KConfigGroup(config, "File");
+    globalPrefs.autoFileExtension = configGroup->readEntry(
+        "AutomaticExtension", true);
+    fileOpenRecent->loadEntries(*configGroup);
+
+    configGroup = new KConfigGroup(config, "PDF");
+    globalPrefs.pdfAutoClose = configGroup->readEntry("AutoClose", true);
+#ifdef __APPLE__
+    // On MacOSX, use an external viewer by default.
+    globalPrefs.pdfEmbed = configGroup->readEntry("Embed", false);
+#else
+    // On Linux, use an embedded viewer if we can.
+    globalPrefs.pdfEmbed = configGroup->readEntry("Embed", true);
+#endif
+    globalPrefs.pdfExternalViewer = configGroup->readEntry("ExternalViewer").
+        trimmed();
     if (globalPrefs.pdfExternalViewer.isEmpty())
         globalPrefs.pdfExternalViewer = ReginaPrefSet::pdfDefaultViewer();
 
-    config->setGroup("Python");
-    globalPrefs.pythonAutoIndent = config->readBoolEntry("AutoIndent", true);
-    globalPrefs.pythonSpacesPerTab = config->readUnsignedNumEntry(
+    configGroup = new KConfigGroup(config, "Python");
+    globalPrefs.pythonAutoIndent = configGroup->readEntry("AutoIndent", true);
+    globalPrefs.pythonSpacesPerTab = configGroup->readEntry(
         "SpacesPerTab", 4);
-    globalPrefs.pythonWordWrap = config->readBoolEntry("WordWrap", false);
+    globalPrefs.pythonWordWrap = configGroup->readEntry("WordWrap", false);
 
-    config->setGroup("SnapPea");
-    globalPrefs.snapPeaClosed = config->readBoolEntry("AllowClosed", false);
+    configGroup = new KConfigGroup(config, "SnapPea");
+    globalPrefs.snapPeaClosed = configGroup->readEntry("AllowClosed", false);
     regina::NSnapPeaTriangulation::enableKernelMessages(
-        config->readBoolEntry("KernelMessages", false));
+        configGroup->readEntry("KernelMessages", false));
 
-    config->setGroup("Surfaces");
-    globalPrefs.surfacesCompatThreshold = config->readUnsignedNumEntry(
+    configGroup = new KConfigGroup(config, "Surfaces");
+    globalPrefs.surfacesCompatThreshold = configGroup->readEntry(
         "CompatibilityThreshold", 100);
 
-    globalPrefs.surfacesCreationCoords = config->readNumEntry(
+    globalPrefs.surfacesCreationCoords = configGroup->readEntry(
         "CreationCoordinates", regina::NNormalSurfaceList::STANDARD);
 
-    str = config->readEntry("InitialCompat");
+    QString str = configGroup->readEntry("InitialCompat");
     if (str == "Global")
         globalPrefs.surfacesInitialCompat = ReginaPrefSet::GlobalCompat;
     else
         globalPrefs.surfacesInitialCompat = ReginaPrefSet::LocalCompat;
             /* default */
 
-    str = config->readEntry("InitialTab");
+    str = configGroup->readEntry("InitialTab");
     if (str == "Coordinates")
         globalPrefs.surfacesInitialTab = ReginaPrefSet::Coordinates;
     else if (str == "Matching")
@@ -571,15 +647,12 @@ void ReginaMain::readOptions(KConfig* config) {
     else
         globalPrefs.surfacesInitialTab = ReginaPrefSet::Summary; /* default */
 
-    config->setGroup("Tree");
-    globalPrefs.treeJumpSize = config->readUnsignedNumEntry("JumpSize", 10);
+    configGroup = new KConfigGroup(config, "Tree");
+    globalPrefs.treeJumpSize = configGroup->readEntry("JumpSize", 10);
 
-    config->setGroup("Triangulation");
-    globalPrefs.triEditMode = (
-        config->readEntry("EditMode") == "Dialog" ?
-        ReginaPrefSet::Dialog : ReginaPrefSet::DirectEdit /* default */);
+    configGroup = new KConfigGroup(config, "Triangulation");
 
-    str = config->readEntry("InitialTab");
+    str = configGroup->readEntry("InitialTab");
     if (str == "Skeleton")
         globalPrefs.triInitialTab = ReginaPrefSet::Skeleton;
     else if (str == "Algebra")
@@ -593,13 +666,13 @@ void ReginaMain::readOptions(KConfig* config) {
     else
         globalPrefs.triInitialTab = ReginaPrefSet::Gluings; /* default */
 
-    str = config->readEntry("InitialSkeletonTab");
+    str = configGroup->readEntry("InitialSkeletonTab");
     if (str == "FacePairingGraph")
         globalPrefs.triInitialSkeletonTab = ReginaPrefSet::FacePairingGraph;
     else
         globalPrefs.triInitialSkeletonTab = ReginaPrefSet::SkelComp; /* def. */
 
-    str = config->readEntry("InitialAlgebraTab");
+    str = configGroup->readEntry("InitialAlgebraTab");
     if (str == "FundGroup")
         globalPrefs.triInitialAlgebraTab = ReginaPrefSet::FundGroup;
     else if (str == "TuraevViro")
@@ -609,14 +682,14 @@ void ReginaMain::readOptions(KConfig* config) {
     else
         globalPrefs.triInitialAlgebraTab = ReginaPrefSet::Homology; /* def. */
 
-    globalPrefs.triSurfacePropsThreshold = config->readUnsignedNumEntry(
+    globalPrefs.triSurfacePropsThreshold = configGroup->readEntry(
         "SurfacePropsThreshold", 6);
 
-    config->setGroup("Extensions");
-    globalPrefs.triGAPExec = config->readEntry("GAPExec", "gap").
-        stripWhiteSpace();
-    globalPrefs.triGraphvizExec = config->readEntry("GraphvizExec", "neato").
-        stripWhiteSpace();
+    configGroup = new KConfigGroup(config, "Extensions");
+    globalPrefs.triGAPExec = configGroup->readEntry("GAPExec", "gap").
+        trimmed();
+    globalPrefs.triGraphvizExec = configGroup->readEntry("GraphvizExec", "neato").
+        trimmed();
 
     globalPrefs.readPythonLibraries();
 
@@ -625,25 +698,16 @@ void ReginaMain::readOptions(KConfig* config) {
 }
 
 void ReginaMain::saveOptions() {
-    KConfig* config = KGlobal::config();
+    KSharedConfigPtr config = KGlobal::config();
+
+    KConfigGroup* configGroup = new KConfigGroup(config,"Display");
 
     // Save the current set of preferences.
-    config->setGroup("Dim4");
-    switch (globalPrefs.dim4InitialTab) {
-        case ReginaPrefSet::Dim4Skeleton:
-            config->writeEntry("InitialTab", "Dim4Skeleton"); break;
-        case ReginaPrefSet::Dim4Algebra:
-            config->writeEntry("InitialTab", "Dim4Algebra"); break;
-        default:
-            config->writeEntry("InitialTab", "Dim4Gluings"); break;
-    }
+    configGroup->writeEntry("PacketDocking", globalPrefs.autoDock);
+    configGroup->writeEntry("DisplayTagsInTree", globalPrefs.displayTagsInTree);
+    configGroup->sync();
 
-    config->setGroup("Display");
-    config->writeEntry("PacketDocking", globalPrefs.autoDock);
-    config->writeEntry("DisplayIcon", globalPrefs.displayIcon);
-    config->writeEntry("DisplayTagsInTree", globalPrefs.displayTagsInTree);
-
-    config->setGroup("Census");
+    configGroup = new KConfigGroup(config, "Census");
     QStringList censusStrings;
     // Distinguish an empty list from an uninitialised list.
     if (globalPrefs.censusFiles.empty())
@@ -654,118 +718,131 @@ void ReginaMain::saveOptions() {
                 it != globalPrefs.censusFiles.end(); it++)
             censusStrings.push_back(((*it).active ? '+' : '-') +
                 (*it).filename);
-    config->writeEntry("Files", censusStrings);
+    configGroup->writeEntry("Files", censusStrings);
+    configGroup->sync();
 
-    config->setGroup("File");
-    config->writeEntry("AutomaticExtension", globalPrefs.autoFileExtension);
-    fileOpenRecent->saveEntries(config);
+    configGroup = new KConfigGroup(config, "Doc");
+    configGroup->writeEntry("HandbookInKHelpCenter",
+        globalPrefs.handbookInKHelpCenter);
 
-    config->setGroup("PDF");
-    config->writeEntry("AutoClose", globalPrefs.pdfAutoClose);
-    config->writeEntry("Embed", globalPrefs.pdfEmbed);
-    config->writeEntry("ExternalViewer", globalPrefs.pdfExternalViewer);
+    configGroup = new KConfigGroup(config, "File");
+    configGroup->writeEntry("AutomaticExtension", globalPrefs.autoFileExtension);
+    fileOpenRecent->saveEntries(*configGroup);
+    configGroup->sync();
 
-    config->setGroup("Python");
-    config->writeEntry("AutoIndent", globalPrefs.pythonAutoIndent);
-    config->writeEntry("SpacesPerTab", globalPrefs.pythonSpacesPerTab);
-    config->writeEntry("WordWrap", globalPrefs.pythonWordWrap);
+    configGroup = new KConfigGroup(config, "PDF");
+    configGroup->writeEntry("AutoClose", globalPrefs.pdfAutoClose);
+    configGroup->writeEntry("Embed", globalPrefs.pdfEmbed);
+    configGroup->writeEntry("ExternalViewer", globalPrefs.pdfExternalViewer);
+    configGroup->sync();
 
-    config->setGroup("SnapPea");
-    config->writeEntry("AllowClosed", globalPrefs.snapPeaClosed);
-    config->writeEntry("KernelMessages",
+    configGroup = new KConfigGroup(config, "Python");
+    configGroup->writeEntry("AutoIndent", globalPrefs.pythonAutoIndent);
+    configGroup->writeEntry("SpacesPerTab", globalPrefs.pythonSpacesPerTab);
+    configGroup->writeEntry("WordWrap", globalPrefs.pythonWordWrap);
+    configGroup->sync();
+
+    configGroup = new KConfigGroup(config, "SnapPea");
+    configGroup->writeEntry("AllowClosed", globalPrefs.snapPeaClosed);
+    configGroup->writeEntry("KernelMessages",
         regina::NSnapPeaTriangulation::kernelMessagesEnabled());
+    configGroup->sync();
 
-    config->setGroup("Surfaces");
-    config->writeEntry("CompatibilityThreshold",
+    configGroup = new KConfigGroup(config, "Surfaces");
+    configGroup->writeEntry("CompatibilityThreshold",
         globalPrefs.surfacesCompatThreshold);
-    config->writeEntry("CreationCoordinates",
+    configGroup->writeEntry("CreationCoordinates",
         globalPrefs.surfacesCreationCoords);
 
     switch (globalPrefs.surfacesInitialCompat) {
         case ReginaPrefSet::GlobalCompat:
-            config->writeEntry("InitialCompat", "Global"); break;
+            configGroup->writeEntry("InitialCompat", "Global"); break;
         default:
-            config->writeEntry("InitialCompat", "Local"); break;
+            configGroup->writeEntry("InitialCompat", "Local"); break;
     }
 
     switch (globalPrefs.surfacesInitialTab) {
         case ReginaPrefSet::Coordinates:
-            config->writeEntry("InitialTab", "Coordinates"); break;
+            configGroup->writeEntry("InitialTab", "Coordinates"); break;
         case ReginaPrefSet::Matching:
-            config->writeEntry("InitialTab", "Matching"); break;
+            configGroup->writeEntry("InitialTab", "Matching"); break;
         case ReginaPrefSet::Compatibility:
-            config->writeEntry("InitialTab", "Compatibility"); break;
+            configGroup->writeEntry("InitialTab", "Compatibility"); break;
         default:
-            config->writeEntry("InitialTab", "Summary"); break;
+            configGroup->writeEntry("InitialTab", "Summary"); break;
     }
+    configGroup->sync();
 
-    config->setGroup("Tree");
-    config->writeEntry("JumpSize", globalPrefs.treeJumpSize);
+    configGroup = new KConfigGroup(config, "Tree");
+    configGroup->writeEntry("JumpSize", globalPrefs.treeJumpSize);
+    configGroup->sync();
 
-    config->setGroup("Triangulation");
-    config->writeEntry("EditMode",
-        globalPrefs.triEditMode == ReginaPrefSet::DirectEdit ?
-        "DirectEdit" : "Dialog");
+    configGroup = new KConfigGroup(config, "Triangulation");
 
     switch (globalPrefs.triInitialTab) {
         case ReginaPrefSet::Skeleton:
-            config->writeEntry("InitialTab", "Skeleton"); break;
+            configGroup->writeEntry("InitialTab", "Skeleton"); break;
         case ReginaPrefSet::Algebra:
-            config->writeEntry("InitialTab", "Algebra"); break;
+            configGroup->writeEntry("InitialTab", "Algebra"); break;
         case ReginaPrefSet::Composition:
-            config->writeEntry("InitialTab", "Composition"); break;
+            configGroup->writeEntry("InitialTab", "Composition"); break;
         case ReginaPrefSet::Surfaces:
-            config->writeEntry("InitialTab", "Surfaces"); break;
+            configGroup->writeEntry("InitialTab", "Surfaces"); break;
         case ReginaPrefSet::SnapPea:
-            config->writeEntry("InitialTab", "SnapPea"); break;
+            configGroup->writeEntry("InitialTab", "SnapPea"); break;
         default:
-            config->writeEntry("InitialTab", "Gluings"); break;
+            configGroup->writeEntry("InitialTab", "Gluings"); break;
     }
 
     switch (globalPrefs.triInitialSkeletonTab) {
         case ReginaPrefSet::FacePairingGraph:
-            config->writeEntry("InitialSkeletonTab", "FacePairingGraph"); break;
+            configGroup->writeEntry("InitialSkeletonTab", "FacePairingGraph"); break;
         default:
-            config->writeEntry("InitialSkeletonTab", "SkelComp"); break;
+            configGroup->writeEntry("InitialSkeletonTab", "SkelComp"); break;
     }
 
     switch (globalPrefs.triInitialAlgebraTab) {
         case ReginaPrefSet::FundGroup:
-            config->writeEntry("InitialAlgebraTab", "FundGroup"); break;
+            configGroup->writeEntry("InitialAlgebraTab", "FundGroup"); break;
         case ReginaPrefSet::TuraevViro:
-            config->writeEntry("InitialAlgebraTab", "TuraevViro"); break;
+            configGroup->writeEntry("InitialAlgebraTab", "TuraevViro"); break;
         case ReginaPrefSet::CellularInfo:
-            config->writeEntry("InitialAlgebraTab", "CellularInfo"); break;
+            configGroup->writeEntry("InitialAlgebraTab", "CellularInfo"); break;
         default:
-            config->writeEntry("InitialAlgebraTab", "Homology"); break;
+            configGroup->writeEntry("InitialAlgebraTab", "Homology"); break;
     }
 
-    config->writeEntry("SurfacePropsThreshold",
+    configGroup->writeEntry("SurfacePropsThreshold",
         globalPrefs.triSurfacePropsThreshold);
+    configGroup->sync();
 
-    config->setGroup("Extensions");
-    config->writeEntry("GAPExec", globalPrefs.triGAPExec);
-    config->writeEntry("GraphvizExec", globalPrefs.triGraphvizExec);
+    configGroup = new KConfigGroup(config, "Extensions");
+    configGroup->writeEntry("GAPExec", globalPrefs.triGAPExec);
+    configGroup->writeEntry("GraphvizExec", globalPrefs.triGraphvizExec);
+    configGroup->sync();
 
     globalPrefs.writePythonLibraries();
 
-    config->sync();
-
     // Make sure other main windows read in and acknowledge the new options.
-    for (KMainWindow* otherMain = memberList->first(); otherMain;
-            otherMain = (memberList->next()))
-        if (otherMain != this)
-            if (otherMain->className() == ReginaMain::className())
-                dynamic_cast<ReginaMain*>(otherMain)->readOptions(config);
+    QListIterator<KMainWindow*> it(memberList());
+    while(it.hasNext()) {
+        KMainWindow* otherMain = it.next();
+        if (otherMain != this) {
+            ReginaMain* regina = qobject_cast<ReginaMain*>(otherMain);
+            if (regina) 
+                regina->readOptions(config);
+        }
+    }
 }
 
 KParts::ReadWritePart* ReginaMain::newTopologyPart() {
     ReginaPart* ans = 0;
 
-    KLibFactory* libFactory = KLibLoader::self()->factory("libreginapart");
-    if (libFactory)
-        ans = (ReginaPart*)(libFactory->create(
-            this, "reginapart", "ReginaPart"));
+    /**
+     * As a first iteration for the KDE4 port, let's just link directly
+     * with the part and create a new class instance directly.
+     */
+    ans = new ReginaPart(this, this, QStringList());
 
     if (! ans)
         KMessageBox::error(this, i18n(
@@ -775,25 +852,14 @@ KParts::ReadWritePart* ReginaMain::newTopologyPart() {
         connect(this, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
             ans, SLOT(updatePreferences(const ReginaPrefSet&)));
 
-        disconnect(actPython, SIGNAL(activated()), this, SLOT(pythonConsole()));
-        connect(actPython, SIGNAL(activated()), ans, SLOT(pythonConsole()));
+        disconnect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
+        connect(actPython, SIGNAL(triggered()), ans, SLOT(pythonConsole()));
 
         // Perform initial setup on the part.
         emit preferencesChanged(globalPrefs);
     }
 
     // All done!
-    return ans;
-}
-
-KParts::ReadWritePart* ReginaMain::newTextEditorPart() {
-    KTextEditor::Editor* ans = KTextEditor::EditorChooser::createEditor(
-        this, this);
-
-    if (! ans)
-        KMessageBox::error(this, i18n(
-            "An appropriate text editor component could not be found."));
-
     return ans;
 }
 
@@ -806,4 +872,3 @@ void ReginaMain::embedPart() {
     }
 }
 
-#include "reginamain.moc"

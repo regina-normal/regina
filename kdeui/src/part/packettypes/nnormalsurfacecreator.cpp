@@ -39,7 +39,7 @@
 
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kprogress.h>
+#include <kprogressdialog.h>
 #include <qcheckbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
@@ -51,24 +51,25 @@ NNormalSurfaceCreator::NNormalSurfaceCreator(int defaultCoordSystem) {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
+    QWidget* coordAreaWidget = new QWidget();
+    layout->addWidget(coordAreaWidget);
 
-    QBoxLayout* coordArea = new QHBoxLayout(layout, 5);
+    QBoxLayout* coordArea = new QHBoxLayout(coordAreaWidget);
+    coordArea->setContentsMargins(0, 0, 0, 0);
     QString expln = i18n("Specifies the coordinate system in which the "
         "vertex normal surfaces will be enumerated.");
     QLabel* label = new QLabel(i18n("Coordinate system:"), ui);
-    QWhatsThis::add(label, expln);
+    label->setWhatsThis(expln);
     coordArea->addWidget(label);
-    coords = new CoordinateChooser(ui);
+    coords = new CoordinateChooser();
     coords->insertAllCreators();
     coords->setCurrentSystem(defaultCoordSystem);
-    QWhatsThis::add(coords, expln);
+    coords->setWhatsThis(expln);
     coordArea->addWidget(coords, 1);
-
-    layout->addSpacing(5);
 
     embedded = new QCheckBox(i18n("Embedded surfaces only"), ui);
     embedded->setChecked(true);
-    QWhatsThis::add(embedded, i18n("Specifies whether only embedded "
+    embedded->setWhatsThis(i18n("Specifies whether only embedded "
         "normal surfaces should be enumerated, or whether all normal "
         "surfaces (embedded, immersed and singular) should be enumerated."));
     layout->addWidget(embedded);
@@ -76,6 +77,14 @@ NNormalSurfaceCreator::NNormalSurfaceCreator(int defaultCoordSystem) {
 
 QWidget* NNormalSurfaceCreator::getInterface() {
     return ui;
+}
+
+QString NNormalSurfaceCreator::parentPrompt() {
+    return i18n("Triangulation:");
+}
+
+QString NNormalSurfaceCreator::parentWhatsThis() {
+    return i18n("The triangulation that will contain your normal surfaces.");
 }
 
 regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
@@ -113,7 +122,7 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
                         "enumerated, which could take a much longer time "
                         "and give a much larger solution set.<p>"
                         "Are you sure you wish to go ahead with this?</qt>"),
-                    QString::null, KStdGuiItem::cont(),
+                    QString::null, KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                     "warnOnNonEmbedded") == KMessageBox::Cancel) {
                 return 0;
             }

@@ -37,19 +37,20 @@
 #include <algorithm>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <KUrl>
 
 using regina::NPacket;
 
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
         QWidget* parent, const char* name) :
-        KComboBox(parent, name), subtree(newSubtree), filter(0),
+        KComboBox(parent), subtree(newSubtree), filter(0),
         onAutoUpdate(false), isUpdating(false) {
     fill(false, 0);
 }
 
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
         PacketFilter* newFilter, QWidget* parent, const char* name) :
-        KComboBox(parent, name), subtree(newSubtree), filter(newFilter),
+        KComboBox(parent), subtree(newSubtree), filter(newFilter),
         onAutoUpdate(false), isUpdating(false) {
     fill(false, 0);
 }
@@ -57,7 +58,7 @@ PacketChooser::PacketChooser(regina::NPacket* newSubtree,
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
         PacketFilter* newFilter, bool allowNone,
         regina::NPacket* initialSelection, QWidget* parent, const char* name) :
-        KComboBox(parent, name), subtree(newSubtree), filter(newFilter),
+        KComboBox(parent), subtree(newSubtree), filter(newFilter),
         onAutoUpdate(false), isUpdating(false) {
     fill(allowNone, initialSelection);
 }
@@ -70,8 +71,26 @@ PacketChooser::~PacketChooser() {
 NPacket* PacketChooser::selectedPacket() {
     if (count() == 0)
         return 0;
-    else
-        return packets[currentItem()];
+    int curr = currentIndex();
+    return (curr < 0 ? 0 : packets[curr]);
+}
+
+void PacketChooser::selectPacket(regina::NPacket* packet) {
+    int index = 0;
+    std::vector<regina::NPacket*>::const_iterator it = packets.begin();
+    while (it != packets.end()) {
+        if ((*it) == packet) {
+            setCurrentIndex(index);
+            return;
+        }
+        ++it;
+        ++index;
+    }
+
+    // Not found.
+    if (! packets.empty())
+        setCurrentIndex(0);
+    return;
 }
 
 void PacketChooser::setAutoUpdate(bool shouldAutoUpdate) {
@@ -96,8 +115,8 @@ void PacketChooser::packetWasRenamed(regina::NPacket* renamed) {
     if (it != packets.end()) {
         // This may trigger a refreshContents(), but that's okay since
         // we're at the end of the routine.
-        changeItem(PacketManager::iconSmall(renamed, false),
-            renamed->getPacketLabel().c_str(), it - packets.begin());
+        changeUrl(it - packets.begin(),PacketManager::iconSmall(renamed, false),
+            KUrl(renamed->getPacketLabel().c_str()));
     }
 }
 
@@ -110,18 +129,18 @@ void PacketChooser::packetToBeDestroyed(regina::NPacket* toDestroy) {
         // Make sure the call to removeItem() comes last since it could
         // trigger a refreshContents().
         long destroyIndex = it - packets.begin();
-        long currentIndex = currentItem();
+        long currIndex = currentIndex();
 
         packets.erase(it);
-        if (destroyIndex == currentIndex) {
+        if (destroyIndex == currIndex) {
             // We know count() > 0 since currentItem() exists.
-            setCurrentItem(0);
+            setCurrentIndex(0);
 
             // If the item to destroy *is* 0, this should just fall through
             // to whatever's next when we remove it from the chooser.
-        } else if (destroyIndex < currentIndex) {
+        } else if (destroyIndex < currIndex) {
             // The selected item has moved up the list.
-            setCurrentItem(currentIndex - 1);
+            setCurrentIndex(currIndex - 1);
         }
 
         removeItem(destroyIndex);
@@ -165,24 +184,24 @@ void PacketChooser::refreshContents() {
 void PacketChooser::fill(bool allowNone, NPacket* select) {
     // Insert the None entry if appropriate.
     if (allowNone) {
-        insertItem(i18n("<None>"));
+        addItem(i18n("<None>"));
         packets.push_back(0);
 
         if (select == 0)
-            setCurrentItem(0);
+            setCurrentIndex(0);
     }
 
     // Insert the regular packets.
     regina::NPacket* p = subtree;
     while (p && subtree->isGrandparentOf(p)) {
         if ((! filter) || (filter->accept(p))) {
-            insertItem(PacketManager::iconSmall(p, false),
+            addItem(PacketManager::iconSmall(p, false),
                 p->getPacketLabel().c_str());
             packets.push_back(p);
             if (onAutoUpdate)
                 p->listen(this);
             if (p == select)
-                setCurrentItem(count() - 1);
+                setCurrentIndex(count() - 1);
         }
         p = p->nextTreePacket();
     }
@@ -222,4 +241,3 @@ bool PacketChooser::verify() {
     return true;
 }
 
-#include "packetchooser.moc"

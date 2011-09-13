@@ -40,15 +40,17 @@
 #include <memory>
 
 class PacketChooser;
-class QPopupMenu;
+class PacketEditIface;
+class QMenu;
 class QPushButton;
-class QListView;
-class QListViewItem;
+class QTreeWidget;
+class QTreeWidgetItem;
 
 namespace regina {
     class NIsomorphism;
     class NMatrix2;
     class NPacket;
+    class NPerm4;
     class NSatRegion;
     class NStandardTriangulation;
     class NTriangulation;
@@ -84,11 +86,10 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         PacketChooser* isoTest;
         QLabel* isoResult;
         QPushButton* isoView;
-        QListView* details;
-        QListViewItem* components;
-        QListViewItem* lastComponent;
-        QPopupMenu* detailsMenu;
-        QString detailsLastSelection;
+        QTreeWidget* details;
+        QTreeWidgetItem* components;
+        QTreeWidgetItem* lastComponent;
+        PacketEditIface* editIface;
 
     public:
         /**
@@ -96,12 +97,14 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
          */
         NTriCompositionUI(regina::NTriangulation* packet,
                 PacketTabbedUI* useParentUI);
+        ~NTriCompositionUI();
 
         /**
          * PacketViewerTab overrides.
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
+        PacketEditIface* getEditIface();
         void refresh();
         void editingElsewhere();
 
@@ -125,8 +128,8 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         /**
          * Add new items to the list view.
          */
-        QListViewItem* addTopLevelSection(const QString& text);
-        QListViewItem* addComponentSection(const QString& text);
+        QTreeWidgetItem* addTopLevelSection(const QString& text);
+        QTreeWidgetItem* addComponentSection(const QString& text);
 
         /**
          * Fill the list view with information.
@@ -144,7 +147,7 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         void findSnappedSpheres();
         void findSpiralSolidTori();
         void describeSatRegion(const regina::NSatRegion& region,
-            QListViewItem* parent);
+            QTreeWidgetItem* parent);
 
         /**
          * Return string representations of various items.
@@ -154,13 +157,10 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         static QString edgeString(unsigned long tetIndex,
             const regina::NPerm4& roles, int startPreimage, int endPreimage);
         static QString matrixString(const regina::NMatrix2& matrix);
-
-    private slots:
-        /**
-         * Actions for the composition details list.
-         */
-        void detailsPopup(QListViewItem* item, const QPoint& pos, int);
-        void detailsCopy();
 };
+
+inline PacketEditIface* NTriCompositionUI::getEditIface() {
+    return editIface;
+}
 
 #endif

@@ -38,14 +38,14 @@
 
 const PDFHandler PDFHandler::instance;
 
-regina::NPacket* PDFHandler::import(const QString& fileName,
+regina::NPacket* PDFHandler::importData(const QString& fileName,
         QWidget* parentWidget) const {
     regina::NPacket* ans = regina::readPDF(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)
         KMessageBox::error(parentWidget, i18n(
             "The PDF document %1 could not be read.").arg(fileName));
-    ans->setPacketLabel(i18n("PDF document").ascii());
+    ans->setPacketLabel(i18n("PDF document").toAscii().constData());
     return ans;
 }
 

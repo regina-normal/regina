@@ -1,8 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Type=Service
-Icon=regina
-ServiceTypes=KParts/ReadOnlyPart,KParts/ReadWritePart
-X-KDE-Library=libreginapart
-MimeType=application/x-regina
-Name=Regina Topology Data Editor

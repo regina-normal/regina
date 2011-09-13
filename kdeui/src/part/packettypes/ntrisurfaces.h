@@ -35,7 +35,7 @@
 
 #include "../packettabui.h"
 
-class QButton;
+class QAbstractButton;
 class QLabel;
 
 namespace regina {
@@ -63,10 +63,10 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         QLabel* splitting;
         QLabel* threeSphere;
         QLabel* threeBall;
-        QButton* btnZeroEff;
-        QButton* btnSplitting;
-        QButton* btnThreeSphere;
-        QButton* btnThreeBall;
+        QAbstractButton* btnZeroEff;
+        QAbstractButton* btnSplitting;
+        QAbstractButton* btnThreeSphere;
+        QAbstractButton* btnThreeBall;
 
         /**
          * Properties

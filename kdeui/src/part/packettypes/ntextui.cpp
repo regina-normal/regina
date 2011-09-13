@@ -30,17 +30,15 @@
 #include "packet/ntext.h"
 
 // UI includes:
+#include "../packeteditiface.h"
 #include "ntextui.h"
 
 #include <cstring>
 #include <sstream>
 #include <klocale.h>
+#include <ktexteditor/configinterface.h>
 #include <ktexteditor/document.h>
-#include <ktexteditor/editinterface.h>
-#include <ktexteditor/undointerface.h>
 #include <ktexteditor/view.h>
-#include <ktexteditor/viewcursorinterface.h>
-#include <ktexteditor/wordwrapinterface.h>
 
 using regina::NPacket;
 using regina::NText;
@@ -51,26 +49,23 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
     // Create a view (which must be parented) before we do anything else.
     // Otherwise the Vim component crashes.
     view = document->createView(enclosingPane);
-    if (strcmp(document->className(), "Vim::Document") == 0)
-        enclosingPane->setDirtinessBroken();
-
     document->setReadWrite(enclosingPane->isReadWrite());
-    KTextEditor::wordWrapInterface(document)->setWordWrap(true);
 
-    editInterface = KTextEditor::editInterface(document);
+    KTextEditor::ConfigInterface *iface =
+        qobject_cast<KTextEditor::ConfigInterface*>(view);
+    if (iface)
+        iface->setConfigValue("dynamic-word-wrap",true);
+
+    editIface = new PacketEditTextEditor(view);
+
     refresh();
 
-    if (strcmp(document->className(), "Vim::Document") == 0)
-        std::cerr << "Not flushing the undo list since this has strange "
-            "side-effects with the Vim component." << std::endl;
-    else
-        KTextEditor::undoInterface(document)->clearUndo();
-
-    connect(document, SIGNAL(textChanged()),
+    connect(document, SIGNAL(textChanged(KTextEditor::Document*)),
         this, SLOT(notifyTextChanged()));
 }
 
 NTextUI::~NTextUI() {
+    delete editIface;
     delete document;
 }
 
@@ -82,16 +77,12 @@ QWidget* NTextUI::getInterface() {
     return view;
 }
 
-KTextEditor::Document* NTextUI::getTextComponent() {
-    return document;
-}
-
 QString NTextUI::getPacketMenuText() const {
     return i18n("Te&xt");
 }
 
 void NTextUI::commit() {
-    text->setText(editInterface->text().ascii());
+    text->setText(document->text().toAscii().constData());
     setDirty(false);
 }
 
@@ -102,7 +93,7 @@ void NTextUI::refresh() {
     if (! wasReadWrite)
         document->setReadWrite(true);
 
-    editInterface->clear();
+    document->clear();
 
     // Back to all-at-once insertion instead of line-by-line insertion.
     // Grrr vimpart.
@@ -113,8 +104,8 @@ void NTextUI::refresh() {
         if (data[data.length() - 1] == '\n')
             data.truncate(data.length() - 1);
 
-        editInterface->setText(data);
-        KTextEditor::viewCursorInterface(view)->setCursorPosition(0, 0);
+        document->setText(data);
+        document->views().front()->setCursorPosition(KTextEditor::Cursor(0, 0));
     }
 
     if (! wasReadWrite)
@@ -131,4 +122,3 @@ void NTextUI::notifyTextChanged() {
     setDirty(true);
 }
 
-#include "ntextui.moc"

@@ -30,11 +30,11 @@
 
 #include <iostream>
 #include <kapplication.h>
-
+#include <QKeyEvent>
 #define COMMAND_EDIT_DEFAULT_SPACES_PER_TAB 4
 
 CommandEdit::CommandEdit(QWidget* parent, const char* name) :
-        KLineEdit(parent, name) {
+        KLineEdit(parent) { // , name) {
     setSpacesPerTab(COMMAND_EDIT_DEFAULT_SPACES_PER_TAB);
     historyPos = history.end();
 }
@@ -73,4 +73,4 @@ void CommandEdit::keyPressEvent(QKeyEvent* event) {
         KLineEdit::keyPressEvent(event);
 }
 
-#include "commandedit.moc"
+// #include "commandedit.moc"

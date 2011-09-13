@@ -34,7 +34,7 @@
 #ifndef __IMPORTDIALOG_H
 #define __IMPORTDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 class PacketChooser;
 class PacketFilter;
@@ -52,7 +52,7 @@ namespace regina {
  * taken (and in particular the imported data will need to be destroyed
  * elsewhere).
  */
-class ImportDialog : public KDialogBase {
+class ImportDialog : public KDialog {
     Q_OBJECT
 
     private:
@@ -94,7 +94,7 @@ class ImportDialog : public KDialogBase {
 
     protected slots:
         /**
-         * KDialogBase overrides.
+         * Ok has been clicked.
          */
         virtual void slotOk();
 };

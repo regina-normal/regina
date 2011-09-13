@@ -52,12 +52,7 @@ void ReginaPart::importDehydration() {
 
 void ReginaPart::importIsoSig3() {
     importFile(IsoSigHandler::instance3, 0, i18n(FILTER_ALL),
-        i18n("Import Isomorphism Signature List (3-D)"));
-}
-
-void ReginaPart::importIsoSig4() {
-    importFile(IsoSigHandler::instance4, 0, i18n(FILTER_ALL),
-        i18n("Import Isomorphism Signature List (4-D)"));
+        i18n("Import Isomorphism Signature List"));
 }
 
 void ReginaPart::importPDF() {
@@ -100,14 +95,14 @@ void ReginaPart::importFile(const PacketImporter& importer,
             QString::null, fileFilter, widget(), dialogTitle);
         if (result.fileNames.empty() || result.fileNames.front().isEmpty())
             return;
-        newTree = importer.import(result.fileNames.front(),
-            QTextCodec::codecForName(result.encoding), widget());
+        newTree = importer.importData(result.fileNames.front(),
+            QTextCodec::codecForName(result.encoding.toAscii()), widget());
     } else {
-        QString file = KFileDialog::getOpenFileName(QString::null,
+        QString file = KFileDialog::getOpenFileName(KUrl(),
             fileFilter, widget(), dialogTitle);
         if (file.isEmpty())
             return;
-        newTree = importer.import(file, widget());
+        newTree = importer.importData(file, widget());
     }
 
     if (newTree) {

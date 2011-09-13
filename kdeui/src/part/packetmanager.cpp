@@ -33,7 +33,6 @@
 // UI includes:
 #include "packetmanager.h"
 #include "reginapart.h"
-#include "packettypes/dim4triui.h"
 #include "packettypes/nanglestructureui.h"
 #include "packettypes/ncontainerui.h"
 #include "packettypes/nnormalsurfaceui.h"
@@ -52,7 +51,7 @@
 #include <klocale.h>
 #include <ktexteditor/document.h>
 #include <ktexteditor/editorchooser.h>
-#include <kuserprofile.h>
+//#include <kuserprofile.h>
 
 using namespace regina;
 
@@ -61,75 +60,29 @@ QImage PacketManager::lockSmall;
 QImage PacketManager::lockBar;
 
 QPixmap PacketManager::iconSmall(NPacket* packet, bool allowLock) {
-    QPixmap ans;
-
-    if (packet->getPacketType() == NAngleStructureList::packetType)
-        ans = SmallIcon("packet_angles", ReginaPart::factoryInstance());
-    else if (packet->getPacketType() == NContainer::packetType)
-        ans = SmallIcon("packet_container", ReginaPart::factoryInstance());
-    else if (packet->getPacketType() == NPDF::packetType)
-        ans = SmallIcon("packet_pdf", ReginaPart::factoryInstance());
-    else if (packet->getPacketType() == NSurfaceFilter::packetType) {
-        if (((NSurfaceFilter*)packet)->getFilterID() ==
-                NSurfaceFilterCombination::filterID)
-            ans = SmallIcon("filter_comb", ReginaPart::factoryInstance());
-        else if (((NSurfaceFilter*)packet)->getFilterID() ==
-                NSurfaceFilterProperties::filterID)
-            ans = SmallIcon("filter_prop", ReginaPart::factoryInstance());
-        else
-            ans = SmallIcon("packet_filter", ReginaPart::factoryInstance());
-    } else if (packet->getPacketType() == NScript::packetType)
-        ans = SmallIcon("packet_script", ReginaPart::factoryInstance());
-    else if (packet->getPacketType() == NNormalSurfaceList::packetType)
-        ans = SmallIcon("packet_surfaces", ReginaPart::factoryInstance());
-    else if (packet->getPacketType() == NText::packetType)
-        ans = SmallIcon("packet_text", ReginaPart::factoryInstance());
-    else if (packet->getPacketType() == NTriangulation::packetType)
-        ans = SmallIcon("packet_triangulation", ReginaPart::factoryInstance());
-    else if (packet->getPacketType() == Dim4Triangulation::packetType)
-        ans = SmallIcon("packet_dim4tri", ReginaPart::factoryInstance());
-    else
+    QString name = iconName(packet);
+    if (name.isNull())
         return QPixmap();
 
+    QStringList overlays;
     if (allowLock && ! packet->isPacketEditable())
-        overlayLockSmall(ans);
+        overlays << "emblem-locked";
 
-    return ans;
+    return KIconLoader::global()->loadIcon(name, KIconLoader::Small, 0,
+        KIconLoader::DefaultState, overlays);
 }
 
 QPixmap PacketManager::iconBar(NPacket* packet, bool allowLock) {
-    QPixmap ans;
-
-    if (packet->getPacketType() == NAngleStructureList::packetType)
-        ans = BarIcon("packet_angles", ReginaPart::factoryInstance());
-    else if (packet->getPacketType() == NContainer::packetType)
-        ans = BarIcon("packet_container", ReginaPart::factoryInstance());
-    else if (packet->getPacketType() == NSurfaceFilter::packetType) {
-        if (((NSurfaceFilter*)packet)->getFilterID() ==
-                NSurfaceFilterCombination::filterID)
-            ans = BarIcon("filter_comb", ReginaPart::factoryInstance());
-        else if (((NSurfaceFilter*)packet)->getFilterID() ==
-                NSurfaceFilterProperties::filterID)
-            ans = BarIcon("filter_prop", ReginaPart::factoryInstance());
-        else
-            ans = BarIcon("packet_filter", ReginaPart::factoryInstance());
-    } else if (packet->getPacketType() == NScript::packetType)
-        ans = BarIcon("packet_script", ReginaPart::factoryInstance());
-    else if (packet->getPacketType() == NNormalSurfaceList::packetType)
-        ans = BarIcon("packet_surfaces", ReginaPart::factoryInstance());
-    else if (packet->getPacketType() == NText::packetType)
-        ans = BarIcon("packet_text", ReginaPart::factoryInstance());
-    else if (packet->getPacketType() == NTriangulation::packetType)
-        ans = BarIcon("packet_triangulation", ReginaPart::factoryInstance());
-    else if (packet->getPacketType() == Dim4Triangulation::packetType)
-        ans = BarIcon("packet_dim4tri", ReginaPart::factoryInstance());
-    else
+    QString name = iconName(packet);
+    if (name.isNull())
         return QPixmap();
 
+    QStringList overlays;
     if (allowLock && ! packet->isPacketEditable())
-        overlayLockBar(ans);
+        overlays << "locked";
 
-    return ans;
+    return KIconLoader::global()->loadIcon(name, KIconLoader::Toolbar, 0,
+        KIconLoader::DefaultState, overlays);
 }
 
 PacketUI* PacketManager::createUI(regina::NPacket* packet,
@@ -146,7 +99,7 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     if (packet->getPacketType() == NPDF::packetType)
         return new NPDFUI(dynamic_cast<NPDF*>(packet), enclosingPane);
     if (packet->getPacketType() == NScript::packetType) {
-        KTextEditor::Document* doc = createDocument();
+        KTextEditor::Document* doc = createDocument(enclosingPane);
         if (doc)
             return new NScriptUI(dynamic_cast<NScript*>(packet),
                 enclosingPane, doc);
@@ -169,7 +122,7 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
         return new DefaultPacketUI(packet, enclosingPane);
     }
     if (packet->getPacketType() == NText::packetType) {
-        KTextEditor::Document* doc = createDocument();
+        KTextEditor::Document* doc = createDocument(enclosingPane);
         if (doc)
             return new NTextUI(dynamic_cast<NText*>(packet),
                 enclosingPane, doc);
@@ -181,69 +134,40 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     if (packet->getPacketType() == NTriangulation::packetType)
         return new NTriangulationUI(dynamic_cast<NTriangulation*>(packet),
             enclosingPane);
-    if (packet->getPacketType() == Dim4Triangulation::packetType)
-        return new Dim4TriangulationUI(dynamic_cast<Dim4Triangulation*>(packet),
-            enclosingPane);
     return new DefaultPacketUI(packet, enclosingPane);
 }
 
-void PacketManager::initLock() {
-    KIconLoader* loader = ReginaPart::factoryInstance()->iconLoader();
-
-    KIconTheme* theme = loader->theme();
-    QString lockName = (theme ? theme->lockOverlay() : "lockoverlay");
-
-    // Try the theme icon, then lock_overlay (KDE >= 3.5), then
-    // lockoverlay (KDE <= 3.4).  This should sort out distributions
-    // with buggy default themes (cough, Fedora, SuSE, cough).
-    lockSmall = loader->loadIcon(lockName, KIcon::Small, 0,
-        KIcon::DefaultState, 0L, true /* null if not found */);
-    if (lockSmall.isNull()) {
-        lockSmall = loader->loadIcon("lock_overlay", KIcon::Small, 0,
-            KIcon::DefaultState, 0L, true /* null if not found */);
-        if (lockSmall.isNull())
-            lockSmall = loader->loadIcon("lockoverlay", KIcon::Small, 0,
-                KIcon::DefaultState, 0L, true /* null if not found */);
+QString PacketManager::iconName(NPacket* packet) {
+    if (packet->getPacketType() == NAngleStructureList::packetType)
+        return "packet_angles";
+    if (packet->getPacketType() == NContainer::packetType)
+        return "packet_container";
+    if (packet->getPacketType() == NPDF::packetType)
+        return "packet_pdf";
+    if (packet->getPacketType() == NSurfaceFilter::packetType) {
+        if (((NSurfaceFilter*)packet)->getFilterID() ==
+                NSurfaceFilterCombination::filterID)
+            return "filter_comb";
+        else if (((NSurfaceFilter*)packet)->getFilterID() ==
+                NSurfaceFilterProperties::filterID)
+            return "filter_prop";
+        else
+            return "packet_filter";
     }
+    if (packet->getPacketType() == NScript::packetType)
+        return "packet_script";
+    if (packet->getPacketType() == NNormalSurfaceList::packetType)
+        return "packet_surfaces";
+    if (packet->getPacketType() == NText::packetType)
+        return "packet_text";
+    if (packet->getPacketType() == NTriangulation::packetType)
+        return "packet_triangulation";
 
-    lockBar = loader->loadIcon(lockName, KIcon::Toolbar, 0,
-        KIcon::DefaultState, 0L, true /* null if not found */);
-    if (lockBar.isNull()) {
-        lockBar = loader->loadIcon("lock_overlay", KIcon::Toolbar, 0,
-            KIcon::DefaultState, 0L, true /* null if not found */);
-        if (lockBar.isNull())
-            lockBar = loader->loadIcon("lockoverlay", KIcon::Toolbar, 0,
-                KIcon::DefaultState, 0L, true /* null if not found */);
-    }
-
-    lockInitialised = true;
+    return QString();
 }
 
-bool PacketManager::overlayLock(QPixmap& icon, QImage& lock) {
-    // Note that the initialisation may alter the given lock image.
-    if (! lockInitialised)
-        initLock();
-
-    if (icon.isNull() || lock.isNull())
-        return false;
-
-    QImage iconImg = icon.convertToImage();
-    if (iconImg.isNull())
-        return false;
-
-    KIconEffect::overlay(iconImg, lock);
-
-    // Keep a backup in case something goes wrong.
-    QPixmap old = icon;
-    if (icon.convertFromImage(iconImg, 0))
-        return true;
-
-    // Yup.  Something went wrong.
-    icon = old;
-    return false;
-}
-
-KTextEditor::Document* PacketManager::createDocument() {
-    return KTextEditor::EditorChooser::createDocument();
+KTextEditor::Document* PacketManager::createDocument(QObject* parent) {
+    KTextEditor::Editor* editor = KTextEditor::EditorChooser::editor();
+    return editor->createDocument(parent);
 }
 

@@ -39,9 +39,9 @@
 
 class NCompatCanvas;
 class QPushButton;
-class QCanvasView;
+class QGraphicsView;
 class QComboBox;
-class QWidgetStack;
+class QStackedWidget;
 class ReginaPrefSet;
 
 namespace regina {
@@ -78,14 +78,14 @@ class NSurfaceCompatibilityUI : public QObject, public PacketViewerTab,
          */
         NCompatCanvas* matrixLocal;
         NCompatCanvas* matrixGlobal;
-        QCanvasView* layerLocal;
-        QCanvasView* layerGlobal;
+        QGraphicsView* layerLocal;
+        QGraphicsView* layerGlobal;
 
         /**
          * Internal components
          */
         QWidget* ui;
-        QWidgetStack* stack;
+        QStackedWidget* stack;
         QWidget* layerNone;
         QLabel* msgNone;
         QComboBox* chooseMatrix;

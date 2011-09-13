@@ -50,23 +50,36 @@ void PythonManager::deregisterConsole(PythonConsole* console) {
     consoles.erase(console);
 }
 
-void PythonManager::openPythonReference(QWidget* parent) {
+void PythonManager::openPythonReference(QWidget* topLevelWindow) {
     QString docDir =
         QFile::decodeName(regina::NGlobalDirs::engineDocs().c_str());
-    QString index = docDir + "/modules.html";
+    QString index = docDir + "/index.html";
 
-    if (QFileInfo(index).exists())
-        new KRun("file:" + index, 0, true /* local file */,
-            false /* progress info */);
-    else
-        KMessageBox::sorry(parent, i18n("<qt>The Python reference could "
+    if (QFileInfo(index).exists()) {
+        // If we're on a mac, just use the default Mac browser.
+#ifdef __APPLE__
+        // Hmm.  Assume this command executes successfully, since on my
+        // fink it returns false even when it *does* execute successfully..!
+        KRun::runCommand(QString("open \"%1\"").arg(index), topLevelWindow);
+#else
+        if (! KRun::runUrl("file:" + index, "text/html", topLevelWindow,
+                false /* temp file */, false /* run executables */))
+            KMessageBox::sorry(topLevelWindow, i18n(
+                "<qt>The Python reference could "
+                "not be opened from within KDE.  "
+                "Please try pointing your web browser to "
+                "<tt>%1/index.html</tt>.</qt>").arg(docDir));
+#endif
+    } else
+        KMessageBox::sorry(topLevelWindow, i18n(
+            "<qt>The Python reference could "
             "not be found.  Perhaps it is not installed?<p>"
             "The Python reference (i.e., the API documentation for the "
             "Regina calculation engine) should be installed in the directory "
             "<tt>%1/</tt>.</qt>").arg(docDir));
 }
 
-#ifdef HAVE_BOOST_PYTHON
+#ifdef BOOST_PYTHON_FOUND
 
 #include "python/pythonconsole.h"
 
@@ -177,7 +190,7 @@ namespace {
         KMessageBox::sorry(parent, i18n("<qt>Python scripting has been "
             "disabled in your particular build of Regina.  This is probably "
             "because no usable boost.python installation could be found.<p>"
-            "Watch the output of <b>./configure</b> at compile time "
+            "Watch the output of <b>cmake</b> at compile time "
             "for a more detailed explanation of why this has happened.  "
             "Please write to <tt>%1</tt> if you would like further "
             "assistance.</qt>").arg(PACKAGE_BUGREPORT));

@@ -33,53 +33,64 @@
 
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <qboxlayout.h>
 #include <qframe.h>
-#include <qhbox.h>
 #include <qlabel.h>
-#include <qlayout.h>
 #include <qlineedit.h>
 #include <qwhatsthis.h>
-
-#define HORIZONTAL_SPACING 10
 
 NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
         regina::NPacket* packetTree, regina::NPacket* defaultParent,
         PacketFilter* useFilter, const QString& dialogTitle,
         const QString& suggestedLabel) :
-        KDialogBase(Plain, dialogTitle, Ok|Cancel, Ok, parent),
+        KDialog(parent), //dialogTitle, Ok|Cancel, Ok, parent),
         creator(newCreator), tree(packetTree), newPacket(0) {
-    QFrame* page = plainPage();
-    QVBoxLayout* layout = new QVBoxLayout(page, 0, spacingHint());
+    setCaption(dialogTitle);
+    setButtons(KDialog::Ok|KDialog::Cancel);
 
-    QHBox* parentStrip = new QHBox(page);
-    parentStrip->setSpacing(HORIZONTAL_SPACING);
-    layout->addWidget(parentStrip);
-    QString expln = i18n("Specifies where in the packet tree the new "
-        "packet will be placed.");
-    QWhatsThis::add(new QLabel(i18n("Create beneath:"), parentStrip), expln);
-    chooser = new PacketChooser(tree, useFilter, false, defaultParent,
-        parentStrip);
-    QWhatsThis::add(chooser, expln);
-    parentStrip->setStretchFactor(chooser, 1);
+    QWidget* page = new QWidget(this);
+    setMainWidget(page);
+    QVBoxLayout* layout = new QVBoxLayout(page);
+    layout->setContentsMargins(0, 0, 0, 0); // Margins come from the dialog.
 
-    QHBox* labelStrip = new QHBox(page);
-    labelStrip->setSpacing(HORIZONTAL_SPACING);
-    layout->addWidget(labelStrip);
+    QHBoxLayout* parentStrip = new QHBoxLayout();
+    layout->addLayout(parentStrip);
+    QString parentPrompt = newCreator->parentPrompt();
+    if (parentPrompt.isNull())
+        parentPrompt = i18n("Create beneath:");
+    QString expln = newCreator->parentWhatsThis();
+    if (expln.isNull())
+        expln = i18n("Specifies where in the packet tree the new "
+            "packet will be placed.");
+    QLabel* createBeneath = new QLabel(parentPrompt);
+    createBeneath->setWhatsThis(expln);
+    parentStrip->addWidget(createBeneath);
+    chooser = new PacketChooser(tree, useFilter, false, defaultParent);
+    chooser->setWhatsThis(expln);
+    parentStrip->addWidget(chooser, 1);
+
+    QHBoxLayout* labelStrip = new QHBoxLayout();
+    layout->addLayout(labelStrip);
     expln = i18n("The label that will be assigned to the new packet.");
-    QWhatsThis::add(new QLabel(i18n("Label:"), labelStrip), expln);
-    label = new QLineEdit(
-        tree->makeUniqueLabel(suggestedLabel.ascii()).c_str(), labelStrip);
-    QWhatsThis::add(label, expln);
-    labelStrip->setStretchFactor(label, 1);
+    QLabel* newlabel = new QLabel(i18n("Label:"));
+    newlabel->setWhatsThis(expln);
+    labelStrip->addWidget(newlabel);
+    label = new QLineEdit(tree->makeUniqueLabel(
+        suggestedLabel.toAscii().constData()).c_str());
+    label->setWhatsThis(expln);
+    labelStrip->addWidget(label, 1);
 
     QWidget* mainUI = creator->getInterface();
     if (mainUI) {
-        mainUI->reparent(page, QPoint(0, 0));
-        layout->addWidget(mainUI);
-        layout->setStretchFactor(mainUI, 1);
+        mainUI->setParent(page);
+        // The outer layouts already provide margins.
+        mainUI->layout()->setContentsMargins(0, 0, 0, 0);
+        layout->addWidget(mainUI, 1);
     } else {
         layout->addStretch(1);
     }
+
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOk()));
 }
 
 NewPacketDialog::~NewPacketDialog() {
@@ -115,15 +126,17 @@ void NewPacketDialog::slotOk() {
     }
 
     // Check the label.
-    QString useLabel = label->text().stripWhiteSpace();
+    QString useLabel = label->text().simplified();
     if (useLabel.isEmpty()) {
         KMessageBox::error(this, i18n("The packet label cannot be empty."));
         return;
     }
-    if (tree->findPacketLabel(useLabel)) {
+    if (tree->findPacketLabel(std::string(useLabel.toAscii().constData()))) {
         KMessageBox::error(this, i18n(
             "There is already a packet labelled %1.").arg(useLabel));
-        label->setText(tree->makeUniqueLabel(useLabel));
+        label->setText(QString::fromAscii(
+              tree->makeUniqueLabel(
+                  std::string(useLabel.toAscii().constData())).c_str()));
         return;
     }
 
@@ -134,12 +147,8 @@ void NewPacketDialog::slotOk() {
         return;
 
     // Fix the new packet.
-    newPacket->setPacketLabel(useLabel);
+    newPacket->setPacketLabel(std::string(useLabel.toAscii().constData()));
     if (! newPacket->getTreeParent())
         parentPacket->insertChildLast(newPacket);
-
-    // And we're done!
-    KDialogBase::slotOk();
 }
 
-#include "newpacketdialog.moc"

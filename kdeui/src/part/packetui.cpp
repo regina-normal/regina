@@ -33,50 +33,44 @@
 // UI includes:
 #include "eventids.h"
 #include "flatbutton.h"
+#include "packeteditiface.h"
 #include "packetmanager.h"
 #include "packetui.h"
 #include "packetwindow.h"
 #include "reginapart.h"
 
 #include <kaction.h>
+#include <kactioncollection.h>
 #include <kapplication.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kstdguiitem.h>
 #include <ktoolbar.h>
-#include <qclipboard.h>
+#include <qboxlayout.h>
 #include <qevent.h>
 #include <qlabel.h>
-#include <qptrlist.h>
+#include <qlinkedlist.h>
+#include <qtreewidget.h>
 #include <qwhatsthis.h>
-#include <ktexteditor/document.h>
-#include <ktexteditor/selectioninterface.h>
-#include <ktexteditor/view.h>
-#include <ktexteditor/undointerface.h>
-
-#define CLIPBOARD_HAS_TEXT \
-    (! (KApplication::kApplication()->clipboard()-> \
-        text(QClipboard::Clipboard).isNull()) )
 
 using regina::NPacket;
 
-namespace {
-    int RIGHT_ALIGN_SEPARATOR_ID = 137;
-        /**< Random integer that shouldn't clash with any other toolbar
-             item ID. */
-}
+QLinkedList<KAction*> PacketUI::noActions;
 
-QPtrList<KAction> PacketUI::noActions;
+PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent) 
+        : QFrame(parent), packet(pkt) {
+    QBoxLayout* layout = new QHBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
 
-PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent,
-        const char* name) : QHBox(parent, name), packet(pkt) {
-    icon = new QLabel(this);
-    icon->setPixmap(PacketManager::iconBar(packet, true));
+    icon = new QLabel();
+    icon->setPixmap(PacketManager::iconSmall(packet, true));
+    icon->setMargin(2); // Leave *some* space, however tiny.
+    layout->addWidget(icon);
 
-    title = new QLabel(packet->getFullName().c_str(), this);
-    title->setAlignment(AlignCenter);
-    setStretchFactor(title, 1);
+    title = new QLabel(packet->getFullName().c_str());
+    title->setAlignment(Qt::AlignCenter);
+    layout->addWidget(title, 1);
 
     setFrameStyle(QFrame::Box | QFrame::Sunken);
     // setMidLineWidth(1);
@@ -84,7 +78,7 @@ PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent,
 
 void PacketHeader::refresh() {
     title->setText(packet->getFullName().c_str());
-    icon->setPixmap(PacketManager::iconBar(packet, true));
+    icon->setPixmap(PacketManager::iconSmall(packet, true));
 }
 
 ErrorPacketUI::ErrorPacketUI(regina::NPacket* newPacket,
@@ -122,123 +116,118 @@ DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
 }
 
 PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
-        QWidget* parent, const char* name) : QVBox(parent, name),
+        QWidget* parent) : QWidget(parent),
         part(newPart), frame(0), dirty(false), dirtinessBroken(false),
         emergencyClosure(false), emergencyRefresh(false), isCommitting(false),
-        extCut(0), extCopy(0), extPaste(0), extUndo(0), extRedo(0) {
+        editCut(0), editCopy(0), editPaste(0) {
+    // Initialise a vertical layout with no padding or spacing.
+    QBoxLayout* layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
     // Should we allow both read and write?
     readWrite = part->isReadWrite() && newPacket->isPacketEditable();
 
     // Create the actions first, since PacketManager::createUI()
     // might want to modify them.
-    actCommit = new KAction(i18n("Co&mmit"), "button_ok", 0 /* shortcut */,
-        this, SLOT(commit()), (KActionCollection*)0, "packet_editor_commit");
+    actCommit = part->actionCollection()->addAction("packet_editor_commit");
+    actCommit->setText(i18n("Co&mmit"));
+    actCommit->setIcon(KIcon("dialog-ok"));
     actCommit->setEnabled(false);
     actCommit->setToolTip(i18n("Commit changes to this packet"));
     actCommit->setWhatsThis(i18n("Commit any changes you have made inside "
         "this packet viewer.  Changes you make will have no effect elsewhere "
         "until they are committed."));
-    actRefresh = new KAction(i18n("&Refresh"), "reload", 0 /* shortcut */,
-        this, SLOT(refresh()), (KActionCollection*)0, "packet_editor_refresh");
+    connect(actCommit,SIGNAL(triggered()),this,SLOT(commit()));
+    actRefresh = part->actionCollection()->addAction("packet_editor_refresh");
+    actRefresh->setText(i18n("&Refresh"));
+    actRefresh->setIcon(KIcon("view-refresh"));
     actRefresh->setToolTip(i18n("Discard any changes and refresh this "
         "packet viewer"));
     actRefresh->setWhatsThis(i18n("Refresh this viewer to show the most "
         "recent state of the packet.  Any changes you mave made inside this "
         "viewer that have not been committed will be discarded."));
-    actDockUndock = new KAction(i18n("Un&dock"), "attach", 0,
-        this, SLOT(floatPane()), (KActionCollection*)0, "packet_editor_dock");
+    connect(actRefresh,SIGNAL(triggered()), this, SLOT(refresh()));
+    actDockUndock = part->actionCollection()->addAction("packet_editor_dock");
+    actDockUndock->setText(i18n("Un&dock"));
+    actDockUndock->setIcon(KIcon("mail-attachment"));
     actDockUndock->setToolTip(i18n("Dock / undock this packet viewer"));
     actDockUndock->setWhatsThis(i18n("Dock or undock this packet viewer.  "
         "A docked viewer sits within the main window, to the right of "
         "the packet tree.  An undocked viewer floats in its own window."));
-    actClose = new KAction(i18n("&Close"), "fileclose", 0,
-        this, SLOT(close()), (KActionCollection*)0, "packet_editor_close");
+    connect(actDockUndock,SIGNAL(triggered()),this, SLOT(floatPane()));
+    actClose = part->actionCollection()->addAction("packet_editor_close");
+    actClose->setText(i18n("&Close"));
+    actClose->setIcon(KIcon("window-close"));
     actClose->setToolTip(i18n("Close this packet viewer"));
     actClose->setWhatsThis(i18n("Close this packet viewer.  Any changes "
         "that have not been committed will be discarded."));
+    connect(actClose,SIGNAL(triggered()), this, SLOT(close()));
 
     // Set up the header and dock/undock button.
-    QHBox* headerBox = new QHBox(this);
+    QBoxLayout* headerBox = new QHBoxLayout();
+    headerBox->setSpacing(0);
 
-    header = new PacketHeader(newPacket, headerBox);
-    headerBox->setStretchFactor(header, 1);
-    QWhatsThis::add(header, i18n("This shows the label of the packet "
+    header = new PacketHeader(newPacket);
+    header->setWhatsThis(i18n("This shows the label of the packet "
         "being viewed, as well as its packet type."));
+    headerBox->addWidget(header, 1);
 
-    dockUndockBtn = new FlatToolButton(headerBox);
-    dockUndockBtn->setToggleButton(true);
-    dockUndockBtn->setPixmap(BarIcon("attach", ReginaPart::factoryInstance()));
-    dockUndockBtn->setTextLabel(i18n("Dock or undock this packet viewer"));
-    dockUndockBtn->setOn(true);
-    QWhatsThis::add(dockUndockBtn, i18n("Dock or undock this packet viewer.  "
+    dockUndockBtn = new FlatToolButton();
+    dockUndockBtn->setCheckable(true);
+    dockUndockBtn->setIcon(KIcon("mail-attachment"));
+    dockUndockBtn->setText(i18n("Dock or undock this packet viewer"));
+    dockUndockBtn->setChecked(true);
+    dockUndockBtn->setWhatsThis(i18n("Dock or undock this packet viewer.  "
         "A docked viewer sits within the main window, to the right of "
         "the packet tree.  An undocked viewer floats in its own window."));
+    headerBox->addWidget(dockUndockBtn);
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
+
+    layout->addLayout(headerBox);
 
     // Set up the main interface component.
     mainUI = PacketManager::createUI(newPacket, this);
     QWidget* mainUIWidget = mainUI->getInterface();
-    if (mainUIWidget->parent() != this) {
-        mainUIWidget->reparent(this, QPoint(0, 0));
-        mainUIWidget->show();
-    }
-    setStretchFactor(mainUIWidget, 1);
+    layout->addWidget(mainUIWidget, 1);
     setFocusProxy(mainUIWidget);
 
     // Set up the footer buttons and other actions.
-    KToolBar* footer = new KToolBar(this, "packetEditorBar", false, false);
-    footer->setFullSize(true);
-    footer->setIconText(KToolBar::IconTextRight);
-    actCommit->plug(footer);
-    actRefresh->plug(footer);
-    actClose->plug(footer);
-    // footer->insertSeparator(2, RIGHT_ALIGN_SEPARATOR_ID);
-    // footer->alignItemRight(RIGHT_ALIGN_SEPARATOR_ID);
+    KToolBar* footer = new KToolBar(false, true);
+    footer->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    footer->addAction(actCommit);
+    footer->addAction(actRefresh);
+    footer->addSeparator();
+    footer->addAction(actClose);
+    layout->addWidget(footer);
 
     // Set up the packet type menu.
-    actSeparator = new KActionSeparator();
-    packetTypeMenu = new KActionMenu(mainUI->getPacketMenuText());
+    packetTypeMenu = new KActionMenu(mainUI->getPacketMenuText(), this);
 
-    const QPtrList<KAction>& packetTypeActions(mainUI->getPacketTypeActions());
+    const QLinkedList<KAction*>& packetTypeActions(
+        mainUI->getPacketTypeActions());
     if (! packetTypeActions.isEmpty()) {
-        for (QPtrListIterator<KAction> it(packetTypeActions);
-                it.current(); ++it)
-            packetTypeMenu->insert(it.current());
-        packetTypeMenu->insert(actSeparator);
+        for (QLinkedListIterator<KAction*> it(packetTypeActions) ;
+                it.hasNext(); ) {
+            packetTypeMenu->addAction( it.next() );  
+        }
+        packetTypeMenu->addSeparator();
     }
 
-    packetTypeMenu->insert(actCommit);
-    packetTypeMenu->insert(actRefresh);
-    packetTypeMenu->insert(actSeparator);
-    packetTypeMenu->insert(actDockUndock);
-    packetTypeMenu->insert(actClose);
+    packetTypeMenu->addAction(actCommit);
+    packetTypeMenu->addAction(actRefresh);
+    packetTypeMenu->addSeparator();
+    packetTypeMenu->addAction(actDockUndock);
+    packetTypeMenu->addAction(actClose);
 
     // Register ourselves to listen for various events.
     newPacket->listen(this);
-
-    KTextEditor::Document* edit = mainUI->getTextComponent();
-    if (edit) {
-        // Listening on selectionChanged() will tell us when selections are
-        // made and unmade.
-        connect(edit, SIGNAL(selectionChanged()),
-            this, SLOT(updateClipboardActions()));
-        // Also watch when the clipboard becomes available.
-        connect(KApplication::kApplication()->clipboard(),
-            SIGNAL(dataChanged()), this, SLOT(updateClipboardActions()));
-        // Finally we call updateClipboardActions() ourselves when the
-        // part's read-write status changes.
-
-        // Do a similar thing for the undo/redo actions.
-        connect(edit, SIGNAL(undoChanged()),
-            this, SLOT(updateUndoActions()));
-    }
 }
 
 PacketPane::~PacketPane() {
     delete mainUI;
     delete actCommit;
     delete actRefresh;
-    delete actSeparator;
     delete actDockUndock;
     delete actClose;
     delete packetTypeMenu;
@@ -252,7 +241,7 @@ void PacketPane::setDirty(bool newDirty) {
 
     actCommit->setEnabled(dirty);
     actRefresh->setText(dirty ? i18n("&Discard") : i18n("&Refresh"));
-    actRefresh->setIcon(dirty ? "button_cancel" : "reload");
+    actRefresh->setIcon(dirty ? KIcon("dialog-cancel") : KIcon("view-refresh"));
 }
 
 void PacketPane::setDirtinessBroken() {
@@ -261,7 +250,7 @@ void PacketPane::setDirtinessBroken() {
 
     actCommit->setEnabled(dirty);
     actRefresh->setText(dirty ? i18n("&Discard / Refresh") : i18n("&Refresh"));
-    actRefresh->setIcon("reload");
+    actRefresh->setIcon(KIcon("view-refresh"));
 }
 
 bool PacketPane::setReadWrite(bool allowReadWrite) {
@@ -277,7 +266,6 @@ bool PacketPane::setReadWrite(bool allowReadWrite) {
 
     mainUI->setReadWrite(allowReadWrite);
     updateClipboardActions();
-    updateUndoActions();
     if (dirtinessBroken) {
         // Update the UI according to the new value of readWrite.
         setDirtinessBroken();
@@ -299,7 +287,7 @@ bool PacketPane::queryClose() {
                  "now and discard these changes?"));
         if (KMessageBox::warningContinueCancel(this, msg,
                 mainUI->getPacket()->getPacketLabel().c_str(),
-                KStdGuiItem::close()) == KMessageBox::Cancel)
+                KStandardGuiItem::discard()) == KMessageBox::Cancel)
             return false;
     }
 
@@ -308,92 +296,55 @@ bool PacketPane::queryClose() {
     return true;
 }
 
-void PacketPane::registerEditOperation(KAction* act, EditOperation op) {
-    KTextEditor::Document* edit = mainUI->getTextComponent();
-    if (! edit) {
-        if (act)
-            act->setEnabled(false);
-        return;
+void PacketPane::registerEditOperations(KAction* actCut, KAction* actCopy,
+        KAction* actPaste) {
+    deregisterEditOperations();
+
+    editCut = actCut;
+    editCopy = actCopy;
+    editPaste = actPaste;
+
+    PacketEditIface* iface = mainUI->getEditIface();
+    if (iface) {
+        connect(iface, SIGNAL(statesChanged()), this,
+            SLOT(updateClipboardActions()));
+
+        if (editCut)
+            connect(editCut, SIGNAL(triggered()), iface, SLOT(cut()));
+        if (editCopy)
+            connect(editCopy, SIGNAL(triggered()), iface, SLOT(copy()));
+        if (editPaste)
+            connect(editPaste, SIGNAL(triggered()), iface, SLOT(paste()));
     }
 
-    switch (op) {
-        case editCut : extCut = act; break;
-        case editCopy : extCopy = act; break;
-        case editPaste : extPaste = act; break;
-        case editUndo : extUndo = act; break;
-        case editRedo : extRedo = act; break;
-    }
-
-    if (act) {
-        switch (op) {
-            case editCut :
-                act->setEnabled(KTextEditor::selectionInterface(edit)->
-                    hasSelection() && edit->isReadWrite());
-                connect(act, SIGNAL(activated()),
-                    edit->views().first(), SLOT(cut()));
-                break;
-            case editCopy :
-                act->setEnabled(KTextEditor::selectionInterface(edit)->
-                    hasSelection());
-                connect(act, SIGNAL(activated()),
-                    edit->views().first(), SLOT(copy()));
-                break;
-            case editPaste :
-                act->setEnabled(CLIPBOARD_HAS_TEXT && edit->isReadWrite());
-                connect(act, SIGNAL(activated()),
-                    edit->views().first(), SLOT(paste()));
-                break;
-            case editUndo :
-                act->setEnabled(KTextEditor::undoInterface(edit)->undoCount()
-                    && edit->isReadWrite());
-                connect(act, SIGNAL(activated()), edit, SLOT(undo()));
-                break;
-            case editRedo :
-                act->setEnabled(KTextEditor::undoInterface(edit)->redoCount()
-                    && edit->isReadWrite());
-                connect(act, SIGNAL(activated()), edit, SLOT(redo()));
-                break;
-        }
-    }
+    updateClipboardActions();
 }
 
-void PacketPane::deregisterEditOperation(KAction* act, EditOperation op) {
-    if (! act)
-        return;
+void PacketPane::deregisterEditOperations() {
+    PacketEditIface* iface = mainUI->getEditIface();
+    if (iface) {
+        disconnect(iface, SIGNAL(statesChanged()), this,
+            SLOT(updateClipboardActions()));
 
-    act->setEnabled(false);
-
-    KTextEditor::Document* edit = mainUI->getTextComponent();
-    if (! edit)
-        return;
-
-    switch (op) {
-        case editCut : if (extCut == act) extCut = 0; break;
-        case editCopy : if (extCopy == act) extCopy = 0; break;
-        case editPaste : if (extPaste == act) extPaste = 0; break;
-        case editUndo : if (extUndo == act) extUndo = 0; break;
-        case editRedo : if (extRedo == act) extRedo = 0; break;
+        if (editCut)
+            disconnect(editCut, SIGNAL(triggered()), iface, SLOT(cut()));
+        if (editCopy)
+            disconnect(editCopy, SIGNAL(triggered()), iface, SLOT(copy()));
+        if (editPaste)
+            disconnect(editPaste, SIGNAL(triggered()), iface, SLOT(paste()));
     }
 
-    switch (op) {
-        case editCut :
-            disconnect(act, SIGNAL(activated()),
-                edit->views().first(), SLOT(cut()));
-            break;
-        case editCopy :
-            disconnect(act, SIGNAL(activated()),
-                edit->views().first(), SLOT(copy()));
-            break;
-        case editPaste :
-            disconnect(act, SIGNAL(activated()),
-                edit->views().first(), SLOT(paste()));
-            break;
-        case editUndo :
-            disconnect(act, SIGNAL(activated()), edit, SLOT(undo()));
-            break;
-        case editRedo :
-            disconnect(act, SIGNAL(activated()), edit, SLOT(redo()));
-            break;
+    if (editCut) {
+        editCut->setEnabled(false);
+        editCut = 0;
+    }
+    if (editCopy) {
+        editCopy->setEnabled(false);
+        editCopy = 0;
+    }
+    if (editPaste) {
+        editPaste->setEnabled(false);
+        editPaste = 0;
     }
 }
 
@@ -443,9 +394,9 @@ void PacketPane::childWasAdded(regina::NPacket* packet, regina::NPacket*) {
     // Watch out though.  We may not be in the GUI thread.
     // Better do it all through Qt events.
     if (packet->isPacketEditable() != readWrite)
-        QApplication::postEvent(this, new QCustomEvent(
-            readWrite ? EVT_PANE_SET_READONLY : EVT_PANE_SET_READWRITE));
-    QApplication::postEvent(this, new QCustomEvent(EVT_REFRESH_HEADER));
+        QApplication::postEvent(this, new QEvent(
+            readWrite ? (QEvent::Type)EVT_PANE_SET_READONLY : (QEvent::Type)EVT_PANE_SET_READWRITE));
+    QApplication::postEvent(this, new QEvent((QEvent::Type)EVT_REFRESH_HEADER));
 }
 
 void PacketPane::childWasRemoved(regina::NPacket* packet, regina::NPacket*,
@@ -470,7 +421,7 @@ void PacketPane::refresh() {
                  "changes?"));
         if (KMessageBox::warningContinueCancel(this, msg,
                 mainUI->getPacket()->getPacketLabel().c_str(),
-                KStdGuiItem::discard()) != KMessageBox::Continue)
+                KStandardGuiItem::discard()) != KMessageBox::Continue)
             return;
     }
 
@@ -605,16 +556,18 @@ void PacketPane::dockPane() {
         return;
 
     // The packet pane is currently floating.
+    // Be sure to unplug the action list so it doesn't get destroyed.
+    frame->unplugActionList("packet_type_menu");
     part->dock(this);
     delete frame;
     frame = 0;
 
-    dockUndockBtn->setOn(true);
+    dockUndockBtn->setChecked(true);
     actDockUndock->setText(i18n("Un&dock"));
     disconnect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
-    disconnect(actDockUndock, SIGNAL(activated()), this, SLOT(dockPane()));
-    connect(actDockUndock, SIGNAL(activated()), this, SLOT(floatPane()));
+    disconnect(actDockUndock, SIGNAL(triggered()), this, SLOT(dockPane()));
+    connect(actDockUndock, SIGNAL(triggered()), this, SLOT(floatPane()));
 }
 
 void PacketPane::floatPane() {
@@ -622,46 +575,31 @@ void PacketPane::floatPane() {
         return;
 
     // The packet pane is currently docked.
+    part->aboutToUndock(this);
     frame = new PacketWindow(this);
-    part->hasUndocked(this);
 
-    dockUndockBtn->setOn(false);
+    dockUndockBtn->setChecked(false);
     actDockUndock->setText(i18n("&Dock"));
     disconnect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
-    disconnect(actDockUndock, SIGNAL(activated()), this, SLOT(floatPane()));
-    connect(actDockUndock, SIGNAL(activated()), this, SLOT(dockPane()));
+    disconnect(actDockUndock, SIGNAL(triggered()), this, SLOT(floatPane()));
+    connect(actDockUndock, SIGNAL(triggered()), this, SLOT(dockPane()));
 
     frame->show();
 }
 
 void PacketPane::updateClipboardActions() {
-    KTextEditor::Document* edit = mainUI->getTextComponent();
-    if (edit) {
-        if (extCut)
-            extCut->setEnabled(KTextEditor::selectionInterface(edit)->
-                hasSelection() && edit->isReadWrite());
-        if (extCopy)
-            extCopy->setEnabled(KTextEditor::selectionInterface(edit)->
-                hasSelection());
-        if (extPaste)
-            extPaste->setEnabled(CLIPBOARD_HAS_TEXT && edit->isReadWrite());
-    }
+    PacketEditIface* iface = mainUI->getEditIface();
+
+    if (editCut)
+        editCut->setEnabled(iface ? iface->cutEnabled() : false);
+    if (editCopy)
+        editCopy->setEnabled(iface ? iface->copyEnabled() : false);
+    if (editPaste)
+        editPaste->setEnabled(iface ? iface->pasteEnabled() : false);
 }
 
-void PacketPane::updateUndoActions() {
-    KTextEditor::Document* edit = mainUI->getTextComponent();
-    if (edit) {
-        if (extUndo)
-            extUndo->setEnabled(KTextEditor::undoInterface(edit)->undoCount()
-                && edit->isReadWrite());
-        if (extRedo)
-            extRedo->setEnabled(KTextEditor::undoInterface(edit)->redoCount()
-                && edit->isReadWrite());
-    }
-}
-
-void PacketPane::customEvent(QCustomEvent* evt) {
+void PacketPane::customEvent(QEvent* evt) {
     switch (evt->type()) {
         case EVT_PANE_SET_READONLY:
             setReadWrite(false); break;
@@ -674,4 +612,3 @@ void PacketPane::customEvent(QCustomEvent* evt) {
     }
 }
 
-#include "packetui.moc"

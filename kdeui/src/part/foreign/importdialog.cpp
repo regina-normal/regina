@@ -35,45 +35,53 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qframe.h>
-#include <qhbox.h>
+#include <QHBoxLayout>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlineedit.h>
 #include <qwhatsthis.h>
 
-#define HORIZONTAL_SPACING 10
-
 ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
         regina::NPacket* packetTree, regina::NPacket* defaultParent,
         PacketFilter* useFilter, const QString& dialogTitle) :
-        KDialogBase(Plain, dialogTitle, Ok|Cancel, Ok, parent),
+        KDialog(parent), // dialogTitle, Ok|Cancel, Ok, parent),
         tree(packetTree), newTree(importedData) {
-    QFrame* page = plainPage();
-    QVBoxLayout* layout = new QVBoxLayout(page, 0, spacingHint());
+    setCaption(dialogTitle);
+    setButtons(KDialog::Ok | KDialog::Cancel);
 
-    QHBox* parentStrip = new QHBox(page);
-    parentStrip->setSpacing(HORIZONTAL_SPACING);
-    layout->addWidget(parentStrip);
-    new QLabel(i18n("Import beneath:"), parentStrip);
-    chooser = new PacketChooser(tree, useFilter, false, defaultParent,
-        parentStrip);
-    parentStrip->setStretchFactor(chooser, 1);
-    QWhatsThis::add(parentStrip, i18n("Select where in the packet tree "
+    QWidget* page = new QWidget(this);
+    setMainWidget(page);
+    QVBoxLayout* layout = new QVBoxLayout(page);
+    layout->setContentsMargins(0, 0, 0, 0); // Margins come from the dialog.
+
+    QHBoxLayout* parentStrip = new QHBoxLayout();
+    layout->addLayout(parentStrip);
+    QString expln = i18n("Select where in the packet tree "
         "the new data should be imported.  The imported data will be "
-        "made a new child of the selected packet."));
+        "made a new child of the selected packet.");
+    QLabel* l = new QLabel(i18n("Import beneath:"));
+    l->setWhatsThis(expln);
+    parentStrip->addWidget(l);
+    chooser = new PacketChooser(tree, useFilter, false, defaultParent);
+    chooser->setWhatsThis(expln);
+    parentStrip->addWidget(chooser, 1);
 
-    QHBox* labelStrip = new QHBox(page);
-    labelStrip->setSpacing(HORIZONTAL_SPACING);
-    layout->addWidget(labelStrip);
-    new QLabel(i18n("Label:"), labelStrip);
-    label = new QLineEdit(
-        tree->makeUniqueLabel(newTree->getPacketLabel()).c_str(), labelStrip);
-    labelStrip->setStretchFactor(label, 1);
-    QWhatsThis::add(labelStrip, i18n("Select a packet label for the new "
+    QHBoxLayout* labelStrip = new QHBoxLayout();
+    layout->addLayout(labelStrip);
+    expln = i18n("Select a packet label for the new "
         "imported data.  This will become the label of the first packet that "
-        "is imported."));
+        "is imported.");
+    l = new QLabel(i18n("Label:"));
+    l->setWhatsThis(expln);
+    labelStrip->addWidget(l);
+    label = new QLineEdit(
+        tree->makeUniqueLabel(newTree->getPacketLabel()).c_str());
+    label->setWhatsThis(expln);
+    labelStrip->addWidget(label, 1);
 
     layout->addStretch(1);
+
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOk()));
 }
 
 bool ImportDialog::validate() {
@@ -105,25 +113,22 @@ void ImportDialog::slotOk() {
     }
 
     // Check the label.
-    QString useLabel = label->text().stripWhiteSpace();
+    QString useLabel = label->text().trimmed();
+    const char* useLabelStr = useLabel.toAscii().constData();
     if (useLabel.isEmpty()) {
         KMessageBox::error(this, i18n("The packet label cannot be empty."));
         return;
     }
-    if (tree->findPacketLabel(useLabel)) {
+    if (tree->findPacketLabel(useLabelStr)) {
         KMessageBox::error(this, i18n(
             "There is already a packet labelled %1.").arg(useLabel));
-        label->setText(tree->makeUniqueLabel(useLabel));
+        label->setText(tree->makeUniqueLabel(useLabelStr).c_str());
         return;
     }
 
     // Insert the imported data into the packet tree.
-    newTree->setPacketLabel(useLabel);
+    newTree->setPacketLabel(useLabelStr);
     newTree->makeUniqueLabels(tree);
     parentPacket->insertChildLast(newTree);
-
-    // And we're done!
-    KDialogBase::slotOk();
 }
 
-#include "importdialog.moc"

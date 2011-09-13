@@ -33,21 +33,21 @@
 #ifndef __REGINAIFACE_H
 #define __REGINAIFACE_H
 
-#include <dcopobject.h>
+#include <QObject>
 
 /**
- * A DCOP interface for a top-level Regina window.
+ * A D-Bus interface for a top-level Regina window.
  */
-class ReginaMainInterface : virtual public DCOPObject {
-    K_DCOP
+class ReginaMainInterface {
+    Q_CLASSINFO("D-Bus Interface","org.kde.regina") 
 
-    k_dcop:
-        virtual void newTopology() = 0;
-        virtual void newPython() = 0;
-        virtual bool openURL(const QString& url) = 0;
-        virtual void pythonConsole() = 0;
-        virtual void close() = 0;
-        virtual void quit() = 0;
+    public Q_SLOTS:
+        Q_SCRIPTABLE void newTopology();
+        Q_SCRIPTABLE void newPython();
+        Q_SCRIPTABLE bool openUrl(const QString& url);
+        Q_SCRIPTABLE void pythonConsole();
+        Q_SCRIPTABLE void close();
+        Q_SCRIPTABLE void quit();
 };
 
 #endif

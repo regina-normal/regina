@@ -34,26 +34,101 @@
 #define __NSURFACECOODINATEUI_H
 
 #include "packet/npacketlistener.h"
+#include "surfaces/nnormalsurfacelist.h"
 
 #include "../packettabui.h"
+#include "coordinates.h"
 
-#include <memory>
-#include <qtooltip.h>
+#include <QAbstractItemModel>
 
 class CoordinateChooser;
 class KAction;
 class KActionCollection;
 class PacketChooser;
-class QBoxLayout;
-class QHeader;
-class QListView;
-class QListViewItem;
-class SurfaceHeaderToolTip;
+class QTreeView;
 
 namespace regina {
     class NPacket;
     class NNormalSurfaceList;
     class NSurfaceFilter;
+};
+
+class SurfaceModel : public QAbstractItemModel {
+    protected:
+        /**
+         * Details of the normal surfaces being displayed
+         */
+        regina::NNormalSurfaceList* surfaces_;
+        int coordSystem_;
+
+        /**
+         * A mapping from table indices to surface indices, for use with
+         * filtered lists.
+         */
+        unsigned* realIndex;
+        unsigned nFiltered;
+
+        /**
+         * Local modifications
+         */
+        QString* localName;
+
+        /**
+         * Internal status
+         */
+        bool isReadWrite;
+
+    public:
+        /**
+         * Constructor and destructor.
+         */
+        SurfaceModel(regina::NNormalSurfaceList* surfaces, bool readWrite);
+        ~SurfaceModel();
+
+        /**
+         * Data retrieval.
+         */
+        regina::NNormalSurfaceList* surfaces() const;
+        const regina::NNormalSurface* surface(const QModelIndex& index) const;
+        int coordSystem() const;
+
+        /**
+         * Rebuild the model from scratch.
+         */
+        void rebuild(int coordSystem_);
+        void rebuild(int coordSystem_, regina::NSurfaceFilter* filter);
+
+        /**
+         * Loading and saving local data from/to the packet.
+         */
+        void refreshNames();
+        void commitNames();
+
+        /**
+         * Updating read/write status.
+         */
+        void setReadWrite(bool readWrite);
+
+        /**
+         * Overrides for describing and editing data in the model.
+         */
+        QModelIndex index(int row, int column,
+                const QModelIndex& parent) const;
+        QModelIndex parent(const QModelIndex& index) const;
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+        Qt::ItemFlags flags(const QModelIndex& index) const;
+        bool setData(const QModelIndex& index, const QVariant& value, int role);
+
+        /**
+         * Information on the property (non-coordinate) columns.
+         */
+        unsigned propertyColCount() const;
+        QString propertyColName(int whichCol) const;
+        QString propertyColDesc(int whichCol) const;
 };
 
 /**
@@ -67,24 +142,17 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         /**
          * Packet details
          */
+        SurfaceModel* model;
         regina::NNormalSurfaceList* surfaces;
         regina::NSurfaceFilter* appliedFilter;
-
-        /**
-         * Local modifications
-         */
-        QString* newName;
 
         /**
          * Internal components
          */
         QWidget* ui;
-        QBoxLayout* uiLayout;
         CoordinateChooser* coords;
         PacketChooser* filter;
-        std::auto_ptr<QListView> table;
-        std::auto_ptr<SurfaceHeaderToolTip> headerTips;
-        QString tableWhatsThis;
+        QTreeView* table;
 
         /**
          * Surface list actions
@@ -92,7 +160,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         KAction* actCutAlong;
         KAction* actCrush;
         KActionCollection* surfaceActions;
-        QPtrList<KAction> surfaceActionList;
+        QLinkedList<KAction*> surfaceActionList;
 
         /**
          * Internal status
@@ -113,7 +181,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
-        const QPtrList<KAction>& getPacketTypeActions();
+        const QLinkedList<KAction*>& getPacketTypeActions();
         void commit();
         void refresh();
         void setReadWrite(bool readWrite);
@@ -152,29 +220,27 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         void notifySurfaceRenamed();
 };
 
-/**
- * A utility class for displaying tooltips for table headers.
- */
-class SurfaceHeaderToolTip : public QToolTip {
-    private:
-        /**
-         * Surface information
-         */
-        regina::NNormalSurfaceList* surfaces;
-        int coordSystem;
+inline SurfaceModel::~SurfaceModel() {
+    delete[] realIndex;
+    delete[] localName;
+}
 
-    public:
-        /**
-         * Constructor.
-         */
-        SurfaceHeaderToolTip(regina::NNormalSurfaceList* useSurfaces,
-            int useCoordSystem, QHeader* header, QToolTipGroup* group = 0);
+inline regina::NNormalSurfaceList* SurfaceModel::surfaces() const {
+    return surfaces_;
+}
 
-    protected:
-        /**
-         * QToolTip overrides.
-         */
-        void maybeTip(const QPoint& p);
-};
+inline const regina::NNormalSurface* SurfaceModel::surface(
+        const QModelIndex& index) const {
+    return surfaces_->getSurface(realIndex[index.row()]);
+}
+
+inline int SurfaceModel::coordSystem() const {
+    return coordSystem_;
+}
+
+inline QModelIndex SurfaceModel::parent(const QModelIndex& index) const {
+    // All items are top-level.
+    return QModelIndex();
+}
 
 #endif

@@ -33,44 +33,42 @@
 #include "eventids.h"
 #include "packetmanager.h"
 #include "packettreeview.h"
+#include "regevents.h"
 #include "reginapart.h"
 
 #include <qapplication.h>
 #include <qevent.h>
-#include <qheader.h>
+#include <QHeaderView>
+#include <QTreeWidget>
 #include <kdebug.h>
 #include <klocale.h>
 
 using regina::NPacket;
 
 PacketTreeItem::PacketTreeItem(PacketTreeView* parent, NPacket* realPacket) :
-        KListViewItem(parent), packet(realPacket), tree(parent) {
+        QTreeWidgetItem(parent), packet(realPacket), tree(parent),
+        shouldBeExpanded_(false) {
     init();
 }
 
 PacketTreeItem::PacketTreeItem(PacketTreeItem* parent,
         NPacket* realPacket) :
-        KListViewItem(parent), packet(realPacket), tree(parent->tree) {
-    init();
-}
-
-PacketTreeItem::PacketTreeItem(PacketTreeView* parent,
-        QListViewItem* after, NPacket* realPacket) :
-        KListViewItem(parent, after), packet(realPacket),
-        tree(parent) {
+        QTreeWidgetItem(parent), packet(realPacket), tree(parent->tree),
+        shouldBeExpanded_(false) {
     init();
 }
 
 PacketTreeItem::PacketTreeItem(PacketTreeItem* parent,
-        QListViewItem* after, NPacket* realPacket) :
-        KListViewItem(parent, after), packet(realPacket), tree(parent->tree) {
+        QTreeWidgetItem* after, NPacket* realPacket) :
+        QTreeWidgetItem(parent, after), packet(realPacket), tree(parent->tree),
+        shouldBeExpanded_(false) {
     init();
 }
 
 void PacketTreeItem::init() {
     packet->listen(this);
     refreshLabel();
-    setPixmap(0, PacketManager::iconSmall(packet, true));
+    setIcon(0, PacketManager::iconSmall(packet, true));
     isEditable = packet->isPacketEditable();
 }
 
@@ -79,9 +77,11 @@ void PacketTreeItem::fill() {
     for (NPacket* p = packet->getFirstTreeChild(); p;
             p = p->getNextTreeSibling()) {
         if (childTree)
-            childTree = new PacketTreeItem(this, childTree, p);
+            childTree = static_cast<PacketTreeView*>(treeWidget())->
+                createAndSelect(this, childTree, p);
         else
-            childTree = new PacketTreeItem(this, p);
+            childTree = static_cast<PacketTreeView*>(treeWidget())->
+                createAndSelect(this, p);
         childTree->fill();
     }
 }
@@ -90,95 +90,105 @@ void PacketTreeItem::refreshSubtree() {
     // Is this a stale node in the tree?
     if (! packet) {
         // Yes, it's a stale node.  Delete all of its children.
-        QListViewItem* item = firstChild();
-        QListViewItem* old;
-        while (item) {
-            old = item;
-            item = item->nextSibling();
-            delete old;
-        }
+        while (childCount())
+            delete child(0);
         return;
     }
 
     // No, we're looking at a real packet.
+
+    // Before we do anything else: this routine can mess up the current
+    // selection.  Remember it so we can restore it later.
+    regina::NPacket* selected = static_cast<PacketTreeView*>(treeWidget())
+        ->selectedPacket();
+
     // Run through the child packets and child nodes and ensure they
     // match up.
     NPacket* p = packet->getFirstTreeChild();
-    PacketTreeItem* item = (PacketTreeItem*)firstChild();
-    QListViewItem* prev = 0;
-    QListViewItem* other;
-    while (p) {
+    int itemCounter = 0;
+    PacketTreeItem* item = static_cast<PacketTreeItem*>(child(itemCounter));
+    PacketTreeItem* prev = 0;
+    PacketTreeItem* other;
+    for ( ; p; ++itemCounter, p = p->getNextTreeSibling()) {
+        // INV: itemCounter is the current index of p and item.
         if (! item) {
             // We've already run out of child nodes.  Add a new one.
             if (prev)
-                prev = new PacketTreeItem(this, prev, p);
+                prev = static_cast<PacketTreeView*>(treeWidget())->
+                    createAndSelect(this, prev, p);
             else
-                prev = new PacketTreeItem(this, p);
-            ((PacketTreeItem*)prev)->fill();
+                prev = static_cast<PacketTreeView*>(treeWidget())->
+                    createAndSelect(this, 0, p);
+            prev->fill();
 
-            // Increment our variables.
+            // Assume this has come from moving prev to a different
+            // place in the packet tree: always expand.
+            treeWidget()->expandItem(this); // make prev visible;
+            treeWidget()->expandItem(prev); // show prev's children.
+
             // Variables prev and item are already correct.
-            p = p->getNextTreeSibling();
         } else if (item->getPacket() == p) {
             // They match up.
             item->refreshSubtree();
 
-            // Increment our variables.
+            // Update our variables.
             prev = item;
-            item = (PacketTreeItem*)(item->nextSibling());
-            p = p->getNextTreeSibling();
+            item = static_cast<PacketTreeItem*>(child(itemCounter + 1));
         } else {
+            int otherCounter;
             // They both exist but they don't match up.  Hmmm.
             // Do we have a node for this packet later in the tree?
-            for (other = item->nextSibling(); other;
-                    other = other->nextSibling())
-                if (((PacketTreeItem*)other)->getPacket() == p) {
+            for (otherCounter = itemCounter + 1; otherCounter < childCount();
+                    ++otherCounter) {
+                other = static_cast<PacketTreeItem*>(child(otherCounter));
+                if (other->getPacket() == p) {
                     // We've found a node for this packet.
                     // Move it to the correct place.
-                    if (prev)
-                        other->moveItem(prev);
-                    else {
-                        // Hmm, it doesn't seem easy to move a list item
-                        // to the beginning of its parent's child list.
-                        other->moveItem(firstChild());
-                        firstChild()->moveItem(other);
-                    }
-                    ((PacketTreeItem*)other)->refreshSubtree();
+                    insertChild(itemCounter, takeChild(otherCounter));
+                    other->refreshSubtree();
+                    other->ensureExpanded();
 
-                    // Increment our variables.
+                    // Update our variables.
                     // Note that item is already correct.
                     prev = other;
-                    p = p->getNextTreeSibling();
                     break;
                 }
+            }
 
-            if (! other) {
+            if (otherCounter == childCount() ) {
                 // We couldn't find a node for this packet anywhere.
                 // Insert a new one.
                 if (prev)
-                    prev = new PacketTreeItem(this, prev, p);
+                    prev = static_cast<PacketTreeView*>(treeWidget())->
+                        createAndSelect(this, prev, p);
                 else
-                    prev = new PacketTreeItem(this, p);
-                ((PacketTreeItem*)prev)->fill();
+                    prev = static_cast<PacketTreeView*>(treeWidget())->
+                        createAndSelect(this, 0, p);
+                prev->fill();
 
-                // Increment our variables.
-                // Note that prev and item are already correct.
-                p = p->getNextTreeSibling();
+                // Assume this has come from moving prev to a different
+                // place in the packet tree: always expand.
+                treeWidget()->expandItem(this); // make prev visible;
+                treeWidget()->expandItem(prev); // show prev's children.
+
+                // Variables prev and item are already correct.
             }
         }
     }
 
     // Were there any child nodes left over?
-    while (item) {
-        other = item;
-        item = (PacketTreeItem*)(item->nextSibling());
-        delete other;
-    }
+    // Note that childCount() will decrease as we delete children here.
+    while (itemCounter < childCount())
+        delete child(itemCounter);
+
+    // Restore any selection we might have had before.
+    if (selected)
+        static_cast<PacketTreeView*>(treeWidget())->selectPacket(selected);
 }
 
 void PacketTreeItem::refreshLabel() {
     if (packet) {
-        QString newLabel = packet->getPacketLabel();
+        QString newLabel = packet->getPacketLabel().c_str();
         if (packet->hasTags())
             newLabel += " (+)";
         if (text(0) != newLabel)
@@ -191,8 +201,17 @@ void PacketTreeItem::updateEditable() {
     if (packet && packet->isPacketEditable() != isEditable) {
         // We need updating.
         isEditable = ! isEditable;
-        setPixmap(0, PacketManager::iconSmall(packet, true));
+        setIcon(0, PacketManager::iconSmall(packet, true));
     }
+}
+
+void PacketTreeItem::ensureExpanded() {
+    if (shouldBeExpanded_) {
+        treeWidget()->expandItem(this);
+        for (int i = 0; i < childCount(); ++i)
+            static_cast<PacketTreeItem*>(child(i))->ensureExpanded();
+    } else
+        treeWidget()->collapseItem(this);
 }
 
 void PacketTreeItem::packetWasChanged(regina::NPacket*) {
@@ -216,7 +235,7 @@ void PacketTreeItem::packetToBeDestroyed(regina::NPacket*) {
 
 void PacketTreeItem::childWasAdded(regina::NPacket*, regina::NPacket*) {
     // Be careful.  We might not be in the GUI thread.
-    QApplication::postEvent(tree, new QCustomEvent(
+    QApplication::postEvent(tree, new PacketTreeItemEvent(
         static_cast<QEvent::Type>(EVT_TREE_CHILD_ADDED), this));
 }
 
@@ -236,20 +255,28 @@ void PacketTreeItem::childrenWereReordered(regina::NPacket*) {
     getPart()->setModified(true);
 }
 
-PacketTreeView::PacketTreeView(ReginaPart* newPart, QWidget* parent,
-        const char* name) : KListView(parent, name), part(newPart) {
-    addColumn(QString::null);
+PacketTreeView::PacketTreeView(ReginaPart* newPart, QWidget* parent) 
+          : QTreeWidget(parent), part(newPart), toSelect(0) {
     setRootIsDecorated(true);
-    setSorting(-1);
     header()->hide();
+    setAlternatingRowColors(false);
+    setSelectionMode(QAbstractItemView::SingleSelection);
 
-    connect(this, SIGNAL(executed(QListViewItem*)), this,
-        SLOT(packetView(QListViewItem*)));
+    connect(this, SIGNAL(itemExpanded(QTreeWidgetItem*)),
+        this, SLOT(handleItemExpanded(QTreeWidgetItem*)));
+    connect(this, SIGNAL(itemCollapsed(QTreeWidgetItem*)),
+        this, SLOT(handleItemCollapsed(QTreeWidgetItem*)));
+
+    // Currently we use the platform default activation method (which is
+    // often double-click).  To make this single-click always, change
+    // itemActivated() to itemClicked().
+    connect(this, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this,
+        SLOT(packetView(QTreeWidgetItem*)));
 }
 
 void PacketTreeView::fill(NPacket* topPacket) {
     clear();
-    (new PacketTreeItem(this, topPacket))->fill();
+    createAndSelect(topPacket)->fill();
 }
 
 PacketTreeItem* PacketTreeView::find(regina::NPacket* packet) {
@@ -257,42 +284,95 @@ PacketTreeItem* PacketTreeView::find(regina::NPacket* packet) {
         return 0;
 
     // Start at the root of the tree and work down.
+    // Note that the invisible root item might not be a PacketTreeItem,
+    // and we should not try to cast it as such.
+    QTreeWidgetItem* root = invisibleRootItem();
+
+    int itemCount = 0;
+    PacketTreeItem* item;
     regina::NPacket* current;
-    PacketTreeItem* item = dynamic_cast<PacketTreeItem*>(firstChild());
-    while (item) {
+    while (itemCount < root->childCount()) {
+        item = dynamic_cast<PacketTreeItem*>(root->child(itemCount++));
         current = item->getPacket();
 
         if (current == packet)
             return item;
-        else if (current && current->isGrandparentOf(packet))
-            item = dynamic_cast<PacketTreeItem*>(item->firstChild());
-        else
-            item = dynamic_cast<PacketTreeItem*>(item->nextSibling());
+        if (current && current->isGrandparentOf(packet)) {
+            root = item;
+            itemCount = 0;
+        }
     }
 
     return 0;
 }
 
-void PacketTreeView::packetView(QListViewItem* packet) {
+void PacketTreeView::selectPacket(regina::NPacket* p, bool allowDefer) {
+    if (p == 0) {
+        if (! selectedItems().isEmpty())
+            clearSelection();
+        return;
+    }
+
+    PacketTreeItem* item = find(p);
+    if (item) {
+        setCurrentItem(item);
+    } else {
+        clearSelection();
+        if (allowDefer)
+            toSelect = p;
+    }
+}
+
+void PacketTreeView::packetView(QTreeWidgetItem* packet) {
     if (packet)
         part->packetView(dynamic_cast<PacketTreeItem*>(packet)->getPacket());
 }
 
 void PacketTreeView::refresh(NPacket* topPacket) {
-    if (childCount() != 1)
+    if (invisibleRootItem()->childCount() != 1)
         fill(topPacket);
-    else if (((PacketTreeItem*)firstChild())->getPacket() != topPacket)
+    else if (((PacketTreeItem*)invisibleRootItem()->child(0))->
+            getPacket() != topPacket)
         fill(topPacket);
     else
-        ((PacketTreeItem*)firstChild())->refreshSubtree();
+        ((PacketTreeItem*)invisibleRootItem()->child(0))->refreshSubtree();
 }
 
-void PacketTreeView::customEvent(QCustomEvent* evt) {
+PacketTreeItem* PacketTreeView::createAndSelect(regina::NPacket* packet) {
+    PacketTreeItem* item = new PacketTreeItem(this, packet);
+    if (packet == toSelect) {
+        setCurrentItem(item);
+        toSelect = 0;
+    }
+    return item;
+}
+
+PacketTreeItem* PacketTreeView::createAndSelect(PacketTreeItem* parent,
+        regina::NPacket* packet) {
+    PacketTreeItem* item = new PacketTreeItem(parent, packet);
+    if (packet == toSelect) {
+        setCurrentItem(item);
+        toSelect = 0;
+    }
+    return item;
+}
+
+PacketTreeItem* PacketTreeView::createAndSelect(PacketTreeItem* parent,
+        QTreeWidgetItem* after, regina::NPacket* packet) {
+    PacketTreeItem* item = new PacketTreeItem(parent, after, packet);
+    if (packet == toSelect) {
+        setCurrentItem(item);
+        toSelect = 0;
+    }
+    return item;
+}
+
+void PacketTreeView::customEvent(QEvent* evt) {
     switch (evt->type()) {
         case EVT_TREE_CHILD_ADDED:
             {
-                PacketTreeItem* item =
-                    static_cast<PacketTreeItem*>(evt->data());
+                PacketTreeItem* item = static_cast<PacketTreeItemEvent*>(evt)->
+                    getItem();
 
                 item->refreshSubtree();
                 item->updateEditable();
@@ -304,4 +384,17 @@ void PacketTreeView::customEvent(QCustomEvent* evt) {
     }
 }
 
-#include "packettreeview.moc"
+void PacketTreeView::handleItemExpanded(QTreeWidgetItem* item) {
+    PacketTreeItem* p = dynamic_cast<PacketTreeItem*>(item);
+    if (! p)
+        return;
+    p->markShouldBeExpanded(true);
+}
+
+void PacketTreeView::handleItemCollapsed(QTreeWidgetItem* item) {
+    PacketTreeItem* p = dynamic_cast<PacketTreeItem*>(item);
+    if (! p)
+        return;
+    p->markShouldBeExpanded(false);
+}
+

@@ -36,14 +36,14 @@
 #include "nsurfacecompatui.h"
 #include "../reginapart.h"
 
-#include <qcanvas.h>
+#include <QGraphicsView>
+#include <QHBoxLayout>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qmessagebox.h>
 #include <qpushbutton.h>
-#include <qtooltip.h>
-#include <qwhatsthis.h>
-#include <qwidgetstack.h>
+#include <QVBoxLayout>
+#include <QStackedWidget>
 #include <kcombobox.h>
 #include <kiconloader.h>
 #include <klocale.h>
@@ -60,17 +60,17 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
         requestedCalculation(false) {
     ui = new QWidget();
     QBoxLayout* uiLayout = new QVBoxLayout(ui);
-    uiLayout->addSpacing(5);
 
-    QBoxLayout* hdrLayout = new QHBoxLayout(uiLayout);
-    hdrLayout->setSpacing(5);
-    hdrLayout->addSpacing(5);
+    QBoxLayout* hdrLayout = new QHBoxLayout();
+    uiLayout->addLayout(hdrLayout);
 
     QLabel* label = new QLabel(i18n("Display matrix:"), ui);
     hdrLayout->addWidget(label);
     chooseMatrix = new KComboBox(ui);
-    chooseMatrix->insertItem(i18n("Local compatibility (quads and octagons)"));
-    chooseMatrix->insertItem(i18n("Global compatibility (disjoint surfaces)"));
+    chooseMatrix->insertItem(chooseMatrix->count(),
+        i18n("Local compatibility (quads and octagons)"));
+    chooseMatrix->insertItem(chooseMatrix->count(),
+        i18n("Global compatibility (disjoint surfaces)"));
     connect(chooseMatrix, SIGNAL(activated(int)), this, SLOT(changeLayer(int)));
     hdrLayout->addWidget(chooseMatrix);
     QString msg = i18n("<qt>Allows you to switch between local and "
@@ -81,18 +81,17 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
         "The <i>global</i> matrix tests whether two surfaces can "
         "simultaneously avoid intersections in <i>all</i> tetrahedra, "
         "i.e., whether the two surfaces can be made disjoint.</qt>");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(chooseMatrix, msg);
-    chooseMatrix->setCurrentItem(
+    label->setWhatsThis(msg);
+    chooseMatrix->setWhatsThis(msg);
+    chooseMatrix->setCurrentIndex(
         prefs.surfacesInitialCompat == ReginaPrefSet::GlobalCompat ? 1 : 0);
     chooseMatrix->setEnabled(false);
 
     hdrLayout->addStretch(1);
 
-    btnCalculate = new QPushButton(SmallIconSet("run", 0,
-        ReginaPart::factoryInstance()), i18n("Calculate"), ui);
-    QToolTip::add(btnCalculate, i18n("Calculate compatibility matrices"));
-    QWhatsThis::add(btnCalculate, i18n("<qt>Calculate and display the "
+    btnCalculate = new QPushButton(KIcon("system-run"), i18n("Calculate"), ui);
+    btnCalculate->setToolTip(i18n("Calculate compatibility matrices"));
+    btnCalculate->setWhatsThis(i18n("<qt>Calculate and display the "
         "full compatibility matrices.<p>"
         "<b>Warning:</b> This calculation can be both slow and "
         "memory-hungry for lists containing large numbers of normal "
@@ -101,32 +100,29 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
     hdrLayout->addWidget(btnCalculate);
     connect(btnCalculate, SIGNAL(clicked()), this, SLOT(calculate()));
 
-    hdrLayout->addSpacing(5);
-    uiLayout->addSpacing(5);
-
-    stack = new QWidgetStack(ui);
+    stack = new QStackedWidget(ui);
     {
-        layerNone = new QWidget(stack);
-        QBoxLayout* noneLayout = new QHBoxLayout(layerNone, 5 /* margin */,
-            5 /* spacing */);
+        layerNone = new QWidget();
+        QBoxLayout* noneLayout = new QHBoxLayout();;
         noneLayout->addStretch(1);
+        layerNone->setLayout(noneLayout);
 
-        QPixmap iconPic = enclosingPane->getPart()->instance()->iconLoader()->
-            loadIcon("messagebox_info", KIcon::NoGroup, KIcon::SizeMedium,
-            KIcon::DefaultState, 0, true /* may be null */);
+        QPixmap iconPic = KIconLoader::global()->
+            loadIcon("dialog-information", KIconLoader::NoGroup, 
+            KIconLoader::SizeMedium, KIconLoader::DefaultState, 
+            QStringList(), 0L, true /* may be null */);
         if (iconPic.isNull())
             iconPic = QMessageBox::standardIcon(QMessageBox::Information);
 
         QLabel* icon = new QLabel(layerNone);
         icon->setPixmap(iconPic);
-        noneLayout->addWidget(icon);
-        noneLayout->setStretchFactor(icon, 0);
+        noneLayout->addWidget(icon, 0);
 
         noneLayout->addSpacing(10);
 
         msgNone = new QLabel(layerNone);
-        noneLayout->addWidget(msgNone);
-        noneLayout->setStretchFactor(msgNone, 4);
+        msgNone->setWordWrap(true);
+        noneLayout->addWidget(msgNone, 4);
 
         noneLayout->addStretch(1);
         stack->addWidget(layerNone);
@@ -200,9 +196,9 @@ void NSurfaceCompatibilityUI::refresh() {
     matrixLocal = new NCompatCanvas(surfaces->getNumberOfSurfaces());
     matrixGlobal = new NCompatCanvas(surfaces->getNumberOfSurfaces());
 
-    layerLocal = new QCanvasView(matrixLocal, stack);
+    layerLocal = new QGraphicsView(matrixLocal);
     stack->addWidget(layerLocal);
-    QWhatsThis::add(layerLocal, i18n("<qt>This is the local "
+    layerLocal->setWhatsThis(i18n("<qt>This is the local "
         "compatibility matrix.  Surfaces are numbered from 0 to <i>N</i>-1, "
         "where <i>N</i> is the total number of surfaces in this list.<p>"
         "The (<i>i</i>,<i>j</i>) cell in this matrix is filled if and "
@@ -213,10 +209,11 @@ void NSurfaceCompatibilityUI::refresh() {
         "intersections in <i>all</i> tetrahedra simultaneously (i.e., "
         "whether two surfaces can be made disjoint).  For this, see "
         "the global compatibility matrix instead.</qt>"));
+    stack->addWidget(layerLocal);
 
-    layerGlobal = new QCanvasView(matrixGlobal, stack);
+    layerGlobal = new QGraphicsView(matrixGlobal);
     stack->addWidget(layerGlobal);
-    QWhatsThis::add(layerGlobal, i18n("<qt>This is the global "
+    layerGlobal->setWhatsThis(i18n("<qt>This is the global "
         "compatibility matrix.  Surfaces are numbered from 0 to <i>N</i>-1, "
         "where <i>N</i> is the total number of surfaces in this list.<p>"
         "The (<i>i</i>,<i>j</i>) cell in this matrix is filled if and "
@@ -227,12 +224,13 @@ void NSurfaceCompatibilityUI::refresh() {
         "are non-compact (e.g., spun normal surfaces), empty, or "
         "disconnected.  The rows and columns corresponding to any such "
         "surfaces will be hashed out.</qt>"));
+    stack->addWidget(layerGlobal);
 
-    if (chooseMatrix->currentItem() == 0) {
-        stack->raiseWidget(layerLocal);
+    if (chooseMatrix->currentIndex() == 0) {
+        stack->setCurrentWidget(layerLocal);
         matrixLocal->fillLocal(*surfaces);
     } else {
-        stack->raiseWidget(layerGlobal);
+        stack->setCurrentWidget(layerGlobal);
         matrixGlobal->fillGlobal(*surfaces);
     }
 
@@ -247,7 +245,7 @@ void NSurfaceCompatibilityUI::setMessage(MessageIndex msg) {
                 "list contains a large number of surfaces.<p>"
                 "If you wish to compute these matrices (and if you have "
                 "enough time and memory), then please press the "
-                "<i>Calculate</qt> button above.</qt>"));
+                "<i>Calculate</i> button above.</qt>"));
             break;
 
         case NON_EMBEDDED:
@@ -268,10 +266,10 @@ void NSurfaceCompatibilityUI::changeLayer(int index) {
         return;
 
     if (index == 0) {
-        stack->raiseWidget(layerLocal);
+        stack->setCurrentWidget(layerLocal);
         matrixLocal->fillLocal(*surfaces);
     } else {
-        stack->raiseWidget(layerGlobal);
+        stack->setCurrentWidget(layerGlobal);
         matrixGlobal->fillGlobal(*surfaces);
     }
 }
@@ -282,6 +280,4 @@ void NSurfaceCompatibilityUI::calculate() {
     if (! matrixLocal)
         refresh();
 }
-
-#include "nsurfacecompatui.moc"
 

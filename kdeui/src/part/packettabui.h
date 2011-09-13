@@ -38,13 +38,12 @@
 
 #include <vector>
 
-class ExtTabCtl;
 class PacketEditorTab;
 class PacketTabbedViewerTab;
 class PacketViewerTab;
 class QBoxLayout;
 class QString;
-class QIconSet;
+class QTabWidget;
 
 /**
  * A packet interface consisting of several tabbed pages.
@@ -94,7 +93,7 @@ class PacketTabbedUI : public QObject, public PacketUI {
          */
         QWidget* ui;
         QBoxLayout* layout;
-        ExtTabCtl* tabs;
+        QTabWidget* tabs;
 
     public:
         /**
@@ -136,6 +135,8 @@ class PacketTabbedUI : public QObject, public PacketUI {
          * Component queries.
          */
         PacketPane* getEnclosingPane();
+        PacketUI* interfaceAtIndex(int tabIndex);
+        PacketUI* currentInterface();
 
         /**
          * PacketUI overrides.
@@ -157,6 +158,11 @@ class PacketTabbedUI : public QObject, public PacketUI {
          * Notification that a new tab has been selected.
          */
         void notifyTabSelected(int newTab);
+
+    // Yes, I know I shouldn't.
+    // This class needs access to several internal components, and
+    // should probably be an inner class of PacketTabbedUI instead.
+    friend class PacketEditTabbedUI;
 };
 
 /**
@@ -305,7 +311,7 @@ class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
          */
         QWidget* ui;
         QBoxLayout* layout;
-        ExtTabCtl* tabs;
+        QTabWidget* tabs;
 
     public:
         /**
