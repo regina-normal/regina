@@ -149,5 +149,3 @@ void Dim4TriHeaderUI::refresh() {
 void Dim4TriHeaderUI::editingElsewhere() {
     header->setText(i18n("Editing..."));
 }
-
-#include "dim4triui.moc"

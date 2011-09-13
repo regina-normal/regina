@@ -365,5 +365,3 @@ void Dim4TriGluingsUI::updateRemoveState() {
 void Dim4TriGluingsUI::notifyGluingsChanged() {
     setDirty(true);
 }
-
-#include "dim4trigluings.moc"
