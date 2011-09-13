@@ -14,8 +14,8 @@
 # Changes to this script were made by Ben Burton <bab@debian.org> and are
 # licensed under the GNU General Public License.
 
-prefix=@prefix@
-exec_prefix=@exec_prefix@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=@CMAKE_INSTALL_PREFIX@
 exec_prefix_set=no
 
 usage()
@@ -83,19 +83,19 @@ if test "$echo_exec_prefix" = "yes"; then
 	echo $exec_prefix
 fi
 
-regina_engine_libs="-lregina-engine @LIBS@"
+regina_engine_libs="-lregina-engine @RECONFIG_LINK_FLAGS@"
 
 if test "$echo_cflags" = "yes"; then
-	includes="@ENGINE_EXTERNAL_INCLUDES@"
-	includes="-I@includedir@/@PACKAGE@ -I@includedir@ $includes"
+	includes="@RECONFIG_INCLUDE_FLAGS@"
+	includes="-I@INCLUDEDIR@ $includes"
 	echo $includes
 fi
 
 if test "$echo_libs" = "yes"; then
-	libdirs=-L@libdir@
+	libdirs=-L@LIBDIR@
 	my_regina_engine_libs=
 	for i in $regina_engine_libs ; do
-		if test "x$i" != "x-L@libdir@" ; then
+		if test "x$i" != "x-L@LIBDIR@" ; then
 			if test -z "$my_regina_engine_libs" ; then
 				my_regina_engine_libs="$i"
 			else

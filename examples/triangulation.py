@@ -2,8 +2,8 @@
 #
 #  Sample Python Script
 #
-#  Illustrates various queries and actions that can be performed upon a
-#  3-manifold triangulation and its normal surfaces.
+#  Illustrates different queries and actions on a 3-manifold triangulation
+#  and its normal surfaces.
 #
 #  See the file "triangulation.session" for the results of running this
 #  script.
@@ -16,31 +16,31 @@ t = regina.NTriangulation()
 t.insertLayeredSolidTorus(3,4)
 print t
 
-# Dump skeletal information for the triangulation.
+# Print the full skeleton of the triangulation.
 print t.toStringLong()
 
 # Calculate some algebraic properties of the triangulation.
 print t.getHomologyH1()
 print t.getHomologyH1Bdry()
 
-# Test for 0-efficiency, which involves searching for particular types
-# of normal surface.
+# Test for 0-efficiency, which asks Regina to search for certain types
+# of normal surfaces.
 print t.isZeroEfficient()
 
-# Get a list of normal surfaces in standard tri-quad coordinates.
+# Make our own list of vertex normal surfaces in standard coordinates.
 from regina import NNormalSurfaceList
 surfaces = NNormalSurfaceList.enumerate(t, NNormalSurfaceList.STANDARD)
 
-# Verify that the normal surface list has been made a child packet of the
-# triangulation.  This happens automatically whenever the normal
-# surfaces (or angle structures) of a triangulation are enumerated.
+# Verify that the normal surface list is already a child packet of the
+# triangulation.  This happens automatically whenever you enumerate
+# normal surfaces (or angle structures).
 if surfaces.getTreeParent() == t:
     print "OK: Parent-child relationship is correct."
 else:
     print "ERROR: Parent-child relationship is incorrect."
 
 
-# Dump the entire list of vertex normal surfaces.
+# Print the full list of vertex normal surfaces.
 print surfaces.toStringLong()
 
 # Print the Euler characteristic and orientability of each surface.
@@ -49,7 +49,7 @@ for i in range(surfaces.getNumberOfSurfaces()):
     print "Chi =", s.getEulerCharacteristic(), "; Or =", s.isOrientable()
 
 
-# List all the surfaces with more than one quad in the first tetrahedron.
+# List all surfaces with more than one quad in the first tetrahedron.
 for i in range(surfaces.getNumberOfSurfaces()):
     s = surfaces.getSurface(i)
     if s.getQuadCoord(0,0) + s.getQuadCoord(0,1) + s.getQuadCoord(0,2) > 1:
@@ -57,6 +57,6 @@ for i in range(surfaces.getNumberOfSurfaces()):
 
 
 # Tidy up.
-# Delete the triangulation; this will automatically delete the surface
-# list since the surface list is a child packet of the triangulation.
+# Delete the triangulation.  This will automatically delete the surface
+# list, which is a child of the triangulation in the packet tree.
 t = None
