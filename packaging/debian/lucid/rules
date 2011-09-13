@@ -1,0 +1,131 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+tmp = debian/tmp
+
+DEB_KDE_LINK_WITH_AS_NEEDED = yes
+
+include /usr/share/pkg-kde-tools/makefiles/1/variables.mk
+
+INSTALL_DIR = install -p -d -o root -g root -m 755
+INSTALL_FILE = install -p -o root -g root -m 644
+
+ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+	INSTALL_PROGRAM += -s
+endif
+
+# Find the default python version so we can pass it to ./configure.  This 
+# keeps things sane when multiple python*-dev packages are installed.
+pyver = $(subst python,,$(shell /usr/bin/pyversions --default))
+
+build_dir = builds/debbuild
+
+${build_dir}:
+	dh_testdir
+
+	mkdir -p ${build_dir}
+	cd ${build_dir} && \
+		cmake $(CURDIR) \
+		-DPACKAGE_NAME=regina-normal -DPACKAGING_MODE=1 \
+		$(DEB_CMAKE_KDE4_FLAGS) \
+		$(DEB_CMAKE_CUSTOM_FLAGS) \
+		-DPYTHON_EXECUTABLE=/usr/bin/python${pyver} \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_MODULE_PATH="/usr/share/apps/cmake/modules"
+
+configure: ${build_dir}
+
+build: build-arch build-indep
+build-arch: build-stamp
+build-indep: build-stamp
+
+build-stamp: ${build_dir}
+	dh_testdir
+
+	$(MAKE) -C ${build_dir} VERBOSE=1
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	$(MAKE) -C ${build_dir} test ARGS=-V
+endif
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+
+	[ ! -d ${build_dir} ] || rm -rf ${build_dir}
+
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+
+	# Main install.
+	$(MAKE) -C ${build_dir} install DESTDIR=$(CURDIR)/$(tmp)
+
+	# Split into separate binary packages.
+	dh_install --sourcedir=$(tmp) --list-missing
+
+	# Install lintian overrides.
+	for pkg in `dh_listpackages`; do \
+	  if test -e debian/$$pkg.override; then \
+	    $(INSTALL_DIR) debian/$$pkg/usr/share/lintian/overrides; \
+	    $(INSTALL_FILE) debian/$$pkg.override \
+	      debian/$$pkg/usr/share/lintian/overrides/$$pkg; \
+	  fi; \
+	done
+
+# Build architecture-independent files here.
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_installdocs -i
+	dh_installexamples -i
+	dh_installman -i
+	dh_installmenu -i
+	dh_installmime -i
+	dh_installchangelogs -i CHANGES.txt
+	dh_link -i
+	dh_strip -i
+	dh_compress -i -X.bz2 -X.css -X.docbook -X.rga
+	dh_fixperms -i
+	# dh_makeshlibs -i
+	dh_installdeb -i
+	dh_perl -i
+	dh_shlibdeps -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installdocs -a
+	dh_installexamples -a
+	dh_installman -a
+	dh_installmenu -a
+	dh_installmime -a
+	dh_installchangelogs -a CHANGES.txt
+	dh_link -a
+	dh_strip -a
+	dh_compress -a -X.bz2 -X.css -X.docbook -X.rga
+	dh_fixperms -a
+	dh_makeshlibs -a
+	# Only run the python scripts on regina-normal.
+	dh_pysupport -pregina-normal /usr/lib/regina-normal/python
+	dh_installdeb -a
+	dh_perl -a
+	dh_shlibdeps -a -ldebian/regina-normal/usr/lib
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

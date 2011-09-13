@@ -1,0 +1,15 @@
+Regina Development Files for Ubuntu
+-----------------------------------
+
+Regina's mathematical engine is provided in the C++ shared library
+/usr/lib/libregina-engine.so.
+
+The corresponding headers can be found in /usr/include/regina-normal/.
+
+Run "regina-engine-config --cflags" or "regina-engine-config --libs" for
+the suggested g++ compiler and linker flags.
+
+You can find thorough API documentation for this library in the package
+regina-normal-doc.
+
+ -- Ben Burton <bab@debian.org>, Fri,  9 Sep 2011 06:11:01 +1000

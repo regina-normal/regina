@@ -1,0 +1,15 @@
+Regina Documentation
+--------------------
+
+This package provides a rich users' handbook for Regina, and also full
+API documentation for the C++ shared library and Python bindings.
+
+For the users' handbook, see:
+
+  /usr/share/doc/regina-normal-doc/handbook/index.html
+
+For the API documentation, see:
+
+  /usr/share/doc/regina-normal-doc/engine-docs/index.html
+
+ -- Ben Burton <bab@debian.org>, Fri,  9 Sep 2011 06:11:01 +1000

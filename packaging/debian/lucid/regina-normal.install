@@ -1,0 +1,18 @@
+usr/bin/reg*
+usr/bin/sig*
+usr/bin/tricensus
+usr/bin/trisetcmp
+usr/lib/libregina-engine.so.4.90
+usr/lib/regina-normal/python/regina.so
+usr/share/applications
+usr/share/icons
+usr/share/kde4/apps/regina
+usr/share/man/man1/reg*
+usr/share/man/man1/sig*
+usr/share/man/man1/tricensus.1
+usr/share/man/man1/trisetcmp.1
+usr/share/mime
+usr/share/regina-normal/examples usr/share/doc/regina-normal
+usr/share/regina-normal/icons
+usr/share/regina-normal/internal
+usr/share/regina-normal/pylib
