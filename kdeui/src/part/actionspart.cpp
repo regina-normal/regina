@@ -290,15 +290,22 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(newText()) );
     treeGeneralEditActions.append(act);
 
-    act = new KAction(KIcon("packet_triangulation"), i18n("New &Triangulation"),
-        this);
     act = actionCollection()->addAction("tree_triangulation");
-    act->setText(i18n("New &Triangulation"));
+    act->setText(i18n("New 3-D &Triangulation"));
     act->setIcon(KIcon("packet_triangulation"));
     act->setShortcut(tr("Alt+t"));
-    act->setToolTip(i18n("New triangulation"));
+    act->setToolTip(i18n("New 3-manifold triangulation"));
     act->setWhatsThis(i18n("Create a new 3-manifold triangulation."));
     connect(act, SIGNAL(triggered()), this, SLOT(newTriangulation()) );
+    treeGeneralEditActions.append(act);
+
+    act = actionCollection()->addAction("tree_dim4tri");
+    act->setText(i18n("New &4-D Triangulation"));
+    act->setIcon(KIcon("packet_dim4tri"));
+    act->setShortcut(tr("Alt+4"));
+    act->setToolTip(i18n("New 4-manifold triangulation"));
+    act->setWhatsThis(i18n("Create a new 4-manifold triangulation."));
+    connect(act, SIGNAL(triggered()), this, SLOT(newDim4Triangulation()) );
     treeGeneralEditActions.append(act);
 
     act = actionCollection()->addAction("tree_census");
@@ -339,7 +346,7 @@ void ReginaPart::setupActions() {
     treeGeneralEditActions.append(act);
 
     act = actionCollection()->addAction("import_isosig3");
-    act->setText(i18n("&Isomorphism Signature List"));
+    act->setText(i18n("&Isomorphism Signature List (3-D)"));
     act->setIcon(KIcon("document-sign"));
     act->setToolTip(i18n("Import an isomorphism signature list "
         "for 3-manifold triangulations"));
@@ -348,6 +355,18 @@ void ReginaPart::setupActions() {
         "For each isomorphism signature, "
         "a new 3-manifold triangulation will be created in this packet tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importIsoSig3()) );
+    treeGeneralEditActions.append(act);
+
+    act = actionCollection()->addAction("import_isosig4");
+    act->setText(i18n("&Isomorphism Signature List (4-D)"));
+    act->setIcon(KIcon("document-sign"));
+    act->setToolTip(i18n("Import an isomorphism signature list "
+        "for 4-manifold triangulations"));
+    act->setWhatsThis(i18n("Import an external text file containing "
+        "isomorphism signatures for 4-manifold triangulations.  "
+        "For each isomorphism signature, "
+        "a new 4-manifold triangulation will be created in this packet tree."));
+    connect(act, SIGNAL(triggered()), this, SLOT(importIsoSig4()) );
     treeGeneralEditActions.append(act);
 
     act = actionCollection()->addAction("import_dehydrated");

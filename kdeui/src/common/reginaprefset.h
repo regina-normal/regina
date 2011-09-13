@@ -225,6 +225,9 @@ struct ReginaPrefSet {
     enum SurfacesCompatMatrix { LocalCompat, GlobalCompat };
         /**< Possible compatibility matrices that can be displayed for a
              normal surface list. */
+    enum Dim4Tab { Dim4Gluings, Dim4Skeleton, Dim4Algebra };
+        /**< Available top-level tabs in a 4-manifold triangulation
+             viewer/editor. */
 
     bool autoDock;
         /**< Do we automatically dock new packet
@@ -233,6 +236,9 @@ struct ReginaPrefSet {
         /**< Should filenames be given an automatic extension? */
     ReginaFilePrefList censusFiles;
         /**< The list of data files to use for census lookups. */
+    Dim4Tab dim4InitialTab;
+        /**< The initially visible top-level tab for a new 4-manifold
+             triangulation viewer/editor. */
     bool displayTagsInTree;
         /**< Should we display packet tags in the visual tree? */
     bool handbookInKHelpCenter;
