@@ -26,10 +26,10 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "subcomplex/nlayeredloop.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/nedge.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NLayeredLoop;

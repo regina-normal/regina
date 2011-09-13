@@ -26,11 +26,11 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "maths/nmatrixint.h"
 #include "progress/nprogressmanager.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NNormalSurfaceList;

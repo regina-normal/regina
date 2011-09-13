@@ -26,12 +26,12 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "subcomplex/npluggedtorusbundle.h"
 #include "subcomplex/nsatregion.h"
 #include "subcomplex/ntxicore.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NPluggedTorusBundle;

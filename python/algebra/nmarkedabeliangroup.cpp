@@ -26,9 +26,9 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/nmatrixint.h"
-#include <boost/python.hpp>
 #include <boost/python/detail/api_placeholder.hpp> // For len().
 
 using namespace boost::python;

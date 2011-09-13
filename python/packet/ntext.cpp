@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "packet/ntext.h"
 #include <boost/python.hpp>
+#include "packet/ntext.h"
 
 using namespace boost::python;
 using regina::NText;

@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "surfaces/sfcombination.h"
 #include <boost/python.hpp>
+#include "surfaces/sfcombination.h"
 
 using namespace boost::python;
 using regina::NSurfaceFilterCombination;

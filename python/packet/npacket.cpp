@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "packet/npacket.h"
 #include <boost/python.hpp>
+#include "packet/npacket.h"
 
 using namespace boost::python;
 using regina::NPacket;

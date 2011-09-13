@@ -26,11 +26,11 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "manifold/nsfs.h"
 #include "subcomplex/nsatblock.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NSatAnnulus;

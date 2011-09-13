@@ -26,9 +26,9 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "foreign/csvsurfacelist.h"
 #include "surfaces/nnormalsurfacelist.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 

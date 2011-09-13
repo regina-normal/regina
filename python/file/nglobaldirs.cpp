@@ -30,8 +30,8 @@
 // that breaks boost.python on MacOSX.
 #include "Python.h"
 
-#include "file/nglobaldirs.h"
 #include <boost/python.hpp>
+#include "file/nglobaldirs.h"
 
 using namespace boost::python;
 using regina::NGlobalDirs;

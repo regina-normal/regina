@@ -26,9 +26,9 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "foreign/pdf.h"
 #include "packet/npdf.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 

@@ -26,9 +26,9 @@
 
 /* end stub */
 
+#include <boost/python.hpp>
 #include "manifold/nsfs.h"
 #include "subcomplex/nsatregion.h"
-#include <boost/python.hpp>
 
 using namespace boost::python;
 using regina::NSatBlock;

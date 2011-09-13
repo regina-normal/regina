@@ -26,8 +26,8 @@
 
 /* end stub */
 
-#include "algebra/ngrouppresentation.h"
 #include <boost/python.hpp>
+#include "algebra/ngrouppresentation.h"
 
 using namespace boost::python;
 using regina::NGroupExpressionTerm;
