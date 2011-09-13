@@ -1,0 +1,78 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-filter-combination">
+ <refmeta>
+  <refentrytitle>filter (combination)</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>filter (combination)</refname>
+  <refpurpose>A logical combination surface filter</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+filter ::= (&xml-op;)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      See the general &xml-filter; element documentation.
+     </entry></row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A <emphasis>combination filter</emphasis> uses a
+   logical operation to combine other normal surface filters into a
+   single more complex surface filter.
+  </para>
+  <para>
+   The filters being combined must be immediate children of the packet
+   representing this combination filter.  The logical operation used to
+   combine these child filters is described by the child &xml-op; element.
+  </para>
+  <para>
+   More information about surface filters can be found in the general
+   &xml-filter; element documentation.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>filter</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-packet-surfacefilter;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    The following elements occur in <sgmltag>filter</sgmltag> for a
+    combination filter:
+    <simplelist type="inline">
+     <member>&xml-op;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+ </refsect1>
+</refentry>
