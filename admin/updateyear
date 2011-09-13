@@ -1,0 +1,114 @@
+#!/usr/bin/perl -w
+#
+# Regina - A Normal Surface Theory Calculator
+# Source Stub Year Update Utility
+#
+# Copyright (c) 1999-2011, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Usage: updateyear <old_year> <new_year> [ <text-file> ... ]
+#
+# Replaces the old year with the new year in the copyright header at
+# the beginning of each given file.  You will be asked to approve or
+# reject each change.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+#
+
+use strict;
+
+# --- Command-line sanity check. ---
+
+my $nArgs = @ARGV;
+if ($nArgs < 3) {
+    print STDERR "Usage: updateyear <old_year> <new_year> [ <text-file> ... ]\n";
+    exit(1);
+}
+
+my $oldYear;
+my $newYear;
+my @argFiles;
+
+($oldYear, $newYear, @argFiles) = @ARGV;
+
+# --- Run through each file to process. ---
+
+foreach my $file (@argFiles) {
+    # Read the file contents.
+    if (! open(DATA, $file)) {
+        print STDERR "ERROR: Could not open $file for reading.\n";
+        next;
+    }
+    my @lines = <DATA>;
+    close(DATA);
+
+    # Hunt for a sentry.
+    my @newLines  = ();
+    my $edit;
+    my $changed = 0;
+
+    foreach my $line (@lines) {
+        $edit = undef;
+        if ($line =~ /Copyright \(c\) $oldYear,/) {
+            $edit = $line;
+            $edit =~ s/(Copyright \(c\) )$oldYear,/$1$newYear,/g;
+        } elsif ($line =~ /Copyright \(c\) \d+-$oldYear,/) {
+            $edit = $line;
+            $edit =~ s/(Copyright \(c\) \d+-)$oldYear,/$1$newYear,/g;
+        }
+
+        if (not defined $edit) {
+            push(@newLines, $line);
+            next;
+        }
+
+        print "CHANGE:\n-$line+$edit";
+        print "Accept? [Y/n] ";
+        my $response = <STDIN>;
+        $response =~ s/\s//g;
+		$response =~ tr/A-Z/a-z/;
+		$response eq '' and $response = 'y';
+        while (not ($response eq 'y' or $response eq 'n')) {
+            print "Accept? [Y/n] ";
+            $response = <STDIN>;
+            $response =~ s/\s//g;
+			$response =~ tr/A-Z/a-z/;
+			$response eq '' and $response = 'y';
+        }
+
+        if ($response eq 'y') {
+            push(@newLines, $edit);
+            $changed = 1;
+        } else {
+            push(@newLines, $line);
+        }
+    }
+
+    if ($changed) {
+        if (! open(DATA, '>'.$file)) {
+            print STDERR "ERROR: Could not open $file for writing.\n";
+            next;
+        }
+
+        print DATA $_ foreach (@newLines);
+
+        close(DATA);
+        print "REPLACED: $file.\n\n";
+    } else {
+        # print "Unchanged: $file.\n";
+    }
+}
+

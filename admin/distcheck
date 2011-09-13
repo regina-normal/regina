@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Source Distribution Verification
 #
-# Copyright (c) 2003-2009, Ben Burton
+# Copyright (c) 2003-2011, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: distcheck <dist-tarball>
@@ -62,8 +62,8 @@ else
 fi
 
 # Find any builddirs that should be ignored.
-builddirs=`find "$svntree" -mindepth 2 -name config.log | \
-	sed -e 's%^[^/]*/%%' -e 's%/config.log$%%'`
+builddirs=`find "$svntree" -mindepth 2 -name CMakeCache.txt | \
+	sed -e 's%^[^/]*/%%' -e 's%/CMakeCache.txt$%%'`
 
 display_builddirs=
 grep_builddirs=
@@ -127,13 +127,12 @@ fi
 # Make a list of files in the subversion source tree.
 echo "Analysing subversion source tree..."
 
-if ! find "$svntree" | sed -e 's%^[^/]*/%%' | \
+if ! find "$svntree" -type f | sed -e 's%^[^/]*/%%' | \
     grep -v "$grep_builddirs" | \
     grep -v '^\.$' | \
     grep -v '^\.\.$' | \
     grep -v '\(^\|/\)\.svn$' | \
     grep -v '\.svn/' | \
-    grep -v 'Makefile$' | \
     grep -v '\.a$' | \
     grep -v '\.DS_Store$' | \
     grep -v '\.deps\(/\|$\)' | \
@@ -160,6 +159,7 @@ if ! find "$svntree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^engine/snappea/kernel/unused\(/\|$\)' | \
     grep -v '^engine/stamp-h' | \
     grep -v '^hold\(/\|$\)' | \
+    grep -v '^icons/povray\(/\|$\)' | \
     grep -v '^icons/src\(/\|$\)' | \
     grep -v '^kdeui/.*/index.cache.bz2$' | \
     grep -v '^kdeui/src/shell/regina-kde$' | \
