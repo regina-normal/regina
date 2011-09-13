@@ -3,16 +3,17 @@ Below are locations of strings that may need changing for a new release.
 All locations are relative to the primary source directory.
 
 Program version:
-    CHANGES.txt, HIGHLIGHTS.txt, kdeui/doc/en/HIGHLIGHTS.txt (version, date)
-    admin/configure.ac.top (AC_INIT, AM_INIT_AUTOMAKE)
+    CHANGES.txt, HIGHLIGHTS.txt, kdeui/doc/regina/HIGHLIGHTS.txt (version, date)
     CMakeLists.txt (PACKAGE_VERSION)
-    kdeui/doc/en/index.docbook (&regversion;, &regdate;, date, releaseinfo)
+    kdeui/doc/regina/index.docbook (&regversion;, &regdate;, date, releaseinfo)
+    kdeui/doc/regina-xml/index.docbook (same as above)
     kdeui/src/common/reginaabout.cpp (regReleased)
-    kdeui/src/{shell,part}/*.rc (kpartgui version)
+    kdeui/src/{shell,part}/*.rc (gui version)
     packaging/debian/*/changelog (version, date)
     packaging/finkinfo/*.info.* (version, revision)
     packaging/rpmspec/*.spec (version, changelog)
-    www/index.html (last updated, current version, news, filenames)
+    www/index.html (last updated, current version, contents, news,
+                    filenames, what's new)
     www/source.html (unpacking instructions: filename, directory)
 
 License details:
@@ -20,8 +21,8 @@ License details:
     engine/docs.h
     engine/regina-engine-config.1
     engine/snappea/kernel/README.txt
-    kdeui/doc/en/compiling.docbook (intro)
-    kdeui/doc/en/credits.docbook
+    kdeui/doc/regina/compiling.docbook (intro)
+    kdeui/doc/regina/credits.docbook
     kdeui/src/common/reginaabout.cpp (ReginaAbout constructor)
     www/index.html
 
@@ -30,16 +31,17 @@ SnapPea / Orb copyright:
     engine/docs.h
     engine/snappea/kernel/README.txt
     engine/snappea/nsnappeatriangulation.h
-    kdeui/doc/en/credits.docbook
+    kdeui/doc/regina/credits.docbook
     kdeui/src/common/reginaabout.cpp
     www/index.html
 
 Acknowledgements:
-    kdeui/doc/en/credits.docbook
+    LICENSE.txt (suggested citation, author list)
+    kdeui/doc/regina/credits.docbook
     kdeui/src/common/reginaabout.cpp (ReginaAbout constructor)
 
 Don't forget:
-    changes & highlights (both . and kdeui/doc/en)
+    changes & highlights (both . and kdeui/doc/regina)
     what's this & tooltips
     documentation in handbook, feature set & index
     any new tips of the day?
@@ -48,7 +50,7 @@ Don't forget:
     update \test... notes in API docs
     python bindings for new routines
     rebuild manpages
-    website, including updated news
+    website, including updated news, what's new and deprecation guide
     debian packages (include cvs.diff)
     fedora/mandriva/suse packages
     update tips for building on different platforms
