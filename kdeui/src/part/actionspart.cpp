@@ -290,8 +290,6 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(newText()) );
     treeGeneralEditActions.append(act);
 
-    act = new KAction(KIcon("packet_triangulation"), i18n("New &Triangulation"),
-        this);
     act = actionCollection()->addAction("tree_triangulation");
     act->setText(i18n("New &Triangulation"));
     act->setIcon(KIcon("packet_triangulation"));
