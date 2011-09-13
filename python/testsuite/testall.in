@@ -42,7 +42,7 @@
 set -e
 
 executable=../regina-python
-testdir="@top_srcdir@/python/testsuite"
+testdir="@PROJECT_SOURCE_DIR@/python/testsuite"
 tmpout=test.tmp
 
 echo "---------------------------------------"
@@ -50,7 +50,7 @@ echo "Test suite for Regina's python bindings"
 echo "---------------------------------------"
 echo
 
-if ! test -d ../../admin -a -f Makefile -a -f "$executable"; then
+if ! test -f ../../CMakeCache.txt -a -f "$executable"; then
 	echo "ERROR: You do not appear to be within the python/testsuite directory"
 	echo "       in the build tree.  This script must be run from directly"
 	echo "       within the build tree (where you ran the configure script)."
