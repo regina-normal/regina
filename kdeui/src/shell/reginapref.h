@@ -158,7 +158,7 @@ class ReginaPrefSurfaces : public QWidget {
  * The page of the Regina configuration dialog for 4-manifold triangulation
  * preferences.
  */
-class ReginaPrefDim4 : public QVBox {
+class ReginaPrefDim4 : public QWidget {
     Q_OBJECT
 
     private:
