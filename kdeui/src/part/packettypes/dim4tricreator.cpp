@@ -37,14 +37,13 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <qboxlayout.h>
 #include <qcheckbox.h>
-#include <qhbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qregexp.h>
 #include <qvalidator.h>
-#include <qwhatsthis.h>
-#include <qwidgetstack.h>
+#include <qstackedwidget.h>
 
 using regina::Dim4ExampleTriangulation;
 using regina::Dim4Triangulation;
@@ -76,53 +75,59 @@ Dim4TriangulationCreator::Dim4TriangulationCreator() {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
-    QBoxLayout* typeArea = new QHBoxLayout(layout, 5);
+    QBoxLayout* typeArea = new QHBoxLayout();
+    layout->addLayout(typeArea);
     QString expln = i18n("Specifies what type of triangulation to create.");
     QLabel* label = new QLabel(i18n("Type of triangulation:"), ui);
-    QWhatsThis::add(label, expln);
+    label->setWhatsThis(expln);
     typeArea->addWidget(label);
-    type = new KComboBox(ui);
-    QWhatsThis::add(type, expln);
+    type = new QComboBox(ui);
+    type->setWhatsThis(expln);
     typeArea->addWidget(type, 1);
 
     layout->addSpacing(5);
 
-    details = new QWidgetStack(ui);
+    details = new QStackedWidget(ui);
     layout->addWidget(details, 1);
 
     // Set up the individual types of triangulation.
     // Note that the order in which these options are added to the combo
     // box must correspond precisely to the type IDs defined at the head
     // of this file.
-    QHBox* hArea;
+    QWidget* hArea;
+    QBoxLayout* hLayout;
 
-    type->insertItem(i18n("Empty"));
-    details->addWidget(new QWidget(), TRI_EMPTY);
+    type->insertItem(type->count(), i18n("Empty"));
+    details->addWidget(new QWidget());
 
-    type->insertItem(i18n("Example triangulation"));
-    hArea = new QHBox();
-    hArea->setSpacing(5);
+    type->insertItem(type->count(), i18n("Example triangulation"));
+    hArea = new QWidget();
+    hLayout = new QHBoxLayout();
+    hLayout->setContentsMargins(0, 0, 0, 0);
+    hArea->setLayout(hLayout);
     expln = i18n("<qt>Specifies which particular example triangulation to "
         "create.<p>"
         "A selection of ready-made 4-manifold triangulations is offered "
         "here to help you experiment and see how Regina works.</qt>");
-    QWhatsThis::add(new QLabel(i18n("Example:"), hArea), expln);
-    exampleWhich = new KComboBox(hArea);
-    exampleWhich->insertItem(i18n("4-sphere"));
-    exampleWhich->insertItem(i18n("RP4"));
-    exampleWhich->insertItem(i18n("Product S3 x S1"));
-    exampleWhich->insertItem(i18n("Twisted product S3 x S1"));
-    exampleWhich->setCurrentItem(0);
-    QWhatsThis::add(exampleWhich, expln);
-    hArea->setStretchFactor(exampleWhich, 1);
-    details->addWidget(hArea, TRI_EXAMPLE);
+    label = new QLabel(i18n("Example:"));
+    label->setWhatsThis(expln);
+    hLayout->addWidget(label);
+    exampleWhich = new QComboBox(hArea);
+    exampleWhich->insertItem(0, i18n("4-sphere"));
+    exampleWhich->insertItem(1, i18n("RP4"));
+    exampleWhich->insertItem(2, i18n("Product S3 x S1"));
+    exampleWhich->insertItem(3, i18n("Twisted product S3 x S1"));
+    exampleWhich->setCurrentIndex(0);
+    exampleWhich->setWhatsThis(expln);
+    hLayout->addWidget(exampleWhich, 1);
+    details->addWidget(hArea);
 
     // Tidy up.
-    type->setCurrentItem(0);
-    details->raiseWidget((int)0);
+    type->setCurrentIndex(0);
+    details->setCurrentIndex((int)0);
 
     QObject::connect(type, SIGNAL(activated(int)), details,
-        SLOT(raiseWidget(int)));
+        SLOT(setCurrentIndex(int)));
 }
 
 QWidget* Dim4TriangulationCreator::getInterface() {
@@ -131,11 +136,11 @@ QWidget* Dim4TriangulationCreator::getInterface() {
 
 regina::NPacket* Dim4TriangulationCreator::createPacket(regina::NPacket*,
         QWidget* parentWidget) {
-    int typeId = type->currentItem();
+    int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY)
         return new Dim4Triangulation();
     else if (typeId == TRI_EXAMPLE) {
-        switch (exampleWhich->currentItem()) {
+        switch (exampleWhich->currentIndex()) {
             case EXAMPLE_S4:
                 return Dim4ExampleTriangulation::fourSphere();
             case EXAMPLE_RP4:

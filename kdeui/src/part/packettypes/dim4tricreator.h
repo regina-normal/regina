@@ -35,10 +35,11 @@
 
 #include "../packetcreator.h"
 
+#include <QStackedWidget>
+
 class QCheckBox;
 class QComboBox;
 class QLineEdit;
-class QWidgetStack;
 
 /**
  * An interface for creating 4-manifold triangulations.
@@ -50,7 +51,7 @@ class Dim4TriangulationCreator : public PacketCreator {
          */
         QWidget* ui;
         QComboBox* type;
-        QWidgetStack* details;
+        QStackedWidget* details;
 
         /**
          * Details for specific triangulation types
