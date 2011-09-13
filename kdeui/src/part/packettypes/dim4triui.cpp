@@ -34,13 +34,13 @@
 #include "dim4trigluings.h"
 // TODO #include "dim4triskeleton.h"
 #include "dim4triui.h"
+#include "../packeteditiface.h"
 #include "../reginapart.h"
 
 #include <klocale.h>
 #include <ktoolbar.h>
+#include <qboxlayout.h>
 #include <qlabel.h>
-#include <qvbox.h>
-#include <qwhatsthis.h>
 
 using regina::NPacket;
 using regina::Dim4Triangulation;
@@ -77,6 +77,12 @@ Dim4TriangulationUI::Dim4TriangulationUI(regina::Dim4Triangulation* packet,
         case ReginaPrefSet::Dim4Algebra:
             setCurrentTab(2); break;
     }
+
+    editIface = new PacketEditTabbedUI(this);
+}
+
+Dim4TriangulationUI::~Dim4TriangulationUI() {
+    delete editIface;
 }
 
 const QPtrList<KAction>& Dim4TriangulationUI::getPacketTypeActions() {
@@ -84,7 +90,7 @@ const QPtrList<KAction>& Dim4TriangulationUI::getPacketTypeActions() {
 }
 
 QString Dim4TriangulationUI::getPacketMenuText() const {
-    return i18n("T&riangulation");
+    return i18n("&4-D Triangulation");
 }
 
 void Dim4TriangulationUI::updatePreferences(const ReginaPrefSet& newPrefs) {
@@ -96,17 +102,21 @@ void Dim4TriangulationUI::updatePreferences(const ReginaPrefSet& newPrefs) {
 Dim4TriHeaderUI::Dim4TriHeaderUI(regina::Dim4Triangulation* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
-    ui = new QVBox();
+    ui = new QWidget();
+    QBoxLayout* uiLayout = new QVBoxLayout();
+    uiLayout->setContentsMargins(0, 0, 0, 0);
+    ui->setLayout(uiLayout);
 
-    bar = new KToolBar(ui, "dim4triangulationActionBar", false, false);
-    bar->setFullSize(true);
-    bar->setIconText(KToolBar::IconTextRight);
+    bar = new KToolBar(ui, false, true);
+    bar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    uiLayout->addWidget(bar);
 
-    header = new QLabel(ui);
+    header = new QLabel();
     header->setAlignment(Qt::AlignCenter);
     header->setMargin(10);
-    QWhatsThis::add(header, i18n("Displays a few basic properties of the "
+    header->setWhatsThis(i18n("Displays a few basic properties of the "
         "triangulation, such as boundary and orientability."));
+    uiLayout->addWidget(header);
 }
 
 regina::NPacket* Dim4TriHeaderUI::getPacket() {
@@ -133,15 +143,17 @@ void Dim4TriHeaderUI::refresh() {
     if (tri->isClosed())
         msg += i18n("Closed, ");
     else {
-        if (tri->isIdeal())
-            msg += i18n("Ideal, ");
-        if (tri->hasBoundaryTetrahedra())
+        if (tri->isIdeal() && tri->hasBoundaryTetrahedra())
+            msg += i18n("Ideal & real bdry, ");
+        else if (tri->isIdeal())
+            msg += i18n("Ideal bdry, ");
+        else if (tri->hasBoundaryTetrahedra())
             msg += i18n("Real Bdry, ");
     }
 
-    msg += (tri->isOrientable() ? i18n("Orientable, ") :
-        i18n("Non-orientable, "));
-    msg += (tri->isConnected() ? i18n("Connected") : i18n("Disconnected"));
+    msg += (tri->isOrientable() ? i18n("orientable, ") :
+        i18n("non-orientable, "));
+    msg += (tri->isConnected() ? i18n("connected") : i18n("disconnected"));
 
     header->setText(msg);
 }

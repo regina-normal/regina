@@ -39,6 +39,7 @@ class KToolBar;
 class Dim4TriAlgebraUI;
 class Dim4TriGluingsUI;
 class Dim4TriSkeletonUI;
+class PacketEditIface;
 class QLabel;
 class ReginaPrefSet;
 
@@ -62,15 +63,17 @@ class Dim4TriangulationUI : public PacketTabbedUI {
 
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
         Dim4TriangulationUI(regina::Dim4Triangulation* packet,
             PacketPane* newEnclosingPane);
+        ~Dim4TriangulationUI();
 
         /**
          * PacketUI overrides.
          */
-        const QPtrList<KAction>& getPacketTypeActions();
+        PacketEditIface* getEditIface();
+        const QLinkedList<KAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
 
     public slots:
@@ -118,6 +121,10 @@ class Dim4TriHeaderUI : public PacketViewerTab {
         void refresh();
         void editingElsewhere();
 };
+
+inline PacketEditIface* Dim4TriangulationUI::getEditIface() {
+    return editIface;
+}
 
 inline KToolBar* Dim4TriHeaderUI::getToolBar() {
     return bar;
