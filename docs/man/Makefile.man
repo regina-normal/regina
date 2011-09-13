@@ -1,0 +1,13 @@
+
+default:
+	# This Makefile should only be used by the software authors.
+	# To rebuild manpages, run "make -f Makefile.man man".
+	# You will need a working docbook2man installation.
+	#
+
+man:
+	cd ../../kdeui/doc/regina && \
+		docbook2man -o ../../../docs/man manonly.docbook
+clean:
+	rm -f manpage.links manpage.refs
+
