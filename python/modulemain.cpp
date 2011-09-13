@@ -56,8 +56,8 @@ using regina::ShareableObject;
 namespace {
     std::string welcome() {
         return std::string(PACKAGE_STRING) +
-            "\nA Normal Surface Theory Calculator" +
-            "\nCopyright (c) 1999-2011, Ben Burton, Ryan Budney and others";
+            "\nSoftware for 3-manifold topology and normal surface theory" +
+            "\nCopyright (c) 1999-2011, The Regina development team";
     }
 
     void shareableWriteTextShort(const ShareableObject& obj) {
