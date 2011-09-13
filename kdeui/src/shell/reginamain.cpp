@@ -712,11 +712,11 @@ void ReginaMain::saveOptions() {
     KConfigGroup* configGroup = new KConfigGroup(config, "Dim4");
     switch (globalPrefs.dim4InitialTab) {
         case ReginaPrefSet::Dim4Skeleton:
-            config->writeEntry("InitialTab", "Dim4Skeleton"); break;
+            configGroup->writeEntry("InitialTab", "Dim4Skeleton"); break;
         case ReginaPrefSet::Dim4Algebra:
-            config->writeEntry("InitialTab", "Dim4Algebra"); break;
+            configGroup->writeEntry("InitialTab", "Dim4Algebra"); break;
         default:
-            config->writeEntry("InitialTab", "Dim4Gluings"); break;
+            configGroup->writeEntry("InitialTab", "Dim4Gluings"); break;
     }
 
     configGroup = new KConfigGroup(config,"Display");

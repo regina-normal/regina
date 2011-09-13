@@ -250,11 +250,11 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     switch (prefSet.dim4InitialTab) {
         case ReginaPrefSet::Dim4Skeleton:
-            dim4Prefs->comboInitialTab->setCurrentItem(1); break;
+            dim4Prefs->comboInitialTab->setCurrentIndex(1); break;
         case ReginaPrefSet::Dim4Algebra:
-            dim4Prefs->comboInitialTab->setCurrentItem(2); break;
+            dim4Prefs->comboInitialTab->setCurrentIndex(2); break;
         default:
-            dim4Prefs->comboInitialTab->setCurrentItem(0); break;
+            dim4Prefs->comboInitialTab->setCurrentIndex(0); break;
     }
 
     pdfPrefs->cbEmbed->setChecked(prefSet.pdfEmbed);
@@ -582,7 +582,7 @@ void ReginaPreferences::slotApply() {
             QString::number(prefSet.surfacesCompatThreshold));
     }
 
-    switch (dim4Prefs->comboInitialTab->currentItem()) {
+    switch (dim4Prefs->comboInitialTab->currentIndex()) {
         case 1:
             prefSet.dim4InitialTab = ReginaPrefSet::Dim4Skeleton; break;
         case 2:
