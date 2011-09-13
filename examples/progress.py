@@ -10,20 +10,24 @@
 
 import time
 
-# Create a new triangulation of the lens space L(49,12).
-tri = regina.NTriangulation()
-tri.insertLayeredLensSpace(49,12)
+# Create an 18-tetrahedron triangulation of a knot complement with real
+# boundary faces (not an ideal vertex).  The knot is L106003 from the
+# knot/link census.  We used Regina to truncate the ideal vertex, and
+# then copied the isomorphism signature so that we can reconstruct the
+# triangulation here.
+sig = 'sfLfvQvwwMQQQccjghjkmqlonrnrqpqrnsnksaisnrobocksks'
+tri = regina.NTriangulation.fromIsoSig(sig)
 print tri.getNumberOfTetrahedra(), 'tetrahedra'
 
-# Create a progress manager to use during the lengthy surface enumeration.
-# This will be responsible for reporting the state of progress while the
-# enumeration runs in the background.
+# Create a progress manager to use during the normal surface enumeration.
+# This will report the state of progress while the enumeration runs in
+# the background.
 manager = regina.NProgressManager()
 
 # Start the normal surface enumeration.
 # Because we are passing a progress manager to enumerate(), the
-# enumeration will be started in the background and control will be
-# returned immediately to the python console.
+# enumeration will start in the background and control will return
+# immediately to the python console.
 surfaces = regina.NNormalSurfaceList.enumerate(tri,
     regina.NNormalSurfaceList.STANDARD, 1, manager)
 
@@ -32,8 +36,8 @@ while not manager.isStarted():
     time.sleep(1)
 
 
-# At this point the surface enumeration is now running.
-# Output a progress report every second until it's finished.
+# At this point the enumeration is up and running.
+# Output a progress report every second until it finishes.
 prog = manager.getProgress()
 while not manager.isFinished():
     print 'Progress:', prog.getDescription()

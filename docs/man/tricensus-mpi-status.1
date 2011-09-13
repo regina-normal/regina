@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "TRICENSUS-MPI-STATUS" "1" "12 May 2009" "" "Specialised Utilities"
+.TH "TRICENSUS-MPI-STATUS" "1" "09 September 2011" "" "The Regina Handbook"
 
 .SH NAME
 tricensus-mpi-status \- Summarise the log file of an MPI census of triangulations
@@ -16,18 +16,19 @@ tricensus-mpi-status \- Summarise the log file of an MPI census of triangulation
 This utility reads a log file produced by a
 \fBtricensus-mpi\fR
 job, and writes a human-readable summary to standard output.
-It can be used for both jobs that have finished and jobs that are
-still running.
+It can be used for either jobs that have finished or jobs that are
+still running, and it can happily read logs that have been
+compressed using gzip or bzip2.
 .PP
-The logs produced by \fBtricensus-mpi\fR are quite
+The logs produced by \fBtricensus-mpi\fR are very
 detailed, including timestamps, details of which slaves have taken
 which tasks, and how many triangulations each task has produced.
-This utility distills this information into an easy-to-read
+This utility distills this detailed log into an easy-to-read
 summary, with one line for each face pairing.
 .PP
-Output will only be given for face pairings that have been
-examined so far (including face pairings whose processing is still
-underway), and will include:
+Output will only appear for face pairings that have been
+examined so far (which includes face pairings still being processed).
+This output will include:
 .TP 0.2i
 \(bu
 whether processing for each face pairing has
@@ -42,8 +43,9 @@ the number of subsearches generated and/or finished
 for each face pairing (only relevant when running in subsearch
 mode).
 .PP
-The final line of output will state whether the census has finished,
-and if not, when the last log entry was written.
+The final line of output will list the total number of triangulations
+found so far, whether the census has finished, and if not, when the
+last log entry was written.
 .PP
 For further explanation of the terminology used above, see the
 \fBtricensus-mpi\fR
@@ -60,5 +62,6 @@ tricensus-mpi,
 regina-kde\&.
 .SH "AUTHOR"
 .PP
-\fBRegina\fR was written by Ben Burton <bab@debian.org> with help from others;
-see the documentation for full details.
+This utility was written by Benjamin Burton <bab@debian.org>\&.
+Many people have been involved in the development
+of Regina; see the users' handbook for a full list of credits.

@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGFILETYPE" "1" "12 May 2009" "" "Specialised Utilities"
+.TH "REGFILETYPE" "1" "09 September 2011" "" "The Regina Handbook"
 
 .SH NAME
 regfiletype \- Identify the formats of Regina data files
@@ -13,20 +13,21 @@ regfiletype \- Identify the formats of Regina data files
 
 .SH "DESCRIPTION"
 .PP
-Between \fBRegina\fR versions 2.4 and 3.0, the data files changed from
+Between Regina versions 2.4 and 3.0, the data files changed from
 using an impenetrable and undocumented binary format to using
 (optionally compressed) XML\&.
 .PP
-This utility simply determines which of these formats a given
-\fBRegina\fR data file is in.
+This utility determines which of these formats a given
+Regina data file is in.
 .PP
-Multiple files may be given on the command-line; the details of each
-file format will be written to standard output.
+You may pass multiple files on the command line; the format of each
+file will be written to standard output.
 .SH "SEE ALSO"
 .PP
 regconvert,
 regina-kde\&.
 .SH "AUTHOR"
 .PP
-\fBRegina\fR was written by Ben Burton <bab@debian.org> with help from others;
-see the documentation for full details.
+This utility was written by Benjamin Burton <bab@debian.org>\&.
+Many people have been involved in the development
+of Regina; see the users' handbook for a full list of credits.

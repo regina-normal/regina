@@ -16,15 +16,14 @@ regina.NCensus.formCensus(census, 2, NBoolSet.sTrue,
     NBoolSet.sTrue, NBoolSet.sFalse, 0, 0)
 
 # Calculate the homology of each triangulation in the census.
-# Note that formCensus() will have inserted each new triangulation as
-# a child packet of the overall census container.
+# The triangulations are all children of the "census" container.
 tri = census.getFirstTreeChild()
 while tri != None:
     print tri.getPacketLabel() + ":", tri.getHomologyH1()
     tri = tri.getNextTreeSibling()
 
 
-# Remove from the tree each triangulation with trivial homology.
+# Remove all triangulations with trivial homology from the tree.
 tri = census.getFirstTreeChild()
 while tri != None:
     next = tri.getNextTreeSibling()
