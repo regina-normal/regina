@@ -27,11 +27,11 @@
 /* end stub */
 
 // UI includes:
-#include "exttabctl.h"
 #include "packettabui.h"
 
 #include <iostream>
 #include <qlayout.h>
+#include <qtabwidget.h>
 
 using regina::NPacket;
 
@@ -39,10 +39,11 @@ PacketTabbedUI::PacketTabbedUI(PacketPane* enclosingPane) :
         PacketUI(enclosingPane), editorTab(0), header(0), visibleViewer(0) {
     ui = new QWidget();
     layout = new QVBoxLayout(ui);
+    layout->setContentsMargins(0, 0, 0, 0);
 
-    tabs = new ExtTabCtl(ui);
+    tabs = new QTabWidget(ui);
     layout->addWidget(tabs, 1);
-    connect(tabs, SIGNAL(tabSelected(int)), this, SLOT(notifyTabSelected(int)));
+    connect(tabs, SIGNAL(currentChanged(int)), this, SLOT(notifyTabSelected(int)));
 
     ui->setFocusProxy(tabs);
 }
@@ -55,7 +56,7 @@ PacketTabbedUI::~PacketTabbedUI() {
     // will destroy its interface component or not.
     //
     // If so, it's removed from the tabbed pane upon destruction and
-    // therefore won't be destroyed again.  If not, the ExtTabCtl
+    // therefore won't be destroyed again.  If not, the QTabWidget
     // destructor should take care of it.
 
     // These viewers are definitely not visible.
@@ -85,7 +86,6 @@ void PacketTabbedUI::addTab(PacketViewerTab* viewer, const QString& label) {
     else
         viewer->queuedAction = PacketViewerTab::Refresh;
 
-    viewer->getInterface()->reparent(tabs, QPoint(0, 0));
     tabs->addTab(viewer->getInterface(), label);
 }
 
@@ -98,7 +98,6 @@ void PacketTabbedUI::addTab(PacketEditorTab* editor, const QString& label) {
     editorTab = editor;
     viewerTabs.push_back(0);
 
-    editor->getInterface()->reparent(tabs, QPoint(0, 0));
     tabs->addTab(editor->getInterface(), label);
 }
 
@@ -108,12 +107,11 @@ void PacketTabbedUI::addHeader(PacketViewerTab* viewer) {
 
     // Add the header.
     header = viewer;
-    viewer->getInterface()->reparent(ui, QPoint(0, 0));
     layout->insertWidget(0, viewer->getInterface(), 0);
 }
 
 void PacketTabbedUI::setCurrentTab(int tabIndex) {
-    tabs->setCurrentTab(tabIndex);
+    tabs->setCurrentIndex(tabIndex);
 }
 
 regina::NPacket* PacketTabbedUI::getPacket() {
@@ -177,6 +175,20 @@ void PacketTabbedUI::refresh() {
     setDirty(false);
 }
 
+PacketUI* PacketTabbedUI::interfaceAtIndex(int tabIndex) {
+    if (viewerTabs[tabIndex])
+        return viewerTabs[tabIndex];
+    else
+        return editorTab;
+}
+
+PacketUI* PacketTabbedUI::currentInterface() {
+    if (visibleViewer)
+        return visibleViewer;
+    else
+        return editorTab;
+}
+
 void PacketTabbedUI::setReadWrite(bool readWrite) {
     if (editorTab)
         editorTab->setReadWrite(readWrite);
@@ -227,9 +239,9 @@ PacketTabbedViewerTab::PacketTabbedViewerTab(PacketTabbedUI* useParentUI) :
     ui = new QWidget();
     layout = new QVBoxLayout(ui);
 
-    tabs = new ExtTabCtl(ui);
+    tabs = new QTabWidget(ui);
     layout->addWidget(tabs, 1);
-    connect(tabs, SIGNAL(tabSelected(int)), this, SLOT(notifyTabSelected(int)));
+    connect(tabs, SIGNAL(currentChanged(int)), this, SLOT(notifyTabSelected(int)));
 }
 
 PacketTabbedViewerTab::~PacketTabbedViewerTab() {
@@ -240,7 +252,7 @@ PacketTabbedViewerTab::~PacketTabbedViewerTab() {
     // will destroy its interface component or not.
     //
     // If so, it's removed from the tabbed pane upon destruction and
-    // therefore won't be destroyed again.  If not, the ExtTabCtl
+    // therefore won't be destroyed again.  If not, the QTabWidget
     // destructor should take care of it.
 
     // These viewers are definitely not visible.
@@ -260,18 +272,16 @@ PacketTabbedViewerTab::~PacketTabbedViewerTab() {
 void PacketTabbedViewerTab::addTab(PacketViewerTab* viewer,
         const QString& label) {
     viewerTabs.push_back(viewer);
-    viewer->getInterface()->reparent(tabs, QPoint(0, 0));
     tabs->addTab(viewer->getInterface(), label);
 }
 
 void PacketTabbedViewerTab::addHeader(PacketViewerTab* viewer) {
     header = viewer;
-    viewer->getInterface()->reparent(ui, QPoint(0, 0));
     layout->insertWidget(0, viewer->getInterface(), 0);
 }
 
 void PacketTabbedViewerTab::setCurrentTab(int tabIndex) {
-    tabs->setCurrentTab(tabIndex);
+    tabs->setCurrentIndex(tabIndex);
 }
 
 regina::NPacket* PacketTabbedViewerTab::getPacket() {
@@ -324,4 +334,3 @@ void PacketTabbedViewerTab::notifyTabSelected(int newTab) {
     visibleViewer->queuedAction = PacketViewerTab::None;
 }
 
-#include "packettabui.moc"

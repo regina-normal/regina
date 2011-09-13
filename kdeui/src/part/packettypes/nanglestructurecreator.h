@@ -58,6 +58,8 @@ class NAngleStructureCreator : public PacketCreator {
          * PacketCreator overrides.
          */
         QWidget* getInterface();
+        QString parentPrompt();
+        QString parentWhatsThis();
         regina::NPacket* createPacket(regina::NPacket* parentPacket,
             QWidget* parentWidget);
 };

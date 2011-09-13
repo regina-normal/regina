@@ -1,8 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Comment=Regina Topology Data
-Icon=regina
-Type=MimeType
-MimeType=application/x-regina
-Patterns=*.rga;
-X-KDE-AutoEmbed=false

@@ -46,6 +46,7 @@
  * Thanks to Ryan Budney for providing these Orb / Casson filters.
  */
 class OrbHandler : public PacketImporter {
+    using PacketImporter::importData;
     public:
         /**
          * A globally available instance of this class.
@@ -56,7 +57,7 @@ class OrbHandler : public PacketImporter {
         /**
          * PacketImporter overrides:
          */
-        virtual regina::NPacket* import(const QString& fileName,
+        virtual regina::NPacket* importData(const QString& fileName,
             QWidget* parentWidget) const;
 
     private:

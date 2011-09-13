@@ -1,9 +1,8 @@
-<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="reginamain" version="4.90">
+<?xml version="1.0" encoding="UTF-8"?>
+<gui name="reginamain" version="4.90">
 <MenuBar>
   <Menu name="file" noMerge="1"><text>&amp;File</text>
     <Action name="new_topology"/>
-    <Action name="new_python"/>
     <DefineGroup name="new_merge"/>
     <Action name="file_open"/>
     <Action name="file_open_recent"/>
@@ -23,27 +22,36 @@
   </Menu>
   <Merge/>
   <Menu name="tools">
-    <Merge/>
-    <Separator/>
     <Action name="python_console" />
   </Menu>
   <Menu name="settings">
     <Action name="configure_editor" />
   </Menu>
   <Menu name="help">
+    <Action name="help_about_app"/>
+    <Action name="help_handbook_custom"/>
+    <Action name="help_whats_this"/>
+    <Separator/>
     <Action name="help_engine"/>
-    <Action name="help_tipofday"/>
+    <Action name="help_xmlref"/>
+    <Separator/>
     <Action name="help_trouble"/>
     <Action name="help_nohelp"/>
+    <Separator/>
+    <Action name="help_show_tip"/>
   </Menu>
 </MenuBar>
 
-<ToolBar name="mainToolBar" noMerge="1">
+<ToolBar name="mainToolBar" iconText="IconOnly" noMerge="1">
   <text>Main Toolbar</text>
   <Action name="new_topology"/>
   <Action name="file_open"/>
+  <DefineGroup name="file_operations"/>
+  <Separator/>
+  <DefineGroup name="edit_operations"/>
+  <Separator/>
   <Merge/>
   <Separator/>
   <Action name="python_console"/>
 </ToolBar>
-</kpartgui>
+</gui>

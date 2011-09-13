@@ -37,14 +37,17 @@
 #include "reginaprefset.h"
 
 #include <kparts/part.h>
-#include <qptrlist.h>
+
+#include <KAction>
+
+#include <QLinkedList>
 
 namespace regina {
     class NPacket;
 };
 
 class KAboutData;
-class KInstance;
+class KComponentData;
 class PacketCreator;
 class PacketExporter;
 class PacketFilter;
@@ -71,14 +74,13 @@ class ReginaPart : public KParts::ReadWritePart {
          * Components
          */
         PacketTreeView* treeView;
-        QLabel* reginaIcon;
         QWidget* dockArea;
         PythonManager consoles;
 
         /**
          * Packet panes
          */
-        QPtrList<PacketPane> allPanes;
+        QLinkedList<PacketPane*> allPanes;
         PacketPane* dockedPane;
 
         /**
@@ -93,18 +95,16 @@ class ReginaPart : public KParts::ReadWritePart {
         KAction* actCut;
         KAction* actCopy;
         KAction* actPaste;
-        KAction* actUndo;
-        KAction* actRedo;
-        QPtrList<KAction> treePacketViewActions;
-        QPtrList<KAction> treePacketEditActions;
-        QPtrList<KAction> treeGeneralEditActions;
+        QLinkedList<KAction *> treePacketViewActions;
+        QLinkedList<KAction *> treePacketEditActions;
+        QLinkedList<KAction *> treeGeneralEditActions;
 
     public:
         /**
          * Constructors and destructors.
          */
-        ReginaPart(QWidget *parentWidget, const char *widgetName,
-            QObject *parent, const char *name, const QStringList &args);
+        ReginaPart(QWidget *parentWidget, QObject *parent, 
+              const QStringList &args);
         virtual ~ReginaPart();
 
         /**
@@ -112,18 +112,13 @@ class ReginaPart : public KParts::ReadWritePart {
          */
         virtual void setReadWrite(bool rw);
         virtual void setModified(bool modified);
-        virtual bool closeURL();
-
-        /**
-         * Basic KPart operations.
-         */
-        static KAboutData *createAboutData();
-        static KInstance* factoryInstance();
+        virtual bool closeUrl();
 
         /**
          * View the given packet.
          */
-        void packetView(regina::NPacket*, bool makeVisibleInTree = true);
+        void packetView(regina::NPacket*, bool makeVisibleInTree = true,
+            bool selectInTree = false);
 
         /**
          * Ensure that the given packet is visible in the packet tree.
@@ -165,15 +160,15 @@ class ReginaPart : public KParts::ReadWritePart {
 
         /**
          * Adjusts the part's interface components to reflect the fact
-         * that a packet pane has left the docking area.
+         * that a packet pane is about to leave the docking area.
          *
-         * This must always be called when a packet pane is either closed
-         * or floated into its own window.
+         * This routine must always be called when a packet pane is
+         * either closed or floated into its own window.
          *
          * This routine will happily cope with the case in which the given
          * packet is in fact not currently docked.
          */
-        void hasUndocked(PacketPane* undockedPane);
+        void aboutToUndock(PacketPane* undockedPane);
 
         /**
          * Handles the deregistration of a packet pane from the list of
@@ -328,14 +323,9 @@ class ReginaPart : public KParts::ReadWritePart {
         /**
          * Initial setup.
          */
-        void setupWidgets(QWidget* parentWidget, const char* widgetName);
+        void setupWidgets(QWidget* parentWidget);
         void setupActions();
         void initPacketTree();
-
-        /**
-         * Called when the docked pane or its properties have changed.
-         */
-        void dockChanged();
 
         /**
          * Verify that the part or its components are in an appropriate

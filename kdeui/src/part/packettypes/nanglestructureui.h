@@ -33,19 +33,55 @@
 #ifndef __NANGLESTRUCTUREUI_H
 #define __NANGLESTRUCTUREUI_H
 
+#include "angle/nanglestructurelist.h"
+#include "triangulation/ntriangulation.h"
 #include "../packetui.h"
 
-#include <qtooltip.h>
+#include <QAbstractItemModel>
 
-class AngleHeaderToolTip;
-class QHeader;
 class QLabel;
-class QListView;
-class QVBox;
+class QTreeView;
 
 namespace regina {
     class NAngleStructureList;
     class NPacket;
+};
+
+class AngleModel : public QAbstractItemModel {
+    protected:
+        /**
+         * Details of the angle structures being displayed
+         */
+        regina::NAngleStructureList* structures_;
+        unsigned nCoords;
+
+    public:
+        /**
+         * Constructor.
+         */
+        AngleModel(regina::NAngleStructureList* structures);
+
+        /**
+         * Data retrieval.
+         */
+        regina::NAngleStructureList* structures() const;
+
+        /**
+         * Rebuild the model from scratch.
+         */
+        void rebuild();
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        QModelIndex index(int row, int column,
+                const QModelIndex& parent) const;
+        QModelIndex parent(const QModelIndex& index) const;
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
 };
 
 /**
@@ -58,15 +94,14 @@ class NAngleStructureUI : public QObject, public PacketReadOnlyUI {
         /**
          * Packet details
          */
-        regina::NAngleStructureList* structures;
+        AngleModel* model;
 
         /**
          * Internal components
          */
-        QVBox* ui;
+        QWidget* ui;
         QLabel* stats;
-        QListView* table;
-        AngleHeaderToolTip* headerTips;
+        QTreeView* table;
 
         /**
          * Status of any ongoing actions.
@@ -89,6 +124,7 @@ class NAngleStructureUI : public QObject, public PacketReadOnlyUI {
         QString getPacketMenuText() const;
         void refresh();
 
+        
     public slots:
         /**
          * Provides auto-resizing of columns.
@@ -96,21 +132,23 @@ class NAngleStructureUI : public QObject, public PacketReadOnlyUI {
         void columnResized(int section, int oldSize, int newSize);
 };
 
-/**
- * A utility class for displaying tooltips for table headers.
- */
-class AngleHeaderToolTip : public QToolTip {
-    public:
-        /**
-         * Constructor.
-         */
-        AngleHeaderToolTip(QHeader *header, QToolTipGroup *group = 0);
+inline AngleModel::AngleModel(regina::NAngleStructureList* structures) :
+        structures_(structures),
+        nCoords(3 * structures_->getTriangulation()->getNumberOfTetrahedra()) {
+}
 
-    protected:
-        /**
-         * QToolTip overrides.
-         */
-        void maybeTip(const QPoint& p);
-};
+inline regina::NAngleStructureList* AngleModel::structures() const {
+    return structures_;
+}
+
+inline QModelIndex AngleModel::index(int row, int column,
+        const QModelIndex& parent) const {
+    return createIndex(row, column, quint32((nCoords + 1) * row + column));
+}
+
+inline QModelIndex AngleModel::parent(const QModelIndex& index) const {
+    // All items are top-level.
+    return QModelIndex();
+}
 
 #endif

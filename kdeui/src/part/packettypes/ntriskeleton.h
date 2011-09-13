@@ -36,14 +36,13 @@
 #include "reginaprefset.h"
 #include "../packettabui.h"
 #include "../reginapart.h"
+#include "skeletonwindow.h"
 
-#include <qptrlist.h>
 
 class NTriFaceGraphUI;
-class SkeletonWindow;
 
-class QScrollView;
-class QWidgetStack;
+class QScrollArea;
+class QStackedWidget;
 
 namespace regina {
     class NPacket;
@@ -99,7 +98,7 @@ class NTriSkelCompUI : public QObject, public PacketViewerTab {
         /**
          * Skeleton viewers
          */
-        QPtrList<SkeletonWindow> viewers;
+        QLinkedList<SkeletonWindow*> viewers;
 
     public:
         /**
@@ -143,8 +142,8 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
-        QWidgetStack* stack;
-        QScrollView* layerGraph;
+        QStackedWidget* stack;
+        QScrollArea* layerGraph;
         QWidget* layerInfo;
         QWidget* layerError;
         QLabel* msgInfo;

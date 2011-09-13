@@ -44,6 +44,7 @@
  * available object CSVSurfaceHandler::instance should always be used.
  */
 class CSVSurfaceHandler : public PacketExporter {
+    using PacketExporter::exportData;
     public:
         /**
          * A globally available instance of this class.

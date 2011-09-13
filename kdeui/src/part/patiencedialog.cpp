@@ -35,8 +35,8 @@
 #include <qlayout.h>
 
 PatienceDialog* PatienceDialog::warn(const QString& message,
-        KInstance* instance, QWidget* parent) {
-    PatienceDialog* dlg = new PatienceDialog(message, instance, parent);
+        QWidget* parent) {
+    PatienceDialog* dlg = new PatienceDialog(message, parent);
     dlg->show();
 
     KApplication::kApplication()->processEvents();
@@ -44,21 +44,22 @@ PatienceDialog* PatienceDialog::warn(const QString& message,
     return dlg;
 }
 
-PatienceDialog::PatienceDialog(const QString& message, KInstance* instance,
-        QWidget* parent, const char* name) :
-        KDialogBase(Plain, i18n("Please Wait"), 0 /* no buttons */,
-        static_cast<ButtonCode>(0), parent, name, false) {
-    QFrame* page = plainPage();
-    QHBoxLayout* layout = new QHBoxLayout(page, 0, spacingHint());
+PatienceDialog::PatienceDialog(const QString& message, QWidget* parent) :
+        KDialog(parent, Qt::Dialog) {
+    setCaption(i18n("Please Wait"));
+    setModal(0);
+    setButtons(None);
+
+    QWidget* page = new QWidget(this);
+    setMainWidget(page);
+    QHBoxLayout* layout = new QHBoxLayout(page);
 
     QLabel* clock = new QLabel(page);
-    clock->setPixmap(UserIcon("patience", instance));
-    clock->setAlignment(AlignCenter);
-    layout->add(clock);
+    clock->setPixmap(UserIcon("patience"));
+    clock->setAlignment(Qt::AlignHCenter);
+    layout->addWidget(clock);
 
     QLabel* msg = new QLabel(message, page);
-    layout->add(msg);
-    layout->setStretchFactor(msg, 1);
+    layout->addWidget(msg, 1);
 }
 
-#include "patiencedialog.moc"

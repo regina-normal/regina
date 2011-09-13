@@ -41,6 +41,7 @@ class NTriGluingsUI;
 class NTriSkeletonUI;
 class NTriSurfacesUI;
 class NTriSnapPeaUI;
+class PacketEditIface;
 class QLabel;
 class ReginaPrefSet;
 
@@ -64,17 +65,21 @@ class NTriangulationUI : public PacketTabbedUI {
         NTriSurfacesUI* surfaces;
         NTriSnapPeaUI* snapPea;
 
+        PacketEditIface* editIface;
+
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
         NTriangulationUI(regina::NTriangulation* packet,
             PacketPane* newEnclosingPane);
+        ~NTriangulationUI();
 
         /**
          * PacketUI overrides.
          */
-        const QPtrList<KAction>& getPacketTypeActions();
+        PacketEditIface* getEditIface();
+        const QLinkedList<KAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
 
     public slots:
@@ -122,6 +127,10 @@ class NTriHeaderUI : public PacketViewerTab {
         void refresh();
         void editingElsewhere();
 };
+
+inline PacketEditIface* NTriangulationUI::getEditIface() {
+    return editIface;
+}
 
 inline KToolBar* NTriHeaderUI::getToolBar() {
     return bar;

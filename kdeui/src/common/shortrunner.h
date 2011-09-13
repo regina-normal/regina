@@ -39,7 +39,7 @@
 
 /**
  * A one-shot class for running a process and collecting output.
- * A timeout must be past to guard against a child process that does not
+ * A timeout must be passed to guard against a child process that does not
  * terminate.
  *
  * An object of this class can only be used once.
@@ -50,9 +50,11 @@ class ShortRunner : public QObject {
     private:
         KProcess proc;
         int timeout;
-        QString output;
-        QMutex outputMutex;
         bool reachedTimeout;
+        bool started;
+        bool finished;
+
+        QMutex mutex;
 
     public:
         ShortRunner(int timeoutSeconds = 2);
@@ -83,14 +85,13 @@ class ShortRunner : public QObject {
         bool timedOut() const;
 
     private slots:
-        /**
-         * Process notifications.
-         */
-        void collectOutput(KProcess*, char* buffer, int buflen);
+        void processStarted();
+        void processFinished();
 };
 
 inline ShortRunner::ShortRunner(int timeoutSeconds) :
-        timeout(timeoutSeconds), output(""), reachedTimeout(false) {
+        timeout(timeoutSeconds), reachedTimeout(false),
+        started(false), finished(false) {
 }
 
 inline ShortRunner& ShortRunner::operator << (const char* arg) {

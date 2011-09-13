@@ -37,44 +37,39 @@
 #include "packetui.h"
 #include "reginapart.h"
 
+#include <qboxlayout.h>
 #include <qcolor.h>
 #include <qfile.h>
 #include <qfileinfo.h>
 #include <qlabel.h>
-#include <qlayout.h>
 #include <qsplitter.h>
-#include <qvbox.h>
+#include <QTreeView>
+#include <QTreeWidget>
 #include <qwhatsthis.h>
 #include <kaction.h>
 #include <kfiledialog.h>
 #include <kiconloader.h>
 #include <kinputdialog.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <kmainwindow.h>
 #include <kmessagebox.h>
 #include <kstdguiitem.h>
-#include <kparts/genericfactory.h>
+#include <kxmlguifactory.h>
+#include <ktexteditor/document.h>
+#include <ktexteditor/view.h>
 
-typedef KParts::GenericFactory<ReginaPart> ReginaPartFactory;
-K_EXPORT_COMPONENT_FACTORY(libreginapart, ReginaPartFactory);
-
-ReginaPart::ReginaPart(QWidget *parentWidget, const char *widgetName,
-        QObject *parent, const char *name, const QStringList& /*args*/) :
-        KParts::ReadWritePart(parent, name), packetTree(0),
-        dockedPane(0) {
-    // Get the instance.
-    setInstance(factoryInstance());
-
+ReginaPart::ReginaPart(QWidget *parentWidget, QObject *parent,
+        const QStringList& /*args*/) :
+        KParts::ReadWritePart(parent), packetTree(0), dockedPane(0) {
     // Set up our widgets and actions.
     setXMLFile("reginapart.rc");
-    setupWidgets(parentWidget, widgetName);
+    setupWidgets(parentWidget);
     setupActions();
 
     // Initialise the packet tree.
     initPacketTree();
 
     // Other tidying up.
-    dockChanged();
     setReadWrite(true);
     setModified(false);
     updateTreeEditActions();
@@ -83,9 +78,10 @@ ReginaPart::ReginaPart(QWidget *parentWidget, const char *widgetName,
 
 ReginaPart::~ReginaPart() {
     // Make an emergency closure of any remaining packet panes.
-    QPtrList<PacketPane> panes = allPanes;
-    for (PacketPane* p = panes.first(); p; p = panes.next())
-        delete p;
+    QLinkedList<PacketPane*> panes = allPanes;
+    QLinkedList<PacketPane*>::iterator i;
+    for (i=panes.begin() ; i!=panes.end(); i++)
+        delete *i;
 
     // Delete the visual tree before the underlying packets so that
     // we don't get a flood of change events.
@@ -98,9 +94,10 @@ ReginaPart::~ReginaPart() {
 
 void ReginaPart::setReadWrite(bool rw) {
     // Update each packet pane.
-    QPtrList<PacketPane> panes = allPanes;
-    for (PacketPane* p = panes.first(); p; p = panes.next())
-        p->setReadWrite(rw);
+    QLinkedList<PacketPane*> panes = allPanes;
+    QLinkedList<PacketPane*>::iterator i;
+    for (i=panes.begin() ; i!=panes.end(); i++)
+        (*i)->setReadWrite(rw);
 
     // Update status for edit actions.
     updateTreeEditActions();
@@ -117,25 +114,17 @@ void ReginaPart::setModified(bool modified) {
     ReadWritePart::setModified(modified);
 }
 
-bool ReginaPart::closeURL() {
+bool ReginaPart::closeUrl() {
     if (! closeAllPanes())
         return false;
     consoles.closeAllConsoles();
-    return ReadWritePart::closeURL();
-}
-
-KAboutData* ReginaPart::createAboutData() {
-    return new ReginaAbout("reginapart");
-}
-
-KInstance* ReginaPart::factoryInstance() {
-    return ReginaPartFactory::instance();
+    return ReadWritePart::closeUrl();
 }
 
 void ReginaPart::ensureVisibleInTree(regina::NPacket* packet) {
-    QListViewItem* item = treeView->find(packet);
+    PacketTreeItem* item = treeView->find(packet);
     if (item)
-        treeView->ensureItemVisible(item);
+        treeView->scrollToItem(item);
 }
 
 void ReginaPart::view(PacketPane* newPane) {
@@ -166,45 +155,34 @@ void ReginaPart::dock(PacketPane* newPane) {
     if (! closeDockedPane())
         dockedPane->floatPane();
 
-    newPane->reparent(dockArea, QPoint(0, 0));
+    newPane->setParent(dockArea);
+    static_cast<QBoxLayout*>(dockArea->layout())->addWidget(newPane, 1);
     dockedPane = newPane;
 
-    QPtrList<KAction> typeActions;
+    QList<QAction*> typeActions;
     typeActions.append(newPane->getPacketTypeMenu());
     plugActionList("packet_type_menu", typeActions);
 
     newPane->show();
 
-    if (newPane->hasTextComponent()) {
-        newPane->registerEditOperation(actCut, PacketPane::editCut);
-        newPane->registerEditOperation(actCopy, PacketPane::editCopy);
-        newPane->registerEditOperation(actPaste, PacketPane::editPaste);
-        newPane->registerEditOperation(actUndo, PacketPane::editUndo);
-        newPane->registerEditOperation(actRedo, PacketPane::editRedo);
-    }
+    newPane->registerEditOperations(actCut, actCopy, actPaste);
 
-    dockChanged();
+    // Don't plug the full KTextEditor::View GUI; there's way too much stuff
+    // that we don't want (like Save and Save-As, for instance).
+    // factory()->addClient(doc->views().front());
 }
 
 void ReginaPart::isClosing(PacketPane* closingPane) {
-    allPanes.removeRef(closingPane);
+    allPanes.removeAll(closingPane);
 }
 
-void ReginaPart::hasUndocked(PacketPane* undockedPane) {
-    if (undockedPane->hasTextComponent()) {
-        undockedPane->deregisterEditOperation(actCut, PacketPane::editCut);
-        undockedPane->deregisterEditOperation(actCopy, PacketPane::editCopy);
-        undockedPane->deregisterEditOperation(actPaste, PacketPane::editPaste);
-        undockedPane->deregisterEditOperation(actUndo, PacketPane::editUndo);
-        undockedPane->deregisterEditOperation(actRedo, PacketPane::editRedo);
-    }
+void ReginaPart::aboutToUndock(PacketPane* undockedPane) {
+    undockedPane->deregisterEditOperations();
 
     if (dockedPane == undockedPane) {
         unplugActionList("packet_type_menu");
         dockedPane = 0;
     }
-
-    dockChanged();
 }
 
 bool ReginaPart::openFile() {
@@ -214,18 +192,18 @@ bool ReginaPart::openFile() {
     }
 
     packetTree = regina::readFileMagic(
-        static_cast<const char*>(QFile::encodeName(m_file)));
+        static_cast<const char*>(QFile::encodeName(localFilePath())));
 
     if (packetTree) {
         treeView->fill(packetTree);
         // Expand the first level.
-        if (treeView->firstChild()->firstChild())
-            treeView->ensureItemVisible(treeView->firstChild()->firstChild());
+        if (treeView->invisibleRootItem()->child(0)->child(0))
+            treeView->scrollToItem(treeView->invisibleRootItem()->child(0)->child(0));
         return true;
     } else {
         KMessageBox::error(widget(), i18n(
             "Topology data file %1 could not be opened.  Perhaps "
-            "it is not a Regina data file?").arg(m_file));
+            "it is not a Regina data file?").arg(localFilePath()));
         initPacketTree();
         return false;
     }
@@ -244,15 +222,15 @@ bool ReginaPart::saveFile() {
                 "find a commit button in the bottom-left corner of each "
                 "packet window.<p>"
                 "Do you wish to save now without these changes?</qt>"),
-                QString::null, KStdGuiItem::save()) != KMessageBox::Continue)
+                QString::null, KStandardGuiItem::save()) != KMessageBox::Continue)
             return false;
 
     if (regina::writeXMLFile(
-            static_cast<const char*>(QFile::encodeName(m_file)), packetTree))
+            static_cast<const char*>(QFile::encodeName(localFilePath())), packetTree))
         return true;
     else {
         KMessageBox::error(widget(), i18n(
-            "Topology data file %1 could not be saved.").arg(m_file));
+            "Topology data file %1 could not be saved.").arg(localFilePath()));
         return false;
     }
 }
@@ -265,21 +243,21 @@ void ReginaPart::fileSave() {
 }
 
 void ReginaPart::fileSaveAs() {
-    QString file = KFileDialog::getSaveFileName(QString::null,
+    QString file = KFileDialog::getSaveFileName( KUrl(),
         i18n(FILTER_REGINA), widget(), i18n("Save Data File"));
 
     if (file.isEmpty())
         return;
 
     // Do we need to add an extension?
-    if (prefs.autoFileExtension && QFileInfo(file).extension().isEmpty())
+    if (prefs.autoFileExtension && QFileInfo(file).suffix().isEmpty())
         file += ReginaAbout::regDataExt;
 
     // Does this file already exist?
     if (QFileInfo(file).exists())
         if (KMessageBox::warningContinueCancel(widget(), i18n("A file with "
                 "this name already exists.  Are you sure you wish to "
-                "overwrite it?"), QString::null, KStdGuiItem::save())
+                "overwrite it?"), QString::null, KStandardGuiItem::save())
                 != KMessageBox::Continue)
             return;
 
@@ -287,11 +265,33 @@ void ReginaPart::fileSaveAs() {
     saveAs(file);
 }
 
-void ReginaPart::packetView(regina::NPacket* packet, bool makeVisibleInTree) {
+void ReginaPart::packetView(regina::NPacket* packet, bool makeVisibleInTree,
+        bool selectInTree) {
     view(new PacketPane(this, packet));
 
-    if (makeVisibleInTree)
-        ensureVisibleInTree(packet);
+    if (makeVisibleInTree || selectInTree) {
+        PacketTreeItem* item = treeView->find(packet);
+        if (! item) {
+            // We cannot find the item in the tree.
+            // Perhaps this is because the packet was just created and
+            // the tree has not been refreshed yet?
+            // Force a refresh now and try again.
+            if (packet->getTreeParent()) {
+                PacketTreeItem* parent =
+                    treeView->find(packet->getTreeParent());
+                if (parent) {
+                    parent->refreshSubtree();
+                    item = treeView->find(packet);
+                }
+            }
+        }
+        if (item) {
+            if (makeVisibleInTree)
+                treeView->scrollToItem(item);
+            if (selectInTree)
+                treeView->setCurrentItem(item);
+        }
+    }
 }
 
 void ReginaPart::packetView() {
@@ -312,18 +312,19 @@ void ReginaPart::packetRename() {
     QString suggest = packet->getPacketLabel().c_str();
     while (true) {
         QString newLabel = KInputDialog::getText(i18n("Rename Packet"),
-            i18n("New label:"), suggest, &ok).stripWhiteSpace();
+            i18n("New label:"), suggest, &ok).trimmed();
         if ((! ok) || (newLabel == packet->getPacketLabel().c_str()))
             return;
 
         // Has this label already been used?
-        if (packetTree->findPacketLabel(newLabel.ascii())) {
+        if (packetTree->findPacketLabel(newLabel.toAscii().constData())) {
             KMessageBox::error(widget(), i18n(
                 "Another packet is already using this label."));
-            suggest = packetTree->makeUniqueLabel(newLabel.ascii()).c_str();
+            suggest = packetTree->makeUniqueLabel(
+                newLabel.toAscii().constData()).c_str();
         } else {
             // It's a unique label; we can rename it!
-            packet->setPacketLabel(newLabel.ascii());
+            packet->setPacketLabel(newLabel.toAscii().constData());
             return;
         }
     }
@@ -336,6 +337,13 @@ void ReginaPart::packetDelete() {
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
+    if (! packet->getTreeParent()) {
+        KMessageBox::sorry(widget(), i18n(
+            "The root of the packet tree cannot be deleted.  You may "
+            "delete any other packet (along with all of its children) "
+            "except for this one."));
+        return;
+    }
 
     if (KMessageBox::warningContinueCancel(widget(), i18n(
             "You are about to delete the packet %1 and all its children.  "
@@ -352,14 +360,17 @@ void ReginaPart::subtreeRefresh() {
 
     // Refresh the tree itself.
     PacketTreeItem* item = dynamic_cast<PacketTreeItem*>(
-        treeView->selectedItem());
+        treeView->selectedItems().first());
     item->refreshSubtree();
 
     // Refresh any relevant packet panes.
     regina::NPacket* subtree = item->getPacket();
-    for (PacketPane* pane = allPanes.first(); pane; pane = allPanes.next())
+    for (QLinkedList<PacketPane *>::iterator it = allPanes.begin();
+            it != allPanes.end(); it++) {
+        PacketPane * pane = (*it);
         if (subtree->isGrandparentOf(pane->getPacket()))
             pane->refresh();
+    }
 }
 
 void ReginaPart::clonePacket() {
@@ -378,11 +389,7 @@ void ReginaPart::clonePacket() {
 
     regina::NPacket* ans = packet->clone(false, false);
 
-    PacketTreeItem* item = treeView->find(ans);
-    if (item) {
-        treeView->setSelected(item, true);
-        treeView->ensureItemVisible(item);
-    }
+    treeView->selectPacket(ans, true);
     packetView(ans, false);
 }
 
@@ -396,11 +403,7 @@ void ReginaPart::cloneSubtree() {
 
     regina::NPacket* ans = packet->clone(true, false);
 
-    PacketTreeItem* item = treeView->find(ans);
-    if (item) {
-        treeView->setSelected(item, true);
-        treeView->ensureItemVisible(item);
-    }
+    treeView->selectPacket(ans, true);
     packetView(ans, false);
 }
 
@@ -419,7 +422,7 @@ void ReginaPart::pythonConsole() {
 void ReginaPart::floatDockedPane() {
     // Delegate the entire procedure to PacketPane::floatPane().
     // Processing will return to this class when PacketPane calls
-    // ReginaPart::hasUndocked().
+    // ReginaPart::aboutToUndock().
     if (dockedPane)
         dockedPane->floatPane();
 }
@@ -436,7 +439,7 @@ bool ReginaPart::closeDockedPane() {
     // Close it.  Note that queryClose() has already done the
     // deregistration for us.
     PacketPane* closedPane = dockedPane;
-    hasUndocked(dockedPane);
+    aboutToUndock(dockedPane);
 
     // At this point dockedPane is already 0.
     delete closedPane;
@@ -446,22 +449,26 @@ bool ReginaPart::closeDockedPane() {
 bool ReginaPart::closeAllPanes() {
     // Copy the list since the original list will be modified as panes
     // are closed.
-    QPtrList<PacketPane> panes = allPanes;
+    QLinkedList<PacketPane *> panes = allPanes;
 
     // Try to close each pane in return, returning false if a pane
     // refuses.
-    for (PacketPane* p = panes.first(); p; p = panes.next())
-        if (! p->close())
+    for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
+            it != panes.end() ; it++) {
+        if (! (*it)->close())
             return false;
+    }
 
     return true;
 }
 
 bool ReginaPart::hasUncommittedChanges() {
-    for (PacketPane* p = allPanes.first(); p; p = allPanes.next())
-        if (p->isDirty())
+    QLinkedList<PacketPane *> panes = allPanes;
+    for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
+            it != panes.end() ; it++) {
+        if ((*it)->isDirty())
             return true;
-
+    }
     return false;
 }
 
@@ -469,85 +476,75 @@ void ReginaPart::updatePreferences(const ReginaPrefSet& newPrefs) {
     prefs = newPrefs;
 
     // Act immediately upon this new set of preferences where required.
-    if (prefs.displayIcon)
-        reginaIcon->show();
-    else
-        reginaIcon->hide();
-
     emit preferencesChanged(prefs);
     consoles.updatePreferences(prefs);
 }
 
 void ReginaPart::updateTreePacketActions() {
-    KAction* act;
+    bool enable = ! treeView->selectedItems().isEmpty(); 
 
-    bool enable = (treeView->selectedItem() != 0);
-    for (act = treePacketViewActions.first(); act;
-            act = treePacketViewActions.next())
-        act->setEnabled(enable);
+    QLinkedList<KAction *>::iterator it;
+    for (it = treePacketViewActions.begin(); 
+            it != treePacketViewActions.end(); it++)
+        (*it)->setEnabled(enable);
 
     enable = enable && isReadWrite();
-    for (act = treePacketEditActions.first(); act;
-            act = treePacketEditActions.next())
-        act->setEnabled(enable);
+    for (it = treePacketEditActions.begin(); 
+            it != treePacketEditActions.end(); it++)
+        (*it)->setEnabled(enable);
 }
 
 void ReginaPart::updateTreeEditActions() {
-    KAction* act;
-
     bool enable = isReadWrite();
-    for (act = treeGeneralEditActions.first(); act;
-            act = treeGeneralEditActions.next())
-        act->setEnabled(enable);
+    QLinkedList<KAction *>::iterator it;
+    for (it = treeGeneralEditActions.begin(); 
+            it != treeGeneralEditActions.end(); it++)
+        (*it)->setEnabled(enable);
 
-    enable = enable && (treeView->selectedItem() != 0);
-    for (act = treePacketEditActions.first(); act;
-            act = treePacketEditActions.next())
-        act->setEnabled(enable);
+    enable = enable && (treeView->selectedItems().isEmpty());
+    for (it = treePacketEditActions.begin(); 
+            it != treePacketEditActions.end(); it++)
+        (*it)->setEnabled(enable);
 }
 
-void ReginaPart::setupWidgets(QWidget* parentWidget, const char* widgetName) {
-    QSplitter* splitter = new QSplitter(parentWidget, widgetName);
+void ReginaPart::setupWidgets(QWidget* parentWidget) {
+    QSplitter* splitter = new QSplitter(parentWidget);
+    splitter->setWhatsThis(i18n(
+        "<qt>Each piece of information stored in a data file "
+        "is a <i>packet</i>: this include triangulations, normal surface "
+        "lists, text items and so on.<p>"
+        "Packets within a data file are arranged in a tree-like structure, "
+        "which you should see on the left-hand side of the window.  "
+        "If you click on a packet in the tree, it will open up in the "
+        "right-hand side of the window where you can edit it or view "
+        "detailed information.</qt>"));
 
     // Set up the packet tree viewer.
-    QWidget* treeBox = new QWidget(splitter);
-    QBoxLayout* treeLayout = new QVBoxLayout(treeBox);
-    treeBox->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
-        QSizePolicy::MinimumExpanding, 1, 1));
-    splitter->setResizeMode(treeBox, QSplitter::KeepSize);
-
-    treeView = new PacketTreeView(this, treeBox);
-    QWhatsThis::add(treeView, i18n("<qt>You are looking at the packet tree "
-        "for this topology data file.<p>"
-        "Each piece of information stored in a data file "
-        "is a packet: this include triangulations, normal surface "
-        "lists, text items and so on.  "
-        "Packets within a data file are arranged in a tree structure, "
-        "so that each packet may contain one or more child packets.</qt>"));
-    treeLayout->addWidget(treeView, 1);
-    connect(treeView, SIGNAL(selectionChanged()), this,
+    treeView = new PacketTreeView(this, splitter);
+    treeView->setSizePolicy(QSizePolicy(
+        QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
+    // Leave the stretch factors at the default of zero.
+    connect(treeView, SIGNAL(itemSelectionChanged()), this,
         SLOT(updateTreePacketActions()));
 
-    reginaIcon = new QLabel(treeBox);
-    reginaIcon->setPixmap(UserIcon("reginatrans", instance()));
-    reginaIcon->setPaletteBackgroundPixmap(UserIcon("stars", instance()));
-    reginaIcon->setAlignment(AlignCenter);
-    reginaIcon->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    treeLayout->addWidget(reginaIcon);
-    reginaIcon->hide();
-
-    // Make sure the tree area doesn't shrink too far, even when the
-    // icon isn't there to prop it out.
-    treeLayout->addStrut(reginaIcon->pixmap()->width());
+    // Make sure the tree area doesn't shrink too far.
+    // Removed this for the KDE4 port, things seem fine without it.
+    // treeLayout->addStrut(150);
 
     // Set up the docking area.
-    dockArea = new QVBox(splitter);
-    dockArea->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
-        QSizePolicy::MinimumExpanding, 5, 5));
+    dockArea = new QWidget(splitter);
+    QBoxLayout* dockLayout = new QVBoxLayout(dockArea);
+    dockLayout->setContentsMargins(0, 0, 0, 0);
+
+    QSizePolicy qpol(
+        QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    qpol.setHorizontalStretch(5);
+    qpol.setVerticalStretch(5);
+    dockArea->setSizePolicy(qpol);
 
     // Make sure the docking area gets some space even when there's
     // nothing in it.
-    dynamic_cast<QBoxLayout*>(dockArea->layout())->addStrut(100);
+    dockLayout->addStrut(100);
 
     // Make the splitter our main widget.
     setWidget(splitter);
@@ -557,15 +554,10 @@ void ReginaPart::initPacketTree() {
     if (packetTree)
         delete packetTree;
     packetTree = new regina::NContainer();
-    packetTree->setPacketLabel(i18n("Container").ascii());
+    packetTree->setPacketLabel(i18n("Container").toAscii().constData());
 
     // Update the visual representation.
     treeView->fill(packetTree);
-}
-
-void ReginaPart::dockChanged() {
-    // This was once useful, but since the packet type menus were
-    // rearranged this routine is no longer needed.
 }
 
 bool ReginaPart::checkReadWrite() {
@@ -598,4 +590,3 @@ regina::NPacket* ReginaPart::checkSubtreeSelected() {
     return 0;
 }
 
-#include "reginapart.moc"

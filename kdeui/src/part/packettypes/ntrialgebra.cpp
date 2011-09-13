@@ -34,7 +34,6 @@
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
-#include "../gridlistview.h"
 #include "gaprunner.h"
 #include "ntrialgebra.h"
 
@@ -44,17 +43,17 @@
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <qfileinfo.h>
-#include <qheader.h>
+#include <QHeaderView>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qlistwidget.h>
 #include <qpainter.h>
 #include <qpushbutton.h>
 #include <qregexp.h>
-#include <qscrollview.h>
+#include <QScrollArea>
 #include <qstyle.h>
-#include <qstylesheet.h>
-#include <qtooltip.h>
-#include <qwhatsthis.h>
+#include <QTreeWidgetItem>
+#include <QTextDocument>
 #include <qvalidator.h>
 
 using regina::NPacket;
@@ -78,53 +77,29 @@ namespace {
      * These list view items are sorted numerically and drawn with a
      * grid.
      */
-    class TuraevViroItem : public GridListViewItem {
+    class TuraevViroItem : public QTreeWidgetItem {
         private:
             unsigned long r_;
             unsigned long root_;
             double value_;
 
         public:
-            TuraevViroItem(QListView* parent, unsigned long r,
-                    unsigned long root, double value) :
-                    GridListViewItem(parent), r_(r), root_(root),
-                    value_(value) {
+            TuraevViroItem(unsigned long r, unsigned long root, double value) :
+                    QTreeWidgetItem(), r_(r), root_(root), value_(value) {
+                setText(0, QString::number(r_));
+                setText(1, QString::number(root_));
+                setText(2, QString::number(value_));
+
+                for (int i = 0; i < 3; ++i)
+                    setTextAlignment(i, Qt::AlignRight);
             }
 
-            bool matches(unsigned long r, unsigned long root) {
-                return (r_ == r && root_ == root);
-            }
-
-            QString text(int col) const {
-                if (col == 0)
-                    return QString::number(r_);
-                else if (col == 1)
-                    return QString::number(root_);
-                else
-                    return QString::number(value_);
-            }
-
-            int compare(QListViewItem* i, int col, bool) const {
-                TuraevViroItem* other = dynamic_cast<TuraevViroItem*>(i);
-                if (col == 0) {
-                    if (r_ < other->r_) return -1;
-                    if (r_ > other->r_) return 1;
-                    // If they're equal, fall back to column 1.
-                    if (root_ < other->root_) return -1;
-                    if (root_ > other->root_) return 1;
-                    return 0;
-                } else if (col == 1) {
-                    if (root_ < other->root_) return -1;
-                    if (root_ > other->root_) return 1;
-                    // If they're equal, fall back to column 0.
-                    if (r_ < other->r_) return -1;
-                    if (r_ > other->r_) return 1;
-                    return 0;
-                } else {
-                    if (value_ < other->value_) return -1;
-                    if (value_ > other->value_) return 1;
-                    return 0;
-                }
+            int compare(const TuraevViroItem* other) const {
+                if (r_ < other->r_) return -1;
+                if (r_ > other->r_) return 1;
+                if (root_ < other->root_) return -1;
+                if (root_ > other->root_) return 1;
+                return 0;
             }
     };
 }
@@ -160,57 +135,59 @@ NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
         tri(packet) {
     ui = new QWidget();
 
-    QGridLayout* homologyGrid = new QGridLayout(ui, 7, 4, 0, 5);
+    QGridLayout* homologyGrid = new QGridLayout(ui);//, 7, 4, 0, 5);
     homologyGrid->setRowStretch(0, 1);
     homologyGrid->setRowStretch(6, 1);
-    homologyGrid->setColStretch(0, 1);
-    homologyGrid->setColStretch(3, 1);
+    homologyGrid->setColumnStretch(0, 1);
+    homologyGrid->setColumnStretch(3, 1);
 
     QLabel* label;
     QString msg;
 
-    label = new QLabel(i18n("H1(M)"), ui);
+    label = new QLabel(i18n("H1(M):"));
     homologyGrid->addWidget(label, 1, 1);
     H1 = new QLabel(ui);
     homologyGrid->addWidget(H1, 1, 2);
     msg = i18n("The first homology group of this triangulation.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(H1, msg);
+    label->setWhatsThis(msg);
+    H1->setWhatsThis(msg);
 
-    label = new QLabel(i18n("H1(M, Bdry M)"), ui);
+    label = new QLabel(i18n("H1(M, %1M):").arg(QChar(0x2202 /* bdry */)));
     homologyGrid->addWidget(label, 2, 1);
     H1Rel = new QLabel(ui);
     homologyGrid->addWidget(H1Rel, 2, 2);
     msg = i18n("The relative first homology group of this triangulation "
         "with respect to the boundary.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(H1Rel, msg);
+    label->setWhatsThis(msg);
+    H1Rel->setWhatsThis(msg);
 
-    label = new QLabel(i18n("H1(Bdry M)"), ui);
+    label = new QLabel(i18n("H1(%1M):").arg(QChar(0x2202 /* bdry */)));
     homologyGrid->addWidget(label, 3, 1);
     H1Bdry = new QLabel(ui);
     homologyGrid->addWidget(H1Bdry, 3, 2);
     msg = i18n("The first homology group of the boundary of this "
         "triangulation.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(H1Bdry, msg);
+    label->setWhatsThis(msg);
+    H1Bdry->setWhatsThis(msg);
 
-    label = new QLabel(i18n("H2(M)"), ui);
+    label = new QLabel(i18n("H2(M):"));
     homologyGrid->addWidget(label, 4, 1);
     H2 = new QLabel(ui);
     homologyGrid->addWidget(H2, 4, 2);
     msg = i18n("The second homology group of this triangulation.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(H2, msg);
+    label->setWhatsThis(msg);
+    H2->setWhatsThis(msg);
 
-    label = new QLabel(i18n("H2(M ; Z_2)"), ui);
+    label = new QLabel(i18n("H2(M ; Z_2):"));
+    //label = new QLabel(i18n("H2(M ; %1%2):").arg(QChar(0x2124 /* Z */)).
+    //    arg(QChar(0x2082 /* sub 2 */)));
     homologyGrid->addWidget(label, 5, 1);
     H2Z2 = new QLabel(ui);
     homologyGrid->addWidget(H2Z2, 5, 2);
     msg = i18n("<qt>The second homology group of this triangulation "
         "with coefficients in Z<sub>2</sub>.</qt>");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(H2Z2, msg);
+    label->setWhatsThis(msg);
+    H2Z2->setWhatsThis(msg);
 }
 
 regina::NPacket* NTriHomologyUI::getPacket() {
@@ -259,49 +236,46 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
         PacketTabbedViewerTab* useParentUI, const QString& useGAPExec) :
         PacketViewerTab(useParentUI), tri(packet), GAPExec(useGAPExec) {
     ui = new QWidget();
-    QBoxLayout* layout = new QVBoxLayout(ui, 5, 0);
+    QBoxLayout* layout = new QVBoxLayout(ui);
 
     layout->addStretch(1);
 
-    fundName = new QLabel(ui);
+    fundName = new QLabel();
     fundName->setAlignment(Qt::AlignCenter);
-    QWhatsThis::add(fundName, i18n("The common name of the fundamental "
+    fundName->setWhatsThis(i18n("The common name of the fundamental "
         "group of this triangulation, if it can be recognised.  Note that "
         "for even a relatively straightforward group, if the presentation "
         "is too complicated then the group might still not be recognised."));
     layout->addWidget(fundName);
 
-    layout->addSpacing(5);
-
-    QBoxLayout* wideFundPresArea = new QHBoxLayout(layout);
+    QBoxLayout* wideFundPresArea = new QHBoxLayout();
+    layout->addLayout(wideFundPresArea);
     wideFundPresArea->addStretch(1);
 
-    QBoxLayout* fundPresArea = new QVBoxLayout(wideFundPresArea);
-    fundGens = new QLabel(ui);
+    QBoxLayout* fundPresArea = new QVBoxLayout();
+    wideFundPresArea->addLayout(fundPresArea);
+    fundGens = new QLabel();
     fundPresArea->addWidget(fundGens);
-    fundRelCount = new QLabel(ui);
+    fundRelCount = new QLabel();
     fundPresArea->addWidget(fundRelCount);
-    fundRels = new KListView(ui);
-    fundRels->header()->hide();
-    fundRels->addColumn(QString::null);
-    fundRels->setSorting(-1);
-    fundRels->setSelectionMode(QListView::NoSelection);
+    fundRels = new QListWidget();
+    fundRels->setSelectionMode(QListWidget::NoSelection);
     fundPresArea->addWidget(fundRels, 1);
 
-    QWhatsThis::add(ui, i18n("A full set of generators and relations forming "
+    ui->setWhatsThis(i18n("A full set of generators and relations forming "
         "a presentation of the fundamental group of this triangulation."));
 
     wideFundPresArea->addStretch(1);
     layout->addStretch(1);
-    layout->addSpacing(5);
 
-    QBoxLayout* btnArea = new QHBoxLayout(layout);
+    QBoxLayout* btnArea = new QHBoxLayout();
+    layout->addLayout(btnArea);
     btnArea->addStretch(1);
-    btnGAP = new QPushButton(SmallIconSet("wizard"),
-        i18n("Simplify using GAP"), ui);
-    QToolTip::add(btnGAP, i18n("Simplify the group presentation using "
+    btnGAP = new QPushButton(KIcon("tools-wizard"),
+        i18n("Simplify using GAP"));
+    btnGAP->setToolTip(i18n("Simplify the group presentation using "
         "GAP (Groups, Algorithms and Programming)"));
-    QWhatsThis::add(btnGAP, i18n("<qt>Simplify the presentation of the "
+    btnGAP->setWhatsThis(i18n("<qt>Simplify the presentation of the "
         "fundamental group using the program GAP (Groups, Algorithms and "
         "Programming).<p>Note that GAP will need to be installed separately "
         "on your system.</qt>"));
@@ -329,12 +303,16 @@ void NTriFundGroupUI::refresh() {
             fundName->setText(i18n("Not recognised"));
 
         unsigned long nGens = pres.getNumberOfGenerators();
+        bool alphabetic = (nGens <= 26);
         if (nGens == 0)
             fundGens->setText(i18n("No generators"));
         else if (nGens == 1)
-            fundGens->setText(i18n("1 generator: g0"));
+            fundGens->setText(i18n("1 generator: a"));
         else if (nGens == 2)
-            fundGens->setText(i18n("2 generators: g0, g1"));
+            fundGens->setText(i18n("2 generators: a, b"));
+        else if (alphabetic)
+            fundGens->setText(i18n("%1 generators: a ... %2").
+                arg(nGens).arg(char('a' + nGens - 1)));
         else
             fundGens->setText(i18n("%1 generators: g0 ... g%2").
                 arg(nGens).arg(nGens - 1));
@@ -353,12 +331,37 @@ void NTriFundGroupUI::refresh() {
         }
         fundRelCount->show();
 
-        // Add the relations in reverse order since the QListViewItem
-        // constructor puts new items at the front.
         fundRels->clear();
-        for (long i = nRels - 1; i >= 0; i--)
-            new KListViewItem(fundRels,
-                QString("1 = ") + pres.getRelation(i).toString().c_str());
+        if (alphabetic) {
+            // Generators are a, b, ...
+            for (long i = 0; i < nRels; ++i) {
+                QString rel("1 =");
+                const std::list<regina::NGroupExpressionTerm>& terms(
+                    pres.getRelation(i).getTerms());
+                if (terms.empty())
+                    rel += " 1";
+                else {
+                    std::list<regina::NGroupExpressionTerm>::const_iterator it;
+                    for (it = terms.begin(); it != terms.end(); ++it) {
+                        rel += ' ';
+                        if (it->exponent == 0)
+                            rel += '1';
+                        else {
+                            rel += char('a' + it->generator);
+                            if (it->exponent != 1)
+                                rel += QString("^%1").arg(it->exponent);
+                        }
+                    }
+                }
+                new QListWidgetItem(rel, fundRels);
+            }
+        } else {
+            // Generators are g0, g1, ...
+            // This is the default text that comes from the calculation engine.
+            for (long i = 0; i < nRels; ++i)
+                new QListWidgetItem(QString("1 = ") +
+                    pres.getRelation(i).toString().c_str(), fundRels);
+        }
 
         btnGAP->setEnabled(true);
     } else {
@@ -410,7 +413,7 @@ void NTriFundGroupUI::simplifyGAP() {
 QString NTriFundGroupUI::verifyGAPExec() {
     QString useExec = GAPExec;
 
-    if (useExec.find('/') < 0) {
+    if (useExec.indexOf('/') < 0) {
         // Hunt on the search path.
         useExec = KStandardDirs::findExe(useExec);
         if (useExec.isNull()) {
@@ -452,9 +455,10 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
-    QBoxLayout* layout = new QVBoxLayout(ui, 5, 5);
+    QBoxLayout* layout = new QVBoxLayout(ui);
 
-    QBoxLayout* paramsArea = new QHBoxLayout(layout);
+    QBoxLayout* paramsArea = new QHBoxLayout();
+    layout->addLayout(paramsArea);
     paramsArea->addStretch(1);
 
     QString expln = i18n("<qt>The (r, root) parameters of a Turaev-Viro "
@@ -469,21 +473,21 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
         "Note that only small values of <i>r</i> "
         "should be used, since the time required to calculate the invariant "
         "grows exponentially with <i>r</i>.</qt>");
-    paramsLabel = new QLabel(i18n("Parameters (r, root):"), ui);
-    QWhatsThis::add(paramsLabel, expln);
+    paramsLabel = new QLabel(i18n("Parameters (r, root):"));
+    paramsLabel->setWhatsThis(expln);
     paramsArea->addWidget(paramsLabel);
 
-    params = new KLineEdit(ui);
+    params = new QLineEdit(ui);
     params->setValidator(new QRegExpValidator(reTVParams, ui));
-    QWhatsThis::add(params, expln);
+    params->setWhatsThis(expln);
     connect(params, SIGNAL(returnPressed()), this, SLOT(calculateInvariant()));
     paramsArea->addWidget(params);
 
-    calculate = new QPushButton(SmallIconSet("exec"), i18n("Calculate"), ui);
+    calculate = new QPushButton(KIcon("system-run"), i18n("Calculate"));
     // calculate->setFlat(true);
-    QToolTip::add(calculate, i18n("Calculate the Turaev-Viro invariant with "
+    calculate->setToolTip(i18n("Calculate the Turaev-Viro invariant with "
         "these parameters"));
-    QWhatsThis::add(calculate, i18n("<qt>Calculate the Turaev-Viro invariant "
+    calculate->setWhatsThis(i18n("<qt>Calculate the Turaev-Viro invariant "
         "corresponding to the (r, root) parameters in the nearby text "
         "box.  The result will be added to the list below.<p>"
         "<b>Warning:</b> This calculation can be quite slow for large "
@@ -494,27 +498,39 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
 
     paramsArea->addStretch(1);
 
-    QBoxLayout* invArea = new QHBoxLayout(layout);
-    layout->setStretchFactor(invArea, 1);
+    QBoxLayout* invArea = new QHBoxLayout();
+    layout->addLayout(invArea, 1);
     invArea->addStretch(1);
 
-    invariants = new KListView(ui);
-    invariants->addColumn(i18n("r"));
-    invariants->addColumn(i18n("root"));
-    invariants->addColumn(i18n("value"));
-    invariants->setSelectionMode(QListView::NoSelection);
-    invariants->setSorting(0);
-    invariants->setColumnAlignment(0, Qt::AlignLeft);
-    invariants->setColumnAlignment(1, Qt::AlignLeft);
-    invariants->setColumnAlignment(2, Qt::AlignLeft);
-    invariants->setResizeMode(QListView::AllColumns);
-    QWhatsThis::add(invariants, i18n("A list of all Turaev-Viro invariants "
+    invariants = new QTreeWidget(ui);
+    invariants->setRootIsDecorated(false);
+    invariants->setAlternatingRowColors(true);
+    invariants->header()->setStretchLastSection(false);
+    invariants->header()->setResizeMode(QHeaderView::ResizeToContents);
+    invariants->setSelectionMode(QAbstractItemView::NoSelection);
+    invariants->setWhatsThis(i18n("A list of all Turaev-Viro invariants "
         "that have been calculated so far for this triangulation.  To "
         "calculate a new invariant, enter the (r, root) parameters into the "
         "text box above and press <i>Calculate</i>."));
     invArea->addWidget(invariants, 1);
 
+    invariants->setColumnCount(3);
+    QTreeWidgetItem* header = new QTreeWidgetItem();
+    header->setText(0, i18n("r"));
+    header->setText(1, i18n("root"));
+    header->setText(2, i18n("value"));
+    for (int i = 0; i < 3; ++i)
+        header->setTextAlignment(i, Qt::AlignCenter);
+    invariants->setHeaderItem(header);
+
     invArea->addStretch(1);
+
+    QLabel* warning = new QLabel(i18n("<qt><b>Warning:</b> These are "
+        "computed using floating point arithmetic, with no guaranteed level "
+        "of accuracy.</qt>"));
+    warning->setWordWrap(true);
+    warning->setAlignment(Qt::AlignCenter);
+    layout->addWidget(warning);
 }
 
 regina::NPacket* NTriTuraevViroUI::getPacket() {
@@ -532,11 +548,13 @@ void NTriTuraevViroUI::refresh() {
 
     invariants->clear();
 
+    // Since TuraevViroSet is a sorted data type,
+    // these items will automatically be inserted in the right order.
     const NTriangulation::TuraevViroSet& invs(tri->allCalculatedTuraevViro());
     for (NTriangulation::TuraevViroSet::const_iterator it = invs.begin();
             it != invs.end(); it++)
-        new TuraevViroItem(invariants, (*it).first.first,
-            (*it).first.second, (*it).second);
+        invariants->addTopLevelItem(new TuraevViroItem(
+            (*it).first.first, (*it).first.second, (*it).second));
 }
 
 void NTriTuraevViroUI::editingElsewhere() {
@@ -613,17 +631,25 @@ void NTriTuraevViroUI::calculateInvariant() {
             return;
 
     // Calculate the invariant!
-    // Don't forget to check for duplicate list items.
     double value = tri->turaevViro(r, root);
+    TuraevViroItem* item = new TuraevViroItem(r, root, value);
 
-    for (QListViewItem* i = invariants->firstChild(); i;
-            i = i->nextSibling())
-        if (dynamic_cast<TuraevViroItem*>(i)->matches(r, root)) {
-            delete i;
-            break;
+    // Insert the invariant in the right place in the table, and delete
+    // any previous invariant with the same parameters if it exists.
+    TuraevViroItem* curr;
+    int cmp;
+    for (int i = 0; i < invariants->invisibleRootItem()->childCount(); i++) {
+        curr = dynamic_cast<TuraevViroItem*>(
+            invariants->invisibleRootItem()->child(i));
+        cmp = item->compare(curr);
+        if (cmp <= 0) {
+            if (cmp == 0)
+                delete curr;
+            invariants->insertTopLevelItem(i, item);
+            return;
         }
-
-    new TuraevViroItem(invariants, r, root, value);
+    }
+    invariants->addTopLevelItem(item);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -650,17 +676,17 @@ void NTriCellularInfoUI::refresh() {
         EulerChar->setText(QString::number(minfo.getEulerChar()));
 
         H0H1H2H3->setText(i18n("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4").
-            arg(minfo.getHomology(0).toString()).
-            arg(minfo.getHomology(1).toString()).
-            arg(minfo.getHomology(2).toString()).
-            arg(minfo.getHomology(3).toString()));
+            arg(minfo.getHomology(0).toString().c_str()).
+            arg(minfo.getHomology(1).toString().c_str()).
+            arg(minfo.getHomology(2).toString().c_str()).
+            arg(minfo.getHomology(3).toString().c_str()));
 
         HBdry->setText(i18n("H0 = %1,  H1 = %2,  H2 = %3").
-            arg(minfo.getBdryHomology(0).toString()).
-            arg(minfo.getBdryHomology(1).toString()).
-            arg(minfo.getBdryHomology(2).toString()));
+            arg(minfo.getBdryHomology(0).toString().c_str()).
+            arg(minfo.getBdryHomology(1).toString().c_str()).
+            arg(minfo.getBdryHomology(2).toString().c_str()));
 
-        BdryMap->setText(minfo.getBdryHomologyMap(1).toString());
+        BdryMap->setText(minfo.getBdryHomologyMap(1).toString().c_str());
 
         if (! tri->isConnected()) {
             QString msg(i18n("Triangulation is disconnected."));
@@ -673,10 +699,12 @@ void NTriCellularInfoUI::refresh() {
             // 8 principle cases:
             // orientable y/n, boundary y/n, torsion exists y/n
             if (tri->isOrientable()) {
-                TorForOrders->setText(minfo.getTorsionRankVectorString());
-                TorForSigma->setText(minfo.getTorsionSigmaVectorString());
+                TorForOrders->setText(
+                    minfo.getTorsionRankVectorString().c_str());
+                TorForSigma->setText(
+                    minfo.getTorsionSigmaVectorString().c_str());
                 TorForLegendre->setText(
-                    minfo.getTorsionLegendreSymbolVectorString());
+                    minfo.getTorsionLegendreSymbolVectorString().c_str());
             } else {
                 // The torsion linking form routines insist on orientability,
                 // so we should avoid calling them.
@@ -691,7 +719,7 @@ void NTriCellularInfoUI::refresh() {
             // non-orientable triangulations.
             // Encase it in <qt>..</qt> so it can wrap over multiple lines.
             EmbeddingComments->setText(QString("<qt>%1</qt>").arg(
-                QStyleSheet::escape(minfo.getEmbeddabilityComment())));
+                Qt::escape(minfo.getEmbeddabilityComment().c_str())));
         }
     } else {
         QString msg(i18n("Invalid Triangulation"));
@@ -711,21 +739,26 @@ void NTriCellularInfoUI::refresh() {
 NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
-    QScrollView* scroller = new QScrollView();
-    scroller->setResizePolicy(QScrollView::AutoOneFit);
+    QScrollArea* scroller = new QScrollArea();
+    scroller->setWidgetResizable(true);
     scroller->setFrameStyle(QFrame::NoFrame);
+    // Transparency must be applied to both the QScrollArea *and* some of its
+    // internal components (possibly the widget that holds the viewport?).
+    scroller->setStyleSheet("QScrollArea, .QWidget { "
+                                "background-color:transparent; "
+                            "}");
     ui = scroller;
 
     QWidget* grid = new QWidget(scroller->viewport());
-    scroller->addChild(grid);
+    scroller->setWidget(grid);
 
-    QGridLayout* homologyGrid = new QGridLayout(grid, 11, 4, 0, 5);
+    QGridLayout* homologyGrid = new QGridLayout(grid);//, 11, 4, 0, 5);
     homologyGrid->setRowStretch(0, 1);
     homologyGrid->setRowStretch(11, 1);
-    homologyGrid->setColStretch(0, 1);
-    homologyGrid->setColStretch(2, 1); // Give the embeddability comment
+    homologyGrid->setColumnStretch(0, 1);
+    homologyGrid->setColumnStretch(2, 1); // Give the embeddability comment
                                        // a little room to breathe.
-    homologyGrid->setColStretch(3, 1);
+    homologyGrid->setColumnStretch(3, 1);
 
     QLabel* label;
     QString msg;
@@ -738,8 +771,8 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
                "the compact manifold specified by this triangulation.  "
                "The four numbers displayed here count 0-cells, 1-cells, "
                "2-cells and 3-cells respectively.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(Cells, msg);
+    label->setWhatsThis(msg);
+    Cells->setWhatsThis(msg);
 
     label = new QLabel(i18n("Dual cells: "), grid);
     homologyGrid->addWidget(label, 2, 1);
@@ -749,16 +782,16 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
                 "corresponding to the triangulation of this "
                 "compact manifold.  The four numbers displayed here "
                 "count 0-cells, 1-cells, 2-cells and 3-cells respectively.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(DualCells, msg);
+    label->setWhatsThis(msg);
+    DualCells->setWhatsThis(msg);
 
     label = new QLabel(i18n("Euler characteristic: "), grid);
     homologyGrid->addWidget(label, 3, 1);
     EulerChar = new QLabel(grid);
     homologyGrid->addWidget(EulerChar, 3, 2);
     msg = i18n("The Euler characteristic of this compact manifold.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(EulerChar, msg);
+    label->setWhatsThis(msg);
+    EulerChar->setWhatsThis(msg);
 
     label = new QLabel(i18n("Homology groups: "), grid);
     homologyGrid->addWidget(label, 4, 1);
@@ -767,8 +800,8 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     msg = i18n("The homology groups of this manifold with coefficients "
                "in the integers.  The groups are listed in order of "
                 "increasing dimension.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(H0H1H2H3, msg);
+    label->setWhatsThis(msg);
+    H0H1H2H3->setWhatsThis(msg);
 
     label = new QLabel(i18n("Boundary homology groups: "), grid);
     homologyGrid->addWidget(label, 5, 1);
@@ -777,10 +810,11 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     msg = i18n("The homology groups of this manifold's boundary with "
                "coefficients in the integers.  The groups are listed "
                "in order of increasing dimension.");
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(HBdry, msg);
+    label->setWhatsThis(msg);
+    HBdry->setWhatsThis(msg);
 
-    label = new QLabel(i18n("H1(Bdry M -> M): "), grid);
+    label = new QLabel(i18n("<qt>H1(%1M &rarr; M): </qt>").
+        arg(QChar(0x2202 /* bdry */)), grid);
     homologyGrid->addWidget(label, 6, 1);
     BdryMap = new QLabel(grid);
     homologyGrid->addWidget(BdryMap, 6, 2);
@@ -788,8 +822,8 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
                 "manifold.  This item describes some properties of "
                 "the induced map on H<sub>1</sub>.</qt>"
                 );
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(BdryMap, msg);
+    label->setWhatsThis(msg);
+    BdryMap->setWhatsThis(msg);
 
     label = new QLabel(i18n("Torsion form rank vector: "), grid);
     homologyGrid->addWidget(label, 7, 1);
@@ -807,8 +841,8 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
                "on 3-manifolds</i>, Math. Ann. <b>253</b> (1980), "
                "no. 1, 29&ndash;42.</qt>"
                 );
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(TorForOrders, msg);
+    label->setWhatsThis(msg);
+    TorForOrders->setWhatsThis(msg);
 
     label = new QLabel(i18n("Sigma vector: "), grid);
     homologyGrid->addWidget(label, 8, 1);
@@ -823,8 +857,8 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
                "on 3-manifolds</i>, Math. Ann. <b>253</b> (1980), "
                "no. 1, 29&ndash;42.</qt>"
                 );
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(TorForSigma, msg);
+    label->setWhatsThis(msg);
+    TorForSigma->setWhatsThis(msg);
 
     label = new QLabel(i18n("Legendre symbol vector: "), grid);
     homologyGrid->addWidget(label, 9, 1);
@@ -839,8 +873,8 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
                "on 3-manifolds</i>, Math. Ann. <b>253</b> (1980), "
                "no. 1, 29&ndash;42.</qt>"
                 );
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(TorForLegendre, msg);
+    label->setWhatsThis(msg);
+    TorForLegendre->setWhatsThis(msg);
 
     label = new QLabel(i18n("Comments: "), grid);
     homologyGrid->addWidget(label, 10, 1);
@@ -855,8 +889,8 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
                 "S<sup>5</sup> and some elementary homological "
                 "observations.</qt>"
                 );
-    QWhatsThis::add(label, msg);
-    QWhatsThis::add(EmbeddingComments, msg);
+    label->setWhatsThis(msg);
+    EmbeddingComments->setWhatsThis(msg);
 }
 
 
@@ -883,4 +917,3 @@ void NTriCellularInfoUI::editingElsewhere() {
     EmbeddingComments->setText(msg);
 }
 
-#include "ntrialgebra.moc"

@@ -37,7 +37,7 @@
 
 class NoSnapPea;
 class QLabel;
-class QWidgetStack;
+class QStackedWidget;
 
 namespace regina {
     class NPacket;
@@ -62,7 +62,7 @@ class NTriSnapPeaUI : public QObject, public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
-        QWidgetStack* data;
+        QStackedWidget* data;
         QWidget* dataValid;
         QWidget* dataNull;
         QLabel* solutionType;

@@ -32,43 +32,44 @@
 #include "reginapart.h"
 
 #include <kaction.h>
+#include <kactioncollection.h>
 #include <klocale.h>
 #include <kmenubar.h>
-#include <kstdaction.h>
+#include <kstandardaction.h>
+#include <ktexteditor/document.h>
+
+#include <QLinkedList>
 
 PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
-        KMainWindow(parent, "Packet#",
-        WType_TopLevel | WDestructiveClose | WStyle_ContextHelp),
+        KXmlGuiWindow(parent, 
+        Qt::Window | Qt::WindowContextHelpButtonHint),
         heldPane(newPane) {
     // Resize ourselves nicely.
     if (! initialGeometrySet())
         resize(400, 400);
-
+    
+    // Set destructive close
+    setAttribute(Qt::WA_DeleteOnClose);
+    
     // Set up our actions.
-    setInstance(ReginaPart::factoryInstance());
+    KAction* actCut = KStandardAction::cut(0, 0, actionCollection());
+    KAction* actCopy = KStandardAction::copy(0, 0, actionCollection());
+    KAction* actPaste = KStandardAction::paste(0, 0, actionCollection());
 
-    if (newPane->hasTextComponent()) {
-        KAction* cut = KStdAction::cut(0, 0, actionCollection());
-        KAction* copy = KStdAction::copy(0, 0, actionCollection());
-        KAction* paste = KStdAction::paste(0, 0, actionCollection());
-        KAction* undo = KStdAction::undo(0, 0, actionCollection());
-        KAction* redo = KStdAction::redo(0, 0, actionCollection());
+    actCut->setWhatsThis(i18n("Cut out the current selection and store it "
+        "in the clipboard."));
+    actCopy->setWhatsThis(i18n("Copy the current selection to the clipboard."));
+    actPaste->setWhatsThis(i18n("Paste the contents of the clipboard."));
 
-        newPane->registerEditOperation(cut, PacketPane::editCut);
-        newPane->registerEditOperation(copy, PacketPane::editCopy);
-        newPane->registerEditOperation(paste, PacketPane::editPaste);
-        newPane->registerEditOperation(undo, PacketPane::editUndo);
-        newPane->registerEditOperation(redo, PacketPane::editRedo);
-    }
+    newPane->registerEditOperations(actCut, actCopy, actPaste);
 
-    createGUI("packetwindow.rc", false);
+    createGUI("packetwindow.rc");
 
-    QPtrList<KAction> typeActions;
+    QList<QAction*> typeActions;
     typeActions.append(newPane->getPacketTypeMenu());
     plugActionList("packet_type_menu", typeActions);
 
     // Set up the widgets.
-    newPane->reparent(this, QPoint(0, 0));
     setCentralWidget(newPane);
     newPane->show();
 }
@@ -77,4 +78,3 @@ bool PacketWindow::queryClose() {
     return heldPane->queryClose();
 }
 
-#include "packetwindow.moc"

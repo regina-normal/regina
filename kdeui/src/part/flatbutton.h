@@ -63,7 +63,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __FLATBUTTON_H
 #define __FLATBUTTON_H
 
-#include <qtoolbutton.h>
+#include <QToolButton>
 
 /**
  * A toolbar button with a neat thin border.
@@ -75,7 +75,7 @@ class FlatToolButton : public QToolButton {
         /**
          * Constructor.
          */
-        FlatToolButton(QWidget* parent = 0, const char* name = 0);
+        FlatToolButton(QWidget* parent = 0);
 
     protected:
         /**
@@ -84,8 +84,8 @@ class FlatToolButton : public QToolButton {
         void drawButton(QPainter *p);
 };
 
-inline FlatToolButton::FlatToolButton(QWidget* parent, const char* name) :
-        QToolButton(parent, name) {
+inline FlatToolButton::FlatToolButton(QWidget* parent) :
+        QToolButton(parent) {
 }
 
 #endif

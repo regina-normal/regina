@@ -36,12 +36,11 @@
 
 #include "packet/npacketlistener.h"
 
-#include "../gridlistview.h"
-
-#include <kdialogbase.h>
+#include <KDialog>
+#include <QAbstractItemModel>
 
 class PacketUI;
-class QListView;
+class QTreeView;
 
 namespace regina {
     class NBoundaryComponent;
@@ -52,6 +51,155 @@ namespace regina {
     class NVertex;
 };
 
+class SkeletalModel : public QAbstractItemModel {
+    protected:
+        /**
+         * The triangulation being displayed
+         */
+        regina::NTriangulation* tri;
+
+        /**
+         * Is the model temporarily empty (e.g., when the triangulation
+         * is being edited)?
+         */
+        bool forceEmpty;
+
+    public:
+        /**
+         * Constructor and destructor.
+         */
+        SkeletalModel(regina::NTriangulation* tri_);
+        virtual ~SkeletalModel();
+
+        /**
+         * Make the model temporarily empty.
+         */
+        void makeEmpty();
+
+        /**
+         * Rebuild the model from scratch.
+         * If the model was temporarily emptied, it will be refilled.
+         */
+        void rebuild();
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        QModelIndex index(int row, int column,
+            const QModelIndex& parent) const;
+        QModelIndex parent(const QModelIndex& index) const;
+};
+
+class VertexModel : public SkeletalModel {
+    public:
+        /**
+         * Constructor.
+         */
+        VertexModel(regina::NTriangulation* tri_);
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Helper routine for generating tooltips.
+         */
+        static QString toolTipForCol(int column);
+};
+
+class EdgeModel : public SkeletalModel {
+    public:
+        /**
+         * Constructor.
+         */
+        EdgeModel(regina::NTriangulation* tri_);
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Helper routine for generating tooltips.
+         */
+        static QString toolTipForCol(int column);
+};
+
+class FaceModel : public SkeletalModel {
+    public:
+        /**
+         * Constructor.
+         */
+        FaceModel(regina::NTriangulation* tri_);
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Helper routine for generating tooltips.
+         */
+        static QString toolTipForCol(int column);
+};
+
+class ComponentModel : public SkeletalModel {
+    public:
+        /**
+         * Constructor.
+         */
+        ComponentModel(regina::NTriangulation* tri_);
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Helper routine for generating tooltips.
+         */
+        static QString toolTipForCol(int column);
+};
+
+class BoundaryComponentModel : public SkeletalModel {
+    public:
+        /**
+         * Constructor.
+         */
+        BoundaryComponentModel(regina::NTriangulation* tri_);
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Helper routine for generating tooltips.
+         */
+        static QString toolTipForCol(int column);
+};
+
 /**
  * A modeless dialog for viewing all skeletal objects of a particular
  * type in a triangulation.
@@ -59,7 +207,7 @@ namespace regina {
  * Skeleton windows automatically listen for changes on the underlying
  * triangulation and update themselves when necessary.
  */
-class SkeletonWindow : public KDialogBase, public regina::NPacketListener {
+class SkeletonWindow : public KDialog, public regina::NPacketListener {
     Q_OBJECT
 
     public:
@@ -74,18 +222,20 @@ class SkeletonWindow : public KDialogBase, public regina::NPacketListener {
          * Packet details
          */
         regina::NTriangulation* tri;
+        SkeletalModel* model;
         SkeletalObject objectType;
 
         /**
          * Internal components
          */
-        QListView* table;
+        QTreeView* table;
 
     public:
         /**
          * Constructor and destructor.
          */
         SkeletonWindow(PacketUI* parentUI, SkeletalObject viewObjectType);
+        ~SkeletonWindow();
 
         /**
          * Update the display.
@@ -104,161 +254,56 @@ class SkeletonWindow : public KDialogBase, public regina::NPacketListener {
         /**
          * Return information specific to different skeletal object types.
          */
-        static QString typeLabel(SkeletalObject type);
-        static QString columnLabel(SkeletalObject type, int column);
         static QString overview(SkeletalObject type);
 };
 
-/**
- * A list view item describing a single skeletal object.  This class is
- * not used on its own, but is instead subclassed for each type of
- * skeletal item.
- */
-class SkeletalItem : public GridListViewItem {
-    protected:
-        /**
-         * Properties of the underlying skeletal object.
-         */
-        regina::NTriangulation* tri;
-        unsigned long itemIndex;
-
-    public:
-        /**
-         * Constructor.
-         */
-        SkeletalItem(QListView* parent, regina::NTriangulation* useTri,
-            unsigned long useItemIndex);
-
-    protected:
-        /**
-         * Aids the construction of a comma-separated string list.
-         */
-        static QString& appendToList(QString& list, const QString& item);
-};
-
-/**
- * A list view item describing a single vertex.
- */
-class VertexItem : public SkeletalItem {
-    private:
-        /**
-         * The underlying skeletal item.
-         */
-        regina::NVertex* item;
-
-    public:
-        /**
-         * Constructor.
-         */
-        VertexItem(QListView* parent, regina::NTriangulation* useTri,
-            unsigned long useItemIndex);
-
-        /**
-         * QListViewItem overrides.
-         */
-        QString text(int column) const;
-};
-
-/**
- * A list view item describing a single edge.
- */
-class EdgeItem : public SkeletalItem {
-    private:
-        /**
-         * The underlying skeletal item.
-         */
-        regina::NEdge* item;
-
-    public:
-        /**
-         * Constructor.
-         */
-        EdgeItem(QListView* parent, regina::NTriangulation* useTri,
-            unsigned long useItemIndex);
-
-        /**
-         * QListViewItem overrides.
-         */
-        QString text(int column) const;
-};
-
-/**
- * A list view item describing a single face.
- */
-class FaceItem : public SkeletalItem {
-    private:
-        /**
-         * The underlying skeletal item.
-         */
-        regina::NFace* item;
-
-    public:
-        /**
-         * Constructor.
-         */
-        FaceItem(QListView* parent, regina::NTriangulation* useTri,
-            unsigned long useItemIndex);
-
-        /**
-         * QListViewItem overrides.
-         */
-        QString text(int column) const;
-};
-
-/**
- * A list view item describing a single component.
- */
-class ComponentItem : public SkeletalItem {
-    private:
-        /**
-         * The underlying skeletal item.
-         */
-        regina::NComponent* item;
-
-    public:
-        /**
-         * Constructor.
-         */
-        ComponentItem(QListView* parent, regina::NTriangulation* useTri,
-            unsigned long useItemIndex);
-
-        /**
-         * QListViewItem overrides.
-         */
-        QString text(int column) const;
-};
-
-/**
- * A list view item describing a single boundary component.
- */
-class BoundaryComponentItem : public SkeletalItem {
-    private:
-        /**
-         * The underlying skeletal item.
-         */
-        regina::NBoundaryComponent* item;
-
-    public:
-        /**
-         * Constructor.
-         */
-        BoundaryComponentItem(QListView* parent, regina::NTriangulation* useTri,
-            unsigned long useItemIndex);
-
-        /**
-         * QListViewItem overrides.
-         */
-        QString text(int column) const;
-};
-
-inline SkeletalItem::SkeletalItem(QListView* parent,
-        regina::NTriangulation* useTri, unsigned long useItemIndex) :
-        GridListViewItem(parent), tri(useTri), itemIndex(useItemIndex) {
+inline SkeletalModel::SkeletalModel(regina::NTriangulation* tri_) :
+        tri(tri_), forceEmpty(false) {
 }
 
-inline QString& SkeletalItem::appendToList(QString& list,
-        const QString& item) {
-    return (list.isEmpty() ? (list = item) : (list.append(", ").append(item)));
+inline SkeletalModel::~SkeletalModel() {
+}
+
+inline void SkeletalModel::makeEmpty() {
+    beginResetModel();
+    forceEmpty = true;
+    endResetModel();
+}
+
+inline void SkeletalModel::rebuild() {
+    beginResetModel();
+    forceEmpty = false;
+    endResetModel();
+}
+
+inline QModelIndex SkeletalModel::index(int row, int column,
+        const QModelIndex& parent) const {
+    return createIndex(row, column, quint32(4 * row + column));
+}
+
+inline QModelIndex SkeletalModel::parent(const QModelIndex&) const {
+    // All items are top-level.
+    return QModelIndex();
+}
+
+inline VertexModel::VertexModel(regina::NTriangulation* tri_) :
+        SkeletalModel(tri_) {}
+
+inline EdgeModel::EdgeModel(regina::NTriangulation* tri_) :
+        SkeletalModel(tri_) {}
+
+inline FaceModel::FaceModel(regina::NTriangulation* tri_) :
+        SkeletalModel(tri_) {}
+
+inline ComponentModel::ComponentModel(regina::NTriangulation* tri_) :
+        SkeletalModel(tri_) {}
+
+inline BoundaryComponentModel::BoundaryComponentModel(
+        regina::NTriangulation* tri_) :
+        SkeletalModel(tri_) {}
+
+inline SkeletonWindow::~SkeletonWindow() {
+    delete model;
 }
 
 #endif

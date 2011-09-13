@@ -52,9 +52,11 @@ namespace {
 ProgressDialogNumeric::ProgressDialogNumeric(
         regina::NProgressManager* useManager, const QString& dialogTitle,
         const QString& displayText, QWidget* parent, const char* name) :
-        KProgressDialog(parent, name, dialogTitle, displayText, true),
+        KProgressDialog(parent, dialogTitle, displayText, Qt::Dialog),
+        /* Don't use Qt::Popup because the layout breaks under fink. */
         manager(useManager), progress(0) {
     setMinimumDuration(500);
+    setWindowModality(Qt::WindowModal);
 }
 
 bool ProgressDialogNumeric::run() {
@@ -67,17 +69,18 @@ bool ProgressDialogNumeric::run() {
     progress = dynamic_cast<const regina::NProgressNumber*>(
         manager->getProgress());
     regina::NProgressStateNumeric state;
+    progressBar()->setMinimum(0); // Start at 0
     while (! progress->isFinished()) {
         if (wasCancelled())
             progress->cancel();
         if (progress->hasChanged()) {
             state = progress->getNumericState();
             if (state.outOf > 0) {
-                progressBar()->setTotalSteps(state.outOf);
-                progressBar()->setProgress(state.completed);
+                progressBar()->setMaximum(state.outOf);
+                progressBar()->setValue(state.completed);
             } else {
-                progressBar()->setTotalSteps(0);
-                progressBar()->setProgress(0);
+                progressBar()->setMaximum(0);
+                progressBar()->setValue(0);
             }
         }
         KApplication::kApplication()->processEvents();
@@ -87,4 +90,3 @@ bool ProgressDialogNumeric::run() {
     return (! progress->isCancelled());
 }
 
-#include "progressdialogs.moc"

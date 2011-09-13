@@ -42,9 +42,10 @@
 
 class ExamplesAction;
 class KAction;
+class KDialog;
 class KRecentFilesAction;
 class KToggleAction;
-class KURL;
+class KUrl;
 
 /**
  * A top-level window for Regina.
@@ -71,9 +72,9 @@ class ReginaMain : public KParts::MainWindow,
         PythonManager consoles;
             /**< The set of all currently open consoles not linked to a
                  specific part. */
-        KURL lastURL;
-            /**< The URL that was last contained in this window.
-                 This data member is only set when the URL is finally
+        KUrl lastUrl;
+            /**< The Url that was last contained in this window.
+                 This data member is only set when the Url is finally
                  closed in the underlying part. */
         static unsigned objectNumber;
             /**< The unique positive integer to be assigned to the next
@@ -87,7 +88,7 @@ class ReginaMain : public KParts::MainWindow,
             /**< The menu of recently opened files. */
         ExamplesAction* fileOpenExample;
             /**< The menu of available example files. */
-        KToggleAction* showToolbar;
+        // KToggleAction* showToolbar;
             /**< Action to show/hide the toolbar. */
         // KToggleAction* showStatusbar;
             /**< Action to show/hide the status bar. */
@@ -99,11 +100,16 @@ class ReginaMain : public KParts::MainWindow,
          */
         ReginaPrefSet globalPrefs;
 
+        /**
+         * About dialogs
+         */
+        KDialog* aboutApp;
+
     public:
         /**
          * Constructors and destructors.
          */
-        ReginaMain();
+        ReginaMain(bool showAdvice = false);
         virtual ~ReginaMain();
 
         /**
@@ -135,8 +141,8 @@ class ReginaMain : public KParts::MainWindow,
         /**
          * Overridden for session management.
          */
-        virtual void saveProperties(KConfig *);
-        virtual void readProperties(KConfig *);
+        virtual void saveProperties(KConfigGroup &);
+        virtual void readProperties(const KConfigGroup &);
 
         /**
          * Overridden to handle window closing.
@@ -159,28 +165,21 @@ class ReginaMain : public KParts::MainWindow,
         void newTopology();
 
         /**
-         * Opens a new python library in this window, or in a new
-         * top-level window if this window already contains an open
-         * document.
-         */
-        void newPython();
-
-        /**
-         * Open the given URL in this window, or in a new top-level
+         * Open the given Url in this window, or in a new top-level
          * window if this window already contains an open document.
          */
-        bool openURL(const KURL& url);
+        bool openUrl(const KUrl& url);
 
         /**
-         * Open the given URL in this window, or in a new top-level
+         * Open the given Url in this window, or in a new top-level
          * window if this window already contains an open document.
          */
-        bool openURL(const QString& url);
+        bool openUrl(const QString& url);
 
         /**
-         * Open the given example file in a manner similar to openURL().
+         * Open the given example file in a manner similar to openUrl().
          */
-        bool openExample(const KURL& url);
+        bool openExample(const KUrl& url);
 
         /**
          * Open a new standalone Python console.  The console will not
@@ -208,12 +207,16 @@ class ReginaMain : public KParts::MainWindow,
          * Implementation of actions.
          */
         void fileOpen();
-        void optionsShowToolbar();
+        // void optionsShowToolbar();
         // void optionsShowStatusbar();
         void optionsConfigureKeys();
         void optionsConfigureToolbars();
         void optionsConfigureEditor();
         void optionsPreferences();
+        void helpAboutApp();
+        void helpHandbook();
+        void helpXMLRef();
+        void helpWhatsThis();
         void helpTipOfDay();
         void helpTrouble();
         void helpNoHelp();
@@ -223,7 +226,7 @@ class ReginaMain : public KParts::MainWindow,
         void newToolbarConfig();
 
         /**
-         * Add the current working URL to the recent file list for every
+         * Add the current working Url to the recent file list for every
          * top-level window (including this one) and save the file list to
          * the global configuration.
          */
@@ -240,7 +243,7 @@ class ReginaMain : public KParts::MainWindow,
          * Force this main window to read the given configuration
          * and update itself (and its child windows) accordingly.
          */
-        void readOptions(KConfig* config);
+        void readOptions(KSharedConfigPtr config);
 
         /**
          * Creates a new topology data part.  If no appropriate part can
@@ -249,21 +252,12 @@ class ReginaMain : public KParts::MainWindow,
         KParts::ReadWritePart* newTopologyPart();
 
         /**
-         * Creates a new text editor part.  If no appropriate part can
-         * be created, an error is displayed and 0 is returned.
-         */
-        KParts::ReadWritePart* newTextEditorPart();
-
-        /**
          * Inserts \a currentPart into the main window and performs any
          * additional setup that is required.  This routine can cope if
          * \a currentPart is 0.
          */
         void embedPart();
 };
-
-inline ReginaMain::~ReginaMain() {
-}
 
 inline const ReginaPrefSet& ReginaMain::getPreferences() const {
     return globalPrefs;

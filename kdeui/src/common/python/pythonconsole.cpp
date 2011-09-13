@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "Python.h"
 #include "regina-config.h"
 #include "file/nglobaldirs.h"
 #include "packet/npacket.h"
@@ -35,6 +36,7 @@
 
 #include "../pythonmanager.h"
 #include "../reginafilter.h"
+#include "../reginaprefset.h"
 #include "commandedit.h"
 #include "pythonconsole.h"
 
@@ -48,111 +50,198 @@
 #include <klocale.h>
 #include <kmenubar.h>
 #include <kmessagebox.h>
-#include <kpopupmenu.h>
 #include <kstatusbar.h>
 #include <ktextedit.h>
 #include <qfile.h>
-#include <qhbox.h>
 #include <qlabel.h>
 #include <qtextcodec.h>
 #include <qtextstream.h>
-#include <qvbox.h>
 #include <qwhatsthis.h>
+
+#include <KActionCollection>
+#include <KStandardAction>
+#include <KToolInvocation>
+#include <QHBoxLayout>
+#include <QMenu>
+#include <QVBoxLayout>
 
 PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
         const ReginaPrefSet* initialPrefs) :
-        KMainWindow(parent, "PythonConsole#"), manager(useManager) {
+        //KMainWindow(parent, "PythonConsole#"), manager(useManager) {
+        KXmlGuiWindow(parent), manager(useManager) {
     // Initialise preferences.
     if (initialPrefs)
         prefs = *initialPrefs;
 
     // Resize ourselves nicely.
     if (! initialGeometrySet())
-        resize(500, 400);
+        resize(600, 500);
 
     // Set up the main widgets.
-    QVBox* box = new QVBox(this);
-
-    session = new KTextEdit(box);
-    session->setTextFormat(Qt::LogText);
-    session->setWordWrap(prefs.pythonWordWrap ? QTextEdit::WidgetWidth :
-        QTextEdit::NoWrap);
+    QWidget* box = new QWidget(this);
+    QVBoxLayout* layout = new QVBoxLayout;
+    session = new KTextEdit();
+    session->setReadOnly(true);
+    session->setWordWrapMode(prefs.pythonWordWrap ? QTextOption::WordWrap :
+        QTextOption::NoWrap);
     session->setAutoFormatting(QTextEdit::AutoNone);
     session->setFont(KGlobalSettings::fixedFont());
-    session->setFocusPolicy(QWidget::NoFocus);
-    QWhatsThis::add(session, i18n("This area stores a history of the entire "
+    session->setFocusPolicy(Qt::NoFocus);
+    session->setWhatsThis( i18n("This area stores a history of the entire "
         "Python session, including commands that have been typed and the "
         "output they have produced."));
-    box->setStretchFactor(session, 1);
+    layout->addWidget(session, 1);
 
-    QHBox* inputArea = new QHBox(box);
-    QWhatsThis::add(inputArea, i18n("Type your Python commands into "
+    QWidget* inputArea = new QWidget(box);
+    QHBoxLayout *inputAreaLayout = new QHBoxLayout;
+    inputAreaLayout->setContentsMargins(0, 0, 0, 0);
+    
+    inputArea->setWhatsThis( i18n("Type your Python commands into "
         "this box."));
-    prompt = new QLabel(inputArea);
+    prompt = new QLabel();
     prompt->setFont(KGlobalSettings::fixedFont());
+    inputAreaLayout->addWidget(prompt);
 
-    input = new CommandEdit(inputArea);
+    input = new CommandEdit();
     input->setFont(KGlobalSettings::fixedFont());
     input->setSpacesPerTab(prefs.pythonSpacesPerTab);
     input->setFocus();
     connect(input, SIGNAL(returnPressed()), this, SLOT(processCommand()));
+    inputAreaLayout->addWidget(input, 1);
+    inputArea->setLayout(inputAreaLayout);
+    layout->addWidget(inputArea);
 
     setCentralWidget(box);
+    box->setLayout(layout);
     box->show();
 
     // Set up the actions.
     // Don't use XML files since we don't know whether we're in the shell or
     // the part.
-    KPopupMenu* menuConsole = new KPopupMenu(this);
-    KPopupMenu* menuEdit = new KPopupMenu(this);
-    KPopupMenu* menuHelp = new KPopupMenu(this);
+    QMenu* menuConsole = new QMenu(this);
+    QMenu* menuEdit = new QMenu(this);
+    QMenu* menuHelp = new QMenu(this);
 
-    KAction* act = new KAction(i18n("&Save Session"), "filesave", CTRL+Key_S,
-        this, SLOT(saveLog()), actionCollection(), "console_save");
+    KAction* act = actionCollection()->addAction("console_save");
+    act->setText(i18n("&Save Session"));
+    act->setIcon(KIcon("document-save"));
+    act->setShortcut(tr("Ctrl+s"));
     act->setToolTip(i18n("Save session history"));
     act->setWhatsThis(i18n("Save the entire history of this Python session "
         "into a text file."));
-    act->plug(menuConsole);
+    connect(act, SIGNAL(triggered()), this, SLOT(saveLog()));
+    menuConsole->addAction(act);
 
-    menuConsole->insertSeparator();
+    menuConsole->addSeparator();
 
-    act = new KAction(i18n("&Close"), "fileclose", CTRL+Key_D, this,
-        SLOT(close()), actionCollection(), "console_close");
+    act = actionCollection()->addAction("console_close");
+    act->setText(i18n("&Close"));
+    act->setIcon(KIcon("window-close"));
+    act->setShortcut(tr("Ctrl+d"));
     act->setToolTip(i18n("Close Python console"));
-    act->plug(menuConsole);
+    connect(act, SIGNAL(triggered()), this, SLOT(close()));
+    menuConsole->addAction(act);
 
-    KAction* actCopy = KStdAction::copy(session, SLOT(copy()),
-        actionCollection());
-    actCopy->setEnabled(false);
-    connect(session, SIGNAL(copyAvailable(bool)), actCopy,
+    act = actionCollection()->addAction("edit_copy_session");
+    act->setText(i18n("&Copy From Session"));
+    act->setIcon(KIcon("edit-copy"));
+    act->setShortcut(tr("Shift+Ctrl+c"));
+    act->setToolTip(i18n(
+        "Copy selected text from the session log to the clipboard "));
+    connect(act, SIGNAL(triggered()), session, SLOT(copy()));
+    act->setEnabled(false);
+    connect(session, SIGNAL(copyAvailable(bool)), act,
         SLOT(setEnabled(bool)));
-    actCopy->plug(menuEdit);
+    menuEdit->addAction(act);
 
-    KStdAction::selectAll(session, SLOT(selectAll()), actionCollection())->
-        plug(menuEdit);
+    act = actionCollection()->addAction("edit_select_all_session");
+    act->setText(i18n("Select &All From Session"));
+    act->setIcon(KIcon("edit-select-all"));
+    act->setShortcut(tr("Shift+Ctrl+a"));
+    act->setToolTip(i18n(
+        "Selected all text in the session log"));
+    connect(act, SIGNAL(triggered()), session, SLOT(selectAll()));
+    menuEdit->addAction(act);
 
-    act = new KAction(i18n("&Scripting Overview"), "contents", Key_F1, this,
-        SLOT(scriptingOverview()), actionCollection(), "help_scripting");
+    /*
+    menuEdit->addSeparator();
+
+    // TODO: Enable iff text is selected (current signal is wrong)
+    act = actionCollection()->addAction("edit_cut_input");
+    act->setText(i18n("Cut From Input"));
+    act->setIcon(KIcon("edit-cut"));
+    act->setShortcut(tr("Ctrl+x"));
+    act->setToolTip(i18n(
+        "Cut selected text from the input area to the clipboard "));
+    connect(act, SIGNAL(triggered()), input, SLOT(cut()));
+    act->setEnabled(false);
+    connect(input, SIGNAL(copyAvailable(bool)), act, SLOT(setEnabled(bool)));
+    menuEdit->addAction(act);
+
+    // TODO: Enable iff text is selected (current signal is wrong)
+    act = actionCollection()->addAction("edit_copy_input");
+    act->setText(i18n("Copy From Input"));
+    act->setIcon(KIcon("edit-copy"));
+    act->setShortcut(tr("Ctrl+c"));
+    act->setToolTip(i18n(
+        "Copy selected text from the input area to the clipboard "));
+    connect(act, SIGNAL(triggered()), input, SLOT(copy()));
+    act->setEnabled(false);
+    connect(input, SIGNAL(copyAvailable(bool)), act, SLOT(setEnabled(bool)));
+    menuEdit->addAction(act);
+
+    // TODO: Enable iff clipboard has text (current signal is wrong)
+    act = actionCollection()->addAction("edit_paste_input");
+    act->setText(i18n("Paste To Input"));
+    act->setIcon(KIcon("edit-paste"));
+    act->setShortcut(tr("Ctrl+v"));
+    act->setToolTip(i18n(
+        "Paste text from the clipboard into the input area"));
+    connect(act, SIGNAL(triggered()), input, SLOT(paste()));
+    act->setEnabled(false);
+    connect(input, SIGNAL(copyAvailable(bool)), act, SLOT(setEnabled(bool)));
+    menuEdit->addAction(act);
+
+    act = actionCollection()->addAction("edit_select_all_input");
+    act->setText(i18n("Select All From Input"));
+    act->setIcon(KIcon("edit-select-all"));
+    act->setShortcut(tr("Ctrl+a"));
+    act->setToolTip(i18n("Selected all text in the input area"));
+    connect(act, SIGNAL(triggered()), input, SLOT(selectAll()));
+    menuEdit->addAction(act);
+    */
+
+    act = actionCollection()->addAction("help_scripting");
+    act->setText(i18n("&Scripting Overview"));
+    act->setIcon(KIcon("help-contents"));
+    act->setShortcut(tr("F1"));
     act->setToolTip(i18n("Read Python scripting overview"));
     act->setWhatsThis(i18n("Open the <i>Python Scripting</i> section of the "
         "users' handbook."));
-    act->plug(menuHelp);
+    connect(act, SIGNAL(triggered()), this, SLOT(scriptingOverview()) );
+    menuHelp->addAction(act);
 
-    act = new KAction(i18n("&Python Reference"), "python_console", 0, this,
-        SLOT(pythonReference()), actionCollection(), "help_engine");
+    act = actionCollection()->addAction("help_engine");
+    act->setText(i18n("&Python API Reference"));
+    act->setIcon(KIcon("python_console"));
     act->setToolTip(i18n("Read detailed Python scripting reference"));
     act->setWhatsThis(i18n("Open the detailed reference of classes, methods "
         "and routines that Regina makes available to Python scripts."));
-    act->plug(menuHelp);
+    connect(act, SIGNAL(triggered()), this, SLOT(pythonReference()));
+    menuHelp->addAction(act);
 
-    menuHelp->insertSeparator();
+    menuHelp->addSeparator();
 
-    KStdAction::whatsThis(this, SLOT(whatsThis()),
-        actionCollection())->plug(menuHelp);
-
-    menuBar()->insertItem(i18n("&Console"), menuConsole);
-    menuBar()->insertItem(i18n("&Edit"), menuEdit);
-    menuBar()->insertItem(i18n("&Help"), menuHelp);
+    act = actionCollection()->addAction(
+        KStandardAction::WhatsThis, this, SLOT(contextHelpActivated()) );
+    menuHelp->addAction(act);
+    
+    menuConsole->setTitle(i18n("&Console"));
+    menuEdit->setTitle(i18n("&Edit"));
+    menuHelp->setTitle(i18n("&Help"));
+    menuBar()->addMenu(menuConsole);
+    menuBar()->addMenu(menuEdit);
+    menuBar()->addMenu(menuHelp);
 
     // Prepare the console for use.
     if (manager)
@@ -174,25 +263,26 @@ PythonConsole::~PythonConsole() {
 }
 
 void PythonConsole::addInput(const QString& input) {
-    session->append("<b>" + encode(input) + "</b>");
-    session->scrollToBottom();
+    session->moveCursor(QTextCursor::End);
+    session->insertHtml("<b>" + encode(input) + "</b><br>");
     KApplication::kApplication()->processEvents();
 }
 
 void PythonConsole::addOutput(const QString& output) {
     // Since empty output has no tags we need to be explicitly sure that
     // blank lines are still written.
+    session->moveCursor(QTextCursor::End);
     if (output.isEmpty())
-        session->append("<br>");
+        session->insertHtml("<br>");
     else
-        session->append(encode(output));
-    session->scrollToBottom();
+        session->insertHtml(encode(output) + "<br>");
     KApplication::kApplication()->processEvents();
 }
 
 void PythonConsole::addError(const QString& output) {
-    session->append("<font color=\"dark red\">" + encode(output) + "</font>");
-    session->scrollToBottom();
+    session->moveCursor(QTextCursor::End);
+    session->insertHtml("<font color=\"dark red\">" + encode(output) +
+        "</font><br>");
     KApplication::kApplication()->processEvents();
 }
 
@@ -268,7 +358,7 @@ void PythonConsole::setSelectedPacket(regina::NPacket* packet) {
 }
 
 void PythonConsole::setVar(const QString& name, regina::NPacket* value) {
-    if (! interpreter->setVar(name.ascii(), value)) {
+    if (! interpreter->setVar(name.toAscii(), value)) {
         QString pktName;
         if (value)
             pktName = value->getPacketLabel().c_str();
@@ -289,7 +379,7 @@ void PythonConsole::loadAllLibraries() {
         QString shortName = QFileInfo((*it).filename).fileName();
         addOutput(i18n("Loading %1...").arg(shortName));
         if (! interpreter->runScript(
-                static_cast<const char*>(it->encodeFilename()), shortName)) {
+                static_cast<const char*>(it->encodeFilename()), shortName.toAscii())) {
             if (! QFileInfo((*it).filename).exists())
                 addError(i18n("The library %1 does not exist.").
                     arg((*it).filename));
@@ -301,7 +391,7 @@ void PythonConsole::loadAllLibraries() {
 }
 
 void PythonConsole::executeLine(const QString& line) {
-    interpreter->executeLine(line.ascii());
+    interpreter->executeLine(line.toAscii().data());
 }
 
 void PythonConsole::executeLine(const std::string& line) {
@@ -313,14 +403,14 @@ void PythonConsole::executeLine(const char* line) {
 }
 
 bool PythonConsole::compileScript(const QString& script) {
-    return interpreter->compileScript(script.ascii());
+    return interpreter->compileScript(script.toAscii());
 }
 
 void PythonConsole::executeScript(const QString& script,
         const QString& scriptName) {
     addOutput(scriptName.isEmpty() ? i18n("Running %1...").arg(scriptName) :
             i18n("Running script..."));
-    interpreter->runScript(script.ascii());
+    interpreter->runScript(script.toAscii());
 }
 
 void PythonConsole::saveLog() {
@@ -331,7 +421,7 @@ void PythonConsole::saveLog() {
     if ((! result.fileNames.empty()) &&
             (! result.fileNames.front().isEmpty())) {
         QFile f(result.fileNames.front());
-        if (! f.open(IO_WriteOnly))
+        if (! f.open(QIODevice::WriteOnly))
             KMessageBox::error(this, i18n("An error occurred whilst "
                 "attempting to write to the file %1.").
                 arg(result.fileNames.front()));
@@ -339,40 +429,34 @@ void PythonConsole::saveLog() {
             QTextStream out(&f);
 
             if (QTextCodec* encoding = QTextCodec::codecForName(
-                    result.encoding))
+                    result.encoding.toAscii()))
                 out.setCodec(encoding);
             else
-                out.setEncoding(QTextStream::UnicodeUTF8);
+                out.setCodec(QTextCodec::codecForName("UTF-8"));
 
-            // Write the contents to file.
-            // We can't just dump text() since this includes HTML tags.
-            // We also can't just remove tags since tags and text that
-            // looks like tags are indistinguishable (i.e., plaintext is
-            // not encoded but is still surrounded by tags - ugh).
-
-            // For the moment we'll do it through selections.  I'm sure
-            // there's a better way.
-            session->selectAll(true);
-            out << session->selectedText();
+            out << session->toPlainText();
             endl(out);
-            session->selectAll(false);
         }
     }
 }
 
 void PythonConsole::scriptingOverview() {
-    KApplication::kApplication()->invokeHelp("python", "regina");
+    prefs.openHandbook("python", 0, this);
 }
 
 void PythonConsole::pythonReference() {
     PythonManager::openPythonReference(this);
 }
 
+void PythonConsole::contextHelpActivated() {
+    QWhatsThis::enterWhatsThisMode();
+}
+
 void PythonConsole::updatePreferences(const ReginaPrefSet& newPrefs) {
     prefs = newPrefs;
 
-    session->setWordWrap(prefs.pythonWordWrap ? QTextEdit::WidgetWidth :
-        QTextEdit::NoWrap);
+    session->setWordWrapMode(prefs.pythonWordWrap ? QTextOption::WordWrap :
+        QTextOption::NoWrap);
     input->setSpacesPerTab(prefs.pythonSpacesPerTab);
 }
 
@@ -380,11 +464,12 @@ QString PythonConsole::encode(const QString& plaintext) {
     QString ans(plaintext);
     return ans.replace('&', "&amp;").
         replace('>', "&gt;").
-        replace('<', "&lt;");
+        replace('<', "&lt;").
+        replace(' ', "&nbsp;");
 }
 
 QString PythonConsole::initialIndent(const QString& line) {
-    const char* start = line.ascii();
+    const char* start = line.toAscii();
     const char* pos = start;
     while (*pos && isspace(*pos))
         pos++;
@@ -408,16 +493,20 @@ void PythonConsole::processCommand() {
 
     // Do the actual processing (which could take some time).
     KApplication::kApplication()->processEvents();
-    bool done = interpreter->executeLine(cmd.ascii());
+    bool done = interpreter->executeLine(cmd.toAscii().constData());
 
     // Finish the output.
     output->flush();
     error->flush();
 
     // Prepare for a new command.
-    if (prefs.pythonAutoIndent)
-        allowInput(done, initialIndent(cmd));
-    else
+    if (prefs.pythonAutoIndent) {
+        // Only use auto-indent if we are waiting on more text.
+        if (done)
+            allowInput(true);
+        else
+            allowInput(false, initialIndent(cmd));
+    } else
         allowInput(done);
 }
 
@@ -437,4 +526,4 @@ void PythonConsole::ErrorStream::processOutput(const std::string& data) {
         console_->addError(data.c_str());
 }
 
-#include "pythonconsole.moc"
+// #include "pythonconsole.moc"

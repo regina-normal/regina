@@ -22,32 +22,32 @@ the packet editor.  If you close the packet editor or press the
 <i>Discard</i> button, any changes since the last commit will be
 discarded (you will be warned before this happens).
 <p>
-Note that some actions automatically commit your changes for you (examples
-include several triangulation actions such as simplification, subdivision
-and connected sum decomposition).
+Note that some actions automatically commit your changes for you (such
+as barycentric subdivision, or simplifying a triangulation).
 </html>
 </tip>
 <tip category="Regina">
 <html>
 <p>
-Regina comes with a full users' handbook, including an index of common
-tasks.  You can read it by selecting <i>Regina Handbook</i> from
-the <i>Help</i> menu, or by typing <tt>help:/regina</tt> directly into
-Konqueror.
+Have you looked at the Regina Handbook?
+<p>
+Regina comes with a rich users' handbook, full of screen shots,
+which walks you through the many different things you can do.
+If you are looking for something in particular, try the index at the back.
+<p>
+You can read the handbook by selecting
+<i>Help&nbsp;&rarr;&nbsp;Regina Handbook</i> from menu, or just press F1.
 </html>
 </tip>
 <tip category="Regina">
 <html>
 <p>
-Regina ships with a number of sample files that give you an overview
-of what Regina can do.  The file <tt>sample-misc.rga</tt> is an
+Regina ships with several example files that you can play with
+to see what Regina can do.  The file <tt>sample-misc.rga</tt> is an
 excellent starting point.
 <p>
-These sample files are generally installed in
-<tt>/usr/share/regina/examples</tt>,
-<tt>/usr/local/share/regina/examples</tt>
-or a similar path, depending on your distribution and how Regina was compiled.
-<p>
+You can access most of these files through the
+<i>File&nbsp;&rarr;&nbsp;Open Example</i> menu.
 </html>
 </tip>
 <tip category="Regina">
@@ -66,37 +66,33 @@ object you are curious about.
 <p>
 If you wish to remember what role a tetrahedron plays within a
 triangulation, you can name it.
-<p>
-In the <i>Gluings</i> tab of the triangulation editor, double click
-in the <i>Tetrahedron</i> column and start typing to give a tetrahedron
-a name.  Regina will also assign it a tetrahedron number as usual.
+In the <i>Gluings</i> tab of the triangulation editor, just type a
+name for your tetrahedron directly into the leftmost column of the table.
 </html>
 </tip>
 <tip category="Regina">
 <html>
 <p>
-If you find it difficult searching through lists of normal surfaces,
+If you find it difficult to search through long lists of normal surfaces,
 you can create a <i>surface filter</i>.  A surface filter lets you
-restrict a list of surfaces so you only see surfaces with particular
-properties (for instance, all closed orientable surfaces with Euler
-characteristic zero).
+restrict your view to only those surfaces with certain properties
+(for instance, all closed orientable surfaces with Euler characteristic zero).
 <p>
-To create a new surface filter, select <i>New Filter</i> from the
-<i>Packet Tree</i> menu.  In the dialog that appears, select <i>Filter
-by properties</i> and then enter in your particular constraints.
+To create a new surface filter, select
+<i>Packet Tree&nbsp;&rarr;&nbsp;New Filter</i> from the menu, and then
+select <i>Filter by properties</i> in the dialog that appears.
 </html>
 </tip>
 <tip>
 <html>
 <p>
-Once a triangulation has a normal surface list or an angle structure
-list beneath it, the triangulation cannot be changed (since changing
-the triangulation would invalidate the normal surfaces and angle
-structures).
+Once a triangulation has a normal surface list or angle structure
+list beneath it, the triangulation cannot be changed (since this
+would invalidate the normal surfaces and angle structures).
 <p>
 If you wish to edit such a triangulation, try cloning it through the
 <i>Packet Tree</i> menu.  The clone will not have any children beneath
-it and may be edited freely.
+it, and you can edit it freely.
 </html>
 </tip>
 <tip category="Regina">
@@ -105,26 +101,8 @@ it and may be edited freely.
 If you wish to mark a particular normal surface within a list so that
 you can find it again later, you can give it a name.
 <p>
-Simply double click in the empty <i>Name</i> field in the table of
-surfaces and start typing.  Don't forget to commit your changes!
-</html>
-</tip>
-<tip category="Regina">
-<html>
-<p>
-You can combine several surface filters using boolean AND or OR.
-This is done using <i>combination filters</i>.
-<p>
-Select <i>New Filter</i> from the <i>Packet Tree</i> menu, and in
-the dialog that appears select <i>Combination filter</i>.
-This filter will then combine all of the filters immediately
-beneath it in the packet tree.
-<p>
-So, for instance, to create a filter that captures 2-spheres and
-tori, create a new combination filter that uses boolean OR.  Beneath
-this combination filter, create two property filters: one that captures
-closed orientable surfaces with Euler characteristic two, and one that
-captures closed orientable surfaces with Euler characteristic zero.
+Simply type your name directly into the <i>Name</i> column of the
+table of surfaces.  Don't forget to commit your changes!
 </html>
 </tip>
 <tip category="Regina">
@@ -132,21 +110,7 @@ captures closed orientable surfaces with Euler characteristic zero.
 <p>
 Regina ships with several command-line utilities for manipulating data
 files and running long census calculations.  See the
-<i>Specialised Utilities</i> section of the users' handbook for details.
-</html>
-</tip>
-<tip category="Regina">
-<html>
-<p>
-There are two ways of editing the gluings between tetrahedron faces.
-<p>
-Impatient users can use <i>direct edit</i> mode, where you type a
-string such as <tt>1&nbsp;(201)</tt> directly into the table.
-New users might prefer <i>pop-up dialog</i> mode, where you double-click
-on a table cell to bring up a dialog box instead.
-<p>
-You can switch between modes through Regina's settings, by selecting
-<i>Triangulation Options</i> and looking for <i>Edit mode</i>.
+<i>Specialised Utilities</i> section of the Regina Handbook for details.
 </html>
 </tip>
 <tip category="Regina">
@@ -178,22 +142,71 @@ import your PDF document into the current Regina data file.
 <tip category="Regina">
 <html>
 <p>
-The Callahan-Hildebrand-Weeks dehydration string for a triangulation (if
-it exists) is shown in the <i>Composition</i> tab of the triangulation
+Whenever you are using a text editor (e.g., when editing a text packet or a
+script packet), all of the usual editor shortcuts are available to you.
+<p>
+For instance, you can paste using
+<b>Ctrl-V</b> (or <b>&#8984;-V</b> on a mac),
+and you can undo using
+<b>Ctrl-Z</b> (or <b>&#8984;-Z</b> on a mac).
+</html>
+</tip>
+<tip category="Regina">
+<html>
+<p>
+The isomorphism signature for a triangulation, as well as the
+Callahan-Hildebrand-Weeks dehydration string (if it exists),
+will be shown in the <i>Composition</i> tab of the triangulation
 viewer.
 <p>
-You can copy this dehydration string by right-clicking on the
-corresponding line of text in the composition tree, and then selecting
-<i>Copy to Clipboard</i> from the pop-up menu that appears.
+You can copy these strings to the clipboard by selecting the
+corresponding line of text in the composition tab, and then
+selecting <i>Edit&nbsp;&rarr;&nbsp;Copy</i> from the menu.
 </html>
 </tip>
 <tip category="Regina">
 <html>
 <p>
 You can export a section of your packet tree into its own separate data
-file.  Select the root of the subtree that you wish to export, then
-visit the <i>File</i> menu, select <i>Export</i> and then
-<i>Regina Data File</i>.  Make sure that the correct subtree is selected
-in the dialog that appears, and press <i>OK</i>.
+file.  Select the root of the subtree that you wish to export, and then
+select <i>File&nbsp;&rarr;&nbsp;Export&nbsp;&rarr;&nbsp;Regina Data File</i>
+from the menu.  Make sure that the correct subtree is selected
+in the dialog that appears, then press <i>OK</i>.
+</html>
+</tip>
+<tip category="Regina">
+<html>
+<p>
+You can combine several surface filters using boolean AND or OR.
+This is done using <i>combination filters</i>.
+<p>
+Select <i>Packet Tree&nbsp;&rarr;&nbsp;New Filter</i> from the menu, and then
+select <i>Combination filter</i> in the diagog that appears.
+This filter will combine all of the filters <i>immediately beneath it</i>
+in the packet tree.
+<p>
+So, for instance, to create a filter that restricts your view to just
+spheres and tori, create a new combination filter that uses boolean OR.
+Beneath this combination filter, create two property filters: one that captures
+closed orientable surfaces with Euler characteristic two, and one that
+captures closed orientable surfaces with Euler characteristic zero.
+</html>
+</tip>
+<tip category="Regina">
+<html>
+<p>
+Finding it hard to read embedded PDF documents?  If your Regina window
+is small and you are using the embedded PDF viewer, you
+might find that space is limited and the PDF shrinks to a very small size.
+<p>
+If you click inside the PDF, you will see Okular's own buttons
+and menu items.  You can zoom in and out, or create more space by hiding
+the side navigation panel (hit <b>F7</b> or see the <i>Settings</i> menu).
+<p>
+If you want the PDF in a window of its own, press the
+paper clip in the top-right corner of the packet viewer to undock it.
+Alternatively, you can configure Regina to open all PDFs in a separate
+application: in Regina's <i>PDF Options</i> panel, uncheck
+<i>"Use embedded viewer if possible"</i>.
 </html>
 </tip>

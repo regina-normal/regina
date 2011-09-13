@@ -43,12 +43,13 @@
 #include "ncompatcanvas.h"
 
 #include <qcolor.h>
+#include <QGraphicsSimpleTextItem>
 
 using regina::NNormalSurface;
 using regina::NNormalSurfaceList;
 
 NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
-        QCanvas(),
+        QGraphicsScene(),
         nSurfaces(useNumSurfaces), filled(false) {
     if (MIN_CELL * nSurfaces > NICE_SIZE)
         cellSize = MIN_CELL;
@@ -61,7 +62,8 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
     // Work out how much vertical and horizontal space we will need for
     // text.  Assume here that (nSurfaces-1) is the largest number we
     // will need to draw.
-    QCanvasText* t = new QCanvasText(QString::number(nSurfaces - 1), this);
+    QGraphicsSimpleTextItem* t = new QGraphicsSimpleTextItem(
+        QString::number(nSurfaces - 1));
     unsigned textWidth = t->boundingRect().width();
     unsigned textHeight = t->boundingRect().height();
     delete t;
@@ -89,12 +91,14 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
             bottomMargin = OUTER_MARGIN;
     }
 
-    resize(gridX + gridSize + rightMargin, gridY + gridSize + bottomMargin);
+    setSceneRect(0, 0, gridX + gridSize + rightMargin,
+        gridY + gridSize + bottomMargin);
 
     // Draw a bounding box.
-    QCanvasRectangle* box = new QCanvasRectangle(
-        gridX, gridY, gridSize, gridSize, this);
-    box->setZ(10);
+    QGraphicsRectItem* box = new QGraphicsRectItem(
+        gridX, gridY, gridSize, gridSize);
+    addItem(box);
+    box->setZValue(10);
     box->show();
 
     // Draw labels along the horizontal axis.
@@ -105,29 +109,31 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
     unsigned i;
 
     pos = gridX + halfCell;
-    QCanvasText* prev = new QCanvasText(" 0 ", this);
-    prev->setTextFlags(Qt::AlignHCenter | Qt::AlignTop);
-    prev->move(pos, TOP_MARGIN);
+    QGraphicsSimpleTextItem* prev = new QGraphicsSimpleTextItem(" 0 ");
+    addItem(prev);
+    prev->setPos(pos - prev->boundingRect().width() / 2, TOP_MARGIN);
     prev->show();
 
-    QCanvasLine* tick = new QCanvasLine(this);
-    tick->setPoints(pos, TOP_MARGIN + textHeight + TICK_LENGTH,
+    QGraphicsLineItem* tick = new QGraphicsLineItem();
+    addItem(tick);
+    tick->setLine(pos, TOP_MARGIN + textHeight + TICK_LENGTH,
         pos, TOP_MARGIN + textHeight + 2 * TICK_LENGTH);
     tick->show();
 
     pos = gridX + halfCell + cellSize * (nSurfaces - 1);
-    QCanvasText* last = new QCanvasText(
-        QString(" %1 ").arg(nSurfaces - 1), this);
-    last->setTextFlags(Qt::AlignHCenter | Qt::AlignTop);
-    last->move(pos, TOP_MARGIN);
-    if (last->collidesWith(prev)) {
+    QGraphicsSimpleTextItem* last = new QGraphicsSimpleTextItem(
+        QString(" %1 ").arg(nSurfaces - 1));
+    addItem(last);
+    last->setPos(pos - last->boundingRect().width() / 2, TOP_MARGIN);
+    if (last->collidesWithItem(prev)) {
         delete last;
         last = 0;
     } else {
         last->show();
 
-        tick = new QCanvasLine(this);
-        tick->setPoints(pos, TOP_MARGIN + textHeight + TICK_LENGTH,
+        tick = new QGraphicsLineItem();
+        addItem(tick);
+        tick->setLine(pos, TOP_MARGIN + textHeight + TICK_LENGTH,
             pos, TOP_MARGIN + textHeight + 2 * TICK_LENGTH);
         tick->show();
     }
@@ -135,17 +141,18 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
     if (last) {
         for (i = labelFreq; i < nSurfaces - 1; i += labelFreq) {
             pos = gridX + halfCell + cellSize * i;
-            t = new QCanvasText(QString(" %1 ").arg(i), this);
-            t->setTextFlags(Qt::AlignHCenter | Qt::AlignTop);
-            t->move(pos, TOP_MARGIN);
-            if (t->collidesWith(prev) || t->collidesWith(last))
+            t = new QGraphicsSimpleTextItem(QString(" %1 ").arg(i));
+            addItem(t);
+            t->setPos(pos - t->boundingRect().width() / 2, TOP_MARGIN);
+            if (t->collidesWithItem(prev) || t->collidesWithItem(last))
                 delete t;
             else {
                 t->show();
                 prev = t;
 
-                tick = new QCanvasLine(this);
-                tick->setPoints(pos, TOP_MARGIN + textHeight + TICK_LENGTH,
+                tick = new QGraphicsLineItem();
+                addItem(tick);
+                tick->setLine(pos, TOP_MARGIN + textHeight + TICK_LENGTH,
                     pos, TOP_MARGIN + textHeight + 2 * TICK_LENGTH);
                 tick->show();
             }
@@ -154,28 +161,32 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
 
     // Draw labels along the vertical axis.
     pos = gridY + halfCell;
-    prev = new QCanvasText(" 0 ", this);
-    prev->setTextFlags(Qt::AlignRight | Qt::AlignVCenter);
-    prev->move(LEFT_MARGIN + textWidth, pos);
+    prev = new QGraphicsSimpleTextItem(" 0 ");
+    addItem(prev);
+    prev->setPos(LEFT_MARGIN + textWidth - prev->boundingRect().width(),
+        pos - prev->boundingRect().height() / 2);
     prev->show();
 
-    tick = new QCanvasLine(this);
-    tick->setPoints(LEFT_MARGIN + textWidth + TICK_LENGTH, pos,
+    tick = new QGraphicsLineItem();
+    addItem(tick);
+    tick->setLine(LEFT_MARGIN + textWidth + TICK_LENGTH, pos,
         LEFT_MARGIN + textWidth + 2 * TICK_LENGTH, pos);
     tick->show();
 
     pos = gridY + halfCell + cellSize * (nSurfaces - 1);
-    last = new QCanvasText(QString(" %1 ").arg(nSurfaces - 1), this);
-    last->setTextFlags(Qt::AlignRight | Qt::AlignVCenter);
-    last->move(LEFT_MARGIN + textWidth, pos);
-    if (last->collidesWith(prev)) {
+    last = new QGraphicsSimpleTextItem(QString(" %1 ").arg(nSurfaces - 1));
+    addItem(last);
+    last->setPos(LEFT_MARGIN + textWidth - last->boundingRect().width(),
+        pos - last->boundingRect().height() / 2);
+    if (last->collidesWithItem(prev)) {
         delete last;
         last = 0;
     } else {
         last->show();
 
-        tick = new QCanvasLine(this);
-        tick->setPoints(LEFT_MARGIN + textWidth + TICK_LENGTH, pos,
+        tick = new QGraphicsLineItem();
+        addItem(tick);
+        tick->setLine(LEFT_MARGIN + textWidth + TICK_LENGTH, pos,
             LEFT_MARGIN + textWidth + 2 * TICK_LENGTH, pos);
         tick->show();
     }
@@ -183,17 +194,19 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
     if (last) {
         for (i = labelFreq; i < nSurfaces - 1; i += labelFreq) {
             pos = gridY + halfCell + cellSize * i;
-            t = new QCanvasText(QString(" %1 ").arg(i), this);
-            t->setTextFlags(Qt::AlignRight | Qt::AlignVCenter);
-            t->move(LEFT_MARGIN + textWidth, pos);
-            if (t->collidesWith(prev) || t->collidesWith(last))
+            t = new QGraphicsSimpleTextItem(QString(" %1 ").arg(i));
+            addItem(t);
+            t->setPos(LEFT_MARGIN + textWidth - t->boundingRect().width(),
+                pos - t->boundingRect().height() / 2);
+            if (t->collidesWithItem(prev) || t->collidesWithItem(last))
                 delete t;
             else {
                 t->show();
                 prev = t;
 
-                tick = new QCanvasLine(this);
-                tick->setPoints(LEFT_MARGIN + textWidth + TICK_LENGTH, pos,
+                tick = new QGraphicsLineItem();
+                addItem(tick);
+                tick->setLine(LEFT_MARGIN + textWidth + TICK_LENGTH, pos,
                     LEFT_MARGIN + textWidth + 2 * TICK_LENGTH, pos);
                 tick->show();
             }
@@ -202,23 +215,25 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
 
     // Draw internal guide lines.
     for (i = 1; i < nSurfaces; ++i) {
-        QCanvasLine* l = new QCanvasLine(this);
+        QGraphicsLineItem* l = new QGraphicsLineItem();
+        addItem(l);
         if (i % 5)
-            l->setPen(Qt::lightGray);
-        l->setPoints(
+            l->setPen(QPen(Qt::lightGray));
+        l->setLine(
             gridX,                gridY + (i * cellSize),
             gridX + gridSize - 1, gridY + (i * cellSize));
-        l->setZ(9);
+        l->setZValue(9);
         l->show();
     }
     for (i = 1; i < nSurfaces; ++i) {
-        QCanvasLine* l = new QCanvasLine(this);
+        QGraphicsLineItem* l = new QGraphicsLineItem();
+        addItem(l);
         if (i % 5)
-            l->setPen(Qt::lightGray);
-        l->setPoints(
+            l->setPen(QPen(Qt::lightGray));
+        l->setLine(
             gridX + (i * cellSize), gridY,
             gridX + (i * cellSize), gridY + gridSize - 1);
-        l->setZ(9);
+        l->setZValue(9);
         l->show();
     }
 
@@ -232,8 +247,8 @@ void NCompatCanvas::fillLocal(const NNormalSurfaceList& surfaces) {
     if (filled)
         return;
 
-    QCanvasRectangle* box;
-    QPen border(QPen::NoPen);
+    QGraphicsRectItem* box;
+    QPen border(Qt::NoPen);
     QBrush fill(Qt::darkCyan);
 
     unsigned i, j;
@@ -245,21 +260,23 @@ void NCompatCanvas::fillLocal(const NNormalSurfaceList& surfaces) {
             t = surfaces.getSurface(j);
 
             if (s->locallyCompatible(*t)) {
-                box = new QCanvasRectangle(
+                box = new QGraphicsRectItem(
                     gridX + i * cellSize, gridY + j * cellSize,
-                    cellSize + 1, cellSize + 1, this);
+                    cellSize + 1, cellSize + 1);
+                addItem(box);
                 box->setPen(border);
                 box->setBrush(fill);
-                box->setZ(8);
+                box->setZValue(8);
                 box->show();
 
                 if (i != j) {
-                    box = new QCanvasRectangle(
+                    box = new QGraphicsRectItem(
                         gridX + j * cellSize, gridY + i * cellSize,
-                        cellSize + 1, cellSize + 1, this);
+                        cellSize + 1, cellSize + 1);
+                    addItem(box);
                     box->setPen(border);
                     box->setBrush(fill);
-                    box->setZ(8);
+                    box->setZValue(8);
                     box->show();
                 }
             }
@@ -286,25 +303,27 @@ void NCompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
             s->isConnected().isTrue());
     }
 
-    QCanvasRectangle* box;
-    QPen border(QPen::NoPen);
+    QGraphicsRectItem* box;
+    QPen border(Qt::NoPen);
     QBrush fill(Qt::darkGreen);
     QBrush hash(Qt::darkRed, Qt::DiagCrossPattern);
 
     for (i = 0; i < nSurfaces; ++i) {
         if (! usable[i]) {
-            box = new QCanvasRectangle(
-                gridX + i * cellSize, gridY, cellSize + 1, gridSize, this);
+            box = new QGraphicsRectItem(
+                gridX + i * cellSize, gridY, cellSize + 1, gridSize);
+            addItem(box);
             box->setPen(border);
             box->setBrush(hash);
-            box->setZ(7);
+            box->setZValue(7);
             box->show();
 
-            box = new QCanvasRectangle(
-                gridX, gridY + i * cellSize, gridSize, cellSize + 1, this);
+            box = new QGraphicsRectItem(
+                gridX, gridY + i * cellSize, gridSize, cellSize + 1);
+            addItem(box);
             box->setPen(border);
             box->setBrush(hash);
-            box->setZ(7);
+            box->setZValue(7);
             box->show();
 
             continue;
@@ -319,21 +338,23 @@ void NCompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
             t = surfaces.getSurface(j);
 
             if (s->disjoint(*t)) {
-                box = new QCanvasRectangle(
+                box = new QGraphicsRectItem(
                     gridX + i * cellSize, gridY + j * cellSize,
-                    cellSize + 1, cellSize + 1, this);
+                    cellSize + 1, cellSize + 1);
+                addItem(box);
                 box->setPen(border);
                 box->setBrush(fill);
-                box->setZ(8);
+                box->setZValue(8);
                 box->show();
 
                 if (i != j) {
-                    box = new QCanvasRectangle(
+                    box = new QGraphicsRectItem(
                         gridX + j * cellSize, gridY + i * cellSize,
-                        cellSize + 1, cellSize + 1, this);
+                        cellSize + 1, cellSize + 1);
+                    addItem(box);
                     box->setPen(border);
                     box->setBrush(fill);
-                    box->setZ(8);
+                    box->setZValue(8);
                     box->show();
                 }
             }
@@ -346,5 +367,4 @@ void NCompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
     update();
 }
 
-#include "ncompatcanvas.moc"
 

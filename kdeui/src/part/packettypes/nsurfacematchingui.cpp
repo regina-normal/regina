@@ -32,27 +32,79 @@
 
 // UI includes:
 #include "coordinates.h"
-#include "nsurfacematchingitem.h"
 #include "nsurfacematchingui.h"
 
-#include <klistview.h>
 #include <klocale.h>
-#include <qheader.h>
-#include <qwhatsthis.h>
+#include <QHeaderView>
+#include <QTreeView>
 
 #define DEFAULT_MATCHING_COLUMN_WIDTH 40
 
 using regina::NNormalSurfaceList;
 using regina::NPacket;
 
+void MatchingModel::rebuild() {
+    beginResetModel();
+    eqns_.reset(surfaces_->recreateMatchingEquations());
+    endResetModel();
+}
+
+int MatchingModel::rowCount(const QModelIndex& parent) const {
+    return (eqns_.get() ? eqns_->rows() : 0);
+}
+
+int MatchingModel::columnCount(const QModelIndex& parent) const {
+    return (eqns_.get() ? eqns_->columns() : 0);
+}
+
+QVariant MatchingModel::data(const QModelIndex& index, int role) const {
+    if (! eqns_.get())
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        regina::NLargeInteger ans = eqns_->entry(index.row(), index.column());
+        if (ans == 0)
+            return QVariant();
+        else
+            return ans.stringValue().c_str();
+    } else if (role == Qt::ToolTipRole)
+        return Coordinates::columnDesc(surfaces_->getFlavour(), index.column(),
+            surfaces_->getTriangulation());
+    else if (role == Qt::TextAlignmentRole)
+        return Qt::AlignRight;
+    else
+        return QVariant();
+}
+
+QVariant MatchingModel::headerData(int section, Qt::Orientation orientation,
+        int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+
+    if (role == Qt::DisplayRole)
+        return Coordinates::columnName(surfaces_->getFlavour(), section,
+            surfaces_->getTriangulation());
+    else if (role == Qt::ToolTipRole)
+        return Coordinates::columnDesc(surfaces_->getFlavour(), section,
+            surfaces_->getTriangulation());
+    else if (role == Qt::TextAlignmentRole)
+        return Qt::AlignCenter;
+    else
+        return QVariant();
+}
+
 NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
-        surfaces(packet), currentlyAutoResizing(false) {
-    table = new KListView();
-    table->setAllColumnsShowFocus(true);
-    table->setSorting(-1);
-    table->setSelectionMode(QListView::NoSelection);
-    QWhatsThis::add(table, i18n("<qt>Displays the normal surface matching "
+        currentlyAutoResizing(false), everRefreshed(false) {
+    model = new MatchingModel(packet);
+
+    table = new QTreeView();
+    table->setItemsExpandable(false);
+    table->setRootIsDecorated(false);
+    table->setAlternatingRowColors(true);
+    table->header()->setStretchLastSection(false);
+    table->setSelectionMode(QAbstractItemView::NoSelection);
+    table->setWhatsThis(i18n("<qt>Displays the normal surface matching "
         "equations that were used in the vertex enumeration when this "
         "list was originally created.<p>"
         "Each row represents a single equation.  Each equation involves "
@@ -62,24 +114,29 @@ NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
         "in each linear combination.<p>"
         "For details of what each coordinate represents, hover the mouse "
         "over the column header (or refer to the users' handbook).</qt>"));
+    // Add grid lines:
+    table->setStyleSheet("QTreeView::item { "
+                            "border: 1px solid #d9d9d9; "
+                            "border-top-color: transparent;"
+                            "border-left-color: transparent;"
+                         "}");
+    table->setModel(model);
 
     // Don't bother creating columns until we first create a set of
     // matching equations.
 
-    headerTips = new MatchingHeaderToolTip(surfaces->getTriangulation(),
-        surfaces->getFlavour(), table->header());
-    connect(table->header(), SIGNAL(sizeChange(int, int, int)),
+    connect(table->header(), SIGNAL(sectionResized(int, int, int)),
         this, SLOT(columnResized(int, int, int)));
 
     ui = table;
 }
 
 NSurfaceMatchingUI::~NSurfaceMatchingUI() {
-    delete headerTips;
+    delete model;
 }
 
 regina::NPacket* NSurfaceMatchingUI::getPacket() {
-    return surfaces;
+    return model->surfaces();
 }
 
 QWidget* NSurfaceMatchingUI::getInterface() {
@@ -88,27 +145,18 @@ QWidget* NSurfaceMatchingUI::getInterface() {
 
 void NSurfaceMatchingUI::refresh() {
     // Regenerate the equations.
-    eqns.reset(surfaces->recreateMatchingEquations());
+    model->rebuild();
 
-    // Don't bother regenerating the columns after the first refresh;
-    // these will never change.
-    if (table->columns() == 0) {
-        int flavour = surfaces->getFlavour();
-        regina::NTriangulation* tri = surfaces->getTriangulation();
-        for (unsigned long i = 0; i < eqns->columns(); i++) {
-            table->addColumn(Coordinates::columnName(flavour, i, tri),
-                DEFAULT_MATCHING_COLUMN_WIDTH);
-            table->adjustColumn(i);
-        }
+    // Resize if we haven't done this before.
+    if (! everRefreshed) {
+        currentlyAutoResizing = true;
+        table->header()->resizeSections(QHeaderView::ResizeToContents);
+        currentlyAutoResizing = false;
     }
-
-    // Refill the table (back to front since we're using a QListView).
-    table->clear();
-    for (long i = eqns->rows() - 1; i >= 0; i--)
-        new NSurfaceMatchingItem(table, eqns.get(), i);
 
     // Tidy up.
     setDirty(false);
+    everRefreshed = true;
 }
 
 void NSurfaceMatchingUI::columnResized(int, int, int newSize) {
@@ -118,25 +166,8 @@ void NSurfaceMatchingUI::columnResized(int, int, int newSize) {
     // A column has been resized.
     // Resize all columns.
     currentlyAutoResizing = true;
-    for (int i = 0; i < table->columns(); i++)
+    for (int i = 0; i < model->columnCount(QModelIndex()); i++)
         table->setColumnWidth(i, newSize);
     currentlyAutoResizing = false;
 }
-
-MatchingHeaderToolTip::MatchingHeaderToolTip(regina::NTriangulation* useTri,
-        int useCoordSystem, QHeader *header, QToolTipGroup *group) :
-        QToolTip(header, group), tri(useTri), coordSystem(useCoordSystem) {
-}
-
-void MatchingHeaderToolTip::maybeTip(const QPoint& p) {
-    QHeader *header = dynamic_cast<QHeader*>(parentWidget());
-    int section = header->sectionAt(p.x());
-    if (section < 0)
-        return;
-
-    tip(header->sectionRect(section), Coordinates::columnDesc(coordSystem,
-        section, tri));
-}
-
-#include "nsurfacematchingui.moc"
 

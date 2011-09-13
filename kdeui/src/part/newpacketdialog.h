@@ -34,7 +34,7 @@
 #ifndef __NEWPACKETDIALOG_H
 #define __NEWPACKETDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 class PacketChooser;
 class PacketCreator;
@@ -52,7 +52,7 @@ namespace regina {
  * The real work is done by the PacketCreator class, which is
  * overridden for each different packet type.
  */
-class NewPacketDialog : public KDialogBase {
+class NewPacketDialog : public KDialog {
     Q_OBJECT
 
     private:
@@ -102,7 +102,7 @@ class NewPacketDialog : public KDialogBase {
 
     protected slots:
         /**
-         * KDialogBase overrides.
+         * Ok has been clicked.
          */
         virtual void slotOk();
 };

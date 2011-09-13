@@ -43,6 +43,7 @@
  * available object DehydrationHandler::instance should always be used.
  */
 class DehydrationHandler : public PacketImporter {
+    using PacketImporter::importData;
     public:
         /**
          * A globally available instance of this class.
@@ -53,7 +54,7 @@ class DehydrationHandler : public PacketImporter {
         /**
          * PacketImporter overrides:
          */
-        virtual regina::NPacket* import(const QString& fileName,
+        virtual regina::NPacket* importData(const QString& fileName,
             QWidget* parentWidget) const;
 
     private:
