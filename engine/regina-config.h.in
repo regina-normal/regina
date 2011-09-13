@@ -1,0 +1,42 @@
+/* Define to 1 if you have the <ext/hash_set> header file. */
+#cmakedefine HAVE_EXT_HASH_SET
+
+/* Define to 1 if you have the <hash_set> header file. */
+#cmakedefine HAVE_HASH_SET
+
+/* Namespace for class hash_set<...>. */
+#define __HASH_NAMESPACE @__HASH_NAMESPACE@
+
+/* Define to 1 if namespace std cannot be aliased. */
+#cmakedefine __NO_NAMESPACE_ALIASES
+
+/* Define to 1 if both signed and unsigned long long types are available. */
+#cmakedefine LONG_LONG_FOUND
+
+/* Define to 1 if 64-bit integer literals are available with no suffix */
+#cmakedefine NUMERIC_64_FOUND
+
+/* Define to 1 if 64-bit integer literals are available using the LL suffix */
+#cmakedefine NUMERIC_64_LL_FOUND
+
+/* Define to 1 if Boost.Python is available. */
+#cmakedefine BOOST_PYTHON_FOUND
+
+/* Define as const if the declaration of iconv() needs const, or empty if not. */
+#define ICONV_CONST @ICONV_CONST@
+
+/* Define to the address where bug reports for this package should be sent. */
+#define PACKAGE_BUGREPORT "@PACKAGE_BUGREPORT@"
+
+/* Define to the full name and version of this package. */
+#define PACKAGE_STRING "@PACKAGE_STRING@"
+
+/* Define to the version of this package. */
+#define PACKAGE_VERSION "@PACKAGE_VERSION@"
+
+/* Major version number of the package. */
+#define PACKAGE_VERSION_MAJOR @PACKAGE_VERSION_MAJOR@
+
+/* Minor version number of the package. */
+#define PACKAGE_VERSION_MINOR @PACKAGE_VERSION_MINOR@
+
