@@ -1,0 +1,78 @@
+This package was debianised by Ben Burton <bab@debian.org> on
+Mon,  1 Oct 2001 20:44:04 -0500.
+
+It was downloaded from http://regina.sourceforge.net/.
+
+Upstream Authors:
+
+  The primary developers of Regina are:
+
+    Benjamin Burton <bab@debian.org>
+    Ryan Budney <rybu@uvic.ca>
+    William Pettersson <william.pettersson@gmail.com>
+
+  Many others have been of assistance with this project, be it through time,
+  knowledge, testing or code.  Please see the full list of acknowledgements
+  in the users' handbook.
+
+Copyright:
+
+  Regina - Software for 3-manifold topology and normal surface theory
+  Copyright (c) 1999-2011, The Regina development team
+
+  CITATION:
+  
+  If you find Regina useful in your research, please consider citing it as
+  you would any other paper that you use.  A suggested form of reference is:
+  
+    Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
+    "Regina: Software for 3-manifold topology and normal surface theory",
+    http://regina.sourceforge.net/, 1999-2011.
+  
+  COPYING AND MODIFICATION:
+  
+  This program is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the
+  Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
+  
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+  
+  A full copy of the GNU General Public License should be included below;
+  if not, write to the Free Software Foundation, Inc., 51 Franklin St,
+  Fifth Floor, Boston, MA 02110-1301, USA.
+  
+  SNAPPEA KERNEL:
+  
+  Regina includes portions of the SnapPea kernel, which it uses for some
+  geometric calculations.  SnapPea was written by Jeff Weeks, and is now
+  maintained by both Jeff Weeks and Nathan Dunfield.  The SnapPeaKernel is
+  distributed under the terms of the GNU General Public License, version 2
+  or any later version, as published by the Free Software Foundation.
+  
+  ORB KERNEL:
+  
+  Regina includes snippets of code from Orb, for use in importing and
+  exporting files in Orb / Casson format.  Orb is based on SnapPea
+  (see above) with additional code written by Damian Heard, who has also
+  given permission for his code to be distributed under the terms of the
+  GNU General Public License.
+  
+  PYTHON ICONS:
+  
+  The python icons are based on applications-python.svg as shipped with the
+  humanity-icon-theme package in Ubuntu 11.04.  The contents of this Ubuntu
+  package are licensed under the GNU General Public License version 2.
+  
+  OXYGEN ICONS:
+  
+  The packet-view icons have been modified from the Oxygen icon set for KDE4.
+  The Oxygen icons are dual-licensed under the Creative Common
+  Attribution-ShareAlike 3.0 License or the GNU Library General Public License.
+  
+On Debian GNU/Linux systems, the complete text of the GNU General
+Public License can be found in `/usr/share/common-licenses/GPL'.
+

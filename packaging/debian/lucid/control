@@ -1,0 +1,93 @@
+Source: regina-normal
+Section: math
+Priority: extra
+Maintainer: Ben Burton <bab@debian.org>
+Homepage: http://regina.sourceforge.net/
+Build-Depends: debhelper (>= 7), cmake, doxygen, kdelibs5-dev, libboost-python-dev (>= 1.39.0), libcppunit-dev (>= 1.10.2-4), libgmp3-dev (>= 4.1.4-10), mpi-default-dev, libpopt-dev, libxml2-dev, pkg-kde-tools, python-dev (>= 2.5.2-1~), python-support (>= 0.6), shared-mime-info, zlib1g-dev
+Standards-Version: 3.8.4
+
+Package: regina-normal
+Architecture: any
+Section: math
+Depends: ${shlibs:Depends}, ${perl:Depends}, ${python:Depends}, ${misc:Depends}, graphviz, regina-normal-doc (>= 4.90-0)
+Recommends: gap, okular | pdf-viewer
+Suggests: regina-normal-dev, regina-normal-mpi
+Description: software for 3-manifold topology and normal surfaces
+ Regina is a suite of mathematical software for 3-manifold topologists.
+ It focuses on the study of 3-manifold triangulations and normal surfaces.
+ .
+ Other highlights of Regina include angle structures, census enumeration,
+ combinatorial recognition of triangulations, and high-level tasks such
+ as 3-sphere recognition and connected sum decomposition.  Regina comes
+ with a full graphical user interface, and also offers Python bindings
+ and a low-level C++ programming interface.
+ .
+ This package includes the graphical user interface and the command-line
+ Python interface.  The users' handbook and the API documentation are in
+ the separate package regina-normal-doc, and the MPI-enabled utilities for
+ high-performance clusters are in the separate package regina-normal-mpi.
+
+Package: regina-normal-dev
+Architecture: any
+Section: libdevel
+Depends: regina-normal (= ${binary:Version}), libgmp3-dev, libxml2-dev, zlib1g-dev, ${misc:Depends}
+Suggests: regina-normal-doc
+Description: development files for Regina, the 3-manifold topology software
+ Regina is a suite of mathematical software for 3-manifold topologists.
+ This package provides development files for compiling Regina's mathematical
+ engine into other projects.
+ .
+ The calculation engine is provided as a C++ shared library.  For complete
+ API documentation, see the package regina-normal-doc.
+ .
+ Regina focuses on the study of 3-manifold triangulations and normal
+ surfaces.  Other highlights include angle structures, census enumeration,
+ combinatorial recognition of triangulations, and high-level tasks such as
+ 3-sphere recognition and connected sum decomposition.
+ .
+ For Regina's standard graphical user interface, install the package
+ regina-normal.
+
+Package: regina-normal-mpi
+Architecture: any
+Section: math
+Depends: mpi-default-bin, ${shlibs:Depends}, ${perl:Depends}, ${misc:Depends}
+Replaces: regina-normal (<= 4.3.1-6)
+Description: MPI utilities for Regina, the 3-manifold topology software
+ Regina is a suite of mathematical software for 3-manifold topologists.
+ This package contains the components of Regina designed to run large
+ parallel computations on a high-performance cluster using MPI.
+ .
+ These components are built against the default implementation of MPI,
+ and must be run under the default MPI runtime environment (as found
+ in the package mpi-default-bin).
+ .
+ Regina focuses on the study of 3-manifold triangulations and normal
+ surfaces.  Other highlights include angle structures, census enumeration,
+ combinatorial recognition of triangulations, and high-level tasks such as
+ 3-sphere recognition and connected sum decomposition.
+ .
+ For Regina's standard graphical user interface, install the package
+ regina-normal.
+
+Package: regina-normal-doc
+Architecture: all
+Section: doc
+Depends: ${misc:Depends}, kdelibs5-data
+Recommends: iceweasel | www-browser
+Suggests: regina-normal, regina-normal-dev
+Breaks: regina-normal (<< 4.6-2)
+Replaces: regina-normal (<< 4.6-2)
+Description: documentation for Regina, the 3-manifold topology software
+ Regina is a suite of mathematical software for 3-manifold topologists.
+ This package provides a rich users' handbook, complete API documentation
+ for the C++ calculation engine and Python bindings, and the full
+ specification for Regina's XML data file format.
+ .
+ Regina focuses on the study of 3-manifold triangulations and normal
+ surfaces.  Other highlights include angle structures, census enumeration,
+ combinatorial recognition of triangulations, and high-level tasks such as
+ 3-sphere recognition and connected sum decomposition.
+ .
+ For Regina's standard graphical user interface, install the package
+ regina-normal.

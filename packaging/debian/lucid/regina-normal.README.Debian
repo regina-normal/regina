@@ -1,0 +1,29 @@
+Regina for Ubuntu
+-----------------
+
+Regina comes with two main binaries:
+
+- /usr/bin/regina-kde, which starts the graphical user interface;
+- /usr/bin/regina-python, which starts a command-line Python session.
+
+Regina also provides several other specialised command-line tools; see the
+users' handbook for details.
+
+To get started, take a look at the users' handbook.  You can find it in
+/usr/share/doc/regina-normal/handbook/index.html .
+
+Examples of topology data files and Python sessions can be found in
+the directory /usr/share/doc/regina-normal/examples/ .
+
+If you are using Python scripting or if you are building the C++
+calculation engine into your own projects, you can find full API
+documentation in /usr/share/doc/regina-normal/engine-docs/index.html .
+
+For C++ headers and other development files required to build Regina's
+calculation engine directly into your own projects, see the package
+regina-normal-dev.
+
+For MPI-enable components that can run on high-performance clusters,
+see the package regina-normal-mpi.
+
+ -- Ben Burton <bab@debian.org>, Fri,  9 Sep 2011 06:33:29 +1000

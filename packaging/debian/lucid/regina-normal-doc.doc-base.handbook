@@ -1,0 +1,11 @@
+Document: regina-handbook
+Title: Regina Users' Handbook
+Author: Ben Burton <bab@debian.org>
+Abstract: Regina is a suite of mathematical software for 3-manifold
+ topologists.  This is the main users' handbook, which guides you through
+ Regina's graphical user interface.
+Section: Science/Mathematics
+
+Format: HTML
+Index: /usr/share/doc/regina-normal-doc/handbook/index.html
+Files: /usr/share/doc/regina-normal-doc/handbook/*.html
