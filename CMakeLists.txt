@@ -33,7 +33,7 @@ INCLUDE(MacroLogFeature)
 INCLUDE( CheckCXXSourceCompiles )
 INCLUDE( CheckFunctionExists )
 # Version
-SET (PACKAGE_VERSION 4.90)
+SET (PACKAGE_VERSION 4.91)
 SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_VERSION}")
 
 # Extract major/minor version

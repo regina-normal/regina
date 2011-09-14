@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gui name="packetwindow" version="4.90">
+<gui name="packetwindow" version="4.91">
 <MenuBar>
   <ActionList name="packet_type_menu"/>
 </MenuBar>
