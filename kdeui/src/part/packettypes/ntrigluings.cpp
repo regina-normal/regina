@@ -353,10 +353,7 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         // Bad string.
         showError(i18n("<qt>The face gluing should be entered in the "
             "form: <i>tet (face)</i>.  An example is <i>5 (032)</i>, "
-            "which represents face 032 of tetrahedron 5.<p>"
-            "For a method of entering face gluings that is slower but "
-            "easier to understand, you can switch to pop-up dialog "
-            "mode in the triangulation preferences.</qt>"));
+            "which represents face 032 of tetrahedron 5.</qt>"));
         return false;
     } else {
         // Real face.
@@ -553,7 +550,6 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     actAddTet = triActions->addAction("tri_add_tet");
     actAddTet->setText(i18n("&Add Tet"));
     actAddTet->setIcon(KIcon("edit-table-insert-row-below"));
-
     actAddTet->setToolTip(i18n("Add a new tetrahedron"));
     actAddTet->setEnabled(readWrite);
     actAddTet->setWhatsThis(i18n("Add a new tetrahedron to this "
