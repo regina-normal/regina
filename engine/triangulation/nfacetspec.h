@@ -341,10 +341,9 @@ inline NFacetSpec<dim>& NFacetSpec<dim>::operator = (
 
 template <int dim>
 inline NFacetSpec<dim> NFacetSpec<dim>::operator ++ () {
-    facet++;
-    if (facet > dim) {
+    if (++facet > dim) {
         facet = 0;
-        simp++;
+        ++simp;
     }
     return *this;
 }
@@ -352,20 +351,18 @@ inline NFacetSpec<dim> NFacetSpec<dim>::operator ++ () {
 template <int dim>
 inline NFacetSpec<dim> NFacetSpec<dim>::operator ++ (int) {
     NFacetSpec<dim> ans(*this);
-    facet++;
-    if (facet > dim) {
+    if (++facet > dim) {
         facet = 0;
-        simp++;
+        ++simp;
     }
     return ans;
 }
 
 template <int dim>
 inline NFacetSpec<dim> NFacetSpec<dim>::operator -- () {
-    facet--;
-    if (facet < 0) {
+    if (--facet < 0) {
         facet = dim;
-        simp--;
+        --simp;
     }
     return *this;
 }
@@ -373,10 +370,9 @@ inline NFacetSpec<dim> NFacetSpec<dim>::operator -- () {
 template <int dim>
 inline NFacetSpec<dim> NFacetSpec<dim>::operator -- (int) {
     NFacetSpec<dim> ans(*this);
-    facet--;
-    if (facet < 0) {
+    if (--facet < 0) {
         facet = dim;
-        simp--;
+        --simp;
     }
     return ans;
 }
