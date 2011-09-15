@@ -66,8 +66,8 @@ NFacePairing::NFacePairing(const NTriangulation& tri) :
         for (f = 0; f < 4; f++) {
             adj = tet->adjacentTetrahedron(f);
             if (adj) {
-                pairs[index].tet = tri.tetrahedronIndex(adj);
-                pairs[index].face = tet->adjacentFace(f);
+                pairs[index].simp = tri.tetrahedronIndex(adj);
+                pairs[index].facet = tet->adjacentFace(f);
             } else
                 pairs[index].setBoundary(nTetrahedra);
 
@@ -80,15 +80,15 @@ std::string NFacePairing::toString() const {
     std::ostringstream ans;
 
     for (NTetFace f(0, 0); ! f.isPastEnd(nTetrahedra, true); f++) {
-        if (f.face == 0 && f.tet > 0)
+        if (f.facet == 0 && f.simp > 0)
             ans << " | ";
-        else if (f.tet || f.face)
+        else if (f.simp || f.facet)
             ans << ' ';
 
         if (dest(f).isBoundary(nTetrahedra))
             ans << "bdry";
         else
-            ans << dest(f).tet << ':' << dest(f).face;
+            ans << dest(f).simp << ':' << dest(f).facet;
     }
     return ans.str();
 }
@@ -130,11 +130,11 @@ void NFacePairing::writeDot(std::ostream& out, const char* prefix,
     for (t = 0; t < nTetrahedra; t++)
         for (f = 0; f < 4; f++) {
             adj = dest(t, f);
-            if (adj.isBoundary(nTetrahedra) || adj.tet < static_cast<int>(t) ||
-                    (adj.tet == static_cast<int>(t) && adj.face < f))
+            if (adj.isBoundary(nTetrahedra) || adj.simp < static_cast<int>(t) ||
+                    (adj.simp == static_cast<int>(t) && adj.facet < f))
                 continue;
             out << prefix << '_' << t << " -- " << prefix << '_'
-                << adj.tet << ';' << std::endl;
+                << adj.simp << ';' << std::endl;
         }
 
     out << '}' << std::endl;
@@ -144,9 +144,9 @@ std::string NFacePairing::toTextRep() const {
     std::ostringstream ans;
 
     for (NTetFace f(0, 0); ! f.isPastEnd(nTetrahedra, true); f++) {
-        if (f.tet || f.face)
+        if (f.simp || f.facet)
             ans << ' ';
-        ans << dest(f).tet << ' ' << dest(f).face;
+        ans << dest(f).simp << ' ' << dest(f).facet;
     }
 
     return ans.str();
@@ -174,7 +174,7 @@ NFacePairing* NFacePairing::fromTextRep(const std::string& rep) {
             delete ans;
             return 0;
         }
-        ans->pairs[i].tet = val;
+        ans->pairs[i].simp = val;
 
         if (! valueOf(tokens[2 * i + 1], val)) {
             delete ans;
@@ -184,7 +184,7 @@ NFacePairing* NFacePairing::fromTextRep(const std::string& rep) {
             delete ans;
             return 0;
         }
-        ans->pairs[i].face = val;
+        ans->pairs[i].facet = val;
     }
 
     // Run a sanity check.
@@ -192,9 +192,9 @@ NFacePairing* NFacePairing::fromTextRep(const std::string& rep) {
     bool broken = false;
     for (NTetFace f(0, 0); ! f.isPastEnd(nTet, true); f++) {
         destFace = ans->dest(f);
-        if (destFace.tet == nTet && destFace.face != 0)
+        if (destFace.simp == nTet && destFace.facet != 0)
             broken = true;
-        else if (destFace.tet < nTet && ! (ans->dest(destFace) == f))
+        else if (destFace.simp < nTet && ! (ans->dest(destFace) == f))
             broken = true;
         else
             continue;
@@ -224,10 +224,10 @@ bool NFacePairing::hasTripleEdge() const {
         equal = 0;
         for (i = 0; i < 4; i++)
             if ((! isUnmatched(tet, i)) &&
-                    dest(tet, i).tet > static_cast<int>(tet)) {
+                    dest(tet, i).simp > static_cast<int>(tet)) {
                 // This face joins to a real face of a later tetrahedron.
                 for (j = i + 1; j < 4; j++)
-                    if (dest(tet, i).tet == dest(tet, j).tet)
+                    if (dest(tet, i).simp == dest(tet, j).simp)
                         equal++;
             }
 
@@ -250,16 +250,16 @@ void NFacePairing::followChain(unsigned& tet, NFacePair& faces) const {
         // Does the second face lead to the same tetrahedron as the first?
         dest1 = dest(tet, faces.lower());
         dest2 = dest(tet, faces.upper());
-        if (dest1.tet != dest2.tet)
+        if (dest1.simp != dest2.simp)
             return;
 
         // Do the two faces lead to a *different* tetrahedron?
-        if (dest1.tet == static_cast<int>(tet))
+        if (dest1.simp == static_cast<int>(tet))
             return;
 
         // Follow the chain along.
-        tet = dest1.tet;
-        faces = NFacePair(dest1.face, dest2.face).complement();
+        tet = dest1.simp;
+        faces = NFacePair(dest1.facet, dest2.facet).complement();
     }
 }
 
@@ -270,7 +270,7 @@ bool NFacePairing::hasBrokenDoubleEndedChain() const {
     // Skip the last tetrahedron -- any of the two ends will do.
     for (baseTet = 0; baseTet + 1 < nTetrahedra; baseTet++)
         for (baseFace = 0; baseFace < 3; baseFace++)
-            if (dest(baseTet, baseFace).tet == static_cast<int>(baseTet)) {
+            if (dest(baseTet, baseFace).simp == static_cast<int>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
                 if (hasBrokenDoubleEndedChain(baseTet, baseFace))
                     return true;
@@ -290,14 +290,14 @@ bool NFacePairing::hasBrokenDoubleEndedChain(unsigned baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =
-        NFacePair(baseFace, dest(baseTet, baseFace).face).complement();
+        NFacePair(baseFace, dest(baseTet, baseFace).facet).complement();
     unsigned bdryTet = baseTet;
     followChain(bdryTet, bdryFaces);
 
     // Here's where we must diverge and move into the second chain.
 
     // We cannot glue the working pair of faces to each other.
-    if (dest(bdryTet, bdryFaces.lower()).tet == static_cast<int>(bdryTet))
+    if (dest(bdryTet, bdryFaces.lower()).simp == static_cast<int>(bdryTet))
         return false;
 
     // Try each possible direction away from the working faces into the
@@ -314,17 +314,17 @@ bool NFacePairing::hasBrokenDoubleEndedChain(unsigned baseTet,
             continue;
 
         for (ignoreFace = 0; ignoreFace < 4; ignoreFace++) {
-            if (destFace.face == static_cast<int>(ignoreFace))
+            if (destFace.facet == static_cast<int>(ignoreFace))
                 continue;
             // Try to follow the chain along from tetrahedron
-            // destFace.tet, using the two faces that are *not*
-            // destFace.face or ignoreFace.
-            chainTet = destFace.tet;
-            chainFaces = NFacePair(destFace.face, ignoreFace).complement();
+            // destFace.simp, using the two faces that are *not*
+            // destFace.facet or ignoreFace.
+            chainTet = destFace.simp;
+            chainFaces = NFacePair(destFace.facet, ignoreFace).complement();
             followChain(chainTet, chainFaces);
 
             // Did we reach an end edge of the second chain?
-            if (dest(chainTet, chainFaces.lower()).tet ==
+            if (dest(chainTet, chainFaces.lower()).simp ==
                     static_cast<int>(chainTet))
                 return true;
         }
@@ -340,7 +340,7 @@ bool NFacePairing::hasOneEndedChainWithDoubleHandle() const {
     unsigned baseFace;
     for (baseTet = 0; baseTet < nTetrahedra; baseTet++)
         for (baseFace = 0; baseFace < 3; baseFace++)
-            if (dest(baseTet, baseFace).tet == static_cast<int>(baseTet)) {
+            if (dest(baseTet, baseFace).simp == static_cast<int>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
                 if (hasOneEndedChainWithDoubleHandle(baseTet, baseFace))
                     return true;
@@ -360,7 +360,7 @@ bool NFacePairing::hasOneEndedChainWithDoubleHandle(unsigned baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =
-        NFacePair(baseFace, dest(baseTet, baseFace).face).complement();
+        NFacePair(baseFace, dest(baseTet, baseFace).facet).complement();
     unsigned bdryTet = baseTet;
     followChain(bdryTet, bdryFaces);
 
@@ -369,7 +369,7 @@ bool NFacePairing::hasOneEndedChainWithDoubleHandle(unsigned baseTet,
     NTetFace dest2 = dest(bdryTet, bdryFaces.upper());
 
     // These two faces must be joined to two distinct tetrahedra.
-    if (dest1.tet == dest2.tet)
+    if (dest1.simp == dest2.simp)
         return false;
 
     // They also cannot be boundary.
@@ -380,7 +380,7 @@ bool NFacePairing::hasOneEndedChainWithDoubleHandle(unsigned baseTet,
     // joined to each other.  So we can start hunting for the double handle.
     int handle = 0;
     for (int i = 0; i < 4; i++)
-        if (dest(dest1.tet, i).tet == dest2.tet)
+        if (dest(dest1.simp, i).simp == dest2.simp)
             handle++;
 
     // Did we find our double handle?
@@ -394,7 +394,7 @@ bool NFacePairing::hasWedgedDoubleEndedChain() const {
     // Skip the last tetrahedron -- any of the two ends will do.
     for (baseTet = 0; baseTet + 1 < nTetrahedra; baseTet++)
         for (baseFace = 0; baseFace < 3; baseFace++)
-            if (dest(baseTet, baseFace).tet == static_cast<int>(baseTet)) {
+            if (dest(baseTet, baseFace).simp == static_cast<int>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
                 if (hasWedgedDoubleEndedChain(baseTet, baseFace))
                     return true;
@@ -414,7 +414,7 @@ bool NFacePairing::hasWedgedDoubleEndedChain(unsigned baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =
-        NFacePair(baseFace, dest(baseTet, baseFace).face).complement();
+        NFacePair(baseFace, dest(baseTet, baseFace).facet).complement();
     unsigned bdryTet = baseTet;
     followChain(bdryTet, bdryFaces);
 
@@ -423,7 +423,7 @@ bool NFacePairing::hasWedgedDoubleEndedChain(unsigned baseTet,
     NTetFace dest2 = dest(bdryTet, bdryFaces.upper());
 
     if (dest1.isBoundary(nTetrahedra) || dest2.isBoundary(nTetrahedra) ||
-            dest1.tet == dest2.tet)
+            dest1.simp == dest2.simp)
         return false;
 
     // We are joined to two new and distinct graph vertices.
@@ -438,17 +438,17 @@ bool NFacePairing::hasWedgedDoubleEndedChain(unsigned baseTet,
     NTetFace nextDest;
     bool foundCrossEdge = false;
     for (i = 0; i < 4; i++) {
-        if (i != dest1.face) {
-            nextDest = dest(dest1.tet, i);
-            if (nextDest.tet == dest2.tet)
+        if (i != dest1.facet) {
+            nextDest = dest(dest1.simp, i);
+            if (nextDest.simp == dest2.simp)
                 foundCrossEdge = true;
-            else if (nextDest.tet != dest1.tet &&
+            else if (nextDest.simp != dest1.simp &&
                     ! nextDest.isBoundary(nTetrahedra))
                 throughFace[0][nThroughFaces[0]++] = nextDest;
         }
-        if (i != dest2.face) {
-            nextDest = dest(dest2.tet, i);
-            if (nextDest.tet != dest1.tet && nextDest.tet != dest2.tet &&
+        if (i != dest2.facet) {
+            nextDest = dest(dest2.simp, i);
+            if (nextDest.simp != dest1.simp && nextDest.simp != dest2.simp &&
                     ! nextDest.isBoundary(nTetrahedra))
                 throughFace[1][nThroughFaces[1]++] = nextDest;
         }
@@ -465,15 +465,15 @@ bool NFacePairing::hasWedgedDoubleEndedChain(unsigned baseTet,
     unsigned chainTet;
     for (i = 0; i < nThroughFaces[0]; i++)
         for (j = 0; j < nThroughFaces[1]; j++)
-            if (throughFace[0][i].tet == throughFace[1][j].tet) {
+            if (throughFace[0][i].simp == throughFace[1][j].simp) {
                 // Bingo.
                 // Follow the chain and see if it ends in a loop.
-                chainTet = throughFace[0][i].tet;
-                chainFaces = NFacePair(throughFace[0][i].face,
-                    throughFace[1][j].face).complement();
+                chainTet = throughFace[0][i].simp;
+                chainFaces = NFacePair(throughFace[0][i].facet,
+                    throughFace[1][j].facet).complement();
                 followChain(chainTet, chainFaces);
 
-                if (dest(chainTet, chainFaces.lower()).tet ==
+                if (dest(chainTet, chainFaces.lower()).simp ==
                         static_cast<int>(chainTet))
                     return true;
             }
@@ -488,7 +488,7 @@ bool NFacePairing::hasOneEndedChainWithStrayBigon() const {
     unsigned baseFace;
     for (baseTet = 0; baseTet < nTetrahedra; baseTet++)
         for (baseFace = 0; baseFace < 3; baseFace++)
-            if (dest(baseTet, baseFace).tet == static_cast<int>(baseTet)) {
+            if (dest(baseTet, baseFace).simp == static_cast<int>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
                 if (hasOneEndedChainWithStrayBigon(baseTet, baseFace))
                     return true;
@@ -508,14 +508,14 @@ bool NFacePairing::hasOneEndedChainWithStrayBigon(unsigned baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =
-        NFacePair(baseFace, dest(baseTet, baseFace).face).complement();
+        NFacePair(baseFace, dest(baseTet, baseFace).facet).complement();
     unsigned bdryTet = baseTet;
     followChain(bdryTet, bdryFaces);
 
     // Here's where we must diverge and create the stray bigon.
 
     // We cannot glue the working pair of faces to each other.
-    if (dest(bdryTet, bdryFaces.lower()).tet == static_cast<int>(bdryTet))
+    if (dest(bdryTet, bdryFaces.lower()).simp == static_cast<int>(bdryTet))
         return false;
 
     // Try each possible direction away from the working faces into the bigon.
@@ -529,52 +529,52 @@ bool NFacePairing::hasOneEndedChainWithStrayBigon(unsigned baseTet,
             i == 0 ? bdryFaces.lower() : bdryFaces.upper());
         if (destFace.isBoundary(nTetrahedra))
             continue;
-        bigonTet = destFace.tet;
+        bigonTet = destFace.simp;
 
         for (ignoreFace = 0; ignoreFace < 4; ignoreFace++) {
-            if (destFace.face == static_cast<int>(ignoreFace))
+            if (destFace.facet == static_cast<int>(ignoreFace))
                 continue;
             // Look for a bigon running away from tetrahedron
-            // destFace.tet, using the two faces that are *not*
-            // destFace.face or ignoreFace.
-            bigonFaces = NFacePair(destFace.face, ignoreFace).complement();
+            // destFace.simp, using the two faces that are *not*
+            // destFace.facet or ignoreFace.
+            bigonFaces = NFacePair(destFace.facet, ignoreFace).complement();
 
-            farTet = dest(bigonTet, bigonFaces.upper()).tet;
+            farTet = dest(bigonTet, bigonFaces.upper()).simp;
             if (farTet != bigonTet &&
                     farTet < static_cast<int>(nTetrahedra) /* non-bdry */ &&
-                    farTet == dest(bigonTet, bigonFaces.lower()).tet) {
+                    farTet == dest(bigonTet, bigonFaces.lower()).simp) {
                 // We have the bigon!
                 // We know that bdryTet != bigonTet != farTet, and we
                 // can prove that bdryTet != farTet using 4-valency.
 
                 // Ensure that we don't have one of our special exceptions.
                 extraTet = dest(bdryTet,
-                    i == 0 ? bdryFaces.upper() : bdryFaces.lower()).tet;
+                    i == 0 ? bdryFaces.upper() : bdryFaces.lower()).simp;
                 // We know extraTet != bigonTet, since otherwise our
                 // one-ended chain would not have stopped when it did.
                 // We also know extraTet != bdryTet by 4-valency.
                 if (extraTet == farTet ||
                         extraTet >= static_cast<int>(nTetrahedra) /* bdry */)
                     return true;
-                if (extraTet == dest(bigonTet, ignoreFace).tet) {
+                if (extraTet == dest(bigonTet, ignoreFace).simp) {
                     // Could be the special case where extraTet joins to
                     // all of bdryTet, bigonTet and farTet.
                     // We already have it joined to bdryTet and bigonTet.
                     // Check farTet.
-                    if (extraTet != dest(farTet, 0).tet &&
-                            extraTet != dest(farTet, 1).tet &&
-                            extraTet != dest(farTet, 2).tet &&
-                            extraTet != dest(farTet, 3).tet)
+                    if (extraTet != dest(farTet, 0).simp &&
+                            extraTet != dest(farTet, 1).simp &&
+                            extraTet != dest(farTet, 2).simp &&
+                            extraTet != dest(farTet, 3).simp)
                         return true;
                 } else {
                     // Could be the special case where extraTet joins
                     // twice to farTet.  If not, we have the type of
                     // graph we're looking for.
                     bigonFaces = NFacePair(
-                        dest(bigonTet, bigonFaces.upper()).face,
-                        dest(bigonTet, bigonFaces.lower()).face).complement();
-                    if (extraTet != dest(farTet, bigonFaces.upper()).tet ||
-                            extraTet != dest(farTet, bigonFaces.lower()).tet)
+                        dest(bigonTet, bigonFaces.upper()).facet,
+                        dest(bigonTet, bigonFaces.lower()).facet).complement();
+                    if (extraTet != dest(farTet, bigonFaces.upper()).simp ||
+                            extraTet != dest(farTet, bigonFaces.lower()).simp)
                         return true;
                 }
             }
@@ -592,7 +592,7 @@ bool NFacePairing::hasTripleOneEndedChain() const {
     // Skip the last two tetrahedra -- any of the three chains will do.
     for (baseTet = 0; baseTet + 2 < nTetrahedra; baseTet++)
         for (baseFace = 0; baseFace < 3; baseFace++)
-            if (dest(baseTet, baseFace).tet == static_cast<int>(baseTet)) {
+            if (dest(baseTet, baseFace).simp == static_cast<int>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
                 if (hasTripleOneEndedChain(baseTet, baseFace))
                     return true;
@@ -612,14 +612,14 @@ bool NFacePairing::hasTripleOneEndedChain(unsigned baseTet,
         unsigned baseFace) const {
     // Follow the chain along and see how far we get.
     NFacePair bdryFaces =
-        NFacePair(baseFace, dest(baseTet, baseFace).face).complement();
+        NFacePair(baseFace, dest(baseTet, baseFace).facet).complement();
     unsigned bdryTet = baseTet;
     followChain(bdryTet, bdryFaces);
 
     // Here's where we must diverge and hunt for the other two chains.
 
     // We cannot glue the working pair of faces to each other.
-    if (dest(bdryTet, bdryFaces.lower()).tet == static_cast<int>(bdryTet))
+    if (dest(bdryTet, bdryFaces.lower()).simp == static_cast<int>(bdryTet))
         return false;
 
     NTetFace axis1 = dest(bdryTet, bdryFaces.lower());
@@ -627,9 +627,9 @@ bool NFacePairing::hasTripleOneEndedChain(unsigned baseTet,
     if (axis1.isBoundary(nTetrahedra) || axis2.isBoundary(nTetrahedra))
         return false;
 
-    // We know axis1.tet != axis2.tet because the chain stopped, but
+    // We know axis1.simp != axis2.simp because the chain stopped, but
     // just in case..
-    if (axis1.tet == axis2.tet)
+    if (axis1.simp == axis2.simp)
         return false;
 
     // Count the number of other chains coming from axis1 and axis2.
@@ -639,19 +639,19 @@ bool NFacePairing::hasTripleOneEndedChain(unsigned baseTet,
     unsigned newChainTet;
     NFacePair newChainFaces;
     for (exit1 = 0; exit1 < 4; exit1++) {
-        if (exit1 == axis1.face)
+        if (exit1 == axis1.facet)
             continue;
-        arrive1 = dest(axis1.tet, exit1);
-        if (arrive1.tet == static_cast<int>(bdryTet) ||
-                arrive1.tet == axis1.tet || arrive1.tet == axis2.tet ||
+        arrive1 = dest(axis1.simp, exit1);
+        if (arrive1.simp == static_cast<int>(bdryTet) ||
+                arrive1.simp == axis1.simp || arrive1.simp == axis2.simp ||
                 arrive1.isBoundary(nTetrahedra))
             continue;
 
         for (exit2 = 0; exit2 < 4; exit2++) {
-            if (exit2 == axis2.face)
+            if (exit2 == axis2.facet)
                 continue;
-            arrive2 = dest(axis2.tet, exit2);
-            if (arrive2.tet != arrive1.tet)
+            arrive2 = dest(axis2.simp, exit2);
+            if (arrive2.simp != arrive1.simp)
                 continue;
 
             // We have graph edges from axis1 and axis2 to a common vertex,
@@ -660,11 +660,12 @@ bool NFacePairing::hasTripleOneEndedChain(unsigned baseTet,
 
             // See if there's a (possibly zero-length) chain we can
             // follow to a loop.
-            newChainTet = arrive1.tet;
-            newChainFaces = NFacePair(arrive1.face, arrive2.face).complement();
+            newChainTet = arrive1.simp;
+            newChainFaces = NFacePair(arrive1.facet, arrive2.facet).
+                complement();
             followChain(newChainTet, newChainFaces);
 
-            if (dest(newChainTet, newChainFaces.lower()).tet ==
+            if (dest(newChainTet, newChainFaces.lower()).simp ==
                     static_cast<int>(newChainTet)) {
                 // Got one!
                 if (++nChains == 3)
@@ -689,7 +690,7 @@ bool NFacePairing::hasSingleStar() const {
     for (first = 0; first + 1 < nTetrahedra; first++) {
         // All four neighbours must be non-boundary and distinct.
         for (f1 = 0; f1 < 4; f1++) {
-            half[f1] = dest(first, f1).tet;
+            half[f1] = dest(first, f1).simp;
             if (half[f1] >= static_cast<int>(nTetrahedra) /* bdry */)
                 break;
         }
@@ -702,11 +703,11 @@ bool NFacePairing::hasSingleStar() const {
 
         // Look for the adjacent neighbour.
         for (f1 = 0; f1 < 4; f1++) {
-            second = dest(first, f1).tet;
+            second = dest(first, f1).simp;
 
             // Now ensure that all eight faces are non-boundary and distinct.
             for (f2 = 0; f2 < 4; f2++) {
-                all[f2 + 4] = dest(second, f2).tet;
+                all[f2 + 4] = dest(second, f2).simp;
                 if (all[f2 + 4] >= static_cast<int>(nTetrahedra) /* bdry */)
                     break;
             }
@@ -742,7 +743,7 @@ bool NFacePairing::hasDoubleStar() const {
         // All four neighbours must be non-boundary, and three must be
         // distinct.
         for (f = 0; f < 4; f++) {
-            all[f] = dest(first, f).tet;
+            all[f] = dest(first, f).simp;
             if (all[f] >= static_cast<int>(nTetrahedra) /* bdry */)
                 break;
         }
@@ -766,7 +767,7 @@ bool NFacePairing::hasDoubleStar() const {
 
         // Now look at the edges coming out from the second tetrahedron.
         for (f = 0; f < 4; f++) {
-            all[f + 3] = dest(second, f).tet;
+            all[f + 3] = dest(second, f).simp;
             if (all[f + 3] >= static_cast<int>(nTetrahedra) /* bdry */)
                 break;
         }
@@ -802,7 +803,7 @@ bool NFacePairing::hasDoubleSquare() const {
     for (t1 = 0; t1 + 3 < nTetrahedra; t1++)
         for (join = 0; join < 4; join++) {
             t2 = dest(t1, join);
-            if (t2.tet == static_cast<int>(t1) || t2.isBoundary(nTetrahedra))
+            if (t2.simp == static_cast<int>(t1) || t2.isBoundary(nTetrahedra))
                 continue;
 
             // We have distinct t1, t2 adjacent.
@@ -812,15 +813,15 @@ bool NFacePairing::hasDoubleSquare() const {
             for (fa = 0; fa < 3 && ! found; fa++) {
                 if (fa == join)
                     continue;
-                adj1 = dest(t1, fa).tet;
+                adj1 = dest(t1, fa).simp;
                 if (adj1 >= static_cast<int>(nTetrahedra) /* bdry */)
                     continue;
-                if (adj1 == static_cast<int>(t1) || adj1 == t2.tet)
+                if (adj1 == static_cast<int>(t1) || adj1 == t2.simp)
                     continue;
                 for (fb = fa + 1; fb < 4; fb++) {
                     if (fb == join)
                         continue;
-                    if (adj1 == dest(t1, fb).tet) {
+                    if (adj1 == dest(t1, fb).simp) {
                         found = true;
                         break;
                     }
@@ -831,18 +832,18 @@ bool NFacePairing::hasDoubleSquare() const {
 
             found = false;
             for (fa = 0; fa < 3 && ! found; fa++) {
-                if (fa == t2.face)
+                if (fa == t2.facet)
                     continue;
-                adj2 = dest(t2.tet, fa).tet;
+                adj2 = dest(t2.simp, fa).simp;
                 if (adj2 >= static_cast<int>(nTetrahedra) /* bdry */)
                     continue;
-                if (adj2 == static_cast<int>(t1) || adj2 == t2.tet ||
+                if (adj2 == static_cast<int>(t1) || adj2 == t2.simp ||
                         adj2 == adj1)
                     continue;
                 for (fb = fa + 1; fb < 4; fb++) {
-                    if (fb == t2.face)
+                    if (fb == t2.facet)
                         continue;
-                    if (adj2 == dest(t2.tet, fb).tet) {
+                    if (adj2 == dest(t2.simp, fb).simp) {
                         found = true;
                         break;
                     }
@@ -853,7 +854,7 @@ bool NFacePairing::hasDoubleSquare() const {
 
             // All we need now is a link between adj1 and adj2.
             for (fa = 0; fa < 4; fa++)
-                if (dest(adj1, fa).tet == adj2)
+                if (dest(adj1, fa).simp == adj2)
                     return true;
         }
 
@@ -901,7 +902,7 @@ void* NFacePairing::run(void* param) {
     }
 
     // Initialise the pairings to unspecified (i.e., face -> itself).
-    for (NTetFace f(0,0); f.tet < static_cast<int>(nTetrahedra); f++)
+    for (NTetFace f(0,0); f.simp < static_cast<int>(nTetrahedra); f++)
         dest(f) = f;
 
     // Note that we have at least one tetrahedron.
@@ -937,10 +938,10 @@ void* NFacePairing::run(void* param) {
         if (usedFaces % 4 == 2 &&
                 usedFaces < 4 * static_cast<int>(nTetrahedra) - 2 &&
                 noDest((usedFaces / 4) + 1, 0) &&
-                dest(trying).tet <= (usedFaces / 4)) {
+                dest(trying).simp <= (usedFaces / 4)) {
             // Move to the first unused tetrahedron.
-            dest(trying).tet = (usedFaces / 4) + 1;
-            dest(trying).face = 0;
+            dest(trying).simp = (usedFaces / 4) + 1;
+            dest(trying).facet = 0;
         }
 
         // We'd better make sure we're not going to glue together so
@@ -955,7 +956,7 @@ void* NFacePairing::run(void* param) {
                     if (boundaryFaces == 0 &&
                             usedFaces ==
                                 4 * static_cast<int>(nTetrahedra) - 2 &&
-                            dest(trying).tet <
+                            dest(trying).simp <
                                 static_cast<int>(nTetrahedra))
                         dest(trying).setBoundary(nTetrahedra);
                 }
@@ -963,7 +964,7 @@ void* NFacePairing::run(void* param) {
                 // We're specific about the number of boundary faces.
                 if (usedFaces - boundaryFaces + args->nBdryFaces ==
                         4 * static_cast<int>(nTetrahedra) &&
-                        dest(trying).tet < static_cast<int>(nTetrahedra))
+                        dest(trying).simp < static_cast<int>(nTetrahedra))
                     // We've used our entire quota of non-boundary faces.
                     dest(trying).setBoundary(nTetrahedra);
             }
@@ -973,18 +974,18 @@ void* NFacePairing::run(void* param) {
         // We still don't know whether this destination is valid however.
         while(true) {
             // Move onwards to the next free destination.
-            while (dest(trying).tet < static_cast<int>(nTetrahedra) &&
+            while (dest(trying).simp < static_cast<int>(nTetrahedra) &&
                     ! noDest(dest(trying)))
                 dest(trying)++;
 
             // If we are past face 0 of a tetrahedron and the previous face
             // was not used, we can't do anything with this tetrahedron.
             // Move to the next tetrahedron.
-            if (dest(trying).tet < static_cast<int>(nTetrahedra) &&
-                    dest(trying).face > 0 &&
-                    noDest(dest(trying).tet, dest(trying).face - 1)) {
-                dest(trying).tet++;
-                dest(trying).face = 0;
+            if (dest(trying).simp < static_cast<int>(nTetrahedra) &&
+                    dest(trying).facet > 0 &&
+                    noDest(dest(trying).simp, dest(trying).facet - 1)) {
+                dest(trying).simp++;
+                dest(trying).facet = 0;
                 continue;
             }
 
@@ -996,9 +997,9 @@ void* NFacePairing::run(void* param) {
         // unused.  Note that face == 0 implies tet > 0.
         // In this case, we've passed the last sane choice; head
         // straight to the boundary.
-        if (dest(trying).tet < static_cast<int>(nTetrahedra) &&
-                dest(trying).face == 0 &&
-                noDest(dest(trying).tet - 1, 0))
+        if (dest(trying).simp < static_cast<int>(nTetrahedra) &&
+                dest(trying).facet == 0 &&
+                noDest(dest(trying).simp - 1, 0))
             dest(trying).setBoundary(nTetrahedra);
 
         // Finally, return to the issue of prematurely closing off a
@@ -1061,11 +1062,11 @@ void* NFacePairing::run(void* param) {
         // Now we increment trying to move to the next unmatched face.
         oldTrying = trying;
         trying++;
-        while (trying.tet < static_cast<int>(nTetrahedra) && ! noDest(trying))
+        while (trying.simp < static_cast<int>(nTetrahedra) && ! noDest(trying))
             trying++;
 
         // Have we got a solution?
-        if (trying.tet == static_cast<int>(nTetrahedra)) {
+        if (trying.simp == static_cast<int>(nTetrahedra)) {
             // Deal with the solution!
             if (isCanonicalInternal(allAutomorphisms)) {
                 args->use(this, &allAutomorphisms, args->useArgs);
@@ -1094,9 +1095,9 @@ void* NFacePairing::run(void* param) {
             // Ensure the destination is at least the
             // previous forward destination from an earlier face of this
             // tetrahedron.
-            if (trying.face > 0) {
+            if (trying.facet > 0) {
                 tmpFace = trying;
-                for (tmpFace--; tmpFace.tet == trying.tet; tmpFace--)
+                for (tmpFace--; tmpFace.simp == trying.simp; tmpFace--)
                     if (tmpFace < dest(tmpFace)) {
                         // Here is the previous forward destination in
                         // this tetrahedron.
@@ -1119,10 +1120,10 @@ void* NFacePairing::run(void* param) {
             // If the first tetrahedron doesn't glue to itself and this
             // is not the first tetrahedron, it can't glue to itself either.
             // (Note that we already know there is at least 1 tetrahedron.)
-            if (dest(trying).tet == trying.tet && dest(trying).face < 3 &&
-                    trying.tet > 0)
-                if (dest(0, 0).tet != 0)
-                    dest(trying).face = 3;
+            if (dest(trying).simp == trying.simp && dest(trying).facet < 3 &&
+                    trying.simp > 0)
+                if (dest(0, 0).simp != 0)
+                    dest(trying).facet = 3;
         }
     }
 
@@ -1140,7 +1141,7 @@ bool NFacePairing::isCanonical() const {
                 if (! (dest(tet, face + 1) == NTetFace(tet, face)))
                     return false;
         if (tet > 0)
-            if (dest(tet, 0).tet >= static_cast<int>(tet))
+            if (dest(tet, 0).simp >= static_cast<int>(tet))
                 return false;
         if (tet > 1)
             if (dest(tet, 0) <= dest(tet - 1, 0))
@@ -1203,12 +1204,12 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
         // If firstFace glues to the same tetrahedron and this face
         // doesn't, we can ignore this permutation.
         firstDestPre = dest(preImage[0]);
-        if (firstFaceDest.tet == 0 && firstDestPre.tet != preImage[0].tet)
+        if (firstFaceDest.simp == 0 && firstDestPre.simp != preImage[0].simp)
             continue;
 
         // If firstFace doesn't glue to the same tetrahedron but this
         // face does, we're not in canonical form.
-        if (firstFaceDest.tet != 0 && firstDestPre.tet == preImage[0].tet) {
+        if (firstFaceDest.simp != 0 && firstDestPre.simp == preImage[0].simp) {
             for_each(list.begin(), list.end(), FuncDelete<NIsomorphism>());
             list.clear();
             delete[] image;
@@ -1218,9 +1219,9 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
 
         // We can use this face.  Set the corresponding reverse mapping
         // and off we go.
-        image[preImage[0].tet * 4 + preImage[0].face] = firstFace;
-        preImage[firstFaceDest.tet * 4 + firstFaceDest.face] = firstDestPre;
-        image[firstDestPre.tet * 4 + firstDestPre.face] = firstFaceDest;
+        image[preImage[0].simp * 4 + preImage[0].facet] = firstFace;
+        preImage[firstFaceDest.simp * 4 + firstFaceDest.facet] = firstDestPre;
+        image[firstDestPre.simp * 4 + firstDestPre.facet] = firstFaceDest;
 
         // Step forwards to the next face whose preimage is undetermined.
         trying = firstFace;
@@ -1238,22 +1239,22 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
             // will be automatically derived.
 
             stepDown = false;
-            NTetFace& pre = preImage[trying.tet * 4 + trying.face];
+            NTetFace& pre = preImage[trying.simp * 4 + trying.facet];
 
             if (trying.isPastEnd(nTetrahedra, true)) {
                 // We have a complete automorphism!
                 NIsomorphism* ans = new NIsomorphism(nTetrahedra);
                 for (i = 0; i < nTetrahedra; i++) {
-                    ans->tetImage(i) = image[i * 4].tet;
-                    ans->facePerm(i) = NPerm4(image[i * 4].face,
-                        image[i * 4 + 1].face, image[i * 4 + 2].face,
-                        image[i * 4 + 3].face);
+                    ans->tetImage(i) = image[i * 4].simp;
+                    ans->facePerm(i) = NPerm4(image[i * 4].facet,
+                        image[i * 4 + 1].facet, image[i * 4 + 2].facet,
+                        image[i * 4 + 3].facet);
                 }
                 list.push_back(ans);
                 stepDown = true;
             } else {
                 // Move to the next candidate.
-                if (pre.tet >= 0 && pre.face == 3) {
+                if (pre.simp >= 0 && pre.facet == 3) {
                     // We're all out of candidates.
                     pre.setBeforeStart();
                     stepDown = true;
@@ -1262,10 +1263,10 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
                         // Which tetrahedron must we look in?
                         // Note that this tetrahedron will already have been
                         // determined.
-                        pre.tet = preImage[trying.tet * 4].tet;
-                        pre.face = 0;
+                        pre.simp = preImage[trying.simp * 4].simp;
+                        pre.facet = 0;
                     } else
-                        pre.face++;
+                        pre.facet++;
 
                     // Step forwards until we have a preimage whose image
                     // has not already been set.
@@ -1273,8 +1274,8 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
                     // we'll also skip it.
                     // If trying is unmatched and the preimage isn't,
                     // we're not in canonical form.
-                    for ( ; pre.face < 4; pre.face++) {
-                        if (! image[pre.tet * 4 + pre.face].isBeforeStart())
+                    for ( ; pre.facet < 4; pre.facet++) {
+                        if (! image[pre.simp * 4 + pre.facet].isBeforeStart())
                             continue;
                         if ((! isUnmatched(trying)) && isUnmatched(pre))
                             continue;
@@ -1289,10 +1290,10 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
                         }
                         break;
                     }
-                    while (pre.face < 4 &&
-                            ! image[pre.tet * 4 + pre.face].isBeforeStart())
-                        pre.face++;
-                    if (pre.face == 4) {
+                    while (pre.facet < 4 &&
+                            ! image[pre.simp * 4 + pre.facet].isBeforeStart())
+                        pre.facet++;
+                    if (pre.facet == 4) {
                         pre.setBeforeStart();
                         stepDown = true;
                     }
@@ -1303,10 +1304,10 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
                 // We found a candidate.
                 // We also know that trying is unmatched iff the preimage
                 // is unmatched.
-                image[pre.tet* 4 + pre.face] = trying;
+                image[pre.simp* 4 + pre.facet] = trying;
                 if (! isUnmatched(pre)) {
                     fPre = dest(pre);
-                    if (image[fPre.tet * 4 + fPre.face].isBeforeStart()) {
+                    if (image[fPre.simp * 4 + fPre.facet].isBeforeStart()) {
                         // The image of fPre (the partner of the preimage
                         // face) can be determined at this point.
                         // Specifically, it should go into the next
@@ -1315,30 +1316,30 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
                         // Do we already know which tetrahedron we should
                         // be looking into?
                         for (i = 0; i < 4; i++)
-                            if (! image[fPre.tet * 4 + i].isBeforeStart()) {
+                            if (! image[fPre.simp * 4 + i].isBeforeStart()) {
                                 // Here's the tetrahedron!
                                 // Find the first available face.
-                                tet = image[fPre.tet * 4 + i].tet;
+                                tet = image[fPre.simp * 4 + i].simp;
                                 for (face = 0; ! preImage[tet * 4 + face].
                                         isBeforeStart(); face++)
                                     ;
-                                image[fPre.tet * 4 + fPre.face].tet = tet;
-                                image[fPre.tet * 4 + fPre.face].face = face;
+                                image[fPre.simp * 4 + fPre.facet].simp = tet;
+                                image[fPre.simp * 4 + fPre.facet].facet = face;
                                 break;
                             }
                         if (i == 4) {
                             // We need to map to a new tetrahedron.
                             // Find the first available tetrahedron.
-                            for (tet = trying.tet + 1;
+                            for (tet = trying.simp + 1;
                                     ! preImage[tet * 4].isBeforeStart(); tet++)
                                 ;
-                            image[fPre.tet * 4 + fPre.face].tet = tet;
-                            image[fPre.tet * 4 + fPre.face].face = 0;
+                            image[fPre.simp * 4 + fPre.facet].simp = tet;
+                            image[fPre.simp * 4 + fPre.facet].facet = 0;
                         }
 
                         // Set the corresponding preimage.
-                        fImg = image[fPre.tet * 4 + fPre.face];
-                        preImage[fImg.tet * 4 + fImg.face] = fPre;
+                        fImg = image[fPre.simp * 4 + fPre.facet];
+                        preImage[fImg.simp * 4 + fImg.facet] = fPre;
                     }
                 }
 
@@ -1346,9 +1347,9 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
                 // if need be.
                 do {
                     fImg = dest(trying);
-                    fPre = dest(preImage[trying.tet * 4 + trying.face]);
+                    fPre = dest(preImage[trying.simp * 4 + trying.facet]);
                     if (! fPre.isBoundary(nTetrahedra))
-                        fPre = image[fPre.tet * 4 + fPre.face];
+                        fPre = image[fPre.simp * 4 + fPre.facet];
 
                     // Currently trying is glued to fImg.
                     // After applying our isomorphism, trying will be
@@ -1372,17 +1373,18 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
                     // What we have so far is consistent with an automorphism.
                     trying++;
                 } while (! (stepDown || trying.isPastEnd(nTetrahedra, true) ||
-                        preImage[trying.tet * 4 + trying.face].isBeforeStart()));
+                        preImage[trying.simp * 4 + trying.facet].
+                        isBeforeStart()));
             }
 
             if (stepDown) {
                 // We're shunting trying back down.
                 trying--;
                 while (true) {
-                    fPre = preImage[trying.tet * 4 + trying.face];
+                    fPre = preImage[trying.simp * 4 + trying.facet];
                     if (! isUnmatched(fPre)) {
                         fPre = dest(fPre);
-                        if (image[fPre.tet * 4 + fPre.face] < trying) {
+                        if (image[fPre.simp * 4 + fPre.facet] < trying) {
                             // This preimage/image was automatically
                             // derived.
                             trying--;
@@ -1395,13 +1397,13 @@ bool NFacePairing::isCanonicalInternal(NFacePairingIsoList& list) const {
                 // Note that this resetting of faces that follows will
                 // also take place when trying makes it all the way back
                 // down to firstFace.
-                fPre = preImage[trying.tet * 4 + trying.face];
-                image[fPre.tet * 4 + fPre.face].setBeforeStart();
+                fPre = preImage[trying.simp * 4 + trying.facet];
+                image[fPre.simp * 4 + fPre.facet].setBeforeStart();
                 if (! isUnmatched(fPre)) {
                     fPre = dest(fPre);
-                    fImg = image[fPre.tet * 4 + fPre.face];
-                    preImage[fImg.tet * 4 + fImg.face].setBeforeStart();
-                    image[fPre.tet * 4 + fPre.face].setBeforeStart();
+                    fImg = image[fPre.simp * 4 + fPre.facet];
+                    preImage[fImg.simp * 4 + fImg.facet].setBeforeStart();
+                    image[fPre.simp * 4 + fPre.facet].setBeforeStart();
                 }
             }
         }

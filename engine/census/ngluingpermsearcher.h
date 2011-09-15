@@ -1660,9 +1660,9 @@ inline void NCompactSearcher::vtxBdryNext(int vertexID,
                     // The boundary that we're not seeing must belong
                     // to either the tetrahedron face we are currently
                     // working with or its adjacent partner.
-                    int ghostFace = (bdryFace == order[orderElt].face ?
-                        (*pairing)[order[orderElt]].face :
-                        order[orderElt].face);
+                    int ghostFace = (bdryFace == order[orderElt].facet ?
+                        (*pairing)[order[orderElt]].facet :
+                        order[orderElt].facet);
                     if (vertexLinkNextFace[vertex][bdryFace] == ghostFace) {
                         next[0] = vertexState[vertexID].bdryNext[0];
                         twist[0] = vertexState[vertexID].bdryTwist[0];

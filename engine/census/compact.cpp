@@ -250,7 +250,7 @@ void NCompactSearcher::runSearch(long maxDepth) {
         // Move to the next permutation.
 
         // Be sure to preserve the orientation of the permutation if necessary.
-        if ((! orientableOnly_) || adj.face == 0)
+        if ((! orientableOnly_) || adj.facet == 0)
             permIndex(face)++;
         else
             permIndex(face) += 2;
@@ -291,13 +291,13 @@ void NCompactSearcher::runSearch(long maxDepth) {
         }
 
         // Fix the orientation if appropriate.
-        if (adj.face == 0 && orientableOnly_) {
+        if (adj.facet == 0 && orientableOnly_) {
             // It's the first time we've hit this tetrahedron.
-            if ((permIndex(face) + (face.face == 3 ? 0 : 1) +
-                    (adj.face == 3 ? 0 : 1)) % 2 == 0)
-                orientation[adj.tet] = -orientation[face.tet];
+            if ((permIndex(face) + (face.facet == 3 ? 0 : 1) +
+                    (adj.facet == 3 ? 0 : 1)) % 2 == 0)
+                orientation[adj.simp] = -orientation[face.simp];
             else
-                orientation[adj.tet] = orientation[face.tet];
+                orientation[adj.simp] = orientation[face.simp];
         }
 
         // Move on to the next face.
@@ -325,15 +325,15 @@ void NCompactSearcher::runSearch(long maxDepth) {
             // We've moved onto a new face.
             // Be sure to get the orientation right.
             face = order[orderElt];
-            if (orientableOnly_ && pairing->dest(face).face > 0) {
+            if (orientableOnly_ && pairing->dest(face).facet > 0) {
                 // permIndex(face) will be set to -1 or -2 as appropriate.
                 adj = (*pairing)[face];
-                if (orientation[face.tet] == orientation[adj.tet])
+                if (orientation[face.simp] == orientation[adj.simp])
                     permIndex(face) = 1;
                 else
                     permIndex(face) = 0;
 
-                if ((face.face == 3 ? 0 : 1) + (adj.face == 3 ? 0 : 1) == 1)
+                if ((face.facet == 3 ? 0 : 1) + (adj.facet == 3 ? 0 : 1) == 1)
                     permIndex(face) = (permIndex(face) + 1) % 2;
 
                 permIndex(face) -= 2;
@@ -540,12 +540,12 @@ int NCompactSearcher::mergeVertexClasses() {
     NPerm4 p = gluingPerm(face);
     char parentTwists, hasTwist, tmpTwist;
     for (v = 0; v < 4; v++) {
-        if (v == face.face)
+        if (v == face.facet)
             continue;
 
         w = p[v];
-        vIdx = v + 4 * face.tet;
-        wIdx = w + 4 * adj.tet;
+        vIdx = v + 4 * face.simp;
+        wIdx = w + 4 * adj.simp;
         orderIdx = v + 4 * orderElt;
 
         // Are the natural 012 representations of the two faces joined
@@ -634,8 +634,8 @@ int NCompactSearcher::mergeVertexClasses() {
                     // We are closing off a single boundary of length two.
                     // All good.
                 } else {
-                    vtxBdryNext(vIdx, face.tet, v, face.face, vNext, vTwist);
-                    vtxBdryNext(wIdx, adj.tet, w, adj.face, wNext, wTwist);
+                    vtxBdryNext(vIdx, face.simp, v, face.facet, vNext, vTwist);
+                    vtxBdryNext(wIdx, adj.simp, w, adj.facet, wNext, wTwist);
 
                     if (vNext[0] == wIdx && wNext[1 ^ vTwist[0]] == vIdx) {
                         // We are joining two adjacent edges of the vertex link.
@@ -760,8 +760,8 @@ int NCompactSearcher::mergeVertexClasses() {
             } else {
                 // Each vertex belongs to a boundary component of length
                 // at least two.  Merge the components together.
-                vtxBdryNext(vIdx, face.tet, v, face.face, vNext, vTwist);
-                vtxBdryNext(wIdx, adj.tet, w, adj.face, wNext, wTwist);
+                vtxBdryNext(vIdx, face.simp, v, face.facet, vNext, vTwist);
+                vtxBdryNext(wIdx, adj.simp, w, adj.facet, wNext, wTwist);
 
                 vtxBdryJoin(vNext[0], 1 ^ vTwist[0], wNext[1 ^ hasTwist],
                     vTwist[0] ^ (hasTwist ^ wTwist[1 ^ hasTwist]));
@@ -789,12 +789,12 @@ void NCompactSearcher::splitVertexClasses() {
     NPerm4 p = gluingPerm(face);
     // Do everything in reverse.  This includes the loop over vertices.
     for (v = 3; v >= 0; v--) {
-        if (v == face.face)
+        if (v == face.facet)
             continue;
 
         w = p[v];
-        vIdx = v + 4 * face.tet;
-        wIdx = w + 4 * adj.tet;
+        vIdx = v + 4 * face.simp;
+        wIdx = w + 4 * adj.simp;
         orderIdx = v + 4 * orderElt;
 
         if (vertexStateChanged[orderIdx] < 0) {
@@ -881,7 +881,7 @@ bool NCompactSearcher::mergeEdgeClasses() {
     int orderIdx;
     int eRep, fRep;
 
-    v1 = face.face;
+    v1 = face.facet;
     w1 = p[v1];
 
     char parentTwists, hasTwist;
@@ -903,8 +903,8 @@ bool NCompactSearcher::mergeEdgeClasses() {
             1 : 0);
 
         parentTwists = 0;
-        eRep = findEdgeClass(e + 6 * face.tet, parentTwists);
-        fRep = findEdgeClass(f + 6 * adj.tet, parentTwists);
+        eRep = findEdgeClass(e + 6 * face.simp, parentTwists);
+        fRep = findEdgeClass(f + 6 * adj.simp, parentTwists);
 
         if (eRep == fRep) {
             edgeState[eRep].bounded = false;
@@ -948,7 +948,7 @@ void NCompactSearcher::splitEdgeClasses() {
     int eIdx, orderIdx;
     int rep, subRep;
 
-    v1 = face.face;
+    v1 = face.facet;
 
     for (v2 = 3; v2 >= 0; v2--) {
         if (v2 == v1)
@@ -957,7 +957,7 @@ void NCompactSearcher::splitEdgeClasses() {
         // Look at the edge opposite v1-v2.
         e = 5 - NEdge::edgeNumber[v1][v2];
 
-        eIdx = e + 6 * face.tet;
+        eIdx = e + 6 * face.simp;
         orderIdx = v2 + 4 * orderElt;
 
         if (edgeStateChanged[orderIdx] < 0)
