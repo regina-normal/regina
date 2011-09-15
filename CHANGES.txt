@@ -12,9 +12,6 @@ Version 5.0  [ (under development) ]
     OVERALL:
         - TODO: List all the new classes and tests relating to 4-manifolds.
     ENGINE:
-        Class NPerm5:
-            - New class describing permutations of five elements, which
-              we need in order to describe 4-manifold triangulations.
         Class NCellularData:
             - This is a catch-all class used for any detailed computations
               related to the topology of a 3 or 4-manifold triangulation. 
@@ -106,10 +103,14 @@ Version 4.91  [ (under development) ]
               but with changes; see the NTetFace notes below.
         Class NPerm3:
             - New routine compareWith() for sorting permutations.
+        Class NPerm5:
+            - New class describing permutations of five elements.
         Class NTetFace:
             - Now an instance of the arbitrary-dimension template class
               NFacetSpec.  NTetFace is retained as a typedef, but the fields
               have been renamed from tet/face to the more general simp/facet.
+        Routines perm4to5, perm5to4:
+            - New routines for converting between permutation classes.
 
 Version 4.90  [ 12 September, 2011 ] - First prerelease for version 5.0.
 
