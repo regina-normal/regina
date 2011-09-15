@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Test Suite                                                            *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2011, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,25 +26,13 @@
 
 /* end stub */
 
-/**
- * This file allows all tests from this directory to be added to
- * the overall test runner, without requiring any further inclusion
- * of headers that define the specific corresponding test fixtures.
- *
- * The routines declared below (which should add tests to the given
- * test runner) should be implemented in this directory and then called
- * from the top-level test suite directory.
- */
+#include <boost/python.hpp>
+#include "maths/permconv.h"
 
-#include <cppunit/ui/text/TestRunner.h>
+using namespace boost::python;
 
-void addMatrixOps(CppUnit::TextUi::TestRunner& runner);
-void addNLargeInteger(CppUnit::TextUi::TestRunner& runner);
-void addNPerm3(CppUnit::TextUi::TestRunner& runner);
-void addNPerm4(CppUnit::TextUi::TestRunner& runner);
-void addNPerm5(CppUnit::TextUi::TestRunner& runner);
-void addNPrimes(CppUnit::TextUi::TestRunner& runner);
-void addNRational(CppUnit::TextUi::TestRunner& runner);
-void addNumberTheory(CppUnit::TextUi::TestRunner& runner);
-void addPermConv(CppUnit::TextUi::TestRunner& runner);
+void addPermConv() {
+    def("perm4to5", regina::perm4to5);
+    def("perm5to4", regina::perm5to4);
+}
 

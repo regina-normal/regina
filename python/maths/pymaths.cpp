@@ -32,9 +32,11 @@ void addNMatrix2();
 void addNMatrixInt();
 void addNPerm3();
 void addNPerm4();
+void addNPerm5();
 void addNPrimes();
 void addNRational();
 void addNumberTheory();
+void addPermConv();
 
 void addMaths() {
     addMatrixOps();
@@ -43,8 +45,10 @@ void addMaths() {
     addNMatrixInt();
     addNPerm3();
     addNPerm4();
+    addNPerm5();
     addNPrimes();
     addNRational();
     addNumberTheory();
+    addPermConv();
 }
 

@@ -122,9 +122,11 @@ bool runAllTests() {
     // Maths:
     addNPerm3(runner);
     addNPerm4(runner);
+    addNPerm5(runner);
     addNPrimes(runner);
     addNumberTheory(runner);
     addMatrixOps(runner);
+    addPermConv(runner);
 
     // Triangulation:
     addNTriangulation(runner);
