@@ -10,8 +10,16 @@ Regina - A Normal Surface Theory Calculator
 Version 4.91  [ (under development) ]
 
     ENGINE:
+        Class NFacetSpec:
+            - New template class that generalises NTetFace to arbitrary
+              dimensions.  NTetFace is retained as a convenience typedef,
+              but with changes; see the NTetFace notes below.
         Class NPerm3:
             - New routine compareWith() for sorting permutations.
+        Class NTetFace:
+            - Now an instance of the arbitrary-dimension template class
+              NFacetSpec.  NTetFace is retained as a typedef, but the fields
+              have been renamed from tet/face to the more general simp/facet.
 
 Version 4.90  [ 12 September, 2011 ] - First prerelease for version 5.0.
 

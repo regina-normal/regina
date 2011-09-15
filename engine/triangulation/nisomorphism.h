@@ -372,7 +372,8 @@ inline NPerm4 NIsomorphism::facePerm(unsigned sourceTet) const {
 }
 
 inline NTetFace NIsomorphism::operator [] (const NTetFace& source) const {
-    return NTetFace(mTetImage[source.tet], mFacePerm[source.tet][source.face]);
+    return NTetFace(mTetImage[source.simp],
+        mFacePerm[source.simp][source.facet]);
 }
 
 // Inline functions for NIsomorphismDirect

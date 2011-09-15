@@ -55,7 +55,7 @@ NTriangulation* NGluingPerms::triangulate() const {
         for (face = 0; face < 4; face++)
             if ((! pairing->isUnmatched(t, face)) &&
                     (! tet[t]->adjacentTetrahedron(face)))
-                tet[t]->joinTo(face, tet[pairing->dest(t, face).tet],
+                tet[t]->joinTo(face, tet[pairing->dest(t, face).simp],
                     gluingPerm(t, face));
 
     delete[] tet;
@@ -64,14 +64,14 @@ NTriangulation* NGluingPerms::triangulate() const {
 
 int NGluingPerms::gluingToIndex(const NTetFace& source,
         const NPerm4& gluing) const {
-    NPerm4 permS3 = NPerm4(pairing->dest(source).face, 3) * gluing *
-        NPerm4(source.face, 3);
+    NPerm4 permS3 = NPerm4(pairing->dest(source).facet, 3) * gluing *
+        NPerm4(source.facet, 3);
     return (std::find(NPerm4::S3, NPerm4::S3 + 6, permS3) - NPerm4::S3);
 }
 
 int NGluingPerms::gluingToIndex(unsigned tet, unsigned face,
         const NPerm4& gluing) const {
-    NPerm4 permS3 = NPerm4(pairing->dest(tet, face).face, 3) * gluing *
+    NPerm4 permS3 = NPerm4(pairing->dest(tet, face).facet, 3) * gluing *
         NPerm4(face, 3);
     return (std::find(NPerm4::S3, NPerm4::S3 + 6, permS3) - NPerm4::S3);
 }

@@ -966,7 +966,7 @@ class REGINA_API NFacePairing : public NThread {
          * <tt>dest(t,i)</tt> is greater than <tt>dest(t,i+1)</tt> is where
          * faces <tt>(t,i)</tt> and <tt>(t,i+1)</tt> are paired together.
          * \pre For each tetrahedron \a t > 0, it is true that
-         * <tt>dest(t,0).tet < t</tt>.
+         * <tt>dest(t,0).simp < t</tt>.
          * \pre The sequence <tt>dest(1,0)</tt>, <tt>dest(2,0)</tt>,
          * ..., <tt>dest(n-1,0)</tt> is strictly increasing, where
          * \a n is the total number of tetrahedra under investigation.
@@ -1097,26 +1097,26 @@ inline unsigned NFacePairing::getNumberOfTetrahedra() const {
 }
 
 inline NTetFace& NFacePairing::dest(const NTetFace& source) {
-    return pairs[4 * source.tet + source.face];
+    return pairs[4 * source.simp + source.facet];
 }
 inline NTetFace& NFacePairing::operator [](const NTetFace& source) {
-    return pairs[4 * source.tet + source.face];
+    return pairs[4 * source.simp + source.facet];
 }
 inline NTetFace& NFacePairing::dest(unsigned tet, unsigned face) {
     return pairs[4 * tet + face];
 }
 inline const NTetFace& NFacePairing::dest(const NTetFace& source) const {
-    return pairs[4 * source.tet + source.face];
+    return pairs[4 * source.simp + source.facet];
 }
 inline const NTetFace& NFacePairing::operator [](const NTetFace& source)
         const {
-    return pairs[4 * source.tet + source.face];
+    return pairs[4 * source.simp + source.facet];
 }
 inline const NTetFace& NFacePairing::dest(unsigned tet, unsigned face) const {
     return pairs[4 * tet + face];
 }
 inline bool NFacePairing::isUnmatched(const NTetFace& source) const {
-    return pairs[4 * source.tet + source.face].isBoundary(nTetrahedra);
+    return pairs[4 * source.simp + source.facet].isBoundary(nTetrahedra);
 }
 inline bool NFacePairing::isUnmatched(unsigned tet, unsigned face) const {
     return pairs[4 * tet + face].isBoundary(nTetrahedra);
@@ -1127,8 +1127,8 @@ inline bool NFacePairing::noDest(const NTetFace& source) const {
 }
 inline bool NFacePairing::noDest(unsigned tet, unsigned face) const {
     NTetFace& f = pairs[4 * tet + face];
-    return (f.tet == static_cast<int>(tet) &&
-        f.face == static_cast<int>(face));
+    return (f.simp == static_cast<int>(tet) &&
+        f.facet == static_cast<int>(face));
 }
 
 inline void NFacePairing::findAutomorphisms(NFacePairingIsoList& list) const {

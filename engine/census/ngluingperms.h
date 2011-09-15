@@ -449,7 +449,7 @@ inline NPerm4 NGluingPerms::gluingPerm(unsigned tet, unsigned face) const {
 }
 
 inline int& NGluingPerms::permIndex(const NTetFace& source) {
-    return permIndices[4 * source.tet + source.face];
+    return permIndices[4 * source.simp + source.facet];
 }
 
 inline int& NGluingPerms::permIndex(unsigned tet, unsigned face) {
@@ -457,7 +457,7 @@ inline int& NGluingPerms::permIndex(unsigned tet, unsigned face) {
 }
 
 inline const int& NGluingPerms::permIndex(const NTetFace& source) const {
-    return permIndices[4 * source.tet + source.face];
+    return permIndices[4 * source.simp + source.facet];
 }
 
 inline const int& NGluingPerms::permIndex(unsigned tet, unsigned face) const {
@@ -466,13 +466,13 @@ inline const int& NGluingPerms::permIndex(unsigned tet, unsigned face) const {
 
 inline NPerm4 NGluingPerms::indexToGluing(const NTetFace& source, int index)
         const {
-    return NPerm4(pairing->dest(source).face, 3) *
-        NPerm4::S3[index] * NPerm4(source.face, 3);
+    return NPerm4(pairing->dest(source).facet, 3) *
+        NPerm4::S3[index] * NPerm4(source.facet, 3);
 }
 
 inline NPerm4 NGluingPerms::indexToGluing(unsigned tet, unsigned face,
         int index) const {
-    return NPerm4(pairing->dest(tet, face).face, 3) *
+    return NPerm4(pairing->dest(tet, face).facet, 3) *
         NPerm4::S3[index] * NPerm4(face, 3);
 }
 

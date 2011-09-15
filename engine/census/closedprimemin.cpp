@@ -113,17 +113,17 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
     // order >= 3.
 
     for (face.setFirst(); ! face.isPastEnd(nTets, true); face++) {
-        if (orderAssigned[face.tet * 4 + face.face])
+        if (orderAssigned[face.simp * 4 + face.facet])
             continue;
 
         adj = (*pairing)[face];
-        if (adj.tet != face.tet)
+        if (adj.simp != face.simp)
             continue;
 
         order[orderDone] = face;
         orderType[orderDone] = EDGE_CHAIN_END;
-        orderAssigned[face.tet * 4 + face.face] = true;
-        orderAssigned[adj.tet * 4 + adj.face] = true;
+        orderAssigned[face.simp * 4 + face.facet] = true;
+        orderAssigned[adj.simp * 4 + adj.facet] = true;
         orderDone++;
     }
 
@@ -139,15 +139,15 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
     NTetFace dest1, dest2;
     NFacePair faces;
     for (i = 0; i < nChains; i++) {
-        tet = order[i].tet;
-        faces = NFacePair(order[i].face,
-            (*pairing)[order[i]].face).complement();
+        tet = order[i].simp;
+        faces = NFacePair(order[i].facet,
+            (*pairing)[order[i]].facet).complement();
         dest1 = pairing->dest(tet, faces.lower());
         dest2 = pairing->dest(tet, faces.upper());
 
         // Currently tet and faces refer to the two faces of the base
         // tetrahedron that are pointing outwards.
-        while (dest1.tet == dest2.tet && dest1.tet != tet &&
+        while (dest1.simp == dest2.simp && dest1.simp != tet &&
                 (! orderAssigned[tet * 4 + faces.lower()]) &&
                 (! orderAssigned[tet * 4 + faces.upper()])) {
             // Insert this pair of edges into the ordering and follow
@@ -155,25 +155,25 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
             orderType[orderDone] = EDGE_CHAIN_INTERNAL_FIRST;
             orderType[orderDone + 1] = EDGE_CHAIN_INTERNAL_SECOND;
 
-            if (tet < dest1.tet) {
+            if (tet < dest1.simp) {
                 order[orderDone] = NTetFace(tet, faces.lower());
                 order[orderDone + 1] = NTetFace(tet, faces.upper());
             }
 
             orderAssigned[tet * 4 + faces.lower()] = true;
             orderAssigned[tet * 4 + faces.upper()] = true;
-            orderAssigned[dest1.tet * 4 + dest1.face] = true;
-            orderAssigned[dest2.tet * 4 + dest2.face] = true;
+            orderAssigned[dest1.simp * 4 + dest1.facet] = true;
+            orderAssigned[dest2.simp * 4 + dest2.facet] = true;
 
-            faces = NFacePair(dest1.face, dest2.face);
+            faces = NFacePair(dest1.facet, dest2.facet);
 
-            if (dest1.tet < tet) {
-                order[orderDone] = NTetFace(dest1.tet, faces.lower());
-                order[orderDone + 1] = NTetFace(dest1.tet, faces.upper());
+            if (dest1.simp < tet) {
+                order[orderDone] = NTetFace(dest1.simp, faces.lower());
+                order[orderDone + 1] = NTetFace(dest1.simp, faces.upper());
             }
 
             faces = faces.complement();
-            tet = dest1.tet;
+            tet = dest1.simp;
 
             dest1 = pairing->dest(tet, faces.lower());
             dest2 = pairing->dest(tet, faces.upper());
@@ -188,21 +188,21 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
 
     // Run through the remaining faces.
     for (face.setFirst(); ! face.isPastEnd(nTets, true); face++)
-        if (! orderAssigned[face.tet * 4 + face.face]) {
+        if (! orderAssigned[face.simp * 4 + face.facet]) {
             order[orderDone] = face;
-            if (face.face < 3 && pairing->dest(boost::next(face)).tet ==
-                    pairing->dest(face).tet)
+            if (face.facet < 3 && pairing->dest(boost::next(face)).simp ==
+                    pairing->dest(face).simp)
                 orderType[orderDone] = EDGE_DOUBLE_FIRST;
-            else if (face.face > 0 && pairing->dest(boost::prior(face)).tet ==
-                    pairing->dest(face).tet)
+            else if (face.facet > 0 && pairing->dest(boost::prior(face)).simp ==
+                    pairing->dest(face).simp)
                 orderType[orderDone] = EDGE_DOUBLE_SECOND;
             else
                 orderType[orderDone] = EDGE_MISC;
             orderDone++;
 
             adj = (*pairing)[face];
-            orderAssigned[face.tet * 4 + face.face] = true;
-            orderAssigned[adj.tet * 4 + adj.face] = true;
+            orderAssigned[face.simp * 4 + face.facet] = true;
+            orderAssigned[adj.simp * 4 + adj.facet] = true;
         }
 
     // All done for the order[] array.  Tidy up.
@@ -222,11 +222,11 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
     NPerm4 trial1, trial2;
     for (i = 0; i < nChainEdges; i++) {
         if (orderType[i] == EDGE_CHAIN_END) {
-            faces = NFacePair(order[i].face, pairing->dest(order[i]).face);
+            faces = NFacePair(order[i].facet, pairing->dest(order[i]).facet);
             comp = faces.complement();
 
-            // order[i].face == faces.lower(),
-            // pairing->dest(order[i]).face == faces.upper().
+            // order[i].facet == faces.lower(),
+            // pairing->dest(order[i]).facet == faces.upper().
             chainPermIndices[2 * i] = gluingToIndex(order[i],
                 NPerm4(faces.lower(), faces.upper(),
                        faces.upper(), comp.lower(),
@@ -238,16 +238,16 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
                        comp.upper(), comp.lower(),
                        comp.lower(), faces.lower()));
         } else if (orderType[i] == EDGE_CHAIN_INTERNAL_FIRST) {
-            faces = NFacePair(order[i].face, order[i + 1].face);
+            faces = NFacePair(order[i].facet, order[i + 1].facet);
             comp = faces.complement();
-            facesAdj = NFacePair(pairing->dest(order[i]).face,
-                pairing->dest(order[i + 1]).face);
+            facesAdj = NFacePair(pairing->dest(order[i]).facet,
+                pairing->dest(order[i + 1]).facet);
             compAdj = facesAdj.complement();
 
-            // order[i].face == faces.lower(),
-            // order[i + 1].face == faces.upper(),
-            // pairing->dest(order[i]).face == facesAdj.lower().
-            // pairing->dest(order[i + 1]).face == facesAdj.upper().
+            // order[i].facet == faces.lower(),
+            // order[i + 1].facet == faces.upper(),
+            // pairing->dest(order[i]).facet == facesAdj.lower().
+            // pairing->dest(order[i + 1]).facet == facesAdj.upper().
             trial1 = NPerm4(faces.lower(), facesAdj.lower(),
                             faces.upper(), compAdj.lower(),
                             comp.lower(), compAdj.upper(),
@@ -336,7 +336,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
 
         orderElt = 0;
         if (nChainEdges < nTets * 2)
-            orientation[order[nChainEdges].tet] = 1;
+            orientation[order[nChainEdges].simp] = 1;
     }
 
     // Is it a partial search that has already finished?
@@ -356,7 +356,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
     //
     // In particular, this means that for any tetrahedron not internal
     // to a one-ended chain (with the possible exception of tetrahedron
-    // order[nChainEdges].tet), face 0 of this tetrahedron is not
+    // order[nChainEdges].simp), face 0 of this tetrahedron is not
     // involved in a one-ended chain.
 
     // In this generation algorithm, each orientation is simply +/-1.
@@ -404,7 +404,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
 
             // Be sure to preserve the orientation of the permutation if
             // necessary.
-            if ((! orientableOnly_) || adj.face == 0)
+            if ((! orientableOnly_) || adj.facet == 0)
                 permIndex(face)++;
             else
                 permIndex(face) += 2;
@@ -504,13 +504,13 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
         }
 
         // Fix the orientation if appropriate.
-        if (generic && adj.face == 0 && orientableOnly_) {
+        if (generic && adj.facet == 0 && orientableOnly_) {
             // It's the first time we've hit this tetrahedron.
-            if ((permIndex(face) + (face.face == 3 ? 0 : 1) +
-                    (adj.face == 3 ? 0 : 1)) % 2 == 0)
-                orientation[adj.tet] = -orientation[face.tet];
+            if ((permIndex(face) + (face.facet == 3 ? 0 : 1) +
+                    (adj.facet == 3 ? 0 : 1)) % 2 == 0)
+                orientation[adj.simp] = -orientation[face.simp];
             else
-                orientation[adj.tet] = orientation[face.tet];
+                orientation[adj.simp] = orientation[face.simp];
         }
 
         // Move on to the next face.
@@ -538,15 +538,15 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             // We've moved onto a new face.
             // Be sure to get the orientation right.
             face = order[orderElt];
-            if (orientableOnly_ && pairing->dest(face).face > 0) {
+            if (orientableOnly_ && pairing->dest(face).facet > 0) {
                 // permIndex(face) will be set to -1 or -2 as appropriate.
                 adj = (*pairing)[face];
-                if (orientation[face.tet] == orientation[adj.tet])
+                if (orientation[face.simp] == orientation[adj.simp])
                     permIndex(face) = 1;
                 else
                     permIndex(face) = 0;
 
-                if ((face.face == 3 ? 0 : 1) + (adj.face == 3 ? 0 : 1) == 1)
+                if ((face.facet == 3 ? 0 : 1) + (adj.facet == 3 ? 0 : 1) == 1)
                     permIndex(face) = (permIndex(face) + 1) % 2;
 
                 permIndex(face) -= 2;
@@ -737,7 +737,7 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
     int eRep, fRep;
     int middleTet;
 
-    v1 = face.face;
+    v1 = face.facet;
     w1 = p[v1];
 
     char parentTwists, hasTwist;
@@ -759,8 +759,8 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
             1 : 0);
 
         parentTwists = 0;
-        eRep = findEdgeClass(e + 6 * face.tet, parentTwists);
-        fRep = findEdgeClass(f + 6 * adj.tet, parentTwists);
+        eRep = findEdgeClass(e + 6 * face.simp, parentTwists);
+        fRep = findEdgeClass(f + 6 * adj.simp, parentTwists);
 
         if (eRep == fRep) {
             edgeState[eRep].bounded = false;
@@ -769,9 +769,9 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                 retVal |= ECLASS_LOWDEG;
             else if (edgeState[eRep].size == 3) {
                 // Flag as LOWDEG only if three distinct tetrahedra are used.
-                middleTet = pairing->dest(face.tet, v2).tet;
-                if (face.tet != adj.tet && adj.tet != middleTet &&
-                        middleTet != face.tet)
+                middleTet = pairing->dest(face.simp, v2).simp;
+                if (face.simp != adj.simp && adj.simp != middleTet &&
+                        middleTet != face.simp)
                     retVal |= ECLASS_LOWDEG;
             }
             if (hasTwist ^ parentTwists)
@@ -844,7 +844,7 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
     int tRep[6];
     char tTwist[6];
     for (e = 0; e < 6; e++)
-        tRep[e] = findEdgeClass(e + 6 * face.tet, tTwist[e] = 0);
+        tRep[e] = findEdgeClass(e + 6 * face.simp, tTwist[e] = 0);
 
     // Test for cones in all possible positions on all possible faces.
     // Apologies for the tightness of the code; this part is being
@@ -908,7 +908,7 @@ void NClosedPrimeMinSearcher::splitEdgeClasses() {
     int eIdx, orderIdx;
     int rep, subRep;
 
-    v1 = face.face;
+    v1 = face.facet;
 
     for (v2 = 3; v2 >= 0; v2--) {
         if (v2 == v1)
@@ -917,7 +917,7 @@ void NClosedPrimeMinSearcher::splitEdgeClasses() {
         // Look at the edge opposite v1-v2.
         e = 5 - NEdge::edgeNumber[v1][v2];
 
-        eIdx = e + 6 * face.tet;
+        eIdx = e + 6 * face.simp;
         orderIdx = v2 + 4 * orderElt;
 
         if (edgeStateChanged[orderIdx] < 0)

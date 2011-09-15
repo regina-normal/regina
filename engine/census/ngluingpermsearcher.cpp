@@ -167,7 +167,7 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
         // Move to the next permutation.
 
         // Be sure to preserve the orientation of the permutation if necessary.
-        if ((! orientableOnly_) || adj.face == 0)
+        if ((! orientableOnly_) || adj.facet == 0)
             permIndex(face)++;
         else
             permIndex(face) += 2;
@@ -192,13 +192,13 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
                 continue;
 
         // Fix the orientation if appropriate.
-        if (adj.face == 0 && orientableOnly_) {
+        if (adj.facet == 0 && orientableOnly_) {
             // It's the first time we've hit this tetrahedron.
-            if ((permIndex(face) + (face.face == 3 ? 0 : 1) +
-                    (adj.face == 3 ? 0 : 1)) % 2 == 0)
-                orientation[adj.tet] = -orientation[face.tet];
+            if ((permIndex(face) + (face.facet == 3 ? 0 : 1) +
+                    (adj.facet == 3 ? 0 : 1)) % 2 == 0)
+                orientation[adj.simp] = -orientation[face.simp];
             else
-                orientation[adj.tet] = orientation[face.tet];
+                orientation[adj.simp] = orientation[face.simp];
         }
 
         // Move on to the next face.
@@ -220,15 +220,15 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
             // We've moved onto a new face.
             // Be sure to get the orientation right.
             face = order[orderElt];
-            if (orientableOnly_ && pairing->dest(face).face > 0) {
+            if (orientableOnly_ && pairing->dest(face).facet > 0) {
                 // permIndex(face) will be set to -1 or -2 as appropriate.
                 adj = (*pairing)[face];
-                if (orientation[face.tet] == orientation[adj.tet])
+                if (orientation[face.simp] == orientation[adj.simp])
                     permIndex(face) = 1;
                 else
                     permIndex(face) = 0;
 
-                if ((face.face == 3 ? 0 : 1) + (adj.face == 3 ? 0 : 1) == 1)
+                if ((face.facet == 3 ? 0 : 1) + (adj.facet == 3 ? 0 : 1) == 1)
                     permIndex(face) = (permIndex(face) + 1) % 2;
 
                 permIndex(face) -= 2;
@@ -304,7 +304,7 @@ void NGluingPermSearcher::dumpData(std::ostream& out) const {
     for (i = 0; i < orderSize; i++) {
         if (i)
             out << ' ';
-        out << order[i].tet << ' ' << order[i].face;
+        out << order[i].simp << ' ' << order[i].facet;
     }
     out << std::endl;
 }
@@ -364,9 +364,9 @@ NGluingPermSearcher::NGluingPermSearcher(std::istream& in,
     order = new NTetFace[2 * nTets];
     in >> orderElt >> orderSize;
     for (t = 0; t < orderSize; t++) {
-        in >> order[t].tet >> order[t].face;
-        if (order[t].tet >= nTets || order[t].tet < 0 ||
-                order[t].face >= 4 || order[t].face < 0) {
+        in >> order[t].simp >> order[t].facet;
+        if (order[t].simp >= nTets || order[t].simp < 0 ||
+                order[t].facet >= 4 || order[t].facet < 0) {
             inputError_ = true; return;
         }
     }
@@ -385,7 +385,7 @@ bool NGluingPermSearcher::isCanonical() const {
         // Compare the current set of gluing permutations with its
         // preimage under each face pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.
-        for (face.setFirst(); face.tet <
+        for (face.setFirst(); face.simp <
                 static_cast<int>(pairing->getNumberOfTetrahedra()); face++) {
             faceDest = pairing->dest(face);
             if (pairing->isUnmatched(face) || faceDest < face)
@@ -393,8 +393,8 @@ bool NGluingPermSearcher::isCanonical() const {
 
             faceImage = (**it)[face];
             ordering = gluingPerm(face).compareWith(
-                (*it)->facePerm(faceDest.tet).inverse() * gluingPerm(faceImage)
-                * (*it)->facePerm(face.tet));
+                (*it)->facePerm(faceDest.simp).inverse() * gluingPerm(faceImage)
+                * (*it)->facePerm(face.simp));
             if (ordering < 0) {
                 // This permutation set is closer.
                 break;
@@ -418,7 +418,7 @@ bool NGluingPermSearcher::badEdgeLink(const NTetFace& face) const {
     NTetFace adj;
     unsigned tet;
     NPerm4 current;
-    NPerm4 start(face.face, 3);
+    NPerm4 start(face.facet, 3);
     bool started, incomplete;
     for (unsigned permIdx = 0; permIdx < 3; permIdx++) {
         start = start * NPerm4(1, 2, 0, 3);
@@ -431,17 +431,17 @@ bool NGluingPermSearcher::badEdgeLink(const NTetFace& face) const {
         // original face.
 
         current = start;
-        tet = face.tet;
+        tet = face.simp;
 
         started = false;
         incomplete = false;
 
-        while ((! started) || (static_cast<int>(tet) != face.tet) ||
+        while ((! started) || (static_cast<int>(tet) != face.simp) ||
                 (start[2] != current[2]) || (start[3] != current[3])) {
             // Test for a return to the original tetrahedron with the
             // orientation reversed; this either means a bad edge link
             // or a bad vertex link.
-            if (started && finiteOnly_ && static_cast<int>(tet) == face.tet)
+            if (started && finiteOnly_ && static_cast<int>(tet) == face.simp)
                 if (start[3] == current[3] && start.sign() != current.sign())
                     return true;
 
@@ -465,7 +465,7 @@ bool NGluingPermSearcher::badEdgeLink(const NTetFace& face) const {
                 break;
             }
 
-            tet = adj.tet;
+            tet = adj.simp;
         }
 
         // Did we meet the original edge in reverse?
@@ -483,7 +483,7 @@ bool NGluingPermSearcher::lowDegreeEdge(const NTetFace& face,
     NTetFace adj;
     unsigned tet;
     NPerm4 current;
-    NPerm4 start(face.face, 3);
+    NPerm4 start(face.facet, 3);
     bool started, incomplete;
     unsigned size;
     for (unsigned permIdx = 0; permIdx < 3; permIdx++) {
@@ -497,13 +497,13 @@ bool NGluingPermSearcher::lowDegreeEdge(const NTetFace& face,
         // original face.
 
         current = start;
-        tet = face.tet;
+        tet = face.simp;
 
         started = false;
         incomplete = false;
         size = 0;
 
-        while ((! started) || (static_cast<int>(tet) != face.tet) ||
+        while ((! started) || (static_cast<int>(tet) != face.simp) ||
                 (start[2] != current[2]) || (start[3] != current[3])) {
             started = true;
 
@@ -534,7 +534,7 @@ bool NGluingPermSearcher::lowDegreeEdge(const NTetFace& face,
                 break;
             }
 
-            tet = adj.tet;
+            tet = adj.simp;
             size++;
         }
 
@@ -544,9 +544,9 @@ bool NGluingPermSearcher::lowDegreeEdge(const NTetFace& face,
             if (testDegree3 && size == 3) {
                 // Only throw away a degree three edge if it involves
                 // three distinct tetrahedra.
-                int tet1 = pairing->dest(face.tet, start[2]).tet;
-                int tet2 = pairing->dest(face.tet, start[3]).tet;
-                if (face.tet != tet1 && tet1 != tet2 && tet2 != face.tet)
+                int tet1 = pairing->dest(face.simp, start[2]).simp;
+                int tet2 = pairing->dest(face.simp, start[3]).simp;
+                if (face.simp != tet1 && tet1 != tet2 && tet2 != face.simp)
                     return true;
             }
         }
