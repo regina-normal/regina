@@ -97,6 +97,12 @@ Version 5.0  [ (under development) ]
     TEST SUITE:
         - Added very thorough tests for NPerm5.
 
+Version 4.91  [ (under development) ]
+
+    ENGINE:
+        Class NPerm3:
+            - New routine compareWith() for sorting permutations.
+
 Version 4.90  [ 12 September, 2011 ] - First prerelease for version 5.0.
 
     OVERALL:
