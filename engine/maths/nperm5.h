@@ -48,7 +48,7 @@ namespace regina {
 /**
  * Represents a permutation of {0,1,2,3,4}.
  * Amongst other things, such permutations are used in describing
- * simplex gluings in 4-manifold triangulations.  NPerm55 objects are small
+ * simplex gluings in 4-manifold triangulations.  NPerm5 objects are small
  * enough to pass about by value instead of by reference.
  *
  * Each permutation has an internal code, and this code is sufficient to
