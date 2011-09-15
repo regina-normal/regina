@@ -62,6 +62,7 @@ void addNPerm3() {
         .def("preImageOf", &NPerm3::preImageOf)
         .def(self == self)
         .def(self != self)
+        .def("compareWith", &NPerm3::compareWith)
         .def("isIdentity", &NPerm3::isIdentity)
         .def("toString", &NPerm3::toString)
         .def("trunc2", &NPerm3::trunc2)

@@ -276,6 +276,17 @@ class REGINA_API NPerm3 {
         bool operator != (const NPerm3& other) const;
 
         /**
+         * Lexicographically compares the images of (0,1,2) under this
+         * and the given permutation.
+         *
+         * @param other the permutation with which to compare this.
+         * @return -1 if this permutation produces a smaller image, 0 if
+         * the permutations are equal and 1 if this permutation produces
+         * a greater image.
+         */
+        int compareWith(const NPerm3& other) const;
+
+        /**
          * Determines if this is the identity permutation.
          * This is true if and only if each of 0, 1 and 2 is mapped to itself.
          *
@@ -438,6 +449,14 @@ inline bool NPerm3::operator == (const NPerm3& other) const {
 
 inline bool NPerm3::operator != (const NPerm3& other) const {
     return (code_ != other.code_);
+}
+
+inline int NPerm3::compareWith(const NPerm3& other) const {
+    // Computing orderedS3Index() is very fast.
+    // Use this instead of comparing images one at a time.
+    int o1 = orderedS3Index();
+    int o2 = other.orderedS3Index();
+    return (o1 == o2 ? 0 : o1 < o2 ? -1 : 1);
 }
 
 inline bool NPerm3::isIdentity() const {

@@ -7,6 +7,12 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Version 4.91  [ (under development) ]
+
+    ENGINE:
+        Class NPerm3:
+            - New routine compareWith() for sorting permutations.
+
 Version 4.90  [ 12 September, 2011 ] - First prerelease for version 5.0.
 
     OVERALL:

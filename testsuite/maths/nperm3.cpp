@@ -42,6 +42,7 @@ class NPerm3Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(exhaustive);
+    CPPUNIT_TEST(compareWith);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -356,6 +357,41 @@ class NPerm3Test : public CppUnit::TestFixture {
 
             if (tested != 6)
                 CPPUNIT_FAIL("All 6 permutations in S(3) were not tested.");
+        }
+
+        void compareWith() {
+            unsigned i, j;
+            NPerm3 p, q;
+
+            for (i = 0; i < 6; ++i) {
+                p = NPerm3::orderedS3[i];
+                if (p.compareWith(p) != 0) {
+                    std::ostringstream msg;
+                    msg << "Routine compareWith() does not conclude that "
+                        << p.toString() << " == " << p.toString() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            for (i = 0; i < 6; ++i) {
+                p = NPerm3::orderedS3[i];
+                for (j = i + 1; j < 6; ++j) {
+                    q = NPerm3::orderedS3[j];
+
+                    if (p.compareWith(q) != -1) {
+                        std::ostringstream msg;
+                        msg << "Routine compareWith() does not conclude that "
+                            << p.toString() << " < " << q.toString() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (q.compareWith(p) != 1) {
+                        std::ostringstream msg;
+                        msg << "Routine compareWith() does not conclude that "
+                            << q.toString() << " > " << p.toString() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
         }
 };
 
