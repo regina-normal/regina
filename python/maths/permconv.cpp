@@ -34,5 +34,7 @@ using namespace boost::python;
 void addPermConv() {
     def("perm4to5", regina::perm4to5);
     def("perm5to4", regina::perm5to4);
+    def("perm3to4", regina::perm3to4);
+    def("perm4to3", regina::perm4to3);
 }
 
