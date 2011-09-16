@@ -646,7 +646,7 @@ class REGINA_API Dim4FacetPairing : public NThread {
          * <tt>dest(p,i)</tt> is greater than <tt>dest(p,i+1)</tt> is where
          * facets <tt>(p,i)</tt> and <tt>(p,i+1)</tt> are paired together.
          * \pre For each pentachoron \a p > 0, it is true that
-         * <tt>dest(p,0).pent < p</tt>.
+         * <tt>dest(p,0).simp < p</tt>.
          * \pre The sequence <tt>dest(1,0)</tt>, <tt>dest(2,0)</tt>,
          * ..., <tt>dest(n-1,0)</tt> is strictly increasing, where
          * \a n is the total number of pentachora under investigation.
@@ -673,7 +673,7 @@ inline unsigned Dim4FacetPairing::getNumberOfPentachora() const {
 
 inline const Dim4PentFacet& Dim4FacetPairing::dest(
         const Dim4PentFacet& source) const {
-    return pairs_[5 * source.pent + source.facet];
+    return pairs_[5 * source.simp + source.facet];
 }
 inline const Dim4PentFacet& Dim4FacetPairing::dest(unsigned pent,
         unsigned facet) const {
@@ -681,11 +681,11 @@ inline const Dim4PentFacet& Dim4FacetPairing::dest(unsigned pent,
 }
 inline const Dim4PentFacet& Dim4FacetPairing::operator [](
         const Dim4PentFacet& source) const {
-    return pairs_[5 * source.pent + source.facet];
+    return pairs_[5 * source.simp + source.facet];
 }
 
 inline bool Dim4FacetPairing::isUnmatched(const Dim4PentFacet& source) const {
-    return pairs_[5 * source.pent + source.facet].isBoundary(nPentachora_);
+    return pairs_[5 * source.simp + source.facet].isBoundary(nPentachora_);
 }
 inline bool Dim4FacetPairing::isUnmatched(unsigned pent, unsigned facet) const {
     return pairs_[5 * pent + facet].isBoundary(nPentachora_);
@@ -704,11 +704,11 @@ inline Dim4PentFacet& Dim4FacetPairing::dest(unsigned pent, unsigned facet) {
     return pairs_[5 * pent + facet];
 }
 inline Dim4PentFacet& Dim4FacetPairing::dest(const Dim4PentFacet& source) {
-    return pairs_[5 * source.pent + source.facet];
+    return pairs_[5 * source.simp + source.facet];
 }
 inline Dim4PentFacet& Dim4FacetPairing::operator [](
         const Dim4PentFacet& source) {
-    return pairs_[5 * source.pent + source.facet];
+    return pairs_[5 * source.simp + source.facet];
 }
 
 inline bool Dim4FacetPairing::noDest(const Dim4PentFacet& source) const {
@@ -716,7 +716,7 @@ inline bool Dim4FacetPairing::noDest(const Dim4PentFacet& source) const {
 }
 inline bool Dim4FacetPairing::noDest(unsigned pent, unsigned facet) const {
     Dim4PentFacet& f = pairs_[5 * pent + facet];
-    return (f.pent == static_cast<int>(pent) &&
+    return (f.simp == static_cast<int>(pent) &&
         f.facet == static_cast<int>(facet));
 }
 

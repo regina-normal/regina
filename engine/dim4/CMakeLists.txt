@@ -10,4 +10,4 @@ ENDFOREACH(SOURCE_FILE)
 
 # Set the variable in the parent directory
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
-INSTALL(FILES dim4boundarycomponent.h dim4component.h dim4edge.h dim4exampletriangulation.h dim4face.h dim4isomorphism.h dim4pentachoron.h dim4pentfacet.h dim4tetrahedron.h dim4triangulation.h dim4vertex.h nxmldim4trireader.h DESTINATION ${INCLUDEDIR}/dim4)
+INSTALL(FILES dim4boundarycomponent.h dim4component.h dim4edge.h dim4exampletriangulation.h dim4face.h dim4isomorphism.h dim4pentachoron.h dim4tetrahedron.h dim4triangulation.h dim4vertex.h nxmldim4trireader.h DESTINATION ${INCLUDEDIR}/dim4)

@@ -397,9 +397,9 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
             // It's the first time we've hit this pentachoron.
             if ((permIndex(facet) + (facet.facet == 4 ? 0 : 1) +
                     (adj.facet == 4 ? 0 : 1)) % 2 == 0)
-                orientation_[adj.pent] = -orientation_[facet.pent];
+                orientation_[adj.simp] = -orientation_[facet.simp];
             else
-                orientation_[adj.pent] = orientation_[facet.pent];
+                orientation_[adj.simp] = orientation_[facet.simp];
         }
 
         // Move on to the next facet.
@@ -432,7 +432,7 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
             if (orientableOnly_ && pairing_->dest(facet).facet > 0) {
                 // permIndex(facet) will be set to -1 or -2 as appropriate.
                 adj = (*pairing_)[facet];
-                if (orientation_[facet.pent] == orientation_[adj.pent])
+                if (orientation_[facet.simp] == orientation_[adj.simp])
                     permIndex(facet) = 1;
                 else
                     permIndex(facet) = 0;
@@ -594,7 +594,7 @@ void Dim4GluingPermSearcher::dumpData(std::ostream& out) const {
     for (i = 0; i < orderSize_; ++i) {
         if (i)
             out << ' ';
-        out << order_[i].pent << ' ' << order_[i].facet;
+        out << order_[i].simp << ' ' << order_[i].facet;
     }
     out << std::endl;
 
@@ -681,8 +681,8 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
     order_ = new Dim4PentFacet[(nPent * 5) / 2];
     in >> orderElt_ >> orderSize_;
     for (p = 0; p < orderSize_; ++p) {
-        in >> order_[p].pent >> order_[p].facet;
-        if (order_[p].pent >= nPent || order_[p].pent < 0 ||
+        in >> order_[p].simp >> order_[p].facet;
+        if (order_[p].simp >= nPent || order_[p].simp < 0 ||
                 order_[p].facet >= 5 || order_[p].facet < 0) {
             inputError_ = true; return;
         }
@@ -751,7 +751,7 @@ bool Dim4GluingPermSearcher::isCanonical() const {
         // Compare the current set of gluing permutations with its
         // preimage under each facet pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.
-        for (facet.setFirst(); facet.pent <
+        for (facet.setFirst(); facet.simp <
                 static_cast<int>(pairing_->getNumberOfPentachora()); facet++) {
             facetDest = pairing_->dest(facet);
             if (pairing_->isUnmatched(facet) || facetDest < facet)
@@ -759,8 +759,8 @@ bool Dim4GluingPermSearcher::isCanonical() const {
 
             facetImage = (**it)[facet];
             ordering = gluingPerm(facet).compareWith(
-                (*it)->facetPerm(facetDest.pent).inverse()
-                * gluingPerm(facetImage) * (*it)->facetPerm(facet.pent));
+                (*it)->facetPerm(facetDest.simp).inverse()
+                * gluingPerm(facetImage) * (*it)->facetPerm(facet.simp));
             if (ordering < 0) {
                 // This permutation set is closer.
                 break;
@@ -797,12 +797,12 @@ bool Dim4GluingPermSearcher::badFaceLink(const Dim4PentFacet& facet) const {
         // original face.
 
         current = start;
-        pent = facet.pent;
+        pent = facet.simp;
 
         started = false;
         incomplete = false;
 
-        while ((! started) || (static_cast<int>(pent) != facet.pent) ||
+        while ((! started) || (static_cast<int>(pent) != facet.simp) ||
                 (start[3] != current[3]) || (start[4] != current[4])) {
             // Push through the current pentachoron.
             started = true;
@@ -824,7 +824,7 @@ bool Dim4GluingPermSearcher::badFaceLink(const Dim4PentFacet& facet) const {
                 break;
             }
 
-            pent = adj.pent;
+            pent = adj.simp;
         }
 
         // Did we meet the original face with a rotation or reflection?
@@ -876,8 +876,8 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
             // Look at the edge opposite v1, v2 and v3.
             e = Dim4Face::faceNumber[v1][v2][v3];
             f = Dim4Face::faceNumber[w1][w2][w3];
-            eIdx = e + 10 * facet.pent;
-            fIdx = f + 10 * adj.pent;
+            eIdx = e + 10 * facet.simp;
+            fIdx = f + 10 * adj.simp;
             orderIdx = e + 10 * orderElt_;
 
             // We declare the natural orientation of an edge to be
@@ -984,9 +984,9 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
                         // We are closing off a single boundary of length two.
                         // All good.
                     } else {
-                        edgeBdryNext(eIdx, facet.pent, e, facet.facet,
+                        edgeBdryNext(eIdx, facet.simp, e, facet.facet,
                             eNext, eTwistTriangle);
-                        edgeBdryNext(fIdx, adj.pent, f, adj.facet,
+                        edgeBdryNext(fIdx, adj.simp, f, adj.facet,
                             fNext, fTwistTriangle);
 
                         if (eNext[0] == fIdx &&
@@ -1120,9 +1120,9 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
                 } else {
                     // Each edge belongs to a boundary component of length
                     // at least two.  Merge the components together.
-                    edgeBdryNext(eIdx, facet.pent, e, facet.facet, eNext,
+                    edgeBdryNext(eIdx, facet.simp, e, facet.facet, eNext,
                         eTwistTriangle);
-                    edgeBdryNext(fIdx, adj.pent, f, adj.facet, fNext,
+                    edgeBdryNext(fIdx, adj.simp, f, adj.facet, fNext,
                         fTwistTriangle);
 
                     edgeBdryJoin(eNext[0], 1 ^ eTwistTriangle[0],
@@ -1175,8 +1175,8 @@ void Dim4GluingPermSearcher::splitEdgeClasses() {
             // Look at the edge opposite v1, v2 and v3.
             e = Dim4Face::faceNumber[v1][v2][v3];
             f = Dim4Face::faceNumber[w1][w2][w3];
-            eIdx = e + 10 * facet.pent;
-            fIdx = f + 10 * adj.pent;
+            eIdx = e + 10 * facet.simp;
+            fIdx = f + 10 * adj.simp;
             orderIdx = e + 10 * orderElt_;
 
             if (edgeStateChanged_[orderIdx] < 0) {
@@ -1300,8 +1300,8 @@ bool Dim4GluingPermSearcher::mergeFaceClasses() {
         }
 
         NPerm3 eTwist, fTwist; /* Initialise to identity permutations. */
-        eRep = findFaceClass(e + 10 * facet.pent, eTwist);
-        fRep = findFaceClass(f + 10 * adj.pent, fTwist);
+        eRep = findFaceClass(e + 10 * facet.simp, eTwist);
+        fRep = findFaceClass(f + 10 * adj.simp, fTwist);
 
         if (eRep == fRep) {
             faceState_[eRep].bounded = false;
@@ -1356,7 +1356,7 @@ void Dim4GluingPermSearcher::splitFaceClasses() {
         // Look at the face opposite edge v1-v2.
         f = Dim4Edge::edgeNumber[v1][v2];
 
-        fIdx = f + 10 * facet.pent;
+        fIdx = f + 10 * facet.simp;
         orderIdx = v2 + 5 * orderElt_;
 
         if (faceStateChanged_[orderIdx] < 0)

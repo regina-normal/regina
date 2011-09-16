@@ -65,7 +65,7 @@ Dim4FacetPairing::Dim4FacetPairing(const Dim4Triangulation& tri) :
         for (f = 0; f < 5; ++f) {
             adj = pent->adjacentPentachoron(f);
             if (adj) {
-                pairs_[index].pent = tri.pentachoronIndex(adj);
+                pairs_[index].simp = tri.pentachoronIndex(adj);
                 pairs_[index].facet = pent->adjacentFacet(f);
             } else
                 pairs_[index].setBoundary(nPentachora_);
@@ -86,15 +86,15 @@ std::string Dim4FacetPairing::toString() const {
     std::ostringstream ans;
 
     for (Dim4PentFacet f(0, 0); ! f.isPastEnd(nPentachora_, true); ++f) {
-        if (f.facet == 0 && f.pent > 0)
+        if (f.facet == 0 && f.simp > 0)
             ans << " | ";
-        else if (f.pent || f.facet)
+        else if (f.simp || f.facet)
             ans << ' ';
 
         if (dest(f).isBoundary(nPentachora_))
             ans << "bdry";
         else
-            ans << dest(f).pent << ':' << dest(f).facet;
+            ans << dest(f).simp << ':' << dest(f).facet;
     }
     return ans.str();
 }
@@ -137,11 +137,11 @@ void Dim4FacetPairing::writeDot(std::ostream& out, const char* prefix,
         for (f = 0; f < 5; ++f) {
             adj = dest(p, f);
             if (adj.isBoundary(nPentachora_) ||
-                    adj.pent < static_cast<int>(p) ||
-                    (adj.pent == static_cast<int>(p) && adj.facet < f))
+                    adj.simp < static_cast<int>(p) ||
+                    (adj.simp == static_cast<int>(p) && adj.facet < f))
                 continue;
             out << prefix << '_' << p << " -- " << prefix << '_'
-                << adj.pent << ';' << std::endl;
+                << adj.simp << ';' << std::endl;
         }
 
     out << '}' << std::endl;
@@ -151,9 +151,9 @@ std::string Dim4FacetPairing::toTextRep() const {
     std::ostringstream ans;
 
     for (Dim4PentFacet f(0, 0); ! f.isPastEnd(nPentachora_, true); ++f) {
-        if (f.pent || f.facet)
+        if (f.simp || f.facet)
             ans << ' ';
-        ans << dest(f).pent << ' ' << dest(f).facet;
+        ans << dest(f).simp << ' ' << dest(f).facet;
     }
 
     return ans.str();
@@ -181,7 +181,7 @@ Dim4FacetPairing* Dim4FacetPairing::fromTextRep(const std::string& rep) {
             delete ans;
             return 0;
         }
-        ans->pairs_[i].pent = val;
+        ans->pairs_[i].simp = val;
 
         if (! valueOf(tokens[2 * i + 1], val)) {
             delete ans;
@@ -199,9 +199,9 @@ Dim4FacetPairing* Dim4FacetPairing::fromTextRep(const std::string& rep) {
     bool broken = false;
     for (Dim4PentFacet f(0, 0); ! f.isPastEnd(nPent, true); ++f) {
         destFacet = ans->dest(f);
-        if (destFacet.pent == nPent && destFacet.facet != 0)
+        if (destFacet.simp == nPent && destFacet.facet != 0)
             broken = true;
-        else if (destFacet.pent < nPent && ! (ans->dest(destFacet) == f))
+        else if (destFacet.simp < nPent && ! (ans->dest(destFacet) == f))
             broken = true;
         else
             continue;
@@ -257,7 +257,7 @@ void* Dim4FacetPairing::run(void* param) {
     }
 
     // Initialise the pairings to unspecified (i.e., facet -> itself).
-    for (Dim4PentFacet f(0,0); f.pent < static_cast<int>(nPentachora_); ++f)
+    for (Dim4PentFacet f(0,0); f.simp < static_cast<int>(nPentachora_); ++f)
         dest(f) = f;
 
     // Note that we have at least one pentachoron.
@@ -293,9 +293,9 @@ void* Dim4FacetPairing::run(void* param) {
         if (usedFacets % 5 == 3 &&
                 usedFacets < 5 * static_cast<int>(nPentachora_) - 2 &&
                 noDest((usedFacets / 5) + 1, 0) &&
-                dest(trying).pent <= (usedFacets / 5)) {
+                dest(trying).simp <= (usedFacets / 5)) {
             // Move to the first unused pentachoron.
-            dest(trying).pent = (usedFacets / 5) + 1;
+            dest(trying).simp = (usedFacets / 5) + 1;
             dest(trying).facet = 0;
         }
 
@@ -311,7 +311,7 @@ void* Dim4FacetPairing::run(void* param) {
                     if (boundaryFacets == 0 &&
                             usedFacets ==
                                 5 * static_cast<int>(nPentachora_) - 2 &&
-                            dest(trying).pent <
+                            dest(trying).simp <
                                 static_cast<int>(nPentachora_))
                         dest(trying).setBoundary(nPentachora_);
                 }
@@ -319,7 +319,7 @@ void* Dim4FacetPairing::run(void* param) {
                 // We're specific about the number of boundary facets.
                 if (usedFacets - boundaryFacets + args->nBdryFacets ==
                         5 * static_cast<int>(nPentachora_) &&
-                        dest(trying).pent < static_cast<int>(nPentachora_))
+                        dest(trying).simp < static_cast<int>(nPentachora_))
                     // We've used our entire quota of non-boundary facets.
                     dest(trying).setBoundary(nPentachora_);
             }
@@ -329,17 +329,17 @@ void* Dim4FacetPairing::run(void* param) {
         // We still don't know whether this destination is valid however.
         while(true) {
             // Move onwards to the next free destination.
-            while (dest(trying).pent < static_cast<int>(nPentachora_) &&
+            while (dest(trying).simp < static_cast<int>(nPentachora_) &&
                     ! noDest(dest(trying)))
                 ++dest(trying);
 
             // If we are past facet 0 of a pentachoron and the previous facet
             // was not used, we can't do anything with this pentachoron.
             // Move to the next pentachoron.
-            if (dest(trying).pent < static_cast<int>(nPentachora_) &&
+            if (dest(trying).simp < static_cast<int>(nPentachora_) &&
                     dest(trying).facet > 0 &&
-                    noDest(dest(trying).pent, dest(trying).facet - 1)) {
-                ++dest(trying).pent;
+                    noDest(dest(trying).simp, dest(trying).facet - 1)) {
+                ++dest(trying).simp;
                 dest(trying).facet = 0;
                 continue;
             }
@@ -352,9 +352,9 @@ void* Dim4FacetPairing::run(void* param) {
         // unused.  Note that facet == 0 implies pent > 0.
         // In this case, we've passed the last sane choice; head
         // straight to the boundary.
-        if (dest(trying).pent < static_cast<int>(nPentachora_) &&
+        if (dest(trying).simp < static_cast<int>(nPentachora_) &&
                 dest(trying).facet == 0 &&
-                noDest(dest(trying).pent - 1, 0))
+                noDest(dest(trying).simp - 1, 0))
             dest(trying).setBoundary(nPentachora_);
 
         // Finally, return to the issue of prematurely closing off a
@@ -417,11 +417,11 @@ void* Dim4FacetPairing::run(void* param) {
         // Now we increment trying to move to the next unmatched facet.
         oldTrying = trying;
         ++trying;
-        while (trying.pent < static_cast<int>(nPentachora_) && ! noDest(trying))
+        while (trying.simp < static_cast<int>(nPentachora_) && ! noDest(trying))
             ++trying;
 
         // Have we got a solution?
-        if (trying.pent == static_cast<int>(nPentachora_)) {
+        if (trying.simp == static_cast<int>(nPentachora_)) {
             // Deal with the solution!
             if (isCanonicalInternal(allAutomorphisms)) {
                 args->use(this, &allAutomorphisms, args->useArgs);
@@ -452,7 +452,7 @@ void* Dim4FacetPairing::run(void* param) {
             // pentachoron.
             if (trying.facet > 0) {
                 tmpFacet = trying;
-                for (--tmpFacet; tmpFacet.pent == trying.pent; --tmpFacet)
+                for (--tmpFacet; tmpFacet.simp == trying.simp; --tmpFacet)
                     if (tmpFacet < dest(tmpFacet)) {
                         // Here is the previous forward destination in
                         // this pentachoron.
@@ -475,9 +475,9 @@ void* Dim4FacetPairing::run(void* param) {
             // If the first pentachoron doesn't glue to itself and this
             // is not the first pentachoron, it can't glue to itself either.
             // (Note that we already know there is at least 1 pentachoron.)
-            if (dest(trying).pent == trying.pent && dest(trying).facet < 4 &&
-                    trying.pent > 0)
-                if (dest(0, 0).pent != 0)
+            if (dest(trying).simp == trying.simp && dest(trying).facet < 4 &&
+                    trying.simp > 0)
+                if (dest(0, 0).simp != 0)
                     dest(trying).facet = 4;
         }
     }
@@ -496,7 +496,7 @@ bool Dim4FacetPairing::isCanonical() const {
                 if (! (dest(pent, facet + 1) == Dim4PentFacet(pent, facet)))
                     return false;
         if (pent > 0)
-            if (dest(pent, 0).pent >= static_cast<int>(pent))
+            if (dest(pent, 0).simp >= static_cast<int>(pent))
                 return false;
         if (pent > 1)
             if (dest(pent, 0) <= dest(pent - 1, 0))
@@ -560,12 +560,12 @@ bool Dim4FacetPairing::isCanonicalInternal(
         // If firstFace glues to the same pentachoron and this facet
         // doesn't, we can ignore this permutation.
         firstDestPre = dest(preImage[0]);
-        if (firstFaceDest.pent == 0 && firstDestPre.pent != preImage[0].pent)
+        if (firstFaceDest.simp == 0 && firstDestPre.simp != preImage[0].simp)
             continue;
 
         // If firstFace doesn't glue to the same pentachoron but this
         // facet does, we're not in canonical form.
-        if (firstFaceDest.pent != 0 && firstDestPre.pent == preImage[0].pent) {
+        if (firstFaceDest.simp != 0 && firstDestPre.simp == preImage[0].simp) {
             for_each(list.begin(), list.end(),
                 FuncDelete<Dim4Isomorphism>());
             list.clear();
@@ -576,9 +576,9 @@ bool Dim4FacetPairing::isCanonicalInternal(
 
         // We can use this facet.  Set the corresponding reverse mapping
         // and off we go.
-        image[preImage[0].pent * 5 + preImage[0].facet] = firstFace;
-        preImage[firstFaceDest.pent * 5 + firstFaceDest.facet] = firstDestPre;
-        image[firstDestPre.pent * 5 + firstDestPre.facet] = firstFaceDest;
+        image[preImage[0].simp * 5 + preImage[0].facet] = firstFace;
+        preImage[firstFaceDest.simp * 5 + firstFaceDest.facet] = firstDestPre;
+        image[firstDestPre.simp * 5 + firstDestPre.facet] = firstFaceDest;
 
         // Step forwards to the next facet whose preimage is undetermined.
         trying = firstFace;
@@ -596,13 +596,13 @@ bool Dim4FacetPairing::isCanonicalInternal(
             // will be automatically derived.
 
             stepDown = false;
-            Dim4PentFacet& pre = preImage[trying.pent * 5 + trying.facet];
+            Dim4PentFacet& pre = preImage[trying.simp * 5 + trying.facet];
 
             if (trying.isPastEnd(nPentachora_, true)) {
                 // We have a complete automorphism!
                 Dim4Isomorphism* ans = new Dim4Isomorphism(nPentachora_);
                 for (i = 0; i < nPentachora_; i++) {
-                    ans->pentImage(i) = image[i * 5].pent;
+                    ans->pentImage(i) = image[i * 5].simp;
                     ans->facetPerm(i) = NPerm5(image[i * 5].facet,
                         image[i * 5 + 1].facet, image[i * 5 + 2].facet,
                         image[i * 5 + 3].facet, image[i * 5 + 4].facet);
@@ -611,7 +611,7 @@ bool Dim4FacetPairing::isCanonicalInternal(
                 stepDown = true;
             } else {
                 // Move to the next candidate.
-                if (pre.pent >= 0 && pre.facet == 4) {
+                if (pre.simp >= 0 && pre.facet == 4) {
                     // We're all out of candidates.
                     pre.setBeforeStart();
                     stepDown = true;
@@ -620,7 +620,7 @@ bool Dim4FacetPairing::isCanonicalInternal(
                         // Which pentachoron must we look in?
                         // Note that this pentachoron will already have been
                         // determined.
-                        pre.pent = preImage[trying.pent * 5].pent;
+                        pre.simp = preImage[trying.simp * 5].simp;
                         pre.facet = 0;
                     } else
                         ++pre.facet;
@@ -632,7 +632,7 @@ bool Dim4FacetPairing::isCanonicalInternal(
                     // If trying is unmatched and the preimage isn't,
                     // we're not in canonical form.
                     for ( ; pre.facet < 5; ++pre.facet) {
-                        if (! image[pre.pent * 5 + pre.facet].isBeforeStart())
+                        if (! image[pre.simp * 5 + pre.facet].isBeforeStart())
                             continue;
                         if ((! isUnmatched(trying)) && isUnmatched(pre))
                             continue;
@@ -648,7 +648,7 @@ bool Dim4FacetPairing::isCanonicalInternal(
                         break;
                     }
                     while (pre.facet < 5 &&
-                            ! image[pre.pent * 5 + pre.facet].isBeforeStart())
+                            ! image[pre.simp * 5 + pre.facet].isBeforeStart())
                         ++pre.facet;
                     if (pre.facet == 5) {
                         pre.setBeforeStart();
@@ -661,10 +661,10 @@ bool Dim4FacetPairing::isCanonicalInternal(
                 // We found a candidate.
                 // We also know that trying is unmatched iff the preimage
                 // is unmatched.
-                image[pre.pent * 5 + pre.facet] = trying;
+                image[pre.simp * 5 + pre.facet] = trying;
                 if (! isUnmatched(pre)) {
                     fPre = dest(pre);
-                    if (image[fPre.pent * 5 + fPre.facet].isBeforeStart()) {
+                    if (image[fPre.simp * 5 + fPre.facet].isBeforeStart()) {
                         // The image of fPre (the partner of the preimage
                         // facet) can be determined at this point.
                         // Specifically, it should go into the next
@@ -673,31 +673,31 @@ bool Dim4FacetPairing::isCanonicalInternal(
                         // Do we already know which pentachoron we should
                         // be looking into?
                         for (i = 0; i < 5; i++)
-                            if (! image[fPre.pent * 5 + i].isBeforeStart()) {
+                            if (! image[fPre.simp * 5 + i].isBeforeStart()) {
                                 // Here's the pentachoron!
                                 // Find the first available facet.
-                                pent = image[fPre.pent * 5 + i].pent;
+                                pent = image[fPre.simp * 5 + i].simp;
                                 for (facet = 0; ! preImage[pent * 5 + facet].
                                         isBeforeStart(); ++facet)
                                     ;
-                                image[fPre.pent * 5 + fPre.facet].pent = pent;
-                                image[fPre.pent * 5 + fPre.facet].facet = facet;
+                                image[fPre.simp * 5 + fPre.facet].simp = pent;
+                                image[fPre.simp * 5 + fPre.facet].facet = facet;
                                 break;
                             }
                         if (i == 5) {
                             // We need to map to a new pentachoron.
                             // Find the first available pentachoron.
-                            for (pent = trying.pent + 1;
+                            for (pent = trying.simp + 1;
                                     ! preImage[pent * 5].isBeforeStart();
                                     ++pent)
                                 ;
-                            image[fPre.pent * 5 + fPre.facet].pent = pent;
-                            image[fPre.pent * 5 + fPre.facet].facet = 0;
+                            image[fPre.simp * 5 + fPre.facet].simp = pent;
+                            image[fPre.simp * 5 + fPre.facet].facet = 0;
                         }
 
                         // Set the corresponding preimage.
-                        fImg = image[fPre.pent * 5 + fPre.facet];
-                        preImage[fImg.pent * 5 + fImg.facet] = fPre;
+                        fImg = image[fPre.simp * 5 + fPre.facet];
+                        preImage[fImg.simp * 5 + fImg.facet] = fPre;
                     }
                 }
 
@@ -705,9 +705,9 @@ bool Dim4FacetPairing::isCanonicalInternal(
                 // if need be.
                 do {
                     fImg = dest(trying);
-                    fPre = dest(preImage[trying.pent * 5 + trying.facet]);
+                    fPre = dest(preImage[trying.simp * 5 + trying.facet]);
                     if (! fPre.isBoundary(nPentachora_))
-                        fPre = image[fPre.pent * 5 + fPre.facet];
+                        fPre = image[fPre.simp * 5 + fPre.facet];
 
                     // Currently trying is glued to fImg.
                     // After applying our isomorphism, trying will be
@@ -731,17 +731,17 @@ bool Dim4FacetPairing::isCanonicalInternal(
                     // What we have so far is consistent with an automorphism.
                     ++trying;
                 } while (! (stepDown || trying.isPastEnd(nPentachora_, true) ||
-                        preImage[trying.pent * 5 + trying.facet].isBeforeStart()));
+                        preImage[trying.simp * 5 + trying.facet].isBeforeStart()));
             }
 
             if (stepDown) {
                 // We're shunting trying back down.
                 --trying;
                 while (true) {
-                    fPre = preImage[trying.pent * 5 + trying.facet];
+                    fPre = preImage[trying.simp * 5 + trying.facet];
                     if (! isUnmatched(fPre)) {
                         fPre = dest(fPre);
-                        if (image[fPre.pent * 5 + fPre.facet] < trying) {
+                        if (image[fPre.simp * 5 + fPre.facet] < trying) {
                             // This preimage/image was automatically
                             // derived.
                             --trying;
@@ -754,13 +754,13 @@ bool Dim4FacetPairing::isCanonicalInternal(
                 // Note that this resetting of facets that follows will
                 // also take place when trying makes it all the way back
                 // down to firstFace.
-                fPre = preImage[trying.pent * 5 + trying.facet];
-                image[fPre.pent * 5 + fPre.facet].setBeforeStart();
+                fPre = preImage[trying.simp * 5 + trying.facet];
+                image[fPre.simp * 5 + fPre.facet].setBeforeStart();
                 if (! isUnmatched(fPre)) {
                     fPre = dest(fPre);
-                    fImg = image[fPre.pent * 5 + fPre.facet];
-                    preImage[fImg.pent * 5 + fImg.facet].setBeforeStart();
-                    image[fPre.pent * 5 + fPre.facet].setBeforeStart();
+                    fImg = image[fPre.simp * 5 + fPre.facet];
+                    preImage[fImg.simp * 5 + fImg.facet].setBeforeStart();
+                    image[fPre.simp * 5 + fPre.facet].setBeforeStart();
                 }
             }
         }

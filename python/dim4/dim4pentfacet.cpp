@@ -27,7 +27,7 @@
 /* end stub */
 
 #include <boost/python.hpp>
-#include "dim4/dim4pentfacet.h"
+#include "triangulation/nfacetspec.h"
 
 using namespace boost::python;
 using regina::Dim4PentFacet;
@@ -46,7 +46,7 @@ void addDim4PentFacet() {
     class_<Dim4PentFacet>("Dim4PentFacet")
         .def(init<int, int>())
         .def(init<const Dim4PentFacet&>())
-        .def_readwrite("pent", &Dim4PentFacet::pent)
+        .def_readwrite("simp", &Dim4PentFacet::simp)
         .def_readwrite("facet", &Dim4PentFacet::facet)
         .def("isBoundary", &Dim4PentFacet::isBoundary)
         .def("isBeforeStart", &Dim4PentFacet::isBeforeStart)

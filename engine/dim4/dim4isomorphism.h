@@ -37,8 +37,8 @@
 
 #include "regina-core.h"
 #include "shareableobject.h"
-#include "dim4/dim4pentfacet.h"
 #include "maths/nperm5.h"
+#include "triangulation/nfacetspec.h"
 
 namespace regina {
 
@@ -334,8 +334,8 @@ inline NPerm5 Dim4Isomorphism::facetPerm(unsigned sourcePent) const {
 }
 inline Dim4PentFacet Dim4Isomorphism::operator [] (
         const Dim4PentFacet& source) const {
-    return Dim4PentFacet(pentImage_[source.pent],
-        facetPerm_[source.pent][source.facet]);
+    return Dim4PentFacet(pentImage_[source.simp],
+        facetPerm_[source.simp][source.facet]);
 }
 
 } // namespace regina

@@ -56,7 +56,7 @@ Dim4Triangulation* Dim4GluingPerms::triangulate() const {
         for (facet = 0; facet < 5; ++facet)
             if ((! pairing_->isUnmatched(p, facet)) &&
                     (! pent[p]->adjacentPentachoron(facet)))
-                pent[p]->joinTo(facet, pent[pairing_->dest(p, facet).pent],
+                pent[p]->joinTo(facet, pent[pairing_->dest(p, facet).simp],
                     gluingPerm(p, facet));
 
     delete[] pent;

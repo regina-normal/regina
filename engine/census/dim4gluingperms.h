@@ -452,7 +452,7 @@ inline NPerm5 Dim4GluingPerms::gluingPerm(unsigned pent, unsigned facet) const {
 }
 
 inline int& Dim4GluingPerms::permIndex(const Dim4PentFacet& source) {
-    return permIndices_[5 * source.pent + source.facet];
+    return permIndices_[5 * source.simp + source.facet];
 }
 
 inline int& Dim4GluingPerms::permIndex(unsigned pent, unsigned facet) {
@@ -461,7 +461,7 @@ inline int& Dim4GluingPerms::permIndex(unsigned pent, unsigned facet) {
 
 inline const int& Dim4GluingPerms::permIndex(const Dim4PentFacet& source)
         const {
-    return permIndices_[5 * source.pent + source.facet];
+    return permIndices_[5 * source.simp + source.facet];
 }
 
 inline const int& Dim4GluingPerms::permIndex(unsigned pent, unsigned facet)
