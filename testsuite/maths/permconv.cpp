@@ -31,6 +31,7 @@
 #include "maths/permconv.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
+using regina::NPerm3;
 using regina::NPerm4;
 using regina::NPerm5;
 
@@ -39,8 +40,12 @@ class PermConvTest : public CppUnit::TestFixture {
 
     CPPUNIT_TEST(identity4to5to4);
     CPPUNIT_TEST(identity5to4to5);
+    CPPUNIT_TEST(identity3to4to3);
+    CPPUNIT_TEST(identity4to3to4);
     CPPUNIT_TEST(strings4to5);
     CPPUNIT_TEST(strings5to4);
+    CPPUNIT_TEST(strings3to4);
+    CPPUNIT_TEST(strings4to3);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -87,6 +92,42 @@ class PermConvTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL("The number of permutations tested was not 24.");
         }
 
+        void identity3to4to3() {
+            NPerm3 p, q;
+            for (int i = 0; i < 6; ++i) {
+                p = NPerm3::S3[i];
+                q = regina::perm4to3(regina::perm3to4(p));
+                if (! (p == q && p.toString() == q.toString())) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << i << " is changed after "
+                        "NPerm3 -> NPerm4 -> NPerm3 conversion.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void identity4to3to4() {
+            NPerm4 p, q;
+            int done = 0;
+            for (int i = 0; i < 24; ++i) {
+                p = NPerm4::S4[i];
+                if (p[3] != 3)
+                    continue;
+
+                q = regina::perm3to4(regina::perm4to3(p));
+                if (! (p == q && p.toString() == q.toString())) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << i << " is changed after "
+                        "NPerm4 -> NPerm3 -> NPerm4 conversion.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                ++done;
+            }
+            // Does it look like we tested everything that maps 3 to itself?
+            if (done != 6)
+                CPPUNIT_FAIL("The number of permutations tested was not 6.");
+        }
+
         void strings4to5() {
             NPerm4 p;
             std::string s1, s2;
@@ -127,6 +168,48 @@ class PermConvTest : public CppUnit::TestFixture {
             // Does it look like we tested everything that maps 4 to itself?
             if (done != 24)
                 CPPUNIT_FAIL("The number of permutations tested was not 24.");
+        }
+
+        void strings3to4() {
+            NPerm3 p;
+            std::string s1, s2;
+            for (int i = 0; i < 6; ++i) {
+                p = NPerm3::S3[i];
+                s1 = p.toString() + "3";
+                s2 = regina::perm3to4(p).toString();
+                if (s1 != s2) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << i << " gives the wrong "
+                        "string representation after NPerm3 -> NPerm4 "
+                        "conversion.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void strings4to3() {
+            NPerm4 p;
+            std::string s1, s2;
+            int done = 0;
+            for (int i = 0; i < 24; ++i) {
+                p = NPerm4::S4[i];
+                if (p[3] != 3)
+                    continue;
+
+                s1 = p.toString();
+                s2 = regina::perm4to3(p).toString() + "3";
+                if (s1 != s2) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << i << " gives the wrong "
+                        "string representation after NPerm4 -> NPerm3 "
+                        "conversion.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                ++done;
+            }
+            // Does it look like we tested everything that maps 3 to itself?
+            if (done != 6)
+                CPPUNIT_FAIL("The number of permutations tested was not 6.");
         }
 };
 
