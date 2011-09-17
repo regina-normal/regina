@@ -135,6 +135,16 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * coordinate system is identical to AN_STANDARD.
          */
         static const int AN_LEGACY;
+        /**
+         * Represents standard triangle-quadrilateral coordinates for
+         * transversely oriented normal surfaces.
+         */
+        static const int ORIENTED;
+        /**
+         * Represents quadrilateral coordinates for transversely oriented 
+         * normal surfaces.
+         */
+        static const int ORIENTED_QUAD;
 
     protected:
         std::vector<NNormalSurface*> surfaces;

@@ -86,8 +86,10 @@ void addNNormalSurface() {
             return_value_policy<manage_new_object>())
         .def("doubleSurface", &NNormalSurface::doubleSurface,
             return_value_policy<manage_new_object>())
-        .def("getTriangleCoord", &NNormalSurface::getTriangleCoord)
-        .def("getQuadCoord", &NNormalSurface::getQuadCoord)
+        .def("getTriangleCoord", static_cast<
+            regina::NLargeInteger (NNormalSurface::*)(unsigned long, int) const>(&NNormalSurface::getTriangleCoord))
+        .def("getQuadCoord", static_cast<
+            regina::NLargeInteger (NNormalSurface::*)(unsigned long, int) const>(&NNormalSurface::getQuadCoord))
         .def("getOctCoord", &NNormalSurface::getOctCoord)
         .def("getEdgeWeight", &NNormalSurface::getEdgeWeight)
         .def("getFaceArcs", &NNormalSurface::getFaceArcs)
