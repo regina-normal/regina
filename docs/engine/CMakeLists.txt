@@ -13,6 +13,7 @@ INSTALL(
   DIRECTORY ${PROJECT_BINARY_DIR}/docs/engine/
   DESTINATION ${PKGDATADIR}/engine-docs
   FILES_MATCHING
+  PATTERN CMakeFiles EXCLUDE
   PATTERN "*.css"
   PATTERN "*.dot"
   PATTERN "*.gif"
