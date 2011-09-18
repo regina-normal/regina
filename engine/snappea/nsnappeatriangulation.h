@@ -232,6 +232,20 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
         double volume(int& precision) const;
 
         /**
+         * Returns the boundary slope equations of the cusps of thetriangulation.
+         *
+         * @return A matrix with rows of the form
+         *
+         *   a b c  d e f  . . .
+         *
+         * which means 
+         *
+         *
+         *
+         * */
+        NMatrixInt slopeEquations() const;
+
+        /**
          * Dumps the underlying SnapPea data to standard output.
          *
          * This routine should be regarded primarily as a diagnostic tool
