@@ -69,16 +69,16 @@ NMatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
                 tetIndex = triangulation->tetrahedronIndex(
                     (*embit).getTetrahedron());
                 perm = (*embit).getVertices();
-                ans->entry(row, noOfCoords * tetIndex + vertexSplit[perm[0]][perm[2]])
+                ans->entry(row, noOfCoords * tetIndex + 2*vertexSplit[perm[0]][perm[2]])
                     += 1;
-                ans->entry(row, noOfCoords * tetIndex + vertexSplit[perm[0]][perm[3]])
+                ans->entry(row, noOfCoords * tetIndex + 2*vertexSplit[perm[0]][perm[3]])
                     -= 1;
-                ans->entry(row+1, noOfCoords * tetIndex + vertexSplit[perm[0]][perm[2]]+1)
+                ans->entry(row+1, noOfCoords * tetIndex + 2*vertexSplit[perm[0]][perm[2]]+1)
                     += 1;
-                ans->entry(row+1, noOfCoords * tetIndex + vertexSplit[perm[0]][perm[3]]+1)
+                ans->entry(row+1, noOfCoords * tetIndex + 2*vertexSplit[perm[0]][perm[3]]+1)
                     -= 1;
             }
-            row++;
+            row+=2;
         }
     }
     return ans;
@@ -144,7 +144,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
             ans->setElement(row + i, NLargeInteger::infinity);
     for (row = 0; 7 * row < nRows; row++)
         for (i = 0; i < 3; i++)
-            ans->setElement(7 * row + 4 + i, (*this)[3 * row + i]);
+            ans->setElement(7 * row + 4 + i, getQuadCoord(row,i,triang));
 
     // Run through the vertices and work out the triangular coordinates
     // about each vertex in turn.

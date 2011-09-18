@@ -97,7 +97,7 @@ class REGINA_API NNormalSurfaceVectorOrientedQuad :
         static NEnumConstraintList* makeEmbeddedConstraints(
             NTriangulation* triangulation);
     private:
-        static const int noOfCoords = 8;
+        static const int noOfCoords = 6;
 };
 
 /*@}*/
