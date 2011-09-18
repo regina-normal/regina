@@ -11,5 +11,7 @@ ADD_CUSTOM_TARGET(xmlref ALL DEPENDS index.html)
 INSTALL(
   DIRECTORY ${PROJECT_BINARY_DIR}/kdeui/doc/regina-xml/
   DESTINATION ${HTML_INSTALL_DIR}/en/regina-xml
-  FILES_MATCHING PATTERN "*.html"
+  FILES_MATCHING
+  PATTERN CMakeFiles EXCLUDE
+  PATTERN "*.html"
   )
