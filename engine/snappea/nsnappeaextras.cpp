@@ -28,6 +28,7 @@
 
 #include "snappea/nsnappeatriangulation.h"
 #include "snappea/kernel/triangulation.h"
+#include "snappea/kernel/kernel_prototypes.h"
 
 int* get_cusp_equation(Triangulation* manifold, int cusp_num, int m, int l, int* numRows);
 void free_cusp_equation(int *equation);
@@ -37,18 +38,19 @@ NMatrixInt NSnapPeaTriangulation::slopeEquations() const {
     int i,j;
     if (! snappeaData)
         return 0;
-    NMatrixInt matrix(2*manifold->num_cusps, 3*manifold->num_tetrahedra);
-    for(i=0; i< manifold->num_cusps; i++) {
+    NMatrixInt matrix(2*snappeaData->num_cusps, 3*snappeaData->num_tetrahedra);
+    ::peripheral_curves(snappeaData);
+    for(i=0; i< snappeaData->num_cusps; i++) {
         int numRows;
-        int *equations = get_cusp_equation(snappeaData, cusp, 1, 0, &numRows);
-        for(j=0; j< manifold->num_tetrahedra; j++) {
+        int *equations = ::get_cusp_equation(snappeaData, cusp, 1, 0, &numRows);
+        for(j=0; j< snappeaData->num_tetrahedra; j++) {
             matrix.entry(2*cusp,j) = equations[j];
         }
-        free_cusp_equation(equations)
-        *equations = get_cusp_equation(snappeaData, cusp, 0, 1, &numRows);
-        for(j=0; j< manifold->num_tetrahedra; j++) {
+        ::free_cusp_equation(equations)
+        *equations = ::get_cusp_equation(snappeaData, cusp, 0, 1, &numRows);
+        for(j=0; j< snappeaData->num_tetrahedra; j++) {
             matrix.entry(2*cusp+1,j) = equations[j];
         }
-        free_cusp_equation(equations)
+        ::free_cusp_equation(equations)
     }
 }
