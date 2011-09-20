@@ -101,6 +101,15 @@ class Dim4Triangulation;
  * \todo  5) need to set up local orientations for dual boundary coordinates (DIM4 done, DIM3 debugging!), 
  *        buildFundGrpPres() for 3-manifolds TODO, for 4-manifold DONE
  *        need to do the boundary inclusion maps for pi1. Need to test, esp. alex polys. DIM3 seems buggy.
+// TODO: possible places code is screwed-up:
+//       1) in pi1 pres code.  Currently reading THIS. presently at ideal dual 2-cells. LOOKS OKAY.
+//       2) check stdBdrypi1Gen code.  LOOKS OKAY NOW.
+//       3) the normalsDim3.  LOOKS OKAY
+//       4) boundary component indexing?? stdBdryCompIndexCD1 LOOKS OKAY
+//       5) in boundary inclusion code. LOOKS OKAY
+//       6) in the maximal forest code for 3-manifolds
+//       7) Ben's NBilinearForm test-suite complaint. 
+//       ??
  * \todo  6) We'll also eventually need maximal trees in the standard and mixed 1-skeleton, to implement
  *        Farber-Levine pairings and Poincare duality in covering spaces, in general. 
  * \todo  7) Make writeTextShort and writeTextLong more pleasant to look at.  Currently it's not 

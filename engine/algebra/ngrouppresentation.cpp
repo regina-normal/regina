@@ -694,6 +694,12 @@ bool NGroupPresentation::intelligentSimplify() {
  return changed;
 }
 
+bool isZeroVec(const std::vector<unsigned long> &V)
+{ 
+ for (unsigned long i=0; i<V.size(); i++)
+   if (V[i] != 0) { return false; }
+ return true;
+}
 
 // TODO: 1) recognise commutators and use that to our advantage. 
 //       recognise other advantageous small words ??
@@ -701,6 +707,11 @@ bool NGroupPresentation::intelligentSimplify() {
 //       recognise utility of some Nielsen transforms, ie
 //       2) basic automorphisms of the free group, x_1 --> x_1, ...
 //             x_i --> x_ix_j, ..., x_n --> x_n, etc. 
+
+// TODO: if you run this on the NCellularData produced fundamental group of
+//       the idealtonormal version of the first manifold in the 3-manifold
+//       knot and link census, it crashes.  It appears to be deallocating
+//       something twice.  What?
 bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMap)
 {
  bool didSomething(false);
@@ -710,8 +721,7 @@ bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMa
  // let's start with the shortest relators first, and see to what extent we can use them to 
  // simplify the other relators.  To do this we'll need a temporary relator table, sorted 
  // on the length of the relators. 
- std::list< NGroupExpression* >::iterator it;
- std::list< NGroupExpression* > relatorList; 
+ std::list< NGroupExpression* >::iterator it;  std::list< NGroupExpression* > relatorList; 
  for (unsigned long i=0; i<relations.size(); i++) relatorList.push_back( relations[i] );
  relations.resize(0); // we'll rebuild the relations later. 
 
@@ -725,7 +735,7 @@ bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMa
 
  while (we_value_iteration)
   { // 1) Sort. 
-    // 2) deallocate and remove any trivial relators 
+    // 2) deallocate and remove any trivial relators from relatorList 
     // 3) apply shorter relators to longer ones to reduce length of relators, possibly triggering we_value_iteration
     // 4) use relators to kill generators
     // 5) Look for convienient Nielsen transforms. TODO
@@ -801,10 +811,9 @@ bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMa
                 else complement.addTermLast( (*tit) ); }
            } 
 	  complement.addTermsLast(prefix);
-
           if (!inv) complement.invert();
 	  // so we sub gi --> complement, in both substitutionTable and relatorList
-          for (unsigned long j=0; j<substitutionTable.size(); j++)
+         for (unsigned long j=0; j<substitutionTable.size(); j++)
 	    substitutionTable[j].substitute( i, complement );
 	  for (std::list< NGroupExpression* >::iterator pit = relatorList.begin(); pit != relatorList.end(); pit++)
 	     { // aha! using it in a nested way!!
@@ -832,7 +841,7 @@ bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMa
  // We need to remove the generators that have been killed or expressed
  // in terms of other generators.  We have to similarly re-index the 
  // remaining generators. 
- 
+
  nGenerators = 0;
  for (unsigned long i=0; i<substitutionTable.size(); i++)
   if ( substitutionTable[i].getNumberOfTerms() == 1 ) 
@@ -866,10 +875,11 @@ bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMa
  relations.reserve( relatorList.size() );
  for (it = relatorList.begin(); it != relatorList.end(); it++) 
   { relations.push_back( (*it) ); }
-  
+
  NGroupPresentation newGroup( *this );
  reductionMap = new NHomGroupPresentation( oldGroup, newGroup, substitutionTable );
  // now we can initialize reductionMap 
+
  return didSomething;
 }// end dehnAlgorithm()
 

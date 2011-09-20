@@ -48,14 +48,6 @@
  *  the various pi1's can be computed. 
  */
 
-// TODO: bug checking in 3-dimensional case is a priority
-//       current bug : alexander ideals clearly wrong for 3-dimensional knot complements
-//       likely problem: buildExtraNormalData and the buildFundGrpPres routines are most
-//       likely culprits, but the maximal forest alg could also be a problem. 
-// okay, pi1 for closed 3-manifolds seems okay. abelianization checks.
-//       pi1 for ideal boundary 3-manifolds... also seems fine.  
-//       pi1 for std bdry... segfaults! look into this. 
-
 namespace regina {
 
 
@@ -184,11 +176,10 @@ void NCellularData::buildExtraNormalData()
     for (NTriangulation::VertexIterator vit=bTriComp->getVertices().begin(); 
          vit!=bTriComp->getVertices().end(); vit++)
      {
-      unsigned long I = lower_bound( bcIx[0].begin(), bcIx[0].end(), 
-       tri4->vertexIndex( (*bcit)->getVertex( bTriComp->vertexIndex(*vit) ) ) ) - bcIx[0].begin(); // bcIx[0] index
-
+      unsigned long I = bcIxLookup( (*bcit)->getVertex( bTriComp->vertexIndex(*vit) ) );
       // find vit's embeddings
-      const std::vector<NVertexEmbedding> tri3vrtEmb( (*vit)->getEmbeddings() ); // vertex embeddings in bdry triangulation
+      const std::vector<NVertexEmbedding> tri3vrtEmb( (*vit)->getEmbeddings() ); 
+        // vertex embeddings in bdry triangulation
  
       dim4BoundaryVertexInclusion dim4bvrtInc;
       dim4bvrtInc.tet.resize(tri3vrtEmb.size()); 
@@ -208,9 +199,7 @@ void NCellularData::buildExtraNormalData()
     for (NTriangulation::EdgeIterator eit=bTriComp->getEdges().begin(); 
          eit!=bTriComp->getEdges().end(); eit++)
      {
-      unsigned long I = lower_bound( bcIx[1].begin(), bcIx[1].end(), 
-       tri4->edgeIndex( (*bcit)->getEdge( bTriComp->edgeIndex(*eit) ) ) ) - bcIx[1].begin(); // bcIx[1] index
-  
+      unsigned long I = bcIxLookup(  (*bcit)->getEdge( bTriComp->edgeIndex(*eit) ) );
       // find vit's embeddings
       const std::deque<NEdgeEmbedding> tri3edgEmb( (*eit)->getEmbeddings() ); // vertex embeddings in bdry triangulation
  
@@ -232,12 +221,13 @@ void NCellularData::buildExtraNormalData()
     for (NTriangulation::FaceIterator fit=bTriComp->getFaces().begin(); 
          fit!=bTriComp->getFaces().end(); fit++)
      {
-      unsigned long I = lower_bound( bcIx[2].begin(), bcIx[2].end(), 
-       tri4->faceIndex( (*bcit)->getFace( bTriComp->faceIndex(*fit) ) ) ) - bcIx[2].begin(); // bcIx[2] index
+      unsigned long I = bcIxLookup( (*bcit)->getFace( bTriComp->faceIndex(*fit) ) );
    
       dim4BoundaryFaceInclusion dim4bfacInc;
-      dim4bfacInc.firsttet = (*bcit)->getTetrahedron( bTriComp->tetrahedronIndex( (*fit)->getEmbedding(0).getTetrahedron() ) );
-      dim4bfacInc.secondtet = (*bcit)->getTetrahedron( bTriComp->tetrahedronIndex( (*fit)->getEmbedding(1).getTetrahedron() ) );
+      dim4bfacInc.firsttet = (*bcit)->getTetrahedron( bTriComp->tetrahedronIndex( 
+                (*fit)->getEmbedding(0).getTetrahedron() ) );
+      dim4bfacInc.secondtet = (*bcit)->getTetrahedron( bTriComp->tetrahedronIndex( 
+                (*fit)->getEmbedding(1).getTetrahedron() ) );
       dim4bfacInc.firstfacnum = (*fit)->getEmbedding(0).getFace();
       dim4bfacInc.secondfacnum = (*fit)->getEmbedding(1).getFace();
 
@@ -262,7 +252,7 @@ void NCellularData::buildExtraNormalData()
   for (unsigned long i=0; i<bcIx[1].size(); i++)
    {
     const NEdge* edg( tri3->getEdge( bcIx[1][i] ) );    
-    
+
     const NEdgeEmbedding emb1( edg->getEmbeddings().front() );
     NPerm4 edgPerm( emb1.getVertices() );        const NTetrahedron* tet1( emb1.getTetrahedron() );  
     NFace* fac1 ( tet1->getFace( edgPerm[3] ) ); NPerm4 facPerm( fac1->getEmbedding(0).getVertices() );
@@ -279,7 +269,6 @@ void NCellularData::buildExtraNormalData()
     normalsDim3BdryEdges[i].secondperm = NPerm3( facPerm.preImageOf( edgPerm[0] ), 
                facPerm.preImageOf( edgPerm[1] ), facPerm.preImageOf( edgPerm[3] ) );
    }
-
   // struct dim3BoundaryVertexInclusion
   //  { std::vector< NFace* > face;
   //    std::vector< unsigned long > vrtnum; 
@@ -293,7 +282,6 @@ void NCellularData::buildExtraNormalData()
   //  edge, and have to call its edge embeddings, going to the opposite end of the edge embeddings... ah.. okay.
   //  that's how we'll do it.  So we just have to get one incident edge to start the process off with. And
   //  we can piggyback off the normalsDim3BdryEdges computation! Good.  
-
   normalsDim3BdryVertices.resize( bcIx[0].size() );
   for (unsigned long i=0; i<bcIx[0].size(); i++)
    {
@@ -314,14 +302,19 @@ void NCellularData::buildExtraNormalData()
       if (foundBdryFac) break;
      } // this must return with foundBdryFac true, or else I've made a huge mistake.
     if (!foundBdryFac) std::cout<<"Skeletal error in NCellularData::buildExtraNormalData.\n";
+    if ( !vrtEmbs[j].getTetrahedron()->getFace((vrtEmbs[j].getVertex()+k) % 4)->isBoundary() ) 
+      std::cout<<"Weird error in NCellularData::buildExtraNormalData.\n"; 
     // okay now it's time to start building normalsDim3BdryVertices.  So we take the face, and choose
     //  some orientation of it. 
-    normalsDim3BdryVertices[i].face.push_back( vrtEmbs[j].getTetrahedron()->getFace((vrtEmbs[j].getVertex()+k) % 4) );
-    normalsDim3BdryVertices[i].vrtnum.push_back( normalsDim3BdryVertices[i].face[0] -> getEmbedding(0).getVertices().preImageOf( vrtEmbs[j].getVertex() ) );
+    normalsDim3BdryVertices[i].face.push_back( 
+       vrtEmbs[j].getTetrahedron()->getFace((vrtEmbs[j].getVertex()+k) % 4) );
+    normalsDim3BdryVertices[i].vrtnum.push_back( 
+       normalsDim3BdryVertices[i].face[0] -> getEmbedding(0).getVertices().preImageOf( vrtEmbs[j].getVertex() ) );
     // 0 to vertex index in face, 1 and 2 to other vertices, any choice...
-    normalsDim3BdryVertices[i].vrtinc.push_back( NPerm3( normalsDim3BdryVertices[i].vrtnum[0], (normalsDim3BdryVertices[i].vrtnum[0]+1) % 3, (normalsDim3BdryVertices[i].vrtnum[0]+2) % 3) );
+    normalsDim3BdryVertices[i].vrtinc.push_back( 
+        NPerm3( normalsDim3BdryVertices[i].vrtnum[0], (normalsDim3BdryVertices[i].vrtnum[0]+1) % 3, 
+               (normalsDim3BdryVertices[i].vrtnum[0]+2) % 3) );
     // find the next face in sequence, if not the 0-th face, append it to list.  
-
     bool toNextFace=true;
     while (toNextFace)
      {
@@ -331,23 +324,25 @@ void NCellularData::buildExtraNormalData()
         prevFace = normalsDim3BdryVertices[i].face.back(); 
         prevVN = normalsDim3BdryVertices[i].vrtnum.back(); 
         prevPerm = normalsDim3BdryVertices[i].vrtinc.back();
-        NEdge *foldE = prevFace->getEdge(1); 
+        NEdge *foldE = prevFace->getEdge( prevPerm[1] ); 
         unsigned long foldEei( bcIxLookup( foldE ) );
-
+        NPerm3 fts( normalsDim3BdryEdges[foldEei].secondperm*(normalsDim3BdryEdges[foldEei].firstperm.inverse()) );
         if ( (normalsDim3BdryEdges[foldEei].firstfac == prevFace) && 
-             (normalsDim3BdryEdges[foldEei].firstedgnum == 1) )
-         {
+             (normalsDim3BdryEdges[foldEei].firstedgnum == prevPerm[1] ) )
+         { // this is the problem, I'm not using the correct nextVN
           nextFace = normalsDim3BdryEdges[foldEei].secondfac;
-          nextVN = normalsDim3BdryEdges[foldEei].secondedgnum;
-          nextPerm = normalsDim3BdryEdges[foldEei].secondperm;
+          nextVN = fts[prevPerm[0]];
+          nextPerm = NPerm3( fts[prevPerm[0]], fts[prevPerm[2]], fts[prevPerm[1]] );
          }
         else
          {
           nextFace = normalsDim3BdryEdges[foldEei].firstfac;
-          nextVN = normalsDim3BdryEdges[foldEei].firstedgnum;
-          nextPerm = normalsDim3BdryEdges[foldEei].firstperm;
+          nextVN = fts.inverse()[prevPerm[0]]; 
+          nextPerm = NPerm3( fts.inverse()[prevPerm[0]], fts.inverse()[prevPerm[2]], fts.inverse()[prevPerm[1]] );
          }
+
        // now check to see if nextFace is the 0-th face or not...
+       // currently this isn't working! 
        if ( (nextFace == normalsDim3BdryVertices[i].face[0]) && 
             (nextVN == normalsDim3BdryVertices[i].vrtnum[0]) ) toNextFace=false;
        else // record
@@ -359,8 +354,6 @@ void NCellularData::buildExtraNormalData()
     }
    }
  } // end tri3
-// TODO gah! currently a major memory leak... somewhere! 
-
  // figure out number of standard vs. ideal boundary components, also compute a vector which describes
  //  the map (boundary faces) --> (boundary components they belong to)
  numStdBdryComps=0; numIdealBdryComps=0; 
@@ -369,15 +362,13 @@ void NCellularData::buildExtraNormalData()
   stdBdryCompIndexCD1.resize( bcIx[2].size() ); 
   idBdryCompIndexCD1.resize( icIx[2].size() );
   for (unsigned long i=0; i<tri4->getNumberOfBoundaryComponents(); i++) 
-   { // now we can run through all the faces in this boundary component, and fill out the appropriate array stdBdryCompIndex
+   { // now we can run through all the faces in this boundary component, 
+     //  and fill out the appropriate array stdBdryCompIndex
     const Dim4BoundaryComponent* bcomp( tri4->getBoundaryComponent(i) );
     if (!bcomp->isIdeal())
      {
       for (unsigned long j=0; j<bcomp->getNumberOfFaces(); j++)
-       {
-        unsigned long I=lower_bound( bcIx[2].begin(), bcIx[2].end(), tri4->faceIndex( bcomp->getFace(j) ) ) - bcIx[2].begin();
-        stdBdryCompIndexCD1[I] = numStdBdryComps; 
-       }
+        stdBdryCompIndexCD1[bcIxLookup( bcomp->getFace(j) )] = numStdBdryComps; 
        numStdBdryComps++; 
       }
     else // bcomp *is* ideal
@@ -399,15 +390,13 @@ void NCellularData::buildExtraNormalData()
   stdBdryCompIndexCD1.resize( bcIx[1].size() ); 
   idBdryCompIndexCD1.resize( icIx[1].size() );
   for (unsigned long i=0; i<tri3->getNumberOfBoundaryComponents(); i++) 
-   { // now we can run through all the faces in this boundary component, and fill out the appropriate array stdBdryCompIndex
+   { // now we can run through all the faces in this boundary component, 
+     //  and fill out the appropriate array stdBdryCompIndex
     const NBoundaryComponent* bcomp( tri3->getBoundaryComponent(i) );
     if (!bcomp->isIdeal())
      {
       for (unsigned long j=0; j<bcomp->getNumberOfEdges(); j++)
-       {
-        unsigned long I=lower_bound( bcIx[1].begin(), bcIx[1].end(), tri3->edgeIndex( bcomp->getEdge(j) ) ) - bcIx[1].begin();
-        stdBdryCompIndexCD1[I] = numStdBdryComps; 
-       }
+        stdBdryCompIndexCD1[bcIxLookup( bcomp->getEdge(j) )] = numStdBdryComps; 
        numStdBdryComps++; 
       }
     else // bcomp *is* ideal
@@ -424,7 +413,6 @@ void NCellularData::buildExtraNormalData()
      }
    }
   }
-
 } // end buildExtraNormalData()
 
 /**
@@ -439,8 +427,9 @@ void NCellularData::buildExtraNormalData()
 void NCellularData::buildMaximalTree()
 {
  if ( maxTreeStd.size() != 0 ) return; // don't bother calling the routine twice
- // Iterate: walk through dual 1-skeleton until we hit an (ideal) boundary component we haven't hit before.  During the iteration we
- //  keep track of several things. Priority to building (ideal) boundary max tree ahead of interior max tree.
+ // Iterate: walk through dual 1-skeleton until we hit an (ideal) boundary component we 
+ // haven't hit before.  During the iteration we keep track of several things. Priority 
+ // to building (ideal) boundary max tree ahead of interior max tree.
 
  std::set< unsigned long > visitedZ, visitedBd, visitedId; // 0-cells in maximal tree
  // indexed by             nicIx[n], bcIx[n-1], icIx[n-1] respectively.
@@ -464,7 +453,8 @@ void NCellularData::buildMaximalTree()
     unexploredV = newVertexListI.begin();
 
     // *unexploredV is the icIx[3]-index of the ideal dual 0-cell
-    const Dim4Pentachoron* pen(NULL); unsigned long idvnum; const Dim4Tetrahedron* septet(NULL); const Dim4Pentachoron* adjpen(NULL);
+    const Dim4Pentachoron* pen(NULL); unsigned long idvnum; const Dim4Tetrahedron* septet(NULL); 
+     const Dim4Pentachoron* adjpen(NULL);
     NPerm5 adjglue, tetmap;
 
     pen = tri4 -> getPentachoron( icIx[3][*unexploredV]/5 );
@@ -478,10 +468,10 @@ void NCellularData::buildMaximalTree()
       // let's determine the number of adjpen
       unsigned long adjpennum = tri4 -> pentachoronIndex( adjpen );
       unsigned long adj0cellnum = 5*adjpennum + adjglue[idvnum]; // dual ideal 0-cell value, should be indexed by icIx[3]
-      unsigned long I = lower_bound( icIx[3].begin(), icIx[3].end(), adj0cellnum ) - icIx[3].begin();
+      unsigned long I = icIxLookup( adjpen, adjglue[idvnum] ); 
       // make J into the index of the ideal boundary face...
       unsigned long tetnum = tri4 -> tetrahedronIndex( septet );
-      unsigned long J = lower_bound( icIx[2].begin(), icIx[2].end(), 4*tetnum + tetmap.preImageOf( idvnum ) ) - icIx[2].begin();
+      unsigned long J = icIxLookup( septet, tetmap.preImageOf( idvnum ) );
       // check to see if I is in visitedId
       if (!binary_search( visitedId.begin(), visitedId.end(), I) ) // not found
        { visitedId.insert(I); newVertexListI.insert(I); maxTreeIdB.insert(J); }
@@ -502,13 +492,13 @@ void NCellularData::buildMaximalTree()
 
     for (unsigned long i=0; i<4; i++) // cross all faces
       {
-       const Dim4Face* fac( btet->getFace(i) ); // look this up in normalsDim4BdryFaces, for that we need the bcIx[2] index.
-       unsigned long facidx( lower_bound( bcIx[2].begin(), bcIx[2].end(), tri4->faceIndex( fac ) ) - bcIx[2].begin() ); 
+       const Dim4Face* fac( btet->getFace(i) ); 
+         // look this up in normalsDim4BdryFaces, for that we need the bcIx[2] index.
+       unsigned long facidx( bcIxLookup( fac ) );
        // one of normalsDim4BdryFaces[facidx] first/second represents this tetrahedron and face, lets walk to the other. 
        if ( (normalsDim4BdryFaces[facidx].firsttet == btet) && (normalsDim4BdryFaces[facidx].firstfacnum == i) ) 
         { // ensure second tet hasn't been touched, if so record the fac.  
-          unsigned long newbtetidx ( lower_bound( bcIx[3].begin(), bcIx[3].end(), 
-                tri4->tetrahedronIndex( normalsDim4BdryFaces[facidx].secondtet ) ) - bcIx[3].begin() );
+          unsigned long newbtetidx ( bcIxLookup( normalsDim4BdryFaces[facidx].secondtet ) );
           if (!binary_search( visitedBd.begin(), visitedBd.end(), newbtetidx ) )
           {
             visitedBd.insert(newbtetidx); newVertexListB.insert(newbtetidx); maxTreeStB.insert( facidx );             
@@ -516,12 +506,9 @@ void NCellularData::buildMaximalTree()
         }
        else // this btet is the secondtet.
         {
-          unsigned long newbtetidx ( lower_bound( bcIx[3].begin(), bcIx[3].end(), 
-                tri4->tetrahedronIndex( normalsDim4BdryFaces[facidx].firsttet ) ) - bcIx[3].begin() );
+          unsigned long newbtetidx ( bcIxLookup( normalsDim4BdryFaces[facidx].firsttet ) );
           if (!binary_search( visitedBd.begin(), visitedBd.end(), newbtetidx ) )
-          {
-            visitedBd.insert(newbtetidx); newVertexListB.insert(newbtetidx); maxTreeStB.insert( facidx );             
-          }
+           { visitedBd.insert(newbtetidx); newVertexListB.insert(newbtetidx); maxTreeStB.insert( facidx ); }
         }
       }
      newVertexListB.erase(unexploredV); // increment unexploredV but return the unincremented iterator...
@@ -541,8 +528,7 @@ void NCellularData::buildMaximalTree()
     // step 1 look for ideal connectors.  If one found, record and exit loop 
     for (unsigned long i=0; i<5; i++) if ( pen -> getVertex(int(i)) -> isIdeal() )
      {
-      unsigned long idvind = 5*(*unexploredV) + i; 
-      unsigned long I = lower_bound( icIx[3].begin(), icIx[3].end(), idvind ) - icIx[3].begin();  
+      unsigned long I = icIxLookup( pen, i );
       // check to see if I in visitedId
       if (!binary_search( visitedId.begin(), visitedId.end(), I) ) // not found
        { 
@@ -554,8 +540,8 @@ void NCellularData::buildMaximalTree()
     for (unsigned long i=0; i<5; i++) if ( pen -> getTetrahedron(int(i)) -> isBoundary() )
      {
       const Dim4Tetrahedron* btet( pen -> getTetrahedron(i) );
-      unsigned long I = lower_bound( bcIx[3].begin(), bcIx[3].end(), tri4->tetrahedronIndex( btet ) ) - bcIx[3].begin();
-      unsigned long J = lower_bound( nicIx[3].begin(), nicIx[3].end(), tri4->tetrahedronIndex( btet ) ) - nicIx[3].begin();
+      unsigned long I = bcIxLookup( btet );
+      unsigned long J = nicIxLookup( btet );
       if (!binary_search( visitedBd.begin(), visitedBd.end(), I ) ) // not found
        { visitedBd.insert(I);  newVertexListB.insert(I); maxTreeStd.insert(J);
          goto standard_boundary_loop4; }
@@ -567,7 +553,7 @@ void NCellularData::buildMaximalTree()
       const Dim4Pentachoron* adjpen( pen -> adjacentPentachoron( i ) );
       unsigned long I = tri4->pentachoronIndex( adjpen );
       const Dim4Tetrahedron* adjtet( pen -> getTetrahedron( i ) );
-      unsigned long J = lower_bound( nicIx[3].begin(), nicIx[3].end(), tri4->tetrahedronIndex( adjtet ) ) - nicIx[3].begin();
+      unsigned long J = nicIxLookup( adjtet );
       if (!binary_search( visitedZ.begin(), visitedZ.end(), I ) ) // not found
        { visitedZ.insert(I); maxTreeStd.insert(J); newVertexListS.insert(I); }
      }
@@ -581,9 +567,9 @@ void NCellularData::buildMaximalTree()
  // let's seed the process and start in pentachoron 0.
  visitedZ.insert(0); newVertexListS.insert(0);
 
- while ( (newVertexListS.size() > 0) || (newVertexListB.size() > 0) || (newVertexListI.size() > 0) ) // unexplored vertices...
+ while ( (newVertexListS.size() > 0) || (newVertexListB.size() > 0) || (newVertexListI.size() > 0) ) 
+                // unexplored vertices...
   {
-
   ideal_boundary_loop3:
   // iterator to go through unexplored vertices
   std::set< unsigned long >::iterator unexploredV;
@@ -605,13 +591,10 @@ void NCellularData::buildMaximalTree()
       adjtet = tet -> adjacentTetrahedron( (idvnum + i) % 4 );
       adjglue = tet -> adjacentGluing( (idvnum + i) % 4 );
       facmap = tet -> getFaceMapping( (idvnum + i) % 4 );
-      // let's determine the number of adjpen
-      unsigned long adjtetnum = tri3 -> tetrahedronIndex( adjtet );
-      unsigned long adj0cellnum = 4*adjtetnum + adjglue[idvnum]; // dual ideal 0-cell value, should be indexed by icIx[3]
-      unsigned long I = lower_bound( icIx[2].begin(), icIx[2].end(), adj0cellnum ) - icIx[2].begin();
-      // make J into the index of the ideal boundary edge...
-      unsigned long facnum = tri3 -> faceIndex( sepfac );
-      unsigned long J = lower_bound( icIx[1].begin(), icIx[1].end(), 3*facnum + facmap.preImageOf( idvnum ) ) - icIx[1].begin();
+        // dual ideal 0-cell value, should be indexed by icIx[3]
+      unsigned long I = icIxLookup( adjtet, adjglue[idvnum] );
+        // make J into the index of the ideal boundary edge...
+      unsigned long J = icIxLookup( sepfac, facmap.preImageOf( idvnum ) );
       // check to see if I is in visitedId
       if (!binary_search( visitedId.begin(), visitedId.end(), I) ) // not found
        { visitedId.insert(I); newVertexListI.insert(I); maxTreeIdB.insert(J); }
@@ -625,42 +608,32 @@ void NCellularData::buildMaximalTree()
    {
     unexploredV = newVertexListB.begin();
 
-    // *unexploredV is the bcIx[2]-index of the standard boundary dual 0-cell
-    const NFace* bfac(tri3 -> getFace( bcIx[2][*unexploredV] ));  // boundary face
-    const NTetrahedron* tet(bfac -> getEmbedding(0).getTetrahedron()); // tet it lives in
-    unsigned long facnum = bfac -> getEmbedding(0).getFace(); // face number in ambient tet.
+    // *unexploredV is the bcIx[3]-index of the standard boundary dual 0-cell
+    const NFace* bfac(NULL); 
+    bfac = tri3 -> getFace( bcIx[2][*unexploredV] ); // bfac
 
-    for (unsigned long i=1; i<4; i++)
+    for (unsigned long i=0; i<3; i++) // cross all faces
       {
-       const NFace* sepfac( tet -> getFace( (facnum + i) % 4 ) );
-       const NPerm4 sepfacmap( tet -> getFaceMapping( (facnum + i) % 4 ) );
-       const NEdge* bedg( sepfac->getEdge( sepfacmap.preImageOf( facnum ) ) );
-       const unsigned long bedgnum( tri3->edgeIndex(bedg) );
-       if (sepfac->isBoundary())
-        {
-         unsigned long I,J; 
-         I = lower_bound( bcIx[2].begin(), bcIx[2].end(), tri3->faceIndex(sepfac) ) - bcIx[2].begin();
-         J = lower_bound( bcIx[1].begin(), bcIx[1].end(), bedgnum ) - bcIx[1].begin();
-         // check to see if I is in visitedBd
-         if (!binary_search( visitedBd.begin(), visitedBd.end(), I) ) // not found
-           { visitedBd.insert(I); newVertexListB.insert(I); maxTreeSttIdB.insert(J); }    
+       const NEdge* edg( bfac->getEdge(i) ); 
+         // look this up in normalsDim4BdryFaces, for that we need the bcIx[1] index.
+       unsigned long edgidx( bcIxLookup( edg ) );
+       // one of normalsDim4BdryFaces[edgidx] first/second represents this tetrahedron and face, lets walk to the other. 
+       if ( (normalsDim3BdryEdges[edgidx].firstfac == bfac) && (normalsDim3BdryEdges[edgidx].firstedgnum == i) ) 
+        { // ensure second tet hasn't been touched, if so record the fac.  
+          unsigned long newbfacidx ( bcIxLookup( normalsDim3BdryEdges[edgidx].secondfac ) );
+          if (!binary_search( visitedBd.begin(), visitedBd.end(), newbfacidx ) )
+          {
+            visitedBd.insert(newbfacidx); newVertexListB.insert(newbfacidx); maxTreeStB.insert( edgidx );             
+          }
         }
-       else
+       else // this bfac is the secondfac.
         {
-        const NTetrahedron* adjtet( tet -> adjacentTetrahedron( (facnum + i) % 4 ) ); // oh, what if there is NO adjacent tet!!
-        const NFace* adjfac( adjtet -> getFace( tet -> adjacentGluing( (facnum + i) % 4)[facnum] ) );
-        // suitably update visitedBd and maxTreeSttIdB indexed by bcIx[2] and bcIx[1] resp.
-        // find adjfac's index in bcIx[2]
-
-        unsigned long I,J; 
-        I = lower_bound( bcIx[2].begin(), bcIx[2].end(), tri3->faceIndex(adjfac) ) - bcIx[2].begin();
-        J = lower_bound( bcIx[1].begin(), bcIx[1].end(), bedgnum ) - bcIx[1].begin();
-        // check to see if I is in visitedBd
-        if (!binary_search( visitedBd.begin(), visitedBd.end(), I) ) // not found
-          { visitedBd.insert(I); newVertexListB.insert(I); maxTreeSttIdB.insert(J); }
+          unsigned long newbfacidx ( bcIxLookup( normalsDim3BdryEdges[edgidx].firstfac ) );
+          if (!binary_search( visitedBd.begin(), visitedBd.end(), newbfacidx ) )
+           { visitedBd.insert(newbfacidx); newVertexListB.insert(newbfacidx); maxTreeStB.insert( edgidx ); }
         }
       }
-     newVertexListB.erase(unexploredV++); // increment unexploredV but return the unincremented iterator...
+     newVertexListB.erase(unexploredV); // increment unexploredV but return the unincremented iterator...
    }
 
   // then check to see if there are standard vertices unexplored
@@ -676,8 +649,8 @@ void NCellularData::buildMaximalTree()
     // step 1 look for ideal connectors.  If one found, record and exit loop 
     for (unsigned long i=0; i<4; i++) if ( tet -> getVertex(int(i)) -> isIdeal() )
      {
-      unsigned long idvind = 4*(*unexploredV) + i; 
-      unsigned long I = lower_bound( icIx[2].begin(), icIx[2].end(), idvind ) - icIx[2].begin();  
+      unsigned long idvind = 4*(*unexploredV) + i;
+      unsigned long I( icIxLookup( tet, i ) ); 
       // check to see if I in visitedId
       if (!binary_search( visitedId.begin(), visitedId.end(), I) ) // not found
        { visitedId.insert(I); newVertexListI.insert(I); maxTreeSttIdB.insert(I);  
@@ -688,8 +661,8 @@ void NCellularData::buildMaximalTree()
     for (unsigned long i=0; i<4; i++) if ( tet -> getFace(int(i)) -> isBoundary() )
      {
       const NFace* bfac( tet -> getFace(int(i)) );
-      unsigned long I = lower_bound( bcIx[2].begin(), bcIx[2].end(), tri3->faceIndex( bfac ) ) - bcIx[2].begin();
-      unsigned long J = lower_bound( nicIx[2].begin(), nicIx[2].end(), tri3->faceIndex( bfac ) ) - nicIx[2].begin();
+      unsigned long I ( bcIxLookup( bfac ) );
+      unsigned long J (nicIxLookup( bfac ) );
       if (!binary_search( visitedBd.begin(), visitedBd.end(), I ) ) // not found
        { visitedBd.insert(I);  newVertexListB.insert(I); maxTreeStd.insert(J);
          goto standard_boundary_loop3; }
@@ -701,7 +674,7 @@ void NCellularData::buildMaximalTree()
       const NTetrahedron* adjtet( tet -> adjacentTetrahedron( int(i) ) );
       unsigned long I = tri3->tetrahedronIndex( adjtet );
       const NFace* adjfac( tet -> getFace( int(i) ) );
-      unsigned long J = lower_bound( nicIx[2].begin(), nicIx[2].end(), tri3->faceIndex( adjfac ) ) - nicIx[2].begin();
+      unsigned long J ( nicIxLookup( adjfac ) );
       if (!binary_search( visitedZ.begin(), visitedZ.end(), I ) ) // not found
        { visitedZ.insert(I); maxTreeStd.insert(J); newVertexListS.insert(I); }
      }
@@ -780,8 +753,10 @@ void NCellularData::buildFundGrpPres() const
          if (!inMaximalTree(tet)) 
           {
           // get index. 
-          unsigned long tetind = delta1 + tri4->tetrahedronIndex( tet ) - num_less_than( maxTreeStd, tri4->tetrahedronIndex( tet ) );
-          if ( (tet -> getEmbedding(1).getPentachoron() == currPen) && (tet -> getEmbedding(1).getTetrahedron() == currPenFace) )
+          unsigned long tetind = delta1 + tri4->tetrahedronIndex( tet ) - 
+                                 num_less_than( maxTreeStd, tri4->tetrahedronIndex( tet ) );
+          if ( (tet -> getEmbedding(1).getPentachoron() == currPen) && 
+               (tet -> getEmbedding(1).getTetrahedron() == currPenFace) )
            relator.addTermFirst( tetind, 1 ); else relator.addTermFirst( tetind, -1 ); // oriented from emb 0 to emb 1
           }
         } 
@@ -801,7 +776,7 @@ void NCellularData::buildFundGrpPres() const
        if (!inMaximalTree(*fac))
         {
          // orientation? 
-         unsigned long I = lower_bound( bcIx[2].begin(), bcIx[2].end(), tri4->faceIndex( *fac ) ) - bcIx[2].begin();
+         unsigned long I ( bcIxLookup ( *fac ) );
          if ( (normalsDim4BdryFaces[I].secondtet == tet) && (normalsDim4BdryFaces[I].secondfacnum == tetfacnum) )
           relator.addTermFirst( I - num_less_than( maxTreeStB, I ),  1 );
          else
@@ -825,7 +800,8 @@ void NCellularData::buildFundGrpPres() const
            { sign = -1; }
           else
            {
-            if ( (tet -> getEmbedding(0).getPentachoron() == currPen) && (tet -> getEmbedding(0).getTetrahedron() == currPenFace) )
+            if ( (tet -> getEmbedding(0).getPentachoron() == currPen) && 
+                 (tet -> getEmbedding(0).getTetrahedron() == currPenFace) )
              sign = -1; else sign = 1; 
            }
            relator.addTermFirst( tetind, sign ); 
@@ -849,7 +825,8 @@ void NCellularData::buildFundGrpPres() const
     }// that finishes interior cells dual to faces. 
 
    // now for boundary dual 2-cells -- pure boundary relator.
-   // run through bcIx[1], for each edge call getEmbeddings(), this describes a disc and we need to crawl around the boundary.
+   // run through bcIx[1], for each edge call getEmbeddings(), this describes a disc 
+   //  and we need to crawl around the boundary.
    Dim4Edge* edg(NULL);
    for (unsigned long i=0; i<bcIx[1].size(); i++)
     {
@@ -859,7 +836,6 @@ void NCellularData::buildFundGrpPres() const
      // call normalsDim4BdryEdges[i] for bcIx[1][i] normal data.
      for (unsigned long j=0; j<normalsDim4BdryEdges[i].tet.size(); j++)
       {
-       // tetrahedron normalsDim4BdryEdges[i].tet[j] edge normalsDim4BdryEdges[i].edgenum[j] and normalsDim4BdryEdges[i].edginc[j]
        const Dim4Tetrahedron* tet( normalsDim4BdryEdges[i].tet[j] );
         // unsigned long edgnum ( normalsDim4BdryEdges[i].edgenum[j] );
        NPerm4 edginc ( normalsDim4BdryEdges[i].edginc[j] );
@@ -867,14 +843,15 @@ void NCellularData::buildFundGrpPres() const
        const Dim4Face* bfac (tet -> getFace( edginc[3] ) ); 
        if (!inMaximalTree(bfac))
         {
-        // find this bfac's bcIx[2] index
-        unsigned long bfacidx ( lower_bound( bcIx[2].begin(), bcIx[2].end(), tri4->faceIndex(bfac) ) - bcIx[2].begin() ); 
-        // what boundary component are we in? 
+         // find this bfac's bcIx[2] index
+        unsigned long bfacidx ( bcIxLookup( bfac ) );
+         // what boundary component are we in? 
         bcompidx = stdBdryCompIndexCD1[ bfacidx ] ;
         unsigned long bgen = lower_bound( stdBdryPi1Gen[bcompidx].begin(), stdBdryPi1Gen[bcompidx].end(), 
                               bfacidx ) - stdBdryPi1Gen[bcompidx].begin();
 
-        if ( ( normalsDim4BdryFaces[bfacidx].secondtet == tet ) && ( normalsDim4BdryFaces[bfacidx].secondfacnum == edginc[3] ) )
+        if ( ( normalsDim4BdryFaces[bfacidx].secondtet == tet ) && 
+             ( normalsDim4BdryFaces[bfacidx].secondfacnum == edginc[3] ) )
 	   {
            relator.addTermFirst( bfacidx - num_less_than( maxTreeStB, bfacidx ), 1 );  // + or 
            brelator.addTermFirst( bgen, 1 );	   
@@ -907,16 +884,16 @@ void NCellularData::buildFundGrpPres() const
       {
        const Dim4Pentachoron* pen ( fac->getEmbedding(j).getPentachoron() );
        NPerm5 facemb( fac->getEmbedding(j).getVertices() );
-       // idEdg of fac represents an ideal edge.  We want to find all the ideal incident tets and mark them appropriately. 
-       //  so we find fac's embeddings in pentachoral and look up the relevant ideal tets.  
-       // so we are going across the tetrahedron in pen whose vertices are marked by facemb[0][1][2] and [3] ie tetrahedron
+       // idEdg of fac represents an ideal edge.  We want to find all the ideal incident 
+       // tets and mark them appropriately. so we find fac's embeddings in pentachoral 
+       // and look up the relevant ideal tets.  so we are going across the tetrahedron 
+       // in pen whose vertices are marked by facemb[0][1][2] and [3] ie tetrahedron
        //  labelled by facemb[4]. 
        const Dim4Tetrahedron* tet ( pen->getTetrahedron( facemb[4] ) );
        NPerm5 tetemb( pen->getTetrahedronMapping( facemb[4] ) );
-       // vertex idEdg of fac corresponds to tetemb^{-1} facemb[idEdg] of tet.  So let's see if it is in the maximal tree 
-       // icIx[2] stored as 4*tetindx + num
-       unsigned long I ( lower_bound( icIx[2].begin(), icIx[2].end(), 4*tri4->tetrahedronIndex(tet) + tetemb.preImageOf( facemb[idEdg] ) )  
-                                     -icIx[2].begin() );
+       // vertex idEdg of fac corresponds to tetemb^{-1} facemb[idEdg] of tet.  So let's 
+       // see if it is in the maximal tree icIx[2] stored as 4*tetindx + num
+       unsigned long I ( icIxLookup( tet, tetemb.preImageOf( facemb[idEdg] )) );
        bcompidx = idBdryCompIndexCD1[ I ];
        unsigned long J ( lower_bound( idBdryPi1Gen[bcompidx].begin(), idBdryPi1Gen[bcompidx].end(), I ) -
  				      idBdryPi1Gen[bcompidx].begin() );
@@ -924,7 +901,8 @@ void NCellularData::buildFundGrpPres() const
         {
          // what's the sign? check to see if this tet embeds into the pentachoron with same normal orientation, or not.  
          int sign (-1);
-         if ( ( tet->getEmbedding(1).getPentachoron() == pen ) && ( tet->getEmbedding(1).getTetrahedron() == facemb[4] ) )
+         if ( ( tet->getEmbedding(1).getPentachoron() == pen ) && 
+              ( tet->getEmbedding(1).getTetrahedron() == facemb[4] ) )
           sign = 1;
          // what's the generator?  
          unsigned long gennum ( delta0 + I - num_less_than( maxTreeIdB, I ) ); // index of generator.
@@ -962,21 +940,21 @@ void NCellularData::buildFundGrpPres() const
      // 1st boundary connector in maximal tree?
      if (!inMaximalTree( penL, tetLinc[idFac] ) )
       { 
-       unsigned long I ( lower_bound( icIx[3].begin(), icIx[3].end(), 5*tri4->pentachoronIndex( penL ) + tetLinc[idFac] ) - icIx[3].begin() );
+       unsigned long I ( icIxLookup( penL, tetLinc[idFac]) );
        unsigned long indx( delta2 + I - num_less_than(maxTreeSttIdB, I ) );
        relator.addTermFirst( indx, -1 );
       }
      // tet in maximal tree?
      if (!inMaximalTree( tet ) )
       {
-       unsigned long I ( lower_bound( nicIx[3].begin(), nicIx[3].end(), tri4->tetrahedronIndex( tet ) ) - nicIx[3].begin() );
+       unsigned long I ( nicIxLookup( tet ) );
        unsigned long indx( delta1 + I - num_less_than(maxTreeStd, I ) );
        relator.addTermFirst( indx, 1 );
       }
      // 2nd boundary connector in maximal tree?  
      if (!inMaximalTree( penR, tetRinc[idFac] ) )
       {
-       unsigned long I ( lower_bound( icIx[3].begin(), icIx[3].end(), 5*tri4->pentachoronIndex( penR ) + tetRinc[idFac] ) - icIx[3].begin() );
+       unsigned long I ( icIxLookup( penR, tetRinc[idFac]) );
        unsigned long indx( delta2 + I - num_less_than(maxTreeSttIdB, I ) );
       relator.addTermFirst( indx, 1 );
       }
@@ -1000,22 +978,19 @@ void NCellularData::buildFundGrpPres() const
    unsigned long delta1( delta0 + numIdealCells[1] - maxTreeIdB.size() );
    unsigned long delta2( delta1 + numNonIdealCells[2] - maxTreeStd.size() );
    unsigned long delta3( delta2 + numIdealCells[2] - maxTreeSttIdB.size() ); // connectors interior to bdry
-
    pres.addGenerator( delta3 );// we've set the generators for the presentation.
-
    // orig currTet                      currPen                tet                                              
    NFace* currFac (NULL); NTetrahedron* currTet (NULL); NFace* fac (NULL); unsigned long currTetFace;
 
-   // okay, lets start finding relators. Relators dual faces. There are two types. 
+   // okay, lets start finding relators. Relators dual to edges. There are two types. 
    //  1) Non-boundary. 
    //  2) Boundary. 
-
    for (NTriangulation::EdgeIterator edg = tri3->getEdges().begin(); edg!=tri3->getEdges().end(); edg++)
     {
      NGroupExpression relator; 
 
-     if ( !(*edg)->isBoundary() ) // non-boundary -- interior 2-cell
-      {
+     if ( !(*edg)->isBoundary() ) // non-boundary -- interior edge
+      { 
        std::deque<NEdgeEmbedding>::const_iterator embit;
        for (embit = (*edg)->getEmbeddings().begin();
                     embit != (*edg)->getEmbeddings().end(); embit++)
@@ -1028,14 +1003,15 @@ void NCellularData::buildFundGrpPres() const
           {
           // get index. 
           unsigned long facind = delta1 + tri3->faceIndex( fac ) - num_less_than( maxTreeStd, tri3->faceIndex( fac ) );
-          if ( (fac -> getEmbedding(1).getTetrahedron() == currTet) && (fac -> getEmbedding(1).getFace() == currTetFace) )
+          if ( (fac -> getEmbedding(1).getTetrahedron() == currTet) && 
+               (fac -> getEmbedding(1).getFace() == currTetFace) )
            relator.addTermFirst( facind, 1 ); else relator.addTermFirst( facind, -1 ); // oriented from emb 0 to emb 1
           }
         } 
        NGroupExpression* relate ( new NGroupExpression(relator) );
        pres.addRelation(relate);
       }
-     else // boundary face -- cell half on std boundary, half in interior
+     else // boundary edge -- cell half on std boundary, half in interior
       {
        unsigned long facind;
        const NEdgeEmbedding edgemb = (*edg)->getEmbedding(0);
@@ -1043,19 +1019,18 @@ void NCellularData::buildFundGrpPres() const
        currTetFace = edgemb.getVertices()[3]; 
        fac = currTet->getFace(currTetFace); // boundary tet we start with
        unsigned long facedgnum = fac->getEmbedding(0).getVertices().preImageOf( edgemb.getVertices()[2] );
-       if (!fac->isBoundary()) std::cout<<"ERROR (unexpected face) "<<std::endl; 
+       if (!fac->isBoundary()) std::cout<<"NCellularData::buildFundGrpPres() ERROR unexpected face (1)."<<std::endl; 
 
        if (!inMaximalTree(*edg))
-        {
-         // orientation? 
-         unsigned long I = lower_bound( bcIx[1].begin(), bcIx[1].end(), tri3->edgeIndex( *edg ) ) - bcIx[1].begin();
+        { // the part of the map in the manifold's boundary
+         unsigned long I = bcIxLookup(*edg); 
          if ( (normalsDim3BdryEdges[I].secondfac == fac) && (normalsDim3BdryEdges[I].secondedgnum == facedgnum) )
           relator.addTermFirst( I - num_less_than( maxTreeStB, I ),  1 );
          else
           relator.addTermFirst( I - num_less_than( maxTreeStB, I ), -1 );
         }
    
-       // main loop
+       // interior part of cell boundary
        for (std::deque<NEdgeEmbedding>::const_iterator embit=(*edg)->getEmbeddings().begin();
             embit != (*edg)->getEmbeddings().end(); embit++)
         { // now we have to determine whether or not the embedding coincides with the normal or of the tet.
@@ -1064,15 +1039,14 @@ void NCellularData::buildFundGrpPres() const
          fac = currTet->getFace(currTetFace);  
          // and is the tet in the maximal tree?    
          if (!inMaximalTree(fac)) 
-          {
-          // get index. 
+          { // get index. 
           facind = delta1 + tri3->faceIndex( fac ) - num_less_than( maxTreeStd, tri3->faceIndex( fac ) );
           int sign;
-          if (embit == (*edg)->getEmbeddings().begin() )
-           { sign = -1; }
+          if (embit == (*edg)->getEmbeddings().begin() ) { sign = -1; }
           else
            {
-            if ( (fac -> getEmbedding(0).getTetrahedron() == currTet) && (fac -> getEmbedding(0).getFace() == currTetFace) )
+            if ( (fac -> getEmbedding(0).getTetrahedron() == currTet) && 
+                 (fac -> getEmbedding(0).getFace() == currTetFace) )
              sign = -1; else sign = 1; 
            }
            relator.addTermFirst( facind, sign ); 
@@ -1080,9 +1054,9 @@ void NCellularData::buildFundGrpPres() const
         } 
 
        // end pad
-       currTetFace= (*edg)->getEmbedding((*edg)->getNumberOfEmbeddings()-1).getVertices()[2];
+       currTetFace= (*edg)->getEmbeddings().back().getVertices()[2];
        fac = currTet->getFace(currTetFace);
-       if (!fac->isBoundary()) std::cout<<"ERROR (unexpected face) "<<std::endl;
+       if (!fac->isBoundary()) std::cout<<"NCellularData::buildFundGrpPres() ERROR unexpected face (2)."<<std::endl;
        if (!inMaximalTree(fac))
         {
          facind = delta1 + tri3->faceIndex( fac ) - num_less_than( maxTreeStd, tri3->faceIndex( fac ) );
@@ -1092,11 +1066,11 @@ void NCellularData::buildFundGrpPres() const
        // finish
        NGroupExpression* relate( new NGroupExpression(relator) );
        pres.addRelation(relate);
-      }
-    }// that finishes interior cells dual to faces. 
+      }// end boundary edge loop
+    }// that finishes interior cells dual to edges. 
 
    // now for boundary dual 2-cells -- pure boundary relator.
-   // run through bcIx[0], for each edge call getEmbeddings(), this describes a disc and we need to crawl around the boundary.
+   //  run through bcIx[0], for each edge call normalsDim3BdryVertices[] 
    NVertex* vrt(NULL);
    for (unsigned long i=0; i<bcIx[0].size(); i++)
     {
@@ -1106,7 +1080,6 @@ void NCellularData::buildFundGrpPres() const
      // call normalsDim3BdryEdges[i] for bcIx[0][i] normal data.
      for (unsigned long j=0; j<normalsDim3BdryVertices[i].face.size(); j++)
       {
-       // tetrahedron normalsDim4BdryEdges[i].tet[j] edge normalsDim4BdryEdges[i].edgenum[j] and normalsDim4BdryEdges[i].edginc[j]
        const NFace* fac( normalsDim3BdryVertices[i].face[j] );
         // unsigned long edgnum ( normalsDim4BdryEdges[i].edgenum[j] );
        NPerm3 vrtinc ( normalsDim3BdryVertices[i].vrtinc[j] );
@@ -1114,14 +1087,14 @@ void NCellularData::buildFundGrpPres() const
        const NEdge* bedg (fac -> getEdge( vrtinc[2] ) ); 
        if (!inMaximalTree(bedg))
         {
-        // find this bfac's bcIx[2] index
-        unsigned long bedgidx ( lower_bound( bcIx[1].begin(), bcIx[1].end(), tri3->edgeIndex(bedg) ) - bcIx[1].begin() ); 
+        unsigned long bedgidx (bcIxLookup(bedg));// find this bedg's bcIx[1] index
         // what boundary component are we in? 
         bcompidx = stdBdryCompIndexCD1[ bedgidx ] ;
         unsigned long bgen = lower_bound( stdBdryPi1Gen[bcompidx].begin(), stdBdryPi1Gen[bcompidx].end(), 
                               bedgidx ) - stdBdryPi1Gen[bcompidx].begin();
 
-        if ( ( normalsDim3BdryEdges[bedgidx].secondfac == fac ) && ( normalsDim3BdryEdges[bedgidx].secondedgnum == vrtinc[2] ) )
+        if ( ( normalsDim3BdryEdges[bedgidx].secondfac == fac ) && 
+             ( normalsDim3BdryEdges[bedgidx].secondedgnum == vrtinc[2] ) )
 	   {
            relator.addTermFirst( bedgidx - num_less_than( maxTreeStB, bedgidx ), 1 );  // + or 
            brelator.addTermFirst( bgen, 1 );	   
@@ -1146,7 +1119,6 @@ void NCellularData::buildFundGrpPres() const
     {
      NGroupExpression relator, brelator; 
      unsigned long bcompidx(0);
-
      const NEdge* edg ( tri3->getEdge( icIx[0][i]/2 ) );
      unsigned long idEdg ( icIx[0][i] % 2 );  // ideal edge number of fac
      // lets acquire all the Dim4Pentachora incident to fac. 
@@ -1162,7 +1134,7 @@ void NCellularData::buildFundGrpPres() const
        NPerm4 facemb( tet->getFaceMapping( edgemb[3] ) );
        // vertex idEdg of fac corresponds to tetemb^{-1} facemb[idEdg] of tet.  So let's see if it is in the 
        // maximal tree icIx[2] stored as 4*tetindx + num
-       unsigned long I ( lower_bound( icIx[1].begin(), icIx[1].end(), 3*tri3->faceIndex(fac) + facemb.preImageOf( edgemb[idEdg] ) ) -icIx[1].begin() );
+       unsigned long I ( icIxLookup( fac, facemb.preImageOf( edgemb[idEdg] ) ) );
        bcompidx = idBdryCompIndexCD1[ I ];
        unsigned long J ( lower_bound( idBdryPi1Gen[bcompidx].begin(), idBdryPi1Gen[bcompidx].end(), I ) -
  				      idBdryPi1Gen[bcompidx].begin() );
@@ -1198,33 +1170,31 @@ void NCellularData::buildFundGrpPres() const
      //  orientations set by tet->getEmbedding()  
      const NTetrahedron* tetL( fac->getEmbedding(0).getTetrahedron() );
      NPerm4 facLinc( fac->getEmbedding(0).getVertices() );
-     unsigned long tetLnum( fac->getEmbedding(0).getFace() );
 
      const NTetrahedron* tetR( fac->getEmbedding(1).getTetrahedron() );
      NPerm4 facRinc( fac->getEmbedding(1).getVertices() );
-     unsigned long facRnum( fac->getEmbedding(1).getFace() );
 
      // 1-cells in order.
      // 1st boundary connector in maximal tree?
      if (!inMaximalTree( tetL, facLinc[idEdg] ) )
       { 
-       unsigned long I ( lower_bound( icIx[2].begin(), icIx[2].end(), 4*tri3->tetrahedronIndex( tetL ) + facLinc[idEdg] ) - icIx[2].begin() );
+       unsigned long I ( icIxLookup( tetL, facLinc[idEdg] ) );
        unsigned long indx( delta2 + I - num_less_than(maxTreeSttIdB, I ) );
        relator.addTermFirst( indx, -1 );
       }
      // tet in maximal tree?
      if (!inMaximalTree( fac ) )
       {
-       unsigned long I ( lower_bound( nicIx[2].begin(), nicIx[2].end(), tri3->faceIndex( fac ) ) - nicIx[2].begin() );
+       unsigned long I ( nicIxLookup( fac ) );
        unsigned long indx( delta1 + I - num_less_than(maxTreeStd, I ) );
        relator.addTermFirst( indx, 1 );
       }
      // 2nd boundary connector in maximal tree?  
      if (!inMaximalTree( tetR, facRinc[idEdg] ) )
       {
-       unsigned long I ( lower_bound( icIx[2].begin(), icIx[2].end(), 4*tri3->tetrahedronIndex( tetR ) + facRinc[idEdg] ) - icIx[2].begin() );
+       unsigned long I ( icIxLookup( tetR, facRinc[idEdg] ) );
        unsigned long indx( delta2 + I - num_less_than(maxTreeSttIdB, I ) );
-      relator.addTermFirst( indx, 1 );
+       relator.addTermFirst( indx, 1 );
       }
      // boundary fac in maximal tree? 
      if (!inMaximalTree( fac, idEdg ) )
@@ -1235,18 +1205,17 @@ void NCellularData::buildFundGrpPres() const
 
      NGroupExpression* relate ( new NGroupExpression(relator) );
      pres.addRelation(relate);
-    }
-
-
-
+    } // end the 2-cells that connect ideal boundary to interior.
   } // end tri3
 
+  // Generate the pi1 presentation for the whole manifold
   GroupPresLocator g_desc(whole_manifold, 0);
   NGroupPresentation* GPptr( new NGroupPresentation( pres ) );
   std::map< GroupPresLocator, NGroupPresentation* > *mGPptr = 
     const_cast< std::map< GroupPresLocator, NGroupPresentation* > *> (&groupPresentations);
   mGPptr->insert( std::pair<GroupPresLocator, NGroupPresentation*>(g_desc, GPptr) );
 
+  // Generate the pi1 presentation for the standard boundary components  
   for (unsigned long i=0; i<numStdBdryComps; i++) // push stdBdryPi1 onto stack
    {
     g_desc.sub_man = standard_boundary; 
@@ -1257,6 +1226,7 @@ void NCellularData::buildFundGrpPres() const
     XX->insert( std::pair<GroupPresLocator, NGroupPresentation*>(g_desc, GPptr) );
    }
 
+  // Generate the pi1 presentation for the ideal/cusp boundary components
   for (unsigned long i=0; i<numIdealBdryComps; i++) // push idBdryPi1 onto stack
    {
     g_desc.sub_man = ideal_boundary; 
@@ -1267,8 +1237,10 @@ void NCellularData::buildFundGrpPres() const
     XX->insert( std::pair<GroupPresLocator, NGroupPresentation*>(g_desc, GPptr) );
    }
 
- // TODO, the stuff below needs adaptation to 3-dimensional triangulations
- // vector that gives the generator *number* in the ambient manifold's pi1 presentation from generator of boundary component. 
+ // Note: The material below is to construct maps of pi1 presentations.
+
+ // vector that gives the generator *number* in the ambient manifold's pi1 presentation 
+ //        from generator of boundary component. 
  std::vector< std::vector< unsigned long > > stdBdryGenIncl( numStdBdryComps );
  std::vector< std::vector< unsigned long > > idlBdryGenIncl( numIdealBdryComps );
  for (unsigned long i=0; i<stdBdryGenIncl.size(); i++)
@@ -1281,14 +1253,17 @@ void NCellularData::buildFundGrpPres() const
   {
    idlBdryGenIncl[i].resize( idBdryPi1Gen[i].size() );
    for (unsigned long j=0; j<idBdryPi1Gen[i].size(); j++)
-     idlBdryGenIncl[i][j] =  numNonIdealBdryCells[2] - maxTreeStB.size()  + idBdryPi1Gen[i][j] - num_less_than( maxTreeIdB, idBdryPi1Gen[i][j] );
+     idlBdryGenIncl[i][j] =  numNonIdealBdryCells[tri4 ? 2 : 1] - maxTreeStB.size()  + 
+        idBdryPi1Gen[i][j] - num_less_than( maxTreeIdB, idBdryPi1Gen[i][j] );
   }
  
- // push the inclusion maps onto the stack
+ // Generate the homomorphisms of group presentations
+ // First for standard boundary to whole manifold
  NHomGroupPresentation* presPtr;
  for (unsigned long i=0; i<stdBdryGenIncl.size(); i++)
   {
-   std::vector< NGroupExpression > ithInclMap( stdBdryGenIncl[i].size() ); // one for every generator of pi1 i-th boundary component
+   std::vector< NGroupExpression > ithInclMap( stdBdryGenIncl[i].size() ); 
+        // one for every generator of pi1 i-th boundary component
    for (unsigned long j=0; j<ithInclMap.size(); j++)
       ithInclMap[j].addTermFirst( NGroupExpressionTerm( stdBdryGenIncl[i][j], 1 ) );
    presPtr = new NHomGroupPresentation( stdBdryPi1[i], pres, ithInclMap );
@@ -1298,9 +1273,11 @@ void NCellularData::buildFundGrpPres() const
    XX -> insert( std::pair< HomGroupPresLocator, NHomGroupPresentation*>(h_desc, presPtr) );
   }
 
+ // And for ideal boundary to whole manifold
  for (unsigned long i=0; i<idlBdryGenIncl.size(); i++)
   {
-   std::vector< NGroupExpression > ithInclMap( idlBdryGenIncl[i].size() ); // one for every generator of pi1 i-th boundary component
+   std::vector< NGroupExpression > ithInclMap( idlBdryGenIncl[i].size() ); 
+        // one for every generator of pi1 i-th boundary component
    for (unsigned long j=0; j<ithInclMap.size(); j++)
       ithInclMap[j].addTermFirst( NGroupExpressionTerm( idlBdryGenIncl[i][j], 1 ) );
    presPtr = new NHomGroupPresentation( idBdryPi1[i], pres, ithInclMap );
@@ -1309,7 +1286,6 @@ void NCellularData::buildFundGrpPres() const
     const_cast< std::map< HomGroupPresLocator, NHomGroupPresentation* > *> (&homGroupPresentations);
    XX -> insert( std::pair< HomGroupPresLocator, NHomGroupPresentation*>(h_desc, presPtr) );
   }
-
  } // end pi1 code
 
 
