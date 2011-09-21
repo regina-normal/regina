@@ -59,7 +59,7 @@ NMatrixInt NSnapPeaTriangulation::slopeEquations() const {
 }
 
 
-bool NSnapPeaTriangulation::verifyTriangulation(const NTriangulation& tri) {
+bool NSnapPeaTriangulation::verifyTriangulation(const NTriangulation& tri) const {
     if (! snappeaData)
         return false;
 
