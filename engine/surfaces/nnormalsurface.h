@@ -1407,6 +1407,21 @@ class REGINA_API NNormalSurface :
          */
         bool disjoint(const NNormalSurface& other) const;
 
+
+        /**
+         *
+         * Calculate the boundary slopes of each cusp of the normal surface.
+         * 
+         * The result is returned in a Yx2 matrix, where Y is the number of
+         * cusps in the normal surface. The first column holds the slope of the
+         * meridian, and the second column holds the slope of the longitude.
+         * Each row corresponds to a different cusp.
+         *
+         * @param triangulation the triangulation which the normal surface lies
+         * in.
+         */
+        NMatrixInt boundarySlopes(const NTriangulation& triangulation);
+
         /**
          * Gives read-only access to the raw vector that sits beneath this
          * normal surface.

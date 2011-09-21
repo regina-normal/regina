@@ -451,6 +451,17 @@ void NNormalSurface::calculateRealBoundary() const {
     realBoundary = false;
 }
 
+NMatrixInt NNormalSurface::boundarySlopes(const NTriangulation& triangulation) const {
+    NSnapPeaTriangulation snapPea = NSnapPeaTriangulation(triangulation, false);
+    NMatrixInt equations = snapPea.slopeEquations();
+    
+    // TODO 
+    //
+    // Calculations
+    // Check triangulation hasn't changed.
+    // Return type (not matrix of integers I think)
+}
+
 void NNormalSurface::writeXMLData(std::ostream& out) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
