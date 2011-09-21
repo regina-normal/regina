@@ -246,6 +246,16 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
         NMatrixInt slopeEquations() const;
 
         /**
+         * Verifies that the face pairings from the SnapPea triangulation match
+         * the given NTriangulation from Regina.
+         *
+         * This is useful for developers, if you are not sure whether SnapPea
+         * will re-triangulate. For end users, this function should not be
+         * required.
+         */
+        verifyTriangulation(NTriangulation& triangulation const) const;
+
+        /**
          * Dumps the underlying SnapPea data to standard output.
          *
          * This routine should be regarded primarily as a diagnostic tool

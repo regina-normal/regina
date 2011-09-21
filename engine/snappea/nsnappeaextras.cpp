@@ -26,6 +26,9 @@
 
 /* end stub */
 
+
+#include <cassert>
+
 #include "snappea/nsnappeatriangulation.h"
 #include "snappea/kernel/triangulation.h"
 #include "snappea/kernel/kernel_prototypes.h"
@@ -52,5 +55,28 @@ NMatrixInt NSnapPeaTriangulation::slopeEquations() const {
             matrix.entry(2*cusp+1,j) = equations[j];
         }
         ::free_cusp_equation(equations)
+    }
+}
+
+
+bool NSnapPeaTriangulation::verifyTriangulation(const NTriangulation& tri) {
+    if (! snappeaData)
+        return false;
+
+    ::TriangulationData data;
+    ::triangulation_to_data(snappeaData, &data);
+
+    int tet, face, i, j, k, l;
+    NTriangulation::TetrahedronIterator it = tri.getTetrahedra().begin();
+    assert ( data.num_tetrahedra == tri.getNumberOfTetrahedra() );
+
+    for (tet = 0; tet < data.num_tetrahedra; tet++) {
+        for (face = 0; face < 4; face++) {
+            assert (data.tetrahedron_data[tet].neighbor_index[face] ==
+                tri.tetrahedronIndex((*it)->adjacentTetrahedron(face)) );
+            for (i = 0; i < 4; i++)
+                assert (data.tetrahedron_data[tet].gluing[face][i] ==
+                    (*it)->adjacentGluing(face)[i] );
+        }
     }
 }
