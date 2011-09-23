@@ -466,11 +466,8 @@ void NCellularData::buildMaximalTree()
       adjglue = pen -> adjacentGluing( int( (idvnum + i) % 5) );
       tetmap = pen -> getTetrahedronMapping( int( (idvnum + i) % 5) );
       // let's determine the number of adjpen
-      unsigned long adjpennum = tri4 -> pentachoronIndex( adjpen );
-      unsigned long adj0cellnum = 5*adjpennum + adjglue[idvnum]; // dual ideal 0-cell value, should be indexed by icIx[3]
       unsigned long I = icIxLookup( adjpen, adjglue[idvnum] ); 
       // make J into the index of the ideal boundary face...
-      unsigned long tetnum = tri4 -> tetrahedronIndex( septet );
       unsigned long J = icIxLookup( septet, tetmap.preImageOf( idvnum ) );
       // check to see if I is in visitedId
       if (!binary_search( visitedId.begin(), visitedId.end(), I) ) // not found
@@ -480,7 +477,6 @@ void NCellularData::buildMaximalTree()
    }
 
   standard_boundary_loop4:
-  
   // then check to see if there are standard boundary vertices unexplored
   while (newVertexListB.size() > 0)
    {
@@ -550,10 +546,8 @@ void NCellularData::buildMaximalTree()
     // step 3 look for internal connectors. Only way to make it to the end of the loop
     for (unsigned long i=0; i<5; i++) if ( !pen -> getTetrahedron(i) -> isBoundary() )
      {
-      const Dim4Pentachoron* adjpen( pen -> adjacentPentachoron( i ) );
-      unsigned long I = tri4->pentachoronIndex( adjpen );
-      const Dim4Tetrahedron* adjtet( pen -> getTetrahedron( i ) );
-      unsigned long J = nicIxLookup( adjtet );
+      unsigned long I = tri4->pentachoronIndex( pen -> adjacentPentachoron( i ) );
+      unsigned long J = nicIxLookup( pen -> getTetrahedron( i ) );
       if (!binary_search( visitedZ.begin(), visitedZ.end(), I ) ) // not found
        { visitedZ.insert(I); maxTreeStd.insert(J); newVertexListS.insert(I); }
      }
@@ -579,7 +573,6 @@ void NCellularData::buildMaximalTree()
     unexploredV = newVertexListI.begin();
 
     // *unexploredV is the icIx[2]-index of the ideal dual 0-cell
-
     const NTetrahedron* tet(NULL); unsigned long idvnum; const NFace* sepfac(NULL); const NTetrahedron* adjtet(NULL);
     NPerm4 adjglue, facmap;
 
@@ -587,10 +580,10 @@ void NCellularData::buildMaximalTree()
     idvnum = icIx[2][*unexploredV] % 4;
     for (unsigned long i=1; i<4; i++) // look at adjacent pentachora
      {
-      sepfac = tet -> getFace( (idvnum + i) % 4 );
-      adjtet = tet -> adjacentTetrahedron( (idvnum + i) % 4 );
-      adjglue = tet -> adjacentGluing( (idvnum + i) % 4 );
-      facmap = tet -> getFaceMapping( (idvnum + i) % 4 );
+      sepfac = tet -> getFace( int( (idvnum + i) % 4) );
+      adjtet = tet -> adjacentTetrahedron( int( (idvnum + i) % 4) );
+      adjglue = tet -> adjacentGluing( int( (idvnum + i) % 4) );
+      facmap = tet -> getFaceMapping( int( (idvnum + i) % 4) );
         // dual ideal 0-cell value, should be indexed by icIx[3]
       unsigned long I = icIxLookup( adjtet, adjglue[idvnum] );
         // make J into the index of the ideal boundary edge...
@@ -622,9 +615,7 @@ void NCellularData::buildMaximalTree()
         { // ensure second tet hasn't been touched, if so record the fac.  
           unsigned long newbfacidx ( bcIxLookup( normalsDim3BdryEdges[edgidx].secondfac ) );
           if (!binary_search( visitedBd.begin(), visitedBd.end(), newbfacidx ) )
-          {
-            visitedBd.insert(newbfacidx); newVertexListB.insert(newbfacidx); maxTreeStB.insert( edgidx );             
-          }
+          { visitedBd.insert(newbfacidx); newVertexListB.insert(newbfacidx); maxTreeStB.insert( edgidx ); }
         }
        else // this bfac is the secondfac.
         {
@@ -649,7 +640,6 @@ void NCellularData::buildMaximalTree()
     // step 1 look for ideal connectors.  If one found, record and exit loop 
     for (unsigned long i=0; i<4; i++) if ( tet -> getVertex(int(i)) -> isIdeal() )
      {
-      unsigned long idvind = 4*(*unexploredV) + i;
       unsigned long I( icIxLookup( tet, i ) ); 
       // check to see if I in visitedId
       if (!binary_search( visitedId.begin(), visitedId.end(), I) ) // not found
@@ -671,10 +661,8 @@ void NCellularData::buildMaximalTree()
     // step 3 look for internal connectors. Only way to make it to the end of the loop
     for (unsigned long i=0; i<4; i++) if ( !tet -> getFace(int(i)) -> isBoundary() )
      {
-      const NTetrahedron* adjtet( tet -> adjacentTetrahedron( int(i) ) );
-      unsigned long I = tri3->tetrahedronIndex( adjtet );
-      const NFace* adjfac( tet -> getFace( int(i) ) );
-      unsigned long J ( nicIxLookup( adjfac ) );
+      unsigned long I = tri3->tetrahedronIndex( tet -> adjacentTetrahedron( int(i) ) );
+      unsigned long J ( nicIxLookup( tet -> getFace( int(i) ) ) );
       if (!binary_search( visitedZ.begin(), visitedZ.end(), I ) ) // not found
        { visitedZ.insert(I); maxTreeStd.insert(J); newVertexListS.insert(I); }
      }
@@ -809,7 +797,7 @@ void NCellularData::buildFundGrpPres() const
         } 
 
        // end pad
-       currPenFace= (*fac)->getEmbedding((*fac)->getNumberOfEmbeddings()-1).getVertices()[3];
+       currPenFace= (*fac)->getEmbeddings().back().getVertices()[3];
        tet = currPen->getTetrahedron(currPenFace);
        if (!tet->isBoundary()) std::cout<<"ERROR (unexpected tetrahedron) "<<std::endl;
        if (!inMaximalTree(tet))
@@ -930,11 +918,9 @@ void NCellularData::buildFundGrpPres() const
      //  orientations set by tet->getEmbedding()  
      const Dim4Pentachoron* penL( tet->getEmbedding(0).getPentachoron() );
      NPerm5 tetLinc( tet->getEmbedding(0).getVertices() );
-     unsigned long penLnum( tet->getEmbedding(0).getTetrahedron() );
 
      const Dim4Pentachoron* penR( tet->getEmbedding(1).getPentachoron() );
      NPerm5 tetRinc( tet->getEmbedding(1).getVertices() );
-     unsigned long penRnum( tet->getEmbedding(1).getTetrahedron() );
 
      // 1-cells in order.
      // 1st boundary connector in maximal tree?
