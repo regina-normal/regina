@@ -46,13 +46,24 @@ NMatrixInt NSnapPeaTriangulation::slopeEquations() const {
     for(i=0; i< snappeaData->num_cusps; i++) {
         int numRows;
         int *equations = ::get_cusp_equation(snappeaData, cusp, 1, 0, &numRows);
+        // SnapPea returns "a b c" for each tetrahedra where the slope is given
+        // as
+        //   a log (z_0) + b log ( 1/(1-z_0)) + c log ((z_0 - 1)/z_0) + ...
+        //
+        // The equation in terms of quads of types q, q' and q'' becomes
+        //   (b-c)q + (-a + c)q' + (a-b)q''
+        //   
         for(j=0; j< snappeaData->num_tetrahedra; j++) {
-            matrix.entry(2*cusp,j) = equations[j];
+            matrix.entry(2*cusp,3*j) = equations[3*j+1] - equations[3*j+2];
+            matrix.entry(2*cusp,3*j+1) = equations[3*j+2] - equations[3*j];
+            matrix.entry(2*cusp,3*j+2) = equations[3*j] - equations[3*j+1];
         }
         ::free_cusp_equation(equations)
         *equations = ::get_cusp_equation(snappeaData, cusp, 0, 1, &numRows);
         for(j=0; j< snappeaData->num_tetrahedra; j++) {
-            matrix.entry(2*cusp+1,j) = equations[j];
+            matrix.entry(2*cusp+1,3*j) = equations[3*j+1] - equations[3*j+2];
+            matrix.entry(2*cusp+1,3*j+1) = equations[3*j+2] - equations[3*j];
+            matrix.entry(2*cusp+1,3*j+2) = equations[3*j] - equations[3*j+1];
         }
         ::free_cusp_equation(equations)
     }
