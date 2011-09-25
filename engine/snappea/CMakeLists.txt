@@ -1,7 +1,7 @@
 # snappea 
 
 # Files to compile
-SET ( FILES nsnappeatriangulation uimessages)
+SET ( FILES nsnappeatriangulation nsnappeaextras uimessages)
 
 
 # Prepend folder name
