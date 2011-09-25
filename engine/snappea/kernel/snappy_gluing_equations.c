@@ -4,8 +4,6 @@
  * This file was originally named "gluing_equations.c" when distributed with
  * SnapPy, but has been renamed here to avoid conflic. */
 
-// TODO Does this file need GPL headers?
-
 
 /*
 

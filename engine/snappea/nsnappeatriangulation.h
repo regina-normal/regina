@@ -44,6 +44,7 @@ struct Triangulation;
 namespace regina {
 
 class NTriangulation;
+class NMatrixInt;
 
 /**
  * \weakgroup triangulation
@@ -253,7 +254,7 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * will re-triangulate. For end users, this function should not be
          * required.
          */
-        verifyTriangulation(NTriangulation& triangulation const) const;
+        bool verifyTriangulation(const NTriangulation& triangulation) const;
 
         /**
          * Dumps the underlying SnapPea data to standard output.
