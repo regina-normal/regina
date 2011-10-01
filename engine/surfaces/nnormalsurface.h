@@ -40,6 +40,7 @@
 #include "regina-core.h"
 #include "shareableobject.h"
 #include "file/nfilepropertyreader.h"
+#include "maths/nmatrixint.h"
 #include "maths/nperm4.h"
 #include "maths/nray.h"
 #include "surfaces/ndisctype.h"
@@ -1420,7 +1421,7 @@ class REGINA_API NNormalSurface :
          * @param triangulation the triangulation which the normal surface lies
          * in.
          */
-        NMatrixInt boundarySlopes(const NTriangulation& triangulation);
+        NMatrixInt boundarySlopes(const NTriangulation& triangulation) const;
 
         /**
          * Gives read-only access to the raw vector that sits beneath this
