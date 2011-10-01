@@ -46,7 +46,6 @@ NMatrixInt NSnapPeaTriangulation::slopeEquations() const {
     ::peripheral_curves(snappeaData);
     for(i=0; i< snappeaData->num_cusps; i++) {
         int numRows;
-        int *equations = ::get_cusp_equation(snappeaData, i, 1, 0, &numRows);
         // SnapPea returns "a b c" for each tetrahedra where the slope is given
         // as
         //   a log (z_0) + b log ( 1/(1-z_0)) + c log ((z_0 - 1)/z_0) + ... = 1
@@ -54,6 +53,7 @@ NMatrixInt NSnapPeaTriangulation::slopeEquations() const {
         // The equation for slopes in terms of quads of types q, q' and q'' becomes
         //   nu = (b-c)q + (-a + c)q' + (a-b)q''
         //   
+        int *equations = ::get_cusp_equation(snappeaData, i, 1, 0, &numRows);
         for(j=0; j< snappeaData->num_tetrahedra; j++) {
             matrix.entry(2*i,3*j) = equations[3*j+1] - equations[3*j+2];
             matrix.entry(2*i,3*j+1) = equations[3*j+2] - equations[3*j];
