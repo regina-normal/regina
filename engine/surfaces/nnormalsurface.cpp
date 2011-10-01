@@ -454,12 +454,28 @@ void NNormalSurface::calculateRealBoundary() const {
 NMatrixInt NNormalSurface::boundarySlopes(const NTriangulation& triangulation) const {
     NSnapPeaTriangulation snapPea = NSnapPeaTriangulation(triangulation, false);
     NMatrixInt equations = snapPea.slopeEquations();
-    
-    // TODO 
-    //
-    // Calculations
+    unsigned long cusps = equations.rows() / 2;
+    unsigned long numTet = triangulation.getNumberOfTetraHedra();
+    NMatrixInt slopes(cusps,2);
+    for(unsigned int i=0; i < cusps; i++) {
+      NLargeInteger meridian = 0;
+      NLargeInteger longitude = 0;
+      for(unsigned int j=0; j < numTet; j++) {
+        meridian += 
+          equation.entry(2*i, 3*j)*getQuadCoord(j,vertexSplit[0][1],triangulation) +
+          equation.entry(2*i, 3*j+1)*getQuadCoord(j,vertexSplit[0][3],triangulation) +
+          equation.entry(2*i, 3*j+2)*getQuadCoord(j,vertexSplit[0][2],triangulation); 
+        longitude += 
+          equation.entry(2*i+1, 3*j)*getQuadCoord(j,vertexSplit[0][1],triangulation) +
+          equation.entry(2*i+1, 3*j+1)*getQuadCoord(j,vertexSplit[0][3],triangulation) +
+          equation.entry(2*i+1, 3*j+2)*getQuadCoord(j,vertexSplit[0][2],triangulation); 
+      }
+      slopes.entry(i,0) = meridian;
+      slopes.entry(i,1) = longitude;
+    }
     // Check triangulation hasn't changed.
-    // Return type (not matrix of integers I think)
+    snapPea.verifyTriangulation(triangulation);
+    return slopes;
 }
 
 void NNormalSurface::writeXMLData(std::ostream& out) const {
