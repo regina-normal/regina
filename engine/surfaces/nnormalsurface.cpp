@@ -28,6 +28,7 @@
 
 #include <algorithm>
 #include "file/nfile.h"
+#include "snappea/nsnappeatriangulation.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/flavourregistry.h"
@@ -455,20 +456,20 @@ NMatrixInt NNormalSurface::boundarySlopes(const NTriangulation& triangulation) c
     NSnapPeaTriangulation snapPea = NSnapPeaTriangulation(triangulation, false);
     NMatrixInt equations = snapPea.slopeEquations();
     unsigned long cusps = equations.rows() / 2;
-    unsigned long numTet = triangulation.getNumberOfTetraHedra();
+    unsigned long numTet = triangulation.getNumberOfTetrahedra();
     NMatrixInt slopes(cusps,2);
     for(unsigned int i=0; i < cusps; i++) {
-      NLargeInteger meridian = 0;
-      NLargeInteger longitude = 0;
+      NLargeInteger meridian = NLargeInteger::zero;
+      NLargeInteger longitude = NLargeInteger::zero;
       for(unsigned int j=0; j < numTet; j++) {
         meridian += 
-          equation.entry(2*i, 3*j)*getQuadCoord(j,vertexSplit[0][1],triangulation) +
-          equation.entry(2*i, 3*j+1)*getQuadCoord(j,vertexSplit[0][3],triangulation) +
-          equation.entry(2*i, 3*j+2)*getQuadCoord(j,vertexSplit[0][2],triangulation); 
+          equations.entry(2*i, 3*j)*getQuadCoord(j,vertexSplit[0][1]) +
+          equations.entry(2*i, 3*j+1)*getQuadCoord(j,vertexSplit[0][3]) +
+          equations.entry(2*i, 3*j+2)*getQuadCoord(j,vertexSplit[0][2]); 
         longitude += 
-          equation.entry(2*i+1, 3*j)*getQuadCoord(j,vertexSplit[0][1],triangulation) +
-          equation.entry(2*i+1, 3*j+1)*getQuadCoord(j,vertexSplit[0][3],triangulation) +
-          equation.entry(2*i+1, 3*j+2)*getQuadCoord(j,vertexSplit[0][2],triangulation); 
+          equations.entry(2*i+1, 3*j)*getQuadCoord(j,vertexSplit[0][1]) +
+          equations.entry(2*i+1, 3*j+1)*getQuadCoord(j,vertexSplit[0][3]) +
+          equations.entry(2*i+1, 3*j+2)*getQuadCoord(j,vertexSplit[0][2]); 
       }
       slopes.entry(i,0) = meridian;
       slopes.entry(i,1) = longitude;
