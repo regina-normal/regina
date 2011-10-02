@@ -2476,7 +2476,6 @@ extern double volume(Triangulation *manifold, int *precision);
 
 
 // TODO Document these.
-extern void peripheral_curves(Triangulation *manifold);
 extern int* get_cusp_equation(Triangulation* manifold, int cusp_num, int m, int l, int* numRows);
 extern void free_cusp_equation(int *equation);
 
