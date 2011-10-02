@@ -80,9 +80,9 @@ bool NSnapPeaTriangulation::verifyTriangulation(const NTriangulation& tri) const
     ::triangulation_to_data(snappeaData, &data);
 
     int tet, face, i, j, k, l;
-    NTriangulation::TetrahedronIterator it = tri.getTetrahedra().begin();
     assert ( data->num_tetrahedra == tri.getNumberOfTetrahedra() );
 
+    NTriangulation::TetrahedronIterator it = tri.getTetrahedra().begin();
     for (tet = 0; tet < data->num_tetrahedra; tet++) {
         for (face = 0; face < 4; face++) {
             assert (data->tetrahedron_data[tet].neighbor_index[face] ==
@@ -91,6 +91,7 @@ bool NSnapPeaTriangulation::verifyTriangulation(const NTriangulation& tri) const
                 assert (data->tetrahedron_data[tet].gluing[face][i] ==
                     (*it)->adjacentGluing(face)[i] );
         }
+        it++;
     }
     return true;
 }
