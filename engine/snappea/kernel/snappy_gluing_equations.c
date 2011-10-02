@@ -2,7 +2,16 @@
 
 /*
  * This file was originally named "gluing_equations.c" when distributed with
- * SnapPy, but has been renamed here to avoid conflic. */
+ * SnapPy, but has been renamed here to avoid conflict. 
+ *
+ * SnapPy, and this file as a result, is licensed under the GNU General Public
+ * License.
+ *
+ * M. Culler, N. M. Dunfield, and J. R. Weeks. 
+ * SnapPy, a computer program for studying the geometry and 
+ * topology of 3-manifolds, http://snappy.computop.org
+ *
+ * */
 
 
 /*
