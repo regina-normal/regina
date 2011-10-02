@@ -452,11 +452,12 @@ void NNormalSurface::calculateRealBoundary() const {
     realBoundary = false;
 }
 
-NMatrixInt NNormalSurface::boundarySlopes(const NTriangulation& triangulation) const {
-    NSnapPeaTriangulation snapPea = NSnapPeaTriangulation(triangulation, false);
+NMatrixInt NNormalSurface::boundarySlopes() const {
+    NTriangulation *tri = getTriangulation();
+    NSnapPeaTriangulation snapPea = NSnapPeaTriangulation(*tri, false);
     NMatrixInt equations = snapPea.slopeEquations();
     unsigned long cusps = equations.rows() / 2;
-    unsigned long numTet = triangulation.getNumberOfTetrahedra();
+    unsigned long numTet = tri->getNumberOfTetrahedra();
     NMatrixInt slopes(cusps,2);
     for(unsigned int i=0; i < cusps; i++) {
       NLargeInteger meridian = NLargeInteger::zero;
@@ -475,7 +476,7 @@ NMatrixInt NNormalSurface::boundarySlopes(const NTriangulation& triangulation) c
       slopes.entry(i,1) = longitude;
     }
     // Check triangulation hasn't changed.
-    snapPea.verifyTriangulation(triangulation);
+    snapPea.verifyTriangulation(*tri);
     return slopes;
 }
 

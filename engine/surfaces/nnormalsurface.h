@@ -188,6 +188,7 @@ class NTriangulation;
 class NEdge;
 class NVertex;
 class NXMLNormalSurfaceReader;
+class NMatrixInt;
 
 /**
  * Stores the vector of a single normal surface in a 3-manifold.
@@ -1421,7 +1422,7 @@ class REGINA_API NNormalSurface :
          * @param triangulation the triangulation which the normal surface lies
          * in.
          */
-        NMatrixInt boundarySlopes(const NTriangulation& triangulation) const;
+        NMatrixInt boundarySlopes() const;
 
         /**
          * Gives read-only access to the raw vector that sits beneath this
