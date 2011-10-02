@@ -27,6 +27,7 @@
 /* end stub */
 
 // Regina core includes:
+#include "maths/nmatrixint.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/nsurfacefilter.h"
 #include "triangulation/ntriangulation.h"
@@ -52,6 +53,7 @@
 
 using regina::NNormalSurfaceList;
 using regina::NPacket;
+using regina::NMatrixInt;
 
 SurfaceModel::SurfaceModel(regina::NNormalSurfaceList* surfaces,
         bool readWrite) :
@@ -180,8 +182,21 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 return i18n("Unknown");
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
-            if (! s->isCompact())
-                return i18n("Spun");
+            if (! s->isCompact()) {
+                QString val = i18n("Spun (");
+                regina::NMatrixInt slopes = s->boundarySlopes();
+                for(unsigned int i=0; i< slopes.rows(); i++) {
+                  QString slopeString = i18n("(%1, %2)")
+                    .arg((regina::NLargeInteger(-1)*(slopes.entry(i,0)))
+                        .stringValue().c_str()) // Meridian 
+                    .arg(slopes.entry(i,1).stringValue().c_str()); // Longitude
+                  val += slopeString;
+                  if ( i < slopes.rows() -1) 
+                    val += ", ";
+                }
+                val += ")";
+                return val;
+            }
             else if (s->hasRealBoundary())
                 return i18n("Real");
             else
