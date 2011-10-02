@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <iostream>
 #include <algorithm>
 #include "file/nfile.h"
 #include "snappea/nsnappeatriangulation.h"
@@ -465,12 +466,12 @@ NMatrixInt NNormalSurface::boundarySlopes() const {
       for(unsigned int j=0; j < numTet; j++) {
         meridian += 
           equations.entry(2*i, 3*j)*getQuadCoord(j,vertexSplit[0][1]) +
-          equations.entry(2*i, 3*j+1)*getQuadCoord(j,vertexSplit[0][3]) +
-          equations.entry(2*i, 3*j+2)*getQuadCoord(j,vertexSplit[0][2]); 
+          equations.entry(2*i, 3*j+1)*getQuadCoord(j,vertexSplit[0][2]) +
+          equations.entry(2*i, 3*j+2)*getQuadCoord(j,vertexSplit[0][3]); 
         longitude += 
           equations.entry(2*i+1, 3*j)*getQuadCoord(j,vertexSplit[0][1]) +
-          equations.entry(2*i+1, 3*j+1)*getQuadCoord(j,vertexSplit[0][3]) +
-          equations.entry(2*i+1, 3*j+2)*getQuadCoord(j,vertexSplit[0][2]); 
+          equations.entry(2*i+1, 3*j+1)*getQuadCoord(j,vertexSplit[0][2]) +
+          equations.entry(2*i+1, 3*j+2)*getQuadCoord(j,vertexSplit[0][3]); 
       }
       slopes.entry(i,0) = meridian;
       slopes.entry(i,1) = longitude;
