@@ -43,7 +43,6 @@ NMatrixInt NSnapPeaTriangulation::slopeEquations() const {
     if (! snappeaData)
         return NMatrixInt(0,0);
     NMatrixInt matrix(2*snappeaData->num_cusps, 3*snappeaData->num_tetrahedra);
-    ::peripheral_curves(snappeaData);
     for(i=0; i< snappeaData->num_cusps; i++) {
         int numRows;
         // SnapPea returns "a b c" for each tetrahedra where the slope is given
