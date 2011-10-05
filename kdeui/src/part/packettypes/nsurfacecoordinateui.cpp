@@ -187,9 +187,10 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 regina::NMatrixInt slopes = s->boundarySlopes();
                 for(unsigned int i=0; i< slopes.rows(); i++) {
                   QString slopeString = i18n("(%1, %2)")
+                    // Display as (nu(L),-nu(M))
+                    .arg(slopes.entry(i,1).stringValue().c_str()) 
                     .arg((regina::NLargeInteger(-1)*(slopes.entry(i,0)))
-                        .stringValue().c_str()) // Meridian 
-                    .arg(slopes.entry(i,1).stringValue().c_str()); // Longitude
+                        .stringValue().c_str()); 
                   val += slopeString;
                   if ( i < slopes.rows() -1) 
                     val += ", ";
