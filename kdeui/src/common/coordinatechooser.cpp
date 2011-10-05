@@ -66,10 +66,11 @@ void CoordinateChooser::insertAllViewers(regina::NNormalSurfaceList* surfaces) {
         insertSystem(NNormalSurfaceList::STANDARD);
         insertSystem(NNormalSurfaceList::QUAD);
     }
-    if ( surfaces->getFlavour() == NNormalSurfaceList::ORIENTED)
+    if ( surfaces->getFlavour() == NNormalSurfaceList::ORIENTED_QUAD ||
+         surfaces->getFlavour() == NNormalSurfaceList::ORIENTED) {
         insertSystem(NNormalSurfaceList::ORIENTED);
-    if ( surfaces->getFlavour() == NNormalSurfaceList::ORIENTED_QUAD)
         insertSystem(NNormalSurfaceList::ORIENTED_QUAD);
+    }
     insertSystem(NNormalSurfaceList::EDGE_WEIGHT);
     insertSystem(NNormalSurfaceList::FACE_ARCS);
 }
