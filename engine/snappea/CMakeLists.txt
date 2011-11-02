@@ -10,6 +10,7 @@ FOREACH ( SOURCE_FILE ${FILES} )
 ENDFOREACH(SOURCE_FILE)
 
 ADD_SUBDIRECTORY(kernel)
+ADD_SUBDIRECTORY(snappy)
 
 
 # Set the variable in the parent directory
