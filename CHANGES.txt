@@ -14,10 +14,18 @@ Version 4.91  [ (under development) ]
             - New template class that generalises NTetFace to arbitrary
               dimensions.  NTetFace is retained as a convenience typedef,
               but with changes; see the NTetFace notes below.
+        Class NNormalSurfaceList:
+            - New coordinate systems ORIENTED and ORIENTED_QUAD to
+              support transverse oriented normal surfaces.
         Class NPerm3:
             - New routine compareWith() for sorting permutations.
         Class NPerm5:
             - New class describing permutations of five elements.
+        Class NSnapPeaTriangulation:
+            - New routine slopeEquations() that uses code from SnapPy to
+              compute the boundary slope equations for cusps.
+            - New routine verifyTriangulation() for ensuring that
+              SnapPea has not retriangulated unexpectedly.
         Class NTetFace:
             - Now an instance of the arbitrary-dimension template class
               NFacetSpec.  NTetFace is retained as a typedef, but the fields
