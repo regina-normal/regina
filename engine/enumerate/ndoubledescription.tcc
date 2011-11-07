@@ -274,8 +274,11 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
 
     // We want to process the hyperplanes in a good order;
     // Fukuda and Prodon (1996) recommend this, and experimental
-    // experience with Regina agrees.  The ordering we use here is
-    // described in the notes for the inner class NDoubleDescription::LexComp.
+    // experience with Regina agrees.  The ordering we use here
+    // is based on position vectors, as described in
+    // "Optimizing the double description method for normal surface
+    // enumeration", B.A. Burton, Mathematics of Computation 79 (2010),
+    // pp. 453-484.  See the class NPosOrder for details.
     //
     // Sort the integers 0..(nEqns-1) into the order in which we plan to
     // process the hyperplanes.
@@ -285,7 +288,7 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
         hyperplanes[i] = i;
 
     std::sort(hyperplanes + initialRows, hyperplanes + nEqns,
-        LexComp(subspace));
+        NPosOrder(subspace));
 
     // Create the two vector lists with which we will work.
     // Fill the first with the initial set of rays.

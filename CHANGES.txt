@@ -9,7 +9,14 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.91  [ (under development) ]
 
+    OVERALL:
+        - For MacOS users: make sure 32-bit python is called when running
+          32-bit fink on a 64-bit machine.
     ENGINE:
+        Class NDoubleDescription:
+            - Removed the inner class LexComp, and replaced it with the new
+              global class NPosOrder (see below).  A deprecated typedef
+              NDoubleDescription::LexOrder is kept for backward compatibility.
         Class NFacetSpec:
             - New template class that generalises NTetFace to arbitrary
               dimensions.  NTetFace is retained as a convenience typedef,
@@ -21,6 +28,9 @@ Version 4.91  [ (under development) ]
             - New routine compareWith() for sorting permutations.
         Class NPerm5:
             - New class describing permutations of five elements.
+        Class NPosOrder:
+            - Class for sorting hyperplanes during vertex enumeration.
+              This is the new name for the old NDoubleDescription::LexComp.
         Class NSnapPeaTriangulation:
             - New routine slopeEquations() that uses code from SnapPy to
               compute the boundary slope equations for cusps.
