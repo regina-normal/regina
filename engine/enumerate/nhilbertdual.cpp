@@ -70,7 +70,6 @@ void NHilbertDual::reduceBasis(VecSpecList& reduce, VecSpecList& against,
         if (reduces(**i, against, listSign, i)) {
             delete *i;
             reduce.erase(i);
-            break; // TODO: Do we want this break?????
         }
 
         i = next;
