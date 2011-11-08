@@ -28,6 +28,7 @@
 
 #include <list>
 #include "enumerate/ndoubledescription.h"
+#include "enumerate/nhilbertdual.h"
 #include "file/nfile.h"
 #include "maths/nmatrixint.h"
 #include "progress/nprogressmanager.h"
@@ -92,7 +93,7 @@ NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
             constraints = cls::makeEmbeddedConstraints(triang); \
         break;
 
-void* NNormalSurfaceList::Enumerator::run(void*) {
+void* NNormalSurfaceList::VertexEnumerator::run(void*) {
     NProgressNumber* progress = 0;
     if (manager) {
         progress = new NProgressNumber(0, 1);
@@ -157,10 +158,87 @@ bool NNormalSurfaceList::enumerateExtremalRays(int flavour,
     return false;
 }
 
+#undef REGISTER_FLAVOUR
+#define REGISTER_FLAVOUR(id_name, cls, n, an, s) \
+    case NNormalSurfaceList::id_name: \
+        if (list->embedded) \
+            constraints = cls::makeEmbeddedConstraints(triang); \
+        break;
+
+void* NNormalSurfaceList::FundEnumerator::run(void*) {
+    NProgressNumber* progress = 0;
+    if (manager) {
+        progress = new NProgressNumber(0, 1);
+        manager->setProgress(progress);
+    }
+
+    // Fetch validity constraints from the registry.
+    NEnumConstraintList* constraints = 0;
+    switch(list->flavour) {
+        // Import cases from the flavour registry.
+        #include "surfaces/flavourregistry.h"
+    }
+
+    // Form the matching equations and starting cone.
+    NMatrixInt* eqns = makeMatchingEquations(triang, list->flavour);
+
+    // Find the normal surfaces.
+    enumerateHilbertDual(list->flavour,
+        SurfaceInserter(*list, triang), *eqns, constraints, progress);
+
+    delete eqns;
+    delete constraints;
+
+    // All done!
+    triang->insertChildLast(list);
+
+    if (progress) {
+        progress->incCompleted();
+        progress->setFinished();
+    }
+
+    return 0;
+}
+
+#undef REGISTER_FLAVOUR
+#define REGISTER_FLAVOUR(id_name, class, n, an, s) \
+    case id_name: NHilbertDual::enumerateHilbertBasis<class>( \
+        results, subspace, constraints, progress); \
+        return true;
+
+bool NNormalSurfaceList::enumerateHilbertDual(int flavour,
+        const SurfaceInserter& results, const NMatrixInt& subspace,
+        const NEnumConstraintList* constraints, NProgressNumber* progress) {
+    switch(flavour) {
+        // Import cases from the flavour registry:
+        #include "surfaces/flavourregistry.h"
+    }
+    return false;
+}
+
 NNormalSurfaceList* NNormalSurfaceList::enumerate(NTriangulation* owner,
         int newFlavour, bool embeddedOnly, NProgressManager* manager) {
     NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
-    Enumerator* e = new Enumerator(ans, owner, manager);
+    VertexEnumerator* e = new VertexEnumerator(ans, owner, manager);
+
+    if (manager) {
+        if (! e->start(0, true)) {
+            delete ans;
+            return 0;
+        }
+        return ans;
+    } else {
+        e->run(0);
+        delete e;
+        return ans;
+    }
+}
+
+NNormalSurfaceList* NNormalSurfaceList::enumerateFundDual(
+        NTriangulation* owner, int newFlavour, bool embeddedOnly,
+        NProgressManager* manager) {
+    NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
+    FundEnumerator* e = new FundEnumerator(ans, owner, manager);
 
     if (manager) {
         if (! e->start(0, true)) {

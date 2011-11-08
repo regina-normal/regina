@@ -218,6 +218,53 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
             NProgressManager* manager = 0);
 
         /**
+         * Enumerates all fundamental normal surfaces in the given
+         * triangulation using the given flavour of coordinate system.
+         * These fundamental normal surfaces will be stored in a new normal
+         * surface list.  The option is offered to find only embedded
+         * normal surfaces or to also include immersed and singular
+         * normal surfaces.
+         *
+         * The normal surface list that is created will be inserted as the
+         * last child of the given triangulation.  This triangulation \b must
+         * remain the parent of this normal surface list, and must not
+         * change while this normal surface list remains in existence.
+         *
+         * If a progress manager is passed, the normal surface
+         * enumeration will take place in a new thread and this routine
+         * will return immediately.  The NProgress object assigned to
+         * this progress manager is guaranteed to be of the class
+         * NProgressNumber.
+         *
+         * If no progress manager is passed, the enumeration will run
+         * in the current thread and this routine will return only when
+         * the enumeration is complete.  Note that this enumeration can
+         * be extremely slow for larger triangulations.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * surfaces will be based.
+         * @param newFlavour the flavour of coordinate system to be used;
+         * this must be one of the predefined coordinate system
+         * constants in NNormalSurfaceList.
+         * @param embeddedOnly \c true if only embedded normal surfaces
+         * are to be produced, or \c false if immersed and singular
+         * normal surfaces are also to be produced; this defaults to
+         * \c true.
+         * @param manager a progress manager through which progress will
+         * be reported, or 0 if no progress reporting is required.  If
+         * non-zero, \a manager must point to a progress manager for
+         * which NProgressManager::isStarted() is still \c false.
+         * @return the newly created normal surface list.  Note that if
+         * a progress manager is passed then this list may not be completely
+         * filled when this routine returns.  If a progress manager is
+         * passed and a new thread could not be started, this routine
+         * returns 0 (and no normal surface list is created).
+         */
+        static NNormalSurfaceList* enumerateFundDual(
+            NTriangulation* owner, int newFlavour, bool embeddedOnly = true,
+            NProgressManager* manager = 0);
+
+        /**
          * Uses a slow-but-direct procedure to enumerate all embedded
          * vertex normal surfaces in standard (tri-quad) coordinates
          * within the given triangulation.
@@ -789,6 +836,25 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
             const NEnumConstraintList* constraints, NProgressNumber* progress);
 
         /**
+         * Calls NHilbertDual::enumerateHilbertBasis() with the
+         * given arguments, and using the vector class that corresponds
+         * to the given coordinate flavour.
+         *
+         * All parameters not listed below are taken directly from
+         * NHilbertDual::enumerateHilbertBasis().
+         *
+         * @param flavour the flavour of coordinate system to be used;
+         * this must be one of the predefined coordinate system constants
+         * in NNormalSurfaceList.
+         * @return \c true if NHilbertDual::enumerateHilbertBasis()
+         * was successfully called, or \c false if the given flavour
+         * does not correspond to a known coordinate system.
+         */
+        static bool enumerateHilbertDual(int flavour,
+            const SurfaceInserter& results, const NMatrixInt& subspace,
+            const NEnumConstraintList* constraints, NProgressNumber* progress);
+
+        /**
          * Enumerates all embedded vertex surfaces in (standard normal
          * or standard almost normal) coordinates by first enumerating
          * surfaces in (quad or quad-oct) coordinates and then performing
@@ -933,10 +999,10 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
         NNormalSurfaceList* internalStandardToReduced() const;
 
         /**
-         * A thread class that actually performs the normal surface
+         * A thread class that actually performs the vertex normal surface
          * enumeration.
          */
-        class Enumerator : public NThread {
+        class VertexEnumerator : public NThread {
             private:
                 NNormalSurfaceList* list;
                     /**< The normal surface list to be filled. */
@@ -959,7 +1025,39 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
                  * progress reporting, or 0 if progress reporting is not
                  * required.
                  */
-                Enumerator(NNormalSurfaceList* newList,
+                VertexEnumerator(NNormalSurfaceList* newList,
+                    NTriangulation* useTriang, NProgressManager* useManager);
+
+                void* run(void*);
+        };
+
+        /**
+         * A thread class that performs fundamental normal surface enumeration.
+         */
+        class FundEnumerator : public NThread {
+            private:
+                NNormalSurfaceList* list;
+                    /**< The normal surface list to be filled. */
+                NTriangulation* triang;
+                    /**< The triangulation upon which this normal
+                         surface list will be based. */
+                NProgressManager* manager;
+                    /**< The progress manager through which progress is
+                         reported, or 0 if no progress manager is in use. */
+
+            public:
+                /**
+                 * Creates a new enumerator thread with the given
+                 * parameters.
+                 *
+                 * @param newList the normal surface list to be filled.
+                 * @param useTriang the triangulation upon which this
+                 * normal surface list will be based.
+                 * @param useManager the progress manager to use for
+                 * progress reporting, or 0 if progress reporting is not
+                 * required.
+                 */
+                FundEnumerator(NNormalSurfaceList* newList,
                     NTriangulation* useTriang, NProgressManager* useManager);
 
                 void* run(void*);
@@ -1120,7 +1218,14 @@ inline NNormalSurfaceList::NNormalSurfaceList(int newFlavour,
         bool embeddedOnly) : flavour(newFlavour), embedded(embeddedOnly) {
 }
 
-inline NNormalSurfaceList::Enumerator::Enumerator(NNormalSurfaceList* newList,
+inline NNormalSurfaceList::VertexEnumerator::VertexEnumerator(
+        NNormalSurfaceList* newList,
+        NTriangulation* useTriang, NProgressManager* useManager) :
+        list(newList), triang(useTriang), manager(useManager) {
+}
+
+inline NNormalSurfaceList::FundEnumerator::FundEnumerator(
+        NNormalSurfaceList* newList,
         NTriangulation* useTriang, NProgressManager* useManager) :
         list(newList), triang(useTriang), manager(useManager) {
 }

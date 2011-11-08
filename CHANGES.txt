@@ -27,6 +27,8 @@ Version 4.91  [ (under development) ]
               "Normaliz: Algorithms for affine monoids and rational cones",
               W. Bruns and B. Ichim, J. Algebra 324 (2010), 1098-1113.
         Class NNormalSurfaceList:
+            - New routine enumerateFundDual() to enumerate fundamental normal
+              surfaces.
             - New coordinate systems ORIENTED and ORIENTED_QUAD to
               support transverse oriented normal surfaces.
         Class NPerm3:

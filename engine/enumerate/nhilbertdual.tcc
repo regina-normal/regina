@@ -113,12 +113,9 @@ void NHilbertDual::enumerateHilbertBasis(OutputIterator results,
     RayClass* ans;
     for (typename VecSpecVector::iterator it = list.begin();
             it != list.end(); ++it) {
-        /*
         ans = new RayClass(dim);
         for (i = 0; i < dim; ++i)
             ans->setElement(i, (**it)[i]);
-        */
-        ans = new RayClass(**it);
         *results++ = ans;
 
         delete *it;
