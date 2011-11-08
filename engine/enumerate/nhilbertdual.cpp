@@ -26,17 +26,15 @@
 
 /* end stub */
 
-// TODO: Proofread this entire file.
-
 #include "enumerate/nhilbertdual.h"
 #include <iostream>
 #include <list>
 
 namespace regina {
 
-bool NHilbertDual::reduces(const VecSpec& vec, const VecSpecList& list,
+bool NHilbertDual::reduces(const VecSpec& vec, const VecSpecList& against,
         int listSign, VecSpecList::const_iterator ignore) {
-    for (VecSpecList::const_iterator it = list.begin(); it != list.end();
+    for (VecSpecList::const_iterator it = against.begin(); it != against.end();
             ++it) {
         if (it == ignore)
             continue;
@@ -72,7 +70,7 @@ void NHilbertDual::reduceBasis(VecSpecList& reduce, VecSpecList& against,
         if (reduces(**i, against, listSign, i)) {
             delete *i;
             reduce.erase(i);
-            break;
+            break; // TODO: Do we want this break?????
         }
 
         i = next;
@@ -80,7 +78,7 @@ void NHilbertDual::reduceBasis(VecSpecList& reduce, VecSpecList& against,
 }
 
 void NHilbertDual::intersectHyperplane(VecSpecVector& list,
-        unsigned dim, const NMatrixInt& subspace, unsigned row,
+        const NMatrixInt& subspace, unsigned row,
         const NEnumConstraintList* constraints) {
     // These must be linked lists because we need fast insertion and
     // deletion at arbitrary locations.
@@ -109,7 +107,6 @@ void NHilbertDual::intersectHyperplane(VecSpecVector& list,
     negPrevGen = neg.begin();
 
     // TODO: Optimise from here down: (d), Sec.3
-    // TODO: Fast bitmasks for quad constraint checking.
 
     // Keep enlarging these sets until they enlarge no more.
     NEnumConstraintList::const_iterator cit;
@@ -138,6 +135,7 @@ void NHilbertDual::intersectHyperplane(VecSpecVector& list,
                     negit != neg.end(); ++negit) {
                 // Check for validity.
                 if (constraints && ! constraints->empty()) {
+                    // TODO: Optimise using bitmasks.
                     broken = false;
                     for (cit = constraints->begin(); cit != constraints->end();
                             ++cit) {
@@ -166,12 +164,15 @@ void NHilbertDual::intersectHyperplane(VecSpecVector& list,
                     if (! reduces(sum, zero, 0, zero.end()))
                         newZero.push_back(new VecSpec(sum));
                 } else if (s > 0) {
+                    // If this decomposes as a sum of (possibly many)
+                    // terms in pos and/or zero, at least one such term must
+                    // be in pos.  Therefore we only need to test
+                    // reduction against pos, and not zero also.
                     if (! reduces(sum, pos, 1, pos.end()))
-                        // TODO: Verify that zero is not required also.
                         newPos.push_back(new VecSpec(sum));
                 } else if (s < 0) {
+                    // Likewise: test only against neg, and not zero also.
                     if (! reduces(sum, neg, -1, neg.end()))
-                        // TODO: Verify that zero is not required also.
                         newNeg.push_back(new VecSpec(sum));
                 }
             }

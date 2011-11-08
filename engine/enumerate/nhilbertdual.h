@@ -248,22 +248,79 @@ class NHilbertDual {
         NHilbertDual();
 
         /**
-         * TODO
+         * Test whether the vector \a vec can be reduced using
+         * any of the candidate basis vectors in \a against.
+         *
+         * We say that \a vec reduces against a candidate basis vector
+         * \a b if and only if:
+         *
+         * - the vector <tt>vec-b</tt> is non-negative;
+         * - if \a listSign is 0, then <tt>vec-b</tt> lies on the
+         *   hyperplane currently under investigation;
+         * - if \a listSign is positive, then <tt>vec-b</tt> lies either
+         *   on or to the positive side of the hyperplane under investigation;
+         * - if \a listSign is negative, then <tt>vec-b</tt> lies either
+         *   on or to the negative side of the hyperplane under investigation.
+         *
+         * This routine uses VecSpec::nextHyp() to determine the
+         * relationships between vectors and the current hyperplane.
+         *
+         * @param vec the vector to test for reducibility.
+         * @param against the list of candidate basis vectors to reduce
+         * \a vec against.
+         * @param listSign an integer indicating which sign of the
+         * current hyperplane we are working on.
+         * @param ignore a single candidate basis vector from \a against
+         * that should be ignored (for instance, to stop us from
+         * reducing \a vec against itself), or against.end() if every
+         * candidate basis vector in \a against should be considered.
          */
-        static bool reduces(const VecSpec& vec, const VecSpecList& list,
+        static bool reduces(const VecSpec& vec, const VecSpecList& against,
             int listSign, VecSpecList::const_iterator ignore);
 
         /**
-         * TODO
+         * Removes all vectors from \reduce that can be reduced against
+         * any of the candidate basis vectors in \a against.  For
+         * details of what reduction means, see reduces() above.
+         *
+         * This routine will work even if \a reduce and \a against are
+         * the same list.
+         *
+         * @param reduce the list of vectors to test for reducibility.
+         * @param against the list of candidate basis vectors to reduce against.
+         * @param listSign an integer indicating which sign of the
+         * current hyperplane we are working on.
          */
         static void reduceBasis(VecSpecList& reduce, VecSpecList& against,
             int listSign);
 
         /**
-         * TODO
+         * Updates a Hilbert basis by intersecting with a new hyperplane.
+         *
+         * The input vectors in \a list should contain the Hilbert basis
+         * of a cone (defined as the intersection of the non-negative
+         * orthant with some linear subspace).  This routine converts
+         * \list into the Hilbert basis of this same cone intersected with
+         * a new hyperplane.  The new hyperplane is defined by the given
+         * row of the \a subspace matrix.
+         *
+         * This routine can optionally enforce a set of validity
+         * constraints (such as the normal surface quadrilateral
+         * constraints), as described in enumerateHilbertBasis().
+         *
+         * @param list contains the original Hilbert basis on entry to
+         * this function, and will contain the updated Hilbert basis upon
+         * returning.
+         * @param subspace a matrix of hyperplanes.
+         * @param row indicates which row of \a subspace contains the
+         * hyperplane that we will intersect with the cone defined by
+         * the old Hilbert basis.
+         * @param constraints a set of validity constraints to impose
+         * as described in enumerateHilbertBasis(), or 0 if no additional
+         * constraints should be imposed.
          */
         static void intersectHyperplane(VecSpecVector& list,
-            unsigned dim, const NMatrixInt& subspace, unsigned row,
+            const NMatrixInt& subspace, unsigned row,
             const NEnumConstraintList* constraints);
 };
 

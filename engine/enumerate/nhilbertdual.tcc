@@ -94,7 +94,7 @@ void NHilbertDual::enumerateHilbertBasis(OutputIterator results,
 
     // Intersect the hyperplanes one at a time.
     for (i=0; i<nEqns; i++) {
-        intersectHyperplane(list, dim, subspace, hyperplanes[i], constraints);
+        intersectHyperplane(list, subspace, hyperplanes[i], constraints);
 
 #if 0
         std::cout << "LIST SIZE: " << list.size() << std::endl;
