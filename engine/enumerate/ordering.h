@@ -49,7 +49,7 @@ namespace regina {
  * A comparison object that sorts hyperplanes by position vectors.
  * This ordering is described in "Optimizing the double description
  * method for normal surface enumeration", B.A. Burton,
- * Mathematics of Computation 79 (2010), pp. 453-484.
+ * Mathematics of Computation 79 (2010), 453-484.
  *
  * This comparison object is used to sort hyperplanes into a good
  * order before enumerating vertex or fundamental normal surfaces

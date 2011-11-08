@@ -21,6 +21,11 @@ Version 4.91  [ (under development) ]
             - New template class that generalises NTetFace to arbitrary
               dimensions.  NTetFace is retained as a convenience typedef,
               but with changes; see the NTetFace notes below.
+        Class NHilbertDual:
+            - New class that implements a modified dual algorithm for
+              Hilbert basis enumeration, based on the dual algorithm in
+              "Normaliz: Algorithms for affine monoids and rational cones",
+              W. Bruns and B. Ichim, J. Algebra 324 (2010), 1098-1113.
         Class NNormalSurfaceList:
             - New coordinate systems ORIENTED and ORIENTED_QUAD to
               support transverse oriented normal surfaces.

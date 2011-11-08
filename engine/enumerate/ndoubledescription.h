@@ -135,8 +135,7 @@ class REGINA_API NDoubleDescription {
         template <class RayClass, class OutputIterator>
         static void enumerateExtremalRays(OutputIterator results,
             const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressNumber* progress = 0,
-            unsigned initialRows = 0);
+            NProgressNumber* progress = 0, unsigned initialRows = 0);
 
     private:
         /**

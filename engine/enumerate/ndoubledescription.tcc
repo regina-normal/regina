@@ -277,8 +277,8 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
     // experience with Regina agrees.  The ordering we use here
     // is based on position vectors, as described in
     // "Optimizing the double description method for normal surface
-    // enumeration", B.A. Burton, Mathematics of Computation 79 (2010),
-    // pp. 453-484.  See the class NPosOrder for details.
+    // enumeration", B.A. Burton, Mathematics of Computation 79 (2010), 453-484.
+    // See the class NPosOrder for details.
     //
     // Sort the integers 0..(nEqns-1) into the order in which we plan to
     // process the hyperplanes.
