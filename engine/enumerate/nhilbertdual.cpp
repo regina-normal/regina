@@ -115,11 +115,11 @@ void NHilbertDual::intersectHyperplane(VecSpecVector& list,
     bool reachedPosPrevGen;
     VecSpec sum(subspace.columns());
 #if 1
-    std::cout << "Start iteration:" << std::endl;
+    std::cerr << "Start iteration:" << std::endl;
 #endif
     while (true) {
 #if 1
-        std::cout << "    Intermediate 0/+/-: " << zero.size()
+        std::cerr << "    Intermediate 0/+/-: " << zero.size()
             << ' ' << pos.size() << ' ' << neg.size() << std::endl;
 #endif
 
