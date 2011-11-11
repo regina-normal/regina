@@ -13,6 +13,12 @@ Version 4.91  [ (under development) ]
         - For MacOS users: make sure 32-bit python is called when running
           32-bit fink on a 64-bit machine.
     ENGINE:
+        Class NBitmask:
+            - Make NBitmask more suitable for use in containers.  Specifically,
+              the assignment operator can now be used to initialise an
+              uninitialised bitmask or to reset an already-initialised
+              bitmask to a different length, and one or both of its
+              operands may be invalid.
         Class NDoubleDescription:
             - Removed the inner class LexComp, and replaced it with the new
               global class NPosOrder (see below).  A deprecated typedef
