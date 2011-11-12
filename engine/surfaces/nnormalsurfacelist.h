@@ -146,6 +146,8 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          */
         static const int ORIENTED_QUAD;
 
+        class VectorIterator;
+
     protected:
         std::vector<NNormalSurface*> surfaces;
             /**< Contains the normal surfaces stored in this packet. */
@@ -657,6 +659,126 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          */
         NMatrixInt* recreateMatchingEquations() const;
 
+        /**
+         * An iterator that gives access to the raw vectors for surfaces in
+         * this list, pointing to the beginning of this surface list.
+         *
+         * @return an iterator at the beginning of this surface list.
+         */
+        VectorIterator beginVectors() const;
+
+        /**
+         * An iterator that gives access to the raw vectors for surfaces in
+         * this list, pointing past the end of this surface list.
+         * This iterator is not dereferenceable.
+         *
+         * @return an iterator past the end of this surface list.
+         */
+        VectorIterator endVectors() const;
+
+        /**
+         * A bidirectional iterator that runs through the raw vectors for
+         * surfaces in this list.
+         */
+        class VectorIterator : public std::iterator<
+                std::bidirectional_iterator_tag, const NNormalSurfaceVector*> {
+            private:
+                std::vector<NNormalSurface*>::const_iterator it_;
+                    /**< An iterator into the underlying list of surfaces. */
+
+            public:
+                /**
+                 * Creates a new uninitialised iterator.
+                 */
+                VectorIterator();
+
+                /**
+                 * Creates a copy of the given iterator.
+                 *
+                 * @param cloneMe the iterator to clone.
+                 */
+                VectorIterator(const VectorIterator& cloneMe);
+
+                /**
+                 * Makes this a copy of the given iterator.
+                 *
+                 * @param cloneMe the iterator to clone.
+                 * @return a reference to this iterator.
+                 */
+                VectorIterator& operator = (const VectorIterator& cloneMe);
+
+                /**
+                 * Compares this with the given operator for equality.
+                 *
+                 * @param other the iterator to compare this with.
+                 * @return \c true if the iterators point to the same
+                 * element of the same normal surface list, or \c false
+                 * if they do not.
+                 */
+                bool operator == (const VectorIterator& other) const;
+
+                /**
+                 * Compares this with the given operator for inequality.
+                 *
+                 * @param other the iterator to compare this with.
+                 * @return \c false if the iterators point to the same
+                 * element of the same normal surface list, or \c true
+                 * if they do not.
+                 */
+                bool operator != (const VectorIterator& other) const;
+
+                /**
+                 * Returns the raw vector for the normal surface that this
+                 * iterator is currently pointing to.
+                 *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
+                 * @return the corresponding normal surface vector.
+                 */
+                const NNormalSurfaceVector* operator *();
+
+                /**
+                 * The preincrement operator.
+                 *
+                 * @return a reference to this iterator after the increment.
+                 */
+                VectorIterator& operator ++();
+
+                /**
+                 * The postincrement operator.
+                 *
+                 * @return a copy of this iterator before the
+                 * increment took place.
+                 */
+                VectorIterator operator ++(int);
+
+                /**
+                 * The predecrement operator.
+                 *
+                 * @return a reference to this iterator after the decrement.
+                 */
+                VectorIterator& operator --();
+
+                /**
+                 * The postdecrement operator.
+                 *
+                 * @return a copy of this iterator before the
+                 * decrement took place.
+                 */
+                VectorIterator operator --(int);
+
+            private:
+                /**
+                 * Initialise a new vector iterator using an iterator for
+                 * the internal list of normal surfaces.
+                 */
+                VectorIterator(
+                    const std::vector<NNormalSurface*>::const_iterator& i);
+
+            friend class NNormalSurfaceList;
+        };
+
     protected:
         /**
          * Creates a new normal surface list performing no initialisation
@@ -1160,6 +1282,71 @@ inline NNormalSurfaceList* NNormalSurfaceList::standardANToQuadOct() const {
 
 inline NMatrixInt* NNormalSurfaceList::recreateMatchingEquations() const {
     return makeMatchingEquations(getTriangulation(), flavour);
+}
+
+inline NNormalSurfaceList::VectorIterator::VectorIterator() {
+}
+
+inline NNormalSurfaceList::VectorIterator::VectorIterator(
+        const NNormalSurfaceList::VectorIterator& cloneMe) :
+        it_(cloneMe.it_) {
+}
+
+inline NNormalSurfaceList::VectorIterator& NNormalSurfaceList::VectorIterator::
+        operator =(const NNormalSurfaceList::VectorIterator& cloneMe) {
+    it_ = cloneMe.it_;
+    return *this;
+}
+
+inline bool NNormalSurfaceList::VectorIterator::operator ==(
+        const NNormalSurfaceList::VectorIterator& other) const {
+    return (it_ == other.it_);
+}
+
+inline bool NNormalSurfaceList::VectorIterator::operator !=(
+        const NNormalSurfaceList::VectorIterator& other) const {
+    return (it_ != other.it_);
+}
+
+inline const NNormalSurfaceVector* NNormalSurfaceList::VectorIterator::
+        operator *() {
+    return (*it_)->rawVector();
+}
+
+inline NNormalSurfaceList::VectorIterator& NNormalSurfaceList::VectorIterator::
+        operator ++() {
+    ++it_;
+    return *this;
+}
+
+inline NNormalSurfaceList::VectorIterator NNormalSurfaceList::VectorIterator::
+        operator ++(int) {
+    return NNormalSurfaceList::VectorIterator(it_++);
+}
+
+inline NNormalSurfaceList::VectorIterator& NNormalSurfaceList::VectorIterator::
+        operator --() {
+    --it_;
+    return *this;
+}
+
+inline NNormalSurfaceList::VectorIterator NNormalSurfaceList::VectorIterator::
+        operator --(int) {
+    return NNormalSurfaceList::VectorIterator(it_--);
+}
+
+inline NNormalSurfaceList::VectorIterator::VectorIterator(
+        const std::vector<NNormalSurface*>::const_iterator& i) : it_(i) {
+}
+
+inline NNormalSurfaceList::VectorIterator NNormalSurfaceList::beginVectors()
+        const {
+    return VectorIterator(surfaces.begin());
+}
+
+inline NNormalSurfaceList::VectorIterator NNormalSurfaceList::endVectors()
+        const {
+    return VectorIterator(surfaces.end());
 }
 
 inline NNormalSurfaceList::SurfaceInserter::SurfaceInserter() : list(0),

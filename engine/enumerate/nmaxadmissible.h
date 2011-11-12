@@ -26,16 +26,17 @@
 
 /* end stub */
 
-/*! \file enumerate/nmaxfaces.h
+/*! \file enumerate/nmaxadmissible.h
  *  \brief Provides an algorithm for enumerating maximal faces of a
  *  polyhedral cone that satisfy a set of admissibility constraints.
  */
 
-#ifndef __NMAXFACES_H
+#ifndef __NMAXADMISSIBLE_H
 #ifndef __DOXYGEN
-#define __NMAXFACES_H
+#define __NMAXADMISSIBLE_H
 #endif
 
+#include <utilities/nbitmask.h>
 #include <vector>
 
 namespace regina {
@@ -89,11 +90,32 @@ class NMaxAdmissible {
          * and <tt>b[i]</tt> is \c true if every point \a x in the relative
          * interior of \a F has <tt>x[i] &gt; 0</tt>.
          *
-         * \pre TODO: Bitmask type is valid, and is large enough.
+         * \pre The template argument RayIterator should be an iterator
+         * type that, when dereferenced, can be cast to a const NRay*.
          *
-         * TODO: Parameters and return value.
+         * \pre The template argument BitmaskType is one of the bitmask
+         * types NBitmask, NBitmask1 or NBitmask2.
+         *
+         * \pre Bitmasks of type BitmaskType can hold \a n bits, where
+         * \a n is the dimension of the underlying space (i.e., the size
+         * of the input vectors described by \a beginExtremalRays and
+         * \a endExtremalRays).  This is always true of NBitmask, but
+         * you must be careful when using one of the fast but size-limited
+         * types NBitmask1 or NBitmask2.
+         *
+         * @param An iterator that begins the set of admissible
+         * extremal rays, as described above.  Typically this would be
+         * rays.begin() if \a rays is a standard container type.
+         * @param An iterator that is past-the-end of the set of
+         * admissible extremal rays.  Typically this would be rays.end()
+         * if \a rays is a standard container type.
+         * @param constraints a set of validity constraints as described
+         * above.  This may be 0 to indicate no constraints (in which
+         * case there will be just one maximal admissible face).
+         * @return a newly allocated list containing one bitmask
+         * representing each maximal admissible face, as described above.
          */
-        template <class RayIterator, class BitmaskType>
+        template <class BitmaskType, class RayIterator>
         static std::vector<BitmaskType>* enumerate(
                 RayIterator beginExtremalRays, RayIterator endExtremalRays,
                 const NEnumConstraintList* constraints);
@@ -103,7 +125,7 @@ class NMaxAdmissible {
 
 // Template definitions
 
-#include "enumerate/nmaxfaces.tcc"
+#include "enumerate/nmaxadmissible.tcc"
 
 #endif
 

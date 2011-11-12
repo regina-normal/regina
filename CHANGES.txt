@@ -32,11 +32,16 @@ Version 4.91  [ (under development) ]
               Hilbert basis enumeration, based on the dual algorithm in
               "Normaliz: Algorithms for affine monoids and rational cones",
               W. Bruns and B. Ichim, J. Algebra 324 (2010), 1098-1113.
+        Class NMaxAdmissible:
+            - New class for enumerating maximal admissible faces of the
+              normal surface solution cone.
         Class NNormalSurfaceList:
             - New routine enumerateFundDual() to enumerate fundamental normal
               surfaces.
             - New coordinate systems ORIENTED and ORIENTED_QUAD to
               support transverse oriented normal surfaces.
+            - New routines beginVectors() and endVectors() and new inner class
+              VectorIterator for iterating through raw normal surface vectors.
         Class NPerm3:
             - New routine compareWith() for sorting permutations.
         Class NPerm5:
