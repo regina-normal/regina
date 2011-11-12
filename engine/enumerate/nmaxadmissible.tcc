@@ -30,7 +30,7 @@
 
 #include "enumerate/nenumconstraint.h"
 #include <algorithm>
-#include <deque>
+#include <list>
 
 namespace regina {
 
@@ -48,7 +48,7 @@ std::vector<BitmaskType>* NMaxAdmissible::enumerate(
     int i;
 
     // Rewrite the constraints as bitmasks.
-    std::deque<BitmaskType> constMasks;
+    std::vector<BitmaskType> constMasks;
     if (constraints) {
         NEnumConstraintList::const_iterator cit;
         std::set<unsigned>::const_iterator sit; 
@@ -62,7 +62,7 @@ std::vector<BitmaskType>* NMaxAdmissible::enumerate(
 
     // Create a set of bitmasks representing the admissible 1-faces of
     // the cone, i.e., the set of admissible extremal rays.
-    std::deque<BitmaskType> rays;
+    std::vector<BitmaskType> rays;
     for (RayIterator rit = beginExtremalRays; rit != endExtremalRays; ++rit) {
         for (i = 0; i < dim; ++i)
             b.set(i, (**rit)[i] != 0);
@@ -71,57 +71,76 @@ std::vector<BitmaskType>* NMaxAdmissible::enumerate(
 
     // Create a working set of admissible faces.
     // We initialise this to the set of all admissible 1-faces, as above.
-    std::deque<BitmaskType> faces(rays);
+    std::list<BitmaskType> faces(rays.begin(), rays.end());
 
     // Create the final set of faces to return.
     std::vector<BitmaskType>* maxFaces = new std::vector<BitmaskType>();
 
     // Keep expanding the faces using additional extremal rays until we can
     // expand no more.
-    // TODO: Change this to one dimension at a time.
-    typename std::deque<BitmaskType>::const_iterator r, c;
-    BitmaskType tmp(dim);
-    bool expanded, broken;
+    // The ith iteration of the following loop enumerates _all_ admissible
+    // faces of dimension i+1, and identifies all _maximal_ admissible
+    // faces of dimension i.
+    std::list<BitmaskType> nextDim;
+    typename std::vector<BitmaskType>::const_iterator r, c;
+    typename std::list<BitmaskType>::const_iterator f;
+    typename std::list<BitmaskType>::iterator n, next;
+    bool isMax, broken;
     while (! faces.empty()) {
-        b = faces.front();
-        faces.pop_front();
+        for (f = faces.begin(); f != faces.end(); ++f) {
+            // Expand this face by combining with other extremal rays.
+            isMax = true;
+            for (r = rays.begin(); r != rays.end(); ++r) {
+                BitmaskType comb(*f);
+                comb |= *r;
 
-        // If this is a copy of some other face already in the queue or
-        // in the solution set, just ignore it.
-        bool found = false;
-        if (std::find(maxFaces->begin(), maxFaces->end(), b)
-                != maxFaces->end() ||
-                std::find(faces.begin(), faces.end(), b) != faces.end())
-            continue;
+                // Ignore rays already in this face.
+                if (comb == *f)
+                    continue;
 
-        // Expand this face by combining with other extremal rays.
-        expanded = false;
-        for (r = rays.begin(); r != rays.end(); ++r) {
-            // Ignore rays already in this face.
-            if (*r <= b)
-                continue;
-
-            // Ignore rays that will break admissibility.
-            BitmaskType comb(b);
-            comb |= *r;
-            broken = false;
-            for (c = constMasks.begin(); c != constMasks.end(); ++c) {
-                tmp = comb;
-                tmp &= *c;
-                if (! tmp.atMostOneBit()) {
-                    broken = true;
-                    break;
+                // Ignore rays that will break admissibility.
+                broken = false;
+                for (c = constMasks.begin(); c != constMasks.end(); ++c) {
+                    b = comb;
+                    b &= *c;
+                    if (! b.atMostOneBit()) {
+                        broken = true;
+                        break;
+                    }
                 }
-            }
-            if (broken)
-                continue;
+                if (broken)
+                    continue;
 
-            // We have a higher-dimensional face.
-            faces.push_back(comb);
-            expanded = true;
+                // comb expands *f to a higher-dimensional superface.
+                isMax = false;
+
+                // Strip out duplicates, and also strip out superfaces of
+                // too high a dimension (since we only want to step up one
+                // dimension at a time).
+                broken = false;
+                n = nextDim.begin();
+                while (n != nextDim.end()) {
+                    next = n;
+                    ++next;
+                    if (*n <= comb) {
+                        // comb has too high a dimension, or is a duplicate.
+                        broken = true;
+                        break;
+                    }
+                    if (comb <= *n) {
+                        // *n has too high a dimension.
+                        nextDim.erase(n);
+                    }
+                    n = next;
+                }
+                if (! broken)
+                    nextDim.push_back(comb);
+            }
+            if (isMax)
+                maxFaces->push_back(*f);
         }
-        if (! expanded)
-            maxFaces->push_back(b);
+        std::swap(nextDim, faces);
+        nextDim.clear();
     }
 
     // All done!
