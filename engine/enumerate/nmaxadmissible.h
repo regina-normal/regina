@@ -36,7 +36,8 @@
 #define __NMAXADMISSIBLE_H
 #endif
 
-#include <utilities/nbitmask.h>
+#include "regina-core.h"
+#include "utilities/nbitmask.h"
 #include <vector>
 
 namespace regina {

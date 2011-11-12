@@ -36,6 +36,7 @@
 #define __ORDERING_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nmatrixint.h"
 
 /**

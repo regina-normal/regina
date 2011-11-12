@@ -35,6 +35,7 @@
 #define __NHILBERTDUAL_H
 #endif
 
+#include "regina-core.h"
 #include "maths/nmatrixint.h"
 #include "maths/nray.h"
 #include <iterator>
