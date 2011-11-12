@@ -26,9 +26,12 @@
 
 /* end stub */
 
+#include <iterator>
 #include <list>
 #include "enumerate/ndoubledescription.h"
 #include "enumerate/nhilbertdual.h"
+#include "enumerate/nhilbertprimal.h"
+#include "enumerate/normaliz/libnormaliz.cpp"
 #include "file/nfile.h"
 #include "maths/nmatrixint.h"
 #include "progress/nprogressmanager.h"
@@ -165,7 +168,78 @@ bool NNormalSurfaceList::enumerateExtremalRays(int flavour,
             constraints = cls::makeEmbeddedConstraints(triang); \
         break;
 
-void* NNormalSurfaceList::FundEnumerator::run(void*) {
+void* NNormalSurfaceList::FundPrimalEnumerator::run(void*) {
+    NProgressMessage* progress = 0;
+    if (manager) {
+        progress = new NProgressMessage("Initialising enumeration");
+        manager->setProgress(progress);
+    }
+
+    // Fetch validity constraints from the registry.
+    NEnumConstraintList* constraints = 0;
+    switch(list->flavour) {
+        // Import cases from the flavour registry.
+        #include "surfaces/flavourregistry.h"
+    }
+
+    // Form the matching equations and starting cone.
+    NMatrixInt* eqns = makeMatchingEquations(triang, list->flavour);
+
+    // Find the vertex normal surfaces.
+    if (progress)
+        progress->setMessage("Enumerating extremal rays");
+    std::vector<NRay*> vertices;
+    NDoubleDescription::enumerateExtremalRays<NRay>(
+        std::back_insert_iterator<std::vector<NRay*> >(vertices),
+        *eqns, constraints, 0);
+
+    // Find the fundamental normal surfaces.
+    if (progress)
+        progress->setMessage("Enumerating Hilbert basis");
+    enumerateHilbertPrimal(list->flavour, SurfaceInserter(*list, triang),
+        vertices, constraints, progress);
+
+    for (std::vector<NRay*>::iterator it = vertices.begin();
+            it != vertices.end(); ++it)
+        delete *it;
+    delete eqns;
+    delete constraints;
+
+    // All done!
+    triang->insertChildLast(list);
+
+    if (progress) {
+        progress->setMessage("Finished enumeration");
+        progress->setFinished();
+    }
+
+    return 0;
+}
+
+#undef REGISTER_FLAVOUR
+#define REGISTER_FLAVOUR(id_name, class, n, an, s) \
+    case id_name: NHilbertPrimal::enumerateHilbertBasis<class>( \
+        results, rays.begin(), rays.end(), constraints, progress); \
+        return true;
+
+bool NNormalSurfaceList::enumerateHilbertPrimal(int flavour,
+        const SurfaceInserter& results, const std::vector<NRay*>& rays,
+        const NEnumConstraintList* constraints, NProgressMessage* progress) {
+    switch(flavour) {
+        // Import cases from the flavour registry:
+        #include "surfaces/flavourregistry.h"
+    }
+    return false;
+}
+
+#undef REGISTER_FLAVOUR
+#define REGISTER_FLAVOUR(id_name, cls, n, an, s) \
+    case NNormalSurfaceList::id_name: \
+        if (list->embedded) \
+            constraints = cls::makeEmbeddedConstraints(triang); \
+        break;
+
+void* NNormalSurfaceList::FundDualEnumerator::run(void*) {
     NProgressNumber* progress = 0;
     if (manager) {
         progress = new NProgressNumber(0, 1);
@@ -234,11 +308,30 @@ NNormalSurfaceList* NNormalSurfaceList::enumerate(NTriangulation* owner,
     }
 }
 
+NNormalSurfaceList* NNormalSurfaceList::enumerateFundPrimal(
+        NTriangulation* owner, int newFlavour, bool embeddedOnly,
+        NProgressManager* manager) {
+    NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
+    FundPrimalEnumerator* e = new FundPrimalEnumerator(ans, owner, manager);
+
+    if (manager) {
+        if (! e->start(0, true)) {
+            delete ans;
+            return 0;
+        }
+        return ans;
+    } else {
+        e->run(0);
+        delete e;
+        return ans;
+    }
+}
+
 NNormalSurfaceList* NNormalSurfaceList::enumerateFundDual(
         NTriangulation* owner, int newFlavour, bool embeddedOnly,
         NProgressManager* manager) {
     NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
-    FundEnumerator* e = new FundEnumerator(ans, owner, manager);
+    FundDualEnumerator* e = new FundDualEnumerator(ans, owner, manager);
 
     if (manager) {
         if (! e->start(0, true)) {

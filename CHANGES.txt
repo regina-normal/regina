@@ -32,6 +32,10 @@ Version 4.91  [ (under development) ]
               Hilbert basis enumeration, based on the dual algorithm in
               "Normaliz: Algorithms for affine monoids and rational cones",
               W. Bruns and B. Ichim, J. Algebra 324 (2010), 1098-1113.
+        Class NHilbertPrimal:
+            - New class that enumerates Hilbert bases by decomposing into
+              maximal admissible faces and running the primal algorithm from
+              Normaliz on each such face.
         Class NMaxAdmissible:
             - New class for enumerating maximal admissible faces of the
               normal surface solution cone.
