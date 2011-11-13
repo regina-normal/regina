@@ -41,6 +41,8 @@ Version 4.91  [ (under development) ]
               arguments of type int, unsigned int, long, and unsigned long.
             - Added ++ and -- operators.
             - Added (long + NLargeInteger) and (long * NLargeInteger) operators.
+            - New routines setRaw() and rawData() for interacting directly
+              with libgmp and libgmpxx.
         Class NMaxAdmissible:
             - New class for enumerating maximal admissible faces of the
               normal surface solution cone.

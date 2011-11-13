@@ -38,6 +38,7 @@
 #include <list>
 #include <set>
 #include <vector>
+#include <gmpxx.h>
 
 namespace regina {
 
@@ -114,27 +115,27 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
         progress->setMessage(
             "Running primal algorithm on maximal admissible faces");
 
-    std::set<std::vector<NLargeInteger> > finalBasis;
+    std::set<std::vector<mpz_class> > finalBasis;
     std::vector<const NRay*> face;
     typename std::vector<BitmaskType>::const_iterator mit;
     RayIterator rit;
     RayClass* tmp;
     unsigned i;
-    std::list<std::vector<NLargeInteger> >::const_iterator hlit;
-    std::set<std::vector<NLargeInteger> >::const_iterator hsit;
-    std::vector<NLargeInteger>::const_iterator hvit;
+    std::list<std::vector<mpz_class> >::const_iterator hlit;
+    std::set<std::vector<mpz_class> >::const_iterator hsit;
+    std::vector<mpz_class>::const_iterator hvit;
     for (mit = maxFaces->begin(); mit != maxFaces->end(); ++mit) {
         // Locate the extremal rays that generate this face.
-        std::list<std::vector<NLargeInteger> > input;
+        std::list<std::vector<mpz_class> > input;
         for (rit = raysBegin; rit != raysEnd; ++rit)
             if (inFace(**rit, *mit)) {
-                input.push_back(std::vector<NLargeInteger>());
-                std::vector<NLargeInteger>& v(input.back());
+                input.push_back(std::vector<mpz_class>());
+                std::vector<mpz_class>& v(input.back());
                 v.reserve(dim);
                 for (i = 0; i < dim; ++i)
-                    v.push_back((**rit)[i]);
+                    v.push_back(mpz_class((**rit)[i].rawData()));
             }
-        libnormaliz::Cone<NLargeInteger> cone(input,
+        libnormaliz::Cone<mpz_class> cone(input,
             0 /* generators, integral closure */);
         libnormaliz::ConeProperties wanted(
             libnormaliz::ConeProperty::HilbertBasis);
@@ -145,7 +146,7 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
             std::cerr << "ERROR: Hilbert basis not computed!" << std::endl;
             continue;
         }
-        const std::list<std::vector<NLargeInteger> >& basis =
+        const std::list<std::vector<mpz_class> >& basis =
             cone.getHilbertBasis();
         for (hlit = basis.begin(); hlit != basis.end(); ++hlit)
             finalBasis.insert(*hlit);
@@ -155,10 +156,17 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
         progress->setMessage("Collecting results");
 
     RayClass* ans;
+    NLargeInteger tmpInt;
     for (hsit = finalBasis.begin(); hsit != finalBasis.end(); ++hsit) {
         ans = new RayClass(dim);
-        for (i = 0, hvit = hsit->begin(); hvit != hsit->end(); ++hvit, ++i)
-            ans->setElement(i, *hvit);
+        for (i = 0, hvit = hsit->begin(); hvit != hsit->end(); ++hvit, ++i) {
+            // We make two copies of the GMP integer instead of one.
+            // This is because NVector/NRay does not give us direct
+            // non-const access to its elements, and so we need a
+            // temporary NLargeInteger to pass through setElement() instead.
+            tmpInt.setRaw(hvit->get_mpz_t());
+            ans->setElement(i, tmpInt);
+        }
         *results++ = ans;
     }
 

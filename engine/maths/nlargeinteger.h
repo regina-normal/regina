@@ -826,6 +826,28 @@ class REGINA_API NLargeInteger {
          */
         static NLargeInteger randomCornerBinary(unsigned long n);
 
+        /**
+         * Set this large integer to a copy of the given raw GMP integer.
+         *
+         * This routine allows NLargeInteger to interact directly with
+         * libgmp and libgmpxx if necessary.
+         *
+         * @param fromData the raw GMP integer to clone.
+         */
+        void setRaw(mpz_srcptr fromData);
+
+        /**
+         * Returns the raw GMP data that describes this integer.
+         *
+         * This routine allows NLargeInteger to interact directly with
+         * libgmp and libgmpxx if necessary.
+         *
+         * \pre This integer is not infinite.
+         *
+         * @return the raw GMP data.
+         */
+        mpz_srcptr rawData() const;
+
     private:
         /**
          * Initialises this integer to infinity.
@@ -1213,6 +1235,15 @@ inline NLargeInteger NLargeInteger::lcm(const NLargeInteger& other) const {
 
 inline int NLargeInteger::legendre(const NLargeInteger& p) const {
     return mpz_legendre(data, p.data);
+}
+
+void NLargeInteger::setRaw(mpz_srcptr fromData) {
+    infinite = false;
+    mpz_set(data, fromData);
+}
+
+mpz_srcptr NLargeInteger::rawData() const {
+    return data;
 }
 
 inline NLargeInteger operator +(long lhs, const NLargeInteger& rhs) {
