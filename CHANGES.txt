@@ -36,6 +36,11 @@ Version 4.91  [ (under development) ]
             - New class that enumerates Hilbert bases by decomposing into
               maximal admissible faces and running the primal algorithm from
               Normaliz on each such face.
+        Class NLargeInteger:
+            - Made separate constructors and assignment operators for
+              arguments of type int, unsigned int, long, and unsigned long.
+            - Added ++ and -- operators.
+            - Added (long + NLargeInteger) and (long * NLargeInteger) operators.
         Class NMaxAdmissible:
             - New class for enumerating maximal admissible faces of the
               normal surface solution cone.

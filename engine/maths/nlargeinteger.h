@@ -115,7 +115,25 @@ class REGINA_API NLargeInteger {
          *
          * @param value the new value of this integer.
          */
+        NLargeInteger(int value);
+        /**
+         * Initialises this integer to the given value.
+         *
+         * @param value the new value of this integer.
+         */
+        NLargeInteger(unsigned value);
+        /**
+         * Initialises this integer to the given value.
+         *
+         * @param value the new value of this integer.
+         */
         NLargeInteger(long value);
+        /**
+         * Initialises this integer to the given value.
+         *
+         * @param value the new value of this integer.
+         */
+        NLargeInteger(unsigned long value);
         /**
          * Initialises this integer to the given value.
          *
@@ -233,7 +251,28 @@ class REGINA_API NLargeInteger {
          * @param value the new value of this integer.
          * @return a reference to this integer with its new value.
          */
+        NLargeInteger& operator =(int value);
+        /**
+         * Sets this integer to the given value.
+         *
+         * @param value the new value of this integer.
+         * @return a reference to this integer with its new value.
+         */
+        NLargeInteger& operator =(unsigned value);
+        /**
+         * Sets this integer to the given value.
+         *
+         * @param value the new value of this integer.
+         * @return a reference to this integer with its new value.
+         */
         NLargeInteger& operator =(long value);
+        /**
+         * Sets this integer to the given value.
+         *
+         * @param value the new value of this integer.
+         * @return a reference to this integer with its new value.
+         */
+        NLargeInteger& operator =(unsigned long value);
         /**
          * Sets this integer to the given value which is
          * represented as a string of digits in base 10.
@@ -368,6 +407,44 @@ class REGINA_API NLargeInteger {
          * to the given integer.
          */
         bool operator >=(long compareTo) const;
+
+        /**
+         * The preincrement operator.
+         * This operator increments this integer by one, and returns a
+         * reference to the integer \e after the increment.
+         *
+         * @return a reference to this integer after the increment.
+         */
+        NLargeInteger& operator ++();
+
+        /**
+         * The postincrement operator.
+         * This operator increments this integer by one, and returns a
+         * copy of the integer \e before the increment.
+         *
+         * @return a copy of this integer before the
+         * increment took place.
+         */
+        NLargeInteger operator ++(int);
+
+        /**
+         * The predecrement operator.
+         * This operator decrements this integer by one, and returns a
+         * reference to the integer \e after the decrement.
+         *
+         * @return a reference to this integer after the decrement.
+         */
+        NLargeInteger& operator --();
+
+        /**
+         * The postdecrement operator.
+         * This operator decrements this integer by one, and returns a
+         * copy of the integer \e before the decrement.
+         *
+         * @return a copy of this integer before the
+         * decrement took place.
+         */
+        NLargeInteger operator --(int);
 
         /**
          * Adds this to the given integer and returns the result.
@@ -774,15 +851,67 @@ class REGINA_API NLargeInteger {
 REGINA_API std::ostream& operator << (std::ostream& out,
     const NLargeInteger& large);
 
+/**
+ * Adds the given native integer to the given large integer.
+ * If the large integer is infinite, the result will also be infinity.
+ *
+ * @param lhs the native integer to add.
+ * @param other the large integer to add.
+ * @return the sum \a lhs plus \a rhs.
+ */
+REGINA_API NLargeInteger operator + (long lhs, const NLargeInteger& rhs);
+
+/**
+ * Multiplies the given native integer with the given large integer.
+ * If the large integer is infinite, the result will also be infinity.
+ *
+ * @param lhs the native integer to multiply.
+ * @param other the large integer to multiply.
+ * @return the product \a lhs times \a rhs.
+ */
+REGINA_API NLargeInteger operator * (long lhs, const NLargeInteger& rhs);
+
 /*@}*/
+
+} // namespace regina
+
+#ifndef __DOXYGEN
+namespace libnormaliz {
+/**
+ * An explicit integer cast function, for compatibility with Normaliz.
+ *
+ * @param a an instance of some arbitrary integer type.
+ * @return the given integer, cast as a native long.
+ */
+template<typename Integer>
+long explicit_cast_to_long(const Integer& a);
+
+template<>
+inline long explicit_cast_to_long<regina::NLargeInteger>(
+        const regina::NLargeInteger& a) {
+	return a.longValue();
+}
+} //namespace libnormaliz
+#endif
+
+namespace regina {
 
 // Inline functions for NLargeInteger
 
 inline NLargeInteger::NLargeInteger() : infinite(false) {
     mpz_init(data);
 }
+inline NLargeInteger::NLargeInteger(int value) : infinite(false) {
+    mpz_init_set_si(data, value);
+}
+inline NLargeInteger::NLargeInteger(unsigned value) : infinite(false) {
+    mpz_init_set_ui(data, value);
+}
 inline NLargeInteger::NLargeInteger(long value) : infinite(false) {
     mpz_init_set_si(data, value);
+}
+inline NLargeInteger::NLargeInteger(unsigned long value) : infinite(false) {
+    mpz_init_set_ui(data, value);
 }
 inline NLargeInteger::NLargeInteger(const NLargeInteger& value) :
         infinite(value.infinite) {
@@ -822,9 +951,24 @@ inline NLargeInteger& NLargeInteger::operator =(const NLargeInteger& value) {
     mpz_set(data, value.data);
     return *this;
 }
+inline NLargeInteger& NLargeInteger::operator =(int value) {
+    infinite = false;
+    mpz_set_si(data, value);
+    return *this;
+}
+inline NLargeInteger& NLargeInteger::operator =(unsigned value) {
+    infinite = false;
+    mpz_set_ui(data, value);
+    return *this;
+}
 inline NLargeInteger& NLargeInteger::operator =(long value) {
     infinite = false;
     mpz_set_si(data, value);
+    return *this;
+}
+inline NLargeInteger& NLargeInteger::operator =(unsigned long value) {
+    infinite = false;
+    mpz_set_ui(data, value);
     return *this;
 }
 inline NLargeInteger& NLargeInteger::operator =(const char* value) {
@@ -885,6 +1029,33 @@ inline bool NLargeInteger::operator >=(const NLargeInteger& compareTo) const {
 }
 inline bool NLargeInteger::operator >=(long compareTo) const {
     return (infinite || mpz_cmp_si_cpp(data, compareTo) >= 0);
+}
+
+inline NLargeInteger& NLargeInteger::operator ++() {
+    if (! infinite)
+        mpz_add_ui(data, data, 1);
+    return *this;
+}
+inline NLargeInteger NLargeInteger::operator ++(int) {
+    if (infinite)
+        return *this;
+    NLargeInteger ans;
+    mpz_set(ans.data, data);
+    mpz_add_ui(data, data, 1);
+    return ans;
+}
+inline NLargeInteger& NLargeInteger::operator --() {
+    if (! infinite)
+        mpz_sub_ui(data, data, 1);
+    return *this;
+}
+inline NLargeInteger NLargeInteger::operator --(int) {
+    if (infinite)
+        return *this;
+    NLargeInteger ans;
+    mpz_set(ans.data, data);
+    mpz_sub_ui(data, data, 1);
+    return ans;
 }
 
 inline NLargeInteger NLargeInteger::operator +(const NLargeInteger& other)
@@ -1042,6 +1213,13 @@ inline NLargeInteger NLargeInteger::lcm(const NLargeInteger& other) const {
 
 inline int NLargeInteger::legendre(const NLargeInteger& p) const {
     return mpz_legendre(data, p.data);
+}
+
+inline NLargeInteger operator +(long lhs, const NLargeInteger& rhs) {
+    return rhs + lhs;
+}
+inline NLargeInteger operator *(long lhs, const NLargeInteger& rhs) {
+    return rhs * lhs;
 }
 
 } // namespace regina
