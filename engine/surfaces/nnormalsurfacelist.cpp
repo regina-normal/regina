@@ -31,7 +31,6 @@
 #include "enumerate/ndoubledescription.h"
 #include "enumerate/nhilbertdual.h"
 #include "enumerate/nhilbertprimal.h"
-#include "enumerate/normaliz/libnormaliz.cpp"
 #include "file/nfile.h"
 #include "maths/nmatrixint.h"
 #include "progress/nprogressmanager.h"
