@@ -147,12 +147,23 @@ class NHilbertDual {
          * In addition, this class stores a data member \a nextHyp_,
          * which gives fast access to the dot product of this vector
          * with the hyperplane currently being processed.
+         *
+         * The \a BitmaskType template argument is used to store one bit
+         * per coordinate, which is \c false if the coordinate is zero
+         * or \c true if the coordinate is non-zero.
+         *
+         * \pre The template argument \a BitmaskType is one of Regina's
+         * bitmask types, such as NBitmask, NBitmask1 or NBitmask2.
          */
+        template <class BitmaskType>
         class VecSpec : private NRay {
             private:
                 NLargeInteger nextHyp_;
                     /**< The dot product of this vector with the
                          hyperplane currently being processed. */
+                BitmaskType mask_;
+                    /**< A bitmask indicating which coordinates are zero
+                         (\c false) and which are non-zero (\c true). */
 
             public:
                 /**
@@ -209,6 +220,12 @@ class NHilbertDual {
                 inline const NLargeInteger& nextHyp() const;
 
                 /**
+                 * Returns the bitmask describing which coordinate are
+                 * non-zero.
+                 */
+                inline const BitmaskType& mask() const;
+
+                /**
                  * Returns the sign of the dot product of this vector
                  * with the hyperplane currently being processed.  This
                  * is simply the sign of the data member \a nextHyp_.
@@ -216,6 +233,15 @@ class NHilbertDual {
                  * @return 1, 0 or -1 according to the sign of \a nextHyp_.
                  */
                 inline int sign() const;
+
+                /**
+                 * Determines if this and the given vector are identical.
+                 *
+                 * @param other the vector to compare with this.
+                 * @return \c true if this vector is identical to the
+                 * given vector, or \c false if not.
+                 */
+                inline bool operator == (const VecSpec& other) const;
 
                 /**
                  * Determines if every element of this vector is less
@@ -232,15 +258,23 @@ class NHilbertDual {
         };
 
         /**
-         * A linked list of VecSpec items, with fast insertion and deletion.
+         * Identical to the public routine enumerateHilbertBasis(),
+         * except that there is an extra template parameter \a BitmaskType.
+         * This describes what type should be used for bitmasks that
+         * represent zero/non-zero coordinates in a vector.
+         *
+         * All argument are identical to those for the public routine
+         * enumerateHilbertBasis().
+         *
+         * \pre The bitmask type is one of Regina's bitmask types, such
+         * as NBitmask, NBitmask1 or NBitmask2.
+         * \pre The type \a BitmaskType can handle at least \a n bits,
+         * where \a n is the number of coordinates in the underlying vectors.
          */
-        typedef std::list<VecSpec*> VecSpecList;
-
-        /**
-         * A vector of VecSpec items, with fast random access and
-         * better caching.
-         */
-        typedef std::vector<VecSpec*> VecSpecVector;
+        template <class RayClass, class BitmaskType, class OutputIterator>
+        static void enumerateUsingBitmask(OutputIterator results,
+            const NMatrixInt& subspace, const NEnumConstraintList* constraints,
+            NProgressNumber* progress, unsigned initialRows);
 
         /**
          * Private constructor to ensure that objects of this class are
@@ -276,8 +310,11 @@ class NHilbertDual {
          * reducing \a vec against itself), or against.end() if every
          * candidate basis vector in \a against should be considered.
          */
-        static bool reduces(const VecSpec& vec, const VecSpecList& against,
-            int listSign, VecSpecList::const_iterator ignore);
+        template <class BitmaskType>
+        static bool reduces(const VecSpec<BitmaskType>& vec,
+            const std::list<VecSpec<BitmaskType>*>& against,
+            int listSign,
+            typename std::list<VecSpec<BitmaskType>*>::const_iterator ignore);
 
         /**
          * Removes all vectors from \reduce that can be reduced against
@@ -292,7 +329,9 @@ class NHilbertDual {
          * @param listSign an integer indicating which sign of the
          * current hyperplane we are working on.
          */
-        static void reduceBasis(VecSpecList& reduce, VecSpecList& against,
+        template <class BitmaskType>
+        static void reduceBasis(std::list<VecSpec<BitmaskType>*>& reduce,
+            std::list<VecSpec<BitmaskType>*>& against,
             int listSign);
 
         /**
@@ -309,6 +348,14 @@ class NHilbertDual {
          * constraints (such as the normal surface quadrilateral
          * constraints), as described in enumerateHilbertBasis().
          *
+         * The set of validity constraints must be passed here as a
+         * C-style array of bitmasks.  Each bitmask contains one bit per
+         * coordinate position, as seen in the VecSpec inner class.
+         * Each constraint is of the form "at most one of these
+         * coordinates can be non-zero"; the bits for these coordinates must
+         * be set to 1 in the corresponding bitmask, and all other bits must
+         * be set to 0.
+         *
          * @param list contains the original Hilbert basis on entry to
          * this function, and will contain the updated Hilbert basis upon
          * returning.
@@ -316,13 +363,19 @@ class NHilbertDual {
          * @param row indicates which row of \a subspace contains the
          * hyperplane that we will intersect with the cone defined by
          * the old Hilbert basis.
-         * @param constraints a set of validity constraints to impose
-         * as described in enumerateHilbertBasis(), or 0 if no additional
-         * constraints should be imposed.
+         * @param constraintsBegin the beginning of the C-style array of
+         * validity constraints.  This should be 0 if no additional
+         * constraints are to be imposed.
+         * @param constraintsEnd a pointer just past the end of the
+         * C-style array of validity constraints.  This should be 0
+         * if no additional constraints are to be imposed.
          */
-        static void intersectHyperplane(VecSpecVector& list,
+        template <class BitmaskType>
+        static void intersectHyperplane(
+            std::vector<VecSpec<BitmaskType>*>& list,
             const NMatrixInt& subspace, unsigned row,
-            const NEnumConstraintList* constraints);
+            const BitmaskType* constraintsBegin,
+            const BitmaskType* constraintsEnd);
 };
 
 /*@}*/
@@ -334,23 +387,31 @@ inline NHilbertDual::NHilbertDual() {
 
 // Inline functions for NHilbertDual::VecSpec
 
-inline NHilbertDual::VecSpec::VecSpec(unsigned dim) : NRay(dim) {
+template <class BitmaskType>
+inline NHilbertDual::VecSpec<BitmaskType>::VecSpec(unsigned dim) :
+        NRay(dim), mask_(dim) {
     // All vector elements and nextHyp_ are initialised to zero
     // thanks to the NLargeInteger default constructor.
 }
 
-inline NHilbertDual::VecSpec::VecSpec(unsigned pos, unsigned dim) : NRay(dim) {
+template <class BitmaskType>
+inline NHilbertDual::VecSpec<BitmaskType>::VecSpec(unsigned pos, unsigned dim) :
+        NRay(dim), mask_(dim) {
     // All coordinates are initialised to zero by default thanks to
     // the NLargeInteger constructor.
     setElement(pos, NLargeInteger::one);
+    mask_.set(pos, true);
 }
 
-inline NHilbertDual::VecSpec::VecSpec(const NHilbertDual::VecSpec& other) :
-        NRay(other), nextHyp_(other.nextHyp_) {
+template <class BitmaskType>
+inline NHilbertDual::VecSpec<BitmaskType>::VecSpec(
+        const NHilbertDual::VecSpec<BitmaskType>& other) :
+        NRay(other), nextHyp_(other.nextHyp_), mask_(other.mask_) {
 }
 
-inline void NHilbertDual::VecSpec::initNextHyp(const NMatrixInt& subspace,
-        unsigned row) {
+template <class BitmaskType>
+inline void NHilbertDual::VecSpec<BitmaskType>::initNextHyp(
+        const NMatrixInt& subspace, unsigned row) {
     nextHyp_ = NLargeInteger::zero;
 
     NLargeInteger tmp;
@@ -362,24 +423,48 @@ inline void NHilbertDual::VecSpec::initNextHyp(const NMatrixInt& subspace,
         }
 }
 
-inline void NHilbertDual::VecSpec::formSum(
-        const NHilbertDual::VecSpec& x, const NHilbertDual::VecSpec& y) {
+template <class BitmaskType>
+inline void NHilbertDual::VecSpec<BitmaskType>::formSum(
+        const NHilbertDual::VecSpec<BitmaskType>& x,
+        const NHilbertDual::VecSpec<BitmaskType>& y) {
     (*this) = x; // The default assignment operator.
 
     (*this) += y;
     nextHyp_ += y.nextHyp_;
+    mask_ |= y.mask_;
 }
 
-inline const NLargeInteger& NHilbertDual::VecSpec::nextHyp() const {
+template <class BitmaskType>
+inline const NLargeInteger& NHilbertDual::VecSpec<BitmaskType>::nextHyp()
+        const {
     return nextHyp_;
 }
 
-inline int NHilbertDual::VecSpec::sign() const {
+template <class BitmaskType>
+inline const BitmaskType& NHilbertDual::VecSpec<BitmaskType>::mask() const {
+    return mask_;
+}
+
+template <class BitmaskType>
+inline int NHilbertDual::VecSpec<BitmaskType>::sign() const {
     return (nextHyp_ == 0 ? 0 : nextHyp_ > 0 ? 1 : -1);
 }
 
-inline bool NHilbertDual::VecSpec::operator <= (
-        const NHilbertDual::VecSpec& other) const {
+template <class BitmaskType>
+inline bool NHilbertDual::VecSpec<BitmaskType>::operator == (
+        const NHilbertDual::VecSpec<BitmaskType>& other) const {
+    // Test bitmasks first since this gives us a fast way of saying no.
+    if (mask_ != other.mask_)
+        return false;
+    return (static_cast<NRay&>(*this) == static_cast<NRay&>(other));
+}
+
+template <class BitmaskType>
+inline bool NHilbertDual::VecSpec<BitmaskType>::operator <= (
+        const NHilbertDual::VecSpec<BitmaskType>& other) const {
+    // Test bitmasks first since this gives us a fast way of saying no.
+    if (! (mask_ <= other.mask_))
+        return false;
     for (unsigned i = 0; i < size(); ++i)
         if ((*this)[i] > other[i])
             return false;
