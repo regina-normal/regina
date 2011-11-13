@@ -1237,12 +1237,12 @@ inline int NLargeInteger::legendre(const NLargeInteger& p) const {
     return mpz_legendre(data, p.data);
 }
 
-void NLargeInteger::setRaw(mpz_srcptr fromData) {
+inline void NLargeInteger::setRaw(mpz_srcptr fromData) {
     infinite = false;
     mpz_set(data, fromData);
 }
 
-mpz_srcptr NLargeInteger::rawData() const {
+inline mpz_srcptr NLargeInteger::rawData() const {
     return data;
 }
 
