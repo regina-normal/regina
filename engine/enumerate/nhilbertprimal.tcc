@@ -110,34 +110,31 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
         raysBegin, raysEnd, constraints);
 
     // Now use normaliz to process each face.
-    // TODO: Use native integer types where possible.
     if (progress)
         progress->setMessage(
             "Running primal algorithm on maximal admissible faces");
 
-    std::set<std::vector<mpz_class> > finalBasis;
+    std::set<std::vector<NLargeInteger> > finalBasis;
     std::vector<const NRay*> face;
     typename std::vector<BitmaskType>::const_iterator mit;
     RayIterator rit;
     RayClass* tmp;
     unsigned i;
-    std::list<std::vector<mpz_class> >::const_iterator hlit;
-    std::set<std::vector<mpz_class> >::const_iterator hsit;
-    std::vector<mpz_class>::const_iterator hvit;
+    std::list<std::vector<NLargeInteger> >::const_iterator hlit;
+    std::set<std::vector<NLargeInteger> >::const_iterator hsit;
+    std::vector<NLargeInteger>::const_iterator hvit;
     for (mit = maxFaces->begin(); mit != maxFaces->end(); ++mit) {
         // Locate the extremal rays that generate this face.
-        std::list<std::vector<mpz_class> > input;
+        std::list<std::vector<NLargeInteger> > input;
         for (rit = raysBegin; rit != raysEnd; ++rit)
             if (inFace(**rit, *mit)) {
-                // TODO: Template on NLargeInteger instead?
-                input.push_back(std::vector<mpz_class>());
-                std::vector<mpz_class>& v(input.back());
-                // TODO: Better way of doing this?
-                // TODO: Don't convert via longs.
+                input.push_back(std::vector<NLargeInteger>());
+                std::vector<NLargeInteger>& v(input.back());
+                v.reserve(dim);
                 for (i = 0; i < dim; ++i)
-                    v.push_back((**rit)[i].longValue());
+                    v.push_back((**rit)[i]);
             }
-        libnormaliz::Cone<mpz_class> cone(input,
+        libnormaliz::Cone<NLargeInteger> cone(input,
             0 /* generators, integral closure */);
         libnormaliz::ConeProperties wanted(
             libnormaliz::ConeProperty::HilbertBasis);
@@ -148,7 +145,7 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
             std::cerr << "ERROR: Hilbert basis not computed!" << std::endl;
             continue;
         }
-        const std::list<std::vector<mpz_class> >& basis =
+        const std::list<std::vector<NLargeInteger> >& basis =
             cone.getHilbertBasis();
         for (hlit = basis.begin(); hlit != basis.end(); ++hlit)
             finalBasis.insert(*hlit);
@@ -160,9 +157,8 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
     RayClass* ans;
     for (hsit = finalBasis.begin(); hsit != finalBasis.end(); ++hsit) {
         ans = new RayClass(dim);
-        // TODO: Don't convert via longs.
         for (i = 0, hvit = hsit->begin(); hvit != hsit->end(); ++hvit, ++i)
-            ans->setElement(i, hvit->get_si());
+            ans->setElement(i, *hvit);
         *results++ = ans;
     }
 
