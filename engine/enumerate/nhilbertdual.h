@@ -164,6 +164,13 @@ class NHilbertDual {
                 BitmaskType mask_;
                     /**< A bitmask indicating which coordinates are zero
                          (\c false) and which are non-zero (\c true). */
+                unsigned gen_;
+                    /**< Indicates in which generation of the algorithm
+                         this vector was created.  See the Bruns-Ichim paper
+                         from the NHilberDual class notes for details. */
+                NLargeInteger deg_;
+                    /**< The "total degree" of this vector, which in
+                         this case is simply the sum of its coordinates. */
 
             public:
                 /**
@@ -196,6 +203,8 @@ class NHilbertDual {
                 /**
                  * Updates the \a nextHyp_ member to reflect the dot
                  * product with the given hyperplane.
+                 *
+                 * This routine also sets the generation \a gen_ to zero.
                  *
                  * @param subspace the matrix containing the full set of
                  * hyperplanes.
@@ -390,13 +399,13 @@ inline NHilbertDual::NHilbertDual() {
 template <class BitmaskType>
 inline NHilbertDual::VecSpec<BitmaskType>::VecSpec(unsigned dim) :
         NRay(dim), mask_(dim) {
-    // All vector elements and nextHyp_ are initialised to zero
+    // All vector elements, nextHyp_ and deg_ are initialised to zero
     // thanks to the NLargeInteger default constructor.
 }
 
 template <class BitmaskType>
 inline NHilbertDual::VecSpec<BitmaskType>::VecSpec(unsigned pos, unsigned dim) :
-        NRay(dim), mask_(dim) {
+        NRay(dim), mask_(dim), deg_(1) {
     // All coordinates are initialised to zero by default thanks to
     // the NLargeInteger constructor.
     setElement(pos, NLargeInteger::one);
@@ -406,7 +415,10 @@ inline NHilbertDual::VecSpec<BitmaskType>::VecSpec(unsigned pos, unsigned dim) :
 template <class BitmaskType>
 inline NHilbertDual::VecSpec<BitmaskType>::VecSpec(
         const NHilbertDual::VecSpec<BitmaskType>& other) :
-        NRay(other), nextHyp_(other.nextHyp_), mask_(other.mask_) {
+        NRay(other),
+        nextHyp_(other.nextHyp_),
+        mask_(other.mask_),
+        deg_(other.deg_) {
 }
 
 template <class BitmaskType>
@@ -421,6 +433,8 @@ inline void NHilbertDual::VecSpec<BitmaskType>::initNextHyp(
             tmp *= (*this)[i];
             nextHyp_ += tmp;
         }
+
+    gen_ = 0;
 }
 
 template <class BitmaskType>
@@ -432,6 +446,7 @@ inline void NHilbertDual::VecSpec<BitmaskType>::formSum(
     (*this) += y;
     nextHyp_ += y.nextHyp_;
     mask_ |= y.mask_;
+    deg_ += y.deg_;
 }
 
 template <class BitmaskType>
@@ -453,8 +468,8 @@ inline int NHilbertDual::VecSpec<BitmaskType>::sign() const {
 template <class BitmaskType>
 inline bool NHilbertDual::VecSpec<BitmaskType>::operator == (
         const NHilbertDual::VecSpec<BitmaskType>& other) const {
-    // Test bitmasks first since this gives us a fast way of saying no.
-    if (mask_ != other.mask_)
+    // Begin with simple tests that give us a fast way of saying no.
+    if (mask_ != other.mask_ || deg_ != other.deg_)
         return false;
     return (static_cast<NRay&>(*this) == static_cast<NRay&>(other));
 }
@@ -462,8 +477,8 @@ inline bool NHilbertDual::VecSpec<BitmaskType>::operator == (
 template <class BitmaskType>
 inline bool NHilbertDual::VecSpec<BitmaskType>::operator <= (
         const NHilbertDual::VecSpec<BitmaskType>& other) const {
-    // Test bitmasks first since this gives us a fast way of saying no.
-    if (! (mask_ <= other.mask_))
+    // Begin with simple tests that give us a fast way of saying no.
+    if (! (mask_ <= other.mask_ && deg_ <= other.deg_))
         return false;
     for (unsigned i = 0; i < size(); ++i)
         if ((*this)[i] > other[i])
