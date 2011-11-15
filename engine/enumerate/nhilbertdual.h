@@ -469,9 +469,9 @@ template <class BitmaskType>
 inline bool NHilbertDual::VecSpec<BitmaskType>::operator == (
         const NHilbertDual::VecSpec<BitmaskType>& other) const {
     // Begin with simple tests that give us a fast way of saying no.
-    if (mask_ != other.mask_ || deg_ != other.deg_)
+    if (! (mask_ == other.mask_ && deg_ == other.deg_))
         return false;
-    return (static_cast<NRay&>(*this) == static_cast<NRay&>(other));
+    return (static_cast<const NRay&>(*this) == static_cast<const NRay&>(other));
 }
 
 template <class BitmaskType>
