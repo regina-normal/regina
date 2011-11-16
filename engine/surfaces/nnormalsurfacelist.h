@@ -251,7 +251,9 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * be extremely slow for larger triangulations.
          *
          * \pre If non-zero, the argument \a vtxSurfaces is precisely
-         * the set of all vertex normal surfaces in the given triangulation.
+         * the set of all vertex normal surfaces in the given triangulation,
+         * enumerated using the same coordinate system and embedded-only
+         * constraints as given here.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
