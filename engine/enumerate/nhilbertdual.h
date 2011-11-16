@@ -193,9 +193,6 @@ class NHilbertDual {
                 BitmaskType mask_;
                     /**< A bitmask indicating which coordinates are zero
                          (\c false) and which are non-zero (\c true). */
-                NLargeInteger deg_;
-                    /**< The "total degree" of this vector, which in
-                         this case is simply the sum of its coordinates. */
 #ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
                 NLargeInteger srcNextHyp_;
                     /**< Stores information from the summands used to
@@ -455,13 +452,13 @@ inline NHilbertDual::NHilbertDual() {
 template <class BitmaskType>
 inline NHilbertDual::VecSpec<BitmaskType>::VecSpec(unsigned dim) :
         NRay(dim), mask_(dim) {
-    // All vector elements, nextHyp_, srcNextHyp_ and deg_ are initialised to
+    // All vector elements, nextHyp_ and srcNextHyp_ are initialised to
     // zero thanks to the NLargeInteger default constructor.
 }
 
 template <class BitmaskType>
 inline NHilbertDual::VecSpec<BitmaskType>::VecSpec(unsigned pos, unsigned dim) :
-        NRay(dim), mask_(dim), deg_(1) {
+        NRay(dim), mask_(dim) {
     // All coordinates are initialised to zero by default thanks to
     // the NLargeInteger constructor.
     setElement(pos, NLargeInteger::one);
@@ -476,8 +473,7 @@ inline NHilbertDual::VecSpec<BitmaskType>::VecSpec(
 #ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
         srcNextHyp_(other.srcNextHyp_),
 #endif
-        mask_(other.mask_),
-        deg_(other.deg_) {
+        mask_(other.mask_) {
 }
 
 template <class BitmaskType>
@@ -507,7 +503,6 @@ inline void NHilbertDual::VecSpec<BitmaskType>::formSum(
     (*this) += neg;
     nextHyp_ += neg.nextHyp_;
     mask_ |= neg.mask_;
-    deg_ += neg.deg_;
 
 #ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
     if (nextHyp_ >= 0)
@@ -545,7 +540,7 @@ template <class BitmaskType>
 inline bool NHilbertDual::VecSpec<BitmaskType>::operator == (
         const NHilbertDual::VecSpec<BitmaskType>& other) const {
     // Begin with simple tests that give us a fast way of saying no.
-    if (! (mask_ == other.mask_ && deg_ == other.deg_))
+    if (! (mask_ == other.mask_))
         return false;
     return (static_cast<const NRay&>(*this) == static_cast<const NRay&>(other));
 }
@@ -554,7 +549,7 @@ template <class BitmaskType>
 inline bool NHilbertDual::VecSpec<BitmaskType>::operator <= (
         const NHilbertDual::VecSpec<BitmaskType>& other) const {
     // Begin with simple tests that give us a fast way of saying no.
-    if (! (mask_ <= other.mask_ && deg_ <= other.deg_))
+    if (! (mask_ <= other.mask_))
         return false;
     for (unsigned i = 0; i < size(); ++i)
         if ((*this)[i] > other[i])
