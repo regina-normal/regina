@@ -344,11 +344,17 @@ void NHilbertDual::intersectHyperplane(std::vector<VecSpec<BitmaskType>*>& list,
                     // be in pos.  Therefore we only need to test
                     // reduction against pos, and not zero also.
                     if (! reduces(sum, pos, 1, pos.end()))
-                        newPos.push_back(new VecSpec<BitmaskType>(sum));
+#ifndef __REGINA_HILBERT_DUAL_OPT_NEWGEN_STRICT_ONLY
+                        if (! reduces(sum, zero, 1, pos.end()))
+#endif
+                            newPos.push_back(new VecSpec<BitmaskType>(sum));
                 } else if (s < 0) {
                     // Likewise: test only against neg, and not zero also.
                     if (! reduces(sum, neg, -1, neg.end()))
-                        newNeg.push_back(new VecSpec<BitmaskType>(sum));
+#ifndef __REGINA_HILBERT_DUAL_OPT_NEWGEN_STRICT_ONLY
+                        if (! reduces(sum, zero, -1, neg.end()))
+#endif
+                            newNeg.push_back(new VecSpec<BitmaskType>(sum));
                 }
             }
         }

@@ -43,14 +43,23 @@
 #include <vector>
 
 #ifndef __DOXYGEN
-// Optimisations:
+    // Optimisations:
 
-/**
- * Bruns and Ichim, J. Algebra 324 (2010) 1098-1113, remark 16(d).
- * This doesn't seem to help for fundamental normal surfaces (and in
- * fact seems to slow things down a small amount).
- */
-// #define __REGINA_HILBERT_DUAL_OPT_BI16D
+    /**
+     * Bruns and Ichim, J. Algebra 324 (2010) 1098-1113, remark 16(d).
+     * This doesn't seem to help for fundamental normal surfaces (and in
+     * fact seems to slow things down a small amount).
+     */
+    // #define __REGINA_HILBERT_DUAL_OPT_BI16D
+
+    /**
+     * When generating new vectors, only reduce against older vectors
+     * that lie in the corresponding strict half-space, and do not perform
+     * the additional (and unnecessary) reduction against older vectors that
+     * lie directly on the hyperplane.
+     * In practice this does speed things up, but only a little.
+     */
+    #define __REGINA_HILBERT_DUAL_OPT_NEWGEN_STRICT_ONLY
 #endif
 
 namespace regina {
