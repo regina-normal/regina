@@ -181,37 +181,27 @@ void* NNormalSurfaceList::FundPrimalEnumerator::run(void*) {
         #include "surfaces/flavourregistry.h"
     }
 
+    NNormalSurfaceList* useVtxSurfaces = vtxSurfaces;
     if (! vtxSurfaces) {
-        // Form the matching equations and starting cone.
-        NMatrixInt* eqns = makeMatchingEquations(triang, list->flavour);
-
-        // Find the vertex normal surfaces.
+        // Enumerate all vertex normal surfaces using the default (and
+        // hopefully best possible) algorithm.
         if (progress)
             progress->setMessage("Enumerating extremal rays");
-        std::vector<NRay*> vertices;
-        NDoubleDescription::enumerateExtremalRays<NRay>(
-            std::back_insert_iterator<std::vector<NRay*> >(vertices),
-            *eqns, constraints, 0);
 
-        // Find the fundamental normal surfaces.
-        if (progress)
-            progress->setMessage("Enumerating Hilbert basis");
-        enumerateHilbertPrimal(list->flavour, SurfaceInserter(*list, triang),
-            vertices, constraints, progress);
-
-        for (std::vector<NRay*>::iterator it = vertices.begin();
-                it != vertices.end(); ++it)
-            delete *it;
-        delete eqns;
-    } else {
-        // Use the vertex normal surfaces directly.
-        if (progress)
-            progress->setMessage("Enumerating Hilbert basis");
-
-        enumerateHilbertPrimal(list->flavour, SurfaceInserter(*list, triang),
-            *vtxSurfaces, constraints, progress);
+        useVtxSurfaces = new NNormalSurfaceList(list->flavour, list->embedded);
+        VertexEnumerator e(useVtxSurfaces, triang, 0);
+        e.run(0);
     }
+
+    if (progress)
+        progress->setMessage("Enumerating Hilbert basis");
+
+    enumerateHilbertPrimal(list->flavour, SurfaceInserter(*list, triang),
+        *useVtxSurfaces, constraints, progress);
+
     delete constraints;
+    if (! vtxSurfaces)
+        delete useVtxSurfaces;
 
     // All done!
     triang->insertChildLast(list);
