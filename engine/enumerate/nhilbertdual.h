@@ -42,6 +42,17 @@
 #include <list>
 #include <vector>
 
+#ifndef __DOXYGEN
+// Optimisations:
+
+/**
+ * Bruns and Ichim, J. Algebra 324 (2010) 1098-1113, remark 16(d).
+ * This doesn't seem to help for fundamental normal surfaces (and in
+ * fact seems to slow things down a small amount).
+ */
+// #define __REGINA_HILBERT_DUAL_OPT_BI16D
+#endif
+
 namespace regina {
 
 class NEnumConstraintList;
@@ -171,6 +182,11 @@ class NHilbertDual {
                 NLargeInteger deg_;
                     /**< The "total degree" of this vector, which in
                          this case is simply the sum of its coordinates. */
+#ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
+                NLargeInteger srcNextHyp_;
+                    /**< Stores information from the summands used to
+                         create this vector.  See srcNextHyp() for details. */
+#endif
 
             public:
                 /**
@@ -204,7 +220,8 @@ class NHilbertDual {
                  * Updates the \a nextHyp_ member to reflect the dot
                  * product with the given hyperplane.
                  *
-                 * This routine also sets the generation \a gen_ to zero.
+                 * This routine also sets the members \a gen_ and
+                 * \a srcNextHyp_ to zero.
                  *
                  * @param subspace the matrix containing the full set of
                  * hyperplanes.
@@ -217,10 +234,15 @@ class NHilbertDual {
                 /**
                  * Sets this to the sum of the two given vectors.
                  *
-                 * @param x the first vector to add.
-                 * @param y the second vector to add.
+                 * \pre <tt>pos.nextHyp() &gt; 0</tt>, and
+                 * <tt>neg.nextHyp() &lt; 0</tt>.
+                 *
+                 * @param pos the first vector to add, which must lie on
+                 * the strictly positive side of the current hyperplane.
+                 * @param neg the second vector to add, which must lie
+                 * on the strictly negative side of the current hyperplane.
                  */
-                inline void formSum(const VecSpec& x, const VecSpec& y);
+                inline void formSum(const VecSpec& pos, const VecSpec& neg);
 
                 /**
                  * Returns the dot product of this vector with the
@@ -242,6 +264,28 @@ class NHilbertDual {
                  * @return 1, 0 or -1 according to the sign of \a nextHyp_.
                  */
                 inline int sign() const;
+
+#ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
+                /**
+                 * Returns information from the summands used to
+                 * create this vector.
+                 *
+                 * Specifically: Suppose this vector was created using
+                 * formSum().  If nextHyp() &ge; 0, then this routine returns
+                 * <tt>pos.nextHyp()</tt> where \a pos was the
+                 * positive summand passed to formSum().
+                 * If nextHyp() &lt; 0, then this routine returns
+                 * <tt>neg.nextHyp()</tt> where \a neg was the
+                 * negative summand passed to formSum().
+                 *
+                 * If this vector was not created using formSum(),
+                 * or if initNextHyp() has since been called, then this
+                 * routine returns zero.
+                 *
+                 * @return the summand information as described above.
+                 */
+                inline const NLargeInteger& srcNextHyp() const;
+#endif
 
                 /**
                  * Determines if this and the given vector are identical.
@@ -399,8 +443,8 @@ inline NHilbertDual::NHilbertDual() {
 template <class BitmaskType>
 inline NHilbertDual::VecSpec<BitmaskType>::VecSpec(unsigned dim) :
         NRay(dim), mask_(dim) {
-    // All vector elements, nextHyp_ and deg_ are initialised to zero
-    // thanks to the NLargeInteger default constructor.
+    // All vector elements, nextHyp_, srcNextHyp_ and deg_ are initialised to
+    // zero thanks to the NLargeInteger default constructor.
 }
 
 template <class BitmaskType>
@@ -417,6 +461,9 @@ inline NHilbertDual::VecSpec<BitmaskType>::VecSpec(
         const NHilbertDual::VecSpec<BitmaskType>& other) :
         NRay(other),
         nextHyp_(other.nextHyp_),
+#ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
+        srcNextHyp_(other.srcNextHyp_),
+#endif
         mask_(other.mask_),
         deg_(other.deg_) {
 }
@@ -435,18 +482,28 @@ inline void NHilbertDual::VecSpec<BitmaskType>::initNextHyp(
         }
 
     gen_ = 0;
+#ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
+    srcNextHyp_ = 0;
+#endif
 }
 
 template <class BitmaskType>
 inline void NHilbertDual::VecSpec<BitmaskType>::formSum(
-        const NHilbertDual::VecSpec<BitmaskType>& x,
-        const NHilbertDual::VecSpec<BitmaskType>& y) {
-    (*this) = x; // The default assignment operator.
+        const NHilbertDual::VecSpec<BitmaskType>& pos,
+        const NHilbertDual::VecSpec<BitmaskType>& neg) {
+    (*this) = pos; // The default assignment operator.
 
-    (*this) += y;
-    nextHyp_ += y.nextHyp_;
-    mask_ |= y.mask_;
-    deg_ += y.deg_;
+    (*this) += neg;
+    nextHyp_ += neg.nextHyp_;
+    mask_ |= neg.mask_;
+    deg_ += neg.deg_;
+
+#ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
+    if (nextHyp_ >= 0)
+        srcNextHyp_ = pos.nextHyp_;
+    else
+        srcNextHyp_ = neg.nextHyp_;
+#endif
 }
 
 template <class BitmaskType>
@@ -464,6 +521,14 @@ template <class BitmaskType>
 inline int NHilbertDual::VecSpec<BitmaskType>::sign() const {
     return (nextHyp_ == 0 ? 0 : nextHyp_ > 0 ? 1 : -1);
 }
+
+#ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
+template <class BitmaskType>
+inline const NLargeInteger& NHilbertDual::VecSpec<BitmaskType>::srcNextHyp()
+        const {
+    return srcNextHyp_;
+}
+#endif
 
 template <class BitmaskType>
 inline bool NHilbertDual::VecSpec<BitmaskType>::operator == (

@@ -300,6 +300,19 @@ void NHilbertDual::intersectHyperplane(std::vector<VecSpec<BitmaskType>*>& list,
 
             for (negit = (reachedPosPrevGen ? neg.begin() : negPrevGen);
                     negit != neg.end(); ++negit) {
+#ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
+                // Check for guaranteed redundany.
+                // See Bruns-Ichim, Remark 16(d).
+                // Bruns and Ichim use strict inequalities, but the same
+                // argument shows that non-strict inequalities will work also.
+                if ((*posit)->srcNextHyp() > 0 &&
+                        (*negit)->nextHyp() <= - (*posit)->srcNextHyp())
+                    continue;
+                if ((*negit)->srcNextHyp() < 0 &&
+                        (*posit)->nextHyp() >= - (*negit)->srcNextHyp())
+                    continue;
+#endif
+
                 // Check for validity.
                 if (constraintsBegin) {
                     comb = (*posit)->mask();
@@ -319,6 +332,7 @@ void NHilbertDual::intersectHyperplane(std::vector<VecSpec<BitmaskType>*>& list,
                 }
 
                 // Check whether the vector can be reduced; if not, use it.
+                // We CANNOT reorder pos or neg at this point.
                 sum.formSum(**posit, **negit);
                 s = sum.sign();
                 if (s == 0) {
