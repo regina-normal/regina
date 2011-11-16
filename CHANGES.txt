@@ -47,8 +47,8 @@ Version 4.91  [ (under development) ]
             - New class for enumerating maximal admissible faces of the
               normal surface solution cone.
         Class NNormalSurfaceList:
-            - New routine enumerateFundDual() to enumerate fundamental normal
-              surfaces.
+            - New routines enumerateFundPrimal() and enumerateFundDual() to
+              enumerate fundamental normal surfaces.
             - New coordinate systems ORIENTED and ORIENTED_QUAD to
               support transverse oriented normal surfaces.
             - New routines beginVectors() and endVectors() and new inner class

@@ -234,6 +234,11 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * remain the parent of this normal surface list, and must not
          * change while this normal surface list remains in existence.
          *
+         * The first step of the primal algorithm is to enumerate all
+         * vertex normal surfaces.  If you have already done this, you
+         * may pass the list of vertex normal surfaces as the (optional)
+         * parameter \a vtxSurfaces.
+         *
          * If a progress manager is passed, the normal surface
          * enumeration will take place in a new thread and this routine
          * will return immediately.  The NProgress object assigned to
@@ -244,6 +249,9 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * in the current thread and this routine will return only when
          * the enumeration is complete.  Note that this enumeration can
          * be extremely slow for larger triangulations.
+         *
+         * \pre If non-zero, the argument \a vtxSurfaces is precisely
+         * the set of all vertex normal surfaces in the given triangulation.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
@@ -266,6 +274,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          */
         static NNormalSurfaceList* enumerateFundPrimal(
             NTriangulation* owner, int newFlavour, bool embeddedOnly = true,
+            NNormalSurfaceList* vtxSurfaces = 0,
             NProgressManager* manager = 0);
 
         /**
@@ -786,7 +795,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
                  *
                  * @return the corresponding normal surface vector.
                  */
-                const NNormalSurfaceVector* operator *();
+                const NNormalSurfaceVector* operator *() const;
 
                 /**
                  * The preincrement operator.
@@ -1029,6 +1038,30 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
             const NEnumConstraintList* constraints, NProgressMessage* progress);
 
         /**
+         * Calls NHilbertPrimal::enumerateHilbertBasis(), using extremal
+         * rays defined by the given list of normal surfaces, and
+         * using the vector class that corresponds to the given
+         * coordinate flavour.
+         *
+         * All parameters not listed below are taken directly from
+         * NDoubleDescription::enumerateExtremalRays() and
+         * NHilbertPrimal::enumerateHilbertBasis().
+         *
+         * @param flavour the flavour of coordinate system to be used;
+         * this must be one of the predefined coordinate system constants
+         * in NNormalSurfaceList.
+         * @param vtxSurfaces the list of all vertex normal surfaces in
+         * the underlying triangulation.
+         * @return \c true if NHilbertDual::enumerateHilbertBasis()
+         * was successfully called, or \c false if the given flavour
+         * does not correspond to a known coordinate system.
+         */
+        static bool enumerateHilbertPrimal(int flavour,
+            const SurfaceInserter& results,
+            const NNormalSurfaceList& vtxSurfaces,
+            const NEnumConstraintList* constraints, NProgressMessage* progress);
+
+        /**
          * Calls NHilbertDual::enumerateHilbertBasis() with the
          * given arguments, and using the vector class that corresponds
          * to the given coordinate flavour.
@@ -1235,6 +1268,9 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
                 NTriangulation* triang;
                     /**< The triangulation upon which this normal
                          surface list will be based. */
+                NNormalSurfaceList* vtxSurfaces;
+                    /**< The list of all vertex normal surfaces in \a triang,
+                         or 0 if this information is not known. */
                 NProgressManager* manager;
                     /**< The progress manager through which progress is
                          reported, or 0 if no progress manager is in use. */
@@ -1247,12 +1283,16 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
                  * @param newList the normal surface list to be filled.
                  * @param useTriang the triangulation upon which this
                  * normal surface list will be based.
+                 * @param useVtxSurafces the vertex normal surfaces in
+                 * \a useTriang, or 0 if this information is not known.
                  * @param useManager the progress manager to use for
                  * progress reporting, or 0 if progress reporting is not
                  * required.
                  */
                 FundPrimalEnumerator(NNormalSurfaceList* newList,
-                    NTriangulation* useTriang, NProgressManager* useManager);
+                    NTriangulation* useTriang,
+                    NNormalSurfaceList* useVtxSurfaces,
+                    NProgressManager* useManager);
 
                 void* run(void*);
         };
@@ -1414,7 +1454,7 @@ inline bool NNormalSurfaceList::VectorIterator::operator !=(
 }
 
 inline const NNormalSurfaceVector* NNormalSurfaceList::VectorIterator::
-        operator *() {
+        operator *() const {
     return (*it_)->rawVector();
 }
 
@@ -1517,9 +1557,10 @@ inline NNormalSurfaceList::VertexEnumerator::VertexEnumerator(
 }
 
 inline NNormalSurfaceList::FundPrimalEnumerator::FundPrimalEnumerator(
-        NNormalSurfaceList* newList,
-        NTriangulation* useTriang, NProgressManager* useManager) :
-        list(newList), triang(useTriang), manager(useManager) {
+        NNormalSurfaceList* newList, NTriangulation* useTriang,
+        NNormalSurfaceList* newVtxSurfaces, NProgressManager* useManager) :
+        list(newList), triang(useTriang), vtxSurfaces(newVtxSurfaces),
+        manager(useManager) {
 }
 
 inline NNormalSurfaceList::FundDualEnumerator::FundDualEnumerator(
