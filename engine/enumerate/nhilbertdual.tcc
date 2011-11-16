@@ -195,13 +195,9 @@ void NHilbertDual::enumerateUsingBitmask(OutputIterator results,
 template <class BitmaskType>
 bool NHilbertDual::reduces(const VecSpec<BitmaskType>& vec,
         const std::list<VecSpec<BitmaskType>*>& against,
-        int listSign,
-        typename std::list<VecSpec<BitmaskType>*>::const_iterator ignore) {
+        int listSign) {
     typename std::list<VecSpec<BitmaskType>*>::const_iterator it;
     for (it = against.begin(); it != against.end(); ++it) {
-        if (it == ignore)
-            continue;
-
         if (! (**it <= vec))
             continue;
 
@@ -224,20 +220,72 @@ template <class BitmaskType>
 void NHilbertDual::reduceBasis(std::list<VecSpec<BitmaskType>*>& reduce,
         std::list<VecSpec<BitmaskType>*>& against,
         int listSign) {
-    typename std::list<VecSpec<BitmaskType>*>::iterator i, next;
+    if (reduce.empty())
+        return;
+
+    typename std::list<VecSpec<BitmaskType>*>::iterator i, next, red;
+    bool processed;
 
     i = reduce.begin();
-    while (i != reduce.end()) {
-        next = i;
-        ++next;
+    next = i;
+    ++next;
 
-        // See if **i is redundant.
-        if (reduces(**i, against, listSign, i)) {
-            delete *i;
-            reduce.erase(i);
+    while (i != reduce.end()) {
+        processed = true;
+        for (red = against.begin(); red != against.end(); ++red) {
+            if (red == i) {
+                processed = false;
+                continue;
+            }
+
+            if (! (**red <= **i))
+                continue;
+
+            if (listSign > 0) {
+                if ((**red).nextHyp() <= (**i).nextHyp())
+                    break;
+            } else if (listSign < 0) {
+                if ((**i).nextHyp() <= (**red).nextHyp())
+                    break;
+            } else {
+                if ((**i).nextHyp() == (**red).nextHyp())
+                    break;
+            }
         }
 
+        if (red == against.end()) {
+            i = next;
+            if (next != reduce.end())
+                ++next;
+            continue;
+        }
+
+        delete *i;
+        reduce.erase(i);
+
+#ifdef __REGINA_HILBERT_DUAL_OPT_DARWIN
+        // Darwinistic reordering of the list against.
+        if (processed) {
+            against.push_front(*red);
+            against.erase(red);
+
+            i = next;
+            if (next != reduce.end())
+                ++next;
+        } else {
+            // Both reduce and against are the same list, and the
+            // reducing vector is one we haven't processed yet.
+            if (red == next)
+                ++next;
+            against.push_front(*red);
+            against.erase(red);
+            i = against.begin();
+        }
+#else
         i = next;
+        if (next != reduce.end())
+            ++next;
+#endif
     }
 }
 
@@ -336,23 +384,23 @@ void NHilbertDual::intersectHyperplane(std::vector<VecSpec<BitmaskType>*>& list,
                 sum.formSum(**posit, **negit);
                 s = sum.sign();
                 if (s == 0) {
-                    if (! reduces(sum, zero, 0, zero.end()))
+                    if (! reduces(sum, zero, 0))
                         newZero.push_back(new VecSpec<BitmaskType>(sum));
                 } else if (s > 0) {
                     // If this decomposes as a sum of (possibly many)
                     // terms in pos and/or zero, at least one such term must
                     // be in pos.  Therefore we only need to test
                     // reduction against pos, and not zero also.
-                    if (! reduces(sum, pos, 1, pos.end()))
+                    if (! reduces(sum, pos, 1))
 #ifndef __REGINA_HILBERT_DUAL_OPT_NEWGEN_STRICT_ONLY
-                        if (! reduces(sum, zero, 1, pos.end()))
+                        if (! reduces(sum, zero, 1))
 #endif
                             newPos.push_back(new VecSpec<BitmaskType>(sum));
                 } else if (s < 0) {
                     // Likewise: test only against neg, and not zero also.
-                    if (! reduces(sum, neg, -1, neg.end()))
+                    if (! reduces(sum, neg, -1))
 #ifndef __REGINA_HILBERT_DUAL_OPT_NEWGEN_STRICT_ONLY
-                        if (! reduces(sum, zero, -1, neg.end()))
+                        if (! reduces(sum, zero, -1))
 #endif
                             newNeg.push_back(new VecSpec<BitmaskType>(sum));
                 }

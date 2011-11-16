@@ -46,7 +46,7 @@
     // Optimisations:
 
     /**
-     * Bruns and Ichim, J. Algebra 324 (2010) 1098-1113, remark 16(d).
+     * Bruns and Ichim, J. Algebra 324 (2010), 1098-1113, remark 16(d).
      * This doesn't seem to help for fundamental normal surfaces (and in
      * fact seems to slow things down a small amount).
      */
@@ -60,6 +60,15 @@
      * In practice this does speed things up, but only a little.
      */
     #define __REGINA_HILBERT_DUAL_OPT_NEWGEN_STRICT_ONLY
+
+    /**
+     * When reducing a potential basis, "darwinistically" reorder it so
+     * that successful reducers are near the front.  See Bruns and Ichim,
+     * J. Algebra 324 (2010), 1098-1113, remark 6(a).
+     * In practice, for fundamental normal surfaces this does not seem
+     * to help (and in fact it slows things down a little).
+     */
+    // #define __REGINA_HILBERT_DUAL_OPT_DARWIN
 #endif
 
 namespace regina {
@@ -367,21 +376,20 @@ class NHilbertDual {
          * \a vec against.
          * @param listSign an integer indicating which sign of the
          * current hyperplane we are working on.
-         * @param ignore a single candidate basis vector from \a against
-         * that should be ignored (for instance, to stop us from
-         * reducing \a vec against itself), or against.end() if every
-         * candidate basis vector in \a against should be considered.
+         * @return \c true if the given vector can be reduced, or \c false 
+         * otherwise.
          */
         template <class BitmaskType>
         static bool reduces(const VecSpec<BitmaskType>& vec,
             const std::list<VecSpec<BitmaskType>*>& against,
-            int listSign,
-            typename std::list<VecSpec<BitmaskType>*>::const_iterator ignore);
+            int listSign);
 
         /**
          * Removes all vectors from \reduce that can be reduced against
-         * any of the candidate basis vectors in \a against.  For
-         * details of what reduction means, see reduces() above.
+         * any of the candidate basis vectors in \a against.
+         * This routine might also reorder the list \a against in the
+         * hope of detecting future reductions more quickly.
+         * For details of what reduction means, see reduces() above.
          *
          * This routine will work even if \a reduce and \a against are
          * the same list.
