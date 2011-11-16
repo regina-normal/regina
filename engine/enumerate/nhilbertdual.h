@@ -193,10 +193,6 @@ class NHilbertDual {
                 BitmaskType mask_;
                     /**< A bitmask indicating which coordinates are zero
                          (\c false) and which are non-zero (\c true). */
-                unsigned gen_;
-                    /**< Indicates in which generation of the algorithm
-                         this vector was created.  See the Bruns-Ichim paper
-                         from the NHilberDual class notes for details. */
                 NLargeInteger deg_;
                     /**< The "total degree" of this vector, which in
                          this case is simply the sum of its coordinates. */
@@ -238,8 +234,7 @@ class NHilbertDual {
                  * Updates the \a nextHyp_ member to reflect the dot
                  * product with the given hyperplane.
                  *
-                 * This routine also sets the members \a gen_ and
-                 * \a srcNextHyp_ to zero.
+                 * This routine also sets the member \a srcNextHyp_ to zero.
                  *
                  * @param subspace the matrix containing the full set of
                  * hyperplanes.
@@ -498,7 +493,6 @@ inline void NHilbertDual::VecSpec<BitmaskType>::initNextHyp(
             nextHyp_ += tmp;
         }
 
-    gen_ = 0;
 #ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
     srcNextHyp_ = 0;
 #endif
