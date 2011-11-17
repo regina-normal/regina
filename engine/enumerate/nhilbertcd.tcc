@@ -237,6 +237,7 @@ void NHilbertCD::enumerateUsingBitmask(OutputIterator results,
 
             coord[stackSize] = new VecSpec<BitmaskType>(*c);
             coord[stackSize]->setElement(i, (*coord[stackSize])[i] + 1);
+            coord[stackSize]->mask_.set(i, true);
 
             match[stackSize] = new NRay(*m);
             (*match[stackSize]) += (*unitMatch[i]);
