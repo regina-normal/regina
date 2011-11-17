@@ -103,6 +103,12 @@ NEnumConstraintList* makeEmbeddedConstraints(NTriangulation* triangulation,
     return 0;
 }
 
+#undef REGISTER_FLAVOUR
+#define REGISTER_FLAVOUR(id_name, class, n, an, s) \
+    case id_name: NDoubleDescription::enumerateExtremalRays<class>( \
+        SurfaceInserter(*list, triang), *eqns, constraints, progress); \
+        break;
+
 void* NNormalSurfaceList::VertexEnumerator::run(void*) {
     NProgressNumber* progress = 0;
     if (manager) {
@@ -132,8 +138,10 @@ void* NNormalSurfaceList::VertexEnumerator::run(void*) {
         NMatrixInt* eqns = makeMatchingEquations(triang, list->flavour);
 
         // Find the normal surfaces.
-        enumerateExtremalRays(list->flavour,
-            SurfaceInserter(*list, triang), *eqns, constraints, progress);
+        switch(list->flavour) {
+            // Import cases from the flavour registry:
+            #include "surfaces/flavourregistry.h"
+        }
 
         delete eqns;
         delete constraints;
@@ -152,19 +160,11 @@ void* NNormalSurfaceList::VertexEnumerator::run(void*) {
 
 #undef REGISTER_FLAVOUR
 #define REGISTER_FLAVOUR(id_name, class, n, an, s) \
-    case id_name: NDoubleDescription::enumerateExtremalRays<class>( \
-        results, subspace, constraints, progress); \
-        return true;
-
-bool NNormalSurfaceList::enumerateExtremalRays(int flavour,
-        const SurfaceInserter& results, const NMatrixInt& subspace,
-        const NEnumConstraintList* constraints, NProgressNumber* progress) {
-    switch(flavour) {
-        // Import cases from the flavour registry:
-        #include "surfaces/flavourregistry.h"
-    }
-    return false;
-}
+    case id_name: NHilbertPrimal::enumerateHilbertBasis<class>( \
+        SurfaceInserter(*list, triang), \
+        useVtxSurfaces->beginVectors(), useVtxSurfaces->endVectors(), \
+        constraints, progress); \
+        break;
 
 void* NNormalSurfaceList::FundPrimalEnumerator::run(void*) {
     NProgressMessage* progress = 0;
@@ -193,8 +193,11 @@ void* NNormalSurfaceList::FundPrimalEnumerator::run(void*) {
     if (progress)
         progress->setMessage("Enumerating Hilbert basis");
 
-    enumerateHilbertPrimal(list->flavour, SurfaceInserter(*list, triang),
-        *useVtxSurfaces, constraints, progress);
+    // Find all fundamental normal surfaces.
+    switch(list->flavour) {
+        // Import cases from the flavour registry:
+        #include "surfaces/flavourregistry.h"
+    }
 
     delete constraints;
     if (! vtxSurfaces)
@@ -213,36 +216,9 @@ void* NNormalSurfaceList::FundPrimalEnumerator::run(void*) {
 
 #undef REGISTER_FLAVOUR
 #define REGISTER_FLAVOUR(id_name, class, n, an, s) \
-    case id_name: NHilbertPrimal::enumerateHilbertBasis<class>( \
-        results, rays.begin(), rays.end(), constraints, progress); \
-        return true;
-
-bool NNormalSurfaceList::enumerateHilbertPrimal(int flavour,
-        const SurfaceInserter& results, const std::vector<NRay*>& rays,
-        const NEnumConstraintList* constraints, NProgressMessage* progress) {
-    switch(flavour) {
-        // Import cases from the flavour registry:
-        #include "surfaces/flavourregistry.h"
-    }
-    return false;
-}
-
-#undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, class, n, an, s) \
-    case id_name: NHilbertPrimal::enumerateHilbertBasis<class>( \
-        results, vtxSurfaces.beginVectors(), vtxSurfaces.endVectors(), \
-        constraints, progress); \
-        return true;
-
-bool NNormalSurfaceList::enumerateHilbertPrimal(int flavour,
-        const SurfaceInserter& results, const NNormalSurfaceList& vtxSurfaces,
-        const NEnumConstraintList* constraints, NProgressMessage* progress) {
-    switch(flavour) {
-        // Import cases from the flavour registry:
-        #include "surfaces/flavourregistry.h"
-    }
-    return false;
-}
+    case id_name: NHilbertDual::enumerateHilbertBasis<class>( \
+        SurfaceInserter(*list, triang), *eqns, constraints, progress); \
+        break;
 
 void* NNormalSurfaceList::FundDualEnumerator::run(void*) {
     NProgressNumber* progress = 0;
@@ -260,8 +236,10 @@ void* NNormalSurfaceList::FundDualEnumerator::run(void*) {
     NMatrixInt* eqns = makeMatchingEquations(triang, list->flavour);
 
     // Find the normal surfaces.
-    enumerateHilbertDual(list->flavour,
-        SurfaceInserter(*list, triang), *eqns, constraints, progress);
+    switch(list->flavour) {
+        // Import cases from the flavour registry:
+        #include "surfaces/flavourregistry.h"
+    }
 
     delete eqns;
     delete constraints;
@@ -275,22 +253,6 @@ void* NNormalSurfaceList::FundDualEnumerator::run(void*) {
     }
 
     return 0;
-}
-
-#undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, class, n, an, s) \
-    case id_name: NHilbertDual::enumerateHilbertBasis<class>( \
-        results, subspace, constraints, progress); \
-        return true;
-
-bool NNormalSurfaceList::enumerateHilbertDual(int flavour,
-        const SurfaceInserter& results, const NMatrixInt& subspace,
-        const NEnumConstraintList* constraints, NProgressNumber* progress) {
-    switch(flavour) {
-        // Import cases from the flavour registry:
-        #include "surfaces/flavourregistry.h"
-    }
-    return false;
 }
 
 NNormalSurfaceList* NNormalSurfaceList::enumerate(NTriangulation* owner,
