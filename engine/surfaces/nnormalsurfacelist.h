@@ -431,6 +431,40 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
         static NNormalSurfaceList* enumerateFundFullCone(
             NTriangulation* owner, int newFlavour, bool embeddedOnly = true);
 
+        /**
+         * Uses an extremely slow modified Contejean-Devie procedure to
+         * enumerate all embedded fundamental surfaces in the given
+         * triangulation.
+         *
+         * Aside from the underlying algorithm, the behaviour of this
+         * routine is identical to enumerateFundPrimal() and
+         * enumerateFundDual().  See those routines for details
+         * regarding preconditions, postconditions, ownership and so on.
+         *
+         * Unlike enumerateFundPrimal() and enumerateFundDual(), this
+         * routine does not support progress management, and does not
+         * support running in a separate thread.
+         *
+         * \warning
+         * Users will generally not want to call this routine, since it
+         * is typically much slower than either enumerateFundPrimal()
+         * or enumerateFundDual(), and it gives precisely the same results.
+         * This routine is provided mainly for interest's sake, and to allow
+         * comparisons between different algorithms.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * surfaces will be based.
+         * @param newFlavour the flavour of coordinate system to be used;
+         * this must be one of the predefined coordinate system
+         * constants in NNormalSurfaceList.
+         * @param embeddedOnly \c true if only embedded normal surfaces
+         * are to be produced, or \c false if immersed and singular
+         * normal surfaces are also to be produced; this defaults to \c true.
+         * @return the newly created normal surface list.
+         */
+        static NNormalSurfaceList* enumerateFundCD(
+            NTriangulation* owner, int newFlavour, bool embeddedOnly = true);
+
         virtual int getFlavour() const;
         virtual bool allowsAlmostNormal() const;
         virtual bool allowsSpun() const;

@@ -29,6 +29,7 @@
 #include <iterator>
 #include <list>
 #include "enumerate/ndoubledescription.h"
+#include "enumerate/nhilbertcd.h"
 #include "enumerate/nhilbertdual.h"
 #include "enumerate/nhilbertprimal.h"
 #include "file/nfile.h"
@@ -445,6 +446,36 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
         }
     }
 
+    // All done!
+    owner->insertChildLast(ans);
+    return ans;
+}
+
+#undef REGISTER_FLAVOUR
+#define REGISTER_FLAVOUR(id_name, class, n, an, s) \
+    case id_name: NHilbertCD::enumerateHilbertBasis<class>( \
+        SurfaceInserter(*ans, owner), *eqns, constraints); \
+        break;
+
+NNormalSurfaceList* NNormalSurfaceList::enumerateFundCD(
+        NTriangulation* owner, int newFlavour, bool embeddedOnly) {
+    NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
+
+    NMatrixInt* eqns = makeMatchingEquations(owner, newFlavour);
+    NEnumConstraintList* constraints = 0;
+    if (embeddedOnly)
+        constraints = makeEmbeddedConstraints(owner, newFlavour);
+
+    switch(newFlavour) {
+        // Import cases from the flavour registry:
+        #include "surfaces/flavourregistry.h"
+    }
+
+    delete constraints;
+    delete eqns;
+
+    // All done!
+    owner->insertChildLast(ans);
     return ans;
 }
 

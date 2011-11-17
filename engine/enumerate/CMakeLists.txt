@@ -1,7 +1,7 @@
 # enumerate
 
 # Files to compile
-SET ( FILES nenumconstraint ndoubledescription ndoubledescriptor nhilbertdual nhilbertprimal nmaxadmissible )
+SET ( FILES nenumconstraint ndoubledescription ndoubledescriptor nhilbertcd nhilbertdual nhilbertprimal nmaxadmissible )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
@@ -11,4 +11,4 @@ ENDFOREACH(SOURCE_FILE)
 ADD_SUBDIRECTORY("normaliz")
 
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
-INSTALL(FILES nenumconstraint.h ndoubledescription.h ndoubledescription.tcc ndoubledescriptor.h ndoubledescriptor.tcc nhilbertdual.h nhilbertdual.tcc nhilbertprimal.h nhilbertprimal.tcc nmaxadmissible.h nmaxadmissible.tcc ordering.h DESTINATION ${INCLUDEDIR}/enumerate)
+INSTALL(FILES nenumconstraint.h ndoubledescription.h ndoubledescription.tcc ndoubledescriptor.h ndoubledescriptor.tcc nhilbertcd.h nhilbertcd.tcc nhilbertdual.h nhilbertdual.tcc nhilbertprimal.h nhilbertprimal.tcc nmaxadmissible.h nmaxadmissible.tcc ordering.h DESTINATION ${INCLUDEDIR}/enumerate)
