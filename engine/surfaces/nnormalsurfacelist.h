@@ -352,11 +352,6 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * double description method for normal surface enumeration",
          * Benjamin A. Burton, Math. Comp. 79 (2010), 453-484.
          *
-         * Users will generally not want to call this routine, since it
-         * is often much slower than enumerate() and it gives precisely
-         * the same results.  This routine is provided mainly for interest's
-         * sake, and to allow comparisons between different algorithms.
-         *
          * Aside from the underlying algorithm, the behaviour of this
          * routine is identical to enumerate().  See enumerate() for
          * details regarding preconditions, postconditions, ownership
@@ -364,6 +359,12 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          *
          * Unlike enumerate(), this routine does not support progress
          * management and does not support running in a separate thread.
+         *
+         * \warning
+         * Users will generally not want to call this routine, since it
+         * is often much slower than enumerate() and it gives precisely
+         * the same results.  This routine is provided mainly for interest's
+         * sake, and to allow comparisons between different algorithms.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
@@ -381,12 +382,54 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * enumerateStandardDirect() enumeration routine; see the
          * enumerateStandardDirect() documentation for further information.
          *
+         * \warning
+         * Users will generally not want to call this routine, since it
+         * is often much slower than enumerate() and it gives precisely
+         * the same results.  This routine is provided mainly for interest's
+         * sake, and to allow comparisons between different algorithms.
+         *
          * @param owner the triangulation upon which this list of
          * almost normal surfaces will be based.
          * @return the newly created surface list.
          */
         static NNormalSurfaceList* enumerateStandardANDirect(
             NTriangulation* owner);
+
+        /**
+         * Uses an extremely slow procedure to enumerate all embedded
+         * fundamental surfaces in the given triangulation,
+         * by running Normaliz over the full (and typically very large)
+         * solution cone, and only enforcing embedded constraints (such as
+         * the quadrilateral constraints) afterwards.
+         *
+         * Aside from the underlying algorithm, the behaviour of this
+         * routine is identical to enumerateFundPrimal() and
+         * enumerateFundDual().  See those routines for details
+         * regarding preconditions, postconditions, ownership and so on.
+         *
+         * Unlike enumerateFundPrimal() and enumerateFundDual(), this
+         * routine does not support progress management, and does not
+         * support running in a separate thread.
+         *
+         * \warning
+         * Users will generally not want to call this routine, since it
+         * is typically much slower than either enumerateFundPrimal()
+         * or enumerateFundDual(), and it gives precisely the same results.
+         * This routine is provided mainly for interest's sake, and to allow
+         * comparisons between different algorithms.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * surfaces will be based.
+         * @param newFlavour the flavour of coordinate system to be used;
+         * this must be one of the predefined coordinate system
+         * constants in NNormalSurfaceList.
+         * @param embeddedOnly \c true if only embedded normal surfaces
+         * are to be produced, or \c false if immersed and singular
+         * normal surfaces are also to be produced; this defaults to \c true.
+         * @return the newly created normal surface list.
+         */
+        static NNormalSurfaceList* enumerateFundFullCone(
+            NTriangulation* owner, int newFlavour, bool embeddedOnly = true);
 
         virtual int getFlavour() const;
         virtual bool allowsAlmostNormal() const;
@@ -1374,6 +1417,22 @@ REGINA_API NNormalSurfaceVector* makeZeroVector(
  */
 REGINA_API NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
     int flavour);
+/**
+ * Creates a new set of validity constraints representing the condition that
+ * normal surfaces be embedded.  The validity constraints will be expressed
+ * relative to the given flavour of coordinate system.
+ *
+ * \ifacespython Not present.
+ *
+ * @param triangulation the triangulation upon which these validity constraints
+ * will be based.
+ * @param flavour the flavour of coordinate system to be used;
+ * this must be one of the predefined coordinate system
+ * constants in NNormalSurfaceList.
+ * @return a newly allocated set of constraints.
+ */
+REGINA_API NEnumConstraintList* makeEmbeddedConstraints(
+    NTriangulation* triangulation, int flavour);
 
 /*@}*/
 
