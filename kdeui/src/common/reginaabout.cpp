@@ -31,33 +31,39 @@
 #include "reginaabout.h"
 
 #include <cstdlib>
-#include <klocale.h>
-#include <kstandarddirs.h>
+/*#include <klocale.h>
+#include <kstandarddirs.h> */
 #include <qdatetime.h>
 #include <qfile.h>
 
-#include <KLocalizedString>
+#include <QLabel>
+#include <QTabWidget>
+#include <QTextEdit>
+#include <QVBoxLayout>
+
+
+/* #include <KLocalizedString> */
 
 const QByteArray ReginaAbout::regBugAddress(PACKAGE_BUGREPORT);
 
-const KLocalizedString ReginaAbout::regCopyright(
-    ki18n("Copyright (c) 1999-2011, The Regina development team"));
+const QString ReginaAbout::regCopyright(
+    tr("Copyright (c) 1999-2011, The Regina development team"));
 
 const QString ReginaAbout::regDataExt(".rga");
 
-const KLocalizedString ReginaAbout::regDescription(
-    ki18n("Software for 3-manifold topology and normal surface theory"));
+const QString ReginaAbout::regDescription(
+    tr("Software for 3-manifold topology and normal surface theory"));
 
-const QByteArray ReginaAbout::regName(I18N_NOOP("Regina"));
+const QByteArray ReginaAbout::regName(QT_TR_NOOP("Regina"));
 
-const KLocalizedString ReginaAbout::regReleased(
-    ki18n("Released %1").subs(QDate(2011, 9, 12).toString(Qt::TextDate)));
+const QString ReginaAbout::regReleased(
+    tr("Released %1").arg(QDate(2011, 9, 12).toString(Qt::TextDate)));
 
 const QByteArray ReginaAbout::regVersion(PACKAGE_VERSION);
 
 const QByteArray ReginaAbout::regWebsite("http://regina.sourceforge.net/");
 
-const KLocalizedString ReginaAbout::regLicense( ki18n( 
+const QString ReginaAbout::regLicense( tr( 
     "Copyright (c) 1999-2011, The Regina development team\n\n"
     "This program is distributed under the terms of the GPL v2.\n\n"
     "CITATION:\n\n"
@@ -106,69 +112,145 @@ const KLocalizedString ReginaAbout::regLicense( ki18n(
     "The Oxygen icons are dual-licensed under the Creative Common Attribution-\n"
     "ShareAlike 3.0 License or the GNU Library General Public License.\n"));
 
-ReginaAbout::ReginaAbout(const char* internalName) :
-        KAboutData(internalName, regName, ki18n(regName),regVersion,
-        regDescription, License_Custom, regCopyright,
-        regReleased, regWebsite, regBugAddress) {
-    setLicenseText(regLicense);
+ReginaAbout::ReginaAbout(QWidget* parent) : 
+        QDialog(parent) {
+        // KAboutData(internalName, regName, tr(regName),regVersion,
+        //regDescription, License_Custom, regCopyright,
+        //regReleased, regWebsite, regBugAddress) {
+    //setLicenseText(regLicense);
 
     // Authors:
-    addAuthor(ki18n("Benjamin Burton"), KLocalizedString(), "bab@debian.org",
+    addAuthor(tr("Benjamin Burton"), QString(), "bab@debian.org",
         "http://www.maths.uq.edu.au/~bab/");
-    addAuthor(ki18n("Ryan Budney"), KLocalizedString(), "rybu@uvic.ca",
+    addAuthor(tr("Ryan Budney"), QString(), "rybu@uvic.ca",
         "http://rybu.org/");
-    addAuthor(ki18n("William Pettersson"), KLocalizedString(),
+    addAuthor(tr("William Pettersson"), QString(),
         "william.pettersson@gmail.com", "");
 
     // Credits:
-    addCredit(ki18n("Bernard Blackham"),
-        ki18n("Help with cache optimisation"),"","");
-    addCredit(ki18n("Winfried Bruns, Bogdan Ichim and Christof Soeger"),
-        ki18n("Use of the Normaliz library"),"","");
-    addCredit(ki18n("Marc Culler"),
-        ki18n("Helpful discussions"),"","");
-    addCredit(ki18n("Dominique Devriese"),
-        ki18n("Red Hat / Fedora porting assistance"),"","");
-    addCredit(ki18n("Nathan Dunfield"),
-        ki18n("Helpful discussions"),"","");
-    addCredit(ki18n("Matthias Goerner"),
-        ki18n("Code contributions"),"","");
-    addCredit(ki18n("William Jaco"),
-        ki18n("Supervision and many long discussions"),"","");
-    addCredit(ki18n("David Letscher"),
-        ki18n("Code contributions and technical advice"),"","");
-    addCredit(ki18n("Craig Macintyre"),
-        ki18n("Red Hat / Fedora porting assistance"),"","");
-    addCredit(ki18n("Hyam Rubinstein"),
-        ki18n("Supervision and many long discussions"),"","");
-    addCredit(ki18n("Jonathan Shewchuk"),
-        ki18n("Useful discussions on vertex enumeration"),"","");
-    addCredit(ki18n("Jeff Weeks"),
-        ki18n("Use of the SnapPea kernel and helpful discussions"),"","");
-    addCredit(ki18n("The American Institute of Mathematics"),
-        ki18n("Support for development"),"","");
-    addCredit(ki18n("The Australian Research Council"),
-        ki18n("Support for development and hardware "
+    addCredit(tr("Bernard Blackham"),
+        tr("Help with cache optimisation"),"","");
+    addCredit(tr("Winfried Bruns, Bogdan Ichim and Christof Soeger"),
+        tr("Use of the Normaliz library"),"","");
+    addCredit(tr("Marc Culler"),
+        tr("Helpful discussions"),"","");
+    addCredit(tr("Dominique Devriese"),
+        tr("Red Hat / Fedora porting assistance"),"","");
+    addCredit(tr("Nathan Dunfield"),
+        tr("Helpful discussions"),"","");
+    addCredit(tr("Matthias Goerner"),
+        tr("Code contributions"),"","");
+    addCredit(tr("William Jaco"),
+        tr("Supervision and many long discussions"),"","");
+    addCredit(tr("David Letscher"),
+        tr("Code contributions and technical advice"),"","");
+    addCredit(tr("Craig Macintyre"),
+        tr("Red Hat / Fedora porting assistance"),"","");
+    addCredit(tr("Hyam Rubinstein"),
+        tr("Supervision and many long discussions"),"","");
+    addCredit(tr("Jonathan Shewchuk"),
+        tr("Useful discussions on vertex enumeration"),"","");
+    addCredit(tr("Jeff Weeks"),
+        tr("Use of the SnapPea kernel and helpful discussions"),"","");
+    addCredit(tr("The American Institute of Mathematics"),
+        tr("Support for development"),"","");
+    addCredit(tr("The Australian Research Council"),
+        tr("Support for development and hardware "
             "(DP0208490, DP1094516, DP110101104)"),"","");
-    addCredit(ki18n("The Institute for the Physics and Mathematics of the "
+    addCredit(tr("The Institute for the Physics and Mathematics of the "
             "Universe, Tokyo"),
-        ki18n("Hospitality and support"),"","");
-    addCredit(ki18n("Oklahoma State University, USA"),
-        ki18n("Support for development"),"","");
-    addCredit(ki18n("Queensland Cyber Infrastructure Foundation"),
-        ki18n("High-performance computing support"),"","");
-    addCredit(ki18n("RMIT University, Australia"),
-        ki18n("Support for development"),"","");
-    addCredit(ki18n("The University of Melbourne, Australia"),
-        ki18n("Support for development and hardware"),"","");
-    addCredit(ki18n("The University of Queensland, Australia"),
-        ki18n("Continuing support for development"),"","");
-    addCredit(ki18n("The University of Victoria, Canada"),
-        ki18n("Hospitality and support"),"","");
-    addCredit(ki18n("The Victorian Partnership for Advanced Computing"),
-        ki18n("Financial support and much-needed CPU cycles"),"","");
-    addCredit(ki18n("Debian GNU/Linux"),
-        ki18n("An exceptional working environment"),"",
+        tr("Hospitality and support"),"","");
+    addCredit(tr("Oklahoma State University, USA"),
+        tr("Support for development"),"","");
+    addCredit(tr("Queensland Cyber Infrastructure Foundation"),
+        tr("High-performance computing support"),"","");
+    addCredit(tr("RMIT University, Australia"),
+        tr("Support for development"),"","");
+    addCredit(tr("The University of Melbourne, Australia"),
+        tr("Support for development and hardware"),"","");
+    addCredit(tr("The University of Queensland, Australia"),
+        tr("Continuing support for development"),"","");
+    addCredit(tr("The University of Victoria, Canada"),
+        tr("Hospitality and support"),"","");
+    addCredit(tr("The Victorian Partnership for Advanced Computing"),
+        tr("Financial support and much-needed CPU cycles"),"","");
+    addCredit(tr("Debian GNU/Linux"),
+        tr("An exceptional working environment"),"",
         "http://www.debian.org/");
+
+
+    // Actual creation of the about box starts here.
+    
+    QVBoxLayout *layout = new QVBoxLayout;
+    QLabel *name = new QLabel(regName);
+
+    layout->addWidget(name);
+
+    name = new QLabel(QString("Version ") + PACKAGE_VERSION);
+
+    layout->addWidget(name);
+
+    QTabWidget *tabs = new QTabWidget;
+    QWidget *about = new QWidget;
+    QWidget *authors = new QWidget;
+    QWidget *thanks = new QWidget;
+
+    QVBoxLayout *aboutLayout = new QVBoxLayout(about);
+
+    QLabel *label = new QLabel(regDescription);
+    aboutLayout->addWidget(label);
+    label = new QLabel(regReleased);
+    aboutLayout->addWidget(label);
+    label = new QLabel(regCopyright);
+    aboutLayout->addWidget(label);
+    label = new QLabel("<a href=\""+regWebsite+"\">"+regWebsite+"</a>");
+    aboutLayout->addWidget(label);
+    label = new QLabel("<a href=\"#\">License: Custom</a>");
+    // Show license dialog when label is clicked
+    connect(label, SIGNAL(linkActivated), this, SLOT(showLicense));
+    aboutLayout->addWidget(label);
+
+    about->setLayout(aboutLayout);
+
+
+    tabs->addTab(about,tr("&About"));
+    tabs->addTab(authors, tr("A&uthors"));
+    tabs->addTab(thanks, tr("&Thanks to"));
+
+    layout->addWidget(tabs);
+    this->setLayout(layout);
+
+    this->exec();
+}
+
+
+void ReginaAbout::addAuthor(QString name, QString details, QString email, 
+    QString website) {
+    QStringList author;
+    author << name << details << email << website;
+    authors.append(author);
+}
+
+void ReginaAbout::addCredit(QString name, QString details, QString email, 
+    QString website) {
+    QStringList author;
+    author << name << details << email << website;
+    creditors.append(author);
+}
+
+void ReginaAbout::showLicense() {
+    QDialog *win = new QDialog(this);
+    win->setWindowTitle(tr("License Agreement - ") + regName);
+    
+    QVBoxLayout *layout = new QVBoxLayout;
+   
+    QTextEdit *text = new QTextEdit;
+    text->setReadOnly(true);
+    text->setPlainText(regLicense);
+   
+    layout->addWidget(text);
+
+    win->setLayout(layout);
+    win->exec();
 }
 

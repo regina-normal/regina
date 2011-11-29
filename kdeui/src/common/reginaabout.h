@@ -35,34 +35,58 @@
 
 // UI includes:
 #include <qstring.h>
-#include <kaboutdata.h>
+#include <QDialog>
 
 /**
  * Provides constants offering general information about the application.
  */
-class ReginaAbout : public KAboutData {
+class ReginaAbout : public QDialog {
     public:
         static const QByteArray regBugAddress;
             /**< The email address to which bug reports should be sent. */
-        static const KLocalizedString regCopyright;
+        static const QString regCopyright;
             /**< The application's copyright notice. */
         static const QString regDataExt;
             /**< The default Regina data file extension.  This includes
                 the period. */
-        static const KLocalizedString regDescription;
+        static const QString regDescription;
             /**< A brief description of the application. */
         static const QByteArray regName;
             /**< The human-readable application name. */
-        static const KLocalizedString regReleased;
+        static const QString regReleased;
             /**< A message describing the current application release date. */
         static const QByteArray regVersion;
             /**< The version number of the current application release. */
         static const QByteArray regWebsite;
             /**< The home website of the application. */
-        static const KLocalizedString regLicense;
+        static const QString regLicense;
             /**< The licensing agreement for the application. */
 
-        ReginaAbout(const char* internalName);
+        ReginaAbout(QWidget *parent);
+
+    private:
+
+        QList<QStringList> authors;
+            /**< Stores a list of authors of the application. */
+        QList<QStringList> creditors;
+            /**< Stores a list of people to credit for the application. */
+        
+        void addAuthor(QString name, QString details, QString email, 
+            /* Adds another person to the authors list 
+             * details denotes the details of the assistance provided
+             * by the author
+             */
+            QString website);
+        void addCredit(QString name, QString details, QString email, 
+            /* Adds another person to the credits list
+             * details denotes the details of the assistance provided
+             * by the author
+             */
+            QString website);
+
+        void showLicense();
+            /* Shows the license text in a new dialog.
+             */
 };
 
 #endif
