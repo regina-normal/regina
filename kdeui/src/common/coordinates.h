@@ -35,7 +35,8 @@
 
 #include "maths/nlargeinteger.h"
 
-#include <qstring.h>
+#include <QString>
+#include <QObject>
 
 namespace regina {
     class NNormalSurface;
@@ -46,7 +47,7 @@ namespace Coordinates {
     /**
      * Return a human-readable name for the given coordinate system.
      */
-    QString name(int coordSystem, bool capitalise = true);
+    const char* name(int coordSystem, bool capitalise = true);
 
     /**
      * Does the given coordinate system generate almost normal
@@ -83,7 +84,7 @@ namespace Coordinates {
      * well without it.
      */
     QString columnDesc(int coordSystem, unsigned long whichCoord,
-        regina::NTriangulation* tri = 0);
+        const QObject *context, regina::NTriangulation* tri = 0);
 
     /**
      * Return a particular coordinate of a normal surface in the given

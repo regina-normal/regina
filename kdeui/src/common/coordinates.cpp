@@ -29,44 +29,45 @@
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 
-#include <klocale.h>
+#include <QObject>
+#include <QString>
 
 using regina::NNormalSurfaceList;
 
 namespace Coordinates {
-    QString name(int coordSystem, bool capitalise) {
+    const char* name(int coordSystem, bool capitalise) {
         if (capitalise) {
             if (coordSystem == NNormalSurfaceList::STANDARD)
-                return i18n("Standard normal (tri-quad)");
+                return QT_TR_NOOP("Standard normal (tri-quad)");
             if (coordSystem == NNormalSurfaceList::AN_STANDARD)
-                return i18n("Standard almost normal (tri-quad-oct)");
+                return QT_TR_NOOP("Standard almost normal (tri-quad-oct)");
             if (coordSystem == NNormalSurfaceList::AN_LEGACY)
-                return i18n("Legacy almost normal (pruned tri-quad-oct)");
+                return QT_TR_NOOP("Legacy almost normal (pruned tri-quad-oct)");
             if (coordSystem == NNormalSurfaceList::QUAD)
-                return i18n("Quad normal");
+                return QT_TR_NOOP("Quad normal");
             if (coordSystem == NNormalSurfaceList::AN_QUAD_OCT)
-                return i18n("Quad-oct almost normal");
+                return QT_TR_NOOP("Quad-oct almost normal");
             if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT)
-                return i18n("Edge weight");
+                return QT_TR_NOOP("Edge weight");
             if (coordSystem == NNormalSurfaceList::FACE_ARCS)
-                return i18n("Face arc");
-            return i18n("Unknown");
+                return QT_TR_NOOP("Face arc");
+            return QT_TR_NOOP("Unknown");
         } else {
             if (coordSystem == NNormalSurfaceList::STANDARD)
-                return i18n("standard normal (tri-quad)");
+                return QT_TR_NOOP("standard normal (tri-quad)");
             if (coordSystem == NNormalSurfaceList::AN_STANDARD)
-                return i18n("standard almost normal (tri-quad-oct)");
+                return QT_TR_NOOP("standard almost normal (tri-quad-oct)");
             if (coordSystem == NNormalSurfaceList::AN_LEGACY)
-                return i18n("legacy almost normal (pruned tri-quad-oct)");
+                return QT_TR_NOOP("legacy almost normal (pruned tri-quad-oct)");
             if (coordSystem == NNormalSurfaceList::QUAD)
-                return i18n("quad normal");
+                return QT_TR_NOOP("quad normal");
             if (coordSystem == NNormalSurfaceList::AN_QUAD_OCT)
-                return i18n("quad-oct almost normal");
+                return QT_TR_NOOP("quad-oct almost normal");
             if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT)
-                return i18n("edge weight");
+                return QT_TR_NOOP("edge weight");
             if (coordSystem == NNormalSurfaceList::FACE_ARCS)
-                return i18n("face arc");
-            return i18n("unknown");
+                return QT_TR_NOOP("face arc");
+            return QT_TR_NOOP("unknown");
         }
     }
 
@@ -107,86 +108,88 @@ namespace Coordinates {
         } else if (coordSystem == NNormalSurfaceList::AN_STANDARD ||
                 coordSystem == NNormalSurfaceList::AN_LEGACY) {
             if (whichCoord % 10 < 4)
-                return i18n("T%1: %2").arg(whichCoord / 10).
+                return QString("T%1: %2").arg(whichCoord / 10).
                     arg(whichCoord % 10);
             else if (whichCoord % 10 < 7)
-                return i18n("Q%1: %2").arg(whichCoord / 10).
+                return QString("Q%1: %2").arg(whichCoord / 10).
                     arg(regina::vertexSplitString[(whichCoord % 10) - 4]);
             else
-                return i18n("K%1: %2").arg(whichCoord / 10).
+                return QString("K%1: %2").arg(whichCoord / 10).
                     arg(regina::vertexSplitString[(whichCoord % 10) - 7]);
         } else if (coordSystem == NNormalSurfaceList::QUAD) {
             return QString("%1: %2").arg(whichCoord / 3).
                 arg(regina::vertexSplitString[whichCoord % 3]);
         } else if (coordSystem == NNormalSurfaceList::AN_QUAD_OCT) {
             if (whichCoord % 6 < 3)
-                return i18n("Q%1: %2").arg(whichCoord / 6).
+                return QString("Q%1: %2").arg(whichCoord / 6).
                     arg(regina::vertexSplitString[whichCoord % 6]);
             else
-                return i18n("K%1: %2").arg(whichCoord / 6).
+                return QString("K%1: %2").arg(whichCoord / 6).
                     arg(regina::vertexSplitString[(whichCoord % 6) - 3]);
         } else if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT) {
             if (! (tri && tri->getEdge(whichCoord)->isBoundary()))
                 return QString::number(whichCoord);
             else
-                return i18n("%1 [B]").arg(whichCoord);
+                return QString("%1 [B]").arg(whichCoord);
         } else if (coordSystem == NNormalSurfaceList::FACE_ARCS) {
             return QString("%1: %2").arg(whichCoord / 3).arg(whichCoord % 3);
         }
 
-        return i18n("Unknown");
+        return QString("Unknown");
     }
 
     QString columnDesc(int coordSystem, unsigned long whichCoord,
-            regina::NTriangulation* tri) {
+            const QObject *context, regina::NTriangulation* tri) {
         if (coordSystem == NNormalSurfaceList::STANDARD) {
             if (whichCoord % 7 < 4)
-                return i18n("Tetrahedron %1, triangle about vertex %2").
+                return context->tr("Tetrahedron %1, triangle about vertex %2").
                     arg(whichCoord / 7).arg(whichCoord % 7);
             else
-                return i18n("Tetrahedron %1, quad splitting vertices %2").
+                return context->tr("Tetrahedron %1, quad splitting vertices %2").
                     arg(whichCoord / 7).
                     arg(regina::vertexSplitString[(whichCoord % 7) - 4]);
         } else if (coordSystem == NNormalSurfaceList::AN_STANDARD ||
                 coordSystem == NNormalSurfaceList::AN_LEGACY) {
             if (whichCoord % 10 < 4)
-                return i18n("Tetrahedron %1, triangle about vertex %2").
+                return context->tr("Tetrahedron %1, triangle about vertex %2").
                     arg(whichCoord / 10).arg(whichCoord % 10);
             else if (whichCoord % 10 < 7)
-                return i18n("Tetrahedron %1, quad splitting vertices %2").
+                return context->tr("Tetrahedron %1, quad splitting vertices %2").
                     arg(whichCoord / 10).
                     arg(regina::vertexSplitString[(whichCoord % 10) - 4]);
             else
-                return i18n("Tetrahedron %1, oct partitioning vertices %2").
+                return context->tr("Tetrahedron %1, oct partitioning vertices %2").
                     arg(whichCoord / 10).
                     arg(regina::vertexSplitString[(whichCoord % 10) - 7]);
         } else if (coordSystem == NNormalSurfaceList::QUAD) {
-            return i18n("Tetrahedron %1, quad splitting vertices %2").
+            return context->tr("Tetrahedron %1, quad splitting vertices %2").
                 arg(whichCoord / 3).
                 arg(regina::vertexSplitString[whichCoord % 3]);
         } else if (coordSystem == NNormalSurfaceList::AN_QUAD_OCT) {
             if (whichCoord % 6 < 3)
-                return i18n("Tetrahedron %1, quad splitting vertices %2").
+                return context->tr("Tetrahedron %1, quad splitting vertices %2").
                     arg(whichCoord / 6).
                     arg(regina::vertexSplitString[whichCoord % 6]);
             else
-                return i18n("Tetrahedron %1, oct partitioning vertices %2").
+                return context->tr("Tetrahedron %1, oct partitioning vertices %2").
                     arg(whichCoord / 6).
                     arg(regina::vertexSplitString[(whichCoord % 6) - 3]);
         } else if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT) {
             if (tri) {
                 if (tri->getEdge(whichCoord)->isBoundary())
-                    return i18n("Weight of (boundary) edge %1").arg(whichCoord);
+                    return context->tr("Weight of (boundary) edge %1").
+                        arg(whichCoord);
                 else
-                    return i18n("Weight of (internal) edge %1").arg(whichCoord);
+                    return context->tr("Weight of (internal) edge %1").
+                        arg(whichCoord);
             } else
-                return i18n("Weight of edge %1").arg(whichCoord);
+                return context->tr("Weight of edge %1").arg(whichCoord);
         } else if (coordSystem == NNormalSurfaceList::FACE_ARCS) {
-            return i18n("Arcs on face %1 crossing face vertex %2").
+            return context->tr("Arcs on face %1 crossing face vertex %2").
                 arg(whichCoord / 3).arg(whichCoord % 3);
         }
 
-        return i18n("This coordinate system is not known");
+        return context->tr("This coordinate system is not known");
     }
 
     regina::NLargeInteger getCoordinate(int coordSystem,

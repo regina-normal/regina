@@ -38,7 +38,7 @@
 using regina::NNormalSurfaceList;
 
 void CoordinateChooser::insertSystem(int coordSystem) {
-    addItem(Coordinates::name(coordSystem));
+    addItem(tr(Coordinates::name(coordSystem)));
     systems.push_back(coordSystem);
 }
 
