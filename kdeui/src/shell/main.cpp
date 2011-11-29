@@ -44,9 +44,12 @@ int main(int argc, char **argv) {
     KCmdLineOptions options;
     options.add("+[Url]", ki18n("Document to open."), 0);
 
-    ReginaAbout about("regina");
+    //ReginaAbout about("regina");
+    //KCmdLineArgs::init(argc, argv, &about);
+    KCmdLineArgs::init(argc, argv, ReginaAbout::regName, 
+        argv[0], ki18n(ReginaAbout::regName), ReginaAbout::regVersion);
+    // TODO Above is a dirty hack until KDE is completely removed.
 
-    KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions(options);
     KApplication app;
 
