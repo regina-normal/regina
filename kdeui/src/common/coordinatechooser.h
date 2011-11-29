@@ -34,7 +34,7 @@
 #ifndef __COORDINATECHOOSER_H
 #define __COORDINATECHOOSER_H
 
-#include <kcombobox.h>
+#include <QComboBox>
 #include <vector>
 
 namespace regina {
@@ -46,7 +46,7 @@ namespace regina {
  * selected.  Coordinate systems are described by the integer constants
  * declared in regina::NNormalSurfaceList.
  */
-class CoordinateChooser : public KComboBox {
+class CoordinateChooser : public QComboBox {
     Q_OBJECT
 
     private:
@@ -74,7 +74,7 @@ class CoordinateChooser : public KComboBox {
         int getCurrentSystem();
 };
 
-inline CoordinateChooser::CoordinateChooser() : KComboBox() {
+inline CoordinateChooser::CoordinateChooser() : QComboBox() {
 }
 
 inline int CoordinateChooser::getCurrentSystem() {
