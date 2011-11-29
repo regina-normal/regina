@@ -259,7 +259,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             return propertyColDesc(index.column());
         else
             return Coordinates::columnDesc(coordSystem_,
-                index.column() - propertyCols, surfaces_->getTriangulation());
+                index.column() - propertyCols, this, surfaces_->getTriangulation());
     } else if (role == Qt::ForegroundRole) {
         const regina::NNormalSurface* s = surfaces_->getSurface(surfaceIndex);
         regina::NTriBool triBool;
@@ -351,7 +351,7 @@ QVariant SurfaceModel::headerData(int section, Qt::Orientation orientation,
             return propertyColDesc(section);
         else
             return Coordinates::columnDesc(coordSystem_, section - propertyCols,
-                surfaces_->getTriangulation());
+                this, surfaces_->getTriangulation());
     } else if (role == Qt::TextAlignmentRole)
         return Qt::AlignCenter;
     else

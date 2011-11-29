@@ -131,6 +131,6 @@ void NSurfaceHeaderUI::refresh() {
             surfaces->getNumberOfSurfaces()).arg(embType);
 
     header->setText(count + i18n("\nEnumerated in %1 coordinates").arg(
-        Coordinates::name(surfaces->getFlavour(), false)));
+        header->tr(Coordinates::name(surfaces->getFlavour(), false))));
 }
 
