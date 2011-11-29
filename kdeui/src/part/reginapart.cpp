@@ -58,6 +58,8 @@
 #include <ktexteditor/document.h>
 #include <ktexteditor/view.h>
 
+#include <KLocalizedString> 
+
 ReginaPart::ReginaPart(QWidget *parentWidget, QObject *parent,
         const QStringList& /*args*/) :
         KParts::ReadWritePart(parent), packetTree(0), dockedPane(0) {
