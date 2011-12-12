@@ -609,9 +609,10 @@ void ReginaMain::readOptions(KSharedConfigPtr config) {
 #endif
     globalPrefs.pdfExternalViewer = configGroup->readEntry("ExternalViewer").
         trimmed();
+    /* TODO remove this if PDF opening works
     if (globalPrefs.pdfExternalViewer.isEmpty())
         globalPrefs.pdfExternalViewer = ReginaPrefSet::pdfDefaultViewer();
-
+    */
     configGroup = new KConfigGroup(config, "Python");
     globalPrefs.pythonAutoIndent = configGroup->readEntry("AutoIndent", true);
     globalPrefs.pythonSpacesPerTab = configGroup->readEntry(

@@ -34,16 +34,20 @@
 #include "shortrunner.h"
 
 #include <fstream>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <krun.h>
+//#include <klocale.h>
+//#include <kmessagebox.h>
+//#include <krun.h>
 #include <kstandarddirs.h>
-#include <ktoolinvocation.h>
+//#include <ktoolinvocation.h>
 #include <qdir.h>
 #include <qfile.h>
 #include <qfileinfo.h>
 #include <qtextcodec.h>
 #include <qtextstream.h>
+
+#include <QDesktopServices>
+#include <QMessageBox>
+#include <QUrl>
 
 namespace {
     QString INACTIVE("## INACTIVE ##");
@@ -166,34 +170,34 @@ ReginaFilePrefList ReginaPrefSet::defaultCensusFiles() {
     return ans;
 }
 
-QString ReginaPrefSet::pdfDefaultViewer() {
-    QString app;
-
-    // If we're on a mac, try the default Mac PDF viewer.
-    #ifdef __APPLE__
-    if (QFile::exists("/Applications"))
-        if (! (app = KStandardDirs::findExe("open")).isNull())
-            return app;
-    #endif
-
-    // Try KDE applications (okular, kpdf).
-    if (! (app = KStandardDirs::findExe("okular")).isNull())
-        return app;
-    if (! (app = KStandardDirs::findExe("kpdf")).isNull())
-        return app;
-
-    // Try GNOME applications (evince).
-    if (! (app = KStandardDirs::findExe("evince")).isNull())
-        return app;
-
-    // Fall back to xpdf if we can.
-    if (! (app = KStandardDirs::findExe("xpdf")).isNull())
-        return app;
-
-    // Bapow.  We'll try going through KRun if/when somebody actually
-    // tries to open a PDF packet.
-    return QString();
-}
+//QString ReginaPrefSet::pdfDefaultViewer() {
+//    QString app;
+//
+//    // If we're on a mac, try the default Mac PDF viewer.
+//    #ifdef __APPLE__
+//    if (QFile::exists("/Applications"))
+//        if (! (app = KStandardDirs::findExe("open")).isNull())
+//            return app;
+//    #endif
+//
+//    // Try KDE applications (okular, kpdf).
+//    if (! (app = KStandardDirs::findExe("okular")).isNull())
+//        return app;
+//    if (! (app = KStandardDirs::findExe("kpdf")).isNull())
+//        return app;
+//
+//    // Try GNOME applications (evince).
+//    if (! (app = KStandardDirs::findExe("evince")).isNull())
+//        return app;
+//
+//    // Fall back to xpdf if we can.
+//    if (! (app = KStandardDirs::findExe("xpdf")).isNull())
+//        return app;
+//
+//    // Bapow.  We'll try going through KRun if/when somebody actually
+//    // tries to open a PDF packet.
+//    return QString();
+//}
 
 QString ReginaPrefSet::pythonLibrariesConfig() {
     return QDir::homePath() + "/.regina-libs";
@@ -255,50 +259,58 @@ bool ReginaPrefSet::writePythonLibraries() const {
 
 void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
         QWidget* parentWidget) {
-    if (handbookInKHelpCenter) {
-        KToolInvocation::invokeHelp(section, handbook);
-        return;
-    }
+    // TODO Remove
+    //if (handbookInKHelpCenter) {
+    //    KToolInvocation::invokeHelp(section, handbook);
+    //    return;
+    //}
 
+    // TODO Change locate function to what?
     QString handbookName = (handbook ? handbook : "regina");
     QString index = KStandardDirs::locate("html",
         QString("en/%1/index.html").arg(handbookName));
     QString page = KStandardDirs::locate("html",
         QString("en/%1/%2.html").arg(handbookName).arg(section));
     if (QFileInfo(page).exists()) {
+
         // If we're on a mac, just use the default Mac browser.
 #ifdef __APPLE__
         // Hmm.  Assume this command executes successfully, since on my
         // fink it returns false even when it *does* execute successfully..!
-        KRun::runCommand(QString("open \"%1\"").arg(page), parentWidget);
+        //KRun::runCommand(QString("open \"%1\"").arg(page), parentWidget);
 #else
-        if (! KRun::runUrl("file:" + page, "text/html", parentWidget,
-                false /* temp file */, false /* run executables */)) {
-            if (handbook)
-                KMessageBox::sorry(parentWidget, i18n(
+        if (! QDesktopServices::openUrl(QUrl("file://" + page))) {
+            if (handbook) {
+                QMessageBox *sorry = new QMessageBox(parentWidget);
+                sorry->setText((sorry->tr(
                     "<qt>The requested handbook could not be opened.  "
                     "Please try pointing your web browser to "
-                    "<tt>%1</tt>.</qt>").arg(page));
-            else
-                KMessageBox::sorry(parentWidget, i18n(
+                    "<tt>%1</tt>.</qt>").arg(page)));
+            } else {
+                QMessageBox *sorry = new QMessageBox(parentWidget);
+                sorry->setText((sorry->tr(
                     "<qt>The Regina handbook could not be opened.  "
                     "Please try pointing your web browser to "
-                    "<tt>%1</tt>.</qt>").arg(page));
+                    "<tt>%1</tt>.</qt>").arg(page)));
+            }
         }
 #endif
     } else {
-        if (handbook)
-            KMessageBox::sorry(parentWidget, i18n(
+        if (handbook) {
+            QMessageBox *sorry = new QMessageBox(parentWidget);
+            sorry->setText((sorry->tr(
                 "<qt>The requested handbook could "
                 "not be found.  Perhaps it is not installed?<p>"
                 "The handbook should be accessible as "
-                "<tt>%1/</tt>.</qt>").arg(index));
-        else
-            KMessageBox::sorry(parentWidget, i18n(
+                "<tt>%1/</tt>.</qt>").arg(index)));
+        } else {
+            QMessageBox *sorry = new QMessageBox(parentWidget);
+            sorry->setText((sorry->tr(
                 "<qt>The Regina handbook could "
                 "not be found.  Perhaps it is not installed?<p>"
                 "The handbook should be accessible as "
-                "<tt>%1/</tt>.</qt>").arg(index));
+                "<tt>%1/</tt>.</qt>").arg(index)));
+        }
     }
 }
 
