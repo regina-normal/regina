@@ -40,10 +40,12 @@
 #include "foreign/snappeahandler.h"
 #include "reginafilter.h"
 
-#include <kencodingfiledialog.h>
+//#include <kencodingfiledialog.h>
 #include <kfiledialog.h>
 #include <klocale.h>
 #include <qtextcodec.h>
+
+#include <QFileDialog>
 
 void ReginaPart::importDehydration() {
     importFile(DehydrationHandler::instance, 0, i18n(FILTER_ALL),
@@ -87,23 +89,32 @@ void ReginaPart::importFile(const PacketImporter& importer,
         return;
 
     regina::NPacket* newTree = 0;
+// TODO: Encoding stuff?
+//    if (importer.offerImportEncoding()) {
+//        KEncodingFileDialog::Result result =
+//            KEncodingFileDialog::getOpenFileNameAndEncoding(
+//            QString::null /* default encoding */,
+//            QString::null, fileFilter, widget(), dialogTitle);
+//        if (result.fileNames.empty() || result.fileNames.front().isEmpty())
+//            return;
+//        newTree = importer.importData(result.fileNames.front(),
+//            QTextCodec::codecForName(result.encoding.toAscii()), widget());
+//    } else {
+//        QString file = KFileDialog::getOpenFileName(KUrl(),
+//            fileFilter, widget(), dialogTitle);
+//        if (file.isEmpty())
+//            return;
+//        newTree = importer.importData(file, widget());
+//    }
 
-    if (importer.offerImportEncoding()) {
-        KEncodingFileDialog::Result result =
-            KEncodingFileDialog::getOpenFileNameAndEncoding(
-            QString::null /* default encoding */,
-            QString::null, fileFilter, widget(), dialogTitle);
-        if (result.fileNames.empty() || result.fileNames.front().isEmpty())
-            return;
-        newTree = importer.importData(result.fileNames.front(),
-            QTextCodec::codecForName(result.encoding.toAscii()), widget());
-    } else {
-        QString file = KFileDialog::getOpenFileName(KUrl(),
-            fileFilter, widget(), dialogTitle);
-        if (file.isEmpty())
-            return;
-        newTree = importer.importData(file, widget());
-    }
+
+    // TODO: Replace widget() with actual QWidget once KParts is gone
+    // TODO: Use encoding
+    QString file = QFileDialog::getOpenFileName(widget(),
+        dialogTitle, QString(), fileFilter);
+    if (file.isEmpty())
+        return;
+    newTree = importer.importData(file, widget());
 
     if (newTree) {
         ImportDialog dlg(widget(), newTree, packetTree,

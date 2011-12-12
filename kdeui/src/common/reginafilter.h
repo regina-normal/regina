@@ -37,61 +37,61 @@
  * Filename filter for all supported files.
  */
 #define FILTER_SUPPORTED \
-    "*.rga|Regina Data Files\n*|All Files"
+    "Regina Data Files (*.rga);;All Files (*)"
 
 /**
  * Filename filter for Regina data files.
  */
 #define FILTER_REGINA \
-    "*.rga|Regina Data Files\n*|All Files"
+    "Regina Data Files (*.rga);;All Files (*)"
 
 /**
  * Filename filter for Python libraries.
  */
 #define FILTER_PYTHON_LIBRARIES \
-    "*.py|Python Libraries\n*|All Files"
+    "Python Libraries (*.py);;All Files (*)"
 
 /**
  * Filename filter for PDF documents.
  */
 #define FILTER_PDF \
-    "*.pdf|PDF Documents\n*|All Files"
+    "PDF Documents (*.pdf);;All Files (*)"
 
 /**
  * Filename filter for Python scripts.
  */
 #define FILTER_PYTHON_SCRIPTS \
-    "*.py|Python Scripts\n*|All Files"
+    "Python Scripts (*.py);;All Files (*)"
 
 /**
  * Filename filter for SnapPea files.
  */
 #define FILTER_SNAPPEA \
-    "*.tri|SnapPea Files\n*|All Files"
+    "SnapPea Files (*.tri);;All Files (*)"
 
 /**
  * Filename filter for Orb files.
  */
 #define FILTER_ORB \
-    "*.orb|Orb and Casson Files\n*|All Files"
+    "Orb and Casson Files (*.orb);;All Files (*)"
 
 /**
  * Filename filter for C++ source files.
  */
 #define FILTER_CPP_SOURCE \
-    "*.cpp *.cc *.C|C++ Source Files\n*|All Files"
+    "C++ Source Files (*.cpp *.cc *.C);;All Files (*)"
 
 /**
  * Filename filter for CSV (comma-separated value) files.
  */
 #define FILTER_CSV \
-    "*.csv|Text Files with Comma-Separated Values\n*|All Files"
+    "Text Files with Comma-Separated Values (*.csv);;All Files (*)"
 
 /**
  * Filename filter for all files.
  */
 #define FILTER_ALL \
-    "*|All Files"
+    "All Files (*)"
 
 #endif
 
