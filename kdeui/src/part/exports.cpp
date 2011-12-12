@@ -39,11 +39,13 @@
 #include "foreign/sourcehandler.h"
 #include "reginafilter.h"
 
-#include <kencodingfiledialog.h>
+//#include <kencodingfiledialog.h>
 #include <kfiledialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <qtextcodec.h>
+
+#include <QFileDialog>
 
 void ReginaPart::exportCSVSurfaceList() {
     exportFile(CSVSurfaceHandler::instance, i18n(FILTER_CSV),
@@ -87,21 +89,27 @@ void ReginaPart::exportFile(const PacketExporter& exporter,
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
         regina::NPacket* data = dlg.selectedPacket();
         if (data) {
-            if (exporter.offerExportEncoding()) {
-                KEncodingFileDialog::Result result =
-                    KEncodingFileDialog::getSaveFileNameAndEncoding(
-                        QString::null /* encoding */, QString::null,
-                        fileFilter, widget(), dialogTitle);
-                if ((! result.fileNames.empty()) &&
-                        (! result.fileNames.front().isEmpty()))
-                    exporter.exportData(data, result.fileNames.front(),
-                        QTextCodec::codecForName(result.encoding.toAscii()), widget());
-            } else {
-                QString file = KFileDialog::getSaveFileName(KUrl(),
-                    fileFilter, widget(), dialogTitle);
-                if (! file.isEmpty())
-                    exporter.exportData(data, file, widget());
-            }
+//            if (exporter.offerExportEncoding()) {
+//                KEncodingFileDialog::Result result =
+//                    KEncodingFileDialog::getSaveFileNameAndEncoding(
+//                        QString::null /* encoding */, QString::null,
+//                        fileFilter, widget(), dialogTitle);
+//                if ((! result.fileNames.empty()) &&
+//                        (! result.fileNames.front().isEmpty()))
+//                    exporter.exportData(data, result.fileNames.front(),
+//                        QTextCodec::codecForName(result.encoding.toAscii()), widget());
+//            } else {
+//                QString file = KFileDialog::getSaveFileName(KUrl(),
+//                    fileFilter, widget(), dialogTitle);
+//                if (! file.isEmpty())
+//                    exporter.exportData(data, file, widget());
+//            }
+//            TODO: Use encoding
+//            TODO: Change widget() to actualy QWidget
+            QString file = QFileDialog::getSaveFileName(widget(),
+                dialogTitle, QString(), fileFilter);
+            if (! file.isEmpty())
+                exporter.exportData(data, file, widget());
         }
     }
 }
