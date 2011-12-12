@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2011, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -40,46 +40,46 @@
 #include "reginafilter.h"
 
 //#include <kencodingfiledialog.h>
-#include <kfiledialog.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <qtextcodec.h>
+//#include <kfiledialog.h>
+//#include <klocale.h>
+//#include <kmessagebox.h>
+//#include <qtextcodec.h>
 
 #include <QFileDialog>
 
 void ReginaPart::exportCSVSurfaceList() {
-    exportFile(CSVSurfaceHandler::instance, i18n(FILTER_CSV),
-        i18n("Export CSV Surface List"));
+    exportFile(CSVSurfaceHandler::instance, tr(FILTER_CSV),
+        tr("Export CSV Surface List"));
 }
 
 void ReginaPart::exportPDF() {
-    exportFile(PDFHandler::instance, i18n(FILTER_PDF),
-        i18n("Export PDF Document"));
+    exportFile(PDFHandler::instance, tr(FILTER_PDF),
+        tr("Export PDF Document"));
 }
 
 void ReginaPart::exportPython() {
-    exportFile(PythonHandler::instance, i18n(FILTER_PYTHON_SCRIPTS),
-        i18n("Export Python Script"));
+    exportFile(PythonHandler::instance, tr(FILTER_PYTHON_SCRIPTS),
+        tr("Export Python Script"));
 }
 
 void ReginaPart::exportRegina() {
-    exportFile(ReginaHandler(true), i18n(FILTER_REGINA),
-        i18n("Export Regina Data File"));
+    exportFile(ReginaHandler(true), tr(FILTER_REGINA),
+        tr("Export Regina Data File"));
 }
 
 void ReginaPart::exportReginaUncompressed() {
-    exportFile(ReginaHandler(false), i18n(FILTER_REGINA),
-        i18n("Export Regina Data File"));
+    exportFile(ReginaHandler(false), tr(FILTER_REGINA),
+        tr("Export Regina Data File"));
 }
 
 void ReginaPart::exportSnapPea() {
-    exportFile(SnapPeaHandler::instance, i18n(FILTER_SNAPPEA),
-        i18n("Export SnapPea Triangulation"));
+    exportFile(SnapPeaHandler::instance, tr(FILTER_SNAPPEA),
+        tr("Export SnapPea Triangulation"));
 }
 
 void ReginaPart::exportSource() {
-    exportFile(SourceHandler::instance, i18n(FILTER_CPP_SOURCE),
-        i18n("Export C++ Source"));
+    exportFile(SourceHandler::instance, tr(FILTER_CPP_SOURCE),
+        tr("Export C++ Source"));
 }
 
 void ReginaPart::exportFile(const PacketExporter& exporter,

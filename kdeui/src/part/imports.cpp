@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2011, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -41,45 +41,45 @@
 #include "reginafilter.h"
 
 //#include <kencodingfiledialog.h>
-#include <kfiledialog.h>
-#include <klocale.h>
-#include <qtextcodec.h>
+//#include <kfiledialog.h>
+//#include <klocale.h>
+//#include <qtextcodec.h>
 
 #include <QFileDialog>
 
 void ReginaPart::importDehydration() {
-    importFile(DehydrationHandler::instance, 0, i18n(FILTER_ALL),
-        i18n("Import Dehydrated Triangulation List"));
+    importFile(DehydrationHandler::instance, 0, tr(FILTER_ALL),
+        tr("Import Dehydrated Triangulation List"));
 }
 
 void ReginaPart::importIsoSig3() {
-    importFile(IsoSigHandler::instance3, 0, i18n(FILTER_ALL),
-        i18n("Import Isomorphism Signature List"));
+    importFile(IsoSigHandler::instance3, 0, tr(FILTER_ALL),
+        tr("Import Isomorphism Signature List"));
 }
 
 void ReginaPart::importPDF() {
-    importFile(PDFHandler::instance, 0, i18n(FILTER_PDF),
-        i18n("Import PDF Document"));
+    importFile(PDFHandler::instance, 0, tr(FILTER_PDF),
+        tr("Import PDF Document"));
 }
 
 void ReginaPart::importPython() {
-    importFile(PythonHandler::instance, 0, i18n(FILTER_PYTHON_SCRIPTS),
-        i18n("Import Python Script"));
+    importFile(PythonHandler::instance, 0, tr(FILTER_PYTHON_SCRIPTS),
+        tr("Import Python Script"));
 }
 
 void ReginaPart::importRegina() {
-    importFile(ReginaHandler(), 0, i18n(FILTER_REGINA),
-        i18n("Import Regina Data File"));
+    importFile(ReginaHandler(), 0, tr(FILTER_REGINA),
+        tr("Import Regina Data File"));
 }
 
 void ReginaPart::importSnapPea() {
-    importFile(SnapPeaHandler::instance, 0, i18n(FILTER_SNAPPEA),
-        i18n("Import SnapPea Triangulation"));
+    importFile(SnapPeaHandler::instance, 0, tr(FILTER_SNAPPEA),
+        tr("Import SnapPea Triangulation"));
 }
 
 void ReginaPart::importOrb() {
-    importFile(OrbHandler::instance, 0, i18n(FILTER_ORB),
-        i18n("Import Orb or Casson Triangulation"));
+    importFile(OrbHandler::instance, 0, tr(FILTER_ORB),
+        tr("Import Orb or Casson Triangulation"));
 }
 
 void ReginaPart::importFile(const PacketImporter& importer,
