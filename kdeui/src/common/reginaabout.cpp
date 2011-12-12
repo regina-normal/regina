@@ -54,7 +54,7 @@ const QString ReginaAbout::regDataExt(".rga");
 const QString ReginaAbout::regDescription(
     tr("Software for 3-manifold topology and normal surface theory"));
 
-const QByteArray ReginaAbout::regName(QT_TR_NOOP("Regina"));
+const QByteArray ReginaAbout::regName(QT_TR_NOOP("regina"));
 
 const QString ReginaAbout::regReleased(
     tr("Released %1").arg(QDate(2011, 9, 12).toString(Qt::TextDate)));
