@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2011, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,15 +30,15 @@
 
 QString ShortRunner::run(bool mergeStderr) {
     // Start the child process running.
-    proc.setOutputChannelMode(mergeStderr ?
-        KProcess::MergedChannels : KProcess::OnlyStdoutChannel);
+    proc.setProcessChannelMode(mergeStderr ?
+        QProcess::MergedChannels : QProcess::SeparateChannels);
     connect(&proc, SIGNAL(started()), this, SLOT(processStarted()));
     connect(&proc, SIGNAL(finished(int, QProcess::ExitStatus)),
         this, SLOT(processFinished()));
 
     // Since we need to collect output, we must use start() and not
     // startDetached().
-    proc.start();
+    proc.start(args.takeFirst(),args);
 
     // Wait for it to finish, within a reasonable time limit.
     // Don't rely on the return value, since waitForFinished() can

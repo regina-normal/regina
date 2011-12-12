@@ -34,7 +34,7 @@
 #ifndef __SHORTRUNNER_H
 #define __SHORTRUNNER_H
 
-#include <kprocess.h>
+#include <QProcess>
 #include <qmutex.h>
 
 /**
@@ -48,7 +48,8 @@ class ShortRunner : public QObject {
     Q_OBJECT
 
     private:
-        KProcess proc;
+        QProcess proc;
+        QStringList args;
         int timeout;
         bool reachedTimeout;
         bool started;
@@ -95,12 +96,12 @@ inline ShortRunner::ShortRunner(int timeoutSeconds) :
 }
 
 inline ShortRunner& ShortRunner::operator << (const char* arg) {
-    proc << arg;
+    args << arg;
     return *this;
 }
 
 inline ShortRunner& ShortRunner::operator << (const QString& arg) {
-    proc << arg;
+    args << arg;
     return *this;
 }
 
