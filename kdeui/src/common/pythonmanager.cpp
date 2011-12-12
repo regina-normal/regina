@@ -62,7 +62,7 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
     QString index = docDir + "/index.html";
 
     if (QFileInfo(index).exists()) {
-        QDesktopServices::openUrl(QUrl(index));
+        QDesktopServices::openUrl(QUrl("file://" + index));
 
         // If we're on a mac, just use the default Mac browser.
 //#ifdef __APPLE__
