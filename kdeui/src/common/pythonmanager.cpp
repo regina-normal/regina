@@ -31,12 +31,18 @@
 
 #include "pythonmanager.h"
 
-#include <kapplication.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <krun.h>
+//#include <kapplication.h>
+//#include <klocale.h>
+//#include <kmessagebox.h>
+//#include <krun.h>
 #include <qfile.h>
 #include <qfileinfo.h>
+
+#include <QCoreApplication>
+#include <QDesktopServices>
+#include <QMessageBox>
+#include <QProcess>
+#include <QUrl>
 
 PythonManager::~PythonManager() {
     closeAllConsoles();
@@ -56,27 +62,34 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
     QString index = docDir + "/index.html";
 
     if (QFileInfo(index).exists()) {
+        QDesktopServices::openUrl(QUrl(index));
+
         // If we're on a mac, just use the default Mac browser.
-#ifdef __APPLE__
+//#ifdef __APPLE__
         // Hmm.  Assume this command executes successfully, since on my
         // fink it returns false even when it *does* execute successfully..!
-        KRun::runCommand(QString("open \"%1\"").arg(index), topLevelWindow);
-#else
-        if (! KRun::runUrl("file:" + index, "text/html", topLevelWindow,
-                false /* temp file */, false /* run executables */))
-            KMessageBox::sorry(topLevelWindow, i18n(
-                "<qt>The Python reference could "
-                "not be opened from within KDE.  "
-                "Please try pointing your web browser to "
-                "<tt>%1/index.html</tt>.</qt>").arg(docDir));
-#endif
-    } else
-        KMessageBox::sorry(topLevelWindow, i18n(
+        //
+//        KRun::runCommand(QString("open \"%1\"").arg(index), topLevelWindow);
+//#else
+//        if (! KRun::runUrl("file:" + index, "text/html", topLevelWindow,
+//                false /* temp file */, false /* run executables */))
+//            KMessageBox::sorry(topLevelWindow, i18n(
+//                "<qt>The Python reference could "
+//                "not be opened from within KDE.  "
+//                "Please try pointing your web browser to "
+//                "<tt>%1/index.html</tt>.</qt>").arg(docDir));
+//#endif
+    } else {
+        QMessageBox *sorry = new QMessageBox(topLevelWindow);
+        //KMessageBox::sorry(topLevelWindow, i18n(
+        sorry->setText((sorry->tr(
             "<qt>The Python reference could "
             "not be found.  Perhaps it is not installed?<p>"
             "The Python reference (i.e., the API documentation for the "
             "Regina calculation engine) should be installed in the directory "
-            "<tt>%1/</tt>.</qt>").arg(docDir));
+            "<tt>%1/</tt>.</qt>")).arg(docDir));
+        sorry->exec();
+    }
 }
 
 #ifdef BOOST_PYTHON_FOUND
@@ -88,11 +101,11 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
         regina::NPacket* selectedPacket) {
     PythonConsole* ans = new PythonConsole(parent, this, initialPrefs);
 
-    ans->blockInput(i18n("Initialising..."));
+    ans->blockInput(parent->tr("Initialising..."));
 
     // Show us what's going on.
     ans->show();
-    KApplication::kApplication()->processEvents();
+    QCoreApplication::instance()->processEvents();
 
     // Initialise the python interpreter.
     if (ans->importRegina()) {
@@ -106,7 +119,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     ans->loadAllLibraries();
 
     // All ready!
-    ans->addOutput(i18n("Ready."));
+    ans->addOutput(parent->tr("Ready."));
     ans->allowInput();
     return ans;
 }
@@ -116,11 +129,11 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
         const PythonVariableList& initialVars) {
     PythonConsole* ans = new PythonConsole(parent, this, initialPrefs);
 
-    ans->blockInput(i18n("Initialising..."));
+    ans->blockInput(parent->tr("Initialising..."));
 
     // Show us what's going on.
     ans->show();
-    KApplication::kApplication()->processEvents();
+    QCoreApplication::instance()->processEvents();
 
     // Initialise the python interpreter.
     if (ans->importRegina())
@@ -129,10 +142,10 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     for (PythonVariableList::const_iterator it = initialVars.begin();
             it != initialVars.end(); it++)
         ans->setVar((*it).name, (*it).value);
-    ans->executeScript(script, i18n("user script"));
+    ans->executeScript(script, parent->tr("user script"));
 
     // All ready!
-    ans->addOutput(i18n("\nReady."));
+    ans->addOutput(parent->tr("\nReady."));
     ans->allowInput();
     return ans;
 }
@@ -141,7 +154,7 @@ PythonConsole* PythonManager::compileScript(QWidget* parent,
         const ReginaPrefSet* initialPrefs, const QString& script) {
     PythonConsole* ans = new PythonConsole(parent, this, initialPrefs);
 
-    ans->blockInput(i18n("Initialising..."));
+    ans->blockInput(parent->tr("Initialising..."));
 
     // Try to compile the script.
     if (ans->compileScript(script)) {
@@ -150,7 +163,7 @@ PythonConsole* PythonManager::compileScript(QWidget* parent,
     } else {
         // The compile failed; show the details to the user.
         ans->show();
-        ans->addOutput(i18n("Compile failed."));
+        ans->addOutput(parent->tr("Compile failed."));
         ans->allowInput();
         return ans;
     }
@@ -187,7 +200,8 @@ void PythonManager::updatePreferences(const ReginaPrefSet& newPrefs) {
 
 namespace {
     PythonConsole* scriptingDisabled(QWidget* parent) {
-        KMessageBox::sorry(parent, i18n("<qt>Python scripting has been "
+        QMessageBox *sorry = new QMessageBox(parent);
+        sorry->setText(tr("<qt>Python scripting has been "
             "disabled in your particular build of Regina.  This is probably "
             "because no usable boost.python installation could be found.<p>"
             "Watch the output of <b>cmake</b> at compile time "
