@@ -37,61 +37,61 @@
  * Filename filter for all supported files.
  */
 #define FILTER_SUPPORTED \
-    "Regina Data Files (*.rga);;All Files (*)"
+    QT_TR_NOOP("Regina Data Files (*.rga);;All Files (*)")
 
 /**
  * Filename filter for Regina data files.
  */
 #define FILTER_REGINA \
-    "Regina Data Files (*.rga);;All Files (*)"
+    QT_TR_NOOP("Regina Data Files (*.rga);;All Files (*)")
 
 /**
  * Filename filter for Python libraries.
  */
 #define FILTER_PYTHON_LIBRARIES \
-    "Python Libraries (*.py);;All Files (*)"
+    QT_TR_NOOP("Python Libraries (*.py);;All Files (*)")
 
 /**
  * Filename filter for PDF documents.
  */
 #define FILTER_PDF \
-    "PDF Documents (*.pdf);;All Files (*)"
+    QT_TR_NOOP("PDF Documents (*.pdf);;All Files (*)")
 
 /**
  * Filename filter for Python scripts.
  */
 #define FILTER_PYTHON_SCRIPTS \
-    "Python Scripts (*.py);;All Files (*)"
+    QT_TR_NOOP("Python Scripts (*.py);;All Files (*)")
 
 /**
  * Filename filter for SnapPea files.
  */
 #define FILTER_SNAPPEA \
-    "SnapPea Files (*.tri);;All Files (*)"
+    QT_TR_NOOP("SnapPea Files (*.tri);;All Files (*)")
 
 /**
  * Filename filter for Orb files.
  */
 #define FILTER_ORB \
-    "Orb and Casson Files (*.orb);;All Files (*)"
+    QT_TR_NOOP("Orb and Casson Files (*.orb);;All Files (*)")
 
 /**
  * Filename filter for C++ source files.
  */
 #define FILTER_CPP_SOURCE \
-    "C++ Source Files (*.cpp *.cc *.C);;All Files (*)"
+    QT_TR_NOOP("C++ Source Files (*.cpp *.cc *.C);;All Files (*)")
 
 /**
  * Filename filter for CSV (comma-separated value) files.
  */
 #define FILTER_CSV \
-    "Text Files with Comma-Separated Values (*.csv);;All Files (*)"
+    QT_TR_NOOP("Text Files with Comma-Separated Values (*.csv);;All Files (*)")
 
 /**
  * Filename filter for all files.
  */
 #define FILTER_ALL \
-    "All Files (*)"
+    QT_TR_NOOP("All Files (*)")
 
 #endif
 
