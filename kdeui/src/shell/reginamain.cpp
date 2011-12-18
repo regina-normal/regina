@@ -172,7 +172,7 @@ void ReginaMain::readProperties(const KConfigGroup& config) {
     // Argument config represents the session managed config file.
     QString url = config.readEntry("lastUrl"); 
     if (url != QString::null)
-        openUrl(KUrl(url));
+        openUrl(QUrl(url));
 }
 
 bool ReginaMain::queryClose() {
@@ -255,7 +255,7 @@ bool ReginaMain::openUrl(const KUrl& url) {
 }
 
 bool ReginaMain::openUrl(const QString& url) {
-    return openUrl(KUrl(url));
+    return openUrl(QUrl(url));
 }
 
 bool ReginaMain::openExample(const KUrl& url) {

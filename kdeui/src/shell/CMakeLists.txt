@@ -1,9 +1,9 @@
-SET(regina-kde_SRCS examplesaction.cpp main.cpp reginamain.cpp reginapref.cpp)
+SET(regina-kde_SRCS examplesaction.cpp main.cpp reginamain.cpp reginapref.cpp reginamanager.cpp)
 SET(regina-kde_SRCS ${COMMON_SOURCES} ${PART_SOURCES} ${regina-kde_SRCS})
 
 KDE4_ADD_APP_ICON(regina-kde_SRCS "../pics/hi*regina.png")
 
-AUTOMOC4_MOC_HEADERS(regina-kde ${MOC_HEADERS} examplesaction.h reginamain.h reginapref.h )
+AUTOMOC4_MOC_HEADERS(regina-kde ${MOC_HEADERS} examplesaction.h reginamain.h reginapref.h reginamanager.h)
 KDE4_ADD_EXECUTABLE(regina-kde ${regina-kde_SRCS})
 SET(LINK_LIBS ${LINK_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS} ${KDE4_KTEXTEDITOR_LIBS})
 TARGET_LINK_LIBRARIES(regina-kde ${LINK_LIBS})

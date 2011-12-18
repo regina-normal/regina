@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2011, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,50 +26,30 @@
 
 /* end stub */
 
-#include "reginaabout.h"
+/*! \file reginamanager.h
+ *  \brief Provides a window manager for Regina.
+ */
+
+#ifndef __REGINAMANAGER_H_
+#define __REGINAMANAGER_H_
+
+#include "regina-config.h"
 #include "reginamain.h"
-#include "reginamanager.h"
 
+class ReginaManager : public QApplication {
 
-#include <QTextCodec>
+    public:
+        ReginaManager(int argc, char** argv);
+        
+        ReginaMain* newWindow();
+        ReginaMain* newWindow(const QString url);
 
-#include <QApplication>
+        void onClose(ReginaMain *child);
 
-int main(int argc, char **argv) {
-    // Always talk to and from the calculation engine in UTF-8.
-    // This must be specified *before* constructing our about data,
-    // since some of the about data is stored as plain C strings.
-    if (QTextCodec* codec = QTextCodec::codecForName("UTF-8"))
-        QTextCodec::setCodecForCStrings(codec);
-    ReginaManager *app = new ReginaManager(argc, argv);;
+    private:
+        QList<ReginaMain *> children;
 
-    // TODO Session management disabled until further notice.
-    // See if we are starting with session management.
-//    if (app.isSessionRestored()) {
-//        int winNum = 1;
-//        while (KMainWindow::canBeRestored(winNum)) {
-//            if (KMainWindow::classNameOfToplevel(winNum) == "ReginaMain")
-//                (new ReginaMain)->restore(winNum);
-//            winNum++;
-//        }
-//    } else {
-        // No session; just start up normally.
-        QStringList args = app->arguments();
-        ReginaMain *widget = app->newWindow();
-        widget->show();
+};
 
-        // Note that args.at(0) is the name of the executable (regina-qt)
-        if (args.size() > 1) {
-            for (int i = 1; i < args.size(); i++) {
-                widget->openUrl(args.at(i));
-            }
-        }
-//    }
-
-    // Show a tip of the day if appropriate.
-    //KTipDialog::showTip();
-
-    // Run the application.
-    return app->exec();
-}
+#endif /* __REGINAMANAGER_H_ */
 
