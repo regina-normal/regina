@@ -36,26 +36,49 @@
 #include <KStandardAction>
 
 void ReginaPart::setupActions() {
-    KAction* act;
+    QAction* act;
 
     // File actions:
-    actSave = KStandardAction::save(this, SLOT(fileSave()), actionCollection());
-    actSave->setWhatsThis(i18n("Save the current data file."));
-    act = KStandardAction::saveAs(this, SLOT(fileSaveAs()), actionCollection());
-    act->setWhatsThis(i18n(
+    actSave = new QAction(
+        QIcon( QApplication::style()->standardIcon(SP_DialogSaveButton) ),
+        tr("&Save"), this);
+    actSave->setShortcuts(QKeySequence::Save);
+    actSave->setWhatsThis(tr("Save the current data file."));
+    connect(actSave, SIGNAL(triggered()), this, SLOT(fileSave()));
+
+    act = new QAction(
+        QIcon( QApplication::style()->standardIcon(SP_DialogSaveButton) ),
+        tr("Save &as"), this);
+    act->setShortcuts(QKeySequence::SaveAs);
+    act->setWhatsThis(tr(
         "Save the current data file, but give it a different name."));
+    connect(act, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
+
 
     // Edit actions:
-    actCut = KStandardAction::cut(actionCollection());
-    actCut->setWhatsThis(i18n("Cut out the current selection and store it "
+    // Note: we connect these in the various panes, don't connect them here
+    actCut = new QAction(
+        // TODO: Qt doesn't (seem to) offer any standard cut/copy/paste icons
+        QIcon( QApplication::style()->standardIcon(SP_ArrowLeft) ),
+        tr("Cu&t"), this);
+    actCut->setWhatsThis(tr("Cut out the current selection and store it "
         "in the clipboard."));
     actCut->setEnabled(false);
-    actCopy = KStandardAction::copy(actionCollection());
-    actCopy->setWhatsThis(i18n("Copy the current selection to the clipboard."));
+    actCut->setShortcuts(QKeySequence::Cut);
+
+    actCopy = new QAction(
+        QIcon( QApplication::style()->standardIcon(SP_ArrowDown)),
+        tr("&Copy"), this);
+    actCopy->setWhatsThis(tr("Copy the current selection to the clipboard."));
     actCopy->setEnabled(false);
-    actPaste = KStandardAction::paste(actionCollection());
+    actCopy->setShortcuts(QKeySequence::Copy);
+
+    actPaste = new QAction(
+        QIcon( QApplication::style()->standardIcon(SP_ArrowRight)),
+        tr("&Paste"), this);
     actPaste->setWhatsThis(i18n("Paste the contents of the clipboard."));
     actPaste->setEnabled(false);
+    actPaste->setShortcuts(QKeySequence::Paste);
 
     // Basic packet actions:
     act = actionCollection()->addAction("tree_view");
