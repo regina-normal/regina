@@ -30,7 +30,6 @@
 #include "reginamain.h"
 #include "reginamanager.h"
 
-
 #include <QTextCodec>
 
 #include <QApplication>
@@ -41,7 +40,14 @@ int main(int argc, char **argv) {
     // since some of the about data is stored as plain C strings.
     if (QTextCodec* codec = QTextCodec::codecForName("UTF-8"))
         QTextCodec::setCodecForCStrings(codec);
-    ReginaManager *app = new ReginaManager(argc, argv);;
+    ReginaManager *app = new ReginaManager(argc, argv);
+
+    // TODO Why does it crash with the next 4 lines commented?
+    QStringList list;
+    for(int a=0;a < argc; ++a) {
+        list << QString::fromLocal8Bit(argv[a]);
+    }
+
 
     // TODO Session management disabled until further notice.
     // See if we are starting with session management.

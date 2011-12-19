@@ -35,7 +35,7 @@ ReginaManager::ReginaManager(int argc, char **argv) :
    
 
 ReginaMain* ReginaManager::newWindow() {
-    ReginaMain *win = new ReginaMain;
+    ReginaMain *win = new ReginaMain(false, this);
     win->show();
     children.append(win);
     return win;

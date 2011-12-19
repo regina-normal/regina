@@ -36,6 +36,9 @@
 #include "regina-config.h"
 #include "reginamain.h"
 
+#include <QApplication>
+
+
 class ReginaManager : public QApplication {
 
     public:

@@ -36,9 +36,14 @@
 #include "pythonmanager.h"
 #include "reginaiface.h"
 #include "reginaprefset.h"
+#include "reginaabout.h"
+#include "reginapart.h"
 
 #include <kapplication.h>
 #include <kparts/mainwindow.h>
+
+#include <QMainWindow>
+#include <QMdiArea>
 
 class ExamplesAction;
 class KAction;
@@ -46,6 +51,8 @@ class KDialog;
 class KRecentFilesAction;
 class KToggleAction;
 class KUrl;
+
+class ReginaManager;
 
 /**
  * A top-level window for Regina.
@@ -55,7 +62,7 @@ class KUrl;
  *
  * This class also stores global preferences for Regina.
  */
-class ReginaMain : public KParts::MainWindow,
+class ReginaMain : public QMainWindow,
         virtual public ReginaMainInterface {
     Q_OBJECT
 
@@ -63,10 +70,10 @@ class ReginaMain : public KParts::MainWindow,
         /**
          * Components
          */
-        KParts::PartManager* manager;
-            /**< The part manager that handles activation and
+        ReginaManager* manager;
+            /**< The regina manager that handles activation and
                  deactivation of nested parts. */
-        KParts::ReadWritePart* currentPart;
+        //KParts::ReadWritePart* currentPart;
             /**< The part containing the currently opened document, or 0 if
                  no document has yet been opened. */
         PythonManager consoles;
@@ -92,8 +99,13 @@ class ReginaMain : public KParts::MainWindow,
             /**< Action to show/hide the toolbar. */
         // KToggleAction* showStatusbar;
             /**< Action to show/hide the status bar. */
-        KAction* actPython;
+        QAction* actPython;
             /**< Action to launch a new python console. */
+
+        /**
+         * Main document display widget
+         */
+        QMdiArea* mdiArea;
 
         /**
          * Preferences
@@ -103,13 +115,13 @@ class ReginaMain : public KParts::MainWindow,
         /**
          * About dialogs
          */
-        KDialog* aboutApp;
+        ReginaAbout* aboutApp;
 
     public:
         /**
          * Constructors and destructors.
          */
-        ReginaMain(bool showAdvice = false);
+        ReginaMain(ReginaManager *parent, bool showAdvice = false);
         virtual ~ReginaMain();
 
         /**
@@ -141,8 +153,8 @@ class ReginaMain : public KParts::MainWindow,
         /**
          * Overridden for session management.
          */
-        virtual void saveProperties(KConfigGroup &);
-        virtual void readProperties(const KConfigGroup &);
+        virtual void saveProperties();
+        virtual void readProperties();
 
         /**
          * Overridden to handle window closing.
@@ -168,7 +180,7 @@ class ReginaMain : public KParts::MainWindow,
          * Open the given Url in this window, or in a new top-level
          * window if this window already contains an open document.
          */
-        bool openUrl(const KUrl& url);
+        bool openUrl(const QUrl& url);
 
         /**
          * Open the given Url in this window, or in a new top-level
@@ -179,7 +191,7 @@ class ReginaMain : public KParts::MainWindow,
         /**
          * Open the given example file in a manner similar to openUrl().
          */
-        bool openExample(const KUrl& url);
+        bool openExample(const QUrl& url);
 
         /**
          * Open a new standalone Python console.  The console will not
@@ -249,7 +261,7 @@ class ReginaMain : public KParts::MainWindow,
          * Creates a new topology data part.  If no appropriate part can
          * be created, an error is displayed and 0 is returned.
          */
-        KParts::ReadWritePart* newTopologyPart();
+        ReginaPart* newTopologyPart();
 
         /**
          * Inserts \a currentPart into the main window and performs any
