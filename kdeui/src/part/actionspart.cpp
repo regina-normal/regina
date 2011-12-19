@@ -40,14 +40,14 @@ void ReginaPart::setupActions() {
 
     // File actions:
     actSave = new QAction(
-        QIcon( QApplication::style()->standardIcon(SP_DialogSaveButton) ),
+        QApplication::style()->standardIcon(SP_DialogSaveButton),
         tr("&Save"), this);
     actSave->setShortcuts(QKeySequence::Save);
     actSave->setWhatsThis(tr("Save the current data file."));
     connect(actSave, SIGNAL(triggered()), this, SLOT(fileSave()));
 
     act = new QAction(
-        QIcon( QApplication::style()->standardIcon(SP_DialogSaveButton) ),
+        QApplication::style()->standardIcon(SP_DialogSaveButton),
         tr("Save &as"), this);
     act->setShortcuts(QKeySequence::SaveAs);
     act->setWhatsThis(tr(
@@ -59,7 +59,7 @@ void ReginaPart::setupActions() {
     // Note: we connect these in the various panes, don't connect them here
     actCut = new QAction(
         // TODO: Qt doesn't (seem to) offer any standard cut/copy/paste icons
-        QIcon( QApplication::style()->standardIcon(SP_ArrowLeft) ),
+        QApplication::style()->standardIcon(SP_ArrowLeft),
         tr("Cu&t"), this);
     actCut->setWhatsThis(tr("Cut out the current selection and store it "
         "in the clipboard."));
@@ -67,14 +67,14 @@ void ReginaPart::setupActions() {
     actCut->setShortcuts(QKeySequence::Cut);
 
     actCopy = new QAction(
-        QIcon( QApplication::style()->standardIcon(SP_ArrowDown)),
+        QApplication::style()->standardIcon(SP_ArrowDown),
         tr("&Copy"), this);
     actCopy->setWhatsThis(tr("Copy the current selection to the clipboard."));
     actCopy->setEnabled(false);
     actCopy->setShortcuts(QKeySequence::Copy);
 
     actPaste = new QAction(
-        QIcon( QApplication::style()->standardIcon(SP_ArrowRight)),
+        QApplication::style()->standardIcon(SP_ArrowRight),
         tr("&Paste"), this);
     actPaste->setWhatsThis(i18n("Paste the contents of the clipboard."));
     actPaste->setEnabled(false);
