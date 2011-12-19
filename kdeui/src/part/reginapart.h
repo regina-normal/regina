@@ -41,6 +41,7 @@
 #include <KAction>
 
 #include <QLinkedList>
+#include <QMdiArea>
 
 namespace regina {
     class NPacket;
@@ -61,7 +62,7 @@ class QLabel;
  *
  * This part does all the real work of working with Regina data files.
  */
-class ReginaPart : public KParts::ReadWritePart {
+class ReginaPart : public QMdiArea {
     Q_OBJECT
 
     private:
