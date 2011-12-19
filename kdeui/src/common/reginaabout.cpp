@@ -31,8 +31,6 @@
 #include "reginaabout.h"
 
 #include <cstdlib>
-/*#include <klocale.h>
-#include <kstandarddirs.h> */
 #include <qdatetime.h>
 #include <qfile.h>
 
@@ -42,7 +40,6 @@
 #include <QVBoxLayout>
 
 
-/* #include <KLocalizedString> */
 
 const QByteArray ReginaAbout::regBugAddress(PACKAGE_BUGREPORT);
 
@@ -114,10 +111,6 @@ const QString ReginaAbout::regLicense( tr(
 
 ReginaAbout::ReginaAbout(QWidget* parent) : 
         QDialog(parent) {
-        // KAboutData(internalName, regName, tr(regName),regVersion,
-        //regDescription, License_Custom, regCopyright,
-        //regReleased, regWebsite, regBugAddress) {
-    //setLicenseText(regLicense);
 
     // Authors:
     addAuthor(tr("Benjamin Burton"), QString(), "bab@debian.org",

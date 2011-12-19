@@ -31,10 +31,6 @@
 
 #include "pythonmanager.h"
 
-//#include <kapplication.h>
-//#include <klocale.h>
-//#include <kmessagebox.h>
-//#include <krun.h>
 #include <qfile.h>
 #include <qfileinfo.h>
 
@@ -64,24 +60,8 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
     if (QFileInfo(index).exists()) {
         QDesktopServices::openUrl(QUrl("file://" + index));
 
-        // If we're on a mac, just use the default Mac browser.
-//#ifdef __APPLE__
-        // Hmm.  Assume this command executes successfully, since on my
-        // fink it returns false even when it *does* execute successfully..!
-        //
-//        KRun::runCommand(QString("open \"%1\"").arg(index), topLevelWindow);
-//#else
-//        if (! KRun::runUrl("file:" + index, "text/html", topLevelWindow,
-//                false /* temp file */, false /* run executables */))
-//            KMessageBox::sorry(topLevelWindow, i18n(
-//                "<qt>The Python reference could "
-//                "not be opened from within KDE.  "
-//                "Please try pointing your web browser to "
-//                "<tt>%1/index.html</tt>.</qt>").arg(docDir));
-//#endif
     } else {
         QMessageBox *sorry = new QMessageBox(topLevelWindow);
-        //KMessageBox::sorry(topLevelWindow, i18n(
         sorry->setText((sorry->tr(
             "<qt>The Python reference could "
             "not be found.  Perhaps it is not installed?<p>"
