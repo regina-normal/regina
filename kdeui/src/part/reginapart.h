@@ -38,7 +38,7 @@
 
 #include <kparts/part.h>
 
-#include <KAction>
+#include <QAction>
 
 #include <QLinkedList>
 #include <QMdiArea>
@@ -92,13 +92,13 @@ class ReginaPart : public QMdiArea {
         /**
          * Actions
          */
-        KAction* actSave;
-        KAction* actCut;
-        KAction* actCopy;
-        KAction* actPaste;
-        QLinkedList<KAction *> treePacketViewActions;
-        QLinkedList<KAction *> treePacketEditActions;
-        QLinkedList<KAction *> treeGeneralEditActions;
+        QAction* actSave;
+        QAction* actCut;
+        QAction* actCopy;
+        QAction* actPaste;
+        QLinkedList<QAction *> treePacketViewActions;
+        QLinkedList<QAction *> treePacketEditActions;
+        QLinkedList<QAction *> treeGeneralEditActions;
 
     public:
         /**
