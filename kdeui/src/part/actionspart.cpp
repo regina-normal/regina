@@ -30,12 +30,24 @@
 
 #include <QAction>
 #include <QApplication>
+#include <QMenu>
+#include <QMenuBar>
 #include <QStyle>
+
+// TODO: Undo/redo are not yet implemented.
 
 
 void ReginaPart::setupActions() {
     QAction* act;
+    QMenuBar* menuBar;
+    QMenu* fileMenu,editMenu,treeMenu,importMenu,exportMenu,treeNavMenu;
+    QMenu* subMenu;
 
+    menuBar = new QMenuBar(this);
+    fileMenu = menuBar->addMenu(tr("&File"));
+    editMenu = menuBar->addMenu(tr("&Edit"));
+    treeMenu = menuBar->addMenu(tr("&Packet Tree"));
+    
     // File actions:
     actSave = new QAction(
         QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton),
@@ -43,6 +55,7 @@ void ReginaPart::setupActions() {
     actSave->setShortcuts(QKeySequence::Save);
     actSave->setWhatsThis(tr("Save the current data file."));
     connect(actSave, SIGNAL(triggered()), this, SLOT(fileSave()));
+    fileMenu->addAction(actSave);
     allActions.append(actSave);
 
     act = new QAction(
@@ -52,8 +65,11 @@ void ReginaPart::setupActions() {
     act->setWhatsThis(tr(
         "Save the current data file, but give it a different name."));
     connect(act, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
+    fileMenu->addAction(act);
     allActions.append(act);
 
+    importMenu = fileMenu->addMenu(tr("&Import"));
+    exportMenu = fileMenu->addMenu(tr("&Export"));
 
     // Edit actions:
     // Note: we connect these in the various panes, don't connect them here
@@ -65,6 +81,7 @@ void ReginaPart::setupActions() {
         "in the clipboard."));
     actCut->setEnabled(false);
     actCut->setShortcuts(QKeySequence::Cut);
+    editMenu->addAction(actCut);
     allActions.append(actCut);
 
     actCopy = new QAction(
@@ -73,6 +90,7 @@ void ReginaPart::setupActions() {
     actCopy->setWhatsThis(tr("Copy the current selection to the clipboard."));
     actCopy->setEnabled(false);
     actCopy->setShortcuts(QKeySequence::Copy);
+    editMenu->addAction(actCopy);
     allActions.append(actCopy);
 
     actPaste = new QAction(
@@ -81,7 +99,123 @@ void ReginaPart::setupActions() {
     actPaste->setWhatsThis(tr("Paste the contents of the clipboard."));
     actPaste->setEnabled(false);
     actPaste->setShortcuts(QKeySequence::Paste);
+    editMenu->addAction(actPaste);
     allActions.append(act);
+
+    
+
+    // New packets:
+    act = new QAction(this);
+    act->setText(tr("New &Angle Structure Solutions"));
+    act->setIcon(QIcon("packet_angles"));
+    act->setShortcut(tr("Alt+a"));
+    act->setToolTip(tr("New angle structure solutions"));
+    act->setWhatsThis(tr("Create a new list of vertex angle structures "
+        "for a triangulation."));
+    connect(act, SIGNAL(triggered()), this, SLOT(newAngleStructures()) );
+    treeGeneralEditActions.append(act);
+    treeMenu->addAction(act);
+    allActions.append(act);
+
+    act = new QAction(this);
+    act->setText(tr("New &Container"));
+    act->setIcon(QIcon("packet_container"));
+    act->setShortcut(tr("Alt+c"));
+    act->setToolTip(tr("New container"));
+    act->setWhatsThis(tr("Create a new container packet.  Containers "
+        "are used to help keep the packet tree organised &ndash; "
+        "they serve no purpose other than to store child packets."));
+    connect(act, SIGNAL(triggered()), this, SLOT(newContainer()) );
+    treeGeneralEditActions.append(act);
+    treeMenu->addAction(act);
+    allActions.append(act);
+
+    act = new QAction(this);
+    act->setText(tr("New &Filter"));
+    act->setIcon(QIcon("packet_filter"));
+    act->setShortcut(tr("Alt+f"));
+    act->setToolTip(tr("New surface filter"));
+    act->setWhatsThis(tr("Create a new normal surface filter.  Surface "
+        "filters can be used to sort through normal surface lists and "
+        "display only surfaces of particular interest."));
+    connect(act, SIGNAL(triggered()), this, SLOT(newFilter()) );
+    treeGeneralEditActions.append(act);
+    treeMenu->addAction(act);
+    allActions.append(act);
+
+    act = new QAction(this);
+    act->setText(tr("New &Normal Surface List"));
+    act->setIcon(QIcon("packet_surfaces"));
+    act->setShortcut(tr("Alt+n"));
+    act->setToolTip(tr("New normal surface list"));
+    act->setWhatsThis(tr("Create a new list of vertex normal surfaces "
+        "for a triangulation."));
+    connect(act, SIGNAL(triggered()), this, SLOT(newNormalSurfaces()) );
+    treeGeneralEditActions.append(act);
+    treeMenu->addAction(act);
+    allActions.append(act);
+
+    act = new QAction(this);
+    act->setText(tr("New &PDF Document"));
+    act->setIcon(QIcon("packet_pdf"));
+    act->setShortcut(tr("Alt+p"));
+    act->setToolTip(tr("New PDF document"));
+    act->setWhatsThis(tr("Create a new PDF packet containing a copy of "
+        "an external PDF document."));
+    connect(act, SIGNAL(triggered()), this, SLOT(newPDF()) );
+    treeGeneralEditActions.append(act);
+    treeMenu->addAction(act);
+    allActions.append(act);
+
+    act = new QAction(this);
+    act->setText(tr("New &Script"));
+    act->setIcon(QIcon("packet_script"));
+    act->setShortcut(tr("Alt+s"));
+    act->setToolTip(tr("New script packet"));
+    act->setWhatsThis(tr("Create a new Python script that can work "
+        "directly with this data file."));
+    connect(act, SIGNAL(triggered()), this, SLOT(newScript()) );
+    treeGeneralEditActions.append(act);
+    treeMenu->addAction(act);
+    allActions.append(act);
+
+    act = new QAction(this);
+    act->setText(tr("New Te&xt"));
+    act->setIcon(QIcon("packet_text"));
+    act->setShortcut(tr("Alt+x"));
+    act->setToolTip(tr("New text packet"));
+    act->setWhatsThis(tr("Create a new piece of text to store within "
+        "the packet tree."));
+    connect(act, SIGNAL(triggered()), this, SLOT(newText()) );
+    treeGeneralEditActions.append(act);
+    treeMenu->addAction(act);
+    allActions.append(act);
+
+    act = new QAction(this);
+    act->setText(tr("New &Triangulation"));
+    act->setIcon(QIcon("packet_triangulation"));
+    act->setShortcut(tr("Alt+t"));
+    act->setToolTip(tr("New triangulation"));
+    act->setWhatsThis(tr("Create a new 3-manifold triangulation."));
+    connect(act, SIGNAL(triggered()), this, SLOT(newTriangulation()) );
+    treeGeneralEditActions.append(act);
+    treeMenu->addAction(act);
+    allActions.append(act);
+
+    treeMenu->addSeparator();
+
+    act = new QAction(this);
+    act->setText(tr("Form &Census"));
+    act->setIcon(QIcon("view-list-text"));
+    act->setToolTip(tr("Form a new census of triangulations"));
+    act->setWhatsThis(tr("Create a new census of 3-manifold "
+        "triangulations according to some set of census constraints."));
+    connect(act, SIGNAL(triggered()), this, SLOT(newCensus()) );
+    treeGeneralEditActions.append(act);
+    treeMenu->addAction(act);
+    allActions.append(act);
+
+    treeMenu->addSeparator();
 
     // Basic packet actions:
     act = new QAction(this);
@@ -93,6 +227,7 @@ void ReginaPart::setupActions() {
         "in the tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(packetView()) );
     treePacketViewActions.append(act);
+    treeMenu->addAction(act);
     allActions.append(act);
 
     act = new QAction(this);
@@ -104,6 +239,7 @@ void ReginaPart::setupActions() {
         "in the tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(packetRename()) );
     treePacketEditActions.append(act);
+    treeMenu->addAction(act);
     allActions.append(act);
 
     act = new QAction(this);
@@ -115,7 +251,153 @@ void ReginaPart::setupActions() {
         "in the tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(packetDelete()) );
     treePacketEditActions.append(act);
+    treeMenu->addAction(act);
     allActions.append(act);
+
+    treeNavMenu = treeMenu->addMenu(tr("&Move"));
+
+    // Tree reorganisation:
+    act = new QAction(this);
+    act->setText(tr("&Higher Level"));
+    act->setIcon(QIcon("arrow-left"));
+    act->setShortcut(tr("Alt+Left"));
+    act->setToolTip(tr("Move packet to a higher (shallower) level "
+        "in the tree"));
+    act->setWhatsThis(tr("Move the currently selected packet "
+        "one level higher (shallower) in the packet tree.  The packet will "
+        "abandon its current parent, and move one level closer to the root "
+        "of the tree."));
+    connect(act, SIGNAL(triggered()), this, SLOT(moveShallow()) );
+    treePacketEditActions.append(act);
+    treeNavMenu->addAction(act);
+    allActions.append(act);
+
+    act = new QAction(this);
+    act->setText(tr("&Lower Level"));
+    act->setIcon(QIcon("arrow-right"));
+    act->setShortcut(tr("Alt+Right"));
+    act->setToolTip(tr("Move packet to a lower (deeper) level in the tree"));
+    act->setWhatsThis(tr("Move the currently selected packet "
+        "one level lower (deeper) in the packet tree.  The packet will "
+        "abandon its current parent, and instead become a child of its "
+        "next sibling."));
+    connect(act, SIGNAL(triggered()), this, SLOT(moveDeep()) );
+    treePacketEditActions.append(act);
+    treeNavMenu->addAction(act);
+    allActions.append(act);
+    
+    treeNavMenu->addSeparator();
+
+    act = new QAction(this);
+    act->setText(tr("&Up"));
+    act->setIcon(QIcon("arrow-up"));
+    act->setShortcut(tr("Alt+Up"));
+    act->setToolTip(tr("Move packet up through its siblings"));
+    act->setWhatsThis(tr("Move the currently selected packet "
+        "one step up in the packet tree.  The packet will keep the "
+        "same parent."));
+    connect(act, SIGNAL(triggered()), this, SLOT(moveUp()) );
+    treePacketEditActions.append(act);
+    treeNavMenu->addAction(act);
+    allActions.append(act);
+
+    act = new QAction(this);
+    act->setText(tr("Jump U&p"));
+    act->setIcon(QIcon("arrow-up-double"));
+    act->setShortcut(tr("Alt+Shift+Up"));
+    act->setToolTip(tr("Jump packet up through its siblings"));
+    act->setWhatsThis(tr("Move the currently selected packet "
+        "several steps up in the packet tree.  The packet will keep the "
+        "same parent."));
+    connect(act, SIGNAL(triggered()), this, SLOT(movePageUp()) );
+    treePacketEditActions.append(act);
+    treeNavMenu->addAction(act);
+    allActions.append(act);
+
+    act = new QAction(this);
+    act->setText(tr("&Top"));
+    act->setIcon(QIcon("go-top"));
+    act->setShortcut(tr("Alt+Home"));
+    act->setToolTip(tr("Move packet above all its siblings"));
+    act->setWhatsThis(tr("Move the currently selected packet "
+        "up as far as possible amongst its siblings in the packet tree.  "
+        "The packet will keep the same parent, but it will become the "
+        "first child of this parent."));
+    connect(act, SIGNAL(triggered()), this, SLOT(moveTop()) );
+    treePacketEditActions.append(act);
+    treeNavMenu->addAction(act);
+    allActions.append(act);
+    
+    treeNavMenu->addSeparator();
+
+    act = new QAction(this);
+    act->setText(tr("&Down"));
+    act->setIcon(QIcon("arrow-down"));
+    act->setShortcut(tr("Alt+Down"));
+    act->setToolTip(tr("Move packet down through its siblings"));
+    act->setWhatsThis(tr("Move the currently selected packet "
+        "one step down in the packet tree.  The packet will keep the "
+        "same parent."));
+    connect(act, SIGNAL(triggered()), this, SLOT(moveDown()) );
+    treePacketEditActions.append(act);
+    treeNavMenu->addAction(act);
+    allActions.append(act);
+
+    act = new QAction(this);
+    act->setText(tr("Jump Do&wn"));
+    act->setIcon(QIcon("arrow-down-double"));
+    act->setShortcut(tr("Alt+Shift+Down"));
+    act->setToolTip(tr("Jump packet down through its siblings"));
+    act->setWhatsThis(tr("Move the currently selected packet "
+        "several steps down in the packet tree.  The packet will keep the "
+        "same parent."));
+    connect(act, SIGNAL(triggered()), this, SLOT(movePageDown()) );
+    treePacketEditActions.append(act);
+    treeNavMenu->addAction(act);
+    allActions.append(act);
+
+    act = new QAction(this);
+    act->setText(tr("&Bottom"));
+    act->setIcon(QIcon("go-bottom"));
+    act->setShortcut(tr("Alt+End"));
+    act->setToolTip(tr("Move packet below all its siblings"));
+    act->setWhatsThis(tr("Move the currently selected packet "
+        "down as far as possible amongst its siblings in the packet tree.  "
+        "The packet will keep the same parent, but it will become the "
+        "last child of this parent."));
+    connect(act, SIGNAL(triggered()), this, SLOT(moveBottom()) );
+    treePacketEditActions.append(act);
+    treeNavMenu->addAction(act);
+    allActions.append(act);
+    
+    treeMenu->addSeparator();
+
+    act = new QAction(this);
+    act->setText(tr("C&lone Packet"));
+    act->setIcon(QIcon("edit-copy"));
+    act->setShortcut(tr("Alt+l"));
+    act->setToolTip(tr("Clone the selected packet only"));
+    act->setWhatsThis(tr("Clone the packet currently selected in "
+        "the tree.  The new clone will be placed alongside the original "
+        "packet."));
+    connect(act, SIGNAL(triggered()), this, SLOT(clonePacket()) );
+    treePacketEditActions.append(act);
+    treeMenu->addAction(act);
+    allActions.append(act);
+
+
+    act = new QAction(this);
+    act->setText(tr("Clone Su&btree"));
+    act->setToolTip(tr("Clone the subtree beneath the selected packet"));
+    act->setWhatsThis(tr("Clone the packet currently selected in "
+        "the tree, as well as all of its descendants in the tree.  The new "
+        "cloned subtree will be placed alongside the original packet."));
+    connect(act, SIGNAL(triggered()), this, SLOT(cloneSubtree()) );
+    treePacketEditActions.append(act);
+    treeMenu->addAction(act);
+    allActions.append(act);
+
+    treeMenu->addSeparator();
 
     act = new QAction(this);
     act->setText(tr("Refres&h Subtree"));
@@ -131,232 +413,9 @@ void ReginaPart::setupActions() {
         "disc; the tree is just resynced with packet editors and so on."));
     connect(act, SIGNAL(triggered()), this, SLOT(subtreeRefresh()) );
     treePacketViewActions.append(act);
+    treeMenu->addAction(act);
     allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("C&lone Packet"));
-    act->setIcon(QIcon("edit-copy"));
-    act->setShortcut(tr("Alt+l"));
-    act->setToolTip(tr("Clone the selected packet only"));
-    act->setWhatsThis(tr("Clone the packet currently selected in "
-        "the tree.  The new clone will be placed alongside the original "
-        "packet."));
-    connect(act, SIGNAL(triggered()), this, SLOT(clonePacket()) );
-    treePacketEditActions.append(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("Clone Su&btree"));
-    act->setToolTip(tr("Clone the subtree beneath the selected packet"));
-    act->setWhatsThis(tr("Clone the packet currently selected in "
-        "the tree, as well as all of its descendants in the tree.  The new "
-        "cloned subtree will be placed alongside the original packet."));
-    connect(act, SIGNAL(triggered()), this, SLOT(cloneSubtree()) );
-    treePacketEditActions.append(act);
-    allActions.append(act);
-
-    // Tree reorganisation:
-    act = new QAction(this);
-    act->setText(tr("&Higher Level"));
-    act->setIcon(QIcon("arrow-left"));
-    act->setShortcut(tr("Alt+Left"));
-    act->setToolTip(tr("Move packet to a higher (shallower) level "
-        "in the tree"));
-    act->setWhatsThis(tr("Move the currently selected packet "
-        "one level higher (shallower) in the packet tree.  The packet will "
-        "abandon its current parent, and move one level closer to the root "
-        "of the tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(moveShallow()) );
-    treePacketEditActions.append(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("&Lower Level"));
-    act->setIcon(QIcon("arrow-right"));
-    act->setShortcut(tr("Alt+Right"));
-    act->setToolTip(tr("Move packet to a lower (deeper) level in the tree"));
-    act->setWhatsThis(tr("Move the currently selected packet "
-        "one level lower (deeper) in the packet tree.  The packet will "
-        "abandon its current parent, and instead become a child of its "
-        "next sibling."));
-    connect(act, SIGNAL(triggered()), this, SLOT(moveDeep()) );
-    treePacketEditActions.append(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("&Up"));
-    act->setIcon(QIcon("arrow-up"));
-    act->setShortcut(tr("Alt+Up"));
-    act->setToolTip(tr("Move packet up through its siblings"));
-    act->setWhatsThis(tr("Move the currently selected packet "
-        "one step up in the packet tree.  The packet will keep the "
-        "same parent."));
-    connect(act, SIGNAL(triggered()), this, SLOT(moveUp()) );
-    treePacketEditActions.append(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("&Down"));
-    act->setIcon(QIcon("arrow-down"));
-    act->setShortcut(tr("Alt+Down"));
-    act->setToolTip(tr("Move packet down through its siblings"));
-    act->setWhatsThis(tr("Move the currently selected packet "
-        "one step down in the packet tree.  The packet will keep the "
-        "same parent."));
-    connect(act, SIGNAL(triggered()), this, SLOT(moveDown()) );
-    treePacketEditActions.append(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("Jump U&p"));
-    act->setIcon(QIcon("arrow-up-double"));
-    act->setShortcut(tr("Alt+Shift+Up"));
-    act->setToolTip(tr("Jump packet up through its siblings"));
-    act->setWhatsThis(tr("Move the currently selected packet "
-        "several steps up in the packet tree.  The packet will keep the "
-        "same parent."));
-    connect(act, SIGNAL(triggered()), this, SLOT(movePageUp()) );
-    treePacketEditActions.append(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("Jump Do&wn"));
-    act->setIcon(QIcon("arrow-down-double"));
-    act->setShortcut(tr("Alt+Shift+Down"));
-    act->setToolTip(tr("Jump packet down through its siblings"));
-    act->setWhatsThis(tr("Move the currently selected packet "
-        "several steps down in the packet tree.  The packet will keep the "
-        "same parent."));
-    connect(act, SIGNAL(triggered()), this, SLOT(movePageDown()) );
-    treePacketEditActions.append(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("&Top"));
-    act->setIcon(QIcon("go-top"));
-    act->setShortcut(tr("Alt+Home"));
-    act->setToolTip(tr("Move packet above all its siblings"));
-    act->setWhatsThis(tr("Move the currently selected packet "
-        "up as far as possible amongst its siblings in the packet tree.  "
-        "The packet will keep the same parent, but it will become the "
-        "first child of this parent."));
-    connect(act, SIGNAL(triggered()), this, SLOT(moveTop()) );
-    treePacketEditActions.append(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("&Bottom"));
-    act->setIcon(QIcon("go-bottom"));
-    act->setShortcut(tr("Alt+End"));
-    act->setToolTip(tr("Move packet below all its siblings"));
-    act->setWhatsThis(tr("Move the currently selected packet "
-        "down as far as possible amongst its siblings in the packet tree.  "
-        "The packet will keep the same parent, but it will become the "
-        "last child of this parent."));
-    connect(act, SIGNAL(triggered()), this, SLOT(moveBottom()) );
-    treePacketEditActions.append(act);
-    allActions.append(act);
-
-    // New packets:
-    act = new QAction(this);
-    act->setText(tr("New &Angle Structure Solutions"));
-    act->setIcon(QIcon("packet_angles"));
-    act->setShortcut(tr("Alt+a"));
-    act->setToolTip(tr("New angle structure solutions"));
-    act->setWhatsThis(tr("Create a new list of vertex angle structures "
-        "for a triangulation."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newAngleStructures()) );
-    treeGeneralEditActions.append(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("New &Container"));
-    act->setIcon(QIcon("packet_container"));
-    act->setShortcut(tr("Alt+c"));
-    act->setToolTip(tr("New container"));
-    act->setWhatsThis(tr("Create a new container packet.  Containers "
-        "are used to help keep the packet tree organised &ndash; "
-        "they serve no purpose other than to store child packets."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newContainer()) );
-    treeGeneralEditActions.append(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("New &Filter"));
-    act->setIcon(QIcon("packet_filter"));
-    act->setShortcut(tr("Alt+f"));
-    act->setToolTip(tr("New surface filter"));
-    act->setWhatsThis(tr("Create a new normal surface filter.  Surface "
-        "filters can be used to sort through normal surface lists and "
-        "display only surfaces of particular interest."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newFilter()) );
-    treeGeneralEditActions.append(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("New &Normal Surface List"));
-    act->setIcon(QIcon("packet_surfaces"));
-    act->setShortcut(tr("Alt+n"));
-    act->setToolTip(tr("New normal surface list"));
-    act->setWhatsThis(tr("Create a new list of vertex normal surfaces "
-        "for a triangulation."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newNormalSurfaces()) );
-    treeGeneralEditActions.append(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("New &PDF Document"));
-    act->setIcon(QIcon("packet_pdf"));
-    act->setShortcut(tr("Alt+p"));
-    act->setToolTip(tr("New PDF document"));
-    act->setWhatsThis(tr("Create a new PDF packet containing a copy of "
-        "an external PDF document."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newPDF()) );
-    treeGeneralEditActions.append(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("New &Script"));
-    act->setIcon(QIcon("packet_script"));
-    act->setShortcut(tr("Alt+s"));
-    act->setToolTip(tr("New script packet"));
-    act->setWhatsThis(tr("Create a new Python script that can work "
-        "directly with this data file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newScript()) );
-    treeGeneralEditActions.append(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("New Te&xt"));
-    act->setIcon(QIcon("packet_text"));
-    act->setShortcut(tr("Alt+x"));
-    act->setToolTip(tr("New text packet"));
-    act->setWhatsThis(tr("Create a new piece of text to store within "
-        "the packet tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newText()) );
-    treeGeneralEditActions.append(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("New &Triangulation"));
-    act->setIcon(QIcon("packet_triangulation"));
-    act->setShortcut(tr("Alt+t"));
-    act->setToolTip(tr("New triangulation"));
-    act->setWhatsThis(tr("Create a new 3-manifold triangulation."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newTriangulation()) );
-    treeGeneralEditActions.append(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("Form &Census"));
-    act->setIcon(QIcon("view-list-text"));
-    act->setToolTip(tr("Form a new census of triangulations"));
-    act->setWhatsThis(tr("Create a new census of 3-manifold "
-        "triangulations according to some set of census constraints."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newCensus()) );
-    treeGeneralEditActions.append(act);
-    allActions.append(act);
-
+    
     // Imports and exports:
     act = new QAction(this);
     act->setText(tr("&Regina Data File"));
@@ -366,6 +425,7 @@ void ReginaPart::setupActions() {
         "imported packet tree will be grafted into this packet tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importRegina()) );
     treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
     allActions.append(act);
 
     act = new QAction(this);
@@ -376,6 +436,7 @@ void ReginaPart::setupActions() {
         "triangulation in this packet tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importSnapPea()) );
     treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
     allActions.append(act);
 
     act= new QAction(this);
@@ -386,6 +447,7 @@ void ReginaPart::setupActions() {
         "triangulation in this packet tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importOrb()) );
     treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
     allActions.append(act);
 
     act = new QAction(this);
@@ -399,6 +461,7 @@ void ReginaPart::setupActions() {
         "a new 3-manifold triangulation will be created in this packet tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importIsoSig3()) );
     treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
     allActions.append(act);
 
     act = new QAction(this);
@@ -410,6 +473,7 @@ void ReginaPart::setupActions() {
         "a new triangulation will be created in this packet tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importDehydration()) );
     treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
     allActions.append(act);
 
     act = new QAction(this);
@@ -420,6 +484,7 @@ void ReginaPart::setupActions() {
         "packet in this tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importPDF()) );
     treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
     allActions.append(act);
 
     act = new QAction(this);
@@ -430,6 +495,7 @@ void ReginaPart::setupActions() {
         "packet in this tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importPython()) );
     treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
     allActions.append(act);
 
     act = new QAction(this);
@@ -440,6 +506,7 @@ void ReginaPart::setupActions() {
         "to a separate Regina data file.  The separate data file will "
         "be saved as compressed XML (the default format)."));
     connect(act, SIGNAL(triggered()), this, SLOT(exportRegina()) );
+    exportMenu->addAction(act);
     allActions.append(act);
 
     act = new QAction(this);
@@ -450,6 +517,7 @@ void ReginaPart::setupActions() {
         "to a separate Regina data file.  The separate data file will "
         "be saved as uncompressed XML."));
     connect(act, SIGNAL(triggered()), this, SLOT(exportReginaUncompressed()) );
+    exportMenu->addAction(act);
     allActions.append(act);
 
     act = new QAction(this);
@@ -459,6 +527,7 @@ void ReginaPart::setupActions() {
     act->setWhatsThis(tr("Export a triangulation from this packet tree "
         "to a separate SnapPea file."));
     connect(act, SIGNAL(triggered()), this, SLOT(exportSnapPea()) );
+    exportMenu->addAction(act);
     allActions.append(act);
 
     act = new QAction(this);
@@ -471,6 +540,7 @@ void ReginaPart::setupActions() {
         "See the users' handbook for further information on using Regina "
         "in your own code."));
     connect(act, SIGNAL(triggered()), this, SLOT(exportSource()) );
+    exportMenu->addAction(act);
     allActions.append(act);
 
     act = new QAction(this);
@@ -486,6 +556,7 @@ void ReginaPart::setupActions() {
         "normal surfaces (such as orientability and Euler characteristic) "
         "will all be stored as separate fields in the CSV file."));
     connect(act, SIGNAL(triggered()), this, SLOT(exportCSVSurfaceList()) );
+    exportMenu->addAction(act);
     allActions.append(act);
 
     act = new QAction(this);
@@ -495,6 +566,7 @@ void ReginaPart::setupActions() {
     act->setWhatsThis(tr("Export a PDF packet from this packet tree "
         "to a separate PDF document."));
     connect(act, SIGNAL(triggered()), this, SLOT(exportPDF()) );
+    exportMenu->addAction(act);
     allActions.append(act);
 
     act = new QAction(this);
@@ -504,6 +576,7 @@ void ReginaPart::setupActions() {
     act->setWhatsThis(tr("Export a script packet from this packet tree "
         "to a separate Python file."));
     connect(act, SIGNAL(triggered()), this, SLOT(exportPython()) );
+    exportMenu->addAction(act);
     allActions.append(act);
 }
 

@@ -101,6 +101,7 @@ class ReginaPart : public QMdiArea {
         QLinkedList<QAction *> treeGeneralEditActions;
         QLinkedList<QAction *> allActions;
 
+
     public:
         /**
          * Constructors and destructors.
