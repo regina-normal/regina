@@ -67,6 +67,11 @@ class ReginaPart : public QMdiArea {
 
     private:
         /**
+         * Parent window
+         */
+        ReginaMain *parent;
+
+        /**
          * Data
          */
         regina::NPacket* packetTree;
@@ -101,6 +106,23 @@ class ReginaPart : public QMdiArea {
         QLinkedList<QAction *> treeGeneralEditActions;
         QLinkedList<QAction *> allActions;
 
+        /**
+         * Menus
+         */
+        QMenuBar* menuBar;
+        QMenu* fileMenu;
+        QMenu* editMenu;
+        QMenu* treeMenu;
+        QMenu* importMenu;
+        QMenu* exportMenu;
+        QMenu* treeNavMenu;
+
+        /* This technically isn't a menu item, but the action representing the
+         * packet menu, when inserted into our main menuBar. Needed to allow 
+         * the packet menu to be removed and re-inserted for different types of
+         * packets.
+         */
+        QAction* packetMenu;
 
     public:
         /**
@@ -329,6 +351,13 @@ class ReginaPart : public QMdiArea {
         void setupWidgets(QWidget* parentWidget);
         void setupActions();
         void initPacketTree();
+
+        /**
+         * Allow different packet UIs to plug in their own menus.
+         */
+
+        void plugMenu();
+        void unplugMenu();
 
         /**
          * Verify that the part or its components are in an appropriate

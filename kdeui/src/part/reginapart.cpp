@@ -60,12 +60,13 @@
 
 #include <KLocalizedString> 
 
-ReginaPart::ReginaPart(QWidget *parentWidget, QObject *parent,
+ReginaPart::ReginaPart(ReginaMain *parent,
         const QStringList& /*args*/) :
-        KParts::ReadWritePart(parent), packetTree(0), dockedPane(0) {
+        KParts::ReadWritePart((QObject)parent), packetTree(0), dockedPane(0),
+        parent(parent) {
     // Set up our widgets and actions.
     setXMLFile("reginapart.rc");
-    setupWidgets(parentWidget);
+    setupWidgets((QObject)parent);
     setupActions();
 
     // Initialise the packet tree.
@@ -594,5 +595,16 @@ regina::NPacket* ReginaPart::checkSubtreeSelected() {
         "No subtree is currently selected.  To work with a packet subtree, "
         "select the packet at the base of the subtree."));
     return 0;
+}
+
+void ReginaPart::plugMenu(QMenu menu) {
+    if (packetMenu)
+        menuBar->removeAction(packetMenu);
+    packetMenu = menuBar->addMenu(menu);
+}
+
+void ReginaPart::unplugMenu() {
+    if (packetMenu)
+        menuBar->removeAction(packetMenu);
 }
 

@@ -39,9 +39,6 @@
 
 void ReginaPart::setupActions() {
     QAction* act;
-    QMenuBar* menuBar;
-    QMenu* fileMenu,editMenu,treeMenu,importMenu,exportMenu,treeNavMenu;
-    QMenu* subMenu;
 
     menuBar = new QMenuBar(this);
     fileMenu = menuBar->addMenu(tr("&File"));
