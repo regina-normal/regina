@@ -92,6 +92,10 @@ ReginaPart::~ReginaPart() {
     // Finish cleaning up.
     if (packetTree)
         delete packetTree;
+    // Delete all actions
+    QLinkedList<QAction*>::iterator i;
+    for (i=allActions.begin() ; i!=allActions.end(); i++)
+        delete *i;
 }
 
 void ReginaPart::setReadWrite(bool rw) {

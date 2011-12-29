@@ -99,6 +99,7 @@ class ReginaPart : public QMdiArea {
         QLinkedList<QAction *> treePacketViewActions;
         QLinkedList<QAction *> treePacketEditActions;
         QLinkedList<QAction *> treeGeneralEditActions;
+        QLinkedList<QAction *> allActions;
 
     public:
         /**

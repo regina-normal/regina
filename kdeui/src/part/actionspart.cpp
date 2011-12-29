@@ -43,6 +43,7 @@ void ReginaPart::setupActions() {
     actSave->setShortcuts(QKeySequence::Save);
     actSave->setWhatsThis(tr("Save the current data file."));
     connect(actSave, SIGNAL(triggered()), this, SLOT(fileSave()));
+    allActions.append(actSave);
 
     act = new QAction(
         QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton),
@@ -51,6 +52,7 @@ void ReginaPart::setupActions() {
     act->setWhatsThis(tr(
         "Save the current data file, but give it a different name."));
     connect(act, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
+    allActions.append(act);
 
 
     // Edit actions:
@@ -63,6 +65,7 @@ void ReginaPart::setupActions() {
         "in the clipboard."));
     actCut->setEnabled(false);
     actCut->setShortcuts(QKeySequence::Cut);
+    allActions.append(actCut);
 
     actCopy = new QAction(
         QApplication::style()->standardIcon(QStyle::SP_ArrowDown),
@@ -70,6 +73,7 @@ void ReginaPart::setupActions() {
     actCopy->setWhatsThis(tr("Copy the current selection to the clipboard."));
     actCopy->setEnabled(false);
     actCopy->setShortcuts(QKeySequence::Copy);
+    allActions.append(actCopy);
 
     actPaste = new QAction(
         QApplication::style()->standardIcon(QStyle::SP_ArrowRight),
@@ -77,6 +81,7 @@ void ReginaPart::setupActions() {
     actPaste->setWhatsThis(tr("Paste the contents of the clipboard."));
     actPaste->setEnabled(false);
     actPaste->setShortcuts(QKeySequence::Paste);
+    allActions.append(act);
 
     // Basic packet actions:
     act = new QAction(this);
@@ -88,6 +93,7 @@ void ReginaPart::setupActions() {
         "in the tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(packetView()) );
     treePacketViewActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&Rename"));
@@ -98,6 +104,7 @@ void ReginaPart::setupActions() {
         "in the tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(packetRename()) );
     treePacketEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&Delete"));
@@ -108,6 +115,7 @@ void ReginaPart::setupActions() {
         "in the tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(packetDelete()) );
     treePacketEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("Refres&h Subtree"));
@@ -123,6 +131,7 @@ void ReginaPart::setupActions() {
         "disc; the tree is just resynced with packet editors and so on."));
     connect(act, SIGNAL(triggered()), this, SLOT(subtreeRefresh()) );
     treePacketViewActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("C&lone Packet"));
@@ -134,6 +143,7 @@ void ReginaPart::setupActions() {
         "packet."));
     connect(act, SIGNAL(triggered()), this, SLOT(clonePacket()) );
     treePacketEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("Clone Su&btree"));
@@ -143,6 +153,7 @@ void ReginaPart::setupActions() {
         "cloned subtree will be placed alongside the original packet."));
     connect(act, SIGNAL(triggered()), this, SLOT(cloneSubtree()) );
     treePacketEditActions.append(act);
+    allActions.append(act);
 
     // Tree reorganisation:
     act = new QAction(this);
@@ -157,6 +168,7 @@ void ReginaPart::setupActions() {
         "of the tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(moveShallow()) );
     treePacketEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&Lower Level"));
@@ -169,6 +181,7 @@ void ReginaPart::setupActions() {
         "next sibling."));
     connect(act, SIGNAL(triggered()), this, SLOT(moveDeep()) );
     treePacketEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&Up"));
@@ -180,6 +193,7 @@ void ReginaPart::setupActions() {
         "same parent."));
     connect(act, SIGNAL(triggered()), this, SLOT(moveUp()) );
     treePacketEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&Down"));
@@ -191,6 +205,7 @@ void ReginaPart::setupActions() {
         "same parent."));
     connect(act, SIGNAL(triggered()), this, SLOT(moveDown()) );
     treePacketEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("Jump U&p"));
@@ -202,6 +217,7 @@ void ReginaPart::setupActions() {
         "same parent."));
     connect(act, SIGNAL(triggered()), this, SLOT(movePageUp()) );
     treePacketEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("Jump Do&wn"));
@@ -213,6 +229,7 @@ void ReginaPart::setupActions() {
         "same parent."));
     connect(act, SIGNAL(triggered()), this, SLOT(movePageDown()) );
     treePacketEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&Top"));
@@ -225,6 +242,7 @@ void ReginaPart::setupActions() {
         "first child of this parent."));
     connect(act, SIGNAL(triggered()), this, SLOT(moveTop()) );
     treePacketEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&Bottom"));
@@ -237,6 +255,7 @@ void ReginaPart::setupActions() {
         "last child of this parent."));
     connect(act, SIGNAL(triggered()), this, SLOT(moveBottom()) );
     treePacketEditActions.append(act);
+    allActions.append(act);
 
     // New packets:
     act = new QAction(this);
@@ -248,6 +267,7 @@ void ReginaPart::setupActions() {
         "for a triangulation."));
     connect(act, SIGNAL(triggered()), this, SLOT(newAngleStructures()) );
     treeGeneralEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("New &Container"));
@@ -259,6 +279,7 @@ void ReginaPart::setupActions() {
         "they serve no purpose other than to store child packets."));
     connect(act, SIGNAL(triggered()), this, SLOT(newContainer()) );
     treeGeneralEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("New &Filter"));
@@ -270,6 +291,7 @@ void ReginaPart::setupActions() {
         "display only surfaces of particular interest."));
     connect(act, SIGNAL(triggered()), this, SLOT(newFilter()) );
     treeGeneralEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("New &Normal Surface List"));
@@ -280,6 +302,7 @@ void ReginaPart::setupActions() {
         "for a triangulation."));
     connect(act, SIGNAL(triggered()), this, SLOT(newNormalSurfaces()) );
     treeGeneralEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("New &PDF Document"));
@@ -290,6 +313,7 @@ void ReginaPart::setupActions() {
         "an external PDF document."));
     connect(act, SIGNAL(triggered()), this, SLOT(newPDF()) );
     treeGeneralEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("New &Script"));
@@ -300,6 +324,7 @@ void ReginaPart::setupActions() {
         "directly with this data file."));
     connect(act, SIGNAL(triggered()), this, SLOT(newScript()) );
     treeGeneralEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("New Te&xt"));
@@ -310,6 +335,7 @@ void ReginaPart::setupActions() {
         "the packet tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(newText()) );
     treeGeneralEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("New &Triangulation"));
@@ -319,6 +345,7 @@ void ReginaPart::setupActions() {
     act->setWhatsThis(tr("Create a new 3-manifold triangulation."));
     connect(act, SIGNAL(triggered()), this, SLOT(newTriangulation()) );
     treeGeneralEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("Form &Census"));
@@ -328,6 +355,7 @@ void ReginaPart::setupActions() {
         "triangulations according to some set of census constraints."));
     connect(act, SIGNAL(triggered()), this, SLOT(newCensus()) );
     treeGeneralEditActions.append(act);
+    allActions.append(act);
 
     // Imports and exports:
     act = new QAction(this);
@@ -338,6 +366,7 @@ void ReginaPart::setupActions() {
         "imported packet tree will be grafted into this packet tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importRegina()) );
     treeGeneralEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&SnapPea Triangulation"));
@@ -347,6 +376,7 @@ void ReginaPart::setupActions() {
         "triangulation in this packet tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importSnapPea()) );
     treeGeneralEditActions.append(act);
+    allActions.append(act);
 
     act= new QAction(this);
     act->setText(tr("&Orb / Casson Triangulation"));
@@ -356,6 +386,7 @@ void ReginaPart::setupActions() {
         "triangulation in this packet tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importOrb()) );
     treeGeneralEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&Isomorphism Signature List"));
@@ -368,6 +399,7 @@ void ReginaPart::setupActions() {
         "a new 3-manifold triangulation will be created in this packet tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importIsoSig3()) );
     treeGeneralEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&Dehydrated Triangulation List"));
@@ -378,6 +410,7 @@ void ReginaPart::setupActions() {
         "a new triangulation will be created in this packet tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importDehydration()) );
     treeGeneralEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&PDF Document"));
@@ -387,6 +420,7 @@ void ReginaPart::setupActions() {
         "packet in this tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importPDF()) );
     treeGeneralEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("P&ython Script"));
@@ -396,6 +430,7 @@ void ReginaPart::setupActions() {
         "packet in this tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importPython()) );
     treeGeneralEditActions.append(act);
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&Regina Data File"));
@@ -405,6 +440,7 @@ void ReginaPart::setupActions() {
         "to a separate Regina data file.  The separate data file will "
         "be saved as compressed XML (the default format)."));
     connect(act, SIGNAL(triggered()), this, SLOT(exportRegina()) );
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("Regina Data File (&Uncompressed)"));
@@ -414,6 +450,7 @@ void ReginaPart::setupActions() {
         "to a separate Regina data file.  The separate data file will "
         "be saved as uncompressed XML."));
     connect(act, SIGNAL(triggered()), this, SLOT(exportReginaUncompressed()) );
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&SnapPea Triangulation"));
@@ -422,6 +459,7 @@ void ReginaPart::setupActions() {
     act->setWhatsThis(tr("Export a triangulation from this packet tree "
         "to a separate SnapPea file."));
     connect(act, SIGNAL(triggered()), this, SLOT(exportSnapPea()) );
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&C++ Source"));
@@ -433,6 +471,7 @@ void ReginaPart::setupActions() {
         "See the users' handbook for further information on using Regina "
         "in your own code."));
     connect(act, SIGNAL(triggered()), this, SLOT(exportSource()) );
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("CS&V Surface List"));
@@ -447,6 +486,7 @@ void ReginaPart::setupActions() {
         "normal surfaces (such as orientability and Euler characteristic) "
         "will all be stored as separate fields in the CSV file."));
     connect(act, SIGNAL(triggered()), this, SLOT(exportCSVSurfaceList()) );
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&PDF Document"));
@@ -455,6 +495,7 @@ void ReginaPart::setupActions() {
     act->setWhatsThis(tr("Export a PDF packet from this packet tree "
         "to a separate PDF document."));
     connect(act, SIGNAL(triggered()), this, SLOT(exportPDF()) );
+    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("P&ython Script"));
@@ -463,5 +504,6 @@ void ReginaPart::setupActions() {
     act->setWhatsThis(tr("Export a script packet from this packet tree "
         "to a separate Python file."));
     connect(act, SIGNAL(triggered()), this, SLOT(exportPython()) );
+    allActions.append(act);
 }
 
