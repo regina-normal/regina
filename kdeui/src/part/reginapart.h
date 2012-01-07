@@ -348,6 +348,12 @@ class ReginaPart : public QMdiArea {
          */
         void updateTreePacketActions();
         void updateTreeEditActions();
+        
+        /**
+         * Allow different packet UIs to plug in their own menus.
+         */
+        void plugMenu(QMenu *);
+        void unplugMenu();
 
     private:
         /**
@@ -357,12 +363,6 @@ class ReginaPart : public QMdiArea {
         void setupActions();
         void initPacketTree();
 
-        /**
-         * Allow different packet UIs to plug in their own menus.
-         */
-
-        void plugMenu();
-        void unplugMenu();
 
         /**
          * Verify that the part or its components are in an appropriate

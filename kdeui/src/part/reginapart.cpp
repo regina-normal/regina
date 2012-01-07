@@ -600,14 +600,19 @@ regina::NPacket* ReginaPart::checkSubtreeSelected() {
     return 0;
 }
 
-void ReginaPart::plugMenu(QMenu menu) {
-    if (packetMenu)
+void ReginaPart::plugMenu(QMenu *menu) {
+    if (packetMenu) {
         menuBar->removeAction(packetMenu);
+        delete[] packetMenu;
+    }
     packetMenu = menuBar->addMenu(menu);
 }
 
 void ReginaPart::unplugMenu() {
-    if (packetMenu)
+    if (packetMenu) {
         menuBar->removeAction(packetMenu);
+        delete[] packetMenu;
+        packetMenu = NULL;
+    }
 }
 
