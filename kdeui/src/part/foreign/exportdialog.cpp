@@ -32,8 +32,6 @@
 #include "../packetchooser.h"
 #include "../packetfilter.h"
 
-#include <klocale.h>
-#include <kmessagebox.h>
 #include <qframe.h>
 #include <QHBoxLayout>
 #include <qlabel.h>
@@ -43,10 +41,12 @@
 ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
         regina::NPacket* defaultSelection, PacketFilter* useFilter,
         const QString& dialogTitle) :
-        KDialog(parent),
+        QDialog(parent),
         tree(packetTree), chosenPacket(0) {
     setCaption(dialogTitle);
-    setButtons(KDialog::Ok|KDialog::Cancel);
+    buttonBox = new QDialogButtonBox(
+        QDialogButtonBox::Ok | QDialogButtonBox::Cancel,Qt::Horizontal,this);
+    connect(buttonBox,SIGNAL(accepted()), this, SLOT(slotOk()));
 
     QWidget* page = new QWidget(this);
     setMainWidget(page);
@@ -54,24 +54,24 @@ ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
     layout->setContentsMargins(0, 0, 0, 0); // Margins come from the dialog.
 
     QHBoxLayout* chosenStrip = new QHBoxLayout;
-    QLabel* label = new QLabel(i18n("Data to export:"));
+    QLabel* label = new QLabel(tr("Data to export:"));
     chosenStrip->addWidget(label);
     chooser = new PacketChooser(tree, useFilter, false, defaultSelection);
     chosenStrip->addWidget(chooser, 1);
-    QString expln = i18n("Select the piece of data that you wish to export.");
+    QString expln = tr("Select the piece of data that you wish to export.");
     label->setWhatsThis(expln);
     chooser->setWhatsThis(expln);
 
     layout->addLayout(chosenStrip);
     layout->addStretch(1);
 
-    connect(this, SIGNAL(okClicked()), this, SLOT(slotOk()));
 }
 
 bool ExportDialog::validate() {
     if (chooser->hasPackets())
         return true;
-    KMessageBox::sorry(this, i18n(
+        QMessageBox *sorry = new QMessageBox(this);
+        sorry->setText(sorry->tr(
         "No packets could be found that are suitable for export in this "
         "format."));
     return false;
@@ -81,13 +81,15 @@ void ExportDialog::slotOk() {
     // Get the selected packet.
     chosenPacket = chooser->selectedPacket();
     if (! chosenPacket) {
-        KMessageBox::error(this, i18n(
+        QMessageBox *sorry = new QMessageBox(this);
+        sorry->setText(sorry->tr(
             "No packet has been selected to export."));
         return;
     }
     PacketFilter* filter = chooser->getFilter();
     if (filter && ! filter->accept(chosenPacket)) {
-        KMessageBox::error(this, i18n(
+        QMessageBox *sorry = new QMessageBox(this);
+        sorry->setText(sorry->tr(
             "The packet %1 cannot be exported to this file format.").
             arg(chosenPacket->getPacketLabel().c_str()));
         return;
