@@ -109,8 +109,11 @@ void ReginaPart::setReadWrite(bool rw) {
     // Update status for edit actions.
     updateTreeEditActions();
 
-    // Finally call the parent implementation.
-    ReadWritePart::setReadWrite(rw);
+    readWrite = true; 
+}
+
+bool ReginaPart::isReadWrite() {
+    return readWrite;
 }
 
 void ReginaPart::setModified(bool modified) {

@@ -36,19 +36,15 @@
 #include "pythonmanager.h"
 #include "reginaprefset.h"
 
-#include <kparts/part.h>
-
 #include <QAction>
-
 #include <QLinkedList>
 #include <QMdiArea>
+#include <QMenuBar>
 
 namespace regina {
     class NPacket;
 };
 
-class KAboutData;
-class KComponentData;
 class PacketCreator;
 class PacketExporter;
 class PacketFilter;
@@ -56,6 +52,8 @@ class PacketImporter;
 class PacketPane;
 class PacketTreeView;
 class QLabel;
+
+class ReginaMain;
 
 /**
  * The Regina topology data editor.
@@ -124,6 +122,12 @@ class ReginaPart : public QMdiArea {
          */
         QAction* packetMenu;
 
+        /** 
+         * Is the current packet writable
+         */
+        bool readWrite;
+
+
     public:
         /**
          * Constructors and destructors.
@@ -133,9 +137,10 @@ class ReginaPart : public QMdiArea {
         virtual ~ReginaPart();
 
         /**
-         * KPart overrides.
+         * KPart replacements.
          */
         virtual void setReadWrite(bool rw);
+        virtual bool isReadWrite();
         virtual void setModified(bool modified);
         virtual bool closeUrl();
 
