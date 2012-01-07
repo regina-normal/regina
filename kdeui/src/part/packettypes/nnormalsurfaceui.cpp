@@ -83,7 +83,7 @@ NNormalSurfaceUI::NNormalSurfaceUI(regina::NNormalSurfaceList* packet,
     }
 }
 
-const QLinkedList<KAction*>& NNormalSurfaceUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& NNormalSurfaceUI::getPacketTypeActions() {
     return coords->getPacketTypeActions();
 }
 

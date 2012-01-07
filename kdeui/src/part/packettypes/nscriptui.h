@@ -40,8 +40,7 @@
 #include <qstyleditemdelegate.h>
 #include <qtablewidget.h>
 
-class KAction;
-class KActionCollection;
+class QAction;
 class QSplitter;
 
 namespace KTextEditor {
@@ -174,10 +173,9 @@ class NScriptUI : public QObject, public PacketUI {
         /**
          * Script actions
          */
-        KAction* actAdd;
-        KAction* actRemove;
-        KActionCollection* scriptActions;
-        QLinkedList<KAction*> scriptActionList;
+        QAction* actAdd;
+        QAction* actRemove;
+        QLinkedList<QAction*> scriptActionList;
 
     public:
         /**
@@ -193,7 +191,7 @@ class NScriptUI : public QObject, public PacketUI {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         PacketEditIface* getEditIface();
-        const QLinkedList<KAction*>& getPacketTypeActions();
+        const QLinkedList<QAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
         void commit();
         void refresh();

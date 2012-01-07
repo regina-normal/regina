@@ -38,8 +38,6 @@
 #include "../reginapart.h"
 
 #include <cstring>
-#include <kaction.h>
-#include <KActionCollection>
 #include <KComponentData>
 #include <kiconloader.h>
 #include <klocale.h>
@@ -285,9 +283,10 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     // --- Script Actions ---
 
-    scriptActions = new KActionCollection((QObject*)0);
+    //scriptActions = new KActionCollection((QObject*)0);
     
-    actAdd = scriptActions->addAction("script_add_var");
+    actAdd = new QAction(this)
+    //scriptActions->addAction("script_add_var");
     actAdd->setText(i18n("&Add Var"));
     actAdd->setIcon(KIcon("edit-table-insert-row-below"));
     actAdd->setToolTip(i18n("Add a new script variable"));
@@ -301,7 +300,8 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     actionBar->addAction(actAdd);
     scriptActionList.append(actAdd);
 
-    actRemove = scriptActions->addAction("script_remove_var");
+    actRemove = new QAction(this);
+    //scriptActions->addAction("script_remove_var");
     actRemove->setText(i18n("Re&move Var"));
     actRemove->setIcon(KIcon("edit-table-delete-row"));
     actRemove->setToolTip(i18n(
@@ -320,12 +320,14 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     actionBar->addAction(actRemove);
     scriptActionList.append(actRemove);
 
-    KAction* actSep = scriptActions->addAction("script_separator");
+    QAction* actSep = new QAction(this);
+    //scriptActions->addAction("script_separator");
     actSep->setSeparator(true);
     actionBar->addAction(actSep);
     scriptActionList.append(actSep);
 
-    KAction* actCompile = scriptActions->addAction("script_compile");;
+    QAction* actCompile = new QAction(this);
+    //scriptActions->addAction("script_compile");;
     actCompile->setText(i18n("&Compile"));
     actCompile->setIcon(KIcon("run-build-file"));
     actCompile->setToolTip(i18n("Compile the Python script"));
@@ -336,7 +338,8 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     actionBar->addAction(actCompile);
     scriptActionList.append(actCompile);
 
-    KAction* actRun = scriptActions->addAction("script_run");;
+    QAction* actRun = new QAction(this);
+    //scriptActions->addAction("script_run");;
     actRun->setText(i18n("&Run"));
     actRun->setIcon(KIcon("system-run"));
     actRun->setToolTip(i18n("Execute the Python script"));
@@ -383,12 +386,12 @@ QWidget* NScriptUI::getInterface() {
     return ui;
 }
 
-const QLinkedList<KAction*>& NScriptUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& NScriptUI::getPacketTypeActions() {
     return scriptActionList;
 }
 
 QString NScriptUI::getPacketMenuText() const {
-    return i18n("S&cript");
+    return tr("S&cript");
 }
 
 void NScriptUI::commit() {
