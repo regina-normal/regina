@@ -56,7 +56,7 @@
 
 using regina::NPacket;
 
-QLinkedList<KAction*> PacketUI::noActions;
+QLinkedList<QAction*> PacketUI::noActions;
 
 PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent) 
         : QFrame(parent), packet(pkt) {
@@ -130,7 +130,8 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
 
     // Create the actions first, since PacketManager::createUI()
     // might want to modify them.
-    actCommit = part->actionCollection()->addAction("packet_editor_commit");
+    //actCommit = part->actionCollection()->addAction("packet_editor_commit");
+    actCommit = new QAction(this);
     actCommit->setText(i18n("Co&mmit"));
     actCommit->setIcon(KIcon("dialog-ok"));
     actCommit->setEnabled(false);
@@ -139,7 +140,9 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         "this packet viewer.  Changes you make will have no effect elsewhere "
         "until they are committed."));
     connect(actCommit,SIGNAL(triggered()),this,SLOT(commit()));
-    actRefresh = part->actionCollection()->addAction("packet_editor_refresh");
+
+    actRefresh = new QAction(this);
+    //actRefresh = part->actionCollection()->addAction("packet_editor_refresh");
     actRefresh->setText(i18n("&Refresh"));
     actRefresh->setIcon(KIcon("view-refresh"));
     actRefresh->setToolTip(i18n("Discard any changes and refresh this "
@@ -148,7 +151,9 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         "recent state of the packet.  Any changes you mave made inside this "
         "viewer that have not been committed will be discarded."));
     connect(actRefresh,SIGNAL(triggered()), this, SLOT(refresh()));
-    actDockUndock = part->actionCollection()->addAction("packet_editor_dock");
+
+    actDockUndock = new QAction(this);
+    //actDockUndock = part->actionCollection()->addAction("packet_editor_dock");
     actDockUndock->setText(i18n("Un&dock"));
     actDockUndock->setIcon(KIcon("mail-attachment"));
     actDockUndock->setToolTip(i18n("Dock / undock this packet viewer"));
@@ -156,7 +161,9 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         "A docked viewer sits within the main window, to the right of "
         "the packet tree.  An undocked viewer floats in its own window."));
     connect(actDockUndock,SIGNAL(triggered()),this, SLOT(floatPane()));
-    actClose = part->actionCollection()->addAction("packet_editor_close");
+
+    actClose = new QAction(this);
+    //actClose = part->actionCollection()->addAction("packet_editor_close");
     actClose->setText(i18n("&Close"));
     actClose->setIcon(KIcon("window-close"));
     actClose->setToolTip(i18n("Close this packet viewer"));
@@ -193,7 +200,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     setFocusProxy(mainUIWidget);
 
     // Set up the footer buttons and other actions.
-    KToolBar* footer = new KToolBar(false, true);
+    QToolBar* footer = new QToolBar(this);
     footer->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     footer->addAction(actCommit);
     footer->addAction(actRefresh);
@@ -202,12 +209,12 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     layout->addWidget(footer);
 
     // Set up the packet type menu.
-    packetTypeMenu = new KActionMenu(mainUI->getPacketMenuText(), this);
+    packetTypeMenu = new QMenu(mainUI->getPacketMenuText(), this);
 
-    const QLinkedList<KAction*>& packetTypeActions(
+    const QLinkedList<QAction*>& packetTypeActions(
         mainUI->getPacketTypeActions());
     if (! packetTypeActions.isEmpty()) {
-        for (QLinkedListIterator<KAction*> it(packetTypeActions) ;
+        for (QLinkedListIterator<QAction*> it(packetTypeActions) ;
                 it.hasNext(); ) {
             packetTypeMenu->addAction( it.next() );  
         }
@@ -219,6 +226,9 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     packetTypeMenu->addSeparator();
     packetTypeMenu->addAction(actDockUndock);
     packetTypeMenu->addAction(actClose);
+
+    // Insert our new menu (Inserting removes the old)
+    newPart->plugMenu(packetTypeMenu);
 
     // Register ourselves to listen for various events.
     newPacket->listen(this);
@@ -296,8 +306,8 @@ bool PacketPane::queryClose() {
     return true;
 }
 
-void PacketPane::registerEditOperations(KAction* actCut, KAction* actCopy,
-        KAction* actPaste) {
+void PacketPane::registerEditOperations(QAction* actCut, QAction* actCopy,
+        QAction* actPaste) {
     deregisterEditOperations();
 
     editCut = actCut;

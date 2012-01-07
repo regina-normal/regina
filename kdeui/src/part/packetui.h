@@ -37,15 +37,13 @@
 
 #include <QFrame>
 #include <QLinkedList>
-#include <kactionmenu.h>
 
-class KAction;
-class KActionMenu;
-class KMainWindow;
 class PacketEditIface;
 class PacketPane;
 class PacketWindow;
+class QAction;
 class QLabel;
+class QMenu;
 class QToolButton;
 class QTreeWidget;
 class ReginaPart;
@@ -154,7 +152,7 @@ class PacketUI {
          * The default implementation of this routine simply returns an
          * empty list.
          */
-        virtual const QLinkedList<KAction*>& getPacketTypeActions();
+        virtual const QLinkedList<QAction*>& getPacketTypeActions();
 
         /**
          * Return the label of the menu that should contain the actions
@@ -227,7 +225,7 @@ class PacketUI {
         /**
          * An empty action list.
          */
-        static QLinkedList<KAction*> noActions;
+        static QLinkedList<QAction*> noActions;
 };
 
 /**
@@ -331,18 +329,18 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         /**
          * Internal actions
          */
-        KAction* actCommit;
-        KAction* actRefresh;
-        KAction* actDockUndock;
-        KAction* actClose;
-        KActionMenu* packetTypeMenu;
+        QAction* actCommit;
+        QAction* actRefresh;
+        QAction* actDockUndock;
+        QAction* actClose;
+        QMenu* packetTypeMenu;
 
         /**
          * Externally registered edit actions and their sources
          */
-        KAction* editCut;
-        KAction* editCopy;
-        KAction* editPaste;
+        QAction* editCut;
+        QAction* editCopy;
+        QAction* editPaste;
 
     public:
         /**
@@ -360,7 +358,7 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * Query components and actions.
          */
         regina::NPacket* getPacket();
-        KActionMenu* getPacketTypeMenu();
+        QMenu* getPacketTypeMenu();
         ReginaPart* getPart();
 
         /**
@@ -437,8 +435,8 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * though the final enabled/disabled status of any remaining
          * actions that are not deregistered is not guaranteed.
          */
-        void registerEditOperations(KAction* actCut, KAction* actCopy,
-            KAction* actPaste);
+        void registerEditOperations(QAction* actCut, QAction* actCopy,
+            QAction* actPaste);
         void deregisterEditOperations();
 
         /**
@@ -602,7 +600,7 @@ inline PacketEditIface* PacketUI::getEditIface() {
     return 0;
 }
 
-inline const QLinkedList<KAction*>& PacketUI::getPacketTypeActions() {
+inline const QLinkedList<QAction*>& PacketUI::getPacketTypeActions() {
     return noActions;
 }
 
@@ -637,7 +635,7 @@ inline bool PacketPane::isReadWrite() {
     return readWrite;
 }
 
-inline KActionMenu* PacketPane::getPacketTypeMenu() {
+inline QMenu* PacketPane::getPacketTypeMenu() {
     return packetTypeMenu;
 }
 
