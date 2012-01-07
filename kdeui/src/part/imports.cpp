@@ -108,16 +108,15 @@ void ReginaPart::importFile(const PacketImporter& importer,
 //    }
 
 
-    // TODO: Replace widget() with actual QWidget once KParts is gone
     // TODO: Use encoding
-    QString file = QFileDialog::getOpenFileName(widget(),
+    QString file = QFileDialog::getOpenFileName(this,
         dialogTitle, QString(), fileFilter);
     if (file.isEmpty())
         return;
-    newTree = importer.importData(file, widget());
+    newTree = importer.importData(file, this);
 
     if (newTree) {
-        ImportDialog dlg(widget(), newTree, packetTree,
+        ImportDialog dlg(this, newTree, packetTree,
             treeView->selectedPacket(), parentFilter, dialogTitle);
         if (dlg.validate() && dlg.exec() == QDialog::Accepted)
             packetView(newTree, true);
