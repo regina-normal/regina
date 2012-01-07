@@ -75,6 +75,11 @@ class ReginaPart : public QMdiArea {
         regina::NPacket* packetTree;
 
         /**
+         * Name of packet file
+         */
+        QString localFile;
+
+        /**
          * Components
          */
         PacketTreeView* treeView;
@@ -132,8 +137,7 @@ class ReginaPart : public QMdiArea {
         /**
          * Constructors and destructors.
          */
-        ReginaPart(QWidget *parentWidget, QObject *parent, 
-              const QStringList &args);
+        ReginaPart(ReginaMain *parent, const QStringList &args);
         virtual ~ReginaPart();
 
         /**
@@ -359,7 +363,7 @@ class ReginaPart : public QMdiArea {
         /**
          * Initial setup.
          */
-        void setupWidgets(QWidget* parentWidget);
+        void setupWidgets();
         void setupActions();
         void initPacketTree();
 

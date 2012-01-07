@@ -39,14 +39,17 @@
 
 #include <qboxlayout.h>
 #include <qcolor.h>
-#include <qfile.h>
+#include <QFileDialog>
 #include <qfileinfo.h>
+#include <QInputDialog>
 #include <qlabel.h>
+#include <QMessageBox>
 #include <qsplitter.h>
 #include <QTreeView>
 #include <QTreeWidget>
 #include <qwhatsthis.h>
-#include <kaction.h>
+
+/*#include <kaction.h>
 #include <kfiledialog.h>
 #include <kiconloader.h>
 #include <kinputdialog.h>
@@ -59,14 +62,14 @@
 #include <ktexteditor/view.h>
 
 #include <KLocalizedString> 
-
+*/
 ReginaPart::ReginaPart(ReginaMain *parent,
         const QStringList& /*args*/) :
-        KParts::ReadWritePart((QObject)parent), packetTree(0), dockedPane(0),
-        parent(parent) {
+        parent(parent), packetTree(0), 
+        dockedPane(0) {
     // Set up our widgets and actions.
-    setXMLFile("reginapart.rc");
-    setupWidgets((QObject)parent);
+    //setXMLFile("reginapart.rc");
+    setupWidgets();
     setupActions();
 
     // Initialise the packet tree.
@@ -94,9 +97,9 @@ ReginaPart::~ReginaPart() {
     if (packetTree)
         delete packetTree;
     // Delete all actions
-    QLinkedList<QAction*>::iterator i;
-    for (i=allActions.begin() ; i!=allActions.end(); i++)
-        delete *i;
+    QLinkedList<QAction*>::iterator it;
+    for (it=allActions.begin() ; it!=allActions.end(); it++)
+        delete *it;
 }
 
 void ReginaPart::setReadWrite(bool rw) {
@@ -121,14 +124,17 @@ void ReginaPart::setModified(bool modified) {
     actSave->setEnabled(modified);
 
     // Finally call the parent implementation.
-    ReadWritePart::setModified(modified);
+    // ReadWritePart::setModified(modified);
 }
 
 bool ReginaPart::closeUrl() {
     if (! closeAllPanes())
         return false;
     consoles.closeAllConsoles();
-    return ReadWritePart::closeUrl();
+
+    // TODO Work out what needs to be done here.
+    return true;
+    // return ReadWritePart::closeUrl();
 }
 
 void ReginaPart::ensureVisibleInTree(regina::NPacket* packet) {
@@ -169,9 +175,7 @@ void ReginaPart::dock(PacketPane* newPane) {
     static_cast<QBoxLayout*>(dockArea->layout())->addWidget(newPane, 1);
     dockedPane = newPane;
 
-    QList<QAction*> typeActions;
-    typeActions.append(newPane->getPacketTypeMenu());
-    plugActionList("packet_type_menu", typeActions);
+    plugMenu(newPane->getPacketTypeMenu());
 
     newPane->show();
 
@@ -190,7 +194,6 @@ void ReginaPart::aboutToUndock(PacketPane* undockedPane) {
     undockedPane->deregisterEditOperations();
 
     if (dockedPane == undockedPane) {
-        unplugActionList("packet_type_menu");
         dockedPane = 0;
     }
 }
@@ -200,9 +203,12 @@ bool ReginaPart::openFile() {
         delete packetTree;
         setModified(false);
     }
+    
+    localFile = QFileDialog::getOpenFileName( this,
+        tr("Open Data File"), QString(),  tr(FILTER_REGINA));
 
     packetTree = regina::readFileMagic(
-        static_cast<const char*>(QFile::encodeName(localFilePath())));
+        static_cast<const char*>(QFile::encodeName(localFile)));
 
     if (packetTree) {
         treeView->fill(packetTree);
@@ -211,9 +217,11 @@ bool ReginaPart::openFile() {
             treeView->scrollToItem(treeView->invisibleRootItem()->child(0)->child(0));
         return true;
     } else {
-        KMessageBox::error(widget(), i18n(
+        QMessageBox *sorry = new QMessageBox(this);
+        sorry->setText(sorry->tr(
             "Topology data file %1 could not be opened.  Perhaps "
-            "it is not a Regina data file?").arg(localFilePath()));
+            "it is not a Regina data file?").arg(localFile));
+        sorry->exec();
         initPacketTree();
         return false;
     }
@@ -225,36 +233,41 @@ bool ReginaPart::saveFile() {
         return false;
 
     // Does the user have some work that still needs to be committed?
-    if (hasUncommittedChanges())
-        if (KMessageBox::warningContinueCancel(widget(), i18n("<qt>You have "
+    if (hasUncommittedChanges()) {
+        QMessageBox *exists = new QMessageBox(this);
+        exists->setText(tr("<qt>You have "
                 "not yet committed your changes for one or more packets.  "
                 "<b>These changes will not be saved to file.</b>  You can "
                 "find a commit button in the bottom-left corner of each "
                 "packet window.<p>"
-                "Do you wish to save now without these changes?</qt>"),
-                QString::null, KStandardGuiItem::save()) != KMessageBox::Continue)
+                "Do you wish to save now without these changes?</qt>"));
+        exists->setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
+        if (exists->exec() !=  QMessageBox::Save)
             return false;
+    }
 
     if (regina::writeXMLFile(
-            static_cast<const char*>(QFile::encodeName(localFilePath())), packetTree))
+            static_cast<const char*>(QFile::encodeName(localFile)), packetTree))
         return true;
     else {
-        KMessageBox::error(widget(), i18n(
-            "Topology data file %1 could not be saved.").arg(localFilePath()));
+        QMessageBox *sorry = new QMessageBox(this);
+        sorry->setText(sorry->tr(
+            "Topology data file %1 could not be saved.").arg(localFile));
+        sorry->exec();
         return false;
     }
 }
 
 void ReginaPart::fileSave() {
-    if (url().isEmpty())
+    if (localFile.isEmpty())
         fileSaveAs();
     else
-        save();
+        saveFile();
 }
 
 void ReginaPart::fileSaveAs() {
-    QString file = KFileDialog::getSaveFileName( KUrl(),
-        i18n(FILTER_REGINA), widget(), i18n("Save Data File"));
+    QString file = QFileDialog::getSaveFileName( this,
+        tr("Save Data File"), QString(), tr(FILTER_REGINA));
 
     if (file.isEmpty())
         return;
@@ -264,15 +277,17 @@ void ReginaPart::fileSaveAs() {
         file += ReginaAbout::regDataExt;
 
     // Does this file already exist?
-    if (QFileInfo(file).exists())
-        if (KMessageBox::warningContinueCancel(widget(), i18n("A file with "
-                "this name already exists.  Are you sure you wish to "
-                "overwrite it?"), QString::null, KStandardGuiItem::save())
-                != KMessageBox::Continue)
+    if (QFileInfo(file).exists()) {
+        QMessageBox *exists = new QMessageBox(this);
+        exists->setText(tr("A file with this name already exists.  Are you "
+                "sure you wish to overwrite it?"));
+        exists->setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
+        if (exists->exec() !=  QMessageBox::Save)
             return;
-
+    }
     // Go ahead and save it.
-    saveAs(file);
+    localFile = file;
+    saveFile();
 }
 
 void ReginaPart::packetView(regina::NPacket* packet, bool makeVisibleInTree,
@@ -321,15 +336,18 @@ void ReginaPart::packetRename() {
     bool ok;
     QString suggest = packet->getPacketLabel().c_str();
     while (true) {
-        QString newLabel = KInputDialog::getText(i18n("Rename Packet"),
-            i18n("New label:"), suggest, &ok).trimmed();
+        QString newLabel = QInputDialog::getText(this,
+            tr("Rename Packet"), tr("New label:"), QLineEdit::Normal,
+                suggest, &ok).trimmed();
         if ((! ok) || (newLabel == packet->getPacketLabel().c_str()))
             return;
 
         // Has this label already been used?
         if (packetTree->findPacketLabel(newLabel.toAscii().constData())) {
-            KMessageBox::error(widget(), i18n(
+            QMessageBox *error = new QMessageBox(this);
+            error->setText(error->tr(
                 "Another packet is already using this label."));
+            error->exec();
             suggest = packetTree->makeUniqueLabel(
                 newLabel.toAscii().constData()).c_str();
         } else {
@@ -348,17 +366,21 @@ void ReginaPart::packetDelete() {
     if (! packet)
         return;
     if (! packet->getTreeParent()) {
-        KMessageBox::sorry(widget(), i18n(
+        QMessageBox *sorry = new QMessageBox(this);
+        sorry->setText(sorry->tr(
             "The root of the packet tree cannot be deleted.  You may "
             "delete any other packet (along with all of its children) "
             "except for this one."));
+        sorry->exec();
         return;
     }
 
-    if (KMessageBox::warningContinueCancel(widget(), i18n(
+    QMessageBox *exists = new QMessageBox(this);
+    exists->setText(tr(
             "You are about to delete the packet %1 and all its children.  "
-            "Are you sure?").arg(packet->getPacketLabel().c_str()),
-            i18n("Delete Packet")) == KMessageBox::Cancel)
+            "Are you sure?").arg(packet->getPacketLabel().c_str()));
+    exists->setStandardButtons(QMessageBox::Discard | QMessageBox::Cancel);
+    if (exists->exec() !=  QMessageBox::Discard)
         return;
 
     delete packet;
@@ -391,9 +413,11 @@ void ReginaPart::clonePacket() {
     if (! packet)
         return;
     if (! packet->getTreeParent()) {
-        KMessageBox::sorry(widget(), i18n("The root of the packet tree "
+        QMessageBox *sorry = new QMessageBox(this);
+        sorry->setText(sorry->tr("The root of the packet tree "
             "cannot be cloned.  You may clone any other packet except for "
             "this one."));
+        sorry->exec();
         return;
     }
 
@@ -418,14 +442,16 @@ void ReginaPart::cloneSubtree() {
 }
 
 void ReginaPart::newCensus() {
-    KMessageBox::sorry(widget(), i18n("<qt>Census creation is not yet "
+    QMessageBox *sorry = new QMessageBox(this);
+    sorry->setText(sorry->tr( "<qt>Census creation is not yet "
         "available within the GUI.  You can however use the command-line "
         "program <i>tricensus</i>, which supports a rich set of features "
         "and is particularly suitable for long census calculations.</qt>"));
+    sorry->exec();
 }
 
 void ReginaPart::pythonConsole() {
-    consoles.launchPythonConsole(widget(), &prefs, packetTree,
+    consoles.launchPythonConsole(this, &prefs, packetTree,
         treeView->selectedPacket());
 }
 
@@ -493,7 +519,7 @@ void ReginaPart::updatePreferences(const ReginaPrefSet& newPrefs) {
 void ReginaPart::updateTreePacketActions() {
     bool enable = ! treeView->selectedItems().isEmpty(); 
 
-    QLinkedList<KAction *>::iterator it;
+    QLinkedList<QAction *>::iterator it;
     for (it = treePacketViewActions.begin(); 
             it != treePacketViewActions.end(); it++)
         (*it)->setEnabled(enable);
@@ -506,7 +532,7 @@ void ReginaPart::updateTreePacketActions() {
 
 void ReginaPart::updateTreeEditActions() {
     bool enable = isReadWrite();
-    QLinkedList<KAction *>::iterator it;
+    QLinkedList<QAction *>::iterator it;
     for (it = treeGeneralEditActions.begin(); 
             it != treeGeneralEditActions.end(); it++)
         (*it)->setEnabled(enable);
@@ -517,9 +543,9 @@ void ReginaPart::updateTreeEditActions() {
         (*it)->setEnabled(enable);
 }
 
-void ReginaPart::setupWidgets(QWidget* parentWidget) {
-    QSplitter* splitter = new QSplitter(parentWidget);
-    splitter->setWhatsThis(i18n(
+void ReginaPart::setupWidgets() {
+    QSplitter* splitter = new QSplitter(this);
+    splitter->setWhatsThis(tr(
         "<qt>Each piece of information stored in a data file "
         "is a <i>packet</i>: this include triangulations, normal surface "
         "lists, text items and so on.<p>"
@@ -556,15 +582,16 @@ void ReginaPart::setupWidgets(QWidget* parentWidget) {
     // nothing in it.
     dockLayout->addStrut(100);
 
+    // TODO: Do we need this still?
     // Make the splitter our main widget.
-    setWidget(splitter);
+    // setWidget(splitter);
 }
 
 void ReginaPart::initPacketTree() {
     if (packetTree)
         delete packetTree;
     packetTree = new regina::NContainer();
-    packetTree->setPacketLabel(i18n("Container").toAscii().constData());
+    packetTree->setPacketLabel(tr("Container").toAscii().constData());
 
     // Update the visual representation.
     treeView->fill(packetTree);
@@ -573,9 +600,10 @@ void ReginaPart::initPacketTree() {
 bool ReginaPart::checkReadWrite() {
     if (isReadWrite())
         return true;
-
-    KMessageBox::error(widget(), i18n(
+    QMessageBox *error = new QMessageBox(this);
+    error->setText(error->tr(
         "This topology data file is currently in read-only mode."));
+    error->exec();
     return false;
 }
 
@@ -584,8 +612,10 @@ regina::NPacket* ReginaPart::checkPacketSelected() {
     if (p)
         return p;
 
-    KMessageBox::error(widget(), i18n(
+    QMessageBox *error = new QMessageBox(this);
+    error->setText(error->tr(
         "No packet is currently selected within the tree."));
+    error->exec();
     return 0;
 }
 
@@ -594,16 +624,17 @@ regina::NPacket* ReginaPart::checkSubtreeSelected() {
     if (p)
         return p;
 
-    KMessageBox::error(widget(), i18n(
+    QMessageBox *error = new QMessageBox(this);
+    error->setText(error->tr(
         "No subtree is currently selected.  To work with a packet subtree, "
         "select the packet at the base of the subtree."));
+    error->exec();
     return 0;
 }
 
 void ReginaPart::plugMenu(QMenu *menu) {
     if (packetMenu) {
         menuBar->removeAction(packetMenu);
-        delete[] packetMenu;
     }
     packetMenu = menuBar->addMenu(menu);
 }
@@ -611,7 +642,6 @@ void ReginaPart::plugMenu(QMenu *menu) {
 void ReginaPart::unplugMenu() {
     if (packetMenu) {
         menuBar->removeAction(packetMenu);
-        delete[] packetMenu;
         packetMenu = NULL;
     }
 }
