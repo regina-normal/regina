@@ -33,10 +33,11 @@
 #ifndef __PACKETWINDOW_H
 #define __PACKETWINDOW_H
 
-#include <kxmlguiwindow.h>
+#include <QMainWindow>
 
-class KAction;
 class PacketPane;
+class QMenu;
+class QMenuBar;
 
 /**
  * A frame holding a floating packet pane.
@@ -44,18 +45,39 @@ class PacketPane;
  * Objects of this class should not be created directly.  Instead
  * PacketPane::floatPane() should be used.
  */
-class PacketWindow : public KXmlGuiWindow {
+class PacketWindow : public QMainWindow {
     Q_OBJECT
 
     private:
         PacketPane* heldPane;
             /**< The packet pane held within this frame. */
 
+            /**
+             * The menu bar, needed for plugging in new menus 
+             */
+        QMenuBar* menuBar;
+
+            /**
+             * The action representing the flexible menu item
+             */
+        QAction* packetMenu;
+
     private:
         /**
          * Constructor.
          */
         PacketWindow(PacketPane* newPane, QWidget* parent = 0);
+
+        /**
+         * Unplug an existing menu
+         */
+        void unplugMenu();
+
+        /**
+         * Plug in a new menu
+         */
+
+        void plugMenu(QMenu* menu);
 
     protected:
         /**

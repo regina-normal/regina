@@ -41,7 +41,7 @@
 #include <QLinkedList>
 
 PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
-        KXmlGuiWindow(parent, 
+        QMainWindow(parent, 
         Qt::Window | Qt::WindowContextHelpButtonHint),
         heldPane(newPane) {
     // Resize ourselves nicely.
@@ -52,6 +52,7 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     
     // Set up our actions.
+    /* TODO clipboard
     KAction* actCut = KStandardAction::cut(0, 0, actionCollection());
     KAction* actCopy = KStandardAction::copy(0, 0, actionCollection());
     KAction* actPaste = KStandardAction::paste(0, 0, actionCollection());
@@ -62,12 +63,15 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
     actPaste->setWhatsThis(i18n("Paste the contents of the clipboard."));
 
     newPane->registerEditOperations(actCut, actCopy, actPaste);
+    */
+    //createGUI("packetwindow.rc");
+    
+    menuBar = new QMenuBar(this);
 
-    createGUI("packetwindow.rc");
-
-    QList<QAction*> typeActions;
-    typeActions.append(newPane->getPacketTypeMenu());
-    plugActionList("packet_type_menu", typeActions);
+    plugMenu(newPane->getPacketTypeMenu());
+    //QList<QAction*> typeActions;
+    //typeActions.append(newPane->getPacketTypeMenu());
+    //plugActionList("packet_type_menu", typeActions);
 
     // Set up the widgets.
     setCentralWidget(newPane);
@@ -76,5 +80,19 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
 
 bool PacketWindow::queryClose() {
     return heldPane->queryClose();
+}
+
+void PacketWindow::plugMenu(QMenu *menu) {
+    if (packetMenu) {
+        menuBar->removeAction(packetMenu);
+    }
+    packetMenu = menuBar->addMenu(menu);
+}
+
+void PacketWindow::unplugMenu() {
+    if (packetMenu) {
+        menuBar->removeAction(packetMenu);
+        packetMenu = NULL;
+    }
 }
 
