@@ -227,9 +227,6 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     packetTypeMenu->addAction(actDockUndock);
     packetTypeMenu->addAction(actClose);
 
-    // Insert our new menu (Inserting removes the old)
-    newPart->plugMenu(packetTypeMenu);
-
     // Register ourselves to listen for various events.
     newPacket->listen(this);
 }
@@ -566,8 +563,7 @@ void PacketPane::dockPane() {
         return;
 
     // The packet pane is currently floating.
-    // Be sure to unplug the action list so it doesn't get destroyed.
-    frame->unplugActionList("packet_type_menu");
+
     part->dock(this);
     delete frame;
     frame = 0;
