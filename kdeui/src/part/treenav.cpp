@@ -33,8 +33,7 @@
 #include "packettreeview.h"
 #include "reginapart.h"
 
-#include <klocale.h>
-#include <kmessagebox.h>
+#include <QMessageBox>
 
 void ReginaPart::moveShallow() {
     if (! checkReadWrite())
@@ -45,14 +44,16 @@ void ReginaPart::moveShallow() {
         return;
 
     if (packet->dependsOnParent()) {
-        KMessageBox::error(widget(), i18n(
+        QMessageBox *error = new QMessageBox(this);
+        error->setText(tr(
             "This packet cannot be moved away from its current parent."));
         return;
     }
 
     regina::NPacket* parent = packet->getTreeParent();
     if (! parent) {
-        KMessageBox::error(widget(), i18n(
+        QMessageBox *error = new QMessageBox(this);
+        error->setText(tr(
             "This packet is already at the highest level in the "
             "entire tree."));
         return;
@@ -60,7 +61,8 @@ void ReginaPart::moveShallow() {
 
     regina::NPacket* grandparent = parent->getTreeParent();
     if (! grandparent) {
-        KMessageBox::error(widget(), i18n(
+        QMessageBox *error = new QMessageBox(this);
+        error->setText(tr(
             "There can only be one packet at the highest level in the tree."));
         return;
     }
@@ -80,7 +82,8 @@ void ReginaPart::moveDeep() {
         return;
 
     if (packet->dependsOnParent()) {
-        KMessageBox::error(widget(), i18n(
+        QMessageBox *error = new QMessageBox(this);
+        error->setText(tr(
             "This packet cannot be moved away from its current parent."));
         return;
     }
@@ -92,7 +95,8 @@ void ReginaPart::moveDeep() {
         down = false;
     }
     if (! newParent) {
-        KMessageBox::error(widget(), i18n(
+        QMessageBox *error = new QMessageBox(this);
+        error->setText(tr(
             "This packet cannot be moved to a lower level because it has no "
             "siblings that could act as its parent."));
         return;
@@ -116,12 +120,15 @@ void ReginaPart::moveUp() {
         return;
 
     if (! packet->getPrevTreeSibling()) {
-        if (! packet->getNextTreeSibling())
-            KMessageBox::error(widget(), i18n(
+        if (! packet->getNextTreeSibling()) {
+            QMessageBox *error = new QMessageBox(this);
+            error->setText(tr(
                 "This packet has no siblings and so cannot be moved up."));
-        else
-            KMessageBox::error(widget(), i18n(
+        } else {
+            QMessageBox *error = new QMessageBox(this);
+            error->setText(tr(
                 "This packet is already at the top of its list of siblings."));
+        }
         return;
     }
 
@@ -137,13 +144,16 @@ void ReginaPart::moveDown() {
         return;
 
     if (! packet->getNextTreeSibling()) {
-        if (! packet->getPrevTreeSibling())
-            KMessageBox::error(widget(), i18n(
+        if (! packet->getPrevTreeSibling()) {
+            QMessageBox *error = new QMessageBox(this);
+            error->setText(tr(
                 "This packet has no siblings and so cannot be moved down."));
-        else
-            KMessageBox::error(widget(), i18n(
+        } else {
+            QMessageBox *error = new QMessageBox(this);
+            error->setText(tr(
                 "This packet is already at the bottom of its "
                 "list of siblings."));
+        }
         return;
     }
 
@@ -159,12 +169,15 @@ void ReginaPart::movePageUp() {
         return;
 
     if (! packet->getPrevTreeSibling()) {
-        if (! packet->getNextTreeSibling())
-            KMessageBox::error(widget(), i18n(
+        if (! packet->getNextTreeSibling()) {
+            QMessageBox *error = new QMessageBox(this);
+            error->setText(tr(
                 "This packet has no siblings and so cannot be moved up."));
-        else
-            KMessageBox::error(widget(), i18n(
+        } else {
+            QMessageBox *error = new QMessageBox(this);
+            error->setText(tr(
                 "This packet is already at the top of its list of siblings."));
+        }
         return;
     }
 
@@ -180,13 +193,16 @@ void ReginaPart::movePageDown() {
         return;
 
     if (! packet->getNextTreeSibling()) {
-        if (! packet->getPrevTreeSibling())
-            KMessageBox::error(widget(), i18n(
+        if (! packet->getPrevTreeSibling()) {
+            QMessageBox *error = new QMessageBox(this);
+            error->setText(tr(
                 "This packet has no siblings and so cannot be moved down."));
-        else
-            KMessageBox::error(widget(), i18n(
+        } else {
+            QMessageBox *error = new QMessageBox(this);
+            error->setText(tr(
                 "This packet is already at the bottom of its "
                 "list of siblings."));
+        }
         return;
     }
 
@@ -202,12 +218,15 @@ void ReginaPart::moveTop() {
         return;
 
     if (! packet->getPrevTreeSibling()) {
-        if (! packet->getNextTreeSibling())
-            KMessageBox::error(widget(), i18n(
+        if (! packet->getNextTreeSibling()) {
+            QMessageBox *error = new QMessageBox(this);
+            error->setText(tr(
                 "This packet has no siblings and so cannot be moved up."));
-        else
-            KMessageBox::error(widget(), i18n(
-                "This packet is already at the top of its list of siblings."));
+        } else {
+            QMessageBox *error = new QMessageBox(this);
+            error->setText(tr(
+                "This packet is already at the top of its list of siblings.")); 
+        }
         return;
     }
 
@@ -223,13 +242,16 @@ void ReginaPart::moveBottom() {
         return;
 
     if (! packet->getNextTreeSibling()) {
-        if (! packet->getPrevTreeSibling())
-            KMessageBox::error(widget(), i18n(
+        if (! packet->getPrevTreeSibling()) {
+            QMessageBox *error = new QMessageBox(this);
+            error->setText(tr(
                 "This packet has no siblings and so cannot be moved down."));
-        else
-            KMessageBox::error(widget(), i18n(
+        } else {
+            QMessageBox *error = new QMessageBox(this);
+            error->setText(tr(
                 "This packet is already at the bottom of its "
                 "list of siblings."));
+        }
         return;
     }
 
