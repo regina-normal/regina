@@ -45,8 +45,7 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
         Qt::Window | Qt::WindowContextHelpButtonHint),
         heldPane(newPane) {
     // Resize ourselves nicely.
-    if (! initialGeometrySet())
-        resize(400, 400);
+    resize(400, 400);
     
     // Set destructive close
     setAttribute(Qt::WA_DeleteOnClose);
