@@ -84,6 +84,13 @@ const KLocalizedString ReginaAbout::regLicense( ki18n(
     "maintained by both Jeff Weeks and Nathan Dunfield.  The SnapPeaKernel is\n"
     "distributed under the terms of the GNU General Public License, version 2\n"
     "or any later version, as published by the Free Software Foundation.\n\n"
+    "NORMALIZ LIBRARY:\n\n"
+    "Regina includes a copy of libnormaliz, which it uses to help with the\n"
+    "enumeration of fundamental normal surfaces.  Normaliz was written by\n"
+    "Winfried Bruns, Bogdan Ichim and Christof Soeger.  It is distributed\n"
+    "under the terms of the GNU General Public License as published by the\n"
+    "Free Software Foundation, either version 3 of the License, or (at your\n"
+    "option) any later version.\n\n"
     "ORB KERNEL:\n\n"
     "Regina includes snippets of code from Orb, for use in importing and\n"
     "exporting files in Orb / Casson format.  Orb is based on SnapPea\n"
@@ -116,6 +123,8 @@ ReginaAbout::ReginaAbout(const char* internalName) :
     // Credits:
     addCredit(ki18n("Bernard Blackham"),
         ki18n("Help with cache optimisation"),"","");
+    addCredit(ki18n("Winfried Bruns, Bogdan Ichim and Christof Soeger"),
+        ki18n("Use of the Normaliz library"),"","");
     addCredit(ki18n("Marc Culler"),
         ki18n("Helpful discussions"),"","");
     addCredit(ki18n("Dominique Devriese"),

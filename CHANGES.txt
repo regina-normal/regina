@@ -96,21 +96,73 @@ Version 5.0  [ (under development) ]
 
 Version 4.91  [ (under development) ]
 
+    OVERALL:
+        - For MacOS users: make sure 32-bit python is called when running
+          32-bit fink on a 64-bit machine.
     ENGINE:
+        Class NBitmask:
+            - Make NBitmask more suitable for use in containers.  Specifically,
+              the assignment operator can now be used to initialise an
+              uninitialised bitmask or to reset an already-initialised
+              bitmask to a different length, and one or both of its
+              operands may be invalid.
+        Class NDoubleDescription:
+            - Removed the inner class LexComp, and replaced it with the new
+              global class NPosOrder (see below).  A deprecated typedef
+              NDoubleDescription::LexOrder is kept for backward compatibility.
         Class NFacetSpec:
             - New template class that generalises NTetFace to arbitrary
               dimensions.  NTetFace is retained as a convenience typedef,
               but with changes; see the NTetFace notes below.
+        Class NHilbertDual:
+            - New class that implements a modified dual algorithm for
+              Hilbert basis enumeration, based on the dual algorithm in
+              "Normaliz: Algorithms for affine monoids and rational cones",
+              W. Bruns and B. Ichim, J. Algebra 324 (2010), 1098-1113.
+        Class NHilbertPrimal:
+            - New class that enumerates Hilbert bases by decomposing into
+              maximal admissible faces and running the primal algorithm from
+              Normaliz on each such face.
+        Class NLargeInteger:
+            - Made separate constructors and assignment operators for
+              arguments of type int, unsigned int, long, and unsigned long.
+            - Added ++ and -- operators.
+            - Added (long + NLargeInteger) and (long * NLargeInteger) operators.
+            - New routines setRaw() and rawData() for interacting directly
+              with libgmp and libgmpxx.
+        Class NMaxAdmissible:
+            - New class for enumerating maximal admissible faces of the
+              normal surface solution cone.
+        Class NNormalSurfaceList:
+            - New routines enumerateFundPrimal() and enumerateFundDual() to
+              enumerate fundamental normal surfaces, as well as slower routines
+              enumerateFundFullCone() and enumerateFundCD() for comparing
+              different enumeration algorithms.
+            - New coordinate systems ORIENTED and ORIENTED_QUAD to
+              support transverse oriented normal surfaces.
+            - New routines beginVectors() and endVectors() and new inner class
+              VectorIterator for iterating through raw normal surface vectors.
         Class NPerm3:
             - New routine compareWith() for sorting permutations.
         Class NPerm5:
             - New class describing permutations of five elements.
+        Class NPosOrder:
+            - Class for sorting hyperplanes during vertex enumeration.
+              This is the new name for the old NDoubleDescription::LexComp.
+        Class NSnapPeaTriangulation:
+            - New routine slopeEquations() that uses code from SnapPy to
+              compute the boundary slope equations for cusps.
+            - New routine verifyTriangulation() for ensuring that
+              SnapPea has not retriangulated unexpectedly.
         Class NTetFace:
             - Now an instance of the arbitrary-dimension template class
               NFacetSpec.  NTetFace is retained as a typedef, but the fields
               have been renamed from tet/face to the more general simp/facet.
         Routines perm4to5, perm5to4, perm3to4, perm4to3:
             - New routines for converting between permutation classes.
+        Routine makeEmbeddedConstraints():
+            - Added to help generate admissibility constraints based on a
+              flavour constant, instead of an NNormalSurfaceVector subclass.
 
 Version 4.90  [ 12 September, 2011 ] - First prerelease for version 5.0.
 

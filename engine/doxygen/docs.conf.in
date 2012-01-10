@@ -68,6 +68,7 @@ EXCLUDE = \
     @PROJECT_SOURCE_DIR@/engine/utilities/nmatrix2.h \
     @PROJECT_SOURCE_DIR@/engine/utilities/nmpi.h \
     @PROJECT_SOURCE_DIR@/engine/utilities/nrational.h \
+    @PROJECT_SOURCE_DIR@/engine/enumerate/normaliz \
     @PROJECT_SOURCE_DIR@/engine/foreign/casson.h \
     @PROJECT_SOURCE_DIR@/engine/snappea/kernel
 

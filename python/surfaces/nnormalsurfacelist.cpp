@@ -36,7 +36,7 @@ using namespace boost::python;
 using regina::NNormalSurfaceList;
 
 namespace {
-    // Write manual overload wrappers since this is a static member function.
+    // Write manual overload wrappers since these are static member functions.
     NNormalSurfaceList* enumerate_2(regina::NTriangulation* owner,
             int flavour) {
         return NNormalSurfaceList::enumerate(owner, flavour);
@@ -48,6 +48,21 @@ namespace {
     NNormalSurfaceList* enumerate_4(regina::NTriangulation* owner,
             int flavour, bool embedded, regina::NProgressManager* manager) {
         return NNormalSurfaceList::enumerate(owner, flavour, embedded, manager);
+    }
+
+    NNormalSurfaceList* enumerateFundDual_2(regina::NTriangulation* owner,
+            int flavour) {
+        return NNormalSurfaceList::enumerateFundDual(owner, flavour);
+    }
+    NNormalSurfaceList* enumerateFundDual_3(regina::NTriangulation* owner,
+            int flavour, bool embedded) {
+        return NNormalSurfaceList::enumerateFundDual(owner, flavour,
+            embedded);
+    }
+    NNormalSurfaceList* enumerateFundDual_4(regina::NTriangulation* owner,
+            int flavour, bool embedded, regina::NProgressManager* manager) {
+        return NNormalSurfaceList::enumerateFundDual(owner, flavour,
+            embedded, manager);
     }
 }
 
@@ -65,6 +80,12 @@ void addNNormalSurfaceList() {
         .def("enumerate", enumerate_3,
             return_value_policy<reference_existing_object>())
         .def("enumerate", enumerate_4,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundDual", enumerateFundDual_2,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundDual", enumerateFundDual_3,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundDual", enumerateFundDual_4,
             return_value_policy<reference_existing_object>())
         .def("enumerateStandardDirect",
             &NNormalSurfaceList::enumerateStandardDirect,
@@ -95,6 +116,7 @@ void addNNormalSurfaceList() {
         .staticmethod("enumerate")
         .staticmethod("enumerateStandardDirect")
         .staticmethod("enumerateStandardANDirect")
+        .staticmethod("enumerateFundDual")
     ;
 
     s.attr("packetType") = NNormalSurfaceList::packetType;

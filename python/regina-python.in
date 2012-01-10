@@ -74,6 +74,14 @@ if (not -e $python_cmd) {
     $python_cmd = '';
 }
 
+# --- Set up the environment.
+
+# On OSX, python ships as a universal binary for several architectures.
+# We need to make sure we are using the right one.
+if (@OSX_PYTHON_32@) {
+	$ENV{'VERSIONER_PYTHON_PREFER_32_BIT'} = 'yes';
+}
+
 # --- Extract variables from the configuration file.
 
 if (open(CONF, $python_conf)) {

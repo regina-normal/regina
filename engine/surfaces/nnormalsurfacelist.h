@@ -51,6 +51,7 @@ namespace regina {
 class NTriangulation;
 class NMatrixInt;
 class NProgressManager;
+class NProgressMessage;
 class NProgressNumber;
 class NXMLPacketReader;
 class NXMLNormalSurfaceListReader;
@@ -135,6 +136,18 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * coordinate system is identical to AN_STANDARD.
          */
         static const int AN_LEGACY;
+        /**
+         * Represents standard triangle-quadrilateral coordinates for
+         * transversely oriented normal surfaces.
+         */
+        static const int ORIENTED;
+        /**
+         * Represents quadrilateral coordinates for transversely oriented 
+         * normal surfaces.
+         */
+        static const int ORIENTED_QUAD;
+
+        class VectorIterator;
 
     protected:
         std::vector<NNormalSurface*> surfaces;
@@ -208,6 +221,113 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
             NProgressManager* manager = 0);
 
         /**
+         * Enumerates all fundamental normal surfaces in the given
+         * triangulation using the given flavour of coordinate system,
+         * using the primal Hilbert basis algorithm.
+         * These fundamental normal surfaces will be stored in a new normal
+         * surface list.  The option is offered to find only embedded
+         * normal surfaces or to also include immersed and singular
+         * normal surfaces.
+         *
+         * The normal surface list that is created will be inserted as the
+         * last child of the given triangulation.  This triangulation \b must
+         * remain the parent of this normal surface list, and must not
+         * change while this normal surface list remains in existence.
+         *
+         * The first step of the primal algorithm is to enumerate all
+         * vertex normal surfaces.  If you have already done this, you
+         * may pass the list of vertex normal surfaces as the (optional)
+         * parameter \a vtxSurfaces.
+         *
+         * If a progress manager is passed, the normal surface
+         * enumeration will take place in a new thread and this routine
+         * will return immediately.  The NProgress object assigned to
+         * this progress manager is guaranteed to be of the class
+         * NProgressNumber.
+         *
+         * If no progress manager is passed, the enumeration will run
+         * in the current thread and this routine will return only when
+         * the enumeration is complete.  Note that this enumeration can
+         * be extremely slow for larger triangulations.
+         *
+         * \pre If non-zero, the argument \a vtxSurfaces is precisely
+         * the set of all vertex normal surfaces in the given triangulation,
+         * enumerated using the same coordinate system and embedded-only
+         * constraints as given here.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * surfaces will be based.
+         * @param newFlavour the flavour of coordinate system to be used;
+         * this must be one of the predefined coordinate system
+         * constants in NNormalSurfaceList.
+         * @param embeddedOnly \c true if only embedded normal surfaces
+         * are to be produced, or \c false if immersed and singular
+         * normal surfaces are also to be produced; this defaults to
+         * \c true.
+         * @param manager a progress manager through which progress will
+         * be reported, or 0 if no progress reporting is required.  If
+         * non-zero, \a manager must point to a progress manager for
+         * which NProgressManager::isStarted() is still \c false.
+         * @return the newly created normal surface list.  Note that if
+         * a progress manager is passed then this list may not be completely
+         * filled when this routine returns.  If a progress manager is
+         * passed and a new thread could not be started, this routine
+         * returns 0 (and no normal surface list is created).
+         */
+        static NNormalSurfaceList* enumerateFundPrimal(
+            NTriangulation* owner, int newFlavour, bool embeddedOnly = true,
+            NNormalSurfaceList* vtxSurfaces = 0,
+            NProgressManager* manager = 0);
+
+        /**
+         * Enumerates all fundamental normal surfaces in the given
+         * triangulation using the given flavour of coordinate system,
+         * using the dual Hilbert basis algorithm.
+         * These fundamental normal surfaces will be stored in a new normal
+         * surface list.  The option is offered to find only embedded
+         * normal surfaces or to also include immersed and singular
+         * normal surfaces.
+         *
+         * The normal surface list that is created will be inserted as the
+         * last child of the given triangulation.  This triangulation \b must
+         * remain the parent of this normal surface list, and must not
+         * change while this normal surface list remains in existence.
+         *
+         * If a progress manager is passed, the normal surface
+         * enumeration will take place in a new thread and this routine
+         * will return immediately.  The NProgress object assigned to
+         * this progress manager is guaranteed to be of the class
+         * NProgressNumber.
+         *
+         * If no progress manager is passed, the enumeration will run
+         * in the current thread and this routine will return only when
+         * the enumeration is complete.  Note that this enumeration can
+         * be extremely slow for larger triangulations.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * surfaces will be based.
+         * @param newFlavour the flavour of coordinate system to be used;
+         * this must be one of the predefined coordinate system
+         * constants in NNormalSurfaceList.
+         * @param embeddedOnly \c true if only embedded normal surfaces
+         * are to be produced, or \c false if immersed and singular
+         * normal surfaces are also to be produced; this defaults to
+         * \c true.
+         * @param manager a progress manager through which progress will
+         * be reported, or 0 if no progress reporting is required.  If
+         * non-zero, \a manager must point to a progress manager for
+         * which NProgressManager::isStarted() is still \c false.
+         * @return the newly created normal surface list.  Note that if
+         * a progress manager is passed then this list may not be completely
+         * filled when this routine returns.  If a progress manager is
+         * passed and a new thread could not be started, this routine
+         * returns 0 (and no normal surface list is created).
+         */
+        static NNormalSurfaceList* enumerateFundDual(
+            NTriangulation* owner, int newFlavour, bool embeddedOnly = true,
+            NProgressManager* manager = 0);
+
+        /**
          * Uses a slow-but-direct procedure to enumerate all embedded
          * vertex normal surfaces in standard (tri-quad) coordinates
          * within the given triangulation.
@@ -232,11 +352,6 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * double description method for normal surface enumeration",
          * Benjamin A. Burton, Math. Comp. 79 (2010), 453-484.
          *
-         * Users will generally not want to call this routine, since it
-         * is often much slower than enumerate() and it gives precisely
-         * the same results.  This routine is provided mainly for interest's
-         * sake, and to allow comparisons between different algorithms.
-         *
          * Aside from the underlying algorithm, the behaviour of this
          * routine is identical to enumerate().  See enumerate() for
          * details regarding preconditions, postconditions, ownership
@@ -244,6 +359,12 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          *
          * Unlike enumerate(), this routine does not support progress
          * management and does not support running in a separate thread.
+         *
+         * \warning
+         * Users will generally not want to call this routine, since it
+         * is often much slower than enumerate() and it gives precisely
+         * the same results.  This routine is provided mainly for interest's
+         * sake, and to allow comparisons between different algorithms.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
@@ -261,12 +382,88 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * enumerateStandardDirect() enumeration routine; see the
          * enumerateStandardDirect() documentation for further information.
          *
+         * \warning
+         * Users will generally not want to call this routine, since it
+         * is often much slower than enumerate() and it gives precisely
+         * the same results.  This routine is provided mainly for interest's
+         * sake, and to allow comparisons between different algorithms.
+         *
          * @param owner the triangulation upon which this list of
          * almost normal surfaces will be based.
          * @return the newly created surface list.
          */
         static NNormalSurfaceList* enumerateStandardANDirect(
             NTriangulation* owner);
+
+        /**
+         * Uses an extremely slow procedure to enumerate all embedded
+         * fundamental surfaces in the given triangulation,
+         * by running Normaliz over the full (and typically very large)
+         * solution cone, and only enforcing embedded constraints (such as
+         * the quadrilateral constraints) afterwards.
+         *
+         * Aside from the underlying algorithm, the behaviour of this
+         * routine is identical to enumerateFundPrimal() and
+         * enumerateFundDual().  See those routines for details
+         * regarding preconditions, postconditions, ownership and so on.
+         *
+         * Unlike enumerateFundPrimal() and enumerateFundDual(), this
+         * routine does not support progress management, and does not
+         * support running in a separate thread.
+         *
+         * \warning
+         * Users will generally not want to call this routine, since it
+         * is typically much slower than either enumerateFundPrimal()
+         * or enumerateFundDual(), and it gives precisely the same results.
+         * This routine is provided mainly for interest's sake, and to allow
+         * comparisons between different algorithms.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * surfaces will be based.
+         * @param newFlavour the flavour of coordinate system to be used;
+         * this must be one of the predefined coordinate system
+         * constants in NNormalSurfaceList.
+         * @param embeddedOnly \c true if only embedded normal surfaces
+         * are to be produced, or \c false if immersed and singular
+         * normal surfaces are also to be produced; this defaults to \c true.
+         * @return the newly created normal surface list.
+         */
+        static NNormalSurfaceList* enumerateFundFullCone(
+            NTriangulation* owner, int newFlavour, bool embeddedOnly = true);
+
+        /**
+         * Uses an extremely slow modified Contejean-Devie procedure to
+         * enumerate all embedded fundamental surfaces in the given
+         * triangulation.
+         *
+         * Aside from the underlying algorithm, the behaviour of this
+         * routine is identical to enumerateFundPrimal() and
+         * enumerateFundDual().  See those routines for details
+         * regarding preconditions, postconditions, ownership and so on.
+         *
+         * Unlike enumerateFundPrimal() and enumerateFundDual(), this
+         * routine does not support progress management, and does not
+         * support running in a separate thread.
+         *
+         * \warning
+         * Users will generally not want to call this routine, since it
+         * is typically much slower than either enumerateFundPrimal()
+         * or enumerateFundDual(), and it gives precisely the same results.
+         * This routine is provided mainly for interest's sake, and to allow
+         * comparisons between different algorithms.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * surfaces will be based.
+         * @param newFlavour the flavour of coordinate system to be used;
+         * this must be one of the predefined coordinate system
+         * constants in NNormalSurfaceList.
+         * @param embeddedOnly \c true if only embedded normal surfaces
+         * are to be produced, or \c false if immersed and singular
+         * normal surfaces are also to be produced; this defaults to \c true.
+         * @return the newly created normal surface list.
+         */
+        static NNormalSurfaceList* enumerateFundCD(
+            NTriangulation* owner, int newFlavour, bool embeddedOnly = true);
 
         virtual int getFlavour() const;
         virtual bool allowsAlmostNormal() const;
@@ -600,6 +797,126 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          */
         NMatrixInt* recreateMatchingEquations() const;
 
+        /**
+         * An iterator that gives access to the raw vectors for surfaces in
+         * this list, pointing to the beginning of this surface list.
+         *
+         * @return an iterator at the beginning of this surface list.
+         */
+        VectorIterator beginVectors() const;
+
+        /**
+         * An iterator that gives access to the raw vectors for surfaces in
+         * this list, pointing past the end of this surface list.
+         * This iterator is not dereferenceable.
+         *
+         * @return an iterator past the end of this surface list.
+         */
+        VectorIterator endVectors() const;
+
+        /**
+         * A bidirectional iterator that runs through the raw vectors for
+         * surfaces in this list.
+         */
+        class VectorIterator : public std::iterator<
+                std::bidirectional_iterator_tag, const NNormalSurfaceVector*> {
+            private:
+                std::vector<NNormalSurface*>::const_iterator it_;
+                    /**< An iterator into the underlying list of surfaces. */
+
+            public:
+                /**
+                 * Creates a new uninitialised iterator.
+                 */
+                VectorIterator();
+
+                /**
+                 * Creates a copy of the given iterator.
+                 *
+                 * @param cloneMe the iterator to clone.
+                 */
+                VectorIterator(const VectorIterator& cloneMe);
+
+                /**
+                 * Makes this a copy of the given iterator.
+                 *
+                 * @param cloneMe the iterator to clone.
+                 * @return a reference to this iterator.
+                 */
+                VectorIterator& operator = (const VectorIterator& cloneMe);
+
+                /**
+                 * Compares this with the given operator for equality.
+                 *
+                 * @param other the iterator to compare this with.
+                 * @return \c true if the iterators point to the same
+                 * element of the same normal surface list, or \c false
+                 * if they do not.
+                 */
+                bool operator == (const VectorIterator& other) const;
+
+                /**
+                 * Compares this with the given operator for inequality.
+                 *
+                 * @param other the iterator to compare this with.
+                 * @return \c false if the iterators point to the same
+                 * element of the same normal surface list, or \c true
+                 * if they do not.
+                 */
+                bool operator != (const VectorIterator& other) const;
+
+                /**
+                 * Returns the raw vector for the normal surface that this
+                 * iterator is currently pointing to.
+                 *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
+                 * @return the corresponding normal surface vector.
+                 */
+                const NNormalSurfaceVector* operator *() const;
+
+                /**
+                 * The preincrement operator.
+                 *
+                 * @return a reference to this iterator after the increment.
+                 */
+                VectorIterator& operator ++();
+
+                /**
+                 * The postincrement operator.
+                 *
+                 * @return a copy of this iterator before the
+                 * increment took place.
+                 */
+                VectorIterator operator ++(int);
+
+                /**
+                 * The predecrement operator.
+                 *
+                 * @return a reference to this iterator after the decrement.
+                 */
+                VectorIterator& operator --();
+
+                /**
+                 * The postdecrement operator.
+                 *
+                 * @return a copy of this iterator before the
+                 * decrement took place.
+                 */
+                VectorIterator operator --(int);
+
+            private:
+                /**
+                 * Initialise a new vector iterator using an iterator for
+                 * the internal list of normal surfaces.
+                 */
+                VectorIterator(
+                    const std::vector<NNormalSurface*>::const_iterator& i);
+
+            friend class NNormalSurfaceList;
+        };
+
     protected:
         /**
          * Creates a new normal surface list performing no initialisation
@@ -760,25 +1077,6 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
         NNormalSurfaceList(int newFlavour, bool embeddedOnly);
 
         /**
-         * Calls NDoubleDescription::enumerateExtremalRays() with the
-         * given arguments, and using the vector class that corresponds
-         * to the given coordinate flavour.
-         *
-         * All parameters not listed below are taken directly from
-         * NDoubleDescription::enumerateExtremalRays().
-         *
-         * @param flavour the flavour of coordinate system to be used;
-         * this must be one of the predefined coordinate system constants
-         * in NNormalSurfaceList.
-         * @return \c true if NDoubleDescription::enumerateExtremalRays()
-         * was successfully called, or \c false if the given flavour
-         * does not correspond to a known coordinate system.
-         */
-        static bool enumerateExtremalRays(int flavour,
-            const SurfaceInserter& results, const NMatrixInt& subspace,
-            const NEnumConstraintList* constraints, NProgressNumber* progress);
-
-        /**
          * Enumerates all embedded vertex surfaces in (standard normal
          * or standard almost normal) coordinates by first enumerating
          * surfaces in (quad or quad-oct) coordinates and then performing
@@ -923,10 +1221,10 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
         NNormalSurfaceList* internalStandardToReduced() const;
 
         /**
-         * A thread class that actually performs the normal surface
+         * A thread class that actually performs the vertex normal surface
          * enumeration.
          */
-        class Enumerator : public NThread {
+        class VertexEnumerator : public NThread {
             private:
                 NNormalSurfaceList* list;
                     /**< The normal surface list to be filled. */
@@ -949,7 +1247,80 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
                  * progress reporting, or 0 if progress reporting is not
                  * required.
                  */
-                Enumerator(NNormalSurfaceList* newList,
+                VertexEnumerator(NNormalSurfaceList* newList,
+                    NTriangulation* useTriang, NProgressManager* useManager);
+
+                void* run(void*);
+        };
+
+        /**
+         * A thread class that performs fundamental normal surface enumeration
+         * using the primal Hilbert basis algorithm.
+         */
+        class FundPrimalEnumerator : public NThread {
+            private:
+                NNormalSurfaceList* list;
+                    /**< The normal surface list to be filled. */
+                NTriangulation* triang;
+                    /**< The triangulation upon which this normal
+                         surface list will be based. */
+                NNormalSurfaceList* vtxSurfaces;
+                    /**< The list of all vertex normal surfaces in \a triang,
+                         or 0 if this information is not known. */
+                NProgressManager* manager;
+                    /**< The progress manager through which progress is
+                         reported, or 0 if no progress manager is in use. */
+
+            public:
+                /**
+                 * Creates a new enumerator thread with the given
+                 * parameters.
+                 *
+                 * @param newList the normal surface list to be filled.
+                 * @param useTriang the triangulation upon which this
+                 * normal surface list will be based.
+                 * @param useVtxSurafces the vertex normal surfaces in
+                 * \a useTriang, or 0 if this information is not known.
+                 * @param useManager the progress manager to use for
+                 * progress reporting, or 0 if progress reporting is not
+                 * required.
+                 */
+                FundPrimalEnumerator(NNormalSurfaceList* newList,
+                    NTriangulation* useTriang,
+                    NNormalSurfaceList* useVtxSurfaces,
+                    NProgressManager* useManager);
+
+                void* run(void*);
+        };
+
+        /**
+         * A thread class that performs fundamental normal surface enumeration
+         * using the dual Hilbert basis algorithm.
+         */
+        class FundDualEnumerator : public NThread {
+            private:
+                NNormalSurfaceList* list;
+                    /**< The normal surface list to be filled. */
+                NTriangulation* triang;
+                    /**< The triangulation upon which this normal
+                         surface list will be based. */
+                NProgressManager* manager;
+                    /**< The progress manager through which progress is
+                         reported, or 0 if no progress manager is in use. */
+
+            public:
+                /**
+                 * Creates a new enumerator thread with the given
+                 * parameters.
+                 *
+                 * @param newList the normal surface list to be filled.
+                 * @param useTriang the triangulation upon which this
+                 * normal surface list will be based.
+                 * @param useManager the progress manager to use for
+                 * progress reporting, or 0 if progress reporting is not
+                 * required.
+                 */
+                FundDualEnumerator(NNormalSurfaceList* newList,
                     NTriangulation* useTriang, NProgressManager* useManager);
 
                 void* run(void*);
@@ -997,6 +1368,22 @@ REGINA_API NNormalSurfaceVector* makeZeroVector(
  */
 REGINA_API NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
     int flavour);
+/**
+ * Creates a new set of validity constraints representing the condition that
+ * normal surfaces be embedded.  The validity constraints will be expressed
+ * relative to the given flavour of coordinate system.
+ *
+ * \ifacespython Not present.
+ *
+ * @param triangulation the triangulation upon which these validity constraints
+ * will be based.
+ * @param flavour the flavour of coordinate system to be used;
+ * this must be one of the predefined coordinate system
+ * constants in NNormalSurfaceList.
+ * @return a newly allocated set of constraints.
+ */
+REGINA_API NEnumConstraintList* makeEmbeddedConstraints(
+    NTriangulation* triangulation, int flavour);
 
 /*@}*/
 
@@ -1052,6 +1439,71 @@ inline NNormalSurfaceList* NNormalSurfaceList::standardANToQuadOct() const {
 
 inline NMatrixInt* NNormalSurfaceList::recreateMatchingEquations() const {
     return makeMatchingEquations(getTriangulation(), flavour);
+}
+
+inline NNormalSurfaceList::VectorIterator::VectorIterator() {
+}
+
+inline NNormalSurfaceList::VectorIterator::VectorIterator(
+        const NNormalSurfaceList::VectorIterator& cloneMe) :
+        it_(cloneMe.it_) {
+}
+
+inline NNormalSurfaceList::VectorIterator& NNormalSurfaceList::VectorIterator::
+        operator =(const NNormalSurfaceList::VectorIterator& cloneMe) {
+    it_ = cloneMe.it_;
+    return *this;
+}
+
+inline bool NNormalSurfaceList::VectorIterator::operator ==(
+        const NNormalSurfaceList::VectorIterator& other) const {
+    return (it_ == other.it_);
+}
+
+inline bool NNormalSurfaceList::VectorIterator::operator !=(
+        const NNormalSurfaceList::VectorIterator& other) const {
+    return (it_ != other.it_);
+}
+
+inline const NNormalSurfaceVector* NNormalSurfaceList::VectorIterator::
+        operator *() const {
+    return (*it_)->rawVector();
+}
+
+inline NNormalSurfaceList::VectorIterator& NNormalSurfaceList::VectorIterator::
+        operator ++() {
+    ++it_;
+    return *this;
+}
+
+inline NNormalSurfaceList::VectorIterator NNormalSurfaceList::VectorIterator::
+        operator ++(int) {
+    return NNormalSurfaceList::VectorIterator(it_++);
+}
+
+inline NNormalSurfaceList::VectorIterator& NNormalSurfaceList::VectorIterator::
+        operator --() {
+    --it_;
+    return *this;
+}
+
+inline NNormalSurfaceList::VectorIterator NNormalSurfaceList::VectorIterator::
+        operator --(int) {
+    return NNormalSurfaceList::VectorIterator(it_--);
+}
+
+inline NNormalSurfaceList::VectorIterator::VectorIterator(
+        const std::vector<NNormalSurface*>::const_iterator& i) : it_(i) {
+}
+
+inline NNormalSurfaceList::VectorIterator NNormalSurfaceList::beginVectors()
+        const {
+    return VectorIterator(surfaces.begin());
+}
+
+inline NNormalSurfaceList::VectorIterator NNormalSurfaceList::endVectors()
+        const {
+    return VectorIterator(surfaces.end());
 }
 
 inline NNormalSurfaceList::SurfaceInserter::SurfaceInserter() : list(0),
@@ -1110,7 +1562,21 @@ inline NNormalSurfaceList::NNormalSurfaceList(int newFlavour,
         bool embeddedOnly) : flavour(newFlavour), embedded(embeddedOnly) {
 }
 
-inline NNormalSurfaceList::Enumerator::Enumerator(NNormalSurfaceList* newList,
+inline NNormalSurfaceList::VertexEnumerator::VertexEnumerator(
+        NNormalSurfaceList* newList,
+        NTriangulation* useTriang, NProgressManager* useManager) :
+        list(newList), triang(useTriang), manager(useManager) {
+}
+
+inline NNormalSurfaceList::FundPrimalEnumerator::FundPrimalEnumerator(
+        NNormalSurfaceList* newList, NTriangulation* useTriang,
+        NNormalSurfaceList* newVtxSurfaces, NProgressManager* useManager) :
+        list(newList), triang(useTriang), vtxSurfaces(newVtxSurfaces),
+        manager(useManager) {
+}
+
+inline NNormalSurfaceList::FundDualEnumerator::FundDualEnumerator(
+        NNormalSurfaceList* newList,
         NTriangulation* useTriang, NProgressManager* useManager) :
         list(newList), triang(useTriang), manager(useManager) {
 }

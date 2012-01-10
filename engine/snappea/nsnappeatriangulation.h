@@ -43,6 +43,7 @@ struct Triangulation;
 
 namespace regina {
 
+class NMatrixInt;
 class NTriangulation;
 
 /**
@@ -230,6 +231,37 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * is a null triangulation.
          */
         double volume(int& precision) const;
+
+        /**
+         * Returns the boundary slope equations for the cusps of this
+         * triangulation.
+         *
+         * These equations are returned in a matrix with rows of the form
+         *
+         *   a b c  d e f  . . .
+         *
+         * which means ... TODO: Finish this.
+         *
+         * @return the boundary slope equations as described above in a
+         * newly allocated matrix, or 0 if this is a null triangulation.
+         */
+        NMatrixInt* slopeEquations() const;
+
+        /**
+         * Verifies that the face gluings from this SnapPea triangulation
+         * match the given NTriangulation from Regina.
+         *
+         * This is useful for developers, if you are not sure whether SnapPea
+         * will re-triangulate.  For end users, this function should not be
+         * required.
+         *
+         * @param triangulation the triangulation to compare with this
+         * SnapPea triangulation.
+         * @return \c true if the face gluings match precisely, or
+         * \c false if the face gluings do not match or if this is a
+         * null triangulation.
+         */
+        bool verifyTriangulation(const NTriangulation& triangulation) const;
 
         /**
          * Dumps the underlying SnapPea data to standard output.

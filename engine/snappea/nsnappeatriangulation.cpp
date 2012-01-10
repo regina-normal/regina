@@ -29,9 +29,12 @@
 #include <climits>
 #include <cstring>
 
+#include "maths/nmatrixint.h"
 #include "snappea/nsnappeatriangulation.h"
+#include "snappea/kernel/kernel_prototypes.h"
 #include "snappea/kernel/triangulation.h"
 #include "snappea/kernel/unix_file_io.h"
+#include "snappea/snappy/SnapPy.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/nthread.h"
 
@@ -78,6 +81,82 @@ double NSnapPeaTriangulation::volume(int& precision) const {
     if (! snappeaData)
         return 0;
     return ::volume(snappeaData, &precision);
+}
+
+/**
+ * Written by William Pettersson, 2011.
+ */
+NMatrixInt* NSnapPeaTriangulation::slopeEquations() const {
+    int i,j;
+    if (! snappeaData)
+        return 0;
+    NMatrixInt* matrix =
+        new NMatrixInt(2*snappeaData->num_cusps, 3*snappeaData->num_tetrahedra);
+    for(i=0; i< snappeaData->num_cusps; i++) {
+        int numRows;
+        // SnapPea returns "a b c" for each tetrahedra where the slope is given
+        // as
+        //   a log (z_0) + b log ( 1/(1-z_0)) + c log ((z_0 - 1)/z_0) + ... = 1
+        //
+        // The equation for slopes in terms of quads of types q, q' and q''
+        // becomes
+        //   nu = (c-b)q + (a-c)q' + (b-a)q''
+        //   
+        int *equations = ::get_cusp_equation(snappeaData, i, 1, 0, &numRows);
+        for(j=0; j< snappeaData->num_tetrahedra; j++) {
+            matrix->entry(2*i,3*j) = equations[3*j+2] - equations[3*j+1];
+            matrix->entry(2*i,3*j+1) = equations[3*j] - equations[3*j+2];
+            matrix->entry(2*i,3*j+2) = equations[3*j+1] - equations[3*j];
+        }
+        ::free_cusp_equation(equations);
+        equations = ::get_cusp_equation(snappeaData, i, 0, 1, &numRows);
+        for(j=0; j< snappeaData->num_tetrahedra; j++) {
+            matrix->entry(2*i+1,3*j) = equations[3*j+2] - equations[3*j+1];
+            matrix->entry(2*i+1,3*j+1) = equations[3*j] - equations[3*j+2];
+            matrix->entry(2*i+1,3*j+2) = equations[3*j+1] - equations[3*j];
+        }
+        ::free_cusp_equation(equations);
+    }
+    return matrix;
+}
+
+/**
+ * Written by William Pettersson, 2011.
+ */
+bool NSnapPeaTriangulation::verifyTriangulation(const NTriangulation& tri)
+        const {
+    if (! snappeaData)
+        return false;
+
+    ::TriangulationData *data;
+    ::triangulation_to_data(snappeaData, &data);
+
+    int tet, face, i, j, k, l;
+    if (data->num_tetrahedra != tri.getNumberOfTetrahedra()) {
+        free_triangulation_data(data);
+        return false;
+    }
+
+    NTriangulation::TetrahedronIterator it = tri.getTetrahedra().begin();
+    for (tet = 0; tet < data->num_tetrahedra; tet++) {
+        for (face = 0; face < 4; face++) {
+            if (data->tetrahedron_data[tet].neighbor_index[face] !=
+                    tri.tetrahedronIndex((*it)->adjacentTetrahedron(face))) {
+                free_triangulation_data(data);
+                return false;
+            }
+            for (i = 0; i < 4; i++)
+                if (data->tetrahedron_data[tet].gluing[face][i] !=
+                        (*it)->adjacentGluing(face)[i]) {
+                    free_triangulation_data(data);
+                    return false;
+                }
+        }
+        it++;
+    }
+
+    free_triangulation_data(data);
+    return true;
 }
 
 void NSnapPeaTriangulation::saveAsSnapPea(const char* filename) const {

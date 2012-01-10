@@ -35,6 +35,7 @@
 class NBitmaskTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NBitmaskTest);
 
+    CPPUNIT_TEST(assignment);
     CPPUNIT_TEST(sizes);
     CPPUNIT_TEST(firstLastBit);
     CPPUNIT_TEST(truncate);
@@ -46,6 +47,36 @@ class NBitmaskTest : public CppUnit::TestFixture {
         }
 
         void tearDown() {
+        }
+
+        void assignment() {
+            // Try using assignment to initialise a bitmask.
+            regina::NBitmask a;
+            regina::NBitmask b(2);
+            b.set(0, true);
+            b.set(1, false);
+
+            a = b;
+            if (! (a.get(0) && ! a.get(1)))
+                CPPUNIT_FAIL("NBitmask assignment initialisation error.");
+
+            // Just make sure we don't crash here.
+            regina::NBitmask c;
+            b = c;
+
+            regina::NBitmask d;
+            c = d;
+
+            // Try using assignment to resize a bitmask.
+            regina::NBitmask e(4);
+            e.set(0, false);
+            e.set(1, true);
+            e.set(2, false);
+            e.set(3, true);
+
+            b = e;
+            if (! ((! b.get(0)) && b.get(1) && (! b.get(2)) && b.get(3)))
+                CPPUNIT_FAIL("NBitmask assignment resizing error.");
         }
 
         void sizes() {

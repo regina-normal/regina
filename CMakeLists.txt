@@ -109,8 +109,16 @@ MACRO_LOG_FEATURE(LIBXML2_FOUND
 FIND_PACKAGE(GMP)
 INCLUDE_DIRECTORIES(${GMP_INCLUDE_DIR})
 MACRO_LOG_FEATURE(GMP_FOUND
-  "GMP"
-  "Essential: large integer arithmetic support"
+  "GMP/C"
+  "Essential: large integer arithmetic support for C"
+  "http://gmplib.org/"
+  TRUE)
+
+FIND_PACKAGE(GMPXX)
+INCLUDE_DIRECTORIES(${GMPXX_INCLUDE_DIR})
+MACRO_LOG_FEATURE(GMPXX_FOUND
+  "GMP/C++"
+  "Essential: large integer arithmetic support for C++"
   "http://gmplib.org/"
   TRUE)
 

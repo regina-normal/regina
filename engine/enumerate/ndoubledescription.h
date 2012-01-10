@@ -37,6 +37,7 @@
 #endif
 
 #include "regina-core.h"
+#include "enumerate/ordering.h"
 #include "maths/nray.h"
 #include "maths/nmatrixint.h"
 #include <iterator>
@@ -128,14 +129,13 @@ class REGINA_API NDoubleDescription {
          * whoever called this routine may need to do further processing.
          * @param initialRows specifies how many initial rows of \a subspace
          * are to be processed in the precise order in which they appear.
-         * The remaining rows will be sorted using the LexComp inner class
+         * The remaining rows will be sorted using the NPosOrder class
          * before they are processed.
          */
         template <class RayClass, class OutputIterator>
         static void enumerateExtremalRays(OutputIterator results,
             const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressNumber* progress = 0,
-            unsigned initialRows = 0);
+            NProgressNumber* progress = 0, unsigned initialRows = 0);
 
     private:
         /**
@@ -299,47 +299,13 @@ class REGINA_API NDoubleDescription {
         /**
          * A comparison object that helps sort hyperplanes into a good
          * order before running the double description algorithm.
-         * A hyperplane is described by a row of the \a subspace matrix
-         * passed to NDoubleDescription::enumerateExtremalRays().
          *
-         * The ordering is defined as follows.  For each hyperplane, we
-         * create a sequence (h_1, ..., h_f), where h_i is 0 if the
-         * hyperplane contains the ith coordinate axis, or 1 if not.
-         * We then simply compare these sequences lexicographically.
+         * @deprecated The inner class LexComp no longer exists; instead
+         * its functionality has been moved to the standalone class
+         * NPosOrder.  This typedef is offered for backward compatibility,
+         * and will be removed in a future version of Regina.
          */
-        class LexComp {
-            private:
-                const NMatrixInt& matrix_;
-                    /**< The \a subspace matrix passed to
-                         NDoubleDescription::enumerateExtremalRays(). */
-
-            public:
-                /**
-                 * Creates a new helper object for comparing hyperplanes.
-                 *
-                 * @param matrix the \a subspace matrix as passed to
-                 * NDoubleDescription::enumerateExtremalRays().
-                 */
-                inline LexComp(const NMatrixInt& matrix);
-
-                /**
-                 * Determines whether the hyperplane described by
-                 * row \a i of the matrix is lexicographically smaller
-                 * than the hyperplane described by row \a j.  See the
-                 * LexComp class notes for details on what
-                 * "lexicographically smaller" means here.
-                 *
-                 * @param i the first matrix row index; this must be between
-                 * 0 and matrix.rows()-1 inclusive, where \a matrix is
-                 * the matrix passed to the class constructor.
-                 * @param j the second matrix row index; this must also be
-                 * between 0 and matrix.rows()-1 inclusive.
-                 * @return \c true if and only if the hyperplane
-                 * described by row \a i is lexicographically smaller
-                 * than the hyperplane described by row \a j.
-                 */
-                inline bool operator () (int i, int j) const;
-        };
+        typedef NPosOrder LexComp;
 
         /**
          * Private constructor to ensure that objects of this class are
@@ -426,7 +392,7 @@ class REGINA_API NDoubleDescription {
 
 /*@}*/
 
-// Inline functions for NDoubleDescription::RayDesc
+// Inline functions for NDoubleDescription::RaySpec
 
 template <class BitmaskType>
 inline NDoubleDescription::RaySpec<BitmaskType>::RaySpec(
@@ -455,23 +421,6 @@ template <class BitmaskType>
 inline bool NDoubleDescription::RaySpec<BitmaskType>::onAllCommonFacets(
         const RaySpec<BitmaskType>& x, const RaySpec<BitmaskType>& y) const {
     return facets_.containsIntn(x.facets_, y.facets_);
-}
-
-// Inline functions for NDoubleDescription::LexComp
-
-inline NDoubleDescription::LexComp::LexComp(const NMatrixInt& matrix) :
-        matrix_(matrix) {
-}
-
-inline bool NDoubleDescription::LexComp::operator () (
-        int i, int j) const {
-    for (unsigned c = 0; c < matrix_.columns(); ++c) {
-        if (matrix_.entry(i, c) == 0 && matrix_.entry(j, c) != 0)
-            return true;
-        if (matrix_.entry(i, c) != 0 && matrix_.entry(j, c) == 0)
-            return false;
-    }
-    return false;
 }
 
 // Inline functions for NDoubleDescription

@@ -35,6 +35,15 @@ IF(WIN32 AND NOT CYGWIN)
 ENDIF(WIN32 AND NOT CYGWIN)
 TARGET_LINK_LIBRARIES(regina ${ENGINE_LIBRARY} ${Boost_PYTHON_LIBRARY} ${PYTHON_LIBRARIES})
 
+# regina-python needs special environment variables when running on a
+# 64-bit mac with a 32-bit build.
+SET (OSX_PYTHON_32 0)
+IF (APPLE)
+  IF (CMAKE_OSX_ARCHITECTURES STREQUAL "i386")
+    SET (OSX_PYTHON_32 1)
+  ENDIF (CMAKE_OSX_ARCHITECTURES STREQUAL "i386")
+ENDIF (APPLE)
+
 # regina-python script
 CONFIGURE_FILE (
   "${PROJECT_SOURCE_DIR}/python/regina-python.in"

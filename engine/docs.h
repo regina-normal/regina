@@ -100,6 +100,15 @@
  *  Public License, version 2 or any later version, as published by the
  *  Free Software Foundation.
  *
+ *  <h3>Normaliz Library</h3>
+ *
+ *  Regina includes a copy of libnormaliz, which it uses to help with the
+ *  enumeration of fundamental normal surfaces.  Normaliz was written by
+ *  Winfried Bruns, Bogdan Ichim and Christof Soeger.  It is distributed
+ *  under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation, either version 3 of the License, or (at your
+ *  option) any later version.
+ *
  *  <h3>Orb Kernel</h3>
  *
  *  Regina includes snippets of code from Orb, for use in importing and
