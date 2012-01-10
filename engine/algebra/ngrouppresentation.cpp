@@ -694,13 +694,6 @@ bool NGroupPresentation::intelligentSimplify() {
  return changed;
 }
 
-bool isZeroVec(const std::vector<unsigned long> &V)
-{ 
- for (unsigned long i=0; i<V.size(); i++)
-   if (V[i] != 0) { return false; }
- return true;
-}
-
 // TODO: 1) recognise commutators and use that to our advantage. 
 //       recognise other advantageous small words ??
 //       random walks using score==0 substitutions??
