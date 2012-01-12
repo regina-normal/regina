@@ -198,7 +198,7 @@ int VertexModel::rowCount(const QModelIndex& parent) const {
     return (parent.isValid() ? 0 : tri->getNumberOfVertices());
 }
 
-int VertexModel::columnCount(const QModelIndex& parent) const {
+int VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
@@ -290,7 +290,7 @@ int EdgeModel::rowCount(const QModelIndex& parent) const {
     return (parent.isValid() ? 0 : tri->getNumberOfEdges());
 }
 
-int EdgeModel::columnCount(const QModelIndex& parent) const {
+int EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
@@ -366,7 +366,7 @@ int FaceModel::rowCount(const QModelIndex& parent) const {
     return (parent.isValid() ? 0 : tri->getNumberOfFaces());
 }
 
-int FaceModel::columnCount(const QModelIndex& parent) const {
+int FaceModel::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
@@ -460,7 +460,7 @@ int ComponentModel::rowCount(const QModelIndex& parent) const {
     return (parent.isValid() ? 0 : tri->getNumberOfComponents());
 }
 
-int ComponentModel::columnCount(const QModelIndex& parent) const {
+int ComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
@@ -530,7 +530,7 @@ int BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
     return (parent.isValid() ? 0 : tri->getNumberOfBoundaryComponents());
 }
 
-int BoundaryComponentModel::columnCount(const QModelIndex& parent) const {
+int BoundaryComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
