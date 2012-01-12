@@ -40,18 +40,17 @@
 #include "../patiencedialog.h"
 #include "../reginapart.h"
 
-#include <KActionCollection>
-#include <kapplication.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <kprogressdialog.h>
-#include <ktoolbar.h>
 #include <memory>
+#include <QAction>
+#include <QCoreApplication>
 #include <qfileinfo.h>
 #include <QHeaderView>
+#include <QMessageBox>
 #include <qlabel.h>
+#include <QProgressDialog>
 #include <qregexp.h>
 #include <QTableView>
+#include <QToolBar>
 #include <set>
 
 using regina::NPacket;
@@ -258,15 +257,15 @@ void GluingsModel::commitData(regina::NTriangulation* tri) {
 }
 
 QModelIndex GluingsModel::index(int row, int column,
-        const QModelIndex& parent) const {
+        const QModelIndex& /* unused parent*/) const {
     return createIndex(row, column, quint32(5 * row + column));
 }
 
-int GluingsModel::rowCount(const QModelIndex& parent) const {
+int GluingsModel::rowCount(const QModelIndex& /* unused parent*/) const {
     return nTet;
 }
 
-int GluingsModel::columnCount(const QModelIndex& parent) const {
+int GluingsModel::columnCount(const QModelIndex& /* unused parent*/) const {
     return 5;
 }
 
@@ -307,16 +306,16 @@ QVariant GluingsModel::headerData(int section, Qt::Orientation orientation,
         return QVariant();
 
     switch (section) {
-        case 0: return i18n("Tetrahedron");
-        case 1: return i18n("Face 012");
-        case 2: return i18n("Face 013");
-        case 3: return i18n("Face 023");
-        case 4: return i18n("Face 123");
+        case 0: return tr("Tetrahedron");
+        case 1: return tr("Face 012");
+        case 2: return tr("Face 013");
+        case 3: return tr("Face 023");
+        case 4: return tr("Face 123");
     }
     return QVariant();
 }
 
-Qt::ItemFlags GluingsModel::flags(const QModelIndex& index) const {
+Qt::ItemFlags GluingsModel::flags(const QModelIndex& /* unused index*/) const {
     if (isReadWrite_)
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
     else
@@ -324,7 +323,7 @@ Qt::ItemFlags GluingsModel::flags(const QModelIndex& index) const {
 }
 
 bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
-        int role) {
+        int /* unused role*/) {
     int tet = index.row();
     if (index.column() == 0) {
         QString newName = value.toString().trimmed();
@@ -351,7 +350,7 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         newAdjTet = -1;
     } else if (! reFaceGluing.exactMatch(text)) {
         // Bad string.
-        showError(i18n("<qt>The face gluing should be entered in the "
+        showError(tr("<qt>The face gluing should be entered in the "
             "form: <i>tet (face)</i>.  An example is <i>5 (032)</i>, "
             "which represents face 032 of tetrahedron 5.</qt>"));
         return false;
@@ -363,7 +362,7 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         // Check explicitly for a negative tetrahedron number
         // since isFaceStringValid() takes an unsigned integer.
         if (newAdjTet < 0 || newAdjTet >= nTet) {
-            showError(i18n("There is no tetrahedron number %1.").
+            showError(tr("There is no tetrahedron number %1.").
                 arg(newAdjTet));
             return false;
         }
@@ -443,22 +442,22 @@ QString GluingsModel::isFaceStringValid(unsigned long srcTet, int srcFace,
         unsigned long destTet, const QString& destFace,
         regina::NPerm4* gluing) {
     if (destTet >= nTet)
-        return i18n("There is no tetrahedron number %1.").arg(destTet);
+        return tr("There is no tetrahedron number %1.").arg(destTet);
 
     if (! reFace.exactMatch(destFace))
-        return i18n("<qt>%1 is not a valid tetrahedron face.  A tetrahedron "
+        return tr("<qt>%1 is not a valid tetrahedron face.  A tetrahedron "
             "face must be described by a sequence of three vertices, each "
             "between 0 and 3 inclusive.  An example is <i>032</i>.</qt>").
             arg(destFace);
 
     if (destFace[0] == destFace[1] || destFace[1] == destFace[2] ||
             destFace[2] == destFace[0])
-        return i18n("%1 is not a valid tetrahedron face.  The three vertices "
+        return tr("%1 is not a valid tetrahedron face.  The three vertices "
             "forming the face must be distinct.").arg(destFace);
 
     regina::NPerm4 foundGluing = faceStringToPerm(srcFace, destFace);
     if (srcTet == destTet && foundGluing[srcFace] == srcFace)
-        return i18n("A face cannot be glued to itself.");
+        return tr("A face cannot be glued to itself.");
 
     // It's valid!
     if (gluing)
@@ -468,9 +467,9 @@ QString GluingsModel::isFaceStringValid(unsigned long srcTet, int srcFace,
 }
 
 void GluingsModel::showError(const QString& message) {
-    // We should actually pass the view to KMessageBox, not 0, but we
+    // We should actually pass the view to QMessageBox, not 0, but we
     // don't have access to any widget from here...
-    KMessageBox::error(0 /* should be the view? */, message);
+    QMessageBox::warning(0 /* should be the view? */, tr("Error"), message);
 }
 
 QString GluingsModel::destString(int srcFace, int destTet,
@@ -514,7 +513,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         faceTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 
-    faceTable->setWhatsThis(i18n("<qt>A table specifying which tetrahedron "
+    faceTable->setWhatsThis(tr("<qt>A table specifying which tetrahedron "
         "faces are identified with which others.<p>"
         "Tetrahedra are numbered upwards from 0, and the four vertices of "
         "each tetrahedron are numbered 0, 1, 2 and 3.  Each row of the table "
@@ -542,28 +541,26 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     ui = faceTable;
 
     // Set up the triangulation actions.
-    KAction* sep;
+    QAction* sep;
 
-    triActions = new KActionCollection((QObject*)0);
-    //triActionList.setAutoDelete(true);
 
-    actAddTet = triActions->addAction("tri_add_tet");
-    actAddTet->setText(i18n("&Add Tet"));
+    actAddTet = new QAction(this);
+    actAddTet->setText(tr("&Add Tet"));
     actAddTet->setIcon(KIcon("edit-table-insert-row-below"));
-    actAddTet->setToolTip(i18n("Add a new tetrahedron"));
+    actAddTet->setToolTip(tr("Add a new tetrahedron"));
     actAddTet->setEnabled(readWrite);
-    actAddTet->setWhatsThis(i18n("Add a new tetrahedron to this "
+    actAddTet->setWhatsThis(tr("Add a new tetrahedron to this "
         "triangulation."));
     enableWhenWritable.append(actAddTet);
     triActionList.append(actAddTet);
     connect(actAddTet, SIGNAL(triggered()), this, SLOT(addTet()));
 
-    actRemoveTet = triActions->addAction("tri_remove_tet");
-    actRemoveTet->setText(i18n("&Remove Tet"));
+    actRemoveTet = new QAction(this);
+    actRemoveTet->setText(tr("&Remove Tet"));
     actRemoveTet->setIcon(KIcon("edit-table-delete-row"));
-    actRemoveTet->setToolTip(i18n("Remove the currently selected tetrahedra"));
+    actRemoveTet->setToolTip(tr("Remove the currently selected tetrahedra"));
     actRemoveTet->setEnabled(false);
-    actRemoveTet->setWhatsThis(i18n("Remove the currently selected "
+    actRemoveTet->setWhatsThis(tr("Remove the currently selected "
         "tetrahedra from this triangulation."));
     connect(actRemoveTet, SIGNAL(triggered()), this, SLOT(removeSelectedTets()));
     connect(faceTable->selectionModel(),
@@ -571,17 +568,17 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         this, SLOT(updateRemoveState()));
     triActionList.append(actRemoveTet);
 
-    sep = new KAction(triActions);
+    sep = new QAction(this);
     sep->setSeparator(true);
     triActionList.append(sep);
 
-    actSimplify = triActions->addAction("tri_simplify");
-    actSimplify->setText(i18n("&Simplify"));
+    actSimplify = new QAction(this);
+    actSimplify->setText(tr("&Simplify"));
     actSimplify->setIcon(KIcon("tools-wizard"));
-    actSimplify->setToolTip(i18n(
+    actSimplify->setToolTip(tr(
         "Simplify the triangulation as far as possible"));
     actSimplify->setEnabled(readWrite);
-    actSimplify->setWhatsThis(i18n("Simplify this triangulation to use fewer "
+    actSimplify->setWhatsThis(tr("Simplify this triangulation to use fewer "
         "tetrahedra without changing the underlying 3-manifold.  This "
         "triangulation will be modified directly.<p>"
         "Note that there is no guarantee that the smallest possible number of "
@@ -594,12 +591,12 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     enableWhenWritable.append(actSimplify);
     triActionList.append(actSimplify);
 
-    KAction* actEltMove = triActions->addAction("tri_elementary_move");
-    actEltMove->setText(i18n("&Elementary Move..."));
-    actEltMove->setToolTip(i18n(
+    QAction* actEltMove = new QAction(this); 
+    actEltMove->setText(tr("&Elementary Move..."));
+    actEltMove->setToolTip(tr(
         "Select an elementary move with which to modify the triangulation"));
     actEltMove->setEnabled(readWrite);
-    actEltMove->setWhatsThis(i18n("<qt>Perform an elementary move upon this "
+    actEltMove->setWhatsThis(tr("<qt>Perform an elementary move upon this "
         "triangulation.  <i>Elementary moves</i> are modifications local to "
         "a small number of tetrahedra that do not change the underlying "
         "3-manifold.<p>"
@@ -609,17 +606,17 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actEltMove);
     connect(actEltMove, SIGNAL(triggered()), this, SLOT(elementaryMove()));
 
-    sep = new KAction(triActions);
+    sep = new QAction(this);
     sep->setSeparator(true);
     triActionList.append(sep);
 
-    actOrient = triActions->addAction("tri_orient");
-    actOrient->setText(i18n("&Orient"));
+    actOrient = new QAction(this);
+    actOrient->setText(tr("&Orient"));
     actOrient->setIcon(KIcon("orient"));
-    actOrient->setToolTip(i18n(
+    actOrient->setToolTip(tr(
         "Relabel vertices of tetrahedra for consistent orientation"));
     actOrient->setEnabled(readWrite);
-    actOrient->setWhatsThis(i18n("<qt>Relabel the vertices of each tetrahedron "
+    actOrient->setWhatsThis(tr("<qt>Relabel the vertices of each tetrahedron "
         "so that all tetrahedra are oriented consistently, i.e., "
         "so that orientation is preserved across adjacent faces.<p>"
         "If this triangulation includes both orientable and non-orientable "
@@ -627,14 +624,13 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
-    KAction* actBarycentricSubdivide = triActions->addAction(
-        "tri_barycentric_subdivide");
-    actBarycentricSubdivide->setText(i18n("&Barycentric Subdivision"));
+    QAction* actBarycentricSubdivide = new QAction(this);
+    actBarycentricSubdivide->setText(tr("&Barycentric Subdivision"));
     actBarycentricSubdivide->setIcon(KIcon("barycentric"));
-    actBarycentricSubdivide->setToolTip(i18n(
+    actBarycentricSubdivide->setToolTip(tr(
         "Perform a barycentric subdivision"));
     actBarycentricSubdivide->setEnabled(readWrite);
-    actBarycentricSubdivide->setWhatsThis(i18n("Perform a barycentric "
+    actBarycentricSubdivide->setWhatsThis(tr("Perform a barycentric "
         "subdivision on this triangulation.  The triangulation will be "
         "changed directly.<p>"
         "This operation involves subdividing each tetrahedron into "
@@ -644,14 +640,14 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     connect(actBarycentricSubdivide, SIGNAL(triggered()), this,
         SLOT(barycentricSubdivide()));
 
-    KAction* actIdealToFinite = triActions->addAction("tri_ideal_to_finite");
-    actIdealToFinite->setText(i18n("&Truncate Ideal Vertices"));
+    QAction* actIdealToFinite = new QAction(this);
+    actIdealToFinite->setText(tr("&Truncate Ideal Vertices"));
     actIdealToFinite->setIcon(KIcon("finite"));
       
-    actIdealToFinite->setToolTip(i18n(
+    actIdealToFinite->setToolTip(tr(
         "Truncate any ideal vertices"));
     actIdealToFinite->setEnabled(readWrite);
-    actIdealToFinite->setWhatsThis(i18n("Convert this from an ideal "
+    actIdealToFinite->setWhatsThis(tr("Convert this from an ideal "
         "triangulation to a finite triangulation.  Any vertices whose "
         "links are neither 2-spheres nor discs "
         "will be truncated and converted into boundary faces.<p>"
@@ -663,13 +659,13 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actIdealToFinite);
     connect(actIdealToFinite, SIGNAL(triggered()), this, SLOT(idealToFinite()));
 
-    KAction* actFiniteToIdeal = triActions->addAction("tri_finite_to_ideal");
-    actFiniteToIdeal->setText(i18n("Make &Ideal"));
+    QAction* actFiniteToIdeal = new QAction(this);
+    actFiniteToIdeal->setText(tr("Make &Ideal"));
     actFiniteToIdeal->setIcon(KIcon("cone"));
-    actFiniteToIdeal->setToolTip(i18n(
+    actFiniteToIdeal->setToolTip(tr(
         "Convert real boundary components into ideal vertices"));
     actFiniteToIdeal->setEnabled(readWrite);
-    actFiniteToIdeal->setWhatsThis(i18n("Convert this from a finite "
+    actFiniteToIdeal->setWhatsThis(tr("Convert this from a finite "
         "triangulation to an ideal triangulation.  Each real boundary "
         "component (formed from two or more boundary faces) will be "
         "converted into a single ideal vertex.<p>"
@@ -681,13 +677,13 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actFiniteToIdeal);
     connect(actFiniteToIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
     
-    KAction* actDoubleCover = triActions->addAction("tri_double_cover");
-    actDoubleCover->setText(i18n("&Double Cover"));
+    QAction* actDoubleCover = new QAction(this); 
+    actDoubleCover->setText(tr("&Double Cover"));
     actDoubleCover->setIcon(KIcon("doublecover"));
-    actDoubleCover->setToolTip(i18n(
+    actDoubleCover->setToolTip(tr(
         "Convert the triangulation to its orientable double cover"));
     actDoubleCover->setEnabled(readWrite);
-    actDoubleCover->setWhatsThis(i18n("Convert a non-orientable "
+    actDoubleCover->setWhatsThis(tr("Convert a non-orientable "
         "triangulation into an orientable double cover.  This triangulation "
         "will be modified directly.<p>"
         "If this triangulation is already orientable, it will simply be "
@@ -696,16 +692,15 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actDoubleCover);
     connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
-    sep = new KAction(triActions);
+    sep = new QAction(this);
     sep->setSeparator(true);
     triActionList.append(sep);
 
-    KAction* actSplitIntoComponents = triActions->addAction(
-        "tri_split_into_components");
-    actSplitIntoComponents->setText(i18n("E&xtract Components"));
-    actSplitIntoComponents->setToolTip(i18n(
+    QAction* actSplitIntoComponents = new QAction(this);
+    actSplitIntoComponents->setText(tr("E&xtract Components"));
+    actSplitIntoComponents->setToolTip(tr(
         "Form a new triangulation for each disconnected component"));
-    actSplitIntoComponents->setWhatsThis(i18n("<qt>Split a disconnected "
+    actSplitIntoComponents->setWhatsThis(tr("<qt>Split a disconnected "
         "triangulation into its individual connected components.  This "
         "triangulation will not be changed &ndash; each "
         "connected component will be added as a new triangulation beneath "
@@ -716,13 +711,12 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     connect(actSplitIntoComponents, SIGNAL(triggered()), this,
         SLOT(splitIntoComponents()));
 
-    KAction* actConnectedSumDecomposition = triActions->addAction(
-        "tri_connected_sum_decomposition");
-    actConnectedSumDecomposition->setText(i18n("Co&nnected Sum Decomposition"));
+    QAction* actConnectedSumDecomposition = new QAction(this);
+    actConnectedSumDecomposition->setText(tr("Co&nnected Sum Decomposition"));
     actConnectedSumDecomposition->setIcon(KIcon("connsum"));
-    actConnectedSumDecomposition->setToolTip(i18n(
+    actConnectedSumDecomposition->setToolTip(tr(
         "Split into a connected sum of prime 3-manifolds"));
-    actConnectedSumDecomposition->setWhatsThis(i18n("Break this "
+    actConnectedSumDecomposition->setWhatsThis(tr("Break this "
         "triangulation down into a connected sum decomposition.  This "
         "triangulation will not be modified &ndash; the individual prime "
         "summands will be added as new triangulations beneath it in "
@@ -731,12 +725,12 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     connect(actConnectedSumDecomposition, SIGNAL(triggered()), this, 
         SLOT(connectedSumDecomposition()));
 
-    KAction* actZeroEff = triActions->addAction( "tri_make_zero_efficient");
-    actZeroEff->setText(i18n("Make &0-Efficient"));
-    actZeroEff->setToolTip(i18n(
+    QAction* actZeroEff = new QAction(this);
+    actZeroEff->setText(tr("Make &0-Efficient"));
+    actZeroEff->setToolTip(tr(
         "Convert this into a 0-efficient triangulation if possible"));
     actZeroEff->setEnabled(readWrite);
-    actZeroEff->setWhatsThis(i18n("<qt>Convert this into a 0-efficient "
+    actZeroEff->setWhatsThis(tr("<qt>Convert this into a 0-efficient "
         "triangulation of the same underlying 3-manifold, if possible.  "
         "This triangulation will be modified directly.<p>"
         "Note that this operation is currently available only for "
@@ -748,16 +742,16 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actZeroEff);
     connect(actZeroEff, SIGNAL(triggered()), this, SLOT(makeZeroEfficient()));
 
-    sep = new KAction(triActions);
+    sep = new QAction(this);
     sep->setSeparator(true);
     triActionList.append(sep);
 
-    KAction* actCensusLookup = triActions->addAction("tri_census_lookup");
-    actCensusLookup->setText(i18n("Census &Lookup"));
+    QAction* actCensusLookup = new QAction(this);
+    actCensusLookup->setText(tr("Census &Lookup"));
     actCensusLookup->setIcon(KIcon("edit-find"));
-    actCensusLookup->setToolTip(i18n(
+    actCensusLookup->setToolTip(tr(
         "Search for this triangulation in the configured list of censuses"));
-    actCensusLookup->setWhatsThis(i18n("Attempt to locate this "
+    actCensusLookup->setWhatsThis(tr("Attempt to locate this "
         "triangulation within the prepackaged censuses of 3-manifold "
         "triangulations that are shipped with Regina.<p>"
         "The list of censuses that are searched can be customised through "
@@ -772,16 +766,15 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
 NTriGluingsUI::~NTriGluingsUI() {
     // Make sure the actions, including separators, are all deleted.
-    delete triActions;
 
     delete model;
 }
 
-const QLinkedList<KAction*>& NTriGluingsUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& NTriGluingsUI::getPacketTypeActions() {
     return triActionList;
 }
 
-void NTriGluingsUI::fillToolBar(KToolBar* bar) {
+void NTriGluingsUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actAddTet);
     bar->addAction(actRemoveTet);
     bar->addSeparator();
@@ -816,7 +809,7 @@ void NTriGluingsUI::setReadWrite(bool readWrite) {
     else
         faceTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    QLinkedListIterator<KAction*> it(enableWhenWritable);
+    QLinkedListIterator<QAction*> it(enableWhenWritable);
     while (it.hasNext())
         (it.next())->setEnabled(readWrite);
 
@@ -833,8 +826,8 @@ void NTriGluingsUI::removeSelectedTets() {
     // Gather together all the tetrahedra to be deleted.
     QModelIndexList sel = faceTable->selectionModel()->selectedIndexes();
     if (sel.empty()) {
-        KMessageBox::error(ui, i18n(
-            "No tetrahedra are currently selected for removal."));
+        QMessageBox::warning(ui, tr("No tetrahedra selected"),
+            tr( "No tetrahedra are currently selected for removal."));
         return;
     }
 
@@ -854,13 +847,14 @@ void NTriGluingsUI::removeSelectedTets() {
     // Notify the user that tetrahedra will be removed.
     QString message;
     if (first == last)
-        message = i18n("1 tetrahedron (number %1) will be removed.  "
+        message = tr("1 tetrahedron (number %1) will be removed.  "
             "Are you sure?").arg(first);
     else
-        message = i18n("%1 tetrahedra (numbers %2 to %3) will be removed.  "
+        message = tr("%1 tetrahedra (numbers %2 to %3) will be removed.  "
             "Are you sure?").arg(last - first + 1).arg(first).arg(last);
 
-    if (KMessageBox::warningContinueCancel(ui, message) == KMessageBox::Cancel)
+    if ( QMessageBox::warning(ui,tr("Confirm removal"), message, 
+          QMessageBox::Ok|QMessageBox::Cancel) == QMessageBox::Cancel)
         return;
 
     // Off we go!
@@ -873,7 +867,7 @@ void NTriGluingsUI::simplify() {
         return;
 
     if (! tri->intelligentSimplify())
-        KMessageBox::sorry(ui, i18n(
+        QMessageBox::warning(ui, tr("Sorry"), tr(
             "The triangulation could not be simplified.  "
             "This does not mean that the triangulation is minimal; it "
             "simply means that I could not find a way of reducing it."));
@@ -881,8 +875,8 @@ void NTriGluingsUI::simplify() {
 
 void NTriGluingsUI::orient() {
     if (tri->isOriented()) {
-        KMessageBox::information(ui, i18n(
-            "This triangulation is already oriented."));
+        QMessageBox::information(ui, tr("Already oriented"), 
+            tr( "This triangulation is already oriented."));
         return;
     }
 
@@ -895,8 +889,8 @@ void NTriGluingsUI::orient() {
             break;
         }
     if (! hasOr) {
-        KMessageBox::sorry(ui, i18n(
-            "This triangulation has no orientable components, "
+        QMessageBox::warning(ui, tr("No orientable components"), 
+            tr( "This triangulation has no orientable components, "
             "and therefore cannot be oriented."));
         return;
     }
@@ -916,8 +910,8 @@ void NTriGluingsUI::idealToFinite() {
         return;
 
     if (tri->isValid() && ! tri->isIdeal())
-        KMessageBox::error(ui, i18n(
-            "This triangulation has no ideal vertices to truncate."));
+        QMessageBox::warning(ui, tr("No idea vertices"), 
+            tr("This triangulation has no ideal vertices to truncate."));
     else
         tri->idealToFinite();
 }
@@ -927,8 +921,8 @@ void NTriGluingsUI::finiteToIdeal() {
         return;
 
     if (! tri->hasBoundaryFaces())
-        KMessageBox::error(ui, i18n(
-            "This triangulation has no real boundary components to "
+        QMessageBox::warning(ui, tr("No real boundary components"),
+            tr("This triangulation has no real boundary components to "
             "convert into ideal vertices."));
     else
         tri->finiteToIdeal();
@@ -956,10 +950,12 @@ void NTriGluingsUI::splitIntoComponents() {
         return;
 
     if (tri->getNumberOfComponents() == 0)
-        KMessageBox::information(ui, i18n("This triangulation is empty "
+        QMessageBox::information(ui, tr("Triangulation is empty"),
+            tr("This triangulation is empty "
             "and therefore has no components."));
     else if (tri->getNumberOfComponents() == 1)
-        KMessageBox::information(ui, i18n("This triangulation is connected "
+        QMessageBox::information(ui, tr("Triangulation is connected"),
+            tr("This triangulation is connected "
             "and therefore has only one component."));
     else {
         // If there are already children of this triangulation, insert
@@ -981,7 +977,8 @@ void NTriGluingsUI::splitIntoComponents() {
             base->getFirstTreeChild());
 
         // Tell the user what happened.
-        KMessageBox::information(ui, i18n("%1 components were extracted.").
+        QMessageBox::information(ui, tr("Extraction details"),
+            tr("%1 components were extracted.").
             arg(nComps));
     }
 }
@@ -993,14 +990,16 @@ void NTriGluingsUI::connectedSumDecomposition() {
         return;
 
     if (tri->getNumberOfTetrahedra() == 0)
-        KMessageBox::information(ui, i18n("This triangulation is empty."));
+        QMessageBox::information(ui, tr("Empty triangulation"),
+            tr("This triangulation is empty."));
     else if (! (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
             tri->isConnected()))
-        KMessageBox::sorry(ui, i18n("Connected sum decomposition is "
+        QMessageBox::warning(ui, tr("Not available"), 
+            tr("Connected sum decomposition is "
             "currently only available for closed orientable connected "
             "3-manifold triangulations."));
     else {
-        std::auto_ptr<PatienceDialog> dlg(PatienceDialog::warn(i18n(
+        std::auto_ptr<PatienceDialog> dlg(PatienceDialog::warn(tr(
             "Connected sum decomposition can be quite\n"
             "slow for larger triangulations.\n\n"
             "Please be patient."), ui));
@@ -1022,7 +1021,8 @@ void NTriGluingsUI::connectedSumDecomposition() {
         // Let the user know what happened.
         dlg.reset();
         if (nSummands == 0)
-            KMessageBox::information(ui, i18n("This triangulation represents "
+            QMessageBox::information(ui, tr("3-sphere"), 
+                tr("This triangulation represents "
                 "a 3-sphere, and has no prime summands at all."));
         else {
             // There is at least one new summand triangulation.
@@ -1031,12 +1031,14 @@ void NTriGluingsUI::connectedSumDecomposition() {
                 base->getLastTreeChild());
 
             if (nSummands == 1)
-                KMessageBox::information(ui, i18n("This is a prime 3-manifold "
+                QMessageBox::information(ui, tr("Prime 3-manifold"),
+                    tr("This is a prime 3-manifold "
                     "triangulation.  It cannot be decomposed any further.\n"
                     "A new 0-efficient triangulation of this prime 3-manifold "
                     "has been constructed."));
             else
-                KMessageBox::information(ui, i18n("The triangulation was "
+                QMessageBox::information(ui, tr("Decomposition complete"),
+                    tr("The triangulation was "
                     "broken down into %1 prime summands.").arg(nSummands));
         }
     }
@@ -1048,19 +1050,21 @@ void NTriGluingsUI::makeZeroEfficient() {
 
     unsigned long initTets = tri->getNumberOfTetrahedra();
     if (initTets == 0) {
-        KMessageBox::information(ui, i18n("This triangulation is empty."));
+        QMessageBox::information(ui, tr("Empty triangulation"),
+            tr("This triangulation is empty."));
         return;
     }
 
     if (! (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
             tri->isConnected())) {
-        KMessageBox::sorry(ui, i18n("0-efficiency reduction is "
+        QMessageBox::warning(ui, tr("Not currently available"),
+            tr("0-efficiency reduction is "
             "currently only available for closed orientable connected "
             "3-manifold triangulations."));
         return;
     }
 
-    std::auto_ptr<PatienceDialog> dlg(PatienceDialog::warn(i18n(
+    std::auto_ptr<PatienceDialog> dlg(PatienceDialog::warn(tr(
         "0-efficiency reduction can be quite\n"
         "slow for larger triangulations.\n\n"
         "Please be patient."), ui));
@@ -1082,7 +1086,8 @@ void NTriGluingsUI::makeZeroEfficient() {
         enclosingPane->getPart()->ensureVisibleInTree(
             decomp->getLastTreeChild());
 
-        KMessageBox::sorry(ui, i18n("This is a composite 3-manifold "
+        QMessageBox::warning(ui, tr("Composite triangulation detected"),
+            tr("This is a composite 3-manifold "
             "triangulation, which means it cannot be made 0-efficient.  "
             "A connected sum decomposition into prime summands has been "
             "extracted (without modifying this triangulation)."));
@@ -1097,18 +1102,21 @@ void NTriGluingsUI::makeZeroEfficient() {
                     tri->getHomologyH1().getNumberOfInvariantFactors() == 1) {
                 // RP3.
                 if (finalTets < initTets)
-                    KMessageBox::information(ui, i18n("<qt>The 3-manifold "
+                    QMessageBox::information(ui, tr("Result"),
+                        tr("<qt>The 3-manifold "
                         "RP<sup>3</sup> does not have a 0-efficient "
                         "triangulation.  This triangulation has instead "
                         "been converted to a minimal two-tetrahedron "
                         "triangulation of RP<sup>3</sup>.</qt>"));
                 else if (orig->isIsomorphicTo(*tri).get())
-                    KMessageBox::information(ui, i18n("<qt>The 3-manifold "
+                    QMessageBox::information(ui, tr("Result"), 
+                        tr("<qt>The 3-manifold "
                         "RP<sup>3</sup> does not have a 0-efficient "
                         "triangulation.  This triangulation has been "
                         "left unchanged.</qt>"));
                 else
-                    KMessageBox::information(ui, i18n("<qt>The 3-manifold "
+                    QMessageBox::information(ui, tr("Result"), 
+                        tr("<qt>The 3-manifold "
                         "RP<sup>3</sup> does not have a 0-efficient "
                         "triangulation.  This triangulation has instead been "
                         "converted to a one-vertex minimal triangulation "
@@ -1119,14 +1127,16 @@ void NTriGluingsUI::makeZeroEfficient() {
                     tri->getHomologyH1().getNumberOfInvariantFactors() == 0) {
                 // S2xS1.
                 if (finalTets < initTets)
-                    KMessageBox::information(ui, i18n("<qt>The 3-manifold "
+                    QMessageBox::information(ui, tr("Result"),
+                        tr("<qt>The 3-manifold "
                         "S<sup>2</sup> x S<sup>1</sup> does not have "
                         "a 0-efficient triangulation.  This triangulation has "
                         "instead been converted to a minimal two-tetrahedron "
                         "triangulation of "
                         "S<sup>2</sup> x S<sup>1</sup>.</qt>"));
                 else
-                    KMessageBox::information(ui, i18n("<qt>The 3-manifold "
+                    QMessageBox::information(ui, tr("Result"),
+                        tr("<qt>The 3-manifold "
                         "S<sup>2</sup> x S<sup>1</sup> does not have "
                         "a 0-efficient triangulation.  This triangulation has "
                         "been left unchanged.</qt>"));
@@ -1143,7 +1153,8 @@ void NTriGluingsUI::makeZeroEfficient() {
         }
 
         if (finalTets == initTets)
-            KMessageBox::information(ui, i18n("This triangulation is already "
+            QMessageBox::information(ui, tr("Result"),
+                tr("This triangulation is already "
                 "0-efficient.  No changes are necessary."));
     }
 }
@@ -1155,28 +1166,30 @@ void NTriGluingsUI::censusLookup() {
         return;
 
     // Run through each census file.
-    KProgressDialog* progress =
-        new KProgressDialog(ui, i18n("Census Lookup"),
-        i18n("Initialising"));
-    progress->progressBar()->setMinimum(0);
-    progress->progressBar()->setMaximum(censusFiles.size() + 1);
+    QProgressDialog *progress = new QProgressDialog(ui);
+    progress->setWindowTitle(tr("Census Lookup"));
+    progress->setLabelText(tr("Initialising"));
+    
+    progress->setMinimum(0);
+    progress->setMaximum(censusFiles.size() + 1);
     progress->show();
-    KApplication::kApplication()->processEvents();
+    
+    QCoreApplication::instance()->processEvents();
 
     QVector<CensusHit> results;
-    QString searched = i18n("The following censuses were searched:");
+    QString searched = tr("The following censuses were searched:");
     NPacket* census;
     NPacket* p;
     for (ReginaFilePrefList::const_iterator it = censusFiles.begin();
             it != censusFiles.end(); it++) {
-        progress->progressBar()->setValue(progress->progressBar()->value()+1);
-        KApplication::kApplication()->processEvents();
+        progress->setValue(progress->value()+1);
+        QCoreApplication::instance()->processEvents();
 
         // Check for cancellation.
-        if (progress->wasCancelled()) {
+        if (progress->wasCanceled()) {
             delete progress;
-            KMessageBox::information(ui,
-                i18n("The census lookup was cancelled."));
+            QMessageBox::information(ui,tr("Cancelled"),
+                tr("The census lookup was cancelled."));
             return;
         }
 
@@ -1184,13 +1197,14 @@ void NTriGluingsUI::censusLookup() {
             continue;
 
         // Process this census file.
-        progress->setLabelText(i18n("Searching %1...").arg((*it).filename));
-        KApplication::kApplication()->processEvents();
+        progress->setLabelText(tr("Searching %1...").arg((*it).filename));
+        QCoreApplication::instance()->processEvents();
 
         census = regina::readFileMagic(
             static_cast<const char*>(it->encodeFilename()));
         if (! census) {
-            KMessageBox::error(ui, i18n("The census data file %1 "
+            QMessageBox::warning(ui, tr("Could not read census data"),
+                tr("The census data file %1 "
                 "could not be read.\nYou might consider temporarily "
                 "disabling this file in the census settings.").
                 arg((*it).filename));
@@ -1208,35 +1222,41 @@ void NTriGluingsUI::censusLookup() {
         searched = searched + '\n' + (*it).filename;
     }
 
-    progress->progressBar()->setValue(progress->progressBar()->value()+1);
+    progress->setValue(progress->value()+1);
     delete progress;
-    KApplication::kApplication()->processEvents();
+    QCoreApplication::instance()->processEvents();
 
     // Were there any hits?
-    if (results.empty())
-        KMessageBox::detailedSorry(ui, i18n("The triangulation could not "
+    if (results.empty()) {
+        // Qt doesn't have a static QMessageBox::warning type function
+        // that also shows the "Details" button.
+        QMessageBox *details = new QMessageBox(ui);
+        details->setIcon(QMessageBox::Warning);
+        details->setText(tr("The triangulation could not "
             "be found in any of the available censuses.\n"
             "You can add more censuses to this search list through the "
-            "census settings."),
-            searched, i18n("No matches"));
-    else {
-        QString detailsText = i18n("Identified by census lookup:");
-        QString detailsHTML = i18n("<qt>The triangulation was identified:");
+            "census settings."));
+        details->setWindowTitle("No matches");
+        details->setDetailedText(searched);
+        details->exec();
+    } else {
+        QString detailsText = tr("Identified by census lookup:");
+        QString detailsHTML = tr("<qt>The triangulation was identified:");
         QString censusName;
         for (QVector<CensusHit>::const_iterator it = results.begin();
                 it != results.end(); it++) {
             censusName = QFileInfo((*it).censusFile).fileName();
-            detailsHTML += i18n("<p>Name: %1<br>Census: %2").
+            detailsHTML += tr("<p>Name: %1<br>Census: %2").
                 arg((*it).triName).arg(censusName);
-            detailsText += i18n("\n\nName: %1\nCensus: %2").
+            detailsText += tr("\n\nName: %1\nCensus: %2").
                 arg((*it).triName).arg(censusName);
         }
         detailsHTML += "</qt>";
 
         // Show the hits to the user.
-        KMessageBox::information(ui, detailsHTML,
-            (results.size() == 1 ? i18n("1 match found") :
-                i18n("%1 matches found").arg(results.size())));
+        QMessageBox::information(ui, (results.size() == 1 ? tr("1 match found") :
+                tr("%1 matches found").arg(results.size())),
+                detailsHTML);
 
         // If we're in read-write mode, store the hits as a text packet
         // also.

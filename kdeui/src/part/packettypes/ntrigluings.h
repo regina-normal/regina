@@ -39,10 +39,8 @@
 
 #include <QAbstractItemModel>
 
-class KAction;
-class KActionCollection;
-class KToolBar;
 class QTableView;
+class QToolBar;
 
 namespace regina {
     class NPacket;
@@ -160,13 +158,12 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Gluing actions
          */
-        KAction* actAddTet;
-        KAction* actRemoveTet;
-        KAction* actSimplify;
-        KAction* actOrient;
-        KActionCollection* triActions;
-        QLinkedList<KAction*> triActionList;
-        QLinkedList<KAction*> enableWhenWritable;
+        QAction* actAddTet;
+        QAction* actRemoveTet;
+        QAction* actSimplify;
+        QAction* actOrient;
+        QLinkedList<QAction*> triActionList;
+        QLinkedList<QAction*> enableWhenWritable;
 
         /**
          * Preferences
@@ -189,7 +186,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          * this page, but this page (as the editor) keeps track of the
          * available actions.
          */
-        void fillToolBar(KToolBar* bar);
+        void fillToolBar(QToolBar* bar);
 
         /**
          * Update the preferences.
