@@ -34,7 +34,7 @@
 #ifndef __EXPORTDIALOG_H
 #define __EXPORTDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 class PacketChooser;
 class PacketFilter;
@@ -46,7 +46,7 @@ namespace regina {
 /**
  * A dialog used to select a packet or packet subtree to export.
  */
-class ExportDialog : public KDialog {
+class ExportDialog : public QDialog {
     Q_OBJECT
 
     private:

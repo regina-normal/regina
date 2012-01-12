@@ -32,10 +32,12 @@
 #include "../packetchooser.h"
 #include "../packetfilter.h"
 
+#include <QDialogButtonBox>
 #include <qframe.h>
 #include <QHBoxLayout>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <QMessageBox>
 #include <qwhatsthis.h>
 
 ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
@@ -43,13 +45,12 @@ ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
         const QString& dialogTitle) :
         QDialog(parent),
         tree(packetTree), chosenPacket(0) {
-    setCaption(dialogTitle);
-    buttonBox = new QDialogButtonBox(
+    setWindowTitle(dialogTitle);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel,Qt::Horizontal,this);
     connect(buttonBox,SIGNAL(accepted()), this, SLOT(slotOk()));
 
     QWidget* page = new QWidget(this);
-    setMainWidget(page);
     QVBoxLayout* layout = new QVBoxLayout(page);
     layout->setContentsMargins(0, 0, 0, 0); // Margins come from the dialog.
 
