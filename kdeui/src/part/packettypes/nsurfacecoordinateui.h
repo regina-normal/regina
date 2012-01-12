@@ -40,10 +40,9 @@
 #include "coordinates.h"
 
 #include <QAbstractItemModel>
+#include <QAction>
 
 class CoordinateChooser;
-class KAction;
-class KActionCollection;
 class PacketChooser;
 class QTreeView;
 
@@ -157,10 +156,9 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         /**
          * Surface list actions
          */
-        KAction* actCutAlong;
-        KAction* actCrush;
-        KActionCollection* surfaceActions;
-        QLinkedList<KAction*> surfaceActionList;
+        QAction* actCutAlong;
+        QAction* actCrush;
+        QLinkedList<QAction*> surfaceActionList;
 
         /**
          * Internal status

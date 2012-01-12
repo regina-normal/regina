@@ -131,11 +131,11 @@ QModelIndex SurfaceModel::index(int row, int column,
         quint32(columnCount(parent) * row + column));
 }
 
-int SurfaceModel::rowCount(const QModelIndex& parent) const {
+int SurfaceModel::rowCount(const QModelIndex& /* unused parent*/) const {
     return nFiltered;
 }
 
-int SurfaceModel::columnCount(const QModelIndex& parent) const {
+int SurfaceModel::columnCount(const QModelIndex& /* unused parent*/) const {
     return propertyColCount() +
         Coordinates::numColumns(coordSystem_, surfaces_->getTriangulation());
 }
@@ -535,10 +535,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     connect(table->header(), SIGNAL(sectionResized(int, int, int)),
         this, SLOT(columnResized(int, int, int)));
 
-    // Set up the surface list actions.
-    surfaceActions = new KActionCollection((QObject*)0);
-
-    actCutAlong = surfaceActions->addAction("surface_cutalong");
+    actCutAlong = new QAction(this);
     actCutAlong->setText(i18n("Cu&t Along Surface"));
     actCutAlong->setToolTip(i18n("Cut the triangulation along the "
         "selected surface"));
@@ -555,7 +552,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     connect(actCutAlong, SIGNAL(triggered()), this, SLOT(cutAlong()));
     surfaceActionList.append(actCutAlong);
 
-    actCrush = surfaceActions->addAction("surface_crush");
+    actCrush = new QAction(this);
     actCrush->setText("Crus&h Surface");
     actCrush->setToolTip(i18n("Crush the selected surface to a point"));
     actCrush->setEnabled(false);
@@ -584,12 +581,11 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
 NSurfaceCoordinateUI::~NSurfaceCoordinateUI() {
     // Make sure the actions, including separators, are all deleted.
     surfaceActionList.clear();
-    delete surfaceActions;
 
     delete model;
 }
 
-const QLinkedList<KAction*>& NSurfaceCoordinateUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& NSurfaceCoordinateUI::getPacketTypeActions() {
     return surfaceActionList;
 }
 
