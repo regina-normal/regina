@@ -101,7 +101,7 @@ NTriangulationUI::~NTriangulationUI() {
     delete editIface;
 }
 
-const QLinkedList<KAction*>& NTriangulationUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& NTriangulationUI::getPacketTypeActions() {
     return gluings->getPacketTypeActions();
 }
 
