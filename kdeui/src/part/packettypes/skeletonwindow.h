@@ -277,7 +277,7 @@ inline void SkeletalModel::rebuild() {
 }
 
 inline QModelIndex SkeletalModel::index(int row, int column,
-        const QModelIndex& parent) const {
+        const QModelIndex& /* unused parent */) const {
     return createIndex(row, column, quint32(4 * row + column));
 }
 

@@ -238,7 +238,7 @@ inline int SurfaceModel::coordSystem() const {
     return coordSystem_;
 }
 
-inline QModelIndex SurfaceModel::parent(const QModelIndex& index) const {
+inline QModelIndex SurfaceModel::parent(const QModelIndex& /* unused index*/) const {
     // All items are top-level.
     return QModelIndex();
 }

@@ -140,7 +140,7 @@ inline regina::NNormalSurfaceList* MatchingModel::surfaces() const {
 }
 
 inline QModelIndex MatchingModel::index(int row, int column,
-        const QModelIndex& parent) const {
+        const QModelIndex& /* unused parent */) const {
     if (eqns_.get())
         return createIndex(row, column,
             quint32(eqns_->columns() * row + column));
@@ -148,7 +148,7 @@ inline QModelIndex MatchingModel::index(int row, int column,
         return createIndex(row, column, quint32(0));
 }
 
-inline QModelIndex MatchingModel::parent(const QModelIndex& index) const {
+inline QModelIndex MatchingModel::parent(const QModelIndex& /* unused index */) const {
     // All items are top-level.
     return QModelIndex();
 }
