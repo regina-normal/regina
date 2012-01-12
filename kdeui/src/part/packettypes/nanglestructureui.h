@@ -142,11 +142,11 @@ inline regina::NAngleStructureList* AngleModel::structures() const {
 }
 
 inline QModelIndex AngleModel::index(int row, int column,
-        const QModelIndex& parent) const {
+        const QModelIndex& /* unused parent */) const {
     return createIndex(row, column, quint32((nCoords + 1) * row + column));
 }
 
-inline QModelIndex AngleModel::parent(const QModelIndex& index) const {
+inline QModelIndex AngleModel::parent(const QModelIndex& /* unused index */) const {
     // All items are top-level.
     return QModelIndex();
 }

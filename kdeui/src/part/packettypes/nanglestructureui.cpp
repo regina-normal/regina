@@ -53,11 +53,11 @@ void AngleModel::rebuild() {
     reset();
 }
 
-int AngleModel::rowCount(const QModelIndex& parent) const {
+int AngleModel::rowCount(const QModelIndex& /* unused parent */) const {
     return structures_->getNumberOfStructures();
 }
 
-int AngleModel::columnCount(const QModelIndex& parent) const {
+int AngleModel::columnCount(const QModelIndex& /* unused parent */) const {
     return nCoords + 1;
 }
 
