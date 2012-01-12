@@ -35,16 +35,12 @@
 
 #include "../packetui.h"
 
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <QProcess>
 #include <QStackedWidget>
+#include <QUrl>
 
 class QWidgetStack;
-class KProcess;
-
-namespace KParts {
-    class ReadOnlyPart;
-};
 
 namespace regina {
     class NPacket;
@@ -68,7 +64,7 @@ class NPDFUI : public QObject, public PacketReadOnlyUI {
         /**
          * Temporary PDF storage
          */
-        KTemporaryFile temp;
+        QTemporaryFile temp;
 
         /**
          * Internal components
@@ -88,8 +84,8 @@ class NPDFUI : public QObject, public PacketReadOnlyUI {
          * command-line \a cmd, and \a runPid is used for a "native"
          * file-open using KRun.
          */
-        KParts::ReadOnlyPart* viewer;
-        KProcess* proc;
+        //KParts::ReadOnlyPart* viewer;
+        QProcess* proc;
         QString cmd;
         pid_t runPid;
 
