@@ -58,14 +58,13 @@ class NTextUI : public QObject, public PacketUI {
          * Internal components
          */
         QPlainTextEdit* document;
-        PacketEditIface* editIface;
+        //PacketEditIface* editIface;
 
     public:
         /**
          * Constructor and destructor.
          */
-        NTextUI(regina::NText* packet, PacketPane* newEnclosingPane,
-                QPlainTextEdit* doc);
+        NTextUI(regina::NText* packet, PacketPane* newEnclosingPane);
         ~NTextUI();
 
         /**
@@ -73,7 +72,7 @@ class NTextUI : public QObject, public PacketUI {
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
-        PacketEditIface* getEditIface();
+        //PacketEditIface* getEditIface();
         QString getPacketMenuText() const;
         void commit();
         void refresh();
@@ -86,8 +85,8 @@ class NTextUI : public QObject, public PacketUI {
         void notifyTextChanged();
 };
 
-inline PacketEditIface* NTextUI::getEditIface() {
-    return editIface;
-}
+//inline PacketEditIface* NTextUI::getEditIface() {
+//    return editIface;
+//}
 
 #endif

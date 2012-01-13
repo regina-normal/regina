@@ -35,28 +35,18 @@
 
 #include <cstring>
 #include <sstream>
-#include <klocale.h>
-#include <ktexteditor/configinterface.h>
-#include <ktexteditor/document.h>
-#include <ktexteditor/view.h>
+#include <QPlainTextEdit>
 
 using regina::NPacket;
 using regina::NText;
 
-NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
-        KTextEditor::Document* doc) :
-        PacketUI(enclosingPane), text(packet), document(doc) {
-    // Create a view (which must be parented) before we do anything else.
-    // Otherwise the Vim component crashes.
-    view = document->createView(enclosingPane);
-    document->setReadWrite(enclosingPane->isReadWrite());
+NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane) :
+        PacketUI(enclosingPane), text(packet) {
 
-    KTextEditor::ConfigInterface *iface =
-        qobject_cast<KTextEditor::ConfigInterface*>(view);
-    if (iface)
-        iface->setConfigValue("dynamic-word-wrap",true);
-
-    editIface = new PacketEditTextEditor(view);
+    document = new QPlainTextEdit(enclosingPane);
+    document->setReadOnly(!enclosingPane->isReadWrite());
+    document->setLineWrapMode(QPlainTextEdit::NoWrap);
+//    editIface = new PacketEditTextEditor(view);
 
     refresh();
 
@@ -65,7 +55,7 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane,
 }
 
 NTextUI::~NTextUI() {
-    delete editIface;
+//    delete editIface;
     delete document;
 }
 
@@ -73,25 +63,25 @@ NPacket* NTextUI::getPacket() {
     return text;
 }
 
-QWidget* NTextUI::getInterface() {
-    return view;
-}
+//QWidget* NTextUI::getInterface() {
+//    return view;
+//}
 
 QString NTextUI::getPacketMenuText() const {
-    return i18n("Te&xt");
+    return tr("Te&xt");
 }
 
 void NTextUI::commit() {
-    text->setText(document->text().toAscii().constData());
+    text->setText(document->toPlainText().toAscii().constData());
     setDirty(false);
 }
 
 void NTextUI::refresh() {
     // A kate part needs to be in read-write mode before we can alter its
     // contents.
-    bool wasReadWrite = document->isReadWrite();
-    if (! wasReadWrite)
-        document->setReadWrite(true);
+//    bool wasReadWrite = document->isReadWrite();
+//    if (! wasReadWrite)
+//        document->setReadWrite(true);
 
     document->clear();
 
@@ -104,18 +94,18 @@ void NTextUI::refresh() {
         if (data[data.length() - 1] == '\n')
             data.truncate(data.length() - 1);
 
-        document->setText(data);
-        document->views().front()->setCursorPosition(KTextEditor::Cursor(0, 0));
+        document->setPlainText(data);
+        document->moveCursor(QTextCursor::Start);
     }
 
-    if (! wasReadWrite)
-        document->setReadWrite(false);
+//    if (! wasReadWrite)
+//        document->setReadWrite(false);
 
     setDirty(false);
 }
 
 void NTextUI::setReadWrite(bool readWrite) {
-    document->setReadWrite(readWrite);
+    document->setReadOnly(!readWrite);
 }
 
 void NTextUI::notifyTextChanged() {
