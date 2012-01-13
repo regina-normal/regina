@@ -28,34 +28,31 @@
 
 #include "patiencedialog.h"
 
-#include <kapplication.h>
-#include <kiconloader.h>
-#include <klocale.h>
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QApplication>
+#include <QLabel>
+#include <QLayout>
+#include <QPixmap>
 
 PatienceDialog* PatienceDialog::warn(const QString& message,
         QWidget* parent) {
     PatienceDialog* dlg = new PatienceDialog(message, parent);
     dlg->show();
-
-    KApplication::kApplication()->processEvents();
+    
+    QApplication::instance()->processEvents();
 
     return dlg;
 }
 
 PatienceDialog::PatienceDialog(const QString& message, QWidget* parent) :
-        KDialog(parent, Qt::Dialog) {
-    setCaption(i18n("Please Wait"));
+        QDialog(parent, Qt::Dialog) {
+    setWindowTitle(tr("Please Wait"));
     setModal(0);
-    setButtons(None);
 
     QWidget* page = new QWidget(this);
-    setMainWidget(page);
     QHBoxLayout* layout = new QHBoxLayout(page);
 
     QLabel* clock = new QLabel(page);
-    clock->setPixmap(UserIcon("patience"));
+    clock->setPixmap(QPixmap("patience"));
     clock->setAlignment(Qt::AlignHCenter);
     layout->addWidget(clock);
 
