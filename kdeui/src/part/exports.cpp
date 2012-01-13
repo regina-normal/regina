@@ -39,12 +39,6 @@
 #include "foreign/sourcehandler.h"
 #include "reginafilter.h"
 
-//#include <kencodingfiledialog.h>
-//#include <kfiledialog.h>
-//#include <klocale.h>
-//#include <kmessagebox.h>
-//#include <qtextcodec.h>
-
 #include <QFileDialog>
 
 void ReginaPart::exportCSVSurfaceList() {

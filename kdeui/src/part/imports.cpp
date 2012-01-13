@@ -40,11 +40,6 @@
 #include "foreign/snappeahandler.h"
 #include "reginafilter.h"
 
-//#include <kencodingfiledialog.h>
-//#include <kfiledialog.h>
-//#include <klocale.h>
-//#include <qtextcodec.h>
-
 #include <QFileDialog>
 
 void ReginaPart::importDehydration() {
