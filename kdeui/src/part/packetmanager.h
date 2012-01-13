@@ -34,15 +34,13 @@
 #ifndef __PACKETMANAGER_H
 #define __PACKETMANAGER_H
 
-#include <qimage.h>
-#include <qpixmap.h>
+#include <QImage>
+#include <QPixmap>
 
 class PacketPane;
 class PacketUI;
 
-namespace KTextEditor {
-    class Document;
-};
+class QPlainTextEdit;
 
 namespace regina {
     class NPacket;
@@ -105,9 +103,9 @@ class PacketManager {
         static QString iconName(regina::NPacket* packet);
 
         /**
-         * Create a new KTextEditor::Document through a KTrader query.
+         * Create a new QPlainText object.
          */
-        static KTextEditor::Document* createDocument(QObject* parent);
+        static QPlainTextEdit* createDocument(QWidget* parent);
 };
 
 #endif

@@ -43,15 +43,9 @@
 #include "packettypes/ntextui.h"
 #include "packettypes/ntriangulationui.h"
 
-#include <kglobal.h>
-#include <kiconeffect.h>
-#include <kiconloader.h>
-#include <kicontheme.h>
-#include <klibloader.h>
-#include <klocale.h>
-#include <ktexteditor/document.h>
-#include <ktexteditor/editorchooser.h>
-//#include <kuserprofile.h>
+#include <QPainter>
+#include <QPixmap>
+#include <QPlainTextEdit>
 
 using namespace regina;
 
@@ -64,12 +58,20 @@ QPixmap PacketManager::iconSmall(NPacket* packet, bool allowLock) {
     if (name.isNull())
         return QPixmap();
 
-    QStringList overlays;
-    if (allowLock && ! packet->isPacketEditable())
-        overlays << "emblem-locked";
 
-    return KIconLoader::global()->loadIcon(name, KIconLoader::Small, 0,
-        KIconLoader::DefaultState, overlays);
+    // TODO Does this work? emblem-locked and emblem aren't in the latest 
+    // freedesktop spec.
+    if (allowLock && ! packet->isPacketEditable()) {
+        QPixmap overlay = QIcon::fromTheme("emblem-locked").pixmap(16,16);
+        QPixmap icon = QIcon::fromTheme(name).pixmap(16,16);
+        QPixmap *result = new QPixmap(icon.width(),icon.height());
+        result->fill(Qt::transparent);
+        QPainter painter(result);
+        painter.drawPixmap(0,0,icon);
+        painter.drawPixmap(0,0,overlay);
+        return *result; 
+    }
+    return QIcon::fromTheme(name).pixmap(16,16);
 }
 
 QPixmap PacketManager::iconBar(NPacket* packet, bool allowLock) {
@@ -77,12 +79,19 @@ QPixmap PacketManager::iconBar(NPacket* packet, bool allowLock) {
     if (name.isNull())
         return QPixmap();
 
-    QStringList overlays;
-    if (allowLock && ! packet->isPacketEditable())
-        overlays << "locked";
-
-    return KIconLoader::global()->loadIcon(name, KIconLoader::Toolbar, 0,
-        KIconLoader::DefaultState, overlays);
+    // TODO Sizes here. KDE says "use KIconLoader::Toolbar size" but I cannot
+    // find a reference to what size that is, so using 16x16
+    if (allowLock && ! packet->isPacketEditable()) {
+        QPixmap overlay = QIcon::fromTheme("locked").pixmap(16,16);
+        QPixmap icon = QIcon::fromTheme(name).pixmap(16,16);
+        QPixmap *result = new QPixmap(icon.width(),icon.height());
+        result->fill(Qt::transparent);
+        QPainter painter(result);
+        painter.drawPixmap(0,0,icon);
+        painter.drawPixmap(0,0,overlay);
+        return *result; 
+    }
+    return QIcon::fromTheme(name).pixmap(16,16); 
 }
 
 PacketUI* PacketManager::createUI(regina::NPacket* packet,
@@ -99,14 +108,14 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     if (packet->getPacketType() == NPDF::packetType)
         return new NPDFUI(dynamic_cast<NPDF*>(packet), enclosingPane);
     if (packet->getPacketType() == NScript::packetType) {
-        KTextEditor::Document* doc = createDocument(enclosingPane);
+        QPlainTextEdit* doc = createDocument(enclosingPane);
         if (doc)
             return new NScriptUI(dynamic_cast<NScript*>(packet),
                 enclosingPane, doc);
         else
             return new ErrorPacketUI(packet, enclosingPane,
-                i18n("An appropriate text editor component could not "
-                "be found."));
+                enclosingPane->tr("An appropriate text editor component "
+                  "could not be found."));
     }
     if (packet->getPacketType() == NSurfaceFilter::packetType) {
         if (((NSurfaceFilter*)packet)->getFilterID() ==
@@ -122,13 +131,13 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
         return new DefaultPacketUI(packet, enclosingPane);
     }
     if (packet->getPacketType() == NText::packetType) {
-        KTextEditor::Document* doc = createDocument(enclosingPane);
+        QPlainTextEdit* doc = createDocument(enclosingPane);
         if (doc)
             return new NTextUI(dynamic_cast<NText*>(packet),
                 enclosingPane, doc);
         else
             return new ErrorPacketUI(packet, enclosingPane,
-                i18n("An appropriate text editor component\n"
+                enclosingPane->tr("An appropriate text editor component\n"
                 "could not be found."));
     }
     if (packet->getPacketType() == NTriangulation::packetType)
@@ -166,8 +175,7 @@ QString PacketManager::iconName(NPacket* packet) {
     return QString();
 }
 
-KTextEditor::Document* PacketManager::createDocument(QObject* parent) {
-    KTextEditor::Editor* editor = KTextEditor::EditorChooser::editor();
-    return editor->createDocument(parent);
+QPlainTextEdit* PacketManager::createDocument(QWidget* parent) {
+    return new QPlainTextEdit(parent);
 }
 

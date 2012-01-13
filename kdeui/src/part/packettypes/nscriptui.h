@@ -42,12 +42,8 @@
 
 class QAction;
 class QSplitter;
+class QPlainTextEdit;
 
-namespace KTextEditor {
-    class Document;
-    class EditInterface;
-    class View;
-};
 
 namespace regina {
     class NPacket;
@@ -166,8 +162,7 @@ class NScriptUI : public QObject, public PacketUI {
         ScriptVarTable* varTable;
         QStyledItemDelegate* nameDelegate;
         QStyledItemDelegate* valueDelegate;
-        KTextEditor::Document* document;
-        KTextEditor::View* view;
+        QPlainTextEdit* document;
         PacketEditIface* editIface;
 
         /**
@@ -182,7 +177,7 @@ class NScriptUI : public QObject, public PacketUI {
          * Constructor and destructor.
          */
         NScriptUI(regina::NScript* packet, PacketPane* newEnclosingPane,
-                KTextEditor::Document* doc);
+                QPlainTextEdit* doc);
         ~NScriptUI();
 
         /**
