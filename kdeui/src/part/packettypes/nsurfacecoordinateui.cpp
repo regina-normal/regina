@@ -653,7 +653,7 @@ void NSurfaceCoordinateUI::setReadWrite(bool readWrite) {
 
 void NSurfaceCoordinateUI::packetToBeDestroyed(NPacket*) {
     // Our currently applied filter is about to be destroyed.
-    filter->setCurrentItem(0); // (i.e., None)
+    filter->setCurrentIndex(0); // (i.e., None)
     refreshLocal();
 }
 
