@@ -34,7 +34,7 @@
 #ifndef __NEWPACKETDIALOG_H
 #define __NEWPACKETDIALOG_H
 
-#include <kdialog.h>
+#include <QDialog>
 
 class PacketChooser;
 class PacketCreator;
@@ -52,7 +52,7 @@ namespace regina {
  * The real work is done by the PacketCreator class, which is
  * overridden for each different packet type.
  */
-class NewPacketDialog : public KDialog {
+class NewPacketDialog : public QDialog {
     Q_OBJECT
 
     private:

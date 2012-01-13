@@ -31,25 +31,24 @@
 #include "packetcreator.h"
 #include "packetfilter.h"
 
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <qboxlayout.h>
-#include <qframe.h>
-#include <qlabel.h>
-#include <qlineedit.h>
-#include <qwhatsthis.h>
+#include <QBoxLayout>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QFrame>
+#include <QLabel>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QWhatsThis>
 
 NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
         regina::NPacket* packetTree, regina::NPacket* defaultParent,
         PacketFilter* useFilter, const QString& dialogTitle,
         const QString& suggestedLabel) :
-        KDialog(parent), //dialogTitle, Ok|Cancel, Ok, parent),
+        QDialog(parent), //dialogTitle, Ok|Cancel, Ok, parent),
         creator(newCreator), tree(packetTree), newPacket(0) {
-    setCaption(dialogTitle);
-    setButtons(KDialog::Ok|KDialog::Cancel);
+    setWindowTitle(dialogTitle);
 
     QWidget* page = new QWidget(this);
-    setMainWidget(page);
     QVBoxLayout* layout = new QVBoxLayout(page);
     layout->setContentsMargins(0, 0, 0, 0); // Margins come from the dialog.
 
@@ -57,10 +56,10 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     layout->addLayout(parentStrip);
     QString parentPrompt = newCreator->parentPrompt();
     if (parentPrompt.isNull())
-        parentPrompt = i18n("Create beneath:");
+        parentPrompt = tr("Create beneath:");
     QString expln = newCreator->parentWhatsThis();
     if (expln.isNull())
-        expln = i18n("Specifies where in the packet tree the new "
+        expln = tr("Specifies where in the packet tree the new "
             "packet will be placed.");
     QLabel* createBeneath = new QLabel(parentPrompt);
     createBeneath->setWhatsThis(expln);
@@ -71,8 +70,8 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
 
     QHBoxLayout* labelStrip = new QHBoxLayout();
     layout->addLayout(labelStrip);
-    expln = i18n("The label that will be assigned to the new packet.");
-    QLabel* newlabel = new QLabel(i18n("Label:"));
+    expln = tr("The label that will be assigned to the new packet.");
+    QLabel* newlabel = new QLabel(tr("Label:"));
     newlabel->setWhatsThis(expln);
     labelStrip->addWidget(newlabel);
     label = new QLineEdit(tree->makeUniqueLabel(
@@ -89,8 +88,10 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     } else {
         layout->addStretch(1);
     }
-
-    connect(this, SIGNAL(okClicked()), this, SLOT(slotOk()));
+    QDialogButtonBox *box = new QDialogButtonBox(
+            QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    layout->addWidget(box);
+    connect(box, SIGNAL(accepted()), this, SLOT(slotOk()));
 }
 
 NewPacketDialog::~NewPacketDialog() {
@@ -100,8 +101,8 @@ NewPacketDialog::~NewPacketDialog() {
 bool NewPacketDialog::validate() {
     if (chooser->hasPackets())
         return true;
-    KMessageBox::sorry(this, i18n(
-        "No suitable parent packets could be found.\n"
+    QMessageBox::warning(this,tr("No suitable parent"), 
+        tr("No suitable parent packets could be found.\n"
         "Some packets have particular requirements of their parents.  "
         "For instance, a list of normal surfaces or angle structures must "
         "be created beneath the triangulation in which they live.\n"
@@ -113,14 +114,14 @@ void NewPacketDialog::slotOk() {
     // Get the parent packet.
     regina::NPacket* parentPacket = chooser->selectedPacket();
     if (! parentPacket) {
-        KMessageBox::error(this, i18n(
-            "No parent packet has been selected."));
+        QMessageBox::warning(this, tr("No parent selected"),
+            tr("No parent packet has been selected."));
         return;
     }
     PacketFilter* filter = chooser->getFilter();
     if (filter && ! filter->accept(parentPacket)) {
-        KMessageBox::error(this, i18n(
-            "The packet %1 is not capable of acting as a parent for "
+        QMessageBox::warning(this, tr("Not a suitable parent"),
+            tr("The packet %1 is not capable of acting as a parent for "
             "the new packet.").arg(parentPacket->getPacketLabel().c_str()));
         return;
     }
@@ -128,12 +129,13 @@ void NewPacketDialog::slotOk() {
     // Check the label.
     QString useLabel = label->text().simplified();
     if (useLabel.isEmpty()) {
-        KMessageBox::error(this, i18n("The packet label cannot be empty."));
+        QMessageBox::warning(this, tr("Empty label"),
+            tr("The packet label cannot be empty."));
         return;
     }
     if (tree->findPacketLabel(std::string(useLabel.toAscii().constData()))) {
-        KMessageBox::error(this, i18n(
-            "There is already a packet labelled %1.").arg(useLabel));
+        QMessageBox::warning(this, tr("Name already in use"),
+            tr("There is already a packet labelled %1.").arg(useLabel));
         label->setText(QString::fromAscii(
               tree->makeUniqueLabel(
                   std::string(useLabel.toAscii().constData())).c_str()));
