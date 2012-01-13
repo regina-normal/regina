@@ -285,7 +285,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     //scriptActions = new KActionCollection((QObject*)0);
     
-    actAdd = new QAction(this)
+    actAdd = new QAction(this);
     //scriptActions->addAction("script_add_var");
     actAdd->setText(i18n("&Add Var"));
     actAdd->setIcon(KIcon("edit-table-insert-row-below"));
@@ -369,7 +369,10 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
 NScriptUI::~NScriptUI() {
     // Make sure the actions, including separators, are all deleted.
-    delete scriptActions;
+    for (QLinkedList<QAction*>::iterator it = scriptActionList.begin() ;
+            it != scriptActionList.end(); it++ )
+        delete *it;
+
 
     // Clean up.
     delete nameDelegate;
