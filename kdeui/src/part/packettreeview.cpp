@@ -36,12 +36,10 @@
 #include "regevents.h"
 #include "reginapart.h"
 
-#include <qapplication.h>
-#include <qevent.h>
+#include <QApplication>
+#include <QEvent>
 #include <QHeaderView>
 #include <QTreeWidget>
-#include <kdebug.h>
-#include <klocale.h>
 
 using regina::NPacket;
 
@@ -194,7 +192,7 @@ void PacketTreeItem::refreshLabel() {
         if (text(0) != newLabel)
             setText(0, newLabel);
     } else
-        setText(0, i18n("<Deleted>"));
+        setText(0, QObject::tr("<Deleted>"));
 }
 
 void PacketTreeItem::updateEditable() {
