@@ -41,28 +41,26 @@
 #include "packettypes/nsurfacefiltercreator.h"
 #include "packettypes/ntriangulationcreator.h"
 
-#include <klocale.h>
-
 void ReginaPart::newAngleStructures() {
     newPacket(new NAngleStructureCreator(),
         new SingleTypeFilter<regina::NTriangulation>(),
-        i18n("New Angle Structure Solutions"), i18n("Angle Structures"));
+        tr("New Angle Structure Solutions"), tr("Angle Structures"));
 }
 
 void ReginaPart::newContainer() {
     newPacket(new BasicPacketCreator<regina::NContainer>(), 0,
-        i18n("New Container"), i18n("Container"));
+        tr("New Container"), tr("Container"));
 }
 
 void ReginaPart::newFilter() {
     newPacket(new NSurfaceFilterCreator(), 0,
-        i18n("New Normal Surface Filter"), i18n("Surface Filter"));
+        tr("New Normal Surface Filter"), tr("Surface Filter"));
 }
 
 void ReginaPart::newNormalSurfaces() {
     newPacket(new NNormalSurfaceCreator(prefs.surfacesCreationCoords),
         new SingleTypeFilter<regina::NTriangulation>(),
-        i18n("New Normal Surface List"), i18n("Normal Surfaces"));
+        tr("New Normal Surface List"), tr("Normal Surfaces"));
 }
 
 void ReginaPart::newPDF() {
@@ -72,17 +70,17 @@ void ReginaPart::newPDF() {
 
 void ReginaPart::newScript() {
     newPacket(new BasicPacketCreator<regina::NScript>(), 0,
-        i18n("New Script"), i18n("Script"));
+        tr("New Script"), tr("Script"));
 }
 
 void ReginaPart::newText() {
     newPacket(new BasicPacketCreator<regina::NText>(), 0,
-        i18n("New Text Packet"), i18n("Text"));
+        tr("New Text Packet"), tr("Text"));
 }
 
 void ReginaPart::newTriangulation() {
     newPacket(new NTriangulationCreator(), 0,
-        i18n("New Triangulation"), i18n("Triangulation"));
+        tr("New Triangulation"), tr("Triangulation"));
 }
 
 void ReginaPart::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
