@@ -34,7 +34,6 @@
 // UI includes:
 #include "nanglestructureui.h"
 
-#include <klocale.h>
 #include <QLabel>
 #include <QHeaderView>
 #include <QTreeView>
@@ -67,9 +66,9 @@ QVariant AngleModel::data(const QModelIndex& index, int role) const {
             structures_->getStructure(index.row());
         if (index.column() == 0) {
             if (s->isStrict())
-                return i18n("Strict");
+                return tr("Strict");
             else if (s->isTaut())
-                return i18n("Taut");
+                return tr("Taut");
             else
                 return QVariant();
         } else {
@@ -94,9 +93,9 @@ QVariant AngleModel::data(const QModelIndex& index, int role) const {
         }
     } else if (role == Qt::ToolTipRole) {
         if (index.column() == 0)
-            return i18n("Taut or strict?");
+            return tr("Taut or strict?");
         else
-            return i18n("Tetrahedron %1, edges %2").
+            return tr("Tetrahedron %1, edges %2").
                 arg((index.column() - 1) / 3).
                 arg(regina::vertexSplitString[(index.column() - 1) % 3]);
     } else if (role == Qt::TextAlignmentRole)
@@ -112,15 +111,15 @@ QVariant AngleModel::headerData(int section, Qt::Orientation orientation,
 
     if (role == Qt::DisplayRole) {
         if (section == 0)
-            return i18n("Type");
+            return tr("Type");
         else
             return QString::number((section - 1) / 3) + ": " + 
                 regina::vertexSplitString[(section - 1) % 3];
     } else if (role == Qt::ToolTipRole) {
         if (section == 0)
-            return i18n("Taut or strict?");
+            return tr("Taut or strict?");
         else
-            return i18n("Tetrahedron %1, edges %2").arg((section - 1) / 3).
+            return tr("Tetrahedron %1, edges %2").arg((section - 1) / 3).
                 arg(regina::vertexSplitString[(section - 1) % 3]);
     } else if (role == Qt::TextAlignmentRole)
         return Qt::AlignCenter;
@@ -140,7 +139,7 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
     layout->addSpacing(ANGLE_STATS_PADDING);
     stats = new QLabel(ui);
     stats->setAlignment(Qt::AlignCenter);
-    stats->setWhatsThis(i18n("<qt>Displays various statistics about this "
+    stats->setWhatsThis(tr("<qt>Displays various statistics about this "
         "angle structure list, including whether the underlying triangulation "
         "supports any strict and/or taut angle structures.  A <i>strict</i> "
         "angle structure has all of its angles strictly between 0 and &pi;, "
@@ -162,7 +161,7 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
     table->setAlternatingRowColors(true);
     table->header()->setStretchLastSection(false);
     table->setSelectionMode(QTreeView::NoSelection);
-    table->setWhatsThis(i18n("<qt>Displays the vertex angle structures "
+    table->setWhatsThis(tr("<qt>Displays the vertex angle structures "
         "in this list.<p>"
         "Each row represents a single angle structure, and "
         "each entry in the table is an internal dihedral angle assigned to "
@@ -203,7 +202,7 @@ QWidget* NAngleStructureUI::getInterface() {
 }
 
 QString NAngleStructureUI::getPacketMenuText() const {
-    return i18n("&Angle Structures");
+    return tr("&Angle Structures");
 }
 
 void NAngleStructureUI::refresh() {
@@ -213,30 +212,30 @@ void NAngleStructureUI::refresh() {
     unsigned long nStructs = model->structures()->getNumberOfStructures();
     if (model->structures()->isTautOnly()) {
         if (nStructs == 0)
-            statStr = i18n("No taut structures\n");
+            statStr = tr("No taut structures\n");
         else if (nStructs == 1)
-            statStr = i18n("1 taut structure\n");
+            statStr = tr("1 taut structure\n");
         else
-            statStr = i18n("%1 taut structures\n").arg(nStructs);
+            statStr = tr("%1 taut structures\n").arg(nStructs);
 
-        statStr.append(i18n("Enumerated taut structures only"));
+        statStr.append(tr("Enumerated taut structures only"));
     } else {
         if (nStructs == 0)
-            statStr = i18n("No vertex angle structures\n");
+            statStr = tr("No vertex angle structures\n");
         else if (nStructs == 1)
-            statStr = i18n("1 vertex angle structure\n");
+            statStr = tr("1 vertex angle structure\n");
         else
-            statStr = i18n("%1 vertex angle structures\n").arg(nStructs);
+            statStr = tr("%1 vertex angle structures\n").arg(nStructs);
 
-        statStr.append(i18n("Span includes: "));
+        statStr.append(tr("Span includes: "));
         if (model->structures()->spansStrict())
-            statStr.append(i18n("Strict, "));
+            statStr.append(tr("Strict, "));
         else
-            statStr.append(i18n("NO Strict, "));
+            statStr.append(tr("NO Strict, "));
         if (model->structures()->spansTaut())
-            statStr.append(i18n("Taut"));
+            statStr.append(tr("Taut"));
         else
-            statStr.append(i18n("NO Taut"));
+            statStr.append(tr("NO Taut"));
     }
 
     stats->setText(statStr);

@@ -32,9 +32,8 @@
 // UI includes:
 #include "ncontainerui.h"
 
-#include <klocale.h>
-#include <qboxlayout.h>
-#include <qlabel.h>
+#include <QBoxLayout>
+#include <QLabel>
 
 using regina::NPacket;
 using regina::NContainer;
@@ -54,7 +53,7 @@ NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
     QLabel* label;
     QString msg;
 
-    label = new QLabel(i18n("Immediate children:"));
+    label = new QLabel(interface->tr("Immediate children:"));
     label->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     grid->addWidget(label, 0, 1, Qt::AlignRight);
 
@@ -63,13 +62,13 @@ NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
         QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     grid->addWidget(children, 0, 2, Qt::AlignRight);
 
-    msg = i18n("Shows the number of immediate children of this "
+    msg = interface->tr("Shows the number of immediate children of this "
         "container, i.e., the number of child packets that have this "
         "container as their immediate parent.");
     label->setWhatsThis(msg);
     children->setWhatsThis(msg);
 
-    label = new QLabel(i18n("Total descendants:"));
+    label = new QLabel(interface->tr("Total descendants:"));
     label->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     grid->addWidget(label, 1, 1, Qt::AlignRight);
 
@@ -78,7 +77,7 @@ NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
         QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     grid->addWidget(descendants, 1, 2, Qt::AlignRight);
 
-    msg = i18n("Shows the total number of descendants of this "
+    msg = interface->tr("Shows the total number of descendants of this "
         "container, i.e., the number of children, grandchildren, "
         "great-grandchildren and so on.");
     label->setWhatsThis(msg);
@@ -102,7 +101,7 @@ QWidget* NContainerUI::getInterface() {
 }
 
 QString NContainerUI::getPacketMenuText() const {
-    return i18n("&Container");
+    return interface->tr("&Container");
 }
 
 void NContainerUI::refresh() {
