@@ -108,14 +108,7 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     if (packet->getPacketType() == NPDF::packetType)
         return new NPDFUI(dynamic_cast<NPDF*>(packet), enclosingPane);
     if (packet->getPacketType() == NScript::packetType) {
-        QPlainTextEdit* doc = createDocument(enclosingPane);
-        if (doc)
-            return new NScriptUI(dynamic_cast<NScript*>(packet),
-                enclosingPane, doc);
-        else
-            return new ErrorPacketUI(packet, enclosingPane,
-                enclosingPane->tr("An appropriate text editor component "
-                  "could not be found."));
+        return new NScriptUI(dynamic_cast<NScript*>(packet), enclosingPane);
     }
     if (packet->getPacketType() == NSurfaceFilter::packetType) {
         if (((NSurfaceFilter*)packet)->getFilterID() ==
@@ -131,14 +124,7 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
         return new DefaultPacketUI(packet, enclosingPane);
     }
     if (packet->getPacketType() == NText::packetType) {
-        QPlainTextEdit* doc = createDocument(enclosingPane);
-        if (doc)
-            return new NTextUI(dynamic_cast<NText*>(packet),
-                enclosingPane, doc);
-        else
-            return new ErrorPacketUI(packet, enclosingPane,
-                enclosingPane->tr("An appropriate text editor component\n"
-                "could not be found."));
+        return new NTextUI(dynamic_cast<NText*>(packet), enclosingPane);
     }
     if (packet->getPacketType() == NTriangulation::packetType)
         return new NTriangulationUI(dynamic_cast<NTriangulation*>(packet),
@@ -174,8 +160,3 @@ QString PacketManager::iconName(NPacket* packet) {
 
     return QString();
 }
-
-QPlainTextEdit* PacketManager::createDocument(QWidget* parent) {
-    return new QPlainTextEdit(parent);
-}
-

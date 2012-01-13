@@ -101,11 +101,6 @@ class PacketManager {
          * More icon support.
          */
         static QString iconName(regina::NPacket* packet);
-
-        /**
-         * Create a new QPlainText object.
-         */
-        static QPlainTextEdit* createDocument(QWidget* parent);
 };
 
 #endif
