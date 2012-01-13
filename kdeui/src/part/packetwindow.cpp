@@ -31,13 +31,6 @@
 #include "packetwindow.h"
 #include "reginapart.h"
 
-#include <kaction.h>
-#include <kactioncollection.h>
-#include <klocale.h>
-#include <kmenubar.h>
-#include <kstandardaction.h>
-#include <ktexteditor/document.h>
-
 #include <QLinkedList>
 
 PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
