@@ -34,7 +34,7 @@
 #ifndef __PROGRESSDIALOGS_H
 #define __PROGRESSDIALOGS_H
 
-#include <kprogressdialog.h>
+#include <QProgressDialog>
 
 namespace regina {
     class NProgressManager;
@@ -50,7 +50,7 @@ namespace regina {
  * operation in the calculation engine.  The operation itself should be
  * running in a separate thread.
  */
-class ProgressDialogNumeric : public KProgressDialog {
+class ProgressDialogNumeric : public QProgressDialog {
     Q_OBJECT
 
     private:

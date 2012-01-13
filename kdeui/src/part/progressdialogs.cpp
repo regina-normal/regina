@@ -33,8 +33,8 @@
 // UI includes:
 #include "progressdialogs.h"
 
-#include <kapplication.h>
-#include <qthread.h>
+#include <QApplication>
+#include <QThread>
 
 namespace {
     /**
@@ -52,16 +52,18 @@ namespace {
 ProgressDialogNumeric::ProgressDialogNumeric(
         regina::NProgressManager* useManager, const QString& dialogTitle,
         const QString& displayText, QWidget* parent, const char* name) :
-        KProgressDialog(parent, dialogTitle, displayText, Qt::Dialog),
+        QProgressDialog(parent),
         /* Don't use Qt::Popup because the layout breaks under fink. */
         manager(useManager), progress(0) {
+    setLabelText(displayText);
+    setWindowTitle(dialogTitle);
     setMinimumDuration(500);
     setWindowModality(Qt::WindowModal);
 }
 
 bool ProgressDialogNumeric::run() {
     show();
-    KApplication::kApplication()->processEvents();
+    QCoreApplication::instance()->processEvents();
 
     while (! manager->isStarted())
         WaitingThread::tinySleep();
@@ -69,21 +71,21 @@ bool ProgressDialogNumeric::run() {
     progress = dynamic_cast<const regina::NProgressNumber*>(
         manager->getProgress());
     regina::NProgressStateNumeric state;
-    progressBar()->setMinimum(0); // Start at 0
+    setMinimum(0); // Start at 0
     while (! progress->isFinished()) {
-        if (wasCancelled())
+        if (wasCanceled())
             progress->cancel();
         if (progress->hasChanged()) {
             state = progress->getNumericState();
             if (state.outOf > 0) {
-                progressBar()->setMaximum(state.outOf);
-                progressBar()->setValue(state.completed);
+                setMaximum(state.outOf);
+                setValue(state.completed);
             } else {
-                progressBar()->setMaximum(0);
-                progressBar()->setValue(0);
+                setMaximum(0);
+                setValue(0);
             }
         }
-        KApplication::kApplication()->processEvents();
+        QCoreApplication::instance()->processEvents();
         WaitingThread::tinySleep();
     }
 
