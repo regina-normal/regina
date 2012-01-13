@@ -35,30 +35,28 @@
 #include "packetmanager.h"
 
 #include <algorithm>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <KUrl>
+#include <QMessageBox>
 
 using regina::NPacket;
 
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
-        QWidget* parent, const char* name) :
-        KComboBox(parent), subtree(newSubtree), filter(0),
+        QWidget* parent) :
+        QComboBox(parent), subtree(newSubtree), filter(0),
         onAutoUpdate(false), isUpdating(false) {
     fill(false, 0);
 }
 
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
-        PacketFilter* newFilter, QWidget* parent, const char* name) :
-        KComboBox(parent), subtree(newSubtree), filter(newFilter),
+        PacketFilter* newFilter, QWidget* parent) :
+        QComboBox(parent), subtree(newSubtree), filter(newFilter),
         onAutoUpdate(false), isUpdating(false) {
     fill(false, 0);
 }
 
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
         PacketFilter* newFilter, bool allowNone,
-        regina::NPacket* initialSelection, QWidget* parent, const char* name) :
-        KComboBox(parent), subtree(newSubtree), filter(newFilter),
+        regina::NPacket* initialSelection, QWidget* parent) :
+        QComboBox(parent), subtree(newSubtree), filter(newFilter),
         onAutoUpdate(false), isUpdating(false) {
     fill(allowNone, initialSelection);
 }
@@ -115,8 +113,9 @@ void PacketChooser::packetWasRenamed(regina::NPacket* renamed) {
     if (it != packets.end()) {
         // This may trigger a refreshContents(), but that's okay since
         // we're at the end of the routine.
-        changeUrl(it - packets.begin(),PacketManager::iconSmall(renamed, false),
-            KUrl(renamed->getPacketLabel().c_str()));
+        int index = it - packets.begin();
+        setItemIcon(index, PacketManager::iconSmall(renamed, false));
+        setItemText(index, renamed->getPacketLabel().c_str());
     }
 }
 
@@ -184,7 +183,7 @@ void PacketChooser::refreshContents() {
 void PacketChooser::fill(bool allowNone, NPacket* select) {
     // Insert the None entry if appropriate.
     if (allowNone) {
-        addItem(i18n("<None>"));
+        addItem(tr("<None>"));
         packets.push_back(0);
 
         if (select == 0)

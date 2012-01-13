@@ -35,7 +35,7 @@
 
 #include "packet/npacketlistener.h"
 
-#include <kcombobox.h>
+#include <QComboBox>
 #include <vector>
 
 class PacketFilter;
@@ -70,7 +70,7 @@ namespace regina {
  * that no activated() signal will be emitted since this change was not
  * a result of direct user interaction.
  */
-class PacketChooser : public KComboBox, public regina::NPacketListener {
+class PacketChooser : public QComboBox, public regina::NPacketListener {
     Q_OBJECT
 
     private:
@@ -100,12 +100,12 @@ class PacketChooser : public KComboBox, public regina::NPacketListener {
          * passed.
          */
         PacketChooser(regina::NPacket* newSubtree,
-                QWidget* parent, const char* name = 0);
+                QWidget* parent);
         PacketChooser(regina::NPacket* newSubtree, PacketFilter* newFilter,
-                QWidget* parent, const char* name = 0);
+                QWidget* parent);
         PacketChooser(regina::NPacket* newSubtree, PacketFilter* newFilter = 0,
                 bool allowNone = false, regina::NPacket* initialSelection = 0,
-                QWidget* parent = 0, const char* name = 0);
+                QWidget* parent = 0);
         ~PacketChooser();
 
         /**
