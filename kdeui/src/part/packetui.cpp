@@ -39,20 +39,15 @@
 #include "packetwindow.h"
 #include "reginapart.h"
 
-#include <kaction.h>
-#include <kactioncollection.h>
-#include <kapplication.h>
-#include <kiconloader.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <kstdguiitem.h>
-#include <ktoolbar.h>
-#include <qboxlayout.h>
-#include <qevent.h>
-#include <qlabel.h>
-#include <qlinkedlist.h>
-#include <qtreewidget.h>
-#include <qwhatsthis.h>
+#include <QApplication>
+#include <QBoxLayout>
+#include <QEvent>
+#include <QLabel>
+#include <QLinkedList>
+#include <QMessageBox>
+#include <QToolBar>
+#include <QTreeWidget>
+#include <QWhatsThis>
 
 using regina::NPacket;
 
@@ -102,7 +97,7 @@ QWidget* ErrorPacketUI::getInterface() {
 }
 
 QString ErrorPacketUI::getPacketMenuText() const {
-    return i18n("&Unknown Packet");
+    return QObject::tr("&Unknown Packet");
 }
 
 void ErrorPacketUI::refresh() {
@@ -111,7 +106,7 @@ void ErrorPacketUI::refresh() {
 DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
         PacketPane* newEnclosingPane) :
         ErrorPacketUI(newPacket, newEnclosingPane,
-        i18n("Packets of type %1\nare not yet supported.").arg(
+        newEnclosingPane->tr("Packets of type %1\nare not yet supported.").arg(
         newPacket->getPacketTypeName().c_str())) {
 }
 
@@ -132,42 +127,42 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     // might want to modify them.
     //actCommit = part->actionCollection()->addAction("packet_editor_commit");
     actCommit = new QAction(this);
-    actCommit->setText(i18n("Co&mmit"));
-    actCommit->setIcon(KIcon("dialog-ok"));
+    actCommit->setText(tr("Co&mmit"));
+    actCommit->setIcon(QIcon::fromTheme("dialog-ok"));
     actCommit->setEnabled(false);
-    actCommit->setToolTip(i18n("Commit changes to this packet"));
-    actCommit->setWhatsThis(i18n("Commit any changes you have made inside "
+    actCommit->setToolTip(tr("Commit changes to this packet"));
+    actCommit->setWhatsThis(tr("Commit any changes you have made inside "
         "this packet viewer.  Changes you make will have no effect elsewhere "
         "until they are committed."));
     connect(actCommit,SIGNAL(triggered()),this,SLOT(commit()));
 
     actRefresh = new QAction(this);
     //actRefresh = part->actionCollection()->addAction("packet_editor_refresh");
-    actRefresh->setText(i18n("&Refresh"));
-    actRefresh->setIcon(KIcon("view-refresh"));
-    actRefresh->setToolTip(i18n("Discard any changes and refresh this "
+    actRefresh->setText(tr("&Refresh"));
+    actRefresh->setIcon(QIcon::fromTheme("view-refresh"));
+    actRefresh->setToolTip(tr("Discard any changes and refresh this "
         "packet viewer"));
-    actRefresh->setWhatsThis(i18n("Refresh this viewer to show the most "
+    actRefresh->setWhatsThis(tr("Refresh this viewer to show the most "
         "recent state of the packet.  Any changes you mave made inside this "
         "viewer that have not been committed will be discarded."));
     connect(actRefresh,SIGNAL(triggered()), this, SLOT(refresh()));
 
     actDockUndock = new QAction(this);
     //actDockUndock = part->actionCollection()->addAction("packet_editor_dock");
-    actDockUndock->setText(i18n("Un&dock"));
-    actDockUndock->setIcon(KIcon("mail-attachment"));
-    actDockUndock->setToolTip(i18n("Dock / undock this packet viewer"));
-    actDockUndock->setWhatsThis(i18n("Dock or undock this packet viewer.  "
+    actDockUndock->setText(tr("Un&dock"));
+    actDockUndock->setIcon(QIcon::fromTheme("mail-attachment"));
+    actDockUndock->setToolTip(tr("Dock / undock this packet viewer"));
+    actDockUndock->setWhatsThis(tr("Dock or undock this packet viewer.  "
         "A docked viewer sits within the main window, to the right of "
         "the packet tree.  An undocked viewer floats in its own window."));
     connect(actDockUndock,SIGNAL(triggered()),this, SLOT(floatPane()));
 
     actClose = new QAction(this);
     //actClose = part->actionCollection()->addAction("packet_editor_close");
-    actClose->setText(i18n("&Close"));
-    actClose->setIcon(KIcon("window-close"));
-    actClose->setToolTip(i18n("Close this packet viewer"));
-    actClose->setWhatsThis(i18n("Close this packet viewer.  Any changes "
+    actClose->setText(tr("&Close"));
+    actClose->setIcon(QIcon::fromTheme("window-close"));
+    actClose->setToolTip(tr("Close this packet viewer"));
+    actClose->setWhatsThis(tr("Close this packet viewer.  Any changes "
         "that have not been committed will be discarded."));
     connect(actClose,SIGNAL(triggered()), this, SLOT(close()));
 
@@ -176,16 +171,16 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     headerBox->setSpacing(0);
 
     header = new PacketHeader(newPacket);
-    header->setWhatsThis(i18n("This shows the label of the packet "
+    header->setWhatsThis(tr("This shows the label of the packet "
         "being viewed, as well as its packet type."));
     headerBox->addWidget(header, 1);
 
     dockUndockBtn = new FlatToolButton();
     dockUndockBtn->setCheckable(true);
-    dockUndockBtn->setIcon(KIcon("mail-attachment"));
-    dockUndockBtn->setText(i18n("Dock or undock this packet viewer"));
+    dockUndockBtn->setIcon(QIcon::fromTheme("mail-attachment"));
+    dockUndockBtn->setText(tr("Dock or undock this packet viewer"));
     dockUndockBtn->setChecked(true);
-    dockUndockBtn->setWhatsThis(i18n("Dock or undock this packet viewer.  "
+    dockUndockBtn->setWhatsThis(tr("Dock or undock this packet viewer.  "
         "A docked viewer sits within the main window, to the right of "
         "the packet tree.  An undocked viewer floats in its own window."));
     headerBox->addWidget(dockUndockBtn);
@@ -247,8 +242,9 @@ void PacketPane::setDirty(bool newDirty) {
     dirty = newDirty;
 
     actCommit->setEnabled(dirty);
-    actRefresh->setText(dirty ? i18n("&Discard") : i18n("&Refresh"));
-    actRefresh->setIcon(dirty ? KIcon("dialog-cancel") : KIcon("view-refresh"));
+    actRefresh->setText(dirty ? tr("&Discard") : tr("&Refresh"));
+    actRefresh->setIcon(dirty ? QIcon::fromTheme("dialog-cancel") : 
+            QIcon::fromTheme("view-refresh"));
 }
 
 void PacketPane::setDirtinessBroken() {
@@ -256,8 +252,8 @@ void PacketPane::setDirtinessBroken() {
     dirty = readWrite;
 
     actCommit->setEnabled(dirty);
-    actRefresh->setText(dirty ? i18n("&Discard / Refresh") : i18n("&Refresh"));
-    actRefresh->setIcon(KIcon("view-refresh"));
+    actRefresh->setText(dirty ? tr("&Discard / Refresh") : tr("&Refresh"));
+    actRefresh->setIcon(QIcon::fromTheme("view-refresh"));
 }
 
 bool PacketPane::setReadWrite(bool allowReadWrite) {
@@ -286,15 +282,16 @@ bool PacketPane::setReadWrite(bool allowReadWrite) {
 bool PacketPane::queryClose() {
     if ((! emergencyClosure) && dirty) {
         QString msg = (dirtinessBroken ?
-            i18n("This packet might contain changes that have not yet been "
+            tr("This packet might contain changes that have not yet been "
                  "committed.  Are you sure you wish to close this packet "
                  "now and discard these changes?") :
-            i18n("This packet contains changes that have not yet been "
+            tr("This packet contains changes that have not yet been "
                  "committed.  Are you sure you wish to close this packet "
                  "now and discard these changes?"));
-        if (KMessageBox::warningContinueCancel(this, msg,
+        if (QMessageBox::warning(this, 
                 mainUI->getPacket()->getPacketLabel().c_str(),
-                KStandardGuiItem::discard()) == KMessageBox::Cancel)
+                msg, QMessageBox::Discard | QMessageBox::Cancel) 
+                == QMessageBox::Cancel)
             return false;
     }
 
@@ -366,19 +363,20 @@ void PacketPane::packetWasChanged(regina::NPacket*) {
 
     if (dirty) {
         QString msg = (dirtinessBroken ?
-            i18n("This packet has been changed from within a script or "
+            tr("This packet has been changed from within a script or "
                  "another interface.  However, this interface might contain "
                  "changes that have not yet been committed.  Do you wish "
                  "to refresh this interface to reflect the changes "
                  "that have been made elsewhere?") :
-            i18n("This packet has been changed from within a script or "
+            tr("This packet has been changed from within a script or "
                  "another interface.  However, this interface contains "
                  "changes that have not yet been committed.  Do you wish "
                  "to refresh this interface to reflect the changes "
                  "that have been made elsewhere?"));
-        if (KMessageBox::warningYesNo(this, msg,
-                mainUI->getPacket()->getPacketLabel().c_str()) ==
-                KMessageBox::No)
+        if (QMessageBox::warning(this, 
+                mainUI->getPacket()->getPacketLabel().c_str(),
+                msg, QMessageBox::Discard | QMessageBox::Cancel) 
+                == QMessageBox::Cancel)
             return;
     }
 
@@ -420,15 +418,16 @@ void PacketPane::refresh() {
 
     if ((! emergencyRefresh) && dirty) {
         QString msg = (dirtinessBroken ?
-            i18n("This packet might contain changes that have not yet been "
+            tr("This packet might contain changes that have not yet been "
                  "committed.  Are you sure you wish to discard these "
                  "changes?") :
-            i18n("This packet contains changes that have not yet been "
+            tr("This packet contains changes that have not yet been "
                  "committed.  Are you sure you wish to discard these "
                  "changes?"));
-        if (KMessageBox::warningContinueCancel(this, msg,
+        if (QMessageBox::warning(this, 
                 mainUI->getPacket()->getPacketLabel().c_str(),
-                KStandardGuiItem::discard()) != KMessageBox::Continue)
+                msg, QMessageBox::Discard | QMessageBox::Cancel) 
+                == QMessageBox::Cancel)
             return;
     }
 
@@ -445,7 +444,8 @@ void PacketPane::refreshForce() {
 bool PacketPane::commit() {
     if (dirty) {
         if (! mainUI->getPacket()->isPacketEditable()) {
-            KMessageBox::sorry(this, i18n("<qt>This packet may not be "
+            QMessageBox::warning(this, tr("Packet not editable"),
+                tr("<qt>This packet may not be "
                 "edited at the present time.  Because of this, your "
                 "changes cannot be committed.<p>"
                 "This is generally due to a tight relationship shared "
@@ -459,8 +459,8 @@ bool PacketPane::commit() {
         }
 
         if (! readWrite) {
-            KMessageBox::sorry(this, i18n("This packet is read-only.  "
-                "No changes may be committed."));
+            QMessageBox::warning(this, tr("Read only packet"),
+                tr("This packet is read-only.  No changes may be committed."));
             return false;
         }
 
@@ -480,7 +480,8 @@ bool PacketPane::commit() {
 
 bool PacketPane::commitToModify() {
     if (! mainUI->getPacket()->isPacketEditable()) {
-        KMessageBox::sorry(this, i18n("<qt>This packet may not be "
+        QMessageBox::warning(this, tr("Packet not editable"),
+            tr("<qt>This packet may not be "
             "modified at the present time.<p>"
             "This is generally due to a tight relationship shared "
             "with some other packet in the tree.  For instance, a "
@@ -493,8 +494,8 @@ bool PacketPane::commitToModify() {
     }
 
     if (! readWrite) {
-        KMessageBox::sorry(this, i18n("This packet is read-only, and "
-            "so may not be modified."));
+        QMessageBox::warning(this, tr("Read only packet"),
+            tr("This packet is read-only.  No changes may be committed."));
         return false;
     }
 
@@ -504,8 +505,8 @@ bool PacketPane::commitToModify() {
 bool PacketPane::tryCommit() {
     if (dirty) {
         if (! mainUI->getPacket()->isPacketEditable()) {
-            if (KMessageBox::warningContinueCancel(this,
-                    i18n("<qt>This packet may not be edited at the present "
+            if (QMessageBox::warning(this, tr("Packet not editable"),
+                    tr("<qt>This packet may not be edited at the present "
                     "time.  Because of this I cannot commit your recent "
                     "changes, and I will have to work from an old copy "
                     "of the packet instead.<p>"
@@ -516,17 +517,17 @@ bool PacketPane::tryCommit() {
                     "as coordinates relative to the triangulation.<p>"
                     "Do you wish to continue this operation using an old "
                     "copy of the packet?</qt>"))
-                    != KMessageBox::Continue)
+                    != QMessageBox::Ok)
                 return false;
         } else if (! readWrite) {
-            if (KMessageBox::warningContinueCancel(this,
-                    i18n("<qt>This packet is read-only, but you appear "
+            if (QMessageBox::warning(this, tr("Read only packet"),
+                    tr("<qt>This packet is read-only, but you appear "
                     "to have made changes that have not yet been committed.  "
                     "I cannot commit these changes for you, and so I will "
                     "have to work from an old copy of the packet instead.<p>"
                     "Do you wish to continue this operation using an old "
                     "copy of the packet?</qt>"))
-                    != KMessageBox::Continue)
+                    != QMessageBox::Ok)
                 return false;
         } else {
             isCommitting = true;
@@ -569,7 +570,7 @@ void PacketPane::dockPane() {
     frame = 0;
 
     dockUndockBtn->setChecked(true);
-    actDockUndock->setText(i18n("Un&dock"));
+    actDockUndock->setText(tr("Un&dock"));
     disconnect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
     disconnect(actDockUndock, SIGNAL(triggered()), this, SLOT(dockPane()));
@@ -585,7 +586,7 @@ void PacketPane::floatPane() {
     frame = new PacketWindow(this);
 
     dockUndockBtn->setChecked(false);
-    actDockUndock->setText(i18n("&Dock"));
+    actDockUndock->setText(tr("&Dock"));
     disconnect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(dockPane()));
     disconnect(actDockUndock, SIGNAL(triggered()), this, SLOT(floatPane()));
