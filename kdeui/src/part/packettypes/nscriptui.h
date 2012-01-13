@@ -37,8 +37,8 @@
 
 #include "../packetui.h"
 
-#include <qstyleditemdelegate.h>
-#include <qtablewidget.h>
+#include <QStyledItemDelegate>
+#include <QTableWidget>
 
 class QAction;
 class QSplitter;
@@ -163,7 +163,7 @@ class NScriptUI : public QObject, public PacketUI {
         QStyledItemDelegate* nameDelegate;
         QStyledItemDelegate* valueDelegate;
         QPlainTextEdit* document;
-        PacketEditIface* editIface;
+        //PacketEditIface* editIface;
 
         /**
          * Script actions
@@ -176,8 +176,7 @@ class NScriptUI : public QObject, public PacketUI {
         /**
          * Constructor and destructor.
          */
-        NScriptUI(regina::NScript* packet, PacketPane* newEnclosingPane,
-                QPlainTextEdit* doc);
+        NScriptUI(regina::NScript* packet, PacketPane* newEnclosingPane);
         ~NScriptUI();
 
         /**
@@ -185,7 +184,7 @@ class NScriptUI : public QObject, public PacketUI {
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
-        PacketEditIface* getEditIface();
+        //PacketEditIface* getEditIface();
         const QLinkedList<QAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
         void commit();
@@ -249,8 +248,8 @@ inline QSize ScriptVarTable::sizeHint() const {
     return QSize(s.width(), s.height() / 3 * 2);
 }
 
-inline PacketEditIface* NScriptUI::getEditIface() {
-    return editIface;
-}
+//inline PacketEditIface* NScriptUI::getEditIface() {
+//    return editIface;
+//}
 
 #endif

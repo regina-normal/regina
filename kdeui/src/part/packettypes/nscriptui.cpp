@@ -33,24 +33,19 @@
 // UI includes:
 #include "nscriptui.h"
 #include "../packetchooser.h"
-#include "../packeteditiface.h"
+//#include "../packeteditiface.h"
 #include "../packetmanager.h"
 #include "../reginapart.h"
 
 #include <cstring>
-#include <KComponentData>
-#include <kiconloader.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <ktexteditor/configinterface.h>
-#include <ktexteditor/document.h>
-#include <ktexteditor/view.h>
-#include <ktoolbar.h>
-#include <qboxlayout.h>
-#include <qheaderview.h>
-#include <qlineedit.h>
-#include <qsplitter.h>
-#include <qtablewidget.h>
+#include <QBoxLayout>
+#include <QHeaderView>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QPlainTextEdit>
+#include <QSplitter>
+#include <QTableWidget>
+#include <QToolBar>
 #include <set>
 
 using regina::NPacket;
@@ -124,13 +119,13 @@ void ScriptNameDelegate::setModelData(QWidget* editor,
     QString data = e->text().trimmed();
 
     if (data.isEmpty()) {
-        KMessageBox::error(e, i18n(
-            "Variable names cannot be empty."));
+        QMessageBox::warning(e, tr("Empty variable name"),
+            tr("Variable names cannot be empty."));
         return;
     }
     if (! rePythonIdentifier.exactMatch(data)) {
-        KMessageBox::error(e, i18n(
-            "%1 is not a valid python variable name.").arg(data));
+        QMessageBox::warning(e, tr("Invalid variable name"),
+            tr("%1 is not a valid python variable name.").arg(data));
 
         // Construct a better variable name.
         data.replace(QRegExp("[^A-Za-z0-9_]"), "");
@@ -140,8 +135,8 @@ void ScriptNameDelegate::setModelData(QWidget* editor,
             data.prepend('_');
     }
     if (nameUsedElsewhere(data, index.row(), model)) {
-        KMessageBox::error(e, i18n(
-            "Another variable is already using the name %1.").arg(data));
+        QMessageBox::warning(e, tr("Name already used"),
+            tr("Another variable is already using the name %1.").arg(data));
 
         // Construct a unique variable name.
         int which;
@@ -203,9 +198,8 @@ void ScriptValueDelegate::updateEditorGeometry(QWidget* editor,
     editor->setGeometry(option.rect);
 }
 
-NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
-        KTextEditor::Document* doc) :
-        PacketUI(enclosingPane), script(packet), document(doc) {
+NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
+        PacketUI(enclosingPane), script(packet){
     bool readWrite = enclosingPane->isReadWrite();
 
     ui = new QWidget(enclosingPane);
@@ -215,7 +209,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     // --- Action Toolbar ---
 
-    KToolBar* actionBar = new KToolBar(ui, false, true);
+    QToolBar* actionBar = new QToolBar(ui);
     actionBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     layout->addWidget(actionBar);
 
@@ -233,7 +227,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     else
         varTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    varTable->setWhatsThis(i18n("<qt>A list of variables that will be "
+    varTable->setWhatsThis(tr("<qt>A list of variables that will be "
         "set before the script is run.  Each variable may refer to a "
         "single packet.<p>"
         "This allows your script to easily access the other packets in "
@@ -242,7 +236,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     varTable->verticalHeader()->hide();
 
     varTable->setHorizontalHeaderLabels(
-        QStringList() << i18n("Variable") << i18n("Value"));
+        QStringList() << tr("Variable") << tr("Value"));
     varTable->horizontalHeader()->setStretchLastSection(true);
 
     nameDelegate = new ScriptNameDelegate();
@@ -255,31 +249,26 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
    
     // --- Text Editor ---
 
-    // Create a view (which must be parented) before we do anything else.
-    // Otherwise the Vim component crashes.
-    view = document->createView(splitter);
-
+    document = new QPlainTextEdit(splitter);
     // Prepare the components.
-    document->setReadWrite(readWrite);
+    document->setReadOnly(!readWrite);
+    document->setLineWrapMode(QPlainTextEdit::NoWrap);
 
-    KTextEditor::ConfigInterface *iface =
-        qobject_cast<KTextEditor::ConfigInterface*>(view);
-    if (iface)
-        iface->setConfigValue("dynamic-word-wrap", false);
 
     setPythonMode();
 
-    view->setFocus();
-    view->setWhatsThis(i18n("Type the Python script into this "
+    document->setFocus();
+    document->setWhatsThis(tr("Type the Python script into this "
         "area.  Any variables listed in the table above will be "
         "set before the script is run."));
 
-    editIface = new PacketEditTextEditor(view);
+    // TODO Check that we don't need this?
+    // editIface = new PacketEditTextEditor(view);
 
-    splitter->addWidget(view);
+    splitter->addWidget(document);
 
-    splitter->setTabOrder(view, varTable);
-    ui->setFocusProxy(view);
+    splitter->setTabOrder(document, varTable);
+    ui->setFocusProxy(document);
 
     // --- Script Actions ---
 
@@ -287,11 +276,11 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     
     actAdd = new QAction(this);
     //scriptActions->addAction("script_add_var");
-    actAdd->setText(i18n("&Add Var"));
-    actAdd->setIcon(KIcon("edit-table-insert-row-below"));
-    actAdd->setToolTip(i18n("Add a new script variable"));
+    actAdd->setText(tr("&Add Var"));
+    actAdd->setIcon(QIcon::fromTheme("edit-table-insert-row-below"));
+    actAdd->setToolTip(tr("Add a new script variable"));
     actAdd->setEnabled(readWrite);
-    actAdd->setWhatsThis(i18n("Add a new variable to this script.<p>"
+    actAdd->setWhatsThis(tr("Add a new variable to this script.<p>"
         "A script may come with any number of variables, each of which "
         "refers to a single packet.  "
         "This allows your script to easily access the other packets in "
@@ -302,12 +291,12 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     actRemove = new QAction(this);
     //scriptActions->addAction("script_remove_var");
-    actRemove->setText(i18n("Re&move Var"));
-    actRemove->setIcon(KIcon("edit-table-delete-row"));
-    actRemove->setToolTip(i18n(
+    actRemove->setText(tr("Re&move Var"));
+    actRemove->setIcon(QIcon::fromTheme("edit-table-delete-row"));
+    actRemove->setToolTip(tr(
         "Remove the currently selected script variable(s)"));
     actRemove->setEnabled(false);
-    actRemove->setWhatsThis(i18n("Remove the selected variable(s) from "
+    actRemove->setWhatsThis(tr("Remove the selected variable(s) from "
         "this script.<p>"
         "A script may come with any number of variables, each of which "
         "refers to a single packet.  "
@@ -328,10 +317,10 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     QAction* actCompile = new QAction(this);
     //scriptActions->addAction("script_compile");;
-    actCompile->setText(i18n("&Compile"));
-    actCompile->setIcon(KIcon("run-build-file"));
-    actCompile->setToolTip(i18n("Compile the Python script"));
-    actCompile->setWhatsThis(i18n("Test whether this Python script "
+    actCompile->setText(tr("&Compile"));
+    actCompile->setIcon(QIcon::fromTheme("run-build-file"));
+    actCompile->setToolTip(tr("Compile the Python script"));
+    actCompile->setWhatsThis(tr("Test whether this Python script "
         "actually compiles.  Any errors will be shown in a separate "
         "Python console."));
     connect(actCompile, SIGNAL(triggered()), this, SLOT(compile()));
@@ -340,10 +329,10 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
 
     QAction* actRun = new QAction(this);
     //scriptActions->addAction("script_run");;
-    actRun->setText(i18n("&Run"));
-    actRun->setIcon(KIcon("system-run"));
-    actRun->setToolTip(i18n("Execute the Python script"));
-    actRun->setWhatsThis(i18n("Execute this Python script.  The "
+    actRun->setText(tr("&Run"));
+    actRun->setIcon(QIcon::fromTheme("system-run"));
+    actRun->setToolTip(tr("Execute the Python script"));
+    actRun->setWhatsThis(tr("Execute this Python script.  The "
         "script will be run in a separate Python console."));
     connect(actRun, SIGNAL(triggered()), this, SLOT(execute()));
     actionBar->addAction(actRun);
@@ -363,7 +352,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane,
     // Notify us of any changes.
     connect(varTable, SIGNAL(itemChanged(QTableWidgetItem*)),
         this, SLOT(notifyScriptChanged()));
-    connect(document, SIGNAL(textChanged(KTextEditor::Document*)),
+    connect(document, SIGNAL(textChanged()),
         this, SLOT(notifyScriptChanged()));
 }
 
@@ -377,7 +366,7 @@ NScriptUI::~NScriptUI() {
     // Clean up.
     delete nameDelegate;
     delete valueDelegate;
-    delete editIface;
+    //delete editIface;
     delete document;
 }
 
@@ -403,11 +392,10 @@ void NScriptUI::commit() {
 
     // Update the lines.
     script->removeAllLines();
-    unsigned nLines = document->lines();
-    for (unsigned i = 0; i < nLines; i++) {
-        QString s = document->line(i);
-        script->addLast(s.isNull() ? "" : s.toAscii().constData());
-    }
+    QStringList lines = document->toPlainText().split("\n");
+    for( QStringList::iterator it = lines.begin(); it != lines.end(); ++it) 
+        script->addLast((*it).isNull() ? "" : (*it).toAscii().constData());
+
 
     // Update the variables.
     script->removeAllVariables();
@@ -439,9 +427,11 @@ void NScriptUI::refresh() {
 
     // A kate part needs to be in read-write mode before we can alter its
     // contents.
-    bool wasReadWrite = document->isReadWrite();
-    if (! wasReadWrite)
-        document->setReadWrite(true);
+    //
+    // TODO: Check if Qt has the same issue.
+//    bool wasReadWrite = !document->isReadOnly();
+//    if (! wasReadWrite)
+//        document->setReadOnly(false);
 
     // Refresh the lines.
     // The first line is handled separately to avoid an additional blank
@@ -461,12 +451,12 @@ void NScriptUI::refresh() {
             if (i + 1 < nLines)
                 allLines += '\n';
         }
-        document->setText(allLines);
-        view->setCursorPosition(KTextEditor::Cursor(0, 0));
+        document->setPlainText(allLines);
+        document->moveCursor(QTextCursor::Start);
     }
 
-    if (! wasReadWrite)
-        document->setReadWrite(false);
+//    if (! wasReadWrite)
+//        document->setReadOnly(true);
 
     setDirty(false);
 }
@@ -477,7 +467,7 @@ void NScriptUI::setReadWrite(bool readWrite) {
     else
         varTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    document->setReadWrite(readWrite);
+    document->setReadOnly(!readWrite);
     actAdd->setEnabled(readWrite);
     updateRemoveState();
 }
@@ -517,8 +507,8 @@ void NScriptUI::removeSelectedVariables() {
 
     // Note that selections are contiguous.
     if (varTable->selectedRanges().empty()) {
-        KMessageBox::error(ui, i18n(
-            "No variables are currently selected for removal."));
+        QMessageBox::warning(ui, tr("Nothing selected"),
+            tr("No variables are currently selected for removal."));
         return;
     }
     QTableWidgetSelectionRange range = varTable->selectedRanges().front();
@@ -528,20 +518,21 @@ void NScriptUI::removeSelectedVariables() {
     // Notify the user that variables will be removed.
     QString message;
     if (range.bottomRow() == range.topRow())
-        message = i18n("The variable %1 will be removed.  Are you sure?").
+        message = tr("The variable %1 will be removed.  Are you sure?").
             arg(varTable->item(range.topRow(), 0)->text());
     else if (range.bottomRow() == range.topRow() + 1)
-        message = i18n("The variables %1 and %2 will be removed.  "
+        message = tr("The variables %1 and %2 will be removed.  "
             "Are you sure?").arg(varTable->item(range.topRow(), 0)->text()).
             arg(varTable->item(range.bottomRow(), 0)->text());
     else
-        message = i18n("%1 variables from %2 to %3 will be removed.  "
+        message = tr("%1 variables from %2 to %3 will be removed.  "
             "Are you sure?").arg(range.bottomRow() - range.topRow() + 1).
             arg(varTable->item(range.topRow(), 0)->text()).
             arg(varTable->item(range.bottomRow(), 0)->text());
 
-    if (KMessageBox::warningContinueCancel(ui, message) ==
-            KMessageBox::Cancel)
+    if (QMessageBox::warning(ui, tr("Are you sure"),
+          message) ==
+            QMessageBox::Cancel)
         return;
 
     // Remove the variables!
@@ -562,16 +553,17 @@ void NScriptUI::updateRemoveState() {
 void NScriptUI::compile() {
     ReginaPart* part = enclosingPane->getPart();
     if (part->getPythonManager().compileScript(ui, &part->getPreferences(),
-            document->text() + "\n\n") == 0) {
+            document->toPlainText() + "\n\n") == 0) {
         #ifdef BOOST_PYTHON_FOUND
-        KMessageBox::information(ui,
-            i18n("The script compiles successfully."), i18n("Success"));
+        QMessageBox::information(ui,tr("Success"),
+            tr("The script compiles successfully."));
         #endif
     } else
-        KMessageBox::error(ui, i18n("The script does not compile.\n"
+        QMessageBox::warning(ui, tr("Compile error"),
+            tr("The script does not compile.\n"
             "See the Python console for details.  You may interact with "
             "this console to further investigate the problem."),
-            i18n("Compile Failure"));
+            tr("Compile Failure"));
 }
 
 void NScriptUI::execute() {
@@ -590,7 +582,7 @@ void NScriptUI::execute() {
     // Run the script.
     ReginaPart* part = enclosingPane->getPart();
     part->getPythonManager().launchPythonConsole(ui, &part->getPreferences(),
-            document->text() + "\n\n", vars);
+            document->toPlainText() + "\n\n", vars);
 }
 
 void NScriptUI::notifyScriptChanged() {
@@ -598,13 +590,9 @@ void NScriptUI::notifyScriptChanged() {
 }
 
 void NScriptUI::setPythonMode() {
-    // KDE4 lets us do document->setHighlightingMode("python") with graceful
-    // failure, possibly making code smaller.
-    QStringList nModes = document->highlightingModes();
-    for ( int i = 0; i < nModes.count(); i++)
-        if (nModes[i].toLower() == "python") {
-            document->setHighlightingMode(nModes[i]);
-            break;
-        } 
+    // TODO
+    // Need to re-create python syntax highlighting
+    // This includes defining rules, or using 3rd party library
+    // see http://srchiliteqt.sourceforge.net
 }
 
