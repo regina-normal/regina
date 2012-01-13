@@ -38,22 +38,13 @@
 #include <cstdio>
 #include <QDesktopServices>
 #include <QDir>
-#include <qfile.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qmessagebox.h>
-#include <qpixmap.h>
+#include <QFile>
+#include <QLabel>
+#include <QLayout>
+#include <QMessageBox>
+#include <QPixmap>
 #include <QTextDocument>
 #include <QStackedWidget>
-/*#include <kiconloader.h>
-#include <klocale.h>
-#include <kmimetypetrader.h>
-#include <kparts/partmanager.h>
-#include <kprocess.h>
-#include <krun.h>
-#include <kshell.h>
-#include <kstandarddirs.h>
-#include <kurl.h> */
 
 #define PDF_MIMETYPE "application/pdf"
 
