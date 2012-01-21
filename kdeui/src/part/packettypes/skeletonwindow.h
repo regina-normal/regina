@@ -36,7 +36,7 @@
 
 #include "packet/npacketlistener.h"
 
-#include <KDialog>
+#include <QDialog>
 #include <QAbstractItemModel>
 
 class PacketUI;
@@ -207,7 +207,7 @@ class BoundaryComponentModel : public SkeletalModel {
  * Skeleton windows automatically listen for changes on the underlying
  * triangulation and update themselves when necessary.
  */
-class SkeletonWindow : public KDialog, public regina::NPacketListener {
+class SkeletonWindow : public QDialog, public regina::NPacketListener {
     Q_OBJECT
 
     public:

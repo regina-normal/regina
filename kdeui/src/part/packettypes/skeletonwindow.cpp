@@ -31,11 +31,11 @@
 #include "skeletonwindow.h"
 #include "../packetui.h"
 
-#include <klocale.h>
-#include <qheaderview.h>
-#include <qlayout.h>
-#include <qpainter.h>
-#include <qstyle.h>
+#include <QDialogButtonBox>
+#include <QHeaderView>
+#include <QLayout>
+#include <QPainter>
+#include <QStyle>
 #include <QTreeView>
 
 using regina::NBoundaryComponent;
@@ -54,12 +54,12 @@ namespace {
 
 SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
         SkeletalObject viewObjectType) : 
-        KDialog(packetUI->getInterface()), objectType(viewObjectType) {
-    setButtons(KDialog::Close);
+        QDialog(packetUI->getInterface()), objectType(viewObjectType) {
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(
+        QDialogButtonBox::Close,Qt::Horizontal,this);
     tri = dynamic_cast<regina::NTriangulation*>(packetUI->getPacket());
 
-    QWidget* page = new QWidget();
-    setMainWidget(page);
+    QWidget* page = new QWidget(this);
     QBoxLayout* layout = new QVBoxLayout(page);
 
     // Set up the table of data.
@@ -112,23 +112,23 @@ void SkeletonWindow::refresh() {
 }
 
 void SkeletonWindow::editingElsewhere() {
-    setCaption(i18n("Editing... (") + tri->getPacketLabel().c_str() + ')');
+    setWindowTitle(tr("Editing... (") + tri->getPacketLabel().c_str() + ')');
     model->makeEmpty();
 }
 
 void SkeletonWindow::updateCaption() {
     QString label;
     switch (objectType) {
-        case Vertices: label = i18n("Vertices (%1)"); break;
-        case Edges: label = i18n("Edges (%1)"); break;
-        case Faces: label = i18n("Faces (%1)"); break;
-        case Components: label = i18n("Components (%1)"); break;
+        case Vertices: label = tr("Vertices (%1)"); break;
+        case Edges: label = tr("Edges (%1)"); break;
+        case Faces: label = tr("Faces (%1)"); break;
+        case Components: label = tr("Components (%1)"); break;
         case BoundaryComponents: label =
-            i18n("Boundary Components (%1)"); break;
-        default: label = i18n("Unknown skeletal items (%1)"); break;
+            tr("Boundary Components (%1)"); break;
+        default: label = tr("Unknown skeletal items (%1)"); break;
     }
 
-    setCaption(label.arg(tri->getPacketLabel().c_str()));
+    setWindowTitle(label.arg(tri->getPacketLabel().c_str()));
 }
 
 void SkeletonWindow::packetWasChanged(regina::NPacket*) {
@@ -140,12 +140,12 @@ void SkeletonWindow::packetWasRenamed(regina::NPacket*) {
 }
 
 void SkeletonWindow::packetToBeDestroyed(regina::NPacket*) {
-    slotButtonClicked(KDialog::Close);
+    accepted();
 }
 
 QString SkeletonWindow::overview(SkeletalObject type) {
     switch (type) {
-        case Vertices: return i18n("<qt>Displays details of each "
+        case Vertices: return tr("<qt>Displays details of each "
             "vertex of this triangulation.<p>"
             "The different vertices are numbered from 0 upwards.  "
             "Each row describes properties of the vertex as well as "
@@ -153,7 +153,7 @@ QString SkeletonWindow::overview(SkeletalObject type) {
             "corresponds to.<p>"
             "See the users' handbook for further details on what each "
             "column of the table means.</qt>");
-        case Edges: return i18n("<qt>Displays details of each edge of "
+        case Edges: return tr("<qt>Displays details of each edge of "
             "this triangulation.<p>"
             "The different edges are numbered from 0 upwards.  "
             "Each row describes properties of the edge as well as "
@@ -161,7 +161,7 @@ QString SkeletonWindow::overview(SkeletalObject type) {
             "corresponds to.<p>"
             "See the users' handbook for further details on what each "
             "column of the table means.</qt>");
-        case Faces: return i18n("<qt>Displays details of each "
+        case Faces: return tr("<qt>Displays details of each "
             "face of this triangulation.<p>"
             "The different faces are numbered from 0 upwards.  "
             "Each row describes the shape of the face as well as "
@@ -169,14 +169,14 @@ QString SkeletonWindow::overview(SkeletalObject type) {
             "corresponds to.<p>"
             "See the users' handbook for further details on what each "
             "column of the table means.</qt>");
-        case Components: return i18n("<qt>Displays details of each "
+        case Components: return tr("<qt>Displays details of each "
             "connected component of this triangulation.<p>"
             "The different components are numbered from 0 upwards.  "
             "Each row describes properties of the component as well as "
             "listing precisely which tetrahedra the component contains.<p>"
             "See the users' handbook for further details on what each "
             "column of the table means.</qt>");
-        case BoundaryComponents: return i18n("<qt>Displays details of each "
+        case BoundaryComponents: return tr("<qt>Displays details of each "
             "boundary component of this triangulation.  A boundary "
             "component may be a collection of adjacent boundary faces, "
             "or it may be a single ideal vertex, whose link is closed but "
@@ -213,21 +213,21 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
                 if (link == NVertex::SPHERE)
                     return QString();
                 if (link == NVertex::DISC)
-                    return i18n("Bdry");
+                    return tr("Bdry");
                 if (link == NVertex::TORUS)
-                    return i18n("Cusp (torus)");
+                    return tr("Cusp (torus)");
                 if (link == NVertex::KLEIN_BOTTLE)
-                    return i18n("Cusp (klein bottle)");
+                    return tr("Cusp (klein bottle)");
                 if (link == NVertex::NON_STANDARD_CUSP) {
                     if (item->isLinkOrientable())
-                        return i18n("Cusp (orbl, genus %1)").arg(
+                        return tr("Cusp (orbl, genus %1)").arg(
                             1 - (item->getLinkEulerCharacteristic() / 2));
                     else
-                        return i18n("Cusp (non-or, genus %1)").arg(
+                        return tr("Cusp (non-or, genus %1)").arg(
                             2 - item->getLinkEulerCharacteristic());
                 }
                 if (link == NVertex::NON_STANDARD_BDRY)
-                    return i18n("Non-std bdry");
+                    return tr("Non-std bdry");
                 return QString();
             }
             case 2:
@@ -256,10 +256,10 @@ QVariant VertexModel::headerData(int section,
 
     if (role == Qt::DisplayRole) {
         switch (section) {
-            case 0: return i18n("Vertex #");
-            case 1: return i18n("Type");
-            case 2: return i18n("Degree");
-            case 3: return i18n("Tetrahedra (Tet vertices)");
+            case 0: return tr("Vertex #");
+            case 1: return tr("Type");
+            case 2: return tr("Degree");
+            case 3: return tr("Tetrahedra (Tet vertices)");
             default: return QString();
         }
     } else if (role == Qt::ToolTipRole) {
@@ -270,14 +270,14 @@ QVariant VertexModel::headerData(int section,
 
 QString VertexModel::toolTipForCol(int column) {
     switch (column) {
-        case 0: return i18n("<qt>The number of the individual vertex.  "
+        case 0: return tr("<qt>The number of the individual vertex.  "
             "Vertices are numbered 0,1,2,...,<i>v</i>-1.</qt>");
-        case 1: return i18n("<qt>Lists additional properties of the vertex, "
+        case 1: return tr("<qt>Lists additional properties of the vertex, "
             "such as whether this is a cusp or a boundary vertex.</qt>");
-        case 2: return i18n("<qt>Gives the degree of this vertex, i.e., "
+        case 2: return tr("<qt>Gives the degree of this vertex, i.e., "
             "the number of individual tetrahedron vertices that are "
             "identified to it.</qt>");
-        case 3: return i18n("<qt>Lists the individual tetrahedron vertices "
+        case 3: return tr("<qt>Lists the individual tetrahedron vertices "
             "that come together to form this vertex of the "
             "triangulation.</qt>");
         default: return QString();
@@ -302,9 +302,9 @@ QVariant EdgeModel::data(const QModelIndex& index, int role) const {
                 return index.row();
             case 1:
                 if (! item->isValid())
-                    return i18n("INVALID");
+                    return tr("INVALID");
                 else if (item->isBoundary())
-                    return i18n("Bdry");
+                    return tr("Bdry");
                 else
                     return QString();
             case 2:
@@ -333,10 +333,10 @@ QVariant EdgeModel::headerData(int section,
 
     if (role == Qt::DisplayRole) {
         switch (section) {
-            case 0: return i18n("Edge #");
-            case 1: return i18n("Type");
-            case 2: return i18n("Degree");
-            case 3: return i18n("Tetrahedra (Tet vertices)");
+            case 0: return tr("Edge #");
+            case 1: return tr("Type");
+            case 2: return tr("Degree");
+            case 3: return tr("Tetrahedra (Tet vertices)");
             default: return QString();
         }
     } else if (role == Qt::ToolTipRole) {
@@ -347,14 +347,14 @@ QVariant EdgeModel::headerData(int section,
 
 QString EdgeModel::toolTipForCol(int column) {
     switch (column) {
-        case 0: return i18n("<qt>The number of the individual edge.  "
+        case 0: return tr("<qt>The number of the individual edge.  "
             "Edges are numbered 0,1,2,...,<i>e</i>-1.</qt>");
-        case 1: return i18n("<qt>Lists additional properties of the edge, "
+        case 1: return tr("<qt>Lists additional properties of the edge, "
             "such as whether it lies on the boundary or is invalid.</qt>");
-        case 2: return i18n("<qt>Gives the degree of this edge, i.e., "
+        case 2: return tr("<qt>Gives the degree of this edge, i.e., "
             "the number of individual tetrahedron edges that are "
             "identified to it.</qt>");
-        case 3: return i18n("<qt>Lists the individual tetrahedron edges "
+        case 3: return tr("<qt>Lists the individual tetrahedron edges "
             "that come together to form this edge of the triangulation.</qt>");
         default: return QString();
     }
@@ -379,26 +379,26 @@ QVariant FaceModel::data(const QModelIndex& index, int role) const {
             case 1: {
                 QString prefix;
                 if (item->isBoundary())
-                    prefix = i18n("(Bdry) ");
+                    prefix = tr("(Bdry) ");
 
                 int type = item->getType();
                 if (type == NFace::TRIANGLE)
-                    return prefix + i18n("Triangle");
+                    return prefix + tr("Triangle");
                 if (type == NFace::SCARF)
-                    return prefix + i18n("Scarf");
+                    return prefix + tr("Scarf");
                 if (type == NFace::PARACHUTE)
-                    return prefix + i18n("Parachute");
+                    return prefix + tr("Parachute");
                 if (type == NFace::MOBIUS)
-                    return prefix + i18n("Mobius band");
+                    return prefix + tr("Mobius band");
                 if (type == NFace::CONE)
-                    return prefix + i18n("Cone");
+                    return prefix + tr("Cone");
                 if (type == NFace::HORN)
-                    return prefix + i18n("Horn");
+                    return prefix + tr("Horn");
                 if (type == NFace::DUNCEHAT)
-                    return prefix + i18n("Dunce hat");
+                    return prefix + tr("Dunce hat");
                 if (type == NFace::L31)
-                    return prefix + i18n("L(3,1)");
-                return prefix + i18n("UNKNOWN");
+                    return prefix + tr("L(3,1)");
+                return prefix + tr("UNKNOWN");
             }
             case 2:
                 return static_cast<unsigned>(item->getNumberOfEmbeddings());
@@ -426,10 +426,10 @@ QVariant FaceModel::headerData(int section,
 
     if (role == Qt::DisplayRole) {
         switch (section) {
-            case 0: return i18n("Face #");
-            case 1: return i18n("Type");
-            case 2: return i18n("Degree");
-            case 3: return i18n("Tetrahedra (Tet vertices)");
+            case 0: return tr("Face #");
+            case 1: return tr("Type");
+            case 2: return tr("Degree");
+            case 3: return tr("Tetrahedra (Tet vertices)");
             default: return QString();
         }
     } else if (role == Qt::ToolTipRole) {
@@ -440,15 +440,15 @@ QVariant FaceModel::headerData(int section,
 
 QString FaceModel::toolTipForCol(int column) {
     switch (column) {
-        case 0: return i18n("<qt>The number of the individual face.  "
+        case 0: return tr("<qt>The number of the individual face.  "
             "Faces are numbered 0,1,2,...,<i>f</i>-1.</qt>");
-        case 1: return i18n("<qt>Lists additional properties of the face, "
+        case 1: return tr("<qt>Lists additional properties of the face, "
             "such as the shape that it forms and whether it lies on the "
             "boundary.</qt>");
-        case 2: return i18n("<qt>Gives the degree of this face, i.e., "
+        case 2: return tr("<qt>Gives the degree of this face, i.e., "
             "the number of individual tetrahedron faces that are "
             "identified to it.</qt>");
-        case 3: return i18n("<qt>Lists the individual tetrahedron faces "
+        case 3: return tr("<qt>Lists the individual tetrahedron faces "
             "that come together to form this face of the triangulation.</qt>");
         default: return QString();
     }
@@ -471,8 +471,8 @@ QVariant ComponentModel::data(const QModelIndex& index, int role) const {
             case 0:
                 return index.row();
             case 1:
-                return (item->isIdeal() ? i18n("Ideal, ") : i18n("Real, ")) +
-                    (item->isOrientable() ? i18n("Orbl") : i18n("Non-orbl"));
+                return (item->isIdeal() ? tr("Ideal, ") : tr("Real, ")) +
+                    (item->isOrientable() ? tr("Orbl") : tr("Non-orbl"));
             case 2:
                 return static_cast<unsigned>(item->getNumberOfTetrahedra());
             case 3:
@@ -497,10 +497,10 @@ QVariant ComponentModel::headerData(int section,
 
     if (role == Qt::DisplayRole) {
         switch (section) {
-            case 0: return i18n("Cmpt #");
-            case 1: return i18n("Type");
-            case 2: return i18n("Size");
-            case 3: return i18n("Tetrahedra");
+            case 0: return tr("Cmpt #");
+            case 1: return tr("Type");
+            case 2: return tr("Size");
+            case 3: return tr("Tetrahedra");
             default: return QString();
         }
     } else if (role == Qt::ToolTipRole) {
@@ -511,14 +511,14 @@ QVariant ComponentModel::headerData(int section,
 
 QString ComponentModel::toolTipForCol(int column) {
     switch (column) {
-        case 0: return i18n("<qt>The number of the individual component.  "
+        case 0: return tr("<qt>The number of the individual component.  "
             "Components are numbered 0,1,2,...,<i>c</i>-1.</qt>");
-        case 1: return i18n("<qt>Lists additional properties of the component, "
+        case 1: return tr("<qt>Lists additional properties of the component, "
             "such as its orientability or whether it contains ideal "
             "vertices.</qt>");
-        case 2: return i18n("<qt>Gives the size of this component, i.e., "
+        case 2: return tr("<qt>Gives the size of this component, i.e., "
             "the number of tetrahedra that it contains.</qt>");
-        case 3: return i18n("<qt>Identifies the individual tetrahedra "
+        case 3: return tr("<qt>Identifies the individual tetrahedra "
             "that belong to this component.</qt>");
         default: return QString();
     }
@@ -542,21 +542,21 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
             case 0:
                 return index.row();
             case 1:
-                return (item->isIdeal() ? i18n("Ideal") : i18n("Real"));
+                return (item->isIdeal() ? tr("Ideal") : tr("Real"));
             case 2:
                 // Note that we can't have just one face (by a parity argument).
-                return (item->isIdeal() ? i18n("1 vertex") :
-                    i18n("%1 faces").arg(item->getNumberOfFaces()));
+                return (item->isIdeal() ? tr("1 vertex") :
+                    tr("%1 faces").arg(item->getNumberOfFaces()));
             case 3:
                 if (item->isIdeal())
-                    return i18n("Vertex %1").arg(tri->vertexIndex(
+                    return tr("Vertex %1").arg(tri->vertexIndex(
                         item->getVertex(0)));
                 else {
                     QString ans;
                     for (unsigned long i = 0; i < item->getNumberOfFaces(); i++)
                         appendToList(ans, QString::number(tri->faceIndex(
                             item->getFace(i))));
-                    return i18n("Faces ") + ans;
+                    return tr("Faces ") + ans;
                 }
         }
         return QString();
@@ -573,10 +573,10 @@ QVariant BoundaryComponentModel::headerData(int section,
 
     if (role == Qt::DisplayRole) {
         switch (section) {
-            case 0: return i18n("Cmpt #");
-            case 1: return i18n("Type");
-            case 2: return i18n("Size");
-            case 3: return i18n("Faces / Vertex");
+            case 0: return tr("Cmpt #");
+            case 1: return tr("Type");
+            case 2: return tr("Size");
+            case 3: return tr("Faces / Vertex");
             default: return QString();
         }
     } else if (role == Qt::ToolTipRole) {
@@ -587,16 +587,16 @@ QVariant BoundaryComponentModel::headerData(int section,
 
 QString BoundaryComponentModel::toolTipForCol(int column) {
     switch (column) {
-        case 0: return i18n("<qt>The number of the individual boundary "
+        case 0: return tr("<qt>The number of the individual boundary "
             "component.  "
             "Boundary components are numbered 0,1,2,...,<i>b</i>-1.</qt>");
-        case 1: return i18n("<qt>Lists whether this is an ideal or real "
+        case 1: return tr("<qt>Lists whether this is an ideal or real "
             "boundary component.</qt>");
-        case 2: return i18n("<qt>Gives the size of this boundary component, "
+        case 2: return tr("<qt>Gives the size of this boundary component, "
             "i.e., the number of faces (for a real boundary component) "
             "or the number of vertices (which is always one for an ideal "
             "boundary component).</qt>");
-        case 3: return i18n("<qt>Identifies the individual faces for a real "
+        case 3: return tr("<qt>Identifies the individual faces for a real "
             "boundary component, or the individual vertex for an ideal "
             "boundary component.</qt>");
         default: return QString();
