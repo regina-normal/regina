@@ -33,15 +33,15 @@
 #ifndef __COMMANDEDIT_H
 #define __COMMANDEDIT_H
 
-#include <klineedit.h>
-#include <qstringlist.h>
+#include <QStringList>
+#include <QLineEdit>
 
 /**
  * A line edit extension designed for entering python commands.
  * Tabs are converted into spaces, and command-line history is
  * available.
  */
-class CommandEdit : public KLineEdit {
+class CommandEdit : public QLineEdit {
     Q_OBJECT
 
     private:
@@ -59,7 +59,7 @@ class CommandEdit : public KLineEdit {
         /**
          * Constructor.
          */
-        CommandEdit(QWidget* parent = 0, const char* name = 0);
+        CommandEdit(QWidget* parent = 0);
 
         /**
          * Configuration.
@@ -69,9 +69,9 @@ class CommandEdit : public KLineEdit {
 
     protected:
         /**
-         * QLineEdit/KLineEdit overrides.
+         * QLineEdit overrides.
          */
-        void keyPressEvent(QKeyEvent* event);
+        bool event(QEvent* event);
 };
 
 inline unsigned CommandEdit::getSpacesPerTab() {

@@ -29,48 +29,57 @@
 #include "commandedit.h"
 
 #include <iostream>
-#include <kapplication.h>
+#include <QApplication>
 #include <QKeyEvent>
 #define COMMAND_EDIT_DEFAULT_SPACES_PER_TAB 4
 
-CommandEdit::CommandEdit(QWidget* parent, const char* name) :
-        KLineEdit(parent) { // , name) {
+CommandEdit::CommandEdit(QWidget* parent) :
+        QLineEdit(parent) { 
     setSpacesPerTab(COMMAND_EDIT_DEFAULT_SPACES_PER_TAB);
     historyPos = history.end();
 }
 
-void CommandEdit::keyPressEvent(QKeyEvent* event) {
-    if (event->key() == Qt::Key_Tab)
-        insert(tabReplacement);
-    else if (event->key() == Qt::Key_Up) {
-        // Browse backwards through history.
-        if (historyPos == history.end())
-            newLine = text();
-        if (historyPos == history.begin())
-            QApplication::beep();
-        else {
-            historyPos--;
-            setText(*historyPos);
-            end(false);
-        }
-    } else if (event->key() == Qt::Key_Down) {
-        // Browse forwards through history.
-        if (historyPos == history.end())
-            QApplication::beep();
-        else {
-            historyPos++;
+bool CommandEdit::event(QEvent* event) {
+    if (event->type() != QEvent::KeyPress) {
+        return QLineEdit::event(event);
+    } else {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        if (keyEvent->key() == Qt::Key_Tab) {
+            insert(tabReplacement);
+            return true;
+        } else if (keyEvent->key() == Qt::Key_Up) {
+            // Browse backwards through history.
             if (historyPos == history.end())
-                setText(newLine);
-            else
+                newLine = text();
+            if (historyPos == history.begin())
+                QApplication::beep();
+            else {
+                historyPos--;
                 setText(*historyPos);
+                end(false);
+            }
+            return true;
+        } else if (keyEvent->key() == Qt::Key_Down) {
+            // Browse forwards through history.
+            if (historyPos == history.end())
+                QApplication::beep();
+            else {
+                historyPos++;
+                if (historyPos == history.end())
+                    setText(newLine);
+                else
+                    setText(*historyPos);
+            }
+            return true;
+        } else if (keyEvent->key() == Qt::Key_Return) {
+            // Save the current line in history before we process it.
+            history.push_back(text());
+            historyPos = history.end();
+            return QLineEdit::event(event);
+        } else {
+            return QLineEdit::event(event);
         }
-    } else if (event->key() == Qt::Key_Return) {
-        // Save the current line in history before we process it.
-        history.push_back(text());
-        historyPos = history.end();
-        KLineEdit::keyPressEvent(event);
-    } else
-        KLineEdit::keyPressEvent(event);
+    }
 }
 
 // #include "commandedit.moc"
