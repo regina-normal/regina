@@ -32,9 +32,8 @@
 #include "pdfhandler.h"
 #include "../packetfilter.h"
 
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <qfile.h>
+#include <QFile>
+#include <QMessageBox>
 
 const PDFHandler PDFHandler::instance;
 
@@ -43,9 +42,10 @@ regina::NPacket* PDFHandler::importData(const QString& fileName,
     regina::NPacket* ans = regina::readPDF(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)
-        KMessageBox::error(parentWidget, i18n(
-            "The PDF document %1 could not be read.").arg(fileName));
-    ans->setPacketLabel(i18n("PDF document").toAscii().constData());
+        QMessageBox::warning(parentWidget, QObject::tr("Read failed"), 
+            QObject::tr("The PDF document %1 could not be read.").
+            arg(fileName));
+    ans->setPacketLabel(QObject::tr("PDF document").toAscii().constData());
     return ans;
 }
 
@@ -57,14 +57,16 @@ bool PDFHandler::exportData(regina::NPacket* data, const QString& fileName,
         QWidget* parentWidget) const {
     regina::NPDF* pdf = dynamic_cast<regina::NPDF*>(data);
     if (! pdf->data()) {
-        KMessageBox::error(parentWidget, i18n(
-            "This PDF packet is empty, and so cannot be exported."));
+        QMessageBox::warning(parentWidget, QObject::tr("Empty packet"), 
+            QObject::tr("This PDF packet is empty, "
+            "and so cannot be exported."));
         return false;
     }
     if (! regina::writePDF(
             static_cast<const char*>(QFile::encodeName(fileName)), *pdf)) {
-        KMessageBox::error(parentWidget, i18n(
-            "The PDF document %1 could not be saved.").arg(fileName));
+        QMessageBox::warning(parentWidget, QObject::tr("Save failed"), 
+            QObject::tr("The PDF document %1 could not be saved.")
+            .arg(fileName));
         return false;
     }
     return true;

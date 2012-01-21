@@ -31,17 +31,16 @@
 #include "reginahandler.h"
 #include "../packetfilter.h"
 
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <qfile.h>
+#include <QFile>
+#include <QMessageBox>
 
 regina::NPacket* ReginaHandler::importData(const QString& fileName,
         QWidget* parentWidget) const {
     regina::NPacket* ans = regina::readFileMagic(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)
-        KMessageBox::error(parentWidget, i18n(
-            "The file %1 could not be imported.  Perhaps it is not "
+        QMessageBox::warning(parentWidget, QObject::tr("Import failed"),
+            QObject::tr("The file %1 could not be imported.  Perhaps it is not "
             "a Regina data file?").arg(fileName));
     return ans;
 }
@@ -53,14 +52,15 @@ PacketFilter* ReginaHandler::canExport() const {
 bool ReginaHandler::exportData(regina::NPacket* data,
         const QString& fileName, QWidget* parentWidget) const {
     if (data->dependsOnParent()) {
-        KMessageBox::error(parentWidget, i18n(
-            "This packet cannot be separated from its parent."));
+        QMessageBox::warning(parentWidget, QObject::tr("Cannot separate"), 
+            QObject::tr("This packet cannot be separated from its parent."));
         return false;
     }
     if (! regina::writeXMLFile(QFile::encodeName(fileName), data, compressed)) {
-        KMessageBox::error(parentWidget, i18n(
-            "This packet subtree could not be exported.  An unknown error, "
-            "probably related to file I/O, occurred during the export."));
+        QMessageBox::warning(parentWidget, QObject::tr("Export failed"), 
+            QObject::tr("This packet subtree could not be exported.  An "
+            "unknown error, probably related to file I/O, occurred during "
+            "the export."));
         return false;
     }
     return true;

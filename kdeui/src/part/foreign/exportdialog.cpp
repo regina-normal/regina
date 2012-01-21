@@ -33,12 +33,12 @@
 #include "../packetfilter.h"
 
 #include <QDialogButtonBox>
-#include <qframe.h>
+#include <QFrame>
 #include <QHBoxLayout>
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QLabel>
+#include <QLayout>
 #include <QMessageBox>
-#include <qwhatsthis.h>
+#include <QWhatsThis>
 
 ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
         regina::NPacket* defaultSelection, PacketFilter* useFilter,

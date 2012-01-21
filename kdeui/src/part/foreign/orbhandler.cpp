@@ -32,9 +32,8 @@
 #include "orbhandler.h"
 #include "../packetfilter.h"
 
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <qfile.h>
+#include <QFile>
+#include <QMessageBox>
 
 const OrbHandler OrbHandler::instance;
 
@@ -43,9 +42,9 @@ regina::NPacket* OrbHandler::importData(const QString& fileName,
     regina::NPacket* ans = regina::readOrb(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)
-        KMessageBox::error(parentWidget, i18n(
-            "The Orb / Casson file %1 could not be imported.  Perhaps the "
-            "data is not in Orb format?").arg(fileName));
+        QMessageBox::warning(parentWidget, QObject::tr("Import failed"),
+            QObject::tr( "The Orb / Casson file %1 could not be imported. "
+            "Perhaps the data is not in Orb format?").arg(fileName));
     return ans;
 }
 

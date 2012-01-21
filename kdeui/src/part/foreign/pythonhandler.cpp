@@ -33,11 +33,10 @@
 #include "../packetfilter.h"
 
 #include <fstream>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <qfile.h>
-#include <qtextcodec.h>
-#include <qtextstream.h>
+#include <QFile>
+#include <QMessageBox>
+#include <QTextCodec>
+#include <QTextStream>
 
 namespace {
     const QString scriptMarker("Regina Script:");
@@ -56,8 +55,8 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
         QTextCodec* encoding, QWidget* parentWidget) const {
     QFile f(fileName);
     if (! f.open(QIODevice::ReadOnly)) {
-        KMessageBox::error(parentWidget, i18n(
-            "The import file %1 could not be read.").arg(fileName));
+        QMessageBox::warning(parentWidget, QObject::tr("Read failed"), 
+            QObject::tr("The import file %1 could not be read.").arg(fileName));
         return 0;
     }
     QTextStream in(&f);
@@ -68,7 +67,7 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
         in.setCodec(QTextCodec::codecForName("UTF-8"));
 
     regina::NScript* ans = new regina::NScript();
-    ans->setPacketLabel(i18n("Imported Script").toAscii().constData());
+    ans->setPacketLabel(QObject::tr("Imported Script").toAscii().constData());
 
     // Read in the script.
     bool readingMetadata = true;
@@ -136,8 +135,9 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
 
     QFile f(fileName);
     if (! f.open(QIODevice::WriteOnly)) {
-        KMessageBox::error(parentWidget, i18n(
-            "The export file %1 could not be written to.").arg(fileName));
+        QMessageBox::warning(parentWidget, QObject::tr("Export failed"), 
+            QObject::tr("The export file %1 could not be written to.")
+            .arg(fileName));
         return false;
     }
     QTextStream out(&f);

@@ -32,9 +32,8 @@
 #include "csvsurfacehandler.h"
 #include "../packetfilter.h"
 
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <qfile.h>
+#include <QFile>
+#include <QMessageBox>
 
 const CSVSurfaceHandler CSVSurfaceHandler::instance;
 
@@ -48,10 +47,10 @@ bool CSVSurfaceHandler::exportData(regina::NPacket* data,
         dynamic_cast<regina::NNormalSurfaceList*>(data);
     if (! regina::writeCSVStandard(
             static_cast<const char*>(QFile::encodeName(fileName)), *list)) {
-        KMessageBox::error(parentWidget, i18n(
-            "This normal surface list could not be exported.  An unknown "
-            "error, probably related to file I/O, occurred during the "
-            "export."));
+        QMessageBox::warning(parentWidget, QObject::tr("Export failed"), 
+            QObject::tr( "This normal surface list could not be exported. "
+            "An unknown error, probably related to file I/O, occurred during "
+            "the export."));
         return false;
     }
     return true;

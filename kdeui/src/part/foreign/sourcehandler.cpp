@@ -32,11 +32,10 @@
 #include "../packetfilter.h"
 
 #include <fstream>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <qfile.h>
-#include <qtextcodec.h>
-#include <qtextstream.h>
+#include <QFile>
+#include <QMessageBox>
+#include <QTextCodec>
+#include <QTextStream>
 
 const SourceHandler SourceHandler::instance;
 
@@ -55,8 +54,8 @@ bool SourceHandler::exportData(regina::NPacket* data, const QString& fileName,
 
     QFile f(fileName);
     if (! f.open(QIODevice::WriteOnly)) {
-        KMessageBox::error(parentWidget, i18n(
-            "This triangulation could not be exported.  The target "
+        QMessageBox::warning(parentWidget, QObject::tr("Write failed"), 
+            QObject::tr("This triangulation could not be exported. The target "
             "file %1 could not be opened for writing.").arg(fileName));
         return false;
     }

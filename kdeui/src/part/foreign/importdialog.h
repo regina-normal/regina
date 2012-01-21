@@ -34,7 +34,7 @@
 #ifndef __IMPORTDIALOG_H
 #define __IMPORTDIALOG_H
 
-#include <kdialog.h>
+#include <QDialog>
 
 class PacketChooser;
 class PacketFilter;
@@ -52,7 +52,7 @@ namespace regina {
  * taken (and in particular the imported data will need to be destroyed
  * elsewhere).
  */
-class ImportDialog : public KDialog {
+class ImportDialog : public QDialog {
     Q_OBJECT
 
     private:
