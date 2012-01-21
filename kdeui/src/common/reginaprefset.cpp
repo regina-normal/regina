@@ -84,7 +84,7 @@ GraphvizStatus GraphvizStatus::status(const QString& userExec,
     // We need a full requery.
     if (! userExec.contains(QDir::separator())) {
         // Hunt on the search path.
-        QString paths = QProcessEnvironment::value("PATH");
+        QString paths = QProcessEnvironment::systemEnvironment().value("PATH");
         // Windows uses a different separator in $PATH
 #if defined _WIN32 || defined _WIN64 || defined __CYGWIN
         QString pathSeparator = ";";
@@ -94,7 +94,7 @@ GraphvizStatus GraphvizStatus::status(const QString& userExec,
         QStringList pathList = paths.split(pathSeparator);
         bool found = false;
         for( QStringList::iterator it = pathList.begin(); it != pathList.end();
-            ++pathList) {
+            ++it) {
             QDir dir(*it);
             if ( dir.exists(userExec) ) {
                 fullExec = dir.absoluteFilePath(userExec);
@@ -272,18 +272,10 @@ bool ReginaPrefSet::writePythonLibraries() const {
 
 void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
         QWidget* parentWidget) {
-    // TODO Remove
-    //if (handbookInKHelpCenter) {
-    //    KToolInvocation::invokeHelp(section, handbook);
-    //    return;
-    //}
-
-    // TODO Change locate function to what?
     QString handbookName = (handbook ? handbook : "regina");
-    QString index = KStandardDirs::locate("html",
-        QString("en/%1/index.html").arg(handbookName));
-    QString page = KStandardDirs::locate("html",
-        QString("en/%1/%2.html").arg(handbookName).arg(section));
+    // TODO: Documentation links are plain wrong.
+    QString index = QString("en/%1/index.html").arg(handbookName);
+    QString page = QString("en/%1/%2.html").arg(handbookName).arg(section);
     if (QFileInfo(page).exists()) {
         if (! QDesktopServices::openUrl(QUrl("file://" + page))) {
             if (handbook) {
