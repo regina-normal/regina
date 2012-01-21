@@ -36,19 +36,17 @@
 #include "reginaprefset.h"
 
 #include <fstream>
-#include <kiconloader.h>
-#include <klocale.h>
-#include <kprocess.h>
-#include <kstandarddirs.h>
-#include <KTemporaryFile>
-#include <qfile.h>
-#include <qfileinfo.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qmessagebox.h>
-#include <qpushbutton.h>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QLabel>
+#include <QLayout>
+#include <QMessageBox>
+#include <QProcess>
+#include <QPushButton>
 #include <QScrollArea>
 #include <QStackedWidget>
+#include <QTemporaryFile>
 
 using regina::NPacket;
 using regina::NTriangulation;
@@ -58,8 +56,8 @@ NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
         PacketTabbedViewerTab(useParentUI) {
     faceGraph = new NTriFaceGraphUI(packet, this, prefs.triGraphvizExec);
 
-    addTab(new NTriSkelCompUI(packet, this), i18n("&Skeletal Components"));
-    addTab(faceGraph, i18n("&Face Pairing Graph"));
+    addTab(new NTriSkelCompUI(packet, this), tr("&Skeletal Components"));
+    addTab(faceGraph, tr("&Face Pairing Graph"));
 
     switch (prefs.triInitialSkeletonTab) {
         case ReginaPrefSet::SkelComp:
@@ -90,98 +88,98 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     QPushButton* btn;
     QString msg;
 
-    label = new QLabel(i18n("Vertices:"), ui);
+    label = new QLabel(tr("Vertices:"), ui);
     grid->addWidget(label, 0, 1);
     nVertices = new QLabel(ui);
     nVertices->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     grid->addWidget(nVertices, 0, 3);
-    msg = i18n("The total number of vertices in this triangulation.");
+    msg = tr("The total number of vertices in this triangulation.");
     label->setWhatsThis(msg);
     nVertices->setWhatsThis(msg);
 
-    label = new QLabel(i18n("Edges:"), ui);
+    label = new QLabel(tr("Edges:"), ui);
     grid->addWidget(label, 1, 1);
     nEdges = new QLabel(ui);
     nEdges ->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     grid->addWidget(nEdges, 1, 3);
-    msg = i18n("The total number of edges in this triangulation.");
+    msg = tr("The total number of edges in this triangulation.");
     label->setWhatsThis(msg);
     nEdges->setWhatsThis(msg);
 
-    label = new QLabel(i18n("Faces:"), ui);
+    label = new QLabel(tr("Faces:"), ui);
     grid->addWidget(label, 2, 1);
     nFaces = new QLabel(ui);
     nFaces->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     grid->addWidget(nFaces, 2, 3);
-    msg = i18n("The total number of faces in this triangulation.");
+    msg = tr("The total number of faces in this triangulation.");
     label->setWhatsThis(msg);
     nFaces->setWhatsThis(msg);
 
-    label = new QLabel(i18n("Components:"), ui);
+    label = new QLabel(tr("Components:"), ui);
     grid->addWidget(label, 0, 7);
     nComps = new QLabel(ui);
     nComps->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     grid->addWidget(nComps, 0, 9);
-    msg = i18n("The total number of connected components in this "
+    msg = tr("The total number of connected components in this "
         "triangulation.");
     label->setWhatsThis(msg);
     nComps->setWhatsThis(msg);
 
-    label = new QLabel(i18n("Bdry Components:"), ui);
+    label = new QLabel(tr("Bdry Components:"), ui);
     grid->addWidget(label, 1, 7);
     nBdryComps = new QLabel(ui);
     nBdryComps->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     grid->addWidget(nBdryComps, 1, 9);
-    msg = i18n("The total number of boundary components in this "
+    msg = tr("The total number of boundary components in this "
         "triangulation.  Boundary components can either be ideal vertices "
         "or collections of adjacent boundary faces.");
     label->setWhatsThis(msg);
     nBdryComps->setWhatsThis(msg);
 
-    label = new QLabel(i18n("Tetrahedra:"), ui);
+    label = new QLabel(tr("Tetrahedra:"), ui);
     grid->addWidget(label, 2, 7);
     nTets = new QLabel(ui);
     nTets->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     grid->addWidget(nTets, 2, 9);
-    msg = i18n("The total number of tetrahedra in this triangulation.");
+    msg = tr("The total number of tetrahedra in this triangulation.");
     label->setWhatsThis(msg);
     nTets->setWhatsThis(msg);
 
-    btn = new QPushButton(KIcon("packet_view"), i18n("View..."), ui);
+    btn = new QPushButton(QIcon("packet_view"), tr("View..."), ui);
     // btn->setFlat(true);
-    btn->setToolTip(i18n("View details of individual vertices"));
-    btn->setWhatsThis(i18n("View details of this triangulation's "
+    btn->setToolTip(tr("View details of individual vertices"));
+    btn->setWhatsThis(tr("View details of this triangulation's "
         "individual vertices in a separate window."));
     connect(btn, SIGNAL(clicked()), this, SLOT(viewVertices()));
     grid->addWidget(btn, 0, 5);
 
-    btn = new QPushButton(KIcon("packet_view"), i18n("View..."), ui);
-    btn->setToolTip(i18n("View details of individual edges"));
-    btn->setWhatsThis(i18n("View details of this triangulation's "
+    btn = new QPushButton(QIcon("packet_view"), tr("View..."), ui);
+    btn->setToolTip(tr("View details of individual edges"));
+    btn->setWhatsThis(tr("View details of this triangulation's "
         "individual edges in a separate window."));
     // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewEdges()));
     grid->addWidget(btn, 1, 5);
 
-    btn = new QPushButton(KIcon("packet_view"), i18n("View..."), ui);
-    btn->setToolTip(i18n("View details of individual faces"));
-    btn->setWhatsThis(i18n("View details of this triangulation's "
+    btn = new QPushButton(QIcon("packet_view"), tr("View..."), ui);
+    btn->setToolTip(tr("View details of individual faces"));
+    btn->setWhatsThis(tr("View details of this triangulation's "
         "individual faces in a separate window."));
     // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewFaces()));
     grid->addWidget(btn, 2, 5);
 
-    btn = new QPushButton(KIcon("packet_view"), i18n("View..."), ui);
-    btn->setToolTip(i18n("View details of individual components"));
-    btn->setWhatsThis(i18n("View details of this triangulation's "
+    btn = new QPushButton(QIcon("packet_view"), tr("View..."), ui);
+    btn->setToolTip(tr("View details of individual components"));
+    btn->setWhatsThis(tr("View details of this triangulation's "
         "individual connected components in a separate window."));
     // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewComponents()));
     grid->addWidget(btn, 0, 11);
 
-    btn = new QPushButton(KIcon("packet_view"), i18n("View..."), ui);
-    btn->setToolTip(i18n("View details of individual boundary components"));
-    btn->setWhatsThis(i18n("View details of this triangulation's "
+    btn = new QPushButton(QIcon("packet_view"), tr("View..."), ui);
+    btn->setToolTip(tr("View details of individual boundary components"));
+    btn->setWhatsThis(tr("View details of this triangulation's "
         "individual boundary components in a separate window.  Note that "
         "boundary components can either be ideal vertices of collections "
         "of adjacent boundary faces."));
@@ -214,12 +212,12 @@ void NTriSkelCompUI::refresh() {
 }
 
 void NTriSkelCompUI::editingElsewhere() {
-    nVertices->setText(i18n("Editing..."));
-    nEdges->setText(i18n("Editing..."));
-    nFaces->setText(i18n("Editing..."));
-    nTets->setText(i18n("Editing..."));
-    nComps->setText(i18n("Editing..."));
-    nBdryComps->setText(i18n("Editing..."));
+    nVertices->setText(tr("Editing..."));
+    nEdges->setText(tr("Editing..."));
+    nFaces->setText(tr("Editing..."));
+    nTets->setText(tr("Editing..."));
+    nComps->setText(tr("Editing..."));
+    nBdryComps->setText(tr("Editing..."));
 
     QLinkedListIterator<SkeletonWindow*> it(viewers);
     while( it.hasNext())
@@ -272,11 +270,11 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
 
     // Information layer.
     layerInfo = messageLayer(msgInfo, "dialog-information");
-    msgInfo->setText(i18n("<qt>Initialising...</qt>"));
+    msgInfo->setText(tr("<qt>Initialising...</qt>"));
 
     // Error layer.
     layerError = messageLayer(msgError, "dialog-error");
-    msgError->setText(i18n("<qt>Initialising...</qt>"));
+    msgError->setText(tr("<qt>Initialising...</qt>"));
 
     // Graph layer.
     layerGraph = new QScrollArea();
@@ -288,7 +286,7 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
     graph = new QLabel(layerGraph);
     graph->setAlignment(Qt::AlignCenter);
     layerGraph->setWidget(graph);
-    layerGraph->setWhatsThis(i18n("<qt>The <i>face pairing graph</i> "
+    layerGraph->setWhatsThis(tr("<qt>The <i>face pairing graph</i> "
         "of a triangulation describes which tetrahedron faces are "
         "identified with which.<p>Each vertex of the graph represents "
         "a tetrahedron, and each edge represents a pair of tetrahedron "
@@ -336,12 +334,12 @@ void NTriFaceGraphUI::refresh() {
     neverDrawn = false;
 
     if (tri->getNumberOfTetrahedra() == 0) {
-        showInfo(i18n("<qt>This triangulation is empty.</qt>"));
+        showInfo(tr("<qt>This triangulation is empty.</qt>"));
         return;
     }
 
     if (tri->getNumberOfTetrahedra() > 500) {
-        showInfo(i18n("<qt>This triangulation contains over 500 "
+        showInfo(tr("<qt>This triangulation contains over 500 "
             "tetrahedra.<p>Regina does not display face pairing graphs "
             "for such large triangulations.</qt>"));
         return;
@@ -356,37 +354,37 @@ void NTriFaceGraphUI::refresh() {
 
     if (useExec.isNull() || ! gvStatus.usable()) {
         // There seems to be a problem.
-        QString header = i18n("<qt>Regina uses <i>Graphviz</i> for displaying "
+        QString header = tr("<qt>Regina uses <i>Graphviz</i> for displaying "
             "face pairing graphs.  ");
-        QString footer = i18n("<p>If you have Graphviz installed, "
+        QString footer = tr("<p>If you have Graphviz installed, "
             "please update the relevant setting in Regina's "
             "triangulation options.</qt>");
 
         QString error;
         if (gvStatus == GraphvizStatus::unknown)
-            error = i18n("However, Regina could not determine the status "
+            error = tr("However, Regina could not determine the status "
                 "of your Graphviz installation.");
         else if (gvStatus == GraphvizStatus::notFound)
-            error = i18n("However, the Graphviz executable \"%1\" "
+            error = tr("However, the Graphviz executable \"%1\" "
                 "could not be found on the default search "
                 "path.").arg(graphvizExec);
         else if (gvStatus == GraphvizStatus::notExist)
-            error = i18n("However, the Graphviz executable \"%1\" "
+            error = tr("However, the Graphviz executable \"%1\" "
                 "does not exist.").arg(graphvizExec);
         else if (gvStatus == GraphvizStatus::notExecutable)
-            error = i18n("However, the Graphviz executable \"%1\" "
+            error = tr("However, the Graphviz executable \"%1\" "
                 "does not appear to be an executable "
                 "file.").arg(graphvizExec);
         else if (gvStatus == GraphvizStatus::notStartable)
-            error = i18n("However, the Graphviz executable \"%1\" "
+            error = tr("However, the Graphviz executable \"%1\" "
                 "cannot be started.").arg(graphvizExec);
         else if (gvStatus == GraphvizStatus::unsupported)
-            error = i18n("However, I cannot determine the version of "
+            error = tr("However, I cannot determine the version of "
                 "Graphviz that you are running.  Perhaps your Graphviz "
                 "is too old (version 0.x), or perhaps the program "
                 "\"%1\" is not from Graphviz at all.").arg(graphvizExec);
         else if (gvStatus == GraphvizStatus::version1NotDot)
-            error = i18n("Your Graphviz seems to be very old (version 1.x).  "
+            error = tr("Your Graphviz seems to be very old (version 1.x).  "
                 "Many tools in older versions of Graphviz cannot handle "
                 "multiple edges, including the tool <i>neato</i> which "
                 "Regina normally uses by default.<p>"
@@ -398,10 +396,9 @@ void NTriFaceGraphUI::refresh() {
         return;
     }
 
-    KTemporaryFile tmpDot;
-    tmpDot.setSuffix(".dot");
+    QTemporaryFile tmpDot(QString("%1/XXXXXX.dot").arg(QDir::tempPath()));
     if (! tmpDot.open()) {
-        showError(i18n("<qt>The temporary DOT file <i>%1</i> "
+        showError(tr("<qt>The temporary DOT file <i>%1</i> "
             "could not be created.</qt>").arg(tmpDot.fileName()));
         return;
     }
@@ -410,7 +407,7 @@ void NTriFaceGraphUI::refresh() {
     std::ofstream outDot(
         static_cast<const char*>(QFile::encodeName(tmpDot.fileName())));
     if (! outDot) {
-        showError(i18n("<qt>The temporary DOT file <i>%1</i> "
+        showError(tr("<qt>The temporary DOT file <i>%1</i> "
             "could not be opened for writing.</qt>").arg(tmpDot.fileName()));
         return;
     }
@@ -420,27 +417,27 @@ void NTriFaceGraphUI::refresh() {
     outDot.close();
     delete pairing;
 
-    KTemporaryFile tmpPng;
-    tmpPng.setSuffix(".png");
+    QTemporaryFile tmpPng(QString("%1/XXXXXX.png").arg(QDir::tempPath()));;
     if (! tmpPng.open()) {
-        showError(i18n("<qt>The temporary PNG file <i>%1</i> "
+        showError(tr("<qt>The temporary PNG file <i>%1</i> "
             "could not be created.</qt>").arg(tmpPng.fileName()));
         return;
     }
     tmpPng.close();
 
-    KProcess graphviz;
-    graphviz << useExec << "-Tpng" << "-Gsize=2.5,4"
-        << "-o" << tmpPng.fileName() << tmpDot.fileName();
-    graphviz.start();
+    QProcess graphviz;
+    QStringList args;
+    args << "-Tpng" << "-Gsize=2.5,4" << "-o" << tmpPng.fileName() 
+        << tmpDot.fileName();
+    graphviz.start(useExec,args);
     graphviz.waitForFinished();
     if ( graphviz.exitStatus() != QProcess::NormalExit) {
         if ( graphviz.error() == QProcess::FailedToStart ) {
-            showError(i18n("<qt>The Graphviz executable <i>%1</i> "
+            showError(tr("<qt>The Graphviz executable <i>%1</i> "
                 "could not be started.</qt>").arg(useExec));
             return;
         }
-        showError(i18n("<qt>The Graphviz executable <i>%1</i> "
+        showError(tr("<qt>The Graphviz executable <i>%1</i> "
             "did not exit normally, and may have encountered an "
             "internal error.  It finished with exit status %2.</qt>")
             .arg(useExec).arg(graphviz.exitCode()));
@@ -449,7 +446,7 @@ void NTriFaceGraphUI::refresh() {
 
     QPixmap png(tmpPng.fileName());
     if (png.isNull()) {
-        showError(i18n("<qt>The PNG graphic created by Graphviz "
+        showError(tr("<qt>The PNG graphic created by Graphviz "
             "could not be loaded.<p>The Graphviz executable used "
             "was <i>%1</i>.  If this is not correct, please change it "
             "in the Regina configuration (Triangulation section).</qt>").
@@ -464,7 +461,7 @@ void NTriFaceGraphUI::refresh() {
 }
 
 void NTriFaceGraphUI::editingElsewhere() {
-    showInfo(i18n("<qt>Editing...</qt>"));
+    showInfo(tr("<qt>Editing...</qt>"));
 }
 
 QWidget* NTriFaceGraphUI::messageLayer(QLabel*& text,
@@ -474,9 +471,7 @@ QWidget* NTriFaceGraphUI::messageLayer(QLabel*& text,
 
     layout->addStretch(1);
 
-    QPixmap iconPic = KIconLoader::global()->
-        loadIcon(iconName, KIconLoader::NoGroup, KIconLoader::SizeMedium,
-        KIconLoader::DefaultState, QStringList(), 0, true /* may be null */);
+    QPixmap iconPic = QIcon(iconName).pixmap(32,32); //SizeMedium from KDE
     if (iconPic.isNull())
         iconPic = QMessageBox::standardIcon(QMessageBox::Critical);
 
@@ -486,7 +481,7 @@ QWidget* NTriFaceGraphUI::messageLayer(QLabel*& text,
 
     layout->addSpacing(10);
 
-    text = new QLabel(i18n("<qt>Initialising...</qt>"), layer);
+    text = new QLabel(tr("<qt>Initialising...</qt>"), layer);
     text->setWordWrap(true);
     layout->addWidget(text, 4);
 

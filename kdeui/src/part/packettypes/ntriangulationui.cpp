@@ -40,9 +40,8 @@
 #include "../packeteditiface.h"
 #include "../reginapart.h"
 
-#include <klocale.h>
-#include <ktoolbar.h>
-#include <qlabel.h>
+#include <QLabel>
+#include <QToolBar>
 #include <QVBoxLayout>
 
 using regina::NPacket;
@@ -68,12 +67,12 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
     // WARNING: If these tabs are reordered, the code below that sets
     // the default tab must be updated accordingly.
     addHeader(header);
-    addTab(gluings, i18n("&Gluings"));
-    addTab(skeleton, i18n("&Skeleton"));
-    addTab(algebra, i18n("&Algebra"));
-    addTab(new NTriCompositionUI(packet, this), i18n("&Composition"));
-    addTab(surfaces, i18n("Sur&faces"));
-    addTab(snapPea, i18n("Snap&Pea"));
+    addTab(gluings, QObject::tr("&Gluings"));
+    addTab(skeleton, QObject::tr("&Skeleton"));
+    addTab(algebra, QObject::tr("&Algebra"));
+    addTab(new NTriCompositionUI(packet, this), QObject::tr("&Composition"));
+    addTab(surfaces, QObject::tr("Sur&faces"));
+    addTab(snapPea, QObject::tr("Snap&Pea"));
 
     connect(part, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
         this, SLOT(updatePreferences(const ReginaPrefSet&)));
@@ -106,7 +105,7 @@ const QLinkedList<QAction*>& NTriangulationUI::getPacketTypeActions() {
 }
 
 QString NTriangulationUI::getPacketMenuText() const {
-    return i18n("T&riangulation");
+    return QObject::tr("T&riangulation");
 }
 
 void NTriangulationUI::updatePreferences(const ReginaPrefSet& newPrefs) {
@@ -125,14 +124,14 @@ NTriHeaderUI::NTriHeaderUI(regina::NTriangulation* packet,
     uiLayout->setContentsMargins(0, 0, 0, 0);
     ui->setLayout(uiLayout);
 
-    bar = new KToolBar(ui, false, true);
+    bar = new QToolBar(ui);
     bar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     uiLayout->addWidget(bar);
 
     header = new QLabel();
     header->setAlignment(Qt::AlignCenter);
     header->setMargin(10);
-    header->setWhatsThis(i18n("Displays a few basic properties of the "
+    header->setWhatsThis(QObject::tr("Displays a few basic properties of the "
         "triangulation, such as boundary and orientability."));
     uiLayout->addWidget(header);
 }
@@ -147,42 +146,42 @@ QWidget* NTriHeaderUI::getInterface() {
 
 void NTriHeaderUI::refresh() {
     if (tri->getNumberOfTetrahedra() == 0) {
-        header->setText(i18n("Empty"));
+        header->setText(QObject::tr("Empty"));
         return;
     }
 
     if (! tri->isValid()) {
-        header->setText(i18n("INVALID TRIANGULATION!"));
+        header->setText(QObject::tr("INVALID TRIANGULATION!"));
         return;
     }
 
     QString msg;
 
     if (tri->isClosed())
-        msg += i18n("Closed, ");
+        msg += QObject::tr("Closed, ");
     else {
         if (tri->isIdeal() && tri->hasBoundaryFaces())
-            msg += i18n("Ideal & real bdry, ");
+            msg += QObject::tr("Ideal & real bdry, ");
         else if (tri->isIdeal())
-            msg += i18n("Ideal bdry, ");
+            msg += QObject::tr("Ideal bdry, ");
         else if (tri->hasBoundaryFaces())
-            msg += i18n("Real bdry, ");
+            msg += QObject::tr("Real bdry, ");
     }
 
     if (tri->isOrientable()) {
         if (tri->isOriented())
-            msg += i18n("orientable and oriented, ");
+            msg += QObject::tr("orientable and oriented, ");
         else
-            msg += i18n("orientable, ");
+            msg += QObject::tr("orientable, ");
     } else
-        msg += i18n("non-orientable, ");
+        msg += QObject::tr("non-orientable, ");
 
-    msg += (tri->isConnected() ? i18n("connected") : i18n("disconnected"));
+    msg += (tri->isConnected() ? QObject::tr("connected") : QObject::tr("disconnected"));
 
     header->setText(msg);
 }
 
 void NTriHeaderUI::editingElsewhere() {
-    header->setText(i18n("Editing..."));
+    header->setText(QObject::tr("Editing..."));
 }
 

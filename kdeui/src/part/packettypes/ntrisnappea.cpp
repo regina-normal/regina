@@ -36,9 +36,8 @@
 
 #include <climits>
 #include <cmath>
-#include <klocale.h>
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QLabel>
+#include <QLayout>
 #include <QStackedWidget>
 
 using regina::NPacket;
@@ -54,7 +53,7 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
 
     layout->addStretch(3);
 
-    QLabel* label = new QLabel(i18n("<qt><b>SnapPea Calculations</b></qt>"),
+    QLabel* label = new QLabel(tr("<qt><b>SnapPea Calculations</b></qt>"),
         ui);
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
@@ -83,24 +82,24 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
 
     QString msg;
 
-    solutionTypeLabel = new QLabel(i18n("Solution type:"), dataValid);
+    solutionTypeLabel = new QLabel(tr("Solution type:"), dataValid);
     solutionTypeLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     validGrid->addWidget(solutionTypeLabel, 0, 1);
     solutionType = new QLabel(dataValid);
     solutionType->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     validGrid->addWidget(solutionType, 0, 3);
-    solutionTypeExplnBase = i18n("The type of solution that was found "
+    solutionTypeExplnBase = tr("The type of solution that was found "
         "when solving for a complete hyperbolic structure.");
     solutionTypeLabel->setWhatsThis(solutionTypeExplnBase);
     solutionType->setWhatsThis(solutionTypeExplnBase);
 
-    label = new QLabel(i18n("Volume:"), dataValid);
+    label = new QLabel(tr("Volume:"), dataValid);
     label->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     validGrid->addWidget(label, 1, 1);
     volume = new QLabel(dataValid);
     volume->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     validGrid->addWidget(volume, 1, 3);
-    msg = i18n("The volume of the underlying 3-manifold.  The estimated "
+    msg = tr("The volume of the underlying 3-manifold.  The estimated "
         "number of decimal places of accuracy is also shown.");
     label->setWhatsThis(msg);
     volume->setWhatsThis(msg);
@@ -141,7 +140,7 @@ void NTriSnapPeaUI::refresh() {
         solutionType->setText(solutionTypeString(snappeaTri->solutionType()));
         solutionType->setEnabled(true);
 
-        QString expln = i18n("%1  %2").arg(solutionTypeExplnBase)
+        QString expln = tr("%1  %2").arg(solutionTypeExplnBase)
             .arg(solutionTypeExplanation(snappeaTri->solutionType()));
         solutionTypeLabel->setWhatsThis(expln);
         solutionType->setWhatsThis(expln);
@@ -168,11 +167,11 @@ void NTriSnapPeaUI::refresh() {
             // Zero is within the margin of error, and this margin of
             // error is small.  Report it as zero, with the exact result
             // beneath.
-            volume->setText(i18n("Possibly zero\n(calculated %1,\n"
+            volume->setText(tr("Possibly zero\n(calculated %1,\n"
                 "est. %2 places accuracy)").
                 arg(snappeaTri->volume(places), 0, 'g', 9).arg(places));
         } else {
-            volume->setText(i18n("%1\n(est. %2 places accuracy)").
+            volume->setText(tr("%1\n(est. %2 places accuracy)").
                 arg(snappeaTri->volume(places), 0, 'g', 9).arg(places));
         }
 
@@ -183,7 +182,7 @@ void NTriSnapPeaUI::refresh() {
 void NTriSnapPeaUI::editingElsewhere() {
     data->setCurrentWidget(dataValid);
 
-    QString msg(i18n("Editing..."));
+    QString msg(tr("Editing..."));
 
     solutionType->setText(msg);
     solutionType->setEnabled(false);
@@ -197,54 +196,54 @@ void NTriSnapPeaUI::editingElsewhere() {
 QString NTriSnapPeaUI::solutionTypeString(int solnType) {
     switch (solnType) {
         case NSnapPeaTriangulation::not_attempted:
-            return i18n("Not attempted");
+            return tr("Not attempted");
         case NSnapPeaTriangulation::geometric_solution:
-            return i18n("Tetrahedra positively oriented");
+            return tr("Tetrahedra positively oriented");
         case NSnapPeaTriangulation::nongeometric_solution:
-            return i18n("Contains negatively oriented tetrahedra");
+            return tr("Contains negatively oriented tetrahedra");
         case NSnapPeaTriangulation::flat_solution:
-            return i18n("All tetrahedra flat");
+            return tr("All tetrahedra flat");
         case NSnapPeaTriangulation::degenerate_solution:
-            return i18n("Contains degenerate tetrahedra");
+            return tr("Contains degenerate tetrahedra");
         case NSnapPeaTriangulation::other_solution:
-            return i18n("Unrecognised solution type");
+            return tr("Unrecognised solution type");
         case NSnapPeaTriangulation::no_solution:
-            return i18n("No solution found");
+            return tr("No solution found");
         default:
-            return i18n("ERROR (invalid solution type)");
+            return tr("ERROR (invalid solution type)");
     }
 }
 
 QString NTriSnapPeaUI::solutionTypeExplanation(int solnType) {
     switch (solnType) {
         case NSnapPeaTriangulation::not_attempted:
-            return i18n("This particular solution type means that "
+            return tr("This particular solution type means that "
                 "a solution has not been attempted.");
         case NSnapPeaTriangulation::geometric_solution:
-            return i18n("This particular solution type means that "
+            return tr("This particular solution type means that "
                 "all tetrahedra are either positively oriented or flat, "
                 "though the entire solution is not flat and no "
                 "tetrahedra are degenerate.");
         case NSnapPeaTriangulation::nongeometric_solution:
-            return i18n("This particular solution type means that "
+            return tr("This particular solution type means that "
                 "the volume is positive, but some tetrahedra are "
                 "negatively oriented.");
         case NSnapPeaTriangulation::flat_solution:
-            return i18n("This particular solution type means that "
+            return tr("This particular solution type means that "
                 "all tetrahedra are flat, but none have shape "
                 "0, 1 or infinity.");
         case NSnapPeaTriangulation::degenerate_solution:
-            return i18n("This particular solution type means that "
+            return tr("This particular solution type means that "
                 "at least one tetrahedron has shape 0, 1 or infinity.");
         case NSnapPeaTriangulation::other_solution:
-            return i18n("This particular solution type means that "
+            return tr("This particular solution type means that "
                 "the volume is zero or negative, but the solution is "
                 "neither flat nor degenerate.");
         case NSnapPeaTriangulation::no_solution:
-            return i18n("This particular solution type means that "
+            return tr("This particular solution type means that "
                 "the gluing equations could not be solved.");
         default:
-            return i18n("This particular solution type is unknown and "
+            return tr("This particular solution type is unknown and "
                 "should never occur.  Please report this as a bug.");
     }
 }

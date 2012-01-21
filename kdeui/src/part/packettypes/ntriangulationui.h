@@ -35,7 +35,7 @@
 
 #include "../packettabui.h"
 
-class KToolBar;
+class QToolBar;
 class NTriAlgebraUI;
 class NTriGluingsUI;
 class NTriSkeletonUI;
@@ -105,7 +105,7 @@ class NTriHeaderUI : public PacketViewerTab {
          */
         QWidget* ui;
         QLabel* header;
-        KToolBar* bar;
+        QToolBar* bar;
 
     public:
         /**
@@ -117,7 +117,7 @@ class NTriHeaderUI : public PacketViewerTab {
         /**
          * Component queries.
          */
-        KToolBar* getToolBar();
+        QToolBar* getToolBar();
 
         /**
          * PacketViewerTab overrides.
@@ -132,7 +132,7 @@ inline PacketEditIface* NTriangulationUI::getEditIface() {
     return editIface;
 }
 
-inline KToolBar* NTriHeaderUI::getToolBar() {
+inline QToolBar* NTriHeaderUI::getToolBar() {
     return bar;
 }
 
