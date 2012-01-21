@@ -38,13 +38,13 @@
 #include "../reginaprefset.h"
 
 #include <packet/npacket.h>
-#include <kxmlguiwindow.h>
+#include <QMainWindow>
 
 class CommandEdit;
-class KTextEdit;
 class PythonInterpreter;
 class PythonManager;
 class QLabel;
+class QTextEdit;
 
 /**
  * A top-level window containing an embedded python interpreter.
@@ -53,7 +53,7 @@ class QLabel;
  * Objects of this class are generally not created directly; instead
  * PacketManager::launchPythonConsole() should be used.
  */
-class PythonConsole : public KXmlGuiWindow {
+class PythonConsole : public QMainWindow {
     Q_OBJECT
 
     private:
@@ -65,7 +65,7 @@ class PythonConsole : public KXmlGuiWindow {
         /**
          * Internal components
          */
-        KTextEdit* session;
+        QTextEdit* session;
         QLabel* prompt;
         CommandEdit* input;
         PythonOutputStream* output;
