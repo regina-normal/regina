@@ -34,17 +34,11 @@
 #include "shortrunner.h"
 
 #include <fstream>
-//#include <klocale.h>
-//#include <kmessagebox.h>
-//#include <krun.h>
-#include <kstandarddirs.h>
-//#include <ktoolinvocation.h>
-#include <qdir.h>
-#include <qfile.h>
-#include <qfileinfo.h>
-#include <qtextcodec.h>
-#include <qtextstream.h>
-
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QTextCodec>
+#include <QTextStream>
 #include <QDesktopServices>
 #include <QMessageBox>
 #include <QUrl>
@@ -88,11 +82,30 @@ GraphvizStatus GraphvizStatus::status(const QString& userExec,
     }
 
     // We need a full requery.
-    if (! userExec.contains("/")) {
+    if (! userExec.contains(QDir::separator())) {
         // Hunt on the search path.
-        fullExec = KStandardDirs::findExe(userExec);
-        if (fullExec.isNull())
+        QString paths = QProcessEnvironment::value("PATH");
+        // Windows uses a different separator in $PATH
+#if defined _WIN32 || defined _WIN64 || defined __CYGWIN
+        QString pathSeparator = ";";
+#else
+        QString pathSeparator = ":";
+#endif
+        QStringList pathList = paths.split(pathSeparator);
+        bool found = false;
+        for( QStringList::iterator it = pathList.begin(); it != pathList.end();
+            ++pathList) {
+            QDir dir(*it);
+            if ( dir.exists(userExec) ) {
+                fullExec = dir.absoluteFilePath(userExec);
+                found = true;
+                break;
+            }
+        }
+        if (! found) {
+            fullExec = QString();
             return notFound;
+        }
     } else
         fullExec = QFileInfo(userExec).absoluteFilePath();
 
@@ -272,13 +285,6 @@ void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
     QString page = KStandardDirs::locate("html",
         QString("en/%1/%2.html").arg(handbookName).arg(section));
     if (QFileInfo(page).exists()) {
-
-        // If we're on a mac, just use the default Mac browser.
-#ifdef __APPLE__
-        // Hmm.  Assume this command executes successfully, since on my
-        // fink it returns false even when it *does* execute successfully..!
-        //KRun::runCommand(QString("open \"%1\"").arg(page), parentWidget);
-#else
         if (! QDesktopServices::openUrl(QUrl("file://" + page))) {
             if (handbook) {
                 QMessageBox *sorry = new QMessageBox(parentWidget);
@@ -294,7 +300,6 @@ void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
                     "<tt>%1</tt>.</qt>").arg(page)));
             }
         }
-#endif
     } else {
         if (handbook) {
             QMessageBox *sorry = new QMessageBox(parentWidget);
