@@ -38,38 +38,14 @@
 #include "../part/reginapart.h"
 
 #include <QDrag>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QFileDialog>
 #include <QLabel>
+#include <QMessageBox>
 #include <QSettings>
 #include <QVBoxLayout>
 #include <QWhatsThis>
-#include <kaboutapplicationdialog.h>
-#include <kaction.h>
-#include <kactioncollection.h>
-#include <kapplication.h>
-#include <kconfig.h>
-#include <kdebug.h>
-#include <kedittoolbar.h>
-#include <kfiledialog.h>
-#include <kglobal.h>
-#include <kiconloader.h>
-#include <kio/netaccess.h>
-#include <klibloader.h>
-#include <klocale.h>
-#include <kmenubar.h>
-#include <kmessagebox.h>
-#include <kparts/event.h>
-#include <kparts/partmanager.h>
-#include <krecentfilesaction.h>
-#include <kshortcutsdialog.h>
-#include <kstdaccel.h>
-#include <kstdaction.h>
-#include <ktexteditor/document.h>
-#include <ktexteditor/editorchooser.h>
-#include <ktexteditor/view.h>
-#include <ktoggleaction.h>
-#include <ktoolbar.h>
-#include <ktip.h>
-#include <kurl.h>
 
 unsigned ReginaMain::objectNumber = 1;
 
@@ -114,11 +90,11 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) : QMainWindow() {
     if (showAdvice) {
         // Until we actually have a part loaded, give the user something
         // helpful to start with.
-        QLabel* advice = new QLabel(i18n("<qt>To start, try:<p>"
+        QLabel* advice = new QLabel(tr("<qt>To start, try:<p>"
             "File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
             "Introductory Examples</qt>"));
         advice->setAlignment(Qt::AlignCenter);
-        advice->setWhatsThis(i18n("<qt>If you select "
+        advice->setWhatsThis(tr("<qt>If you select "
             "<i>File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
             "Introductory Examples</i> from the menu, "
             "Regina will open a sample data file that you can "
@@ -163,13 +139,15 @@ void ReginaMain::dropEvent(QDropEvent *event) {
 
 void ReginaMain::saveProperties() {
     ReginaPart* part;
-    if (part = mdiArea->activeSubWindow()) {
-        KUrl url = part->url();
+    QMdiSubWindow* win = mdiArea->activeSubWindow();
+    if (win != 0 && strcmp(win->metaObject()->className(),"ReginaPart")==0) {
+        part = static_cast<ReginaPart*>(win);
+        QUrl url = part->url();
         if (url.isEmpty())
             url = lastUrl;
         if (! url.isEmpty()) {
             QSettings settings;
-            settings.value("lastUrl", url.url());
+            settings.value("lastUrl", url.toString());
         }
     }
 }
@@ -184,11 +162,16 @@ void ReginaMain::readProperties() {
 bool ReginaMain::queryClose() {
     consoles.closeAllConsoles();
     ReginaPart* part;
-    if (part = mdiArea->activeSubWindow()) {
+    bool result;
+    QMdiSubWindow* win = mdiArea->activeSubWindow();
+    if (win != 0 && strcmp(win->metaObject()->className(),"ReginaPart")==0) {
+        part = static_cast<ReginaPart*>(win);
         lastUrl = part->url();
-        return part->closeUrl();
-    } else
-        return true;
+        result = part->closeUrl();
+    } else {
+        result = true;
+    }
+    return result;
 }
 
 bool ReginaMain::queryExit() {
@@ -227,7 +210,7 @@ bool ReginaMain::openUrl(const QUrl& url) {
     // Variable name will initially contain the mimetype name, but if
     // the mimetype is not suitable it will be changed to the mimetype
     // comment so we can display it to the user.
-    if (url.fileName().right(ReginaAbout::regDataExt.length()).toLower() ==
+    if (url.toLocalFile().right(ReginaAbout::regDataExt.length()).toLower() ==
             ReginaAbout::regDataExt)
         isReg = true;
     // TODO: Mime type checking. It doesn't currently exist in Qt.
@@ -242,18 +225,18 @@ bool ReginaMain::openUrl(const QUrl& url) {
         else
             name = mimetype->comment();
     }*/
-
+    bool result;
     if (isReg) {
         ReginaPart* part = newTopologyPart();
         mdiArea->addSubWindow(part);
-        return part->openUrl(url);
+        result = part->openFile(url);
     }
     else {
-        QMessageBox *sorry = new QMessageBox(this);
-        sorry->setText( tr(
-            "I do not know how to open files of type %1.").arg(name));
-        return false;
+        QMessageBox::warning(this, tr("Unable to open file"),
+            tr( "I do not know how to open files of type %1.").arg(name));
+        result = false;
     }
+    return result;
 }
 
 bool ReginaMain::openUrl(const QString& url) {
@@ -265,12 +248,12 @@ bool ReginaMain::openExample(const QUrl& url) {
     // doesn't seem to exist.
     QFile file(url.path());
     if (! file.exists()) {
-        QMessageBox *sorry = new QMessageBox(this);
-        sorry->setText( tr("<qt>The example file %1 "
+        QMessageBox::warning(this, tr("Could not find example file"),
+            tr("<qt>The example file %1 "
             "could not be found.<p>Example files should be installed in the "
             "directory <i>%2</i>.  It appears that they have not been "
             "installed properly.  Please contact <i>%3</i> for assistance.").
-            arg(url.fileName()).arg(url.directory()).arg(PACKAGE_BUGREPORT));
+            arg(url.toLocalFile()).arg(url.path()).arg(PACKAGE_BUGREPORT));
         return false;
     }
     return openUrl(url);
@@ -295,7 +278,7 @@ void ReginaMain::quit() {
 }
 
 void ReginaMain::fileOpen() {
-    QUrl url = QFileDialog::getOpenFileName(this, tr("Open Data File", QString(), 
+    QUrl url = QFileDialog::getOpenFileName(this, tr("Open Data File"), QString(), 
           tr(FILTER_SUPPORTED));
     if (!url.isEmpty())
         openUrl(url);
@@ -323,16 +306,18 @@ void ReginaMain::optionsShowStatusbar() {
 */
 
 void ReginaMain::optionsConfigureKeys() {
-    KShortcutsDialog::configure(actionCollection());
+    // TODO: Modifying shortcuts isn't this easy in Qt
+    //KShortcutsDialog::configure(actionCollection());
 }
 
 void ReginaMain::optionsConfigureToolbars() {
-    saveMainWindowSettings(KConfigGroup(KGlobal::config(),
-        QString::fromLatin1("MainWindow")));
+    // TODO: Configure toolbars
+    //saveMainWindowSettings(KConfigGroup(KGlobal::config(),
+    //    QString::fromLatin1("MainWindow")));
 
-    KEditToolBar dlg(factory());
-    connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(newToolbarConfig()));
-    dlg.exec();
+    //KEditToolBar dlg(factory());
+    //connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(newToolbarConfig()));
+    //dlg.exec();
 }
 
 void ReginaMain::optionsConfigureEditor() {
@@ -347,8 +332,7 @@ void ReginaMain::optionsPreferences() {
 
 void ReginaMain::helpAboutApp() {
     if (! aboutApp)
-        aboutApp = new KAboutApplicationDialog(
-            KGlobal::mainComponent().aboutData(), this);
+        aboutApp = new ReginaAbout(this);
     aboutApp->show();
 }
 
@@ -365,7 +349,8 @@ void ReginaMain::helpWhatsThis() {
 }
 
 void ReginaMain::helpTipOfDay() {
-    KTipDialog::showTip(this, QString::null, true);
+    // TODO
+    //KTipDialog::showTip(this, QString::null, true);
 }
 
 void ReginaMain::helpTrouble() {
@@ -373,8 +358,8 @@ void ReginaMain::helpTrouble() {
 }
 
 void ReginaMain::helpNoHelp() {
-    KMessageBox::information(this,
-        i18n("<qt>If you cannot view the Regina Handbook, it is possibly "
+    QMessageBox::information(this, tr("TODO change this title"),
+        tr("<qt>If you cannot view the Regina Handbook, it is possibly "
             "because you do not have the KDE Help Center installed.<p>"
             "Try editing Regina's preferences: in the General Options "
             "panel, uncheck the box "
@@ -385,7 +370,7 @@ void ReginaMain::helpNoHelp() {
             "Regina Handbook online at "
             "<a href=\"http://regina.sourceforge.net/\">regina.sourceforge.net</a>.  "
             "Just follow the <i>Documentation</i> links.</qt>"),
-        i18n("Handbook won't open?"));
+        tr("Handbook won't open?"));
 }
 
 /*
@@ -395,7 +380,7 @@ void ReginaMain::changeStatusbar(const QString& text) {
 */
 
 void ReginaMain::changeCaption(const QString& text) {
-    setCaption(text);
+    setWindowTitle(text);
 }
 
 void ReginaMain::newToolbarConfig() {
@@ -406,43 +391,53 @@ void ReginaMain::newToolbarConfig() {
     createGUI(currentPart);
     */
 
-    applyMainWindowSettings(KConfigGroup(KGlobal::config(),
-        QString::fromLatin1("MainWindow")));
+    //applyMainWindowSettings(KConfigGroup(KGlobal::config(),
+    //    QString::fromLatin1("MainWindow")));
 }
 
 void ReginaMain::setupActions() {
-    KAction* act;
+    QAction* act;
 
     // File actions:
-    act = actionCollection()->addAction("new_topology");
-    act->setText(i18n("&New Topology Data"));
-    act->setIcon(KIcon("document-new"));
+    act = new QAction(this); 
+    act->setText(tr("&New Topology Data"));
+    act->setIcon(QIcon::fromTheme("document-new"));
     act->setShortcut(tr("Ctrl+n"));
-    act->setWhatsThis(i18n("Create a new topology data file.  This is "
+    act->setWhatsThis(tr("Create a new topology data file.  This is "
         "the standard type of data file used by Regina."));
     connect(act, SIGNAL(triggered()), this, SLOT(newTopology()));
-    
-    act = KStandardAction::open(this, SLOT(fileOpen()), actionCollection());
-    act->setWhatsThis(i18n("Open a topology data file."));
-    fileOpenRecent = KStandardAction::openRecent(this, 
-        SLOT(openUrl(const KUrl&)), actionCollection());
-
+   
+    act = new QAction(this);
+    act->setText(tr("&Open..."));
+    act->setIcon(QIcon::fromTheme("document-open"));
+    act->setShortcut(tr("Ctrl+o"));
+    act->setWhatsThis(tr("Open a topology data file."));
+    connect(act, SIGNAL(triggered()), this, SLOT(openUrl(const QUrl&)));
+   
     fileOpenExample = new ExamplesAction(this);
     fillExamples();
     connect(fileOpenExample, SIGNAL(urlSelected(const KUrl&)),
         this, SLOT(openExample(const KUrl&)));
-    actionCollection()->addAction("file_open_example", fileOpenExample);
 
-    act = KStandardAction::close(this, SLOT(close()), actionCollection());
-    act->setWhatsThis(i18n("Close this topology data file."));
-    act = KStandardAction::quit(kapp, SLOT(closeAllWindows()),
-        actionCollection());
-    act->setWhatsThis(i18n("Close all files and quit Regina."));
+    act = new QAction(this);
+    act->setText(tr("&Close"));
+    act->setIcon(QIcon::fromTheme("window-close"));
+    act->setShortcut(tr("Ctrl+w"));
+    act->setWhatsThis(tr("Close this topology data file."));
+    connect(act, SIGNAL(triggered()), this, SLOT(close()));
+
+    act = new QAction(this);
+    act->setText(tr("&Quit"));
+    act->setIcon(QIcon::fromTheme("application-exit"));
+    act->setShortcut(tr("Ctrl+q"));
+    act->setWhatsThis(tr("Close all files and quit Regina."));
+    connect(act, SIGNAL(triggered()), this, SLOT(closeAllWindows()));
+
 
     // Toolbar and status bar:
     //showToolbar = KStandardAction::showToolbar(this,
     //    SLOT(optionsShowToolbar()), actionCollection());
-    setStandardToolBarMenuEnabled(true);
+    //setStandardToolBarMenuEnabled(true);
     
     /*
     showStatusbar = KStandardAction::showStatusbar(this,
@@ -450,49 +445,58 @@ void ReginaMain::setupActions() {
     */
 
     // Preferences:
-    act = actionCollection()->addAction("configure_editor");
-    act->setText(i18n("Choose Text &Editor..."));
-    act->setIcon(KIcon("configure"));
+    act = new QAction(this);
+    act->setText(tr("Choose Text &Editor..."));
+    act->setIcon(QIcon("configure"));
     connect(act, SIGNAL(triggered()), this, SLOT(optionsConfigureEditor()));
-    KStandardAction::keyBindings(this, SLOT(optionsConfigureKeys()),
-        actionCollection());
-    KStandardAction::configureToolbars(this, SLOT(optionsConfigureToolbars()),
-        actionCollection());
-    act = KStandardAction::preferences(this, SLOT(optionsPreferences()),
-        actionCollection());
-    act->setWhatsThis(i18n("Configure Regina.  Here you can set "
+    // TODO: Configuration
+    //KStandardAction::keyBindings(this, SLOT(optionsConfigureKeys()),
+    //    actionCollection());
+    //KStandardAction::configureToolbars(this, SLOT(optionsConfigureToolbars()),
+    //    actionCollection());
+
+    act = new QAction(this);
+    act->setText(tr("&Configure Regina"));
+    act->setIcon(QIcon::fromTheme("configure"));
+    act->setWhatsThis(tr("Configure Regina.  Here you can set "
         "your own preferences for how Regina behaves."));
+    connect(act, SIGNAL(triggered()), this, SLOT(optionsPreferences()));
 
     // Tools:
-    actPython = actionCollection()->addAction("python_console");
-    actPython->setText(i18n("&Python Console"));
+    actPython = new QAction(this);
+    actPython->setText(tr("&Python Console"));
     actPython->setIcon(KIcon("python_console"));
     actPython->setShortcut(tr("Alt+y"));
-    actPython->setWhatsThis(i18n("Open a new Python console.  You can "
+    actPython->setWhatsThis(tr("Open a new Python console.  You can "
         "use a Python console to interact directly with Regina's "
         "mathematical engine."));
     connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
 
     // Help:
-    act = KStandardAction::aboutApp(this, SLOT(helpAboutApp()),
-        actionCollection());
-    act->setWhatsThis(i18n("Display information about Regina, such as "
+    act = new QAction(this);
+    act->setText(tr("&About Regina"));
+    act->setIcon(QIcon::fromTheme("help-about"));
+    act->setWhatsThis(tr("Display information about Regina, such as "
         "the authors, license and website."));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpAboutApp()));
 
-    act = actionCollection()->addAction("help_handbook_custom");
-    act->setText(i18n("Regina &Handbook"));
-    act->setIcon(KIcon("help-contents"));
+    act = new QAction(this);
+    act->setText(tr("Regina &Handbook"));
+    act->setIcon(QIcon::fromTheme("help-contents"));
     act->setShortcut(tr("F1"));
-    act->setWhatsThis(i18n("Open the Regina handbook.  "
+    act->setWhatsThis(tr("Open the Regina handbook.  "
         "This is the main users' guide for how to use Regina."));
     connect(act, SIGNAL(triggered()), this, SLOT(helpHandbook()));
 
-    KStandardAction::whatsThis(this, SLOT(helpWhatsThis()), actionCollection());
+    act = new QAction(this);
+    act->setText(tr("What's &This?"));
+    act->setIcon(QIcon::fromTheme("help-hint"));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpWhatsThis()));
 
-    act = actionCollection()->addAction("help_engine");
-    act->setText(i18n("&Python API Reference"));
-    act->setIcon(KIcon("python_console"));
-    act->setWhatsThis(i18n("Open the detailed documentation for Regina's "
+    act = new QAction(this);
+    act->setText(tr("&Python API Reference"));
+    act->setIcon(QIcon("python_console"));
+    act->setWhatsThis(tr("Open the detailed documentation for Regina's "
         "mathematical engine.  This describes the classes, methods and "
         "routines that Regina makes available to Python scripts.<p>"
         "See the <i>Python Scripting</i> chapter of the user's handbook "
@@ -500,51 +504,52 @@ void ReginaMain::setupActions() {
         "accessed through <i>Regina Handbook</i> in the <i>Help</i> menu)."));
     connect(act, SIGNAL(triggered()), this, SLOT(pythonReference()));
 
-    act = actionCollection()->addAction("help_xmlref");
-    act->setText(i18n("&File Format Reference"));
-    act->setIcon(KIcon("application-xml"));
-    act->setWhatsThis(i18n("Open the file format reference manual.  "
+    act = new QAction(this);
+    act->setText(tr("&File Format Reference"));
+    act->setIcon(QIcon("application-xml"));
+    act->setWhatsThis(tr("Open the file format reference manual.  "
         "This give full details of the XML file format that Regina "
         "uses to store its data files."));
     connect(act, SIGNAL(triggered()), this, SLOT(helpXMLRef()));
 
-    act = KStandardAction::tipOfDay(this, SLOT(helpTipOfDay()),
-        actionCollection());
-    act->setWhatsThis(i18n("View tips and hints on how to use Regina."));
-    
-    act = actionCollection()->addAction("help_trouble");
-    act->setText(i18n("Tr&oubleshooting"));
-    act->setIcon(KIcon("dialog-warning"));
+    // TODO: Not implemented
+    //act = KStandardAction::tipOfDay(this, SLOT(helpTipOfDay()),
+    //    actionCollection());
+    //act->setWhatsThis(tr("View tips and hints on how to use Regina."));
+   
+    act = new QAction(this);
+    act->setText(tr("Tr&oubleshooting"));
+    act->setIcon(QIcon::fromTheme("dialog-warning"));
     connect(act, SIGNAL(triggered()), this, SLOT(helpTrouble()));
    
-    act = actionCollection()->addAction("help_nohelp");
-    act->setText(i18n("Handbook won't open?"));
-    act->setIcon(KIcon("dialog-cancel"));
+    act = new QAction(this);
+    act->setText(tr("Handbook won't open?"));
+    act->setIcon(QIcon::fromTheme("dialog-cancel"));
     connect(act, SIGNAL(triggered()), this, SLOT(helpNoHelp()));
     
-    // All done!  Build the GUI.
-    createGUI(0);
+    // All done!  Build the GUI. TODO
+    // createGUI(0);
 }
 
 void ReginaMain::fillExamples() {
     fileOpenExample->addUrl("sample-misc.rga",
-        i18n("Introductory Examples"));
+        tr("Introductory Examples"));
     fileOpenExample->addUrl("closed-hyp-census.rga",
-        i18n("Closed Hyperbolic Census"));
+        tr("Closed Hyperbolic Census"));
     fileOpenExample->addUrl("closed-or-census.rga",
-        i18n("Closed Orientable Census (Small)"));
+        tr("Closed Orientable Census (Small)"));
     fileOpenExample->addUrl("closed-or-census-large.rga",
-        i18n("Closed Orientable Census (Large)"));
+        tr("Closed Orientable Census (Large)"));
     fileOpenExample->addUrl("closed-nor-census.rga",
-        i18n("Closed Non-Orientable Census"));
+        tr("Closed Non-Orientable Census"));
     fileOpenExample->addUrl("snappea-census.rga",
-        i18n("Cusped Hyperbolic Census"));
+        tr("Cusped Hyperbolic Census"));
     fileOpenExample->addUrl("knot-link-census.rga",
-        i18n("Knot / Link Complements"));
+        tr("Knot / Link Complements"));
     fileOpenExample->addUrl("sig-3mfd-census.rga",
-        i18n("Splitting Surface Sigs (General)"));
+        tr("Splitting Surface Sigs (General)"));
     fileOpenExample->addUrl("sig-prime-min-census.rga",
-        i18n("Splitting Surface Sigs (Prime, Minimal)"));
+        tr("Splitting Surface Sigs (Prime, Minimal)"));
 }
 
 void ReginaMain::addRecentFile() {
@@ -858,7 +863,7 @@ void ReginaMain::saveOptions() {
     }
 }
 
-KParts::ReadWritePart* ReginaMain::newTopologyPart() {
+ReginaPart* ReginaMain::newTopologyPart() {
     ReginaPart* ans = 0;
 
     /**
@@ -868,7 +873,7 @@ KParts::ReadWritePart* ReginaMain::newTopologyPart() {
     ans = new ReginaPart(this, this, QStringList());
 
     if (! ans)
-        KMessageBox::error(this, i18n(
+        KMessageBox::error(this, tr(
             "An appropriate topology data component could not be found."));
     else {
         // Connect up signals and slots.

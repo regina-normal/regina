@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "reginamanager.h"
+#include "reginamain.h"
 
 
 ReginaManager::ReginaManager(int argc, char **argv) : 

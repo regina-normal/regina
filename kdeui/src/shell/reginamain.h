@@ -279,4 +279,25 @@ inline void ReginaMain::readOptions() {
     readOptions(KGlobal::config());
 }
 
+/**
+ * A manager for Regina windows
+ *
+ * This class creates and destroys the windows used by Regina.
+ */
+
+class ReginaManager : public QApplication {
+
+    public:
+        ReginaManager(int argc, char** argv);
+        
+        ReginaMain* newWindow();
+        ReginaMain* newWindow(const QString url);
+
+        void onClose(ReginaMain *child);
+
+    private:
+        QList<ReginaMain *> children;
+
+};
+
 #endif

@@ -28,7 +28,6 @@
 
 #include "reginaabout.h"
 #include "reginamain.h"
-#include "reginamanager.h"
 
 #include <QTextCodec>
 
