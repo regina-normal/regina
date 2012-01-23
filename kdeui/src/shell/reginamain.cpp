@@ -84,9 +84,6 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) : QMainWindow() {
     // Track the parent manager.
     manager = parent;
 
-    // Create the toolbar
-    toolBar = new QToolBar(this);
-
     // Create the MDI area.
     QMdiArea* area = new QMdiArea(this);
     this->setCentralWidget(area);
@@ -403,8 +400,12 @@ void ReginaMain::newToolbarConfig() {
 void ReginaMain::setupActions() {
     QAction* act;
     menuBar = new QMenuBar(this);
-
+    toolBar =  new QToolBar(this);
+    
     fileMenu = new QMenu(this);
+
+    
+
     // File actions:
     act = new QAction(this); 
     act->setText(tr("&New Topology Data"));
