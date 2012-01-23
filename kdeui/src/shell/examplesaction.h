@@ -33,10 +33,11 @@
 #ifndef __EXAMPLESACTION_H
 #define __EXAMPLESACTION_H
 
-#include <kselectaction.h>
-#include <qmap.h>
+#include <QMap>
+#include <QWidgetAction>
 
-class KUrl;
+class QUrl;
+class QMenu;
 
 /**
  * An action offering a selection of sample data files that can be
@@ -46,20 +47,25 @@ class KUrl;
  * KDE 3.2.3.  KRecentFilesAction was written by Michael Koch and is
  * released under the GNU Library General Public License (v2).
  */
-class ExamplesAction : public KSelectAction {
+class ExamplesAction : public QWidgetAction {
     Q_OBJECT
 
     private:
         /**
          * Sample data files
          */
-        QMap<QAction*, KUrl> urls_;
+        QMap<QAction*, QUrl> urls_;
+
+        /**
+         * Menu holding options
+         */
+        QMenu* menu;
 
     public:
         /**
          * Constructor and destructor.
          */
-        ExamplesAction(QObject* parent);
+        ExamplesAction(QWidget* parent);
         virtual ~ExamplesAction();
 
         /**
@@ -73,7 +79,7 @@ class ExamplesAction : public KSelectAction {
         /**
          * Emitted when a sample data file is selected for opening.
          */
-        void urlSelected(const KUrl& url);
+        void urlSelected(const QUrl& url);
 
     protected slots:
         /**

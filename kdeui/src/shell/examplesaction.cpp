@@ -35,24 +35,23 @@
 
 #include "examplesaction.h"
 
-#include <klocale.h>
-#include <kmenu.h>
-#include <ktoolbar.h>
-#include <kurl.h>
-#include <qfile.h>
-#include <qtoolbutton.h>
+#include <QFile>
+#include <QIcon>
+#include <QMenu>
+#include <QToolButton>
+#include <QUrl>
 
-ExamplesAction::ExamplesAction(QObject* parent) :
-        KSelectAction(KIcon("bookmarks"),i18n("Open E&xample"), parent) {
-    delete menu();
-    setMenu(new KMenu());
-    setToolBarMode(KSelectAction::MenuMode);
+ExamplesAction::ExamplesAction(QWidget* parent) :
+        QWidgetAction(parent) {
+    menu = new QMenu(parent);
+    menu->setTitle(tr("Open E&xample"));
+    menu->setIcon(QIcon::fromTheme("bookmarks"));
     connect(this, SIGNAL(triggered(QAction*)),
         SLOT(exampleActivated(QAction*)));
-    setMenuAccelsEnabled(false);
-    setEnabled(true);
+    //setMenuAccelsEnabled(false);
+    //setEnabled(true);
 
-    setWhatsThis(i18n("Open one of the example data files that "
+    setWhatsThis(tr("Open one of the example data files that "
         "ships with Regina.  These examples are useful starting points "
         "for discovering what Regina can do.  Several censuses of "
         "3-manifold triangulations are also provided."));
@@ -63,10 +62,11 @@ ExamplesAction::~ExamplesAction() {
 
 void ExamplesAction::addUrl(const QString& fileName, const QString& text) {
 
-    QAction* action = new QAction(text, selectableActionGroup());
+    QAction* action = new QAction(this);
+    action->setText(text);
 
-    menu()->insertAction(0 /* insert last */, action);
-    urls_.insert(action, KUrl(QString("file:%1/%2")
+    menu->insertAction(0 /* insert last */, action);
+    urls_.insert(action, QUrl(QString("file:%1/%2")
         .arg(QFile::decodeName(regina::NGlobalDirs::examples().c_str()))
         .arg(fileName)));
 }
