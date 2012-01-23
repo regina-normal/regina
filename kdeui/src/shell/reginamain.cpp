@@ -42,8 +42,10 @@
 #include <QDropEvent>
 #include <QFileDialog>
 #include <QLabel>
+#include <QMenuBar>
 #include <QMessageBox>
 #include <QSettings>
+#include <QToolBar>
 #include <QVBoxLayout>
 #include <QWhatsThis>
 
@@ -82,6 +84,10 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) : QMainWindow() {
     // Track the parent manager.
     manager = parent;
 
+    // Create the toolbar
+    toolBar = new QToolBar(this);
+
+    // Create the MDI area.
     QMdiArea* area = new QMdiArea(this);
     this->setCentralWidget(area);
     
@@ -274,7 +280,6 @@ void ReginaMain::close() {
 
 void ReginaMain::quit() {
     manager->quit();
-    kapp->closeAllWindows();
 }
 
 void ReginaMain::fileOpen() {
@@ -409,6 +414,7 @@ void ReginaMain::setupActions() {
         "the standard type of data file used by Regina."));
     connect(act, SIGNAL(triggered()), this, SLOT(newTopology()));
     fileMenu->addAction(act);
+    toolBar->addAction(act);
 
     act = new QAction(this);
     act->setText(tr("&Open..."));
@@ -417,6 +423,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Open a topology data file."));
     connect(act, SIGNAL(triggered()), this, SLOT(openUrl(const QUrl&)));
     fileMenu->addAction(act);
+    toolBar->addAction(act);
    
     fileOpenExample = new ExamplesAction(this);
     fillExamples();
@@ -430,6 +437,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Save the topology data to a file."));
     connect(act, SIGNAL(triggered()), this, SLOT(saveUrl()));
     fileMenu->addAction(act);
+    toolBar->addAction(act); // TODO Disable save/saveAs until something is loaded
 
     act = new QAction(this);
     act->setText(tr("Save &As..."));
@@ -437,6 +445,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Save the topology data to a new file."));
     connect(act, SIGNAL(triggered()), this, SLOT(saveUrl()));
     fileMenu->addAction(act);
+    toolBar->addAction(act);
 
 
     act = new QAction(this);
@@ -485,7 +494,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Configure Regina.  Here you can set "
         "your own preferences for how Regina behaves."));
     connect(act, SIGNAL(triggered()), this, SLOT(optionsPreferences()));
-    settinsMenu->addAction(this);
+    settingsMenu->addAction(act);
 
     menuBar->addMenu(settingsMenu);
 
@@ -500,6 +509,7 @@ void ReginaMain::setupActions() {
         "mathematical engine."));
     connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
     toolMenu->addAction(actPython);
+    toolBar->addAction(actPython);
 
     menuBar->addMenu(toolMenu);
 
@@ -602,7 +612,7 @@ void ReginaMain::addRecentFile() {
     }
 }
 
-void ReginaMain::readOptions(KSharedConfigPtr config) {
+void ReginaMain::readOptions() {
     
     // Read in new preferences.
     
@@ -766,7 +776,6 @@ void ReginaMain::readOptions(KSharedConfigPtr config) {
 }
 
 void ReginaMain::saveOptions() {
-    KSharedConfigPtr config = KGlobal::config();
 
     KConfigGroup* configGroup = new KConfigGroup(config,"Display");
 
@@ -795,7 +804,7 @@ void ReginaMain::saveOptions() {
 
     configGroup = new KConfigGroup(config, "File");
     configGroup->writeEntry("AutomaticExtension", globalPrefs.autoFileExtension);
-    fileOpenRecent->saveEntries(*configGroup);
+    //fileOpenRecent->saveEntries(*configGroup); TODO recent files
     configGroup->sync();
 
     configGroup = new KConfigGroup(config, "PDF");
@@ -891,16 +900,17 @@ void ReginaMain::saveOptions() {
 
     globalPrefs.writePythonLibraries();
 
+    // TODO Call via reginaMain to ensure windows read new options.
     // Make sure other main windows read in and acknowledge the new options.
-    QListIterator<KMainWindow*> it(memberList());
-    while(it.hasNext()) {
-        KMainWindow* otherMain = it.next();
-        if (otherMain != this) {
-            ReginaMain* regina = qobject_cast<ReginaMain*>(otherMain);
-            if (regina) 
-                regina->readOptions(config);
-        }
-    }
+//    QListIterator<KMainWindow*> it(memberList());
+//    while(it.hasNext()) {
+//        KMainWindow* otherMain = it.next();
+//        if (otherMain != this) {
+//            ReginaMain* regina = qobject_cast<ReginaMain*>(otherMain);
+//            if (regina) 
+//                regina->readOptions();
+//        }
+//    }
 }
 
 ReginaPart* ReginaMain::newTopologyPart() {
@@ -910,11 +920,11 @@ ReginaPart* ReginaMain::newTopologyPart() {
      * As a first iteration for the KDE4 port, let's just link directly
      * with the part and create a new class instance directly.
      */
-    ans = new ReginaPart(this, this, QStringList());
+    ans = new ReginaPart(this, QStringList());
 
     if (! ans)
-        KMessageBox::error(this, tr(
-            "An appropriate topology data component could not be found."));
+        QMessageBox::warning(this, tr("Could not create component"),
+            tr("An appropriate topology data component could not be found."));
     else {
         // Connect up signals and slots.
         connect(this, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
@@ -931,12 +941,15 @@ ReginaPart* ReginaMain::newTopologyPart() {
     return ans;
 }
 
+
+// TODO: As best I can tell, this never gets called.
 void ReginaMain::embedPart() {
-    if (currentPart) {
-        setCentralWidget(currentPart->widget());
-        currentPart->widget()->show();
-        manager->addPart(currentPart, true /* active part */);
-        connect(currentPart, SIGNAL(completed()), this, SLOT(addRecentFile()));
-    }
+    return;
+//    if (currentPart) {
+//        setCentralWidget(currentPart->widget());
+//        currentPart->widget()->show();
+//        manager->addPart(currentPart, true /* active part */);
+//        connect(currentPart, SIGNAL(completed()), this, SLOT(addRecentFile()));
+//    }
 }
 

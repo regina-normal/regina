@@ -39,19 +39,16 @@
 #include "reginaabout.h"
 #include "reginapart.h"
 
-#include <kapplication.h>
-#include <kparts/mainwindow.h>
-
+#include <QApplication>
 #include <QMainWindow>
 #include <QMdiArea>
+#include <QUrl>
 
 class ExamplesAction;
-class KAction;
-class KDialog;
-class KRecentFilesAction;
-class KToggleAction;
-class KUrl;
-
+class QMenuBar;
+class QMenu;
+class QToolBar;
+class QAction;
 class ReginaManager;
 
 /**
@@ -73,13 +70,13 @@ class ReginaMain : public QMainWindow,
         ReginaManager* manager;
             /**< The regina manager that handles activation and
                  deactivation of nested parts. */
-        //KParts::ReadWritePart* currentPart;
+        ReginaPart* currentPart;
             /**< The part containing the currently opened document, or 0 if
                  no document has yet been opened. */
         PythonManager consoles;
             /**< The set of all currently open consoles not linked to a
                  specific part. */
-        KUrl lastUrl;
+        QUrl lastUrl;
             /**< The Url that was last contained in this window.
                  This data member is only set when the Url is finally
                  closed in the underlying part. */
@@ -91,7 +88,7 @@ class ReginaMain : public QMainWindow,
         /**
          * Actions
          */
-        KRecentFilesAction* fileOpenRecent;
+        //KRecentFilesAction* fileOpenRecent;
             /**< The menu of recently opened files. */
         ExamplesAction* fileOpenExample;
             /**< The menu of available example files. */
@@ -103,13 +100,14 @@ class ReginaMain : public QMainWindow,
             /**< Action to launch a new python console. */
 
         /**
-         * Menus
+         * Menus and toolbars
          */
         QMenuBar* menuBar;
         QMenu* fileMenu;
         QMenu* settingsMenu;
         QMenu* toolMenu;
         QMenu* helpMenu;
+        QToolBar* toolBar;
 
         /**
          * Main document display widget
@@ -261,12 +259,6 @@ class ReginaMain : public QMainWindow,
         void fillExamples();
 
         /**
-         * Force this main window to read the given configuration
-         * and update itself (and its child windows) accordingly.
-         */
-        void readOptions(KSharedConfigPtr config);
-
-        /**
          * Creates a new topology data part.  If no appropriate part can
          * be created, an error is displayed and 0 is returned.
          */
@@ -284,9 +276,6 @@ inline const ReginaPrefSet& ReginaMain::getPreferences() const {
     return globalPrefs;
 }
 
-inline void ReginaMain::readOptions() {
-    readOptions(KGlobal::config());
-}
 
 /**
  * A manager for Regina windows
