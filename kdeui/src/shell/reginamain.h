@@ -103,6 +103,15 @@ class ReginaMain : public QMainWindow,
             /**< Action to launch a new python console. */
 
         /**
+         * Menus
+         */
+        QMenuBar* menuBar;
+        QMenu* fileMenu;
+        QMenu* settingsMenu;
+        QMenu* toolMenu;
+        QMenu* helpMenu;
+
+        /**
          * Main document display widget
          */
         QMdiArea* mdiArea;

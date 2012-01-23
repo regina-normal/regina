@@ -397,7 +397,9 @@ void ReginaMain::newToolbarConfig() {
 
 void ReginaMain::setupActions() {
     QAction* act;
+    menuBar = new QMenuBar(this);
 
+    fileMenu = new QMenu(this);
     // File actions:
     act = new QAction(this); 
     act->setText(tr("&New Topology Data"));
@@ -406,13 +408,15 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Create a new topology data file.  This is "
         "the standard type of data file used by Regina."));
     connect(act, SIGNAL(triggered()), this, SLOT(newTopology()));
-   
+    fileMenu->addAction(act);
+
     act = new QAction(this);
     act->setText(tr("&Open..."));
     act->setIcon(QIcon::fromTheme("document-open"));
     act->setShortcut(tr("Ctrl+o"));
     act->setWhatsThis(tr("Open a topology data file."));
     connect(act, SIGNAL(triggered()), this, SLOT(openUrl(const QUrl&)));
+    fileMenu->addAction(act);
    
     fileOpenExample = new ExamplesAction(this);
     fillExamples();
@@ -420,11 +424,28 @@ void ReginaMain::setupActions() {
         this, SLOT(openExample(const KUrl&)));
 
     act = new QAction(this);
+    act->setText(tr("&Save"));
+    act->setIcon(QIcon::fromTheme("document-save"));
+    act->setShortcut(tr("Ctrl+s"));
+    act->setWhatsThis(tr("Save the topology data to a file."));
+    connect(act, SIGNAL(triggered()), this, SLOT(saveUrl()));
+    fileMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("Save &As..."));
+    act->setIcon(QIcon::fromTheme("document-save-as"));
+    act->setWhatsThis(tr("Save the topology data to a new file."));
+    connect(act, SIGNAL(triggered()), this, SLOT(saveUrl()));
+    fileMenu->addAction(act);
+
+
+    act = new QAction(this);
     act->setText(tr("&Close"));
     act->setIcon(QIcon::fromTheme("window-close"));
     act->setShortcut(tr("Ctrl+w"));
     act->setWhatsThis(tr("Close this topology data file."));
     connect(act, SIGNAL(triggered()), this, SLOT(close()));
+    fileMenu->addAction(act);
 
     act = new QAction(this);
     act->setText(tr("&Quit"));
@@ -432,8 +453,9 @@ void ReginaMain::setupActions() {
     act->setShortcut(tr("Ctrl+q"));
     act->setWhatsThis(tr("Close all files and quit Regina."));
     connect(act, SIGNAL(triggered()), this, SLOT(closeAllWindows()));
+    fileMenu->addAction(act);
 
-
+    menuBar->addMenu(fileMenu);
     // Toolbar and status bar:
     //showToolbar = KStandardAction::showToolbar(this,
     //    SLOT(optionsShowToolbar()), actionCollection());
@@ -444,11 +466,13 @@ void ReginaMain::setupActions() {
         SLOT(optionsShowStatusbar()), actionCollection());
     */
 
+    settingsMenu = new QMenu(this);
     // Preferences:
     act = new QAction(this);
     act->setText(tr("Choose Text &Editor..."));
     act->setIcon(QIcon("configure"));
     connect(act, SIGNAL(triggered()), this, SLOT(optionsConfigureEditor()));
+    settingsMenu->addAction(act);
     // TODO: Configuration
     //KStandardAction::keyBindings(this, SLOT(optionsConfigureKeys()),
     //    actionCollection());
@@ -461,7 +485,11 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Configure Regina.  Here you can set "
         "your own preferences for how Regina behaves."));
     connect(act, SIGNAL(triggered()), this, SLOT(optionsPreferences()));
+    settinsMenu->addAction(this);
 
+    menuBar->addMenu(settingsMenu);
+
+    toolMenu = new QMenu(this);
     // Tools:
     actPython = new QAction(this);
     actPython->setText(tr("&Python Console"));
@@ -471,7 +499,11 @@ void ReginaMain::setupActions() {
         "use a Python console to interact directly with Regina's "
         "mathematical engine."));
     connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
+    toolMenu->addAction(actPython);
 
+    menuBar->addMenu(toolMenu);
+
+    helpMenu = new QMenu(this);
     // Help:
     act = new QAction(this);
     act->setText(tr("&About Regina"));
@@ -479,6 +511,8 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Display information about Regina, such as "
         "the authors, license and website."));
     connect(act, SIGNAL(triggered()), this, SLOT(helpAboutApp()));
+    helpMenu->addAction(act);
+
 
     act = new QAction(this);
     act->setText(tr("Regina &Handbook"));
@@ -487,11 +521,13 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Open the Regina handbook.  "
         "This is the main users' guide for how to use Regina."));
     connect(act, SIGNAL(triggered()), this, SLOT(helpHandbook()));
+    helpMenu->addAction(act);
 
     act = new QAction(this);
     act->setText(tr("What's &This?"));
     act->setIcon(QIcon::fromTheme("help-hint"));
     connect(act, SIGNAL(triggered()), this, SLOT(helpWhatsThis()));
+    helpMenu->addAction(act);
 
     act = new QAction(this);
     act->setText(tr("&Python API Reference"));
@@ -503,6 +539,7 @@ void ReginaMain::setupActions() {
         "for more information (the handbook is "
         "accessed through <i>Regina Handbook</i> in the <i>Help</i> menu)."));
     connect(act, SIGNAL(triggered()), this, SLOT(pythonReference()));
+    helpMenu->addAction(act);
 
     act = new QAction(this);
     act->setText(tr("&File Format Reference"));
@@ -511,6 +548,7 @@ void ReginaMain::setupActions() {
         "This give full details of the XML file format that Regina "
         "uses to store its data files."));
     connect(act, SIGNAL(triggered()), this, SLOT(helpXMLRef()));
+    helpMenu->addAction(act);
 
     // TODO: Not implemented
     //act = KStandardAction::tipOfDay(this, SLOT(helpTipOfDay()),
@@ -521,14 +559,15 @@ void ReginaMain::setupActions() {
     act->setText(tr("Tr&oubleshooting"));
     act->setIcon(QIcon::fromTheme("dialog-warning"));
     connect(act, SIGNAL(triggered()), this, SLOT(helpTrouble()));
+    helpMenu->addAction(act);
    
     act = new QAction(this);
     act->setText(tr("Handbook won't open?"));
     act->setIcon(QIcon::fromTheme("dialog-cancel"));
     connect(act, SIGNAL(triggered()), this, SLOT(helpNoHelp()));
-    
-    // All done!  Build the GUI. TODO
-    // createGUI(0);
+    helpMenu->addAction(act);
+   
+    menuBar->addMenu(helpMenu);
 }
 
 void ReginaMain::fillExamples() {
@@ -554,7 +593,8 @@ void ReginaMain::fillExamples() {
 
 void ReginaMain::addRecentFile() {
     if (currentPart && ! currentPart->url().isEmpty()) {
-        fileOpenRecent->addUrl(currentPart->url());
+        // TODO Save recent file
+        //fileOpenRecent->addUrl(currentPart->url());
 
         // Save the new file list to the global configuration.
         // Note that the other main windows will be updated because of this.
