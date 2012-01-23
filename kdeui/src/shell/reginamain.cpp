@@ -777,14 +777,15 @@ void ReginaMain::readOptions() {
 
 void ReginaMain::saveOptions() {
 
-    KConfigGroup* configGroup = new KConfigGroup(config,"Display");
-
+    QSettings settings;
+    settings.beginGroup("Display");
     // Save the current set of preferences.
-    configGroup->writeEntry("PacketDocking", globalPrefs.autoDock);
-    configGroup->writeEntry("DisplayTagsInTree", globalPrefs.displayTagsInTree);
-    configGroup->sync();
+    settings.setValue("PacketDocking", globalPrefs.autoDock);
+    settings.setValue("PacketDocking", globalPrefs.autoDock);
+    settings.setValue("DisplayTagsInTree", globalPrefs.displayTagsInTree);
+    settings.endGroup();
 
-    configGroup = new KConfigGroup(config, "Census");
+    settings.beginGroup("Census");
     QStringList censusStrings;
     // Distinguish an empty list from an uninitialised list.
     if (globalPrefs.censusFiles.empty())
@@ -795,108 +796,108 @@ void ReginaMain::saveOptions() {
                 it != globalPrefs.censusFiles.end(); it++)
             censusStrings.push_back(((*it).active ? '+' : '-') +
                 (*it).filename);
-    configGroup->writeEntry("Files", censusStrings);
-    configGroup->sync();
+    settings.setValue("Files", censusStrings);
+    settings.endGroup();
 
-    configGroup = new KConfigGroup(config, "Doc");
-    configGroup->writeEntry("HandbookInKHelpCenter",
+    settings.beginGroup("Doc");
+    settings.setValue("HandbookInKHelpCenter",
         globalPrefs.handbookInKHelpCenter);
 
-    configGroup = new KConfigGroup(config, "File");
-    configGroup->writeEntry("AutomaticExtension", globalPrefs.autoFileExtension);
+    settings.beginGroup("File");
+    settings.setValue("AutomaticExtension", globalPrefs.autoFileExtension);
     //fileOpenRecent->saveEntries(*configGroup); TODO recent files
-    configGroup->sync();
+    settings.endGroup();
 
-    configGroup = new KConfigGroup(config, "PDF");
-    configGroup->writeEntry("AutoClose", globalPrefs.pdfAutoClose);
-    configGroup->writeEntry("Embed", globalPrefs.pdfEmbed);
-    configGroup->writeEntry("ExternalViewer", globalPrefs.pdfExternalViewer);
-    configGroup->sync();
+    settings.beginGroup("PDF");
+    settings.setValue("AutoClose", globalPrefs.pdfAutoClose);
+    settings.setValue("Embed", globalPrefs.pdfEmbed);
+    settings.setValue("ExternalViewer", globalPrefs.pdfExternalViewer);
+    settings.endGroup();
 
-    configGroup = new KConfigGroup(config, "Python");
-    configGroup->writeEntry("AutoIndent", globalPrefs.pythonAutoIndent);
-    configGroup->writeEntry("SpacesPerTab", globalPrefs.pythonSpacesPerTab);
-    configGroup->writeEntry("WordWrap", globalPrefs.pythonWordWrap);
-    configGroup->sync();
+    settings.beginGroup("Python");
+    settings.setValue("AutoIndent", globalPrefs.pythonAutoIndent);
+    settings.setValue("SpacesPerTab", globalPrefs.pythonSpacesPerTab);
+    settings.setValue("WordWrap", globalPrefs.pythonWordWrap);
+    settings.endGroup();
 
-    configGroup = new KConfigGroup(config, "SnapPea");
-    configGroup->writeEntry("AllowClosed", globalPrefs.snapPeaClosed);
-    configGroup->writeEntry("KernelMessages",
+    settings.beginGroup("SnapPea");
+    settings.setValue("AllowClosed", globalPrefs.snapPeaClosed);
+    settings.setValue("KernelMessages",
         regina::NSnapPeaTriangulation::kernelMessagesEnabled());
-    configGroup->sync();
+    settings.endGroup();
 
-    configGroup = new KConfigGroup(config, "Surfaces");
-    configGroup->writeEntry("CompatibilityThreshold",
+    settings.beginGroup("Surfaces");
+    settings.setValue("CompatibilityThreshold",
         globalPrefs.surfacesCompatThreshold);
-    configGroup->writeEntry("CreationCoordinates",
+    settings.setValue("CreationCoordinates",
         globalPrefs.surfacesCreationCoords);
 
     switch (globalPrefs.surfacesInitialCompat) {
         case ReginaPrefSet::GlobalCompat:
-            configGroup->writeEntry("InitialCompat", "Global"); break;
+            settings.setValue("InitialCompat", "Global"); break;
         default:
-            configGroup->writeEntry("InitialCompat", "Local"); break;
+            settings.setValue("InitialCompat", "Local"); break;
     }
 
     switch (globalPrefs.surfacesInitialTab) {
         case ReginaPrefSet::Coordinates:
-            configGroup->writeEntry("InitialTab", "Coordinates"); break;
+            settings.setValue("InitialTab", "Coordinates"); break;
         case ReginaPrefSet::Matching:
-            configGroup->writeEntry("InitialTab", "Matching"); break;
+            settings.setValue("InitialTab", "Matching"); break;
         case ReginaPrefSet::Compatibility:
-            configGroup->writeEntry("InitialTab", "Compatibility"); break;
+            settings.setValue("InitialTab", "Compatibility"); break;
         default:
-            configGroup->writeEntry("InitialTab", "Summary"); break;
+            settings.setValue("InitialTab", "Summary"); break;
     }
-    configGroup->sync();
+    settings.endGroup();
 
-    configGroup = new KConfigGroup(config, "Tree");
-    configGroup->writeEntry("JumpSize", globalPrefs.treeJumpSize);
-    configGroup->sync();
+    settings.beginGroup("Tree");
+    settings.setValue("JumpSize", globalPrefs.treeJumpSize);
+    settings.endGroup();
 
-    configGroup = new KConfigGroup(config, "Triangulation");
+    settings.beginGroup("Triangulation");
 
     switch (globalPrefs.triInitialTab) {
         case ReginaPrefSet::Skeleton:
-            configGroup->writeEntry("InitialTab", "Skeleton"); break;
+            settings.setValue("InitialTab", "Skeleton"); break;
         case ReginaPrefSet::Algebra:
-            configGroup->writeEntry("InitialTab", "Algebra"); break;
+            settings.setValue("InitialTab", "Algebra"); break;
         case ReginaPrefSet::Composition:
-            configGroup->writeEntry("InitialTab", "Composition"); break;
+            settings.setValue("InitialTab", "Composition"); break;
         case ReginaPrefSet::Surfaces:
-            configGroup->writeEntry("InitialTab", "Surfaces"); break;
+            settings.setValue("InitialTab", "Surfaces"); break;
         case ReginaPrefSet::SnapPea:
-            configGroup->writeEntry("InitialTab", "SnapPea"); break;
+            settings.setValue("InitialTab", "SnapPea"); break;
         default:
-            configGroup->writeEntry("InitialTab", "Gluings"); break;
+            settings.setValue("InitialTab", "Gluings"); break;
     }
 
     switch (globalPrefs.triInitialSkeletonTab) {
         case ReginaPrefSet::FacePairingGraph:
-            configGroup->writeEntry("InitialSkeletonTab", "FacePairingGraph"); break;
+            settings.setValue("InitialSkeletonTab", "FacePairingGraph"); break;
         default:
-            configGroup->writeEntry("InitialSkeletonTab", "SkelComp"); break;
+            settings.setValue("InitialSkeletonTab", "SkelComp"); break;
     }
 
     switch (globalPrefs.triInitialAlgebraTab) {
         case ReginaPrefSet::FundGroup:
-            configGroup->writeEntry("InitialAlgebraTab", "FundGroup"); break;
+            settings.setValue("InitialAlgebraTab", "FundGroup"); break;
         case ReginaPrefSet::TuraevViro:
-            configGroup->writeEntry("InitialAlgebraTab", "TuraevViro"); break;
+            settings.setValue("InitialAlgebraTab", "TuraevViro"); break;
         case ReginaPrefSet::CellularInfo:
-            configGroup->writeEntry("InitialAlgebraTab", "CellularInfo"); break;
+            settings.setValue("InitialAlgebraTab", "CellularInfo"); break;
         default:
-            configGroup->writeEntry("InitialAlgebraTab", "Homology"); break;
+            settings.setValue("InitialAlgebraTab", "Homology"); break;
     }
 
-    configGroup->writeEntry("SurfacePropsThreshold",
+    settings.setValue("SurfacePropsThreshold",
         globalPrefs.triSurfacePropsThreshold);
-    configGroup->sync();
+    settings.endGroup();
 
-    configGroup = new KConfigGroup(config, "Extensions");
-    configGroup->writeEntry("GAPExec", globalPrefs.triGAPExec);
-    configGroup->writeEntry("GraphvizExec", globalPrefs.triGraphvizExec);
-    configGroup->sync();
+    settings.beginGroup("Extensions");
+    settings.setValue("GAPExec", globalPrefs.triGAPExec);
+    settings.setValue("GraphvizExec", globalPrefs.triGraphvizExec);
+    settings.endGroup();
 
     globalPrefs.writePythonLibraries();
 
