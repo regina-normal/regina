@@ -38,6 +38,7 @@
 
 class QUrl;
 class QMenu;
+class QActionGroup;
 
 /**
  * An action offering a selection of sample data files that can be
@@ -60,6 +61,11 @@ class ExamplesAction : public QWidgetAction {
          * Menu holding options
          */
         QMenu* menu;
+
+        /**
+         * Group of actions in the menu
+         */
+        QActionGroup* group;
 
     public:
         /**

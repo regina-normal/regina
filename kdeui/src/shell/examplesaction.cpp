@@ -35,6 +35,7 @@
 
 #include "examplesaction.h"
 
+#include <QActionGroup>
 #include <QFile>
 #include <QIcon>
 #include <QMenu>
@@ -46,11 +47,12 @@ ExamplesAction::ExamplesAction(QWidget* parent) :
     menu = new QMenu(parent);
     menu->setTitle(tr("Open E&xample"));
     menu->setIcon(QIcon::fromTheme("bookmarks"));
-    connect(this, SIGNAL(triggered(QAction*)),
-        SLOT(exampleActivated(QAction*)));
+
+    group = new QActionGroup(parent);
     //setMenuAccelsEnabled(false);
     //setEnabled(true);
-
+    connect(group, SIGNAL(triggered(QAction*)), this, SLOT(exampleActivated(QAction*)));
+    
     setWhatsThis(tr("Open one of the example data files that "
         "ships with Regina.  These examples are useful starting points "
         "for discovering what Regina can do.  Several censuses of "
@@ -64,8 +66,8 @@ void ExamplesAction::addUrl(const QString& fileName, const QString& text) {
 
     QAction* action = new QAction(this);
     action->setText(text);
-
     menu->insertAction(0 /* insert last */, action);
+    group->addAction(action);
     urls_.insert(action, QUrl(QString("file:%1/%2")
         .arg(QFile::decodeName(regina::NGlobalDirs::examples().c_str()))
         .arg(fileName)));
