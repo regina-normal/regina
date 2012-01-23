@@ -397,8 +397,7 @@ void ReginaMain::newToolbarConfig() {
 
 void ReginaMain::setupActions() {
     QAction* act;
-    menuBar = new QMenuBar(this);
-    toolBar =  new QToolBar(this);
+    toolBar = addToolBar(tr("Main"));
     
     fileMenu = new QMenu(this);
 
@@ -420,7 +419,7 @@ void ReginaMain::setupActions() {
     act->setIcon(QIcon::fromTheme("document-open"));
     act->setShortcut(tr("Ctrl+o"));
     act->setWhatsThis(tr("Open a topology data file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(openUrl(const QUrl&)));
+    connect(act, SIGNAL(triggered()), this, SLOT(fileOpen()));
     fileMenu->addAction(act);
     toolBar->addAction(act);
    
@@ -463,7 +462,7 @@ void ReginaMain::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(quit()));
     fileMenu->addAction(act);
 
-    menuBar->addMenu(fileMenu);
+    menuBar()->addMenu(fileMenu);
     // Toolbar and status bar:
     //showToolbar = KStandardAction::showToolbar(this,
     //    SLOT(optionsShowToolbar()), actionCollection());
@@ -495,7 +494,7 @@ void ReginaMain::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(optionsPreferences()));
     settingsMenu->addAction(act);
 
-    menuBar->addMenu(settingsMenu);
+    menuBar()->addMenu(settingsMenu);
 
     toolMenu = new QMenu(this);
     // Tools:
@@ -510,7 +509,7 @@ void ReginaMain::setupActions() {
     toolMenu->addAction(actPython);
     toolBar->addAction(actPython);
 
-    menuBar->addMenu(toolMenu);
+    menuBar()->addMenu(toolMenu);
 
     helpMenu = new QMenu(this);
     // Help:
@@ -576,7 +575,7 @@ void ReginaMain::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(helpNoHelp()));
     helpMenu->addAction(act);
    
-    menuBar->addMenu(helpMenu);
+    menuBar()->addMenu(helpMenu);
 }
 
 void ReginaMain::fillExamples() {

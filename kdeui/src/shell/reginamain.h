@@ -102,7 +102,6 @@ class ReginaMain : public QMainWindow,
         /**
          * Menus and toolbars
          */
-        QMenuBar* menuBar;
         QMenu* fileMenu;
         QMenu* settingsMenu;
         QMenu* toolMenu;
@@ -199,6 +198,16 @@ class ReginaMain : public QMainWindow,
          * Open the given example file in a manner similar to openUrl().
          */
         bool openExample(const QUrl& url);
+
+        /**
+         * Save the data in the current window.
+         */
+        bool saveUrl();
+
+        /**
+         * Save the data in the current window with a new name.
+         */
+        bool saveUrlAs();
 
         /**
          * Open a new standalone Python console.  The console will not
