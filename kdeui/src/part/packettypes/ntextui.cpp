@@ -63,9 +63,9 @@ NPacket* NTextUI::getPacket() {
     return text;
 }
 
-//QWidget* NTextUI::getInterface() {
-//    return view;
-//}
+QWidget* NTextUI::getInterface() {
+    return document;
+}
 
 QString NTextUI::getPacketMenuText() const {
     return tr("Te&xt");
