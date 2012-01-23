@@ -85,10 +85,8 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) : QMainWindow() {
     manager = parent;
 
     // Create the MDI area.
-    QMdiArea* area = new QMdiArea(this);
-    this->setCentralWidget(area);
-    
-    mdiArea = area;
+    mdiArea = new QMdiArea(this);
+    this->setCentralWidget(mdiArea);
 
     if (showAdvice) {
         // Until we actually have a part loaded, give the user something
@@ -428,8 +426,8 @@ void ReginaMain::setupActions() {
    
     fileOpenExample = new ExamplesAction(this);
     fillExamples();
-    connect(fileOpenExample, SIGNAL(urlSelected(const KUrl&)),
-        this, SLOT(openExample(const KUrl&)));
+    connect(fileOpenExample, SIGNAL(urlSelected(const QUrl&)),
+        this, SLOT(openExample(const QUrl&)));
 
     act = new QAction(this);
     act->setText(tr("&Save"));
@@ -438,13 +436,13 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Save the topology data to a file."));
     connect(act, SIGNAL(triggered()), this, SLOT(saveUrl()));
     fileMenu->addAction(act);
-    toolBar->addAction(act); // TODO Disable save/saveAs until something is loaded
+    toolBar->addAction(act); // TODO Disable save/saveAs until something is loaded?
 
     act = new QAction(this);
     act->setText(tr("Save &As..."));
     act->setIcon(QIcon::fromTheme("document-save-as"));
     act->setWhatsThis(tr("Save the topology data to a new file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(saveUrl()));
+    connect(act, SIGNAL(triggered()), this, SLOT(saveUrlAs()));
     fileMenu->addAction(act);
     toolBar->addAction(act);
 
@@ -462,7 +460,7 @@ void ReginaMain::setupActions() {
     act->setIcon(QIcon::fromTheme("application-exit"));
     act->setShortcut(tr("Ctrl+q"));
     act->setWhatsThis(tr("Close all files and quit Regina."));
-    connect(act, SIGNAL(triggered()), this, SLOT(closeAllWindows()));
+    connect(act, SIGNAL(triggered()), this, SLOT(quit()));
     fileMenu->addAction(act);
 
     menuBar->addMenu(fileMenu);
@@ -941,6 +939,21 @@ ReginaPart* ReginaMain::newTopologyPart() {
 
     // All done!
     return ans;
+}
+
+
+bool ReginaMain::saveUrl() {
+    if (! currentPart )
+        return false;
+    currentPart->fileSave();
+    return true;
+}
+
+bool ReginaMain::saveUrlAs() {
+    if (! currentPart )
+        return false;
+    currentPart->fileSaveAs();
+    return true;
 }
 
 
