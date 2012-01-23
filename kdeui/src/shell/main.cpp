@@ -41,6 +41,10 @@ int main(int argc, char **argv) {
         QTextCodec::setCodecForCStrings(codec);
     ReginaManager *app = new ReginaManager(argc, argv);
 
+    QCoreApplication::setOrganizationName("Regina");
+    QCoreApplication::setOrganizationDomain("regina.sourceforge.net");
+    QCoreApplication::setApplicationName("Regina");
+
     // TODO Why does it crash with the next 4 lines commented?
     QStringList list;
     for(int a=0;a < argc; ++a) {
