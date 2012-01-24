@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "reginapart.h"
+#include "reginamain.h"
 
 #include <QAction>
 #include <QApplication>
@@ -40,10 +41,8 @@
 void ReginaPart::setupActions() {
     QAction* act;
 
-    menuBar = new QMenuBar(this);
-    fileMenu = menuBar->addMenu(tr("&File"));
-    editMenu = menuBar->addMenu(tr("&Edit"));
-    treeMenu = menuBar->addMenu(tr("&Packet Tree"));
+    editMenu = new QMenu(tr("&Edit"));
+    treeMenu = new QMenu(tr("&Packet Tree"));
     
     // File actions:
     actSave = new QAction(
@@ -52,7 +51,6 @@ void ReginaPart::setupActions() {
     actSave->setShortcuts(QKeySequence::Save);
     actSave->setWhatsThis(tr("Save the current data file."));
     connect(actSave, SIGNAL(triggered()), this, SLOT(fileSave()));
-    fileMenu->addAction(actSave);
     allActions.append(actSave);
 
     act = new QAction(
@@ -62,11 +60,12 @@ void ReginaPart::setupActions() {
     act->setWhatsThis(tr(
         "Save the current data file, but give it a different name."));
     connect(act, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
-    fileMenu->addAction(act);
     allActions.append(act);
 
-    importMenu = fileMenu->addMenu(tr("&Import"));
-    exportMenu = fileMenu->addMenu(tr("&Export"));
+    parent->setSaveActions(actSave, act);
+
+    importMenu = new QMenu(this);
+    exportMenu = new QMenu(this);
 
     // Edit actions:
     // Note: we connect these in the various panes, don't connect them here
@@ -98,7 +97,8 @@ void ReginaPart::setupActions() {
     actPaste->setShortcuts(QKeySequence::Paste);
     editMenu->addAction(actPaste);
     allActions.append(act);
-
+  
+    parent->editMenu(editMenu);
     
 
     // New packets:
@@ -575,5 +575,7 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(exportPython()) );
     exportMenu->addAction(act);
     allActions.append(act);
+
+    parent->importsExports(importMenu, exportMenu);
 }
 

@@ -72,6 +72,12 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
     // Don't forget to save toolbar/etc settings.
     //setAutoSaveSettings(QString::fromLatin1("MainWindow"), true);
 
+
+    // Mark down that there is no edit menu yet.
+    editAct = 0;
+    packetMenu = 0;
+
+
     // Track the parent manager.
     manager = parent;
 
@@ -422,6 +428,7 @@ void ReginaMain::setupActions() {
     connect(fileOpenExample, SIGNAL(urlSelected(const QUrl&)),
         this, SLOT(openExample(const QUrl&)));
 
+    /*
     act = new QAction(this);
     act->setText(tr("&Save"));
     act->setIcon(QIcon::fromTheme("document-save"));
@@ -429,7 +436,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Save the topology data to a file."));
     connect(act, SIGNAL(triggered()), this, SLOT(saveUrl()));
     fileMenu->addAction(act);
-    toolBar->addAction(act); // TODO Disable save/saveAs until something is loaded?
+    toolBar->addAction(act); 
 
     act = new QAction(this);
     act->setText(tr("Save &As..."));
@@ -437,8 +444,14 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Save the topology data to a new file."));
     connect(act, SIGNAL(triggered()), this, SLOT(saveUrlAs()));
     fileMenu->addAction(act);
-    toolBar->addAction(act);
+    toolBar->addAction(act); */
 
+    saveSep = fileMenu->addSeparator();
+    importAct = fileMenu->addMenu(tr("&Import"))->menuAction();
+    importAct->setEnabled(false);
+    exportAct = fileMenu->addMenu(tr("&Export"))->menuAction();
+    exportAct->setEnabled(false);
+    exportSep = fileMenu->addSeparator();
 
     act = new QAction(this);
     act->setText(tr("&Close"));
@@ -466,7 +479,7 @@ void ReginaMain::setupActions() {
         SLOT(optionsShowStatusbar()), actionCollection());
     */
 
-    settingsMenu =  menuBar()->addMenu(tr("&Settings"));
+    QMenu *settingsMenu =  menuBar()->addMenu(tr("&Settings"));
     // Preferences:
     act = new QAction(this);
     act->setText(tr("Choose Text &Editor..."));
@@ -488,7 +501,7 @@ void ReginaMain::setupActions() {
     settingsMenu->addAction(act);
 
 
-    toolMenu =  menuBar()->addMenu(tr("&Tools"));
+    QMenu *toolMenu =  menuBar()->addMenu(tr("&Tools"));
     // Tools:
     actPython = new QAction(this);
     actPython->setText(tr("&Python Console"));
@@ -501,7 +514,7 @@ void ReginaMain::setupActions() {
     toolMenu->addAction(actPython);
     toolBar->addAction(actPython);
 
-    helpMenu =  menuBar()->addMenu(tr("&Help"));
+    QMenu *helpMenu =  menuBar()->addMenu(tr("&Help"));
     // Help:
     act = new QAction(this);
     act->setText(tr("&About Regina"));
@@ -945,6 +958,57 @@ bool ReginaMain::saveUrlAs() {
 
 QSize ReginaMain::sizeHint() const {
     return QSize(640,400);
+}
+
+void ReginaMain::plugMenu(QMenu *menu) {
+    if (packetMenu) {
+        menuBar()->removeAction(packetMenu);
+    }
+    packetMenu = menuBar()->addMenu(menu);
+}
+
+void ReginaMain::unplugMenu() {
+    if (packetMenu) {
+        menuBar()->removeAction(packetMenu);
+        packetMenu = NULL;
+    }
+}
+
+void ReginaMain::setSaveActions(QAction *save, QAction *saveAs) {
+    // First insert SaveAs before the separator
+    if (saveAsAct) {
+        fileMenu->removeAction(saveAsAct);
+    }
+    saveAsAct = saveAs;
+    fileMenu->insertAction(saveSep,saveAs);
+    // Then insert Save before SaveAs
+    if (saveAct) {
+        fileMenu->removeAction(saveAct);
+    }
+    saveAct = save;
+    fileMenu->insertAction(saveAs,save);
+}
+
+void ReginaMain::importsExports(QMenu *imports, QMenu *exports) {
+    // First insert Export before the separator
+    if (exportAct) {
+        fileMenu->removeAction(exportAct);
+    }
+    exportAct = fileMenu->insertMenu(exportSep,exports);
+    // Then insert Import before Export
+    if (importAct) {
+        fileMenu->removeAction(importAct);
+    }
+    importAct = fileMenu->insertMenu(exports->menuAction(),imports);
+
+}
+
+void ReginaMain::editMenu(QMenu *menu) {
+    if (editAct) {
+        menuBar()->removeAction(editAct);
+    }
+    // Insert before "plugMenu" aka Packet Tree
+    editAct = fileMenu->insertMenu(packetMenu,menu);
 }
 
 // TODO: As best I can tell, this never gets called.

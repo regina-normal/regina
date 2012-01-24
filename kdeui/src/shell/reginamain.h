@@ -104,9 +104,14 @@ class ReginaMain : public QMainWindow,
          * Menus and toolbars
          */
         QMenu* fileMenu;
-        QMenu* settingsMenu;
-        QMenu* toolMenu;
-        QMenu* helpMenu;
+        QAction* saveSep;
+        QAction* saveAct;
+        QAction* saveAsAct;
+        QAction* packetMenu;
+        QAction* exportSep;
+        QAction* importAct;
+        QAction* exportAct;
+        QAction* editAct;
         QToolBar* toolBar;
 
         /**
@@ -149,6 +154,31 @@ class ReginaMain : public QMainWindow,
          * configuration and update themselves accordingly.
          */
         void saveOptions();
+
+        /**
+         * Plug in a new PacketTree menu
+         */
+        void plugMenu(QMenu *menu);
+
+        /**
+         * Remove the PacketTree menu
+         */
+        void unplugMenu();
+
+        /**
+         * Insert the import/export menus
+         */
+        void importsExports(QMenu *imports, QMenu *exports);
+
+        /**
+         * Sets up the Edit menu
+         */
+        void editMenu(QMenu *edit);
+        
+        /**
+         * Sets up Save and SaveAs actions
+         */
+        void setSaveActions(QAction *save, QAction *saveAs);
 
     protected:
         /**
