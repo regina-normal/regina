@@ -37,17 +37,18 @@
 #include "packetui.h"
 #include "reginapart.h"
 
-#include <qboxlayout.h>
-#include <qcolor.h>
+#include <QBoxLayout>
+#include <QColor>
 #include <QFileDialog>
-#include <qfileinfo.h>
+#include <QFileInfo>
 #include <QInputDialog>
-#include <qlabel.h>
+#include <QLabel>
 #include <QMessageBox>
-#include <qsplitter.h>
+#include <QSplitter>
 #include <QTreeView>
 #include <QTreeWidget>
-#include <qwhatsthis.h>
+#include <QUrl>
+#include <QWhatsThis>
 
 ReginaPart::ReginaPart(ReginaMain *parent,
         const QStringList& /*args*/) :
@@ -82,9 +83,7 @@ ReginaPart::~ReginaPart() {
     if (packetTree)
         delete packetTree;
     // Delete all actions
-    QLinkedList<QAction*>::iterator it;
-    for (it=allActions.begin() ; it!=allActions.end(); it++)
-        delete *it;
+    allActions.clear();
 }
 
 void ReginaPart::setReadWrite(bool rw) {
@@ -183,15 +182,17 @@ void ReginaPart::aboutToUndock(PacketPane* undockedPane) {
     }
 }
 
-bool ReginaPart::openFile() {
+bool ReginaPart::openFile(QUrl url = QUrl()) {
     if (packetTree) {
         delete packetTree;
         setModified(false);
     }
-    
-    localFile = QFileDialog::getOpenFileName( this,
-        tr("Open Data File"), QString(),  tr(FILTER_REGINA));
-
+    if (url.isEmpty()) { 
+        localFile = QFileDialog::getOpenFileName( this,
+            tr("Open Data File"), QString(),  tr(FILTER_REGINA));
+    } else {
+        localFile = url.toLocalFile();
+    }
     packetTree = regina::readFileMagic(
         static_cast<const char*>(QFile::encodeName(localFile)));
 
@@ -610,3 +611,6 @@ void ReginaPart::unplugMenu() {
     }
 }
 
+const QUrl ReginaPart::url() {
+    return QUrl(localFile);
+}

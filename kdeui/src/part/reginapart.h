@@ -38,7 +38,7 @@
 
 #include <QAction>
 #include <QLinkedList>
-#include <QMdiArea>
+#include <QMdiSubWindow>
 #include <QMenuBar>
 
 namespace regina {
@@ -60,7 +60,7 @@ class ReginaMain;
  *
  * This part does all the real work of working with Regina data files.
  */
-class ReginaPart : public QMdiArea {
+class ReginaPart : public QMdiSubWindow {
     Q_OBJECT
 
     private:
@@ -222,16 +222,20 @@ class ReginaPart : public QMdiArea {
         const ReginaPrefSet& getPreferences() const;
 
         /**
+         * Returns the currently open URL.
+         */
+        const QUrl url();
+
+        /**
          * Allow access to the python manager.
          */
         PythonManager& getPythonManager();
 
-    protected:
         /**
-         * KPart overrides.
+         * Open and save files.
          */
-        virtual bool openFile();
-        virtual bool saveFile();
+        bool openFile(QUrl url);
+        bool saveFile();
 
     signals:
         /**
