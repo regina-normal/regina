@@ -45,26 +45,22 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QSettings>
+#include <QSize>
 #include <QToolBar>
 #include <QVBoxLayout>
 #include <QWhatsThis>
 
+
+#include <QDebug>
 unsigned ReginaMain::objectNumber = 1;
 
 ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
 
     setAttribute(Qt::WA_DeleteOnClose);
 
-    // TODO: KDE things
-    // Resize ourselves nicely.
-    //if (! initialGeometrySet())
-    //    resize(640, 400);
-
     // Accept drag and drop.
     setAcceptDrops(true);
 
-    // Don't use the standard Help menu; we'll provide our own.
-    //setHelpMenuEnabled(false);
 
     // Set up our actions and status bar.
     setupActions();
@@ -80,8 +76,7 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
     manager = parent;
 
     // Create the MDI area.
-    mdiArea = new QMdiArea(this);
-    this->setCentralWidget(mdiArea);
+    mdiArea = new QMdiArea();
 
     if (showAdvice) {
         // Until we actually have a part loaded, give the user something
@@ -100,6 +95,8 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
             "<i>Help&nbsp;&rarr;&nbsp;Regina Handbook</i> from the "
             "menu.</qt>"));
         setCentralWidget(advice);
+    } else {
+        setCentralWidget(mdiArea);
     }
 }
 
@@ -177,6 +174,7 @@ bool ReginaMain::queryExit() {
 
 void ReginaMain::newTopology() {
     ReginaPart* part = newTopologyPart();
+    setCentralWidget(mdiArea);
     mdiArea->addSubWindow(part);
     return;
 }
@@ -395,7 +393,7 @@ void ReginaMain::setupActions() {
     QAction* act;
     toolBar = addToolBar(tr("Main"));
     
-    fileMenu = new QMenu(this);
+    fileMenu =  menuBar()->addMenu(tr("&File"));
 
     
 
@@ -458,7 +456,6 @@ void ReginaMain::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(quit()));
     fileMenu->addAction(act);
 
-    menuBar()->addMenu(fileMenu);
     // Toolbar and status bar:
     //showToolbar = KStandardAction::showToolbar(this,
     //    SLOT(optionsShowToolbar()), actionCollection());
@@ -469,7 +466,7 @@ void ReginaMain::setupActions() {
         SLOT(optionsShowStatusbar()), actionCollection());
     */
 
-    settingsMenu = new QMenu(this);
+    settingsMenu =  menuBar()->addMenu(tr("&Settings"));
     // Preferences:
     act = new QAction(this);
     act->setText(tr("Choose Text &Editor..."));
@@ -490,9 +487,8 @@ void ReginaMain::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(optionsPreferences()));
     settingsMenu->addAction(act);
 
-    menuBar()->addMenu(settingsMenu);
 
-    toolMenu = new QMenu(this);
+    toolMenu =  menuBar()->addMenu(tr("&Tools"));
     // Tools:
     actPython = new QAction(this);
     actPython->setText(tr("&Python Console"));
@@ -505,9 +501,7 @@ void ReginaMain::setupActions() {
     toolMenu->addAction(actPython);
     toolBar->addAction(actPython);
 
-    menuBar()->addMenu(toolMenu);
-
-    helpMenu = new QMenu(this);
+    helpMenu =  menuBar()->addMenu(tr("&Help"));
     // Help:
     act = new QAction(this);
     act->setText(tr("&About Regina"));
@@ -570,8 +564,6 @@ void ReginaMain::setupActions() {
     act->setIcon(QIcon::fromTheme("dialog-cancel"));
     connect(act, SIGNAL(triggered()), this, SLOT(helpNoHelp()));
     helpMenu->addAction(act);
-   
-    menuBar()->addMenu(helpMenu);
 }
 
 void ReginaMain::fillExamples() {
@@ -951,6 +943,9 @@ bool ReginaMain::saveUrlAs() {
     return true;
 }
 
+QSize ReginaMain::sizeHint() const {
+    return QSize(640,400);
+}
 
 // TODO: As best I can tell, this never gets called.
 void ReginaMain::embedPart() {

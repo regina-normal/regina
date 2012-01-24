@@ -45,10 +45,11 @@
 #include <QUrl>
 
 class ExamplesAction;
+class QAction;
 class QMenuBar;
 class QMenu;
+class QSize;
 class QToolBar;
-class QAction;
 class ReginaManager;
 
 /**
@@ -167,6 +168,11 @@ class ReginaMain : public QMainWindow,
          */
         virtual bool queryClose();
         virtual bool queryExit();
+
+        /**
+         * Qt override to set preferred size of the window to 640x400
+         */
+        virtual QSize sizeHint() const;
 
     signals:
         /**
