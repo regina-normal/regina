@@ -46,10 +46,10 @@ int main(int argc, char **argv) {
     QCoreApplication::setApplicationName("Regina");
 
     // TODO Why does it crash with the next 4 lines commented?
-    QStringList list;
-    for(int a=0;a < argc; ++a) {
-        list << QString::fromLocal8Bit(argv[a]);
-    }
+    //QStringList list;
+    //for(int a=0;a < argc; ++a) {
+    //    list << QString::fromLocal8Bit(argv[a]);
+    //}
 
 
     // TODO Session management disabled until further notice.
@@ -64,13 +64,12 @@ int main(int argc, char **argv) {
 //    } else {
         // No session; just start up normally.
         QStringList args = app->arguments();
-        ReginaMain *widget = app->newWindow();
-        widget->show();
+        ReginaMain *window = app->newWindow();
 
         // Note that args.at(0) is the name of the executable (regina-qt)
         if (args.size() > 1) {
             for (int i = 1; i < args.size(); i++) {
-                widget->openUrl(args.at(i));
+                window->openUrl(args.at(i));
             }
         }
 //    }

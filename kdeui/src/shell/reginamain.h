@@ -295,7 +295,7 @@ inline const ReginaPrefSet& ReginaMain::getPreferences() const {
 class ReginaManager : public QApplication {
 
     public:
-        ReginaManager(int argc, char** argv);
+        ReginaManager(int &argc, char** argv);
         
         ReginaMain* newWindow();
         ReginaMain* newWindow(const QString url);

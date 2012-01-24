@@ -29,13 +29,13 @@
 #include "reginamain.h"
 
 
-ReginaManager::ReginaManager(int argc, char **argv) : 
+ReginaManager::ReginaManager(int &argc, char **argv) : 
     QApplication(argc,argv) {
 }
    
 
 ReginaMain* ReginaManager::newWindow() {
-    ReginaMain *win = new ReginaMain(this, false);
+    ReginaMain *win = new ReginaMain(this, true);
     win->show();
     children.append(win);
     return win;
