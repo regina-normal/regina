@@ -51,13 +51,9 @@
 
 unsigned ReginaMain::objectNumber = 1;
 
-ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) : QMainWindow() {
+ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
 
     setAttribute(Qt::WA_DeleteOnClose);
-    // Select a unique DCOP interface name.
-    //QCString objNumStr;
-    //objNumStr.setNum(objectNumber++);
-    //setObjId("ReginaMainInterface#" + objNumStr);
 
     // TODO: KDE things
     // Resize ourselves nicely.
@@ -71,7 +67,6 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) : QMainWindow() {
     //setHelpMenuEnabled(false);
 
     // Set up our actions and status bar.
-    //setXMLFile("reginamain.rc");
     setupActions();
     // statusBar()->show();
 
@@ -229,7 +224,8 @@ bool ReginaMain::openUrl(const QUrl& url) {
     bool result;
     if (isReg) {
         ReginaPart* part = newTopologyPart();
-        mdiArea->addSubWindow(part);
+        setCentralWidget(mdiArea);
+        mdiArea->setActiveSubWindow(mdiArea->addSubWindow(part));
         result = part->openFile(url);
     }
     else {
