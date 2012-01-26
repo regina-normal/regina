@@ -64,8 +64,8 @@ void ReginaPart::setupActions() {
 
     parent->setSaveActions(actSave, act);
 
-    importMenu = new QMenu(this);
-    exportMenu = new QMenu(this);
+    importMenu = new QMenu(tr("&Import"));
+    exportMenu = new QMenu(tr("&Export"));
 
     // Edit actions:
     // Note: we connect these in the various panes, don't connect them here
