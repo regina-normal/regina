@@ -357,12 +357,6 @@ class ReginaPart : public QMdiSubWindow {
         void updateTreePacketActions();
         void updateTreeEditActions();
         
-        /**
-         * Allow different packet UIs to plug in their own menus.
-         */
-        void plugMenu(QMenu *);
-        void unplugMenu();
-
     private:
         /**
          * Initial setup.

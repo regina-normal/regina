@@ -35,6 +35,7 @@
 #include "reginafilter.h"
 #include "packettreeview.h"
 #include "packetui.h"
+#include "reginamain.h"
 #include "reginapart.h"
 
 #include <QBoxLayout>
@@ -159,8 +160,8 @@ void ReginaPart::dock(PacketPane* newPane) {
     newPane->setParent(dockArea);
     static_cast<QBoxLayout*>(dockArea->layout())->addWidget(newPane, 1);
     dockedPane = newPane;
-
-    plugMenu(newPane->getPacketTypeMenu());
+    
+    parent->plugMenu(newPane->getPacketTypeMenu());
 
     newPane->show();
 
@@ -172,6 +173,7 @@ void ReginaPart::dock(PacketPane* newPane) {
 }
 
 void ReginaPart::isClosing(PacketPane* closingPane) {
+    parent->unplugMenu();
     allPanes.removeAll(closingPane);
 }
 
@@ -595,20 +597,6 @@ regina::NPacket* ReginaPart::checkSubtreeSelected() {
         "No subtree is currently selected.  To work with a packet subtree, "
         "select the packet at the base of the subtree."));
     return 0;
-}
-
-void ReginaPart::plugMenu(QMenu *menu) {
-    if (packetMenu) {
-        menuBar->removeAction(packetMenu);
-    }
-    packetMenu = menuBar->addMenu(menu);
-}
-
-void ReginaPart::unplugMenu() {
-    if (packetMenu) {
-        menuBar->removeAction(packetMenu);
-        packetMenu = NULL;
-    }
 }
 
 const QUrl ReginaPart::url() {
