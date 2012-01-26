@@ -57,6 +57,7 @@ ReginaPart::ReginaPart(ReginaMain *parent,
     // Set up our widgets and actions.
     setupWidgets();
     setupActions();
+    packetMenu = NULL;
 
     // Initialise the packet tree.
     initPacketTree();
@@ -555,9 +556,8 @@ void ReginaPart::setupWidgets() {
     // nothing in it.
     dockLayout->addStrut(100);
 
-    // TODO: Do we need this still?
     // Make the splitter our main widget.
-    // setWidget(splitter);
+    setWidget(splitter);
 }
 
 void ReginaPart::initPacketTree() {
