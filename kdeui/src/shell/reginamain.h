@@ -104,6 +104,10 @@ class ReginaMain : public QMainWindow,
          * Menus and toolbars
          */
         QMenu* fileMenu;
+        QAction* treeMenu;
+        QAction* toolMenuAction;
+        QAction* actNew;
+        QAction* actOpen;
         QAction* saveSep;
         QAction* saveAct;
         QAction* saveAsAct;
@@ -113,6 +117,7 @@ class ReginaMain : public QMainWindow,
         QAction* exportAct;
         QAction* editAct;
         QToolBar* toolBar;
+        QToolBar* packetTreeToolBar;
 
         /**
          * Main document display widget
@@ -156,14 +161,24 @@ class ReginaMain : public QMainWindow,
         void saveOptions();
 
         /**
-         * Plug in a new PacketTree menu
+         * Plug in a new packet specific menu
          */
         void plugMenu(QMenu *menu);
 
         /**
-         * Remove the PacketTree menu
+         * Remove the packet specific menu
          */
         void unplugMenu();
+
+        /**
+         * Plug in a new Packet Tree menu
+         */
+        void plugTreeMenu(QMenu *menu);
+
+        /**
+         * Remove the Packet Tree menu
+         */
+        void unplugTreeMenu();
 
         /**
          * Insert the import/export menus
@@ -178,7 +193,16 @@ class ReginaMain : public QMainWindow,
         /**
          * Sets up Save and SaveAs actions
          */
-        void setSaveActions(QAction *save, QAction *saveAs);
+        void setActions(QAction *save, QAction *saveAs,
+            QAction *actCut, QAction *actCopy, QAction *actPaste);
+
+        /**
+         * Destroys any existing packetTree toolbar, then creates 
+         * a new one and returns it. The toolbar is owned by ReginaMain
+         * so "extensions" (popups for if the toolbar doesn't fit) work
+         * correctly.
+         */
+        QToolBar* createToolBar(QString name);
 
     protected:
         /**

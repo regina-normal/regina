@@ -72,10 +72,15 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
     // Don't forget to save toolbar/etc settings.
     //setAutoSaveSettings(QString::fromLatin1("MainWindow"), true);
 
+    aboutApp = 0;
 
-    // Mark down that there is no edit menu yet.
+    // Mark actions as missing for now.
     editAct = 0;
+    saveAct = 0;
+    saveAsAct = 0;
     packetMenu = 0;
+    packetTreeToolBar = 0;
+    toolBar = 0;
 
 
     // Track the parent manager.
@@ -107,7 +112,8 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
 }
 
 ReginaMain::~ReginaMain() {
-    delete aboutApp;
+    if (aboutApp)
+      delete aboutApp;
 }
 
 void ReginaMain::setPreferences(const ReginaPrefSet& prefs) {
@@ -179,9 +185,11 @@ bool ReginaMain::queryExit() {
 }
 
 void ReginaMain::newTopology() {
+    QMdiSubWindow *win;
     ReginaPart* part = newTopologyPart();
     setCentralWidget(mdiArea);
-    mdiArea->addSubWindow(part);
+    win = mdiArea->addSubWindow(part);
+    win->showMaximized();
     return;
 }
 
@@ -227,9 +235,12 @@ bool ReginaMain::openUrl(const QUrl& url) {
     }*/
     bool result;
     if (isReg) {
+        QMdiSubWindow *win;
         ReginaPart* part = newTopologyPart();
         setCentralWidget(mdiArea);
-        mdiArea->setActiveSubWindow(mdiArea->addSubWindow(part));
+        win = mdiArea->addSubWindow(part);
+        win->showMaximized();
+        mdiArea->setActiveSubWindow(win);
         result = part->openFile(url);
     }
     else {
@@ -404,29 +415,30 @@ void ReginaMain::setupActions() {
     
 
     // File actions:
-    act = new QAction(this); 
-    act->setText(tr("&New Topology Data"));
-    act->setIcon(QIcon::fromTheme("document-new"));
-    act->setShortcut(tr("Ctrl+n"));
-    act->setWhatsThis(tr("Create a new topology data file.  This is "
+    actNew = new QAction(this); 
+    actNew->setText(tr("&New Topology Data"));
+    actNew->setIcon(QIcon::fromTheme("document-new"));
+    actNew->setShortcut(tr("Ctrl+n"));
+    actNew->setWhatsThis(tr("Create a new topology data file.  This is "
         "the standard type of data file used by Regina."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newTopology()));
-    fileMenu->addAction(act);
-    toolBar->addAction(act);
+    connect(actNew, SIGNAL(triggered()), this, SLOT(newTopology()));
+    fileMenu->addAction(actNew);
+    toolBar->addAction(actNew);
 
-    act = new QAction(this);
-    act->setText(tr("&Open..."));
-    act->setIcon(QIcon::fromTheme("document-open"));
-    act->setShortcut(tr("Ctrl+o"));
-    act->setWhatsThis(tr("Open a topology data file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(fileOpen()));
-    fileMenu->addAction(act);
-    toolBar->addAction(act);
+    actOpen = new QAction(this);
+    actOpen->setText(tr("&Open..."));
+    actOpen->setIcon(QIcon::fromTheme("document-open"));
+    actOpen->setShortcut(tr("Ctrl+o"));
+    actOpen->setWhatsThis(tr("Open a topology data file."));
+    connect(actOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
+    fileMenu->addAction(actOpen);
+    toolBar->addAction(actOpen);
    
     fileOpenExample = new ExamplesAction(this);
     fillExamples();
     connect(fileOpenExample, SIGNAL(urlSelected(const QUrl&)),
         this, SLOT(openExample(const QUrl&)));
+    fileMenu->addMenu(fileOpenExample);
 
     /*
     act = new QAction(this);
@@ -479,6 +491,22 @@ void ReginaMain::setupActions() {
         SLOT(optionsShowStatusbar()), actionCollection());
     */
 
+
+    QMenu *toolMenu =  menuBar()->addMenu(tr("&Tools"));
+    toolMenuAction = toolMenu->menuAction();
+    // Tools:
+    actPython = new QAction(this);
+    actPython->setText(tr("&Python Console"));
+    actPython->setIcon(KIcon("python_console"));
+    actPython->setShortcut(tr("Alt+y"));
+    actPython->setWhatsThis(tr("Open a new Python console.  You can "
+        "use a Python console to interact directly with Regina's "
+        "mathematical engine."));
+    connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
+    toolMenu->addAction(actPython);
+    toolBar->addAction(actPython);
+    
+    
     QMenu *settingsMenu =  menuBar()->addMenu(tr("&Settings"));
     // Preferences:
     act = new QAction(this);
@@ -500,19 +528,6 @@ void ReginaMain::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(optionsPreferences()));
     settingsMenu->addAction(act);
 
-
-    QMenu *toolMenu =  menuBar()->addMenu(tr("&Tools"));
-    // Tools:
-    actPython = new QAction(this);
-    actPython->setText(tr("&Python Console"));
-    actPython->setIcon(KIcon("python_console"));
-    actPython->setShortcut(tr("Alt+y"));
-    actPython->setWhatsThis(tr("Open a new Python console.  You can "
-        "use a Python console to interact directly with Regina's "
-        "mathematical engine."));
-    connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
-    toolMenu->addAction(actPython);
-    toolBar->addAction(actPython);
 
     QMenu *helpMenu =  menuBar()->addMenu(tr("&Help"));
     // Help:
@@ -964,7 +979,7 @@ void ReginaMain::plugMenu(QMenu *menu) {
     if (packetMenu) {
         menuBar()->removeAction(packetMenu);
     }
-    packetMenu = menuBar()->addMenu(menu);
+    packetMenu = menuBar()->insertMenu(toolMenuAction,menu);
 }
 
 void ReginaMain::unplugMenu() {
@@ -974,7 +989,26 @@ void ReginaMain::unplugMenu() {
     }
 }
 
-void ReginaMain::setSaveActions(QAction *save, QAction *saveAs) {
+void ReginaMain::plugTreeMenu(QMenu *menu) {
+    if (treeMenu) {
+        menuBar()->removeAction(treeMenu);
+    }
+    if (packetMenu) {
+        treeMenu = menuBar()->insertMenu(packetMenu,menu);
+    } else {
+        treeMenu = menuBar()->insertMenu(toolMenuAction,menu);
+    }
+}
+
+void ReginaMain::unplugTreeMenu() {
+    if (treeMenu) {
+        menuBar()->removeAction(packetMenu);
+        treeMenu = NULL;
+    }
+}
+
+void ReginaMain::setActions(QAction *save, QAction *saveAs,
+        QAction *actCut, QAction *actCopy, QAction *actPaste) {
     // First insert SaveAs before the separator
     if (saveAsAct) {
         fileMenu->removeAction(saveAsAct);
@@ -987,7 +1021,29 @@ void ReginaMain::setSaveActions(QAction *save, QAction *saveAs) {
     }
     saveAct = save;
     fileMenu->insertAction(saveAs,save);
+    
+    removeToolBar(toolBar);
+    delete toolBar;
+    toolBar = addToolBar(tr("Main2"));
+    toolBar->addAction(actNew);
+    toolBar->addAction(actOpen);
+    toolBar->addAction(save);
+    toolBar->addSeparator();
+    toolBar->addAction(actCut);
+    toolBar->addAction(actCopy);
+    toolBar->addAction(actPaste);
+    toolBar->addSeparator();
+    toolBar->addAction(actPython);
 }
+
+QToolBar* ReginaMain::createToolBar(QString name) {
+    if (packetTreeToolBar) {
+        removeToolBar(packetTreeToolBar);
+    }
+    packetTreeToolBar = addToolBar(name);
+    return packetTreeToolBar;
+}
+
 
 void ReginaMain::importsExports(QMenu *imports, QMenu *exports) {
     // First insert Export before the separator
@@ -1007,8 +1063,17 @@ void ReginaMain::editMenu(QMenu *menu) {
     if (editAct) {
         menuBar()->removeAction(editAct);
     }
-    // Insert before "plugMenu" aka Packet Tree
-    editAct = fileMenu->insertMenu(packetMenu,menu);
+
+    if (treeMenu) {
+        // Insert before "treeMenu" aka Packet Tree
+        editAct = menuBar()->insertMenu(treeMenu,menu);
+    } else if(packetMenu) {
+        // Insert before "plugMenu" aka packet-specific menu
+        editAct = menuBar()->insertMenu(packetMenu,menu);
+    } else {
+        // Insert before Tools
+        editAct = menuBar()->insertMenu(toolMenuAction,menu);
+    }
 }
 
 // TODO: As best I can tell, this never gets called.
