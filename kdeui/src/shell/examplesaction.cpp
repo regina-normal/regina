@@ -43,10 +43,9 @@
 #include <QUrl>
 
 ExamplesAction::ExamplesAction(QWidget* parent) :
-        QWidgetAction(parent) {
-    menu = new QMenu(parent);
-    menu->setTitle(tr("Open E&xample"));
-    menu->setIcon(QIcon::fromTheme("bookmarks"));
+        QMenu(parent) {
+    setTitle(tr("Open E&xample"));
+    setIcon(QIcon::fromTheme("bookmarks"));
 
     group = new QActionGroup(parent);
     //setMenuAccelsEnabled(false);
@@ -66,7 +65,7 @@ void ExamplesAction::addUrl(const QString& fileName, const QString& text) {
 
     QAction* action = new QAction(this);
     action->setText(text);
-    menu->insertAction(0 /* insert last */, action);
+    insertAction(0 /* insert last */, action);
     group->addAction(action);
     urls_.insert(action, QUrl(QString("file:%1/%2")
         .arg(QFile::decodeName(regina::NGlobalDirs::examples().c_str()))

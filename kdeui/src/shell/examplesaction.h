@@ -34,10 +34,9 @@
 #define __EXAMPLESACTION_H
 
 #include <QMap>
-#include <QWidgetAction>
+#include <QMenu>
 
 class QUrl;
-class QMenu;
 class QActionGroup;
 
 /**
@@ -48,7 +47,7 @@ class QActionGroup;
  * KDE 3.2.3.  KRecentFilesAction was written by Michael Koch and is
  * released under the GNU Library General Public License (v2).
  */
-class ExamplesAction : public QWidgetAction {
+class ExamplesAction : public QMenu {
     Q_OBJECT
 
     private:
