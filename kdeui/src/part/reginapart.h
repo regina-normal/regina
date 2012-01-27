@@ -120,13 +120,6 @@ class ReginaPart : public QMdiSubWindow {
         QMenu* exportMenu;
         QMenu* treeNavMenu;
 
-        /* This technically isn't a menu item, but the action representing the
-         * packet menu, when inserted into our main menuBar. Needed to allow 
-         * the packet menu to be removed and re-inserted for different types of
-         * packets.
-         */
-        QAction* packetMenu;
-
         /** 
          * Is the current packet writable
          */

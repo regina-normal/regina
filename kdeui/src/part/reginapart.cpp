@@ -58,7 +58,8 @@ ReginaPart::ReginaPart(ReginaMain *parent,
     // Set up our widgets and actions.
     setupWidgets();
     setupActions();
-    packetMenu = NULL;
+    // Send Packet Tree menu to parent
+    parent->plugTreeMenu(treeMenu);
 
     // Initialise the packet tree.
     initPacketTree();
@@ -68,6 +69,7 @@ ReginaPart::ReginaPart(ReginaMain *parent,
     setModified(false);
     updateTreeEditActions();
     updateTreePacketActions();
+
 }
 
 ReginaPart::~ReginaPart() {
@@ -162,7 +164,6 @@ void ReginaPart::dock(PacketPane* newPane) {
     dockedPane = newPane;
     
     parent->plugMenu(newPane->getPacketTypeMenu());
-
     newPane->show();
 
     newPane->registerEditOperations(actCut, actCopy, actPaste);
@@ -174,6 +175,7 @@ void ReginaPart::dock(PacketPane* newPane) {
 
 void ReginaPart::isClosing(PacketPane* closingPane) {
     parent->unplugMenu();
+    parent->unplugTreeMenu();
     allPanes.removeAll(closingPane);
 }
 

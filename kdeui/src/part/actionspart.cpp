@@ -34,6 +34,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QStyle>
+#include <QToolBar>
 
 // TODO: Undo/redo are not yet implemented.
 
@@ -45,34 +46,25 @@ void ReginaPart::setupActions() {
     treeMenu = new QMenu(tr("&Packet Tree"));
     
     // File actions:
-    actSave = new QAction(
-        QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton),
-        tr("&Save"), this);
+    actSave = new QAction(QIcon::fromTheme("document-save"), tr("&Save"), this);
     actSave->setShortcuts(QKeySequence::Save);
     actSave->setWhatsThis(tr("Save the current data file."));
     connect(actSave, SIGNAL(triggered()), this, SLOT(fileSave()));
     allActions.append(actSave);
 
-    act = new QAction(
-        QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton),
-        tr("Save &as"), this);
+    act = new QAction(QIcon::fromTheme("document-save-as"), tr("Save &as"), this);
     act->setShortcuts(QKeySequence::SaveAs);
     act->setWhatsThis(tr(
         "Save the current data file, but give it a different name."));
     connect(act, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
     allActions.append(act);
 
-    parent->setSaveActions(actSave, act);
 
     importMenu = new QMenu(tr("&Import"));
     exportMenu = new QMenu(tr("&Export"));
 
     // Edit actions:
-    // Note: we connect these in the various panes, don't connect them here
-    actCut = new QAction(
-        // TODO: Qt doesn't (seem to) offer any standard cut/copy/paste icons
-        QApplication::style()->standardIcon(QStyle::SP_ArrowLeft),
-        tr("Cu&t"), this);
+    actCut = new QAction(QIcon::fromTheme("edit-cut"), tr("Cu&t"), this);
     actCut->setWhatsThis(tr("Cut out the current selection and store it "
         "in the clipboard."));
     actCut->setEnabled(false);
@@ -80,18 +72,14 @@ void ReginaPart::setupActions() {
     editMenu->addAction(actCut);
     allActions.append(actCut);
 
-    actCopy = new QAction(
-        QApplication::style()->standardIcon(QStyle::SP_ArrowDown),
-        tr("&Copy"), this);
+    actCopy = new QAction(QIcon::fromTheme("edit-copy"), tr("&Copy"), this);
     actCopy->setWhatsThis(tr("Copy the current selection to the clipboard."));
     actCopy->setEnabled(false);
     actCopy->setShortcuts(QKeySequence::Copy);
     editMenu->addAction(actCopy);
     allActions.append(actCopy);
 
-    actPaste = new QAction(
-        QApplication::style()->standardIcon(QStyle::SP_ArrowRight),
-        tr("&Paste"), this);
+    actPaste = new QAction(QIcon::fromTheme("edit-paste"), tr("&Paste"), this);
     actPaste->setWhatsThis(tr("Paste the contents of the clipboard."));
     actPaste->setEnabled(false);
     actPaste->setShortcuts(QKeySequence::Paste);
@@ -99,105 +87,107 @@ void ReginaPart::setupActions() {
     allActions.append(act);
   
     parent->editMenu(editMenu);
+
+    parent->setActions(actSave, act, actCut, actCopy, actPaste);
     
 
     // New packets:
-    act = new QAction(this);
-    act->setText(tr("New &Angle Structure Solutions"));
-    act->setIcon(QIcon("packet_angles"));
-    act->setShortcut(tr("Alt+a"));
-    act->setToolTip(tr("New angle structure solutions"));
-    act->setWhatsThis(tr("Create a new list of vertex angle structures "
+    QAction *actAngleStructure = new QAction(this);
+    actAngleStructure->setText(tr("New &Angle Structure Solutions"));
+    actAngleStructure->setIcon(QIcon("packet_angles"));
+    actAngleStructure->setShortcut(tr("Alt+a"));
+    actAngleStructure->setToolTip(tr("New angle structure solutions"));
+    actAngleStructure->setWhatsThis(tr("Create a new list of vertex angle structures "
         "for a triangulation."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newAngleStructures()) );
-    treeGeneralEditActions.append(act);
-    treeMenu->addAction(act);
-    allActions.append(act);
+    connect(actAngleStructure, SIGNAL(triggered()), this, SLOT(newAngleStructures()) );
+    treeGeneralEditActions.append(actAngleStructure);
+    treeMenu->addAction(actAngleStructure);
+    allActions.append(actAngleStructure);
 
-    act = new QAction(this);
-    act->setText(tr("New &Container"));
-    act->setIcon(QIcon("packet_container"));
-    act->setShortcut(tr("Alt+c"));
-    act->setToolTip(tr("New container"));
-    act->setWhatsThis(tr("Create a new container packet.  Containers "
+    QAction* actContainer = new QAction(this);
+    actContainer->setText(tr("New &Container"));
+    actContainer->setIcon(QIcon("packet_container"));
+    actContainer->setShortcut(tr("Alt+c"));
+    actContainer->setToolTip(tr("New container"));
+    actContainer->setWhatsThis(tr("Create a new container packet.  Containers "
         "are used to help keep the packet tree organised &ndash; "
         "they serve no purpose other than to store child packets."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newContainer()) );
-    treeGeneralEditActions.append(act);
-    treeMenu->addAction(act);
-    allActions.append(act);
+    connect(actContainer, SIGNAL(triggered()), this, SLOT(newContainer()) );
+    treeGeneralEditActions.append(actContainer);
+    treeMenu->addAction(actContainer);
+    allActions.append(actContainer);
 
-    act = new QAction(this);
-    act->setText(tr("New &Filter"));
-    act->setIcon(QIcon("packet_filter"));
-    act->setShortcut(tr("Alt+f"));
-    act->setToolTip(tr("New surface filter"));
-    act->setWhatsThis(tr("Create a new normal surface filter.  Surface "
+    QAction* actFilter = new QAction(this);
+    actFilter->setText(tr("New &Filter"));
+    actFilter->setIcon(QIcon("packet_filter"));
+    actFilter->setShortcut(tr("Alt+f"));
+    actFilter->setToolTip(tr("New surface filter"));
+    actFilter->setWhatsThis(tr("Create a new normal surface filter.  Surface "
         "filters can be used to sort through normal surface lists and "
         "display only surfaces of particular interest."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newFilter()) );
-    treeGeneralEditActions.append(act);
-    treeMenu->addAction(act);
-    allActions.append(act);
+    connect(actFilter, SIGNAL(triggered()), this, SLOT(newFilter()) );
+    treeGeneralEditActions.append(actFilter);
+    treeMenu->addAction(actFilter);
+    allActions.append(actFilter);
 
-    act = new QAction(this);
-    act->setText(tr("New &Normal Surface List"));
-    act->setIcon(QIcon("packet_surfaces"));
-    act->setShortcut(tr("Alt+n"));
-    act->setToolTip(tr("New normal surface list"));
-    act->setWhatsThis(tr("Create a new list of vertex normal surfaces "
+    QAction* actSurfaces = new QAction(this);
+    actSurfaces->setText(tr("New &Normal Surface List"));
+    actSurfaces->setIcon(QIcon("packet_surfaces"));
+    actSurfaces->setShortcut(tr("Alt+n"));
+    actSurfaces->setToolTip(tr("New normal surface list"));
+    actSurfaces->setWhatsThis(tr("Create a new list of vertex normal surfaces "
         "for a triangulation."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newNormalSurfaces()) );
-    treeGeneralEditActions.append(act);
-    treeMenu->addAction(act);
-    allActions.append(act);
+    connect(actSurfaces, SIGNAL(triggered()), this, SLOT(newNormalSurfaces()) );
+    treeGeneralEditActions.append(actSurfaces);
+    treeMenu->addAction(actSurfaces);
+    allActions.append(actSurfaces);
 
-    act = new QAction(this);
-    act->setText(tr("New &PDF Document"));
-    act->setIcon(QIcon("packet_pdf"));
-    act->setShortcut(tr("Alt+p"));
-    act->setToolTip(tr("New PDF document"));
-    act->setWhatsThis(tr("Create a new PDF packet containing a copy of "
+    QAction* actPDF = new QAction(this);
+    actPDF->setText(tr("New &PDF Document"));
+    actPDF->setIcon(QIcon("packet_pdf"));
+    actPDF->setShortcut(tr("Alt+p"));
+    actPDF->setToolTip(tr("New PDF document"));
+    actPDF->setWhatsThis(tr("Create a new PDF packet containing a copy of "
         "an external PDF document."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newPDF()) );
-    treeGeneralEditActions.append(act);
-    treeMenu->addAction(act);
-    allActions.append(act);
+    connect(actPDF, SIGNAL(triggered()), this, SLOT(newPDF()) );
+    treeGeneralEditActions.append(actPDF);
+    treeMenu->addAction(actPDF);
+    allActions.append(actPDF);
 
-    act = new QAction(this);
-    act->setText(tr("New &Script"));
-    act->setIcon(QIcon("packet_script"));
-    act->setShortcut(tr("Alt+s"));
-    act->setToolTip(tr("New script packet"));
-    act->setWhatsThis(tr("Create a new Python script that can work "
+    QAction* actScript = new QAction(this);
+    actScript->setText(tr("New &Script"));
+    actScript->setIcon(QIcon("packet_script"));
+    actScript->setShortcut(tr("Alt+s"));
+    actScript->setToolTip(tr("New script packet"));
+    actScript->setWhatsThis(tr("Create a new Python script that can work "
         "directly with this data file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newScript()) );
-    treeGeneralEditActions.append(act);
-    treeMenu->addAction(act);
-    allActions.append(act);
+    connect(actScript, SIGNAL(triggered()), this, SLOT(newScript()) );
+    treeGeneralEditActions.append(actScript);
+    treeMenu->addAction(actScript);
+    allActions.append(actScript);
 
-    act = new QAction(this);
-    act->setText(tr("New Te&xt"));
-    act->setIcon(QIcon("packet_text"));
-    act->setShortcut(tr("Alt+x"));
-    act->setToolTip(tr("New text packet"));
-    act->setWhatsThis(tr("Create a new piece of text to store within "
+    QAction* actText = new QAction(this);
+    actText->setText(tr("New Te&xt"));
+    actText->setIcon(QIcon("packet_text"));
+    actText->setShortcut(tr("Alt+x"));
+    actText->setToolTip(tr("New text packet"));
+    actText->setWhatsThis(tr("Create a new piece of text to store within "
         "the packet tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newText()) );
-    treeGeneralEditActions.append(act);
-    treeMenu->addAction(act);
-    allActions.append(act);
+    connect(actText, SIGNAL(triggered()), this, SLOT(newText()) );
+    treeGeneralEditActions.append(actText);
+    treeMenu->addAction(actText);
+    allActions.append(actText);
 
-    act = new QAction(this);
-    act->setText(tr("New &Triangulation"));
-    act->setIcon(QIcon("packet_triangulation"));
-    act->setShortcut(tr("Alt+t"));
-    act->setToolTip(tr("New triangulation"));
-    act->setWhatsThis(tr("Create a new 3-manifold triangulation."));
-    connect(act, SIGNAL(triggered()), this, SLOT(newTriangulation()) );
-    treeGeneralEditActions.append(act);
-    treeMenu->addAction(act);
-    allActions.append(act);
+    QAction* actTriangulation = new QAction(this);
+    actTriangulation->setText(tr("New &Triangulation"));
+    actTriangulation->setIcon(QIcon("packet_triangulation"));
+    actTriangulation->setShortcut(tr("Alt+t"));
+    actTriangulation->setToolTip(tr("New triangulation"));
+    actTriangulation->setWhatsThis(tr("Create a new 3-manifold triangulation."));
+    connect(actTriangulation, SIGNAL(triggered()), this, SLOT(newTriangulation()) );
+    treeGeneralEditActions.append(actTriangulation);
+    treeMenu->addAction(actTriangulation);
+    allActions.append(actTriangulation);
 
     treeMenu->addSeparator();
 
@@ -215,41 +205,41 @@ void ReginaPart::setupActions() {
     treeMenu->addSeparator();
 
     // Basic packet actions:
-    act = new QAction(this);
-    act->setText(tr("&View/Edit"));
-    act->setIcon(QIcon("packet_view"));
-    act->setShortcut(tr("Alt+v"));
-    act->setToolTip(tr("View or edit the selected packet"));
-    act->setWhatsThis(tr("View or edit the packet currently selected "
+    QAction* actView = new QAction(this);
+    actView->setText(tr("&View/Edit"));
+    actView->setIcon(QIcon("packet_view"));
+    actView->setShortcut(tr("Alt+v"));
+    actView->setToolTip(tr("View or edit the selected packet"));
+    actView->setWhatsThis(tr("View or edit the packet currently selected "
         "in the tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(packetView()) );
-    treePacketViewActions.append(act);
-    treeMenu->addAction(act);
-    allActions.append(act);
+    connect(actView, SIGNAL(triggered()), this, SLOT(packetView()) );
+    treePacketViewActions.append(actView);
+    treeMenu->addAction(actView);
+    allActions.append(actView);
 
-    act = new QAction(this);
-    act->setText(tr("&Rename"));
-    act->setIcon(QIcon("edit-rename"));
-    act->setShortcut(tr("Alt+r"));
-    act->setToolTip(tr("Rename the selected packet"));
-    act->setWhatsThis(tr("Rename the packet currently selected "
+    QAction* actRename = new QAction(this);
+    actRename->setText(tr("&Rename"));
+    actRename->setIcon(QIcon("edit-rename"));
+    actRename->setShortcut(tr("Alt+r"));
+    actRename->setToolTip(tr("Rename the selected packet"));
+    actRename->setWhatsThis(tr("Rename the packet currently selected "
         "in the tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(packetRename()) );
-    treePacketEditActions.append(act);
-    treeMenu->addAction(act);
-    allActions.append(act);
+    connect(actRename, SIGNAL(triggered()), this, SLOT(packetRename()) );
+    treePacketEditActions.append(actRename);
+    treeMenu->addAction(actRename);
+    allActions.append(actRename);
 
-    act = new QAction(this);
-    act->setText(tr("&Delete"));
-    act->setIcon(QIcon("edit-delete"));
-    act->setShortcut(tr("Delete"));
-    act->setToolTip(tr("Delete the selected packet"));
-    act->setWhatsThis(tr("Delete the packet currently selected "
+    QAction *actDelete = new QAction(this);
+    actDelete->setText(tr("&Delete"));
+    actDelete->setIcon(QIcon("edit-delete"));
+    actDelete->setShortcut(tr("Delete"));
+    actDelete->setToolTip(tr("Delete the selected packet"));
+    actDelete->setWhatsThis(tr("Delete the packet currently selected "
         "in the tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(packetDelete()) );
-    treePacketEditActions.append(act);
-    treeMenu->addAction(act);
-    allActions.append(act);
+    connect(actDelete, SIGNAL(triggered()), this, SLOT(packetDelete()) );
+    treePacketEditActions.append(actDelete);
+    treeMenu->addAction(actDelete);
+    allActions.append(actDelete);
 
     treeNavMenu = treeMenu->addMenu(tr("&Move"));
 
@@ -396,22 +386,22 @@ void ReginaPart::setupActions() {
 
     treeMenu->addSeparator();
 
-    act = new QAction(this);
-    act->setText(tr("Refres&h Subtree"));
-    act->setIcon(QIcon("view-refresh"));
-    act->setShortcut(tr("F5"));
-    act->setToolTip(tr("Refresh the subtree beneath the selected packet"));
-    act->setWhatsThis(tr("Refresh the packet "
+    QAction* actRefresh = new QAction(this);
+    actRefresh->setText(tr("Refres&h Subtree"));
+    actRefresh->setIcon(QIcon("view-refresh"));
+    actRefresh->setShortcut(tr("F5"));
+    actRefresh->setToolTip(tr("Refresh the subtree beneath the selected packet"));
+    actRefresh->setWhatsThis(tr("Refresh the packet "
         "currently selected in the tree, as well as all of its descendants "
         "within the tree.<p>"
         "This should not normally be necessary, but it is a possible "
         "fix-up in case the tree is out of sync with what is happening "
         "elsewhere.  Note that the file is <i>not</i> reloaded from "
         "disc; the tree is just resynced with packet editors and so on."));
-    connect(act, SIGNAL(triggered()), this, SLOT(subtreeRefresh()) );
-    treePacketViewActions.append(act);
-    treeMenu->addAction(act);
-    allActions.append(act);
+    connect(actRefresh, SIGNAL(triggered()), this, SLOT(subtreeRefresh()) );
+    treePacketViewActions.append(actRefresh);
+    treeMenu->addAction(actRefresh);
+    allActions.append(actRefresh);
     
     // Imports and exports:
     act = new QAction(this);
@@ -577,5 +567,20 @@ void ReginaPart::setupActions() {
     allActions.append(act);
 
     parent->importsExports(importMenu, exportMenu);
+
+    QToolBar* packet = parent->createToolBar(tr("Packet Tree Toolbar"));
+    packet->addAction(actView);
+    packet->addAction(actRefresh);
+    packet->addAction(actRename);
+    packet->addAction(actDelete);
+    packet->addSeparator();
+    packet->addAction(actContainer);
+    packet->addAction(actTriangulation);
+    packet->addAction(actSurfaces);
+    packet->addAction(actAngleStructure);
+    packet->addAction(actFilter);
+    packet->addAction(actText);
+    packet->addAction(actScript);
+    packet->addAction(actPDF);
 }
 
