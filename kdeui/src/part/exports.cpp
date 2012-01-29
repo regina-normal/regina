@@ -78,7 +78,7 @@ void ReginaPart::exportSource() {
 
 void ReginaPart::exportFile(const PacketExporter& exporter,
         const QString& fileFilter, const QString& dialogTitle) {
-    ExportDialog dlg(this, packetTree, treeView->selectedPacket(),
+    ExportDialog dlg(widget(), packetTree, treeView->selectedPacket(),
         exporter.canExport(), dialogTitle);
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
         regina::NPacket* data = dlg.selectedPacket();
@@ -99,10 +99,10 @@ void ReginaPart::exportFile(const PacketExporter& exporter,
 //                    exporter.exportData(data, file, widget());
 //            }
 //            TODO: Use encoding
-            QString file = QFileDialog::getSaveFileName(this,
+            QString file = QFileDialog::getSaveFileName(widget(),
                 dialogTitle, QString(), fileFilter);
             if (! file.isEmpty())
-                exporter.exportData(data, file, this);
+                exporter.exportData(data, file, widget());
         }
     }
 }

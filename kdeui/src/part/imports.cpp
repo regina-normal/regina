@@ -104,14 +104,14 @@ void ReginaPart::importFile(const PacketImporter& importer,
 
 
     // TODO: Use encoding
-    QString file = QFileDialog::getOpenFileName(this,
+    QString file = QFileDialog::getOpenFileName(widget(),
         dialogTitle, QString(), fileFilter);
     if (file.isEmpty())
         return;
-    newTree = importer.importData(file, this);
+    newTree = importer.importData(file, widget());
 
     if (newTree) {
-        ImportDialog dlg(this, newTree, packetTree,
+        ImportDialog dlg(widget(), newTree, packetTree,
             treeView->selectedPacket(), parentFilter, dialogTitle);
         if (dlg.validate() && dlg.exec() == QDialog::Accepted)
             packetView(newTree, true);
