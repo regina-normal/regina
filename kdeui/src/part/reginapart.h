@@ -38,8 +38,8 @@
 
 #include <QAction>
 #include <QLinkedList>
-#include <QMdiSubWindow>
 #include <QMenuBar>
+#include <QSplitter>
 
 namespace regina {
     class NPacket;
@@ -60,19 +60,25 @@ class ReginaMain;
  *
  * This part does all the real work of working with Regina data files.
  */
-class ReginaPart : public QMdiSubWindow {
+class ReginaPart : public QObject {
     Q_OBJECT
 
     private:
         /**
          * Parent window
          */
-        ReginaMain *parent;
+        ReginaMain* parent;
 
         /**
          * Data
          */
         regina::NPacket* packetTree;
+
+        /**
+         * Main widget
+         */
+        QSplitter* splitter;
+
 
         /**
          * Name of packet file
@@ -229,6 +235,12 @@ class ReginaPart : public QMdiSubWindow {
          */
         bool openFile(QUrl url);
         bool saveFile();
+
+        /**
+         * Get the main widget for this part
+         */
+
+        QWidget* widget() const;
 
     signals:
         /**
@@ -390,6 +402,10 @@ inline const ReginaPrefSet& ReginaPart::getPreferences() const {
 
 inline PythonManager& ReginaPart::getPythonManager() {
     return consoles;
+}
+
+inline QWidget* ReginaPart::widget() const {
+    return qobject_cast<QWidget *>(splitter);
 }
 
 #endif
