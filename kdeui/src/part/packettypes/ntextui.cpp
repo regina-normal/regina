@@ -45,12 +45,12 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane) :
 
     document = new QPlainTextEdit(enclosingPane);
     document->setReadOnly(!enclosingPane->isReadWrite());
-    document->setLineWrapMode(QPlainTextEdit::NoWrap);
+    document->setLineWrapMode(QPlainTextEdit::WidgetWidth);
 //    editIface = new PacketEditTextEditor(view);
 
     refresh();
 
-    connect(document, SIGNAL(textChanged(KTextEditor::Document*)),
+    connect(document, SIGNAL(textChanged()),
         this, SLOT(notifyTextChanged()));
 }
 
