@@ -41,11 +41,15 @@ ReginaMain* ReginaManager::newWindow() {
     return win;
 }
 
-ReginaMain* ReginaManager::newWindow(const QString url) {
+bool ReginaManager::newWindow(const QString url) {
+    if ( url.isEmpty() ) 
+        return false;
     ReginaMain *win = newWindow();
-    if ( ! url.isEmpty() )
-        win->openUrl(url);
-    return win;
+    if ( ! win->openUrl(url) ) {
+        win->close();
+        return false;
+    }
+    return true;
 }
        
 void ReginaManager::onClose(ReginaMain *child) {

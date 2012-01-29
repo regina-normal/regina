@@ -82,12 +82,11 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
     packetTreeToolBar = 0;
     toolBar = 0;
 
+    currentPart = 0;
 
     // Track the parent manager.
     manager = parent;
 
-    // Create the MDI area.
-    mdiArea = new QMdiArea();
 
     if (showAdvice) {
         // Until we actually have a part loaded, give the user something
@@ -106,8 +105,6 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
             "<i>Help&nbsp;&rarr;&nbsp;Regina Handbook</i> from the "
             "menu.</qt>"));
         setCentralWidget(advice);
-    } else {
-        setCentralWidget(mdiArea);
     }
 }
 
@@ -143,17 +140,14 @@ void ReginaMain::dropEvent(QDropEvent *event) {
 }
 
 void ReginaMain::saveProperties() {
-    ReginaPart* part;
-    QMdiSubWindow* win = mdiArea->activeSubWindow();
-    if (win != 0 && strcmp(win->metaObject()->className(),"ReginaPart")==0) {
-        part = static_cast<ReginaPart*>(win);
-        QUrl url = part->url();
-        if (url.isEmpty())
-            url = lastUrl;
-        if (! url.isEmpty()) {
-            QSettings settings;
-            settings.value("lastUrl", url.toString());
-        }
+    if (! currentPart ) 
+        return;
+    QUrl url = currentPart->url();
+    if (url.isEmpty())
+        url = lastUrl;
+    if (! url.isEmpty()) {
+        QSettings settings;
+        settings.value("lastUrl", url.toString());
     }
 }
 
@@ -165,14 +159,11 @@ void ReginaMain::readProperties() {
 }
 
 bool ReginaMain::queryClose() {
-    consoles.closeAllConsoles();
-    ReginaPart* part;
     bool result;
-    QMdiSubWindow* win = mdiArea->activeSubWindow();
-    if (win != 0 && strcmp(win->metaObject()->className(),"ReginaPart")==0) {
-        part = static_cast<ReginaPart*>(win);
-        lastUrl = part->url();
-        result = part->closeUrl();
+    consoles.closeAllConsoles();
+    if (currentPart) {
+        lastUrl = currentPart->url();
+        result = currentPart->closeUrl();
     } else {
         result = true;
     }
@@ -185,30 +176,21 @@ bool ReginaMain::queryExit() {
 }
 
 void ReginaMain::newTopology() {
-    QMdiSubWindow *win;
-    ReginaPart* part = newTopologyPart();
-    setCentralWidget(mdiArea);
-    win = mdiArea->addSubWindow(part);
-    win->showMaximized();
+    if (currentPart) {
+        manager->newWindow();
+    } else {
+        currentPart = newTopologyPart();
+        setCentralWidget(currentPart->widget());
+    }
     return;
 }
 
 bool ReginaMain::openUrl(const QUrl& url) {
-    /*  TODO: Do we need this? 
     // Do we already have a document open?
     if (currentPart) {
         // Open the new document in a new window.
-        // If the document failed to open, close this new window before
-        // it's shown.
-        ReginaMain* top = new ReginaMain;
-        if (top->openUrl(url)) {
-            top->show();
-            return true;
-        } else {
-            top->close();
-            return false;
-        }
-    }*/
+        return manager->newWindow(url.toString());
+    }
 
     // As of Regina 4.90, we only support Regina data files.
     // Python scripts should be opened in a real python editor, not Regina.
@@ -235,13 +217,9 @@ bool ReginaMain::openUrl(const QUrl& url) {
     }*/
     bool result;
     if (isReg) {
-        QMdiSubWindow *win;
-        ReginaPart* part = newTopologyPart();
-        setCentralWidget(mdiArea);
-        win = mdiArea->addSubWindow(part);
-        win->showMaximized();
-        mdiArea->setActiveSubWindow(win);
-        result = part->openFile(url);
+        currentPart = newTopologyPart();
+        setCentralWidget(currentPart->widget());
+        result = currentPart->openFile(url);
     }
     else {
         QMessageBox::warning(this, tr("Unable to open file"),

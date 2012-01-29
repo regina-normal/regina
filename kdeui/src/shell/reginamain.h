@@ -41,7 +41,6 @@
 
 #include <QApplication>
 #include <QMainWindow>
-#include <QMdiArea>
 #include <QUrl>
 
 class ExamplesAction;
@@ -119,10 +118,6 @@ class ReginaMain : public QMainWindow,
         QToolBar* toolBar;
         QToolBar* packetTreeToolBar;
 
-        /**
-         * Main document display widget
-         */
-        QMdiArea* mdiArea;
 
         /**
          * Preferences
@@ -358,7 +353,7 @@ class ReginaManager : public QApplication {
         ReginaManager(int &argc, char** argv);
         
         ReginaMain* newWindow();
-        ReginaMain* newWindow(const QString url);
+        bool newWindow(const QString url);
 
         void onClose(ReginaMain *child);
 
