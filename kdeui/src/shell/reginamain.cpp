@@ -80,7 +80,6 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
     saveAsAct = 0;
     packetMenu = 0;
     packetTreeToolBar = 0;
-    toolBar = 0;
 
     currentPart = 0;
 
@@ -386,7 +385,9 @@ void ReginaMain::newToolbarConfig() {
 
 void ReginaMain::setupActions() {
     QAction* act;
-    toolBar = addToolBar(tr("Main"));
+    toolBar = new QToolBar(this);
+    toolBar->setWindowTitle(tr("Main"));
+    addToolBar(toolBar);
     
     fileMenu =  menuBar()->addMenu(tr("&File"));
 
@@ -999,19 +1000,13 @@ void ReginaMain::setActions(QAction *save, QAction *saveAs,
     }
     saveAct = save;
     fileMenu->insertAction(saveAs,save);
-    
-    removeToolBar(toolBar);
-    delete toolBar;
-    toolBar = addToolBar(tr("Main2"));
-    toolBar->addAction(actNew);
-    toolBar->addAction(actOpen);
-    toolBar->addAction(save);
-    toolBar->addSeparator();
-    toolBar->addAction(actCut);
-    toolBar->addAction(actCopy);
-    toolBar->addAction(actPaste);
-    toolBar->addSeparator();
-    toolBar->addAction(actPython);
+  
+    toolBar->insertAction(actPython, save);
+    toolBar->insertSeparator(actPython);
+    toolBar->insertAction(actPython, actCut);
+    toolBar->insertAction(actPython, actCopy);
+    toolBar->insertAction(actPython, actPaste);
+    toolBar->insertSeparator(actPython);
 }
 
 QToolBar* ReginaMain::createToolBar(QString name) {
