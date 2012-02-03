@@ -346,6 +346,23 @@ class REGINA_API NBitmask {
         bool operator == (const NBitmask& other) const;
 
         /**
+         * Determines whether this bitmask appears strictly before the given
+         * bitmask when bitmasks are sorted in lexicographical order.
+         * Here the bit at index 0 is least significant, and the bit at
+         * index \a length-1 is most significant.
+         *
+         * \pre This and the given bitmask have the same length.
+         *
+         * \warning We do not use &lt; for this operation, since &lt;=
+         * represents the subset operation.
+         *
+         * @param other the bitmask to compare against this.
+         * @return \c true if and only if this is lexicographically
+         * strictly smaller than the given bitmask.
+         */
+        bool lessThan(const NBitmask& other) const;
+
+        /**
          * Determines whether this bitmask is entirely contained within
          * the given bitmask.
          *
@@ -353,6 +370,11 @@ class REGINA_API NBitmask {
          * in this bitmask must also be set in the given bitmask.
          *
          * \pre This and the given bitmask have the same length.
+         *
+         * \warning This operation does not compare bitmasks
+         * lexicographically; moreover, it only describes a partial
+         * order, not a total order.  To compare bitmasks
+         * lexicographically, use lessThan() instead.
          *
          * @param other the bitmask to compare against this.
          * @return \c true if and only if this bitmask is entirely contained
@@ -697,11 +719,33 @@ class NBitmask1 {
         }
 
         /**
+         * Determines whether this bitmask appears strictly before the given
+         * bitmask when bitmasks are sorted in lexicographical order.
+         * Here the bit at index 0 is least significant, and the bit at
+         * index \a length-1 is most significant.
+         *
+         * \warning We do not use &lt; for this operation, since &lt;=
+         * represents the subset operation.
+         *
+         * @param other the bitmask to compare against this.
+         * @return \c true if and only if this is lexicographically
+         * strictly smaller than the given bitmask.
+         */
+        inline bool lessThan(const NBitmask1<T>& other) const {
+            return (mask < other.mask);
+        }
+
+        /**
          * Determines whether this bitmask is entirely contained within
          * the given bitmask.
          *
          * For this routine to return \c true, every bit that is set
          * in this bitmask must also be set in the given bitmask.
+         *
+         * \warning This operation does not compare bitmasks
+         * lexicographically; moreover, it only describes a partial
+         * order, not a total order.  To compare bitmasks
+         * lexicographically, use lessThan() instead.
          *
          * @param other the bitmask to compare against this.
          * @return \c true if and only if this bitmask is entirely contained
@@ -1100,11 +1144,34 @@ class NBitmask2 {
         }
 
         /**
+         * Determines whether this bitmask appears strictly before the given
+         * bitmask when bitmasks are sorted in lexicographical order.
+         * Here the bit at index 0 is least significant, and the bit at
+         * index \a length-1 is most significant.
+         *
+         * \warning We do not use &lt; for this operation, since &lt;=
+         * represents the subset operation.
+         *
+         * @param other the bitmask to compare against this.
+         * @return \c true if and only if this is lexicographically
+         * strictly smaller than the given bitmask.
+         */
+        inline bool lessThan(const NBitmask2<T, U>& other) const {
+            return (high < other.high ||
+                (high == other.high && low < other.low));
+        }
+
+        /**
          * Determines whether this bitmask is entirely contained within
          * the given bitmask.
          *
          * For this routine to return \c true, every bit that is set
          * in this bitmask must also be set in the given bitmask.
+         *
+         * \warning This operation does not compare bitmasks
+         * lexicographically; moreover, it only describes a partial
+         * order, not a total order.  To compare bitmasks
+         * lexicographically, use lessThan() instead.
          *
          * @param other the bitmask to compare against this.
          * @return \c true if and only if this bitmask is entirely contained
@@ -1459,6 +1526,15 @@ inline void NBitmask::flip() {
 
 inline bool NBitmask::operator == (const NBitmask& other) const {
     return std::equal(mask, mask + pieces, other.mask);
+}
+
+inline bool NBitmask::lessThan(const NBitmask& other) const {
+    for (int i = pieces - 1; i >= 0; --i)
+        if (mask[i] < other.mask[i])
+            return true;
+        else if (mask[i] > other.mask[i])
+            return false;
+    return false;
 }
 
 inline bool NBitmask::operator <= (const NBitmask& other) const {

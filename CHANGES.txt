@@ -106,6 +106,8 @@ Version 4.91  [ (under development) ]
               uninitialised bitmask or to reset an already-initialised
               bitmask to a different length, and one or both of its
               operands may be invalid.
+        Class NBitmask, NBitmask1, NBitmask2:
+            - New function lessThan() for lexicographical comparisons.
         Class NDoubleDescription:
             - Removed the inner class LexComp, and replaced it with the new
               global class NPosOrder (see below).  A deprecated typedef
