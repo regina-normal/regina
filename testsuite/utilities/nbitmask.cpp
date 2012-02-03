@@ -27,6 +27,7 @@
 /* end stub */
 
 #include <algorithm>
+#include <cstdlib>
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "testsuite/utilities/testutilities.h"
@@ -39,6 +40,7 @@ class NBitmaskTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(sizes);
     CPPUNIT_TEST(firstLastBit);
     CPPUNIT_TEST(truncate);
+    CPPUNIT_TEST(lexOrder);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -193,6 +195,59 @@ class NBitmaskTest : public CppUnit::TestFixture {
             testTruncate<regina::NBitmask2<unsigned long, unsigned char> >
                 ("ulong,uchar", 8 + 8 * sizeof(unsigned long));
             testTruncate<regina::NBitmask>("pieces", 128);
+        }
+
+        template <typename BitmaskType>
+        void testLexOrder(const char* typeDesc, int length) {
+            BitmaskType b[256];
+            int i, j;
+
+            for (i = 0; i < 256; ++i) {
+                b[i].reset(length);
+                for (j = 0; j < 8; ++j)
+                    if (i & (1 << j))
+                        b[i].set(j * (length / 8), true);
+            }
+
+            for (i = 0; i < 256; ++i) {
+                if (b[i].lessThan(b[i])) {
+                    std::ostringstream out;
+                    out << "Bitmask using type " << typeDesc
+                        << ", len=" << length << ": x < x";
+                    CPPUNIT_FAIL(out.str());
+                }
+                if (i > 0 && ! (b[i-1].lessThan(b[i]))) {
+                    std::ostringstream out;
+                    out << "Bitmask using type " << typeDesc
+                        << ", len=" << length
+                        << ": lessThan() gives incorrect order";
+                    CPPUNIT_FAIL(out.str());
+                }
+                if (i > 0 && b[i].lessThan(b[i-1])) {
+                    std::ostringstream out;
+                    out << "Bitmask using type " << typeDesc
+                        << ", len=" << length
+                        << ": lessThan() gives incorrect order";
+                    CPPUNIT_FAIL(out.str());
+                }
+            }
+        }
+
+        void lexOrder() {
+            testLexOrder<regina::NBitmaskLen8>("len8", 8);
+            testLexOrder<regina::NBitmaskLen16>("len16", 16);
+            testLexOrder<regina::NBitmaskLen32>("len32", 32);
+            testLexOrder<regina::NBitmaskLen64>("len64", 64);
+            testLexOrder<regina::NBitmask1<unsigned char> >("uchar", 8);
+            testLexOrder<regina::NBitmask1<unsigned long> >
+                ("ulong", 8 * sizeof(unsigned long));
+            testLexOrder<regina::NBitmask2<unsigned char, unsigned char> >
+                ("uchar,uchar", 16);
+            testLexOrder<regina::NBitmask2<unsigned char, unsigned long> >
+                ("uchar,ulong", 8 + 8 * sizeof(unsigned long));
+            testLexOrder<regina::NBitmask2<unsigned long, unsigned char> >
+                ("ulong,uchar", 8 + 8 * sizeof(unsigned long));
+            testLexOrder<regina::NBitmask>("pieces", 128);
         }
 };
 
