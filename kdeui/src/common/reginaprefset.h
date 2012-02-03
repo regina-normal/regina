@@ -283,6 +283,9 @@ struct ReginaPrefSet {
              for drawing undirected graphs; the recommended Graphviz tool
              is neato.  This need not include a directory (in which case
              the search path will be used). */
+    bool triGraphvizLabels;
+        /**< Indicates whether pentachoron numbers should be used to label
+             vertices in facet pairing graphs for 3-manifold triangulations. */
     TriTab triInitialTab;
         /**< The initially visible top-level tab for a new 3-manifold
              triangulation viewer/editor. */

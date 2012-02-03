@@ -651,6 +651,8 @@ void ReginaMain::readOptions(KSharedConfigPtr config) {
     globalPrefs.treeJumpSize = configGroup->readEntry("JumpSize", 10);
 
     configGroup = new KConfigGroup(config, "Triangulation");
+    globalPrefs.triGraphvizLabels = configGroup->readEntry(
+        "GraphvizLabels", false);
 
     str = configGroup->readEntry("InitialTab");
     if (str == "Skeleton")
@@ -778,6 +780,7 @@ void ReginaMain::saveOptions() {
     configGroup->sync();
 
     configGroup = new KConfigGroup(config, "Triangulation");
+    configGroup->writeEntry("GraphvizLabels", globalPrefs.triGraphvizLabels);
 
     switch (globalPrefs.triInitialTab) {
         case ReginaPrefSet::Skeleton:

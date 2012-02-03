@@ -25,6 +25,9 @@ Version 4.91  [ (under development) ]
             - Removed the inner class LexComp, and replaced it with the new
               global class NPosOrder (see below).  A deprecated typedef
               NDoubleDescription::LexOrder is kept for backward compatibility.
+        Class NFacePairing:
+            - Function writeDot() can now optionally label graph
+              vertices with the corresponding tetrahedron numbers.
         Class NFacetSpec:
             - New template class that generalises NTetFace to arbitrary
               dimensions.  NTetFace is retained as a convenience typedef,

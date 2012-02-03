@@ -152,9 +152,10 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
         bool neverDrawn;
 
         /**
-         * The Graphviz executable.
+         * Graphviz options.
          */
         QString graphvizExec;
+        bool graphvizLabels;
 
     public:
         /**
@@ -162,12 +163,12 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
          */
         NTriFaceGraphUI(regina::NTriangulation* packet,
                 PacketTabbedViewerTab* useParentUI,
-                const QString& useGraphvizExec);
+                const ReginaPrefSet& prefs);
 
         /**
          * Update preferences.
          */
-        void setGraphvizExec(const QString& newGraphvizExec);
+        void updatePreferences(const ReginaPrefSet& newPrefs);
 
         /**
          * PacketViewerTab overrides.
@@ -187,7 +188,7 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
 };
 
 inline void NTriSkeletonUI::updatePreferences(const ReginaPrefSet& newPrefs) {
-    faceGraph->setGraphvizExec(newPrefs.triGraphvizExec);
+    faceGraph->updatePreferences(newPrefs);
 }
 
 #endif

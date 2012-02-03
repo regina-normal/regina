@@ -147,6 +147,7 @@ ReginaPrefSet::ReginaPrefSet() :
         treeJumpSize(10),
         triGAPExec(defaultGAPExec),
         triGraphvizExec(defaultGraphvizExec),
+        triGraphvizLabels(false),
         triInitialTab(Gluings),
         triInitialSkeletonTab(SkelComp),
         triInitialAlgebraTab(Homology),
