@@ -555,6 +555,9 @@ void ReginaMain::addRecentFile() {
 void ReginaMain::readOptions(KSharedConfigPtr config) {
     // Read in new preferences.
     KConfigGroup* configGroup = new KConfigGroup(config, "Dim4");
+    globalPrefs.dim4GraphvizLabels = configGroup->readEntry(
+        "GraphvizLabels", false);
+
     QString str = configGroup->readEntry("InitialTab");
     if (str == "Dim4Skeleton")
         globalPrefs.dim4InitialTab = ReginaPrefSet::Dim4Skeleton;
@@ -659,6 +662,8 @@ void ReginaMain::readOptions(KSharedConfigPtr config) {
     globalPrefs.treeJumpSize = configGroup->readEntry("JumpSize", 10);
 
     configGroup = new KConfigGroup(config, "Triangulation");
+    globalPrefs.triGraphvizLabels = configGroup->readEntry(
+        "GraphvizLabels", false);
 
     str = configGroup->readEntry("InitialTab");
     if (str == "Skeleton")
@@ -710,6 +715,8 @@ void ReginaMain::saveOptions() {
     // Save the current set of preferences.
 
     KConfigGroup* configGroup = new KConfigGroup(config, "Dim4");
+    configGroup->writeEntry("GraphvizLabels", globalPrefs.dim4GraphvizLabels);
+
     switch (globalPrefs.dim4InitialTab) {
         case ReginaPrefSet::Dim4Skeleton:
             configGroup->writeEntry("InitialTab", "Dim4Skeleton"); break;
@@ -795,6 +802,7 @@ void ReginaMain::saveOptions() {
     configGroup->sync();
 
     configGroup = new KConfigGroup(config, "Triangulation");
+    configGroup->writeEntry("GraphvizLabels", globalPrefs.triGraphvizLabels);
 
     switch (globalPrefs.triInitialTab) {
         case ReginaPrefSet::Skeleton:

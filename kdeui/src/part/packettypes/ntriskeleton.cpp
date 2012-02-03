@@ -56,7 +56,7 @@ using regina::NTriangulation;
 NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
         PacketTabbedUI* useParentUI, const ReginaPrefSet& prefs) :
         PacketTabbedViewerTab(useParentUI) {
-    faceGraph = new NTriFaceGraphUI(packet, this, prefs.triGraphvizExec);
+    faceGraph = new NTriFaceGraphUI(packet, this, prefs);
 
     addTab(new NTriSkelCompUI(packet, this), i18n("&Skeletal Components"));
     addTab(faceGraph, i18n("&Face Pairing Graph"));
@@ -263,9 +263,10 @@ void NTriSkelCompUI::viewBoundaryComponents() {
 
 NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
         PacketTabbedViewerTab* useParentUI,
-        const QString& useGraphvizExec) :
+        const ReginaPrefSet& prefs) :
         PacketViewerTab(useParentUI), tri(packet), neverDrawn(true),
-        graphvizExec(useGraphvizExec) {
+        graphvizExec(prefs.triGraphvizExec),
+        graphvizLabels(prefs.triGraphvizLabels) {
     ui = new QWidget();
     QBoxLayout* baseLayout = new QVBoxLayout(ui);
     stack = new QStackedWidget(ui);
@@ -299,15 +300,16 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
     baseLayout->addWidget(stack);
 }
 
-void NTriFaceGraphUI::setGraphvizExec(const QString& newGraphvizExec) {
-    // If the graphviz executable has actually changed, redraw the graph
-    // with the newly selected tool.
+void NTriFaceGraphUI::updatePreferences(const ReginaPrefSet& newPrefs) {
+    // If the graphviz options have actually changed, draw the graph again.
 
     // If the executable *path* hasn't changed but somebody did a
     // reinstall (i.e., the graphviz *behaviour* has changed), they
     // can always hit refresh anyway.
-    if (graphvizExec != newGraphvizExec) {
-        graphvizExec = newGraphvizExec;
+    if ((graphvizExec != newPrefs.triGraphvizExec) ||
+            (graphvizLabels != newPrefs.triGraphvizLabels)) {
+        graphvizExec = newPrefs.triGraphvizExec;
+        graphvizLabels = newPrefs.triGraphvizLabels;
 
         // If we wanted to be polite, we could queue this refresh till
         // later.  In practice there shouldn't be too many viewers
@@ -416,7 +418,8 @@ void NTriFaceGraphUI::refresh() {
     }
 
     regina::NFacePairing* pairing = new regina::NFacePairing(*tri);
-    pairing->writeDot(outDot);
+    pairing->writeDot(outDot, 0 /* prefix */, false /* subgraphs */,
+        graphvizLabels);
     outDot.close();
     delete pairing;
 

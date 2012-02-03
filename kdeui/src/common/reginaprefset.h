@@ -236,6 +236,9 @@ struct ReginaPrefSet {
         /**< Should filenames be given an automatic extension? */
     ReginaFilePrefList censusFiles;
         /**< The list of data files to use for census lookups. */
+    bool dim4GraphvizLabels;
+        /**< Indicates whether pentachoron numbers should be used to label
+             vertices in facet pairing graphs for 4-manifold triangulations. */
     Dim4Tab dim4InitialTab;
         /**< The initially visible top-level tab for a new 4-manifold
              triangulation viewer/editor. */
@@ -289,6 +292,9 @@ struct ReginaPrefSet {
              for drawing undirected graphs; the recommended Graphviz tool
              is neato.  This need not include a directory (in which case
              the search path will be used). */
+    bool triGraphvizLabels;
+        /**< Indicates whether pentachoron numbers should be used to label
+             vertices in facet pairing graphs for 3-manifold triangulations. */
     TriTab triInitialTab;
         /**< The initially visible top-level tab for a new 3-manifold
              triangulation viewer/editor. */

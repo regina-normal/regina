@@ -112,7 +112,7 @@ void Dim4FacetPairing::writeDotHeader(std::ostream& out, const char* graphName) 
 }
 
 void Dim4FacetPairing::writeDot(std::ostream& out, const char* prefix,
-        bool subgraph) const {
+        bool subgraph, bool labels) const {
     static const char defaultPrefix[] = "g";
 
     if ((! prefix) || (! *prefix))
@@ -128,8 +128,12 @@ void Dim4FacetPairing::writeDot(std::ostream& out, const char* prefix,
     // Ancient versions of graphviz seem to ignore the default label="".
     // Make this explicit for each node.
     unsigned p;
-    for (p = 0; p < nPentachora_; ++p)
-        out << prefix << '_' << p << " [label=\"\"]" << std::endl;
+    for (p = 0; p < nPentachora_; ++p) {
+        out << prefix << '_' << p << " [label=\"";
+        if (labels)
+            out << p;
+        out << "\"]" << std::endl;
+    }
 
     int f;
     Dim4PentFacet adj;

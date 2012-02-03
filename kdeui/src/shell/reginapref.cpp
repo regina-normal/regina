@@ -175,6 +175,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     // Read the current preferences from the main window.
     generalPrefs->cbAutoDock->setChecked(prefSet.autoDock);
     generalPrefs->cbAutoFileExtension->setChecked(prefSet.autoFileExtension);
+    dim4Prefs->cbGraphvizLabels->setChecked(prefSet.dim4GraphvizLabels);
     // generalPrefs->cbDisplayTagsInTree->setChecked(prefSet.displayTagsInTree);
     generalPrefs->editTreeJumpSize->setText(
         QString::number(prefSet.treeJumpSize));
@@ -183,6 +184,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
         readEntry("RunOnStart", true));
     generalPrefs->cbHandbookInKHelpCenter->setChecked(
         prefSet.handbookInKHelpCenter);
+    triPrefs->cbGraphvizLabels->setChecked(prefSet.triGraphvizLabels);
 
     switch (prefSet.triInitialTab) {
         case ReginaPrefSet::Skeleton:
@@ -302,6 +304,7 @@ void ReginaPreferences::slotApply() {
 
     prefSet.autoDock = generalPrefs->cbAutoDock->isChecked();
     prefSet.autoFileExtension = generalPrefs->cbAutoFileExtension->isChecked();
+    prefSet.dim4GraphvizLabels = dim4Prefs->cbGraphvizLabels->isChecked();
     // prefSet.displayTagsInTree = generalPrefs->cbDisplayTagsInTree->isChecked();
     KTipDialog::setShowOnStart(generalPrefs->cbTipOfDay->isChecked());
     prefSet.handbookInKHelpCenter = generalPrefs->cbHandbookInKHelpCenter->
@@ -317,6 +320,8 @@ void ReginaPreferences::slotApply() {
         generalPrefs->editTreeJumpSize->setText(
             QString::number(prefSet.treeJumpSize));
     }
+
+    prefSet.triGraphvizLabels = triPrefs->cbGraphvizLabels->isChecked();
 
     switch (triPrefs->comboInitialTab->currentIndex()) {
         case 1:
@@ -816,6 +821,15 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QWidget(parent) {
     editGraphvizExec->setWhatsThis(msg);
     layout->addLayout(box);
 
+    // Set up graphviz options.
+    cbGraphvizLabels = new QCheckBox(
+        i18n("Label face pairing graphs (experimental)"));
+    cbGraphvizLabels->setWhatsThis(i18n("<qt>Labels each vertex in a "
+        "face pairing graph with the corresponding tetrahedron number.<p>"
+        "<b>Warning:</b> This feature is experimental, and may produce graphs "
+        "that are difficult to read.</qt>"));
+    layout->addWidget(cbGraphvizLabels);
+
     // Add some space at the end.
     layout->addStretch(1);
     setLayout(layout);
@@ -934,6 +948,15 @@ ReginaPrefDim4::ReginaPrefDim4(QWidget* parent) : QWidget(parent) {
     label->setWhatsThis(msg);
     comboInitialTab->setWhatsThis(msg);
     layout->addLayout(box);
+
+    // Set up graphviz options.
+    cbGraphvizLabels = new QCheckBox(
+        i18n("Label facet pairing graphs (experimental)"));
+    cbGraphvizLabels->setWhatsThis(i18n("<qt>Labels each vertex in a "
+        "facet pairing graph with the corresponding tetrahedron number.<p>"
+        "<b>Warning:</b> This feature is experimental, and may produce graphs "
+        "that are difficult to read.</qt>"));
+    layout->addWidget(cbGraphvizLabels);
 
     // Add some space at the end.
     layout->addStretch(1);

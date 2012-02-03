@@ -127,6 +127,7 @@ class ReginaPrefTri : public QWidget {
         QLineEdit* editSurfacePropsThreshold;
         QLineEdit* editGAPExec;
         QLineEdit* editGraphvizExec;
+        QCheckBox* cbGraphvizLabels;
 
     public:
         ReginaPrefTri(QWidget* parent = 0);
@@ -163,6 +164,7 @@ class ReginaPrefDim4 : public QWidget {
 
     private:
         QComboBox* comboInitialTab;
+        QCheckBox* cbGraphvizLabels;
 
     public:
         ReginaPrefDim4(QWidget* parent = 0);
