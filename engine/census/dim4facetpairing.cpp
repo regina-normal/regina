@@ -108,7 +108,7 @@ void Dim4FacetPairing::writeDotHeader(std::ostream& out, const char* graphName) 
     out << "graph " << graphName << " {" << std::endl;
     out << "graph [bgcolor=white];" << std::endl;
     out << "edge [color=black];" << std::endl;
-    out << "node [shape=circle,style=filled,height=0.15,fixedsize=true,label=\"\"];" << std::endl;
+    out << "node [shape=circle,style=filled,height=0.15,fixedsize=true,label=\"\",fontsize=9,fontcolor=\"#751010\"];" << std::endl;
 }
 
 void Dim4FacetPairing::writeDot(std::ostream& out, const char* prefix,
