@@ -50,8 +50,6 @@
 #include <QVBoxLayout>
 #include <QWhatsThis>
 
-
-#include <QDebug>
 unsigned ReginaMain::objectNumber = 1;
 
 ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
