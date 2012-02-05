@@ -272,46 +272,6 @@ void ReginaMain::fileOpen() {
         openUrl(url);
 }
 
-/*
-void ReginaMain::optionsShowToolbar() {
-    QListIterator<KToolBar*> bar(toolBars());
-    if (showToolbar->isChecked())
-        while (bar.hasNext() )
-            bar.next()->show();
-    else
-        while (bar.hasNext() )
-            bar.next()->hide();
-}
-*/
-
-/*
-void ReginaMain::optionsShowStatusbar() {
-    if (showStatusbar->isChecked())
-        statusBar()->show();
-    else
-        statusBar()->hide();
-}
-*/
-
-void ReginaMain::optionsConfigureKeys() {
-    // TODO: Modifying shortcuts isn't this easy in Qt
-    //KShortcutsDialog::configure(actionCollection());
-}
-
-void ReginaMain::optionsConfigureToolbars() {
-    // TODO: Configure toolbars
-    //saveMainWindowSettings(KConfigGroup(KGlobal::config(),
-    //    QString::fromLatin1("MainWindow")));
-
-    //KEditToolBar dlg(factory());
-    //connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(newToolbarConfig()));
-    //dlg.exec();
-}
-
-void ReginaMain::optionsConfigureEditor() {
-    ReginaEditorChooser dlg(this);
-    dlg.exec();
-}
 
 void ReginaMain::optionsPreferences() {
     ReginaPreferences dlg(this);
@@ -360,12 +320,6 @@ void ReginaMain::helpNoHelp() {
             "Just follow the <i>Documentation</i> links.</qt>"),
         tr("Handbook won't open?"));
 }
-
-/*
-void ReginaMain::changeStatusbar(const QString& text) {
-    statusBar()->message(text);
-}
-*/
 
 void ReginaMain::changeCaption(const QString& text) {
     setWindowTitle(text);
@@ -476,7 +430,7 @@ void ReginaMain::setupActions() {
     // Tools:
     actPython = new QAction(this);
     actPython->setText(tr("&Python Console"));
-    actPython->setIcon(KIcon("python_console"));
+    actPython->setIcon(QIcon("python_console"));
     actPython->setShortcut(tr("Alt+y"));
     actPython->setWhatsThis(tr("Open a new Python console.  You can "
         "use a Python console to interact directly with Regina's "
@@ -488,16 +442,6 @@ void ReginaMain::setupActions() {
     
     QMenu *settingsMenu =  menuBar()->addMenu(tr("&Settings"));
     // Preferences:
-    act = new QAction(this);
-    act->setText(tr("Choose Text &Editor..."));
-    act->setIcon(QIcon("configure"));
-    connect(act, SIGNAL(triggered()), this, SLOT(optionsConfigureEditor()));
-    settingsMenu->addAction(act);
-    // TODO: Configuration
-    //KStandardAction::keyBindings(this, SLOT(optionsConfigureKeys()),
-    //    actionCollection());
-    //KStandardAction::configureToolbars(this, SLOT(optionsConfigureToolbars()),
-    //    actionCollection());
 
     act = new QAction(this);
     act->setText(tr("&Configure Regina"));

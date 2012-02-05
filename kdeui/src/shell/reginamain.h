@@ -290,11 +290,6 @@ class ReginaMain : public QMainWindow,
          * Implementation of actions.
          */
         void fileOpen();
-        // void optionsShowToolbar();
-        // void optionsShowStatusbar();
-        void optionsConfigureKeys();
-        void optionsConfigureToolbars();
-        void optionsConfigureEditor();
         void optionsPreferences();
         void helpAboutApp();
         void helpHandbook();
