@@ -35,9 +35,11 @@
 
 #include "reginaprefset.h"
 
-#include <kpagedialog.h>
+#include <QMainWindow>
 
 class CoordinateChooser;
+class QAbstractButton;
+class QDialogButtonBox;
 class QCheckBox;
 class QComboBox;
 class QLabel;
@@ -53,14 +55,11 @@ class ReginaPrefSnapPea;
 class ReginaPrefSurfaces;
 class ReginaPrefTri;
 
-namespace KTextEditor {
-    class EditorChooser;
-}
 
 /**
  * The Regina configuration dialog.
  */
-class ReginaPreferences : public KPageDialog {
+class ReginaPreferences : public QDialog {
     Q_OBJECT
 
     private:
@@ -76,19 +75,22 @@ class ReginaPreferences : public KPageDialog {
         ReginaPrefPython* pythonPrefs;
         ReginaPrefSnapPea* snapPeaPrefs;
 
+        // Needed for clicked() slot
+        QDialogButtonBox *buttonBox;
+
     public:
         ReginaPreferences(ReginaMain* parent);
-
-        /**
-         * Overridden to call slotApply() when OK is pressed.
-         */
-        virtual int exec();
 
     public slots:
         /**
          * Propagate changes back to the main UI.
          */
         virtual void slotApply();
+        
+        /**
+         * Overridden to handle saving of preferences.
+         */
+        virtual void clicked(QAbstractButton *);
 };
 
 /**
@@ -246,24 +248,6 @@ class ReginaPrefSnapPea : public QWidget {
         ReginaPrefSnapPea(QWidget* parent = 0);
 
     friend class ReginaPreferences;
-};
-
-/**
- * A simple dialog for choosing the text editor component to use.
- *
- * Adapted from the KWrite sources, which are released under the LGPL.
- */
-class ReginaEditorChooser : public KDialog {
-    Q_OBJECT
-
-    private:
-        KTextEditor::EditorChooser* chooser;
-
-    public:
-        ReginaEditorChooser(QWidget* parent);
-
-    protected slots:
-        void slotOk();
 };
 
 #endif
