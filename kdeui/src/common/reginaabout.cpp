@@ -208,12 +208,11 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
 
     tabs->addTab(about,tr("&About"));
     tabs->addTab(authors, tr("A&uthors"));
+    // TODO: Actually add authors+thanks to their respective widgets
     tabs->addTab(thanks, tr("&Thanks to"));
 
     layout->addWidget(tabs);
     this->setLayout(layout);
-
-    this->exec();
 }
 
 
