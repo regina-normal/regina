@@ -297,6 +297,10 @@ struct ReginaPrefSet {
              properties of 3-manifold triangulations will be automatically
              calculated. */
 
+    bool warnOnNonEmbedded;
+        /**< Whether to warn when attempting to enumerate normal surfaces
+             that are not embedded */
+
     /**
      * Default constructor that provides a reasonable set of defaults.
      */
