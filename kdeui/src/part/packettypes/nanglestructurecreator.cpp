@@ -36,21 +36,20 @@
 #include "nanglestructurecreator.h"
 #include "../progressdialogs.h"
 
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <qcheckbox.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qwhatsthis.h>
+#include <QCheckBox>
+#include <QLabel>
+#include <QLayout>
+#include <QMessageBox>
+#include <QWhatsThis>
 
 NAngleStructureCreator::NAngleStructureCreator() {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
-    tautOnly = new QCheckBox(i18n("Taut structures only"), ui);
+    tautOnly = new QCheckBox(ui->tr("Taut structures only"), ui);
     tautOnly->setChecked(false);
-    tautOnly->setWhatsThis( i18n("If you check this box, only "
+    tautOnly->setWhatsThis(ui->tr("If you check this box, only "
         "taut structures will be enumerated (that is, angle structures "
         "in which every angle is 0 or Pi).  "
         "This is typically much faster than a full enumeration of all "
@@ -63,25 +62,25 @@ QWidget* NAngleStructureCreator::getInterface() {
 }
 
 QString NAngleStructureCreator::parentPrompt() {
-    return i18n("Triangulation:");
+    return ui->tr("Triangulation:");
 }
 
 QString NAngleStructureCreator::parentWhatsThis() {
-    return i18n("The triangulation that will contain your angle structures.");
+    return ui->tr("The triangulation that will contain your angle structures.");
 }
 
 regina::NPacket* NAngleStructureCreator::createPacket(
         regina::NPacket* parentPacket, QWidget* parentWidget) {
     if (parentPacket->getPacketType() != regina::NTriangulation::packetType) {
-        KMessageBox::error(parentWidget, i18n(
-            "Angle structure lists can only be created directly beneath "
+        QMessageBox::warning(parentWidget, ui->tr("Invalid parent"), 
+            ui->tr("Angle structure lists can only be created directly beneath "
             "triangulations."));
         return 0;
     }
 
     regina::NProgressManager manager;
-    ProgressDialogNumeric dlg(&manager, i18n("Angle Structure Enumeration"),
-        i18n("Enumerating vertex angle structures..."), parentWidget);
+    ProgressDialogNumeric dlg(&manager, ui->tr("Angle Structure Enumeration"),
+        ui->tr("Enumerating vertex angle structures..."), parentWidget);
 
     regina::NAngleStructureList* ans = regina::NAngleStructureList::enumerate(
             dynamic_cast<regina::NTriangulation*>(parentPacket),
@@ -91,8 +90,8 @@ regina::NPacket* NAngleStructureCreator::createPacket(
         return ans;
     else {
         delete ans;
-        KMessageBox::information(parentWidget,
-            i18n("The angle structure enumeration was cancelled."));
+        QMessageBox::information(parentWidget, ui->tr("Enumeration cancelled"),
+            ui->tr("The angle structure enumeration was cancelled."));
         return 0;
     }
 }
