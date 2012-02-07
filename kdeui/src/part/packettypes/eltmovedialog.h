@@ -34,7 +34,7 @@
 #ifndef __ELTMOVEDIALOG_H
 #define __ELTMOVEDIALOG_H
 
-#include <kdialog.h>
+#include <QDialog>
 #include <vector>
 
 class QButtonGroup;
@@ -49,7 +49,7 @@ namespace regina {
  * A dialog used to select and perform an elementary move on a
  * triangulation.
  */
-class EltMoveDialog : public KDialog {
+class EltMoveDialog : public QDialog {
     Q_OBJECT
 
     private:
