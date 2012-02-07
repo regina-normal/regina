@@ -121,7 +121,6 @@ bool ReginaPart::closeUrl() {
         return false;
     consoles.closeAllConsoles();
 
-    // TODO Work out what needs to be done here.
     return true;
     // return ReadWritePart::closeUrl();
 }

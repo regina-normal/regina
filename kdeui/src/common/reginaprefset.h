@@ -311,25 +311,6 @@ struct ReginaPrefSet {
      */
     static ReginaFilePrefList defaultCensusFiles();
 
-    // TODO Remove
-    /**
-     * Returns an external program suitable for viewing PDF files, or
-     * the null string if none could be found.  This default is used
-     * if the user preference \a pdfExternalViewer is left empty.
-     *
-     * The string returned will contain a program and possibly some
-     * additional arguments.  It is expected that a PDF filename will be
-     * added to the end of this string (separated by whitespace) and
-     * that the entire string will be parsed by a shell.
-     *
-     * This routine does not query the services that offer themselves to KDE;
-     * indeed, the generic KRun infrastructure will be used as a fallback if
-     * this routine returns the null string.  The application returned
-     * here is intended to have higher priority than what KDE knows about
-     * (for instance, this routine refers to Preview.app on MacOS 10.x).
-     */
-    //static QString pdfDefaultViewer();
-
     /**
      * Returns the full path to the python libraries configuration file.
      */

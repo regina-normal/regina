@@ -56,14 +56,10 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
 
     newPane->registerEditOperations(actCut, actCopy, actPaste);
     */
-    //createGUI("packetwindow.rc");
     
-    menuBar = new QMenuBar(this);
-
+    
+    packetMenu = NULL;
     plugMenu(newPane->getPacketTypeMenu());
-    //QList<QAction*> typeActions;
-    //typeActions.append(newPane->getPacketTypeMenu());
-    //plugActionList("packet_type_menu", typeActions);
 
     // Set up the widgets.
     setCentralWidget(newPane);
@@ -76,14 +72,14 @@ bool PacketWindow::queryClose() {
 
 void PacketWindow::plugMenu(QMenu *menu) {
     if (packetMenu) {
-        menuBar->removeAction(packetMenu);
+        menuBar()->removeAction(packetMenu);
     }
-    packetMenu = menuBar->addMenu(menu);
+    packetMenu = menuBar()->addMenu(menu);
 }
 
 void PacketWindow::unplugMenu() {
     if (packetMenu) {
-        menuBar->removeAction(packetMenu);
+        menuBar()->removeAction(packetMenu);
         packetMenu = NULL;
     }
 }

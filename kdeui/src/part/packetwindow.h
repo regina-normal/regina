@@ -53,11 +53,6 @@ class PacketWindow : public QMainWindow {
             /**< The packet pane held within this frame. */
 
             /**
-             * The menu bar, needed for plugging in new menus 
-             */
-        QMenuBar* menuBar;
-
-            /**
              * The action representing the flexible menu item
              */
         QAction* packetMenu;

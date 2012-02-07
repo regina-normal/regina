@@ -45,13 +45,6 @@ int main(int argc, char **argv) {
     QCoreApplication::setOrganizationDomain("regina.sourceforge.net");
     QCoreApplication::setApplicationName("Regina");
 
-    // TODO Why does it crash with the next 4 lines commented?
-    //QStringList list;
-    //for(int a=0;a < argc; ++a) {
-    //    list << QString::fromLocal8Bit(argv[a]);
-    //}
-
-
     // TODO Session management disabled until further notice.
     // See if we are starting with session management.
 //    if (app.isSessionRestored()) {

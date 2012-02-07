@@ -598,7 +598,7 @@ void ReginaMain::readOptions() {
     settings.beginGroup("File");
     globalPrefs.autoFileExtension = settings.value(
         "AutomaticExtension", true).toBool();
-    // TODO: Replace this
+    // TODO: Replace this, recentFiles
     // fileOpenRecent->loadEntries(*configGroup);
     settings.endGroup();
 
@@ -613,10 +613,6 @@ void ReginaMain::readOptions() {
 #endif
     globalPrefs.pdfExternalViewer = settings.value("ExternalViewer").
         toString().trimmed();
-    /* TODO remove this if PDF opening works
-    if (globalPrefs.pdfExternalViewer.isEmpty())
-        globalPrefs.pdfExternalViewer = ReginaPrefSet::pdfDefaultViewer();
-    */
     settings.endGroup();
 
     settings.beginGroup("Python");
