@@ -38,14 +38,11 @@
 #include "../packetfilter.h"
 #include "../reginapart.h"
 
-#include <KActionCollection>
-#include <KComponentData>
-#include <klocale.h>
-#include <kmessagebox.h>
 #include <QHeaderView>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qstyle.h>
+#include <QLabel>
+#include <QLayout>
+#include <QMessageBox>
+#include <QStyle>
 #include <QTreeView>
 
 #define DEFAULT_COORDINATE_COLUMN_WIDTH 40
@@ -148,7 +145,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         regina::NTriBool triBool;
 
         if (index.column() == 0)
-            return i18n("%1.").arg(surfaceIndex);
+            return tr("%1.").arg(surfaceIndex);
         else if (index.column() == 1)
             return localName[surfaceIndex];
         else if (index.column() == 2) {
@@ -162,11 +159,11 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             triBool = s->isOrientable();
             if (triBool.isTrue())
                 return QString(QChar(0x2713 /* tick */));
-                // return i18n("Yes");
+                // return tr("Yes");
             else if (triBool.isFalse())
-                return i18n("Non-or.");
+                return tr("Non-or.");
             else
-                return i18n("Unknown");
+                return tr("Unknown");
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 4) {
             if (! s->isCompact())
                 return QVariant();
@@ -177,13 +174,13 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             else if (triBool.isFalse())
                 return "1";
             else
-                return i18n("Unknown");
+                return tr("Unknown");
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
             if (! s->isCompact())
-                return i18n("Spun");
+                return tr("Spun");
             else if (s->hasRealBoundary())
-                return i18n("Real");
+                return tr("Real");
             else
                 return QString(QChar(0x2014 /* emdash */));
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 6) ||
@@ -192,17 +189,17 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             std::pair<const regina::NEdge*, const regina::NEdge*> e;
 
             if ((v = s->isVertexLink()))
-                return i18n("Vertex %1").arg(
+                return tr("Vertex %1").arg(
                     surfaces_->getTriangulation()->vertexIndex(v));
             else if ((e = s->isThinEdgeLink()).first) {
                 if (e.second)
-                    return i18n("Thin edges %1, %2").
+                    return tr("Thin edges %1, %2").
                         arg(surfaces_->getTriangulation()->edgeIndex(
                             e.first)).
                         arg(surfaces_->getTriangulation()->edgeIndex(
                             e.second));
                 else
-                    return i18n("Thin edge %1").
+                    return tr("Thin edge %1").
                         arg(surfaces_->getTriangulation()->edgeIndex(
                             e.first));
             } else
@@ -211,9 +208,9 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 5)) {
             regina::NLargeInteger tot;
             if (s->isSplitting())
-                return i18n("Splitting");
+                return tr("Splitting");
             else if ((tot = s->isCentral()) != 0)
-                return i18n("Central (%1)").arg(tot.longValue());
+                return tr("Central (%1)").arg(tot.longValue());
             else
                 return QVariant();
         } else if (surfaces_->allowsAlmostNormal() &&
@@ -226,11 +223,11 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 regina::NLargeInteger tot = s->getOctCoord(
                     oct.tetIndex, oct.type);
                 if (tot == 1) {
-                    return i18n("K%1: %2 (1 oct)").
+                    return tr("K%1: %2 (1 oct)").
                         arg(oct.tetIndex).
                         arg(regina::vertexSplitString[oct.type]);
                 } else {
-                    return i18n("K%1: %2 (%3 octs)").
+                    return tr("K%1: %2 (%3 octs)").
                         arg(oct.tetIndex).
                         arg(regina::vertexSplitString[oct.type]).
                         arg(tot.stringValue().c_str());
@@ -384,70 +381,70 @@ QString SurfaceModel::propertyColName(int whichCol) const {
     if (surfaces_->isEmbeddedOnly()) {
         switch (whichCol) {
             case 0 : return QString(); // Surface number
-            case 1 : return i18n("Name");
-            case 2 : return i18n("Euler");
-            case 3 : return i18n("Orient");
-            case 4 : return i18n("Sides");
-            case 5 : return i18n("Bdry");
-            case 6 : return i18n("Link");
-            case 7 : return i18n("Type");
+            case 1 : return tr("Name");
+            case 2 : return tr("Euler");
+            case 3 : return tr("Orient");
+            case 4 : return tr("Sides");
+            case 5 : return tr("Bdry");
+            case 6 : return tr("Link");
+            case 7 : return tr("Type");
         }
         if (whichCol == 8 && surfaces_->allowsAlmostNormal())
-            return i18n("Octagon");
+            return tr("Octagon");
     } else {
         switch (whichCol) {
             case 0 : return QString(); // Surface number
-            case 1 : return i18n("Name");
-            case 2 : return i18n("Euler");
-            case 3 : return i18n("Bdry");
-            case 4 : return i18n("Link");
-            case 5 : return i18n("Type");
+            case 1 : return tr("Name");
+            case 2 : return tr("Euler");
+            case 3 : return tr("Bdry");
+            case 4 : return tr("Link");
+            case 5 : return tr("Type");
         }
         if (whichCol == 6 && surfaces_->allowsAlmostNormal())
-            return i18n("Octagon");
+            return tr("Octagon");
     }
 
-    return i18n("Unknown");
+    return tr("Unknown");
 }
 
 QString SurfaceModel::propertyColDesc(int whichCol) const {
     if (surfaces_->isEmbeddedOnly()) {
         switch (whichCol) {
-            case 0: return i18n("The index of this surface within the "
+            case 0: return tr("The index of this surface within the "
                 "overall list (surfaces are numbered 0,1,2,...)");
-            case 1: return i18n("Name (this has no special meaning and "
+            case 1: return tr("Name (this has no special meaning and "
                 "can be edited)");
-            case 2: return i18n("Euler characteristic");
-            case 3: return i18n("Is this surface orientable?");
-            case 4: return i18n("1-sided or 2-sided");
-            case 5: return i18n("What kind of boundary does this "
+            case 2: return tr("Euler characteristic");
+            case 3: return tr("Is this surface orientable?");
+            case 4: return tr("1-sided or 2-sided");
+            case 5: return tr("What kind of boundary does this "
                 "surface have?");
-            case 6: return i18n("Has this surface been identified as "
+            case 6: return tr("Has this surface been identified as "
                 "the link of a particular subcomplex?");
-            case 7: return i18n("Other interesting properties");
+            case 7: return tr("Other interesting properties");
         }
         if (whichCol == 8 && surfaces_->allowsAlmostNormal())
-            return i18n("The coordinate position containing the octagonal "
+            return tr("The coordinate position containing the octagonal "
                 "disc type, and the number of discs of that type");
     } else {
         switch (whichCol) {
-            case 0: return i18n("The index of this surface within the "
+            case 0: return tr("The index of this surface within the "
                 "overall list (surfaces are numbered 0,1,2,...)");
-            case 1: return i18n("Name (this has no special meaning and "
+            case 1: return tr("Name (this has no special meaning and "
                 "can be edited)");
-            case 2: return i18n("Euler characteristic");
-            case 3: return i18n("What kind of boundary does this "
+            case 2: return tr("Euler characteristic");
+            case 3: return tr("What kind of boundary does this "
                 "surface have?");
-            case 4: return i18n("Has this surface been identified as "
+            case 4: return tr("Has this surface been identified as "
                 "the link of a particular subcomplex?");
-            case 5: return i18n("Other interesting properties");
+            case 5: return tr("Other interesting properties");
         }
         if (whichCol == 6 && surfaces_->allowsAlmostNormal())
-            return i18n("The coordinate position containing the octagonal "
+            return tr("The coordinate position containing the octagonal "
                 "disc type, and the number of discs of that type");
     }
 
-    return i18n("Unknown");
+    return tr("Unknown");
 }
 
 NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
@@ -464,14 +461,14 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     uiLayout->addLayout(hdrLayout);
 
     // Set up the coordinate selector.
-    QLabel* label = new QLabel(i18n("Display coordinates:"));
+    QLabel* label = new QLabel(tr("Display coordinates:"));
     hdrLayout->addWidget(label);
     coords = new CoordinateChooser();
     coords->insertAllViewers(surfaces);
     coords->setCurrentSystem(surfaces->getFlavour());
     connect(coords, SIGNAL(activated(int)), this, SLOT(refreshLocal()));
     hdrLayout->addWidget(coords);
-    QString msg = i18n("Allows you to view these normal surfaces in a "
+    QString msg = tr("Allows you to view these normal surfaces in a "
         "different coordinate system.");
     label->setWhatsThis(msg);
     coords->setWhatsThis(msg);
@@ -479,14 +476,14 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     hdrLayout->addStretch(1);
 
     // Set up the filter selector.
-    label = new QLabel(i18n("Apply filter:"));
+    label = new QLabel(tr("Apply filter:"));
     hdrLayout->addWidget(label);
     filter = new PacketChooser(surfaces->getTreeMatriarch(),
         new SingleTypeFilter<regina::NSurfaceFilter>(), true, 0, ui);
     filter->setAutoUpdate(true);
     connect(filter, SIGNAL(activated(int)), this, SLOT(refreshLocal()));
     hdrLayout->addWidget(filter);
-    msg = i18n("<qt>Allows you to filter this list so that only normal "
+    msg = tr("<qt>Allows you to filter this list so that only normal "
         "surfaces satisfying particular properties are displayed.<p>"
         "To use this feature you need a separate surface filter.  You "
         "can create new surface filters through the <i>Packet Tree</i> "
@@ -503,7 +500,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     table->setAlternatingRowColors(true);
     table->header()->setStretchLastSection(false);
     table->setSelectionMode(QTreeView::SingleSelection);
-    table->setWhatsThis(i18n("Displays details of the individual normal "
+    table->setWhatsThis(tr("Displays details of the individual normal "
         "surfaces in this list.<p>"
         "Each row represents a single normal (or almost normal) surface.  "
         "As well as various properties of the surface, each row contains "
@@ -536,11 +533,11 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         this, SLOT(columnResized(int, int, int)));
 
     actCutAlong = new QAction(this);
-    actCutAlong->setText(i18n("Cu&t Along Surface"));
-    actCutAlong->setToolTip(i18n("Cut the triangulation along the "
+    actCutAlong->setText(tr("Cu&t Along Surface"));
+    actCutAlong->setToolTip(tr("Cut the triangulation along the "
         "selected surface"));
     actCutAlong->setEnabled(false);
-    actCutAlong->setWhatsThis(i18n("<qt>Cuts open the surround triangulation "
+    actCutAlong->setWhatsThis(tr("<qt>Cuts open the surround triangulation "
         "along the selected surface.  This triangulation will not "
         "be changed; instead a new cut-open triangulation will be created.<p>"
         "This operation will never change the topology of the underlying "
@@ -554,9 +551,9 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
 
     actCrush = new QAction(this);
     actCrush->setText("Crus&h Surface");
-    actCrush->setToolTip(i18n("Crush the selected surface to a point"));
+    actCrush->setToolTip(tr("Crush the selected surface to a point"));
     actCrush->setEnabled(false);
-    actCrush->setWhatsThis(i18n("<qt>Crushes the selected surface to a point "
+    actCrush->setWhatsThis(tr("<qt>Crushes the selected surface to a point "
         "within the surrounding triangulation.  This triangulation will not "
         "be changed; instead a new crushed triangulation will be created.<p>"
         "<b>Warning:</b> This routine simply removes all tetrahedra "
@@ -659,15 +656,16 @@ void NSurfaceCoordinateUI::packetToBeDestroyed(NPacket*) {
 
 void NSurfaceCoordinateUI::cutAlong() {
     if (table->selectionModel()->selectedIndexes().empty()) {
-        KMessageBox::error(ui,
-            i18n("No normal surface is currently selected to cut along."));
+        QMessageBox::warning(ui, tr("No selection"),
+            tr("No normal surface is currently selected to cut along."));
         return;
     }
 
     const regina::NNormalSurface* toCutAlong =
         model->surface(table->selectionModel()->selectedIndexes().front());
     if (! toCutAlong->isCompact()) {
-        KMessageBox::error(ui, i18n("The selected surface is non-compact "
+        QMessageBox::warning(ui, tr("Invalid selection"),
+            tr("The selected surface is non-compact "
             "and so cannot be cut along."));
         return;
     }
@@ -676,7 +674,7 @@ void NSurfaceCoordinateUI::cutAlong() {
     // Be nice and simplify the triangulation, which could be very large.
     regina::NTriangulation* ans = toCutAlong->cutAlong();
     ans->intelligentSimplify();
-    ans->setPacketLabel(surfaces->makeUniqueLabel(i18n("Cut-open %1").arg(
+    ans->setPacketLabel(surfaces->makeUniqueLabel(tr("Cut-open %1").arg(
         surfaces->getTriangulation()->getPacketLabel().c_str())
           .toAscii().constData()));
     surfaces->insertChildLast(ans);
@@ -686,22 +684,23 @@ void NSurfaceCoordinateUI::cutAlong() {
 
 void NSurfaceCoordinateUI::crush() {
     if (table->selectionModel()->selectedIndexes().empty()) {
-        KMessageBox::error(ui,
-            i18n("No normal surface is currently selected to crush."));
+        QMessageBox::warning(ui, tr("No selection"),
+            tr("No normal surface is currently selected to crush."));
         return;
     }
 
     const regina::NNormalSurface* toCrush =
         model->surface(table->selectionModel()->selectedIndexes().front());
     if (! toCrush->isCompact()) {
-        KMessageBox::error(ui, i18n("The selected surface is non-compact "
+        QMessageBox::warning(ui, tr("Invalid selection"),
+            tr("The selected surface is non-compact "
             "and so cannot be crushed."));
         return;
     }
 
     // Go ahead and crush it.
     regina::NTriangulation* ans = toCrush->crush();
-    ans->setPacketLabel(surfaces->makeUniqueLabel(i18n("Crushed %1").arg(
+    ans->setPacketLabel(surfaces->makeUniqueLabel(tr("Crushed %1").arg(
         surfaces->getTriangulation()->getPacketLabel().c_str())
           .toAscii().constData()));
     surfaces->insertChildLast(ans);

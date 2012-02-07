@@ -32,17 +32,16 @@
 // UI includes:
 #include "nsurfacefilterprop.h"
 
-#include <kcombobox.h>
-#include <klineedit.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <qbuttongroup.h>
-#include <qcheckbox.h>
+#include <QButtonGroup>
+#include <QCheckBox>
+#include <QComboBox>
 #include <QHeaderView>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qradiobutton.h>
-#include <qvalidator.h>
+#include <QLabel>
+#include <QLayout>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QRadioButton>
+#include <QValidator>
 
 using regina::NBoolSet;
 using regina::NPacket;
@@ -68,7 +67,7 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
         PacketPane* enclosingPane) : PacketUI(enclosingPane),
         filter(packet), allowReadWrite(enclosingPane->isReadWrite()) {
     ui = new QWidget();
-    ui->setWhatsThis(i18n("Specify on this page which properties "
+    ui->setWhatsThis(tr("Specify on this page which properties "
         "a normal surface must satisfy in order to be displayed by this "
         "filter."));
 
@@ -79,24 +78,24 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
     layout->setColumnStretch(0, 1);
     layout->setColumnStretch(3, 1);
 
-    QLabel* label = new QLabel(i18n("Restrict by:"), ui);
+    QLabel* label = new QLabel(tr("Restrict by:"), ui);
     layout->addWidget(label, 0, 1, Qt::AlignLeft | Qt::AlignBottom);
 
     // Set up the available restriction types.
-    useOrient = new QCheckBox(i18n("Orientability"), ui);
-    useOrient->setWhatsThis(i18n("Filter surfaces according to whether "
+    useOrient = new QCheckBox(tr("Orientability"), ui);
+    useOrient->setWhatsThis(tr("Filter surfaces according to whether "
         "or not they are orientable."));
     layout->addWidget(useOrient, 1, 1, Qt::AlignLeft);
-    useCompact = new QCheckBox(i18n("Compactness"), ui);
-    useCompact->setWhatsThis(i18n("Filter surfaces according to whether "
+    useCompact = new QCheckBox(tr("Compactness"), ui);
+    useCompact->setWhatsThis(tr("Filter surfaces according to whether "
         "or not they are compact (have finitely many discs)."));
     layout->addWidget(useCompact, 2, 1, Qt::AlignLeft);
-    useBdry = new QCheckBox(i18n("Boundary"), ui);
-    useBdry->setWhatsThis(i18n("Filter surfaces according to whether "
+    useBdry = new QCheckBox(tr("Boundary"), ui);
+    useBdry->setWhatsThis(tr("Filter surfaces according to whether "
         "or not they meet the boundary of the 3-manifold triangulation."));
     layout->addWidget(useBdry, 3, 1, Qt::AlignLeft);
-    useEuler = new QCheckBox(i18n("Euler char."), ui);
-    useEuler->setWhatsThis(i18n("Filter surfaces according to "
+    useEuler = new QCheckBox(tr("Euler char."), ui);
+    useEuler->setWhatsThis(tr("Filter surfaces according to "
         "their Euler characteristic."));
     layout->addWidget(useEuler, 4, 1, Qt::AlignLeft);
 
@@ -105,18 +104,18 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
 
     // Set up the boolean options.
     // We always have TRUE then FALSE in each combo box.
-    optOrient = new KComboBox(ui);
-    optOrient->insertItem(optOrient->count(),i18n("Orientable only"));
-    optOrient->insertItem(optOrient->count(),i18n("Non-orientable only"));
-    optOrient->setWhatsThis(i18n("Choose whether the filter should "
+    optOrient = new QComboBox(ui);
+    optOrient->insertItem(optOrient->count(),tr("Orientable only"));
+    optOrient->insertItem(optOrient->count(),tr("Non-orientable only"));
+    optOrient->setWhatsThis(tr("Choose whether the filter should "
         "only display orientable surfaces or whether it should only "
         "display non-orientable surfaces."));
     layout->addWidget(optOrient, 1, 2);
 
-    optCompact = new KComboBox(ui);
-    optCompact->insertItem(optCompact->count(),i18n("Compact only"));
-    optCompact->insertItem(optCompact->count(),i18n("Spun only"));
-    optCompact->setWhatsThis(i18n("<qt>Choose whether the filter should "
+    optCompact = new QComboBox(ui);
+    optCompact->insertItem(optCompact->count(),tr("Compact only"));
+    optCompact->insertItem(optCompact->count(),tr("Spun only"));
+    optCompact->setWhatsThis(tr("<qt>Choose whether the filter should "
         "only display compact surfaces or whether it should only display "
         "spun (non-compact) surfaces.<p>"
         "A <i>compact</i> surface is one with finitely many normal discs.  "
@@ -125,10 +124,10 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
         "&ldquo;spinning&rdquo; out towards the vertices."));
     layout->addWidget(optCompact, 2, 2);
 
-    optBdry = new KComboBox(ui);
-    optBdry->insertItem(optBdry->count(),i18n("With real boundary only"));
-    optBdry->insertItem(optBdry->count(),i18n("No real boundary only"));
-    optBdry->setWhatsThis(i18n("<qt>Choose whether the filter should "
+    optBdry = new QComboBox(ui);
+    optBdry->insertItem(optBdry->count(),tr("With real boundary only"));
+    optBdry->insertItem(optBdry->count(),tr("No real boundary only"));
+    optBdry->setWhatsThis(tr("<qt>Choose whether the filter should "
         "only display surfaces with real boundary or whether it should "
         "only display surfaces with no real boundary.<p>"
         "A real boundary occurs when a normal surface meets the boundary "
@@ -140,19 +139,19 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
     layout->addLayout(ecBox, 4, 2);
 
     ecBox->addSpacing(5);
-    eulerExpln1 = new QLabel(i18n("Allowable Euler characteristics:"), ui);
+    eulerExpln1 = new QLabel(tr("Allowable Euler characteristics:"), ui);
     ecBox->addWidget(eulerExpln1);
 
-    eulerList = new KLineEdit(ui);
+    eulerList = new QLineEdit(ui);
     eulerList->setValidator(new QRegExpValidator(reECChars, eulerList));
     ecBox->addWidget(eulerList);
 
-    eulerExpln2 = new QLabel(i18n(
+    eulerExpln2 = new QLabel(tr(
         "(separate with spaces or commas)"), ui);
     ecBox->addWidget(eulerExpln2);
     ecBox->addSpacing(5);
 
-    QString msg = i18n("Fill this box with a list of the allowable Euler "
+    QString msg = tr("Fill this box with a list of the allowable Euler "
         "characteristics, separated by "
         "spaces or commas.  This filter will only display a surface "
         "if its Euler characteristic is equal to one of these values.");
@@ -202,7 +201,7 @@ QWidget* NSurfaceFilterPropUI::getInterface() {
 }
 
 QString NSurfaceFilterPropUI::getPacketMenuText() const {
-    return i18n("Surface F&ilter");
+    return tr("Surface F&ilter");
 }
 
 void NSurfaceFilterPropUI::commit() {
@@ -217,8 +216,8 @@ void NSurfaceFilterPropUI::commit() {
             // No Euler characteristics have been entered.
             useEuler->setChecked(false);
         } else if (! reECList.exactMatch(ecText)) {
-            KMessageBox::error(eulerList, i18n(
-                "The allowable Euler characteristics must be given "
+            QMessageBox::warning(eulerList, tr("Invalid characteristics"),
+                tr("The allowable Euler characteristics must be given "
                 "as a list of integers separated by spaces or commas."));
             useEuler->setChecked(false);
         } else {

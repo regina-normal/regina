@@ -41,7 +41,7 @@
 class QCheckBox;
 class QComboBox;
 class QLabel;
-class KLineEdit;
+class QLineEdit;
 
 namespace regina {
     class NSurfaceFilterProperties;
@@ -71,7 +71,7 @@ class NSurfaceFilterPropUI : public QObject, public PacketUI {
         QComboBox* optOrient;
         QComboBox* optCompact;
         QComboBox* optBdry;
-        KLineEdit* eulerList;
+        QLineEdit* eulerList;
         QLabel* eulerExpln1;
         QLabel* eulerExpln2;
 

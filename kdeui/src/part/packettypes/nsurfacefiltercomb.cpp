@@ -33,12 +33,11 @@
 #include "nsurfacefiltercomb.h"
 #include "../packetmanager.h"
 
-#include <klocale.h>
-#include <qbuttongroup.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qlistwidget.h>
-#include <qradiobutton.h>
+#include <QButtonGroup>
+#include <QLabel>
+#include <QLayout>
+#include <QListWidget>
+#include <QRadioButton>
 
 namespace {
     const int ID_AND = 0;
@@ -62,8 +61,8 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
     layout->addLayout(typeLayout);
     typeLayout->addStretch(1);
 
-    QLabel* label = new QLabel(i18n("Combine using:"), ui);
-    label->setWhatsThis(i18n("Specifies whether this combination "
+    QLabel* label = new QLabel(tr("Combine using:"), ui);
+    label->setWhatsThis(tr("Specifies whether this combination "
         "filter will use boolean AND or boolean OR to combine its "
         "children."));
     typeLayout->addWidget(label);
@@ -71,15 +70,15 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
 
     QBoxLayout* typeOptionLayout = new QVBoxLayout();
     typeLayout->addLayout(typeOptionLayout);
-    typeAnd = new QRadioButton(i18n("AND (passes all)"), ui);
+    typeAnd = new QRadioButton(tr("AND (passes all)"), ui);
     typeAnd->setEnabled(readWrite);
-    typeAnd->setWhatsThis(i18n("Combine the children of this filter "
+    typeAnd->setWhatsThis(tr("Combine the children of this filter "
         "using boolean AND.  A surface will pass this filter only when "
         "it passes every one of the child filters."));
     typeOptionLayout->addWidget(typeAnd);
-    typeOr = new QRadioButton(i18n("OR (passes any)"), ui);
+    typeOr = new QRadioButton(tr("OR (passes any)"), ui);
     typeOr->setEnabled(readWrite);
-    typeOr->setWhatsThis(i18n("Combine the children of this filter "
+    typeOr->setWhatsThis(tr("Combine the children of this filter "
         "using boolean OR.  A surface will pass this filter only when "
         "it passes at least one of the child filters."));
     typeOptionLayout->addWidget(typeOr);
@@ -107,7 +106,7 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
     QVBoxLayout* childLayout = new QVBoxLayout();
     wideChildLayout->addLayout(childLayout, 2);
 
-    label = new QLabel(i18n("Filters to be combined\n"
+    label = new QLabel(tr("Filters to be combined\n"
         "(i.e., all filters immediately beneath this in the tree):"), ui);
     childLayout->addWidget(label);
 
@@ -117,7 +116,7 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
     refreshChildList();
     childLayout->addWidget(children, 1);
 
-    QString msg = i18n("<qt>Shows the child filters that this combination "
+    QString msg = tr("<qt>Shows the child filters that this combination "
         "filter will combine, i.e., all of the filters immediately beneath "
         "this filter in the packet tree.<p>"
         "If you wish to add a filter to this list, you need to add it "
@@ -133,7 +132,7 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
     layout->addStretch(1);
 
     /*
-    label = new QLabel(i18n("Filters can be applied to a normal surface list\n"
+    label = new QLabel(tr("Filters can be applied to a normal surface list\n"
         "from within the surface list viewer."), ui);
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
@@ -161,7 +160,7 @@ QWidget* NSurfaceFilterCombUI::getInterface() {
 }
 
 QString NSurfaceFilterCombUI::getPacketMenuText() const {
-    return i18n("Surface F&ilter");
+    return tr("Surface F&ilter");
 }
 
 void NSurfaceFilterCombUI::commit() {

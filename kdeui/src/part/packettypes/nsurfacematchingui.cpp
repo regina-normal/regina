@@ -34,7 +34,6 @@
 #include "coordinates.h"
 #include "nsurfacematchingui.h"
 
-#include <klocale.h>
 #include <QHeaderView>
 #include <QTreeView>
 
@@ -49,11 +48,11 @@ void MatchingModel::rebuild() {
     endResetModel();
 }
 
-int MatchingModel::rowCount(const QModelIndex& parent) const {
+int MatchingModel::rowCount(const QModelIndex& /* unused parent */) const {
     return (eqns_.get() ? eqns_->rows() : 0);
 }
 
-int MatchingModel::columnCount(const QModelIndex& parent) const {
+int MatchingModel::columnCount(const QModelIndex& /* unused parent */) const {
     return (eqns_.get() ? eqns_->columns() : 0);
 }
 
@@ -104,7 +103,7 @@ NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
     table->setAlternatingRowColors(true);
     table->header()->setStretchLastSection(false);
     table->setSelectionMode(QAbstractItemView::NoSelection);
-    table->setWhatsThis(i18n("<qt>Displays the normal surface matching "
+    table->setWhatsThis(tr("<qt>Displays the normal surface matching "
         "equations that were used in the vertex enumeration when this "
         "list was originally created.<p>"
         "Each row represents a single equation.  Each equation involves "
