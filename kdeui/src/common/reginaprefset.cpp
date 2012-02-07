@@ -167,7 +167,8 @@ ReginaPrefSet::ReginaPrefSet() :
         triInitialTab(Gluings),
         triInitialSkeletonTab(SkelComp),
         triInitialAlgebraTab(Homology),
-        triSurfacePropsThreshold(6) {
+        triSurfacePropsThreshold(6),
+        warnOnNonEmbedded(true) {
 }
 
 ReginaFilePrefList ReginaPrefSet::defaultCensusFiles() {
@@ -279,34 +280,30 @@ void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
     if (QFileInfo(page).exists()) {
         if (! QDesktopServices::openUrl(QUrl("file://" + page))) {
             if (handbook) {
-                QMessageBox *sorry = new QMessageBox(parentWidget);
-                sorry->setText((sorry->tr(
-                    "<qt>The requested handbook could not be opened.  "
+                QMessageBox::warning(parentWidget, QObject::tr("Could not open help"),
+                    QObject::tr("<qt>The requested handbook could not be opened.  "
                     "Please try pointing your web browser to "
-                    "<tt>%1</tt>.</qt>").arg(page)));
+                    "<tt>%1</tt>.</qt>").arg(page));
             } else {
-                QMessageBox *sorry = new QMessageBox(parentWidget);
-                sorry->setText((sorry->tr(
-                    "<qt>The Regina handbook could not be opened.  "
+              QMessageBox::warning(parentWidget, QObject::tr("Could not open handbook"),
+                    QObject::tr("<qt>The Regina handbook could not be opened.  "
                     "Please try pointing your web browser to "
-                    "<tt>%1</tt>.</qt>").arg(page)));
+                    "<tt>%1</tt>.</qt>").arg(page));
             }
         }
     } else {
         if (handbook) {
-            QMessageBox *sorry = new QMessageBox(parentWidget);
-            sorry->setText((sorry->tr(
-                "<qt>The requested handbook could "
+            QMessageBox::warning(parentWidget, QObject::tr("Could not find handbook"),
+                QObject::tr("<qt>The requested handbook could "
                 "not be found.  Perhaps it is not installed?<p>"
                 "The handbook should be accessible as "
-                "<tt>%1/</tt>.</qt>").arg(index)));
+                "<tt>%1/</tt>.</qt>").arg(index));
         } else {
-            QMessageBox *sorry = new QMessageBox(parentWidget);
-            sorry->setText((sorry->tr(
-                "<qt>The Regina handbook could "
+            QMessageBox::warning(parentWidget, QObject::tr("Could not find handbook"),
+                QObject::tr("<qt>The Regina handbook could "
                 "not be found.  Perhaps it is not installed?<p>"
                 "The handbook should be accessible as "
-                "<tt>%1/</tt>.</qt>").arg(index)));
+                "<tt>%1/</tt>.</qt>").arg(index));
         }
     }
 }

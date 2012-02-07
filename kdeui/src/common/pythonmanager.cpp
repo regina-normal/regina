@@ -31,11 +31,11 @@
 
 #include "pythonmanager.h"
 
-#include <qfile.h>
-#include <qfileinfo.h>
 
 #include <QCoreApplication>
 #include <QDesktopServices>
+#include <QFile>
+#include <QFileInfo>
 #include <QMessageBox>
 #include <QProcess>
 #include <QUrl>
@@ -61,14 +61,12 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
         QDesktopServices::openUrl(QUrl("file://" + index));
 
     } else {
-        QMessageBox *sorry = new QMessageBox(topLevelWindow);
-        sorry->setText((sorry->tr(
-            "<qt>The Python reference could "
+        QMessageBox::warning(topLevelWindow, QObject::tr("Could not find references"),
+            QObject::tr("<qt>The Python reference could "
             "not be found.  Perhaps it is not installed?<p>"
             "The Python reference (i.e., the API documentation for the "
             "Regina calculation engine) should be installed in the directory "
-            "<tt>%1/</tt>.</qt>")).arg(docDir));
-        sorry->exec();
+            "<tt>%1/</tt>.</qt>").arg(docDir));
     }
 }
 
@@ -81,7 +79,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
         regina::NPacket* selectedPacket) {
     PythonConsole* ans = new PythonConsole(parent, this, initialPrefs);
 
-    ans->blockInput(parent->tr("Initialising..."));
+    ans->blockInput(parent->QObject::tr("Initialising..."));
 
     // Show us what's going on.
     ans->show();
@@ -99,7 +97,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     ans->loadAllLibraries();
 
     // All ready!
-    ans->addOutput(parent->tr("Ready."));
+    ans->addOutput(parent->QObject::tr("Ready."));
     ans->allowInput();
     return ans;
 }
@@ -109,7 +107,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
         const PythonVariableList& initialVars) {
     PythonConsole* ans = new PythonConsole(parent, this, initialPrefs);
 
-    ans->blockInput(parent->tr("Initialising..."));
+    ans->blockInput(parent->QObject::tr("Initialising..."));
 
     // Show us what's going on.
     ans->show();
@@ -122,10 +120,10 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     for (PythonVariableList::const_iterator it = initialVars.begin();
             it != initialVars.end(); it++)
         ans->setVar((*it).name, (*it).value);
-    ans->executeScript(script, parent->tr("user script"));
+    ans->executeScript(script, parent->QObject::tr("user script"));
 
     // All ready!
-    ans->addOutput(parent->tr("\nReady."));
+    ans->addOutput(parent->QObject::tr("\nReady."));
     ans->allowInput();
     return ans;
 }
@@ -134,7 +132,7 @@ PythonConsole* PythonManager::compileScript(QWidget* parent,
         const ReginaPrefSet* initialPrefs, const QString& script) {
     PythonConsole* ans = new PythonConsole(parent, this, initialPrefs);
 
-    ans->blockInput(parent->tr("Initialising..."));
+    ans->blockInput(parent->QObject::tr("Initialising..."));
 
     // Try to compile the script.
     if (ans->compileScript(script)) {
@@ -143,7 +141,7 @@ PythonConsole* PythonManager::compileScript(QWidget* parent,
     } else {
         // The compile failed; show the details to the user.
         ans->show();
-        ans->addOutput(parent->tr("Compile failed."));
+        ans->addOutput(parent->QObject::tr("Compile failed."));
         ans->allowInput();
         return ans;
     }
@@ -180,8 +178,8 @@ void PythonManager::updatePreferences(const ReginaPrefSet& newPrefs) {
 
 namespace {
     PythonConsole* scriptingDisabled(QWidget* parent) {
-        QMessageBox *sorry = new QMessageBox(parent);
-        sorry->setText(tr("<qt>Python scripting has been "
+      QMessageBox::warning(parent, QObject::tr("Python scripting disabled"),
+            QObject::tr("<qt>Python scripting has been "
             "disabled in your particular build of Regina.  This is probably "
             "because no usable boost.python installation could be found.<p>"
             "Watch the output of <b>cmake</b> at compile time "
