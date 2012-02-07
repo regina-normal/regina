@@ -49,12 +49,13 @@ class NNormalSurfaceCreator : public PacketCreator {
         QWidget* ui;
         CoordinateChooser* coords;
         QCheckBox* embedded;
+        bool warnOnNonEmbedded_;
 
     public:
         /**
          * Constructor.
          */
-        NNormalSurfaceCreator(int defaultCoordSystem);
+        NNormalSurfaceCreator(int defaultCoordSystem, bool warnOnNonEmbedded);
 
         /**
          * PacketCreator overrides.

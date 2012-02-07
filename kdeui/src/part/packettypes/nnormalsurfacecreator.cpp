@@ -37,17 +37,18 @@
 #include "nnormalsurfacecreator.h"
 #include "../progressdialogs.h"
 
-#include <klocale.h>
-#include <kmessagebox.h>
 #include <kprogressdialog.h>
-#include <qcheckbox.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qwhatsthis.h>
+#include <QCheckBox>
+#include <QLabel>
+#include <QLayout>
+#include <QMessageBox>
+#include <QWhatsThis>
 
 using regina::NNormalSurfaceList;
 
-NNormalSurfaceCreator::NNormalSurfaceCreator(int defaultCoordSystem) {
+NNormalSurfaceCreator::NNormalSurfaceCreator(int defaultCoordSystem, 
+        bool warnOnNonEmbedded):
+        warnOnNonEmbedded_(warnOnNonEmbedded) {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -56,9 +57,9 @@ NNormalSurfaceCreator::NNormalSurfaceCreator(int defaultCoordSystem) {
 
     QBoxLayout* coordArea = new QHBoxLayout(coordAreaWidget);
     coordArea->setContentsMargins(0, 0, 0, 0);
-    QString expln = i18n("Specifies the coordinate system in which the "
+    QString expln = ui->tr("Specifies the coordinate system in which the "
         "vertex normal surfaces will be enumerated.");
-    QLabel* label = new QLabel(i18n("Coordinate system:"), ui);
+    QLabel* label = new QLabel(ui->tr("Coordinate system:"), ui);
     label->setWhatsThis(expln);
     coordArea->addWidget(label);
     coords = new CoordinateChooser();
@@ -67,9 +68,9 @@ NNormalSurfaceCreator::NNormalSurfaceCreator(int defaultCoordSystem) {
     coords->setWhatsThis(expln);
     coordArea->addWidget(coords, 1);
 
-    embedded = new QCheckBox(i18n("Embedded surfaces only"), ui);
+    embedded = new QCheckBox(ui->tr("Embedded surfaces only"), ui);
     embedded->setChecked(true);
-    embedded->setWhatsThis(i18n("Specifies whether only embedded "
+    embedded->setWhatsThis(ui->tr("Specifies whether only embedded "
         "normal surfaces should be enumerated, or whether all normal "
         "surfaces (embedded, immersed and singular) should be enumerated."));
     layout->addWidget(embedded);
@@ -80,18 +81,18 @@ QWidget* NNormalSurfaceCreator::getInterface() {
 }
 
 QString NNormalSurfaceCreator::parentPrompt() {
-    return i18n("Triangulation:");
+    return ui->tr("Triangulation:");
 }
 
 QString NNormalSurfaceCreator::parentWhatsThis() {
-    return i18n("The triangulation that will contain your normal surfaces.");
+    return ui->tr("The triangulation that will contain your normal surfaces.");
 }
 
 regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
         QWidget* parentWidget) {
     if (parent->getPacketType() != regina::NTriangulation::packetType) {
-        KMessageBox::error(parentWidget, i18n(
-            "Normal surface lists can only be created directly beneath "
+        QMessageBox::warning(parentWidget, ui->tr("Invalid parent"),
+            ui->tr("Normal surface lists can only be created directly beneath "
             "triangulations."));
         return 0;
     }
@@ -101,7 +102,8 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
     // Sanity check for immersed and/or singular surfaces.
     if (! embedded->isChecked()) {
         if (Coordinates::generatesAlmostNormal(coordSystem)) {
-            KMessageBox::sorry(parentWidget, i18n(
+            QMessageBox::warning(parentWidget, ui->tr("Unsupported options"),
+                ui->tr(
                 "<qt>You have selected an almost normal coordinate "
                 "system, but you have unchecked the box for embedded "
                 "surfaces only.<p>"
@@ -114,23 +116,26 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
             return 0;
         }
 
-        if (KMessageBox::shouldBeShownContinue("warnOnNonEmbedded"))
-            if (KMessageBox::warningContinueCancel(parentWidget,
-                    i18n("<qt>You have unchecked the box for embedded "
+        // TODO: Add the "Always ask me this" part
+        // That requires creating a new QDialog by hand
+        if (warnOnNonEmbedded_)
+            if (QMessageBox::warning(parentWidget, 
+                    ui->tr("Non-embedded surface enumeration"),
+                    ui->tr("<qt>You have unchecked the box for embedded "
                         "surfaces only.  This means that immersed "
                         "and/or singular surfaces will also be "
                         "enumerated, which could take a much longer time "
                         "and give a much larger solution set.<p>"
                         "Are you sure you wish to go ahead with this?</qt>"),
-                    QString::null, KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-                    "warnOnNonEmbedded") == KMessageBox::Cancel) {
+                    QMessageBox::Ok | QMessageBox::Cancel) == 
+                    QMessageBox::Cancel) {
                 return 0;
             }
     }
 
     regina::NProgressManager manager;
-    ProgressDialogNumeric dlg(&manager, i18n("Normal Surface Enumeration"),
-        i18n("Enumerating vertex normal surfaces..."), parentWidget);
+    ProgressDialogNumeric dlg(&manager, ui->tr("Normal Surface Enumeration"),
+        ui->tr("Enumerating vertex normal surfaces..."), parentWidget);
 
     NNormalSurfaceList* ans = NNormalSurfaceList::enumerate(
         dynamic_cast<regina::NTriangulation*>(parent),
@@ -140,8 +145,8 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
         return ans;
     else {
         delete ans;
-        KMessageBox::information(parentWidget,
-            i18n("The normal surface enumeration was cancelled."));
+        QMessageBox::information(parentWidget, ui->tr("Cancelled"),
+            ui->tr("The normal surface enumeration was cancelled."));
         return 0;
     }
 }
