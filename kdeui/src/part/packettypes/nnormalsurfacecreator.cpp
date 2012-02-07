@@ -37,7 +37,6 @@
 #include "nnormalsurfacecreator.h"
 #include "../progressdialogs.h"
 
-#include <kprogressdialog.h>
 #include <QCheckBox>
 #include <QLabel>
 #include <QLayout>
