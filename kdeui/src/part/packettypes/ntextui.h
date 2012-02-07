@@ -58,7 +58,7 @@ class NTextUI : public QObject, public PacketUI {
          * Internal components
          */
         QPlainTextEdit* document;
-        //PacketEditIface* editIface;
+        PacketEditIface* editIface;
 
     public:
         /**
@@ -72,7 +72,7 @@ class NTextUI : public QObject, public PacketUI {
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
-        //PacketEditIface* getEditIface();
+        PacketEditIface* getEditIface();
         QString getPacketMenuText() const;
         void commit();
         void refresh();
@@ -85,8 +85,8 @@ class NTextUI : public QObject, public PacketUI {
         void notifyTextChanged();
 };
 
-//inline PacketEditIface* NTextUI::getEditIface() {
-//    return editIface;
-//}
+inline PacketEditIface* NTextUI::getEditIface() {
+    return editIface;
+}
 
 #endif

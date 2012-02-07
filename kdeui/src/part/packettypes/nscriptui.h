@@ -163,7 +163,7 @@ class NScriptUI : public QObject, public PacketUI {
         QStyledItemDelegate* nameDelegate;
         QStyledItemDelegate* valueDelegate;
         QPlainTextEdit* document;
-        //PacketEditIface* editIface;
+        PacketEditIface* editIface;
 
         /**
          * Script actions
@@ -184,7 +184,7 @@ class NScriptUI : public QObject, public PacketUI {
          */
         regina::NPacket* getPacket();
         QWidget* getInterface();
-        //PacketEditIface* getEditIface();
+        PacketEditIface* getEditIface();
         const QLinkedList<QAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
         void commit();
@@ -248,8 +248,8 @@ inline QSize ScriptVarTable::sizeHint() const {
     return QSize(s.width(), s.height() / 3 * 2);
 }
 
-//inline PacketEditIface* NScriptUI::getEditIface() {
-//    return editIface;
-//}
+inline PacketEditIface* NScriptUI::getEditIface() {
+    return editIface;
+}
 
 #endif

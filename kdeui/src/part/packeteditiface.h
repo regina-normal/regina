@@ -38,11 +38,9 @@
 
 class PacketUI;
 class PacketTabbedUI;
+class QPlainTextEdit;
 class QTreeWidget;
 
-namespace KTextEditor {
-    class View;
-};
 
 class PacketEditIface : public QObject {
     Q_OBJECT
@@ -68,10 +66,10 @@ class PacketEditTextEditor : public PacketEditIface {
     Q_OBJECT
 
     private:
-        KTextEditor::View* view_;
+        QPlainTextEdit *edit_;
 
     public:
-        PacketEditTextEditor(KTextEditor::View* view);
+        PacketEditTextEditor(QPlainTextEdit *edit);
 
         virtual bool cutEnabled() const;
         virtual bool copyEnabled() const;

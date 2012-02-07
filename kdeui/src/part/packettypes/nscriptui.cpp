@@ -33,7 +33,7 @@
 // UI includes:
 #include "nscriptui.h"
 #include "../packetchooser.h"
-//#include "../packeteditiface.h"
+#include "../packeteditiface.h"
 #include "../packetmanager.h"
 #include "../reginapart.h"
 
@@ -262,8 +262,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
         "area.  Any variables listed in the table above will be "
         "set before the script is run."));
 
-    // TODO Check that we don't need this?
-    // editIface = new PacketEditTextEditor(view);
+    editIface = new PacketEditTextEditor(document);
 
     splitter->addWidget(document);
 
@@ -366,7 +365,7 @@ NScriptUI::~NScriptUI() {
     // Clean up.
     delete nameDelegate;
     delete valueDelegate;
-    //delete editIface;
+    delete editIface;
     delete document;
 }
 

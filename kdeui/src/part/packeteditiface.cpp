@@ -30,36 +30,36 @@
 #include "packeteditiface.h"
 #include "packettabui.h"
 
-#include <qclipboard.h>
-#include <qtreewidget.h>
-#include <kapplication.h>
-#include <ktexteditor/document.h>
-#include <ktexteditor/view.h>
+#include <QApplication>
+#include <QClipboard>
+#include <QPlainTextEdit>
+#include <QTreeWidget>
 
-PacketEditTextEditor::PacketEditTextEditor(KTextEditor::View* view) :
-        view_(view) {
-    connect(this, SIGNAL(sendCutToEditor()), view, SLOT(cut()));
-    connect(this, SIGNAL(sendCopyToEditor()), view, SLOT(copy()));
-    connect(this, SIGNAL(sendPasteToEditor()), view, SLOT(paste()));
+PacketEditTextEditor::PacketEditTextEditor(QPlainTextEdit *edit) :
+        edit_(edit) {
+    connect(this, SIGNAL(sendCutToEditor()), edit_, SLOT(cut()));
+    connect(this, SIGNAL(sendCopyToEditor()), edit_, SLOT(copy()));
+    connect(this, SIGNAL(sendPasteToEditor()), edit_, SLOT(paste()));
 
-    connect(view_, SIGNAL(selectionChanged(KTextEditor::View*)),
+    connect(edit_, SIGNAL(selectionChanged()), 
         this, SLOT(fireStatesChanged()));
-    connect(KApplication::kApplication()->clipboard(), SIGNAL(dataChanged()),
+
+    connect(QApplication::clipboard(), SIGNAL(dataChanged()),
         this, SLOT(fireStatesChanged()));
 }
 
 bool PacketEditTextEditor::cutEnabled() const {
-    return view_->selection() && view_->document()->isReadWrite();
+    return edit_->textCursor().hasSelection() && !edit_->isReadOnly();
 }
 
 bool PacketEditTextEditor::copyEnabled() const {
-    return view_->selection();
+    return edit_->textCursor().hasSelection();
 }
 
 bool PacketEditTextEditor::pasteEnabled() const {
-    return (! (KApplication::kApplication()->clipboard()->text(
+    return (! (QApplication::clipboard()->text(
         QClipboard::Clipboard).isNull())) &&
-        view_->document()->isReadWrite();
+        !edit_->isReadOnly();
 }
 
 void PacketEditTextEditor::cut() {

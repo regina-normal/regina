@@ -67,21 +67,18 @@ void ReginaPart::setupActions() {
     actCut = new QAction(QIcon::fromTheme("edit-cut"), tr("Cu&t"), this);
     actCut->setWhatsThis(tr("Cut out the current selection and store it "
         "in the clipboard."));
-    actCut->setEnabled(false);
     actCut->setShortcuts(QKeySequence::Cut);
     editMenu->addAction(actCut);
     allActions.append(actCut);
 
     actCopy = new QAction(QIcon::fromTheme("edit-copy"), tr("&Copy"), this);
     actCopy->setWhatsThis(tr("Copy the current selection to the clipboard."));
-    actCopy->setEnabled(false);
     actCopy->setShortcuts(QKeySequence::Copy);
     editMenu->addAction(actCopy);
     allActions.append(actCopy);
 
     actPaste = new QAction(QIcon::fromTheme("edit-paste"), tr("&Paste"), this);
     actPaste->setWhatsThis(tr("Paste the contents of the clipboard."));
-    actPaste->setEnabled(false);
     actPaste->setShortcuts(QKeySequence::Paste);
     editMenu->addAction(actPaste);
     allActions.append(act);

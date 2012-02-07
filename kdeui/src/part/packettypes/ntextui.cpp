@@ -46,7 +46,7 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane) :
     document = new QPlainTextEdit(enclosingPane);
     document->setReadOnly(!enclosingPane->isReadWrite());
     document->setLineWrapMode(QPlainTextEdit::WidgetWidth);
-//    editIface = new PacketEditTextEditor(view);
+    editIface = new PacketEditTextEditor(document);
 
     refresh();
 
