@@ -76,6 +76,7 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
     editAct = 0;
     saveAct = 0;
     saveAsAct = 0;
+    treeMenu = 0;
     packetMenu = 0;
     packetTreeToolBar = 0;
 
