@@ -33,13 +33,14 @@
 #ifndef __GAPRUNNER_H
 #define __GAPRUNNER_H
 
-#include <kdialog.h>
-#include <KProcess>
+#include <QDialog>
+#include <QProcess>
 #include <map>
 #include <memory>
 
-class KProcIO;
+class QDialogButtonBox;
 class QLabel;
+class QSize;
 
 namespace regina {
     class NGroupExpression;
@@ -50,7 +51,7 @@ namespace regina {
  * A dialog that handles communications with GAP in order to simplify a
  * group presentation.
  */
-class GAPRunner : public KDialog {
+class GAPRunner : public QDialog {
     Q_OBJECT
 
     private:
@@ -58,11 +59,12 @@ class GAPRunner : public KDialog {
          * Internal components:
          */
         QLabel* status;
+        QDialogButtonBox* buttonBox;
 
         /**
          * The running GAP process:
          */
-        KProcess* proc;
+        QProcess* proc;
         QString currOutput;
         QString partialLine;
         int stage;
@@ -105,6 +107,12 @@ class GAPRunner : public KDialog {
          * Cancel has been pressed.
          */
         virtual void slotCancel();
+
+    protected:
+        /**
+         * Qt override to set preferred size of the window
+         */
+        virtual QSize sizeHint() const;
 
     private:
         /**

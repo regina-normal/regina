@@ -32,14 +32,14 @@
 #include "gaprunner.h"
 
 #include <iostream>
-#include <kiconloader.h>
-#include <klocale.h>
-#include <kstdguiitem.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qregexp.h>
-#include <qstringlist.h>
-#include <qwhatsthis.h>
+#include <QDialogButtonBox>
+#include <QLabel>
+#include <QLayout>
+#include <QPushButton>
+#include <QRegExp>
+#include <QSize>
+#include <QStringList>
+#include <QWhatsThis>
 #include <signal.h>
 
 #define MAX_GAP_READ_LINE 512
@@ -81,24 +81,28 @@ const char* GAP_PROMPT = "gap> ";
 
 GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
         const regina::NGroupPresentation& useOrigGroup) :
-        KDialog(parent),
+        QDialog(parent),
         proc(0), currOutput(""), partialLine(""), stage(GAP_init),
         cancelled(false), origGroup(useOrigGroup), newGroup(0) {
-    resize(300, 100);
-    setCaption(i18n("Running GAP..."));
-    setButtons(KDialog::Cancel);
-    setButtonGuiItem(KDialog::Cancel, KGuiItem(i18n("Kill GAP"),
-        "process-stop", i18n("Kill the running GAP process"),
-        i18n("Kill the running GAP process.  This will cancel the "
-            "group simplification.")));
-    setDefaultButton(KDialog::NoDefault);
-    setModal(true);
+    setWindowTitle(tr("Running GAP..."));
+
+    QVBoxLayout *dialogLayout = new QVBoxLayout(this);
+    buttonBox = new QDialogButtonBox(this);
+    buttonBox->addButton(QDialogButtonBox::Cancel);
+    QPushButton *button = new QPushButton(QIcon::fromTheme("process-stop"),
+        tr("Kill GAP"), this);
+    button->setToolTip(tr("Kill the running GAP process"));
+    button->setWhatsThis(tr("Kill the running GAP process.  This will cancel the "
+            "group simplification."));
+    buttonBox->addButton(button, QDialogButtonBox::RejectRole);
 
     QWidget* page = new QWidget(this);
-    setMainWidget(page);
+    dialogLayout->addWidget(page);
+    dialogLayout->addWidget(buttonBox);
+    setLayout(dialogLayout);
     QBoxLayout* layout = new QHBoxLayout(page);//, 5, 0);
 
-    page->setWhatsThis(i18n("<qt>When GAP (Groups, Algorithms and "
+    page->setWhatsThis(tr("<qt>When GAP (Groups, Algorithms and "
         "Programming) is used to simplify a group, GAP is started as a "
         "separate process on your system.  Regina talks to GAP just as "
         "any other user would at the GAP command prompt.<p>"
@@ -106,31 +110,30 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
         "between Regina and GAP.</qt>"));
 
     QLabel* icon = new QLabel(page);
-    icon->setPixmap(DesktopIcon("system-run", 32, KIconLoader::DefaultState));
+    icon->setPixmap(QIcon::fromTheme("system-run").pixmap(32,32));
     layout->addWidget(icon, 0);
 
     layout->addSpacing(10);
 
-    status = new QLabel(i18n("Initialising..."), page);
+    status = new QLabel(tr("Initialising..."), page);
     status->setAlignment(Qt::AlignLeft);
     layout->addWidget(status, 1);
 
     // Start the GAP process.
-    proc = new KProcess();
-    *proc << useExec << "-b" /* banner suppression */;
+    proc = new QProcess();
 
     connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)),
         this, SLOT(processExited()));
-    connect(proc, SIGNAL(readyRead()), this, SLOT(readReady()));
-    proc->setOutputChannelMode(KProcess::MergedChannels);
+    connect(proc, SIGNAL(readyReadStandardOutput()), this, SLOT(readReady()));
+    proc->setProcessChannelMode(QProcess::MergedChannels);
 
-    status->setText(i18n("Starting GAP..."));
-    proc->start();
+    status->setText(tr("Starting GAP..."));
+    proc->start(useExec, QStringList() << "-b" /* banner suppression */ );
 
     if (! proc->waitForStarted(10000 /* milliseconds */))
-        error(i18n("GAP could not be started."));
+        error(tr("GAP could not be started."));
 
-    connect(this, SIGNAL(cancelClicked()), this, SLOT(slotCancel()));
+    connect(button, SIGNAL(clicked()), this, SLOT(slotCancel()));
 }
 
 GAPRunner::~GAPRunner() {
@@ -147,8 +150,8 @@ void GAPRunner::slotCancel() {
             proc->kill();
         disconnect(proc, 0, this, 0);
 
-        status->setText(i18n("Simplification cancelled."));
-        setButtonGuiItem(KDialog::Cancel, KStandardGuiItem::close());
+        status->setText(tr("Simplification cancelled."));
+        buttonBox->setStandardButtons(QDialogButtonBox::Cancel); 
     } else {
         // We've already hit cancel; just close the dialog.
         reject();
@@ -202,7 +205,7 @@ void GAPRunner::processOutput(const QString& output) {
             sendInput(QString("f := FreeGroup(%1);").arg(
                 origGroup.getNumberOfGenerators()));
             stage = GAP_oldgens;
-            status->setText(i18n("Constructing original group "
+            status->setText(tr("Constructing original group "
                 "presentation..."));
             return;
         case GAP_oldgens:
@@ -214,13 +217,13 @@ void GAPRunner::processOutput(const QString& output) {
             // Ignore any output.
             sendInput("hom := IsomorphismSimplifiedFpGroup(g);");
             stage = GAP_simplify;
-            status->setText(i18n("Simplifying group presentation..."));
+            status->setText(tr("Simplifying group presentation..."));
             return;
         case GAP_simplify:
             // Ignore any output.
             sendInput("Length(GeneratorsOfGroup(Range(hom)));");
             stage = GAP_newgenscount;
-            status->setText(i18n("Extracting new group presentation..."));
+            status->setText(tr("Extracting new group presentation..."));
             return;
         case GAP_newgenscount:
             count = use.toULong(&ok);
@@ -240,7 +243,7 @@ void GAPRunner::processOutput(const QString& output) {
                     stage = GAP_newgenseach;
                 }
             } else
-                error(i18n("GAP produced the following output where "
+                error(tr("GAP produced the following output where "
                     "an integer was expected:<p><tt>%1</tt>").arg(
                     escape(use)));
             return;
@@ -259,7 +262,7 @@ void GAPRunner::processOutput(const QString& output) {
                         arg(stageWhichGen + 1));
                 }
             } else
-                error(i18n("GAP produced the same generator <i>%1</i> more "
+                error(tr("GAP produced the same generator <i>%1</i> more "
                     "than once in its simplified group presentation.").
                     arg(escape(use)));
             return;
@@ -271,7 +274,7 @@ void GAPRunner::processOutput(const QString& output) {
                     // All finished!
                     sendInput("quit;");
                     stage = GAP_done;
-                    status->setText(i18n("Simplification complete."));
+                    status->setText(tr("Simplification complete."));
                 } else {
                     // We need to extract the individual relations.
                     stageWhichReln = 0;
@@ -279,7 +282,7 @@ void GAPRunner::processOutput(const QString& output) {
                     stage = GAP_newrelseach;
                 }
             } else
-                error(i18n("GAP produced the following output where "
+                error(tr("GAP produced the following output where "
                     "an integer was expected:<p><tt>%1</tt>").arg(
                     escape(use)));
             return;
@@ -291,7 +294,7 @@ void GAPRunner::processOutput(const QString& output) {
                     // All finished!
                     sendInput("quit;");
                     stage = GAP_done;
-                    status->setText(i18n("Simplification complete."));
+                    status->setText(tr("Simplification complete."));
                 } else {
                     // Move on to the next relation.
                     sendInput(QString("RelatorsOfFpGroup(Range(hom))[%1];").
@@ -348,7 +351,7 @@ regina::NGroupExpression* GAPRunner::parseRelation(const QString& reln) {
 
     QStringList terms = relnLocal.split(QChar('*'));
     if (terms.isEmpty()) {
-        error(i18n("GAP produced empty output where a group relator "
+        error(tr("GAP produced empty output where a group relator "
             "was expected."));
         return 0;
     }
@@ -365,7 +368,7 @@ regina::NGroupExpression* GAPRunner::parseRelation(const QString& reln) {
     long exp;
     for (QStringList::iterator it = terms.begin(); it != terms.end(); it++) {
         if (! reGAPTerm.exactMatch(*it)) {
-            error(i18n("GAP produced the following group relator, which could "
+            error(tr("GAP produced the following group relator, which could "
                 "not be understood:<p><tt>%1</tt>").arg(escape(reln)));
             return 0;
         }
@@ -373,7 +376,7 @@ regina::NGroupExpression* GAPRunner::parseRelation(const QString& reln) {
         genStr = reGAPTerm.cap(1);
         genPos = newGens.find(genStr);
         if (genPos == newGens.end()) {
-            error(i18n("GAP produced the following group relator, which "
+            error(tr("GAP produced the following group relator, which "
                 "includes the unknown generator <i>%1</i>:<p>"
                 "<tt>%2</tt>").arg(genStr).arg(escape(reln)));
             return 0;
@@ -394,14 +397,14 @@ regina::NGroupExpression* GAPRunner::parseRelation(const QString& reln) {
 }
 
 void GAPRunner::error(const QString& msg) {
-    status->setText(i18n("<qt><b>Error:</b> %1</qt>").arg(msg));
+    status->setText(tr("<qt><b>Error:</b> %1</qt>").arg(msg));
 
     cancelled = true;
     if (proc->state() == QProcess::Running)
         proc->kill();
     disconnect(proc, 0, this, 0);
 
-    setButtonGuiItem(KDialog::Cancel, KStandardGuiItem::close());
+    buttonBox->setStandardButtons(QDialogButtonBox::Cancel); 
 
     // Resize in case the error message is large.
     // We have to go right in and reset the minimum size of the status
@@ -443,7 +446,7 @@ void GAPRunner::readReady() {
             if (reGAPPrompt.exactMatch(partialLine)) {
                 // It's indeed a prompt.  Are we ready for one?
                 if (currOutput.isEmpty() && stage != GAP_init) {
-                    error(i18n("GAP asked for more input than we could "
+                    error(tr("GAP asked for more input than we could "
                         "provide."));
                     break;
                 }
@@ -468,7 +471,7 @@ void GAPRunner::readReady() {
             // isn't GAP at all.
             if (! appearsValid(currOutput)) {
                 std::cout << currOutput.toAscii().constData() << std::endl;
-                error(i18n("GAP produced the following unexpected "
+                error(tr("GAP produced the following unexpected "
                     "output:<p><tt>%1</tt>").arg(escape(currOutput)));
             }
         }
@@ -477,7 +480,7 @@ void GAPRunner::readReady() {
     // All out of data to read.
     // Let the user know if something broke.
     if (size < 0) {
-        error(i18n("An unexpected error occurred whilst communicating "
+        error(tr("An unexpected error occurred whilst communicating "
             "with GAP."));
     }
 }
@@ -489,12 +492,16 @@ void GAPRunner::processExited() {
     }
 
     if (stage == GAP_done) {
-        status->setText(i18n("GAP finished."));
+        status->setText(tr("GAP finished."));
         accept();
     } else {
-        error(i18n("GAP exited unexpectedly before the simplification "
+        error(tr("GAP exited unexpectedly before the simplification "
             "was finished."));
     }
+}
+
+QSize GAPRunner::sizeHint() const {
+    return QSize(300, 100);
 }
 
 std::auto_ptr<regina::NGroupPresentation> GAPRunner::simplifiedGroup() {
