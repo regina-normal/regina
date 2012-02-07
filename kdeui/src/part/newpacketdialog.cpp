@@ -92,6 +92,7 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
             QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
     layout->addWidget(box);
     connect(box, SIGNAL(accepted()), this, SLOT(slotOk()));
+    connect(box, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
 NewPacketDialog::~NewPacketDialog() {
@@ -152,5 +153,7 @@ void NewPacketDialog::slotOk() {
     newPacket->setPacketLabel(std::string(useLabel.toAscii().constData()));
     if (! newPacket->getTreeParent())
         parentPacket->insertChildLast(newPacket);
+
+    accept();
 }
 
