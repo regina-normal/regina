@@ -51,7 +51,6 @@ endif (APPLE)
 
 # TODO: Restore all of these.
 # install(FILES regina.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-# install(FILES reginamain.rc tips DESTINATION ${DATA_INSTALL_DIR}/regina)
 # install(FILES regina.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
 # update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
 
