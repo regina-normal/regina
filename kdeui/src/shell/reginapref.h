@@ -35,6 +35,7 @@
 
 #include "reginaprefset.h"
 
+#include <QDialog>
 #include <QMainWindow>
 
 class CoordinateChooser;
