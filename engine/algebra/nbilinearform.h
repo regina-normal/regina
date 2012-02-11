@@ -134,8 +134,9 @@ class REGINA_API NBilinearForm : public ShareableObject {
 	/**
 	 * Access to the reducedPairing map.  So if you wanted to iterate through the
          * values of the bilinear form evaluated on the generators of the homology of
-         * ldomain and rdomain, you'd construct an iterator to a std::map< NMultiIndex< unsigned long >, NLargeInteger* > 
-         * type and iterate through reducedMap(). 
+         * ldomain and rdomain, you'd construct an iterator to a 
+         *  std::map< NMultiIndex< unsigned long >, NLargeInteger* > type and iterate 
+         *  through reducedMap(). 
 	 */
         const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & reducedMap() const;
 
@@ -152,19 +153,19 @@ class REGINA_API NBilinearForm : public ShareableObject {
 
 	/**
          * Kawauchi-Kojima sigma vector describing the odd prime torsion, provided the
-         * form is symmetric. TODO
+         * form is symmetric. TODO not yet implemented
          */
 	std::vector< NLargeInteger > oddKKvec() const;
 
 	/**
          * Kawauchi-Kojima vector describing the 2-torsion, provided the
-         * form is symmetric.  TODO
+         * form is symmetric.  TODO not yet implemented
          */
 	std::vector< NLargeInteger > twoKKvec() const;
 
 	/**
 	 * Kawauchi-Kojima test for hyperbolicity, assuming form symmetric.
-         * TODO
+         * TODO not yet implemented
 	 */
 	bool isHyperbolic() const;
 
@@ -228,13 +229,13 @@ class REGINA_API NBilinearForm : public ShareableObject {
 	const NMarkedAbelianGroup& range() const;
 
         /**
-         * todo! maybe talk about nullity, symmetry, l/rdomain, range, etc.
+         * TODO: maybe talk about nullity, symmetry, l/rdomain, range, etc.
          * various invariants if they make sense, etc.
          */
         void writeTextShort(std::ostream& out) const;
 
         /**
-         * todo! maybe talk about nullity, symmetry, l/rdomain, range, etc.
+         * TODO: maybe talk about nullity, symmetry, l/rdomain, range, etc.
          * various invariants if they make sense, etc.
          */
         void writeTextLong(std::ostream& out) const;
@@ -243,31 +244,35 @@ class REGINA_API NBilinearForm : public ShareableObject {
 
 
 /**
- *  This procedure takes as input the NBilinearForm intP which is required to be a torsion linking form on an abelian
- * group.  Specifically, it's assumed the map A x A --> Q/Z is symmetric, and the range is a trivially presented Z/nZ
+ *  This procedure takes as input the NBilinearForm intP which is required to be a torsion linking 
+ * form on an abelian group.  Specifically, it's assumed the map A x A --> Q/Z is symmetric, and 
+ * the range is a trivially presented Z/nZ
  *
  * The procedure outputs the complete Kawauchi-Kojima invariants of the form, which are:
  *
  * 1) The prime power decomposition of A, as ppVec.
  *
- * 2) The classification of the 2-torsion linking pairing.  This invariant takes the form of a vector with n elements, where
- *    2^n is the order of the largest subgroup of A whose order is a power of two.  The entries of the vector represent which
- *    the angle of a certain vector V in the complex plane -- this vector can either be at the origin (8), or it is a non-zero
- *    vector along the line of angle 2(pi)i/8*k, k=0,1,2,3,4,5,6,7.  Kawauchi and Kojima use the symbol infinity to represent
- *    zero-sums, but we use 8. The vector V is the sum of e^{ 2^{i+1} pi i form(x,x) } where x ranges over ?? read KK paper
- *    again...  So this invariant is orientation-sensitive.  In particular if you reverse the orientation, the elements of the
- *    vector negate mod 8 (except for 8, which remains fixed).  So a vector (1 3 8 7 8) is turned to (7 5 8 1 8) on reversal
- *    of orientation. TODO: supply more details
+ * 2) The classification of the 2-torsion linking pairing.  This invariant takes the form of a vector 
+ *    with n elements, where 2^n is the order of the largest subgroup of A whose order is a power of 
+ *    two.  The entries of the vector represent which the angle of a certain vector V in the complex 
+ *    plane -- this vector can either be at the origin (8), or it is a non-zero vector along the line 
+ *    of angle 2(pi)i/8*k, k=0,1,2,3,4,5,6,7.  Kawauchi and Kojima use the symbol infinity to represent
+ *    zero-sums, but we use 8. The vector V is the sum of e^{ 2^{i+1} pi i form(x,x) } where x ranges 
+ *    over ?? read KK paper again...  So this invariant is orientation-sensitive.  In particular if you 
+ *    reverse the orientation, the elements of the vector negate mod 8 (except for 8, which remains 
+ *    fixed).  So a vector (1 3 8 7 8) is turned to (7 5 8 1 8) on reversal of orientation. 
+ *    TODO: supply more details
  *
- * 3) The classification of the odd p-torsion linking pairing.  Given a prime power p^k, you consider the induced linking
- *    form on the quotient of elements of order p^k modulo p^{k-1}.  The determinant you can consider as an element of the
- *    field Z_p, and then you take the legendre symbol (whether or not the determinant is a square mod p).  This is the
- *    invariant, as a list for all p^k dividing the order of A, with p odd.  This invariant is also orientation-sensitive, 
- *    since when you change the orientation you negate the relevant matrices, so the legendre symbol changes if and 
+ * 3) The classification of the odd p-torsion linking pairing.  Given a prime power p^k, you consider 
+ *    the induced linking form on the quotient of elements of order p^k modulo p^{k-1}.  The determinant 
+ *    you can consider as an element of the field Z_p, and then you take the legendre symbol (whether or 
+ *    not the determinant is a square mod p).  This is the invariant, as a list for all p^k dividing the 
+ *    order of A, with p odd.  This invariant is also orientation-sensitive, since when you change the 
+ *    orientation you negate the relevant matrices, so the legendre symbol changes if and 
  *    only if the rank n of the p^k-torsion mod p^(k-1) is odd and p | n^2 + 1. 
  *
- * The routine also outputs linkingFormPD, which is the restriction of the torsion linking form to the subgroups of A
- * divisible by all the prime factors of the order of A. 
+ * The routine also outputs linkingFormPD, which is the restriction of the torsion linking form to the 
+ *   subgroups of A divisible by all the prime factors of the order of A. 
  */
 REGINA_API void computeTorsionLinkingFormInvariants(const NBilinearForm &intP, 
 	std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec, // almost same except this counts

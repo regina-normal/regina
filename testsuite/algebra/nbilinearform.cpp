@@ -88,7 +88,8 @@ class NBilinearFormTest : public CppUnit::TestFixture {
          }
 
 	void constructors_test() {
-	 // let's check that the standard inner product on R^n is an iso between R^n and its dual for all n == 1,2,3,...,10, say.
+	 // let's check that the standard inner product on R^n is an iso between R^n and its 
+         //  dual for all n == 1,2,3,...,10, say.
          for (unsigned long dim=1; dim<11; dim++)
 	  {
 	  NMarkedAbelianGroup ldom( dim, NLargeInteger::zero );
@@ -102,8 +103,10 @@ class NBilinearFormTest : public CppUnit::TestFixture {
 	    pairing.incEntry( I, NLargeInteger::one );
            }
  	  NBilinearForm innP(ldom, rdom, zed, pairing);
-	  if (!innP.leftAdjoint().isIsomorphism()) CPPUNIT_FAIL("Left-adjoint to standard inner product on R^n is not isomorphism.");
-	  if (!innP.rightAdjoint().isIsomorphism()) CPPUNIT_FAIL("Right-adjoint to standard inner product on R^n is not isomorphism.");
+	  if (!innP.leftAdjoint().isIsomorphism()) 
+           CPPUNIT_FAIL("Left-adjoint to standard inner product on R^n is not isomorphism.");
+	  if (!innP.rightAdjoint().isIsomorphism()) 
+           CPPUNIT_FAIL("Right-adjoint to standard inner product on R^n is not isomorphism.");
           if (!innP.isSymmetric()) CPPUNIT_FAIL("Standard inner product isn't symmetric.");
           if (innP.signature() != dim) CPPUNIT_FAIL("Standard inner product doesn't have full signature.");
 	  }
@@ -111,7 +114,6 @@ class NBilinearFormTest : public CppUnit::TestFixture {
 	};
 	void symmetry_test() {
 	  
-
 	// todo
         }
 	void composition_test() {

@@ -112,11 +112,9 @@ class Dim4Triangulation;
 //       ??
  * \todo  6) We'll also eventually need maximal trees in the standard and mixed 1-skeleton, to implement
  *        Farber-Levine pairings and Poincare duality in covering spaces, in general. 
- * \todo  7) Make writeTextShort and writeTextLong more pleasant to look at.  Currently it's not 
+ * \todo \optlong Make writeTextShort and writeTextLong more pleasant to look at.  Currently it's not 
  *        clear what all the computations mean.  It could use a general re-think.
- * \todo  \optlong Make all of the Regina engine POSIX pthread safe.  Make a thread-pool version of the 
- *        test suite. Right now NCellularData, probably some aspect of the Alexander Ideal construction 
- *        process is the main culprit. 
+ * \todo \optlong Make a thread-pool version of the test suite.  
  * \todo \optlong We should add Bocksteins and the long exact sequence associated to a change-of-coefficient map.
  *
  * Guide to ncellulardata.*.cpp files:

@@ -60,7 +60,7 @@ namespace regina {
  *  2) An assignment "=" operator. 
  *  3) An output operation std::string T::stringValue()
  *  4) Operations +, -, +=, -=, ==, <, abs()
- *  5) T::zero and T::one exists 
+ *  5) T casts unsigned integers 
  *  6) Present implementation also assumes the ring is without zero divisors.
  *
  * \testpart
@@ -182,8 +182,8 @@ class NSVPolynomialRing {
         bool isZero() const;
 
 	/**
-	 * Returns the number of sign changes in coefficients of the polynomial P(t) - number of sign changes of P(-t) 
-         * This is the number of + roots - number of - roots, provided all real. 
+	 * Returns the number of sign changes in coefficients of the polynomial P(t) - number of 
+         * sign changes of P(-t). This is the number of + roots - number of - roots, provided all real. 
          */
 	long int descartesNo() const;
 
@@ -259,8 +259,8 @@ REGINA_API void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &id
  * via division by elements of ideal.   laurentPoly allows one to assume in Laurent polynomial ring. Set it to false
  * if you want to be in Z[t]. 
  */
-REGINA_API bool reduceByIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &ideal, NSVPolynomialRing< NLargeInteger > &elt,
-                    bool laurentPoly=true );
+REGINA_API bool reduceByIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &ideal, 
+        NSVPolynomialRing< NLargeInteger > &elt, bool laurentPoly=true );
 /**
  *  Some kind of ordering < on ideals.  Useful? 
  */
@@ -449,10 +449,10 @@ template <class T>
 const NSVPolynomialRing<T> NSVPolynomialRing<T>::zero;
 
 template <class T>
-const NSVPolynomialRing<T> NSVPolynomialRing<T>::one(  T::one, 0 );
+const NSVPolynomialRing<T> NSVPolynomialRing<T>::one(  T(1), 0 );
 
 template <class T>
-const NSVPolynomialRing<T> NSVPolynomialRing<T>::pvar( T::one, 1 );
+const NSVPolynomialRing<T> NSVPolynomialRing<T>::pvar( T(1), 1 );
 
 template <class T>
 inline void NSVPolynomialRing<T>::setCoefficient (signed long i, const T & c) 
@@ -493,7 +493,7 @@ inline NSVPolynomialRing<T> NSVPolynomialRing<T>::operator * (const NSVPolynomia
  //  now run through find zero coefficients and deallocate.
  typename std::map< signed long, T* >::iterator K;
  for (K = retval.cof.begin(); K!=retval.cof.end(); K++)
-   while ( (*K->second) == NLargeInteger::zero ) { delete K->second; retval.cof.erase(K++);  
+   while ( (*K->second) == NLargeInteger(0) ) { delete K->second; retval.cof.erase(K++);  
                                                    if (K==retval.cof.end()) continue; }
  return retval;
 }
@@ -583,7 +583,8 @@ inline NSVPolynomialRing<T>& NSVPolynomialRing<T>::operator -=(const NSVPolynomi
     else if ( i->first > j->first ) { cof.insert( std::pair< signed long, T* >(j->first, new T(-(*j->second) ) ) ); j++; }
     else
       { (*i->second) -= (*j->second); 
-        if (*i->second == T::zero) // we have to deallocate the pointer, remove *i from cof, and move i and j up the cof list.
+        if (*i->second == T::zero) // we have to deallocate the pointer, remove *i from cof, 
+                                   //  and move i and j up the cof list.
           { delete i->second; cof.erase(i++); j++; } 
         else { i++; j++; }
       }
@@ -605,7 +606,8 @@ inline NSVPolynomialRing<T>& NSVPolynomialRing<T>::operator +=(const NSVPolynomi
     else if ( i->first > j->first ) { cof.insert( std::pair< signed long, T* >(j->first, new T( (*j->second) ) ) ); j++; }
     else
       { (*i->second) += (*j->second); 
-        if (*i->second == T::zero) // we have to deallocate the pointer, remove *i from cof, and move i and j up the cof list.
+        if (*i->second == T::zero) // we have to deallocate the pointer, remove *i from cof, 
+                                   // and move i and j up the cof list.
           { delete i->second; cof.erase(i++); j++; } 
         else { i++; j++; }
       }

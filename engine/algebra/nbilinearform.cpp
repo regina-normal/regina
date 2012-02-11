@@ -56,7 +56,6 @@ ShareableObject(), reducedPairing(NULL), unreducedPairing(NULL), lDomain(ldomain
       std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator I;
       for (I=pairing.getGrid().begin(); I!=pairing.getGrid().end(); I++)
 	 evalcc[ I->first.entry(2) ] += lv[ I->first.entry(0) ] * rv[ I->first.entry(1) ] * (*(I->second));
-//if (!range.isCycle(evalcc)) std::cout<<"!"; // helpful for debugging not-well-thought-out bilinear forms
       std::vector< NLargeInteger > evalsnf( range.snfRep( evalcc ) );
 
       NMultiIndex< unsigned long > J(3); J[0] = i; J[1]=j;
@@ -121,6 +120,7 @@ long int NBilinearForm::signature() const
             i->first.entry(1) - rDomain.getNumberOfInvariantFactors() ) = 
             NSVPolynomialRing< NLargeInteger >(-(*i->second), 0); }
  // add t down diagonal
+
  for (unsigned long j=0; j<cM.rows(); j++) cM.entry(j,j) += NSVPolynomialRing< NLargeInteger >::pvar;
  // grab an adjoint, get its defining matrix, compute char poly, use Descartes
  // to get number of pos - neg roots. 
