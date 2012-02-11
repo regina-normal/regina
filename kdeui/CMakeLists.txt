@@ -1,4 +1,4 @@
 
-INCLUDE(KDE4Defaults)
 ADD_SUBDIRECTORY(src)
-ADD_SUBDIRECTORY(doc)
+# TODO: Restore documentation.
+# ADD_SUBDIRECTORY(doc)

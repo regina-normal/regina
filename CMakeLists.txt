@@ -29,6 +29,11 @@ ENDIF(PACKAGING_MODE)
 # For pretty logging of optional features at the end of the cmake run:
 INCLUDE(MacroLogFeature)
 
+# Options that were used with the (now-redundant) KDE4Defaults:
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
+set(CMAKE_COLOR_MAKEFILE ON)
+
 # Modules needed for IOS check and function existence
 INCLUDE( CheckCXXSourceCompiles )
 INCLUDE( CheckFunctionExists )
@@ -59,8 +64,14 @@ SET (ENGINE_INCLUDES "${PROJECT_SOURCE_DIR}/engine" )
 SET (ENGINE_LIBRARY regina-engine)
 
 if (APPLE)
-  # Use rpath since KDE4 apps like to install into non-standard directories.
-  set(CMAKE_INSTALL_NAME_DIR ${LIBDIR})
+  # In the old KDE builds we used rpath because KDE4 apps like to
+  # install into non-standard directories.
+  #
+  # In the new Qt-only builds we remove rpath because app bundles should
+  # be relocatable.  The commented line below is the old KDE-era rpath command:
+  # set(CMAKE_INSTALL_NAME_DIR ${LIBDIR})
+  #
+  # TODO: Restore this if it's a no-bundle build (e.g., a fink install).
 else (APPLE)
   # Don't use rpath under linux.
   # set(CMAKE_INSTALL_RPATH ${LIBDIR} )
@@ -168,6 +179,11 @@ ENABLE_TESTING() # This must appear before any calls to ADD_SUBDIRECTORY().
 # TODO: Get rid of this, eventually.
 SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated")
 
+# TODO: Make this optional.
+# Switch on compiler optimisations by default.
+SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+SET (CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+
 # Core directories
 ADD_SUBDIRECTORY(engine)
 ADD_SUBDIRECTORY(utils)
@@ -201,63 +217,36 @@ MACRO_LOG_FEATURE(BOOST_PYTHON_FOUND
   REGINA_MANDATORY)
 
 # TODO: Make this option show up in cmake -i.
-IF(DISABLE_KDEUI)
-  MESSAGE(WARNING "User passed -DDISABLE_KDEUI=1: KDE user interface disabled.")
-ELSE(DISABLE_KDEUI)
-  set(KDE4_REQUIRED TRUE)
-  FIND_PACKAGE(KDE4)
+IF(DISABLE_GUI)
+  MESSAGE(WARNING "User passed -DDISABLE_GUI=1: graphical user interface disabled.")
+ELSE(DISABLE_GUI)
+  set(GUI_REQUIRED TRUE)
+  FIND_PACKAGE(Qt4 COMPONENTS QtGui QtCore)
 
-  IF(KDE4_FOUND)
-    FIND_PACKAGE(Qt4)
-    MACRO_LOG_FEATURE(QT4_FOUND
-      "Qt4"
-      "Required for Regina's graphical user interface"
-      "http://qt.nokia.com/"
-      TRUE)
+  set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
+  find_package(SharedMimeInfo)
+  MACRO_LOG_FEATURE(SHARED_MIME_INFO_FOUND
+    "SharedMimeInfo"
+    "Required for Regina's graphical user interface"
+    "http://freedesktop.org/wiki/Software/shared-mime-info"
+    TRUE "0.30")
 
-    # Some versions of the KDE4 macros disable exception handling.
-    # We need exceptions in regina, so put them back.
-    SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+  if (APPLE)
+    # Include utilities for building MacOSX bundles.
+    include(BundleUtilities)
+  endif (APPLE)
 
-    set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
-    find_package(SharedMimeInfo)
-    MACRO_LOG_FEATURE(SHARED_MIME_INFO_FOUND
-      "SharedMimeInfo"
-      "Required for Regina's graphical user interface"
-      "http://freedesktop.org/wiki/Software/shared-mime-info"
-      TRUE "0.30")
-
-    # This must come after SharedMimeInfo is included, since the kdeui/
-    # makefiles use SharedMimeInfo macros.
-    ADD_SUBDIRECTORY(kdeui)
-    MESSAGE(STATUS "KDE user interface enabled")
-
-    # Check that the install prefix is sane (i.e., the same as KDE's).
-    get_filename_component(REGINA_KDEBIN "${KDE4_KDECONFIG_EXECUTABLE}" PATH)
-    get_filename_component(REGINA_KDEPREFIX "${REGINA_KDEBIN}" PATH)
-    IF (NOT CMAKE_INSTALL_PREFIX STREQUAL REGINA_KDEPREFIX)
-      MESSAGE("")
-      MESSAGE("KDE seems to use the installed prefix: ${REGINA_KDEPREFIX}")
-      MESSAGE("Your installation prefix is: ${CMAKE_INSTALL_PREFIX}\n")
-      MESSAGE("Regina needs to be installed with the same prefix as KDE.")
-      MESSAGE("Try passing: -DCMAKE_INSTALL_PREFIX=${REGINA_KDEPREFIX}")
-      MESSAGE("If you really want a different prefix, pass: -DIGNORE_PREFIX=1"\n)
-      IF (IGNORE_PREFIX)
-        MESSAGE(WARNING
-          "You passed IGNORE_PREFIX=1: continuing anyway as requested.")
-      ELSE (IGNORE_PREFIX)
-        MESSAGE(FATAL_ERROR
-          "Stopping the build so you can resolve the prefix issue (see above).")
-      ENDIF (IGNORE_PREFIX)
-    ENDIF (NOT CMAKE_INSTALL_PREFIX STREQUAL REGINA_KDEPREFIX)
-  ENDIF(KDE4_FOUND)
-ENDIF(DISABLE_KDEUI)
-MACRO_LOG_FEATURE(KDE4_FOUND
-  "KDE4"
+  # This must come after SharedMimeInfo is included, since the kdeui/
+  # makefiles use SharedMimeInfo macros.
+  ADD_SUBDIRECTORY(kdeui)
+  MESSAGE(STATUS "Graphical user interface enabled")
+ENDIF(DISABLE_GUI)
+MACRO_LOG_FEATURE(QT4_FOUND
+  "Qt4"
   "Required for Regina's graphical user interface"
-  "http://www.kde.org/"
-  KDE4_REQUIRED ""
-  "To disable the graphical user interface, run: cmake -DDISABLE_KDEUI=1")
+  "http://qt.nokia.com/"
+  GUI_REQUIRED ""
+  "To disable the graphical user interface, run: cmake -DDISABLE_GUI=1")
 
 # Test suite, continued
 FIND_PATH(CPPUNIT_INCLUDE_DIR cppunit/Test.h)

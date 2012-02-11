@@ -1,17 +1,54 @@
-SET(regina-kde_SRCS examplesaction.cpp main.cpp reginamain.cpp reginapref.cpp reginamanager.cpp)
-SET(regina-kde_SRCS ${COMMON_SOURCES} ${PART_SOURCES} ${regina-kde_SRCS})
+SET(regina-app_SRCS examplesaction.cpp main.cpp reginamain.cpp reginapref.cpp reginamanager.cpp)
+SET(regina-app_SRCS ${COMMON_SOURCES} ${PART_SOURCES} ${regina-app_SRCS})
 
-KDE4_ADD_APP_ICON(regina-kde_SRCS "../pics/hi*regina.png")
+# TODO: Restore
+# KDE4_ADD_APP_ICON(regina-app_SRCS "../pics/hi*regina.png")
 
-AUTOMOC4_MOC_HEADERS(regina-kde ${MOC_HEADERS} examplesaction.h reginamain.h reginapref.h)
-KDE4_ADD_EXECUTABLE(regina-kde ${regina-kde_SRCS})
-SET(LINK_LIBS ${LINK_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS} ${KDE4_KTEXTEDITOR_LIBS})
-TARGET_LINK_LIBRARIES(regina-kde ${LINK_LIBS})
+SET ( MOC_HEADERS ${MOC_HEADERS} examplesaction.h reginamain.h reginapref.h)
+QT4_WRAP_CPP(regina-app_HEADERS_MOC ${MOC_HEADERS})
 
-INSTALL(TARGETS regina-kde DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS})
+if (APPLE)
+  set(REGINA_APP_NAME Regina)
+  set(REGINA_APP_ESCAPED "\${CMAKE_INSTALL_PREFIX}/${REGINA_APP_NAME}.app")
 
-install(FILES regina.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-install(FILES reginamain.rc tips DESTINATION ${DATA_INSTALL_DIR}/regina)
-install(FILES regina.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
-update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
+  # Add an icon to the app bundle.
+  set(REGINA_ICNS "${PROJECT_SOURCE_DIR}/icons/regina.icns")
+  set(MACOSX_BUNDLE_ICON_FILE regina.icns)
+  set_source_files_properties("${REGINA_ICNS}" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+  set(regina-app_SRCS ${regina-app_SRCS} "${REGINA_ICNS}")
+else (APPLE)
+  set(REGINA_APP_NAME regina-gui)
+  set(REGINA_APP_ESCAPED "\${CMAKE_INSTALL_PREFIX}/bin/${REGINA_APP_NAME}")
+endif (APPLE)
+
+ADD_EXECUTABLE(${REGINA_APP_NAME} MACOSX_BUNDLE ${regina-app_SRCS} ${regina-app_HEADERS_MOC})
+
+SET(LINK_LIBS ${LINK_LIBS} ${QT_LIBRARIES})
+TARGET_LINK_LIBRARIES(${REGINA_APP_NAME} ${LINK_LIBS})
+
+INSTALL(TARGETS ${REGINA_APP_NAME}
+  BUNDLE DESTINATION . COMPONENT Runtime
+  RUNTIME DESTINATION bin COMPONENT Runtime)
+
+set(BUNDLE_LIBDIRS ${PROJECT_BINARY_DIR}/engine ${QT_LIBRARY_DIRS})
+INSTALL(CODE "
+  include(BundleUtilities)
+  fixup_bundle(\"${REGINA_APP_ESCAPED}\" \"\" \"${BUNDLE_LIBDIRS}\")
+  " COMPONENT Runtime)
+
+# On MacOSX we need a qt.conf file in our bundle; otherwise the system
+# may load both the bundle and system Qt libraries and give unpredictable
+# results.
+# install a qt.conf file# this inserts some cmake code into the install
+# script to write the file
+set(BUNDLE_QT_CONF "${REGINA_APP_ESCAPED}/Contents/Resources/qt.conf")
+INSTALL(CODE "
+  file(WRITE \"${BUNDLE_QT_CONF}\" \"\")
+  " COMPONENT Runtime)
+
+# TODO: Restore all of these.
+# install(FILES regina.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+# install(FILES reginamain.rc tips DESTINATION ${DATA_INSTALL_DIR}/regina)
+# install(FILES regina.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
+# update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
 
