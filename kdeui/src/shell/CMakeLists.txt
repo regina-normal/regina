@@ -30,21 +30,24 @@ INSTALL(TARGETS ${REGINA_APP_NAME}
   BUNDLE DESTINATION . COMPONENT Runtime
   RUNTIME DESTINATION bin COMPONENT Runtime)
 
-set(BUNDLE_LIBDIRS ${PROJECT_BINARY_DIR}/engine ${QT_LIBRARY_DIRS})
-INSTALL(CODE "
-  include(BundleUtilities)
-  fixup_bundle(\"${REGINA_APP_ESCAPED}\" \"\" \"${BUNDLE_LIBDIRS}\")
-  " COMPONENT Runtime)
+if (APPLE)
+  # Extra steps for building self-contained MacOSX bundles.
+  set(BUNDLE_LIBDIRS ${PROJECT_BINARY_DIR}/engine ${QT_LIBRARY_DIRS})
+  INSTALL(CODE "
+    include(BundleUtilities)
+    fixup_bundle(\"${REGINA_APP_ESCAPED}\" \"\" \"${BUNDLE_LIBDIRS}\")
+    " COMPONENT Runtime)
 
-# On MacOSX we need a qt.conf file in our bundle; otherwise the system
-# may load both the bundle and system Qt libraries and give unpredictable
-# results.
-# install a qt.conf file# this inserts some cmake code into the install
-# script to write the file
-set(BUNDLE_QT_CONF "${REGINA_APP_ESCAPED}/Contents/Resources/qt.conf")
-INSTALL(CODE "
-  file(WRITE \"${BUNDLE_QT_CONF}\" \"\")
-  " COMPONENT Runtime)
+  # On MacOSX we need a qt.conf file in our bundle; otherwise the system
+  # may load both the bundle and system Qt libraries and give unpredictable
+  # results.
+  # install a qt.conf file# this inserts some cmake code into the install
+  # script to write the file
+  set(BUNDLE_QT_CONF "${REGINA_APP_ESCAPED}/Contents/Resources/qt.conf")
+  INSTALL(CODE "
+    file(WRITE \"${BUNDLE_QT_CONF}\" \"\")
+    " COMPONENT Runtime)
+endif (APPLE)
 
 # TODO: Restore all of these.
 # install(FILES regina.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
