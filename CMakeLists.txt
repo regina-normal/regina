@@ -13,9 +13,28 @@ SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 # Make a release build by default.
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE Release CACHE STRING
-    "Choose the type of build, options are: <empty> Debug Release RelWithDebInfo MinSizeRel."
+    "Choose the type of build.  Options are: Debug Release RelWithDebInfo MinSizeRel."
   FORCE)
 ENDIF(NOT CMAKE_BUILD_TYPE)
+
+# Distinguish between the different Regina installation types:
+# FullInstall = standard filesystem installation in a fixed location.
+# Bundle = self-contained MacOSX app bundle that users can drag and drop.
+if (NOT REGINA_INSTALL_TYPE)
+  SET (REGINA_INSTALL_TYPE FullInstall CACHE STRING
+    "Choose how Regina installs itself.  Options are: FullInstall Bundle.")
+ENDIF (NOT REGINA_INSTALL_TYPE)
+
+# Sanity check the installation type:
+IF (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+  # No sanity checking needed here (yet).
+ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+  IF (NOT APPLE)
+    MESSAGE(FATAL_ERROR "REGINA_INSTALL_TYPE=Bundle is only supported on MacOSX.")
+  ENDIF (NOT APPLE)
+ELSE()
+  MESSAGE(FATAL_ERROR "REGINA_INSTALL_TYPE must be one of: FullInstall Bundle.")
+ENDIF()
 
 # Give packagers a way of insisting that every optional component is found.
 # Set PACKAGING_MODE=1 to make every component compulsory.
@@ -70,22 +89,16 @@ SET (MANDIR ${DATADIR}/man)
 SET (ENGINE_INCLUDES "${PROJECT_SOURCE_DIR}/engine" )
 SET (ENGINE_LIBRARY regina-engine)
 
-if (APPLE)
-  # In the old KDE builds we used rpath because KDE4 apps like to
-  # install into non-standard directories.
-  #
-  # In the new Qt-only builds we remove rpath because app bundles should
-  # be relocatable.  The commented line below is the old KDE-era rpath command:
-  # set(CMAKE_INSTALL_NAME_DIR ${LIBDIR})
-  #
-  # TODO: Restore this if it's a no-bundle build (e.g., a fink install).
-else (APPLE)
+if (APPLE AND ${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+  # Use rpath because apps may be installed into non-standard directories.
+  set(CMAKE_INSTALL_NAME_DIR ${LIBDIR})
+else ()
   # Don't use rpath under linux.
   # set(CMAKE_INSTALL_RPATH ${LIBDIR} )
   # set(CMAKE_SKIP_BUILD_RPATH FALSE)
   # set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
   # set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-endif (APPLE)
+endif ()
 
 # 64 bit integer checks
 CHECK_CXX_SOURCE_COMPILES("
@@ -233,10 +246,9 @@ ELSE(DISABLE_GUI)
     "http://freedesktop.org/wiki/Software/shared-mime-info"
     TRUE "0.30")
 
-  if (APPLE)
-    # Include utilities for building MacOSX bundles.
+  if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
     include(BundleUtilities)
-  endif (APPLE)
+  endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
 
   # This must come after SharedMimeInfo is included, since the kdeui/
   # makefiles use SharedMimeInfo macros.

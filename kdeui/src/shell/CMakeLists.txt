@@ -9,7 +9,6 @@ QT4_WRAP_CPP(regina-app_HEADERS_MOC ${MOC_HEADERS})
 
 if (APPLE)
   set(REGINA_APP_NAME Regina)
-  set(REGINA_APP_ESCAPED "\${CMAKE_INSTALL_PREFIX}/${REGINA_APP_NAME}.app")
 
   # Add an icon to the app bundle.
   set(REGINA_ICNS "${PROJECT_SOURCE_DIR}/icons/regina.icns")
@@ -18,8 +17,13 @@ if (APPLE)
   set(regina-app_SRCS ${regina-app_SRCS} "${REGINA_ICNS}")
 else (APPLE)
   set(REGINA_APP_NAME regina-gui)
-  set(REGINA_APP_ESCAPED "\${CMAKE_INSTALL_PREFIX}/bin/${REGINA_APP_NAME}")
 endif (APPLE)
+
+if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+  set(REGINA_BUNDLE_DEST .)
+else (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+  set(REGINA_BUNDLE_DEST bin)
+endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
 
 ADD_EXECUTABLE(${REGINA_APP_NAME} MACOSX_BUNDLE ${regina-app_SRCS} ${regina-app_HEADERS_MOC})
 
@@ -27,11 +31,15 @@ SET(LINK_LIBS ${LINK_LIBS} ${QT_LIBRARIES})
 TARGET_LINK_LIBRARIES(${REGINA_APP_NAME} ${LINK_LIBS})
 
 INSTALL(TARGETS ${REGINA_APP_NAME}
-  BUNDLE DESTINATION . COMPONENT Runtime
+  BUNDLE DESTINATION ${REGINA_BUNDLE_DEST} COMPONENT Runtime
   RUNTIME DESTINATION bin COMPONENT Runtime)
 
-if (APPLE)
+# TODO: Use COMPONENT Runtime/Development throughout all install targets.
+
+if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   # Extra steps for building self-contained MacOSX bundles.
+  set(REGINA_APP_ESCAPED "\${CMAKE_INSTALL_PREFIX}/${REGINA_APP_NAME}.app")
+
   set(BUNDLE_LIBDIRS ${PROJECT_BINARY_DIR}/engine ${QT_LIBRARY_DIRS})
   INSTALL(CODE "
     include(BundleUtilities)
@@ -47,7 +55,7 @@ if (APPLE)
   INSTALL(CODE "
     file(WRITE \"${BUNDLE_QT_CONF}\" \"\")
     " COMPONENT Runtime)
-endif (APPLE)
+endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
 
 # TODO: Restore all of these.
 # install(FILES regina.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
