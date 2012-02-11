@@ -30,20 +30,16 @@ ADD_EXECUTABLE(${REGINA_APP_NAME} MACOSX_BUNDLE ${regina-app_SRCS} ${regina-app_
 SET(LINK_LIBS ${LINK_LIBS} ${QT_LIBRARIES})
 TARGET_LINK_LIBRARIES(${REGINA_APP_NAME} ${LINK_LIBS})
 
-INSTALL(TARGETS ${REGINA_APP_NAME}
-  BUNDLE DESTINATION ${REGINA_BUNDLE_DEST} COMPONENT Runtime
-  RUNTIME DESTINATION bin COMPONENT Runtime)
+INSTALL(TARGETS ${REGINA_APP_NAME} DESTINATION ${APPDIR} COMPONENT Runtime)
 
 # TODO: Use COMPONENT Runtime/Development throughout all install targets.
 
 if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   # Extra steps for building self-contained MacOSX bundles.
-  set(REGINA_APP_ESCAPED "\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${REGINA_APP_NAME}.app")
-
   set(BUNDLE_LIBDIRS ${PROJECT_BINARY_DIR}/engine ${QT_LIBRARY_DIRS})
   INSTALL(CODE "
     include(BundleUtilities)
-    fixup_bundle(\"${REGINA_APP_ESCAPED}\" \"\" \"${BUNDLE_LIBDIRS}\")
+    fixup_bundle(\"${BUNDLEDIR_ESCAPED}\" \"\" \"${BUNDLE_LIBDIRS}\")
     " COMPONENT Runtime)
 
   # On MacOSX we need a qt.conf file in our bundle; otherwise the system
@@ -51,7 +47,7 @@ if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   # results.
   # install a qt.conf file# this inserts some cmake code into the install
   # script to write the file
-  set(BUNDLE_QT_CONF "${REGINA_APP_ESCAPED}/Contents/Resources/qt.conf")
+  set(BUNDLE_QT_CONF "${BUNDLEDIR_ESCAPED}/Contents/Resources/qt.conf")
   INSTALL(CODE "
     file(WRITE \"${BUNDLE_QT_CONF}\" \"\")
     " COMPONENT Runtime)

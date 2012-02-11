@@ -9,5 +9,5 @@ foreach(UTIL ${UTILS})
   target_link_libraries(${UTIL} ${ENGINE_LIBRARY} ${MPI_LIBRARY} ${MPI_LIBRARIES} ${POPT_LIBRARY})
 endforeach(UTIL)
 
-install(PROGRAMS tricensus-mpi-status DESTINATION bin)
-install(TARGETS tricensus-mpi DESTINATION bin)
+install(PROGRAMS tricensus-mpi-status DESTINATION ${BINDIR} COMPONENT Runtime)
+install(TARGETS tricensus-mpi DESTINATION ${BINDIR} COMPONENT Runtime)

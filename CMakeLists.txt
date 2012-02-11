@@ -10,6 +10,20 @@ SET (PACKAGE_PRETTY_NAME Regina)
 # Look here for Find___.cmake modules
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
+# Version
+SET (PACKAGE_VERSION 4.91)
+SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_VERSION}")
+
+# Extract major/minor version
+# Note: The PACKAGE_VERSION_MAJOR "output" is discarded, since it matches the
+# whole string
+STRING(REGEX MATCH "^([0-9]+).([0-9]+)" PACKAGE_VERSION_MAJOR "${PACKAGE_VERSION}")
+SET (PACKAGE_VERSION_MAJOR ${CMAKE_MATCH_1} )
+SET (PACKAGE_VERSION_MINOR ${CMAKE_MATCH_2} )
+
+# Bug report email
+SET (PACKAGE_BUGREPORT "regina-user@lists.sourceforge.net")
+
 # Make a release build by default.
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE Release CACHE STRING
@@ -63,29 +77,34 @@ set(CMAKE_COLOR_MAKEFILE ON)
 # Modules needed for IOS check and function existence
 INCLUDE( CheckCXXSourceCompiles )
 INCLUDE( CheckFunctionExists )
-# Version
-SET (PACKAGE_VERSION 4.91)
-SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_VERSION}")
 
-# Extract major/minor version
-# Note: The PACKAGE_VERSION_MAJOR "output" is discarded, since it matches the
-# whole string
-STRING(REGEX MATCH "^([0-9]+).([0-9]+)" PACKAGE_VERSION_MAJOR "${PACKAGE_VERSION}")
-SET (PACKAGE_VERSION_MAJOR ${CMAKE_MATCH_1} )
-SET (PACKAGE_VERSION_MINOR ${CMAKE_MATCH_2} )
+# Installation directories
+if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+  # MacOSX app bundle.
+  SET (APPDIR ${CMAKE_INSTALL_PREFIX})
+  SET (BUNDLEDIR ${APPDIR}/Regina.app)
+  SET (BUNDLEDIR_ESCAPED "\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/Regina.app")
+  SET (RESOURCEDIR ${BUNDLEDIR}/Contents/Resources)
+  SET (BINDIR ${BUNDLEDIR}/Contents/MacOS)
+  SET (LIBDIR ${BINDIR})
+  SET (DATADIR ${RESOURCEDIR}/share)
+  SET (INCLUDEDIR ${RESOURCEDIR}/include)
+  SET (PKGLIBDIR ${LIBDIR})
+  SET (PKGDATADIR ${DATADIR})
+  SET (MANDIR ${DATADIR}/man)
+else ()
+  # Full install.
+  SET (APPDIR ${CMAKE_INSTALL_PREFIX}/bin)
+  SET (BINDIR ${CMAKE_INSTALL_PREFIX}/bin)
+  SET (LIBDIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+  SET (DATADIR ${CMAKE_INSTALL_PREFIX}/share)
+  SET (INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include/${PACKAGE_NAME})
+  SET (PKGLIBDIR ${LIBDIR}/${PACKAGE_NAME})
+  SET (PKGDATADIR ${DATADIR}/${PACKAGE_NAME})
+  SET (MANDIR ${DATADIR}/man)
+endif ()
 
-# Bug report email
-SET (PACKAGE_BUGREPORT "regina-user@lists.sourceforge.net")
-
-# Useful directories
-
-SET (DATADIR ${CMAKE_INSTALL_PREFIX}/share)
-SET (PKGDATADIR ${DATADIR}/${PACKAGE_NAME})
-SET (LIBDIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
-SET (PKGLIBDIR ${LIBDIR}/${PACKAGE_NAME})
-SET (INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include/${PACKAGE_NAME})
-SET (MANDIR ${DATADIR}/man)
-
+# Useful build directories
 SET (ENGINE_INCLUDES "${PROJECT_SOURCE_DIR}/engine" )
 SET (ENGINE_LIBRARY regina-engine)
 
@@ -233,7 +252,11 @@ MACRO_LOG_FEATURE(BOOST_PYTHON_FOUND
 
 # TODO: Make this option show up in cmake -i.
 IF(DISABLE_GUI)
-  MESSAGE(WARNING "User passed -DDISABLE_GUI=1: graphical user interface disabled.")
+  if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+    MESSAGE(FATAL_ERROR "You cannot set DISABLE_GUI=1 with REGINA_INSTALL_TYPE=Bundle.")
+  endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+
+  MESSAGE(WARNING "User set DISABLE_GUI=1: graphical user interface disabled.")
 ELSE(DISABLE_GUI)
   set(GUI_REQUIRED TRUE)
   FIND_PACKAGE(Qt4 COMPONENTS QtGui QtCore)
