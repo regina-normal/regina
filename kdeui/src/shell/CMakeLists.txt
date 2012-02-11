@@ -36,7 +36,7 @@ INSTALL(TARGETS ${REGINA_APP_NAME} DESTINATION ${APPDIR} COMPONENT Runtime)
 
 if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   # Extra steps for building self-contained MacOSX bundles.
-  set(BUNDLE_LIBDIRS ${PROJECT_BINARY_DIR}/engine ${QT_LIBRARY_DIRS})
+  set(BUNDLE_LIBDIRS ${QT_LIBRARY_DIRS})
   INSTALL(CODE "
     include(BundleUtilities)
     fixup_bundle(\"${BUNDLEDIR_ESCAPED}\" \"\" \"${BUNDLE_LIBDIRS}\")
