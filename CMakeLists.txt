@@ -10,6 +10,13 @@ SET (PACKAGE_PRETTY_NAME Regina)
 # Look here for Find___.cmake modules
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
+# Make a release build by default.
+IF(NOT CMAKE_BUILD_TYPE)
+  SET(CMAKE_BUILD_TYPE Release CACHE STRING
+    "Choose the type of build, options are: <empty> Debug Release RelWithDebInfo MinSizeRel."
+  FORCE)
+ENDIF(NOT CMAKE_BUILD_TYPE)
+
 # Give packagers a way of insisting that every optional component is found.
 # Set PACKAGING_MODE=1 to make every component compulsory.
 # Set PACKAGING_MODE=1 and PACKAGING_NO_MPI=1 to make every component
@@ -178,11 +185,6 @@ ENABLE_TESTING() # This must appear before any calls to ADD_SUBDIRECTORY().
 
 # TODO: Get rid of this, eventually.
 SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated")
-
-# TODO: Make this optional.
-# Switch on compiler optimisations by default.
-SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
-SET (CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
 # Core directories
 ADD_SUBDIRECTORY(engine)
