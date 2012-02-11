@@ -10,4 +10,7 @@ ENDFOREACH(SOURCE_FILE)
 
 # Set the variable in the parent directory
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
-INSTALL(FILES naugtrisolidtorus.h nblockedsfs.h nblockedsfsloop.h nblockedsfspair.h nblockedsfstriple.h nl31pillow.h nlayeredchain.h nlayeredchainpair.h nlayeredlensspace.h nlayeredloop.h nlayeredsolidtorus.h nlayeredsurfacebundle.h nlayering.h npillowtwosphere.h npluggedtorusbundle.h nplugtrisolidtorus.h nsatannulus.h nsatblock.h nsatblockstarter.h nsatblocktypes.h nsatregion.h nsnappeacensustri.h nsnappedball.h nsnappedtwosphere.h nspiralsolidtorus.h nstandardtri.h ntrisolidtorus.h ntrivialtri.h ntxicore.h DESTINATION ${INCLUDEDIR}/subcomplex)
+
+if (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+  INSTALL(FILES naugtrisolidtorus.h nblockedsfs.h nblockedsfsloop.h nblockedsfspair.h nblockedsfstriple.h nl31pillow.h nlayeredchain.h nlayeredchainpair.h nlayeredlensspace.h nlayeredloop.h nlayeredsolidtorus.h nlayeredsurfacebundle.h nlayering.h npillowtwosphere.h npluggedtorusbundle.h nplugtrisolidtorus.h nsatannulus.h nsatblock.h nsatblockstarter.h nsatblocktypes.h nsatregion.h nsnappeacensustri.h nsnappedball.h nsnappedtwosphere.h nspiralsolidtorus.h nstandardtri.h ntrisolidtorus.h ntrivialtri.h ntxicore.h DESTINATION ${INCLUDEDIR}/subcomplex COMPONENT Development)
+endif (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)

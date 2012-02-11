@@ -10,4 +10,7 @@ ENDFOREACH(SOURCE_FILE)
 
 # Set the variable in the parent directory
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
-INSTALL(FILES nprogress.h nprogressmanager.h nprogresstypes.h DESTINATION ${INCLUDEDIR}/progress)
+
+if (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+  INSTALL(FILES nprogress.h nprogressmanager.h nprogresstypes.h DESTINATION ${INCLUDEDIR}/progress COMPONENT Development)
+endif (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)

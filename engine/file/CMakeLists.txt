@@ -8,4 +8,7 @@ FOREACH ( SOURCE_FILE ${FILES} )
   SET ( SOURCES ${SOURCES} file/${SOURCE_FILE})
 ENDFOREACH(SOURCE_FILE)
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
-INSTALL(FILES  nfile.h nfileinfo.h nfilepropertyreader.h nglobaldirs.h nresources.h nxmlcallback.h nxmlelementreader.h nxmlfile.h DESTINATION ${INCLUDEDIR}/file)
+
+if (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+  INSTALL(FILES  nfile.h nfileinfo.h nfilepropertyreader.h nglobaldirs.h nresources.h nxmlcallback.h nxmlelementreader.h nxmlfile.h DESTINATION ${INCLUDEDIR}/file COMPONENT Development)
+endif (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
