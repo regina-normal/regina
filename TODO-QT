@@ -1,5 +1,13 @@
+Unicode (e.g. Poincare homology sphere)
+
+File type associations: http://doc.qt.nokia.com/qq/qq12-mac-events.html
 
 Strip out TODOs from all CMakeLists.txt
+
+Check that we call QWidget::setWindowIcon() for top-level windows.
+
+Install desktop files and icons for KDE/GNOME:
+http://developer.qt.nokia.com/doc/qt-4.8/appicon.html
 
 Mimetype installation on linux desktops
 
