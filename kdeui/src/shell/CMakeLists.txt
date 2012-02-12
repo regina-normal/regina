@@ -10,9 +10,8 @@ QT4_WRAP_CPP(regina-app_HEADERS_MOC ${MOC_HEADERS})
 if (APPLE)
   set(REGINA_APP_NAME Regina)
 
-  # Add an icon to the app bundle.
+  # Add icons to the app bundle.
   set(REGINA_ICNS "${PROJECT_SOURCE_DIR}/icons/regina.icns")
-  set(MACOSX_BUNDLE_ICON_FILE regina.icns)
   set_source_files_properties("${REGINA_ICNS}" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
   set(regina-app_SRCS ${regina-app_SRCS} "${REGINA_ICNS}")
 else (APPLE)
@@ -29,6 +28,16 @@ ADD_EXECUTABLE(${REGINA_APP_NAME} MACOSX_BUNDLE ${regina-app_SRCS} ${regina-app_
 
 SET(LINK_LIBS ${LINK_LIBS} ${QT_LIBRARIES})
 TARGET_LINK_LIBRARIES(${REGINA_APP_NAME} ${LINK_LIBS})
+
+if (APPLE)
+  # Prepare an Info.plist:
+  set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${PACKAGE_VERSION}")
+
+  # This information will be inserted into the following template (which
+  # contains file associations for Regina data files, amongst other things):
+  set_target_properties(${REGINA_APP_NAME}
+    PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/regina.plist )
+endif (APPLE)
 
 INSTALL(TARGETS ${REGINA_APP_NAME} DESTINATION ${APPDIR} COMPONENT Runtime)
 
