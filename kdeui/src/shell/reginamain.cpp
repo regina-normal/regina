@@ -35,6 +35,7 @@
 #include "reginafilter.h"
 #include "reginamain.h"
 #include "reginapref.h"
+#include "reginasupport.h"
 #include "../part/reginapart.h"
 
 #include <QDrag>
@@ -349,7 +350,7 @@ void ReginaMain::setupActions() {
     // File actions:
     actNew = new QAction(this); 
     actNew->setText(tr("&New Topology Data"));
-    actNew->setIcon(QIcon::fromTheme("document-new"));
+    actNew->setIcon(ReginaSupport::themeIcon("document-new"));
     actNew->setShortcut(tr("Ctrl+n"));
     actNew->setWhatsThis(tr("Create a new topology data file.  This is "
         "the standard type of data file used by Regina."));
@@ -359,7 +360,7 @@ void ReginaMain::setupActions() {
 
     actOpen = new QAction(this);
     actOpen->setText(tr("&Open..."));
-    actOpen->setIcon(QIcon::fromTheme("document-open"));
+    actOpen->setIcon(ReginaSupport::themeIcon("document-open"));
     actOpen->setShortcut(tr("Ctrl+o"));
     actOpen->setWhatsThis(tr("Open a topology data file."));
     connect(actOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
@@ -375,7 +376,7 @@ void ReginaMain::setupActions() {
     /*
     act = new QAction(this);
     act->setText(tr("&Save"));
-    act->setIcon(QIcon::fromTheme("document-save"));
+    act->setIcon(ReginaSupport::themeIcon("document-save"));
     act->setShortcut(tr("Ctrl+s"));
     act->setWhatsThis(tr("Save the topology data to a file."));
     connect(act, SIGNAL(triggered()), this, SLOT(saveUrl()));
@@ -384,7 +385,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("Save &As..."));
-    act->setIcon(QIcon::fromTheme("document-save-as"));
+    act->setIcon(ReginaSupport::themeIcon("document-save-as"));
     act->setWhatsThis(tr("Save the topology data to a new file."));
     connect(act, SIGNAL(triggered()), this, SLOT(saveUrlAs()));
     fileMenu->addAction(act);
@@ -399,7 +400,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Close"));
-    act->setIcon(QIcon::fromTheme("window-close"));
+    act->setIcon(ReginaSupport::themeIcon("window-close"));
     act->setShortcut(tr("Ctrl+w"));
     act->setWhatsThis(tr("Close this topology data file."));
     connect(act, SIGNAL(triggered()), this, SLOT(close()));
@@ -407,7 +408,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Quit"));
-    act->setIcon(QIcon::fromTheme("application-exit"));
+    act->setIcon(ReginaSupport::themeIcon("application-exit"));
     act->setShortcut(tr("Ctrl+q"));
     act->setWhatsThis(tr("Close all files and quit Regina."));
     connect(act, SIGNAL(triggered()), this, SLOT(quit()));
@@ -429,7 +430,7 @@ void ReginaMain::setupActions() {
     // Tools:
     actPython = new QAction(this);
     actPython->setText(tr("&Python Console"));
-    actPython->setIcon(QIcon("python_console"));
+    actPython->setIcon(ReginaSupport::regIcon("python_console"));
     actPython->setShortcut(tr("Alt+y"));
     actPython->setWhatsThis(tr("Open a new Python console.  You can "
         "use a Python console to interact directly with Regina's "
@@ -444,7 +445,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Configure Regina"));
-    act->setIcon(QIcon::fromTheme("configure"));
+    act->setIcon(ReginaSupport::themeIcon("configure"));
     act->setWhatsThis(tr("Configure Regina.  Here you can set "
         "your own preferences for how Regina behaves."));
     connect(act, SIGNAL(triggered()), this, SLOT(optionsPreferences()));
@@ -455,7 +456,7 @@ void ReginaMain::setupActions() {
     // Help:
     act = new QAction(this);
     act->setText(tr("&About Regina"));
-    act->setIcon(QIcon::fromTheme("help-about"));
+    act->setIcon(ReginaSupport::themeIcon("help-about"));
     act->setWhatsThis(tr("Display information about Regina, such as "
         "the authors, license and website."));
     connect(act, SIGNAL(triggered()), this, SLOT(helpAboutApp()));
@@ -464,7 +465,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("Regina &Handbook"));
-    act->setIcon(QIcon::fromTheme("help-contents"));
+    act->setIcon(ReginaSupport::themeIcon("help-contents"));
     act->setShortcut(tr("F1"));
     act->setWhatsThis(tr("Open the Regina handbook.  "
         "This is the main users' guide for how to use Regina."));
@@ -473,13 +474,13 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("What's &This?"));
-    act->setIcon(QIcon::fromTheme("help-hint"));
+    act->setIcon(ReginaSupport::themeIcon("help-hint"));
     connect(act, SIGNAL(triggered()), this, SLOT(helpWhatsThis()));
     helpMenu->addAction(act);
 
     act = new QAction(this);
     act->setText(tr("&Python API Reference"));
-    act->setIcon(QIcon("python_console"));
+    act->setIcon(ReginaSupport::regIcon("python_console"));
     act->setWhatsThis(tr("Open the detailed documentation for Regina's "
         "mathematical engine.  This describes the classes, methods and "
         "routines that Regina makes available to Python scripts.<p>"
@@ -491,7 +492,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&File Format Reference"));
-    act->setIcon(QIcon("application-xml"));
+    act->setIcon(ReginaSupport::themeIcon("application-xml"));
     act->setWhatsThis(tr("Open the file format reference manual.  "
         "This give full details of the XML file format that Regina "
         "uses to store its data files."));
@@ -505,13 +506,13 @@ void ReginaMain::setupActions() {
    
     act = new QAction(this);
     act->setText(tr("Tr&oubleshooting"));
-    act->setIcon(QIcon::fromTheme("dialog-warning"));
+    act->setIcon(ReginaSupport::themeIcon("dialog-warning"));
     connect(act, SIGNAL(triggered()), this, SLOT(helpTrouble()));
     helpMenu->addAction(act);
    
     act = new QAction(this);
     act->setText(tr("Handbook won't open?"));
-    act->setIcon(QIcon::fromTheme("dialog-cancel"));
+    act->setIcon(ReginaSupport::themeIcon("dialog-cancel"));
     connect(act, SIGNAL(triggered()), this, SLOT(helpNoHelp()));
     helpMenu->addAction(act);
 }

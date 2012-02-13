@@ -33,6 +33,7 @@
 // UI includes:
 #include "nsurfacefiltercreator.h"
 #include "../reginapart.h"
+#include "reginasupport.h"
 
 #include <QButtonGroup>
 #include <QLabel>
@@ -54,7 +55,7 @@ NSurfaceFilterCreator::NSurfaceFilterCreator() {
     QString msg;
 
     pic = new QLabel(ui);
-    pic->setPixmap(QIcon("filter_prop").pixmap(16,16));
+    pic->setPixmap(ReginaSupport::regIcon("filter_prop").pixmap(16,16));
     layout->addWidget(pic, 0, 0, Qt::AlignRight);
 
     QRadioButton* props = new QRadioButton(
@@ -67,7 +68,7 @@ NSurfaceFilterCreator::NSurfaceFilterCreator() {
     props->setWhatsThis(msg);
 
     pic = new QLabel(ui);
-    pic->setPixmap(QIcon("filter_comb").pixmap(16,16));
+    pic->setPixmap(ReginaSupport::regIcon("filter_comb").pixmap(16,16));
     layout->addWidget(pic, 1, 0, Qt::AlignRight);
 
     QRadioButton* comb = new QRadioButton(

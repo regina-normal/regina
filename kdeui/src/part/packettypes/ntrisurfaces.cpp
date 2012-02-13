@@ -33,6 +33,7 @@
 #include "ntrisurfaces.h"
 #include "../patiencedialog.h"
 #include "../reginapart.h"
+#include "reginasupport.h"
 
 #include <QLabel>
 #include <QLayout>
@@ -108,7 +109,8 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     threeBall->setWhatsThis(msg);
 
-    btnZeroEff = new QPushButton(QIcon::fromTheme("system-run"), tr("Calculate"), ui);
+    btnZeroEff = new QPushButton(ReginaSupport::themeIcon("system-run"),
+        tr("Calculate"), ui);
     btnZeroEff->setToolTip(tr("Calculate 0-efficiency"));
     btnZeroEff->setWhatsThis(tr("<qt>Calculate whether this "
         "triangulation is 0-efficient.<p>"
@@ -118,7 +120,8 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->addWidget(btnZeroEff, 0, 5);
     connect(btnZeroEff, SIGNAL(clicked()), this, SLOT(calculateZeroEff()));
 
-    btnSplitting = new QPushButton(QIcon::fromTheme("system-run"), tr("Calculate"), ui);
+    btnSplitting = new QPushButton(ReginaSupport::themeIcon("system-run"),
+        tr("Calculate"), ui);
     btnSplitting->setToolTip(tr("Calculate existence of a splitting "
         "surface"));
     btnSplitting->setWhatsThis(tr("<qt>Calculate whether this "
@@ -129,7 +132,8 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->addWidget(btnSplitting, 1, 5);
     connect(btnSplitting, SIGNAL(clicked()), this, SLOT(calculateSplitting()));
 
-    btnThreeSphere = new QPushButton(QIcon::fromTheme("system-run"), tr("Calculate"), ui);
+    btnThreeSphere = new QPushButton(ReginaSupport::themeIcon("system-run"),
+        tr("Calculate"), ui);
     btnThreeSphere->setToolTip(tr("Calculate whether this is a 3-sphere"));
     btnThreeSphere->setWhatsThis(tr("<qt>Calculate whether this "
         "is a triangulation of a 3-sphere.<p>"
@@ -140,7 +144,8 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     connect(btnThreeSphere, SIGNAL(clicked()), this,
         SLOT(calculateThreeSphere()));
 
-    btnThreeBall = new QPushButton(QIcon::fromTheme("system-run"), tr("Calculate"), ui);
+    btnThreeBall = new QPushButton(ReginaSupport::themeIcon("system-run"),
+        tr("Calculate"), ui);
     btnThreeBall->setToolTip(
         tr("Calculate whether this is a 3-dimensional ball"));
     btnThreeBall->setWhatsThis(tr("<qt>Calculate whether this "

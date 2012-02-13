@@ -39,6 +39,7 @@
 #include "ntrigluings.h"
 #include "../patiencedialog.h"
 #include "../reginapart.h"
+#include "reginasupport.h"
 
 #include <memory>
 #include <QAction>
@@ -546,7 +547,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     actAddTet = new QAction(this);
     actAddTet->setText(tr("&Add Tet"));
-    actAddTet->setIcon(QIcon::fromTheme("list-add"));
+    actAddTet->setIcon(ReginaSupport::themeIcon("list-add"));
     actAddTet->setToolTip(tr("Add a new tetrahedron"));
     actAddTet->setEnabled(readWrite);
     actAddTet->setWhatsThis(tr("Add a new tetrahedron to this "
@@ -557,7 +558,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     actRemoveTet = new QAction(this);
     actRemoveTet->setText(tr("&Remove Tet"));
-    actRemoveTet->setIcon(QIcon::fromTheme("list-remove"));
+    actRemoveTet->setIcon(ReginaSupport::themeIcon("list-remove"));
     actRemoveTet->setToolTip(tr("Remove the currently selected tetrahedra"));
     actRemoveTet->setEnabled(false);
     actRemoveTet->setWhatsThis(tr("Remove the currently selected "
@@ -574,7 +575,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     actSimplify = new QAction(this);
     actSimplify->setText(tr("&Simplify"));
-    actSimplify->setIcon(QIcon::fromTheme("help-about"));
+    actSimplify->setIcon(ReginaSupport::themeIcon("tools-wizard"));
     actSimplify->setToolTip(tr(
         "Simplify the triangulation as far as possible"));
     actSimplify->setEnabled(readWrite);
@@ -612,7 +613,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     actOrient = new QAction(this);
     actOrient->setText(tr("&Orient"));
-    actOrient->setIcon(QIcon("orient"));
+    actOrient->setIcon(ReginaSupport::regIcon("orient"));
     actOrient->setToolTip(tr(
         "Relabel vertices of tetrahedra for consistent orientation"));
     actOrient->setEnabled(readWrite);
@@ -626,7 +627,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     QAction* actBarycentricSubdivide = new QAction(this);
     actBarycentricSubdivide->setText(tr("&Barycentric Subdivision"));
-    actBarycentricSubdivide->setIcon(QIcon("barycentric"));
+    actBarycentricSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
     actBarycentricSubdivide->setToolTip(tr(
         "Perform a barycentric subdivision"));
     actBarycentricSubdivide->setEnabled(readWrite);
@@ -642,7 +643,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     QAction* actIdealToFinite = new QAction(this);
     actIdealToFinite->setText(tr("&Truncate Ideal Vertices"));
-    actIdealToFinite->setIcon(QIcon("finite"));
+    actIdealToFinite->setIcon(ReginaSupport::regIcon("finite"));
       
     actIdealToFinite->setToolTip(tr(
         "Truncate any ideal vertices"));
@@ -661,7 +662,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     QAction* actFiniteToIdeal = new QAction(this);
     actFiniteToIdeal->setText(tr("Make &Ideal"));
-    actFiniteToIdeal->setIcon(QIcon("cone"));
+    actFiniteToIdeal->setIcon(ReginaSupport::regIcon("cone"));
     actFiniteToIdeal->setToolTip(tr(
         "Convert real boundary components into ideal vertices"));
     actFiniteToIdeal->setEnabled(readWrite);
@@ -679,7 +680,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     
     QAction* actDoubleCover = new QAction(this); 
     actDoubleCover->setText(tr("&Double Cover"));
-    actDoubleCover->setIcon(QIcon("doublecover"));
+    actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
     actDoubleCover->setToolTip(tr(
         "Convert the triangulation to its orientable double cover"));
     actDoubleCover->setEnabled(readWrite);
@@ -713,7 +714,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     QAction* actConnectedSumDecomposition = new QAction(this);
     actConnectedSumDecomposition->setText(tr("Co&nnected Sum Decomposition"));
-    actConnectedSumDecomposition->setIcon(QIcon("connsum"));
+    actConnectedSumDecomposition->setIcon(ReginaSupport::regIcon("connsum"));
     actConnectedSumDecomposition->setToolTip(tr(
         "Split into a connected sum of prime 3-manifolds"));
     actConnectedSumDecomposition->setWhatsThis(tr("Break this "
@@ -748,7 +749,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     QAction* actCensusLookup = new QAction(this);
     actCensusLookup->setText(tr("Census &Lookup"));
-    actCensusLookup->setIcon(QIcon::fromTheme("edit-find"));
+    actCensusLookup->setIcon(ReginaSupport::themeIcon("edit-find"));
     actCensusLookup->setToolTip(tr(
         "Search for this triangulation in the configured list of censuses"));
     actCensusLookup->setWhatsThis(tr("Attempt to locate this "

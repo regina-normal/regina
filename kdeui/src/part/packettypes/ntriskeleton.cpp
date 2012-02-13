@@ -34,6 +34,7 @@
 #include "ntriskeleton.h"
 #include "skeletonwindow.h"
 #include "reginaprefset.h"
+#include "reginasupport.h"
 
 #include <fstream>
 #include <QDir>
@@ -145,7 +146,8 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     nTets->setWhatsThis(msg);
 
-    btn = new QPushButton(QIcon("packet_view"), tr("View..."), ui);
+    btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
+        tr("View..."), ui);
     // btn->setFlat(true);
     btn->setToolTip(tr("View details of individual vertices"));
     btn->setWhatsThis(tr("View details of this triangulation's "
@@ -153,7 +155,8 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     connect(btn, SIGNAL(clicked()), this, SLOT(viewVertices()));
     grid->addWidget(btn, 0, 5);
 
-    btn = new QPushButton(QIcon("packet_view"), tr("View..."), ui);
+    btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
+        tr("View..."), ui);
     btn->setToolTip(tr("View details of individual edges"));
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual edges in a separate window."));
@@ -161,7 +164,8 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     connect(btn, SIGNAL(clicked()), this, SLOT(viewEdges()));
     grid->addWidget(btn, 1, 5);
 
-    btn = new QPushButton(QIcon("packet_view"), tr("View..."), ui);
+    btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
+        tr("View..."), ui);
     btn->setToolTip(tr("View details of individual faces"));
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual faces in a separate window."));
@@ -169,7 +173,8 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     connect(btn, SIGNAL(clicked()), this, SLOT(viewFaces()));
     grid->addWidget(btn, 2, 5);
 
-    btn = new QPushButton(QIcon("packet_view"), tr("View..."), ui);
+    btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
+        tr("View..."), ui);
     btn->setToolTip(tr("View details of individual components"));
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual connected components in a separate window."));
@@ -177,7 +182,8 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     connect(btn, SIGNAL(clicked()), this, SLOT(viewComponents()));
     grid->addWidget(btn, 0, 11);
 
-    btn = new QPushButton(QIcon("packet_view"), tr("View..."), ui);
+    btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
+        tr("View..."), ui);
     btn->setToolTip(tr("View details of individual boundary components"));
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual boundary components in a separate window.  Note that "

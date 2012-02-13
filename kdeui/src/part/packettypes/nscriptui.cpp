@@ -36,6 +36,7 @@
 #include "../packeteditiface.h"
 #include "../packetmanager.h"
 #include "../reginapart.h"
+#include "reginasupport.h"
 
 #include <cstring>
 #include <QBoxLayout>
@@ -276,7 +277,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
     actAdd = new QAction(this);
     //scriptActions->addAction("script_add_var");
     actAdd->setText(tr("&Add Var"));
-    actAdd->setIcon(QIcon::fromTheme("edit-table-insert-row-below"));
+    actAdd->setIcon(ReginaSupport::themeIcon("edit-table-insert-row-below"));
     actAdd->setToolTip(tr("Add a new script variable"));
     actAdd->setEnabled(readWrite);
     actAdd->setWhatsThis(tr("Add a new variable to this script.<p>"
@@ -291,7 +292,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
     actRemove = new QAction(this);
     //scriptActions->addAction("script_remove_var");
     actRemove->setText(tr("Re&move Var"));
-    actRemove->setIcon(QIcon::fromTheme("edit-table-delete-row"));
+    actRemove->setIcon(ReginaSupport::themeIcon("edit-table-delete-row"));
     actRemove->setToolTip(tr(
         "Remove the currently selected script variable(s)"));
     actRemove->setEnabled(false);
@@ -317,7 +318,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
     QAction* actCompile = new QAction(this);
     //scriptActions->addAction("script_compile");;
     actCompile->setText(tr("&Compile"));
-    actCompile->setIcon(QIcon::fromTheme("run-build-file"));
+    actCompile->setIcon(ReginaSupport::themeIcon("run-build-file"));
     actCompile->setToolTip(tr("Compile the Python script"));
     actCompile->setWhatsThis(tr("Test whether this Python script "
         "actually compiles.  Any errors will be shown in a separate "
@@ -329,7 +330,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
     QAction* actRun = new QAction(this);
     //scriptActions->addAction("script_run");;
     actRun->setText(tr("&Run"));
-    actRun->setIcon(QIcon::fromTheme("system-run"));
+    actRun->setIcon(ReginaSupport::themeIcon("system-run"));
     actRun->setToolTip(tr("Execute the Python script"));
     actRun->setWhatsThis(tr("Execute this Python script.  The "
         "script will be run in a separate Python console."));

@@ -1,6 +1,6 @@
 # Engine
 
-SET ( FILES coordinatechooser coordinates pythonmanager reginaabout reginaprefset shortrunner )
+SET ( FILES coordinatechooser coordinates pythonmanager reginaabout reginaprefset reginasupport shortrunner )
 
 IF(PYTHONLIBRARY_FOUND)
   ADD_SUBDIRECTORY(python)

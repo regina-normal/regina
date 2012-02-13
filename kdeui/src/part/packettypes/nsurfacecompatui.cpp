@@ -32,6 +32,7 @@
 
 // UI includes:
 #include "reginaprefset.h"
+#include "reginasupport.h"
 #include "ncompatcanvas.h"
 #include "nsurfacecompatui.h"
 #include "../reginapart.h"
@@ -39,7 +40,6 @@
 #include <QComboBox>
 #include <QGraphicsView>
 #include <QHBoxLayout>
-#include <QIcon>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qmessagebox.h>
@@ -88,7 +88,8 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
 
     hdrLayout->addStretch(1);
 
-    btnCalculate = new QPushButton(QIcon::fromTheme("system-run"), tr("Calculate"), ui);
+    btnCalculate = new QPushButton(ReginaSupport::themeIcon("system-run"),
+        tr("Calculate"), ui);
     btnCalculate->setToolTip(tr("Calculate compatibility matrices"));
     btnCalculate->setWhatsThis(tr("<qt>Calculate and display the "
         "full compatibility matrices.<p>"
@@ -107,8 +108,8 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
         layerNone->setLayout(noneLayout);
 
         // Create a 32x32 pixmap from the appropriate icon
-        QPixmap iconPic = QIcon::fromTheme("dialog-information",
-                QMessageBox::standardIcon(QMessageBox::Information)).pixmap(32,32);
+        QPixmap iconPic = ReginaSupport::themeIcon("dialog-information").
+            pixmap(32,32);
 
         QLabel* icon = new QLabel(layerNone);
         icon->setPixmap(iconPic);

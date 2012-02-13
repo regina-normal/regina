@@ -28,6 +28,7 @@
 
 #include "reginapart.h"
 #include "reginamain.h"
+#include "reginasupport.h"
 
 #include <QAction>
 #include <QApplication>
@@ -46,13 +47,15 @@ void ReginaPart::setupActions() {
     treeMenu = new QMenu(tr("&Packet Tree"));
     
     // File actions:
-    actSave = new QAction(QIcon::fromTheme("document-save"), tr("&Save"), this);
+    actSave = new QAction(ReginaSupport::themeIcon("document-save"),
+        tr("&Save"), this);
     actSave->setShortcuts(QKeySequence::Save);
     actSave->setWhatsThis(tr("Save the current data file."));
     connect(actSave, SIGNAL(triggered()), this, SLOT(fileSave()));
     allActions.append(actSave);
 
-    act = new QAction(QIcon::fromTheme("document-save-as"), tr("Save &as"), this);
+    act = new QAction(ReginaSupport::themeIcon("document-save-as"),
+        tr("Save &as"), this);
     act->setShortcuts(QKeySequence::SaveAs);
     act->setWhatsThis(tr(
         "Save the current data file, but give it a different name."));
@@ -64,20 +67,23 @@ void ReginaPart::setupActions() {
     exportMenu = new QMenu(tr("&Export"));
 
     // Edit actions:
-    actCut = new QAction(QIcon::fromTheme("edit-cut"), tr("Cu&t"), this);
+    actCut = new QAction(ReginaSupport::themeIcon("edit-cut"),
+        tr("Cu&t"), this);
     actCut->setWhatsThis(tr("Cut out the current selection and store it "
         "in the clipboard."));
     actCut->setShortcuts(QKeySequence::Cut);
     editMenu->addAction(actCut);
     allActions.append(actCut);
 
-    actCopy = new QAction(QIcon::fromTheme("edit-copy"), tr("&Copy"), this);
+    actCopy = new QAction(ReginaSupport::themeIcon("edit-copy"),
+        tr("&Copy"), this);
     actCopy->setWhatsThis(tr("Copy the current selection to the clipboard."));
     actCopy->setShortcuts(QKeySequence::Copy);
     editMenu->addAction(actCopy);
     allActions.append(actCopy);
 
-    actPaste = new QAction(QIcon::fromTheme("edit-paste"), tr("&Paste"), this);
+    actPaste = new QAction(ReginaSupport::themeIcon("edit-paste"),
+        tr("&Paste"), this);
     actPaste->setWhatsThis(tr("Paste the contents of the clipboard."));
     actPaste->setShortcuts(QKeySequence::Paste);
     editMenu->addAction(actPaste);
@@ -91,10 +97,11 @@ void ReginaPart::setupActions() {
     // New packets:
     QAction *actAngleStructure = new QAction(this);
     actAngleStructure->setText(tr("New &Angle Structure Solutions"));
-    actAngleStructure->setIcon(QIcon("packet_angles"));
+    actAngleStructure->setIcon(ReginaSupport::regIcon("packet_angles"));
     actAngleStructure->setShortcut(tr("Alt+a"));
     actAngleStructure->setToolTip(tr("New angle structure solutions"));
-    actAngleStructure->setWhatsThis(tr("Create a new list of vertex angle structures "
+    actAngleStructure->setWhatsThis(
+        tr("Create a new list of vertex angle structures "
         "for a triangulation."));
     connect(actAngleStructure, SIGNAL(triggered()), this, SLOT(newAngleStructures()) );
     treeGeneralEditActions.append(actAngleStructure);
@@ -103,7 +110,7 @@ void ReginaPart::setupActions() {
 
     QAction* actContainer = new QAction(this);
     actContainer->setText(tr("New &Container"));
-    actContainer->setIcon(QIcon("packet_container"));
+    actContainer->setIcon(ReginaSupport::regIcon("packet_container"));
     actContainer->setShortcut(tr("Alt+c"));
     actContainer->setToolTip(tr("New container"));
     actContainer->setWhatsThis(tr("Create a new container packet.  Containers "
@@ -116,7 +123,7 @@ void ReginaPart::setupActions() {
 
     QAction* actFilter = new QAction(this);
     actFilter->setText(tr("New &Filter"));
-    actFilter->setIcon(QIcon("packet_filter"));
+    actFilter->setIcon(ReginaSupport::regIcon("packet_filter"));
     actFilter->setShortcut(tr("Alt+f"));
     actFilter->setToolTip(tr("New surface filter"));
     actFilter->setWhatsThis(tr("Create a new normal surface filter.  Surface "
@@ -129,7 +136,7 @@ void ReginaPart::setupActions() {
 
     QAction* actSurfaces = new QAction(this);
     actSurfaces->setText(tr("New &Normal Surface List"));
-    actSurfaces->setIcon(QIcon("packet_surfaces"));
+    actSurfaces->setIcon(ReginaSupport::regIcon("packet_surfaces"));
     actSurfaces->setShortcut(tr("Alt+n"));
     actSurfaces->setToolTip(tr("New normal surface list"));
     actSurfaces->setWhatsThis(tr("Create a new list of vertex normal surfaces "
@@ -141,7 +148,7 @@ void ReginaPart::setupActions() {
 
     QAction* actPDF = new QAction(this);
     actPDF->setText(tr("New &PDF Document"));
-    actPDF->setIcon(QIcon("packet_pdf"));
+    actPDF->setIcon(ReginaSupport::regIcon("packet_pdf"));
     actPDF->setShortcut(tr("Alt+p"));
     actPDF->setToolTip(tr("New PDF document"));
     actPDF->setWhatsThis(tr("Create a new PDF packet containing a copy of "
@@ -153,7 +160,7 @@ void ReginaPart::setupActions() {
 
     QAction* actScript = new QAction(this);
     actScript->setText(tr("New &Script"));
-    actScript->setIcon(QIcon("packet_script"));
+    actScript->setIcon(ReginaSupport::regIcon("packet_script"));
     actScript->setShortcut(tr("Alt+s"));
     actScript->setToolTip(tr("New script packet"));
     actScript->setWhatsThis(tr("Create a new Python script that can work "
@@ -165,7 +172,7 @@ void ReginaPart::setupActions() {
 
     QAction* actText = new QAction(this);
     actText->setText(tr("New Te&xt"));
-    actText->setIcon(QIcon("packet_text"));
+    actText->setIcon(ReginaSupport::regIcon("packet_text"));
     actText->setShortcut(tr("Alt+x"));
     actText->setToolTip(tr("New text packet"));
     actText->setWhatsThis(tr("Create a new piece of text to store within "
@@ -177,7 +184,7 @@ void ReginaPart::setupActions() {
 
     QAction* actTriangulation = new QAction(this);
     actTriangulation->setText(tr("New &Triangulation"));
-    actTriangulation->setIcon(QIcon("packet_triangulation"));
+    actTriangulation->setIcon(ReginaSupport::regIcon("packet_triangulation"));
     actTriangulation->setShortcut(tr("Alt+t"));
     actTriangulation->setToolTip(tr("New triangulation"));
     actTriangulation->setWhatsThis(tr("Create a new 3-manifold triangulation."));
@@ -190,7 +197,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("Form &Census"));
-    act->setIcon(QIcon("view-list-text"));
+    act->setIcon(ReginaSupport::themeIcon("view-list-text"));
     act->setToolTip(tr("Form a new census of triangulations"));
     act->setWhatsThis(tr("Create a new census of 3-manifold "
         "triangulations according to some set of census constraints."));
@@ -204,7 +211,7 @@ void ReginaPart::setupActions() {
     // Basic packet actions:
     QAction* actView = new QAction(this);
     actView->setText(tr("&View/Edit"));
-    actView->setIcon(QIcon("packet_view"));
+    actView->setIcon(ReginaSupport::regIcon("packet_view"));
     actView->setShortcut(tr("Alt+v"));
     actView->setToolTip(tr("View or edit the selected packet"));
     actView->setWhatsThis(tr("View or edit the packet currently selected "
@@ -216,7 +223,7 @@ void ReginaPart::setupActions() {
 
     QAction* actRename = new QAction(this);
     actRename->setText(tr("&Rename"));
-    actRename->setIcon(QIcon("edit-rename"));
+    actRename->setIcon(ReginaSupport::themeIcon("edit-rename"));
     actRename->setShortcut(tr("Alt+r"));
     actRename->setToolTip(tr("Rename the selected packet"));
     actRename->setWhatsThis(tr("Rename the packet currently selected "
@@ -228,7 +235,7 @@ void ReginaPart::setupActions() {
 
     QAction *actDelete = new QAction(this);
     actDelete->setText(tr("&Delete"));
-    actDelete->setIcon(QIcon("edit-delete"));
+    actDelete->setIcon(ReginaSupport::themeIcon("edit-delete"));
     actDelete->setShortcut(tr("Delete"));
     actDelete->setToolTip(tr("Delete the selected packet"));
     actDelete->setWhatsThis(tr("Delete the packet currently selected "
@@ -243,7 +250,7 @@ void ReginaPart::setupActions() {
     // Tree reorganisation:
     act = new QAction(this);
     act->setText(tr("&Higher Level"));
-    act->setIcon(QIcon("arrow-left"));
+    act->setIcon(ReginaSupport::themeIcon("arrow-left"));
     act->setShortcut(tr("Alt+Left"));
     act->setToolTip(tr("Move packet to a higher (shallower) level "
         "in the tree"));
@@ -258,7 +265,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Lower Level"));
-    act->setIcon(QIcon("arrow-right"));
+    act->setIcon(ReginaSupport::themeIcon("arrow-right"));
     act->setShortcut(tr("Alt+Right"));
     act->setToolTip(tr("Move packet to a lower (deeper) level in the tree"));
     act->setWhatsThis(tr("Move the currently selected packet "
@@ -274,7 +281,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Up"));
-    act->setIcon(QIcon("arrow-up"));
+    act->setIcon(ReginaSupport::themeIcon("arrow-up"));
     act->setShortcut(tr("Alt+Up"));
     act->setToolTip(tr("Move packet up through its siblings"));
     act->setWhatsThis(tr("Move the currently selected packet "
@@ -287,7 +294,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("Jump U&p"));
-    act->setIcon(QIcon("arrow-up-double"));
+    act->setIcon(ReginaSupport::themeIcon("arrow-up-double"));
     act->setShortcut(tr("Alt+Shift+Up"));
     act->setToolTip(tr("Jump packet up through its siblings"));
     act->setWhatsThis(tr("Move the currently selected packet "
@@ -300,7 +307,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Top"));
-    act->setIcon(QIcon("go-top"));
+    act->setIcon(ReginaSupport::themeIcon("go-top"));
     act->setShortcut(tr("Alt+Home"));
     act->setToolTip(tr("Move packet above all its siblings"));
     act->setWhatsThis(tr("Move the currently selected packet "
@@ -316,7 +323,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Down"));
-    act->setIcon(QIcon("arrow-down"));
+    act->setIcon(ReginaSupport::themeIcon("arrow-down"));
     act->setShortcut(tr("Alt+Down"));
     act->setToolTip(tr("Move packet down through its siblings"));
     act->setWhatsThis(tr("Move the currently selected packet "
@@ -329,7 +336,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("Jump Do&wn"));
-    act->setIcon(QIcon("arrow-down-double"));
+    act->setIcon(ReginaSupport::themeIcon("arrow-down-double"));
     act->setShortcut(tr("Alt+Shift+Down"));
     act->setToolTip(tr("Jump packet down through its siblings"));
     act->setWhatsThis(tr("Move the currently selected packet "
@@ -342,7 +349,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Bottom"));
-    act->setIcon(QIcon("go-bottom"));
+    act->setIcon(ReginaSupport::themeIcon("go-bottom"));
     act->setShortcut(tr("Alt+End"));
     act->setToolTip(tr("Move packet below all its siblings"));
     act->setWhatsThis(tr("Move the currently selected packet "
@@ -358,7 +365,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("C&lone Packet"));
-    act->setIcon(QIcon("edit-copy"));
+    act->setIcon(ReginaSupport::themeIcon("edit-copy"));
     act->setShortcut(tr("Alt+l"));
     act->setToolTip(tr("Clone the selected packet only"));
     act->setWhatsThis(tr("Clone the packet currently selected in "
@@ -385,7 +392,7 @@ void ReginaPart::setupActions() {
 
     QAction* actRefresh = new QAction(this);
     actRefresh->setText(tr("Refres&h Subtree"));
-    actRefresh->setIcon(QIcon("view-refresh"));
+    actRefresh->setIcon(ReginaSupport::themeIcon("view-refresh"));
     actRefresh->setShortcut(tr("F5"));
     actRefresh->setToolTip(tr("Refresh the subtree beneath the selected packet"));
     actRefresh->setWhatsThis(tr("Refresh the packet "
@@ -403,7 +410,7 @@ void ReginaPart::setupActions() {
     // Imports and exports:
     act = new QAction(this);
     act->setText(tr("&Regina Data File"));
-    act->setIcon(QIcon("regina"));
+    act->setIcon(ReginaSupport::regIcon("regina"));
     act->setToolTip(tr("Import a Regina data file"));
     act->setWhatsThis(tr("Import an external Regina data file.  The "
         "imported packet tree will be grafted into this packet tree."));
@@ -414,7 +421,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&SnapPea Triangulation"));
-    act->setIcon(QIcon("snappea"));
+    act->setIcon(ReginaSupport::regIcon("snappea"));
     act->setToolTip(tr("Import a SnapPea triangulation"));
     act->setWhatsThis(tr("Import an external SnapPea file as a new "
         "triangulation in this packet tree."));
@@ -425,7 +432,7 @@ void ReginaPart::setupActions() {
 
     act= new QAction(this);
     act->setText(tr("&Orb / Casson Triangulation"));
-    act->setIcon(QIcon("orb"));
+    act->setIcon(ReginaSupport::regIcon("orb"));
     act->setToolTip(tr("Import an Orb / Casson triangulation"));
     act->setWhatsThis(tr("Import an external Orb / Casson file as a new "
         "triangulation in this packet tree."));
@@ -436,7 +443,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Isomorphism Signature List"));
-    act->setIcon(QIcon("document-sign"));
+    act->setIcon(ReginaSupport::themeIcon("document-sign"));
     act->setToolTip(tr("Import an isomorphism signature list "
         "for 3-manifold triangulations"));
     act->setWhatsThis(tr("Import an external text file containing "
@@ -450,7 +457,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Dehydrated Triangulation List"));
-    act->setIcon(QIcon("dehydrated"));
+    act->setIcon(ReginaSupport::regIcon("dehydrated"));
     act->setToolTip(tr("Import a dehydrated triangulation list"));
     act->setWhatsThis(tr("Import an external text file containing "
         "dehydrated triangulation strings.  For each dehydration string, "
@@ -462,7 +469,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&PDF Document"));
-    act->setIcon(QIcon("packet_pdf"));
+    act->setIcon(ReginaSupport::regIcon("packet_pdf"));
     act->setToolTip(tr("Import a PDF document"));
     act->setWhatsThis(tr("Import an external PDF document as a new PDF "
         "packet in this tree."));
@@ -473,7 +480,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("P&ython Script"));
-    act->setIcon(QIcon("packet_script"));
+    act->setIcon(ReginaSupport::regIcon("packet_script"));
     act->setToolTip(tr("Import a Python script"));
     act->setWhatsThis(tr("Import an external Python file as a new script "
         "packet in this tree."));
@@ -484,7 +491,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Regina Data File"));
-    act->setIcon(QIcon("regina"));
+    act->setIcon(ReginaSupport::regIcon("regina"));
     act->setToolTip(tr("Export a compressed Regina data file"));
     act->setWhatsThis(tr("Export all or part of this packet tree "
         "to a separate Regina data file.  The separate data file will "
@@ -495,7 +502,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("Regina Data File (&Uncompressed)"));
-    act->setIcon(QIcon("regina"));
+    act->setIcon(ReginaSupport::regIcon("regina"));
     act->setToolTip(tr("Export an uncompressed Regina data file"));
     act->setWhatsThis(tr("Export all or part of this packet tree "
         "to a separate Regina data file.  The separate data file will "
@@ -506,7 +513,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&SnapPea Triangulation"));
-    act->setIcon(QIcon("snappea"));
+    act->setIcon(ReginaSupport::regIcon("snappea"));
     act->setToolTip(tr("Export a SnapPea triangulation"));
     act->setWhatsThis(tr("Export a triangulation from this packet tree "
         "to a separate SnapPea file."));
@@ -516,7 +523,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&C++ Source"));
-    act->setIcon(QIcon("text-x-c++src"));
+    act->setIcon(ReginaSupport::themeIcon("text-x-c++src"));
     act->setToolTip(tr("Export a triangulation as C++ source"));
     act->setWhatsThis(tr("Export a triangulation from this packet tree "
         "to a C++ source file.<p>"
@@ -529,7 +536,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("CS&V Surface List"));
-    act->setIcon(QIcon("csvexport"));
+    act->setIcon(ReginaSupport::regIcon("csvexport"));
     act->setToolTip(tr("Export a normal surface list as a "
         "text file with comma-separated values"));
     act->setWhatsThis(tr("Export a normal surface list from this packet tree "
@@ -545,7 +552,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&PDF Document"));
-    act->setIcon(QIcon("packet_pdf"));
+    act->setIcon(ReginaSupport::regIcon("packet_pdf"));
     act->setToolTip(tr("Export a PDF document"));
     act->setWhatsThis(tr("Export a PDF packet from this packet tree "
         "to a separate PDF document."));
@@ -555,7 +562,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("P&ython Script"));
-    act->setIcon(QIcon("packet_script"));
+    act->setIcon(ReginaSupport::regIcon("packet_script"));
     act->setToolTip(tr("Export a Python script"));
     act->setWhatsThis(tr("Export a script packet from this packet tree "
         "to a separate Python file."));

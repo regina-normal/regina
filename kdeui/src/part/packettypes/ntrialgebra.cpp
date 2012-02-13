@@ -36,6 +36,7 @@
 // UI includes:
 #include "gaprunner.h"
 #include "ntrialgebra.h"
+#include "reginasupport.h"
 
 #include <QDir>
 #include <QFileInfo>
@@ -269,7 +270,7 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
     QBoxLayout* btnArea = new QHBoxLayout();
     layout->addLayout(btnArea);
     btnArea->addStretch(1);
-    btnGAP = new QPushButton(QIcon("tools-wizard"),
+    btnGAP = new QPushButton(ReginaSupport::themeIcon("tools-wizard"),
         tr("Simplify using GAP"));
     btnGAP->setToolTip(tr("Simplify the group presentation using "
         "GAP (Groups, Algorithms and Programming)"));
@@ -502,7 +503,8 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
     connect(params, SIGNAL(returnPressed()), this, SLOT(calculateInvariant()));
     paramsArea->addWidget(params);
 
-    calculate = new QPushButton(QIcon::fromTheme("system-run"), tr("Calculate"));
+    calculate = new QPushButton(ReginaSupport::themeIcon("system-run"),
+        tr("Calculate"));
     // calculate->setFlat(true);
     calculate->setToolTip(tr("Calculate the Turaev-Viro invariant with "
         "these parameters"));

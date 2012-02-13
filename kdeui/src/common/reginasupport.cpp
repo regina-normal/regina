@@ -26,54 +26,41 @@
 
 /* end stub */
 
-/**
- * Much of the ExamplesAction code is based on the KRecentFilesAction
- * sources, written by Michael Koch and released under the GNU LGPL v2.
- */
-
 #include "file/nglobaldirs.h"
-
-#include "examplesaction.h"
 #include "reginasupport.h"
+#include <QCoreApplication>
 
-#include <QActionGroup>
-#include <QFile>
-#include <QMenu>
-#include <QToolButton>
-#include <QUrl>
+// TODO: Rewrite this and do it properly.
 
-ExamplesAction::ExamplesAction(QWidget* parent) :
-        QMenu(parent) {
-    setTitle(tr("Open E&xample"));
-    setIcon(ReginaSupport::themeIcon("bookmarks"));
+QString ReginaSupport::home_;
 
-    group = new QActionGroup(parent);
-    //setMenuAccelsEnabled(false);
-    //setEnabled(true);
-    connect(group, SIGNAL(triggered(QAction*)), this, SLOT(exampleActivated(QAction*)));
-    
-    setWhatsThis(tr("Open one of the example data files that "
-        "ships with Regina.  These examples are useful starting points "
-        "for discovering what Regina can do.  Several censuses of "
-        "3-manifold triangulations are also provided."));
+const QString& ReginaSupport::home() {
+    if (home_.isNull()) {
+#ifdef Q_OS_MACX
+        home_ = QCoreApplication::applicationDirPath() + "/../Resources";
+#else
+        home_ = regina::NGlobalDirs::home();
+#endif
+
+    }
+
+    return home_;
 }
 
-ExamplesAction::~ExamplesAction() {
+QIcon ReginaSupport::regIcon(const QString& name) {
+    QIcon icon(home() + "/icons/regina/" + name + "-22.png");
+    icon.addFile(home() + "/icons/regina/" + name + "-16.png");
+    icon.addFile(home() + "/icons/regina/" + name + "-32.png");
+    icon.addFile(home() + "/icons/regina/" + name + "-8.png");
+    return icon;
 }
 
-void ExamplesAction::addUrl(const QString& fileName, const QString& text) {
-
-    QAction* action = new QAction(this);
-    action->setText(text);
-    insertAction(0 /* insert last */, action);
-    group->addAction(action);
-    urls_.insert(action, QUrl(QString("file:%1/%2")
-        .arg(QFile::decodeName(regina::NGlobalDirs::examples().c_str()))
-        .arg(fileName)));
-}
-
-void ExamplesAction::exampleActivated(QAction* action) {
-    // Open the Url.
-    emit urlSelected(urls_[action]);
+QIcon ReginaSupport::themeIcon(const QString& name) {
+    // TODO: Allow theme.
+    QIcon icon(home() + "/icons/oxygen/" + name + "-22.png");
+    icon.addFile(home() + "/icons/oxygen/" + name + "-16.png");
+    icon.addFile(home() + "/icons/oxygen/" + name + "-32.png");
+    icon.addFile(home() + "/icons/oxygen/" + name + "-8.png");
+    return icon;
 }
 

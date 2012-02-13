@@ -36,6 +36,7 @@
 #include "reginafilter.h"
 #include "reginamain.h"
 #include "reginapref.h"
+#include "reginasupport.h"
 
 #include <QCheckBox>
 #include <QDialogButtonBox>
@@ -87,7 +88,7 @@ namespace {
                     return false;
 
                 data.active = true;
-                setIcon(QIcon::fromTheme("dialog-ok"));
+                setIcon(ReginaSupport::themeIcon("dialog-ok"));
                 return true;
             }
 
@@ -96,15 +97,15 @@ namespace {
                     return false;
 
                 data.active = false;
-                setIcon(QIcon::fromTheme("dialog-cancel"));
+                setIcon(ReginaSupport::themeIcon("dialog-cancel"));
                 return true;
             }
 
             static QPixmap pixmapFor(const ReginaFilePref& data) {
                 return (data.active ?
                     // 16x16 is SmallIcon size from KDE
-                    QIcon::fromTheme("dialog-ok").pixmap(16,16) : 
-                    QIcon::fromTheme("dialog-cancel").pixmap(16,16));
+                    ReginaSupport::themeIcon("dialog-ok").pixmap(16,16) : 
+                    ReginaSupport::themeIcon("dialog-cancel").pixmap(16,16));
             }
     };
 }
@@ -127,26 +128,30 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     setLayout(layout);
 
     generalPrefs = new ReginaPrefGeneral(this);
-    item->addTab(generalPrefs, QIcon("regina"), tr("General"));
+    item->addTab(generalPrefs, ReginaSupport::regIcon("regina"), tr("General"));
 
     triPrefs = new ReginaPrefTri(this);
-    item->addTab(triPrefs, QIcon("packet_triangulation"), 
+    item->addTab(triPrefs, ReginaSupport::regIcon("packet_triangulation"), 
             tr("Triangulation"));
 
     surfacePrefs = new ReginaPrefSurfaces(this);
-    item->addTab(surfacePrefs, QIcon("packet_surfaces"), tr("Surfaces"));
+    item->addTab(surfacePrefs, ReginaSupport::regIcon("packet_surfaces"),
+        tr("Surfaces"));
 
     pdfPrefs = new ReginaPrefPDF(this);
-    item->addTab(pdfPrefs, QIcon("packet_pdf"), tr("PDF"));
+    item->addTab(pdfPrefs, ReginaSupport::regIcon("packet_pdf"), tr("PDF"));
 
     censusPrefs = new ReginaPrefCensus(this);
-    item->addTab(censusPrefs, QIcon("view-list-text"), tr("Census"));
+    item->addTab(censusPrefs, ReginaSupport::themeIcon("view-list-text"),
+        tr("Census"));
 
     pythonPrefs = new ReginaPrefPython(this);
-    item->addTab(pythonPrefs, QIcon("python_console"), tr("Python"));
+    item->addTab(pythonPrefs, ReginaSupport::regIcon("python_console"),
+        tr("Python"));
 
     snapPeaPrefs = new ReginaPrefSnapPea(this);
-    item->addTab(snapPeaPrefs, QIcon("snappea"), tr("SnapPea"));
+    item->addTab(snapPeaPrefs, ReginaSupport::regIcon("snappea"),
+        tr("SnapPea"));
 
     // Read the current preferences from the main window.
     generalPrefs->cbAutoDock->setChecked(prefSet.autoDock);
@@ -983,7 +988,7 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QWidget(parent) {
     // Set up the button panel.
     QBoxLayout* vBox = new QVBoxLayout();
 
-    QPushButton* btnAdd = new QPushButton(QIcon::fromTheme("list-add"),
+    QPushButton* btnAdd = new QPushButton(ReginaSupport::themeIcon("list-add"),
         tr("Add..."));
     // btnAdd->setFlat(true);
     vBox->addWidget(btnAdd);
@@ -993,7 +998,8 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QWidget(parent) {
         "This list contains the census files that are searched when asked "
         "to locate an arbitrary triangulation in all available censuses."));
 
-    btnRemove = new QPushButton(QIcon::fromTheme("list-remove"), tr("Remove"));
+    btnRemove = new QPushButton(ReginaSupport::themeIcon("list-remove"),
+        tr("Remove"));
     // btnRemove->setFlat(true);
     vBox->addWidget(btnRemove);
     connect(btnRemove, SIGNAL(clicked()), this, SLOT(remove()));
@@ -1002,7 +1008,8 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QWidget(parent) {
         "This list contains the census files that are searched when asked "
         "to locate an arbitrary triangulation in all available censuses."));
 
-    btnActivate = new QPushButton(QIcon::fromTheme("dialog-ok"), tr("Activate"));
+    btnActivate = new QPushButton(ReginaSupport::themeIcon("dialog-ok"),
+        tr("Activate"));
     // btnActivate->setFlat(true);
     vBox->addWidget(btnActivate);
     connect(btnActivate, SIGNAL(clicked()), this, SLOT(activate()));
@@ -1012,7 +1019,8 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QWidget(parent) {
         "available censuses, only the activated census files in this list "
         "are searched."));
 
-    btnDeactivate = new QPushButton(QIcon::fromTheme("dialog-cancel"), tr("Deactivate"));
+    btnDeactivate = new QPushButton(ReginaSupport::themeIcon("dialog-cancel"),
+        tr("Deactivate"));
     // btnDeactivate->setFlat(true);
     vBox->addWidget(btnDeactivate);
     connect(btnDeactivate, SIGNAL(clicked()), this, SLOT(deactivate()));
@@ -1219,7 +1227,7 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
     // Set up the button panel.
     QBoxLayout* vBox = new QVBoxLayout();
 
-    QPushButton* btnAdd = new QPushButton(QIcon::fromTheme("list-add"),
+    QPushButton* btnAdd = new QPushButton(ReginaSupport::themeIcon("list-add"),
         tr("Add..."));
     // btnAdd->setFlat(true);
     vBox->addWidget(btnAdd);
@@ -1229,7 +1237,8 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
         "This list contains the Python libraries to be loaded at "
         "the beginning of each new Python session."));
 
-    btnRemove = new QPushButton(QIcon::fromTheme("list-remove"), tr("Remove"));
+    btnRemove = new QPushButton(ReginaSupport::themeIcon("list-remove"),
+        tr("Remove"));
     // btnRemove->setFlat(true);
     vBox->addWidget(btnRemove);
     connect(btnRemove, SIGNAL(clicked()), this, SLOT(remove()));
@@ -1238,7 +1247,8 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
         "This list contains the Python libraries to be loaded at "
         "the beginning of each new Python session."));
 
-    btnActivate = new QPushButton(QIcon::fromTheme("dialog-ok"), tr("Activate"));
+    btnActivate = new QPushButton(ReginaSupport::themeIcon("dialog-ok"),
+        tr("Activate"));
     // btnActivate->setFlat(true);
     vBox->addWidget(btnActivate);
     connect(btnActivate, SIGNAL(clicked()), this, SLOT(activate()));
@@ -1247,7 +1257,8 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
         "libraries.  When a new Python session is started, only the active "
         "libraries in this list will be loaded."));
 
-    btnDeactivate = new QPushButton(QIcon::fromTheme("dialog-cancel"), tr("Deactivate"));
+    btnDeactivate = new QPushButton(ReginaSupport::themeIcon("dialog-cancel"),
+        tr("Deactivate"));
     // btnDeactivate->setFlat(true);
     vBox->addWidget(btnDeactivate);
     connect(btnDeactivate, SIGNAL(clicked()), this, SLOT(deactivate()));

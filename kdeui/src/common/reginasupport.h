@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2011, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,54 +26,34 @@
 
 /* end stub */
 
-/**
- * Much of the ExamplesAction code is based on the KRecentFilesAction
- * sources, written by Michael Koch and released under the GNU LGPL v2.
+/*! \file support.h
+ *  \brief Helps the GUI to locate supporting files.
  */
 
-#include "file/nglobaldirs.h"
+#ifndef __SUPPORT_H
+#define __SUPPORT_H
 
-#include "examplesaction.h"
-#include "reginasupport.h"
+#include <QIcon>
+#include <QString>
 
-#include <QActionGroup>
-#include <QFile>
-#include <QMenu>
-#include <QToolButton>
-#include <QUrl>
+/**
+ * A class with static functions that help Regina to locate supporting files.
+ *
+ * Unlike regina::NGlobalDirs, this class gives correct results for both
+ * full installations in a fixed location (e.g., a typical Linux install),
+ * as well as relocatable application bundles (e.g., a typical MacOSX install).
+ */
+class ReginaSupport {
+    private:
+        static QString home_;
 
-ExamplesAction::ExamplesAction(QWidget* parent) :
-        QMenu(parent) {
-    setTitle(tr("Open E&xample"));
-    setIcon(ReginaSupport::themeIcon("bookmarks"));
+    public:
+        static QIcon regIcon(const QString& name);
+        static QIcon themeIcon(const QString& name);
 
-    group = new QActionGroup(parent);
-    //setMenuAccelsEnabled(false);
-    //setEnabled(true);
-    connect(group, SIGNAL(triggered(QAction*)), this, SLOT(exampleActivated(QAction*)));
-    
-    setWhatsThis(tr("Open one of the example data files that "
-        "ships with Regina.  These examples are useful starting points "
-        "for discovering what Regina can do.  Several censuses of "
-        "3-manifold triangulations are also provided."));
-}
+    private:
+        static const QString& home();
+};
 
-ExamplesAction::~ExamplesAction() {
-}
-
-void ExamplesAction::addUrl(const QString& fileName, const QString& text) {
-
-    QAction* action = new QAction(this);
-    action->setText(text);
-    insertAction(0 /* insert last */, action);
-    group->addAction(action);
-    urls_.insert(action, QUrl(QString("file:%1/%2")
-        .arg(QFile::decodeName(regina::NGlobalDirs::examples().c_str()))
-        .arg(fileName)));
-}
-
-void ExamplesAction::exampleActivated(QAction* action) {
-    // Open the Url.
-    emit urlSelected(urls_[action]);
-}
+#endif
 

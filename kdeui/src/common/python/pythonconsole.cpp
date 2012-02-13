@@ -34,9 +34,10 @@
 // Put this before any Qt/KDE stuff so Python 2.3 "slots" doesn't clash.
 #include "pythoninterpreter.h"
 
-#include "../pythonmanager.h"
-#include "../reginafilter.h"
-#include "../reginaprefset.h"
+#include "pythonmanager.h"
+#include "reginafilter.h"
+#include "reginaprefset.h"
+#include "reginasupport.h"
 #include "commandedit.h"
 #include "pythonconsole.h"
 
@@ -47,7 +48,6 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QHBoxLayout>
-#include <QIcon>
 #include <QLabel>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -115,7 +115,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     QAction* act = new QAction(this);
     act->setText(tr("&Save Session"));
-    act->setIcon(QIcon::fromTheme("document-save"));
+    act->setIcon(ReginaSupport::themeIcon("document-save"));
     act->setShortcut(tr("Ctrl+s"));
     act->setToolTip(tr("Save session history"));
     act->setWhatsThis(tr("Save the entire history of this Python session "
@@ -127,7 +127,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     act = new QAction(this);
     act->setText(tr("&Close"));
-    act->setIcon(QIcon::fromTheme("window-close"));
+    act->setIcon(ReginaSupport::themeIcon("window-close"));
     act->setShortcut(tr("Ctrl+d"));
     act->setToolTip(tr("Close Python console"));
     connect(act, SIGNAL(triggered()), this, SLOT(close()));
@@ -135,7 +135,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     act = new QAction(this);
     act->setText(tr("&Copy From Session"));
-    act->setIcon(QIcon::fromTheme("edit-copy"));
+    act->setIcon(ReginaSupport::themeIcon("edit-copy"));
     act->setShortcut(tr("Shift+Ctrl+c"));
     act->setToolTip(tr(
         "Copy selected text from the session log to the clipboard "));
@@ -147,7 +147,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     act = new QAction(this);
     act->setText(tr("Select &All From Session"));
-    act->setIcon(QIcon::fromTheme("edit-select-all"));
+    act->setIcon(ReginaSupport::themeIcon("edit-select-all"));
     act->setShortcut(tr("Shift+Ctrl+a"));
     act->setToolTip(tr(
         "Selected all text in the session log"));
@@ -204,7 +204,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     act = new QAction(this);
     act->setText(tr("&Scripting Overview"));
-    act->setIcon(QIcon::fromTheme("help-contents"));
+    act->setIcon(ReginaSupport::themeIcon("help-contents"));
     act->setShortcut(tr("F1"));
     act->setToolTip(tr("Read Python scripting overview"));
     act->setWhatsThis(tr("Open the <i>Python Scripting</i> section of the "
@@ -214,7 +214,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     act = new QAction(this);
     act->setText(tr("&Python API Reference"));
-    act->setIcon(QIcon("python_console"));
+    act->setIcon(ReginaSupport::regIcon("python_console"));
     act->setToolTip(tr("Read detailed Python scripting reference"));
     act->setWhatsThis(tr("Open the detailed reference of classes, methods "
         "and routines that Regina makes available to Python scripts."));
@@ -225,7 +225,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
 
     act = new QAction(this);
     act->setText(tr("What's &This?"));
-    act->setIcon(QIcon::fromTheme("help-contextual"));
+    act->setIcon(ReginaSupport::themeIcon("help-contextual"));
     connect(act, SIGNAL(triggered()), this, SLOT(contextHelpActivated()));
     menuHelp->addAction(act);
     

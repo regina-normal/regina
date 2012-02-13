@@ -58,6 +58,7 @@
 #include "../packetchooser.h"
 #include "../packeteditiface.h"
 #include "../packetfilter.h"
+#include "reginasupport.h"
 
 #include <memory>
 #include <QApplication>
@@ -121,7 +122,8 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     isoResult->setWhatsThis(msg);
     leftIsoArea->addWidget(isoResult);
 
-    isoView = new QPushButton(QIcon("packet_view"), tr("Details..."), ui);
+    isoView = new QPushButton(ReginaSupport::regIcon("packet_view"),
+        tr("Details..."), ui);
     // isoView->setFlat(true);
     isoView->setToolTip(tr("View details of isomorphism"));
     isoView->setWhatsThis(tr("View the details of the isomorphism "

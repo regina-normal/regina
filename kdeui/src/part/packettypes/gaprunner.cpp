@@ -29,6 +29,7 @@
 #include "algebra/ngrouppresentation.h"
 
 #include "../reginapart.h"
+#include "reginasupport.h"
 #include "gaprunner.h"
 
 #include <iostream>
@@ -89,8 +90,8 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
     QVBoxLayout *dialogLayout = new QVBoxLayout(this);
     buttonBox = new QDialogButtonBox(this);
     buttonBox->addButton(QDialogButtonBox::Cancel);
-    QPushButton *button = new QPushButton(QIcon::fromTheme("process-stop"),
-        tr("Kill GAP"), this);
+    QPushButton *button = new QPushButton(
+        ReginaSupport::themeIcon("process-stop"), tr("Kill GAP"), this);
     button->setToolTip(tr("Kill the running GAP process"));
     button->setWhatsThis(tr("Kill the running GAP process.  This will cancel the "
             "group simplification."));
@@ -110,7 +111,7 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
         "between Regina and GAP.</qt>"));
 
     QLabel* icon = new QLabel(page);
-    icon->setPixmap(QIcon::fromTheme("system-run").pixmap(32,32));
+    icon->setPixmap(ReginaSupport::themeIcon("system-run").pixmap(32,32));
     layout->addWidget(icon, 0);
 
     layout->addSpacing(10);

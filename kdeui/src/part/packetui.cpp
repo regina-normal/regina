@@ -38,6 +38,7 @@
 #include "packetui.h"
 #include "packetwindow.h"
 #include "reginapart.h"
+#include "reginasupport.h"
 
 #include <QApplication>
 #include <QBoxLayout>
@@ -128,7 +129,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     //actCommit = part->actionCollection()->addAction("packet_editor_commit");
     actCommit = new QAction(this);
     actCommit->setText(tr("Co&mmit"));
-    actCommit->setIcon(QIcon::fromTheme("dialog-ok"));
+    actCommit->setIcon(ReginaSupport::themeIcon("dialog-ok"));
     actCommit->setEnabled(false);
     actCommit->setToolTip(tr("Commit changes to this packet"));
     actCommit->setWhatsThis(tr("Commit any changes you have made inside "
@@ -139,7 +140,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     actRefresh = new QAction(this);
     //actRefresh = part->actionCollection()->addAction("packet_editor_refresh");
     actRefresh->setText(tr("&Refresh"));
-    actRefresh->setIcon(QIcon::fromTheme("view-refresh"));
+    actRefresh->setIcon(ReginaSupport::themeIcon("view-refresh"));
     actRefresh->setToolTip(tr("Discard any changes and refresh this "
         "packet viewer"));
     actRefresh->setWhatsThis(tr("Refresh this viewer to show the most "
@@ -150,7 +151,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     actDockUndock = new QAction(this);
     //actDockUndock = part->actionCollection()->addAction("packet_editor_dock");
     actDockUndock->setText(tr("Un&dock"));
-    actDockUndock->setIcon(QIcon::fromTheme("mail-attachment"));
+    actDockUndock->setIcon(ReginaSupport::themeIcon("mail-attachment"));
     actDockUndock->setToolTip(tr("Dock / undock this packet viewer"));
     actDockUndock->setWhatsThis(tr("Dock or undock this packet viewer.  "
         "A docked viewer sits within the main window, to the right of "
@@ -160,7 +161,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     actClose = new QAction(this);
     //actClose = part->actionCollection()->addAction("packet_editor_close");
     actClose->setText(tr("&Close"));
-    actClose->setIcon(QIcon::fromTheme("window-close"));
+    actClose->setIcon(ReginaSupport::themeIcon("window-close"));
     actClose->setToolTip(tr("Close this packet viewer"));
     actClose->setWhatsThis(tr("Close this packet viewer.  Any changes "
         "that have not been committed will be discarded."));
@@ -177,7 +178,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
 
     dockUndockBtn = new FlatToolButton();
     dockUndockBtn->setCheckable(true);
-    dockUndockBtn->setIcon(QIcon::fromTheme("mail-attachment"));
+    dockUndockBtn->setIcon(ReginaSupport::themeIcon("mail-attachment"));
     dockUndockBtn->setText(tr("Dock or undock this packet viewer"));
     dockUndockBtn->setChecked(true);
     dockUndockBtn->setWhatsThis(tr("Dock or undock this packet viewer.  "
@@ -243,8 +244,8 @@ void PacketPane::setDirty(bool newDirty) {
 
     actCommit->setEnabled(dirty);
     actRefresh->setText(dirty ? tr("&Discard") : tr("&Refresh"));
-    actRefresh->setIcon(dirty ? QIcon::fromTheme("dialog-cancel") : 
-            QIcon::fromTheme("view-refresh"));
+    actRefresh->setIcon(dirty ? ReginaSupport::themeIcon("dialog-cancel") : 
+            ReginaSupport::themeIcon("view-refresh"));
 }
 
 void PacketPane::setDirtinessBroken() {
@@ -253,7 +254,7 @@ void PacketPane::setDirtinessBroken() {
 
     actCommit->setEnabled(dirty);
     actRefresh->setText(dirty ? tr("&Discard / Refresh") : tr("&Refresh"));
-    actRefresh->setIcon(QIcon::fromTheme("view-refresh"));
+    actRefresh->setIcon(ReginaSupport::themeIcon("view-refresh"));
 }
 
 bool PacketPane::setReadWrite(bool allowReadWrite) {
