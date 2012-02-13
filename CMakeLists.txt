@@ -3,7 +3,9 @@ PROJECT (regina)
 
 # Let the user override the package name.
 IF(NOT PACKAGE_NAME)
-  SET (PACKAGE_NAME regina)
+  SET (PACKAGE_NAME regina CACHE STRING
+    "The package name used for installation directories.  On some platforms this is 'regina-normal', not 'regina', to avoid conflicts with other software with the same name."
+	FORCE)
 ENDIF(NOT PACKAGE_NAME)
 
 SET (PACKAGE_PRETTY_NAME Regina)
@@ -36,7 +38,8 @@ ENDIF(NOT CMAKE_BUILD_TYPE)
 # Bundle = self-contained MacOSX app bundle that users can drag and drop.
 if (NOT REGINA_INSTALL_TYPE)
   SET (REGINA_INSTALL_TYPE FullInstall CACHE STRING
-    "Choose how Regina installs itself.  Options are: FullInstall Bundle.")
+    "Choose how Regina installs itself.  Options are: FullInstall Bundle."
+	FORCE)
 ENDIF (NOT REGINA_INSTALL_TYPE)
 
 # Sanity check the installation type:
@@ -54,6 +57,16 @@ ENDIF()
 # Set PACKAGING_MODE=1 to make every component compulsory.
 # Set PACKAGING_MODE=1 and PACKAGING_NO_MPI=1 to make every component
 # compulsory except for the MPI utilities.
+IF(NOT PACKAGING_MODE)
+  SET (PACKAGING_MODE OFF CACHE STRING
+    "Makes all optional components mandatory, so that cmake will fail if any optional component is not found."
+	FORCE)
+ENDIF(NOT PACKAGING_MODE)
+IF(NOT PACKAGING_NO_MPI)
+  SET (PACKAGING_NO_MPI OFF CACHE STRING
+    "Leaves MPI as an optional component, even if PACKAGING_MODE is ON."
+	FORCE)
+ENDIF(NOT PACKAGING_NO_MPI)
 IF(PACKAGING_MODE)
   SET(REGINA_MANDATORY TRUE)
   IF(PACKAGING_NO_MPI)
@@ -250,7 +263,11 @@ MACRO_LOG_FEATURE(BOOST_PYTHON_FOUND
   "http://www.boost.org/"
   REGINA_MANDATORY)
 
-# TODO: Make this option show up in cmake -i.
+IF(NOT DISABLE_GUI)
+  SET (DISABLE_GUI OFF CACHE STRING
+    "Disables the graphical user interface.  The calculation engine, Python bindings and other command-line utilities will still be built.  This option is suitable for use on high-performance clusters."
+	FORCE)
+ENDIF(NOT DISABLE_GUI)
 IF(DISABLE_GUI)
   if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
     MESSAGE(FATAL_ERROR "You cannot set DISABLE_GUI=1 with REGINA_INSTALL_TYPE=Bundle.")
