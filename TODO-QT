@@ -7,7 +7,10 @@ The toolbar is fairly bulky: make it 22x22, not 32x32.
 
 File type associations: http://doc.qt.nokia.com/qq/qq12-mac-events.html
 
-Strip out TODOs from all CMakeLists.txt
+CMakeLists:
+- restore GUI documentation (which was built using meinproc);
+- install application icons and Desktop files for KDE/GNOME;
+- install mimetype handling for KDE/GNOME.
 
 Check that we call QWidget::setWindowIcon() for top-level windows.
 
