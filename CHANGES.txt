@@ -119,6 +119,9 @@ Version 4.91  [ (under development) ]
             - New template class that generalises NTetFace to arbitrary
               dimensions.  NTetFace is retained as a convenience typedef,
               but with changes; see the NTetFace notes below.
+        Class NGlobalDirs:
+            - New routine setDirs() to be used when an application has
+              been moved from the cmake-configured installation directory.
         Class NHilbertDual:
             - New class that implements a modified dual algorithm for
               Hilbert basis enumeration, based on the dual algorithm in

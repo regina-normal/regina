@@ -49,16 +49,18 @@ namespace regina {
  * Provides global routines that return directories in which various
  * components of Regina are installed on the system.
  *
- * These routines are only useful with a normal installation of Regina.
- * Specifically, they return the relevant directories as they \e should be
- * according to the arguments given to the \e configure script at build time.
- * If Regina is being run directly out of the source tree, or if files were
- * moved around after Regina was installed, then these directories might well
- * not exist.
+ * By default, these routines are only useful with a fixed filesystem
+ * installation of Regina (e.g., a typical Linux install).  Specifically,
+ * they return the relevant directories as they were configured by \e cmake
+ * at build time.
  *
- * It is possible that, in future versions of Regina, these routines will
- * support more interesting scenarios, such as running out of the source
- * tree or moving ready-made "application bundles" around the system.
+ * If Regina may have been moved around on the filesystem (e.g., if you are
+ * running an app bundle on MacOS), you \e must call setDirs() when your
+ * application starts.  Otherwise the directories that NGlobalDirs might
+ * be incorrect, and might not even exist.
+ *
+ * At present this class does not support running Regina directly out of
+ * the source tree.  This might be supported in future versions of Regina.
  */
 class REGINA_API NGlobalDirs {
     public:
@@ -67,9 +69,12 @@ class REGINA_API NGlobalDirs {
          * directory should contains subdirectories \e scripts/, \e icons/,
          * \e examples/ and so on.
          *
-         * \warning Currently this routine only returns useful results
-         * if Regina has been properly installed on the system.  See the
-         * NGlobalDirs class notes for further details.
+         * \warning If Regina is not installed in the exact location
+         * configured at compile time (e.g., if you are running a MacOSX
+         * app bundle), you \e must call setDirs() before calling this routine.
+         * \warning If you are running out of the source tree, this
+         * routine will almost certainly return an incorrect (and possibly
+         * non-existent) directory.
          *
          * @return Regina's primary home directory.
          */
@@ -78,9 +83,12 @@ class REGINA_API NGlobalDirs {
         /**
          * Returns the directory in which Regina's python module is installed.
          *
-         * \warning Currently this routine only returns useful results
-         * if Regina has been properly installed on the system.  See the
-         * NGlobalDirs class notes for further details.
+         * \warning If Regina is not installed in the exact location
+         * configured at compile time (e.g., if you are running a MacOSX
+         * app bundle), you \e must call setDirs() before calling this routine.
+         * \warning If you are running out of the source tree, this
+         * routine will almost certainly return an incorrect (and possibly
+         * non-existent) directory.
          *
          * @return Regina's python module directory.
          */
@@ -92,9 +100,12 @@ class REGINA_API NGlobalDirs {
          * but can be made to load automatically as extra user libraries
          * through Regina's python settings.
          *
-         * \warning Currently this routine only returns useful results
-         * if Regina has been properly installed on the system.  See the
-         * NGlobalDirs class notes for further details.
+         * \warning If Regina is not installed in the exact location
+         * configured at compile time (e.g., if you are running a MacOSX
+         * app bundle), you \e must call setDirs() before calling this routine.
+         * \warning If you are running out of the source tree, this
+         * routine will almost certainly return an incorrect (and possibly
+         * non-existent) directory.
          *
          * @return Regina's optional Python library directory.
          */
@@ -104,9 +115,12 @@ class REGINA_API NGlobalDirs {
          * Returns the directory in which example data files and census
          * data files are installed.
          *
-         * \warning Currently this routine only returns useful results
-         * if Regina has been properly installed on the system.  See the
-         * NGlobalDirs class notes for further details.
+         * \warning If Regina is not installed in the exact location
+         * configured at compile time (e.g., if you are running a MacOSX
+         * app bundle), you \e must call setDirs() before calling this routine.
+         * \warning If you are running out of the source tree, this
+         * routine will almost certainly return an incorrect (and possibly
+         * non-existent) directory.
          *
          * @return Regina's example and census data directory.
          */
@@ -116,9 +130,12 @@ class REGINA_API NGlobalDirs {
          * Returns the directory in which API documentation for Regina's
          * calculation engine is installed.
          *
-         * \warning Currently this routine only returns useful results
-         * if Regina has been properly installed on the system.  See the
-         * NGlobalDirs class notes for further details.
+         * \warning If Regina is not installed in the exact location
+         * configured at compile time (e.g., if you are running a MacOSX
+         * app bundle), you \e must call setDirs() before calling this routine.
+         * \warning If you are running out of the source tree, this
+         * routine will almost certainly return an incorrect (and possibly
+         * non-existent) directory.
          *
          * @return Regina's calculation engine documentation directory.
          */
@@ -128,13 +145,36 @@ class REGINA_API NGlobalDirs {
          * Returns the directory containing internal data files for Regina's
          * calculation engine.
          *
-         * \warning Currently this routine only returns useful results
-         * if Regina has been properly installed on the system.  See the
-         * NGlobalDirs class notes for further details.
+         * \warning If Regina is not installed in the exact location
+         * configured at compile time (e.g., if you are running a MacOSX
+         * app bundle), you \e must call setDirs() before calling this routine.
+         * \warning If you are running out of the source tree, this
+         * routine will almost certainly return an incorrect (and possibly
+         * non-existent) directory.
          *
          * @return Regina's calculation engine data directory.
          */
         static std::string data();
+
+        /**
+         * Tells Regina where data files are installed.  This is
+         * necessary if Regina is not installed in the location that was
+         * configured by \e cmake at build time (e.g., if you are
+         * running a MacOSX app bundle).
+         *
+         * @param homeDir Regina's primary home directory, which will be
+         * returned by homeDir().
+         * @param pythonModuleDir the directory containing Regina's
+         * python module, which will be returned by pythonModule().
+         */
+        static void setDirs(const std::string& homeDir,
+                const std::string& pythonModuleDir);
+
+    private:
+        static std::string home_;
+            /**< Regina's primary home directory. */
+        static std::string pythonModule_;
+            /**< The directory containing Regina's python module. */
 };
 
 /*@}*/
