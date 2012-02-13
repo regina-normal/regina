@@ -79,7 +79,6 @@ package are licensed under the GNU General Public License version 2.
 
 OXYGEN ICONS:
 
-The packet-view icons have been modified from the Oxygen icon set for KDE4.
 The Oxygen icons are dual-licensed under the Creative Common
 Attribution-ShareAlike 3.0 License or the GNU Library General Public License.
 
