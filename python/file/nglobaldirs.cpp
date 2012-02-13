@@ -44,12 +44,14 @@ void addNGlobalDirs() {
         .def("examples", &NGlobalDirs::examples)
         .def("engineDocs", &NGlobalDirs::engineDocs)
         .def("data", &NGlobalDirs::data)
+        .def("setDirs", &NGlobalDirs::setDirs)
         .staticmethod("home")
         .staticmethod("pythonModule")
         .staticmethod("pythonLibs")
         .staticmethod("examples")
         .staticmethod("engineDocs")
         .staticmethod("data")
+        .staticmethod("setDirs")
     ;
 }
 
