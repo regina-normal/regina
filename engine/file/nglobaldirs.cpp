@@ -30,28 +30,37 @@
 
 namespace regina {
 
+std::string NGlobalDirs::home_(REGINA_DATADIR);
+std::string NGlobalDirs::pythonModule_(REGINA_PYLIBDIR);
+
 std::string NGlobalDirs::home() {
-    return REGINA_DATADIR;
+    return home_;
 }
 
 std::string NGlobalDirs::pythonModule() {
-    return REGINA_PYLIBDIR;
+    return pythonModule_;
 }
 
 std::string NGlobalDirs::pythonLibs() {
-    return home() + "/pylib";
+    return home_ + "/pylib";
 }
 
 std::string NGlobalDirs::examples() {
-    return home() + "/examples";
+    return home_ + "/examples";
 }
 
 std::string NGlobalDirs::engineDocs() {
-    return home() + "/engine-docs";
+    return home_ + "/engine-docs";
 }
 
 std::string NGlobalDirs::data() {
-    return home() + "/internal/data";
+    return home_ + "/internal/data";
+}
+
+void NGlobalDirs::setDirs(const std::string& homeDir,
+        const std::string& pythonModuleDir) {
+    home_ = homeDir;
+    pythonModule_ = pythonModuleDir;
 }
 
 } // namespace regina
