@@ -48,7 +48,7 @@ if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   set(BUNDLE_LIBDIRS ${QT_LIBRARY_DIRS})
   INSTALL(CODE "
     include(BundleUtilities)
-    fixup_bundle(\"${BUNDLEDIR_ESCAPED}\" \"\" \"${BUNDLE_LIBDIRS}\")
+    fixup_bundle(\"${BUNDLEDIR_ESCAPED}\" \"python/regina.so\" \"${BUNDLE_LIBDIRS}\")
     " COMPONENT Runtime)
 
   # On MacOSX we need a qt.conf file in our bundle; otherwise the system
