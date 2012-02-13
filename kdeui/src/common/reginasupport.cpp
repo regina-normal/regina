@@ -28,39 +28,36 @@
 
 #include "file/nglobaldirs.h"
 #include "reginasupport.h"
-#include <QCoreApplication>
+#include <QFile>
 
-// TODO: Rewrite this and do it properly.
+namespace {
+    int iconSizes[] = { 8, 16, 22, 32, 48, 64, 128, 0 /* terminator */ };
+}
 
 QString ReginaSupport::home_;
 
 const QString& ReginaSupport::home() {
-    if (home_.isNull()) {
-#ifdef Q_OS_MACX
-        home_ = QCoreApplication::applicationDirPath() + "/../Resources";
-#else
-        home_ = regina::NGlobalDirs::home();
-#endif
-
-    }
-
+    if (home_.isNull())
+        home_ = QFile::decodeName(regina::NGlobalDirs::home().c_str());
     return home_;
 }
 
 QIcon ReginaSupport::regIcon(const QString& name) {
-    QIcon icon(home() + "/icons/regina/" + name + "-22.png");
-    icon.addFile(home() + "/icons/regina/" + name + "-16.png");
-    icon.addFile(home() + "/icons/regina/" + name + "-32.png");
-    icon.addFile(home() + "/icons/regina/" + name + "-8.png");
+    QIcon icon;
+    QString filename = home() + "/icons/regina/" + name + "-%1.png";
+    for (int i = 0; iconSizes[i]; ++i)
+        icon.addFile(filename.arg(iconSizes[i]));
     return icon;
 }
 
 QIcon ReginaSupport::themeIcon(const QString& name) {
-    // TODO: Allow theme.
-    QIcon icon(home() + "/icons/oxygen/" + name + "-22.png");
-    icon.addFile(home() + "/icons/oxygen/" + name + "-16.png");
-    icon.addFile(home() + "/icons/oxygen/" + name + "-32.png");
-    icon.addFile(home() + "/icons/oxygen/" + name + "-8.png");
+    QIcon icon = QIcon::fromTheme(name);
+    if (! icon.isNull())
+        return icon;
+
+    QString filename = home() + "/icons/oxygen/" + name + "-%1.png";
+    for (int i = 0; iconSizes[i]; ++i)
+        icon.addFile(filename.arg(iconSizes[i]));
     return icon;
 }
 

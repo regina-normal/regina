@@ -26,12 +26,14 @@
 
 /* end stub */
 
+#include "file/nglobaldirs.h"
+
 #include "reginaabout.h"
 #include "reginamain.h"
 
 #include <QTextCodec>
-
 #include <QApplication>
+#include <QFile>
 
 int main(int argc, char **argv) {
     // Always talk to and from the calculation engine in UTF-8.
@@ -44,6 +46,16 @@ int main(int argc, char **argv) {
     QCoreApplication::setOrganizationName("Regina");
     QCoreApplication::setOrganizationDomain("regina.sourceforge.net");
     QCoreApplication::setApplicationName("Regina");
+
+#ifdef REGINA_INSTALL_BUNDLE
+#ifdef Q_OS_MACX
+    regina::NGlobalDirs::setDirs(
+        static_cast<const char*>(QFile::encodeName(
+            QCoreApplication::applicationDirPath() + "/../Resources")),
+        static_cast<const char*>(QFile::encodeName(
+            QCoreApplication::applicationDirPath() + "/python")));
+#endif
+#endif
 
     // TODO Session management disabled until further notice.
     // See if we are starting with session management.

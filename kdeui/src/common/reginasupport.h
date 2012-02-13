@@ -39,9 +39,9 @@
 /**
  * A class with static functions that help Regina to locate supporting files.
  *
- * Unlike regina::NGlobalDirs, this class gives correct results for both
- * full installations in a fixed location (e.g., a typical Linux install),
- * as well as relocatable application bundles (e.g., a typical MacOSX install).
+ * This class gives correct results for full installations in a fixed location
+ * (e.g., a typical Linux install), as well as relocatable application bundles
+ * (e.g., a typical MacOSX install).
  */
 class ReginaSupport {
     private:
