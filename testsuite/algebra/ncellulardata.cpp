@@ -31,6 +31,7 @@
 
 #include "maths/nsparsegrid.h"
 #include "maths/nmatrixint.h"
+//#include "maths/nmatrix.h"
 
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
@@ -55,6 +56,9 @@ using regina::NCellularData;
 using regina::NBilinearForm;
 using regina::NMatrixInt;
 using regina::NLensSpace;
+using regina::NMatrixRing; 
+using regina::NSVPolynomialRing; 
+
 
 // export REGINA_DETAILED_TESTS=yes
 // to enable detailed (slow!) tests.
@@ -95,6 +99,8 @@ class NCellularDataTest : public CppUnit::TestFixture {
     private:
        std::vector< NTriangulation* > t3List;
        std::vector< Dim4Triangulation* > t4List;
+       std::vector< NTriangulation* > knotList;
+       std::vector< std::string > knotPolyList;
        std::vector< NCellularData* > m3List; // NCellularData of 3-manifolds
        std::vector< NCellularData* > m4List; // NCellularData of 4-manifolds
        std::vector< std::string > polyList;
@@ -116,6 +122,21 @@ class NCellularDataTest : public CppUnit::TestFixture {
           copyAndDelete(*t3List[14],     NExampleTriangulation::weberSeifert());
 	  t3List[15]->insertRehydration("gepaadcefeffnkkanax");
 	  t3List[16]->insertRehydration("jgofiaaaceedfhiiifkxkfnbtxe"); }
+
+          unsigned long numKnotTests( 5 );
+          knotList.resize(numKnotTests); for (unsigned long i=0; i<knotList.size(); i++)
+           knotList[i] = new NTriangulation();
+          knotPolyList.resize(numKnotTests);
+          copyAndDelete(*knotList[0], NTriangulation::fromIsoSig("cPcbbbiht"));  // figure-8 4_1 knot
+          knotPolyList[0] = "-t^(-1)+3-t"; // -t^-1 + 3 - t
+          copyAndDelete(*knotList[1], NTriangulation::fromIsoSig("dLQbcccdero")); // 3-twist 5_2 knot
+          knotPolyList[1] = "2t^(-1)-3+2t"; // 2t^-1 - 3 + 2t
+          copyAndDelete(*knotList[2], NTriangulation::fromIsoSig("eLPkbcddddcwjb")); // Stevedore 6_1
+          knotPolyList[2] = "-2t^(-1)+5-2t"; // -2t^-1 + 5 - 2t
+          copyAndDelete(*knotList[3], NTriangulation::fromIsoSig("fLLQcbcdeeemgopdp")); // Miller Inst knot 6_2
+          knotPolyList[3] = "-t^(-2)+3t^(-1)-3+3t-t^2"; // -t^-2 + 3t^-1 - 3 + 3t - t^2
+          copyAndDelete(*knotList[4], NTriangulation::fromIsoSig("gLLPQccdefffhggaacv")); // 6_3 knot
+          knotPolyList[4] = "t^2-3t^(-1)+t-3t+t^2"; // t^2 - 3t^-1 + 5 - 3t + t^2
 
           unsigned long numTests4( detailedTests() ? 7 : 4);
           t4List.resize(numTests4); for (unsigned long i=0; i<t4List.size(); i++) t4List[i] = new Dim4Triangulation();
@@ -144,6 +165,7 @@ class NCellularDataTest : public CppUnit::TestFixture {
          for (unsigned long i=0; i<t4List.size(); i++) delete t4List[i];
 	 for (unsigned long i=0; i<m3List.size(); i++) delete m3List[i];
          for (unsigned long i=0; i<m4List.size(); i++) delete m4List[i];
+         for (unsigned long i=0; i<knotList.size(); i++) delete knotList[i];
 	}
 
 	void basic_tests() {  // euler char, poincare poly, cell counts
@@ -263,13 +285,26 @@ class NCellularDataTest : public CppUnit::TestFixture {
 	} // lensspacehomotopyclassification_tests()
 
         void alexpoly_tests() {
-        // TODO: stuff in here!  
-        //  (1) Check maximal tree has right number of cells. 
-        //  (2) check alexander module chain complex is actually a chain complex for a random
-        //      ish collection? 
-        //  (3) check a wider variety of alex polys symmetric and evaluate to +1 or -1 at 1. 
-        //  (4) check alex polys against what we expect them to be for several cases
-        }
+        for (unsigned long i=0; i<knotList.size(); i++)
+         {
+         // construct corresponding NCellularData from knotList[i]
+
+         NCellularData knotNCD(*knotList[i]);
+
+         //  (1) Check maximal tree has right number of cells.  TODO -- no way to access this yet. 
+         //  (2) check alexander module chain complex is actually a chain complex for a random
+         //      ish collection? 
+         const NMatrixRing< NSVPolynomialRing< NLargeInteger > >* cm1(NULL), *cm2(NULL);
+         cm1 = knotNCD.alexanderChainComplex( NCellularData::ChainComplexLocator(1, NCellularData::DUAL_coord ) );
+         cm2 = knotNCD.alexanderChainComplex( NCellularData::ChainComplexLocator(2, NCellularData::DUAL_coord ) );
+
+         std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > prod((*cm1)*(*cm2));
+        if (!prod->isZero()) CPPUNIT_FAIL("NCellularData::alexander module chain complex error.");
+         //  (3) check a wider variety of alex polys symmetric and evaluate to +1 or -1 at 1. 
+        
+         //  (4) check alex polys against what we expect them to be for several cases
+         }
+        } // end alexpoly_tests()
 
 };
 
