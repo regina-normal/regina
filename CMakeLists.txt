@@ -82,14 +82,12 @@ ENDIF(PACKAGING_MODE)
 # For pretty logging of optional features at the end of the cmake run:
 INCLUDE(MacroLogFeature)
 
-# Options that were used with the (now-redundant) KDE4Defaults:
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
-set(CMAKE_COLOR_MAKEFILE ON)
-
 # Modules needed for IOS check and function existence
 INCLUDE( CheckCXXSourceCompiles )
 INCLUDE( CheckFunctionExists )
+
+# Always include . in the header search path:
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Installation directories
 if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
