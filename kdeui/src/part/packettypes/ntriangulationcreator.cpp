@@ -338,7 +338,7 @@ NTriangulationCreator::NTriangulationCreator() {
     exampleWhich->insertItem(3, QObject::tr("Figure eight knot complement"));
     exampleWhich->insertItem(4, QObject::tr("Gieseking manifold"));
     exampleWhich->insertItem(5, QObject::tr("Lens space L(8,3)"));
-    exampleWhich->insertItem(6, QObject::tr("Poincaré homology sphere"));
+    exampleWhich->insertItem(6, QObject::trUtf8("Poincaré homology sphere"));
     exampleWhich->insertItem(7, QObject::tr("Product RP2 x S1"));
     exampleWhich->insertItem(8, QObject::tr("Product S2 x S1"));
     exampleWhich->insertItem(9, QObject::tr("Solid Klein bottle"));
