@@ -80,6 +80,8 @@ class NCellularDataTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(intersectionform_tests); 
     // check lens space classification, torsion linking form
     CPPUNIT_TEST(lensspacehomotopyclassification_tests); 
+    // check alexander polynomials
+    CPPUNIT_TEST(alexpoly_tests);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -259,6 +261,15 @@ class NCellularDataTest : public CppUnit::TestFixture {
           } // for i loop
          if (!testpassed) CPPUNIT_FAIL("Lens space(s): "+msg.str()+"failed TLF test.");
 	} // lensspacehomotopyclassification_tests()
+
+        void alexpoly_tests() {
+        // TODO: stuff in here!  
+        //  (1) Check maximal tree has right number of cells. 
+        //  (2) check alexander module chain complex is actually a chain complex for a random
+        //      ish collection? 
+        //  (3) check a wider variety of alex polys symmetric and evaluate to +1 or -1 at 1. 
+        //  (4) check alex polys against what we expect them to be for several cases
+        }
 
 };
 

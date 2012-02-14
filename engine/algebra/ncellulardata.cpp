@@ -982,18 +982,7 @@ std::cout.flush();
 //
 // At present this algorithm collapses the maximal tree in the 1-skeleton of the dual
 // CW-decomposition.  Assumes triangulation is connected. So the 1->0 chain map
-// is just a [t^a-1, ..., t^p-1] type of matrix.  Currently a little buggy for 3-manifolds
-// it appears there's a problem with the C_2 --> C_1 map. 
-//
-// Possible problem: we are mixing several conventions here.  One is cycles in the dual CW
-//  complex, another is the Pi1 presentation code.  We should ensure we have a uniform normal
-//  orientation for faces in the 3-manifolds code.  Maybe this is the probem? 
-//
-// TODO for 2->1 map, go through all incidences and list them. Print on screen. 
-//
-// this algorithm appears to have these problems:
-//  (1) The map 1->0 gives one too many non-trivial entries. So somehow it's 
-//      messing up this part of the chain complex. 
+// is just a [t^a-1, ..., t^p-1] type of matrix.  
 
 const NMatrixRing< NSVPolynomialRing< NLargeInteger > >* 
  NCellularData::alexanderChainComplex( const ChainComplexLocator &a_desc ) const
