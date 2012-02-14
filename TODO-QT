@@ -1,9 +1,8 @@
-Unicode (e.g. Poincare homology sphere in create-triangulation)
 Hunt for instances of pixmap(..,..).
 
 Lock icon on trianglations with surface lists
 
-The toolbar is fairly bulky: make it 22x22, not 32x32.
+The toolbar is fairly bulky on MacOSX: make it 22x22, not 32x32?
 
 File type associations: http://doc.qt.nokia.com/qq/qq12-mac-events.html
 
