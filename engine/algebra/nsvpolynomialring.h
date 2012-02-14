@@ -150,8 +150,19 @@ class NSVPolynomialRing {
 	 */
 	NSVPolynomialRing<T> operator - (const NSVPolynomialRing<T>& q) const;
 
+        /**
+         * Decrement operator. 
+         */
 	NSVPolynomialRing<T>& operator -=(const NSVPolynomialRing<T>& q);
+
+        /**
+         * Increment operator. 
+         */
 	NSVPolynomialRing<T>& operator +=(const NSVPolynomialRing<T>& q);
+
+        /**
+         * Negation operator. 
+         */
 	NSVPolynomialRing<T> operator -() const;
 
         /**
@@ -175,7 +186,7 @@ class NSVPolynomialRing {
          */
         bool isIdentity() const;
 
-       /**
+        /**
          * Determines if this polynomial is equal to the additive identity
          * element.
          */
@@ -208,10 +219,12 @@ class NSVPolynomialRing {
          * term.
          */
         T PU_leadTerm() const;
+
         /**
          *  Returns the lowest-degree (most negative degree) term.
          */
         std::pair<signed long, T> firstTerm() const;
+
         /**
          *  Returns the highest-degree (most positive degree) term.
          */

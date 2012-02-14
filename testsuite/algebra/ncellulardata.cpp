@@ -301,8 +301,19 @@ class NCellularDataTest : public CppUnit::TestFixture {
          std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > prod((*cm1)*(*cm2));
         if (!prod->isZero()) CPPUNIT_FAIL("NCellularData::alexander module chain complex error.");
          //  (3) check a wider variety of alex polys symmetric and evaluate to +1 or -1 at 1. 
-        
+        std::auto_ptr< std::list< regina::NSVPolynomialRing< regina::NLargeInteger > > > ideal( knotNCD.alexanderIdeal() );
+        if (ideal->size()!=1) CPPUNIT_FAIL("Alexander ideal failed to be principal."); 
+        regina::NSVPolynomialRing< regina::NLargeInteger > alexP( ideal->front() );
+        std::pair<signed long, NLargeInteger> firstAPterm(alexP.firstTerm());
+        std::pair<signed long, NLargeInteger> lastAPterm( alexP.lastTerm() );
+        // TODO: normalize polynomial so that firstAPterm.first + lastAPterm.first == 0
+        // TODO: check symmetric
+        // TODO: normalize so that eval at 1 is non-negative
+        // TODO: check eval at 1 is 1. 
+
          //  (4) check alex polys against what we expect them to be for several cases
+        // TODO: compare to stored value
+
          }
         } // end alexpoly_tests()
 
