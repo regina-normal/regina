@@ -145,15 +145,15 @@ unsigned long NCellularData::pi1Lookup(const NEdge* edg) const
   return I - num_less_than( maxTreeStB, I ); }
 unsigned long NCellularData::pi1Lookup(const NFace* fac, unsigned long num) const
 { unsigned long I = icIxLookup( fac, num );
-  return (numNonIdealBdryCells[2] - maxTreeStB.size()) + I - num_less_than( maxTreeIdB, I ); } 
+  return (numNonIdealBdryCells[1] - maxTreeStB.size()) + I - num_less_than( maxTreeIdB, I ); } 
 unsigned long NCellularData::pi1Lookup(const NFace* fac) const
 { unsigned long I = nicIxLookup( fac );
-  return (numNonIdealBdryCells[2] - maxTreeStB.size()) + (numIdealCells[2] - maxTreeIdB.size())  + 
+  return (numNonIdealBdryCells[1] - maxTreeStB.size()) + (numIdealCells[1] - maxTreeIdB.size())  + 
          (I - num_less_than( maxTreeStd, I )); }
 unsigned long NCellularData::pi1Lookup(const NTetrahedron* tet, unsigned long num) const
 { unsigned long I = icIxLookup( tet, num );
-  return (numNonIdealBdryCells[2] - maxTreeStB.size()) + (numIdealCells[2] - maxTreeIdB.size())  + 
-         (numNonIdealCells[3] - maxTreeStd.size()) + (I - num_less_than(maxTreeSttIdB, I )); }
+  return (numNonIdealBdryCells[1] - maxTreeStB.size()) + (numIdealCells[1] - maxTreeIdB.size())  + 
+         (numNonIdealCells[2] - maxTreeStd.size()) + (I - num_less_than(maxTreeSttIdB, I )); }
 
 
 } // regina namespace

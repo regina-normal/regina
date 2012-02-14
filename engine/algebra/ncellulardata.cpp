@@ -967,71 +967,119 @@ const NMatrixInt* NCellularData::integerChainMap( const ChainMapLocator &m_desc 
 
 unsigned long num_less_than(const std::set<unsigned long> &thelist, const unsigned long &obj); // forward dec.
 
-template <class T>
+/*template <class T>
 void dumpVec(const std::vector<T> out)
 {
 for (unsigned long i=0; i<out.size(); i++)
  std::cout<<out[i]<<" ";
 std::cout.flush();
-}
+}*/
 
-const NMatrixRing< NSVPolynomialRing< NLargeInteger > >* NCellularData::alexanderChainComplex( const ChainComplexLocator &a_desc ) const
+// Eventually this should return the appropriate map from the (a_desc)-stage of the
+//  chain complex for the Alexander module.  The current algorithm is a hack, but until
+//  all the appropriate `wordles' are computed in ncellulardata.init.cc.cpp, this is all
+//  that's available. 
+//
+// At present this algorithm collapses the maximal tree in the 1-skeleton of the dual
+// CW-decomposition.  Assumes triangulation is connected. So the 1->0 chain map
+// is just a [t^a-1, ..., t^p-1] type of matrix.  Currently a little buggy for 3-manifolds
+// it appears there's a problem with the C_2 --> C_1 map. 
+//
+// Possible problem: we are mixing several conventions here.  One is cycles in the dual CW
+//  complex, another is the Pi1 presentation code.  We should ensure we have a uniform normal
+//  orientation for faces in the 3-manifolds code.  Maybe this is the probem? 
+//
+// TODO for 2->1 map, go through all incidences and list them. Print on screen. 
+//
+// this algorithm appears to have these problems:
+//  (1) The map 1->0 gives one too many non-trivial entries. So somehow it's 
+//      messing up this part of the chain complex. 
+
+const NMatrixRing< NSVPolynomialRing< NLargeInteger > >* 
+ NCellularData::alexanderChainComplex( const ChainComplexLocator &a_desc ) const
 { 
  std::map< ChainComplexLocator, NMatrixRing< NSVPolynomialRing< NLargeInteger > >* >::const_iterator p;
  ChainComplexLocator range_desc(a_desc); range_desc.dim--;
 
+ // if precomputed, return that.
  p = alexanderChainComplexes.find(a_desc);
  if (p != alexanderChainComplexes.end()) return (p->second);
+ // if not, work, let's find other reasons to give up, such as the request not being
+ //  implemented yet. 
+ ccCollectionType::const_iterator q; q = genCC.find(a_desc);
+ // genCC is the master map of chain complexes.  Above puts in a request for the specific map
+ //  of the chain complex with domain described by a_desc.
+ if (q == genCC.end()) return NULL; // that chain complex does not exist!
+ // chain complex exists, and q points to it. 
+ if (a_desc.hcs != DUAL_coord) return NULL; // the chain complex exists in non DUAL_coord coordinates, 
+  // but the wordle data hasn't been implemented yet, so abort if you get this far. 
+ if ((a_desc.dim > 2) || (a_desc.dim<1)) return NULL; // similarly, only dimensions 1->0, 2->1 permitted at present.
+ // *now* we have no excuses for not doing something. Sigh.  If only there were more reasons to give up!
 
- // build a list of the dual 1-cells indexed by dcIx[1] that are in the maximal tree, currently indexed by nicIx[dim-1]
+ // build a list of the dual 1-cells indexed by dcIx[1] that are in the maximal tree, 
+ //  maxTreeStd uses indexing from nicIx[dim-1], so we need to switch over. 
  std::set< unsigned long > maxTreedcIx; // dcIx index vs. nicIx[dim-1] indices of max tree maxTreeStd
  for (std::set<unsigned long>::const_iterator i=maxTreeStd.begin(); i!=maxTreeStd.end(); i++)
-  {
-   if (tri3) if (!tri3->getFace( nicIx[2][*i] )->isBoundary()) maxTreedcIx.insert( dcIxLookup( tri3->getFace( nicIx[2][*i] ) ) );
-   if (tri4) if (!tri4->getTetrahedron( nicIx[3][*i] )->isBoundary()) maxTreedcIx.insert( dcIxLookup( tri4->getTetrahedron( nicIx[3][*i] ) ) );
+  { // this is a local def.
+   if (tri3) { if (!tri3->getFace( nicIx[2][*i] )->isBoundary()) 
+                 maxTreedcIx.insert( dcIxLookup( tri3->getFace( nicIx[2][*i] ) ) );
+                 }
+   if (tri4) if (!tri4->getTetrahedron( nicIx[3][*i] )->isBoundary()) 
+                 maxTreedcIx.insert( dcIxLookup( tri4->getTetrahedron( nicIx[3][*i] ) ) );
   }
+  // this is a sparse grid of coverFacetData from the chain complex.
+  NCellularData::ccMapType thisCC( *q->second ); 
+  // fundamental group and its abelianization. 
+  const NGroupPresentation* pi1( groupPresentation( GroupPresLocator( whole_manifold, 0 ) ) );
+  std::auto_ptr<NMarkedAbelianGroup> pi1Ab( pi1->markedAbelianization() );
+  // We adapt the chain complex because of the reduced number of 0 and 1-cells, 
+  // since we're using a maximal tree in dual 1-skeleton to reduce the cell structure. 
+  // this is an ad-hoc solution since we don't have good algorithms implemented to compute
+  // homology of chain complexes over a single-variable Laurent polynomial ring implemented.
+  NMatrixRing<NSVPolynomialRing< NLargeInteger > >* buildMat( NULL ); 
+  unsigned long ranDim; unsigned long domDim; 
+   // lower rank of domain by one for every element of the maximal tree
+  if (a_desc.dim==1) { ranDim = 1;  domDim = cellCount(a_desc) - maxTreedcIx.size(); }
+   // lower rank of range by one for every element of the maximal tree
+  if (a_desc.dim==2) { ranDim = cellCount(range_desc) - maxTreedcIx.size(); domDim = cellCount(a_desc); }
+  buildMat = new NMatrixRing<NSVPolynomialRing< NLargeInteger > >( ranDim, domDim );
 
-   ccCollectionType::const_iterator q;
-   q = genCC.find(a_desc); 
-   if (q == genCC.end()) return NULL; // invalid request
-   if (a_desc.hcs != DUAL_coord) return NULL; // currently only implemented for dual coordinates.
-   if (a_desc.dim > 2) return NULL; // and only dimensions 1->0, 2->1
-   NCellularData::ccMapType thisCC( *q->second ); 
-   const NGroupPresentation* pi1( groupPresentation( GroupPresLocator( whole_manifold, 0 ) ) );
-   std::auto_ptr<NMarkedAbelianGroup> pi1Ab( pi1->markedAbelianization() );
-   // build matrix, dimensions -- special case of 1-cells, since we're using max tree....
-   NMatrixRing<NSVPolynomialRing< NLargeInteger > >* buildMat( NULL ); 
-   unsigned long ranDim; unsigned long domDim; 
-   if (a_desc.dim==1) { ranDim = 1;  domDim = cellCount(a_desc) - maxTreedcIx.size(); }
-   if (a_desc.dim==2) { ranDim = cellCount(range_desc) - maxTreedcIx.size(); domDim = cellCount(a_desc); }
-   buildMat = new NMatrixRing<NSVPolynomialRing< NLargeInteger > >( ranDim, domDim );
+  // build entries
+  std::map< NMultiIndex< unsigned long >, coverFacetData* >::const_iterator ci;
 
-   // build entries
-   std::map< NMultiIndex< unsigned long >, coverFacetData* >::const_iterator ci;
-   for (ci = thisCC.getGrid().begin(); ci!=thisCC.getGrid().end(); ci++)
+  for (ci = thisCC.getGrid().begin(); ci!=thisCC.getGrid().end(); ci++)
     {
-     std::vector<NLargeInteger> ccI( pi1->getNumberOfGenerators() );  // to put into pi1Ab
+     // ci is pointing to the boundary facets of cells in the chain complex, the cells being in DUAL_coord.
+     //  it's possible ci could be emanating from or pointing to something from the maximal tree.  
+     //  If this is the case, we can safely ignore it. 
+    if ( (a_desc.dim==1) && ( maxTreedcIx.find( ci->first.entry(0) ) != maxTreedcIx.end() ) ) continue;
+    if ( (a_desc.dim==2) && ( maxTreedcIx.find( ci->second->cellNo ) != maxTreedcIx.end() ) ) continue; 
+
+    // now we take the cover facet data pointed to by ci and convert it to something in the chain
+    // complex for the abelianization of pi1. 
+    std::vector<NLargeInteger> ccI( pi1->getNumberOfGenerators() );  // to put into pi1Ab
     for (unsigned long i=0; i<ci->second->trans.getNumberOfTerms(); i++)
+      {
       ccI[ci->second->trans.getTerm(i).generator] += ci->second->trans.getTerm(i).exponent;
-
-     signed long levelOfCell ( pi1Ab->snfRep(ccI)[pi1Ab->getNumberOfInvariantFactors()].longValue() );
+      }
+    signed long levelOfCell ( pi1Ab->snfRep(ccI)[pi1Ab->getNumberOfInvariantFactors()].longValue() );
      // level of cell is the index i, for the covering space trans t^i
-     unsigned long cR, cC;  
+    unsigned long cR, cC;  
      // so we need to chuck the 1-cell if it is not in the dual 1-skeleton, and if it *is* in maxTreeStd
-     if (a_desc.dim==1) { if ( maxTreedcIx.find( ci->first.entry(0) ) != maxTreedcIx.end() ) continue;
-                          cR=0; cC=ci->first.entry(0) - num_less_than(maxTreedcIx, ci->first.entry(0)); }
-     if (a_desc.dim==2) { if ( maxTreedcIx.find( ci->second->cellNo ) != maxTreedcIx.end() ) continue; 
-                          cR=ci->second->cellNo - num_less_than(maxTreedcIx, ci->second->cellNo); cC = ci->first.entry(0); }
 
-     buildMat->entry( cR,  cC ) += 
+    if (a_desc.dim==1) { cR=0; cC=ci->first.entry(0) - num_less_than(maxTreedcIx, ci->first.entry(0)); }
+    if (a_desc.dim==2) { cR=ci->second->cellNo - num_less_than(maxTreedcIx, ci->second->cellNo);
+                         cC = ci->first.entry(0); }
+    buildMat->entry( cR,  cC ) += 
       NSVPolynomialRing< NLargeInteger >( NLargeInteger(ci->second->sig), levelOfCell ); 
     }
    // insert
-
-   std::map< ChainComplexLocator, NMatrixRing<NSVPolynomialRing< NLargeInteger > >* > *Mptr = 
-       const_cast< std::map< ChainComplexLocator, NMatrixRing<NSVPolynomialRing< NLargeInteger > >* > *> (&alexanderChainComplexes);
-      Mptr->insert( std::pair< ChainComplexLocator, NMatrixRing<NSVPolynomialRing< NLargeInteger > >* > ( a_desc, buildMat ) );
-   return buildMat; 
+  std::map< ChainComplexLocator, NMatrixRing<NSVPolynomialRing< NLargeInteger > >* > *Mptr = 
+      const_cast< std::map< ChainComplexLocator, NMatrixRing<NSVPolynomialRing< NLargeInteger > >* > *>
+        (&alexanderChainComplexes);
+     Mptr->insert( std::pair< ChainComplexLocator, NMatrixRing<NSVPolynomialRing< NLargeInteger > >* > 
+       ( a_desc, buildMat ) );
+  return buildMat; 
 }
 
 /*
@@ -1060,8 +1108,9 @@ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > NCellularData
  pivotCol=0; smallestNZdeg=0;
 
  for (unsigned long i=0; i<workM.columns();i++)
-  { if ( (workM.entry(0,i).degree() != 0) && (( abs(workM.entry(0,i).degree()) < abs(smallestNZdeg)) || (smallestNZdeg==0) ) )
-    {     pivotCol = i;  smallestNZdeg = workM.entry(0,i).degree(); } } 
+  { if ( (workM.entry(0,i).degree() != 0) && 
+         (( abs(workM.entry(0,i).degree()) < abs(smallestNZdeg)) || (smallestNZdeg==0) ) )
+    {     pivotCol = i;  smallestNZdeg = workM.entry(0,i).degree(); } }
 
  bool nonZeroFlag(false);
  for (unsigned long i=0; i<M->columns(); i++)
@@ -1071,8 +1120,10 @@ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > NCellularData
    signed long d, r; 
    signedLongDivAlg( workM.entry(0,pivotCol).degree(), workM.entry(0,i).degree(), d, r);
    // t^m-1 = NSVPolynomialRing< NLargeInteger >(n,m,d)*(t^n-1) + t^r-1  
-   NSVPolynomialRing< NLargeInteger > Fac( NSVPolynomialRing< NLargeInteger >( workM.entry(0,pivotCol).degree(), workM.entry(0,i).degree(), d) );
-   workM.entry(0,i) = NSVPolynomialRing< NLargeInteger >( NLargeInteger::one, r ) - NSVPolynomialRing< NLargeInteger >::one;
+   NSVPolynomialRing< NLargeInteger > Fac( NSVPolynomialRing< NLargeInteger >
+                ( workM.entry(0,pivotCol).degree(), workM.entry(0,i).degree(), d) );
+   workM.entry(0,i) = NSVPolynomialRing< NLargeInteger >( 
+                NLargeInteger::one, r ) - NSVPolynomialRing< NLargeInteger >::one;
    // now do corresponding row op on workN, ie subtract NSVP(n,m,d) of the pivot row from the ith row
    workN.addRow( i, pivotCol, Fac );
    // if entry (0,i) nonzero after reduction, set nonZeroFlag
@@ -1080,7 +1131,8 @@ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > NCellularData
   }
  if (nonZeroFlag) goto find_small_degree;
  // okay, all entries except pivotCol are killed, so pivotCol in workM must be t^{\pm}-1. 
- std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > retval( new NMatrixRing< NSVPolynomialRing< NLargeInteger > >(N->rows()-1,N->columns()) );
+ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > retval( 
+        new NMatrixRing< NSVPolynomialRing< NLargeInteger > >(N->rows()-1,N->columns()) );
  for (unsigned long i=0; i<retval->rows(); i++) for (unsigned long j=0; j<retval->columns(); j++)
   retval->entry( i, j ) = workN.entry( (i<pivotCol) ? i : i+1, j ); 
 
@@ -1124,6 +1176,5 @@ std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > NCellularData::
 }
 
 } // namespace regina
-
 
 

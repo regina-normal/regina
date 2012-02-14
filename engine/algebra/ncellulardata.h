@@ -89,6 +89,9 @@ class Dim4Triangulation;
  *        Move all the test routines out of the NCellularData class and put them in the test suite proper. 
  *        Need some kind of form tests for 4-manifolds.  But need some 4-manifolds that we understand, first.
  *        double check torsion linking form behaves properly. NPartition
+ *        with the maximal tree code, add tests that will ensure there's the appropriate
+ *        number of edges of each type.  There's the entire tree, then the boundary component
+ *        trees.  Ensure the Alexander module CC is a chain complex! 
  * \todo  3) New coordinate systems to implement:
  *        MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *        various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
@@ -98,24 +101,14 @@ class Dim4Triangulation;
  * \todo  4) To minimize memory usage we should consider having homs, bilinear forms, etc, 
  *        not store their initialization data, instead trusting it to the NCellularData stack.
  *        This is a slow-but-ongoing process....  
- * \todo  5) need to set up local orientations for dual boundary coordinates (DIM4 done, DIM3 debugging!), 
- *        buildFundGrpPres() for 3-manifolds TODO, for 4-manifold DONE
- *        need to do the boundary inclusion maps for pi1. Need to test, esp. alex polys. DIM3 seems buggy.
-// TODO: possible places code is screwed-up:
-//       1) in pi1 pres code.  Currently reading THIS. presently at ideal dual 2-cells. LOOKS OKAY.
-//       2) check stdBdrypi1Gen code.  LOOKS OKAY NOW.
-//       3) the normalsDim3.  LOOKS OKAY
-//       4) boundary component indexing?? stdBdryCompIndexCD1 LOOKS OKAY
-//       5) in boundary inclusion code. LOOKS OKAY
-//       6) in the maximal forest code for 3-manifolds
-//       7) Ben's NBilinearForm test-suite complaint. 
-//       ??
+ * \todo  5) need to do the boundary inclusion maps for pi1. Need to test.
  * \todo  6) We'll also eventually need maximal trees in the standard and mixed 1-skeleton, to implement
  *        Farber-Levine pairings and Poincare duality in covering spaces, in general. 
  * \todo \optlong Make writeTextShort and writeTextLong more pleasant to look at.  Currently it's not 
  *        clear what all the computations mean.  It could use a general re-think.
  * \todo \optlong Make a thread-pool version of the test suite.  
  * \todo \optlong We should add Bocksteins and the long exact sequence associated to a change-of-coefficient map.
+ * \todo \optlong Why not just move to monoid presentations, and kill generators for a max tree in the presentation?  Would be more natural and involve less re-indexing. 
  *
  * Guide to ncellulardata.*.cpp files:
  *
@@ -144,7 +137,8 @@ class Dim4Triangulation;
  *
  *       ncellulardata.init.pi1.cpp 
  *                         - contains initialization routines for the fundamental groups presentations 
- *                           and maps between them.
+ *                           and maps between them. This includes code to generate maximal trees in
+ *                           the 1-skeleta. 
  *
  *       ncellulardata.locators.cpp 
  *                         - contains the Locator classes for the internal maps that store the various
@@ -165,34 +159,39 @@ class REGINA_API NCellularData : public ShareableObject {
 public:
 
  /**
-  * This enum gives names to the 9 standard CW-structures associated to a semi-simplicially (ideall) triangulated
-  * manifold.  Ideal triangulations are generally not compact.  These cell decomposition are decompositions corresponding
-  * to the compact manifold such that the ideally-triangulated manifold is a dense subspace and such that its cells are
-  * the intersection of these cells to that subspace. See NCellularData::unmarkedGroup, NCellularData::markedGroup, 
-  * NCellularData::homGroup, NCellularData::bilinearForm, NCellularData::GroupLocator, NCellularData::HomLocator for usage.  
+  * This enum gives names to the 9 standard CW-structures associated to a semi-simplicially 
+  * (ideal) triangulated manifold.  Ideal triangulations are generally not compact.  These 
+  * cell decomposition are decompositions corresponding to the compact manifold such that 
+  * the ideally-triangulated manifold is a dense subspace and such that its cells are the 
+  * intersection of these cells to that subspace. See NCellularData::unmarkedGroup, 
+  * NCellularData::markedGroup, NCellularData::homGroup, NCellularData::bilinearForm, 
+  * NCellularData::GroupLocator, NCellularData::HomLocator for usage.  
   *
-  * See also the valid_coordinate_systems vector, to iterate through implemented coordinate systems.
+  * See also the valid_coordinate_systems vector, to iterate through implemented 
+  *  coordinate systems.
   */
  enum homology_coordinate_system { 
  first_coord,
  /**
-  * Is the most natural CW-decomposition of a semi-simplicially (ideal) triangulated manifold. The top-dimensional cells are
-  * the tetrahedra (of a 3-manifold) or the pentachora (of a 4-manifold). Dual to DUAL_REL_BDRY_coord.
+  * Is the most natural CW-decomposition of a semi-simplicially (ideal) triangulated manifold. 
+  * The top-dimensional cells are the tetrahedra (of a 3-manifold) or the pentachora (of a 
+  * 4-manifold). Dual to DUAL_REL_BDRY_coord.
   */
   STD_coord = first_coord, // indexed by nicIx then icIx 
  /**
-  * Is the dual polyhedral decomposition to this CW-decomposition. The top-dimensional cells correspond to the interior
-  * vertices of the triangulation. Dual to STD_REL_BDRY_coord.
+  * Is the dual polyhedral decomposition to this CW-decomposition. The top-dimensional cells 
+  * correspond to the interior vertices of the triangulation. Dual to STD_REL_BDRY_coord.
   */
   DUAL_coord, // indexed by dcIx
  /**
-  * Is essentially the CW-decomposition of the barycentric subdivision of the triangulation. For every k-cell in the
-  * original triangulation there's k+1 associated k-cells in this triangulation. 
+  * Is essentially the CW-decomposition of the barycentric subdivision of the triangulation. For 
+  * every k-cell in the original triangulation there's k+1 associated k-cells in this triangulation. 
   */
   MIX_coord, // see docs for indexing
  /**
-  * This is the standard cell decomposition (which is always a triangulation) of the boundary. So this consists of two
-  * natural parts -- the part from the standard boundary, and the ideal boundary. Dual to DUAL_BDRY_coord
+  * This is the standard cell decomposition (which is always a triangulation) of the boundary. So 
+  * this consists of two natural parts -- the part from the standard boundary, and the ideal 
+  * boundary. Dual to DUAL_BDRY_coord
   */
   STD_BDRY_coord, // indexed by bcIx then icIx
  /**
@@ -467,7 +466,7 @@ public:
   */
  struct coverFacetData {
   /**
-   * This call is incident to cell number cellNo, taken from the chain complex
+   * This cell is incident to cell number cellNo, taken from the chain complex
    * indexing. 
    */
   unsigned long cellNo;
@@ -733,7 +732,7 @@ private:
     bool inMaximalTree(const NTetrahedron* tet, unsigned long num) const;
     
    /**
-    *  During initialization many revere-lookups are needed.  We proved them in one place.
+    *  During initialization many reverse-lookups are needed.  We proved them in one place.
     * See cellulardata.lookups.cpp for implementations.
     */ 
    unsigned long nicIxLookup(const NVertex* vrt) const;
@@ -1028,8 +1027,8 @@ public:
      *     @pre h_desc.domain.cof is an integer multiple of h_desc.range.cof, 
      *      both must be Z_2 if the manifold is not orientable.
      *
-     *  5) Convienience maps.  These are natural maps users might be interested in that are composites of maps (1)--(4)
-     *     and their inverses.  TODO
+     *  5) Convienience maps.  These are natural maps users might be interested in that are composites 
+     *     of maps (1)--(4) and their inverses.  TODO
      */
     const NHomMarkedAbelianGroup* homGroup( const HomLocator &h_desc) const;
 
