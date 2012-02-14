@@ -86,6 +86,9 @@ INCLUDE(MacroLogFeature)
 INCLUDE( CheckCXXSourceCompiles )
 INCLUDE( CheckFunctionExists )
 
+# Regina's own cmake scripts:
+INCLUDE( ReginaMacros )
+
 # Always include . in the header search path:
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -103,6 +106,7 @@ if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   SET (PKGLIBDIR ${LIBDIR})
   SET (PKGDATADIR ${DATADIR})
   SET (MANDIR ${DATADIR}/man)
+  SET (HTMLDIR ${DATADIR}/docs)
 else ()
   # Full install.
   SET (APPDIR ${CMAKE_INSTALL_PREFIX}/bin)
@@ -113,6 +117,7 @@ else ()
   SET (PKGLIBDIR ${LIBDIR}/${PACKAGE_NAME})
   SET (PKGDATADIR ${DATADIR}/${PACKAGE_NAME})
   SET (MANDIR ${DATADIR}/man)
+  SET (HTMLDIR ${DATADIR}/docs)
 endif ()
 
 # Useful build directories
