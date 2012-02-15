@@ -54,8 +54,9 @@ for (unsigned long j=0; j<vec.size(); j++)
 }
 */
 
-void correctRelOrMat( NMatrixInt &CM, unsigned long domdim, const NTriangulation* tri3, const Dim4Triangulation* tri4, 
- const std::vector< std::vector<unsigned long> > &dcIx ); // forward reference, see ncellulardata_init.cpp for details
+void correctRelOrMat( NMatrixInt &CM, unsigned long domdim, const NTriangulation* tri3, 
+        const Dim4Triangulation* tri4,  const std::vector< std::vector<unsigned long> > &dcIx ); 
+        // forward reference, see ncellulardata_init.cpp for details
 
 const NAbelianGroup* NCellularData::unmarkedGroup( const GroupLocator &g_desc) const
 {

@@ -85,24 +85,27 @@ class Dim4Triangulation;
  * \testpart
  *
  * \todo  1) Complete collection of homology natural bilinear forms on a manifold, spin structures. 
- * \todo  2) test suite stuff: LES of pair, natural isos, PD, detailed tests for intersection forms.
+ *        Derive chain complexes and maps from sparsely stored internal data.  Do not store matrices
+ *        for these. 
+ * \todo  2) test suite stuff: 
  *        Move all the test routines out of the NCellularData class and put them in the test suite proper. 
- *        Need some kind of form tests for 4-manifolds.  But need some 4-manifolds that we understand, first.
- *        double check torsion linking form behaves properly. NPartition
- *        with the maximal tree code, add tests that will ensure there's the appropriate
+ *        TODO double check torsion linking form behaves properly. 
+ *        With the maximal tree code, add tests that will ensure there's the appropriate
  *        number of edges of each type.  There's the entire tree, then the boundary component
  *        trees.  
- * \todo  3) New coordinate systems to implement:
+ * \todo  3) Make sure all the maximal trees are copy-constructor safe. 
+ * \todo  4) New coordinate systems to implement:
  *        MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *        various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
  *        cup products. Not complete: Chain complex initialization. chain maps.  PD / intersection forms
  *        Note, current "mixed" chain complex does not subdivide ideal boundary.  Is this an issue? 
  *        Also, this is needed for (1) and (2).
- * \todo  4) To minimize memory usage we should consider having homs, bilinear forms, etc, 
+ * \todo  5) need to do the boundary inclusion maps for pi1. Need to test. This can be used to check 
+ *        for knots and links in homotopy-spheres and such. 
+ * \todo  \optlong To minimize memory usage we should consider having homs, bilinear forms, etc, 
  *        not store their initialization data, instead trusting it to the NCellularData stack.
  *        This is a slow-but-ongoing process....  
- * \todo  5) need to do the boundary inclusion maps for pi1. Need to test.
- * \todo  6) We'll also eventually need maximal trees in the standard and mixed 1-skeleton, to implement
+ * \todo \optlong We'll also eventually need maximal trees in the standard and mixed 1-skeleton, to implement
  *        Farber-Levine pairings and Poincare duality in covering spaces, in general. 
  * \todo \optlong Make writeTextShort and writeTextLong more pleasant to look at.  Currently it's not 
  *        clear what all the computations mean.  It could use a general re-think.
@@ -715,8 +718,9 @@ private:
    std::vector< std::vector< unsigned long > > idBdryPi1Gen;
 
     /**
-     * Routine returns true if and only if tet is represents an edge in the maximal tree for the dual 1-skeleton of the triangulation.
-     *  Any tetrahedron from the triangulation can potentially represent an edge. Corresponds to maxTreeStd, maxTreeStB, 
+     * Routine returns true if and only if tet is represents an edge in the maximal tree for the 
+     * dual 1-skeleton of the triangulation. Any tetrahedron from the triangulation can 
+     * potentially represent an edge. Corresponds to maxTreeStd, maxTreeStB, 
      *  maxTreeIdB, and MaxTreeSttIdB respectively.
      */
     bool inMaximalTree(const Dim4Tetrahedron* tet) const;
@@ -799,7 +803,7 @@ private:
    /**
     * Internal routines to set up chain maps. 
     */
-   void fillStandardToMixedHomCM(); // void fillDualToMixedHomCM(); 
+   void fillStandardToMixedHomCM(); // void fillDualToMixedHomCM();  // TODO
 
    /**
     * internal routine to build the maximal tree in the dual 1-skeleton, suitable for computing
@@ -808,8 +812,9 @@ private:
    void buildMaximalTree();
 
    /**
-    *  Routine constructs tables normalsDim4BdryFaces normalsDim4BdryEdges normalsDim3BdryEdges normalsDim3BdryVertices
-    * for homology and fundamental group computations.  Called before buildMaximalTree()
+    *  Routine constructs tables normalsDim4BdryFaces normalsDim4BdryEdges 
+    *  normalsDim3BdryEdges normalsDim3BdryVertices for homology and fundamental 
+    *  group computations.  Called before buildMaximalTree()
     */
    void buildExtraNormalData();
 

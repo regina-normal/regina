@@ -47,7 +47,6 @@ Enum & enum_increment(Enum & value, Enum begin, Enum end)
 NCellularData::homology_coordinate_system & operator++ (NCellularData::homology_coordinate_system & cs)
 { return enum_increment(cs, NCellularData::first_coord, NCellularData::last_implemented_coord); }
 
-// need to fix. 
 bool NCellularData::chainComplexesVerified() const
 {
 unsigned long aDim( (tri4 != NULL) ? 4 : 3 );
@@ -60,15 +59,14 @@ for (homology_coordinate_system i=first_coord; i != last_implemented_coord; ++i)
    const NMatrixInt* A = integerChainComplex( ChainComplexLocator( j, i) );
    const NMatrixInt* B = integerChainComplex( ChainComplexLocator( j+1, i) );
    std::auto_ptr< NMatrixRing<NLargeInteger> > prod = (*A)*(*B);
-   for (unsigned long j=0; j<prod->rows(); j++) for (unsigned long k=0; k<prod->columns(); k++)
-	if (prod->entry(j,k) != 0) return false; 
+   if (!prod->isZero()) return false;
   }
  }
 return true;
 }
 
 bool NCellularData::chainMapsVerified() const
-{ // temporary fix TODO replace once new chain maps are up and running
+{ 
 unsigned long aDim( (tri4!=NULL) ? 4 : 3 );
 std::vector< const NMatrixInt* > mCC(5), sCC(5), dCC(5), srCC(5), sbCC(5);
 for (unsigned long i=0; i<aDim; i++)
