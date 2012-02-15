@@ -293,7 +293,6 @@ class NCellularDataTest : public CppUnit::TestFixture {
         for (unsigned long i=0; i<knotList.size(); i++)
          {
          // construct corresponding NCellularData from knotList[i]
-
          NCellularData knotNCD(*knotList[i]);
 
          //  TODO: Check maximal tree has right number of cells.  No way to access this yet. 
@@ -311,7 +310,7 @@ class NCellularDataTest : public CppUnit::TestFixture {
         if (ideal->size()!=1) CPPUNIT_FAIL("Alexander ideal failed to be principal."); 
         regina::NSVPolynomialRing< regina::NLargeInteger > alexP( ideal->front() );
         // normalize polynomial so that firstAPterm.first = 0
-        prettifyPolynomial(alexP);
+        // done automatically now prettifyPolynomial(alexP);
         // check symmetric, another test.
         if (!alexP.isSymmetric()) CPPUNIT_FAIL("Alexander polynomial of knot in S^3 fails to be symmetric.");
 
@@ -326,6 +325,39 @@ class NCellularDataTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL("Alexander polynomial of knot fails to agree with pre-computed value.");
 
          }
+        // let's also do one text for the alexander module of a 4-manifold. Eventually more!
+
+         // construct corresponding NCellularData from knotList[i]
+         NCellularData knotNCD(*m4List[2]); // this is a Cappell-Shaneson knot
+
+         //  TODO: Check maximal tree has right number of cells.  No way to access this yet. 
+         const NMatrixRing< NSVPolynomialRing< NLargeInteger > >* cm1(NULL), *cm2(NULL);
+         cm1 = knotNCD.alexanderChainComplex( 
+                NCellularData::ChainComplexLocator(1, NCellularData::DUAL_coord ) );
+         cm2 = knotNCD.alexanderChainComplex( 
+                NCellularData::ChainComplexLocator(2, NCellularData::DUAL_coord ) );
+
+         std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > prod((*cm1)*(*cm2));
+        if (!prod->isZero()) CPPUNIT_FAIL("NCellularData::alexander module chain complex error for CS 2-knot.");
+        // normalize so that eval at 1 is non-negative
+        // check eval at 1 is 1. 
+        std::auto_ptr< std::list< regina::NSVPolynomialRing< regina::NLargeInteger > > > 
+                ideal( knotNCD.alexanderIdeal() );
+        regina::NSVPolynomialRing< regina::NLargeInteger > alexP( ideal->front() );
+        // normalize polynomial so that firstAPterm.first = 0
+        regina::NLargeInteger alexPone(alexP.eval(NLargeInteger::one));
+        if (!((alexPone!=NLargeInteger::one) || (-alexPone!=NLargeInteger::one)))
+                CPPUNIT_FAIL("Alexander polynomial of knot in S^3 fails to evaluate to +1 or -1 at +1. CS 2-knot.");
+         //  (4) check alex polys against what we expect them to be for several cases
+        // compare to stored value
+        if (alexP.toString() != std::string("-1+t^2+t^3")) 
+        {
+                CPPUNIT_FAIL("Alexander polynomial of knot fails to agree with pre-computed value. CS 2-knot.");
+                std::cout<<alexP.toString()<<" vs "<<std::string("-1+t^2+t^3\n");
+                       std::cout.flush();
+        }
+
+
         } // end alexpoly_tests()
 
 };

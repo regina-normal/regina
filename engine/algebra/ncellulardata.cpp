@@ -1161,6 +1161,11 @@ std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > NCellularData::
  // consider reducing the ideal before returning it.
  reduceIdeal(alexIdeal);
 
+ // clean up the polynomials a little, if possible. 
+ std::list< NSVPolynomialRing< NLargeInteger > >::iterator it;
+ for (it = alexIdeal.begin(); it!=alexIdeal.end(); it++)
+   { prettifyPolynomial(*it); }
+
  return std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > >(new std::list< NSVPolynomialRing< NLargeInteger > >(alexIdeal));
 }
 

@@ -91,7 +91,7 @@ class Dim4Triangulation;
  *        double check torsion linking form behaves properly. NPartition
  *        with the maximal tree code, add tests that will ensure there's the appropriate
  *        number of edges of each type.  There's the entire tree, then the boundary component
- *        trees.  Ensure the Alexander module CC is a chain complex! 
+ *        trees.  
  * \todo  3) New coordinate systems to implement:
  *        MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *        various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
@@ -106,9 +106,9 @@ class Dim4Triangulation;
  *        Farber-Levine pairings and Poincare duality in covering spaces, in general. 
  * \todo \optlong Make writeTextShort and writeTextLong more pleasant to look at.  Currently it's not 
  *        clear what all the computations mean.  It could use a general re-think.
- * \todo \optlong Make a thread-pool version of the test suite.  
  * \todo \optlong We should add Bocksteins and the long exact sequence associated to a change-of-coefficient map.
- * \todo \optlong Why not just move to monoid presentations, and kill generators for a max tree in the presentation?  Would be more natural and involve less re-indexing. 
+ * \todo \optlong Why not just move to monoid presentations, and kill generators for a max tree in the presentation?  
+ *        Would be more natural and involve less re-indexing. 
  *
  * Guide to ncellulardata.*.cpp files:
  *
