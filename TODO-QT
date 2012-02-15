@@ -49,9 +49,6 @@ different file encodings
 Python console - Edit options, seem to be there, but are commented in
 code?
 
-Session management : Currently this doesn't happen at all, can be
-implemented if needed.
-
 Undocked packet windows : cut/copy/paste have been commented, but as
 best I can tell they still work. Is there a menu missing here?
 
