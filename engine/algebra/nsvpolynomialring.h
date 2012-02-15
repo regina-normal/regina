@@ -180,6 +180,11 @@ class NSVPolynomialRing {
          */
         bool operator != (const NSVPolynomialRing<T>& other) const;
 
+        /** 
+         * Evaluate polynomial
+         */
+        T eval(const T &input) const;
+
         /**
          * Determines if this polynomial is equal to the multiplicative identity
          * element.
@@ -191,6 +196,12 @@ class NSVPolynomialRing {
          * element.
          */
         bool isZero() const;
+
+        /** 
+         * Determines if the polynomial is symmetric, i.e. up to a multiple of t^k, 
+         *  it's true that p(t)=p^(t^-1)
+         */
+        bool isSymmetric() const; 
 
 	/**
 	 * Returns the number of sign changes in coefficients of the polynomial P(t) - number of 
@@ -297,6 +308,8 @@ REGINA_API void elementaryReductions( std::list< NSVPolynomialRing< NLargeIntege
  */
 REGINA_API NLargeInteger gcd( const std::vector< NLargeInteger > &input,
  std::vector< NLargeInteger > &outputG, std::vector< NLargeInteger > &outputN );
+
+REGINA_API inline void prettifyPolynomial( NSVPolynomialRing< NLargeInteger > &poly );
 
 /*@}*/
 
@@ -748,7 +761,70 @@ if (outputSomething == false) retval = "0";
 return retval;
 }
 
+/** 
+ * Given a Laurent polynomial, it ensures via multiplication by a unit \pm 1 t^k that
+ *  if it is non-zero, the smallest-degree non-zero term is the constant term,
+ *  and if it evaluates to a non-zero number, that number is positive. 
+ */
+REGINA_API inline void prettifyPolynomial( NSVPolynomialRing< NLargeInteger > &poly )
+{
+ // step 1: check if polynomial is zero
+  if (poly.isZero()) return;
 
+ // step 2: if not, multiply by t^k to ensure smallest degree term is t^0
+  std::pair<signed long, NLargeInteger> firstAPterm(poly.firstTerm());
+  std::pair<signed long, NLargeInteger> lastAPterm( poly.lastTerm() );
+  NSVPolynomialRing< NLargeInteger > trans ( NLargeInteger::one, -firstAPterm.first );  
+  poly = poly * trans;
+ // step 3: multiply by -1 if polynomial evaluates to negative at t=1. 
+  NLargeInteger evalone( poly.eval(NLargeInteger::one) );
+  if (evalone < 0) poly=(NSVPolynomialRing<NLargeInteger>(-1))*poly;
+}
+
+/** 
+ * Evaluate polynomial.  It must be an actual polynomial for this to work, as we do not
+ * assume the class T has inverses.  If the polynomial has terms of degree less than 0, 
+ * routine returns 0. 
+ */
+template <class T>
+REGINA_API inline T NSVPolynomialRing<T>::eval(const T &input) const
+{
+ if (firstTerm().first<0) return T::zero; 
+ // compute input^n recursively, building up sum from left to right. 
+ T retval(T::zero);
+ //        std::map< signed long, T* > cof;
+ typename std::map< signed long, T* >::const_iterator cofi;
+ unsigned long k=0;  T inputk(T::one);
+ for (cofi = cof.begin(); cofi != cof.end(); cofi++)
+  {
+   // determine gap between cofi->first and k, multiply
+   // appropriate amount to get inputk
+   for (unsigned long i=k; i<cofi->first; i++)
+    { inputk = inputk * input; }
+   k=cofi->first; 
+   retval = retval + (*cofi->second) * inputk;
+  }
+ return retval;
+}
+
+template <class T>
+REGINA_API inline bool NSVPolynomialRing<T>::isSymmetric() const
+{
+ // use a forward and backwards iterator and check they agree at every step until they
+ //  pass each other
+ typename std::map< signed long, T* >::const_iterator cofF; 
+ typename std::map< signed long, T* >::const_reverse_iterator cofB;
+ cofF = cof.begin();  cofB = cof.rbegin();
+ signed long gap = cofF->first + cofB->first; // this should stay constant through
+  // incrementation if poly is symmetric
+ while ( cofF->first > cofB->first )
+  {
+   if (cofF->second != cofB->second) return false; 
+   cofF++; cofB++;
+   if (cofF->first + cofB->first != gap) return false; 
+  }
+ return true;
+}
 
 } // namespace regina
 

@@ -31,7 +31,6 @@
 
 #include "maths/nsparsegrid.h"
 #include "maths/nmatrixint.h"
-//#include "maths/nmatrix.h"
 
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
@@ -128,15 +127,15 @@ class NCellularDataTest : public CppUnit::TestFixture {
            knotList[i] = new NTriangulation();
           knotPolyList.resize(numKnotTests);
           copyAndDelete(*knotList[0], NTriangulation::fromIsoSig("cPcbbbiht"));  // figure-8 4_1 knot
-          knotPolyList[0] = "-t^(-1)+3-t"; // -t^-1 + 3 - t
+          knotPolyList[0] = "-1+3t-t^2"; // -t^-1 + 3 - t
           copyAndDelete(*knotList[1], NTriangulation::fromIsoSig("dLQbcccdero")); // 3-twist 5_2 knot
-          knotPolyList[1] = "2t^(-1)-3+2t"; // 2t^-1 - 3 + 2t
+          knotPolyList[1] = "2-3t+2t^2"; // 2t^-1 - 3 + 2t
           copyAndDelete(*knotList[2], NTriangulation::fromIsoSig("eLPkbcddddcwjb")); // Stevedore 6_1
-          knotPolyList[2] = "-2t^(-1)+5-2t"; // -2t^-1 + 5 - 2t
+          knotPolyList[2] = "-2+5t-2t^2"; // -2t^-1 + 5 - 2t
           copyAndDelete(*knotList[3], NTriangulation::fromIsoSig("fLLQcbcdeeemgopdp")); // Miller Inst knot 6_2
-          knotPolyList[3] = "-t^(-2)+3t^(-1)-3+3t-t^2"; // -t^-2 + 3t^-1 - 3 + 3t - t^2
+          knotPolyList[3] = "-1+3t-3t^2+3t^3-t^4"; // -t^-2 + 3t^-1 - 3 + 3t - t^2
           copyAndDelete(*knotList[4], NTriangulation::fromIsoSig("gLLPQccdefffhggaacv")); // 6_3 knot
-          knotPolyList[4] = "t^2-3t^(-1)+t-3t+t^2"; // t^2 - 3t^-1 + 5 - 3t + t^2
+          knotPolyList[4] = "1-3t+5t^2-3t^3+t^4"; // t^2 - 3t^-1 + 5 - 3t + t^2
 
           unsigned long numTests4( detailedTests() ? 7 : 4);
           t4List.resize(numTests4); for (unsigned long i=0; i<t4List.size(); i++) t4List[i] = new Dim4Triangulation();
@@ -172,20 +171,26 @@ class NCellularDataTest : public CppUnit::TestFixture {
 		for (unsigned long i=0; i<m3List.size(); i++)
 		 if (m3List[i]->eulerChar() != 0) CPPUNIT_FAIL("Euler characteristic error.");
 		for (unsigned long i=0; i<m3List.size(); i++)
-	         if (m3List[i]->poincarePolynomial().toString() != polyList[i]) CPPUNIT_FAIL("Poincare polynomial error.");
+	         if (m3List[i]->poincarePolynomial().toString() != polyList[i]) 
+                        CPPUNIT_FAIL("Poincare polynomial error.");
 	}
 
         void absolute_h1_comparisons() {
                 for (unsigned long i=0; i<m3List.size(); i++)
                 {
-                 std::stringstream str1; t3List[i]->getHomologyH1().writeTextShort(str1); std::string S1( str1.str() );  
+                 std::stringstream str1; t3List[i]->getHomologyH1().writeTextShort(str1); 
+                        std::string S1( str1.str() );  
                  NCellularData::GroupLocator h1s( 1, NCellularData::coVariant, NCellularData::STD_coord, 0 );
-                 std::stringstream str2; m3List[i]->markedGroup( h1s )->writeTextShort(str2); std::string S2( str2.str() );
+                 std::stringstream str2; m3List[i]->markedGroup( h1s )->writeTextShort(str2); 
+                        std::string S2( str2.str() );
                  NCellularData::GroupLocator h2s( 1, NCellularData::coVariant, NCellularData::DUAL_coord, 0 );
-                 std::stringstream str3; m3List[i]->markedGroup( h2s )->writeTextShort(str3); std::string S3( str3.str() );
+                 std::stringstream str3; m3List[i]->markedGroup( h2s )->writeTextShort(str3); 
+                        std::string S3( str3.str() );
                  NCellularData::GroupLocator h3s( 1, NCellularData::coVariant, NCellularData::MIX_coord, 0 );
-                 std::stringstream str4; m3List[i]->markedGroup( h3s )->writeTextShort(str4); std::string S4( str4.str() );
-                 if ( (S1!=S2) || (S2!=S3) || (S3!=S4) ) CPPUNIT_FAIL("4-Way H1 comparison failed (3). "+S1+" "+S2+" "+S3+" "+S4);
+                 std::stringstream str4; m3List[i]->markedGroup( h3s )->writeTextShort(str4); 
+                        std::string S4( str4.str() );
+                 if ( (S1!=S2) || (S2!=S3) || (S3!=S4) ) 
+                        CPPUNIT_FAIL("4-Way H1 comparison failed (3). "+S1+" "+S2+" "+S3+" "+S4);
                }
                 for (unsigned long i=0; i<m4List.size(); i++)
                 {
@@ -291,28 +296,34 @@ class NCellularDataTest : public CppUnit::TestFixture {
 
          NCellularData knotNCD(*knotList[i]);
 
-         //  (1) Check maximal tree has right number of cells.  TODO -- no way to access this yet. 
-         //  (2) check alexander module chain complex is actually a chain complex for a random
-         //      ish collection? 
+         //  TODO: Check maximal tree has right number of cells.  No way to access this yet. 
          const NMatrixRing< NSVPolynomialRing< NLargeInteger > >* cm1(NULL), *cm2(NULL);
-         cm1 = knotNCD.alexanderChainComplex( NCellularData::ChainComplexLocator(1, NCellularData::DUAL_coord ) );
-         cm2 = knotNCD.alexanderChainComplex( NCellularData::ChainComplexLocator(2, NCellularData::DUAL_coord ) );
+         cm1 = knotNCD.alexanderChainComplex( 
+                NCellularData::ChainComplexLocator(1, NCellularData::DUAL_coord ) );
+         cm2 = knotNCD.alexanderChainComplex( 
+                NCellularData::ChainComplexLocator(2, NCellularData::DUAL_coord ) );
 
          std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > prod((*cm1)*(*cm2));
         if (!prod->isZero()) CPPUNIT_FAIL("NCellularData::alexander module chain complex error.");
          //  (3) check a wider variety of alex polys symmetric and evaluate to +1 or -1 at 1. 
-        std::auto_ptr< std::list< regina::NSVPolynomialRing< regina::NLargeInteger > > > ideal( knotNCD.alexanderIdeal() );
+        std::auto_ptr< std::list< regina::NSVPolynomialRing< regina::NLargeInteger > > > 
+                ideal( knotNCD.alexanderIdeal() );
         if (ideal->size()!=1) CPPUNIT_FAIL("Alexander ideal failed to be principal."); 
         regina::NSVPolynomialRing< regina::NLargeInteger > alexP( ideal->front() );
-        std::pair<signed long, NLargeInteger> firstAPterm(alexP.firstTerm());
-        std::pair<signed long, NLargeInteger> lastAPterm( alexP.lastTerm() );
-        // TODO: normalize polynomial so that firstAPterm.first + lastAPterm.first == 0
-        // TODO: check symmetric
-        // TODO: normalize so that eval at 1 is non-negative
-        // TODO: check eval at 1 is 1. 
+        // normalize polynomial so that firstAPterm.first = 0
+        prettifyPolynomial(alexP);
+        // check symmetric, another test.
+        if (!alexP.isSymmetric()) CPPUNIT_FAIL("Alexander polynomial of knot in S^3 fails to be symmetric.");
 
+        // normalize so that eval at 1 is non-negative
+        // check eval at 1 is 1. 
+        regina::NLargeInteger alexPone(alexP.eval(NLargeInteger::one));
+        if (!((alexPone!=NLargeInteger::one) || (-alexPone!=NLargeInteger::one)))
+                CPPUNIT_FAIL("Alexander polynomial of knot in S^3 fails to evaluate to +1 or -1 at +1.");
          //  (4) check alex polys against what we expect them to be for several cases
-        // TODO: compare to stored value
+        // compare to stored value
+        if (alexP.toString() != knotPolyList[i]) 
+                CPPUNIT_FAIL("Alexander polynomial of knot fails to agree with pre-computed value.");
 
          }
         } // end alexpoly_tests()
