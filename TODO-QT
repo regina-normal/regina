@@ -1,8 +1,14 @@
+
+Make the default window size larger.
+Save/restore the window geometry in QSettings.
+
+MacOS:
+- Toolbar is very bulky; can we make it 22x22, not 32x32?
+- Message boxes are all in bold, ugh.
+
 Hunt for instances of pixmap(..,..).
 
 Lock icon on trianglations with surface lists
-
-The toolbar is fairly bulky on MacOSX: make it 22x22, not 32x32?
 
 File type associations: http://doc.qt.nokia.com/qq/qq12-mac-events.html
 
@@ -16,14 +22,6 @@ Install desktop files and icons for KDE/GNOME:
 http://developer.qt.nokia.com/doc/qt-4.8/appicon.html
 
 Mimetype installation on linux desktops
-
-Icons: Most icons (essentially, any Regina-specific icons and any that I
-couldn't find a reasonable equivalent in
-http://standards.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html
-are blank. There are some options here, including 
-a) Pointing regina to the right folder (OS-specific)
-b) Bundling the resources into the executable (OS-agnostic)
-c) Finding appropriate system-default-installed icons
 
 Help->About doesn't list authors/contributors. This is just a matter of
 creating it, I can do it but wanted to get it all running so you can
