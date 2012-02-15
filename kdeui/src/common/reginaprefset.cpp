@@ -274,9 +274,12 @@ bool ReginaPrefSet::writePythonLibraries() const {
 void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
         QWidget* parentWidget) {
     QString handbookName = (handbook ? handbook : "regina");
-    // TODO: Documentation links are plain wrong.
-    QString index = QString("en/%1/index.html").arg(handbookName);
-    QString page = QString("en/%1/%2.html").arg(handbookName).arg(section);
+
+    QString home = QFile::decodeName(regina::NGlobalDirs::home().c_str());
+    QString index = home +
+        QString("/docs/en/%1/index.html").arg(handbookName);
+    QString page = home +
+        QString("/docs/en/%1/%2.html").arg(handbookName).arg(section);
     if (QFileInfo(page).exists()) {
         if (! QDesktopServices::openUrl(QUrl("file://" + page))) {
             if (handbook) {

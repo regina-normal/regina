@@ -7,7 +7,6 @@ The toolbar is fairly bulky on MacOSX: make it 22x22, not 32x32?
 File type associations: http://doc.qt.nokia.com/qq/qq12-mac-events.html
 
 CMakeLists:
-- restore GUI documentation (which was built using meinproc);
 - install application icons and Desktop files for KDE/GNOME;
 - install mimetype handling for KDE/GNOME.
 
@@ -37,9 +36,6 @@ somehow.
 Recent files option in the File Menu. As best I found, Qt doesn't offer
 this itself, but there's an example at
 http://developer.qt.nokia.com/doc/qt-4.8/mainwindows-recentfiles.html
-
-Links to documentation are still wrong/not set up. Need to add/use some
-regina (the library/engine) option/setting to get the correct path.
 
 Tip of the day is missing, again Qt doesn't offer anything that does
 this as best I can tell.

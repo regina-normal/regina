@@ -228,6 +228,16 @@ MACRO_LOG_FEATURE(DOXYGEN_FOUND
   "http://www.doxygen.org/"
   REGINA_MANDATORY)
 
+FIND_PROGRAM(XSLTPROC_EXECUTABLE NAMES xsltproc DOC "XSLT processor")
+IF (XSLTPROC_EXECUTABLE)
+  SET (XSLTPROC_FOUND TRUE)
+ENDIF (XSLTPROC_EXECUTABLE)
+MACRO_LOG_FEATURE(XSLTPROC_FOUND
+  "xsltproc"
+  "Generate the user handbook"
+  "http://xmlsoft.org/XSLT/"
+  REGINA_MANDATORY)
+
 # Test suite
 ENABLE_TESTING() # This must appear before any calls to ADD_SUBDIRECTORY().
 

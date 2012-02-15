@@ -30,7 +30,7 @@ macro (REGINA_CREATE_HANDBOOK _lang)
 
   file(GLOB _docs *.docbook)
   add_custom_command(OUTPUT ${_doc}
-    COMMAND xsltproc --path ${_dtd} -o ${CMAKE_CURRENT_BINARY_DIR}/ ${_ssheet} ${_input}
+    COMMAND ${XSLTPROC_EXECUTABLE} --path ${_dtd} -o ${CMAKE_CURRENT_BINARY_DIR}/ ${_ssheet} ${_input}
     DEPENDS ${_docs} ${_ssheet}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
   add_custom_target(${_handbook}-html ALL DEPENDS ${_doc})
