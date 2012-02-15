@@ -89,7 +89,6 @@ class Dim4Triangulation;
  *        for these. 
  * \todo  2) test suite stuff: 
  *        Move all the test routines out of the NCellularData class and put them in the test suite proper. 
- *        TODO double check torsion linking form behaves properly. 
  *        With the maximal tree code, add tests that will ensure there's the appropriate
  *        number of edges of each type.  There's the entire tree, then the boundary component
  *        trees.  
