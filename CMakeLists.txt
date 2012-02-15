@@ -106,7 +106,7 @@ if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   SET (PKGLIBDIR ${LIBDIR})
   SET (PKGDATADIR ${DATADIR})
   SET (MANDIR ${DATADIR}/man)
-  SET (HTMLDIR ${DATADIR}/docs)
+  SET (HTMLDIR ${PKGDATADIR}/docs)
 else ()
   # Full install.
   SET (APPDIR ${CMAKE_INSTALL_PREFIX}/bin)
@@ -117,7 +117,7 @@ else ()
   SET (PKGLIBDIR ${LIBDIR}/${PACKAGE_NAME})
   SET (PKGDATADIR ${DATADIR}/${PACKAGE_NAME})
   SET (MANDIR ${DATADIR}/man)
-  SET (HTMLDIR ${DATADIR}/docs)
+  SET (HTMLDIR ${PKGDATADIR}/docs)
 endif ()
 
 # Useful build directories
