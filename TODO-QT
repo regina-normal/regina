@@ -6,14 +6,14 @@ MacOS:
 - Settings are not saved: see QSettings
 - Cmdline tools (including regina-python) don't work.
 
-Hunt for instances of pixmap(..,..).
-
-Lock icon on trianglations with surface lists
-
-CMakeLists:
+Linux:
 - install application icons and Desktop files for KDE/GNOME:
     http://developer.qt.nokia.com/doc/qt-4.8/appicon.html
 - install mimetype handling for KDE/GNOME.
+
+Hunt for instances of pixmap(..,..).
+
+Lock icon on trianglations with surface lists
 
 Check that we call QWidget::setWindowIcon() for top-level windows.
 
