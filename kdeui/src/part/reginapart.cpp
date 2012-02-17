@@ -203,6 +203,8 @@ bool ReginaPart::initData(regina::NPacket* usePacketTree,
         if (treeView->invisibleRootItem()->child(0)->child(0))
             treeView->scrollToItem(
                 treeView->invisibleRootItem()->child(0)->child(0));
+
+        parent->setWindowTitle(localFile);
         return true;
     } else {
         initPacketTree();
@@ -264,8 +266,13 @@ void ReginaPart::fileSaveAs() {
                 == QMessageBox::Cancel)
             return;
     }
+
     // Go ahead and save it.
-    localFile = file;
+    if (localFile != file) {
+        localFile = file;
+        parent->setWindowTitle(localFile);
+    }
+
     saveFile();
 }
 
@@ -563,6 +570,8 @@ void ReginaPart::initPacketTree() {
 
     // Update the visual representation.
     treeView->fill(packetTree);
+
+    parent->setWindowTitle(tr("Untitled"));
 }
 
 bool ReginaPart::checkReadWrite() {
@@ -593,5 +602,5 @@ regina::NPacket* ReginaPart::checkSubtreeSelected() {
 }
 
 const QUrl ReginaPart::url() {
-    return QUrl(localFile);
+    return QUrl::fromLocalFile(localFile);
 }

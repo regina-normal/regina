@@ -89,6 +89,7 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
     // Track the parent manager.
     manager = parent;
 
+    setWindowTitle(tr("Regina"));
 
     if (showAdvice) {
         // Until we actually have a part loaded, give the user something
