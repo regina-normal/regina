@@ -1,5 +1,7 @@
 Save/restore the window geometry in QSettings.
 
+Don't allow users to modify example files (i.e., change the localFile).
+
 MacOS:
 - Toolbar is very bulky; can we make it 22x22, not 32x32?
 - Message boxes are all in bold, ugh.
