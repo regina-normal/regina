@@ -28,6 +28,8 @@
 
 #include "reginamain.h"
 
+#include <QFileOpenEvent>
+#include <QUrl>
 
 ReginaManager::ReginaManager(int &argc, char **argv) : 
     QApplication(argc,argv) {
@@ -41,7 +43,7 @@ ReginaMain* ReginaManager::newWindow() {
     return win;
 }
 
-bool ReginaManager::newWindow(const QString url) {
+bool ReginaManager::newWindow(const QUrl& url) {
     if ( url.isEmpty() ) 
         return false;
     ReginaMain *win = newWindow();
@@ -59,5 +61,14 @@ void ReginaManager::onClose(ReginaMain *child) {
         exit();
 }
 
-
+bool ReginaManager::event(QEvent* event) {
+    switch (event->type()) {
+        case QEvent::FileOpen:
+            children.front()->openUrl(
+                static_cast<QFileOpenEvent*>(event)->url());
+            return true;
+        default:
+            return QApplication::event(event);
+    }
+}
 

@@ -34,7 +34,6 @@
 #define __REGINAMAIN_H_
 
 #include "pythonmanager.h"
-#include "reginaiface.h"
 #include "reginaprefset.h"
 #include "reginaabout.h"
 #include "reginapart.h"
@@ -59,8 +58,7 @@ class ReginaManager;
  *
  * This class also stores global preferences for Regina.
  */
-class ReginaMain : public QMainWindow,
-        virtual public ReginaMainInterface {
+class ReginaMain : public QMainWindow {
     Q_OBJECT
 
     private:
@@ -244,12 +242,6 @@ class ReginaMain : public QMainWindow,
         bool openUrl(const QUrl& url);
 
         /**
-         * Open the given Url in this window, or in a new top-level
-         * window if this window already contains an open document.
-         */
-        bool openUrl(const QString& url);
-
-        /**
          * Open the given example file in a manner similar to openUrl().
          */
         bool openExample(const QUrl& url);
@@ -343,14 +335,21 @@ inline const ReginaPrefSet& ReginaMain::getPreferences() const {
  */
 
 class ReginaManager : public QApplication {
+    Q_OBJECT
 
     public:
         ReginaManager(int &argc, char** argv);
         
         ReginaMain* newWindow();
-        bool newWindow(const QString url);
+        bool newWindow(const QUrl& url);
 
         void onClose(ReginaMain *child);
+
+    protected:
+        /**
+         * Support QEvent::FileOpen on MacOS.
+         */
+        bool event(QEvent*);
 
     private:
         QList<ReginaMain *> children;

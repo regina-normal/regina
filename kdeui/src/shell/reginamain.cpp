@@ -190,48 +190,19 @@ bool ReginaMain::openUrl(const QUrl& url) {
     // Do we already have a document open?
     if (currentPart) {
         // Open the new document in a new window.
-        return manager->newWindow(url.toString());
+        return manager->newWindow(url);
     }
 
     // As of Regina 4.90, we only support Regina data files.
     // Python scripts should be opened in a real python editor, not Regina.
-    bool isReg = false;
-    QString name;
 
-    // Variable name will initially contain the mimetype name, but if
-    // the mimetype is not suitable it will be changed to the mimetype
-    // comment so we can display it to the user.
-    if (url.toLocalFile().right(ReginaAbout::regDataExt.length()).toLower() ==
-            ReginaAbout::regDataExt)
-        isReg = true;
-    // TODO: Mime type checking. It doesn't currently exist in Qt.
-    /*else {
-        // Try to guess it from the mimetype.
-        KMimeType::Ptr mimetype = KMimeType::findByUrl(url);
-        name = mimetype->name();
-        if (name == "application/x-regina" || name == "text/xml" ||
-                name == "application/x-gzip" ||
-                name == "application/octet-stream")
-            isReg = true;
-        else
-            name = mimetype->comment();
-    }*/
-    bool result;
-    if (isReg) {
-        currentPart = newTopologyPart();
-        setCentralWidget(currentPart->widget());
-        result = currentPart->openFile(url);
-    }
-    else {
-        QMessageBox::warning(this, tr("Unable to open file"),
-            tr( "I do not know how to open files of type %1.").arg(name));
-        result = false;
-    }
+    // Since we only work with Regina data files, just try to open it
+    // as a Regina data file regardless of its extension.
+    currentPart = newTopologyPart();
+    setCentralWidget(currentPart->widget());
+    bool result = currentPart->openFile(url);
+
     return result;
-}
-
-bool ReginaMain::openUrl(const QString& url) {
-    return openUrl(QUrl(url));
 }
 
 bool ReginaMain::openExample(const QUrl& url) {
@@ -268,12 +239,11 @@ void ReginaMain::quit() {
 }
 
 void ReginaMain::fileOpen() {
-    QUrl url = QFileDialog::getOpenFileName(this, tr("Open Data File"), QString(), 
-          tr(FILTER_SUPPORTED));
-    if (!url.isEmpty())
-        openUrl(url);
+    QString file = QFileDialog::getOpenFileName(this, tr("Open Data File"),
+        QString(), tr(FILTER_SUPPORTED));
+    if (! file.isNull())
+        openUrl(QUrl::fromLocalFile(file));
 }
-
 
 void ReginaMain::optionsPreferences() {
     ReginaPreferences dlg(this);

@@ -187,17 +187,20 @@ void ReginaPart::aboutToUndock(PacketPane* undockedPane) {
     }
 }
 
-bool ReginaPart::openFile(QUrl url = QUrl()) {
+bool ReginaPart::openFile(QUrl url) {
     if (packetTree) {
         delete packetTree;
         setModified(false);
     }
-    if (url.isEmpty()) { 
-        localFile = QFileDialog::getOpenFileName( widget(),
-            tr("Open Data File"), QString(),  tr(FILTER_REGINA));
-    } else {
-        localFile = url.toLocalFile();
+
+    localFile = url.toLocalFile();
+
+    if (localFile.isEmpty()) {
+        // Silently do nothing, and just create a new file.
+        initPacketTree();
+        return false;
     }
+
     packetTree = regina::readFileMagic(
         static_cast<const char*>(QFile::encodeName(localFile)));
 
@@ -205,7 +208,8 @@ bool ReginaPart::openFile(QUrl url = QUrl()) {
         treeView->fill(packetTree);
         // Expand the first level.
         if (treeView->invisibleRootItem()->child(0)->child(0))
-            treeView->scrollToItem(treeView->invisibleRootItem()->child(0)->child(0));
+            treeView->scrollToItem(
+                treeView->invisibleRootItem()->child(0)->child(0));
         return true;
     } else {
         QMessageBox::warning(widget(),tr("Could not open data"), tr(

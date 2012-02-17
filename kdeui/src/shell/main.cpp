@@ -74,7 +74,8 @@ int main(int argc, char **argv) {
         // Note that args.at(0) is the name of the executable (regina-qt)
         if (args.size() > 1) {
             for (int i = 1; i < args.size(); i++) {
-                window->openUrl(args.at(i));
+                // Assume that arguments are all local filenames.
+                window->openUrl(QUrl::fromUserInput(args.at(i)));
             }
         }
 //    }
