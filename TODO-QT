@@ -1,16 +1,14 @@
-Make the default window size larger.
 Save/restore the window geometry in QSettings.
 
 MacOS:
 - Toolbar is very bulky; can we make it 22x22, not 32x32?
 - Message boxes are all in bold, ugh.
 - Settings are not saved: see QSettings
+- Cmdline tools (including regina-python) don't work.
 
 Hunt for instances of pixmap(..,..).
 
 Lock icon on trianglations with surface lists
-
-File type associations: http://doc.qt.nokia.com/qq/qq12-mac-events.html
 
 CMakeLists:
 - install application icons and Desktop files for KDE/GNOME:
