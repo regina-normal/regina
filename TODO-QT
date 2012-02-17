@@ -4,6 +4,7 @@ Save/restore the window geometry in QSettings.
 MacOS:
 - Toolbar is very bulky; can we make it 22x22, not 32x32?
 - Message boxes are all in bold, ugh.
+- Settings are not saved: see QSettings
 
 Hunt for instances of pixmap(..,..).
 
