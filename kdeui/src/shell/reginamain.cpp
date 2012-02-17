@@ -38,6 +38,8 @@
 #include "reginasupport.h"
 #include "../part/reginapart.h"
 
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QDrag>
 #include <QDragEnterEvent>
 #include <QDropEvent>
@@ -891,7 +893,11 @@ bool ReginaMain::saveUrlAs() {
 }
 
 QSize ReginaMain::sizeHint() const {
-    return QSize(640,400);
+    // Use roughly 2/3 the screen size by default.
+    QSize use = QApplication::desktop()->availableGeometry().size();
+    use *= 2;
+    use /= 3;
+    return use;
 }
 
 void ReginaMain::plugMenu(QMenu *menu) {
