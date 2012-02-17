@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "regina-config.h"
+#include "file/nxmlfile.h"
 #include "snappea/nsnappeatriangulation.h"
 #include "surfaces/nnormalsurfacelist.h"
 
@@ -177,32 +178,37 @@ bool ReginaMain::queryExit() {
 }
 
 void ReginaMain::newTopology() {
-    if (currentPart) {
-        manager->newWindow();
-    } else {
-        currentPart = newTopologyPart();
-        setCentralWidget(currentPart->widget());
-    }
-    return;
+    // If we already have a document open, make a new window.
+    ReginaMain* useWindow = (currentPart ? manager->newWindow() : this);
+    useWindow->newTopologyPart();
 }
 
 bool ReginaMain::openUrl(const QUrl& url) {
-    // Do we already have a document open?
-    if (currentPart) {
-        // Open the new document in a new window.
-        return manager->newWindow(url);
+    // Can we read data from the file?
+    QString localFile = url.toLocalFile();
+    if (localFile.isEmpty()) {
+        QMessageBox::warning(this, tr("Empty filename"), tr(
+            "<qt>I cannot open this data file, since the filename is empty.  "
+            "Please report this error to the developers at <i>%1</i>.</qt>").
+            arg(PACKAGE_BUGREPORT));
+        return false;
     }
 
-    // As of Regina 4.90, we only support Regina data files.
-    // Python scripts should be opened in a real python editor, not Regina.
+    regina::NPacket* packetTree = regina::readFileMagic(
+        static_cast<const char*>(QFile::encodeName(localFile)));
 
-    // Since we only work with Regina data files, just try to open it
-    // as a Regina data file regardless of its extension.
-    currentPart = newTopologyPart();
-    setCentralWidget(currentPart->widget());
-    bool result = currentPart->openFile(url);
+    if (! packetTree) {
+        QMessageBox::warning(this, tr("Could not open data"), tr(
+            "The topology data file %1 could not be opened.  Perhaps "
+            "it is not a Regina data file?").arg(localFile));
+        return false;
+    }
 
-    return result;
+    // All good, we have some real data.  Let's go.
+    // If we already have a document open, make a new window.
+    ReginaMain* useWindow = (currentPart ? manager->newWindow() : this);
+    useWindow->newTopologyPart();
+    return useWindow->currentPart->initData(packetTree, localFile);
 }
 
 bool ReginaMain::openExample(const QUrl& url) {
@@ -819,32 +825,20 @@ void ReginaMain::saveOptions() {
 //    }
 }
 
-ReginaPart* ReginaMain::newTopologyPart() {
-    ReginaPart* ans = 0;
+void ReginaMain::newTopologyPart() {
+    currentPart = new ReginaPart(this, QStringList());
 
-    /**
-     * As a first iteration for the KDE4 port, let's just link directly
-     * with the part and create a new class instance directly.
-     */
-    ans = new ReginaPart(this, QStringList());
+    // Connect up signals and slots.
+    connect(this, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
+        currentPart, SLOT(updatePreferences(const ReginaPrefSet&)));
 
-    if (! ans)
-        QMessageBox::warning(this, tr("Could not create component"),
-            tr("An appropriate topology data component could not be found."));
-    else {
-        // Connect up signals and slots.
-        connect(this, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
-            ans, SLOT(updatePreferences(const ReginaPrefSet&)));
+    disconnect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
+    connect(actPython, SIGNAL(triggered()), currentPart, SLOT(pythonConsole()));
 
-        disconnect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
-        connect(actPython, SIGNAL(triggered()), ans, SLOT(pythonConsole()));
+    // Perform initial setup on the part.
+    emit preferencesChanged(globalPrefs);
 
-        // Perform initial setup on the part.
-        emit preferencesChanged(globalPrefs);
-    }
-
-    // All done!
-    return ans;
+    setCentralWidget(currentPart->widget());
 }
 
 
@@ -963,16 +957,5 @@ void ReginaMain::editMenu(QMenu *menu) {
         // Insert before Tools
         editAct = menuBar()->insertMenu(toolMenuAction,menu);
     }
-}
-
-// TODO: As best I can tell, this never gets called.
-void ReginaMain::embedPart() {
-    return;
-//    if (currentPart) {
-//        setCentralWidget(currentPart->widget());
-//        currentPart->widget()->show();
-//        manager->addPart(currentPart, true /* active part */);
-//        connect(currentPart, SIGNAL(completed()), this, SLOT(addRecentFile()));
-//    }
 }
 

@@ -43,17 +43,6 @@ ReginaMain* ReginaManager::newWindow() {
     return win;
 }
 
-bool ReginaManager::newWindow(const QUrl& url) {
-    if ( url.isEmpty() ) 
-        return false;
-    ReginaMain *win = newWindow();
-    if ( ! win->openUrl(url) ) {
-        win->close();
-        return false;
-    }
-    return true;
-}
-       
 void ReginaManager::onClose(ReginaMain *child) {
     children.removeOne(child);
     // Exit if we have no more to manage

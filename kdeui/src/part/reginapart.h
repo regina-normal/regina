@@ -233,7 +233,8 @@ class ReginaPart : public QObject {
         /**
          * Open and save files.
          */
-        bool openFile(QUrl url);
+        bool initData(regina::NPacket* usePacketTree,
+            const QString& useLocalFilename);
         bool saveFile();
 
         /**

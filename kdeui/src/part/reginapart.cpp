@@ -187,22 +187,15 @@ void ReginaPart::aboutToUndock(PacketPane* undockedPane) {
     }
 }
 
-bool ReginaPart::openFile(QUrl url) {
+bool ReginaPart::initData(regina::NPacket* usePacketTree,
+        const QString& useLocalFilename) {
     if (packetTree) {
         delete packetTree;
         setModified(false);
     }
 
-    localFile = url.toLocalFile();
-
-    if (localFile.isEmpty()) {
-        // Silently do nothing, and just create a new file.
-        initPacketTree();
-        return false;
-    }
-
-    packetTree = regina::readFileMagic(
-        static_cast<const char*>(QFile::encodeName(localFile)));
+    localFile = useLocalFilename;
+    packetTree = usePacketTree;
 
     if (packetTree) {
         treeView->fill(packetTree);
@@ -212,9 +205,6 @@ bool ReginaPart::openFile(QUrl url) {
                 treeView->invisibleRootItem()->child(0)->child(0));
         return true;
     } else {
-        QMessageBox::warning(widget(),tr("Could not open data"), tr(
-            "Topology data file %1 could not be opened.  Perhaps "
-            "it is not a Regina data file?").arg(localFile));
         initPacketTree();
         return false;
     }

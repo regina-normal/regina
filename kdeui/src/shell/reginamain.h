@@ -310,17 +310,9 @@ class ReginaMain : public QMainWindow {
         void fillExamples();
 
         /**
-         * Creates a new topology data part.  If no appropriate part can
-         * be created, an error is displayed and 0 is returned.
+         * Fills the window with a new topology data part.
          */
-        ReginaPart* newTopologyPart();
-
-        /**
-         * Inserts \a currentPart into the main window and performs any
-         * additional setup that is required.  This routine can cope if
-         * \a currentPart is 0.
-         */
-        void embedPart();
+        void newTopologyPart();
 };
 
 inline const ReginaPrefSet& ReginaMain::getPreferences() const {
@@ -341,7 +333,6 @@ class ReginaManager : public QApplication {
         ReginaManager(int &argc, char** argv);
         
         ReginaMain* newWindow();
-        bool newWindow(const QUrl& url);
 
         void onClose(ReginaMain *child);
 
