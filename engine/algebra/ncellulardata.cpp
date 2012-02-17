@@ -850,8 +850,10 @@ const NHomGroupPresentation* NCellularData::homGroupPresentation( const HomGroup
  std::map< HomGroupPresLocator, NHomGroupPresentation* >::const_iterator p;
 
  // various bail triggers
- if ( (h_desc.inclusion_sub_man==ideal_boundary) &&    (h_desc.subman_component_index >= numIdealBdryComps) ) return NULL;
- if ( (h_desc.inclusion_sub_man==standard_boundary) && (h_desc.subman_component_index >= numStdBdryComps) )   return NULL;
+ if ( (h_desc.inclusion_sub_man==ideal_boundary) &&    
+      (h_desc.subman_component_index >= numIdealBdryComps) ) return NULL;
+ if ( (h_desc.inclusion_sub_man==standard_boundary) && 
+      (h_desc.subman_component_index >= numStdBdryComps) )   return NULL;
 
  p = homGroupPresentations.find(h_desc);
  if (p != homGroupPresentations.end()) return (p->second);
@@ -967,14 +969,6 @@ const NMatrixInt* NCellularData::integerChainMap( const ChainMapLocator &m_desc 
 }
 
 unsigned long num_less_than(const std::set<unsigned long> &thelist, const unsigned long &obj); // forward dec.
-
-/*template <class T>
-void dumpVec(const std::vector<T> out)
-{
-for (unsigned long i=0; i<out.size(); i++)
- std::cout<<out[i]<<" ";
-std::cout.flush();
-}*/
 
 // Eventually this should return the appropriate map from the (a_desc)-stage of the
 //  chain complex for the Alexander module.  The current algorithm is a hack, but until

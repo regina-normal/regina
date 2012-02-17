@@ -84,23 +84,26 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo  1) Complete collection of homology natural bilinear forms on a manifold, spin structures. 
+ * \todo  1) need to do the boundary inclusion maps for pi1. This can be used to check 
+ *        for knots and links in homotopy-spheres and such.  So it can probably be safely added
+ *        to the test suite to give lots of group simplification exercises.  Okay, it looks like these
+ *        are implemented.  Time to add them to the test suite. 
+ * \todo  2) Homomorphisms to finite groups, covering spaces, Pi_2 presentations as a module over Pi_1.
+ * \todo  3) Complete collection of homology natural bilinear forms on a manifold, spin structures. 
  *        Derive chain complexes and maps from sparsely stored internal data.  Do not store matrices
  *        for these. 
- * \todo  2) test suite stuff: 
+ * \todo  4) test suite stuff: 
  *        Move all the test routines out of the NCellularData class and put them in the test suite proper. 
  *        With the maximal tree code, add tests that will ensure there's the appropriate
  *        number of edges of each type.  There's the entire tree, then the boundary component
  *        trees.  
- * \todo  3) Make sure all the maximal trees are copy-constructor safe. 
- * \todo  4) New coordinate systems to implement:
+ * \todo  5) Make sure all the maximal trees are copy-constructor safe. 
+ * \todo  6) New coordinate systems to implement:
  *        MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *        various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
  *        cup products. Not complete: Chain complex initialization. chain maps.  PD / intersection forms
  *        Note, current "mixed" chain complex does not subdivide ideal boundary.  Is this an issue? 
  *        Also, this is needed for (1) and (2).
- * \todo  5) need to do the boundary inclusion maps for pi1. Need to test. This can be used to check 
- *        for knots and links in homotopy-spheres and such. 
  * \todo  \optlong To minimize memory usage we should consider having homs, bilinear forms, etc, 
  *        not store their initialization data, instead trusting it to the NCellularData stack.
  *        This is a slow-but-ongoing process....  
