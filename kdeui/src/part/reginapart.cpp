@@ -66,11 +66,8 @@ ReginaPart::ReginaPart(ReginaMain *parent,
     initPacketTree();
 
     // Other tidying up.
-    setReadWrite(true);
     setModified(false);
-    updateTreeEditActions();
-    updateTreePacketActions();
-
+    updateTreeActions();
 }
 
 ReginaPart::~ReginaPart() {
@@ -89,23 +86,6 @@ ReginaPart::~ReginaPart() {
         delete packetTree;
     // Delete all actions
     allActions.clear();
-}
-
-void ReginaPart::setReadWrite(bool rw) {
-    // Update each packet pane.
-    QLinkedList<PacketPane*> panes = allPanes;
-    QLinkedList<PacketPane*>::iterator i;
-    for (i=panes.begin() ; i!=panes.end(); i++)
-        (*i)->setReadWrite(rw);
-
-    // Update status for edit actions.
-    updateTreeEditActions();
-
-    readWrite = true; 
-}
-
-bool ReginaPart::isReadWrite() {
-    return readWrite;
 }
 
 void ReginaPart::setModified(bool modified) {
@@ -228,10 +208,6 @@ bool ReginaPart::initData(regina::NPacket* usePacketTree,
 }
 
 bool ReginaPart::saveFile() {
-    // If we aren't read-write, return immediately.
-    if (! isReadWrite())
-        return false;
-
     // Does the user have some work that still needs to be committed?
     if (hasUncommittedChanges()) {
         if ( QMessageBox::warning(widget(), tr("Changes not commited"), 
@@ -328,9 +304,6 @@ void ReginaPart::packetView() {
 }
 
 void ReginaPart::packetRename() {
-    if (! checkReadWrite())
-        return;
-
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
@@ -359,9 +332,6 @@ void ReginaPart::packetRename() {
 }
 
 void ReginaPart::packetDelete() {
-    if (! checkReadWrite())
-        return;
-
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
@@ -403,9 +373,6 @@ void ReginaPart::subtreeRefresh() {
 }
 
 void ReginaPart::clonePacket() {
-    if (! checkReadWrite())
-        return;
-
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
@@ -424,9 +391,6 @@ void ReginaPart::clonePacket() {
 }
 
 void ReginaPart::cloneSubtree() {
-    if (! checkReadWrite())
-        return;
-
     regina::NPacket* packet = checkSubtreeSelected();
     if (! packet)
         return;
@@ -511,28 +475,18 @@ void ReginaPart::updatePreferences(const ReginaPrefSet& newPrefs) {
     consoles.updatePreferences(prefs);
 }
 
-void ReginaPart::updateTreePacketActions() {
+void ReginaPart::updateTreeActions() {
+    QLinkedList<QAction *>::iterator it;
+    for (it = treeGeneralEditActions.begin(); 
+            it != treeGeneralEditActions.end(); it++)
+        (*it)->setEnabled(true);
+
     bool enable = ! treeView->selectedItems().isEmpty(); 
 
-    QLinkedList<QAction *>::iterator it;
     for (it = treePacketViewActions.begin(); 
             it != treePacketViewActions.end(); it++)
         (*it)->setEnabled(enable);
 
-    enable = enable && isReadWrite();
-    for (it = treePacketEditActions.begin(); 
-            it != treePacketEditActions.end(); it++)
-        (*it)->setEnabled(enable);
-}
-
-void ReginaPart::updateTreeEditActions() {
-    bool enable = isReadWrite();
-    QLinkedList<QAction *>::iterator it;
-    for (it = treeGeneralEditActions.begin(); 
-            it != treeGeneralEditActions.end(); it++)
-        (*it)->setEnabled(enable);
-
-    enable = enable && (treeView->selectedItems().isEmpty());
     for (it = treePacketEditActions.begin(); 
             it != treePacketEditActions.end(); it++)
         (*it)->setEnabled(enable);
@@ -588,14 +542,6 @@ void ReginaPart::initPacketTree() {
     treeView->fill(packetTree);
 
     parent->setWindowTitle(tr("Untitled"));
-}
-
-bool ReginaPart::checkReadWrite() {
-    if (isReadWrite())
-        return true;
-    QMessageBox::warning(widget(),tr("Read-only mode"), tr(
-        "This topology data file is currently in read-only mode."));
-    return false;
 }
 
 regina::NPacket* ReginaPart::checkPacketSelected() {

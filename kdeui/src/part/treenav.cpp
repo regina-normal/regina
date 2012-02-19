@@ -36,9 +36,6 @@
 #include <QMessageBox>
 
 void ReginaPart::moveShallow() {
-    if (! checkReadWrite())
-        return;
-
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
@@ -72,9 +69,6 @@ void ReginaPart::moveShallow() {
 }
 
 void ReginaPart::moveDeep() {
-    if (! checkReadWrite())
-        return;
-
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
@@ -108,9 +102,6 @@ void ReginaPart::moveDeep() {
 }
 
 void ReginaPart::moveUp() {
-    if (! checkReadWrite())
-        return;
-
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
@@ -131,9 +122,6 @@ void ReginaPart::moveUp() {
 }
 
 void ReginaPart::moveDown() {
-    if (! checkReadWrite())
-        return;
-
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
@@ -154,9 +142,6 @@ void ReginaPart::moveDown() {
 }
 
 void ReginaPart::movePageUp() {
-    if (! checkReadWrite())
-        return;
-
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
@@ -177,9 +162,6 @@ void ReginaPart::movePageUp() {
 }
 
 void ReginaPart::movePageDown() {
-    if (! checkReadWrite())
-        return;
-
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
@@ -201,9 +183,6 @@ void ReginaPart::movePageDown() {
 }
 
 void ReginaPart::moveTop() {
-    if (! checkReadWrite())
-        return;
-
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
@@ -224,9 +203,6 @@ void ReginaPart::moveTop() {
 }
 
 void ReginaPart::moveBottom() {
-    if (! checkReadWrite())
-        return;
-
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;

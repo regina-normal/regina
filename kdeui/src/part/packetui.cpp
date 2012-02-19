@@ -113,7 +113,7 @@ DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
 
 PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
         QWidget* parent) : QWidget(parent),
-        part(newPart), frame(0), dirty(false), dirtinessBroken(false),
+        part(newPart), frame(0), dirty(false),
         emergencyClosure(false), emergencyRefresh(false), isCommitting(false),
         editCut(0), editCopy(0), editPaste(0) {
     // Initialise a vertical layout with no padding or spacing.
@@ -122,7 +122,7 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     layout->setSpacing(0);
 
     // Should we allow both read and write?
-    readWrite = part->isReadWrite() && newPacket->isPacketEditable();
+    readWrite = newPacket->isPacketEditable();
 
     // Create the actions first, since PacketManager::createUI()
     // might want to modify them.
@@ -237,7 +237,7 @@ PacketPane::~PacketPane() {
 }
 
 void PacketPane::setDirty(bool newDirty) {
-    if (dirtinessBroken || dirty == newDirty)
+    if (dirty == newDirty)
         return;
 
     dirty = newDirty;
@@ -248,18 +248,9 @@ void PacketPane::setDirty(bool newDirty) {
             ReginaSupport::themeIcon("view-refresh"));
 }
 
-void PacketPane::setDirtinessBroken() {
-    dirtinessBroken = true;
-    dirty = readWrite;
-
-    actCommit->setEnabled(dirty);
-    actRefresh->setText(dirty ? tr("&Discard / Refresh") : tr("&Refresh"));
-    actRefresh->setIcon(ReginaSupport::themeIcon("view-refresh"));
-}
-
 bool PacketPane::setReadWrite(bool allowReadWrite) {
     if (allowReadWrite)
-        if (! (mainUI->getPacket()->isPacketEditable() && part->isReadWrite()))
+        if (! (mainUI->getPacket()->isPacketEditable()))
             return false;
 
     if (readWrite == allowReadWrite)
@@ -270,10 +261,6 @@ bool PacketPane::setReadWrite(bool allowReadWrite) {
 
     mainUI->setReadWrite(allowReadWrite);
     updateClipboardActions();
-    if (dirtinessBroken) {
-        // Update the UI according to the new value of readWrite.
-        setDirtinessBroken();
-    }
 
     emit readWriteStatusChanged(readWrite);
 
@@ -282,13 +269,9 @@ bool PacketPane::setReadWrite(bool allowReadWrite) {
 
 bool PacketPane::queryClose() {
     if ((! emergencyClosure) && dirty) {
-        QString msg = (dirtinessBroken ?
-            tr("This packet might contain changes that have not yet been "
+        QString msg = tr("This packet contains changes that have not yet been "
                  "committed.  Are you sure you wish to close this packet "
-                 "now and discard these changes?") :
-            tr("This packet contains changes that have not yet been "
-                 "committed.  Are you sure you wish to close this packet "
-                 "now and discard these changes?"));
+                 "now and discard these changes?");
         if (QMessageBox::warning(this, 
                 mainUI->getPacket()->getPacketLabel().c_str(),
                 msg, QMessageBox::Discard | QMessageBox::Cancel) 
@@ -363,17 +346,11 @@ void PacketPane::packetWasChanged(regina::NPacket*) {
     header->refresh();
 
     if (dirty) {
-        QString msg = (dirtinessBroken ?
-            tr("This packet has been changed from within a script or "
-                 "another interface.  However, this interface might contain "
-                 "changes that have not yet been committed.  Do you wish "
-                 "to refresh this interface to reflect the changes "
-                 "that have been made elsewhere?") :
-            tr("This packet has been changed from within a script or "
+        QString msg = tr("This packet has been changed from within a script or "
                  "another interface.  However, this interface contains "
                  "changes that have not yet been committed.  Do you wish "
                  "to refresh this interface to reflect the changes "
-                 "that have been made elsewhere?"));
+                 "that have been made elsewhere?");
         if (QMessageBox::warning(this, 
                 mainUI->getPacket()->getPacketLabel().c_str(),
                 msg, QMessageBox::Discard | QMessageBox::Cancel) 
@@ -418,13 +395,9 @@ void PacketPane::refresh() {
     header->refresh();
 
     if ((! emergencyRefresh) && dirty) {
-        QString msg = (dirtinessBroken ?
-            tr("This packet might contain changes that have not yet been "
+        QString msg = tr("This packet contains changes that have not yet been "
                  "committed.  Are you sure you wish to discard these "
-                 "changes?") :
-            tr("This packet contains changes that have not yet been "
-                 "committed.  Are you sure you wish to discard these "
-                 "changes?"));
+                 "changes?");
         if (QMessageBox::warning(this, 
                 mainUI->getPacket()->getPacketLabel().c_str(),
                 msg, QMessageBox::Discard | QMessageBox::Cancel) 

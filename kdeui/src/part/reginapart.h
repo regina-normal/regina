@@ -130,8 +130,6 @@ class ReginaPart : public QObject {
          * Miscellaneous flags
          */
         bool dirty;
-        bool readWrite;
-
 
     public:
         /**
@@ -143,8 +141,6 @@ class ReginaPart : public QObject {
         /**
          * KPart replacements.
          */
-        virtual void setReadWrite(bool rw);
-        virtual bool isReadWrite();
         virtual void setModified(bool modified);
         virtual bool closeUrl();
 
@@ -361,8 +357,7 @@ class ReginaPart : public QObject {
         /**
          * Various UI updates.
          */
-        void updateTreePacketActions();
-        void updateTreeEditActions();
+        void updateTreeActions();
         
     private:
         /**
@@ -382,7 +377,6 @@ class ReginaPart : public QObject {
          * value can always be cast to a boolean that is true if and
          * only if the test was passed.
          */
-        bool checkReadWrite();
         regina::NPacket* checkPacketSelected();
         regina::NPacket* checkSubtreeSelected();
 

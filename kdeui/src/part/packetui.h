@@ -320,7 +320,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * Properties
          */
         bool dirty;
-        bool dirtinessBroken;
         bool readWrite;
         bool emergencyClosure;
         bool emergencyRefresh;
@@ -373,18 +372,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * components will be updated accordingly.
          */
         void setDirty(bool newDirty);
-
-        /**
-         * The packet UI within this pane should call this routine when it
-         * knows it will not reliably call setDirty() as it should.  This
-         * instructs the packet pane to always treat the packet as "possibly
-         * dirty".
-         *
-         * Examples of when this should be used are when a packet UI uses
-         * the Vim part for editing, which for some versions never emits
-         * the required textChanged() signals.
-         */
-        void setDirtinessBroken();
 
         /**
          * Is this packet pane currently in read-write (as opposed to

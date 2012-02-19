@@ -80,9 +80,6 @@ void ReginaPart::importOrb() {
 void ReginaPart::importFile(const PacketImporter& importer,
         PacketFilter* parentFilter, const QString& fileFilter,
         const QString& dialogTitle) {
-    if (! checkReadWrite())
-        return;
-
     regina::NPacket* newTree = 0;
 // TODO: Encoding stuff?
 //    if (importer.offerImportEncoding()) {
