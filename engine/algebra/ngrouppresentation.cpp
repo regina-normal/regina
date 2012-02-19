@@ -545,15 +545,19 @@ bool NGroupPresentation::intelligentSimplify() {
 
 // TODO: 1) recognise commutators and use that to our advantage. 
 //       recognise other advantageous small words ??
-//       random walks using score==0 substitutions??
-//       recognise utility of some Nielsen transforms, ie
+//       random walks using score==0 substitutions, or perhaps a 
+//       peek-ahead algorithm to see if any of the score=0 subs
+//       result is useful future reductions. 
+//
 //       2) basic automorphisms of the free group, x_1 --> x_1, ...
 //             x_i --> x_ix_j, ..., x_n --> x_n, etc. 
-
-// TODO: if you run this on the NCellularData produced fundamental group of
-//       the idealtonormal version of the first manifold in the 3-manifold
-//       knot and link census, it crashes.  It appears to be deallocating
-//       something twice.  What?
+//          This should be used to simplify presentations like
+//          < a b | b^2a^2, abababab > etc. 
+//
+//       3) Some of the 4-manifold presentations produced are clunky. 
+//       For example, < a b | b^-2, b^-1ab^-1a^2b > could benefit from a Tietze
+//       move.  < a b | b^2, a^2, babababab > apears to be a finite dihedral group. 
+//       < a b | ba^-2b, ab^-1a^-1ba^-1 > isn't cyclically reduced! 
 bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMap)
 {
  bool didSomething(false);
@@ -846,7 +850,8 @@ std::string NGroupPresentation::stringOutput() const {
          // a through z should be ASCII 97 through 122, these are 26
          // lower case roman letters. 
         if (nGenerators <= 26) { 
-          for (unsigned long i=0; i<nGenerators; i++) { retval.append(std::string(1, char(i+97))); retval.append(" "); }
+          for (unsigned long i=0; i<nGenerators; i++) 
+           { retval.append(std::string(1, char(i+97))); retval.append(" "); }
           }
         else { retval.append("g0 .. g"); std::stringstream num;
                  num<<(nGenerators - 1); retval.append(num.str()); }
