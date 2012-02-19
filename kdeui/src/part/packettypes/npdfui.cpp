@@ -33,6 +33,7 @@
 // UI includes:
 #include "npdfui.h"
 #include "../reginapart.h"
+#include "reginasupport.h"
 
 #include <csignal>
 #include <cstdio>
@@ -69,7 +70,7 @@ NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
     layerInfo = messageLayer(msgInfo, "dialog-information");
 
     // Error layer.
-    layerError = messageLayer(msgError, "dialog-error");
+    layerError = messageLayer(msgError, "dialog-warning");
 
     // Finish off.
     refresh();
@@ -242,10 +243,8 @@ QWidget* NPDFUI::messageLayer(QLabel*& text, const char* iconName) {
 
     layout->addStretch(1);
 
-    // Create a 32x32 pixmap from the iconName icon, falling back 
-    // to a "critical" pixmap
-    QPixmap iconPic = QIcon::fromTheme(iconName, 
-            QMessageBox::standardIcon(QMessageBox::Critical)).pixmap(32,32);
+    // Create a 32x32 pixmap from the iconName icon.
+    QPixmap iconPic = ReginaSupport::themeIcon(iconName).pixmap(32,32);
 
     QLabel* icon = new QLabel(layer);
     icon->setPixmap(iconPic);

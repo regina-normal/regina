@@ -1232,7 +1232,7 @@ void NTriGluingsUI::censusLookup() {
         // Qt doesn't have a static QMessageBox::warning type function
         // that also shows the "Details" button.
         QMessageBox *details = new QMessageBox(ui);
-        details->setIcon(QMessageBox::Warning);
+        details->setIcon(QMessageBox::Information);
         details->setText(tr("The triangulation could not "
             "be found in any of the available censuses.\n"
             "You can add more censuses to this search list through the "

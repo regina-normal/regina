@@ -279,7 +279,7 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
     msgInfo->setText(tr("<qt>Initialising...</qt>"));
 
     // Error layer.
-    layerError = messageLayer(msgError, "dialog-error");
+    layerError = messageLayer(msgError, "dialog-warning");
     msgError->setText(tr("<qt>Initialising...</qt>"));
 
     // Graph layer.
@@ -477,9 +477,8 @@ QWidget* NTriFaceGraphUI::messageLayer(QLabel*& text,
 
     layout->addStretch(1);
 
-    QPixmap iconPic = QIcon(iconName).pixmap(32,32); //SizeMedium from KDE
-    if (iconPic.isNull())
-        iconPic = QMessageBox::standardIcon(QMessageBox::Critical);
+    QPixmap iconPic = ReginaSupport::themeIcon(iconName).pixmap(32,32);
+        //SizeMedium from KDE
 
     QLabel* icon = new QLabel(layer);
     icon->setPixmap(iconPic);
