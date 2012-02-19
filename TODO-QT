@@ -1,12 +1,13 @@
 Save/restore the window geometry in QSettings.
-
 Don't allow users to modify example files (i.e., change the localFile).
+Save-As doesn't work.
 
 MacOS:
 - Toolbar is very bulky; can we make it 22x22, not 32x32?
 - Message boxes are all in bold, ugh.
 - Settings are not saved: see QSettings
 - Cmdline tools (including regina-python) don't work.
+- Fix QMessageBox use (text vs informative text).  Check QMessageBox icons.
 
 Linux:
 - install application icons and Desktop files for KDE/GNOME:

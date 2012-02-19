@@ -118,14 +118,23 @@ bool ReginaPart::closeUrl() {
         return false;
     consoles.closeAllConsoles();
 
-    if (dirty) {
-        if (QMessageBox::warning(widget(), tr("Unsaved changes"),
-                tr("Your data file has changes that have not been saved.  "
-                    "Are you sure you wish to close this file and discard "
-                    "these changes?"),
-                QMessageBox::Discard | QMessageBox::Cancel) ==
-                QMessageBox::Cancel)
+    while (dirty) {
+        QMessageBox msgBox;
+        msgBox.setWindowTitle(tr("Regina"));
+        msgBox.setText("The data file has been modified.");
+        msgBox.setInformativeText("Do you want to save your changes?");
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setStandardButtons(QMessageBox::Save |
+            QMessageBox::Discard | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Save);
+        int ret = msgBox.exec();
+
+        if (ret == QMessageBox::Cancel)
             return false;
+        if (ret == QMessageBox::Discard)
+            break;
+
+        fileSave();
     }
 
     return true;
@@ -236,10 +245,11 @@ bool ReginaPart::saveFile() {
             return false;
     }
 
-    if (regina::writeXMLFile(
-            static_cast<const char*>(QFile::encodeName(localFile)), packetTree))
+    if (regina::writeXMLFile(static_cast<const char*>(
+            QFile::encodeName(localFile)), packetTree)) {
+        setModified(false);
         return true;
-    else {
+    } else {
         QMessageBox::warning(widget(),tr("Could not save data"), tr(
             "Topology data file %1 could not be saved.").arg(localFile));
         return false;
