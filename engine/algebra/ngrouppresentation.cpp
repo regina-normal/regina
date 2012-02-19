@@ -207,44 +207,17 @@ bool NGroupExpression::substitute(unsigned long generator,
     return changed;
 }
 
-void NGroupExpression::writeXMLData(std::ostream& out) const {
-    out << "<reln> ";
-    for (TermIteratorConst it = terms.begin(); it != terms.end(); it++)
-        out << (*it).generator << '^' << (*it).exponent << ' ';
-    out << "</reln>";
-}
-
-void NGroupExpression::writeToFile(NFile& out) const {
-    out.writeULong(terms.size());
-    for (TermIteratorConst it = terms.begin(); it != terms.end(); it++)
-        (*it).writeToFile(out);
-}
-
-NGroupExpression* NGroupExpression::readFromFile(NFile& in) {
-    NGroupExpression* ans = new NGroupExpression();
-    unsigned long nTerms = in.readULong();
-    for (unsigned long i = 0; i < nTerms; i++)
-        ans->terms.push_back(NGroupExpressionTerm::readFromFile(in));
-    return ans;
-}
-
-void NGroupExpression::writeTextShort(std::ostream& out) const {
-    if (terms.empty())
-        out << '1';
-    else {
-        TermIteratorConst last = --terms.end();
-        copy(terms.begin(), last,
-            std::ostream_iterator<NGroupExpressionTerm>(out, " "));
-        out << *last;
-    }
-}
-
 NGroupPresentation::NGroupPresentation(const NGroupPresentation& cloneMe) :
         ShareableObject(), nGenerators(cloneMe.nGenerators) {
     transform(cloneMe.relations.begin(), cloneMe.relations.end(),
         back_inserter(relations), FuncNewCopyPtr<NGroupExpression>());
 }
 
+
+// TODO: add platonic groups: octahedral/cubical, dihedral, icosahedral/dodecahedral, 
+//       tetrahedral groups and binary versions of them.  Is there a quick finiteness
+//       check?  Compare with SnapPea's code. 
+//
 std::string NGroupPresentation::recogniseGroup() const {
     std::ostringstream out;
     unsigned long nRels = relations.size();
@@ -302,123 +275,6 @@ std::string NGroupPresentation::recogniseGroup() const {
         // Don't have anything intelligent to say at this point.
     }
     return out.str();
-}
-
-void NGroupPresentation::writeXMLData(std::ostream& out) const {
-    out << "<group generators=\"" << nGenerators << "\">\n";
-    for (RelIteratorConst it = relations.begin(); it != relations.end(); it++) {
-        out << "  ";
-        (*it)->writeXMLData(out);
-        out << '\n';
-    }
-    out << "</group>\n";
-}
-
-void NGroupPresentation::writeToFile(NFile& out) const {
-    out.writeULong(nGenerators);
-    out.writeULong(relations.size());
-    for (RelIteratorConst it = relations.begin(); it != relations.end(); it++)
-        (*it)->writeToFile(out);
-
-    // Write properties.
-    out.writeAllPropertiesFooter();
-}
-
-NGroupPresentation* NGroupPresentation::readFromFile(NFile& in) {
-    NGroupPresentation* ans = new NGroupPresentation();
-    ans->nGenerators = in.readULong();
-    unsigned long nRels = in.readULong();
-    for (unsigned long i = 0; i < nRels; i++)
-        ans->relations.push_back(NGroupExpression::readFromFile(in));
-
-    // Read properties.
-    in.readProperties(0);
-
-    return ans;
-}
-
-void NGroupPresentation::writeTextLong(std::ostream& out) const {
-    out << "Generators: ";
-    if (nGenerators == 0)
-        out << "(none)";
-    else if (nGenerators == 1)
-        out << "g0";
-    else if (nGenerators == 2)
-        out << "g0, g1";
-    else
-        out << "g0 .. g" << (nGenerators - 1);
-    out << std::endl;
-
-    out << "Relations:\n";
-    if (relations.empty())
-        out << "    (none)\n";
-    else
-        for (RelIteratorConst it = relations.begin();
-                it != relations.end(); it++) {
-            out << "    ";
-            (*it)->writeTextShort(out);
-            out << std::endl;
-        }
-}
-
-std::string NGroupPresentation::stringOutput() const {
-	std::string retval;
-	retval.append("< ");
-        if (nGenerators == 0) retval.append("");
-        else if (nGenerators == 1) retval.append("g0");
-        else if (nGenerators == 2) retval.append("g0, g1");
-        else { retval.append("g0 .. g"); std::stringstream num;
-                 num<<(nGenerators - 1); retval.append(num.str()); }
-        retval.append(" | ");
-        std::stringstream temp;
-        if (relations.empty()) retval.append(""); 
-	else for (RelIteratorConst it = relations.begin(); 
-                it != relations.end(); it++) {
-            if (it != relations.begin()) temp<<", ";
-            (*it)->writeTextShort(temp); }
-        retval.append(temp.str());
-        retval.append(" >");
-	return retval;
-}
-
-std::string NGroupExpression::TeXOutput() const {
-    std::string retval;
-    if (terms.empty())
-        retval.append("e");
-    else {
-       std::list<NGroupExpressionTerm>::const_iterator i;
-        for (i = terms.begin(); i!=terms.end(); i++)
-         {
-          std::stringstream genss; genss<<(*i).generator;
-          std::stringstream expss; expss<<(*i).exponent; 
-          retval.append("g_{"); retval.append(genss.str());
-          retval.append("}"); 
-          if ( (*i).exponent != 1 ) {
-           retval.append("^{"); retval.append(expss.str());
-           retval.append("}"); }
-         }
-    }
-    return retval;
-}
-
-std::string NGroupPresentation::TeXOutput() const {
-	std::string retval;
-	retval.append("\\langle ");
-        if (nGenerators == 0) retval.append("\\cdot");
-        else if (nGenerators == 1) retval.append("g_0");
-        else if (nGenerators == 2) retval.append("g_0, g_1");
-        else { retval.append("g0, \\cdots, g"); 
-        std::stringstream num; num<<(nGenerators - 1); 
-        retval.append(num.str()); }
-        retval.append(" | ");
-        // std::stringstream temp;
-        if (relations.empty()) retval.append("\\cdot"); 
-	else for (RelIteratorConst it = relations.begin(); 
-                it != relations.end(); it++) {
-            if (it != relations.begin()) retval.append(", ");
-            retval.append( (*it)->TeXOutput() ); }
-        retval.append(" \\rangle");
-	return retval;
 }
 
 
@@ -664,13 +520,6 @@ std::string substitutionString( const NGroupExpression &word,
  return retval;
 }
 
-std::string NGroupExpression::stringOutput() const
-{
- std::stringstream out; 
- writeTextShort(out); 
- return out.str();
-}
-
 void NGroupExpression::addTermsLast( const NGroupExpression& word)
 {
 std::list< NGroupExpressionTerm >::const_iterator it; 
@@ -885,6 +734,188 @@ void NGroupPresentation::operator=(const NGroupPresentation& copyMe)
   relations[i] = new NGroupExpression( *copyMe.relations[i] );
 }
 
+////////////////// ALL INPUT / OUTPUT routines below //////////////////////
+
+NGroupExpression* NGroupExpression::readFromFile(NFile& in) {
+    NGroupExpression* ans = new NGroupExpression();
+    unsigned long nTerms = in.readULong();
+    for (unsigned long i = 0; i < nTerms; i++)
+        ans->terms.push_back(NGroupExpressionTerm::readFromFile(in));
+    return ans;
+}
+
+NGroupPresentation* NGroupPresentation::readFromFile(NFile& in) {
+    NGroupPresentation* ans = new NGroupPresentation();
+    ans->nGenerators = in.readULong();
+    unsigned long nRels = in.readULong();
+    for (unsigned long i = 0; i < nRels; i++)
+        ans->relations.push_back(NGroupExpression::readFromFile(in));
+
+    // Read properties.
+    in.readProperties(0);
+
+    return ans;
+}
+
+// XML output
+
+void NGroupPresentation::writeXMLData(std::ostream& out) const {
+    out << "<group generators=\"" << nGenerators << "\">\n";
+    for (RelIteratorConst it = relations.begin(); it != relations.end(); it++) {
+        out << "  ";
+        (*it)->writeXMLData(out);
+        out << '\n';
+    }
+    out << "</group>\n";
+}
+
+void NGroupExpression::writeXMLData(std::ostream& out) const {
+    out << "<reln> ";
+    for (TermIteratorConst it = terms.begin(); it != terms.end(); it++)
+        out << (*it).generator << '^' << (*it).exponent << ' ';
+    out << "</reln>";
+}
+
+// group expression output routines
+
+std::string NGroupExpression::stringOutput(bool shortword) const
+{
+    std::string retval;
+    if (terms.empty())
+        retval.append("1");
+    else {
+       std::list<NGroupExpressionTerm>::const_iterator i;
+        for (i = terms.begin(); i!=terms.end(); i++)
+         {
+          // a through z should be ASCII 97 through 122, these are 26
+          // lower case roman letters. 
+          std::stringstream genss; if (shortword) genss<<((char) (97+(*i).generator)); else genss<<(*i).generator;
+          std::stringstream expss; expss<<(*i).exponent; 
+          if (shortword) retval.append(genss.str()); else { retval.append("g_"); retval.append(genss.str());
+          retval.append(""); }
+          if ( (*i).exponent != 1 ) {
+           retval.append("^"); retval.append(expss.str()); }
+         }
+    }
+    return retval;
+}
+
+std::string NGroupExpression::TeXOutput() const {
+    std::string retval;
+    if (terms.empty())
+        retval.append("e");
+    else {
+       std::list<NGroupExpressionTerm>::const_iterator i;
+        for (i = terms.begin(); i!=terms.end(); i++)
+         {
+          std::stringstream genss; genss<<(*i).generator;
+          std::stringstream expss; expss<<(*i).exponent; 
+          retval.append("g_{"); retval.append(genss.str());
+          retval.append("}"); 
+          if ( (*i).exponent != 1 ) {
+           retval.append("^{"); retval.append(expss.str());
+           retval.append("}"); }
+         }
+    }
+    return retval;
+}
+
+void NGroupExpression::writeToFile(NFile& out) const {
+    out.writeULong(terms.size());
+    for (TermIteratorConst it = terms.begin(); it != terms.end(); it++)
+        (*it).writeToFile(out);
+}
+
+void NGroupExpression::writeTextShort(std::ostream& out) const {
+    if (terms.empty())
+        out << '1';
+    else {
+        TermIteratorConst last = --terms.end();
+        copy(terms.begin(), last,
+            std::ostream_iterator<NGroupExpressionTerm>(out, " "));
+        out << *last;
+    }
+}
+
+// presentation output routines below
+
+std::string NGroupPresentation::stringOutput() const {
+	std::string retval;
+	retval.append("< ");
+        if (nGenerators == 0) { return("< >"); }
+         // a through z should be ASCII 97 through 122, these are 26
+         // lower case roman letters. 
+        if (nGenerators <= 26) { 
+          for (unsigned long i=0; i<nGenerators; i++) { retval.append(std::string(1, char(i+97))); retval.append(" "); }
+          }
+        else { retval.append("g0 .. g"); std::stringstream num;
+                 num<<(nGenerators - 1); retval.append(num.str()); }
+        std::stringstream temp;
+        if (relations.empty()) { retval.append(">"); return retval; }
+        retval.append(" | ");
+	for (RelIteratorConst it = relations.begin(); 
+                it != relations.end(); it++) { 
+            if (it != relations.begin()) temp<<", ";
+            temp<<(*it)->stringOutput( (nGenerators <= 26) ? true : false ); }
+        retval.append(temp.str());
+        retval.append(" >");
+	return retval;
+}
+
+std::string NGroupPresentation::TeXOutput() const {
+	std::string retval;
+	retval.append("\\langle ");
+        if (nGenerators == 0) retval.append("\\cdot");
+        else if (nGenerators == 1) retval.append("g_0");
+        else if (nGenerators == 2) retval.append("g_0, g_1");
+        else { retval.append("g0, \\cdots, g"); 
+        std::stringstream num; num<<(nGenerators - 1); 
+        retval.append(num.str()); }
+        retval.append(" | ");
+        // std::stringstream temp;
+        if (relations.empty()) retval.append("\\cdot"); 
+	else for (RelIteratorConst it = relations.begin(); 
+                it != relations.end(); it++) {
+            if (it != relations.begin()) retval.append(", ");
+            retval.append( (*it)->TeXOutput() ); }
+        retval.append(" \\rangle");
+	return retval;
+}
+
+void NGroupPresentation::writeTextLong(std::ostream& out) const {
+    out << "Generators: ";
+    if (nGenerators == 0)
+        out << "(none)";
+    else if (nGenerators == 1)
+        out << "g0";
+    else if (nGenerators == 2)
+        out << "g0, g1";
+    else
+        out << "g0 .. g" << (nGenerators - 1);
+    out << std::endl;
+
+    out << "Relations:\n";
+    if (relations.empty())
+        out << "    (none)\n";
+    else
+        for (RelIteratorConst it = relations.begin();
+                it != relations.end(); it++) {
+            out << "    ";
+            (*it)->writeTextShort(out);
+            out << std::endl;
+        }
+}
+
+
+void NGroupPresentation::writeToFile(NFile& out) const {
+    out.writeULong(nGenerators);
+    out.writeULong(relations.size());
+    for (RelIteratorConst it = relations.begin(); it != relations.end(); it++)
+        (*it)->writeToFile(out);
+
+    // Write properties.
+    out.writeAllPropertiesFooter();
+}
 
 } // namespace regina
 

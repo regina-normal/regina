@@ -530,11 +530,14 @@ class REGINA_API NGroupExpression : public ShareableObject {
 
         /**
          * The text representation will be of the form
-         * <tt>g2^4 g13^-5 g4</tt>.
+         * <tt>g2^4 g13^-5 g4</tt>. If the shortword flag is
+         * true, it will assume your word is in an alphabet of
+         * no more than 26 letters, and will write the word using
+         * lower-case ASCII, i.e. <tt>c^4 n^-5 e</tt>.
 	 *
 	 * @return a std::string representation of the word.
          */
-	std::string stringOutput() const;
+	std::string stringOutput(bool shortword=false) const;
 
         /**
          * The text representation will be of the form
@@ -675,6 +678,10 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * during the execution of this routine, although not nearly as
          * much as would be done by intelligentSimplify().
          *
+         * Currently, if successful the only groups this routine
+         * recognises is the trivial group, cyclic groups, free groups,
+         * and the free abelian group of rank two. 
+         *
          * \todo \featurelong Make this recognition more effective.
          *
          * @return a simple string representation of the group if it is
@@ -746,6 +753,8 @@ class REGINA_API NGroupPresentation : public ShareableObject {
 
 	/**
 	 * Writes a single string description of the group presentation. No endlines!
+         * Provided the group has 26 or fewer generators, will use the regular lower-case
+         * ASCII alphabet to describe words, such as ab^2c^-1, etc. 
 	 *
 	 * @return a std::string describing the presentation, < generators | relators >
 	 */

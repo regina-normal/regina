@@ -87,7 +87,9 @@ class Dim4Triangulation;
  * \todo  1) need to do the boundary inclusion maps for pi1. This can be used to check 
  *        for knots and links in homotopy-spheres and such.  So it can probably be safely added
  *        to the test suite to give lots of group simplification exercises.  Okay, it looks like these
- *        are implemented.  Time to add them to the test suite. 
+ *        are implemented.  Time to add them to the test suite.  Other tests we could add to the test
+ *        suite is to compute Alexander ideals of manifolds where H_1 = Z + Z_n and evaluate the
+ *        polynomial at 1, etc.  
  * \todo  2) Homomorphisms to finite groups, covering spaces, Pi_2 presentations as a module over Pi_1.
  * \todo  3) Complete collection of homology natural bilinear forms on a manifold, spin structures. 
  *        Derive chain complexes and maps from sparsely stored internal data.  Do not store matrices
