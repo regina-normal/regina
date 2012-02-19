@@ -127,8 +127,9 @@ class ReginaPart : public QObject {
         QMenu* treeNavMenu;
 
         /** 
-         * Is the current packet writable
+         * Miscellaneous flags
          */
+        bool dirty;
         bool readWrite;
 
 

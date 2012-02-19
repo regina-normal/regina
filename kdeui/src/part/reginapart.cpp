@@ -54,7 +54,7 @@
 ReginaPart::ReginaPart(ReginaMain *parent,
         const QStringList& /*args*/) :
         parent(parent), packetTree(0), 
-        dockedPane(0) {
+        dockedPane(0), dirty(false) {
 
     // Set up our widgets and actions.
     setupWidgets();
@@ -109,11 +109,8 @@ bool ReginaPart::isReadWrite() {
 }
 
 void ReginaPart::setModified(bool modified) {
-    // Internal changes.
+    dirty = modified;
     actSave->setEnabled(modified);
-
-    // Finally call the parent implementation.
-    // ReadWritePart::setModified(modified);
 }
 
 bool ReginaPart::closeUrl() {
@@ -121,8 +118,17 @@ bool ReginaPart::closeUrl() {
         return false;
     consoles.closeAllConsoles();
 
+    if (dirty) {
+        if (QMessageBox::warning(widget(), tr("Unsaved changes"),
+                tr("Your data file has changes that have not been saved.  "
+                    "Are you sure you wish to close this file and discard "
+                    "these changes?"),
+                QMessageBox::Discard | QMessageBox::Cancel) ==
+                QMessageBox::Cancel)
+            return false;
+    }
+
     return true;
-    // return ReadWritePart::closeUrl();
 }
 
 void ReginaPart::ensureVisibleInTree(regina::NPacket* packet) {

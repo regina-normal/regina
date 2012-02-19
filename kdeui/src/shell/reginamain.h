@@ -74,14 +74,6 @@ class ReginaMain : public QMainWindow {
         PythonManager consoles;
             /**< The set of all currently open consoles not linked to a
                  specific part. */
-        QUrl lastUrl;
-            /**< The Url that was last contained in this window.
-                 This data member is only set when the Url is finally
-                 closed in the underlying part. */
-        static unsigned objectNumber;
-            /**< The unique positive integer to be assigned to the next
-                 object of this class that is created.  Used with DCOP
-                 to distinguish between different instances. */
 
         /**
          * Actions
@@ -205,19 +197,12 @@ class ReginaMain : public QMainWindow {
         virtual void dropEvent(QDropEvent *event);
 
         /**
-         * Overridden for session management.
-         */
-        virtual void saveProperties();
-        virtual void readProperties();
-
-        /**
          * Overridden to handle window closing.
          */
-        virtual bool queryClose();
-        virtual bool queryExit();
+        virtual void closeEvent(QCloseEvent *event);
 
         /**
-         * Qt override to set preferred size of the window to 640x400
+         * Qt override to set preferred size of the window.
          */
         virtual QSize sizeHint() const;
 

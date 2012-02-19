@@ -57,28 +57,17 @@ int main(int argc, char **argv) {
 #endif
 #endif
 
-    // TODO Session management disabled until further notice.
-    // See if we are starting with session management.
-//    if (app.isSessionRestored()) {
-//        int winNum = 1;
-//        while (KMainWindow::canBeRestored(winNum)) {
-//            if (KMainWindow::classNameOfToplevel(winNum) == "ReginaMain")
-//                (new ReginaMain)->restore(winNum);
-//            winNum++;
-//        }
-//    } else {
-        // No session; just start up normally.
-        QStringList args = app->arguments();
-        ReginaMain *window = app->newWindow();
+    // No session management with the Qt GUI; just start up normally.
+    QStringList args = app->arguments();
+    ReginaMain *window = app->newWindow();
 
-        // Note that args.at(0) is the name of the executable (regina-qt)
-        if (args.size() > 1) {
-            for (int i = 1; i < args.size(); i++) {
-                // Assume that arguments are all local filenames.
-                window->openUrl(QUrl::fromLocalFile(args.at(i)));
-            }
+    // Note that args.at(0) is the name of the executable (regina-qt)
+    if (args.size() > 1) {
+        for (int i = 1; i < args.size(); i++) {
+            // Assume that arguments are all local filenames.
+            window->openUrl(QUrl::fromLocalFile(args.at(i)));
         }
-//    }
+    }
 
     // Show a tip of the day if appropriate.
     //KTipDialog::showTip();

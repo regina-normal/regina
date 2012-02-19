@@ -54,8 +54,6 @@
 #include <QVBoxLayout>
 #include <QWhatsThis>
 
-unsigned ReginaMain::objectNumber = 1;
-
 ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
 
     setAttribute(Qt::WA_DeleteOnClose);
@@ -142,40 +140,16 @@ void ReginaMain::dropEvent(QDropEvent *event) {
     }
 }
 
-void ReginaMain::saveProperties() {
-    if (! currentPart ) 
-        return;
-    QUrl url = currentPart->url();
-    if (url.isEmpty())
-        url = lastUrl;
-    if (! url.isEmpty()) {
-        QSettings settings;
-        settings.value("lastUrl", url.toString());
-    }
-}
-
-void ReginaMain::readProperties() {
-    QSettings settings;
-    QString url = settings.value("lastUrl").toString();
-    if (url != QString::null)
-        openUrl(QUrl(url));
-}
-
-bool ReginaMain::queryClose() {
-    bool result;
+void ReginaMain::closeEvent(QCloseEvent *event) {
     consoles.closeAllConsoles();
-    if (currentPart) {
-        lastUrl = currentPart->url();
-        result = currentPart->closeUrl();
-    } else {
-        result = true;
-    }
-    return result;
-}
 
-bool ReginaMain::queryExit() {
-    saveOptions();
-    return true;
+    // Do we really want to close?
+    if (currentPart && ! currentPart->closeUrl())
+        event->ignore();
+    else {
+        saveOptions();
+        event->accept();
+    }
 }
 
 void ReginaMain::newTopology() {
@@ -683,6 +657,10 @@ void ReginaMain::readOptions() {
 
     globalPrefs.readPythonLibraries();
 
+    settings.beginGroup("ReginaMain");
+    resize(settings.value("size", sizeHint()).toSize());
+    settings.endGroup();
+
     emit preferencesChanged(globalPrefs);
     consoles.updatePreferences(globalPrefs);
 }
@@ -812,6 +790,10 @@ void ReginaMain::saveOptions() {
     settings.endGroup();
 
     globalPrefs.writePythonLibraries();
+
+    settings.beginGroup("ReginaMain");
+    settings.setValue("size", size());
+    settings.endGroup();
 
     // TODO Call via reginaMain to ensure windows read new options.
     // Make sure other main windows read in and acknowledge the new options.
