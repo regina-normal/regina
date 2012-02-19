@@ -510,7 +510,7 @@ void ReginaPart::setupWidgets() {
         QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
     // Leave the stretch factors at the default of zero.
     connect(treeView, SIGNAL(itemSelectionChanged()), this,
-        SLOT(updateTreePacketActions()));
+        SLOT(updateTreeActions()));
 
     // Make sure the tree area doesn't shrink too far.
     // Removed this for the KDE4 port, things seem fine without it.
