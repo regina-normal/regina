@@ -84,40 +84,46 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo  1) need to do the boundary inclusion maps for pi1. This can be used to check 
- *        for knots and links in homotopy-spheres and such.  So it can probably be safely added
- *        to the test suite to give lots of group simplification exercises.  Okay, it looks like these
- *        are implemented.  Time to add them to the test suite.  Other tests we could add to the test
- *        suite is to compute Alexander ideals of manifolds where H_1 = Z + Z_n and evaluate the
- *        polynomial at 1, etc.  
- * \todo  2) Homomorphisms to finite groups, covering spaces, Pi_2 presentations as a module over Pi_1.
+ * \todo  1) Homomorphisms to finite groups, covering spaces, Pi_2 presentations as a module over Pi_1.
  *        Immediately: pi1 presentation simplification code needs smoothing, recognition code expanding.
- *        
- * \todo  3) Complete collection of homology natural bilinear forms on a manifold, spin structures. 
+ *
+ * \todo  2) Complete collection of homology natural bilinear forms on a manifold, spin structures. 
  *        Derive chain complexes and maps from sparsely stored internal data.  Do not store matrices
  *        for these. 
- * \todo  4) test suite stuff: 
+ *
+ * \todo  3) test suite stuff: 
  *        Move all the test routines out of the NCellularData class and put them in the test suite proper. 
  *        With the maximal tree code, add tests that will ensure there's the appropriate
  *        number of edges of each type.  There's the entire tree, then the boundary component
- *        trees.  
- * \todo  5) Make sure all the maximal trees are copy-constructor safe. 
- * \todo  6) New coordinate systems to implement:
+ *        trees, edge counts, etc.   Need some pi1 and group simplification tests. 
+ *        Compute Alexander ideals of manifolds where H_1 = Z + Z_n and evaluate the
+ *        polynomial at 1, etc.  
+ *
+ * \todo  4) Make sure all the maximal trees are copy-constructor safe.  I forget if the maximal trees and
+ *        extra normal data has been made copy-safe. 
+ *
+ * \todo  5) New coordinate systems to implement:
  *        MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *        various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
  *        cup products. Not complete: Chain complex initialization. chain maps.  PD / intersection forms
  *        Note, current "mixed" chain complex does not subdivide ideal boundary.  Is this an issue? 
  *        Also, this is needed for (1) and (2).
+ *
  * \todo  \optlong To minimize memory usage we should consider having homs, bilinear forms, etc, 
  *        not store their initialization data, instead trusting it to the NCellularData stack.
  *        This is a slow-but-ongoing process....  
+ *
  * \todo \optlong We'll also eventually need maximal trees in the standard and mixed 1-skeleton, to implement
  *        Farber-Levine pairings and Poincare duality in covering spaces, in general. 
+ *
  * \todo \optlong Make writeTextShort and writeTextLong more pleasant to look at.  Currently it's not 
- *        clear what all the computations mean.  It could use a general re-think.
+ *        clear what all the computations mean.  It could use a general re-think.  The idea now is they're
+ *        never really used for anything important so they haven't been well thought out from the start. 
+ *
  * \todo \optlong We should add Bocksteins and the long exact sequence associated to a change-of-coefficient map.
- * \todo \optlong Why not just move to monoid presentations, and kill generators for a max tree in the presentation?  
- *        Would be more natural and involve less re-indexing. 
+ *
+ * \todo \optlong Why not just move to monoid presentations, and kill generators for a max 
+ *        tree in the presentation?   Would be more natural and involve less re-indexing. 
  *
  * Guide to ncellulardata.*.cpp files:
  *

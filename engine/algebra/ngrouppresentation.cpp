@@ -213,11 +213,6 @@ NGroupPresentation::NGroupPresentation(const NGroupPresentation& cloneMe) :
         back_inserter(relations), FuncNewCopyPtr<NGroupExpression>());
 }
 
-
-// TODO: add platonic groups: octahedral/cubical, dihedral, icosahedral/dodecahedral, 
-//       tetrahedral groups and binary versions of them.  Is there a quick finiteness
-//       check?  Compare with SnapPea's code. 
-//
 std::string NGroupPresentation::recogniseGroup() const {
     std::ostringstream out;
     unsigned long nRels = relations.size();
@@ -268,6 +263,9 @@ std::string NGroupPresentation::recogniseGroup() const {
                     rel->getExponent(1) + rel->getExponent(3) == 0)
                 out << "Z + Z (abelian)";
         }
+// TODO: To add: platonic groups, octahedral/cubical, dihedral, icosahedral/dodecahedral, tetrahedral
+//       and binary versions of them.  Free products of torsion groups, free products with amalgamation.
+//       currently intelligentSimplify() isn't smart enough or this. 
     } else if (nGenerators == 2 && nRels == 2) {
         // TODO: See if it's the quaternions.
     } else {
@@ -544,20 +542,22 @@ bool NGroupPresentation::intelligentSimplify() {
 }
 
 // TODO: 1) recognise commutators and use that to our advantage. 
-//       recognise other advantageous small words ??
-//       random walks using score==0 substitutions, or perhaps a 
-//       peek-ahead algorithm to see if any of the score=0 subs
-//       result is useful future reductions. 
+//          recognise other advantageous small words ??
+//          random walks using score==0 substitutions, or perhaps a 
+//          peek-ahead algorithm to see if any of the score=0 subs
+//          result is useful future reductions. 
 //
 //       2) basic automorphisms of the free group, x_1 --> x_1, ...
 //             x_i --> x_ix_j, ..., x_n --> x_n, etc. 
 //          This should be used to simplify presentations like
 //          < a b | b^2a^2, abababab > etc. 
-//
-//       3) Some of the 4-manifold presentations produced are clunky. 
-//       For example, < a b | b^-2, b^-1ab^-1a^2b > could benefit from a Tietze
-//       move.  < a b | b^2, a^2, babababab > apears to be a finite dihedral group. 
-//       < a b | ba^-2b, ab^-1a^-1ba^-1 > isn't cyclically reduced! 
+//          In this situation if we make f the automorphism of the free group
+//          with f(a)=ab, f(b)=b, we get f^{-1}(b)=b, f^{-1}(a)=ab^-1, so
+//          f^{-1}(b^2a^2)=b^2ab^-1ab^-1, f^{-1}(abababab)=a^4. 
+//          the former cyclically reduces to bab^-1a.  This is good.  
+//          So how should we weigh the change of coordinates?  This is to be
+//          in step 5. 
+//        
 bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMap)
 {
  bool didSomething(false);
@@ -582,12 +582,17 @@ bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMa
  while (we_value_iteration)
   { // 1) Sort. 
     // 2) deallocate and remove any trivial relators from relatorList 
-    // 3) apply shorter relators to longer ones to reduce length of relators, possibly triggering we_value_iteration
+    // 3) apply shorter relators to longer ones to reduce length of relators, 
+    //    possibly triggering we_value_iteration
     // 4) use relators to kill generators
-    // 5) Look for convienient Nielsen transforms. TODO
+    // 5) Look for convienient Tietze transforms. 
     // 6) return to (1) if we_value_iteration
 
    we_value_iteration = false; // set this back to true if we ever make a successful substitution. 
+   // cyclically reduce relators
+   for ( it = relatorList.begin(); it != relatorList.end(); it++)
+        (*it)->simplify(true); 
+
    relatorList.sort( compare_length ); // (1)
 
    // start (2) deletion of 0-length relators
@@ -624,12 +629,13 @@ bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMa
   //     (a) Find generator-killing relators
   //     (b) Apply all possible length 1 and length 2 relators
   //     (c) If any length 3 relators, apply a single one then loop back to (1)
-  //     (d) Keep a running list of generators we've killed and their substitutions in terms of the new generators. 
+  //     (d) Keep a running list of generators we've killed and their substitutions in 
+  //         terms of the new generators. 
 
   relatorList.sort( compare_length ); 
 
-  // okay, lets start walking through relatorList. Terminate either when we hit the end or a length >=3 relator. 
-  //  If we can use the relator *it, do. And record in substitutionTable.
+  // okay, lets start walking through relatorList. Terminate either when we hit the end
+  //  or a length >=3 relator.  If we can use the relator *it, do. And record in substitutionTable.
   // begin (4)
   for (it = relatorList.begin(); it!=relatorList.end(); it++)
    {  
@@ -642,10 +648,11 @@ bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMa
     std::list<NGroupExpressionTerm>::iterator tit;
     for (unsigned long i=0; i<genUsage.size(); i++) if (genUsage[i] == 1)
      { // have we found a substitution for generator i ?
-       if ( ( substitutionTable[i].getNumberOfTerms() == 1 ) && ( substitutionTable[i].getGenerator(0) == i ) )
+       if ( ( substitutionTable[i].getNumberOfTerms() == 1 ) && 
+            ( substitutionTable[i].getGenerator(0) == i ) )
         { // we have a valid substitution.  So we have to replace all occurances of generator
-	  // genUsage[i] with the inverse of the remaining word in *both* substitutionTable and relatorList
-	  // find where genUsage[i] occurs. 
+	  // genUsage[i] with the inverse of the remaining word in *both* substitutionTable 
+          // and relatorList find where genUsage[i] occurs. 
           bool inv(true); 
           bool before_flag(true); // true if we have not yet encountered generator 
           NGroupExpression prefix, complement; 
@@ -661,7 +668,8 @@ bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMa
 	  // so we sub gi --> complement, in both substitutionTable and relatorList
          for (unsigned long j=0; j<substitutionTable.size(); j++)
 	    substitutionTable[j].substitute( i, complement );
-	  for (std::list< NGroupExpression* >::iterator pit = relatorList.begin(); pit != relatorList.end(); pit++)
+	  for (std::list< NGroupExpression* >::iterator pit = relatorList.begin(); 
+               pit != relatorList.end(); pit++)
 	     { // aha! using it in a nested way!!
 	     (*pit)->substitute( i, complement ); // except this
 	     }
@@ -676,12 +684,22 @@ bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMa
     found_a_generator_killer:
     if (word_length_3_trigger) break; 
    } // end (4)
-  // (5) look for convienient Nielsen moves. These are automorphisms of the
+  // (5) look for convienient Tietze moves. These are automorphisms of the
   //     the free group that fix all but one generator, which maps as
   //     g_i --> g_i g_j^k for some j \neq i, and any k, similarly
-  //     g_i --> g_j^k g_i.  To pull this off I think I'll have to separate
-  //     a killTable from the substitutionTable.... TODO
-
+  //     g_i --> g_j^k g_i. 
+  //
+  //     For example,  < a b | b^2a^2, abababab > 
+  //          In this situation if we make f the automorphism of the free group
+  //          with f(a)=ab, f(b)=b, we get f^{-1}(b)=b, f^{-1}(a)=ab^-1, so
+  //          f^{-1}(b^2a^2)=b^2ab^-1ab^-1, f^{-1}(abababab)=a^4. 
+  //          the former cyclically reduces to bab^-1a.  This is good.  
+  //          So how should we weigh the change of coordinates? Probably some 
+  //          strict greedy algorithm for now, just to be safe.  Or perhaps
+  //          only when the move can amalgamate consecutive appearances of
+  //          generators?  Like abababab -> a^4 is good, but
+  //          b^2a^2 -> b^2ab^-1ab^-1 is kind of bad. 
+  // 
   } // end of main_while_loop (6)
  
  // We need to remove the generators that have been killed or expressed
