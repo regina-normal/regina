@@ -303,9 +303,9 @@ ELSE(DISABLE_GUI)
     include(BundleUtilities)
   endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
 
-  # This must come after SharedMimeInfo is included, since the kdeui/
+  # This must come after SharedMimeInfo is included, since the qtui/
   # makefiles use SharedMimeInfo macros.
-  ADD_SUBDIRECTORY(kdeui)
+  ADD_SUBDIRECTORY(qtui)
   MESSAGE(STATUS "Graphical user interface enabled")
 ENDIF(DISABLE_GUI)
 MACRO_LOG_FEATURE(QT4_FOUND
