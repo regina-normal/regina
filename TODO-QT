@@ -7,16 +7,14 @@ Hard-coded icon sizes:
 - 16x16 in packetmanager, reginapref, nsurfacefiltercreator
 - 32x32 in gaprunner, npdfui, nsurfacecompatui, ntriskeleton
 
-MacOS:
-- Cmdline tools (including regina-python) don't work.
-- Fix QMessageBox use (text vs informative text).  Check QMessageBox icons.
+MacOS: Cmdline tools (including regina-python) don't work.
+
+Fix QMessageBox use (text vs informative text).  Check QMessageBox icons.
 
 Linux:
 - install application icons and Desktop files for KDE/GNOME:
     http://developer.qt.nokia.com/doc/qt-4.8/appicon.html
 - install mimetype handling for KDE/GNOME.
-
-Hunt for instances of pixmap(..,..).
 
 Check that we call QWidget::setWindowIcon() for top-level windows.
 
