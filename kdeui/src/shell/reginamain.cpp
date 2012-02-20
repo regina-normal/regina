@@ -183,23 +183,40 @@ bool ReginaMain::openUrl(const QUrl& url) {
     // If we already have a document open, make a new window.
     ReginaMain* useWindow = (currentPart ? manager->newWindow() : this);
     useWindow->newTopologyPart();
-    return useWindow->currentPart->initData(packetTree, localFile);
+    return useWindow->currentPart->initData(packetTree, localFile, QString());
 }
 
-bool ReginaMain::openExample(const QUrl& url) {
+bool ReginaMain::openExample(const QUrl& url, const QString& description) {
     // Same as openUrl(), but give a pleasant message if the file
     // doesn't seem to exist.
-    QFile file(url.path());
-    if (! file.exists()) {
+    QString localFile = url.toLocalFile();
+    if (! QFile(localFile).exists()) {
         QMessageBox::warning(this, tr("Could not find example file"),
-            tr("<qt>The example file %1 "
-            "could not be found.<p>Example files should be installed in the "
-            "directory <i>%2</i>.  It appears that they have not been "
-            "installed properly.  Please contact <i>%3</i> for assistance.").
-            arg(url.toLocalFile()).arg(url.path()).arg(PACKAGE_BUGREPORT));
+            tr("<qt>The example file \"%1\" could not be found."
+            "This may be because the examples have not been installed "
+            "properly.  Please contact <i>%2</i> for assistance.").
+            arg(description).arg(PACKAGE_BUGREPORT));
         return false;
     }
-    return openUrl(url);
+
+    regina::NPacket* packetTree = regina::readXMLFile(
+        static_cast<const char*>(QFile::encodeName(localFile)));
+
+    if (! packetTree) {
+        QMessageBox::warning(this, tr("Could not open example file"),
+            tr("<qt>The example file \"%1\" could not be read."
+            "This may be because the examples have not been installed "
+            "properly.  Please contact <i>%2</i> for assistance.").
+            arg(description).arg(PACKAGE_BUGREPORT));
+        return false;
+    }
+
+    // All good, we have some real data.  Let's go.
+    // If we already have a document open, make a new window.
+    ReginaMain* useWindow = (currentPart ? manager->newWindow() : this);
+    useWindow->newTopologyPart();
+    return useWindow->currentPart->initData(packetTree,
+        QString(), description);
 }
 
 void ReginaMain::pythonConsole() {
@@ -322,8 +339,8 @@ void ReginaMain::setupActions() {
    
     fileOpenExample = new ExamplesAction(this);
     fillExamples();
-    connect(fileOpenExample, SIGNAL(urlSelected(const QUrl&)),
-        this, SLOT(openExample(const QUrl&)));
+    connect(fileOpenExample, SIGNAL(urlSelected(const QUrl&, const QString&)),
+        this, SLOT(openExample(const QUrl&, const QString&)));
     fileMenu->addMenu(fileOpenExample);
 
     /*

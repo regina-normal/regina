@@ -84,7 +84,7 @@ class ExamplesAction : public QMenu {
         /**
          * Emitted when a sample data file is selected for opening.
          */
-        void urlSelected(const QUrl& url);
+        void urlSelected(const QUrl& url, const QString& description);
 
     protected slots:
         /**

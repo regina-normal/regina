@@ -43,6 +43,8 @@ PacketChooser::PacketChooser(regina::NPacket* newSubtree,
         QWidget* parent) :
         QComboBox(parent), subtree(newSubtree), filter(0),
         onAutoUpdate(false), isUpdating(false) {
+    setMinimumContentsLength(30);
+    setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     fill(false, 0);
 }
 
@@ -50,6 +52,8 @@ PacketChooser::PacketChooser(regina::NPacket* newSubtree,
         PacketFilter* newFilter, QWidget* parent) :
         QComboBox(parent), subtree(newSubtree), filter(newFilter),
         onAutoUpdate(false), isUpdating(false) {
+    setMinimumContentsLength(30);
+    setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     fill(false, 0);
 }
 
@@ -58,6 +62,8 @@ PacketChooser::PacketChooser(regina::NPacket* newSubtree,
         regina::NPacket* initialSelection, QWidget* parent) :
         QComboBox(parent), subtree(newSubtree), filter(newFilter),
         onAutoUpdate(false), isUpdating(false) {
+    setMinimumContentsLength(30);
+    setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     fill(allowNone, initialSelection);
 }
 

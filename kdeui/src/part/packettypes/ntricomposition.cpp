@@ -115,8 +115,8 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     isoTest->setAutoUpdate(true);
     isoTest->setWhatsThis(msg);
     connect(isoTest, SIGNAL(activated(int)), this, SLOT(updateIsoPanel()));
-    isoSelectArea->addWidget(isoTest);
-    isoSelectArea->addStretch(1);
+    isoSelectArea->addWidget(isoTest, 1);
+    // isoSelectArea->addStretch(1);
 
     isoResult = new QLabel(tr("Result:"), ui);
     isoResult->setWhatsThis(msg);

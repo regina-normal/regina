@@ -81,9 +81,16 @@ class ReginaPart : public QObject {
 
 
         /**
-         * Name of packet file
+         * Current filename, or null if we don't have one (or if we are
+         * trying to hide it from the user, e.g., for census data):
          */
         QString localFile;
+
+        /**
+         * Some files (e.g., census data) have human-readable file
+         * descriptions even though don't set localFile (e.g., census data):
+         */
+        QString displayName;
 
         /**
          * Components
@@ -231,7 +238,8 @@ class ReginaPart : public QObject {
          * Open and save files.
          */
         bool initData(regina::NPacket* usePacketTree,
-            const QString& useLocalFilename);
+            const QString& useLocalFilename,
+            const QString& useDisplayName);
         bool saveFile();
 
         /**
@@ -401,7 +409,7 @@ inline PythonManager& ReginaPart::getPythonManager() {
 }
 
 inline QWidget* ReginaPart::widget() const {
-    return qobject_cast<QWidget *>(splitter);
+    return splitter;
 }
 
 #endif

@@ -74,6 +74,6 @@ void ExamplesAction::addUrl(const QString& fileName, const QString& text) {
 
 void ExamplesAction::exampleActivated(QAction* action) {
     // Open the Url.
-    emit urlSelected(urls_[action]);
+    emit urlSelected(urls_[action], action->text());
 }
 

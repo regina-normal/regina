@@ -72,16 +72,6 @@ class PacketManager {
             bool allowLock = false);
 
         /**
-         * Returns a toolbar (22x22) icon appropriate for the given packet.
-         *
-         * If \a allowLock is true and the packet is not editable
-         * according to NPacket::isPacketEditable(), a small padlock
-         * will be overlaid onto the icon.
-         */
-        static QPixmap iconBar(regina::NPacket* packet,
-            bool allowLock = false);
-
-        /**
          * Returns a newly created interface appropriate for viewing or
          * editing the given packet.
          *

@@ -99,13 +99,10 @@ bool ReginaPart::closeUrl() {
     consoles.closeAllConsoles();
 
     while (dirty) {
-        QMessageBox msgBox;
-        msgBox.setWindowTitle(tr("Regina"));
-        msgBox.setText("The data file has been modified.");
-        msgBox.setInformativeText("Do you want to save your changes?");
-        msgBox.setIcon(QMessageBox::Information);
-        msgBox.setStandardButtons(QMessageBox::Save |
-            QMessageBox::Discard | QMessageBox::Cancel);
+        QMessageBox msgBox(QMessageBox::Information, tr("Regina"),
+            tr("The data file has been modified."),
+            QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        msgBox.setInformativeText(tr("Do you want to save your changes?"));
         msgBox.setDefaultButton(QMessageBox::Save);
         int ret = msgBox.exec();
 
@@ -183,13 +180,15 @@ void ReginaPart::aboutToUndock(PacketPane* undockedPane) {
 }
 
 bool ReginaPart::initData(regina::NPacket* usePacketTree,
-        const QString& useLocalFilename) {
+        const QString& useLocalFilename,
+        const QString& useDisplayName) {
     if (packetTree) {
         delete packetTree;
         setModified(false);
     }
 
     localFile = useLocalFilename;
+    displayName = useDisplayName;
     packetTree = usePacketTree;
 
     if (packetTree) {
@@ -199,7 +198,10 @@ bool ReginaPart::initData(regina::NPacket* usePacketTree,
             treeView->scrollToItem(
                 treeView->invisibleRootItem()->child(0)->child(0));
 
-        parent->setWindowTitle(localFile);
+        if (! displayName.isEmpty())
+            parent->setWindowTitle(displayName);
+        else
+            parent->setWindowTitle(localFile);
         return true;
     } else {
         initPacketTree();
@@ -240,7 +242,10 @@ void ReginaPart::fileSave() {
 }
 
 void ReginaPart::fileSaveAs() {
-    QString file = QFileDialog::getSaveFileName( widget(),
+    // Pass parent, not widget(), to QFileDialog::getSaveFileName.
+    // For some reason, on MacOS the file dialog disappears immediately
+    // if widget() is used [20 Feb 2012].
+    QString file = QFileDialog::getSaveFileName(parent,
         tr("Save Data File"), QString(), tr(FILTER_REGINA));
 
     if (file.isEmpty())

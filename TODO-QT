@@ -1,11 +1,13 @@
-Save/restore the window geometry in QSettings.
-Don't allow users to modify example files (i.e., change the localFile).
-Save-As doesn't work.
+Save/restore the window geometry in QSettings (and verify setting work).
+Work through Will's TODOs.
+Get rid of the commit/discard mechanism, which is counterintuitive.
+Open a new file by default, and give the root-level container a better name.
+
+Hard-coded icon sizes:
+- 16x16 in packetmanager, reginapref, nsurfacefiltercreator
+- 32x32 in gaprunner, npdfui, nsurfacecompatui, ntriskeleton
 
 MacOS:
-- Toolbar is very bulky; can we make it 22x22, not 32x32?
-- Message boxes are all in bold, ugh.
-- Settings are not saved: see QSettings
 - Cmdline tools (including regina-python) don't work.
 - Fix QMessageBox use (text vs informative text).  Check QMessageBox icons.
 
@@ -15,8 +17,6 @@ Linux:
 - install mimetype handling for KDE/GNOME.
 
 Hunt for instances of pixmap(..,..).
-
-Lock icon on trianglations with surface lists
 
 Check that we call QWidget::setWindowIcon() for top-level windows.
 

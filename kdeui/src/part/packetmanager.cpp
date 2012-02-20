@@ -59,40 +59,19 @@ QPixmap PacketManager::iconSmall(NPacket* packet, bool allowLock) {
     if (name.isNull())
         return QPixmap();
 
-
-    // TODO Does this work? emblem-locked and emblem aren't in the latest 
-    // freedesktop spec.
     if (allowLock && ! packet->isPacketEditable()) {
         QPixmap overlay = ReginaSupport::themeIcon("emblem-locked").pixmap(8,8);
-        QPixmap icon = ReginaSupport::regIcon(name).pixmap(16,16);
-        QPixmap *result = new QPixmap(icon.width(),icon.height());
-        result->fill(Qt::transparent);
-        QPainter painter(result);
-        painter.drawPixmap(0,0,icon);
-        painter.drawPixmap(0,0,overlay);
-        return *result; 
-    }
-    return ReginaSupport::regIcon(name).pixmap(16,16);
-}
+        QPixmap icon = ReginaSupport::regIcon(name).pixmap(16, 16);
 
-QPixmap PacketManager::iconBar(NPacket* packet, bool allowLock) {
-    QString name = iconName(packet);
-    if (name.isNull())
-        return QPixmap();
-
-    // TODO Sizes here. KDE says "use KIconLoader::Toolbar size" but I cannot
-    // find a reference to what size that is, so using 16x16
-    if (allowLock && ! packet->isPacketEditable()) {
-        QPixmap overlay = ReginaSupport::themeIcon("emblem-locked").pixmap(8,8);
-        QPixmap icon = ReginaSupport::regIcon(name).pixmap(16,16);
-        QPixmap *result = new QPixmap(icon.width(),icon.height());
-        result->fill(Qt::transparent);
-        QPainter painter(result);
-        painter.drawPixmap(0,0,icon);
-        painter.drawPixmap(0,0,overlay);
-        return *result; 
+        QPixmap result(icon.width(), icon.height());
+        result.fill(Qt::transparent);
+        QPainter painter(&result);
+        painter.drawPixmap(0, 0, icon);
+        painter.drawPixmap(0, icon.height() - overlay.height(), overlay);
+        return result; 
     }
-    return ReginaSupport::regIcon(name).pixmap(16,16); 
+
+    return ReginaSupport::regIcon(name).pixmap(16, 16);
 }
 
 PacketUI* PacketManager::createUI(regina::NPacket* packet,

@@ -229,7 +229,7 @@ class ReginaMain : public QMainWindow {
         /**
          * Open the given example file in a manner similar to openUrl().
          */
-        bool openExample(const QUrl& url);
+        bool openExample(const QUrl& url, const QString& description);
 
         /**
          * Save the data in the current window.
