@@ -3,12 +3,11 @@ Below are locations of strings that may need changing for a new release.
 All locations are relative to the primary source directory.
 
 Program version:
-    CHANGES.txt, HIGHLIGHTS.txt, kdeui/doc/regina/HIGHLIGHTS.txt (version, date)
+    CHANGES.txt, HIGHLIGHTS.txt, qtui/doc/regina/HIGHLIGHTS.txt (version, date)
     CMakeLists.txt (PACKAGE_VERSION)
-    kdeui/doc/regina/index.docbook (&regversion;, &regdate;, date, releaseinfo)
-    kdeui/doc/regina-xml/index.docbook (same as above)
-    kdeui/src/common/reginaabout.cpp (regReleased)
-    kdeui/src/{shell,part}/*.rc (gui version)
+    qtui/doc/regina/index.docbook (&regversion;, &regdate;, date, releaseinfo)
+    qtui/doc/regina-xml/index.docbook (same as above)
+    qtui/src/common/reginaabout.cpp (regReleased)
     packaging/debian/*/changelog (version, date)
     packaging/finkinfo/*.info.* (version, revision)
     packaging/rpmspec/*.spec (version, changelog)
@@ -21,9 +20,9 @@ License details:
     engine/docs.h
     engine/regina-engine-config.1
     engine/snappea/kernel/README.txt
-    kdeui/doc/regina/compiling.docbook (intro)
-    kdeui/doc/regina/credits.docbook
-    kdeui/src/common/reginaabout.cpp (ReginaAbout constructor)
+    qtui/doc/regina/compiling.docbook (intro)
+    qtui/doc/regina/credits.docbook
+    qtui/src/common/reginaabout.cpp (ReginaAbout constructor)
     www/index.html
 
 SnapPea / Orb copyright:
@@ -31,17 +30,17 @@ SnapPea / Orb copyright:
     engine/docs.h
     engine/snappea/kernel/README.txt
     engine/snappea/nsnappeatriangulation.h
-    kdeui/doc/regina/credits.docbook
-    kdeui/src/common/reginaabout.cpp
+    qtui/doc/regina/credits.docbook
+    qtui/src/common/reginaabout.cpp
     www/index.html
 
 Acknowledgements:
     LICENSE.txt (suggested citation, author list)
-    kdeui/doc/regina/credits.docbook
-    kdeui/src/common/reginaabout.cpp (ReginaAbout constructor)
+    qtui/doc/regina/credits.docbook
+    qtui/src/common/reginaabout.cpp (ReginaAbout constructor)
 
 Don't forget:
-    changes & highlights (both . and kdeui/doc/regina)
+    changes & highlights (both . and qtui/doc/regina)
     what's this & tooltips
     documentation in handbook, feature set & index
     any new tips of the day?
