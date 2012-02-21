@@ -2,6 +2,7 @@ Save/restore the window geometry in QSettings (and verify setting work).
 Work through Will's TODOs.
 Get rid of the commit/discard mechanism, which is counterintuitive.
 Open a new file by default, and give the root-level container a better name.
+Strip out obsolete preferences.
 
 Hard-coded icon sizes:
 - 16x16 in packetmanager, reginapref, nsurfacefiltercreator
@@ -32,7 +33,6 @@ http://developer.qt.nokia.com/doc/qt-4.8/mainwindows-recentfiles.html
 
 Tip of the day is missing, again Qt doesn't offer anything that does
 this as best I can tell.
-Mime-type checking, Qt doesn't offer this.
 Help button/system for the preferences window.
 
 Undo/Redo actions. This "works" in regular text editor (and script

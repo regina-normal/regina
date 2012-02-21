@@ -47,14 +47,12 @@
 #include <QTextDocument>
 #include <QStackedWidget>
 
-#define PDF_MIMETYPE "application/pdf"
-
 using regina::NPacket;
 using regina::NPDF;
 
 NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
         PacketReadOnlyUI(enclosingPane), pdf(packet),
-        temp(QString("%1/XXXXXX.pdf").arg(QDir::tempPath())), proc(0), runPid(0) {
+        temp(QString("%1/XXXXXX.pdf").arg(QDir::tempPath())), proc(0) {
     // Set suffix. Note that XXXXXX (exactly 6 X's all uppercase) gets replaced
     // with random letters to ensure the file does not already exist.
 
@@ -123,68 +121,14 @@ void NPDFUI::refresh() {
     // Kill any external viewer that might currently be running.
     abandonProcess();
 
-//    // Are we trying for an embedded viewer?
-//    if (embed) {
-//        if (! viewer) {
-//            // We don't yet have an embedded PDF viewer.
-//            viewer = KMimeTypeTrader::
-//                createPartInstanceFromQuery<KParts::ReadOnlyPart>(
-//                PDF_MIMETYPE, 0, this);
-//
-//            if (viewer) {
-//                viewer->setProgressInfoEnabled(false);
-//
-//                // Allow the viewer to merge its GUI into the main menu
-//                // bar and toolbar.
-//                ReginaPart* part = enclosingPane->getPart();
-//                KParts::PartManager* manager = part->manager();
-//                if (manager)
-//                    manager->addPart(viewer, false /* set active */);
-//            }
-//        }
-//
-//        // If we actually found ourselves a viewer, load the PDF.
-//        if (viewer) {
-//            stack->addWidget(viewer->widget());
-//            if (viewer->openUrl(KUrl(temp.fileName())))
-//                stack->setCurrentWidget((viewer->widget()));
-//            else
-//                showError(tr("An error occurred whilst re-reading the PDF "
-//                    "data from the temporary file <i>%1</i>.")
-//                    .arg(temp.fileName()));
-//
-//            setDirty(false);
-//            return;
-//        }
-//    }
-//
-//    // We're down to an external viewer.
-//    // Ditch the old embedded viewer if one exists.
-//    if (embed)
-//        showInfo(tr("<qt>No embedded PDF viewer could be found on "
-//            "your system.  Falling back to an external viewer instead.<p>"
-//            "If you would like PDFs to appear directly inside "
-//            "Regina's main window, you could try installing "
-//            "<i>okular</i> (which is part of the "
-//            "<i>kdegraphics</i> package shipped with KDE 4.x).</qt>"));
-//    else
-//        showInfo(tr("<qt>Using an external PDF viewer as "
-//            "requested.<p>To change this preference, you can "
-//            "edit the PDF options in Regina's settings.</qt>"));
-//
-//    if (viewer) {
-//        delete viewer;
-//        viewer = 0;
-//
-//        // Just to be sure...
-//        stack->setCurrentWidget(layerInfo);
-//    }
+    showInfo(tr("<qt>Opening the requested PDF viewer.<p>"
+        "You can select a different viewer under the PDF options "
+        "in Regina's settings.</qt>"));
 
     if (externalViewer.isEmpty()) {
         // Fall back to the Qt default for PDFs.
-        if (! QDesktopServices::openUrl(QUrl(QString("file://%1").arg(temp.fileName()))))
-            showError(tr("<qt>No preferred PDF viewer has been set, and "
-                "KDE was not able to start a suitable application.<p>"
+        if (! QDesktopServices::openUrl(QUrl::fromLocalFile(temp.fileName())))
+            showError(tr("<qt>I was not able to find a suitable PDF viewer.<p>"
                 "Please specify your preferred PDF viewer under the "
                 "PDF options in Regina's settings.</qt>"));
     } else {
@@ -290,10 +234,6 @@ void NPDFUI::abandonProcess() {
             delete proc;
             proc = 0;
         }
-    } else if (runPid) {
-        if (autoClose)
-            kill(runPid, SIGTERM);
-        runPid = 0;
     }
 }
 

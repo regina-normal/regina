@@ -78,16 +78,11 @@ class NPDFUI : public QObject, public PacketReadOnlyUI {
         /**
          * Viewer details.
          *
-         * At most one of \a viewer, \a proc and \a runPid is non-zero at
-         * any given time.  \a viewer is used for an embedded viewer,
-         * \a proc is used for an external process given by the
-         * command-line \a cmd, and \a runPid is used for a "native"
-         * file-open using KRun.
+         * \a proc identifies an external process given by the command-line
+         * \a cmd.
          */
-        //KParts::ReadOnlyPart* viewer;
         QProcess* proc;
         QString cmd;
-        pid_t runPid;
 
         /**
          * The current viewer preferences.
