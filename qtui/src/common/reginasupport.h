@@ -49,6 +49,7 @@ class ReginaSupport {
 
     public:
         static QIcon regIcon(const QString& name);
+        static QIcon regIcon(const QString& name, const QString& themeOverlay);
         static QIcon themeIcon(const QString& name);
 
     private:

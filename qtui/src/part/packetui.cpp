@@ -43,6 +43,7 @@
 #include <QApplication>
 #include <QBoxLayout>
 #include <QEvent>
+#include <QFrame>
 #include <QLabel>
 #include <QLinkedList>
 #include <QMessageBox>
@@ -53,29 +54,6 @@
 using regina::NPacket;
 
 QLinkedList<QAction*> PacketUI::noActions;
-
-PacketHeader::PacketHeader(NPacket* pkt, QWidget* parent) 
-        : QFrame(parent), packet(pkt) {
-    QBoxLayout* layout = new QHBoxLayout(this);
-    layout->setContentsMargins(0, 0, 0, 0);
-
-    icon = new QLabel();
-    icon->setPixmap(PacketManager::iconSmall(packet, true));
-    icon->setMargin(2); // Leave *some* space, however tiny.
-    layout->addWidget(icon);
-
-    title = new QLabel(packet->getFullName().c_str());
-    title->setAlignment(Qt::AlignCenter);
-    layout->addWidget(title, 1);
-
-    setFrameStyle(QFrame::Box | QFrame::Sunken);
-    // setMidLineWidth(1);
-}
-
-void PacketHeader::refresh() {
-    title->setText(packet->getFullName().c_str());
-    icon->setPixmap(PacketManager::iconSmall(packet, true));
-}
 
 ErrorPacketUI::ErrorPacketUI(regina::NPacket* newPacket,
         PacketPane* newEnclosingPane, const QString& errorMessage) :
@@ -171,10 +149,18 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     QBoxLayout* headerBox = new QHBoxLayout();
     headerBox->setSpacing(0);
 
-    header = new PacketHeader(newPacket);
-    header->setWhatsThis(tr("This shows the label of the packet "
+    headerIcon = new QLabel();
+    headerIcon->setPixmap(PacketManager::icon(newPacket, true).pixmap(22, 22));
+    headerIcon->setMargin(2); // Leave *some* space, however tiny.
+    headerIcon->setWhatsThis(tr("This shows the label of the packet "
         "being viewed, as well as its packet type."));
-    headerBox->addWidget(header, 1);
+    headerBox->addWidget(headerIcon);
+
+    headerTitle = new QLabel(newPacket->getFullName().c_str());
+    headerTitle->setAlignment(Qt::AlignCenter);
+    headerTitle->setWhatsThis(tr("This shows the label of the packet "
+        "being viewed, as well as its packet type."));
+    headerBox->addWidget(headerTitle, 1);
 
     dockUndockBtn = new FlatToolButton();
     dockUndockBtn->setCheckable(true);
@@ -188,6 +174,11 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
 
     layout->addLayout(headerBox);
+
+    QFrame* separator = new QFrame();
+    separator->setFrameStyle(QFrame::HLine);
+    separator->setFrameShadow(QFrame::Sunken);
+    layout->addWidget(separator);
 
     // Set up the main interface component.
     mainUI = PacketManager::createUI(newPacket, this);
@@ -343,7 +334,7 @@ void PacketPane::packetWasChanged(regina::NPacket*) {
     if (isCommitting)
         return;
 
-    header->refresh();
+    refreshHeader();
 
     if (dirty) {
         QString msg = tr("This packet has been changed from within a script or "
@@ -364,7 +355,7 @@ void PacketPane::packetWasChanged(regina::NPacket*) {
 
 void PacketPane::packetWasRenamed(regina::NPacket*) {
     // Assume it's this packet.
-    header->refresh();
+    refreshHeader();
 }
 
 void PacketPane::packetToBeDestroyed(regina::NPacket*) {
@@ -388,12 +379,10 @@ void PacketPane::childWasRemoved(regina::NPacket* packet, regina::NPacket*,
     if (packet->isPacketEditable() != readWrite)
         setReadWrite(!readWrite);
     if (! inParentDestructor)
-        header->refresh();
+        refreshHeader();
 }
 
 void PacketPane::refresh() {
-    header->refresh();
-
     if ((! emergencyRefresh) && dirty) {
         QString msg = tr("This packet contains changes that have not yet been "
                  "committed.  Are you sure you wish to discard these "
@@ -580,6 +569,12 @@ void PacketPane::updateClipboardActions() {
         editPaste->setEnabled(iface ? iface->pasteEnabled() : false);
 }
 
+void PacketPane::refreshHeader() {
+    regina::NPacket* packet = mainUI->getPacket();
+    headerTitle->setText(packet->getFullName().c_str());
+    headerIcon->setPixmap(PacketManager::icon(packet, true).pixmap(22, 22));
+}
+
 void PacketPane::customEvent(QEvent* evt) {
     switch (evt->type()) {
         case EVT_PANE_SET_READONLY:
@@ -587,7 +582,7 @@ void PacketPane::customEvent(QEvent* evt) {
         case EVT_PANE_SET_READWRITE:
             setReadWrite(true); break;
         case EVT_REFRESH_HEADER:
-            header->refresh(); break;
+            refreshHeader(); break;
         default:
             break;
     }

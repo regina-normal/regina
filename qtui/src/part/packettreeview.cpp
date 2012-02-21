@@ -66,7 +66,7 @@ PacketTreeItem::PacketTreeItem(PacketTreeItem* parent,
 void PacketTreeItem::init() {
     packet->listen(this);
     refreshLabel();
-    setIcon(0, PacketManager::iconSmall(packet, true));
+    setIcon(0, PacketManager::icon(packet, true));
     isEditable = packet->isPacketEditable();
 }
 
@@ -199,7 +199,7 @@ void PacketTreeItem::updateEditable() {
     if (packet && packet->isPacketEditable() != isEditable) {
         // We need updating.
         isEditable = ! isEditable;
-        setIcon(0, PacketManager::iconSmall(packet, true));
+        setIcon(0, PacketManager::icon(packet, true));
     }
 }
 

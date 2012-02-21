@@ -34,8 +34,7 @@
 #ifndef __PACKETMANAGER_H
 #define __PACKETMANAGER_H
 
-#include <QImage>
-#include <QPixmap>
+#include <QIcon>
 
 class PacketPane;
 class PacketUI;
@@ -52,24 +51,16 @@ namespace regina {
  * packet type.
  */
 class PacketManager {
-    private:
-        /**
-         * Support for overlaying a read-only lock onto an icon.
-         */
-        static bool lockInitialised;
-        static QImage lockSmall;
-        static QImage lockBar;
-
     public:
         /**
-         * Returns a small (16x16) icon appropriate for the given packet.
+         * Returns an icon appropriate for the given packet.  This icon
+         * may be rendered at various different sizes.
          *
          * If \a allowLock is true and the packet is not editable
          * according to NPacket::isPacketEditable(), a small padlock
          * will be overlaid onto the icon.
          */
-        static QPixmap iconSmall(regina::NPacket* packet,
-            bool allowLock = false);
+        static QIcon icon(regina::NPacket* packet, bool allowLock = false);
 
         /**
          * Returns a newly created interface appropriate for viewing or

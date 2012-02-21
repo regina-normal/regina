@@ -44,34 +44,18 @@
 #include "packettypes/ntextui.h"
 #include "packettypes/ntriangulationui.h"
 
-#include <QPainter>
-#include <QPixmap>
 #include <QPlainTextEdit>
 
 using namespace regina;
 
-bool PacketManager::lockInitialised = false;
-QImage PacketManager::lockSmall;
-QImage PacketManager::lockBar;
-
-QPixmap PacketManager::iconSmall(NPacket* packet, bool allowLock) {
+QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
     QString name = iconName(packet);
     if (name.isNull())
-        return QPixmap();
-
-    if (allowLock && ! packet->isPacketEditable()) {
-        QPixmap overlay = ReginaSupport::themeIcon("emblem-locked").pixmap(8,8);
-        QPixmap icon = ReginaSupport::regIcon(name).pixmap(16, 16);
-
-        QPixmap result(icon.width(), icon.height());
-        result.fill(Qt::transparent);
-        QPainter painter(&result);
-        painter.drawPixmap(0, 0, icon);
-        painter.drawPixmap(0, icon.height() - overlay.height(), overlay);
-        return result; 
-    }
-
-    return ReginaSupport::regIcon(name).pixmap(16, 16);
+        return QIcon();
+    else if (allowLock && ! packet->isPacketEditable())
+        return ReginaSupport::regIcon(name, "emblem-locked");
+    else
+        return ReginaSupport::regIcon(name);
 }
 
 PacketUI* PacketManager::createUI(regina::NPacket* packet,

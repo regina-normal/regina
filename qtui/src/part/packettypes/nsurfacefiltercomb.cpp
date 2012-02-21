@@ -211,7 +211,7 @@ void NSurfaceFilterCombUI::refreshChildList() {
     for (regina::NPacket* p = filter->getFirstTreeChild(); p;
             p = p->getNextTreeSibling())
         if (p->getPacketType() == regina::NSurfaceFilter::packetType) {
-            new QListWidgetItem(PacketManager::iconSmall(p, false),
+            new QListWidgetItem(PacketManager::icon(p),
                 p->getPacketLabel().c_str(), children);
 
             // Listen for renaming events.  We won't ever call

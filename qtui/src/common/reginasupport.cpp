@@ -29,6 +29,8 @@
 #include "file/nglobaldirs.h"
 #include "reginasupport.h"
 #include <QFile>
+#include <QIcon>
+#include <QPainter>
 
 namespace {
     int iconSizes[] = { 8, 16, 22, 32, 48, 64, 128, 0 /* terminator */ };
@@ -47,6 +49,28 @@ QIcon ReginaSupport::regIcon(const QString& name) {
     QString filename = home() + "/icons/regina/" + name + "-%1.png";
     for (int i = 0; iconSizes[i]; ++i)
         icon.addFile(filename.arg(iconSizes[i]));
+    return icon;
+}
+
+QIcon ReginaSupport::regIcon(const QString& name, const QString& themeOverlay) {
+    QIcon overlay = themeIcon(themeOverlay);
+
+    QIcon icon;
+    QString filename = home() + "/icons/regina/" + name + "-%1.png";
+    int overlaySize;
+    for (int i = 0; iconSizes[i]; ++i) {
+        QPixmap iconPic(filename.arg(iconSizes[i]));
+        if (iconPic.isNull())
+            continue;
+
+        overlaySize = (iconSizes[i] <= 22 ? 8 : iconSizes[i] <= 48 ? 16 : 22);
+        QPixmap overlayPic = overlay.pixmap(overlaySize, overlaySize);
+
+        QPainter painter(&iconPic);
+        painter.drawPixmap(0, iconSizes[i] - overlayPic.height(), overlayPic);
+
+        icon.addPixmap(iconPic);
+    }
     return icon;
 }
 

@@ -120,7 +120,7 @@ void PacketChooser::packetWasRenamed(regina::NPacket* renamed) {
         // This may trigger a refreshContents(), but that's okay since
         // we're at the end of the routine.
         int index = it - packets.begin();
-        setItemIcon(index, PacketManager::iconSmall(renamed, false));
+        setItemIcon(index, PacketManager::icon(renamed));
         setItemText(index, renamed->getPacketLabel().c_str());
     }
 }
@@ -200,8 +200,7 @@ void PacketChooser::fill(bool allowNone, NPacket* select) {
     regina::NPacket* p = subtree;
     while (p && subtree->isGrandparentOf(p)) {
         if ((! filter) || (filter->accept(p))) {
-            addItem(PacketManager::iconSmall(p, false),
-                p->getPacketLabel().c_str());
+            addItem(PacketManager::icon(p), p->getPacketLabel().c_str());
             packets.push_back(p);
             if (onAutoUpdate)
                 p->listen(this);

@@ -92,10 +92,10 @@ void ScriptVarValueItem::packetToBeDestroyed(regina::NPacket* p) {
 void ScriptVarValueItem::updateData() {
     if (packet_ && ! packet_->getPacketLabel().empty()) {
         setText(packet_->getPacketLabel().c_str());
-        setIcon(QPixmap(PacketManager::iconSmall(packet_, false)));
+        setIcon(PacketManager::icon(packet_));
     } else {
         setText("<None>");
-        setIcon(QPixmap());
+        setIcon(QIcon());
     }
 }
 

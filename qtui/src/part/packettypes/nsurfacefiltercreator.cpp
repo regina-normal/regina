@@ -35,10 +35,12 @@
 #include "../reginapart.h"
 #include "reginasupport.h"
 
+#include <QApplication>
 #include <QButtonGroup>
 #include <QLabel>
 #include <QLayout>
 #include <QRadioButton>
+#include <QStyle>
 #include <QWhatsThis>
 
 namespace {
@@ -51,11 +53,15 @@ NSurfaceFilterCreator::NSurfaceFilterCreator() {
     QGridLayout* layout = new QGridLayout(ui);//, 2, 2, 5);
     layout->setColumnStretch(1, 1);
 
+    int iconSize = QApplication::style()->pixelMetric(
+        QStyle::PM_ButtonIconSize);
+
     QLabel* pic;
     QString msg;
 
     pic = new QLabel(ui);
-    pic->setPixmap(ReginaSupport::regIcon("filter_prop").pixmap(16,16));
+    pic->setPixmap(ReginaSupport::regIcon("filter_prop").pixmap(
+        iconSize, iconSize));
     layout->addWidget(pic, 0, 0, Qt::AlignRight);
 
     QRadioButton* props = new QRadioButton(
@@ -68,7 +74,8 @@ NSurfaceFilterCreator::NSurfaceFilterCreator() {
     props->setWhatsThis(msg);
 
     pic = new QLabel(ui);
-    pic->setPixmap(ReginaSupport::regIcon("filter_comb").pixmap(16,16));
+    pic->setPixmap(ReginaSupport::regIcon("filter_comb").pixmap(
+        iconSize, iconSize));
     layout->addWidget(pic, 1, 0, Qt::AlignRight);
 
     QRadioButton* comb = new QRadioButton(

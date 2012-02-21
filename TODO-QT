@@ -3,9 +3,8 @@ Work through Will's TODOs.
 Get rid of the commit/discard mechanism, which is counterintuitive.
 Open a new file by default, and give the root-level container a better name.
 Strip out obsolete preferences.
-
-Hard-coded icon sizes:
-- 16x16 in packetmanager, nsurfacefiltercreator
+Cache packet icons in PacketManager for performance.
+Rejuvenate the PacketPane header, including FlatButton and hard-coded 22px icon
 
 MacOS: Cmdline tools (including regina-python) don't work.
 

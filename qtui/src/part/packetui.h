@@ -35,8 +35,8 @@
 
 #include "packet/npacketlistener.h"
 
-#include <QFrame>
 #include <QLinkedList>
+#include <QWidget>
 
 class PacketEditIface;
 class PacketPane;
@@ -50,38 +50,6 @@ class ReginaPart;
 
 namespace regina {
     class NPacket;
-};
-
-/**
- * A packet header, containing an appropriate icon and text title.
- */
-class PacketHeader : public QFrame {
-    Q_OBJECT
-
-    private:
-        /**
-         * Packet details
-         */
-        regina::NPacket* packet;
-
-        /**
-         * Internal components
-         */
-        QLabel* icon;
-        QLabel* title;
-
-    public:
-        /**
-         * Constructor.
-         */
-        PacketHeader(regina::NPacket* pkt, QWidget* parent = 0);
-
-    public slots:
-        /**
-         * Refresh this header according to the current label and
-         * contents of the underlying packet.
-         */
-        void refresh();
 };
 
 /**
@@ -312,7 +280,8 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         /**
          * Internal components
          */
-        PacketHeader* header;
+        QLabel* headerIcon;
+        QLabel* headerTitle;
         PacketUI* mainUI;
         QToolButton* dockUndockBtn;
 
@@ -570,6 +539,11 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         void updateClipboardActions();
 
     protected:
+        /**
+         * Refresh the packet label and icon in the header.
+         */
+        void refreshHeader();
+
         /**
          * Allow GUI updates from within a non-GUI thread.
          */
