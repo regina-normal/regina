@@ -36,6 +36,7 @@
 #include "ncompatcanvas.h"
 #include "nsurfacecompatui.h"
 #include "../reginapart.h"
+#include "../messagelayer.h"
 
 #include <QComboBox>
 #include <QGraphicsView>
@@ -101,29 +102,8 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
     connect(btnCalculate, SIGNAL(clicked()), this, SLOT(calculate()));
 
     stack = new QStackedWidget(ui);
-    {
-        layerNone = new QWidget();
-        QBoxLayout* noneLayout = new QHBoxLayout();;
-        noneLayout->addStretch(1);
-        layerNone->setLayout(noneLayout);
-
-        // Create a 32x32 pixmap from the appropriate icon
-        QPixmap iconPic = ReginaSupport::themeIcon("dialog-information").
-            pixmap(32,32);
-
-        QLabel* icon = new QLabel(layerNone);
-        icon->setPixmap(iconPic);
-        noneLayout->addWidget(icon, 0);
-
-        noneLayout->addSpacing(10);
-
-        msgNone = new QLabel(layerNone);
-        msgNone->setWordWrap(true);
-        noneLayout->addWidget(msgNone, 4);
-
-        noneLayout->addStretch(1);
-        stack->addWidget(layerNone);
-    }
+    layerNone = new MessageLayer("dialog-information");
+    stack->addWidget(layerNone);
     uiLayout->addWidget(stack);
 
     refresh();
@@ -237,7 +217,7 @@ void NSurfaceCompatibilityUI::refresh() {
 void NSurfaceCompatibilityUI::setMessage(MessageIndex msg) {
     switch (msg) {
         case TOO_LARGE:
-            msgNone->setText(tr("<qt>The compatibility matrices "
+            layerNone->setText(tr("<qt>The compatibility matrices "
                 "have not been computed automatically, because this "
                 "list contains a large number of surfaces.<p>"
                 "If you wish to compute these matrices (and if you have "
@@ -246,14 +226,14 @@ void NSurfaceCompatibilityUI::setMessage(MessageIndex msg) {
             break;
 
         case NON_EMBEDDED:
-            msgNone->setText(tr("<qt>This list "
+            layerNone->setText(tr("<qt>This list "
                 "may contain immersed and/or singular surfaces.<p>"
                 "Compatibility matrices can only be shown for a list "
                 "of <i>embedded</i> normal or almost normal surfaces.</qt>"));
             break;
 
         case EMPTY_LIST:
-            msgNone->setText(tr("<qt>This list of surfaces is empty.</qt>"));
+            layerNone->setText(tr("<qt>This list of surfaces is empty.</qt>"));
             break;
     }
 }

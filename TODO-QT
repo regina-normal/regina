@@ -5,8 +5,7 @@ Open a new file by default, and give the root-level container a better name.
 Strip out obsolete preferences.
 
 Hard-coded icon sizes:
-- 16x16 in packetmanager, reginapref, nsurfacefiltercreator
-- 32x32 in gaprunner, npdfui, nsurfacecompatui, ntriskeleton
+- 16x16 in packetmanager, nsurfacefiltercreator
 
 MacOS: Cmdline tools (including regina-python) don't work.
 

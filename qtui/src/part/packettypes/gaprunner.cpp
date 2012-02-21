@@ -29,6 +29,7 @@
 #include "algebra/ngrouppresentation.h"
 
 #include "../reginapart.h"
+#include "../messagelayer.h"
 #include "reginasupport.h"
 #include "gaprunner.h"
 
@@ -97,28 +98,18 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
             "group simplification."));
     buttonBox->addButton(button, QDialogButtonBox::RejectRole);
 
-    QWidget* page = new QWidget(this);
-    dialogLayout->addWidget(page);
+    status = new MessageLayer("system-run", tr("Initialising..."));
+
+    dialogLayout->addWidget(status);
     dialogLayout->addWidget(buttonBox);
     setLayout(dialogLayout);
-    QBoxLayout* layout = new QHBoxLayout(page);//, 5, 0);
 
-    page->setWhatsThis(tr("<qt>When GAP (Groups, Algorithms and "
+    status->setWhatsThis(tr("<qt>When GAP (Groups, Algorithms and "
         "Programming) is used to simplify a group, GAP is started as a "
         "separate process on your system.  Regina talks to GAP just as "
         "any other user would at the GAP command prompt.<p>"
         "This dialog shows you the current state of the conversation "
         "between Regina and GAP.</qt>"));
-
-    QLabel* icon = new QLabel(page);
-    icon->setPixmap(ReginaSupport::themeIcon("system-run").pixmap(32,32));
-    layout->addWidget(icon, 0);
-
-    layout->addSpacing(10);
-
-    status = new QLabel(tr("Initialising..."), page);
-    status->setAlignment(Qt::AlignLeft);
-    layout->addWidget(status, 1);
 
     // Start the GAP process.
     proc = new QProcess();

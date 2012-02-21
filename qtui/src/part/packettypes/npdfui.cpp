@@ -32,8 +32,8 @@
 
 // UI includes:
 #include "npdfui.h"
+#include "../messagelayer.h"
 #include "../reginapart.h"
-#include "reginasupport.h"
 
 #include <csignal>
 #include <cstdio>
@@ -64,11 +64,11 @@ NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
 
     stack = new QStackedWidget();
 
-    // Information layer.
-    layerInfo = messageLayer(msgInfo, "dialog-information");
-
-    // Error layer.
-    layerError = messageLayer(msgError, "dialog-warning");
+    // Information and error layers.
+    layerInfo = new MessageLayer("dialog-information", tr("Initialising..."));
+    layerError = new MessageLayer("dialog-warning", tr("Initialising..."));
+    stack->addWidget(layerInfo);
+    stack->addWidget(layerError);
 
     // Finish off.
     refresh();
@@ -181,38 +181,13 @@ void NPDFUI::updatePreferences(const ReginaPrefSet& newPrefs) {
         refresh();
 }
 
-QWidget* NPDFUI::messageLayer(QLabel*& text, const char* iconName) {
-    QWidget* layer = new QWidget();
-    QBoxLayout* layout = new QHBoxLayout(layer);
-
-    layout->addStretch(1);
-
-    // Create a 32x32 pixmap from the iconName icon.
-    QPixmap iconPic = ReginaSupport::themeIcon(iconName).pixmap(32,32);
-
-    QLabel* icon = new QLabel(layer);
-    icon->setPixmap(iconPic);
-    layout->addWidget(icon, 0);
-
-    layout->addSpacing(10);
-
-    text = new QLabel(tr("<qt>Initialising...</qt>"), layer);
-    text->setWordWrap(true);
-    layout->addWidget(text, 4);
-
-    layout->addStretch(1);
-    stack->addWidget(layer);
-
-    return layer;
-}
-
 void NPDFUI::showInfo(const QString& msg) {
-    msgInfo->setText(msg);
+    layerInfo->setText(msg);
     stack->setCurrentWidget(layerInfo);
 }
 
 void NPDFUI::showError(const QString& msg) {
-    msgError->setText(msg);
+    layerError->setText(msg);
     stack->setCurrentWidget(layerError);
 }
 

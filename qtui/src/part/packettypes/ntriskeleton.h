@@ -39,6 +39,7 @@
 #include "skeletonwindow.h"
 
 
+class MessageLayer;
 class NTriFaceGraphUI;
 
 class QScrollArea;
@@ -144,10 +145,8 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
         QWidget* ui;
         QStackedWidget* stack;
         QScrollArea* layerGraph;
-        QWidget* layerInfo;
-        QWidget* layerError;
-        QLabel* msgInfo;
-        QLabel* msgError;
+        MessageLayer* layerInfo;
+        MessageLayer* layerError;
         QLabel* graph;
         bool neverDrawn;
 
@@ -181,7 +180,6 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
         /**
          * Set up internal components.
          */
-        QWidget* messageLayer(QLabel*& text, const char* icon);
         void showInfo(const QString& msg);
         void showError(const QString& msg);
 };

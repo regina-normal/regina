@@ -35,6 +35,7 @@
 #include "skeletonwindow.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
+#include "../messagelayer.h"
 
 #include <fstream>
 #include <QDir>
@@ -274,13 +275,11 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
     QBoxLayout* baseLayout = new QVBoxLayout(ui);
     stack = new QStackedWidget(ui);
 
-    // Information layer.
-    layerInfo = messageLayer(msgInfo, "dialog-information");
-    msgInfo->setText(tr("<qt>Initialising...</qt>"));
-
-    // Error layer.
-    layerError = messageLayer(msgError, "dialog-warning");
-    msgError->setText(tr("<qt>Initialising...</qt>"));
+    // Information and error layers.
+    layerInfo = new MessageLayer("dialog-information", tr("Initialising..."));
+    layerError = new MessageLayer("dialog-warning", tr("Initialising..."));
+    stack->addWidget(layerInfo);
+    stack->addWidget(layerError);
 
     // Graph layer.
     layerGraph = new QScrollArea();
@@ -470,39 +469,13 @@ void NTriFaceGraphUI::editingElsewhere() {
     showInfo(tr("<qt>Editing...</qt>"));
 }
 
-QWidget* NTriFaceGraphUI::messageLayer(QLabel*& text,
-        const char* iconName) {
-    QWidget* layer = new QWidget();
-    QBoxLayout* layout = new QHBoxLayout(layer);
-
-    layout->addStretch(1);
-
-    QPixmap iconPic = ReginaSupport::themeIcon(iconName).pixmap(32,32);
-        //SizeMedium from KDE
-
-    QLabel* icon = new QLabel(layer);
-    icon->setPixmap(iconPic);
-    layout->addWidget(icon, 0);
-
-    layout->addSpacing(10);
-
-    text = new QLabel(tr("<qt>Initialising...</qt>"), layer);
-    text->setWordWrap(true);
-    layout->addWidget(text, 4);
-
-    layout->addStretch(1);
-    stack->addWidget(layer);
-
-    return layer;
-}
-
 void NTriFaceGraphUI::showInfo(const QString& msg) {
-    msgInfo->setText(msg);
+    layerInfo->setText(msg);
     stack->setCurrentWidget(layerInfo);
 }
 
 void NTriFaceGraphUI::showError(const QString& msg) {
-    msgError->setText(msg);
+    layerError->setText(msg);
     stack->setCurrentWidget(layerError);
 }
 

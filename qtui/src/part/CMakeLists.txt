@@ -1,6 +1,6 @@
 # Engine
 
-SET ( SOURCES actionspart exports flatbutton imports newpacketdialog newpackets packetchooser packeteditiface packetmanager packettabui packettreeview packetui packetwindow patiencedialog progressdialogs reginapart treenav)
+SET ( SOURCES actionspart exports flatbutton imports messagelayer newpacketdialog newpackets packetchooser packeteditiface packetmanager packettabui packettreeview packetui packetwindow patiencedialog progressdialogs reginapart treenav)
 
 ADD_SUBDIRECTORY(foreign)
 ADD_SUBDIRECTORY(packettypes)

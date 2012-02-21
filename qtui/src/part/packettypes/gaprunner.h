@@ -38,6 +38,7 @@
 #include <map>
 #include <memory>
 
+class MessageLayer;
 class QDialogButtonBox;
 class QLabel;
 class QSize;
@@ -58,7 +59,7 @@ class GAPRunner : public QDialog {
         /**
          * Internal components:
          */
-        QLabel* status;
+        MessageLayer* status;
         QDialogButtonBox* buttonBox;
 
         /**

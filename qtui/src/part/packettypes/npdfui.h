@@ -47,6 +47,7 @@ namespace regina {
     class NPDF;
 };
 
+class MessageLayer;
 class ReginaPrefSet;
 
 /**
@@ -70,10 +71,8 @@ class NPDFUI : public QObject, public PacketReadOnlyUI {
          * Internal components
          */
         QStackedWidget* stack;
-        QWidget* layerInfo;
-        QWidget* layerError;
-        QLabel* msgInfo;
-        QLabel* msgError;
+        MessageLayer* layerInfo;
+        MessageLayer* layerError;
 
         /**
          * Viewer details.
@@ -115,9 +114,8 @@ class NPDFUI : public QObject, public PacketReadOnlyUI {
 
     private:
         /**
-         * Set up internal components.
+         * Update internal components.
          */
-        QWidget* messageLayer(QLabel*& text, const char* icon);
         void showInfo(const QString& msg);
         void showError(const QString& msg);
 

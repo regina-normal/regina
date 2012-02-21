@@ -74,7 +74,7 @@ namespace {
              */
             ReginaFilePrefItem(QListWidget* parent,
                     const ReginaFilePref& newData) :
-                    QListWidgetItem(pixmapFor(newData),
+                    QListWidgetItem(iconFor(newData),
                         newData.filename, parent),
                     data(newData) {
             }
@@ -101,11 +101,10 @@ namespace {
                 return true;
             }
 
-            static QPixmap pixmapFor(const ReginaFilePref& data) {
+            static QIcon iconFor(const ReginaFilePref& data) {
                 return (data.active ?
-                    // 16x16 is SmallIcon size from KDE
-                    ReginaSupport::themeIcon("dialog-ok").pixmap(16,16) : 
-                    ReginaSupport::themeIcon("dialog-cancel").pixmap(16,16));
+                    ReginaSupport::themeIcon("dialog-ok") :
+                    ReginaSupport::themeIcon("dialog-cancel"));
             }
     };
 }

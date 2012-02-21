@@ -37,6 +37,7 @@
 
 #include "../packettabui.h"
 
+class MessageLayer;
 class NCompatCanvas;
 class QPushButton;
 class QGraphicsView;
@@ -86,8 +87,7 @@ class NSurfaceCompatibilityUI : public QObject, public PacketViewerTab,
          */
         QWidget* ui;
         QStackedWidget* stack;
-        QWidget* layerNone;
-        QLabel* msgNone;
+        MessageLayer* layerNone;
         QComboBox* chooseMatrix;
         QPushButton* btnCalculate;
 
