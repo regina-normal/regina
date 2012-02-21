@@ -281,7 +281,7 @@ void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
     QString page = home +
         QString("/docs/en/%1/%2.html").arg(handbookName).arg(section);
     if (QFileInfo(page).exists()) {
-        if (! QDesktopServices::openUrl(QUrl("file://" + page))) {
+        if (! QDesktopServices::openUrl(QUrl::fromLocalFile(page))) {
             if (handbook) {
                 QMessageBox::warning(parentWidget, QObject::tr("Could not open help"),
                     QObject::tr("<qt>The requested handbook could not be opened.  "

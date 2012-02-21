@@ -58,8 +58,7 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
     QString index = docDir + "/index.html";
 
     if (QFileInfo(index).exists()) {
-        QDesktopServices::openUrl(QUrl("file://" + index));
-
+        QDesktopServices::openUrl(QUrl::fromLocalFile(index));
     } else {
         QMessageBox::warning(topLevelWindow, QObject::tr("Could not find references"),
             QObject::tr("<qt>The Python reference could "
