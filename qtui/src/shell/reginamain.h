@@ -252,11 +252,6 @@ class ReginaMain : public QMainWindow {
          */
         void pythonReference();
 
-        /**
-         * Quits the entire application, closing all windows.
-         */
-        void quit();
-
     private slots:
         /**
          * Implementation of actions.

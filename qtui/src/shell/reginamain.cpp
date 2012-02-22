@@ -55,6 +55,8 @@
 #include <QWhatsThis>
 
 ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
+    // Track the parent manager.
+    manager = parent;
 
     setAttribute(Qt::WA_DeleteOnClose);
 
@@ -83,9 +85,6 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
     packetTreeToolBar = 0;
 
     currentPart = 0;
-
-    // Track the parent manager.
-    manager = parent;
 
     setWindowTitle(tr("Regina"));
 
@@ -226,10 +225,6 @@ void ReginaMain::pythonConsole() {
 
 void ReginaMain::pythonReference() {
     PythonManager::openPythonReference(this);
-}
-
-void ReginaMain::quit() {
-    manager->quit();
 }
 
 void ReginaMain::fileOpen() {
@@ -377,19 +372,8 @@ void ReginaMain::setupActions() {
     act->setIcon(ReginaSupport::themeIcon("application-exit"));
     act->setShortcut(tr("Ctrl+q"));
     act->setWhatsThis(tr("Close all files and quit Regina."));
-    connect(act, SIGNAL(triggered()), this, SLOT(quit()));
+    connect(act, SIGNAL(triggered()), manager, SLOT(closeAllWindows()));
     fileMenu->addAction(act);
-
-    // Toolbar and status bar:
-    //showToolbar = KStandardAction::showToolbar(this,
-    //    SLOT(optionsShowToolbar()), actionCollection());
-    //setStandardToolBarMenuEnabled(true);
-    
-    /*
-    showStatusbar = KStandardAction::showStatusbar(this,
-        SLOT(optionsShowStatusbar()), actionCollection());
-    */
-
 
     QMenu *toolMenu =  menuBar()->addMenu(tr("&Tools"));
     toolMenuAction = toolMenu->menuAction();
