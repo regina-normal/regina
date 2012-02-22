@@ -236,7 +236,7 @@ void ReginaPart::setupActions() {
     QAction *actDelete = new QAction(this);
     actDelete->setText(tr("&Delete"));
     actDelete->setIcon(ReginaSupport::themeIcon("edit-delete"));
-    actDelete->setShortcut(tr("Delete"));
+    actDelete->setShortcuts(QKeySequence::Delete);
     actDelete->setToolTip(tr("Delete the selected packet"));
     actDelete->setWhatsThis(tr("Delete the packet currently selected "
         "in the tree."));
@@ -393,7 +393,7 @@ void ReginaPart::setupActions() {
     QAction* actRefresh = new QAction(this);
     actRefresh->setText(tr("Refres&h Subtree"));
     actRefresh->setIcon(ReginaSupport::themeIcon("view-refresh"));
-    actRefresh->setShortcut(tr("F5"));
+    actRefresh->setShortcuts(QKeySequence::Refresh);
     actRefresh->setToolTip(tr("Refresh the subtree beneath the selected packet"));
     actRefresh->setWhatsThis(tr("Refresh the packet "
         "currently selected in the tree, as well as all of its descendants "

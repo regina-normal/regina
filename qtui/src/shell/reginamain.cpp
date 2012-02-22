@@ -312,7 +312,7 @@ void ReginaMain::setupActions() {
     actNew = new QAction(this); 
     actNew->setText(tr("&New Topology Data"));
     actNew->setIcon(ReginaSupport::themeIcon("document-new"));
-    actNew->setShortcut(tr("Ctrl+n"));
+    actNew->setShortcuts(QKeySequence::New);
     actNew->setWhatsThis(tr("Create a new topology data file.  This is "
         "the standard type of data file used by Regina."));
     connect(actNew, SIGNAL(triggered()), this, SLOT(newTopology()));
@@ -322,7 +322,7 @@ void ReginaMain::setupActions() {
     actOpen = new QAction(this);
     actOpen->setText(tr("&Open..."));
     actOpen->setIcon(ReginaSupport::themeIcon("document-open"));
-    actOpen->setShortcut(tr("Ctrl+o"));
+    actOpen->setShortcuts(QKeySequence::Open);
     actOpen->setWhatsThis(tr("Open a topology data file."));
     connect(actOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
     fileMenu->addAction(actOpen);
@@ -338,7 +338,7 @@ void ReginaMain::setupActions() {
     act = new QAction(this);
     act->setText(tr("&Save"));
     act->setIcon(ReginaSupport::themeIcon("document-save"));
-    act->setShortcut(tr("Ctrl+s"));
+    act->setShortcuts(QKeySequence::Save);
     act->setWhatsThis(tr("Save the topology data to a file."));
     connect(act, SIGNAL(triggered()), this, SLOT(saveUrl()));
     fileMenu->addAction(act);
@@ -347,6 +347,7 @@ void ReginaMain::setupActions() {
     act = new QAction(this);
     act->setText(tr("Save &As..."));
     act->setIcon(ReginaSupport::themeIcon("document-save-as"));
+    act->setShortcuts(QKeySequence::SaveAs);
     act->setWhatsThis(tr("Save the topology data to a new file."));
     connect(act, SIGNAL(triggered()), this, SLOT(saveUrlAs()));
     fileMenu->addAction(act);
@@ -362,7 +363,7 @@ void ReginaMain::setupActions() {
     act = new QAction(this);
     act->setText(tr("&Close"));
     act->setIcon(ReginaSupport::themeIcon("window-close"));
-    act->setShortcut(tr("Ctrl+w"));
+    act->setShortcuts(QKeySequence::Close);
     act->setWhatsThis(tr("Close this topology data file."));
     connect(act, SIGNAL(triggered()), this, SLOT(close()));
     fileMenu->addAction(act);
@@ -370,7 +371,7 @@ void ReginaMain::setupActions() {
     act = new QAction(this);
     act->setText(tr("&Quit"));
     act->setIcon(ReginaSupport::themeIcon("application-exit"));
-    act->setShortcut(tr("Ctrl+q"));
+    act->setShortcuts(QKeySequence::Quit);
     act->setWhatsThis(tr("Close all files and quit Regina."));
     connect(act, SIGNAL(triggered()), manager, SLOT(closeAllWindows()));
     fileMenu->addAction(act);
@@ -416,7 +417,7 @@ void ReginaMain::setupActions() {
     act = new QAction(this);
     act->setText(tr("Regina &Handbook"));
     act->setIcon(ReginaSupport::themeIcon("help-contents"));
-    act->setShortcut(tr("F1"));
+    act->setShortcuts(QKeySequence::HelpContents);
     act->setWhatsThis(tr("Open the Regina handbook.  "
         "This is the main users' guide for how to use Regina."));
     connect(act, SIGNAL(triggered()), this, SLOT(helpHandbook()));
@@ -425,6 +426,7 @@ void ReginaMain::setupActions() {
     act = new QAction(this);
     act->setText(tr("What's &This?"));
     act->setIcon(ReginaSupport::themeIcon("help-hint"));
+    act->setShortcuts(QKeySequence::WhatsThis);
     connect(act, SIGNAL(triggered()), this, SLOT(helpWhatsThis()));
     helpMenu->addAction(act);
 

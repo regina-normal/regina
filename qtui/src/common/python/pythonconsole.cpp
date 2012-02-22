@@ -116,7 +116,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     QAction* act = new QAction(this);
     act->setText(tr("&Save Session"));
     act->setIcon(ReginaSupport::themeIcon("document-save"));
-    act->setShortcut(tr("Ctrl+s"));
+    act->setShortcuts(QKeySequence::Save);
     act->setToolTip(tr("Save session history"));
     act->setWhatsThis(tr("Save the entire history of this Python session "
         "into a text file."));
@@ -128,7 +128,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     act = new QAction(this);
     act->setText(tr("&Close"));
     act->setIcon(ReginaSupport::themeIcon("window-close"));
-    act->setShortcut(tr("Ctrl+d"));
+    act->setShortcuts(QKeySequence::Close);
     act->setToolTip(tr("Close Python console"));
     connect(act, SIGNAL(triggered()), this, SLOT(close()));
     menuConsole->addAction(act);
@@ -161,7 +161,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     act = actionCollection()->addAction("edit_cut_input");
     act->setText(tr("Cut From Input"));
     act->setIcon(KIcon("edit-cut"));
-    act->setShortcut(tr("Ctrl+x"));
+    act->setShortcuts(QKeySequence::Cut);
     act->setToolTip(tr(
         "Cut selected text from the input area to the clipboard "));
     connect(act, SIGNAL(triggered()), input, SLOT(cut()));
@@ -173,7 +173,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     act = actionCollection()->addAction("edit_copy_input");
     act->setText(tr("Copy From Input"));
     act->setIcon(KIcon("edit-copy"));
-    act->setShortcut(tr("Ctrl+c"));
+    act->setShortcuts(QKeySequence::Copy);
     act->setToolTip(tr(
         "Copy selected text from the input area to the clipboard "));
     connect(act, SIGNAL(triggered()), input, SLOT(copy()));
@@ -185,7 +185,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     act = actionCollection()->addAction("edit_paste_input");
     act->setText(tr("Paste To Input"));
     act->setIcon(KIcon("edit-paste"));
-    act->setShortcut(tr("Ctrl+v"));
+    act->setShortcuts(QKeySequence::Paste);
     act->setToolTip(tr(
         "Paste text from the clipboard into the input area"));
     connect(act, SIGNAL(triggered()), input, SLOT(paste()));
@@ -196,7 +196,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     act = actionCollection()->addAction("edit_select_all_input");
     act->setText(tr("Select All From Input"));
     act->setIcon(KIcon("edit-select-all"));
-    act->setShortcut(tr("Ctrl+a"));
+    act->setShortcuts(QKeySequence::SelectAll);
     act->setToolTip(tr("Selected all text in the input area"));
     connect(act, SIGNAL(triggered()), input, SLOT(selectAll()));
     menuEdit->addAction(act);
@@ -205,7 +205,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     act = new QAction(this);
     act->setText(tr("&Scripting Overview"));
     act->setIcon(ReginaSupport::themeIcon("help-contents"));
-    act->setShortcut(tr("F1"));
+    act->setShortcuts(QKeySequence::HelpContents);
     act->setToolTip(tr("Read Python scripting overview"));
     act->setWhatsThis(tr("Open the <i>Python Scripting</i> section of the "
         "users' handbook."));
