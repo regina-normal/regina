@@ -43,11 +43,9 @@ ReginaMain* ReginaManager::newWindow() {
     return win;
 }
 
-void ReginaManager::onClose(ReginaMain *child) {
+void ReginaManager::aboutToClose(ReginaMain *child) {
     children.removeOne(child);
-    // Exit if we have no more to manage
-    if (children.size() == 0)
-        exit();
+    // Qt will automatically handle exit-on-last-window-closed.
 }
 
 bool ReginaManager::event(QEvent* event) {

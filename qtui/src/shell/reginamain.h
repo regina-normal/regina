@@ -253,11 +253,6 @@ class ReginaMain : public QMainWindow {
         void pythonReference();
 
         /**
-         * Closes this window.
-         */
-        void close();
-
-        /**
          * Quits the entire application, closing all windows.
          */
         void quit();
@@ -319,7 +314,7 @@ class ReginaManager : public QApplication {
         
         ReginaMain* newWindow();
 
-        void onClose(ReginaMain *child);
+        void aboutToClose(ReginaMain *child);
 
     protected:
         /**

@@ -148,6 +148,7 @@ void ReginaMain::closeEvent(QCloseEvent *event) {
         event->ignore();
     else {
         saveOptions();
+        manager->aboutToClose(this);
         event->accept();
     }
 }
@@ -225,11 +226,6 @@ void ReginaMain::pythonConsole() {
 
 void ReginaMain::pythonReference() {
     PythonManager::openPythonReference(this);
-}
-
-void ReginaMain::close() {
-    manager->onClose(this);
-    close();
 }
 
 void ReginaMain::quit() {
