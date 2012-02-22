@@ -1,4 +1,3 @@
-Save/restore the window geometry in QSettings (and verify setting work).
 Work through Will's TODOs.
 Get rid of the commit/discard mechanism, which is counterintuitive.
 Open a new file by default, and give the root-level container a better name.

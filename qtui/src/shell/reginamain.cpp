@@ -709,6 +709,7 @@ void ReginaMain::saveOptions() {
     settings.beginGroup("Doc");
     settings.setValue("HandbookInKHelpCenter",
         globalPrefs.handbookInKHelpCenter);
+    settings.endGroup();
 
     settings.beginGroup("File");
     settings.setValue("AutomaticExtension", globalPrefs.autoFileExtension);
