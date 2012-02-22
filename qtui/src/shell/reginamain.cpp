@@ -372,6 +372,7 @@ void ReginaMain::setupActions() {
     act->setText(tr("&Quit"));
     act->setIcon(ReginaSupport::themeIcon("application-exit"));
     act->setShortcuts(QKeySequence::Quit);
+    act->setMenuRole(QAction::QuitRole);
     act->setWhatsThis(tr("Close all files and quit Regina."));
     connect(act, SIGNAL(triggered()), manager, SLOT(closeAllWindows()));
     fileMenu->addAction(act);
@@ -397,6 +398,8 @@ void ReginaMain::setupActions() {
     act = new QAction(this);
     act->setText(tr("&Configure Regina"));
     act->setIcon(ReginaSupport::themeIcon("configure"));
+    act->setShortcuts(QKeySequence::Preferences);
+    act->setMenuRole(QAction::PreferencesRole);
     act->setWhatsThis(tr("Configure Regina.  Here you can set "
         "your own preferences for how Regina behaves."));
     connect(act, SIGNAL(triggered()), this, SLOT(optionsPreferences()));
@@ -408,6 +411,7 @@ void ReginaMain::setupActions() {
     act = new QAction(this);
     act->setText(tr("&About Regina"));
     act->setIcon(ReginaSupport::themeIcon("help-about"));
+    act->setMenuRole(QAction::AboutRole);
     act->setWhatsThis(tr("Display information about Regina, such as "
         "the authors, license and website."));
     connect(act, SIGNAL(triggered()), this, SLOT(helpAboutApp()));
