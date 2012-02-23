@@ -47,6 +47,7 @@
 #include <QLabel>
 #include <QLinkedList>
 #include <QMessageBox>
+#include <QPushButton>
 #include <QToolBar>
 #include <QTreeWidget>
 #include <QWhatsThis>
@@ -259,15 +260,30 @@ bool PacketPane::setReadWrite(bool allowReadWrite) {
 }
 
 bool PacketPane::queryClose() {
-    if ((! emergencyClosure) && dirty) {
-        QString msg = tr("This packet contains changes that have not yet been "
-                 "committed.  Are you sure you wish to close this packet "
-                 "now and discard these changes?");
-        if (QMessageBox::warning(this, 
-                mainUI->getPacket()->getPacketLabel().c_str(),
-                msg, QMessageBox::Discard | QMessageBox::Cancel) 
-                == QMessageBox::Cancel)
+    while ((! emergencyClosure) && dirty) {
+        QMessageBox msgBox(QMessageBox::Information, tr("Regina"),
+            tr("This packet contains changes that have "
+                "not yet been committed."),
+            QMessageBox::Cancel);
+        msgBox.setInformativeText(
+            tr("Do you wish to commit these changes now?"));
+        //msgBox.setDetailedText(
+        //    tr("The packet in question is: %1").
+        //    arg(mainUI->getPacket()->getPacketLabel().c_str()));
+        QPushButton* discardBtn = msgBox.addButton(tr("Discard changes"),
+            QMessageBox::DestructiveRole);
+        QPushButton* commitBtn = msgBox.addButton(tr("Commit"),
+            QMessageBox::AcceptRole);
+        msgBox.setDefaultButton(commitBtn);
+
+        msgBox.exec();
+        if (msgBox.clickedButton() == discardBtn)
+            break;
+        else if (msgBox.clickedButton() != commitBtn) {
+            // Assume cancel.
             return false;
+        }
+        commit();
     }
 
     // We are definitely going to close the pane.  Do some cleaning up.
