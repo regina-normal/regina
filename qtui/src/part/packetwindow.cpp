@@ -31,6 +31,7 @@
 #include "packetwindow.h"
 #include "reginapart.h"
 
+#include <QCloseEvent>
 #include <QLinkedList>
 
 PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
@@ -66,8 +67,11 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
     newPane->show();
 }
 
-bool PacketWindow::queryClose() {
-    return heldPane->queryClose();
+void PacketWindow::closeEvent(QCloseEvent* event) {
+    if (heldPane->queryClose())
+        event->accept();
+    else
+        event->ignore();
 }
 
 void PacketWindow::plugMenu(QMenu *menu) {

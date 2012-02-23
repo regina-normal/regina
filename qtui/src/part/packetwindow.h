@@ -76,10 +76,9 @@ class PacketWindow : public QMainWindow {
 
     protected:
         /**
-         * Query the internal packet pane to see if the frame may be
-         * closed.
+         * Overridden to handle window closing.
          */
-        virtual bool queryClose();
+        virtual void closeEvent(QCloseEvent* event);
 
     friend class PacketPane;
 };
