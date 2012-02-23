@@ -64,6 +64,8 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     if (initialPrefs)
         prefs = *initialPrefs;
 
+    QFont font(prefs.fixedWidthFont());
+
     resize(600, 500);
 
     // Set up the main widgets.
@@ -74,8 +76,6 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     session->setWordWrapMode(prefs.pythonWordWrap ? QTextOption::WordWrap :
         QTextOption::NoWrap);
     session->setAutoFormatting(QTextEdit::AutoNone);
-    QFont font;
-    font.setFixedPitch(true);
     session->setFont(font);
     session->setFocusPolicy(Qt::NoFocus);
     session->setWhatsThis( tr("This area stores a history of the entire "
@@ -447,6 +447,11 @@ void PythonConsole::updatePreferences(const ReginaPrefSet& newPrefs) {
     session->setWordWrapMode(prefs.pythonWordWrap ? QTextOption::WordWrap :
         QTextOption::NoWrap);
     input->setSpacesPerTab(prefs.pythonSpacesPerTab);
+
+    QFont font(prefs.fixedWidthFont());
+    session->setFont(font);
+    prompt->setFont(font);
+    input->setFont(font);
 }
 
 QString PythonConsole::encode(const QString& plaintext) {

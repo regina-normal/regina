@@ -36,6 +36,7 @@
 #include "../packeteditiface.h"
 #include "../packetmanager.h"
 #include "../reginapart.h"
+#include "reginaprefset.h"
 #include "reginasupport.h"
 
 #include <cstring>
@@ -202,6 +203,7 @@ void ScriptValueDelegate::updateEditorGeometry(QWidget* editor,
 NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
         PacketUI(enclosingPane), script(packet){
     bool readWrite = enclosingPane->isReadWrite();
+    ReginaPart* part = enclosingPane->getPart();
 
     ui = new QWidget(enclosingPane);
     QVBoxLayout* layout = new QVBoxLayout(ui);
@@ -254,6 +256,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
     // Prepare the components.
     document->setReadOnly(!readWrite);
     document->setLineWrapMode(QPlainTextEdit::NoWrap);
+    document->setFont(part->getPreferences().fixedWidthFont());
 
 
     setPythonMode();
@@ -354,6 +357,11 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
         this, SLOT(notifyScriptChanged()));
     connect(document, SIGNAL(textChanged()),
         this, SLOT(notifyScriptChanged()));
+
+    // Notify us if the preferences (e.g., the default fixed-width font)
+    // change.
+    connect(part, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
+        this, SLOT(updatePreferences(const ReginaPrefSet&)));
 }
 
 NScriptUI::~NScriptUI() {
@@ -596,3 +604,6 @@ void NScriptUI::setPythonMode() {
     // see http://srchiliteqt.sourceforge.net
 }
 
+void NScriptUI::updatePreferences(const ReginaPrefSet& newPrefs) {
+    document->setFont(newPrefs.fixedWidthFont());
+}

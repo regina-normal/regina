@@ -271,8 +271,20 @@ bool ReginaPrefSet::writePythonLibraries() const {
     return true;
 }
 
+QFont ReginaPrefSet::fixedWidthFont() const {
+    QFont ans;
+#ifdef Q_OS_MACX
+    ans.setFamily("menlo");
+#else
+    ans.setFamily("monospace");
+#endif
+    ans.setFixedPitch(true);
+    ans.setStyleHint(QFont::Monospace);
+    return ans;
+}
+
 void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
-        QWidget* parentWidget) {
+        QWidget* parentWidget) const {
     QString handbookName = (handbook ? handbook : "regina");
 
     QString home = QFile::decodeName(regina::NGlobalDirs::home().c_str());

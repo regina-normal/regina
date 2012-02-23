@@ -34,6 +34,7 @@
 #define __REGINAPREFSET_H
 
 #include <qmutex.h>
+#include <QFont>
 #include <QLinkedList>
 #include <QString>
 
@@ -329,13 +330,19 @@ struct ReginaPrefSet {
     bool writePythonLibraries() const;
 
     /**
+     * Returns a sensible fixed-width font.  The font size is not
+     * specified.
+     */
+    QFont fixedWidthFont() const;
+
+    /**
      * Opens the given section of an arbitrary handbook in an appropriate
      * manner.  If the handbook is in fact the users' handbook then
      * the argument \a handbook should be 0 (which enables specialised
      * code for the users' handbook only).
      */
     void openHandbook(const char* section, const char* handbook,
-        QWidget* parentWidget);
+        QWidget* parentWidget) const;
 };
 
 inline GraphvizStatus::GraphvizStatus() : flag_(unknown.flag_) {

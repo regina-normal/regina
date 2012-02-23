@@ -4,6 +4,7 @@ Open a new file by default, and give the root-level container a better name.
 Strip out obsolete preferences.
 Cache packet icons in PacketManager for performance.
 Rejuvenate the PacketPane header, including FlatButton and hard-coded 22px icon
+Spaces-per-tab has no effect in NScriptUI.
 
 MacOS: Cmdline tools (including regina-python) don't work.
 
