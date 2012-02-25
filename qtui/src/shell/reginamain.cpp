@@ -32,6 +32,7 @@
 #include "surfaces/nnormalsurfacelist.h"
 
 #include "examplesaction.h"
+#include "recentfilesaction.h"
 #include "reginaabout.h"
 #include "reginafilter.h"
 #include "reginamain.h"
@@ -328,6 +329,11 @@ void ReginaMain::setupActions() {
     fileMenu->addAction(actOpen);
     toolBar->addAction(actOpen);
    
+    fileOpenRecent = new RecentFilesAction(this);
+    connect(fileOpenRecent, SIGNAL(urlSelected(const QUrl&)),
+        this, SLOT(openUrl(const QUrl&)));
+    fileMenu->addMenu(fileOpenRecent);
+
     fileOpenExample = new ExamplesAction(this);
     fillExamples();
     connect(fileOpenExample, SIGNAL(urlSelected(const QUrl&, const QString&)),
@@ -496,8 +502,7 @@ void ReginaMain::fillExamples() {
 
 void ReginaMain::addRecentFile() {
     if (currentPart && ! currentPart->url().isEmpty()) {
-        // TODO Save recent file
-        //fileOpenRecent->addUrl(currentPart->url());
+        fileOpenRecent->addUrl(currentPart->url());
 
         // Save the new file list to the global configuration.
         // Note that the other main windows will be updated because of this.

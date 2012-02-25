@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2011, Ben Burton                                   *
+ *  Copyright (c) 1999-2011, Ben Burton and others (see below)            *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -26,12 +26,12 @@
 
 /* end stub */
 
-/*! \file examplesaction.h
- *  \brief Provides an action class that offers access to sample data files.
+/*! \file recentfilesaction.h
+ *  \brief Provides an action class that offers access to recently-opened files.
  */
 
-#ifndef __EXAMPLESACTION_H
-#define __EXAMPLESACTION_H
+#ifndef __RECENTFILESACTION_H
+#define __RECENTFILESACTION_H
 
 #include <QMap>
 #include <QMenu>
@@ -40,52 +40,82 @@ class QUrl;
 class QActionGroup;
 
 /**
- * An action offering a selection of sample data files that can be
- * opened.
+ * An action offering access to recently-opened files.
  *
- * Much of this class is based upon KRecentFilesAction, as taken from
- * KDE 3.2.3.  KRecentFilesAction was written by Michael Koch and is
- * released under the GNU Library General Public License (v2).
+ * Much of this code is a stripped-down version of KRecentFilesAction, as
+ * taken from KDE 4.4.1.  This KDE code is licensed under the GNU Library
+ * General Public License version 2 as published by the Free Software
+ * Foundation.  See \a recentfilesaction.cpp for the full KDE license details
+ * and copyright holders.
  */
-class ExamplesAction : public QMenu {
+class RecentFilesAction : public QMenu {
     Q_OBJECT
 
     private:
         /**
-         * Sample data files
+         * Data files
          */
         QMap<QAction*, QUrl> urls_;
+        QMap<QAction*, QString> shortNames_;
 
         /**
-         * Group of actions in the menu
+         * Internal components
          */
-        QActionGroup* group;
+        QActionGroup* group_;
+        QAction *noEntriesAction_;
+        QAction *clearSeparator_;
+        QAction *clearAction_;
+
+        /**
+         * Configuration
+         */
+        int maxItems_;
 
     public:
         /**
          * Constructor and destructor.
          */
-        ExamplesAction(QWidget* parent);
-        virtual ~ExamplesAction();
+        RecentFilesAction(QWidget* parent);
+        virtual ~RecentFilesAction();
 
         /**
-         * Add a sample data file to the list of offerings.
-         *
-         * The filename should be relative to the Regina examples directory.
+         * Add a new data file to the front of the list.
          */
-        void addUrl(const QString& fileName, const QString& description);
+        void addUrl(const QUrl& url);
+
+        /**
+         * Get and set the maximum number of files in the list.
+         */
+        int maxItems() const;
+        void setMaxItems(int maxItems);
+
+        /**
+         * Action-related overloads from QWidget, and extended versions
+         * of these.  They are public because the corresponding QWidget
+         * routines are public, but you should not call these directly.
+         * Instead use addUrl() and clear().
+         */
+        virtual void addAction(QAction* action, const QUrl& url,
+                const QString& name);
+        virtual QAction* removeAction(QAction* action);
 
     signals:
         /**
-         * Emitted when a sample data file is selected for opening.
+         * Emitted when a data file is selected for opening.
          */
-        void urlSelected(const QUrl& url, const QString& description);
+        void urlSelected(const QUrl& url);
+
+    public slots:
+        /**
+         * Clear the list of recent files.
+         */
+        void clear();
 
     protected slots:
         /**
          * All activation events lead here.
          */
-        void exampleActivated(QAction*);
+        void fileActivated(QAction*);
 };
 
 #endif

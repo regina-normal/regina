@@ -202,6 +202,10 @@ bool ReginaPart::initData(regina::NPacket* usePacketTree,
             parent->setWindowTitle(displayName);
         else
             parent->setWindowTitle(localFile);
+
+        if (! localFile.isEmpty())
+            parent->addRecentFile();
+
         return true;
     } else {
         initPacketTree();
@@ -271,6 +275,8 @@ void ReginaPart::fileSaveAs() {
     }
 
     saveFile();
+
+    parent->addRecentFile();
 }
 
 void ReginaPart::packetView(regina::NPacket* packet, bool makeVisibleInTree,

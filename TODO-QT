@@ -1,3 +1,5 @@
+QSettings: single global ReginaPrefSet; propagate to other main windows
+RecentFilesAction: single action that updates across all windows; test!
 Work through Will's TODOs.
 Get rid of the commit/discard mechanism, which is counterintuitive.
 Open a new file by default, and give the root-level container a better name.
@@ -24,10 +26,6 @@ warnOnNonEmbedded - when enumerating non-embedded surfaces, the dialog
 currently has no "Don't warn me again" option. This'll have to be
 recreated manually, and we need to pass the value back to ReginaPrefSet
 somehow.
-
-Recent files option in the File Menu. As best I found, Qt doesn't offer
-this itself, but there's an example at
-http://developer.qt.nokia.com/doc/qt-4.8/mainwindows-recentfiles.html
 
 Tip of the day is missing, again Qt doesn't offer anything that does
 this as best I can tell.

@@ -48,6 +48,7 @@ class QMenuBar;
 class QMenu;
 class QSize;
 class QToolBar;
+class RecentFilesAction;
 class ReginaManager;
 
 /**
@@ -78,14 +79,10 @@ class ReginaMain : public QMainWindow {
         /**
          * Actions
          */
-        //KRecentFilesAction* fileOpenRecent;
+        RecentFilesAction* fileOpenRecent;
             /**< The menu of recently opened files. */
         ExamplesAction* fileOpenExample;
             /**< The menu of available example files. */
-        // KToggleAction* showToolbar;
-            /**< Action to show/hide the toolbar. */
-        // KToggleAction* showStatusbar;
-            /**< Action to show/hide the status bar. */
         QAction* actPython;
             /**< Action to launch a new python console. */
 
@@ -189,6 +186,13 @@ class ReginaMain : public QMainWindow {
          */
         QToolBar* createToolBar(QString name);
 
+        /**
+         * Add the current working URL to the recent file list for every
+         * top-level window (including this one) and save the file list to
+         * the global configuration.
+         */
+        void addRecentFile();
+
     protected:
         /**
          * Overridden for drag-and-drop implementation.
@@ -269,13 +273,6 @@ class ReginaMain : public QMainWindow {
         // void changeStatusbar(const QString& text);
         void changeCaption(const QString& text);
         void newToolbarConfig();
-
-        /**
-         * Add the current working Url to the recent file list for every
-         * top-level window (including this one) and save the file list to
-         * the global configuration.
-         */
-        void addRecentFile();
 
     private:
         /**
