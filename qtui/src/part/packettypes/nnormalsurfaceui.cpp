@@ -37,7 +37,6 @@
 #include "nsurfacematchingui.h"
 #include "nsurfacesummaryui.h"
 #include "../reginapart.h"
-#include "reginaprefset.h"
 
 #include <QLabel>
 #include <QWhatsThis>
@@ -63,14 +62,11 @@ NNormalSurfaceUI::NNormalSurfaceUI(regina::NNormalSurfaceList* packet,
 
     addTab(new NSurfaceMatchingUI(packet, this), tr("&Matching Equations"));
 
-    compat = new NSurfaceCompatibilityUI(packet, this, part->getPreferences());
+    compat = new NSurfaceCompatibilityUI(packet, this);
     addTab(compat, tr("Com&patibility"));
 
-    connect(part, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
-        this, SLOT(updatePreferences(const ReginaPrefSet&)));
-
     // Select the default tab.
-    switch(newEnclosingPane->getPart()->getPreferences().surfacesInitialTab) {
+    switch(ReginaPrefSet::global().surfacesInitialTab) {
         case ReginaPrefSet::Summary:
             /* already visible */ break;
         case ReginaPrefSet::Coordinates:
@@ -88,10 +84,6 @@ const QLinkedList<QAction*>& NNormalSurfaceUI::getPacketTypeActions() {
 
 QString NNormalSurfaceUI::getPacketMenuText() const {
     return tr("&Normal Surfaces");
-}
-
-void NNormalSurfaceUI::updatePreferences(const ReginaPrefSet& newPrefs) {
-    compat->setAutoCalcThreshold(newPrefs.surfacesCompatThreshold);
 }
 
 NSurfaceHeaderUI::NSurfaceHeaderUI(regina::NNormalSurfaceList* packet,

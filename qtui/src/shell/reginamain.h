@@ -56,8 +56,6 @@ class ReginaManager;
  *
  * Each main window is used for a single data file.  Data files are
  * actually displayed and edited by embedded KParts.
- *
- * This class also stores global preferences for Regina.
  */
 class ReginaMain : public QMainWindow {
     Q_OBJECT
@@ -105,12 +103,6 @@ class ReginaMain : public QMainWindow {
         QToolBar* toolBar;
         QToolBar* packetTreeToolBar;
 
-
-        /**
-         * Preferences
-         */
-        ReginaPrefSet globalPrefs;
-
         /**
          * About dialogs
          */
@@ -122,25 +114,6 @@ class ReginaMain : public QMainWindow {
          */
         ReginaMain(ReginaManager *parent, bool showAdvice = false);
         virtual ~ReginaMain();
-
-        /**
-         * Retrieve and set global preferences.
-         */
-        const ReginaPrefSet& getPreferences() const;
-        void setPreferences(const ReginaPrefSet& prefs);
-
-        /**
-         * Force this main window to reread the user's configuration
-         * file and update itself (and its child windows) accordingly.
-         */
-        void readOptions();
-
-        /**
-         * Save the current preferences to the user's configuration file.
-         * All other main windows will then be forced to reread this
-         * configuration and update themselves accordingly.
-         */
-        void saveOptions();
 
         /**
          * Plug in a new packet specific menu
@@ -209,12 +182,6 @@ class ReginaMain : public QMainWindow {
          * Qt override to set preferred size of the window.
          */
         virtual QSize sizeHint() const;
-
-    signals:
-        /**
-         * Emitted when the global preferences have been changed.
-         */
-        void preferencesChanged(const ReginaPrefSet&);
 
     public slots:
         /**
@@ -286,11 +253,6 @@ class ReginaMain : public QMainWindow {
          */
         void newTopologyPart();
 };
-
-inline const ReginaPrefSet& ReginaMain::getPreferences() const {
-    return globalPrefs;
-}
-
 
 /**
  * A manager for Regina windows

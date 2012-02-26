@@ -158,7 +158,7 @@ void ReginaPart::movePageUp() {
         return;
     }
 
-    packet->moveUp(prefs.treeJumpSize);
+    packet->moveUp(ReginaPrefSet::global().treeJumpSize);
 }
 
 void ReginaPart::movePageDown() {
@@ -179,7 +179,7 @@ void ReginaPart::movePageDown() {
         return;
     }
 
-    packet->moveDown(prefs.treeJumpSize);
+    packet->moveDown(ReginaPrefSet::global().treeJumpSize);
 }
 
 void ReginaPart::moveTop() {

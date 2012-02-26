@@ -127,7 +127,7 @@ void ReginaPart::view(PacketPane* newPane) {
     // Decide whether to dock or float.
     bool shouldDock;
 
-    if (prefs.autoDock) {
+    if (ReginaPrefSet::global().autoDock) {
         if (dockedPane) {
             shouldDock = ! dockedPane->isDirty();
         } else
@@ -256,7 +256,8 @@ void ReginaPart::fileSaveAs() {
         return;
 
     // Do we need to add an extension?
-    if (prefs.autoFileExtension && QFileInfo(file).suffix().isEmpty())
+    if (ReginaPrefSet::global().autoFileExtension &&
+            QFileInfo(file).suffix().isEmpty())
         file += ReginaAbout::regDataExt;
 
     // Does this file already exist?
@@ -421,7 +422,7 @@ void ReginaPart::newCensus() {
 }
 
 void ReginaPart::pythonConsole() {
-    consoles.launchPythonConsole(widget(), &prefs, packetTree,
+    consoles.launchPythonConsole(widget(), packetTree,
         treeView->selectedPacket());
 }
 
@@ -476,14 +477,6 @@ bool ReginaPart::hasUncommittedChanges() {
             return true;
     }
     return false;
-}
-
-void ReginaPart::updatePreferences(const ReginaPrefSet& newPrefs) {
-    prefs = newPrefs;
-
-    // Act immediately upon this new set of preferences where required.
-    emit preferencesChanged(prefs);
-    consoles.updatePreferences(prefs);
 }
 
 void ReginaPart::updateTreeActions() {

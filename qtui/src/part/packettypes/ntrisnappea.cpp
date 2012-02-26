@@ -32,6 +32,7 @@
 
 // UI includes:
 #include "ntrisnappea.h"
+#include "reginaprefset.h"
 #include "snappeacomponents.h"
 
 #include <climits>
@@ -45,9 +46,8 @@ using regina::NSnapPeaTriangulation;
 using regina::NTriangulation;
 
 NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
-        PacketTabbedUI* useParentUI, bool newAllowClosed) :
-        PacketViewerTab(useParentUI), reginaTri(packet), snappeaTri(0),
-        allowClosed(newAllowClosed) {
+        PacketTabbedUI* useParentUI) :
+        PacketViewerTab(useParentUI), reginaTri(packet), snappeaTri(0) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
@@ -67,7 +67,7 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     dataNull = new QWidget();
     QBoxLayout* nullLayout = new QVBoxLayout(dataNull);
 
-    unavailable = new NoSnapPea(reginaTri, allowClosed, dataNull, true);
+    unavailable = new NoSnapPea(reginaTri, dataNull, true);
     unavailable->setAlignment(Qt::AlignCenter);
     nullLayout->addWidget(unavailable);
     data->addWidget(dataNull);
@@ -107,9 +107,11 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
     data->addWidget(dataValid);
 
     // Finish off.
-
     layout->addWidget(data);
     layout->addStretch(3);
+
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 NTriSnapPeaUI::~NTriSnapPeaUI() {
@@ -129,11 +131,12 @@ void NTriSnapPeaUI::refresh() {
     if (snappeaTri)
         delete snappeaTri;
 
-    snappeaTri = new NSnapPeaTriangulation(*reginaTri, allowClosed);
+    snappeaTri = new NSnapPeaTriangulation(*reginaTri,
+        ReginaPrefSet::global().snapPeaClosed);
 
     if (snappeaTri->isNull()) {
         data->setCurrentWidget(dataNull);
-        unavailable->refresh(allowClosed);
+        unavailable->refresh();
     } else {
         data->setCurrentWidget(dataValid);
 

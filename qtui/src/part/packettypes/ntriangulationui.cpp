@@ -53,14 +53,11 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
     ReginaPart* part = newEnclosingPane->getPart();
 
     NTriHeaderUI* header = new NTriHeaderUI(packet, this);
-    gluings = new NTriGluingsUI(packet, this,
-        part->getPreferences(), newEnclosingPane->isReadWrite());
-    skeleton = new NTriSkeletonUI(packet, this, part->getPreferences());
-    algebra = new NTriAlgebraUI(packet, this, part->getPreferences());
-    surfaces = new NTriSurfacesUI(packet, this,
-        part->getPreferences().triSurfacePropsThreshold);
-    snapPea = new NTriSnapPeaUI(packet, this,
-        part->getPreferences().snapPeaClosed);
+    gluings = new NTriGluingsUI(packet, this, newEnclosingPane->isReadWrite());
+    skeleton = new NTriSkeletonUI(packet, this);
+    algebra = new NTriAlgebraUI(packet, this);
+    surfaces = new NTriSurfacesUI(packet, this);
+    snapPea = new NTriSnapPeaUI(packet, this);
 
     gluings->fillToolBar(header->getToolBar());
 
@@ -74,11 +71,8 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
     addTab(surfaces, QObject::tr("Sur&faces"));
     addTab(snapPea, QObject::tr("Snap&Pea"));
 
-    connect(part, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
-        this, SLOT(updatePreferences(const ReginaPrefSet&)));
-
     // Select the default tab.
-    switch (part->getPreferences().triInitialTab) {
+    switch (ReginaPrefSet::global().triInitialTab) {
         case ReginaPrefSet::Gluings:
             /* already visible */ break;
         case ReginaPrefSet::Skeleton:
@@ -106,14 +100,6 @@ const QLinkedList<QAction*>& NTriangulationUI::getPacketTypeActions() {
 
 QString NTriangulationUI::getPacketMenuText() const {
     return QObject::tr("T&riangulation");
-}
-
-void NTriangulationUI::updatePreferences(const ReginaPrefSet& newPrefs) {
-    gluings->updatePreferences(newPrefs);
-    skeleton->updatePreferences(newPrefs);
-    algebra->updatePreferences(newPrefs);
-    surfaces->setAutoCalcThreshold(newPrefs.triSurfacePropsThreshold);
-    snapPea->setAllowClosed(newPrefs.snapPeaClosed);
 }
 
 NTriHeaderUI::NTriHeaderUI(regina::NTriangulation* packet,

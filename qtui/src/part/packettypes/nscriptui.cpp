@@ -256,7 +256,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
     // Prepare the components.
     document->setReadOnly(!readWrite);
     document->setLineWrapMode(QPlainTextEdit::NoWrap);
-    document->setFont(part->getPreferences().fixedWidthFont());
+    document->setFont(ReginaPrefSet::fixedWidthFont());
 
 
     setPythonMode();
@@ -360,8 +360,8 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
 
     // Notify us if the preferences (e.g., the default fixed-width font)
     // change.
-    connect(part, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
-        this, SLOT(updatePreferences(const ReginaPrefSet&)));
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 NScriptUI::~NScriptUI() {
@@ -560,7 +560,7 @@ void NScriptUI::updateRemoveState() {
 
 void NScriptUI::compile() {
     ReginaPart* part = enclosingPane->getPart();
-    if (part->getPythonManager().compileScript(ui, &part->getPreferences(),
+    if (part->getPythonManager().compileScript(ui,
             document->toPlainText() + "\n\n") == 0) {
         #ifdef BOOST_PYTHON_FOUND
         QMessageBox::information(ui,tr("Success"),
@@ -589,7 +589,7 @@ void NScriptUI::execute() {
 
     // Run the script.
     ReginaPart* part = enclosingPane->getPart();
-    part->getPythonManager().launchPythonConsole(ui, &part->getPreferences(),
+    part->getPythonManager().launchPythonConsole(ui,
             document->toPlainText() + "\n\n", vars);
 }
 
@@ -604,6 +604,6 @@ void NScriptUI::setPythonMode() {
     // see http://srchiliteqt.sourceforge.net
 }
 
-void NScriptUI::updatePreferences(const ReginaPrefSet& newPrefs) {
-    document->setFont(newPrefs.fixedWidthFont());
+void NScriptUI::updatePreferences() {
+    document->setFont(ReginaPrefSet::fixedWidthFont());
 }

@@ -39,7 +39,6 @@
 class NSurfaceCompatibilityUI;
 class NSurfaceCoordinateUI;
 class QLabel;
-class ReginaPrefSet;
 
 namespace regina {
     class NNormalSurfaceList;
@@ -70,13 +69,6 @@ class NNormalSurfaceUI : public PacketTabbedUI {
          */
         const QLinkedList<QAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
-
-    public slots:
-        /**
-         * Notify this interface that the global preferences have been
-         * updated.
-         */
-        void updatePreferences(const ReginaPrefSet& newPrefs);
 };
 
 /**

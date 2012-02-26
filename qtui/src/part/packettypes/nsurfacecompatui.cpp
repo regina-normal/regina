@@ -52,11 +52,9 @@ using regina::NNormalSurfaceList;
 using regina::NPacket;
 
 NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
-        regina::NNormalSurfaceList* packet, PacketTabbedUI* useParentUI,
-        const ReginaPrefSet& prefs) :
+        regina::NNormalSurfaceList* packet, PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet),
         matrixLocal(0), matrixGlobal(0), layerLocal(0), layerGlobal(0),
-        autoCalcThreshold(prefs.surfacesCompatThreshold),
         requestedCalculation(false) {
     ui = new QWidget();
     QBoxLayout* uiLayout = new QVBoxLayout(ui);
@@ -84,7 +82,8 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
     label->setWhatsThis(msg);
     chooseMatrix->setWhatsThis(msg);
     chooseMatrix->setCurrentIndex(
-        prefs.surfacesInitialCompat == ReginaPrefSet::GlobalCompat ? 1 : 0);
+        ReginaPrefSet::global().surfacesInitialCompat ==
+        ReginaPrefSet::GlobalCompat ? 1 : 0);
     chooseMatrix->setEnabled(false);
 
     hdrLayout->addStretch(1);
@@ -106,6 +105,9 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
     stack->addWidget(layerNone);
     uiLayout->addWidget(stack);
 
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
+
     refresh();
 }
 
@@ -119,12 +121,10 @@ NSurfaceCompatibilityUI::~NSurfaceCompatibilityUI() {
     }
 }
 
-void NSurfaceCompatibilityUI::setAutoCalcThreshold(unsigned newThreshold) {
-    autoCalcThreshold = newThreshold;
-
-    if (! matrixLocal)
-        if (surfaces->getNumberOfSurfaces() <= autoCalcThreshold)
-            refresh();
+void NSurfaceCompatibilityUI::updatePreferences() {
+    if ((! matrixLocal) && surfaces->getNumberOfSurfaces() <= 
+            ReginaPrefSet::global().surfacesCompatThreshold)
+        refresh();
 }
 
 regina::NPacket* NSurfaceCompatibilityUI::getPacket() {
@@ -161,8 +161,8 @@ void NSurfaceCompatibilityUI::refresh() {
     }
 
     // Should we compute new matrices?
-    if ((! requestedCalculation) &&
-            surfaces->getNumberOfSurfaces() > autoCalcThreshold) {
+    if ((! requestedCalculation) && surfaces->getNumberOfSurfaces() >
+            ReginaPrefSet::global().surfacesCompatThreshold) {
         // Nope.
         setMessage(TOO_LARGE);
         btnCalculate->setEnabled(true);

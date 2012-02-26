@@ -68,22 +68,12 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         QAbstractButton* btnThreeSphere;
         QAbstractButton* btnThreeBall;
 
-        /**
-         * Properties
-         */
-        unsigned autoCalcThreshold;
-
     public:
         /**
          * Constructor.
          */
         NTriSurfacesUI(regina::NTriangulation* packet,
-            PacketTabbedUI* useParentUI, unsigned newAutoCalcThreshold);
-
-        /**
-         * Update properties.
-         */
-        void setAutoCalcThreshold(unsigned newThreshold);
+            PacketTabbedUI* useParentUI);
 
         /**
          * PacketViewerTab overrides.
@@ -101,10 +91,14 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         void calculateSplitting();
         void calculateThreeSphere();
         void calculateThreeBall();
+
+        /**
+         * Notify that preferences have changed.
+         */
+        void updatePreferences();
 };
 
-inline void NTriSurfacesUI::setAutoCalcThreshold(unsigned newThreshold) {
-    autoCalcThreshold = newThreshold;
+inline void NTriSurfacesUI::updatePreferences() {
     refresh();
 }
 

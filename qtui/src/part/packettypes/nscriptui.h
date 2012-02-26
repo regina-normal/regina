@@ -43,7 +43,6 @@
 class QAction;
 class QSplitter;
 class QPlainTextEdit;
-class ReginaPrefSet;
 
 namespace regina {
     class NPacket;
@@ -220,7 +219,7 @@ class NScriptUI : public QObject, public PacketUI {
          * Notify this interface that the global preferences have been
          * updated.
          */
-        void updatePreferences(const ReginaPrefSet& newPrefs);
+        void updatePreferences();
 
     private:
         /**

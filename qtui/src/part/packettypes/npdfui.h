@@ -48,7 +48,6 @@ namespace regina {
 };
 
 class MessageLayer;
-class ReginaPrefSet;
 
 /**
  * A packet interface for viewing text packets.
@@ -83,13 +82,6 @@ class NPDFUI : public QObject, public PacketReadOnlyUI {
         QProcess* proc;
         QString cmd;
 
-        /**
-         * The current viewer preferences.
-         */
-        bool autoClose;
-        bool embed;
-        QString externalViewer;
-
     public:
         /**
          * Constructor and destructor.
@@ -110,7 +102,7 @@ class NPDFUI : public QObject, public PacketReadOnlyUI {
          * Notify this interface that the global preferences have been
          * updated.
          */
-        void updatePreferences(const ReginaPrefSet& newPrefs);
+        void updatePreferences();
 
     private:
         /**

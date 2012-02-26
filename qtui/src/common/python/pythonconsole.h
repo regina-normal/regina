@@ -80,7 +80,6 @@ class PythonConsole : public QMainWindow {
         /**
          * Configuration and attributes
          */
-        ReginaPrefSet prefs;
         QString lastIndent;
 
     public:
@@ -94,8 +93,7 @@ class PythonConsole : public QMainWindow {
          * PythonManager::launchPythonConsole(), not by calling this
          * constructor directly.
          */
-        PythonConsole(QWidget* parent = 0, PythonManager* useManager = 0,
-                const ReginaPrefSet* initialPrefs = 0);
+        PythonConsole(QWidget* parent = 0, PythonManager* useManager = 0);
 
         ~PythonConsole();
 
@@ -155,7 +153,7 @@ class PythonConsole : public QMainWindow {
         /**
          * Update the global preferences.
          */
-        void updatePreferences(const ReginaPrefSet& newPrefs);
+        void updatePreferences();
 
         /**
          * Help -> What's this has been acctivated.

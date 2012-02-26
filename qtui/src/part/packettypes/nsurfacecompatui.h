@@ -43,7 +43,6 @@ class QPushButton;
 class QGraphicsView;
 class QComboBox;
 class QStackedWidget;
-class ReginaPrefSet;
 
 namespace regina {
     class NPacket;
@@ -94,7 +93,6 @@ class NSurfaceCompatibilityUI : public QObject, public PacketViewerTab,
         /**
          * Properties
          */
-        unsigned autoCalcThreshold;
         bool requestedCalculation;
 
     public:
@@ -102,13 +100,8 @@ class NSurfaceCompatibilityUI : public QObject, public PacketViewerTab,
          * Constructor and destructor.
          */
         NSurfaceCompatibilityUI(regina::NNormalSurfaceList* packet,
-            PacketTabbedUI* useParentUI, const ReginaPrefSet& prefs);
+            PacketTabbedUI* useParentUI);
         ~NSurfaceCompatibilityUI();
-
-        /**
-         * Update properties.
-         */
-        void setAutoCalcThreshold(unsigned newThreshold);
 
         /**
          * PacketViewerTab overrides.
@@ -116,6 +109,12 @@ class NSurfaceCompatibilityUI : public QObject, public PacketViewerTab,
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
+
+    public slots:
+        /**
+         * Notify that preferences have changed.
+         */
+        void updatePreferences();
 
     private:
         /**

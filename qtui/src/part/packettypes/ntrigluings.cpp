@@ -498,10 +498,8 @@ regina::NPerm4 GluingsModel::faceStringToPerm(int srcFace, const QString& str) {
 }
 
 NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
-        PacketTabbedUI* useParentUI,
-        const ReginaPrefSet& initPrefs, bool readWrite) :
-        PacketEditorTab(useParentUI), tri(packet),
-        censusFiles(initPrefs.censusFiles) {
+        PacketTabbedUI* useParentUI, bool readWrite) :
+        PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of face gluings.
     model = new GluingsModel(readWrite);
     faceTable = new QTableView();
@@ -1165,6 +1163,10 @@ void NTriGluingsUI::censusLookup() {
     // packet might have changed its editable property.
     if (! enclosingPane->tryCommit())
         return;
+
+    // Copy the list of census files for processing.
+    // This is cheap (Qt uses copy-on-write).
+    ReginaFilePrefList censusFiles = ReginaPrefSet::global().censusFiles;
 
     // Run through each census file.
     QProgressDialog *progress = new QProgressDialog(ui);

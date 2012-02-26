@@ -71,23 +71,13 @@ class NTriSnapPeaUI : public QObject, public PacketViewerTab {
         QLabel* volume;
         NoSnapPea* unavailable;
 
-        /**
-         * Properties
-         */
-        bool allowClosed;
-
     public:
         /**
          * Constructor and destructor.
          */
         NTriSnapPeaUI(regina::NTriangulation* packet,
-            PacketTabbedUI* useParentUI, bool newAllowClosed);
+            PacketTabbedUI* useParentUI);
         ~NTriSnapPeaUI();
-
-        /**
-         * Update properties.
-         */
-        void setAllowClosed(bool newAllowClosed);
 
         /**
          * PacketViewerTab overrides.
@@ -96,6 +86,12 @@ class NTriSnapPeaUI : public QObject, public PacketViewerTab {
         QWidget* getInterface();
         void refresh();
         void editingElsewhere();
+
+    public slots:
+        /**
+         * Update properties.
+         */
+        void updatePreferences();
 
     private:
         /**
@@ -108,8 +104,7 @@ class NTriSnapPeaUI : public QObject, public PacketViewerTab {
         static QString solutionTypeExplanation(int solnType);
 };
 
-inline void NTriSnapPeaUI::setAllowClosed(bool newAllowClosed) {
-    allowClosed = newAllowClosed;
+inline void NTriSnapPeaUI::updatePreferences() {
     refresh();
 }
 

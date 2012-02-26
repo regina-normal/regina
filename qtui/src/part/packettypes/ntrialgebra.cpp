@@ -36,6 +36,7 @@
 // UI includes:
 #include "gaprunner.h"
 #include "ntrialgebra.h"
+#include "reginaprefset.h"
 #include "reginasupport.h"
 
 #include <QDir>
@@ -104,16 +105,16 @@ namespace {
 }
 
 NTriAlgebraUI::NTriAlgebraUI(regina::NTriangulation* packet,
-        PacketTabbedUI* useParentUI, const ReginaPrefSet& prefs) :
+        PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI) {
-    fundGroup = new NTriFundGroupUI(packet, this, prefs.triGAPExec);
+    fundGroup = new NTriFundGroupUI(packet, this);
 
     addTab(new NTriHomologyUI(packet, this), tr("&Homology"));
     addTab(fundGroup, tr("&Fund. Group"));
     addTab(new NTriTuraevViroUI(packet, this), tr("&Turaev-Viro"));
     addTab(new NTriCellularInfoUI(packet, this), tr("&Cellular Info"));
 
-    switch (prefs.triInitialAlgebraTab) {
+    switch (ReginaPrefSet::global().triInitialAlgebraTab) {
         case ReginaPrefSet::Homology:
             /* already visible */ break;
         case ReginaPrefSet::FundGroup:
@@ -123,10 +124,6 @@ NTriAlgebraUI::NTriAlgebraUI(regina::NTriangulation* packet,
         case ReginaPrefSet::CellularInfo:
             setCurrentTab(3); break;
     }
-}
-
-void NTriAlgebraUI::updatePreferences(const ReginaPrefSet& newPrefs) {
-    fundGroup->setGAPExec(newPrefs.triGAPExec);
 }
 
 NTriHomologyUI::NTriHomologyUI(regina::NTriangulation* packet,
@@ -232,8 +229,8 @@ void NTriHomologyUI::editingElsewhere() {
 }
 
 NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
-        PacketTabbedViewerTab* useParentUI, const QString& useGAPExec) :
-        PacketViewerTab(useParentUI), tri(packet), GAPExec(useGAPExec) {
+        PacketTabbedViewerTab* useParentUI) :
+        PacketViewerTab(useParentUI), tri(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
@@ -411,7 +408,7 @@ void NTriFundGroupUI::simplifyGAP() {
 }
 
 QString NTriFundGroupUI::verifyGAPExec() {
-    QString useExec = GAPExec;
+    QString useExec = ReginaPrefSet::global().triGAPExec;
 
     if (useExec.indexOf('/') < 0) {
         // Hunt on the search path.
@@ -441,7 +438,7 @@ QString NTriFundGroupUI::verifyGAPExec() {
                 "If you have GAP (Groups, Algorithms and Programming) "
                 "installed on your system, please go into the Regina "
                 "configuration (Triangulation section) and tell Regina "
-                "where it can find GAP.").arg(GAPExec));
+                "where it can find GAP.").arg(useExec));
             return QString::null;
         }
     }

@@ -42,7 +42,6 @@
 class PythonConsole;
 class QString;
 class QWidget;
-class ReginaPrefSet;
 
 namespace regina {
     class NPacket;
@@ -98,7 +97,6 @@ class PythonManager {
          * to the user and 0 is returned.
          */
         PythonConsole* launchPythonConsole(QWidget* parent,
-                const ReginaPrefSet* initialPrefs,
                 regina::NPacket* tree = 0,
                 regina::NPacket* selectedPacket = 0);
 
@@ -111,7 +109,6 @@ class PythonManager {
          * to the user and 0 is returned.
          */
         PythonConsole* launchPythonConsole(QWidget* parent,
-                const ReginaPrefSet* initialPrefs,
                 const QString& script,
                 const PythonVariableList& initialVariables);
 
@@ -127,9 +124,7 @@ class PythonManager {
          * If python scripting is not built in, a notice is displayed
          * to the user and 0 is returned.
          */
-        PythonConsole* compileScript(QWidget* parent,
-                const ReginaPrefSet* initialPrefs,
-                const QString& script);
+        PythonConsole* compileScript(QWidget* parent, const QString& script);
 
         /**
          * Destroys any consoles still in existence that were either
@@ -149,12 +144,6 @@ class PythonManager {
          * given console.
          */
         void deregisterConsole(PythonConsole* console);
-
-        /**
-         * Update the global preferences for all python consoles
-         * that this manager is currently responsible for.
-         */
-        void updatePreferences(const ReginaPrefSet& newPrefs);
 
         /**
          * Opens a new browser displaying the calculation engine

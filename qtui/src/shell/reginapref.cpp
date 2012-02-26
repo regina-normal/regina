@@ -110,9 +110,10 @@ namespace {
 }
 
 ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
-        QDialog(parent), mainWindow(parent),
-        prefSet(mainWindow->getPreferences()) {
+        QDialog(parent), mainWindow(parent) {
     setWindowTitle(tr("Regina Preferences"));
+
+    ReginaPrefSet& prefSet(ReginaPrefSet::global());
 
     QVBoxLayout *layout = new QVBoxLayout;
     buttonBox = new QDialogButtonBox(this);
@@ -161,8 +162,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 //    generalPrefs->cbTipOfDay->setChecked(
 //        KConfigGroup(KGlobal::config(), "TipOfDay").
 //        readEntry("RunOnStart", true));
-    generalPrefs->cbHandbookInKHelpCenter->setChecked(
-        prefSet.handbookInKHelpCenter);
 
     switch (prefSet.triInitialTab) {
         case ReginaPrefSet::Skeleton:
@@ -227,7 +226,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     surfacePrefs->editCompatThreshold->setText(
         QString::number(prefSet.surfacesCompatThreshold));
 
-    pdfPrefs->cbEmbed->setChecked(prefSet.pdfEmbed);
     pdfPrefs->editExternalViewer->setText(prefSet.pdfExternalViewer);
     pdfPrefs->cbAutoClose->setChecked(prefSet.pdfAutoClose);
 
@@ -271,6 +269,8 @@ void ReginaPreferences::clicked(QAbstractButton *button) {
 
 void ReginaPreferences::slotApply() {
     // Propagate changes to the main window.
+    ReginaPrefSet& prefSet(ReginaPrefSet::global());
+
     bool ok;
     unsigned uintVal;
     QString strVal;
@@ -279,8 +279,6 @@ void ReginaPreferences::slotApply() {
     prefSet.autoFileExtension = generalPrefs->cbAutoFileExtension->isChecked();
     // prefSet.displayTagsInTree = generalPrefs->cbDisplayTagsInTree->isChecked();
     //KTipDialog::setShowOnStart(generalPrefs->cbTipOfDay->isChecked());
-    prefSet.handbookInKHelpCenter = generalPrefs->cbHandbookInKHelpCenter->
-        isChecked();
 
     uintVal = generalPrefs->editTreeJumpSize->text().toUInt(&ok);
     if (ok && uintVal > 0)
@@ -587,8 +585,6 @@ void ReginaPreferences::slotApply() {
             QString::number(prefSet.surfacesCompatThreshold));
     }
 
-    prefSet.pdfEmbed = pdfPrefs->cbEmbed->isChecked();
-
     // Don't be too fussy about what they put in this field, since the
     // PDF viewer tries hard to find a suitable executable regardless.
     strVal = pdfPrefs->editExternalViewer->text().trimmed();
@@ -630,8 +626,8 @@ void ReginaPreferences::slotApply() {
         snapPeaPrefs->cbMessages->isChecked());
 
     // Save these preferences to the global configuration.
-    mainWindow->setPreferences(prefSet);
-    mainWindow->saveOptions();
+    ReginaPrefSet::save();
+    ReginaPrefSet::propagate();
 }
 
 ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
@@ -680,16 +676,6 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     // cbTipOfDay->setWhatsThis(tr("Show a tip of the day each time "
     //     "Regina is started."));
     // layout->addWidget(cbTipOfDay);
-
-    cbHandbookInKHelpCenter = new QCheckBox(tr("Open handbook "
-        "in KDE Help Center"));
-    cbHandbookInKHelpCenter->setWhatsThis(tr("<qt>If checked, the users' "
-        "handbook will be opened within the KDE Help Center.  If unchecked, "
-        "Regina will try to open the users' handbook using your default "
-        "web browser.<p>"
-        "To open the users' handbook, select "
-        "<i>Help</i>-&gt;<i>Regina Handbook</i>.</qt>"));
-    layout->addWidget(cbHandbookInKHelpCenter);
 
     // Add some space at the end.
     layout->addStretch(1);
@@ -914,13 +900,6 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QWidget(parent) {
 
 ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : QWidget(parent) {
     QBoxLayout* layout = new QVBoxLayout(this);
-
-    // Set up the embedded checkbox.
-    cbEmbed = new QCheckBox(tr("Use embedded viewer if possible"));
-    cbEmbed->setWhatsThis(tr("If possible, view PDF packets using "
-        "a viewer that can embed directly into Regina's main window, "
-        "such as KPDF or KGhostView."));
-    layout->addWidget(cbEmbed);
 
     // Set up the external viewer.
     QBoxLayout* box = new QHBoxLayout();

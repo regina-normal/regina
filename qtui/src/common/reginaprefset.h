@@ -37,6 +37,7 @@
 #include <QFont>
 #include <QLinkedList>
 #include <QString>
+#include <QSize>
 
 class QWidget;
 
@@ -204,145 +205,192 @@ class GraphvizStatus {
 
 /**
  * A structure holding all Regina preferences.
+ *
+ * There is only one global object of type ReginaPrefSet; this ensures
+ * that preferences are consistent across different main windows.
+ *
+ * You can access this global object by calling ReginaPrefSet.global().
  */
-struct ReginaPrefSet {
-    // Some defaults that other classes may need to access:
-    static const char* defaultGAPExec;
-        /**< The default setting for \a triGAPExec. */
-    static const char* defaultGraphvizExec;
-        /**< The default setting for \a triGraphvizExec. */
+class ReginaPrefSet : public QObject {
+    Q_OBJECT
 
-    // The preferences themselves:
+    private:
+        static ReginaPrefSet instance_;
 
-    enum TriTab { Gluings, Skeleton, Algebra, Composition, Surfaces, SnapPea };
-        /**< Available top-level tabs in a 3-manifold triangulation
-             viewer/editor. */
-    enum TriSkeletonTab { SkelComp, FacePairingGraph };
-        /**< Available tabs in a 3-manifold triangulation skeleton viewer. */
-    enum TriAlgebraTab { Homology, FundGroup, TuraevViro, CellularInfo };
-        /**< Available tabs in a 3-manifold triangulation algebra viewer. */
-    enum SurfacesTab { Summary, Coordinates, Matching, Compatibility };
-        /**< Available top-level tabs in a normal surface list viewer. */
-    enum SurfacesCompatMatrix { LocalCompat, GlobalCompat };
-        /**< Possible compatibility matrices that can be displayed for a
-             normal surface list. */
+    public:
+        // Some defaults that other classes may need to access:
+        static const char* defaultGAPExec;
+            /**< The default setting for \a triGAPExec. */
+        static const char* defaultGraphvizExec;
+            /**< The default setting for \a triGraphvizExec. */
 
-    bool autoDock;
-        /**< Do we automatically dock new packet
-             viewers into the parent window? */
-    bool autoFileExtension;
-        /**< Should filenames be given an automatic extension? */
-    ReginaFilePrefList censusFiles;
-        /**< The list of data files to use for census lookups. */
-    bool displayTagsInTree;
-        /**< Should we display packet tags in the visual tree? */
-    bool handbookInKHelpCenter;
-        /**< Should we open the users' handbook in the KDE help center? */
-    bool pdfAutoClose;
-        /**< Should we close external PDF viewers automatically (e.g.,
-             when the packet is refreshed or closed)? */
-    bool pdfEmbed;
-        /**< Should we view PDFs using an embedded KPart if possible? */
-    QString pdfExternalViewer;
-        /**< The external program used to view PDFs if we cannot find
-             (or do not want) an embedded KPart.  This string may contain
-             additional arguments for the viewer; the PDF filename will
-             added to the end (separated by whitespace) and the entire
-             string will be passed to a shell for interpretation.  If this is
-             empty, Regina will do its best to find a suitable viewer. */
-    bool pythonAutoIndent;
-        /**< Should auto-indent be enabled in python consoles? */
-    ReginaFilePrefList pythonLibraries;
-        /**< The python libraries to load upon each session startup. */
-    unsigned pythonSpacesPerTab;
-        /**< The number of spaces to insert when <TAB> is pressed in a
-             python console. */
-    bool pythonWordWrap;
-        /**< Should python consoles be word wrapped? */
-    bool snapPeaClosed;
-        /**< Do we allow the SnapPea kernel to work with closed (non-ideal)
-             triangulations, even though it's dangerous? */
-    unsigned surfacesCompatThreshold;
-        /**< The maximum number of normal surfaces in a list for which the
-             compatibility matrices will be automatically calculated. */
-    int surfacesCreationCoords;
-        /**< The default coordinate system for normal surface creation. */
-    SurfacesCompatMatrix surfacesInitialCompat;
-        /**< The matrix first shown when the compatibility tab is
-             opened for a normal surface list. */
-    SurfacesTab surfacesInitialTab;
-        /**< The initially visible top-level tab for a new normal
-             surface list viewer. */
-    unsigned treeJumpSize;
-        /**< The number of steps corresponding to a jump up or down in
-             the packet tree. */
-    QString triGAPExec;
-        /**< The executable for starting GAP.  This need not include a
-             directory (in which case the search path will be used). */
-    QString triGraphvizExec;
-        /**< The executable for starting Graphviz.  This should be a tool
-             for drawing undirected graphs; the recommended Graphviz tool
-             is neato.  This need not include a directory (in which case
-             the search path will be used). */
-    TriTab triInitialTab;
-        /**< The initially visible top-level tab for a new 3-manifold
-             triangulation viewer/editor. */
-    TriSkeletonTab triInitialSkeletonTab;
-        /**< The initially visible tab for a new 3-manifold triangulation
-             skeleton viewer. */
-    TriAlgebraTab triInitialAlgebraTab;
-        /**< The initially visible tab for a new 3-manifold triangulation
-             algebra viewer. */
-    unsigned triSurfacePropsThreshold;
-        /**< The maximum number of tetrahedra for which surface-related
-             properties of 3-manifold triangulations will be automatically
-             calculated. */
+        // The preferences themselves:
 
-    bool warnOnNonEmbedded;
-        /**< Whether to warn when attempting to enumerate normal surfaces
-             that are not embedded */
+        enum TriTab
+            { Gluings, Skeleton, Algebra, Composition, Surfaces, SnapPea };
+            /**< Available top-level tabs in a 3-manifold triangulation
+                 viewer/editor. */
+        enum TriSkeletonTab { SkelComp, FacePairingGraph };
+            /**< Available tabs in a 3-manifold triangulation
+                 skeleton viewer. */
+        enum TriAlgebraTab { Homology, FundGroup, TuraevViro, CellularInfo };
+            /**< Available tabs in a 3-manifold triangulation algebra viewer. */
+        enum SurfacesTab { Summary, Coordinates, Matching, Compatibility };
+            /**< Available top-level tabs in a normal surface list viewer. */
+        enum SurfacesCompatMatrix { LocalCompat, GlobalCompat };
+            /**< Possible compatibility matrices that can be displayed for a
+                 normal surface list. */
 
-    /**
-     * Default constructor that provides a reasonable set of defaults.
-     */
-    ReginaPrefSet();
+        bool autoDock;
+            /**< Do we automatically dock new packet
+                 viewers into the parent window? */
+        bool autoFileExtension;
+            /**< Should filenames be given an automatic extension? */
+        ReginaFilePrefList censusFiles;
+            /**< The list of data files to use for census lookups. */
+        bool displayTagsInTree;
+            /**< Should we display packet tags in the visual tree? */
+        bool pdfAutoClose;
+            /**< Should we close external PDF viewers automatically (e.g.,
+                 when the packet is refreshed or closed)? */
+        QString pdfExternalViewer;
+            /**< The external program used to view PDFs if we cannot find
+                 (or do not want) an embedded KPart.  This string may contain
+                 additional arguments for the viewer; the PDF filename will
+                 added to the end (separated by whitespace) and the entire
+                 string will be passed to a shell for interpretation.  If this
+                 is empty, Regina will do its best to find a suitable viewer. */
+        bool pythonAutoIndent;
+            /**< Should auto-indent be enabled in python consoles? */
+        ReginaFilePrefList pythonLibraries;
+            /**< The python libraries to load upon each session startup. */
+        unsigned pythonSpacesPerTab;
+            /**< The number of spaces to insert when <TAB> is pressed in a
+                 python console. */
+        bool pythonWordWrap;
+            /**< Should python consoles be word wrapped? */
+        bool snapPeaClosed;
+            /**< Do we allow the SnapPea kernel to work with closed (non-ideal)
+                 triangulations, even though it's dangerous? */
+        unsigned surfacesCompatThreshold;
+            /**< The maximum number of normal surfaces in a list for which the
+                 compatibility matrices will be automatically calculated. */
+        int surfacesCreationCoords;
+            /**< The default coordinate system for normal surface creation. */
+        SurfacesCompatMatrix surfacesInitialCompat;
+            /**< The matrix first shown when the compatibility tab is
+                 opened for a normal surface list. */
+        SurfacesTab surfacesInitialTab;
+            /**< The initially visible top-level tab for a new normal
+                 surface list viewer. */
+        unsigned treeJumpSize;
+            /**< The number of steps corresponding to a jump up or down in
+                 the packet tree. */
+        QString triGAPExec;
+            /**< The executable for starting GAP.  This need not include a
+                 directory (in which case the search path will be used). */
+        QString triGraphvizExec;
+            /**< The executable for starting Graphviz.  This should be a tool
+                 for drawing undirected graphs; the recommended Graphviz tool
+                 is neato.  This need not include a directory (in which case
+                 the search path will be used). */
+        TriTab triInitialTab;
+            /**< The initially visible top-level tab for a new 3-manifold
+                 triangulation viewer/editor. */
+        TriSkeletonTab triInitialSkeletonTab;
+            /**< The initially visible tab for a new 3-manifold triangulation
+                 skeleton viewer. */
+        TriAlgebraTab triInitialAlgebraTab;
+            /**< The initially visible tab for a new 3-manifold triangulation
+                 algebra viewer. */
+        unsigned triSurfacePropsThreshold;
+            /**< The maximum number of tetrahedra for which surface-related
+                 properties of 3-manifold triangulations will be automatically
+                 calculated. */
 
-    /**
-     * Returns the default census files shipped with Regina.
-     */
-    static ReginaFilePrefList defaultCensusFiles();
+        bool warnOnNonEmbedded;
+            /**< Whether to warn when attempting to enumerate normal surfaces
+                 that are not embedded */
 
-    /**
-     * Returns the full path to the python libraries configuration file.
-     */
-    static QString pythonLibrariesConfig();
+        QSize windowMainSize;
+            /**< The initial size of a new main topology data window. */
 
-    /**
-     * Reads the python libraries from the regina-python configuration
-     * file.
-     */
-    bool readPythonLibraries();
+    public:
+        /**
+         * Access the global ReginaPrefSet instance.
+         */
+        static ReginaPrefSet& global();
 
-    /**
-     * Writes the python libraries to the regina-python configuration
-     * file.
-     */
-    bool writePythonLibraries() const;
+        /**
+         * Read the current preference list from the platform-specific
+         * settings file.
+         */
+        static void read();
 
-    /**
-     * Returns a sensible fixed-width font.  The font size is not
-     * specified.
-     */
-    QFont fixedWidthFont() const;
+        /**
+         * Save the current preference list to the platform-specific
+         * settings file.
+         */
+        static void save();
 
-    /**
-     * Opens the given section of an arbitrary handbook in an appropriate
-     * manner.  If the handbook is in fact the users' handbook then
-     * the argument \a handbook should be 0 (which enables specialised
-     * code for the users' handbook only).
-     */
-    void openHandbook(const char* section, const char* handbook,
-        QWidget* parentWidget) const;
+        /**
+         * Returns the default size of a new main topology data window.
+         */
+        static QSize defaultMainSize();
+
+        /**
+         * Returns the default census files shipped with Regina.
+         */
+        static ReginaFilePrefList defaultCensusFiles();
+
+        /**
+         * Returns the full path to the python libraries configuration file.
+         */
+        static QString pythonLibrariesConfig();
+
+        /**
+         * Returns a sensible fixed-width font.  The font size is not
+         * specified.
+         */
+        static QFont fixedWidthFont();
+
+        /**
+         * Opens the given section of an arbitrary handbook in an appropriate
+         * manner.  If the handbook is in fact the users' handbook then
+         * the argument \a handbook should be 0 (which enables specialised
+         * code for the users' handbook only).
+         */
+        static void openHandbook(const char* section, const char* handbook,
+            QWidget* parentWidget);
+
+        /**
+         * Inform everyone who needs to know that this preference set
+         * might have changed.
+         *
+         * This simply causes the global ReginaPrefSet to emit the
+         * signal preferencesChanged().
+         */
+        static void propagate();
+
+    signals:
+        /**
+         * Emitted from the global ReginaPrefSet instance when the
+         * global preferences have changed.
+         */
+        void preferencesChanged();
+
+    private:
+        // Constructor that provides a reasonable set of defaults.
+        ReginaPrefSet();
+
+        // Non-static internal read/write routines:
+        void readInternal();
+        void saveInternal() const;
+
+        // Read and write python libraries to/from the regina-python
+        // configuration file:
+        bool readPythonLibraries();
+        bool savePythonLibraries() const;
 };
 
 inline GraphvizStatus::GraphvizStatus() : flag_(unknown.flag_) {
@@ -384,6 +432,22 @@ inline ReginaFilePref::ReginaFilePref() : active(true) {
 
 inline ReginaFilePref::ReginaFilePref(const QString& newFilename,
         bool newActive) : filename(newFilename), active(newActive) {
+}
+
+inline ReginaPrefSet& ReginaPrefSet::global() {
+    return instance_;
+}
+
+inline void ReginaPrefSet::read() {
+    instance_.readInternal();
+}
+
+inline void ReginaPrefSet::save() {
+    instance_.saveInternal();
+}
+
+inline void ReginaPrefSet::propagate() {
+    emit instance_.preferencesChanged();
 }
 
 #endif

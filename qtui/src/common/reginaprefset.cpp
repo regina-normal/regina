@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "file/nglobaldirs.h"
+#include "snappea/nsnappeatriangulation.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "utilities/stringutils.h"
 
@@ -34,6 +35,8 @@
 #include "shortrunner.h"
 
 #include <fstream>
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -41,6 +44,7 @@
 #include <QTextStream>
 #include <QDesktopServices>
 #include <QMessageBox>
+#include <QSettings>
 #include <QUrl>
 
 namespace {
@@ -56,6 +60,8 @@ const GraphvizStatus GraphvizStatus::unsupported(-5);
 const GraphvizStatus GraphvizStatus::version1(1);
 const GraphvizStatus GraphvizStatus::version1NotDot(2);
 const GraphvizStatus GraphvizStatus::version2(3);
+
+ReginaPrefSet ReginaPrefSet::instance_;
 
 const char* ReginaPrefSet::defaultGAPExec = "gap";
 const char* ReginaPrefSet::defaultGraphvizExec = "neato";
@@ -150,9 +156,7 @@ ReginaPrefSet::ReginaPrefSet() :
         autoFileExtension(true),
         censusFiles(defaultCensusFiles()),
         displayTagsInTree(false),
-        handbookInKHelpCenter(true),
         pdfAutoClose(true),
-        pdfEmbed(true),
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
         pythonWordWrap(false),
@@ -168,7 +172,16 @@ ReginaPrefSet::ReginaPrefSet() :
         triInitialSkeletonTab(SkelComp),
         triInitialAlgebraTab(Homology),
         triSurfacePropsThreshold(6),
-        warnOnNonEmbedded(true) {
+        warnOnNonEmbedded(true),
+        windowMainSize() /* initially null */ {
+}
+
+QSize ReginaPrefSet::defaultMainSize() {
+    // Use roughly 2/3 the screen size by default.
+    QSize use = QApplication::desktop()->availableGeometry().size();
+    use *= 2;
+    use /= 3;
+    return use;
 }
 
 ReginaFilePrefList ReginaPrefSet::defaultCensusFiles() {
@@ -183,35 +196,6 @@ ReginaFilePrefList ReginaPrefSet::defaultCensusFiles() {
 
     return ans;
 }
-
-//QString ReginaPrefSet::pdfDefaultViewer() {
-//    QString app;
-//
-//    // If we're on a mac, try the default Mac PDF viewer.
-//    #ifdef __APPLE__
-//    if (QFile::exists("/Applications"))
-//        if (! (app = KStandardDirs::findExe("open")).isNull())
-//            return app;
-//    #endif
-//
-//    // Try KDE applications (okular, kpdf).
-//    if (! (app = KStandardDirs::findExe("okular")).isNull())
-//        return app;
-//    if (! (app = KStandardDirs::findExe("kpdf")).isNull())
-//        return app;
-//
-//    // Try GNOME applications (evince).
-//    if (! (app = KStandardDirs::findExe("evince")).isNull())
-//        return app;
-//
-//    // Fall back to xpdf if we can.
-//    if (! (app = KStandardDirs::findExe("xpdf")).isNull())
-//        return app;
-//
-//    // Bapow.  We'll try going through KRun if/when somebody actually
-//    // tries to open a PDF packet.
-//    return QString();
-//}
 
 QString ReginaPrefSet::pythonLibrariesConfig() {
     return QDir::homePath() + "/.regina-libs";
@@ -250,7 +234,7 @@ bool ReginaPrefSet::readPythonLibraries() {
     return true;
 }
 
-bool ReginaPrefSet::writePythonLibraries() const {
+bool ReginaPrefSet::savePythonLibraries() const {
     QFile f(pythonLibrariesConfig());
     if (! f.open(QIODevice::WriteOnly))
         return false;
@@ -271,7 +255,7 @@ bool ReginaPrefSet::writePythonLibraries() const {
     return true;
 }
 
-QFont ReginaPrefSet::fixedWidthFont() const {
+QFont ReginaPrefSet::fixedWidthFont() {
     QFont ans;
 #ifdef Q_OS_MACX
     ans.setFamily("menlo");
@@ -284,7 +268,7 @@ QFont ReginaPrefSet::fixedWidthFont() const {
 }
 
 void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
-        QWidget* parentWidget) const {
+        QWidget* parentWidget) {
     QString handbookName = (handbook ? handbook : "regina");
 
     QString home = QFile::decodeName(regina::NGlobalDirs::home().c_str());
@@ -321,5 +305,263 @@ void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
                 "<tt>%1/</tt>.</qt>").arg(index));
         }
     }
+}
+
+void ReginaPrefSet::readInternal() {
+    QSettings settings;
+
+    settings.beginGroup("Display");
+    autoDock = settings.value("PacketDocking", true).toBool();
+    displayTagsInTree = settings.value("DisplayTagsInTree", false).toBool();
+    settings.endGroup();
+
+    settings.beginGroup("Census");
+    QStringList censusStrings = 
+        settings.value("Files", QStringList()).value<QStringList>();
+    if (censusStrings.empty())
+        censusFiles = ReginaPrefSet::defaultCensusFiles();
+    else {
+        censusFiles.clear();
+
+        // Each string must start with + or - (active or inactive).
+        // Any other strings will be ignored.
+        for (QStringList::const_iterator it = censusStrings.begin();
+                it != censusStrings.end(); it++) {
+            if ((*it).isEmpty())
+                continue;
+            switch ((*it)[0].toAscii()) {
+                case '+':
+                    // Active file.
+                    censusFiles.push_back(ReginaFilePref((*it).mid(1), true));
+                    break;
+                case '-':
+                    // Inactive file.
+                    censusFiles.push_back(ReginaFilePref((*it).mid(1), false));
+                    break;
+            }
+        }
+    }
+    settings.endGroup();
+    
+    settings.beginGroup("File");
+    autoFileExtension = settings.value("AutomaticExtension", true).toBool();
+    // TODO: Replace this, recentFiles
+    // fileOpenRecent->loadEntries(*configGroup);
+    settings.endGroup();
+
+    settings.beginGroup("PDF");
+    pdfAutoClose = settings.value("AutoClose", true).toBool();
+    pdfExternalViewer = settings.value("ExternalViewer").toString().trimmed();
+    settings.endGroup();
+
+    settings.beginGroup("Python");
+    pythonAutoIndent = settings.value("AutoIndent", true).toBool();
+    pythonSpacesPerTab = settings.value("SpacesPerTab", 4).toInt();
+    pythonWordWrap = settings.value("WordWrap", false).toBool();
+    settings.endGroup();
+
+    settings.beginGroup("SnapPea");
+    snapPeaClosed = settings.value("AllowClosed", false).toBool();
+    regina::NSnapPeaTriangulation::enableKernelMessages(
+        settings.value("KernelMessages", false).toBool());
+    settings.endGroup();
+
+    settings.beginGroup("Surfaces");
+    surfacesCompatThreshold = settings.value(
+        "CompatibilityThreshold", 100).toInt();
+    surfacesCreationCoords = settings.value(
+        "CreationCoordinates", regina::NNormalSurfaceList::STANDARD).toInt();
+
+    QString str = settings.value("InitialCompat").toString();
+    if (str == "Global")
+        surfacesInitialCompat = ReginaPrefSet::GlobalCompat;
+    else
+        surfacesInitialCompat = ReginaPrefSet::LocalCompat; /* default */
+
+    str = settings.value("InitialTab").toString();
+    if (str == "Coordinates")
+        surfacesInitialTab = ReginaPrefSet::Coordinates;
+    else if (str == "Matching")
+        surfacesInitialTab = ReginaPrefSet::Matching;
+    else if (str == "Compatibility")
+        surfacesInitialTab = ReginaPrefSet::Compatibility;
+    else
+        surfacesInitialTab = ReginaPrefSet::Summary; /* default */
+    settings.endGroup();
+
+    settings.beginGroup("Tree");
+    treeJumpSize = settings.value("JumpSize", 10).toInt();
+    settings.endGroup();
+
+    settings.beginGroup("Triangulation");
+
+    str = settings.value("InitialTab").toString();
+    if (str == "Skeleton")
+        triInitialTab = ReginaPrefSet::Skeleton;
+    else if (str == "Algebra")
+        triInitialTab = ReginaPrefSet::Algebra;
+    else if (str == "Composition")
+        triInitialTab = ReginaPrefSet::Composition;
+    else if (str == "Surfaces")
+        triInitialTab = ReginaPrefSet::Surfaces;
+    else if (str == "SnapPea")
+        triInitialTab = ReginaPrefSet::SnapPea;
+    else
+        triInitialTab = ReginaPrefSet::Gluings; /* default */
+
+    str = settings.value("InitialSkeletonTab").toString();
+    if (str == "FacePairingGraph")
+        triInitialSkeletonTab = ReginaPrefSet::FacePairingGraph;
+    else
+        triInitialSkeletonTab = ReginaPrefSet::SkelComp; /* default */
+
+    str = settings.value("InitialAlgebraTab").toString();
+    if (str == "FundGroup")
+        triInitialAlgebraTab = ReginaPrefSet::FundGroup;
+    else if (str == "TuraevViro")
+        triInitialAlgebraTab = ReginaPrefSet::TuraevViro;
+    else if (str == "CellularInfo")
+        triInitialAlgebraTab = ReginaPrefSet::CellularInfo;
+    else
+        triInitialAlgebraTab = ReginaPrefSet::Homology; /* default */
+
+    triSurfacePropsThreshold = settings.value(
+        "SurfacePropsThreshold", 6).toInt();
+    settings.endGroup();
+
+    settings.beginGroup("Extensions");
+    triGAPExec = settings.value("GAPExec", "gap").toString().trimmed();
+    triGraphvizExec = settings.value("GraphvizExec", "neato").
+        toString().trimmed();
+    settings.endGroup();
+
+    readPythonLibraries();
+
+    settings.beginGroup("Window");
+    windowMainSize = settings.value("MainSize", defaultMainSize()).toSize();
+    settings.endGroup();
+
+    propagate();
+}
+
+void ReginaPrefSet::saveInternal() const {
+    QSettings settings;
+    settings.beginGroup("Display");
+    // Save the current set of preferences.
+    settings.setValue("PacketDocking", autoDock);
+    settings.setValue("PacketDocking", autoDock);
+    settings.setValue("DisplayTagsInTree", displayTagsInTree);
+    settings.endGroup();
+
+    settings.beginGroup("Census");
+    QStringList censusStrings;
+    // Distinguish an empty list from an uninitialised list.
+    if (censusFiles.empty())
+        censusStrings.push_back("0");
+    else
+        for (ReginaFilePrefList::const_iterator it = censusFiles.begin();
+                it != censusFiles.end(); it++)
+            censusStrings.push_back(((*it).active ? '+' : '-') +
+                (*it).filename);
+    settings.setValue("Files", censusStrings);
+    settings.endGroup();
+
+    settings.beginGroup("File");
+    settings.setValue("AutomaticExtension", autoFileExtension);
+    //fileOpenRecent->saveEntries(*configGroup); TODO recent files
+    settings.endGroup();
+
+    settings.beginGroup("PDF");
+    settings.setValue("AutoClose", pdfAutoClose);
+    settings.setValue("ExternalViewer", pdfExternalViewer);
+    settings.endGroup();
+
+    settings.beginGroup("Python");
+    settings.setValue("AutoIndent", pythonAutoIndent);
+    settings.setValue("SpacesPerTab", pythonSpacesPerTab);
+    settings.setValue("WordWrap", pythonWordWrap);
+    settings.endGroup();
+
+    settings.beginGroup("SnapPea");
+    settings.setValue("AllowClosed", snapPeaClosed);
+    settings.setValue("KernelMessages",
+        regina::NSnapPeaTriangulation::kernelMessagesEnabled());
+    settings.endGroup();
+
+    settings.beginGroup("Surfaces");
+    settings.setValue("CompatibilityThreshold", surfacesCompatThreshold);
+    settings.setValue("CreationCoordinates", surfacesCreationCoords);
+
+    switch (surfacesInitialCompat) {
+        case ReginaPrefSet::GlobalCompat:
+            settings.setValue("InitialCompat", "Global"); break;
+        default:
+            settings.setValue("InitialCompat", "Local"); break;
+    }
+
+    switch (surfacesInitialTab) {
+        case ReginaPrefSet::Coordinates:
+            settings.setValue("InitialTab", "Coordinates"); break;
+        case ReginaPrefSet::Matching:
+            settings.setValue("InitialTab", "Matching"); break;
+        case ReginaPrefSet::Compatibility:
+            settings.setValue("InitialTab", "Compatibility"); break;
+        default:
+            settings.setValue("InitialTab", "Summary"); break;
+    }
+    settings.endGroup();
+
+    settings.beginGroup("Tree");
+    settings.setValue("JumpSize", treeJumpSize);
+    settings.endGroup();
+
+    settings.beginGroup("Triangulation");
+
+    switch (triInitialTab) {
+        case ReginaPrefSet::Skeleton:
+            settings.setValue("InitialTab", "Skeleton"); break;
+        case ReginaPrefSet::Algebra:
+            settings.setValue("InitialTab", "Algebra"); break;
+        case ReginaPrefSet::Composition:
+            settings.setValue("InitialTab", "Composition"); break;
+        case ReginaPrefSet::Surfaces:
+            settings.setValue("InitialTab", "Surfaces"); break;
+        case ReginaPrefSet::SnapPea:
+            settings.setValue("InitialTab", "SnapPea"); break;
+        default:
+            settings.setValue("InitialTab", "Gluings"); break;
+    }
+
+    switch (triInitialSkeletonTab) {
+        case ReginaPrefSet::FacePairingGraph:
+            settings.setValue("InitialSkeletonTab", "FacePairingGraph"); break;
+        default:
+            settings.setValue("InitialSkeletonTab", "SkelComp"); break;
+    }
+
+    switch (triInitialAlgebraTab) {
+        case ReginaPrefSet::FundGroup:
+            settings.setValue("InitialAlgebraTab", "FundGroup"); break;
+        case ReginaPrefSet::TuraevViro:
+            settings.setValue("InitialAlgebraTab", "TuraevViro"); break;
+        case ReginaPrefSet::CellularInfo:
+            settings.setValue("InitialAlgebraTab", "CellularInfo"); break;
+        default:
+            settings.setValue("InitialAlgebraTab", "Homology"); break;
+    }
+
+    settings.setValue("SurfacePropsThreshold", triSurfacePropsThreshold);
+    settings.endGroup();
+
+    settings.beginGroup("Extensions");
+    settings.setValue("GAPExec", triGAPExec);
+    settings.setValue("GraphvizExec", triGraphvizExec);
+    settings.endGroup();
+
+    savePythonLibraries();
+
+    settings.beginGroup("Window");
+    settings.setValue("MainSize", windowMainSize);
+    settings.endGroup();
 }
 

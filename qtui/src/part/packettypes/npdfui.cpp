@@ -56,12 +56,6 @@ NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
     // Set suffix. Note that XXXXXX (exactly 6 X's all uppercase) gets replaced
     // with random letters to ensure the file does not already exist.
 
-    ReginaPart* part = enclosingPane->getPart();
-    const ReginaPrefSet& prefs = part->getPreferences();
-    autoClose = prefs.pdfAutoClose;
-    embed = prefs.pdfEmbed;
-    externalViewer = prefs.pdfExternalViewer.trimmed();
-
     stack = new QStackedWidget();
 
     // Information and error layers.
@@ -71,10 +65,10 @@ NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
     stack->addWidget(layerError);
 
     // Finish off.
-    refresh();
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 
-    connect(part, SIGNAL(preferencesChanged(const ReginaPrefSet&)),
-        this, SLOT(updatePreferences(const ReginaPrefSet&)));
+    refresh();
 }
 
 NPDFUI::~NPDFUI() {
@@ -92,6 +86,13 @@ QWidget* NPDFUI::getInterface() {
 
 QString NPDFUI::getPacketMenuText() const {
     return tr("P&DF");
+}
+
+void NPDFUI::updatePreferences() {
+    // If we're already showing the PDF, don't show it again.
+    // If there was some kind of error though, have another crack.
+    if (stack->currentWidget() == layerError)
+        refresh();
 }
 
 void NPDFUI::refresh() {
@@ -125,6 +126,9 @@ void NPDFUI::refresh() {
         "You can select a different viewer under the PDF options "
         "in Regina's settings.</qt>"));
 
+    QString externalViewer =
+        ReginaPrefSet::global().pdfExternalViewer.trimmed();
+
     if (externalViewer.isEmpty()) {
         // Fall back to the Qt default for PDFs.
         if (! QDesktopServices::openUrl(QUrl::fromLocalFile(temp.fileName())))
@@ -132,13 +136,12 @@ void NPDFUI::refresh() {
                 "Please specify your preferred PDF viewer under the "
                 "PDF options in Regina's settings.</qt>"));
     } else {
-
         proc = new QProcess(this);
 
         connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)),
             this, SLOT(processExited(int, QProcess::ExitStatus)));
         
-        if (autoClose) {
+        if (ReginaPrefSet::global().pdfAutoClose) {
             proc->start(externalViewer,QStringList(temp.fileName()));
             if (! proc->waitForStarted(10000 /* milliseconds */)) {
                 showError(tr("<qt>Regina was unable to open an external "
@@ -166,21 +169,6 @@ void NPDFUI::refresh() {
     setDirty(false);
 }
 
-void NPDFUI::updatePreferences(const ReginaPrefSet& newPrefs) {
-    // Whitespace should already have been stripped by now, but just in case...
-    QString newExternalViewer = newPrefs.pdfExternalViewer.trimmed();
-
-    // Do we need to refresh afterwards?
-    bool needRefresh = (externalViewer != newExternalViewer);
-
-    autoClose = newPrefs.pdfAutoClose;
-    embed = newPrefs.pdfEmbed;
-    externalViewer = newExternalViewer;
-
-    if (needRefresh)
-        refresh();
-}
-
 void NPDFUI::showInfo(const QString& msg) {
     layerInfo->setText(msg);
     stack->setCurrentWidget(layerInfo);
@@ -193,22 +181,15 @@ void NPDFUI::showError(const QString& msg) {
 
 void NPDFUI::abandonProcess() {
     if (proc) {
-        // Don't flag an error when we kill then process.
+        // Don't flag an error when we kill the process.
         disconnect(proc, 0, this, 0);
 
-        if (autoClose) {
-            // Set proc = 0 *before* we kill the process, so that the
-            // exit signal is ignored.
-            QProcess* tmpProc = proc;
-            proc = 0;
-            tmpProc->kill();
-            delete tmpProc;
-        } else {
-            // The process was already cut free when we called
-            // startDetached(); there is nothing more for us to do here.
-            delete proc;
-            proc = 0;
-        }
+        // Set proc = 0 *before* we kill the process, so that any
+        // exit signal is ignored.
+        QProcess* tmpProc = proc;
+        proc = 0;
+        tmpProc->kill(); // Harmless if the process was detached.
+        delete tmpProc;
     }
 }
 

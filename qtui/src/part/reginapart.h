@@ -106,11 +106,6 @@ class ReginaPart : public QObject {
         PacketPane* dockedPane;
 
         /**
-         * Configuration
-         */
-        ReginaPrefSet prefs;
-
-        /**
          * Actions
          */
         QAction* actSave;
@@ -220,11 +215,6 @@ class ReginaPart : public QObject {
         void isClosing(PacketPane* closingPane);
 
         /**
-         * Returns the current set of preferences.
-         */
-        const ReginaPrefSet& getPreferences() const;
-
-        /**
          * Returns the currently open URL.
          */
         const QUrl url();
@@ -247,14 +237,6 @@ class ReginaPart : public QObject {
          */
 
         QWidget* widget() const;
-
-    signals:
-        /**
-         * Emitted when the global preferences have been changed
-         * externally (such as through the main window preferences
-         * dialog).
-         */
-        void preferencesChanged(const ReginaPrefSet&);
 
     public slots:
         /**
@@ -357,12 +339,6 @@ class ReginaPart : public QObject {
         bool hasUncommittedChanges();
 
         /**
-         * Update the global preferences.  Note that this routine emits
-         * a preferencesChanged() signal.
-         */
-        void updatePreferences(const ReginaPrefSet& newPrefs);
-
-        /**
          * Various UI updates.
          */
         void updateTreeActions();
@@ -399,10 +375,6 @@ class ReginaPart : public QObject {
         void exportFile(const PacketExporter& exporter,
             const QString& fileFilter, const QString& dialogTitle);
 };
-
-inline const ReginaPrefSet& ReginaPart::getPreferences() const {
-    return prefs;
-}
 
 inline PythonManager& ReginaPart::getPythonManager() {
     return consoles;

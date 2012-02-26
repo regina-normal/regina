@@ -54,14 +54,14 @@ using regina::NPacket;
 using regina::NTriangulation;
 
 NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
-        PacketTabbedUI* useParentUI, const ReginaPrefSet& prefs) :
+        PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI) {
-    faceGraph = new NTriFaceGraphUI(packet, this, prefs.triGraphvizExec);
+    faceGraph = new NTriFaceGraphUI(packet, this);
 
     addTab(new NTriSkelCompUI(packet, this), tr("&Skeletal Components"));
     addTab(faceGraph, tr("&Face Pairing Graph"));
 
-    switch (prefs.triInitialSkeletonTab) {
+    switch (ReginaPrefSet::global().triInitialSkeletonTab) {
         case ReginaPrefSet::SkelComp:
             /* already visible */ break;
         case ReginaPrefSet::FacePairingGraph:
@@ -267,10 +267,9 @@ void NTriSkelCompUI::viewBoundaryComponents() {
 }
 
 NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
-        PacketTabbedViewerTab* useParentUI,
-        const QString& useGraphvizExec) :
+        PacketTabbedViewerTab* useParentUI) :
         PacketViewerTab(useParentUI), tri(packet), neverDrawn(true),
-        graphvizExec(useGraphvizExec) {
+        graphvizExec(ReginaPrefSet::global().triGraphvizExec) {
     ui = new QWidget();
     QBoxLayout* baseLayout = new QVBoxLayout(ui);
     stack = new QStackedWidget(ui);
@@ -300,9 +299,14 @@ NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
 
     // Finish off.
     baseLayout->addWidget(stack);
+
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
-void NTriFaceGraphUI::setGraphvizExec(const QString& newGraphvizExec) {
+void NTriFaceGraphUI::updatePreferences() {
+    QString newGraphvizExec = ReginaPrefSet::global().triGraphvizExec;
+
     // If the graphviz executable has actually changed, redraw the graph
     // with the newly selected tool.
 

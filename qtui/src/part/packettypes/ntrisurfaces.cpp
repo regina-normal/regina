@@ -47,9 +47,8 @@ using regina::NPacket;
 using regina::NTriangulation;
 
 NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
-        PacketTabbedUI* useParentUI, unsigned newAutoCalcThreshold) :
-        PacketViewerTab(useParentUI), tri(packet),
-        autoCalcThreshold(newAutoCalcThreshold) {
+        PacketTabbedUI* useParentUI) :
+        PacketViewerTab(useParentUI), tri(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
@@ -158,6 +157,9 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
         SLOT(calculateThreeBall()));
 
     layout->addStretch(3);
+
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 regina::NPacket* NTriSurfacesUI::getPacket() {
@@ -169,6 +171,8 @@ QWidget* NTriSurfacesUI::getInterface() {
 }
 
 void NTriSurfacesUI::refresh() {
+    int autoCalcThreshold = ReginaPrefSet::global().triSurfacePropsThreshold;
+
     if (tri->knowsZeroEfficient() ||
             tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
         if (tri->isZeroEfficient()) {

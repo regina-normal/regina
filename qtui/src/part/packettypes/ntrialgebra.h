@@ -33,7 +33,6 @@
 #ifndef __NTRIALGEBRA_H
 #define __NTRIALGEBRA_H
 
-#include "reginaprefset.h"
 #include "../packettabui.h"
 
 class NTriFundGroupUI;
@@ -63,12 +62,7 @@ class NTriAlgebraUI : public PacketTabbedViewerTab {
          * Constructor.
          */
         NTriAlgebraUI(regina::NTriangulation* packet,
-                PacketTabbedUI* useParentUI, const ReginaPrefSet& prefs);
-
-        /**
-         * Propagate any preference changes to our children.
-         */
-        void updatePreferences(const ReginaPrefSet& newPrefs);
+                PacketTabbedUI* useParentUI);
 };
 
 /**
@@ -129,22 +123,12 @@ class NTriFundGroupUI : public QObject, public PacketViewerTab {
         QListWidget* fundRels;
         QPushButton* btnGAP;
 
-        /**
-         * The GAP executable.
-         */
-        QString GAPExec;
-
     public:
         /**
          * Constructor.
          */
         NTriFundGroupUI(regina::NTriangulation* packet,
-                PacketTabbedViewerTab* useParentUI, const QString& useGAPExec);
-
-        /**
-         * Update preferences.
-         */
-        void setGAPExec(const QString& newGAPExec);
+                PacketTabbedViewerTab* useParentUI);
 
         /**
          * PacketViewerTab overrides.
@@ -254,9 +238,5 @@ class NTriCellularInfoUI: public PacketViewerTab {
         void refresh();
         void editingElsewhere();
 };
-
-inline void NTriFundGroupUI::setGAPExec(const QString& newGAPExec) {
-    GAPExec = newGAPExec;
-}
 
 #endif

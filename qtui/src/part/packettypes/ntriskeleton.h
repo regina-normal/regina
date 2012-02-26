@@ -33,7 +33,6 @@
 #ifndef __NTRISKELETON_H
 #define __NTRISKELETON_H
 
-#include "reginaprefset.h"
 #include "../packettabui.h"
 #include "../reginapart.h"
 #include "skeletonwindow.h"
@@ -65,12 +64,7 @@ class NTriSkeletonUI : public PacketTabbedViewerTab {
          * Constructor.
          */
         NTriSkeletonUI(regina::NTriangulation* packet,
-                PacketTabbedUI* useParentUI, const ReginaPrefSet& prefs);
-
-        /**
-         * Propagate any preference changes to our children.
-         */
-        void updatePreferences(const ReginaPrefSet& newPrefs);
+                PacketTabbedUI* useParentUI);
 };
 
 /**
@@ -160,13 +154,7 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
          * Constructor and destructor.
          */
         NTriFaceGraphUI(regina::NTriangulation* packet,
-                PacketTabbedViewerTab* useParentUI,
-                const QString& useGraphvizExec);
-
-        /**
-         * Update preferences.
-         */
-        void setGraphvizExec(const QString& newGraphvizExec);
+                PacketTabbedViewerTab* useParentUI);
 
         /**
          * PacketViewerTab overrides.
@@ -176,6 +164,12 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
         void refresh();
         void editingElsewhere();
 
+    public slots:
+        /**
+         * Reflect preference changes.
+         */
+        void updatePreferences();
+
     private:
         /**
          * Set up internal components.
@@ -183,9 +177,5 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
         void showInfo(const QString& msg);
         void showError(const QString& msg);
 };
-
-inline void NTriSkeletonUI::updatePreferences(const ReginaPrefSet& newPrefs) {
-    faceGraph->setGraphvizExec(newPrefs.triGraphvizExec);
-}
 
 #endif

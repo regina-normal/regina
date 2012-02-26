@@ -74,9 +74,8 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
 #include "python/pythonconsole.h"
 
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
-        const ReginaPrefSet* initialPrefs, regina::NPacket* tree,
-        regina::NPacket* selectedPacket) {
-    PythonConsole* ans = new PythonConsole(parent, this, initialPrefs);
+        regina::NPacket* tree, regina::NPacket* selectedPacket) {
+    PythonConsole* ans = new PythonConsole(parent, this);
 
     ans->blockInput(parent->QObject::tr("Initialising..."));
 
@@ -102,9 +101,8 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
 }
 
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
-        const ReginaPrefSet* initialPrefs, const QString& script,
-        const PythonVariableList& initialVars) {
-    PythonConsole* ans = new PythonConsole(parent, this, initialPrefs);
+        const QString& script, const PythonVariableList& initialVars) {
+    PythonConsole* ans = new PythonConsole(parent, this);
 
     ans->blockInput(parent->QObject::tr("Initialising..."));
 
@@ -128,8 +126,8 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
 }
 
 PythonConsole* PythonManager::compileScript(QWidget* parent,
-        const ReginaPrefSet* initialPrefs, const QString& script) {
-    PythonConsole* ans = new PythonConsole(parent, this, initialPrefs);
+        const QString& script) {
+    PythonConsole* ans = new PythonConsole(parent, this);
 
     ans->blockInput(parent->QObject::tr("Initialising..."));
 
@@ -167,12 +165,6 @@ void PythonManager::closeAllConsoles() {
     }
 }
 
-void PythonManager::updatePreferences(const ReginaPrefSet& newPrefs) {
-    for (std::set<PythonConsole*>::iterator it = consoles.begin();
-            it != consoles.end(); it++)
-        (*it)->updatePreferences(newPrefs);
-}
-
 #else
 
 namespace {
@@ -190,24 +182,20 @@ namespace {
 }
 
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
-        const ReginaPrefSet*, regina::NPacket*, regina::NPacket*) {
+        regina::NPacket*, regina::NPacket*) {
     return scriptingDisabled(parent);
 }
 
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
-        const ReginaPrefSet*, const QString&, const PythonVariableList&) {
+        const QString&, const PythonVariableList&) {
     return scriptingDisabled(parent);
 }
 
-PythonConsole* PythonManager::compileScript(QWidget* parent,
-        const ReginaPrefSet*, const QString&) {
+PythonConsole* PythonManager::compileScript(QWidget* parent, const QString&) {
     return scriptingDisabled(parent);
 }
 
 void PythonManager::closeAllConsoles() {
-}
-
-void PythonManager::updatePreferences(const ReginaPrefSet&) {
 }
 
 #endif

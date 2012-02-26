@@ -57,15 +57,8 @@
 #include <QVBoxLayout>
 #include <QWhatsThis>
 
-PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
-        const ReginaPrefSet* initialPrefs) :
+PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
         QMainWindow(parent), manager(useManager) {
-    // Initialise preferences.
-    if (initialPrefs)
-        prefs = *initialPrefs;
-
-    QFont font(prefs.fixedWidthFont());
-
     resize(600, 500);
 
     // Set up the main widgets.
@@ -73,10 +66,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     QVBoxLayout* layout = new QVBoxLayout;
     session = new QTextEdit();
     session->setReadOnly(true);
-    session->setWordWrapMode(prefs.pythonWordWrap ? QTextOption::WordWrap :
-        QTextOption::NoWrap);
     session->setAutoFormatting(QTextEdit::AutoNone);
-    session->setFont(font);
     session->setFocusPolicy(Qt::NoFocus);
     session->setWhatsThis( tr("This area stores a history of the entire "
         "Python session, including commands that have been typed and the "
@@ -90,17 +80,16 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     inputArea->setWhatsThis( tr("Type your Python commands into "
         "this box."));
     prompt = new QLabel();
-    prompt->setFont(font);
     inputAreaLayout->addWidget(prompt);
 
     input = new CommandEdit();
-    input->setFont(font);
-    input->setSpacesPerTab(prefs.pythonSpacesPerTab);
     input->setFocus();
     connect(input, SIGNAL(returnPressed()), this, SLOT(processCommand()));
     inputAreaLayout->addWidget(input, 1);
     inputArea->setLayout(inputAreaLayout);
     layout->addWidget(inputArea);
+
+    updatePreferences(); // Set fonts, indents, etc.
 
     setCentralWidget(box);
     box->setLayout(layout);
@@ -240,6 +229,9 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager,
     if (manager)
         manager->registerConsole(this);
 
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
+
     output = new PythonConsole::OutputStream(this);
     error = new PythonConsole::ErrorStream(this);
     interpreter = new PythonInterpreter(output, error);
@@ -367,8 +359,9 @@ void PythonConsole::setVar(const QString& name, regina::NPacket* value) {
 }
 
 void PythonConsole::loadAllLibraries() {
-    for (ReginaFilePrefList::const_iterator it = prefs.pythonLibraries.begin();
-            it != prefs.pythonLibraries.end(); it++) {
+    for (ReginaFilePrefList::const_iterator it =
+            ReginaPrefSet::global().pythonLibraries.begin();
+            it != ReginaPrefSet::global().pythonLibraries.end(); it++) {
         if (! (*it).active)
             continue;
 
@@ -430,7 +423,7 @@ void PythonConsole::saveLog() {
 }
 
 void PythonConsole::scriptingOverview() {
-    prefs.openHandbook("python", 0, this);
+    ReginaPrefSet::openHandbook("python", 0, this);
 }
 
 void PythonConsole::pythonReference() {
@@ -441,14 +434,12 @@ void PythonConsole::contextHelpActivated() {
     QWhatsThis::enterWhatsThisMode();
 }
 
-void PythonConsole::updatePreferences(const ReginaPrefSet& newPrefs) {
-    prefs = newPrefs;
+void PythonConsole::updatePreferences() {
+    session->setWordWrapMode(ReginaPrefSet::global().pythonWordWrap ?
+        QTextOption::WordWrap : QTextOption::NoWrap);
+    input->setSpacesPerTab(ReginaPrefSet::global().pythonSpacesPerTab);
 
-    session->setWordWrapMode(prefs.pythonWordWrap ? QTextOption::WordWrap :
-        QTextOption::NoWrap);
-    input->setSpacesPerTab(prefs.pythonSpacesPerTab);
-
-    QFont font(prefs.fixedWidthFont());
+    QFont font(ReginaPrefSet::fixedWidthFont());
     session->setFont(font);
     prompt->setFont(font);
     input->setFont(font);
@@ -494,7 +485,7 @@ void PythonConsole::processCommand() {
     error->flush();
 
     // Prepare for a new command.
-    if (prefs.pythonAutoIndent) {
+    if (ReginaPrefSet::global().pythonAutoIndent) {
         // Only use auto-indent if we are waiting on more text.
         if (done)
             allowInput(true);

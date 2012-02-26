@@ -30,6 +30,7 @@
 
 #include "reginaabout.h"
 #include "reginamain.h"
+#include "reginaprefset.h"
 
 #include <QTextCodec>
 #include <QApplication>
@@ -56,6 +57,9 @@ int main(int argc, char **argv) {
             QCoreApplication::applicationDirPath() + "/python")));
 #endif
 #endif
+
+    // Load preferences from file.
+    ReginaPrefSet::read();
 
     // No session management with the Qt GUI; just start up normally.
     QStringList args = app->arguments();

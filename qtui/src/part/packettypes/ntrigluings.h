@@ -165,18 +165,12 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         QLinkedList<QAction*> triActionList;
         QLinkedList<QAction*> enableWhenWritable;
 
-        /**
-         * Preferences
-         */
-        ReginaFilePrefList censusFiles;
-
     public:
         /**
          * Constructor and destructor.
          */
         NTriGluingsUI(regina::NTriangulation* packet,
-                PacketTabbedUI* useParentUI,
-                const ReginaPrefSet& initialPrefs, bool readWrite);
+                PacketTabbedUI* useParentUI, bool readWrite);
         ~NTriGluingsUI();
 
         /**
@@ -187,11 +181,6 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          * available actions.
          */
         void fillToolBar(QToolBar* bar);
-
-        /**
-         * Update the preferences.
-         */
-        void updatePreferences(const ReginaPrefSet& newPrefs);
 
         /**
          * PacketEditorTab overrides.
@@ -260,10 +249,6 @@ inline void GluingsModel::setReadWrite(bool readWrite) {
 inline QModelIndex GluingsModel::parent(const QModelIndex& /* unused index */) const {
     // All items are top-level.
     return QModelIndex();
-}
-
-inline void NTriGluingsUI::updatePreferences(const ReginaPrefSet& newPrefs) {
-    censusFiles = newPrefs.censusFiles;
 }
 
 #endif
