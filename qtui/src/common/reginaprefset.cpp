@@ -323,20 +323,17 @@ void ReginaPrefSet::setMaxItems(int newMax) {
 */
 
 void ReginaPrefSet::addRecentFile(const QUrl& url) {
-    /* TODO TODO TODO
-    foreach (QUrl u, instance_.fileRecent_) {
-        if (u == url) {
-            // TODO
-            emit instance_.recentFileRemoved(u);
+    for (int i = 0; i < instance_.fileRecent_.count(); ++i)
+        if (instance_.fileRecent_[i] == url) {
+            instance_.fileRecent_.move(i, 0);
+            emit instance_.recentFilePromoted(url);
+            return;
         }
-    }
-    */
 
     if (instance_.fileRecentMax > 0 &&
             instance_.fileRecent_.size() >= instance_.fileRecentMax) {
-        QUrl old = instance_.fileRecent_.back();
         instance_.fileRecent_.pop_back();
-        emit instance_.recentFileRemoved(old);
+        emit instance_.recentFileRemovedLast();
     }
 
     instance_.fileRecent_.push_front(url);
@@ -483,7 +480,8 @@ void ReginaPrefSet::readInternal() {
     windowMainSize = settings.value("MainSize", defaultMainSize()).toSize();
     settings.endGroup();
 
-    propagate();
+    emit instance_.preferencesChanged();
+    emit instance_.recentFilesFilled();
 }
 
 void ReginaPrefSet::saveInternal() const {

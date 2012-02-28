@@ -26,7 +26,7 @@
 /* end stub */
 
 /**
- *  Much of this code is a stripped-down version of KRecentFilesAction, as
+ *  This code was originally derived from KRecentFilesAction, as
  *  taken from KDE 4.4.1.  This KDE code is licensed as follows:
  *
  *  Copyright (C) 1999 Reginald Stadlbauer <reggie@kde.org>
@@ -68,8 +68,6 @@ RecentFilesAction::RecentFilesAction(QWidget *parent) : QMenu(parent) {
     setIcon(ReginaSupport::themeIcon("document-open-recent"));
     setWhatsThis(tr("Open a data file that you were recently working with."));
 
-    group_ = new QActionGroup(parent);
-
     noEntriesAction_ = new QAction(parent);
     noEntriesAction_->setText(tr("No Entries"));
     noEntriesAction_->setEnabled(false);
@@ -84,25 +82,29 @@ RecentFilesAction::RecentFilesAction(QWidget *parent) : QMenu(parent) {
     clearAction_->setWhatsThis(tr("Clear the list of recent documents."));
     QMenu::addAction(clearAction_);
 
-    // TODO: Fill from ReginaPrefSet::recentFiles_.
-
     ReginaPrefSet* prefs = &ReginaPrefSet::global();
     connect(prefs, SIGNAL(recentFileAdded(const QUrl&)),
         this, SLOT(addUrl(const QUrl&)));
-    connect(prefs, SIGNAL(recentFileRemoved(const QUrl&)),
-        this, SLOT(removeUrl(const QUrl&)));
-    connect(prefs, SIGNAL(recentFilesCleared()), this, SLOT(clear()));
+    connect(prefs, SIGNAL(recentFilePromoted(const QUrl&)),
+        this, SLOT(promoteUrl(const QUrl&)));
+    connect(prefs, SIGNAL(recentFileRemovedLast()),
+        this, SLOT(removeUrlLast()));
+    connect(prefs, SIGNAL(recentFilesCleared()), this, SLOT(clearUrls()));
+    connect(prefs, SIGNAL(recentFilesFilled()), this, SLOT(fillUrls()));
 
     connect(clearAction_, SIGNAL(triggered()), prefs, SLOT(clearRecentFiles()));
-    connect(group_, SIGNAL(triggered(QAction*)), SLOT(fileActivated(QAction*)));
+
+    fillUrls();
 }
 
 RecentFilesAction::~RecentFilesAction() {
 }
 
-void RecentFilesAction::fileActivated(QAction* action) {
+void RecentFilesAction::fileActivated() {
     // Open the URL.
-    emit urlSelected(action->data().toUrl());
+    QAction* action = qobject_cast<QAction*>(sender());
+    if (action)
+        emit urlSelected(action->data().toUrl());
 }
 
 void RecentFilesAction::addUrl(const QUrl& url) {
@@ -113,38 +115,82 @@ void RecentFilesAction::addUrl(const QUrl& url) {
     clearSeparator_->setVisible(true);
     clearAction_->setVisible(true);
     clearAction_->setEnabled(true);
-    // add file to list
-    const QString title = shortName + " [" + file + ']';
 
-    QAction* action = new QAction(title, group_);
+    const QString title = shortName + " [" + file + ']';
+    QAction* action = new QAction(title, this);
     action->setData(url);
+    urlActions_.push_front(action);
     QMenu::insertAction(actions().value(0), action);
+
+    connect(action, SIGNAL(triggered()), SLOT(fileActivated()));
 }
 
-void RecentFilesAction::removeUrl(const QUrl& url) {
-    // TODO: Make this cleaner.
-    const QList<QAction*> actions = group_->actions();
-    for (int i = 0; i < actions.count(); ++i) {
-        if (actions[i]->data().toUrl() == url) {
-            group_->removeAction(actions[i]);
-            actions[i]->deleteLater();
+void RecentFilesAction::promoteUrl(const QUrl& url) {
+    for (int i = 0; i < urlActions_.count(); ++i) {
+        if (urlActions_[i]->data().toUrl() == url) {
+            if (i == 0)
+                return;
+
+            // Fact: there are at least two actions in the list.
+            QAction* act = urlActions_[i];
+
+            urlActions_.move(i, 0);
+            QMenu::removeAction(act);
+            QMenu::insertAction(actions().value(0), act);
         }
     }
 }
 
-void RecentFilesAction::clear() {
+void RecentFilesAction::removeUrlLast() {
+    if (! urlActions_.empty()) {
+        QAction* act = urlActions_.back();
+        urlActions_.pop_back();
+        act->deleteLater();
+    }
+}
+
+void RecentFilesAction::fillUrls() {
+    foreach (QAction* act, urlActions_) {
+        act->deleteLater();
+    }
+    urlActions_.clear();
+
+    if (ReginaPrefSet::recentFiles().empty()) {
+        noEntriesAction_->setVisible(true);
+        clearSeparator_->setVisible(false);
+        clearAction_->setVisible(false);
+        clearAction_->setEnabled(false);
+        return;
+    }
+
+    noEntriesAction_->setVisible(false);
+    clearSeparator_->setVisible(true);
+    clearAction_->setVisible(true);
+    clearAction_->setEnabled(true);
+
+    QString file, shortName, title;
+    foreach (QUrl url, ReginaPrefSet::recentFiles()) {
+        file = url.toLocalFile();
+        shortName = QFileInfo(file).fileName();
+
+        title = shortName + " [" + file + ']';
+        QAction* action = new QAction(title, this);
+        action->setData(url);
+        // Insert to the back of the list.
+        urlActions_.push_back(action);
+        QMenu::insertAction(0, action);
+
+        connect(action, SIGNAL(triggered()), SLOT(fileActivated()));
+    }
+}
+
+void RecentFilesAction::clearUrls() {
     // we need to delete the actions later since we may get a call to clear()
     // from a method called due to a triggered(...) signal
-    const QList<QAction*> actions = group_->actions();
-    for (int i = 0; i < actions.count(); ++i) {
-        // deleteLater() only removes us from the actions() list (among
-        // other things) on the next entry into the event loop.  Until then,
-        // e.g. action() and setCurrentItem() will be working on items
-        // that are supposed to have been deleted.  So detach the action to
-        // prevent this from happening.
-        group_->removeAction(actions[i]);
-        actions[i]->deleteLater();
+    foreach (QAction* act, urlActions_) {
+        act->deleteLater();
     }
+    urlActions_.clear();
 
     noEntriesAction_->setVisible(true);
     clearSeparator_->setVisible(false);

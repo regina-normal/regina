@@ -211,6 +211,10 @@ class GraphvizStatus {
  * that preferences are consistent across different main windows.
  *
  * You can access this global object by calling ReginaPrefSet.global().
+ *
+ * Normally you should only read the data members in this class.  If you
+ * change them, you should call propagate() to ensure that everyone sees
+ * your changes.
  */
 class ReginaPrefSet : public QObject {
     Q_OBJECT
@@ -219,10 +223,11 @@ class ReginaPrefSet : public QObject {
         static ReginaPrefSet instance_;
 
         QList<QUrl> fileRecent_;
-            /**< The actions that correspond to recently-opened files.
-                 This can be accessed via the public signals and slots. */
+            /**< The actions that correspond to recently-opened files. */
         int fileRecentMax;
-            /**< The maximum number of recent files to remember. */
+            /**< The maximum number of recent files to remember.
+                 For now this is treated as read-only at runtime, though its
+                 initial value is read from the configuration file. */
 
     public:
         // Some defaults that other classes may need to access:
@@ -342,9 +347,14 @@ class ReginaPrefSet : public QObject {
 
         /**
          * Push a new URL to the front of the recent files list,
-         * possibly dropping an old URL from the back of the list.
+         * updating and reorganising the list as required.
          */
         static void addRecentFile(const QUrl& url);
+
+        /**
+         * Returns a read-only reference to the current list of recent URLs.
+         */
+        static const QList<QUrl>& recentFiles();
 
         /**
          * Returns the default size of a new main topology data window.
@@ -391,13 +401,12 @@ class ReginaPrefSet : public QObject {
          */
         void clearRecentFiles();
 
-
     signals:
         /**
          * Emitted from the global ReginaPrefSet instance when the
          * global preferences have changed.  If the recent files list
-         * changes, this signal will \e not be emitted; instead see the
-         * signals recentFileAdded() and recentFilesCleared().
+         * changes, this signal will \e not be emitted; however, one or
+         * more of the recent files signals will be emitted instead.
          */
         void preferencesChanged();
 
@@ -408,16 +417,29 @@ class ReginaPrefSet : public QObject {
         void recentFileAdded(const QUrl& url);
 
         /**
-         * Emitted from the global ReginaPrefSet instance when an URL
+         * Emitted from the global ReginaPrefSet instance when an existing URL
+         * is moved to the front of the recent files list.
+         */
+        void recentFilePromoted(const QUrl& url);
+
+        /**
+         * Emitted from the global ReginaPrefSet instance when the last URL
          * is removed from the recent files list.
          */
-        void recentFileRemoved(const QUrl& url);
+        void recentFileRemovedLast();
 
         /**
          * Emitted from the global ReginaPrefSet instance when the
          * recent files list is emptied completely.
          */
         void recentFilesCleared();
+
+        /**
+         * Emitted from the global ReginaPrefSet instance when the
+         * recent files list is refilled from scratch, possibly bearing
+         * no resemblance to its original contents.
+         */
+        void recentFilesFilled();
 
     private:
         // Constructor that provides a reasonable set of defaults.
@@ -488,6 +510,10 @@ inline void ReginaPrefSet::save() {
 
 inline void ReginaPrefSet::propagate() {
     emit instance_.preferencesChanged();
+}
+
+inline const QList<QUrl>& ReginaPrefSet::recentFiles() {
+    return instance_.fileRecent_;
 }
 
 #endif

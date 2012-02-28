@@ -33,15 +33,15 @@
 #ifndef __RECENTFILESACTION_H
 #define __RECENTFILESACTION_H
 
+#include <QList>
 #include <QMenu>
 
 class QUrl;
-class QActionGroup;
 
 /**
  * An action offering access to recently-opened files.
  *
- * Much of this code is a stripped-down version of KRecentFilesAction, as
+ * This code was originally derived from KRecentFilesAction, as
  * taken from KDE 4.4.1.  This KDE code is licensed under the GNU Library
  * General Public License version 2 as published by the Free Software
  * Foundation.  See \a recentfilesaction.cpp for the full KDE license details
@@ -54,7 +54,7 @@ class RecentFilesAction : public QMenu {
         /**
          * Internal components
          */
-        QActionGroup* group_;
+        QList<QAction*> urlActions_;
         QAction *noEntriesAction_;
         QAction *clearSeparator_;
         QAction *clearAction_;
@@ -72,27 +72,20 @@ class RecentFilesAction : public QMenu {
          */
         void urlSelected(const QUrl& url);
 
-    protected slots:
+    private slots:
         /**
          * All activation events lead here.
          */
-        void fileActivated(QAction*);
+        void fileActivated();
 
-    private slots:
         /**
-         * Add a new data file to the front of the list.
+         * Slots that update the GUI items as the list of recent files changes.
          */
         void addUrl(const QUrl& url);
-
-        /**
-         * Remove a file from this list.
-         */
-        void removeUrl(const QUrl& url);
-
-        /**
-         * Clear the list of recent files.
-         */
-        void clear();
+        void promoteUrl(const QUrl& url);
+        void removeUrlLast();
+        void clearUrls();
+        void fillUrls();
 };
 
 #endif
