@@ -156,6 +156,7 @@ ReginaPrefSet::ReginaPrefSet() :
         autoFileExtension(true),
         censusFiles(defaultCensusFiles()),
         displayTagsInTree(false),
+        fileRecentMax(10),
         pdfAutoClose(true),
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
@@ -307,6 +308,46 @@ void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
     }
 }
 
+/*
+void ReginaPrefSet::setMaxItems(int newMax) {
+    fileRecentMax_ = newMax;
+    if (newMax <= 0)
+        return;
+
+    while (fileRecent_.size() > newMax) {
+        QUrl u = fileRecent_.back();
+        fileRecent_.pop_back();
+        emit recentFileRemoved(u);
+    }
+}
+*/
+
+void ReginaPrefSet::addRecentFile(const QUrl& url) {
+    /* TODO TODO TODO
+    foreach (QUrl u, instance_.fileRecent_) {
+        if (u == url) {
+            // TODO
+            emit instance_.recentFileRemoved(u);
+        }
+    }
+    */
+
+    if (instance_.fileRecentMax > 0 &&
+            instance_.fileRecent_.size() >= instance_.fileRecentMax) {
+        QUrl old = instance_.fileRecent_.back();
+        instance_.fileRecent_.pop_back();
+        emit instance_.recentFileRemoved(old);
+    }
+
+    instance_.fileRecent_.push_front(url);
+    emit instance_.recentFileAdded(url);
+}
+
+void ReginaPrefSet::clearRecentFiles() {
+    fileRecent_.clear();
+    emit recentFilesCleared();
+}
+
 void ReginaPrefSet::readInternal() {
     QSettings settings;
 
@@ -347,6 +388,7 @@ void ReginaPrefSet::readInternal() {
     autoFileExtension = settings.value("AutomaticExtension", true).toBool();
     // TODO: Replace this, recentFiles
     // fileOpenRecent->loadEntries(*configGroup);
+    fileRecentMax = settings.value("RecentMax", 10).toInt();
     settings.endGroup();
 
     settings.beginGroup("PDF");
@@ -469,6 +511,7 @@ void ReginaPrefSet::saveInternal() const {
     settings.beginGroup("File");
     settings.setValue("AutomaticExtension", autoFileExtension);
     //fileOpenRecent->saveEntries(*configGroup); TODO recent files
+    settings.setValue("RecentMax", fileRecentMax);
     settings.endGroup();
 
     settings.beginGroup("PDF");

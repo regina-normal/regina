@@ -57,13 +57,13 @@
 
 #include "recentfilesaction.h"
 #include "reginasupport.h"
+#include "reginaprefset.h"
 
 #include <QFile>
 #include <QFileInfo>
 #include <QUrl>
 
-RecentFilesAction::RecentFilesAction(QWidget *parent) : QMenu(parent),
-        maxItems_(10) {
+RecentFilesAction::RecentFilesAction(QWidget *parent) : QMenu(parent) {
     setTitle(tr("Open &Recent"));
     setIcon(ReginaSupport::themeIcon("document-open-recent"));
     setWhatsThis(tr("Open a data file that you were recently working with."));
@@ -84,7 +84,16 @@ RecentFilesAction::RecentFilesAction(QWidget *parent) : QMenu(parent),
     clearAction_->setWhatsThis(tr("Clear the list of recent documents."));
     QMenu::addAction(clearAction_);
 
-    connect(clearAction_, SIGNAL(triggered()), this, SLOT(clear()));
+    // TODO: Fill from ReginaPrefSet::recentFiles_.
+
+    ReginaPrefSet* prefs = &ReginaPrefSet::global();
+    connect(prefs, SIGNAL(recentFileAdded(const QUrl&)),
+        this, SLOT(addUrl(const QUrl&)));
+    connect(prefs, SIGNAL(recentFileRemoved(const QUrl&)),
+        this, SLOT(removeUrl(const QUrl&)));
+    connect(prefs, SIGNAL(recentFilesCleared()), this, SLOT(clear()));
+
+    connect(clearAction_, SIGNAL(triggered()), prefs, SLOT(clearRecentFiles()));
     connect(group_, SIGNAL(triggered(QAction*)), SLOT(fileActivated(QAction*)));
 }
 
@@ -93,74 +102,34 @@ RecentFilesAction::~RecentFilesAction() {
 
 void RecentFilesAction::fileActivated(QAction* action) {
     // Open the URL.
-    emit urlSelected(urls_[action]);
+    emit urlSelected(action->data().toUrl());
 }
 
-int RecentFilesAction::maxItems() const {
-    return maxItems_;
-}
-
-void RecentFilesAction::setMaxItems(int maxItems) {
-    maxItems_ = maxItems;
-
-    // remove all excess items
-    while (group_->actions().count() > maxItems)
-        delete removeAction(group_->actions().last());
-}
-
-void RecentFilesAction::addUrl(const QUrl& _url) {
-    /**
-     * Create a deep copy here, because if _url is the parameter from
-     * urlSelected() signal, we will delete it in the removeAction() call below.
-     * but access it again in the addAction call... => crash
-     */
-    const QUrl url(_url);
-
-    const QString tmpName = QFileInfo(url.toLocalFile()).fileName();
+void RecentFilesAction::addUrl(const QUrl& url) {
     const QString file = url.toLocalFile();
-
-    // remove file if already in list
-    foreach (QAction* action, group_->actions()) {
-      if (urls_[action].toLocalFile().endsWith(file)) {
-        removeAction(action)->deleteLater();
-        break;
-      }
-    }
-
-    // remove oldest item if already maxitems in list
-    if (maxItems_ && group_->actions().count() == maxItems_) {
-        // remove oldest added item
-        delete removeAction(group_->actions().first());
-    }
+    const QString shortName = QFileInfo(file).fileName();
 
     noEntriesAction_->setVisible(false);
     clearSeparator_->setVisible(true);
     clearAction_->setVisible(true);
     clearAction_->setEnabled(true);
     // add file to list
-    const QString title = tmpName + " [" + file + ']';
+    const QString title = shortName + " [" + file + ']';
+
     QAction* action = new QAction(title, group_);
-    addAction(action, url, tmpName);
-}
-
-void RecentFilesAction::addAction(QAction* action, const QUrl& url,
-        const QString& name) {
-    action->setActionGroup(group_);
-
+    action->setData(url);
     QMenu::insertAction(actions().value(0), action);
-
-    shortNames_.insert(action, name);
-    urls_.insert(action, url);
 }
 
-QAction* RecentFilesAction::removeAction(QAction* action) {
-    group_->removeAction(action);
-    QMenu::removeAction(action);
-
-    shortNames_.remove(action);
-    urls_.remove(action);
-
-    return action;
+void RecentFilesAction::removeUrl(const QUrl& url) {
+    // TODO: Make this cleaner.
+    const QList<QAction*> actions = group_->actions();
+    for (int i = 0; i < actions.count(); ++i) {
+        if (actions[i]->data().toUrl() == url) {
+            group_->removeAction(actions[i]);
+            actions[i]->deleteLater();
+        }
+    }
 }
 
 void RecentFilesAction::clear() {
@@ -173,12 +142,10 @@ void RecentFilesAction::clear() {
         // e.g. action() and setCurrentItem() will be working on items
         // that are supposed to have been deleted.  So detach the action to
         // prevent this from happening.
-        removeAction(actions[i]);
+        group_->removeAction(actions[i]);
         actions[i]->deleteLater();
     }
 
-    shortNames_.clear();
-    urls_.clear();
     noEntriesAction_->setVisible(true);
     clearSeparator_->setVisible(false);
     clearAction_->setVisible(false);
@@ -218,9 +185,6 @@ void RecentFilesAction::loadEntries( const KConfigGroup& _config)
         if (urls_.values().contains(url))
           continue;
 
-        nameKey = QString( "Name%1" ).arg( i );
-        nameValue = cg.readPathEntry(nameKey,
-            QFileInfo(url.toLocalFile()).fileName());
         title = nameValue + " [" + value + ']';
         if (!value.isNull())
         {
@@ -256,9 +220,6 @@ void RecentFilesAction::saveEntries( const KConfigGroup &_cg )
         key = QString( "File%1" ).arg( i );
         // i - 1 because we started from 1
         value = urls_[ selectableActionGroup()->actions()[ i - 1 ] ].toLocalFile();
-        cg.writePathEntry( key, value );
-        key = QString( "Name%1" ).arg( i );
-        value = shortNames_[ selectableActionGroup()->actions()[ i - 1 ] ];
         cg.writePathEntry( key, value );
     }
 

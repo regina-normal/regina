@@ -33,7 +33,6 @@
 #ifndef __RECENTFILESACTION_H
 #define __RECENTFILESACTION_H
 
-#include <QMap>
 #include <QMenu>
 
 class QUrl;
@@ -53,23 +52,12 @@ class RecentFilesAction : public QMenu {
 
     private:
         /**
-         * Data files
-         */
-        QMap<QAction*, QUrl> urls_;
-        QMap<QAction*, QString> shortNames_;
-
-        /**
          * Internal components
          */
         QActionGroup* group_;
         QAction *noEntriesAction_;
         QAction *clearSeparator_;
         QAction *clearAction_;
-
-        /**
-         * Configuration
-         */
-        int maxItems_;
 
     public:
         /**
@@ -78,44 +66,33 @@ class RecentFilesAction : public QMenu {
         RecentFilesAction(QWidget* parent);
         virtual ~RecentFilesAction();
 
-        /**
-         * Add a new data file to the front of the list.
-         */
-        void addUrl(const QUrl& url);
-
-        /**
-         * Get and set the maximum number of files in the list.
-         */
-        int maxItems() const;
-        void setMaxItems(int maxItems);
-
-        /**
-         * Action-related overloads from QWidget, and extended versions
-         * of these.  They are public because the corresponding QWidget
-         * routines are public, but you should not call these directly.
-         * Instead use addUrl() and clear().
-         */
-        virtual void addAction(QAction* action, const QUrl& url,
-                const QString& name);
-        virtual QAction* removeAction(QAction* action);
-
     signals:
         /**
          * Emitted when a data file is selected for opening.
          */
         void urlSelected(const QUrl& url);
 
-    public slots:
-        /**
-         * Clear the list of recent files.
-         */
-        void clear();
-
     protected slots:
         /**
          * All activation events lead here.
          */
         void fileActivated(QAction*);
+
+    private slots:
+        /**
+         * Add a new data file to the front of the list.
+         */
+        void addUrl(const QUrl& url);
+
+        /**
+         * Remove a file from this list.
+         */
+        void removeUrl(const QUrl& url);
+
+        /**
+         * Clear the list of recent files.
+         */
+        void clear();
 };
 
 #endif

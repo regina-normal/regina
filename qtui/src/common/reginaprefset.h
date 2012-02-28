@@ -35,9 +35,10 @@
 
 #include <qmutex.h>
 #include <QFont>
-#include <QLinkedList>
+#include <QList>
 #include <QString>
 #include <QSize>
+#include <QUrl>
 
 class QWidget;
 
@@ -68,7 +69,7 @@ struct ReginaFilePref {
  * A structure holding a list of filenames each of which may or may not
  * be active.
  */
-typedef QLinkedList<ReginaFilePref> ReginaFilePrefList;
+typedef QList<ReginaFilePref> ReginaFilePrefList;
 
 /**
  * Describes the many possible ways in which ReginaPrefSet::triGraphvizExec
@@ -217,6 +218,12 @@ class ReginaPrefSet : public QObject {
     private:
         static ReginaPrefSet instance_;
 
+        QList<QUrl> fileRecent_;
+            /**< The actions that correspond to recently-opened files.
+                 This can be accessed via the public signals and slots. */
+        int fileRecentMax;
+            /**< The maximum number of recent files to remember. */
+
     public:
         // Some defaults that other classes may need to access:
         static const char* defaultGAPExec;
@@ -334,6 +341,12 @@ class ReginaPrefSet : public QObject {
         static void save();
 
         /**
+         * Push a new URL to the front of the recent files list,
+         * possibly dropping an old URL from the back of the list.
+         */
+        static void addRecentFile(const QUrl& url);
+
+        /**
          * Returns the default size of a new main topology data window.
          */
         static QSize defaultMainSize();
@@ -372,12 +385,39 @@ class ReginaPrefSet : public QObject {
          */
         static void propagate();
 
+    public slots:
+        /**
+         * Empty the recent files list.
+         */
+        void clearRecentFiles();
+
+
     signals:
         /**
          * Emitted from the global ReginaPrefSet instance when the
-         * global preferences have changed.
+         * global preferences have changed.  If the recent files list
+         * changes, this signal will \e not be emitted; instead see the
+         * signals recentFileAdded() and recentFilesCleared().
          */
         void preferencesChanged();
+
+        /**
+         * Emitted from the global ReginaPrefSet instance when a new URL
+         * is prepended to the beginning of the recent files list.
+         */
+        void recentFileAdded(const QUrl& url);
+
+        /**
+         * Emitted from the global ReginaPrefSet instance when an URL
+         * is removed from the recent files list.
+         */
+        void recentFileRemoved(const QUrl& url);
+
+        /**
+         * Emitted from the global ReginaPrefSet instance when the
+         * recent files list is emptied completely.
+         */
+        void recentFilesCleared();
 
     private:
         // Constructor that provides a reasonable set of defaults.

@@ -488,7 +488,7 @@ void ReginaMain::fillExamples() {
 
 void ReginaMain::addRecentFile() {
     if (currentPart && ! currentPart->url().isEmpty())
-        fileOpenRecent->addUrl(currentPart->url());
+        ReginaPrefSet::addRecentFile(currentPart->url());
 }
 
 void ReginaMain::newTopologyPart() {

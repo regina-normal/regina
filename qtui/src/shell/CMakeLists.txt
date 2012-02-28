@@ -1,10 +1,10 @@
-SET(regina-app_SRCS examplesaction.cpp main.cpp recentfilesaction.cpp reginamain.cpp reginapref.cpp reginamanager.cpp)
+SET(regina-app_SRCS examplesaction.cpp main.cpp reginamain.cpp reginapref.cpp reginamanager.cpp)
 SET(regina-app_SRCS ${COMMON_SOURCES} ${PART_SOURCES} ${regina-app_SRCS})
 
 # TODO: Restore
 # KDE4_ADD_APP_ICON(regina-app_SRCS "../pics/hi*regina.png")
 
-SET ( MOC_HEADERS ${MOC_HEADERS} examplesaction.h recentfilesaction.h reginamain.h reginapref.h)
+SET ( MOC_HEADERS ${MOC_HEADERS} examplesaction.h reginamain.h reginapref.h)
 QT4_WRAP_CPP(regina-app_HEADERS_MOC ${MOC_HEADERS})
 
 if (APPLE)

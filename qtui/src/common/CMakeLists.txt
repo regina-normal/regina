@@ -1,6 +1,6 @@
 # Engine
 
-SET ( FILES coordinatechooser coordinates pythonmanager reginaabout reginaprefset reginasupport shortrunner )
+SET ( FILES coordinatechooser coordinates pythonmanager recentfilesaction reginaabout reginaprefset reginasupport shortrunner )
 
 IF(PYTHONLIBRARY_FOUND)
   ADD_SUBDIRECTORY(python)
@@ -12,5 +12,5 @@ FOREACH( FILE ${FILES} )
   SET( COMMON_SOURCES ${COMMON_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/${FILE})
 ENDFOREACH(FILE)
 SET( COMMON_SOURCES ${COMMON_SOURCES} PARENT_SCOPE)
-SET( MOC_HEADERS ${MOC_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/coordinatechooser.h ${CMAKE_CURRENT_SOURCE_DIR}/reginaprefset.h ${CMAKE_CURRENT_SOURCE_DIR}/shortrunner.h)
+SET( MOC_HEADERS ${MOC_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/coordinatechooser.h ${CMAKE_CURRENT_SOURCE_DIR}/recentfilesaction.h ${CMAKE_CURRENT_SOURCE_DIR}/reginaprefset.h ${CMAKE_CURRENT_SOURCE_DIR}/shortrunner.h)
 SET( MOC_HEADERS ${MOC_HEADERS} PARENT_SCOPE )
