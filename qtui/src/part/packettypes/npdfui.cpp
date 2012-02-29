@@ -43,7 +43,6 @@
 #include <QLabel>
 #include <QLayout>
 #include <QMessageBox>
-#include <QPixmap>
 #include <QTextDocument>
 #include <QStackedWidget>
 

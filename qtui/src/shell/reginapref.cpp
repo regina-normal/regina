@@ -116,15 +116,16 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     ReginaPrefSet& prefSet(ReginaPrefSet::global());
 
     QVBoxLayout *layout = new QVBoxLayout;
-    buttonBox = new QDialogButtonBox(this);
-    // TODO: When help is implemented, add the help button here
-    buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel);
 
     // Construct the individual preferences pages.
     QTabWidget* item = new QTabWidget(this);
-
     layout->addWidget(item);
+
+    // TODO: When help is implemented, add the help button here
+    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok |
+        QDialogButtonBox::Apply | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
+
     setLayout(layout);
 
     generalPrefs = new ReginaPrefGeneral(this);

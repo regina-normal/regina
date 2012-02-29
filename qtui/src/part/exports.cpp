@@ -29,6 +29,7 @@
 #include "packet/npacket.h"
 
 #include "packettreeview.h"
+#include "reginamain.h"
 #include "reginapart.h"
 #include "foreign/csvsurfacehandler.h"
 #include "foreign/exportdialog.h"
@@ -78,6 +79,9 @@ void ReginaPart::exportSource() {
 
 void ReginaPart::exportFile(const PacketExporter& exporter,
         const QString& fileFilter, const QString& dialogTitle) {
+    // Pass parent, not widget(), to QFileDialog::getSaveFileName.
+    // For some reason, on MacOS the file dialog disappears immediately
+    // if widget() is used [20 Feb 2012].
     ExportDialog dlg(widget(), packetTree, treeView->selectedPacket(),
         exporter.canExport(), dialogTitle);
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
@@ -99,7 +103,7 @@ void ReginaPart::exportFile(const PacketExporter& exporter,
 //                    exporter.exportData(data, file, widget());
 //            }
 //            TODO: Use encoding
-            QString file = QFileDialog::getSaveFileName(widget(),
+            QString file = QFileDialog::getSaveFileName(parent,
                 dialogTitle, QString(), fileFilter);
             if (! file.isEmpty())
                 exporter.exportData(data, file, widget());

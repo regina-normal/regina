@@ -27,11 +27,12 @@
 /* end stub */
 
 #include "patiencedialog.h"
+#include "reginasupport.h"
 
 #include <QApplication>
 #include <QLabel>
 #include <QLayout>
-#include <QPixmap>
+#include <QStyle>
 
 PatienceDialog* PatienceDialog::warn(const QString& message,
         QWidget* parent) {
@@ -48,15 +49,15 @@ PatienceDialog::PatienceDialog(const QString& message, QWidget* parent) :
     setWindowTitle(tr("Please Wait"));
     setModal(0);
 
-    QWidget* page = new QWidget(this);
-    QHBoxLayout* layout = new QHBoxLayout(page);
+    QHBoxLayout* layout = new QHBoxLayout(this);
 
-    QLabel* clock = new QLabel(page);
-    clock->setPixmap(QPixmap("patience"));
+    QLabel* clock = new QLabel(this);
+    clock->setPixmap(ReginaSupport::regIcon("patience").pixmap(
+        QApplication::style()->pixelMetric(QStyle::PM_MessageBoxIconSize)));
     clock->setAlignment(Qt::AlignHCenter);
     layout->addWidget(clock);
 
-    QLabel* msg = new QLabel(message, page);
+    QLabel* msg = new QLabel(message, this);
     layout->addWidget(msg, 1);
 }
 

@@ -47,10 +47,7 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
         QDialog(parent), //dialogTitle, Ok|Cancel, Ok, parent),
         creator(newCreator), tree(packetTree), newPacket(0) {
     setWindowTitle(dialogTitle);
-
-    QWidget* page = new QWidget(this);
-    QVBoxLayout* layout = new QVBoxLayout(page);
-    layout->setContentsMargins(0, 0, 0, 0); // Margins come from the dialog.
+    QVBoxLayout* layout = new QVBoxLayout(this);
 
     QHBoxLayout* parentStrip = new QHBoxLayout();
     layout->addLayout(parentStrip);
@@ -81,7 +78,7 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
 
     QWidget* mainUI = creator->getInterface();
     if (mainUI) {
-        mainUI->setParent(page);
+        mainUI->setParent(this);
         // The outer layouts already provide margins.
         mainUI->layout()->setContentsMargins(0, 0, 0, 0);
         layout->addWidget(mainUI, 1);

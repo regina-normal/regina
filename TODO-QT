@@ -1,5 +1,6 @@
-Check all ButtonBox usage.
-Skeleton windows are broken.
+Fix QDialogButtonBox usage in gaprunner.
+Hunt down all setContentsMargins().
+Hunt down all container widgets that should be sub-layouts.
 Work through Will's TODOs.
 Get rid of the commit/discard mechanism, which is counterintuitive.
 Open a new file by default, and give the root-level container a better name.

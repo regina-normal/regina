@@ -46,13 +46,7 @@ ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
         QDialog(parent),
         tree(packetTree), chosenPacket(0) {
     setWindowTitle(dialogTitle);
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(
-        QDialogButtonBox::Ok | QDialogButtonBox::Cancel,Qt::Horizontal,this);
-    connect(buttonBox,SIGNAL(accepted()), this, SLOT(slotOk()));
-
-    QWidget* page = new QWidget(this);
-    QVBoxLayout* layout = new QVBoxLayout(page);
-    layout->setContentsMargins(0, 0, 0, 0); // Margins come from the dialog.
+    QVBoxLayout* layout = new QVBoxLayout(this);
 
     QHBoxLayout* chosenStrip = new QHBoxLayout;
     QLabel* label = new QLabel(tr("Data to export:"));
@@ -66,6 +60,12 @@ ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
     layout->addLayout(chosenStrip);
     layout->addStretch(1);
 
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(
+        QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    layout->addWidget(buttonBox);
+
+    connect(buttonBox,SIGNAL(accepted()), this, SLOT(slotOk()));
+    connect(buttonBox,SIGNAL(rejected()), this, SLOT(reject()));
 }
 
 bool ExportDialog::validate() {
@@ -95,5 +95,7 @@ void ExportDialog::slotOk() {
             arg(chosenPacket->getPacketLabel().c_str()));
         return;
     }
+
+    accept();
 }
 

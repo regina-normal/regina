@@ -46,10 +46,7 @@ ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
         PacketFilter* useFilter, const QString& dialogTitle) :
         QDialog(parent), tree(packetTree), newTree(importedData) {
     setWindowTitle(dialogTitle);
-
-    QWidget* page = new QWidget(this);
-    QVBoxLayout* layout = new QVBoxLayout(page);
-    layout->setContentsMargins(0, 0, 0, 0); // Margins come from the dialog.
+    QVBoxLayout* layout = new QVBoxLayout(this);
 
     QHBoxLayout* parentStrip = new QHBoxLayout();
     layout->addLayout(parentStrip);

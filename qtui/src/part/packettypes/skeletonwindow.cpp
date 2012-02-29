@@ -55,12 +55,8 @@ namespace {
 SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
         SkeletalObject viewObjectType) : 
         QDialog(packetUI->getInterface()), objectType(viewObjectType) {
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(
-        QDialogButtonBox::Close,Qt::Horizontal,this);
     tri = dynamic_cast<regina::NTriangulation*>(packetUI->getPacket());
-
-    QWidget* page = new QWidget(this);
-    QBoxLayout* layout = new QVBoxLayout(page);
+    QBoxLayout* layout = new QVBoxLayout(this);
 
     // Set up the table of data.
     switch (objectType) {
@@ -95,7 +91,10 @@ SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
                              "border-left-color: transparent;"
                          "}");
     table->setModel(model);
-    layout->addWidget(table);
+    layout->addWidget(table, 1);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    layout->addWidget(buttonBox);
 
     refresh();
 
@@ -103,6 +102,9 @@ SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
     table->header()->resizeSections(QHeaderView::ResizeToContents);
 
     tri->listen(this);
+
+    // Only one button to press (Close).
+    connect(buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(accept()));
 }
 
 void SkeletonWindow::refresh() {
