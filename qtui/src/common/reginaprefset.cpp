@@ -480,6 +480,19 @@ void ReginaPrefSet::readInternal() {
     windowMainSize = settings.value("MainSize", defaultMainSize()).toSize();
     settings.endGroup();
 
+    settings.beginGroup("RecentFiles");
+    fileRecent_.clear();
+    QString val;
+    for (int i = 0; i < fileRecentMax; ++i) {
+        val = settings.value(QString("File%1").arg(i + 1)).toString();
+        if (val.isEmpty())
+            continue;
+        if (! QFile::exists(val))
+            continue;
+        fileRecent_.push_back(QUrl::fromLocalFile(val));
+    }
+    settings.endGroup();
+
     emit instance_.preferencesChanged();
     emit instance_.recentFilesFilled();
 }
@@ -603,6 +616,13 @@ void ReginaPrefSet::saveInternal() const {
 
     settings.beginGroup("Window");
     settings.setValue("MainSize", windowMainSize);
+    settings.endGroup();
+
+    settings.beginGroup("RecentFiles");
+    settings.remove("");
+    for (int i = 0; i < fileRecent_.count(); ++i)
+        settings.setValue(QString("File%1").arg(i + 1),
+            fileRecent_[i].toLocalFile());
     settings.endGroup();
 }
 
