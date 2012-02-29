@@ -80,7 +80,10 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     if (mainUI) {
         mainUI->setParent(this);
         // The outer layouts already provide margins.
-        mainUI->layout()->setContentsMargins(0, 0, 0, 0);
+        if (mainUI->layout())
+            mainUI->layout()->setContentsMargins(0, 0, 0, 0);
+        else
+            mainUI->setContentsMargins(0, 0, 0, 0);
         layout->addWidget(mainUI, 1);
     } else {
         layout->addStretch(1);

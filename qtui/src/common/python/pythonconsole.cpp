@@ -73,21 +73,19 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
         "output they have produced."));
     layout->addWidget(session, 1);
 
-    QWidget* inputArea = new QWidget(box);
     QHBoxLayout *inputAreaLayout = new QHBoxLayout;
-    inputAreaLayout->setContentsMargins(0, 0, 0, 0);
     
-    inputArea->setWhatsThis( tr("Type your Python commands into "
-        "this box."));
+    QString inputMsg = tr("Type your Python commands into this box.");
     prompt = new QLabel();
+    prompt->setWhatsThis(inputMsg);
     inputAreaLayout->addWidget(prompt);
 
     input = new CommandEdit();
+    input->setWhatsThis(inputMsg);
     input->setFocus();
     connect(input, SIGNAL(returnPressed()), this, SLOT(processCommand()));
     inputAreaLayout->addWidget(input, 1);
-    inputArea->setLayout(inputAreaLayout);
-    layout->addWidget(inputArea);
+    layout->addLayout(inputAreaLayout);
 
     updatePreferences(); // Set fonts, indents, etc.
 

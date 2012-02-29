@@ -131,9 +131,8 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
         PacketPane* enclosingPane) : PacketReadOnlyUI(enclosingPane),
         currentlyAutoResizing(false) {
     ui = new QWidget();
-    QBoxLayout* layout = new QVBoxLayout();
+    QBoxLayout* layout = new QVBoxLayout(ui);
     layout->setContentsMargins(0, 0, 0, 0);
-    ui->setLayout(layout);
 
     // Set up the statistics label.
     layout->addSpacing(ANGLE_STATS_PADDING);

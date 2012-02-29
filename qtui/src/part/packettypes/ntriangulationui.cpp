@@ -106,9 +106,8 @@ NTriHeaderUI::NTriHeaderUI(regina::NTriangulation* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
-    QBoxLayout* uiLayout = new QVBoxLayout();
+    QBoxLayout* uiLayout = new QVBoxLayout(ui);
     uiLayout->setContentsMargins(0, 0, 0, 0);
-    ui->setLayout(uiLayout);
 
     bar = new QToolBar(ui);
     bar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);

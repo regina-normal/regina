@@ -51,11 +51,9 @@ NNormalSurfaceCreator::NNormalSurfaceCreator(int defaultCoordSystem,
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
-    QWidget* coordAreaWidget = new QWidget();
-    layout->addWidget(coordAreaWidget);
 
-    QBoxLayout* coordArea = new QHBoxLayout(coordAreaWidget);
-    coordArea->setContentsMargins(0, 0, 0, 0);
+    QBoxLayout* coordArea = new QHBoxLayout();
+    layout->addLayout(coordArea);
     QString expln = ui->tr("Specifies the coordinate system in which the "
         "vertex normal surfaces will be enumerated.");
     QLabel* label = new QLabel(ui->tr("Coordinate system:"), ui);
