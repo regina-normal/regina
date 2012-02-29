@@ -205,7 +205,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
     bool readWrite = enclosingPane->isReadWrite();
     ReginaPart* part = enclosingPane->getPart();
 
-    ui = new QWidget(enclosingPane);
+    ui = new QWidget();
     QVBoxLayout* layout = new QVBoxLayout(ui);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);

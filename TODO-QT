@@ -1,13 +1,15 @@
 Fix QDialogButtonBox usage in gaprunner.
-Hunt down all container widgets that should be sub-layouts.
 Hunt for dialogs that allow window-close but shouldn't.
 Work through Will's TODOs.
+Ensure that the scrollers actually shrink and allow scrolling.
 Get rid of the commit/discard mechanism, which is counterintuitive.
 Open a new file by default, and give the root-level container a better name.
 Strip out obsolete preferences.
 Cache packet icons in PacketManager for performance.
 Rejuvenate the PacketPane header, including FlatButton and hard-coded 22px icon
 Spaces-per-tab has no effect in NScriptUI.
+Census prefs: separate standard files from user files.
+Merge shell/, part/, common/.
 
 MacOS: Cmdline tools (including regina-python) don't work.
 
@@ -20,23 +22,20 @@ Linux:
 
 Check that we call QWidget::setWindowIcon() for top-level windows.
 
-Help->About doesn't list authors/contributors. This is just a matter of
-creating it, I can do it but wanted to get it all running so you can
-have a look at it.
-warnOnNonEmbedded - when enumerating non-embedded surfaces, the dialog
-currently has no "Don't warn me again" option. This'll have to be
-recreated manually, and we need to pass the value back to ReginaPrefSet
-somehow.
+Help->About needs to be filled with data.
 
-Tip of the day is missing, again Qt doesn't offer anything that does
-this as best I can tell.
+warnOnNonEmbedded - when enumerating non-embedded surfaces, the dialog
+currently has no "Don't warn me again" option. This'll have to be recreated
+manually, and we need to pass the value back to ReginaPrefSet somehow.
+
+Tip of the day is missing (not supported OOTB by Qt).
+
 Help button/system for the preferences window.
 
 Undo/Redo actions. This "works" in regular text editor (and script
 editor) but nowhere else.
 
-File encoding : imports/exports currently don't do anything about
-different file encodings
+File encoding : imports/exports currently don't do anything about encodings
 
 Python console - Edit options, seem to be there, but are commented in code?
 
