@@ -178,7 +178,7 @@ void RecentFilesAction::fillUrls() {
         action->setData(url);
         // Insert to the back of the list.
         urlActions_.push_back(action);
-        QMenu::insertAction(0, action);
+        QMenu::insertAction(clearSeparator_, action);
 
         connect(action, SIGNAL(triggered()), SLOT(fileActivated()));
     }
