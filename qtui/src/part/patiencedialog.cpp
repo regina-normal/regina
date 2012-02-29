@@ -51,11 +51,15 @@ PatienceDialog::PatienceDialog(const QString& message, QWidget* parent) :
 
     QHBoxLayout* layout = new QHBoxLayout(this);
 
+    int iconSize = QApplication::style()->pixelMetric(
+        QStyle::PM_MessageBoxIconSize);
+
     QLabel* clock = new QLabel(this);
-    clock->setPixmap(ReginaSupport::regIcon("patience").pixmap(
-        QApplication::style()->pixelMetric(QStyle::PM_MessageBoxIconSize)));
+    clock->setPixmap(ReginaSupport::themeIcon("clock").pixmap(iconSize));
     clock->setAlignment(Qt::AlignHCenter);
     layout->addWidget(clock);
+
+    layout->addSpacing(iconSize / 4 + 2 /* shrug */);
 
     QLabel* msg = new QLabel(message, this);
     layout->addWidget(msg, 1);
