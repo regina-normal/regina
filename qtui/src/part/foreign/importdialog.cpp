@@ -46,8 +46,6 @@ ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
         PacketFilter* useFilter, const QString& dialogTitle) :
         QDialog(parent), tree(packetTree), newTree(importedData) {
     setWindowTitle(dialogTitle);
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(
-        QDialogButtonBox::Ok | QDialogButtonBox::Cancel,Qt::Horizontal,this);
 
     QWidget* page = new QWidget(this);
     QVBoxLayout* layout = new QVBoxLayout(page);
@@ -80,7 +78,12 @@ ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
 
     layout->addStretch(1);
 
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(
+        QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    layout->addWidget(buttonBox);
+
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOk()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
 bool ImportDialog::validate() {
@@ -130,5 +133,7 @@ void ImportDialog::slotOk() {
     newTree->setPacketLabel(useLabelStr);
     newTree->makeUniqueLabels(tree);
     parentPacket->insertChildLast(newTree);
+
+    accept();
 }
 

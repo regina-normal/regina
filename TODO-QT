@@ -1,5 +1,5 @@
-QSettings: single global ReginaPrefSet; propagate to other main windows
-RecentFilesAction: single action that updates across all windows; test!
+Check all ButtonBox usage.
+Skeleton windows are broken.
 Work through Will's TODOs.
 Get rid of the commit/discard mechanism, which is counterintuitive.
 Open a new file by default, and give the root-level container a better name.
