@@ -10,6 +10,7 @@ Rejuvenate the PacketPane header, including FlatButton and hard-coded 22px icon
 Spaces-per-tab has no effect in NScriptUI.
 Census prefs: separate standard files from user files.
 Merge shell/, part/, common/.
+Include graphviz in the bundle.
 
 MacOS: Cmdline tools (including regina-python) don't work.
 
