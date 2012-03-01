@@ -291,13 +291,15 @@ ELSE(DISABLE_GUI)
   set(GUI_REQUIRED TRUE)
   FIND_PACKAGE(Qt4 COMPONENTS QtGui QtCore)
 
-  set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
-  find_package(SharedMimeInfo)
-  MACRO_LOG_FEATURE(SHARED_MIME_INFO_FOUND
-    "SharedMimeInfo"
-    "Required for Regina's graphical user interface"
-    "http://freedesktop.org/wiki/Software/shared-mime-info"
-    TRUE "0.30")
+  if (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+    set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
+    find_package(SharedMimeInfo)
+    MACRO_LOG_FEATURE(SHARED_MIME_INFO_FOUND
+      "SharedMimeInfo"
+      "Required for Regina's graphical user interface"
+      "http://freedesktop.org/wiki/Software/shared-mime-info"
+      TRUE "0.30")
+  endif (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
 
   if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
     include(BundleUtilities)
