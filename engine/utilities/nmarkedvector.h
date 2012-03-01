@@ -138,10 +138,10 @@ class REGINA_API NMarkedElement {
 template <typename T>
 class NMarkedVector : private std::vector<T*> {
     public:
-        using std::vector<T*>::iterator;
-        using std::vector<T*>::const_iterator;
+        using typename std::vector<T*>::iterator;
+        using typename std::vector<T*>::const_iterator;
 
-        using std::vector<T*>::size_type;
+        using typename std::vector<T*>::size_type;
 
         using std::vector<T*>::begin;
         using std::vector<T*>::end;

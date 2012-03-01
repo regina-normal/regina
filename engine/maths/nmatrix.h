@@ -370,7 +370,7 @@ class NMatrixRing : public NMatrix<T> {
          * <tt>r == c</tt> and <tt>zero</tt> otherwise.
          */
         void makeIdentity() {
-            initialise(zero);
+            this->initialise(zero);
             for (unsigned long i = 0; i < this->nRows && i < this->nCols; i++)
                 this->data[i][i] = one;
         }
