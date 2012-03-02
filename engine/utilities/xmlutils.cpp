@@ -36,6 +36,8 @@
 namespace regina {
 namespace xml {
 
+const std::string XMLPropertyDict::empty_;
+
 XMLParser::XMLParser(XMLParserCallback& callback) : _parser_callback(callback) {
     xmlSAXHandler sax_handler = {
         0,                  // internalSubset
