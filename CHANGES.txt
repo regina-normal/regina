@@ -50,6 +50,9 @@ Version 4.91  [ (under development) ]
             - Now an instance of the arbitrary-dimension template class
               NFacetSpec.  NTetFace is retained as a typedef, but the fields
               have been renamed from tet/face to the more general simp/facet.
+        Class XMLPropertyDict:
+            - Removed the optional defaultVal argument from lookup();
+              the default is now always the empty string.
         Routines perm4to5, perm5to4, perm3to4, perm4to3:
             - New routines for converting between permutation classes.
 

@@ -78,22 +78,24 @@ class REGINA_API XMLPropertyDict : private std::map<std::string, std::string> {
         XMLPropertyDict();
 
         /**
-         * Return a value for the given key, even if the key does not
-         * exist in the map.
+         * Return a value for the given key, or the empty string if the
+         * key does not exist in the map.
          *
          * @param key the key to look up.
-         * @param defaultVal the value to return if the key does not exist.
-         * @return the value associated with the given key, or parameter
-         * \a default if the key does not exist in the map.
+         * @return the value associated with the given key, or the
+         * empty string if the key does not exist in the map.
          */
-        const std::string& lookup(const std::string& key,
-            const std::string& defaultVal = std::string()) const;
+        const std::string& lookup(const std::string& key) const;
 
         using std::map<std::string, std::string>::const_iterator;
         using std::map<std::string, std::string>::begin;
         using std::map<std::string, std::string>::end;
         using std::map<std::string, std::string>::find;
         using std::map<std::string, std::string>::operator [];
+
+    private:
+        static const std::string empty_;
+            /**< An empty string that we can pass by reference. */
 };
 
 /**
@@ -362,10 +364,10 @@ inline std::string xmlValueTag(const std::string& tagName, const T& value) {
 inline XMLPropertyDict::XMLPropertyDict() {
 }
 
-inline const std::string& XMLPropertyDict::lookup(const std::string& key,
-        const std::string& defaultVal) const {
+inline const std::string& XMLPropertyDict::lookup(const std::string& key)
+        const {
     const_iterator it = find(key);
-    return (it == end() ? defaultVal : (*it).second);
+    return (it == end() ? empty_ : (*it).second);
 }
 
 // Inline functions for XMLParserCallback
