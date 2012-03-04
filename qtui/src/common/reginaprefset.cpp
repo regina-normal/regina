@@ -32,6 +32,7 @@
 #include "utilities/stringutils.h"
 
 #include "reginaprefset.h"
+#include "reginasupport.h"
 #include "shortrunner.h"
 
 #include <fstream>
@@ -43,7 +44,6 @@
 #include <QTextCodec>
 #include <QTextStream>
 #include <QDesktopServices>
-#include <QMessageBox>
 #include <QSettings>
 #include <QUrl>
 
@@ -280,30 +280,28 @@ void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
     if (QFileInfo(page).exists()) {
         if (! QDesktopServices::openUrl(QUrl::fromLocalFile(page))) {
             if (handbook) {
-                QMessageBox::warning(parentWidget, QObject::tr("Could not open help"),
-                    QObject::tr("<qt>The requested handbook could not be opened.  "
-                    "Please try pointing your web browser to "
-                    "<tt>%1</tt>.</qt>").arg(page));
+                ReginaSupport::warn(parentWidget,
+                    QObject::tr("I could not open the requested handbook."),
+                    QObject::tr("<qt>Please try pointing your web browser to: "
+                    "<tt>%1</tt></qt>").arg(page));
             } else {
-              QMessageBox::warning(parentWidget, QObject::tr("Could not open handbook"),
-                    QObject::tr("<qt>The Regina handbook could not be opened.  "
-                    "Please try pointing your web browser to "
-                    "<tt>%1</tt>.</qt>").arg(page));
+                ReginaSupport::warn(parentWidget,
+                    QObject::tr("I could not open the Regina handbook."),
+                    QObject::tr("<qt>Please try pointing your web browser to: "
+                    "<tt>%1</tt></qt>").arg(page));
             }
         }
     } else {
         if (handbook) {
-            QMessageBox::warning(parentWidget, QObject::tr("Could not find handbook"),
-                QObject::tr("<qt>The requested handbook could "
-                "not be found.  Perhaps it is not installed?<p>"
-                "The handbook should be accessible as "
-                "<tt>%1/</tt>.</qt>").arg(index));
+            ReginaSupport::warn(parentWidget,
+                QObject::tr("I could not find the requested handbook."),
+                QObject::tr("<qt>It should be installed at: "
+                "<tt>%1</tt></qt>").arg(index));
         } else {
-            QMessageBox::warning(parentWidget, QObject::tr("Could not find handbook"),
-                QObject::tr("<qt>The Regina handbook could "
-                "not be found.  Perhaps it is not installed?<p>"
-                "The handbook should be accessible as "
-                "<tt>%1/</tt>.</qt>").arg(index));
+            ReginaSupport::warn(parentWidget,
+                QObject::tr("I could not find the Regina handbook."),
+                QObject::tr("<qt>It should be installed at: "
+                "<tt>%1</tt></qt>").arg(index));
         }
     }
 }

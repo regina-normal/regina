@@ -121,13 +121,12 @@ void ScriptNameDelegate::setModelData(QWidget* editor,
     QString data = e->text().trimmed();
 
     if (data.isEmpty()) {
-        QMessageBox::warning(e, tr("Empty variable name"),
+        ReginaSupport::info(e,
             tr("Variable names cannot be empty."));
         return;
     }
     if (! rePythonIdentifier.exactMatch(data)) {
-        QMessageBox::warning(e, tr("Invalid variable name"),
-            tr("%1 is not a valid python variable name.").arg(data));
+        QString oldData(data);
 
         // Construct a better variable name.
         data.replace(QRegExp("[^A-Za-z0-9_]"), "");
@@ -135,10 +134,15 @@ void ScriptNameDelegate::setModelData(QWidget* editor,
             return;
         if (! rePythonIdentifier.exactMatch(data))
             data.prepend('_');
+
+        ReginaSupport::info(e,
+            tr("<qt><tt>%1</tt> is not a valid Python variable name.</qt>").
+                arg(oldData),
+            tr("<qt>I have changed it to <tt>%1</tt> instead.</qt>").arg(data));
+
     }
     if (nameUsedElsewhere(data, index.row(), model)) {
-        QMessageBox::warning(e, tr("Name already used"),
-            tr("Another variable is already using the name %1.").arg(data));
+        QString oldData(data);
 
         // Construct a unique variable name.
         int which;
@@ -146,6 +150,11 @@ void ScriptNameDelegate::setModelData(QWidget* editor,
                 index.row(), model); which++)
             ;
         data.append(QString::number(which));
+
+        ReginaSupport::info(e,
+            tr("<qt>Another variable is already using the "
+                "name <tt>%1</tt>.</qt>").arg(oldData),
+            tr("<qt>I will use <tt>%1</tt> instead.</qt>").arg(data));
     }
 
     model->setData(index, data, Qt::EditRole);
@@ -515,8 +524,10 @@ void NScriptUI::removeSelectedVariables() {
 
     // Note that selections are contiguous.
     if (varTable->selectedRanges().empty()) {
-        QMessageBox::warning(ui, tr("Nothing selected"),
-            tr("No variables are currently selected for removal."));
+        ReginaSupport::info(ui,
+            tr("No variables are selected."),
+            tr("Please select one or more variables to remove, "
+            "then press <i>Remove Var</i> again."));
         return;
     }
     QTableWidgetSelectionRange range = varTable->selectedRanges().front();
@@ -524,23 +535,22 @@ void NScriptUI::removeSelectedVariables() {
         range.bottomRow() << std::endl;
 
     // Notify the user that variables will be removed.
-    QString message;
-    if (range.bottomRow() == range.topRow())
-        message = tr("The variable %1 will be removed.  Are you sure?").
-            arg(varTable->item(range.topRow(), 0)->text());
-    else if (range.bottomRow() == range.topRow() + 1)
-        message = tr("The variables %1 and %2 will be removed.  "
-            "Are you sure?").arg(varTable->item(range.topRow(), 0)->text()).
-            arg(varTable->item(range.bottomRow(), 0)->text());
-    else
-        message = tr("%1 variables from %2 to %3 will be removed.  "
-            "Are you sure?").arg(range.bottomRow() - range.topRow() + 1).
-            arg(varTable->item(range.topRow(), 0)->text()).
-            arg(varTable->item(range.bottomRow(), 0)->text());
+    QMessageBox msgBox(ui);
+    msgBox.setWindowTitle(tr("Regina"));
+    msgBox.setIcon(QMessageBox::Question);
+    if (range.bottomRow() == range.topRow()) {
+        msgBox.setText(tr("<qt>The variable <tt>%1</tt> will be removed.</qt>").
+            arg(varTable->item(range.topRow(), 0)->text()));
+        msgBox.setInformativeText(tr("Are you sure?"));
+    } else {
+        msgBox.setText(tr("%1 variables will be removed.").
+            arg(range.bottomRow() - range.topRow() + 1));
+        msgBox.setInformativeText(tr("Are you sure?"));
+    }
 
-    if (QMessageBox::warning(ui, tr("Are you sure"),
-          message) ==
-            QMessageBox::Cancel)
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    if (msgBox.exec() == QMessageBox::Cancel)
         return;
 
     // Remove the variables!
@@ -563,15 +573,14 @@ void NScriptUI::compile() {
     if (part->getPythonManager().compileScript(ui,
             document->toPlainText() + "\n\n") == 0) {
         #ifdef BOOST_PYTHON_FOUND
-        QMessageBox::information(ui,tr("Success"),
+        ReginaSupport::success(ui,
             tr("The script compiles successfully."));
         #endif
     } else
-        QMessageBox::warning(ui, tr("Compile error"),
-            tr("The script does not compile.\n"
-            "See the Python console for details.  You may interact with "
-            "this console to further investigate the problem."),
-            tr("Compile Failure"));
+        ReginaSupport::failure(ui,
+            tr("The script does not compile."),
+            tr("See the Python console for details.  You may interact with "
+            "this console to further investigate the problem."));
 }
 
 void NScriptUI::execute() {
