@@ -27,29 +27,47 @@
 /* end stub */
 
 /*! \file support.h
- *  \brief Helps the GUI to locate supporting files.
+ *  \brief Miscellaneous support routines for Regina.
  */
 
 #ifndef __SUPPORT_H
 #define __SUPPORT_H
 
 #include <QIcon>
-#include <QString>
+#include <QString> 
+
+class QWidget;
 
 /**
- * A class with static functions that help Regina to locate supporting files.
+ * A class with miscellaneous support routines for Regina.
  *
- * This class gives correct results for full installations in a fixed location
- * (e.g., a typical Linux install), as well as relocatable application bundles
- * (e.g., a typical MacOSX install).
+ * The icon loading routines give correct results for full installations in
+ * a fixed location (e.g., a typical Linux install), as well as relocatable
+ * application bundles (e.g., a typical MacOSX install).
  */
 class ReginaSupport {
     private:
         static QString home_;
 
     public:
+        /**
+         * Produces a platform-agnostic "sorry" message informing the
+         * user that (for example) a selection is invalid, or some
+         * action is not possible.
+         */
+        static void sorry(QWidget* parent, const QString& text,
+            const QString& informativeText = QString());
+
+        /**
+         * Load a Regina-specific icon.
+         */
         static QIcon regIcon(const QString& name);
         static QIcon regIcon(const QString& name, const QString& themeOverlay);
+
+        /**
+         * Load an icon from the default theme, falling back to the
+         * Oxygen icons shipped with Regina if necessary.
+         */
         static QIcon themeIcon(const QString& name);
 
     private:

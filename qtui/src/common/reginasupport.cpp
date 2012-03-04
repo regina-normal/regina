@@ -27,9 +27,11 @@
 /* end stub */
 
 #include "file/nglobaldirs.h"
+#include "reginamain.h"
 #include "reginasupport.h"
 #include <QFile>
 #include <QIcon>
+#include <QMessageBox>
 #include <QPainter>
 
 namespace {
@@ -37,6 +39,19 @@ namespace {
 }
 
 QString ReginaSupport::home_;
+
+void ReginaSupport::sorry(QWidget* parent, const QString& text,
+        const QString& informativeText) {
+    // Make sure that the window title is ignorable, since it does not
+    // appear on MacOSX.
+    // The tr() call needs a QObject subclass as context; here we use
+    // ReginaMain.
+    QMessageBox msg(QMessageBox::Information,
+        ReginaMain::tr("Sorry"), text, QMessageBox::Ok, parent);
+    if (! informativeText.isNull())
+        msg.setInformativeText(informativeText);
+    msg.exec();
+}
 
 const QString& ReginaSupport::home() {
     if (home_.isNull())

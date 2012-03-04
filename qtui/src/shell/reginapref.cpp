@@ -285,10 +285,13 @@ void ReginaPreferences::slotApply() {
     if (ok && uintVal > 0)
         prefSet.treeJumpSize = uintVal;
     else {
-        QMessageBox::warning(this, tr("Invalid jump size"),
-            tr("The packet tree jump size "
-            "must be a positive integer.  This is the number of steps "
-            "that a packet moves when Jump Up or Jump Down is selected."));
+        ReginaSupport::sorry(this,
+            tr("The packet tree jump size must be positive."),
+            tr("<qt>This is the number of steps that a packet moves "
+            "when you select <i>Jump Up</i> or <i>Jump Down</i> from the "
+            "<i>Packet Tree</i> menu.<p>"
+            "I have reset this back to its old value of %1.</qt>").
+            arg(prefSet.treeJumpSize));
         generalPrefs->editTreeJumpSize->setText(
             QString::number(prefSet.treeJumpSize));
     }
@@ -331,11 +334,14 @@ void ReginaPreferences::slotApply() {
     if (ok)
         prefSet.triSurfacePropsThreshold = uintVal;
     else {
-        QMessageBox::warning(this, tr("Invalid threshold"),
-            tr("The surface calculation "
-            "threshold must be a non-negative integer.  "
-            "This is the maximum number of tetrahedra for which normal "
-            "surface properties will be calculated automatically."));
+        ReginaSupport::sorry(this,
+            tr("The surface calculation threshold must be a "
+            "non-negative integer."),
+            tr("<qt>This determines how large a triangulation must be "
+            "before normal surface properties "
+            "are no longer calculated automatically.<p>"
+            "I have reset this back to its old value of %1.</qt>").
+            arg(prefSet.triSurfacePropsThreshold));
         triPrefs->editSurfacePropsThreshold->setText(
             QString::number(prefSet.triSurfacePropsThreshold));
     }
@@ -1091,8 +1097,10 @@ void ReginaPrefCensus::add() {
 void ReginaPrefCensus::remove() {
     QList<QListWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
-        QMessageBox::warning(this, tr("No selection"),
-            tr("No files have been selected to remove."));
+        ReginaSupport::sorry(this,
+            tr("No files are selected."),
+            tr("<qt>Please select one or more files to remove, then "
+            "press <i>Remove</i> again."));
     else {
         while(! selection.isEmpty())
             delete (selection.takeLast());
@@ -1103,8 +1111,10 @@ void ReginaPrefCensus::remove() {
 void ReginaPrefCensus::activate() {
     QList<QListWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
-        QMessageBox::warning(this, tr("No selection"),
-            tr("No files have been selected to activate."));
+        ReginaSupport::sorry(this,
+            tr("No files are selected."),
+            tr("<qt>Please select one or more files to activate, then "
+            "press <i>Activate</i> again."));
     else {
         bool done = false;
         QListIterator<QListWidgetItem*> it(selection);
@@ -1113,17 +1123,22 @@ void ReginaPrefCensus::activate() {
               activateFile();
         if (done)
             updateActiveCount();
+        else if (selection.count() == 1)
+            ReginaSupport::sorry(this,
+                tr("The selected file is already active."));
         else
-            QMessageBox::warning(this, tr("Selection already active"),
-                tr("All of the selected files are already active."));
+            ReginaSupport::sorry(this,
+                tr("The selected files are already active."));
     }
 }
 
 void ReginaPrefCensus::deactivate() {
     QList<QListWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
-        QMessageBox::warning(this, tr("No selection"),
-            tr("No files have been selected to deactivate."));
+        ReginaSupport::sorry(this,
+            tr("No files are selected."),
+            tr("<qt>Please select one or more files to deactivate, then "
+            "press <i>Deactivate</i> again."));
     else {
         bool done = false;
         QListIterator<QListWidgetItem*> it(selection);
@@ -1132,10 +1147,12 @@ void ReginaPrefCensus::deactivate() {
               deactivateFile();
         if (done)
             updateActiveCount();
+        else if (selection.count() == 1)
+            ReginaSupport::sorry(this,
+                tr("The selected file is already inactive."));
         else
-            QMessageBox::warning(this, tr("Selection already deactive"),
-                tr("All of the selected files have already been "
-                    "deactivated."));
+            ReginaSupport::sorry(this,
+                tr("The selected files are already inactive."));
     }
 }
 
@@ -1292,8 +1309,10 @@ void ReginaPrefPython::add() {
 void ReginaPrefPython::remove() {
     QList<QListWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
-        QMessageBox::warning(this, tr("No selection"),
-            tr("No libraries have been selected to remove."));
+        ReginaSupport::sorry(this,
+            tr("No libraries are selected."),
+            tr("<qt>Please select one or more libraries to remove, then "
+            "press <i>Remove</i> again."));
     else {
         while (! selection.isEmpty()) 
           delete (selection.takeFirst());
@@ -1304,8 +1323,10 @@ void ReginaPrefPython::remove() {
 void ReginaPrefPython::activate() {
     QList<QListWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
-        QMessageBox::warning(this, tr("No selection"),
-            tr("No libraries have been selected to activate."));
+        ReginaSupport::sorry(this,
+            tr("No libraries are selected."),
+            tr("<qt>Please select one or more libraries to activate, then "
+            "press <i>Activate</i> again."));
     else {
         bool done = false;
         QListIterator<QListWidgetItem*> it(selection);
@@ -1314,17 +1335,22 @@ void ReginaPrefPython::activate() {
               activateFile();
         if (done)
             updateActiveCount();
+        else if (selection.count() == 1)
+            ReginaSupport::sorry(this,
+                tr("The selected library is already active."));
         else
-            QMessageBox::warning(this, tr("Libraries already active"),
-                tr("All of the selected libraries are already active."));
+            ReginaSupport::sorry(this,
+                tr("The selected libraries are already active."));
     }
 }
 
 void ReginaPrefPython::deactivate() {
     QList<QListWidgetItem*> selection = listFiles->selectedItems();
     if (selection.isEmpty())
-        QMessageBox::warning(this, tr("No selection"),
-            tr("No libraries have been selected to deactivate."));
+        ReginaSupport::sorry(this,
+            tr("No libraries are selected."),
+            tr("<qt>Please select one or more libraries to deactivate, then "
+            "press <i>Deactivate</i> again."));
     else {
         bool done = false;
         QListIterator<QListWidgetItem*> it(selection);
@@ -1333,10 +1359,12 @@ void ReginaPrefPython::deactivate() {
               deactivateFile();
         if (done)
             updateActiveCount();
+        else if (selection.count() == 1)
+            ReginaSupport::sorry(this,
+                tr("The selected library is already inactive."));
         else
-            QMessageBox::warning(this, tr("Libraries already deactive"),
-                tr("All of the selected libraries have already been "
-                    "deactivated."));
+            ReginaSupport::sorry(this,
+                tr("The selected libraries are already inactive."));
     }
 }
 
