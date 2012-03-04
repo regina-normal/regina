@@ -42,7 +42,6 @@
 #include <QFile>
 #include <QLabel>
 #include <QLayout>
-#include <QMessageBox>
 #include <QTextDocument>
 #include <QStackedWidget>
 

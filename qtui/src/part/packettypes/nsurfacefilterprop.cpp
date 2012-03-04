@@ -31,6 +31,7 @@
 
 // UI includes:
 #include "nsurfacefilterprop.h"
+#include "reginasupport.h"
 
 #include <QButtonGroup>
 #include <QCheckBox>
@@ -39,7 +40,6 @@
 #include <QLabel>
 #include <QLayout>
 #include <QLineEdit>
-#include <QMessageBox>
 #include <QRadioButton>
 #include <QValidator>
 
@@ -216,9 +216,10 @@ void NSurfaceFilterPropUI::commit() {
             // No Euler characteristics have been entered.
             useEuler->setChecked(false);
         } else if (! reECList.exactMatch(ecText)) {
-            QMessageBox::warning(eulerList, tr("Invalid characteristics"),
-                tr("The allowable Euler characteristics must be given "
-                "as a list of integers separated by spaces or commas."));
+            ReginaSupport::info(eulerList,
+                tr("The list of Euler characteristics is invalid."),
+                tr("This should be a sequence of integers, separated by "
+                "spaces or commas."));
             useEuler->setChecked(false);
         } else {
             // We have a valid list of Euler characteristics.

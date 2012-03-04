@@ -43,7 +43,6 @@
 #include <QFileInfo>
 #include <QLabel>
 #include <QLayout>
-#include <QMessageBox>
 #include <QProcess>
 #include <QPushButton>
 #include <QScrollArea>

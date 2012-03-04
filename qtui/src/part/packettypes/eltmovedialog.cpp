@@ -29,11 +29,11 @@
 #include "triangulation/ntriangulation.h"
 
 #include "eltmovedialog.h"
+#include "reginasupport.h"
 
 #include <QButtonGroup>
 #include <QComboBox>
 #include <QDialogButtonBox>
-#include <QMessageBox>
 #include <QLayout>
 #include <QRadioButton>
 #include <QWhatsThis>
@@ -313,8 +313,7 @@ void EltMoveDialog::slotOk() {
         tri->collapseEdge(tri->getEdge(setCollapseEdge[
             boxCollapseEdge->currentIndex()]));
     else {
-        QMessageBox::warning(this, tr("No move selected"),
-            tr("No elementary move has been selected."));
+        ReginaSupport::info(this, tr("Please select a move."));
         return;
     }
 

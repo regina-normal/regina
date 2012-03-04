@@ -35,7 +35,6 @@
 #include "packetmanager.h"
 
 #include <algorithm>
-#include <QMessageBox>
 
 using regina::NPacket;
 
