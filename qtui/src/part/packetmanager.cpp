@@ -100,7 +100,7 @@ QString PacketManager::iconName(NPacket* packet) {
     if (packet->getPacketType() == NAngleStructureList::packetType)
         return "packet_angles";
     if (packet->getPacketType() == NContainer::packetType)
-        return "packet_container";
+        return (packet->getTreeParent() ? "packet_container" : "regina");
     if (packet->getPacketType() == NPDF::packetType)
         return "packet_pdf";
     if (packet->getPacketType() == NSurfaceFilter::packetType) {
