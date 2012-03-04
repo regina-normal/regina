@@ -40,12 +40,28 @@ namespace {
 
 QString ReginaSupport::home_;
 
+void ReginaSupport::info(QWidget* parent, const QString& text,
+        const QString& informativeText) {
+    // Make sure that the window title is ignorable, since it does not
+    // appear on MacOSX.
+    // The tr() call needs a QObject subclass as context; here we use
+    // ReginaMain.
+    QMessageBox msg(QMessageBox::Information,
+        ReginaMain::tr("Information"), text, QMessageBox::Ok, parent);
+    if (! informativeText.isNull())
+        msg.setInformativeText(informativeText);
+    msg.exec();
+}
+
 void ReginaSupport::sorry(QWidget* parent, const QString& text,
         const QString& informativeText) {
     // Make sure that the window title is ignorable, since it does not
     // appear on MacOSX.
     // The tr() call needs a QObject subclass as context; here we use
     // ReginaMain.
+
+    // Use the generic Information icon, since sorry() is not severe
+    // enough to warrant a more exciting icon.
     QMessageBox msg(QMessageBox::Information,
         ReginaMain::tr("Sorry"), text, QMessageBox::Ok, parent);
     if (! informativeText.isNull())

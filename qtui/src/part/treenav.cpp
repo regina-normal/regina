@@ -32,8 +32,7 @@
 // UI includes:
 #include "packettreeview.h"
 #include "reginapart.h"
-
-#include <QMessageBox>
+#include "reginasupport.h"
 
 void ReginaPart::moveShallow() {
     regina::NPacket* packet = checkPacketSelected();
@@ -41,24 +40,30 @@ void ReginaPart::moveShallow() {
         return;
 
     if (packet->dependsOnParent()) {
-      QMessageBox::warning(widget(), tr("Cannot move packet"),
-        tr( "This packet cannot be moved away from its current parent."));
+        ReginaSupport::info(widget(),
+            tr("This packet must stay with its current parent."),
+            tr("This is because it relies on information stored "
+            "in its parent (e.g., a normal surface list that stores "
+            "coordinates relative to its parent triangulation).  "
+            "If you want to move this packet to a higher level in the tree, "
+            "try moving its parent instead."));
         return;
     }
 
     regina::NPacket* parent = packet->getTreeParent();
     if (! parent) {
-        QMessageBox::warning(widget(), tr("Cannot move packet"),
-            tr("This packet is already at the highest level in the "
-            "entire tree."));
+        ReginaSupport::info(widget(),
+            tr("This packet is already at the top of the tree."),
+            tr("I cannot move it to a higher level."));
         return;
     }
 
     regina::NPacket* grandparent = parent->getTreeParent();
     if (! grandparent) {
-        QMessageBox::warning(widget(), tr("Cannot move packet"),
-            tr("There can only be one packet at "
-            "the highest level in the tree."));
+        ReginaSupport::info(widget(),
+            tr("The root of the packet tree must stay fixed."),
+            tr("I cannot move this packet to the top level to take "
+            "its place."));
         return;
     }
 
@@ -73,9 +78,21 @@ void ReginaPart::moveDeep() {
     if (! packet)
         return;
 
+    if (! packet->getTreeParent()) {
+        ReginaSupport::info(widget(),
+            tr("The root of the packet tree must stay fixed."),
+            tr("I cannot move it to a lower level."));
+        return;
+    }
+
     if (packet->dependsOnParent()) {
-        QMessageBox::warning(widget(), tr("Cannot move packet"),
-            tr("This packet cannot be moved away from its current parent."));
+        ReginaSupport::info(widget(),
+            tr("This packet must stay with its current parent."),
+            tr("This is because it relies on information stored "
+            "in its parent (e.g., a normal surface list that stores "
+            "coordinates relative to its parent triangulation).  "
+            "If you want to move this packet to a deeper level in the tree, "
+            "try moving its parent instead."));
         return;
     }
 
@@ -86,9 +103,10 @@ void ReginaPart::moveDeep() {
         down = false;
     }
     if (! newParent) {
-        QMessageBox::warning(widget(), tr("Cannot move packet"),
-            tr("This packet cannot be moved to a lower level because it "
-            "has no siblings that could act as its parent."));
+        ReginaSupport::info(widget(),
+            tr("This packet is an only child."),
+            tr("To move it to a lower level in the tree, it must have "
+            "a sibling (above or below it) that can act as its new parent."));
         return;
     }
 
@@ -108,12 +126,13 @@ void ReginaPart::moveUp() {
 
     if (! packet->getPrevTreeSibling()) {
         if (! packet->getNextTreeSibling()) {
-            QMessageBox::warning(widget(), tr("Cannot move packet"),
-                tr("This packet has no siblings and so cannot be moved up."));
+            ReginaSupport::info(widget(),
+                tr("This packet is an only child."),
+                tr("I cannot move it up or down, since it has no siblings."));
         } else {
-            QMessageBox::warning(widget(), tr("Cannot move packet"),
-                tr("This packet is already at the top of its list "
-                "of siblings."));
+            ReginaSupport::info(widget(),
+                tr("This packet is already the first amongst its siblings."),
+                tr("I cannot move it further up."));
         }
         return;
     }
@@ -128,12 +147,13 @@ void ReginaPart::moveDown() {
 
     if (! packet->getNextTreeSibling()) {
         if (! packet->getPrevTreeSibling()) {
-            QMessageBox::warning(widget(), tr("Cannot move packet"),
-                tr("This packet has no siblings and so cannot be moved down."));
+            ReginaSupport::info(widget(),
+                tr("This packet is an only child."),
+                tr("I cannot move it up or down, since it has no siblings."));
         } else {
-            QMessageBox::warning(widget(), tr("Cannot move packet"),
-                tr("This packet is already at the bottom of its "
-                "list of siblings."));
+            ReginaSupport::info(widget(),
+                tr("This packet is already the last amongst its siblings."),
+                tr("I cannot move it further down."));
         }
         return;
     }
@@ -148,12 +168,13 @@ void ReginaPart::movePageUp() {
 
     if (! packet->getPrevTreeSibling()) {
         if (! packet->getNextTreeSibling()) {
-            QMessageBox::warning(widget(), tr("Cannot move packet"),
-                tr("This packet has no siblings and so cannot be moved up."));
+            ReginaSupport::info(widget(),
+                tr("This packet is an only child."),
+                tr("I cannot move it up or down, since it has no siblings."));
         } else {
-            QMessageBox::warning(widget(), tr("Cannot move packet"),
-                tr("This packet is already at the top of its list "
-                "of siblings."));
+            ReginaSupport::info(widget(),
+                tr("This packet is already the first amongst its siblings."),
+                tr("I cannot move it further up."));
         }
         return;
     }
@@ -168,13 +189,13 @@ void ReginaPart::movePageDown() {
 
     if (! packet->getNextTreeSibling()) {
         if (! packet->getPrevTreeSibling()) {
-            QMessageBox::warning(widget(), tr("Cannot move packet"),
-                tr("This packet has no siblings and so cannot "
-                "be moved down."));
+            ReginaSupport::info(widget(),
+                tr("This packet is an only child."),
+                tr("I cannot move it up or down, since it has no siblings."));
         } else {
-            QMessageBox::warning(widget(), tr("Cannot move packet"),
-                tr("This packet is already at the bottom of its "
-                "list of siblings."));
+            ReginaSupport::info(widget(),
+                tr("This packet is already the last amongst its siblings."),
+                tr("I cannot move it further down."));
         }
         return;
     }
@@ -189,12 +210,13 @@ void ReginaPart::moveTop() {
 
     if (! packet->getPrevTreeSibling()) {
         if (! packet->getNextTreeSibling()) {
-            QMessageBox::warning(widget(), tr("Cannot move packet"),
-                tr("This packet has no siblings and so cannot be moved up."));
+            ReginaSupport::info(widget(),
+                tr("This packet is an only child."),
+                tr("I cannot move it up or down, since it has no siblings."));
         } else {
-            QMessageBox::warning(widget(), tr("Cannot move packet"),
-                tr("This packet is already at the top of its "
-                "list of siblings.")); 
+            ReginaSupport::info(widget(),
+                tr("This packet is already the first amongst its siblings."),
+                tr("I cannot move it further up."));
         }
         return;
     }
@@ -209,13 +231,13 @@ void ReginaPart::moveBottom() {
 
     if (! packet->getNextTreeSibling()) {
         if (! packet->getPrevTreeSibling()) {
-            QMessageBox::warning(widget(), tr("Cannot move packet"),
-                tr("This packet has no siblings and so cannot be "
-                "moved down."));
+            ReginaSupport::info(widget(),
+                tr("This packet is an only child."),
+                tr("I cannot move it up or down, since it has no siblings."));
         } else {
-            QMessageBox::warning(widget(), tr("Cannot move packet"),
-                tr("This packet is already at the bottom of its "
-                "list of siblings."));
+            ReginaSupport::info(widget(),
+                tr("This packet is already the last amongst its siblings."),
+                tr("I cannot move it further down."));
         }
         return;
     }

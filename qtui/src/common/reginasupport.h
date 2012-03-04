@@ -51,6 +51,12 @@ class ReginaSupport {
 
     public:
         /**
+         * Produces a platform-agnostic information message.
+         */
+        static void info(QWidget* parent, const QString& text,
+            const QString& informativeText = QString());
+
+        /**
          * Produces a platform-agnostic "sorry" message informing the
          * user that (for example) a selection is invalid, or some
          * action is not possible.
