@@ -30,6 +30,7 @@
 #include "utilities/stringutils.h"
 
 #include "pythonhandler.h"
+#include "reginasupport.h"
 #include "../packetfilter.h"
 
 #include <fstream>

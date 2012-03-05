@@ -174,7 +174,7 @@ namespace {
             QObject::tr("<qt>This is because no boost.python installation "
             "could be found when Regina was compiled.  "
             "Watch the output of <b>cmake</b> at compile time "
-            "for a more detailed explanation, and "
+            "for a more detailed explanation, or "
             "please write to <tt>%1</tt> if you would like further "
             "assistance.</qt>").arg(PACKAGE_BUGREPORT));
         return 0;
