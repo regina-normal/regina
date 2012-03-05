@@ -34,7 +34,6 @@
 
 #include <fstream>
 #include <QFile>
-#include <QMessageBox>
 #include <QTextCodec>
 #include <QTextStream>
 
@@ -55,8 +54,9 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
         QTextCodec* encoding, QWidget* parentWidget) const {
     QFile f(fileName);
     if (! f.open(QIODevice::ReadOnly)) {
-        QMessageBox::warning(parentWidget, QObject::tr("Read failed"), 
-            QObject::tr("The import file %1 could not be read.").arg(fileName));
+        ReginaSupport::warn(parentWidget,
+            QObject::tr("The import failed."), 
+            QObject::tr("I could not read from the file %1.").arg(fileName));
         return 0;
     }
     QTextStream in(&f);
@@ -135,9 +135,9 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
 
     QFile f(fileName);
     if (! f.open(QIODevice::WriteOnly)) {
-        QMessageBox::warning(parentWidget, QObject::tr("Export failed"), 
-            QObject::tr("The export file %1 could not be written to.")
-            .arg(fileName));
+        ReginaSupport::warn(parentWidget,
+            QObject::tr("The export failed."), 
+            QObject::tr("I could not write to the file %1.").arg(fileName));
         return false;
     }
     QTextStream out(&f);

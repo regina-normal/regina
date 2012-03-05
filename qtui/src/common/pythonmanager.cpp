@@ -30,13 +30,12 @@
 #include "file/nglobaldirs.h"
 
 #include "pythonmanager.h"
-
+#include "reginasupport.h"
 
 #include <QCoreApplication>
 #include <QDesktopServices>
 #include <QFile>
 #include <QFileInfo>
-#include <QMessageBox>
 #include <QProcess>
 #include <QUrl>
 
@@ -60,12 +59,12 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
     if (QFileInfo(index).exists()) {
         QDesktopServices::openUrl(QUrl::fromLocalFile(index));
     } else {
-        QMessageBox::warning(topLevelWindow, QObject::tr("Could not find references"),
-            QObject::tr("<qt>The Python reference could "
-            "not be found.  Perhaps it is not installed?<p>"
-            "The Python reference (i.e., the API documentation for the "
-            "Regina calculation engine) should be installed in the directory "
-            "<tt>%1/</tt>.</qt>").arg(docDir));
+        ReginaSupport::warn(topLevelWindow,
+            QObject::tr("I could not find the Python API reference."),
+            QObject::tr("<qt>It should be installed in: <tt>%1/</tt><p>"
+            "Please contact %2 for assistance.</qt>")
+            .arg(docDir)
+            .arg(PACKAGE_BUGREPORT));
     }
 }
 
@@ -169,13 +168,14 @@ void PythonManager::closeAllConsoles() {
 
 namespace {
     PythonConsole* scriptingDisabled(QWidget* parent) {
-      QMessageBox::warning(parent, QObject::tr("Python scripting disabled"),
-            QObject::tr("<qt>Python scripting has been "
-            "disabled in your particular build of Regina.  This is probably "
-            "because no usable boost.python installation could be found.<p>"
+        ReginaSupport::warn(parent,
+            QObject::tr("Python scripting has been "
+            "disabled in your build of Regina."),
+            QObject::tr("<qt>This is because no boost.python installation "
+            "could be found when Regina was compiled.  "
             "Watch the output of <b>cmake</b> at compile time "
-            "for a more detailed explanation of why this has happened.  "
-            "Please write to <tt>%1</tt> if you would like further "
+            "for a more detailed explanation, and "
+            "please write to <tt>%1</tt> if you would like further "
             "assistance.</qt>").arg(PACKAGE_BUGREPORT));
         return 0;
     }

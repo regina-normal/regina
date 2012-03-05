@@ -50,7 +50,6 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMenuBar>
-#include <QMessageBox>
 #include <QTextCodec>
 #include <QTextEdit>
 #include <QTextStream>
@@ -295,13 +294,13 @@ bool PythonConsole::importRegina() {
     if (interpreter->importRegina())
         return true;
     else {
-        QMessageBox::warning(this, tr("Could not load regina module"),
-            tr("<qt>The Python module <i>regina</i> "
-            "could not be loaded.  None of Regina's functions will "
-            "be available during this Python session.<p>"
-            "The module should be installed as the file "
+        ReginaSupport::warn(this,
+            tr("Regina's Python module could not be loaded."),
+            tr("<qt>The module should be installed as the file "
             "<tt>%1/regina.so</tt>.  Please write to %2 if you require "
-            "further assistance.</qt>")
+            "further assistance.<p>"
+            "None of Regina's functions will "
+            "be available during this Python session.</qt>")
             .arg(QFile::decodeName(regina::NGlobalDirs::pythonModule().c_str()))
             .arg(PACKAGE_BUGREPORT));
         addError(tr("Unable to load module \"regina\"."));
@@ -314,10 +313,11 @@ void PythonConsole::setRootPacket(regina::NPacket* packet) {
         addOutput(tr("The root of the packet tree is in the "
             "variable [root]."));
     else {
-        QMessageBox::warning(this, tr("Could not place root of packet tree"),
-            tr("<qt>An error occurred "
-            "whilst attempting to place the root of the packet "
-            "tree in the variable <i>root</i>.</qt>"));
+        ReginaSupport::warn(this,
+            tr("<qt>I could not set the <i>root</i> variable.</qt>"),
+            tr("The root of the packet tree will not be available in "
+            "this Python session.  Please report this error to %2.")
+            .arg(PACKAGE_BUGREPORT));
         addError(tr("The variable \"root\" has not been set."));
     }
 }
@@ -335,10 +335,11 @@ void PythonConsole::setSelectedPacket(regina::NPacket* packet) {
         addOutput(tr("The selected packet (%1) is in the "
             "variable [selected].").arg(pktName));
     else {
-        QMessageBox::warning(this, tr("Error"),
-            tr("<qt>An error occurred "
-            "whilst attempting to place the selected packet (%1) "
-            "in the variable <i>selected</i>.</qt>").arg(pktName));
+        ReginaSupport::warn(this,
+            tr("<qt>I could not set the <i>selected</i> variable.</qt>"),
+            tr("The currently selected packet will not be available in "
+            "this Python session.  Please report this error to %2.")
+            .arg(PACKAGE_BUGREPORT));
         addError(tr("The variable \"selected\" has not been set."));
     }
 }
@@ -407,7 +408,8 @@ void PythonConsole::saveLog() {
     if (! fileName.isEmpty()) {
         QFile f(fileName);
         if (! f.open(QIODevice::WriteOnly))
-            QMessageBox::warning(this, tr("Error writing to file"),
+            ReginaSupport::warn(this,
+                tr("I could not save the session transcript."),
                 tr("An error occurred whilst "
                 "attempting to write to the file %1.").
                 arg(fileName));

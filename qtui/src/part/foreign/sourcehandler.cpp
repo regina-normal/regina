@@ -28,12 +28,12 @@
 
 #include "triangulation/ntriangulation.h"
 
+#include "reginasupport.h"
 #include "sourcehandler.h"
 #include "../packetfilter.h"
 
 #include <fstream>
 #include <QFile>
-#include <QMessageBox>
 #include <QTextCodec>
 #include <QTextStream>
 
@@ -54,9 +54,9 @@ bool SourceHandler::exportData(regina::NPacket* data, const QString& fileName,
 
     QFile f(fileName);
     if (! f.open(QIODevice::WriteOnly)) {
-        QMessageBox::warning(parentWidget, QObject::tr("Write failed"), 
-            QObject::tr("This triangulation could not be exported. The target "
-            "file %1 could not be opened for writing.").arg(fileName));
+        ReginaSupport::warn(parentWidget,
+            QObject::tr("The export failed."), 
+            QObject::tr("I could not write to the file %1.").arg(fileName));
         return false;
     }
     QTextStream out(&f);

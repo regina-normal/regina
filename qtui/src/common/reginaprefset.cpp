@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "regina-config.h"
 #include "file/nglobaldirs.h"
 #include "snappea/nsnappeatriangulation.h"
 #include "surfaces/nnormalsurfacelist.h"
@@ -296,12 +297,14 @@ void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
             ReginaSupport::warn(parentWidget,
                 QObject::tr("I could not find the requested handbook."),
                 QObject::tr("<qt>It should be installed at: "
-                "<tt>%1</tt></qt>").arg(index));
+                "<tt>%1</tt><p>Please contact %2 for assistance.</qt>")
+                .arg(index).arg(PACKAGE_BUGREPORT));
         } else {
             ReginaSupport::warn(parentWidget,
                 QObject::tr("I could not find the Regina handbook."),
                 QObject::tr("<qt>It should be installed at: "
-                "<tt>%1</tt></qt>").arg(index));
+                "<tt>%1</tt><p>Please contact %2 for assistance.</qt>")
+                .arg(index).arg(PACKAGE_BUGREPORT));
         }
     }
 }

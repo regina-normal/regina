@@ -30,10 +30,10 @@
 #include "surfaces/nnormalsurfacelist.h"
 
 #include "csvsurfacehandler.h"
+#include "reginasupport.h"
 #include "../packetfilter.h"
 
 #include <QFile>
-#include <QMessageBox>
 
 const CSVSurfaceHandler CSVSurfaceHandler::instance;
 
@@ -47,10 +47,11 @@ bool CSVSurfaceHandler::exportData(regina::NPacket* data,
         dynamic_cast<regina::NNormalSurfaceList*>(data);
     if (! regina::writeCSVStandard(
             static_cast<const char*>(QFile::encodeName(fileName)), *list)) {
-        QMessageBox::warning(parentWidget, QObject::tr("Export failed"), 
-            QObject::tr( "This normal surface list could not be exported. "
-            "An unknown error, probably related to file I/O, occurred during "
-            "the export."));
+        ReginaSupport::warn(parentWidget,
+            QObject::tr("The export failed."), 
+            QObject::tr("An unknown error occurred, probably related "
+            "to file I/O.  Please check that you have permissions to write "
+            "to the file %1.").arg(fileName));
         return false;
     }
     return true;
