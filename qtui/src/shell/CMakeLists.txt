@@ -46,10 +46,17 @@ INSTALL(TARGETS ${REGINA_APP_NAME} DESTINATION ${APPDIR} COMPONENT Runtime)
 if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   # Extra steps for building self-contained MacOSX bundles.
   set(BUNDLE_LIBDIRS ${QT_LIBRARY_DIRS})
-  INSTALL(CODE "
-    include(BundleUtilities)
-    fixup_bundle(\"${BUNDLEDIR_ESCAPED}\" \"python/regina.so\" \"${BUNDLE_LIBDIRS}\")
-    " COMPONENT Runtime)
+  IF (BOOST_PYTHON_FOUND)
+    INSTALL(CODE "
+      include(BundleUtilities)
+      fixup_bundle(\"${BUNDLEDIR_ESCAPED}\" \"python/regina.so\" \"${BUNDLE_LIBDIRS}\")
+      " COMPONENT Runtime)
+  ELSE (BOOST_PYTHON_FOUND)
+    INSTALL(CODE "
+      include(BundleUtilities)
+      fixup_bundle(\"${BUNDLEDIR_ESCAPED}\" \"\" \"${BUNDLE_LIBDIRS}\")
+      " COMPONENT Runtime)
+  ENDIF (BOOST_PYTHON_FOUND)
 
   # On MacOSX we need a qt.conf file in our bundle; otherwise the system
   # may load both the bundle and system Qt libraries and give unpredictable
