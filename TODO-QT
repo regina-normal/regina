@@ -11,6 +11,7 @@ Spaces-per-tab has no effect in NScriptUI.
 Census prefs: separate standard files from user files.
 Merge shell/, part/, common/.
 Include graphviz in the bundle.
+Look for bad use of temporaries with constData().
 
 MacOS: Cmdline tools (including regina-python) don't work.
 
