@@ -30,10 +30,10 @@
 #include "triangulation/ntriangulation.h"
 
 #include "orbhandler.h"
+#include "reginasupport.h"
 #include "../packetfilter.h"
 
 #include <QFile>
-#include <QMessageBox>
 
 const OrbHandler OrbHandler::instance;
 
@@ -42,9 +42,10 @@ regina::NPacket* OrbHandler::importData(const QString& fileName,
     regina::NPacket* ans = regina::readOrb(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)
-        QMessageBox::warning(parentWidget, QObject::tr("Import failed"),
-            QObject::tr( "The Orb / Casson file %1 could not be imported. "
-            "Perhaps the data is not in Orb format?").arg(fileName));
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("The import failed."),
+            QObject::tr("<qt>Please check that the file <tt>%1</tt> "
+            "is readable and in Orb / Casson format.").arg(fileName));
     return ans;
 }
 

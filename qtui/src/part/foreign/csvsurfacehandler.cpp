@@ -49,9 +49,9 @@ bool CSVSurfaceHandler::exportData(regina::NPacket* data,
             static_cast<const char*>(QFile::encodeName(fileName)), *list)) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 
-            QObject::tr("An unknown error occurred, probably related "
+            QObject::tr("<qt>An unknown error occurred, probably related "
             "to file I/O.  Please check that you have permissions to write "
-            "to the file %1.").arg(fileName));
+            "to the file <tt>%1</tt>.</qt>").arg(fileName));
         return false;
     }
     return true;

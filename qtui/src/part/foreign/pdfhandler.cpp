@@ -30,10 +30,10 @@
 #include "packet/npdf.h"
 
 #include "pdfhandler.h"
+#include "reginasupport.h"
 #include "../packetfilter.h"
 
 #include <QFile>
-#include <QMessageBox>
 
 const PDFHandler PDFHandler::instance;
 
@@ -42,10 +42,12 @@ regina::NPacket* PDFHandler::importData(const QString& fileName,
     regina::NPacket* ans = regina::readPDF(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)
-        QMessageBox::warning(parentWidget, QObject::tr("Read failed"), 
-            QObject::tr("The PDF document %1 could not be read.").
-            arg(fileName));
-    ans->setPacketLabel(QObject::tr("PDF document").toAscii().constData());
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("The import failed."),
+            QObject::tr("<qt>Please check that the file <tt>%1</tt> "
+            "is readable and in PDF format.</qt>").arg(fileName));
+    else
+        ans->setPacketLabel(QObject::tr("PDF document").toAscii().constData());
     return ans;
 }
 
@@ -57,16 +59,19 @@ bool PDFHandler::exportData(regina::NPacket* data, const QString& fileName,
         QWidget* parentWidget) const {
     regina::NPDF* pdf = dynamic_cast<regina::NPDF*>(data);
     if (! pdf->data()) {
-        QMessageBox::warning(parentWidget, QObject::tr("Empty packet"), 
-            QObject::tr("This PDF packet is empty, "
-            "and so cannot be exported."));
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("This PDF packet is empty."),
+            QObject::tr("I can only export packets that contain "
+                "real PDF data."));
         return false;
     }
     if (! regina::writePDF(
             static_cast<const char*>(QFile::encodeName(fileName)), *pdf)) {
-        QMessageBox::warning(parentWidget, QObject::tr("Save failed"), 
-            QObject::tr("The PDF document %1 could not be saved.")
-            .arg(fileName));
+        ReginaSupport::warn(parentWidget,
+            QObject::tr("The export failed."), 
+            QObject::tr("<qt>An unknown error occurred, probably related "
+            "to file I/O.  Please check that you have permissions to write "
+            "to the file <tt>%1</tt>.</qt>").arg(fileName));
         return false;
     }
     return true;

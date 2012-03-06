@@ -29,6 +29,7 @@
 #include "packet/npacket.h"
 
 #include "importdialog.h"
+#include "reginasupport.h"
 #include "../packetchooser.h"
 #include "../packetfilter.h"
 
@@ -38,7 +39,6 @@
 #include <QLabel>
 #include <QLayout>
 #include <QLineEdit>
-#include <QMessageBox>
 #include <QWhatsThis>
 
 ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
@@ -86,12 +86,14 @@ ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
 bool ImportDialog::validate() {
     if (chooser->hasPackets())
         return true;
-    QMessageBox::warning(this, tr("No suitable parent"),
-        tr("No suitable parent packets could be found for the imported data.\n"
-        "Some packets have particular requirements of their parents.  "
-        "For instance, a list of normal surfaces or angle structures must "
-        "be imported beneath the triangulation in which they live.\n"
-        "See the users' handbook for further information."));
+    ReginaSupport::sorry(this,
+        tr("I could not finish the import."),
+        tr("<qt>There is no suitable location in this packet tree "
+        "for the imported data.<p>"
+        "Some packets have constraints on their location in the tree; "
+        "for instance, normal surface or angle structure lists must "
+        "be placed beneath the corresponding triangulation.  "
+        "See the users' handbook for further information.</qt>"));
     return false;
 }
 
@@ -99,35 +101,40 @@ void ImportDialog::slotOk() {
     // Get the parent packet.
     regina::NPacket* parentPacket = chooser->selectedPacket();
     if (! parentPacket) {
-        QMessageBox::warning(this, tr("No packet selected"),
-            tr("No parent packet has been selected."));
+        ReginaSupport::info(this,
+            tr("Please select a parent packet."));
         return;
     }
     PacketFilter* filter = chooser->getFilter();
     if (filter && ! filter->accept(parentPacket)) {
-        QMessageBox::warning(this, tr("Invalid parent"),
-            tr("The packet %1 is not capable of acting as a parent for "
-            "the imported data.").arg(parentPacket->getPacketLabel().c_str()));
+        ReginaSupport::info(this,
+            tr("Please select a different location in the tree "
+            "for the import."),
+            tr("<qt>The packet <i>%1</i> cannot act as a parent for "
+            "this imported data.</qt>").
+            arg(parentPacket->getPacketLabel().c_str()));
         return;
     }
 
     // Check the label.
     QString useLabel = label->text().trimmed();
-    const char* useLabelStr = useLabel.toAscii().constData();
+    QByteArray ascii = useLabel.toAscii();
     if (useLabel.isEmpty()) {
-        QMessageBox::warning(this, tr("Empty label"),
-            tr("The packet label cannot be empty."));
+        ReginaSupport::info(this,
+            tr("Please enter a label for the new packet."));
         return;
     }
-    if (tree->findPacketLabel(useLabelStr)) {
-        QMessageBox::warning(this, tr("Packet exists"), 
-            tr("There is already a packet labelled %1.").arg(useLabel));
-        label->setText(tree->makeUniqueLabel(useLabelStr).c_str());
+    if (tree->findPacketLabel(ascii.constData())) {
+        ReginaSupport::sorry(this,
+            tr("Another packet is already using this label."),
+            tr("Each packet in your data file must have its own unique "
+            "label.  I will suggest a different label that is not in use."));
+        label->setText(tree->makeUniqueLabel(ascii.constData()).c_str());
         return;
     }
 
     // Insert the imported data into the packet tree.
-    newTree->setPacketLabel(useLabelStr);
+    newTree->setPacketLabel(ascii.constData());
     newTree->makeUniqueLabels(tree);
     parentPacket->insertChildLast(newTree);
 

@@ -31,53 +31,64 @@
 #include "packet/ntext.h"
 
 #include "isosighandler.h"
+#include "reginasupport.h"
 #include "../packetfilter.h"
 
 #include <QFile>
-#include <QMessageBox>
 
 const IsoSigHandler IsoSigHandler::instance3(3);
 
 regina::NPacket* IsoSigHandler::importData(const QString& fileName,
         QWidget* parentWidget) const {
     QString explnSuffix = QObject::tr("<p>The file should be a plain text file "
-        "containing one %1-manifold triangulation isomorphism signature "
-        "per line.</p></qt>").arg(dimension_);
+        "containing one %1-manifold isomorphism signature per line.  "
+        "Isomorphism signatures are described in detail in "
+        "<i>Simplification paths in the Pachner graphs "
+        "of closed orientable 3-manifold triangulations</i>, "
+        "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>").arg(dimension_);
 
     regina::NPacket* ans = regina::readIsoSigList(
         static_cast<const char*>(QFile::encodeName(fileName)), dimension_);
     if (! ans) {
-        QMessageBox::warning(parentWidget, QObject::tr("Error reading file"),
-            QObject::tr("<qt>An error occurred "
-            "whilst attempting to read from the file %1.").arg(fileName) +
-            explnSuffix);
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("The import failed."),
+            QObject::tr("<qt>I could not open the file <tt>%1</tt>.  "
+                "Please check that this file is readable.</qt>")
+                .arg(fileName));
         return 0;
     }
 
     regina::NPacket* last = ans->getLastTreeChild();
     if (last == 0) {
-        QMessageBox::warning(parentWidget, QObject::tr("No signatures found"),
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("The import failed."),
             QObject::tr("<qt>The selected file does "
             "not contain any isomorphism signatures.") + explnSuffix);
+        delete ans;
         return 0;
     } else if (last->getPacketType() == regina::NText::packetType) {
         if (last == ans->getFirstTreeChild()) {
-            QMessageBox::warning(parentWidget, 
-                QObject::tr("Interpretation failed"), QObject::tr("<qt>None of "
-                "the isomorphism signatures found in the selected file could "
-                "be interpreted.") + explnSuffix);
+            ReginaSupport::sorry(parentWidget, 
+                QObject::tr("The import failed."),
+                QObject::tr("<qt>None of the lines in the selected file "
+                "could be interpreted as isomorphism signatures.")
+                + explnSuffix);
+            delete ans;
             return 0;
         } else {
-            QMessageBox::warning(parentWidget, 
-                QObject::tr("Interpretation failed"), QObject::tr("<qt>One or "
-                "more of the isomorphism signatures could not be interpreted. "
-                "Details of the error(s) can be found in the final text packet "
-                "beneath the newly imported tree.") + explnSuffix);
+            ReginaSupport::warn(parentWidget, 
+                QObject::tr("There were problems with the import."),
+                QObject::tr("<qt>One or more lines in the selected file "
+                "could not be interpreted as isomorphism signatures. "
+                "For details, see the text packet "
+                "at the end of the imported packet list.")
+                + explnSuffix);
         }
     }
 
     // All worked out okay.
-    ans->setPacketLabel(QObject::tr("Imported Triangulations").toAscii().constData());
+    ans->setPacketLabel(
+        QObject::tr("Imported Triangulations").toAscii().constData());
     return ans;
 }
 

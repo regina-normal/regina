@@ -29,11 +29,11 @@
 #include "foreign/snappea.h"
 #include "triangulation/ntriangulation.h"
 
+#include "reginasupport.h"
 #include "snappeahandler.h"
 #include "../packetfilter.h"
 
 #include <QFile>
-#include <QMessageBox>
 
 const SnapPeaHandler SnapPeaHandler::instance;
 
@@ -42,9 +42,10 @@ regina::NPacket* SnapPeaHandler::importData(const QString& fileName,
     regina::NPacket* ans = regina::readSnapPea(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)
-        QMessageBox::warning(parentWidget, QObject::tr("Import failed"),
-            QObject::tr("The SnapPea file %1 could not be imported.  Perhaps "
-            "the data is not in SnapPea format?").arg(fileName));
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("The import failed."),
+            QObject::tr("<qt>Please check that the file <tt>%1</tt> "
+            "is readable and in SnapPea format.</qt>").arg(fileName));
     return ans;
 }
 
@@ -56,23 +57,26 @@ bool SnapPeaHandler::exportData(regina::NPacket* data,
         const QString& fileName, QWidget* parentWidget) const {
     regina::NTriangulation* tri = dynamic_cast<regina::NTriangulation*>(data);
     if (! tri->isValid()) {
-        QMessageBox::warning(parentWidget, QObject::tr("Invalid triangulation"), 
-            QObject::tr( "This triangulation cannot be exported to SnapPea "
-            "format because it is not a valid triangulation."));
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("This triangulation is not valid."),
+            QObject::tr("I can only export valid triangulations "
+                "to SnapPea format."));
         return false;
     }
     if (tri->hasBoundaryFaces()) {
-        QMessageBox::warning(parentWidget, QObject::tr("Boundary detected"), 
-            QObject::tr( "This triangulation cannot be exported to SnapPea "
-            "format because it has one or more boundary faces."));
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("This triangulation has boundary faces."),
+            QObject::tr("I can only export closed or ideal triangulations "
+                "to SnapPea format."));
         return false;
     }
     if (! regina::writeSnapPea(
             static_cast<const char*>(QFile::encodeName(fileName)), *tri)) {
-        QMessageBox::warning(parentWidget, QObject::tr("Export failed"), 
-            QObject::tr( "This triangulation could not be exported.  An "
-            "unknown error, probably related to file I/O, occurred during "
-            "the export."));
+        ReginaSupport::warn(parentWidget,
+            QObject::tr("The export failed."),
+            QObject::tr("<qt>An unknown error occurred, probably related "
+            "to file I/O.  Please check that you have permissions to write "
+            "to the file <tt>%1</tt>.</qt>").arg(fileName));
         return false;
     }
     return true;

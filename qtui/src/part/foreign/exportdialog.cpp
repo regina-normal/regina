@@ -29,6 +29,7 @@
 #include "packet/npacket.h"
 
 #include "exportdialog.h"
+#include "reginasupport.h"
 #include "../packetchooser.h"
 #include "../packetfilter.h"
 
@@ -37,7 +38,6 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLayout>
-#include <QMessageBox>
 #include <QWhatsThis>
 
 ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
@@ -71,10 +71,9 @@ ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
 bool ExportDialog::validate() {
     if (chooser->hasPackets())
         return true;
-        QMessageBox *sorry = new QMessageBox(this);
-        sorry->setText(sorry->tr(
-        "No packets could be found that are suitable for export in this "
-        "format."));
+    hide();
+    ReginaSupport::info(this,
+        tr("This file contains no data that I can export in this format."));
     return false;
 }
 
@@ -82,16 +81,16 @@ void ExportDialog::slotOk() {
     // Get the selected packet.
     chosenPacket = chooser->selectedPacket();
     if (! chosenPacket) {
-        QMessageBox *sorry = new QMessageBox(this);
-        sorry->setText(sorry->tr(
-            "No packet has been selected to export."));
+        ReginaSupport::info(this,
+            tr("Please select a packet to export."));
         return;
     }
     PacketFilter* filter = chooser->getFilter();
     if (filter && ! filter->accept(chosenPacket)) {
-        QMessageBox *sorry = new QMessageBox(this);
-        sorry->setText(sorry->tr(
-            "The packet %1 cannot be exported to this file format.").
+        ReginaSupport::sorry(this,
+            tr("Please select a different packet."),
+            tr("<qt>The packet <i>%1</i> cannot "
+            "be exported to this file format.</qt>").
             arg(chosenPacket->getPacketLabel().c_str()));
         return;
     }

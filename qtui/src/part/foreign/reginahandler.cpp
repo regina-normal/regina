@@ -29,19 +29,20 @@
 #include "file/nxmlfile.h"
 
 #include "reginahandler.h"
+#include "reginasupport.h"
 #include "../packetfilter.h"
 
 #include <QFile>
-#include <QMessageBox>
 
 regina::NPacket* ReginaHandler::importData(const QString& fileName,
         QWidget* parentWidget) const {
     regina::NPacket* ans = regina::readFileMagic(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)
-        QMessageBox::warning(parentWidget, QObject::tr("Import failed"),
-            QObject::tr("The file %1 could not be imported.  Perhaps it is not "
-            "a Regina data file?").arg(fileName));
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("The import failed."),
+            QObject::tr("<qt>Please check that the file <tt>%1</tt> "
+            "is readable and in Regina format.</qt>").arg(fileName));
     return ans;
 }
 
@@ -52,15 +53,19 @@ PacketFilter* ReginaHandler::canExport() const {
 bool ReginaHandler::exportData(regina::NPacket* data,
         const QString& fileName, QWidget* parentWidget) const {
     if (data->dependsOnParent()) {
-        QMessageBox::warning(parentWidget, QObject::tr("Cannot separate"), 
-            QObject::tr("This packet cannot be separated from its parent."));
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("I cannot export this packet subtree on its own."), 
+            QObject::tr("<qt>This is because the root packet <i>%1</i> "
+            "must stay connected to its parent.</qt>").
+            arg(data->getPacketLabel().c_str()));
         return false;
     }
     if (! regina::writeXMLFile(QFile::encodeName(fileName), data, compressed)) {
-        QMessageBox::warning(parentWidget, QObject::tr("Export failed"), 
-            QObject::tr("This packet subtree could not be exported.  An "
-            "unknown error, probably related to file I/O, occurred during "
-            "the export."));
+        ReginaSupport::warn(parentWidget,
+            QObject::tr("The export failed."), 
+            QObject::tr("<qt>An unknown error occurred, probably related "
+            "to file I/O.  Please check that you have permissions to write "
+            "to the file <tt>%1</tt>.</qt>").arg(fileName));
         return false;
     }
     return true;

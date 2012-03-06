@@ -31,10 +31,10 @@
 #include "packet/ntext.h"
 
 #include "dehydrationhandler.h"
+#include "reginasupport.h"
 #include "../packetfilter.h"
 
 #include <QFile>
-#include <QMessageBox>
 
 const DehydrationHandler DehydrationHandler::instance;
 
@@ -50,31 +50,39 @@ regina::NPacket* DehydrationHandler::importData(const QString& fileName,
     regina::NPacket* ans = regina::readDehydrationList(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans) {
-        QMessageBox::warning(parentWidget, QObject::tr("Error reading file"),
-            QObject::tr("<qt>An error occurred whilst attempting to read "
-                "from the file %1.").arg(fileName) + explnSuffix);
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("The import failed."),
+            QObject::tr("<qt>I could not open the file <tt>%1</tt>.  "
+                "Please check that this file is readable.</qt>")
+                .arg(fileName));
         return 0;
     }
 
     regina::NPacket* last = ans->getLastTreeChild();
     if (last == 0) {
-        QMessageBox::warning(parentWidget, QObject::tr("No dehydration strings"),
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("The import failed."),
             QObject::tr("<qt>The selected file does not contain any "
                 "dehydration strings.") + explnSuffix);
+        delete ans;
         return 0;
     } else if (last->getPacketType() == regina::NText::packetType) {
         if (last == ans->getFirstTreeChild()) {
-            QMessageBox::warning(parentWidget, 
-                QObject::tr("Interpretation failed"), QObject::tr("<qt>None "
-                "of the dehydration strings found in the selected file could "
-                "be interpreted.") + explnSuffix);
+            ReginaSupport::sorry(parentWidget, 
+                QObject::tr("The import failed."),
+                QObject::tr("<qt>None of the lines in the selected file "
+                "could be interpreted as dehydration strings.")
+                + explnSuffix);
+            delete ans;
             return 0;
         } else {
-            QMessageBox::warning(parentWidget, 
-                QObject::tr("Interpretation failed"), QObject::tr("<qt>One or "
-                "more of the dehydration strings could not be interpreted. "
-                "Details of the error(s) can be found in the final text packet "
-                "beneath the newly imported tree.") + explnSuffix);
+            ReginaSupport::warn(parentWidget, 
+                QObject::tr("There were problems with the import."),
+                QObject::tr("<qt>One or more lines in the selected file "
+                "could not be interpreted as dehydration strings. "
+                "For details, see the text packet "
+                "at the end of the imported packet list.")
+                + explnSuffix);
         }
     }
 
