@@ -25,10 +25,6 @@ Check that we call QWidget::setWindowIcon() for top-level windows.
 
 Help->About needs to be filled with data.
 
-warnOnNonEmbedded - when enumerating non-embedded surfaces, the dialog
-currently has no "Don't warn me again" option. This'll have to be recreated
-manually, and we need to pass the value back to ReginaPrefSet somehow.
-
 Tip of the day is missing (not supported OOTB by Qt).
 
 Help button/system for the preferences window.
