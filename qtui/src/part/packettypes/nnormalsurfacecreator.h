@@ -49,13 +49,12 @@ class NNormalSurfaceCreator : public PacketCreator {
         QWidget* ui;
         CoordinateChooser* coords;
         QCheckBox* embedded;
-        bool warnOnNonEmbedded_;
 
     public:
         /**
          * Constructor.
          */
-        NNormalSurfaceCreator(int defaultCoordSystem, bool warnOnNonEmbedded);
+        NNormalSurfaceCreator();
 
         /**
          * PacketCreator overrides.
@@ -65,6 +64,7 @@ class NNormalSurfaceCreator : public PacketCreator {
         QString parentWhatsThis();
         regina::NPacket* createPacket(regina::NPacket* parentPacket,
             QWidget* parentWidget);
+        void explainNoParents();
 };
 
 #endif

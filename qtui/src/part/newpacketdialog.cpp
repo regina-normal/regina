@@ -30,6 +30,7 @@
 #include "packetchooser.h"
 #include "packetcreator.h"
 #include "packetfilter.h"
+#include "reginasupport.h"
 
 #include <QBoxLayout>
 #include <QDialog>
@@ -37,7 +38,6 @@
 #include <QFrame>
 #include <QLabel>
 #include <QLineEdit>
-#include <QMessageBox>
 #include <QWhatsThis>
 
 NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
@@ -102,12 +102,8 @@ NewPacketDialog::~NewPacketDialog() {
 bool NewPacketDialog::validate() {
     if (chooser->hasPackets())
         return true;
-    QMessageBox::warning(this,tr("No suitable parent"), 
-        tr("No suitable parent packets could be found.\n"
-        "Some packets have particular requirements of their parents.  "
-        "For instance, a list of normal surfaces or angle structures must "
-        "be created beneath the triangulation in which they live.\n"
-        "See the users' handbook for further information."));
+    hide();
+    creator->explainNoParents();
     return false;
 }
 
@@ -115,31 +111,35 @@ void NewPacketDialog::slotOk() {
     // Get the parent packet.
     regina::NPacket* parentPacket = chooser->selectedPacket();
     if (! parentPacket) {
-        QMessageBox::warning(this, tr("No parent selected"),
-            tr("No parent packet has been selected."));
+        ReginaSupport::info(this,
+            tr("Please select a parent packet."));
         return;
     }
     PacketFilter* filter = chooser->getFilter();
     if (filter && ! filter->accept(parentPacket)) {
-        QMessageBox::warning(this, tr("Not a suitable parent"),
-            tr("The packet %1 is not capable of acting as a parent for "
-            "the new packet.").arg(parentPacket->getPacketLabel().c_str()));
+        ReginaSupport::info(this,
+            tr("Please select a different location in the tree for "
+            "the new packet."),
+            tr("<qt>The packet <i>%1</i> cannot act as a parent for "
+            "the new packet.</qt>").
+            arg(parentPacket->getPacketLabel().c_str()));
         return;
     }
 
     // Check the label.
     QString useLabel = label->text().simplified();
     if (useLabel.isEmpty()) {
-        QMessageBox::warning(this, tr("Empty label"),
-            tr("The packet label cannot be empty."));
+        ReginaSupport::info(this,
+            tr("Please enter a label for the new packet."));
         return;
     }
     if (tree->findPacketLabel(std::string(useLabel.toAscii().constData()))) {
-        QMessageBox::warning(this, tr("Name already in use"),
-            tr("There is already a packet labelled %1.").arg(useLabel));
-        label->setText(QString::fromAscii(
-              tree->makeUniqueLabel(
-                  std::string(useLabel.toAscii().constData())).c_str()));
+        ReginaSupport::info(this,
+            tr("Another packet is already using this label."),
+            tr("Each packet in your data file must have its own unique "
+            "label.  I will suggest a different label that is not in use."));
+        label->setText(tree->makeUniqueLabel(
+            useLabel.toAscii().constData()).c_str());
         return;
     }
 

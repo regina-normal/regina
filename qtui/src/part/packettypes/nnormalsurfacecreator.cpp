@@ -35,6 +35,8 @@
 #include "coordinatechooser.h"
 #include "coordinates.h"
 #include "nnormalsurfacecreator.h"
+#include "reginaprefset.h"
+#include "reginasupport.h"
 #include "../progressdialogs.h"
 
 #include <QCheckBox>
@@ -45,9 +47,7 @@
 
 using regina::NNormalSurfaceList;
 
-NNormalSurfaceCreator::NNormalSurfaceCreator(int defaultCoordSystem, 
-        bool warnOnNonEmbedded):
-        warnOnNonEmbedded_(warnOnNonEmbedded) {
+NNormalSurfaceCreator::NNormalSurfaceCreator() {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -61,7 +61,7 @@ NNormalSurfaceCreator::NNormalSurfaceCreator(int defaultCoordSystem,
     coordArea->addWidget(label);
     coords = new CoordinateChooser();
     coords->insertAllCreators();
-    coords->setCurrentSystem(defaultCoordSystem);
+    coords->setCurrentSystem(ReginaPrefSet::global().surfacesCreationCoords);
     coords->setWhatsThis(expln);
     coordArea->addWidget(coords, 1);
 
@@ -88,9 +88,11 @@ QString NNormalSurfaceCreator::parentWhatsThis() {
 regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
         QWidget* parentWidget) {
     if (parent->getPacketType() != regina::NTriangulation::packetType) {
-        QMessageBox::warning(parentWidget, ui->tr("Invalid parent"),
-            ui->tr("Normal surface lists can only be created directly beneath "
-            "triangulations."));
+        ReginaSupport::sorry(ui,
+            ui->tr("The selected parent is not a 3-manifold triangulation."),
+            ui->tr("Normal surfaces must live within a 3-manifold "
+            "triangulation.  Please select the corresponding triangulation "
+            "as the location in the tree for your new normal surface list."));
         return 0;
     }
 
@@ -99,12 +101,12 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
     // Sanity check for immersed and/or singular surfaces.
     if (! embedded->isChecked()) {
         if (Coordinates::generatesAlmostNormal(coordSystem)) {
-            QMessageBox::warning(parentWidget, ui->tr("Unsupported options"),
+            ReginaSupport::sorry(parentWidget,
+                ui->tr("This combination of options is not yet supported."),
                 ui->tr(
                 "<qt>You have selected an almost normal coordinate "
                 "system, but you have unchecked the box for embedded "
                 "surfaces only.<p>"
-                "This combination is not yet supported in Regina.  "
                 "At present, immersed and singular surfaces can only "
                 "be used with <i>normal</i> coordinate systems, not "
                 "<i>almost normal</i> coordinate systems.<p>"
@@ -113,21 +115,22 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
             return 0;
         }
 
-        // TODO: Add the "Always ask me this" part
-        // That requires creating a new QDialog by hand
-        if (warnOnNonEmbedded_)
-            if (QMessageBox::warning(parentWidget, 
-                    ui->tr("Non-embedded surface enumeration"),
-                    ui->tr("<qt>You have unchecked the box for embedded "
-                        "surfaces only.  This means that immersed "
-                        "and/or singular surfaces will also be "
-                        "enumerated, which could take a much longer time "
-                        "and give a much larger solution set.<p>"
-                        "Are you sure you wish to go ahead with this?</qt>"),
-                    QMessageBox::Ok | QMessageBox::Cancel) == 
-                    QMessageBox::Cancel) {
+        if (ReginaPrefSet::global().warnOnNonEmbedded) {
+            QMessageBox msg(QMessageBox::Information,
+                ui->tr("Warning"),
+                ui->tr("You have unchecked the box for embedded "
+                    "surfaces only."),
+                QMessageBox::Yes | QMessageBox::Cancel, parentWidget);
+            msg.setInformativeText(
+                ui->tr("<qt>This means that immersed "
+                "and singular surfaces will also be "
+                "enumerated, which could be much slower "
+                "and give far more solutions. "
+                "Are you sure you wish to continue?</qt>"));
+            msg.setDefaultButton(QMessageBox::Yes);
+            if (msg.exec() != QMessageBox::Yes)
                 return 0;
-            }
+        }
     }
 
     regina::NProgressManager manager;
@@ -142,9 +145,17 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
         return ans;
     else {
         delete ans;
-        QMessageBox::information(parentWidget, ui->tr("Cancelled"),
+        ReginaSupport::info(parentWidget,
             ui->tr("The normal surface enumeration was cancelled."));
         return 0;
     }
+}
+
+void NNormalSurfaceCreator::explainNoParents() {
+    ReginaSupport::sorry(ui,
+        ui->tr("There are no triangulations to work with."),
+        ui->tr("Normal surfaces must live within a 3-manifold "
+        "triangulation.  Please add some triangulations to your file and "
+        "try again."));
 }
 

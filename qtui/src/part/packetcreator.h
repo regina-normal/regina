@@ -96,6 +96,17 @@ class PacketCreator {
          */
         virtual regina::NPacket* createPacket(regina::NPacket* parentPacket,
             QWidget* parentWidget) = 0;
+
+        /**
+         * Show a message box to the user explaining why packets of this
+         * type cannot (yet) be created.  This will be shown if the user
+         * tries to create a new packet but no suitable parents exist.
+         *
+         * For packets that have constraints on their parents, it is
+         * highly recommended to customise this routine; otherwise a
+         * generic (and less illuminating) message will be shown.
+         */
+         virtual void explainNoParents();
 };
 
 /**

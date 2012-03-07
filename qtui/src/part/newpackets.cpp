@@ -58,9 +58,7 @@ void ReginaPart::newFilter() {
 }
 
 void ReginaPart::newNormalSurfaces() {
-    newPacket(new NNormalSurfaceCreator(
-        ReginaPrefSet::global().surfacesCreationCoords,
-        ReginaPrefSet::global().warnOnNonEmbedded),
+    newPacket(new NNormalSurfaceCreator(),
         new SingleTypeFilter<regina::NTriangulation>(),
         tr("New Normal Surface List"), tr("Normal Surfaces"));
 }

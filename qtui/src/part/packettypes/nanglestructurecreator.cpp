@@ -35,11 +35,11 @@
 // UI includes:
 #include "nanglestructurecreator.h"
 #include "../progressdialogs.h"
+#include "reginasupport.h"
 
 #include <QCheckBox>
 #include <QLabel>
 #include <QLayout>
-#include <QMessageBox>
 #include <QWhatsThis>
 
 NAngleStructureCreator::NAngleStructureCreator() {
@@ -72,9 +72,11 @@ QString NAngleStructureCreator::parentWhatsThis() {
 regina::NPacket* NAngleStructureCreator::createPacket(
         regina::NPacket* parentPacket, QWidget* parentWidget) {
     if (parentPacket->getPacketType() != regina::NTriangulation::packetType) {
-        QMessageBox::warning(parentWidget, ui->tr("Invalid parent"), 
-            ui->tr("Angle structure lists can only be created directly beneath "
-            "triangulations."));
+        ReginaSupport::sorry(ui,
+            ui->tr("The selected parent is not a 3-manifold triangulation."),
+            ui->tr("Angle structures must live within a 3-manifold "
+            "triangulation.  Please select the corresponding triangulation "
+            "as the location in the tree for your new angle structure list."));
         return 0;
     }
 
@@ -90,9 +92,17 @@ regina::NPacket* NAngleStructureCreator::createPacket(
         return ans;
     else {
         delete ans;
-        QMessageBox::information(parentWidget, ui->tr("Enumeration cancelled"),
+        ReginaSupport::info(parentWidget,
             ui->tr("The angle structure enumeration was cancelled."));
         return 0;
     }
+}
+
+void NAngleStructureCreator::explainNoParents() {
+    ReginaSupport::sorry(ui,
+        ui->tr("There are no triangulations to work with."),
+        ui->tr("Angle structures must live within a 3-manifold "
+        "triangulation.  Please add some triangulations to your file and "
+        "try again."));
 }
 

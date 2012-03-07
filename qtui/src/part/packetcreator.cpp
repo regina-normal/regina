@@ -26,43 +26,16 @@
 
 /* end stub */
 
-/*! \file nanglestructurecreator.h
- *  \brief Allows the creation of angle structure lists.
- */
+#include "packetcreator.h"
+#include "reginasupport.h"
 
-#ifndef __NANGLESTRUCTURECREATOR_H
-#define __NANGLESTRUCTURECREATOR_H
+void PacketCreator::explainNoParents() {
+    ReginaSupport::sorry(getInterface(),
+        QObject::tr("I cannot yet create this type of packet."), 
+        QObject::tr("<qt>There is nowhere in the tree that I can place it.<p>"
+        "Some packets have constraints on their location in the tree; "
+        "for instance, normal surface or angle structure lists must "
+        "be created beneath the corresponding triangulation.  "
+        "See the users' handbook for further information.</qt>"));
+}
 
-#include "../packetcreator.h"
-
-class QCheckBox;
-
-/**
- * An interface for creating angle structure lists.
- */
-class NAngleStructureCreator : public PacketCreator {
-    private:
-        /**
-         * Internal components
-         */
-        QWidget* ui;
-        QCheckBox* tautOnly;
-
-    public:
-        /**
-         * Constructor.
-         */
-        NAngleStructureCreator();
-
-        /**
-         * PacketCreator overrides.
-         */
-        QWidget* getInterface();
-        QString parentPrompt();
-        QString parentWhatsThis();
-        regina::NPacket* createPacket(regina::NPacket* parentPacket,
-            QWidget* parentWidget);
-        void explainNoParents();
-};
-
-#endif
