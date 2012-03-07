@@ -351,7 +351,7 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         newAdjTet = -1;
     } else if (! reFaceGluing.exactMatch(text)) {
         // Bad string.
-        showError(tr("<qt>The face gluing should be entered in the "
+        showError(tr("<qt>The face gluing should be of the "
             "form: <i>tet (face)</i>.  An example is <i>5 (032)</i>, "
             "which represents face 032 of tetrahedron 5.</qt>"));
         return false;
@@ -468,9 +468,10 @@ QString GluingsModel::isFaceStringValid(unsigned long srcTet, int srcFace,
 }
 
 void GluingsModel::showError(const QString& message) {
-    // We should actually pass the view to QMessageBox, not 0, but we
+    // We should actually pass the view to the message box, not 0, but we
     // don't have access to any widget from here...
-    QMessageBox::warning(0 /* should be the view? */, tr("Error"), message);
+    ReginaSupport::info(0 /* should be the view? */,
+        tr("This is not a valid gluing."), message);
 }
 
 QString GluingsModel::destString(int srcFace, int destTet,
@@ -825,8 +826,7 @@ void NTriGluingsUI::removeSelectedTets() {
     // Gather together all the tetrahedra to be deleted.
     QModelIndexList sel = faceTable->selectionModel()->selectedIndexes();
     if (sel.empty()) {
-        QMessageBox::warning(ui, tr("No tetrahedra selected"),
-            tr( "No tetrahedra are currently selected for removal."));
+        ReginaSupport::warn(ui, tr("No tetrahedra are selected to remove."));
         return;
     }
 
@@ -866,16 +866,15 @@ void NTriGluingsUI::simplify() {
         return;
 
     if (! tri->intelligentSimplify())
-        QMessageBox::warning(ui, tr("Sorry"), tr(
-            "The triangulation could not be simplified.  "
-            "This does not mean that the triangulation is minimal; it "
+        ReginaSupport::info(ui,
+            tr("I could not simplify the triangulation further."),
+            tr("This does not mean that the triangulation is minimal; it "
             "simply means that I could not find a way of reducing it."));
 }
 
 void NTriGluingsUI::orient() {
     if (tri->isOriented()) {
-        QMessageBox::information(ui, tr("Already oriented"), 
-            tr( "This triangulation is already oriented."));
+        ReginaSupport::info(ui, tr("This triangulation is already oriented."));
         return;
     }
 
@@ -888,9 +887,9 @@ void NTriGluingsUI::orient() {
             break;
         }
     if (! hasOr) {
-        QMessageBox::warning(ui, tr("No orientable components"), 
-            tr( "This triangulation has no orientable components, "
-            "and therefore cannot be oriented."));
+        ReginaSupport::info(ui,
+            tr("This triangulation has no orientable components."),
+            tr("Non-orientable components cannot be oriented."));
         return;
     }
 
@@ -909,8 +908,9 @@ void NTriGluingsUI::idealToFinite() {
         return;
 
     if (tri->isValid() && ! tri->isIdeal())
-        QMessageBox::warning(ui, tr("No idea vertices"), 
-            tr("This triangulation has no ideal vertices to truncate."));
+        ReginaSupport::info(ui,
+            tr("This triangulation has no ideal vertices."),
+            tr("Only ideal vertices will be truncated."));
     else
         tri->idealToFinite();
 }
@@ -920,9 +920,10 @@ void NTriGluingsUI::finiteToIdeal() {
         return;
 
     if (! tri->hasBoundaryFaces())
-        QMessageBox::warning(ui, tr("No real boundary components"),
-            tr("This triangulation has no real boundary components to "
-            "convert into ideal vertices."));
+        ReginaSupport::info(ui,
+            tr("This triangulation has no real boundary components."),
+            tr("Only real boundary components will be converted into "
+            "ideal vertices."));
     else
         tri->finiteToIdeal();
 }
@@ -949,13 +950,13 @@ void NTriGluingsUI::splitIntoComponents() {
         return;
 
     if (tri->getNumberOfComponents() == 0)
-        QMessageBox::information(ui, tr("Triangulation is empty"),
-            tr("This triangulation is empty "
-            "and therefore has no components."));
+        ReginaSupport::info(ui,
+            tr("This triangulation is empty."),
+            tr("It has no components."));
     else if (tri->getNumberOfComponents() == 1)
-        QMessageBox::information(ui, tr("Triangulation is connected"),
-            tr("This triangulation is connected "
-            "and therefore has only one component."));
+        ReginaSupport::info(ui,
+            tr("This triangulation is connected."),
+            tr("It has only one component."));
     else {
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
@@ -976,9 +977,8 @@ void NTriGluingsUI::splitIntoComponents() {
             base->getFirstTreeChild());
 
         // Tell the user what happened.
-        QMessageBox::information(ui, tr("Extraction details"),
-            tr("%1 components were extracted.").
-            arg(nComps));
+        ReginaSupport::info(ui,
+            tr("%1 components were extracted.").arg(nComps));
     }
 }
 
@@ -989,11 +989,12 @@ void NTriGluingsUI::connectedSumDecomposition() {
         return;
 
     if (tri->getNumberOfTetrahedra() == 0)
-        QMessageBox::information(ui, tr("Empty triangulation"),
-            tr("This triangulation is empty."));
+        ReginaSupport::info(ui,
+            tr("This triangulation is empty."),
+            tr("It has no prime summands."));
     else if (! (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
             tri->isConnected()))
-        QMessageBox::warning(ui, tr("Not available"), 
+        ReginaSupport::sorry(ui,
             tr("Connected sum decomposition is "
             "currently only available for closed orientable connected "
             "3-manifold triangulations."));
@@ -1020,25 +1021,56 @@ void NTriGluingsUI::connectedSumDecomposition() {
         // Let the user know what happened.
         dlg.reset();
         if (nSummands == 0)
-            QMessageBox::information(ui, tr("3-sphere"), 
-                tr("This triangulation represents "
-                "a 3-sphere, and has no prime summands at all."));
+            ReginaSupport::info(ui,
+                tr("This is the 3-sphere."),
+                tr("It has no prime summands."));
         else {
             // There is at least one new summand triangulation.
             // Make sure the new summands are visible.
             enclosingPane->getPart()->ensureVisibleInTree(
                 base->getLastTreeChild());
 
-            if (nSummands == 1)
-                QMessageBox::information(ui, tr("Prime 3-manifold"),
-                    tr("This is a prime 3-manifold "
-                    "triangulation.  It cannot be decomposed any further.\n"
-                    "A new 0-efficient triangulation of this prime 3-manifold "
-                    "has been constructed."));
-            else
-                QMessageBox::information(ui, tr("Decomposition complete"),
-                    tr("The triangulation was "
-                    "broken down into %1 prime summands.").arg(nSummands));
+            if (nSummands == 1) {
+                // Special-case S2xS1 and RP3, which do not have
+                // 0-efficient triangulations.
+                NTriangulation* small = static_cast<NTriangulation*>
+                    (base->getFirstTreeChild());
+                if (small->getNumberOfTetrahedra() <= 2 &&
+                        small->getHomologyH1().getRank() == 1 &&
+                        small->getHomologyH1().getNumberOfInvariantFactors()
+                            == 0) {
+                    // The only closed prime orientable manifold with
+                    // H_1 = Z and <= 2 tetrahedra is S2xS1.
+                    ReginaSupport::info(ui,
+                        tr("<qt>This is the prime manifold "
+                        "S<sup>2</sup> x S<sup>1</sup>.</qt>"),
+                        tr("I cannot decompose it further.  "
+                        "However, I have constructed a new minimal "
+                        "(but not 0-efficient) triangulation."));
+                } else if (small->getNumberOfTetrahedra() <= 2 &&
+                        small->getHomologyH1().getRank() == 0 &&
+                        small->getHomologyH1().getNumberOfInvariantFactors()
+                            == 1 &&
+                        small->getHomologyH1().getInvariantFactor(0) == 2) {
+                    // The only closed prime orientable manifold with
+                    // H_1 = Z_2 and <= 2 tetrahedra is RP3. */) {
+                    ReginaSupport::info(ui,
+                        tr("<qt>This is the prime manifold "
+                        "RP<sup>3</sup>.</qt>"),
+                        tr("I cannot decompose it further.  "
+                        "However, I have constructed a new minimal "
+                        "(but not 0-efficient) triangulation."));
+                } else {
+                    ReginaSupport::info(ui,
+                        tr("This is a prime 3-manifold."),
+                        tr("I cannot decompose it further.  "
+                        "However, I have constructed a new 0-efficient "
+                        "triangulation."));
+                }
+            } else
+                ReginaSupport::info(ui,
+                    tr("This manifold decomposes into %1 prime summands.").
+                    arg(nSummands));
         }
     }
 }
@@ -1097,8 +1129,8 @@ void NTriGluingsUI::makeZeroEfficient() {
             // Check for special cases.
             if ((! tri->isZeroEfficient()) &&
                     tri->getHomologyH1().getRank() == 0 &&
-                    tri->getHomologyH1().getTorsionRank(2) == 1 &&
-                    tri->getHomologyH1().getNumberOfInvariantFactors() == 1) {
+                    tri->getHomologyH1().getNumberOfInvariantFactors() == 1 &&
+                    tri->getHomologyH1().getInvariantFactor(0) == 2) {
                 // RP3.
                 if (finalTets < initTets)
                     QMessageBox::information(ui, tr("Result"),
