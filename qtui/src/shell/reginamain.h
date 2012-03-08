@@ -235,7 +235,6 @@ class ReginaMain : public QMainWindow {
         void helpWhatsThis();
         void helpTipOfDay();
         void helpTrouble();
-        void helpNoHelp();
 
         // void changeStatusbar(const QString& text);
         void changeCaption(const QString& text);

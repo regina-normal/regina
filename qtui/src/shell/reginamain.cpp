@@ -45,7 +45,6 @@
 #include <QFileDialog>
 #include <QLabel>
 #include <QMenuBar>
-#include <QMessageBox>
 #include <QSize>
 #include <QToolBar>
 #include <QVBoxLayout>
@@ -149,9 +148,11 @@ bool ReginaMain::openUrl(const QUrl& url) {
     // Can we read data from the file?
     QString localFile = url.toLocalFile();
     if (localFile.isEmpty()) {
-        QMessageBox::warning(this, tr("Empty filename"), tr(
-            "<qt>I cannot open this data file, since the filename is empty.  "
-            "Please report this error to the developers at <i>%1</i>.</qt>").
+        ReginaSupport::warn(this,
+            tr("The filename is empty."),
+            tr("<qt>There may be a miscommunication between Regina and "
+            "your operating system.  "
+            "Please report this to the developers at <i>%1</i>.</qt>").
             arg(PACKAGE_BUGREPORT));
         return false;
     }
@@ -160,9 +161,10 @@ bool ReginaMain::openUrl(const QUrl& url) {
         static_cast<const char*>(QFile::encodeName(localFile)));
 
     if (! packetTree) {
-        QMessageBox::warning(this, tr("Could not open data"), tr(
-            "The topology data file %1 could not be opened.  Perhaps "
-            "it is not a Regina data file?").arg(localFile));
+        ReginaSupport::sorry(this,
+            tr("I could not open the selected file."),
+            tr("<qt>Please check that the file <i>%1</i> "
+            "is readable and in Regina format.</qt>").arg(localFile));
         return false;
     }
 
@@ -178,10 +180,10 @@ bool ReginaMain::openExample(const QUrl& url, const QString& description) {
     // doesn't seem to exist.
     QString localFile = url.toLocalFile();
     if (! QFile(localFile).exists()) {
-        QMessageBox::warning(this, tr("Could not find example file"),
-            tr("<qt>The example file \"%1\" could not be found."
-            "This may be because the examples have not been installed "
-            "properly.  Please contact <i>%2</i> for assistance.").
+        ReginaSupport::warn(this,
+            tr("I could not locate the example that you requested."),
+            tr("<qt>The example \"%1\" may not have been installed properly.  "
+            "Please contact <i>%2</i> for assistance.").
             arg(description).arg(PACKAGE_BUGREPORT));
         return false;
     }
@@ -190,10 +192,10 @@ bool ReginaMain::openExample(const QUrl& url, const QString& description) {
         static_cast<const char*>(QFile::encodeName(localFile)));
 
     if (! packetTree) {
-        QMessageBox::warning(this, tr("Could not open example file"),
-            tr("<qt>The example file \"%1\" could not be read."
-            "This may be because the examples have not been installed "
-            "properly.  Please contact <i>%2</i> for assistance.").
+        ReginaSupport::warn(this,
+            tr("I could not open the example that you requested."),
+            tr("<qt>The example \"%1\" may not have been installed properly.  "
+            "Please contact <i>%2</i> for assistance.").
             arg(description).arg(PACKAGE_BUGREPORT));
         return false;
     }
@@ -251,22 +253,6 @@ void ReginaMain::helpTipOfDay() {
 
 void ReginaMain::helpTrouble() {
     ReginaPrefSet::openHandbook("troubleshooting", 0, this);
-}
-
-void ReginaMain::helpNoHelp() {
-    QMessageBox::information(this, tr("TODO change this title"),
-        tr("<qt>If you cannot view the Regina Handbook, it is possibly "
-            "because you do not have the KDE Help Center installed.<p>"
-            "Try editing Regina's preferences: in the General Options "
-            "panel, uncheck the box "
-            "<i>\"Open handbook in KDE Help Center\"</i>.  "
-            "This will make the handbook open in your default web browser "
-            "instead.<p>"
-            "If all else fails, remember that you can always read the "
-            "Regina Handbook online at "
-            "<a href=\"http://regina.sourceforge.net/\">regina.sourceforge.net</a>.  "
-            "Just follow the <i>Documentation</i> links.</qt>"),
-        tr("Handbook won't open?"));
 }
 
 void ReginaMain::changeCaption(const QString& text) {
@@ -456,12 +442,6 @@ void ReginaMain::setupActions() {
     act->setText(tr("Tr&oubleshooting"));
     act->setIcon(ReginaSupport::themeIcon("dialog-warning"));
     connect(act, SIGNAL(triggered()), this, SLOT(helpTrouble()));
-    helpMenu->addAction(act);
-   
-    act = new QAction(this);
-    act->setText(tr("Handbook won't open?"));
-    act->setIcon(ReginaSupport::themeIcon("dialog-cancel"));
-    connect(act, SIGNAL(triggered()), this, SLOT(helpNoHelp()));
     helpMenu->addAction(act);
 }
 

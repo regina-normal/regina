@@ -34,6 +34,7 @@
 // UI includes:
 #include "coordinatechooser.h"
 #include "nsurfacecoordinateui.h"
+#include "reginasupport.h"
 #include "../packetchooser.h"
 #include "../packetfilter.h"
 #include "../reginapart.h"
@@ -41,11 +42,8 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QLayout>
-#include <QMessageBox>
 #include <QStyle>
 #include <QTreeView>
-
-#define DEFAULT_COORDINATE_COLUMN_WIDTH 40
 
 using regina::NNormalSurfaceList;
 using regina::NPacket;
@@ -656,17 +654,17 @@ void NSurfaceCoordinateUI::packetToBeDestroyed(NPacket*) {
 
 void NSurfaceCoordinateUI::cutAlong() {
     if (table->selectionModel()->selectedIndexes().empty()) {
-        QMessageBox::warning(ui, tr("No selection"),
-            tr("No normal surface is currently selected to cut along."));
+        ReginaSupport::info(ui,
+            tr("Please select a normal surface to cut along."));
         return;
     }
 
     const regina::NNormalSurface* toCutAlong =
         model->surface(table->selectionModel()->selectedIndexes().front());
     if (! toCutAlong->isCompact()) {
-        QMessageBox::warning(ui, tr("Invalid selection"),
-            tr("The selected surface is non-compact "
-            "and so cannot be cut along."));
+        ReginaSupport::info(ui,
+            tr("I can only cut along compact surfaces."),
+            tr("The surface you have selected is non-compact."));
         return;
     }
 
@@ -684,17 +682,17 @@ void NSurfaceCoordinateUI::cutAlong() {
 
 void NSurfaceCoordinateUI::crush() {
     if (table->selectionModel()->selectedIndexes().empty()) {
-        QMessageBox::warning(ui, tr("No selection"),
-            tr("No normal surface is currently selected to crush."));
+        ReginaSupport::info(ui,
+            tr("Please select a normal surface to crush."));
         return;
     }
 
     const regina::NNormalSurface* toCrush =
         model->surface(table->selectionModel()->selectedIndexes().front());
     if (! toCrush->isCompact()) {
-        QMessageBox::warning(ui, tr("Invalid selection"),
-            tr("The selected surface is non-compact "
-            "and so cannot be crushed."));
+        ReginaSupport::info(ui,
+            tr("I can only crush compact surfaces."),
+            tr("The surface you have selected is non-compact."));
         return;
     }
 

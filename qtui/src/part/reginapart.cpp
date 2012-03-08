@@ -37,6 +37,7 @@
 #include "packetui.h"
 #include "reginamain.h"
 #include "reginapart.h"
+#include "reginasupport.h"
 
 #include <QBoxLayout>
 #include <QColor>
@@ -389,10 +390,10 @@ void ReginaPart::clonePacket() {
     if (! packet)
         return;
     if (! packet->getTreeParent()) {
-        QMessageBox::warning(widget(),tr("Cannot clone root"),
-            tr( "The root of the packet tree "
-            "cannot be cloned.  You may clone any other packet except for "
-            "this one."));
+        ReginaSupport::info(widget(),
+            tr("You cannot clone the top-level packet in the tree."),
+            tr("Any other packet in the tree may be cloned except "
+            "for this one."));
         return;
     }
 
@@ -406,6 +407,12 @@ void ReginaPart::cloneSubtree() {
     regina::NPacket* packet = checkSubtreeSelected();
     if (! packet)
         return;
+    if (! packet->getTreeParent()) {
+        ReginaSupport::info(widget(),
+            tr("You cannot clone the entire tree."),
+            tr("Any subtree may be cloned, however."));
+        return;
+    }
 
     regina::NPacket* ans = packet->clone(true, false);
 
@@ -414,11 +421,11 @@ void ReginaPart::cloneSubtree() {
 }
 
 void ReginaPart::newCensus() {
-    QMessageBox::information(widget(), tr("Not implemented"), 
-        tr( "<qt>Census creation is not yet "
-        "available within the GUI.  You can however use the command-line "
-        "program <i>tricensus</i>, which supports a rich set of features "
-        "and is particularly suitable for long census calculations.</qt>"));
+    ReginaSupport::info(widget(),
+        tr("Census creation is only available from the command line."), 
+        tr("<qt>See the command-line program <i>tricensus</i>, which "
+        "supports a rich set of features and is suitable for "
+        "long census calculations.</qt>"));
 }
 
 void ReginaPart::pythonConsole() {
@@ -552,8 +559,8 @@ regina::NPacket* ReginaPart::checkPacketSelected() {
     regina::NPacket* p = treeView->selectedPacket();
     if (p)
         return p;
-    QMessageBox::warning(widget(),tr("No packet selected"), tr(
-        "No packet is currently selected within the tree."));
+    ReginaSupport::info(widget(),
+        tr("Please select a packet to work with."));
     return 0;
 }
 
@@ -561,9 +568,9 @@ regina::NPacket* ReginaPart::checkSubtreeSelected() {
     regina::NPacket* p = treeView->selectedPacket();
     if (p)
         return p;
-    QMessageBox::warning(widget(),tr("No subtree selected"), tr(
-        "No subtree is currently selected.  To work with a packet subtree, "
-        "select the packet at the base of the subtree."));
+    ReginaSupport::info(widget(),
+        tr("Please select a packet to work with."));
+        // Remove all the information about subtrees; it's clear anyway.
     return 0;
 }
 
