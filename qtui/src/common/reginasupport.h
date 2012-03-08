@@ -54,7 +54,8 @@ class ReginaSupport {
          * Produces a platform-agnostic information message.
          */
         static void info(QWidget* parent, const QString& text,
-            const QString& informativeText = QString());
+            const QString& informativeText = QString(),
+            const QString& detailedText = QString());
 
         /**
          * Produces a platform-agnostic "sorry" message informing the
@@ -62,28 +63,32 @@ class ReginaSupport {
          * action is not possible.
          */
         static void sorry(QWidget* parent, const QString& text,
-            const QString& informativeText = QString());
+            const QString& informativeText = QString(),
+            const QString& detailedText = QString());
 
         /**
          * Produces a platform-agnostic warning message informing the
          * user that something non-critical has gone wrong.
          */
         static void warn(QWidget* parent, const QString& text,
-            const QString& informativeText = QString());
+            const QString& informativeText = QString(),
+            const QString& detailedText = QString());
 
         /**
          * Produces a platform-agnostic warning message indicating some
          * kind of success.
          */
         static void success(QWidget* parent, const QString& text,
-            const QString& informativeText = QString());
+            const QString& informativeText = QString(),
+            const QString& detailedText = QString());
 
         /**
          * Produces a platform-agnostic warning message indicating some
          * kind of failure.
          */
         static void failure(QWidget* parent, const QString& text,
-            const QString& informativeText = QString());
+            const QString& informativeText = QString(),
+            const QString& detailedText = QString());
 
         /**
          * Load a Regina-specific icon.

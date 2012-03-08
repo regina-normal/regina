@@ -357,8 +357,6 @@ void ReginaPreferences::slotApply() {
 #endif
     QStringList pathList = paths.split(pathSeparator);
 
-
-
     strVal = triPrefs->editGAPExec->text().trimmed();
     if (strVal.isEmpty()) {
         // No no no.
@@ -372,14 +370,16 @@ void ReginaPreferences::slotApply() {
         // Let's be anal about it.
         QFileInfo info(strVal);
         if (! info.exists()) {
-            QMessageBox::warning(this, tr("Executable not found"),
-                tr("The GAP executable \"%1\" "
-                "does not exist.").arg(strVal));
+            ReginaSupport::sorry(this,
+                tr("<qt>The GAP executable <i>%1</i> "
+                "does not exist.</qt>").arg(strVal),
+                tr("I have reset this back to its old value."));
             triPrefs->editGAPExec->setText(prefSet.triGAPExec);
         } else if (! (info.isFile() && info.isExecutable())) {
-            QMessageBox::warning(this, tr("Executable not found"),
-                tr("The GAP executable \"%1\" "
-                "is not actually an executable file.").arg(strVal));
+            ReginaSupport::sorry(this,
+                tr("<qt>The GAP executable <i>%1</i> is not an "
+                "executable program.</qt>").arg(strVal),
+                tr("I have reset this back to its old value."));
             triPrefs->editGAPExec->setText(prefSet.triGAPExec);
         } else {
             // Looking fine.  Make it absolute.
@@ -401,18 +401,16 @@ void ReginaPreferences::slotApply() {
             }
         }
         if (! found) {
-            QMessageBox box;
-            box.setText(tr("The GAP executable \"%1\" "
-                "could not be found on the default search path.  This means "
-                "that you will not be able to use GAP from within Regina.\n"
+            ReginaSupport::sorry(this,
+                tr("<qt>I could not find the GAP executable <i>%1</i> "
+                "on the search path.</qt>").arg(strVal),
+                tr("<qt>This means "
+                "that you cannot use GAP from within Regina.<p>"
                 "This is not really a problem; it just means that Regina "
-                "will have to do its own (far less effective) group "
-                "simplifications.\n"
-                "The following directories are included in the default "
-                "search path:").arg(strVal));
-            box.setWindowTitle(tr("GAP Executable Not Found"));
-            box.setInformativeText(pathList.join("\n"));
-            box.exec();
+                "will have to do its own (less effective) group "
+                "simplifications.</qt>"),
+                tr("The following directories are in the search path:\n%1")
+                .arg(pathList.join("\n")));
         }
         prefSet.triGAPExec = strVal;
     }
@@ -425,13 +423,15 @@ void ReginaPreferences::slotApply() {
     } else if (strVal == "graphviz" || strVal.endsWith("/graphviz")) {
         // The user is trying to use "graphviz" as the executable name.
         // Disallow the change.
-        QMessageBox::warning(this, tr("Executable name mismatch"),
-            tr("<qt>Graphviz is the name of a "
-            "software suite, not the actual executable.  Graphviz supplies "
-            "several different executables for drawing graphs in several "
+        ReginaSupport::info(this,
+            tr("Graphviz is the name of a software suite, "
+            "not the executable."),
+            tr("<qt>Graphviz supplies several different executables "
+            "for drawing graphs in several "
             "different ways.  The recommended executable for use with "
-            "Regina is <i>neato</i>.<p>"
-            "See <i>http://www.graphviz.org/</i> for further details.</qt>"));
+            "Regina is <i>neato</i>.  "
+            "See <i>http://www.graphviz.org/</i> for further details.<p>"
+            "I have reset this back to its old value.</qt>"));
         triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
     } else {
         // Time to check it out.
@@ -458,83 +458,91 @@ void ReginaPreferences::slotApply() {
         } else {
             // We have a problem.
             // We will need to ask the user for confirmation before
-            // making the change.  Set up messages that are common to
-            // all casese.
-            QString title = tr("Graphviz Not Usable");
-            QString tail = tr(
-                "A misconfigured Graphviz is not really "
-                "a problem.  It just means that Regina will not be "
-                "able to display the face pairing graphs of "
-                "triangulations.<p>"
-                "Are you sure you wish to save your new Graphviz "
-                "setting?");
-
+            // making the change.
             // Treat the individual error types as appropriate.
             QMessageBox box(this);
-            box.setWindowTitle(title);
-            box.setStandardButtons(QMessageBox::Save|QMessageBox::Discard);
+            box.setWindowTitle(tr("Sorry"));
+            box.setIcon(QMessageBox::Information);
+            box.setStandardButtons(QMessageBox::Save |
+                QMessageBox::Discard | QMessageBox::RestoreDefaults);
+            box.setDefaultButton(QMessageBox::Save);
+            box.setInformativeText(
+                tr("A misconfigured Graphviz is not really "
+                "a problem.  It just means that Regina cannot "
+                "display the face pairing graphs of triangulations.<p>"
+                "Are you sure you wish to save your new Graphviz "
+                "setting?"));
+
             if (gvStatus == GraphvizStatus::notFound) {
-                box.setText(tr(
-                    "<qt>The Graphviz executable \"%1\" could not be found "
-                    "on the default search path.<p>"
-                    "The directories in the default search path are "
-                    "listed below.<p>%2</qt>").arg(strVal).arg(tail));
-                box.setInformativeText(pathList.join("\n"));
-            }
-            else if (gvStatus == GraphvizStatus::notExist)
-                box.setText(tr(
-                    "<qt>The Graphviz executable \"%1\" does not exist.<p>"
-                    "%2</qt>").arg(strVal).arg(tail));
-            else if (gvStatus == GraphvizStatus::notExecutable)
-                box.setText(tr(
-                    "<qt>The Graphviz executable \"%1\" is not actually "
-                    "an executable file.<p>%2</qt>").arg(strVal).arg(tail));
-            else if (gvStatus == GraphvizStatus::notStartable)
-                box.setText(tr(
-                    "<qt>The Graphviz executable \"%1\" cannot be started."
-                    "<p>%2</qt>").arg(strVal).arg(tail));
-            else if (gvStatus == GraphvizStatus::unsupported)
-                box.setText(tr(
-                    "<qt>I cannot determine the "
-                    "version of Graphviz that you are running.<p>"
-                    "This is a bad sign - your Graphviz version might "
-                    "be too old (version 0.x), or the program \"%1\" might "
+                box.setText(
+                    tr("<qt>I could not find the Graphviz executable <i>%1</i> "
+                    "on the search path.</qt>").arg(strVal));
+                box.setDetailedText(
+                    tr("The following directories are in the search path:\n%1")
+                    .arg(pathList.join("\n")));
+            } else if (gvStatus == GraphvizStatus::notExist) {
+                box.setText(
+                    tr("<qt>The Graphviz executable <i>%1</i> "
+                        "does not exist.</qt>").arg(strVal));
+            } else if (gvStatus == GraphvizStatus::notExecutable) {
+                box.setText(
+                    tr("<qt>The Graphviz executable <i>%1</i> "
+                        "is not an executable program.</qt>").arg(strVal));
+            } else if (gvStatus == GraphvizStatus::notStartable) {
+                box.setText(
+                    tr("<qt>The Graphviz executable <i>%1</i> "
+                    "cannot be started.</qt>").arg(strVal));
+            } else if (gvStatus == GraphvizStatus::unsupported) {
+                box.setText(
+                    tr("I cannot determine which "
+                    "version of Graphviz you are running."));
+                box.setInformativeText(
+                    tr("<qt>This is a bad sign: your Graphviz version might "
+                    "be too old (version 0.x), or the program <i>%1</i> might "
                     "not be from Graphviz at all.<p>"
-                    "It is strongly recommended that you double-check this "
+                    "Please double-check this "
                     "setting.  This should be a Graphviz graph drawing "
-                    "program, such as <i>neato</i> or <i>dot</i>.<p>"
-                    "See <i>http://www.graphviz.org/</i> for information "
-                    "on Graphviz.  If you believe this message is in error, "
+                    "program, such as <i>neato</i> or <i>dot</i> (see "
+                    "<i>http://www.graphviz.org/</i>).<p>"
+                    "If you believe this message is in error, "
                     "please notify the Regina authors at <i>%2</i>.<p>"
                     "Are you sure you wish to save your new Graphviz "
                     "setting?</qt>").arg(strVal).arg(PACKAGE_BUGREPORT));
-            else if (gvStatus == GraphvizStatus::version1NotDot)
-                box.setText(tr(
-                    "<qt>You appear to be running "
-                    "a very old version of Graphviz (version 1.x).<p>"
-                    "Many tools in older versions of Graphviz, including "
-                    "<i>neato</i> (the default setting here), cannot handle "
-                    "graphs with multiple edges.<p>"
+            } else if (gvStatus == GraphvizStatus::version1NotDot) {
+                box.setText(
+                    tr("You appear to be running "
+                    "a very old version of Graphviz (version 1.x)."));
+                box.setInformativeText(
+                    tr("<qt>Many tools in older versions of Graphviz "
+                    "cannot handle graphs with multiple edges.<p>"
                     "It is <b>highly recommended</b> that you change this "
                     "setting to <i>dot</i>, which handles multiple edges "
                     "correctly even in this old version.<p>"
                     "Alternatively, you could upgrade to a more recent "
-                    "version of Graphviz (such as 2.x).  See "
-                    "<i>http://www.graphviz.org/</i> for further "
-                    "information.<p>"
+                    "version of Graphviz (see "
+                    "<i>http://www.graphviz.org/</i>).<p>"
                     "Are you sure you wish to save your new Graphviz "
                     "setting?</qt>"));
-            else
+            } else {
                 box.setText(tr(
-                    "<qt>The status of the Graphviz installation on "
-                    "this machine could not be determined.<p>"
-                    "This is very unusual, and the author would be "
+                    "I could not determine the status of your Graphviz "
+                    "installation."));
+                box.setInformativeText(
+                    tr("<qt>This is very unusual: the authors would be "
                     "grateful if you could file a bug report at "
-                    "<i>%1</i>.<p>%2</qt>").arg(PACKAGE_BUGREPORT).arg(tail));
+                    "<i>%1</i>.<p>"
+                    "Are you sure you wish to save your new Graphviz "
+                    "setting?</qt>").arg(PACKAGE_BUGREPORT));
+            }
             
-            if (box.exec() == QMessageBox::Save)
+            int ret = box.exec();
+            if (ret == QMessageBox::Save)
                 prefSet.triGraphvizExec = strVal;
-            else
+            else if (ret == QMessageBox::RestoreDefaults) {
+                triPrefs->editGraphvizExec->setText(
+                    ReginaPrefSet::defaultGraphvizExec);
+                prefSet.triGraphvizExec = ReginaPrefSet::defaultGraphvizExec;
+            } else
                 triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
         }
     }
@@ -567,27 +575,28 @@ void ReginaPreferences::slotApply() {
     uintVal = surfacePrefs->editCompatThreshold->text().toUInt(&ok);
     if (ok) {
         if (uintVal > 1000) {
-            QMessageBox::warning(this, tr("Threshold too big"),
-                tr("<qt>I am not brave enough to allow "
-                "a compatibility matrix threshold of more than 1000.  "
-                "If there are over a thousand surfaces then each compatibility "
-                "matrix will contain over a million cells, which could cause "
-                "severe performance problems for the graphical user "
-                "interface.<p>"
-                "Remember that you can always press the <i>Calculate</i> "
-                "button manually in the compatibility viewer for any "
-                "list of normal surfaces, regardless of its size.</qt>"));
+            ReginaSupport::sorry(this,
+                tr("I am not brave enough to allow "
+                "a compatibility matrix threshold over 1000."),
+                tr("<qt>Such a matrix would contain over a million cells, "
+                "which could cause severe performance problems.<p>"
+                "I have reset this back to its old value of %1.  "
+                "Remember that you can still compute compatibility "
+                "matrices manually at any time.</qt>").
+                arg(prefSet.surfacesCompatThreshold));
             surfacePrefs->editCompatThreshold->setText(
                 QString::number(prefSet.surfacesCompatThreshold));
         } else
             prefSet.surfacesCompatThreshold = uintVal;
     } else {
-        QMessageBox::warning(this, tr("Invalid threshold"),
-            tr("<qt>The compatibility matrix "
-            "threshold must be a non-negative integer.  "
-            "This is the maximum number of surfaces <i>N</i> in a normal "
-            "surface list for which the <i>N</i>-by-<i>N</i> compatibility "
-            "matrices will be calculated automatically.</qt>"));
+        ReginaSupport::sorry(this,
+            tr("The compatibility matrix threshold must be a "
+            "non-negative integer."),
+            tr("<qt>This is the maximum number of normal surfaces <i>N</i> "
+            "for which the <i>N</i>&nbsp;x&nbsp;<i>N</i> compatibility "
+            "matrices will be calculated automatically.<p>"
+            "I have reset this back to its old value of %1.</qt>").
+            arg(prefSet.surfacesCompatThreshold));
         surfacePrefs->editCompatThreshold->setText(
             QString::number(prefSet.surfacesCompatThreshold));
     }
@@ -613,9 +622,10 @@ void ReginaPreferences::slotApply() {
     if (ok && uintVal > 0)
         prefSet.pythonSpacesPerTab = uintVal;
     else {
-        QMessageBox::warning(this, tr("Invalid setting"),
-            tr("The number of spaces per tab "
-            "must be a positive integer."));
+        ReginaSupport::sorry(this,
+            tr("The number of spaces per tab must be positive."),
+            tr("I have reset this back to its old value of %1.")
+            .arg(prefSet.pythonSpacesPerTab));
         pythonPrefs->editSpacesPerTab->setText(
             QString::number(prefSet.pythonSpacesPerTab));
     }
@@ -1065,25 +1075,26 @@ void ReginaPrefCensus::add() {
             regina::NFileInfo* info = regina::NFileInfo::identify(
                 static_cast<const char*>(QFile::encodeName(*it)));
             if (! info) {
-                QMessageBox box(this);
-                box.setWindowTitle("Invalid census file");
-                box.setText(
-                        tr("The file %1 does not appear "
-                        "to be a Regina data file.  Only Regina data files "
-                        "can be used for census data.  Are you sure you wish "
-                        "to add it?").
+                QMessageBox box(QMessageBox::Information,
+                    tr("Information"),
+                    tr("<qt>The census file <i>%1</i> does not appear to be "
+                    "a Regina data file.</qt>").arg(QFileInfo(*it).fileName()),
+                    QMessageBox::Yes | QMessageBox::No, this);
+                box.setInformativeText(
+                        tr("Only Regina data files can be used for "
+                        "census lookups.  Are you sure you wish "
+                        "to add this file?").
                         arg(QFileInfo(*it).fileName()));
-                box.setStandardButtons(QMessageBox::Save|QMessageBox::Discard);
-                if (box.exec() == QMessageBox::Discard)
+                box.setDefaultButton(QMessageBox::No);
+                if (box.exec() != QMessageBox::Yes)
                     continue;
                 active = false;
             } else if (info->isInvalid()) {
-                QMessageBox::information(this, tr("Invalid header found"),
-                    tr("The file %1 might be a "
-                    "Regina data file, but it appears to contain unusual "
-                    "header information.  It is being deactivated for now; "
-                    "you may wish to examine it more closely.").
-                    arg(QFileInfo(*it).fileName()));
+                ReginaSupport::info(this,
+                    tr("<qt>The census file <i>%1</i> contains unusual "
+                    "header data.</qt>").arg(QFileInfo(*it).fileName()),
+                    tr("I am deactivating it for now; "
+                    "you may wish to examine it more closely."));
                 active = false;
             }
 
