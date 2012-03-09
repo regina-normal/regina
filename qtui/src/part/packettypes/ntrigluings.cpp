@@ -844,16 +844,21 @@ void NTriGluingsUI::removeSelectedTets() {
     }
 
     // Notify the user that tetrahedra will be removed.
-    QString message;
-    if (first == last)
-        message = tr("1 tetrahedron (number %1) will be removed.  "
-            "Are you sure?").arg(first);
-    else
-        message = tr("%1 tetrahedra (numbers %2 to %3) will be removed.  "
-            "Are you sure?").arg(last - first + 1).arg(first).arg(last);
-
-    if ( QMessageBox::warning(ui,tr("Confirm removal"), message, 
-          QMessageBox::Ok|QMessageBox::Cancel) == QMessageBox::Cancel)
+    QMessageBox msgBox(ui);
+    msgBox.setWindowTitle(tr("Regina"));
+    msgBox.setIcon(QMessageBox::Question);
+    if (first == last) {
+        msgBox.setText(tr("Tetrahedron number %1 will be removed.").arg(first));
+        msgBox.setInformativeText(tr("Are you sure?"));
+    } else {
+        msgBox.setText(
+            tr("<qt>%1 tetrahedra (numbers %2&ndash;%3) will be removed.</qt>")
+            .arg(last - first + 1).arg(first).arg(last));
+        msgBox.setInformativeText(tr("Are you sure?"));
+    }
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    if (msgBox.exec() != QMessageBox::Yes)
         return;
 
     // Off we go!
@@ -1081,14 +1086,13 @@ void NTriGluingsUI::makeZeroEfficient() {
 
     unsigned long initTets = tri->getNumberOfTetrahedra();
     if (initTets == 0) {
-        QMessageBox::information(ui, tr("Empty triangulation"),
-            tr("This triangulation is empty."));
+        ReginaSupport::info(ui, tr("This triangulation is empty."));
         return;
     }
 
     if (! (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
             tri->isConnected())) {
-        QMessageBox::warning(ui, tr("Not currently available"),
+        ReginaSupport::sorry(ui,
             tr("0-efficiency reduction is "
             "currently only available for closed orientable connected "
             "3-manifold triangulations."));
@@ -1117,11 +1121,11 @@ void NTriGluingsUI::makeZeroEfficient() {
         enclosingPane->getPart()->ensureVisibleInTree(
             decomp->getLastTreeChild());
 
-        QMessageBox::warning(ui, tr("Composite triangulation detected"),
-            tr("This is a composite 3-manifold "
-            "triangulation, which means it cannot be made 0-efficient.  "
-            "A connected sum decomposition into prime summands has been "
-            "extracted (without modifying this triangulation)."));
+        ReginaSupport::info(ui,
+            tr("This triangulation represents a composite 3-manifold."),
+            tr("This means it can never be made 0-efficient.  "
+            "I have performed a connected sum decomposition into "
+            "prime summands (without modifying this triangulation)."));
     } else {
         // Prime 3-manifold.
         unsigned long finalTets = tri->getNumberOfTetrahedra();
@@ -1133,24 +1137,26 @@ void NTriGluingsUI::makeZeroEfficient() {
                     tri->getHomologyH1().getInvariantFactor(0) == 2) {
                 // RP3.
                 if (finalTets < initTets)
-                    QMessageBox::information(ui, tr("Result"),
-                        tr("<qt>The 3-manifold "
-                        "RP<sup>3</sup> does not have a 0-efficient "
-                        "triangulation.  This triangulation has instead "
-                        "been converted to a minimal two-tetrahedron "
-                        "triangulation of RP<sup>3</sup>.</qt>"));
+                    ReginaSupport::info(ui,
+                        tr("<qt>This is the 3-manifold "
+                        "RP<sup>3</sup>, which does not have a 0-efficient "
+                        "triangulation.</qt>"),
+                        tr("<qt>I have instead converted it to a minimal "
+                        "two-tetrahedron triangulation of "
+                        "RP<sup>3</sup>.</qt>"));
                 else if (orig->isIsomorphicTo(*tri).get())
-                    QMessageBox::information(ui, tr("Result"), 
-                        tr("<qt>The 3-manifold "
-                        "RP<sup>3</sup> does not have a 0-efficient "
-                        "triangulation.  This triangulation has been "
-                        "left unchanged.</qt>"));
+                    ReginaSupport::info(ui,
+                        tr("<qt>This is the 3-manifold "
+                        "RP<sup>3</sup>, which does not have a 0-efficient "
+                        "triangulation.</qt>"),
+                        tr("I have left the triangulation unchanged."));
                 else
-                    QMessageBox::information(ui, tr("Result"), 
-                        tr("<qt>The 3-manifold "
-                        "RP<sup>3</sup> does not have a 0-efficient "
-                        "triangulation.  This triangulation has instead been "
-                        "converted to a one-vertex minimal triangulation "
+                    ReginaSupport::info(ui,
+                        tr("<qt>This is the 3-manifold "
+                        "RP<sup>3</sup>, which does not have a 0-efficient "
+                        "triangulation.</qt>"),
+                        tr("<qt>I have instead converted it to a "
+                        "one-vertex minimal triangulation "
                         "of RP<sup>3</sup>.</qt>"));
                 return;
             } else if ((! tri->isZeroEfficient()) &&
@@ -1158,19 +1164,19 @@ void NTriGluingsUI::makeZeroEfficient() {
                     tri->getHomologyH1().getNumberOfInvariantFactors() == 0) {
                 // S2xS1.
                 if (finalTets < initTets)
-                    QMessageBox::information(ui, tr("Result"),
-                        tr("<qt>The 3-manifold "
-                        "S<sup>2</sup> x S<sup>1</sup> does not have "
-                        "a 0-efficient triangulation.  This triangulation has "
-                        "instead been converted to a minimal two-tetrahedron "
-                        "triangulation of "
+                    ReginaSupport::info(ui,
+                        tr("<qt>This is the 3-manifold "
+                        "S<sup>2</sup> x S<sup>1</sup>, which does not have "
+                        "a 0-efficient triangulation."),
+                        tr("<qt>I have instead converted it to a minimal "
+                        "two-tetrahedron triangulation of "
                         "S<sup>2</sup> x S<sup>1</sup>.</qt>"));
                 else
-                    QMessageBox::information(ui, tr("Result"),
-                        tr("<qt>The 3-manifold "
-                        "S<sup>2</sup> x S<sup>1</sup> does not have "
-                        "a 0-efficient triangulation.  This triangulation has "
-                        "been left unchanged.</qt>"));
+                    ReginaSupport::info(ui,
+                        tr("<qt>This is the 3-manifold "
+                        "S<sup>2</sup> x S<sup>1</sup>, which does not have "
+                        "a 0-efficient triangulation."),
+                        tr("I have left the triangulation unchanged."));
                 return;
             } else if (finalTets == initTets && ! orig->isZeroEfficient()) {
                 // The triangulation has been made 0-efficient
@@ -1184,9 +1190,9 @@ void NTriGluingsUI::makeZeroEfficient() {
         }
 
         if (finalTets == initTets)
-            QMessageBox::information(ui, tr("Result"),
-                tr("This triangulation is already "
-                "0-efficient.  No changes are necessary."));
+            ReginaSupport::info(ui,
+                tr("This triangulation is already 0-efficient."),
+                tr("No changes are necessary."));
     }
 }
 
@@ -1212,10 +1218,11 @@ void NTriGluingsUI::censusLookup() {
     QCoreApplication::instance()->processEvents();
 
     QVector<CensusHit> results;
-    QString searched = tr("The following censuses were searched:");
+    QString searched = tr("The following censuses were searched:\n");
     NPacket* census;
     NPacket* p;
-    for (ReginaFilePrefList::const_iterator it = censusFiles.begin();
+    bool adjustedSettings = false;
+    for (ReginaFilePrefList::iterator it = censusFiles.begin();
             it != censusFiles.end(); it++) {
         progress->setValue(progress->value()+1);
         QCoreApplication::instance()->processEvents();
@@ -1223,8 +1230,7 @@ void NTriGluingsUI::censusLookup() {
         // Check for cancellation.
         if (progress->wasCanceled()) {
             delete progress;
-            QMessageBox::information(ui,tr("Cancelled"),
-                tr("The census lookup was cancelled."));
+            ReginaSupport::info(ui, tr("The census lookup was cancelled."));
             return;
         }
 
@@ -1238,11 +1244,25 @@ void NTriGluingsUI::censusLookup() {
         census = regina::readFileMagic(
             static_cast<const char*>(it->encodeFilename()));
         if (! census) {
-            QMessageBox::warning(ui, tr("Could not read census data"),
-                tr("The census data file %1 "
-                "could not be read.\nYou might consider temporarily "
-                "disabling this file in the census settings.").
-                arg((*it).filename));
+            // Disable the file automatically: it didn't work this time,
+            // it won't work next time.
+            // Since we're using a copy of the original list, we must
+            // hunt for the file in the original list.  This is okay;
+            // the lists are small and this case should rarely happen anyway.
+            for (ReginaFilePrefList::iterator tmpit =
+                    ReginaPrefSet::global().censusFiles.begin();
+                    tmpit != ReginaPrefSet::global().censusFiles.end();
+                    ++tmpit)
+                if (tmpit->filename == it->filename) {
+                    tmpit->active = false;
+                    adjustedSettings = true;
+                    break;
+                }
+            ReginaSupport::warn(ui,
+                tr("<qt>I could not read the census data file <i>%1</i>.</qt>")
+                .arg((*it).filename),
+                tr("I have disabled this file in Regina's census settings.  "
+                "You can re-enable it once the problem is fixed."));
             continue;
         }
 
@@ -1261,27 +1281,28 @@ void NTriGluingsUI::censusLookup() {
     delete progress;
     QCoreApplication::instance()->processEvents();
 
+    if (adjustedSettings) {
+        ReginaPrefSet::save();
+        ReginaPrefSet::propagate();
+    }
+
     // Were there any hits?
     if (results.empty()) {
-        // Qt doesn't have a static QMessageBox::warning type function
-        // that also shows the "Details" button.
-        QMessageBox *details = new QMessageBox(ui);
-        details->setIcon(QMessageBox::Information);
-        details->setText(tr("The triangulation could not "
-            "be found in any of the available censuses.\n"
-            "You can add more censuses to this search list through the "
-            "census settings."));
-        details->setWindowTitle("No matches");
-        details->setDetailedText(searched);
-        details->exec();
+        ReginaSupport::info(ui,
+            tr("The triangulation was not located in any census files."),
+            tr("You can add more censuses to this search through "
+            "Regina's census settings."),
+            searched);
     } else {
         QString detailsText = tr("Identified by census lookup:");
-        QString detailsHTML = tr("<qt>The triangulation was identified:");
+        QString detailsHTML = tr("<qt>");
         QString censusName;
         for (QVector<CensusHit>::const_iterator it = results.begin();
                 it != results.end(); it++) {
             censusName = QFileInfo((*it).censusFile).fileName();
-            detailsHTML += tr("<p>Name: %1<br>Census: %2").
+            if (it != results.begin())
+                detailsHTML += "<p>";
+            detailsHTML += tr("Name: %1<br>Census: %2").
                 arg((*it).triName).arg(censusName);
             detailsText += tr("\n\nName: %1\nCensus: %2").
                 arg((*it).triName).arg(censusName);
@@ -1289,19 +1310,16 @@ void NTriGluingsUI::censusLookup() {
         detailsHTML += "</qt>";
 
         // Show the hits to the user.
-        QMessageBox::information(ui, (results.size() == 1 ? tr("1 match found") :
-                tr("%1 matches found").arg(results.size())),
-                detailsHTML);
+        ReginaSupport::info(ui,
+            tr("The triangulation was identified:"),
+            detailsHTML, searched);
 
-        // If we're in read-write mode, store the hits as a text packet
-        // also.
-        if (model->isReadWrite()) {
-            regina::NText* text = 
-              new regina::NText(detailsText.toAscii().constData());
-            text->setPacketLabel(tri->makeUniqueLabel(
-                "ID: " + tri->getPacketLabel()));
-            tri->insertChildLast(text);
-        }
+        // Store the hits as a text packet also.
+        regina::NText* text = 
+          new regina::NText(detailsText.toAscii().constData());
+        text->setPacketLabel(tri->makeUniqueLabel(
+            "ID: " + tri->getPacketLabel()));
+        tri->insertChildLast(text);
     }
 }
 

@@ -8,7 +8,7 @@ Strip out obsolete preferences.
 Cache packet icons in PacketManager for performance.
 Rejuvenate the PacketPane header, including FlatButton and hard-coded 22px icon
 Spaces-per-tab has no effect in NScriptUI.
-Census prefs: separate standard files from user files.
+Census prefs: make system files different; display sensible names during lookup
 Merge shell/, part/, common/.
 Include graphviz in the bundle.
 
