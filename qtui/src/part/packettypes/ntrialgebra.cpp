@@ -396,13 +396,14 @@ void NTriFundGroupUI::simplifyGAP() {
             tri->simplifiedFundamentalGroup(newGroup);
             refresh();
         } else {
-            QMessageBox::warning(ui, tr("Unexpected error"),
+            ReginaSupport::sorry(ui,
                 tr("An unexpected error occurred whilst "
-                "attempting to simplify the group presentation using GAP.\n"
-                "Please verify that GAP (Groups, Algorithms and Programming) "
+                "attempting to simplify the group presentation using GAP."),
+                tr("<qt>Please verify that GAP "
+                "(Groups, Algorithms and Programming) "
                 "is correctly installed on your system, and that Regina "
                 "has been correctly configured to use it (see the "
-                "Triangulation section of the Regina configuration)."));
+                "<i>Triangulation</i> section in Regina's settings).</qt>"));
         }
     }
 }
@@ -432,13 +433,13 @@ QString NTriFundGroupUI::verifyGAPExec() {
             }
         }
         if (! found) {
-            QMessageBox::warning(ui, tr("Unable to find executable"),
-                tr("<qt>The GAP executable \"%1\" could "
-                "not be found on the default search path.\n"
-                "If you have GAP (Groups, Algorithms and Programming) "
-                "installed on your system, please go into the Regina "
-                "configuration (Triangulation section) and tell Regina "
-                "where it can find GAP.</qt>").arg(Qt::escape(useExec)));
+            ReginaSupport::sorry(ui,
+                tr("<qt>I could not find the GAP executable <i>%1</i> "
+                "on the default search path.</qt>").arg(Qt::escape(useExec)),
+                tr("<qt>If you have GAP (Groups, Algorithms and Programming) "
+                "installed on your system, please go into Regina's "
+                "settings (<i>Triangulation</i> section) and tell Regina "
+                "where it can find GAP.</qt>"));
             return QString::null;
         }
     }
@@ -446,21 +447,22 @@ QString NTriFundGroupUI::verifyGAPExec() {
     // We have a full path to the GAP executable.
     QFileInfo info(useExec);
     if (! info.exists()) {
-        QMessageBox::warning(ui, tr("Unable to find GAP executable"),
-            tr("<qt>The GAP executable \"%1\" does not exist.\n"
-            "If you have GAP (Groups, Algorithms and Programming) "
-            "installed on your system, please go into the Regina "
-            "configuration (Triangulation section) and tell Regina "
-            "where it can find GAP.</qt>").arg(Qt::escape(useExec)));
+        ReginaSupport::sorry(ui,
+            tr("<qt>The GAP executable <i>%1</i> does not exist.</qt>").
+                arg(Qt::escape(useExec)),
+            tr("<qt>If you have GAP (Groups, Algorithms and Programming) "
+            "installed on your system, please go into Regina's "
+            "settings (<i>Triangulation</i> section) and tell Regina "
+            "where it can find GAP.</qt>"));
         return QString::null;
     } else if (! (info.isFile() && info.isExecutable())) {
-        QMessageBox::warning(ui, tr("GAP not executable"),
-            tr("<qt>The GAP executable \"%1\" does "
-            "not actually appear to be an executable file.\n"
-            "If you have GAP (Groups, Algorithms and Programming) "
-            "installed on your system, please go into the Regina "
-            "configuration (Triangulation section) and tell Regina "
-            "where it can find GAP.</qt>").arg(Qt::escape(useExec)));
+        ReginaSupport::sorry(ui,
+            tr("<qt>The GAP executable <i>%1</i> does not appear to be "
+            "an executable program.</qt>").arg(Qt::escape(useExec)),
+            tr("<qt>If you have GAP (Groups, Algorithms and Programming) "
+            "installed on your system, please go into Regina's "
+            "settings (<i>Triangulation</i> section) and tell Regina "
+            "where it can find GAP.</qt>"));
         return QString::null;
     }
 
@@ -591,18 +593,17 @@ void NTriTuraevViroUI::calculateInvariant() {
     // Run sanity checks.
     if (! (tri->isValid() && tri->isClosed() &&
             tri->getNumberOfTetrahedra() > 0)) {
-        QMessageBox::warning(ui, tr("Invariants not available"),
-            tr("Turaev-Viro invariants are only "
-            "available for closed, valid, non-empty triangulations at "
-            "the present time."));
+        ReginaSupport::sorry(ui,
+            tr("Turaev-Viro invariants are currently "
+            "available only for closed, valid, non-empty triangulations."));
         return;
     }
 
     if (! reTVParams.exactMatch(params->text())) {
-        QMessageBox::warning(ui, tr("Invalid invariant parameters"),
+        ReginaSupport::info(ui,
             tr("<qt>The invariant parameters "
-            "(<i>r</i>, <i>root</i>) must be two positive integers.<p>"
-            "These parameters describe the initial data "
+            "(<i>r</i>, <i>root</i>) must be two positive integers.</qt>"),
+            tr("<qt>These parameters describe the initial data "
             "for the invariant as described in <i>State sum invariants of "
             "3-manifolds and quantum 6j-symbols</i>, Turaev and Viro, "
             "published in <i>Topology</i> <b>31</b>, no. 4, 1992.<p>"
@@ -621,39 +622,45 @@ void NTriTuraevViroUI::calculateInvariant() {
     unsigned long root = reTVParams.cap(2).toULong();
 
     if (r < 3) {
-        QMessageBox::warning(ui, tr("Invalid invariant parameter"),
+        ReginaSupport::info(ui,
             tr("<qt>The first parameter <i>r</i> must be "
             "at least 3.</qt>"));
         return;
     }
 
     if (root <= 0 || root >= 2 * r) {
-        QMessageBox::warning(ui, tr("Invalid invariant parameter"),
+        ReginaSupport::info(ui,
             tr("<qt>The second parameter <i>root</i> "
             "must be strictly between 0 and 2<i>r</i> (it specifies a "
-            "2<i>r</i>-th root of unity).  Example parameters "
-            "are <i>5,3</i>.</qt>"));
+            "2<i>r</i>-th root of unity).</qt>"),
+            tr("<qt>Example parameters are <i>5,3</i>.</qt>"));
         return;
     }
 
     if (regina::gcd(r, root) > 1) {
-        QMessageBox::warning(ui, tr("Invalid invariant parameter"),
+        ReginaSupport::info(ui,
             tr("<qt>The invariant parameters must have "
-            "no common factors.  Example parameters are <i>5,3</i>.</qt>"));
+            "no common factors.</qt>"),
+            tr("<qt>Example parameters are <i>5,3</i>.</qt>"));
         return;
     }
 
-    if (r >= TV_WARN_LARGE_R)
-        if (QMessageBox::warning(ui, tr("Warning"),
-                tr("<qt>This calculation "
-                "is likely to take a long time, since the time required "
-                "for calculating Turaev-Viro invariants grows exponentially "
+    if (r >= TV_WARN_LARGE_R) {
+        QMessageBox msg(QMessageBox::Warning,
+            tr("Warning"),
+            tr("This calculation could take a very long time."),
+            QMessageBox::Yes | QMessageBox::Cancel,
+            ui);
+        msg.setInformativeText(tr("<qt>The time required "
+                "to calculate Turaev-Viro invariants grows exponentially "
                 "with <i>r</i>.  It is recommended only to use "
-                "r&nbsp;&lt;&nbsp;%1.  Are you sure you wish to "
-                "proceed?</qt>").arg(TV_WARN_LARGE_R),
-                QMessageBox::Ok|QMessageBox::Cancel)
-                == QMessageBox::Cancel)
+                "r&nbsp;&lt;&nbsp;%1.<p>"
+                "Are you sure you wish to "
+                "proceed?</qt>").arg(TV_WARN_LARGE_R)),
+        msg.setDefaultButton(QMessageBox::Yes);
+        if (msg.exec() != QMessageBox::Yes)
             return;
+    }
 
     // Calculate the invariant!
     double value = tri->turaevViro(r, root);

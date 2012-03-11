@@ -405,14 +405,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
             bool inParentDestructor);
 
-    signals:
-        /**
-         * Emitted when the packet pane changes between read-write and
-         * read-only mode.  The boolean argument contains the new
-         * read-write status.
-         */
-        void readWriteStatusChanged(bool);
-
     public slots:
         /**
          * Queries the packet and refreshes the interface accordingly.

@@ -35,6 +35,7 @@
 
 // UI includes:
 #include "ntriangulationcreator.h"
+#include "reginasupport.h"
 
 #include <QCheckBox>
 #include <QComboBox>
@@ -42,8 +43,8 @@
 #include <QLabel>
 #include <QLayout>
 #include <QLineEdit>
-#include <QMessageBox>
 #include <QRegExp>
+#include <QTextDocument>
 #include <QValidator>
 #include <QStackedWidget>
 
@@ -368,10 +369,12 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         return new NTriangulation();
     else if (typeId == TRI_LAYERED_LENS_SPACE) {
         if (! reLensParams.exactMatch(lensParams->text())) {
-            QMessageBox::warning(parentWidget, 
-                QObject::tr("Negative parameters"), QObject::tr("<qt>The lens space "
-                "parameters (p,q) must be two non-negative integers.  "
-                "Example parameters are <i>8,3</i>.</qt>"));
+            ReginaSupport::sorry(parentWidget, 
+                QObject::tr("<qt>The lens space "
+                "parameters (<i>p</i>,<i>q</i>) "
+                "must be non-negative integers."),
+                QObject::tr("<qt>Example parameters are "
+                "<i>8,3</i>.</qt>"));
             return 0;
         }
 
@@ -379,21 +382,22 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         unsigned long q = reLensParams.cap(2).toULong();
 
         if (p == 0 && q == 0) {
-            QMessageBox::warning(parentWidget, QObject::tr("Need positive parameter"),
+            ReginaSupport::sorry(parentWidget,
                 QObject::tr("At least one of the "
-                "two lens space parameters must be strictly positive."));
+                "lens space parameters must be strictly positive."));
             return 0;
         }
         if (p < q && ! (p == 0 && q == 1)) {
-            QMessageBox::warning(parentWidget, QObject::tr("Invalid parameters"),
-                QObject::tr("<qt>The second lens space "
-                "parameter must be smaller than the first.  For instance, "
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("The second lens space "
+                "parameter must be smaller than the first."),
+                QObject::tr("<qt>For instance, "
                 "the parameters <i>8,3</i> are valid whereas <i>3,8</i> "
-                "are not."));
+                "are not.</qt>"));
             return 0;
         }
         if (regina::gcd(p, q) != 1) {
-            QMessageBox::warning(parentWidget, QObject::tr("Invalid parameters"),
+            ReginaSupport::sorry(parentWidget,
                 QObject::tr("The two lens space "
                 "parameters must be relatively prime."));
             return 0;
@@ -405,9 +409,9 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
     } else if (typeId == TRI_LAYERED_LOOP) {
         unsigned long len = loopLen->text().toULong();
         if (len == 0) {
-            QMessageBox::warning(parentWidget, QObject::tr("Invalid parameter"),
+            ReginaSupport::sorry(parentWidget,
                 QObject::tr("The layered loop length "
-                "must be a strictly positive integer."));
+                "must be a positive integer."));
             return 0;
         }
 
@@ -416,10 +420,11 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         return ans;
     } else if (typeId == TRI_LAYERED_SOLID_TORUS) {
         if (! reLSTParams.exactMatch(lstParams->text())) {
-            QMessageBox::warning(parentWidget, QObject::tr("Invalid parameter"),
+            ReginaSupport::sorry(parentWidget,
                 QObject::tr("<qt>The layered solid "
-                "torus parameters (a,b,c) must be three non-negative "
-                "integers.  Example parameters are <i>3,4,7</i>.</qt>"));
+                "torus parameters (<i>a</i>,<i>b</i>,<i>c</i>) "
+                "must be non-negative integers.</qt>"),
+                QObject::tr("<qt>Example parameters are <i>3,4,7</i>.</qt>"));
             return 0;
         }
 
@@ -428,15 +433,15 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         unsigned long c = reLSTParams.cap(3).toULong();
 
         if (a == 0 && b == 0 && c == 0) {
-            QMessageBox::warning(parentWidget, QObject::tr("Invalid parameter"),
+            ReginaSupport::sorry(parentWidget,
                 QObject::tr("At least one of the "
-                "three layered solid torus parameters must be strictly "
+                "layered solid torus parameters must be strictly "
                 "positive."));
             return 0;
         }
         if (regina::gcd(a, b) != 1) {
-            QMessageBox::warning(parentWidget, QObject::tr("Invalid parameter"),
-                QObject::tr("The three layered "
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("The layered "
                 "solid torus parameters must be relatively prime."));
             return 0;
         }
@@ -463,18 +468,20 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
                 ans->insertLayeredSolidTorus(c, b);
             return ans;
         } else {
-            QMessageBox::warning(parentWidget, QObject::tr("Invalid parameter"),
-                QObject::tr("<qt>Two of the layered "
-                "solid torus parameters must add to give the third.  "
-                "For instance, the parameters <i>3,4,7</i> are valid "
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("Two of the layered "
+                "solid torus parameters must add to give the third."),
+                QObject::tr("<qt>For instance, the parameters "
+                "<i>3,4,7</i> are valid "
                 "whereas the parameters <i>3,4,5</i> are not.</qt>"));
             return 0;
         }
     } else if (typeId == TRI_SFS_SPHERE) {
         if (! reSFSAllParams.exactMatch(sfsParams->text())) {
-            QMessageBox::warning(parentWidget, QObject::tr("Invalid parameter"),
-                QObject::tr("<qt>All 2<i>n</i> Seifert "
-                "fibred space parameters "
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("The Seifert fibred space parameters "
+                "are not valid."),
+                QObject::tr("<qt>All 2<i>n</i> parameters "
                 "(<i>a<sub>1</sub></i>,<i>b<sub>1</sub></i>) "
                 "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) ... "
                 "(<i>a<sub>n</sub></i>,<i>b<sub>n</sub></i>) "
@@ -511,7 +518,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
             b = reSFSParamPair.cap(2).toLong();
 
             if (a == 0) {
-                QMessageBox::warning(parentWidget, QObject::tr("Invalid parameter"),
+                ReginaSupport::sorry(parentWidget,
                     QObject::tr("<qt>None of the parameters "
                     "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i>, ..., "
                     "<i>a<sub>n</sub></i> may be zero.</qt>"));
@@ -522,7 +529,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
             // negatives.
             d = regina::gcdWithCoeffs(a, b, u, v);
             if (d != 1 && d != -1) {
-                QMessageBox::warning(parentWidget, QObject::tr("Invalid parameters"),
+                ReginaSupport::sorry(parentWidget,
                     QObject::tr("<qt>The two parameters "
                     "<i>a<sub>%1</sub> = %2</i> and "
                     "<i>b<sub>%3</sub> = %4</i> must be "
@@ -544,7 +551,9 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         return ans;
     } else if (typeId == TRI_AUG_TRI_SOLID_TORUS) {
         if (! reSFS3Params.exactMatch(augParams->text())) {
-            QMessageBox::warning(parentWidget, QObject::tr("Invalid parameter"),
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("The augmented triangular solid torus parameters "
+                "are not valid."),
                 QObject::tr("<qt>All six integer "
                 "parameters (<i>a<sub>1</sub></i>,<i>b<sub>1</sub></i>) "
                 "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) "
@@ -568,7 +577,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         long d, u, v;
         d = regina::gcdWithCoeffs(a1, b1, u, v);
         if (d != 1 && d != -1) {
-            QMessageBox::warning(parentWidget, QObject::tr("Invalid parameters"),
+            ReginaSupport::sorry(parentWidget,
                 QObject::tr("<qt>The two parameters "
                 "<i>a<sub>1</sub></i> and <i>b<sub>1</sub></i> must be "
                 "relatively prime.</qt>"));
@@ -576,7 +585,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         }
         d = regina::gcdWithCoeffs(a2, b2, u, v);
         if (d != 1 && d != -1) {
-            QMessageBox::warning(parentWidget, QObject::tr("Invalid parameters"),
+            ReginaSupport::sorry(parentWidget,
                 QObject::tr("<qt>The two parameters "
                 "<i>a<sub>2</sub></i> and <i>b<sub>2</sub></i> must be "
                 "relatively prime.</qt>"));
@@ -584,7 +593,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         }
         d = regina::gcdWithCoeffs(a3, b3, u, v);
         if (d != 1 && d != -1) {
-            QMessageBox::warning(parentWidget, QObject::tr("Invalid parameters"),
+            ReginaSupport::sorry(parentWidget,
                 QObject::tr("<qt>The two parameters "
                 "<i>a<sub>3</sub></i> and <i>b<sub>3</sub></i> must be "
                 "relatively prime.</qt>"));
@@ -597,11 +606,16 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         return ans;
     } else if (typeId == TRI_ISOSIG) {
         if (! reIsoSig.exactMatch(isoSig->text())) {
-            QMessageBox::warning(parentWidget, QObject::tr("Invalid signature"),
-                QObject::tr("<qt>The isomorphism "
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("The isomorphism signature is not valid."),
+                QObject::tr("<qt>An isomorphism "
                 "signature must be a sequence of symbols, which may include "
                 "letters, digits, plus and/or minus but nothing else.  "
-                "An example isomorphism signature is <i>bkaagj</i>.</qt>"));
+                "An example isomorphism signature is <i>bkaagj</i>.<p>"
+                "Isomorphism signatures are described in detail in "
+                "<i>Simplification paths in the Pachner graphs "
+                "of closed orientable 3-manifold triangulations</i>, "
+                "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>"));
             return 0;
         }
 
@@ -609,15 +623,19 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
             reIsoSig.cap(1).toAscii().constData());
         if (ans)
             return ans;
-        QMessageBox::warning(parentWidget, QObject::tr("Invalid signature"),
-            QObject::tr("<qt>The given "
-            "isomorphism signature was not valid.</qt>"));
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("I could not interpret the given "
+            "isomorphism signature."),
+            QObject::tr("<qt>Isomorphism signatures are described in detail in "
+            "<i>Simplification paths in the Pachner graphs "
+            "of closed orientable 3-manifold triangulations</i>, "
+            "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>"));
         return 0;
     } else if (typeId == TRI_DEHYDRATION) {
         if (! reDehydration.exactMatch(dehydrationString->text())) {
-            QMessageBox::warning(parentWidget, 
-                QObject::tr("Invalid dehydration string"),
-                QObject::tr("<qt>The dehydration "
+            ReginaSupport::sorry(parentWidget, 
+                QObject::tr("The dehydration string is not valid."),
+                QObject::tr("<qt>A dehydration "
                 "string must be a sequence of letters of the alphabet.  "
                 "An example dehydration string is <i>baaaade</i>.<p>"
                 "Dehydration strings are described in detail in "
@@ -631,11 +649,11 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         if (! ans->insertRehydration(
                 reDehydration.cap(1).toAscii().constData())) {
             delete ans;
-            QMessageBox::warning(parentWidget, 
-                QObject::tr("Invalid dehydration string"),
-                QObject::tr("<qt>The given "
-                "dehydration string was not valid.<p>"
-                "Dehydration strings are described in detail in "
+            ReginaSupport::sorry(parentWidget, 
+                QObject::tr("I could not interpret the given "
+                "dehydration string."),
+                QObject::tr("<qt>Dehydration strings are described in "
+                "detail in "
                 "<i>A census of cusped hyperbolic 3-manifolds</i>, "
                 "Callahan, Hildebrand and Weeks, published in "
                 "<i>Mathematics of Computation</i> <b>68</b>, 1999.</qt>"));
@@ -644,9 +662,9 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         return ans;
     } else if (typeId == TRI_SPLITTING_SURFACE) {
         if (! reSignature.exactMatch(splittingSignature->text())) {
-            QMessageBox::warning(parentWidget, 
-                QObject::tr("Invalid signature"),
-                QObject::tr("<qt>The splitting "
+            ReginaSupport::sorry(parentWidget, 
+                QObject::tr("The splitting surface signature is not valid."),
+                QObject::tr("<qt>A splitting "
                 "surface signature must be a sequence of cycles.  "
                 "Cycles should consist of letters of the alphabet and "
                 "should be separated by brackets, periods or commas.  "
@@ -661,11 +679,11 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         regina::NSignature* sig = regina::NSignature::parse(
             reSignature.cap(1).toAscii().constData());
         if (! sig) {
-            QMessageBox::warning(parentWidget, 
-                QObject::tr("Invalid signature"),
-                QObject::tr("<qt>The given "
-                "splitting surface signature was not valid.<p>"
-                "Splitting surface signatures are described in detail in "
+            ReginaSupport::sorry(parentWidget, 
+                QObject::tr("I could not interpret the given "
+                "splitting surface signature."),
+                QObject::tr("<qt>Splitting surface signatures are "
+                "described in detail in "
                 "<i>Minimal triangulations and normal surfaces</i>, "
                 "Burton, PhD thesis, available from the Regina website.</qt>"));
             return 0;
@@ -701,13 +719,13 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
                 return NExampleTriangulation::whiteheadLinkComplement();
         }
 
-        QMessageBox::warning(parentWidget, QObject::tr("No selection"),
-            QObject::tr("No example triangulation has been selected."));
+        ReginaSupport::info(parentWidget,
+            QObject::tr("Please select an example triangulation."));
         return 0;
     }
 
-    QMessageBox::warning(parentWidget, QObject::tr("No selection"),
-        QObject::tr("No triangulation type has been selected."));
+    ReginaSupport::info(parentWidget,
+        QObject::tr("Please select a triangulation type."));
     return 0;
 }
 

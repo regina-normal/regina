@@ -254,8 +254,6 @@ bool PacketPane::setReadWrite(bool allowReadWrite) {
     mainUI->setReadWrite(allowReadWrite);
     updateClipboardActions();
 
-    emit readWriteStatusChanged(readWrite);
-
     return true;
 }
 
@@ -438,8 +436,12 @@ bool PacketPane::commit() {
         }
 
         if (! readWrite) {
-            QMessageBox::warning(this, tr("Read only packet"),
-                tr("This packet is read-only.  No changes may be committed."));
+            // We should never reach this point: readWrite should be synced
+            // with isPacketEditable().  This code is left over from the old
+            // days of read-only KParts.  Keep the code just in case though.
+            ReginaSupport::info(this,
+                tr("This packet is read-only."),
+                tr("You may not commit any changes."));
             return false;
         }
 
@@ -473,8 +475,12 @@ bool PacketPane::commitToModify() {
     }
 
     if (! readWrite) {
-        QMessageBox::warning(this, tr("Read only packet"),
-            tr("This packet is read-only.  No changes may be committed."));
+        // We should never reach this point: readWrite should be synced
+        // with isPacketEditable().  This code is left over from the old
+        // days of read-only KParts.  Keep the code just in case though.
+        ReginaSupport::info(this,
+            tr("This packet is read-only."),
+            tr("You may not commit any changes."));
         return false;
     }
 
