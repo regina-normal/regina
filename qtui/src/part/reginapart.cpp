@@ -47,6 +47,7 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QSplitter>
+#include <QTextDocument>
 #include <QTreeView>
 #include <QTreeWidget>
 #include <QUrl>
@@ -234,7 +235,8 @@ bool ReginaPart::saveFile() {
         return true;
     } else {
         QMessageBox::warning(widget(),tr("Could not save data"), tr(
-            "Topology data file %1 could not be saved.").arg(localFile));
+            "<qt>Topology data file %1 could not be saved.</qt>").
+            arg(Qt::escape(localFile)));
         return false;
     }
 }
@@ -357,9 +359,9 @@ void ReginaPart::packetDelete() {
     }
 
     if (QMessageBox::warning(widget(), tr("Delete all?"),
-            tr("You are about to delete the packet"
-            "%1 and all its children.  Are you sure?")
-            .arg(packet->getPacketLabel().c_str()),
+            tr("<qt>You are about to delete the packet "
+            "%1 and all its children.  Are you sure?</qt>")
+            .arg(Qt::escape(packet->getPacketLabel().c_str())),
             QMessageBox::Discard | QMessageBox::Cancel) != QMessageBox::Discard )
         return;
 

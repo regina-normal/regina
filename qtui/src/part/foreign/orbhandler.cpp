@@ -34,6 +34,7 @@
 #include "../packetfilter.h"
 
 #include <QFile>
+#include <QTextDocument>
 
 const OrbHandler OrbHandler::instance;
 
@@ -45,7 +46,8 @@ regina::NPacket* OrbHandler::importData(const QString& fileName,
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
-            "is readable and in Orb / Casson format.").arg(fileName));
+            "is readable and in Orb / Casson format.").
+                arg(Qt::escape(fileName)));
     return ans;
 }
 

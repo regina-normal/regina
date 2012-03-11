@@ -51,6 +51,7 @@
 #include <QLabel>
 #include <QMenuBar>
 #include <QTextCodec>
+#include <QTextDocument>
 #include <QTextEdit>
 #include <QTextStream>
 #include <QVBoxLayout>
@@ -301,7 +302,8 @@ bool PythonConsole::importRegina() {
             "further assistance.<p>"
             "None of Regina's functions will "
             "be available during this Python session.</qt>")
-            .arg(QFile::decodeName(regina::NGlobalDirs::pythonModule().c_str()))
+            .arg(Qt::escape(QFile::decodeName(
+                regina::NGlobalDirs::pythonModule().c_str())))
             .arg(PACKAGE_BUGREPORT));
         addError(tr("Unable to load module \"regina\"."));
         return false;
@@ -410,9 +412,9 @@ void PythonConsole::saveLog() {
         if (! f.open(QIODevice::WriteOnly))
             ReginaSupport::warn(this,
                 tr("I could not save the session transcript."),
-                tr("An error occurred whilst "
-                "attempting to write to the file %1.").
-                arg(fileName));
+                tr("<qt>An error occurred whilst "
+                "attempting to write to the file <tt>%1</tt>.</qt>").
+                arg(Qt::escape(fileName)));
         else {
             QTextStream out(&f);
             out.setCodec(QTextCodec::codecForName("UTF-8"));

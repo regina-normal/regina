@@ -33,6 +33,7 @@
 #include "../packetfilter.h"
 
 #include <QFile>
+#include <QTextDocument>
 
 regina::NPacket* ReginaHandler::importData(const QString& fileName,
         QWidget* parentWidget) const {
@@ -42,7 +43,8 @@ regina::NPacket* ReginaHandler::importData(const QString& fileName,
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
-            "is readable and in Regina format.</qt>").arg(fileName));
+            "is readable and in Regina format.</qt>").
+                arg(Qt::escape(fileName)));
     return ans;
 }
 
@@ -57,7 +59,7 @@ bool ReginaHandler::exportData(regina::NPacket* data,
             QObject::tr("I cannot export this packet subtree on its own."), 
             QObject::tr("<qt>This is because the root packet <i>%1</i> "
             "must stay connected to its parent.</qt>").
-            arg(data->getPacketLabel().c_str()));
+            arg(Qt::escape(data->getPacketLabel().c_str())));
         return false;
     }
     if (! regina::writeXMLFile(QFile::encodeName(fileName), data, compressed)) {
@@ -65,7 +67,7 @@ bool ReginaHandler::exportData(regina::NPacket* data,
             QObject::tr("The export failed."), 
             QObject::tr("<qt>An unknown error occurred, probably related "
             "to file I/O.  Please check that you have permissions to write "
-            "to the file <tt>%1</tt>.</qt>").arg(fileName));
+            "to the file <tt>%1</tt>.</qt>").arg(Qt::escape(fileName)));
         return false;
     }
     return true;

@@ -35,6 +35,7 @@
 #include "../packetfilter.h"
 
 #include <QFile>
+#include <QTextDocument>
 
 const IsoSigHandler IsoSigHandler::instance3(3);
 
@@ -54,7 +55,7 @@ regina::NPacket* IsoSigHandler::importData(const QString& fileName,
             QObject::tr("The import failed."),
             QObject::tr("<qt>I could not open the file <tt>%1</tt>.  "
                 "Please check that this file is readable.</qt>")
-                .arg(fileName));
+                .arg(Qt::escape(fileName)));
         return 0;
     }
 

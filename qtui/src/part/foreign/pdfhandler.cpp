@@ -34,6 +34,7 @@
 #include "../packetfilter.h"
 
 #include <QFile>
+#include <QTextDocument>
 
 const PDFHandler PDFHandler::instance;
 
@@ -45,7 +46,7 @@ regina::NPacket* PDFHandler::importData(const QString& fileName,
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
-            "is readable and in PDF format.</qt>").arg(fileName));
+            "is readable and in PDF format.</qt>").arg(Qt::escape(fileName)));
     else
         ans->setPacketLabel(QObject::tr("PDF document").toAscii().constData());
     return ans;
@@ -71,7 +72,7 @@ bool PDFHandler::exportData(regina::NPacket* data, const QString& fileName,
             QObject::tr("The export failed."), 
             QObject::tr("<qt>An unknown error occurred, probably related "
             "to file I/O.  Please check that you have permissions to write "
-            "to the file <tt>%1</tt>.</qt>").arg(fileName));
+            "to the file <tt>%1</tt>.</qt>").arg(Qt::escape(fileName)));
         return false;
     }
     return true;

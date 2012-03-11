@@ -35,6 +35,7 @@
 #include <fstream>
 #include <QFile>
 #include <QTextCodec>
+#include <QTextDocument>
 #include <QTextStream>
 
 const SourceHandler SourceHandler::instance;
@@ -56,7 +57,8 @@ bool SourceHandler::exportData(regina::NPacket* data, const QString& fileName,
     if (! f.open(QIODevice::WriteOnly)) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 
-            QObject::tr("I could not write to the file %1.").arg(fileName));
+            QObject::tr("<qt>I could not write to the file <tt>%1</tt>.</qt>").
+                arg(Qt::escape(fileName)));
         return false;
     }
     QTextStream out(&f);

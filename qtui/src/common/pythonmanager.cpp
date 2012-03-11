@@ -37,6 +37,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QProcess>
+#include <QTextDocument>
 #include <QUrl>
 
 PythonManager::~PythonManager() {
@@ -63,7 +64,7 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
             QObject::tr("I could not find the Python API reference."),
             QObject::tr("<qt>It should be installed in: <tt>%1/</tt><p>"
             "Please contact %2 for assistance.</qt>")
-            .arg(docDir)
+            .arg(Qt::escape(docDir))
             .arg(PACKAGE_BUGREPORT));
     }
 }

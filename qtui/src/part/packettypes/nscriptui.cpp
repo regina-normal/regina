@@ -137,8 +137,9 @@ void ScriptNameDelegate::setModelData(QWidget* editor,
 
         ReginaSupport::info(e,
             tr("<qt><tt>%1</tt> is not a valid Python variable name.</qt>").
-                arg(oldData),
-            tr("<qt>I have changed it to <tt>%1</tt> instead.</qt>").arg(data));
+                arg(Qt::escape(oldData)),
+            tr("<qt>I have changed it to <tt>%1</tt> instead.</qt>").
+                arg(Qt::escape(data)));
 
     }
     if (nameUsedElsewhere(data, index.row(), model)) {
@@ -153,8 +154,9 @@ void ScriptNameDelegate::setModelData(QWidget* editor,
 
         ReginaSupport::info(e,
             tr("<qt>Another variable is already using the "
-                "name <tt>%1</tt>.</qt>").arg(oldData),
-            tr("<qt>I will use <tt>%1</tt> instead.</qt>").arg(data));
+                "name <tt>%1</tt>.</qt>").arg(Qt::escape(oldData)),
+            tr("<qt>I will use <tt>%1</tt> instead.</qt>").
+                arg(Qt::escape(data)));
     }
 
     model->setData(index, data, Qt::EditRole);
@@ -540,7 +542,7 @@ void NScriptUI::removeSelectedVariables() {
     msgBox.setIcon(QMessageBox::Question);
     if (range.bottomRow() == range.topRow()) {
         msgBox.setText(tr("<qt>The variable <tt>%1</tt> will be removed.</qt>").
-            arg(varTable->item(range.topRow(), 0)->text()));
+            arg(Qt::escape(varTable->item(range.topRow(), 0)->text())));
         msgBox.setInformativeText(tr("Are you sure?"));
     } else {
         msgBox.setText(tr("%1 variables will be removed.").

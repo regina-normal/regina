@@ -39,6 +39,7 @@
 #include <QLabel>
 #include <QLayout>
 #include <QLineEdit>
+#include <QTextDocument>
 #include <QWhatsThis>
 
 ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
@@ -112,7 +113,7 @@ void ImportDialog::slotOk() {
             "for the import."),
             tr("<qt>The packet <i>%1</i> cannot act as a parent for "
             "this imported data.</qt>").
-            arg(parentPacket->getPacketLabel().c_str()));
+            arg(Qt::escape(parentPacket->getPacketLabel().c_str())));
         return;
     }
 

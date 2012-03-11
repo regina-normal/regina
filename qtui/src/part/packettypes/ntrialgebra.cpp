@@ -433,12 +433,12 @@ QString NTriFundGroupUI::verifyGAPExec() {
         }
         if (! found) {
             QMessageBox::warning(ui, tr("Unable to find executable"),
-                tr("The GAP executable \"%1\" could "
+                tr("<qt>The GAP executable \"%1\" could "
                 "not be found on the default search path.\n"
                 "If you have GAP (Groups, Algorithms and Programming) "
                 "installed on your system, please go into the Regina "
                 "configuration (Triangulation section) and tell Regina "
-                "where it can find GAP.").arg(useExec));
+                "where it can find GAP.</qt>").arg(Qt::escape(useExec)));
             return QString::null;
         }
     }
@@ -447,20 +447,20 @@ QString NTriFundGroupUI::verifyGAPExec() {
     QFileInfo info(useExec);
     if (! info.exists()) {
         QMessageBox::warning(ui, tr("Unable to find GAP executable"),
-            tr("The GAP executable \"%1\" does not exist.\n"
+            tr("<qt>The GAP executable \"%1\" does not exist.\n"
             "If you have GAP (Groups, Algorithms and Programming) "
             "installed on your system, please go into the Regina "
             "configuration (Triangulation section) and tell Regina "
-            "where it can find GAP.").arg(useExec));
+            "where it can find GAP.</qt>").arg(Qt::escape(useExec)));
         return QString::null;
     } else if (! (info.isFile() && info.isExecutable())) {
         QMessageBox::warning(ui, tr("GAP not executable"),
-            tr("The GAP executable \"%1\" does "
+            tr("<qt>The GAP executable \"%1\" does "
             "not actually appear to be an executable file.\n"
             "If you have GAP (Groups, Algorithms and Programming) "
             "installed on your system, please go into the Regina "
             "configuration (Triangulation section) and tell Regina "
-            "where it can find GAP.").arg(useExec));
+            "where it can find GAP.</qt>").arg(Qt::escape(useExec)));
         return QString::null;
     }
 

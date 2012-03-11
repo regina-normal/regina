@@ -67,8 +67,8 @@
 #include <QLabel>
 #include <QLayout>
 #include <QMenu>
-#include <QMessageBox>
 #include <QPushButton>
+#include <QTextDocument>
 #include <QTreeWidgetItem>
 
 using regina::NEdge;
@@ -297,37 +297,40 @@ void NTriCompositionUI::viewIsomorphism() {
     QString title, msg;
     QStringList details;
 
-    details += QString("[%1]  -  [%2]").arg(tri->getPacketLabel().c_str()).
-        arg(comparingTri->getPacketLabel().c_str());
+    details += QString("[%1]  &rarr;  [%2]").
+        arg(Qt::escape(tri->getPacketLabel().c_str())).
+        arg(Qt::escape(comparingTri->getPacketLabel().c_str()));
 
     if (isoType == IsIsomorphic) {
-        title = tr("Isomorphism Details");
-        msg = tr("Below are details of the specific isomorphism between "
-            "the two triangulations.  The left hand side refers to this "
+        title = tr("Details of the isomorphism between "
+            "the two triangulations:");
+        msg = tr("<qt>The left hand side refers to this "
             "triangulation; the right hand side refers to the selected "
-            "triangulation %1.\n"
+            "triangulation <i>%1</i>.<p>"
             "Each line represents a single tetrahedron and its four "
-            "vertices.").arg(comparingTri->getPacketLabel().c_str());
+            "vertices.").
+            arg(Qt::escape(comparingTri->getPacketLabel().c_str()));
 
         for (unsigned long i = 0; i < tri->getNumberOfTetrahedra(); i++)
-            details += QString("%1 (0123)  -  %2 (%3)").
+            details += QString("%1 (0123)  &rarr;  %2 (%3)").
                 arg(i).
                 arg(isomorphism->tetImage(i)).
                 arg(isomorphism->facePerm(i).toString().c_str())
                 ;
     } else {
-        title = tr("Subcomplex Details");
-        msg = tr("Below are details of the specific isomorphism by which "
-            "one triangulation is contained within the other.  The left "
+        title = tr("Details of the isomorphism by which "
+            "one triangulation is contained within the other:");
+        msg = tr("<qt>The left "
             "hand side refers to this triangulation; the right hand side "
             "refers to the selected "
-            "triangulation %1.\n"
+            "triangulation <i>%1</i>.<p>"
             "Each line represents a single tetrahedron and its four "
-            "vertices.").arg(comparingTri->getPacketLabel().c_str());
+            "vertices.").
+            arg(Qt::escape(comparingTri->getPacketLabel().c_str()));
 
         if (isoType == IsSubcomplex)
             for (unsigned long i = 0; i < tri->getNumberOfTetrahedra(); i++)
-                details += QString("%1 (0123)  -  %2 (%3)").
+                details += QString("%1 (0123)  &rarr;  %2 (%3)").
                     arg(i).
                     arg(isomorphism->tetImage(i)).
                     arg(isomorphism->facePerm(i).toString().c_str())
@@ -335,7 +338,7 @@ void NTriCompositionUI::viewIsomorphism() {
         else
             for (unsigned long i = 0;
                     i < comparingTri->getNumberOfTetrahedra(); i++)
-                details += QString("%2 (%3)  -  %1 (0123)").
+                details += QString("%2 (%3)  &rarr;  %1 (0123)").
                     arg(i).
                     arg(isomorphism->tetImage(i)).
                     arg(isomorphism->facePerm(i).toString().c_str())
@@ -346,12 +349,8 @@ void NTriCompositionUI::viewIsomorphism() {
         details += tr("(no tetrahedra)");
 
     // Redo this to actually display information as a list?
-    QMessageBox msgBox;
-    msgBox.setText(msg);
-    msgBox.setWindowTitle(title);
-    msgBox.setInformativeText(details.join("\n"));
-    msgBox.exec();
-
+    ReginaSupport::info(ui,
+        title, msg + "<p>" + details.join("<br>") + "<qt>");
 }
 
 QTreeWidgetItem* NTriCompositionUI::addTopLevelSection(const QString& text) {

@@ -38,6 +38,7 @@
 #include <QFrame>
 #include <QLabel>
 #include <QLineEdit>
+#include <QTextDocument>
 #include <QWhatsThis>
 
 NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
@@ -122,7 +123,7 @@ void NewPacketDialog::slotOk() {
             "the new packet."),
             tr("<qt>The packet <i>%1</i> cannot act as a parent for "
             "the new packet.</qt>").
-            arg(parentPacket->getPacketLabel().c_str()));
+            arg(Qt::escape(parentPacket->getPacketLabel().c_str())));
         return;
     }
 

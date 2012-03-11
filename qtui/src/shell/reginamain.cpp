@@ -46,6 +46,7 @@
 #include <QLabel>
 #include <QMenuBar>
 #include <QSize>
+#include <QTextDocument>
 #include <QToolBar>
 #include <QVBoxLayout>
 #include <QWhatsThis>
@@ -163,8 +164,9 @@ bool ReginaMain::openUrl(const QUrl& url) {
     if (! packetTree) {
         ReginaSupport::sorry(this,
             tr("I could not open the selected file."),
-            tr("<qt>Please check that the file <i>%1</i> "
-            "is readable and in Regina format.</qt>").arg(localFile));
+            tr("<qt>Please check that the file <tt>%1</tt> "
+            "is readable and in Regina format.</qt>").
+            arg(Qt::escape(localFile)));
         return false;
     }
 
@@ -184,7 +186,7 @@ bool ReginaMain::openExample(const QUrl& url, const QString& description) {
             tr("I could not locate the example that you requested."),
             tr("<qt>The example \"%1\" may not have been installed properly.  "
             "Please contact <i>%2</i> for assistance.").
-            arg(description).arg(PACKAGE_BUGREPORT));
+            arg(Qt::escape(description)).arg(PACKAGE_BUGREPORT));
         return false;
     }
 
@@ -196,7 +198,7 @@ bool ReginaMain::openExample(const QUrl& url, const QString& description) {
             tr("I could not open the example that you requested."),
             tr("<qt>The example \"%1\" may not have been installed properly.  "
             "Please contact <i>%2</i> for assistance.").
-            arg(description).arg(PACKAGE_BUGREPORT));
+            arg(Qt::escape(description)).arg(PACKAGE_BUGREPORT));
         return false;
     }
 

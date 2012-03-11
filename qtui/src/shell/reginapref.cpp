@@ -50,6 +50,7 @@
 #include <QMessageBox>
 #include <QProcessEnvironment>
 #include <QPushButton>
+#include <QTextDocument>
 #include <QValidator>
 
 /**
@@ -372,13 +373,13 @@ void ReginaPreferences::slotApply() {
         if (! info.exists()) {
             ReginaSupport::sorry(this,
                 tr("<qt>The GAP executable <i>%1</i> "
-                "does not exist.</qt>").arg(strVal),
+                "does not exist.</qt>").arg(Qt::escape(strVal)),
                 tr("I have reset this back to its old value."));
             triPrefs->editGAPExec->setText(prefSet.triGAPExec);
         } else if (! (info.isFile() && info.isExecutable())) {
             ReginaSupport::sorry(this,
                 tr("<qt>The GAP executable <i>%1</i> is not an "
-                "executable program.</qt>").arg(strVal),
+                "executable program.</qt>").arg(Qt::escape(strVal)),
                 tr("I have reset this back to its old value."));
             triPrefs->editGAPExec->setText(prefSet.triGAPExec);
         } else {
@@ -403,7 +404,7 @@ void ReginaPreferences::slotApply() {
         if (! found) {
             ReginaSupport::sorry(this,
                 tr("<qt>I could not find the GAP executable <i>%1</i> "
-                "on the search path.</qt>").arg(strVal),
+                "on the search path.</qt>").arg(Qt::escape(strVal)),
                 tr("<qt>This means "
                 "that you cannot use GAP from within Regina.<p>"
                 "This is not really a problem; it just means that Regina "
@@ -476,22 +477,23 @@ void ReginaPreferences::slotApply() {
             if (gvStatus == GraphvizStatus::notFound) {
                 box.setText(
                     tr("<qt>I could not find the Graphviz executable <i>%1</i> "
-                    "on the search path.</qt>").arg(strVal));
+                    "on the search path.</qt>").arg(Qt::escape(strVal)));
                 box.setDetailedText(
                     tr("The following directories are in the search path:\n%1")
                     .arg(pathList.join("\n")));
             } else if (gvStatus == GraphvizStatus::notExist) {
                 box.setText(
                     tr("<qt>The Graphviz executable <i>%1</i> "
-                        "does not exist.</qt>").arg(strVal));
+                        "does not exist.</qt>").arg(Qt::escape(strVal)));
             } else if (gvStatus == GraphvizStatus::notExecutable) {
                 box.setText(
                     tr("<qt>The Graphviz executable <i>%1</i> "
-                        "is not an executable program.</qt>").arg(strVal));
+                        "is not an executable program.</qt>")
+                        .arg(Qt::escape(strVal)));
             } else if (gvStatus == GraphvizStatus::notStartable) {
                 box.setText(
                     tr("<qt>The Graphviz executable <i>%1</i> "
-                    "cannot be started.</qt>").arg(strVal));
+                    "cannot be started.</qt>").arg(Qt::escape(strVal)));
             } else if (gvStatus == GraphvizStatus::unsupported) {
                 box.setText(
                     tr("I cannot determine which "
@@ -507,7 +509,8 @@ void ReginaPreferences::slotApply() {
                     "If you believe this message is in error, "
                     "please notify the Regina authors at <i>%2</i>.<p>"
                     "Are you sure you wish to save your new Graphviz "
-                    "setting?</qt>").arg(strVal).arg(PACKAGE_BUGREPORT));
+                    "setting?</qt>").
+                    arg(Qt::escape(strVal)).arg(PACKAGE_BUGREPORT));
             } else if (gvStatus == GraphvizStatus::version1NotDot) {
                 box.setText(
                     tr("You appear to be running "
@@ -1078,13 +1081,13 @@ void ReginaPrefCensus::add() {
                 QMessageBox box(QMessageBox::Information,
                     tr("Information"),
                     tr("<qt>The census file <i>%1</i> does not appear to be "
-                    "a Regina data file.</qt>").arg(QFileInfo(*it).fileName()),
+                    "a Regina data file.</qt>").
+                    arg(Qt::escape(QFileInfo(*it).fileName())),
                     QMessageBox::Yes | QMessageBox::No, this);
                 box.setInformativeText(
                         tr("Only Regina data files can be used for "
                         "census lookups.  Are you sure you wish "
-                        "to add this file?").
-                        arg(QFileInfo(*it).fileName()));
+                        "to add this file?"));
                 box.setDefaultButton(QMessageBox::No);
                 if (box.exec() != QMessageBox::Yes)
                     continue;
@@ -1092,7 +1095,8 @@ void ReginaPrefCensus::add() {
             } else if (info->isInvalid()) {
                 ReginaSupport::info(this,
                     tr("<qt>The census file <i>%1</i> contains unusual "
-                    "header data.</qt>").arg(QFileInfo(*it).fileName()),
+                    "header data.</qt>").
+                    arg(Qt::escape(QFileInfo(*it).fileName())),
                     tr("I am deactivating it for now; "
                     "you may wish to examine it more closely."));
                 active = false;

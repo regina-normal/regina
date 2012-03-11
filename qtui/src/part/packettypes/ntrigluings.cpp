@@ -51,6 +51,7 @@
 #include <QProgressDialog>
 #include <QRegExp>
 #include <QTableView>
+#include <QTextDocument>
 #include <QToolBar>
 #include <set>
 
@@ -1238,7 +1239,8 @@ void NTriGluingsUI::censusLookup() {
             continue;
 
         // Process this census file.
-        progress->setLabelText(tr("Searching %1...").arg((*it).filename));
+        progress->setLabelText(tr("Searching %1...").
+            arg(Qt::escape((*it).filename)));
         QCoreApplication::instance()->processEvents();
 
         census = regina::readFileMagic(
@@ -1260,7 +1262,7 @@ void NTriGluingsUI::censusLookup() {
                 }
             ReginaSupport::warn(ui,
                 tr("<qt>I could not read the census data file <i>%1</i>.</qt>")
-                .arg((*it).filename),
+                .arg(Qt::escape((*it).filename)),
                 tr("I have disabled this file in Regina's census settings.  "
                 "You can re-enable it once the problem is fixed."));
             continue;
@@ -1303,7 +1305,7 @@ void NTriGluingsUI::censusLookup() {
             if (it != results.begin())
                 detailsHTML += "<p>";
             detailsHTML += tr("Name: %1<br>Census: %2").
-                arg((*it).triName).arg(censusName);
+                arg(Qt::escape((*it).triName)).arg(Qt::escape(censusName));
             detailsText += tr("\n\nName: %1\nCensus: %2").
                 arg((*it).triName).arg(censusName);
         }

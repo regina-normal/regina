@@ -38,6 +38,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLayout>
+#include <QTextDocument>
 #include <QWhatsThis>
 
 ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
@@ -91,7 +92,7 @@ void ExportDialog::slotOk() {
             tr("Please select a different packet."),
             tr("<qt>The packet <i>%1</i> cannot "
             "be exported to this file format.</qt>").
-            arg(chosenPacket->getPacketLabel().c_str()));
+            arg(Qt::escape(chosenPacket->getPacketLabel().c_str())));
         return;
     }
 

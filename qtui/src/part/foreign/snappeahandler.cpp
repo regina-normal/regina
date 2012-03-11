@@ -34,6 +34,7 @@
 #include "../packetfilter.h"
 
 #include <QFile>
+#include <QTextDocument>
 
 const SnapPeaHandler SnapPeaHandler::instance;
 
@@ -45,7 +46,8 @@ regina::NPacket* SnapPeaHandler::importData(const QString& fileName,
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
-            "is readable and in SnapPea format.</qt>").arg(fileName));
+                "is readable and in SnapPea format.</qt>").
+                arg(Qt::escape(fileName)));
     return ans;
 }
 
@@ -76,7 +78,7 @@ bool SnapPeaHandler::exportData(regina::NPacket* data,
             QObject::tr("The export failed."),
             QObject::tr("<qt>An unknown error occurred, probably related "
             "to file I/O.  Please check that you have permissions to write "
-            "to the file <tt>%1</tt>.</qt>").arg(fileName));
+            "to the file <tt>%1</tt>.</qt>").arg(Qt::escape(fileName)));
         return false;
     }
     return true;
