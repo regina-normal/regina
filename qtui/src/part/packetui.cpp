@@ -32,7 +32,6 @@
 
 // UI includes:
 #include "eventids.h"
-#include "flatbutton.h"
 #include "packeteditiface.h"
 #include "packetmanager.h"
 #include "packetui.h"
@@ -49,10 +48,16 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QToolBar>
+#include <QToolButton>
 #include <QTreeWidget>
 #include <QWhatsThis>
 
 using regina::NPacket;
+
+// Hard-code the header size for now.
+namespace {
+    const int headerSize = 22;
+};
 
 QLinkedList<QAction*> PacketUI::noActions;
 
@@ -150,20 +155,27 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     QBoxLayout* headerBox = new QHBoxLayout();
     headerBox->setSpacing(0);
 
+    headerBox->addStretch(1);
+
     headerIcon = new QLabel();
-    headerIcon->setPixmap(PacketManager::icon(newPacket, true).pixmap(22, 22));
+    headerIcon->setPixmap(PacketManager::icon(newPacket, true).
+        pixmap(headerSize));
     headerIcon->setMargin(2); // Leave *some* space, however tiny.
     headerIcon->setWhatsThis(tr("This shows the label of the packet "
         "being viewed, as well as its packet type."));
     headerBox->addWidget(headerIcon);
 
+    headerBox->addSpacing((headerSize / 2 /* shrug */));
+
     headerTitle = new QLabel(newPacket->getFullName().c_str());
     headerTitle->setAlignment(Qt::AlignCenter);
     headerTitle->setWhatsThis(tr("This shows the label of the packet "
         "being viewed, as well as its packet type."));
-    headerBox->addWidget(headerTitle, 1);
+    headerBox->addWidget(headerTitle);
 
-    dockUndockBtn = new FlatToolButton();
+    headerBox->addStretch(1);
+
+    dockUndockBtn = new QToolButton();
     dockUndockBtn->setCheckable(true);
     dockUndockBtn->setIcon(ReginaSupport::themeIcon("mail-attachment"));
     dockUndockBtn->setText(tr("Dock or undock this packet viewer"));
@@ -585,7 +597,8 @@ void PacketPane::updateClipboardActions() {
 void PacketPane::refreshHeader() {
     regina::NPacket* packet = mainUI->getPacket();
     headerTitle->setText(packet->getFullName().c_str());
-    headerIcon->setPixmap(PacketManager::icon(packet, true).pixmap(22, 22));
+    headerIcon->setPixmap(PacketManager::icon(packet, true).
+        pixmap(headerSize));
 }
 
 void PacketPane::customEvent(QEvent* evt) {

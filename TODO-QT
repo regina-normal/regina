@@ -6,6 +6,7 @@ Clean-up:
 
 Appearance:
 - Rejuvenate the PacketPane header, including FlatButton & hard-coded 22px icon
+- Reorganise the Preferences dialog.
 
 Unimplemented:
 - Help->About needs to be filled with data.
