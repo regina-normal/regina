@@ -122,9 +122,9 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     QTabWidget* item = new QTabWidget(this);
     layout->addWidget(item);
 
-    // TODO: When help is implemented, add the help button here
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok |
-        QDialogButtonBox::Apply | QDialogButtonBox::Cancel);
+        QDialogButtonBox::Apply | QDialogButtonBox::Cancel |
+        QDialogButtonBox::Help);
     layout->addWidget(buttonBox);
 
     setLayout(layout);
@@ -252,8 +252,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     // Finish off.
     connect(buttonBox, SIGNAL(clicked(QAbstractButton *)), this, SLOT(clicked(QAbstractButton *)));
-    // TODO Setup help
-    //setHelp("options", "regina");
 }
 
 // Apply if apply or OK is clicked, then pass to QDialog signals
@@ -264,6 +262,9 @@ void ReginaPreferences::clicked(QAbstractButton *button) {
     } else if (buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole) {
         slotApply();
         accept();
+    } else if (buttonBox->buttonRole(button) == QDialogButtonBox::HelpRole) {
+        ReginaPrefSet::openHandbook("options", 0, this);
+        return;
     }
     reject();
 }
