@@ -1,13 +1,10 @@
 [Desktop Entry]
-Encoding=UTF-8
-GenericName=3-Manifold Topology
-Name=Regina
-Exec=regina-kde %U
-X-KDE-StartupNotify=true
-Icon=regina
+Version=1.0
 Type=Application
-MimeType=application/x-regina;
-DocPath=regina/index.html
-Comment=A Normal Surface Theory Calculator
-Terminal=0
-Categories=Qt;KDE;Math;Education;
+Name=Regina
+GenericName=3-Manifold Topology
+Comment=Software for 3-manifold topology and normal surface theory
+Icon=regina
+Exec=regina-gui %F
+Categories=Math;Education;Science;Qt
+MimeType=application/x-regina

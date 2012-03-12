@@ -1,5 +1,3 @@
-# TODO: Install application icons for KDE/GNOME
-
 set (IMG_FILES )
 
 set (IMGS barycentric cone connsum csvexport dehydrated doublecover filter_comb filter_prop finite orb orient packet_angles packet_container packet_filter packet_pdf packet_script packet_surfaces packet_text packet_triangulation packet_view python_console regina snappea)
@@ -14,5 +12,14 @@ foreach (IMG_CLASS ${IMGS})
 endforeach (IMG_CLASS ${IMGS})
 
 INSTALL (FILES ${IMG_FILES} SOURCES DESTINATION ${PKGDATADIR}/icons/regina)
+
+if (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+  # Install application icons for KDE/GNOME.
+  foreach (IMG_SIZE ${SIZES})
+    if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/regina-${IMG_SIZE}.png)
+      INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE} RENAME regina.png)
+    endif (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/regina-${IMG_SIZE}.png)
+  endforeach (IMG_SIZE ${SIZES})
+endif (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
 
 ADD_SUBDIRECTORY(oxygen)

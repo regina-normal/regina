@@ -1,9 +1,6 @@
 SET(regina-app_SRCS examplesaction.cpp main.cpp reginamain.cpp reginapref.cpp reginamanager.cpp)
 SET(regina-app_SRCS ${COMMON_SOURCES} ${PART_SOURCES} ${regina-app_SRCS})
 
-# TODO: Restore
-# KDE4_ADD_APP_ICON(regina-app_SRCS "../pics/hi*regina.png")
-
 SET ( MOC_HEADERS ${MOC_HEADERS} examplesaction.h reginamain.h reginapref.h)
 QT4_WRAP_CPP(regina-app_HEADERS_MOC ${MOC_HEADERS})
 
@@ -69,8 +66,9 @@ if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
     " COMPONENT Runtime)
 endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
 
-# TODO: Restore all of these.
-# install(FILES regina.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-# install(FILES regina.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
-# update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
-
+if (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+  # Install desktop files, mimetype handling and application icons.
+  install(FILES regina.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+  install(FILES regina.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
+  update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
+endif (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)

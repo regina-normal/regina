@@ -20,11 +20,6 @@ MacOS: Cmdline tools (including regina-python) don't work.
 
 Fix QMessageBox use (text vs informative text).  Check QMessageBox icons.
 
-Linux:
-- install application icons and Desktop files for KDE/GNOME:
-    http://developer.qt.nokia.com/doc/qt-4.8/appicon.html
-- install mimetype handling for KDE/GNOME.
-
 Check that we call QWidget::setWindowIcon() for top-level windows.
 
 Help->About needs to be filled with data.
