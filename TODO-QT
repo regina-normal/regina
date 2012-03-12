@@ -12,7 +12,6 @@ Unimplemented:
 - Script editor: Syntax highlighting 
 - File encoding: imports/exports currently don't do anything about encodings
 - Tip of the day is missing (not supported OOTB by Qt).
-- Help button/system for the preferences window.
 
 Change behaviour:
 - Get rid of the commit/discard mechanism, which is counterintuitive.
