@@ -155,7 +155,6 @@ GraphvizStatus GraphvizStatus::status(const QString& userExec,
 
 ReginaPrefSet::ReginaPrefSet() :
         autoDock(true),
-        autoFileExtension(true),
         censusFiles(defaultCensusFiles()),
         displayTagsInTree(false),
         fileRecentMax(10),
@@ -384,9 +383,6 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
     
     settings.beginGroup("File");
-    autoFileExtension = settings.value("AutomaticExtension", true).toBool();
-    // TODO: Replace this, recentFiles
-    // fileOpenRecent->loadEntries(*configGroup);
     fileRecentMax = settings.value("RecentMax", 10).toInt();
     settings.endGroup();
 
@@ -522,8 +518,6 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("File");
-    settings.setValue("AutomaticExtension", autoFileExtension);
-    //fileOpenRecent->saveEntries(*configGroup); TODO recent files
     settings.setValue("RecentMax", fileRecentMax);
     settings.endGroup();
 

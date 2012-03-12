@@ -256,8 +256,6 @@ class ReginaPrefSet : public QObject {
         bool autoDock;
             /**< Do we automatically dock new packet
                  viewers into the parent window? */
-        bool autoFileExtension;
-            /**< Should filenames be given an automatic extension? */
         ReginaFilePrefList censusFiles;
             /**< The list of data files to use for census lookups. */
         bool displayTagsInTree;

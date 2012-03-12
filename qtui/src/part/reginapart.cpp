@@ -275,9 +275,11 @@ void ReginaPart::fileSaveAs() {
         return;
 
     // Do we need to add an extension?
-    if (ReginaPrefSet::global().autoFileExtension &&
-            QFileInfo(file).suffix().isEmpty())
+    // Qt seems to handle this for us automatically.
+    /*
+    if (QFileInfo(file).suffix().isEmpty())
         file += ReginaAbout::regDataExt;
+    */
 
     // Does this file already exist?
     // Don't warn the user; Qt seems to do this for us.

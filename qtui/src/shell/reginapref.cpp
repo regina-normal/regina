@@ -157,7 +157,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     // Read the current preferences from the main window.
     generalPrefs->cbAutoDock->setChecked(prefSet.autoDock);
-    generalPrefs->cbAutoFileExtension->setChecked(prefSet.autoFileExtension);
     // generalPrefs->cbDisplayTagsInTree->setChecked(prefSet.displayTagsInTree);
     generalPrefs->editTreeJumpSize->setText(
         QString::number(prefSet.treeJumpSize));
@@ -278,7 +277,6 @@ void ReginaPreferences::slotApply() {
     QString strVal;
 
     prefSet.autoDock = generalPrefs->cbAutoDock->isChecked();
-    prefSet.autoFileExtension = generalPrefs->cbAutoFileExtension->isChecked();
     // prefSet.displayTagsInTree = generalPrefs->cbDisplayTagsInTree->isChecked();
     //KTipDialog::setShowOnStart(generalPrefs->cbTipOfDay->isChecked());
 
@@ -652,11 +650,6 @@ void ReginaPreferences::slotApply() {
 
 ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     QBoxLayout* layout = new QVBoxLayout(this);
-
-    cbAutoFileExtension = new QCheckBox(tr("Automatic file extension"));
-    cbAutoFileExtension->setWhatsThis(tr("Append the default extension "
-        "to filenames when saving if no extension is already given."));
-    layout->addWidget(cbAutoFileExtension);
 
     cbAutoDock = new QCheckBox(tr("Automatic packet docking"));
     cbAutoDock->setWhatsThis(tr("Try to dock new packet viewers into "
