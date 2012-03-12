@@ -14,7 +14,7 @@
 			<key>LSHandlerRank</key>
 			<string>Owner</string>
 			<key>CFBundleTypeIconFile</key>
-			<string>regina.icns</string>
+			<string>x-regina.icns</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>rga</string>

@@ -7,10 +7,10 @@ QT4_WRAP_CPP(regina-app_HEADERS_MOC ${MOC_HEADERS})
 if (APPLE)
   set(REGINA_APP_NAME Regina)
 
-  # Add icons to the app bundle.
-  set(REGINA_ICNS "${PROJECT_SOURCE_DIR}/icons/regina.icns")
-  set_source_files_properties("${REGINA_ICNS}" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-  set(regina-app_SRCS ${regina-app_SRCS} "${REGINA_ICNS}")
+  # Add application and mimetype icons to the app bundle.
+  set(REGINA_ICNS ${PROJECT_SOURCE_DIR}/icons/regina.icns ${PROJECT_SOURCE_DIR}/icons/x-regina.icns)
+  set_source_files_properties(${REGINA_ICNS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+  set(regina-app_SRCS ${regina-app_SRCS} ${REGINA_ICNS})
 else (APPLE)
   set(REGINA_APP_NAME regina-gui)
 endif (APPLE)
