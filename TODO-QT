@@ -1,7 +1,6 @@
 Clean-up:
 - Hunt for dialogs that allow window-close but shouldn't.
 - GAPRunner: Fix QDialogButtonBox usage; broken cancel on error.
-- Work through Will's TODOs.
 - Check that we call QWidget::setWindowIcon() for top-level windows.
 
 Appearance:

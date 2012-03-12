@@ -249,7 +249,7 @@ void ReginaMain::helpWhatsThis() {
 }
 
 void ReginaMain::helpTipOfDay() {
-    // TODO
+    // TODO: Tip of the day
     //KTipDialog::showTip(this, QString::null, true);
 }
 
@@ -435,7 +435,7 @@ void ReginaMain::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(helpXMLRef()));
     helpMenu->addAction(act);
 
-    // TODO: Not implemented
+    // TODO: Tip of the day not implemented
     //act = KStandardAction::tipOfDay(this, SLOT(helpTipOfDay()),
     //    actionCollection());
     //act->setWhatsThis(tr("View tips and hints on how to use Regina."));
