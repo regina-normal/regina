@@ -339,6 +339,12 @@ class ReginaPart : public QObject {
         bool hasUncommittedChanges();
 
         /**
+         * Commit or discard changes in all open panes.
+         */
+        void commitAllChanges();
+        void discardAllChanges();
+
+        /**
          * Various UI updates.
          */
         void updateTreeActions();

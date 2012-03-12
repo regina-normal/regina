@@ -1,4 +1,4 @@
-Fix QDialogButtonBox usage in gaprunner.
+GAPRunner: Fix QDialogButtonBox usage; broken cancel on error.
 Hunt for dialogs that allow window-close but shouldn't.
 Work through Will's TODOs.
 Ensure that the scrollers actually shrink and allow scrolling.
@@ -11,6 +11,10 @@ Spaces-per-tab has no effect in NScriptUI.
 Census prefs: make system files different; display sensible names during lookup
 Merge shell/, part/, common/.
 Include graphviz in the bundle.
+Save-As: make sure check-on-overwrite happens on non-Mac platforms.
+Save-As: make auto file extension automatic, and try to push this to Qt.
+The dock/undock mechanism is very broken.
+Simultaneous edits, choose commit (not external) -> not propagated.
 
 MacOS: Cmdline tools (including regina-python) don't work.
 

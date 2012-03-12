@@ -846,7 +846,7 @@ void NTriGluingsUI::removeSelectedTets() {
 
     // Notify the user that tetrahedra will be removed.
     QMessageBox msgBox(ui);
-    msgBox.setWindowTitle(tr("Regina"));
+    msgBox.setWindowTitle(tr("Question"));
     msgBox.setIcon(QMessageBox::Question);
     if (first == last) {
         msgBox.setText(tr("Tetrahedron number %1 will be removed.").arg(first));

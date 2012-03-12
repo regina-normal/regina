@@ -46,6 +46,7 @@
 #include <QInputDialog>
 #include <QLabel>
 #include <QMessageBox>
+#include <QPushButton>
 #include <QSplitter>
 #include <QTextDocument>
 #include <QTreeView>
@@ -101,9 +102,10 @@ bool ReginaPart::closeUrl() {
     consoles.closeAllConsoles();
 
     while (dirty) {
-        QMessageBox msgBox(QMessageBox::Information, tr("Regina"),
+        QMessageBox msgBox(QMessageBox::Information, tr("Information"),
             tr("The data file has been modified."),
-            QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+            QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
+            widget());
         msgBox.setInformativeText(tr("Do you want to save your changes?"));
         msgBox.setDefaultButton(QMessageBox::Save);
         int ret = msgBox.exec();
@@ -217,15 +219,27 @@ bool ReginaPart::initData(regina::NPacket* usePacketTree,
 
 bool ReginaPart::saveFile() {
     // Does the user have some work that still needs to be committed?
-    if (hasUncommittedChanges()) {
-        if ( QMessageBox::warning(widget(), tr("Changes not commited"), 
-                tr("<qt>You have "
-                "not yet committed your changes for one or more packets.  "
-                "<b>These changes will not be saved to file.</b>  You can "
-                "find a commit button in the bottom-left corner of each "
-                "packet window.<p>"
-                "Do you wish to save now without these changes?</qt>"), 
-                QMessageBox::Save | QMessageBox::Cancel) != QMessageBox::Save)
+    while (hasUncommittedChanges()) {
+        QMessageBox msgBox(QMessageBox::Information, tr("Information"),
+            tr("Some of your packets have changes that are "
+            "not yet committed."));
+        msgBox.setInformativeText("<qt>Uncommitted changes will "
+            "not be saved to file.<p>"
+            "Do you wish to commit all of your changes now?</qt>");
+        QPushButton* commit = msgBox.addButton(tr("Commit All"),
+            QMessageBox::AcceptRole);
+        QPushButton* discard = msgBox.addButton(tr("Discard All"),
+            QMessageBox::DestructiveRole);
+        QPushButton* cancel = msgBox.addButton(tr("Cancel"),
+            QMessageBox::RejectRole);
+        msgBox.setDefaultButton(commit);
+        msgBox.exec();
+
+        if (msgBox.clickedButton() == commit)
+            commitAllChanges();
+        else if (msgBox.clickedButton() == discard)
+            discardAllChanges();
+        else
             return false;
     }
 
@@ -234,9 +248,11 @@ bool ReginaPart::saveFile() {
         setModified(false);
         return true;
     } else {
-        QMessageBox::warning(widget(),tr("Could not save data"), tr(
-            "<qt>Topology data file %1 could not be saved.</qt>").
-            arg(Qt::escape(localFile)));
+        ReginaSupport::warn(widget(),
+            tr("<qt>I could not save the data file <tt>%1</tt>.</qt>").
+                arg(Qt::escape(localFile)),
+            tr("Please check that you have permissions to write "
+                "to this file."));
         return false;
     }
 }
@@ -264,13 +280,21 @@ void ReginaPart::fileSaveAs() {
         file += ReginaAbout::regDataExt;
 
     // Does this file already exist?
+    // Don't warn the user; Qt seems to do this for us.
+    /*
     if (QFileInfo(file).exists()) {
-        if (QMessageBox::warning(widget(), tr("File exists"), 
-              tr("A file with this name already exists.  Are you sure you wish"
-                 " to overwrite it?"), QMessageBox::Save | QMessageBox::Cancel)
-                == QMessageBox::Cancel)
+        QMessageBox msgBox(QMessageBox::Information,
+            tr("Information"),
+            tr("A file with this name already exists."),
+            QMessageBox::Save | QMessageBox::Cancel,
+            widget());
+        msgBox.setInformativeText(tr("Are you sure you wish to "
+            "overwrite it?"));
+        msgBox.setDefaultButton(QMessageBox::Cancel);
+        if (msgBox.exec() != QMessageBox::Save)
             return;
     }
+    */
 
     // Go ahead and save it.
     if (localFile != file) {
@@ -334,8 +358,11 @@ void ReginaPart::packetRename() {
 
         // Has this label already been used?
         if (packetTree->findPacketLabel(newLabel.toAscii().constData())) {
-            QMessageBox::warning(widget(),tr("Name already in use"), tr(
-                "Another packet is already using this label."));
+            ReginaSupport::info(widget(),
+                tr("Another packet is already using this label."),
+                tr("Each packet in your data file must have its own "
+                    "unique label.  I will suggest a different label "
+                    "that is not in use."));
             suggest = packetTree->makeUniqueLabel(
                 newLabel.toAscii().constData()).c_str();
         } else {
@@ -351,18 +378,34 @@ void ReginaPart::packetDelete() {
     if (! packet)
         return;
     if (! packet->getTreeParent()) {
-        QMessageBox::information(widget(),tr("Cannot delete root"), tr(
-            "The root of the packet tree cannot be deleted.  You may "
-            "delete any other packet (along with all of its children) "
-            "except for this one."));
+        ReginaSupport::info(widget(),
+            tr("You cannot delete the root of the packet tree."),
+            tr("You may delete any other packet except for this one."));
         return;
     }
 
-    if (QMessageBox::warning(widget(), tr("Delete all?"),
-            tr("<qt>You are about to delete the packet "
-            "%1 and all its children.  Are you sure?</qt>")
-            .arg(Qt::escape(packet->getPacketLabel().c_str())),
-            QMessageBox::Discard | QMessageBox::Cancel) != QMessageBox::Discard )
+    QMessageBox msgBox(widget());
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.setWindowTitle(tr("Warning"));
+    QPushButton* delBtn;
+    if (packet->getFirstTreeChild()) {
+        msgBox.setText(tr("<qt>You are about to delete the packet <i>%1</i> "
+            "and all of its children.</qt>").
+            arg(Qt::escape(packet->getPacketLabel().c_str())));
+        delBtn = msgBox.addButton(tr("Delete All"),
+            QMessageBox::AcceptRole);
+    } else {
+        msgBox.setText(tr("<qt>You are about to delete the packet "
+            "<i>%1</i>.</qt>").
+            arg(Qt::escape(packet->getPacketLabel().c_str())));
+        delBtn = msgBox.addButton(tr("Delete"),
+            QMessageBox::AcceptRole);
+    }
+    msgBox.addButton(tr("Cancel"), QMessageBox::RejectRole);
+    msgBox.setDefaultButton(delBtn);
+    msgBox.setInformativeText("Are you sure?");
+    msgBox.exec();
+    if (msgBox.clickedButton() != delBtn)
         return;
 
     delete packet;
@@ -486,6 +529,24 @@ bool ReginaPart::hasUncommittedChanges() {
             return true;
     }
     return false;
+}
+
+void ReginaPart::commitAllChanges() {
+    QLinkedList<PacketPane *> panes = allPanes;
+    for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
+            it != panes.end() ; it++) {
+        if ((*it)->isDirty())
+            (*it)->commit();
+    }
+}
+
+void ReginaPart::discardAllChanges() {
+    QLinkedList<PacketPane *> panes = allPanes;
+    for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
+            it != panes.end() ; it++) {
+        if ((*it)->isDirty())
+            (*it)->refreshForce();
+    }
 }
 
 void ReginaPart::updateTreeActions() {

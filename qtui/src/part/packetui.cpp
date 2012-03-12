@@ -259,16 +259,16 @@ bool PacketPane::setReadWrite(bool allowReadWrite) {
 
 bool PacketPane::queryClose() {
     while ((! emergencyClosure) && dirty) {
-        QMessageBox msgBox(QMessageBox::Information, tr("Regina"),
+        QMessageBox msgBox(QMessageBox::Information, tr("Information"),
             tr("This packet contains changes that have "
                 "not yet been committed."),
-            QMessageBox::Cancel);
+            QMessageBox::Cancel, this);
         msgBox.setInformativeText(
             tr("Do you wish to commit these changes now?"));
         //msgBox.setDetailedText(
         //    tr("The packet in question is: %1").
         //    arg(mainUI->getPacket()->getPacketLabel().c_str()));
-        QPushButton* discardBtn = msgBox.addButton(tr("Discard changes"),
+        QPushButton* discardBtn = msgBox.addButton(tr("Discard"),
             QMessageBox::DestructiveRole);
         QPushButton* commitBtn = msgBox.addButton(tr("Commit"),
             QMessageBox::AcceptRole);
@@ -351,16 +351,25 @@ void PacketPane::packetWasChanged(regina::NPacket*) {
     refreshHeader();
 
     if (dirty) {
-        QString msg = tr("This packet has been changed from within a script or "
-                 "another interface.  However, this interface contains "
-                 "changes that have not yet been committed.  Do you wish "
-                 "to refresh this interface to reflect the changes "
-                 "that have been made elsewhere?");
-        if (QMessageBox::warning(this, 
-                mainUI->getPacket()->getPacketLabel().c_str(),
-                msg, QMessageBox::Discard | QMessageBox::Cancel) 
-                == QMessageBox::Cancel)
+        QMessageBox msgBox(this);
+        msgBox.setIcon(QMessageBox::Question);
+        msgBox.setWindowTitle(tr("Question"));
+        msgBox.setText(tr("This packet has been changed externally."));
+        msgBox.setInformativeText(
+            tr("Do you wish to load the external version (discarding "
+            "your changes here), or commit your changes here "
+            "(replacing the external version)?"));
+        QPushButton* externalBtn = msgBox.addButton(tr("Use External"),
+            QMessageBox::DestructiveRole);
+        QPushButton* commitBtn = msgBox.addButton(tr("Commit"),
+            QMessageBox::AcceptRole);
+        msgBox.setDefaultButton(externalBtn);
+        msgBox.exec();
+        if (msgBox.clickedButton() == commitBtn) {
+            commit();
             return;
+        }
+        // Abandon changes and refresh.
     }
 
     mainUI->refresh();
@@ -398,13 +407,19 @@ void PacketPane::childWasRemoved(regina::NPacket* packet, regina::NPacket*,
 
 void PacketPane::refresh() {
     if ((! emergencyRefresh) && dirty) {
-        QString msg = tr("This packet contains changes that have not yet been "
-                 "committed.  Are you sure you wish to discard these "
-                 "changes?");
-        if (QMessageBox::warning(this, 
-                mainUI->getPacket()->getPacketLabel().c_str(),
-                msg, QMessageBox::Discard | QMessageBox::Cancel) 
-                == QMessageBox::Cancel)
+        QMessageBox msgBox(QMessageBox::Information,
+            tr("Information"),
+            tr("This packet contains changes that have "
+                "not yet been committed."),
+            QMessageBox::Cancel,
+            this);
+        msgBox.setInformativeText("Are you sure you wish to discard "
+            "these changes?");
+        QPushButton* discardBtn = msgBox.addButton(tr("Discard"),
+            QMessageBox::AcceptRole);
+        msgBox.setDefaultButton(discardBtn);
+        msgBox.exec();
+        if (msgBox.clickedButton() != discardBtn)
             return;
     }
 
@@ -420,28 +435,19 @@ void PacketPane::refreshForce() {
 
 bool PacketPane::commit() {
     if (dirty) {
-        if (! mainUI->getPacket()->isPacketEditable()) {
-            QMessageBox::warning(this, tr("Packet not editable"),
-                tr("<qt>This packet may not be "
-                "edited at the present time.  Because of this, your "
-                "changes cannot be committed.<p>"
-                "This is generally due to a tight relationship shared "
-                "with some other packet in the tree.  For instance, a "
-                "triangulation containing a normal surface list may "
-                "not be edited, since the normal surfaces are stored "
-                "as coordinates relative to the triangulation.<p>"
-                "As a workaround for this problem, you might wish to try "
-                "cloning this packet and editing the clone instead.</qt>"));
-            return false;
-        }
-
-        if (! readWrite) {
-            // We should never reach this point: readWrite should be synced
-            // with isPacketEditable().  This code is left over from the old
-            // days of read-only KParts.  Keep the code just in case though.
-            ReginaSupport::info(this,
-                tr("This packet is read-only."),
-                tr("You may not commit any changes."));
+        // Note that readWrite should be synced with isPacketEditable().
+        // Originally they were different concepts, but that was back
+        // in the days of the read-only KPart.
+        if (! (mainUI->getPacket()->isPacketEditable() && readWrite)) {
+            ReginaSupport::sorry(this,
+                tr("This packet is currently read-only, and so I cannot "
+                    "commit your changes."),
+                tr("<qt>This is typically due to a "
+                    "relationship with another packet.  For instance, "
+                    "any triangulation that contains normal surfaces or "
+                    "angle structures will be read-only.<p>"
+                    "As a workaround, you could try cloning this packet, "
+                    "and then editing the clone instead.</qt>"));
             return false;
         }
 
@@ -460,27 +466,18 @@ bool PacketPane::commit() {
 }
 
 bool PacketPane::commitToModify() {
-    if (! mainUI->getPacket()->isPacketEditable()) {
-        QMessageBox::warning(this, tr("Packet not editable"),
-            tr("<qt>This packet may not be "
-            "modified at the present time.<p>"
-            "This is generally due to a tight relationship shared "
-            "with some other packet in the tree.  For instance, a "
-            "triangulation containing a normal surface list may "
-            "not be edited, since the normal surfaces are stored "
-            "as coordinates relative to the triangulation.<p>"
-            "As a workaround for this problem, you might wish to try "
-            "cloning this packet and editing the clone instead.</qt>"));
-        return false;
-    }
-
-    if (! readWrite) {
-        // We should never reach this point: readWrite should be synced
-        // with isPacketEditable().  This code is left over from the old
-        // days of read-only KParts.  Keep the code just in case though.
+    // Note that readWrite should be synced with isPacketEditable().
+    // Originally they were different concepts, but that was back
+    // in the days of the read-only KPart.
+    if (! (mainUI->getPacket()->isPacketEditable() && readWrite)) {
         ReginaSupport::info(this,
-            tr("This packet is read-only."),
-            tr("You may not commit any changes."));
+            tr("This packet is currently read-only."),
+            tr("<qt>This is typically due to its "
+                "relationship with another packet.  For instance, "
+                "any triangulation that contains normal surfaces or "
+                "angle structures will be read-only.<p>"
+                "As a workaround, you could try cloning this packet, "
+                "and then editing the clone instead.</qt>"));
         return false;
     }
 
@@ -489,30 +486,24 @@ bool PacketPane::commitToModify() {
 
 bool PacketPane::tryCommit() {
     if (dirty) {
-        if (! mainUI->getPacket()->isPacketEditable()) {
-            if (QMessageBox::warning(this, tr("Packet not editable"),
-                    tr("<qt>This packet may not be edited at the present "
-                    "time.  Because of this I cannot commit your recent "
-                    "changes, and I will have to work from an old copy "
-                    "of the packet instead.<p>"
-                    "This is generally due to a tight relationship shared "
-                    "with some other packet in the tree.  For instance, a "
-                    "triangulation containing a normal surface list may "
-                    "not be edited, since the normal surfaces are stored "
-                    "as coordinates relative to the triangulation.<p>"
-                    "Do you wish to continue this operation using an old "
-                    "copy of the packet?</qt>"))
-                    != QMessageBox::Ok)
-                return false;
-        } else if (! readWrite) {
-            if (QMessageBox::warning(this, tr("Read only packet"),
-                    tr("<qt>This packet is read-only, but you appear "
-                    "to have made changes that have not yet been committed.  "
-                    "I cannot commit these changes for you, and so I will "
-                    "have to work from an old copy of the packet instead.<p>"
-                    "Do you wish to continue this operation using an old "
-                    "copy of the packet?</qt>"))
-                    != QMessageBox::Ok)
+        // Note that readWrite should be synced with isPacketEditable().
+        // Originally they were different concepts, but that was back
+        // in the days of the read-only KPart.
+        if (! (mainUI->getPacket()->isPacketEditable() && readWrite)) {
+            QMessageBox msg(QMessageBox::Information,
+                    tr("Information"),
+                    tr("This packet is currently read-only, and I "
+                    "cannot commit your recent changes."),
+                    QMessageBox::Yes | QMessageBox::Cancel,
+                    this);
+            msg.setInformativeText(tr("<qt>This is typically due to a "
+                "relationship with another packet.  For instance, "
+                "any triangulation that contains normal surfaces or "
+                "angle structures will be read-only.<p>"
+                "Do you wish to continue using an old version "
+                "of the packet?</qt>"));
+            msg.setDefaultButton(QMessageBox::Yes);
+            if (msg.exec() != QMessageBox::Yes)
                 return false;
         } else {
             isCommitting = true;

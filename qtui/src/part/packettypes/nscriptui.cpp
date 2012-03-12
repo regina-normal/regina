@@ -538,7 +538,7 @@ void NScriptUI::removeSelectedVariables() {
 
     // Notify the user that variables will be removed.
     QMessageBox msgBox(ui);
-    msgBox.setWindowTitle(tr("Regina"));
+    msgBox.setWindowTitle(tr("Question"));
     msgBox.setIcon(QMessageBox::Question);
     if (range.bottomRow() == range.topRow()) {
         msgBox.setText(tr("<qt>The variable <tt>%1</tt> will be removed.</qt>").
