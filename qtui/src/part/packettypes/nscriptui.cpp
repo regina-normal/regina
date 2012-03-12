@@ -444,14 +444,6 @@ void NScriptUI::refresh() {
             matriarch->findPacketLabel(script->getVariableValue(i).c_str())));
     }
 
-    // A kate part needs to be in read-write mode before we can alter its
-    // contents.
-    //
-    // TODO: Check if Qt has the same issue.
-//    bool wasReadWrite = !document->isReadOnly();
-//    if (! wasReadWrite)
-//        document->setReadOnly(false);
-
     // Refresh the lines.
     // The first line is handled separately to avoid an additional blank
     // line from being appended.
@@ -473,9 +465,6 @@ void NScriptUI::refresh() {
         document->setPlainText(allLines);
         document->moveCursor(QTextCursor::Start);
     }
-
-//    if (! wasReadWrite)
-//        document->setReadOnly(true);
 
     setDirty(false);
 }
@@ -609,8 +598,7 @@ void NScriptUI::notifyScriptChanged() {
 }
 
 void NScriptUI::setPythonMode() {
-    // TODO
-    // Need to re-create python syntax highlighting
+    // TODO: Need to re-create python syntax highlighting
     // This includes defining rules, or using 3rd party library
     // see http://srchiliteqt.sourceforge.net
 }
