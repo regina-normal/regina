@@ -18,8 +18,6 @@ Simultaneous edits, choose commit (not external) -> not propagated.
 
 MacOS: Cmdline tools (including regina-python) don't work.
 
-Fix QMessageBox use (text vs informative text).  Check QMessageBox icons.
-
 Check that we call QWidget::setWindowIcon() for top-level windows.
 
 Help->About needs to be filled with data.
