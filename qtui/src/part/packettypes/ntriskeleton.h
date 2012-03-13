@@ -145,9 +145,10 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
         bool neverDrawn;
 
         /**
-         * The Graphviz executable.
+         * Graphviz options.
          */
         QString graphvizExec;
+        bool graphvizLabels;
 
     public:
         /**

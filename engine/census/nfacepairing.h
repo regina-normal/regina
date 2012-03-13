@@ -380,11 +380,15 @@ class REGINA_API NFacePairing : public NThread {
          * @param subgraph \c false if a complete standalone DOT graph
          * should be output, or \c true if a clustered subgraph should
          * be output for use in some larger DOT file.
+         * @param labels indicates whether graph vertices will be
+         * labelled with the corresponding tetrahedron numbers.
+         * This feature is currently experimental, and the default is
+         * \c false.
          *
          * @see http://www.graphviz.org/
          */
         void writeDot(std::ostream& out, const char* prefix = 0,
-            bool subgraph = false) const;
+            bool subgraph = false, bool labels = false) const;
 
         /*@}*/
         /**

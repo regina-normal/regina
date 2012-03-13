@@ -170,6 +170,7 @@ ReginaPrefSet::ReginaPrefSet() :
         treeJumpSize(10),
         triGAPExec(defaultGAPExec),
         triGraphvizExec(defaultGraphvizExec),
+        triGraphvizLabels(true),
         triInitialTab(Gluings),
         triInitialSkeletonTab(SkelComp),
         triInitialAlgebraTab(Homology),
@@ -431,6 +432,7 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("Triangulation");
+    triGraphvizLabels = settings.value("GraphvizLabels", true).toBool();
 
     str = settings.value("InitialTab").toString();
     if (str == "Skeleton")
@@ -566,6 +568,7 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("Triangulation");
+    settings.setValue("GraphvizLabels", triGraphvizLabels);
 
     switch (triInitialTab) {
         case ReginaPrefSet::Skeleton:

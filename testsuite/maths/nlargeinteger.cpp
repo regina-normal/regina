@@ -37,6 +37,7 @@ class NLargeIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NLargeIntegerTest);
 
     CPPUNIT_TEST(comparisons);
+    CPPUNIT_TEST(incDec);
     CPPUNIT_TEST(divisionAlg);
     CPPUNIT_TEST(gcd);
     CPPUNIT_TEST(lcm);
@@ -374,6 +375,40 @@ class NLargeIntegerTest : public CppUnit::TestFixture {
                                 }
                             }
                         }
+        }
+
+        void testIncDec(const NLargeInteger& x) {
+            NLargeInteger i(x);
+            NLargeInteger orig(x);
+            NLargeInteger up(x + 1);
+            NLargeInteger down(x - 1);
+
+            if (i++ != orig)
+                CPPUNIT_FAIL("i++ does not return original value.");
+            if (i != up)
+                CPPUNIT_FAIL("i++ does not increment properly.");
+            if (i-- != up)
+                CPPUNIT_FAIL("i-- does not return original value.");
+            if (i != orig)
+                CPPUNIT_FAIL("i-- does not decrement properly.");
+
+            if (--i != down)
+                CPPUNIT_FAIL("--i does not return final value.");
+            if (i != down)
+                CPPUNIT_FAIL("--i does not decrement properly.");
+            if (++i != orig)
+                CPPUNIT_FAIL("++i does not return final value.");
+            if (i != orig)
+                CPPUNIT_FAIL("++i does not increment properly.");
+        }
+
+        void incDec() {
+            testIncDec(NLargeInteger::zero);
+            testIncDec(NLargeInteger::one);
+            testIncDec(NLargeInteger::infinity);
+            for (int a = 0; a < nSeries; a++)
+                for (int i = 0; i < seriesLen; i++)
+                    testIncDec(series[a][i]);
         }
 
         void checkDivisionAlg(int n, int divisor, int quotient,

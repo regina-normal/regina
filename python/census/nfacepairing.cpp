@@ -62,15 +62,15 @@ namespace {
     }
 
     void writeDot_stdout(const NFacePairing& p, const char* prefix = 0,
-            bool subgraph = false) {
-        p.writeDot(std::cout, prefix, subgraph);
+            bool subgraph = false, bool labels = false) {
+        p.writeDot(std::cout, prefix, subgraph, labels);
     }
 
     void writeDotHeader_stdout(const char* graphName = 0) {
         NFacePairing::writeDotHeader(std::cout, graphName);
     }
 
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDot, writeDot_stdout, 1, 3);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDot, writeDot_stdout, 1, 4);
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDotHeader, writeDotHeader_stdout,
         0, 1);
 }

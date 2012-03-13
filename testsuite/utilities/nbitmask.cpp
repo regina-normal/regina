@@ -27,6 +27,7 @@
 /* end stub */
 
 #include <algorithm>
+#include <cstdlib>
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "testsuite/utilities/testutilities.h"
@@ -35,9 +36,11 @@
 class NBitmaskTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NBitmaskTest);
 
+    CPPUNIT_TEST(assignment);
     CPPUNIT_TEST(sizes);
     CPPUNIT_TEST(firstLastBit);
     CPPUNIT_TEST(truncate);
+    CPPUNIT_TEST(lexOrder);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -46,6 +49,36 @@ class NBitmaskTest : public CppUnit::TestFixture {
         }
 
         void tearDown() {
+        }
+
+        void assignment() {
+            // Try using assignment to initialise a bitmask.
+            regina::NBitmask a;
+            regina::NBitmask b(2);
+            b.set(0, true);
+            b.set(1, false);
+
+            a = b;
+            if (! (a.get(0) && ! a.get(1)))
+                CPPUNIT_FAIL("NBitmask assignment initialisation error.");
+
+            // Just make sure we don't crash here.
+            regina::NBitmask c;
+            b = c;
+
+            regina::NBitmask d;
+            c = d;
+
+            // Try using assignment to resize a bitmask.
+            regina::NBitmask e(4);
+            e.set(0, false);
+            e.set(1, true);
+            e.set(2, false);
+            e.set(3, true);
+
+            b = e;
+            if (! ((! b.get(0)) && b.get(1) && (! b.get(2)) && b.get(3)))
+                CPPUNIT_FAIL("NBitmask assignment resizing error.");
         }
 
         void sizes() {
@@ -162,6 +195,59 @@ class NBitmaskTest : public CppUnit::TestFixture {
             testTruncate<regina::NBitmask2<unsigned long, unsigned char> >
                 ("ulong,uchar", 8 + 8 * sizeof(unsigned long));
             testTruncate<regina::NBitmask>("pieces", 128);
+        }
+
+        template <typename BitmaskType>
+        void testLexOrder(const char* typeDesc, int length) {
+            BitmaskType b[256];
+            int i, j;
+
+            for (i = 0; i < 256; ++i) {
+                b[i].reset(length);
+                for (j = 0; j < 8; ++j)
+                    if (i & (1 << j))
+                        b[i].set(j * (length / 8), true);
+            }
+
+            for (i = 0; i < 256; ++i) {
+                if (b[i].lessThan(b[i])) {
+                    std::ostringstream out;
+                    out << "Bitmask using type " << typeDesc
+                        << ", len=" << length << ": x < x";
+                    CPPUNIT_FAIL(out.str());
+                }
+                if (i > 0 && ! (b[i-1].lessThan(b[i]))) {
+                    std::ostringstream out;
+                    out << "Bitmask using type " << typeDesc
+                        << ", len=" << length
+                        << ": lessThan() gives incorrect order";
+                    CPPUNIT_FAIL(out.str());
+                }
+                if (i > 0 && b[i].lessThan(b[i-1])) {
+                    std::ostringstream out;
+                    out << "Bitmask using type " << typeDesc
+                        << ", len=" << length
+                        << ": lessThan() gives incorrect order";
+                    CPPUNIT_FAIL(out.str());
+                }
+            }
+        }
+
+        void lexOrder() {
+            testLexOrder<regina::NBitmaskLen8>("len8", 8);
+            testLexOrder<regina::NBitmaskLen16>("len16", 16);
+            testLexOrder<regina::NBitmaskLen32>("len32", 32);
+            testLexOrder<regina::NBitmaskLen64>("len64", 64);
+            testLexOrder<regina::NBitmask1<unsigned char> >("uchar", 8);
+            testLexOrder<regina::NBitmask1<unsigned long> >
+                ("ulong", 8 * sizeof(unsigned long));
+            testLexOrder<regina::NBitmask2<unsigned char, unsigned char> >
+                ("uchar,uchar", 16);
+            testLexOrder<regina::NBitmask2<unsigned char, unsigned long> >
+                ("uchar,ulong", 8 + 8 * sizeof(unsigned long));
+            testLexOrder<regina::NBitmask2<unsigned long, unsigned char> >
+                ("ulong,uchar", 8 + 8 * sizeof(unsigned long));
+            testLexOrder<regina::NBitmask>("pieces", 128);
         }
 };
 

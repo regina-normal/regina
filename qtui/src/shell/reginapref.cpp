@@ -163,6 +163,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 //    generalPrefs->cbTipOfDay->setChecked(
 //        KConfigGroup(KGlobal::config(), "TipOfDay").
 //        readEntry("RunOnStart", true));
+    triPrefs->cbGraphvizLabels->setChecked(prefSet.triGraphvizLabels);
 
     switch (prefSet.triInitialTab) {
         case ReginaPrefSet::Skeleton:
@@ -295,6 +296,8 @@ void ReginaPreferences::slotApply() {
         generalPrefs->editTreeJumpSize->setText(
             QString::number(prefSet.treeJumpSize));
     }
+
+    prefSet.triGraphvizLabels = triPrefs->cbGraphvizLabels->isChecked();
 
     switch (triPrefs->comboInitialTab->currentIndex()) {
         case 1:
@@ -814,6 +817,12 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QWidget(parent) {
     label->setWhatsThis(msg);
     editGraphvizExec->setWhatsThis(msg);
     layout->addLayout(box);
+
+    // Set up Graphviz options.
+    cbGraphvizLabels = new QCheckBox(tr("Labels on face pairing graphs"));
+    cbGraphvizLabels->setWhatsThis(tr("Labels each node in a "
+        "face pairing graph with the corresponding tetrahedron number."));
+    layout->addWidget(cbGraphvizLabels);
 
     // Add some space at the end.
     layout->addStretch(1);

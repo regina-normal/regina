@@ -124,6 +124,7 @@ class ReginaPrefTri : public QWidget {
         QLineEdit* editSurfacePropsThreshold;
         QLineEdit* editGAPExec;
         QLineEdit* editGraphvizExec;
+        QCheckBox* cbGraphvizLabels;
 
     public:
         ReginaPrefTri(QWidget* parent = 0);
