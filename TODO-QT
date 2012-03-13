@@ -4,7 +4,6 @@ Clean-up:
 - Check that we call QWidget::setWindowIcon() for top-level windows.
 
 Appearance:
-- Rejuvenate the PacketPane header, including FlatButton & hard-coded 22px icon
 - Reorganise the Preferences dialog.
 
 Unimplemented:
@@ -12,21 +11,24 @@ Unimplemented:
 - Script editor: Syntax highlighting 
 - File encoding: imports/exports currently don't do anything about encodings
 - Tip of the day is missing (not supported OOTB by Qt).
-
-Change behaviour:
-- Get rid of the commit/discard mechanism, which is counterintuitive.
-- Open a new file by default, and give the root-level container a better name.
 - Census prefs: system files different; display sensible names during lookup
 
-Broken:
-- The dock/undock mechanism is very broken.
-- Ensure that the scroll areas actually shrink and allow scrolling.
+Commit / discard redesign:
+- Get rid of the commit/discard mechanism, which is counterintuitive.
 - Simultaneous edits, choose commit (not external) -> not propagated.
+
+Packet pane / dock redesign:
+- The dock/undock mechanism is very broken.
+- Rejuvenate the PacketPane header, including FlatButton & hard-coded 22px icon
+- Open a new file by default, and give the root-level container a better name.
+- Undocked panes: cut/copy/paste commented but still works; is a menu missing?
+
+Broken:
+- Ensure that the scroll areas actually shrink and allow scrolling.
 - MacOS: Cmdline tools (including regina-python) don't work.
 - Spaces-per-tab has no effect in NScriptUI.
 
 Other:
-- Undocked panes: cut/copy/paste commented but still works; is a menu missing?
 - Python console: Edit options, seem to be there, but are commented in code?
 - Undo/Redo: "works" in regular text/script editors but nowhere else.
 - PacketManager: Cache packet icons for performance.
