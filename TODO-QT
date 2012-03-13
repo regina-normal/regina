@@ -29,8 +29,6 @@ Other:
 - Undocked panes: cut/copy/paste commented but still works; is a menu missing?
 - Python console: Edit options, seem to be there, but are commented in code?
 - Undo/Redo: "works" in regular text/script editors but nowhere else.
-- Save-As: make sure check-on-overwrite happens on non-Mac platforms.
-- Save-As: make auto file extension happens on non-Mac platforms.
 - PacketManager: Cache packet icons for performance.
 
 Low-priority:
