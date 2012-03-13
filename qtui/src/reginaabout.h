@@ -41,9 +41,9 @@
  * Provides constants offering general information about the application.
  */
 class ReginaAbout : public QDialog {
+    Q_OBJECT
+
     public:
-        static const QString regBugAddress;
-            /**< The email address to which bug reports should be sent. */
         static const QString regCopyright;
             /**< The application's copyright notice. */
         static const QString regDescription;
@@ -58,28 +58,38 @@ class ReginaAbout : public QDialog {
         ReginaAbout(QWidget *parent);
 
     private:
+        /**
+         * Full details for an author of the application.
+         */
+        struct AuthorInfo {
+            QString name, email, website;
 
-        QList<QStringList> authors;
+            AuthorInfo(const QString& name_, const QString& email_,
+                    const QString& website_) :
+                    name(name_), email(email_), website(website_) {
+                    }
+        };
+
+        /**
+         * Full details for "thanks to" credit.
+         */
+        struct CreditInfo {
+            QString name, details;
+
+            CreditInfo(const QString& name_, const QString& details_) :
+                    name(name_), details(details_) {
+                    }
+        };
+
+        QList<AuthorInfo> authors;
             /**< Stores a list of authors of the application. */
-        QList<QStringList> creditors;
-            /**< Stores a list of people to credit for the application. */
+        QList<CreditInfo> creditors;
+            /**< Stores a list of people and institutions to credit
+                 for the application. */
         
-        void addAuthor(QString name, QString details, QString email, 
-            /* Adds another person to the authors list 
-             * details denotes the details of the assistance provided
-             * by the author
-             */
-            QString website);
-        void addCredit(QString name, QString details, QString email, 
-            /* Adds another person to the credits list
-             * details denotes the details of the assistance provided
-             * by the author
-             */
-            QString website);
-
+    private slots:
         void showLicense();
-            /* Shows the license text in a new dialog.
-             */
+            /**< Shows the license text in a new dialog. */
 };
 
 #endif

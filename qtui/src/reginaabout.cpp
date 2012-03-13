@@ -29,6 +29,7 @@
 #include "regina-config.h"
 
 #include "reginaabout.h"
+#include "reginaprefset.h"
 #include "reginasupport.h"
 
 #include <cstdlib>
@@ -37,13 +38,12 @@
 
 #include <QDialogButtonBox>
 #include <QLabel>
+#include <QScrollBar>
 #include <QTabWidget>
+#include <QTextBrowser>
 #include <QTextEdit>
 #include <QVBoxLayout>
 
-
-
-const QString ReginaAbout::regBugAddress(PACKAGE_BUGREPORT);
 
 const QString ReginaAbout::regCopyright(
     tr("Copyright (c) 1999-2011, The Regina development team"));
@@ -58,7 +58,7 @@ const QString ReginaAbout::regWebsite("http://regina.sourceforge.net/");
 
 const QString ReginaAbout::regLicense( tr( 
     "Copyright (c) 1999-2011, The Regina development team\n\n"
-    "This program is distributed under the terms of the GPL v2.\n\n"
+    "This program is distributed under the terms of the GPL v2 or later.\n\n"
     "CITATION:\n\n"
     "If you find Regina useful in your research, please consider citing it as\n"
     "you would any other paper that you use.  A suggested form of reference is:\n\n"
@@ -101,75 +101,72 @@ const QString ReginaAbout::regLicense( tr(
     "humanity-icon-theme package in Ubuntu 11.04.  The contents of this Ubuntu\n"
     "package are licensed under the GNU General Public License version 2.\n\n"
     "OXYGEN ICONS:\n\n"
-    "The packet-view icons have been modified from the Oxygen icon set for KDE4.\n"
     "The Oxygen icons are dual-licensed under the Creative Common Attribution-\n"
     "ShareAlike 3.0 License or the GNU Library General Public License.\n"));
 
 ReginaAbout::ReginaAbout(QWidget* parent) : 
         QDialog(parent) {
-
     // Authors:
-    addAuthor(tr("Benjamin Burton"), QString(), "bab@debian.org",
+    authors << AuthorInfo("Benjamin Burton", "bab@debian.org",
         "http://www.maths.uq.edu.au/~bab/");
-    addAuthor(tr("Ryan Budney"), QString(), "rybu@uvic.ca",
+    authors << AuthorInfo("Ryan Budney", "rybu@uvic.ca",
         "http://rybu.org/");
-    addAuthor(tr("William Pettersson"), QString(),
+    authors << AuthorInfo("William Pettersson",
         "william.pettersson@gmail.com", "");
 
     // Credits:
-    addCredit(tr("Bernard Blackham"),
-        tr("Help with cache optimisation"),"","");
-    addCredit(tr("Winfried Bruns, Bogdan Ichim and Christof Soeger"),
-        tr("Use of the Normaliz library"),"","");
-    addCredit(tr("Marc Culler"),
-        tr("Helpful discussions"),"","");
-    addCredit(tr("Dominique Devriese"),
-        tr("Red Hat / Fedora porting assistance"),"","");
-    addCredit(tr("Nathan Dunfield"),
-        tr("Helpful discussions"),"","");
-    addCredit(tr("Matthias Goerner"),
-        tr("Code contributions"),"","");
-    addCredit(tr("William Jaco"),
-        tr("Supervision and many long discussions"),"","");
-    addCredit(tr("David Letscher"),
-        tr("Code contributions and technical advice"),"","");
-    addCredit(tr("Craig Macintyre"),
-        tr("Red Hat / Fedora porting assistance"),"","");
-    addCredit(tr("Hyam Rubinstein"),
-        tr("Supervision and many long discussions"),"","");
-    addCredit(tr("Jonathan Shewchuk"),
-        tr("Useful discussions on vertex enumeration"),"","");
-    addCredit(tr("Jeff Weeks"),
-        tr("Use of the SnapPea kernel and helpful discussions"),"","");
-    addCredit(tr("The American Institute of Mathematics"),
-        tr("Support for development"),"","");
-    addCredit(tr("The Australian Research Council"),
+    creditors << CreditInfo("Bernard Blackham",
+        tr("Help with cache optimisation"));
+    creditors << CreditInfo("Winfried Bruns, Bogdan Ichim and Christof Soeger",
+        tr("Use of the Normaliz library"));
+    creditors << CreditInfo("Marc Culler",
+        tr("Helpful discussions"));
+    creditors << CreditInfo("Dominique Devriese",
+        tr("Red Hat / Fedora porting assistance"));
+    creditors << CreditInfo("Nathan Dunfield",
+        tr("Helpful discussions"));
+    creditors << CreditInfo("Matthias Goerner",
+        tr("Code contributions"));
+    creditors << CreditInfo("William Jaco",
+        tr("Supervision and many long discussions"));
+    creditors << CreditInfo("David Letscher",
+        tr("Code contributions and technical advice"));
+    creditors << CreditInfo("Craig Macintyre",
+        tr("Red Hat / Fedora porting assistance"));
+    creditors << CreditInfo("Hyam Rubinstein",
+        tr("Supervision and many long discussions"));
+    creditors << CreditInfo("Jonathan Shewchuk",
+        tr("Useful discussions on vertex enumeration"));
+    creditors << CreditInfo("Jeff Weeks",
+        tr("Use of the SnapPea kernel and helpful discussions"));
+    creditors << CreditInfo("The American Institute of Mathematics",
+        tr("Support for development"));
+    creditors << CreditInfo("The Australian Research Council",
         tr("Support for development and hardware "
-            "(DP0208490, DP1094516, DP110101104)"),"","");
-    addCredit(tr("The Institute for the Physics and Mathematics of the "
-            "Universe, Tokyo"),
-        tr("Hospitality and support"),"","");
-    addCredit(tr("Oklahoma State University, USA"),
-        tr("Support for development"),"","");
-    addCredit(tr("Queensland Cyber Infrastructure Foundation"),
-        tr("High-performance computing support"),"","");
-    addCredit(tr("RMIT University, Australia"),
-        tr("Support for development"),"","");
-    addCredit(tr("The University of Melbourne, Australia"),
-        tr("Support for development and hardware"),"","");
-    addCredit(tr("The University of Queensland, Australia"),
-        tr("Continuing support for development"),"","");
-    addCredit(tr("The University of Victoria, Canada"),
-        tr("Hospitality and support"),"","");
-    addCredit(tr("The Victorian Partnership for Advanced Computing"),
-        tr("Financial support and much-needed CPU cycles"),"","");
-    addCredit(tr("Debian GNU/Linux"),
-        tr("An exceptional working environment"),"",
-        "http://www.debian.org/");
+            "(DP0208490, DP1094516, DP110101104)"));
+    creditors << CreditInfo("The Institute for the Physics and "
+        "Mathematics of the Universe, Tokyo",
+        tr("Hospitality and support"));
+    creditors << CreditInfo("Oklahoma State University, USA",
+        tr("Support for development"));
+    creditors << CreditInfo("Queensland Cyber Infrastructure Foundation",
+        tr("High-performance computing support"));
+    creditors << CreditInfo("RMIT University, Australia",
+        tr("Support for development"));
+    creditors << CreditInfo("The University of Melbourne, Australia",
+        tr("Support for development and hardware"));
+    creditors << CreditInfo("The University of Queensland, Australia",
+        tr("Continuing support for development"));
+    creditors << CreditInfo("The University of Victoria, Canada",
+        tr("Hospitality and support"));
+    creditors << CreditInfo("The Victorian Partnership for Advanced Computing",
+        tr("Financial support and much-needed CPU cycles"));
+    creditors << CreditInfo("Debian GNU/Linux",
+        tr("An exceptional working environment"));
 
 
     // Actual creation of the about box starts here.
-    // This follows the layout from KAboutDialog to some extent.
+    // This follows the layout from KAboutApplicationDialog to a large extent.
     QVBoxLayout *layout = new QVBoxLayout;
 
     QFrame* title = new QFrame(this);
@@ -192,33 +189,72 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     layout->addWidget(title);
 
     QTabWidget *tabs = new QTabWidget;
-    QWidget *about = new QWidget;
-    QWidget *authors = new QWidget;
-    QWidget *thanks = new QWidget;
 
-    QVBoxLayout *aboutLayout = new QVBoxLayout(about);
+    QString aboutText = QString("<qt>") + regDescription +
+        "<p>" + regReleased +
+        "<p>" + regCopyright +
+        "<p><a href=\"" + regWebsite + "\">" + regWebsite + "</a></qt>";
+    QLabel* aboutLabel = new QLabel(aboutText);
+    aboutLabel->setWordWrap(true);
+    aboutLabel->setOpenExternalLinks(true);
+    aboutLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
 
-    QLabel *label = new QLabel(regDescription);
-    aboutLayout->addWidget(label);
-    label = new QLabel(regReleased);
-    aboutLayout->addWidget(label);
-    label = new QLabel(regCopyright);
-    aboutLayout->addWidget(label);
-    label = new QLabel("<a href=\""+regWebsite+"\">"+regWebsite+"</a>");
-    label->setOpenExternalLinks(true);
-    aboutLayout->addWidget(label);
-    label = new QLabel("<a href=\"#\">License: Custom</a>");
+    QLabel* licenseLabel = new QLabel(tr("<a href=\"#\">License: Custom</a>"));
+    licenseLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
     // Show license dialog when label is clicked
-    connect(label, SIGNAL(linkActivated), this, SLOT(showLicense));
-    aboutLayout->addWidget(label);
+    connect(licenseLabel, SIGNAL(linkActivated(QString)),
+        this, SLOT(showLicense()));
 
-    about->setLayout(aboutLayout);
+    QWidget *aboutPage = new QWidget(this);
+    QVBoxLayout *aboutLayout = new QVBoxLayout;
+    aboutLayout->addStretch();
+    aboutLayout->addWidget(aboutLabel);
+    aboutLayout->addWidget(licenseLabel);
+    aboutLayout->addStretch();
+    aboutPage->setLayout(aboutLayout);
+    tabs->addTab(aboutPage, tr("&About"));
 
+    QPalette transparent;
+    transparent.setColor(QPalette::Base, Qt::transparent);
+    transparent.setColor(QPalette::Text,
+        transparent.color(QPalette::WindowText));
 
-    tabs->addTab(about,tr("&About"));
-    tabs->addTab(authors, tr("A&uthors"));
-    // TODO: Actually add authors+thanks to their respective widgets
-    tabs->addTab(thanks, tr("&Thanks to"));
+    /*
+    QString authorText(tr("<p>Please report bugs to "
+        "<a href=\"mailto:%1\">%1</a>.</p>").arg(PACKAGE_BUGREPORT));
+    */
+    QString authorText;
+    foreach (const AuthorInfo& info, authors) {
+        authorText += QString("<p style=\"margin: 0px;\">%1</p>")
+            .arg(info.name);
+        authorText += QString("<p style=\"margin: 0px; margin-left: 15px;\">"
+            "<a href=\"mailto:%1\">%1</a></p>").arg(info.email);
+        authorText += QString("<p style=\"margin: 0px; margin-left: 15px;\">"
+            "<a href=\"%1\">%1</a></p>").arg(info.website);
+        authorText += "<p style=\"margin: 0px;\">&nbsp;</p>";
+    }
+
+    QTextBrowser* authorPage = new QTextBrowser;
+    authorPage->setFrameStyle(QFrame::NoFrame);
+    authorPage->setHtml(authorText);
+    authorPage->setPalette(transparent);
+    authorPage->setOpenExternalLinks(true);
+    tabs->addTab(authorPage, tr("A&uthors"));
+
+    QString thanksText;
+    foreach (const CreditInfo& info, creditors) {
+        thanksText += QString("<p style=\"margin: 0px;\">%1</p>")
+            .arg(info.name);
+        thanksText += QString("<p style=\"margin: 0px; margin-left: 15px;\">"
+            "%1</p>").arg(info.details);
+        thanksText += "<p style=\"margin: 0px;\">&nbsp;</p>";
+    }
+
+    QTextBrowser* thanksPage = new QTextBrowser;
+    thanksPage->setFrameStyle(QFrame::NoFrame);
+    thanksPage->setHtml(thanksText);
+    thanksPage->setPalette(transparent);
+    tabs->addTab(thanksPage, tr("&Thanks to"));
 
     layout->addWidget(tabs);
 
@@ -230,34 +266,37 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     connect(buttons, SIGNAL(clicked(QAbstractButton*)), this, SLOT(accept()));
 }
 
-
-void ReginaAbout::addAuthor(QString name, QString details, QString email, 
-    QString website) {
-    QStringList author;
-    author << name << details << email << website;
-    authors.append(author);
-}
-
-void ReginaAbout::addCredit(QString name, QString details, QString email, 
-    QString website) {
-    QStringList author;
-    author << name << details << email << website;
-    creditors.append(author);
-}
-
 void ReginaAbout::showLicense() {
+    // Borrow heavily from KAboutApplicationDialog::showLicense() here.
     QDialog *win = new QDialog(this);
     win->setWindowTitle(tr("License Agreement - Regina"));
+
+    const QFont font = ReginaPrefSet::fixedWidthFont();
+    QFontMetrics metrics(font);
     
-    QVBoxLayout *layout = new QVBoxLayout;
-   
-    QTextEdit *text = new QTextEdit;
-    text->setReadOnly(true);
+    QTextBrowser *text = new QTextBrowser;
+    text->setFont(font);
+    text->setLineWrapMode(QTextEdit::NoWrap);
     text->setPlainText(regLicense);
    
+    QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(text);
 
+    QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Close);
+    connect(buttons, SIGNAL(clicked(QAbstractButton*)), win, SLOT(accept()));
+    layout->addWidget(buttons);
+
     win->setLayout(layout);
-    win->exec();
+
+    // Try to make a decent portion of the license visible, and avoid
+    // horizontal scrolling if possible.
+    const qreal idealWidth = text->document()->idealWidth() +
+        layout->contentsMargins().left() + layout->contentsMargins().right() +
+        2 * text->verticalScrollBar()->width();
+    const int idealHeight = metrics.height() * 30;
+
+    win->resize(win->sizeHint().expandedTo(
+        QSize((int)idealWidth, idealHeight)));
+    win->show();
 }
 

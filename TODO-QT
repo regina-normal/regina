@@ -7,7 +7,6 @@ Appearance:
 - Reorganise the Preferences dialog.
 
 Unimplemented:
-- Help->About needs to be filled with data.
 - Script editor: Syntax highlighting 
 - File encoding: imports/exports currently don't do anything about encodings
 - Tip of the day is missing (not supported OOTB by Qt).
