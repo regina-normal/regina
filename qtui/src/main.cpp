@@ -28,7 +28,6 @@
 
 #include "file/nglobaldirs.h"
 
-#include "reginaabout.h"
 #include "reginamain.h"
 #include "reginaprefset.h"
 

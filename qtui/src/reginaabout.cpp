@@ -29,11 +29,13 @@
 #include "regina-config.h"
 
 #include "reginaabout.h"
+#include "reginasupport.h"
 
 #include <cstdlib>
 #include <qdatetime.h>
 #include <qfile.h>
 
+#include <QDialogButtonBox>
 #include <QLabel>
 #include <QTabWidget>
 #include <QTextEdit>
@@ -41,24 +43,18 @@
 
 
 
-const QByteArray ReginaAbout::regBugAddress(PACKAGE_BUGREPORT);
+const QString ReginaAbout::regBugAddress(PACKAGE_BUGREPORT);
 
 const QString ReginaAbout::regCopyright(
     tr("Copyright (c) 1999-2011, The Regina development team"));
 
-const QString ReginaAbout::regDataExt(".rga");
-
 const QString ReginaAbout::regDescription(
     tr("Software for 3-manifold topology and normal surface theory"));
-
-const QByteArray ReginaAbout::regName(QT_TR_NOOP("regina"));
 
 const QString ReginaAbout::regReleased(
     tr("Released %1").arg(QDate(2011, 9, 12).toString(Qt::TextDate)));
 
-const QByteArray ReginaAbout::regVersion(PACKAGE_VERSION);
-
-const QByteArray ReginaAbout::regWebsite("http://regina.sourceforge.net/");
+const QString ReginaAbout::regWebsite("http://regina.sourceforge.net/");
 
 const QString ReginaAbout::regLicense( tr( 
     "Copyright (c) 1999-2011, The Regina development team\n\n"
@@ -173,15 +169,27 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
 
 
     // Actual creation of the about box starts here.
-    
+    // This follows the layout from KAboutDialog to some extent.
     QVBoxLayout *layout = new QVBoxLayout;
-    QLabel *name = new QLabel(regName);
 
-    layout->addWidget(name);
+    QFrame* title = new QFrame(this);
+    title->setAutoFillBackground(true);
+    title->setFrameShape(QFrame::StyledPanel);
+    title->setFrameShadow(QFrame::Plain);
+    title->setBackgroundRole(QPalette::Base);
 
-    name = new QLabel(QString("Version ") + PACKAGE_VERSION);
+    QGridLayout* titleGrid = new QGridLayout(title);
+    titleGrid->setColumnStretch(1, 1);
+    titleGrid->setMargin(6);
 
-    layout->addWidget(name);
+    QLabel* titleIcon = new QLabel(this);
+    titleIcon->setPixmap(ReginaSupport::regIcon("regina").pixmap(64));
+    titleGrid->addWidget(titleIcon, 0, 0, 2, 1);
+    QLabel* titleText = new QLabel(tr("<qt><font size=\"5\">Regina</font><p>"
+        "<b>Version %1</b></qt>").arg(PACKAGE_VERSION));
+    titleGrid->addWidget(titleText, 0, 1);
+
+    layout->addWidget(title);
 
     QTabWidget *tabs = new QTabWidget;
     QWidget *about = new QWidget;
@@ -197,6 +205,7 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     label = new QLabel(regCopyright);
     aboutLayout->addWidget(label);
     label = new QLabel("<a href=\""+regWebsite+"\">"+regWebsite+"</a>");
+    label->setOpenExternalLinks(true);
     aboutLayout->addWidget(label);
     label = new QLabel("<a href=\"#\">License: Custom</a>");
     // Show license dialog when label is clicked
@@ -212,7 +221,13 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     tabs->addTab(thanks, tr("&Thanks to"));
 
     layout->addWidget(tabs);
+
+    QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Close);
+    layout->addWidget(buttons);
+
     this->setLayout(layout);
+
+    connect(buttons, SIGNAL(clicked(QAbstractButton*)), this, SLOT(accept()));
 }
 
 
@@ -232,7 +247,7 @@ void ReginaAbout::addCredit(QString name, QString details, QString email,
 
 void ReginaAbout::showLicense() {
     QDialog *win = new QDialog(this);
-    win->setWindowTitle(tr("License Agreement - ") + regName);
+    win->setWindowTitle(tr("License Agreement - Regina"));
     
     QVBoxLayout *layout = new QVBoxLayout;
    

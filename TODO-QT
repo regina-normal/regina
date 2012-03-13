@@ -1,5 +1,5 @@
 Clean-up:
-- Hunt for dialogs that allow window-close but shouldn't.
+- Check that window-close is handled in GAPRunner and PatienceDialog.
 - GAPRunner: Fix QDialogButtonBox usage; broken cancel on error.
 - Check that we call QWidget::setWindowIcon() for top-level windows.
 

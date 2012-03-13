@@ -31,7 +31,6 @@
 #include "packet/ncontainer.h"
 
 // UI includes:
-#include "reginaabout.h"
 #include "reginafilter.h"
 #include "packettreeview.h"
 #include "packetui.h"

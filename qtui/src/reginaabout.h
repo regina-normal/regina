@@ -42,22 +42,15 @@
  */
 class ReginaAbout : public QDialog {
     public:
-        static const QByteArray regBugAddress;
+        static const QString regBugAddress;
             /**< The email address to which bug reports should be sent. */
         static const QString regCopyright;
             /**< The application's copyright notice. */
-        static const QString regDataExt;
-            /**< The default Regina data file extension.  This includes
-                the period. */
         static const QString regDescription;
             /**< A brief description of the application. */
-        static const QByteArray regName;
-            /**< The human-readable application name. */
         static const QString regReleased;
             /**< A message describing the current application release date. */
-        static const QByteArray regVersion;
-            /**< The version number of the current application release. */
-        static const QByteArray regWebsite;
+        static const QString regWebsite;
             /**< The home website of the application. */
         static const QString regLicense;
             /**< The licensing agreement for the application. */
