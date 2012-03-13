@@ -96,13 +96,13 @@ const QString ReginaAbout::regLicense( tr(
     "(see above) with additional code written by Damian Heard, who has also\n"
     "given permission for his code to be distributed under the terms of the\n"
     "GNU General Public License.\n\n"
-    "PYTHON ICONS:\n\n"
-    "The python icons are based on applications-python.svg as shipped with the\n"
-    "humanity-icon-theme package in Ubuntu 11.04.  The contents of this Ubuntu\n"
-    "package are licensed under the GNU General Public License version 2.\n\n"
-    "OXYGEN ICONS:\n\n"
+    "ICONS:\n\n"
     "The Oxygen icons are dual-licensed under the Creative Common Attribution-\n"
-    "ShareAlike 3.0 License or the GNU Library General Public License.\n"));
+    "ShareAlike 3.0 License or the GNU Library General Public License.\n"
+    "The python icons are based on applications-python.svg as shipped with the\n"
+    "humanity-icon-theme package in Ubuntu 11.04, the contents of which\n"
+    "are licensed under the GNU General Public License version 2.\n"
+    ));
 
 ReginaAbout::ReginaAbout(QWidget* parent) : 
         QDialog(parent) {

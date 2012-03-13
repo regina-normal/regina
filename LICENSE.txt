@@ -70,17 +70,13 @@ given permission for his code to be distributed under the terms of the
 GNU General Public License.
 
 
-PYTHON ICONS:
+ICONS:
 
+The Oxygen icons are dual-licensed under the Creative Common Attribution-
+ShareAlike 3.0 License or the GNU Library General Public License.
 The python icons are based on applications-python.svg as shipped with the
-humanity-icon-theme package in Ubuntu 11.04.  The contents of this Ubuntu
-package are licensed under the GNU General Public License version 2.
-
-
-OXYGEN ICONS:
-
-The Oxygen icons are dual-licensed under the Creative Common
-Attribution-ShareAlike 3.0 License or the GNU Library General Public License.
+humanity-icon-theme package in Ubuntu 11.04, the contents of which
+are licensed under the GNU General Public License version 2.
 
 
 
