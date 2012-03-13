@@ -37,7 +37,7 @@
 #include "reginamain.h"
 #include "reginapref.h"
 #include "reginasupport.h"
-#include "../part/reginapart.h"
+#include "reginapart.h"
 
 #include <QDrag>
 #include <QDragEnterEvent>

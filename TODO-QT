@@ -34,5 +34,4 @@ Other:
 - PacketManager: Cache packet icons for performance.
 
 Low-priority:
-- Merge shell/, part/, common/.
 - Include graphviz in the bundle.
