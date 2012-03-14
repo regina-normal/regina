@@ -206,6 +206,14 @@ MACRO_LOG_FEATURE(ICONV_FOUND
   "http://www.gnu.org/s/libiconv/"
   TRUE)
 
+FIND_PACKAGE(Boost COMPONENTS python)
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+MACRO_LOG_FEATURE(Boost_FOUND
+  "Boost"
+  "Essential: C++ components (including Boost.Python)"
+  "http://www.boost.org/"
+  TRUE)
+
 FIND_PACKAGE(Threads REQUIRED)
 IF(NOT CMAKE_USE_PTHREADS_INIT)
   MESSAGE(FATAL_ERROR "Regina requires pthread support.")
@@ -262,7 +270,6 @@ ADD_SUBDIRECTORY(utils)
 IF(NOT DISABLE_PYTHON)
   FIND_PACKAGE(PythonInterp)
   FIND_PACKAGE(PythonLibrary)
-  FIND_PACKAGE(Boost COMPONENTS python)
 ENDIF(NOT DISABLE_PYTHON)
 
 IF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBRARY_FOUND)
@@ -273,17 +280,14 @@ IF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBRARY_FOUND)
   MESSAGE(STATUS "Python bindings enabled")
 ELSE(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBRARY_FOUND)
   # We cannot support python.
-  IF(ENABLE_PYTHON)
-    MESSAGE(FATAL_ERROR
-      "Python bindings unavailable; try again without ENABLE_PYTHON.")
-  ELSE(ENABLE_PYTHON)
-    MESSAGE(WARNING "Could not find Boost.Python: Python bindings disabled.")
-  ENDIF(ENABLE_PYTHON)
+  # Recall that Boost.Python is now mandatory (from the Boost check above),
+  # so if we break here then it's Python's fault.
+  MESSAGE(WARNING "Could not find Python development files: Python bindings disabled.")
 ENDIF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBRARY_FOUND)
 MACRO_LOG_FEATURE(BOOST_PYTHON_FOUND
-  "Boost.Python"
+  "Python development"
   "Build Python bindings for Regina"
-  "http://www.boost.org/"
+  "http://www.python.org/"
   REGINA_MANDATORY)
 
 IF(NOT DISABLE_GUI)
