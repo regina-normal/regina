@@ -134,7 +134,7 @@ else ()
   # Under linux, give users the choice.
   IF (NOT DISABLE_RPATH)
     SET(DISABLE_RPATH OFF CACHE BOOL
-      "Does not build with rpath.  Disabling rpath may break installations in non-standard directories, since executables may be unable to find Regina's libraries.  For installations in standard areas such as /usr however, disabling rpath is highly recommended." FORCE)
+      "Do not build with rpath.  This option may break installations in non-standard directories, since executables may be unable to find Regina's libraries.  For installations in standard areas such as /usr however, this option is highly recommended." FORCE)
   ENDIF (NOT DISABLE_RPATH)
 
   IF (DISABLE_RPATH)
