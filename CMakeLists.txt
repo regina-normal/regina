@@ -292,6 +292,13 @@ ELSE(DISABLE_GUI)
   set(GUI_REQUIRED TRUE)
   FIND_PACKAGE(Qt4 COMPONENTS QtGui QtCore)
 
+  FIND_PACKAGE(SourceHighlight)
+  MACRO_LOG_FEATURE(SRCHILITE_FOUND
+    "Source-highlight"
+    "Syntax highlighting"
+    "http://www.gnu.org/software/src-highlite/"
+    REGINA_MANDATORY)
+
   if (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
     set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
     find_package(SharedMimeInfo)

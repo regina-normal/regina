@@ -28,6 +28,7 @@
 
 // Regina core includes:
 #include "regina-config.h"
+#include "file/nglobaldirs.h"
 #include "packet/nscript.h"
 
 // UI includes:
@@ -38,6 +39,10 @@
 #include "../reginapart.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
+
+#if ! (NO_SRCHILITE)
+#include "../srchiliteqt/Qt4SyntaxHighlighter.h"
+#endif
 
 #include <cstring>
 #include <QBoxLayout>
@@ -269,8 +274,11 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
     document->setLineWrapMode(QPlainTextEdit::NoWrap);
     document->setFont(ReginaPrefSet::fixedWidthFont());
 
-
-    setPythonMode();
+#if ! (NO_SRCHILITE)
+    srchiliteqt::Qt4SyntaxHighlighter* highlighter =
+        new srchiliteqt::Qt4SyntaxHighlighter(document->document());
+    highlighter->init("python.lang", "default.style");
+#endif
 
     document->setFocus();
     document->setWhatsThis(tr("Type the Python script into this "
@@ -595,12 +603,6 @@ void NScriptUI::execute() {
 
 void NScriptUI::notifyScriptChanged() {
     setDirty(true);
-}
-
-void NScriptUI::setPythonMode() {
-    // TODO: Need to re-create python syntax highlighting
-    // This includes defining rules, or using 3rd party library
-    // see http://srchiliteqt.sourceforge.net
 }
 
 void NScriptUI::updatePreferences() {

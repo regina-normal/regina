@@ -1,15 +1,13 @@
 Clean-up:
 - Check that window-close is handled in GAPRunner and PatienceDialog.
 - GAPRunner: Fix QDialogButtonBox usage; broken cancel on error.
-- Check that we call QWidget::setWindowIcon() for top-level windows.
+- Linux: Check that we call QWidget::setWindowIcon() for top-level windows.
 
 Appearance:
 - Reorganise the Preferences dialog.
 
 Unimplemented:
-- Script editor: Syntax highlighting 
 - File encoding: imports/exports currently don't do anything about encodings
-- Tip of the day is missing (not supported OOTB by Qt).
 - Census prefs: system files different; display sensible names during lookup
 
 Commit / discard redesign:
@@ -33,4 +31,5 @@ Other:
 - PacketManager: Cache packet icons for performance.
 
 Low-priority:
-- Include graphviz in the bundle.
+- MacOS: Include graphviz in the bundle.
+- Reimplement tip of the day (not supported out-of-the-box by Qt).

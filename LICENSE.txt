@@ -70,6 +70,14 @@ given permission for his code to be distributed under the terms of the
 GNU General Public License.
 
 
+SYNTAX HIGHLIGHTING:
+
+Regina includes code from Source-highlight-qt and language definitions
+from GNU Source-highlight, which it uses to highlight Python scripts.
+Both projects are by Lorenzo Bettini and others, and are distributed
+under the terms of the GNU General Public License, version 3.
+
+
 ICONS:
 
 The Oxygen icons are dual-licensed under the Creative Common Attribution-

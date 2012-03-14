@@ -220,13 +220,6 @@ class NScriptUI : public QObject, public PacketUI {
          * updated.
          */
         void updatePreferences();
-
-    private:
-        /**
-         * Set the internal text editor to use syntax highlighting for
-         * Python, if possible.
-         */
-        void setPythonMode();
 };
 
 inline regina::NPacket* ScriptVarValueItem::getPacket() const {
