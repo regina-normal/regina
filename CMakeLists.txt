@@ -5,7 +5,7 @@ PROJECT (regina)
 IF(NOT PACKAGE_NAME)
   SET (PACKAGE_NAME regina CACHE STRING
     "The package name used for installation directories.  On some platforms this is 'regina-normal', not 'regina', to avoid conflicts with other software with the same name."
-	FORCE)
+    FORCE)
 ENDIF(NOT PACKAGE_NAME)
 
 SET (PACKAGE_PRETTY_NAME Regina)
@@ -39,7 +39,7 @@ ENDIF(NOT CMAKE_BUILD_TYPE)
 if (NOT REGINA_INSTALL_TYPE)
   SET (REGINA_INSTALL_TYPE FullInstall CACHE STRING
     "Choose how Regina installs itself.  Options are: FullInstall Bundle."
-	FORCE)
+    FORCE)
 ENDIF (NOT REGINA_INSTALL_TYPE)
 
 # Sanity check the installation type:
@@ -60,12 +60,12 @@ ENDIF()
 IF(NOT PACKAGING_MODE)
   SET (PACKAGING_MODE OFF CACHE STRING
     "Makes all optional components mandatory, so that cmake will fail if any optional component is not found."
-	FORCE)
+    FORCE)
 ENDIF(NOT PACKAGING_MODE)
 IF(NOT PACKAGING_NO_MPI)
   SET (PACKAGING_NO_MPI OFF CACHE STRING
     "Leaves MPI as an optional component, even if PACKAGING_MODE is ON."
-	FORCE)
+    FORCE)
 ENDIF(NOT PACKAGING_NO_MPI)
 IF(PACKAGING_MODE)
   SET(REGINA_MANDATORY TRUE)
@@ -125,15 +125,24 @@ SET (XDG_MIME_INSTALL_DIR ${DATADIR}/mime/packages)
 SET (ENGINE_INCLUDES "${PROJECT_SOURCE_DIR}/engine" )
 SET (ENGINE_LIBRARY regina-engine)
 
+# RPATH support.
 if (APPLE AND ${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
-  # Use rpath because apps may be installed into non-standard directories.
+  # Use rpath always on MacOS because apps will almost certainly be
+  # installed into non-standard directories.
   set(CMAKE_INSTALL_NAME_DIR ${LIBDIR})
 else ()
-  # Don't use rpath under linux.
-  set(CMAKE_INSTALL_RPATH ${LIBDIR} )
-  set(CMAKE_SKIP_BUILD_RPATH FALSE)
-  set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  # Under linux, give users the choice.
+  IF (NOT DISABLE_RPATH)
+    SET(DISABLE_RPATH OFF CACHE BOOL
+      "Does not build with rpath.  Disabling rpath may break installations in non-standard directories, since executables may be unable to find Regina's libraries.  For installations in standard areas such as /usr however, disabling rpath is highly recommended." FORCE)
+  ENDIF (NOT DISABLE_RPATH)
+
+  IF (DISABLE_RPATH)
+    set(CMAKE_INSTALL_RPATH ${LIBDIR} )
+    set(CMAKE_SKIP_BUILD_RPATH FALSE)
+    set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  ENDIF (DISABLE_RPATH)
 endif ()
 
 # 64 bit integer checks
@@ -280,7 +289,7 @@ MACRO_LOG_FEATURE(BOOST_PYTHON_FOUND
 IF(NOT DISABLE_GUI)
   SET (DISABLE_GUI OFF CACHE STRING
     "Disables the graphical user interface.  The calculation engine, Python bindings and other command-line utilities will still be built.  This option is suitable for use on high-performance clusters."
-	FORCE)
+    FORCE)
 ENDIF(NOT DISABLE_GUI)
 IF(DISABLE_GUI)
   if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
