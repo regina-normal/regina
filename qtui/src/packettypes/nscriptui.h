@@ -220,6 +220,17 @@ class NScriptUI : public QObject, public PacketUI {
          * updated.
          */
         void updatePreferences();
+
+    private:
+        /**
+         * Updates the tab width in the text area according to the
+         * global preferences.
+         *
+         * This also needs to be called after changing the font, since the
+         * tab width is measured in pixels (and therefore depends on the
+         * font metrics).
+         */
+        void updateTabWidth();
 };
 
 inline regina::NPacket* ScriptVarValueItem::getPacket() const {

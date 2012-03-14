@@ -23,7 +23,6 @@ Packet pane / dock redesign:
 Broken:
 - Ensure that the scroll areas actually shrink and allow scrolling.
 - MacOS: Cmdline tools (including regina-python) don't work.
-- Spaces-per-tab has no effect in NScriptUI.
 
 Other:
 - Python console: Edit options, seem to be there, but are commented in code?

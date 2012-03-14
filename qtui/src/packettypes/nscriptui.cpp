@@ -46,6 +46,7 @@
 
 #include <cstring>
 #include <QBoxLayout>
+#include <QFontMetrics>
 #include <QHeaderView>
 #include <QLineEdit>
 #include <QMessageBox>
@@ -217,7 +218,7 @@ void ScriptValueDelegate::updateEditorGeometry(QWidget* editor,
 }
 
 NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
-        PacketUI(enclosingPane), script(packet){
+        PacketUI(enclosingPane), script(packet) {
     bool readWrite = enclosingPane->isReadWrite();
     ReginaPart* part = enclosingPane->getPart();
 
@@ -273,6 +274,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
     document->setReadOnly(!readWrite);
     document->setLineWrapMode(QPlainTextEdit::NoWrap);
     document->setFont(ReginaPrefSet::fixedWidthFont());
+    updateTabWidth();
 
 #if ! (NO_SRCHILITE)
     srchiliteqt::Qt4SyntaxHighlighter* highlighter =
@@ -607,4 +609,11 @@ void NScriptUI::notifyScriptChanged() {
 
 void NScriptUI::updatePreferences() {
     document->setFont(ReginaPrefSet::fixedWidthFont());
+    updateTabWidth();
+}
+
+void NScriptUI::updateTabWidth() {
+    document->setTabStopWidth(
+        QFontMetrics(document->font()).width('x') *
+        ReginaPrefSet::global().pythonSpacesPerTab);
 }
