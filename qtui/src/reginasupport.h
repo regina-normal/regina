@@ -26,12 +26,12 @@
 
 /* end stub */
 
-/*! \file support.h
+/*! \file reginasupport.h
  *  \brief Miscellaneous support routines for Regina.
  */
 
-#ifndef __SUPPORT_H
-#define __SUPPORT_H
+#ifndef __REGINASUPPORT_H
+#define __REGINASUPPORT_H
 
 #include <QIcon>
 #include <QString> 
@@ -94,13 +94,17 @@ class ReginaSupport {
          * Load a Regina-specific icon.
          */
         static QIcon regIcon(const QString& name);
-        static QIcon regIcon(const QString& name, const QString& themeOverlay);
 
         /**
          * Load an icon from the default theme, falling back to the
          * Oxygen icons shipped with Regina if necessary.
          */
         static QIcon themeIcon(const QString& name);
+
+        /**
+         * Overlay an emblem onto an icon.
+         */
+        static QIcon overlayIcon(const QIcon& base, const QIcon& emblem);
 
     private:
         static const QString& home();

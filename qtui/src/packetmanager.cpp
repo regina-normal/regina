@@ -31,6 +31,7 @@
 #include "surfaces/filterregistry.h"
 
 // UI includes:
+#include "iconcache.h"
 #include "packetmanager.h"
 #include "reginapart.h"
 #include "reginasupport.h"
@@ -49,13 +50,42 @@
 using namespace regina;
 
 QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
-    QString name = iconName(packet);
-    if (name.isNull())
+    IconCache::IconID id;
+
+    if (packet->getPacketType() == NAngleStructureList::packetType)
+        id = IconCache::packet_angles;
+    else if (packet->getPacketType() == NContainer::packetType)
+        id = (packet->getTreeParent() ? IconCache::packet_container :
+            IconCache::regina);
+    else if (packet->getPacketType() == NPDF::packetType)
+        id = IconCache::packet_pdf;
+    else if (packet->getPacketType() == NSurfaceFilter::packetType) {
+        if (((NSurfaceFilter*)packet)->getFilterID() ==
+                NSurfaceFilterCombination::filterID)
+            id = IconCache::filter_comb;
+        else if (((NSurfaceFilter*)packet)->getFilterID() ==
+                NSurfaceFilterProperties::filterID)
+            id = IconCache::filter_prop;
+        else
+            id = IconCache::packet_filter;
+    }
+    else if (packet->getPacketType() == NScript::packetType)
+        id = IconCache::packet_script;
+    else if (packet->getPacketType() == NNormalSurfaceList::packetType)
+        id = IconCache::packet_surfaces;
+    else if (packet->getPacketType() == NText::packetType)
+        id = IconCache::packet_text;
+    else if (packet->getPacketType() == NTriangulation::packetType)
+        id = IconCache::packet_triangulation;
+    else {
+        // Unknown packet type.
         return QIcon();
-    else if (allowLock && ! packet->isPacketEditable())
-        return ReginaSupport::regIcon(name, "emblem-locked");
+    }
+
+    if (allowLock && ! packet->isPacketEditable())
+        return IconCache::lockedIcon(id);
     else
-        return ReginaSupport::regIcon(name);
+        return IconCache::icon(id);
 }
 
 PacketUI* PacketManager::createUI(regina::NPacket* packet,
@@ -96,31 +126,3 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     return new DefaultPacketUI(packet, enclosingPane);
 }
 
-QString PacketManager::iconName(NPacket* packet) {
-    if (packet->getPacketType() == NAngleStructureList::packetType)
-        return "packet_angles";
-    if (packet->getPacketType() == NContainer::packetType)
-        return (packet->getTreeParent() ? "packet_container" : "regina");
-    if (packet->getPacketType() == NPDF::packetType)
-        return "packet_pdf";
-    if (packet->getPacketType() == NSurfaceFilter::packetType) {
-        if (((NSurfaceFilter*)packet)->getFilterID() ==
-                NSurfaceFilterCombination::filterID)
-            return "filter_comb";
-        else if (((NSurfaceFilter*)packet)->getFilterID() ==
-                NSurfaceFilterProperties::filterID)
-            return "filter_prop";
-        else
-            return "packet_filter";
-    }
-    if (packet->getPacketType() == NScript::packetType)
-        return "packet_script";
-    if (packet->getPacketType() == NNormalSurfaceList::packetType)
-        return "packet_surfaces";
-    if (packet->getPacketType() == NText::packetType)
-        return "packet_text";
-    if (packet->getPacketType() == NTriangulation::packetType)
-        return "packet_triangulation";
-
-    return QString();
-}

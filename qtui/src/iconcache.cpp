@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2011, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,57 +26,57 @@
 
 /* end stub */
 
-/*! \file packetmanager.h
- *  \brief Creates interfaces for packets based on their specific
- *  packet types.
- */
-
-#ifndef __PACKETMANAGER_H
-#define __PACKETMANAGER_H
-
-#include <QIcon>
 #include "iconcache.h"
+#include "reginasupport.h"
 
-class PacketPane;
-class PacketUI;
+QIcon IconCache::cache_[IconCache::END_OF_LIST];
+QIcon IconCache::locked_[IconCache::END_OF_LIST];
+QIcon IconCache::emblemLocked_;
 
-class QPlainTextEdit;
+void IconCache::load(IconID id) {
+    switch (id) {
+        case regina:
+            cache_[id] = ReginaSupport::regIcon("regina");
+            return;
+        case packet_angles:
+            cache_[id] = ReginaSupport::regIcon("packet_angles");
+            return;
+        case packet_container:
+            cache_[id] = ReginaSupport::regIcon("packet_container");
+            return;
+        case packet_filter:
+            cache_[id] = ReginaSupport::regIcon("packet_filter");
+            return;
+        case packet_pdf:
+            cache_[id] = ReginaSupport::regIcon("packet_pdf");
+            return;
+        case packet_script:
+            cache_[id] = ReginaSupport::regIcon("packet_script");
+            return;
+        case packet_surfaces:
+            cache_[id] = ReginaSupport::regIcon("packet_surfaces");
+            return;
+        case packet_text:
+            cache_[id] = ReginaSupport::regIcon("packet_text");
+            return;
+        case packet_triangulation:
+            cache_[id] = ReginaSupport::regIcon("packet_triangulation");
+            return;
+        case filter_comb:
+            cache_[id] = ReginaSupport::regIcon("filter_comb");
+            return;
+        case filter_prop:
+            cache_[id] = ReginaSupport::regIcon("filter_prop");
+            return;
+    }
+}
 
-namespace regina {
-    class NPacket;
-};
+void IconCache::constructLocked(IconID id) {
+    QIcon base = icon(id);
 
-/**
- * Provides a variety of routines for creating visual interfaces for
- * packets.  Each interface will be tailored according to the specific
- * packet type.
- */
-class PacketManager {
-    public:
-        /**
-         * Returns an icon appropriate for the given packet.  This icon
-         * may be rendered at various different sizes.
-         *
-         * If \a allowLock is true and the packet is not editable
-         * according to NPacket::isPacketEditable(), a small padlock
-         * will be overlaid onto the icon.
-         */
-        static QIcon icon(regina::NPacket* packet, bool allowLock = false);
+    if (emblemLocked_.isNull())
+        emblemLocked_ = ReginaSupport::themeIcon("emblem-locked");
 
-        /**
-         * Returns a newly created interface appropriate for viewing or
-         * editing the given packet.
-         *
-         * The interface will be created in read-write or read-only mode
-         * according to the read-write status of the enclosing KPart as
-         * well as the return value of NPacket::isPacketEditable().
-         *
-         * Note that the interface may be required to change its
-         * read-only or read-write status throughout its lifetime.
-         * See PacketUI::setReadWrite() for details.
-         */
-        static PacketUI* createUI(regina::NPacket* packet,
-            PacketPane* enclosingPane);
-};
+    locked_[id] = ReginaSupport::overlayIcon(base, emblemLocked_);
+}
 
-#endif

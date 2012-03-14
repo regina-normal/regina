@@ -33,6 +33,7 @@
 #include "snappea/nsnappeatriangulation.h"
 
 #include "coordinatechooser.h"
+#include "iconcache.h"
 #include "reginafilter.h"
 #include "reginamain.h"
 #include "reginapref.h"
@@ -130,18 +131,19 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     setLayout(layout);
 
     generalPrefs = new ReginaPrefGeneral(this);
-    item->addTab(generalPrefs, ReginaSupport::regIcon("regina"), tr("General"));
+    item->addTab(generalPrefs, IconCache::icon(IconCache::regina),
+        tr("General"));
 
     triPrefs = new ReginaPrefTri(this);
-    item->addTab(triPrefs, ReginaSupport::regIcon("packet_triangulation"), 
-            tr("Triangulation"));
+    item->addTab(triPrefs, IconCache::icon(IconCache::packet_triangulation), 
+        tr("Triangulation"));
 
     surfacePrefs = new ReginaPrefSurfaces(this);
-    item->addTab(surfacePrefs, ReginaSupport::regIcon("packet_surfaces"),
+    item->addTab(surfacePrefs, IconCache::icon(IconCache::packet_surfaces),
         tr("Surfaces"));
 
     pdfPrefs = new ReginaPrefPDF(this);
-    item->addTab(pdfPrefs, ReginaSupport::regIcon("packet_pdf"), tr("PDF"));
+    item->addTab(pdfPrefs, IconCache::icon(IconCache::packet_pdf), tr("PDF"));
 
     censusPrefs = new ReginaPrefCensus(this);
     item->addTab(censusPrefs, ReginaSupport::themeIcon("view-list-text"),

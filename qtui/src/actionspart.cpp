@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "iconcache.h"
 #include "reginapart.h"
 #include "reginamain.h"
 #include "reginasupport.h"
@@ -97,7 +98,7 @@ void ReginaPart::setupActions() {
     // New packets:
     QAction *actAngleStructure = new QAction(this);
     actAngleStructure->setText(tr("New &Angle Structure Solutions"));
-    actAngleStructure->setIcon(ReginaSupport::regIcon("packet_angles"));
+    actAngleStructure->setIcon(IconCache::icon(IconCache::packet_angles));
     actAngleStructure->setShortcut(tr("Alt+a"));
     actAngleStructure->setToolTip(tr("New angle structure solutions"));
     actAngleStructure->setWhatsThis(
@@ -110,7 +111,7 @@ void ReginaPart::setupActions() {
 
     QAction* actContainer = new QAction(this);
     actContainer->setText(tr("New &Container"));
-    actContainer->setIcon(ReginaSupport::regIcon("packet_container"));
+    actContainer->setIcon(IconCache::icon(IconCache::packet_container));
     actContainer->setShortcut(tr("Alt+c"));
     actContainer->setToolTip(tr("New container"));
     actContainer->setWhatsThis(tr("Create a new container packet.  Containers "
@@ -123,7 +124,7 @@ void ReginaPart::setupActions() {
 
     QAction* actFilter = new QAction(this);
     actFilter->setText(tr("New &Filter"));
-    actFilter->setIcon(ReginaSupport::regIcon("packet_filter"));
+    actFilter->setIcon(IconCache::icon(IconCache::packet_filter));
     actFilter->setShortcut(tr("Alt+f"));
     actFilter->setToolTip(tr("New surface filter"));
     actFilter->setWhatsThis(tr("Create a new normal surface filter.  Surface "
@@ -136,7 +137,7 @@ void ReginaPart::setupActions() {
 
     QAction* actSurfaces = new QAction(this);
     actSurfaces->setText(tr("New &Normal Surface List"));
-    actSurfaces->setIcon(ReginaSupport::regIcon("packet_surfaces"));
+    actSurfaces->setIcon(IconCache::icon(IconCache::packet_surfaces));
     actSurfaces->setShortcut(tr("Alt+n"));
     actSurfaces->setToolTip(tr("New normal surface list"));
     actSurfaces->setWhatsThis(tr("Create a new list of vertex normal surfaces "
@@ -148,7 +149,7 @@ void ReginaPart::setupActions() {
 
     QAction* actPDF = new QAction(this);
     actPDF->setText(tr("New &PDF Document"));
-    actPDF->setIcon(ReginaSupport::regIcon("packet_pdf"));
+    actPDF->setIcon(IconCache::icon(IconCache::packet_pdf));
     actPDF->setShortcut(tr("Alt+p"));
     actPDF->setToolTip(tr("New PDF document"));
     actPDF->setWhatsThis(tr("Create a new PDF packet containing a copy of "
@@ -160,7 +161,7 @@ void ReginaPart::setupActions() {
 
     QAction* actScript = new QAction(this);
     actScript->setText(tr("New &Script"));
-    actScript->setIcon(ReginaSupport::regIcon("packet_script"));
+    actScript->setIcon(IconCache::icon(IconCache::packet_script));
     actScript->setShortcut(tr("Alt+s"));
     actScript->setToolTip(tr("New script packet"));
     actScript->setWhatsThis(tr("Create a new Python script that can work "
@@ -172,7 +173,7 @@ void ReginaPart::setupActions() {
 
     QAction* actText = new QAction(this);
     actText->setText(tr("New Te&xt"));
-    actText->setIcon(ReginaSupport::regIcon("packet_text"));
+    actText->setIcon(IconCache::icon(IconCache::packet_text));
     actText->setShortcut(tr("Alt+x"));
     actText->setToolTip(tr("New text packet"));
     actText->setWhatsThis(tr("Create a new piece of text to store within "
@@ -184,7 +185,7 @@ void ReginaPart::setupActions() {
 
     QAction* actTriangulation = new QAction(this);
     actTriangulation->setText(tr("New &Triangulation"));
-    actTriangulation->setIcon(ReginaSupport::regIcon("packet_triangulation"));
+    actTriangulation->setIcon(IconCache::icon(IconCache::packet_triangulation));
     actTriangulation->setShortcut(tr("Alt+t"));
     actTriangulation->setToolTip(tr("New triangulation"));
     actTriangulation->setWhatsThis(tr("Create a new 3-manifold triangulation."));
@@ -410,7 +411,7 @@ void ReginaPart::setupActions() {
     // Imports and exports:
     act = new QAction(this);
     act->setText(tr("&Regina Data File"));
-    act->setIcon(ReginaSupport::regIcon("regina"));
+    act->setIcon(IconCache::icon(IconCache::regina));
     act->setToolTip(tr("Import a Regina data file"));
     act->setWhatsThis(tr("Import an external Regina data file.  The "
         "imported packet tree will be grafted into this packet tree."));
@@ -469,7 +470,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&PDF Document"));
-    act->setIcon(ReginaSupport::regIcon("packet_pdf"));
+    act->setIcon(IconCache::icon(IconCache::packet_pdf));
     act->setToolTip(tr("Import a PDF document"));
     act->setWhatsThis(tr("Import an external PDF document as a new PDF "
         "packet in this tree."));
@@ -480,7 +481,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("P&ython Script"));
-    act->setIcon(ReginaSupport::regIcon("packet_script"));
+    act->setIcon(IconCache::icon(IconCache::packet_script));
     act->setToolTip(tr("Import a Python script"));
     act->setWhatsThis(tr("Import an external Python file as a new script "
         "packet in this tree."));
@@ -491,7 +492,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Regina Data File"));
-    act->setIcon(ReginaSupport::regIcon("regina"));
+    act->setIcon(IconCache::icon(IconCache::regina));
     act->setToolTip(tr("Export a compressed Regina data file"));
     act->setWhatsThis(tr("Export all or part of this packet tree "
         "to a separate Regina data file.  The separate data file will "
@@ -502,7 +503,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("Regina Data File (&Uncompressed)"));
-    act->setIcon(ReginaSupport::regIcon("regina"));
+    act->setIcon(IconCache::icon(IconCache::regina));
     act->setToolTip(tr("Export an uncompressed Regina data file"));
     act->setWhatsThis(tr("Export all or part of this packet tree "
         "to a separate Regina data file.  The separate data file will "
@@ -552,7 +553,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&PDF Document"));
-    act->setIcon(ReginaSupport::regIcon("packet_pdf"));
+    act->setIcon(IconCache::icon(IconCache::packet_pdf));
     act->setToolTip(tr("Export a PDF document"));
     act->setWhatsThis(tr("Export a PDF packet from this packet tree "
         "to a separate PDF document."));
@@ -562,7 +563,7 @@ void ReginaPart::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("P&ython Script"));
-    act->setIcon(ReginaSupport::regIcon("packet_script"));
+    act->setIcon(IconCache::icon(IconCache::packet_script));
     act->setToolTip(tr("Export a Python script"));
     act->setWhatsThis(tr("Export a script packet from this packet tree "
         "to a separate Python file."));

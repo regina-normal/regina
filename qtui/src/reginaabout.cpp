@@ -28,6 +28,7 @@
 
 #include "regina-config.h"
 
+#include "iconcache.h"
 #include "reginaabout.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
@@ -185,7 +186,7 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     titleGrid->setMargin(6);
 
     QLabel* titleIcon = new QLabel(this);
-    titleIcon->setPixmap(ReginaSupport::regIcon("regina").pixmap(64));
+    titleIcon->setPixmap(IconCache::icon(IconCache::regina).pixmap(64));
     titleGrid->addWidget(titleIcon, 0, 0, 2, 1);
     QLabel* titleText = new QLabel(tr("<qt><font size=\"5\">Regina</font><p>"
         "<b>Version %1</b></qt>").arg(PACKAGE_VERSION));

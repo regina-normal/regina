@@ -28,7 +28,6 @@ Broken:
 Other:
 - Python console: Edit options, seem to be there, but are commented in code?
 - Undo/Redo: "works" in regular text/script editors but nowhere else.
-- PacketManager: Cache packet icons for performance.
 
 Low-priority:
 - MacOS: Include graphviz in the bundle.

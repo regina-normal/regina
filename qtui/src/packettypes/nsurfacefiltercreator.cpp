@@ -31,6 +31,7 @@
 #include "surfaces/sfproperties.h"
 
 // UI includes:
+#include "iconcache.h"
 #include "nsurfacefiltercreator.h"
 #include "../reginapart.h"
 #include "reginasupport.h"
@@ -60,7 +61,7 @@ NSurfaceFilterCreator::NSurfaceFilterCreator() {
     QString msg;
 
     pic = new QLabel(ui);
-    pic->setPixmap(ReginaSupport::regIcon("filter_prop").pixmap(
+    pic->setPixmap(IconCache::icon(IconCache::filter_prop).pixmap(
         iconSize, iconSize));
     layout->addWidget(pic, 0, 0, Qt::AlignRight);
 
@@ -74,7 +75,7 @@ NSurfaceFilterCreator::NSurfaceFilterCreator() {
     props->setWhatsThis(msg);
 
     pic = new QLabel(ui);
-    pic->setPixmap(ReginaSupport::regIcon("filter_comb").pixmap(
+    pic->setPixmap(IconCache::icon(IconCache::filter_comb).pixmap(
         iconSize, iconSize));
     layout->addWidget(pic, 1, 0, Qt::AlignRight);
 

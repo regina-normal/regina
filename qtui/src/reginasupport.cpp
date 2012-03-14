@@ -132,28 +132,6 @@ QIcon ReginaSupport::regIcon(const QString& name) {
     return icon;
 }
 
-QIcon ReginaSupport::regIcon(const QString& name, const QString& themeOverlay) {
-    QIcon overlay = themeIcon(themeOverlay);
-
-    QIcon icon;
-    QString filename = home() + "/icons/regina/" + name + "-%1.png";
-    int overlaySize;
-    for (int i = 0; iconSizes[i]; ++i) {
-        QPixmap iconPic(filename.arg(iconSizes[i]));
-        if (iconPic.isNull())
-            continue;
-
-        overlaySize = (iconSizes[i] <= 22 ? 8 : iconSizes[i] <= 48 ? 16 : 22);
-        QPixmap overlayPic = overlay.pixmap(overlaySize, overlaySize);
-
-        QPainter painter(&iconPic);
-        painter.drawPixmap(0, iconSizes[i] - overlayPic.height(), overlayPic);
-
-        icon.addPixmap(iconPic);
-    }
-    return icon;
-}
-
 QIcon ReginaSupport::themeIcon(const QString& name) {
     QIcon icon = QIcon::fromTheme(name);
     if (! icon.isNull())
@@ -162,6 +140,25 @@ QIcon ReginaSupport::themeIcon(const QString& name) {
     QString filename = home() + "/icons/oxygen/" + name + "-%1.png";
     for (int i = 0; iconSizes[i]; ++i)
         icon.addFile(filename.arg(iconSizes[i]));
+    return icon;
+}
+
+QIcon ReginaSupport::overlayIcon(const QIcon& base, const QIcon& emblem) {
+    QIcon icon;
+    int overlaySize;
+    for (int i = 0; iconSizes[i]; ++i) {
+        QPixmap iconPic = base.pixmap(iconSizes[i]);
+        if (iconPic.isNull())
+            continue;
+
+        overlaySize = (iconSizes[i] <= 22 ? 8 : iconSizes[i] <= 48 ? 16 : 22);
+        QPixmap overlayPic = emblem.pixmap(overlaySize);
+
+        QPainter painter(&iconPic);
+        painter.drawPixmap(0, iconSizes[i] - overlayPic.height(), overlayPic);
+
+        icon.addPixmap(iconPic);
+    }
     return icon;
 }
 
