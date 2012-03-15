@@ -28,7 +28,7 @@ ELSE(SRCHILITE_FOUND)
   ADD_DEFINITIONS(-DNO_SRCHILITE=1)
 ENDIF(SRCHILITE_FOUND)
 
-SET(SOURCES ${SOURCES} examplesaction.cpp iconcache.cpp main.cpp reginamain.cpp reginapref.cpp reginamanager.cpp actionspart exports imports messagelayer newpacketdialog newpackets packetchooser packetcreator packeteditiface packetmanager packettabui packettreeview packetui packetwindow patiencedialog progressdialogs reginapart treenav coordinatechooser coordinates pythonmanager recentfilesaction reginaabout reginaprefset reginasupport shortrunner)
+SET(SOURCES ${SOURCES} codecchooser.cpp examplesaction.cpp iconcache.cpp main.cpp reginamain.cpp reginapref.cpp reginamanager.cpp actionspart exports imports messagelayer newpacketdialog newpackets packetchooser packetcreator packeteditiface packetmanager packettabui packettreeview packetui packetwindow patiencedialog progressdialogs reginapart treenav coordinatechooser coordinates pythonmanager recentfilesaction reginaabout reginaprefset reginasupport shortrunner)
 
 SET(MOC_HEADERS ${MOC_HEADERS} coordinatechooser.h recentfilesaction.h reginaprefset.h shortrunner.h packettreeview.h newpacketdialog.h packetchooser.h packeteditiface.h packettabui.h packetui.h packetwindow.h patiencedialog.h progressdialogs.h reginapart.h examplesaction.h reginaabout.h reginamain.h reginapref.h)
 

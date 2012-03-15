@@ -28,6 +28,7 @@
 
 #include "packet/npacket.h"
 
+#include "codecchooser.h"
 #include "exportdialog.h"
 #include "reginasupport.h"
 #include "../packetchooser.h"
@@ -43,22 +44,36 @@
 
 ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
         regina::NPacket* defaultSelection, PacketFilter* useFilter,
-        const QString& dialogTitle) :
+        bool offerCodec, const QString& dialogTitle) :
         QDialog(parent),
         tree(packetTree), chosenPacket(0) {
     setWindowTitle(dialogTitle);
     QVBoxLayout* layout = new QVBoxLayout(this);
 
-    QHBoxLayout* chosenStrip = new QHBoxLayout;
+    QHBoxLayout* hStrip = new QHBoxLayout;
     QLabel* label = new QLabel(tr("Data to export:"));
-    chosenStrip->addWidget(label);
+    hStrip->addWidget(label);
     chooser = new PacketChooser(tree, useFilter, false, defaultSelection);
-    chosenStrip->addWidget(chooser, 1);
+    hStrip->addWidget(chooser, 1);
     QString expln = tr("Select the piece of data that you wish to export.");
     label->setWhatsThis(expln);
     chooser->setWhatsThis(expln);
+    layout->addLayout(hStrip);
 
-    layout->addLayout(chosenStrip);
+    if (offerCodec) {
+        hStrip = new QHBoxLayout;
+        label = new QLabel(tr("Text encoding:"));
+        hStrip->addWidget(label);
+        codecChooser = new CodecChooser();
+        hStrip->addWidget(codecChooser, 1);
+        QString expln = tr("Select the text encoding that you wish to "
+            "use.  If you are not sure, just use the default UTF-8.");
+        label->setWhatsThis(expln);
+        codecChooser->setWhatsThis(expln);
+        layout->addLayout(hStrip);
+    } else
+        codecChooser = 0;
+
     layout->addStretch(1);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(
@@ -97,5 +112,9 @@ void ExportDialog::slotOk() {
     }
 
     accept();
+}
+
+QTextCodec* ExportDialog::selectedCodec() {
+    return (codecChooser ? codecChooser->selectedCodec() : 0);
 }
 

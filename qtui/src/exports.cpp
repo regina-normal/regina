@@ -83,30 +83,19 @@ void ReginaPart::exportFile(const PacketExporter& exporter,
     // For some reason, on MacOS the file dialog disappears immediately
     // if widget() is used [20 Feb 2012].
     ExportDialog dlg(widget(), packetTree, treeView->selectedPacket(),
-        exporter.canExport(), dialogTitle);
+        exporter.canExport(), exporter.offerExportEncoding(), dialogTitle);
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
         regina::NPacket* data = dlg.selectedPacket();
         if (data) {
-//            if (exporter.offerExportEncoding()) {
-//                KEncodingFileDialog::Result result =
-//                    KEncodingFileDialog::getSaveFileNameAndEncoding(
-//                        QString::null /* encoding */, QString::null,
-//                        fileFilter, widget(), dialogTitle);
-//                if ((! result.fileNames.empty()) &&
-//                        (! result.fileNames.front().isEmpty()))
-//                    exporter.exportData(data, result.fileNames.front(),
-//                        QTextCodec::codecForName(result.encoding.toAscii()), widget());
-//            } else {
-//                QString file = KFileDialog::getSaveFileName(KUrl(),
-//                    fileFilter, widget(), dialogTitle);
-//                if (! file.isEmpty())
-//                    exporter.exportData(data, file, widget());
-//            }
-//            TODO: Use encoding
             QString file = QFileDialog::getSaveFileName(parent,
                 dialogTitle, QString(), fileFilter);
-            if (! file.isEmpty())
-                exporter.exportData(data, file, widget());
+            if (! file.isEmpty()) {
+                if (exporter.offerExportEncoding())
+                    exporter.exportData(data, file, dlg.selectedCodec(),
+                        widget());
+                else
+                    exporter.exportData(data, file, widget());
+            }
         }
     }
 }
