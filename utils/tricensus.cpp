@@ -118,17 +118,11 @@ void foundGluingPerms(const regina::NGluingPermSearcher* perms,
 void foundFacePairing(const regina::NFacePairing* pairing,
         const regina::NFacePairingIsoList* autos, void* container) {
     if (pairing) {
-        if (progress)
-            progress->setMessage(pairing->toString());
+        std::cout << pairing->toString() << std::endl;
 
         regina::NGluingPermSearcher::findAllPerms(pairing, autos,
             ! orientability.hasFalse(), ! finiteness.hasFalse(),
             whichPurge, foundGluingPerms, container);
-    } else {
-        if (progress) {
-            progress->setMessage("Finished.");
-            progress->setFinished();
-        }
     }
 }
 
@@ -462,30 +456,13 @@ int main(int argc, const char* argv[]) {
         }
     } else {
         // An ordinary all-face-pairings census.
-        std::cout << "Progress reports are periodic." << std::endl;
-        std::cout << "Not all face pairings used will be reported."
-            << std::endl;
-
-        regina::NProgressManager manager;
-        progress = new regina::NProgressMessage(
-            "Starting census generation...");
-        manager.setProgress(progress);
+        std::cout << "Starting census generation..." << std::endl;
 
         regina::NFacePairing::findAllPairings(
             nTet, boundary, nBdryFaces,
-            foundFacePairing, census /* dest */, true);
+            foundFacePairing, census /* dest */);
 
-        // Output progress and wait for the census to finish.
-        while (! manager.isStarted())
-            sleep(SLEEP_SECONDS);
-
-        const regina::NProgress* progress = manager.getProgress();
-        while (! manager.isFinished()) {
-            if (progress->hasChanged())
-                std::cout << progress->getDescription() << std::endl;
-            sleep(SLEEP_SECONDS);
-        }
-        std::cout << progress->getDescription() << std::endl;
+        std::cout << "Finished." << std::endl;
     }
 
     // Write the completed census to file.
