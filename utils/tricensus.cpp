@@ -38,8 +38,6 @@
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
-#include "progress/nprogressmanager.h"
-#include "progress/nprogresstypes.h"
 #include "triangulation/ntriangulation.h"
 
 // Constants.
@@ -65,7 +63,6 @@ unsigned long totPairings = 0;
 
 // Variables used for output.
 long long nSolns;
-regina::NProgressMessage* progress = 0;
 std::ofstream sigStream;
 
 /**
