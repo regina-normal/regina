@@ -3,7 +3,12 @@ include_directories(${ENGINE_INCLUDES})
 include_directories(${CMAKE_BINARY_DIR}/engine)
 include_directories(${POPT_INCLUDE_DIR})
 
-set(UTILS regconcat regconvert regfiledump regfiletype sigcensus tricensus trisetcmp)
+set(UTILS regconcat regconvert regfiledump regfiletype sigcensus trisetcmp)
+
+if (not WIN32)
+  # Don't try to build multithreaded apps under Windows... for now.
+  set(UTILS ${UTILS} tricensus)
+endif (not WIN32)
 
 foreach(UTIL ${UTILS})
   string(REGEX REPLACE _ - SOURCE_FILE ${UTIL})
@@ -15,4 +20,4 @@ if(MPI_FOUND)
   add_subdirectory(mpi)
 endif(MPI_FOUND)
 
-install(TARGETS regconcat regconvert regfiledump regfiletype sigcensus tricensus trisetcmp DESTINATION ${BINDIR} COMPONENT Runtime)
+install(TARGETS ${UTILS} DESTINATION ${BINDIR} COMPONENT Runtime)
