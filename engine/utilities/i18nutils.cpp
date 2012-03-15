@@ -29,9 +29,13 @@
 #include <cerrno>
 #include <cstddef>
 #include <cstring>
-#include <langinfo.h>
 #include <locale.h>
+#include "regina-config.h"
 #include "utilities/i18nutils.h"
+
+#ifdef LANGINFO_FOUND
+    #include <langinfo.h>
+#endif
 
 namespace regina {
 namespace i18n {
@@ -40,14 +44,23 @@ bool Locale::initialised = false;
 
 const iconv_t IConvStreamBuffer::cdNone((iconv_t)(-1));
 
-const char* Locale::codeset() {
-    if (! initialised) {
-        ::setlocale(LC_ALL, "");
-        initialised = true;
-    }
+#ifdef LANGINFO_FOUND
+    const char* Locale::codeset() {
+        if (! initialised) {
+            ::setlocale(LC_ALL, "");
+            initialised = true;
+        }
 
-    return nl_langinfo(CODESET);
-}
+        return nl_langinfo(CODESET);
+    }
+#else
+    namespace {
+        const char* noLanginfoCodeset = "UTF-8";
+    }
+    const char* Locale::codeset() {
+        return noLanginfoCodeset;
+    }
+#endif
 
 IConvStreamBuffer* IConvStreamBuffer::open(std::ostream& dest,
         const char* srcCode, const char* destCode) {

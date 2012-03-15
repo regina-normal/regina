@@ -69,6 +69,15 @@ else (APPLE)
   # set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif (APPLE)
 
+# i18n checks.
+CHECK_CXX_SOURCE_COMPILES("
+  #include \"langinfo.h\"
+  int main() { nl_langinfo(CODESET); return 0; }"
+  LANGINFO_FOUND )
+if(NOT LANGINFO_FOUND)
+  MESSAGE(WARNING "langinfo not found: UTF-8 will be used always, and the locale-specific encoding will be ignored.")
+endif(NOT LANGINFO_FOUND)
+
 # 64 bit integer checks
 CHECK_CXX_SOURCE_COMPILES("
   long long x;
