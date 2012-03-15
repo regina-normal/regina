@@ -42,8 +42,6 @@
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
-#include "progress/nprogressmanager.h"
-#include "progress/nprogresstypes.h"
 #include "triangulation/ntriangulation.h"
 
 #define WORD_face (dim4 ? "facet" : "face")
@@ -79,7 +77,6 @@ unsigned long totPairings = 0;
 
 // Variables used for output.
 long long nSolns;
-regina::NProgressMessage* progress = 0;
 std::ofstream sigStream;
 
 // Forward declarations:
@@ -188,17 +185,11 @@ template <class CensusType>
 void foundFacePairing(const typename CensusType::Pairing* pairing,
         const typename CensusType::PairingIsoList* autos, void* container) {
     if (pairing) {
-        if (progress)
-            progress->setMessage(pairing->toString());
+        std::cout << pairing->toString() << std::endl;
 
         CensusType::findAllPerms(pairing, autos,
             ! orientability.hasFalse(), ! finiteness.hasFalse(),
             whichPurge, static_cast<regina::NPacket*>(container));
-    } else {
-        if (progress) {
-            progress->setMessage("Finished.");
-            progress->setFinished();
-        }
     }
 }
 
@@ -572,29 +563,12 @@ int runCensus() {
         }
     } else {
         // An ordinary all-face-pairings census.
-        std::cout << "Progress reports are periodic." << std::endl;
-        std::cout << "Not all " << WORD_face
-            << " pairings used will be reported." << std::endl;
-
-        regina::NProgressManager manager;
-        progress = new regina::NProgressMessage(
-            "Starting census generation...");
-        manager.setProgress(progress);
+        std::cout << "Starting census generation..." << std::endl;
 
         CensusType::Pairing::findAllPairings(nTet, boundary, nBdryFaces,
-            foundFacePairing<CensusType>, census /* dest */, true);
+            foundFacePairing<CensusType>, census /* dest */);
 
-        // Output progress and wait for the census to finish.
-        while (! manager.isStarted())
-            sleep(SLEEP_SECONDS);
-
-        const regina::NProgress* progress = manager.getProgress();
-        while (! manager.isFinished()) {
-            if (progress->hasChanged())
-                std::cout << progress->getDescription() << std::endl;
-            sleep(SLEEP_SECONDS);
-        }
-        std::cout << progress->getDescription() << std::endl;
+        std::cout << "Finished." << std::endl;
     }
 
     // Write the completed census to file.
