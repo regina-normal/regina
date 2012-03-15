@@ -21,7 +21,6 @@ Packet pane / dock redesign:
 - Undocked panes: cut/copy/paste commented but still works; is a menu missing?
 
 Broken:
-- Ensure that the scroll areas actually shrink and allow scrolling.
 - MacOS: Cmdline tools (including regina-python) don't work.
 
 Other:
