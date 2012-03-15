@@ -5,10 +5,10 @@ include_directories(${POPT_INCLUDE_DIR})
 
 set(UTILS regconcat regconvert regfiledump regfiletype sigcensus trisetcmp)
 
-if (not WIN32)
+if (NOT WIN32)
   # Don't try to build multithreaded apps under Windows... for now.
   set(UTILS ${UTILS} tricensus)
-endif (not WIN32)
+endif (NOT WIN32)
 
 foreach(UTIL ${UTILS})
   string(REGEX REPLACE _ - SOURCE_FILE ${UTIL})
