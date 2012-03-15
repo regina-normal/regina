@@ -3,12 +3,7 @@ include_directories(${ENGINE_INCLUDES})
 include_directories(${CMAKE_BINARY_DIR}/engine)
 include_directories(${POPT_INCLUDE_DIR})
 
-set(UTILS regconcat regconvert regfiledump regfiletype sigcensus trisetcmp)
-
-if (NOT WIN32)
-  # Don't try to build multithreaded apps under Windows... for now.
-  set(UTILS ${UTILS} tricensus)
-endif (NOT WIN32)
+set(UTILS regconcat regconvert regfiledump regfiletype sigcensus tricensus trisetcmp)
 
 foreach(UTIL ${UTILS})
   string(REGEX REPLACE _ - SOURCE_FILE ${UTIL})
