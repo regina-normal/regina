@@ -145,6 +145,15 @@ else ()
   ENDIF (DISABLE_RPATH)
 endif ()
 
+# i18n checks.
+CHECK_CXX_SOURCE_COMPILES("
+  #include \"langinfo.h\"
+  int main() { nl_langinfo(CODESET); return 0; }"
+  LANGINFO_FOUND )
+if(NOT LANGINFO_FOUND)
+  MESSAGE(WARNING "langinfo not found: UTF-8 will be used always, and the locale-specific encoding will be ignored.")
+endif(NOT LANGINFO_FOUND)
+
 # 64 bit integer checks
 CHECK_CXX_SOURCE_COMPILES("
   long long x;
@@ -328,7 +337,9 @@ ELSE(DISABLE_GUI)
 
   # This must come after SharedMimeInfo is included, since the qtui/
   # makefiles use SharedMimeInfo macros.
-  ADD_SUBDIRECTORY(qtui)
+  if (QT4_FOUND)
+    ADD_SUBDIRECTORY(qtui)
+  endif (QT4_FOUND)
   MESSAGE(STATUS "Graphical user interface enabled")
 ENDIF(DISABLE_GUI)
 MACRO_LOG_FEATURE(QT4_FOUND
