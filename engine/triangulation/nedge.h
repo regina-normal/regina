@@ -67,7 +67,7 @@ class NVertex;
  * instead, since the old regina::edgeNumber will eventually be removed
  * in some future version of Regina.
  */
-extern const int edgeNumber[4][4];
+REGINA_API extern const int edgeNumber[4][4];
 
 /**
  * <tt>edgeStart[k]</tt> is the vertex of a tetrahedron at which edge
@@ -84,7 +84,7 @@ extern const int edgeNumber[4][4];
  * regina::edgeStart and regina::edgeEnd will eventually be removed in some
  * future version of Regina.
  */
-extern const int edgeStart[6];
+REGINA_API extern const int edgeStart[6];
 
 /**
  * <tt>edgeEnd[k]</tt> is the vertex of a tetrahedron
@@ -102,7 +102,7 @@ extern const int edgeStart[6];
  * regina::edgeStart and regina::edgeEnd will eventually be removed in some
  * future version of Regina.
  */
-extern const int edgeEnd[6];
+REGINA_API extern const int edgeEnd[6];
 
 /**
  * Details how an edge in the skeleton forms part of an individual

@@ -603,7 +603,7 @@ inline REGINA_API std::ostream& operator << (std::ostream& out,
  * regina::allPermsS4 now just points to NPerm4::S4, and will be removed
  * in some future version of Regina.
  */
-extern const NPerm4* allPermsS4;
+REGINA_API extern const NPerm4* allPermsS4;
 
 /**
  * An array of size 24 containing the inverses of the permutations in the
@@ -617,7 +617,7 @@ extern const NPerm4* allPermsS4;
  * regina::allPermsS4Inv now just points to NPerm4::invS4, and will
  * be removed in some future version of Regina.
  */
-extern const unsigned* allPermsS4Inv;
+REGINA_API extern const unsigned* allPermsS4Inv;
 
 /**
  * An array of size 24 containing all possible permutations of four elements
@@ -628,7 +628,7 @@ extern const unsigned* allPermsS4Inv;
  * regina::orderedPermsS4 now just points to NPerm4::orderedS4, and will be
  * removed in some future version of Regina.
  */
-extern const NPerm4* orderedPermsS4;
+REGINA_API extern const NPerm4* orderedPermsS4;
 
 /**
  * An array of size 6 containing all possible permutations of three elements.
@@ -644,7 +644,7 @@ extern const NPerm4* orderedPermsS4;
  * regina::allPermsS4 now just points to NPerm4::S3, and will be removed
  * in some future version of Regina.
  */
-extern const NPerm4* allPermsS3;
+REGINA_API extern const NPerm4* allPermsS3;
 
 /**
  * An array of size 6 containing the inverses of the permutations in the
@@ -658,7 +658,7 @@ extern const NPerm4* allPermsS3;
  * regina::allPermsS3Inv now just points to NPerm4::invS3, and will be
  * removed in some future version of Regina.
  */
-extern const unsigned* allPermsS3Inv;
+REGINA_API extern const unsigned* allPermsS3Inv;
 
 /**
  * An array of size 6 containing all possible permutations of three elements
@@ -669,7 +669,7 @@ extern const unsigned* allPermsS3Inv;
  * regina::orderedPermsS3 now just points to NPerm4::orderedS3, and will be
  * removed in some future version of Regina.
  */
-extern const NPerm4* orderedPermsS3;
+REGINA_API extern const NPerm4* orderedPermsS3;
 
 /**
  * An array of size 2 containing all possible permutations of two elements.
@@ -685,7 +685,7 @@ extern const NPerm4* orderedPermsS3;
  * regina::allPermsS2 now just points to NPerm4::S2, and will be removed in
  * some future version of Regina.
  */
-extern const NPerm4* allPermsS2;
+REGINA_API extern const NPerm4* allPermsS2;
 
 /**
  * An array of size 2 containing the inverses of the permutations in the
@@ -699,7 +699,7 @@ extern const NPerm4* allPermsS2;
  * regina::allPermsS2Inv now just points to NPerm4::invS2, and will be
  * removed in some future version of Regina.
  */
-extern const unsigned* allPermsS2Inv;
+REGINA_API extern const unsigned* allPermsS2Inv;
 
 // Routines for constructing the permutations associated to
 // faces and edges of the triangulation

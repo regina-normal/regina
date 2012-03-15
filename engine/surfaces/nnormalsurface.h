@@ -65,7 +65,7 @@ namespace regina {
  * edge \a i together (and will therefore also keep the vertices of edge
  * \a 5-i together).
  */
-extern const int vertexSplit[4][4];
+REGINA_API extern const int vertexSplit[4][4];
 /**
  * Lists which vertex splits meet which edges.
  * See \a vertexSplit for details on what a vertex split is.
@@ -73,7 +73,7 @@ extern const int vertexSplit[4][4];
  * vertex splits that meet the edge joining tetrahedron vertices
  * <tt>i</tt> and <tt>j</tt>.
  */
-extern const int vertexSplitMeeting[4][4][2];
+REGINA_API extern const int vertexSplitMeeting[4][4][2];
 
 /**
  * Lists the vertices which each vertex split splits.
@@ -90,7 +90,7 @@ extern const int vertexSplitMeeting[4][4][2];
  *
  * - <tt>vertexSplitDefn[i][0] < vertexSplitDefn[i][2]</tt>.
  */
-extern const int vertexSplitDefn[3][4];
+REGINA_API extern const int vertexSplitDefn[3][4];
 
 /**
  * Lists the second vertex with which each vertex is paired under each
@@ -99,7 +99,7 @@ extern const int vertexSplitDefn[3][4];
  * Vertex split number \c i pairs vertex \c v with
  * vertex <tt>vertexSplitPartner[i][v]</tt>.
  */
-extern const int vertexSplitPartner[3][4];
+REGINA_API extern const int vertexSplitPartner[3][4];
 
 /**
  * Contains strings describing which vertices each vertex split splits.
@@ -109,7 +109,7 @@ extern const int vertexSplitPartner[3][4];
  * which in this case is the vertex split that splits vertices 0,2 from
  * vertices 1,3.
  */
-extern const char vertexSplitString[3][6];
+REGINA_API extern const char vertexSplitString[3][6];
 
 /**
  * Lists in consecutive order the directed normal arcs that form the
@@ -128,9 +128,9 @@ extern const char vertexSplitString[3][6];
  * the corresponding array.  This is necessary because of a bug in gcc 2.95.
  */
 #ifdef __DOXYGEN
-extern const NPerm4 triDiscArcs[4][3];
+REGINA_API extern const NPerm4 triDiscArcs[4][3];
 #else
-extern const NPerm4 __triDiscArcs[12];
+REGINA_API extern const NPerm4 __triDiscArcs[12];
 #define triDiscArcs(i, j) __triDiscArcs[(3 * (i)) + (j)]
 #endif
 
@@ -152,9 +152,9 @@ extern const NPerm4 __triDiscArcs[12];
  * the corresponding array.  This is necessary because of a bug in gcc 2.95.
  */
 #ifdef __DOXYGEN
-extern const NPerm4 quadDiscArcs[3][4];
+REGINA_API extern const NPerm4 quadDiscArcs[3][4];
 #else
-extern const NPerm4 __quadDiscArcs[12];
+REGINA_API extern const NPerm4 __quadDiscArcs[12];
 #define quadDiscArcs(i, j) __quadDiscArcs[(4 * (i)) + (j)]
 #endif
 
@@ -176,9 +176,9 @@ extern const NPerm4 __quadDiscArcs[12];
  * the corresponding array.  This is necessary because of a bug in gcc 2.95.
  */
 #ifdef __DOXYGEN
-extern const NPerm4 octDiscArcs[3][8];
+REGINA_API extern const NPerm4 octDiscArcs[3][8];
 #else
-extern const NPerm4 __octDiscArcs[24];
+REGINA_API extern const NPerm4 __octDiscArcs[24];
 #define octDiscArcs(i, j) __octDiscArcs[(8 * (i)) + (j)]
 #endif
 
