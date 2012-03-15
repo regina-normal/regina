@@ -44,8 +44,11 @@
   // Fake definitions just for doxygen.
 
   /**
-   * All non-templated, non-static functions and classes that are part of
-   * Regina's public interface \b must be declared with REGINA_API.
+   * All non-templated, non-static functions, classes and global variables
+   * that are part of Regina's public interface \b must be declared with
+   * REGINA_API.
+   * In addition, global variables must also be declared with \c extern
+   * as per normal.
    * Otherwise things may (and in some environments will) break when external
    * applications try to use Regina with optimisations such as gcc's
    * <tt>-fvisibility=hidden</tt>.

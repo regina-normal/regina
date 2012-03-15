@@ -51,7 +51,7 @@ namespace regina {
  * equal by the generic zero-testing and sign-testing routines defined in
  * this file (isZero(), isPositive(), isNonNegative() and so on).
  */
-extern const double epsilon;
+REGINA_API extern const double epsilon;
 
 /**
  * Determines whether the given real number is zero.
