@@ -1,0 +1,18 @@
+Index: libnormaliz.h
+===================================================================
+--- libnormaliz.h	(revision 6435)
++++ libnormaliz.h	(working copy)
+@@ -22,11 +22,8 @@
+ #include <iostream>
+ #include <assert.h>
+ 
+-#ifdef _WIN32 //for 32 and 64 bit windows
+-	#include <mpirxx.h>
+-#else         // all other systems
+-	#include <gmpxx.h>
+-#endif
++// Regina will gmpxx.h everywhere, even on Windows.
++#include <gmpxx.h>
+ 
+ #include "normaliz_exception.h"
+ #include "cone_property.h"
