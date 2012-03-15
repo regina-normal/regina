@@ -34,24 +34,47 @@ IF(NOT CMAKE_BUILD_TYPE)
 ENDIF(NOT CMAKE_BUILD_TYPE)
 
 # Distinguish between the different Regina installation types:
-# FullInstall = standard filesystem installation in a fixed location.
-# Bundle = self-contained MacOSX app bundle that users can drag and drop.
+# XDG = standard freedesktop.org filesystem installation in a fixed location.
+# Bundle = self-contained app bundle for MacOS that users can drag and drop.
+# Windows = self-contained movable install directory for MS Windows.
 if (NOT REGINA_INSTALL_TYPE)
-  SET (REGINA_INSTALL_TYPE FullInstall CACHE STRING
-    "Choose how Regina installs itself.  Options are: FullInstall Bundle."
+  if (APPLE)
+    SET (REGINA_DEFAULT_INSTALL_TYPE Bundle)
+  elseif (WIN32)
+    SET (REGINA_DEFAULT_INSTALL_TYPE Windows)
+  else ()
+    SET (REGINA_DEFAULT_INSTALL_TYPE XDG)
+  endif ()
+  SET (REGINA_INSTALL_TYPE ${REGINA_DEFAULT_INSTALL_TYPE} CACHE STRING
+    "Choose how Regina installs itself.  Options are: XDG Bundle Windows."
     FORCE)
 ENDIF (NOT REGINA_INSTALL_TYPE)
+MESSAGE (STATUS "Regina install type: ${REGINA_INSTALL_TYPE}")
 
 # Sanity check the installation type:
-IF (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+IF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   # No sanity checking needed here (yet).
 ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   IF (NOT APPLE)
-    MESSAGE(FATAL_ERROR "REGINA_INSTALL_TYPE=Bundle is only supported on MacOSX.")
+    MESSAGE(FATAL_ERROR
+      "REGINA_INSTALL_TYPE=Bundle is only supported on MacOSX.")
   ENDIF (NOT APPLE)
+ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Windows)
+  IF (NOT WIN32)
+    MESSAGE(FATAL_ERROR
+      "REGINA_INSTALL_TYPE=Windows is only supported on MS Windows.")
+  ENDIF (NOT WIN32)
 ELSE()
-  MESSAGE(FATAL_ERROR "REGINA_INSTALL_TYPE must be one of: FullInstall Bundle.")
+  MESSAGE(FATAL_ERROR
+    "REGINA_INSTALL_TYPE must be one of: XDG Bundle Windows.")
 ENDIF()
+
+# Are we installing development files?
+IF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+  SET (REGINA_INSTALL_DEV OFF)
+ELSE (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+  SET (REGINA_INSTALL_DEV ON)
+ENDIF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
 
 # Give packagers a way of insisting that every optional component is found.
 # Set PACKAGING_MODE=1 to make every component compulsory.
@@ -105,6 +128,15 @@ if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   SET (INCLUDEDIR ${RESOURCEDIR}/include)
   SET (PKGLIBDIR ${LIBDIR})
   SET (PKGDATADIR ${DATADIR})
+elseif (${REGINA_INSTALL_TYPE} STREQUAL Windows)
+  # MS Windows install.
+  SET (APPDIR ${CMAKE_INSTALL_PREFIX}/bin)
+  SET (BINDIR ${CMAKE_INSTALL_PREFIX}/bin)
+  SET (LIBDIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+  SET (DATADIR ${CMAKE_INSTALL_PREFIX}/share)
+  SET (INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include/${PACKAGE_NAME})
+  SET (PKGLIBDIR ${LIBDIR}/${PACKAGE_NAME})
+  SET (PKGDATADIR ${DATADIR}/${PACKAGE_NAME})
 else ()
   # Full install.
   SET (APPDIR ${CMAKE_INSTALL_PREFIX}/bin)
@@ -126,24 +158,21 @@ SET (ENGINE_INCLUDES "${PROJECT_SOURCE_DIR}/engine" )
 SET (ENGINE_LIBRARY regina-engine)
 
 # RPATH support.
-if (APPLE AND ${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
-  # Use rpath always on MacOS because apps will almost certainly be
-  # installed into non-standard directories.
-  set(CMAKE_INSTALL_NAME_DIR ${LIBDIR})
-else ()
-  # Under linux, give users the choice.
-  IF (NOT DISABLE_RPATH)
-    SET(DISABLE_RPATH OFF CACHE BOOL
-      "Do not build with rpath.  This option may break installations in non-standard directories, since executables may be unable to find Regina's libraries.  For installations in standard areas such as /usr however, this option is highly recommended." FORCE)
-  ENDIF (NOT DISABLE_RPATH)
+IF (NOT DISABLE_RPATH)
+  SET(DISABLE_RPATH OFF CACHE BOOL
+    "Do not build with rpath.  This option may break installations in non-standard directories, since executables may be unable to find Regina's libraries.  For installations in standard areas such as /usr however, this option is highly recommended." FORCE)
+ENDIF (NOT DISABLE_RPATH)
 
-  IF (DISABLE_RPATH)
+IF (NOT DISABLE_RPATH)
+  if (APPLE)
+    set(CMAKE_INSTALL_NAME_DIR ${LIBDIR})
+  else (APPLE)
     set(CMAKE_INSTALL_RPATH ${LIBDIR} )
     set(CMAKE_SKIP_BUILD_RPATH FALSE)
     set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-  ENDIF (DISABLE_RPATH)
-endif ()
+  endif (APPLE)
+ENDIF (NOT DISABLE_RPATH)
 
 # i18n checks.
 CHECK_CXX_SOURCE_COMPILES("
@@ -305,9 +334,10 @@ IF(NOT DISABLE_GUI)
     FORCE)
 ENDIF(NOT DISABLE_GUI)
 IF(DISABLE_GUI)
-  if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-    MESSAGE(FATAL_ERROR "You cannot set DISABLE_GUI=1 with REGINA_INSTALL_TYPE=Bundle.")
-  endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+  if (NOT ${REGINA_INSTALL_TYPE} STREQUAL XDG)
+    MESSAGE(FATAL_ERROR
+	  "You can only set DISABLE_GUI=1 with REGINA_INSTALL_TYPE=XDG.")
+  endif (NOT ${REGINA_INSTALL_TYPE} STREQUAL XDG)
 
   MESSAGE(WARNING "User set DISABLE_GUI=1: graphical user interface disabled.")
 ELSE(DISABLE_GUI)
@@ -321,7 +351,7 @@ ELSE(DISABLE_GUI)
     "http://www.gnu.org/software/src-highlite/"
     REGINA_MANDATORY)
 
-  if (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+  if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
     set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
     find_package(SharedMimeInfo)
     MACRO_LOG_FEATURE(SHARED_MIME_INFO_FOUND
@@ -329,7 +359,7 @@ ELSE(DISABLE_GUI)
       "Required for Regina's graphical user interface"
       "http://freedesktop.org/wiki/Software/shared-mime-info"
       TRUE "0.30")
-  endif (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+  endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
 
   if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
     include(BundleUtilities)

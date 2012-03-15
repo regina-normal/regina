@@ -9,6 +9,6 @@ FOREACH ( SOURCE_FILE ${FILES} )
 ENDFOREACH(SOURCE_FILE)
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
-if (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+if (${REGINA_INSTALL_DEV})
   INSTALL(FILES nabeliangroup.h ngrouppresentation.h nmarkedabeliangroup.h nxmlalgebrareader.h DESTINATION ${INCLUDEDIR}/algebra COMPONENT Development)
-endif (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+endif (${REGINA_INSTALL_DEV})

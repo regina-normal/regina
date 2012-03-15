@@ -9,6 +9,6 @@ FOREACH ( SOURCE_FILE ${FILES} )
 ENDFOREACH(SOURCE_FILE)
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
-if (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+if (${REGINA_INSTALL_DEV})
   INSTALL(FILES ngraphloop.h ngraphpair.h ngraphtriple.h nhandlebody.h nlensspace.h nmanifold.h notation.h nsfs.h nsfsaltset.h nsimplesurfacebundle.h nsnappeacensusmfd.h ntorusbundle.h DESTINATION ${INCLUDEDIR}/manifold COMPONENT Development)
-endif (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+endif (${REGINA_INSTALL_DEV})

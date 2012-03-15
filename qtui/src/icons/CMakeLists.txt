@@ -13,14 +13,14 @@ endforeach (IMG_CLASS ${IMGS})
 
 INSTALL (FILES ${IMG_FILES} SOURCES DESTINATION ${PKGDATADIR}/icons/regina)
 
-if (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
-  # Install application icons for KDE/GNOME.
+if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+  # Install application icons for freedesktop.org.
   foreach (IMG_SIZE ${SIZES})
     if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/regina-${IMG_SIZE}.png)
       INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/apps RENAME regina.png)
       INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/x-regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/mimetypes RENAME application-x-regina.png)
     endif (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/regina-${IMG_SIZE}.png)
   endforeach (IMG_SIZE ${SIZES})
-endif (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
 
 ADD_SUBDIRECTORY(oxygen)

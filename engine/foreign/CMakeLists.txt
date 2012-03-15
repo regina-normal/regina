@@ -9,6 +9,6 @@ FOREACH ( SOURCE_FILE ${FILES} )
 ENDFOREACH(SOURCE_FILE)
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
-if (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+if (${REGINA_INSTALL_DEV})
   INSTALL(FILES csvsurfacelist.h dehydration.h isosig.h orb.h pdf.h snappea.h DESTINATION ${INCLUDEDIR}/foreign COMPONENT Development)
-endif (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+endif (${REGINA_INSTALL_DEV})

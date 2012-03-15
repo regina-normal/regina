@@ -9,6 +9,6 @@ FOREACH ( SOURCE_FILE ${FILES} )
 ENDFOREACH(SOURCE_FILE)
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
-if (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+if (${REGINA_INSTALL_DEV})
   INSTALL( FILES approx.h matrixops.h nlargeinteger.h nmatrix.h nmatrix2.h nmatrixint.h nperm3.h nperm4.h nperm5.h nprimes.h nrational.h nray.h numbertheory.h nvector.h permconv.h DESTINATION ${INCLUDEDIR}/maths COMPONENT Development)
-endif (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+endif (${REGINA_INSTALL_DEV})

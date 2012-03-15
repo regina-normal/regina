@@ -95,10 +95,10 @@ if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
     " COMPONENT Runtime)
 endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
 
-if (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
-  # Install desktop files, mimetype handling and application icons.
+if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+  # Install desktop files and mimetype handling.
   install(FILES regina.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
   install(FILES regina.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
   update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
-endif (${REGINA_INSTALL_TYPE} STREQUAL FullInstall)
+endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
 
