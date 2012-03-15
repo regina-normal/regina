@@ -59,7 +59,7 @@ class NContainerUI : public PacketReadOnlyUI, public regina::NPacketListener {
         /**
          * Internal components
          */
-        QWidget* interface;
+        QWidget* ui;
         QLabel* children;
         QLabel* descendants;
 

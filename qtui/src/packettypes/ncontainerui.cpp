@@ -40,8 +40,8 @@ using regina::NContainer;
 
 NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
         PacketReadOnlyUI(enclosingPane), container(packet) {
-    interface = new QWidget();
-    QBoxLayout* layout = new QVBoxLayout(interface);
+    ui = new QWidget();
+    QBoxLayout* layout = new QVBoxLayout(ui);
     layout->addStretch(1);
 
     // Give the grid two extra stretchable columns on the outside.
@@ -53,7 +53,7 @@ NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
     QLabel* label;
     QString msg;
 
-    label = new QLabel(interface->tr("Immediate children:"));
+    label = new QLabel(ui->tr("Immediate children:"));
     label->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     grid->addWidget(label, 0, 1, Qt::AlignRight);
 
@@ -62,13 +62,13 @@ NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
         QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     grid->addWidget(children, 0, 2, Qt::AlignRight);
 
-    msg = interface->tr("Shows the number of immediate children of this "
+    msg = ui->tr("Shows the number of immediate children of this "
         "container, i.e., the number of child packets that have this "
         "container as their immediate parent.");
     label->setWhatsThis(msg);
     children->setWhatsThis(msg);
 
-    label = new QLabel(interface->tr("Total descendants:"));
+    label = new QLabel(ui->tr("Total descendants:"));
     label->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     grid->addWidget(label, 1, 1, Qt::AlignRight);
 
@@ -77,7 +77,7 @@ NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
         QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     grid->addWidget(descendants, 1, 2, Qt::AlignRight);
 
-    msg = interface->tr("Shows the total number of descendants of this "
+    msg = ui->tr("Shows the total number of descendants of this "
         "container, i.e., the number of children, grandchildren, "
         "great-grandchildren and so on.");
     label->setWhatsThis(msg);
@@ -97,11 +97,11 @@ NPacket* NContainerUI::getPacket() {
 }
 
 QWidget* NContainerUI::getInterface() {
-    return interface;
+    return ui;
 }
 
 QString NContainerUI::getPacketMenuText() const {
-    return interface->tr("&Container");
+    return ui->tr("&Container");
 }
 
 void NContainerUI::refresh() {
