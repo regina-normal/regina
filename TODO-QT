@@ -20,9 +20,6 @@ Packet pane / dock redesign:
 - Open a new file by default, and give the root-level container a better name.
 - Undocked panes: cut/copy/paste commented but still works; is a menu missing?
 
-Broken:
-- MacOS: Cmdline tools (including regina-python) don't work.
-
 Other:
 - Python console: Edit options, seem to be there, but are commented in code?
 - Undo/Redo: "works" in regular text/script editors but nowhere else.

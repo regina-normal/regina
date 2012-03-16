@@ -33,11 +33,15 @@ use File::Basename;
 
 # --- Constants. ---
 
-# The program name.
+# The program name and directory.
 my $prog_name = $0;
+my $prog_dir = dirname($prog_name);
 
 # The module filename.
 my $module_name = "regina.@REGINA_PYTHON_EXTENSION@";
+
+# How Regina is installed.
+my $install_type = "@REGINA_INSTALL_TYPE@";
 
 # Address to which questions should be emailed.
 my $regina_support = "regina-user\@lists.sourceforge.net";
@@ -61,7 +65,6 @@ my $interactive = 0;
 my $nolibs = 0;
 my $regina_home = '';
 my $runscript_py = '';
-my $from_source = 0;
 my $python_lib_dir = '';
 my @python_libs;
 my $script = '';
@@ -77,12 +80,21 @@ if (not -e $python_cmd) {
     $python_cmd = '';
 }
 
+# Detect the scenario where we run from within the source tree.
+if ( -f "$prog_dir/cmake_install.cmake" and -f "$prog_dir/../CMakeCache.txt"
+        and -f "$prog_dir/../../engine/regina-core.h") {
+    &info("I: Running from the source tree.\n");
+    $install_type = 'Source';
+}
+
+&info("I: Running from installation type: $install_type");
+
 # --- Set up the environment.
 
 # On OSX, python ships as a universal binary for several architectures.
 # We need to make sure we are using the right one.
 if (@OSX_PYTHON_32@) {
-	$ENV{'VERSIONER_PYTHON_PREFER_32_BIT'} = 'yes';
+    $ENV{'VERSIONER_PYTHON_PREFER_32_BIT'} = 'yes';
 }
 
 # --- Extract variables from the configuration file.
@@ -182,16 +194,12 @@ if ($interactive and not $script) {
 
 my $prefix = "@CMAKE_INSTALL_PREFIX@";
 my $exec_prefix = "@CMAKE_INSTALL_PREFIX@";
-my $datadir = "@DATADIR@";
+my $pkgdatadir = "@PKGDATADIR@";
 my $libdir = "@LIBDIR@";
 my $package = "@PACKAGE_NAME@";
 
 if (! $regina_home) {
-    my $prog_dir = dirname($prog_name);
-    if ( -f "$prog_dir/cmake_install.cmake" and -f "$prog_dir/../CMakeCache.txt") {
-        &info("I: Running from the source tree.\n");
-        $from_source = 1;
-
+    if ($install_type eq 'Source') {
         # Setting $regina_home is interesting, because we want things
         # from both the builddir and the srcdir.  Use both.
         my $builddir = "$prog_dir/..";
@@ -199,9 +207,10 @@ if (! $regina_home) {
         $srcdir =~ /^\// or $srcdir = "$prog_dir/$srcdir";
 
         &setReginaHome($builddir, $srcdir);
+    } elsif ($install_type eq 'Bundle') {
+        &setReginaHome("$prog_dir/../Resources");
     } else {
-        &info("I: Running from an installation.\n");
-        &setReginaHome("$datadir/$package");
+        &setReginaHome($pkgdatadir);
     }
 }
 
@@ -218,8 +227,13 @@ if (! $python_cmd) {
 }
 
 if (! $python_lib_dir) {
-    &setPythonLibDir($from_source ? "$regina_home/python/" :
-        "$libdir/$package/python");
+    if ($install_type eq 'Bundle') {
+        &setPythonLibDir("$prog_dir/python");
+    } elsif ($install_type eq 'Source') {
+        &setPythonLibDir("$regina_home/python");
+    } else {
+        &setPythonLibDir("$libdir/$package/python");
+    }
 }
 
 # --- Find the default charset to use for filename encodings. ---
@@ -277,13 +291,16 @@ if ($nolibs) {
 
 &extendEnvVar('PYTHONPATH', $python_lib_dir);
 
-if ($from_source) {
+if ($install_type eq 'Source') {
     # Since we're running from the source tree, we need to ensure that
     # the calculation engine library can be found.
     &extendEnvVar('LD_LIBRARY_PATH', "$regina_home/engine/");
 
     # MacOS users will need DYLD_LIBRARY_PATH also.
     &extendEnvVar('DYLD_LIBRARY_PATH', "$regina_home/engine/");
+} elsif ($install_type eq 'Bundle') {
+    # Make sure we can find the libraries shipped with the bundle.
+    &extendEnvVar('DYLD_LIBRARY_PATH', $prog_dir);
 }
 
 my @fullCommandLine = ( $python_cmd );
