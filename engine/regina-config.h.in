@@ -1,28 +1,28 @@
-/* Define to 1 if you have the <ext/hash_set> header file. */
+/* Define if you have the <ext/hash_set> header file. */
 #cmakedefine HAVE_EXT_HASH_SET
 
-/* Define to 1 if you have the <hash_set> header file. */
+/* Define if you have the <hash_set> header file. */
 #cmakedefine HAVE_HASH_SET
 
 /* Namespace for class hash_set<...>. */
 #define __HASH_NAMESPACE @__HASH_NAMESPACE@
 
-/* Define to 1 if namespace std cannot be aliased. */
+/* Define if namespace std cannot be aliased. */
 #cmakedefine __NO_NAMESPACE_ALIASES
 
-/* Define to 1 if both signed and unsigned long long types are available. */
+/* Define if both signed and unsigned long long types are available. */
 #cmakedefine LONG_LONG_FOUND
 
-/* Define to 1 if 64-bit integer literals are available with no suffix */
+/* Define if 64-bit integer literals are available with no suffix */
 #cmakedefine NUMERIC_64_FOUND
 
-/* Define to 1 if 64-bit integer literals are available using the LL suffix */
+/* Define if 64-bit integer literals are available using the LL suffix */
 #cmakedefine NUMERIC_64_LL_FOUND
 
-/* Define to 1 if Boost.Python is available. */
+/* Define if Boost.Python is available. */
 #cmakedefine BOOST_PYTHON_FOUND
 
-/* Define to 1 if langinfo.h and nl_langinfo() are available. */
+/* Define if langinfo.h and nl_langinfo() are available. */
 #cmakedefine LANGINFO_FOUND
 
 /* Define as const if the declaration of iconv() needs const, or empty if not. */
