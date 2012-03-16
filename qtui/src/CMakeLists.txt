@@ -87,8 +87,6 @@ if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   # On MacOSX we need a qt.conf file in our bundle; otherwise the system
   # may load both the bundle and system Qt libraries and give unpredictable
   # results.
-  # install a qt.conf file# this inserts some cmake code into the install
-  # script to write the file
   set(BUNDLE_QT_CONF "${BUNDLEDIR_ESCAPED}/Contents/Resources/qt.conf")
   INSTALL(CODE "
     file(WRITE \"${BUNDLE_QT_CONF}\" \"\")
