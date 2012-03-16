@@ -1421,22 +1421,6 @@ inline bool NNormalSurfaceList::dependsOnParent() const {
     return true;
 }
 
-inline NNormalSurfaceList* NNormalSurfaceList::quadToStandard() const {
-    return internalReducedToStandard<NormalSpec>();
-}
-
-inline NNormalSurfaceList* NNormalSurfaceList::quadOctToStandardAN() const {
-    return internalReducedToStandard<AlmostNormalSpec>();
-}
-
-inline NNormalSurfaceList* NNormalSurfaceList::standardToQuad() const {
-    return internalStandardToReduced<NormalSpec>();
-}
-
-inline NNormalSurfaceList* NNormalSurfaceList::standardANToQuadOct() const {
-    return internalStandardToReduced<AlmostNormalSpec>();
-}
-
 inline NMatrixInt* NNormalSurfaceList::recreateMatchingEquations() const {
     return makeMatchingEquations(getTriangulation(), flavour);
 }
