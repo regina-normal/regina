@@ -36,6 +36,9 @@ use File::Basename;
 # The program name.
 my $prog_name = $0;
 
+# The module filename.
+my $module_name = "regina.@REGINA_PYTHON_EXTENSION@";
+
 # Address to which questions should be emailed.
 my $regina_support = "regina-user\@lists.sourceforge.net";
 
@@ -328,11 +331,11 @@ sub setPythonCmd() {
 }
 sub setPythonLibDir() {
     &info("I: Setting python module directory to $_[0].\n");
-    if ( ! -e "$_[0]/regina.so") {
-        &err("E: The calculation engine module 'regina.so' could not be \n");
+    if ( ! -e "$_[0]/$module_name") {
+        &err("E: The calculation engine module '$module_name' could not be \n");
         &err("   found in the directory $_[0].\n");
         &err("E: Please set \$REGINA_PYLIBDIR to the directory containing\n");
-        &err("   the module 'regina.so' and try again.\n");
+        &err("   the module '$module_name' and try again.\n");
         exit 1;
     }
     $python_lib_dir = $_[0];

@@ -27,10 +27,11 @@ ADD_LIBRARY("regina" MODULE ${SOURCES} )
 # (windows doesn't have a prefix anyway)
 SET_TARGET_PROPERTIES(regina PROPERTIES PREFIX "")
 
-# python modules on windows (not cygwin though) need a .pyd suffix
-IF(WIN32 AND NOT CYGWIN)
-  SET_TARGET_PROPERTIES(regina PROPERTIES SUFFIX ".pyd")
-ENDIF(WIN32 AND NOT CYGWIN)
+# enforce a non-standard suffix if we have one
+IF (REGINA_PYTHON_EXTENSION_NONSTANDARD)
+  SET_TARGET_PROPERTIES(regina PROPERTIES SUFFIX ".${REGINA_PYTHON_EXTENSION}")
+ENDIF (REGINA_PYTHON_EXTENSION_NONSTANDARD)
+
 TARGET_LINK_LIBRARIES(regina ${ENGINE_LIBRARY} ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
 # regina-python needs special environment variables when running on a

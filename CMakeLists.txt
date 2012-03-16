@@ -305,6 +305,14 @@ ADD_SUBDIRECTORY(engine)
 ADD_SUBDIRECTORY(utils)
 
 # Python support
+if (WIN32 AND NOT CYGWIN)
+  SET (REGINA_PYTHON_EXTENSION "pyd")
+  SET (REGINA_PYTHON_EXTENSION_NONSTANDARD TRUE)
+else ()
+  SET (REGINA_PYTHON_EXTENSION "so")
+  SET (REGINA_PYTHON_EXTENSION_NONSTANDARD FALSE)
+endif ()
+
 IF(NOT DISABLE_PYTHON)
   FIND_PACKAGE(PythonInterp)
   FIND_PACKAGE(PythonLibrary)
@@ -328,6 +336,7 @@ MACRO_LOG_FEATURE(BOOST_PYTHON_FOUND
   "http://www.python.org/"
   REGINA_MANDATORY)
 
+# The Qt GUI
 IF(NOT DISABLE_GUI)
   SET (DISABLE_GUI OFF CACHE STRING
     "Disables the graphical user interface.  The calculation engine, Python bindings and other command-line utilities will still be built.  This option is suitable for use on high-performance clusters."
