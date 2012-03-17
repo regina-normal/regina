@@ -40,9 +40,6 @@ my $prog_dir = dirname($prog_name);
 # The module filename.
 my $module_name = "regina.@REGINA_PYTHON_EXTENSION@";
 
-# How Regina is installed.
-my $install_type = "@REGINA_INSTALL_TYPE@";
-
 # Address to which questions should be emailed.
 my $regina_support = "regina-user\@lists.sourceforge.net";
 
@@ -70,6 +67,52 @@ my @python_libs;
 my $script = '';
 my @script_args;
 
+# --- Parse the command-line options. ---
+
+my $readingScriptArgs = 0;
+foreach my $arg (@ARGV) {
+    if ($readingScriptArgs) {
+        push @script_args, $arg;
+        next;
+    }
+
+    if ($arg eq '-q' or $arg eq '--quiet') {
+        $quiet = 1;
+        $verbose = 0;
+        next;
+    }
+
+    if ($arg eq '-v' or $arg eq '--verbose') {
+        $quiet = 0;
+        $verbose = 1;
+        next;
+    }
+
+    if ($arg eq '-i' or $arg eq '--interactive') {
+        $interactive = 1;
+        next;
+    }
+
+    if ($arg eq '-n' or $arg eq '--nolibs') {
+        $nolibs = 1;
+        next;
+    }
+
+    if ($arg =~ /^-/) {
+        &usage("Unrecognised option: $arg");
+    }
+
+    # We must be onto the script.
+    $script = $arg;
+    $readingScriptArgs = 1;
+}
+
+if ($interactive and not $script) {
+    &usage("The interactive option (-i, --interactive) can only be used with a script.");
+}
+
+# --- Determine the python executable.
+
 # In the absence of any user-specified options, use the python
 # command that corresponds to the original build environment.
 
@@ -80,14 +123,15 @@ if (not -e $python_cmd) {
     $python_cmd = '';
 }
 
-# Detect the scenario where we run from within the source tree.
+# --- Determine the installation type.
+
+my $install_type = "@REGINA_INSTALL_TYPE@";
 if ( -f "$prog_dir/cmake_install.cmake" and -f "$prog_dir/../CMakeCache.txt"
         and -f "$prog_dir/../../engine/regina-core.h") {
-    &info("I: Running from the source tree.\n");
     $install_type = 'Source';
 }
 
-&info("I: Running from installation type: $install_type");
+&info("I: Running from installation type: $install_type\n");
 
 # --- Set up the environment.
 
@@ -144,50 +188,6 @@ if ($ENV{REGINA_PYTHON}) {
 }
 if ($ENV{REGINA_PYLIBDIR}) {
     &setPythonLibDir($ENV{REGINA_PYLIBDIR});
-}
-
-# --- Parse the command-line options. ---
-
-my $readingScriptArgs = 0;
-foreach my $arg (@ARGV) {
-    if ($readingScriptArgs) {
-        push @script_args, $arg;
-        next;
-    }
-
-    if ($arg eq '-q' or $arg eq '--quiet') {
-        $quiet = 1;
-        $verbose = 0;
-        next;
-    }
-
-    if ($arg eq '-v' or $arg eq '--verbose') {
-        $quiet = 0;
-        $verbose = 1;
-        next;
-    }
-
-    if ($arg eq '-i' or $arg eq '--interactive') {
-        $interactive = 1;
-        next;
-    }
-
-    if ($arg eq '-n' or $arg eq '--nolibs') {
-        $nolibs = 1;
-        next;
-    }
-
-    if ($arg =~ /^-/) {
-        &usage("Unrecognised option: $arg");
-    }
-
-    # We must be onto the script.
-    $script = $arg;
-    $readingScriptArgs = 1;
-}
-
-if ($interactive and not $script) {
-    &usage("The interactive option (-i, --interactive) can only be used with a script.");
 }
 
 # --- Check that the current options are reasonable. ---
