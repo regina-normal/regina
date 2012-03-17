@@ -28,6 +28,7 @@
 
 #include "file/nglobaldirs.h"
 
+#include "iconcache.h"
 #include "reginamain.h"
 #include "reginaprefset.h"
 
@@ -59,6 +60,9 @@ int main(int argc, char **argv) {
 
     // Load preferences from file.
     ReginaPrefSet::read();
+
+    // Set a window icon for platforms that support it.
+    QApplication::setWindowIcon(IconCache::icon(IconCache::regina));
 
     // No session management with the Qt GUI; just start up normally.
     QStringList args = app->arguments();
