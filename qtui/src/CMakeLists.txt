@@ -45,6 +45,11 @@ else (APPLE)
   set(REGINA_APP_NAME regina-gui)
 endif (APPLE)
 
+if (WIN32)
+  # Add an icon to the executable.
+  set(SOURCES ${SOURCES} regina.rc)
+endif (WIN32)
+
 if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   set(REGINA_BUNDLE_DEST .)
 else (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
