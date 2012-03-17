@@ -81,7 +81,7 @@ class ImportDialog : public QDialog {
          */
         ImportDialog(QWidget* parent, regina::NPacket* importedData,
             regina::NPacket* packetTree, regina::NPacket* defaultParent,
-            PacketFilter* useFilter, const QString& dialogTitle);
+            PacketFilter* useFilter, bool useCodec, const QString& dialogTitle);
 
         /**
          * Returns whether or not there are any possible parent packets
@@ -97,6 +97,11 @@ class ImportDialog : public QDialog {
          * Ok has been clicked.
          */
         virtual void slotOk();
+
+        /**
+         * The user wishes to learn more about text encodings.
+         */
+        virtual void slotEncodingInfo();
 };
 
 #endif

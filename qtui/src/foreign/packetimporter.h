@@ -55,8 +55,9 @@ class PacketImporter {
         virtual ~PacketImporter();
 
         /**
-         * Import a packet tree from the given file.  The default UTF-8
-         * encoding should be assumed.
+         * Import a packet tree from the given file.
+         * If a text encoding is required, the preferred codec
+         * ReginaPrefSet::importExportCodec() should be used.
          *
          * If the import is unsuccessful, this routine should display
          * an appropriate error to the user (using the argument
@@ -70,43 +71,18 @@ class PacketImporter {
             QWidget* parentWidget) const = 0;
 
         /**
-         * Import a packet tree from the given file using the given
-         * character encoding.
-         *
-         * This routine is identical to the simpler importData() above, except
-         * that the encoding of the given file is explicitly specified
-         * (and might not be the default UTF-8).  If the given encoding
-         * is null, the routine should assume a default of UTF-8.
-         *
-         * The default implementation simply ignores the encoding and
-         * calls the simpler importData() above.
-         */
-        virtual regina::NPacket* importData(const QString& fileName,
-            QTextCodec* encoding, QWidget* parentWidget) const;
-
-        /**
-         * Should the GUI allow the user to choose a character encoding
-         * when selecting a file to import?
-         *
-         * If this routine returns \c true, the user will be offered a
-         * choice of encoding and the three-argument importData() will be
-         * called.  Otherwise the user will not be offered a choice, and
-         * the two-argument importData() will be called instead.
+         * Should the GUI inform the user that their preferred codec
+         * will be used?
          *
          * The default implementation returns \c false.
          */
-        virtual bool offerImportEncoding() const;
+        virtual bool useImportEncoding() const;
 };
 
 inline PacketImporter::~PacketImporter() {
 }
 
-inline regina::NPacket* PacketImporter::importData(const QString& fileName,
-        QTextCodec*, QWidget* parentWidget) const {
-    return importData(fileName, parentWidget);
-}
-
-inline bool PacketImporter::offerImportEncoding() const {
+inline bool PacketImporter::useImportEncoding() const {
     return false;
 }
 

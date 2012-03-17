@@ -56,9 +56,7 @@ class PythonHandler : public PacketImporter, public PacketExporter {
          */
         virtual regina::NPacket* importData(const QString& fileName,
             QWidget* parentWidget) const;
-        virtual regina::NPacket* importData(const QString& fileName,
-            QTextCodec* encoding, QWidget* parentWidget) const;
-        virtual bool offerImportEncoding() const;
+        virtual bool useImportEncoding() const;
 
         /**
          * PacketExporter overrides:
@@ -78,7 +76,7 @@ class PythonHandler : public PacketImporter, public PacketExporter {
 inline PythonHandler::PythonHandler() {
 }
 
-inline bool PythonHandler::offerImportEncoding() const {
+inline bool PythonHandler::useImportEncoding() const {
     return true;
 }
 

@@ -80,36 +80,16 @@ void ReginaPart::importOrb() {
 void ReginaPart::importFile(const PacketImporter& importer,
         PacketFilter* parentFilter, const QString& fileFilter,
         const QString& dialogTitle) {
-    regina::NPacket* newTree = 0;
-// TODO: Encoding stuff?
-//    if (importer.offerImportEncoding()) {
-//        KEncodingFileDialog::Result result =
-//            KEncodingFileDialog::getOpenFileNameAndEncoding(
-//            QString::null /* default encoding */,
-//            QString::null, fileFilter, widget(), dialogTitle);
-//        if (result.fileNames.empty() || result.fileNames.front().isEmpty())
-//            return;
-//        newTree = importer.importData(result.fileNames.front(),
-//            QTextCodec::codecForName(result.encoding.toAscii()), widget());
-//    } else {
-//        QString file = KFileDialog::getOpenFileName(KUrl(),
-//            fileFilter, widget(), dialogTitle);
-//        if (file.isEmpty())
-//            return;
-//        newTree = importer.importData(file, widget());
-//    }
-
-
-    // TODO: Use encoding
     QString file = QFileDialog::getOpenFileName(widget(),
         dialogTitle, QString(), fileFilter);
     if (file.isEmpty())
         return;
-    newTree = importer.importData(file, widget());
+    regina::NPacket* newTree = importer.importData(file, widget());
 
     if (newTree) {
         ImportDialog dlg(widget(), newTree, packetTree,
-            treeView->selectedPacket(), parentFilter, dialogTitle);
+            treeView->selectedPacket(), parentFilter,
+            importer.useImportEncoding(), dialogTitle);
         if (dlg.validate() && dlg.exec() == QDialog::Accepted)
             packetView(newTree, true);
         else

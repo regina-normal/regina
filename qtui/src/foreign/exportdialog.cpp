@@ -63,7 +63,7 @@ ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
 
     if (useCodec) {
         hStrip = new QHBoxLayout;
-        label = new QLabel(tr("<qt>Text encoding: <b>%1</b></qt>").
+        label = new QLabel(tr("<qt>Text encoding: %1</qt>").
             arg(QString::fromAscii(
                 ReginaPrefSet::global().fileImportExportCodec)));
         hStrip->addWidget(label);

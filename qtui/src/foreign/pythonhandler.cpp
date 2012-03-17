@@ -50,11 +50,6 @@ const PythonHandler PythonHandler::instance;
 
 regina::NPacket* PythonHandler::importData(const QString& fileName,
         QWidget* parentWidget) const {
-    return importData(fileName, 0, parentWidget);
-}
-
-regina::NPacket* PythonHandler::importData(const QString& fileName,
-        QTextCodec* encoding, QWidget* parentWidget) const {
     QFile f(fileName);
     if (! f.open(QIODevice::ReadOnly)) {
         ReginaSupport::warn(parentWidget,
@@ -65,10 +60,7 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
     }
     QTextStream in(&f);
 
-    if (encoding)
-        in.setCodec(encoding);
-    else
-        in.setCodec(QTextCodec::codecForName("UTF-8"));
+    in.setCodec(ReginaPrefSet::importExportCodec());
 
     regina::NScript* ans = new regina::NScript();
     ans->setPacketLabel(QObject::tr("Imported Script").toAscii().constData());

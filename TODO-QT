@@ -7,7 +7,6 @@ Appearance:
 - Reorganise the Preferences dialog.
 
 Unimplemented:
-- File encoding: imports/exports currently don't do anything about encodings
 - Census prefs: system files different; display sensible names during lookup
 
 Commit / discard redesign:
@@ -20,7 +19,7 @@ Packet pane / dock redesign:
 - Open a new file by default, and give the root-level container a better name.
 - Undocked panes: cut/copy/paste commented but still works; is a menu missing?
 
-Other:
+Edit menu:
 - Python console: Edit options, seem to be there, but are commented in code?
 - Undo/Redo: "works" in regular text/script editors but nowhere else.
 
