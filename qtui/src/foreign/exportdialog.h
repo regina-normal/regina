@@ -36,10 +36,8 @@
 
 #include <QDialog>
 
-class CodecChooser;
 class PacketChooser;
 class PacketFilter;
-class QTextCodec;
 
 namespace regina {
     class NPacket;
@@ -56,7 +54,6 @@ class ExportDialog : public QDialog {
          * Internal components:
          */
         PacketChooser* chooser;
-        CodecChooser* codecChooser;
 
         /**
          * Packet tree structure:
@@ -77,7 +74,7 @@ class ExportDialog : public QDialog {
          */
         ExportDialog(QWidget* parent, regina::NPacket* packetTree,
             regina::NPacket* defaultSelection, PacketFilter* useFilter,
-            bool offerCodec, const QString& dialogTitle);
+            bool useCodec, const QString& dialogTitle);
 
         /**
          * Returns whether or not there are any packets at all made
@@ -94,16 +91,16 @@ class ExportDialog : public QDialog {
          */
         regina::NPacket* selectedPacket();
 
-        /**
-         * Returns the currently selected codec.  This may be NULL.
-         */
-        QTextCodec* selectedCodec();
-
     protected slots:
         /**
          * Ok has been clicked.
          */
         virtual void slotOk();
+
+        /**
+         * The user wants to learn more about text encodings.
+         */
+        virtual void slotEncodingInfo();
 };
 
 inline regina::NPacket* ExportDialog::selectedPacket() {

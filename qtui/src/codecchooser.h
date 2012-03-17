@@ -42,14 +42,21 @@
 class CodecChooser : public QComboBox {
     public:
         /**
-         * Constructor that creates an empty combo box.
+         * Constructor that fills the chooser with all available codecs.
+         * The default UTF-8 codec will be selected.
          */
         CodecChooser();
 
         /**
-         * Get the currently selected codec.  This may return NULL.
+         * Get the currently selected codec name.  This may return NULL.
          */
-        QTextCodec* selectedCodec();
+        QByteArray selectedCodecName();
+
+        /**
+         * Selects the given codec name, if it is available.  If not, the
+         * selection will not be changed.
+         */
+        void setCodecName(const QByteArray& codec);
 };
 
 #endif

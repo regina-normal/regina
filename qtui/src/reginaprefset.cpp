@@ -157,6 +157,7 @@ ReginaPrefSet::ReginaPrefSet() :
         autoDock(true),
         censusFiles(defaultCensusFiles()),
         displayTagsInTree(false),
+        fileImportExportCodec("UTF-8"),
         fileRecentMax(10),
         pdfAutoClose(true),
         pythonAutoIndent(true),
@@ -385,6 +386,8 @@ void ReginaPrefSet::readInternal() {
     
     settings.beginGroup("File");
     fileRecentMax = settings.value("RecentMax", 10).toInt();
+    fileImportExportCodec = settings.value("ImportExportCodec",
+        QByteArray("UTF-8")).toByteArray();
     settings.endGroup();
 
     settings.beginGroup("PDF");
@@ -521,6 +524,7 @@ void ReginaPrefSet::saveInternal() const {
 
     settings.beginGroup("File");
     settings.setValue("RecentMax", fileRecentMax);
+    settings.setValue("ImportExportCodec", fileImportExportCodec);
     settings.endGroup();
 
     settings.beginGroup("PDF");
@@ -623,5 +627,12 @@ void ReginaPrefSet::saveInternal() const {
         settings.setValue(QString("File%1").arg(i + 1),
             fileRecent_[i].toLocalFile());
     settings.endGroup();
+}
+
+QTextCodec* ReginaPrefSet::importExportCodec() {
+    QTextCodec* ans = QTextCodec::codecForName(global().fileImportExportCodec);
+    if (! ans)
+        ans = QTextCodec::codecForName("UTF-8");
+    return ans;
 }
 

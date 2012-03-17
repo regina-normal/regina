@@ -40,6 +40,7 @@
 #include <QSize>
 #include <QUrl>
 
+class QTextCodec;
 class QWidget;
 
 /**
@@ -260,6 +261,8 @@ class ReginaPrefSet : public QObject {
             /**< The list of data files to use for census lookups. */
         bool displayTagsInTree;
             /**< Should we display packet tags in the visual tree? */
+        QByteArray fileImportExportCodec;
+            /**< The codec to use for imports and exports. */
         bool pdfAutoClose;
             /**< Should we close external PDF viewers automatically (e.g.,
                  when the packet is refreshed or closed)? */
@@ -378,6 +381,15 @@ class ReginaPrefSet : public QObject {
          * specified.
          */
         static QFont fixedWidthFont();
+
+        /**
+         * Returns the preferred codec for imports and exports.
+         * If the preferred codec could not be found, the UTF-8 codec
+         * will be returned instead.
+         *
+         * This routine will never return null.
+         */
+        static QTextCodec* importExportCodec();
 
         /**
          * Opens the given section of an arbitrary handbook in an appropriate

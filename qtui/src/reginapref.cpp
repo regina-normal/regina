@@ -32,6 +32,7 @@
 #include "file/nglobaldirs.h"
 #include "snappea/nsnappeatriangulation.h"
 
+#include "codecchooser.h"
 #include "coordinatechooser.h"
 #include "iconcache.h"
 #include "reginafilter.h"
@@ -165,6 +166,9 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 //    generalPrefs->cbTipOfDay->setChecked(
 //        KConfigGroup(KGlobal::config(), "TipOfDay").
 //        readEntry("RunOnStart", true));
+    generalPrefs->cbImportExportCodec->setCodecName(
+        prefSet.fileImportExportCodec);
+
     triPrefs->cbGraphvizLabels->setChecked(prefSet.triGraphvizLabels);
 
     switch (prefSet.triInitialTab) {
@@ -298,6 +302,9 @@ void ReginaPreferences::slotApply() {
         generalPrefs->editTreeJumpSize->setText(
             QString::number(prefSet.treeJumpSize));
     }
+
+    prefSet.fileImportExportCodec = generalPrefs->cbImportExportCodec->
+        selectedCodecName();
 
     prefSet.triGraphvizLabels = triPrefs->cbGraphvizLabels->isChecked();
 
@@ -686,6 +693,23 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
         "or Jump Down is selected.");
     label->setWhatsThis(msg);
     editTreeJumpSize->setWhatsThis(msg);
+    layout->addLayout(box);
+
+    // Set up the import/export codec.
+    box = new QHBoxLayout();
+
+    label = new QLabel(tr("Text encoding for imports/exports:"));
+    box->addWidget(label);
+    cbImportExportCodec = new CodecChooser();
+    box->addWidget(cbImportExportCodec, 1);
+    msg = tr("<qt>The text encoding to use when importing or exporting data "
+        "using plain text formats.  This is only relevant if you "
+        "use letters or symbols that are not found on a typical "
+        "English keyboard.<p>"
+        "If you are not sure what to choose, the default encoding "
+        "<b>UTF-8</b> is safe.</qt>");
+    label->setWhatsThis(msg);
+    cbImportExportCodec->setWhatsThis(msg);
     layout->addLayout(box);
 
     // More options.

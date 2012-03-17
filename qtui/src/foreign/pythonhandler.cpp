@@ -30,6 +30,7 @@
 #include "utilities/stringutils.h"
 
 #include "pythonhandler.h"
+#include "reginaprefset.h"
 #include "reginasupport.h"
 #include "../packetfilter.h"
 
@@ -129,11 +130,6 @@ PacketFilter* PythonHandler::canExport() const {
 
 bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
         QWidget* parentWidget) const {
-    return exportData(data, fileName, 0, parentWidget);
-}
-
-bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
-        QTextCodec* encoding, QWidget* parentWidget) const {
     regina::NScript* script = dynamic_cast<regina::NScript*>(data);
 
     QFile f(fileName);
@@ -146,10 +142,7 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
     }
     QTextStream out(&f);
 
-    if (encoding)
-        out.setCodec(encoding);
-    else
-        out.setCodec(QTextCodec::codecForName("UTF-8"));
+    out.setCodec(ReginaPrefSet::importExportCodec());
 
     // Write the name of the script.
     out << "### " << scriptMarker << ' ';

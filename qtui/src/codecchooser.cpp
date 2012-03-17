@@ -47,7 +47,13 @@ CodecChooser::CodecChooser() : QComboBox() {
         setCurrentIndex(defaultIndex);
 }
 
-QTextCodec* CodecChooser::selectedCodec() {
-    return QTextCodec::codecForName(currentText().toAscii());
+QByteArray CodecChooser::selectedCodecName() {
+    return currentText().toAscii();
+}
+
+void CodecChooser::setCodecName(const QByteArray& codec) {
+    int pos = findText(QString::fromAscii(codec));
+    if (pos >= 0)
+        setCurrentIndex(pos);
 }
 

@@ -41,6 +41,7 @@
 #include "reginafilter.h"
 
 #include <QFileDialog>
+#include <QTextCodec>
 
 void ReginaPart::exportCSVSurfaceList() {
     exportFile(CSVSurfaceHandler::instance, tr(FILTER_CSV),
@@ -83,19 +84,14 @@ void ReginaPart::exportFile(const PacketExporter& exporter,
     // For some reason, on MacOS the file dialog disappears immediately
     // if widget() is used [20 Feb 2012].
     ExportDialog dlg(widget(), packetTree, treeView->selectedPacket(),
-        exporter.canExport(), exporter.offerExportEncoding(), dialogTitle);
+        exporter.canExport(), exporter.useExportEncoding(), dialogTitle);
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
         regina::NPacket* data = dlg.selectedPacket();
         if (data) {
             QString file = QFileDialog::getSaveFileName(parent,
                 dialogTitle, QString(), fileFilter);
-            if (! file.isEmpty()) {
-                if (exporter.offerExportEncoding())
-                    exporter.exportData(data, file, dlg.selectedCodec(),
-                        widget());
-                else
-                    exporter.exportData(data, file, widget());
-            }
+            if (! file.isEmpty())
+                exporter.exportData(data, file, widget());
         }
     }
 }

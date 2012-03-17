@@ -28,8 +28,8 @@
 
 #include "packet/npacket.h"
 
-#include "codecchooser.h"
 #include "exportdialog.h"
+#include "reginaprefset.h"
 #include "reginasupport.h"
 #include "../packetchooser.h"
 #include "../packetfilter.h"
@@ -39,12 +39,13 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLayout>
+#include <QPushButton>
 #include <QTextDocument>
 #include <QWhatsThis>
 
 ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
         regina::NPacket* defaultSelection, PacketFilter* useFilter,
-        bool offerCodec, const QString& dialogTitle) :
+        bool useCodec, const QString& dialogTitle) :
         QDialog(parent),
         tree(packetTree), chosenPacket(0) {
     setWindowTitle(dialogTitle);
@@ -60,19 +61,19 @@ ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
     chooser->setWhatsThis(expln);
     layout->addLayout(hStrip);
 
-    if (offerCodec) {
+    if (useCodec) {
         hStrip = new QHBoxLayout;
-        label = new QLabel(tr("Text encoding:"));
+        label = new QLabel(tr("<qt>Text encoding: <b>%1</b></qt>").
+            arg(QString::fromAscii(
+                ReginaPrefSet::global().fileImportExportCodec)));
         hStrip->addWidget(label);
-        codecChooser = new CodecChooser();
-        hStrip->addWidget(codecChooser, 1);
-        QString expln = tr("Select the text encoding that you wish to "
-            "use.  If you are not sure, just use the default UTF-8.");
-        label->setWhatsThis(expln);
-        codecChooser->setWhatsThis(expln);
+        QPushButton* btn = new QPushButton(tr("Learn more..."));
+        hStrip->addWidget(btn);
+        hStrip->addStretch(1);
         layout->addLayout(hStrip);
-    } else
-        codecChooser = 0;
+
+        connect(btn, SIGNAL(clicked(bool)), this, SLOT(slotEncodingInfo()));
+    }
 
     layout->addStretch(1);
 
@@ -114,7 +115,16 @@ void ExportDialog::slotOk() {
     accept();
 }
 
-QTextCodec* ExportDialog::selectedCodec() {
-    return (codecChooser ? codecChooser->selectedCodec() : 0);
+void ExportDialog::slotEncodingInfo() {
+    ReginaSupport::info(this,
+        tr("<qt>I will encode any international symbols "
+            "using the <b>%1</b> encoding.</qt>").arg(
+            QString::fromAscii(ReginaPrefSet::global().fileImportExportCodec)),
+        tr("<qt>This is only relevant if you use letters or symbols "
+            "that are not found on a typical English keyboard.<p>"
+            "If you wish to use a different encoding, you can "
+            "change this through Regina's settings.  If you are "
+            "not sure what encoding to use, the default encoding "
+            "<b>UTF-8</b> is safe.</qt>"));
 }
 

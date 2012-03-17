@@ -38,6 +38,7 @@
 #include <QDialog>
 #include <QMainWindow>
 
+class CodecChooser;
 class CoordinateChooser;
 class QAbstractButton;
 class QDialogButtonBox;
@@ -103,6 +104,7 @@ class ReginaPrefGeneral : public QWidget {
         // QCheckBox* cbDisplayTagsInTree;
         QLineEdit* editTreeJumpSize;
         QCheckBox* cbTipOfDay;
+        CodecChooser* cbImportExportCodec;
 
     public:
         ReginaPrefGeneral(QWidget* parent = 0);

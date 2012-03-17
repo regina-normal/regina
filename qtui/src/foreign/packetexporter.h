@@ -65,8 +65,9 @@ class PacketExporter {
         virtual PacketFilter* canExport() const = 0;
 
         /**
-         * Export a packet or packet subtree to the given file.  The
-         * default UTF-8 encoding should be used.
+         * Export a packet or packet subtree to the given file.
+         * If a text encoding is required, the preferred codec
+         * ReginaPrefSet::importExportCodec() should be used.
          *
          * This routine should return \c true if and only if the export
          * was successful.  If the export was unsuccessful, an
@@ -78,43 +79,18 @@ class PacketExporter {
             QWidget* parentWidget) const = 0;
 
         /**
-         * Export a packet or packet subtree to the given file using the
-         * given character encoding.
-         *
-         * This routine is identical to the simpler exportData() above, except
-         * that the encoding to use in the given file is explicitly given
-         * (and might not be the default UTF-8).  If the given encoding is
-         * null, the routine should assume a default of UTF-8.
-         *
-         * The default implementation simply ignores the encoding and
-         * calls the simpler exportData() above.
-         */
-        virtual bool exportData(regina::NPacket* data, const QString& fileName,
-            QTextCodec* encoding, QWidget* parentWidget) const;
-
-        /**
-         * Should the GUI allow the user to choose a character encoding
-         * when selecting a filename for export?
-         *
-         * If this routine returns \c true, the user will be offered a
-         * choice of encoding and the four-argument exportData() will be
-         * called.  Otherwise the user will not be offered a choice, and
-         * the three-argument exportData() will be called instead.
+         * Should the GUI inform the user that their preferred codec
+         * will be used?
          *
          * The default implementation returns \c false.
          */
-        virtual bool offerExportEncoding() const;
+        virtual bool useExportEncoding() const;
 };
 
 inline PacketExporter::~PacketExporter() {
 }
 
-inline bool PacketExporter::exportData(regina::NPacket* data,
-        const QString& fileName, QTextCodec*, QWidget* parentWidget) const {
-    return exportData(data, fileName, parentWidget);
-}
-
-inline bool PacketExporter::offerExportEncoding() const {
+inline bool PacketExporter::useExportEncoding() const {
     return false;
 }
 

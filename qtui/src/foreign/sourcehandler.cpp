@@ -28,6 +28,7 @@
 
 #include "triangulation/ntriangulation.h"
 
+#include "reginaprefset.h"
 #include "reginasupport.h"
 #include "sourcehandler.h"
 #include "../packetfilter.h"
@@ -46,11 +47,6 @@ PacketFilter* SourceHandler::canExport() const {
 
 bool SourceHandler::exportData(regina::NPacket* data, const QString& fileName,
         QWidget* parentWidget) const {
-    return exportData(data, fileName, 0, parentWidget);
-}
-
-bool SourceHandler::exportData(regina::NPacket* data, const QString& fileName,
-        QTextCodec* encoding, QWidget* parentWidget) const {
     regina::NTriangulation* tri = dynamic_cast<regina::NTriangulation*>(data);
 
     QFile f(fileName);
@@ -63,10 +59,7 @@ bool SourceHandler::exportData(regina::NPacket* data, const QString& fileName,
     }
     QTextStream out(&f);
 
-    if (encoding)
-        out.setCodec(encoding);
-    else
-        out.setCodec(QTextCodec::codecForName("UTF-8"));
+    out.setCodec(ReginaPrefSet::importExportCodec());
 
     out << tri->dumpConstruction().c_str();
     return true;
