@@ -360,19 +360,18 @@ void PythonConsole::setVar(const QString& name, regina::NPacket* value) {
 }
 
 void PythonConsole::loadAllLibraries() {
-    for (ReginaFilePrefList::const_iterator it =
-            ReginaPrefSet::global().pythonLibraries.begin();
-            it != ReginaPrefSet::global().pythonLibraries.end(); it++) {
-        if (! (*it).active)
+    foreach (const ReginaFilePref& f, ReginaPrefSet::global().pythonLibraries) {
+        if (! f.isActive())
             continue;
 
-        QString shortName = QFileInfo((*it).filename).fileName();
+        QString shortName = f.shortDisplayName();
         addOutput(tr("Loading %1...").arg(shortName));
         if (! interpreter->runScript(
-                static_cast<const char*>(it->encodeFilename()), shortName.toAscii())) {
-            if (! QFileInfo((*it).filename).exists())
+                static_cast<const char*>(f.encodeFilename()),
+                shortName.toAscii())) {
+            if (! f.exists())
                 addError(tr("The library %1 does not exist.").
-                    arg((*it).filename));
+                    arg(f.longDisplayName()));
             else
                 addError(tr("The library %1 could not be loaded.").
                     arg(shortName));

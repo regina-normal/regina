@@ -194,7 +194,6 @@ class ReginaPrefCensus : public QWidget {
         void remove();
         void activate();
         void deactivate();
-        void restoreDefaults();
 
     public:
     friend class ReginaPreferences;

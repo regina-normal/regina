@@ -78,7 +78,7 @@ namespace {
             ReginaFilePrefItem(QListWidget* parent,
                     const ReginaFilePref& newData) :
                     QListWidgetItem(iconFor(newData),
-                        newData.filename, parent),
+                        newData.longDisplayName(), parent),
                     data(newData) {
             }
 
@@ -87,25 +87,25 @@ namespace {
             }
 
             bool activateFile() {
-                if (data.active)
+                if (data.isActive())
                     return false;
 
-                data.active = true;
+                data.activate();
                 setIcon(ReginaSupport::themeIcon("dialog-ok"));
                 return true;
             }
 
             bool deactivateFile() {
-                if (! data.active)
+                if (! data.isActive())
                     return false;
 
-                data.active = false;
+                data.deactivate();
                 setIcon(ReginaSupport::themeIcon("dialog-cancel"));
                 return true;
             }
 
             static QIcon iconFor(const ReginaFilePref& data) {
-                return (data.active ?
+                return (data.isActive() ?
                     ReginaSupport::themeIcon("dialog-ok") :
                     ReginaSupport::themeIcon("dialog-cancel"));
             }
@@ -237,9 +237,9 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     pdfPrefs->editExternalViewer->setText(prefSet.pdfExternalViewer);
     pdfPrefs->cbAutoClose->setChecked(prefSet.pdfAutoClose);
 
-    for (ReginaFilePrefList::const_iterator it = prefSet.censusFiles.begin();
-            it != prefSet.censusFiles.end(); it++)
-        new ReginaFilePrefItem(censusPrefs->listFiles, *it);
+    foreach (const ReginaFilePref& f, prefSet.censusFiles) {
+        new ReginaFilePrefItem(censusPrefs->listFiles, f);
+    }
     censusPrefs->updateActiveCount();
 
     pythonPrefs->cbAutoIndent->setChecked(prefSet.pythonAutoIndent);
@@ -247,10 +247,9 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
         QString::number(prefSet.pythonSpacesPerTab));
     // pythonPrefs->cbWordWrap->setChecked(prefSet.pythonWordWrap);
 
-    for (ReginaFilePrefList::const_iterator it =
-            prefSet.pythonLibraries.begin();
-            it != prefSet.pythonLibraries.end(); it++)
-        new ReginaFilePrefItem(pythonPrefs->listFiles, *it);
+    foreach (const ReginaFilePref& f, prefSet.pythonLibraries) {
+        new ReginaFilePrefItem(pythonPrefs->listFiles, f);
+    }
     pythonPrefs->updateActiveCount();
 
     snapPeaPrefs->cbClosed->setChecked(prefSet.snapPeaClosed);
@@ -1059,14 +1058,6 @@ ReginaPrefCensus::ReginaPrefCensus(QWidget* parent) : QWidget(parent) {
 
     vBox->addStretch(1);
 
-    QPushButton* btnDefaults = new QPushButton(tr("Defaults"));
-    // btnDefaults->setFlat(true);
-    vBox->addWidget(btnDefaults);
-    connect(btnDefaults, SIGNAL(clicked()), this, SLOT(restoreDefaults()));
-    btnDefaults->setToolTip(tr("Restore default list of census files"));
-    btnDefaults->setWhatsThis(tr("Restore the default list of "
-        "census files."));
-
     box->addLayout(vBox);
     layout->addLayout(box, 1);
 
@@ -1077,7 +1068,7 @@ void ReginaPrefCensus::updateActiveCount() {
     long count = 0;
     for (int i = 0; i < listFiles->count(); i++) {
         QListWidgetItem* item = listFiles->item(i);
-        if (dynamic_cast<ReginaFilePrefItem*>(item)->getData().active)
+        if (dynamic_cast<ReginaFilePrefItem*>(item)->getData().isActive())
             count++;
     }
 
@@ -1200,16 +1191,6 @@ void ReginaPrefCensus::deactivate() {
     }
 }
 
-void ReginaPrefCensus::restoreDefaults() {
-    ReginaFilePrefList defaults = ReginaPrefSet::defaultCensusFiles();
-
-    listFiles->clear();
-    for (ReginaFilePrefList::const_iterator it = defaults.begin();
-            it != defaults.end(); it++)
-        new ReginaFilePrefItem(listFiles, *it);
-    updateActiveCount();
-}
-
 ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
     QBoxLayout* layout = new QVBoxLayout(this);
 
@@ -1318,7 +1299,7 @@ void ReginaPrefPython::updateActiveCount() {
     long count = 0;
     for(int i=0; i < listFiles->count() ; i++) {
         QListWidgetItem *item = listFiles->item(i);
-        if (dynamic_cast<ReginaFilePrefItem*>(item)->getData().active)
+        if (dynamic_cast<ReginaFilePrefItem*>(item)->getData().isActive())
             count++;
     }
 
@@ -1425,7 +1406,7 @@ ReginaPrefSnapPea::ReginaPrefSnapPea(QWidget* parent) : QWidget(parent) {
         "When this option is switched on, if you start Regina from the "
         "command line then you will see diagnostic messages appear on the "
         "same console from which you started Regina.  "
-        "If you start Regina from a menu (such as the KDE menu), you will "
+        "If you start Regina from a menu, you will "
         "not see these messages at all.</qt>"));
     layout->addWidget(cbMessages);
 

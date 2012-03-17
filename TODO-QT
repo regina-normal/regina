@@ -6,9 +6,6 @@ Clean-up:
 Appearance:
 - Reorganise the Preferences dialog.
 
-Unimplemented:
-- Census prefs: system files different; display sensible names during lookup
-
 Commit / discard redesign:
 - Get rid of the commit/discard mechanism, which is counterintuitive.
 - Simultaneous edits, choose commit (not external) -> not propagated.

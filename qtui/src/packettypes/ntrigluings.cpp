@@ -1205,7 +1205,7 @@ void NTriGluingsUI::censusLookup() {
 
     // Copy the list of census files for processing.
     // This is cheap (Qt uses copy-on-write).
-    ReginaFilePrefList censusFiles = ReginaPrefSet::global().censusFiles;
+    QList<ReginaFilePref> censusFiles = ReginaPrefSet::global().censusFiles;
 
     // Run through each census file.
     QProgressDialog *progress = new QProgressDialog(ui);
@@ -1223,8 +1223,7 @@ void NTriGluingsUI::censusLookup() {
     NPacket* census;
     NPacket* p;
     bool adjustedSettings = false;
-    for (ReginaFilePrefList::iterator it = censusFiles.begin();
-            it != censusFiles.end(); it++) {
+    foreach (const ReginaFilePref& f, censusFiles) {
         progress->setValue(progress->value()+1);
         QCoreApplication::instance()->processEvents();
 
@@ -1235,34 +1234,34 @@ void NTriGluingsUI::censusLookup() {
             return;
         }
 
-        if (! ((*it).active))
+        if (! (f.isActive()))
             continue;
 
         // Process this census file.
-        progress->setLabelText(tr("Searching %1...").
-            arg(Qt::escape((*it).filename)));
+        progress->setLabelText(tr("Searching: %1 ...").
+            arg(Qt::escape(f.shortDisplayName())));
         QCoreApplication::instance()->processEvents();
 
         census = regina::readFileMagic(
-            static_cast<const char*>(it->encodeFilename()));
+            static_cast<const char*>(f.encodeFilename()));
         if (! census) {
             // Disable the file automatically: it didn't work this time,
             // it won't work next time.
             // Since we're using a copy of the original list, we must
             // hunt for the file in the original list.  This is okay;
             // the lists are small and this case should rarely happen anyway.
-            for (ReginaFilePrefList::iterator tmpit =
+            for (QList<ReginaFilePref>::iterator tmpit =
                     ReginaPrefSet::global().censusFiles.begin();
                     tmpit != ReginaPrefSet::global().censusFiles.end();
                     ++tmpit)
-                if (tmpit->filename == it->filename) {
-                    tmpit->active = false;
+                if (f == *tmpit) {
+                    tmpit->deactivate();
                     adjustedSettings = true;
                     break;
                 }
             ReginaSupport::warn(ui,
                 tr("<qt>I could not read the census data file <i>%1</i>.</qt>")
-                .arg(Qt::escape((*it).filename)),
+                .arg(Qt::escape(f.longDisplayName())),
                 tr("I have disabled this file in Regina's census settings.  "
                 "You can re-enable it once the problem is fixed."));
             continue;
@@ -1274,9 +1273,9 @@ void NTriGluingsUI::censusLookup() {
                 if (tri->isIsomorphicTo(
                         *dynamic_cast<NTriangulation*>(p)).get())
                     results.push_back(CensusHit(p->getPacketLabel().c_str(),
-                        (*it).filename));
+                        f.shortDisplayName()));
         delete census;
-        searched = searched + '\n' + (*it).filename;
+        searched = searched + '\n' + f.shortDisplayName();
     }
 
     progress->setValue(progress->value()+1);
