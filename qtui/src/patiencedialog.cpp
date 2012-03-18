@@ -30,6 +30,7 @@
 #include "reginasupport.h"
 
 #include <QApplication>
+#include <QCloseEvent>
 #include <QLabel>
 #include <QLayout>
 #include <QStyle>
@@ -49,6 +50,10 @@ PatienceDialog::PatienceDialog(const QString& message, QWidget* parent) :
     setWindowTitle(tr("Please Wait"));
     setModal(0);
 
+    // Disable the window manager buttons (including Close).
+    setWindowFlags((windowFlags() | Qt::CustomizeWindowHint) &
+        ~(Qt::WindowCloseButtonHint | Qt::WindowSystemMenuHint));
+
     QHBoxLayout* layout = new QHBoxLayout(this);
 
     int iconSize = QApplication::style()->pixelMetric(
@@ -63,5 +68,9 @@ PatienceDialog::PatienceDialog(const QString& message, QWidget* parent) :
 
     QLabel* msg = new QLabel(message, this);
     layout->addWidget(msg, 1);
+}
+
+void PatienceDialog::closeEvent(QCloseEvent* e) {
+    e->ignore();
 }
 

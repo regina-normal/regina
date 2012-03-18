@@ -59,6 +59,12 @@ class PatienceDialog : public QDialog {
         static PatienceDialog* warn(const QString& message,
             QWidget* parent = 0);
 
+    protected:
+        /**
+         * Disable the window-close event.
+         */
+        virtual void closeEvent(QCloseEvent* e);
+
     private:
         /**
          * Creates a new non-modal dialog that warns the user with the

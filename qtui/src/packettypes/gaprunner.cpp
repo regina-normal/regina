@@ -34,6 +34,7 @@
 #include "gaprunner.h"
 
 #include <iostream>
+#include <QCloseEvent>
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QLayout>
@@ -86,22 +87,26 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
         QDialog(parent),
         proc(0), currOutput(""), partialLine(""), stage(GAP_init),
         cancelled(false), origGroup(useOrigGroup), newGroup(0) {
-    setWindowTitle(tr("Running GAP..."));
+    setWindowTitle(tr("Running GAP"));
+
+    // Disable the window manager buttons (including Close).
+    setWindowFlags((windowFlags() | Qt::CustomizeWindowHint) &
+        ~(Qt::WindowCloseButtonHint | Qt::WindowSystemMenuHint));
 
     QVBoxLayout *dialogLayout = new QVBoxLayout(this);
-    buttonBox = new QDialogButtonBox(this);
-    buttonBox->addButton(QDialogButtonBox::Cancel);
-    QPushButton *button = new QPushButton(
-        ReginaSupport::themeIcon("process-stop"), tr("Kill GAP"), this);
-    button->setToolTip(tr("Kill the running GAP process"));
-    button->setWhatsThis(tr("Kill the running GAP process.  This will cancel the "
-            "group simplification."));
-    buttonBox->addButton(button, QDialogButtonBox::RejectRole);
 
     status = new MessageLayer("system-run", tr("Initialising..."));
-
     dialogLayout->addWidget(status);
+
+    QDialogButtonBox* buttonBox = new QDialogButtonBox();
+    killBtn = new QPushButton(
+        ReginaSupport::themeIcon("process-stop"), tr("Stop"), this);
+    killBtn->setToolTip(tr("Stop the running GAP process"));
+    killBtn->setWhatsThis(tr("Stop the running GAP process.  "
+        "This will cancel the group simplification."));
+    buttonBox->addButton(killBtn, QDialogButtonBox::RejectRole);
     dialogLayout->addWidget(buttonBox);
+
     setLayout(dialogLayout);
 
     status->setWhatsThis(tr("<qt>When GAP (Groups, Algorithms and "
@@ -125,11 +130,15 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
     if (! proc->waitForStarted(10000 /* milliseconds */))
         error(tr("GAP could not be started."));
 
-    connect(button, SIGNAL(clicked()), this, SLOT(slotCancel()));
+    connect(killBtn, SIGNAL(clicked()), this, SLOT(slotCancel()));
 }
 
 GAPRunner::~GAPRunner() {
     delete proc;
+}
+
+void GAPRunner::closeEvent(QCloseEvent* e) {
+    e->ignore();
 }
 
 void GAPRunner::slotCancel() {
@@ -143,7 +152,7 @@ void GAPRunner::slotCancel() {
         disconnect(proc, 0, this, 0);
 
         status->setText(tr("Simplification cancelled."));
-        buttonBox->setStandardButtons(QDialogButtonBox::Cancel); 
+        killBtn->setText(tr("Close"));
     } else {
         // We've already hit cancel; just close the dialog.
         reject();
@@ -396,7 +405,7 @@ void GAPRunner::error(const QString& msg) {
         proc->kill();
     disconnect(proc, 0, this, 0);
 
-    buttonBox->setStandardButtons(QDialogButtonBox::Cancel); 
+    killBtn->setText(tr("Close"));
 
     // Resize in case the error message is large.
     // We have to go right in and reset the minimum size of the status

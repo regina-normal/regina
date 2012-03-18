@@ -60,7 +60,7 @@ class GAPRunner : public QDialog {
          * Internal components:
          */
         MessageLayer* status;
-        QDialogButtonBox* buttonBox;
+        QPushButton* killBtn;
 
         /**
          * The running GAP process:
@@ -114,6 +114,11 @@ class GAPRunner : public QDialog {
          * Qt override to set preferred size of the window
          */
         virtual QSize sizeHint() const;
+
+        /**
+         * Disable the window-close event.
+         */
+        virtual void closeEvent(QCloseEvent* e);
 
     private:
         /**
