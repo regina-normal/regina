@@ -1,5 +1,5 @@
 Appearance:
-- Reorganise the Preferences dialog.
+- Preferences: add "Default PDF viewer" checkbox.
 - Linux: Check that we call QWidget::setWindowIcon() for top-level windows.
 
 Commit / discard redesign:
@@ -23,3 +23,6 @@ Low-priority:
 Stephan:
 - Document NNormalSurface::boundarySlopes().
 - Merge and clean up TONS.
+
+Misc:
+- MacOS, Windows: Search for graphviz/GAP in the "usual place".
