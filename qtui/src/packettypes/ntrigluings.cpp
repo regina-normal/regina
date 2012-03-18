@@ -1241,7 +1241,7 @@ void NTriGluingsUI::censusLookup() {
         hasActiveFiles = true;
 
         // Process this census file.
-        progress->setLabelText(tr("Searching: %1 ...").
+        progress->setLabelText(tr("Searching: %1").
             arg(Qt::escape(f.shortDisplayName())));
         QCoreApplication::instance()->processEvents();
 
