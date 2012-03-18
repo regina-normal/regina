@@ -130,6 +130,11 @@ struct ReginaFilePref {
         bool exists() const;
 
         /**
+         * Indicates whether this is a system file.
+         */
+        bool isSystem() const;
+
+        /**
          * Indicates whether this and the given preference use identical
          * filenames.
          * Note that different representations of the same file will
@@ -604,6 +609,10 @@ inline ReginaFilePref::ReginaFilePref(const QString& filename,
 
 inline bool ReginaFilePref::isActive() const {
     return active_;
+}
+
+inline bool ReginaFilePref::isSystem() const {
+    return (! systemKey_.isNull());
 }
 
 inline void ReginaFilePref::activate() {

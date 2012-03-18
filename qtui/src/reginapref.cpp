@@ -82,6 +82,10 @@ namespace {
                     data(newData) {
             }
 
+            ReginaFilePref& getData() {
+                return data;
+            }
+
             const ReginaFilePref& getData() const {
                 return data;
             }
@@ -1130,15 +1134,39 @@ void ReginaPrefCensus::add() {
 }
 
 void ReginaPrefCensus::remove() {
-    QList<QListWidgetItem*> selection = listFiles->selectedItems();
-    if (selection.isEmpty())
+    if (! listFiles->selectionModel()->hasSelection()) {
         ReginaSupport::sorry(this,
             tr("No files are selected."),
             tr("<qt>Please select one or more files to remove, then "
             "press <i>Remove</i> again."));
-    else {
-        while(! selection.isEmpty())
-            delete (selection.takeLast());
+    } else {
+        bool removeSys = false;
+        bool deactivated = false;
+        ReginaFilePrefItem* p;
+        foreach (QListWidgetItem* item, listFiles->selectedItems()) {
+            p = static_cast<ReginaFilePrefItem*>(item);
+            if (p->getData().isSystem()) {
+                removeSys = true;
+                deactivated |= p->deactivateFile();
+            } else {
+                delete p;
+            }
+        }
+        if (removeSys) {
+            if (deactivated) {
+                ReginaSupport::info(this,
+                    tr("You cannot remove Regina's own census files "
+                        "from this list."),
+                    tr("I have deactivated the files you selected instead, "
+                        "which will exclude them from census lookups."));
+            } else {
+                ReginaSupport::info(this,
+                    tr("You cannot remove Regina's own census files "
+                        "from this list."),
+                    tr("However, you can deactivate them if you wish to "
+                        "exclude them from census lookups."));
+            }
+        }
         updateActiveCount();
     }
 }
