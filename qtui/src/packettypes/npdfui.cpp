@@ -121,7 +121,7 @@ void NPDFUI::refresh() {
     abandonProcess();
 
     showInfo(tr("<qt>Opening the requested PDF viewer.<p>"
-        "You can select a different viewer under the PDF options "
+        "You can select a different viewer under the <i>Tools</i> options "
         "in Regina's settings.</qt>"));
 
     QString externalViewer =
@@ -132,7 +132,7 @@ void NPDFUI::refresh() {
         if (! QDesktopServices::openUrl(QUrl::fromLocalFile(temp.fileName())))
             showError(tr("<qt>I was not able to find a suitable PDF viewer.<p>"
                 "Please specify your preferred PDF viewer under the "
-                "PDF options in Regina's settings.</qt>"));
+                "<i>Tools</i> options in Regina's settings.</qt>"));
     } else {
         proc = new QProcess(this);
 
@@ -146,7 +146,7 @@ void NPDFUI::refresh() {
                 showError(tr("<qt>Regina was unable to open an external "
                     "PDF viewer.  The failed command was:<p>"
                     "<tt>%1</tt><p>"
-                    "You can fix this by editing the PDF options in "
+                    "You can fix this by editing the <i>Tools</i> options in "
                     "Regina's settings.</qt>").arg(Qt::escape(cmd)));
                 proc->kill();
                 delete proc;
@@ -157,7 +157,7 @@ void NPDFUI::refresh() {
                 showError(tr("<qt>Regina was unable to open an external "
                     "PDF viewer.  The failed command was:<p>"
                     "<tt>%1</tt><p>"
-                    "You can fix this by editing the PDF options in "
+                    "You can fix this by editing the <i>Tools</i> options in "
                     "Regina's settings.</qt>").arg(Qt::escape(cmd)));
                 delete proc;
                 proc = 0;
@@ -198,7 +198,7 @@ void NPDFUI::processExited(int exitCode, QProcess::ExitStatus exitStatus) {
         showError(tr("<qt>Regina tried to open an external "
             "PDF viewer but could not.  The failed command was:<p>"
             "<tt>%1</tt><p>"
-            "You can fix this by editing the PDF options in "
+            "You can fix this by editing the <i>Tools</i> options in "
             "Regina's settings.</qt>").arg(Qt::escape(cmd)));
     delete proc;
     proc = 0;

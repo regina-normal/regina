@@ -403,7 +403,7 @@ void NTriFundGroupUI::simplifyGAP() {
                 "(Groups, Algorithms and Programming) "
                 "is correctly installed on your system, and that Regina "
                 "has been correctly configured to use it (see the "
-                "<i>Triangulation</i> section in Regina's settings).</qt>"));
+                "<i>Tools</i> section in Regina's settings).</qt>"));
         }
     }
 }
@@ -438,7 +438,7 @@ QString NTriFundGroupUI::verifyGAPExec() {
                 "on the default search path.</qt>").arg(Qt::escape(useExec)),
                 tr("<qt>If you have GAP (Groups, Algorithms and Programming) "
                 "installed on your system, please go into Regina's "
-                "settings (<i>Triangulation</i> section) and tell Regina "
+                "settings (<i>Tools</i> section) and tell Regina "
                 "where it can find GAP.</qt>"));
             return QString::null;
         }
@@ -452,7 +452,7 @@ QString NTriFundGroupUI::verifyGAPExec() {
                 arg(Qt::escape(useExec)),
             tr("<qt>If you have GAP (Groups, Algorithms and Programming) "
             "installed on your system, please go into Regina's "
-            "settings (<i>Triangulation</i> section) and tell Regina "
+            "settings (<i>Tools</i> section) and tell Regina "
             "where it can find GAP.</qt>"));
         return QString::null;
     } else if (! (info.isFile() && info.isExecutable())) {
@@ -461,7 +461,7 @@ QString NTriFundGroupUI::verifyGAPExec() {
             "an executable program.</qt>").arg(Qt::escape(useExec)),
             tr("<qt>If you have GAP (Groups, Algorithms and Programming) "
             "installed on your system, please go into Regina's "
-            "settings (<i>Triangulation</i> section) and tell Regina "
+            "settings (<i>Tools</i> section) and tell Regina "
             "where it can find GAP.</qt>"));
         return QString::null;
     }

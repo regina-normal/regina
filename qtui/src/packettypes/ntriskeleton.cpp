@@ -370,7 +370,7 @@ void NTriFaceGraphUI::refresh() {
             "face pairing graphs.  ");
         QString footer = tr("<p>If you have Graphviz installed, "
             "please update the relevant setting in Regina's "
-            "triangulation options.</qt>");
+            "<i>Tools</i> options.</qt>");
 
         QString error;
         if (gvStatus == GraphvizStatus::unknown)
@@ -462,7 +462,7 @@ void NTriFaceGraphUI::refresh() {
         showError(tr("<qt>The PNG graphic created by Graphviz "
             "could not be loaded.<p>The Graphviz executable used "
             "was <i>%1</i>.  If this is not correct, please change it "
-            "in the Regina configuration (Triangulation section).</qt>").
+            "in the Regina configuration (<i>Tools</i> section).</qt>").
             arg(useExec));
         return;
     }
