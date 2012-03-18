@@ -1,5 +1,4 @@
 Appearance:
-- Preferences: add "Default PDF viewer" checkbox.
 - Linux: Check that we call QWidget::setWindowIcon() for top-level windows.
 
 Commit / discard redesign:
