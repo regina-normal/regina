@@ -239,7 +239,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
         QString::number(prefSet.surfacesCompatThreshold));
 
     pdfPrefs->editExternalViewer->setText(prefSet.pdfExternalViewer);
-    pdfPrefs->cbAutoClose->setChecked(prefSet.pdfAutoClose);
 
     foreach (const ReginaFilePref& f, prefSet.censusFiles) {
         new ReginaFilePrefItem(censusPrefs->listFiles, f);
@@ -625,8 +624,6 @@ void ReginaPreferences::slotApply() {
 
     // pdfPrefs->editExternalViewer->setText(prefSet.pdfExternalViewer);
 
-    prefSet.pdfAutoClose = pdfPrefs->cbAutoClose->isChecked();
-
     prefSet.censusFiles.clear();
     for (int i=0; i < censusPrefs->listFiles->count();i++) {
         QListWidgetItem* item = censusPrefs->listFiles->item(i);
@@ -878,15 +875,6 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QWidget(parent) {
     chooserCreationCoords->setWhatsThis(msg);
     layout->addLayout(box);
 
-    cbWarnOnNonEmbedded = new QCheckBox(tr("Warn before generating "
-        "non-embedded surfaces"));
-    cbWarnOnNonEmbedded->setWhatsThis(tr("<qt>When creating a new "
-        "normal surface list, should Regina ask for confirmation before "
-        "enumerating immersed and/or singular surfaces?  This warning "
-        "will be issued whenever the <i>Embedded surfaces only</i> box "
-        "is not checked in the dialog for a new normal surface list.</qt>"));
-    layout->addWidget(cbWarnOnNonEmbedded);
-
     // Set up the initial tab.
     box = new QHBoxLayout();
 
@@ -945,6 +933,16 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QWidget(parent) {
     editCompatThreshold->setWhatsThis(msg);
     layout->addLayout(box);
 
+    // Options for warnings.
+    cbWarnOnNonEmbedded = new QCheckBox(tr("Warn before generating "
+        "non-embedded surfaces"));
+    cbWarnOnNonEmbedded->setWhatsThis(tr("<qt>When creating a new "
+        "normal surface list, should Regina ask for confirmation before "
+        "enumerating immersed and/or singular surfaces?  This warning "
+        "will be issued whenever the <i>Embedded surfaces only</i> box "
+        "is not checked in the dialog for a new normal surface list.</qt>"));
+    layout->addWidget(cbWarnOnNonEmbedded);
+
     // Add some space at the end.
     layout->addStretch(1);
     setLayout(layout);
@@ -960,32 +958,17 @@ ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : QWidget(parent) {
     box->addWidget(label);
     editExternalViewer = new QLineEdit();
     box->addWidget(editExternalViewer);
-    QString msg = tr("<qt>The command used to view PDF packets if we are "
-        "forced to use an external application.  Examples might include "
+    QString msg = tr("<qt>The command used to view PDF packets.  "
+        "Examples might include "
         "<tt>okular</tt>, <tt>evince</tt> or <tt>xpdf</tt>.<p>"
         "You may include optional command-line arguments here.  The PDF "
         "filename will be added to the end of the argument list, and the "
         "entire command will be passed to a shell for execution.<p>"
         "You are welcome to leave this option empty, in which case Regina "
-        "will try to find a suitable application.<p>"
-        "This option only relates to external viewers.  If you have "
-        "requested an <i>embedded</i> viewer in the checkbox above (and if an "
-        "embedded viewer is available), then this option will not be "
-        "used.</qt>");
+        "will try to find a suitable application.</qt>");
     label->setWhatsThis(msg);
     editExternalViewer->setWhatsThis(msg);
     layout->addLayout(box);
-
-    cbAutoClose = new QCheckBox(tr("Automatically close external viewers"));
-    cbAutoClose->setWhatsThis(tr("When using an external PDF viewer "
-        "(such as <tt>okular</tt> or <tt>xpdf</tt>), "
-        "close it automatically when Regina's packet viewer is closed.  "
-        "Likewise, close and reopen the external viewer whenever Regina's "
-        "packet viewer is refreshed.<p>"
-        "If you do not select this option, Regina will never close any "
-        "external PDF viewers on its own; instead this task will be left "
-        "up to the user.</qt>"));
-    layout->addWidget(cbAutoClose);
 
     // Add some space at the end.
     layout->addStretch(1);

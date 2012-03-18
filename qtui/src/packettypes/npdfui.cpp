@@ -139,7 +139,8 @@ void NPDFUI::refresh() {
         connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)),
             this, SLOT(processExited(int, QProcess::ExitStatus)));
         
-        if (ReginaPrefSet::global().pdfAutoClose) {
+        // pdfAutoClose is now always false.
+        if (false /* ReginaPrefSet::global().pdfAutoClose */) {
             proc->start(externalViewer,QStringList(temp.fileName()));
             if (! proc->waitForStarted(10000 /* milliseconds */)) {
                 showError(tr("<qt>Regina was unable to open an external "

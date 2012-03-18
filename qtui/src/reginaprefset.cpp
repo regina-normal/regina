@@ -217,7 +217,6 @@ ReginaPrefSet::ReginaPrefSet() :
         displayTagsInTree(false),
         fileImportExportCodec("UTF-8"),
         fileRecentMax(10),
-        pdfAutoClose(true),
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
         pythonWordWrap(false),
@@ -426,7 +425,6 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("PDF");
-    pdfAutoClose = settings.value("AutoClose", true).toBool();
     pdfExternalViewer = settings.value("ExternalViewer").toString().trimmed();
     settings.endGroup();
 
@@ -554,7 +552,6 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("PDF");
-    settings.setValue("AutoClose", pdfAutoClose);
     settings.setValue("ExternalViewer", pdfExternalViewer);
     settings.endGroup();
 

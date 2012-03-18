@@ -358,9 +358,6 @@ class ReginaPrefSet : public QObject {
             /**< Should we display packet tags in the visual tree? */
         QByteArray fileImportExportCodec;
             /**< The codec to use for imports and exports. */
-        bool pdfAutoClose;
-            /**< Should we close external PDF viewers automatically (e.g.,
-                 when the packet is refreshed or closed)? */
         QString pdfExternalViewer;
             /**< The external program used to view PDFs if we cannot find
                  (or do not want) an embedded KPart.  This string may contain

@@ -163,7 +163,6 @@ class ReginaPrefPDF : public QWidget {
 
     private:
         QLineEdit* editExternalViewer;
-        QCheckBox* cbAutoClose;
 
     public:
         ReginaPrefPDF(QWidget* parent = 0);
