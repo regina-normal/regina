@@ -187,6 +187,7 @@ class NTriangulation;
 class NEdge;
 class NVertex;
 class NXMLNormalSurfaceReader;
+class NMatrixInt;
 
 /**
  * Stores the vector of a single normal surface in a 3-manifold.
@@ -1313,6 +1314,27 @@ class REGINA_API NNormalSurface :
          * surface are forced to intersect at some point.
          */
         bool disjoint(const NNormalSurface& other) const;
+
+        /**
+         *
+         * Calculate the boundary slopes of each cusp of the normal surface.
+         * 
+         * TODO: Document this.
+         *
+         * The result is returned in a Yx2 matrix, where Y is the number of
+         * cusps in the normal surface. The first column holds the slope of the
+         * meridian, and the second column holds the slope of the longitude.
+         * Each row corresponds to a different cusp.
+         *
+         * Regina can only compute boundary slopes if every vertex link
+         * in the triangulation is a torus, and if the underlying
+         * coordinate system is for normal surfaces (not almost normal
+         * surfaces).  If these conditions are not met, this routine
+         * will return 0.
+         *
+         * @return TODO.
+         */
+        NMatrixInt* boundarySlopes() const;
 
         /**
          * Gives read-only access to the raw vector that sits beneath this

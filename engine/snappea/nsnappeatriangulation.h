@@ -233,17 +233,34 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
         double volume(int& precision) const;
 
         /**
-         * Returns the boundary slope equations for the cusps of this
-         * triangulation.
+         * Returns a matrix for computing boundary slopes of
+         * spun normal surfaces at the cusps of the triangulation.  This
+         * matrix includes a pair of rows for each cusp in the triangulation:
+         * one row for determining the coefficient of the meridian, and one
+         * row for determining the coefficient of the longitude.
+         * If the triangulation has more than one cusp, these pairs are
+         * ordered by vertex number in the triangulation.  Within each
+         * pair, the meridian row always appears before the longitude row.
          *
-         * These equations are returned in a matrix with rows of the form
+         * This matrix is constructed so that, if \a M and \a L are the
+         * rows for the meridian and longitude at some cusp, then for
+         * any spun normal surface with quadrilateral coordinates
+         * \a q, the boundary slope passes <i>M.q</i> times around the
+         * meridian and <i>L.q</i> times around the longitude.
+         * To compute these slopes directly from a normal surface, see
+         * NNormalSurface::boundarySlopes().
          *
-         *   a b c  d e f  . . .
+         * This code makes use of the \e SnapPy kernel, and the choice
+         * of meridian and longitude on each cusp follows \e SnapPy's
+         * conventions.
          *
-         * which means ... TODO: Finish this.
+         * \pre All vertex links in this triangulation must be tori.
          *
-         * @return the boundary slope equations as described above in a
-         * newly allocated matrix, or 0 if this is a null triangulation.
+         * @author William Pettersson and Stephan Tillmann
+         *
+         * @return a newly allocated matrix with (2 * \a number_of_cusps) rows
+         * and (3 * \a number_of_tetrahedron) columns as described above,
+         * or 0 if this is a null triangulation.
          */
         NMatrixInt* slopeEquations() const;
 
