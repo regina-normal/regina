@@ -51,10 +51,10 @@ class QPushButton;
 class ReginaMain;
 class ReginaPrefCensus;
 class ReginaPrefGeneral;
-class ReginaPrefPDF;
 class ReginaPrefPython;
 class ReginaPrefSnapPea;
 class ReginaPrefSurfaces;
+class ReginaPrefTools;
 class ReginaPrefTri;
 
 
@@ -70,10 +70,10 @@ class ReginaPreferences : public QDialog {
         ReginaPrefGeneral* generalPrefs;
         ReginaPrefTri* triPrefs;
         ReginaPrefSurfaces* surfacePrefs;
-        ReginaPrefPDF* pdfPrefs;
         ReginaPrefCensus* censusPrefs;
         ReginaPrefPython* pythonPrefs;
         ReginaPrefSnapPea* snapPeaPrefs;
+        ReginaPrefTools* toolsPrefs;
 
         // Needed for clicked() slot
         QDialogButtonBox *buttonBox;
@@ -124,8 +124,6 @@ class ReginaPrefTri : public QWidget {
         QComboBox* comboInitialSkeletonTab;
         QComboBox* comboInitialAlgebraTab;
         QLineEdit* editSurfacePropsThreshold;
-        QLineEdit* editGAPExec;
-        QLineEdit* editGraphvizExec;
         QCheckBox* cbGraphvizLabels;
 
     public:
@@ -150,22 +148,6 @@ class ReginaPrefSurfaces : public QWidget {
 
     public:
         ReginaPrefSurfaces(QWidget* parent = 0);
-
-    friend class ReginaPreferences;
-};
-
-/**
- * The page of the Regina configuration dialog for PDF viewing
- * preferences.
- */
-class ReginaPrefPDF : public QWidget {
-    Q_OBJECT
-
-    private:
-        QLineEdit* editExternalViewer;
-
-    public:
-        ReginaPrefPDF(QWidget* parent = 0);
 
     friend class ReginaPreferences;
 };
@@ -243,6 +225,25 @@ class ReginaPrefSnapPea : public QWidget {
 
     public:
         ReginaPrefSnapPea(QWidget* parent = 0);
+
+    friend class ReginaPreferences;
+};
+
+/**
+ * The page of the Regina configuration dialog for configuring
+ * third-party tools.
+ */
+class ReginaPrefTools: public QWidget {
+    Q_OBJECT
+
+    private:
+        QLineEdit* cbDefaultPDFViewer;
+        QLineEdit* editPDFViewer;
+        QLineEdit* editGAPExec;
+        QLineEdit* editGraphvizExec;
+
+    public:
+        ReginaPrefTools(QWidget* parent = 0);
 
     friend class ReginaPreferences;
 };

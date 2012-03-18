@@ -147,9 +147,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     item->addTab(surfacePrefs, IconCache::icon(IconCache::packet_surfaces),
         tr("Surfaces"));
 
-    pdfPrefs = new ReginaPrefPDF(this);
-    item->addTab(pdfPrefs, IconCache::icon(IconCache::packet_pdf), tr("PDF"));
-
     censusPrefs = new ReginaPrefCensus(this);
     item->addTab(censusPrefs, ReginaSupport::themeIcon("view-list-text"),
         tr("Census"));
@@ -161,6 +158,10 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     snapPeaPrefs = new ReginaPrefSnapPea(this);
     item->addTab(snapPeaPrefs, ReginaSupport::regIcon("snappea"),
         tr("SnapPea"));
+
+    toolsPrefs = new ReginaPrefTools(this);
+    item->addTab(toolsPrefs, ReginaSupport::themeIcon("configure"),
+        tr("Tools"));
 
     // Read the current preferences from the main window.
     generalPrefs->cbAutoDock->setChecked(prefSet.autoDock);
@@ -210,8 +211,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     triPrefs->editSurfacePropsThreshold->setText(
         QString::number(prefSet.triSurfacePropsThreshold));
-    triPrefs->editGAPExec->setText(prefSet.triGAPExec);
-    triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
 
     surfacePrefs->chooserCreationCoords->setCurrentSystem(
         prefSet.surfacesCreationCoords);
@@ -238,8 +237,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     surfacePrefs->editCompatThreshold->setText(
         QString::number(prefSet.surfacesCompatThreshold));
 
-    pdfPrefs->editExternalViewer->setText(prefSet.pdfExternalViewer);
-
     foreach (const ReginaFilePref& f, prefSet.censusFiles) {
         new ReginaFilePrefItem(censusPrefs->listFiles, f);
     }
@@ -258,6 +255,10 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     snapPeaPrefs->cbClosed->setChecked(prefSet.snapPeaClosed);
     snapPeaPrefs->cbMessages->setChecked(
         regina::NSnapPeaTriangulation::kernelMessagesEnabled());
+
+    toolsPrefs->editPDFViewer->setText(prefSet.pdfExternalViewer);
+    toolsPrefs->editGAPExec->setText(prefSet.triGAPExec);
+    toolsPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
 
     // Finish off.
     connect(buttonBox, SIGNAL(clicked(QAbstractButton *)), this, SLOT(clicked(QAbstractButton *)));
@@ -371,10 +372,101 @@ void ReginaPreferences::slotApply() {
 #endif
     QStringList pathList = paths.split(pathSeparator);
 
-    strVal = triPrefs->editGAPExec->text().trimmed();
+    prefSet.surfacesCreationCoords = surfacePrefs->chooserCreationCoords->
+        getCurrentSystem();
+    if (surfacePrefs->cbWarnOnNonEmbedded->isChecked())
+        prefSet.warnOnNonEmbedded = true;
+    else
+        prefSet.warnOnNonEmbedded = false;
+
+    switch (surfacePrefs->comboInitialTab->currentIndex()) {
+        case 1:
+            prefSet.surfacesInitialTab = ReginaPrefSet::Coordinates; break;
+        case 2:
+            prefSet.surfacesInitialTab = ReginaPrefSet::Matching; break;
+        case 3:
+            prefSet.surfacesInitialTab = ReginaPrefSet::Compatibility; break;
+        default:
+            prefSet.surfacesInitialTab = ReginaPrefSet::Summary; break;
+    }
+
+    switch (surfacePrefs->comboInitialCompat->currentIndex()) {
+        case 1:
+            prefSet.surfacesInitialCompat = ReginaPrefSet::GlobalCompat; break;
+        default:
+            prefSet.surfacesInitialCompat = ReginaPrefSet::LocalCompat; break;
+    }
+
+    uintVal = surfacePrefs->editCompatThreshold->text().toUInt(&ok);
+    if (ok) {
+        if (uintVal > 1000) {
+            ReginaSupport::sorry(this,
+                tr("I am not brave enough to allow "
+                "a compatibility matrix threshold over 1000."),
+                tr("<qt>Such a matrix would contain over a million cells, "
+                "which could cause severe performance problems.<p>"
+                "I have reset this back to its old value of %1.  "
+                "Remember that you can still compute compatibility "
+                "matrices manually at any time.</qt>").
+                arg(prefSet.surfacesCompatThreshold));
+            surfacePrefs->editCompatThreshold->setText(
+                QString::number(prefSet.surfacesCompatThreshold));
+        } else
+            prefSet.surfacesCompatThreshold = uintVal;
+    } else {
+        ReginaSupport::sorry(this,
+            tr("The compatibility matrix threshold must be a "
+            "non-negative integer."),
+            tr("<qt>This is the maximum number of normal surfaces <i>N</i> "
+            "for which the <i>N</i>&nbsp;x&nbsp;<i>N</i> compatibility "
+            "matrices will be calculated automatically.<p>"
+            "I have reset this back to its old value of %1.</qt>").
+            arg(prefSet.surfacesCompatThreshold));
+        surfacePrefs->editCompatThreshold->setText(
+            QString::number(prefSet.surfacesCompatThreshold));
+    }
+
+    prefSet.censusFiles.clear();
+    for (int i=0; i < censusPrefs->listFiles->count();i++) {
+        QListWidgetItem* item = censusPrefs->listFiles->item(i);
+        prefSet.censusFiles.push_back(
+            dynamic_cast<ReginaFilePrefItem*>(item)->getData());
+    }
+
+    prefSet.pythonAutoIndent = pythonPrefs->cbAutoIndent->isChecked();
+    uintVal = pythonPrefs->editSpacesPerTab->text().toUInt(&ok);
+    if (ok && uintVal > 0)
+        prefSet.pythonSpacesPerTab = uintVal;
+    else {
+        ReginaSupport::sorry(this,
+            tr("The number of spaces per tab must be positive."),
+            tr("I have reset this back to its old value of %1.")
+            .arg(prefSet.pythonSpacesPerTab));
+        pythonPrefs->editSpacesPerTab->setText(
+            QString::number(prefSet.pythonSpacesPerTab));
+    }
+    // prefSet.pythonWordWrap = pythonPrefs->cbWordWrap->isChecked();
+
+    prefSet.pythonLibraries.clear();
+    for (int i=0; i < pythonPrefs->listFiles->count();i++) {
+        QListWidgetItem* item = pythonPrefs->listFiles->item(i);
+        prefSet.pythonLibraries.push_back(
+            dynamic_cast<ReginaFilePrefItem*>(item)->getData());
+    }
+
+    prefSet.snapPeaClosed = snapPeaPrefs->cbClosed->isChecked();
+    regina::NSnapPeaTriangulation::enableKernelMessages(
+        snapPeaPrefs->cbMessages->isChecked());
+
+    // Don't be too fussy about what they put in this field, since the
+    // PDF viewer tries hard to find a suitable executable regardless.
+    strVal = toolsPrefs->editPDFViewer->text().trimmed();
+    prefSet.pdfExternalViewer = strVal;
+
+    strVal = toolsPrefs->editGAPExec->text().trimmed();
     if (strVal.isEmpty()) {
         // No no no.
-        triPrefs->editGAPExec->setText(prefSet.triGAPExec);
+        toolsPrefs->editGAPExec->setText(prefSet.triGAPExec);
     } else if (strVal == "gap") {
         // Don't run any checks, since this is the default.
         // GAP might not be installed.
@@ -388,17 +480,17 @@ void ReginaPreferences::slotApply() {
                 tr("<qt>The GAP executable <i>%1</i> "
                 "does not exist.</qt>").arg(Qt::escape(strVal)),
                 tr("I have reset this back to its old value."));
-            triPrefs->editGAPExec->setText(prefSet.triGAPExec);
+            toolsPrefs->editGAPExec->setText(prefSet.triGAPExec);
         } else if (! (info.isFile() && info.isExecutable())) {
             ReginaSupport::sorry(this,
                 tr("<qt>The GAP executable <i>%1</i> is not an "
                 "executable program.</qt>").arg(Qt::escape(strVal)),
                 tr("I have reset this back to its old value."));
-            triPrefs->editGAPExec->setText(prefSet.triGAPExec);
+            toolsPrefs->editGAPExec->setText(prefSet.triGAPExec);
         } else {
             // Looking fine.  Make it absolute.
             prefSet.triGAPExec = info.absoluteFilePath();
-            triPrefs->editGAPExec->setText(prefSet.triGAPExec);
+            toolsPrefs->editGAPExec->setText(prefSet.triGAPExec);
         }
     } else {
         // Search on the system path.
@@ -429,11 +521,11 @@ void ReginaPreferences::slotApply() {
         prefSet.triGAPExec = strVal;
     }
 
-    strVal = triPrefs->editGraphvizExec->text().trimmed();
+    strVal = toolsPrefs->editGraphvizExec->text().trimmed();
     if (strVal.isEmpty()) {
         // No no no.
         // Disallow the change.
-        triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
+        toolsPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
     } else if (strVal == "graphviz" || strVal.endsWith("/graphviz")) {
         // The user is trying to use "graphviz" as the executable name.
         // Disallow the change.
@@ -446,7 +538,7 @@ void ReginaPreferences::slotApply() {
             "Regina is <i>neato</i>.  "
             "See <i>http://www.graphviz.org/</i> for further details.<p>"
             "I have reset this back to its old value.</qt>"));
-        triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
+        toolsPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
     } else {
         // Time to check it out.
         QString gvFullExec;
@@ -458,7 +550,7 @@ void ReginaPreferences::slotApply() {
             // Looking fine.
             // Allow the change, and make the path absolute.
             prefSet.triGraphvizExec = gvFullExec;
-            triPrefs->editGraphvizExec->setText(gvFullExec);
+            toolsPrefs->editGraphvizExec->setText(gvFullExec);
         } else if (strVal == ReginaPrefSet::defaultGraphvizExec &&
                 gvStatus != GraphvizStatus::version1NotDot) {
             // Since we have stayed with the default, allow it with almost
@@ -555,106 +647,13 @@ void ReginaPreferences::slotApply() {
             if (ret == QMessageBox::Save)
                 prefSet.triGraphvizExec = strVal;
             else if (ret == QMessageBox::RestoreDefaults) {
-                triPrefs->editGraphvizExec->setText(
+                toolsPrefs->editGraphvizExec->setText(
                     ReginaPrefSet::defaultGraphvizExec);
                 prefSet.triGraphvizExec = ReginaPrefSet::defaultGraphvizExec;
             } else
-                triPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
+                toolsPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
         }
     }
-
-    prefSet.surfacesCreationCoords = surfacePrefs->chooserCreationCoords->
-        getCurrentSystem();
-    if (surfacePrefs->cbWarnOnNonEmbedded->isChecked())
-        prefSet.warnOnNonEmbedded = true;
-    else
-        prefSet.warnOnNonEmbedded = false;
-
-    switch (surfacePrefs->comboInitialTab->currentIndex()) {
-        case 1:
-            prefSet.surfacesInitialTab = ReginaPrefSet::Coordinates; break;
-        case 2:
-            prefSet.surfacesInitialTab = ReginaPrefSet::Matching; break;
-        case 3:
-            prefSet.surfacesInitialTab = ReginaPrefSet::Compatibility; break;
-        default:
-            prefSet.surfacesInitialTab = ReginaPrefSet::Summary; break;
-    }
-
-    switch (surfacePrefs->comboInitialCompat->currentIndex()) {
-        case 1:
-            prefSet.surfacesInitialCompat = ReginaPrefSet::GlobalCompat; break;
-        default:
-            prefSet.surfacesInitialCompat = ReginaPrefSet::LocalCompat; break;
-    }
-
-    uintVal = surfacePrefs->editCompatThreshold->text().toUInt(&ok);
-    if (ok) {
-        if (uintVal > 1000) {
-            ReginaSupport::sorry(this,
-                tr("I am not brave enough to allow "
-                "a compatibility matrix threshold over 1000."),
-                tr("<qt>Such a matrix would contain over a million cells, "
-                "which could cause severe performance problems.<p>"
-                "I have reset this back to its old value of %1.  "
-                "Remember that you can still compute compatibility "
-                "matrices manually at any time.</qt>").
-                arg(prefSet.surfacesCompatThreshold));
-            surfacePrefs->editCompatThreshold->setText(
-                QString::number(prefSet.surfacesCompatThreshold));
-        } else
-            prefSet.surfacesCompatThreshold = uintVal;
-    } else {
-        ReginaSupport::sorry(this,
-            tr("The compatibility matrix threshold must be a "
-            "non-negative integer."),
-            tr("<qt>This is the maximum number of normal surfaces <i>N</i> "
-            "for which the <i>N</i>&nbsp;x&nbsp;<i>N</i> compatibility "
-            "matrices will be calculated automatically.<p>"
-            "I have reset this back to its old value of %1.</qt>").
-            arg(prefSet.surfacesCompatThreshold));
-        surfacePrefs->editCompatThreshold->setText(
-            QString::number(prefSet.surfacesCompatThreshold));
-    }
-
-    // Don't be too fussy about what they put in this field, since the
-    // PDF viewer tries hard to find a suitable executable regardless.
-    strVal = pdfPrefs->editExternalViewer->text().trimmed();
-    prefSet.pdfExternalViewer = strVal;
-
-    // pdfPrefs->editExternalViewer->setText(prefSet.pdfExternalViewer);
-
-    prefSet.censusFiles.clear();
-    for (int i=0; i < censusPrefs->listFiles->count();i++) {
-        QListWidgetItem* item = censusPrefs->listFiles->item(i);
-        prefSet.censusFiles.push_back(
-            dynamic_cast<ReginaFilePrefItem*>(item)->getData());
-    }
-
-    prefSet.pythonAutoIndent = pythonPrefs->cbAutoIndent->isChecked();
-    uintVal = pythonPrefs->editSpacesPerTab->text().toUInt(&ok);
-    if (ok && uintVal > 0)
-        prefSet.pythonSpacesPerTab = uintVal;
-    else {
-        ReginaSupport::sorry(this,
-            tr("The number of spaces per tab must be positive."),
-            tr("I have reset this back to its old value of %1.")
-            .arg(prefSet.pythonSpacesPerTab));
-        pythonPrefs->editSpacesPerTab->setText(
-            QString::number(prefSet.pythonSpacesPerTab));
-    }
-    // prefSet.pythonWordWrap = pythonPrefs->cbWordWrap->isChecked();
-
-    prefSet.pythonLibraries.clear();
-    for (int i=0; i < pythonPrefs->listFiles->count();i++) {
-        QListWidgetItem* item = pythonPrefs->listFiles->item(i);
-        prefSet.pythonLibraries.push_back(
-            dynamic_cast<ReginaFilePrefItem*>(item)->getData());
-    }
-
-    prefSet.snapPeaClosed = snapPeaPrefs->cbClosed->isChecked();
-    regina::NSnapPeaTriangulation::enableKernelMessages(
-        snapPeaPrefs->cbMessages->isChecked());
 
     // Save these preferences to the global configuration.
     ReginaPrefSet::save();
@@ -799,51 +798,6 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QWidget(parent) {
     editSurfacePropsThreshold->setWhatsThis(msg);
     layout->addLayout(box);
 
-    // Set up the GAP executable.
-    box = new QHBoxLayout();
-
-    label = new QLabel(tr("GAP executable:"));
-    box->addWidget(label);
-    editGAPExec = new QLineEdit();
-    box->addWidget(editGAPExec);
-    msg = tr("<qt>The command used to run GAP (Groups, Algorithms and "
-        "Programming).  GAP can be used to help simplify presentations "
-        "of fundamental groups.<p>"
-        "This should be a single executable name (e.g., <i>gap</i>).  You "
-        "may specify the full path to the executable if you wish "
-        "(e.g., <i>/usr/bin/gap</i>); otherwise the default search path "
-        "will be used.<p>"
-        "There is no trouble if GAP is not installed; this just means that "
-        "Regina will have to do its own (much less effective) group "
-        "simplifications.</qt>");
-    label->setWhatsThis(msg);
-    editGAPExec->setWhatsThis(msg);
-    layout->addLayout(box);
-
-    // Set up the Graphviz executable.
-    box = new QHBoxLayout();
-
-    label = new QLabel(tr("Graphviz executable:"));
-    box->addWidget(label);
-    editGraphvizExec = new QLineEdit();
-    box->addWidget(editGraphvizExec);
-    msg = tr("<qt>The command used to run Graphviz for drawing "
-        "undirected graphs.  The recommended Graphviz command for this "
-        "job is <i>neato</i>, though you are of course welcome to use "
-        "others.<p>"
-        "This should be a single executable name (e.g., <i>neato</i>).  You "
-        "may specify the full path to the executable if you wish "
-        "(e.g., <i>/usr/bin/neato</i>); otherwise the default search path "
-        "will be used.<p>"
-        "There is no trouble if Graphviz is not installed; this just means "
-        "that Regina will not be able to display the face pairing graphs "
-        "of triangulations.<p>"
-        "For more information on Graphviz, see "
-        "<i>http://www.graphviz.org/</i>.</qt>");
-    label->setWhatsThis(msg);
-    editGraphvizExec->setWhatsThis(msg);
-    layout->addLayout(box);
-
     // Set up Graphviz options.
     cbGraphvizLabels = new QCheckBox(tr("Labels on face pairing graphs"));
     cbGraphvizLabels->setWhatsThis(tr("Labels each node in a "
@@ -948,16 +902,16 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QWidget(parent) {
     setLayout(layout);
 }
 
-ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : QWidget(parent) {
+ReginaPrefTools::ReginaPrefTools(QWidget* parent) : QWidget(parent) {
     QBoxLayout* layout = new QVBoxLayout(this);
 
-    // Set up the external viewer.
+    // Set up the PDF viewer.
     QBoxLayout* box = new QHBoxLayout();
 
-    QLabel* label = new QLabel(tr("External PDF viewer:"));
+    QLabel* label = new QLabel(tr("PDF viewer:"));
     box->addWidget(label);
-    editExternalViewer = new QLineEdit();
-    box->addWidget(editExternalViewer);
+    editPDFViewer = new QLineEdit();
+    box->addWidget(editPDFViewer);
     QString msg = tr("<qt>The command used to view PDF packets.  "
         "Examples might include "
         "<tt>okular</tt>, <tt>evince</tt> or <tt>xpdf</tt>.<p>"
@@ -967,7 +921,52 @@ ReginaPrefPDF::ReginaPrefPDF(QWidget* parent) : QWidget(parent) {
         "You are welcome to leave this option empty, in which case Regina "
         "will try to find a suitable application.</qt>");
     label->setWhatsThis(msg);
-    editExternalViewer->setWhatsThis(msg);
+    editPDFViewer->setWhatsThis(msg);
+    layout->addLayout(box);
+
+    // Set up the GAP executable.
+    box = new QHBoxLayout();
+
+    label = new QLabel(tr("GAP executable:"));
+    box->addWidget(label);
+    editGAPExec = new QLineEdit();
+    box->addWidget(editGAPExec);
+    msg = tr("<qt>The command used to run GAP (Groups, Algorithms and "
+        "Programming).  GAP can be used to help simplify presentations "
+        "of fundamental groups.<p>"
+        "This should be a single executable name (e.g., <i>gap</i>).  You "
+        "may specify the full path to the executable if you wish "
+        "(e.g., <i>/usr/bin/gap</i>); otherwise the default search path "
+        "will be used.<p>"
+        "There is no trouble if GAP is not installed; this just means that "
+        "Regina will have to do its own (much less effective) group "
+        "simplifications.</qt>");
+    label->setWhatsThis(msg);
+    editGAPExec->setWhatsThis(msg);
+    layout->addLayout(box);
+
+    // Set up the Graphviz executable.
+    box = new QHBoxLayout();
+
+    label = new QLabel(tr("Graphviz executable:"));
+    box->addWidget(label);
+    editGraphvizExec = new QLineEdit();
+    box->addWidget(editGraphvizExec);
+    msg = tr("<qt>The command used to run Graphviz for drawing "
+        "undirected graphs.  The recommended Graphviz command for this "
+        "job is <i>neato</i>, though you are of course welcome to use "
+        "others.<p>"
+        "This should be a single executable name (e.g., <i>neato</i>).  You "
+        "may specify the full path to the executable if you wish "
+        "(e.g., <i>/usr/bin/neato</i>); otherwise the default search path "
+        "will be used.<p>"
+        "There is no trouble if Graphviz is not installed; this just means "
+        "that Regina will not be able to display the face pairing graphs "
+        "of triangulations.<p>"
+        "For more information on Graphviz, see "
+        "<i>http://www.graphviz.org/</i>.</qt>");
+    label->setWhatsThis(msg);
+    editGraphvizExec->setWhatsThis(msg);
     layout->addLayout(box);
 
     // Add some space at the end.

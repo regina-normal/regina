@@ -424,10 +424,6 @@ void ReginaPrefSet::readInternal() {
         QByteArray("UTF-8")).toByteArray();
     settings.endGroup();
 
-    settings.beginGroup("PDF");
-    pdfExternalViewer = settings.value("ExternalViewer").toString().trimmed();
-    settings.endGroup();
-
     settings.beginGroup("Python");
     pythonAutoIndent = settings.value("AutoIndent", true).toBool();
     pythonSpacesPerTab = settings.value("SpacesPerTab", 4).toInt();
@@ -504,7 +500,8 @@ void ReginaPrefSet::readInternal() {
         "SurfacePropsThreshold", 6).toInt();
     settings.endGroup();
 
-    settings.beginGroup("Extensions");
+    settings.beginGroup("Tools");
+    pdfExternalViewer = settings.value("PDFViewer").toString().trimmed();
     triGAPExec = settings.value("GAPExec", "gap").toString().trimmed();
     triGraphvizExec = settings.value("GraphvizExec", "neato").
         toString().trimmed();
@@ -549,10 +546,6 @@ void ReginaPrefSet::saveInternal() const {
     settings.beginGroup("File");
     settings.setValue("RecentMax", fileRecentMax);
     settings.setValue("ImportExportCodec", fileImportExportCodec);
-    settings.endGroup();
-
-    settings.beginGroup("PDF");
-    settings.setValue("ExternalViewer", pdfExternalViewer);
     settings.endGroup();
 
     settings.beginGroup("Python");
@@ -633,7 +626,8 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("SurfacePropsThreshold", triSurfacePropsThreshold);
     settings.endGroup();
 
-    settings.beginGroup("Extensions");
+    settings.beginGroup("Tools");
+    settings.setValue("PDFViewer", pdfExternalViewer);
     settings.setValue("GAPExec", triGAPExec);
     settings.setValue("GraphvizExec", triGraphvizExec);
     settings.endGroup();
