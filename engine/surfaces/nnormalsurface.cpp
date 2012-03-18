@@ -28,6 +28,8 @@
 
 #include <algorithm>
 #include "file/nfile.h"
+#include "maths/nmatrixint.h"
+#include "snappea/nsnappeatriangulation.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/flavourregistry.h"
@@ -449,6 +451,57 @@ void NNormalSurface::calculateRealBoundary() const {
         }
     }
     realBoundary = false;
+}
+
+NMatrixInt* NNormalSurface::boundarySlopes() const {
+    NTriangulation *tri = getTriangulation();
+
+    // Check the preconditions.
+    if (vector->allowsAlmostNormal())
+        return 0;
+    for (NTriangulation::VertexIterator it = tri->getVertices().begin();
+            it != tri->getVertices().end(); ++it) {
+        if (! (*it)->isIdeal())
+            return 0;
+        if (! (*it)->isLinkOrientable())
+            return 0;
+        if ((*it)->getLinkEulerCharacteristic() != 0)
+            return 0;
+    }
+
+    NSnapPeaTriangulation snapPea(*tri, false);
+    NMatrixInt* equations = snapPea.slopeEquations();
+    if (! equations)
+        return 0;
+
+    // Check that snappea hasn't changed the triangulation.
+    // It shouldn't, but if it does then the matrix we obtain cannot be used.
+    if (! snapPea.verifyTriangulation(*tri)) {
+        delete equations;
+        return 0;
+    }
+
+    unsigned long cusps = equations->rows() / 2;
+    unsigned long numTet = tri->getNumberOfTetrahedra();
+    NMatrixInt* slopes = new NMatrixInt(cusps, 2);
+    for(unsigned int i=0; i < cusps; i++) {
+        NLargeInteger meridian; // constructor sets this to 0
+        NLargeInteger longitude; // constructor sets this to 0
+        for(unsigned int j=0; j < numTet; j++) {
+            meridian += 
+                equations->entry(2*i, 3*j)*getQuadCoord(j,vertexSplit[0][1]) +
+                equations->entry(2*i, 3*j+1)*getQuadCoord(j,vertexSplit[0][2]) +
+                equations->entry(2*i, 3*j+2)*getQuadCoord(j,vertexSplit[0][3]); 
+            longitude += 
+                equations->entry(2*i+1, 3*j)*getQuadCoord(j,vertexSplit[0][1]) +
+                equations->entry(2*i+1, 3*j+1)*getQuadCoord(j,vertexSplit[0][2]) +
+                equations->entry(2*i+1, 3*j+2)*getQuadCoord(j,vertexSplit[0][3]); 
+        }
+        slopes->entry(i,0) = meridian;
+        slopes->entry(i,1) = longitude;
+    }
+    delete equations;
+    return slopes;
 }
 
 void NNormalSurface::writeXMLData(std::ostream& out) const {

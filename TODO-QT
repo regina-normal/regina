@@ -23,3 +23,7 @@ Edit menu:
 Low-priority:
 - MacOS: Include graphviz in the bundle.
 - Reimplement tip of the day (not supported out-of-the-box by Qt).
+
+Stephan:
+- Document NNormalSurface::boundarySlopes().
+- Merge and clean up TONS.

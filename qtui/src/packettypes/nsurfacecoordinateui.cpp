@@ -27,6 +27,7 @@
 /* end stub */
 
 // Regina core includes:
+#include "maths/nmatrixint.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/nsurfacefilter.h"
 #include "triangulation/ntriangulation.h"
@@ -175,9 +176,19 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 return tr("Unknown");
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
-            if (! s->isCompact())
-                return tr("Spun");
-            else if (s->hasRealBoundary())
+            if (! s->isCompact()) {
+                regina::NMatrixInt* slopes = s->boundarySlopes();
+                if (slopes) {
+                    QString ans = tr("Spun:");
+                    // Display each boundary slope as (nu(L), -nu(M)).
+                    for (unsigned i = 0; i < slopes->rows(); ++i)
+                        ans += QString(" (%1, %2)")
+                            .arg(slopes->entry(i,1).stringValue().c_str())
+                            .arg((-slopes->entry(i,0)).stringValue().c_str());
+                    return ans;
+                } else
+                    return tr("Spun");
+            } else if (s->hasRealBoundary())
                 return tr("Real");
             else
                 return QString(QChar(0x2014 /* emdash */));
