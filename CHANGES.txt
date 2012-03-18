@@ -141,6 +141,9 @@ Version 4.91  [ (under development) ]
         Class NMaxAdmissible:
             - New class for enumerating maximal admissible faces of the
               normal surface solution cone.
+        Class NNormalSurface:
+            - New routine boundarySlopes() that calculates boundary slopes
+              for spun normal surfaces.
         Class NNormalSurfaceList:
             - New routines enumerateFundPrimal() and enumerateFundDual() to
               enumerate fundamental normal surfaces, as well as slower routines
@@ -159,7 +162,7 @@ Version 4.91  [ (under development) ]
               This is the new name for the old NDoubleDescription::LexComp.
         Class NSnapPeaTriangulation:
             - New routine slopeEquations() that uses code from SnapPy to
-              compute the boundary slope equations for cusps.
+              compute boundary slope matrices for cusps.
             - New routine verifyTriangulation() for ensuring that
               SnapPea has not retriangulated unexpectedly.
         Class NTetFace:
