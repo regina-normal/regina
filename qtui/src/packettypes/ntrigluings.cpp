@@ -1222,6 +1222,7 @@ void NTriGluingsUI::censusLookup() {
     QString searched = tr("The following censuses were searched:\n");
     NPacket* census;
     NPacket* p;
+    bool hasActiveFiles = false;
     bool adjustedSettings = false;
     foreach (const ReginaFilePref& f, censusFiles) {
         progress->setValue(progress->value()+1);
@@ -1236,6 +1237,8 @@ void NTriGluingsUI::censusLookup() {
 
         if (! (f.isActive()))
             continue;
+
+        hasActiveFiles = true;
 
         // Process this census file.
         progress->setLabelText(tr("Searching: %1 ...").
@@ -1288,7 +1291,13 @@ void NTriGluingsUI::censusLookup() {
     }
 
     // Were there any hits?
-    if (results.empty()) {
+    if (! hasActiveFiles) {
+        ReginaSupport::info(ui,
+            tr("I have no census files to search through."),
+            tr("This is probably because you deactivated Regina's "
+                "standard censuses at some time in the past.  "
+                "You can reactivate them through Regina's census settings."));
+    } else if (results.empty()) {
         ReginaSupport::info(ui,
             tr("The triangulation was not located in any census files."),
             tr("You can add more censuses to this search through "
