@@ -1,5 +1,1 @@
 Sort out what happens with config files (specifically .regina-libs).
-
-Make sure it runs from outside mingw / msys.
-
-Make sure it's treated as a real GUI app, and set window icons.

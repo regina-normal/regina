@@ -1,6 +1,3 @@
-Appearance:
-- Linux: Check that we call QWidget::setWindowIcon() for top-level windows.
-
 Commit / discard redesign:
 - Get rid of the commit/discard mechanism, which is counterintuitive.
 - Simultaneous edits, choose commit (not external) -> not propagated.
