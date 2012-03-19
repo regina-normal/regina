@@ -141,6 +141,11 @@ if (@OSX_PYTHON_32@) {
     $ENV{'VERSIONER_PYTHON_PREFER_32_BIT'} = 'yes';
 }
 
+# On Windows, we need to make sure all our DLLs are on the path.
+if ($install_type eq 'Windows') {
+    &extendEnvVar('PATH', $prog_dir);
+}
+
 # --- Extract variables from the configuration file.
 
 if (open(CONF, $python_conf)) {
@@ -244,8 +249,14 @@ eval {
     $codeset = I18N::Langinfo::langinfo(I18N::Langinfo::CODESET());
 };
 if (not defined $codeset) {
-    &warn("W: Could not determine default character encoding for filenames.\n");
-    &warn("W: Try setting \$LANG if this is causing problems.\n");
+    if ($install_type ne 'Windows') {
+        &warn("W: Could not determine default character encoding for filenames.\n");
+        &warn("W: Try setting \$LANG if this is causing problems.\n");
+    } else {
+        # We can't help this under Windows; drop the severity.
+        &info("I: Could not determine default character encoding for filenames.\n");
+        &info("I: Try setting \$LANG if this is causing problems.\n");
+    }
 }
 
 # --- Read the list of libraries to load. ---
