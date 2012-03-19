@@ -284,15 +284,41 @@ MACRO_LOG_FEATURE(DOXYGEN_FOUND
   "http://www.doxygen.org/"
   REGINA_MANDATORY)
 
-FIND_PROGRAM(XSLTPROC_EXECUTABLE NAMES xsltproc DOC "XSLT processor")
-IF (XSLTPROC_EXECUTABLE)
-  SET (XSLTPROC_FOUND TRUE)
-ENDIF (XSLTPROC_EXECUTABLE)
-MACRO_LOG_FEATURE(XSLTPROC_FOUND
-  "xsltproc"
-  "Generate the user handbook"
-  "http://xmlsoft.org/XSLT/"
-  REGINA_MANDATORY)
+IF (REGINA_DOCS)
+  get_filename_component(REGINA_DOCS_FILE "${REGINA_DOCS}" ABSOLUTE)
+
+  IF (NOT EXISTS ${REGINA_DOCS_FILE})
+    MESSAGE (FATAL_ERROR "The argument to REGINA_DOCS should be a zip file containing pre-built handbooks.  The file you gave (${REGINA_DOCS}) does not exist.")
+  ENDIF (NOT EXISTS ${REGINA_DOCS_FILE})
+
+  MESSAGE (STATUS "Using pre-built handbooks from ${REGINA_DOCS_FILE}")
+
+  FIND_PROGRAM(UNZIP_EXECUTABLE NAMES unzip DOC "Command-line unzip tool")
+  IF (UNZIP_EXECUTABLE)
+    SET (UNZIP_FOUND TRUE)
+  ENDIF (UNZIP_EXECUTABLE)
+  SET (REGINA_BUILD_HANDBOOK ${UNZIP_FOUND})
+  MACRO_LOG_FEATURE(UNZIP_FOUND
+    "unzip"
+    "Extract the user handbook"
+    "http://www.info-zip.org/pub/infozip/"
+    REGINA_MANDATORY)
+ELSE (REGINA_DOCS)
+  SET (REGINA_DOCS "" CACHE STRING
+    "Extract handbooks from the given pre-built zip file instead of building them manually."
+    FORCE)
+
+  FIND_PROGRAM(XSLTPROC_EXECUTABLE NAMES xsltproc DOC "XSLT processor")
+  IF (XSLTPROC_EXECUTABLE)
+    SET (XSLTPROC_FOUND TRUE)
+  ENDIF (XSLTPROC_EXECUTABLE)
+  SET (REGINA_BUILD_HANDBOOK ${XSLTPROC_FOUND})
+  MACRO_LOG_FEATURE(XSLTPROC_FOUND
+    "xsltproc"
+    "Generate the user handbook"
+    "http://xmlsoft.org/XSLT/"
+    REGINA_MANDATORY)
+ENDIF (REGINA_DOCS)
 
 # Test suite
 ENABLE_TESTING() # This must appear before any calls to ADD_SUBDIRECTORY().

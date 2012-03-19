@@ -8,7 +8,7 @@
 #
 # Builds an HTML manual from XML Docbook sources.
 #
-# Based on KDE4_CREATE_HANDBOOK from the KDE cmake scripts.
+# Includes code from KDE4_CREATE_HANDBOOK from the KDE cmake scripts.
 # The KDE cmake scripts are licensed as follows:
 #
 # Copyright (c) 2006-2009 Alexander Neundorf, <neundorf@kde.org>
@@ -29,10 +29,16 @@ macro (REGINA_CREATE_HANDBOOK _lang)
   get_filename_component(_handbook ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
   file(GLOB _docs *.docbook)
-  add_custom_command(OUTPUT ${_doc}
-    COMMAND ${XSLTPROC_EXECUTABLE} --path ${_dtd} -o ${CMAKE_CURRENT_BINARY_DIR}/ ${_ssheet} ${_input}
-    DEPENDS ${_docs} ${_ssheet}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+  if (REGINA_DOCS)
+    add_custom_command(OUTPUT ${_doc}
+      COMMAND ${UNZIP_EXECUTABLE} -o -j -d ${CMAKE_CURRENT_BINARY_DIR}
+        ${REGINA_DOCS_FILE} "docs/${_lang}/${_handbook}/\\*")
+  else (REGINA_DOCS)
+    add_custom_command(OUTPUT ${_doc}
+      COMMAND ${XSLTPROC_EXECUTABLE} --path ${_dtd} -o ${CMAKE_CURRENT_BINARY_DIR}/ ${_ssheet} ${_input}
+      DEPENDS ${_docs} ${_ssheet}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+  endif (REGINA_DOCS)
   add_custom_target(${_handbook}-html ALL DEPENDS ${_doc})
 
   file(GLOB _support *.png *.css *.html)
