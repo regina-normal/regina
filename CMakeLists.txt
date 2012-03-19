@@ -244,11 +244,11 @@ MACRO_LOG_FEATURE(ICONV_FOUND
   "http://www.gnu.org/s/libiconv/"
   TRUE)
 
-FIND_PACKAGE(Boost COMPONENTS python)
+FIND_PACKAGE(Boost COMPONENTS python regex)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 MACRO_LOG_FEATURE(Boost_FOUND
   "Boost"
-  "Essential: C++ components (including Boost.Python)"
+  "Essential: C++ components (including Boost.Python and Boost.Regex)"
   "http://www.boost.org/"
   TRUE)
 
