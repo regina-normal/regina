@@ -58,6 +58,16 @@ int main(int argc, char **argv) {
 #endif
 #endif
 
+#ifdef REGINA_INSTALL_WINDOWS
+#ifdef Q_OS_WIN32
+    regina::NGlobalDirs::setDirs(
+        static_cast<const char*>(QFile::encodeName(
+            QCoreApplication::applicationDirPath() + "/../share/regina")),
+        static_cast<const char*>(QFile::encodeName(
+            QCoreApplication::applicationDirPath() + "/../lib/regina/python")));
+#endif
+#endif
+
     // Load preferences from file.
     ReginaPrefSet::read();
 
