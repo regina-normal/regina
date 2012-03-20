@@ -133,6 +133,10 @@ if ( -f "$prog_dir/cmake_install.cmake" and -f "$prog_dir/../CMakeCache.txt"
 
 &info("I: Running from installation type: $install_type\n");
 
+# --- Determine the underlying operating system.
+my $os = "@CMAKE_SYSTEM_NAME@";
+&info("I: Running on operating system: $os\n");
+
 # --- Set up the environment.
 
 # On OSX, python ships as a universal binary for several architectures.
@@ -209,7 +213,9 @@ if (! $regina_home) {
         # from both the builddir and the srcdir.  Use both.
         my $builddir = "$prog_dir/..";
         my $srcdir = "@CMAKE_SOURCE_DIR@";
-        $srcdir =~ /^\// or $srcdir = "$prog_dir/$srcdir";
+        $srcdir =~ /^\// or                  # Unix-style absolute path
+            $srcdir =~ /^[A-Za-z]:[\\\/]/ or # Windows-style absolute path
+            $srcdir = "$prog_dir/$srcdir";   # Relative path: make absolute
 
         &setReginaHome($builddir, $srcdir);
     } elsif ($install_type eq 'Bundle') {
@@ -305,13 +311,19 @@ if ($nolibs) {
 if ($install_type eq 'Source') {
     # Since we're running from the source tree, we need to ensure that
     # the calculation engine library can be found.
-    &extendEnvVar('LD_LIBRARY_PATH', "$regina_home/engine/");
-
-    # MacOS users will need DYLD_LIBRARY_PATH also.
-    &extendEnvVar('DYLD_LIBRARY_PATH', "$regina_home/engine/");
+    if ($os eq 'Darwin') {
+        &extendEnvVar('DYLD_LIBRARY_PATH', "$regina_home/engine/");
+    } elsif ($os eq 'Windows') {
+        &extendEnvVar('PATH', "$regina_home/engine/");
+    } else {
+        &extendEnvVar('LD_LIBRARY_PATH', "$regina_home/engine/");
+    }
 } elsif ($install_type eq 'Bundle') {
     # Make sure we can find the libraries shipped with the bundle.
     &extendEnvVar('DYLD_LIBRARY_PATH', $prog_dir);
+} elsif ($install_type eq 'Windows') {
+    # Make sure we can find the libraries shipped with the application.
+    &extendEnvVar('PATH', $prog_dir);
 }
 
 my @fullCommandLine = ( $python_cmd );
