@@ -22,3 +22,4 @@ Stephan:
 
 Misc:
 - MacOS, Windows: Search for graphviz/GAP in the "usual place".
+- Work out what to do with ~/.regina-libs on Windows.
