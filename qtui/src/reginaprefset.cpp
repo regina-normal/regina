@@ -152,13 +152,19 @@ GraphvizStatus GraphvizStatus::status(const QString& userExec,
     if (! userExec.contains(QDir::separator())) {
         // Hunt on the search path.
         QString paths = QProcessEnvironment::systemEnvironment().value("PATH");
+#ifdef Q_OS_WIN32
         // Windows uses a different separator in $PATH
-#if defined _WIN32 || defined _WIN64 || defined __CYGWIN
         QString pathSeparator = ";";
 #else
         QString pathSeparator = ":";
 #endif
         QStringList pathList = paths.split(pathSeparator);
+
+        // Add the "usual" location of Graphviz to the search path.
+#ifdef Q_OS_MACX
+        pathList.push_back("/usr/local/bin");
+#endif
+
         bool found = false;
         for( QStringList::iterator it = pathList.begin(); it != pathList.end();
             ++it) {
