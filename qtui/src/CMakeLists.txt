@@ -110,7 +110,7 @@ endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
 
 if (WIN32)
   # Install Windows icons.
-  install(FILES regina.ico x-regina.ico DESTINATION ${PKGDATADIR}/icons
-    COMPONENT Runtime)
+  set(ICONS regina.ico x-regina.ico help-contents.ico)
+  install(FILES ${ICONS} DESTINATION ${PKGDATADIR}/icons COMPONENT Runtime)
 endif (WIN32)
 
