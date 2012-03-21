@@ -148,6 +148,7 @@ else ()
   SET (PYLIBDIR ${LIBDIR}/${PACKAGE_NAME}/python)
 endif ()
 SET (HTMLDIR ${PKGDATADIR}/docs)
+SET (ICONDIR ${DATADIR}/icons)
 SET (MANDIR ${DATADIR}/man)
 SET (XDG_APPS_INSTALL_DIR ${DATADIR}/applications)
 SET (XDG_MIME_INSTALL_DIR ${DATADIR}/mime/packages)
@@ -432,7 +433,6 @@ MACRO_LOG_FEATURE(CPPUNIT_FOUND
 # Miscellaneous subdirectories
 ADD_SUBDIRECTORY(docs)
 ADD_SUBDIRECTORY(examples)
-ADD_SUBDIRECTORY(icons)
 
 # Configure file
 CONFIGURE_FILE (
