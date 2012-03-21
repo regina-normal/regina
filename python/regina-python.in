@@ -29,13 +29,14 @@
 # MA 02110-1301, USA.
 
 use strict;
+use Cwd 'abs_path';
 use File::Basename;
 
 # --- Constants. ---
 
 # The program name and directory.
 my $prog_name = $0;
-my $prog_dir = dirname($prog_name);
+my $prog_dir = abs_path(dirname($prog_name));
 
 # The module filename.
 my $module_name = "regina.@REGINA_PYTHON_EXTENSION@";
