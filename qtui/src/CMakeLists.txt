@@ -101,8 +101,16 @@ endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
 
 if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   # Install desktop files and mimetype handling.
-  install(FILES regina.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-  install(FILES regina.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
+  install(FILES regina.desktop DESTINATION ${XDG_APPS_INSTALL_DIR}
+    COMPONENT Runtime)
+  install(FILES regina.xml DESTINATION ${XDG_MIME_INSTALL_DIR}
+    COMPONENT Runtime)
   update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
 endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+
+if (WIN32)
+  # Install Windows icons.
+  install(FILES regina.ico x-regina.ico DESTINATION ${PKGDATADIR}/icons
+    COMPONENT Runtime)
+endif (WIN32)
 
