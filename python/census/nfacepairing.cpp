@@ -73,6 +73,9 @@ namespace {
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDot, writeDot_stdout, 1, 4);
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDotHeader, writeDotHeader_stdout,
         0, 1);
+
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_dot, NFacePairing::dot, 0, 3);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dotHeader, NFacePairing::dotHeader, 0, 1);
 }
 
 void addNFacePairing() {
@@ -94,7 +97,9 @@ void addNFacePairing() {
         .def("fromTextRep", &NFacePairing::fromTextRep,
             return_value_policy<manage_new_object>())
         .def("writeDot", writeDot_stdout, OL_writeDot())
+        .def("dot", &NFacePairing::dot, OL_dot())
         .def("writeDotHeader", writeDotHeader_stdout, OL_writeDotHeader())
+        .def("dotHeader", &NFacePairing::dotHeader, OL_dotHeader())
         .def("isClosed", &NFacePairing::isClosed)
         .def("hasTripleEdge", &NFacePairing::hasTripleEdge)
         .def("followChain", &NFacePairing::followChain)
@@ -114,6 +119,7 @@ void addNFacePairing() {
         .def("__str__", &NFacePairing::toString)
         .staticmethod("fromTextRep")
         .staticmethod("writeDotHeader")
+        .staticmethod("dotHeader")
     ;
 }
 

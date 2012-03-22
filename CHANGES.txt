@@ -28,6 +28,9 @@ Version 4.91  [ (under development) ]
         Class NFacePairing:
             - Function writeDot() can now optionally label graph
               vertices with the corresponding tetrahedron numbers.
+            - Added graphviz export routines dot() and dotHeader(), which
+              are like writeDot() and writeDotHeader() but return strings
+              instead of writing to standard output.
         Class NFacetSpec:
             - New template class that generalises NTetFace to arbitrary
               dimensions.  NTetFace is retained as a convenience typedef,
