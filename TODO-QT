@@ -21,7 +21,5 @@ Stephan:
 - Merge and clean up TONS.
 
 Misc:
-- MacOS, Windows: Search for graphviz/GAP in the "usual place".
 - Windows: Work out what to do with ~/.regina-libs
-- Windows: Find a less confronting icon for documentation
 - Windows: View PDF packet breaks (Adobe says cannot open)
