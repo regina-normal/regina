@@ -128,7 +128,7 @@ void NFacePairing::writeDot(std::ostream& out, const char* prefix,
     // We are guaranteed that prefix is a non-empty string.
 
     if (subgraph)
-        out << "subgraph cluster_" << prefix << " {" << std::endl;
+        out << "subgraph pairing_" << prefix << " {" << std::endl;
     else
         writeDotHeader(out, (prefix + std::string("_graph")).c_str());
 
