@@ -20,6 +20,7 @@ Misc:
 - Incorporate fundamental normal surfaces into the UI.
 - Windows: Work out what to do with ~/.regina-libs
 - Windows: View PDF packet breaks (Adobe says cannot open)
+- Open windows with offsets, not all in the same location.
 
 NEXT RELEASE:
 - Get rid of the commit/discard mechanism, which is counterintuitive.
