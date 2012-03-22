@@ -366,19 +366,23 @@ void PacketPane::packetWasChanged(regina::NPacket*) {
         QMessageBox msgBox(this);
         msgBox.setIcon(QMessageBox::Question);
         msgBox.setWindowTitle(tr("Question"));
-        msgBox.setText(tr("This packet has been changed externally."));
+        msgBox.setText(tr("This packet has been changed elsewhere."));
         msgBox.setInformativeText(
-            tr("Do you wish to load the external version (discarding "
-            "your changes here), or commit your changes here "
-            "(replacing the external version)?"));
-        QPushButton* externalBtn = msgBox.addButton(tr("Use External"),
+            tr("Do you wish to load the other version (discarding "
+            "your changes here), or commit this version "
+            "(overwriting the other version)?"));
+        QPushButton* externalBtn = msgBox.addButton(tr("Use other"),
             QMessageBox::DestructiveRole);
-        QPushButton* commitBtn = msgBox.addButton(tr("Commit"),
+        QPushButton* commitBtn = msgBox.addButton(tr("Commit this"),
             QMessageBox::AcceptRole);
         msgBox.setDefaultButton(externalBtn);
         msgBox.exec();
         if (msgBox.clickedButton() == commitBtn) {
-            commit();
+            // We are already inside someone else's commit / packet-changed
+            // loop, so we can't commit again here and now.
+            // Queue the commit instead.
+            QApplication::postEvent(this,
+                new QEvent((QEvent::Type)EVT_COMMIT_PACKET));
             return;
         }
         // Abandon changes and refresh.
@@ -609,6 +613,8 @@ void PacketPane::customEvent(QEvent* evt) {
             setReadWrite(true); break;
         case EVT_REFRESH_HEADER:
             refreshHeader(); break;
+        case EVT_COMMIT_PACKET:
+            commit(); break;
         default:
             break;
     }

@@ -1,6 +1,5 @@
 Commit / discard redesign:
 - Get rid of the commit/discard mechanism, which is counterintuitive.
-- Simultaneous edits, choose commit (not external) -> not propagated.
 
 Packet pane / dock redesign:
 - The dock/undock mechanism is very broken.
