@@ -99,6 +99,12 @@ std::string Dim4FacetPairing::toString() const {
     return ans.str();
 }
 
+std::string Dim4FacetPairing::dotHeader(const char* graphName) {
+    std::ostringstream ans;
+    writeDotHeader(ans, graphName);
+    return ans.str();
+}
+
 void Dim4FacetPairing::writeDotHeader(std::ostream& out, const char* graphName) {
     static const char defaultGraphName[] = "G";
 
@@ -111,6 +117,13 @@ void Dim4FacetPairing::writeDotHeader(std::ostream& out, const char* graphName) 
     out << "node [shape=circle,style=filled,height=0.15,fixedsize=true,label=\"\",fontsize=9,fontcolor=\"#751010\"];" << std::endl;
 }
 
+std::string Dim4FacetPairing::dot(const char* prefix, bool subgraph,
+        bool labels) const {
+    std::ostringstream ans;
+    writeDot(ans, prefix, subgraph, labels);
+    return ans.str();
+}
+
 void Dim4FacetPairing::writeDot(std::ostream& out, const char* prefix,
         bool subgraph, bool labels) const {
     static const char defaultPrefix[] = "g";
@@ -121,7 +134,7 @@ void Dim4FacetPairing::writeDot(std::ostream& out, const char* prefix,
     // We are guaranteed that prefix is a non-empty string.
 
     if (subgraph)
-        out << "subgraph cluster_" << prefix << " {" << std::endl;
+        out << "subgraph pairing_" << prefix << " {" << std::endl;
     else
         writeDotHeader(out, (prefix + std::string("_graph")).c_str());
 
