@@ -1,6 +1,3 @@
-Commit / discard redesign:
-- Get rid of the commit/discard mechanism, which is counterintuitive.
-
 Packet pane / dock redesign:
 - The dock/undock mechanism is very broken.
 - Rejuvenate the PacketPane header, including FlatButton & hard-coded 22px icon
@@ -20,6 +17,10 @@ Stephan:
 - Merge and clean up TONS.
 
 Misc:
-- Implement fundamental normal surfaces in the UI.
+- Incorporate fundamental normal surfaces into the UI.
 - Windows: Work out what to do with ~/.regina-libs
 - Windows: View PDF packet breaks (Adobe says cannot open)
+
+NEXT RELEASE:
+- Get rid of the commit/discard mechanism, which is counterintuitive.
+
