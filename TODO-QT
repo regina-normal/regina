@@ -21,5 +21,6 @@ Stephan:
 - Merge and clean up TONS.
 
 Misc:
+- Implement fundamental normal surfaces in the UI.
 - Windows: Work out what to do with ~/.regina-libs
 - Windows: View PDF packet breaks (Adobe says cannot open)
