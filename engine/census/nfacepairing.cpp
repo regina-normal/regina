@@ -93,6 +93,12 @@ std::string NFacePairing::toString() const {
     return ans.str();
 }
 
+std::string NFacePairing::dotHeader(const char* graphName) {
+    std::ostringstream ans;
+    writeDotHeader(ans, graphName);
+    return ans.str();
+}
+
 void NFacePairing::writeDotHeader(std::ostream& out, const char* graphName) {
     static const char defaultGraphName[] = "G";
 
@@ -103,6 +109,13 @@ void NFacePairing::writeDotHeader(std::ostream& out, const char* graphName) {
     out << "graph [bgcolor=white];" << std::endl;
     out << "edge [color=black];" << std::endl;
     out << "node [shape=circle,style=filled,height=0.15,fixedsize=true,label=\"\",fontsize=9,fontcolor=\"#751010\"];" << std::endl;
+}
+
+std::string NFacePairing::dot(const char* prefix,
+        bool subgraph, bool labels) const {
+    std::ostringstream ans;
+    writeDot(ans, prefix, subgraph, labels);
+    return ans.str();
 }
 
 void NFacePairing::writeDot(std::ostream& out, const char* prefix,
