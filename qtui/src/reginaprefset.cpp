@@ -65,8 +65,13 @@ const GraphvizStatus GraphvizStatus::version2(3);
 
 ReginaPrefSet ReginaPrefSet::instance_;
 
-const char* ReginaPrefSet::defaultGAPExec = "gap";
-const char* ReginaPrefSet::defaultGraphvizExec = "neato";
+#ifdef Q_OS_WIN32
+    const char* ReginaPrefSet::defaultGAPExec = "gap.exe";
+    const char* ReginaPrefSet::defaultGraphvizExec = "neato.exe";
+#else
+    const char* ReginaPrefSet::defaultGAPExec = "gap";
+    const char* ReginaPrefSet::defaultGraphvizExec = "neato";
+#endif
 
 // No need to initialise these, since the cache is only used when the
 // given executable matches cacheGraphvizExec (which begins life as null).
@@ -508,8 +513,8 @@ void ReginaPrefSet::readInternal() {
 
     settings.beginGroup("Tools");
     pdfExternalViewer = settings.value("PDFViewer").toString().trimmed();
-    triGAPExec = settings.value("GAPExec", "gap").toString().trimmed();
-    triGraphvizExec = settings.value("GraphvizExec", "neato").
+    triGAPExec = settings.value("GAPExec", defaultGAPExec).toString().trimmed();
+    triGraphvizExec = settings.value("GraphvizExec", defaultGraphvizExec).
         toString().trimmed();
     settings.endGroup();
 

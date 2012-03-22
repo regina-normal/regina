@@ -109,8 +109,10 @@ if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
 endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
 
 if (WIN32)
-  # Install Windows icons.
-  set(ICONS regina.ico x-regina.ico help-contents.ico)
-  install(FILES ${ICONS} DESTINATION ${PKGDATADIR}/icons COMPONENT Runtime)
+  # Install Windows icons for mimetype handling.
+  # It seems that, to keep WiX happy, x-regina.ico needs to be in $BINDIR
+  # to avoid an ICE69 error (mismatched components for the ProgId entry).
+  # I'd love to hear any advice to the contrary.
+  install(FILES x-regina.ico DESTINATION ${BINDIR} COMPONENT Runtime)
 endif (WIN32)
 

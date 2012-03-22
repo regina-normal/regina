@@ -974,15 +974,16 @@ ReginaPrefTools::ReginaPrefTools(QWidget* parent) : QWidget(parent) {
         "undirected graphs.  The recommended Graphviz command for this "
         "job is <i>neato</i>, though you are of course welcome to use "
         "others.<p>"
-        "This should be a single executable name (e.g., <i>neato</i>).  You "
+        "This should be a single executable name (e.g., <i>%1</i>).  You "
         "may specify the full path to the executable if you wish "
-        "(e.g., <i>/usr/bin/neato</i>); otherwise the default search path "
+        "(e.g., <i>/usr/bin/%1</i>); otherwise the default search path "
         "will be used.<p>"
         "There is no trouble if Graphviz is not installed; this just means "
         "that Regina will not be able to display the face pairing graphs "
         "of triangulations.<p>"
         "For more information on Graphviz, see "
-        "<i>http://www.graphviz.org/</i>.</qt>");
+        "<i>http://www.graphviz.org/</i>.</qt>").
+        arg(ReginaPrefSet::defaultGraphvizExec);
     label->setWhatsThis(msg);
     editGraphvizExec->setWhatsThis(msg);
     layout->addLayout(box);
