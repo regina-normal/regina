@@ -478,7 +478,7 @@ void ReginaPreferences::slotApply() {
     if (strVal.isEmpty()) {
         // No no no.
         toolsPrefs->editGAPExec->setText(prefSet.triGAPExec);
-    } else if (strVal == "gap") {
+    } else if (strVal == ReginaPrefSet::defaultGAPExec) {
         // Don't run any checks, since this is the default.
         // GAP might not be installed.
         prefSet.triGAPExec = strVal;
@@ -953,13 +953,14 @@ ReginaPrefTools::ReginaPrefTools(QWidget* parent) : QWidget(parent) {
     msg = tr("<qt>The command used to run GAP (Groups, Algorithms and "
         "Programming).  GAP can be used to help simplify presentations "
         "of fundamental groups.<p>"
-        "This should be a single executable name (e.g., <i>gap</i>).  You "
+        "This should be a single executable name (e.g., <i>%1</i>).  You "
         "may specify the full path to the executable if you wish "
-        "(e.g., <i>/usr/bin/gap</i>); otherwise the default search path "
+        "(e.g., <i>/usr/bin/%1</i>); otherwise the default search path "
         "will be used.<p>"
         "There is no trouble if GAP is not installed; this just means that "
         "Regina will have to do its own (much less effective) group "
-        "simplifications.</qt>");
+        "simplifications.</qt>").
+        arg(ReginaPrefSet::defaultGAPExec);
     label->setWhatsThis(msg);
     editGAPExec->setWhatsThis(msg);
     layout->addLayout(box);
