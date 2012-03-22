@@ -132,6 +132,7 @@ class ReginaPart : public QObject {
          * Miscellaneous flags
          */
         bool dirty;
+        bool supportingDock;
 
     public:
         /**
@@ -380,6 +381,12 @@ class ReginaPart : public QObject {
             const QString& dialogTitle);
         void exportFile(const PacketExporter& exporter,
             const QString& fileFilter, const QString& dialogTitle);
+
+    private slots:
+        /**
+         * Notification that the preferences have changed.
+         */
+        void updatePreferences();
 };
 
 inline PythonManager& ReginaPart::getPythonManager() {

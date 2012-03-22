@@ -100,7 +100,7 @@ class ReginaPrefGeneral : public QWidget {
     Q_OBJECT
 
     private:
-        QCheckBox* cbAutoDock;
+        QCheckBox* cbUseDock;
         // QCheckBox* cbDisplayTagsInTree;
         QLineEdit* editTreeJumpSize;
         QCheckBox* cbTipOfDay;

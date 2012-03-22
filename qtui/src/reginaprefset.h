@@ -349,9 +349,6 @@ class ReginaPrefSet : public QObject {
             /**< Possible compatibility matrices that can be displayed for a
                  normal surface list. */
 
-        bool autoDock;
-            /**< Do we automatically dock new packet
-                 viewers into the parent window? */
         QList<ReginaFilePref> censusFiles;
             /**< The list of data files to use for census lookups. */
         bool displayTagsInTree;
@@ -416,6 +413,10 @@ class ReginaPrefSet : public QObject {
             /**< The maximum number of tetrahedra for which surface-related
                  properties of 3-manifold triangulations will be automatically
                  calculated. */
+        bool useDock;
+            /**< Do we use a dock area in the main window (as opposed to
+                 a new window for each open packet)?  This mimics the
+                 old behaviour from Regina 4.90 and before. */
 
         bool warnOnNonEmbedded;
             /**< Whether to warn when attempting to enumerate normal surfaces

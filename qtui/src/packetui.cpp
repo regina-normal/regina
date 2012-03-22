@@ -37,6 +37,7 @@
 #include "packetui.h"
 #include "packetwindow.h"
 #include "reginapart.h"
+#include "reginaprefset.h"
 #include "reginasupport.h"
 
 #include <QApplication>
@@ -140,6 +141,8 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     actDockUndock->setWhatsThis(tr("Dock or undock this packet viewer.  "
         "A docked viewer sits within the main window, to the right of "
         "the packet tree.  An undocked viewer floats in its own window."));
+    actDockUndock->setVisible(ReginaPrefSet::global().useDock);
+    actDockUndock->setEnabled(ReginaPrefSet::global().useDock);
     connect(actDockUndock,SIGNAL(triggered()),this, SLOT(floatPane()));
 
     actClose = new QAction(this);
@@ -183,6 +186,8 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     dockUndockBtn->setWhatsThis(tr("Dock or undock this packet viewer.  "
         "A docked viewer sits within the main window, to the right of "
         "the packet tree.  An undocked viewer floats in its own window."));
+    dockUndockBtn->setVisible(ReginaPrefSet::global().useDock);
+    dockUndockBtn->setEnabled(ReginaPrefSet::global().useDock);
     headerBox->addWidget(dockUndockBtn);
     connect(dockUndockBtn, SIGNAL(toggled(bool)), this, SLOT(floatPane()));
 
@@ -238,6 +243,13 @@ PacketPane::~PacketPane() {
     delete actDockUndock;
     delete actClose;
     delete packetTypeMenu;
+}
+
+void PacketPane::supportDock(bool shouldSupport) {
+    actDockUndock->setEnabled(shouldSupport);
+    actDockUndock->setVisible(shouldSupport);
+    dockUndockBtn->setEnabled(shouldSupport);
+    dockUndockBtn->setVisible(shouldSupport);
 }
 
 void PacketPane::setDirty(bool newDirty) {

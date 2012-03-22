@@ -56,7 +56,8 @@
 ReginaPart::ReginaPart(ReginaMain *parent,
         const QStringList& /*args*/) :
         parent(parent), packetTree(0), 
-        dockedPane(0), dirty(false) {
+        dockedPane(0), dirty(false),
+        supportingDock(ReginaPrefSet::global().useDock) {
 
     // Set up our widgets and actions.
     setupWidgets();
@@ -70,6 +71,9 @@ ReginaPart::ReginaPart(ReginaMain *parent,
     // Other tidying up.
     setModified(false);
     updateTreeActions();
+
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 ReginaPart::~ReginaPart() {
@@ -130,7 +134,7 @@ void ReginaPart::view(PacketPane* newPane) {
     // Decide whether to dock or float.
     bool shouldDock;
 
-    if (ReginaPrefSet::global().autoDock) {
+    if (supportingDock) {
         if (dockedPane) {
             shouldDock = ! dockedPane->isDirty();
         } else
@@ -595,6 +599,8 @@ void ReginaPart::setupWidgets() {
     dockArea = new QWidget(splitter);
     QBoxLayout* dockLayout = new QVBoxLayout(dockArea);
     dockLayout->setContentsMargins(0, 0, 0, 0);
+    if (! supportingDock)
+        dockArea->hide();
 
     QSizePolicy qpol(
         QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
@@ -641,3 +647,20 @@ regina::NPacket* ReginaPart::checkSubtreeSelected() {
 const QUrl ReginaPart::url() {
     return QUrl::fromLocalFile(localFile);
 }
+
+void ReginaPart::updatePreferences() {
+    if (ReginaPrefSet::global().useDock == supportingDock)
+        return;
+
+    supportingDock = ReginaPrefSet::global().useDock;
+
+    if (! supportingDock)
+        floatDockedPane();
+
+    dockArea->setVisible(supportingDock);
+
+    for (QLinkedList<PacketPane *>::iterator it = allPanes.begin();
+            it != allPanes.end(); it++)
+        (*it)->supportDock(supportingDock);
+}
+

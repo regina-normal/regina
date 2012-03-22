@@ -224,7 +224,6 @@ GraphvizStatus GraphvizStatus::status(const QString& userExec,
 }
 
 ReginaPrefSet::ReginaPrefSet() :
-        autoDock(true),
         displayTagsInTree(false),
         fileImportExportCodec("UTF-8"),
         fileRecentMax(10),
@@ -244,6 +243,7 @@ ReginaPrefSet::ReginaPrefSet() :
         triInitialSkeletonTab(SkelComp),
         triInitialAlgebraTab(Homology),
         triSurfacePropsThreshold(6),
+        useDock(false),
         warnOnNonEmbedded(true),
         windowMainSize() /* initially null */ {
 }
@@ -407,7 +407,7 @@ void ReginaPrefSet::readInternal() {
     QSettings settings;
 
     settings.beginGroup("Display");
-    autoDock = settings.value("PacketDocking", true).toBool();
+    useDock = settings.value("UseDock", false).toBool();
     displayTagsInTree = settings.value("DisplayTagsInTree", false).toBool();
     settings.endGroup();
 
@@ -545,8 +545,7 @@ void ReginaPrefSet::saveInternal() const {
     QSettings settings;
     settings.beginGroup("Display");
     // Save the current set of preferences.
-    settings.setValue("PacketDocking", autoDock);
-    settings.setValue("PacketDocking", autoDock);
+    settings.setValue("UseDock", useDock);
     settings.setValue("DisplayTagsInTree", displayTagsInTree);
     settings.endGroup();
 

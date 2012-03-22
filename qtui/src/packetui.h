@@ -330,6 +330,11 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         ReginaPart* getPart();
 
         /**
+         * Set this pane to support or not support docking as appropriate.
+         */
+        void supportDock(bool shouldSupport);
+
+        /**
          * Does this packet pane contain any changes that have not yet
          * been committed?
          */
