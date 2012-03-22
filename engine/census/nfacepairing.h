@@ -390,6 +390,21 @@ class REGINA_API NFacePairing : public NThread {
         void writeDot(std::ostream& out, const char* prefix = 0,
             bool subgraph = false, bool labels = false) const;
 
+        /**
+         * Returns a Graphviz DOT representation of the graph that
+         * describes this face pairing.
+         *
+         * This routine simply returns the output of writeDot() as a
+         * string, instead of dumping it to an output stream.
+         *
+         * All arguments are the same as for writeDot(); see the
+         * writeDot() notes for further details.
+         *
+         * @return the output of writeDot(), as outlined above.
+         */
+        std::string dot(const char* prefix = 0, bool subgraph = false,
+            bool labels = false) const;
+
         /*@}*/
         /**
          * (end: Input and Output)
@@ -449,6 +464,20 @@ class REGINA_API NFacePairing : public NThread {
          */
         static void writeDotHeader(std::ostream& out,
             const char* graphName = 0);
+
+        /**
+         * Returns header information for a Graphviz DOT file that
+         * will describe the graphs for one or more face pairings.
+         *
+         * This routine simply returns the output of writeDotHeader()
+         * as a string, instead of dumping it to an output stream.
+         *
+         * All arguments are the same as for writeDotHeader(); see the
+         * writeDotHeader() notes for further details.
+         *
+         * @return the output of writeDotHeader(), as outlined above.
+         */
+        static std::string dotHeader(const char* graphName = 0);
 
         /**
          * \name Subgraph Queries
