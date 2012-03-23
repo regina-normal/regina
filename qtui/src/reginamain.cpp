@@ -52,7 +52,7 @@
 #include <QVBoxLayout>
 #include <QWhatsThis>
 
-ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
+ReginaMain::ReginaMain(ReginaManager* parent, bool starterWindow) {
     // Track the parent manager.
     manager = parent;
 
@@ -81,24 +81,8 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool showAdvice) {
 
     setWindowTitle(tr("Regina"));
 
-    if (showAdvice) {
-        // Until we actually have a part loaded, give the user something
-        // helpful to start with.
-        QLabel* advice = new QLabel(tr("<qt>To start, try:<p>"
-            "File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
-            "Introductory Examples</qt>"));
-        advice->setAlignment(Qt::AlignCenter);
-        advice->setWhatsThis(tr("<qt>If you select "
-            "<i>File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
-            "Introductory Examples</i> from the menu, "
-            "Regina will open a sample data file that you can "
-            "play around with.<p>"
-            "You can also read the Regina Handbook, which walks "
-            "you through what Regina can do.  Just press F1, or select "
-            "<i>Help&nbsp;&rarr;&nbsp;Regina Handbook</i> from the "
-            "menu.</qt>"));
-        setCentralWidget(advice);
-    }
+    if (starterWindow)
+        newTopologyPart(true);
 }
 
 ReginaMain::~ReginaMain() {
@@ -143,7 +127,7 @@ void ReginaMain::closeEvent(QCloseEvent *event) {
 void ReginaMain::newTopology() {
     // If we already have a document open, make a new window.
     ReginaMain* useWindow = (currentPart ? manager->newWindow(false) : this);
-    useWindow->newTopologyPart();
+    useWindow->newTopologyPart(false);
 }
 
 bool ReginaMain::openUrl(const QUrl& url) {
@@ -174,7 +158,7 @@ bool ReginaMain::openUrl(const QUrl& url) {
     // All good, we have some real data.  Let's go.
     // If we already have a document open, make a new window.
     ReginaMain* useWindow = (currentPart ? manager->newWindow(false) : this);
-    useWindow->newTopologyPart();
+    useWindow->newTopologyPart(false);
     return useWindow->currentPart->initData(packetTree, localFile, QString());
 }
 
@@ -206,7 +190,7 @@ bool ReginaMain::openExample(const QUrl& url, const QString& description) {
     // All good, we have some real data.  Let's go.
     // If we already have a document open, make a new window.
     ReginaMain* useWindow = (currentPart ? manager->newWindow(false) : this);
-    useWindow->newTopologyPart();
+    useWindow->newTopologyPart(false);
     return useWindow->currentPart->initData(packetTree,
         QString(), description);
 }
@@ -473,8 +457,8 @@ void ReginaMain::addRecentFile() {
         ReginaPrefSet::addRecentFile(currentPart->url());
 }
 
-void ReginaMain::newTopologyPart() {
-    currentPart = new ReginaPart(this, QStringList());
+void ReginaMain::newTopologyPart(bool starterWindow) {
+    currentPart = new ReginaPart(this, starterWindow);
 
     // Connect up signals and slots.
     disconnect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));

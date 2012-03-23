@@ -93,11 +93,20 @@ class ReginaPart : public QObject {
         QString displayName;
 
         /**
+         * True if this is the initial window when the application
+         * is first opened, which means we show helpful advice, and which
+         * also means that opening a file will replace the current
+         * (empty) packet tree instead of opening in a new window.
+         */
+        bool starterWindow_;
+
+        /**
          * Components
          */
         PacketTreeView* treeView;
         QWidget* dockArea;
         PythonManager consoles;
+        QWidget* advice;
 
         /**
          * Packet panes
@@ -138,7 +147,7 @@ class ReginaPart : public QObject {
         /**
          * Constructors and destructors.
          */
-        ReginaPart(ReginaMain *parent, const QStringList &args);
+        ReginaPart(ReginaMain *parent, bool starterWindow);
         virtual ~ReginaPart();
 
         /**

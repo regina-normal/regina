@@ -31,6 +31,7 @@
 #include "packet/ncontainer.h"
 
 // UI includes:
+#include "messagelayer.h"
 #include "reginafilter.h"
 #include "packettreeview.h"
 #include "packetui.h"
@@ -53,9 +54,8 @@
 #include <QUrl>
 #include <QWhatsThis>
 
-ReginaPart::ReginaPart(ReginaMain *parent,
-        const QStringList& /*args*/) :
-        parent(parent), packetTree(0), 
+ReginaPart::ReginaPart(ReginaMain *parent, bool starterWindow) :
+        parent(parent), packetTree(0), starterWindow_(starterWindow),
         dockedPane(0), dirty(false),
         supportingDock(ReginaPrefSet::global().useDock) {
 
@@ -97,6 +97,11 @@ ReginaPart::~ReginaPart() {
 void ReginaPart::setModified(bool modified) {
     dirty = modified;
     actSave->setEnabled(modified);
+
+    if (starterWindow_ && modified) {
+        starterWindow_ = false;
+        delete advice;
+    }
 }
 
 bool ReginaPart::closeUrl() {
@@ -582,17 +587,41 @@ void ReginaPart::setupWidgets() {
         "right-hand side of the window where you can edit it or view "
         "detailed information.</qt>"));
 
+    if (starterWindow_) {
+        // Give the user something helpful to start with.
+        advice = new MessageLayer("dialog-information",
+            tr("<qt>To start, try:<p>"
+            "File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
+            "Introductory Examples</qt>"));
+        advice->setWhatsThis(tr("<qt>If you select "
+            "<i>File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
+            "Introductory Examples</i> from the menu, "
+            "Regina will open a sample data file that you can "
+            "play around with.<p>"
+            "You can also read the Regina Handbook, which walks "
+            "you through what Regina can do.  Just press F1, or select "
+            "<i>Help&nbsp;&rarr;&nbsp;Regina Handbook</i> from the "
+            "menu.</qt>"));
+    } else
+        advice = 0;
+
     // Set up the packet tree viewer.
-    treeView = new PacketTreeView(this, splitter);
-    treeView->setSizePolicy(QSizePolicy(
+    QWidget* treeArea = new QWidget(splitter);
+    QBoxLayout* treeLayout = new QVBoxLayout(treeArea);
+    treeLayout->setContentsMargins(0, 0, 0, 0);
+    treeLayout->setSpacing(0);
+
+    treeArea->setSizePolicy(QSizePolicy(
         QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
     // Leave the stretch factors at the default of zero.
+
+    treeView = new PacketTreeView(this);
+    treeLayout->addWidget(treeView, 1);
     connect(treeView, SIGNAL(itemSelectionChanged()), this,
         SLOT(updateTreeActions()));
 
-    // Make sure the tree area doesn't shrink too far.
-    // Removed this for the KDE4 port, things seem fine without it.
-    // treeLayout->addStrut(150);
+    if (advice)
+        treeLayout->addWidget(advice);
 
     // Set up the docking area.
     dockArea = new QWidget(splitter);

@@ -111,7 +111,7 @@ class ReginaMain : public QMainWindow {
         /**
          * Constructors and destructors.
          */
-        ReginaMain(ReginaManager *parent, bool showAdvice = false);
+        ReginaMain(ReginaManager *parent, bool starterWindow);
         virtual ~ReginaMain();
 
         /**
@@ -244,7 +244,7 @@ class ReginaMain : public QMainWindow {
         /**
          * Fills the window with a new topology data part.
          */
-        void newTopologyPart();
+        void newTopologyPart(bool starterWindow);
 };
 
 #endif
