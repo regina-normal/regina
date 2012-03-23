@@ -35,6 +35,7 @@
 #include "reginaabout.h"
 #include "reginafilter.h"
 #include "reginamain.h"
+#include "reginamanager.h"
 #include "reginapref.h"
 #include "reginasupport.h"
 #include "reginapart.h"
@@ -141,7 +142,7 @@ void ReginaMain::closeEvent(QCloseEvent *event) {
 
 void ReginaMain::newTopology() {
     // If we already have a document open, make a new window.
-    ReginaMain* useWindow = (currentPart ? manager->newWindow() : this);
+    ReginaMain* useWindow = (currentPart ? manager->newWindow(false) : this);
     useWindow->newTopologyPart();
 }
 
@@ -172,7 +173,7 @@ bool ReginaMain::openUrl(const QUrl& url) {
 
     // All good, we have some real data.  Let's go.
     // If we already have a document open, make a new window.
-    ReginaMain* useWindow = (currentPart ? manager->newWindow() : this);
+    ReginaMain* useWindow = (currentPart ? manager->newWindow(false) : this);
     useWindow->newTopologyPart();
     return useWindow->currentPart->initData(packetTree, localFile, QString());
 }
@@ -204,7 +205,7 @@ bool ReginaMain::openExample(const QUrl& url, const QString& description) {
 
     // All good, we have some real data.  Let's go.
     // If we already have a document open, make a new window.
-    ReginaMain* useWindow = (currentPart ? manager->newWindow() : this);
+    ReginaMain* useWindow = (currentPart ? manager->newWindow(false) : this);
     useWindow->newTopologyPart();
     return useWindow->currentPart->initData(packetTree,
         QString(), description);

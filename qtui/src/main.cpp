@@ -30,6 +30,7 @@
 
 #include "iconcache.h"
 #include "reginamain.h"
+#include "reginamanager.h"
 #include "reginaprefset.h"
 
 #include <QTextCodec>
@@ -76,7 +77,7 @@ int main(int argc, char **argv) {
 
     // No session management with the Qt GUI; just start up normally.
     QStringList args = app->arguments();
-    ReginaMain *window = app->newWindow();
+    ReginaMain *window = app->newWindow(true);
 
     // Note that args.at(0) is the name of the executable (regina-qt)
     if (args.size() > 1) {

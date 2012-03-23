@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                    *
+ *  KDE User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2011, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,37 +26,42 @@
 
 /* end stub */
 
-#include "reginamain.h"
-#include "reginamanager.h"
+/*! \file reginamanager.h
+ *  \brief The main application class for Regina.
+ */
 
-#include <QFileOpenEvent>
-#include <QUrl>
+#ifndef __REGINAMANAGER_H_
+#define __REGINAMANAGER_H_
 
-ReginaManager::ReginaManager(int &argc, char **argv) : 
-    QApplication(argc,argv) {
-}
-   
+#include <QApplication>
 
-ReginaMain* ReginaManager::newWindow(bool firstWindow) {
-    ReginaMain *win = new ReginaMain(this, firstWindow);
-    win->show();
-    children.append(win);
-    return win;
-}
+class ReginaMain;
 
-void ReginaManager::aboutToClose(ReginaMain *child) {
-    children.removeOne(child);
-    // Qt will automatically handle exit-on-last-window-closed.
-}
+/**
+ * The main application class for Regina.
+ *
+ * This class also creates, destroys and manages the individual main windows.
+ */
 
-bool ReginaManager::event(QEvent* event) {
-    switch (event->type()) {
-        case QEvent::FileOpen:
-            children.front()->openUrl(
-                static_cast<QFileOpenEvent*>(event)->url());
-            return true;
-        default:
-            return QApplication::event(event);
-    }
-}
+class ReginaManager : public QApplication {
+    Q_OBJECT
 
+    public:
+        ReginaManager(int &argc, char** argv);
+        
+        ReginaMain* newWindow(bool firstWindow);
+
+        void aboutToClose(ReginaMain *child);
+
+    protected:
+        /**
+         * Support QEvent::FileOpen on MacOS.
+         */
+        bool event(QEvent*);
+
+    private:
+        QList<ReginaMain *> children;
+
+};
+
+#endif

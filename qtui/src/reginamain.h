@@ -38,7 +38,6 @@
 #include "reginaabout.h"
 #include "reginapart.h"
 
-#include <QApplication>
 #include <QMainWindow>
 #include <QUrl>
 
@@ -246,33 +245,6 @@ class ReginaMain : public QMainWindow {
          * Fills the window with a new topology data part.
          */
         void newTopologyPart();
-};
-
-/**
- * A manager for Regina windows
- *
- * This class creates and destroys the windows used by Regina.
- */
-
-class ReginaManager : public QApplication {
-    Q_OBJECT
-
-    public:
-        ReginaManager(int &argc, char** argv);
-        
-        ReginaMain* newWindow();
-
-        void aboutToClose(ReginaMain *child);
-
-    protected:
-        /**
-         * Support QEvent::FileOpen on MacOS.
-         */
-        bool event(QEvent*);
-
-    private:
-        QList<ReginaMain *> children;
-
 };
 
 #endif
