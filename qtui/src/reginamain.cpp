@@ -502,17 +502,15 @@ QSize ReginaMain::sizeHint() const {
     return ReginaPrefSet::defaultMainSize();
 }
 
-void ReginaMain::plugMenu(QMenu *menu) {
-    if (packetMenu) {
-        menuBar()->removeAction(packetMenu);
-    }
-    packetMenu = menuBar()->insertMenu(toolMenuAction,menu);
+void ReginaMain::plugPacketMenu(QMenu *menu) {
+    delete packetMenu;
+    packetMenu = menuBar()->insertMenu(toolMenuAction, menu);
 }
 
-void ReginaMain::unplugMenu() {
+void ReginaMain::unplugPacketMenu() {
     if (packetMenu) {
-        menuBar()->removeAction(packetMenu);
-        packetMenu = NULL;
+        delete packetMenu;
+        packetMenu = 0;
     }
 }
 
@@ -589,7 +587,7 @@ void ReginaMain::editMenu(QMenu *menu) {
         // Insert before "treeMenu" aka Packet Tree
         editAct = menuBar()->insertMenu(treeMenu,menu);
     } else if(packetMenu) {
-        // Insert before "plugMenu" aka packet-specific menu
+        // Insert before "packetMenu" aka packet-specific menu
         editAct = menuBar()->insertMenu(packetMenu,menu);
     } else {
         // Insert before Tools

@@ -213,25 +213,6 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     footer->addAction(actClose);
     layout->addWidget(footer);
 
-    // Set up the packet type menu.
-    packetTypeMenu = new QMenu(mainUI->getPacketMenuText(), this);
-
-    const QLinkedList<QAction*>& packetTypeActions(
-        mainUI->getPacketTypeActions());
-    if (! packetTypeActions.isEmpty()) {
-        for (QLinkedListIterator<QAction*> it(packetTypeActions) ;
-                it.hasNext(); ) {
-            packetTypeMenu->addAction( it.next() );  
-        }
-        packetTypeMenu->addSeparator();
-    }
-
-    packetTypeMenu->addAction(actCommit);
-    packetTypeMenu->addAction(actRefresh);
-    packetTypeMenu->addSeparator();
-    packetTypeMenu->addAction(actDockUndock);
-    packetTypeMenu->addAction(actClose);
-
     // Register ourselves to listen for various events.
     newPacket->listen(this);
 }
@@ -242,7 +223,6 @@ PacketPane::~PacketPane() {
     delete actRefresh;
     delete actDockUndock;
     delete actClose;
-    delete packetTypeMenu;
 }
 
 void PacketPane::supportDock(bool shouldSupport) {
@@ -250,6 +230,32 @@ void PacketPane::supportDock(bool shouldSupport) {
     actDockUndock->setVisible(shouldSupport);
     dockUndockBtn->setEnabled(shouldSupport);
     dockUndockBtn->setVisible(shouldSupport);
+}
+
+QMenu* PacketPane::createPacketTypeMenu(bool forDock) {
+    QMenu* ans;
+    if (forDock)
+        ans = new QMenu(QString("Docked %1").arg(mainUI->getPacketMenuText()));
+    else
+        ans = new QMenu(mainUI->getPacketMenuText());
+
+    const QLinkedList<QAction*>& packetTypeActions(
+        mainUI->getPacketTypeActions());
+    if (! packetTypeActions.isEmpty()) {
+        for (QLinkedListIterator<QAction*> it(packetTypeActions) ;
+                it.hasNext(); ) {
+            ans->addAction( it.next() );  
+        }
+        ans->addSeparator();
+    }
+
+    ans->addAction(actCommit);
+    ans->addAction(actRefresh);
+    ans->addSeparator();
+    ans->addAction(actDockUndock);
+    ans->addAction(actClose);
+
+    return ans;
 }
 
 void PacketPane::setDirty(bool newDirty) {

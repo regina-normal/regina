@@ -162,7 +162,7 @@ void ReginaPart::dock(PacketPane* newPane) {
     static_cast<QBoxLayout*>(dockArea->layout())->addWidget(newPane, 1);
     dockedPane = newPane;
     
-    parent->plugMenu(newPane->getPacketTypeMenu());
+    parent->plugPacketMenu(newPane->createPacketTypeMenu(true));
     newPane->show();
 
     newPane->registerEditOperations(actCut, actCopy, actPaste);
@@ -173,12 +173,13 @@ void ReginaPart::dock(PacketPane* newPane) {
 }
 
 void ReginaPart::isClosing(PacketPane* closingPane) {
-    parent->unplugMenu();
+    parent->unplugPacketMenu();
     parent->unplugTreeMenu();
     allPanes.removeAll(closingPane);
 }
 
 void ReginaPart::aboutToUndock(PacketPane* undockedPane) {
+    parent->unplugPacketMenu();
     undockedPane->deregisterEditOperations();
 
     if (dockedPane == undockedPane) {

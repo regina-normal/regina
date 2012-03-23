@@ -301,7 +301,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         QAction* actRefresh;
         QAction* actDockUndock;
         QAction* actClose;
-        QMenu* packetTypeMenu;
 
         /**
          * Externally registered edit actions and their sources
@@ -326,13 +325,17 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * Query components and actions.
          */
         regina::NPacket* getPacket();
-        QMenu* getPacketTypeMenu();
         ReginaPart* getPart();
 
         /**
          * Set this pane to support or not support docking as appropriate.
          */
         void supportDock(bool shouldSupport);
+
+        /**
+         * Create a menu filled with the (shared) packet actions.
+         */
+        QMenu* createPacketTypeMenu(bool forDock);
 
         /**
          * Does this packet pane contain any changes that have not yet
@@ -591,10 +594,6 @@ inline bool PacketPane::isDirty() {
 
 inline bool PacketPane::isReadWrite() {
     return readWrite;
-}
-
-inline QMenu* PacketPane::getPacketTypeMenu() {
-    return packetTypeMenu;
 }
 
 #endif

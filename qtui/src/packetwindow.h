@@ -63,17 +63,6 @@ class PacketWindow : public QMainWindow {
          */
         PacketWindow(PacketPane* newPane, QWidget* parent = 0);
 
-        /**
-         * Unplug an existing menu
-         */
-        void unplugMenu();
-
-        /**
-         * Plug in a new menu
-         */
-
-        void plugMenu(QMenu* menu);
-
     protected:
         /**
          * Overridden to handle window closing.

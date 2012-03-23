@@ -118,12 +118,12 @@ class ReginaMain : public QMainWindow {
         /**
          * Plug in a new packet specific menu
          */
-        void plugMenu(QMenu *menu);
+        void plugPacketMenu(QMenu *menu);
 
         /**
          * Remove the packet specific menu
          */
-        void unplugMenu();
+        void unplugPacketMenu();
 
         /**
          * Plug in a new Packet Tree menu
