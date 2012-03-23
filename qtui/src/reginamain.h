@@ -88,8 +88,8 @@ class ReginaMain : public QMainWindow {
          * Menus and toolbars
          */
         QMenu* fileMenu;
+        QMenu* toolMenu;
         QAction* treeMenu;
-        QAction* toolMenuAction;
         QAction* actNew;
         QAction* actOpen;
         QAction* saveSep;
@@ -131,19 +131,14 @@ class ReginaMain : public QMainWindow {
         void plugTreeMenu(QMenu *menu);
 
         /**
-         * Remove the Packet Tree menu
-         */
-        void unplugTreeMenu();
-
-        /**
          * Insert the import/export menus
          */
         void importsExports(QMenu *imports, QMenu *exports);
 
         /**
-         * Sets up the Edit menu
+         * Plug in a new Edit menu
          */
-        void editMenu(QMenu *edit);
+        void plugEditMenu(QMenu *edit);
         
         /**
          * Sets up Save and SaveAs actions

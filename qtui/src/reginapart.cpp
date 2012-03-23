@@ -173,7 +173,6 @@ void ReginaPart::dock(PacketPane* newPane) {
 
 void ReginaPart::isClosing(PacketPane* closingPane) {
     parent->unplugPacketMenu();
-    parent->unplugTreeMenu();
     allPanes.removeAll(closingPane);
 }
 

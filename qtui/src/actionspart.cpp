@@ -90,7 +90,7 @@ void ReginaPart::setupActions() {
     editMenu->addAction(actPaste);
     allActions.append(act);
   
-    parent->editMenu(editMenu);
+    parent->plugEditMenu(editMenu);
 
     parent->setActions(actSave, act, actCut, actCopy, actPaste);
     

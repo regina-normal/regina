@@ -357,8 +357,7 @@ void ReginaMain::setupActions() {
     connect(act, SIGNAL(triggered()), manager, SLOT(closeAllWindows()));
     fileMenu->addAction(act);
 
-    QMenu *toolMenu =  menuBar()->addMenu(tr("&Tools"));
-    toolMenuAction = toolMenu->menuAction();
+    toolMenu = menuBar()->addMenu(tr("&Tools"));
     // Tools:
     actPython = new QAction(this);
     actPython->setText(tr("&Python Console"));
@@ -504,7 +503,7 @@ QSize ReginaMain::sizeHint() const {
 
 void ReginaMain::plugPacketMenu(QMenu *menu) {
     delete packetMenu;
-    packetMenu = menuBar()->insertMenu(toolMenuAction, menu);
+    packetMenu = menuBar()->insertMenu(toolMenu->menuAction(), menu);
 }
 
 void ReginaMain::unplugPacketMenu() {
@@ -515,21 +514,9 @@ void ReginaMain::unplugPacketMenu() {
 }
 
 void ReginaMain::plugTreeMenu(QMenu *menu) {
-    if (treeMenu) {
-        menuBar()->removeAction(treeMenu);
-    }
-    if (packetMenu) {
-        treeMenu = menuBar()->insertMenu(packetMenu,menu);
-    } else {
-        treeMenu = menuBar()->insertMenu(toolMenuAction,menu);
-    }
-}
-
-void ReginaMain::unplugTreeMenu() {
-    if (treeMenu) {
-        menuBar()->removeAction(packetMenu);
-        treeMenu = NULL;
-    }
+    // The only time this is called, there will not yet be a packet menu,
+    // and there will not be any pre-existing tree menu.
+    treeMenu = menuBar()->insertMenu(toolMenu->menuAction(), menu);
 }
 
 void ReginaMain::setActions(QAction *save, QAction *saveAs,
@@ -578,20 +565,20 @@ void ReginaMain::importsExports(QMenu *imports, QMenu *exports) {
 
 }
 
-void ReginaMain::editMenu(QMenu *menu) {
+void ReginaMain::plugEditMenu(QMenu *menu) {
     if (editAct) {
-        menuBar()->removeAction(editAct);
+        delete editAct;
     }
 
     if (treeMenu) {
         // Insert before "treeMenu" aka Packet Tree
         editAct = menuBar()->insertMenu(treeMenu,menu);
-    } else if(packetMenu) {
+    } else if (packetMenu) {
         // Insert before "packetMenu" aka packet-specific menu
         editAct = menuBar()->insertMenu(packetMenu,menu);
     } else {
         // Insert before Tools
-        editAct = menuBar()->insertMenu(toolMenuAction,menu);
+        editAct = menuBar()->insertMenu(toolMenu->menuAction(), menu);
     }
 }
 
