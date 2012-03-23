@@ -576,7 +576,11 @@ void PacketPane::dockPane() {
     // The packet pane is currently floating.
 
     part->dock(this);
-    delete frame;
+    frame->hide();
+
+    // Use deleteLater() instead of delete; otherwise we get occasional
+    // crashes when the event loop cleans up the departing window.
+    frame->deleteLater();
     frame = 0;
 
     dockUndockBtn->setChecked(true);

@@ -57,12 +57,13 @@ PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
 
     newPane->registerEditOperations(actCut, actCopy, actPaste);
     */
-    
-    menuBar()->addMenu(newPane->createPacketTypeMenu(false));
 
     // Set up the widgets.
+    heldPane->setParent(this);
     setCentralWidget(newPane);
-    newPane->show();
+    
+    // Set up the menu bar.
+    menuBar()->addMenu(newPane->createPacketTypeMenu(false));
 }
 
 void PacketWindow::closeEvent(QCloseEvent* event) {

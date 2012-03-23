@@ -163,7 +163,6 @@ void ReginaPart::dock(PacketPane* newPane) {
     dockedPane = newPane;
     
     parent->plugPacketMenu(newPane->createPacketTypeMenu(true));
-    newPane->show();
 
     newPane->registerEditOperations(actCut, actCopy, actPaste);
 
