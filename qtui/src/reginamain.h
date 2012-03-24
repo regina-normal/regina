@@ -51,6 +51,7 @@ class QAction;
 class QMenu;
 class QSize;
 class QSplitter;
+class QToolBar;
 class QUrl;
 class RecentFilesAction;
 class ReginaManager;
@@ -109,6 +110,8 @@ class ReginaMain : public QMainWindow {
          */
         QAction* packetMenu;
         QMenu* toolMenu;
+        QToolBar* toolBarMain;
+        QToolBar* toolBarPacket;
 
         /**
          * Other widgets and components

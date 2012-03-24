@@ -455,11 +455,6 @@ class ReginaPrefSet : public QObject {
         static const QList<QUrl>& recentFiles();
 
         /**
-         * Returns the default size of a new main topology data window.
-         */
-        static QSize defaultMainSize();
-
-        /**
          * Returns the full path to the python libraries configuration file.
          */
         static QString pythonLibrariesConfig();

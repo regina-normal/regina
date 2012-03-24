@@ -37,8 +37,6 @@
 #include "shortrunner.h"
 
 #include <fstream>
-#include <QApplication>
-#include <QDesktopWidget>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -246,14 +244,6 @@ ReginaPrefSet::ReginaPrefSet() :
         useDock(false),
         warnOnNonEmbedded(true),
         windowMainSize() /* initially null */ {
-}
-
-QSize ReginaPrefSet::defaultMainSize() {
-    // Use roughly 2/3 the screen size by default.
-    QSize use = QApplication::desktop()->availableGeometry().size();
-    use *= 2;
-    use /= 3;
-    return use;
 }
 
 QString ReginaPrefSet::pythonLibrariesConfig() {
@@ -521,7 +511,7 @@ void ReginaPrefSet::readInternal() {
     readPythonLibraries();
 
     settings.beginGroup("Window");
-    windowMainSize = settings.value("MainSize", defaultMainSize()).toSize();
+    windowMainSize = settings.value("MainSize", QSize()).toSize();
     settings.endGroup();
 
     settings.beginGroup("RecentFiles");

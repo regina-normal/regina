@@ -43,8 +43,10 @@
 #include "reginapref.h"
 #include "reginasupport.h"
 
+#include <QApplication>
 #include <QBoxLayout>
 #include <QColor>
+#include <QDesktopWidget>
 #include <QDrag>
 #include <QDragEnterEvent>
 #include <QDropEvent>
@@ -253,7 +255,16 @@ void ReginaMain::closeEvent(QCloseEvent *event) {
 }
 
 QSize ReginaMain::sizeHint() const {
-    return ReginaPrefSet::defaultMainSize();
+    // Use the suggested width, but expand to 2/3 the screen height.
+    QSize ans = QMainWindow::sizeHint();
+
+    int ht = QApplication::desktop()->availableGeometry().height();
+    ht *= 2;
+    ht /= 3;
+    if (ht > ans.height())
+        ans.setHeight(ht);
+
+    return ans;
 }
 
 void ReginaMain::fileNew() {
@@ -636,6 +647,11 @@ void ReginaMain::updateTreeActions() {
 }
 
 void ReginaMain::setupWidgets() {
+    QWidget* main = new QWidget(this);
+    QBoxLayout* layout = new QVBoxLayout(main);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
     splitter = new QSplitter();
     splitter->setWhatsThis(tr(
         "<qt>Each piece of information stored in a data file "
@@ -646,6 +662,7 @@ void ReginaMain::setupWidgets() {
         "If you click on a packet in the tree, it will open up in the "
         "right-hand side of the window where you can edit it or view "
         "detailed information.</qt>"));
+    layout->addWidget(splitter, 1);
 
     if (starterWindow_) {
         // Give the user something helpful to start with.
@@ -662,26 +679,17 @@ void ReginaMain::setupWidgets() {
             "you through what Regina can do.  Just press F1, or select "
             "<i>Help&nbsp;&rarr;&nbsp;Regina Handbook</i> from the "
             "menu.</qt>"));
+        layout->addWidget(advice);
     } else
         advice = 0;
 
     // Set up the packet tree viewer.
-    QWidget* treeArea = new QWidget(splitter);
-    QBoxLayout* treeLayout = new QVBoxLayout(treeArea);
-    treeLayout->setContentsMargins(0, 0, 0, 0);
-    treeLayout->setSpacing(0);
-
-    treeArea->setSizePolicy(QSizePolicy(
+    treeView = new PacketTreeView(this, splitter);
+    treeView->setSizePolicy(QSizePolicy(
         QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
     // Leave the stretch factors at the default of zero.
-
-    treeView = new PacketTreeView(this);
-    treeLayout->addWidget(treeView, 1);
     connect(treeView, SIGNAL(itemSelectionChanged()), this,
         SLOT(updateTreeActions()));
-
-    if (advice)
-        treeLayout->addWidget(advice);
 
     // Set up the docking area.
     dockArea = new QWidget(splitter);
@@ -701,7 +709,7 @@ void ReginaMain::setupWidgets() {
     dockLayout->addStrut(100);
 
     // Put it all inside the main window.
-    setCentralWidget(splitter);
+    setCentralWidget(main);
 }
 
 void ReginaMain::initPacketTree() {
@@ -840,6 +848,17 @@ void ReginaMain::updatePreferences() {
         floatDockedPane();
 
     dockArea->setVisible(supportingDock);
+    if (supportingDock)
+        removeToolBarBreak(toolBarPacket);
+    else
+        insertToolBarBreak(toolBarPacket);
+
+    // Resize to the suggested width, but only use the suggested height
+    // if it is larger (i.e., never shrink vertically).
+    QSize s = sizeHint();
+    if (height() > s.height())
+        s.setHeight(height());
+    resize(s);
 
     for (QLinkedList<PacketPane *>::iterator it = allPanes.begin();
             it != allPanes.end(); it++)

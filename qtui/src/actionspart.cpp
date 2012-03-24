@@ -29,6 +29,7 @@
 #include "iconcache.h"
 #include "reginamain.h"
 #include "reginamanager.h"
+#include "reginaprefset.h"
 #include "reginasupport.h"
 #include "recentfilesaction.h"
 #include "examplesaction.h"
@@ -677,27 +678,28 @@ void ReginaMain::setupActions() {
 
     // --- Toolbars ---
 
-    QToolBar* toolBar = addToolBar(tr("Main"));
-    toolBar->addAction(actNew);
-    toolBar->addAction(actOpen);
-    toolBar->addAction(actSave);
-    toolBar->addSeparator();
-    toolBar->addAction(actView);
-    toolBar->addAction(actRename);
-    toolBar->addAction(actDelete);
-    toolBar->addSeparator();
-    toolBar->addAction(actPython);
+    toolBarMain = addToolBar(tr("Main"));
+    toolBarMain->addAction(actNew);
+    toolBarMain->addAction(actOpen);
+    toolBarMain->addAction(actSave);
+    toolBarMain->addSeparator();
+    toolBarMain->addAction(actView);
+    toolBarMain->addAction(actRename);
+    toolBarMain->addAction(actDelete);
+    toolBarMain->addSeparator();
+    toolBarMain->addAction(actPython);
 
-    addToolBarBreak();
+    if (! ReginaPrefSet::global().useDock)
+        addToolBarBreak();
 
-    toolBar = addToolBar(tr("New Packets"));
-    toolBar->addAction(actContainer);
-    toolBar->addAction(actTriangulation);
-    toolBar->addAction(actSurfaces);
-    toolBar->addAction(actAngleStructure);
-    toolBar->addAction(actFilter);
-    toolBar->addAction(actText);
-    toolBar->addAction(actScript);
-    toolBar->addAction(actPDF);
+    toolBarPacket = addToolBar(tr("New Packets"));
+    toolBarPacket->addAction(actContainer);
+    toolBarPacket->addAction(actTriangulation);
+    toolBarPacket->addAction(actSurfaces);
+    toolBarPacket->addAction(actAngleStructure);
+    toolBarPacket->addAction(actFilter);
+    toolBarPacket->addAction(actText);
+    toolBarPacket->addAction(actScript);
+    toolBarPacket->addAction(actPDF);
 }
 
