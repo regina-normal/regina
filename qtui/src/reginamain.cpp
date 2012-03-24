@@ -32,6 +32,7 @@
 #include "surfaces/nnormalsurfacelist.h"
 
 #include "examplesaction.h"
+#include "introdialog.h"
 #include "messagelayer.h"
 #include "packettreeview.h"
 #include "packetui.h"
@@ -559,17 +560,10 @@ void ReginaMain::helpTrouble() {
 }
 
 void ReginaMain::helpIntro() {
-    // TODO
-    ReginaSupport::info(this,
-        tr("<qt>If you select "
-            "<i>File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
-            "Introductory Examples</i> from the menu, "
-            "Regina will open a sample data file that you can "
-            "play around with.<p>"
-            "You can also read the Regina Handbook, which walks "
-            "you through what Regina can do.  Just press F1, or select "
-            "<i>Help&nbsp;&rarr;&nbsp;Regina Handbook</i> from the "
-            "menu.</qt>"));
+    QDialog* dlg = new IntroDialog(this);
+    dlg->show();
+    dlg->raise();
+    dlg->activateWindow();
 }
 
 void ReginaMain::floatDockedPane() {
