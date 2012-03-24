@@ -126,11 +126,11 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     creditors << CreditInfo("Winfried Bruns, Bogdan Ichim and Christof Soeger",
         tr("Use of the Normaliz library"));
     creditors << CreditInfo("Marc Culler",
-        tr("Helpful discussions"));
+        tr("Use of code from SnapPy and helpful discussions"));
     creditors << CreditInfo("Dominique Devriese",
         tr("Red Hat / Fedora porting assistance"));
     creditors << CreditInfo("Nathan Dunfield",
-        tr("Helpful discussions"));
+        tr("Use of code from SnapPy and helpful discussions"));
     creditors << CreditInfo("Matthias Goerner",
         tr("Code contributions"));
     creditors << CreditInfo("William Jaco",
