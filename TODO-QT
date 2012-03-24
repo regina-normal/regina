@@ -1,7 +1,6 @@
 Packet pane / dock redesign:
 - The dock/undock mechanism is very broken.
-- Get the initial PacketPane window size right (and make it larger).
-- Give the root-level container a better name.
+- PDF: no PacketUI; instead pass straight to the external viewer.
 
 Edit menu:
 - Python console: Edit options, seem to be there, but are commented in code?
