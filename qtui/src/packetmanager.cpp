@@ -33,7 +33,7 @@
 // UI includes:
 #include "iconcache.h"
 #include "packetmanager.h"
-#include "reginapart.h"
+#include "reginamain.h"
 #include "reginasupport.h"
 #include "packettypes/nanglestructureui.h"
 #include "packettypes/ncontainerui.h"

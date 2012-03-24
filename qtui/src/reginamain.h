@@ -36,82 +36,111 @@
 #include "pythonmanager.h"
 #include "reginaprefset.h"
 #include "reginaabout.h"
-#include "reginapart.h"
 
+#include <QLinkedList>
 #include <QMainWindow>
-#include <QUrl>
 
 class ExamplesAction;
+class PacketCreator;
+class PacketExporter;
+class PacketFilter;
+class PacketImporter;
+class PacketPane;
+class PacketTreeView;
 class QAction;
-class QMenuBar;
 class QMenu;
 class QSize;
-class QToolBar;
+class QSplitter;
+class QUrl;
 class RecentFilesAction;
 class ReginaManager;
+
+namespace regina {
+    class NPacket;
+};
 
 /**
  * A top-level window for Regina.
  *
- * Each main window is used for a single data file.  Data files are
- * actually displayed and edited by embedded KParts.
+ * Each main window is used for a single data file.
  */
 class ReginaMain : public QMainWindow {
     Q_OBJECT
 
     private:
         /**
-         * Components
+         * Components and Data
          */
         ReginaManager* manager;
-            /**< The regina manager that handles activation and
-                 deactivation of nested parts. */
-        ReginaPart* currentPart;
-            /**< The part containing the currently opened document, or 0 if
-                 no document has yet been opened. */
-        PythonManager consoles;
-            /**< The set of all currently open consoles not linked to a
-                 specific part. */
+            /**< The main application, which handles activation and
+                 deactivation of windows. */
+
+        /**
+         * Current data file
+         */
+        regina::NPacket* packetTree;
+            /**< The current working packet tree. */
+        QString localFile;
+            /**< Current filename, or null if we don't have one (or if we are
+                 trying to hide it from the user, e.g., for census data). */
+        QString displayName;
+            /**< Some files (e.g., census data) have human-readable file
+                 descriptions even though don't set localFile (e.g., census
+                 data). */
+        bool starterWindow_;
+            /**< True if this is the initial window when the application
+                 is first opened, which means we show helpful advice, and which
+                 also means that opening a file will replace the current
+                 (empty) packet tree instead of opening in a new window. */
 
         /**
          * Actions
          */
-        RecentFilesAction* fileOpenRecent;
-            /**< The menu of recently opened files. */
-        ExamplesAction* fileOpenExample;
-            /**< The menu of available example files. */
-        QAction* actPython;
-            /**< Action to launch a new python console. */
+        QAction* actSave;
+        QAction* actCut;
+        QAction* actCopy;
+        QAction* actPaste;
+        QLinkedList<QAction *> treePacketViewActions;
+        QLinkedList<QAction *> treePacketEditActions;
+        QLinkedList<QAction *> treeGeneralEditActions;
 
         /**
          * Menus and toolbars
          */
-        QMenu* fileMenu;
-        QMenu* toolMenu;
-        QAction* treeMenu;
-        QAction* actNew;
-        QAction* actOpen;
-        QAction* saveSep;
-        QAction* saveAct;
-        QAction* saveAsAct;
         QAction* packetMenu;
-        QAction* exportSep;
-        QAction* importAct;
-        QAction* exportAct;
-        QAction* editAct;
-        QToolBar* toolBar;
-        QToolBar* packetTreeToolBar;
+        QMenu* toolMenu;
 
         /**
-         * About dialogs
+         * Other widgets and components
          */
+        QSplitter* splitter;
+        PacketTreeView* treeView;
+        QWidget* dockArea;
+        QWidget* advice;
+
+        /**
+         * Related windows that the user might have opened
+         */
+        PythonManager consoles;
         ReginaAbout* aboutApp;
+
+        /**
+         * Packet panes
+         */
+        QLinkedList<PacketPane*> allPanes;
+        PacketPane* dockedPane;
+
+        /** 
+         * Miscellaneous flags
+         */
+        bool dirty;
+        bool supportingDock;
 
     public:
         /**
          * Constructors and destructors.
          */
-        ReginaMain(ReginaManager *parent, bool starterWindow);
+        ReginaMain(ReginaManager *useManager, bool starterWindow);
         virtual ~ReginaMain();
 
         /**
@@ -125,40 +154,71 @@ class ReginaMain : public QMainWindow {
         void unplugPacketMenu();
 
         /**
-         * Plug in a new Packet Tree menu
+         * Allow access to the python manager.
          */
-        void plugTreeMenu(QMenu *menu);
+        PythonManager& getPythonManager();
 
         /**
-         * Insert the import/export menus
+         * Indicate that the file is dirty.
          */
-        void importsExports(QMenu *imports, QMenu *exports);
+        virtual void setModified(bool modified);
 
         /**
-         * Plug in a new Edit menu
+         * View the given packet.
          */
-        void plugEditMenu(QMenu *edit);
-        
-        /**
-         * Sets up Save and SaveAs actions
-         */
-        void setActions(QAction *save, QAction *saveAs,
-            QAction *actCut, QAction *actCopy, QAction *actPaste);
+        void packetView(regina::NPacket*, bool makeVisibleInTree = true,
+            bool selectInTree = false);
 
         /**
-         * Destroys any existing packetTree toolbar, then creates 
-         * a new one and returns it. The toolbar is owned by ReginaMain
-         * so "extensions" (popups for if the toolbar doesn't fit) work
-         * correctly.
+         * Ensure that the given packet is visible in the packet tree.
          */
-        QToolBar* createToolBar(QString name);
+        void ensureVisibleInTree(regina::NPacket* packet);
 
         /**
-         * Add the current working URL to the recent file list for every
-         * top-level window (including this one) and save the file list to
-         * the global configuration.
+         * Handles the incorporation of an existing packet pane into the
+         * part's dock area.  Any currently docked pane that refuses to
+         * close will be forced out into its own floating window.
+         *
+         * This is routine is always called at some point whenever a
+         * packet pane is inserted into the dock area.
+         *
+         * This routine does not handle registration of the packet pane
+         * into the list of managed panes, the clean removal of the
+         * packet pane from any preexisting container, or the
+         * configuration of the pane's dock/undock button and associated
+         * actions.
+         *
+         * Note that this routine is not designed for general use.
+         * For docking a pane that is currently floating,
+         * PacketPane::dockPane() should be used.  For docking a newly
+         * created pane, a combination of ReginaMain::view() and
+         * PacketPane::dockPane() should be used.
          */
-        void addRecentFile();
+        void dock(PacketPane* newPane);
+
+        /**
+         * Adjusts the part's interface components to reflect the fact
+         * that a packet pane is about to leave the docking area.
+         *
+         * This routine must always be called when a packet pane is
+         * either closed or floated into its own window.
+         *
+         * This routine will happily cope with the case in which the given
+         * packet is in fact not currently docked.
+         */
+        void aboutToUndock(PacketPane* undockedPane);
+
+        /**
+         * Handles the deregistration of a packet pane from the list of
+         * managed panes.
+         *
+         * This must always be called when a packet pane is about to
+         * close with certainty.
+         *
+         * Note that this routine is already called from
+         * PacketPane::queryClose() whenever it returns \c true.
+         */
+        void isClosing(PacketPane* closingPane);
 
     protected:
         /**
@@ -179,72 +239,190 @@ class ReginaMain : public QMainWindow {
 
     public slots:
         /**
-         * Opens a new topology data file in this window, or in a new
-         * top-level window if this window already contains an open
-         * document.
+         * Basic file routines.
          */
-        void newTopology();
+        void fileNew();
+        void fileOpen();
+        void fileOpenUrl(const QUrl& url);
+        void fileOpenExample(const QUrl& url, const QString& description);
+        void fileSave();
+        void fileSaveAs();
 
         /**
-         * Open the given Url in this window, or in a new top-level
-         * window if this window already contains an open document.
+         * View, rename or delete the currently selected packet.
          */
-        bool openUrl(const QUrl& url);
+        void packetView();
+        void packetRename();
+        void packetDelete();
 
         /**
-         * Open the given example file in a manner similar to openUrl().
+         * Refresh the subtree beneath the currently selected packet.
          */
-        bool openExample(const QUrl& url, const QString& description);
+        void subtreeRefresh();
 
         /**
-         * Save the data in the current window.
+         * Packet cloning routines, both with and without cloning the
+         * entire subtree.
          */
-        bool saveUrl();
+        void clonePacket();
+        void cloneSubtree();
 
         /**
-         * Save the data in the current window with a new name.
+         * Tree reorganisation routines.
          */
-        bool saveUrlAs();
+        void moveShallow();
+        void moveDeep();
+        void moveUp();
+        void moveDown();
+        void movePageUp();
+        void movePageDown();
+        void moveTop();
+        void moveBottom();
 
         /**
-         * Open a new standalone Python console.  The console will not
-         * be linked to the document currently in this window (if any).
+         * New packet routines.
+         */
+        void newAngleStructures();
+        void newCensus();
+        void newContainer();
+        void newFilter();
+        void newNormalSurfaces();
+        void newPDF();
+        void newScript();
+        void newText();
+        void newTriangulation();
+
+        /**
+         * Packet import routines.
+         */
+        void importDehydration();
+        void importIsoSig3();
+        void importPDF();
+        void importPython();
+        void importRegina();
+        void importSnapPea();
+        void importOrb();
+
+        /**
+         * Packet export routines.
+         */
+        void exportCSVSurfaceList();
+        void exportPDF();
+        void exportPython();
+        void exportRegina();
+        void exportReginaUncompressed();
+        void exportSnapPea();
+        void exportSource();
+
+        /**
+         * Python scripting routines.
          */
         void pythonConsole();
 
         /**
-         * Present the calculation engine documentation in a new browser.
+         * Options and documentation.
          */
-        void pythonReference();
-
-    private slots:
-        /**
-         * Implementation of actions.
-         */
-        void fileOpen();
         void optionsPreferences();
         void helpAboutApp();
         void helpHandbook();
         void helpXMLRef();
+        void helpPythonReference();
         void helpWhatsThis();
         void helpTipOfDay();
         void helpTrouble();
 
-        // void changeStatusbar(const QString& text);
-        void changeCaption(const QString& text);
-        void newToolbarConfig();
+        /**
+         * Float the currently docked pane.
+         */
+        void floatDockedPane();
 
+        /**
+         * Attempt to close the currently docked pane.
+         * The user will be prompted if necessary.
+         */
+        bool closeDockedPane();
+
+        /**
+         * Attempt to close all panes, docked or undocked.
+         * The user will be prompted if necessary.
+         */
+        bool closeAllPanes();
+
+        /**
+         * Tests whether there is some open pane with uncommitted changes.
+         */
+        bool hasUncommittedChanges();
+
+        /**
+         * Commit or discard changes in all open panes.
+         */
+        void commitAllChanges();
+        void discardAllChanges();
+
+        /**
+         * Various UI updates.
+         */
+        void updateTreeActions();
+        
     private:
         /**
          * Initial setup.
          */
+        void setupWidgets();
         void setupActions();
-        void fillExamples();
+        void initPacketTree();
 
         /**
-         * Fills the window with a new topology data part.
+         * Display a newly created packet pane in a sensible manner.
+         * Whether it is docked or in a free-floating window will be
+         * decided according to the current arrangement of panes and any
+         * relevant user settings.
+         *
+         * Note that this routine should only be called for newly
+         * created packet panes.
          */
-        void newTopologyPart(bool starterWindow);
+        void view(PacketPane* newPane);
+
+        /**
+         * Verify that the part or its components are in an appropriate
+         * state and display an error message otherwise.
+         *
+         * Some of these routines return useful information in addition
+         * to performing some form of test.  In these cases, the return
+         * value can always be cast to a boolean that is true if and
+         * only if the test was passed.
+         */
+        regina::NPacket* checkPacketSelected();
+        regina::NPacket* checkSubtreeSelected();
+
+        /**
+         * Generic packet operations.
+         */
+        void newPacket(PacketCreator* creator, PacketFilter* parentFilter,
+            const QString& dialogTitle, const QString& suggestedLabel);
+        void importFile(const PacketImporter& importer,
+            PacketFilter* parentFilter, const QString& fileFilter,
+            const QString& dialogTitle);
+        void exportFile(const PacketExporter& exporter,
+            const QString& fileFilter, const QString& dialogTitle);
+
+        /**
+         * Open and save files.
+         */
+        bool initData(regina::NPacket* usePacketTree,
+            const QString& useLocalFilename,
+            const QString& useDisplayName);
+        bool saveFile();
+
+    private slots:
+        /**
+         * Notification that the preferences have changed.
+         */
+        void updatePreferences();
 };
+
+inline PythonManager& ReginaMain::getPythonManager() {
+    return consoles;
+}
 
 #endif

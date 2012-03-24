@@ -356,8 +356,8 @@ class ReginaPrefSet : public QObject {
         QByteArray fileImportExportCodec;
             /**< The codec to use for imports and exports. */
         QString pdfExternalViewer;
-            /**< The external program used to view PDFs if we cannot find
-                 (or do not want) an embedded KPart.  This string may contain
+            /**< The external program used to view PDFs.
+                 This string may contain
                  additional arguments for the viewer; the PDF filename will
                  added to the end (separated by whitespace) and the entire
                  string will be passed to a shell for interpretation.  If this

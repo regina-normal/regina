@@ -35,57 +35,57 @@
 #include "packetcreator.h"
 #include "packetfilter.h"
 #include "packettreeview.h"
-#include "reginapart.h"
+#include "reginamain.h"
 #include "packettypes/nanglestructurecreator.h"
 #include "packettypes/nnormalsurfacecreator.h"
 #include "packettypes/nsurfacefiltercreator.h"
 #include "packettypes/ntriangulationcreator.h"
 
-void ReginaPart::newAngleStructures() {
+void ReginaMain::newAngleStructures() {
     newPacket(new NAngleStructureCreator(),
         new SingleTypeFilter<regina::NTriangulation>(),
         tr("New Angle Structure Solutions"), tr("Angle Structures"));
 }
 
-void ReginaPart::newContainer() {
+void ReginaMain::newContainer() {
     newPacket(new BasicPacketCreator<regina::NContainer>(), 0,
         tr("New Container"), tr("Container"));
 }
 
-void ReginaPart::newFilter() {
+void ReginaMain::newFilter() {
     newPacket(new NSurfaceFilterCreator(), 0,
         tr("New Normal Surface Filter"), tr("Surface Filter"));
 }
 
-void ReginaPart::newNormalSurfaces() {
+void ReginaMain::newNormalSurfaces() {
     newPacket(new NNormalSurfaceCreator(),
         new SingleTypeFilter<regina::NTriangulation>(),
         tr("New Normal Surface List"), tr("Normal Surfaces"));
 }
 
-void ReginaPart::newPDF() {
+void ReginaMain::newPDF() {
     // A PDF must be an import; just use the import routine directly.
     importPDF();
 }
 
-void ReginaPart::newScript() {
+void ReginaMain::newScript() {
     newPacket(new BasicPacketCreator<regina::NScript>(), 0,
         tr("New Script"), tr("Script"));
 }
 
-void ReginaPart::newText() {
+void ReginaMain::newText() {
     newPacket(new BasicPacketCreator<regina::NText>(), 0,
         tr("New Text Packet"), tr("Text"));
 }
 
-void ReginaPart::newTriangulation() {
+void ReginaMain::newTriangulation() {
     newPacket(new NTriangulationCreator(), 0,
         tr("New Triangulation"), tr("Triangulation"));
 }
 
-void ReginaPart::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
+void ReginaMain::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
         const QString& dialogTitle, const QString& suggestedLabel) {
-    NewPacketDialog dlg(widget(), creator, packetTree,
+    NewPacketDialog dlg(this, creator, packetTree,
         treeView->selectedPacket(), parentFilter, dialogTitle, suggestedLabel);
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
         regina::NPacket* newPacket = dlg.createdPacket();

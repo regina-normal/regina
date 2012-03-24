@@ -35,8 +35,8 @@
 #include "reginasupport.h"
 #include "ncompatcanvas.h"
 #include "nsurfacecompatui.h"
-#include "../reginapart.h"
-#include "../messagelayer.h"
+#include "reginamain.h"
+#include "messagelayer.h"
 
 #include <QComboBox>
 #include <QGraphicsView>

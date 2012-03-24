@@ -28,8 +28,8 @@
 
 #include "algebra/ngrouppresentation.h"
 
-#include "../reginapart.h"
-#include "../messagelayer.h"
+#include "messagelayer.h"
+#include "reginamain.h"
 #include "reginasupport.h"
 #include "gaprunner.h"
 

@@ -37,8 +37,8 @@
 // UI includes:
 #include "eltmovedialog.h"
 #include "ntrigluings.h"
-#include "../patiencedialog.h"
-#include "../reginapart.h"
+#include "patiencedialog.h"
+#include "reginamain.h"
 #include "reginasupport.h"
 
 #include <memory>
@@ -979,7 +979,7 @@ void NTriGluingsUI::splitIntoComponents() {
         unsigned long nComps = tri->splitIntoComponents(base);
 
         // Make sure the new components are visible.
-        enclosingPane->getPart()->ensureVisibleInTree(
+        enclosingPane->getMainWindow()->ensureVisibleInTree(
             base->getFirstTreeChild());
 
         // Tell the user what happened.
@@ -1033,7 +1033,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
         else {
             // There is at least one new summand triangulation.
             // Make sure the new summands are visible.
-            enclosingPane->getPart()->ensureVisibleInTree(
+            enclosingPane->getMainWindow()->ensureVisibleInTree(
                 base->getLastTreeChild());
 
             if (nSummands == 1) {
@@ -1119,7 +1119,7 @@ void NTriGluingsUI::makeZeroEfficient() {
         // Composite 3-manifold.
         tri->insertChildLast(decomp);
         decomp->getTreeMatriarch()->makeUniqueLabels(0);
-        enclosingPane->getPart()->ensureVisibleInTree(
+        enclosingPane->getMainWindow()->ensureVisibleInTree(
             decomp->getLastTreeChild());
 
         ReginaSupport::info(ui,

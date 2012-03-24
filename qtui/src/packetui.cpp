@@ -36,16 +36,18 @@
 #include "packetmanager.h"
 #include "packetui.h"
 #include "packetwindow.h"
-#include "reginapart.h"
+#include "reginamain.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
 
+#include <QAction>
 #include <QApplication>
 #include <QBoxLayout>
 #include <QEvent>
 #include <QFrame>
 #include <QLabel>
 #include <QLinkedList>
+#include <QMenu>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QToolBar>
@@ -96,9 +98,9 @@ DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
         newPacket->getPacketTypeName().c_str())) {
 }
 
-PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
+PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
         QWidget* parent) : QWidget(parent),
-        part(newPart), frame(0), dirty(false),
+        mainWindow(newMainWindow), frame(0), dirty(false),
         emergencyClosure(false), emergencyRefresh(false), isCommitting(false),
         editCut(0), editCopy(0), editPaste(0) {
     // Initialise a vertical layout with no padding or spacing.
@@ -111,7 +113,6 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
 
     // Create the actions first, since PacketManager::createUI()
     // might want to modify them.
-    //actCommit = part->actionCollection()->addAction("packet_editor_commit");
     actCommit = new QAction(this);
     actCommit->setText(tr("Co&mmit"));
     actCommit->setIcon(ReginaSupport::themeIcon("dialog-ok"));
@@ -123,7 +124,6 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     connect(actCommit,SIGNAL(triggered()),this,SLOT(commit()));
 
     actRefresh = new QAction(this);
-    //actRefresh = part->actionCollection()->addAction("packet_editor_refresh");
     actRefresh->setText(tr("&Refresh"));
     actRefresh->setIcon(ReginaSupport::themeIcon("view-refresh"));
     actRefresh->setToolTip(tr("Discard any changes and refresh this "
@@ -134,7 +134,6 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     connect(actRefresh,SIGNAL(triggered()), this, SLOT(refresh()));
 
     actDockUndock = new QAction(this);
-    //actDockUndock = part->actionCollection()->addAction("packet_editor_dock");
     actDockUndock->setText(tr("Un&dock"));
     actDockUndock->setIcon(ReginaSupport::themeIcon("mail-attachment"));
     actDockUndock->setToolTip(tr("Dock / undock this packet viewer"));
@@ -146,7 +145,6 @@ PacketPane::PacketPane(ReginaPart* newPart, NPacket* newPacket,
     connect(actDockUndock,SIGNAL(triggered()),this, SLOT(floatPane()));
 
     actClose = new QAction(this);
-    //actClose = part->actionCollection()->addAction("packet_editor_close");
     actClose->setText(tr("&Close"));
     actClose->setIcon(ReginaSupport::themeIcon("window-close"));
     actClose->setToolTip(tr("Close this packet viewer"));
@@ -315,7 +313,7 @@ bool PacketPane::queryClose() {
     }
 
     // We are definitely going to close the pane.  Do some cleaning up.
-    part->isClosing(this);
+    mainWindow->isClosing(this);
     return true;
 }
 
@@ -561,7 +559,7 @@ bool PacketPane::close() {
     if (frame)
         return frame->close();
     else
-        return part->closeDockedPane();
+        return mainWindow->closeDockedPane();
 }
 
 void PacketPane::closeForce() {
@@ -575,7 +573,7 @@ void PacketPane::dockPane() {
 
     // The packet pane is currently floating.
 
-    part->dock(this);
+    mainWindow->dock(this);
     frame->hide();
 
     // Use deleteLater() instead of delete; otherwise we get occasional
@@ -596,7 +594,7 @@ void PacketPane::floatPane() {
         return;
 
     // The packet pane is currently docked.
-    part->aboutToUndock(this);
+    mainWindow->aboutToUndock(this);
     frame = new PacketWindow(this);
 
     dockUndockBtn->setChecked(false);

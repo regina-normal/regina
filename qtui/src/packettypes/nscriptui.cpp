@@ -33,10 +33,10 @@
 
 // UI includes:
 #include "nscriptui.h"
-#include "../packetchooser.h"
-#include "../packeteditiface.h"
-#include "../packetmanager.h"
-#include "../reginapart.h"
+#include "packetchooser.h"
+#include "packeteditiface.h"
+#include "packetmanager.h"
+#include "reginamain.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
 
@@ -45,6 +45,7 @@
 #endif
 
 #include <cstring>
+#include <QAction>
 #include <QBoxLayout>
 #include <QFontMetrics>
 #include <QHeaderView>
@@ -220,7 +221,6 @@ void ScriptValueDelegate::updateEditorGeometry(QWidget* editor,
 NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
         PacketUI(enclosingPane), script(packet) {
     bool readWrite = enclosingPane->isReadWrite();
-    ReginaPart* part = enclosingPane->getPart();
 
     ui = new QWidget();
     QVBoxLayout* layout = new QVBoxLayout(ui);
@@ -570,8 +570,7 @@ void NScriptUI::updateRemoveState() {
 }
 
 void NScriptUI::compile() {
-    ReginaPart* part = enclosingPane->getPart();
-    if (part->getPythonManager().compileScript(ui,
+    if (enclosingPane->getMainWindow()->getPythonManager().compileScript(ui,
             document->toPlainText() + "\n\n") == 0) {
         #ifdef BOOST_PYTHON_FOUND
         ReginaSupport::success(ui,
@@ -598,8 +597,7 @@ void NScriptUI::execute() {
                 getPacket()));
 
     // Run the script.
-    ReginaPart* part = enclosingPane->getPart();
-    part->getPythonManager().launchPythonConsole(ui,
+    enclosingPane->getMainWindow()->getPythonManager().launchPythonConsole(ui,
             document->toPlainText() + "\n\n", vars);
 }
 

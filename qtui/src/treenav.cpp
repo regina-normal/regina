@@ -31,16 +31,16 @@
 
 // UI includes:
 #include "packettreeview.h"
-#include "reginapart.h"
+#include "reginamain.h"
 #include "reginasupport.h"
 
-void ReginaPart::moveShallow() {
+void ReginaMain::moveShallow() {
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
 
     if (packet->dependsOnParent()) {
-        ReginaSupport::info(widget(),
+        ReginaSupport::info(this,
             tr("This packet must stay with its current parent."),
             tr("This is because it relies on information stored "
             "in its parent (e.g., a normal surface list that stores "
@@ -52,7 +52,7 @@ void ReginaPart::moveShallow() {
 
     regina::NPacket* parent = packet->getTreeParent();
     if (! parent) {
-        ReginaSupport::info(widget(),
+        ReginaSupport::info(this,
             tr("This packet is already at the top of the tree."),
             tr("I cannot move it to a higher level."));
         return;
@@ -60,7 +60,7 @@ void ReginaPart::moveShallow() {
 
     regina::NPacket* grandparent = parent->getTreeParent();
     if (! grandparent) {
-        ReginaSupport::info(widget(),
+        ReginaSupport::info(this,
             tr("The root of the packet tree must stay fixed."),
             tr("I cannot move this packet to the top level to take "
             "its place."));
@@ -73,20 +73,20 @@ void ReginaPart::moveShallow() {
     treeView->selectPacket(packet, true);
 }
 
-void ReginaPart::moveDeep() {
+void ReginaMain::moveDeep() {
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
 
     if (! packet->getTreeParent()) {
-        ReginaSupport::info(widget(),
+        ReginaSupport::info(this,
             tr("The root of the packet tree must stay fixed."),
             tr("I cannot move it to a lower level."));
         return;
     }
 
     if (packet->dependsOnParent()) {
-        ReginaSupport::info(widget(),
+        ReginaSupport::info(this,
             tr("This packet must stay with its current parent."),
             tr("This is because it relies on information stored "
             "in its parent (e.g., a normal surface list that stores "
@@ -103,7 +103,7 @@ void ReginaPart::moveDeep() {
         down = false;
     }
     if (! newParent) {
-        ReginaSupport::info(widget(),
+        ReginaSupport::info(this,
             tr("This packet is an only child."),
             tr("To move it to a lower level in the tree, it must have "
             "a sibling (above or below it) that can act as its new parent."));
@@ -119,18 +119,18 @@ void ReginaPart::moveDeep() {
     treeView->selectPacket(packet, true);
 }
 
-void ReginaPart::moveUp() {
+void ReginaMain::moveUp() {
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
 
     if (! packet->getPrevTreeSibling()) {
         if (! packet->getNextTreeSibling()) {
-            ReginaSupport::info(widget(),
+            ReginaSupport::info(this,
                 tr("This packet is an only child."),
                 tr("I cannot move it up or down, since it has no siblings."));
         } else {
-            ReginaSupport::info(widget(),
+            ReginaSupport::info(this,
                 tr("This packet is already the first amongst its siblings."),
                 tr("I cannot move it further up."));
         }
@@ -140,18 +140,18 @@ void ReginaPart::moveUp() {
     packet->getPrevTreeSibling()->swapWithNextSibling();
 }
 
-void ReginaPart::moveDown() {
+void ReginaMain::moveDown() {
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
 
     if (! packet->getNextTreeSibling()) {
         if (! packet->getPrevTreeSibling()) {
-            ReginaSupport::info(widget(),
+            ReginaSupport::info(this,
                 tr("This packet is an only child."),
                 tr("I cannot move it up or down, since it has no siblings."));
         } else {
-            ReginaSupport::info(widget(),
+            ReginaSupport::info(this,
                 tr("This packet is already the last amongst its siblings."),
                 tr("I cannot move it further down."));
         }
@@ -161,18 +161,18 @@ void ReginaPart::moveDown() {
     packet->swapWithNextSibling();
 }
 
-void ReginaPart::movePageUp() {
+void ReginaMain::movePageUp() {
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
 
     if (! packet->getPrevTreeSibling()) {
         if (! packet->getNextTreeSibling()) {
-            ReginaSupport::info(widget(),
+            ReginaSupport::info(this,
                 tr("This packet is an only child."),
                 tr("I cannot move it up or down, since it has no siblings."));
         } else {
-            ReginaSupport::info(widget(),
+            ReginaSupport::info(this,
                 tr("This packet is already the first amongst its siblings."),
                 tr("I cannot move it further up."));
         }
@@ -182,18 +182,18 @@ void ReginaPart::movePageUp() {
     packet->moveUp(ReginaPrefSet::global().treeJumpSize);
 }
 
-void ReginaPart::movePageDown() {
+void ReginaMain::movePageDown() {
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
 
     if (! packet->getNextTreeSibling()) {
         if (! packet->getPrevTreeSibling()) {
-            ReginaSupport::info(widget(),
+            ReginaSupport::info(this,
                 tr("This packet is an only child."),
                 tr("I cannot move it up or down, since it has no siblings."));
         } else {
-            ReginaSupport::info(widget(),
+            ReginaSupport::info(this,
                 tr("This packet is already the last amongst its siblings."),
                 tr("I cannot move it further down."));
         }
@@ -203,18 +203,18 @@ void ReginaPart::movePageDown() {
     packet->moveDown(ReginaPrefSet::global().treeJumpSize);
 }
 
-void ReginaPart::moveTop() {
+void ReginaMain::moveTop() {
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
 
     if (! packet->getPrevTreeSibling()) {
         if (! packet->getNextTreeSibling()) {
-            ReginaSupport::info(widget(),
+            ReginaSupport::info(this,
                 tr("This packet is an only child."),
                 tr("I cannot move it up or down, since it has no siblings."));
         } else {
-            ReginaSupport::info(widget(),
+            ReginaSupport::info(this,
                 tr("This packet is already the first amongst its siblings."),
                 tr("I cannot move it further up."));
         }
@@ -224,18 +224,18 @@ void ReginaPart::moveTop() {
     packet->moveToFirst();
 }
 
-void ReginaPart::moveBottom() {
+void ReginaMain::moveBottom() {
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
 
     if (! packet->getNextTreeSibling()) {
         if (! packet->getPrevTreeSibling()) {
-            ReginaSupport::info(widget(),
+            ReginaSupport::info(this,
                 tr("This packet is an only child."),
                 tr("I cannot move it up or down, since it has no siblings."));
         } else {
-            ReginaSupport::info(widget(),
+            ReginaSupport::info(this,
                 tr("This packet is already the last amongst its siblings."),
                 tr("I cannot move it further down."));
         }

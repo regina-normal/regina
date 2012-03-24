@@ -46,7 +46,7 @@ class QLabel;
 class QMenu;
 class QToolButton;
 class QTreeWidget;
-class ReginaPart;
+class ReginaMain;
 
 namespace regina {
     class NPacket;
@@ -264,7 +264,7 @@ class DefaultPacketUI : public ErrorPacketUI {
  * A full-featured component through which the user can view or edit a
  * single packet.
  *
- * Packet panes may be either docked within the main ReginaPart widget
+ * Packet panes may be either docked within a main window
  * or may be floating freely in their own frames.
  */
 class PacketPane : public QWidget, public regina::NPacketListener {
@@ -274,7 +274,7 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         /**
          * External components
          */
-        ReginaPart* part;
+        ReginaMain* mainWindow;
         PacketWindow* frame;
 
         /**
@@ -311,13 +311,13 @@ class PacketPane : public QWidget, public regina::NPacketListener {
 
     public:
         /**
-         * Constructs a new packet pane, managed by the given KPart,
+         * Constructs a new packet pane, managed by the given main window,
          * that views or edits the given packet.
          *
          * An appropriate internal interface component will be selected
          * by way of the PacketManager class.
          */
-        PacketPane(ReginaPart* newPart, regina::NPacket* newPacket,
+        PacketPane(ReginaMain* newMainWindow, regina::NPacket* newPacket,
             QWidget* parent = 0);
         ~PacketPane();
 
@@ -325,7 +325,7 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * Query components and actions.
          */
         regina::NPacket* getPacket();
-        ReginaPart* getPart();
+        ReginaMain* getMainWindow();
 
         /**
          * Set this pane to support or not support docking as appropriate.
@@ -363,7 +363,7 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * If \a allowReadWrite is \c true but nevertheless the pane
          * cannot be put into read-write mode, i.e., if
          * NPacket::isPacketEditable() returns \c false or the
-         * underlying KPart is in read-only mode, then this routine will
+         * underlying file is in read-only mode, then this routine will
          * do nothing and return \c false.  Otherwise this routine will
          * set the read-write status as requested and return \c true.
          */
@@ -374,7 +374,7 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          *
          * If this routine returns \c true, the caller of this routine
          * must ensure that the packet pane is actually closed (since in
-         * this case queryClose() will call ReginaPart::isClosing()).
+         * this case queryClose() will call ReginaMain::isClosing()).
          */
         bool queryClose();
 
@@ -487,7 +487,7 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * necessary.
          *
          * For a packet pane that is currently docked, this routine
-         * is equivalent to calling ReginaPart::closeDockedPane().
+         * is equivalent to calling ReginaMain::closeDockedPane().
          *
          * Note that all this routine does is delegate the closure
          * operation to whatever component currently owns this packet pane.
@@ -501,7 +501,7 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         void closeForce();
 
         /**
-         * Docks this packet pane into the main ReginaPart widget, if
+         * Docks this packet pane into the main window, if
          * it is not already docked.  If another packet pane is
          * already docked and refuses to be closed, the other pane will
          * be moved into its own freely floating window.
@@ -510,7 +510,7 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * that is currently floating in its own window.
          *
          * It is assumed that the packet pane is already registered with
-         * the managing ReginaPart and is either already docked or
+         * the main window, and is either already docked or
          * currently floating in its own window.
          */
         void dockPane();
@@ -523,11 +523,11 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * top-level window enclosing a packet pane.
          *
          * It is assumed that the packet pane is already registered with
-         * the managing ReginaPart, though it does not matter if the
+         * the main window, though it does not matter if the
          * pane is currently floating, docked or parentless.
          *
          * Note that a currently docked packet pane can also be floated by
-         * calling ReginaPart::floatDockedPane(), which simply calls
+         * calling ReginaMain::floatDockedPane(), which simply calls
          * this routine.
          */
         void floatPane();
@@ -584,8 +584,8 @@ inline regina::NPacket* PacketPane::getPacket() {
     return mainUI->getPacket();
 }
 
-inline ReginaPart* PacketPane::getPart() {
-    return part;
+inline ReginaMain* PacketPane::getMainWindow() {
+    return mainWindow;
 }
 
 inline bool PacketPane::isDirty() {

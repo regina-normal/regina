@@ -27,9 +27,11 @@
 /* end stub */
 
 #include "iconcache.h"
-#include "reginapart.h"
 #include "reginamain.h"
+#include "reginamanager.h"
 #include "reginasupport.h"
+#include "recentfilesaction.h"
+#include "examplesaction.h"
 
 #include <QAction>
 #include <QApplication>
@@ -41,19 +43,46 @@
 // TODO: Undo/redo are not yet implemented.
 
 
-void ReginaPart::setupActions() {
+void ReginaMain::setupActions() {
     QAction* act;
-
-    editMenu = new QMenu(tr("&Edit"));
-    treeMenu = new QMenu(tr("&Packet Tree"));
     
-    // File actions:
+    // --- File actions ---
+
+    QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
+
+    QAction* actNew = new QAction(this); 
+    actNew->setText(tr("&New Topology Data"));
+    actNew->setIcon(ReginaSupport::themeIcon("document-new"));
+    actNew->setShortcuts(QKeySequence::New);
+    actNew->setWhatsThis(tr("Create a new topology data file.  This is "
+        "the standard type of data file used by Regina."));
+    connect(actNew, SIGNAL(triggered()), this, SLOT(fileNew()));
+    fileMenu->addAction(actNew);
+
+    QAction* actOpen = new QAction(this);
+    actOpen->setText(tr("&Open..."));
+    actOpen->setIcon(ReginaSupport::themeIcon("document-open"));
+    actOpen->setShortcuts(QKeySequence::Open);
+    actOpen->setWhatsThis(tr("Open a topology data file."));
+    connect(actOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
+    fileMenu->addAction(actOpen);
+   
+    RecentFilesAction* fileOpenRecent = new RecentFilesAction(this);
+    connect(fileOpenRecent, SIGNAL(urlSelected(const QUrl&)),
+        this, SLOT(fileOpenUrl(const QUrl&)));
+    fileMenu->addMenu(fileOpenRecent);
+
+    ExamplesAction* fileExamples = new ExamplesAction(this);
+    fileExamples->fillStandard();
+    connect(fileExamples, SIGNAL(urlSelected(const QUrl&, const QString&)),
+        this, SLOT(fileOpenExample(const QUrl&, const QString&)));
+    fileMenu->addMenu(fileExamples);
+
     actSave = new QAction(ReginaSupport::themeIcon("document-save"),
         tr("&Save"), this);
     actSave->setShortcuts(QKeySequence::Save);
     actSave->setWhatsThis(tr("Save the current data file."));
     connect(actSave, SIGNAL(triggered()), this, SLOT(fileSave()));
-    allActions.append(actSave);
 
     act = new QAction(ReginaSupport::themeIcon("document-save-as"),
         tr("Save &as"), this);
@@ -61,39 +90,207 @@ void ReginaPart::setupActions() {
     act->setWhatsThis(tr(
         "Save the current data file, but give it a different name."));
     connect(act, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
-    allActions.append(act);
 
+    fileMenu->addSeparator();
 
-    importMenu = new QMenu(tr("&Import"));
-    exportMenu = new QMenu(tr("&Export"));
+    // Imports and exports:
+    QMenu* importMenu = fileMenu->addMenu(tr("&Import"));
 
-    // Edit actions:
+    act = new QAction(this);
+    act->setText(tr("&Regina Data File"));
+    act->setIcon(IconCache::icon(IconCache::regina));
+    act->setToolTip(tr("Import a Regina data file"));
+    act->setWhatsThis(tr("Import an external Regina data file.  The "
+        "imported packet tree will be grafted into this packet tree."));
+    connect(act, SIGNAL(triggered()), this, SLOT(importRegina()) );
+    treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("&SnapPea Triangulation"));
+    act->setIcon(ReginaSupport::regIcon("snappea"));
+    act->setToolTip(tr("Import a SnapPea triangulation"));
+    act->setWhatsThis(tr("Import an external SnapPea file as a new "
+        "triangulation in this packet tree."));
+    connect(act, SIGNAL(triggered()), this, SLOT(importSnapPea()) );
+    treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
+
+    act= new QAction(this);
+    act->setText(tr("&Orb / Casson Triangulation"));
+    act->setIcon(ReginaSupport::regIcon("orb"));
+    act->setToolTip(tr("Import an Orb / Casson triangulation"));
+    act->setWhatsThis(tr("Import an external Orb / Casson file as a new "
+        "triangulation in this packet tree."));
+    connect(act, SIGNAL(triggered()), this, SLOT(importOrb()) );
+    treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("&Isomorphism Signature List"));
+    act->setIcon(ReginaSupport::themeIcon("document-sign"));
+    act->setToolTip(tr("Import an isomorphism signature list "
+        "for 3-manifold triangulations"));
+    act->setWhatsThis(tr("Import an external text file containing "
+        "isomorphism signatures for 3-manifold triangulations.  "
+        "For each isomorphism signature, "
+        "a new 3-manifold triangulation will be created in this packet tree."));
+    connect(act, SIGNAL(triggered()), this, SLOT(importIsoSig3()) );
+    treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("&Dehydrated Triangulation List"));
+    act->setIcon(ReginaSupport::regIcon("dehydrated"));
+    act->setToolTip(tr("Import a dehydrated triangulation list"));
+    act->setWhatsThis(tr("Import an external text file containing "
+        "dehydrated triangulation strings.  For each dehydration string, "
+        "a new triangulation will be created in this packet tree."));
+    connect(act, SIGNAL(triggered()), this, SLOT(importDehydration()) );
+    treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("&PDF Document"));
+    act->setIcon(IconCache::icon(IconCache::packet_pdf));
+    act->setToolTip(tr("Import a PDF document"));
+    act->setWhatsThis(tr("Import an external PDF document as a new PDF "
+        "packet in this tree."));
+    connect(act, SIGNAL(triggered()), this, SLOT(importPDF()) );
+    treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("P&ython Script"));
+    act->setIcon(IconCache::icon(IconCache::packet_script));
+    act->setToolTip(tr("Import a Python script"));
+    act->setWhatsThis(tr("Import an external Python file as a new script "
+        "packet in this tree."));
+    connect(act, SIGNAL(triggered()), this, SLOT(importPython()) );
+    treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
+
+    QMenu* exportMenu = fileMenu->addMenu(tr("&Export"));
+
+    act = new QAction(this);
+    act->setText(tr("&Regina Data File"));
+    act->setIcon(IconCache::icon(IconCache::regina));
+    act->setToolTip(tr("Export a compressed Regina data file"));
+    act->setWhatsThis(tr("Export all or part of this packet tree "
+        "to a separate Regina data file.  The separate data file will "
+        "be saved as compressed XML (the default format)."));
+    connect(act, SIGNAL(triggered()), this, SLOT(exportRegina()) );
+    exportMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("Regina Data File (&Uncompressed)"));
+    act->setIcon(IconCache::icon(IconCache::regina));
+    act->setToolTip(tr("Export an uncompressed Regina data file"));
+    act->setWhatsThis(tr("Export all or part of this packet tree "
+        "to a separate Regina data file.  The separate data file will "
+        "be saved as uncompressed XML."));
+    connect(act, SIGNAL(triggered()), this, SLOT(exportReginaUncompressed()) );
+    exportMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("&SnapPea Triangulation"));
+    act->setIcon(ReginaSupport::regIcon("snappea"));
+    act->setToolTip(tr("Export a SnapPea triangulation"));
+    act->setWhatsThis(tr("Export a triangulation from this packet tree "
+        "to a separate SnapPea file."));
+    connect(act, SIGNAL(triggered()), this, SLOT(exportSnapPea()) );
+    exportMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("&C++ Source"));
+    act->setIcon(ReginaSupport::themeIcon("text-x-c++src"));
+    act->setToolTip(tr("Export a triangulation as C++ source"));
+    act->setWhatsThis(tr("Export a triangulation from this packet tree "
+        "to a C++ source file.<p>"
+        "The exported C++ code will reconstruct the original triangulation.  "
+        "See the users' handbook for further information on using Regina "
+        "in your own code."));
+    connect(act, SIGNAL(triggered()), this, SLOT(exportSource()) );
+    exportMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("CS&V Surface List"));
+    act->setIcon(ReginaSupport::regIcon("csvexport"));
+    act->setToolTip(tr("Export a normal surface list as a "
+        "text file with comma-separated values"));
+    act->setWhatsThis(tr("Export a normal surface list from this packet tree "
+        "to a CSV file (a text file with comma-separated values).  Files of "
+        "this type are suitable for importing into spreadsheets and "
+        "databases.<p>"
+        "Individual disc coordinates as well as various properties of the "
+        "normal surfaces (such as orientability and Euler characteristic) "
+        "will all be stored as separate fields in the CSV file."));
+    connect(act, SIGNAL(triggered()), this, SLOT(exportCSVSurfaceList()) );
+    exportMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("&PDF Document"));
+    act->setIcon(IconCache::icon(IconCache::packet_pdf));
+    act->setToolTip(tr("Export a PDF document"));
+    act->setWhatsThis(tr("Export a PDF packet from this packet tree "
+        "to a separate PDF document."));
+    connect(act, SIGNAL(triggered()), this, SLOT(exportPDF()) );
+    exportMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("P&ython Script"));
+    act->setIcon(IconCache::icon(IconCache::packet_script));
+    act->setToolTip(tr("Export a Python script"));
+    act->setWhatsThis(tr("Export a script packet from this packet tree "
+        "to a separate Python file."));
+    connect(act, SIGNAL(triggered()), this, SLOT(exportPython()) );
+    exportMenu->addAction(act);
+
+    fileMenu->addSeparator();
+
+    act = new QAction(this);
+    act->setText(tr("&Close"));
+    act->setIcon(ReginaSupport::themeIcon("window-close"));
+    act->setShortcuts(QKeySequence::Close);
+    act->setWhatsThis(tr("Close this topology data file."));
+    connect(act, SIGNAL(triggered()), this, SLOT(close()));
+    fileMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("&Quit"));
+    act->setIcon(ReginaSupport::themeIcon("application-exit"));
+    act->setShortcuts(QKeySequence::Quit);
+    act->setMenuRole(QAction::QuitRole);
+    act->setWhatsThis(tr("Close all files and quit Regina."));
+    connect(act, SIGNAL(triggered()), manager, SLOT(closeAllWindows()));
+    fileMenu->addAction(act);
+
+    // --- Edit actions ---
+
+    QMenu* editMenu = menuBar()->addMenu(tr("&Edit"));
+
     actCut = new QAction(ReginaSupport::themeIcon("edit-cut"),
         tr("Cu&t"), this);
     actCut->setWhatsThis(tr("Cut out the current selection and store it "
         "in the clipboard."));
     actCut->setShortcuts(QKeySequence::Cut);
     editMenu->addAction(actCut);
-    allActions.append(actCut);
 
     actCopy = new QAction(ReginaSupport::themeIcon("edit-copy"),
         tr("&Copy"), this);
     actCopy->setWhatsThis(tr("Copy the current selection to the clipboard."));
     actCopy->setShortcuts(QKeySequence::Copy);
     editMenu->addAction(actCopy);
-    allActions.append(actCopy);
 
     actPaste = new QAction(ReginaSupport::themeIcon("edit-paste"),
         tr("&Paste"), this);
     actPaste->setWhatsThis(tr("Paste the contents of the clipboard."));
     actPaste->setShortcuts(QKeySequence::Paste);
     editMenu->addAction(actPaste);
-    allActions.append(act);
   
-    parent->plugEditMenu(editMenu);
+    // --- Tree actions ---
 
-    parent->setActions(actSave, act, actCut, actCopy, actPaste);
-    
+    QMenu* treeMenu = menuBar()->addMenu(tr("&Packet Tree"));
 
     // New packets:
     QAction *actAngleStructure = new QAction(this);
@@ -107,7 +304,6 @@ void ReginaPart::setupActions() {
     connect(actAngleStructure, SIGNAL(triggered()), this, SLOT(newAngleStructures()) );
     treeGeneralEditActions.append(actAngleStructure);
     treeMenu->addAction(actAngleStructure);
-    allActions.append(actAngleStructure);
 
     QAction* actContainer = new QAction(this);
     actContainer->setText(tr("New &Container"));
@@ -120,7 +316,6 @@ void ReginaPart::setupActions() {
     connect(actContainer, SIGNAL(triggered()), this, SLOT(newContainer()) );
     treeGeneralEditActions.append(actContainer);
     treeMenu->addAction(actContainer);
-    allActions.append(actContainer);
 
     QAction* actFilter = new QAction(this);
     actFilter->setText(tr("New &Filter"));
@@ -133,7 +328,6 @@ void ReginaPart::setupActions() {
     connect(actFilter, SIGNAL(triggered()), this, SLOT(newFilter()) );
     treeGeneralEditActions.append(actFilter);
     treeMenu->addAction(actFilter);
-    allActions.append(actFilter);
 
     QAction* actSurfaces = new QAction(this);
     actSurfaces->setText(tr("New &Normal Surface List"));
@@ -145,7 +339,6 @@ void ReginaPart::setupActions() {
     connect(actSurfaces, SIGNAL(triggered()), this, SLOT(newNormalSurfaces()) );
     treeGeneralEditActions.append(actSurfaces);
     treeMenu->addAction(actSurfaces);
-    allActions.append(actSurfaces);
 
     QAction* actPDF = new QAction(this);
     actPDF->setText(tr("New &PDF Document"));
@@ -157,7 +350,6 @@ void ReginaPart::setupActions() {
     connect(actPDF, SIGNAL(triggered()), this, SLOT(newPDF()) );
     treeGeneralEditActions.append(actPDF);
     treeMenu->addAction(actPDF);
-    allActions.append(actPDF);
 
     QAction* actScript = new QAction(this);
     actScript->setText(tr("New &Script"));
@@ -169,7 +361,6 @@ void ReginaPart::setupActions() {
     connect(actScript, SIGNAL(triggered()), this, SLOT(newScript()) );
     treeGeneralEditActions.append(actScript);
     treeMenu->addAction(actScript);
-    allActions.append(actScript);
 
     QAction* actText = new QAction(this);
     actText->setText(tr("New Te&xt"));
@@ -181,7 +372,6 @@ void ReginaPart::setupActions() {
     connect(actText, SIGNAL(triggered()), this, SLOT(newText()) );
     treeGeneralEditActions.append(actText);
     treeMenu->addAction(actText);
-    allActions.append(actText);
 
     QAction* actTriangulation = new QAction(this);
     actTriangulation->setText(tr("New &Triangulation"));
@@ -192,7 +382,6 @@ void ReginaPart::setupActions() {
     connect(actTriangulation, SIGNAL(triggered()), this, SLOT(newTriangulation()) );
     treeGeneralEditActions.append(actTriangulation);
     treeMenu->addAction(actTriangulation);
-    allActions.append(actTriangulation);
 
     treeMenu->addSeparator();
 
@@ -205,7 +394,6 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(newCensus()) );
     treeGeneralEditActions.append(act);
     treeMenu->addAction(act);
-    allActions.append(act);
 
     treeMenu->addSeparator();
 
@@ -220,7 +408,6 @@ void ReginaPart::setupActions() {
     connect(actView, SIGNAL(triggered()), this, SLOT(packetView()) );
     treePacketViewActions.append(actView);
     treeMenu->addAction(actView);
-    allActions.append(actView);
 
     QAction* actRename = new QAction(this);
     actRename->setText(tr("&Rename"));
@@ -232,7 +419,6 @@ void ReginaPart::setupActions() {
     connect(actRename, SIGNAL(triggered()), this, SLOT(packetRename()) );
     treePacketEditActions.append(actRename);
     treeMenu->addAction(actRename);
-    allActions.append(actRename);
 
     QAction *actDelete = new QAction(this);
     actDelete->setText(tr("&Delete"));
@@ -244,9 +430,8 @@ void ReginaPart::setupActions() {
     connect(actDelete, SIGNAL(triggered()), this, SLOT(packetDelete()) );
     treePacketEditActions.append(actDelete);
     treeMenu->addAction(actDelete);
-    allActions.append(actDelete);
 
-    treeNavMenu = treeMenu->addMenu(tr("&Move"));
+    QMenu* treeNavMenu = treeMenu->addMenu(tr("&Move"));
 
     // Tree reorganisation:
     act = new QAction(this);
@@ -262,7 +447,6 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(moveShallow()) );
     treePacketEditActions.append(act);
     treeNavMenu->addAction(act);
-    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&Lower Level"));
@@ -276,7 +460,6 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(moveDeep()) );
     treePacketEditActions.append(act);
     treeNavMenu->addAction(act);
-    allActions.append(act);
     
     treeNavMenu->addSeparator();
 
@@ -291,7 +474,6 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(moveUp()) );
     treePacketEditActions.append(act);
     treeNavMenu->addAction(act);
-    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("Jump U&p"));
@@ -304,7 +486,6 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(movePageUp()) );
     treePacketEditActions.append(act);
     treeNavMenu->addAction(act);
-    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&Top"));
@@ -318,7 +499,6 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(moveTop()) );
     treePacketEditActions.append(act);
     treeNavMenu->addAction(act);
-    allActions.append(act);
     
     treeNavMenu->addSeparator();
 
@@ -333,7 +513,6 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(moveDown()) );
     treePacketEditActions.append(act);
     treeNavMenu->addAction(act);
-    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("Jump Do&wn"));
@@ -346,7 +525,6 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(movePageDown()) );
     treePacketEditActions.append(act);
     treeNavMenu->addAction(act);
-    allActions.append(act);
 
     act = new QAction(this);
     act->setText(tr("&Bottom"));
@@ -360,7 +538,6 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(moveBottom()) );
     treePacketEditActions.append(act);
     treeNavMenu->addAction(act);
-    allActions.append(act);
     
     treeMenu->addSeparator();
 
@@ -375,7 +552,6 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(clonePacket()) );
     treePacketEditActions.append(act);
     treeMenu->addAction(act);
-    allActions.append(act);
 
 
     act = new QAction(this);
@@ -387,7 +563,6 @@ void ReginaPart::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(cloneSubtree()) );
     treePacketEditActions.append(act);
     treeMenu->addAction(act);
-    allActions.append(act);
 
     treeMenu->addSeparator();
 
@@ -406,186 +581,122 @@ void ReginaPart::setupActions() {
     connect(actRefresh, SIGNAL(triggered()), this, SLOT(subtreeRefresh()) );
     treePacketViewActions.append(actRefresh);
     treeMenu->addAction(actRefresh);
-    allActions.append(actRefresh);
     
-    // Imports and exports:
-    act = new QAction(this);
-    act->setText(tr("&Regina Data File"));
-    act->setIcon(IconCache::icon(IconCache::regina));
-    act->setToolTip(tr("Import a Regina data file"));
-    act->setWhatsThis(tr("Import an external Regina data file.  The "
-        "imported packet tree will be grafted into this packet tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importRegina()) );
-    treeGeneralEditActions.append(act);
-    importMenu->addAction(act);
-    allActions.append(act);
+    // --- Tools actions ---
+
+    toolMenu = menuBar()->addMenu(tr("&Tools"));
+
+    QAction* actPython = new QAction(this);
+    actPython->setText(tr("&Python Console"));
+    actPython->setIcon(ReginaSupport::regIcon("python_console"));
+    actPython->setShortcut(tr("Alt+y"));
+    actPython->setWhatsThis(tr("Open a new Python console.  You can "
+        "use a Python console to interact directly with Regina's "
+        "mathematical engine."));
+    connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
+    toolMenu->addAction(actPython);
+    
+    
+    // --- Settings actions ---
+
+    QMenu *settingsMenu =  menuBar()->addMenu(tr("&Settings"));
 
     act = new QAction(this);
-    act->setText(tr("&SnapPea Triangulation"));
-    act->setIcon(ReginaSupport::regIcon("snappea"));
-    act->setToolTip(tr("Import a SnapPea triangulation"));
-    act->setWhatsThis(tr("Import an external SnapPea file as a new "
-        "triangulation in this packet tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importSnapPea()) );
-    treeGeneralEditActions.append(act);
-    importMenu->addAction(act);
-    allActions.append(act);
+    act->setText(tr("&Configure Regina"));
+    act->setIcon(ReginaSupport::themeIcon("configure"));
+    act->setShortcuts(QKeySequence::Preferences);
+    act->setMenuRole(QAction::PreferencesRole);
+    act->setWhatsThis(tr("Configure Regina.  Here you can set "
+        "your own preferences for how Regina behaves."));
+    connect(act, SIGNAL(triggered()), this, SLOT(optionsPreferences()));
+    settingsMenu->addAction(act);
 
-    act= new QAction(this);
-    act->setText(tr("&Orb / Casson Triangulation"));
-    act->setIcon(ReginaSupport::regIcon("orb"));
-    act->setToolTip(tr("Import an Orb / Casson triangulation"));
-    act->setWhatsThis(tr("Import an external Orb / Casson file as a new "
-        "triangulation in this packet tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importOrb()) );
-    treeGeneralEditActions.append(act);
-    importMenu->addAction(act);
-    allActions.append(act);
+
+    // --- Help actions ---
+
+    QMenu *helpMenu =  menuBar()->addMenu(tr("&Help"));
 
     act = new QAction(this);
-    act->setText(tr("&Isomorphism Signature List"));
-    act->setIcon(ReginaSupport::themeIcon("document-sign"));
-    act->setToolTip(tr("Import an isomorphism signature list "
-        "for 3-manifold triangulations"));
-    act->setWhatsThis(tr("Import an external text file containing "
-        "isomorphism signatures for 3-manifold triangulations.  "
-        "For each isomorphism signature, "
-        "a new 3-manifold triangulation will be created in this packet tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importIsoSig3()) );
-    treeGeneralEditActions.append(act);
-    importMenu->addAction(act);
-    allActions.append(act);
+    act->setText(tr("&About Regina"));
+    act->setIcon(ReginaSupport::themeIcon("help-about"));
+    act->setMenuRole(QAction::AboutRole);
+    act->setWhatsThis(tr("Display information about Regina, such as "
+        "the authors, license and website."));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpAboutApp()));
+    helpMenu->addAction(act);
+
 
     act = new QAction(this);
-    act->setText(tr("&Dehydrated Triangulation List"));
-    act->setIcon(ReginaSupport::regIcon("dehydrated"));
-    act->setToolTip(tr("Import a dehydrated triangulation list"));
-    act->setWhatsThis(tr("Import an external text file containing "
-        "dehydrated triangulation strings.  For each dehydration string, "
-        "a new triangulation will be created in this packet tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importDehydration()) );
-    treeGeneralEditActions.append(act);
-    importMenu->addAction(act);
-    allActions.append(act);
+    act->setText(tr("Regina &Handbook"));
+    act->setIcon(ReginaSupport::themeIcon("help-contents"));
+    act->setShortcuts(QKeySequence::HelpContents);
+    act->setWhatsThis(tr("Open the Regina handbook.  "
+        "This is the main users' guide for how to use Regina."));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpHandbook()));
+    helpMenu->addAction(act);
 
     act = new QAction(this);
-    act->setText(tr("&PDF Document"));
-    act->setIcon(IconCache::icon(IconCache::packet_pdf));
-    act->setToolTip(tr("Import a PDF document"));
-    act->setWhatsThis(tr("Import an external PDF document as a new PDF "
-        "packet in this tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importPDF()) );
-    treeGeneralEditActions.append(act);
-    importMenu->addAction(act);
-    allActions.append(act);
+    act->setText(tr("What's &This?"));
+    act->setIcon(ReginaSupport::themeIcon("help-hint"));
+    act->setShortcuts(QKeySequence::WhatsThis);
+    connect(act, SIGNAL(triggered()), this, SLOT(helpWhatsThis()));
+    helpMenu->addAction(act);
 
     act = new QAction(this);
-    act->setText(tr("P&ython Script"));
-    act->setIcon(IconCache::icon(IconCache::packet_script));
-    act->setToolTip(tr("Import a Python script"));
-    act->setWhatsThis(tr("Import an external Python file as a new script "
-        "packet in this tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importPython()) );
-    treeGeneralEditActions.append(act);
-    importMenu->addAction(act);
-    allActions.append(act);
+    act->setText(tr("&Python API Reference"));
+    act->setIcon(ReginaSupport::regIcon("python_console"));
+    act->setWhatsThis(tr("Open the detailed documentation for Regina's "
+        "mathematical engine.  This describes the classes, methods and "
+        "routines that Regina makes available to Python scripts.<p>"
+        "See the <i>Python Scripting</i> chapter of the user's handbook "
+        "for more information (the handbook is "
+        "accessed through <i>Regina Handbook</i> in the <i>Help</i> menu)."));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpPythonReference()));
+    helpMenu->addAction(act);
 
     act = new QAction(this);
-    act->setText(tr("&Regina Data File"));
-    act->setIcon(IconCache::icon(IconCache::regina));
-    act->setToolTip(tr("Export a compressed Regina data file"));
-    act->setWhatsThis(tr("Export all or part of this packet tree "
-        "to a separate Regina data file.  The separate data file will "
-        "be saved as compressed XML (the default format)."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportRegina()) );
-    exportMenu->addAction(act);
-    allActions.append(act);
+    act->setText(tr("&File Format Reference"));
+    act->setIcon(ReginaSupport::themeIcon("application-xml"));
+    act->setWhatsThis(tr("Open the file format reference manual.  "
+        "This give full details of the XML file format that Regina "
+        "uses to store its data files."));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpXMLRef()));
+    helpMenu->addAction(act);
 
+    // TODO: Tip of the day not implemented
+    //act = KStandardAction::tipOfDay(this, SLOT(helpTipOfDay()),
+    //    actionCollection());
+    //act->setWhatsThis(tr("View tips and hints on how to use Regina."));
+   
     act = new QAction(this);
-    act->setText(tr("Regina Data File (&Uncompressed)"));
-    act->setIcon(IconCache::icon(IconCache::regina));
-    act->setToolTip(tr("Export an uncompressed Regina data file"));
-    act->setWhatsThis(tr("Export all or part of this packet tree "
-        "to a separate Regina data file.  The separate data file will "
-        "be saved as uncompressed XML."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportReginaUncompressed()) );
-    exportMenu->addAction(act);
-    allActions.append(act);
+    act->setText(tr("Tr&oubleshooting"));
+    act->setIcon(ReginaSupport::themeIcon("dialog-warning"));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpTrouble()));
+    helpMenu->addAction(act);
 
-    act = new QAction(this);
-    act->setText(tr("&SnapPea Triangulation"));
-    act->setIcon(ReginaSupport::regIcon("snappea"));
-    act->setToolTip(tr("Export a SnapPea triangulation"));
-    act->setWhatsThis(tr("Export a triangulation from this packet tree "
-        "to a separate SnapPea file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportSnapPea()) );
-    exportMenu->addAction(act);
-    allActions.append(act);
 
-    act = new QAction(this);
-    act->setText(tr("&C++ Source"));
-    act->setIcon(ReginaSupport::themeIcon("text-x-c++src"));
-    act->setToolTip(tr("Export a triangulation as C++ source"));
-    act->setWhatsThis(tr("Export a triangulation from this packet tree "
-        "to a C++ source file.<p>"
-        "The exported C++ code will reconstruct the original triangulation.  "
-        "See the users' handbook for further information on using Regina "
-        "in your own code."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportSource()) );
-    exportMenu->addAction(act);
-    allActions.append(act);
+    // --- Toolbars ---
 
-    act = new QAction(this);
-    act->setText(tr("CS&V Surface List"));
-    act->setIcon(ReginaSupport::regIcon("csvexport"));
-    act->setToolTip(tr("Export a normal surface list as a "
-        "text file with comma-separated values"));
-    act->setWhatsThis(tr("Export a normal surface list from this packet tree "
-        "to a CSV file (a text file with comma-separated values).  Files of "
-        "this type are suitable for importing into spreadsheets and "
-        "databases.<p>"
-        "Individual disc coordinates as well as various properties of the "
-        "normal surfaces (such as orientability and Euler characteristic) "
-        "will all be stored as separate fields in the CSV file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportCSVSurfaceList()) );
-    exportMenu->addAction(act);
-    allActions.append(act);
+    QToolBar* toolBar = addToolBar(tr("Main"));
+    toolBar->addAction(actNew);
+    toolBar->addAction(actOpen);
+    toolBar->addAction(actSave);
+    toolBar->addSeparator();
+    toolBar->addAction(actPython);
+    toolBar->addSeparator();
+    toolBar->addAction(actView);
+    toolBar->addAction(actRefresh);
+    toolBar->addAction(actRename);
+    toolBar->addAction(actDelete);
 
-    act = new QAction(this);
-    act->setText(tr("&PDF Document"));
-    act->setIcon(IconCache::icon(IconCache::packet_pdf));
-    act->setToolTip(tr("Export a PDF document"));
-    act->setWhatsThis(tr("Export a PDF packet from this packet tree "
-        "to a separate PDF document."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportPDF()) );
-    exportMenu->addAction(act);
-    allActions.append(act);
-
-    act = new QAction(this);
-    act->setText(tr("P&ython Script"));
-    act->setIcon(IconCache::icon(IconCache::packet_script));
-    act->setToolTip(tr("Export a Python script"));
-    act->setWhatsThis(tr("Export a script packet from this packet tree "
-        "to a separate Python file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportPython()) );
-    exportMenu->addAction(act);
-    allActions.append(act);
-
-    parent->importsExports(importMenu, exportMenu);
-
-    QToolBar* packet = parent->createToolBar(tr("Packet Tree Toolbar"));
-    packet->addAction(actView);
-    packet->addAction(actRefresh);
-    packet->addAction(actRename);
-    packet->addAction(actDelete);
-    packet->addSeparator();
-    packet->addAction(actContainer);
-    packet->addAction(actTriangulation);
-    packet->addAction(actSurfaces);
-    packet->addAction(actAngleStructure);
-    packet->addAction(actFilter);
-    packet->addAction(actText);
-    packet->addAction(actScript);
-    packet->addAction(actPDF);
+    toolBar = addToolBar(tr("New Packets"));
+    toolBar->addAction(actContainer);
+    toolBar->addAction(actTriangulation);
+    toolBar->addAction(actSurfaces);
+    toolBar->addAction(actAngleStructure);
+    toolBar->addAction(actFilter);
+    toolBar->addAction(actText);
+    toolBar->addAction(actScript);
+    toolBar->addAction(actPDF);
 }
 

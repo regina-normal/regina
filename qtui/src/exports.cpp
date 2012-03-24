@@ -30,7 +30,6 @@
 
 #include "packettreeview.h"
 #include "reginamain.h"
-#include "reginapart.h"
 #include "foreign/csvsurfacehandler.h"
 #include "foreign/exportdialog.h"
 #include "foreign/pdfhandler.h"
@@ -43,55 +42,52 @@
 #include <QFileDialog>
 #include <QTextCodec>
 
-void ReginaPart::exportCSVSurfaceList() {
+void ReginaMain::exportCSVSurfaceList() {
     exportFile(CSVSurfaceHandler::instance, tr(FILTER_CSV),
         tr("Export CSV Surface List"));
 }
 
-void ReginaPart::exportPDF() {
+void ReginaMain::exportPDF() {
     exportFile(PDFHandler::instance, tr(FILTER_PDF),
         tr("Export PDF Document"));
 }
 
-void ReginaPart::exportPython() {
+void ReginaMain::exportPython() {
     exportFile(PythonHandler::instance, tr(FILTER_PYTHON_SCRIPTS),
         tr("Export Python Script"));
 }
 
-void ReginaPart::exportRegina() {
+void ReginaMain::exportRegina() {
     exportFile(ReginaHandler(true), tr(FILTER_REGINA),
         tr("Export Regina Data File"));
 }
 
-void ReginaPart::exportReginaUncompressed() {
+void ReginaMain::exportReginaUncompressed() {
     exportFile(ReginaHandler(false), tr(FILTER_REGINA),
         tr("Export Regina Data File"));
 }
 
-void ReginaPart::exportSnapPea() {
+void ReginaMain::exportSnapPea() {
     exportFile(SnapPeaHandler::instance, tr(FILTER_SNAPPEA),
         tr("Export SnapPea Triangulation"));
 }
 
-void ReginaPart::exportSource() {
+void ReginaMain::exportSource() {
     exportFile(SourceHandler::instance, tr(FILTER_CPP_SOURCE),
         tr("Export C++ Source"));
 }
 
-void ReginaPart::exportFile(const PacketExporter& exporter,
+void ReginaMain::exportFile(const PacketExporter& exporter,
         const QString& fileFilter, const QString& dialogTitle) {
-    // Pass parent, not widget(), to QFileDialog::getSaveFileName.
-    // For some reason, on MacOS the file dialog disappears immediately
-    // if widget() is used [20 Feb 2012].
-    ExportDialog dlg(widget(), packetTree, treeView->selectedPacket(),
+    ExportDialog dlg(this, packetTree, treeView->selectedPacket(),
         exporter.canExport(), exporter.useExportEncoding(), dialogTitle);
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
         regina::NPacket* data = dlg.selectedPacket();
         if (data) {
-            QString file = QFileDialog::getSaveFileName(parent,
+            QString file = QFileDialog::getSaveFileName(this,
                 dialogTitle, QString(), fileFilter);
             if (! file.isEmpty())
-                exporter.exportData(data, file, widget());
+                exporter.exportData(data, file, this);
         }
     }
 }

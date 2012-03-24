@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
     if (args.size() > 1) {
         for (int i = 1; i < args.size(); i++) {
             // Assume that arguments are all local filenames.
-            window->openUrl(QUrl::fromLocalFile(args.at(i)));
+            window->fileOpenUrl(QUrl::fromLocalFile(args.at(i)));
         }
     }
 

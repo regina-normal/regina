@@ -68,8 +68,7 @@ class PacketManager {
          * editing the given packet.
          *
          * The interface will be created in read-write or read-only mode
-         * according to the read-write status of the enclosing KPart as
-         * well as the return value of NPacket::isPacketEditable().
+         * as appropriate.
          *
          * Note that the interface may be required to change its
          * read-only or read-write status throughout its lifetime.

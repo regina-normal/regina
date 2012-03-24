@@ -52,7 +52,7 @@ void ReginaManager::aboutToClose(ReginaMain *child) {
 bool ReginaManager::event(QEvent* event) {
     switch (event->type()) {
         case QEvent::FileOpen:
-            children.front()->openUrl(
+            children.front()->fileOpenUrl(
                 static_cast<QFileOpenEvent*>(event)->url());
             return true;
         default:

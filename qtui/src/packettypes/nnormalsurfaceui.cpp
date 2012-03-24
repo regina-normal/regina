@@ -36,7 +36,7 @@
 #include "nsurfacecoordinateui.h"
 #include "nsurfacematchingui.h"
 #include "nsurfacesummaryui.h"
-#include "../reginapart.h"
+#include "reginamain.h"
 
 #include <QLabel>
 #include <QWhatsThis>
@@ -47,8 +47,6 @@ using regina::NNormalSurface;
 NNormalSurfaceUI::NNormalSurfaceUI(regina::NNormalSurfaceList* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane) {
-    ReginaPart* part = newEnclosingPane->getPart();
-
     NSurfaceHeaderUI* header = new NSurfaceHeaderUI(packet, this);
     addHeader(header);
 

@@ -31,8 +31,8 @@
 
 // UI includes:
 #include "ntrisurfaces.h"
-#include "../patiencedialog.h"
-#include "../reginapart.h"
+#include "patiencedialog.h"
+#include "reginamain.h"
 #include "reginasupport.h"
 
 #include <QLabel>

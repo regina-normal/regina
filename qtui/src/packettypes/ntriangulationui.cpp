@@ -37,8 +37,8 @@
 #include "ntriskeleton.h"
 #include "ntrisnappea.h"
 #include "ntrisurfaces.h"
-#include "../packeteditiface.h"
-#include "../reginapart.h"
+#include "packeteditiface.h"
+#include "reginamain.h"
 
 #include <QLabel>
 #include <QToolBar>
@@ -50,8 +50,6 @@ using regina::NTriangulation;
 NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane) {
-    ReginaPart* part = newEnclosingPane->getPart();
-
     NTriHeaderUI* header = new NTriHeaderUI(packet, this);
     gluings = new NTriGluingsUI(packet, this, newEnclosingPane->isReadWrite());
     skeleton = new NTriSkeletonUI(packet, this);

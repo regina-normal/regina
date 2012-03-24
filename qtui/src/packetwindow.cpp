@@ -29,10 +29,11 @@
 // UI includes:
 #include "packetui.h"
 #include "packetwindow.h"
-#include "reginapart.h"
+#include "reginamain.h"
 
 #include <QCloseEvent>
 #include <QLinkedList>
+#include <QMenuBar>
 
 PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
         QMainWindow(parent, 

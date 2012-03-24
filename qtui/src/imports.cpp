@@ -29,7 +29,7 @@
 #include "packet/npacket.h"
 
 #include "packettreeview.h"
-#include "reginapart.h"
+#include "reginamain.h"
 #include "foreign/dehydrationhandler.h"
 #include "foreign/importdialog.h"
 #include "foreign/isosighandler.h"
@@ -42,52 +42,52 @@
 
 #include <QFileDialog>
 
-void ReginaPart::importDehydration() {
+void ReginaMain::importDehydration() {
     importFile(DehydrationHandler::instance, 0, tr(FILTER_ALL),
         tr("Import Dehydrated Triangulation List"));
 }
 
-void ReginaPart::importIsoSig3() {
+void ReginaMain::importIsoSig3() {
     importFile(IsoSigHandler::instance3, 0, tr(FILTER_ALL),
         tr("Import Isomorphism Signature List"));
 }
 
-void ReginaPart::importPDF() {
+void ReginaMain::importPDF() {
     importFile(PDFHandler::instance, 0, tr(FILTER_PDF),
         tr("Import PDF Document"));
 }
 
-void ReginaPart::importPython() {
+void ReginaMain::importPython() {
     importFile(PythonHandler::instance, 0, tr(FILTER_PYTHON_SCRIPTS),
         tr("Import Python Script"));
 }
 
-void ReginaPart::importRegina() {
+void ReginaMain::importRegina() {
     importFile(ReginaHandler(), 0, tr(FILTER_REGINA),
         tr("Import Regina Data File"));
 }
 
-void ReginaPart::importSnapPea() {
+void ReginaMain::importSnapPea() {
     importFile(SnapPeaHandler::instance, 0, tr(FILTER_SNAPPEA),
         tr("Import SnapPea Triangulation"));
 }
 
-void ReginaPart::importOrb() {
+void ReginaMain::importOrb() {
     importFile(OrbHandler::instance, 0, tr(FILTER_ORB),
         tr("Import Orb or Casson Triangulation"));
 }
 
-void ReginaPart::importFile(const PacketImporter& importer,
+void ReginaMain::importFile(const PacketImporter& importer,
         PacketFilter* parentFilter, const QString& fileFilter,
         const QString& dialogTitle) {
-    QString file = QFileDialog::getOpenFileName(widget(),
+    QString file = QFileDialog::getOpenFileName(this,
         dialogTitle, QString(), fileFilter);
     if (file.isEmpty())
         return;
-    regina::NPacket* newTree = importer.importData(file, widget());
+    regina::NPacket* newTree = importer.importData(file, this);
 
     if (newTree) {
-        ImportDialog dlg(widget(), newTree, packetTree,
+        ImportDialog dlg(this, newTree, packetTree,
             treeView->selectedPacket(), parentFilter,
             importer.useImportEncoding(), dialogTitle);
         if (dlg.validate() && dlg.exec() == QDialog::Accepted)

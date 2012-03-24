@@ -33,8 +33,7 @@
 #ifndef __NTRISKELETON_H
 #define __NTRISKELETON_H
 
-#include "../packettabui.h"
-#include "../reginapart.h"
+#include "packettabui.h"
 #include "skeletonwindow.h"
 
 

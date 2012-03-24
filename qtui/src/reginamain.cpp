@@ -28,9 +28,13 @@
 
 #include "regina-config.h"
 #include "file/nxmlfile.h"
+#include "packet/ncontainer.h"
 #include "surfaces/nnormalsurfacelist.h"
 
 #include "examplesaction.h"
+#include "messagelayer.h"
+#include "packettreeview.h"
+#include "packetui.h"
 #include "recentfilesaction.h"
 #include "reginaabout.h"
 #include "reginafilter.h"
@@ -38,24 +42,38 @@
 #include "reginamanager.h"
 #include "reginapref.h"
 #include "reginasupport.h"
-#include "reginapart.h"
 
+#include <QBoxLayout>
+#include <QColor>
 #include <QDrag>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QFileDialog>
+#include <QFileInfo>
+#include <QInputDialog>
 #include <QLabel>
 #include <QMenuBar>
+#include <QMessageBox>
+#include <QPushButton>
 #include <QSize>
+#include <QSplitter>
 #include <QTextDocument>
-#include <QToolBar>
+#include <QTreeView>
+#include <QTreeWidget>
+#include <QUrl>
 #include <QVBoxLayout>
 #include <QWhatsThis>
 
-ReginaMain::ReginaMain(ReginaManager* parent, bool starterWindow) {
-    // Track the parent manager.
-    manager = parent;
-
+ReginaMain::ReginaMain(ReginaManager* useManager, bool starterWindow) :
+        QMainWindow(),
+        manager(useManager),
+        packetTree(0),
+        starterWindow_(starterWindow),
+        packetMenu(0),
+        aboutApp(0),
+        dockedPane(0),
+        dirty(false),
+        supportingDock(ReginaPrefSet::global().useDock) {
     setAttribute(Qt::WA_DeleteOnClose);
 
     if (ReginaPrefSet::global().windowMainSize.isValid())
@@ -64,36 +82,125 @@ ReginaMain::ReginaMain(ReginaManager* parent, bool starterWindow) {
     // Accept drag and drop.
     setAcceptDrops(true);
 
-    // Set up our actions.
+    // Set up our widgets and actions.
+    setupWidgets();
     setupActions();
 
-    aboutApp = 0;
+    // Initialise the packet tree.
+    initPacketTree();
 
-    // Mark actions as missing for now.
-    editAct = 0;
-    saveAct = 0;
-    saveAsAct = 0;
-    treeMenu = 0;
-    packetMenu = 0;
-    packetTreeToolBar = 0;
+    // Other tidying up.
+    setModified(false);
+    updateTreeActions();
 
-    currentPart = 0;
-
-    setWindowTitle(tr("Regina"));
-
-    if (starterWindow)
-        newTopologyPart(true);
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 ReginaMain::~ReginaMain() {
     if (aboutApp)
-      delete aboutApp;
+        delete aboutApp;
+
+    // Make an emergency closure of any remaining packet panes.
+    QLinkedList<PacketPane*> panes = allPanes;
+    QLinkedList<PacketPane*>::iterator i;
+    for (i=panes.begin() ; i!=panes.end(); i++)
+        delete *i;
+
+    // Delete the visual tree before the underlying packets so that
+    // we don't get a flood of change events.
+    delete treeView;
+
+    // Finish cleaning up.
+    delete packetTree;
+}
+
+void ReginaMain::plugPacketMenu(QMenu *menu) {
+    delete packetMenu;
+    packetMenu = menuBar()->insertMenu(toolMenu->menuAction(), menu);
+}
+
+void ReginaMain::unplugPacketMenu() {
+    if (packetMenu) {
+        delete packetMenu;
+        packetMenu = 0;
+    }
+}
+
+void ReginaMain::setModified(bool modified) {
+    dirty = modified;
+    actSave->setEnabled(modified);
+
+    if (starterWindow_ && modified) {
+        starterWindow_ = false;
+        delete advice;
+    }
+}
+
+void ReginaMain::packetView(regina::NPacket* packet, bool makeVisibleInTree,
+        bool selectInTree) {
+    view(new PacketPane(this, packet));
+
+    if (makeVisibleInTree || selectInTree) {
+        PacketTreeItem* item = treeView->find(packet);
+        if (! item) {
+            // We cannot find the item in the tree.
+            // Perhaps this is because the packet was just created and
+            // the tree has not been refreshed yet?
+            // Force a refresh now and try again.
+            if (packet->getTreeParent()) {
+                PacketTreeItem* parent =
+                    treeView->find(packet->getTreeParent());
+                if (parent) {
+                    parent->refreshSubtree();
+                    item = treeView->find(packet);
+                }
+            }
+        }
+        if (item) {
+            if (makeVisibleInTree)
+                treeView->scrollToItem(item);
+            if (selectInTree)
+                treeView->setCurrentItem(item);
+        }
+    }
+}
+
+void ReginaMain::ensureVisibleInTree(regina::NPacket* packet) {
+    PacketTreeItem* item = treeView->find(packet);
+    if (item)
+        treeView->scrollToItem(item);
+}
+
+void ReginaMain::dock(PacketPane* newPane) {
+    // Get rid of the currently docked pane by whatever means necessary.
+    if (! closeDockedPane())
+        dockedPane->floatPane();
+
+    newPane->setParent(dockArea);
+    static_cast<QBoxLayout*>(dockArea->layout())->addWidget(newPane, 1);
+    dockedPane = newPane;
+    
+    plugPacketMenu(newPane->createPacketTypeMenu(true));
+    newPane->registerEditOperations(actCut, actCopy, actPaste);
+}
+
+void ReginaMain::aboutToUndock(PacketPane* undockedPane) {
+    unplugPacketMenu();
+    undockedPane->deregisterEditOperations();
+
+    if (dockedPane == undockedPane) {
+        dockedPane = 0;
+    }
+}
+
+void ReginaMain::isClosing(PacketPane* closingPane) {
+    allPanes.removeAll(closingPane);
 }
 
 void ReginaMain::dragEnterEvent(QDragEnterEvent *event) {
     if( event->mimeData()->hasUrls() )
       event->acceptProposedAction();
-    
 }
 
 void ReginaMain::dropEvent(QDropEvent *event) {
@@ -106,31 +213,61 @@ void ReginaMain::dropEvent(QDropEvent *event) {
         const QList<QUrl>& urls(event->mimeData()->urls());
         for (QList<QUrl>::const_iterator it = urls.begin();
                 it != urls.end(); ++it)
-            openUrl(*it);
+            fileOpenUrl(*it);
     }
 }
 
 void ReginaMain::closeEvent(QCloseEvent *event) {
-    consoles.closeAllConsoles();
+    if (! closeAllPanes()) {
+        event->ignore();
+        return;
+    }
 
     // Do we really want to close?
-    if (currentPart && ! currentPart->closeUrl())
-        event->ignore();
-    else {
-        ReginaPrefSet::global().windowMainSize = size();
-        ReginaPrefSet::save();
-        manager->aboutToClose(this);
-        event->accept();
+    while (dirty) {
+        QMessageBox msgBox(QMessageBox::Information, tr("Information"),
+            tr("The data file has been modified."),
+            QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
+            this);
+        msgBox.setInformativeText(tr("Do you want to save your changes?"));
+        msgBox.setDefaultButton(QMessageBox::Save);
+        int ret = msgBox.exec();
+
+        if (ret == QMessageBox::Cancel) {
+            event->ignore();
+            return;
+        }
+        if (ret == QMessageBox::Discard)
+            break;
+
+        fileSave();
     }
+
+    consoles.closeAllConsoles();
+
+    ReginaPrefSet::global().windowMainSize = size();
+    ReginaPrefSet::save();
+
+    manager->aboutToClose(this);
+    event->accept();
 }
 
-void ReginaMain::newTopology() {
-    // If we already have a document open, make a new window.
-    ReginaMain* useWindow = (currentPart ? manager->newWindow(false) : this);
-    useWindow->newTopologyPart(false);
+QSize ReginaMain::sizeHint() const {
+    return ReginaPrefSet::defaultMainSize();
 }
 
-bool ReginaMain::openUrl(const QUrl& url) {
+void ReginaMain::fileNew() {
+    manager->newWindow(false);
+}
+
+void ReginaMain::fileOpen() {
+    QString file = QFileDialog::getOpenFileName(this, tr("Open Data File"),
+        QString(), tr(FILTER_SUPPORTED));
+    if (! file.isNull())
+        fileOpenUrl(QUrl::fromLocalFile(file));
+}
+
+void ReginaMain::fileOpenUrl(const QUrl& url) {
     // Can we read data from the file?
     QString localFile = url.toLocalFile();
     if (localFile.isEmpty()) {
@@ -140,7 +277,7 @@ bool ReginaMain::openUrl(const QUrl& url) {
             "your operating system.  "
             "Please report this to the developers at <i>%1</i>.</qt>").
             arg(PACKAGE_BUGREPORT));
-        return false;
+        return;
     }
 
     regina::NPacket* packetTree = regina::readFileMagic(
@@ -152,18 +289,17 @@ bool ReginaMain::openUrl(const QUrl& url) {
             tr("<qt>Please check that the file <tt>%1</tt> "
             "is readable and in Regina format.</qt>").
             arg(Qt::escape(localFile)));
-        return false;
+        return;
     }
 
     // All good, we have some real data.  Let's go.
     // If we already have a document open, make a new window.
-    ReginaMain* useWindow = (currentPart ? manager->newWindow(false) : this);
-    useWindow->newTopologyPart(false);
-    return useWindow->currentPart->initData(packetTree, localFile, QString());
+    ReginaMain* useWindow = (starterWindow_ ? this : manager->newWindow(false));
+    useWindow->initData(packetTree, localFile, QString());
 }
 
-bool ReginaMain::openExample(const QUrl& url, const QString& description) {
-    // Same as openUrl(), but give a pleasant message if the file
+void ReginaMain::fileOpenExample(const QUrl& url, const QString& description) {
+    // Same as fileOpenUrl(), but give a pleasant message if the file
     // doesn't seem to exist.
     QString localFile = url.toLocalFile();
     if (! QFile(localFile).exists()) {
@@ -172,7 +308,7 @@ bool ReginaMain::openExample(const QUrl& url, const QString& description) {
             tr("<qt>The example \"%1\" may not have been installed properly.  "
             "Please contact <i>%2</i> for assistance.").
             arg(Qt::escape(description)).arg(PACKAGE_BUGREPORT));
-        return false;
+        return;
     }
 
     regina::NPacket* packetTree = regina::readXMLFile(
@@ -184,30 +320,195 @@ bool ReginaMain::openExample(const QUrl& url, const QString& description) {
             tr("<qt>The example \"%1\" may not have been installed properly.  "
             "Please contact <i>%2</i> for assistance.").
             arg(Qt::escape(description)).arg(PACKAGE_BUGREPORT));
-        return false;
+        return;
     }
 
     // All good, we have some real data.  Let's go.
     // If we already have a document open, make a new window.
-    ReginaMain* useWindow = (currentPart ? manager->newWindow(false) : this);
-    useWindow->newTopologyPart(false);
-    return useWindow->currentPart->initData(packetTree,
-        QString(), description);
+    ReginaMain* useWindow = (starterWindow_ ? this : manager->newWindow(false));
+    useWindow->initData(packetTree, QString(), description);
+}
+
+void ReginaMain::fileSave() {
+    if (localFile.isEmpty())
+        fileSaveAs();
+    else
+        saveFile();
+}
+
+void ReginaMain::fileSaveAs() {
+    QString file = QFileDialog::getSaveFileName(this,
+        tr("Save Data File"), QString(), tr(FILTER_REGINA));
+
+    if (file.isEmpty())
+        return;
+
+    // Do we need to add an extension?
+    // Qt seems to handle this for us automatically.
+    /*
+    if (QFileInfo(file).suffix().isEmpty())
+        file += ReginaAbout::regDataExt;
+    */
+
+    // Does this file already exist?
+    // Don't warn the user; Qt seems to do this for us.
+    /*
+    if (QFileInfo(file).exists()) {
+        QMessageBox msgBox(QMessageBox::Information,
+            tr("Information"),
+            tr("A file with this name already exists."),
+            QMessageBox::Save | QMessageBox::Cancel,
+            this);
+        msgBox.setInformativeText(tr("Are you sure you wish to "
+            "overwrite it?"));
+        msgBox.setDefaultButton(QMessageBox::Cancel);
+        if (msgBox.exec() != QMessageBox::Save)
+            return;
+    }
+    */
+
+    // Go ahead and save it.
+    if (localFile != file) {
+        localFile = file;
+        setWindowTitle(localFile);
+    }
+
+    saveFile();
+    ReginaPrefSet::addRecentFile(QUrl::fromLocalFile(localFile));
+}
+
+void ReginaMain::packetView() {
+    regina::NPacket* packet = checkPacketSelected();
+    if (packet)
+        packetView(packet, false);
+}
+
+void ReginaMain::packetRename() {
+    regina::NPacket* packet = checkPacketSelected();
+    if (! packet)
+        return;
+
+    bool ok;
+    QString suggest = packet->getPacketLabel().c_str();
+    while (true) {
+        QString newLabel = QInputDialog::getText(this,
+            tr("Rename Packet"), tr("New label:"), QLineEdit::Normal,
+                suggest, &ok).trimmed();
+        if ((! ok) || (newLabel == packet->getPacketLabel().c_str()))
+            return;
+
+        // Has this label already been used?
+        if (packetTree->findPacketLabel(newLabel.toAscii().constData())) {
+            ReginaSupport::info(this,
+                tr("Another packet is already using this label."),
+                tr("Each packet in your data file must have its own "
+                    "unique label.  I will suggest a different label "
+                    "that is not in use."));
+            suggest = packetTree->makeUniqueLabel(
+                newLabel.toAscii().constData()).c_str();
+        } else {
+            // It's a unique label; we can rename it!
+            packet->setPacketLabel(newLabel.toAscii().constData());
+            return;
+        }
+    }
+}
+
+void ReginaMain::packetDelete() {
+    regina::NPacket* packet = checkPacketSelected();
+    if (! packet)
+        return;
+    if (! packet->getTreeParent()) {
+        ReginaSupport::info(this,
+            tr("You cannot delete the root of the packet tree."),
+            tr("You may delete any other packet except for this one."));
+        return;
+    }
+
+    QMessageBox msgBox(this);
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.setWindowTitle(tr("Warning"));
+    QPushButton* delBtn;
+    if (packet->getFirstTreeChild()) {
+        msgBox.setText(tr("<qt>You are about to delete the packet <i>%1</i> "
+            "and all of its children.</qt>").
+            arg(Qt::escape(packet->getPacketLabel().c_str())));
+        delBtn = msgBox.addButton(tr("Delete All"),
+            QMessageBox::AcceptRole);
+    } else {
+        msgBox.setText(tr("<qt>You are about to delete the packet "
+            "<i>%1</i>.</qt>").
+            arg(Qt::escape(packet->getPacketLabel().c_str())));
+        delBtn = msgBox.addButton(tr("Delete"),
+            QMessageBox::AcceptRole);
+    }
+    msgBox.addButton(tr("Cancel"), QMessageBox::RejectRole);
+    msgBox.setDefaultButton(delBtn);
+    msgBox.setInformativeText("Are you sure?");
+    msgBox.exec();
+    if (msgBox.clickedButton() != delBtn)
+        return;
+
+    delete packet;
+}
+
+void ReginaMain::subtreeRefresh() {
+    if (! checkSubtreeSelected())
+        return;
+
+    // Refresh the tree itself.
+    PacketTreeItem* item = dynamic_cast<PacketTreeItem*>(
+        treeView->selectedItems().first());
+    item->refreshSubtree();
+
+    // Refresh any relevant packet panes.
+    regina::NPacket* subtree = item->getPacket();
+    for (QLinkedList<PacketPane *>::iterator it = allPanes.begin();
+            it != allPanes.end(); it++) {
+        PacketPane * pane = (*it);
+        if (subtree->isGrandparentOf(pane->getPacket()))
+            pane->refresh();
+    }
+}
+
+void ReginaMain::clonePacket() {
+    regina::NPacket* packet = checkPacketSelected();
+    if (! packet)
+        return;
+    if (! packet->getTreeParent()) {
+        ReginaSupport::info(this,
+            tr("You cannot clone the top-level packet in the tree."),
+            tr("Any other packet in the tree may be cloned except "
+            "for this one."));
+        return;
+    }
+
+    regina::NPacket* ans = packet->clone(false, false);
+
+    treeView->selectPacket(ans, true);
+    packetView(ans, false);
+}
+
+void ReginaMain::cloneSubtree() {
+    regina::NPacket* packet = checkSubtreeSelected();
+    if (! packet)
+        return;
+    if (! packet->getTreeParent()) {
+        ReginaSupport::info(this,
+            tr("You cannot clone the entire tree."),
+            tr("Any subtree may be cloned, however."));
+        return;
+    }
+
+    regina::NPacket* ans = packet->clone(true, false);
+
+    treeView->selectPacket(ans, true);
+    packetView(ans, false);
 }
 
 void ReginaMain::pythonConsole() {
-    consoles.launchPythonConsole(this);
-}
-
-void ReginaMain::pythonReference() {
-    PythonManager::openPythonReference(this);
-}
-
-void ReginaMain::fileOpen() {
-    QString file = QFileDialog::getOpenFileName(this, tr("Open Data File"),
-        QString(), tr(FILTER_SUPPORTED));
-    if (! file.isNull())
-        openUrl(QUrl::fromLocalFile(file));
+    consoles.launchPythonConsole(this, packetTree,
+        treeView->selectedPacket());
 }
 
 void ReginaMain::optionsPreferences() {
@@ -229,6 +530,10 @@ void ReginaMain::helpXMLRef() {
     ReginaPrefSet::openHandbook("index", "regina-xml", this);
 }
 
+void ReginaMain::helpPythonReference() {
+    PythonManager::openPythonReference(this);
+}
+
 void ReginaMain::helpWhatsThis() {
     QWhatsThis::enterWhatsThisMode();
 }
@@ -242,328 +547,310 @@ void ReginaMain::helpTrouble() {
     ReginaPrefSet::openHandbook("troubleshooting", 0, this);
 }
 
-void ReginaMain::changeCaption(const QString& text) {
-    setWindowTitle(text);
+void ReginaMain::floatDockedPane() {
+    // Delegate the entire procedure to PacketPane::floatPane().
+    // Processing will return to this class when PacketPane calls
+    // ReginaMain::aboutToUndock().
+    if (dockedPane)
+        dockedPane->floatPane();
 }
 
-void ReginaMain::newToolbarConfig() {
-    // Work around a bug that messes up the newly created GUI.
-    /*
-    createGUI(0);
-    createShellGUI(false);
-    createGUI(currentPart);
-    */
+bool ReginaMain::closeDockedPane() {
+    // Is there anything to close?
+    if (! dockedPane)
+        return true;
 
-    //applyMainWindowSettings(KConfigGroup(KGlobal::config(),
-    //    QString::fromLatin1("MainWindow")));
-}
-
-void ReginaMain::setupActions() {
-    QAction* act;
-    toolBar = new QToolBar(this);
-    toolBar->setWindowTitle(tr("Main"));
-    addToolBar(toolBar);
-    
-    fileMenu =  menuBar()->addMenu(tr("&File"));
-
-    
-
-    // File actions:
-    actNew = new QAction(this); 
-    actNew->setText(tr("&New Topology Data"));
-    actNew->setIcon(ReginaSupport::themeIcon("document-new"));
-    actNew->setShortcuts(QKeySequence::New);
-    actNew->setWhatsThis(tr("Create a new topology data file.  This is "
-        "the standard type of data file used by Regina."));
-    connect(actNew, SIGNAL(triggered()), this, SLOT(newTopology()));
-    fileMenu->addAction(actNew);
-    toolBar->addAction(actNew);
-
-    actOpen = new QAction(this);
-    actOpen->setText(tr("&Open..."));
-    actOpen->setIcon(ReginaSupport::themeIcon("document-open"));
-    actOpen->setShortcuts(QKeySequence::Open);
-    actOpen->setWhatsThis(tr("Open a topology data file."));
-    connect(actOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
-    fileMenu->addAction(actOpen);
-    toolBar->addAction(actOpen);
-   
-    fileOpenRecent = new RecentFilesAction(this);
-    connect(fileOpenRecent, SIGNAL(urlSelected(const QUrl&)),
-        this, SLOT(openUrl(const QUrl&)));
-    fileMenu->addMenu(fileOpenRecent);
-
-    fileOpenExample = new ExamplesAction(this);
-    fillExamples();
-    connect(fileOpenExample, SIGNAL(urlSelected(const QUrl&, const QString&)),
-        this, SLOT(openExample(const QUrl&, const QString&)));
-    fileMenu->addMenu(fileOpenExample);
-
-    /*
-    act = new QAction(this);
-    act->setText(tr("&Save"));
-    act->setIcon(ReginaSupport::themeIcon("document-save"));
-    act->setShortcuts(QKeySequence::Save);
-    act->setWhatsThis(tr("Save the topology data to a file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(saveUrl()));
-    fileMenu->addAction(act);
-    toolBar->addAction(act); 
-
-    act = new QAction(this);
-    act->setText(tr("Save &As..."));
-    act->setIcon(ReginaSupport::themeIcon("document-save-as"));
-    act->setShortcuts(QKeySequence::SaveAs);
-    act->setWhatsThis(tr("Save the topology data to a new file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(saveUrlAs()));
-    fileMenu->addAction(act);
-    toolBar->addAction(act); */
-
-    saveSep = fileMenu->addSeparator();
-    importAct = fileMenu->addMenu(tr("&Import"))->menuAction();
-    importAct->setEnabled(false);
-    exportAct = fileMenu->addMenu(tr("&Export"))->menuAction();
-    exportAct->setEnabled(false);
-    exportSep = fileMenu->addSeparator();
-
-    act = new QAction(this);
-    act->setText(tr("&Close"));
-    act->setIcon(ReginaSupport::themeIcon("window-close"));
-    act->setShortcuts(QKeySequence::Close);
-    act->setWhatsThis(tr("Close this topology data file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(close()));
-    fileMenu->addAction(act);
-
-    act = new QAction(this);
-    act->setText(tr("&Quit"));
-    act->setIcon(ReginaSupport::themeIcon("application-exit"));
-    act->setShortcuts(QKeySequence::Quit);
-    act->setMenuRole(QAction::QuitRole);
-    act->setWhatsThis(tr("Close all files and quit Regina."));
-    connect(act, SIGNAL(triggered()), manager, SLOT(closeAllWindows()));
-    fileMenu->addAction(act);
-
-    toolMenu = menuBar()->addMenu(tr("&Tools"));
-    // Tools:
-    actPython = new QAction(this);
-    actPython->setText(tr("&Python Console"));
-    actPython->setIcon(ReginaSupport::regIcon("python_console"));
-    actPython->setShortcut(tr("Alt+y"));
-    actPython->setWhatsThis(tr("Open a new Python console.  You can "
-        "use a Python console to interact directly with Regina's "
-        "mathematical engine."));
-    connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
-    toolMenu->addAction(actPython);
-    toolBar->addAction(actPython);
-    
-    
-    QMenu *settingsMenu =  menuBar()->addMenu(tr("&Settings"));
-    // Preferences:
-
-    act = new QAction(this);
-    act->setText(tr("&Configure Regina"));
-    act->setIcon(ReginaSupport::themeIcon("configure"));
-    act->setShortcuts(QKeySequence::Preferences);
-    act->setMenuRole(QAction::PreferencesRole);
-    act->setWhatsThis(tr("Configure Regina.  Here you can set "
-        "your own preferences for how Regina behaves."));
-    connect(act, SIGNAL(triggered()), this, SLOT(optionsPreferences()));
-    settingsMenu->addAction(act);
-
-
-    QMenu *helpMenu =  menuBar()->addMenu(tr("&Help"));
-    // Help:
-    act = new QAction(this);
-    act->setText(tr("&About Regina"));
-    act->setIcon(ReginaSupport::themeIcon("help-about"));
-    act->setMenuRole(QAction::AboutRole);
-    act->setWhatsThis(tr("Display information about Regina, such as "
-        "the authors, license and website."));
-    connect(act, SIGNAL(triggered()), this, SLOT(helpAboutApp()));
-    helpMenu->addAction(act);
-
-
-    act = new QAction(this);
-    act->setText(tr("Regina &Handbook"));
-    act->setIcon(ReginaSupport::themeIcon("help-contents"));
-    act->setShortcuts(QKeySequence::HelpContents);
-    act->setWhatsThis(tr("Open the Regina handbook.  "
-        "This is the main users' guide for how to use Regina."));
-    connect(act, SIGNAL(triggered()), this, SLOT(helpHandbook()));
-    helpMenu->addAction(act);
-
-    act = new QAction(this);
-    act->setText(tr("What's &This?"));
-    act->setIcon(ReginaSupport::themeIcon("help-hint"));
-    act->setShortcuts(QKeySequence::WhatsThis);
-    connect(act, SIGNAL(triggered()), this, SLOT(helpWhatsThis()));
-    helpMenu->addAction(act);
-
-    act = new QAction(this);
-    act->setText(tr("&Python API Reference"));
-    act->setIcon(ReginaSupport::regIcon("python_console"));
-    act->setWhatsThis(tr("Open the detailed documentation for Regina's "
-        "mathematical engine.  This describes the classes, methods and "
-        "routines that Regina makes available to Python scripts.<p>"
-        "See the <i>Python Scripting</i> chapter of the user's handbook "
-        "for more information (the handbook is "
-        "accessed through <i>Regina Handbook</i> in the <i>Help</i> menu)."));
-    connect(act, SIGNAL(triggered()), this, SLOT(pythonReference()));
-    helpMenu->addAction(act);
-
-    act = new QAction(this);
-    act->setText(tr("&File Format Reference"));
-    act->setIcon(ReginaSupport::themeIcon("application-xml"));
-    act->setWhatsThis(tr("Open the file format reference manual.  "
-        "This give full details of the XML file format that Regina "
-        "uses to store its data files."));
-    connect(act, SIGNAL(triggered()), this, SLOT(helpXMLRef()));
-    helpMenu->addAction(act);
-
-    // TODO: Tip of the day not implemented
-    //act = KStandardAction::tipOfDay(this, SLOT(helpTipOfDay()),
-    //    actionCollection());
-    //act->setWhatsThis(tr("View tips and hints on how to use Regina."));
-   
-    act = new QAction(this);
-    act->setText(tr("Tr&oubleshooting"));
-    act->setIcon(ReginaSupport::themeIcon("dialog-warning"));
-    connect(act, SIGNAL(triggered()), this, SLOT(helpTrouble()));
-    helpMenu->addAction(act);
-}
-
-void ReginaMain::fillExamples() {
-    fileOpenExample->addUrl("sample-misc.rga",
-        tr("Introductory Examples"));
-    fileOpenExample->addUrl("closed-hyp-census.rga",
-        tr("Closed Hyperbolic Census"));
-    fileOpenExample->addUrl("closed-or-census.rga",
-        tr("Closed Orientable Census (Small)"));
-    fileOpenExample->addUrl("closed-or-census-large.rga",
-        tr("Closed Orientable Census (Large)"));
-    fileOpenExample->addUrl("closed-nor-census.rga",
-        tr("Closed Non-Orientable Census"));
-    fileOpenExample->addUrl("snappea-census.rga",
-        tr("Cusped Hyperbolic Census"));
-    fileOpenExample->addUrl("knot-link-census.rga",
-        tr("Knot / Link Complements"));
-    fileOpenExample->addUrl("sig-3mfd-census.rga",
-        tr("Splitting Surface Sigs (General)"));
-    fileOpenExample->addUrl("sig-prime-min-census.rga",
-        tr("Splitting Surface Sigs (Prime, Minimal)"));
-}
-
-void ReginaMain::addRecentFile() {
-    if (currentPart && ! currentPart->url().isEmpty())
-        ReginaPrefSet::addRecentFile(currentPart->url());
-}
-
-void ReginaMain::newTopologyPart(bool starterWindow) {
-    currentPart = new ReginaPart(this, starterWindow);
-
-    // Connect up signals and slots.
-    disconnect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
-    connect(actPython, SIGNAL(triggered()), currentPart, SLOT(pythonConsole()));
-
-    setCentralWidget(currentPart->widget());
-}
-
-
-bool ReginaMain::saveUrl() {
-    if (! currentPart )
+    // Are we allowed to close it?
+    if (! dockedPane->queryClose())
         return false;
-    currentPart->fileSave();
+
+    // Close it.  Note that queryClose() has already done the
+    // deregistration for us.
+    PacketPane* closedPane = dockedPane;
+    aboutToUndock(dockedPane);
+
+    // At this point dockedPane is already 0.
+    delete closedPane;
     return true;
 }
 
-bool ReginaMain::saveUrlAs() {
-    if (! currentPart )
-        return false;
-    currentPart->fileSaveAs();
+bool ReginaMain::closeAllPanes() {
+    // Copy the list since the original list will be modified as panes
+    // are closed.
+    QLinkedList<PacketPane *> panes = allPanes;
+
+    // Try to close each pane in return, returning false if a pane
+    // refuses.
+    for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
+            it != panes.end() ; it++) {
+        if (! (*it)->close())
+            return false;
+    }
+
     return true;
 }
 
-QSize ReginaMain::sizeHint() const {
-    return ReginaPrefSet::defaultMainSize();
+bool ReginaMain::hasUncommittedChanges() {
+    QLinkedList<PacketPane *> panes = allPanes;
+    for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
+            it != panes.end() ; it++) {
+        if ((*it)->isDirty())
+            return true;
+    }
+    return false;
 }
 
-void ReginaMain::plugPacketMenu(QMenu *menu) {
-    delete packetMenu;
-    packetMenu = menuBar()->insertMenu(toolMenu->menuAction(), menu);
-}
-
-void ReginaMain::unplugPacketMenu() {
-    if (packetMenu) {
-        delete packetMenu;
-        packetMenu = 0;
+void ReginaMain::commitAllChanges() {
+    QLinkedList<PacketPane *> panes = allPanes;
+    for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
+            it != panes.end() ; it++) {
+        if ((*it)->isDirty())
+            (*it)->commit();
     }
 }
 
-void ReginaMain::plugTreeMenu(QMenu *menu) {
-    // The only time this is called, there will not yet be a packet menu,
-    // and there will not be any pre-existing tree menu.
-    treeMenu = menuBar()->insertMenu(toolMenu->menuAction(), menu);
+void ReginaMain::discardAllChanges() {
+    QLinkedList<PacketPane *> panes = allPanes;
+    for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
+            it != panes.end() ; it++) {
+        if ((*it)->isDirty())
+            (*it)->refreshForce();
+    }
 }
 
-void ReginaMain::setActions(QAction *save, QAction *saveAs,
-        QAction *actCut, QAction *actCopy, QAction *actPaste) {
-    // First insert SaveAs before the separator
-    if (saveAsAct) {
-        fileMenu->removeAction(saveAsAct);
-    }
-    saveAsAct = saveAs;
-    fileMenu->insertAction(saveSep,saveAs);
-    // Then insert Save before SaveAs
-    if (saveAct) {
-        fileMenu->removeAction(saveAct);
-    }
-    saveAct = save;
-    fileMenu->insertAction(saveAs,save);
-  
-    toolBar->insertAction(actPython, save);
-    toolBar->insertSeparator(actPython);
-    toolBar->insertAction(actPython, actCut);
-    toolBar->insertAction(actPython, actCopy);
-    toolBar->insertAction(actPython, actPaste);
-    toolBar->insertSeparator(actPython);
+void ReginaMain::updateTreeActions() {
+    QLinkedList<QAction *>::iterator it;
+    for (it = treeGeneralEditActions.begin(); 
+            it != treeGeneralEditActions.end(); it++)
+        (*it)->setEnabled(true);
+
+    bool enable = ! treeView->selectedItems().isEmpty(); 
+
+    for (it = treePacketViewActions.begin(); 
+            it != treePacketViewActions.end(); it++)
+        (*it)->setEnabled(enable);
+
+    for (it = treePacketEditActions.begin(); 
+            it != treePacketEditActions.end(); it++)
+        (*it)->setEnabled(enable);
 }
 
-QToolBar* ReginaMain::createToolBar(QString name) {
-    if (packetTreeToolBar) {
-        removeToolBar(packetTreeToolBar);
-    }
-    packetTreeToolBar = addToolBar(name);
-    return packetTreeToolBar;
+void ReginaMain::setupWidgets() {
+    splitter = new QSplitter();
+    splitter->setWhatsThis(tr(
+        "<qt>Each piece of information stored in a data file "
+        "is a <i>packet</i>: this include triangulations, normal surface "
+        "lists, text items and so on.<p>"
+        "Packets within a data file are arranged in a tree-like structure, "
+        "which you should see on the left-hand side of the window.  "
+        "If you click on a packet in the tree, it will open up in the "
+        "right-hand side of the window where you can edit it or view "
+        "detailed information.</qt>"));
+
+    if (starterWindow_) {
+        // Give the user something helpful to start with.
+        advice = new MessageLayer("dialog-information",
+            tr("<qt>To start, try:<p>"
+            "File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
+            "Introductory Examples</qt>"));
+        advice->setWhatsThis(tr("<qt>If you select "
+            "<i>File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
+            "Introductory Examples</i> from the menu, "
+            "Regina will open a sample data file that you can "
+            "play around with.<p>"
+            "You can also read the Regina Handbook, which walks "
+            "you through what Regina can do.  Just press F1, or select "
+            "<i>Help&nbsp;&rarr;&nbsp;Regina Handbook</i> from the "
+            "menu.</qt>"));
+    } else
+        advice = 0;
+
+    // Set up the packet tree viewer.
+    QWidget* treeArea = new QWidget(splitter);
+    QBoxLayout* treeLayout = new QVBoxLayout(treeArea);
+    treeLayout->setContentsMargins(0, 0, 0, 0);
+    treeLayout->setSpacing(0);
+
+    treeArea->setSizePolicy(QSizePolicy(
+        QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
+    // Leave the stretch factors at the default of zero.
+
+    treeView = new PacketTreeView(this);
+    treeLayout->addWidget(treeView, 1);
+    connect(treeView, SIGNAL(itemSelectionChanged()), this,
+        SLOT(updateTreeActions()));
+
+    if (advice)
+        treeLayout->addWidget(advice);
+
+    // Set up the docking area.
+    dockArea = new QWidget(splitter);
+    QBoxLayout* dockLayout = new QVBoxLayout(dockArea);
+    dockLayout->setContentsMargins(0, 0, 0, 0);
+    if (! supportingDock)
+        dockArea->hide();
+
+    QSizePolicy qpol(
+        QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    qpol.setHorizontalStretch(5);
+    qpol.setVerticalStretch(5);
+    dockArea->setSizePolicy(qpol);
+
+    // Make sure the docking area gets some space even when there's
+    // nothing in it.
+    dockLayout->addStrut(100);
+
+    // Put it all inside the main window.
+    setCentralWidget(splitter);
 }
 
+void ReginaMain::initPacketTree() {
+    if (packetTree)
+        delete packetTree;
+    packetTree = new regina::NContainer();
+    packetTree->setPacketLabel(tr("Container").toAscii().constData());
 
-void ReginaMain::importsExports(QMenu *imports, QMenu *exports) {
-    // First insert Export before the separator
-    if (exportAct) {
-        fileMenu->removeAction(exportAct);
-    }
-    exportAct = fileMenu->insertMenu(exportSep,exports);
-    // Then insert Import before Export
-    if (importAct) {
-        fileMenu->removeAction(importAct);
-    }
-    importAct = fileMenu->insertMenu(exports->menuAction(),imports);
+    // Update the visual representation.
+    treeView->fill(packetTree);
 
+    setWindowTitle(tr("Untitled"));
 }
 
-void ReginaMain::plugEditMenu(QMenu *menu) {
-    if (editAct) {
-        delete editAct;
+void ReginaMain::view(PacketPane* newPane) {
+    // Decide whether to dock or float.
+    bool shouldDock;
+
+    if (supportingDock) {
+        if (dockedPane) {
+            shouldDock = ! dockedPane->isDirty();
+        } else
+            shouldDock = true;
+    } else
+        shouldDock = false;
+
+    // Display the new pane.
+    if (shouldDock) {
+        dock(newPane);
+        newPane->setFocus();
+    } else
+        newPane->floatPane();
+
+    // Add it to the list of currently managed panes.
+    allPanes.append(newPane);
+}
+
+regina::NPacket* ReginaMain::checkPacketSelected() {
+    regina::NPacket* p = treeView->selectedPacket();
+    if (p)
+        return p;
+    ReginaSupport::info(this, tr("Please select a packet to work with."));
+    return 0;
+}
+
+regina::NPacket* ReginaMain::checkSubtreeSelected() {
+    regina::NPacket* p = treeView->selectedPacket();
+    if (p)
+        return p;
+    ReginaSupport::info(this, tr("Please select a packet to work with."));
+        // Remove all the information about subtrees; it's clear anyway.
+    return 0;
+}
+
+bool ReginaMain::initData(regina::NPacket* usePacketTree,
+        const QString& useLocalFilename,
+        const QString& useDisplayName) {
+    if (packetTree) {
+        delete packetTree;
+        setModified(false);
     }
 
-    if (treeMenu) {
-        // Insert before "treeMenu" aka Packet Tree
-        editAct = menuBar()->insertMenu(treeMenu,menu);
-    } else if (packetMenu) {
-        // Insert before "packetMenu" aka packet-specific menu
-        editAct = menuBar()->insertMenu(packetMenu,menu);
+    localFile = useLocalFilename;
+    displayName = useDisplayName;
+    packetTree = usePacketTree;
+
+    if (packetTree) {
+        treeView->fill(packetTree);
+        // Expand the first level.
+        if (treeView->invisibleRootItem()->child(0)->child(0))
+            treeView->scrollToItem(
+                treeView->invisibleRootItem()->child(0)->child(0));
+
+        if (! displayName.isEmpty())
+            setWindowTitle(displayName);
+        else
+            setWindowTitle(localFile);
+
+        if (! localFile.isEmpty())
+            ReginaPrefSet::addRecentFile(QUrl::fromLocalFile(localFile));
+
+        return true;
     } else {
-        // Insert before Tools
-        editAct = menuBar()->insertMenu(toolMenu->menuAction(), menu);
+        initPacketTree();
+        return false;
     }
+}
+
+bool ReginaMain::saveFile() {
+    // Does the user have some work that still needs to be committed?
+    while (hasUncommittedChanges()) {
+        QMessageBox msgBox(QMessageBox::Information, tr("Information"),
+            tr("Some of your packets have changes that are "
+            "not yet committed."));
+        msgBox.setInformativeText("<qt>Uncommitted changes will "
+            "not be saved to file.<p>"
+            "Do you wish to commit all of your changes now?</qt>");
+        QPushButton* commit = msgBox.addButton(tr("Commit All"),
+            QMessageBox::AcceptRole);
+        QPushButton* discard = msgBox.addButton(tr("Discard All"),
+            QMessageBox::DestructiveRole);
+        QPushButton* cancel = msgBox.addButton(tr("Cancel"),
+            QMessageBox::RejectRole);
+        msgBox.setDefaultButton(commit);
+        msgBox.exec();
+
+        if (msgBox.clickedButton() == commit)
+            commitAllChanges();
+        else if (msgBox.clickedButton() == discard)
+            discardAllChanges();
+        else
+            return false;
+    }
+
+    if (regina::writeXMLFile(static_cast<const char*>(
+            QFile::encodeName(localFile)), packetTree)) {
+        setModified(false);
+        return true;
+    } else {
+        ReginaSupport::warn(this,
+            tr("<qt>I could not save the data file <tt>%1</tt>.</qt>").
+                arg(Qt::escape(localFile)),
+            tr("Please check that you have permissions to write "
+                "to this file."));
+        return false;
+    }
+}
+
+void ReginaMain::updatePreferences() {
+    if (ReginaPrefSet::global().useDock == supportingDock)
+        return;
+
+    supportingDock = ReginaPrefSet::global().useDock;
+
+    if (! supportingDock)
+        floatDockedPane();
+
+    dockArea->setVisible(supportingDock);
+
+    for (QLinkedList<PacketPane *>::iterator it = allPanes.begin();
+            it != allPanes.end(); it++)
+        (*it)->supportDock(supportingDock);
+}
+
+void ReginaMain::newCensus() {
+    ReginaSupport::info(this,
+        tr("Census creation is only available from the command line."), 
+        tr("<qt>See the command-line program <i>tricensus</i>, which "
+        "supports a rich set of features and is suitable for "
+        "long census calculations.</qt>"));
 }
 

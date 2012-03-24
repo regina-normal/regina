@@ -40,7 +40,7 @@
 
 
 class PacketTreeView;
-class ReginaPart;
+class ReginaMain;
 
 namespace regina {
     class NPacket;
@@ -65,7 +65,7 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::NPacketListener {
         /**
          * Do we currently believe the underlying packet to be editable?
          * We refer here purely to child packet constraints; whether
-         * or not the overall KPart is read-only is irrelevant here.
+         * or not the overall file is read-only is irrelevant here.
          */
         bool isEditable;
 
@@ -99,9 +99,9 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::NPacketListener {
         regina::NPacket* getPacket();
 
         /**
-         * Return the KPart responsible for this packet tree.
+         * Return the main window responsible for this packet tree.
          */
-        ReginaPart* getPart();
+        ReginaMain* getMainWindow();
 
         /**
          * Fills this item with a subtree of items corresponding to the
@@ -129,7 +129,7 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::NPacketListener {
         /**
          * Updates the appearance of this item to correctly reflect whether
          * or not the underlying packet is editable.  This refers purely to
-         * child packet constraints; whether or not the overall KPart is
+         * child packet constraints; whether or not the overall file is
          * read-only is irrelevant here.
          *
          * This will only make a physical update if the editability has in
@@ -175,8 +175,8 @@ class PacketTreeView : public QTreeWidget {
     Q_OBJECT
 
     private:
-        ReginaPart* part;
-            /**< The KPart responsible for this packet tree. */
+        ReginaMain* mainWindow;
+            /**< The main window responsible for this packet tree. */
 
         regina::NPacket* toSelect;
             /**< If non-zero, this is a packet that will be added to the
@@ -188,7 +188,7 @@ class PacketTreeView : public QTreeWidget {
          * Creates an empty tree.  This tree must be initialised using
          * fill().
          */
-        PacketTreeView(ReginaPart* newPart, QWidget* parent = 0);
+        PacketTreeView(ReginaMain* newMainWindow, QWidget* parent = 0);
 
         /**
          * Returns the currently selected packet, or 0 if no packet is
@@ -221,9 +221,9 @@ class PacketTreeView : public QTreeWidget {
         PacketTreeItem* find(regina::NPacket* packet);
 
         /**
-         * Return the KPart responsible for this packet tree.
+         * Return the main window responsible for this packet tree.
          */
-        ReginaPart* getPart();
+        ReginaMain* getMainWindow();
 
         /**
          * Create a new packet item in this tree.  These routines handle
@@ -271,8 +271,8 @@ inline regina::NPacket* PacketTreeItem::getPacket() {
     return packet;
 }
 
-inline ReginaPart* PacketTreeItem::getPart() {
-    return tree->getPart();
+inline ReginaMain* PacketTreeItem::getMainWindow() {
+    return tree->getMainWindow();
 }
 
 inline bool PacketTreeItem::shouldBeExpanded() const {
@@ -290,8 +290,8 @@ inline regina::NPacket* PacketTreeView::selectedPacket() {
     return (item ? dynamic_cast<PacketTreeItem*>(item)->getPacket() : 0);
 }
 
-inline ReginaPart* PacketTreeView::getPart() {
-    return part;
+inline ReginaMain* PacketTreeView::getMainWindow() {
+    return mainWindow;
 }
 
 #endif

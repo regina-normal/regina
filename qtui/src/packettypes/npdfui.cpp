@@ -32,8 +32,8 @@
 
 // UI includes:
 #include "npdfui.h"
-#include "../messagelayer.h"
-#include "../reginapart.h"
+#include "messagelayer.h"
+#include "reginamain.h"
 
 #include <csignal>
 #include <cstdio>

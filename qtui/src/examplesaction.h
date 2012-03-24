@@ -75,6 +75,11 @@ class ExamplesAction : public QMenu {
          */
         void addUrl(const QString& fileName, const QString& description);
 
+        /**
+         * Fill this action with Regina's standard example files.
+         */
+        void fillStandard();
+
     signals:
         /**
          * Emitted when a sample data file is selected for opening.

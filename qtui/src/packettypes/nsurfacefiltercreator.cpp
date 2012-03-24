@@ -33,7 +33,7 @@
 // UI includes:
 #include "iconcache.h"
 #include "nsurfacefiltercreator.h"
-#include "../reginapart.h"
+#include "reginamain.h"
 #include "reginasupport.h"
 
 #include <QApplication>

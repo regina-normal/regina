@@ -34,7 +34,7 @@
 #include "packetmanager.h"
 #include "packettreeview.h"
 #include "regevents.h"
-#include "reginapart.h"
+#include "reginamain.h"
 
 #include <QApplication>
 #include <QEvent>
@@ -213,18 +213,18 @@ void PacketTreeItem::ensureExpanded() {
 }
 
 void PacketTreeItem::packetWasChanged(regina::NPacket*) {
-    getPart()->setModified(true);
+    getMainWindow()->setModified(true);
 }
 
 void PacketTreeItem::packetWasRenamed(regina::NPacket*) {
     refreshLabel();
-    getPart()->setModified(true);
+    getMainWindow()->setModified(true);
 }
 
 void PacketTreeItem::packetToBeDestroyed(regina::NPacket*) {
     packet = 0;
     refreshLabel();
-    getPart()->setModified(true);
+    getMainWindow()->setModified(true);
 
     // I'm a bit worried about this line, but I understand it will
     // behave correctly. :/
@@ -244,17 +244,17 @@ void PacketTreeItem::childWasRemoved(regina::NPacket*, regina::NPacket*,
     if (! inParentDestructor) {
         refreshSubtree();
         updateEditable();
-        getPart()->setModified(true);
+        getMainWindow()->setModified(true);
     }
 }
 
 void PacketTreeItem::childrenWereReordered(regina::NPacket*) {
     refreshSubtree();
-    getPart()->setModified(true);
+    getMainWindow()->setModified(true);
 }
 
-PacketTreeView::PacketTreeView(ReginaPart* newPart, QWidget* parent) 
-          : QTreeWidget(parent), part(newPart), toSelect(0) {
+PacketTreeView::PacketTreeView(ReginaMain* newMainWindow, QWidget* parent) 
+          : QTreeWidget(parent), mainWindow(newMainWindow), toSelect(0) {
     setRootIsDecorated(true);
     header()->hide();
     setAlternatingRowColors(false);
@@ -323,7 +323,8 @@ void PacketTreeView::selectPacket(regina::NPacket* p, bool allowDefer) {
 
 void PacketTreeView::packetView(QTreeWidgetItem* packet) {
     if (packet)
-        part->packetView(dynamic_cast<PacketTreeItem*>(packet)->getPacket());
+        mainWindow->packetView(
+            dynamic_cast<PacketTreeItem*>(packet)->getPacket());
 }
 
 void PacketTreeView::refresh(NPacket* topPacket) {
@@ -374,7 +375,7 @@ void PacketTreeView::customEvent(QEvent* evt) {
 
                 item->refreshSubtree();
                 item->updateEditable();
-                part->setModified(true);
+                mainWindow->setModified(true);
             }
             break;
         default:

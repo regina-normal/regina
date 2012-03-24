@@ -77,3 +77,24 @@ void ExamplesAction::exampleActivated(QAction* action) {
     emit urlSelected(urls_[action], action->text());
 }
 
+void ExamplesAction::fillStandard() {
+    addUrl("sample-misc.rga",
+        tr("Introductory Examples"));
+    addUrl("closed-hyp-census.rga",
+        tr("Closed Hyperbolic Census"));
+    addUrl("closed-or-census.rga",
+        tr("Closed Orientable Census (Small)"));
+    addUrl("closed-or-census-large.rga",
+        tr("Closed Orientable Census (Large)"));
+    addUrl("closed-nor-census.rga",
+        tr("Closed Non-Orientable Census"));
+    addUrl("snappea-census.rga",
+        tr("Cusped Hyperbolic Census"));
+    addUrl("knot-link-census.rga",
+        tr("Knot / Link Complements"));
+    addUrl("sig-3mfd-census.rga",
+        tr("Splitting Surface Sigs (General)"));
+    addUrl("sig-prime-min-census.rga",
+        tr("Splitting Surface Sigs (Prime, Minimal)"));
+}
+

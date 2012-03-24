@@ -36,9 +36,9 @@
 #include "coordinatechooser.h"
 #include "nsurfacecoordinateui.h"
 #include "reginasupport.h"
-#include "../packetchooser.h"
-#include "../packetfilter.h"
-#include "../reginapart.h"
+#include "packetchooser.h"
+#include "packetfilter.h"
+#include "reginamain.h"
 
 #include <QHeaderView>
 #include <QLabel>
@@ -688,7 +688,7 @@ void NSurfaceCoordinateUI::cutAlong() {
           .toAscii().constData()));
     surfaces->insertChildLast(ans);
 
-    enclosingPane->getPart()->packetView(ans, true, true);
+    enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
 void NSurfaceCoordinateUI::crush() {
@@ -714,7 +714,7 @@ void NSurfaceCoordinateUI::crush() {
           .toAscii().constData()));
     surfaces->insertChildLast(ans);
 
-    enclosingPane->getPart()->packetView(ans, true, true);
+    enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
 void NSurfaceCoordinateUI::updateActionStates() {
