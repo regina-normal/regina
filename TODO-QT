@@ -2,7 +2,7 @@ Packet pane / dock redesign:
 - The dock/undock mechanism is very broken.
 - Get the initial ReginaMain window size right, with two stacked toolbars.
 - Get the initial PacketPane window size right (and make it larger).
-- Open a new file by default, and give the root-level container a better name.
+- Give the root-level container a better name.
 
 Edit menu:
 - Python console: Edit options, seem to be there, but are commented in code?
