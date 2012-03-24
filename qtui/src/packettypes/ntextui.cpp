@@ -30,23 +30,29 @@
 #include "packet/ntext.h"
 
 // UI includes:
-#include "../packeteditiface.h"
+#include "bigwidget.h"
+#include "packeteditiface.h"
 #include "ntextui.h"
 
 #include <cstring>
 #include <sstream>
 #include <QPlainTextEdit>
+#include <QVBoxLayout>
 
 using regina::NPacket;
 using regina::NText;
 
 NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane) :
         PacketUI(enclosingPane), text(packet) {
+    ui = new BigWidget(1, 2);
+    QBoxLayout* layout = new QVBoxLayout(ui);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     document = new QPlainTextEdit(enclosingPane);
     document->setReadOnly(!enclosingPane->isReadWrite());
     document->setLineWrapMode(QPlainTextEdit::WidgetWidth);
     editIface = new PacketEditTextEditor(document);
+    layout->addWidget(document, 1);
 
     refresh();
 
@@ -56,7 +62,7 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane) :
 
 NTextUI::~NTextUI() {
 //    delete editIface;
-    delete document;
+    delete ui;
 }
 
 NPacket* NTextUI::getPacket() {
@@ -64,7 +70,7 @@ NPacket* NTextUI::getPacket() {
 }
 
 QWidget* NTextUI::getInterface() {
-    return document;
+    return ui;
 }
 
 QString NTextUI::getPacketMenuText() const {

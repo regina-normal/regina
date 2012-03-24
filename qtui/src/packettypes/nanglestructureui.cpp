@@ -32,6 +32,7 @@
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
+#include "bigwidget.h"
 #include "nanglestructureui.h"
 
 #include <QLabel>
@@ -130,7 +131,7 @@ QVariant AngleModel::headerData(int section, Qt::Orientation orientation,
 NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
         PacketPane* enclosingPane) : PacketReadOnlyUI(enclosingPane),
         currentlyAutoResizing(false) {
-    ui = new QWidget();
+    ui = new BigWidget(1, 2);
     QBoxLayout* layout = new QVBoxLayout(ui);
     layout->setContentsMargins(0, 0, 0, 0);
 

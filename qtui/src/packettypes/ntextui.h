@@ -57,6 +57,7 @@ class NTextUI : public QObject, public PacketUI {
         /**
          * Internal components
          */
+        QWidget* ui;
         QPlainTextEdit* document;
         PacketEditIface* editIface;
 

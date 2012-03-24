@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2011, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,48 +26,46 @@
 
 /* end stub */
 
-// UI includes:
-#include "packetui.h"
-#include "packetwindow.h"
-#include "reginamain.h"
+/*! \file bigwidget.h
+ *  \brief Provides a widget whose size hint is larger than just the sum
+ *  of its parts.
+ */
 
-#include <QCloseEvent>
-#include <QLinkedList>
-#include <QMenuBar>
+#ifndef __BIGWIDGET_H
+#define __BIGWIDGET_H
 
-PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
-        QMainWindow(parent, 
-        Qt::Window | Qt::WindowContextHelpButtonHint),
-        heldPane(newPane) {
-    // Set destructive close
-    setAttribute(Qt::WA_DeleteOnClose);
-    
-    // Set up our actions.
-    /* TODO clipboard
-    KAction* actCut = KStandardAction::cut(0, 0, actionCollection());
-    KAction* actCopy = KStandardAction::copy(0, 0, actionCollection());
-    KAction* actPaste = KStandardAction::paste(0, 0, actionCollection());
+#include <QWidget>
 
-    actCut->setWhatsThis(i18n("Cut out the current selection and store it "
-        "in the clipboard."));
-    actCopy->setWhatsThis(i18n("Copy the current selection to the clipboard."));
-    actPaste->setWhatsThis(i18n("Paste the contents of the clipboard."));
+/**
+ * A widget whose size hint is larger than otherwise necessary.
+ */
+class BigWidget : public QWidget {
+    private:
+        int desktopNum_;
+        int desktopDen_;
 
-    newPane->registerEditOperations(actCut, actCopy, actPaste);
-    */
+    public:
+        /**
+         * Constructor: the size hint will always be at least the given
+         * fraction of the available desktop size (measured as a single
+         * screen, not all virtual desktops combined).
+         */
+        BigWidget(int desktopFractionNumerator,
+                  int desktopFractionDenominator,
+                  QWidget* parent = 0);
 
-    // Set up the widgets.
-    heldPane->setParent(this);
-    setCentralWidget(newPane);
+    protected:
+        /**
+         * Qt overrides.
+         */
+        virtual QSize sizeHint() const;
+};
 
-    // Set up the menu bar.
-    menuBar()->addMenu(newPane->createPacketTypeMenu(false));
+inline BigWidget::BigWidget(int desktopFractionNumerator,
+        int desktopFractionDenominator, QWidget* parent) :
+        QWidget(parent),
+        desktopNum_(desktopFractionNumerator),
+        desktopDen_(desktopFractionDenominator) {
 }
 
-void PacketWindow::closeEvent(QCloseEvent* event) {
-    if (heldPane->queryClose())
-        event->accept();
-    else
-        event->ignore();
-}
-
+#endif

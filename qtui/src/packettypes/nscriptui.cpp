@@ -32,6 +32,7 @@
 #include "packet/nscript.h"
 
 // UI includes:
+#include "bigwidget.h"
 #include "nscriptui.h"
 #include "packetchooser.h"
 #include "packeteditiface.h"
@@ -222,7 +223,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
         PacketUI(enclosingPane), script(packet) {
     bool readWrite = enclosingPane->isReadWrite();
 
-    ui = new QWidget();
+    ui = new BigWidget(1, 2);
     QVBoxLayout* layout = new QVBoxLayout(ui);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2011, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -27,47 +27,16 @@
 /* end stub */
 
 // UI includes:
-#include "packetui.h"
-#include "packetwindow.h"
-#include "reginamain.h"
+#include "bigwidget.h"
 
-#include <QCloseEvent>
-#include <QLinkedList>
-#include <QMenuBar>
+#include <QApplication>
+#include <QDesktopWidget>
 
-PacketWindow::PacketWindow(PacketPane* newPane, QWidget* parent) :
-        QMainWindow(parent, 
-        Qt::Window | Qt::WindowContextHelpButtonHint),
-        heldPane(newPane) {
-    // Set destructive close
-    setAttribute(Qt::WA_DeleteOnClose);
-    
-    // Set up our actions.
-    /* TODO clipboard
-    KAction* actCut = KStandardAction::cut(0, 0, actionCollection());
-    KAction* actCopy = KStandardAction::copy(0, 0, actionCollection());
-    KAction* actPaste = KStandardAction::paste(0, 0, actionCollection());
-
-    actCut->setWhatsThis(i18n("Cut out the current selection and store it "
-        "in the clipboard."));
-    actCopy->setWhatsThis(i18n("Copy the current selection to the clipboard."));
-    actPaste->setWhatsThis(i18n("Paste the contents of the clipboard."));
-
-    newPane->registerEditOperations(actCut, actCopy, actPaste);
-    */
-
-    // Set up the widgets.
-    heldPane->setParent(this);
-    setCentralWidget(newPane);
-
-    // Set up the menu bar.
-    menuBar()->addMenu(newPane->createPacketTypeMenu(false));
+QSize BigWidget::sizeHint() const {
+    QSize d = QApplication::desktop()->availableGeometry().size();
+    if (desktopNum_ != 1)
+        d *= desktopNum_;
+    if (desktopDen_ != 1)
+        d /= desktopDen_;
+    return QWidget::sizeHint().expandedTo(d);
 }
-
-void PacketWindow::closeEvent(QCloseEvent* event) {
-    if (heldPane->queryClose())
-        event->accept();
-    else
-        event->ignore();
-}
-
