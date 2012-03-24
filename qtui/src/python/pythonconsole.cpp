@@ -45,6 +45,7 @@
 #include <iostream>
 
 #include <QApplication>
+#include <QDesktopWidget>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QHBoxLayout>
@@ -59,7 +60,10 @@
 
 PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
         QMainWindow(parent), manager(useManager) {
-    resize(600, 500);
+    setAttribute(Qt::WA_DeleteOnClose);
+
+    if (ReginaPrefSet::global().windowPythonSize.isValid())
+        resize(ReginaPrefSet::global().windowPythonSize);
 
     // Set up the main widgets.
     QWidget* box = new QWidget(this);
@@ -238,6 +242,8 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
 }
 
 PythonConsole::~PythonConsole() {
+    ReginaPrefSet::global().windowPythonSize = size();
+
     delete interpreter;
     delete output;
     delete error;
@@ -433,6 +439,12 @@ void PythonConsole::pythonReference() {
 
 void PythonConsole::contextHelpActivated() {
     QWhatsThis::enterWhatsThisMode();
+}
+
+QSize PythonConsole::sizeHint() const {
+    QRect d = QApplication::desktop()->availableGeometry();
+    return QSize(d.width() / 2,
+                 d.height() * 2 / 3); // A little taller for its size.
 }
 
 void PythonConsole::updatePreferences() {

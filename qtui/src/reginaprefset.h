@@ -424,6 +424,8 @@ class ReginaPrefSet : public QObject {
 
         QSize windowMainSize;
             /**< The initial size of a new main topology data window. */
+        QSize windowPythonSize;
+            /**< The initial size of a new python console. */
 
     public:
         /**

@@ -160,6 +160,12 @@ class PythonConsole : public QMainWindow {
          */
         void contextHelpActivated();
 
+    protected:
+        /**
+         * Qt overrides.
+         */
+         virtual QSize sizeHint() const;
+
     private:
         /**
          * Encode special characters so that the given text can be

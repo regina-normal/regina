@@ -242,8 +242,7 @@ ReginaPrefSet::ReginaPrefSet() :
         triInitialAlgebraTab(Homology),
         triSurfacePropsThreshold(6),
         useDock(false),
-        warnOnNonEmbedded(true),
-        windowMainSize() /* initially null */ {
+        warnOnNonEmbedded(true) {
 }
 
 QString ReginaPrefSet::pythonLibrariesConfig() {
@@ -512,6 +511,7 @@ void ReginaPrefSet::readInternal() {
 
     settings.beginGroup("Window");
     windowMainSize = settings.value("MainSize", QSize()).toSize();
+    windowPythonSize = settings.value("PythonSize", QSize()).toSize();
     settings.endGroup();
 
     settings.beginGroup("RecentFiles");
@@ -636,6 +636,7 @@ void ReginaPrefSet::saveInternal() const {
 
     settings.beginGroup("Window");
     settings.setValue("MainSize", windowMainSize);
+    settings.setValue("PythonSize", windowPythonSize);
     settings.endGroup();
 
     settings.beginGroup("RecentFiles");
