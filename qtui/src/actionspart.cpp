@@ -682,12 +682,13 @@ void ReginaMain::setupActions() {
     toolBar->addAction(actOpen);
     toolBar->addAction(actSave);
     toolBar->addSeparator();
-    toolBar->addAction(actPython);
-    toolBar->addSeparator();
     toolBar->addAction(actView);
-    toolBar->addAction(actRefresh);
     toolBar->addAction(actRename);
     toolBar->addAction(actDelete);
+    toolBar->addSeparator();
+    toolBar->addAction(actPython);
+
+    addToolBarBreak();
 
     toolBar = addToolBar(tr("New Packets"));
     toolBar->addAction(actContainer);

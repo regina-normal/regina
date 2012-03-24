@@ -1,6 +1,6 @@
 Packet pane / dock redesign:
 - The dock/undock mechanism is very broken.
-- Get the initial ReginaMain window size right, with two stacked toolbars.
+- Get the initial ReginaMain window size right.
 - Get the initial PacketPane window size right (and make it larger).
 - Give the root-level container a better name.
 
