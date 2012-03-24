@@ -716,7 +716,7 @@ void ReginaMain::initPacketTree() {
     if (packetTree)
         delete packetTree;
     packetTree = new regina::NContainer();
-    packetTree->setPacketLabel(tr("Container").toAscii().constData());
+    packetTree->setPacketLabel(tr("Data").toAscii().constData());
 
     // Update the visual representation.
     treeView->fill(packetTree);
