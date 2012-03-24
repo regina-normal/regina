@@ -558,6 +558,20 @@ void ReginaMain::helpTrouble() {
     ReginaPrefSet::openHandbook("troubleshooting", 0, this);
 }
 
+void ReginaMain::helpIntro() {
+    // TODO
+    ReginaSupport::info(this,
+        tr("<qt>If you select "
+            "<i>File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
+            "Introductory Examples</i> from the menu, "
+            "Regina will open a sample data file that you can "
+            "play around with.<p>"
+            "You can also read the Regina Handbook, which walks "
+            "you through what Regina can do.  Just press F1, or select "
+            "<i>Help&nbsp;&rarr;&nbsp;Regina Handbook</i> from the "
+            "menu.</qt>"));
+}
+
 void ReginaMain::floatDockedPane() {
     // Delegate the entire procedure to PacketPane::floatPane().
     // Processing will return to this class when PacketPane calls
@@ -664,21 +678,28 @@ void ReginaMain::setupWidgets() {
         "detailed information.</qt>"));
     layout->addWidget(splitter, 1);
 
-    if (starterWindow_) {
+    if (starterWindow_ && ReginaPrefSet::global().helpIntroOnStartup) {
         // Give the user something helpful to start with.
-        advice = new MessageLayer("dialog-information",
-            tr("<qt>To start, try:<p>"
-            "File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
-            "Introductory Examples</qt>"));
-        advice->setWhatsThis(tr("<qt>If you select "
-            "<i>File&nbsp;&rarr;&nbsp;Open Example&nbsp;&rarr;&nbsp;"
-            "Introductory Examples</i> from the menu, "
-            "Regina will open a sample data file that you can "
-            "play around with.<p>"
-            "You can also read the Regina Handbook, which walks "
-            "you through what Regina can do.  Just press F1, or select "
-            "<i>Help&nbsp;&rarr;&nbsp;Regina Handbook</i> from the "
-            "menu.</qt>"));
+        advice = new QWidget();
+        QBoxLayout* advLayout = new QHBoxLayout(advice);
+
+        int iconSize = QApplication::style()->pixelMetric(
+            QStyle::PM_ToolBarIconSize);
+        QLabel* icon = new QLabel(advice);
+        icon->setPixmap(ReginaSupport::themeIcon("help-hint").pixmap(iconSize));
+        advLayout->addWidget(icon);
+
+        advLayout->addSpacing(iconSize / 2);
+
+        QLabel* text = new QLabel(tr(
+            "<qt>New to Regina?  <a href=\"#\">Click here.</a></qt>"), advice);
+        text->setWordWrap(false);
+        text->setTextInteractionFlags(Qt::TextBrowserInteraction);
+        advLayout->addWidget(text);
+        connect(text, SIGNAL(linkActivated(QString)), this, SLOT(helpIntro()));
+
+        advLayout->addStretch(1);
+
         layout->addWidget(advice);
     } else
         advice = 0;
@@ -839,6 +860,9 @@ bool ReginaMain::saveFile() {
 }
 
 void ReginaMain::updatePreferences() {
+    if (advice && ! ReginaPrefSet::global().helpIntroOnStartup)
+        delete advice;
+
     if (ReginaPrefSet::global().useDock == supportingDock)
         return;
 

@@ -618,16 +618,6 @@ void ReginaMain::setupActions() {
     QMenu *helpMenu =  menuBar()->addMenu(tr("&Help"));
 
     act = new QAction(this);
-    act->setText(tr("&About Regina"));
-    act->setIcon(ReginaSupport::themeIcon("help-about"));
-    act->setMenuRole(QAction::AboutRole);
-    act->setWhatsThis(tr("Display information about Regina, such as "
-        "the authors, license and website."));
-    connect(act, SIGNAL(triggered()), this, SLOT(helpAboutApp()));
-    helpMenu->addAction(act);
-
-
-    act = new QAction(this);
     act->setText(tr("Regina &Handbook"));
     act->setIcon(ReginaSupport::themeIcon("help-contents"));
     act->setShortcuts(QKeySequence::HelpContents);
@@ -637,11 +627,14 @@ void ReginaMain::setupActions() {
     helpMenu->addAction(act);
 
     act = new QAction(this);
-    act->setText(tr("What's &This?"));
+    act->setText(tr("&Getting Started"));
     act->setIcon(ReginaSupport::themeIcon("help-hint"));
-    act->setShortcuts(QKeySequence::WhatsThis);
-    connect(act, SIGNAL(triggered()), this, SLOT(helpWhatsThis()));
+    act->setWhatsThis(tr("Show some introductory information "
+        "for users new to Regina."));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpIntro()));
     helpMenu->addAction(act);
+
+    helpMenu->addSeparator();
 
     act = new QAction(this);
     act->setText(tr("&Python API Reference"));
@@ -664,17 +657,37 @@ void ReginaMain::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(helpXMLRef()));
     helpMenu->addAction(act);
 
+    act = new QAction(this);
+    act->setText(tr("Tr&oubleshooting"));
+    act->setIcon(ReginaSupport::themeIcon("dialog-warning"));
+    act->setWhatsThis(tr("Show solutions and discussions for common "
+        "problems."));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpTrouble()));
+    helpMenu->addAction(act);
+
+    helpMenu->addSeparator();
+
+    act = new QAction(this);
+    act->setText(tr("&About Regina"));
+    act->setIcon(ReginaSupport::themeIcon("help-about"));
+    act->setMenuRole(QAction::AboutRole);
+    act->setWhatsThis(tr("Display information about Regina, such as "
+        "the authors, license and website."));
+    connect(act, SIGNAL(triggered()), this, SLOT(helpAboutApp()));
+    helpMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("What's &This?"));
+    act->setIcon(ReginaSupport::themeIcon("help-contextual"));
+    act->setShortcuts(QKeySequence::WhatsThis);
+    connect(act, SIGNAL(triggered()), this, SLOT(helpWhatsThis()));
+    helpMenu->addAction(act);
+
     // TODO: Tip of the day not implemented
     //act = KStandardAction::tipOfDay(this, SLOT(helpTipOfDay()),
     //    actionCollection());
     //act->setWhatsThis(tr("View tips and hints on how to use Regina."));
    
-    act = new QAction(this);
-    act->setText(tr("Tr&oubleshooting"));
-    act->setIcon(ReginaSupport::themeIcon("dialog-warning"));
-    connect(act, SIGNAL(triggered()), this, SLOT(helpTrouble()));
-    helpMenu->addAction(act);
-
 
     // --- Toolbars ---
 

@@ -104,7 +104,8 @@ class ReginaPrefGeneral : public QWidget {
         // QCheckBox* cbDisplayTagsInTree;
         QLineEdit* editTreeJumpSize;
         QCheckBox* cbTipOfDay;
-        CodecChooser* cbImportExportCodec;
+        QCheckBox* cbIntroOnStartup;
+        CodecChooser* chooserImportExportCodec;
 
     public:
         ReginaPrefGeneral(QWidget* parent = 0);

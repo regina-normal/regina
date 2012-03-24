@@ -171,7 +171,8 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 //    generalPrefs->cbTipOfDay->setChecked(
 //        KConfigGroup(KGlobal::config(), "TipOfDay").
 //        readEntry("RunOnStart", true));
-    generalPrefs->cbImportExportCodec->setCodecName(
+    generalPrefs->cbIntroOnStartup->setChecked(prefSet.helpIntroOnStartup);
+    generalPrefs->chooserImportExportCodec->setCodecName(
         prefSet.fileImportExportCodec);
 
     triPrefs->cbGraphvizLabels->setChecked(prefSet.triGraphvizLabels);
@@ -299,6 +300,7 @@ void ReginaPreferences::slotApply() {
     prefSet.useDock = generalPrefs->cbUseDock->isChecked();
     // prefSet.displayTagsInTree = generalPrefs->cbDisplayTagsInTree->isChecked();
     //KTipDialog::setShowOnStart(generalPrefs->cbTipOfDay->isChecked());
+    prefSet.helpIntroOnStartup = generalPrefs->cbIntroOnStartup->isChecked();
 
     uintVal = generalPrefs->editTreeJumpSize->text().toUInt(&ok);
     if (ok && uintVal > 0)
@@ -315,7 +317,7 @@ void ReginaPreferences::slotApply() {
             QString::number(prefSet.treeJumpSize));
     }
 
-    prefSet.fileImportExportCodec = generalPrefs->cbImportExportCodec->
+    prefSet.fileImportExportCodec = generalPrefs->chooserImportExportCodec->
         selectedCodecName();
 
     prefSet.triGraphvizLabels = triPrefs->cbGraphvizLabels->isChecked();
@@ -712,8 +714,8 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
 
     label = new QLabel(tr("Text encoding for imports/exports:"));
     box->addWidget(label);
-    cbImportExportCodec = new CodecChooser();
-    box->addWidget(cbImportExportCodec, 1);
+    chooserImportExportCodec = new CodecChooser();
+    box->addWidget(chooserImportExportCodec, 1);
     msg = tr("<qt>The text encoding to use when importing or exporting data "
         "using plain text formats.  This is only relevant if you "
         "use letters or symbols that are not found on a typical "
@@ -721,8 +723,14 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
         "If you are not sure what to choose, the default encoding "
         "<b>UTF-8</b> is safe.</qt>");
     label->setWhatsThis(msg);
-    cbImportExportCodec->setWhatsThis(msg);
+    chooserImportExportCodec->setWhatsThis(msg);
     layout->addLayout(box);
+
+    // Help-related options.
+    cbIntroOnStartup = new QCheckBox(tr("Show help for new users on startup"));
+    cbIntroOnStartup->setWhatsThis(tr("Show help for new users at the bottom "
+        "of the window each time Regina is started."));
+    layout->addWidget(cbIntroOnStartup);
 
     // More options.
 

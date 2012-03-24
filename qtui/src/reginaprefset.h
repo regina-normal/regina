@@ -355,6 +355,8 @@ class ReginaPrefSet : public QObject {
             /**< Should we display packet tags in the visual tree? */
         QByteArray fileImportExportCodec;
             /**< The codec to use for imports and exports. */
+        bool helpIntroOnStartup;
+            /**< Should we display introductory help on startup? */
         QString pdfExternalViewer;
             /**< The external program used to view PDFs.
                  This string may contain

@@ -225,6 +225,7 @@ ReginaPrefSet::ReginaPrefSet() :
         displayTagsInTree(false),
         fileImportExportCodec("UTF-8"),
         fileRecentMax(10),
+        helpIntroOnStartup(true),
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
         pythonWordWrap(false),
@@ -424,6 +425,10 @@ void ReginaPrefSet::readInternal() {
         QByteArray("UTF-8")).toByteArray();
     settings.endGroup();
 
+    settings.beginGroup("Help");
+    helpIntroOnStartup = settings.value("IntroOnStartup", true).toBool();
+    settings.endGroup();
+
     settings.beginGroup("Python");
     pythonAutoIndent = settings.value("AutoIndent", true).toBool();
     pythonSpacesPerTab = settings.value("SpacesPerTab", 4).toInt();
@@ -546,6 +551,10 @@ void ReginaPrefSet::saveInternal() const {
     settings.beginGroup("File");
     settings.setValue("RecentMax", fileRecentMax);
     settings.setValue("ImportExportCodec", fileImportExportCodec);
+    settings.endGroup();
+
+    settings.beginGroup("Help");
+    settings.setValue("IntroOnStartup", helpIntroOnStartup);
     settings.endGroup();
 
     settings.beginGroup("Python");

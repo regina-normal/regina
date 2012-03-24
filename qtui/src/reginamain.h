@@ -333,6 +333,7 @@ class ReginaMain : public QMainWindow {
         void helpWhatsThis();
         void helpTipOfDay();
         void helpTrouble();
+        void helpIntro();
 
         /**
          * Float the currently docked pane.
