@@ -275,18 +275,21 @@ void ReginaMain::setupActions() {
     actCut->setWhatsThis(tr("Cut out the current selection and store it "
         "in the clipboard."));
     actCut->setShortcuts(QKeySequence::Cut);
+    actCut->setEnabled(false);
     editMenu->addAction(actCut);
 
     actCopy = new QAction(ReginaSupport::themeIcon("edit-copy"),
         tr("&Copy"), this);
     actCopy->setWhatsThis(tr("Copy the current selection to the clipboard."));
     actCopy->setShortcuts(QKeySequence::Copy);
+    actCopy->setEnabled(false);
     editMenu->addAction(actCopy);
 
     actPaste = new QAction(ReginaSupport::themeIcon("edit-paste"),
         tr("&Paste"), this);
     actPaste->setWhatsThis(tr("Paste the contents of the clipboard."));
     actPaste->setShortcuts(QKeySequence::Paste);
+    actPaste->setEnabled(false);
     editMenu->addAction(actPaste);
   
     // --- Tree actions ---

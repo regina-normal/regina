@@ -1,7 +1,5 @@
 Edit menu:
 - Python console: Edit options, seem to be there, but are commented in code?
-- Undocked panes: cut/copy/paste commented but still works; is a menu missing?
-- Undo/Redo: "works" in regular text/script editors but nowhere else.
 
 Stephan:
 - Document NNormalSurface::boundarySlopes().
