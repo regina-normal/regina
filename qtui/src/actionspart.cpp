@@ -597,10 +597,7 @@ void ReginaMain::setupActions() {
     connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
     toolMenu->addAction(actPython);
     
-    
-    // --- Settings actions ---
-
-    QMenu *settingsMenu =  menuBar()->addMenu(tr("&Settings"));
+    toolMenu->addSeparator();
 
     act = new QAction(this);
     act->setText(tr("&Configure Regina"));
@@ -610,8 +607,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Configure Regina.  Here you can set "
         "your own preferences for how Regina behaves."));
     connect(act, SIGNAL(triggered()), this, SLOT(optionsPreferences()));
-    settingsMenu->addAction(act);
-
+    toolMenu->addAction(act);
 
     // --- Help actions ---
 
