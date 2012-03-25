@@ -595,7 +595,7 @@ void PacketPane::floatPane() {
 
     // The packet pane is currently docked.
     mainWindow->aboutToUndock(this);
-    frame = new PacketWindow(this);
+    frame = new PacketWindow(this, mainWindow);
 
     dockUndockBtn->setChecked(false);
     actDockUndock->setText(tr("&Dock"));

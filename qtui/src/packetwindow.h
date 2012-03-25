@@ -38,6 +38,7 @@
 class PacketPane;
 class QMenu;
 class QMenuBar;
+class ReginaMain;
 
 /**
  * A frame holding a floating packet pane.
@@ -51,17 +52,22 @@ class PacketWindow : public QMainWindow {
     private:
         PacketPane* heldPane;
             /**< The packet pane held within this frame. */
+        ReginaMain* mainWindow;
+            /**< The main window for the corresponding data file. */
 
-            /**
-             * The action representing the flexible menu item
-             */
         QAction* packetMenu;
+            /**< The packet-specific menu. */
 
     private:
         /**
          * Constructor.
          */
-        PacketWindow(PacketPane* newPane, QWidget* parent = 0);
+        PacketWindow(PacketPane* newPane, ReginaMain* parent);
+
+        void setupMenus();
+
+    public slots:
+        void pythonConsole();
 
     protected:
         /**

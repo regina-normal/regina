@@ -162,6 +162,11 @@ class ReginaMain : public QMainWindow {
         PythonManager& getPythonManager();
 
         /**
+         * Allow access to the packet tree that this window manages.
+         */
+        regina::NPacket* getPacketTree();
+
+        /**
          * Indicate that the file is dirty.
          */
         virtual void setModified(bool modified);
@@ -432,6 +437,10 @@ class ReginaMain : public QMainWindow {
 
 inline PythonManager& ReginaMain::getPythonManager() {
     return consoles;
+}
+
+inline regina::NPacket* ReginaMain::getPacketTree() {
+    return packetTree;
 }
 
 #endif

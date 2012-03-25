@@ -1,6 +1,3 @@
-Packet pane / dock redesign:
-- The dock/undock mechanism is very broken.
-
 Edit menu:
 - Python console: Edit options, seem to be there, but are commented in code?
 - Undocked panes: cut/copy/paste commented but still works; is a menu missing?
@@ -20,3 +17,4 @@ NEXT RELEASE:
 - Get rid of the commit/discard mechanism, which is counterintuitive.
 - Reimplement tip of the day (not supported out-of-the-box by Qt).
 - MacOS: Include graphviz in the bundle.
+- MacOS: Resolve the jumping-menus issue if possible.
