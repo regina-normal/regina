@@ -31,6 +31,7 @@
 #include "packet/ncontainer.h"
 #include "surfaces/nnormalsurfacelist.h"
 
+#include "eventids.h"
 #include "examplesaction.h"
 #include "introdialog.h"
 #include "messagelayer.h"
@@ -52,6 +53,7 @@
 #include <QDrag>
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QEvent>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QInputDialog>
@@ -119,13 +121,21 @@ ReginaMain::~ReginaMain() {
     delete packetTree;
 }
 
-void ReginaMain::plugPacketMenu(QMenu *menu) {
-    delete packetMenu;
-    packetMenu = menuBar()->insertMenu(toolMenu->menuAction(), menu);
+void ReginaMain::plugPacketMenu() {
+    if (packetMenu) {
+        menuBar()->removeAction(packetMenu->menuAction());
+        delete packetMenu;
+        packetMenu = 0;
+    }
+    if (dockedPane) {
+        packetMenu = dockedPane->createPacketTypeMenu(true);
+        menuBar()->insertMenu(toolMenu->menuAction(), packetMenu);
+    }
 }
 
 void ReginaMain::unplugPacketMenu() {
     if (packetMenu) {
+        menuBar()->removeAction(packetMenu->menuAction());
         delete packetMenu;
         packetMenu = 0;
     }
@@ -189,9 +199,15 @@ void ReginaMain::dock(PacketPane* newPane) {
     newPane->setParent(dockArea);
     static_cast<QBoxLayout*>(dockArea->layout())->addWidget(newPane, 1);
     dockedPane = newPane;
-    
-    plugPacketMenu(newPane->createPacketTypeMenu(true));
+
     newPane->registerEditOperations(actCut, actCopy, actPaste);
+    
+    // Postpone plugPacketMenu() until after this run through the event
+    // loop, in the hope of avoiding the strange situation where menus
+    // end up in the wrong order even though QMenuBar is trying to
+    // insert them exactly where they should go...
+    QApplication::postEvent(this,
+        new QEvent((QEvent::Type)EVT_PLUG_PACKET_MENU));
 }
 
 void ReginaMain::aboutToUndock(PacketPane* undockedPane) {
@@ -272,6 +288,15 @@ QSize ReginaMain::sizeHint() const {
         ans.setHeight(ht);
 
     return ans;
+}
+
+void ReginaMain::customEvent(QEvent* evt) {
+    switch (evt->type()) {
+        case EVT_PLUG_PACKET_MENU:
+            plugPacketMenu(); break;
+        default:
+            break;
+    }
 }
 
 void ReginaMain::fileNew() {

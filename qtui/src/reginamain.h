@@ -108,7 +108,7 @@ class ReginaMain : public QMainWindow {
         /**
          * Menus and toolbars
          */
-        QAction* packetMenu;
+        QMenu* packetMenu;
         QMenu* toolMenu;
         QToolBar* toolBarMain;
         QToolBar* toolBarPacket;
@@ -149,7 +149,7 @@ class ReginaMain : public QMainWindow {
         /**
          * Plug in a new packet specific menu
          */
-        void plugPacketMenu(QMenu *menu);
+        void plugPacketMenu();
 
         /**
          * Remove the packet specific menu
@@ -239,6 +239,11 @@ class ReginaMain : public QMainWindow {
          * Qt override to set preferred size of the window.
          */
         virtual QSize sizeHint() const;
+
+        /**
+         * Qt override to allow postponing actions.
+         */
+        void customEvent(QEvent* evt);
 
     public slots:
         /**

@@ -36,11 +36,15 @@
 // Note that QEvent::User is 1000.
 
 enum {
+    // PacketUI:
     EVT_REFRESH_HEADER = 2001,
     EVT_PANE_SET_READONLY = 2100,
     EVT_PANE_SET_READWRITE = 2101,
     EVT_TREE_CHILD_ADDED = 2200,
-    EVT_COMMIT_PACKET = 2300
+    EVT_COMMIT_PACKET = 2300,
+
+    // ReginaMain:
+    EVT_PLUG_PACKET_MENU = 3001
 };
 
 #endif
