@@ -550,6 +550,13 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         void customEvent(QEvent* evt);
 };
 
+/**
+ * A packet-specific interface for opening a packet using an external
+ * viewer.
+ */
+typedef void (*PacketExternalViewer)(regina::NPacket* /* packet */,
+    QWidget* /* parentWidget */);
+
 inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :
         enclosingPane(newEnclosingPane) {
 }

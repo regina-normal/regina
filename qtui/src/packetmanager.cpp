@@ -99,8 +99,6 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     if (packet->getPacketType() == NNormalSurfaceList::packetType)
         return new NNormalSurfaceUI(dynamic_cast<NNormalSurfaceList*>(packet),
             enclosingPane);
-    if (packet->getPacketType() == NPDF::packetType)
-        return new NPDFUI(dynamic_cast<NPDF*>(packet), enclosingPane);
     if (packet->getPacketType() == NScript::packetType) {
         return new NScriptUI(dynamic_cast<NScript*>(packet), enclosingPane);
     }
@@ -124,5 +122,11 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
         return new NTriangulationUI(dynamic_cast<NTriangulation*>(packet),
             enclosingPane);
     return new DefaultPacketUI(packet, enclosingPane);
+}
+
+PacketExternalViewer PacketManager::externalViewer(regina::NPacket* packet) {
+    if (packet->getPacketType() == NPDF::packetType)
+        return &NPDFExternalViewer::view;
+    return 0;
 }
 

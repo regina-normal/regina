@@ -36,9 +36,7 @@
 
 #include <QIcon>
 #include "iconcache.h"
-
-class PacketPane;
-class PacketUI;
+#include "packetui.h"
 
 class QPlainTextEdit;
 
@@ -76,6 +74,14 @@ class PacketManager {
          */
         static PacketUI* createUI(regina::NPacket* packet,
             PacketPane* enclosingPane);
+
+        /**
+         * If this packet should be viewed using an external viewer
+         * (e.g., PDF packets), this routine returns an appropriate function.
+         * If this packet should be viewed using an internal viewer, this
+         * routine returns 0.
+         */
+        static PacketExternalViewer externalViewer(regina::NPacket* packet);
 };
 
 #endif

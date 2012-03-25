@@ -33,95 +33,14 @@
 #ifndef __NPDFUI_H
 #define __NPDFUI_H
 
-#include "../packetui.h"
-
-#include <QTemporaryFile>
-#include <QProcess>
-#include <QStackedWidget>
-#include <QUrl>
-
-class QWidgetStack;
-
-namespace regina {
-    class NPacket;
-    class NPDF;
-};
-
-class MessageLayer;
+#include "packetui.h"
 
 /**
- * A packet interface for viewing text packets.
+ * An external viewer for PDF packets.
  */
-class NPDFUI : public QObject, public PacketReadOnlyUI {
-    Q_OBJECT
-
-    private:
-        /**
-         * Packet details
-         */
-        regina::NPDF* pdf;
-
-        /**
-         * Temporary PDF storage
-         */
-        QTemporaryFile temp;
-
-        /**
-         * Internal components
-         */
-        QStackedWidget* stack;
-        MessageLayer* layerInfo;
-        MessageLayer* layerError;
-
-        /**
-         * Viewer details.
-         *
-         * \a proc identifies an external process given by the command-line
-         * \a cmd.
-         */
-        QProcess* proc;
-        QString cmd;
-
+class NPDFExternalViewer {
     public:
-        /**
-         * Constructor and destructor.
-         */
-        NPDFUI(regina::NPDF* packet, PacketPane* newEnclosingPane);
-        ~NPDFUI();
-
-        /**
-         * PacketUI overrides.
-         */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
-        QString getPacketMenuText() const;
-        void refresh();
-
-    public slots:
-        /**
-         * Notify this interface that the global preferences have been
-         * updated.
-         */
-        void updatePreferences();
-
-    private:
-        /**
-         * Update internal components.
-         */
-        void showInfo(const QString& msg);
-        void showError(const QString& msg);
-
-        /**
-         * Either kill the current viewer process or set it free,
-         * according to the \a autoClose setting.
-         */
-        void abandonProcess();
-
-    private slots:
-        /**
-         * Process control for external PDF viewers.
-         */
-        void processExited(int exitCode, QProcess::ExitStatus exitStatus);
+        static void view(regina::NPacket* packet, QWidget* parentWidget);
 };
 
 #endif

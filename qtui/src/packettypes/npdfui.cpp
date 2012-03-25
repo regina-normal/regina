@@ -32,175 +32,80 @@
 
 // UI includes:
 #include "npdfui.h"
-#include "messagelayer.h"
 #include "reginamain.h"
+#include "reginasupport.h"
 
 #include <csignal>
 #include <cstdio>
 #include <QDesktopServices>
 #include <QDir>
 #include <QFile>
-#include <QLabel>
 #include <QLayout>
+#include <QProcess>
 #include <QTextDocument>
-#include <QStackedWidget>
+#include <QTemporaryFile>
+#include <QUrl>
 
-using regina::NPacket;
-using regina::NPDF;
+void NPDFExternalViewer::view(regina::NPacket* packet, QWidget* parentWidget) {
+    // Write the PDF data to our temporary file.
+    const char* data = static_cast<regina::NPDF*>(packet)->data();
+    if (! data) {
+        ReginaSupport::info(parentWidget,
+            QObject::tr("This PDF packet is empty."));
+        return;
+    }
 
-NPDFUI::NPDFUI(NPDF* packet, PacketPane* enclosingPane) :
-        PacketReadOnlyUI(enclosingPane), pdf(packet),
-        temp(QString("%1/XXXXXX.pdf").arg(QDir::tempPath())), proc(0) {
     // Set suffix. Note that XXXXXX (exactly 6 X's all uppercase) gets replaced
     // with random letters to ensure the file does not already exist.
-
-    stack = new QStackedWidget();
-
-    // Information and error layers.
-    layerInfo = new MessageLayer("dialog-information", tr("Initialising..."));
-    layerError = new MessageLayer("dialog-warning", tr("Initialising..."));
-    stack->addWidget(layerInfo);
-    stack->addWidget(layerError);
-
-    // Finish off.
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
-
-    refresh();
-}
-
-NPDFUI::~NPDFUI() {
-    // Kill any external viewer that might currently be running.
-    abandonProcess();
-}
-
-NPacket* NPDFUI::getPacket() {
-    return pdf;
-}
-
-QWidget* NPDFUI::getInterface() {
-    return stack;
-}
-
-QString NPDFUI::getPacketMenuText() const {
-    return tr("P&DF");
-}
-
-void NPDFUI::updatePreferences() {
-    // If we're already showing the PDF, don't show it again.
-    // If there was some kind of error though, have another crack.
-    if (stack->currentWidget() == layerError)
-        refresh();
-}
-
-void NPDFUI::refresh() {
-    // Write the PDF data to our temporary file.
-    const char* data = pdf->data();
-    if (! data) {
-        showInfo(tr("This PDF packet is empty."));
-        setDirty(false);
+    QTemporaryFile* temp = new QTemporaryFile(
+        QString("%1/XXXXXX.pdf").arg(QDir::tempPath()), parentWidget);
+    if (! temp->open()) {
+        ReginaSupport::warn(parentWidget,
+            QObject::tr("<qt>I could not create the temporary "
+            "PDF file <i>%1</i>.</qt>").arg(temp->fileName()));
+        delete temp;
         return;
     }
-    if (! temp.open()) {
-        showError(tr("<qt>The temporary PDF file <i>%1</i> could not be "
-            "created.</qt>").arg(temp.fileName()));
-        setDirty(false);
-        return;
-    }
-    temp.close();
+    temp->close();
 
     if (! regina::writePDF(static_cast<const char*>(
-            QFile::encodeName(temp.fileName())), *pdf)) {
-        showError(tr("An error occurred whilst writing the PDF "
-            "data to the temporary file <i>%1</i>.").arg(temp.fileName()));
-        setDirty(false);
+            QFile::encodeName(temp->fileName())),
+            static_cast<regina::NPDF&>(*packet))) {
+        ReginaSupport::warn(parentWidget,
+            QObject::tr("<qt>An error occurred whilst writing the PDF "
+            "data to the temporary file <i>%1</i>.</qt>").
+            arg(temp->fileName()));
+        delete temp;
         return;
     }
-
-    // Kill any external viewer that might currently be running.
-    abandonProcess();
-
-    showInfo(tr("<qt>Opening the requested PDF viewer.<p>"
-        "You can select a different viewer under the <i>Tools</i> options "
-        "in Regina's settings.</qt>"));
 
     QString externalViewer =
         ReginaPrefSet::global().pdfExternalViewer.trimmed();
 
     if (externalViewer.isEmpty()) {
         // Fall back to the Qt default for PDFs.
-        if (! QDesktopServices::openUrl(QUrl::fromLocalFile(temp.fileName())))
-            showError(tr("<qt>I was not able to find a suitable PDF viewer.<p>"
+        if (! QDesktopServices::openUrl(
+                QUrl::fromLocalFile(temp->fileName()))) {
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("<qt>I was not able to find a suitable "
+                "PDF viewer.<p>"
                 "Please specify your preferred PDF viewer under the "
                 "<i>Tools</i> options in Regina's settings.</qt>"));
+            delete temp;
+        }
     } else {
-        proc = new QProcess(this);
-
-        connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)),
-            this, SLOT(processExited(int, QProcess::ExitStatus)));
-        
-        // pdfAutoClose is now always false.
-        if (false /* ReginaPrefSet::global().pdfAutoClose */) {
-            proc->start(externalViewer,QStringList(temp.fileName()));
-            if (! proc->waitForStarted(10000 /* milliseconds */)) {
-                showError(tr("<qt>Regina was unable to open an external "
-                    "PDF viewer.  The failed command was:<p>"
-                    "<tt>%1</tt><p>"
-                    "You can fix this by editing the <i>Tools</i> options in "
-                    "Regina's settings.</qt>").arg(Qt::escape(cmd)));
-                proc->kill();
-                delete proc;
-                proc = 0;
-            }
-        } else {
-            if (! proc->startDetached(externalViewer,QStringList(temp.fileName())) ) {
-                showError(tr("<qt>Regina was unable to open an external "
-                    "PDF viewer.  The failed command was:<p>"
-                    "<tt>%1</tt><p>"
-                    "You can fix this by editing the <i>Tools</i> options in "
-                    "Regina's settings.</qt>").arg(Qt::escape(cmd)));
-                delete proc;
-                proc = 0;
-            }
+        if (! QProcess::startDetached(externalViewer,
+                QStringList(temp->fileName()))) {
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("<qt>I was not able to open an external "
+                "PDF viewer.  The failed command was:<p>"
+                "<tt>%1 \"%2\"</tt><p>"
+                "You can fix this by editing the <i>Tools</i> options in "
+                "Regina's settings.</qt>").
+                arg(Qt::escape(externalViewer)).
+                arg(Qt::escape(temp->fileName())));
+            delete temp;
         }
     }
-
-    setDirty(false);
-}
-
-void NPDFUI::showInfo(const QString& msg) {
-    layerInfo->setText(msg);
-    stack->setCurrentWidget(layerInfo);
-}
-
-void NPDFUI::showError(const QString& msg) {
-    layerError->setText(msg);
-    stack->setCurrentWidget(layerError);
-}
-
-void NPDFUI::abandonProcess() {
-    if (proc) {
-        // Don't flag an error when we kill the process.
-        disconnect(proc, 0, this, 0);
-
-        // Set proc = 0 *before* we kill the process, so that any
-        // exit signal is ignored.
-        QProcess* tmpProc = proc;
-        proc = 0;
-        tmpProc->kill(); // Harmless if the process was detached.
-        delete tmpProc;
-    }
-}
-
-void NPDFUI::processExited(int exitCode, QProcess::ExitStatus exitStatus) {
-    // Did we try to start a viewer but couldn't?
-    if (! (exitStatus == QProcess::NormalExit && exitCode == 0))
-        showError(tr("<qt>Regina tried to open an external "
-            "PDF viewer but could not.  The failed command was:<p>"
-            "<tt>%1</tt><p>"
-            "You can fix this by editing the <i>Tools</i> options in "
-            "Regina's settings.</qt>").arg(Qt::escape(cmd)));
-    delete proc;
-    proc = 0;
 }
 

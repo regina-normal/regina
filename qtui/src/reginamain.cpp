@@ -34,6 +34,7 @@
 #include "examplesaction.h"
 #include "introdialog.h"
 #include "messagelayer.h"
+#include "packetmanager.h"
 #include "packettreeview.h"
 #include "packetui.h"
 #include "recentfilesaction.h"
@@ -142,7 +143,11 @@ void ReginaMain::setModified(bool modified) {
 
 void ReginaMain::packetView(regina::NPacket* packet, bool makeVisibleInTree,
         bool selectInTree) {
-    view(new PacketPane(this, packet));
+    PacketExternalViewer ext = PacketManager::externalViewer(packet);
+    if (ext) {
+        (*ext)(packet, this);
+    } else
+        view(new PacketPane(this, packet));
 
     if (makeVisibleInTree || selectInTree) {
         PacketTreeItem* item = treeView->find(packet);
