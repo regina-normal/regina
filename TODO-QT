@@ -6,9 +6,6 @@ Edit menu:
 - Undocked panes: cut/copy/paste commented but still works; is a menu missing?
 - Undo/Redo: "works" in regular text/script editors but nowhere else.
 
-Low-priority:
-- MacOS: Include graphviz in the bundle.
-
 Stephan:
 - Document NNormalSurface::boundarySlopes().
 - Merge and clean up TONS.
@@ -22,3 +19,4 @@ Misc:
 NEXT RELEASE:
 - Get rid of the commit/discard mechanism, which is counterintuitive.
 - Reimplement tip of the day (not supported out-of-the-box by Qt).
+- MacOS: Include graphviz in the bundle.
