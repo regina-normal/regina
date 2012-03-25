@@ -107,7 +107,7 @@ void PacketWindow::setupMenus() {
     
     toolMenu->addSeparator();
 
-    act = new QAction(this);
+    QAction* act = new QAction(this);
     act->setText(tr("&Configure Regina"));
     act->setIcon(ReginaSupport::themeIcon("configure"));
     act->setShortcuts(QKeySequence::Preferences);
