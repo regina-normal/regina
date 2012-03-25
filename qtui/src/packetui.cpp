@@ -147,6 +147,7 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
     actClose = new QAction(this);
     actClose->setText(tr("&Close"));
     actClose->setIcon(ReginaSupport::themeIcon("window-close"));
+    actClose->setShortcuts(QKeySequence::Close);
     actClose->setToolTip(tr("Close this packet viewer"));
     actClose->setWhatsThis(tr("Close this packet viewer.  Any changes "
         "that have not been committed will be discarded."));
