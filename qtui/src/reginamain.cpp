@@ -138,6 +138,7 @@ void ReginaMain::setModified(bool modified) {
     if (starterWindow_ && modified) {
         starterWindow_ = false;
         delete advice;
+        advice = 0;
     }
 }
 
@@ -859,8 +860,10 @@ bool ReginaMain::saveFile() {
 }
 
 void ReginaMain::updatePreferences() {
-    if (advice && ! ReginaPrefSet::global().helpIntroOnStartup)
+    if (advice && ! ReginaPrefSet::global().helpIntroOnStartup) {
         delete advice;
+        advice = 0;
+    }
 
     if (ReginaPrefSet::global().useDock == supportingDock)
         return;

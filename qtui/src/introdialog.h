@@ -52,6 +52,7 @@ class IntroDialog : public QDialog {
 
     private slots:
         void openHandbook();
+        void helpChanged(int newState);
 };
 
 #endif

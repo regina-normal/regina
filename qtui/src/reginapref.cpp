@@ -727,7 +727,7 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     layout->addLayout(box);
 
     // Help-related options.
-    cbIntroOnStartup = new QCheckBox(tr("Show help for new users on startup"));
+    cbIntroOnStartup = new QCheckBox(tr("Offer help for new users on startup"));
     cbIntroOnStartup->setWhatsThis(tr("Show help for new users at the bottom "
         "of the window each time Regina is started."));
     layout->addWidget(cbIntroOnStartup);
