@@ -1,5 +1,5 @@
 Edit menu:
-- Python console: Edit options, seem to be there, but are commented in code?
+- Python console: Fix enable/disable signals for input cut/copy/paste
 
 Stephan:
 - Document NNormalSurface::boundarySlopes().

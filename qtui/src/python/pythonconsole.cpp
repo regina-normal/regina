@@ -121,6 +121,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     act->setIcon(ReginaSupport::themeIcon("window-close"));
     act->setShortcuts(QKeySequence::Close);
     act->setToolTip(tr("Close Python console"));
+    act->setWhatsThis(tr("Close this Python console."));
     connect(act, SIGNAL(triggered()), this, SLOT(close()));
     menuConsole->addAction(act);
 
@@ -129,7 +130,11 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     act->setIcon(ReginaSupport::themeIcon("edit-copy"));
     act->setShortcut(tr("Shift+Ctrl+c"));
     act->setToolTip(tr(
-        "Copy selected text from the session log to the clipboard "));
+        "Copy selected text from the session log to the clipboard"));
+    act->setWhatsThis(tr(
+        "Copy selected text from the session log to the clipboard.  "
+        "The session log is the main part of the window, where you see "
+        "the full history of commands and their results."));
     connect(act, SIGNAL(triggered()), session, SLOT(copy()));
     act->setEnabled(false);
     connect(session, SIGNAL(copyAvailable(bool)), act,
@@ -141,57 +146,74 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     act->setIcon(ReginaSupport::themeIcon("edit-select-all"));
     act->setShortcut(tr("Shift+Ctrl+a"));
     act->setToolTip(tr(
-        "Selected all text in the session log"));
+        "Select all text in the session log"));
+    act->setWhatsThis(tr(
+        "Select all text in the session log.  "
+        "The session log is the main part of the window, where you see "
+        "the full history of commands and their results."));
     connect(act, SIGNAL(triggered()), session, SLOT(selectAll()));
     menuEdit->addAction(act);
 
-    /*
     menuEdit->addSeparator();
 
-    // TODO: Enable iff text is selected (current signal is wrong)
-    act = actionCollection()->addAction("edit_cut_input");
+    // TODO: Not enabled correctly (wrong CommandEdit signal).
+    act = new QAction(this);
     act->setText(tr("Cut From Input"));
-    act->setIcon(KIcon("edit-cut"));
+    act->setIcon(ReginaSupport::themeIcon("edit-cut"));
     act->setShortcuts(QKeySequence::Cut);
     act->setToolTip(tr(
-        "Cut selected text from the input area to the clipboard "));
+        "Cut selected text from the input area to the clipboard"));
+    act->setWhatsThis(tr(
+        "Cut selected text from the input area to the clipboard.  "
+        "The input area is the small box at the bottom of the window "
+        "where you can type your next command."));
     connect(act, SIGNAL(triggered()), input, SLOT(cut()));
     act->setEnabled(false);
     connect(input, SIGNAL(copyAvailable(bool)), act, SLOT(setEnabled(bool)));
     menuEdit->addAction(act);
 
-    // TODO: Enable iff text is selected (current signal is wrong)
-    act = actionCollection()->addAction("edit_copy_input");
+    // TODO: Not enabled correctly (wrong CommandEdit signal).
+    act = new QAction(this);
     act->setText(tr("Copy From Input"));
-    act->setIcon(KIcon("edit-copy"));
+    act->setIcon(ReginaSupport::themeIcon("edit-copy"));
     act->setShortcuts(QKeySequence::Copy);
     act->setToolTip(tr(
-        "Copy selected text from the input area to the clipboard "));
+        "Copy selected text from the input area to the clipboard"));
+    act->setWhatsThis(tr(
+        "Copy selected text from the input area to the clipboard.  "
+        "The input area is the small box at the bottom of the window "
+        "where you can type your next command."));
     connect(act, SIGNAL(triggered()), input, SLOT(copy()));
     act->setEnabled(false);
     connect(input, SIGNAL(copyAvailable(bool)), act, SLOT(setEnabled(bool)));
     menuEdit->addAction(act);
 
-    // TODO: Enable iff clipboard has text (current signal is wrong)
-    act = actionCollection()->addAction("edit_paste_input");
+    // TODO: Not enabled correctly (current signal is wrong)
+    act = new QAction(this);
     act->setText(tr("Paste To Input"));
-    act->setIcon(KIcon("edit-paste"));
+    act->setIcon(ReginaSupport::themeIcon("edit-paste"));
     act->setShortcuts(QKeySequence::Paste);
     act->setToolTip(tr(
         "Paste text from the clipboard into the input area"));
+    act->setWhatsThis(tr(
+        "Paste text from the clipboard into the input area.  "
+        "The input area is the small box at the bottom of the window "
+        "where you can type your next command."));
     connect(act, SIGNAL(triggered()), input, SLOT(paste()));
     act->setEnabled(false);
     connect(input, SIGNAL(copyAvailable(bool)), act, SLOT(setEnabled(bool)));
     menuEdit->addAction(act);
 
-    act = actionCollection()->addAction("edit_select_all_input");
+    act = new QAction(this);
     act->setText(tr("Select All From Input"));
-    act->setIcon(KIcon("edit-select-all"));
+    act->setIcon(ReginaSupport::themeIcon("edit-select-all"));
     act->setShortcuts(QKeySequence::SelectAll);
-    act->setToolTip(tr("Selected all text in the input area"));
+    act->setToolTip(tr("Select all text in the input area"));
+    act->setWhatsThis(tr("Select all text in the input area.  "
+        "The input area is the small box at the bottom of the window "
+        "where you can type your next command."));
     connect(act, SIGNAL(triggered()), input, SLOT(selectAll()));
     menuEdit->addAction(act);
-    */
 
     act = new QAction(this);
     act->setText(tr("&Scripting Overview"));
