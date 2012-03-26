@@ -34,6 +34,7 @@
 #include "npdfui.h"
 #include "reginamain.h"
 #include "reginasupport.h"
+#include "sharedtempfile.h"
 
 #include <csignal>
 #include <cstdio>
@@ -43,7 +44,6 @@
 #include <QLayout>
 #include <QProcess>
 #include <QTextDocument>
-#include <QTemporaryFile>
 #include <QUrl>
 
 void NPDFExternalViewer::view(regina::NPacket* packet, QWidget* parentWidget) {
@@ -57,35 +57,34 @@ void NPDFExternalViewer::view(regina::NPacket* packet, QWidget* parentWidget) {
 
     // Set suffix. Note that XXXXXX (exactly 6 X's all uppercase) gets replaced
     // with random letters to ensure the file does not already exist.
-    QTemporaryFile* temp = new QTemporaryFile(
-        QString("%1/XXXXXX.pdf").arg(QDir::tempPath()), parentWidget);
-    if (! temp->open()) {
+    SharedTempFile* temp = new SharedTempFile("XXXXXX.pdf", parentWidget);
+    if (! temp->valid()) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("<qt>I could not create the temporary "
-            "PDF file <i>%1</i>.</qt>").arg(temp->fileName()));
+            "PDF file <i>%1</i>.</qt>").arg(temp->localFileName()));
         delete temp;
         return;
     }
-    temp->close();
 
     if (! regina::writePDF(static_cast<const char*>(
-            QFile::encodeName(temp->fileName())),
+            QFile::encodeName(temp->localFileName())),
             static_cast<regina::NPDF&>(*packet))) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("<qt>An error occurred whilst writing the PDF "
             "data to the temporary file <i>%1</i>.</qt>").
-            arg(temp->fileName()));
+            arg(temp->localFileName()));
         delete temp;
         return;
     }
+
+    temp->share();
 
     QString externalViewer =
         ReginaPrefSet::global().pdfExternalViewer.trimmed();
 
     if (externalViewer.isEmpty()) {
         // Fall back to the Qt default for PDFs.
-        if (! QDesktopServices::openUrl(
-                QUrl::fromLocalFile(temp->fileName()))) {
+        if (! QDesktopServices::openUrl(temp->url())) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("<qt>I was not able to find a suitable "
                 "PDF viewer.<p>"
@@ -95,7 +94,7 @@ void NPDFExternalViewer::view(regina::NPacket* packet, QWidget* parentWidget) {
         }
     } else {
         if (! QProcess::startDetached(externalViewer,
-                QStringList(temp->fileName()))) {
+                QStringList(temp->localFileName()))) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("<qt>I was not able to open an external "
                 "PDF viewer.  The failed command was:<p>"
@@ -103,7 +102,7 @@ void NPDFExternalViewer::view(regina::NPacket* packet, QWidget* parentWidget) {
                 "You can fix this by editing the <i>Tools</i> options in "
                 "Regina's settings.</qt>").
                 arg(Qt::escape(externalViewer)).
-                arg(Qt::escape(temp->fileName())));
+                arg(Qt::escape(temp->localFileName())));
             delete temp;
         }
     }
