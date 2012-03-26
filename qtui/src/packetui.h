@@ -44,7 +44,6 @@ class PacketWindow;
 class QAction;
 class QLabel;
 class QMenu;
-class QToolBar;
 class QToolButton;
 class QTreeWidget;
 class ReginaMain;
@@ -285,7 +284,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         QLabel* headerTitle;
         PacketUI* mainUI;
         QToolButton* dockUndockBtn;
-        QToolBar* internalPacketToolBar;
 
         /**
          * Properties
@@ -338,24 +336,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          * Create a menu filled with the (shared) packet actions.
          */
         QMenu* createPacketTypeMenu(bool forDock);
-
-        /**
-         * Create a toolbar filled with the standard
-         * commit/discard/close actions, ready to add into a user interface.
-         */
-        QToolBar* createPacketToolBar();
-
-        /**
-         * Create a toolbar filled with the standard commit/discard/close
-         * actions, and add it as a footer to this packet pane.
-         *
-         * This should only be done when the packet pane is docked in the
-         * main window.  We need floating PacketWindows to maintain
-         * their own top-level toolbars; otherwise Windows platforms can
-         * get horribly confused when they see an internal QToolBar widget
-         * but no top-level toolbar in the main window.
-         */
-        void createInternalPacketToolBar();
 
         /**
          * Does this packet pane contain any changes that have not yet

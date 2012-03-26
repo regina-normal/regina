@@ -100,8 +100,7 @@ DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
 
 PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
         QWidget* parent) : QWidget(parent),
-        mainWindow(newMainWindow), frame(0), internalPacketToolBar(0),
-        dirty(false),
+        mainWindow(newMainWindow), frame(0), dirty(false),
         emergencyClosure(false), emergencyRefresh(false), isCommitting(false),
         editCut(0), editCopy(0), editPaste(0) {
     // Initialise a vertical layout with no padding or spacing.
@@ -204,6 +203,15 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
     layout->addWidget(mainUIWidget, 1);
     setFocusProxy(mainUIWidget);
 
+    // Set up the footer buttons and other actions.
+    QToolBar* footer = new QToolBar(this);
+    footer->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    footer->addAction(actCommit);
+    footer->addAction(actRefresh);
+    footer->addSeparator();
+    footer->addAction(actClose);
+    layout->addWidget(footer);
+
     // Register ourselves to listen for various events.
     newPacket->listen(this);
 }
@@ -247,25 +255,6 @@ QMenu* PacketPane::createPacketTypeMenu(bool forDock) {
     ans->addAction(actClose);
 
     return ans;
-}
-
-QToolBar* PacketPane::createPacketToolBar() {
-    QToolBar* ans = new QToolBar(this);
-    ans->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    ans->setFloatable(false);
-    ans->setMovable(false);
-
-    ans->addAction(actCommit);
-    ans->addAction(actRefresh);
-    ans->addSeparator();
-    ans->addAction(actClose);
-
-    return ans;
-}
-
-void PacketPane::createInternalPacketToolBar() {
-    internalPacketToolBar = createPacketToolBar();
-    static_cast<QBoxLayout*>(layout())->addWidget(internalPacketToolBar);
 }
 
 void PacketPane::setDirty(bool newDirty) {
@@ -602,15 +591,6 @@ void PacketPane::dockPane() {
 }
 
 void PacketPane::floatPane() {
-    if (internalPacketToolBar) {
-        delete internalPacketToolBar;
-        internalPacketToolBar = 0;
-
-        // We need PacketWindow to maintain the toolbar itself, since
-        // Windows platforms can get horribly confused when there is an
-        // internal toolbar widget but no top-level toolbar present.
-    }
-
     if (frame)
         return;
 

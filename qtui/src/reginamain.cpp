@@ -201,7 +201,6 @@ void ReginaMain::dock(PacketPane* newPane) {
     dockedPane = newPane;
 
     newPane->registerEditOperations(actCut, actCopy, actPaste);
-    newPane->createInternalPacketToolBar();
     
     // Postpone plugPacketMenu() until after this run through the event
     // loop, in the hope of avoiding the strange situation where menus
