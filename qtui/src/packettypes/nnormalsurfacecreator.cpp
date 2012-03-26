@@ -47,6 +47,16 @@
 
 using regina::NNormalSurfaceList;
 
+namespace {
+    /**
+     * IDs that correspond to indices in the enumeration type box.
+     */
+    enum {
+        BASIS_VERTEX,
+        BASIS_FUND
+    };
+}
+
 NNormalSurfaceCreator::NNormalSurfaceCreator() {
     // Set up the basic layout.
     ui = new QWidget();
@@ -64,6 +74,25 @@ NNormalSurfaceCreator::NNormalSurfaceCreator() {
     coords->setCurrentSystem(ReginaPrefSet::global().surfacesCreationCoords);
     coords->setWhatsThis(expln);
     coordArea->addWidget(coords, 1);
+
+    QBoxLayout* basisArea = new QHBoxLayout();
+    layout->addLayout(basisArea);
+    expln = ui->tr("<qt>Specifies whether to enumerate "
+        "only vertex surfaces (at extremal rays of the normal surface "
+        "solution cone), or all fundamental surfaces (which form a Hilbert "
+        "basis for the solution cone).<p>Fundamental surfaces are "
+        "more numerous, but can be significantly slower to enumerate.</qt>");
+    label = new QLabel(ui->tr("Enumerate:"), ui);
+    label->setWhatsThis(expln);
+    basisArea->addWidget(label);
+    basis = new QComboBox(ui);
+    // These insertions MUST happen in the same order in which the
+    // BASIS_... constants are defined at the top of this file.
+    basis->insertItem(BASIS_VERTEX, ui->tr("Vertex surfaces"));
+    basis->insertItem(BASIS_FUND, ui->tr("Fundamental surfaces"));
+    basis->setCurrentIndex(0);
+    basis->setWhatsThis(expln);
+    basisArea->addWidget(basis, 1);
 
     embedded = new QCheckBox(ui->tr("Embedded surfaces only"), ui);
     embedded->setChecked(true);
@@ -97,6 +126,8 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
     }
 
     int coordSystem = coords->getCurrentSystem();
+
+    int basisId = basis->currentIndex();
 
     // Sanity check for immersed and/or singular surfaces.
     if (! embedded->isChecked()) {
@@ -133,21 +164,47 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
         }
     }
 
-    regina::NProgressManager manager;
-    ProgressDialogNumeric dlg(&manager, ui->tr("Normal Surface Enumeration"),
-        ui->tr("Enumerating vertex normal surfaces..."), parentWidget);
+    if (basisId == BASIS_VERTEX) {
+        regina::NProgressManager manager;
+        ProgressDialogNumeric dlg(&manager,
+            ui->tr("Normal Surface Enumeration"),
+            ui->tr("Enumerating vertex normal surfaces..."),
+            parentWidget);
 
-    NNormalSurfaceList* ans = NNormalSurfaceList::enumerate(
-        dynamic_cast<regina::NTriangulation*>(parent),
-        coordSystem, embedded->isChecked(), &manager);
+        NNormalSurfaceList* ans = NNormalSurfaceList::enumerate(
+            dynamic_cast<regina::NTriangulation*>(parent),
+            coordSystem, embedded->isChecked(), &manager);
 
-    if (dlg.run())
-        return ans;
-    else {
-        delete ans;
-        ReginaSupport::info(parentWidget,
-            ui->tr("The normal surface enumeration was cancelled."));
-        return 0;
+        if (dlg.run())
+            return ans;
+        else {
+            delete ans;
+            ReginaSupport::info(parentWidget,
+                ui->tr("The normal surface enumeration was cancelled."));
+            return 0;
+        }
+    } else {
+        regina::NProgressManager manager;
+        // TODO: ProgressDialogNumeric will crash here, since messages
+        // are plain text.
+        ProgressDialogNumeric dlg(&manager,
+            ui->tr("Normal Surface Enumeration"),
+            ui->tr("Enumerating fundamental normal surfaces..."),
+            parentWidget);
+
+        NNormalSurfaceList* ans = NNormalSurfaceList::enumerateFundPrimal(
+                dynamic_cast<regina::NTriangulation*>(parent),
+                coordSystem, embedded->isChecked(),
+                0 /* vtx surfaces */, &manager);
+
+        if (dlg.run())
+            return ans;
+        else {
+            delete ans;
+            ReginaSupport::info(parentWidget,
+                ui->tr("The normal surface enumeration was cancelled."));
+            return 0;
+        }
     }
 }
 

@@ -37,6 +37,7 @@
 
 class CoordinateChooser;
 class QCheckBox;
+class QComboBox;
 
 /**
  * An interface for creating normal surface lists.
@@ -48,6 +49,7 @@ class NNormalSurfaceCreator : public PacketCreator {
          */
         QWidget* ui;
         CoordinateChooser* coords;
+        QComboBox* basis;
         QCheckBox* embedded;
 
     public:
