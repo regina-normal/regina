@@ -3,6 +3,5 @@ Stephan:
 - Merge and clean up TONS.
 
 Misc:
-- Surfaces: Make the default label reflect the coordinate system
 - Incorporate fundamental normal surfaces into the UI.
 - Windows: Work out what to do with ~/.regina-libs

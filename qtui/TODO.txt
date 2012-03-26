@@ -44,5 +44,8 @@ Python:
     - Check to see whether user libraries are in fact text files
     - Allow compilation and running of open libraries
 
+Surfaces:
+    - Make the default label reflect the coordinate system
+
 Triangulations:
     - Centre face pairing graphs, and/or match the background colour
