@@ -6,4 +6,3 @@ Misc:
 - Surfaces: Make the default label reflect the coordinate system
 - Incorporate fundamental normal surfaces into the UI.
 - Windows: Work out what to do with ~/.regina-libs
-- Windows: View PDF packet breaks (Adobe says cannot open)
