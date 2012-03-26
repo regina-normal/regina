@@ -128,8 +128,10 @@ void ReginaMain::plugPacketMenu() {
         packetMenu = 0;
     }
     if (dockedPane) {
-        packetMenu = dockedPane->createPacketTypeMenu(true);
+        packetMenu = new QMenu(tr("Docked %1").arg(dockedPane->getUI()->
+            getPacketMenuText()));
         menuBar()->insertMenu(toolMenu->menuAction(), packetMenu);
+        dockedPane->fillPacketTypeMenu(packetMenu);
     }
 }
 

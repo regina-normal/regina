@@ -231,30 +231,22 @@ void PacketPane::supportDock(bool shouldSupport) {
     dockUndockBtn->setVisible(shouldSupport);
 }
 
-QMenu* PacketPane::createPacketTypeMenu(bool forDock) {
-    QMenu* ans;
-    if (forDock)
-        ans = new QMenu(QString("Docked %1").arg(mainUI->getPacketMenuText()));
-    else
-        ans = new QMenu(mainUI->getPacketMenuText());
-
+void PacketPane::fillPacketTypeMenu(QMenu* menu) {
     const QLinkedList<QAction*>& packetTypeActions(
         mainUI->getPacketTypeActions());
     if (! packetTypeActions.isEmpty()) {
         for (QLinkedListIterator<QAction*> it(packetTypeActions) ;
                 it.hasNext(); ) {
-            ans->addAction( it.next() );  
+            menu->addAction( it.next() );  
         }
-        ans->addSeparator();
+        menu->addSeparator();
     }
 
-    ans->addAction(actCommit);
-    ans->addAction(actRefresh);
-    ans->addSeparator();
-    ans->addAction(actDockUndock);
-    ans->addAction(actClose);
-
-    return ans;
+    menu->addAction(actCommit);
+    menu->addAction(actRefresh);
+    menu->addSeparator();
+    menu->addAction(actDockUndock);
+    menu->addAction(actClose);
 }
 
 void PacketPane::setDirty(bool newDirty) {

@@ -62,9 +62,9 @@ void PacketWindow::closeEvent(QCloseEvent* event) {
 void PacketWindow::setupMenus() {
     // The packet-specific menu:
 
-    QMenu* packetMenu = heldPane->createPacketTypeMenu(false);
-    packetMenu->setParent(menuBar()); // Ensure it gets destroyed on close.
-    menuBar()->addMenu(packetMenu);
+    QMenu* packetMenu = menuBar()->addMenu(
+        heldPane->getUI()->getPacketMenuText());
+    heldPane->fillPacketTypeMenu(packetMenu);
 
     // The edit menu:
 

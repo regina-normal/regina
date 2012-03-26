@@ -326,6 +326,7 @@ class PacketPane : public QWidget, public regina::NPacketListener {
          */
         regina::NPacket* getPacket();
         ReginaMain* getMainWindow();
+        PacketUI* getUI();
 
         /**
          * Set this pane to support or not support docking as appropriate.
@@ -333,9 +334,12 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         void supportDock(bool shouldSupport);
 
         /**
-         * Create a menu filled with the (shared) packet actions.
+         * Fill the given menu with the internal packet actions.
+         * The menu must already be in a menu bar; otherwise Windows
+         * platforms get horribly confused.
+         * It is assumed that the given menu is empty.
          */
-        QMenu* createPacketTypeMenu(bool forDock);
+        void fillPacketTypeMenu(QMenu* menu);
 
         /**
          * Does this packet pane contain any changes that have not yet
@@ -593,6 +597,10 @@ inline regina::NPacket* PacketPane::getPacket() {
 
 inline ReginaMain* PacketPane::getMainWindow() {
     return mainWindow;
+}
+
+inline PacketUI* PacketPane::getUI() {
+    return mainUI;
 }
 
 inline bool PacketPane::isDirty() {
