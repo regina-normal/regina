@@ -33,7 +33,6 @@ Import/Export:
 
 MacOS:
     + Include graphviz in the bundle
-    - Resolve the jumping-menus issue if possible
     - Work out how to open windows with offsets (not always centered)
 
 Packets (General):
