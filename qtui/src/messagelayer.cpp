@@ -50,6 +50,8 @@ MessageLayer::MessageLayer(const char* iconName, const QString& defaultText) {
 
     text = new QLabel(defaultText, this);
     text->setWordWrap(true);
+    text->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    text->setOpenExternalLinks(true);
     layout->addWidget(text, 4);
 
     layout->addStretch(1);

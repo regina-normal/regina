@@ -366,19 +366,20 @@ void NTriFaceGraphUI::refresh() {
 
     if (useExec.isNull() || ! gvStatus.usable()) {
         // There seems to be a problem.
-        QString header = tr("<qt>Regina uses <i>Graphviz</i> for displaying "
+        QString header = tr("<qt>Regina uses <i>Graphviz</i> to display "
             "face pairing graphs.  ");
-        QString footer = tr("<p>If you have Graphviz installed, "
-            "please update the relevant setting in Regina's "
-            "<i>Tools</i> options.</qt>");
+        QString footer = tr("<p>You can install Graphviz from "
+            "<a href=\"http://www.graphviz.org\">www.graphviz.org</a>.  "
+            "If it is already installed, please visit Regina's <i>Tools</i> "
+            "configuration and tell me where I can find it.</qt>");
 
         QString error;
         if (gvStatus == GraphvizStatus::unknown)
             error = tr("However, Regina could not determine the status "
                 "of your Graphviz installation.");
         else if (gvStatus == GraphvizStatus::notFound)
-            error = tr("However, the Graphviz executable \"%1\" "
-                "could not be found on the default search "
+            error = tr("However, I could not find the Graphviz "
+                "executable \"%1\" on the default search "
                 "path.").arg(graphvizExec);
         else if (gvStatus == GraphvizStatus::notExist)
             error = tr("However, the Graphviz executable \"%1\" "
@@ -388,8 +389,8 @@ void NTriFaceGraphUI::refresh() {
                 "does not appear to be an executable "
                 "file.").arg(graphvizExec);
         else if (gvStatus == GraphvizStatus::notStartable)
-            error = tr("However, the Graphviz executable \"%1\" "
-                "cannot be started.").arg(graphvizExec);
+            error = tr("However, I could not start "    
+                "the Graphviz executable \"%1\".").arg(graphvizExec);
         else if (gvStatus == GraphvizStatus::unsupported)
             error = tr("However, I cannot determine the version of "
                 "Graphviz that you are running.  Perhaps your Graphviz "
