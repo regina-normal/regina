@@ -49,6 +49,8 @@ PacketWindow::PacketWindow(PacketPane* newPane, ReginaMain* parent) :
     heldPane->setParent(this);
     setCentralWidget(newPane);
 
+    addToolBar(Qt::BottomToolBarArea, heldPane->createPacketToolBar());
+
     setupMenus();
 }
 
