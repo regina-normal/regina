@@ -50,6 +50,29 @@ namespace {
         return NNormalSurfaceList::enumerate(owner, flavour, embedded, manager);
     }
 
+    NNormalSurfaceList* enumerateFundPrimal_2(regina::NTriangulation* owner,
+            int flavour) {
+        return NNormalSurfaceList::enumerateFundPrimal(owner, flavour);
+    }
+    NNormalSurfaceList* enumerateFundPrimal_3(regina::NTriangulation* owner,
+            int flavour, bool embedded) {
+        return NNormalSurfaceList::enumerateFundPrimal(owner, flavour,
+            embedded);
+    }
+    NNormalSurfaceList* enumerateFundPrimal_4(regina::NTriangulation* owner,
+            int flavour, bool embedded,
+            regina::NNormalSurfaceList* vtxSurfaces) {
+        return NNormalSurfaceList::enumerateFundPrimal(owner, flavour,
+            embedded, vtxSurfaces);
+    }
+    NNormalSurfaceList* enumerateFundPrimal_5(regina::NTriangulation* owner,
+            int flavour, bool embedded,
+            regina::NNormalSurfaceList* vtxSurfaces,
+            regina::NProgressManager* manager) {
+        return NNormalSurfaceList::enumerateFundPrimal(owner, flavour,
+            embedded, vtxSurfaces, manager);
+    }
+
     NNormalSurfaceList* enumerateFundDual_2(regina::NTriangulation* owner,
             int flavour) {
         return NNormalSurfaceList::enumerateFundDual(owner, flavour);
@@ -80,6 +103,14 @@ void addNNormalSurfaceList() {
         .def("enumerate", enumerate_3,
             return_value_policy<reference_existing_object>())
         .def("enumerate", enumerate_4,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundPrimal", enumerateFundPrimal_2,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundPrimal", enumerateFundPrimal_3,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundPrimal", enumerateFundPrimal_4,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundPrimal", enumerateFundPrimal_5,
             return_value_policy<reference_existing_object>())
         .def("enumerateFundDual", enumerateFundDual_2,
             return_value_policy<reference_existing_object>())
@@ -116,6 +147,7 @@ void addNNormalSurfaceList() {
         .staticmethod("enumerate")
         .staticmethod("enumerateStandardDirect")
         .staticmethod("enumerateStandardANDirect")
+        .staticmethod("enumerateFundPrimal")
         .staticmethod("enumerateFundDual")
     ;
 
