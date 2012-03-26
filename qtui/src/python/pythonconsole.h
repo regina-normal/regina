@@ -72,6 +72,13 @@ class PythonConsole : public QMainWindow {
         PythonOutputStream* error;
 
         /**
+         * Actions
+         */
+        QAction* actCutInput;
+        QAction* actCopyInput;
+        QAction* actPasteInput;
+
+        /**
          * Python components
          */
         PythonInterpreter* interpreter;
@@ -184,6 +191,11 @@ class PythonConsole : public QMainWindow {
          * Process the command currently on the input line.
          */
         void processCommand();
+
+        /**
+         * Update the enabled state of the clipboard-related actions.
+         */
+        void updateClipboardActions();
 
     private:
         /**

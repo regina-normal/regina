@@ -45,6 +45,7 @@
 #include <iostream>
 
 #include <QApplication>
+#include <QClipboard>
 #include <QDesktopWidget>
 #include <QFileDialog>
 #include <QFileInfo>
@@ -156,53 +157,52 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
 
     menuEdit->addSeparator();
 
-    // TODO: Not enabled correctly (wrong CommandEdit signal).
-    act = new QAction(this);
-    act->setText(tr("Cut From Input"));
-    act->setIcon(ReginaSupport::themeIcon("edit-cut"));
-    act->setShortcuts(QKeySequence::Cut);
-    act->setToolTip(tr(
+    actCutInput = new QAction(this);
+    actCutInput->setText(tr("Cut From Input"));
+    actCutInput->setIcon(ReginaSupport::themeIcon("edit-cut"));
+    actCutInput->setShortcuts(QKeySequence::Cut);
+    actCutInput->setToolTip(tr(
         "Cut selected text from the input area to the clipboard"));
-    act->setWhatsThis(tr(
+    actCutInput->setWhatsThis(tr(
         "Cut selected text from the input area to the clipboard.  "
         "The input area is the small box at the bottom of the window "
         "where you can type your next command."));
-    connect(act, SIGNAL(triggered()), input, SLOT(cut()));
-    act->setEnabled(false);
-    connect(input, SIGNAL(copyAvailable(bool)), act, SLOT(setEnabled(bool)));
-    menuEdit->addAction(act);
+    connect(actCutInput, SIGNAL(triggered()), input, SLOT(cut()));
+    actCutInput->setEnabled(false);
+    menuEdit->addAction(actCutInput);
 
-    // TODO: Not enabled correctly (wrong CommandEdit signal).
-    act = new QAction(this);
-    act->setText(tr("Copy From Input"));
-    act->setIcon(ReginaSupport::themeIcon("edit-copy"));
-    act->setShortcuts(QKeySequence::Copy);
-    act->setToolTip(tr(
+    actCopyInput = new QAction(this);
+    actCopyInput->setText(tr("Copy From Input"));
+    actCopyInput->setIcon(ReginaSupport::themeIcon("edit-copy"));
+    actCopyInput->setShortcuts(QKeySequence::Copy);
+    actCopyInput->setToolTip(tr(
         "Copy selected text from the input area to the clipboard"));
-    act->setWhatsThis(tr(
+    actCopyInput->setWhatsThis(tr(
         "Copy selected text from the input area to the clipboard.  "
         "The input area is the small box at the bottom of the window "
         "where you can type your next command."));
-    connect(act, SIGNAL(triggered()), input, SLOT(copy()));
-    act->setEnabled(false);
-    connect(input, SIGNAL(copyAvailable(bool)), act, SLOT(setEnabled(bool)));
-    menuEdit->addAction(act);
+    connect(actCopyInput, SIGNAL(triggered()), input, SLOT(copy()));
+    actCopyInput->setEnabled(false);
+    menuEdit->addAction(actCopyInput);
 
-    // TODO: Not enabled correctly (current signal is wrong)
-    act = new QAction(this);
-    act->setText(tr("Paste To Input"));
-    act->setIcon(ReginaSupport::themeIcon("edit-paste"));
-    act->setShortcuts(QKeySequence::Paste);
-    act->setToolTip(tr(
+    connect(input, SIGNAL(selectionChanged()), this,
+        SLOT(updateClipboardActions()));
+
+    actPasteInput = new QAction(this);
+    actPasteInput->setText(tr("Paste To Input"));
+    actPasteInput->setIcon(ReginaSupport::themeIcon("edit-paste"));
+    actPasteInput->setShortcuts(QKeySequence::Paste);
+    actPasteInput->setToolTip(tr(
         "Paste text from the clipboard into the input area"));
-    act->setWhatsThis(tr(
+    actPasteInput->setWhatsThis(tr(
         "Paste text from the clipboard into the input area.  "
         "The input area is the small box at the bottom of the window "
         "where you can type your next command."));
-    connect(act, SIGNAL(triggered()), input, SLOT(paste()));
-    act->setEnabled(false);
-    connect(input, SIGNAL(copyAvailable(bool)), act, SLOT(setEnabled(bool)));
-    menuEdit->addAction(act);
+    connect(actPasteInput, SIGNAL(triggered()), input, SLOT(paste()));
+    actPasteInput->setEnabled(false);
+    connect(QApplication::clipboard(), SIGNAL(dataChanged()), this,
+        SLOT(updateClipboardActions()));
+    menuEdit->addAction(actPasteInput);
 
     act = new QAction(this);
     act->setText(tr("Select All From Input"));
@@ -248,6 +248,8 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     menuBar()->addMenu(menuConsole);
     menuBar()->addMenu(menuEdit);
     menuBar()->addMenu(menuHelp);
+
+    updateClipboardActions();
 
     // Prepare the console for use.
     if (manager)
@@ -544,6 +546,13 @@ void PythonConsole::ErrorStream::processOutput(const std::string& data) {
         console_->addError(data.substr(0, data.length() - 1).c_str());
     else
         console_->addError(data.c_str());
+}
+
+void PythonConsole::updateClipboardActions() {
+    actCutInput->setEnabled(input->hasSelectedText());
+    actCopyInput->setEnabled(input->hasSelectedText());
+    actPasteInput->setEnabled(
+        ! QApplication::clipboard()->text(QClipboard::Clipboard).isNull());
 }
 
 // #include "pythonconsole.moc"
