@@ -6,10 +6,10 @@ Misc:
 - Incorporate fundamental normal surfaces into the UI.
 - Windows: Work out what to do with ~/.regina-libs
 - Windows: View PDF packet breaks (Adobe says cannot open)
-- Open windows with offsets, not all in the same location.
 
 NEXT RELEASE:
 - Get rid of the commit/discard mechanism, which is counterintuitive.
 - Reimplement tip of the day (not supported out-of-the-box by Qt).
 - MacOS: Include graphviz in the bundle.
 - MacOS: Resolve the jumping-menus issue if possible.
+- Open windows with offsets, not all in the same location.
