@@ -38,6 +38,7 @@
 
 #include <QDialog>
 #include <QAbstractItemModel>
+#include <QTreeView>
 
 class PacketUI;
 class QTreeView;
@@ -201,6 +202,19 @@ class BoundaryComponentModel : public SkeletalModel {
 };
 
 /**
+ * A tree view with a larger size hint than normal.
+ */
+class SkeletonTreeView : public QTreeView {
+    Q_OBJECT
+
+    public:
+        SkeletonTreeView();
+
+    protected:
+        virtual QSize sizeHint() const;
+};
+
+/**
  * A modeless dialog for viewing all skeletal objects of a particular
  * type in a triangulation.
  *
@@ -301,6 +315,9 @@ inline ComponentModel::ComponentModel(regina::NTriangulation* tri_) :
 inline BoundaryComponentModel::BoundaryComponentModel(
         regina::NTriangulation* tri_) :
         SkeletalModel(tri_) {}
+
+inline SkeletonTreeView::SkeletonTreeView() : QTreeView() {
+}
 
 inline SkeletonWindow::~SkeletonWindow() {
     delete model;

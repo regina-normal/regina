@@ -31,12 +31,14 @@
 #include "skeletonwindow.h"
 #include "../packetui.h"
 
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QHeaderView>
 #include <QLayout>
 #include <QPainter>
+#include <QScrollBar>
 #include <QStyle>
-#include <QTreeView>
 
 using regina::NBoundaryComponent;
 using regina::NComponent;
@@ -44,12 +46,45 @@ using regina::NEdge;
 using regina::NFace;
 using regina::NVertex;
 
+#define SKELETON_MAX_ROWS_DEFAULT 10
 namespace {
     inline QString& appendToList(QString& list,
             const QString& item) {
         return (list.isEmpty() ? (list = item) :
             (list.append(", ").append(item)));
     }
+}
+
+QSize SkeletonTreeView::sizeHint() const {
+    int preferredWidth = header()->length();
+
+    // Wide, but not insanely wide.
+    int desktopWidth = QApplication::desktop()->availableGeometry().width();
+    if (preferredWidth > desktopWidth / 2)
+        preferredWidth = desktopWidth / 2;
+
+    // Can we fit all the rows?
+    int preferredHeight;
+
+    int rows = model()->rowCount();
+    int headerHeight = header()->sizeHint().height();
+    int rowHeight = sizeHintForRow(0);
+    if (rows <= SKELETON_MAX_ROWS_DEFAULT) {
+        preferredHeight = rowHeight * rows + headerHeight;
+    } else {
+        preferredHeight = rowHeight * SKELETON_MAX_ROWS_DEFAULT +
+            headerHeight + horizontalScrollBar()->height();
+
+        preferredWidth += verticalScrollBar()->width();
+    }
+
+    // We need a little extra space.
+    // Alas I'm not quite sure what this is; I'm hoping it's just the
+    // 2px for the borders around cells.
+    preferredWidth += 2;
+    preferredHeight += 2;
+
+    return QSize(preferredWidth, preferredHeight);
 }
 
 SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
@@ -77,7 +112,7 @@ SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
             break;
     }
 
-    table = new QTreeView();
+    table = new SkeletonTreeView();
     table->setItemsExpandable(false);
     table->setRootIsDecorated(false);
     table->setAlternatingRowColors(true);
