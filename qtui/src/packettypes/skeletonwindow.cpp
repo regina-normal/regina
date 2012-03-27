@@ -90,6 +90,11 @@ SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
                              "border-top-color: transparent;"
                              "border-left-color: transparent;"
                          "}");
+    /*
+    table->header()->setStyleSheet("QHeaderView::section:last { "
+                                       "border: 1px solid #d9d9d9; "
+                                   "}");
+    */
     table->setModel(model);
     layout->addWidget(table, 1);
 
