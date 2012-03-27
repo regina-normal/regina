@@ -908,7 +908,10 @@ void ReginaMain::updatePreferences() {
 
     // Resize to the suggested width, but only use the suggested height
     // if it is larger (i.e., never shrink vertically).
-    QSize s = sizeHint();
+    // Here we use QMainWindow's sizeHint() which measures the widths of
+    // toolbars, instead of ReginaMain's sizeHint() which simply uses
+    // the size of the last main window.
+    QSize s = QMainWindow::sizeHint();
     if (height() > s.height())
         s.setHeight(height());
     resize(s);
