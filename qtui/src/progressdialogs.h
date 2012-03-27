@@ -37,9 +37,12 @@
 #include <QProgressDialog>
 
 namespace regina {
+    class NProgress;
     class NProgressManager;
     class NProgressNumber;
 };
+
+class QLabel;
 
 /**
  * A dialog that interacts with the calculation engine progress class
@@ -73,8 +76,53 @@ class ProgressDialogNumeric : public QProgressDialog {
          * regina::NProgressNumber.
          */
         ProgressDialogNumeric(regina::NProgressManager* useManager,
-                const QString& dialogTitle, const QString& displayText,
-                QWidget* parent = 0, const char* name = 0);
+                const QString& displayText, QWidget* parent = 0);
+
+        /**
+         * Displays the dialog and follows the progress of the
+         * underlying operation.
+         *
+         * This routine will only return once the operation has finished.
+         * It returns \c true on successful completion, or \c false
+         * if the operation was cancelled.
+         */
+        bool run();
+};
+
+/**
+ * A dialog that can interact with any progress class from the
+ * calculation engine.
+ *
+ * Upon calling ProgressDialogMessage::run(), the dialog will be
+ * displayed and it will follow the progress of the underlying
+ * operation in the calculation engine.  The operation itself should be
+ * running in a separate thread.
+ *
+ * For the time being, this dialog has no cancellation button.
+ */
+class ProgressDialogMessage : public QDialog {
+    Q_OBJECT
+
+    private:
+        regina::NProgressManager* manager;
+            /**< The progress manager handling the inter-thread
+                 communication. */
+        const regina::NProgress* progress;
+            /**< The calculation engine progress watcher. */
+
+        QLabel* msg;
+            /**< The current progress message. */
+
+    public:
+        /**
+         * Creates a new progress dialog linked to the given
+         * calculation engine progress manager.
+         *
+         * The progress manager must not have been started, i.e.,
+         * <tt>manager->isStarted()</tt> must return \c false.
+         */
+        ProgressDialogMessage(regina::NProgressManager* useManager,
+                const QString& displayText, QWidget* parent = 0);
 
         /**
          * Displays the dialog and follows the progress of the

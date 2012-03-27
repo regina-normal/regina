@@ -167,8 +167,7 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
     if (basisId == BASIS_VERTEX) {
         regina::NProgressManager manager;
         ProgressDialogNumeric dlg(&manager,
-            ui->tr("Normal Surface Enumeration"),
-            ui->tr("Enumerating vertex normal surfaces..."),
+            ui->tr("Enumerating vertex normal surfaces"),
             parentWidget);
 
         NNormalSurfaceList* ans = NNormalSurfaceList::enumerate(
@@ -185,11 +184,8 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
         }
     } else {
         regina::NProgressManager manager;
-        // TODO: ProgressDialogNumeric will crash here, since messages
-        // are plain text.
-        ProgressDialogNumeric dlg(&manager,
-            ui->tr("Normal Surface Enumeration"),
-            ui->tr("Enumerating fundamental normal surfaces..."),
+        ProgressDialogMessage dlg(&manager,
+            ui->tr("Enumerating fundamental normal surfaces"),
             parentWidget);
 
         NNormalSurfaceList* ans = NNormalSurfaceList::enumerateFundPrimal(

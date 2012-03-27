@@ -81,7 +81,7 @@ regina::NPacket* NAngleStructureCreator::createPacket(
     }
 
     regina::NProgressManager manager;
-    ProgressDialogNumeric dlg(&manager, ui->tr("Angle Structure Enumeration"),
+    ProgressDialogNumeric dlg(&manager,
         ui->tr("Enumerating vertex angle structures..."), parentWidget);
 
     regina::NAngleStructureList* ans = regina::NAngleStructureList::enumerate(

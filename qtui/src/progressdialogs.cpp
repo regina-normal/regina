@@ -34,7 +34,10 @@
 #include "progressdialogs.h"
 
 #include <QApplication>
+#include <QFrame>
+#include <QLabel>
 #include <QThread>
+#include <QVBoxLayout>
 
 namespace {
     /**
@@ -50,13 +53,13 @@ namespace {
 }
 
 ProgressDialogNumeric::ProgressDialogNumeric(
-        regina::NProgressManager* useManager, const QString& dialogTitle,
-        const QString& displayText, QWidget* parent, const char* name) :
+        regina::NProgressManager* useManager,
+        const QString& displayText, QWidget* parent) :
         QProgressDialog(parent),
         /* Don't use Qt::Popup because the layout breaks under fink. */
         manager(useManager), progress(0) {
     setLabelText(displayText);
-    setWindowTitle(dialogTitle);
+    setWindowTitle(tr("Working"));
     setMinimumDuration(500);
     setWindowModality(Qt::WindowModal);
 }
@@ -90,5 +93,53 @@ bool ProgressDialogNumeric::run() {
     }
 
     return (! progress->isCancelled());
+}
+
+ProgressDialogMessage::ProgressDialogMessage(
+        regina::NProgressManager* useManager,
+        const QString& displayText, QWidget* parent) :
+        QDialog(parent),
+        manager(useManager), progress(0) {
+    setWindowTitle(tr("Working"));
+    setWindowModality(Qt::WindowModal);
+
+    QVBoxLayout* layout = new QVBoxLayout(this);
+
+    QLabel* label = new QLabel(QString("<qt><b>%1</b></qt>").arg(displayText));
+    label->setAlignment(Qt::AlignCenter);
+    layout->addWidget(label);
+
+    QFrame* separator = new QFrame();
+    separator->setFrameStyle(QFrame::HLine);
+    separator->setFrameShadow(QFrame::Sunken);
+    layout->addWidget(separator);
+
+    msg = new QLabel(tr("Status: Starting"));
+    msg->setAlignment(Qt::AlignLeft);
+    msg->setTextFormat(Qt::PlainText);
+    layout->addWidget(msg);
+
+    layout->addStretch(1);
+}
+
+bool ProgressDialogMessage::run() {
+    show();
+    QCoreApplication::instance()->processEvents();
+
+    while (! manager->isStarted())
+        WaitingThread::tinySleep();
+
+    progress = manager->getProgress();
+    msg->setText(tr("Status: %1").arg(progress->getDescription().c_str()));
+    while (! progress->isFinished()) {
+        if (progress->hasChanged()) {
+            msg->setText(tr("Status: %1").arg(
+                progress->getDescription().c_str()));
+        }
+        QCoreApplication::instance()->processEvents();
+        WaitingThread::tinySleep();
+    }
+
+    return (! progress->isCancelled()); // Always true, for now.
 }
 
