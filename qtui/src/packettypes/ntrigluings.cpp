@@ -508,9 +508,12 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     faceTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     faceTable->setModel(model);
     
-    if (readWrite)
-        faceTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
-    else
+    if (readWrite) {
+        QAbstractItemView::EditTriggers flags(
+            QAbstractItemView::AllEditTriggers);
+        flags ^= QAbstractItemView::CurrentChanged;
+        faceTable->setEditTriggers(flags);
+    } else
         faceTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 
@@ -805,9 +808,12 @@ void NTriGluingsUI::refresh() {
 void NTriGluingsUI::setReadWrite(bool readWrite) {
     model->setReadWrite(readWrite);
 
-    if (readWrite)
-        faceTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
-    else
+    if (readWrite) {
+        QAbstractItemView::EditTriggers flags(
+            QAbstractItemView::AllEditTriggers);
+        flags ^= QAbstractItemView::CurrentChanged;
+        faceTable->setEditTriggers(flags);
+    } else
         faceTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     QLinkedListIterator<QAction*> it(enableWhenWritable);
