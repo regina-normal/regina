@@ -64,9 +64,6 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowTitle(tr("Python Console"));
 
-    if (ReginaPrefSet::global().windowPythonSize.isValid())
-        resize(ReginaPrefSet::global().windowPythonSize);
-
     // Set up the main widgets.
     QWidget* box = new QWidget(this);
     QVBoxLayout* layout = new QVBoxLayout;
@@ -467,6 +464,9 @@ void PythonConsole::contextHelpActivated() {
 }
 
 QSize PythonConsole::sizeHint() const {
+    if (ReginaPrefSet::global().windowPythonSize.isValid())
+        return ReginaPrefSet::global().windowPythonSize;
+
     QRect d = QApplication::desktop()->availableGeometry();
     return QSize(d.width() / 2,
                  d.height() * 2 / 3); // A little taller for its size.

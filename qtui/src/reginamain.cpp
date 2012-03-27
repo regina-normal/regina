@@ -82,9 +82,6 @@ ReginaMain::ReginaMain(ReginaManager* useManager, bool starterWindow) :
         supportingDock(ReginaPrefSet::global().useDock) {
     setAttribute(Qt::WA_DeleteOnClose);
 
-    if (ReginaPrefSet::global().windowMainSize.isValid())
-        resize(ReginaPrefSet::global().windowMainSize);
-
     // Accept drag and drop.
     setAcceptDrops(true);
 
@@ -280,6 +277,9 @@ void ReginaMain::closeEvent(QCloseEvent *event) {
 }
 
 QSize ReginaMain::sizeHint() const {
+    if (ReginaPrefSet::global().windowMainSize.isValid())
+        return ReginaPrefSet::global().windowMainSize;
+
     // Use the suggested width, but expand to 2/3 the screen height.
     QSize ans = QMainWindow::sizeHint();
 
