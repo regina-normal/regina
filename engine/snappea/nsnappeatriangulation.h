@@ -72,7 +72,12 @@ class NTriangulation;
  * Public License, version 2 or any later version, as published by the
  * Free Software Foundation.
  *
- * See http://www.math.uic.edu/t3m/SnapPy/ for further information on
+ * This class also makes use of additional code from SnapPy that is not
+ * included in the SnapPea kernel.  SnapPy is by M. Culler, N. M. Dunfield
+ * and J. R. Weeks, and is also released under the terms of the
+ * GNU General Public License.
+ *
+ * See http://snappy.computop.org/ for further information on
  * SnapPea and its successor SnapPy.
  *
  * \testpart
