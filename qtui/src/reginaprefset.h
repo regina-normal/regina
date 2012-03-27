@@ -460,6 +460,8 @@ class ReginaPrefSet : public QObject {
 
         /**
          * Returns the full path to the python libraries configuration file.
+         * Under Windows (where python libraries are stored in the registry),
+         * this routine returns the null string.
          */
         static QString pythonLibrariesConfig();
 
@@ -551,7 +553,8 @@ class ReginaPrefSet : public QObject {
         void saveInternal() const;
 
         // Read and write python libraries to/from the regina-python
-        // configuration file:
+        // configuration file.  As an exception, under Windows, use the
+        // registry instead.
         bool readPythonLibraries();
         bool savePythonLibraries() const;
 };
