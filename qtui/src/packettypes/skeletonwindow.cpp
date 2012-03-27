@@ -78,11 +78,8 @@ QSize SkeletonTreeView::sizeHint() const {
         preferredWidth += verticalScrollBar()->width();
     }
 
-    // We need a little extra space.
-    // Alas I'm not quite sure what this is; I'm hoping it's just the
-    // 2px for the borders around cells.
-    preferredWidth += 2;
-    preferredHeight += 2;
+    preferredWidth += 2 * frameWidth();
+    preferredHeight += 2 * frameWidth();
 
     return QSize(preferredWidth, preferredHeight);
 }
