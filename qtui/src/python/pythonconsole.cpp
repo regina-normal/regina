@@ -62,6 +62,7 @@
 PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
         QMainWindow(parent), manager(useManager) {
     setAttribute(Qt::WA_DeleteOnClose);
+    setWindowTitle(tr("Python Console"));
 
     if (ReginaPrefSet::global().windowPythonSize.isValid())
         resize(ReginaPrefSet::global().windowPythonSize);
