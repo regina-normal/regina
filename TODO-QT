@@ -1,6 +1,3 @@
 Stephan:
 - Document NNormalSurface::boundarySlopes().
 - Merge and clean up TONS.
-
-Misc:
-- Windows: Work out what to do with ~/.regina-libs
