@@ -352,11 +352,13 @@ bool PythonInterpreter::runScript(const char* code) {
 bool PythonInterpreter::runScript(const char* filename, const char* shortName) {
     PyEval_RestoreThread(state);
 
-    FILE* script = fopen(filename, "r");
+    PyObject* script = PyFile_FromString(const_cast<char*>(filename), "r");
     if (script) {
-        PyObject* ans = PyRun_File(script, const_cast<char*>(shortName),
+        PyObject* ans = PyRun_File(PyFile_AsFile(script),
+            const_cast<char*>(shortName),
             Py_file_input, mainNamespace, mainNamespace);
-        fclose(script);
+        Py_DECREF(script);
+
         if (ans) {
             Py_DECREF(ans);
             state = PyEval_SaveThread();
