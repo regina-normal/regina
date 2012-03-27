@@ -27,6 +27,8 @@
 /* end stub */
 
 // UI includes:
+#include "packet/npacket.h"
+
 #include "packetui.h"
 #include "packetwindow.h"
 #include "reginamain.h"
@@ -44,6 +46,8 @@ PacketWindow::PacketWindow(PacketPane* newPane, ReginaMain* parent) :
         heldPane(newPane), mainWindow(parent) {
     // Set destructive close
     setAttribute(Qt::WA_DeleteOnClose);
+
+    setWindowTitle(heldPane->getPacket()->getPacketLabel().c_str());
     
     // Set up the widgets and menu bar.
     heldPane->setParent(this);

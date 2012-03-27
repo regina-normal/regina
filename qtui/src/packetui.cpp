@@ -404,6 +404,9 @@ void PacketPane::packetWasChanged(regina::NPacket*) {
 void PacketPane::packetWasRenamed(regina::NPacket*) {
     // Assume it's this packet.
     refreshHeader();
+
+    if (frame)
+        frame->setWindowTitle(getPacket()->getPacketLabel().c_str());
 }
 
 void PacketPane::packetToBeDestroyed(regina::NPacket*) {
