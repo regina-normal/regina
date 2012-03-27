@@ -102,15 +102,20 @@
     The corresponding license details are included below.
    </para>
    <sect3 id="license-snappea">
-    <title>&snappea; Kernel</title>
+    <title>&snappea; and &snappy;</title>
     <para>
      &regina; includes portions of the &snappea; kernel, which it uses for some
-     geometric calculations.
-     &snappea; was written by Jeff Weeks, and is now maintained by both
-     Jeff Weeks and Nathan Dunfield.
-     The SnapPeaKernel is distributed under the terms of the &gnu; General
-     Public License, version&nbsp;2 or any later version, as published by the
-     Free Software Foundation.
+     geometric calculations.  &snappea; was written by Jeff Weeks, and is now
+     maintained by both Jeff Weeks and Nathan Dunfield.  The SnapPeaKernel is
+     distributed under the terms of the &gnu; General Public License,
+     version&nbsp;2
+     or any later version, as published by the Free Software Foundation.
+    </para>
+    <para>
+     &regina; also includes code from &snappy;, the successor to &snappea;.
+     &snappy; was written by
+     M.&nbsp;Culler, N.&nbsp;M.&nbsp;Dunfield and J.&nbsp;R.&nbsp;Weeks, and is
+     also released under the terms of the &gnu; General Public License.
     </para>
    </sect3>
  
@@ -137,24 +142,27 @@
     </para>
    </sect3>
  
-   <sect3 id="license-python">
-    <title>Python Icons</title>
+   <sect3 id="license-srchilite">
+    <title>Syntax Highlighting</title>
     <para>
-     The python icons are based on applications-python.svg as shipped with
-     the humanity-icon-theme package in Ubuntu&nbsp;11.04.  The contents of this
-     Ubuntu package are licensed under the
-     &gnu; General Public License version&nbsp;2.
+     &regina; includes code from
+     <application>Source-highlight-qt</application> and language definitions
+     from <application>&gnu; Source-highlight</application>,
+     which it uses to highlight &python; scripts.
+     Both projects are by Lorenzo Bettini and others, and are distributed
+     under the terms of the &gnu; General Public License, version&nbsp;3.
     </para>
    </sect3>
  
-   <sect3 id="license-oxygen">
-    <title>Oxygen Icons</title>
+   <sect3 id="license-icons">
+    <title>Icons</title>
     <para>
-     The packet-view icons have been modified from the Oxygen icon set for
-     &kde4;.
      The Oxygen icons are dual-licensed under the Creative Common
-     Attribution-ShareAlike&nbsp;3.0 License or the GNU Library General Public
-     License.
+     Attribution-ShareAlike&nbsp;3.0 License or the
+     &gnu; Library General Public License.
+     The python icons are based on applications-python.svg as shipped with the
+     humanity-icon-theme package in Ubuntu&nbsp;11.04, the contents of which
+     are licensed under the &gnu; General Public License version 2.
     </para>
    </sect3>
   </sect2>
