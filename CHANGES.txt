@@ -93,6 +93,13 @@ Version 4.91  [ (under development) ]
         Routine makeEmbeddedConstraints():
             - Added to help generate admissibility constraints based on a
               flavour constant, instead of an NNormalSurfaceVector subclass.
+    USER INTERFACE:
+        - Ported from KDE to Qt-only.  This means that KDE-related
+          dependencies are no longer required at either build time or runtime.
+        - Continued the user interface overhaul, again with an aim towards
+          cleaner and more sensible behaviour.
+        - Graphical Python consoles now execute "from regina import *"
+          automatically.
     UTILITIES:
         tricensus:
             - Now outputs all face pairings as it runs, instead of periodic

@@ -320,9 +320,10 @@ void PythonConsole::allowInput(bool primaryPrompt,
 }
 
 bool PythonConsole::importRegina() {
-    if (interpreter->importRegina())
+    if (interpreter->importRegina()) {
+        executeLine("from regina import *");
         return true;
-    else {
+    } else {
         ReginaSupport::warn(this,
             tr("Regina's Python module could not be loaded."),
             tr("<qt>The module should be installed as the file "
