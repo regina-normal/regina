@@ -47,7 +47,7 @@
 
 
 const QString ReginaAbout::regCopyright(
-    tr("Copyright (c) 1999-2011, The Regina development team"));
+    tr("Copyright (c) 1999-2012, The Regina development team"));
 
 const QString ReginaAbout::regDescription(
     tr("Software for 3-manifold topology and normal surface theory"));
@@ -58,14 +58,13 @@ const QString ReginaAbout::regReleased(
 const QString ReginaAbout::regWebsite("http://regina.sourceforge.net/");
 
 const QString ReginaAbout::regLicense( tr( 
-    "Copyright (c) 1999-2011, The Regina development team\n\n"
-    "This program is distributed under the terms of the GPL v2 or later.\n\n"
+    "Copyright (c) 1999-2012, The Regina development team\n\n"
     "CITATION:\n\n"
     "If you find Regina useful in your research, please consider citing it as\n"
     "you would any other paper that you use.  A suggested form of reference is:\n\n"
     "  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,\n"
     "  \"Regina: Software for 3-manifold topology and normal surface theory\",\n"
-    "  http://regina.sourceforge.net/, 1999-2011.\n\n"
+    "  http://regina.sourceforge.net/, 1999-2012.\n\n"
     "COPYING AND MODIFICATION:\n\n"
     "This program is free software; you can redistribute it and/or modify it\n"
     "under the terms of the GNU General Public License as published by the\n"
@@ -208,7 +207,8 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     aboutLabel->setOpenExternalLinks(true);
     aboutLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
 
-    QLabel* licenseLabel = new QLabel(tr("<a href=\"#\">License: Custom</a>"));
+    QLabel* licenseLabel =
+        new QLabel(tr("<a href=\"#\">License: Click here</a>"));
     licenseLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
     // Show license dialog when label is clicked
     connect(licenseLabel, SIGNAL(linkActivated(QString)),
