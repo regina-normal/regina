@@ -123,6 +123,8 @@ void addNNormalSurface() {
         .def("sameSurface", &NNormalSurface::sameSurface)
         .def("locallyCompatible", &NNormalSurface::locallyCompatible)
         .def("disjoint", &NNormalSurface::disjoint)
+        .def("boundarySlopes", &NNormalSurface::boundarySlopes,
+            return_value_policy<manage_new_object>())
         .def("findNonTrivialSphere", &NNormalSurface::findNonTrivialSphere,
             return_value_policy<manage_new_object>())
         .def("findVtxOctAlmostNormalSphere", findVtxOctAlmostNormalSphere1,

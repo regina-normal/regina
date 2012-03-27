@@ -125,6 +125,12 @@ Version 4.91  [ (under development) ]
         Class NGlobalDirs:
             - New routine setDirs() to be used when an application has
               been moved from the cmake-configured installation directory.
+        Class NHilbertCD:
+            - New class that implements a modified Contejean-Devie algorithm
+              for Hilbert basis enumeration, based on the original algorithm in
+              "An efficient incremental algorithm for solving systems of
+              linear Diophantine equations", Contejean and Devie,
+              Inform. and Comput. 113 (1994), 143-172.
         Class NHilbertDual:
             - New class that implements a modified dual algorithm for
               Hilbert basis enumeration, based on the dual algorithm in
@@ -133,7 +139,9 @@ Version 4.91  [ (under development) ]
         Class NHilbertPrimal:
             - New class that enumerates Hilbert bases by decomposing into
               maximal admissible faces and running the primal algorithm from
-              Normaliz on each such face.
+              Normaliz on each such face.  For details, see
+              "Fundamental normal surfaces and the enumeration of Hilbert
+              bases", B. Burton, arXiv:1111.7055, November 2011.
         Class NLargeInteger:
             - Made separate constructors and assignment operators for
               arguments of type int, unsigned int, long, and unsigned long.
