@@ -113,11 +113,17 @@ class REGINA_API NLargeInteger {
         /**
          * Initialises this integer to the given value.
          *
+         * \ifacespython In Python, the only native-integer constructor
+         * is NLargeInteger(long).
+         *
          * @param value the new value of this integer.
          */
         NLargeInteger(int value);
         /**
          * Initialises this integer to the given value.
+         *
+         * \ifacespython In Python, the only native-integer constructor
+         * is NLargeInteger(long).
          *
          * @param value the new value of this integer.
          */
@@ -125,11 +131,17 @@ class REGINA_API NLargeInteger {
         /**
          * Initialises this integer to the given value.
          *
+         * \ifacespython In Python, this is the only native-integer
+         * constructor available.
+         *
          * @param value the new value of this integer.
          */
         NLargeInteger(long value);
         /**
          * Initialises this integer to the given value.
+         *
+         * \ifacespython In Python, the only native-integer constructor
+         * is NLargeInteger(long).
          *
          * @param value the new value of this integer.
          */
@@ -413,6 +425,8 @@ class REGINA_API NLargeInteger {
          * This operator increments this integer by one, and returns a
          * reference to the integer \e after the increment.
          *
+         * \ifacespython Not available.
+         *
          * @return a reference to this integer after the increment.
          */
         NLargeInteger& operator ++();
@@ -421,6 +435,8 @@ class REGINA_API NLargeInteger {
          * The postincrement operator.
          * This operator increments this integer by one, and returns a
          * copy of the integer \e before the increment.
+         *
+         * \ifacespython Not available.
          *
          * @return a copy of this integer before the
          * increment took place.
@@ -432,6 +448,8 @@ class REGINA_API NLargeInteger {
          * This operator decrements this integer by one, and returns a
          * reference to the integer \e after the decrement.
          *
+         * \ifacespython Not available.
+         *
          * @return a reference to this integer after the decrement.
          */
         NLargeInteger& operator --();
@@ -440,6 +458,8 @@ class REGINA_API NLargeInteger {
          * The postdecrement operator.
          * This operator decrements this integer by one, and returns a
          * copy of the integer \e before the decrement.
+         *
+         * \ifacespython Not available.
          *
          * @return a copy of this integer before the
          * decrement took place.
@@ -832,6 +852,8 @@ class REGINA_API NLargeInteger {
          * This routine allows NLargeInteger to interact directly with
          * libgmp and libgmpxx if necessary.
          *
+         * \ifacespython Not available.
+         *
          * @param fromData the raw GMP integer to clone.
          */
         void setRaw(mpz_srcptr fromData);
@@ -843,6 +865,8 @@ class REGINA_API NLargeInteger {
          * libgmp and libgmpxx if necessary.
          *
          * \pre This integer is not infinite.
+         *
+         * \ifacespython Not available.
          *
          * @return the raw GMP data.
          */
@@ -877,6 +901,8 @@ REGINA_API std::ostream& operator << (std::ostream& out,
  * Adds the given native integer to the given large integer.
  * If the large integer is infinite, the result will also be infinity.
  *
+ * \ifacespython Not available.
+ *
  * @param lhs the native integer to add.
  * @param other the large integer to add.
  * @return the sum \a lhs plus \a rhs.
@@ -886,6 +912,8 @@ REGINA_API NLargeInteger operator + (long lhs, const NLargeInteger& rhs);
 /**
  * Multiplies the given native integer with the given large integer.
  * If the large integer is infinite, the result will also be infinity.
+ *
+ * \ifacespython Not available.
  *
  * @param lhs the native integer to multiply.
  * @param other the large integer to multiply.

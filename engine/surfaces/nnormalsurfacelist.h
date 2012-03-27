@@ -801,6 +801,8 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * An iterator that gives access to the raw vectors for surfaces in
          * this list, pointing to the beginning of this surface list.
          *
+         * \ifacespython Not present.
+         *
          * @return an iterator at the beginning of this surface list.
          */
         VectorIterator beginVectors() const;
@@ -810,6 +812,8 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * this list, pointing past the end of this surface list.
          * This iterator is not dereferenceable.
          *
+         * \ifacespython Not present.
+         *
          * @return an iterator past the end of this surface list.
          */
         VectorIterator endVectors() const;
@@ -817,6 +821,8 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
         /**
          * A bidirectional iterator that runs through the raw vectors for
          * surfaces in this list.
+         *
+         * \ifacespython Not present.
          */
         class VectorIterator : public std::iterator<
                 std::bidirectional_iterator_tag, const NNormalSurfaceVector*> {

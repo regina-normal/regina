@@ -87,6 +87,25 @@ namespace {
         return NNormalSurfaceList::enumerateFundDual(owner, flavour,
             embedded, manager);
     }
+
+    NNormalSurfaceList* enumerateFundFullCone_2(regina::NTriangulation* owner,
+            int flavour) {
+        return NNormalSurfaceList::enumerateFundFullCone(owner, flavour);
+    }
+    NNormalSurfaceList* enumerateFundFullCone_3(regina::NTriangulation* owner,
+            int flavour, bool embedded) {
+        return NNormalSurfaceList::enumerateFundFullCone(owner, flavour,
+            embedded);
+    }
+
+    NNormalSurfaceList* enumerateFundCD_2(regina::NTriangulation* owner,
+            int flavour) {
+        return NNormalSurfaceList::enumerateFundCD(owner, flavour);
+    }
+    NNormalSurfaceList* enumerateFundCD_3(regina::NTriangulation* owner,
+            int flavour, bool embedded) {
+        return NNormalSurfaceList::enumerateFundCD(owner, flavour, embedded);
+    }
 }
 
 void addNNormalSurfaceList() {
@@ -117,6 +136,14 @@ void addNNormalSurfaceList() {
         .def("enumerateFundDual", enumerateFundDual_3,
             return_value_policy<reference_existing_object>())
         .def("enumerateFundDual", enumerateFundDual_4,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundFullCone", enumerateFundFullCone_2,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundFullCone", enumerateFundFullCone_3,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundCD", enumerateFundCD_2,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundCD", enumerateFundCD_3,
             return_value_policy<reference_existing_object>())
         .def("enumerateStandardDirect",
             &NNormalSurfaceList::enumerateStandardDirect,
@@ -149,6 +176,8 @@ void addNNormalSurfaceList() {
         .staticmethod("enumerateStandardANDirect")
         .staticmethod("enumerateFundPrimal")
         .staticmethod("enumerateFundDual")
+        .staticmethod("enumerateFundFullCone")
+        .staticmethod("enumerateFundCD")
     ;
 
     s.attr("packetType") = NNormalSurfaceList::packetType;
@@ -159,6 +188,8 @@ void addNNormalSurfaceList() {
     s.attr("EDGE_WEIGHT") = NNormalSurfaceList::EDGE_WEIGHT;
     s.attr("FACE_ARCS") = NNormalSurfaceList::FACE_ARCS;
     s.attr("AN_LEGACY") = NNormalSurfaceList::AN_LEGACY;
+    s.attr("ORIENTED") = NNormalSurfaceList::ORIENTED;
+    s.attr("ORIENTED_QUAD") = NNormalSurfaceList::ORIENTED_QUAD;
 
     implicitly_convertible<std::auto_ptr<NNormalSurfaceList>,
         std::auto_ptr<regina::NPacket> >();

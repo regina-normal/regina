@@ -63,6 +63,8 @@ namespace regina {
  * create a <i>position vector</i> (h_1, ..., h_f), where h_i is 0 if the
  * hyperplane contains the ith coordinate axis, or 1 if not.
  * We then compare these position vectors lexicographically.
+ *
+ * \ifacespython Not present.
  */
 class NPosOrder {
     private:

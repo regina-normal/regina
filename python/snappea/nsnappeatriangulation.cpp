@@ -57,6 +57,9 @@ void addNSnapPeaTriangulation() {
         .def("solutionType", &NSnapPeaTriangulation::solutionType)
         .def("volume", volume_void)
         .def("volumeWithPrecision", volume_precision)
+        .def("slopeEquations", &NSnapPeaTriangulation::slopeEquations,
+            return_value_policy<manage_new_object>())
+        .def("verifyTriangulation", &NSnapPeaTriangulation::verifyTriangulation)
         .def("dump", &NSnapPeaTriangulation::dump)
         .def("saveAsSnapPea", &NSnapPeaTriangulation::saveAsSnapPea)
         .def("kernelMessagesEnabled",
