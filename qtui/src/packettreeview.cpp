@@ -259,6 +259,7 @@ PacketTreeView::PacketTreeView(ReginaMain* newMainWindow, QWidget* parent)
     header()->hide();
     setAlternatingRowColors(false);
     setSelectionMode(QAbstractItemView::SingleSelection);
+    setExpandsOnDoubleClick(false); // since double-click opens a packet
 
     connect(this, SIGNAL(itemExpanded(QTreeWidgetItem*)),
         this, SLOT(handleItemExpanded(QTreeWidgetItem*)));
