@@ -7,7 +7,7 @@ Program version:
     CMakeLists.txt (PACKAGE_VERSION)
     qtui/doc/regina/index.docbook (&regversion;, &regdate;, date, releaseinfo)
     qtui/doc/regina-xml/index.docbook (same as above)
-    qtui/src/common/reginaabout.cpp (regReleased)
+    qtui/src/reginaabout.cpp (regReleased)
     packaging/debian/*/changelog (version, date)
     packaging/finkinfo/*.info.* (version, revision)
     packaging/rpmspec/*.spec (version, changelog)
@@ -22,7 +22,7 @@ License details:
     engine/snappea/kernel/README.txt
     qtui/doc/regina/compiling.docbook (intro)
     qtui/doc/regina/credits.docbook
-    qtui/src/common/reginaabout.cpp (ReginaAbout constructor)
+    qtui/src/reginaabout.cpp (ReginaAbout constructor)
     www/index.html
 
 SnapPea / Orb copyright:
@@ -31,13 +31,13 @@ SnapPea / Orb copyright:
     engine/snappea/kernel/README.txt
     engine/snappea/nsnappeatriangulation.h
     qtui/doc/regina/credits.docbook
-    qtui/src/common/reginaabout.cpp
+    qtui/src/reginaabout.cpp
     www/index.html
 
 Acknowledgements:
     LICENSE.txt (suggested citation, author list)
     qtui/doc/regina/credits.docbook
-    qtui/src/common/reginaabout.cpp (ReginaAbout constructor)
+    qtui/src/reginaabout.cpp (ReginaAbout constructor)
 
 Don't forget:
     changes & highlights (both . and qtui/doc/regina)
