@@ -62,6 +62,10 @@ namespace {
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDot, writeDot_stdout, 1, 4);
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDotHeader, writeDotHeader_stdout,
         0, 1);
+
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_dot, Dim4FacetPairing::dot, 0, 3);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dotHeader, Dim4FacetPairing::dotHeader,
+        0, 1);
 }
 
 void addDim4FacetPairing() {
@@ -84,11 +88,14 @@ void addDim4FacetPairing() {
         .def("fromTextRep", &Dim4FacetPairing::fromTextRep,
             return_value_policy<manage_new_object>())
         .def("writeDot", writeDot_stdout, OL_writeDot())
+        .def("dot", &Dim4FacetPairing::dot, OL_dot())
         .def("writeDotHeader", writeDotHeader_stdout, OL_writeDotHeader())
+        .def("dotHeader", &Dim4FacetPairing::dotHeader, OL_dotHeader())
         .def("isClosed", &Dim4FacetPairing::isClosed)
         .def("__str__", &Dim4FacetPairing::toString)
         .staticmethod("fromTextRep")
         .staticmethod("writeDotHeader")
+        .staticmethod("dotHeader")
     ;
 }
 
