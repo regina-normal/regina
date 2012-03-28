@@ -27,6 +27,7 @@
 /* end stub */
 
 #include <boost/python.hpp>
+#include "maths/nmatrixint.h"
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/ntriangulation.h"
 #include "../globalarray.h"
