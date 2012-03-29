@@ -654,16 +654,18 @@ void NPacket::fireEvent(void (NPacketListener::*event)(NPacket*,
 void NPacket::fireDestructionEvent() {
     if (listeners.get()) {
         std::set<NPacketListener*>::const_iterator it;
+        NPacketListener* tmp;
         while (! listeners->empty()) {
             it = listeners->begin();
+            tmp = *it;
 
             // Unregister *before* we fire the event for each listener.
             // If we have a listener that deletes itself (or other listeners),
             // we don't want things to get nasty.
             listeners->erase(it);
-            (*it)->packets.erase(this);
+            tmp->packets.erase(this);
 
-            (*it)->packetToBeDestroyed(this);
+            tmp->packetToBeDestroyed(this);
         }
     }
 }
