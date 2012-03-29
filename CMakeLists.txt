@@ -270,12 +270,14 @@ MACRO_LOG_FEATURE(POPT_FOUND
 FIND_PACKAGE(HashSet)
 
 # Optionals
-FIND_PACKAGE(MPI)
-MACRO_LOG_FEATURE(MPI_FOUND
-  "MPI"
-  "Build command-line tools for high-performance computing"
-  "http://www.open-mpi.org/"
-  REGINA_MANDATORY_MPI)
+IF(NOT DISABLE_MPI)
+  FIND_PACKAGE(MPI)
+  MACRO_LOG_FEATURE(MPI_FOUND
+    "MPI"
+    "Build command-line tools for high-performance computing"
+    "http://www.open-mpi.org/"
+    REGINA_MANDATORY_MPI)
+ENDIF(NOT DISABLE_MPI)
 
 FIND_PACKAGE(Doxygen)
 MACRO_LOG_FEATURE(DOXYGEN_FOUND
