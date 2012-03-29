@@ -1,5 +1,2 @@
 Stephan:
 - Document NNormalSurface::boundarySlopes().
-
-Misc:
-- from regina import *
