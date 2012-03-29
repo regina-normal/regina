@@ -29,12 +29,17 @@
 # MA 02110-1301, USA.
 
 use strict;
+use Cwd 'abs_path';
 use File::Basename;
 
 # --- Constants. ---
 
-# The program name.
+# The program name and directory.
 my $prog_name = $0;
+my $prog_dir = abs_path(dirname($prog_name));
+
+# The module filename.
+my $module_name = "regina.@REGINA_PYTHON_EXTENSION@";
 
 # Address to which questions should be emailed.
 my $regina_support = "regina-user\@lists.sourceforge.net";
@@ -58,11 +63,56 @@ my $interactive = 0;
 my $nolibs = 0;
 my $regina_home = '';
 my $runscript_py = '';
-my $from_source = 0;
 my $python_lib_dir = '';
 my @python_libs;
 my $script = '';
 my @script_args;
+
+# --- Parse the command-line options. ---
+
+my $readingScriptArgs = 0;
+foreach my $arg (@ARGV) {
+    if ($readingScriptArgs) {
+        push @script_args, $arg;
+        next;
+    }
+
+    if ($arg eq '-q' or $arg eq '--quiet') {
+        $quiet = 1;
+        $verbose = 0;
+        next;
+    }
+
+    if ($arg eq '-v' or $arg eq '--verbose') {
+        $quiet = 0;
+        $verbose = 1;
+        next;
+    }
+
+    if ($arg eq '-i' or $arg eq '--interactive') {
+        $interactive = 1;
+        next;
+    }
+
+    if ($arg eq '-n' or $arg eq '--nolibs') {
+        $nolibs = 1;
+        next;
+    }
+
+    if ($arg =~ /^-/) {
+        &usage("Unrecognised option: $arg");
+    }
+
+    # We must be onto the script.
+    $script = $arg;
+    $readingScriptArgs = 1;
+}
+
+if ($interactive and not $script) {
+    &usage("The interactive option (-i, --interactive) can only be used with a script.");
+}
+
+# --- Determine the python executable.
 
 # In the absence of any user-specified options, use the python
 # command that corresponds to the original build environment.
@@ -74,12 +124,31 @@ if (not -e $python_cmd) {
     $python_cmd = '';
 }
 
+# --- Determine the installation type.
+
+my $install_type = "@REGINA_INSTALL_TYPE@";
+if ( -f "$prog_dir/cmake_install.cmake" and -f "$prog_dir/../CMakeCache.txt"
+        and -f "$prog_dir/../../engine/regina-core.h") {
+    $install_type = 'Source';
+}
+
+&info("I: Running from installation type: $install_type\n");
+
+# --- Determine the underlying operating system.
+my $os = "@CMAKE_SYSTEM_NAME@";
+&info("I: Running on operating system: $os\n");
+
 # --- Set up the environment.
 
 # On OSX, python ships as a universal binary for several architectures.
 # We need to make sure we are using the right one.
 if (@OSX_PYTHON_32@) {
-	$ENV{'VERSIONER_PYTHON_PREFER_32_BIT'} = 'yes';
+    $ENV{'VERSIONER_PYTHON_PREFER_32_BIT'} = 'yes';
+}
+
+# On Windows, we need to make sure all our DLLs are on the path.
+if ($install_type eq 'Windows') {
+    &extendEnvVar('PATH', $prog_dir);
 }
 
 # --- Extract variables from the configuration file.
@@ -131,74 +200,29 @@ if ($ENV{REGINA_PYLIBDIR}) {
     &setPythonLibDir($ENV{REGINA_PYLIBDIR});
 }
 
-# --- Parse the command-line options. ---
-
-my $readingScriptArgs = 0;
-foreach my $arg (@ARGV) {
-    if ($readingScriptArgs) {
-        push @script_args, $arg;
-        next;
-    }
-
-    if ($arg eq '-q' or $arg eq '--quiet') {
-        $quiet = 1;
-        $verbose = 0;
-        next;
-    }
-
-    if ($arg eq '-v' or $arg eq '--verbose') {
-        $quiet = 0;
-        $verbose = 1;
-        next;
-    }
-
-    if ($arg eq '-i' or $arg eq '--interactive') {
-        $interactive = 1;
-        next;
-    }
-
-    if ($arg eq '-n' or $arg eq '--nolibs') {
-        $nolibs = 1;
-        next;
-    }
-
-    if ($arg =~ /^-/) {
-        &usage("Unrecognised option: $arg");
-    }
-
-    # We must be onto the script.
-    $script = $arg;
-    $readingScriptArgs = 1;
-}
-
-if ($interactive and not $script) {
-    &usage("The interactive option (-i, --interactive) can only be used with a script.");
-}
-
 # --- Check that the current options are reasonable. ---
 
 my $prefix = "@CMAKE_INSTALL_PREFIX@";
 my $exec_prefix = "@CMAKE_INSTALL_PREFIX@";
-my $datadir = "@DATADIR@";
+my $pkgdatadir = "@PKGDATADIR@";
 my $libdir = "@LIBDIR@";
 my $package = "@PACKAGE_NAME@";
 
 if (! $regina_home) {
-    my $prog_dir = dirname($prog_name);
-    if ( -f "$prog_dir/cmake_install.cmake" and -f "$prog_dir/../CMakeCache.txt") {
-        &info("I: Running from the source tree.\n");
-        $from_source = 1;
-
+    if ($install_type eq 'Source') {
         # Setting $regina_home is interesting, because we want things
         # from both the builddir and the srcdir.  Use both.
         my $builddir = "$prog_dir/..";
         my $srcdir = "@CMAKE_SOURCE_DIR@";
-        $srcdir =~ /^\// or $srcdir = "$prog_dir/$srcdir";
+        $srcdir =~ /^\// or                  # Unix-style absolute path
+            $srcdir =~ /^[A-Za-z]:[\\\/]/ or # Windows-style absolute path
+            $srcdir = "$prog_dir/$srcdir";   # Relative path: make absolute
 
         &setReginaHome($builddir, $srcdir);
+    } elsif ($install_type eq 'Bundle') {
+        &setReginaHome("$prog_dir/../Resources");
     } else {
-        &info("I: Running from an installation.\n");
-        &setReginaHome("$datadir/$package");
+        &setReginaHome($pkgdatadir);
     }
 }
 
@@ -215,8 +239,13 @@ if (! $python_cmd) {
 }
 
 if (! $python_lib_dir) {
-    &setPythonLibDir($from_source ? "$regina_home/python/" :
-        "$libdir/$package/python");
+    if ($install_type eq 'Bundle') {
+        &setPythonLibDir("$prog_dir/python");
+    } elsif ($install_type eq 'Source') {
+        &setPythonLibDir("$regina_home/python");
+    } else {
+        &setPythonLibDir("$libdir/$package/python");
+    }
 }
 
 # --- Find the default charset to use for filename encodings. ---
@@ -227,8 +256,14 @@ eval {
     $codeset = I18N::Langinfo::langinfo(I18N::Langinfo::CODESET());
 };
 if (not defined $codeset) {
-    &warn("W: Could not determine default character encoding for filenames.\n");
-    &warn("W: Try setting \$LANG if this is causing problems.\n");
+    if ($os ne 'Windows') {
+        &warn("W: Could not determine default character encoding for filenames.\n");
+        &warn("W: Try setting \$LANG if this is causing problems.\n");
+    } else {
+        # We can't help this under Windows; drop the severity.
+        &info("I: Could not determine default character encoding for filenames.\n");
+        &info("I: Try setting \$LANG if this is causing problems.\n");
+    }
 }
 
 # --- Read the list of libraries to load. ---
@@ -274,13 +309,22 @@ if ($nolibs) {
 
 &extendEnvVar('PYTHONPATH', $python_lib_dir);
 
-if ($from_source) {
+if ($install_type eq 'Source') {
     # Since we're running from the source tree, we need to ensure that
     # the calculation engine library can be found.
-    &extendEnvVar('LD_LIBRARY_PATH', "$regina_home/engine/");
-
-    # MacOS users will need DYLD_LIBRARY_PATH also.
-    &extendEnvVar('DYLD_LIBRARY_PATH', "$regina_home/engine/");
+    if ($os eq 'Darwin') {
+        &extendEnvVar('DYLD_LIBRARY_PATH', "$regina_home/engine/");
+    } elsif ($os eq 'Windows') {
+        &extendEnvVar('PATH', "$regina_home/engine/");
+    } else {
+        &extendEnvVar('LD_LIBRARY_PATH', "$regina_home/engine/");
+    }
+} elsif ($install_type eq 'Bundle') {
+    # Make sure we can find the libraries shipped with the bundle.
+    &extendEnvVar('DYLD_LIBRARY_PATH', $prog_dir);
+} elsif ($install_type eq 'Windows') {
+    # Make sure we can find the libraries shipped with the application.
+    &extendEnvVar('PATH', $prog_dir);
 }
 
 my @fullCommandLine = ( $python_cmd );
@@ -328,11 +372,11 @@ sub setPythonCmd() {
 }
 sub setPythonLibDir() {
     &info("I: Setting python module directory to $_[0].\n");
-    if ( ! -e "$_[0]/regina.so") {
-        &err("E: The calculation engine module 'regina.so' could not be \n");
+    if ( ! -e "$_[0]/$module_name") {
+        &err("E: The calculation engine module '$module_name' could not be \n");
         &err("   found in the directory $_[0].\n");
         &err("E: Please set \$REGINA_PYLIBDIR to the directory containing\n");
-        &err("   the module 'regina.so' and try again.\n");
+        &err("   the module '$module_name' and try again.\n");
         exit 1;
     }
     $python_lib_dir = $_[0];
