@@ -37,6 +37,7 @@
 #include "shortrunner.h"
 
 #include <fstream>
+#include <qglobal.h>
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
@@ -339,7 +340,11 @@ QFont ReginaPrefSet::fixedWidthFont() {
     ans.setFamily("monospace");
 #endif
     ans.setFixedPitch(true);
+#if (QT_VERSION >= QT_VERSION_CHECK(4, 7, 0))
     ans.setStyleHint(QFont::Monospace);
+#else
+    ans.setStyleHint(QFont::TypeWriter);
+#endif
     return ans;
 }
 
