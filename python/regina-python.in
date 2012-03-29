@@ -60,6 +60,7 @@ my $libs_conf = $home . "/.regina-libs";
 my $quiet = 0;
 my $verbose = 0;
 my $interactive = 0;
+my $autoImport = 1;
 my $nolibs = 0;
 my $regina_home = '';
 my $runscript_py = '';
@@ -96,6 +97,11 @@ foreach my $arg (@ARGV) {
 
     if ($arg eq '-n' or $arg eq '--nolibs') {
         $nolibs = 1;
+        next;
+    }
+
+    if ($arg eq '-a' or $arg eq '--noautoimport') {
+        $autoImport = 0;
         next;
     }
 
@@ -336,6 +342,7 @@ if ($script) {
     my @fullCommandLine = ( $python_cmd );
     $interactive and push @fullCommandLine, '-i';
     push @fullCommandLine, $runscript_py;
+	push @fullCommandLine, ($autoImport ? 'import' : 'noimport');
     push @fullCommandLine, @python_libs;
     push @fullCommandLine, ( '--', $script );
     push @fullCommandLine, @script_args;
@@ -441,8 +448,12 @@ sub err {
 sub usage {
     my $msg = shift;
     defined($msg) and print STDERR "$msg\n\n";
-    print STDERR "Usage: 1. $prog_name [ -q, --quiet | -v, --verbose ]\n";
-    print STDERR "       2. $prog_name [ -q, --quiet | -v, --verbose ]\n";
+    print STDERR "Usage: 1. $prog_name\n";
+    print STDERR "               [ -q, --quiet | -v, --verbose ]\n";
+    print STDERR "               [ -a, --noautoimport] \n";
+    print STDERR "       2. $prog_name\n";
+    print STDERR "               [ -q, --quiet | -v, --verbose ]\n";
+    print STDERR "               [ -a, --noautoimport] \n";
     print STDERR "               [ -i, --interactive ] script [ script_args ... ]\n";
     exit 1;
 }

@@ -119,6 +119,9 @@ Version 4.91  [ (under development) ]
             - Now requires an additional argument, indicating whether
               the coordinate system supports transverse orientations.
     UTILITIES:
+        regina-python:
+            - Now executes "from regina import *" automatically.  You
+              can suppress this with the argument --noautoimport.
         tricensus:
             - Now outputs all face pairings as it runs, instead of periodic
               snapshots of where the census is up to.

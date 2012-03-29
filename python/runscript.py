@@ -11,12 +11,15 @@
 # Copyright (c) 2003-2011, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Usage: runscript.py [ <library> ... ] [ -- <script> [ <script-arg> ... ]]
+# Usage: runscript.py [ import | noimport ]
+#                     [ <library> ... ]
+#                     [ -- <script> [ <script-arg> ... ]]
 #
 # Initialises the python environment for working with the Regina
 # calculation engine.  Tasks include:
 #
 #   - Importing the 'regina' module;
+#   - If requested, running "from regina import *";
 #   - Running a series of provided library scripts;
 #   - Running a selected script with the provided command-line arguments,
 #       or,
@@ -54,8 +57,18 @@ libNames = []
 scriptName = None
 scriptArgs = []
 
+if len(sys.argv) < 2:
+    print 'ERROR: The import/noimport argument was missing.'
+    sys.exit(1)
+
+if sys.argv[1] == 'import':
+    from regina import *
+elif sys.argv[1] != 'noimport':
+    print 'ERROR: The import/noimport argument was incorrect.'
+    sys.exit(1)
+
 libsDone = 0
-for i in sys.argv[1:]:
+for i in sys.argv[2:]:
     if libsDone:
         if scriptName == None:
             scriptName = i
