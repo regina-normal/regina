@@ -160,7 +160,7 @@
   <!ENTITY reginatrouble SYSTEM "trouble.docbook">
   <!ENTITY reginaservices SYSTEM "services.docbook">
   <!ENTITY reginacredits SYSTEM "credits.docbook">
-  <!ENTITY reginahighlights SYSTEM "HIGHLIGHTS.txt">
+  <!ENTITY reginahighlights SYSTEM "../../../HIGHLIGHTS.txt">
   <!ENTITY reginaman SYSTEM "reginaman.docbook">
   <!ENTITY reginautils SYSTEM "utils.docbook">
   <!ENTITY bibliography SYSTEM "bibliography.docbook">

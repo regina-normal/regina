@@ -3,7 +3,7 @@ Below are locations of strings that may need changing for a new release.
 All locations are relative to the primary source directory.
 
 Program version:
-    CHANGES.txt, HIGHLIGHTS.txt, qtui/doc/regina/HIGHLIGHTS.txt (version, date)
+    CHANGES.txt, HIGHLIGHTS.txt (version, date)
     CMakeLists.txt (PACKAGE_VERSION)
     qtui/doc/regina/index.docbook (&regversion;, &regdate;, date, releaseinfo)
     qtui/doc/regina-xml/index.docbook (same as above)
