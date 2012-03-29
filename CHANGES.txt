@@ -91,6 +91,8 @@ Version 4.92  [ XX April, 2012 ] - The "hello Windows!" release.
               coordinate system supports transverse orientations.
         Class NNormalSurfaceVectorOriented, NNormalSurfaceVectorOrientedQuad:
             - New coordinate systems for transversely oriented normal surfaces.
+        Class NPacket:
+            - Fixed potential crash in fireDestructionEvent().
         Class NPerm3:
             - New routine compareWith() for sorting permutations.
         Class NPerm5:
