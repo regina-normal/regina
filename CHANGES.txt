@@ -92,11 +92,14 @@ Version 5.0  [ (under development) ]
               it does not identify when a 3-manifold triangulation appears
               as a subcomplex of a 4-manifold triangulation).
 
-Version 4.91  [ (under development) ]
+Version 4.92  [ XX April, 2012 ] - The "hello Windows!" release.
 
-    OVERALL:
-        - For MacOS users: make sure 32-bit python is called when running
-          32-bit fink on a 64-bit machine.
+    INSTALLATION:
+        - Regina now builds and runs under Windows!
+        - MacOS users now have a drag-and-drop app bundle, and do not
+          need fink at runtime.
+        - Linux (and indeed all) users no longer need KDE, since the user
+          interface is now Qt-only.
     ENGINE:
         Class NBitmask:
             - Make NBitmask more suitable for use in containers.  Specifically,
@@ -203,13 +206,27 @@ Version 4.91  [ (under development) ]
         Macro REGISTER_FLAVOUR:
             - Now requires an additional argument, indicating whether
               the coordinate system supports transverse orientations.
+    USER INTERFACE:
+        - Ported from KDE to Qt-only.
+        - Moved from a single monolithic window to lots of small windows
+          (one for the tree, one for each open packets). The old
+          interface can be re-enabled through Regina's preferences.
+        - Continued the user interface overhaul, again with many more
+          improvements that give cleaner and more sensible behaviour
+          (too many changes to list individually).
+        - Graphical Python consoles now execute "from regina import *"
+          automatically.
     UTILITIES:
         regina-python:
             - Now executes "from regina import *" automatically.  You
               can suppress this with the argument --noautoimport.
+            - For MacOS users: make sure 32-bit python is called when running
+              32-bit fink on a 64-bit machine.
         tricensus:
             - Now outputs all face pairings as it runs, instead of periodic
               snapshots of where the census is up to.
+
+Version 4.91: Internal development version.
 
 Version 4.90  [ 12 September, 2011 ] - First prerelease for version 5.0.
 
