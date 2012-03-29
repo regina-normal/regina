@@ -62,6 +62,7 @@ namespace {
      * The components inserted into \a dest will always be in standard
      * (tri-quad or tri-quad-oct) coordinates, regardless of the
      * native coordinate system that is used by the given surface.
+     * Any transverse orientations will be lost.
      *
      * This routine is slow, since it performs a depth-first search
      * over the entire set of normal discs.  If the surface contains

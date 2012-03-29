@@ -231,8 +231,9 @@ class NMatrixInt;
  *   declared and implemented; these will usually just call the
  *   corresponding superclass constructors.</li>
  *   <li>Virtual functions <tt>NNormalSurfaceVector* clone() const</tt>,
- *   <tt>bool allowsAlmostNormal() const</tt> and
- *   <tt>bool allowsSpun() const </tt> must be declared but not
+ *   <tt>bool allowsAlmostNormal() const</tt>,
+ *   <tt>bool allowsSpun() const</tt> and
+ *   <tt>bool allowsOriented()</tt> must be declared but not
  *   implemented.  The registry utilities will take care of their
  *   implementations.</li>
  *   <li>All abstract functions must be implemented.
@@ -240,6 +241,10 @@ class NMatrixInt;
  *   \e total number of discs of the requested type; if your new coordinate
  *   system adorns discs with extra information (such as orientation) then
  *   your implementation must compute the appropriate sum.</li>
+ *   <li>The orientation-specific coordinate functions
+ *   getOrientedTriangleCoord() and getOrientedQuadCoord() must be
+ *   implemented if your coordinate system supports transverse orientation.
+ *   Otherwise you can use the default implementations (which returns zero).
  *   <li>Static public functions <tt>void
  *   makeZeroVector(const NTriangulation*)</tt>,
  *   <tt>NMatrixInt* makeMatchingEquations(NTriangulation*)</tt> and
@@ -305,6 +310,15 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return \c true if and only if spun normal surfaces are allowed.
          */
         virtual bool allowsSpun() const = 0;
+
+        /**
+         * Determines if the specific underlying coordinate system
+         * allows for transversely oriented normal surfaces.
+         *
+         * @return \c true if and only if transverse orientations are
+         * supported.
+         */
+        virtual bool allowsOriented() const = 0;
 
         /**
          * Determines if this normal surface has more than one
@@ -455,6 +469,30 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          */
         virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
             int vertex, NTriangulation* triang) const = 0;
+        
+        /**
+         * Returns the number of oriented triangular discs of the given type in
+         * this normal surface.
+         * See NNormalSurface::getOrientedTriangleCoord() for further details.
+         *
+         * The default implementation of this routine returns zero,
+         * which is suitable for coordinate systems that do not support
+         * transverse orientation.
+         *
+         * @param tetIndex the index in the triangulation of the
+         * tetrahedron in which the requested triangles reside;
+         * this should be between 0 and
+         * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
+         * @param vertex the vertex of the given tetrahedron around
+         * which the requested triangles lie; this should be between 0
+         * and 3 inclusive.
+         * @param triang the triangulation in which this normal surface lives.
+         * @param orientation the orientation of the normal discs.
+         * @return the number of triangular discs of the given type.
+         */
+        virtual NLargeInteger getOrientedTriangleCoord(unsigned long tetIndex,
+            int vertex, NTriangulation* triang, bool orientation) const;
+
         /**
          * Returns the number of quadrilateral discs of the given type
          * in this normal surface.
@@ -472,6 +510,29 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          */
         virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
             int quadType, NTriangulation* triang) const = 0;
+
+        /**
+         * Returns the number of oriented quadrilateral discs of the given type
+         * in this normal surface.
+         * See NNormalSurface::getOrientedQuadCoord() for further details.
+         *
+         * The default implementation of this routine returns zero,
+         * which is suitable for coordinate systems that do not support
+         * transverse orientation.
+         *
+         * @param tetIndex the index in the triangulation of the
+         * tetrahedron in which the requested quadrilaterals reside;
+         * this should be between 0 and
+         * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
+         * @param quadType the number of the vertex splitting that this
+         * quad type represents; this should be between 0 and 2
+         * inclusive.
+         * @param triang the triangulation in which this normal surface lives.
+         * @param orientation the orientation of the normal discs.
+         * @return the number of quadrilateral discs of the given type.
+         */
+        virtual NLargeInteger getOrientedQuadCoord(unsigned long tetIndex,
+            int quadType, NTriangulation* triang, bool orientation) const;
         /**
          * Returns the number of octagonal discs of the given type
          * in this normal surface.
@@ -690,9 +751,41 @@ class REGINA_API NNormalSurface :
          */
         NLargeInteger getTriangleCoord(unsigned long tetIndex,
             int vertex) const;
+
         /**
-         * Returns the number of quadrilateral discs of the given type
+         * Returns the number of oriented triangular discs of the given type 
          * in this normal surface.
+         *
+         * This routine is for coordinate systems that support
+         * transversely oriented normal surfaces; for details see
+         * "The Thurston norm via normal surfaces", Stephan Tillmann and
+         * Daryl Cooper, Pacific Journal of Mathematics 239 (2009), 1-15.
+         *
+         * An oriented triangular disc type is identified by specifying a
+         * tetrahedron, a vertex of that tetrahedron that the
+         * triangle surrounds, and a boolean orientation.  The \c true
+         * orientation indicates a transverse orientation pointing to the
+         * nearby vertex, and the \c false orientation indicates a
+         * transverse orientation pointing to the opposite face.
+         *
+         * If the underlying coordinate system does not support transverse
+         * orientation, this routine will simply return zero.
+         *
+         * @param tetIndex the index in the triangulation of the
+         * tetrahedron in which the requested triangles reside;
+         * this should be between 0 and
+         * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
+         * @param vertex the vertex of the given tetrahedron around
+         * which the requested triangles lie; this should be between 0
+         * and 3 inclusive.
+         * @param orientation the orientation of the triangle 
+         * @return the number of triangular discs of the given type.
+         */
+        NLargeInteger getOrientedTriangleCoord(unsigned long tetIndex,
+            int vertex, bool orientation) const;
+        /**
+         * Returns the number of oriented quadrilateral discs of the given
+         * type in this normal surface.
          * A quadrilateral disc type is identified by specifying a
          * tetrahedron and a vertex splitting of that tetrahedron that
          * describes how the quadrilateral partitions the tetrahedron
@@ -715,6 +808,46 @@ class REGINA_API NNormalSurface :
          */
         NLargeInteger getQuadCoord(unsigned long tetIndex,
             int quadType) const;
+        /**
+         * Returns the number of oriented quadrilateral discs of the given type
+         * in this normal surface.
+         *
+         * This routine is for coordinate systems that support
+         * transversely oriented normal surfaces; for details see
+         * "The Thurston norm via normal surfaces", Stephan Tillmann and
+         * Daryl Cooper, Pacific Journal of Mathematics 239 (2009), 1-15.
+         *
+         * An oriented triangular disc type is identified by specifying a
+         * tetrahedron, a vertex of that tetrahedron that the
+         * triangle surrounds, and a boolean orientation.  The \c true
+         * orientation indicates a triangle whose "transverse" orientation
+         * points to the nearby vertex, and the \c false orientation
+         * indicates a triangle whose "transverse" orientation points to
+         * the opposite face.
+         *
+         * An oriented quadrilateral disc type is identified by specifying a
+         * tetrahedron, a vertex splitting of that tetrahedron as
+         * described in getQuadCoord(), and a boolean orientation.
+         * The \c true orientation indicates a transverse orientation
+         * pointing to the edge containing vertex 0 of the tetrahedron,
+         * and the \c false orientation indicates a transverse
+         * orientation pointing to the opposite edge.
+         *
+         * If the underlying coordinate system does not support transverse
+         * orientation, this routine will simply return zero.
+         *
+         * @param tetIndex the index in the triangulation of the
+         * tetrahedron in which the requested quadrilaterals reside;
+         * this should be between 0 and
+         * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
+         * @param quadType the number of the vertex splitting that this
+         * quad type represents; this should be between 0 and 2
+         * inclusive.
+         * @param orientation the orientation of the quadrilateral disc 
+         * @return the number of quadrilateral discs of the given type.
+         */
+        NLargeInteger getOrientedQuadCoord(unsigned long tetIndex,
+            int quadType, bool orientation) const;
         /**
          * Returns the number of octagonal discs of the given type
          * in this normal surface.
@@ -1479,9 +1612,19 @@ inline NLargeInteger NNormalSurface::getTriangleCoord(unsigned long tetIndex,
         int vertex) const {
     return vector->getTriangleCoord(tetIndex, vertex, triangulation);
 }
+inline NLargeInteger NNormalSurface::getOrientedTriangleCoord(
+        unsigned long tetIndex, int vertex, bool oriented) const {
+    return vector->getOrientedTriangleCoord(tetIndex, vertex, triangulation,
+        oriented);
+}
 inline NLargeInteger NNormalSurface::getQuadCoord(unsigned long tetIndex,
         int quadType) const {
     return vector->getQuadCoord(tetIndex, quadType, triangulation);
+}
+inline NLargeInteger NNormalSurface::getOrientedQuadCoord(
+        unsigned long tetIndex, int quadType, bool oriented) const {
+    return vector->getOrientedQuadCoord(tetIndex, quadType, triangulation,
+        oriented);
 }
 inline NLargeInteger NNormalSurface::getOctCoord(unsigned long tetIndex,
         int octType) const {

@@ -614,7 +614,7 @@ void NNormalSurface::writeToFile(NFile& out) const {
     out.writeAllPropertiesFooter();
 }
 
-#define REGISTER_FLAVOUR(id_name, class, n, a, s) \
+#define REGISTER_FLAVOUR(id_name, class, n, a, s, o) \
     if (flavour == NNormalSurfaceList::id_name) \
         vector = new class(vecLen); \
     else
@@ -647,6 +647,18 @@ NNormalSurface* NNormalSurface::readFromFile(NFile& in, int flavour,
 
     return ans;
 }
+
+// Default implementations for oriented surfaces. Returns zero as any
+// coordinate system which supports orientation should override these.
+NLargeInteger NNormalSurfaceVector::getOrientedTriangleCoord(
+        unsigned long, int, NTriangulation*, bool) const {
+    return NLargeInteger::zero;
+};
+
+NLargeInteger NNormalSurfaceVector::getOrientedQuadCoord(
+        unsigned long, int, NTriangulation*, bool) const {
+    return NLargeInteger::zero;
+};
 
 // Tidy up.
 #undef REGISTER_FLAVOUR

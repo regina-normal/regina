@@ -83,6 +83,7 @@ class REGINA_API NNormalSurfaceVectorANStandard : public NNormalSurfaceVector {
 
         virtual bool allowsAlmostNormal() const;
         virtual bool allowsSpun() const;
+        virtual bool allowsOriented() const;
 
         virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
             int vertex, NTriangulation* triang) const;

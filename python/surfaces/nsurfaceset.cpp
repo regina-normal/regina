@@ -46,6 +46,7 @@ void addNSurfaceSet() {
         .def("getFlavour", &NSurfaceSet::getFlavour)
         .def("allowsAlmostNormal", &NSurfaceSet::allowsAlmostNormal)
         .def("allowsSpun", &NSurfaceSet::allowsSpun)
+        .def("allowsOriented", &NSurfaceSet::allowsOriented)
         .def("isEmbeddedOnly", &NSurfaceSet::isEmbeddedOnly)
         .def("getTriangulation", &NSurfaceSet::getTriangulation,
             return_value_policy<reference_existing_object>())
