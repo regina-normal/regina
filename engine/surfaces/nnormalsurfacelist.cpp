@@ -63,7 +63,7 @@ const int NNormalSurfaceList::FACE_ARCS = 201;
 const int NNormalSurfaceList::ORIENTED = 300;
 const int NNormalSurfaceList::ORIENTED_QUAD = 301;
 
-#define REGISTER_FLAVOUR(id_name, class, n, a, s) \
+#define REGISTER_FLAVOUR(id_name, class, n, a, s, o) \
     case NNormalSurfaceList::id_name: \
         return class::makeZeroVector(triangulation);
 
@@ -77,7 +77,7 @@ NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, class, n, a, s) \
+#define REGISTER_FLAVOUR(id_name, class, n, a, s, o) \
     case NNormalSurfaceList::id_name: \
         return class::makeMatchingEquations(triangulation);
 
@@ -91,7 +91,7 @@ NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, class, n, a, s) \
+#define REGISTER_FLAVOUR(id_name, class, n, a, s, o) \
     case NNormalSurfaceList::id_name: \
         return class::makeEmbeddedConstraints(triangulation);
 
@@ -105,7 +105,7 @@ NEnumConstraintList* makeEmbeddedConstraints(NTriangulation* triangulation,
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, class, n, an, s) \
+#define REGISTER_FLAVOUR(id_name, class, n, an, s, o) \
     case id_name: NDoubleDescription::enumerateExtremalRays<class>( \
         SurfaceInserter(*list, triang), *eqns, constraints, progress); \
         break;
@@ -160,7 +160,7 @@ void* NNormalSurfaceList::VertexEnumerator::run(void*) {
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, class, n, an, s) \
+#define REGISTER_FLAVOUR(id_name, class, n, an, s, o) \
     case id_name: NHilbertPrimal::enumerateHilbertBasis<class>( \
         SurfaceInserter(*list, triang), \
         useVtxSurfaces->beginVectors(), useVtxSurfaces->endVectors(), \
@@ -216,7 +216,7 @@ void* NNormalSurfaceList::FundPrimalEnumerator::run(void*) {
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, class, n, an, s) \
+#define REGISTER_FLAVOUR(id_name, class, n, an, s, o) \
     case id_name: NHilbertDual::enumerateHilbertBasis<class>( \
         SurfaceInserter(*list, triang), *eqns, constraints, progress); \
         break;
@@ -358,7 +358,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateStandardANDirect(
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, class, n, an, s) \
+#define REGISTER_FLAVOUR(id_name, class, n, an, s, o) \
     case id_name: v = new class(dim); break; \
 
 NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
@@ -452,7 +452,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, class, n, an, s) \
+#define REGISTER_FLAVOUR(id_name, class, n, an, s, o) \
     case id_name: NHilbertCD::enumerateHilbertBasis<class>( \
         SurfaceInserter(*ans, owner), *eqns, constraints); \
         break;
@@ -484,7 +484,7 @@ NTriangulation* NNormalSurfaceList::getTriangulation() const {
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, n, almost_normal, s) \
+#define REGISTER_FLAVOUR(id_name, c, n, almost_normal, s, o) \
     case id_name: return almost_normal;
 
 bool NNormalSurfaceList::allowsAlmostNormal() const {
@@ -498,7 +498,7 @@ bool NNormalSurfaceList::allowsAlmostNormal() const {
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, n, a, spun) \
+#define REGISTER_FLAVOUR(id_name, c, n, a, spun, o) \
     case id_name: return spun;
 
 bool NNormalSurfaceList::allowsSpun() const {
@@ -512,51 +512,65 @@ bool NNormalSurfaceList::allowsSpun() const {
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, name, a, s) \
-    case id_name: o << name; break;
+#define REGISTER_FLAVOUR(id_name, c, n, a, s, oriented) \
+    case id_name: return oriented;
 
-void NNormalSurfaceList::writeTextShort(std::ostream& o) const {
-    o << surfaces.size() << " vertex normal surface";
-    if (surfaces.size() != 1)
-        o << 's';
-    o << " (";
+bool NNormalSurfaceList::allowsOriented() const {
     switch(flavour) {
         // Import cases from the flavour registry...
         #include "surfaces/flavourregistry.h"
         // ... and legacy cases:
-        case AN_LEGACY:
-            o << AN_LEGACY_NAME;
-            break;
-        default:
-            o << "Unknown";
-            break;
+        case AN_LEGACY: return false;
     }
-    o << ')';
+    return false;
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, name, a, s) \
-    case id_name: o << name << '\n'; break;
+#define REGISTER_FLAVOUR(id_name, c, name, a, s, o) \
+    case id_name: out << name; break;
 
-void NNormalSurfaceList::writeTextLong(std::ostream& o) const {
-    if (embedded)
-        o << "Embedded ";
-    else
-        o << "Embedded, immersed & singular ";
-    o << "vertex normal surfaces\n";
-    o << "Coordinates: ";
+void NNormalSurfaceList::writeTextShort(std::ostream& out) const {
+    out << surfaces.size() << " vertex normal surface";
+    if (surfaces.size() != 1)
+        out << 's';
+    out << " (";
     switch(flavour) {
         // Import cases from the flavour registry...
         #include "surfaces/flavourregistry.h"
         // ... and legacy cases:
         case AN_LEGACY:
-            o << AN_LEGACY_NAME << '\n';
+            out << AN_LEGACY_NAME;
             break;
         default:
-            o << "Unknown\n";
+            out << "Unknown";
             break;
     }
-    writeAllSurfaces(o);
+    out << ')';
+}
+
+#undef REGISTER_FLAVOUR
+#define REGISTER_FLAVOUR(id_name, c, name, a, s, o) \
+    case id_name: out << name << '\n'; break;
+
+void NNormalSurfaceList::writeTextLong(std::ostream& out) const {
+    if (embedded)
+        out << "Embedded ";
+    else
+        out << "Embedded, immersed & singular ";
+    out << "vertex normal surfaces\n";
+    out << "Coordinates: ";
+    switch(flavour) {
+        // Import cases from the flavour registry...
+        #include "surfaces/flavourregistry.h"
+        // ... and legacy cases:
+        case AN_LEGACY:
+            out << AN_LEGACY_NAME << '\n';
+            break;
+        default:
+            out << "Unknown\n";
+            break;
+    }
+    writeAllSurfaces(out);
 }
 
 void NNormalSurfaceList::writePacket(NFile& out) const {
@@ -574,7 +588,7 @@ void NNormalSurfaceList::writePacket(NFile& out) const {
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, name, a, s) \
+#define REGISTER_FLAVOUR(id_name, c, name, a, s, o) \
     case id_name: out << regina::xml::xmlEncodeSpecialChars(name); break;
 
 void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
@@ -602,7 +616,7 @@ void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
 }
 
 #undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, n, a, s) \
+#define REGISTER_FLAVOUR(id_name, c, n, a, s, o) \
     case id_name: break;
 
 NNormalSurfaceList* NNormalSurfaceList::readPacket(NFile& in,

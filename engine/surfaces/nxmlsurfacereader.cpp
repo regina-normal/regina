@@ -44,7 +44,7 @@ void NXMLNormalSurfaceReader::startElement(const std::string&,
     name = props.lookup("name");
 }
 
-#define REGISTER_FLAVOUR(id_name, class, n, a, s) \
+#define REGISTER_FLAVOUR(id_name, class, n, a, s, o) \
     if (flavour == NNormalSurfaceList::id_name) \
         vec = new class(vecLen); \
     else

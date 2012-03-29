@@ -89,6 +89,7 @@ class REGINA_API NSurfaceSubset : public ShareableObject, public NSurfaceSet {
         virtual int getFlavour() const;
         virtual bool allowsAlmostNormal() const;
         virtual bool allowsSpun() const;
+        virtual bool allowsOriented() const;
         virtual bool isEmbeddedOnly() const;
         virtual NTriangulation* getTriangulation() const;
         virtual unsigned long getNumberOfSurfaces() const;
@@ -114,6 +115,9 @@ inline bool NSurfaceSubset::allowsAlmostNormal() const {
 }
 inline bool NSurfaceSubset::allowsSpun() const {
     return source.allowsSpun();
+}
+inline bool NSurfaceSubset::allowsOriented() const {
+    return source.allowsOriented();
 }
 inline bool NSurfaceSubset::isEmbeddedOnly() const {
     return source.isEmbeddedOnly();
