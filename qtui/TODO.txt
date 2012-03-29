@@ -46,5 +46,8 @@ Python:
 Surfaces:
     - Make the default label reflect the coordinate system
 
+TONS:
+    - Improve output via both CSV export and toString().
+
 Triangulations:
     - Centre face pairing graphs, and/or match the background colour

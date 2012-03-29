@@ -1,6 +1,5 @@
 Stephan:
 - Document NNormalSurface::boundarySlopes().
-- TONS: text output; CSV output
 
 Misc:
 - from regina import *
