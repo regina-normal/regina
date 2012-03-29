@@ -342,13 +342,14 @@ if ($script) {
     my @fullCommandLine = ( $python_cmd );
     $interactive and push @fullCommandLine, '-i';
     push @fullCommandLine, $runscript_py;
-	push @fullCommandLine, ($autoImport ? 'import' : 'noimport');
+    push @fullCommandLine, ($autoImport ? 'import' : 'noimport');
     push @fullCommandLine, @python_libs;
     push @fullCommandLine, ( '--', $script );
     push @fullCommandLine, @script_args;
     exec @fullCommandLine or &execError();
 } else {
     my @fullCommandLine = ( $python_cmd, '-i', $runscript_py );
+    push @fullCommandLine, ($autoImport ? 'import' : 'noimport');
     push @fullCommandLine, @python_libs;
     exec @fullCommandLine or &execError();
 }
