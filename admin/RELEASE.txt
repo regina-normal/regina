@@ -43,7 +43,9 @@ Don't forget:
     rebuild manpages
     website, including updated news, what's new and deprecation guide
     debian packages (include cvs.diff)
-    fedora/mandriva/suse packages
+    rpm-based packages (fedora/mandriva/suse)
+    windows installer
+    macos DMG
     update tips for building on different platforms
     update debian/ubuntu/fink READMEs as required (both text and html)
     copy fink info file(s) beneath www/
