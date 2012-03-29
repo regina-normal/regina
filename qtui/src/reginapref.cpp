@@ -238,6 +238,9 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     surfacePrefs->editCompatThreshold->setText(
         QString::number(prefSet.surfacesCompatThreshold));
 
+    surfacePrefs->cbSupportOriented->setChecked(
+        prefSet.surfacesSupportOriented);
+
     foreach (const ReginaFilePref& f, prefSet.censusFiles) {
         new ReginaFilePrefItem(censusPrefs->listFiles, f);
     }
@@ -271,6 +274,8 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     toolsPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
 
     // Finish off.
+    connect(surfacePrefs->cbSupportOriented, SIGNAL(stateChanged(int)),
+        surfacePrefs, SLOT(orientedChecked(int)));
     connect(buttonBox, SIGNAL(clicked(QAbstractButton *)), this, SLOT(clicked(QAbstractButton *)));
 }
 
@@ -436,6 +441,9 @@ void ReginaPreferences::slotApply() {
         surfacePrefs->editCompatThreshold->setText(
             QString::number(prefSet.surfacesCompatThreshold));
     }
+
+    prefSet.surfacesSupportOriented =
+        surfacePrefs->cbSupportOriented->isChecked();
 
     prefSet.censusFiles.clear();
     for (int i=0; i < censusPrefs->listFiles->count();i++) {
@@ -918,9 +926,34 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QWidget(parent) {
         "is not checked in the dialog for a new normal surface list.</qt>"));
     layout->addWidget(cbWarnOnNonEmbedded);
 
+    // Options for experimental features.
+    cbSupportOriented = new QCheckBox(tr("Support transversely oriented "
+        "normal surfaces (highly experimental)"));
+    cbSupportOriented->setWhatsThis(tr("<qt>Allow the enumeration of "
+        "normal surfaces using transversely oriented coordinates.  "
+        "This feature is <b>highly experimental</b>, and some features "
+        "<b>will break</b>.</qt>"));
+    layout->addWidget(cbSupportOriented);
+
     // Add some space at the end.
     layout->addStretch(1);
     setLayout(layout);
+}
+
+void ReginaPrefSurfaces::orientedChecked(int state) {
+    if (state == Qt::Checked) {
+        QMessageBox box(QMessageBox::Warning,
+            tr("Warning"),
+            tr("Transversely oriented normal surfaces are "
+                "still highly experimental."),
+            QMessageBox::Yes | QMessageBox::No, this);
+        box.setInformativeText(
+                tr("<qt>Some things <b>will break</b>.  "
+                "Are you sure you wish to enable this feature?</qt>"));
+        box.setDefaultButton(QMessageBox::No);
+        if (box.exec() != QMessageBox::Yes)
+            cbSupportOriented->setChecked(false);
+    }
 }
 
 ReginaPrefTools::ReginaPrefTools(QWidget* parent) : QWidget(parent) {

@@ -32,6 +32,7 @@
 // UI includes:
 #include "coordinatechooser.h"
 #include "coordinates.h"
+#include "reginaprefset.h"
 
 #include <algorithm>
 
@@ -47,6 +48,10 @@ void CoordinateChooser::insertAllCreators() {
     insertSystem(NNormalSurfaceList::AN_STANDARD);
     insertSystem(NNormalSurfaceList::QUAD);
     insertSystem(NNormalSurfaceList::AN_QUAD_OCT);
+    if (ReginaPrefSet::global().surfacesSupportOriented) {
+        insertSystem(NNormalSurfaceList::ORIENTED);
+        insertSystem(NNormalSurfaceList::ORIENTED_QUAD);
+    }
 }
 
 void CoordinateChooser::insertAllViewers(regina::NNormalSurfaceList* surfaces) {
@@ -63,6 +68,11 @@ void CoordinateChooser::insertAllViewers(regina::NNormalSurfaceList* surfaces) {
     } else {
         insertSystem(NNormalSurfaceList::STANDARD);
         insertSystem(NNormalSurfaceList::QUAD);
+
+        if (surfaces->allowsOriented()) {
+            insertSystem(NNormalSurfaceList::ORIENTED);
+            insertSystem(NNormalSurfaceList::ORIENTED_QUAD);
+        }
     }
 
     insertSystem(NNormalSurfaceList::EDGE_WEIGHT);

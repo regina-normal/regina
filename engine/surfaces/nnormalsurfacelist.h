@@ -468,6 +468,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
         virtual int getFlavour() const;
         virtual bool allowsAlmostNormal() const;
         virtual bool allowsSpun() const;
+        virtual bool allowsOriented() const;
         virtual bool isEmbeddedOnly() const;
         virtual NTriangulation* getTriangulation() const;
         virtual unsigned long getNumberOfSurfaces() const;

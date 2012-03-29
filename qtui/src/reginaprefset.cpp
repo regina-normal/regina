@@ -235,6 +235,7 @@ ReginaPrefSet::ReginaPrefSet() :
         surfacesCreationCoords(regina::NNormalSurfaceList::STANDARD),
         surfacesInitialCompat(LocalCompat),
         surfacesInitialTab(Summary),
+        surfacesSupportOriented(false),
         treeJumpSize(10),
         triGAPExec(defaultGAPExec),
         triGraphvizExec(defaultGraphvizExec),
@@ -488,6 +489,8 @@ void ReginaPrefSet::readInternal() {
         surfacesInitialTab = ReginaPrefSet::Compatibility;
     else
         surfacesInitialTab = ReginaPrefSet::Summary; /* default */
+
+    surfacesSupportOriented = settings.value("SupportOriented", false).toBool();
     settings.endGroup();
 
     settings.beginGroup("Tree");
@@ -616,6 +619,8 @@ void ReginaPrefSet::saveInternal() const {
         default:
             settings.setValue("InitialTab", "Summary"); break;
     }
+
+    settings.setValue("SupportOriented", surfacesSupportOriented);
     settings.endGroup();
 
     settings.beginGroup("Tree");

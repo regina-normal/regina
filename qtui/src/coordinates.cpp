@@ -27,11 +27,13 @@
 /* end stub */
 
 #include "surfaces/nnormalsurfacelist.h"
+#include "triangulation/nface.h"
 #include "triangulation/ntriangulation.h"
 
 #include <QObject>
 #include <QString>
 
+using regina::NFace;
 using regina::NNormalSurfaceList;
 
 namespace Coordinates {
@@ -51,6 +53,10 @@ namespace Coordinates {
                 return QT_TR_NOOP("Edge weight");
             if (coordSystem == NNormalSurfaceList::FACE_ARCS)
                 return QT_TR_NOOP("Face arc");
+            if (coordSystem == NNormalSurfaceList::ORIENTED)
+                return QT_TR_NOOP("Transversely oriented normal");
+            if (coordSystem == NNormalSurfaceList::ORIENTED_QUAD)
+                return QT_TR_NOOP("Transversely oriented quad normal");
             return QT_TR_NOOP("Unknown");
         } else {
             if (coordSystem == NNormalSurfaceList::STANDARD)
@@ -67,6 +73,10 @@ namespace Coordinates {
                 return QT_TR_NOOP("edge weight");
             if (coordSystem == NNormalSurfaceList::FACE_ARCS)
                 return QT_TR_NOOP("face arc");
+            if (coordSystem == NNormalSurfaceList::ORIENTED)
+                return QT_TR_NOOP("transversely oriented normal");
+            if (coordSystem == NNormalSurfaceList::ORIENTED_QUAD)
+                return QT_TR_NOOP("transversely oriented quad normal");
             return QT_TR_NOOP("unknown");
         }
     }
@@ -92,6 +102,10 @@ namespace Coordinates {
             return tri->getNumberOfEdges();
         else if (coordSystem == NNormalSurfaceList::FACE_ARCS)
             return tri->getNumberOfFaces() * 3;
+        else if (coordSystem == NNormalSurfaceList::ORIENTED)
+            return tri->getNumberOfTetrahedra() * 14;
+        else if (coordSystem == NNormalSurfaceList::ORIENTED_QUAD)
+            return tri->getNumberOfTetrahedra() * 6;
         else
             return 0;
     }
@@ -133,6 +147,42 @@ namespace Coordinates {
                 return QString("%1 [B]").arg(whichCoord);
         } else if (coordSystem == NNormalSurfaceList::FACE_ARCS) {
             return QString("%1: %2").arg(whichCoord / 3).arg(whichCoord % 3);
+        } else if (coordSystem == NNormalSurfaceList::ORIENTED) {
+            unsigned long stdCoord = whichCoord / 2;
+            if (whichCoord % 2 == 0) {
+                // "true" orientation.
+                // Note that vertexSplitDefn[i][0] == 0 always.
+                if (stdCoord % 7 < 4)
+                    return QString("%1: %2").arg(stdCoord / 7).
+                        arg(stdCoord % 7);
+                else
+                    return QString("%1: %2%3").arg(stdCoord / 7).
+                        arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][0]).
+                        arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][1]);
+            } else {
+                // "false" orientation.
+                if (stdCoord % 7 < 4)
+                    return QString("%1: %2").arg(stdCoord / 7).
+                        arg(NFace::ordering[stdCoord % 7].trunc3().c_str());
+                else
+                    return QString("%1: %2%3").arg(stdCoord / 7).
+                        arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][2]).
+                        arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][3]);
+            }
+        } else if (coordSystem == NNormalSurfaceList::ORIENTED_QUAD) {
+            unsigned long quadCoord = whichCoord / 2;
+            if (whichCoord % 2 == 0) {
+                // "true" orientation.
+                // Note that vertexSplitDefn[i][0] == 0 always.
+                return QString("%1: %2%3").arg(quadCoord / 3).
+                    arg(regina::vertexSplitDefn[(quadCoord % 3)][0]).
+                    arg(regina::vertexSplitDefn[(quadCoord % 3)][1]);
+            } else {
+                // "false" orientation.
+                return QString("%1: %2%3").arg(quadCoord / 3).
+                    arg(regina::vertexSplitDefn[(quadCoord % 3)][2]).
+                    arg(regina::vertexSplitDefn[(quadCoord % 3)][3]);
+            }
         }
 
         return QString("Unknown");
@@ -187,6 +237,54 @@ namespace Coordinates {
         } else if (coordSystem == NNormalSurfaceList::FACE_ARCS) {
             return context->tr("Arcs on face %1 crossing face vertex %2").
                 arg(whichCoord / 3).arg(whichCoord % 3);
+        } else if (coordSystem == NNormalSurfaceList::ORIENTED) {
+            unsigned long stdCoord = whichCoord / 2;
+            if (whichCoord % 2 == 0) {
+                // "true" orientation.
+                // Note that vertexSplitDefn[i][0] == 0 always.
+                if (stdCoord % 7 < 4)
+                    return context->tr("Tetrahedron %1, "
+                        "triangle oriented towards vertex %2").
+                        arg(stdCoord / 7).
+                        arg(stdCoord % 7);
+                else
+                    return context->tr("Tetrahedron %1, "
+                        "quad oriented towards edge %2%3").
+                        arg(stdCoord / 7).
+                        arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][0]).
+                        arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][1]);
+            } else {
+                // "false" orientation.
+                if (stdCoord % 7 < 4)
+                    return context->tr("Tetrahedron %1, "
+                        "triangle oriented towards face %2").
+                        arg(stdCoord / 7).
+                        arg(NFace::ordering[stdCoord % 7].trunc3().c_str());
+                else
+                    return context->tr("Tetrahedron %1, "
+                        "quad oriented towards edge %2%3").
+                        arg(stdCoord / 7).
+                        arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][2]).
+                        arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][3]);
+            }
+        } else if (coordSystem == NNormalSurfaceList::ORIENTED_QUAD) {
+            unsigned long quadCoord = whichCoord / 2;
+            if (whichCoord % 2 == 0) {
+                // "true" orientation.
+                // Note that vertexSplitDefn[i][0] == 0 always.
+                return context->tr("Tetrahedron %1, "
+                    "quad oriented towards edge %2%3").
+                    arg(quadCoord / 3).
+                    arg(regina::vertexSplitDefn[(quadCoord % 3)][0]).
+                    arg(regina::vertexSplitDefn[(quadCoord % 3)][1]);
+            } else {
+                // "false" orientation.
+                return context->tr("Tetrahedron %1, "
+                    "quad oriented towards edge %2%3").
+                    arg(quadCoord / 3).
+                    arg(regina::vertexSplitDefn[(quadCoord % 3)][2]).
+                    arg(regina::vertexSplitDefn[(quadCoord % 3)][3]);
+            }
         }
 
         return context->tr("This coordinate system is not known");
@@ -224,6 +322,20 @@ namespace Coordinates {
             return surface.getEdgeWeight(whichCoord);
         } else if (coordSystem == NNormalSurfaceList::FACE_ARCS) {
             return surface.getFaceArcs(whichCoord / 3, whichCoord % 3);
+        } else if (coordSystem == NNormalSurfaceList::ORIENTED) {
+            bool orientation = (whichCoord % 2 == 0);
+            whichCoord /= 2;
+            if (whichCoord % 7 < 4)
+                return surface.getOrientedTriangleCoord(
+                    whichCoord / 7, whichCoord % 7, orientation);
+            else
+                return surface.getOrientedQuadCoord(
+                    whichCoord / 7, (whichCoord % 7) - 4, orientation);
+        } else if (coordSystem == NNormalSurfaceList::ORIENTED_QUAD) {
+            bool orientation = (whichCoord % 2 == 0);
+            whichCoord /= 2;
+            return surface.getOrientedQuadCoord(
+                whichCoord / 3, whichCoord % 3, orientation);
         }
 
         return (long)0;

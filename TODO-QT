@@ -1,3 +1,6 @@
 Stephan:
 - Document NNormalSurface::boundarySlopes().
-- Merge and clean up TONS.
+- TONS: text output; CSV output
+
+Misc:
+- from regina import *

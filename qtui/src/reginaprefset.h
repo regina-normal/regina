@@ -387,6 +387,9 @@ class ReginaPrefSet : public QObject {
         SurfacesTab surfacesInitialTab;
             /**< The initially visible top-level tab for a new normal
                  surface list viewer. */
+        bool surfacesSupportOriented;
+            /**< Should we offer support for transversely oriented
+                 normal surfaces?  This is still highly experimental. */
         unsigned treeJumpSize;
             /**< The number of steps corresponding to a jump up or down in
                  the packet tree. */

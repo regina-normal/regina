@@ -146,9 +146,13 @@ class ReginaPrefSurfaces : public QWidget {
         QComboBox* comboInitialTab;
         QComboBox* comboInitialCompat;
         QLineEdit* editCompatThreshold;
+        QCheckBox* cbSupportOriented;
 
     public:
         ReginaPrefSurfaces(QWidget* parent = 0);
+
+    private slots:
+        void orientedChecked(int);
 
     friend class ReginaPreferences;
 };

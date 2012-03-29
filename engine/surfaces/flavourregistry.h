@@ -41,7 +41,7 @@
  *
  *    For each such flavour there should be a line of the form:
  *
- *        REGISTER_FLAVOUR(id_name, class, name, almost_normal, spun)
+ *        REGISTER_FLAVOUR(id_name, class, name, almost_normal, spun, oriented)
  *
  *    where:
  *        id_name = the constant int member of NNormalSurfaceList that
@@ -53,6 +53,8 @@
  *            normal surfaces or false otherwise.
  *        spun = true if this coordinate system allows spun normal surfaces
  *            or false otherwise.
+ *        oriented = true if this coordinate system supports transversely
+ *            oriented normal surfaces or false otherwise.
  *
  *    The appropriate include files should also be placed in the
  *        appropriate include sections below.
@@ -76,15 +78,21 @@
     #include "surfaces/nsanstandard.h"
     #include "surfaces/nsquad.h"
     #include "surfaces/nsquadoct.h"
+    #include "surfaces/nsoriented.h"
+    #include "surfaces/nsorientedquad.h"
 #else
     REGISTER_FLAVOUR(STANDARD, NNormalSurfaceVectorStandard,
-        "Standard normal (tri-quad)", false, false)
+        "Standard normal (tri-quad)", false, false, false)
     REGISTER_FLAVOUR(AN_STANDARD, NNormalSurfaceVectorANStandard,
-        "Standard almost normal (tri-quad-oct)", true, false)
+        "Standard almost normal (tri-quad-oct)", true, false, false)
     REGISTER_FLAVOUR(QUAD, NNormalSurfaceVectorQuad,
-        "Quad normal", false, true)
+        "Quad normal", false, true, false)
     REGISTER_FLAVOUR(AN_QUAD_OCT, NNormalSurfaceVectorQuadOct,
-        "Quad-oct almost normal", true, true)
+        "Quad-oct almost normal", true, true, false)
+    REGISTER_FLAVOUR(ORIENTED, NNormalSurfaceVectorOriented,
+        "Transversely oriented standard normal", false, false, true)
+    REGISTER_FLAVOUR(ORIENTED_QUAD, NNormalSurfaceVectorOrientedQuad,
+        "Transversely oriented quad normal", false, true, true)
 #endif
 
 /*! \file surfaces/flavourregistry.h

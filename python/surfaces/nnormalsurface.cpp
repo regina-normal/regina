@@ -88,7 +88,10 @@ void addNNormalSurface() {
         .def("doubleSurface", &NNormalSurface::doubleSurface,
             return_value_policy<manage_new_object>())
         .def("getTriangleCoord", &NNormalSurface::getTriangleCoord)
+        .def("getOrientedTriangleCoord",
+            &NNormalSurface::getOrientedTriangleCoord)
         .def("getQuadCoord", &NNormalSurface::getQuadCoord)
+        .def("getOrientedQuadCoord", &NNormalSurface::getOrientedQuadCoord)
         .def("getOctCoord", &NNormalSurface::getOctCoord)
         .def("getEdgeWeight", &NNormalSurface::getEdgeWeight)
         .def("getFaceArcs", &NNormalSurface::getFaceArcs)

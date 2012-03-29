@@ -97,6 +97,14 @@ class REGINA_API NSurfaceSet {
          */
         virtual bool allowsSpun() const = 0;
         /**
+         * Determines if the flavour of coordinate system being used
+         * allows for transversely oriented normal surfaces.
+         *
+         * @return \c true if and only if transverse orientations are
+         * supported.
+         */
+        virtual bool allowsOriented() const = 0;
+        /**
          * Returns whether this set is known to contain only embedded normal
          * surfaces.
          *
