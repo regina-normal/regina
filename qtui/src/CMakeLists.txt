@@ -116,3 +116,10 @@ if (WIN32)
   install(FILES x-regina.ico DESTINATION ${BINDIR} COMPONENT Runtime)
 endif (WIN32)
 
+if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+  # Install a placeholder for the old regina-kde.
+  ADD_EXECUTABLE(regina-kde WIN32 regina-kde)
+  TARGET_LINK_LIBRARIES(regina-kde ${QT_LIBRARIES})
+  INSTALL(TARGETS regina-kde DESTINATION ${APPDIR} COMPONENT Runtime)
+  INSTALL(FILES regina-kde.1 DESTINATION ${MANDIR}/man1 COMPONENT Runtime)
+endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
