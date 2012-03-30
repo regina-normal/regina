@@ -57,7 +57,7 @@ namespace {
     std::string welcome() {
         return std::string(PACKAGE_STRING) +
             "\nSoftware for 3-manifold topology and normal surface theory" +
-            "\nCopyright (c) 1999-2011, The Regina development team";
+            "\nCopyright (c) 1999-2012, The Regina development team";
     }
 
     void shareableWriteTextShort(const ShareableObject& obj) {
