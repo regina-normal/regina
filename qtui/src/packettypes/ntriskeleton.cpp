@@ -46,6 +46,7 @@
 #include <QProcess>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QSysInfo>
 #include <QStackedWidget>
 #include <QTemporaryFile>
 
@@ -391,12 +392,27 @@ void NTriFaceGraphUI::refresh() {
         else if (gvStatus == GraphvizStatus::notStartable)
             error = tr("However, I could not start "    
                 "the Graphviz executable \"%1\".").arg(graphvizExec);
-        else if (gvStatus == GraphvizStatus::unsupported)
+        else if (gvStatus == GraphvizStatus::unsupported) {
+#ifdef Q_OS_MACX
+            if (QSysInfo::MacintoshVersion == QSysInfo::MV_LEOPARD)
+                error = tr("However, I cannot determine the version of "
+                    "Graphviz that you are running.<p>"
+                    "<b>MacOS Leopard users:</b> "
+                    "Graphviz 2.28.0 is broken under Leopard, and can "
+                    "cause this error.  The older Graphviz 2.26.3 "
+                    "should work fine.");
+            else
+                error = tr("However, I cannot determine the version of "
+                    "Graphviz that you are running.  Perhaps your Graphviz "
+                    "is too old (version 0.x), or perhaps the program "
+                    "\"%1\" is not from Graphviz at all.").arg(graphvizExec);
+#else
             error = tr("However, I cannot determine the version of "
                 "Graphviz that you are running.  Perhaps your Graphviz "
                 "is too old (version 0.x), or perhaps the program "
                 "\"%1\" is not from Graphviz at all.").arg(graphvizExec);
-        else if (gvStatus == GraphvizStatus::version1NotDot)
+#endif
+        } else if (gvStatus == GraphvizStatus::version1NotDot)
             error = tr("Your Graphviz seems to be very old (version 1.x).  "
                 "Many tools in older versions of Graphviz cannot handle "
                 "multiple edges, including the tool <i>neato</i> which "
