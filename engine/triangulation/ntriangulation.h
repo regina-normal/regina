@@ -2278,7 +2278,7 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * For further details on the underlying algorithms, see
          * "The Weber-Seifert dodecahedral space is non-Haken",
          * Benjamin A. Burton, J. Hyam Rubinstein and Stephan Tillmann,
-         * to appear in Trans. Amer. Math. Soc., arXiv:0909.4625; and
+         * Trans. Amer. Math. Soc. 364:2 (2012), pp. 911-932; and
          * "Algorithms for the complete decomposition of a closed 3-manifold",
          * William Jaco and Jeffrey L. Tollefson, Illinois J. Math. 39 (1995),
          * 358-406.
@@ -2345,7 +2345,7 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * For further information on this test, see "The Weber-Seifert
          * dodecahedral space is non-Haken", Benjamin A. Burton,
          * J. Hyam Rubinstein and Stephan Tillmann,
-         * to appear in Trans. Amer. Math. Soc., arXiv:0909.4625.
+         * Trans. Amer. Math. Soc. 364:2 (2012), pp. 911-932.
          *
          * \warning The definition of "simple" is subject to change in
          * future releases of Regina.  That is, this routine may be

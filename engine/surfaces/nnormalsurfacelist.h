@@ -229,6 +229,13 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * normal surfaces or to also include immersed and singular
          * normal surfaces.
          *
+         * The primal algorithm is the recommended method for
+         * enumerating fundamental normal surfaces, although other
+         * algorithms are made available in this class also.
+         * For full details of the procedure, see "Fundamental normal
+         * surfaces and the enumeration of Hilbert bases", Burton,
+         * arXiv:1111.7055, Nov 2011.
+         *
          * The normal surface list that is created will be inserted as the
          * last child of the given triangulation.  This triangulation \b must
          * remain the parent of this normal surface list, and must not
@@ -287,6 +294,12 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * surface list.  The option is offered to find only embedded
          * normal surfaces or to also include immersed and singular
          * normal surfaces.
+         *
+         * The dual algorithm is fast but its performance is highly variable;
+         * for this reason the primal algorithm is recommended instead.
+         * For full details of both procedures, see
+         * "Fundamental normal surfaces and the enumeration of Hilbert bases",
+         * Burton, arXiv:1111.7055, Nov 2011.
          *
          * The normal surface list that is created will be inserted as the
          * last child of the given triangulation.  This triangulation \b must
@@ -434,7 +447,9 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
         /**
          * Uses an extremely slow modified Contejean-Devie procedure to
          * enumerate all embedded fundamental surfaces in the given
-         * triangulation.
+         * triangulation.  For details of the modifications, see
+         * "Fundamental normal surfaces and the enumeration of Hilbert bases",
+         * Burton, arXiv:1111.7055, Nov 2011.
          *
          * Aside from the underlying algorithm, the behaviour of this
          * routine is identical to enumerateFundPrimal() and
@@ -761,7 +776,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * bounded triangulations.  For more details on these tests
          * see "The Weber-Seifert dodecahedral space is non-Haken",
          * Benjamin A. Burton, J. Hyam Rubinstein and Stephan Tillmann,
-         * to appear in Trans. Amer. Math. Soc., arXiv:0909.4625.
+         * Trans. Amer. Math. Soc. 364:2 (2012), pp. 911-932.
          *
          * \pre The underlying 3-manifold triangulation is valid and closed.
          * In particular, it has no ideal vertices.
