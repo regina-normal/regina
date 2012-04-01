@@ -183,7 +183,7 @@
  </biblioentry>
 
  <biblioentry id="bib-weber-seifert">
-  <abbrev>BRT09</abbrev>
+  <abbrev>BRT12</abbrev>
   <authorgroup>
    <author>
     <firstname>Benjamin</firstname>
@@ -201,9 +201,11 @@
    </author>
   </authorgroup>
   <title>The Weber-Seifert dodecahedral space is non-Haken</title>
-  <edition>To appear in Trans. Amer. Math. Soc.</edition>
-  <issuenum>arXiv:0909.4625</issuenum>
-  <date>September 2009</date>
+  <edition>Trans. Amer. Math. Soc.</edition>
+  <volumenum>364</volumenum>
+  <issuenum>2</issuenum>
+  <artpagenums>pp. 911&ndash;932</artpagenums>
+  <date>2012</date>
  </biblioentry>
 
  <biblioentry id="bib-cuspedcensus">
