@@ -182,6 +182,20 @@
   <date>2011</date>
  </biblioentry>
 
+ <biblioentry id="bib-burton-fund">
+  <abbrev>Bur11c</abbrev>
+  <authorgroup><author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author></authorgroup>
+  <title>Fundamental normal surfaces and the enumeration of Hilbert
+   bases</title>
+  <edition>Preprint</edition>
+  <issuenum>arXiv:1111.7055</issuenum>
+  <date>November 2011</date>
+ </biblioentry>
+
  <biblioentry id="bib-weber-seifert">
   <abbrev>BRT12</abbrev>
   <authorgroup>
@@ -233,6 +247,25 @@
   <issuenum>no. 225</issuenum>
   <artpagenums>pp. 321&ndash;332</artpagenums>
   <date>1999</date>
+ </biblioentry>
+
+ <biblioentry id="bib-cooper-tons">
+  <abbrev>CT09</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Daryl</firstname>
+    <surname>Cooper</surname>
+   </author>
+   <author>
+    <firstname>Stephan</firstname>
+    <surname>Tillmann</surname>
+   </author>
+  </authorgroup>
+  <title>The Thurston norm via normal surfaces</title>
+  <edition>Pacific J. Math.</edition>
+  <volumenum>vol. 239</volumenum>
+  <artpagenums>pp. 1&ndash;15</artpagenums>
+  <date>2009</date>
  </biblioentry>
 
  <biblioentry id="bib-gap">

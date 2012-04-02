@@ -195,22 +195,25 @@
  <sect2 id="features-surfaces">
   <title>Normal Surfaces</title>
   <para>
-   &regina; is capable of enumerating all vertex normal surfaces or almost
-   normal surfaces<footnote><para>Almost normal surfaces are closely related
-   to normal surfaces and are used by Rubinstein in his 3-sphere recognition
-   algorithm <xref linkend="bib-rubin-3sphere1"/>,
-   <xref linkend="bib-rubin-3sphere2"/>.  &regina; only considers octagonal
-   almost normal discs, and does not consider annular pieces.</para></footnote>
-   of a triangulation,
-   an operation required by most high-level topological algorithms that
+   &regina; is capable of enumerating all vertex or fundamental
+   normal surfaces within a triangulation; almost normal
+   surfaces<footnote><para>Almost normal surfaces are closely related
+     to normal surfaces and are used by Rubinstein in his 3-sphere recognition
+     algorithm <xref linkend="bib-rubin-3sphere1"/>,
+     <xref linkend="bib-rubin-3sphere2"/>.  &regina; only considers octagonal
+     almost normal discs, and does not consider annular
+     pieces.</para></footnote>
+   are supported also.
+   These operations are required by many high-level topological algorithms that
    utilise normal surface theory.  The underlying enumeration algorithms
    are highly optimised, and are described in detail in
    <xref linkend="bib-burton-dd"/>,
-   <xref linkend="bib-burton-convert"/> and
-   <xref linkend="bib-burton-quadoct"/>.
+   <xref linkend="bib-burton-convert"/>,
+   <xref linkend="bib-burton-quadoct"/> and
+   <xref linkend="bib-burton-fund"/>.
   </para>
   <para>
-   This vertex enumeration can be performed in a variety of coordinate
+   This enumeration can be performed in a variety of coordinate
    systems.  For an <replaceable>n</replaceable>-tetrahedron triangulation
    this includes the 7<replaceable>n</replaceable>
    standard triangle and quadrilateral coordinates, as well
@@ -220,13 +223,14 @@
    this includes the 10<replaceable>n</replaceable> standard coordinates
    as well as the 6<replaceable>n</replaceable> quadrilateral-octagon
    coordinates <xref linkend="bib-burton-quadoct"/>.
+   &regina; also offers experimental support for
+   transversely oriented normal surfaces <xref linkend="bib-cooper-tons"/>.
   </para>
   <para>
    The enumeration
    can be restricted to embedded normal surfaces or can be expanded to
-   include immersed and singular surfaces.  Furthermore, elementary support
-   is present for spun normal surfaces, discussed in detail by
-   Tillmann <xref linkend="bib-tillus-spun"/>,
+   include immersed and singular surfaces.  &regina; also supports
+   spun normal surfaces <xref linkend="bib-tillus-spun"/>,
    which are non-compact surfaces with infinitely many
    discs found in ideal triangulations.
   </para>

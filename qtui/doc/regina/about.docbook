@@ -93,9 +93,12 @@
    favour of a faster and cleaner native &cpp; user interface (written
    using the excellent &kde; libraries), and the scripting interface
    switched from &jython; to standard &python; support.
-   In 2011 the user interface was ported from &kde3; to &kde4;, which brings
-   &regina; in line with modern &linux; desktop systems and offers a much
-   cleaner experience on &macosx;,
+   In 2011 the user interface was ported from &kde3; to &kde4;,
+   bringing &regina; in line with modern &linux; desktop systems and
+   offering a much cleaner experience on &macosx;.
+   In 2012 it was again ported from &kde; to a more portable &qt;-only
+   interface, further improving &macosx; support and allowing
+   (for the first time) &windows; support,
    bringing us to the point at which we are today.
   </para>
  </sect1>
