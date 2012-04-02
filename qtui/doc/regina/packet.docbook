@@ -21,8 +21,7 @@
   <para>
    To view or edit a packet, just click on the packet in the tree
    (on some platforms, such as &macosx;, you need to double-click instead).
-   The packet will open up in the right-hand side of the window, as
-   shown below.
+   The packet will open up in a new window, as shown below.
   </para>
   <para>
    <inlinemediaobject id="shot-packetview">
@@ -194,10 +193,10 @@
     </inlinemediaobject>
    </para>
    <para>
-    When you open a &pdf; packet for viewing, it might appear in the
-    main window or it might open in an external &pdf; viewer (as
-    illustrated below), according to your
-    <link linkend="options-pdf">current settings</link>.
+    When you open a &pdf; packet for viewing, it will open in your computer's
+    default &pdf; viewer (as illustrated below).  If you like, you can
+    specify a different &pdf; viewer in
+    <link linkend="options-pdf">&regina;'s settings</link>.
    </para>
    <para>
     <inlinemediaobject>
@@ -412,7 +411,7 @@
    Here we describe each of these operations in turn.
   </para>
 
-  <sect2 id="packet-float">
+  <!--sect2 id="packet-float">
    <title>Floating in Separate Windows</title>
 
    <para>
@@ -452,7 +451,7 @@
     you can choose this in
     &regina;'s <link linkend="options-general">general settings</link>.
    </para>
-  </sect2>
+  </sect2-->
 
   <sect2 id="packet-new">
    <title>Creating New Packets</title>
@@ -550,10 +549,10 @@
     beneath it (&ie;, its children, their children and so on).
    </para>
    <tip><para>
-    If you have selected some packet in the tree but you have a different
-    packet open for viewing or editing, it is the
+    If you have selected some packet in the tree but you have different
+    packets open for viewing or editing, it is the
     <emphasis>selected packet in the tree</emphasis> that will be cloned,
-    not the packet that you are currently viewing.
+    not the packets that you are currently viewing.
    </para></tip>
   </sect2>
 
@@ -578,10 +577,10 @@
     </inlinemediaobject>
    </para>
    <tip><para>
-    If you have selected some packet in the tree but you have a different
-    packet open for viewing or editing, it is the
+    If you have selected some packet in the tree but you have different
+    packets open for viewing or editing, it is the
     <emphasis>selected packet in the tree</emphasis> that will be renamed,
-    not the packet that you are currently viewing.
+    not the packets that you are currently viewing.
    </para></tip>
   </sect2>
 
@@ -607,10 +606,10 @@
     </inlinemediaobject>
    </para>
    <caution><para>
-    If you have selected some packet in the tree but you have a different
-    packet open for viewing or editing, it is the
+    If you have selected some packet in the tree but you have different
+    packets open for viewing or editing, it is the
     <emphasis>selected packet in the tree</emphasis> that will be
-    deleted, not the packet that you are currently viewing.
+    deleted, not the packets that you are currently viewing.
     Be careful, since deleting a packet cannot be undone!
    </para></caution>
   </sect2>
