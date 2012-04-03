@@ -128,15 +128,19 @@ QWidget* NTriHeaderUI::getInterface() {
 }
 
 void NTriHeaderUI::refresh() {
-    if (tri->getNumberOfTetrahedra() == 0) {
-        header->setText(QObject::tr("Empty"));
-        return;
-    }
+    header->setText(summaryInfo(tri));
+}
 
-    if (! tri->isValid()) {
-        header->setText(QObject::tr("INVALID TRIANGULATION!"));
-        return;
-    }
+void NTriHeaderUI::editingElsewhere() {
+    header->setText(QObject::tr("Editing..."));
+}
+
+QString NTriHeaderUI::summaryInfo(regina::NTriangulation* tri) {
+    if (tri->getNumberOfTetrahedra() == 0)
+        return QObject::tr("Empty");
+
+    if (! tri->isValid())
+        return QObject::tr("INVALID TRIANGULATION!");
 
     QString msg;
 
@@ -159,12 +163,9 @@ void NTriHeaderUI::refresh() {
     } else
         msg += QObject::tr("non-orientable, ");
 
-    msg += (tri->isConnected() ? QObject::tr("connected") : QObject::tr("disconnected"));
+    msg += (tri->isConnected() ? QObject::tr("connected") :
+        QObject::tr("disconnected"));
 
-    header->setText(msg);
-}
-
-void NTriHeaderUI::editingElsewhere() {
-    header->setText(QObject::tr("Editing..."));
+    return msg;
 }
 

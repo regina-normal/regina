@@ -118,6 +118,11 @@ class NTriHeaderUI : public PacketViewerTab {
         QWidget* getInterface();
         void refresh();
         void editingElsewhere();
+
+        /**
+         * Allow other UIs to access the summary information.
+         */
+        static QString summaryInfo(regina::NTriangulation* tri);
 };
 
 inline PacketEditIface* NTriangulationUI::getEditIface() {
