@@ -196,7 +196,7 @@
     When you open a &pdf; packet for viewing, it will open in your computer's
     default &pdf; viewer (as illustrated below).  If you like, you can
     specify a different &pdf; viewer in
-    <link linkend="options-pdf">&regina;'s settings</link>.
+    <link linkend="options-tools">&regina;'s settings</link>.
    </para>
    <para>
     <inlinemediaobject>
