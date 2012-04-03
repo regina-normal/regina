@@ -42,7 +42,7 @@ Don't forget:
     python bindings for new routines
     rebuild manpages
     website, including updated news, what's new and deprecation guide
-    debian packages (include cvs.diff)
+    debian-based packages (debian/ubuntu)
     rpm-based packages (fedora/mandriva/suse)
     windows installer
     macos DMG
