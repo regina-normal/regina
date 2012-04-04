@@ -466,8 +466,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="surfaces-creation">enumerating vertex normal
-   surfaces</link></primaryie>
+  <primaryie><link linkend="surfaces-creation">enumerating vertex or
+   fundamental normal surfaces</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -582,6 +582,11 @@
  <indexentry>
   <primaryie><link linkend="tri-algebra-fundgroup">fundamental
    group</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="surfaces-selectenum">fundamental normal surfaces,
+   enumerating</link></primaryie>
  </indexentry>
 
  </indexdiv><indexdiv><title>&mdash; G &mdash;</title>
@@ -846,7 +851,7 @@
   <secondaryie><link linkend="surfaces-proplink">edge links,
    recognising</link></secondaryie>
   <secondaryie><link linkend="surfaces-creation">enumerating vertex
-   normal surfaces</link></secondaryie>
+   or fundamental normal surfaces</link></secondaryie>
   <secondaryie><link linkend="export-csvsurfacelist">exporting to
    &csv; files</link></secondaryie>
   <secondaryie><link linkend="surfaces-filtering">filtering surface
@@ -1412,8 +1417,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>vertex angle structures</primaryie>
-  <seeie>See: angle structures</seeie>
+  <primaryie><link linkend="angles-creation">vertex angle structures,
+   enumerating</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1422,8 +1427,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>vertex normal surfaces</primaryie>
-  <seeie>See: normal surfaces</seeie>
+  <primaryie><link linkend="surfaces-selectenum">vertex normal surfaces,
+   enumerating</link></primaryie>
  </indexentry>
 
  <indexentry>

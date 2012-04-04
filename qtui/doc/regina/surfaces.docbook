@@ -36,8 +36,9 @@
 
   <para>
    Normal surfaces are stored in lists, which typically represent all
-   vertex normal (or almost normal) surfaces within a triangulation
-   in some normal coordinate system.
+   vertex or fundamental normal surfaces within a
+   triangulation in some normal coordinate system.
+   &regina; also supports octagonal almost normal surfaces.
   </para>
   <para>
    A normal surface list must remain &ldquo;connected&rdquo; to the
@@ -176,6 +177,52 @@
       </para>
      </glossdef>
     </glossentry>
+    <glossentry id="surfaces-selectenum">
+     <glossterm><guilabel>Enumerate</guilabel></glossterm>
+     <glossdef>
+      <para>
+       Here you indicate whether you wish to enumerate all
+       <firstterm>vertex</firstterm> normal surfaces, or all
+       <firstterm>fundamental</firstterm> normal surfaces.
+       Fundamental surfaces are much slower to enumerate
+       than vertex surfaces, but in some settings can offer
+       significantly more information.
+      </para>
+      <para>
+       <glosslist>
+        <glossentry>
+         <glossterm><guilabel>Vertex surfaces</guilabel></glossterm>
+         <glossdef>
+          <para>
+           These correspond to the extreme rays of the normal
+           surface solution cone: in the chosen coordinate system,
+           a vertex normal surface cannot be expressed as a
+           non-negative linear combination of normal surfaces
+           other than multiples of itself.
+          </para>
+          <para>
+           &regina; will only compute one surface for each
+           extreme ray: specifically, the smallest integer vector along
+           that ray.  In other words, the coordinates of each surface
+           will have greatest common divisor one.
+          </para>
+         </glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Fundamental surfaces</guilabel></glossterm>
+         <glossdef>
+          <para>
+           These correspond to the Hilbert basis of the normal surface
+           solution cone: in the chosen coordinate system, a fundamental
+           normal surface cannot be expressed as a sum of
+           normal surfaces other than zero and itself.
+          </para>
+         </glossdef>
+        </glossentry>
+       </glosslist>
+      </para>
+     </glossdef>
+    </glossentry>
     <glossentry id="surfaces-embeddedonly">
      <glossterm><guilabel>Embedded surfaces only</guilabel></glossterm>
      <glossdef>
@@ -199,8 +246,8 @@
   </para>
   <para>
    Once you are ready, click <guibutton>OK</guibutton> and &regina;
-   will enumerate all vertex normal surfaces in the chosen coordinate
-   system.
+   will enumerate all vertex or fundamental normal surfaces
+   in the chosen coordinate system.
   </para>
   <para>
    <inlinemediaobject>
@@ -210,7 +257,7 @@
    </inlinemediaobject>
   </para>
   <para>
-   Once this is done, &regina; will package the vertex normal surfaces
+   Once this is done, &regina; will package the results
    into a normal surface list and open it for you to view.
   </para>
   <para>
@@ -248,6 +295,8 @@
    (i.e., the <link linkend="surfaces-selectcoords">coordinate system</link>
    you selected, and whether or not you asked for
    <link linkend="surfaces-embeddedonly">embedded surfaces only</link>).
+   It also offers a link that you can click on to view the underlying
+   triangulation.
   </para>
   <para>
    <inlinemediaobject>
@@ -971,7 +1020,7 @@
     2, 1 or 0.  In other words, this filter selects spheres, projective
     planes, tori and Klein bottles
     (as well as other disconnected surfaces, but
-    vertex normal surfaces are never disconnected).
+    vertex or fundamental normal surfaces will never be disconnected).
    </para>
    <para>
     <inlinemediaobject>
