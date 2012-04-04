@@ -34,9 +34,11 @@
 // UI includes:
 #include "bigwidget.h"
 #include "nanglestructureui.h"
+#include "reginamain.h"
 
 #include <QLabel>
 #include <QHeaderView>
+#include <QTextDocument>
 #include <QTreeView>
 #include <QVBoxLayout>
 
@@ -149,6 +151,9 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
         "a strict angle structure even if none appear in the list below "
         "&ndash; the strict angle structure might only be found as a "
         "combination of several different vertex angle structures.</qt>"));
+    stats->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    connect(stats, SIGNAL(linkActivated(QString)),
+        this, SLOT(viewTriangulation()));
     layout->addWidget(stats);
     layout->addSpacing(ANGLE_STATS_PADDING);
 
@@ -187,6 +192,10 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
         this, SLOT(columnResized(int, int, int)));
 
     ui->setFocusProxy(table);
+
+    // Listen for renaming events on the parent triangulation, since we
+    // display its label in the header.
+    packet->getTriangulation()->listen(this);
 }
 
 NAngleStructureUI::~NAngleStructureUI() {
@@ -206,45 +215,60 @@ QString NAngleStructureUI::getPacketMenuText() const {
 }
 
 void NAngleStructureUI::refresh() {
-    QString statStr;
-
-    // Update the general statistics.
-    unsigned long nStructs = model->structures()->getNumberOfStructures();
-    if (model->structures()->isTautOnly()) {
-        if (nStructs == 0)
-            statStr = tr("No taut structures\n");
-        else if (nStructs == 1)
-            statStr = tr("1 taut structure\n");
-        else
-            statStr = tr("%1 taut structures\n").arg(nStructs);
-
-        statStr.append(tr("Enumerated taut structures only"));
-    } else {
-        if (nStructs == 0)
-            statStr = tr("No vertex angle structures\n");
-        else if (nStructs == 1)
-            statStr = tr("1 vertex angle structure\n");
-        else
-            statStr = tr("%1 vertex angle structures\n").arg(nStructs);
-
-        statStr.append(tr("Span includes: "));
-        if (model->structures()->spansStrict())
-            statStr.append(tr("Strict, "));
-        else
-            statStr.append(tr("NO Strict, "));
-        if (model->structures()->spansTaut())
-            statStr.append(tr("Taut"));
-        else
-            statStr.append(tr("NO Taut"));
-    }
-
-    stats->setText(statStr);
+    refreshHeader();
 
     // Rebuild the table.
     model->rebuild();
 
     // Tidy up.
     setDirty(false);
+}
+
+void NAngleStructureUI::refreshHeader() {
+    QString count, span;
+
+    // Update the general statistics.
+    unsigned long nStructs = model->structures()->getNumberOfStructures();
+    if (model->structures()->isTautOnly()) {
+        if (nStructs == 0)
+            count = tr("No taut structures");
+        else if (nStructs == 1)
+            count = tr("1 taut structure");
+        else
+            count = tr("%1 taut structures").arg(nStructs);
+
+        span = tr("Enumerated taut structures only");
+    } else {
+        if (nStructs == 0)
+            count = tr("No vertex angle structures");
+        else if (nStructs == 1)
+            count = tr("1 vertex angle structure");
+        else
+            count = tr("%1 vertex angle structures").arg(nStructs);
+
+        span = tr("Span includes: ");
+        if (model->structures()->spansStrict())
+            span.append(tr("Strict, "));
+        else
+            span.append(tr("NO Strict, "));
+        if (model->structures()->spansTaut())
+            span.append(tr("Taut"));
+        else
+            span.append(tr("NO Taut"));
+    }
+
+    stats->setText(tr(
+        "<qt>%1<br>%2<br>Triangulation: <a href=\"#\">%3</a></qt>").
+        arg(count).
+        arg(span).
+        arg(Qt::escape(model->structures()->getTriangulation()->
+            getPacketLabel().c_str())));
+}
+
+void NAngleStructureUI::viewTriangulation() {
+    enclosingPane->getMainWindow()->packetView(
+        model->structures()->getTriangulation(),
+        false /* visible in tree */, false /* select in tree */);
 }
 
 void NAngleStructureUI::columnResized(int section, int, int newSize) {
@@ -257,5 +281,10 @@ void NAngleStructureUI::columnResized(int section, int, int newSize) {
     for (int i = 1; i < model->columnCount(QModelIndex()); i++)
         table->setColumnWidth(i, newSize);
     currentlyAutoResizing = false;
+}
+
+void NAngleStructureUI::packetWasRenamed(regina::NPacket*) {
+    // Assume it is the parent triangulation.
+    refreshHeader();
 }
 

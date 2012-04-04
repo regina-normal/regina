@@ -33,7 +33,9 @@
 #ifndef __NNORMALSURFACEUI_H
 #define __NNORMALSURFACEUI_H
 
-#include "../packettabui.h"
+#include "packettabui.h"
+#include "reginamain.h"
+
 #include <QLinkedList>
 
 class NSurfaceCompatibilityUI;
@@ -74,7 +76,10 @@ class NNormalSurfaceUI : public PacketTabbedUI {
 /**
  * A header for the normal surface list viewer.
  */
-class NSurfaceHeaderUI : public PacketViewerTab {
+class NSurfaceHeaderUI : public QObject, public PacketViewerTab,
+        public regina::NPacketListener {
+    Q_OBJECT
+
     private:
         /**
          * Packet details
@@ -100,6 +105,17 @@ class NSurfaceHeaderUI : public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
+
+        /**
+         * NPacketListener overrides.
+         */
+        void packetWasRenamed(regina::NPacket* packet);
+
+    private slots:
+        /**
+         * View the underlying triangulation.
+         */
+        void viewTriangulation();
 };
 
 #endif

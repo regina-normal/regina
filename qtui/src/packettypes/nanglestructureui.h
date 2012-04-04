@@ -87,7 +87,8 @@ class AngleModel : public QAbstractItemModel {
 /**
  * A packet interface for viewing angle structure lists.
  */
-class NAngleStructureUI : public QObject, public PacketReadOnlyUI {
+class NAngleStructureUI : public QObject, public PacketReadOnlyUI,
+        regina::NPacketListener {
     Q_OBJECT
 
     private:
@@ -124,8 +125,22 @@ class NAngleStructureUI : public QObject, public PacketReadOnlyUI {
         QString getPacketMenuText() const;
         void refresh();
 
+        /**
+         * Refresh just the text header above the table.
+         */
+        void refreshHeader();
+
+        /**
+         * NPacketListener overrides.
+         */
+        void packetWasRenamed(regina::NPacket* packet);
         
     public slots:
+        /**
+         * View the underlying triangulation.
+         */
+        void viewTriangulation();
+
         /**
          * Provides auto-resizing of columns.
          */

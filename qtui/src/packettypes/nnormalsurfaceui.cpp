@@ -28,6 +28,7 @@
 
 // Regina core includes:
 #include "surfaces/nnormalsurfacelist.h"
+#include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "coordinates.h"
@@ -36,9 +37,11 @@
 #include "nsurfacecoordinateui.h"
 #include "nsurfacematchingui.h"
 #include "nsurfacesummaryui.h"
+#include "ntriangulationui.h"
 #include "reginamain.h"
 
 #include <QLabel>
+#include <QTextDocument>
 #include <QWhatsThis>
 
 using regina::NPacket;
@@ -94,8 +97,15 @@ NSurfaceHeaderUI::NSurfaceHeaderUI(regina::NNormalSurfaceList* packet,
         "vertex enumeration that created this list of surfaces, including "
         "the specific coordinate system that was originally used.  Also "
         "displays the total number of surfaces in this list."));
+    header->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    connect(header, SIGNAL(linkActivated(QString)),
+        this, SLOT(viewTriangulation()));
 
     ui = header;
+
+    // Listen for renaming events on the parent triangulation, since we
+    // display its label in the header.
+    packet->getTriangulation()->listen(this);
 }
 
 regina::NPacket* NSurfaceHeaderUI::getPacket() {
@@ -119,7 +129,22 @@ void NSurfaceHeaderUI::refresh() {
         count = header->tr("%1 %2 normal surfaces").arg(
             surfaces->getNumberOfSurfaces()).arg(embType);
 
-    header->setText(count + header->tr("\nEnumerated in %1 coordinates").arg(
-        header->tr(Coordinates::name(surfaces->getFlavour(), false))));
+    header->setText(header->tr(
+        "<qt>%1<br>Enumerated in %2 coordinates<br>"
+        "Triangulation: <a href=\"#\">%3</a></qt>").
+        arg(count).
+        arg(header->tr(Coordinates::name(surfaces->getFlavour(), false))).
+        arg(Qt::escape(
+            surfaces->getTriangulation()->getPacketLabel().c_str())));
+}
+
+void NSurfaceHeaderUI::viewTriangulation() {
+    enclosingPane->getMainWindow()->packetView(surfaces->getTriangulation(),
+        false /* visible in tree */, false /* select in tree */);
+}
+
+void NSurfaceHeaderUI::packetWasRenamed(regina::NPacket*) {
+    // Assume it is the parent triangulation.
+    refresh();
 }
 
