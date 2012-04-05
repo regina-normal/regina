@@ -2755,6 +2755,11 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * recovered might not be identical to the original, but it will be
          * combinatorially isomorphic.
          *
+         * For a full and precise description of the isomorphism signature
+         * format, see <i>Simplification paths in the Pachner graphs of
+         * closed orientable 3-manifold triangulations</i>, Burton, 2011,
+         * <tt>arXiv:1110.6080</tt>.
+         *
          * @return the isomorphism signature of this triangulation.
          */
         std::string isoSig() const;
@@ -2768,6 +2773,11 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * produce an identical triangulation to the original, but it
          * \e is guaranteed to produce a combinatorially isomorphic
          * triangulation.
+         *
+         * For a full and precise description of the isomorphism signature
+         * format, see <i>Simplification paths in the Pachner graphs of
+         * closed orientable 3-manifold triangulations</i>, Burton, 2011,
+         * <tt>arXiv:1110.6080</tt>.
          *
          * @param signature the isomorphism signature of the
          * triangulation to construct.  Note that, unlike dehydration

@@ -34,7 +34,8 @@
      </para></listitem>
      <listitem><para>
       reconstruction from
-      text-based isomorphism signatures <xref linkend="bib-burton-simps3"/>
+      text-based isomorphism signatures
+      <xref linkend="bib-burton-pachner-orprime"/>
       and Callahan-Hildebrand-Weeks
       dehydration strings <xref linkend="bib-cuspedcensus"/>;
      </para></listitem>
@@ -90,7 +91,8 @@
       of &graphviz;;
      </para></listitem>
      <listitem><para>
-      text-based isomorphism signatures <xref linkend="bib-burton-simps3"/>,
+      text-based isomorphism signatures
+      <xref linkend="bib-burton-pachner-orprime"/>,
       which identify a triangulation uniquely up to combinatorial isomorphism;
      </para></listitem>
      <listitem><para>

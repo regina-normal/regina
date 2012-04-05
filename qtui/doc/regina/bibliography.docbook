@@ -182,8 +182,22 @@
   <date>2011</date>
  </biblioentry>
 
- <biblioentry id="bib-burton-fund">
+ <biblioentry id="bib-burton-pachner-orprime">
   <abbrev>Bur11c</abbrev>
+  <authorgroup><author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author></authorgroup>
+  <title>Simplification paths in the Pachner graphs of
+   closed orientable 3-manifold triangulations</title>
+  <edition>Preprint</edition>
+  <issuenum>arXiv:1110.6080</issuenum>
+  <date>October 2011</date>
+ </biblioentry>
+
+ <biblioentry id="bib-burton-fund">
+  <abbrev>Bur11d</abbrev>
   <authorgroup><author>
    <firstname>Benjamin</firstname>
    <othername>A.</othername>
