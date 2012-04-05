@@ -354,11 +354,17 @@
     in your data file named <replaceable>value</replaceable>.
    </para>
    <para>
-    If the script contains any international characters, you must
-    specify the text encoding (such as &utf8; or &latin1;) when
-    you choose the file to import.
-    A drop-down list of encodings should appear in the file dialog,
-    as illustrated below.
+    During the import, &regina; will tell you how it will interpret any
+    international characters in the script (that is, letters or symbols
+    not found on a typical English keyboard).  Such characters are
+    stored using a <firstterm>text encoding</firstterm>, such as
+    &utf8; (a popular modern standard and the default in &regina;),
+    or &latin1; (which has a long history of use with many Western European
+    languages).
+    If your script uses a different encoding, you will need to set this
+    in <link linkend="options-general">&regina;'s options</link>.
+    If you only ever use letters or symbols on a typical English keyboard,
+    you do not need to worry about this at all.
    </para>
    <para>
     <inlinemediaobject>
@@ -511,13 +517,18 @@
     <link linkend="compiling">building &regina; into your own code</link>.
    </para>
    <para>
-    If the triangulation includes any international characters (for
-    instance, in the packet label or the tetrahedron names), these might
-    appear as comments in the exported &cpp; code.  You can choose the
-    text encoding that will be used for these characters (such as &utf8;
-    or &latin1;).  When you select the filename to export to, a
-    drop-down list of encodings should appear in the dialog, as
-    illustrated below.
+    During the export, &regina; will tell you how it will write any
+    international characters (that is, letters or symbols
+    not found on a typical English keyboard).  Such characters are
+    stored using a <firstterm>text encoding</firstterm>, such as
+    &utf8; (a popular modern standard and the default in &regina;),
+    or &latin1; (which has a long history of use with many Western European
+    languages).
+    If you wish to use a different encoding, you will need to set this
+    in <link linkend="options-general">&regina;'s options</link>.
+    If you are not sure, the default of &utf8; is typically a good choice.
+    If you only ever use letters or symbols on a typical English keyboard,
+    you do not need to worry about text encodings at all.
    </para>
    <para>
     <inlinemediaobject>
@@ -584,11 +595,11 @@
     <link linkend="import-pyscript">&python; imports</link> for details.
    </para>
    <para>
-    If the script contains any international characters, you can
-    choose a text encoding to use (such as &utf8; or &latin1;).
-    A drop-down list of encodings should appear when you choose the
-    filename to export to, as illustrated in
-    <link linkend="export-cpp">&cpp; exports</link> above.
+    During the export, &regina; will tell you how it will encode any
+    international characters in the script (i.e., letters or symbols
+    not found on a typical English keyboard).
+    See the <link linkend="export-cpp">&cpp; exports</link> section
+    above for more information on text encodings.
    </para>
   </sect2>
  </sect1>
