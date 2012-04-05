@@ -12,7 +12,7 @@
 
 # Create a new (3,4,7) layered solid torus.  This is a 3-tetrahedron
 # triangulation of a solid torus.
-t = regina.NTriangulation()
+t = NTriangulation()
 t.insertLayeredSolidTorus(3,4)
 print t
 
@@ -28,7 +28,6 @@ print t.getHomologyH1Bdry()
 print t.isZeroEfficient()
 
 # Make our own list of vertex normal surfaces in standard coordinates.
-from regina import NNormalSurfaceList
 surfaces = NNormalSurfaceList.enumerate(t, NNormalSurfaceList.STANDARD)
 
 # Verify that the normal surface list is already a child packet of the
