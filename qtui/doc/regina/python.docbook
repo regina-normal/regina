@@ -67,8 +67,7 @@
      <glossentry>
       <glossterm><varname>root</varname></glossterm>
       <glossdef><para>
-       If you have a data file open,
-       the variable <varname>root</varname> will refer to the packet
+       The variable <varname>root</varname> will refer to the packet
        at the top of your packet tree.
       </para></glossdef>
      </glossentry>
@@ -176,15 +175,23 @@
   <para>
    All of &regina;'s objects, classes and methods belong to the
    module called <parameter>regina</parameter>.
-   For instance, you can create a new triangulation by calling
-   <literal>regina.NTriangulation()</literal>, and you can read a data file
-   by calling <literal>regina.readFileMagic(filename)</literal>.
+   For instance, the main 3-manifold triangulation class is
+   <literal>regina.NTriangulation</literal>, and the main routine to
+   read a data file is <literal>regina.readFileMagic</literal>.
+  </para>
+  <para>
    Whenever &regina; gives you access to &python; (either through a
    <link linkend="python-gui">graphical console</link>,
    a <link linkend="python-script">script packet</link> or a
    <link linkend="python-cmdline">command-line session</link>),
    it will automatically import the <parameter>regina</parameter>
-   module for you to use.
+   module, and it will automatically import all of &regina;'s objects,
+   classes and methods into the current namespace.
+   This means you create a new triangulation by just calling
+   <literal>NTriangulation()</literal>, and you can read a data file
+   by calling <literal>readFileMagic(filename)</literal>.
+   For command-line sessions, you can modify this behaviour
+   through the option <link linkend="">.
   </para>
   <tip>
    <para>
@@ -312,7 +319,7 @@
     <exceptionname>TypeError</exceptionname>.
    </para>
    <programlisting>
-&gt;&gt;&gt; p = regina.NTriangulation()
+&gt;&gt;&gt; p = NTriangulation()
 &gt;&gt;&gt; print p
 Triangulation with 0 tetrahedra.
 &gt;&gt;&gt; root.insertChildLast(p)
@@ -353,7 +360,7 @@ Triangulation with 0 tetrahedra.
     instead, as illustrated below.
    </para>
    <programlisting>
-&gt;&gt;&gt; p = regina.NTriangulation()
+&gt;&gt;&gt; p = NTriangulation()
 &gt;&gt;&gt; print p
 Triangulation with 0 tetrahedra.
 &gt;&gt;&gt; root.insertChildLast(p)

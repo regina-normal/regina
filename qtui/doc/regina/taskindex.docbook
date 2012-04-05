@@ -1264,6 +1264,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>text encodings</primaryie>
+  <seeie>See: character encodings</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="packet-text">text packets</link></primaryie>
  </indexentry>
 

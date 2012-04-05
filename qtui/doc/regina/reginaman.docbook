@@ -93,6 +93,7 @@
      <arg><option>-v, --verbose</option></arg>
     </group>
     <arg><option>-n, --nolibs</option></arg>
+    <arg><option>-a, --noautoimport</option></arg>
    </cmdsynopsis>
    <cmdsynopsis>
     <command>regina-python</command>
@@ -101,6 +102,7 @@
      <arg><option>-v, --verbose</option></arg>
     </group>
     <arg><option>-n, --nolibs</option></arg>
+    <arg><option>-a, --noautoimport</option></arg>
     <arg><option>-i, --interactive</option></arg>
     <arg choice="req"><replaceable>script</replaceable></arg>
     <arg><replaceable>script-args</replaceable></arg>
@@ -117,6 +119,9 @@
     All of the objects, clases and methods from &regina;'s mathematical
     engine will be made available through the module
     <parameter>regina</parameter>, which will be imported on startup.
+    Moreover, unless the option <option>--noautoimport</option> is
+    passed, all of &regina;'s objects, classes and methods will be
+    imported directly into the current namespace.
    </para>
    <para>
     If you have frequently-used code, you can store it in a
@@ -179,6 +184,20 @@
       <para>
        Do not load any user libraries when the session starts.
        User libraries are discussed in the overview above.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-a</option></term>
+     <term><option>--noautoimport</option></term>
+     <listitem>
+      <para>
+       Still import the <parameter>regina</parameter> module,
+       but do not automatically import all of &regina;'s objects,
+       classes and methods into the current namespace.
+       This means that (for example) the main 3-manifold triangulation class
+       must be accessed as <literal>regina.NTriangulation</literal>, not
+       just <literal>NTriangulation</literal>.
       </para>
      </listitem>
     </varlistentry>
