@@ -191,7 +191,7 @@
    <literal>NTriangulation()</literal>, and you can read a data file
    by calling <literal>readFileMagic(filename)</literal>.
    For command-line sessions, you can modify this behaviour
-   through the option <link linkend="">.
+   through the option <option>--noautoimport</option>.
   </para>
   <tip>
    <para>
