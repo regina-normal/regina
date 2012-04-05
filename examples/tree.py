@@ -10,9 +10,8 @@
 
 # Create a new census of finite orientable closed 3-manifold
 # triangulations with two tetrahedra.
-from regina import NBoolSet
-census = regina.NContainer()
-regina.NCensus.formCensus(census, 2, NBoolSet.sTrue,
+census = NContainer()
+NCensus.formCensus(census, 2, NBoolSet.sTrue,
     NBoolSet.sTrue, NBoolSet.sFalse, 0, 0)
 
 # Calculate the homology of each triangulation in the census.

@@ -16,20 +16,20 @@ import time
 # then copied the isomorphism signature so that we can reconstruct the
 # triangulation here.
 sig = 'sfLfvQvwwMQQQccjghjkmqlonrnrqpqrnsnksaisnrobocksks'
-tri = regina.NTriangulation.fromIsoSig(sig)
+tri = NTriangulation.fromIsoSig(sig)
 print tri.getNumberOfTetrahedra(), 'tetrahedra'
 
 # Create a progress manager to use during the normal surface enumeration.
 # This will report the state of progress while the enumeration runs in
 # the background.
-manager = regina.NProgressManager()
+manager = NProgressManager()
 
 # Start the normal surface enumeration.
 # Because we are passing a progress manager to enumerate(), the
 # enumeration will start in the background and control will return
 # immediately to the python console.
-surfaces = regina.NNormalSurfaceList.enumerate(tri,
-    regina.NNormalSurfaceList.STANDARD, 1, manager)
+surfaces = NNormalSurfaceList.enumerate(tri,
+    NNormalSurfaceList.STANDARD, 1, manager)
 
 # Wait for the surface enumeration to fully start up.
 while not manager.isStarted():
