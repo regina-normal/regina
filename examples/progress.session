@@ -48,6 +48,8 @@ Copyright (c) 1999-2012, The Regina development team
 ...     print 'Progress:', prog.getDescription()
 ...     time.sleep(1)
 ... 
+Progress: 4/21
+Progress: 16/21
 Progress: 17/21
 Progress: 17/21
 Progress: 19/21
@@ -61,5 +63,5 @@ Progress: 19/21
 ... print 'Total real time:', prog.getRealTime(), 'seconds'
 Total real time: 5 seconds
 >>> print 'Total cpu time:', prog.totalCPUTime(), 'seconds'
-Total cpu time: 4 seconds
+Total cpu time: 5 seconds
 >>>

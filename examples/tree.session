@@ -14,7 +14,7 @@ Copyright (c) 1999-2012, The Regina development team
 ... 
 >>> # Create a new census of finite orientable closed 3-manifold
 ... # triangulations with two tetrahedra.
->>> census = NContainer()
+... census = NContainer()
 >>> NCensus.formCensus(census, 2, NBoolSet.sTrue,
 ...     NBoolSet.sTrue, NBoolSet.sFalse, 0, 0)
 16
@@ -52,12 +52,12 @@ Item 16: Z_2
 ...         tri.makeOrphan()
 ...     tri = next
 ... 
-<regina.NTriangulation object at 0x10046ade0>
-<regina.NTriangulation object at 0x10046ad70>
-<regina.NTriangulation object at 0x10046aec0>
-<regina.NTriangulation object at 0x10046ac90>
-<regina.NTriangulation object at 0x10046ae50>
-<regina.NTriangulation object at 0x10046ad70>
+<regina.NTriangulation object at 0x1021fe8a0>
+<regina.NTriangulation object at 0x1021fe830>
+<regina.NTriangulation object at 0x1021fe980>
+<regina.NTriangulation object at 0x1021fe750>
+<regina.NTriangulation object at 0x1021fe910>
+<regina.NTriangulation object at 0x1021fe830>
 >>> 
 >>> # Print the homology of each remaining triangulation.
 ... tri = census.getFirstTreeChild()
