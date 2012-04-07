@@ -23,14 +23,14 @@
   </para>
   <itemizedlist>
    <listitem><para>
-    If you downloaded an &rpm;-based package (e.g., for
+    If you downloaded an &rpm;-based &linux; package (e.g., for
     &fedora;, &mandriva; or &suse;), you should already have the
     development files installed.
     Check that the headers are present in
     <filename>/usr/include/regina/</filename>.
    </para></listitem>
    <listitem><para>
-    If you downloaded a &debian;-based package (e.g., for
+    If you downloaded a &debian;-based &linux; package (e.g., for
     &debian; or &ubuntu;), you will need to install the separate package
     <literal>regina-normal-dev</literal>.
     Check that the headers are present in
@@ -47,8 +47,15 @@
     If you built &regina; yourself, you should already have the &cpp; headers
     and development libraries installed.
     Check that the headers are present in
-    <filename>/usr/include/regina/</filename> (or wherever you chose to
+    <filename>/usr/local/include/regina/</filename> (or wherever you chose to
     install &regina;).
+   </para></listitem>
+   <listitem><para>
+    If you use &windows; or if you downloaded the
+    drag-and-drop app bundle on &macosx;, the development files are not
+    available.
+    This is because it is too difficult at present to ensure that your
+    development environment is compatible.
    </para></listitem>
   </itemizedlist>
   <para>

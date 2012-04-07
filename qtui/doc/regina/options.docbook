@@ -6,7 +6,7 @@
    <guimenu>Settings</guimenu>
    <guisubmenu>Configure Regina</guisubmenu>
   </menuchoice>
-  from the menu under &linux;, or
+  from the menu under &linux; and &windows;, or
   <menuchoice>
    <guimenu>Regina</guimenu>
    <guisubmenu>Preferences</guisubmenu>
@@ -168,57 +168,6 @@
       which in the worst-case scenario are
       much slower to work with than normal surfaces.
      </para>
-    </glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>&gap; executable</guilabel></glossterm>
-    <glossdef>
-     <para>
-      Tells &regina; where to find &gaplongurl;.  &gap; is not
-      required by &regina;, but if it is installed then it can help
-      <link linkend="tri-algebra-fundgroup">simplify group presentations</link>.
-     </para>
-     <para>
-      This setting should be the name of the command that starts
-      &gap; (the default is simply &ldquo;<command>gap</command>&rdquo;).
-      &regina; will look for this command on the default search path.
-      If you have installed &gap; somewhere unusual then you will need to
-      provide the full path to the executable
-      (such as <filename>/usr/local/bin/gap</filename>).
-     </para>
-    </glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>&graphviz; executable</guilabel></glossterm>
-    <glossdef>
-     <para>
-      Tells &regina; where to find &graphvizurl;.  &graphviz; is
-      not required by &regina;, but is needed if you wish to
-      <link linkend="tri-skeleton-facegraph">view face pairing graphs</link>.
-     </para>
-     <para>
-      This setting should be the name of the command that &graphviz;
-      uses to draw undirected graphs.  The default
-      is &ldquo;<command>neato</command>&rdquo;,
-      but you may use one of &graphviz;' other drawing commands if you prefer
-      (but note that the command is <emphasis>not</emphasis> called
-      &ldquo;<command>graphviz</command>&rdquo;).
-     </para>
-     <para>
-      Again, &regina; will look for this command on the default search path.
-      If you have installed &graphviz; somewhere unusual then you will need to
-      provide the full path to the executable
-      (such as <filename>/usr/local/bin/neato</filename>).
-     </para>
-     <para><tip><para>
-      &regina; works best with &graphviz; version &ge;&nbsp;2.0.
-      If you have an ancient version (&graphviz;&nbsp;1.x) then
-      you will need to set your &graphviz; command to <command>dot</command>,
-      not <command>neato</command>.
-      This is because ancient versions of <command>neato</command> could
-      not display multiple edges.  &regina; will check the version and
-      warn you if you seem to be using the wrong command.
-     </para></tip></para>
     </glossdef>
    </glossentry>
   </glosslist>
@@ -497,16 +446,11 @@
  </sect1>
 
  <sect1 id="options-tools">
-  <title>&pdf; Options</title>
+  <title>Tools Options</title>
 
   <para>
    The <guilabel>Tools</guilabel> options panel controls how
    &regina; works with third-party software.
-  </para>
-  <para>
-   The second way is to use an <emphasis>external &pdf; viewer</emphasis>:
-   this can be any program that displays &pdf; files, such as
-   &xpdf; under &linux;, or &previewapp; under &macosx;.
   </para>
   <para>
    <inlinemediaobject>
@@ -520,10 +464,10 @@
   </para>
   <glosslist>
    <glossentry>
-    <glossterm><guilabel>External &pdf; viewer</guilabel></glossterm>
+    <glossterm><guilabel>Custom &pdf; viewer</guilabel></glossterm>
     <glossdef>
      <para>
-      Specifies the command that starts your external &pdf; viewer,
+      Specifies the command that starts your &pdf; viewer,
       such as &ldquo;<command>evince</command>&rdquo; or
       &ldquo;<command>xpdf</command>&rdquo;
       under &linux;, or &ldquo;<command>open</command>&rdquo; under &macosx;.
@@ -540,10 +484,57 @@
       this command, and the entire command will be passed to a shell for
       execution.
      </para>
+    </glossdef>
+   </glossentry>
+   <glossentry>
+    <glossterm><guilabel>&gap; executable</guilabel></glossterm>
+    <glossdef>
      <para>
-      You are welcome to leave this option empty, in which case &regina;
-      will search for a suitable application.
+      Tells &regina; where to find &gaplongurl;.  &gap; is not
+      required by &regina;, but if it is installed then it can help
+      <link linkend="tri-algebra-fundgroup">simplify group presentations</link>.
      </para>
+     <para>
+      This setting should be the name of the command that starts
+      &gap; (the default is simply &ldquo;<command>gap</command>&rdquo;).
+      &regina; will look for this command on the default search path.
+      If you have installed &gap; somewhere unusual then you will need to
+      provide the full path to the executable
+      (such as <filename>/usr/local/bin/gap</filename>).
+     </para>
+    </glossdef>
+   </glossentry>
+   <glossentry>
+    <glossterm><guilabel>&graphviz; executable</guilabel></glossterm>
+    <glossdef>
+     <para>
+      Tells &regina; where to find &graphvizurl;.  &graphviz; is
+      not required by &regina;, but is needed if you wish to
+      <link linkend="tri-skeleton-facegraph">view face pairing graphs</link>.
+     </para>
+     <para>
+      This setting should be the name of the command that &graphviz;
+      uses to draw undirected graphs.  The default
+      is &ldquo;<command>neato</command>&rdquo;,
+      but you may use one of &graphviz;' other drawing commands if you prefer
+      (but note that the command is <emphasis>not</emphasis> called
+      &ldquo;<command>graphviz</command>&rdquo;).
+     </para>
+     <para>
+      Again, &regina; will look for this command on the default search path.
+      If you have installed &graphviz; somewhere unusual then you will need to
+      provide the full path to the executable
+      (such as <filename>/usr/local/bin/neato</filename>).
+     </para>
+     <para><tip><para>
+      &regina; works best with &graphviz; version &ge;&nbsp;2.0.
+      If you have an ancient version (&graphviz;&nbsp;1.x) then
+      you will need to set your &graphviz; command to <command>dot</command>,
+      not <command>neato</command>.
+      This is because ancient versions of <command>neato</command> could
+      not display multiple edges.  &regina; will check the version and
+      warn you if you seem to be using the wrong command.
+     </para></tip></para>
     </glossdef>
    </glossentry>
   </glosslist>
