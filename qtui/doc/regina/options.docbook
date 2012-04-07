@@ -8,7 +8,7 @@
   </menuchoice>
   from the menu under &linux;, or
   <menuchoice>
-   <guimenu>regina-kde</guimenu>
+   <guimenu>Regina</guimenu>
    <guisubmenu>Preferences</guisubmenu>
   </menuchoice>
   on &macosx;.
@@ -43,30 +43,21 @@
    The settings here are:
   </para>
   <glosslist>
-   <glossentry>
-    <glossterm><guilabel>Automatic file extension</guilabel></glossterm>
-    <glossdef><para>
-     This affects what happens if you save your data but do not supply
-     a filename extension.
-     If checked, &regina; will add the default extension
-     <filename>.rga</filename> (so the filename
-     <filename>manifolds</filename> will become
-     <filename>manifolds.rga</filename>).
-     If unchecked, &regina; will leave the filename exactly as you typed it.
-    </para></glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>Automatic packet docking</guilabel></glossterm>
-    <glossdef><para>
-     This affects what happens each time you
-     <link linkend="packet-view">open a packet for viewing</link>.
-     If checked, &regina; will open the packet inside the main window, as
-     <link linkend="packet-view">illustrated here</link>.
-     If unchecked, &regina; will open the packet in a separate
-     floating window, as
-     <link linkend="packet-float">illustrated here</link>.
-     See <link linkend="packet-float">floating packets</link>
-     for further details.
+   <glossentry id="packet-dock">
+    <glossterm><guilabel>Dock packets in the main window</guilabel></glossterm>
+    <glossdef>
+     <para>
+      As of version&nbsp;4.92, &regina; opens each packet in a new window.
+      If you wish to return to the old behaviour (where packets were
+      &ldquo;docked&rdquo; in the main window beside the packet tree),
+      you can check this box.
+     </para>
+     <para>
+      If you choose this option, a large dock area will appear to the
+      right of the packet tree, and each packet viewer will have an
+      extra <guilabel>Dock&nbsp;/&nbsp;Undock</guilabel> button that
+      allows you to pop it out as separate floating windows if you choose.
+     </para>
     </para></glossdef>
    </glossentry>
    <glossentry>
@@ -102,18 +93,6 @@
       <guimenuitem>Tip of the Day</guimenuitem>
      </menuchoice>
      from the menu.
-    </para></glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>Open handbook in &khelpcenter;</guilabel></glossterm>
-    <glossdef><para>
-     This affects how &regina; opens the users' handbook (which you are
-     reading now).
-     If checked, &regina; will open the handbook in the
-     &khelpcenter; (which is probably installed if you run a &kde;
-     desktop, but probably not installed if you run &gnome; or &macosx;).
-     If unchecked, &regina; will open the handbook in your default web
-     browser.
     </para></glossdef>
    </glossentry>
   </glosslist>
@@ -303,114 +282,6 @@
      compute these matrices until you manually press the
      <guibutton>Calculate</guibutton> button.
     </para></glossdef>
-   </glossentry>
-  </glosslist>
- </sect1>
-
- <sect1 id="options-pdf">
-  <title>&pdf; Options</title>
-
-  <para>
-   The <guilabel>&pdf;</guilabel> options panel controls how
-   &regina; handles &pdf; packets.
-  </para>
-  <para>
-   There are two ways of viewing &pdf; packets in &regina;.
-   The first is to use &kde;'s <firstterm>embedded viewer</firstterm>,
-   which will display the &pdf; directly within &regina;'s main window
-   (as illustrated below).
-   This requires you to have &okular; installed (the &pdf;
-   viewer that ships with &kde;).
-  </para>
-  <para>
-   <inlinemediaobject>
-    <imageobject>
-     <imagedata fileref="embedpdf.png"/>
-    </imageobject>
-   </inlinemediaobject>
-  </para>
-  <para>
-   The second way is to use an <emphasis>external &pdf; viewer</emphasis>:
-   this can be any program that displays &pdf; files, such as
-   &xpdf; under &linux;, or &previewapp; under &macosx; (which is
-   illustrated below).
-  </para>
-  <para>
-   <inlinemediaobject>
-    <imageobject>
-     <imagedata fileref="pdf.png"/>
-    </imageobject>
-   </inlinemediaobject>
-  </para>
-  <para>
-   The <guilabel>&pdf;</guilabel> options panel lets you choose between
-   these two methods and fine-tune them:
-  </para>
-  <para>
-   <inlinemediaobject>
-    <imageobject>
-     <imagedata fileref="options-pdf.png"/>
-    </imageobject>
-   </inlinemediaobject>
-  </para>
-  <para>
-   The settings here are:
-  </para>
-  <glosslist>
-   <glossentry>
-    <glossterm><guilabel>Use embedded viewer if possible</guilabel></glossterm>
-    <glossdef><para>
-     If checked, &regina; will search for an embedded
-     viewer that it can use (but if it cannot find one, it will fall back to
-     an external viewer instead).
-     If unchecked, &regina; will always use an external viewer.
-    </para></glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>External &pdf; viewer</guilabel></glossterm>
-    <glossdef>
-     <para>
-      Specifies the command that starts your external &pdf; viewer,
-      such as &ldquo;<command>evince</command>&rdquo; or
-      &ldquo;<command>xpdf</command>&rdquo;
-      under &linux;, or &ldquo;<command>open</command>&rdquo; under &macosx;.
-      &regina; will look for this command on the default search path.
-      If your viewer is installed somewhere unusual then you will need to
-      provide the full path to the executable
-      (such as <filename>/usr/local/bin/xpdf</filename>).
-     </para>
-     <para>
-      You may include additional command-line arguments here
-      (so, for instance, &macosx; users might enter
-      &ldquo;<command>/usr/bin/open&nbsp;-a&nbsp;Preview</command>&rdquo;).
-      &regina; will automatically add the &pdf; filename to the end of
-      this command, and the entire command will be passed to a shell for
-      execution.
-     </para>
-     <para>
-      You are welcome to leave this option empty, in which case &regina;
-      will search for a suitable application.
-     </para>
-    </glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>Automatically close external
-     viewers</guilabel></glossterm>
-    <glossdef>
-     <para>
-      If checked, &regina; will automatically close the external viewer
-      when you close a &pdf; packet within &regina;,
-      and will automatically close and reopen the external viewer whenever
-      you <link linkend="packet-view">refresh the packet</link> within &regina;.
-      If unchecked, &regina; will simply leave the external viewer
-      running (even if you exit &regina; completely).
-     </para>
-     <para>
-      For some viewers and/or some operating systems (such as
-      &previewapp; under &macosx;), &regina; is unable to close the external
-      viewer even if you ask it to.
-     </para>
-    </glossdef>
    </glossentry>
   </glosslist>
  </sect1>
@@ -612,6 +483,59 @@
       was not originally designed for.  Please be sure that you know
       what you are doing, and please save regularly!
      </para></caution></para>
+    </glossdef>
+   </glossentry>
+  </glosslist>
+ </sect1>
+
+ <sect1 id="options-tools">
+  <title>&pdf; Options</title>
+
+  <para>
+   The <guilabel>Tools</guilabel> options panel controls how
+   &regina; works with third-party software.
+  </para>
+  <para>
+   The second way is to use an <emphasis>external &pdf; viewer</emphasis>:
+   this can be any program that displays &pdf; files, such as
+   &xpdf; under &linux;, or &previewapp; under &macosx;.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="options-tools.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   The settings here are:
+  </para>
+  <glosslist>
+   <glossentry>
+    <glossterm><guilabel>External &pdf; viewer</guilabel></glossterm>
+    <glossdef>
+     <para>
+      Specifies the command that starts your external &pdf; viewer,
+      such as &ldquo;<command>evince</command>&rdquo; or
+      &ldquo;<command>xpdf</command>&rdquo;
+      under &linux;, or &ldquo;<command>open</command>&rdquo; under &macosx;.
+      &regina; will look for this command on the default search path.
+      If your viewer is installed somewhere unusual then you will need to
+      provide the full path to the executable
+      (such as <filename>/usr/local/bin/xpdf</filename>).
+     </para>
+     <para>
+      You may include additional command-line arguments here
+      (so, for instance, &macosx; users might enter
+      &ldquo;<command>/usr/bin/open&nbsp;-a&nbsp;Preview</command>&rdquo;).
+      &regina; will automatically add the &pdf; filename to the end of
+      this command, and the entire command will be passed to a shell for
+      execution.
+     </para>
+     <para>
+      You are welcome to leave this option empty, in which case &regina;
+      will search for a suitable application.
+     </para>
     </glossdef>
    </glossentry>
   </glosslist>

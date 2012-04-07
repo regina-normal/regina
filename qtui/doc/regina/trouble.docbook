@@ -46,44 +46,6 @@
      </para>
     </answer>
    </qandaentry>
-
-   <qandaentry id="trouble-handbook-unavailable">
-    <question><para>
-     I cannot open the &regina; handbook.  I try
-     selecting <guilabel>Regina Handbook</guilabel> from the
-     <guilabel>Help</guilabel> menu but I get an error message.
-    </para></question>
-    <answer>
-     <para>
-      First, remember that if all else fails you can download
-      the handbook directly from the &regwebsite;
-      (follow the documentation links).  You can even
-      <ulink url="http://regina.sourceforge.net/docs/">read it online</ulink>.
-     </para>
-     <para>
-      Otherwise: visit
-      &regina;'s <link linkend="options-general">general options</link>
-      and uncheck the box marked
-      &ldquo;<guilabel>Open handbook in &khelpcenter;</guilabel>&rdquo;.
-      &regina; should now try to open the &regina; handbook in your
-      favourite web browser.
-     </para>
-     <para>
-      <inlinemediaobject>
-       <imageobject>
-        <imagedata fileref="trouble-help.png"/>
-       </imageobject>
-      </inlinemediaobject>
-     </para>
-     <para>
-      If you have done this and the web browser starts but it cannot find
-      <filename>index.html</filename>, you might have the handbook
-      installed in the wrong location.  Please
-      <link linkend="services">mail us for assistance</link>, so we can
-      try to make it work out of the box for you in a future release.
-     </para>
-    </answer>
-   </qandaentry>
   </qandadiv>
 
   <qandadiv id="trouble-python"><title>&python; Scripting</title>

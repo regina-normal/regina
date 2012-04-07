@@ -385,7 +385,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="packet-float">docking packets</link></primaryie>
+  <primaryie><link linkend="packet-dock">docking packets</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -570,7 +570,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="packet-float">floating packets
+  <primaryie><link linkend="packet-dock">floating packets
    in separate windows</link></primaryie>
  </indexentry>
 
@@ -946,9 +946,9 @@
   <secondaryie><link linkend="packet-new">creating new
    packets</link></secondaryie>
   <secondaryie><link linkend="packet-delete">deleting</link></secondaryie>
-  <secondaryie><link linkend="packet-float">docking and
+  <secondaryie><link linkend="packet-dock">docking and
    undocking</link></secondaryie>
-  <secondaryie><link linkend="packet-float">floating in separate
+  <secondaryie><link linkend="packet-dock">floating in separate
    windows</link></secondaryie>
   <secondaryie><link linkend="packet-move">moving within the
    tree</link></secondaryie>
@@ -964,7 +964,7 @@
 
  <indexentry>
   <primaryie>paper clip</primaryie>
-  <secondaryie><link linkend="packet-float">button in packet
+  <secondaryie><link linkend="packet-dock">button in packet
    viewers</link></secondaryie>
  </indexentry>
 
@@ -1386,14 +1386,14 @@
  </indexdiv><indexdiv><title>&mdash; U &mdash;</title>
 
  <indexentry>
-  <primaryie><link linkend="packet-float">undocking packets</link></primaryie>
+  <primaryie><link linkend="packet-dock">undocking packets</link></primaryie>
  </indexentry>
 
  <indexentry id="idx-user-interface">
   <primaryie>user interface</primaryie>
   <secondaryie><link linkend="man-regina-python">command-line scripting
    interface</link></secondaryie>
-  <secondaryie><link linkend="man-regina-kde">graphical user
+  <secondaryie><link linkend="man-regina-gui">graphical user
    interface</link></secondaryie>
   <secondaryie><link linkend="utils">specialised command-line
    utilities</link></secondaryie>

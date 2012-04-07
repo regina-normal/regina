@@ -41,7 +41,7 @@
     you will need to install the separate package
     <literal>regina-normal&regversion;-dev</literal>.
     Check that the headers are present in
-    <filename>/sw/opt/kde4/mac/include/regina-normal/</filename>.
+    <filename>/sw/include/regina-normal/</filename>.
    </para></listitem>
    <listitem><para>
     If you built &regina; yourself, you should already have the &cpp; headers

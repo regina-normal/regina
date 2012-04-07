@@ -4,29 +4,29 @@
  <para>
   This reference chapter documents the command-line options for
   &regina;'s two main applications:
-  <command>regina-kde</command> and <command>regina-python</command>.
+  <command>regina-gui</command> and <command>regina-python</command>.
  </para>
  <para>
   &regina; also ship with several other specialised command-line utilities,
   which are documented in the <link linkend="utils">following chapter</link>.
  </para>
 
- <!-- KDE Startup Script -->
+ <!-- Graphical User Interface -->
 
- <refentry id="man-regina-kde">
+ <refentry id="man-regina-gui">
   <refmeta>
-   <refentrytitle>regina-kde</refentrytitle>
+   <refentrytitle>regina-gui</refentrytitle>
    <manvolnum>1</manvolnum>
   </refmeta>
 
   <refnamediv>
-   <refname>regina-kde</refname>
+   <refname>regina-gui</refname>
    <refpurpose>&regina;'s graphical user interface</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
    <cmdsynopsis>
-    <command>regina-kde</command>
+    <command>regina-gui</command>
     <arg><replaceable>generic-options</replaceable></arg>
     <arg rep="repeat"><replaceable>file</replaceable></arg>
    </cmdsynopsis>
@@ -47,7 +47,7 @@
    <para>
     All of the available options are generic Qt or &kde; options, and
     are not described here.  For a full summary of these options, run
-    <userinput>regina-kde --help</userinput>.
+    <userinput>regina-gui --help</userinput>.
    </para>
   </refsect1>
 
@@ -345,7 +345,7 @@
   <refsect1>
    <title>See Also</title>
    <para>
-    <link linkend="man-regina-kde">regina-kde</link>.
+    <link linkend="man-regina-gui">regina-gui</link>.
    </para>
    <para>
     &regina; comes with thorough &api; documentation,

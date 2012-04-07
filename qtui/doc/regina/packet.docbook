@@ -411,48 +411,6 @@
    Here we describe each of these operations in turn.
   </para>
 
-  <!--sect2 id="packet-float">
-   <title>Floating in Separate Windows</title>
-
-   <para>
-    If you wish to view several packets at the same time, you can
-    &ldquo;undock&rdquo; them from the main &regina; window and float
-    them in separate windows of their own.  Just click on the paper clip
-    in the top right corner of the packet viewer (circled in red
-    below).
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="dockbutton.png"/>
-     </imageobject>
-    </inlinemediaobject>
-   </para>
-   <para>
-    The packet will them jump out of main window and into its own
-    separate window.  Two such windows are illustrated below.
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="undocked.png"/>
-     </imageobject>
-    </inlinemediaobject>
-   </para>
-   <para>
-    If you click on the paper clip
-    again, the packet will return to the main &regina; window.
-    If you have some <emphasis>other</emphasis> packet in the main
-    window with uncommitted changes, it will be pushed out into a separate
-    window as a result (i.e., your changes will not be lost).
-   </para>
-   <para>
-    If you prefer all packets to open in separate windows by default,
-    you can choose this in
-    &regina;'s <link linkend="options-general">general settings</link>.
-   </para>
-  </sect2-->
-
   <sect2 id="packet-new">
    <title>Creating New Packets</title>
 

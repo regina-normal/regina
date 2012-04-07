@@ -86,10 +86,6 @@
   <!ENTITY jython "<application>Jython</application>">
   <!ENTITY kde3 "&kde;&nbsp;3">
   <!ENTITY kde4 "&kde;&nbsp;4">
-  <!ENTITY kdegraphics "<application>kdegraphics</application>">
-  <!ENTITY kghostview "<application>KGhostView</application>">
-  <!ENTITY khelpcenter "<application>&kde; Help Center</application>">
-  <!ENTITY kpdf "<application>KPDF</application>">
   <!ENTITY latex "<application>LaTeX</application>">
   <!ENTITY latin1 "<acronym>LATIN1</acronym>">
   <!ENTITY libnormaliz "<application>libnormaliz</application>">
@@ -100,7 +96,6 @@
   <!ENTITY mpi "<acronym>MPI</acronym>">
   <!ENTITY mpich "<application>MPICH</application>">
   <!ENTITY normaliz "<application>Normaliz</application>">
-  <!ENTITY okular "<application>Okular</application>">
   <!ENTITY orb "<application>Orb</application>">
   <!ENTITY orbcasson "&orb; / &casson;">
   <!ENTITY orburl "<ulink url='http://www.ms.unimelb.edu.au/~snap/orb.html'>&orb;</ulink>">

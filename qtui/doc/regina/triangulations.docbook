@@ -1198,9 +1198,9 @@
     <tip><para>
      If you wish to see a full transcript of the conversation between
      &regina; and &gap;, start &regina; from the command-line by running
-     <command>regina-kde</command>.  The entire conversation
+     <command>regina-gui</command>.  The entire conversation
      will be shown in the text console where you ran
-     <command>regina-kde</command> command.
+     <command>regina-gui</command> command.
     </para></tip>
    </sect3>
    <sect3 id="tri-algebra-turaevviro">
