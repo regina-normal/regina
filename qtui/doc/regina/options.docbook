@@ -55,10 +55,18 @@
      <para>
       If you choose this option, a large dock area will appear to the
       right of the packet tree, and each packet viewer will have an
-      extra <guilabel>Dock&nbsp;/&nbsp;Undock</guilabel> button that
+      extra <guilabel>Dock&nbsp;/&nbsp;Undock</guilabel> button
+      (indicated by the arrow below) that
       allows you to pop it out as separate floating windows if you choose.
      </para>
-    </para></glossdef>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="dock.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+    </glossdef>
    </glossentry>
    <glossentry>
     <glossterm><guilabel>Packet tree jump size</guilabel></glossterm>

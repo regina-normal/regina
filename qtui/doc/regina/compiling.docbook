@@ -136,7 +136,7 @@
   </para>
   <para>
    Note that these compiler and linker flags are tailored to the
-   <productname>&gnu; &cpp; Compiler</productname>
+   &gnu; &cpp; compiler
    (<application>g++</application>).  If you use a different
    compiler, you might need to adjust your flags accordingly.
   </para>
