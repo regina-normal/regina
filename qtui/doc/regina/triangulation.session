@@ -1,7 +1,7 @@
 example$ regina-python
-Regina 4.90
+Regina 4.92
 Software for 3-manifold topology and normal surface theory
-Copyright (c) 1999-2011, The Regina development team
+Copyright (c) 1999-2012, The Regina development team
 &gt;&gt;&gt; ################################
 ... #
 ... #  Sample Python Script
@@ -16,9 +16,9 @@ Copyright (c) 1999-2011, The Regina development team
 ... 
 &gt;&gt;&gt; # Create a new (3,4,7) layered solid torus.  This is a 3-tetrahedron
 ... # triangulation of a solid torus.
-... t = regina.NTriangulation()
+... t = NTriangulation()
 &gt;&gt;&gt; t.insertLayeredSolidTorus(3,4)
-&lt;regina.NTetrahedron object at 0x10046ac20&gt;
+&lt;regina.NTetrahedron object at 0x108015750&gt;
 &gt;&gt;&gt; print t
 Triangulation with 3 tetrahedra.
 &gt;&gt;&gt; 
@@ -72,8 +72,7 @@ Z
 False
 &gt;&gt;&gt; 
 &gt;&gt;&gt; # Make our own list of vertex normal surfaces in standard coordinates.
-... from regina import NNormalSurfaceList
-&gt;&gt;&gt; surfaces = NNormalSurfaceList.enumerate(t, NNormalSurfaceList.STANDARD)
+... surfaces = NNormalSurfaceList.enumerate(t, NNormalSurfaceList.STANDARD)
 &gt;&gt;&gt; 
 &gt;&gt;&gt; # Verify that the normal surface list is already a child packet of the
 ... # triangulation.  This happens automatically whenever you enumerate
