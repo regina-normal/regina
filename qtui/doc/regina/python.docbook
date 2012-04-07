@@ -106,6 +106,18 @@
      </imageobject>
     </inlinemediaobject>
    </para>
+   <para>
+    &macosx; users will find <command>regina-python</command>
+    inside &regina;'s application bundle.  See the
+    <link linkend="regina-python-mac"><acronym>FAQ</acronym> entry</link>
+    for details.
+   </para>
+   <para>
+    &windows; users do not have the command-line
+    <command>regina-python</command> at all, though they can still use
+    <link linkend="python-gui">graphical &python; consoles</link> and
+    <link linkend="python-script">script packets</link>.
+   </para>
   </sect2>
   <sect2 id="python-script">
    <title>Script Packets</title>
@@ -185,13 +197,21 @@
    a <link linkend="python-script">script packet</link> or a
    <link linkend="python-cmdline">command-line session</link>),
    it will automatically import the <parameter>regina</parameter>
-   module, and it will automatically import all of &regina;'s objects,
-   classes and methods into the current namespace.
-   This means you create a new triangulation by just calling
-   <literal>NTriangulation()</literal>, and you can read a data file
+   module (i.e., &ldquo;<literal>import regina</literal>&rdquo;),
+   and it will import all of &regina;'s objects,
+   classes and methods into the current namespace
+   (i.e., &ldquo;<literal>from regina import&nbsp;*</literal>&rdquo;).
+  </para>
+  <para>
+   This means, for instance, that you create a new triangulation by just
+   calling <literal>NTriangulation()</literal>, and you can read a data file
    by calling <literal>readFileMagic(filename)</literal>.
-   For command-line sessions, you can modify this behaviour
-   through the option <option>--noautoimport</option>.
+   For command-line sessions, if you wish to avoid the heavy-handed
+   &ldquo;<literal>from regina import&nbsp;*</literal>&rdquo;, you can pass
+   the option <option>--noautoimport</option> (in which case you will need to
+   use fully qualified names such as
+   <literal>regina.NTriangulation()</literal> and
+   <literal>regina.readFileMagic(filename)</literal>).
   </para>
   <tip>
    <para>
@@ -201,12 +221,16 @@
     at the beginning of every &python; session
     (including graphical consoles, script packets
     and <command>regina-python</command>).
+   </para>
+   <para>
     User libraries are just ordinary &python; files: you can maintain
     the current list of enabled libraries through
-    &regina;'s <link linkend="python-libraries">&python; options</link>
-    (or if you prefer, through the file &regina-libs; as described in the
+    &regina;'s <link linkend="python-libraries">&python; options</link>.
+    On &linux; and &macosx;, if you prefer, you can also maintain this
+    list directly by editing the text file &regina-libs;,
+    as described in the
     <link linkend="man-regina-python"><command>regina-python</command></link>
-    reference).
+    reference.
    </para>
   </tip>
 

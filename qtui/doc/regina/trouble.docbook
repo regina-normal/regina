@@ -3,6 +3,17 @@
 
  <qandaset>
   <qandadiv id="trouble-running"><title>Running &regina;</title>
+   <qandaentry>
+    <question><para>
+     How do I start &regina;?
+    </para></question>
+    <answer>
+     <para>
+      TODO.
+     </para>
+    </answer>
+   </qandaentry>
+
    <qandaentry id="trouble-packet-uneditable">
     <question><para>
      I cannot edit a triangulation.  I can view it but I can't change anything.
@@ -70,48 +81,6 @@
       installed in the wrong location.  Please
       <link linkend="services">mail us for assistance</link>, so we can
       try to make it work out of the box for you in a future release.
-     </para>
-    </answer>
-   </qandaentry>
-
-   <qandaentry id="trouble-pdf">
-    <question><para>
-     How do I view &pdf; packets?  I click on the packet but I just see
-     a box with an error message.
-    </para></question>
-    <answer>
-     <para>
-      If you use &macosx;, see <link linkend="trouble-mac-pdf">this
-      question</link>.
-     </para>
-     <para>
-      If you use &linux;, the easiest solution is to
-      visit &regina;'s <link linkend="options-pdf">&pdf; options</link>,
-      switch off the <emphasis>embedded</emphasis> &pdf; viewer,
-      and set the <emphasis>external</emphasis> &pdf; viewer to
-      your favourite application (such as &xpdf; or &evince;).
-      &regina; can usually find a suitable viewer automatically,
-      but if your installation is unusual then you may need to provide
-      &regina; with the full path to your &pdf; viewer
-      (such as <filename>/usr/local/bin/xpdf</filename>).
-     </para>
-     <para>
-      <inlinemediaobject>
-       <imageobject>
-        <imagedata fileref="trouble-pdf.png"/>
-       </imageobject>
-      </inlinemediaobject>
-     </para>
-     <para>
-      If you wish to use the embedded &pdf; viewer, you will need to
-      have &okular; installed.  &okular; should be shipped with your
-      &linux; distrubition; it may be offered as its own package, or it
-      may be part of the &kdegraphics; bundle.
-     </para>
-     <para>
-      If you are still having trouble getting &pdf; support working,
-      please <link linkend="services">let us know</link> so we can
-      fix the problem in a future release.
      </para>
     </answer>
    </qandaentry>
@@ -228,140 +197,41 @@
   <qandadiv id="trouble-macosx"><title>&regina; on &macosx;</title>
    <qandaentry>
     <question><para>
-     Can I put &regina; on my dock?
+     Do I need &fink; any more?
     </para></question>
     <answer>
      <para>
-      Yes you can.  Open
-      <filename>/sw/opt/kde4/mac/bin/</filename> in the
-      <application>Finder</application>.  You should see
-      <command>regina-kde</command> (complete with the brown tetrahedron
-      icon), and you can drag it straight onto your dock.
-     </para>
-     <para>
-      <inlinemediaobject>
-       <imageobject>
-        <imagedata fileref="macdock.png"/>
-       </imageobject>
-      </inlinemediaobject>
+      No.  As of version&nbsp;4.92, &regina; ships as a standalone app
+      bundle that you can drag and drop straight into your Applications
+      folder.  If you installed &fink; for an earlier version of
+      &regina; and you do not use it for anything else, you can remove
+      it: simply delete <filename>/sw</filename> and everything beneath it.
      </para>
     </answer>
    </qandaentry>
 
-   <qandaentry>
-    <question>
-     <para>
-      Whenever I open or save a file, I get strange errors like
-      &ldquo;Could not find mime type ...&rdquo;.
-     </para>
-     <para>
-      <inlinemediaobject>
-       <imageobject>
-        <imagedata fileref="errmime1.png"/>
-       </imageobject>
-      </inlinemediaobject>
-      <inlinemediaobject>
-       <imageobject>
-        <imagedata fileref="errmime2.png"/>
-       </imageobject>
-      </inlinemediaobject>
-     </para>
-    </question>
-    <answer>
-     <para>
-      These errors are irritating but harmless.  Unfortunately they happen
-      from time to time with all &kde; applications on &macosx;, not just
-      &regina;.  They are easy to get rid of: just run
-      <userinput>/sw/opt/kde4/mac/bin/kbuildsycoca4</userinput> from the
-      command prompt.
-     </para>
-<screen>
-<prompt>example:~&gt;</prompt> <userinput>/sw/opt/kde4/mac/bin/kbuildsycoca4</userinput>
-kbuildsycoca4(1476)/kdecore (kdelibs) getBundle: getBundle( "/sw/opt/kde4/mac/lib/kde4/libexec/drkonqi" ,  false ) called
-...
-... (lots of output)
-...
-<prompt>example:~&gt;</prompt>
-</screen>
-     <para>
-      This should make the mime type errors stop (at least for now).
-      Hopefully this will be fixed permanently in later releases of
-      &kde4; on &macosx;.
-     </para>
-    </answer>
-   </qandaentry>
-
-   <qandaentry>
-    <question>
-     <para>
-      The file open/save dialog is ugly, and I cannot read any of the file
-      or directory names.
-     </para>
-     <para>
-      <inlinemediaobject>
-       <imageobject>
-        <imagedata fileref="kfiledlg-bad.png"/>
-       </imageobject>
-      </inlinemediaobject>
-     </para>
-    </question>
-    <answer>
-     <para>
-      Again this seems to be an issue across the board with &kde; on
-      &macosx;.  This is easily fixed: change your file dialog from
-      <guilabel>Short View</guilabel> to
-      <guilabel>Detailed View</guilabel> (in fact anything other than
-      <guilabel>Short View</guilabel> will do).
-     </para>
-     <para>
-      <inlinemediaobject>
-       <imageobject>
-        <imagedata fileref="kfiledlg-fix.png"/>
-       </imageobject>
-      </inlinemediaobject>
-     </para>
-     <para>
-      The result should be a clear and readable file dialog, and
-      &kde; will remember your new view type from now on.
-     </para>
-     <para>
-      <inlinemediaobject>
-       <imageobject>
-        <imagedata fileref="kfiledlg-good.png"/>
-       </imageobject>
-      </inlinemediaobject>
-     </para>
-    </answer>
-   </qandaentry>
-
-   <qandaentry id="trouble-mac-pdf">
+   <qandaentry id="regina-python-mac">
     <question><para>
-     I cannot view &pdf; packets.  I just see a big empty grey box.
+     How can I run <command>regina-python</command> or the other
+     command-line tools?
     </para></question>
     <answer>
      <para>
-      At the time of writing,
-      &kde;'s &pdf; viewer (&okular;) does not work on &macosx;,
-      which means the embedded &pdf; viewer will not work in &regina;.
+      TODO.
      </para>
+    </answer>
+   </qandaentry>
+  </qandadiv>
+
+  <qandadiv id="trouble-windows"><title>&regina; on &windows;</title>
+   <qandaentry id="regina-python-windows">
+    <question><para>
+     How can I run <command>regina-python</command> or the other
+     command-line tools?
+    </para></question>
+    <answer>
      <para>
-      Visit &regina;'s <link linkend="options-pdf">&pdf; settings</link>
-      and make sure the embedded viewer is switched off.
-      This will make &regina; use an external &pdf; viewer instead
-      (which is what you want).
-     </para>
-     <para>
-      <inlinemediaobject>
-       <imageobject>
-        <imagedata fileref="mac-pdf.png"/>
-       </imageobject>
-      </inlinemediaobject>
-     </para>
-     <para>
-      As for <emphasis>which</emphasis> external viewer: you can leave
-      this empty, and &regina; will know what to do.  Alternatively
-      you can suggest <command>/usr/bin/open</command>, which will tell
-      &regina; to use whatever &pdf; viewer is your default under &macosx;.
+      TODO.
      </para>
     </answer>
    </qandaentry>
