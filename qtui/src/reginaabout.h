@@ -70,22 +70,14 @@ class ReginaAbout : public QDialog {
                     }
         };
 
-        /**
-         * Full details for "thanks to" credit.
-         */
-        struct CreditInfo {
-            QString name, details;
-
-            CreditInfo(const QString& name_, const QString& details_) :
-                    name(name_), details(details_) {
-                    }
-        };
-
         QList<AuthorInfo> authors;
             /**< Stores a list of authors of the application. */
-        QList<CreditInfo> creditors;
-            /**< Stores a list of people and institutions to credit
-                 for the application. */
+        QList<QString> thanksCode;
+            /**< Stores a list of additional people to thank for code. */
+        QList<QString> thanksExpertise;
+            /**< Stores a list of additional people to thank for expertise. */
+        QList<QString> thanksInstitutions;
+            /**< Stores a list of institions to thank. */
         
     private slots:
         void showLicense();

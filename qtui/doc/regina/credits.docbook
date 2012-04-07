@@ -10,7 +10,8 @@
      <email>bab@debian.org</email></para></listitem>
     <listitem><para>Ryan Budney
      <email>rybu@uvic.ca</email></para></listitem>
-    <listitem><para>William Pettersson</para></listitem>
+    <listitem><para>William Pettersson
+     <email>william.pettersson@gmail.com</email></para></listitem>
    </itemizedlist>
   </para>
 
@@ -33,6 +34,7 @@
     <listitem><para>Craig Macintyre</para></listitem>
     <listitem><para>J. Hyam Rubinstein</para></listitem>
     <listitem><para>Jonathan Shewchuk</para></listitem>
+    <listitem><para>Stephan Tillmann</para></listitem>
    </itemizedlist>
   </para>
   <para>The following institutions have supported the development of &regina;:

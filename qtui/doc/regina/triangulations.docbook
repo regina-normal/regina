@@ -262,7 +262,9 @@
      and two triangulations have the same signature if and only if they
      are isomorphic.
      Isomorphism signatures are introduced in the paper
-     <xref linkend="bib-burton-simps3"/>.
+     <xref linkend="bib-burton-simps3"/>,
+     and the format is explicitly described in
+     <xref linkend="bib-burton-pachner-orprime"/>.
     </para>
     <para>
      The isomorphism signature for an existing triangulation can be viewed
@@ -1610,7 +1612,8 @@
       The main features of isomorphism signatures are that they are fast
       to compute, and that two triangulations have the same signature
       <emphasis>if and only if</emphasis> they are isomorphic.
-      See <xref linkend="bib-burton-simps3"/> for details.
+      See <xref linkend="bib-burton-simps3"/> and
+      <xref linkend="bib-burton-pachner-orprime"/> for details.
      </para>
      <para>
       To convert an isomorphism signature back into a triangulation,

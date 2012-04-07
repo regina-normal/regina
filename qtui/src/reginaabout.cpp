@@ -120,57 +120,37 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     authors << AuthorInfo("Ryan Budney", "rybu@uvic.ca",
         "http://rybu.org/");
     authors << AuthorInfo("William Pettersson",
-        "william.pettersson@gmail.com", "");
+        "william.pettersson@gmail.com", "http://ewpettersson.se/");
 
     // Credits:
-    creditors << CreditInfo("Bernard Blackham",
-        tr("Help with cache optimisation"));
-    creditors << CreditInfo("Winfried Bruns, Bogdan Ichim and Christof Soeger",
-        tr("Use of the Normaliz library"));
-    creditors << CreditInfo("Marc Culler",
-        tr("Use of code from SnapPy and helpful discussions"));
-    creditors << CreditInfo("Dominique Devriese",
-        tr("Red Hat / Fedora porting assistance"));
-    creditors << CreditInfo("Nathan Dunfield",
-        tr("Use of code from SnapPy and helpful discussions"));
-    creditors << CreditInfo("Matthias Goerner",
-        tr("Code contributions"));
-    creditors << CreditInfo("William Jaco",
-        tr("Supervision and many long discussions"));
-    creditors << CreditInfo("David Letscher",
-        tr("Code contributions and technical advice"));
-    creditors << CreditInfo("Craig Macintyre",
-        tr("Red Hat / Fedora porting assistance"));
-    creditors << CreditInfo("Hyam Rubinstein",
-        tr("Supervision and many long discussions"));
-    creditors << CreditInfo("Jonathan Shewchuk",
-        tr("Useful discussions on vertex enumeration"));
-    creditors << CreditInfo("Jeff Weeks",
-        tr("Use of the SnapPea kernel and helpful discussions"));
-    creditors << CreditInfo("The American Institute of Mathematics",
-        tr("Support for development"));
-    creditors << CreditInfo("The Australian Research Council",
-        tr("Support for development and hardware "
-            "(DP0208490, DP1094516, DP110101104)"));
-    creditors << CreditInfo("The Institute for the Physics and "
-        "Mathematics of the Universe, Tokyo",
-        tr("Hospitality and support"));
-    creditors << CreditInfo("Oklahoma State University, USA",
-        tr("Support for development"));
-    creditors << CreditInfo("Queensland Cyber Infrastructure Foundation",
-        tr("High-performance computing support"));
-    creditors << CreditInfo("RMIT University, Australia",
-        tr("Support for development"));
-    creditors << CreditInfo("The University of Melbourne, Australia",
-        tr("Support for development and hardware"));
-    creditors << CreditInfo("The University of Queensland, Australia",
-        tr("Continuing support for development"));
-    creditors << CreditInfo("The University of Victoria, Canada",
-        tr("Hospitality and support"));
-    creditors << CreditInfo("The Victorian Partnership for Advanced Computing",
-        tr("Financial support and much-needed CPU cycles"));
-    creditors << CreditInfo("Debian GNU/Linux",
-        tr("An exceptional working environment"));
+    thanksCode << "Matthias Goerner";
+    thanksCode << "David Letscher";
+    thanksCode << "Winfried Bruns, Bogdan Ichim and Christof Soeger "
+        "(for the Normaliz library)";
+    thanksCode << "Jeff Weeks (for the SnapPea kernel)";
+
+    thanksExpertise << "Bernard Blackham";
+    thanksExpertise << "Marc Culler";
+    thanksExpertise << "Dominique Devriese";
+    thanksExpertise << "Nathan Dunfield";
+    thanksExpertise << "William Jaco";
+    thanksExpertise << "Craig Macintyre";
+    thanksExpertise << "Hyam Rubinstein";
+    thanksExpertise << "Jonathan Shewchuk";
+    thanksExpertise << "Stephan Tillmann";
+
+    thanksInstitutions << "The American Institute of Mathematics";
+    thanksInstitutions << "The Australian Research Council "
+        "(grants DP0208490, DP1094516 and DP110101104)";
+    thanksInstitutions << "The Institute for the Physics and "
+        "Mathematics of the Universe, Tokyo";
+    thanksInstitutions << "Oklahoma State University, USA";
+    thanksInstitutions << "Queensland Cyber Infrastructure Foundation";
+    thanksInstitutions << "RMIT University, Australia";
+    thanksInstitutions << "The University of Melbourne, Australia";
+    thanksInstitutions << "The University of Queensland, Australia";
+    thanksInstitutions << "The University of Victoria, Canada";
+    thanksInstitutions << "The Victorian Partnership for Advanced Computing";
 
 
     // Actual creation of the about box starts here.
@@ -251,13 +231,31 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     tabs->addTab(authorPage, tr("A&uthors"));
 
     QString thanksText;
-    foreach (const CreditInfo& info, creditors) {
-        thanksText += QString("<p style=\"margin: 0px;\">%1</p>")
-            .arg(info.name);
+    thanksText = tr("<p style=\"margin: 0px;\">"
+        "Additional code was contributed by:</p>");
+    thanksText += "<p style=\"margin: 0px;\">&nbsp;</p>";
+    foreach (const QString& s, thanksCode) {
         thanksText += QString("<p style=\"margin: 0px; margin-left: 15px;\">"
-            "%1</p>").arg(info.details);
-        thanksText += "<p style=\"margin: 0px;\">&nbsp;</p>";
+            "%1</p>").arg(s);
     }
+    thanksText += "<p style=\"margin: 0px;\">&nbsp;</p>";
+    thanksText += tr("<p style=\"margin: 0px;\">"
+        "Thanks also to the help and expertise of:</p>");
+    thanksText += "<p style=\"margin: 0px;\">&nbsp;</p>";
+    foreach (const QString& s, thanksExpertise) {
+        thanksText += QString("<p style=\"margin: 0px; margin-left: 15px;\">"
+            "%1</p>").arg(s);
+    }
+    thanksText += "<p style=\"margin: 0px;\">&nbsp;</p>";
+    thanksText += tr("<p style=\"margin: 0px;\">"
+        "The following institutions have supported the development of "
+        "Regina:</p>");
+    thanksText += "<p style=\"margin: 0px;\">&nbsp;</p>";
+    foreach (const QString& s, thanksInstitutions) {
+        thanksText += QString("<p style=\"margin: 0px; margin-left: 15px;\">"
+            "%1</p>").arg(s);
+    }
+    thanksText += "<p style=\"margin: 0px;\">&nbsp;</p>";
 
     QTextBrowser* thanksPage = new QTextBrowser;
     thanksPage->setFrameStyle(QFrame::NoFrame);

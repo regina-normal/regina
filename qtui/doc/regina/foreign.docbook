@@ -199,8 +199,8 @@
     triangulation uniquely up to combinatorial isomorphism.
     See the <link linkend="tri-composition-isosig">composition viewer</link>
     for a more detailed discussion on isomorphism signatures, or
-    <xref linkend="bib-burton-simps3"/> for examples of where they
-    can be used.
+    <xref linkend="bib-burton-pachner-orprime"/> for examples of their use
+    and a precise description of the signature format.
    </para>
    <para>
     The list should be stored in a plain text file with one triangulation
