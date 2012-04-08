@@ -2,7 +2,7 @@
  <title>Command Line: Specialised Utilities</title>
 
  <para>
-  The main applications <command>regina-kde</command> and
+  The main applications <command>regina-gui</command> and
   <command>regina-python</command> are documented in the
   <link linkend="manpages">previous chapter</link>.
   This chapter documents the more specialised command-line
@@ -62,9 +62,19 @@
   </refsect1>
 
   <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/regconcat</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
    <title>See Also</title>
    <para>
-    <link linkend="man-regina-kde">regina-kde</link>.
+    <link linkend="man-regina-gui">regina-gui</link>.
    </para>
   </refsect1>
 
@@ -157,10 +167,20 @@
   </refsect1>
 
   <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/regconvert</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
    <title>See Also</title>
    <para>
     <link linkend="man-regfiletype">regfiletype</link>,
-    <link linkend="man-regina-kde">regina-kde</link>.
+    <link linkend="man-regina-gui">regina-gui</link>.
    </para>
   </refsect1>
 
@@ -256,9 +276,19 @@
   &submani18n;
 
   <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/regfiledump</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
    <title>See Also</title>
    <para>
-    <link linkend="man-regina-kde">regina-kde</link>.
+    <link linkend="man-regina-gui">regina-gui</link>.
    </para>
   </refsect1>
 
@@ -309,10 +339,20 @@
   </refsect1>
 
   <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/regfiletype</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
    <title>See Also</title>
    <para>
     <link linkend="man-regconvert">regconvert</link>,
-    <link linkend="man-regina-kde">regina-kde</link>.
+    <link linkend="man-regina-gui">regina-gui</link>.
    </para>
   </refsect1>
 
@@ -388,11 +428,21 @@
   </refsect1>
 
   <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/sigcensus</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
    <title>See Also</title>
    <para>
     <link linkend="man-tricensus">tricensus</link>,
     <link linkend="man-tricensus-mpi">tricensus-mpi</link>,
-    <link linkend="man-regina-kde">regina-kde</link>.
+    <link linkend="man-regina-gui">regina-gui</link>.
    </para>
   </refsect1>
 
@@ -817,11 +867,21 @@
   </refsect1>
 
   <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/tricensus</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
    <title>See Also</title>
    <para>
     <link linkend="man-sigcensus">sigcensus</link>,
     <link linkend="man-tricensus-mpi">tricensus-mpi</link>,
-    <link linkend="man-regina-kde">regina-kde</link>.
+    <link linkend="man-regina-gui">regina-gui</link>.
    </para>
   </refsect1>
 
@@ -1164,13 +1224,20 @@
   </refsect1>
 
   <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    This utility is not shipped with the drag-and-drop app bundle.
+   </para>
+  </refsect1>
+
+  <refsect1>
    <title>See Also</title>
    <para>
     <link linkend="man-regconcat">regconcat</link>,
     <link linkend="man-sigcensus">sigcensus</link>,
     <link linkend="man-tricensus">tricensus</link>,
     <link linkend="man-tricensus-mpi-status">tricensus-mpi-status</link>,
-    <link linkend="man-regina-kde">regina-kde</link>.
+    <link linkend="man-regina-gui">regina-gui</link>.
    </para>
   </refsect1>
 
@@ -1257,10 +1324,17 @@
   </refsect1>
 
   <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    This utility is not shipped with the drag-and-drop app bundle.
+   </para>
+  </refsect1>
+
+  <refsect1>
    <title>See Also</title>
    <para>
     <link linkend="man-tricensus-mpi">tricensus-mpi</link>,
-    <link linkend="man-regina-kde">regina-kde</link>.
+    <link linkend="man-regina-gui">regina-gui</link>.
    </para>
   </refsect1>
 
@@ -1377,9 +1451,19 @@
   &submani18n;
 
   <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/trisetcmp</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
    <title>See Also</title>
    <para>
-    <link linkend="man-regina-kde">regina-kde</link>.
+    <link linkend="man-regina-gui">regina-gui</link>.
    </para>
   </refsect1>
 

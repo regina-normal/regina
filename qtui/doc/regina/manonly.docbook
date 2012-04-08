@@ -34,6 +34,7 @@
   <!ENTITY html "<acronym>HTML</acronym>">
   <!ENTITY kde "<acronym>KDE</acronym>">
   <!ENTITY linux "<application><acronym>GNU</acronym>/Linux</application>">
+  <!ENTITY macosx "<application>MacOS&nbsp;X</application>">
   <!ENTITY menuapidocs "Help-&gt;&python; &api; Reference">
   <!ENTITY menuhandbook "Help-&gt;Regina Handbook">
   <!ENTITY menuimportsigs "File-&gt;Import-&gt;Isomorphism Signature List">
@@ -41,6 +42,7 @@
   <!ENTITY mpich "MPICH">
   <!ENTITY python "Python">
   <!ENTITY url "<acronym>URL</acronym>">
+  <!ENTITY windows "<application>Windows</application>">
   <!ENTITY xml "<acronym>XML</acronym>">
 
   <!ENTITY reginaman SYSTEM "reginaman.docbook">

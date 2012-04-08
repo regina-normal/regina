@@ -9,7 +9,26 @@
     </para></question>
     <answer>
      <para>
-      TODO.
+      If you use &linux;, look for &regina; in your main menu
+      (for instance, the &gnome; or &kde; menu).  It might be classified
+      under <guilabel>Science</guilabel> or <guilabel>Education</guilabel>.
+      If all else fails, you can always start &regina; from the command line
+      by running <command>regina-gui</command>.
+     </para>
+     <para>
+      If you use &macosx;, you should have downloaded a drag-and-drop
+      app bundle.  You can start &regina; simply by opening this app
+      from wherever you dragged it to (typically the
+      <guilabel>Applications</guilabel> folder).
+     </para>
+     <para>
+      If you use &windows;, you can find &regina; in the
+      <guilabel>Start</guilabel> menu.  Look for
+      <menuchoice>
+       <guimenu>All Programs</guimenu>
+       <guisubmenu>Regina&nbsp;&regversion;</guisubmenu>
+       <guimenuitem>&regina;</guimenuitem>
+      </menuchoice>.
      </para>
     </answer>
    </qandaentry>
@@ -179,7 +198,12 @@
     </para></question>
     <answer>
      <para>
-      TODO.
+      If you downloaded a drag-and-drop app bundle, these tools are all
+      shipped inside it.  If you dragged &regina; to the main
+      <guilabel>Applications</guilabel> folder, you can find them in
+      <filename>/Applications/Regina.app/Contents/MacOS/</filename>
+      (so, for instance, you can start <command>regina-python</command> as
+      <literal>/Applications/Regina.app/Contents/MacOS/regina-python</literal>).
      </para>
     </answer>
    </qandaentry>
@@ -193,7 +217,19 @@
     </para></question>
     <answer>
      <para>
-      TODO.
+      The tool <command>regina-python</command> is not available under
+      &windows;.  However, you can still use &python; scripting in &regina;'s
+      graphical user interface, by opening a graphical &python; console or
+      using script packets.
+     </para>
+     <para>
+      The other command-line tools (such as <command>regfiledump</command>,
+      <command>tricensus</command> and so on) are all installed under the
+      <filename>Program&nbsp;Files</filename> directory.  Typically you
+      can find them in
+      TODO
+      (so, for instance, you can start <command>tricensus</command> as
+      <literal>TODO\tricensus</literal>).
      </para>
     </answer>
    </qandaentry>

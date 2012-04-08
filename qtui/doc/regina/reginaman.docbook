@@ -27,7 +27,6 @@
   <refsynopsisdiv>
    <cmdsynopsis>
     <command>regina-gui</command>
-    <arg><replaceable>generic-options</replaceable></arg>
     <arg rep="repeat"><replaceable>file</replaceable></arg>
    </cmdsynopsis>
   </refsynopsisdiv>
@@ -43,11 +42,12 @@
   </refsect1>
 
   <refsect1>
-   <title>Options</title>
+   <title>&macosx; Users</title>
    <para>
-    All of the available options are generic Qt or &kde; options, and
-    are not described here.  For a full summary of these options, run
-    <userinput>regina-gui --help</userinput>.
+    If you downloaded a drag-and-drop app bundle, this is the
+    program that starts when you open it.
+    The executable itself is simply called <command>Regina</command>,
+    not <command>regina-gui</command>.
    </para>
   </refsect1>
 
@@ -340,6 +340,26 @@
      </listitem>
     </varlistentry>
    </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/regconcat</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command <command>regina-python</command> is not available under
+    &windows;.  However, you can still use &python; scripting in &regina;'s
+    graphical user interface, by opening a graphical &python; console or
+    using script packets.
+   </para>
   </refsect1>
 
   <refsect1>
