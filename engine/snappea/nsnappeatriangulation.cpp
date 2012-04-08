@@ -94,26 +94,30 @@ NMatrixInt* NSnapPeaTriangulation::slopeEquations() const {
         new NMatrixInt(2*snappeaData->num_cusps, 3*snappeaData->num_tetrahedra);
     for(i=0; i< snappeaData->num_cusps; i++) {
         int numRows;
-        // SnapPea returns "a b c" for each tetrahedra where the slope is given
-        // as
-        //   a log (z_0) + b log ( 1/(1-z_0)) + c log ((z_0 - 1)/z_0) + ... = 1
+        // SnapPea returns "a b c" for each tetrahedron, where the
+        // derivative of the holonomy of meridians and longitudes is given as
+        //   a log (z_0) + b log ( 1/(1-z_0)) + c log ((z_0 - 1)/z_0) + ... = 0
         //
         // The equation for slopes in terms of quads of types q, q' and q''
         // becomes
-        //   nu = (c-b)q + (a-c)q' + (b-a)q''
+        //   nu = (b-c)q + (c-a)q' + (a-b)q''
+        //
+        // See Lemma 4.2 in "Degenerations of ideal hyperbolic triangulations",
+        // Stephan Tillmann, Mathematische Zeitschrift,
+        // DOI: 10.1007/s00209-011-0958-8.
         //   
         int *equations = ::get_cusp_equation(snappeaData, i, 1, 0, &numRows);
         for(j=0; j< snappeaData->num_tetrahedra; j++) {
-            matrix->entry(2*i,3*j) = equations[3*j+2] - equations[3*j+1];
-            matrix->entry(2*i,3*j+1) = equations[3*j] - equations[3*j+2];
-            matrix->entry(2*i,3*j+2) = equations[3*j+1] - equations[3*j];
+            matrix->entry(2*i,3*j) = equations[3*j+1] - equations[3*j+2];
+            matrix->entry(2*i,3*j+1) = equations[3*j+2] - equations[3*j];
+            matrix->entry(2*i,3*j+2) = equations[3*j] - equations[3*j+1];
         }
         ::free_cusp_equation(equations);
         equations = ::get_cusp_equation(snappeaData, i, 0, 1, &numRows);
         for(j=0; j< snappeaData->num_tetrahedra; j++) {
-            matrix->entry(2*i+1,3*j) = equations[3*j+2] - equations[3*j+1];
-            matrix->entry(2*i+1,3*j+1) = equations[3*j] - equations[3*j+2];
-            matrix->entry(2*i+1,3*j+2) = equations[3*j+1] - equations[3*j];
+            matrix->entry(2*i+1,3*j) = equations[3*j+1] - equations[3*j+2];
+            matrix->entry(2*i+1,3*j+1) = equations[3*j+2] - equations[3*j];
+            matrix->entry(2*i+1,3*j+2) = equations[3*j] - equations[3*j+1];
         }
         ::free_cusp_equation(equations);
     }
