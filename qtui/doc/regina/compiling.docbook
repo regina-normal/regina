@@ -76,14 +76,17 @@
      </para></listitem>
     </varlistentry>
     <varlistentry>
-     <term>&gnu; multiprecision arithmetic library
-      (<firstterm>libgmp</firstterm>)</term>
+     <term>&gnu; multiprecision arithmetic libraries for &ccpp;
+      (<firstterm>libgmp</firstterm> and <firstterm>libgmpxx</firstterm>)</term>
      <listitem><para>
       Look for a package named
       <literal>libgmp-dev</literal>,
       <literal>lib64gmp-devel</literal>,
       <literal>libgmp-devel</literal> or
       <literal>gmp-devel</literal>.
+      Some distributions (such as &mandriva;)
+      ship the &cpp; library separately in a package named
+      <literal>gmpxx-devel</literal>.
      </para></listitem>
     </varlistentry>
     <varlistentry>
@@ -94,6 +97,16 @@
       <literal>libxml2-dev</literal>,
       <literal>lib64xml2-devel</literal> or
       <literal>libxml2-devel</literal>.
+     </para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>Boost headers</term>
+     <listitem><para>
+      Look for a package named
+      <literal>libboost-dev</literal> or
+      <literal>boost-devel</literal>.
+      You only need the headers (there is no need for pre-built libraries
+      such as Boost.Regex or Boost.Python).
      </para></listitem>
     </varlistentry>
    </variablelist>

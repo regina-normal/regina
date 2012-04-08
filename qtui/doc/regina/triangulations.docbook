@@ -1083,7 +1083,7 @@
      represents a pair of tetrahedron faces that are joined together.
      Each node contains a small label indicating the corresponding
      tetrahedron number (though these can be
-     <link linkend="options-triangulation">switched off</link>).
+     <link linkend="options-fpg-labels">switched off</link>).
      For a closed triangulation the face pairing graph is always
      4-valent; for a bounded triangulation there may be nodes
      of degree three or less.

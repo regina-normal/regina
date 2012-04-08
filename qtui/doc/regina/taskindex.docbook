@@ -279,12 +279,14 @@
   <secondaryie><link linkend="options-triangulation">&graphviz;</link></secondaryie>
   <secondaryie><link linkend="options-surfaces">normal surface
    enumeration</link></secondaryie>
-  <secondaryie><link linkend="options-pdf">&pdf;
+  <secondaryie><link linkend="options-tools">&pdf;
    viewing</link></secondaryie>
   <secondaryie><link linkend="options-python">&python;
    scripting</link></secondaryie>
   <secondaryie><link linkend="options-snappea">&snappea;
    interaction</link></secondaryie>
+  <secondaryie><link linkend="options-tools">tools,
+   third-party</link></secondaryie>
   <secondaryie><link linkend="options-triangulation">triangulation
    viewing and editing</link></secondaryie>
  </indexentry>
@@ -451,11 +453,6 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="options-pdf">embedded &pdf; viewer,
-   configuration</link></primaryie>
- </indexentry>
-
- <indexentry>
   <primaryie>encodings</primaryie>
   <seeie>See: character encodings</seeie>
  </indexentry>
@@ -500,11 +497,6 @@
    boundary</link></secondaryie>
  </indexentry>
 
- <indexentry>
-  <primaryie><link linkend="options-pdf">external &pdf; viewer,
-   configuration</link></primaryie>
- </indexentry>
-
  </indexdiv><indexdiv><title>&mdash; F &mdash;</title>
 
  <indexentry>
@@ -518,8 +510,9 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-skeleton-facegraph">face pairing
-   graphs</link></primaryie>
+  <primaryie>face pairing graphs</primaryie>
+  <secondaryie><link linkend="options-fpg-labels">labelling</link></secondaryie>
+  <secondaryie><link linkend="tri-skeleton-facegraph">viewing</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -720,6 +713,11 @@
  </indexentry>
 
  </indexdiv><indexdiv><title>&mdash; L &mdash;</title>
+
+ <indexentry>
+  <primaryie><link linkend="options-fpg-labels">labelling face pairing
+   graphs</link></primaryie>
+ </indexentry>
 
  <indexentry>
   <primaryie>&latin1;</primaryie>
@@ -976,12 +974,12 @@
 
  <indexentry>
   <primaryie>&pdf; documents</primaryie>
-  <secondaryie><link linkend="options-pdf">embedded / external viewer
-   configuration</link></secondaryie>
   <secondaryie><link linkend="export-pdf">exporting</link></secondaryie>
   <secondaryie><link linkend="import-pdf">importing</link></secondaryie>
   <secondaryie><link linkend="packet-pdf">&pdf;
    packets</link></secondaryie>
+  <secondaryie><link linkend="options-tools">&pdf; viewer
+   configuration</link></secondaryie>
  </indexentry>
 
  <indexentry>

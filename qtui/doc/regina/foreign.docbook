@@ -353,7 +353,7 @@
     to the new script packet, and to make it refer to the packet
     in your data file named <replaceable>value</replaceable>.
    </para>
-   <para>
+   <para id="encodings">
     During the import, &regina; will tell you how it will interpret any
     international characters in the script (that is, letters or symbols
     not found on a typical English keyboard).  Such characters are
@@ -362,7 +362,7 @@
     or &latin1; (which has a long history of use with many Western European
     languages).
     If your script uses a different encoding, you will need to set this
-    in <link linkend="options-general">&regina;'s options</link>.
+    in <link linkend="options-encoding">&regina;'s options</link>.
     If you only ever use letters or symbols on a typical English keyboard,
     you do not need to worry about this at all.
    </para>
@@ -525,7 +525,7 @@
     or &latin1; (which has a long history of use with many Western European
     languages).
     If you wish to use a different encoding, you will need to set this
-    in <link linkend="options-general">&regina;'s options</link>.
+    in <link linkend="options-encoding">&regina;'s options</link>.
     If you are not sure, the default of &utf8; is typically a good choice.
     If you only ever use letters or symbols on a typical English keyboard,
     you do not need to worry about text encodings at all.
@@ -576,8 +576,8 @@
    <para>
     If you simply wish to view &pdf; packets in a different viewer,
     you do not need to go to the trouble of exporting the
-    packet&mdash;instead you can configure &regina;'s
-    <link linkend="options-pdf">&pdf; options</link> to use your
+    packet&mdash;instead you can
+    <link linkend="options-tools">configure &regina;</link> to use your
     favourite viewer by default.
    </para>
   </sect2>

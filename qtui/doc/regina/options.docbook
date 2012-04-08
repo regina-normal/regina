@@ -47,17 +47,18 @@
     <glossterm><guilabel>Dock packets in the main window</guilabel></glossterm>
     <glossdef>
      <para>
-      As of version&nbsp;4.92, &regina; opens each packet in a new window.
-      If you wish to return to the old behaviour (where packets were
-      &ldquo;docked&rdquo; in the main window beside the packet tree),
-      you can check this box.
+      As of version&nbsp;4.92, &regina; works with lots of small windows
+      instead of one monolithic window.  The main window contains just
+      the packet tree, and each packet opens in its own separate window.
      </para>
      <para>
-      If you choose this option, a large dock area will appear to the
+      If you wish to return to the old behaviour (where packets were
+      &ldquo;docked&rdquo; in the main window beside the packet tree),
+      you can check this box.  A large dock area will appear to the
       right of the packet tree, and each packet viewer will have an
       extra <guilabel>Dock&nbsp;/&nbsp;Undock</guilabel> button
       (indicated by the arrow below) that
-      allows you to pop it out as separate floating windows if you choose.
+      allows you to pop it out into a separate window if you choose.
      </para>
      <para>
       <inlinemediaobject>
@@ -88,7 +89,54 @@
      further details.
     </para></glossdef>
    </glossentry>
+   <glossentry id="options-encoding">
+    <glossterm><guilabel>Text encoding for
+     imports/exports</guilabel></glossterm>
+    <glossdef>
+     <para>
+      Specifies how &regina; encodes international characters
+      when importing or exporting data.  International characters are
+      letters or symbols not found on a typical English keyboard.
+     </para>
+     <para>
+      If you are not sure what to use, the default encoding &utf8; is a
+      good choice (this is a modern standard and can represent all languages).
+      If you only ever use plain English letters and symbols, you do not
+      need to worry about encodings at all.
+     </para>
+     <para>
+      For more information on text encodings, see
+      <link linkend="encodings">imports and exports</link>.
+     </para>
+    </glossdef>
+   </glossentry>
    <glossentry>
+    <glossterm><guilabel>Offer help for new users on
+     startup</guilabel></glossterm>
+    <glossdef>
+     <para>
+      If checked, &regina; will show a link to the <guilabel>Getting
+      Started</guilabel> dialog at the bottom of the main window
+      each time &regina; starts.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="helplink.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+     <para>
+      You can view this information at any time by selecting
+      <menuchoice>
+       <guimenu>Help</guimenu>
+       <guimenuitem>Getting Started</guimenuitem>
+      </menuchoice>
+      from the menu.
+     </para>
+    </glossdef>
+   </glossentry>
+   <!--glossentry>
     <glossterm><guilabel>Show tip of the day</guilabel></glossterm>
     <glossdef><para>
      If checked, &regina; will offer occasional tips and hints on
@@ -102,7 +150,7 @@
      </menuchoice>
      from the menu.
     </para></glossdef>
-   </glossentry>
+   </glossentry-->
   </glosslist>
  </sect1>
 
@@ -170,6 +218,14 @@
      </para>
     </glossdef>
    </glossentry>
+   <glossentry id="options-fpg-labels">
+    <glossterm><guilabel>Labels on face pairing graphs</guilabel></glossterm>
+    <glossdef><para>
+     If checked, &regina; will label each node in the
+     <link linkend="tri-skeleton-facegraph">face pairing graph</link>
+     with the corresponding tetrahedron number.
+    </para></glossdef>
+   </glossentry>
   </glosslist>
  </sect1>
 
@@ -196,19 +252,6 @@
     <glossdef><para>
      Specifies which coordinate system will be the default when you
      <link linkend="surfaces-creation">enumerate normal surfaces</link>.
-    </para></glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>Warn before generating non-embedded
-    surfaces</guilabel></glossterm>
-    <glossdef><para>
-     If checked, &regina; will ask for confirmation whenever you try to
-     <link linkend="surfaces-creation">enumerate normal surfaces</link>
-     <emphasis>without</emphasis> selecting
-     <link linkend="surfaces-embeddedonly">embedded surfaces only</link>.
-     &regina; asks for confirmation because non-embedded surfaces are
-     typically much slower to generate, far more numerous, and &regina;
-     only offers very basic support for them.
     </para></glossdef>
    </glossentry>
    <glossentry>
@@ -240,6 +283,40 @@
      <guibutton>Calculate</guibutton> button.
     </para></glossdef>
    </glossentry>
+   <glossentry>
+    <glossterm><guilabel>Warn before generating non-embedded
+    surfaces</guilabel></glossterm>
+    <glossdef><para>
+     If checked, &regina; will ask for confirmation whenever you try to
+     <link linkend="surfaces-creation">enumerate normal surfaces</link>
+     <emphasis>without</emphasis> selecting
+     <link linkend="surfaces-embeddedonly">embedded surfaces only</link>.
+     &regina; asks for confirmation because non-embedded surfaces are
+     typically much slower to generate, far more numerous, and &regina;
+     only offers very basic support for them.
+    </para></glossdef>
+   </glossentry>
+   <glossentry>
+    <glossterm><guilabel>Support transversely oriented normal
+    surfaces</guilabel></glossterm>
+    <glossdef><para>
+     As of version&nbsp;4.92, &regina; offers support for transversely
+     oriented normal surfaces <xref linkend="bib-cooper-tons"/>.
+     However, this feature is highly experimental and still a work in
+     progress, and things <emphasis>will break</emphasis> if you use it.
+     Because of this, transversely oriented coordinate systems are hidden
+     from users by default.
+    </para><para>
+     If you check this box, &regina; will offer traversely oriented
+     coordinate systems for creating and viewing normal surfaces.
+     Once again, this is a work in progress, and you should
+     <emphasis>not trust any results</emphasis> in these coordinate systems.
+    </para><para>
+     Once this feature becomes stable in a later version of &regina;,
+     transversely oriented normal surfaces will be supported by default
+     (and this option will be removed).
+    </para></glossdef>
+   </glossentry>
   </glosslist>
  </sect1>
 
@@ -248,7 +325,7 @@
 
   <para>
    The <guilabel>Census</guilabel> options panel lets you configure which
-   files are searched by the
+   files &regina; searches in the
    <link linkend="tri-censuslookup">census lookup facility</link>.
   </para>
 
@@ -262,21 +339,22 @@
 
   <para>
    The <link linkend="tri-censuslookup">census lookup facility</link>
-   searches for a selected triangulation within a list prepackaged censuses.
-   These settings allows you to add or remove censuses from this list.
+   allows you to select a triangulation and search for it within a list
+   of ready-made census files.
+   Through the settings here, you can add additional census files to this list,
+   or disable the files that &regina; uses by default.
   </para>
   <para>
-   You can add your own census files here or remove &regina;'s original
-   files from the list.  Any files you add must be &regina; data files,
+   Any additional files that you add must be &regina; data files,
    but beyond this they do not need to be in any special format.
    When you perform a census lookup,
    &regina; will simply search through every triangulation in all of the
    files listed here.
   </para>
   <para>
-   Instead of removing files, you may simply wish to
+   Instead of removing files, you can simply
    <emphasis>deactivate</emphasis> them.  This means they will
-   <emphasis>not be searched</emphasis>, but they will remain here in
+   not be searched, but they will remain here in
    the list so that you can easily activate them again.
    Active files are marked with a tick, and deactivated files are
    marked with a no-entry sign.
@@ -289,10 +367,11 @@
    </inlinemediaobject>
   </para>
   <para>
-   If you press the <guibutton>Defaults</guibutton> button, &regina;
-   will refill the list with its own prepackaged
-   censuses (as described in the
-   <link linkend="tri-censuslookup">census lookup</link> notes).
+   You can never remove &regina;'s own prepackaged census files
+   (these are the ones with plain English names, like
+   <emphasis>Closed orientable census</emphasis> and
+   <emphasis>Cusped hyperbolic census</emphasis>).
+   However, you can still deactivate them if you do not wish to search them.
   </para>
  </sect1>
 
@@ -343,9 +422,9 @@
       A typical &python; library defines one or more useful functions.
      </para>
      <para>
-      You can save your own frequently-used code in a file, and then add
-      this file to the list of &python; libraries here in the &python;
-      options panel.
+      The idea of &python; libraries is that you can save your own
+      frequently-used code in a file, and then add
+      this file to the list of libraries here in the &python; options panel.
      </para>
      <para>
       When you no longer wish to use a library, you can remove it from
@@ -363,11 +442,16 @@
       differ with your &linux; distribution.
      </para>
      <para><tip><para>
-      The list of &python; libraries is stored in the file
-      &regina-libs;.  This is a plain text file, with each library filename
+      On &linux; and &macosx;, the list of &python; libraries is stored in
+      the file &regina-libs;.
+      This is a plain text file, with each library filename
       written on a separate line.  &regina; will ignore
       any blank lines or lines beginning with a hash (#).
       You are welcome to edit this file directly if you prefer.
+     </para><para>
+      On &windows; this list is stored in the registry,
+      and you should only edit it through the &python; configuration panel
+      as described above.
      </para></tip></para>
     </glossdef>
    </glossentry>
@@ -464,23 +548,38 @@
   </para>
   <glosslist>
    <glossentry>
+    <glossterm><guilabel>Use default &pdf; viewer</guilabel></glossterm>
+    <glossdef>
+     <para>
+      If checked, &regina; will open
+      <link linkend="packet-pdf">&pdf; packets</link> using the default
+      &pdf; viewer on your computer (for instance, this might be
+      &evince; under &gnome;, or &previewapp; under &macosx;).
+      If unchecked, &regina; will use the custom &pdf; viewer specified in
+      the text box below.
+     </para>
+    </glossdef>
+   </glossentry>
+   <glossentry>
     <glossterm><guilabel>Custom &pdf; viewer</guilabel></glossterm>
     <glossdef>
      <para>
-      Specifies the command that starts your &pdf; viewer,
-      such as &ldquo;<command>evince</command>&rdquo; or
-      &ldquo;<command>xpdf</command>&rdquo;
-      under &linux;, or &ldquo;<command>open</command>&rdquo; under &macosx;.
+      If you have unchecked <guilabel>Use default &pdf; viewer</guilabel>
+      (as described above),
+      here you can specify the command to start your preferred &pdf; viewer
+      (such as <literal>xpdf</literal>
+      under &linux;, or <literal>open</literal> under &macosx;).
       &regina; will look for this command on the default search path.
       If your viewer is installed somewhere unusual then you will need to
       provide the full path to the executable
-      (such as <filename>/usr/local/bin/xpdf</filename>).
+      (such as <literal>/usr/local/bin/xpdf</literal>).
      </para>
      <para>
       You may include additional command-line arguments here
       (so, for instance, &macosx; users might enter
-      &ldquo;<command>/usr/bin/open&nbsp;-a&nbsp;Preview</command>&rdquo;).
-      &regina; will automatically add the &pdf; filename to the end of
+      <literal>/usr/bin/open&nbsp;-a&nbsp;Preview</literal>).
+      &regina; will automatically add the location of the &pdf; document
+      to the end of
       this command, and the entire command will be passed to a shell for
       execution.
      </para>
@@ -496,11 +595,11 @@
      </para>
      <para>
       This setting should be the name of the command that starts
-      &gap; (the default is simply &ldquo;<command>gap</command>&rdquo;).
+      &gap; (the default is simply <literal>gap</literal>).
       &regina; will look for this command on the default search path.
       If you have installed &gap; somewhere unusual then you will need to
       provide the full path to the executable
-      (such as <filename>/usr/local/bin/gap</filename>).
+      (such as <literal>/usr/local/bin/gap</literal>).
      </para>
     </glossdef>
    </glossentry>
@@ -515,10 +614,10 @@
      <para>
       This setting should be the name of the command that &graphviz;
       uses to draw undirected graphs.  The default
-      is &ldquo;<command>neato</command>&rdquo;,
+      is <literal>neato</literal>,
       but you may use one of &graphviz;' other drawing commands if you prefer
       (but note that the command is <emphasis>not</emphasis> called
-      &ldquo;<command>graphviz</command>&rdquo;).
+      <literal>graphviz</literal>).
      </para>
      <para>
       Again, &regina; will look for this command on the default search path.
