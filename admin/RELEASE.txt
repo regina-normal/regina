@@ -9,9 +9,6 @@ Program version:
     qtui/doc/regina/manonly.docbook (&regversion;)
     qtui/doc/regina-xml/index.docbook (same as for .../regina/index.docbook)
     qtui/src/reginaabout.cpp (regReleased)
-    packaging/debian/*/changelog (version, date)
-    packaging/finkinfo/*.info.* (version, revision)
-    packaging/rpmspec/*.spec (version, changelog)
     www/index.html (last updated, current version, contents, news,
                     filenames, what's new)
     www/source.html (unpacking instructions: filename, directory)
