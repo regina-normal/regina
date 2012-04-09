@@ -239,25 +239,34 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
 
         /**
          * Returns a matrix for computing boundary slopes of
-         * spun normal surfaces at the cusps of the triangulation.  This
+         * spun-normal surfaces at the cusps of the triangulation.  This
          * matrix includes a pair of rows for each cusp in the triangulation:
-         * one row for determining the coefficient of the meridian, and one
-         * row for determining the coefficient of the longitude.
+         * one row for determining the algebraic intersection number
+         * with the meridian, and one row for determining the algebraic
+         * intersection number with the longitude.
          * If the triangulation has more than one cusp, these pairs are
          * ordered by vertex number in the triangulation.  Within each
          * pair, the meridian row always appears before the longitude row.
          *
          * This matrix is constructed so that, if \a M and \a L are the
          * rows for the meridian and longitude at some cusp, then for
-         * any spun normal surface with quadrilateral coordinates
-         * \a q, the boundary slope passes <i>M.q</i> times around the
-         * meridian and <i>L.q</i> times around the longitude.
+         * any spun-normal surface with quadrilateral coordinates
+         * \a q, the boundary curves have algebraic intersection number
+         * <i>M.q</i> with the meridian and <i>L.q</i> with the longitude.
+         * Equivalently, the boundary curves pass <i>L.q</i> times around the
+         * meridian and <i>-M.q</i> times around the longitude.
          * To compute these slopes directly from a normal surface, see
          * NNormalSurface::boundarySlopes().
          *
          * This code makes use of the \e SnapPy kernel, and the choice
          * of meridian and longitude on each cusp follows \e SnapPy's
-         * conventions.
+         * conventions.  In particular, we use the orientations for
+         * meridian and longitude from \e SnapPy. The orientations of the
+         * boundary curves of a spun-normal surface are chosen so
+         * that \e if meridian and longitude are a positive basis as
+         * vieved from the cusp, then as one travels along an oriented
+         * boundary curve, the spun-normal surface spirals into the cusp
+         * to one's right and down into the manifold to one's left.
          *
          * \pre All vertex links in this triangulation must be tori.
          *
