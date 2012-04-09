@@ -271,6 +271,9 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * are to be produced, or \c false if immersed and singular
          * normal surfaces are also to be produced; this defaults to
          * \c true.
+         * @param vtxSurfaces the set of all \e vertex normal surfaces
+         * as enumerated under the same coordinate system and
+         * constraints as given here; this may be 0 if unknown.
          * @param manager a progress manager through which progress will
          * be reported, or 0 if no progress reporting is required.  If
          * non-zero, \a manager must point to a progress manager for

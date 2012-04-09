@@ -904,7 +904,7 @@ REGINA_API std::ostream& operator << (std::ostream& out,
  * \ifacespython Not available.
  *
  * @param lhs the native integer to add.
- * @param other the large integer to add.
+ * @param rhs the large integer to add.
  * @return the sum \a lhs plus \a rhs.
  */
 REGINA_API NLargeInteger operator + (long lhs, const NLargeInteger& rhs);
@@ -916,7 +916,7 @@ REGINA_API NLargeInteger operator + (long lhs, const NLargeInteger& rhs);
  * \ifacespython Not available.
  *
  * @param lhs the native integer to multiply.
- * @param other the large integer to multiply.
+ * @param rhs the large integer to multiply.
  * @return the product \a lhs times \a rhs.
  */
 REGINA_API NLargeInteger operator * (long lhs, const NLargeInteger& rhs);

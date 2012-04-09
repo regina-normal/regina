@@ -104,11 +104,11 @@ class NMaxAdmissible {
          * you must be careful when using one of the fast but size-limited
          * types NBitmask1 or NBitmask2.
          *
-         * @param An iterator that begins the set of admissible
-         * extremal rays, as described above.  Typically this would be
-         * rays.begin() if \a rays is a standard container type.
-         * @param An iterator that is past-the-end of the set of
-         * admissible extremal rays.  Typically this would be rays.end()
+         * @param beginExtremalRays an iterator that begins the set of
+         * admissible extremal rays, as described above.  Typically this would
+         * be rays.begin() if \a rays is a standard container type.
+         * @param endExtremalRays an iterator that is past-the-end of the set
+         * of admissible extremal rays.  Typically this would be rays.end()
          * if \a rays is a standard container type.
          * @param constraints a set of validity constraints as described
          * above.  This may be 0 to indicate no constraints (in which
@@ -121,6 +121,8 @@ class NMaxAdmissible {
                 RayIterator beginExtremalRays, RayIterator endExtremalRays,
                 const NEnumConstraintList* constraints);
 };
+
+/*@}*/
 
 } // namespace regina
 
