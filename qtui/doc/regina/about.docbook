@@ -88,7 +88,9 @@
    uploaded to the web.
   </para>
   <para>
-   Since then &regina; has undergone some major structural changes.
+   Since then, <link linkend="acknowledgements">many more people</link>
+   have been involved in both small ways and large.
+   &regina; has also undergone some major structural changes over the years:
    In late 2003 the old &java; user interface was completely removed in
    favour of a faster and cleaner native &cpp; user interface (written
    using the excellent &kde; libraries), and the scripting interface
@@ -97,9 +99,8 @@
    bringing &regina; in line with modern &linux; desktop systems and
    offering a much cleaner experience on &macosx;.
    In 2012 it was again ported from &kde; to a more portable &qt;-only
-   interface, further improving &macosx; support and allowing
-   (for the first time) &windows; support,
-   bringing us to the point at which we are today.
+   interface, further improving &macosx; support and for the first time
+   supporting &windows;, bringing us to the point at which we are today.
   </para>
  </sect1>
 
