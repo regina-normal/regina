@@ -232,7 +232,7 @@
    The enumeration
    can be restricted to embedded normal surfaces or can be expanded to
    include immersed and singular surfaces.  &regina; also supports
-   spun normal surfaces <xref linkend="bib-tillus-spun"/>,
+   spun-normal surfaces <xref linkend="bib-tillus-spun"/>,
    which are non-compact surfaces with infinitely many
    discs found in ideal triangulations.
   </para>

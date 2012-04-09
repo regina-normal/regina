@@ -19,7 +19,7 @@
   work with <firstterm>almost normal surfaces</firstterm>
   (which are like normal surfaces but with an extra
   &ldquo;exceptional disc&rdquo;)
-  and <firstterm>spun normal surfaces</firstterm> (with infinitely
+  and <firstterm>spun-normal surfaces</firstterm> (with infinitely
   many triangles spinning out towards the vertices).
  </para>
  <para>
@@ -108,7 +108,7 @@
       </para>
       <para>
        Your choice of coordinate system will affect which surfaces
-       appear in the final solution set.  For instance, spun normal
+       appear in the final solution set.  For instance, spun-normal
        surfaces only appear in quadrilateral and quadrilateral-octagon
        coordinates; other surfaces (such as vertex links) only appear in
        standard normal and standard almost normal coordinates.
@@ -153,7 +153,7 @@
            <xref linkend="bib-burton-convert"/> for details.
           </para>
           <para>
-           This system supports spun normal surfaces.
+           This system supports spun-normal surfaces.
           </para>
          </glossdef>
         </glossentry>
@@ -169,7 +169,7 @@
           </para>
           <para>
            This system supports both almost normal surfaces
-           and spun normal surfaces.
+           and spun-normal surfaces.
           </para>
          </glossdef>
         </glossentry>
@@ -323,7 +323,7 @@
     At a broad level, the total is divided into
     <emphasis>closed</emphasis> surfaces,
     <emphasis>bounded</emphasis> surfaces (which have only real boundary),
-    and <emphasis>spun normal surfaces</emphasis> (which have infinitely
+    and <emphasis>spun-normal surfaces</emphasis> (which have infinitely
     many triangles).
     For each category that contains one or more surfaces, a table is
     given to break this down further according to orientability,
@@ -338,7 +338,7 @@
    </para>
    <para>
     If the coordinate system that you used for enumeration does not support
-    spun normal surfaces, they will not be listed here in the
+    spun-normal surfaces, they will not be listed here in the
     <guilabel>Summary</guilabel> tab.
    </para>
   </sect2>
@@ -386,7 +386,7 @@
      The next few columns describe various properties of each surface.
      Some of these columns might be empty or absent in your
      viewer (for instance, &regina; does not compute Euler
-     characteristic for spun normal surfaces, and it hides the
+     characteristic for spun-normal surfaces, and it hides the
      orientability column if your enumeration allowed for
      immersed or singular surfaces).
     </para>
@@ -433,14 +433,31 @@
            the triangulation).
           </para></glossdef>
          </glossentry>
-         <glossentry>
+         <glossentry id="surfaces-spun">
           <glossterm><guilabel>Spun</guilabel></glossterm>
-          <glossdef><para>
-           Indicates a spun normal surface (i.e., a non-compact surface
-           with infinitely many discs).
-           These only appear when the enumeration is done in
-           quadrilateral or quadrilateral-octagon coordinates.
-          </para></glossdef>
+          <glossdef>
+           <para>
+            Indicates a spun-normal surface (i.e., a non-compact surface
+            with infinitely many discs).
+            These only appear when the enumeration is done in
+            quadrilateral or quadrilateral-octagon coordinates.
+           </para>
+           <para>
+            If the vertex links are all tori and the underlying
+            coordinate system is normal (not almost normal), then
+            &regina; will also show the boundary slopes for each
+            spun-normal surface.  These are presented as a pair
+            (<replaceable>p</replaceable>,&nbsp;<replaceable>q</replaceable>)
+            for each cusp, indicating that the boundary curves pass
+            <replaceable>p</replaceable> times around the meridian and
+            <replaceable>q</replaceable> times around the longitude.
+           </para>
+           <para>
+            &regina; uses &snappy;'s conventions for the meridian and
+            longitude on each cusp.  If there are multiple cusps,
+            these pairs will be ordered by vertex number.
+           </para>
+          </glossdef>
          </glossentry>
         </glosslist>
        </para></glossdef>
@@ -558,7 +575,7 @@
      the surfaces you already have.  For example, if you enumerated in
      quadrilateral coordinates then your list will not contain any
      vertex links, and these will not suddenly appear when you view in
-     standard coorinates.  If your list contains spun normal surfaces
+     standard coorinates.  If your list contains spun-normal surfaces
      and you view them in standard coordinates, they will not
      disappear (instead you will see triangular coordinates of &infin;).
     </para>
@@ -1044,7 +1061,8 @@
       <listitem><para>
        Check this to allow only compact surfaces
        (i.e., surfaces with finitely many discs), or only
-       spun surfaces (i.e., non-compact surfaces with infinitely many discs).
+       spun-normal surfaces
+       (i.e., non-compact surfaces with infinitely many discs).
       </para></listitem>
      </varlistentry>
      <varlistentry>
@@ -1058,11 +1076,11 @@
        </para>
        <para>
         This constraint is independent of whether the surface is spun
-        (non-compact).  Typical spun normal surfaces do not have real
+        (non-compact).  Typical spun-normal surfaces do not have real
         boundary, since they live in ideal triangulations with no
         boundary faces.  However, if your triangulation has both ideal
         vertices and boundary faces, then it is possible for
-        a spun normal surface to have real boundary also.
+        a spun-normal surface to have real boundary also.
        </para>
       </listitem>
      </varlistentry>

@@ -133,6 +133,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="surfaces-spun">boundary slopes for
+   spun-normal surfaces</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="services">bug reporting</link></primaryie>
  </indexentry>
 
@@ -1187,8 +1192,10 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="surfaces-boundary">spun normal
-   surfaces</link></primaryie>
+  <primaryie>spun-normal surfaces</primaryie>
+  <secondaryie><link linkend="surfaces-spun">boundary
+   slopes</link></secondaryie>
+  <secondaryie><link linkend="surfaces-boundary">identifying</link></secondaryie>
  </indexentry>
 
  <indexentry>
