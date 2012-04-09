@@ -1461,6 +1461,8 @@ class REGINA_API NNormalSurface :
          * with the meridian and \a L with the longitude.  Equivalently,
          * the boundary curves pass \a L times around the meridian and
          * <i>-M</i> times around the longitude.
+         * The rational boundary slope is therefore <tt>-L/M<tt>, and
+         * there are <tt>gcd(L,M)</tt> boundary curves with this slope.
          *
          * This code makes use of the \e SnapPy kernel, and the choice of
          * meridian and longitude on each cusp follows \e SnapPy's conventions.
