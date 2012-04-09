@@ -6,7 +6,7 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
-Version 4.92  [ XX April, 2012 ] - The "hello Windows!" release.
+Version 4.92  [ 12 April, 2012 ] - The "hello Windows!" release.
 
     Installation
         - MacOS users now have a simple drag-and-drop install.
