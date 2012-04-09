@@ -1449,23 +1449,33 @@ class REGINA_API NNormalSurface :
         bool disjoint(const NNormalSurface& other) const;
 
         /**
+         * Computes the boundary slopes of this surface at each cusp of
+         * the triangulation.  This is for use with spun normal surfaces
+         * (for closed surfaces all boundary slopes are zero).
          *
-         * Calculate the boundary slopes of each cusp of the normal surface.
+         * The results are returned in a matrix with \a V rows and two
+         * columns, where \a V is the number of vertices in the triangulation.
+         * If row \a i of the matrix contains the integers
+         * \a M and \a L, this indicates that at the <i>i</i>th cusp,
+         * the boundary slope passes \a M times around the meridian and
+         * \a L times around the longitude.
+         *
+         * This code makes use of the \e SnapPy kernel, and the choice of
+         * meridian and longitude on each cusp follows \e SnapPy's conventions.
+         * If this triangulation contains more than one vertex, the
+         * vertices are ordered by vertex number in the triangulation.
          * 
-         * TODO: Document this.
-         *
-         * The result is returned in a Yx2 matrix, where Y is the number of
-         * cusps in the normal surface. The first column holds the slope of the
-         * meridian, and the second column holds the slope of the longitude.
-         * Each row corresponds to a different cusp.
-         *
          * Regina can only compute boundary slopes if every vertex link
          * in the triangulation is a torus, and if the underlying
          * coordinate system is for normal surfaces (not almost normal
          * surfaces).  If these conditions are not met, this routine
          * will return 0.
          *
-         * @return TODO.
+         * @author William Pettersson and Stephan Tillmann
+         *
+         * @return a newly allocated matrix with \a number_of_vertices
+         * rows and two columns as described above, or 0 if the boundary
+         * slopes cannot be computed.
          */
         NMatrixInt* boundarySlopes() const;
 
