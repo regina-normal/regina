@@ -79,7 +79,7 @@
     machines this directory is called
     <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
     You can start this utility by running
-    <filename>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\regconcat.exe</filename>.
+    <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\regconcat.exe</literal>.
    </para>
   </refsect1>
 
@@ -196,7 +196,7 @@
     machines this directory is called
     <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
     You can start this utility by running
-    <filename>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\regconvert.exe</filename>.
+    <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\regconvert.exe</literal>.
    </para>
   </refsect1>
 
@@ -317,7 +317,7 @@
     machines this directory is called
     <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
     You can start this utility by running
-    <filename>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\regfiledump.exe</filename>.
+    <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\regfiledump.exe</literal>.
    </para>
   </refsect1>
 
@@ -392,7 +392,7 @@
     machines this directory is called
     <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
     You can start this utility by running
-    <filename>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\regfiletype.exe</filename>.
+    <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\regfiletype.exe</literal>.
    </para>
   </refsect1>
 
@@ -493,7 +493,7 @@
     machines this directory is called
     <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
     You can start this utility by running
-    <filename>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\sigcensus.exe</filename>.
+    <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\sigcensus.exe</literal>.
    </para>
   </refsect1>
 
@@ -947,7 +947,7 @@
     machines this directory is called
     <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
     You can start this utility by running
-    <filename>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\tricensus.exe</filename>.
+    <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\tricensus.exe</literal>.
    </para>
   </refsect1>
 
@@ -1545,7 +1545,7 @@
     machines this directory is called
     <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
     You can start this utility by running
-    <filename>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\trisetcmp.exe</filename>.
+    <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\trisetcmp.exe</literal>.
    </para>
   </refsect1>
 

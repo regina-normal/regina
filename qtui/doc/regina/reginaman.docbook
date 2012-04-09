@@ -123,7 +123,8 @@
     Moreover, unless the option <option>--noautoimport</option> is
     passed, all of &regina;'s objects, classes and methods will be
     imported directly into the current namespace
-    (effectively running <literal>from regina import&nbsp;*</literal>).
+    (effectively running
+    <literal>from regina import&nbsp;*</literal>).
    </para>
    <para>
     If you have frequently-used code, you can store it in a
@@ -197,7 +198,8 @@
        Still import the <parameter>regina</parameter> module,
        but do not automatically import all of &regina;'s objects,
        classes and methods into the current namespace
-       (that is, do not run <literal>from regina import&nbsp;*</literal>).
+       (that is, do not run
+       <literal>from regina import&nbsp;*</literal>).
        This means that (for example) the main 3-manifold triangulation class
        must be accessed as <literal>regina.NTriangulation</literal>, not
        just <literal>NTriangulation</literal>.
