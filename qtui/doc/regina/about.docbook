@@ -14,6 +14,12 @@
  <sect1 id="tutorial">
   <title>Getting Started</title>
   <para>
+   Not sure how to start &regina;?  You can find it in your main
+   applications or programs menu;
+   <link linkend="trouble-start"><acronym>follow this link</acronym></link>
+   for details and screenshots.
+  </para>
+  <para>
    The best way to become familiar with &regina; is simply to play
    around with it.  &regina; ships with several example files, including
    a number of censuses of 3-manifold triangulations.  Most of these examples

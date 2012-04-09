@@ -45,7 +45,7 @@
    <title>&macosx; Users</title>
    <para>
     If you downloaded a drag-and-drop app bundle, this is the
-    program that starts when you open it.
+    program that runs when you open it.
     The executable itself is simply called <command>Regina</command>,
     not <command>regina-gui</command>.
    </para>
@@ -118,10 +118,12 @@
     text input/output and no graphical user interface.
     All of the objects, clases and methods from &regina;'s mathematical
     engine will be made available through the module
-    <parameter>regina</parameter>, which will be imported on startup.
+    <parameter>regina</parameter>, which will be imported on startup
+    (effectively running <literal>import regina</literal>).
     Moreover, unless the option <option>--noautoimport</option> is
     passed, all of &regina;'s objects, classes and methods will be
-    imported directly into the current namespace.
+    imported directly into the current namespace
+    (effectively running <literal>from regina import&nbsp;*</literal>).
    </para>
    <para>
     If you have frequently-used code, you can store it in a
@@ -194,7 +196,8 @@
       <para>
        Still import the <parameter>regina</parameter> module,
        but do not automatically import all of &regina;'s objects,
-       classes and methods into the current namespace.
+       classes and methods into the current namespace
+       (that is, do not run <literal>from regina import&nbsp;*</literal>).
        This means that (for example) the main 3-manifold triangulation class
        must be accessed as <literal>regina.NTriangulation</literal>, not
        just <literal>NTriangulation</literal>.

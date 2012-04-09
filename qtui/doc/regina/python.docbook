@@ -109,7 +109,7 @@
    <para>
     &macosx; users will find <command>regina-python</command>
     inside &regina;'s application bundle.  See the
-    <link linkend="regina-python-mac"><acronym>FAQ</acronym> entry</link>
+    <link linkend="trouble-regina-python"><acronym>FAQ</acronym> entry</link>
     for details.
    </para>
    <para>
