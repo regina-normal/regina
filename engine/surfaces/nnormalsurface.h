@@ -206,7 +206,7 @@ class NMatrixInt;
  * NNormalSurfaceVectorMirrored for further explanation.
  *
  * Note that non-compact surfaces (surfaces with infinitely many discs,
- * such as spun normal surfaces) are allowed; in these cases, the
+ * such as spun-normal surfaces) are allowed; in these cases, the
  * corresponding coordinate lookup routines should return
  * NLargeInteger::infinity where appropriate.
  *
@@ -301,13 +301,13 @@ class REGINA_API NNormalSurfaceVector : public NRay {
 
         /**
          * Determines if the specific underlying coordinate system
-         * allows for spun normal surfaces; that is, surfaces with
+         * allows for spun-normal surfaces; that is, surfaces with
          * infinitely many triangles.
          *
          * Note that this has nothing to do with whether or not this
          * specific surface \e contains infinitely many triangles.
          *
-         * @return \c true if and only if spun normal surfaces are allowed.
+         * @return \c true if and only if spun-normal surfaces are allowed.
          */
         virtual bool allowsSpun() const = 0;
 
@@ -642,7 +642,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
  * when introducing a new flavour of coordinate system.
  *
  * Note that non-compact surfaces (surfaces with infinitely many discs,
- * such as spun normal surfaces) are allowed; in these cases, the
+ * such as spun-normal surfaces) are allowed; in these cases, the
  * corresponding coordinate lookup routines will return
  * NLargeInteger::infinity where appropriate.
  *
@@ -1450,20 +1450,31 @@ class REGINA_API NNormalSurface :
 
         /**
          * Computes the boundary slopes of this surface at each cusp of
-         * the triangulation.  This is for use with spun normal surfaces
+         * the triangulation.  This is for use with spun-normal surfaces
          * (for closed surfaces all boundary slopes are zero).
          *
          * The results are returned in a matrix with \a V rows and two
          * columns, where \a V is the number of vertices in the triangulation.
          * If row \a i of the matrix contains the integers
          * \a M and \a L, this indicates that at the <i>i</i>th cusp,
-         * the boundary slope passes \a M times around the meridian and
-         * \a L times around the longitude.
+         * the boundary curves have algebraic intersection number \a M
+         * with the meridian and \a L with the longitude.  Equivalently,
+         * the boundary curves pass \a L times around the meridian and
+         * <i>-M</i> times around the longitude.
          *
          * This code makes use of the \e SnapPy kernel, and the choice of
          * meridian and longitude on each cusp follows \e SnapPy's conventions.
+         * In particular, we use the orientations for meridian and longitude
+         * from \e SnapPy. The orientations of the boundary curves of a
+         * spun-normal surface are chosen so that \e if meridian and
+         * longitude are a positive basis as vieved from the cusp, then
+         * as one travels along an oriented boundary curve, the
+         * spun-normal surface spirals into the cusp to one's right and
+         * down into the manifold to one's left.
+         *
          * If this triangulation contains more than one vertex, the
-         * vertices are ordered by vertex number in the triangulation.
+         * rows in the resulting matrix are ordered by vertex number in the
+         * triangulation.
          * 
          * Regina can only compute boundary slopes if every vertex link
          * in the triangulation is a torus, and if the underlying
