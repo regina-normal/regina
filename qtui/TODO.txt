@@ -29,6 +29,8 @@ Icons:
     - Softer tree for filter_comb.png
 
 Import/Export:
+    - Make the CSV export look like the table, and let the user choose
+      coordinate systems
     - Allow a greater variety of dehydration list file formats
 
 MacOS:
