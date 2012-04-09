@@ -29,6 +29,7 @@
 #include <fstream>
 
 #include "foreign/csvsurfacelist.h"
+#include "maths/nmatrixint.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 
@@ -110,9 +111,18 @@ namespace {
             out << ',';
         }
         if (fields & surfaceExportBdry) {
-            if (! s->isCompact())
-                out << "spun";
-            else if (s->hasRealBoundary())
+            if (! s->isCompact()) {
+                regina::NMatrixInt* slopes = s->boundarySlopes();
+                if (slopes) {
+                    out << "\"spun:";
+                    for (unsigned i = 0; i < slopes->rows(); ++i)
+                        out << " (" << slopes->entry(i, 1)
+                            << ", " << - slopes->entry(i, 0)
+                            << ')';
+                    out << '\"';
+                } else
+                    out << "spun";
+            } else if (s->hasRealBoundary())
                 out << "real";
             else
                 out << "none";

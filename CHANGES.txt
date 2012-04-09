@@ -120,6 +120,8 @@ Version 4.92  [ XX April, 2012 ] - The "hello Windows!" release.
         Routine makeEmbeddedConstraints():
             - Added to help generate admissibility constraints based on a
               flavour constant, instead of an NNormalSurfaceVector subclass.
+        Routines writeCSVStandard, writeCSVEdgeWeight:
+            - Included boundary slopes of spun-normal surfaces in CSV output.
         Macro REGISTER_FLAVOUR:
             - Now requires an additional argument, indicating whether
               the coordinate system supports transverse orientations.

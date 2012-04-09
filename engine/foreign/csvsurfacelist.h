@@ -73,9 +73,16 @@ enum SurfaceExportFields {
              or will be left empty if the "sidedness" cannot be computed. */
     surfaceExportBdry = 0x0010,
         /**< Represents the calculated property of whether a surface is
-             bounded.  This will be one of the strings "closed",
+             bounded.  In most cases, this will be one of the strings "closed",
              "real bdry" or "infinite" (where "infinite" indicates a
-             surface with infinitely many discs). */
+             surface with infinitely many discs).  For spun-normal
+             surfaces in certain ideal triangulations, this string will
+             be followed by the boundary slopes of the surface at the
+             cusps: these written as a list of pairs (\a p, \a q),
+             one for each cusp, indicating that the boundary curves of
+             the surface run \a p times around the meridian and \a q times
+             around the longitude.  See NNormalSurface::boundarySlopes()
+             for further information on interpreting these values. */
     surfaceExportLink = 0x0020,
         /**< Represents whether a surface is a single vertex link or a
              thin edge link.  See NNormalSurface::isVertexLink() and
