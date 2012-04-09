@@ -39,12 +39,12 @@
 #include "regina-core.h"
 #include "maths/nmatrixint.h"
 
+namespace regina {
+
 /**
  * \weakgroup enumerate
  * @{
  */
-
-namespace regina {
 
 /**
  * A comparison object that sorts hyperplanes by position vectors.
