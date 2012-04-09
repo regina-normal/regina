@@ -9,17 +9,31 @@
     </para></question>
     <answer>
      <para>
-      If you use &linux;, look for &regina; in your main menu
-      (for instance, the &gnome; or &kde; menu).  It might be classified
+      If you use &linux;, look for &regina; in your applications menu
+      (for instance, the main &gnome; or &kde; menu).  It might be classified
       under <guilabel>Science</guilabel> or <guilabel>Education</guilabel>.
       If all else fails, you can always start &regina; from the command line
       by running <command>regina-gui</command>.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="run-fedora-menu.png"/>
+       </imageobject>
+      </inlinemediaobject>
      </para>
      <para>
       If you use &macosx;, you should have downloaded a drag-and-drop
       app bundle.  You can start &regina; simply by opening this app
       from wherever you dragged it to (typically the
       <guilabel>Applications</guilabel> folder).
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="run-mac-white.png"/>
+       </imageobject>
+      </inlinemediaobject>
      </para>
      <para>
       If you use &windows;, you can find &regina; in the
@@ -29,6 +43,13 @@
        <guisubmenu>Regina&nbsp;&regversion;</guisubmenu>
        <guimenuitem>&regina;</guimenuitem>
       </menuchoice>.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="run-windows.png"/>
+       </imageobject>
+      </inlinemediaobject>
      </para>
     </answer>
    </qandaentry>
@@ -225,11 +246,13 @@
      <para>
       The other command-line tools (such as <command>regfiledump</command>,
       <command>tricensus</command> and so on) are all installed under the
-      <filename>Program&nbsp;Files</filename> directory.  Typically you
-      can find them in
-      TODO
+      <filename>Program&nbsp;Files</filename> directory (on some
+      machines this directory is called
+      <filename>Program&nbsp;Files&nbsp;(x86)</filename>).
+      Typically you can find them in the subdirectory
+      <filename>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\</filename>
       (so, for instance, you can start <command>tricensus</command> as
-      <literal>TODO\tricensus</literal>).
+      <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\tricensus.exe</literal>).
      </para>
     </answer>
    </qandaentry>
