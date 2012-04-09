@@ -39,6 +39,7 @@ Don't forget:
     any new tips of the day?
     journal references (www, KDE docs, example files, headers)
     check for doxygen warnings
+    check for docbook warnings/errors
     update \test... notes in API docs
     python bindings for new routines
     rebuild manpages
