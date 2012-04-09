@@ -72,6 +72,18 @@
   </refsect1>
 
   <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command-line utilities are installed beneath the
+    <filename>Program&nbsp;Files</filename> directory; on some
+    machines this directory is called
+    <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+    You can start this utility by running
+    <filename>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\regconcat.exe</filename>.
+   </para>
+  </refsect1>
+
+  <refsect1>
    <title>See Also</title>
    <para>
     <link linkend="man-regina-gui">regina-gui</link>.
@@ -173,6 +185,18 @@
     shipped inside it.  If you dragged &regina; to the main
     <guilabel>Applications</guilabel> folder, you can run it as
     <literal>/Applications/Regina.app/Contents/MacOS/regconvert</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command-line utilities are installed beneath the
+    <filename>Program&nbsp;Files</filename> directory; on some
+    machines this directory is called
+    <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+    You can start this utility by running
+    <filename>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\regconvert.exe</filename>.
    </para>
   </refsect1>
 
@@ -286,6 +310,18 @@
   </refsect1>
 
   <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command-line utilities are installed beneath the
+    <filename>Program&nbsp;Files</filename> directory; on some
+    machines this directory is called
+    <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+    You can start this utility by running
+    <filename>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\regfiledump.exe</filename>.
+   </para>
+  </refsect1>
+
+  <refsect1>
    <title>See Also</title>
    <para>
     <link linkend="man-regina-gui">regina-gui</link>.
@@ -345,6 +381,18 @@
     shipped inside it.  If you dragged &regina; to the main
     <guilabel>Applications</guilabel> folder, you can run it as
     <literal>/Applications/Regina.app/Contents/MacOS/regfiletype</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command-line utilities are installed beneath the
+    <filename>Program&nbsp;Files</filename> directory; on some
+    machines this directory is called
+    <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+    You can start this utility by running
+    <filename>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\regfiletype.exe</filename>.
    </para>
   </refsect1>
 
@@ -434,6 +482,18 @@
     shipped inside it.  If you dragged &regina; to the main
     <guilabel>Applications</guilabel> folder, you can run it as
     <literal>/Applications/Regina.app/Contents/MacOS/sigcensus</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command-line utilities are installed beneath the
+    <filename>Program&nbsp;Files</filename> directory; on some
+    machines this directory is called
+    <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+    You can start this utility by running
+    <filename>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\sigcensus.exe</filename>.
    </para>
   </refsect1>
 
@@ -877,6 +937,18 @@
   </refsect1>
 
   <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command-line utilities are installed beneath the
+    <filename>Program&nbsp;Files</filename> directory; on some
+    machines this directory is called
+    <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+    You can start this utility by running
+    <filename>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\tricensus.exe</filename>.
+   </para>
+  </refsect1>
+
+  <refsect1>
    <title>See Also</title>
    <para>
     <link linkend="man-sigcensus">sigcensus</link>,
@@ -1224,9 +1296,10 @@
   </refsect1>
 
   <refsect1>
-   <title>&macosx; Users</title>
+   <title>&macosx; and &windows; Users</title>
    <para>
-    This utility is not shipped with the drag-and-drop app bundle.
+    This utility is not shipped with the drag-and-drop app bundle for
+    &macosx; or with the &windows; installer.
    </para>
   </refsect1>
 
@@ -1324,9 +1397,10 @@
   </refsect1>
 
   <refsect1>
-   <title>&macosx; Users</title>
+   <title>&macosx; and &windows; Users</title>
    <para>
-    This utility is not shipped with the drag-and-drop app bundle.
+    This utility is not shipped with the drag-and-drop app bundle for
+    &macosx; or with the &windows; installer.
    </para>
   </refsect1>
 
@@ -1457,6 +1531,18 @@
     shipped inside it.  If you dragged &regina; to the main
     <guilabel>Applications</guilabel> folder, you can run it as
     <literal>/Applications/Regina.app/Contents/MacOS/trisetcmp</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command-line utilities are installed beneath the
+    <filename>Program&nbsp;Files</filename> directory; on some
+    machines this directory is called
+    <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+    You can start this utility by running
+    <filename>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\trisetcmp.exe</filename>.
    </para>
   </refsect1>
 
