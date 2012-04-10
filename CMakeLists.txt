@@ -3,17 +3,93 @@ PROJECT (regina)
 
 # Let the user override the package name.
 IF(NOT PACKAGE_NAME)
-  SET (PACKAGE_NAME regina)
+  SET (PACKAGE_NAME regina CACHE STRING
+    "The package name used for installation directories.  On some platforms this is 'regina-normal', not 'regina', to avoid conflicts with other software with the same name."
+    FORCE)
 ENDIF(NOT PACKAGE_NAME)
 
 SET (PACKAGE_PRETTY_NAME Regina)
 # Look here for Find___.cmake modules
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
+# Version
+SET (PACKAGE_VERSION 4.92)
+SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_VERSION}")
+
+# Extract major/minor version
+# Note: The PACKAGE_VERSION_MAJOR "output" is discarded, since it matches the
+# whole string
+STRING(REGEX MATCH "^([0-9]+).([0-9]+)" PACKAGE_VERSION_MAJOR "${PACKAGE_VERSION}")
+SET (PACKAGE_VERSION_MAJOR ${CMAKE_MATCH_1} )
+SET (PACKAGE_VERSION_MINOR ${CMAKE_MATCH_2} )
+
+# Bug report email
+SET (PACKAGE_BUGREPORT "regina-user@lists.sourceforge.net")
+
+# Make a release build by default.
+IF(NOT CMAKE_BUILD_TYPE)
+  SET(CMAKE_BUILD_TYPE Release CACHE STRING
+    "Choose the type of build.  Options are: Debug Release RelWithDebInfo MinSizeRel."
+  FORCE)
+ENDIF(NOT CMAKE_BUILD_TYPE)
+
+# Distinguish between the different Regina installation types:
+# XDG = standard freedesktop.org filesystem installation in a fixed location.
+# Bundle = self-contained app bundle for MacOS that users can drag and drop.
+# Windows = self-contained movable install directory for MS Windows.
+if (NOT REGINA_INSTALL_TYPE)
+  if (APPLE)
+    SET (REGINA_DEFAULT_INSTALL_TYPE Bundle)
+  elseif (WIN32)
+    SET (REGINA_DEFAULT_INSTALL_TYPE Windows)
+  else ()
+    SET (REGINA_DEFAULT_INSTALL_TYPE XDG)
+  endif ()
+  SET (REGINA_INSTALL_TYPE ${REGINA_DEFAULT_INSTALL_TYPE} CACHE STRING
+    "Choose how Regina installs itself.  Options are: XDG Bundle Windows."
+    FORCE)
+ENDIF (NOT REGINA_INSTALL_TYPE)
+MESSAGE (STATUS "Regina install type: ${REGINA_INSTALL_TYPE}")
+
+# Sanity check the installation type:
+IF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+  # No sanity checking needed here (yet).
+ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+  IF (NOT APPLE)
+    MESSAGE(FATAL_ERROR
+      "REGINA_INSTALL_TYPE=Bundle is only supported on MacOSX.")
+  ENDIF (NOT APPLE)
+ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Windows)
+  IF (NOT WIN32)
+    MESSAGE(FATAL_ERROR
+      "REGINA_INSTALL_TYPE=Windows is only supported on MS Windows.")
+  ENDIF (NOT WIN32)
+ELSE()
+  MESSAGE(FATAL_ERROR
+    "REGINA_INSTALL_TYPE must be one of: XDG Bundle Windows.")
+ENDIF()
+
+# Are we installing development files?
+IF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+  SET (REGINA_INSTALL_DEV OFF)
+ELSE (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+  SET (REGINA_INSTALL_DEV ON)
+ENDIF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+
 # Give packagers a way of insisting that every optional component is found.
 # Set PACKAGING_MODE=1 to make every component compulsory.
 # Set PACKAGING_MODE=1 and PACKAGING_NO_MPI=1 to make every component
 # compulsory except for the MPI utilities.
+IF(NOT PACKAGING_MODE)
+  SET (PACKAGING_MODE OFF CACHE STRING
+    "Makes all optional components mandatory, so that cmake will fail if any optional component is not found."
+    FORCE)
+ENDIF(NOT PACKAGING_MODE)
+IF(NOT PACKAGING_NO_MPI)
+  SET (PACKAGING_NO_MPI OFF CACHE STRING
+    "Leaves MPI as an optional component, even if PACKAGING_MODE is ON."
+    FORCE)
+ENDIF(NOT PACKAGING_NO_MPI)
 IF(PACKAGING_MODE)
   SET(REGINA_MANDATORY TRUE)
   IF(PACKAGING_NO_MPI)
@@ -32,42 +108,71 @@ INCLUDE(MacroLogFeature)
 # Modules needed for IOS check and function existence
 INCLUDE( CheckCXXSourceCompiles )
 INCLUDE( CheckFunctionExists )
-# Version
-SET (PACKAGE_VERSION 4.91)
-SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_VERSION}")
 
-# Extract major/minor version
-# Note: The PACKAGE_VERSION_MAJOR "output" is discarded, since it matches the
-# whole string
-STRING(REGEX MATCH "^([0-9]+).([0-9]+)" PACKAGE_VERSION_MAJOR "${PACKAGE_VERSION}")
-SET (PACKAGE_VERSION_MAJOR ${CMAKE_MATCH_1} )
-SET (PACKAGE_VERSION_MINOR ${CMAKE_MATCH_2} )
+# Regina's own cmake scripts:
+INCLUDE( ReginaMacros )
 
-# Bug report email
-SET (PACKAGE_BUGREPORT "regina-user@lists.sourceforge.net")
+# Always include . in the header search path:
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-# Useful directories
-
-SET (DATADIR ${CMAKE_INSTALL_PREFIX}/share)
-SET (PKGDATADIR ${DATADIR}/${PACKAGE_NAME})
-SET (LIBDIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
-SET (PKGLIBDIR ${LIBDIR}/${PACKAGE_NAME})
-SET (INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include/${PACKAGE_NAME})
+# Installation directories
+if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+  # MacOSX app bundle.
+  SET (APPDIR ${CMAKE_INSTALL_PREFIX})
+  SET (BUNDLEDIR ${APPDIR}/Regina.app)
+  SET (BUNDLEDIR_ESCAPED "\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/Regina.app")
+  SET (RESOURCEDIR ${BUNDLEDIR}/Contents/Resources)
+  SET (BINDIR ${BUNDLEDIR}/Contents/MacOS)
+  SET (LIBDIR ${BINDIR})
+  SET (DATADIR ${RESOURCEDIR})
+  SET (INCLUDEDIR ${RESOURCEDIR}/include)
+  SET (PKGDATADIR ${DATADIR})
+  SET (PYLIBDIR ${LIBDIR}/python)
+elseif (${REGINA_INSTALL_TYPE} STREQUAL Windows)
+  # MS Windows install.
+  SET (APPDIR ${CMAKE_INSTALL_PREFIX}/bin)
+  SET (BINDIR ${CMAKE_INSTALL_PREFIX}/bin)
+  SET (LIBDIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+  SET (DATADIR ${CMAKE_INSTALL_PREFIX}/share)
+  SET (INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include/${PACKAGE_NAME})
+  SET (PKGDATADIR ${DATADIR}/${PACKAGE_NAME})
+  SET (PYLIBDIR ${LIBDIR}/${PACKAGE_NAME}/python)
+else ()
+  # Full install.
+  SET (APPDIR ${CMAKE_INSTALL_PREFIX}/bin)
+  SET (BINDIR ${CMAKE_INSTALL_PREFIX}/bin)
+  SET (LIBDIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+  SET (DATADIR ${CMAKE_INSTALL_PREFIX}/share)
+  SET (INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include/${PACKAGE_NAME})
+  SET (PKGDATADIR ${DATADIR}/${PACKAGE_NAME})
+  SET (PYLIBDIR ${LIBDIR}/${PACKAGE_NAME}/python)
+endif ()
+SET (HTMLDIR ${PKGDATADIR}/docs)
+SET (ICONDIR ${DATADIR}/icons)
 SET (MANDIR ${DATADIR}/man)
+SET (XDG_APPS_INSTALL_DIR ${DATADIR}/applications)
+SET (XDG_MIME_INSTALL_DIR ${DATADIR}/mime/packages)
 
+# Useful build directories
 SET (ENGINE_INCLUDES "${PROJECT_SOURCE_DIR}/engine" )
 SET (ENGINE_LIBRARY regina-engine)
 
-if (APPLE)
-  # Use rpath since KDE4 apps like to install into non-standard directories.
-  set(CMAKE_INSTALL_NAME_DIR ${LIBDIR})
-else (APPLE)
-  # Don't use rpath under linux.
-  # set(CMAKE_INSTALL_RPATH ${LIBDIR} )
-  # set(CMAKE_SKIP_BUILD_RPATH FALSE)
-  # set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-  # set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-endif (APPLE)
+# RPATH support.
+IF (NOT DISABLE_RPATH)
+  SET(DISABLE_RPATH OFF CACHE BOOL
+    "Do not build with rpath.  This option may break installations in non-standard directories, since executables may be unable to find Regina's libraries.  For installations in standard areas such as /usr however, this option is highly recommended." FORCE)
+ENDIF (NOT DISABLE_RPATH)
+
+IF (NOT DISABLE_RPATH)
+  if (APPLE)
+    set(CMAKE_INSTALL_NAME_DIR ${LIBDIR})
+  else (APPLE)
+    set(CMAKE_INSTALL_RPATH ${LIBDIR} )
+    set(CMAKE_SKIP_BUILD_RPATH FALSE)
+    set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  endif (APPLE)
+ENDIF (NOT DISABLE_RPATH)
 
 # i18n checks.
 CHECK_CXX_SOURCE_COMPILES("
@@ -139,6 +244,14 @@ MACRO_LOG_FEATURE(ICONV_FOUND
   "http://www.gnu.org/s/libiconv/"
   TRUE)
 
+FIND_PACKAGE(Boost COMPONENTS python regex)
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+MACRO_LOG_FEATURE(Boost_FOUND
+  "Boost"
+  "Essential: C++ components (including Boost.Python and Boost.Regex)"
+  "http://www.boost.org/"
+  TRUE)
+
 FIND_PACKAGE(Threads REQUIRED)
 IF(NOT CMAKE_USE_PTHREADS_INIT)
   MESSAGE(FATAL_ERROR "Regina requires pthread support.")
@@ -157,12 +270,14 @@ MACRO_LOG_FEATURE(POPT_FOUND
 FIND_PACKAGE(HashSet)
 
 # Optionals
-FIND_PACKAGE(MPI)
-MACRO_LOG_FEATURE(MPI_FOUND
-  "MPI"
-  "Build command-line tools for high-performance computing"
-  "http://www.open-mpi.org/"
-  REGINA_MANDATORY_MPI)
+IF(NOT DISABLE_MPI)
+  FIND_PACKAGE(MPI)
+  MACRO_LOG_FEATURE(MPI_FOUND
+    "MPI"
+    "Build command-line tools for high-performance computing"
+    "http://www.open-mpi.org/"
+    REGINA_MANDATORY_MPI)
+ENDIF(NOT DISABLE_MPI)
 
 FIND_PACKAGE(Doxygen)
 MACRO_LOG_FEATURE(DOXYGEN_FOUND
@@ -170,6 +285,42 @@ MACRO_LOG_FEATURE(DOXYGEN_FOUND
   "Generate C++/Python API docs"
   "http://www.doxygen.org/"
   REGINA_MANDATORY)
+
+IF (REGINA_DOCS)
+  get_filename_component(REGINA_DOCS_FILE "${REGINA_DOCS}" ABSOLUTE)
+
+  IF (NOT EXISTS ${REGINA_DOCS_FILE})
+    MESSAGE (FATAL_ERROR "The argument to REGINA_DOCS should be a zip file containing pre-built handbooks.  The file you gave (${REGINA_DOCS}) does not exist.")
+  ENDIF (NOT EXISTS ${REGINA_DOCS_FILE})
+
+  MESSAGE (STATUS "Using pre-built handbooks from ${REGINA_DOCS_FILE}")
+
+  FIND_PROGRAM(UNZIP_EXECUTABLE NAMES unzip DOC "Command-line unzip tool")
+  IF (UNZIP_EXECUTABLE)
+    SET (UNZIP_FOUND TRUE)
+  ENDIF (UNZIP_EXECUTABLE)
+  SET (REGINA_BUILD_HANDBOOK ${UNZIP_FOUND})
+  MACRO_LOG_FEATURE(UNZIP_FOUND
+    "unzip"
+    "Extract the user handbook"
+    "http://www.info-zip.org/pub/infozip/"
+    REGINA_MANDATORY)
+ELSE (REGINA_DOCS)
+  SET (REGINA_DOCS "" CACHE STRING
+    "Extract handbooks from the given pre-built zip file instead of building them manually."
+    FORCE)
+
+  FIND_PROGRAM(XSLTPROC_EXECUTABLE NAMES xsltproc DOC "XSLT processor")
+  IF (XSLTPROC_EXECUTABLE)
+    SET (XSLTPROC_FOUND TRUE)
+  ENDIF (XSLTPROC_EXECUTABLE)
+  SET (REGINA_BUILD_HANDBOOK ${XSLTPROC_FOUND})
+  MACRO_LOG_FEATURE(XSLTPROC_FOUND
+    "xsltproc"
+    "Generate the user handbook"
+    "http://xmlsoft.org/XSLT/"
+    REGINA_MANDATORY)
+ENDIF (REGINA_DOCS)
 
 # Test suite
 ENABLE_TESTING() # This must appear before any calls to ADD_SUBDIRECTORY().
@@ -182,10 +333,17 @@ ADD_SUBDIRECTORY(engine)
 ADD_SUBDIRECTORY(utils)
 
 # Python support
+if (WIN32 AND NOT CYGWIN)
+  SET (REGINA_PYTHON_EXTENSION "pyd")
+  SET (REGINA_PYTHON_EXTENSION_NONSTANDARD TRUE)
+else ()
+  SET (REGINA_PYTHON_EXTENSION "so")
+  SET (REGINA_PYTHON_EXTENSION_NONSTANDARD FALSE)
+endif ()
+
 IF(NOT DISABLE_PYTHON)
   FIND_PACKAGE(PythonInterp)
   FIND_PACKAGE(PythonLibrary)
-  FIND_PACKAGE(Boost COMPONENTS python)
 ENDIF(NOT DISABLE_PYTHON)
 
 IF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBRARY_FOUND)
@@ -196,38 +354,41 @@ IF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBRARY_FOUND)
   MESSAGE(STATUS "Python bindings enabled")
 ELSE(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBRARY_FOUND)
   # We cannot support python.
-  IF(ENABLE_PYTHON)
-    MESSAGE(FATAL_ERROR
-      "Python bindings unavailable; try again without ENABLE_PYTHON.")
-  ELSE(ENABLE_PYTHON)
-    MESSAGE(WARNING "Could not find Boost.Python: Python bindings disabled.")
-  ENDIF(ENABLE_PYTHON)
+  # Recall that Boost.Python is now mandatory (from the Boost check above),
+  # so if we break here then it's Python's fault.
+  MESSAGE(WARNING "Could not find Python development files: Python bindings disabled.")
 ENDIF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBRARY_FOUND)
 MACRO_LOG_FEATURE(BOOST_PYTHON_FOUND
-  "Boost.Python"
+  "Python development"
   "Build Python bindings for Regina"
-  "http://www.boost.org/"
+  "http://www.python.org/"
   REGINA_MANDATORY)
 
-# TODO: Make this option show up in cmake -i.
-IF(DISABLE_KDEUI)
-  MESSAGE(WARNING "User passed -DDISABLE_KDEUI=1: KDE user interface disabled.")
-ELSE(DISABLE_KDEUI)
-  set(KDE4_REQUIRED TRUE)
-  FIND_PACKAGE(KDE4)
+# The Qt GUI
+IF(NOT DISABLE_GUI)
+  SET (DISABLE_GUI OFF CACHE STRING
+    "Disables the graphical user interface.  The calculation engine, Python bindings and other command-line utilities will still be built.  This option is suitable for use on high-performance clusters."
+    FORCE)
+ENDIF(NOT DISABLE_GUI)
+IF(DISABLE_GUI)
+  if (NOT ${REGINA_INSTALL_TYPE} STREQUAL XDG)
+    MESSAGE(FATAL_ERROR
+	  "You can only set DISABLE_GUI=1 with REGINA_INSTALL_TYPE=XDG.")
+  endif (NOT ${REGINA_INSTALL_TYPE} STREQUAL XDG)
 
-  IF(KDE4_FOUND)
-    FIND_PACKAGE(Qt4)
-    MACRO_LOG_FEATURE(QT4_FOUND
-      "Qt4"
-      "Required for Regina's graphical user interface"
-      "http://qt.nokia.com/"
-      TRUE)
+  MESSAGE(WARNING "User set DISABLE_GUI=1: graphical user interface disabled.")
+ELSE(DISABLE_GUI)
+  set(GUI_REQUIRED TRUE)
+  FIND_PACKAGE(Qt4 COMPONENTS QtGui QtCore)
 
-    # Some versions of the KDE4 macros disable exception handling.
-    # We need exceptions in regina, so put them back.
-    SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+  FIND_PACKAGE(SourceHighlight)
+  MACRO_LOG_FEATURE(SRCHILITE_FOUND
+    "Source-highlight"
+    "Syntax highlighting"
+    "http://www.gnu.org/software/src-highlite/"
+    REGINA_MANDATORY)
 
+  if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
     set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
     find_package(SharedMimeInfo)
     MACRO_LOG_FEATURE(SHARED_MIME_INFO_FOUND
@@ -235,38 +396,25 @@ ELSE(DISABLE_KDEUI)
       "Required for Regina's graphical user interface"
       "http://freedesktop.org/wiki/Software/shared-mime-info"
       TRUE "0.30")
+  endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
 
-    # This must come after SharedMimeInfo is included, since the kdeui/
-    # makefiles use SharedMimeInfo macros.
-    ADD_SUBDIRECTORY(kdeui)
-    MESSAGE(STATUS "KDE user interface enabled")
+  if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+    include(BundleUtilities)
+  endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
 
-    # Check that the install prefix is sane (i.e., the same as KDE's).
-    get_filename_component(REGINA_KDEBIN "${KDE4_KDECONFIG_EXECUTABLE}" PATH)
-    get_filename_component(REGINA_KDEPREFIX "${REGINA_KDEBIN}" PATH)
-    IF (NOT CMAKE_INSTALL_PREFIX STREQUAL REGINA_KDEPREFIX)
-      MESSAGE("")
-      MESSAGE("KDE seems to use the installed prefix: ${REGINA_KDEPREFIX}")
-      MESSAGE("Your installation prefix is: ${CMAKE_INSTALL_PREFIX}\n")
-      MESSAGE("Regina needs to be installed with the same prefix as KDE.")
-      MESSAGE("Try passing: -DCMAKE_INSTALL_PREFIX=${REGINA_KDEPREFIX}")
-      MESSAGE("If you really want a different prefix, pass: -DIGNORE_PREFIX=1"\n)
-      IF (IGNORE_PREFIX)
-        MESSAGE(WARNING
-          "You passed IGNORE_PREFIX=1: continuing anyway as requested.")
-      ELSE (IGNORE_PREFIX)
-        MESSAGE(FATAL_ERROR
-          "Stopping the build so you can resolve the prefix issue (see above).")
-      ENDIF (IGNORE_PREFIX)
-    ENDIF (NOT CMAKE_INSTALL_PREFIX STREQUAL REGINA_KDEPREFIX)
-  ENDIF(KDE4_FOUND)
-ENDIF(DISABLE_KDEUI)
-MACRO_LOG_FEATURE(KDE4_FOUND
-  "KDE4"
+  # This must come after SharedMimeInfo is included, since the qtui/
+  # makefiles use SharedMimeInfo macros.
+  if (QT4_FOUND)
+    ADD_SUBDIRECTORY(qtui)
+  endif (QT4_FOUND)
+  MESSAGE(STATUS "Graphical user interface enabled")
+ENDIF(DISABLE_GUI)
+MACRO_LOG_FEATURE(QT4_FOUND
+  "Qt4"
   "Required for Regina's graphical user interface"
-  "http://www.kde.org/"
-  KDE4_REQUIRED ""
-  "To disable the graphical user interface, run: cmake -DDISABLE_KDEUI=1")
+  "http://qt.nokia.com/"
+  GUI_REQUIRED ""
+  "To disable the graphical user interface, run: cmake -DDISABLE_GUI=1")
 
 # Test suite, continued
 FIND_PATH(CPPUNIT_INCLUDE_DIR cppunit/Test.h)

@@ -16,5 +16,7 @@ ADD_SUBDIRECTORY(snappy)
 # Set the variable in the parent directory
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
-INSTALL(FILES nsnappeatriangulation.h DESTINATION ${INCLUDEDIR}/snappea)
+if (${REGINA_INSTALL_DEV})
+  INSTALL(FILES nsnappeatriangulation.h DESTINATION ${INCLUDEDIR}/snappea COMPONENT Development)
+endif (${REGINA_INSTALL_DEV})
 

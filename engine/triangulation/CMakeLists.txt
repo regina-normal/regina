@@ -10,4 +10,7 @@ ENDFOREACH(SOURCE_FILE)
 
 # Set the variable in the parent directory
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
-INSTALL(FILES nboundarycomponent.h ncomponent.h nedge.h nexampletriangulation.h nface.h nfacepair.h nfacetspec.h nhomologicaldata.h nisomorphism.h nperm.h npermit.h ntetface.h ntetrahedron.h ntriangulation.h nvertex.h nxmltrireader.h DESTINATION ${INCLUDEDIR}/triangulation)
+
+if (${REGINA_INSTALL_DEV})
+  INSTALL(FILES nboundarycomponent.h ncomponent.h nedge.h nexampletriangulation.h nface.h nfacepair.h nfacetspec.h nhomologicaldata.h nisomorphism.h nperm.h npermit.h ntetface.h ntetrahedron.h ntriangulation.h nvertex.h nxmltrireader.h DESTINATION ${INCLUDEDIR}/triangulation COMPONENT Development)
+endif (${REGINA_INSTALL_DEV})

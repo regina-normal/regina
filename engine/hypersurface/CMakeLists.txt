@@ -10,4 +10,7 @@ ENDFOREACH(SOURCE_FILE)
 
 # Set the variable in the parent directory
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
-INSTALL(FILES hsflavourregistry.h nhsmirrored.h nhsstandard.h nnormalhypersurface.h nnormalhypersurfacelist.h nxmlhypersurfacereader.h DESTINATION ${INCLUDEDIR}/hypersurface)
+
+if (${REGINA_INSTALL_DEV})
+  INSTALL(FILES hsflavourregistry.h nhsmirrored.h nhsstandard.h nnormalhypersurface.h nnormalhypersurfacelist.h nxmlhypersurfacereader.h DESTINATION ${INCLUDEDIR}/hypersurface COMPONENT Development)
+endif (${REGINA_INSTALL_DEV})

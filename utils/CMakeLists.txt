@@ -15,4 +15,4 @@ if(MPI_FOUND)
   add_subdirectory(mpi)
 endif(MPI_FOUND)
 
-install(TARGETS regconcat regconvert regfiledump regfiletype regmerge sigcensus tricensus trisetcmp DESTINATION bin)
+install(TARGETS ${UTILS} DESTINATION ${BINDIR} COMPONENT Runtime)

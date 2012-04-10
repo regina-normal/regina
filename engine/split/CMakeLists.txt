@@ -10,4 +10,7 @@ ENDFOREACH(SOURCE_FILE)
 
 # Set the variable in the parent directory
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
-INSTALL(FILES nsigcensus.h nsigisomorphism.h nsignature.h DESTINATION ${INCLUDEDIR}/split)
+
+if (${REGINA_INSTALL_DEV})
+  INSTALL(FILES nsigcensus.h nsigisomorphism.h nsignature.h DESTINATION ${INCLUDEDIR}/split COMPONENT Development)
+endif (${REGINA_INSTALL_DEV})
