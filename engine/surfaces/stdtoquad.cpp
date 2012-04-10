@@ -38,13 +38,16 @@ namespace regina {
 // Although internalStandardToReduced() is a template routine, we implement
 // it here in this C++ file to avoid dragging it into the headers.
 //
-// The following declarations should ensure that the template is fully
+// The following definitions should ensure that the template is fully
 // instantiated where it needs to be.
 
-template NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced
-    <NNormalSurfaceList::NormalSpec>() const;
-template NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced
-    <NNormalSurfaceList::AlmostNormalSpec>() const;
+NNormalSurfaceList* NNormalSurfaceList::standardToQuad() const {
+    return internalStandardToReduced<NormalSpec>();
+}
+
+NNormalSurfaceList* NNormalSurfaceList::standardANToQuadOct() const {
+    return internalStandardToReduced<AlmostNormalSpec>();
+}
 
 template <class Variant>
 NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced() const {
