@@ -6,7 +6,7 @@ default:
 	#
 
 man:
-	cd ../../kdeui/doc/regina && \
+	cd ../../qtui/doc/regina && \
 		docbook2man -o ../../../docs/man manonly.docbook
 clean:
 	rm -f manpage.links manpage.refs
