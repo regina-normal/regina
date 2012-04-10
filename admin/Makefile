@@ -14,7 +14,8 @@ all :
 tabs :
 	cd $(srcdir); ./replacetabs `find .. -name "*.cpp" -o -name "*.h" -o -name "*.tcc"`
 	cd $(srcdir); ./replacetabs `find .. -name "*.txt"`
-	cd $(srcdir); ./replacetabs ../kdeui/doc/en/*.docbook
+	cd $(srcdir); ./replacetabs ../qtui/doc/regina/*.docbook
+	cd $(srcdir); ./replacetabs ../qtui/doc/regina-xml/*.docbook
 	cd $(srcdir); ./replacetabs ../pylib/*.py
 	cd $(srcdir); ./replacetabs ../scripts/*.py
 
