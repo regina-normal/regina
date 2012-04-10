@@ -1,0 +1,3 @@
+Example of rendering svg to png:
+
+rsvg -w 32 -h 32 connectedsum.svg connsum-32.png
