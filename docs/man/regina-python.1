@@ -3,16 +3,16 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGINA-PYTHON" "1" "09 September 2011" "" "The Regina Handbook"
+.TH "REGINA-PYTHON" "1" "09 April 2012" "" "The Regina Handbook"
 
 .SH NAME
 regina-python \- Regina's command-line Python interface
 .SH SYNOPSIS
 
-\fBregina-python\fR [ \fB-q, --quiet\fR | \fB-v, --verbose\fR ] [ \fB-n, --nolibs\fR ]
+\fBregina-python\fR [ \fB-q, --quiet\fR | \fB-v, --verbose\fR ] [ \fB-n, --nolibs\fR ] [ \fB-a, --noautoimport\fR ]
 
 
-\fBregina-python\fR [ \fB-q, --quiet\fR | \fB-v, --verbose\fR ] [ \fB-n, --nolibs\fR ] [ \fB-i, --interactive\fR ] \fB\fIscript\fB\fR [ \fB\fIscript-args\fB\fR ]
+\fBregina-python\fR [ \fB-q, --quiet\fR | \fB-v, --verbose\fR ] [ \fB-n, --nolibs\fR ] [ \fB-a, --noautoimport\fR ] [ \fB-i, --interactive\fR ] \fB\fIscript\fB\fR [ \fB\fIscript-args\fB\fR ]
 
 .SH "DESCRIPTION"
 .PP
@@ -29,7 +29,13 @@ Regina.  This will be a command-line Python session, with direct
 text input/output and no graphical user interface.
 All of the objects, clases and methods from Regina's mathematical
 engine will be made available through the module
-\fIregina\fR, which will be imported on startup.
+\fIregina\fR, which will be imported on startup
+(effectively running import regina).
+Moreover, unless the option \fB--noautoimport\fR is
+passed, all of Regina's objects, classes and methods will be
+imported directly into the current namespace
+(effectively running
+from regina import\~*).
 .PP
 If you have frequently-used code, you can store it in a
 \fIuser library\fR\&.
@@ -74,6 +80,18 @@ This is equivalent to setting the environment variable
 \fB--nolibs\fR
 Do not load any user libraries when the session starts.
 User libraries are discussed in the overview above.
+.TP
+\fB-a\fR
+.TP
+\fB--noautoimport\fR
+Still import the \fIregina\fR module,
+but do not automatically import all of Regina's objects,
+classes and methods into the current namespace
+(that is, do not run
+from regina import\~*).
+This means that (for example) the main 3-manifold triangulation class
+must be accessed as regina.NTriangulation, not
+just NTriangulation\&.
 .TP
 \fB-i\fR
 .TP
@@ -166,9 +184,21 @@ If you install Regina into one directory but then move it by
 hand into another, the default \fIREGINA_PYLIBDIR\fR
 will be incorrect.
 .RE
+.SH "MACOS\\~X USERS"
+.PP
+If you downloaded a drag-and-drop app bundle, this utility is
+shipped inside it.  If you dragged Regina to the main
+Applications folder, you can run it as
+/Applications/Regina.app/Contents/MacOS/regconcat\&.
+.SH "WINDOWS USERS"
+.PP
+The command \fBregina-python\fR is not available under
+\fBWindows\fR\&.  However, you can still use Python scripting in Regina's
+graphical user interface, by opening a graphical Python console or
+using script packets.
 .SH "SEE ALSO"
 .PP
-regina-kde\&.
+regina-gui\&.
 .PP
 Regina comes with thorough API documentation,
 which describes in detail all of the objects, classes and methods that
