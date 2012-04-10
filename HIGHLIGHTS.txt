@@ -6,6 +6,34 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
+Version 4.92  [ 12 April, 2012 ] - The "hello Windows!" release.
+
+    Installation
+        - MacOS users now have a simple drag-and-drop install.
+          If you want, you can now get rid of fink.
+        - Windows users can install Regina!  This is also a simple
+          point-and-click install.
+        - Linux users have far fewer dependencies than before: Regina is
+          now based on Qt only, and does not use anything from KDE.
+    User Interface:
+        - The user interface has continued its overhaul, with many more
+          usability improvements.
+        - Regina now uses many small windows instead of one monolithic window.
+          You can return to the "old way" via Regina's settings if you prefer.
+    Features:
+        - You can now enumerate all fundamental normal surfaces, as well as
+          all vertex normal surfaces.  See arXiv:1111.7055 for the algorithms.
+        - Face pairing graphs now have labels for tetrahedron numbers.
+        - You can now see boundary slopes for spun normal surfaces;
+          thanks to William Pettersson and Stephan Tillmann.
+        - There is now experimental support for transversely oriented
+          normal surfaces.  Again, thanks to Will and Stephan.
+    Python:
+        - All python sessions now execute "from regina import *" by default.
+          For regina-python, you can disable this by passing --noautoimport.
+
+Version 4.91: Internal development version.
+
 Version 4.90  [ 12 September, 2011 ] - First prerelease for version 5.0.
 
     Installation:
