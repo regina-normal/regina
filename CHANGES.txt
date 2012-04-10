@@ -92,7 +92,7 @@ Version 5.0  [ (under development) ]
               it does not identify when a 3-manifold triangulation appears
               as a subcomplex of a 4-manifold triangulation).
 
-Version 4.92  [ XX April, 2012 ] - The "hello Windows!" release.
+Version 4.92  [ 12 April, 2012 ] - The "hello Windows!" release.
 
     INSTALLATION:
         - Regina now builds and runs under Windows!

@@ -9,3 +9,6 @@ these source files are generally the best starting point.
 ATTRIBUTIONS:
 
 The packet_pdf icon is based on the pdf mimetype icon shipped with kdelibs.
+
+The x-regina mimetype icon incorporates the generic "sheet of paper" from
+the oxygen icon set.
