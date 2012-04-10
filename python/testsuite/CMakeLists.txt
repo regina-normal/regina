@@ -5,4 +5,8 @@ CONFIGURE_FILE(
   @ONLY
 )
 
-ADD_TEST(python-test ./testall)
+IF (WIN32)
+  ADD_TEST(python-test bash testall)
+ELSE (WIN32)
+  ADD_TEST(python-test ./testall)
+ENDIF (WIN32)

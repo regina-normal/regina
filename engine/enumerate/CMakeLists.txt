@@ -11,4 +11,7 @@ ENDFOREACH(SOURCE_FILE)
 ADD_SUBDIRECTORY("normaliz")
 
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
-INSTALL(FILES nenumconstraint.h ndoubledescription.h ndoubledescription.tcc ndoubledescriptor.h ndoubledescriptor.tcc nhilbertcd.h nhilbertcd.tcc nhilbertdual.h nhilbertdual.tcc nhilbertprimal.h nhilbertprimal.tcc nmaxadmissible.h nmaxadmissible.tcc ordering.h DESTINATION ${INCLUDEDIR}/enumerate)
+
+if (${REGINA_INSTALL_DEV})
+  INSTALL(FILES nenumconstraint.h ndoubledescription.h ndoubledescription.tcc ndoubledescriptor.h ndoubledescriptor.tcc nhilbertcd.h nhilbertcd.tcc nhilbertdual.h nhilbertdual.tcc nhilbertprimal.h nhilbertprimal.tcc nmaxadmissible.h nmaxadmissible.tcc ordering.h DESTINATION ${INCLUDEDIR}/enumerate COMPONENT Development)
+endif (${REGINA_INSTALL_DEV})

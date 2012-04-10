@@ -27,11 +27,12 @@ ADD_LIBRARY("regina" MODULE ${SOURCES} )
 # (windows doesn't have a prefix anyway)
 SET_TARGET_PROPERTIES(regina PROPERTIES PREFIX "")
 
-# python modules on windows (not cygwin though) need a .pyd suffix
-IF(WIN32 AND NOT CYGWIN)
-  SET_TARGET_PROPERTIES(regina PROPERTIES SUFFIX ".pyd")
-ENDIF(WIN32 AND NOT CYGWIN)
-TARGET_LINK_LIBRARIES(regina ${ENGINE_LIBRARY} ${Boost_PYTHON_LIBRARY} ${PYTHON_LIBRARIES})
+# enforce a non-standard suffix if we have one
+IF (REGINA_PYTHON_EXTENSION_NONSTANDARD)
+  SET_TARGET_PROPERTIES(regina PROPERTIES SUFFIX ".${REGINA_PYTHON_EXTENSION}")
+ENDIF (REGINA_PYTHON_EXTENSION_NONSTANDARD)
+
+TARGET_LINK_LIBRARIES(regina ${ENGINE_LIBRARY} ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
 # regina-python needs special environment variables when running on a
 # 64-bit mac with a 32-bit build.
@@ -49,8 +50,8 @@ CONFIGURE_FILE (
   @ONLY
 )
 
-INSTALL(TARGETS regina LIBRARY DESTINATION ${PKGLIBDIR}/python)
-INSTALL(PROGRAMS ${PROJECT_BINARY_DIR}/python/regina-python DESTINATION bin)
+INSTALL(TARGETS regina LIBRARY DESTINATION ${PYLIBDIR} COMPONENT Runtime)
+INSTALL(PROGRAMS ${PROJECT_BINARY_DIR}/python/regina-python DESTINATION ${BINDIR} COMPONENT Runtime)
 
-INSTALL(FILES runscript.py DESTINATION ${PKGDATADIR}/internal/scripts)
+INSTALL(FILES runscript.py DESTINATION ${PKGDATADIR}/internal/scripts COMPONENT Runtime)
 

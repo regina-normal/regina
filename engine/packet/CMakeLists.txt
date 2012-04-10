@@ -10,4 +10,7 @@ ENDFOREACH(SOURCE_FILE)
 
 # Set the variable in the parent directory
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
-INSTALL(FILES ncontainer.h npacket.h npacketlistener.h npdf.h nscript.h ntext.h nxmlpacketreader.h nxmlpacketreaders.h packetregistry.h DESTINATION ${INCLUDEDIR}/packet)
+
+if (${REGINA_INSTALL_DEV})
+  INSTALL(FILES ncontainer.h npacket.h npacketlistener.h npdf.h nscript.h ntext.h nxmlpacketreader.h nxmlpacketreaders.h packetregistry.h DESTINATION ${INCLUDEDIR}/packet COMPONENT Development)
+endif (${REGINA_INSTALL_DEV})
