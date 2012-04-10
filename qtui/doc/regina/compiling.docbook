@@ -1,0 +1,184 @@
+<chapter id="compiling">
+ <title>Compiling Regina Into Your Projects</title>
+ <para>
+  &regina; offers its mathematical core as a &cpp; shared library.
+  This means that your own &cpp; applications can make use of &regina;'s
+  functionality, much like they might use any other mathematical library.
+ </para>
+ <para>
+  &regina; is released under the &gnu; General Public License, which restricts
+  how you may use it in other software.  These restrictions are to benefit
+  and encourage mathematical software that is free to use, modify and
+  redistribute.  For further information, please read the
+  <link linkend="license">license details</link> or
+  <link linkend="services">write and ask</link> if you have any specific
+  questions.
+ </para>
+ <sect1 id="compiling-devfiles">
+  <title>Installing the Development Files</title>
+  <para>
+   To build &regina; into your own projects, you must install
+   &regina;'s <firstterm>development files</firstterm>;
+   that is, the &cpp; headers and development libraries.
+  </para>
+  <itemizedlist>
+   <listitem><para>
+    If you downloaded an &rpm;-based &linux; package (e.g., for
+    &fedora;, &mandriva; or &suse;), you should already have the
+    development files installed.
+    Check that the headers are present in
+    <filename>/usr/include/regina/</filename>.
+   </para></listitem>
+   <listitem><para>
+    If you downloaded a &debian;-based &linux; package (e.g., for
+    &debian; or &ubuntu;), you will need to install the separate package
+    <literal>regina-normal-dev</literal>.
+    Check that the headers are present in
+    <filename>/usr/include/regina-normal/</filename>.
+   </para></listitem>
+   <listitem><para>
+    If you built a &fink; package on &macosx;,
+    you will need to install the separate package
+    <literal>regina-normal&regversion;-dev</literal>.
+    Check that the headers are present in
+    <filename>/sw/include/regina-normal/</filename>.
+   </para></listitem>
+   <listitem><para>
+    If you built &regina; yourself, you should already have the &cpp; headers
+    and development libraries installed.
+    Check that the headers are present in
+    <filename>/usr/local/include/regina/</filename> (or wherever you chose to
+    install &regina;).
+   </para></listitem>
+   <listitem><para>
+    If you use &windows; or if you downloaded the
+    drag-and-drop app bundle on &macosx;, the development files are not
+    available.
+    This is because it is too difficult at present to ensure that your
+    development environment is compatible.
+   </para></listitem>
+  </itemizedlist>
+  <para>
+   &regina; uses some other libraries in turn, and you will need the
+   development files for these libraries also.  You should install these
+   through ready-made packages if at all possible: they are available
+   in every major &linux; distribution.  The extra libraries you will
+   need are:
+   <variablelist>
+    <varlistentry>
+     <term>zlib compression library
+      (<firstterm>libz</firstterm>)</term>
+     <listitem><para>
+      Look for a package named
+      <literal>zlib1g-dev</literal>,
+      <literal>zlib1-devel</literal> or
+      <literal>zlib-devel</literal>.
+     </para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>&gnu; multiprecision arithmetic libraries for &ccpp;
+      (<firstterm>libgmp</firstterm> and <firstterm>libgmpxx</firstterm>)</term>
+     <listitem><para>
+      Look for a package named
+      <literal>libgmp-dev</literal>,
+      <literal>lib64gmp-devel</literal>,
+      <literal>libgmp-devel</literal> or
+      <literal>gmp-devel</literal>.
+      Some distributions (such as &mandriva;)
+      ship the &cpp; library separately in a package named
+      <literal>gmpxx-devel</literal>.
+     </para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><acronym>GNOME</acronym> &xml; library
+      (<firstterm>libxml2</firstterm>)</term>
+     <listitem><para>
+      Look for a package named
+      <literal>libxml2-dev</literal>,
+      <literal>lib64xml2-devel</literal> or
+      <literal>libxml2-devel</literal>.
+     </para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>Boost headers</term>
+     <listitem><para>
+      Look for a package named
+      <literal>libboost-dev</literal> or
+      <literal>boost-devel</literal>.
+      You only need the headers (there is no need for pre-built libraries
+      such as Boost.Regex or Boost.Python).
+     </para></listitem>
+    </varlistentry>
+   </variablelist>
+  </para>
+ </sect1>
+
+ <sect1 id="compiling-flags">
+  <title>Compiler and Linker Flags</title>
+  <para>
+   &regina; comes with a small program called
+   <command>regina-engine-config</command>, which tells you how to
+   compile &regina; into your own &cpp; projects.
+  </para>
+  <para>
+   When you <emphasis>compile</emphasis> your own &cpp; code, you will need
+   to pass some extra flags to the compiler.  To find these extra
+   compiler flags, run <userinput>regina-engine-config --cflags</userinput>.
+  </para>
+<screen>
+    <prompt>example$</prompt> <userinput>regina-engine-config --cflags</userinput>
+    -I/usr/include/regina-normal -I/usr/include -I/usr/include/libxml2
+    <prompt>example$</prompt>
+</screen>
+  <para>
+   When you <emphasis>link</emphasis> your code into a final executable,
+   you will also need to pass extra flags to the linker.  To find these
+   extra linker flags, run <userinput>regina-engine-config --libs</userinput>.
+  </para>
+<screen>
+    <prompt>example$</prompt> <userinput>regina-engine-config --libs</userinput>
+    -L/usr/lib -lregina-engine /usr/lib/libxml2.so /usr/lib/libgmp.so /usr/lib/libz.so -lpthread
+    <prompt>example$</prompt>
+</screen>
+  <para>
+   If your code is a single &cpp; source file, you can compile and
+   link a final executable in one simple step:
+  </para>
+<screen>
+    <prompt>example$</prompt> <userinput>g++ `regina-engine-config --cflags --libs` mycode.cc</userinput>
+    <prompt>example$</prompt>
+</screen>
+  <para>
+   Compiler and linker flags will differ from system to system.  You
+   should always use <command>regina-engine-config</command> to find out
+   what they are, and not just copy the flags that appear in
+   the examples above.
+  </para>
+  <para>
+   Note that these compiler and linker flags are tailored to the
+   &gnu; &cpp; compiler
+   (<application>g++</application>).  If you use a different
+   compiler, you might need to adjust your flags accordingly.
+  </para>
+ </sect1>
+ <sect1 id="compiling-apidocs">
+ <title>&api; Documentation</title>
+  <para>
+   You can access full &api; documentation by selecting
+   <menuchoice>
+    <guimenu>Help</guimenu>
+    <guimenuitem>Python &api; Reference</guimenuitem>
+   </menuchoice>
+   from the menu.  This describes in detail the &cpp; objects, classes and
+   methods that &regina; makes available.
+   You can also read this &api; documentation online at &regenginedocsurlbase;.
+  </para>
+  <para>
+   Don't be worried because the menu says &ldquo;&python; Reference&rdquo;.
+   The &api; documentation is really a &cpp; reference:
+   &python; users are simply granted access to the &cpp; library through
+   an extra layer of &python; bindings.
+  </para>
+ </sect1>
+</chapter>
+

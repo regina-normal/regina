@@ -1,0 +1,29 @@
+<refsect1>
+ <title>Internationalisation</title>
+
+ <para>
+  If any packets contain international characters,
+  &regina; will attempt to convert these to your local character
+  encoding as it writes them to the output.
+ </para>
+ <para>
+  You can tell &regina; what character encoding to use by setting
+  standard locale-related environment variables, such as
+  <envar>LANG</envar>, <envar>LC_CTYPE</envar> or
+  <envar>LC_ALL</envar>.
+ </para>
+ <para>
+  For example, if <envar>LANG</envar> is set to
+  <literal>en_AU</literal> then output will be written in the
+  Western European character set <literal>ISO-8859-1</literal>,
+  and if <envar>LANG</envar> is set to
+  <literal>en_AU.UTF-8</literal> then output will be written in the
+  universal character set <literal>UTF-8</literal>.
+ </para>
+ <para>
+  Typically these environment variables will already be set for you when
+  you install your &linux; system, and &regina; will just use the
+  right character set out of the box.  See your &linux; system reference
+  for further information on supporting different locales.
+ </para>
+</refsect1>

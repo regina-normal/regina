@@ -1,0 +1,55 @@
+Qt User Interface TODO List
+---------------------------
+
+Note that this TODO list pertains only to the user interface; there is
+also a calculation engine TODO list found under "Related Pages" in the
+engine documentation.
+
+* means must be implemented in the next release.
++ means would be nice to have implemented in the next release.
+- means would be pleasant to have some time.
+
+General:
+    + Allow exports to python source
+    + Get rid of the commit/discard mechanism, which is counterintuitive
+
+Census:
+    - Implement GUI census creation
+
+Containers:
+    - Update container viewers whenever their subtrees change, not just when
+        their immediate children change
+
+Docs:
+    + Include a walk-through
+    - Include a menu-by-menu index of features/tasks
+    - Reimplement tip-of-the-day
+
+Icons:
+    - Softer tree for filter_comb.png
+
+Import/Export:
+    - Make the CSV export look like the table, and let the user choose
+      coordinate systems
+    - Allow a greater variety of dehydration list file formats
+
+MacOS:
+    + Include graphviz in the bundle
+    - Work out how to open windows with offsets (not always centered)
+
+Packets (General):
+    - Implement packet tags
+
+Python:
+    - Allow breaking processing in python consoles
+    - Check to see whether user libraries are in fact text files
+    - Allow compilation and running of open libraries
+
+Surfaces:
+    - Make the default label reflect the coordinate system
+
+TONS:
+    - Improve output via both CSV export and toString().
+
+Triangulations:
+    - Centre face pairing graphs, and/or match the background colour

@@ -1,0 +1,158 @@
+<chapter id="about">
+ <title>Introduction</title>
+
+ <para>
+  &regina; is a software package for 3-manifold topologists.
+  Its main strengths lie in normal surface theory and the combinatorial
+  structures of 3-manifold triangulations.  Beyond this, &regina;
+  can perform a range of other algebraic, geometric, topological and
+  combinatorial tasks; see the
+  <link linkend="featureset">full feature set</link>
+  later in this introduction.
+ </para>
+
+ <sect1 id="tutorial">
+  <title>Getting Started</title>
+  <para>
+   Not sure how to start &regina;?  You can find it in your main
+   applications or programs menu;
+   <link linkend="trouble-start"><acronym>follow this link</acronym></link>
+   for details and screenshots.
+  </para>
+  <para>
+   The best way to become familiar with &regina; is simply to play
+   around with it.  &regina; ships with several example files, including
+   a number of censuses of 3-manifold triangulations.  Most of these examples
+   can be accessed through the
+   <menuchoice>
+    <guimenu>File</guimenu>
+    <guimenuitem>Open Example</guimenuitem>
+   </menuchoice>
+   menu when running &regina;.
+  </para>
+  <para>
+   For an excellent starting point, try
+   <menuchoice>
+    <guimenu>File</guimenu>
+    <guisubmenu>Open Example</guisubmenu>
+    <guimenuitem>Introductory Examples</guimenuitem>
+   </menuchoice>,
+   which illustrates most of the structures that &regina; can work with.
+   The users' handbook (which you are reading now) also includes a number of
+   <link linkend="sessions">sample &python; sessions</link>
+   that illustrate how &regina;'s in-built &python; scripting can be used.
+  </para>
+  <para>
+   The graphical user interface offers extensive assistance
+   through tooltips and &quot;What's This?&quot; texts.
+   If you ever want to know what element of the user interface means
+   (such a button or a text field), just press
+   <keycombo action="simul">&Shift;<keycap>F1</keycap></keycombo>
+   and click on the thing you would like to know more about.
+  </para>
+  <para>
+   As a final note, users are encouraged to write to &reguserlist; with
+   any questions or comments.  See the <link linkend="services">user
+   services page</link> for further details.
+  </para>
+ </sect1>
+
+ &reginafeatureset;
+
+ <sect1 id="genealogy">
+  <title>Genealogy</title>
+
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="normalicon.png" align="right"/>
+    </imageobject>
+   </inlinemediaobject>
+   In 1997 in Melbourne, David Letscher, Richard Rannard and Ben Burton
+   under the guidance of J.&nbsp;Hyam Rubinstein planned out a program that
+   would do normal surface theory and everything else besides.  Much
+   groundwork planning was done, epsilon code was written and then
+   things kind of faded away.  David Letscher revived the project on his
+   own and in 1999 presented <application>Normal 1.0</application>.
+   This program performed
+   triangulation simplification and found vertex normal surfaces, was
+   written in &java; and was a proof-of-concept program that normal
+   surface theory was computationally feasible.
+  </para>
+  <para>
+   In March 1999, David and Ben sat down to write a new version
+   of the program from scratch.  The new version would have a
+   calculation engine written in &cpp; for speed and would have a &java;
+   GUI for portability.  It would be carefully
+   designed and written with rigour and extensibility in mind, allowing
+   for the possibility of add-ons written by other people.
+  </para>
+  <para>
+   David however leads a busy life and pulled out of the project in
+   late 2000, but remained to offer technical advice.  In late 2000 a
+   prerelease of the new program was ready and &regina; 2.0 was
+   uploaded to the web.
+  </para>
+  <para>
+   Since then, <link linkend="acknowledgements">many more people</link>
+   have been involved in both small ways and large.
+   &regina; has also undergone some major structural changes over the years:
+   In late 2003 the old &java; user interface was completely removed in
+   favour of a faster and cleaner native &cpp; user interface (written
+   using the excellent &kde; libraries), and the scripting interface
+   switched from &jython; to standard &python; support.
+   In 2011 the user interface was ported from &kde3; to &kde4;,
+   bringing &regina; in line with modern &linux; desktop systems and
+   offering a much cleaner experience on &macosx;.
+   In 2012 it was again ported from &kde; to a more portable &qt;-only
+   interface, further improving &macosx; support and for the first time
+   supporting &windows;, bringing us to the point at which we are today.
+  </para>
+ </sect1>
+
+ <sect1 id="citing">
+  <title>Citing Regina</title>
+
+  <para>
+   If you find &regina; useful in your research, please consider citing it
+   as you would any other paper that you use.  A suggested form of reference
+   is:
+  </para>
+  <blockquote><para>
+   Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
+   <emphasis>Regina: Software for 3-manifold topology and
+    normal surface theory,</emphasis>
+   <literal>http://regina.sourceforge.net/</literal>,
+   1999&ndash;2012.
+  </para></blockquote>
+  <para>
+   A &bibtex; entry for this reference is included below.
+  </para>
+<programlisting>
+@misc{regina,
+    author = {Benjamin A. Burton and Ryan Budney and William Pettersson and others},
+    title = {Regina: Software for 3-manifold topology and normal surface theory},
+    howpublished = {{\tt http://\allowbreak regina.\allowbreak
+        sourceforge.\allowbreak net/}},
+    year = {1999--2012}
+}
+</programlisting>
+ </sect1>
+
+ <sect1 id="who">
+  <title>Who is Regina?</title>
+
+  <para>
+   This normal surface theory software has been named after Regina
+   Basman who once told me she was the most normal person
+   I knew.  She's studied mathematics, reads interesting books, has a gorgeous
+   child and likes running around rainforests in the dark.
+  </para>
+
+  <mediaobject>
+   <imageobject>
+    <imagedata fileref="basman.png"/>
+   </imageobject>
+  </mediaobject>
+ </sect1>
+</chapter>

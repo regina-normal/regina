@@ -1,0 +1,86 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-reln">
+ <refmeta>
+  <refentrytitle>reln</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>reln</refname>
+  <refpurpose>A relation in a group presentation</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+reln ::= (#PCDATA)</synopsis>
+     </entry></row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-reln; element stores a single relation in a group presentation.
+  </para>
+  <para>
+   The character data of this &xml; element should be a
+   whitespace-separated sequence of terms.  Each term should be of the form
+   <literal><replaceable>g</replaceable>^<replaceable>p</replaceable></literal>,
+   where <replaceable>g</replaceable> is an integer representing one of
+   the group generators and <replaceable>p</replaceable> is an integer
+   representing the power to which that generator is raised.
+  </para>
+  <para>
+   The relation itself then states that the product of these terms from left
+   to right is equal to the identity.
+  </para>
+  <para>
+   Recall from the &xml-group; specification that group generators are
+   numbered 0, 1, 2, etc.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>reln</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-group;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    Element <sgmltag>reln</sgmltag> has no children.
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Example</title>
+  <para>
+   The following &xml; snippet represents the relation
+   <literal>(a b^2 c^-1 = 1)</literal>, where <literal>a</literal>,
+   <literal>b</literal> and <literal>c</literal> are generators numbers
+   0, 1 and 2 respectively.
+  </para>
+  <programlisting>
+&lt;reln&gt; 0^1 1^2 2^-1 &lt;/reln&gt;
+  </programlisting>
+ </refsect1>
+</refentry>

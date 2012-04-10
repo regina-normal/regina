@@ -1,0 +1,216 @@
+<chapter id="angles">
+ <title>Angle Structures</title>
+
+ <para>
+  An <firstterm>angle structure</firstterm> on a triangulation is a
+  simple algebraic generalisation of a hyperbolic structure.
+  It contains some but not all
+  of the properties required to produce a hyperbolic metric.  Angle
+  structures were studied by Casson and developed by
+  Lackenby <xref linkend="bib-lackenby-taut"/>,
+  <xref linkend="bib-lackenby-anglestruct"/> and
+  Rivin <xref linkend="bib-rivin-structures"/>,
+  <xref linkend="bib-rivin-combopt"/>.
+ </para>
+ <para>
+  An angle structure assigns an angle to every edge of every tetrahedron
+  of the triangulation (so if there are <replaceable>n</replaceable>
+  tetrahedra, there are 6<replaceable>n</replaceable>
+  angles assigned in total).
+  This assignment must satisfy several conditions:
+  <itemizedlist>
+   <listitem><para>
+    Each angle must be between 0 and &twopi; inclusive;
+   </para></listitem>
+   <listitem><para>
+    Opposite edges of a tetrahedron must be assigned equal angles;
+   </para></listitem>
+   <listitem><para>
+    The sum of all six angles in each tetrahedron is &twopi;;
+   </para></listitem>
+   <listitem><para>
+    The sum of angles around each non-boundary edge of the triangulation
+    is &twopi;.
+   </para></listitem>
+  </itemizedlist>
+ </para>
+
+ <sect1 id="angles-creation">
+  <title>Enumerating Angle Structures</title>
+
+  <para>
+   Angle structures are stored in lists, which typically hold all
+   vertex angle structures on a particular triangulation.
+   Here <emphasis>vertex</emphasis> angle structures
+   correspond to the vertices of the solution space to the
+   equations and inequalities <link linkend="angles">described above</link>:
+   this means that every possible angle structure
+   can be expressed as a convex combination of these vertex strutures.
+  </para>
+  <para>
+   Like normal surfaces, an angle structure list
+   must remain &ldquo;connected&rdquo; to the
+   corresponding triangulation.  It always lives immediately beneath the
+   triangulation in the packet tree, and the triangulation
+   <link linkend="packet-uneditable">cannot be modified</link>
+   unless all of its angle structure lists are deleted.
+   The triangulation will be marked with a small padlock to remind you
+   of this.
+  </para>
+  <para>
+   To create a new angle structure list, select
+   <menuchoice>
+    <guimenu>Packet Tree</guimenu>
+    <guimenuitem>New Angle Structure Solutions</guimenuitem>
+   </menuchoice>
+   from the menu (or press the corresponding toolbar button).
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="menu-newangles.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   A <link linkend="packet-new">new packet</link> window will appear,
+   asking for the usual <link linkend="packet-new">packet label</link>
+   as well as some additional details:
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="newangles.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   <glosslist>
+    <glossentry>
+     <glossterm><guilabel>Triangulation</guilabel></glossterm>
+     <glossdef>
+      <para>
+       This is the triangulation that will contain your angle structures.
+       The new angle structure list will appear as a child of this
+       triangulation in the packet tree.
+      </para>
+     </glossdef>
+    </glossentry>
+    <glossentry id="angles-tautonly">
+     <glossterm><guilabel>Taut structures only</guilabel></glossterm>
+     <glossdef>
+      <para>
+       If unchecked (the default), &regina; will enumerate all vertex
+       angle structures.
+      </para>
+      <para>
+       If checked, &regina; will only enumerate
+       <emphasis>taut structures</emphasis>.
+       These are angle strutures in which every angle is either 0 or &pi;.
+       There are only ever finitely many taut structures (possibly
+       none at all), and if you check this box then &regina; will enumerate
+       them all.
+      </para>
+     </glossdef>
+    </glossentry>
+   </glosslist>
+  </para>
+  <para>
+   Once you are ready, click <guibutton>OK</guibutton>.
+   &regina; will enumerate the vertex angle structures as requested,
+   package them into an angle structure list, and open this list
+   for you to view.
+  </para>
+ </sect1>
+
+ <sect1 id="angles-analysis">
+  <title>Analysis</title>
+
+  <para>
+   When you open an angle structure list for viewing, you will see a
+   table with all of the angle structures in your list.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="angles-coords.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   Above this table is a header
+   displaying the total number of angle structures.
+   If you enumerated <link linkend="angles-tautonly">taut structures
+   only</link>, this will be reported in the header also:
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="angles-tautheader.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   Otherwise the header will indicate whether
+   or not the convex span of these angle structures
+   contains any <link linkend="angles-propstrict">strict</link>
+   and/or <link linkend="angles-proptaut">taut</link> structures
+   (these terms are defined below).
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="angles-header.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+
+  <sect2 id="angles-viewstructurecoords">
+   <title>Details of Individual Angle Structures</title>
+
+   <para>
+    Each row of the table represents a single angle structure
+    in this list.
+   </para>
+   <para>
+    The leftmost column is used to indicate special types of angle structure.
+    Possible values include:
+    <glosslist>
+     <glossentry id="angles-propstrict">
+      <glossterm><guilabel>Strict</guilabel></glossterm>
+      <glossdef><para>
+       Indicates a strict angle structure (all of its angles are
+       strictly between 0 and &pi;).
+      </para></glossdef>
+     </glossentry>
+     <glossentry id="angles-proptaut">
+      <glossterm><guilabel>Taut</guilabel></glossterm>
+      <glossdef><para>
+       Indicates a taut angle structure (all of its angles are
+       equal to either 0 or &pi;).
+      </para></glossdef>
+     </glossentry>
+    </glosslist>
+    If an angle structure is neither strict nor taut, the
+    leftmost cell will be left empty.
+   </para>
+   <para>
+    The remaining columns list the individual angles that are assigned
+    to edges in tetrahedra.
+    These columns are labelled
+    <guilabel>0:01/23</guilabel>, <guilabel>0:02/13</guilabel>,
+    <guilabel>0:03/12</guilabel>, <guilabel>1:01/23</guilabel>,
+    etc., where column
+    <replaceable>t</replaceable>:<replaceable>ab</replaceable>/<replaceable>cd</replaceable>
+    represents the angle assigned to tetrahedron
+    <replaceable>t</replaceable> along the edge that joins tetrahedron vertices
+    <replaceable>a</replaceable> and <replaceable>b</replaceable>, as
+    well as the (opposite) edge that joins tetrahedron vertices
+    <replaceable>c</replaceable> and <replaceable>d</replaceable>.
+    Here 0&nbsp;&le;&nbsp;<replaceable>t</replaceable>&nbsp;&lt;&nbsp;<replaceable>n</replaceable>,
+    and <replaceable>a</replaceable>,<replaceable>b</replaceable>,<replaceable>c</replaceable>,<replaceable>d</replaceable>
+    are some permutation of 0,1,2,3.
+   </para>
+  </sect2>
+ </sect1>
+</chapter>

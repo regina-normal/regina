@@ -1,0 +1,13 @@
+All icons in the oxygen/ directory are taken from the Oxygen icon set for KDE4.
+The Oxygen icons are dual-licensed under the Creative Common
+Attribution-ShareAlike 3.0 License or the GNU Library General Public License.
+
+The packet_view icon is also taken from Oxygen, and has been
+modified to remove the - sign inside the magnifying glass.
+
+The x-regina mimetype icon includes the generic "sheet of paper" from
+the Oxygen icon set.
+
+The csvexport icons are taken from the KDE3 slick icon set (view_text.png),
+which was shipped with KDE3's kdeartwork module.
+The slick icon set is (C) 2005 - Robert Cosgrove <rob@digital-confusion.net>.

@@ -1,0 +1,67 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-euler-filter">
+ <refmeta>
+  <refentrytitle>euler (filter)</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>euler (filter)</refname>
+  <refpurpose>A constraint on Euler characteristic</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+euler ::= (#PCDATA)</synopsis>
+     </entry></row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   An &xml-euler-filter; element represents a constraint on the
+   Euler characteristic of a normal surface.  The character data should
+   contain a whitespace-separated list of integers; a surface will
+   satisfy this constraint if its Euler characteristic belongs to this
+   list.
+  </para>
+  <para>
+   Note that this list of acceptable Euler characteristics must not be
+   empty.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>euler</sgmltag> (in the
+    context of a constraint on surface properties):
+    <simplelist type="inline">
+     <member>&xml-filter-properties;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    Element <sgmltag>euler</sgmltag> (in the context of a
+    constraint on surface properties) has no children.
+   </para>
+  </refsect2>
+ </refsect1>
+</refentry>

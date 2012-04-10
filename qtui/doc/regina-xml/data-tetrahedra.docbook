@@ -1,0 +1,108 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-tetrahedra">
+ <refmeta>
+  <refentrytitle>tetrahedra</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>tetrahedra</refname>
+  <refpurpose>The tetrahedra forming a triangulation</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+tetrahedra ::= (&xml-tet;*)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>ntet</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-tetrahedra; element stores the entire set of tetrahedra forming a
+   3-manifold triangulation.
+  </para>
+  <para>
+   The total number of tetrahedra must be specified by the
+   <sgmltag>ntet</sgmltag> attribute.  The individual tetrahedra are
+   numbered 0, 1, 2, etc., and their face gluings are described by the
+   corresponding child &xml-tet; elements.  There must be precisely
+   <replaceable>ntet</replaceable> child &xml-tet; elements in total.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>tetrahedra</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-packet-triangulation;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    The following elements occur in <sgmltag>tetrahedra</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-tet;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>ntet</sgmltag></term>
+    <listitem>
+     <para>
+      The total number of tetrahedra in this set.  Note that there must
+      be precisely this many child &xml-tet; elements.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </refsect1>
+
+ <refsect1>
+  <title>Example</title>
+  <para>
+   The following &xml; snippet represents a triangulation of a
+   two-tetrahedron (1, 1, 2) layered solid torus.
+  </para>
+  <programlisting>
+&lt;tetrahedra ntet=&quot;2&quot;&gt;
+  &lt;tet&gt; 1 78 1 78 -1 -1 -1 -1 &lt;/tet&gt;
+  &lt;tet&gt; 1 57 1 147 0 78 0 78 &lt;/tet&gt;
+&lt;/tetrahedra&gt;
+  </programlisting>
+ </refsect1>
+</refentry>

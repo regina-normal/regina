@@ -1,0 +1,392 @@
+<appendix id="manpages">
+ <title>Command Line: Main Applications</title>
+
+ <para>
+  This reference chapter documents the command-line options for
+  &regina;'s two main applications:
+  <command>regina-gui</command> and <command>regina-python</command>.
+ </para>
+ <para>
+  &regina; also ship with several other specialised command-line utilities,
+  which are documented in the <link linkend="utils">following chapter</link>.
+ </para>
+
+ <!-- Graphical User Interface -->
+
+ <refentry id="man-regina-gui">
+  <refmeta>
+   <refentrytitle>regina-gui</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regina-gui</refname>
+   <refpurpose>&regina;'s graphical user interface</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>regina-gui</command>
+    <arg rep="repeat"><replaceable>file</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   &regabstract;
+   <para>
+    This starts the full graphical user interface, and is the usual
+    way of starting &regina;.  Any files passed on the command-line
+    will be opened on startup.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this is the
+    program that runs when you open it.
+    The executable itself is simply called <command>Regina</command>,
+    not <command>regina-gui</command>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina-python">regina-python</link>.
+   </para>
+   <para>
+    &regina; comes with a rich users' handbook, which you can access via
+    &menuhandbook;
+    in the menu.  You can also read the users' handbook online
+    at &regmanhandbookurl;.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &manpageack;
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- Python Command-Line Interface -->
+
+ <refentry id="man-regina-python">
+  <refmeta>
+   <refentrytitle>regina-python</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regina-python</refname>
+   <refpurpose>&regina;'s command-line &python; interface</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>regina-python</command>
+    <group>
+     <arg><option>-q, --quiet</option></arg>
+     <arg><option>-v, --verbose</option></arg>
+    </group>
+    <arg><option>-n, --nolibs</option></arg>
+    <arg><option>-a, --noautoimport</option></arg>
+   </cmdsynopsis>
+   <cmdsynopsis>
+    <command>regina-python</command>
+    <group>
+     <arg><option>-q, --quiet</option></arg>
+     <arg><option>-v, --verbose</option></arg>
+    </group>
+    <arg><option>-n, --nolibs</option></arg>
+    <arg><option>-a, --noautoimport</option></arg>
+    <arg><option>-i, --interactive</option></arg>
+    <arg choice="req"><replaceable>script</replaceable></arg>
+    <arg><replaceable>script-args</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   &regabstract;
+   <para>
+    This command starts an interactive &python; session for
+    &regina;.  This will be a command-line &python; session, with direct
+    text input/output and no graphical user interface.
+    All of the objects, clases and methods from &regina;'s mathematical
+    engine will be made available through the module
+    <parameter>regina</parameter>, which will be imported on startup
+    (effectively running <literal>import regina</literal>).
+    Moreover, unless the option <option>--noautoimport</option> is
+    passed, all of &regina;'s objects, classes and methods will be
+    imported directly into the current namespace
+    (effectively running
+    <literal>from regina import&nbsp;*</literal>).
+   </para>
+   <para>
+    If you have frequently-used code, you can store it in a
+    <firstterm>user library</firstterm>.
+    At the beginning of each &python; session, &regina; will automatically
+    run all of the code in all of your user libraries.
+    The list of user libraries will be read from the text file
+    &regina-libs;, which should contain one
+    library filename per line.  Blank lines and lines beginning with a
+    hash (#) will be ignored.  You can also configure this list of
+    libraries through the graphical user interface: see the
+    &python; options page.
+   </para>
+   <para>
+    Instead of starting an interactive &python; session, you can pass a
+    &python; script (with arguments if desired).  In this case &regina;
+    will run the script (after first importing the
+    <parameter>regina</parameter> module and loading any user libraries).
+    If you pass <option>--interactive</option>, &regina; will leave you
+    at a &python; prompt once the script finishes;
+    otherwise it will exit &python; and return you to the command line.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>-q</option></term>
+     <term><option>--quiet</option></term>
+     <listitem>
+      <para>
+       Start in quiet mode.  No output will be produced except
+       for serious errors.  In particular, warnings will be suppressed.
+      </para>
+      <para>
+       This is equivalent to setting the environment variable
+       <parameter>REGINA_VERBOSITY</parameter>=<literal>0</literal>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-v</option></term>
+     <term><option>--verbose</option></term>
+     <listitem>
+      <para>
+       Start in verbose mode.  Additional diagnostic
+       information will be output.
+      </para>
+      <para>
+       This is equivalent to setting the environment variable
+       <parameter>REGINA_VERBOSITY</parameter>=<literal>2</literal>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-n</option></term>
+     <term><option>--nolibs</option></term>
+     <listitem>
+      <para>
+       Do not load any user libraries when the session starts.
+       User libraries are discussed in the overview above.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-a</option></term>
+     <term><option>--noautoimport</option></term>
+     <listitem>
+      <para>
+       Still import the <parameter>regina</parameter> module,
+       but do not automatically import all of &regina;'s objects,
+       classes and methods into the current namespace
+       (that is, do not run
+       <literal>from regina import&nbsp;*</literal>).
+       This means that (for example) the main 3-manifold triangulation class
+       must be accessed as <literal>regina.NTriangulation</literal>, not
+       just <literal>NTriangulation</literal>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-i</option></term>
+     <term><option>--interactive</option></term>
+     <listitem>
+      <para>
+       Run the script in interactive mode.  After executing the
+       given script, &regina; will leave you in the &python; interpreter
+       to run your own additional commands.
+      </para>
+      <para>
+       This option is only available when a script is passed.
+       If no script is passed, <command>regina-python</command> will
+       always start in interactive mode.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>Environment Variables</title>
+   <para>
+    The following environment variables influence the behaviour of
+    this program.  Each variable can also be set in the local
+    configuration file <filename>~/.regina-python</filename> using a line
+    of the form
+    <replaceable>option</replaceable>=<replaceable>value</replaceable>.
+    Environment variables will take precedence over values in
+    the configuration file.
+   </para>
+   <variablelist>
+    <varlistentry>
+     <term><parameter>REGINA_VERBOSITY</parameter></term>
+     <listitem>
+      <para>
+       Specifies how much output should be generated.
+       Recognised values are:
+       <variablelist>
+        <varlistentry>
+         <term><literal>0</literal></term>
+         <listitem><para>
+          Display errors only; this is equivalent to passing the option
+          <option>--quiet</option>.
+         </para></listitem>
+        </varlistentry>
+        <varlistentry>
+         <term><literal>1</literal></term>
+         <listitem><para>
+          Display errors and warnings; this is the default.
+         </para></listitem>
+        </varlistentry>
+        <varlistentry>
+         <term><literal>2</literal></term>
+         <listitem><para>
+          Display errors, warnings and diagnostic output; this is
+          equivalent to passing the option <option>--verbose</option>.
+         </para></listitem>
+        </varlistentry>
+       </variablelist>
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_PYTHON</parameter></term>
+     <listitem>
+      <para>
+       The command used to start the &python; interpreter.
+       By default, &regina; tries to run the same version of &python;
+       that it was built against.
+      </para>
+      <para>
+       In general you should use the same version of &python; that &regina;
+       was built against; otherwise &python; might not be able to load the
+       <parameter>regina</parameter> module.
+      </para>
+      <para>
+       In normal situations you should never need to set this option yourself.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_HOME</parameter></term>
+     <listitem>
+      <para>
+       The directory in which &regina;'s data files are installed.  This
+       should be the directory containing the <filename>internal/</filename>
+       subdirectory, the <filename>examples/</filename> subdirectory and so on.
+      </para>
+      <para>
+       If you are running &regina; directly out of the source tree, this
+       defaults to the top-level source directory.  If you are running
+       &regina; from a proper installation, this defaults to the corresponding
+       installation directory.
+      </para>
+      <para>
+       In normal situations you should never need to set this option yourself.
+      </para>
+      <warning>
+       <para>
+        When running from a proper installation,
+        the default <parameter>REGINA_HOME</parameter> is
+        hard-wired into the startup script (it is set at compile time).
+        If you install &regina; into one directory but then move it by
+        hand into another, the default <parameter>REGINA_HOME</parameter>
+        will be incorrect.
+       </para>
+      </warning>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_PYLIBDIR</parameter></term>
+     <listitem>
+      <para>
+       The directory containing the &python; module
+       <filename>regina.so</filename>.
+      </para>
+      <para>
+       If you are running &regina; directly out of the source tree, this
+       defaults to a directory within this source tree.  If you are
+       running &regina; from a proper installation, this defaults to the
+       corresponding installation directory.
+      </para>
+      <para>
+       In normal situations you should never need to set this option yourself.
+      </para>
+      <warning>
+       <para>
+        Like <parameter>REGINA_HOME</parameter>,
+        when running from a proper installation
+        the default <parameter>REGINA_PYLIBDIR</parameter> is
+        hard-wired into the startup script.
+        If you install &regina; into one directory but then move it by
+        hand into another, the default <parameter>REGINA_PYLIBDIR</parameter>
+        will be incorrect.
+       </para>
+      </warning>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/regconcat</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command <command>regina-python</command> is not available under
+    &windows;.  However, you can still use &python; scripting in &regina;'s
+    graphical user interface, by opening a graphical &python; console or
+    using script packets.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina-gui">regina-gui</link>.
+   </para>
+   <para>
+    &regina; comes with thorough &api; documentation,
+    which describes in detail all of the objects, classes and methods that
+    &regina; makes available to &python;.
+    You can access this documentation via
+    &menuapidocs; in the graphical user interface, or read it online
+    at &regmanapiurl;.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    &manpageack;
+   </para>
+  </refsect1>
+ </refentry>
+</appendix>

@@ -1,0 +1,1167 @@
+<chapter id="surfaces">
+ <title>Normal Surfaces</title>
+
+ <para>
+  <inlinemediaobject>
+   <imageobject>
+    <imagedata fileref="normaldiscs.png" align="right"/>
+   </imageobject>
+  </inlinemediaobject>
+  A <firstterm>normal surface</firstterm> is a surface within a
+  3-manifold triangulation that meets each tetrahedron in a collection
+  of triangles and/or quadrilaterals, as illustrated to the right.
+  For a nice overview of normal surface theory, see
+  <xref linkend="bib-hass-knotnp"/>.
+ </para>
+ <para>
+  &regina; typically works with embedded normal surfaces, but it also offers
+  basic support for immersed and singular surfaces.  In addition, it can
+  work with <firstterm>almost normal surfaces</firstterm>
+  (which are like normal surfaces but with an extra
+  &ldquo;exceptional disc&rdquo;)
+  and <firstterm>spun-normal surfaces</firstterm> (with infinitely
+  many triangles spinning out towards the vertices).
+ </para>
+ <para>
+  For almost normal surfaces, &regina; uses the restricted definition
+  of Thompson <xref linkend="bib-thinposition"/>
+  where the exceptional piece is an octagon>.
+  &regina; does not currently support the more general definition
+  of Rubinstein <xref linkend="bib-rubin-3sphere1"/> where the exception
+  piece may be either an octagon or a tube.
+ </para>
+
+ <sect1 id="surfaces-creation">
+  <title>Enumerating Normal Surfaces</title>
+
+  <para>
+   Normal surfaces are stored in lists, which typically represent all
+   vertex or fundamental normal surfaces within a
+   triangulation in some normal coordinate system.
+   &regina; also supports octagonal almost normal surfaces.
+  </para>
+  <para>
+   A normal surface list must remain &ldquo;connected&rdquo; to the
+   corresponding triangulation.  It always lives immediately beneath the
+   triangulation in the packet tree, and the triangulation
+   <link linkend="packet-uneditable">cannot be modified</link>
+   unless all of its normal surface lists are deleted.
+   The triangulation will be marked with a small padlock to remind you
+   of this.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="surfaces-intree.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   To create a new normal surface list, select
+   <menuchoice>
+    <guimenu>Packet Tree</guimenu>
+    <guimenuitem>New Normal Surface List</guimenuitem>
+   </menuchoice>
+   from the menu (or press the corresponding toolbar button).
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="menu-newsurfaces.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   You will be offered the usual <link linkend="packet-new">new
+   packet</link> window, as shown below.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="newsurfaces.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   In addition to the <link linkend="packet-new">usual label option</link>,
+   there are important details that you must provide:
+   <glosslist>
+    <glossentry>
+     <glossterm><guilabel>Triangulation</guilabel></glossterm>
+     <glossdef>
+      <para>
+       This is the triangulation that will contain your normal surfaces.
+       The new normal surface list will appear as a child of this
+       triangulation in the packet tree.
+      </para>
+     </glossdef>
+    </glossentry>
+    <glossentry id="surfaces-selectcoords">
+     <glossterm><guilabel>Coordinate system</guilabel></glossterm>
+     <glossdef>
+      <para>
+       This is the coordinate system that &regina; will use to enumerate
+       normal surfaces.
+       If you have a favourite system that you use all the
+       time, you can change the default in &regina;'s
+       <link linkend="options-surfaces">normal surface options</link>.
+      </para>
+      <para>
+       Your choice of coordinate system will affect which surfaces
+       appear in the final solution set.  For instance, spun-normal
+       surfaces only appear in quadrilateral and quadrilateral-octagon
+       coordinates; other surfaces (such as vertex links) only appear in
+       standard normal and standard almost normal coordinates.
+      </para>
+      <para>
+       Your options are:
+       <glosslist>
+        <glossentry>
+         <glossterm><guilabel>Standard normal (tri-quad)</guilabel></glossterm>
+         <glossdef>
+          <para>
+           This is the standard 7<replaceable>n</replaceable>-dimensional
+           coordinate system that typically appears in papers and textbooks
+           (where <replaceable>n</replaceable> is the number of tetrahedra).
+           Each tetrahedron contributes three triangle and four
+           quadrilateral coordinates.
+          </para>
+         </glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Standard almost normal
+          (tri-quad-oct)</guilabel></glossterm>
+         <glossdef>
+          <para>
+           This is a 10<replaceable>n</replaceable>-dimensional system,
+           obtained from standard normal coordinates by adding three
+           octagon coordinates per tetrahedron.
+          </para>
+          <para>
+           This system supports almost normal surfaces.
+          </para>
+         </glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Quad normal</guilabel></glossterm>
+         <glossdef>
+          <para>
+           These are the 3<replaceable>n</replaceable>-dimensional
+           <firstterm>quadrilateral coordinates</firstterm>,
+           obtained from standard normal coordinates by simply ignoring all
+           triangles.  See <xref linkend="bib-quadspace"/> or
+           <xref linkend="bib-burton-convert"/> for details.
+          </para>
+          <para>
+           This system supports spun-normal surfaces.
+          </para>
+         </glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Quad-oct almost normal</guilabel></glossterm>
+         <glossdef>
+          <para>
+           These are the 6<replaceable>n</replaceable>-dimensional
+           <firstterm>quadrilateral-octagon coordinates</firstterm>,
+           likewise obtained from standard almost normal coordinates by
+           ignoring all triangles.  See <xref linkend="bib-burton-quadoct"/>
+           for details.
+          </para>
+          <para>
+           This system supports both almost normal surfaces
+           and spun-normal surfaces.
+          </para>
+         </glossdef>
+        </glossentry>
+       </glosslist>
+      </para>
+     </glossdef>
+    </glossentry>
+    <glossentry id="surfaces-selectenum">
+     <glossterm><guilabel>Enumerate</guilabel></glossterm>
+     <glossdef>
+      <para>
+       Here you indicate whether you wish to enumerate all
+       <firstterm>vertex</firstterm> normal surfaces, or all
+       <firstterm>fundamental</firstterm> normal surfaces.
+       Fundamental surfaces are much slower to enumerate
+       than vertex surfaces, but in some settings can offer
+       significantly more information.
+      </para>
+      <para>
+       <glosslist>
+        <glossentry>
+         <glossterm><guilabel>Vertex surfaces</guilabel></glossterm>
+         <glossdef>
+          <para>
+           These correspond to the extreme rays of the normal
+           surface solution cone: in the chosen coordinate system,
+           a vertex normal surface cannot be expressed as a
+           non-negative linear combination of normal surfaces
+           other than multiples of itself.
+          </para>
+          <para>
+           &regina; will only compute one surface for each
+           extreme ray: specifically, the smallest integer vector along
+           that ray.  In other words, the coordinates of each surface
+           will have greatest common divisor one.
+          </para>
+         </glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Fundamental surfaces</guilabel></glossterm>
+         <glossdef>
+          <para>
+           These correspond to the Hilbert basis of the normal surface
+           solution cone: in the chosen coordinate system, a fundamental
+           normal surface cannot be expressed as a sum of
+           normal surfaces other than zero and itself.
+          </para>
+         </glossdef>
+        </glossentry>
+       </glosslist>
+      </para>
+     </glossdef>
+    </glossentry>
+    <glossentry id="surfaces-embeddedonly">
+     <glossterm><guilabel>Embedded surfaces only</guilabel></glossterm>
+     <glossdef>
+      <para>
+       If this box is checked (the default), this indicates that you are
+       only interested in embedded surfaces.  This is consistent with most
+       of the normal surface literature.
+      </para>
+      <para>
+       If unchecked, this indicates that you are interested not only in
+       embedded normal surfaces, but also <emphasis>immersed</emphasis>
+       and <emphasis>singular</emphasis> surfaces.
+       &regina; currently offers only very basic support for such
+       surfaces (it will not even tell you which are immersed and which are
+       singular); moreover, the enumeration of surfaces
+       will become <emphasis>much</emphasis> slower.
+      </para>
+     </glossdef>
+    </glossentry>
+   </glosslist>
+  </para>
+  <para>
+   Once you are ready, click <guibutton>OK</guibutton> and &regina;
+   will enumerate all vertex or fundamental normal surfaces
+   in the chosen coordinate system.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="surfaces-enumerating.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   Once this is done, &regina; will package the results
+   into a normal surface list and open it for you to view.
+  </para>
+  <para>
+   If you selected an <emphasis>almost normal</emphasis> coordinate
+   system, &regina; will enforce at most one octagon
+   <emphasis>type</emphasis> but it will not enforce precisely one
+   octagon <emphasis>disc</emphasis> (this makes it easier for users
+   to work with convex combinations of vertex almost normal surfaces).
+   As a result, you might see
+   surfaces with multiple octagons (but all of the same type),
+   or surfaces with no octagons at all.  The coordinate viewer makes it easy
+   <link linkend="surfaces-propoctagon">to spot which is which</link>.
+  </para>
+  <warning>
+   <para>
+    If you have a data file from &regina;&nbsp;4.5.1 or earlier,
+    it will not show almost normal surfaces with more than one octagon.
+    See the discussion on <link linkend="surfaces-deflegacyan">legacy
+    coordinates</link> for details.
+   </para>
+  </warning>
+ </sect1>
+
+ <sect1 id="surfaces-analysis">
+  <title>Analysis</title>
+
+  <para>
+   Once you have <link linkend="surfaces-creation">built
+   a list of surfaces</link>, you can study these surfaces
+   using the various tabs in the normal surface list viewer.
+  </para>
+  <para>
+   Above all of these tabs is a header displaying the total number of
+   surfaces and the original enumeration parameters
+   (i.e., the <link linkend="surfaces-selectcoords">coordinate system</link>
+   you selected, and whether or not you asked for
+   <link linkend="surfaces-embeddedonly">embedded surfaces only</link>).
+   It also offers a link that you can click on to view the underlying
+   triangulation.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="surfaces-header.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   If the header says that you enumerated in
+   <emphasis>legacy</emphasis> almost normal coordinates, it means
+   that the list was created using &regina;&nbsp;4.5.1 or earlier, and that
+   surfaces with more than one octagon were deleted.
+   See the discussion on <link linkend="surfaces-deflegacyan">legacy
+   coordinates</link> for details.
+  </para>
+
+  <sect2 id="surfaces-summary">
+   <title>Summary of Surfaces</title>
+
+   <para>
+    The <guilabel>Summary</guilabel> tab breaks the total count
+    into sub-counts for different types of surfaces, as illustrated below.
+    At a broad level, the total is divided into
+    <emphasis>closed</emphasis> surfaces,
+    <emphasis>bounded</emphasis> surfaces (which have only real boundary),
+    and <emphasis>spun-normal surfaces</emphasis> (which have infinitely
+    many triangles).
+    For each category that contains one or more surfaces, a table is
+    given to break this down further according to orientability,
+    1-or-2-sidedness, and Euler characteristic.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="surfaces-summary.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    If the coordinate system that you used for enumeration does not support
+    spun-normal surfaces, they will not be listed here in the
+    <guilabel>Summary</guilabel> tab.
+   </para>
+  </sect2>
+
+  <sect2 id="surfaces-coords">
+   <title>Details of Individual Surfaces</title>
+
+   <para>
+    You can view details of the individual surfaces in the
+    <guilabel>Surface Coordinates</guilabel> tab.  This brings up a
+    large table in which each row represents a single normal (or almost
+    normal) surface.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="surfaces-coords.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    Above the table are some drop-down boxes that let you view the
+    list in different ways.  These are discussed further in
+    the notes on
+    <link linkend="surfaces-coords-coords">coordinate systems</link>
+    and
+    <link linkend="surfaces-filtering">filtering surfaces</link>.
+   </para>
+   <para>
+    In the first column, surfaces are numbered 0,1,2,... (in no particular
+    order) so that you can make note of them for later on.
+    You can also assign arbitrary names to surfaces by typing directly into
+    the second column; these names will be saved with your data file.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="surfaces-rename.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <sect3 id="surfaces-coords-props">
+    <title>Properties of surfaces</title>
+    <para>
+     The next few columns describe various properties of each surface.
+     Some of these columns might be empty or absent in your
+     viewer (for instance, &regina; does not compute Euler
+     characteristic for spun-normal surfaces, and it hides the
+     orientability column if your enumeration allowed for
+     immersed or singular surfaces).
+    </para>
+    <para>
+     The columns and their meanings are:
+     <glosslist>
+      <glossentry id="surfaces-propeuler">
+       <glossterm><guilabel>Euler</guilabel></glossterm>
+       <glossdef><para>
+        Shows the Euler characteristic of the surface.
+       </para></glossdef>
+      </glossentry>
+      <glossentry id="surfaces-proporient">
+       <glossterm><guilabel>Orient</guilabel></glossterm>
+       <glossdef><para>
+        Contains a tick (&#x2713;) if the surface is
+        orientable, or the text <guilabel>Non-or.</guilabel> if it is not.
+       </para></glossdef>
+      </glossentry>
+      <glossentry id="surfaces-propsides">
+       <glossterm><guilabel>Sides</guilabel></glossterm>
+       <glossdef><para>
+        Shows whether the surface is one-sided or two-sided.
+       </para></glossdef>
+      </glossentry>
+      <glossentry id="surfaces-boundary">
+       <glossterm><guilabel>Bdry</guilabel></glossterm>
+       <glossdef><para>
+        Indicates what type of boundary the surface has.
+        This will be one of:
+        <glosslist>
+         <glossentry>
+          <glossterm><guilabel>&mdash;</guilabel></glossterm>
+          <glossdef><para>
+           Indicates a closed, compact surface (i.e., no boundary at all
+           and finitely many discs).
+          </para></glossdef>
+         </glossentry>
+         <glossentry>
+          <glossterm><guilabel>Real</guilabel></glossterm>
+          <glossdef><para>
+           Indicates a compact surface with boundary (i.e.,
+           finitely many discs, some of which meet the boundary of
+           the triangulation).
+          </para></glossdef>
+         </glossentry>
+         <glossentry id="surfaces-spun">
+          <glossterm><guilabel>Spun</guilabel></glossterm>
+          <glossdef>
+           <para>
+            Indicates a spun-normal surface (i.e., a non-compact surface
+            with infinitely many discs).
+            These only appear when the enumeration is done in
+            quadrilateral or quadrilateral-octagon coordinates.
+           </para>
+           <para>
+            If the vertex links are all tori and the underlying
+            coordinate system is normal (not almost normal), then
+            &regina; will also show the boundary slopes for each
+            spun-normal surface.  These are presented as a pair
+            (<replaceable>p</replaceable>,&nbsp;<replaceable>q</replaceable>)
+            for each cusp, indicating that the boundary curves pass
+            <replaceable>p</replaceable> times around the meridian and
+            <replaceable>q</replaceable> times around the longitude.
+           </para>
+           <para>
+            &regina; uses &snappy;'s conventions for the meridian and
+            longitude on each cusp.  If there are multiple cusps,
+            these pairs will be ordered by vertex number.
+           </para>
+          </glossdef>
+         </glossentry>
+        </glosslist>
+       </para></glossdef>
+      </glossentry>
+      <glossentry id="surfaces-proplink">
+       <glossterm><guilabel>Link</guilabel></glossterm>
+       <glossdef>
+        <para>
+         Indicates if a surface is a vertex link or a thin edge link
+         (i.e., the boundary of a small regular neighbourhood of a
+         vertex or edge).  If this is a one-sided surface whose
+         <emphasis>double</emphasis> is a thin edge link, then it will be
+         reported as a thin edge link for these purposes.
+        </para>
+        <para>
+         The relevant vertex or edge will be listed also, using the
+         vertex and edge numbers that appear in the first column of the
+         <link linkend="tri-vertices">vertex viewer</link> and
+         <link linkend="tri-edges">edge viewer</link>.
+         It is possible for a surface to be the thin edge link for two edges
+         at the same time, in which case both edges will be listed.
+        </para>
+        <para>
+         If the surface is not a vertex link or a thin edge link, this
+         cell will be left empty.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry id="surfaces-proptype">
+       <glossterm><guilabel>Type</guilabel></glossterm>
+       <glossdef>
+        <para>
+         Indicates if this is one of a few special types of surface that
+         &regina; identifies.  Possible values are:
+         <glosslist>
+          <glossentry>
+           <glossterm><guilabel>Central</guilabel></glossterm>
+           <glossdef><para>
+            There is at most one normal or almost normal disc
+            per tetrahedron (which may be a triangle, quadrilateral or octagon).
+            The cell will also list the total number of normal discs
+            (i.e., the total number of tetrahedra that this surface meets).
+           </para></glossdef>
+          </glossentry>
+          <glossentry>
+           <glossterm><guilabel>Splitting</guilabel></glossterm>
+           <glossdef><para>
+            There is precisely one quadrilateral per tetrahedron
+            and no other normal (or almost normal) discs.
+            Although splitting surfaces are also central, only the word
+            <guilabel>Splitting</guilabel> will be displayed.
+           </para></glossdef>
+          </glossentry>
+         </glosslist>
+         If the surface is not one of these types,
+         this cell will be left empty.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry id="surfaces-propoctagon">
+       <glossterm><guilabel>Octagon</guilabel></glossterm>
+       <glossdef>
+        <para>
+         Indicates which coordinate position contains the octagonal
+         discs (if any), and how many octagonal discs there are.
+         (Recall that the enumeration procedure insists that at most one
+         coordinate <emphasis>position</emphasis> can have octagonal discs,
+         but allows any number of octagons of that type.)
+        </para>
+        <para>
+         This column only appears if you enumerated using an
+         almost normal coordinate system.
+        </para>
+        <para>
+         <inlinemediaobject>
+          <imageobject>
+           <imagedata fileref="surfaces-octagons.png"/>
+          </imageobject>
+         </inlinemediaobject>
+        </para>
+        <para>
+         If this cell is empty, it means
+         the surface does not contain any octagons at all
+         (i.e., you have normal surface, not an almost normal surface).
+         Otherwise it will state which coordinate position
+         contains the octagons and how many octagons there are
+         (for example, <guilabel>K2:&nbsp;03/12 (3&nbsp;octs)</guilabel>).
+        </para>
+       </glossdef>
+      </glossentry>
+     </glosslist>
+    </para>
+   </sect3>
+   <sect3 id="surfaces-coords-coords">
+    <title>Coordinates and Coordinate Systems</title>
+    <para>
+     The remaining columns give the precise normal coordinates of the surface.
+    </para>
+    <para>
+     You can view surfaces in several different coordinate systems (not just
+     the system you <link linkend="surfaces-selectcoords">used for
+     enumeration</link>).  To change the coordinate system, simply
+     select a new system from the drop-down box above the table.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="surfaces-coordbox.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     This will <emphasis>not re-enumerate</emphasis>
+     surfaces in the new coordinate system; it will simply re-display
+     the surfaces you already have.  For example, if you enumerated in
+     quadrilateral coordinates then your list will not contain any
+     vertex links, and these will not suddenly appear when you view in
+     standard coorinates.  If your list contains spun-normal surfaces
+     and you view them in standard coordinates, they will not
+     disappear (instead you will see triangular coordinates of &infin;).
+    </para>
+    <para>
+     The available coordinate systems as follows.
+     Some options might not be available for your surface list
+     (for instance, if you enumerated in standard normal coordinates
+     then the almost normal systems will not appear).
+     <glosslist>
+      <glossentry id="surfaces-defstandard">
+       <glossterm><guilabel>Standard normal (tri-quad)</guilabel></glossterm>
+       <glossdef>
+        <para>
+         This is the standard 7<replaceable>n</replaceable>-dimensional
+         coordinate system that typically appears in papers and textbooks
+         (where <replaceable>n</replaceable> is the number of tetrahedra).
+         Each tetrahedron contributes three triangle and four
+         quadrilateral coordinates.
+        </para>
+        <para>
+         Triangle coordinates are labelled
+         <guilabel>0:0</guilabel>, <guilabel>0:1</guilabel>,
+         <guilabel>0:2</guilabel>, <guilabel>0:3</guilabel>,
+         <guilabel>1:0</guilabel>, etc., where coordinate
+         <replaceable>t</replaceable>:<replaceable>v</replaceable>
+         counts the number of triangles in tetrahedron
+         <replaceable>t</replaceable> that separate vertex
+         <replaceable>v</replaceable> of that tetrahedron from the others.
+         Here 0&nbsp;&le;&nbsp;<replaceable>t</replaceable>&nbsp;&lt;&nbsp;<replaceable>n</replaceable>
+         and <replaceable>v</replaceable>&nbsp;&isin;&nbsp;{0,1,2,3}.
+        </para>
+        <para>
+         Quadrilateral coordinates are labelled
+         <guilabel>0:01/23</guilabel>,
+         <guilabel>0:02/13</guilabel>,
+         <guilabel>0:03/12</guilabel>,
+         <guilabel>1:01/23</guilabel>,
+         etc., where coordinate
+         <replaceable>t</replaceable>:<replaceable>ab</replaceable>/<replaceable>cd</replaceable>
+         counts the number of quadrilaterals in tetrahedron
+         <replaceable>t</replaceable> that separate vertices
+         <replaceable>a</replaceable> and <replaceable>b</replaceable>
+         of that tetrahedron from vertices
+         <replaceable>c</replaceable> and <replaceable>d</replaceable>.
+         Here 0&nbsp;&le;&nbsp;<replaceable>t</replaceable>&nbsp;&lt;&nbsp;<replaceable>n</replaceable>,
+         and <replaceable>a</replaceable>,<replaceable>b</replaceable>,<replaceable>c</replaceable>,<replaceable>d</replaceable>
+         are some permutation of 0,1,2,3.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry id="surfaces-defquad">
+       <glossterm><guilabel>Quad normal</guilabel></glossterm>
+       <glossdef>
+        <para>
+         These are the 3<replaceable>n</replaceable>-dimensional
+         <firstterm>quadrilateral coordinates</firstterm>,
+         obtained from standard normal (tri-quad) coordinates by ignoring
+         all triangles and considering only the quadrilaterals.
+         See <xref linkend="bib-quadspace"/> or
+         <xref linkend="bib-burton-convert"/> for details.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry id="surfaces-defstandardan">
+       <glossterm><guilabel>Standard almost normal
+        (tri-quad-oct)</guilabel></glossterm>
+       <glossdef>
+        <para>
+         This is a 10<replaceable>n</replaceable>-dimensional system
+         for almost normal surfaces,
+         obtained from standard normal (tri-quad) coordinates by adding three
+         octagon coordinates per tetrahedron.
+        </para>
+        <para>
+         Octagon coordinates are again labelled
+         <guilabel>0:01/23</guilabel>, <guilabel>0:02/13</guilabel>,
+         <guilabel>0:03/12</guilabel>, <guilabel>1:01/23</guilabel>,
+         etc., where coordinate
+         <replaceable>t</replaceable>:<replaceable>ab</replaceable>/<replaceable>cd</replaceable>
+         counts the number of octagons in tetrahedron
+         <replaceable>t</replaceable> that separate vertices
+         <replaceable>a</replaceable> and <replaceable>b</replaceable> from
+         <replaceable>c</replaceable> and <replaceable>d</replaceable>.
+        </para>
+        <para>
+         To avoid ambiguity, all triangle, quadrilateral and octagon
+         coordinate labels are prefixed
+         with <guilabel>T</guilabel>, <guilabel>Q</guilabel> and
+         <guilabel>K</guilabel> respectively.  The full
+         coordinates are therefore
+         <guilabel>T0:0</guilabel>, <guilabel>T0:1</guilabel>,
+         <guilabel>T0:2</guilabel>, <guilabel>T0:3</guilabel>,
+         <guilabel>Q0:01/23</guilabel>, <guilabel>Q0:02/13</guilabel>,
+         <guilabel>Q0:03/12</guilabel>,
+         <guilabel>K0:01/23</guilabel>, <guilabel>K0:02/13</guilabel>,
+         <guilabel>K0:03/12</guilabel>,
+         <guilabel>T1:0</guilabel>, etc.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry id="surfaces-defquadoct">
+       <glossterm><guilabel>Quad-oct almost normal</guilabel></glossterm>
+       <glossdef>
+        <para>
+         These are the 6<replaceable>n</replaceable>-dimensional
+         <firstterm>quadrilateral-octagon coordinates</firstterm>,
+         obtained from standard almost normal (tri-quad-oct) coordinates by
+         ignoring all triangles and considering only the quadrilaterals
+         and octagons.  See <xref linkend="bib-burton-quadoct"/> for details.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry id="surfaces-deflegacyan">
+       <glossterm><guilabel>Legacy almost normal
+        (pruned tri-quad-oct)</guilabel></glossterm>
+       <glossdef>
+        <para>
+         Legacy coordinates are to support data files created in
+         &regina;&nbsp;4.5.1 or earlier.
+         These are like standard almost normal (tri-quad-oct)
+         coordinates, except that surfaces with
+         <emphasis>more than one octagon</emphasis>
+         are deleted entirely.
+        </para>
+        <para>
+         If you created your surfaces in
+         &regina;&nbsp;4.5.1 or earlier, there is no way to recover
+         those surfaces with multiple octagons&mdash;they would have been
+         deleted when you originally enumerated them.  Instead you will
+         need to <link linkend="surfaces-creation">enumerate them
+         again</link>.
+         Your list will always be displayed
+         with the label <guilabel>legacy almost normal coordinates</guilabel>
+         to remind you of this.
+        </para>
+        <para>
+         From &regina;&nbsp;4.6 onwards, the enumeration process now
+         keeps almost surfaces with multiple octagons (though they must
+         be in the same coordinate position).  This is important if you
+         wish to generate new almost normal surfaces by taking convex
+         combinations of old surfaces.
+         If you are only interested in surfaces with one octagon,
+         the <link linkend="surfaces-propoctagon">Octagon column</link>
+         makes them easy to spot.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry id="surfaces-defedgewt">
+       <glossterm><guilabel>Edge weight</guilabel></glossterm>
+       <glossdef>
+        <para>
+         This system has one coordinate for each edge of the
+         triangulation.
+         The coordinates are labelled <guilabel>0</guilabel>,
+         <guilabel>1</guilabel>, <guilabel>2</guilabel>, etc., where
+         coordinate <replaceable>e</replaceable> counts the number of times the
+         surface crosses edge number <replaceable>e</replaceable>.
+        </para>
+        <para>
+         Edge numbers and the tetrahedron edges to which they
+         correspond can be found in the
+         <link linkend="tri-edges">edge viewer</link>,
+         under the triangulation's <guilabel>Skeleton</guilabel> tab.
+        </para>
+        <para>
+         Edge weight coordinates are offered for viewing only.
+         You cannot enumerate surfaces in edge weight coordinates.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry id="surfaces-deffacearc">
+       <glossterm><guilabel>Face arc</guilabel></glossterm>
+       <glossdef>
+        <para>
+         This system has three coordinates for each face of the
+         triangulation.
+         The coordinates are labelled
+         <guilabel>0:0</guilabel>, <guilabel>0:1</guilabel>,
+         <guilabel>0:2</guilabel>,
+         <guilabel>1:0</guilabel>, etc., where coordinate
+         <replaceable>f</replaceable>:<replaceable>v</replaceable>
+         represents the number of times the surface slices through face
+         <replaceable>f</replaceable> of the triangulation in an arc
+         that truncates vertex <replaceable>v</replaceable> of that face.
+         Here <replaceable>v</replaceable>&nbsp;&isin;&nbsp;{0,1,2}.
+        </para>
+        <para>
+         Face numbers and the tetrahedron faces to which they
+         correspond can be found in the
+         <link linkend="tri-faces">face viewer</link>,
+         under the triangulation's <guilabel>Skeleton</guilabel> tab.
+         The three vertices 0,1,2 of each face correspond to the
+         ordering of tetrahedron vertices that you see in the rightmost
+         column of the face viewer.
+        </para>
+        <para>
+         Face arc coordinates are likewise offered for viewing only.
+         You cannot enumerate surfaces in face arc coordinates.
+        </para>
+       </glossdef>
+      </glossentry>
+     </glosslist>
+    </para>
+    <tip><para>
+     If you grab and resize one of the coordinate columns, all of the
+     coordinate columns will be resized at once.  This is useful if you
+     wish to fit as many columns on the screen as possible.
+    </para></tip>
+   </sect3>
+  </sect2>
+
+  <sect2 id="surfaces-viewmatching">
+   <title>Original Matching Equations</title>
+
+   <para>
+    The <guilabel>Matching Equations</guilabel> tab
+    shows a table with the individual matching equations that
+    were used when you enumerated this list.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="surfaces-matching.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The matching equations will always use the same
+    coordinate system that you
+    <link linkend="surfaces-selectcoords">used during enumeration</link>.
+    Remember that this coordinate system is always displayed
+    <link linkend="surfaces-analysis">above all of the tabs</link>.
+   </para>
+   <para>
+    Each row of this table represents an individual matching equation.
+    Each equation is a homogeneous linear equation, and the coefficients
+    for each coordinate position are shown in the individual table cells.
+    See the
+    <link linkend="surfaces-coords-coords">coordinate viewer</link>
+    for details on how the coordinate columms are labelled.
+   </para>
+   <tip><para>
+    Like the coordinate viewer,
+    if you grab and resize one of the columns then all columns
+    will be resized at once.  This is useful if you
+    wish to fit as much of the matrix on screen as possible.
+   </para></tip>
+  </sect2>
+
+  <sect2 id="surfaces-compat">
+   <title>Compatibility Between Surfaces</title>
+
+   <para>
+    The <guilabel>Compatibility</guilabel> tab
+    shows which pairs of surfaces are
+    <emphasis>locally</emphasis> and <emphasis>globally</emphasis>
+    compatible with each other.  This means:
+   </para>
+   <para>
+    <glosslist>
+     <glossentry id="surfaces-localcompat">
+      <glossterm>Locally compatible</glossterm>
+      <glossdef>
+       <para>
+        Two surfaces are <emphasis>locally compatible</emphasis> if
+        they are able to avoid intersection in any given tetrahedron of
+        the triangulation (though not necessarily in all tetrahedra
+        simultaneously).
+       </para>
+       <para>
+        In other words, two surfaces are locally compatible if, in each
+        tetrahedron, they <emphasis>together</emphasis> use at most
+        one quadrilateral or octagonal disc type.
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry id="surfaces-globalcompat">
+      <glossterm>Globally compatible</glossterm>
+      <glossdef>
+       <para>
+        Two surfaces are <emphasis>globally compatible</emphasis> if
+        they are able to avoid intersection in <emphasis>all</emphasis>
+        tetrahedra of the triangulation simultaneously.
+       </para>
+       <para>
+        In other words, two surfaces are globally compatible if they can
+        be made <emphasis>disjoint</emphasis> within the triangulation.
+       </para>
+      </glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
+   <para>
+    The <guilabel>Compatibility</guilabel> tab displays two matrices
+    (one at a time): one shows local compatibility and one shows
+    global compatibility.  You can
+    switch between them using the drop-down box indicated below.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="surfaces-compat-local.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    Each matrix has dimensions
+    <replaceable>S</replaceable>&nbsp;&times;&nbsp;<replaceable>S</replaceable>,
+    where <replaceable>S</replaceable> is the total number of surfaces
+    in the list.  Rows and columns are both numbered
+    0,...,<replaceable>S</replaceable>-1.
+    The cell at position
+    (<replaceable>x</replaceable>,<replaceable>y</replaceable>)
+    is filled if and only if the surfaces numbered
+    <replaceable>x</replaceable> and <replaceable>y</replaceable> are
+    compatible.  Recall that surfaces are numbered in the leftmost
+    column of the <link linkend="surfaces-coords">coordinate viewer</link>.
+   </para>
+   <para>
+    For some surfaces, &regina; cannot test global compatibility.
+    These include surfaces that are empty, disconnected, or spun.
+    In such cases the corresponding rows and columns will be hashed out,
+    as illustrated below.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="surfaces-compat-hash.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    If you have too many surfaces in your list, &regina; will not
+    generate these matrices automatically.
+    You can still compute them by pressing the
+    <guilabel>Calculate</guilabel> button (indicated below).
+    The default threshold for &ldquo;too many&rdquo; is 100 surfaces,
+    though you can change this in the
+    <link linkend="options-surfaces">normal surface options</link>.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="surfaces-compat-compute.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2>
+   <title>Crushing and Cutting</title>
+
+   <para>
+    You can cut along a normal surface, or crush it using the techniques
+    of Jaco and Rubinstein <xref linkend="bib-0-efficiency"/>.
+    See the <link linkend="tri-cutcrush">chapter on triangulations</link>
+    for details.
+   </para>
+  </sect2>
+ </sect1>
+
+ <sect1 id="surfaces-filtering">
+  <title>Using Filters</title>
+
+  <para>
+   Large triangulations often contain a great many
+   &ldquo;junk surfaces&rdquo;, and it is sometimes desirable to restrict
+   a long normal surface list to just those surfaces that satisfy
+   some simple constraints.
+   &regina; allows you to do this using <emphasis>surface filters</emphasis>.
+  </para>
+  <para>
+   You can create filters based on
+   <link linkend="surfaces-filterprop">simple tests</link>
+   (such as orientability, boundary or Euler characteristic), and you
+   can <link linkend="surfaces-filtercomb">combine filters</link>
+   into complex boolean expressions.
+   Each filter is stored as a separate packet in the packet tree.
+  </para>
+  <para>
+   To apply a filter to a normal surface list, simply choose the filter
+   from the drop-down box above the
+   <link linkend="surfaces-coords">coordinate viewer</link>.
+   The table of surfaces will immediately shrink to include only
+   those surfaces that pass the selected filter.
+   To remove the filter, select <guilabel>None</guilabel> from the
+   drop-down box.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="surfaces-applyfilter.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   Filtering a surface list only affects how you
+   <emphasis>view</emphasis> it: the underlying list is not changed.
+   Moreover, only the
+   <link linkend="surfaces-coords">coordinate viewer</link>
+   will be filtered&mdash;other tabs (such as the
+   <link linkend="surfaces-summary">summary tab</link> or
+   <link linkend="surfaces-compat">compatility matrices</link>)
+   will be unaffected.
+  </para>
+
+  <sect2 id="surfaces-filtercreate">
+   <title>Creating Filters</title>
+
+   <para>
+    To create a new filter, select
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>New Filter</guimenuitem>
+    </menuchoice>
+    from the menu (or press the corresponding toolbar button).
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menu-newfilter.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The <link linkend="packet-new">new packet window</link>
+    will ask what type of filter to create.
+    The different types of filter are described in their own sections below.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="newfilter.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+  <sect2 id="surfaces-filterprop">
+   <title>Filtering by Surface Properties</title>
+
+   <para>
+    To filter by simple properties
+    (such as orientability, boundary or Euler characteristic),
+    create a new filter and select <guilabel>Filter by properties</guilabel>.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="newfilter-prop.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    Now you can open your new filter and select your constraints.
+    To pass through the filter, a surface must satisfy
+    <emphasis>all</emphasis> of the constraints that you set. 
+    In the example below, a surface will only pass if it is closed
+    (i.e., compact with no boundary) and has Euler characteristic
+    2, 1 or 0.  In other words, this filter selects spheres, projective
+    planes, tori and Klein bottles
+    (as well as other disconnected surfaces, but
+    vertex or fundamental normal surfaces will never be disconnected).
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="filter-prop.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The constraints you can set are:
+    <variablelist>
+     <varlistentry>
+      <term><guilabel>Orientability</guilabel></term>
+      <listitem><para>
+       Check this to allow only orientable surfaces,
+       or only non-orientable surfaces.
+      </para></listitem>
+     </varlistentry>
+     <varlistentry>
+      <term><guilabel>Compactness</guilabel></term>
+      <listitem><para>
+       Check this to allow only compact surfaces
+       (i.e., surfaces with finitely many discs), or only
+       spun-normal surfaces
+       (i.e., non-compact surfaces with infinitely many discs).
+      </para></listitem>
+     </varlistentry>
+     <varlistentry>
+      <term><guilabel>Boundary</guilabel></term>
+      <listitem>
+       <para>
+        Check this to allow only surfaces with real boundary,
+        or only surfaces with no real boundary.  Here
+        <firstterm>real boundary</firstterm> means that some discs
+        in the surface touch the boundary of the triangulation.
+       </para>
+       <para>
+        This constraint is independent of whether the surface is spun
+        (non-compact).  Typical spun-normal surfaces do not have real
+        boundary, since they live in ideal triangulations with no
+        boundary faces.  However, if your triangulation has both ideal
+        vertices and boundary faces, then it is possible for
+        a spun-normal surface to have real boundary also.
+       </para>
+      </listitem>
+     </varlistentry>
+     <varlistentry>
+      <term><guilabel>Euler Characteristic</guilabel></term>
+      <listitem>
+       <para>
+        Check this to allow only surfaces with particular Euler
+        characteristics.  You can allow more than one Euler
+        characteristic; simply type them all into the box provided.
+       </para>
+       <para>
+        <inlinemediaobject>
+         <imageobject>
+          <imagedata fileref="filter-euler.png"/>
+         </imageobject>
+        </inlinemediaobject>
+       </para>
+      </listitem>
+     </varlistentry>
+    </variablelist>
+   </para>
+  </sect2>
+
+  <sect2 id="surfaces-filtercomb">
+   <title>Combining Several Filters</title>
+
+   <para>
+    To combine several other filters
+    into a boolean expression, create a new filter and select
+    <guilabel>Combination (AND/OR) filter</guilabel>.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="newfilter-comb.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    A combination filter is a high-level filter that combines all of the
+    filters <emphasis>immediately beneath it</emphasis> in the packet
+    tree.  If you open the combination filter, you can select whether
+    a packet must pass <emphasis>all</emphasis> of the packets beneath it
+    (<guilabel>AND</guilabel>),
+    or <emphasis>any</emphasis> of the packets beneath it
+    (<guilabel>OR</guilabel>).
+    You will also see a box listing
+    which &ldquo;child filters&rdquo; are being combined.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="filtercomb.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The child filters will often be
+    <link linkend="surfaces-filterprop">property-based filters</link>,
+    although they may be other combination filters if you need to build
+    up more complex boolean expressions.
+    A combination filter will only combine its
+    <emphasis>immediate</emphasis> children&mdash;not its
+    children's children and so on.
+    In the example below, the combination filter
+    <replaceable>C</replaceable> will only combine the children
+    <replaceable>P</replaceable> and <replaceable>Q</replaceable>.
+    In turn, <replaceable>Q</replaceable> will combine
+    <replaceable>X</replaceable> and <replaceable>Y</replaceable>;
+    the result (depending on how the filters are set) might look something like
+    &ldquo;<replaceable>P</replaceable> and
+    (<replaceable>X</replaceable> or <replaceable>Y</replaceable>)&rdquo;.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="filtercombtree.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+ </sect1>
+</chapter>

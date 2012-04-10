@@ -1,0 +1,106 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-abeliangroup">
+ <refmeta>
+  <refentrytitle>abeliangroup</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>abeliangroup</refname>
+  <refpurpose>An abelian group</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+abeliangroup ::= (#PCDATA)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>rank</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   An &xml-abeliangroup; element stores a single abelian group.
+  </para>
+  <para>
+   The rank of the abelian group is specified by the
+   <sgmltag>rank</sgmltag> attribute.
+  </para>
+  <para>
+   The torsion elements of the abelian group are stored in the character
+   data of this &xml; element as a whitespace-separated list of integers.
+   Each integer <replaceable>k</replaceable> corresponds to a
+   Z_<replaceable>k</replaceable> torsion element of the group.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>abeliangroup</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-H1;</member>
+     <member>&xml-H1Bdry;</member>
+     <member>&xml-H1Rel;</member>
+     <member>&xml-H2;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    Element <sgmltag>abeliangroup</sgmltag> has no children.
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>rank</sgmltag></term>
+    <listitem>
+     <para>
+      The rank of this abelian group; this should be a non-negative integer.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </refsect1>
+
+ <refsect1>
+  <title>Example</title>
+  <para>
+   The following &xml; snippet represents the group
+   <literal>2 Z + Z_3 + Z_9</literal>.
+  </para>
+  <programlisting>
+&lt;abeliangroup rank=&quot;2&quot;&gt; 3 9 &lt;/abeliangroup&gt;
+  </programlisting>
+ </refsect1>
+</refentry>

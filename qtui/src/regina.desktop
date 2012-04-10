@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Regina
+GenericName=3-Manifold Topology
+Comment=Software for 3-manifold topology and normal surface theory
+Icon=regina
+Exec=regina-gui %F
+Categories=Math;Education;Science;Qt;
+MimeType=application/x-regina;
