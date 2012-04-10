@@ -44,13 +44,16 @@ namespace regina {
 // Although the conversion routines are template routines, we implement
 // them here in this C++ file to avoid dragging them into the headers.
 //
-// The following declarations should ensure that the templates are fully
-// instantiated where they need to be.
+// The following definitions and declarations should ensure that the
+// templates are fully instantiated where they need to be.
 
-template NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard<
-        NNormalSurfaceList::NormalSpec>() const;
-template NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard<
-        NNormalSurfaceList::AlmostNormalSpec>() const;
+NNormalSurfaceList* NNormalSurfaceList::quadToStandard() const {
+    return internalReducedToStandard<NormalSpec>();
+}
+
+NNormalSurfaceList* NNormalSurfaceList::quadOctToStandardAN() const {
+    return internalReducedToStandard<AlmostNormalSpec>();
+}
 
 template void NNormalSurfaceList::enumerateStandardViaReduced<
         NNormalSurfaceList::NormalSpec>(NTriangulation*, NProgressNumber*);
