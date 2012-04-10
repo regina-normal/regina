@@ -161,8 +161,6 @@ if ! find "$svntree" -type f | sed -e 's%^[^/]*/%%' | \
     grep -v '^hold\(/\|$\)' | \
     grep -v '^icons/povray\(/\|$\)' | \
     grep -v '^icons/src\(/\|$\)' | \
-    grep -v '^kdeui/.*/index.cache.bz2$' | \
-    grep -v '^kdeui/src/shell/regina-kde$' | \
     grep -v '^libtool$' | \
     grep -v '^metrics\(/\|$\)' | \
     grep -v '^packaging\(/\|$\)' | \
