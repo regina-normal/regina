@@ -1,0 +1,651 @@
+<chapter id="packet">
+ <title>Working with Packets</title>
+
+ <sect1 id="packet-tree">
+  <title>The Packet Tree</title>
+
+  <para>
+   A single Regina data file can store a range of objects, from
+   3-manifold triangulations and normal surfaces to &python; scripts,
+   &pdf; documents and text notes.
+   All of these objects are called <firstterm>packets</firstterm>,
+   and are arranged in a tree-like structure as you can see below.
+  </para>
+  <para>
+   <inlinemediaobject id="shot-packettree">
+    <imageobject>
+     <imagedata fileref="packettree.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   To view or edit a packet, just click on the packet in the tree
+   (on some platforms, such as &macosx;, you need to double-click instead).
+   The packet will open up in a new window, as shown below.
+  </para>
+  <para>
+   <inlinemediaobject id="shot-packetview">
+    <imageobject>
+     <imagedata fileref="packetview.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+ </sect1>
+ <sect1 id="packet-view">
+  <title>Viewing and Editing Packets</title>
+  <para>
+   Each time you open a packet, you will see three buttons at the bottom
+   of the window: <guibutton>Commit</guibutton>,
+   <guibutton>Refresh</guibutton> and <guibutton>Close</guibutton>
+   (all illustrated below).
+   Pressing <guibutton>Close</guibutton> will simply close the packet
+   again.  Pressing <guibutton>Refresh</guibutton> will reload the
+   contents of the packet from &regina;'s mathematical engine (this
+   should rarely be necessary, but the button is provided just in case).
+   <guibutton>Commit</guibutton> should be disabled until you start
+   making changes.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="textview.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   Once you begin to edit the packet, the buttons will change to
+   <guibutton>Commit</guibutton>, <guibutton>Discard</guibutton> and
+   <guibutton>Close</guibutton> (again illustrated below).
+   Your changes will not <emphasis>not take effect</emphasis>
+   until you press <guibutton>Commit</guibutton> (after which you
+   will not be able to undo them).
+   Alternatively, you can undo your changes and revert to the original
+   state of the packet by pressing <guibutton>Discard</guibutton>.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="textedit.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <sect2 id="packet-uneditable">
+   <title>Uneditable Packets</title>
+
+   <para>
+    Sometimes you will find that you cannot make changes to a packet
+    at all.  This often happens when a packet is constrained by its
+    children.  For instance, if a triangulation is parent to a
+    normal surface list or an angle structure list
+    then &regina; will insist that the triangulation does not change
+    (so that normal coordinates and angle structure coordinates
+    cannot be invalidated).
+    Uneditable packets like this
+    will be marked with a small padlock in the tree: see the
+    Figure&nbsp;8 Knot Complement in the illustration below.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="padlock.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    If you find yourself in such a situation, you can always
+    <link linkend="packet-clone">clone the packet</link>.
+    This will create a new copy of the packet without any
+    children, and you will be able to edit your clone instead.
+   </para>
+  </sect2>
+ </sect1>
+
+ <sect1 id="packet-types">
+  <title>Different Packet Types</title>
+  <para>
+   There are many different types of packet that you can create in
+   &regina;.  Here we give a brief overview of each.
+  </para>
+
+  <sect2 id="packet-container">
+   <title>Container Packets</title>
+   <para>
+    A <firstterm>container</firstterm> packet helps keep your packet
+    tree organised: it can contain other &ldquo;child&rdquo; packets,
+    but otherwise it does nothing.
+   </para>
+   <para>
+    Containers are marked by the following icon:
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="icon-container.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    To see how containers can be used to organise a tree, take
+    a look at one of the census files: try
+    <menuchoice>
+     <guimenu>File</guimenu>
+     <guisubmenu>Open Example</guisubmenu>
+     <guimenuitem>Closed Non-Orientable Census</guimenuitem>
+    </menuchoice>.
+    Part of the packet tree for this census is shown below (the
+    container labelled <guilabel>6&nbsp;tetrahedra</guilabel> has been
+    opened for viewing).
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="container.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <tip><para>
+    Any packet (not just a container) can contain other child packets.
+   </para></tip>
+  </sect2>
+
+  <sect2 id="packet-text">
+   <title>Text Packets</title>
+   <para>
+    A <firstterm>text</firstterm> packet contains an arbitrary amount of
+    plain text, with no formatting.
+    It can be used to add descriptions, observations or
+    other miscellaneous comments into your data file.
+   </para>
+   <para>
+    Text packets are marked by the following icon:
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="icon-text.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="text.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="packet-pdf">
+   <title>&pdf; Documents</title>
+   <para>
+    Like text packets, a <firstterm>&pdf;</firstterm> packet allows you
+    to document your work.  &pdf; packets support richer content,
+    including diagrams and formulae.  The &pdf; document must be created
+    outside &regina; (using &latex; or your favourite word processor),
+    and then imported into your &regina; data file by selecting
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>New PDF Document</guimenuitem>
+    </menuchoice>.
+   </para>
+   <para>
+    &pdf; packets are marked by the following icon:
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="icon-pdf.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    When you open a &pdf; packet for viewing, it will open in your computer's
+    default &pdf; viewer (as illustrated below).  If you like, you can
+    specify a different &pdf; viewer in
+    <link linkend="options-tools">&regina;'s settings</link>.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="pdf.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="packet-triangulation">
+   <title>Triangulations</title>
+   <para>
+    A <firstterm>triangulation</firstterm> packet represents a
+    3-manifold triangulation, described by gluing faces of tetrahedra
+    together in pairs.
+    Triangulations are central to &regina;, and you can learn more about
+    using them by reading the
+    <link linkend="triangulations">chapter on triangulations</link> in
+    this handbook.
+   </para>
+   <para>
+    Triangulations are marked by the following icon:
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="icon-triangulation.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="triangulation.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="packet-surfacelist">
+   <title>Normal Surface Lists</title>
+   <para>
+    A <firstterm>normal surface list</firstterm> represents a set
+    of normal surfaces within a 3-manifold triangulation.
+    Typically this will be the set of all vertex normal surfaces
+    in some normal (or almost normal) coordinate system.
+    Like triangulations, normal surfaces are central to &regina;,
+    and you can learn more about using them in the
+    <link linkend="surfaces">chapter on normal surfaces</link>.
+   </para>
+   <para>
+    Normal surface lists are marked by the following icon:
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="icon-surfaces.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    Normal surface lists can be created using different sets of matching
+    equations, and can then be viewed in a variety of coordinate systems.
+    In the packet tree, a normal surface list must always appear as a
+    child of the corresponding 3-manifold triangulation.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="surfacelist.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="packet-filter">
+   <title>Surface Filters</title>
+   <para>
+    A <firstterm>surface filter</firstterm> can be applied to
+    a long list of normal surfaces to extract only some
+    smaller set of surfaces that you might be interested in.
+    You can learn more about surface filters in the
+    <link linkend="surfaces-filtering">chapter on normal surfaces</link>.
+    &regina; offers two types of surface filter:
+   </para>
+
+   <sect3 id="packet-filterprop">
+    <title>Property Filters</title>
+    <para>
+     A <firstterm>property filter</firstterm> selects only those normal
+     surfaces with a given orientability, compactness, boundary
+     and/or Euler characteristic.
+    </para>
+    <para>
+     Property filters are marked by the following icon:
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="icon-filterprop.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="filterprop.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+   </sect3>
+
+   <sect3 id="packet-filtercomb">
+    <title>Combination Filters</title>
+    <para>
+     A <firstterm>combination filter</firstterm> uses boolean
+     <function>AND</function> or <function>OR</function>
+     to combine several other surface filters.
+     This allows you to combine property filters together in
+     complex boolean expressions.
+    </para>
+    <para>
+     Combination filters are marked by the following icon:
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="icon-filtercomb.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     A combination filter will combine its immediate children in the
+     packet tree.  For example, the combination filter illustrated
+     below will select any surface that passes
+     <emphasis>either</emphasis> the <guilabel>Tori and Annuli</guilabel>
+     filter <emphasis>or</emphasis> the
+     <guilabel>Discs</guilabel> filter.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="filtercomb.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+   </sect3>
+  </sect2>
+
+  <sect2 id="packet-anglestructures">
+   <title>Angle Structure Lists</title>
+   <para>
+    An <firstterm>angle structure list</firstterm> represents a set
+    of angle structures on a 3-manifold triangulation.
+    Typically this will be the
+    set of all vertex angle structures under the standard equations.
+    You can learn more about working with angle structure lists
+    in the <link linkend="angles">chapter on angle structures</link>
+    in this handbook.
+   </para>
+   <para>
+    Angle structure lists are marked by the following icon:
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="icon-angles.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    Like normal surface lists, an angle structure list must always appear as a
+    child of the corresponding 3-manifold triangulation.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="angles.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="packet-script">
+   <title>Script Packets</title>
+   <para>
+    A <firstterm>script</firstterm> packet contains a &python; script
+    that offers direct access to &regina;'s calculation engine.
+    You can edit the script from within &regina;,
+    and your script can set variables that represent
+    other packets in your data file.
+    See the <link linkend="python">chapter on &python;</link>
+    for more information on scripting within &regina;.
+   </para>
+   <para>
+    Script packets are marked by the following icon:
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="icon-script.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="script.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+ </sect1>
+
+ <sect1 id="packet-operations">
+  <title>Other Operations on Packets</title>
+  <para>
+   The <guimenu>Packet Tree</guimenu> menu contains
+   operations that can be applied to any packet in &regina;.  Most of
+   these operations are also offered as toolbar buttons.
+   Here we describe each of these operations in turn.
+  </para>
+
+  <sect2 id="packet-new">
+   <title>Creating New Packets</title>
+
+   <para>
+    New packets of any type can be created through the corresponding
+    <guimenuitem>New&nbsp;...</guimenuitem> item in the
+    <guimenu>Packet Tree</guimenu> menu, or by pressing the toolbar
+    button with the corresponding packet icon.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menunew.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    For example, to create a new triangulation, either select
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>New Triangulation</guimenuitem>
+    </menuchoice>
+    in the menu, or press the toolbar button with the following icon:
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="icon-triangulation.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    Each time you create a new packet, you will be asked for some details
+    (as illustrated below):
+    <glosslist>
+     <glossentry>
+      <glossterm><guilabel>Create beneath:</guilabel></glossterm>
+      <glossdef><para>
+       Here you select where in the tree your new packet will appear.
+       Your new packet will be added as a child of whatever
+       you choose in this box.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Label:</guilabel></glossterm>
+      <glossdef><para>
+       This will be the label (i.e., the name) of the new packet.
+       No two packets in the same data file may have the same label.
+      </para></glossdef>
+     </glossentry>
+    </glosslist>
+    You might also be asked for additional information according to which
+    type of packet you are creating.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="newtriangulation.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="packet-clone">
+   <title>Cloning Packets</title>
+
+   <para>
+    To make an identical copy of an existing packet, you can use
+    either the
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>Clone Packet</guimenuitem>
+    </menuchoice>
+    or the
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>Clone Subtree</guimenuitem>
+    </menuchoice>
+    menu item.  &regina; will clone whatever packet is
+    currently selected, and the clone will be added adjacent to it
+    in the tree.
+    The top-level packet at the root of the tree cannot be cloned.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menuclone.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    If you choose <guimenuitem>Clone Packet</guimenuitem>, only the
+    selected packet will be copied (not any of its children).
+    If you choose <guimenuitem>Clone Subtree</guimenuitem>, &regina;
+    will clone not only the selected packet but also the entire subtree
+    beneath it (&ie;, its children, their children and so on).
+   </para>
+   <tip><para>
+    If you have selected some packet in the tree but you have different
+    packets open for viewing or editing, it is the
+    <emphasis>selected packet in the tree</emphasis> that will be cloned,
+    not the packets that you are currently viewing.
+   </para></tip>
+  </sect2>
+
+  <sect2 id="packet-rename">
+   <title>Renaming Packets</title>
+
+   <para>
+    By selecting
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>Rename</guimenuitem>
+    </menuchoice>
+    from the menu (or the corresponding toolbar button),
+    you can give the selected packet a new label.
+    Note that no two packets in the same data file may have the same label.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menurename.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <tip><para>
+    If you have selected some packet in the tree but you have different
+    packets open for viewing or editing, it is the
+    <emphasis>selected packet in the tree</emphasis> that will be renamed,
+    not the packets that you are currently viewing.
+   </para></tip>
+  </sect2>
+
+  <sect2 id="packet-delete">
+   <title>Deleting Packets and Subtrees</title>
+
+   <para>
+    If you select
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>Delete</guimenuitem>
+    </menuchoice>
+    from the menu (or press the corresponding toolbar button),
+    whatever packet you have selected in the tree will be deleted.
+    Note that all <emphasis>children</emphasis> of the selected packet
+    will also be deleted, and their children and so on.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menudelete.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <caution><para>
+    If you have selected some packet in the tree but you have different
+    packets open for viewing or editing, it is the
+    <emphasis>selected packet in the tree</emphasis> that will be
+    deleted, not the packets that you are currently viewing.
+    Be careful, since deleting a packet cannot be undone!
+   </para></caution>
+  </sect2>
+
+  <sect2 id="packet-move">
+   <title>Moving Around the Tree</title>
+
+   <para>
+    The
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>Move</guimenuitem>
+    </menuchoice>
+    submenu allows you to reorganise your packet tree by moving packets
+    around.  Whenever a packet moves, all of its children (and their
+    children and so on) will move along with it.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menumove.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    Selecting <guilabel>Higher Level</guilabel> or
+    <guilabel>Lower Level</guilabel> will move the selected packet to a
+    different parent (either shallower or deeper in the tree respectively).
+    The remaining options will keep the same parent, but will move the
+    selected packet up or down with respect to its &ldquo;siblings&rdquo;.
+    <guilabel>Up</guilabel> or <guilabel>Down</guilabel> will move the
+    packet by one step, and
+    <guilabel>Top</guilabel> or <guilabel>Bottom</guilabel> will make it
+    the first or last child respectively of its parent.
+    <guilabel>Jump Up</guilabel> or <guilabel>Jump Down</guilabel> will move
+    the packet several steps at a time; the precise number of steps can be
+    configured in &regina;'s <link linkend="options-general">general
+    settings</link>.
+   </para>
+   <tip><para>
+    All of the actions in the
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>Move</guimenuitem>
+    </menuchoice>
+    menu have keyboard shortcuts, allowing you to reorganise the
+    packet tree quickly using just the keyboard.
+   </para></tip>
+  </sect2>
+
+  <sect2 id="packet-refresh">
+   <title>Refreshing Subtrees</title>
+
+   <para>
+    The
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>Refresh Subtree</guimenuitem>
+    </menuchoice>
+    menu item will reload a section of the packet tree from &regina;'s
+    mathematical engine.  This should never be necessary, but the
+    operation is provided in case the user interface gets out of sync.
+    If this does happen, please <link linkend="services">let us know</link>
+    so that we can reproduce and hopefully fix the bug.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="menurefresh.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    Only the section of the tree beneath the selected packet will be
+    reloaded (i.e., the selected packet, its children, their children
+    and so on).  To refresh the entire tree, you should have the root
+    packet selected.
+   </para>
+  </sect2>
+ </sect1>
+</chapter>

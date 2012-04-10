@@ -1,0 +1,78 @@
+example$ regina-python
+Regina 4.92
+Software for 3-manifold topology and normal surface theory
+Copyright (c) 1999-2012, The Regina development team
+&gt;&gt;&gt; ################################
+... #
+... #  Sample Python Script
+... #
+... #  Illustrates the traversal and manipulation of an entire packet tree.
+... #
+... #  See the file "tree.session" for the results of running this script.
+... #
+... ################################
+... 
+&gt;&gt;&gt; # Create a new census of finite orientable closed 3-manifold
+... # triangulations with two tetrahedra.
+... census = NContainer()
+&gt;&gt;&gt; NCensus.formCensus(census, 2, NBoolSet.sTrue,
+...     NBoolSet.sTrue, NBoolSet.sFalse, 0, 0)
+16
+&gt;&gt;&gt; 
+&gt;&gt;&gt; # Calculate the homology of each triangulation in the census.
+... # The triangulations are all children of the "census" container.
+... tri = census.getFirstTreeChild()
+&gt;&gt;&gt; while tri != None:
+...     print tri.getPacketLabel() + ":", tri.getHomologyH1()
+...     tri = tri.getNextTreeSibling()
+... 
+Item 1: Z_7
+Item 2: Z_5
+Item 3: Z
+Item 4: Z_3
+Item 5: Z_8
+Item 6: 0
+Item 7: 0
+Item 8: 0
+Item 9: Z_2
+Item 10: 0
+Item 11: 0
+Item 12: Z_3
+Item 13: 0
+Item 14: Z_3
+Item 15: 2 Z_2
+Item 16: Z_2
+&gt;&gt;&gt; 
+&gt;&gt;&gt; # Remove all triangulations with trivial homology from the tree.
+... tri = census.getFirstTreeChild()
+&gt;&gt;&gt; while tri != None:
+...     next = tri.getNextTreeSibling()
+...     hom = tri.getHomologyH1()
+...     if hom.isTrivial():
+...         tri.makeOrphan()
+...     tri = next
+... 
+&lt;regina.NTriangulation object at 0x1021fe8a0&gt;
+&lt;regina.NTriangulation object at 0x1021fe830&gt;
+&lt;regina.NTriangulation object at 0x1021fe980&gt;
+&lt;regina.NTriangulation object at 0x1021fe750&gt;
+&lt;regina.NTriangulation object at 0x1021fe910&gt;
+&lt;regina.NTriangulation object at 0x1021fe830&gt;
+&gt;&gt;&gt; 
+&gt;&gt;&gt; # Print the homology of each remaining triangulation.
+... tri = census.getFirstTreeChild()
+&gt;&gt;&gt; while tri != None:
+...     print tri.getPacketLabel() + ":", tri.getHomologyH1()
+...     tri = tri.getNextTreeSibling()
+... 
+Item 1: Z_7
+Item 2: Z_5
+Item 3: Z
+Item 4: Z_3
+Item 5: Z_8
+Item 9: Z_2
+Item 12: Z_3
+Item 14: Z_3
+Item 15: 2 Z_2
+Item 16: Z_2
+&gt;&gt;&gt; 

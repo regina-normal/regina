@@ -1,0 +1,1567 @@
+<appendix id="utils">
+ <title>Command Line: Specialised Utilities</title>
+
+ <para>
+  The main applications <command>regina-gui</command> and
+  <command>regina-python</command> are documented in the
+  <link linkend="manpages">previous chapter</link>.
+  This chapter documents the more specialised command-line
+  utilities that &regina; provides.
+ </para>
+
+ <!-- File Concatenator -->
+
+ <refentry id="man-regconcat">
+  <refmeta>
+   <refentrytitle>regconcat</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regconcat</refname>
+   <refpurpose>Combine several &regina; data files</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>regconcat</command>
+    <arg><option>-o</option> <replaceable>output-file</replaceable></arg>
+    <arg rep="repeat" choice="req"><replaceable>input-file</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    This utility combines several individual &regina; data files into
+    a single larger data file.  The new file will have a container as its
+    top-level packet, and beneath this container will be the packet trees
+    from each of the input files that you supply.
+   </para>
+   <para>
+    If an output file is specified through option <option>-o</option>,
+    the new file will be written as compressed &xml; to this output file.
+    Otherwise the new file will be written as uncompressed &xml; to
+    standard output.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>-o</option> <replaceable>output-file</replaceable></term>
+     <listitem>
+      <para>
+       Specifies that the new combined data file should be written
+       as compressed &xml; to the given output file.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/regconcat</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command-line utilities are installed beneath the
+    <filename>Program&nbsp;Files</filename> directory; on some
+    machines this directory is called
+    <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+    You can start this utility by running
+    <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\regconcat.exe</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina-gui">regina-gui</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    This utility was written by Benjamin Burton <email>bab@debian.org</email>.
+    &manpageack;
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- File Converter -->
+
+ <refentry id="man-regconvert">
+  <refmeta>
+   <refentrytitle>regconvert</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regconvert</refname>
+   <refpurpose>Convert between different &regina; file formats</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>regconvert</command>
+    <group>
+     <arg><option>-x</option></arg>
+     <arg><option>-u</option></arg>
+     <arg><option>-b</option></arg>
+    </group>
+    <arg choice="req"><replaceable>old-file</replaceable></arg>
+    <arg><replaceable>new-file</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    Between &regina; versions 2.4 and 3.0, the data files changed from
+    using an impenetrable and undocumented binary format to using
+    (optionally compressed) &xml;.
+   </para>
+   <para>
+    This utility converts back and forth between these different
+    file formats.
+   </para>
+   <para>
+    The argument <replaceable>old-file</replaceable> should be the file to
+    read and convert; the argument <replaceable>new-file</replaceable> should
+    be the name of the new converted file to write.  These two filenames
+    may be the same, in which case the old file will be replaced with the new.
+   </para>
+   <para>
+    If the argument <replaceable>new-file</replaceable> is missing then the
+    new file will be written to standard output, which forces the output to be
+    uncompressed &xml; (see option <option>-u</option>).
+   </para>
+   <warning><para>
+    When writing an old-style binary file, some information might be
+    lost.  Old-style binary files can only store information that was
+    understood by the old version &regina;&nbsp;2.4.
+   </para></warning>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>-x</option> (default)</term>
+     <listitem>
+      <para>Convert to compressed &xml;.</para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-u</option></term>
+     <listitem>
+      <para>Convert to plain (uncompressed) &xml;.</para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-b</option></term>
+     <listitem>
+      <para>Convert to the old-style binary format.</para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/regconvert</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command-line utilities are installed beneath the
+    <filename>Program&nbsp;Files</filename> directory; on some
+    machines this directory is called
+    <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+    You can start this utility by running
+    <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\regconvert.exe</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regfiletype">regfiletype</link>,
+    <link linkend="man-regina-gui">regina-gui</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    This utility was written by Benjamin Burton <email>bab@debian.org</email>.
+    &manpageack;
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- File Dumper -->
+
+ <refentry id="man-regfiledump">
+  <refmeta>
+   <refentrytitle>regfiledump</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regfiledump</refname>
+   <refpurpose>Dump the contents of a &regina; data file</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>regfiledump</command>
+    <group>
+     <arg><option>-f</option></arg>
+     <arg><option>-l</option></arg>
+     <arg><option>-n</option></arg>
+    </group>
+    <arg><option>-c</option></arg>
+    <arg choice="req"><replaceable>file</replaceable></arg>
+    <arg rep="repeat"><replaceable>packet-label</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    This utility dumps the contents of the given &regina; data file to
+    standard output in a human-readable format.
+   </para>
+   <para>
+    If a list of packet labels is given on the command-line, only those
+    packets will be output.  Otherwise all packets in the given
+    file will be output.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>-f</option> (default)</term>
+     <listitem>
+      <para>
+       Output full packet details.  The output for each packet will cover
+       several lines, beginning with basic details (such as the packet label
+       and type) followed by the packet's long description.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-l</option></term>
+     <listitem>
+      <para>
+       Output a list of packet labels and types only, one packet per line.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-n</option></term>
+     <listitem>
+      <para>
+       Don't output any packets at all; this option forces a packet
+       count (see option <option>-c</option>).
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-c</option></term>
+     <listitem>
+      <para>Finish the output with a total count of all packets in the
+       file.</para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  &submani18n;
+
+  <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/regfiledump</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command-line utilities are installed beneath the
+    <filename>Program&nbsp;Files</filename> directory; on some
+    machines this directory is called
+    <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+    You can start this utility by running
+    <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\regfiledump.exe</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina-gui">regina-gui</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    This utility was written by Benjamin Burton <email>bab@debian.org</email>.
+    &manpageack;
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- File Identifier -->
+
+ <refentry id="man-regfiletype">
+  <refmeta>
+   <refentrytitle>regfiletype</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>regfiletype</refname>
+   <refpurpose>Identify the formats of &regina; data files</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>regfiletype</command>
+    <arg choice="req" rep="repeat"><replaceable>file</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    Between &regina; versions 2.4 and 3.0, the data files changed from
+    using an impenetrable and undocumented binary format to using
+    (optionally compressed) &xml;.
+   </para>
+   <para>
+    This utility determines which of these formats a given
+    &regina; data file is in.
+   </para>
+   <para>
+    You may pass multiple files on the command line; the format of each
+    file will be written to standard output.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/regfiletype</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command-line utilities are installed beneath the
+    <filename>Program&nbsp;Files</filename> directory; on some
+    machines this directory is called
+    <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+    You can start this utility by running
+    <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\regfiletype.exe</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regconvert">regconvert</link>,
+    <link linkend="man-regina-gui">regina-gui</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    This utility was written by Benjamin Burton <email>bab@debian.org</email>.
+    &manpageack;
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- Signature Census -->
+
+ <refentry id="man-sigcensus">
+  <refmeta>
+   <refentrytitle>sigcensus</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>sigcensus</refname>
+   <refpurpose>Form a census of splitting surface signatures</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>sigcensus</command>
+    <arg choice="req"><replaceable>order</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    Forms a census of all splitting surface signatures of the given
+    order.  The <firstterm>order</firstterm> is the number of
+    quadrilaterals in the resulting splitting surface.
+   </para>
+   <para>
+    The signatures will be written to standard output, one per
+    line, followed by a count of the total number of signatures found.
+   </para>
+   <para>
+    Each signature will be output precisely once up to equivalence.
+    Signatures are considered equivalent if they are related by some
+    combination of:
+    <itemizedlist>
+     <listitem>
+      <para>relabelling symbols;</para>
+     </listitem>
+     <listitem>
+      <para>rotating an individual cycle;</para>
+     </listitem>
+     <listitem>
+      <para>inverting an individual cycle (i.e., reversing the cycle and
+       changing the case of each symbol in the cycle);</para>
+     </listitem>
+     <listitem>
+      <para>reversing all cycles without changing the case of any
+       symbols.</para>
+     </listitem>
+    </itemizedlist>
+   </para>
+   <para>
+    Upper-case symbols in signatures are not yet supported; this
+    program will only output signatures whose symbols are all lower-case.
+   </para>
+   <para>
+    For more information on splitting surface signatures, see
+    Burton's PhD thesis at &regmanburtonthesisurl;.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/sigcensus</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command-line utilities are installed beneath the
+    <filename>Program&nbsp;Files</filename> directory; on some
+    machines this directory is called
+    <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+    You can start this utility by running
+    <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\sigcensus.exe</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-tricensus">tricensus</link>,
+    <link linkend="man-tricensus-mpi">tricensus-mpi</link>,
+    <link linkend="man-regina-gui">regina-gui</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    This utility was written by Benjamin Burton <email>bab@debian.org</email>.
+    &manpageack;
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- Triangulation Census -->
+
+ <refentry id="man-tricensus">
+  <refmeta>
+   <refentrytitle>tricensus</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>tricensus</refname>
+   <refpurpose>Form a census of 3-manifold triangulations</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>tricensus</command>
+    <arg><option>-t, --tetrahedra=</option><replaceable>tetrahedra</replaceable></arg>
+    <group>
+     <arg><option>-b, --boundary</option></arg>
+     <arg><option>-i, --internal</option></arg>
+     <arg><option>-B, --bdryfaces=</option><replaceable>faces</replaceable></arg>
+    </group>
+    <group>
+     <arg><option>-o, --orientable</option></arg>
+     <arg><option>-n, --nonorientable</option></arg>
+    </group>
+    <group>
+     <arg><option>-f, --finite</option></arg>
+     <arg><option>-d, --ideal</option></arg>
+    </group>
+    <group>
+     <arg><option>-m, --minimal</option></arg>
+     <arg><option>-M, --minprime</option></arg>
+     <arg><option>-N, --minprimep2</option></arg>
+    </group>
+    <arg><option>-s, --sigs=</option></arg>
+    <group>
+     <arg><option>-p, --genpairs</option></arg>
+     <arg><option>-P, --usepairs</option></arg>
+    </group>
+    <arg choice="req"><replaceable>output-file</replaceable></arg>
+   </cmdsynopsis>
+   <cmdsynopsis>
+    <command>tricensus</command>
+    <arg choice="req"><option>--help</option></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    Forms a census of all 3-manifold triangulations that satisfy
+    some set of conditions.
+   </para>
+   <para>
+    These conditions are specified using various command-line arguments.
+    The only condition that you <emphasis>must</emphasis> provide is
+    the number of
+    tetrahedra, but there are many other options available.
+   </para>
+   <para>
+    Each triangulation will be output precisely once up to combinatorial
+    isomorphism.  Invalid triangulations (i.e., triangulations with edges
+    identified to themselves in reverse, or vertices whose links
+    have boundary but are not discs) will not be output at all.
+   </para>
+   <para>
+    As the census progresses, the state of progress will be written (slowly)
+    to standard output.  Once the census is complete, the full census will
+    be saved to the given output file.
+   </para>
+   <para>
+    You can use the options <option>--genpairs</option> and
+    <option>--usepairs</option> to split a census into smaller
+    pieces.  See also
+    <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>,
+    a more powerful tool that allows you to distribute a census
+    across a high-performance computing cluster.
+   </para>
+   <caution>
+    <para>
+     A census with even a small number of tetrahedra can
+     take an incredibly long time to run, and can chew up massive amounts of
+     memory.  It is recommended that you try very small censuses to begin
+     with (such as 3 or 4 tetrahedra), and work upwards to establish the
+     limits of your machine.
+    </para>
+    <para>
+     For very large census runs, it is <emphasis>highly recommended</emphasis>
+     that you use the <option>--sigs</option> option, which will keep
+     the output file small and significantly reduce the memory footprint.
+    </para>
+   </caution>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>-t,
+      --tetrahedra=</option><replaceable>tetrahedra</replaceable></term>
+     <listitem>
+      <para>
+       Specifies the number of tetrahedra used to build the triangulations.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-b, --boundary</option></term>
+     <listitem>
+      <para>
+       Only produce triangulations with at least one boundary face.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-i, --internal</option></term>
+     <listitem>
+      <para>
+       Only produce triangulations with all faces internal (i.e., with no
+       boundary faces).
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-B,
+      --bdryfaces=</option><replaceable>faces</replaceable></term>
+     <listitem>
+      <para>
+       Only produce triangulations with the precise number of boundary
+       faces specified.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-o, --orientable</option></term>
+     <listitem>
+      <para>
+       Only produce orientable triangulations.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-n, --nonorientable</option></term>
+     <listitem>
+      <para>
+       Only produce non-orientable triangulations.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-f, --finite</option></term>
+     <listitem>
+      <para>
+       Only produce finite triangulations (triangulations with no
+       ideal vertices).
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-d, --ideal</option></term>
+     <listitem>
+      <para>
+       Only produce triangulations with at least one ideal vertex.
+       There might or might not be internal vertices (whose links are
+       spheres) as well.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-m, --minimal</option></term>
+     <listitem>
+      <para>
+       Do not include triangulations that are obviously non-minimal.
+      </para>
+      <para>
+       This option uses a series of fast tests that try to eliminate
+       non-minimal triangulations, but that are not always conclusive.
+       If &regina; cannot quickly tell whether a triangulation is
+       non-minimal, it will place the triangulation in the census regardless.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-M, --minprime</option></term>
+     <listitem>
+      <para>
+       Do not include triangulations that are obviously non-minimal,
+       non-prime and/or disc-reducible.
+      </para>
+      <para>
+       This can significantly speed up the census and vastly
+       reduce the final number of triangulations produced.
+      </para>
+      <para>
+       As above, this option uses a series of fast tests that are not
+       always conclusive.
+       If &regina; cannot quickly tell whether a triangulation is
+       non-minimal, non-prime or disc-reducible, it will place the
+       triangulation in the census regardless.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-N, --minprimep2</option></term>
+     <listitem>
+      <para>
+       Do not include triangulations that are obviously non-minimal,
+       non-prime, P2-reducible and/or disc-reducible.
+      </para>
+      <para>
+       This can significantly speed up the census and vastly
+       reduce the final number of triangulations produced,
+       even more so than <option>--minprime</option>.
+      </para>
+      <para>
+       As above, this option uses a series of fast tests that are not
+       always conclusive.
+       If &regina; cannot quickly tell whether a triangulation is
+       non-minimal, non-prime, P2-reducible or disc-reducible, it will place
+       the triangulation in the census regardless.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-s, --sigs=</option></term>
+     <listitem>
+      <para>
+       Instead of writing a full &regina; data file, just output a list
+       of isomorphism signatures.
+      </para>
+      <para>
+       The output file will be a plain text file.  Each line will be a
+       short string of letters, digits and punctuation that uniquely
+       encodes a 3-manifold triangulation up to combinatorial isomorphism.
+       You can import this text file from within &regina; by selecting
+       &menuimportsigs; from the menu.
+      </para>
+      <para>
+       This option is highly recommended for large census enumerations.
+       First, the output file will be considerably smaller.
+       More importantly, the memory footprint of
+       <command>tricensus</command> will also be much smaller:
+       triangulations can be written to the output file and forgotten
+       immediately, instead of being kept in memory to construct a final
+       &regina; data file.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-p, --genpairs</option></term>
+     <listitem>
+      <para>
+       Only generate face pairings, not triangulations.
+      </para>
+      <para>
+       The outermost layer of the census code involves pairing off the
+       faces of individual tetrahedra without determining
+       the corresponding gluing permutations.  For each face pairing that is
+       produced, &regina; will try many different sets of gluing permutations
+       and generated the corresponding triangulations.
+      </para>
+      <para>
+       Face pairing generation consumes a very small fraction of the
+       total census runtime, and effectively divides the census into
+       multiple pieces.  This option allows you to quickly generate
+       a complete list of possible face pairings, so that you can feed subsets
+       of this list to different machines to work on simultaneously.  You
+       can coordinate this manually, or you can use
+       <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
+       to coordinate it for you on a high-performance cluster.
+      </para>
+      <para>
+       The list of all face pairings will be written to the given output
+       file in text format (though you may omit the output file from the
+       command line, in which case the face pairings will be written to
+       standard output).
+       If you are coordinating your sub-censuses manually, you can use
+       the option <option>--usepairs</option> to generate triangulations
+       from a subset of these face pairings.
+      </para>
+      <para>
+       Options for orientability, finiteness or minimality cannot be
+       used with <option>--genpairs</option>; instead you should use them
+       later with <option>--usepairs</option>, or pass them to
+       <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>.
+      </para>
+      <para>
+       This option does not come with progress reporting, though
+       typically it runs fast enough that this does not matter.
+       You can always track the state of progress by counting lines in
+       the output file.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-P, --usepairs</option></term>
+     <listitem>
+      <para>
+       Use only the given subset of face pairings to build the triangulations.
+      </para>
+      <para>
+       Each face pairing that is processed must be
+       in canonical form, i.e., must be a minimal representative of its
+       isomorphism class.  All face pairings generated using
+       <option>--genpairs</option> are guaranteed to satisfy this condition.
+      </para>
+      <para>
+       Face pairings should be supplied on standard input, one per line.
+       They should be listed in the format produced by the option
+       <option>--genpairs</option>.
+      </para>
+      <para>
+       This option effectively lets you run a subset of a larger census.
+       See <option>--genpairs</option> for further details on how to split
+       a census into subsets that can run simultaneously on different machines,
+       or
+       <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
+       which can coordinate this process using &mpi; on a
+       high-performance cluster.
+      </para>
+      <para>
+       Options for tetrahedra or boundary faces cannot be used with
+       <option>--usepairs</option>; instead you should pass them earlier
+       along with <option>--genpairs</option> when you split the original
+       census into pieces.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>Examples</title>
+
+   <para>
+    The following command forms a census of all 3-tetrahedron closed
+    non-orientable triangulations and puts the results in the file
+    <filename>results.rga</filename>.  To ensure that triangulations are
+    closed we use the options <option>-i</option> (no boundary faces)
+    and <option>-f</option> (no ideal vertices).
+   </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>tricensus -t 3 -nif results.rga</userinput>
+    Starting census generation...
+    0:1 0:0 1:0 1:1 | 0:2 0:3 2:0 2:1 | 1:2 1:3 2:3 2:2
+    0:1 0:0 1:0 2:0 | 0:2 1:2 1:1 2:1 | 0:3 1:3 2:3 2:2
+    0:1 0:0 1:0 2:0 | 0:2 2:1 2:2 2:3 | 0:3 1:1 1:2 1:3
+    1:0 1:1 2:0 2:1 | 0:0 0:1 2:2 2:3 | 0:2 0:3 1:2 1:3
+    Finished.
+    Total triangulations: 5
+    <prompt>example$</prompt>
+</screen>
+
+   <para>
+    The following command forms a census of 4-tetrahedron closed
+    orientable triangulations, where the census creation is optimised
+    for prime minimal triangulations.  Although all prime minimal
+    triangulations will be included, there may be some non-prime or
+    non-minimal triangulations in the census also.
+   </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>tricensus -t 4 -oifM results.rga</userinput>
+    Starting census generation...
+    0:1 0:0 1:0 1:1 | 0:2 0:3 2:0 2:1 | 1:2 1:3 3:0 3:1 | 2:2 ...
+    0:1 0:0 1:0 1:1 | 0:2 0:3 2:0 3:0 | 1:2 2:2 2:1 3:1 | 1:3 ...
+    ...
+    1:0 1:1 2:0 3:0 | 0:0 0:1 2:1 3:1 | 0:2 1:2 3:2 3:3 | 0:3 ...
+    Finished.
+    Total triangulations: 17
+    <prompt>example$</prompt>
+</screen>
+
+   <para>
+    The following command generates all face pairings for a
+    5-tetrahedron census in which all triangulations have precisely two
+    boundary faces.  The face pairings will be written to
+    <filename>pairings.txt</filename>, whereupon they can be broken up
+    and distributed for processing at a later date.
+   </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>tricensus --genpairs -t 5 -B 2 pairings.txt</userinput>
+    Total face pairings: 118
+    <prompt>example$</prompt>
+</screen>
+
+   <para>
+    The face pairings generated in the previous example can then be fleshed
+    out into a full census of all 3-manifold triangulations with five
+    tetrahedra, precisely two boundary faces and no ideal vertices as
+    follows.  The number of tetrahedra and boundary faces were
+    already specified in the previous command, and cannot be
+    supplied here.  The face pairings will be read from
+    <filename>pairings.txt</filename>, and the final census will be
+    written to <filename>results.rga</filename>.
+   </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>tricensus --usepairs -f results.rga &lt; pairings.txt</userinput>
+    Trying face pairings...
+    0:1 0:0 1:0 1:1 | 0:2 0:3 2:0 2:1 | 1:2 1:3 3:0 3:1 | 2:2 ...
+    0:1 0:0 1:0 1:1 | 0:2 0:3 2:0 2:1 | 1:2 1:3 3:0 3:1 | 2:2 ...
+    ...
+    ... (running through all 118 face pairings)
+    ...
+    1:0 2:0 3:0 4:0 | 0:0 2:1 3:1 4:1 | 0:1 1:1 3:2 4:2 | 0:2 ...
+    Total triangulations: 5817
+    <prompt>example$</prompt>
+</screen>
+  </refsect1>
+
+  <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/tricensus</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command-line utilities are installed beneath the
+    <filename>Program&nbsp;Files</filename> directory; on some
+    machines this directory is called
+    <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+    You can start this utility by running
+    <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\tricensus.exe</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-sigcensus">sigcensus</link>,
+    <link linkend="man-tricensus-mpi">tricensus-mpi</link>,
+    <link linkend="man-regina-gui">regina-gui</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    This utility was written by Benjamin Burton <email>bab@debian.org</email>.
+    &manpageack;
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- Triangulation Census Manager (MPI) -->
+
+ <refentry id="man-tricensus-mpi">
+  <refmeta>
+   <refentrytitle>tricensus-mpi</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>tricensus-mpi</refname>
+   <refpurpose>Distribute a triangulation census amongst several machines using &mpi;</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>tricensus-mpi</command>
+    <arg><option>-D, --depth=</option><replaceable>levels</replaceable></arg>
+    <arg><option>-x, --dryrun</option></arg>
+    <group>
+     <arg><option>-o, --orientable</option></arg>
+     <arg><option>-n, --nonorientable</option></arg>
+    </group>
+    <group>
+     <arg><option>-f, --finite</option></arg>
+     <arg><option>-d, --ideal</option></arg>
+    </group>
+    <group>
+     <arg><option>-m, --minimal</option></arg>
+     <arg><option>-M, --minprime</option></arg>
+     <arg><option>-N, --minprimep2</option></arg>
+    </group>
+    <arg><option>-s, --sigs=</option></arg>
+    <arg choice="req"><replaceable>pairs-file</replaceable></arg>
+    <arg choice="req"><replaceable>output-file-prefix</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    Allows multiple processes, possibly running on a cluster of
+    different machines, to
+    collaborate in forming a census of 3-manifold triangulations.
+    Coordination is done through &mpi; (the Message Passing Interface),
+    and the entire census is run as a single &mpi; job.
+    This program is well suited for high-performance clusters.
+   </para>
+   <para>
+    To prepare a census for distribution amongst several processes or
+    machines, the census must be split into smaller pieces.
+    Running <link linkend="man-tricensus"><command>tricensus</command></link>
+    with option <option>--genpairs</option> (which is very fast) will create
+    a list of face pairings, each of which must be analysed in order to
+    complete the census.
+   </para>
+   <para>
+    The full list of face pairings should be stored in a single file,
+    which is passed on the command-line as
+    <replaceable>pairs-file</replaceable>.
+    This file must contain one face pairing per line, and each of these
+    face pairings must be in canonical form (i.e., must be a
+    minimal representative of its isomorphism class).  The face
+    pairings generated by
+    <link linkend="man-tricensus"><userinput>tricensus
+    --genpairs</userinput></link> are guaranteed to satisfy these conditions.
+   </para>
+   <para>
+    The <command>tricensus-mpi</command> utility has two modes of
+    operation: default mode, and subsearch mode.  These are explained
+    separately under <link linkend="man-tricensus-mpi-modes">modes
+    of operation</link> below.
+   </para>
+   <para>
+    In both modes, one &mpi; process acts as the controller and the remaining
+    processes all act as slaves.  The controller reads the list of face
+    pairings from <replaceable>pairs-file</replaceable>, constructs a
+    series of tasks based on these, and farms these tasks
+    out to the slaves for processing.  Each slave processes one task
+    at a time, asking the controller for a new task when it is finished
+    with the previous one.
+   </para>
+   <para>
+    At the end of each task, if any triangulations were found then
+    the slave responsible will save these triangulations to an output file.
+    The output file will have a name of the form
+    <filename><replaceable>output-file-prefix</replaceable>_<replaceable>p</replaceable>.rga</filename>
+    in default mode or
+    <filename><replaceable>output-file-prefix</replaceable>_<replaceable>p</replaceable>-<replaceable>s</replaceable>.rga</filename>
+    in subsearch mode.
+    Here <replaceable>output-file-prefix</replaceable> is passed on the
+    command line, <replaceable>p</replaceable> is the number
+    of the face pairing being processed, and <replaceable>s</replaceable>
+    is the number of the subsearch within that face pairing
+    (both face pairings and subsearches are numbered from 1 upwards).
+    If no triangulations were found then the slave will not write
+    any output file at all.
+   </para>
+   <para>
+    The controller and slave
+    processes all take the same <command>tricensus-mpi</command>
+    options (excluding &mpi;-specific options, which are generally supplied
+    by an &mpi; wrapper program such as <command>mpirun</command> or
+    <command>mpiexec</command>).
+    The different roles of the processes are determined solely by their
+    &mpi; process rank (the controller is always the process with rank 0).
+    It should therefore be possible to start all &mpi; processes by
+    running a single command, as illustrated in the examples below.
+   </para>
+   <para>
+    As the census progresses, the controller keeps a detailed log of each
+    slave's activities, including how long each slave task has taken and how
+    many triangulations have been found.  This log is written to the file
+    <filename><replaceable>output-file-prefix</replaceable>.log</filename>.
+    The utility
+    <link linkend="man-tricensus-mpi-status"><command>tricensus-mpi-status</command></link>
+    can parse this log and produce a shorter human-readable summary.
+   </para>
+   <important><para>
+    It is <emphasis>highly recommended</emphasis>
+    that you use the <option>--sigs</option> option.  This will keep
+    output files small, and will significantly reduce the memory footprint
+    of <command>tricensus-mpi</command> itself.
+   </para></important>
+  </refsect1>
+
+  <refsect1 id="man-tricensus-mpi-modes">
+   <title>Modes of Operation</title>
+   <para>
+    As discussed above, there are two basic modes of operation.
+    These are default mode (used when <option>--depth</option> is not
+    passed), and subsearch mode (used when <option>--depth</option> is
+    passed).
+   </para>
+   <itemizedlist>
+    <listitem><para>
+     In <emphasis>default mode</emphasis>, the controller simply
+     reads the list of face pairings and gives each pairing
+     to a slave for processing, one after another.
+    </para></listitem>
+    <listitem><para>
+     In <emphasis>subsearch mode</emphasis>, more work is pushed to
+     the controller and the slave tasks are shorter.  Here the
+     controller reads one face pairing at a time and begins processing
+     that face pairing.  A fixed depth is supplied in the argument
+     <option>--depth</option>; each time that depth is reached in the
+     search tree, the
+     subsearch from that point on is given as a task to the next idle slave.
+     Meanwhile the controller backtracks (as though the subsearch had
+     finished) and continues, farming the next subsearch out when
+     the given depth is reached again, and so on.
+    </para></listitem>
+   </itemizedlist>
+   <para>
+    The modes can be visualised as follows.
+    For each face pairing, consider the corresponding recursive search
+    as a large search tree.  In default mode, the entire tree is
+    processed at once as a single slave task.  In subsearch mode, each
+    subtree rooted at the given depth is processed as a separate slave
+    task (and all processing between the root and the given depth is
+    done by the controller).
+   </para>
+   <para>
+    The main difference between the different modes of operation is
+    the lengths of the slave tasks, which can have a variety of effects.
+   </para>
+   <itemizedlist>
+    <listitem><para>
+     In default mode the slave tasks are quite long.
+     This means the parallelisation can become very poor towards the
+     end of the census, with some slaves sitting idle for
+     a long time as they wait for the remaining slaves to finish.
+    </para></listitem>
+    <listitem><para>
+     As we move to subsearch mode with increasing depth, the slave
+     tasks become shorter and the slaves' finish times will be closer
+     together (thus avoiding the idle slave inefficiency described above).
+     Moreover, with a more refined subsearch,
+     the progress information stored in the log will be more detailed,
+     giving a better idea of how long the census has to go.  On the
+     other hand, more work is pushed to the single-process controller
+     (risking a bottleneck if the depth is too great, with slaves now
+     sitting idle as they wait for new tasks).  In addition the &mpi; overhead
+     is greater, and the number of output files can become extremely large.
+    </para></listitem>
+   </itemizedlist>
+   <para>
+    In the end, experimentation is the best way to decide whether to run
+    in subsearch mode and at what depth.  Be aware of the option
+    <option>--dryrun</option>, which can give a quick overview of the
+    search space (and in particular, show how many subsearches are
+    required for each face pairing at any given depth).
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <para>
+    The census options accepted by <command>tricensus-mpi</command>
+    are identical to the options for <command>tricensus</command>
+    See the
+    <link linkend="man-tricensus"><command>tricensus</command> reference</link>
+    for details.
+   </para>
+   <para>
+    Some options from <command>tricensus</command> are not
+    available here (e.g., tetrahedra and boundary options), since these must
+    be supplied earlier on when generating the initial list of face pairings.
+   </para>
+   <para>
+    There are new options specific to <command>tricensus-mpi</command>,
+    which are as follows.
+   </para>
+   <variablelist>
+    <varlistentry>
+     <term><option>-D, --depth=</option><replaceable>levels</replaceable></term>
+     <listitem>
+      <para>
+       Indicates that subsearch mode should be used (instead of default
+       mode).  The argument <replaceable>levels</replaceable> specifies
+       at what depth in the search tree processing should pass from the
+       controller to a new slave task.
+      </para>
+      <para>
+       The given depth must be strictly positive (running at depth zero
+       is equivalent to running in default mode).
+      </para>
+      <para>
+       See the <link linkend="man-tricensus-mpi-modes">modes of
+       operation</link> section above for further information, as well
+       as hints on choosing a good value for <replaceable>levels</replaceable>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-x, --dryrun</option></term>
+     <listitem>
+      <para>
+       Specifies that a fast dry run should be performed, instead of a
+       full census.
+      </para>
+      <para>
+       In a dry run, each time a slave accepts a task it
+       will immediately mark it as finished with no triangulations found.
+       The behaviour of the controller remains unchanged.
+      </para>
+      <para>
+       The result will be an empty census.  The benefit of a dry run is
+       the log file it produces, which will show precisely how face pairings
+       would be divided into subsearches in a real census run.
+       In particular, the log file will show how
+       many subsearches each face pairing produces (the utility
+       <link linkend="man-tricensus-mpi-status"><command>tricensus-mpi-status</command></link>
+       can help extract this information from the log).
+      </para>
+      <para>
+       At small subsearch depths, a dry run should be extremely fast.
+       As the depth increases however, the dry run will become
+       slower due to the extra work given to the controller.
+      </para>
+      <para>
+       This option is only useful in subsearch mode (it can be used in
+       default mode, but the results are uninteresting).
+       See the <link linkend="man-tricensus-mpi-modes">modes of
+       operation</link> section above for further details.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>Examples</title>
+   <para>
+    Suppose we wish to form a census of all 6-tetrahedron closed
+    non-orientable triangulations, optimised for
+    prime minimal P2-irreducible triangulations (so some
+    non-prime, non-minimal or non-P2-irreducible triangulations may be omitted).
+   </para>
+   <para>
+    We begin by using <command>tricensus</command> to generate a full
+    list of face pairings.
+   </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>tricensus --genpairs -t 6 -i &gt; 6.pairs</userinput>
+    Total face pairings: 97
+    <prompt>example$</prompt>
+</screen>
+
+   <para>
+    We now use <command>tricensus-mpi</command> to run the distributed
+    census.  A wrapper program such as <command>mpirun</command>
+    or <command>mpiexec</command> can generally
+    be used to start the &mpi; processes, though this depends on your
+    specific &mpi; implementation.  The following command runs a distributed
+    census on 10 processors using the &mpich; implementation of &mpi;.
+   </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>mpirun -np 10 /usr/bin/tricensus-mpi -Nnf 6.pairs 6-nor</userinput>
+    <prompt>example$</prompt>
+</screen>
+
+    <para>
+     The current state of processing is kept in the controller log
+     <filename>6-nor.log</filename>.  You can watch this log with the help of
+     <link linkend="man-tricensus-mpi-status"><command>tricensus-mpi-status</command></link>.
+    </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>tricensus-mpi-status 6-nor.log</userinput>
+    Pairing 1: done, 0 found
+    ...
+    Pairing 85: done, 0 found
+    Pairing 86: done, 7 found
+    Pairing 87: running
+    Pairing 88: running
+    Still running, 15 found, last activity: Wed Jun 10 05:57:34 2009
+    <prompt>example$</prompt>
+</screen>
+
+    <para>
+     Once the census is finished, the resulting triangulations will be
+     saved in files such as
+     <filename>6-nor_8.rga</filename>,
+     <filename>6-nor_86.rga</filename> and so on.
+    </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&macosx; and &windows; Users</title>
+   <para>
+    This utility is not shipped with the drag-and-drop app bundle for
+    &macosx; or with the &windows; installer.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regconcat">regconcat</link>,
+    <link linkend="man-sigcensus">sigcensus</link>,
+    <link linkend="man-tricensus">tricensus</link>,
+    <link linkend="man-tricensus-mpi-status">tricensus-mpi-status</link>,
+    <link linkend="man-regina-gui">regina-gui</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    This utility was written by Benjamin Burton <email>bab@debian.org</email>.
+    &manpageack;
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- MPI Census Log Viewer -->
+
+ <refentry id="man-tricensus-mpi-status">
+  <refmeta>
+   <refentrytitle>tricensus-mpi-status</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>tricensus-mpi-status</refname>
+   <refpurpose>Summarise the log file of an &mpi; census of triangulations</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>tricensus-mpi-status</command>
+    <arg choice="req"><replaceable>log-file</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    This utility reads a log file produced by a
+    <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
+    job, and writes a human-readable summary to standard output.
+    It can be used for either jobs that have finished or jobs that are
+    still running, and it can happily read logs that have been
+    compressed using &gzip; or &bzip2;.
+   </para>
+   <para>
+    The logs produced by <command>tricensus-mpi</command> are very
+    detailed, including timestamps, details of which slaves have taken
+    which tasks, and how many triangulations each task has produced.
+    This utility distills this detailed log into an easy-to-read
+    summary, with one line for each face pairing.
+   </para>
+   <para>
+    Output will only appear for face pairings that have been
+    examined so far (which includes face pairings still being processed).
+    This output will include:
+   </para>
+   <itemizedlist>
+    <listitem><para>whether processing for each face pairing has
+     finished;</para></listitem>
+    <listitem><para>the number of triangulations found so far for each
+     face pairing;</para></listitem>
+    <listitem><para>the number of subsearches generated and/or finished
+     for each face pairing (only relevant when running in subsearch
+     mode).</para></listitem>
+   </itemizedlist>
+   <para>
+    The final line of output will list the total number of triangulations
+    found so far, whether the census has finished, and if not, when the
+    last log entry was written.
+   </para>
+   <para>
+    For further explanation of the terminology used above, see the
+    <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
+    reference.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Examples</title>
+   <para>
+    See the
+    <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
+    reference for a sample session in which
+    <command>tricensus-mpi-status</command> is used.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&macosx; and &windows; Users</title>
+   <para>
+    This utility is not shipped with the drag-and-drop app bundle for
+    &macosx; or with the &windows; installer.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-tricensus-mpi">tricensus-mpi</link>,
+    <link linkend="man-regina-gui">regina-gui</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    This utility was written by Benjamin Burton <email>bab@debian.org</email>.
+    &manpageack;
+   </para>
+  </refsect1>
+ </refentry>
+
+ <!-- Isomorphism Tester -->
+
+ <refentry id="man-trisetcmp">
+  <refmeta>
+   <refentrytitle>trisetcmp</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>trisetcmp</refname>
+   <refpurpose>Compare triangulations between two &regina; data files</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>trisetcmp</command>
+    <group>
+     <arg><option>-m</option></arg>
+     <arg><option>-n</option></arg>
+    </group>
+    <arg><option>-s</option></arg>
+    <arg choice="req"><replaceable>file1</replaceable></arg>
+    <arg choice="req"><replaceable>file2</replaceable></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    Compares all triangulations in the first file against
+    all triangulations in the second file, looking for pairs of
+    triangulations that are combinatorially isomorphic.
+   </para>
+   <para>
+    The two given files must be &regina; data files.
+    A full list of matches (or a full list of non-matches if
+    <option>-n</option> is passed) is written to standard output.
+    A match occurs when some triangulation from
+    <replaceable>file1</replaceable> is combinatorially isomorphic to
+    some triangulation from <replaceable>file2</replaceable> (i.e.,
+    identical up to a relabelling of tetrahedra and their vertices).
+   </para>
+   <para>
+    This utility can also do subcomplex testing instead of full
+    isomorphism testing.  See the option <option>-s</option> for
+    details.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>-m</option> (default)</term>
+     <listitem>
+      <para>
+       Output matches only.  All isomorphic matches between
+       triangulations in <replaceable>file1</replaceable>
+       and triangulations in <replaceable>file2</replaceable>
+       will be listed.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-n</option></term>
+     <listitem>
+      <para>
+       Output non-matches only.  All triangulations from
+       <replaceable>file1</replaceable> with no isomorphic match in
+       <replaceable>file2</replaceable> will be listed, and vice versa.
+      </para>
+      <para>
+       If <option>-s</option> is passed then non-matches are
+       tested in one direction only, not both; see below for details.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-s</option></term>
+     <listitem>
+      <para>
+       Instead of testing triangulations for isomorphism, test whether
+       one triangulation is isomorphic to a subcomplex of the other.
+      </para>
+      <para>
+       In the default case of <option>-m</option> (output matches only),
+       this program outputs all instances where a triangulation from
+       <replaceable>file1</replaceable> is isomorphic to a subcomplex
+       of a triangulation from <replaceable>file2</replaceable>.
+      </para>
+      <para>
+       In the case of <option>-n</option> (output non-matches only),
+       this program outputs all triangulations from
+       <replaceable>file1</replaceable> that are not isomorphic to a
+       subcomplex of any triangulation from <replaceable>file2</replaceable>.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  &submani18n;
+
+  <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/trisetcmp</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command-line utilities are installed beneath the
+    <filename>Program&nbsp;Files</filename> directory; on some
+    machines this directory is called
+    <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+    You can start this utility by running
+    <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\trisetcmp.exe</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina-gui">regina-gui</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    This utility was written by Benjamin Burton <email>bab@debian.org</email>.
+    &manpageack;
+   </para>
+  </refsect1>
+ </refentry>
+</appendix>

@@ -1,0 +1,173 @@
+<appendix id="credits">
+ <title>Authors and License</title>
+
+ <sect1 id="acknowledgements">
+  <title>Acknowledgements</title>
+  <para>
+   The primary developers of &regina; are:
+   <itemizedlist>
+    <listitem><para>Benjamin Burton
+     <email>bab@debian.org</email></para></listitem>
+    <listitem><para>Ryan Budney
+     <email>rybu@uvic.ca</email></para></listitem>
+    <listitem><para>William Pettersson
+     <email>william.pettersson@gmail.com</email></para></listitem>
+   </itemizedlist>
+  </para>
+
+  <para>Additional code was contributed by:
+   <itemizedlist>
+    <listitem><para>Matthias Goerner</para></listitem>
+    <listitem><para>David Letscher</para></listitem>
+    <listitem><para>Winfried Bruns, Bogdan Ichim and Christof Soeger
+     (for the &normaliz; library)</para></listitem>
+    <listitem><para>Jeff Weeks (for the &snappea; kernel)</para></listitem>
+   </itemizedlist>
+  </para>
+  <para>Thanks also to the help and expertise of:
+   <itemizedlist>
+    <listitem><para>Bernard Blackham</para></listitem>
+    <listitem><para>Marc Culler</para></listitem>
+    <listitem><para>Dominique Devriese</para></listitem>
+    <listitem><para>Nathan Dunfield</para></listitem>
+    <listitem><para>William Jaco</para></listitem>
+    <listitem><para>Craig Macintyre</para></listitem>
+    <listitem><para>J. Hyam Rubinstein</para></listitem>
+    <listitem><para>Jonathan Shewchuk</para></listitem>
+    <listitem><para>Stephan Tillmann</para></listitem>
+   </itemizedlist>
+  </para>
+  <para>The following institutions have supported the development of &regina;:
+   <itemizedlist>
+    <listitem><para>The American Institute of Mathematics</para></listitem>
+    <listitem><para>The Australian Research Council
+     (grants DP0208490, DP1094516 and DP110101104)</para></listitem>
+    <listitem><para>The Institute for the Physics and Mathematics of the
+     Universe, Tokyo</para></listitem>
+    <listitem><para>Oklahoma State University, USA</para></listitem>
+    <listitem><para>Queensland Cyber Infrastructure Foundation</para></listitem>
+    <listitem><para>RMIT University, Australia</para></listitem>
+    <listitem><para>The University of Melbourne, Australia</para></listitem>
+    <listitem><para>The University of Queensland, Australia</para></listitem>
+    <listitem><para>The University of Victoria, Canada</para></listitem>
+    <listitem><para>The Victorian Partnership for Advanced
+     Computing</para></listitem>
+   </itemizedlist>
+  </para>
+ </sect1>
+
+ <sect1 id="license">
+  <title>License Details</title>
+  <para>
+   &regina; &ndash; Software for 3-manifold topology and normal surface theory
+  </para>
+  <para>
+   &copyrightnotice;
+  </para>
+
+  <sect2 id="license-citation">
+  <title>Citation</title>
+   <para>
+    If you find &regina; useful in your research, please consider
+    citing it as you would any other paper that you use.
+    <link linkend="citing">See here</link> for a suggested form of reference.
+   </para>
+  </sect2>
+
+  <sect2 id="license-gpl">
+   <title>Copying and Modification</title>
+   <para>
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version&nbsp;2 of the License, or (at
+    your option) any later version.
+   </para>
+   <para>
+    This program is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    General Public License for more details.
+   </para>
+   <para>
+    A full copy of the GNU General Public License
+    should be <ulink url="gpl-license.html">included here</ulink>;
+    if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+   </para>
+  </sect2>
+
+  <sect2 id="license-external">
+   <title>External Software</title>
+   <para>
+    Regina makes use of external software for some specialised tasks.
+    The corresponding license details are included below.
+   </para>
+   <sect3 id="license-snappea">
+    <title>&snappea; and &snappy;</title>
+    <para>
+     &regina; includes portions of the &snappea; kernel, which it uses for some
+     geometric calculations.  &snappea; was written by Jeff Weeks, and is now
+     maintained by both Jeff Weeks and Nathan Dunfield.  The SnapPeaKernel is
+     distributed under the terms of the &gnu; General Public License,
+     version&nbsp;2
+     or any later version, as published by the Free Software Foundation.
+    </para>
+    <para>
+     &regina; also includes code from &snappy;, the successor to &snappea;.
+     &snappy; was written by
+     M.&nbsp;Culler, N.&nbsp;M.&nbsp;Dunfield and J.&nbsp;R.&nbsp;Weeks, and is
+     also released under the terms of the &gnu; General Public License.
+    </para>
+   </sect3>
+ 
+   <sect3 id="license-normaliz">
+    <title>&normaliz; Library</title>
+    <para>
+     &regina; includes a copy of &libnormaliz;, which it uses to help with the
+     enumeration of fundamental normal surfaces.  &normaliz; was written
+     by Winfried Bruns, Bogdan Ichim and Christof Soeger.  It is distributed
+     under the terms of the &gnu; General Public License as published by the
+     Free Software Foundation, either version&nbsp;3 of the License, or
+     (at your option) any later version.
+    </para>
+   </sect3>
+ 
+   <sect3 id="license-orb">
+    <title>Orb Kernel</title>
+    <para>
+     &regina; includes snippets of code from &orb;, for use in importing and
+     exporting files in Orb / Casson format.  &orb; is based on &snappea;
+     (see above) with additional code written by Damian Heard, who has also
+     given permission for his code to be distributed under the terms of the
+     &gnu; General Public License.
+    </para>
+   </sect3>
+ 
+   <sect3 id="license-srchilite">
+    <title>Syntax Highlighting</title>
+    <para>
+     &regina; includes code from
+     <application>Source-highlight-qt</application> and language definitions
+     from <application>&gnu; Source-highlight</application>,
+     which it uses to highlight &python; scripts.
+     Both projects are by Lorenzo Bettini and others, and are distributed
+     under the terms of the &gnu; General Public License, version&nbsp;3.
+    </para>
+   </sect3>
+ 
+   <sect3 id="license-icons">
+    <title>Icons</title>
+    <para>
+     The Oxygen icons are dual-licensed under the Creative Common
+     Attribution-ShareAlike&nbsp;3.0 License or the
+     &gnu; Library General Public License.
+     The python icons are based on applications-python.svg as shipped with the
+     humanity-icon-theme package in Ubuntu&nbsp;11.04, the contents of which
+     are licensed under the &gnu; General Public License version 2.
+    </para>
+   </sect3>
+  </sect2>
+ </sect1>
+
+</appendix>

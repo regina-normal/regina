@@ -1,0 +1,83 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-filter-properties">
+ <refmeta>
+  <refentrytitle>filter (properties)</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>filter (properties)</refname>
+  <refpurpose>A surface filter that uses basic properties</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+filter ::= (&xml-compact-filter;?, &xml-euler-filter;?,
+            &xml-orbl-filter;?, &xml-realbdry-filter;?)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      See the general &xml-filter; element documentation.
+     </entry></row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A <emphasis>property filter</emphasis>
+   filters normal surfaces by examining basic topological properties
+   such as orientability and Euler characteristic.
+  </para>
+  <para>
+   The specific constraints imposed by this filter
+   are specified by its child &xml; elements.  If this filter has
+   several child elements, a surface must satisfy all of the
+   corresponding constraints in order to be accepted by this filter.
+  </para>
+  <para>
+   More information about surface filters can be found in the general
+   &xml-filter; element documentation.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>filter</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-packet-surfacefilter;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    The following elements occur in <sgmltag>filter</sgmltag> for a
+    filter by basic properties:
+    <simplelist type="inline">
+     <member>&xml-compact-filter;</member>
+     <member>&xml-euler-filter;</member>
+     <member>&xml-orbl-filter;</member>
+     <member>&xml-realbdry-filter;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+ </refsect1>
+</refentry>

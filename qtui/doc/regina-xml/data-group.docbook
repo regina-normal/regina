@@ -1,0 +1,108 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-group">
+ <refmeta>
+  <refentrytitle>group</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>group</refname>
+  <refpurpose>A group presentation</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+group ::= (&xml-reln;*)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>generators</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-group; element stores a single group presentation.
+  </para>
+  <para>
+   The generators of the group are numbered 0, 1, 2, etc.
+   The total number of generators is specified by the
+   <sgmltag>generators</sgmltag> attribute.
+  </para>
+  <para>
+   The relations of the group are specified by the child &xml-reln;
+   elements.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>group</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-fundgroup;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    The following elements occur in <sgmltag>group</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-reln;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>generators</sgmltag></term>
+    <listitem>
+     <para>
+      The number of generators in this group presentation; this should be
+      a non-negative integer.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </refsect1>
+
+ <refsect1>
+  <title>Example</title>
+  <para>
+   The following &xml; snippet represents the group
+   <literal>&lt; x, y | x y^2 = 1 &gt;</literal>.
+  </para>
+  <programlisting>
+&lt;group generators=&quot;2&quot;&gt;
+  &lt;reln&gt; 0^1 1^2 &lt;/reln&gt;
+&lt;/group&gt;
+  </programlisting>
+ </refsect1>
+</refentry>

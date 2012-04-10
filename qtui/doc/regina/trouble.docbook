@@ -1,0 +1,401 @@
+<chapter id="troubleshooting">
+ <title>Troubleshooting and <acronym>FAQ</acronym></title>
+
+ <qandaset>
+  <qandadiv id="trouble-running"><title>Running &regina;</title>
+   <qandaentry id="trouble-start">
+    <question><para>
+     How do I start &regina;?
+    </para></question>
+    <answer>
+     <para>
+      If you use &linux;, look for &regina; in your applications menu
+      (for instance, the main &gnome; or &kde; menu).  It might be classified
+      under <guilabel>Science</guilabel> or <guilabel>Education</guilabel>.
+      If all else fails, you can always start &regina; from the command line
+      by running <command>regina-gui</command>.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="run-fedora-menu.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+     <para>
+      If you use &macosx;, you should have downloaded a drag-and-drop
+      app bundle.  You can start &regina; simply by opening this app
+      from wherever you dragged it to (typically the
+      <guilabel>Applications</guilabel> folder).
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="run-mac-white.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+     <para>
+      If you use &windows;, you can find &regina; in the
+      <guilabel>Start</guilabel> menu.  Look for
+      <menuchoice>
+       <guimenu>All Programs</guimenu>
+       <guisubmenu>Regina&nbsp;&regversion;</guisubmenu>
+       <guimenuitem>&regina;</guimenuitem>
+      </menuchoice>.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="run-windows.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+    </answer>
+   </qandaentry>
+
+   <qandaentry id="trouble-regina-python">
+    <question><para>
+     How can I run <command>regina-python</command> or the other
+     command-line tools?
+    </para></question>
+    <answer>
+     <para>
+      If you downloaded a &linux; package, these tools should all be in
+      <filename>/usr/bin/</filename>.  You can run them directly from
+      the command line:
+     </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>regina-python</userinput>
+    Regina 4.92
+    Software for 3-manifold topology and normal surface theory
+    Copyright (c) 1999-2012, The Regina development team
+    &gt;&gt;&gt;
+</screen>
+
+     <para>
+      If you downloaded a drag-and-drop app bundle for &macosx;,
+      these tools are all shipped inside it.
+      If you dragged &regina; to the main
+      <guilabel>Applications</guilabel> folder, you can find them in
+      <filename>/Applications/Regina.app/Contents/MacOS/</filename>.
+     </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>/Applications/Regina.app/Contents/MacOS/regina-python</userinput>
+    Regina 4.92
+    Software for 3-manifold topology and normal surface theory
+    Copyright (c) 1999-2012, The Regina development team
+    &gt;&gt;&gt;
+</screen>
+
+     <para>
+      If you use &windows;, the tool
+      <command>regina-python</command> is not available.
+      &windows;.  However, you can still use &python; scripting in &regina;'s
+      graphical user interface, by opening a graphical &python; console or
+      using script packets.
+     </para>
+     <para>
+      The other command-line tools (such as <command>regfiledump</command>,
+      <command>tricensus</command> and so on) are installed under
+      &windows; beneath the
+      <filename>Program&nbsp;Files</filename> directory; on some
+      machines this directory is called
+      <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+      Specifically, the command-line tools are stored in the subdirectory
+      <filename>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\</filename>.
+
+<screen>
+    <prompt>example$</prompt> <userinput>"c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\tricensus.exe" -t2 output.rga</userinput>
+    Starting census generation...
+    0:1 0:0 1:0 1:1 | 0:2 0:3 1:3 1:2
+    0:1 0:0 1:0 1:1 | 0:2 0:3 bdry bdry
+    ...
+</screen>
+     </para>
+    </answer>
+   </qandaentry>
+
+   <qandaentry>
+    <question><para>
+     On &macosx;, do I need &fink; any more?
+    </para></question>
+    <answer>
+     <para>
+      No!  As of version&nbsp;4.92, &regina; ships as a standalone app
+      bundle that you can drag and drop straight into your Applications
+      folder.  If you installed &fink; for an earlier version of
+      &regina; and you do not use it for anything else, you can remove
+      it: simply delete <filename>/sw</filename> and everything beneath it.
+     </para>
+    </answer>
+   </qandaentry>
+  </qandadiv>
+
+  <qandadiv id="trouble-python"><title>&python; Scripting</title>
+   <qandaentry id="trouble-python-disabled">
+    <question><para>
+     &regina; tells me that &python; scripting has been disabled.
+    </para></question>
+    <answer>
+     <para>
+      This means that whoever built your version of &regina; did
+      not include &python; support in the build.
+     </para>
+     <para>
+      The best solution is to download a ready-made package from the
+      <ulink url="http://regina.sourceforge.net/#download">&regina;
+      website</ulink>.  All of the ready-made packages should have
+      &python; support built in.
+     </para>
+     <para>
+      If you need to build &regina; yourself from source, make sure you have the
+      <ulink url="http://regina.sourceforge.net/source.html#sysreq">&python;
+      and &boost-python; development files</ulink> installed.
+      If not, &regina; will warn you about this when you run
+      <command>cmake</command>:
+     </para>
+<screen>
+<prompt>example:~/source/regina/build&gt;</prompt> <userinput>cmake ..</userinput>
+-- The C compiler identification is GNU
+-- The CXX compiler identification is GNU
+...
+... (lots of output)
+...
+-----------------------------------------------------------------------------
+-- The following OPTIONAL packages could NOT be located on your system.
+-- Consider installing them to enable more features from this software.
+-----------------------------------------------------------------------------
+   * Python development  &lt;http://www.python.org/&gt;
+     Build Python bindings for Regina
+
+-----------------------------------------------------------------------------
+
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/bab/source/regina/build
+<prompt>example:~/source/regina/build&gt;</prompt>
+</screen>
+     <para>
+      If you are stuck, please mail &reguserlist; for assistance,
+      including your <filename>CMakeCache.txt</filename>
+      if possible to help diagnose the problem.
+     </para>
+    </answer>
+   </qandaentry>
+
+   <qandaentry id="trouble-python-typeerror">
+    <question><para>
+     While working with a &python; object I receive a
+     <exceptionname>TypeError</exceptionname> with the message
+     &quot;bad argument type for built-in operation&quot;.
+     I know the object is valid since I've used it earlier without problems.
+    </para></question>
+    <answer>
+     <para>
+      You may have run into an unusual &boost-python; issue regarding
+      ownership semantics.  If you have been using tree insertion routines
+      such as <function>NPacket.insertChildFirst()</function>,
+      <function>NPacket.insertChildLast()</function> or
+      <function>NPacket.insertChildAfter()</function>, this is
+      particularly likely.
+     </para>
+     <para>
+      See the <link linkend="python-ownership">&python; scripting notes</link>
+      for a full discussion of this problem and how to work around it.
+     </para>
+    </answer>
+   </qandaentry>
+
+   <qandaentry id="trouble-python-sigerror">
+    <question><para>
+     While calling a &python; function I receive a
+     <exceptionname>Boost.Python.ArgumentError</exceptionname> with the message
+     &quot;Python argument types did not match C++ signature&quot;.  I'm
+     fairly sure I'm passing the right arguments.
+    </para></question>
+    <answer>
+     <para>
+      You may have run into the same unusual ownership issue with
+      &boost-python; discussed in the
+      <link linkend="trouble-python-typeerror">previous question</link>.
+      Again, if you have been using tree insertion routines such as
+      <function>NPacket.insertChildFirst()</function>,
+      <function>NPacket.insertChildLast()</function> or
+      <function>NPacket.insertChildAfter()</function>, this is
+      particularly likely.
+     </para>
+     <para>
+      See the <link linkend="python-ownership">&python; scripting notes</link>
+      for a full discussion of this problem and how to work around it.
+     </para>
+     <para>
+      On the other hand, you may just be calling a function incorrectly.
+      You might wish to check the
+      <link linkend="python-docs">&api; documentation</link>,
+      which describes all of &regina;'s functions and what
+      arguments they should take.
+     </para>
+    </answer>
+   </qandaentry>
+  </qandadiv>
+
+  <qandadiv id="trouble-misc"><title>Miscellaneous</title>
+   <qandaentry id="trouble-packet-uneditable">
+    <question><para>
+     I cannot edit a triangulation.  I can view it but I can't change anything.
+    </para></question>
+    <answer>
+     <para>
+      If a triangulation has any normal surface lists or angle structure
+      lists beneath it, that triangulation must not change.
+      This is because normal surfaces and angle structures store their
+      coordinates relative to the triangulation, and any changes to the
+      triangulation will invalidate these coordinates.
+     </para>
+     <para>
+      If you wish to modify the triangulation,
+      <link linkend="packet-clone">try cloning it</link>
+      (not the subtree, just the triangulation itself).
+      Then you can edit the clone instead.
+     </para>
+     <para>
+      Triangulations that cannot be edited will be marked with a
+      small padlock in the packet tree, as seen with the
+      figure eight knot complement below.
+     </para>
+     <para>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="padlock.png"/>
+       </imageobject>
+      </inlinemediaobject>
+     </para>
+    </answer>
+   </qandaentry>
+
+   <qandaentry id="trouble-compile">
+    <question><para>
+     I am having trouble compiling &regina;.
+    </para></question>
+    <answer>
+     <para>
+      If you can, it is best to install &regina; from a ready-made
+      package.  See the
+      <ulink url="http://regina.sourceforge.net/#download">&regina;
+      website</ulink> for a list of &linux; distributions
+      that have packages available.
+     </para>
+     <para>
+      If you do need to build &regina; yourself, the website offers
+      help on
+      <ulink url="http://regina.sourceforge.net/source.html">building
+      &regina; from source</ulink>.  There is also a page on
+      <ulink url="http://regina.sourceforge.net/buildtips.html">building
+      &regina; on different distributions</ulink>, which suggests specific
+      <command>cmake</command> options tailored to your particular
+      type of machine.
+     </para>
+    </answer>
+   </qandaentry>
+
+   <qandaentry id="trouble-testsuite">
+    <question><para>
+     What is the test suite, and how do I run it?
+    </para></question>
+    <answer>
+     <para>
+      Sometimes building an application on different
+      hardware or against different versions of libraries can produce
+      unforseen bugs that do not appear on the developer's machine(s).
+      To help guard against such problems, &regina; ships with a rich test
+      suite.  The test suite asks &regina; to perform
+      different calculations that isolate different portions of its
+      mathematical code, and it verifies that &regina; gets all
+      the answers correct.
+     </para>
+     <para>
+      You can only run the test suite if you are
+      <ulink url="http://regina.sourceforge.net/source.html">building
+      &regina; from source</ulink> yourself.
+      If you download a ready-made package, the person who built the
+      package should have already verified that &regina; passes the
+      test suite (as all of the packages on the &regina; website do).
+     </para>
+     <para>
+      You will also need
+      <ulink url="http://regina.sourceforge.net/source.html#sysreq"><application>CppUnit</application> installed</ulink>.
+      Otherwise the test suite will run but only with the simpler &python;
+      tests, not the rich and detailed &cpp; calculation engine tests.
+     </para>
+     <para>
+      To run the test suite, move into your main build
+      directory and type <userinput>make test ARGS=-V</userinput>.
+      You should see the individual tests being run, as illustrated below.
+     </para>
+<screen>
+<prompt>example:~/source/regina/build&gt;</prompt> <userinput>make test ARGS=-V</userinput>
+Running tests...
+...
+... (some initial output)
+...
+1: ---------------------------------------
+1: Test suite for Regina's python bindings
+1: ---------------------------------------
+1: 
+1: Running euler.test ... ok
+1: Running file.test ... ok
+...
+... (more output)
+...
+2: Regina calculation engine test suite
+2: 
+2: NBitmaskTest::sizes... ok.
+2: NBitmaskTest::firstLastBit... ok.
+2: NBitmaskTest::truncate... ok.
+...
+... (lots and lots of output)
+...
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =  19.48 sec
+<prompt>example:~/source/regina/build&gt;</prompt>
+</screen>
+     <para>
+      We see from the output above that &regina; passed all of its tests
+      (and hopefully this is what you will see too).
+     </para>
+    </answer>
+   </qandaentry>
+
+   <qandaentry>
+    <question><para>
+     Something else not described in this list has gone wrong.
+    </para></question>
+    <answer>
+     <para>
+      Perhaps something crashed.  Maybe the program gave the wrong
+      answer.  Or it could be just a little too slow?
+     </para>
+     <para>
+      Please! - mail the authors and let us know.  You are welcome to
+      write to us directly (our <link linkend="acknowledgements">email
+      addresses are here</link>).  Or even better,
+      use the <link linkend="services">&sourceforge; services</link>
+      such as the bug tracking system and mailing lists so that the
+      problem you report is publicly archived.
+     </para>
+     <para>
+      This program is permanently in development.  There is a very
+      long &todo; list, and chances are your problem is on it.  And
+      then again chances are it's not.  So please, let us know what you
+      think can be fixed or improved.
+     </para>
+    </answer>
+   </qandaentry>
+  </qandadiv>
+ </qandaset>
+</chapter>
+

@@ -1,0 +1,67 @@
+example$ regina-python
+Regina 4.92
+Software for 3-manifold topology and normal surface theory
+Copyright (c) 1999-2012, The Regina development team
+&gt;&gt;&gt; ################################
+... #
+... #  Sample Python Script
+... #
+... #  Illustrates progress reporting during long operations.
+... #
+... #  See the file "progress.session" for the results of running this script.
+... #
+... ################################
+... 
+&gt;&gt;&gt; import time
+&gt;&gt;&gt; 
+&gt;&gt;&gt; # Create an 18-tetrahedron triangulation of a knot complement with real
+... # boundary faces (not an ideal vertex).  The knot is L106003 from the
+... # knot/link census.  We used Regina to truncate the ideal vertex, and
+... # then copied the isomorphism signature so that we can reconstruct the
+... # triangulation here.
+... sig = 'sfLfvQvwwMQQQccjghjkmqlonrnrqpqrnsnksaisnrobocksks'
+&gt;&gt;&gt; tri = NTriangulation.fromIsoSig(sig)
+&gt;&gt;&gt; print tri.getNumberOfTetrahedra(), 'tetrahedra'
+18 tetrahedra
+&gt;&gt;&gt; 
+&gt;&gt;&gt; # Create a progress manager to use during the normal surface enumeration.
+... # This will report the state of progress while the enumeration runs in
+... # the background.
+... manager = NProgressManager()
+&gt;&gt;&gt; 
+&gt;&gt;&gt; # Start the normal surface enumeration.
+... # Because we are passing a progress manager to enumerate(), the
+... # enumeration will start in the background and control will return
+... # immediately to the python console.
+... surfaces = NNormalSurfaceList.enumerate(tri,
+...     NNormalSurfaceList.STANDARD, 1, manager)
+&gt;&gt;&gt; 
+&gt;&gt;&gt; # Wait for the surface enumeration to fully start up.
+... while not manager.isStarted():
+...     time.sleep(1)
+... 
+&gt;&gt;&gt; 
+&gt;&gt;&gt; # At this point the enumeration is up and running.
+... # Output a progress report every second until it finishes.
+... prog = manager.getProgress()
+&gt;&gt;&gt; while not manager.isFinished():
+...     print 'Progress:', prog.getDescription()
+...     time.sleep(1)
+... 
+Progress: 4/21
+Progress: 16/21
+Progress: 17/21
+Progress: 17/21
+Progress: 19/21
+Progress: 19/21
+&gt;&gt;&gt; 
+&gt;&gt;&gt; # The surface enumeration is now complete.
+... print surfaces.getNumberOfSurfaces(), 'normal surfaces'
+2319 normal surfaces
+&gt;&gt;&gt; 
+&gt;&gt;&gt; # Output the total time spent during the surface enumeration.
+... print 'Total real time:', prog.getRealTime(), 'seconds'
+Total real time: 5 seconds
+&gt;&gt;&gt; print 'Total cpu time:', prog.totalCPUTime(), 'seconds'
+Total cpu time: 5 seconds
+&gt;&gt;&gt;
