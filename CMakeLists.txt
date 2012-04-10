@@ -287,7 +287,6 @@ MACRO_LOG_FEATURE(CPPUNIT_FOUND
 # Miscellaneous subdirectories
 ADD_SUBDIRECTORY(docs)
 ADD_SUBDIRECTORY(examples)
-ADD_SUBDIRECTORY(icons)
 
 # Configure file
 CONFIGURE_FILE (
