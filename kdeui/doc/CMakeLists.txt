@@ -1,2 +1,0 @@
-ADD_SUBDIRECTORY(regina)
-ADD_SUBDIRECTORY(regina-xml)
