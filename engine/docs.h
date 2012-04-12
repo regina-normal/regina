@@ -67,7 +67,7 @@
  *  <ul>
  *    <li>Benjamin Burton &lt;bab@debian.org&gt;</li>
  *    <li>Ryan Budney &lt;rybu@uvic.ca&gt;</li>
- *    <li>William Pettersson</li>
+ *    <li>William Pettersson &lt;william.pettersson@gmail.com&gt;</li>
  *  </ul>
  *  <p>
  *  Many others have been of assistance with this project, be it through
