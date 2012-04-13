@@ -10,7 +10,7 @@ For help with building Regina from source, see:
 
 To run regina:
 
-  prompt$ regina-kde      (for the graphical user interface)
+  prompt$ regina-gui      (for the graphical user interface)
   prompt$ regina-python   (for the scripting-only interface)
 
 If you encounter problems, try:
@@ -23,4 +23,4 @@ or mail your question to:
 
 Enjoy!
 
- -- Ben Burton <bab@debian.org>, Wed, 31 Aug 2011 15:02:16 +1000
+ -- Ben Burton <bab@debian.org>, Fri, 13 Apr 2012 11:56:19 +1000
