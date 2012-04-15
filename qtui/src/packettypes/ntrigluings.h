@@ -246,7 +246,7 @@ inline void GluingsModel::setReadWrite(bool readWrite) {
     }
 }
 
-inline QModelIndex GluingsModel::parent(const QModelIndex& /* unused index */) const {
+inline QModelIndex GluingsModel::parent(const QModelIndex&) const {
     // All items are top-level.
     return QModelIndex();
 }
