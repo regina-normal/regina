@@ -38,6 +38,7 @@
 #include <QTextDocument>
 
 const IsoSigHandler IsoSigHandler::instance3(3);
+const IsoSigHandler IsoSigHandler::instance4(4);
 
 regina::NPacket* IsoSigHandler::importData(const QString& fileName,
         QWidget* parentWidget) const {

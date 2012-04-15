@@ -40,7 +40,9 @@
  * isomorphism signature lists.
  *
  * Rather than creating new objects of this class, the globally
- * available object IsoSigHandler::instance3 should always be used.
+ * available objects IsoSigHandler::instance3 and IsoSigHandler::instance4
+ * (for 3-manifold and 4-manifold triangulations respectively) should always
+ * be used.
  */
 class IsoSigHandler : public PacketImporter {
     using PacketImporter::importData;
@@ -48,9 +50,6 @@ class IsoSigHandler : public PacketImporter {
         /**
          * Which dimension of triangulations do our isomorphism
          * signatures describe?
-         *
-         * This data member is reserved for future expansion.  The only value
-         * allowed at present is 3.
          */
         unsigned dimension_;
 
@@ -59,6 +58,7 @@ class IsoSigHandler : public PacketImporter {
          * Globally available instances of this class.
          */
         static const IsoSigHandler instance3;
+        static const IsoSigHandler instance4;
 
     public:
         /**

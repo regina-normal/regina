@@ -128,7 +128,7 @@ void ReginaMain::setupActions() {
     importMenu->addAction(act);
 
     act = new QAction(this);
-    act->setText(tr("&Isomorphism Signature List"));
+    act->setText(tr("&Isomorphism Signature List (3-D)"));
     act->setIcon(ReginaSupport::themeIcon("document-sign"));
     act->setToolTip(tr("Import an isomorphism signature list "
         "for 3-manifold triangulations"));
@@ -137,6 +137,19 @@ void ReginaMain::setupActions() {
         "For each isomorphism signature, "
         "a new 3-manifold triangulation will be created in this packet tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(importIsoSig3()) );
+    treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("&Isomorphism Signature List (4-D)"));
+    act->setIcon(ReginaSupport::themeIcon("document-sign"));
+    act->setToolTip(tr("Import an isomorphism signature list "
+        "for 4-manifold triangulations"));
+    act->setWhatsThis(tr("Import an external text file containing "
+        "isomorphism signatures for 4-manifold triangulations.  "
+        "For each isomorphism signature, "
+        "a new 4-manifold triangulation will be created in this packet tree."));
+    connect(act, SIGNAL(triggered()), this, SLOT(importIsoSig4()) );
     treeGeneralEditActions.append(act);
     importMenu->addAction(act);
 

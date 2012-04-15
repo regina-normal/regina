@@ -49,7 +49,12 @@ void ReginaMain::importDehydration() {
 
 void ReginaMain::importIsoSig3() {
     importFile(IsoSigHandler::instance3, 0, tr(FILTER_ALL),
-        tr("Import Isomorphism Signature List"));
+        tr("Import Isomorphism Signature List (3-D)"));
+}
+
+void ReginaMain::importIsoSig4() {
+    importFile(IsoSigHandler::instance4, 0, tr(FILTER_ALL),
+        tr("Import Isomorphism Signature List (4-D)"));
 }
 
 void ReginaMain::importPDF() {
