@@ -117,6 +117,22 @@ Dim4Triangulation* Dim4ExampleTriangulation::s3xs1Twisted() {
     return ans;
 }
 
+Dim4Triangulation* Dim4ExampleTriangulation::cappellShaneson() {
+    // Use the gluings described in arXiv:1109.3899.
+    Dim4Triangulation* ans = new Dim4Triangulation();
+    ans->setPacketLabel("Cappell-Shaneson knot complement");
+
+    Dim4Pentachoron* p = ans->newPentachoron();
+    Dim4Pentachoron* q = ans->newPentachoron();
+    q->joinTo(0, p, NPerm5(2,0,1,3,4));
+    q->joinTo(2, p, NPerm5(0,1,4,2,3));
+    q->joinTo(3, p, NPerm5(0,2,3,1,4));
+    p->joinTo(3, p, NPerm5(1,2,3,0,4));
+    q->joinTo(4, q, NPerm5(0,2,3,4,1));
+
+    return ans;
+}
+
 Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
         const NTriangulation& base) {
     Dim4Triangulation* ans = new Dim4Triangulation();

@@ -116,6 +116,28 @@ class REGINA_API Dim4ExampleTriangulation {
          */
 
         /**
+         * \name Ideal Triangulations
+         */
+        /*@{*/
+
+        /**
+         * Returns a two-pentachoron triangulation of a Cappell-Shaneson
+         * 2-knot complement in the 4-sphere.  This triangulation is
+         * described and analysed in "Triangulating a Cappell-Shaneson
+         * knot complement", Budney, Burton and Hillman, Preprint,
+         * arXiv:1109.3899, Sep 2011.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static Dim4Triangulation* cappellShaneson();
+
+        /*@}*/
+        /**
+         * (end: Ideal Triangulations)
+         */
+
+        /**
          * \name Constructions from 3-Manifold Triangulations
          */
         /*@{*/

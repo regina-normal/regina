@@ -44,6 +44,8 @@ void addDim4ExampleTriangulation() {
             return_value_policy<manage_new_object>())
         .def("s3xs1Twisted", &Dim4ExampleTriangulation::s3xs1Twisted,
             return_value_policy<manage_new_object>())
+        .def("cappellShaneson", &Dim4ExampleTriangulation::cappellShaneson,
+            return_value_policy<manage_new_object>())
         .def("doubleCone", &Dim4ExampleTriangulation::doubleCone,
             return_value_policy<manage_new_object>())
         .def("singleCone", &Dim4ExampleTriangulation::singleCone,
@@ -52,6 +54,7 @@ void addDim4ExampleTriangulation() {
         .staticmethod("rp4")
         .staticmethod("s3xs1")
         .staticmethod("s3xs1Twisted")
+        .staticmethod("cappellShaneson")
         .staticmethod("doubleCone")
         .staticmethod("singleCone")
     ;
