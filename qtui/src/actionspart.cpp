@@ -297,18 +297,6 @@ void ReginaMain::setupActions() {
     QMenu* treeMenu = menuBar()->addMenu(tr("&Packet Tree"));
 
     // New packets:
-    QAction *actAngleStructure = new QAction(this);
-    actAngleStructure->setText(tr("New &Angle Structure Solutions"));
-    actAngleStructure->setIcon(IconCache::icon(IconCache::packet_angles));
-    actAngleStructure->setShortcut(tr("Alt+a"));
-    actAngleStructure->setToolTip(tr("New angle structure solutions"));
-    actAngleStructure->setWhatsThis(
-        tr("Create a new list of vertex angle structures "
-        "for a triangulation."));
-    connect(actAngleStructure, SIGNAL(triggered()), this, SLOT(newAngleStructures()) );
-    treeGeneralEditActions.append(actAngleStructure);
-    treeMenu->addAction(actAngleStructure);
-
     QAction* actContainer = new QAction(this);
     actContainer->setText(tr("New &Container"));
     actContainer->setIcon(IconCache::icon(IconCache::packet_container));
@@ -320,6 +308,41 @@ void ReginaMain::setupActions() {
     connect(actContainer, SIGNAL(triggered()), this, SLOT(newContainer()) );
     treeGeneralEditActions.append(actContainer);
     treeMenu->addAction(actContainer);
+
+    QAction* actTriangulation = new QAction(this);
+    actTriangulation->setText(tr("New &Triangulation"));
+    actTriangulation->setIcon(IconCache::icon(IconCache::packet_triangulation));
+    actTriangulation->setShortcut(tr("Alt+t"));
+    actTriangulation->setToolTip(tr("New triangulation"));
+    actTriangulation->setWhatsThis(
+        tr("Create a new 3-manifold triangulation."));
+    connect(actTriangulation, SIGNAL(triggered()), this,
+        SLOT(newTriangulation()) );
+    treeGeneralEditActions.append(actTriangulation);
+    treeMenu->addAction(actTriangulation);
+
+    QAction* actSurfaces = new QAction(this);
+    actSurfaces->setText(tr("New &Normal Surface List"));
+    actSurfaces->setIcon(IconCache::icon(IconCache::packet_surfaces));
+    actSurfaces->setShortcut(tr("Alt+n"));
+    actSurfaces->setToolTip(tr("New normal surface list"));
+    actSurfaces->setWhatsThis(tr("Create a new list of vertex normal surfaces "
+        "for a triangulation."));
+    connect(actSurfaces, SIGNAL(triggered()), this, SLOT(newNormalSurfaces()) );
+    treeGeneralEditActions.append(actSurfaces);
+    treeMenu->addAction(actSurfaces);
+
+    QAction *actAngleStructure = new QAction(this);
+    actAngleStructure->setText(tr("New &Angle Structure Solutions"));
+    actAngleStructure->setIcon(IconCache::icon(IconCache::packet_angles));
+    actAngleStructure->setShortcut(tr("Alt+a"));
+    actAngleStructure->setToolTip(tr("New angle structure solutions"));
+    actAngleStructure->setWhatsThis(
+        tr("Create a new list of vertex angle structures "
+        "for a triangulation."));
+    connect(actAngleStructure, SIGNAL(triggered()), this, SLOT(newAngleStructures()) );
+    treeGeneralEditActions.append(actAngleStructure);
+    treeMenu->addAction(actAngleStructure);
 
     QAction* actFilter = new QAction(this);
     actFilter->setText(tr("New &Filter"));
@@ -333,27 +356,16 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.append(actFilter);
     treeMenu->addAction(actFilter);
 
-    QAction* actSurfaces = new QAction(this);
-    actSurfaces->setText(tr("New &Normal Surface List"));
-    actSurfaces->setIcon(IconCache::icon(IconCache::packet_surfaces));
-    actSurfaces->setShortcut(tr("Alt+n"));
-    actSurfaces->setToolTip(tr("New normal surface list"));
-    actSurfaces->setWhatsThis(tr("Create a new list of vertex normal surfaces "
-        "for a triangulation."));
-    connect(actSurfaces, SIGNAL(triggered()), this, SLOT(newNormalSurfaces()) );
-    treeGeneralEditActions.append(actSurfaces);
-    treeMenu->addAction(actSurfaces);
-
-    QAction* actPDF = new QAction(this);
-    actPDF->setText(tr("New &PDF Document"));
-    actPDF->setIcon(IconCache::icon(IconCache::packet_pdf));
-    actPDF->setShortcut(tr("Alt+p"));
-    actPDF->setToolTip(tr("New PDF document"));
-    actPDF->setWhatsThis(tr("Create a new PDF packet containing a copy of "
-        "an external PDF document."));
-    connect(actPDF, SIGNAL(triggered()), this, SLOT(newPDF()) );
-    treeGeneralEditActions.append(actPDF);
-    treeMenu->addAction(actPDF);
+    QAction* actText = new QAction(this);
+    actText->setText(tr("New Te&xt"));
+    actText->setIcon(IconCache::icon(IconCache::packet_text));
+    actText->setShortcut(tr("Alt+x"));
+    actText->setToolTip(tr("New text packet"));
+    actText->setWhatsThis(tr("Create a new piece of text to store within "
+        "the packet tree."));
+    connect(actText, SIGNAL(triggered()), this, SLOT(newText()) );
+    treeGeneralEditActions.append(actText);
+    treeMenu->addAction(actText);
 
     QAction* actScript = new QAction(this);
     actScript->setText(tr("New &Script"));
@@ -366,26 +378,16 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.append(actScript);
     treeMenu->addAction(actScript);
 
-    QAction* actText = new QAction(this);
-    actText->setText(tr("New Te&xt"));
-    actText->setIcon(IconCache::icon(IconCache::packet_text));
-    actText->setShortcut(tr("Alt+x"));
-    actText->setToolTip(tr("New text packet"));
-    actText->setWhatsThis(tr("Create a new piece of text to store within "
-        "the packet tree."));
-    connect(actText, SIGNAL(triggered()), this, SLOT(newText()) );
-    treeGeneralEditActions.append(actText);
-    treeMenu->addAction(actText);
-
-    QAction* actTriangulation = new QAction(this);
-    actTriangulation->setText(tr("New &Triangulation"));
-    actTriangulation->setIcon(IconCache::icon(IconCache::packet_triangulation));
-    actTriangulation->setShortcut(tr("Alt+t"));
-    actTriangulation->setToolTip(tr("New triangulation"));
-    actTriangulation->setWhatsThis(tr("Create a new 3-manifold triangulation."));
-    connect(actTriangulation, SIGNAL(triggered()), this, SLOT(newTriangulation()) );
-    treeGeneralEditActions.append(actTriangulation);
-    treeMenu->addAction(actTriangulation);
+    QAction* actPDF = new QAction(this);
+    actPDF->setText(tr("New &PDF Document"));
+    actPDF->setIcon(IconCache::icon(IconCache::packet_pdf));
+    actPDF->setShortcut(tr("Alt+p"));
+    actPDF->setToolTip(tr("New PDF document"));
+    actPDF->setWhatsThis(tr("Create a new PDF packet containing a copy of "
+        "an external PDF document."));
+    connect(actPDF, SIGNAL(triggered()), this, SLOT(newPDF()) );
+    treeGeneralEditActions.append(actPDF);
+    treeMenu->addAction(actPDF);
 
     treeMenu->addSeparator();
 

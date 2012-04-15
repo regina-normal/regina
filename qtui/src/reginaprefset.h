@@ -558,8 +558,8 @@ class ReginaPrefSet : public QObject {
         // Read and write python libraries to/from the regina-python
         // configuration file.  As an exception, under Windows, use the
         // registry instead.
-        bool readPythonLibraries();
-        bool savePythonLibraries() const;
+        void readPythonLibraries();
+        void savePythonLibraries() const;
 };
 
 inline GraphvizStatus::GraphvizStatus() : flag_(unknown.flag_) {

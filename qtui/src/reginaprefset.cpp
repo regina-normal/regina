@@ -257,7 +257,7 @@ QString ReginaPrefSet::pythonLibrariesConfig() {
 #endif
 }
 
-bool ReginaPrefSet::readPythonLibraries() {
+void ReginaPrefSet::readPythonLibraries() {
     QString configFile = pythonLibrariesConfig();
     if (configFile.isNull()) {
         QSettings pySettings(QCoreApplication::organizationDomain(),
@@ -272,7 +272,7 @@ bool ReginaPrefSet::readPythonLibraries() {
 
         QFile f(configFile);
         if (! f.open(QIODevice::ReadOnly))
-            return false;
+            return /* false */;
 
         QTextStream in(&f);
         in.setCodec(QTextCodec::codecForName("UTF-8"));
@@ -297,11 +297,11 @@ bool ReginaPrefSet::readPythonLibraries() {
             line = in.readLine();
         }
 
-        return true;
+        return /* true */;
     }
 }
 
-bool ReginaPrefSet::savePythonLibraries() const {
+void ReginaPrefSet::savePythonLibraries() const {
     QString configFile = pythonLibrariesConfig();
     if (configFile.isNull()) {
         QSettings pySettings(QCoreApplication::organizationDomain(),
@@ -313,7 +313,7 @@ bool ReginaPrefSet::savePythonLibraries() const {
     } else {
         QFile f(configFile);
         if (! f.open(QIODevice::WriteOnly))
-            return false;
+            return /* false */;
 
         QTextStream out(&f);
         out.setCodec(QTextCodec::codecForName("UTF-8"));
@@ -328,7 +328,7 @@ bool ReginaPrefSet::savePythonLibraries() const {
                 out << INACTIVE << ' ' << f.filename_ << '\n';
         }
 
-        return true;
+        return /* true */;
     }
 }
 
