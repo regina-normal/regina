@@ -57,6 +57,8 @@ QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
     else if (packet->getPacketType() == NContainer::packetType)
         id = (packet->getTreeParent() ? IconCache::packet_container :
             IconCache::regina);
+    else if (packet->getPacketType() == Dim4Triangulation::packetType)
+        id = IconCache::packet_dim4triangulation;
     else if (packet->getPacketType() == NPDF::packetType)
         id = IconCache::packet_pdf;
     else if (packet->getPacketType() == NSurfaceFilter::packetType) {
@@ -96,6 +98,10 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     if (packet->getPacketType() == NContainer::packetType)
         return new NContainerUI(dynamic_cast<NContainer*>(packet),
             enclosingPane);
+    if (packet->getPacketType() == Dim4Triangulation::packetType)
+        return new DefaultPacketUI(packet, enclosingPane);
+        //return new NTriangulationUI(dynamic_cast<Dim4Triangulation*>(packet),
+        //    enclosingPane);
     if (packet->getPacketType() == NNormalSurfaceList::packetType)
         return new NNormalSurfaceUI(dynamic_cast<NNormalSurfaceList*>(packet),
             enclosingPane);

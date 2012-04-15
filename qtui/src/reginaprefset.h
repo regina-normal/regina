@@ -334,6 +334,10 @@ class ReginaPrefSet : public QObject {
 
         // The preferences themselves:
 
+        enum Dim4Tab
+            { Dim4Gluings, Dim4Skeleton, Dim4Algebra };
+            /**< Available top-level tabs in a 4-manifold triangulation
+                 viewer/editor. */
         enum TriTab
             { Gluings, Skeleton, Algebra, Composition, Surfaces, SnapPea };
             /**< Available top-level tabs in a 3-manifold triangulation
@@ -351,6 +355,9 @@ class ReginaPrefSet : public QObject {
 
         QList<ReginaFilePref> censusFiles;
             /**< The list of data files to use for census lookups. */
+        Dim4Tab dim4InitialTab;
+            /**< The initially visible top-level tab for a new 4-manifold
+                 triangulation viewer/editor. */
         bool displayTagsInTree;
             /**< Should we display packet tags in the visual tree? */
         QByteArray fileImportExportCodec;
@@ -558,8 +565,8 @@ class ReginaPrefSet : public QObject {
         // Read and write python libraries to/from the regina-python
         // configuration file.  As an exception, under Windows, use the
         // registry instead.
-        bool readPythonLibraries();
-        bool savePythonLibraries() const;
+        void readPythonLibraries();
+        void savePythonLibraries() const;
 };
 
 inline GraphvizStatus::GraphvizStatus() : flag_(unknown.flag_) {

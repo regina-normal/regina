@@ -44,6 +44,9 @@ void IconCache::load(IconID id) {
         case packet_container:
             cache_[id] = ReginaSupport::regIcon("packet_container");
             return;
+        case packet_dim4triangulation:
+            cache_[id] = ReginaSupport::regIcon("packet_dim4tri");
+            return;
         case packet_filter:
             cache_[id] = ReginaSupport::regIcon("packet_filter");
             return;

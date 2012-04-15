@@ -224,6 +224,7 @@ GraphvizStatus GraphvizStatus::status(const QString& userExec,
 }
 
 ReginaPrefSet::ReginaPrefSet() :
+        dim4InitialTab(Dim4Gluings),
         displayTagsInTree(false),
         fileImportExportCodec("UTF-8"),
         fileRecentMax(10),
@@ -257,7 +258,7 @@ QString ReginaPrefSet::pythonLibrariesConfig() {
 #endif
 }
 
-bool ReginaPrefSet::readPythonLibraries() {
+void ReginaPrefSet::readPythonLibraries() {
     QString configFile = pythonLibrariesConfig();
     if (configFile.isNull()) {
         QSettings pySettings(QCoreApplication::organizationDomain(),
@@ -272,7 +273,7 @@ bool ReginaPrefSet::readPythonLibraries() {
 
         QFile f(configFile);
         if (! f.open(QIODevice::ReadOnly))
-            return false;
+            return /* false */;
 
         QTextStream in(&f);
         in.setCodec(QTextCodec::codecForName("UTF-8"));
@@ -297,11 +298,11 @@ bool ReginaPrefSet::readPythonLibraries() {
             line = in.readLine();
         }
 
-        return true;
+        return /* true */;
     }
 }
 
-bool ReginaPrefSet::savePythonLibraries() const {
+void ReginaPrefSet::savePythonLibraries() const {
     QString configFile = pythonLibrariesConfig();
     if (configFile.isNull()) {
         QSettings pySettings(QCoreApplication::organizationDomain(),
@@ -313,7 +314,7 @@ bool ReginaPrefSet::savePythonLibraries() const {
     } else {
         QFile f(configFile);
         if (! f.open(QIODevice::WriteOnly))
-            return false;
+            return /* false */;
 
         QTextStream out(&f);
         out.setCodec(QTextCodec::codecForName("UTF-8"));
@@ -328,7 +329,7 @@ bool ReginaPrefSet::savePythonLibraries() const {
                 out << INACTIVE << ' ' << f.filename_ << '\n';
         }
 
-        return true;
+        return /* true */;
     }
 }
 
@@ -451,6 +452,16 @@ void ReginaPrefSet::readInternal() {
     ReginaFilePref::readUserKey(censusFiles, settings);
     settings.endGroup();
     
+    settings.beginGroup("Dim4");
+    QString str = settings.value("InitialTab").toString();
+    if (str == "Dim4Skeleton")
+        dim4InitialTab = ReginaPrefSet::Dim4Skeleton;
+    else if (str == "Dim4Algebra")
+        dim4InitialTab = ReginaPrefSet::Dim4Algebra;
+    else
+        dim4InitialTab = ReginaPrefSet::Dim4Gluings; /* default */
+    settings.endGroup();
+
     settings.beginGroup("File");
     fileRecentMax = settings.value("RecentMax", 10).toInt();
     fileImportExportCodec = settings.value("ImportExportCodec",
@@ -479,7 +490,7 @@ void ReginaPrefSet::readInternal() {
     surfacesCreationCoords = settings.value(
         "CreationCoordinates", regina::NNormalSurfaceList::STANDARD).toInt();
 
-    QString str = settings.value("InitialCompat").toString();
+    str = settings.value("InitialCompat").toString();
     if (str == "Global")
         surfacesInitialCompat = ReginaPrefSet::GlobalCompat;
     else
@@ -580,6 +591,17 @@ void ReginaPrefSet::saveInternal() const {
 
     settings.beginGroup("Census");
     ReginaFilePref::writeKeys(censusFiles, settings);
+    settings.endGroup();
+
+    settings.beginGroup("Dim4");
+    switch (dim4InitialTab) {
+        case ReginaPrefSet::Dim4Skeleton:
+            settings.setValue("InitialTab", "Dim4Skeleton"); break;
+        case ReginaPrefSet::Dim4Algebra:
+            settings.setValue("InitialTab", "Dim4Algebra"); break;
+        default:
+            settings.setValue("InitialTab", "Dim4Gluings"); break;
+    }
     settings.endGroup();
 
     settings.beginGroup("File");

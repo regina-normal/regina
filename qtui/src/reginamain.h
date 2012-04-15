@@ -298,6 +298,7 @@ class ReginaMain : public QMainWindow {
         void newAngleStructures();
         void newCensus();
         void newContainer();
+        void newDim4Triangulation();
         void newFilter();
         void newNormalSurfaces();
         void newPDF();

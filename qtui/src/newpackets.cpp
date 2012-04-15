@@ -36,6 +36,7 @@
 #include "packetfilter.h"
 #include "packettreeview.h"
 #include "reginamain.h"
+#include "packettypes/dim4tricreator.h"
 #include "packettypes/nanglestructurecreator.h"
 #include "packettypes/nnormalsurfacecreator.h"
 #include "packettypes/nsurfacefiltercreator.h"
@@ -50,6 +51,11 @@ void ReginaMain::newAngleStructures() {
 void ReginaMain::newContainer() {
     newPacket(new BasicPacketCreator<regina::NContainer>(), 0,
         tr("New Container"), tr("Container"));
+}
+
+void ReginaMain::newDim4Triangulation() {
+    newPacket(new Dim4TriangulationCreator(), 0,
+        tr("New 4-Manifold Triangulation"), tr("4-Manifold Triangulation"));
 }
 
 void ReginaMain::newFilter() {
@@ -80,7 +86,7 @@ void ReginaMain::newText() {
 
 void ReginaMain::newTriangulation() {
     newPacket(new NTriangulationCreator(), 0,
-        tr("New Triangulation"), tr("Triangulation"));
+        tr("New 3-Manifold Triangulation"), tr("3-Manifold Triangulation"));
 }
 
 void ReginaMain::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
