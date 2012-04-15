@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2011, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -27,16 +27,13 @@
 /* end stub */
 
 // Regina core includes:
-#include "triangulation/ntriangulation.h"
+#include "dim4/dim4triangulation.h"
 
 // UI includes:
-#include "ntrialgebra.h"
-#include "ntricomposition.h"
-#include "ntriangulationui.h"
-#include "ntrigluings.h"
-#include "ntriskeleton.h"
-#include "ntrisnappea.h"
-#include "ntrisurfaces.h"
+// TODO #include "dim4trialgebra.h"
+#include "dim4trigluings.h"
+// TODO #include "dim4triskeleton.h"
+#include "dim4triui.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
 
@@ -45,17 +42,16 @@
 #include <QVBoxLayout>
 
 using regina::NPacket;
-using regina::NTriangulation;
+using regina::Dim4Triangulation;
 
-NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
+Dim4TriangulationUI::Dim4TriangulationUI(regina::Dim4Triangulation* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane) {
-    NTriHeaderUI* header = new NTriHeaderUI(packet, this);
-    gluings = new NTriGluingsUI(packet, this, newEnclosingPane->isReadWrite());
-    skeleton = new NTriSkeletonUI(packet, this);
-    algebra = new NTriAlgebraUI(packet, this);
-    surfaces = new NTriSurfacesUI(packet, this);
-    snapPea = new NTriSnapPeaUI(packet, this);
+    Dim4TriHeaderUI* header = new Dim4TriHeaderUI(packet, this);
+    gluings = new Dim4TriGluingsUI(packet, this,
+        newEnclosingPane->isReadWrite());
+    // TODO skeleton = new Dim4TriSkeletonUI(packet, this);
+    // TODO algebra = new Dim4TriAlgebraUI(packet, this);
 
     gluings->fillToolBar(header->getToolBar());
 
@@ -63,44 +59,35 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
     // the default tab must be updated accordingly.
     addHeader(header);
     addTab(gluings, QObject::tr("&Gluings"));
-    addTab(skeleton, QObject::tr("&Skeleton"));
-    addTab(algebra, QObject::tr("&Algebra"));
-    addTab(new NTriCompositionUI(packet, this), QObject::tr("&Composition"));
-    addTab(surfaces, QObject::tr("Sur&faces"));
-    addTab(snapPea, QObject::tr("Snap&Pea"));
+    // TODO addTab(skeleton, QObject::tr("&Skeleton"));
+    // TODO addTab(algebra, QObject::tr("&Algebra"));
 
     // Select the default tab.
-    switch (ReginaPrefSet::global().triInitialTab) {
-        case ReginaPrefSet::Gluings:
+    switch (ReginaPrefSet::global().dim4InitialTab) {
+        case ReginaPrefSet::Dim4Gluings:
             /* already visible */ break;
-        case ReginaPrefSet::Skeleton:
+        case ReginaPrefSet::Dim4Skeleton:
             setCurrentTab(1); break;
-        case ReginaPrefSet::Algebra:
+        case ReginaPrefSet::Dim4Algebra:
             setCurrentTab(2); break;
-        case ReginaPrefSet::Composition:
-            setCurrentTab(3); break;
-        case ReginaPrefSet::Surfaces:
-            setCurrentTab(4); break;
-        case ReginaPrefSet::SnapPea:
-            setCurrentTab(5); break;
     }
 
     editIface = new PacketEditTabbedUI(this);
 }
 
-NTriangulationUI::~NTriangulationUI() {
+Dim4TriangulationUI::~Dim4TriangulationUI() {
     delete editIface;
 }
 
-const QLinkedList<QAction*>& NTriangulationUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& Dim4TriangulationUI::getPacketTypeActions() {
     return gluings->getPacketTypeActions();
 }
 
-QString NTriangulationUI::getPacketMenuText() const {
-    return QObject::tr("3-D T&riangulation");
+QString Dim4TriangulationUI::getPacketMenuText() const {
+    return QObject::tr("&4-D Triangulation");
 }
 
-NTriHeaderUI::NTriHeaderUI(regina::NTriangulation* packet,
+Dim4TriHeaderUI::Dim4TriHeaderUI(regina::Dim4Triangulation* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -119,24 +106,24 @@ NTriHeaderUI::NTriHeaderUI(regina::NTriangulation* packet,
     uiLayout->addWidget(header);
 }
 
-regina::NPacket* NTriHeaderUI::getPacket() {
+regina::NPacket* Dim4TriHeaderUI::getPacket() {
     return tri;
 }
 
-QWidget* NTriHeaderUI::getInterface() {
+QWidget* Dim4TriHeaderUI::getInterface() {
     return ui;
 }
 
-void NTriHeaderUI::refresh() {
+void Dim4TriHeaderUI::refresh() {
     header->setText(summaryInfo(tri));
 }
 
-void NTriHeaderUI::editingElsewhere() {
+void Dim4TriHeaderUI::editingElsewhere() {
     header->setText(QObject::tr("Editing..."));
 }
 
-QString NTriHeaderUI::summaryInfo(regina::NTriangulation* tri) {
-    if (tri->getNumberOfTetrahedra() == 0)
+QString Dim4TriHeaderUI::summaryInfo(regina::Dim4Triangulation* tri) {
+    if (tri->getNumberOfPentachora() == 0)
         return QObject::tr("Empty");
 
     if (! tri->isValid())
@@ -147,22 +134,16 @@ QString NTriHeaderUI::summaryInfo(regina::NTriangulation* tri) {
     if (tri->isClosed())
         msg += QObject::tr("Closed, ");
     else {
-        if (tri->isIdeal() && tri->hasBoundaryFaces())
+        if (tri->isIdeal() && tri->hasBoundaryTetrahedra())
             msg += QObject::tr("Ideal & real bdry, ");
         else if (tri->isIdeal())
             msg += QObject::tr("Ideal bdry, ");
-        else if (tri->hasBoundaryFaces())
-            msg += QObject::tr("Real bdry, ");
+        else if (tri->hasBoundaryTetrahedra())
+            msg += QObject::tr("Real Bdry, ");
     }
 
-    if (tri->isOrientable()) {
-        if (tri->isOriented())
-            msg += QObject::tr("orientable and oriented, ");
-        else
-            msg += QObject::tr("orientable, ");
-    } else
-        msg += QObject::tr("non-orientable, ");
-
+    msg += (tri->isOrientable() ? QObject::tr("orientable, ") :
+        QObject::tr("non-orientable, "));
     msg += (tri->isConnected() ? QObject::tr("connected") :
         QObject::tr("disconnected"));
 

@@ -26,50 +26,107 @@
 
 /* end stub */
 
-/*! \file dim4triangulationcreator.h
- *  \brief Allows the creation of 4-manifold triangulations.
+/*! \file dim4triui.h
+ *  \brief Provides an interface for viewing 4-manifold triangulations.
  */
 
-#ifndef __DIM4TRICREATOR_H
-#define __DIM4TRICREATOR_H
+#ifndef __DIM4TRIUI_H
+#define __DIM4TRIUI_H
 
-#include "../packetcreator.h"
+#include "../packettabui.h"
 
-#include <QStackedWidget>
+class QToolBar;
+class Dim4TriAlgebraUI;
+class Dim4TriGluingsUI;
+class Dim4TriSkeletonUI;
+class PacketEditIface;
+class QLabel;
 
-class QCheckBox;
-class QComboBox;
-class QLineEdit;
+namespace regina {
+    class Dim4Triangulation;
+};
 
 /**
- * An interface for creating 4-manifold triangulations.
+ * A packet interface for viewing 4-manifold triangulations.
  */
-class Dim4TriangulationCreator : public PacketCreator {
+class Dim4TriangulationUI : public PacketTabbedUI {
+    Q_OBJECT
+
     private:
         /**
          * Internal components
          */
-        QWidget* ui;
-        QComboBox* type;
-        QStackedWidget* details;
+        Dim4TriGluingsUI* gluings;
+        Dim4TriSkeletonUI* skeleton;
+        Dim4TriAlgebraUI* algebra;
+
+        PacketEditIface* editIface;
+
+    public:
+        /**
+         * Constructor and destructor.
+         */
+        Dim4TriangulationUI(regina::Dim4Triangulation* packet,
+            PacketPane* newEnclosingPane);
+        ~Dim4TriangulationUI();
 
         /**
-         * Details for specific triangulation types
+         * PacketUI overrides.
          */
-        QComboBox* exampleWhich;
+        PacketEditIface* getEditIface();
+        const QLinkedList<QAction*>& getPacketTypeActions();
+        QString getPacketMenuText() const;
+};
+
+/**
+ * A header for the 4-manifold triangulation viewer.
+ */
+class Dim4TriHeaderUI : public PacketViewerTab {
+    private:
+        /**
+         * Packet details
+         */
+        regina::Dim4Triangulation* tri;
+
+        /**
+         * Internal components
+         */
+        QWidget* ui;
+        QLabel* header;
+        QToolBar* bar;
 
     public:
         /**
          * Constructor.
          */
-        Dim4TriangulationCreator();
+        Dim4TriHeaderUI(regina::Dim4Triangulation* packet,
+                PacketTabbedUI* useParentUI);
 
         /**
-         * PacketCreator overrides.
+         * Component queries.
          */
+        QToolBar* getToolBar();
+
+        /**
+         * PacketViewerTab overrides.
+         */
+        regina::NPacket* getPacket();
         QWidget* getInterface();
-        regina::NPacket* createPacket(regina::NPacket* parentPacket,
-            QWidget* parentWidget);
+        void refresh();
+        void editingElsewhere();
+
+        /**
+         * Allow other UIs to access the summary information.
+         */
+        static QString summaryInfo(regina::Dim4Triangulation* tri);
 };
+
+inline PacketEditIface* Dim4TriangulationUI::getEditIface() {
+    return editIface;
+}
+
+inline QToolBar* Dim4TriHeaderUI::getToolBar() {
+    return bar;
+}
 
 #endif

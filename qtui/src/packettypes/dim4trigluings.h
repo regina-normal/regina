@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2011, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,16 +26,16 @@
 
 /* end stub */
 
-/*! \file ntrigluings.h
- *  \brief Provides a face gluing editor for 3-manifold triangulations.
+/*! \file dim4trigluings.h
+ *  \brief Provides a facet gluing editor for 4-manifold triangulations.
  */
 
-#ifndef __NTRIGLUINGS_H
-#define __NTRIGLUINGS_H
+#ifndef __DIM4TRIGLUINGS_H
+#define __DIM4TRIGLUINGS_H
 
 #include "../packettabui.h"
 #include "reginaprefset.h"
-#include "maths/nperm4.h"
+#include "maths/nperm5.h"
 
 #include <QAbstractItemModel>
 
@@ -44,18 +44,18 @@ class QToolBar;
 
 namespace regina {
     class NPacket;
-    class NTriangulation;
+    class Dim4Triangulation;
 };
 
-class GluingsModel : public QAbstractItemModel {
+class Dim4GluingsModel : public QAbstractItemModel {
     protected:
         /**
          * Details of the working (non-committed) triangulation
          */
-        int nTet;
+        int nPent;
         QString* name;
-        int* adjTet;
-        regina::NPerm4* adjPerm;
+        int* adjPent;
+        regina::NPerm5* adjPerm;
 
         /**
          * Internal status
@@ -66,8 +66,8 @@ class GluingsModel : public QAbstractItemModel {
         /**
          * Constructor and destructor.
          */
-        GluingsModel(bool readWrite);
-        ~GluingsModel();
+        Dim4GluingsModel(bool readWrite);
+        ~Dim4GluingsModel();
 
         /**
          * Read-write state.
@@ -78,8 +78,8 @@ class GluingsModel : public QAbstractItemModel {
         /**
          * Loading and saving local data from/to the packet.
          */
-        void refreshData(regina::NTriangulation* tri);
-        void commitData(regina::NTriangulation* tri);
+        void refreshData(regina::Dim4Triangulation* tri);
+        void commitData(regina::Dim4Triangulation* tri);
 
         /**
          * Overrides for describing and editing data in the model.
@@ -98,37 +98,38 @@ class GluingsModel : public QAbstractItemModel {
         /**
          * Gluing edit actions.
          */
-        void addTet();
-        void removeTet(int first, int last);
+        void addPent();
+        void removePent(int first, int last);
 
     private:
         /**
-         * Determine whether the given destination tetrahedron and face
+         * Determine whether the given destination pentachoron and facet
          * string are valid.  If so, a null string is returned; if not,
          * an appropriate error message is returned.
          *
          * If the given permutation pointer is not null, the resulting
          * gluing permutation will be returned in this variable.
          */
-        QString isFaceStringValid(unsigned long srcTet, int srcFace,
-            unsigned long destTet, const QString& destFace,
-            regina::NPerm4* gluing);
+        QString isFacetStringValid(unsigned long srcPent, int srcFacet,
+            unsigned long destPent, const QString& destFacet,
+            regina::NPerm5* gluing);
 
         /**
          * Return a short string describing the destination of a
-         * face gluing.  This routine handles both boundary and
-         * non-boundary faces.
+         * facet gluing.  This routine handles both boundary and
+         * non-boundary facets.
          */
-        static QString destString(int srcFace, int destTet,
-            const regina::NPerm4& gluing);
+        static QString destString(int srcFacet, int destPent,
+            const regina::NPerm5& gluing);
 
         /**
-         * Convert a face string (e.g., "130") to a face permutation.
+         * Convert a facet string (e.g., "1304") to a facet permutation.
          *
-         * The given face string must be valid; otherwise the results
+         * The given facet string must be valid; otherwise the results
          * could be unpredictable (and indeed a crash could result).
          */
-        static regina::NPerm4 faceStringToPerm(int srcFace, const QString& str);
+        static regina::NPerm5 facetStringToPerm(int srcFacet,
+            const QString& str);
 
         /**
          * Display the given error to the user.
@@ -137,31 +138,30 @@ class GluingsModel : public QAbstractItemModel {
 };
 
 /**
- * A 3-manifold triangulation page for editing face gluings.
+ * A 4-manifold triangulation page for editing facet gluings.
  */
-class NTriGluingsUI : public QObject, public PacketEditorTab {
+class Dim4TriGluingsUI : public QObject, public PacketEditorTab {
     Q_OBJECT
 
     private:
         /**
          * Packet details
          */
-        regina::NTriangulation* tri;
+        regina::Dim4Triangulation* tri;
 
         /**
          * Internal components
          */
         QWidget* ui;
-        QTableView* faceTable;
-        GluingsModel* model;
+        QTableView* facetTable;
+        Dim4GluingsModel* model;
 
         /**
          * Gluing actions
          */
-        QAction* actAddTet;
-        QAction* actRemoveTet;
+        QAction* actAddPent;
+        QAction* actRemovePent;
         QAction* actSimplify;
-        QAction* actOrient;
         QLinkedList<QAction*> triActionList;
         QLinkedList<QAction*> enableWhenWritable;
 
@@ -169,9 +169,9 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Constructor and destructor.
          */
-        NTriGluingsUI(regina::NTriangulation* packet,
+        Dim4TriGluingsUI(regina::Dim4Triangulation* packet,
                 PacketTabbedUI* useParentUI, bool readWrite);
-        ~NTriGluingsUI();
+        ~Dim4TriGluingsUI();
 
         /**
          * Fill the given toolbar with triangulation actions.
@@ -196,29 +196,18 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Gluing edit actions.
          */
-        void addTet();
-        void removeSelectedTets();
+        void addPent();
+        void removeSelectedPents();
 
         /**
          * Triangulation actions.
          */
         void simplify();
-        void orient();
-        void barycentricSubdivide();
-        void idealToFinite();
-        void finiteToIdeal();
-        void elementaryMove();
-        void doubleCover();
-        void splitIntoComponents();
-        void connectedSumDecomposition();
-        void makeZeroEfficient();
-        void censusLookup();
 
         /**
          * Update the states of internal components.
          */
         void updateRemoveState();
-        void updateOrientState();
 
         /**
          * Notify us of the fact that an edit has been made.
@@ -226,17 +215,17 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         void notifyDataChanged();
 };
 
-inline GluingsModel::~GluingsModel() {
+inline Dim4GluingsModel::~Dim4GluingsModel() {
     delete[] name;
-    delete[] adjTet;
+    delete[] adjPent;
     delete[] adjPerm;
 }
 
-inline bool GluingsModel::isReadWrite() const {
+inline bool Dim4GluingsModel::isReadWrite() const {
     return isReadWrite_;
 }
 
-inline void GluingsModel::setReadWrite(bool readWrite) {
+inline void Dim4GluingsModel::setReadWrite(bool readWrite) {
     if (isReadWrite_ != readWrite) {
         // Edit flags will all change.
         // A full model reset is probably too severe, but.. *shrug*
@@ -246,7 +235,7 @@ inline void GluingsModel::setReadWrite(bool readWrite) {
     }
 }
 
-inline QModelIndex GluingsModel::parent(const QModelIndex&) const {
+inline QModelIndex Dim4GluingsModel::parent(const QModelIndex&) const {
     // All items are top-level.
     return QModelIndex();
 }

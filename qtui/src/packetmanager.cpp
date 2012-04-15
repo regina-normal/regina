@@ -35,6 +35,7 @@
 #include "packetmanager.h"
 #include "reginamain.h"
 #include "reginasupport.h"
+#include "packettypes/dim4triui.h"
 #include "packettypes/nanglestructureui.h"
 #include "packettypes/ncontainerui.h"
 #include "packettypes/nnormalsurfaceui.h"
@@ -99,9 +100,8 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
         return new NContainerUI(dynamic_cast<NContainer*>(packet),
             enclosingPane);
     if (packet->getPacketType() == Dim4Triangulation::packetType)
-        return new DefaultPacketUI(packet, enclosingPane);
-        //return new NTriangulationUI(dynamic_cast<Dim4Triangulation*>(packet),
-        //    enclosingPane);
+        return new Dim4TriangulationUI(dynamic_cast<Dim4Triangulation*>(packet),
+            enclosingPane);
     if (packet->getPacketType() == NNormalSurfaceList::packetType)
         return new NNormalSurfaceUI(dynamic_cast<NNormalSurfaceList*>(packet),
             enclosingPane);
