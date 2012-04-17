@@ -84,12 +84,23 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo  1) Homomorphisms to finite groups, covering spaces, Pi_2 presentations as a module over Pi_1.
+ * \todo  1) (a) Homomorphisms to finite groups, (b) covering spaces, (c) Pi_2 presentations as a module over Pi_1.
  *        Immediately: pi1 presentation simplification code needs smoothing, recognition code expanding.
+ *        For (a) GQuotients( F, G ) from GAP is useful.  To define, use
+ *        f:=FreeGroup(n);;
+ *        F:=f / [ f.1^2*f.2^3*f.1^-1, blah, blah ];; relator list
+ *        G:=SmallGroup(p,q) or SymmetricGroup(n) or AlternatingGroup(n) or DihedralGroup(n)
+ *        GQuotients(F,G) lists homomorphisms F-->G up to conjugacy in G. 
+ *           1 <= q <= NumberSmallGroup(p) for use in SmallGroup
+ *         Structuredescription( groupobject ) eg: for i in AllSmallGroups(8) do Display(StructureDescription(i)); od; 
+ *         PerfectGroup(number), etc...
+ *        Maybe create a static class SimpleListOfFiniteGroups and BigListOfFiniteGroups,
+ *         with procedures hasEpiTo. That kind of thing.  SimpleList can have simple procedures, 
+ *         BigList can have more multi-threaded and sophisticated procedures. 
  *
  * \todo  2) Complete collection of homology natural bilinear forms on a manifold, spin structures. 
  *        Derive chain complexes and maps from sparsely stored internal data.  Do not store matrices
- *        for these. 
+ *        for these.  We're still missing several coordinate systems for these (co)homology computations...
  *
  * \todo  3) test suite stuff: 
  *        Move all the test routines out of the NCellularData class and put them in the test suite proper. 
