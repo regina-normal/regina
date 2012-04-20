@@ -44,7 +44,6 @@
 #include "utilities/ptrutils.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "algebra/nabeliangroup.h"
-//#include "algebra/nhomgrouppresentation.h"
 
 namespace regina {
 

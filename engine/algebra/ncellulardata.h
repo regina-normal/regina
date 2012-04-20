@@ -84,15 +84,17 @@ class Dim4Triangulation;
  *
  * \testpart
  *
- * \todo  1) (a) Homomorphisms to finite groups, (b) covering spaces, (c) Pi_2 presentations as a module over Pi_1.
- *        Immediately: pi1 presentation simplification code needs smoothing, recognition code expanding.
- *        For (a) GQuotients( F, G ) from GAP is useful.  To define, use
+ * \todo  1) (a) Homomorphisms to finite groups, (b) covering spaces, (c) Pi_2 presentations 
+ *        as a module over Pi_1. Immediately: pi1 presentation simplification code needs 
+ *        smoothing, recognition code expanding. For (a) GQuotients( F, G ) from GAP is 
+ *        useful.  To define, use
  *        f:=FreeGroup(n);;
  *        F:=f / [ f.1^2*f.2^3*f.1^-1, blah, blah ];; relator list
  *        G:=SmallGroup(p,q) or SymmetricGroup(n) or AlternatingGroup(n) or DihedralGroup(n)
  *        GQuotients(F,G) lists homomorphisms F-->G up to conjugacy in G. 
  *           1 <= q <= NumberSmallGroup(p) for use in SmallGroup
- *         Structuredescription( groupobject ) eg: for i in AllSmallGroups(8) do Display(StructureDescription(i)); od; 
+ *         Structuredescription( groupobject ) eg: for i in AllSmallGroups(8) do 
+ *        Display(StructureDescription(i)); od; 
  *         PerfectGroup(number), etc...
  *        Maybe create a static class SimpleListOfFiniteGroups and BigListOfFiniteGroups,
  *         with procedures hasEpiTo. That kind of thing.  SimpleList can have simple procedures, 
@@ -110,8 +112,8 @@ class Dim4Triangulation;
  *        Compute Alexander ideals of manifolds where H_1 = Z + Z_n and evaluate the
  *        polynomial at 1, etc.  
  *
- * \todo  4) Make sure all the maximal trees are copy-constructor safe.  I forget if the maximal trees and
- *        extra normal data has been made copy-safe. 
+ * \todo  4) Make sure all the maximal trees are copy-constructor safe.  I forget if the 
+ *        maximal trees and extra normal data has been made copy-safe. 
  *
  * \todo  5) New coordinate systems to implement:
  *        MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
@@ -131,15 +133,17 @@ class Dim4Triangulation;
  *        clear what all the computations mean.  It could use a general re-think.  The idea now is they're
  *        never really used for anything important so they haven't been well thought out from the start. 
  *
- * \todo \optlong We should add Bocksteins and the long exact sequence associated to a change-of-coefficient map.
+ * \todo \optlong We should add Bocksteins and the long exact sequence associated to a 
+ *       change-of-coefficient map.
  *
  * \todo \optlong Why not just move to monoid presentations, and kill generators for a max 
  *        tree in the presentation?   Would be more natural and involve less re-indexing. 
  *
  * Guide to ncellulardata.*.cpp files:
  *
- *       ncellulardata.cpp - contains only the core routines to call for information stored on internal stacks, 
- *                            or calls appropriate routines to generate such information.
+ *       ncellulardata.cpp - contains only the core routines to call for information stored 
+ *                            on internal stacks, or calls appropriate routines to 
+ *                            generate such information.
  *                           NCellularData::integerChainComplex
  *                           NCellularData::integerChainMap
  *                           NCellularData::unMarkedGroup 
