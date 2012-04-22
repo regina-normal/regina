@@ -671,7 +671,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         /**
          * Attempts to recognise the group corresponding to this
          * presentation.  This routine is much more likely to be
-         * successful if you have already called intelligentSimplify().
+         * successful if you have already whecalled intelligentSimplify().
          *
          * Note that the presentation might be simplified a little
          * during the execution of this routine, although not nearly as
@@ -686,7 +686,8 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * @return a simple string representation of the group if it is
          * recognised, or an empty string if the group is not
          * recognised.  Return strings have the form "Z_n" for cyclic groups
-         * "Free(n generators)" for free groups, and "Z + Z (abelian)"
+         * "Free(n generators)" for free groups, "Z" and "Z + Z (abelian)"
+         * are the only two free abelian groups supported at present. 
          */
         std::string recogniseGroup() const;
 
