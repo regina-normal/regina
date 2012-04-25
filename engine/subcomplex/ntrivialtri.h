@@ -27,7 +27,7 @@
 /* end stub */
 
 /*! \file subcomplex/ntrivialtri.h
- *  \brief Deals with a few specific trivial triangulations.
+ *  \brief Deals with a few specific hard-coded trivial triangulations.
  */
 
 #ifndef __NTRIVIALTRI_H
@@ -46,8 +46,8 @@ namespace regina {
  */
 
 /**
- * Represents one of a few particular trivial triangulations that do not
- * belong to any of the other larger families.
+ * Represents one of a few particular hard-coded trivial triangulations
+ * that do not belong to any of the other larger families.
  *
  * All optional NStandardTriangulation routines are implemented for this
  * class.
