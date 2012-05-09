@@ -84,6 +84,7 @@ void ReginaMain::setupActions() {
     actSave->setShortcuts(QKeySequence::Save);
     actSave->setWhatsThis(tr("Save the current data file."));
     connect(actSave, SIGNAL(triggered()), this, SLOT(fileSave()));
+    fileMenu->addAction(actSave);
 
     act = new QAction(ReginaSupport::themeIcon("document-save-as"),
         tr("Save &as"), this);
@@ -91,6 +92,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr(
         "Save the current data file, but give it a different name."));
     connect(act, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
+    fileMenu->addAction(act);
 
     fileMenu->addSeparator();
 
