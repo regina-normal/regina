@@ -9,6 +9,9 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.93  [ ]
 
+    ENGINE:
+        Class NExampleTriangulation:
+            - New routine weeks() to build the Weeks manifold.
     USER INTERFACE:
         - Restored File -> Save and File ->Save As, which were missing from
           the main menu in version 4.92.
