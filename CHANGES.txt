@@ -94,6 +94,9 @@ Version 5.0  [ (under development) ]
 
 Version 4.93  [ ]
 
+    ENGINE:
+        Class NExampleTriangulation:
+            - New routine weeks() to build the Weeks manifold.
     USER INTERFACE:
         - Restored File -> Save and File ->Save As, which were missing from
           the main menu in version 4.92.

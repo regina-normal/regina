@@ -47,6 +47,30 @@ namespace {
         { { 3, 1, 2, 0 }, { 2, 3, 0, 1 }, { 1, 2, 3, 0 }, { 2, 0, 1, 3 } }
     };
 
+    static const int weeksAdj[9][4] = {
+        { 0, 0, 1, 2},
+        { 0, 3, 4, 5},
+        { 0, 3, 4, 6},
+        { 1, 2, 5, 7},
+        { 1, 2, 7, 8},
+        { 1, 3, 6, 8},
+        { 2, 5, 7, 8},
+        { 3, 4, 6, 8},
+        { 4, 5, 6, 7}
+    };
+
+    static const int weeksGluings[9][4][4] = {
+        { { 1, 2, 3, 0 }, { 3, 0, 1, 2 }, { 3, 2, 0, 1 }, { 2, 3, 1, 0 } },
+        { { 2, 3, 1, 0 }, { 1, 0, 2, 3 }, { 1, 3, 0, 2 }, { 2, 3, 1, 0 } },
+        { { 3, 2, 0, 1 }, { 0, 1, 3, 2 }, { 0, 2, 1, 3 }, { 1, 3, 2, 0 } },
+        { { 1, 0, 2, 3 }, { 0, 1, 3, 2 }, { 2, 3, 1, 0 }, { 3, 2, 1, 0 } },
+        { { 2, 0, 3, 1 }, { 0, 2, 1, 3 }, { 0, 3, 1, 2 }, { 2, 3, 1, 0 } },
+        { { 3, 2, 0, 1 }, { 3, 2, 0, 1 }, { 0, 3, 1, 2 }, { 3, 2, 0, 1 } },
+        { { 3, 0, 2, 1 }, { 0, 2, 3, 1 }, { 3, 1, 2, 0 }, { 1, 0, 3, 2 } },
+        { { 3, 2, 1, 0 }, { 0, 2, 3, 1 }, { 3, 1, 2, 0 }, { 1, 2, 0, 3 } },
+        { { 3, 2, 0, 1 }, { 2, 3, 1, 0 }, { 1, 0, 3, 2 }, { 2, 0, 1, 3 } }
+    };
+
     static const int closedOrHypAdj[9][4] = {
         { 6, 8, 2, 8 },
         { 6, 8, 3, 7 },
@@ -188,6 +212,15 @@ NTriangulation* NExampleTriangulation::poincareHomologySphere() {
     ans->setPacketLabel("Poincare homology sphere");
 
     ans->insertConstruction(5, poincareAdj, poincareGluings);
+
+    return ans;
+}
+
+NTriangulation* NExampleTriangulation::weeks() {
+    NTriangulation* ans = new NTriangulation();
+    ans->setPacketLabel("Weeks manifold");
+
+    ans->insertConstruction(9, weeksAdj, weeksGluings);
 
     return ans;
 }

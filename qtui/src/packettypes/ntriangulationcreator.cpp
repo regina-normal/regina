@@ -84,6 +84,7 @@ namespace {
         EXAMPLE_RP2xS1,
         EXAMPLE_S2xS1,
         EXAMPLE_SOLIDKLEIN,
+        EXAMPLE_WEEKS,
         EXAMPLE_WEBERSEIFERT,
         EXAMPLE_WHITEHEAD
     };
@@ -341,8 +342,9 @@ NTriangulationCreator::NTriangulationCreator() {
     exampleWhich->insertItem(7, QObject::tr("Product RP2 x S1"));
     exampleWhich->insertItem(8, QObject::tr("Product S2 x S1"));
     exampleWhich->insertItem(9, QObject::tr("Solid Klein bottle"));
-    exampleWhich->insertItem(10, QObject::tr("Weber-Seifert dodecahedral space"));
-    exampleWhich->insertItem(11, QObject::tr("Whitehead link complement"));
+    exampleWhich->insertItem(10, QObject::tr("Weeks manifold"));
+    exampleWhich->insertItem(11, QObject::tr("Weber-Seifert dodecahedral space"));
+    exampleWhich->insertItem(12, QObject::tr("Whitehead link complement"));
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     hLayout->addWidget(exampleWhich, 1);
@@ -711,6 +713,8 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
                 return NExampleTriangulation::s2xs1();
             case EXAMPLE_SOLIDKLEIN:
                 return NExampleTriangulation::solidKleinBottle();
+            case EXAMPLE_WEEKS:
+                return NExampleTriangulation::weeks();
             case EXAMPLE_WEBERSEIFERT:
                 return NExampleTriangulation::weberSeifert();
             case EXAMPLE_WHITEHEAD:

@@ -51,6 +51,8 @@ void addNExampleTriangulation() {
         .def("poincareHomologySphere",
             &NExampleTriangulation::poincareHomologySphere,
             return_value_policy<manage_new_object>())
+        .def("weeks", &NExampleTriangulation::weeks,
+            return_value_policy<manage_new_object>())
         .def("seifertWeber",
             &NExampleTriangulation::seifertWeber,
             return_value_policy<manage_new_object>())

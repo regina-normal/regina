@@ -130,6 +130,18 @@ class REGINA_API NExampleTriangulation {
         static NTriangulation* poincareHomologySphere();
 
         /**
+         * Returns a nine-tetrahedron minimal triangulation of the Weeks
+         * manifold.  The Weeks manifold is the smallest-volume closed
+         * hyperbolic 3-manifold, with a volume of roughly 0.9427.
+         * Note that there are nine minimal triangulations of the Weeks
+         * manifold (of course this routine returns just one).
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static NTriangulation* weeks();
+
+        /**
          * Returns a one-vertex triangulation of the Weber-Seifert
          * dodecahedral space.
          *
