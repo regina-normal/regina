@@ -9,7 +9,34 @@
 <index id="taskindex">
  <title>Index</title>
 
- <indexdiv><title>&mdash; 0-9 &mdash;</title>
+ <simplelist type='horiz' columns='24'>
+ <member><link linkend='taskindex-0'>0-9</link></member>
+ <member><link linkend='taskindex-A'>A</link></member>
+ <member><link linkend='taskindex-B'>B</link></member>
+ <member><link linkend='taskindex-C'>C</link></member>
+ <member><link linkend='taskindex-D'>D</link></member>
+ <member><link linkend='taskindex-E'>E</link></member>
+ <member><link linkend='taskindex-F'>F</link></member>
+ <member><link linkend='taskindex-G'>G</link></member>
+ <member><link linkend='taskindex-H'>H</link></member>
+ <member><link linkend='taskindex-I'>I</link></member>
+ <member><link linkend='taskindex-K'>K</link></member>
+ <member><link linkend='taskindex-L'>L</link></member>
+ <member><link linkend='taskindex-M'>M</link></member>
+ <member><link linkend='taskindex-N'>N</link></member>
+ <member><link linkend='taskindex-O'>O</link></member>
+ <member><link linkend='taskindex-P'>P</link></member>
+ <member><link linkend='taskindex-Q'>Q</link></member>
+ <member><link linkend='taskindex-R'>R</link></member>
+ <member><link linkend='taskindex-S'>S</link></member>
+ <member><link linkend='taskindex-T'>T</link></member>
+ <member><link linkend='taskindex-U'>U</link></member>
+ <member><link linkend='taskindex-V'>V</link></member>
+ <member><link linkend='taskindex-W'>W</link></member>
+ <member><link linkend='taskindex-Z'>Z</link></member>
+ </simplelist>
+
+ <indexdiv id='taskindex-0'><title>&mdash; 0-9 &mdash;</title>
 
  <indexentry id="idx-0-efficiency">
   <primaryie>0-efficiency</primaryie>
@@ -59,7 +86,7 @@
   <seeie>See: elementary moves</seeie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; A &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-A'><title>&mdash; A &mdash;</title>
 
  <indexentry>
   <primaryie>almost normal surfaces</primaryie>
@@ -95,7 +122,7 @@
   <primaryie><link linkend="options-python">auto-indent</link></primaryie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; B &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-B'><title>&mdash; B &mdash;</title>
 
  <indexentry>
   <primaryie><link linkend="tri-barycentric">barycentric
@@ -141,7 +168,7 @@
   <primaryie><link linkend="services">bug reporting</link></primaryie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; C &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-C'><title>&mdash; C &mdash;</title>
 
  <indexentry>
   <primaryie>&cpp; source</primaryie>
@@ -357,7 +384,7 @@
   <primaryie><link linkend="tri-algebra-cellular">CW-decomposition</link></primaryie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; D &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-D'><title>&mdash; D &mdash;</title>
 
  <indexentry>
   <primaryie>data files</primaryie>
@@ -421,7 +448,7 @@
    file</link></primaryie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; E &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-E'><title>&mdash; E &mdash;</title>
 
  <indexentry>
   <primaryie><link linkend="surfaces-proplink">edge linking surfaces,
@@ -502,7 +529,7 @@
    boundary</link></secondaryie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; F &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-F'><title>&mdash; F &mdash;</title>
 
  <indexentry>
   <primaryie>face arc normal coordinates</primaryie>
@@ -587,7 +614,7 @@
    enumerating</link></primaryie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; G &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-G'><title>&mdash; G &mdash;</title>
 
  <indexentry>
   <primaryie>&gaplong;</primaryie>
@@ -618,7 +645,7 @@
    display face pairing graphs</link></secondaryie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; H &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-H'><title>&mdash; H &mdash;</title>
 
  <indexentry>
   <primaryie><link linkend="tri-algebra-homology">homology
@@ -638,7 +665,7 @@
   <secondaryie><link linkend="tri-snappea">volume</link></secondaryie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; I &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-I'><title>&mdash; I &mdash;</title>
 
  <indexentry>
   <primaryie>ideal vertices</primaryie>
@@ -710,14 +737,14 @@
    sets of triangulations</link></secondaryie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; K &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-K'><title>&mdash; K &mdash;</title>
 
  <indexentry>
   <primaryie>Kawauchi-Kojima invariants</primaryie>
   <seeie>See: torsion linking form</seeie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; L &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-L'><title>&mdash; L &mdash;</title>
 
  <indexentry>
   <primaryie><link linkend="options-fpg-labels">labelling face pairing
@@ -788,7 +815,7 @@
   <seeie>See: search</seeie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; M &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-M'><title>&mdash; M &mdash;</title>
 
  <indexentry>
   <primaryie><link linkend="services">mailing lists</link></primaryie>
@@ -817,7 +844,7 @@
   <seeie>See: parallel processing</seeie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; N &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-N'><title>&mdash; N &mdash;</title>
 
  <indexentry>
   <primaryie>naming</primaryie>
@@ -871,7 +898,7 @@
    recognising</link></secondaryie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; O &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-O'><title>&mdash; O &mdash;</title>
 
  <indexentry>
   <primaryie>octagons</primaryie>
@@ -924,7 +951,7 @@
    orientations</link></secondaryie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; P &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-P'><title>&mdash; P &mdash;</title>
 
  <indexentry>
   <primaryie>packet tree</primaryie>
@@ -1002,7 +1029,7 @@
   <seeie>See: scripting</seeie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; Q &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-Q'><title>&mdash; Q &mdash;</title>
 
  <indexentry>
   <primaryie>quadrilateral normal coordinates</primaryie>
@@ -1019,7 +1046,7 @@
    asked</link></primaryie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; R &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-R'><title>&mdash; R &mdash;</title>
 
  <indexentry>
   <primaryie>rank vector</primaryie>
@@ -1056,7 +1083,7 @@
   <primaryie><link linkend="services">reporting bugs</link></primaryie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; S &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-S'><title>&mdash; S &mdash;</title>
 
  <indexentry>
   <primaryie>samples</primaryie>
@@ -1244,7 +1271,7 @@
   <seeie>See: normal surfaces</seeie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; T &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-T'><title>&mdash; T &mdash;</title>
 
  <indexentry>
   <primaryie><link linkend="options-python">tab size</link></primaryie>
@@ -1388,7 +1415,7 @@
   <seeie>See: sidedness</seeie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; U &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-U'><title>&mdash; U &mdash;</title>
 
  <indexentry>
   <primaryie><link linkend="packet-dock">undocking packets</link></primaryie>
@@ -1414,7 +1441,7 @@
   <seeie>See: character encodings</seeie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; V &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-V'><title>&mdash; V &mdash;</title>
 
  <indexentry>
   <primaryie><link linkend="tri-edges">valid edges,
@@ -1455,14 +1482,14 @@
   <seeie>See: hyperbolic volume</seeie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; W &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-W'><title>&mdash; W &mdash;</title>
 
  <indexentry>
   <primaryie><link linkend="tri-new-example">Weber-Seifert
    dodecahedral space</link></primaryie>
  </indexentry>
 
- </indexdiv><indexdiv><title>&mdash; Z &mdash;</title>
+ </indexdiv><indexdiv id='taskindex-Z'><title>&mdash; Z &mdash;</title>
 
  <indexentry>
   <primaryie>zero-efficiency</primaryie>
