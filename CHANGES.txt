@@ -15,6 +15,7 @@ Version 4.93  [ ]
     USER INTERFACE:
         - Restored File -> Save and File ->Save As, which were missing from
           the main menu in version 4.92.
+        - Replaced the python icon with a generic terminal icon.
     DOCUMENTATION:
         - Layout and navigation improvements in the user handbook.
 

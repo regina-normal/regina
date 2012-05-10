@@ -225,7 +225,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
 
     act = new QAction(this);
     act->setText(tr("&Python API Reference"));
-    act->setIcon(ReginaSupport::regIcon("python_console"));
+    act->setIcon(ReginaSupport::themeIcon("utilities-terminal"));
     act->setToolTip(tr("Read detailed Python scripting reference"));
     act->setWhatsThis(tr("Open the detailed reference of classes, methods "
         "and routines that Regina makes available to Python scripts."));

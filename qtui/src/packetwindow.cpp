@@ -101,7 +101,7 @@ void PacketWindow::setupMenus() {
 
     QAction* actPython = new QAction(this);
     actPython->setText(tr("&Python Console"));
-    actPython->setIcon(ReginaSupport::regIcon("python_console"));
+    actPython->setIcon(ReginaSupport::themeIcon("utilities-terminal"));
     actPython->setShortcut(tr("Alt+y"));
     actPython->setWhatsThis(tr("Open a new Python console.  You can "
         "use a Python console to interact directly with Regina's "
@@ -146,7 +146,7 @@ void PacketWindow::setupMenus() {
 
     act = new QAction(this);
     act->setText(tr("&Python API Reference"));
-    act->setIcon(ReginaSupport::regIcon("python_console"));
+    act->setIcon(ReginaSupport::themeIcon("utilities-terminal"));
     act->setWhatsThis(tr("Open the detailed documentation for Regina's "
         "mathematical engine.  This describes the classes, methods and "
         "routines that Regina makes available to Python scripts.<p>"
