@@ -202,6 +202,10 @@
    <para>
     This handbook is current as of &regdate; for &regina; &regversion;.
    </para>
+   <para>
+    Tip: You can also browse the
+    <link linkend="taskindex">alphabetical index</link> of tasks.
+   </para>
   </abstract>
 
   <keywordset>
