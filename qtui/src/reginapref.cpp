@@ -152,7 +152,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
         tr("Census"));
 
     pythonPrefs = new ReginaPrefPython(this);
-    item->addTab(pythonPrefs, ReginaSupport::regIcon("python_console"),
+    item->addTab(pythonPrefs, ReginaSupport::themeIcon("utilities-terminal"),
         tr("Python"));
 
     snapPeaPrefs = new ReginaPrefSnapPea(this);
