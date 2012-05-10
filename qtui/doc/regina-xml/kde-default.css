@@ -170,6 +170,14 @@ dl {
 dt { 
   margin-top: 1em; 
 }
+div.index dt {
+  margin-top: 0.2em; 
+  margin-bottom: 0.2em; 
+}
+div.index dl {
+  margin-top: 0em; 
+  margin-bottom: 0em; 
+}
 div.toc dt { 
   margin-top: 0px; 
 }
