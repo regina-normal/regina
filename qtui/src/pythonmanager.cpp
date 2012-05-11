@@ -86,11 +86,8 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     // Initialise the python interpreter.
     if (ans->importRegina()) {
         ans->executeLine("print regina.welcome() + '\\n'");
-
-        if (tree)
-            ans->setRootPacket(tree);
-        if (selectedPacket)
-            ans->setSelectedPacket(selectedPacket);
+        ans->setRootPacket(tree);
+        ans->setSelectedPacket(selectedPacket);
     }
     ans->loadAllLibraries();
 

@@ -340,10 +340,11 @@ bool PythonConsole::importRegina() {
 }
 
 void PythonConsole::setRootPacket(regina::NPacket* packet) {
-    if (interpreter->setVar("root", packet))
-        addOutput(tr("The root of the packet tree is in the "
-            "variable [root]."));
-    else {
+    if (interpreter->setVar("root", packet)) {
+        if (packet)
+            addOutput(tr("The root of the packet tree is in the "
+                "variable [root]."));
+    } else {
         ReginaSupport::warn(this,
             tr("<qt>I could not set the <i>root</i> variable.</qt>"),
             tr("The root of the packet tree will not be available in "
@@ -354,18 +355,12 @@ void PythonConsole::setRootPacket(regina::NPacket* packet) {
 }
 
 void PythonConsole::setSelectedPacket(regina::NPacket* packet) {
-    // Extract the packet name.
-    QString pktName;
-    if (packet)
-        pktName = packet->getPacketLabel().c_str();
-    else
-        pktName = tr("None");
-
     // Set the variable.
-    if (interpreter->setVar("selected", packet))
-        addOutput(tr("The selected packet (%1) is in the "
-            "variable [selected].").arg(pktName));
-    else {
+    if (interpreter->setVar("selected", packet)) {
+        if (packet)
+            addOutput(tr("The selected packet (%1) is in the "
+                "variable [selected].").arg(packet->getPacketLabel().c_str()));
+    } else {
         ReginaSupport::warn(this,
             tr("<qt>I could not set the <i>selected</i> variable.</qt>"),
             tr("The currently selected packet will not be available in "
