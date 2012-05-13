@@ -190,6 +190,19 @@ class REGINA_API NAngleStructure :
          */
         bool isTaut() const;
 
+        /**
+         * Determines whether this is a veering structure.
+         * TODO: Finish documentation, and indicate the right definition
+         * of veering.
+         *
+         * If this angle structure is not taut, or if the underlying
+         * triangulation is non-orientable, then this routine will
+         * return \c false.
+         *
+         * @return \c true if and only if this is a veering structure.
+         */
+        bool isVeering() const;
+
         void writeTextShort(std::ostream& out) const;
 
         /**
