@@ -193,5 +193,8 @@ void NAngleStructure::calculateType() const {
     flags |= flagCalculatedType;
 }
 
+bool NAngleStructure::isVeering() const {
+}
+
 } // namespace regina
 

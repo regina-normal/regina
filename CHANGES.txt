@@ -95,6 +95,8 @@ Version 5.0  [ (under development) ]
 Version 4.93  [ 30 May, 2012 ]
 
     ENGINE:
+        Class NAngleStructure:
+            - New routine isVeering() to test for veering structures.
         Class NExampleTriangulation:
             - New routine weeks() to build the Weeks manifold.
     USER INTERFACE:
