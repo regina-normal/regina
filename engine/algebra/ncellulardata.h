@@ -122,6 +122,11 @@ class Dim4Triangulation;
  *        Note, current "mixed" chain complex does not subdivide ideal boundary.  Is this an issue? 
  *        Also, this is needed for (1) and (2).
  *
+ * \todo  6) Implement circle packings for 2-manifold triangulations.  Presumably we'll put this straight
+ *        into the 2-manifold triangulation code.  Circle packings represented as the labelling function
+ *        R : vertices -> (0,\infty].  Code to find the circle packing, code to display it.  Should summarize
+ *        the algorithm from Collins-Stephenson paper here. 
+ *
  * \todo  \optlong To minimize memory usage we should consider having homs, bilinear forms, etc, 
  *        not store their initialization data, instead trusting it to the NCellularData stack.
  *        This is a slow-but-ongoing process....  
