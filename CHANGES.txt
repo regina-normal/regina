@@ -97,6 +97,7 @@ Version 4.93  [ 30 May, 2012 ]
     ENGINE:
         Class NAngleStructure:
             - New routine isVeering() to test for veering structures.
+            - Flags (taut/strict/veering) are no longer stored in data files.
         Class NExampleTriangulation:
             - New routine weeks() to build the Weeks manifold.
     USER INTERFACE:

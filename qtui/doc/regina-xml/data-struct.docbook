@@ -89,9 +89,14 @@ struct ::= (#PCDATA, &xml-flags;?)</synopsis>
   <refsect2>
    <title>Flags</title>
    <para>
-    The child &xml-flags; element can be used to store properties of the
-    angle structure.  The flags should be a bitwise combination of the
-    following values:
+    The child &xml-flags; element is deprecated, and should not be used.
+    As of Regina&nbsp;4.93, the &xml-flags; element will not be written,
+    and will be ignored when reading older data files.
+   </para>
+   <para>
+    In older versions of Regina, the &xml-flags; element was used to
+    store properties of the angle structure.
+    The flags were a bitwise combination of the following values:
    </para>
    <informaltable frame="all">
     <tgroup cols="2">
@@ -170,12 +175,8 @@ struct ::= (#PCDATA, &xml-flags;?)</synopsis>
    (0, 0, 2, 1, 1, 0, 2).  The corresponding six angles are
    (0, 0, &pi;, &pi;/2, &pi;/2, 0).
   </para>
-  <para>
-   The flags indicate that the angle structure type has been calculated
-   but the angle structure was found to be neither strict nor taut.
-  </para>
   <programlisting>
-&lt;struct len=&quot;7&quot;&gt; 2 2 3 1 4 1 6 2 &lt;flags value=&quot;4&quot;/&gt;&lt;/struct&gt;
+&lt;struct len=&quot;7&quot;&gt; 2 2 3 1 4 1 6 2 &lt;/struct&gt;
   </programlisting>
  </refsect1>
 </refentry>

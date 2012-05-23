@@ -76,10 +76,12 @@ NXMLElementReader* NXMLAngleStructureReader::startSubElement(
     if (! angles)
         return new NXMLElementReader();
 
+    /** Flags in data files are deprecated as of Regina 4.93.
     if (subTagName == "flags") {
         if (! valueOf(props.lookup("value"), angles->flags))
             angles->flags = 0;
     }
+    */
     return new NXMLElementReader();
 }
 
