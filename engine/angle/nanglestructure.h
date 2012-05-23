@@ -118,9 +118,15 @@ class REGINA_API NAngleStructure :
         static const unsigned long flagStrict;
             /**< Signals that this angle structure is strict. */
         static const unsigned long flagTaut;
-            /**< Signals that this angle structure is taut. */
+            /**< Signals that this angle structure is taut.  A taut
+                 structure might also be veering, in which case the
+                 flag \a flagVeering will be set also. */
+        static const unsigned long flagVeering;
+            /**< Signals that this angle structure is veering (in which
+                 case that the \a flagTaut flag must be set also). */
         static const unsigned long flagCalculatedType;
-            /**< Signals that the type (strict/taut) has been calculated. */
+            /**< Signals that the type (strict/taut/veering) has been
+                 calculated. */
 
     public:
         /**
@@ -183,8 +189,21 @@ class REGINA_API NAngleStructure :
         bool isStrict() const;
 
         /**
-         * Determines whether this is a taut structure.
-         * A taut structure contains only angles 0 and <i>pi</i>.
+         * Determines whether this is a taut angle structure.
+         * A taut angle structure contains only angles 0 and <i>pi</i>.
+         *
+         * Here we use the Kang-Rubinstein definition of a taut
+         * angle structure [1], which is based on the angles alone.
+         * In his original paper [2], Lackenby has an extra condition
+         * whereby 2-faces of the triangulation must have consistent
+         * coorientations, which we do not enforce here.
+         *
+         * [1] E. Kang and J. H. Rubinstein, "Ideal triangulations of
+         * 3-manifolds II; Taut and angle structures", Algebr. Geom. Topol.
+         * 5 (2005), pp. 1505-1533.
+         *
+         * [2] M. Lackenby, "Taut ideal triangulations of 3-manifolds",
+         * Geom. Topol. 4 (2000), pp. 369-395.
          *
          * @return \c true if and only if this is a taut structure.
          */
@@ -192,8 +211,21 @@ class REGINA_API NAngleStructure :
 
         /**
          * Determines whether this is a veering structure.
-         * TODO: Finish documentation, and indicate the right definition
-         * of veering.
+         * A veering structure is taut angle structure with additional
+         * strong combinatorial constraints, which we do not outline here.
+         * For a definition, see C. D. Hodgson, J. H. Rubinstein,
+         * H. Segerman, and S. Tillmann, "Veering triangulations admit
+         * strict angle structures", Geom. Topol., 15 (2011), pp. 2073-2089.
+         *
+         * Note that the Hodgson et al. definition is slightly more general
+         * than Agol's veering taut triangulations from his original paper:
+         * I. Agol, " Ideal triangulations of pseudo-Anosov mapping tori",
+         * in "Topology and Geometry in Dimension Three", volume 560 of
+         * Contemp. Math., pp. 1-17, Amer. Math. Soc., 2011.
+         * This mirrors the way in which the Kang-Rubinstein definition of
+         * taut angle structure is slightly more general than Lackenby's.
+         * See the Hodgson et al. paper for full details and comparisons
+         * between the two settings.
          *
          * If this angle structure is not taut, or if the underlying
          * triangulation is non-orientable, then this routine will
@@ -304,6 +336,12 @@ inline bool NAngleStructure::isTaut() const {
     if ((flags & flagCalculatedType) == 0)
         calculateType();
     return ((flags & flagTaut) != 0);
+}
+
+inline bool NAngleStructure::isVeering() const {
+    if ((flags & flagCalculatedType) == 0)
+        calculateType();
+    return ((flags & flagVeering) != 0);
 }
 
 } // namespace regina

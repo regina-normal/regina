@@ -97,7 +97,7 @@
      </glossdef>
     </glossentry>
     <glossentry id="angles-tautonly">
-     <glossterm><guilabel>Taut structures only</guilabel></glossterm>
+     <glossterm><guilabel>Taut angle structures only</guilabel></glossterm>
      <glossdef>
       <para>
        If unchecked (the default), &regina; will enumerate all vertex
@@ -105,11 +105,19 @@
       </para>
       <para>
        If checked, &regina; will only enumerate
-       <emphasis>taut structures</emphasis>.
+       <emphasis>taut angle structures</emphasis>.
        These are angle strutures in which every angle is either 0 or &pi;.
        There are only ever finitely many taut structures (possibly
        none at all), and if you check this box then &regina; will enumerate
        them all.
+      </para>
+      <para>
+       Note that we use the Kang-Rubinstein definition of taut angle
+       structure <xref linkend="bib-kang-taut"/>,
+       which is based on the angles alone.  We do not use Lackenby's
+       definition <xref linkend="bib-lackenby-taut"/>,
+       which also requires consistent coorientations on the 2-faces of
+       the triangulation.
       </para>
      </glossdef>
     </glossentry>
@@ -185,10 +193,20 @@
      </glossentry>
      <glossentry id="angles-proptaut">
       <glossterm><guilabel>Taut</guilabel></glossterm>
-      <glossdef><para>
-       Indicates a taut angle structure (all of its angles are
-       equal to either 0 or &pi;).
-      </para></glossdef>
+      <glossdef>
+       <para>
+        Indicates a taut angle structure (all of its angles are
+        equal to either 0 or &pi;).
+       </para>
+       <para>
+        Note that we use the Kang-Rubinstein definition of taut angle
+        structure <xref linkend="bib-kang-taut"/>,
+        which is based on the angles alone.  We do not use Lackenby's
+        definition <xref linkend="bib-lackenby-taut"/>,
+        which also requires consistent coorientations on the 2-faces of
+        the triangulation.
+       </para>
+      </glossdef>
      </glossentry>
     </glosslist>
     If an angle structure is neither strict nor taut, the

@@ -413,6 +413,27 @@
   <date>February 2006</date>
  </biblioentry>
 
+ <biblioentry id="bib-kang-taut">
+  <abbrev>KR05</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Ensil</firstname>
+    <surname>Kang</surname>
+   </author>
+   <author>
+    <firstname>J.</firstname>
+    <othername>Hyam</othername>
+    <surname>Rubinstein</surname>
+   </author>
+  </authorgroup>
+  <title>Ideal triangulations of 3-manifolds II;
+   Taut and angle structures</title>
+  <edition>Algebr. Geom. Topol.</edition>
+  <volumenum>vol. 5</volumenum>
+  <artpagenums>pp. 1505&ndash;1533</artpagenums>
+  <date>2005</date>
+ </biblioentry>
+
  <biblioentry id="bib-kktorsionlinkingform">
   <abbrev>KK80</abbrev>
   <authorgroup>
