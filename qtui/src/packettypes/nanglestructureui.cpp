@@ -70,6 +70,8 @@ QVariant AngleModel::data(const QModelIndex& index, int role) const {
         if (index.column() == 0) {
             if (s->isStrict())
                 return tr("Strict");
+            else if (s->isVeering())
+                return tr("Veering");
             else if (s->isTaut())
                 return tr("Taut");
             else
@@ -96,14 +98,17 @@ QVariant AngleModel::data(const QModelIndex& index, int role) const {
         }
     } else if (role == Qt::ToolTipRole) {
         if (index.column() == 0)
-            return tr("Taut or strict?");
+            return tr("Strict, taut and/or veering?");
         else
             return tr("Tetrahedron %1, edges %2").
                 arg((index.column() - 1) / 3).
                 arg(regina::vertexSplitString[(index.column() - 1) % 3]);
-    } else if (role == Qt::TextAlignmentRole)
-        return Qt::AlignRight;
-    else
+    } else if (role == Qt::TextAlignmentRole) {
+        if (index.column() == 0)
+            return Qt::AlignLeft;
+        else
+            return Qt::AlignRight;
+    } else
         return QVariant();
 }
 
@@ -120,7 +125,7 @@ QVariant AngleModel::headerData(int section, Qt::Orientation orientation,
                 regina::vertexSplitString[(section - 1) % 3];
     } else if (role == Qt::ToolTipRole) {
         if (section == 0)
-            return tr("Taut or strict?");
+            return tr("Strict, taut and/or veering?");
         else
             return tr("Tetrahedron %1, edges %2").arg((section - 1) / 3).
                 arg(regina::vertexSplitString[(section - 1) % 3]);
@@ -231,13 +236,13 @@ void NAngleStructureUI::refreshHeader() {
     unsigned long nStructs = model->structures()->getNumberOfStructures();
     if (model->structures()->isTautOnly()) {
         if (nStructs == 0)
-            count = tr("No taut structures");
+            count = tr("No taut angle structures");
         else if (nStructs == 1)
-            count = tr("1 taut structure");
+            count = tr("1 taut angle structure");
         else
-            count = tr("%1 taut structures").arg(nStructs);
+            count = tr("%1 taut angle structures").arg(nStructs);
 
-        span = tr("Enumerated taut structures only");
+        span = tr("Enumerated taut angle structures only");
     } else {
         if (nStructs == 0)
             count = tr("No vertex angle structures");

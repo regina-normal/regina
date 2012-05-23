@@ -39,6 +39,7 @@ namespace regina {
 const unsigned long NAngleStructure::flagStrict = 1;
 const unsigned long NAngleStructure::flagTaut = 2;
 const unsigned long NAngleStructure::flagCalculatedType = 4;
+const unsigned long NAngleStructure::flagVeering = 8;
 
 NAngleStructure* NAngleStructure::clone() const {
     NAngleStructure* ans = new NAngleStructure(triangulation,
@@ -149,10 +150,11 @@ void NAngleStructure::readIndividualProperty(NFile& infile, unsigned propType) {
 void NAngleStructure::calculateType() const {
     unsigned long size = vector->size();
     if (size == 1) {
-        // We have no tetrahedra at all; this angle structure is both
-        // strict and taut.
+        // We have no tetrahedra, which means this angle structure has it all:
+        // strict, taut and veering.
         flags |= flagStrict;
         flags |= flagTaut;
+        flags |= flagVeering;
         flags |= flagCalculatedType;
         return;
     }
@@ -185,15 +187,125 @@ void NAngleStructure::calculateType() const {
     else
         flags &= (~flagStrict);
 
-    if (taut)
+    if (taut) {
+        // This structure is taut.
         flags |= flagTaut;
-    else
+
+        // Is it veering also?
+        bool veering = true;
+        if (triangulation->isOrientable()) {
+            int nEdges = triangulation->getNumberOfEdges();
+            int* edgeColour = new int[nEdges];
+            std::fill(edgeColour, edgeColour + nEdges, (int)0);
+            NTetrahedron* tet;
+            int orient;
+            int e;
+            for (unsigned i = 0; i < triangulation->getNumberOfTetrahedra();
+                    ++i) {
+                tet = triangulation->getTetrahedron(i);
+                orient = tet->orientation();
+                if ((*vector)[3 * i] > 0) {
+                    // Edges 0,5 are marked as pi.
+                    // For a positively oriented tetrahedron:
+                    // Edges 1,4 vs 2,3 are of colour +1 vs -1.
+                    e = triangulation->edgeIndex(tet->getEdge(1));
+                    if (edgeColour[e] == -orient)
+                        veering = false;
+                    else
+                        edgeColour[e] = orient;
+
+                    e = triangulation->edgeIndex(tet->getEdge(4));
+                    if (edgeColour[e] == -orient)
+                        veering = false;
+                    else
+                        edgeColour[e] = orient;
+
+                    e = triangulation->edgeIndex(tet->getEdge(2));
+                    if (edgeColour[e] == orient)
+                        veering = false;
+                    else
+                        edgeColour[e] = -orient;
+
+                    e = triangulation->edgeIndex(tet->getEdge(3));
+                    if (edgeColour[e] == orient)
+                        veering = false;
+                    else
+                        edgeColour[e] = -orient;
+                } else if ((*vector)[3 * i + 1] > 0) {
+                    // Edges 1,4 are marked as pi.
+                    // For a positively oriented tetrahedron:
+                    // Edges 2,3 vs 0,5 are of colour +1 vs -1.
+                    e = triangulation->edgeIndex(tet->getEdge(2));
+                    if (edgeColour[e] == -orient)
+                        veering = false;
+                    else
+                        edgeColour[e] = orient;
+
+                    e = triangulation->edgeIndex(tet->getEdge(3));
+                    if (edgeColour[e] == -orient)
+                        veering = false;
+                    else
+                        edgeColour[e] = orient;
+
+                    e = triangulation->edgeIndex(tet->getEdge(0));
+                    if (edgeColour[e] == orient)
+                        veering = false;
+                    else
+                        edgeColour[e] = -orient;
+
+                    e = triangulation->edgeIndex(tet->getEdge(5));
+                    if (edgeColour[e] == orient)
+                        veering = false;
+                    else
+                        edgeColour[e] = -orient;
+                } else if ((*vector)[3 * i + 2] > 0) {
+                    // Edges 2,3 are marked as pi.
+                    // For a positively oriented tetrahedron:
+                    // Edges 0,5 vs 1,4 are of colour +1 vs -1.
+                    e = triangulation->edgeIndex(tet->getEdge(0));
+                    if (edgeColour[e] == -orient)
+                        veering = false;
+                    else
+                        edgeColour[e] = orient;
+
+                    e = triangulation->edgeIndex(tet->getEdge(5));
+                    if (edgeColour[e] == -orient)
+                        veering = false;
+                    else
+                        edgeColour[e] = orient;
+
+                    e = triangulation->edgeIndex(tet->getEdge(1));
+                    if (edgeColour[e] == orient)
+                        veering = false;
+                    else
+                        edgeColour[e] = -orient;
+
+                    e = triangulation->edgeIndex(tet->getEdge(4));
+                    if (edgeColour[e] == orient)
+                        veering = false;
+                    else
+                        edgeColour[e] = -orient;
+                }
+                if (! veering)
+                    break;
+            }
+            delete[] edgeColour;
+        } else {
+            // Only orientable triangulations can be veering.
+            veering = false;
+        }
+
+        if (veering)
+            flags |= flagVeering;
+        else
+            flags &= (~flagVeering);
+    } else {
+        // Not taut, and therefore not veering either.
         flags &= (~flagTaut);
+        flags &= (~flagVeering);
+    }
 
     flags |= flagCalculatedType;
-}
-
-bool NAngleStructure::isVeering() const {
 }
 
 } // namespace regina
