@@ -93,9 +93,11 @@ void NAngleStructure::writeToFile(NFile& out) const {
     // Write properties.
     std::streampos bookmark(0);
 
+    /** Flags in data files are deprecated as of Regina 4.93.
     bookmark = out.writePropertyHeader(PROPID_FLAGS);
     out.writeULong(flags);
     out.writePropertyFooter(bookmark);
+    */
 
     out.writeAllPropertiesFooter();
 }
@@ -135,16 +137,20 @@ void NAngleStructure::writeXMLData(std::ostream& out) const {
     }
 
     // Write properties.
+    /** Flags in data files are deprecated as of Regina 4.93.
     out << regina::xml::xmlValueTag("flags", flags);
+    */
 
     // Write the closing tag.
     out << "</struct>\n";
 }
 
 void NAngleStructure::readIndividualProperty(NFile& infile, unsigned propType) {
+    /** Flags in data files are deprecated as of Regina 4.93.
     if (propType == PROPID_FLAGS) {
         flags = infile.readULong();
     }
+    */
 }
 
 void NAngleStructure::calculateType() const {
