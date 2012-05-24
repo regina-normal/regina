@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                    *
+ *  KDE User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2011, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,78 +26,48 @@
 
 /* end stub */
 
-/*! \file reginafilter.h
- *  \brief A variety of filename filters for use with KFileDialog.
- */
+#include "foreign/recogniser.h"
+#include "triangulation/ntriangulation.h"
 
-#ifndef __REGINAFILTER_H
-#define __REGINAFILTER_H
+#include "reginasupport.h"
+#include "recogniserhandler.h"
+#include "../packetfilter.h"
 
-/**
- * Filename filter for all supported files.
- */
-#define FILTER_SUPPORTED \
-    QT_TR_NOOP("Regina Data Files (*.rga);;All Files (*)")
+#include <QFile>
+#include <QTextDocument>
 
-/**
- * Filename filter for Regina data files.
- */
-#define FILTER_REGINA \
-    QT_TR_NOOP("Regina Data Files (*.rga);;All Files (*)")
+const RecogniserHandler RecogniserHandler::instance;
 
-/**
- * Filename filter for Python libraries.
- */
-#define FILTER_PYTHON_LIBRARIES \
-    QT_TR_NOOP("Python Libraries (*.py);;All Files (*)")
+PacketFilter* RecogniserHandler::canExport() const {
+    return new SingleTypeFilter<regina::NTriangulation>();
+}
 
-/**
- * Filename filter for PDF documents.
- */
-#define FILTER_PDF \
-    QT_TR_NOOP("PDF Documents (*.pdf);;All Files (*)")
-
-/**
- * Filename filter for Python scripts.
- */
-#define FILTER_PYTHON_SCRIPTS \
-    QT_TR_NOOP("Python Scripts (*.py);;All Files (*)")
-
-/**
- * Filename filter for SnapPea files.
- */
-#define FILTER_SNAPPEA \
-    QT_TR_NOOP("SnapPea Files (*.tri);;All Files (*)")
-
-/**
- * Filename filter for Orb files.
- */
-#define FILTER_ORB \
-    QT_TR_NOOP("Orb and Casson Files (*.orb);;All Files (*)")
-
-/**
- * Filename filter for 3-manifold recogniser files.
- */
-#define FILTER_RECOGNISER \
-    QT_TR_NOOP("Text Files (*.txt);;All Files (*)")
-
-/**
- * Filename filter for C++ source files.
- */
-#define FILTER_CPP_SOURCE \
-    QT_TR_NOOP("C++ Source Files (*.cpp *.cc *.C);;All Files (*)")
-
-/**
- * Filename filter for CSV (comma-separated value) files.
- */
-#define FILTER_CSV \
-    QT_TR_NOOP("Text Files with Comma-Separated Values (*.csv);;All Files (*)")
-
-/**
- * Filename filter for all files.
- */
-#define FILTER_ALL \
-    QT_TR_NOOP("All Files (*)")
-
-#endif
+bool RecogniserHandler::exportData(regina::NPacket* data,
+        const QString& fileName, QWidget* parentWidget) const {
+    regina::NTriangulation* tri = dynamic_cast<regina::NTriangulation*>(data);
+    if (! tri->isValid()) {
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("This triangulation is not valid."),
+            QObject::tr("I can only export valid triangulations "
+                "to the 3-manifold recogniser format."));
+        return false;
+    }
+    if (tri->hasBoundaryFaces()) {
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("This triangulation has boundary faces."),
+            QObject::tr("I can only export closed or ideal triangulations "
+                "to the 3-manifold recogniser format."));
+        return false;
+    }
+    if (! regina::writeRecogniser(
+            static_cast<const char*>(QFile::encodeName(fileName)), *tri)) {
+        ReginaSupport::warn(parentWidget,
+            QObject::tr("The export failed."),
+            QObject::tr("<qt>An unknown error occurred, probably related "
+            "to file I/O.  Please check that you have permissions to write "
+            "to the file <tt>%1</tt>.</qt>").arg(Qt::escape(fileName)));
+        return false;
+    }
+    return true;
+}
 

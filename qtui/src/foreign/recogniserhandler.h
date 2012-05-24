@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                    *
+ *  KDE User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2011, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,78 +26,47 @@
 
 /* end stub */
 
-/*! \file reginafilter.h
- *  \brief A variety of filename filters for use with KFileDialog.
+/*! \file recogniserhandler.h
+ *  \brief Allows interaction with data files for Matveev's
+ *  3-manifold recogniser.
  */
 
-#ifndef __REGINAFILTER_H
-#define __REGINAFILTER_H
+#ifndef __RECOGNISERHANDLER_H
+#define __RECOGNISERHANDLER_H
 
-/**
- * Filename filter for all supported files.
- */
-#define FILTER_SUPPORTED \
-    QT_TR_NOOP("Regina Data Files (*.rga);;All Files (*)")
+#include "packetexporter.h"
 
 /**
- * Filename filter for Regina data files.
+ * An object responsible for exporting triangulations
+ * to text files that can be read by Matveev's 3-manifold recogniser.
+ *
+ * Rather than creating new objects of this class, the globally
+ * available object RecogniserHandler::instance should always be used.
  */
-#define FILTER_REGINA \
-    QT_TR_NOOP("Regina Data Files (*.rga);;All Files (*)")
+class RecogniserHandler : public PacketExporter {
+    using PacketExporter::exportData;
+    public:
+        /**
+         * A globally available instance of this class.
+         */
+        static const RecogniserHandler instance;
 
-/**
- * Filename filter for Python libraries.
- */
-#define FILTER_PYTHON_LIBRARIES \
-    QT_TR_NOOP("Python Libraries (*.py);;All Files (*)")
+    public:
+        /**
+         * PacketExporter overrides:
+         */
+        virtual PacketFilter* canExport() const;
+        virtual bool exportData(regina::NPacket* data,
+            const QString& fileName, QWidget* parentWidget) const;
 
-/**
- * Filename filter for PDF documents.
- */
-#define FILTER_PDF \
-    QT_TR_NOOP("PDF Documents (*.pdf);;All Files (*)")
+    private:
+        /**
+         * Don't allow people to construct their own Recogniser handlers.
+         */
+        RecogniserHandler();
+};
 
-/**
- * Filename filter for Python scripts.
- */
-#define FILTER_PYTHON_SCRIPTS \
-    QT_TR_NOOP("Python Scripts (*.py);;All Files (*)")
-
-/**
- * Filename filter for SnapPea files.
- */
-#define FILTER_SNAPPEA \
-    QT_TR_NOOP("SnapPea Files (*.tri);;All Files (*)")
-
-/**
- * Filename filter for Orb files.
- */
-#define FILTER_ORB \
-    QT_TR_NOOP("Orb and Casson Files (*.orb);;All Files (*)")
-
-/**
- * Filename filter for 3-manifold recogniser files.
- */
-#define FILTER_RECOGNISER \
-    QT_TR_NOOP("Text Files (*.txt);;All Files (*)")
-
-/**
- * Filename filter for C++ source files.
- */
-#define FILTER_CPP_SOURCE \
-    QT_TR_NOOP("C++ Source Files (*.cpp *.cc *.C);;All Files (*)")
-
-/**
- * Filename filter for CSV (comma-separated value) files.
- */
-#define FILTER_CSV \
-    QT_TR_NOOP("Text Files with Comma-Separated Values (*.csv);;All Files (*)")
-
-/**
- * Filename filter for all files.
- */
-#define FILTER_ALL \
-    QT_TR_NOOP("All Files (*)")
+inline RecogniserHandler::RecogniserHandler() {
+}
 
 #endif
-

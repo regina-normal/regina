@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                    *
+ *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2011, Ben Burton                                   *
+ *  Copyright (c) 1999-2012, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -26,78 +26,61 @@
 
 /* end stub */
 
-/*! \file reginafilter.h
- *  \brief A variety of filename filters for use with KFileDialog.
+/*! \file foreign/recogniser.h
+ *  \brief Allows exports to Matveev's 3-manifold recogniser.
  */
 
-#ifndef __REGINAFILTER_H
-#define __REGINAFILTER_H
+#ifndef __RECOGNISER_H
+#ifndef __DOXYGEN
+#define __RECOGNISER_H
+#endif
 
-/**
- * Filename filter for all supported files.
- */
-#define FILTER_SUPPORTED \
-    QT_TR_NOOP("Regina Data Files (*.rga);;All Files (*)")
+#include <string>
+#include "regina-core.h"
 
-/**
- * Filename filter for Regina data files.
- */
-#define FILTER_REGINA \
-    QT_TR_NOOP("Regina Data Files (*.rga);;All Files (*)")
+namespace regina {
+
+class NTriangulation;
 
 /**
- * Filename filter for Python libraries.
+ * \weakgroup foreign
+ * @{
  */
-#define FILTER_PYTHON_LIBRARIES \
-    QT_TR_NOOP("Python Libraries (*.py);;All Files (*)")
 
 /**
- * Filename filter for PDF documents.
+ * Writes the given triangulation to the given file in Matveev's 3-manifold
+ * recogniser format.
+ *
+ * \pre The given triangulation is not invalid, and does not contain any
+ * boundary faces.
+ *
+ * \i18n This routine makes no assumptions about the
+ * \ref i18n "character encoding" used in the given file \e name, and
+ * simply passes it through unchanged to low-level C/C++ file I/O routines.
+ * The \e contents of the file will be written using UTF-8.
+ *
+ * @param filename the name of the Recogniser file to which to write.
+ * This may be the null pointer (or the empty string), in which case the
+ * data will be written to standard output instead.
+ * @param tri the triangulation to write to the Recogniser file.
+ * @return \c true if the export was successful, or \c false otherwise.
  */
-#define FILTER_PDF \
-    QT_TR_NOOP("PDF Documents (*.pdf);;All Files (*)")
+REGINA_API bool writeRecogniser(const char* filename, NTriangulation& tri);
 
 /**
- * Filename filter for Python scripts.
+ * A synonym for writeRecogniser().  See writeRecogniser() for details.
  */
-#define FILTER_PYTHON_SCRIPTS \
-    QT_TR_NOOP("Python Scripts (*.py);;All Files (*)")
+REGINA_API bool writeRecognizer(const char* filename, NTriangulation& tri);
 
-/**
- * Filename filter for SnapPea files.
- */
-#define FILTER_SNAPPEA \
-    QT_TR_NOOP("SnapPea Files (*.tri);;All Files (*)")
+/*@}*/
 
-/**
- * Filename filter for Orb files.
- */
-#define FILTER_ORB \
-    QT_TR_NOOP("Orb and Casson Files (*.orb);;All Files (*)")
+// Inline functions:
 
-/**
- * Filename filter for 3-manifold recogniser files.
- */
-#define FILTER_RECOGNISER \
-    QT_TR_NOOP("Text Files (*.txt);;All Files (*)")
+inline bool writeRecognizer(const char* filename, NTriangulation& tri) {
+    return writeRecogniser(filename, tri);
+}
 
-/**
- * Filename filter for C++ source files.
- */
-#define FILTER_CPP_SOURCE \
-    QT_TR_NOOP("C++ Source Files (*.cpp *.cc *.C);;All Files (*)")
-
-/**
- * Filename filter for CSV (comma-separated value) files.
- */
-#define FILTER_CSV \
-    QT_TR_NOOP("Text Files with Comma-Separated Values (*.csv);;All Files (*)")
-
-/**
- * Filename filter for all files.
- */
-#define FILTER_ALL \
-    QT_TR_NOOP("All Files (*)")
+} // namespace regina
 
 #endif
 

@@ -31,7 +31,6 @@
 #include <fstream>
 #include <iomanip>
 
-#include "file/nresources.h"
 #include "foreign/snappea.h"
 #include "triangulation/ntriangulation.h"
 
@@ -39,7 +38,7 @@ namespace regina {
 
 NTriangulation* readSnapPea(const char* filename) {
     // Open the file.
-    std::ifstream in(filename, NLocalFileResource::sysModeRead());
+    std::ifstream in(filename);
     if (!in)
         return 0;
 
@@ -145,7 +144,7 @@ NTriangulation* readSnapPea(const char* filename) {
 
 bool writeSnapPea(const char* filename, NTriangulation& tri) {
     // Open the file.
-    std::ofstream out(filename, NLocalFileResource::sysModeWrite());
+    std::ofstream out(filename);
     if (!out)
         return 0;
 

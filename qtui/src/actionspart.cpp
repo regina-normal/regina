@@ -205,6 +205,17 @@ void ReginaMain::setupActions() {
     exportMenu->addAction(act);
 
     act = new QAction(this);
+    act->setText(tr("3-Manifold R&ecogniser"));
+    act->setIcon(ReginaSupport::regIcon("recogniser"));
+    act->setToolTip(tr("Export a triangulation to "
+        "Matveev's 3-manifold recogniser"));
+    act->setWhatsThis(tr("Export a triangulation from this packet tree "
+        "to a plain text file that can be given to Matveev's "
+        "3-manifold recogniser."));
+    connect(act, SIGNAL(triggered()), this, SLOT(exportRecogniser()) );
+    exportMenu->addAction(act);
+
+    act = new QAction(this);
     act->setText(tr("&C++ Source"));
     act->setIcon(ReginaSupport::themeIcon("text-x-c++src"));
     act->setToolTip(tr("Export a triangulation as C++ source"));

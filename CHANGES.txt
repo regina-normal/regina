@@ -15,11 +15,14 @@ Version 4.93  [ 30 May, 2012 ]
             - Flags (taut/strict/veering) are no longer stored in data files.
         Class NExampleTriangulation:
             - New routine weeks() to build the Weeks manifold.
+        Routine writeRecogniser():
+            - Added to support sending triangulations to Matveev's
+              3-manifold recogniser software.
     USER INTERFACE:
         - Restored File -> Save and File ->Save As, which were missing from
           the main menu in version 4.92.
         - Replaced the python icon with a generic terminal icon.
-        - GUI python consoles will now set selected = None if there is
+        - GUI python consoles will now set selected=None if there is
           nothing selected in the packet tree.
     DOCUMENTATION:
         - Layout and navigation improvements in the user handbook.

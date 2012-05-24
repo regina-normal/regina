@@ -34,6 +34,7 @@
 #include "foreign/exportdialog.h"
 #include "foreign/pdfhandler.h"
 #include "foreign/pythonhandler.h"
+#include "foreign/recogniserhandler.h"
 #include "foreign/reginahandler.h"
 #include "foreign/snappeahandler.h"
 #include "foreign/sourcehandler.h"
@@ -70,6 +71,11 @@ void ReginaMain::exportReginaUncompressed() {
 void ReginaMain::exportSnapPea() {
     exportFile(SnapPeaHandler::instance, tr(FILTER_SNAPPEA),
         tr("Export SnapPea Triangulation"));
+}
+
+void ReginaMain::exportRecogniser() {
+    exportFile(RecogniserHandler::instance, tr(FILTER_RECOGNISER),
+        tr("Export Triangulation to 3-Manifold Recogniser"));
 }
 
 void ReginaMain::exportSource() {
