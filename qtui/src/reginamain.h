@@ -324,6 +324,7 @@ class ReginaMain : public QMainWindow {
         void exportCSVSurfaceList();
         void exportPDF();
         void exportPython();
+        void exportRecogniser();
         void exportRegina();
         void exportReginaUncompressed();
         void exportSnapPea();
