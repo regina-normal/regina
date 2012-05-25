@@ -273,6 +273,8 @@ void addNTriangulation() {
         .def("knowsThreeSphere", &NTriangulation::knowsThreeSphere)
         .def("isBall", &NTriangulation::isBall)
         .def("knowsBall", &NTriangulation::knowsBall)
+        .def("isSolidTorus", &NTriangulation::isSolidTorus)
+        .def("knowsSolidTorus", &NTriangulation::knowsSolidTorus)
         .def("hasCompressingDisc", &NTriangulation::hasCompressingDisc)
         .def("hasSimpleCompressingDisc",
             &NTriangulation::hasSimpleCompressingDisc)

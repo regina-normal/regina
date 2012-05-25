@@ -224,6 +224,10 @@ NXMLElementReader* NXMLTriangulationReader::startContentSubElement(
         bool b;
         if (valueOf(props.lookup("value"), b))
             tri->threeBall = b;
+    } else if (subTagName == "solidtorus") {
+        bool b;
+        if (valueOf(props.lookup("value"), b))
+            tri->solidTorus = b;
     } else if (subTagName == "H1")
         return new NAbelianGroupPropertyReader(tri->H1);
     else if (subTagName == "H1Rel")

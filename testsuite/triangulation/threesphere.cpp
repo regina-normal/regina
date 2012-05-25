@@ -53,6 +53,7 @@ class ThreeSphereTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(threeSphereRecognition);
     CPPUNIT_TEST(threeSphereCensus);
     CPPUNIT_TEST(threeBallRecognition);
+    CPPUNIT_TEST(solidTorusRecognition);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -82,6 +83,7 @@ class ThreeSphereTest : public CppUnit::TestFixture {
 
             // Try again with a barycentric subdivision.
             NTriangulation big(*tri);
+            big.barycentricSubdivision();
             if (! big.isThreeSphere()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the 3-sphere "
                     + triName + " is not recognised as such.").c_str());
@@ -99,6 +101,7 @@ class ThreeSphereTest : public CppUnit::TestFixture {
 
             // Try again with a barycentric subdivision.
             NTriangulation big(*tri);
+            big.barycentricSubdivision();
             if (big.isThreeSphere()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the non-3-sphere "
                     + triName + " is recognised as a 3-sphere.").c_str());
@@ -320,6 +323,7 @@ class ThreeSphereTest : public CppUnit::TestFixture {
 
             // Try again with a barycentric subdivision.
             NTriangulation big(*tri);
+            big.barycentricSubdivision();
             if (! big.isBall()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the 3-ball "
                     + triName + " is not recognised as such.").c_str());
@@ -337,6 +341,7 @@ class ThreeSphereTest : public CppUnit::TestFixture {
 
             // Try again with a barycentric subdivision.
             NTriangulation big(*tri);
+            big.barycentricSubdivision();
             if (big.isBall()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the non-3-ball "
                     + triName + " is recognised as a 3-ball.").c_str());
@@ -413,6 +418,128 @@ class ThreeSphereTest : public CppUnit::TestFixture {
 
             tri = NExampleTriangulation::poincareHomologySphere();
             delete verifyNotThreeBall(tri, "Poincare homology sphere");
+        }
+
+        NTriangulation* verifySolidTorus(NTriangulation* tri,
+                const std::string& triName) {
+            NTriangulation bounded(*tri);
+            if (bounded.isIdeal())
+                bounded.idealToFinite();
+
+            NTriangulation ideal(*tri);
+            if (ideal.hasBoundaryFaces())
+                ideal.finiteToIdeal();
+
+            NTriangulation boundedBig(bounded);
+            boundedBig.barycentricSubdivision();
+
+            NTriangulation idealBig(ideal);
+            idealBig.barycentricSubdivision();
+
+            if (! bounded.isSolidTorus()) {
+                CPPUNIT_FAIL(("The real solid torus " + triName +
+                    " is not recognised as such.").c_str());
+            }
+            if (! ideal.isSolidTorus()) {
+                CPPUNIT_FAIL(("The ideal solid torus " + triName +
+                    " is not recognised as such.").c_str());
+            }
+            if (! boundedBig.isSolidTorus()) {
+                CPPUNIT_FAIL(("The subdivided real solid torus " + triName +
+                    " is not recognised as such.").c_str());
+            }
+            if (! idealBig.isSolidTorus()) {
+                CPPUNIT_FAIL(("The subdivided ideal solid torus " + triName +
+                    " is not recognised as such.").c_str());
+            }
+
+            return tri;
+        }
+
+        NTriangulation* verifyNotSolidTorus(NTriangulation* tri,
+                const std::string& triName) {
+            NTriangulation bounded(*tri);
+            if (bounded.isIdeal())
+                bounded.idealToFinite();
+
+            NTriangulation ideal(*tri);
+            if (ideal.hasBoundaryFaces())
+                ideal.finiteToIdeal();
+
+            NTriangulation boundedBig(bounded);
+            boundedBig.barycentricSubdivision();
+
+            NTriangulation idealBig(ideal);
+            idealBig.barycentricSubdivision();
+
+            if (bounded.isSolidTorus()) {
+                CPPUNIT_FAIL(("The real non-solid-torus " + triName +
+                    " is recognised as a solid torus.").c_str());
+            }
+            if (ideal.isSolidTorus()) {
+                CPPUNIT_FAIL(("The ideal non-solid-torus " + triName +
+                    " is recognised as a solid torus.").c_str());
+            }
+            if (boundedBig.isSolidTorus()) {
+                CPPUNIT_FAIL(("The subdivided real non-solid-torus " +
+                    triName + " is recognised as a solid torus.").c_str());
+            }
+            if (idealBig.isSolidTorus()) {
+                CPPUNIT_FAIL(("The subdivided ideal non-solid-torus " +
+                    triName + " is recognised as a solid torus.").c_str());
+            }
+
+            return tri;
+        }
+
+        void solidTorusRecognition() {
+            NTriangulation* tri;
+
+            tri = new NTriangulation();
+            delete verifyNotSolidTorus(tri, "Empty triangulation");
+
+            tri = new NTriangulation();
+            tri->newTetrahedron();
+            delete verifyNotSolidTorus(tri, "Single tetrahedron");
+
+            tri = new NTriangulation();
+            NTetrahedron* tet = tri->newTetrahedron();
+            tet->joinTo(0, tet, NPerm4(3, 1, 2, 0));
+            delete verifyNotSolidTorus(tri, "Snapped tetrahedron");
+
+            tri = new NTriangulation();
+            tri->insertLayeredSolidTorus(1, 2);
+            delete verifySolidTorus(tri, "LST(1,2,3)");
+
+            tri = new NTriangulation();
+            tri->insertLayeredSolidTorus(1, 20);
+            delete verifySolidTorus(tri, "LST(1,20,21)");
+
+            tri = new NTriangulation();
+            tri->insertLayeredSolidTorus(1, 1);
+            delete verifySolidTorus(tri, "LST(1,1,2)");
+
+            tri = new NTriangulation();
+            tri->insertLayeredSolidTorus(0, 1);
+            delete verifySolidTorus(tri, "LST(0,1,1)");
+
+            tri = NTriangulation::fromIsoSig("cMcabbgds");
+            delete verifySolidTorus(tri, "Ideal solid torus");
+
+            tri = NExampleTriangulation::figureEightKnotComplement();
+            delete verifyNotSolidTorus(tri, "Figure 8 Knot Complement");
+
+            // Throw in a couple of closed manifolds for good measure.
+            tri = new NTriangulation();
+            tri->insertLayeredLensSpace(1,0);
+            delete verifyNotSolidTorus(tri, "L(1,0)");
+
+            tri = new NTriangulation();
+            tri->insertLayeredLensSpace(2,1);
+            delete verifyNotSolidTorus(tri, "L(2,1)");
+
+            tri = NExampleTriangulation::poincareHomologySphere();
+            delete verifyNotSolidTorus(tri, "Poincare homology sphere");
         }
 };
 

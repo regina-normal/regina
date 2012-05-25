@@ -63,10 +63,12 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         QLabel* splitting;
         QLabel* threeSphere;
         QLabel* threeBall;
+        QLabel* solidTorus;
         QAbstractButton* btnZeroEff;
         QAbstractButton* btnSplitting;
         QAbstractButton* btnThreeSphere;
         QAbstractButton* btnThreeBall;
+        QAbstractButton* btnSolidTorus;
 
     public:
         /**
@@ -91,6 +93,7 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         void calculateSplitting();
         void calculateThreeSphere();
         void calculateThreeBall();
+        void calculateSolidTorus();
 
         /**
          * Notify that preferences have changed.
