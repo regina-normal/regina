@@ -32,6 +32,7 @@ void addForeignIsoSig();
 void addForeignOrb();
 void addForeignPDF();
 void addForeignSnapPea();
+void addForeignRecogniser();
 
 void addForeign() {
     addForeignCSVSurfaceList();
@@ -40,5 +41,6 @@ void addForeign() {
     addForeignOrb();
     addForeignPDF();
     addForeignSnapPea();
+    addForeignRecogniser();
 }
 

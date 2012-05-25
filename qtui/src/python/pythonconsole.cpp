@@ -356,17 +356,20 @@ void PythonConsole::setRootPacket(regina::NPacket* packet) {
 
 void PythonConsole::setSelectedPacket(regina::NPacket* packet) {
     // Set the variable.
-    if (interpreter->setVar("selected", packet)) {
+    if (interpreter->setVar("item", packet)) {
         if (packet)
             addOutput(tr("The selected packet (%1) is in the "
-                "variable [selected].").arg(packet->getPacketLabel().c_str()));
+                "variable [item].").arg(packet->getPacketLabel().c_str()));
+        // Set "selected" for backward compatibility with Regina <= 4.92.
+        // Ignore any errors.
+        interpreter->setVar("selected", packet);
     } else {
         ReginaSupport::warn(this,
-            tr("<qt>I could not set the <i>selected</i> variable.</qt>"),
+            tr("<qt>I could not set the <i>item</i> variable.</qt>"),
             tr("The currently selected packet will not be available in "
             "this Python session.  Please report this error to %2.")
             .arg(PACKAGE_BUGREPORT));
-        addError(tr("The variable \"selected\" has not been set."));
+        addError(tr("The variable \"item\" has not been set."));
     }
 }
 

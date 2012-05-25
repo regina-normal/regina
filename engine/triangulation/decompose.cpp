@@ -409,6 +409,106 @@ bool NTriangulation::knowsBall() const {
     return false;
 }
 
+bool NTriangulation::isSolidTorus() const {
+    if (solidTorus.known())
+        return solidTorus.value();
+
+    // Basic property checks.
+    if (! (isValid() && isOrientable() && isConnected())) {
+        solidTorus = false;
+        return false;
+    }
+
+    if (boundaryComponents.size() != 1) {
+        solidTorus = false;
+        return false;
+    }
+
+    if (boundaryComponents.front()->getEulerCharacteristic() != 0 ||
+            (! boundaryComponents.front()->isOrientable())) {
+        solidTorus = false;
+        return false;
+    }
+
+    // Make a triangulation with real boundary.
+    NTriangulation working(*this);
+    working.intelligentSimplify();
+    if (working.isIdeal()) {
+        working.idealToFinite();
+        working.intelligentSimplify();
+    }
+
+    // Check homology.
+    const NAbelianGroup& h1 = working.getHomologyH1();
+    if (! (h1.getRank() == 1 && h1.getNumberOfInvariantFactors() == 0)) {
+        solidTorus = false;
+        return false;
+    }
+
+    // Pull out the big guns: normal surface time.
+    // TODO: Can we do this in quad coordinates instead?
+    NNormalSurfaceList* s = NNormalSurfaceList::enumerate(
+        &working, NNormalSurfaceList::STANDARD, true);
+    const NNormalSurface* f;
+    NTriangulation* cutOpen;
+    for (unsigned long i = 0; i < s->getNumberOfSurfaces(); ++i) {
+        f = s->getSurface(i);
+        if (! f->isCompact()) // This test is unnecessary, strictly speaking.
+            continue;
+        if (f->getEulerCharacteristic() != 1)
+            continue;
+        if (! f->hasRealBoundary())
+            continue;
+        if (f->isVertexLinking())
+            continue;
+        if (f->isThinEdgeLink().first)
+            continue;
+
+        // We have a non-vertex-linking, non-edge-linking disc.
+        // Does cutting along this disc give a 3-ball?
+        cutOpen = f->cutAlong();
+        if (cutOpen->isBall()) {
+            // Yes!  We have a solid torus.
+            delete cutOpen;
+            delete s;
+            solidTorus = true;
+            return true;
+        }
+        delete cutOpen;
+    }
+
+    delete s;
+
+    // We didn't find the right compressing disc.
+    solidTorus = false;
+    return false;
+}
+
+bool NTriangulation::knowsSolidTorus() const {
+    if (solidTorus.known())
+        return true;
+
+    // Run some very fast prelimiary tests before we give up and say no.
+    if (! (isValid() && isOrientable() && isConnected())) {
+        solidTorus = false;
+        return true;
+    }
+
+    if (boundaryComponents.size() != 1) {
+        solidTorus = false;
+        return true;
+    }
+
+    if (boundaryComponents.front()->getEulerCharacteristic() != 0 ||
+            (! boundaryComponents.front()->isOrientable())) {
+        solidTorus = false;
+        return true;
+    }
+
+    // More work is required.
+    return false;
+}
+
 NPacket* NTriangulation::makeZeroEfficient() {
     // Extract a connected sum decomposition.
     NContainer* connSum = new NContainer();

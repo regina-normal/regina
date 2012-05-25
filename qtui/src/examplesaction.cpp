@@ -91,7 +91,7 @@ void ExamplesAction::fillStandard() {
     addUrl("snappea-census.rga",
         tr("Cusped Hyperbolic Census"));
     addUrl("knot-link-census.rga",
-        tr("Knot / Link Complements"));
+        tr("Hyperbolic Knot / Link Complements"));
     addUrl("sig-3mfd-census.rga",
         tr("Splitting Surface Sigs (General)"));
     addUrl("sig-prime-min-census.rga",

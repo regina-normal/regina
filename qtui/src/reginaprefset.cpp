@@ -442,7 +442,7 @@ void ReginaPrefSet::readInternal() {
     censusFiles.push_back(ReginaFilePref(exDir + "/closed-nor-census.rga",
         tr("Closed non-orientable census"), "ClosedNor", settings));
     censusFiles.push_back(ReginaFilePref(exDir + "/knot-link-census.rga",
-        tr("Knot/Link census"), "KnotLink", settings));
+        tr("Hyperbolic knot/link census"), "KnotLink", settings));
     censusFiles.push_back(ReginaFilePref(exDir + "/snappea-census.rga",
         tr("Cusped hyperbolic census"), "CuspedHyp", settings));
     censusFiles.push_back(ReginaFilePref(exDir + "/closed-hyp-census.rga",

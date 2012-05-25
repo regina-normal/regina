@@ -108,6 +108,14 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     threeBall->setWhatsThis(msg);
 
+    label = new QLabel(tr("Solid torus?"), ui);
+    grid->addWidget(label, 4, 1);
+    solidTorus = new QLabel(ui);
+    grid->addWidget(solidTorus, 4, 3);
+    msg = tr("Is this a triangulation of the solid torus?");
+    label->setWhatsThis(msg);
+    solidTorus->setWhatsThis(msg);
+
     btnZeroEff = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"), ui);
     btnZeroEff->setToolTip(tr("Calculate 0-efficiency"));
@@ -155,6 +163,21 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->addWidget(btnThreeBall, 3, 5);
     connect(btnThreeBall, SIGNAL(clicked()), this,
         SLOT(calculateThreeBall()));
+
+    btnSolidTorus = new QPushButton(ReginaSupport::themeIcon("system-run"),
+        tr("Calculate"), ui);
+    btnSolidTorus->setToolTip(tr("Calculate whether this is a solid torus"));
+    btnSolidTorus->setWhatsThis(tr("<qt>Calculate whether this "
+        "is a triangulation of the solid torus (i.e., the unknot "
+        "complement).  The triangulation may have real boundary faces, "
+        "or it may be ideal (in which case I will assume that "
+        "any ideal vertices are truncated).<p>"
+        "<b>Warning:</b> This calculation is occasionally quite slow for "
+        "larger triangulations (which is why solid torus recognition is not "
+        "always run automatically).</qt>"));
+    grid->addWidget(btnSolidTorus, 4, 5);
+    connect(btnSolidTorus, SIGNAL(clicked()), this,
+        SLOT(calculateSolidTorus()));
 
     layout->addStretch(3);
 
@@ -255,6 +278,28 @@ void NTriSurfacesUI::refresh() {
         threeBall->setPalette(QPalette());
         btnThreeBall->setEnabled(true);
     }
+
+    // Use the same threshold adjustment as for 3-sphere recognition.
+    if (tri->knowsSolidTorus() ||
+            tri->getNumberOfTetrahedra() + THREE_SPHERE_AUTO_CALC_ADJUSTMENT
+            <= autoCalcThreshold) {
+        if (tri->isSolidTorus()) {
+            solidTorus->setText(tr("True"));
+            QPalette pal = solidTorus->palette();
+            pal.setColor(solidTorus->foregroundRole(), Qt::darkGreen);
+            solidTorus->setPalette(pal);
+        } else {
+            solidTorus->setText(tr("False"));
+            QPalette pal = solidTorus->palette();
+            pal.setColor(solidTorus->foregroundRole(), Qt::darkRed);
+            solidTorus->setPalette(pal);
+        }
+        btnSolidTorus->setEnabled(false);
+    } else {
+        solidTorus->setText(tr("Unknown"));
+        solidTorus->setPalette(QPalette());
+        btnSolidTorus->setEnabled(true);
+    }
 }
 
 void NTriSurfacesUI::editingElsewhere() {
@@ -267,11 +312,14 @@ void NTriSurfacesUI::editingElsewhere() {
     threeSphere->setPalette(QPalette());
     threeBall->setText(msg);
     threeBall->setPalette(QPalette());
+    solidTorus->setText(msg);
+    solidTorus->setPalette(QPalette());
 
     btnZeroEff->setEnabled(false);
     btnSplitting->setEnabled(false);
     btnThreeSphere->setEnabled(false);
     btnThreeBall->setEnabled(false);
+    btnSolidTorus->setEnabled(false);
 }
 
 void NTriSurfacesUI::calculateZeroEff() {
@@ -313,6 +361,17 @@ void NTriSurfacesUI::calculateThreeBall() {
         "for larger triangulations.\n\n"
         "Please be patient."), ui);
     tri->isBall();
+    delete dlg;
+
+    refresh();
+}
+
+void NTriSurfacesUI::calculateSolidTorus() {
+    PatienceDialog* dlg = PatienceDialog::warn(tr(
+        "Solid torus recognition can be quite slow\n"
+        "for larger triangulations.\n\n"
+        "Please be patient."), ui);
+    tri->isSolidTorus();
     delete dlg;
 
     refresh();

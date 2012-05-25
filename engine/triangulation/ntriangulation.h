@@ -189,6 +189,8 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
             /**< Is this a triangulation of a 3-sphere? */
         mutable NProperty<bool> threeBall;
             /**< Is this a triangulation of a 3-dimensional ball? */
+        mutable NProperty<bool> solidTorus;
+            /**< Is this a triangulation of the solid torus? */
 
         mutable TuraevViroSet turaevViroCache;
             /**< The set of Turaev-Viro invariants that have already
@@ -2261,6 +2263,50 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * original triangulation was not changed).
          */
         NPacket* makeZeroEfficient();
+        /**
+         * Determines whether this is a triangulation of the solid
+         * torus; that is, the unknot complement.  This routine can be
+         * used on a triangulation with real boundary faces, or on an
+         * ideal triangulation (in which case all ideal vertices will
+         * be assumed to be truncated).
+         *
+         * \warning The algorithms used in this routine rely on normal
+         * surface theory and so might be very slow for larger
+         * triangulations (although faster tests are used where possible).
+         * The routine knowsSolidTorus() can be called to see if this
+         * property is already known or if it happens to be very fast to
+         * calculate for this triangulation.
+         *
+         * @return \c true if and only if this is either a real (compact)
+         * or ideal (non-compact) triangulation of the solid torus.
+         */
+        bool isSolidTorus() const;
+        /**
+         * Is it already known (or trivial to determine) whether or not this
+         * is a triangulation of a solid torus (that is, the unknot
+         * complement)?  See isSolidTorus() for further details.
+         *
+         * If this property is indeed already known, future calls to
+         * isSolidTorus() will be very fast (simply returning the
+         * precalculated value).
+         *
+         * If this property is not already known, this routine will
+         * nevertheless run some very fast preliminary tests to see if the
+         * answer is obviously no.  If so, it will store \c false as the
+         * precalculated value for isSolidTorus() and this routine will
+         * return \c true.
+         *
+         * Otherwise a call to isSolidTorus() may potentially require more
+         * significant work, and so this routine will return \c false.
+         *
+         * \warning This routine does not actually tell you \e whether
+         * this triangulation forms a solid torus; it merely tells you whether
+         * the answer has already been computed (or is very easily computed).
+         *
+         * @return \c true if and only if this property is already known
+         * or trivial to calculate.
+         */
+        bool knowsSolidTorus() const;
 
         /**
          * Searches for a compressing disc within the underlying
