@@ -141,7 +141,6 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
 
     if (role == Qt::DisplayRole) {
         const regina::NNormalSurface* s = surfaces_->getSurface(surfaceIndex);
-        regina::NTriBool triBool;
 
         if (index.column() == 0)
             return tr("%1.").arg(surfaceIndex);
@@ -155,25 +154,19 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             if (! s->isCompact())
                 return QVariant();
 
-            triBool = s->isOrientable();
-            if (triBool.isTrue())
+            if (s->isOrientable())
                 return QString(QChar(0x2713 /* tick */));
                 // return tr("Yes");
-            else if (triBool.isFalse())
-                return tr("Non-or.");
             else
-                return tr("Unknown");
+                return tr("Non-or.");
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 4) {
             if (! s->isCompact())
                 return QVariant();
 
-            triBool = s->isTwoSided();
-            if (triBool.isTrue())
+            if (s->isTwoSided())
                 return "2";
-            else if (triBool.isFalse())
-                return "1";
             else
-                return tr("Unknown");
+                return "1";
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
             if (! s->isCompact()) {
@@ -268,30 +261,23 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 index.column() - propertyCols, this, surfaces_->getTriangulation());
     } else if (role == Qt::ForegroundRole) {
         const regina::NNormalSurface* s = surfaces_->getSurface(surfaceIndex);
-        regina::NTriBool triBool;
 
         if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
             if (! s->isCompact())
                 return QVariant();
 
-            triBool = s->isOrientable();
-            if (triBool.isTrue())
+            if (s->isOrientable())
                 return Qt::darkGreen;
-            else if (triBool.isFalse())
-                return Qt::darkRed;
             else
-                return Qt::darkYellow;
+                return Qt::darkRed;
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 4) {
             if (! s->isCompact())
                 return QVariant();
 
-            triBool = s->isTwoSided();
-            if (triBool.isTrue())
+            if (s->isTwoSided())
                 return Qt::darkGreen;
-            else if (triBool.isFalse())
-                return Qt::darkRed;
             else
-                return Qt::darkYellow;
+                return Qt::darkRed;
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
             if (! s->isCompact())

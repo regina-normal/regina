@@ -35,7 +35,7 @@ connected ::=</synopsis>
      </row>
      <row>
       <entry><sgmltag>value</sgmltag></entry>
-      <entry><type>NUMBER</type> (required)</entry>
+      <entry><type>CDATA</type> (required)</entry>
      </row>
     </tbody>
    </tgroup>
@@ -74,10 +74,17 @@ connected ::=</synopsis>
     <term><sgmltag>value</sgmltag></term>
     <listitem>
      <para>
-      Either 1, -1 or 0.  Value 1 signifies that the parent surface is
-      connected, value -1 signifies that the parent surface is disconnected
-      and value 0 signifies that the connectedness of the parent surface
-      is still unknown.
+      Either <literal>T</literal> or <literal>F</literal>, according to
+      whether the parent surface is connected or disconnected respectively.
+     </para>
+     <para>
+      Past versions of &regina; (versions&nbsp;4.92 and earlier) used
+      <literal>true</literal> or <literal>1</literal> instead of
+      <literal>T</literal>, used
+      <literal>false</literal> or <literal>-1</literal> instead of
+      <literal>F</literal>, and also used
+      <literal>unknown</literal> or <literal>0</literal> to indicate
+      that this property was unknown.
      </para>
     </listitem>
    </varlistentry>

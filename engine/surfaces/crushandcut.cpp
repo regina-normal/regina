@@ -1285,17 +1285,16 @@ NTriangulation* NNormalSurface::crush() const {
     return ans;
 }
 
-NTriBool NNormalSurface::isCompressingDisc(bool knownConnected) const {
+bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     // Is it even a disc?
     if (! hasRealBoundary())
-        return NTriBool::False;
+        return false;
     if (getEulerCharacteristic() != 1)
-        return NTriBool::False;
+        return false;
 
     if (! knownConnected) {
-        NTriBool ans = isConnected();
-        if (! ans.isTrue())
-            return ans;
+        if (! isConnected())
+            return false;
     }
 
     // Yep, it's a disc (and hence two-sided).
@@ -1313,8 +1312,6 @@ NTriBool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     // result.  If not, the disc boundary is non-trivial and so the disc
     // is compressing.
     std::auto_ptr<NTriangulation> cut(cutAlong());
-    if (! cut.get())
-        return NTriBool::Unknown;
 
     if (cut->getNumberOfBoundaryComponents() ==
             getTriangulation()->getNumberOfBoundaryComponents()) {
@@ -1322,7 +1319,7 @@ NTriBool NNormalSurface::isCompressingDisc(bool knownConnected) const {
         // boundary of the triangulation.  Therefore we might end up
         // converting a torus boundary into a sphere boundary, but the
         // disc is compressing regardless.
-        return NTriBool::True;
+        return true;
     }
 
     unsigned long newSphereCount = 0;
@@ -1332,18 +1329,15 @@ NTriBool NNormalSurface::isCompressingDisc(bool knownConnected) const {
             ++newSphereCount;
 
     if (newSphereCount == origSphereCount)
-        return NTriBool::True;
+        return true;
     else
-        return NTriBool::False;
+        return false;
 }
 
-NTriBool NNormalSurface::isIncompressible() const {
+bool NNormalSurface::isIncompressible() const {
     // Make the surface two-sided if necessary.
     {
-        NTriBool twoSided = isTwoSided();
-        if (twoSided.isUnknown())
-            return NTriBool::Unknown;
-        if (twoSided.isFalse()) {
+        if (! isTwoSided()) {
             // Convert this into a two-sided surface and rerun the
             // algorithm.
             NNormalSurfaceVector* v =
@@ -1358,29 +1352,22 @@ NTriBool NNormalSurface::isIncompressible() const {
     // From the preconditions, we can assume this surface to be
     // closed, compact and connected.
     if (getEulerCharacteristic() == 2)
-        return NTriBool::False;
+        return false;
 
     // Cut along this surface and look for compressing discs.
     std::auto_ptr<NTriangulation> cut(cutAlong());
-    if (! cut.get())
-        return NTriBool::Unknown;
-
     cut->splitIntoComponents(0, false);
-    NTriBool found;
     for (NPacket* comp = cut->getFirstTreeChild(); comp;
             comp = comp->getNextTreeSibling()) {
         // Since the original manifold is irreducible and this surface
         // is connected, we know that the sliced-open manifold is irreducible
         // also.
-        found = static_cast<NTriangulation*>(comp)->hasCompressingDisc();
-        if (found.isUnknown())
-            return NTriBool::Unknown;
-        if (found.isTrue())
-            return NTriBool::False;
+        if (static_cast<NTriangulation*>(comp)->hasCompressingDisc())
+            return false;
     }
 
     // No compressing discs were found.
-    return NTriBool::True;
+    return true;
 }
 
 } // namespace regina

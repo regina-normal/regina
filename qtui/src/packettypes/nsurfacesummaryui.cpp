@@ -42,8 +42,8 @@
 #include <map>
 
 namespace {
-    inline int triBoolIndex(regina::NTriBool b) {
-        return (b.isTrue() ? 0 : b.isFalse() ? 1 : 2);
+    inline int boolIndex(bool b) {
+        return (b ? 0 : 1);
     }
 
     QString tableHeader(int twoSided, int orbl) {
@@ -159,7 +159,7 @@ void NSurfaceSummaryUI::refresh() {
     unsigned long bounded = 0;
     unsigned long closed = 0;
     std::map<regina::NLargeInteger, unsigned long>
-        countClosed[3][3], countBounded[3][3]; /* 2-sided, orbl ? */
+        countClosed[2][2], countBounded[2][2]; /* 2-sided, orbl ? */
     std::set<regina::NLargeInteger> allECsClosed, allECsBounded;
     std::set<std::pair<int, int> > allTypesClosed, allTypesBounded;
 
@@ -176,8 +176,8 @@ void NSurfaceSummaryUI::refresh() {
             euler = s->getEulerCharacteristic();
             allECsBounded.insert(euler);
 
-            type = std::make_pair(triBoolIndex(s->isTwoSided()),
-                triBoolIndex(s->isOrientable()));
+            type = std::make_pair(boolIndex(s->isTwoSided()),
+                boolIndex(s->isOrientable()));
             allTypesBounded.insert(type);
 
             ++countBounded[type.first][type.second][euler];
@@ -186,8 +186,8 @@ void NSurfaceSummaryUI::refresh() {
             euler = s->getEulerCharacteristic();
             allECsClosed.insert(euler);
 
-            type = std::make_pair(triBoolIndex(s->isTwoSided()),
-                triBoolIndex(s->isOrientable()));
+            type = std::make_pair(boolIndex(s->isTwoSided()),
+                boolIndex(s->isOrientable()));
             allTypesClosed.insert(type);
 
             ++countClosed[type.first][type.second][euler];

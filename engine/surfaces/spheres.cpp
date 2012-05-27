@@ -69,7 +69,7 @@ NNormalSurface* NNormalSurface::findNonTrivialSphere(NTriangulation* tri) {
         if (s->isCompact() && (! s->hasRealBoundary()) &&
                 (! s->isVertexLinking())) {
             chi = s->getEulerCharacteristic();
-            if (chi == 2 || (chi == 1 && s->isTwoSided().isFalse())) {
+            if (chi == 2 || (chi == 1 && ! s->isTwoSided())) {
                 // It's a non-trivial 2-sphere!
                 // Clone the surface for our return value.
                 NNormalSurface* ans = (chi == 1 ? s->doubleSurface() :

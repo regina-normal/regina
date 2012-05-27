@@ -672,11 +672,11 @@ class REGINA_API NNormalSurface :
                  between 0 and 2 inclusive. */
         mutable NProperty<NLargeInteger> eulerChar;
             /**< The Euler characteristic of this surface. */
-        mutable NProperty<NTriBool> orientable;
+        mutable NProperty<bool> orientable;
             /**< Is this surface orientable? */
-        mutable NProperty<NTriBool> twoSided;
+        mutable NProperty<bool> twoSided;
             /**< Is this surface two-sided? */
-        mutable NProperty<NTriBool> connected;
+        mutable NProperty<bool> connected;
             /**< Is this surface connected? */
         mutable NProperty<bool> realBoundary;
             /**< Does this surface have real boundary (i.e. does it meet
@@ -1061,64 +1061,54 @@ class REGINA_API NNormalSurface :
         /**
          * Returns whether or not this surface is orientable.
          * 
-         * This routine returns an NTriBool since it is possible that
-         * the result cannot be determined (for instance, if there
-         * are too many normal discs).
-         *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
          * \pre This normal surface is compact (has finitely many discs).
          *
-         * \todo \prob Check for absurdly large numbers of discs and bail
-         * accordingly.
+         * \warning This routine explicitly builds the normal discs,
+         * and so may run out of memory if the normal coordinates
+         * are extremely large.
          *
-         * @return true if this surface is orientable, false if this surface
-         * is non-orientable and unknown if orientability cannot be
-         * determined.
+         * @return \c true if this surface is orientable, or \c false if
+         * this surface is non-orientable.
          */
-        NTriBool isOrientable() const;
+        bool isOrientable() const;
         /**
          * Returns whether or not this surface is two-sided.
          *
-         * This routine returns an NTriBool since it is possible that
-         * the result cannot be determined (for instance, if there
-         * are too many normal discs).
-         *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
          * \pre This normal surface is compact (has finitely many discs).
          *
-         * \todo \prob Check for absurdly large numbers of discs and bail
-         * accordingly.
+         * \warning This routine explicitly builds the normal discs,
+         * and so may run out of memory if the normal coordinates
+         * are extremely large.
          *
-         * @return true if this surface is two-sided, false if this surface
-         * is one-sided and unknown if two-sidedness cannot be determined.
+         * @return \c true if this surface is two-sided, or \c false if
+         * this surface is one-sided.
          */
-        NTriBool isTwoSided() const;
+        bool isTwoSided() const;
         /**
          * Returns whether or not this surface is connected.
          *
-         * This routine returns an NTriBool since it is possible that
-         * the result cannot be determined (for instance, if there
-         * are too many normal discs).
-         *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
          * \pre This normal surface is compact (has finitely many discs).
          *
-         * \todo \prob Check for absurdly large numbers of discs and bail
-         * accordingly.
+         * \warning This routine explicitly builds the normal discs,
+         * and so may run out of memory if the normal coordinates
+         * are extremely large.
          *
-         * @return true if this surface is connected, false if this surface
-         * is not connected and unknown if connectedness cannot be determined.
+         * @return \c true if this surface is connected, or \c false if
+         * this surface is disconnected.
          */
-        NTriBool isConnected() const;
+        bool isConnected() const;
         /**
          * Determines if this surface has any real boundary, that is,
          * whether it meets any boundary faces of the triangulation.
@@ -1225,10 +1215,6 @@ class REGINA_API NNormalSurface :
          * be a properly embedded disc in \a M, and the boundary of \a D
          * must not bound a disc in \a B.
          *
-         * This routine returns an NTriBool since it is possible that
-         * the result cannot be determined (for instance, if there
-         * are too many normal discs).
-         *
          * The implementation of this routine is somewhat inefficient at
          * present, since it cuts along the disc, retriangulates and then
          * examines the resulting boundary components.
@@ -1240,15 +1226,18 @@ class REGINA_API NNormalSurface :
          * \todo \prob Check for absurdly large numbers of discs and bail
          * accordingly.
          *
+         * \warning This routine might cut along the surface and
+         * retriangulate, and so may run out of memory if the normal
+         * coordinates are extremely large.
+         *
          * @param knownConnected \c true if this normal surface is
          * already known to be connected (for instance, if it came from
          * an enumeration of vertex normal surfaces), or \c false if
          * we should not assume any such information about this surface.
-         * @return true if this surface is a compressing disc, false if
-         * this surface is not a compressing disc, or unknown if the
-         * result cannot be determined.
+         * @return \c true if this surface is a compressing disc, or \c false if
+         * this surface is not a compressing disc.
          */
-        NTriBool isCompressingDisc(bool knownConnected = false) const;
+        bool isCompressingDisc(bool knownConnected = false) const;
 
         /**
          * Determines whether this is an incompressible surface within
@@ -1272,10 +1261,6 @@ class REGINA_API NNormalSurface :
          * If this surface is one-sided, the incompressibility test will
          * be run on its two-sided double cover.
          *
-         * This routine returns an NTriBool since it is possible that
-         * the result cannot be determined (for instance, if there
-         * are too many normal discs).
-         *
          * \warning This routine can become \e extremely slow, to the
          * point of infeasibility.  This is because the underlying
          * algorithm cuts along this surface, retriangulates (possibly
@@ -1287,11 +1272,10 @@ class REGINA_API NNormalSurface :
          * \pre This normal surface is compact, embedded and connected.
          * \pre This normal surface contains no octagonal discs.
          *
-         * @return true if this surface is incompressible, false if
-         * this surface is not incompressible (or if it is a sphere),
-         * or unknown if the result cannot be determined.
+         * @return \c true if this surface is incompressible, or \c false if
+         * this surface is not incompressible (or if it is a sphere).
          */
-        NTriBool isIncompressible() const;
+        bool isIncompressible() const;
 
         /**
          * Cuts the associated triangulation along this surface and
@@ -1307,10 +1291,6 @@ class REGINA_API NNormalSurface :
          *
          * \pre This normal surface is compact and embedded.
          * \pre This normal surface contains no octagonal discs.
-         *
-         * \todo Have some error flag so we can barf politely if the
-         * resulting number of tetrahedra is going to be too large to
-         * handle.
          *
          * @return a pointer to the newly allocated resulting
          * triangulation.
@@ -1698,19 +1678,19 @@ inline NLargeInteger NNormalSurface::getEulerCharacteristic() const {
     return eulerChar.value();
 }
 
-inline NTriBool NNormalSurface::isOrientable() const {
+inline bool NNormalSurface::isOrientable() const {
     if (! orientable.known())
         calculateOrientable();
     return orientable.value();
 }
 
-inline NTriBool NNormalSurface::isTwoSided() const {
+inline bool NNormalSurface::isTwoSided() const {
     if (! twoSided.known())
         calculateOrientable();
     return twoSided.value();
 }
 
-inline NTriBool NNormalSurface::isConnected() const {
+inline bool NNormalSurface::isConnected() const {
     if (! connected.known())
         calculateOrientable();
     return connected.value();

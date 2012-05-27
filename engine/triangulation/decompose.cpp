@@ -539,7 +539,7 @@ NPacket* NTriangulation::makeZeroEfficient() {
     }
 }
 
-NTriBool NTriangulation::hasCompressingDisc() const {
+bool NTriangulation::hasCompressingDisc() const {
     // Some sanity checks; also enforce preconditions.
     if (! hasBoundaryFaces())
         return false;
@@ -552,9 +552,8 @@ NTriBool NTriangulation::hasCompressingDisc() const {
     use.intelligentSimplify();
 
     // Try for a fast answer first.
-    NTriBool ans = use.hasSimpleCompressingDisc();
-    if (! ans.isFalse())
-        return ans;
+    if (use.hasSimpleCompressingDisc())
+        return true;
 
     // Sigh.  Enumerate all vertex normal surfaces.
     //
@@ -567,19 +566,14 @@ NTriBool NTriangulation::hasCompressingDisc() const {
 
     // Run through all vertex surfaces looking for a compressing disc.
     unsigned long nSurfaces = q->getNumberOfSurfaces();
-    NTriBool b;
     for (unsigned long i = 0; i < nSurfaces; ++i) {
         // Use the fact that all vertex normal surfaces are connected.
-        b = q->getSurface(i)->isCompressingDisc(true);
-
-        // If either we found a compressing disc or we can't actually tell,
-        // return this information.
-        if (! b.isFalse())
-            return b;
+        if (q->getSurface(i)->isCompressingDisc(true))
+            return true;
     }
 
     // No compressing discs!
-    return NTriBool::False;
+    return false;
 }
 
 bool NTriangulation::hasSimpleCompressingDisc() const {

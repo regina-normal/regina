@@ -2329,10 +2329,6 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * William Jaco and Jeffrey L. Tollefson, Illinois J. Math. 39 (1995),
          * 358-406.
          *
-         * This routine returns an NTriBool since it is possible that
-         * the result cannot be determined (for instance, if some
-         * vertex normal surfaces contain too many normal discs).
-         *
          * This routine will work on a copy of this triangulation, not
          * the original.  In particular, the copy will be simplified, which
          * means that there is no harm in calling this routine on an
@@ -2346,15 +2342,15 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          *
          * \warning This routine can be infeasibly slow for large
          * triangulations, since it may need to perform a full enumeration
-         * of vertex normal surfaces.  See hasSimpleCompressingDisc()
-         * for a "heuristic shortcut" that is faster but might not
-         * give a definitive answer.
+         * of vertex normal surfaces, and since it might perform "large"
+         * operations on these surfaces such as cutting along them.
+         * See hasSimpleCompressingDisc() for a "heuristic shortcut"
+         * that is faster but might not give a definitive answer.
          *
-         * @return true if the underlying 3-manifold contains a
-         * compressing disc, false if it does not, or unknown if the
-         * result cannot be determined.
+         * @return \c true if the underlying 3-manifold contains a
+         * compressing disc, or \c false if it does not.
          */
-        NTriBool hasCompressingDisc() const;
+        bool hasCompressingDisc() const;
 
         /**
          * Searches for a "simple" compressing disc inside this
