@@ -141,6 +141,7 @@ bool runAllTests() {
 
     // Surfaces:
     addNNormalSurfaceList(runner);
+    addIncompressible(runner);
 
     // Angle structures:
     addNAngleStructureList(runner);

@@ -47,6 +47,8 @@ Version 4.93  [ 30 May, 2012 ]
           knot/link census, since non-hyperbolic knots or links are excluded.
     DOCUMENTATION:
         - Layout and navigation improvements in the user handbook.
+    TEST SUITE:
+        - Added several tests related to Hakenness testing.
 
 Version 4.92  [ 12 April, 2012 ] - The "hello Windows!" release.
 
