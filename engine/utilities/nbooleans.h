@@ -48,6 +48,9 @@ namespace regina {
 /**
  * A three-way extension of the boolean type.
  * Three-way booleans can be true, false or unknown.
+ *
+ * \deprecated NTriBool has now been replaced with native (two-way) bool
+ * throughout Regina, and will be removed in some future release.
  */
 class REGINA_API NTriBool {
     private:

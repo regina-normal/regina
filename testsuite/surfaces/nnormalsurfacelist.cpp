@@ -1892,13 +1892,13 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
                 // Ensure that the surface is disjoint from itself
                 // iff it is two-sided.
-                if (s->isTwoSided().isTrue() && ! s->disjoint(*s)) {
+                if (s->isTwoSided() && ! s->disjoint(*s)) {
                     std::ostringstream msg;
                     msg << "Surface #" << i << " for " << triName
                         << " is two-sided and therefore should be "
                         "disjoint from itself.";
                     CPPUNIT_FAIL(msg.str());
-                } else if (s->isTwoSided().isFalse() && s->disjoint(*s)) {
+                } else if ((! s->isTwoSided()) && s->disjoint(*s)) {
                     std::ostringstream msg;
                     msg << "Surface #" << i << " for " << triName
                         << " is one-sided and therefore should not be "
@@ -2081,7 +2081,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     ++foundS;
                 if (s->getEulerCharacteristic() * 2 ==
                             b->getEulerCharacteristic() &&
-                        (b->isOrientable() || s->isOrientable().isFalse()))
+                        (b->isOrientable() || ! s->isOrientable()))
                     ++foundDoubleCover;
             } else if (tri->getNumberOfBoundaryComponents() == 2) {
                 const NBoundaryComponent* b0 = tri->getBoundaryComponent(0);
@@ -2136,7 +2136,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 nCompDouble = tDouble->splitIntoComponents(compDouble.get(),
                     false);
 
-                separating = (s->isTwoSided().isTrue() && nComp > 1);
+                separating = (s->isTwoSided() && nComp > 1);
 
                 expected = (separating ? 2 : 1);
                 if (nComp != expected) {
@@ -2245,7 +2245,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     expectS = 2;
                     expectTwoCopies = 0;
                     expectDoubleCover = 0;
-                } else if (s->isTwoSided().isTrue()) {
+                } else if (s->isTwoSided()) {
                     expectS = 0;
                     expectTwoCopies = 1;
                     expectDoubleCover = 0;
@@ -2279,7 +2279,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     expectS = 2;
                     expectTwoCopies = 1;
                     expectDoubleCover = 0;
-                } else if (s->isTwoSided().isTrue()) {
+                } else if (s->isTwoSided()) {
                     expectS = 0;
                     expectTwoCopies = 2;
                     expectDoubleCover = 0;
@@ -2314,7 +2314,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 // double surface.
                 for (p = compDouble->getFirstTreeChild(); p;
                         p = p->getNextTreeSibling()) {
-                    if (s->isTwoSided().isTrue()) {
+                    if (s->isTwoSided()) {
                         if (mightBeUntwistedProduct(
                                 static_cast<NTriangulation*>(p)))
                             break;

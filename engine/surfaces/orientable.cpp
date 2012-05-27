@@ -62,16 +62,11 @@ void NNormalSurface::calculateOrientable() const {
     // First check that the precondition (compactness) holds, since if
     // it doesn't we'll have a rather nasty crash (thanks Nathan).
     if (! isCompact()) {
-        orientable = NTriBool::Unknown;
-        twoSided = NTriBool::Unknown;
-        connected = NTriBool::Unknown;
         orientable.clear();
         twoSided.clear();
         connected.clear();
         return;
     }
-
-    // TODO: First check that there aren't too many discs!
 
     // All right.  Off we go.
     orientable.clear();

@@ -15,9 +15,20 @@ Version 4.93  [ 30 May, 2012 ]
             - Flags (taut/strict/veering) are no longer stored in data files.
         Class NExampleTriangulation:
             - New routine weeks() to build the Weeks manifold.
+        Class NNormalSurface:
+            - Routines isOrientable(), isTwoSided() and isConnected() now
+              return bool instead of NTriBool.  This helps avoid unintended
+              errors in scripts, but be warned: these properties can only be
+              computed for compact surfaces (not spun normal surfaces).
+            - Routines isIncompressible() and isCompressingDisc() likewise
+              now return bool instead of NTriBool.
         Class NTriangulation:
             - New routines isSolidTorus() and knowsSolidTorus()
               for "one-click unknot recognition".
+            - Routine hasCompressingDisc() now returns bool instead of NTriBool.
+        Class NTriBool:
+            - Deprecated.  This class has been replaced with ordinary (two-way)
+              bool throughout Regina, and will be removed in a future release.
         Routine writeRecogniser():
             - Added to support sending triangulations to Matveev's
               3-manifold recogniser software.

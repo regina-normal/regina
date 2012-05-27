@@ -299,8 +299,7 @@ void NCompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
     bool* usable = new bool[nSurfaces];
     for (i = 0; i < nSurfaces; ++i) {
         s = surfaces.getSurface(i);
-        usable[i] = (s->isCompact() && (! s->isEmpty()) &&
-            s->isConnected().isTrue());
+        usable[i] = (s->isCompact() && (! s->isEmpty()) && s->isConnected());
     }
 
     QGraphicsRectItem* box;

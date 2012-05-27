@@ -694,7 +694,7 @@ NNormalSurfaceList* NNormalSurfaceList::filterForDisjointPairs() const {
             continue;
         if (! (*it)->isCompact())
             continue;
-        if (! (*it)->isConnected().isTrue())
+        if (! (*it)->isConnected())
             continue;
 
         interesting.push_back(*it);

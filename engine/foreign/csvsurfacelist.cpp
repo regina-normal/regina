@@ -92,21 +92,13 @@ namespace {
         }
         if (fields & surfaceExportOrient) {
             if (s->isCompact()) {
-                NTriBool ans = s->isOrientable();
-                if (ans.isTrue())
-                    out << "TRUE";
-                else if (ans.isFalse())
-                    out << "FALSE";
+                out << (s->isOrientable() ? "TRUE" : "FALSE");
             }
             out << ',';
         }
         if (fields & surfaceExportSides) {
             if (s->isCompact()) {
-                NTriBool ans = s->isTwoSided();
-                if (ans.isTrue())
-                    out << '2';
-                else if (ans.isFalse())
-                    out << '1';
+                out << (s->isTwoSided() ? '2' : '1');
             }
             out << ',';
         }

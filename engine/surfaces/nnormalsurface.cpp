@@ -149,24 +149,18 @@ void NNormalSurface::readIndividualProperty(NFile& infile,
             orientable = true;
         else if (val == -1)
             orientable = false;
-        else
-            orientable = NTriBool::Unknown;
     } else if (propType == PROPID_TWOSIDEDNESS) {
         int val = infile.readInt();
         if (val == 1)
             twoSided = true;
         else if (val == -1)
             twoSided = false;
-        else
-            twoSided = NTriBool::Unknown;
     } else if (propType == PROPID_CONNECTEDNESS) {
         int val = infile.readInt();
         if (val == 1)
             connected = true;
         else if (val == -1)
             connected = false;
-        else
-            connected = NTriBool::Unknown;
     } else if (propType == PROPID_REALBOUNDARY)
         realBoundary = infile.readBool();
     else if (propType == PROPID_COMPACT)
@@ -569,35 +563,17 @@ void NNormalSurface::writeToFile(NFile& out) const {
     }
     if (orientable.known()) {
         bookmark = out.writePropertyHeader(PROPID_ORIENTABILITY);
-        NTriBool val = orientable.value();
-        if (val.isTrue())
-            out.writeInt(1);
-        else if (val.isFalse())
-            out.writeInt(-1);
-        else
-            out.writeInt(0);
+        out.writeInt(orientable.value() ? 1 : -1);
         out.writePropertyFooter(bookmark);
     }
     if (twoSided.known()) {
         bookmark = out.writePropertyHeader(PROPID_TWOSIDEDNESS);
-        NTriBool val = twoSided.value();
-        if (val.isTrue())
-            out.writeInt(1);
-        else if (val.isFalse())
-            out.writeInt(-1);
-        else
-            out.writeInt(0);
+        out.writeInt(twoSided.value() ? 1 : -1);
         out.writePropertyFooter(bookmark);
     }
     if (connected.known()) {
         bookmark = out.writePropertyHeader(PROPID_CONNECTEDNESS);
-        NTriBool val = connected.value();
-        if (val.isTrue())
-            out.writeInt(1);
-        else if (val.isFalse())
-            out.writeInt(-1);
-        else
-            out.writeInt(0);
+        out.writeInt(connected.value() ? 1 : -1);
         out.writePropertyFooter(bookmark);
     }
     if (realBoundary.known()) {

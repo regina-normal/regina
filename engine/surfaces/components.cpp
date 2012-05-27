@@ -223,7 +223,7 @@ bool NNormalSurface::disjoint(const NNormalSurface& other) const {
     // These should all pass if the user has adhered to the preconditions.
     if (! (isCompact() && other.isCompact()))
         return false;
-    if (! (isConnected().isTrue() && other.isConnected().isTrue()))
+    if (! (isConnected() && other.isConnected()))
         return false;
 
     // Begin with a local compatibility test.

@@ -92,7 +92,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
             /**< A one-vertex 3-sphere. */
         NTriangulation s2xs1;
             /**< The product space S^2 x S^1. */
-        NTriangulation rp3;
+        NTriangulation rp3_1;
+            /**< A one-vertex triangulation of RP^3. */
+        NTriangulation rp3_2;
             /**< A two-vertex triangulation of RP^3. */
         NTriangulation lens3_1;
             /**< A two-vertex lens space L(3,1). */
@@ -202,7 +204,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             // Some of our triangulations can be constructed automatically.
             s3.insertLayeredLensSpace(1, 0);
             s2xs1.insertLayeredLensSpace(0, 1);
-            rp3.insertLayeredLoop(2, false);
+            rp3_1.insertLayeredLensSpace(2, 1);
+            rp3_2.insertLayeredLoop(2, false);
             lens8_3.insertLayeredLensSpace(8, 3);
             lens100_1.insertLayeredLensSpace(100, 1);
             lst3_4_7.insertLayeredSolidTorus(3, 4);
@@ -325,8 +328,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 s3.isValid());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is not valid.",
                 s2xs1.isValid());
-            CPPUNIT_ASSERT_MESSAGE("RP^3 is not valid.",
-                rp3.isValid());
+            CPPUNIT_ASSERT_MESSAGE("RP^3 (1 vtx) is not valid.",
+                rp3_1.isValid());
+            CPPUNIT_ASSERT_MESSAGE("RP^3 (2 vtx) is not valid.",
+                rp3_2.isValid());
             CPPUNIT_ASSERT_MESSAGE("L(3,1) is not valid.",
                 lens3_1.isValid());
             CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) is not valid.",
@@ -391,8 +396,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 s3.isStandard());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is not standard.",
                 s2xs1.isStandard());
-            CPPUNIT_ASSERT_MESSAGE("RP^3 is not standard.",
-                rp3.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("RP^3 (1 vtx) is not standard.",
+                rp3_1.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("RP^3 (2 vtx) is not standard.",
+                rp3_2.isStandard());
             CPPUNIT_ASSERT_MESSAGE("L(3,1) is not standard.",
                 lens3_1.isStandard());
             CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) is not standard.",
@@ -456,8 +463,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 s3.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is not orientable.",
                 s2xs1.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("RP^3 is not orientable.",
-                rp3.isOrientable());
+            CPPUNIT_ASSERT_MESSAGE("RP^3 (1 vtx) is not orientable.",
+                rp3_1.isOrientable());
+            CPPUNIT_ASSERT_MESSAGE("RP^3 (2 vtx) is not orientable.",
+                rp3_2.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("L(3,1) is not orientable.",
                 lens3_1.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) is not orientable.",
@@ -521,8 +530,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 s3.getNumberOfBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 has boundary components.",
                 s2xs1.getNumberOfBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE("RP^3 has boundary components.",
-                rp3.getNumberOfBoundaryComponents() == 0);
+            CPPUNIT_ASSERT_MESSAGE("RP^3 (1 vtx) has boundary components.",
+                rp3_1.getNumberOfBoundaryComponents() == 0);
+            CPPUNIT_ASSERT_MESSAGE("RP^3 (2 vtx) has boundary components.",
+                rp3_2.getNumberOfBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("L(3,1) has boundary components.",
                 lens3_1.getNumberOfBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) "
@@ -1069,9 +1080,12 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyVertexCount(s2xs1, 1, "S^2 x S^1");
             verifyVertexSphere(s2xs1, 0, "S^2 x S^1");
 
-            verifyVertexCount(rp3, 2, "RP^3");
-            verifyVertexSphere(rp3, 0, "RP^3");
-            verifyVertexSphere(rp3, 1, "RP^3");
+            verifyVertexCount(rp3_1, 1, "RP^3 (1 vtx)");
+            verifyVertexSphere(rp3_1, 0, "RP^3 (1 vtx)");
+
+            verifyVertexCount(rp3_2, 2, "RP^3 (2 vtx)");
+            verifyVertexSphere(rp3_2, 0, "RP^3 (2 vtx)");
+            verifyVertexSphere(rp3_2, 1, "RP^3 (2 vtx)");
 
             verifyVertexCount(lens3_1, 2, "L(3,1)");
             verifyVertexSphere(lens3_1, 0, "L(3,1)");
@@ -1231,7 +1245,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyEuler(singleTet, 1, 1, "Single tetrahedron");
             verifyEuler(s3, 0, 0, "S^3");
             verifyEuler(s2xs1, 0, 0, "S^2 x S^1");
-            verifyEuler(rp3, 0, 0, "RP^3");
+            verifyEuler(rp3_1, 0, 0, "RP^3 (1 vtx)");
+            verifyEuler(rp3_2, 0, 0, "RP^3 (2 vtx)");
             verifyEuler(lens3_1, 0, 0, "L(3,1)");
             verifyEuler(lens8_3, 0, 0, "L(8,3)");
             verifyEuler(lens7_1_loop, 0, 0, "Layered loop L(7,1)");
@@ -1387,8 +1402,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "H1(S^3)", 0);
             verifyGroup(s2xs1.getHomologyH1(),
                 "H1(S^2 x S^1)", 1);
-            verifyGroup(rp3.getHomologyH1(),
-                "H1(RP^3)", 0, 2);
+            verifyGroup(rp3_1.getHomologyH1(),
+                "H1(RP^3, 1 vtx)", 0, 2);
+            verifyGroup(rp3_2.getHomologyH1(),
+                "H1(RP^3, 2 vtx)", 0, 2);
             verifyGroup(lens3_1.getHomologyH1(),
                 "H1(L(3,1))", 0, 3);
             verifyGroup(lens7_1_loop.getHomologyH1(),
@@ -1444,8 +1461,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Boundary H1(S^3)", 0);
             verifyGroup(s2xs1.getHomologyH1Bdry(),
                 "Boundary H1(S^2 x S^1)", 0);
-            verifyGroup(rp3.getHomologyH1Bdry(),
-                "Boundary H1(RP^3)", 0);
+            verifyGroup(rp3_1.getHomologyH1Bdry(),
+                "Boundary H1(RP^3, 1 vtx)", 0);
+            verifyGroup(rp3_2.getHomologyH1Bdry(),
+                "Boundary H1(RP^3, 2 vtx)", 0);
             verifyGroup(lens3_1.getHomologyH1Bdry(),
                 "Boundary H1(L(3,1))", 0);
             verifyGroup(lens7_1_loop.getHomologyH1Bdry(),
@@ -1510,8 +1529,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Fund(S^3)", "0");
             verifyFundGroup(s2xs1.getFundamentalGroup(),
                 "Fund(S^2 x S^1)", "Z");
-            verifyFundGroup(rp3.getFundamentalGroup(),
-                "Fund(RP^3)", "Z_2");
+            verifyFundGroup(rp3_1.getFundamentalGroup(),
+                "Fund(RP^3, 1 vtx)", "Z_2");
+            verifyFundGroup(rp3_2.getFundamentalGroup(),
+                "Fund(RP^3, 2 vtx)", "Z_2");
             verifyFundGroup(lens3_1.getFundamentalGroup(),
                 "Fund(L(3,1))", "Z_3");
             verifyFundGroup(lens7_1_loop.getFundamentalGroup(),
@@ -1567,8 +1588,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 s3.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is 0-efficient.",
                 ! s2xs1.isZeroEfficient());
-            CPPUNIT_ASSERT_MESSAGE("RP^3 is 0-efficient.",
-                ! rp3.isZeroEfficient());
+            CPPUNIT_ASSERT_MESSAGE("RP^3 (1 vtx) is 0-efficient.",
+                ! rp3_1.isZeroEfficient());
+            CPPUNIT_ASSERT_MESSAGE("RP^3 (2 vtx) is 0-efficient.",
+                ! rp3_2.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("L(3,1) is 0-efficient.",
                 ! lens3_1.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) is 0-efficient.",
@@ -1674,7 +1697,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 if (regina::gcd(q0, r) > 1)
                     continue;
 
-                double tv = rp3.turaevViro(r, q0);
+                double tv = rp3_2.turaevViro(r, q0);
 
                 double expectedTV;
                 if (q0 % 2 == r % 2)
@@ -1749,7 +1772,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
         void turaevViro() {
             verifyTV3(s3, "S^3");
             verifyTV3(s2xs1, "S^2 x S^1");
-            verifyTV3(rp3, "RP^3");
+            verifyTV3(rp3_1, "RP^3 (1 vtx)");
+            verifyTV3(rp3_2, "RP^3 (2 vtx)");
             verifyTV3(lens3_1, "L(3,1)");
             verifyTV3(lens7_1_loop, "Layered loop L(7,1)");
             verifyTV3(lens8_3, "L(8,3)");
@@ -1882,7 +1906,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyDoubleCover(singleTet, "Single tetrahedron");
             verifyDoubleCover(s3, "S^3");
             verifyDoubleCover(s2xs1, "S^2 x S^1");
-            verifyDoubleCover(rp3, "RP^3");
+            verifyDoubleCover(rp3_1, "RP^3 (1 vtx)");
+            verifyDoubleCover(rp3_2, "RP^3 (2 vtx)");
             verifyDoubleCover(lens3_1, "L(3,1)");
             verifyDoubleCover(lens8_3, "L(8,3)");
             verifyDoubleCover(lens8_3_large, "Large L(8,3)");
@@ -1995,7 +2020,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Single tetrahedron subdivided");
             verifyIdealToFinite(s3, "S^3");
             verifyIdealToFinite(s2xs1, "S^2 x S^1");
-            verifyIdealToFinite(rp3, "RP^3");
+            verifyIdealToFinite(rp3_1, "RP^3 (1 vtx)");
+            verifyIdealToFinite(rp3_2, "RP^3 (2 vtx)");
             verifyIdealToFinite(lens3_1, "L(3,1)");
             verifyIdealToFinite(lens8_3, "L(8,3)");
             verifyIdealToFinite(lens8_3_large, "Large L(8,3)");
@@ -2097,7 +2123,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Single tetrahedron subdivided");
             verifyFiniteToIdeal(s3, "S^3");
             verifyFiniteToIdeal(s2xs1, "S^2 x S^1");
-            verifyFiniteToIdeal(rp3, "RP^3");
+            verifyFiniteToIdeal(rp3_1, "RP^3 (1 vtx)");
+            verifyFiniteToIdeal(rp3_2, "RP^3 (2 vtx)");
             verifyFiniteToIdeal(lens3_1, "L(3,1)");
             verifyFiniteToIdeal(lens8_3, "L(8,3)");
             verifyFiniteToIdeal(lens8_3_large, "Large L(8,3)");
@@ -2168,7 +2195,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyNoDehydration(singleTet, "Single tetrahedron");
             verifyDehydration(s3, "S^3");
             verifyDehydration(s2xs1, "S^2 x S^1");
-            verifyDehydration(rp3, "RP^3");
+            verifyDehydration(rp3_1, "RP^3 (1 vtx)");
+            verifyDehydration(rp3_2, "RP^3 (2 vtx)");
             verifyDehydration(lens3_1, "L(3,1)");
             verifyDehydration(lens8_3, "L(8,3)");
             verifyDehydration(lens8_3_large, "Large L(8,3)");
@@ -2266,7 +2294,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyIsoSig(singleTet, "Single tetrahedron");
             verifyIsoSig(s3, "S^3");
             verifyIsoSig(s2xs1, "S^2 x S^1");
-            verifyIsoSig(rp3, "RP^3");
+            verifyIsoSig(rp3_1, "RP^3 (1 vtx)");
+            verifyIsoSig(rp3_2, "RP^3 (2 vtx)");
             verifyIsoSig(lens3_1, "L(3,1)");
             verifyIsoSig(lens8_3, "L(8,3)");
             verifyIsoSig(lens8_3_large, "Large L(8,3)");
@@ -2488,7 +2517,8 @@ class NTriangulationTest : public CppUnit::TestFixture {
             testReordering(singleTet, "Single tetrahedron");
             testReordering(s3, "S^3");
             testReordering(s2xs1, "S^2 x S^1");
-            testReordering(rp3, "RP^3");
+            testReordering(rp3_1, "RP^3 (1 vtx)");
+            testReordering(rp3_2, "RP^3 (2 vtx)");
             testReordering(lens3_1, "L(3,1)");
             testReordering(lens8_3, "L(8,3)");
             testReordering(lens8_3_large, "Large L(8,3)");
