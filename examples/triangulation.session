@@ -1,5 +1,5 @@
 example$ regina-python
-Regina 4.92
+Regina 4.93
 Software for 3-manifold topology and normal surface theory
 Copyright (c) 1999-2012, The Regina development team
 >>> ################################
@@ -105,15 +105,15 @@ Number of surfaces is 9
 ...     s = surfaces.getSurface(i)
 ...     print "Chi =", s.getEulerCharacteristic(), "; Or =", s.isOrientable()
 ... 
-Chi = 0 ; Or = true
-Chi = 0 ; Or = true
-Chi = 0 ; Or = false
-Chi = -1 ; Or = true
-Chi = 0 ; Or = true
-Chi = 1 ; Or = true
-Chi = -2 ; Or = true
-Chi = -1 ; Or = false
-Chi = 1 ; Or = true
+Chi = 0 ; Or = True
+Chi = 0 ; Or = True
+Chi = 0 ; Or = False
+Chi = -1 ; Or = True
+Chi = 0 ; Or = True
+Chi = 1 ; Or = True
+Chi = -2 ; Or = True
+Chi = -1 ; Or = False
+Chi = 1 ; Or = True
 >>> 
 >>> # List all surfaces with more than one quad in the first tetrahedron.
 ... for i in range(surfaces.getNumberOfSurfaces()):
