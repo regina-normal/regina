@@ -27,6 +27,8 @@
 /* end stub */
 
 // Regina core includes:
+#include "manifold/nmanifold.h"
+#include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
@@ -52,7 +54,7 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
-    layout->addStretch(3);
+    layout->addStretch(2);
 
     QLabel* label = new QLabel(tr(
         "<qt><b>High-level Recognition Routines</b></qt>"), ui);
@@ -179,7 +181,21 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     grid->addWidget(btnSplitting, 4, 5);
     connect(btnSplitting, SIGNAL(clicked()), this, SLOT(calculateSplitting()));
 
-    layout->addStretch(3);
+    layout->addStretch(1);
+
+    QBoxLayout* mfdArea = new QHBoxLayout();
+    manifold = new QLabel();
+    manifold->setAlignment(Qt::AlignCenter);
+    manifold->setTextFormat(Qt::PlainText);
+    manifold->setWordWrap(true);
+    mfdArea->addWidget(manifold, 1);
+    msg = tr("<qt>Displays the name of the underlying 3-manifold if "
+        "this is known, or if it can be recognised from the combinatorial "
+        "structure of the triangulation.</qt>");
+    manifold->setWhatsThis(msg);
+    layout->addLayout(mfdArea);
+
+    layout->addStretch(2);
 
     connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
         this, SLOT(updatePreferences()));
@@ -195,6 +211,31 @@ QWidget* NTriSurfacesUI::getInterface() {
 
 void NTriSurfacesUI::refresh() {
     int autoCalcThreshold = ReginaPrefSet::global().triSurfacePropsThreshold;
+
+    // Begin with the combinatorial recognition.
+    std::string name;
+    regina::NStandardTriangulation* std =
+        regina::NStandardTriangulation::isStandardTriangulation(tri);
+    if (std) {
+        regina::NManifold* mfd = std->getManifold();
+        if (mfd) {
+            name = mfd->getName();
+            delete mfd;
+
+            // If we have the 3-sphere, 3-ball or solid torus, then
+            // automatically run the large recognition routines: these
+            // should finish quickly and give results consistent with
+            // the combinatorial routines.
+            if (name == "S3") {
+                tri->isThreeSphere();
+            } else if (name == "B3") {
+                tri->isBall();
+            } else if (name == "B2 x S1") {
+                tri->isSolidTorus();
+            }
+        }
+        delete std;
+    }
 
     if (tri->knowsZeroEfficient() ||
             tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
@@ -244,6 +285,9 @@ void NTriSurfacesUI::refresh() {
             QPalette pal = threeSphere->palette();
             pal.setColor(threeSphere->foregroundRole(), Qt::darkGreen);
             threeSphere->setPalette(pal);
+
+            if (name.empty())
+                name = "S3";
         } else {
             threeSphere->setText(tr("False"));
             QPalette pal = threeSphere->palette();
@@ -266,6 +310,9 @@ void NTriSurfacesUI::refresh() {
             QPalette pal = threeBall->palette();
             pal.setColor(threeBall->foregroundRole(), Qt::darkGreen);
             threeBall->setPalette(pal);
+
+            if (name.empty())
+                name = "B3";
         } else {
             threeBall->setText(tr("False"));
             QPalette pal = threeBall->palette();
@@ -288,6 +335,9 @@ void NTriSurfacesUI::refresh() {
             QPalette pal = solidTorus->palette();
             pal.setColor(solidTorus->foregroundRole(), Qt::darkGreen);
             solidTorus->setPalette(pal);
+
+            if (name.empty())
+                name = "B2 x S1";
         } else {
             solidTorus->setText(tr("False"));
             QPalette pal = solidTorus->palette();
@@ -299,6 +349,12 @@ void NTriSurfacesUI::refresh() {
         solidTorus->setText(tr("Unknown"));
         solidTorus->setPalette(QPalette());
         btnSolidTorus->setEnabled(true);
+    }
+
+    if (! name.empty()) {
+        manifold->setText(tr("Manifold:  %1").arg(name.c_str()));
+    } else {
+        manifold->setText(tr("Manifold:  Not recognised"));
     }
 }
 
@@ -314,6 +370,7 @@ void NTriSurfacesUI::editingElsewhere() {
     threeBall->setPalette(QPalette());
     solidTorus->setText(msg);
     solidTorus->setPalette(QPalette());
+    manifold->setText(msg);
 
     btnZeroEff->setEnabled(false);
     btnSplitting->setEnabled(false);

@@ -69,6 +69,7 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         QAbstractButton* btnThreeSphere;
         QAbstractButton* btnThreeBall;
         QAbstractButton* btnSolidTorus;
+        QLabel* manifold;
 
     public:
         /**

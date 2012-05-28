@@ -11,9 +11,7 @@ Version 4.93  [ 30 May, 2012 ]
     Features:
         - Implements solid torus recognition, and by corollary unknot
           recognition.  The necessary tools were already there, but this
-          rolls them into a "one-click" procedure.  You can access this via
-          the Recognition tab in the triangulation viewer (formerly called
-          the Surfaces tab).
+          rolls them into a single "one-click" procedure.
         - Identifies which taut angles structures are veering structures.
         - Adds the Weeks manifold to the list of example triangulations
           that you can construct.
@@ -22,6 +20,9 @@ Version 4.93  [ 30 May, 2012 ]
     User Interface:
         - Restored File -> Save and Save As to the menu.  These were missing
           in version 4.92.
+        - The old Surfaces tab in the triangulation viewer is now the
+          Recognition tab, and combines exact high-level algorithms
+          with "opportunistic" combinatorial recognition.
     Python:
         - Python consoles now set the variable "item" to the currently selected
           packet in the tree, not "selected".  This is easier to type, and
