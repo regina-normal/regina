@@ -125,8 +125,10 @@ Version 4.93  [ 30 May, 2012 ]
     USER INTERFACE:
         - Restored File -> Save and File ->Save As, which were missing from
           the main menu in version 4.92.
-        - In the triangulation viewer, renamed the "Surfaces" tab to
-          the "Recognition" tab.
+        - In the triangulation viewer, the old "Surfaces" tab has been renamed
+          as the "Recognition" tab, and includes high-level algorithms such as
+          3-sphere recognition as well as "opportunistic" combinatorial
+          recognition.
         - Replaced the python icon with a generic terminal icon.
         - GUI python consoles now set the variable "item", not "selected".
           This is easier to type, and avoids the misconception that selecting
