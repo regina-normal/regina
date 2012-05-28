@@ -199,12 +199,37 @@
         equal to either 0 or &pi;).
        </para>
        <para>
-        Note that we use the Kang-Rubinstein definition of taut angle
+        Here we use the Kang-Rubinstein definition of taut angle
         structure <xref linkend="bib-kang-taut"/>,
         which is based on the angles alone.  We do not use Lackenby's
         definition <xref linkend="bib-lackenby-taut"/>,
         which also requires consistent coorientations on the 2-faces of
         the triangulation.
+       </para>
+       <para>
+        Note that some taut structures may be listed as
+        <link linkend="angles-propveering">veering</link> instead
+        (which indicates a stronger combinatorial structure).
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry id="angles-propveering">
+      <glossterm><guilabel>Veering</guilabel></glossterm>
+      <glossdef>
+       <para>
+        Indicates a veering structure.
+        This is a taut structure with additional (and very strong)
+        combinatorial constraints; for details see
+        <xref linkend="bib-hodgson-veering"/>.
+       </para>
+       <para>
+        Note that we use the Hodgson et&nbsp;al.&nbsp;definition
+        of veering structure <xref linkend="bib-hodgson-veering"/>.
+        This is slightly more general than Agol's original definition
+        <xref linkend="bib-agol-ideal"/>, in the same sense that
+        the Kang-Rubinstein definition of taut angle structure is
+        slightly more general than Lackenby's.  In particular, we do not
+        require consistent coorientations on the 2-faces of the triangulation.
        </para>
       </glossdef>
      </glossentry>

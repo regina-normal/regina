@@ -77,6 +77,16 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>&recogniser; (Matveev)</primaryie>
+  <secondaryie><link linkend="export-recogniser">exporting to</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-recognition">3-manifold
+   recognition</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="tri-prop3sphere">3-sphere
    recognition</link></primaryie>
  </indexentry>
@@ -105,6 +115,8 @@
   <secondaryie><link linkend="angles-propstrict">strict,
    testing</link></secondaryie>
   <secondaryie><link linkend="angles-proptaut">taut,
+   testing</link></secondaryie>
+  <secondaryie><link linkend="angles-propveering">veering,
    testing</link></secondaryie>
  </indexentry>
 
@@ -827,6 +839,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>Matveev's &recogniser;</primaryie>
+  <seeie>See: &recogniser;</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>merging data files</primaryie>
   <secondaryie><link linkend="man-regconcat">from the
    command-line</link></secondaryie>
@@ -1060,8 +1077,18 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>Recogniser, 3-Manifold (Matveev)</primaryie>
+  <seeie>See: &recogniser;</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-recognition">recognising
+   3-manifolds</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="tri-composition-name">recognising
-   triangulations and 3-manifolds</link></primaryie>
+   triangulations</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1189,6 +1216,11 @@
   <secondaryie><link linkend="export-snappea">exporting to</link></secondaryie>
   <secondaryie><link linkend="import-snappea">importing
    from</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-propsolidtorus">solid torus
+   recognition</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1323,6 +1355,8 @@
    conversion to</link></secondaryie>
   <secondaryie><link linkend="tri-prop3ball">3-ball
    recognition</link></secondaryie>
+  <secondaryie><link linkend="tri-recognition">3-manifold,
+   recognising</link></secondaryie>
   <secondaryie><link linkend="tri-prop3sphere">3-sphere
    recognition</link></secondaryie>
   <secondaryie><link linkend="tri-barycentric">barycentric
@@ -1379,11 +1413,15 @@
   <secondaryie><link linkend="tri-proporient">orientability</link></secondaryie>
   <secondaryie><link linkend="tri-cover">orientable double
    cover</link></secondaryie>
+  <secondaryie><link linkend="tri-recognition">recognising the
+   underlying 3-manifold</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a
    triangulation in the available censuses</link></secondaryie>
   <secondaryie><link linkend="tri-simplification">simplification</link></secondaryie>
   <secondaryie><link linkend="tri-skeleton">skeleton,
    viewing details</link></secondaryie>
+  <secondaryie><link linkend="tri-propsolidtorus">solid torus
+   recognition</link></secondaryie>
   <secondaryie><link linkend="tri-new-splitting">splitting surface,
    reconstructing triangulation from</link></secondaryie>
   <secondaryie><link linkend="tri-propsplitting">splitting surface,
@@ -1392,6 +1430,8 @@
    gluings, editing</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-turaevviro">Turaev-Viro
    invariants</link></secondaryie>
+  <secondaryie><link linkend="tri-propsolidtorus">unknot complement
+   recognition</link></secondaryie>
   <secondaryie><link linkend="tri-propvalid">validity</link></secondaryie>
   <secondaryie><link linkend="tri-snappea">volume</link></secondaryie>
  </indexentry>
@@ -1419,6 +1459,11 @@
 
  <indexentry>
   <primaryie><link linkend="packet-dock">undocking packets</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-propsolidtorus">unknot
+   recognition</link></primaryie>
  </indexentry>
 
  <indexentry id="idx-user-interface">
@@ -1451,6 +1496,11 @@
  <indexentry>
   <primaryie><link linkend="tri-propvalid">valid triangulation,
    testing for</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>veering structures</primaryie>
+  <secondaryie><link linkend="angles-propveering">detecting</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1487,6 +1537,11 @@
  <indexentry>
   <primaryie><link linkend="tri-new-example">Weber-Seifert
    dodecahedral space</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-new-example">Weeks
+   manifold</link></primaryie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-Z'><title>&mdash; Z &mdash;</title>

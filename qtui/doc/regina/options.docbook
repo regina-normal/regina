@@ -200,21 +200,24 @@
     <glossterm><guilabel>Surface calculation threshold</guilabel></glossterm>
     <glossdef>
      <para>
-      Determines when the information on the
-      <link linkend="tri-surfaceproperties">triangulation
-      surfaces tab</link> is computed.
+      Determines when &regina; will automatically compute information on the
+      <link linkend="tri-recognition">triangulation recognition tab</link>
+      that requires the enumeration of normal surfaces (such as
+      0-efficiency testing, 3-sphere recognition, or unknot recognition).
       If the number of tetrahedra is at most the given value, then
-      &regina; will compute surface-related information automatically.
+      &regina; will compute such information automatically.
       If the number of tetrahedra is larger, then &regina; will not
       compute this information until you manually press the
       <guibutton>Calculate</guibutton> button.
      </para>
      <para>
-      Note that 3-sphere and 3-ball recognition might use a slighly lower
+      Note that some algorithms (such as 3-sphere, 3-ball and solid torus
+      recognition) might use a lower
       threshold than the one you set here.  This is because they rely on
+      even more complex operations, such as enumerating
       <emphasis>almost normal</emphasis> surfaces,
-      which in the worst-case scenario are
-      much slower to work with than normal surfaces.
+      which in the worst cases are much slower than ordinary normal surface
+      enumeration.
      </para>
     </glossdef>
    </glossentry>

@@ -501,6 +501,23 @@
    </para>
   </sect2>
 
+  <sect2 id="export-recogniser">
+   <title>&recogniser; Triangulations</title>
+
+   <para>
+    You can export a triangulation to a plain text file that can be
+    given as input to Matveev's &recogniserlink;.
+   </para>
+   <para>
+    As with the &snappea; format, not every data file can be exported to
+    the &recogniser;.
+    In particular, the triangulation cannot be
+    <link linkend="tri-propvalid">invalid</link>,
+    and it may not have any boundary faces.
+    &regina; will tell you if your triangulation cannot be exported.
+   </para>
+  </sect2>
+
   <sect2 id="export-cpp">
    <title>&cpp; Source Code</title>
 
