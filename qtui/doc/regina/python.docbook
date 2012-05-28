@@ -72,12 +72,19 @@
       </para></glossdef>
      </glossentry>
      <glossentry>
-      <glossterm><varname>selected</varname></glossterm>
-      <glossdef><para>
-       If you have a packet selected in the tree,
-       the variable <varname>selected</varname> will refer to this packet
-       (see the figure above for an example of this).
-      </para></glossdef>
+      <glossterm><varname>item</varname></glossterm>
+      <glossdef>
+       <para>
+        If you have a packet selected in the tree when you start the
+        &python; session,
+        the variable <varname>item</varname> will refer to this packet
+        (see the figure above for an example of this).
+       </para>
+       <para>
+        Note that, if you later change your selection in the packet tree,
+        the <varname>item</varname> variable will not change as a result.
+       </para>
+      </glossdef>
      </glossentry>
     </glosslist>
    </para>

@@ -1545,7 +1545,7 @@
    </sect3>
 
    <sect3 id="tri-composition-composition">
-    <title>High-Level Recognition, Building Blocks,
+    <title>Combinatorial Recognition, Building Blocks,
      Isomorphism Signatures and Dehydrations</title>
     <para>
      In the lower portion of the composition tab is a large box
@@ -1589,6 +1589,13 @@
       for details on the families of triangulations and what their names
       and parameters mean.
      </para>
+     <tip><para>
+      If your aim is to determine the underlying 3-manifold, see the
+      <link linkend="tri-recognition">recognition tab</link> instead.
+      The recognition tab combines the results of this combinatorial
+      recognition with slower but stronger routines such as
+      3-sphere, 3-ball and solid torus recognition.
+     </para></tip>
     </sect4>
     <sect4 id="tri-composition-isosig">
      <title>Isomorphism Signature</title>
@@ -1698,13 +1705,16 @@
    </sect3>
   </sect2>
 
-  <sect2 id="tri-surfaceproperties">
-   <title>Properties Involving Normal Surfaces</title>
+  <sect2 id="tri-recognition">
+   <title>High-Level Recognition Routines</title>
 
    <para>
-    Some properties of a triangulation are defined by the types of
-    normal surfaces it contains.  These properties can be found under
-    the <guilabel>Surfaces</guilabel> tab.
+    The <guilabel>Recognition</guilabel> tab
+    attempts to identify the underlying 3-manifold,
+    and also computes other high-level properties of the triangulation.
+    It offers a combination of slow but exact procedures
+    (such as 3-sphere, 3-ball and solid torus recognition),
+    and fast "opportunistic" combinatorial recognition procedures.
    </para>
    <para>
     <inlinemediaobject>
@@ -1714,8 +1724,9 @@
     </inlinemediaobject>
    </para>
    <para>
-    For large triangulations, some of these properties are
-    not automatically calculated (since they might take exponential time).
+    For large triangulations, many of these properties are
+    not automatically calculated (since the algorithms run in
+    worst-case exponential time).
     If a property is listed as <literal>Unknown</literal>, press
     the corresponding <guibutton>Calculate</guibutton> button
     (and be prepared to wait):
@@ -1739,10 +1750,48 @@
    </para>
    <para>
     The following properties are listed on the
-    <guilabel>Surfaces</guilabel> tab.
+    <guilabel>Recognition</guilabel> tab.
    </para>
    <para>
     <glosslist>
+     <glossentry id="tri-prop3sphere">
+      <glossterm><guilabel>3-Sphere</guilabel></glossterm>
+      <glossdef><para>
+       Determines whether this is a triangulation
+       of the 3-sphere.
+       This uses a complete, exact 3-sphere recognition algorithm, i.e.,
+       it guarantees to terminate with the correct result.
+       The algorithm is highly optimised, and incorporates techniques from
+       <xref linkend="bib-rubin-3sphere1"/>,
+       <xref linkend="bib-rubin-3sphere2"/>,
+       <xref linkend="bib-thinposition"/>,
+       <xref linkend="bib-0-efficiency"/> and
+       <xref linkend="bib-burton-quadoct"/>.
+      </para></glossdef>
+     </glossentry>
+     <glossentry id="tri-prop3ball">
+      <glossterm><guilabel>3-Ball</guilabel></glossterm>
+      <glossdef><para>
+       Determines whether this is a triangulation of the 3-dimensional ball.
+       Again this uses a complete, exact algorithm that guarantees to
+       terminate with the correct result.
+       The algorithm is a simple modification of the 3-sphere recognition
+       algorithm as described above.
+      </para></glossdef>
+     </glossentry>
+     <glossentry id="tri-propsolidtorus">
+      <glossterm><guilabel>Solid Torus</guilabel></glossterm>
+      <glossdef><para>
+       Determines whether this is a triangulation of the solid torus,
+       or equivalently, the unknot complement.
+       This will work with ideal triangulations as well as
+       triangulations with real boundary faces (if the
+       triangulation is ideal, any ideal vertices will be treated as
+       though they were truncated).
+       Once again this uses a complete, exact algorithm that guarantees to
+       terminate with the correct result.
+      </para></glossdef>
+     </glossentry>
      <glossentry id="tri-prop0eff">
       <glossterm><guilabel>Zero-Efficient</guilabel></glossterm>
       <glossdef><para>
@@ -1750,7 +1799,10 @@
        triangulation is <firstterm>0-efficient</firstterm> if its only
        normal spheres and discs are vertex linking, and if it has no 2-sphere
        boundary components.
-       See <xref linkend="bib-0-efficiency"/> for details.
+       If a closed orientable triangulation is not 0-efficient (and has
+       more than two tetrahedra), this indicates that either the
+       triangulation is non-minimal or the underlying 3-manifold is non-prime.
+       See <xref linkend="bib-0-efficiency"/> for details on 0-efficiency.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-propsplitting">
@@ -1763,33 +1815,44 @@
        See <xref linkend="bib-burton-phd"/> for details.
       </para></glossdef>
      </glossentry>
-     <glossentry id="tri-prop3sphere">
-      <glossterm><guilabel>3-Sphere</guilabel></glossterm>
-      <glossdef><para>
-       Determines whether this is a triangulation
-       of the 3-sphere.  The 3-sphere recognition algorithm is
-       highly optimised, and incorporates techniques from
-       <xref linkend="bib-rubin-3sphere1"/>,
-       <xref linkend="bib-rubin-3sphere2"/>,
-       <xref linkend="bib-thinposition"/>,
-       <xref linkend="bib-0-efficiency"/> and
-       <xref linkend="bib-burton-quadoct"/>.
-      </para></glossdef>
-     </glossentry>
-     <glossentry id="tri-prop3ball">
-      <glossterm><guilabel>3-Ball</guilabel></glossterm>
-      <glossdef><para>
-       Determines whether this is a triangulation of the 3-dimensional ball.
-       The algorithm is based on 3-sphere recognition as described above.
-      </para></glossdef>
+     <glossentry id="tri-manifold">
+      <glossterm><guilabel>Manifold</guilabel></glossterm>
+      <glossdef>
+       <para>
+        This last field combines the exact algorithms above with the
+        combinatorial recognition routines from the
+        <link linkend="tri-composition-name">composition tab</link>,
+        in a multi-pronged attempt
+        to conclusively identify the underlying 3-manifold.
+        If the 3-manifold can be determined by any of these methods,
+        it will be listed here.
+       </para>
+       <tip><para>
+        This will <emphasis>not</emphasis> attempt a
+        connected sum decomposition: if the manifold is non-prime then
+        it will probably not be recognised.  Try running a
+        <link linkend="tri-decomposition-connsum">connected sum
+        decomposition</link> first, and then recognising each of the
+        prime summands.
+       </para></tip>
+       <tip><para>
+        Unlike the exact algorithms above (which may be slow but will
+        work in all settings), the "opportunistic"
+        combinatorial recognition benefits from a well-structured
+        triangulation.  If the 3-manifold is not recognised,
+        try <link linkend="tri-simplification">simplifying</link>
+        the triangulation, or performing
+        <link linkend="tri-elementarymove">elementary moves</link>.
+       </para></tip>
+      </glossdef>
      </glossentry>
     </glosslist>
    </para>
-   <tip><para>
-    You can change the number of tetrahedra beyond which properties are
-    not computed automatically.  See &regina;'s
+   <para>
+    You can change the size threshold that controls when properties on this
+    tab are computed automatically.  See &regina;'s
     <link linkend="options-triangulation">triangulation options</link>.
-   </para></tip>
+   </para>
   </sect2>
 
   <sect2 id="tri-snappea">

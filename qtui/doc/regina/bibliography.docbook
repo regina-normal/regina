@@ -1,5 +1,20 @@
 <bibliography id="bibliography">
 
+ <biblioentry id="bib-agol-ideal">
+  <abbrev>Ago11</abbrev>
+  <authorgroup><author>
+   <firstname>Ian</firstname>
+   <surname>Agol</surname>
+  </author></authorgroup>
+  <title>Ideal triangulations of pseudo-Anosov mapping tori</title>
+  <edition>Topology and Geometry in Dimension Three</edition>
+  <volumenum>vol. 560 of Contemp. Math.</volumenum>
+  <artpagenums>pp. 1&ndash;17</artpagenums>
+  <publishername>Amer. Math. Soc.</publishername>
+  <address>Providence, RI</address>
+  <date>2011</date>
+ </biblioentry>
+
  <biblioentry id="bib-budney-emb11">
   <abbrev>Bud08</abbrev>
   <authorgroup><author>
@@ -329,6 +344,36 @@
   <issuenum>no. 2</issuenum>
   <artpagenums>pp. 185&ndash;211</artpagenums>
   <date>1999</date>
+ </biblioentry>
+
+ <biblioentry id="bib-hodgson-veering">
+  <abbrev>HRST11</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Craig</firstname>
+    <othername>D.</othername>
+    <surname>Hodgson</surname>
+   </author>
+   <author>
+    <firstname>J.</firstname>
+    <othername>Hyam</othername>
+    <surname>Rubinstein</surname>
+   </author>
+   <author>
+    <firstname>Henry</firstname>
+    <surname>Segerman</surname>
+   </author>
+   <author>
+    <firstname>Stephan</firstname>
+    <surname>Tillmann</surname>
+   </author>
+  </authorgroup>
+  <title>Veering triangulations admit strict angle structures</title>
+  <edition>Geom. Topol.</edition>
+  <volumenum>vol. 15</volumenum>
+  <issuenum>no. 4</issuenum>
+  <artpagenums>pp. 2073&ndash;2089</artpagenums>
+  <date>2011</date>
  </biblioentry>
 
  <biblioentry id="bib-closedhypcensus">

@@ -72,7 +72,8 @@
       where the triangulation might be embeddable;
      </para></listitem>
      <listitem><para>
-      3-sphere and 3-ball recognition, as well as a complete connected sum
+      3-sphere, 3-ball, solid torus and unknot recognition,
+      as well as a full connected sum
       decomposition for closed orientable triangulations;
      </para></listitem>
      <listitem><para>
@@ -297,6 +298,10 @@
    &regina; can enumerate all vertex angle structures in a triangulation,
    or all taut structures (for which each dihedral angle is precisely 0
    or &pi;).
+   &regina; can also identify veering structures, which are taut
+   structures that induce a specific type of combinatorial structure on
+   the underlying triangulation
+   <xref linkend="bib-agol-ideal"/>, <xref linkend="bib-hodgson-veering"/>.
   </para>
  </sect2>
 

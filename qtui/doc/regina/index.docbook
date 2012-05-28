@@ -106,6 +106,8 @@
   <!ENTITY previewapp "<application>Preview</application>">
   <!ENTITY python "<application>Python</application>">
   <!ENTITY qt "<application>Qt</application>">
+  <!ENTITY recogniser "<application>3-Manifold Recogniser</application>">
+  <!ENTITY recogniserlink "<ulink url='http://www.matlas.math.csu.ru/?page=recognizer'>&recogniser;</ulink>">
   <!ENTITY rhel "<application>Red Hat Enterprise</application>">
   <!ENTITY rhfedora "<application>Red Hat</application> /
    <application>Fedora</application>">
