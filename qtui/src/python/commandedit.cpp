@@ -27,14 +27,17 @@
 /* end stub */
 
 #include "commandedit.h"
+#include "pythonconsole.h"
 
 #include <iostream>
 #include <QApplication>
 #include <QKeyEvent>
+#include <QKeySequence>
+
 #define COMMAND_EDIT_DEFAULT_SPACES_PER_TAB 4
 
-CommandEdit::CommandEdit(QWidget* parent) :
-        QLineEdit(parent) { 
+CommandEdit::CommandEdit(PythonConsole* parent) :
+        QLineEdit(parent), console(parent) { 
     setSpacesPerTab(COMMAND_EDIT_DEFAULT_SPACES_PER_TAB);
     historyPos = history.end();
 }
@@ -80,6 +83,21 @@ bool CommandEdit::event(QEvent* event) {
             return QLineEdit::event(event);
         }
     }
+}
+
+void CommandEdit::keyPressEvent(QKeyEvent* event) {
+    // Let the parent console handle clipboard events, which are "shared"
+    // between the command area and the session log.
+    if (event->matches(QKeySequence::Cut))
+        console->cut();
+    else if (event->matches(QKeySequence::Copy))
+        console->copy();
+    else if (event->matches(QKeySequence::Paste))
+        console->paste();
+    else if (event->matches(QKeySequence::SelectAll))
+        console->selectAll();
+    else
+        QLineEdit::keyPressEvent(event);
 }
 
 // #include "commandedit.moc"

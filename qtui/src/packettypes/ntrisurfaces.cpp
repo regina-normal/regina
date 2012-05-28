@@ -55,7 +55,7 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     layout->addStretch(3);
 
     QLabel* label = new QLabel(tr(
-        "<qt><b>Normal Surface Properties</b></qt>"), ui);
+        "<qt><b>High-level Recognition Routines</b></qt>"), ui);
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
 
@@ -70,10 +70,34 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
 
     QString msg;
 
-    label = new QLabel(tr("Zero-efficient?"), ui);
+    label = new QLabel(tr("3-sphere?"), ui);
     grid->addWidget(label, 0, 1);
+    threeSphere = new QLabel(ui);
+    grid->addWidget(threeSphere, 0, 3);
+    msg = tr("Is this a triangulation of the 3-sphere?");
+    label->setWhatsThis(msg);
+    threeSphere->setWhatsThis(msg);
+
+    label = new QLabel(tr("3-ball?"), ui);
+    grid->addWidget(label, 1, 1);
+    threeBall= new QLabel(ui);
+    grid->addWidget(threeBall, 1, 3);
+    msg = tr("Is this a triangulation of the 3-dimensional ball?");
+    label->setWhatsThis(msg);
+    threeBall->setWhatsThis(msg);
+
+    label = new QLabel(tr("Solid torus?"), ui);
+    grid->addWidget(label, 2, 1);
+    solidTorus = new QLabel(ui);
+    grid->addWidget(solidTorus, 2, 3);
+    msg = tr("Is this a triangulation of the solid torus?");
+    label->setWhatsThis(msg);
+    solidTorus->setWhatsThis(msg);
+
+    label = new QLabel(tr("Zero-efficient?"), ui);
+    grid->addWidget(label, 3, 1);
     zeroEff = new QLabel(ui);
-    grid->addWidget(zeroEff, 0, 3);
+    grid->addWidget(zeroEff, 3, 3);
     msg = tr("<qt>Is this a 0-efficient triangulation?  "
         "A <i>0-efficient triangulation</i> is one whose only normal "
         "spheres or discs are vertex linking, and which has no 2-sphere "
@@ -82,62 +106,15 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     zeroEff->setWhatsThis(msg);
 
     label = new QLabel(tr("Splitting surface?"), ui);
-    grid->addWidget(label, 1, 1);
+    grid->addWidget(label, 4, 1);
     splitting = new QLabel(ui);
-    grid->addWidget(splitting, 1, 3);
+    grid->addWidget(splitting, 4, 3);
     msg = tr("<qt>Does this triangulation contain a splitting surface?  "
         "A <i>splitting surface</i> is a normal surface containing precisely "
         "one quadrilateral per tetrahedron and no other normal (or "
         "almost normal) discs.</qt>");
     label->setWhatsThis(msg);
     splitting->setWhatsThis(msg);
-
-    label = new QLabel(tr("3-sphere?"), ui);
-    grid->addWidget(label, 2, 1);
-    threeSphere = new QLabel(ui);
-    grid->addWidget(threeSphere, 2, 3);
-    msg = tr("Is this a triangulation of the 3-sphere?");
-    label->setWhatsThis(msg);
-    threeSphere->setWhatsThis(msg);
-
-    label = new QLabel(tr("3-ball?"), ui);
-    grid->addWidget(label, 3, 1);
-    threeBall= new QLabel(ui);
-    grid->addWidget(threeBall, 3, 3);
-    msg = tr("Is this a triangulation of the 3-dimensional ball?");
-    label->setWhatsThis(msg);
-    threeBall->setWhatsThis(msg);
-
-    label = new QLabel(tr("Solid torus?"), ui);
-    grid->addWidget(label, 4, 1);
-    solidTorus = new QLabel(ui);
-    grid->addWidget(solidTorus, 4, 3);
-    msg = tr("Is this a triangulation of the solid torus?");
-    label->setWhatsThis(msg);
-    solidTorus->setWhatsThis(msg);
-
-    btnZeroEff = new QPushButton(ReginaSupport::themeIcon("system-run"),
-        tr("Calculate"), ui);
-    btnZeroEff->setToolTip(tr("Calculate 0-efficiency"));
-    btnZeroEff->setWhatsThis(tr("<qt>Calculate whether this "
-        "triangulation is 0-efficient.<p>"
-        "<b>Warning:</b> This calculation can be quite slow for larger "
-        "triangulations (which is why 0-efficiency is not always "
-        "calculated automatically).</qt>"));
-    grid->addWidget(btnZeroEff, 0, 5);
-    connect(btnZeroEff, SIGNAL(clicked()), this, SLOT(calculateZeroEff()));
-
-    btnSplitting = new QPushButton(ReginaSupport::themeIcon("system-run"),
-        tr("Calculate"), ui);
-    btnSplitting->setToolTip(tr("Calculate existence of a splitting "
-        "surface"));
-    btnSplitting->setWhatsThis(tr("<qt>Calculate whether this "
-        "triangulation contains a splitting surface.<p>"
-        "<b>Warning:</b> This calculation can be quite slow for larger "
-        "triangulations (which is why the existence of a splitting "
-        "surface is not always determined automatically).</qt>"));
-    grid->addWidget(btnSplitting, 1, 5);
-    connect(btnSplitting, SIGNAL(clicked()), this, SLOT(calculateSplitting()));
 
     btnThreeSphere = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"), ui);
@@ -147,7 +124,7 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
         "<b>Warning:</b> This calculation is occasionally quite slow for "
         "larger triangulations (which is why 3-sphere recognition is not "
         "always run automatically).</qt>"));
-    grid->addWidget(btnThreeSphere, 2, 5);
+    grid->addWidget(btnThreeSphere, 0, 5);
     connect(btnThreeSphere, SIGNAL(clicked()), this,
         SLOT(calculateThreeSphere()));
 
@@ -160,7 +137,7 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
         "<b>Warning:</b> This calculation is occasionally quite slow for "
         "larger triangulations (which is why 3-ball recognition is not "
         "always run automatically).</qt>"));
-    grid->addWidget(btnThreeBall, 3, 5);
+    grid->addWidget(btnThreeBall, 1, 5);
     connect(btnThreeBall, SIGNAL(clicked()), this,
         SLOT(calculateThreeBall()));
 
@@ -175,9 +152,32 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
         "<b>Warning:</b> This calculation is occasionally quite slow for "
         "larger triangulations (which is why solid torus recognition is not "
         "always run automatically).</qt>"));
-    grid->addWidget(btnSolidTorus, 4, 5);
+    grid->addWidget(btnSolidTorus, 2, 5);
     connect(btnSolidTorus, SIGNAL(clicked()), this,
         SLOT(calculateSolidTorus()));
+
+    btnZeroEff = new QPushButton(ReginaSupport::themeIcon("system-run"),
+        tr("Calculate"), ui);
+    btnZeroEff->setToolTip(tr("Calculate 0-efficiency"));
+    btnZeroEff->setWhatsThis(tr("<qt>Calculate whether this "
+        "triangulation is 0-efficient.<p>"
+        "<b>Warning:</b> This calculation can be quite slow for larger "
+        "triangulations (which is why 0-efficiency is not always "
+        "calculated automatically).</qt>"));
+    grid->addWidget(btnZeroEff, 3, 5);
+    connect(btnZeroEff, SIGNAL(clicked()), this, SLOT(calculateZeroEff()));
+
+    btnSplitting = new QPushButton(ReginaSupport::themeIcon("system-run"),
+        tr("Calculate"), ui);
+    btnSplitting->setToolTip(tr("Calculate existence of a splitting "
+        "surface"));
+    btnSplitting->setWhatsThis(tr("<qt>Calculate whether this "
+        "triangulation contains a splitting surface.<p>"
+        "<b>Warning:</b> This calculation can be quite slow for larger "
+        "triangulations (which is why the existence of a splitting "
+        "surface is not always determined automatically).</qt>"));
+    grid->addWidget(btnSplitting, 4, 5);
+    connect(btnSplitting, SIGNAL(clicked()), this, SLOT(calculateSplitting()));
 
     layout->addStretch(3);
 
