@@ -30,7 +30,7 @@ Acknowledgements (in addition to primary authors listed in the license):
     qtui/src/reginaabout.cpp (ReginaAbout constructor)
 
 Don't forget:
-    changes & highlights (both . and qtui/doc/regina)
+    changes & highlights
     what's this & tooltips
     documentation in handbook, feature set & index
     any new tips of the day?
