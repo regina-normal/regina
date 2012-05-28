@@ -40,6 +40,8 @@ Version 4.93  [ 30 May, 2012 ]
     USER INTERFACE:
         - Restored File -> Save and File ->Save As, which were missing from
           the main menu in version 4.92.
+        - In the triangulation viewer, renamed the "Surfaces" tab to
+          the "Recognition" tab.
         - Replaced the python icon with a generic terminal icon.
         - GUI python consoles now set the variable "item", not "selected".
           This is easier to type, and avoids the misconception that selecting
@@ -48,6 +50,7 @@ Version 4.93  [ 30 May, 2012 ]
           compability, though this will be removed in a future release.
         - GUI python consoles will now set item=None if there is
           nothing selected in the packet tree.
+        - Simplified the cut/copy/paste behaviour in graphical Python consoles.
         - The knot/link census is now explicitly called the *hyperbolic*
           knot/link census, since non-hyperbolic knots or links are excluded.
     DOCUMENTATION:

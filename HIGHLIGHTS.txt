@@ -6,6 +6,33 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
+Version 4.93  [ 30 May, 2012 ]
+
+    Features:
+        - Implements solid torus recognition, and by corollary unknot
+          recognition.  The necessary tools were already there, but this
+          rolls them into a "one-click" procedure.  You can access this via
+          the Recognition tab in the triangulation viewer (formerly called
+          the Surfaces tab).
+        - Identifies which taut angles structures are veering structures.
+        - Adds the Weeks manifold to the list of example triangulations
+          that you can construct.
+        - Exports triangulations in a text format that can be passed to
+          Matveev's 3-manifold recogniser software.
+    User Interface:
+        - Restored File -> Save and Save As to the menu.  These were missing
+          in version 4.92.
+    Python:
+        - Python consoles now set the variable "item" to the currently selected
+          packet in the tree, not "selected".  This is easier to type, and
+          avoids the misconception that changing the selection afterwards will
+          change the variable (it doesn't).  If nothing is selected, Regina
+          will now explicitly set item=None.
+        - All use of NTriBool is gone from the classes NTriangulation and
+          NNormalSurface.  Tests such as NNormalSurface::isOrientable() and
+          NTriangulation::hasCompressingDisc() now return an ordinary boolean
+          that you can test in the natural way in Python.
+
 Version 4.92  [ 12 April, 2012 ] - The "hello Windows!" release.
 
     Installation

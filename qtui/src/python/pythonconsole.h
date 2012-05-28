@@ -74,9 +74,9 @@ class PythonConsole : public QMainWindow {
         /**
          * Actions
          */
-        QAction* actCutInput;
-        QAction* actCopyInput;
-        QAction* actPasteInput;
+        QAction* actCut;
+        QAction* actCopy;
+        QAction* actPaste;
 
         /**
          * Python components
@@ -193,9 +193,18 @@ class PythonConsole : public QMainWindow {
         void processCommand();
 
         /**
-         * Update the enabled state of the clipboard-related actions.
+         * Copy selected text, whether it be in the session log or the
+         * input area.
          */
-        void updateClipboardActions();
+        void copy();
+
+        /**
+         * Update the enabled state of clipboard-related actions
+         * and update selections in the session log and/or input area.
+         */
+        void inputSelectionChanged();
+        void sessionSelectionChanged();
+        void clipboardChanged();
 
     private:
         /**

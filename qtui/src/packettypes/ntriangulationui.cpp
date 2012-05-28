@@ -66,7 +66,7 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
     addTab(skeleton, QObject::tr("&Skeleton"));
     addTab(algebra, QObject::tr("&Algebra"));
     addTab(new NTriCompositionUI(packet, this), QObject::tr("&Composition"));
-    addTab(surfaces, QObject::tr("Sur&faces"));
+    addTab(surfaces, QObject::tr("&Recognition"));
     addTab(snapPea, QObject::tr("Snap&Pea"));
 
     // Select the default tab.

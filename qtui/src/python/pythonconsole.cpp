@@ -124,93 +124,66 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     connect(act, SIGNAL(triggered()), this, SLOT(close()));
     menuConsole->addAction(act);
 
-    act = new QAction(this);
-    act->setText(tr("&Copy From Session"));
-    act->setIcon(ReginaSupport::themeIcon("edit-copy"));
-    act->setShortcut(tr("Shift+Ctrl+c"));
-    act->setToolTip(tr(
-        "Copy selected text from the session log to the clipboard"));
-    act->setWhatsThis(tr(
-        "Copy selected text from the session log to the clipboard.  "
-        "The session log is the main part of the window, where you see "
-        "the full history of commands and their results."));
-    connect(act, SIGNAL(triggered()), session, SLOT(copy()));
-    act->setEnabled(false);
-    connect(session, SIGNAL(copyAvailable(bool)), act,
-        SLOT(setEnabled(bool)));
-    menuEdit->addAction(act);
+    actCut = new QAction(this);
+    actCut->setText(tr("Cut"));
+    actCut->setIcon(ReginaSupport::themeIcon("edit-cut"));
+    actCut->setShortcuts(QKeySequence::Cut);
+    actCut->setToolTip(tr(
+        "Cut selected text from the input area to the clipboard"));
+    actCut->setWhatsThis(tr(
+        "Cut selected text from the input area to the clipboard.  "
+        "The input area is the small box at the bottom of the window "
+        "where you can type your next command."));
+    connect(actCut, SIGNAL(triggered()), input, SLOT(cut()));
+    actCut->setEnabled(false);
+    menuEdit->addAction(actCut);
+
+    actCopy = new QAction(this);
+    actCopy->setText(tr("Copy"));
+    actCopy->setIcon(ReginaSupport::themeIcon("edit-copy"));
+    actCopy->setShortcuts(QKeySequence::Copy);
+    actCopy->setToolTip(tr(
+        "Copy selected text to the clipboard."));
+    actCopy->setWhatsThis(tr(
+        "Copy selected text to the clipboard.  "
+        "You may select text in either the session log (the main "
+        "part of the window) or the input area (the small box at the "
+        "bottom of the window)."));
+    connect(actCopy, SIGNAL(triggered()), this, SLOT(copy()));
+    actCopy->setEnabled(false);
+    menuEdit->addAction(actCopy);
+
+    connect(input, SIGNAL(selectionChanged()), this,
+        SLOT(inputSelectionChanged()));
+    connect(session, SIGNAL(selectionChanged()), this,
+        SLOT(sessionSelectionChanged()));
+
+    actPaste = new QAction(this);
+    actPaste->setText(tr("&Paste"));
+    actPaste->setIcon(ReginaSupport::themeIcon("edit-paste"));
+    actPaste->setShortcuts(QKeySequence::Paste);
+    actPaste->setToolTip(tr(
+        "Paste text from the clipboard into the input area"));
+    actPaste->setWhatsThis(tr(
+        "Paste text from the clipboard into the input area.  "
+        "The input area is the small box at the bottom of the window "
+        "where you can type your next command."));
+    connect(actPaste, SIGNAL(triggered()), input, SLOT(paste()));
+    actPaste->setEnabled(false);
+    connect(QApplication::clipboard(), SIGNAL(dataChanged()), this,
+        SLOT(clipboardChanged()));
+    menuEdit->addAction(actPaste);
 
     act = new QAction(this);
-    act->setText(tr("Select &All From Session"));
+    act->setText(tr("Select &All"));
     act->setIcon(ReginaSupport::themeIcon("edit-select-all"));
-    act->setShortcut(tr("Shift+Ctrl+a"));
-    act->setToolTip(tr(
-        "Select all text in the session log"));
+    act->setShortcuts(QKeySequence::SelectAll);
+    act->setToolTip(tr("Select all text in the session log"));
     act->setWhatsThis(tr(
         "Select all text in the session log.  "
         "The session log is the main part of the window, where you see "
         "the full history of commands and their results."));
     connect(act, SIGNAL(triggered()), session, SLOT(selectAll()));
-    menuEdit->addAction(act);
-
-    menuEdit->addSeparator();
-
-    actCutInput = new QAction(this);
-    actCutInput->setText(tr("Cut From Input"));
-    actCutInput->setIcon(ReginaSupport::themeIcon("edit-cut"));
-    actCutInput->setShortcuts(QKeySequence::Cut);
-    actCutInput->setToolTip(tr(
-        "Cut selected text from the input area to the clipboard"));
-    actCutInput->setWhatsThis(tr(
-        "Cut selected text from the input area to the clipboard.  "
-        "The input area is the small box at the bottom of the window "
-        "where you can type your next command."));
-    connect(actCutInput, SIGNAL(triggered()), input, SLOT(cut()));
-    actCutInput->setEnabled(false);
-    menuEdit->addAction(actCutInput);
-
-    actCopyInput = new QAction(this);
-    actCopyInput->setText(tr("Copy From Input"));
-    actCopyInput->setIcon(ReginaSupport::themeIcon("edit-copy"));
-    actCopyInput->setShortcuts(QKeySequence::Copy);
-    actCopyInput->setToolTip(tr(
-        "Copy selected text from the input area to the clipboard"));
-    actCopyInput->setWhatsThis(tr(
-        "Copy selected text from the input area to the clipboard.  "
-        "The input area is the small box at the bottom of the window "
-        "where you can type your next command."));
-    connect(actCopyInput, SIGNAL(triggered()), input, SLOT(copy()));
-    actCopyInput->setEnabled(false);
-    menuEdit->addAction(actCopyInput);
-
-    connect(input, SIGNAL(selectionChanged()), this,
-        SLOT(updateClipboardActions()));
-
-    actPasteInput = new QAction(this);
-    actPasteInput->setText(tr("Paste To Input"));
-    actPasteInput->setIcon(ReginaSupport::themeIcon("edit-paste"));
-    actPasteInput->setShortcuts(QKeySequence::Paste);
-    actPasteInput->setToolTip(tr(
-        "Paste text from the clipboard into the input area"));
-    actPasteInput->setWhatsThis(tr(
-        "Paste text from the clipboard into the input area.  "
-        "The input area is the small box at the bottom of the window "
-        "where you can type your next command."));
-    connect(actPasteInput, SIGNAL(triggered()), input, SLOT(paste()));
-    actPasteInput->setEnabled(false);
-    connect(QApplication::clipboard(), SIGNAL(dataChanged()), this,
-        SLOT(updateClipboardActions()));
-    menuEdit->addAction(actPasteInput);
-
-    act = new QAction(this);
-    act->setText(tr("Select All From Input"));
-    act->setIcon(ReginaSupport::themeIcon("edit-select-all"));
-    act->setShortcuts(QKeySequence::SelectAll);
-    act->setToolTip(tr("Select all text in the input area"));
-    act->setWhatsThis(tr("Select all text in the input area.  "
-        "The input area is the small box at the bottom of the window "
-        "where you can type your next command."));
-    connect(act, SIGNAL(triggered()), input, SLOT(selectAll()));
     menuEdit->addAction(act);
 
     act = new QAction(this);
@@ -247,7 +220,9 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     menuBar()->addMenu(menuEdit);
     menuBar()->addMenu(menuHelp);
 
-    updateClipboardActions();
+    inputSelectionChanged();
+    sessionSelectionChanged();
+    clipboardChanged();
 
     // Prepare the console for use.
     if (manager)
@@ -548,10 +523,45 @@ void PythonConsole::ErrorStream::processOutput(const std::string& data) {
         console_->addError(data.c_str());
 }
 
-void PythonConsole::updateClipboardActions() {
-    actCutInput->setEnabled(input->hasSelectedText());
-    actCopyInput->setEnabled(input->hasSelectedText());
-    actPasteInput->setEnabled(
+void PythonConsole::copy() {
+    if (input->hasSelectedText()) {
+        input->copy();
+        prompt->setText("INPUT");
+    } else {
+        session->copy();
+        prompt->setText("SESSION");
+    }
+}
+
+void PythonConsole::inputSelectionChanged() {
+    // Affected operations: cut, copy
+    if (input->hasSelectedText()) {
+        actCut->setEnabled(true);
+        actCopy->setEnabled(true);
+
+        // Surely there is a better way than this..?
+        QTextCursor c = session->textCursor();
+        c.clearSelection();
+        session->setTextCursor(c);
+    } else {
+        actCut->setEnabled(false);
+        actCopy->setEnabled(session->textCursor().hasSelection());
+    }
+}
+
+void PythonConsole::sessionSelectionChanged() {
+    // Affected operations: copy
+    if (session->textCursor().hasSelection()) {
+        actCopy->setEnabled(true);
+        input->deselect();
+    } else {
+        actCopy->setEnabled(input->hasSelectedText());
+    }
+}
+
+void PythonConsole::clipboardChanged() {
+    // Affected operations: paste
+    actPaste->setEnabled(
         ! QApplication::clipboard()->text(QClipboard::Clipboard).isNull());
 }
 
