@@ -87,6 +87,7 @@ void addNExampleTriangulation() {
         .staticmethod("rp3rp3")
         .staticmethod("lens8_3")
         .staticmethod("poincareHomologySphere")
+        .staticmethod("weeks")
         .staticmethod("seifertWeber")
         .staticmethod("weberSeifert")
         .staticmethod("smallClosedOrblHyperbolic")

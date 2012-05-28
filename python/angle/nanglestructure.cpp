@@ -44,6 +44,7 @@ void addNAngleStructure() {
             return_value_policy<reference_existing_object>())
         .def("isStrict", &NAngleStructure::isStrict)
         .def("isTaut", &NAngleStructure::isTaut)
+        .def("isVeering", &NAngleStructure::isVeering)
     ;
 }
 
