@@ -53,7 +53,7 @@ const QString ReginaAbout::regDescription(
     tr("Software for 3-manifold topology and normal surface theory"));
 
 const QString ReginaAbout::regReleased(
-    tr("Released %1").arg(QDate(2012, 4, 12).toString(Qt::TextDate)));
+    tr("Released %1").arg(QDate(2012, 5, 30).toString(Qt::TextDate)));
 
 const QString ReginaAbout::regWebsite("http://regina.sourceforge.net/");
 
