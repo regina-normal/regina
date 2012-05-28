@@ -167,6 +167,27 @@ class PythonConsole : public QMainWindow {
          */
         void contextHelpActivated();
 
+        /**
+         * Cut selected text from the command area.
+         */
+        void cut();
+
+        /**
+         * Copy selected text, whether it be in the session log or the
+         * input area.
+         */
+        void copy();
+
+        /**
+         * Paste text from the clipboard into the command area.
+         */
+        void paste();
+
+        /**
+         * Select all text in the session log.
+         */
+        void selectAll();
+
     protected:
         /**
          * Qt overrides.
@@ -191,12 +212,6 @@ class PythonConsole : public QMainWindow {
          * Process the command currently on the input line.
          */
         void processCommand();
-
-        /**
-         * Copy selected text, whether it be in the session log or the
-         * input area.
-         */
-        void copy();
 
         /**
          * Update the enabled state of clipboard-related actions

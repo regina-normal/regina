@@ -83,7 +83,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     prompt->setWhatsThis(inputMsg);
     inputAreaLayout->addWidget(prompt);
 
-    input = new CommandEdit();
+    input = new CommandEdit(this);
     input->setWhatsThis(inputMsg);
     input->setFocus();
     connect(input, SIGNAL(returnPressed()), this, SLOT(processCommand()));
@@ -134,7 +134,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
         "Cut selected text from the input area to the clipboard.  "
         "The input area is the small box at the bottom of the window "
         "where you can type your next command."));
-    connect(actCut, SIGNAL(triggered()), input, SLOT(cut()));
+    connect(actCut, SIGNAL(triggered()), this, SLOT(cut()));
     actCut->setEnabled(false);
     menuEdit->addAction(actCut);
 
@@ -168,7 +168,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
         "Paste text from the clipboard into the input area.  "
         "The input area is the small box at the bottom of the window "
         "where you can type your next command."));
-    connect(actPaste, SIGNAL(triggered()), input, SLOT(paste()));
+    connect(actPaste, SIGNAL(triggered()), this, SLOT(paste()));
     actPaste->setEnabled(false);
     connect(QApplication::clipboard(), SIGNAL(dataChanged()), this,
         SLOT(clipboardChanged()));
@@ -183,7 +183,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
         "Select all text in the session log.  "
         "The session log is the main part of the window, where you see "
         "the full history of commands and their results."));
-    connect(act, SIGNAL(triggered()), session, SLOT(selectAll()));
+    connect(act, SIGNAL(triggered()), this, SLOT(selectAll()));
     menuEdit->addAction(act);
 
     act = new QAction(this);
@@ -523,14 +523,23 @@ void PythonConsole::ErrorStream::processOutput(const std::string& data) {
         console_->addError(data.c_str());
 }
 
+void PythonConsole::cut() {
+    input->cut();
+}
+
 void PythonConsole::copy() {
-    if (input->hasSelectedText()) {
+    if (input->hasSelectedText())
         input->copy();
-        prompt->setText("INPUT");
-    } else {
+    else
         session->copy();
-        prompt->setText("SESSION");
-    }
+}
+
+void PythonConsole::paste() {
+    input->paste();
+}
+
+void PythonConsole::selectAll() {
+    session->selectAll();
 }
 
 void PythonConsole::inputSelectionChanged() {

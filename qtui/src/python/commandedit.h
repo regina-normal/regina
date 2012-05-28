@@ -36,10 +36,13 @@
 #include <QStringList>
 #include <QLineEdit>
 
+class PythonConsole;
+
 /**
  * A line edit extension designed for entering python commands.
- * Tabs are converted into spaces, and command-line history is
- * available.
+ * Tabs are converted into spaces, command-line history is available,
+ * and cut/copy/paste shortcuts are disabled (so that Regina's actions
+ * are called instead).
  */
 class CommandEdit : public QLineEdit {
     Q_OBJECT
@@ -55,11 +58,14 @@ class CommandEdit : public QLineEdit {
         QString tabReplacement;
             /**< The set of spaces to insert for each TAB keypress. */
 
+        PythonConsole* console;
+            /**< The associated python console. */
+
     public:
         /**
          * Constructor.
          */
-        CommandEdit(QWidget* parent = 0);
+        CommandEdit(PythonConsole* parent);
 
         /**
          * Configuration.
@@ -72,6 +78,7 @@ class CommandEdit : public QLineEdit {
          * QLineEdit overrides.
          */
         bool event(QEvent* event);
+        void keyPressEvent(QKeyEvent* event);
 };
 
 inline unsigned CommandEdit::getSpacesPerTab() {
