@@ -83,6 +83,34 @@ NBlockedSFSTriple::~NBlockedSFSTriple() {
 }
 
 NManifold* NBlockedSFSTriple::getManifold() const {
+    int nRegionBdries = 0;
+
+    // How many boundary components does the centre region have?
+    // We know there are two boundary annuli, so we simply need to test
+    // whether they are adjacent in the region boundary.
+    unsigned long i;
+    NSatBlock *b;
+    for (i = 0; i < centre_->numberOfBlocks(); ++i) {
+        b = centre_->block(i).block;
+        if (b->nAnnuli() == 0)
+            continue;
+        if (b->nAnnuli() > 1) {
+            nRegionBdries = 1;
+            break;
+        }
+        NSatBlock* nextBlock;
+        unsigned nextAnnulus;
+        bool refVert, refHoriz;
+        b->nextBoundaryAnnulus(0, nextBlock, nextAnnulus, refVert, refHoriz);
+        nRegionBdries = (nextBlock == b ? 2 : 1);
+    }
+    if (nRegionBdries == 0) {
+        // Should never reach this point.
+        std::cerr << "ERROR: Could not find central saturated region boundary."
+            << std::endl;
+    }
+
+    // Go ahead and create the Seifert fibred spaces.
     NSFSpace* end0 = end_[0]->createSFS(1, false);
     if (! end0)
         return 0;
@@ -93,11 +121,16 @@ NManifold* NBlockedSFSTriple::getManifold() const {
         return 0;
     }
 
-    NSFSpace* hub = centre_->createSFS(2, false);
+    NSFSpace* hub = centre_->createSFS(nRegionBdries, false);
     if (! hub) {
         delete end0;
         delete end1;
         return 0;
+    }
+    if (nRegionBdries == 1) {
+        // The region has one larger boundary, but we pinch it to create
+        // two smaller boundaries.
+        hub->addPuncture();
     }
 
     // Reduce the Seifert fibred space representations and finish up.

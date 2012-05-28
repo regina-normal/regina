@@ -13,6 +13,11 @@ Version 4.93  [ 30 May, 2012 ]
         Class NAngleStructure:
             - New routine isVeering() to test for veering structures.
             - Flags (taut/strict/veering) are no longer stored in data files.
+        Class NBlockedSFSLoop, NBlockedSFSTriple, NPluggedTorusBundle:
+            - Corrected an off-by-one error in computing the genus of certain
+              non-orientable base orbifolds for Seifert fibred pieces.
+              This only affects census manifolds with >= 12 tetrahedra;
+              in particular, no existing census data is affected.
         Class NExampleTriangulation:
             - New routine weeks() to build the Weeks manifold.
         Class NNormalSurface:
