@@ -74,6 +74,8 @@ void addDim4Vertex() {
         .def("getDegree", &Dim4Vertex::getDegree)
         .def("getLink", &Dim4Vertex::getLink,
             return_value_policy<reference_existing_object>())
+        .def("buildLink", &Dim4Vertex::buildLink,
+            return_value_policy<reference_existing_object>())
         .def("isValid", &Dim4Vertex::isValid)
         .def("isIdeal", &Dim4Vertex::isIdeal)
         .def("isBoundary", &Dim4Vertex::isBoundary)

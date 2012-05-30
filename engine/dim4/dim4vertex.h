@@ -266,9 +266,19 @@ class REGINA_API Dim4Vertex : public ShareableObject, public NMarkedElement {
          * the vertices of the tetrahedron in the domain (0123) to
          * the vertices of the tetrahedron in the range (01234 excluding \a v).
          *
-         * @return the link of this vertex.
+         * @return the triangulated link of this vertex.
          */
         const NTriangulation* getLink() const;
+
+        /**
+         * A synonym for getLink().  This is provided for consistency
+         * with the 3-dimensional analogue NTriangulation::buildLink().
+         *
+         * See getLink() for further details.
+         *
+         * @return the triangulated link of this vertex.
+         */
+        const NTriangulation* buildLink() const;
 
         /**
          * Determines if this vertex is valid.
@@ -405,6 +415,10 @@ inline unsigned long Dim4Vertex::getDegree() const {
 }
 
 inline const NTriangulation* Dim4Vertex::getLink() const {
+    return link_;
+}
+
+inline const NTriangulation* Dim4Vertex::buildLink() const {
     return link_;
 }
 
