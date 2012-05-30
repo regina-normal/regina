@@ -92,6 +92,21 @@ Version 5.0  [ (under development) ]
               it does not identify when a 3-manifold triangulation appears
               as a subcomplex of a 4-manifold triangulation).
 
+Version 4.94  [ (under development) ]
+
+Version 4.94  [ (under development) ]
+
+    ENGINE:
+        Class Dim2Triangulation:
+            - New 2-manifold triangulation class.  This is a new packet
+              type that can be independently stored in data files.
+        Class Dim2BoundaryComponent, Dim2Component, Dim2EdgeEmbedding,
+                  Dim2Edge, Dim2Face, Dim2Isomorphism, Dim2VertexEmbedding,
+                  Dim2Vertex, NXMLDim2TriangulationReader:
+            - New classes to support Dim2Triangulation.
+        Class NVertex:
+            - New routine buildLink() to triangulate the vertex link.
+
 Version 4.93  [ 30 May, 2012 ]
 
     ENGINE:

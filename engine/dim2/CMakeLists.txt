@@ -7,7 +7,8 @@ SET ( FILES canonical dim2edge dim2face dim2isomorphism dim2triangulation isomor
 FOREACH ( SOURCE_FILE ${FILES} )
   SET ( SOURCES ${SOURCES} dim2/${SOURCE_FILE})
 ENDFOREACH(SOURCE_FILE)
-
-# Set the variable in the parent directory
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
-INSTALL(FILES dim2boundarycomponent.h dim2component.h dim2edge.h dim2face.h dim2isomorphism.h dim2triangulation.h dim2vertex.h nxmldim2trireader.h DESTINATION ${INCLUDEDIR}/dim2)
+
+if (${REGINA_INSTALL_DEV})
+  INSTALL(FILES dim2boundarycomponent.h dim2component.h dim2edge.h dim2face.h dim2isomorphism.h dim2triangulation.h dim2vertex.h nxmldim2trireader.h DESTINATION ${INCLUDEDIR}/dim2 COMPONENT Development)
+endif (${REGINA_INSTALL_DEV})

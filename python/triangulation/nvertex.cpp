@@ -27,6 +27,7 @@
 /* end stub */
 
 #include <boost/python.hpp>
+#include "dim2/dim2triangulation.h"
 #include "triangulation/nboundarycomponent.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/ntetrahedron.h"
@@ -71,6 +72,8 @@ void addNVertex() {
             return_value_policy<reference_existing_object>())
         .def("getDegree", &NVertex::getDegree)
         .def("getLink", &NVertex::getLink)
+        .def("buildLink", &NVertex::buildLink,
+            return_value_policy<reference_existing_object>())
         .def("isLinkClosed", &NVertex::isLinkClosed)
         .def("isIdeal", &NVertex::isIdeal)
         .def("isBoundary", &NVertex::isBoundary)
