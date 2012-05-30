@@ -80,6 +80,7 @@
     #include "packet/npdf.h"
     #include "dim4/dim4triangulation.h"
     #include "hypersurface/nnormalhypersurfacelist.h"
+    #include "dim2/dim2triangulation.h"
 #else
     REGISTER_PACKET(NContainer, 1, "Container")
     REGISTER_PACKET(NText, 2, "Text")
@@ -91,6 +92,7 @@
     REGISTER_PACKET(NPDF, 10, "PDF")
     REGISTER_PACKET(Dim4Triangulation, 11, "4-Manifold Triangulation")
     REGISTER_PACKET(NNormalHypersurfaceList, 13, "Normal Hypersurface List")
+    REGISTER_PACKET(Dim2Triangulation, 15, "2-Manifold Triangulation")
 #endif
 
 /*! \file packet/packetregistry.h
