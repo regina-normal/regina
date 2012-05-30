@@ -46,6 +46,7 @@ namespace regina {
 
 class NBoundaryComponent;
 class NComponent;
+class Dim2Triangulation;
 class NTetrahedron;
 
 /**
@@ -167,6 +168,9 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
             /**< Specifies whether the vertex link is orientable. */
         long linkEulerCharacteristic;
             /**< Specifies the Euler characteristic of the vertex link. */
+        std::auto_ptr<Dim2Triangulation> linkTri;
+            /**< A triangulation of the vertex link.  This will only be
+                 constructed on demand; until then it will be null. */
 
     public:
         /**
@@ -243,9 +247,48 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
         /**
          * Returns a description of the link of the vertex.
          *
+         * This routine does not require a full triangulation of the
+         * vertex link, and so can be much faster than analysing the
+         * result of buildLink().
+         *
          * @return one of the predefined link constants in NVertex.
          */
         int getLink() const;
+
+        /**
+         * Returns a full triangulation of the link of this vertex.
+         *
+         * The vertex link is a 2-manifold, and this routine returns a
+         * full-blown 2-manifold triangulation.  Note that this
+         * triangulation is read-only (though of course you can clone it
+         * and then operate upon the clone).
+         *
+         * The triangulation of the vertex link is built as follows.
+         * Let \a i lie between 0 and getDegree()-1 inclusive, let
+         * \a tet represent <tt>getEmbedding(i).getTetrahedron()</tt>,
+         * and let \a v represent <tt>getEmbedding(i).getVertex()</tt>.
+         * Then <tt>buildLink()->getFace(i)</tt> is the triangle
+         * in the vertex link that "slices off" vertex \a v from
+         * tetrahedron \a tet.  In other words,
+         * <tt>buildLink()->getFace(i)</tt> in the vertex link
+         * corresponds to <tt>tet->getFace(v)</tt> in the
+         * surrounding 3-manifold triangulation.
+         *
+         * The vertices of each triangle in the vertex link are
+         * numbered as follows.  Following the discussion above,
+         * suppose that <tt>buildLink()->getFace(i)</tt>
+         * corresponds to <tt>tet->getFace(v)</tt>.
+         * The correspondence from the vertices of
+         * <tt>buildLink()->getFace(i)</tt> to the vertices of
+         * <tt>tet->getFace(v)</tt> is given by the map
+         * <tt>tet->getFaceMapping(v)</tt>.
+         * This is an <tt>NPerm4</tt> object, sending 4 to \a v, and sending
+         * the vertices of the face in the domain (012) to
+         * the vertices of the face in the range (0123 excluding \a v).
+         *
+         * @return the triangulated link of this vertex.
+         */
+        const Dim2Triangulation* buildLink() const;
 
         /**
          * Determines if the link of this vertex is closed.
@@ -288,12 +331,20 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
         /**
          * Determines if the vertex link is orientable.
          *
+         * This routine does not require a full triangulation of the
+         * vertex link, and so can be much faster than calling
+         * buildLink().isOrientable().
+         *
          * @return \c true if and only if the vertex link is orientable.
          */
         bool isLinkOrientable() const;
 
         /**
          * Returns the Euler characteristic of the vertex link.
+         *
+         * This routine does not require a full triangulation of the
+         * vertex link, and so can be much faster than calling
+         * buildLink().getEulerChar().
          *
          * @return the Euler characteristic of the vertex link.
          */

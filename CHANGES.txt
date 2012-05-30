@@ -7,6 +7,19 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Version 4.94  [ (under development) ]
+
+    ENGINE:
+        Class Dim2Triangulation:
+            - New 2-manifold triangulation class.  This is a new packet
+              type that can be independently stored in data files.
+        Class Dim2BoundaryComponent, Dim2Component, Dim2EdgeEmbedding,
+                  Dim2Edge, Dim2Face, Dim2Isomorphism, Dim2VertexEmbedding,
+                  Dim2Vertex, NXMLDim2TriangulationReader:
+            - New classes to support Dim2Triangulation.
+        Class NVertex:
+            - New routine buildLink() to triangulate the vertex link.
+
 Version 4.93  [ 30 May, 2012 ]
 
     ENGINE:

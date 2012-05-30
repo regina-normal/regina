@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "dim2/dim2triangulation.h"
+#include "maths/permconv.h"
 #include "triangulation/nvertex.h"
 
 namespace regina {
@@ -47,6 +49,65 @@ void NVertex::writeTextShort(std::ostream& out) const {
         case NON_STANDARD_BDRY: out << "Non-standard boundary "; break;
     }
     out << "vertex of degree " << getNumberOfEmbeddings();
+}
+
+const Dim2Triangulation* NVertex::buildLink() const {
+    if (linkTri.get())
+        return linkTri.get();
+
+    // Build the triangulation.
+    Dim2Triangulation* ans = new Dim2Triangulation();
+
+    std::vector<NVertexEmbedding>::const_iterator it, adjIt;
+    for (it = embeddings.begin(); it != embeddings.end(); ++it)
+        ans->newFace();
+
+    NTetrahedron *tet, *adj;
+    int i, exitFace, v;
+    int edgeInLink;
+    int adjIndex;
+    int adjVertex;
+    for (it = embeddings.begin(), i = 0; it != embeddings.end(); ++it, ++i) {
+        tet = it->getTetrahedron();
+        v = it->getVertex();
+
+        for (exitFace = 0; exitFace < 4; ++exitFace) {
+            if (exitFace == v)
+                continue;
+
+            adj = tet->adjacentTetrahedron(exitFace);
+            if (! adj)
+                continue;
+
+            edgeInLink = tet->getFaceMapping(v).preImageOf(exitFace);
+            if (ans->getFace(i)->adjacentFace(edgeInLink)) {
+                // We've already made this gluing in the vertex link
+                // from the other side.
+                continue;
+            }
+
+            adjVertex = tet->adjacentGluing(exitFace)[v];
+
+            // TODO: We need to find which *embedding* corresponds to
+            // the adjacent tetrahedron/vertex pair.
+            // Currently we do a simple linear scan, which makes the
+            // overall link construction quadratic.  This can surely be
+            // made linear(ish) with the right data structure and/or algorithm.
+            for (adjIt = embeddings.begin(), adjIndex = 0;
+                    adjIt != embeddings.end(); ++adjIt, ++adjIndex)
+                if (adjIt->getTetrahedron() == adj &&
+                        adjIt->getVertex() == adjVertex)
+                    break; // Sets adjIndex to the right value.
+
+            ans->getFace(i)->joinTo(edgeInLink, ans->getFace(adjIndex),
+                perm4to3(adj->getFaceMapping(adjVertex).inverse() *
+                    tet->adjacentGluing(exitFace) *
+                    tet->getFaceMapping(v)));
+        }
+    }
+
+    const_cast<NVertex*>(this)->linkTri.reset(ans);
+    return linkTri.get();
 }
 
 } // namespace regina
