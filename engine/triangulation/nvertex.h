@@ -36,6 +36,7 @@
 #endif
 
 #include <vector>
+#include <memory>
 #include "regina-core.h"
 #include "shareableobject.h"
 #include "maths/nperm4.h"
