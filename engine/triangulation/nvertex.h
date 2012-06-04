@@ -36,7 +36,6 @@
 #endif
 
 #include <vector>
-#include <memory>
 #include "regina-core.h"
 #include "shareableobject.h"
 #include "maths/nperm4.h"
@@ -169,7 +168,7 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
             /**< Specifies whether the vertex link is orientable. */
         long linkEulerCharacteristic;
             /**< Specifies the Euler characteristic of the vertex link. */
-        std::auto_ptr<Dim2Triangulation> linkTri;
+        Dim2Triangulation* linkTri;
             /**< A triangulation of the vertex link.  This will only be
                  constructed on demand; until then it will be null. */
 
@@ -377,10 +376,8 @@ namespace regina {
 // Inline functions for NVertex
 
 inline NVertex::NVertex(NComponent* myComponent) : component(myComponent),
-        boundaryComponent(0), linkOrientable(true), linkEulerCharacteristic(0) {
-}
-
-inline NVertex::~NVertex() {
+        boundaryComponent(0), linkOrientable(true),
+        linkEulerCharacteristic(0), linkTri(0) {
 }
 
 inline NComponent* NVertex::getComponent() const {
