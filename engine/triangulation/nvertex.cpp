@@ -61,6 +61,7 @@ const Dim2Triangulation* NVertex::buildLink() const {
 
     // Build the triangulation.
     Dim2Triangulation* ans = new Dim2Triangulation();
+    ChangeEventSpan span(ans);
 
     std::vector<NVertexEmbedding>::const_iterator it, adjIt;
     for (it = embeddings.begin(); it != embeddings.end(); ++it)
