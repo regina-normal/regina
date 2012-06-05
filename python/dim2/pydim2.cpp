@@ -31,6 +31,7 @@ void addDim2Component();
 void addDim2Edge();
 void addDim2Face();
 void addDim2Isomorphism();
+void addDim2TriangleEdge();
 void addDim2Triangulation();
 void addDim2Vertex();
 
@@ -40,6 +41,7 @@ void addDim2() {
     addDim2Edge();
     addDim2Face();
     addDim2Isomorphism();
+    addDim2TriangleEdge();
     addDim2Triangulation();
     addDim2Vertex();
 }
