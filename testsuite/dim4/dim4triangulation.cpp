@@ -71,6 +71,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
+    CPPUNIT_TEST(barycentricSubdivision);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1096,11 +1097,141 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             Dim4Triangulation t;
             t.insertTriangulation(rp4);
             t.insertTriangulation(ball_layerAndFold);
-            t.setPacketLabel("Connected sum with two terms");
+            t.setPacketLabel("Disjoint union of two terms");
             verifyIsoSig(t);
             t.insertTriangulation(idealPoincareProduct);
-            t.setPacketLabel("Connected sum with three terms");
+            t.setPacketLabel("Disjoint union of three terms");
             verifyIsoSig(t);
+        }
+
+        void verifyBary(const Dim4Triangulation& tri) {
+            Dim4Triangulation b(tri);
+            b.barycentricSubdivision();
+
+            // Note that subdivisions can turn invalid into valid, but
+            // they can never turn valid into invalid.
+            if (tri.isValid() && ! b.isValid()) {
+                std::ostringstream msg;
+                msg << tri.getPacketLabel()
+                    << ": Barycentric subdivision breaks validity.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Ideal triangulations must be valid, so only consider the
+            // valid -> valid case here.
+            if (tri.isValid() && (tri.isIdeal() != b.isIdeal())) {
+                std::ostringstream msg;
+                msg << tri.getPacketLabel()
+                    << ": Barycentric subdivision breaks idealness.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri.hasBoundaryTetrahedra() != b.hasBoundaryTetrahedra()) {
+                std::ostringstream msg;
+                msg << tri.getPacketLabel()
+                    << ": Barycentric subdivision breaks boundary tetrahedra.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Some invalid -> valid cases can turn non-closed into closed.
+            // Just consider valid only.
+            if (tri.isValid() && (tri.isClosed() != b.isClosed())) {
+                std::ostringstream msg;
+                msg << tri.getPacketLabel()
+                    << ": Barycentric subdivision breaks closedness.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri.isOrientable() != b.isOrientable()) {
+                std::ostringstream msg;
+                msg << tri.getPacketLabel()
+                    << ": Barycentric subdivision breaks orientability.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri.isConnected() != b.isConnected()) {
+                std::ostringstream msg;
+                msg << tri.getPacketLabel()
+                    << ": Barycentric subdivision breaks connectedness.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri.getNumberOfComponents() != b.getNumberOfComponents()) {
+                std::ostringstream msg;
+                msg << tri.getPacketLabel()
+                    << ": Barycentric subdivision breaks connected components.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Invalid vertices and edges can wreak havoc on the
+            // counting and labelling of boundary components (see
+            // Dim4BoundaryComponent for details).
+            if (tri.isValid() && (tri.getNumberOfBoundaryComponents() !=
+                    b.getNumberOfBoundaryComponents())) {
+                std::ostringstream msg;
+                msg << tri.getPacketLabel()
+                    << ": Barycentric subdivision breaks boundary components.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // The same problem with invalid triangulations and boundary
+            // components bites us with Euler characteristic also.
+            if (tri.isValid() &&
+                    (tri.getEulerCharTri() != b.getEulerCharTri())) {
+                std::ostringstream msg;
+                msg << tri.getPacketLabel()
+                    << ": Barycentric subdivision breaks Euler char (tri).";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri.isValid() &&
+                    (tri.getEulerCharManifold() != b.getEulerCharManifold())) {
+                std::ostringstream msg;
+                msg << tri.getPacketLabel()
+                    << ": Barycentric subdivision breaks Euler char (mfd).";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Now run more expensive tests that will be better with
+            // *small* triangulations.
+            if (! tri.isValid())
+                return;
+
+            b.intelligentSimplify();
+
+            if (! (tri.getHomologyH1() == b.getHomologyH1())) {
+                std::ostringstream msg;
+                msg << tri.getPacketLabel()
+                    << ": Barycentric subdivision breaks H1.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! (tri.getHomologyH2() == b.getHomologyH2())) {
+                std::ostringstream msg;
+                msg << tri.getPacketLabel()
+                    << ": Barycentric subdivision breaks H2.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void barycentricSubdivision() {
+            verifyBary(empty);
+            verifyBary(s4_id);
+            verifyBary(s4_doubleConeS3);
+            verifyBary(s3xs1);
+            verifyBary(rp4);
+            verifyBary(s3xs1Twisted);
+            verifyBary(ball_singlePent);
+            verifyBary(ball_foldedPent);
+            verifyBary(ball_singleConeS3);
+            verifyBary(ball_layerAndFold);
+            // (too large) verifyBary(idealPoincareProduct);
+            // (too large) verifyBary(mixedPoincareProduct);
+            verifyBary(idealFigEightProduct);
+            verifyBary(mixedFigEightProduct);
+            verifyBary(pillow_twoCycle);
+            verifyBary(pillow_threeCycle);
+            verifyBary(pillow_fourCycle);
         }
 };
 
