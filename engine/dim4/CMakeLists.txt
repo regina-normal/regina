@@ -1,7 +1,7 @@
 # dim4 
 
 # Files to compile
-SET ( FILES canonical dim4boundarycomponent dim4edge dim4exampletriangulation dim4face dim4isomorphism dim4pentachoron dim4tetrahedron dim4triangulation dim4vertex homology homotopy isomorphic nxmldim4trireader signature simplify simplifyglobal skeleton )
+SET ( FILES canonical dim4boundarycomponent dim4edge dim4exampletriangulation dim4face dim4isomorphism dim4pentachoron dim4tetrahedron dim4triangulation dim4vertex homology homotopy isomorphic nxmldim4trireader signature simplify simplifyglobal skeleton subdivide )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

@@ -216,6 +216,8 @@ void addDim4Triangulation() {
             OL_shellBoundary())
         .def("collapseEdge", &Dim4Triangulation::collapseEdge,
             OL_collapseEdge())
+        .def("barycentricSubdivision",
+            &Dim4Triangulation::barycentricSubdivision)
         .def("insertTriangulation", &Dim4Triangulation::insertTriangulation)
         .def("isoSig", isoSig_void)
         .def("fromIsoSig", &Dim4Triangulation::fromIsoSig,
