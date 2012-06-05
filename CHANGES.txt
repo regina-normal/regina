@@ -21,6 +21,8 @@ Version 4.94  [ (under development) ]
             - New classes to support Dim2Triangulation.
         Class NVertex:
             - New routine buildLink() to triangulate the vertex link.
+    TEST SUITE:
+        - Added thorough tests for barycentric subdivision.
 
 Version 4.93  [ 30 May, 2012 ]
 
