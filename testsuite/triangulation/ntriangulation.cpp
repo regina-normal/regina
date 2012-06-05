@@ -70,6 +70,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(zeroEfficiency);
     CPPUNIT_TEST(turaevViro);
     CPPUNIT_TEST(doubleCover);
+    CPPUNIT_TEST(barycentricSubdivision);
     CPPUNIT_TEST(idealToFinite);
     CPPUNIT_TEST(finiteToIdeal);
     CPPUNIT_TEST(dehydration);
@@ -1932,6 +1933,147 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Cusped solid genus 2 torus");
             verifyDoubleCover(pinchedSolidTorus, "Pinched solid torus");
             verifyDoubleCover(pinchedSolidKB, "Pinched solid Klein bottle");
+        }
+
+        void verifyBary(const NTriangulation& tri, const char* name) {
+            NTriangulation b(tri);
+            b.barycentricSubdivision();
+
+            // Note that subdivisions can turn invalid into valid, but
+            // they can never turn valid into invalid.
+            if (tri.isValid() && ! b.isValid()) {
+                std::ostringstream msg;
+                msg << name
+                    << ": Barycentric subdivision breaks validity.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Subdivisions can also turn invalid into ideal.
+            // Only consider the valid -> valid case here.
+            if (tri.isValid() && (tri.isIdeal() != b.isIdeal())) {
+                std::ostringstream msg;
+                msg << name
+                    << ": Barycentric subdivision breaks idealness.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri.hasBoundaryFaces() != b.hasBoundaryFaces()) {
+                std::ostringstream msg;
+                msg << name
+                    << ": Barycentric subdivision breaks boundary faces.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // As with ideal, consider valid inputs only.
+            if (tri.isValid() && (tri.isClosed() != b.isClosed())) {
+                std::ostringstream msg;
+                msg << name
+                    << ": Barycentric subdivision breaks closedness.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri.isOrientable() != b.isOrientable()) {
+                std::ostringstream msg;
+                msg << name
+                    << ": Barycentric subdivision breaks orientability.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri.isConnected() != b.isConnected()) {
+                std::ostringstream msg;
+                msg << name
+                    << ": Barycentric subdivision breaks connectedness.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri.getNumberOfComponents() != b.getNumberOfComponents()) {
+                std::ostringstream msg;
+                msg << name
+                    << ": Barycentric subdivision breaks connected components.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Invalid vertices can become new boundary components.
+            // Only consider valid inputs here.
+            if (tri.isValid() && (tri.getNumberOfBoundaryComponents() !=
+                    b.getNumberOfBoundaryComponents())) {
+                std::ostringstream msg;
+                msg << name
+                    << ": Barycentric subdivision breaks boundary components.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // The same problem with invalid triangulations and boundary
+            // components bites us with Euler characteristic also.
+            if (tri.isValid() &&
+                    (tri.getEulerCharTri() != b.getEulerCharTri())) {
+                std::ostringstream msg;
+                msg << name
+                    << ": Barycentric subdivision breaks Euler char (tri).";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri.isValid() &&
+                    (tri.getEulerCharManifold() != b.getEulerCharManifold())) {
+                std::ostringstream msg;
+                msg << name
+                    << ": Barycentric subdivision breaks Euler char (mfd).";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Now run more expensive tests that will be better with
+            // *small* triangulations.
+            if (! tri.isValid())
+                return;
+
+            b.intelligentSimplify();
+
+            if (! (tri.getHomologyH1() == b.getHomologyH1())) {
+                std::ostringstream msg;
+                msg << name
+                    << ": Barycentric subdivision breaks H1.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! (tri.getHomologyH2() == b.getHomologyH2())) {
+                std::ostringstream msg;
+                msg << name
+                    << ": Barycentric subdivision breaks H2.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void barycentricSubdivision() {
+            verifyBary(empty, "Empty triangulation");
+            verifyBary(singleTet, "Single tetrahedron");
+            verifyBary(s3, "S^3");
+            verifyBary(s2xs1, "S^2 x S^1");
+            verifyBary(rp3_1, "RP^3 (1 vtx)");
+            verifyBary(rp3_2, "RP^3 (2 vtx)");
+            verifyBary(lens3_1, "L(3,1)");
+            verifyBary(lens8_3, "L(8,3)");
+            // (too large) verifyBary(lens8_3_large, "Large L(8,3)");
+            verifyBary(lens7_1_loop, "Layered loop L(7,1)");
+            verifyBary(rp3rp3, "RP^3 # RP^3");
+            verifyBary(q32xz3, "S^3 / Q_32 x Z_3");
+            verifyBary(q28, "S^3 / Q_28");
+            // (too large) verifyBary(weberSeifert, "Weber-Seifert");
+            // (too large) verifyBary(lens100_1, "L(100,1)");
+            verifyBary(ball_large, "4-tetrahedron ball");
+            verifyBary(ball_large_pillows, "4-tetrahedron pillow ball");
+            verifyBary(ball_large_snapped, "3-tetrahedron snapped ball");
+            verifyBary(lst3_4_7, "LST(3,4,7)");
+            verifyBary(figure8, "Figure eight knot complement");
+            verifyBary(rp2xs1, "RP^2 x S^1");
+            verifyBary(solidKB, "Solid Klein bottle");
+            verifyBary(gieseking, "Gieseking manifold");
+            verifyBary(invalidEdges, "Triangulation with invalid edges");
+            verifyBary(twoProjPlaneCusps,
+                "Triangulation with RP^2 cusps");
+            verifyBary(cuspedGenusTwoTorus,
+                "Cusped solid genus 2 torus");
+            verifyBary(pinchedSolidTorus, "Pinched solid torus");
+            verifyBary(pinchedSolidKB, "Pinched solid Klein bottle");
         }
 
         void verifyIdealToFinite(const NTriangulation& tri,
