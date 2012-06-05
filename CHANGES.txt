@@ -94,9 +94,9 @@ Version 5.0  [ (under development) ]
 
 Version 4.94  [ (under development) ]
 
-Version 4.94  [ (under development) ]
-
     ENGINE:
+        Class Dim2TriangleEdge:
+            - New convenience typedef for NFacetSpec<2>.
         Class Dim2Triangulation:
             - New 2-manifold triangulation class.  This is a new packet
               type that can be independently stored in data files.

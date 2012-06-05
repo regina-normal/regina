@@ -26,23 +26,40 @@
 
 /* end stub */
 
-void addDim2BoundaryComponent();
-void addDim2Component();
-void addDim2Edge();
-void addDim2Face();
-void addDim2Isomorphism();
-void addDim2TriangleEdge();
-void addDim2Triangulation();
-void addDim2Vertex();
+#include <boost/python.hpp>
+#include "triangulation/nfacetspec.h"
 
-void addDim2() {
-    addDim2BoundaryComponent();
-    addDim2Component();
-    addDim2Edge();
-    addDim2Face();
-    addDim2Isomorphism();
-    addDim2TriangleEdge();
-    addDim2Triangulation();
-    addDim2Vertex();
+using namespace boost::python;
+using regina::Dim2TriangleEdge;
+
+namespace {
+    Dim2TriangleEdge triangleedge_inc_operator(Dim2TriangleEdge& p) {
+        return p++;
+    }
+
+    Dim2TriangleEdge triangleedge_dec_operator(Dim2TriangleEdge& p) {
+        return p--;
+    }
+}
+
+void addDim2TriangleEdge() {
+    class_<Dim2TriangleEdge>("Dim2TriangleEdge")
+        .def(init<int, int>())
+        .def(init<const Dim2TriangleEdge&>())
+        .def_readwrite("simp", &Dim2TriangleEdge::simp)
+        .def_readwrite("facet", &Dim2TriangleEdge::facet)
+        .def("isBoundary", &Dim2TriangleEdge::isBoundary)
+        .def("isBeforeStart", &Dim2TriangleEdge::isBeforeStart)
+        .def("isPastEnd", &Dim2TriangleEdge::isPastEnd)
+        .def("setFirst", &Dim2TriangleEdge::setFirst)
+        .def("setBoundary", &Dim2TriangleEdge::setBoundary)
+        .def("setBeforeStart", &Dim2TriangleEdge::setBeforeStart)
+        .def("setPastEnd", &Dim2TriangleEdge::setPastEnd)
+        .def("inc", triangleedge_inc_operator)
+        .def("dec", triangleedge_dec_operator)
+        .def(self == self)
+        .def(self < self)
+        .def(self <= self)
+    ;
 }
 

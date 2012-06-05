@@ -256,6 +256,16 @@ struct NFacetSpec {
 };
 
 /**
+ * A lightweight class used to refer to a particular edge of a
+ * particular triangle in a 2-manifold triangulation.  This is a
+ * convenience typedef for the template instance NFacetSpec<2>.
+ *
+ * \ifacespython The specific class Dim2TriangleEdge is available through
+ * Python, even though the generic template NFacetSpec is not.
+ */
+typedef NFacetSpec<2> Dim2TriangleEdge;
+
+/**
  * A lightweight class used to refer to a particular face of a
  * particular tetrahedron in a 3-manifold triangulation.  This is a
  * convenience typedef for the template instance NFacetSpec<3>.
