@@ -30,53 +30,44 @@
 #include <cstdlib>
 #include "dim2/dim2isomorphism.h"
 #include "dim2/dim2triangulation.h"
+#include "triangulation/ngeneralisomorphism.tcc"
 
 namespace regina {
 
-void Dim2Isomorphism::writeTextShort(std::ostream& out) const {
-    out << "Isomorphism between 2-manifold triangulations";
-}
-
-void Dim2Isomorphism::writeTextLong(std::ostream& out) const {
-    for (unsigned i = 0; i < nFaces_; ++i)
-        out << i << " -> " << faceImage_[i] << " (" << edgePerm_[i] << ")\n";
-}
-
-bool Dim2Isomorphism::isIdentity() const {
-    for (unsigned p = 0; p < nFaces_; ++p) {
-        if (faceImage_[p] != static_cast<int>(p))
-            return false;
-        if (! edgePerm_[p].isIdentity())
-            return false;
-    }
-    return true;
-}
+// Instatiate all templates from the .tcc file.
+template void NGeneralIsomorphism<2>::writeTextShort(std::ostream&) const;
+template void NGeneralIsomorphism<2>::writeTextLong(std::ostream&) const;
+template bool NGeneralIsomorphism<2>::isIdentity() const;
+template NGeneralIsomorphism<2>::NGeneralIsomorphism(
+    const NGeneralIsomorphism<2>&);
+template Dim2Isomorphism*
+    NGeneralIsomorphism<2>::randomInternal<Dim2Isomorphism>(unsigned);
 
 Dim2Triangulation* Dim2Isomorphism::apply(
         const Dim2Triangulation* original) const {
-    if (original->getNumberOfFaces() != nFaces_)
+    if (original->getNumberOfFaces() != nSimplices_)
         return 0;
 
-    if (nFaces_ == 0)
+    if (nSimplices_ == 0)
         return new Dim2Triangulation();
 
     Dim2Triangulation* ans = new Dim2Triangulation();
-    Dim2Face** face = new Dim2Face*[nFaces_];
+    Dim2Face** face = new Dim2Face*[nSimplices_];
     unsigned long p;
     int f;
 
     NPacket::ChangeEventSpan span(ans);
-    for (p = 0; p < nFaces_; ++p)
+    for (p = 0; p < nSimplices_; ++p)
         face[p] = ans->newFace();
 
-    for (p = 0; p < nFaces_; ++p)
-        face[faceImage_[p]]->setDescription(
+    for (p = 0; p < nSimplices_; ++p)
+        face[simpImage_[p]]->setDescription(
             original->getFace(p)->getDescription());
 
     const Dim2Face *myFace, *adjFace;
     unsigned long adjFaceIndex;
     NPerm3 gluingPerm;
-    for (p = 0; p < nFaces_; ++p) {
+    for (p = 0; p < nSimplices_; ++p) {
         myFace = original->getFace(p);
         for (f = 0; f < 3; ++f)
             if ((adjFace = myFace->adjacentFace(f))) {
@@ -87,10 +78,10 @@ Dim2Triangulation* Dim2Isomorphism::apply(
                 // Make the gluing from one side only.
                 if (adjFaceIndex > p || (adjFaceIndex == p &&
                         gluingPerm[f] > f))
-                    face[faceImage_[p]]->joinTo(edgePerm_[p][f],
-                        face[faceImage_[adjFaceIndex]],
-                        edgePerm_[adjFaceIndex] * gluingPerm *
-                            edgePerm_[p].inverse());
+                    face[simpImage_[p]]->joinTo(facetPerm_[p][f],
+                        face[simpImage_[adjFaceIndex]],
+                        facetPerm_[adjFaceIndex] * gluingPerm *
+                            facetPerm_[p].inverse());
             }
     }
 
@@ -98,28 +89,28 @@ Dim2Triangulation* Dim2Isomorphism::apply(
 }
 
 void Dim2Isomorphism::applyInPlace(Dim2Triangulation* tri) const {
-    if (tri->getNumberOfFaces() != nFaces_)
+    if (tri->getNumberOfFaces() != nSimplices_)
         return;
 
-    if (nFaces_ == 0)
+    if (nSimplices_ == 0)
         return;
 
     Dim2Triangulation staging;
     NPacket::ChangeEventSpan span1(&staging);
-    Dim2Face** face = new Dim2Face*[nFaces_];
+    Dim2Face** face = new Dim2Face*[nSimplices_];
     unsigned long p;
     int f;
 
-    for (p = 0; p < nFaces_; ++p)
+    for (p = 0; p < nSimplices_; ++p)
         face[p] = staging.newFace();
 
-    for (p = 0; p < nFaces_; ++p)
-        face[faceImage_[p]]->setDescription(tri->getFace(p)->getDescription());
+    for (p = 0; p < nSimplices_; ++p)
+        face[simpImage_[p]]->setDescription(tri->getFace(p)->getDescription());
 
     const Dim2Face *myFace, *adjFace;
     unsigned long adjFaceIndex;
     NPerm3 gluingPerm;
-    for (p = 0; p < nFaces_; ++p) {
+    for (p = 0; p < nSimplices_; ++p) {
         myFace = tri->getFace(p);
         for (f = 0; f < 3; ++f)
             if ((adjFace = myFace->adjacentFace(f))) {
@@ -130,41 +121,16 @@ void Dim2Isomorphism::applyInPlace(Dim2Triangulation* tri) const {
                 // Make the gluing from one side only.
                 if (adjFaceIndex > p || (adjFaceIndex == p &&
                         gluingPerm[f] > f))
-                    face[faceImage_[p]]->joinTo(edgePerm_[p][f],
-                        face[faceImage_[adjFaceIndex]],
-                        edgePerm_[adjFaceIndex] * gluingPerm *
-                            edgePerm_[p].inverse());
+                    face[simpImage_[p]]->joinTo(facetPerm_[p][f],
+                        face[simpImage_[adjFaceIndex]],
+                        facetPerm_[adjFaceIndex] * gluingPerm *
+                            facetPerm_[p].inverse());
             }
     }
 
     NPacket::ChangeEventSpan span2(tri);
     tri->removeAllFaces();
     tri->swapContents(staging);
-}
-
-Dim2Isomorphism::Dim2Isomorphism(const Dim2Isomorphism& cloneMe) :
-        ShareableObject(),
-        nFaces_(cloneMe.nFaces_),
-        faceImage_(cloneMe.nFaces_ > 0 ? new int[cloneMe.nFaces_] : 0),
-        edgePerm_(cloneMe.nFaces_ > 0 ? new NPerm3[cloneMe.nFaces_] : 0) {
-    std::copy(cloneMe.faceImage_, cloneMe.faceImage_ + nFaces_, faceImage_);
-    std::copy(cloneMe.edgePerm_, cloneMe.edgePerm_ + nFaces_, edgePerm_);
-}
-
-Dim2Isomorphism* Dim2Isomorphism::random(unsigned nFaces) {
-    Dim2Isomorphism* ans = new Dim2Isomorphism(nFaces);
-
-    // Randomly choose the destination faces.
-    unsigned i;
-    for (i = 0; i < nFaces; i++)
-        ans->faceImage_[i] = i;
-    std::random_shuffle(ans->faceImage_, ans->faceImage_ + nFaces);
-
-    // Randomly choose the individual permutations.
-    for (i = 0; i < nFaces; i++)
-        ans->edgePerm_[i] = NPerm3::S3[rand() % 6];
-
-    return ans;
 }
 
 } // namespace regina

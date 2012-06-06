@@ -57,8 +57,8 @@ namespace {
         unsigned pent;
 
         for (pent = 0; pent < nPents; ++pent)
-            if (pent != currentInv.pentImage(0))
-                current.pentImage(pent) = -1;
+            if (pent != currentInv.simpImage(0))
+                current.simpImage(pent) = -1;
 
         int facet;
 
@@ -79,8 +79,8 @@ namespace {
             // INV: We have already selected the preimage of pent and
             // the corresponding facet permutation by the time we reach
             // this point.
-            origPent = currentInv.pentImage(pent);
-            origPentBest = bestInv.pentImage(pent);
+            origPent = currentInv.simpImage(pent);
+            origPentBest = bestInv.simpImage(pent);
 
             for (facet = 0; facet < 5; ++facet) {
                 origFacet = current.facetPerm(origPent).preImageOf(facet);
@@ -97,18 +97,18 @@ namespace {
                     tri->pentachoronIndex(adjPentBest) : nPents);
 
                 justAssigned = false;
-                if (adjPent && current.pentImage(adjPentIndex) < 0) {
+                if (adjPent && current.simpImage(adjPentIndex) < 0) {
                     // We have a new pentachoron that needs assignment.
                     ++lastAssigned;
-                    current.pentImage(adjPentIndex) = lastAssigned;
-                    currentInv.pentImage(lastAssigned) = adjPentIndex;
+                    current.simpImage(adjPentIndex) = lastAssigned;
+                    currentInv.simpImage(lastAssigned) = adjPentIndex;
                     justAssigned = true;
                 }
 
                 finalImage = (adjPent ?
-                    current.pentImage(adjPentIndex) : nPents);
+                    current.simpImage(adjPentIndex) : nPents);
                 finalImageBest = (adjPentBest ?
-                    best.pentImage(adjPentIndexBest) : nPents);
+                    best.simpImage(adjPentIndexBest) : nPents);
 
                 // We now have a gluing (but possibly not a gluing
                 // permutation).  Compare adjacent pentachoron indices.
@@ -175,7 +175,7 @@ bool Dim4Triangulation::makeCanonical() {
     // The thing to best is the identity isomorphism.
     unsigned pent, inner;
     for (pent = 0; pent < nPents; ++pent) {
-        best.pentImage(pent) = bestInv.pentImage(pent) = pent;
+        best.simpImage(pent) = bestInv.simpImage(pent) = pent;
         best.facetPerm(pent) = bestInv.facetPerm(pent) = NPerm5();
     }
 
@@ -185,8 +185,8 @@ bool Dim4Triangulation::makeCanonical() {
         for (perm = 0; perm < 120; ++perm) {
             // Build a "perhaps canonical" isomorphism based on this
             // preimage of pentachoron 0.
-            current.pentImage(pent) = 0;
-            currentInv.pentImage(0) = pent;
+            current.simpImage(pent) = 0;
+            currentInv.simpImage(0) = pent;
 
             current.facetPerm(pent) = NPerm5::S5[NPerm5::invS5[perm]];
             currentInv.facetPerm(0) = NPerm5::S5[perm];
@@ -194,9 +194,9 @@ bool Dim4Triangulation::makeCanonical() {
             if (extendIsomorphism(this, current, currentInv, best, bestInv)) {
                 // This is better than anything we've seen before.
                 for (inner = 0; inner < nPents; ++inner) {
-                    best.pentImage(inner) = current.pentImage(inner);
+                    best.simpImage(inner) = current.simpImage(inner);
                     best.facetPerm(inner) = current.facetPerm(inner);
-                    bestInv.pentImage(inner) = currentInv.pentImage(inner);
+                    bestInv.simpImage(inner) = currentInv.simpImage(inner);
                     bestInv.facetPerm(inner) = currentInv.facetPerm(inner);
                 }
             }

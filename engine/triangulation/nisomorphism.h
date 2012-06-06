@@ -38,6 +38,7 @@
 #include "regina-core.h"
 #include "shareableobject.h"
 #include "maths/nperm4.h"
+#include "triangulation/ngeneralisomorphism.h"
 #include "triangulation/ntetface.h"
 
 namespace regina {
@@ -53,21 +54,29 @@ class NTriangulation;
  * Represents a combinatorial isomorphism from one triangulation into
  * another.
  *
- * A combinatorial isomorphism from triangulation T to triangulation U
- * is a one-to-one map f from the individual tetrahedron faces of T to
- * the individual tetrahedron faces of U for which the following
- * conditions hold:
+ * In essence, a combinatorial isomorphism from triangulation T to
+ * triangulation U is a one-to-one map from the tetrahedra of T to the
+ * tetrahedra of U that allows relabelling of both the tetrahedra and
+ * their faces (or equivalently, their vertices), and that preserves
+ * gluings across adjacent tetrahedra.
  *
- *   - if faces x and y belong to the same tetrahedron of T then
- *     faces f(x) and f(y) belong to the same tetrahedron of U;
- *   - if faces x and y are identified in T then faces f(x) and f(y)
- *     are identified in U.
+ * More precisely:  An isomorphism consists of (i) a one-to-one map f
+ * from the tetrahedra of T to the tetrahedra of U, and (ii) for each
+ * tetrahedron S of T, a permutation f_S of the facets (0,1,2,3) of S,
+ * for which the following condition holds:
+ *
+ *   - If face k of tetrahedron S and face k' of tetrahedron S'
+ *     are identified in T, then face f_S(k) of f(S) and face f_S'(k')
+ *     of f(S') are identified in U.  Moreover, their gluing is consistent
+ *     with the face/vertex permutations; that is, there is a commutative
+ *     square involving the gluing maps in T and U and the permutations
+ *     f_S and f_S'.
  *
  * Isomorphisms can be <i>boundary complete</i> or
  * <i>boundary incomplete</i>.  A boundary complete isomorphism
  * satisfies the additional condition:
  *
- *   - if face x is a boundary face of T then face f(x) is a boundary
+ *   - If face x is a boundary face of T then face f(x) is a boundary
  *     face of U.
  *
  * A boundary complete isomorphism thus indicates that a copy of
@@ -83,17 +92,7 @@ class NTriangulation;
  *
  * \todo \feature Composition of isomorphisms.
  */
-class REGINA_API NIsomorphism : public ShareableObject {
-    protected:
-        unsigned nTetrahedra;
-            /**< The number of tetrahedra in the source triangulation. */
-        int* mTetImage;
-            /**< The tetrahedron of the destination triangulation that
-                 each tetrahedron of the source triangulation maps to. */
-        NPerm4* mFacePerm;
-            /**< The permutation applied to the four faces of each
-                 source tetrahedron. */
-
+class REGINA_API NIsomorphism : public NGeneralIsomorphism<3> {
     public:
         /**
          * Creates a new isomorphism with no initialisation.
@@ -111,16 +110,15 @@ class REGINA_API NIsomorphism : public ShareableObject {
          * isomorphism.
          */
         NIsomorphism(const NIsomorphism& cloneMe);
-        /**
-         * Destroys this isomorphism.
-         */
-        ~NIsomorphism();
 
         /**
          * Returns the number of tetrahedra in the source triangulation
          * associated with this isomorphism.  Note that this is always
          * less than or equal to the number of tetrahedra in the
          * destination triangulation.
+         *
+         * This is a convenience routine specific to three dimensions, and is
+         * identical to the dimension-agnostic routine getSourceSimplices().
          *
          * @return the number of tetrahedra in the source triangulation.
          */
@@ -130,11 +128,14 @@ class REGINA_API NIsomorphism : public ShareableObject {
          * Determines the image of the given source tetrahedron under
          * this isomorphism.
          *
+         * This is a convenience routine specific to three dimensions, and is
+         * identical to the dimension-agnostic routine simpImage().
+         *
          * \ifacespython Not present, though the read-only version of
          * this routine is.
          *
          * @param sourceTet the index of the source tetrahedron; this must
-         * be between 0 and <tt>getSourceTetrahedra()-1</tt> inclusive.
+         * be between 0 and <tt>getSourceSimplices()-1</tt> inclusive.
          * @return a reference to the index of the destination tetrahedron
          * that the source tetrahedron maps to.
          */
@@ -143,8 +144,11 @@ class REGINA_API NIsomorphism : public ShareableObject {
          * Determines the image of the given source tetrahedron under
          * this isomorphism.
          *
+         * This is a convenience routine specific to three dimensions, and is
+         * identical to the dimension-agnostic routine simpImage().
+         *
          * @param sourceTet the index of the source tetrahedron; this must
-         * be between 0 and <tt>getSourceTetrahedra()-1</tt> inclusive.
+         * be between 0 and <tt>getSourceSimplices()-1</tt> inclusive.
          * @return the index of the destination tetrahedron
          * that the source tetrahedron maps to.
          */
@@ -157,12 +161,15 @@ class REGINA_API NIsomorphism : public ShareableObject {
          * face <tt>facePerm(sourceTet)[i]</tt> of tetrahedron
          * <tt>tetImage(sourceTet)</tt>.
          *
+         * This is a convenience routine specific to three dimensions, and is
+         * identical to the dimension-agnostic routine facetPerm().
+         *
          * \ifacespython Not present, though the read-only version of this
          * routine is.
          *
          * @param sourceTet the index of the source tetrahedron containing
          * the original four faces; this must be between 0 and
-         * <tt>getSourceTetrahedra()-1</tt> inclusive.
+         * <tt>getSourceSimplices()-1</tt> inclusive.
          * @return a read-write reference to the permutation applied to the
          * four faces of the source tetrahedron.
          */
@@ -174,37 +181,16 @@ class REGINA_API NIsomorphism : public ShareableObject {
          * face <tt>facePerm(sourceTet)[i]</tt> of tetrahedron
          * <tt>tetImage(sourceTet)</tt>.
          *
+         * This is a convenience routine specific to three dimensions, and is
+         * identical to the dimension-agnostic routine facetPerm().
+         *
          * @param sourceTet the index of the source tetrahedron containing
          * the original four faces; this must be between 0 and
-         * <tt>getSourceTetrahedra()-1</tt> inclusive.
+         * <tt>getSourceSimplices()-1</tt> inclusive.
          * @return the permutation applied to the four faces of the
          * source tetrahedron.
          */
         NPerm4 facePerm(unsigned sourceTet) const;
-        /**
-         * Determines the image of the given source tetrahedron face
-         * under this isomorphism.  Note that a value only is returned; this
-         * routine cannot be used to alter the isomorphism.
-         *
-         * @param source the given source tetrahedron face; this must
-         * be one of the four faces of one of the getSourceTetrahedra()
-         * tetrahedra in the source triangulation.
-         * @return the image of the source tetrahedron face under this
-         * isomorphism.
-         */
-        NTetFace operator [] (const NTetFace& source) const;
-
-        /**
-         * Determines whether or not this is an identity isomorphism.
-         *
-         * In an identity isomorphism, each tetrahedron image is itself,
-         * and within each tetrahedron the face/vertex permutation is
-         * the identity on (0,1,2,3).
-         *
-         * @return \c true if this is an identity isomorphism, or
-         * \c false otherwise.
-         */
-        bool isIdentity() const;
 
         /**
          * Applies this isomorphism to the given triangulation and
@@ -228,14 +214,14 @@ class REGINA_API NIsomorphism : public ShareableObject {
          * met.
          *
          * \pre The number of tetrahedra in the given triangulation is
-         * precisely the number returned by getSourceTetrahedra() for
+         * precisely the number returned by getSourceSimplices() for
          * this isomorphism.
          * \pre This is a valid isomorphism (i.e., it has been properly
          * initialised, so that all tetrahedron images are non-negative
          * and distinct, and all face permutations are real permutations
          * of (0,1,2,3).
          * \pre Each tetrahedron image for this isomorphism lies
-         * between 0 and <tt>getSourceTetrahedra()-1</tt> inclusive
+         * between 0 and <tt>getSourceSimplices()-1</tt> inclusive
          * (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
@@ -264,14 +250,14 @@ class REGINA_API NIsomorphism : public ShareableObject {
          * preconditions are met.
          *
          * \pre The number of tetrahedra in the given triangulation is
-         * precisely the number returned by getSourceTetrahedra() for
+         * precisely the number returned by getSourceSimplices() for
          * this isomorphism.
          * \pre This is a valid isomorphism (i.e., it has been properly
          * initialised, so that all tetrahedron images are non-negative
          * and distinct, and all face permutations are real permutations
          * of (0,1,2,3).
          * \pre Each tetrahedron image for this isomorphism lies
-         * between 0 and <tt>getSourceTetrahedra()-1</tt> inclusive
+         * between 0 and <tt>getSourceSimplices()-1</tt> inclusive
          * (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
@@ -280,9 +266,6 @@ class REGINA_API NIsomorphism : public ShareableObject {
          */
         void applyInPlace(NTriangulation* tri) const;
 
-        void writeTextShort(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
-
         /**
          * Returns a random isomorphism for the given number of
          * tetrahedra.  This isomorphism will reorder tetrahedra
@@ -290,7 +273,7 @@ class REGINA_API NIsomorphism : public ShareableObject {
          * each tetrahedron a random permutation of its four vertices
          * will be selected.
          *
-         * The isomorphism returned is newly constructed, and must be
+         * The isomorphism returned will be newly constructed, and must be
          * destroyed by the caller of this routine.
          *
          * Note that both the STL random number generator and the
@@ -342,38 +325,34 @@ class REGINA_API NIsomorphismDirect : public NIsomorphism {
 // Inline functions for NIsomorphism
 
 inline NIsomorphism::NIsomorphism(unsigned sourceTetrahedra) :
-        nTetrahedra(sourceTetrahedra),
-        mTetImage(sourceTetrahedra > 0 ?
-            new int[sourceTetrahedra] : 0),
-        mFacePerm(sourceTetrahedra > 0 ?
-            new NPerm4[sourceTetrahedra] : 0) {
+        NGeneralIsomorphism<3>(sourceTetrahedra) {
 }
-inline NIsomorphism::~NIsomorphism() {
-    delete[] mTetImage;
-    delete[] mFacePerm;
+
+inline NIsomorphism::NIsomorphism(const NIsomorphism& cloneMe) :
+        NGeneralIsomorphism<3>(cloneMe) {
 }
 
 inline unsigned NIsomorphism::getSourceTetrahedra() const {
-    return nTetrahedra;
+    return nSimplices_;
 }
 
 inline int& NIsomorphism::tetImage(unsigned sourceTet) {
-    return mTetImage[sourceTet];
+    return simpImage_[sourceTet];
 }
+
 inline int NIsomorphism::tetImage(unsigned sourceTet) const {
-    return mTetImage[sourceTet];
+    return simpImage_[sourceTet];
 }
 
 inline NPerm4& NIsomorphism::facePerm(unsigned sourceTet) {
-    return mFacePerm[sourceTet];
+    return facetPerm_[sourceTet];
 }
 inline NPerm4 NIsomorphism::facePerm(unsigned sourceTet) const {
-    return mFacePerm[sourceTet];
+    return facetPerm_[sourceTet];
 }
 
-inline NTetFace NIsomorphism::operator [] (const NTetFace& source) const {
-    return NTetFace(mTetImage[source.simp],
-        mFacePerm[source.simp][source.facet]);
+inline NIsomorphism* NIsomorphism::random(unsigned nTetrahedra) {
+    return randomInternal<NIsomorphism>(nTetrahedra);
 }
 
 // Inline functions for NIsomorphismDirect

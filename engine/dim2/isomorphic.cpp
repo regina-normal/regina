@@ -172,7 +172,7 @@ unsigned long Dim2Triangulation::findIsomorphisms(
 
     Dim2Isomorphism iso(nFaces);
     for (i = 0; i < nFaces; i++)
-        iso.faceImage(i) = -1;
+        iso.simpImage(i) = -1;
 
     // Which source component does each destination face correspond to?
     long* whichComp = new long[nDestFaces];
@@ -226,10 +226,10 @@ unsigned long Dim2Triangulation::findIsomorphisms(
             comp--;
 
             for (i = 0; i < nFaces; i++)
-                if (iso.faceImage(i) >= 0 &&
-                        whichComp[iso.faceImage(i)] == comp) {
-                    whichComp[iso.faceImage(i)] = -1;
-                    iso.faceImage(i) = -1;
+                if (iso.simpImage(i) >= 0 &&
+                        whichComp[iso.simpImage(i)] == comp) {
+                    whichComp[iso.simpImage(i)] = -1;
+                    iso.simpImage(i) = -1;
                 }
             startPerm[comp]++;
 
@@ -277,10 +277,10 @@ unsigned long Dim2Triangulation::findIsomorphisms(
             comp--;
             if (comp >= 0) {
                 for (i = 0; i < nFaces; i++)
-                    if (iso.faceImage(i) >= 0 &&
-                            whichComp[iso.faceImage(i)] == comp) {
-                        whichComp[iso.faceImage(i)] = -1;
-                        iso.faceImage(i) = -1;
+                    if (iso.simpImage(i) >= 0 &&
+                            whichComp[iso.simpImage(i)] == comp) {
+                        whichComp[iso.simpImage(i)] = -1;
+                        iso.simpImage(i) = -1;
                     }
                 startPerm[comp]++;
             }
@@ -296,8 +296,8 @@ unsigned long Dim2Triangulation::findIsomorphisms(
         myFaceIndex = faceIndex(components_[comp]->getFace(0));
 
         whichComp[startFace[comp]] = comp;
-        iso.faceImage(myFaceIndex) = startFace[comp];
-        iso.edgePerm(myFaceIndex) = NPerm3::S3[startPerm[comp]];
+        iso.simpImage(myFaceIndex) = startFace[comp];
+        iso.facetPerm(myFaceIndex) = NPerm3::S3[startPerm[comp]];
         toProcess.push(myFaceIndex);
 
         broken = false;
@@ -305,8 +305,8 @@ unsigned long Dim2Triangulation::findIsomorphisms(
             myFaceIndex = toProcess.front();
             toProcess.pop();
             face = faces_[myFaceIndex];
-            facePerm = iso.edgePerm(myFaceIndex);
-            destFaceIndex = iso.faceImage(myFaceIndex);
+            facePerm = iso.facetPerm(myFaceIndex);
+            destFaceIndex = iso.simpImage(myFaceIndex);
             destFace = other.faces_[destFaceIndex];
 
             // If we are after a complete isomorphism, we might as well
@@ -335,12 +335,12 @@ unsigned long Dim2Triangulation::findIsomorphisms(
                         facePerm *
                         face->adjacentGluing(edge).inverse();
 
-                    if (iso.faceImage(adjIndex) >= 0) {
+                    if (iso.simpImage(adjIndex) >= 0) {
                         // We've already decided upon an image for this
                         // source face.  Does it match?
                         if (static_cast<long>(destAdjIndex) !=
-                                iso.faceImage(adjIndex) ||
-                                adjPerm != iso.edgePerm(adjIndex)) {
+                                iso.simpImage(adjIndex) ||
+                                adjPerm != iso.facetPerm(adjIndex)) {
                             broken = true;
                             break;
                         }
@@ -354,8 +354,8 @@ unsigned long Dim2Triangulation::findIsomorphisms(
                         // We haven't seen either the source or the
                         // destination face.
                         whichComp[destAdjIndex] = comp;
-                        iso.faceImage(adjIndex) = destAdjIndex;
-                        iso.edgePerm(adjIndex) = adjPerm;
+                        iso.simpImage(adjIndex) = destAdjIndex;
+                        iso.facetPerm(adjIndex) = adjPerm;
                         toProcess.push(adjIndex);
                     }
                 } else if (completeIsomorphism) {
@@ -384,10 +384,10 @@ unsigned long Dim2Triangulation::findIsomorphisms(
                 toProcess.pop();
 
             for (i = 0; i < nFaces; i++)
-                if (iso.faceImage(i) >= 0 &&
-                        whichComp[iso.faceImage(i)] == comp) {
-                    whichComp[iso.faceImage(i)] = -1;
-                    iso.faceImage(i) = -1;
+                if (iso.simpImage(i) >= 0 &&
+                        whichComp[iso.simpImage(i)] == comp) {
+                    whichComp[iso.simpImage(i)] = -1;
+                    iso.simpImage(i) = -1;
                 }
 
             startPerm[comp]++;

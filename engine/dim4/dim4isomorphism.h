@@ -39,6 +39,7 @@
 #include "shareableobject.h"
 #include "maths/nperm5.h"
 #include "triangulation/nfacetspec.h"
+#include "triangulation/ngeneralisomorphism.h"
 
 namespace regina {
 
@@ -53,21 +54,29 @@ class Dim4Triangulation;
  * Represents a combinatorial isomorphism from one 4-manifold triangulation
  * into another.
  *
- * A combinatorial isomorphism from triangulation T to triangulation U
- * is a one-to-one map f from the individual pentachoron facets of T to
- * the individual pentachoron facets of U for which the following
- * conditions hold:
+ * In essence, a combinatorial isomorphism from triangulation T to
+ * triangulation U is a one-to-one map from the pentachora of T to the
+ * pentachora of U that allows relabelling of both the pentachora and
+ * their facets (or equivalently, their vertices), and that preserves
+ * gluings across adjacent pentachora.
  *
- *   - if facets x and y belong to the same pentachoron of T then
- *     facets f(x) and f(y) belong to the same pentachoron of U;
- *   - if facets x and y are identified in T then facets f(x) and f(y)
- *     are identified in U.
+ * More precisely:  An isomorphism consists of (i) a one-to-one map f
+ * from the pentachora of T to the pentachora of U, and (ii) for each
+ * pentachoron S of T, a permutation f_S of the facets (0,1,2,3,4) of S,
+ * for which the following condition holds:
+ *
+ *   - If facet k of pentachoron S and facet k' of pentachoron S'
+ *     are identified in T, then facet f_S(k) of f(S) and facet f_S'(k')
+ *     of f(S') are identified in U.  Moreover, their gluing is consistent
+ *     with the facet/vertex permutations; that is, there is a commutative
+ *     square involving the gluing maps in T and U and the permutations
+ *     f_S and f_S'.
  *
  * Isomorphisms can be <i>boundary complete</i> or
  * <i>boundary incomplete</i>.  A boundary complete isomorphism
  * satisfies the additional condition:
  *
- *   - if facet x is a boundary facet of T then facet f(x) is a boundary
+ *   - If facet x is a boundary facet of T then facet f(x) is a boundary
  *     facet of U.
  *
  * A boundary complete isomorphism thus indicates that a copy of
@@ -79,17 +88,7 @@ class Dim4Triangulation;
  * Note that in all cases triangulation U may contain more pentachora
  * than triangulation T.
  */
-class REGINA_API Dim4Isomorphism : public ShareableObject {
-    protected:
-        unsigned nPentachora_;
-            /**< The number of pentachora in the source triangulation. */
-        int* pentImage_;
-            /**< The pentachoron of the destination triangulation that
-                 each pentachoron of the source triangulation maps to. */
-        NPerm5* facetPerm_;
-            /**< The permutation applied to the five facets of each
-                 source pentachoron. */
-
+class REGINA_API Dim4Isomorphism : public NGeneralIsomorphism<4> {
     public:
         /**
          * Creates a new isomorphism with no initialisation.
@@ -107,16 +106,15 @@ class REGINA_API Dim4Isomorphism : public ShareableObject {
          * isomorphism.
          */
         Dim4Isomorphism(const Dim4Isomorphism& cloneMe);
-        /**
-         * Destroys this isomorphism.
-         */
-        ~Dim4Isomorphism();
 
         /**
          * Returns the number of pentachora in the source triangulation
          * associated with this isomorphism.  Note that this is always
          * less than or equal to the number of pentachora in the
          * destination triangulation.
+         *
+         * This is a convenience routine specific to four dimensions, and is
+         * identical to the dimension-agnostic routine getSourceSimplices().
          *
          * @return the number of pentachora in the source triangulation.
          */
@@ -126,81 +124,32 @@ class REGINA_API Dim4Isomorphism : public ShareableObject {
          * Determines the image of the given source pentachoron under
          * this isomorphism.
          *
-         * \ifacespython Not present, though the read-only version of this
-         * routine is.
+         * This is a convenience routine specific to four dimensions, and is
+         * identical to the dimension-agnostic routine simpImage().
+         *
+         * \ifacespython Not present, though the read-only version of
+         * this routine is.
          *
          * @param sourcePent the index of the source pentachoron; this must
-         * be between 0 and <tt>getSourcePentachora()-1</tt> inclusive.
+         * be between 0 and <tt>getSourceSimplices()-1</tt> inclusive.
          * @return a reference to the index of the destination pentachoron
          * that the source pentachoron maps to.
          */
         int& pentImage(unsigned sourcePent);
+
         /**
          * Determines the image of the given source pentachoron under
          * this isomorphism.
          *
+         * This is a convenience routine specific to four dimensions, and is
+         * identical to the dimension-agnostic routine simpImage().
+         *
          * @param sourcePent the index of the source pentachoron; this must
-         * be between 0 and <tt>getSourcePentachora()-1</tt> inclusive.
+         * be between 0 and <tt>getSourceSimplices()-1</tt> inclusive.
          * @return the index of the destination pentachoron
          * that the source pentachoron maps to.
          */
         int pentImage(unsigned sourcePent) const;
-        /**
-         * Returns a read-write reference to the permutation that is
-         * applied to the five facets of the given source pentachoron
-         * under this isomorphism.
-         * Facet \a i of source pentachoron \a sourcePent will be mapped to
-         * facet <tt>facetPerm(sourcePent)[i]</tt> of pentachoron
-         * <tt>pentImage(sourcePent)</tt>.
-         *
-         * \ifacespython Not present, though the read-only version of this
-         * routine is.
-         *
-         * @param sourcePent the index of the source pentachoron containing
-         * the original five facets; this must be between 0 and
-         * <tt>getSourcePentachora()-1</tt> inclusive.
-         * @return a read-write reference to the permutation applied to the
-         * five facets of the source pentachoron.
-         */
-        NPerm5& facetPerm(unsigned sourcePent);
-        /**
-         * Determines the permutation that is applied to the five facets
-         * of the given source pentachoron under this isomorphism.
-         * Facet \a i of source pentachoron \a sourcePent will be mapped to
-         * face <tt>facetPerm(sourcePent)[i]</tt> of pentachoron
-         * <tt>pentImage(sourcePent)</tt>.
-         *
-         * @param sourcePent the index of the source pentachoron containing
-         * the original five facets; this must be between 0 and
-         * <tt>getSourcePentachora()-1</tt> inclusive.
-         * @return the permutation applied to the five facets of the
-         * source pentachoron.
-         */
-        NPerm5 facetPerm(unsigned sourcePent) const;
-        /**
-         * Determines the image of the given source pentachoron facet
-         * under this isomorphism.  Note that a value only is returned; this
-         * routine cannot be used to alter the isomorphism.
-         *
-         * @param source the given source pentachoron facet; this must
-         * be one of the five facets of one of the getSourcePentachora()
-         * pentachora in the source triangulation.
-         * @return the image of the source pentachoron facet under this
-         * isomorphism.
-         */
-        Dim4PentFacet operator [] (const Dim4PentFacet& source) const;
-
-        /**
-         * Determines whether or not this is an identity isomorphism.
-         *
-         * In an identity isomorphism, each pentachoron image is itself,
-         * and within each pentachoron the facet/vertex permutation is
-         * the identity on (0,1,2,3,4).
-         *
-         * @return \c true if this is an identity isomorphism, or
-         * \c false otherwise.
-         */
-        bool isIdentity() const;
 
         /**
          * Applies this isomorphism to the given triangulation and
@@ -224,14 +173,14 @@ class REGINA_API Dim4Isomorphism : public ShareableObject {
          * met.
          *
          * \pre The number of pentachora in the given triangulation is
-         * precisely the number returned by getSourcePentachora() for
+         * precisely the number returned by getSourceSimplices() for
          * this isomorphism.
          * \pre This is a valid isomorphism (i.e., it has been properly
          * initialised, so that all pentachoron images are non-negative
          * and distinct, and all facet permutations are real permutations
          * of (0,1,2,3,4).
          * \pre Each pentachoron image for this isomorphism lies
-         * between 0 and <tt>getSourcePentachora()-1</tt> inclusive
+         * between 0 and <tt>getSourceSimplices()-1</tt> inclusive
          * (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
@@ -260,14 +209,14 @@ class REGINA_API Dim4Isomorphism : public ShareableObject {
          * preconditions are met.
          *
          * \pre The number of pentachora in the given triangulation is
-         * precisely the number returned by getSourcePentachora() for
+         * precisely the number returned by getSourceSimplices() for
          * this isomorphism.
          * \pre This is a valid isomorphism (i.e., it has been properly
          * initialised, so that all pentachoron images are non-negative
          * and distinct, and all facet permutations are real permutations
          * of (0,1,2,3,4).
          * \pre Each pentachoron image for this isomorphism lies
-         * between 0 and <tt>getSourcePentachora()-1</tt> inclusive
+         * between 0 and <tt>getSourceSimplices()-1</tt> inclusive
          * (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
@@ -276,9 +225,6 @@ class REGINA_API Dim4Isomorphism : public ShareableObject {
          */
         void applyInPlace(Dim4Triangulation* tri) const;
 
-        void writeTextShort(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
-
         /**
          * Returns a random isomorphism for the given number of
          * pentachora.  This isomorphism will reorder pentachora
@@ -286,7 +232,7 @@ class REGINA_API Dim4Isomorphism : public ShareableObject {
          * each pentachoron a random permutation of its five vertices
          * will be selected.
          *
-         * The isomorphism returned is newly constructed, and must be
+         * The isomorphism returned will be newly constructed, and must be
          * destroyed by the caller of this routine.
          *
          * Note that both the STL random number generator and the
@@ -306,36 +252,27 @@ class REGINA_API Dim4Isomorphism : public ShareableObject {
 // Inline functions for Dim4Isomorphism
 
 inline Dim4Isomorphism::Dim4Isomorphism(unsigned sourcePentachora) :
-        nPentachora_(sourcePentachora),
-        pentImage_(sourcePentachora > 0 ? new int[sourcePentachora] : 0),
-        facetPerm_(sourcePentachora > 0 ? new NPerm5[sourcePentachora] : 0) {
+        NGeneralIsomorphism<4>(sourcePentachora) {
 }
-inline Dim4Isomorphism::~Dim4Isomorphism() {
-    // Always safe to delete null.
-    delete[] pentImage_;
-    delete[] facetPerm_;
+
+inline Dim4Isomorphism::Dim4Isomorphism(const Dim4Isomorphism& cloneMe) :
+        NGeneralIsomorphism<4>(cloneMe) {
 }
 
 inline unsigned Dim4Isomorphism::getSourcePentachora() const {
-    return nPentachora_;
+    return nSimplices_;
 }
 
 inline int& Dim4Isomorphism::pentImage(unsigned sourcePent) {
-    return pentImage_[sourcePent];
+    return simpImage_[sourcePent];
 }
+
 inline int Dim4Isomorphism::pentImage(unsigned sourcePent) const {
-    return pentImage_[sourcePent];
+    return simpImage_[sourcePent];
 }
-inline NPerm5& Dim4Isomorphism::facetPerm(unsigned sourcePent) {
-    return facetPerm_[sourcePent];
-}
-inline NPerm5 Dim4Isomorphism::facetPerm(unsigned sourcePent) const {
-    return facetPerm_[sourcePent];
-}
-inline Dim4PentFacet Dim4Isomorphism::operator [] (
-        const Dim4PentFacet& source) const {
-    return Dim4PentFacet(pentImage_[source.simp],
-        facetPerm_[source.simp][source.facet]);
+
+inline Dim4Isomorphism* Dim4Isomorphism::random(unsigned nPentachora) {
+    return randomInternal<Dim4Isomorphism>(nPentachora);
 }
 
 } // namespace regina

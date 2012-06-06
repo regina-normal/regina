@@ -214,7 +214,7 @@ unsigned long Dim4Triangulation::findIsomorphisms(
 
     Dim4Isomorphism iso(nPentachora);
     for (i = 0; i < nPentachora; i++)
-        iso.pentImage(i) = -1;
+        iso.simpImage(i) = -1;
 
     // Which source component does each destination pentachoron correspond to?
     long* whichComp = new long[nDestPentachora];
@@ -268,10 +268,10 @@ unsigned long Dim4Triangulation::findIsomorphisms(
             comp--;
 
             for (i = 0; i < nPentachora; i++)
-                if (iso.pentImage(i) >= 0 &&
-                        whichComp[iso.pentImage(i)] == comp) {
-                    whichComp[iso.pentImage(i)] = -1;
-                    iso.pentImage(i) = -1;
+                if (iso.simpImage(i) >= 0 &&
+                        whichComp[iso.simpImage(i)] == comp) {
+                    whichComp[iso.simpImage(i)] = -1;
+                    iso.simpImage(i) = -1;
                 }
             startPerm[comp]++;
 
@@ -319,10 +319,10 @@ unsigned long Dim4Triangulation::findIsomorphisms(
             comp--;
             if (comp >= 0) {
                 for (i = 0; i < nPentachora; i++)
-                    if (iso.pentImage(i) >= 0 &&
-                            whichComp[iso.pentImage(i)] == comp) {
-                        whichComp[iso.pentImage(i)] = -1;
-                        iso.pentImage(i) = -1;
+                    if (iso.simpImage(i) >= 0 &&
+                            whichComp[iso.simpImage(i)] == comp) {
+                        whichComp[iso.simpImage(i)] = -1;
+                        iso.simpImage(i) = -1;
                     }
                 startPerm[comp]++;
             }
@@ -338,7 +338,7 @@ unsigned long Dim4Triangulation::findIsomorphisms(
         pentIndex = pentachoronIndex(components_[comp]->getPentachoron(0));
 
         whichComp[startPent[comp]] = comp;
-        iso.pentImage(pentIndex) = startPent[comp];
+        iso.simpImage(pentIndex) = startPent[comp];
         iso.facetPerm(pentIndex) = NPerm5::S5[startPerm[comp]];
         toProcess.push(pentIndex);
 
@@ -348,7 +348,7 @@ unsigned long Dim4Triangulation::findIsomorphisms(
             toProcess.pop();
             pent = pentachora_[pentIndex];
             pentPerm = iso.facetPerm(pentIndex);
-            destPentIndex = iso.pentImage(pentIndex);
+            destPentIndex = iso.simpImage(pentIndex);
             destPent = other.pentachora_[destPentIndex];
 
             // If we are after a complete isomorphism, we might as well
@@ -377,11 +377,11 @@ unsigned long Dim4Triangulation::findIsomorphisms(
                         pentPerm *
                         pent->adjacentGluing(facet).inverse();
 
-                    if (iso.pentImage(adjIndex) >= 0) {
+                    if (iso.simpImage(adjIndex) >= 0) {
                         // We've already decided upon an image for this
                         // source pentachoron.  Does it match?
                         if (static_cast<long>(destAdjIndex) !=
-                                iso.pentImage(adjIndex) ||
+                                iso.simpImage(adjIndex) ||
                                 adjPerm != iso.facetPerm(adjIndex)) {
                             broken = true;
                             break;
@@ -396,7 +396,7 @@ unsigned long Dim4Triangulation::findIsomorphisms(
                         // We haven't seen either the source or the
                         // destination pentachoron.
                         whichComp[destAdjIndex] = comp;
-                        iso.pentImage(adjIndex) = destAdjIndex;
+                        iso.simpImage(adjIndex) = destAdjIndex;
                         iso.facetPerm(adjIndex) = adjPerm;
                         toProcess.push(adjIndex);
                     }
@@ -426,10 +426,10 @@ unsigned long Dim4Triangulation::findIsomorphisms(
                 toProcess.pop();
 
             for (i = 0; i < nPentachora; i++)
-                if (iso.pentImage(i) >= 0 &&
-                        whichComp[iso.pentImage(i)] == comp) {
-                    whichComp[iso.pentImage(i)] = -1;
-                    iso.pentImage(i) = -1;
+                if (iso.simpImage(i) >= 0 &&
+                        whichComp[iso.simpImage(i)] == comp) {
+                    whichComp[iso.simpImage(i)] = -1;
+                    iso.simpImage(i) = -1;
                 }
 
             startPerm[comp]++;

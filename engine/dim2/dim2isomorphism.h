@@ -37,8 +37,9 @@
 
 #include "regina-core.h"
 #include "shareableobject.h"
-#include "triangulation/nfacetspec.h"
 #include "maths/nperm3.h"
+#include "triangulation/nfacetspec.h"
+#include "triangulation/ngeneralisomorphism.h"
 
 namespace regina {
 
@@ -50,24 +51,32 @@ class Dim2Triangulation;
  */
 
 /**
- * Represents a combinatorial isomorphism from one 4-manifold triangulation
+ * Represents a combinatorial isomorphism from one 2-manifold triangulation
  * into another.
  *
- * A combinatorial isomorphism from triangulation T to triangulation U
- * is a one-to-one map f from the individual face edges of T to
- * the individual face edges of U for which the following
- * conditions hold:
+ * In essence, a combinatorial isomorphism from triangulation T to
+ * triangulation U is a one-to-one map from the triangles of T to the
+ * triangles of U that allows relabelling of both the triangles and
+ * their edges (or equivalently, their vertices), and that preserves
+ * gluings across adjacent triangles.
  *
- *   - if edges x and y belong to the same face of T then
- *     edges f(x) and f(y) belong to the same face of U;
- *   - if edges x and y are identified in T then edges f(x) and f(y)
- *     are identified in U.
+ * More precisely:  An isomorphism consists of (i) a one-to-one map f
+ * from the triangles of T to the triangles of U, and (ii) for each
+ * triangle S of T, a permutation f_S of the edges (0,1,2) of S,
+ * for which the following condition holds:
+ *
+ *   - If edge k of triangle S and edge k' of triangle S'
+ *     are identified in T, then edge f_S(k) of f(S) and edge f_S'(k')
+ *     of f(S') are identified in U.  Moreover, their gluing is consistent
+ *     with the edge/vertex permutations; that is, there is a commutative
+ *     square involving the gluing maps in T and U and the permutations
+ *     f_S and f_S'.
  *
  * Isomorphisms can be <i>boundary complete</i> or
  * <i>boundary incomplete</i>.  A boundary complete isomorphism
  * satisfies the additional condition:
  *
- *   - if edge x is a boundary edge of T then edge f(x) is a boundary
+ *   - If edge x is a boundary edge of T then edge f(x) is a boundary
  *     edge of U.
  *
  * A boundary complete isomorphism thus indicates that a copy of
@@ -76,30 +85,20 @@ class Dim2Triangulation;
  * copy of triangulation T as a subcomplex of some possibly larger component
  * (or components) of U.
  *
- * Note that in all cases triangulation U may contain more faces
+ * Note that in all cases triangulation U may contain more triangles
  * than triangulation T.
  */
-class REGINA_API Dim2Isomorphism : public ShareableObject {
-    protected:
-        unsigned nFaces_;
-            /**< The number of faces in the source triangulation. */
-        int* faceImage_;
-            /**< The face of the destination triangulation that
-                 each face of the source triangulation maps to. */
-        NPerm3* edgePerm_;
-            /**< The permutation applied to the three edges of each
-                 source face. */
-
+class REGINA_API Dim2Isomorphism : public NGeneralIsomorphism<2> {
     public:
         /**
          * Creates a new isomorphism with no initialisation.
          *
          * \ifacespython Not present.
          *
-         * @param sourceFaces the number of faces in the source
+         * @param sourceTriangles the number of triangles in the source
          * triangulation associated with this isomorphism; this may be zero.
          */
-        Dim2Isomorphism(unsigned sourceFaces);
+        Dim2Isomorphism(unsigned sourceTriangles);
         /**
          * Creates a new isomorphism identical to the given isomorphism.
          *
@@ -107,100 +106,90 @@ class REGINA_API Dim2Isomorphism : public ShareableObject {
          * isomorphism.
          */
         Dim2Isomorphism(const Dim2Isomorphism& cloneMe);
-        /**
-         * Destroys this isomorphism.
-         */
-        ~Dim2Isomorphism();
 
         /**
-         * Returns the number of faces in the source triangulation
+         * Returns the number of triangles in the source triangulation
          * associated with this isomorphism.  Note that this is always
-         * less than or equal to the number of faces in the
+         * less than or equal to the number of triangles in the
          * destination triangulation.
          *
-         * @return the number of faces in the source triangulation.
+         * This is a convenience routine specific to two dimensions, and is
+         * identical to the dimension-agnostic routine getSourceSimplices().
+         *
+         * @return the number of triangles in the source triangulation.
          */
-        unsigned getSourceFaces() const;
+        unsigned getSourceTriangles() const;
 
         /**
-         * Determines the image of the given source face under
+         * Determines the image of the given source triangle under
          * this isomorphism.
+         *
+         * This is a convenience routine specific to two dimensions, and is
+         * identical to the dimension-agnostic routine simpImage().
          *
          * \ifacespython Not present, though the read-only version of this
          * routine is.
          *
-         * @param sourceFace the index of the source face; this must
-         * be between 0 and <tt>getSourceFaces()-1</tt> inclusive.
-         * @return a reference to the index of the destination face
-         * that the source face maps to.
+         * @param sourceTriangle the index of the source triangle; this must
+         * be between 0 and <tt>getSourceSimplices()-1</tt> inclusive.
+         * @return a reference to the index of the destination triangle
+         * that the source triangle maps to.
          */
-        int& faceImage(unsigned sourceFace);
+        int& triImage(unsigned sourceTriangle);
+
         /**
-         * Determines the image of the given source face under
+         * Determines the image of the given source triangle under
          * this isomorphism.
          *
-         * @param sourceFace the index of the source face; this must
-         * be between 0 and <tt>getSourceFaces()-1</tt> inclusive.
-         * @return the index of the destination face
-         * that the source face maps to.
+         * This is a convenience routine specific to two dimensions, and is
+         * identical to the dimension-agnostic routine simpImage().
+         *
+         * @param sourceTriangle the index of the source triangle; this must
+         * be between 0 and <tt>getSourceSimplices()-1</tt> inclusive.
+         * @return the index of the destination triangle
+         * that the source triangle maps to.
          */
-        int faceImage(unsigned sourceFace) const;
+        int triImage(unsigned sourceTriangle) const;
+
         /**
          * Returns a read-write reference to the permutation that is
-         * applied to the three edges of the given source face
+         * applied to the three edges of the given source triangle
          * under this isomorphism.
-         * Edge \a i of source face \a sourceFace will be mapped to
-         * edge <tt>edgePerm(sourceFace)[i]</tt> of face
-         * <tt>faceImage(sourceFace)</tt>.
+         * Edge \a i of source triangle \a sourceTriangle will be mapped to
+         * edge <tt>facetPerm(sourceTriangle)[i]</tt> of triangle
+         * <tt>simpImage(sourceTriangle)</tt>.
+         *
+         * This is a convenience routine specific to two dimensions, and is
+         * identical to the dimension-agnostic routine facetPerm().
          *
          * \ifacespython Not present, though the read-only version of this
          * routine is.
          *
-         * @param sourceFace the index of the source face containing
+         * @param sourceTriangle the index of the source triangle containing
          * the original three edges; this must be between 0 and
-         * <tt>getSourceFaces()-1</tt> inclusive.
+         * <tt>getSourceTriangles()-1</tt> inclusive.
          * @return a read-write reference to the permutation applied to the
-         * three edges of the source face.
+         * three edges of the source triangle.
          */
-        NPerm3& edgePerm(unsigned sourceFace);
-        /**
-         * Determines the permutation that is applied to the three edges
-         * of the given source face under this isomorphism.
-         * Edge \a i of source face \a sourceFace will be mapped to
-         * face <tt>edgePerm(sourceFace)[i]</tt> of face
-         * <tt>faceImage(sourceFace)</tt>.
-         *
-         * @param sourceFace the index of the source face containing
-         * the original three edges; this must be between 0 and
-         * <tt>getSourceFaces()-1</tt> inclusive.
-         * @return the permutation applied to the three edges of the
-         * source face.
-         */
-        NPerm3 edgePerm(unsigned sourceFace) const;
-        /**
-         * Determines the image of the given source face edge
-         * under this isomorphism.  Note that a value only is returned; this
-         * routine cannot be used to alter the isomorphism.
-         *
-         * @param source the given source face edge; this must
-         * be one of the three edges of one of the getSourceFaces()
-         * faces in the source triangulation.
-         * @return the image of the source face edge under this
-         * isomorphism.
-         */
-        NFacetSpec<2> operator [] (const NFacetSpec<2>& source) const;
+        NPerm3& edgePerm(unsigned sourceTriangle);
 
         /**
-         * Determines whether or not this is an identity isomorphism.
+         * Determines the permutation that is applied to the three edges
+         * of the given source triangle under this isomorphism.
+         * Edge \a i of source triangle \a sourceTriangle will be mapped to
+         * triangle <tt>facetPerm(sourceTriangle)[i]</tt> of triangle
+         * <tt>simpImage(sourceTriangle)</tt>.
          *
-         * In an identity isomorphism, each face image is itself,
-         * and within each face the edge/vertex permutation is
-         * the identity on (0,1,2).
+         * This is a convenience routine specific to two dimensions, and is
+         * identical to the dimension-agnostic routine facetPerm().
          *
-         * @return \c true if this is an identity isomorphism, or
-         * \c false otherwise.
+         * @param sourceTriangle the index of the source triangle containing
+         * the original three edges; this must be between 0 and
+         * <tt>getSourceTriangles()-1</tt> inclusive.
+         * @return the permutation applied to the three edges of the
+         * source triangle.
          */
-        bool isIdentity() const;
+        NPerm3 edgePerm(unsigned sourceTriangle) const;
 
         /**
          * Applies this isomorphism to the given triangulation and
@@ -211,7 +200,7 @@ class REGINA_API Dim2Isomorphism : public ShareableObject {
          * isomorphism represents a one-to-one, onto and boundary complete
          * isomorphism from T to S.  That is, T and S are combinatorially
          * identical triangulations, and this isomorphism describes the
-         * corresponding mapping between faces and face edges.
+         * corresponding mapping between triangles and triangle edges.
          *
          * The resulting triangulation S is newly created, and must be
          * destroyed by the caller of this routine.
@@ -223,15 +212,15 @@ class REGINA_API Dim2Isomorphism : public ShareableObject {
          * routine to verify that all of the following preconditions are
          * met.
          *
-         * \pre The number of faces in the given triangulation is
-         * precisely the number returned by getSourceFaces() for
+         * \pre The number of triangles in the given triangulation is
+         * precisely the number returned by getSourceTriangles() for
          * this isomorphism.
          * \pre This is a valid isomorphism (i.e., it has been properly
-         * initialised, so that all face images are non-negative
+         * initialised, so that all triangle images are non-negative
          * and distinct, and all edge permutations are real permutations
          * of (0,1,2).
-         * \pre Each face image for this isomorphism lies
-         * between 0 and <tt>getSourceFaces()-1</tt> inclusive
+         * \pre Each triangle image for this isomorphism lies
+         * between 0 and <tt>getSourceTriangles()-1</tt> inclusive
          * (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
@@ -247,7 +236,7 @@ class REGINA_API Dim2Isomorphism : public ShareableObject {
          * modifying the given triangulation directly.
          *
          * This is similar to apply(), except that instead of creating a
-         * new triangulation, the faces and vertices of the given
+         * new triangulation, the triangles and vertices of the given
          * triangulation are modified directly.
          *
          * See apply() for further details on how this operation is performed.
@@ -259,15 +248,15 @@ class REGINA_API Dim2Isomorphism : public ShareableObject {
          * caller of this routine to verify that all of the following
          * preconditions are met.
          *
-         * \pre The number of faces in the given triangulation is
-         * precisely the number returned by getSourceFaces() for
+         * \pre The number of triangles in the given triangulation is
+         * precisely the number returned by getSourceSimplices() for
          * this isomorphism.
          * \pre This is a valid isomorphism (i.e., it has been properly
-         * initialised, so that all face images are non-negative
+         * initialised, so that all triangle images are non-negative
          * and distinct, and all edge permutations are real permutations
          * of (0,1,2).
-         * \pre Each face image for this isomorphism lies
-         * between 0 and <tt>getSourceFaces()-1</tt> inclusive
+         * \pre Each triangle image for this isomorphism lies
+         * between 0 and <tt>getSourceSimplices()-1</tt> inclusive
          * (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
@@ -276,66 +265,61 @@ class REGINA_API Dim2Isomorphism : public ShareableObject {
          */
         void applyInPlace(Dim2Triangulation* tri) const;
 
-        void writeTextShort(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
-
         /**
          * Returns a random isomorphism for the given number of
-         * faces.  This isomorphism will reorder faces
-         * 0 to <tt>nFaces-1</tt> in a random fashion, and for
-         * each face a random permutation of its three vertices
+         * triangles.  This isomorphism will reorder triangles
+         * 0 to <tt>nTriangles-1</tt> in a random fashion, and for
+         * each triangle a random permutation of its three vertices
          * will be selected.
          *
-         * The isomorphism returned is newly constructed, and must be
+         * The isomorphism returned will be newly constructed, and must be
          * destroyed by the caller of this routine.
          *
          * Note that both the STL random number generator and the
          * standard C function rand() are used in this routine.  All
-         * possible isomorphisms for the given number of faces are
+         * possible isomorphisms for the given number of triangles are
          * equally likely.
          *
-         * @param nFaces the number of faces that the new
+         * @param nTriangles the number of triangles that the new
          * isomorphism should operate upon.
          * @return the newly constructed random isomorphism.
          */
-        static Dim2Isomorphism* random(unsigned nFaces);
+        static Dim2Isomorphism* random(unsigned nTriangles);
 };
 
 /*@}*/
 
 // Inline functions for Dim2Isomorphism
 
-inline Dim2Isomorphism::Dim2Isomorphism(unsigned sourceFaces) :
-        nFaces_(sourceFaces),
-        faceImage_(sourceFaces > 0 ? new int[sourceFaces] : 0),
-        edgePerm_(sourceFaces > 0 ? new NPerm3[sourceFaces] : 0) {
-}
-inline Dim2Isomorphism::~Dim2Isomorphism() {
-    // Always safe to delete null.
-    delete[] faceImage_;
-    delete[] edgePerm_;
+inline Dim2Isomorphism::Dim2Isomorphism(unsigned sourceTriangles) :
+        NGeneralIsomorphism<2>(sourceTriangles) {
 }
 
-inline unsigned Dim2Isomorphism::getSourceFaces() const {
-    return nFaces_;
+inline Dim2Isomorphism::Dim2Isomorphism(const Dim2Isomorphism& cloneMe) :
+        NGeneralIsomorphism<2>(cloneMe) {
 }
 
-inline int& Dim2Isomorphism::faceImage(unsigned sourceFace) {
-    return faceImage_[sourceFace];
+inline unsigned Dim2Isomorphism::getSourceTriangles() const {
+    return nSimplices_;
 }
-inline int Dim2Isomorphism::faceImage(unsigned sourceFace) const {
-    return faceImage_[sourceFace];
+
+inline int& Dim2Isomorphism::triImage(unsigned sourceTriangle) {
+    return simpImage_[sourceTriangle];
 }
-inline NPerm3& Dim2Isomorphism::edgePerm(unsigned sourceFace) {
-    return edgePerm_[sourceFace];
+
+inline int Dim2Isomorphism::triImage(unsigned sourceTriangle) const {
+    return simpImage_[sourceTriangle];
 }
-inline NPerm3 Dim2Isomorphism::edgePerm(unsigned sourceFace) const {
-    return edgePerm_[sourceFace];
+
+inline NPerm3& Dim2Isomorphism::edgePerm(unsigned sourceTriangle) {
+    return facetPerm_[sourceTriangle];
 }
-inline NFacetSpec<2> Dim2Isomorphism::operator [] (
-        const NFacetSpec<2>& source) const {
-    return NFacetSpec<2>(faceImage_[source.simp],
-        edgePerm_[source.simp][source.facet]);
+inline NPerm3 Dim2Isomorphism::edgePerm(unsigned sourceTriangle) const {
+    return facetPerm_[sourceTriangle];
+}
+
+inline Dim2Isomorphism* Dim2Isomorphism::random(unsigned nTriangles) {
+    return randomInternal<Dim2Isomorphism>(nTriangles);
 }
 
 } // namespace regina

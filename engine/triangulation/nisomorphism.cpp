@@ -28,64 +28,45 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include "triangulation/ngeneralisomorphism.tcc"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
 
-NIsomorphism::NIsomorphism(const NIsomorphism& cloneMe) :
-        nTetrahedra(cloneMe.nTetrahedra),
-        mTetImage(cloneMe.nTetrahedra > 0 ?
-            new int[cloneMe.nTetrahedra] : 0),
-        mFacePerm(cloneMe.nTetrahedra > 0 ?
-            new NPerm4[cloneMe.nTetrahedra] : 0) {
-    std::copy(cloneMe.mTetImage, cloneMe.mTetImage + nTetrahedra, mTetImage);
-    std::copy(cloneMe.mFacePerm, cloneMe.mFacePerm + nTetrahedra, mFacePerm);
-}
-
-void NIsomorphism::writeTextShort(std::ostream& out) const {
-    out << "Isomorphism between triangulations";
-}
-
-void NIsomorphism::writeTextLong(std::ostream& out) const {
-    for (unsigned i = 0; i < nTetrahedra; i++)
-        out << i << " -> " << mTetImage[i] << " (" << mFacePerm[i] << ")\n";
-}
-
-bool NIsomorphism::isIdentity() const {
-    for (unsigned t = 0; t < nTetrahedra; t++) {
-        if (mTetImage[t] != static_cast<int>(t))
-            return false;
-        if (! mFacePerm[t].isIdentity())
-            return false;
-    }
-    return true;
-}
+// Instatiate all templates from the .tcc file.
+template void NGeneralIsomorphism<3>::writeTextShort(std::ostream&) const;
+template void NGeneralIsomorphism<3>::writeTextLong(std::ostream&) const;
+template bool NGeneralIsomorphism<3>::isIdentity() const;
+template NGeneralIsomorphism<3>::NGeneralIsomorphism(
+    const NGeneralIsomorphism<3>&);
+template NIsomorphism*
+    NGeneralIsomorphism<3>::randomInternal<NIsomorphism>(unsigned);
 
 NTriangulation* NIsomorphism::apply(const NTriangulation* original) const {
-    if (original->getNumberOfTetrahedra() != nTetrahedra)
+    if (original->getNumberOfTetrahedra() != nSimplices_)
         return 0;
 
-    if (nTetrahedra == 0)
+    if (nSimplices_ == 0)
         return new NTriangulation();
 
     NTriangulation* ans = new NTriangulation();
-    NTetrahedron** tet = new NTetrahedron*[nTetrahedra];
+    NTetrahedron** tet = new NTetrahedron*[nSimplices_];
     unsigned long t;
     int f;
 
     NPacket::ChangeEventSpan span(ans);
-    for (t = 0; t < nTetrahedra; t++)
+    for (t = 0; t < nSimplices_; t++)
         tet[t] = ans->newTetrahedron();
 
-    for (t = 0; t < nTetrahedra; t++)
-        tet[mTetImage[t]]->setDescription(
+    for (t = 0; t < nSimplices_; t++)
+        tet[simpImage_[t]]->setDescription(
             original->getTetrahedron(t)->getDescription());
 
     const NTetrahedron *myTet, *adjTet;
     unsigned long adjTetIndex;
     NPerm4 gluingPerm;
-    for (t = 0; t < nTetrahedra; t++) {
+    for (t = 0; t < nSimplices_; t++) {
         myTet = original->getTetrahedron(t);
         for (f = 0; f < 4; f++)
             if ((adjTet = myTet->adjacentTetrahedron(f))) {
@@ -96,10 +77,10 @@ NTriangulation* NIsomorphism::apply(const NTriangulation* original) const {
                 // Make the gluing from one side only.
                 if (adjTetIndex > t || (adjTetIndex == t &&
                         gluingPerm[f] > f))
-                    tet[mTetImage[t]]->joinTo(mFacePerm[t][f],
-                        tet[mTetImage[adjTetIndex]],
-                        mFacePerm[adjTetIndex] * gluingPerm *
-                            mFacePerm[t].inverse());
+                    tet[simpImage_[t]]->joinTo(facetPerm_[t][f],
+                        tet[simpImage_[adjTetIndex]],
+                        facetPerm_[adjTetIndex] * gluingPerm *
+                            facetPerm_[t].inverse());
             }
     }
 
@@ -107,29 +88,29 @@ NTriangulation* NIsomorphism::apply(const NTriangulation* original) const {
 }
 
 void NIsomorphism::applyInPlace(NTriangulation* tri) const {
-    if (tri->getNumberOfTetrahedra() != nTetrahedra)
+    if (tri->getNumberOfTetrahedra() != nSimplices_)
         return;
 
-    if (nTetrahedra == 0)
+    if (nSimplices_ == 0)
         return;
 
     NTriangulation staging;
-    NTetrahedron** tet = new NTetrahedron*[nTetrahedra];
+    NTetrahedron** tet = new NTetrahedron*[nSimplices_];
     unsigned long t;
     int f;
 
     NPacket::ChangeEventSpan span1(&staging);
-    for (t = 0; t < nTetrahedra; t++)
+    for (t = 0; t < nSimplices_; t++)
         tet[t] = staging.newTetrahedron();
 
-    for (t = 0; t < nTetrahedra; t++)
-        tet[mTetImage[t]]->setDescription(
+    for (t = 0; t < nSimplices_; t++)
+        tet[simpImage_[t]]->setDescription(
             tri->getTetrahedron(t)->getDescription());
 
     const NTetrahedron *myTet, *adjTet;
     unsigned long adjTetIndex;
     NPerm4 gluingPerm;
-    for (t = 0; t < nTetrahedra; t++) {
+    for (t = 0; t < nSimplices_; t++) {
         myTet = tri->getTetrahedron(t);
         for (f = 0; f < 4; f++)
             if ((adjTet = myTet->adjacentTetrahedron(f))) {
@@ -140,32 +121,16 @@ void NIsomorphism::applyInPlace(NTriangulation* tri) const {
                 // Make the gluing from one side only.
                 if (adjTetIndex > t || (adjTetIndex == t &&
                         gluingPerm[f] > f))
-                    tet[mTetImage[t]]->joinTo(mFacePerm[t][f],
-                        tet[mTetImage[adjTetIndex]],
-                        mFacePerm[adjTetIndex] * gluingPerm *
-                            mFacePerm[t].inverse());
+                    tet[simpImage_[t]]->joinTo(facetPerm_[t][f],
+                        tet[simpImage_[adjTetIndex]],
+                        facetPerm_[adjTetIndex] * gluingPerm *
+                            facetPerm_[t].inverse());
             }
     }
 
     NPacket::ChangeEventSpan span2(tri);
     tri->removeAllTetrahedra();
     tri->swapContents(staging);
-}
-
-NIsomorphism* NIsomorphism::random(unsigned nTetrahedra) {
-    NIsomorphism* ans = new NIsomorphism(nTetrahedra);
-
-    // Randomly choose the destination tetrahedra.
-    unsigned i;
-    for (i = 0; i < nTetrahedra; i++)
-        ans->mTetImage[i] = i;
-    std::random_shuffle(ans->mTetImage, ans->mTetImage + nTetrahedra);
-
-    // Randomly choose the individual permutations.
-    for (i = 0; i < nTetrahedra; i++)
-        ans->mFacePerm[i] = NPerm4::S4[rand() % 24];
-
-    return ans;
 }
 
 } // namespace regina
