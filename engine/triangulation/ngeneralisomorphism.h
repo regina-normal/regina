@@ -52,23 +52,29 @@ namespace regina {
  * A dimension-agnostic base class that represents a combinatorial
  * isomorphism from one \a dim-manifold triangulation into another.
  *
- * TODO: Fix the class notes.
+ * In essence, a combinatorial isomorphism from triangulation T to
+ * triangulation U is a one-to-one map from the simplices of T to the
+ * simplices of U that allows relabelling of both the simplices and
+ * their facets (or equivalently, their vertices), and that preserves
+ * gluings across adjacent simplices.
  *
- * A combinatorial isomorphism from triangulation T to triangulation U
- * is a one-to-one map f from the individual simplex facets of T to
- * the individual simplex facets of U for which the following
- * conditions hold:
+ * More precisely:  An isomorphism consists of (i) a one-to-one map f
+ * from the simplices of T to the simplices of U, and (ii) for each
+ * simplex S of T, a permutation f_S of the facets (0,...,\a dim) of S,
+ * for which the following condition holds:
  *
- *   - if facets x and y belong to the same simplex of T then
- *     facets f(x) and f(y) belong to the same simplex of U;
- *   - if facets x and y are identified in T then facets f(x) and f(y)
- *     are identified in U.
+ *   - If facet k of simplex S and facet k' of simplex S'
+ *     are identified in T, then facet f_S(k) of f(S) and facet f_S'(k')
+ *     of f(S') are identified in U.  Moreover, their gluing is consistent
+ *     with the facet/vertex permutations; that is, there is a commutative
+ *     square involving the gluing maps in T and U and the permutations
+ *     f_S and f_S'.
  *
  * Isomorphisms can be <i>boundary complete</i> or
  * <i>boundary incomplete</i>.  A boundary complete isomorphism
  * satisfies the additional condition:
  *
- *   - if facet x is a boundary facet of T then facet f(x) is a boundary
+ *   - If facet x is a boundary facet of T then facet f(x) is a boundary
  *     facet of U.
  *
  * A boundary complete isomorphism thus indicates that a copy of
@@ -105,8 +111,6 @@ class REGINA_API NGeneralIsomorphism : public ShareableObject {
         /**
          * Creates a new isomorphism with no initialisation.
          *
-         * \ifacespython Not present.
-         *
          * @param nSimplices the number of simplices in the source
          * triangulation associated with this isomorphism; this may be zero.
          */
@@ -137,8 +141,9 @@ class REGINA_API NGeneralIsomorphism : public ShareableObject {
          * Determines the image of the given source simplex under
          * this isomorphism.
          *
-         * \ifacespython Not present, though the read-only version of this
-         * routine is.
+         * \ifacespython This is not available for Python users, even in
+         * the dimension-specific subclasses.  However, the read-only
+         * version of this routine is.
          *
          * @param sourceSimp the index of the source simplex; this must
          * be between 0 and <tt>getSourceSimplices()-1</tt> inclusive.
@@ -164,8 +169,9 @@ class REGINA_API NGeneralIsomorphism : public ShareableObject {
          * facet <tt>facetPerm(sourceSimp)[i]</tt> of simplex
          * <tt>simpImage(sourceSimp)</tt>.
          *
-         * \ifacespython Not present, though the read-only version of this
-         * routine is.
+         * \ifacespython This is not available for Python users, even in
+         * the dimension-specific subclasses.  However, the read-only
+         * version of this routine is.
          *
          * @param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and
@@ -215,6 +221,31 @@ class REGINA_API NGeneralIsomorphism : public ShareableObject {
 
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
+
+    protected:
+        /**
+         * Returns a random isomorphism for the given number of
+         * simplices.  This isomorphism will reorder simplices
+         * 0 to <tt>nSimplices-1</tt> in a random fashion, and for
+         * each simplex a random permutation of its (\a dim + 1) vertices
+         * will be selected.
+         *
+         * The isomorphism will be newly constructed, and must be
+         * destroyed by the caller of this routine.  The new isomorphism
+         * will be of the class \a Subclass, which must be a subclass of
+         * NGeneralIsomorphism<dim>.
+         *
+         * Note that both the STL random number generator and the
+         * standard C function rand() are used in this routine.  All
+         * possible isomorphisms for the given number of simplices are
+         * equally likely.
+         *
+         * @param nSimplices the number of simplices that the new
+         * isomorphism should operate upon.
+         * @return the newly constructed random isomorphism.
+         */
+        template <class Subclass>
+        static Subclass* randomInternal(unsigned nSimplices);
 };
 
 /*@}*/

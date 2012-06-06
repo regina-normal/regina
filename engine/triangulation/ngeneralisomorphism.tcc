@@ -71,5 +71,23 @@ NGeneralIsomorphism<dim>::NGeneralIsomorphism(
         facetPerm_);
 }
 
+template <int dim>
+template <class Subclass>
+Subclass* NGeneralIsomorphism<dim>::randomInternal(unsigned nSimplices) {
+    Subclass* ans = new Subclass(nSimplices);
+
+    // Randomly choose the destination simplices.
+    unsigned i;
+    for (i = 0; i < nSimplices; i++)
+        ans->simpImage_[i] = i;
+    std::random_shuffle(ans->simpImage_, ans->simpImage_ + nSimplices);
+
+    // Randomly choose the individual permutations.
+    for (i = 0; i < nSimplices; i++)
+        ans->facetPerm_[i] = Perm::Sn[rand() % Perm::nPerms];
+
+    return ans;
+}
+
 } // namespace regina
 
