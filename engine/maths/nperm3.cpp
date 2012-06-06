@@ -35,6 +35,8 @@ const NPerm3 NPerm3::S3[6] = {
     NPerm3(0), NPerm3(1), NPerm3(2), NPerm3(3), NPerm3(4), NPerm3(5)
 };
 
+const NPerm3* NPerm3::Sn = NPerm3::S3;
+
 const int NPerm3::invS3[6] = {
     0, 1, 4, 3, 2, 5
 };

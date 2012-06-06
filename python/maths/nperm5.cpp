@@ -78,6 +78,7 @@ void addNPerm5() {
     ;
 
     s.attr("S5") = &NPerm5_S5_arr;
+    s.attr("Sn") = &NPerm5_S5_arr;
     s.attr("orderedS5") = &NPerm5_orderedS5_arr;
     s.attr("invS5") = &NPerm5_invS5_arr;
 }

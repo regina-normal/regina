@@ -77,6 +77,14 @@ class REGINA_API NPerm5 {
         static const NPerm5 S5[120];
 
         /**
+         * A dimension-agnostic alias for NPerm5::S5.  In general, for
+         * each \a K the class NPerm<i>K</i> will define an alias \a Sn
+         * that references the list of all permutations
+         * NPerm<i>K</i>::S<i>K</i>.
+         */
+        static const NPerm5* Sn;
+
+        /**
          * Contains all possible permutations of five elements in
          * lexicographical order.
          */
@@ -89,6 +97,15 @@ class REGINA_API NPerm5 {
          * the permutation <tt>S5[ invS5[i] ]</tt>.
          */
         static const unsigned invS5[120];
+
+        enum {
+            /**
+             * The total number of permutations on five elements.
+             *
+             * \ifacespython Not present.
+             */
+            nPerms = 120
+        };
 
     private:
         unsigned code;
