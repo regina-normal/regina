@@ -24,6 +24,9 @@ Version 4.94  [ (under development) ]
         Class NGeneralFacePairing:
             - New template base class that contains dimension-agnostic
               code for representing face/facet pairings.
+        Class NGeneralIsomorphism:
+            - New template base class that contains dimension-agnostic
+              code for representing isomorphisms between triangulations.
         Class NTriangulation:
             - Rewrote barycentricSubdivision(): the code is now clearer,
               but note that the precise labelling of the new tetrahedra has
