@@ -1179,9 +1179,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Triangulation with RP^2 cusps");
             verifyVertexSphere(twoProjPlaneCusps, 1,
                 "Triangulation with RP^2 cusps");
-            verifyVertexSphere(twoProjPlaneCusps, 2,
+            verifyVertexProjPlane(twoProjPlaneCusps, 2,
                 "Triangulation with RP^2 cusps");
-            verifyVertexProjPlane(twoProjPlaneCusps, 3,
+            verifyVertexSphere(twoProjPlaneCusps, 3,
                 "Triangulation with RP^2 cusps");
             verifyVertexSphere(twoProjPlaneCusps, 4,
                 "Triangulation with RP^2 cusps");
@@ -2058,7 +2058,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyBary(q32xz3, "S^3 / Q_32 x Z_3");
             verifyBary(q28, "S^3 / Q_28");
             // (too large) verifyBary(weberSeifert, "Weber-Seifert");
-            // (too large) verifyBary(lens100_1, "L(100,1)");
+            verifyBary(lens100_1, "L(100,1)");
             verifyBary(ball_large, "4-tetrahedron ball");
             verifyBary(ball_large_pillows, "4-tetrahedron pillow ball");
             verifyBary(ball_large_snapped, "3-tetrahedron snapped ball");

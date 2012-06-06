@@ -34,18 +34,8 @@
 
 namespace regina {
 
-namespace {
-    // The indices of the new tetrahedra
-    int tetIndex[4][4][4] = {
-        { {-1,-1,-1,-1}, {-1,-1,0,1}, {-1,2,-1,3}, {-1,4,5,-1} },
-        { {-1,-1,6,7}, {-1,-1,-1,-1}, {8,-1,-1,9}, {10,-1,11,-1} },
-        { {-1,12,-1,13}, {14,-1,-1,15}, {-1,-1,-1,-1}, {16,17,-1,-1} },
-        { {-1,18,19,-1}, {20,-1,21,-1}, {22,23,-1,-1}, {-1,-1,-1,-1} } };
-}
-
 void NTriangulation::barycentricSubdivision() {
-    // (Initially written by Dave Letscher on 11/2/00)
-
+    // Rewritten for Regina 4.94 to use a more sensible labelling scheme.
     unsigned long nOldTet = tetrahedra.size();
     if (nOldTet == 0)
         return;
@@ -55,55 +45,55 @@ void NTriangulation::barycentricSubdivision() {
 
     NTetrahedron** newTet = new NTetrahedron*[nOldTet * 24];
     NTetrahedron* oldTet;
-    NPerm4 p;
+
+    // A tetrahedron in the subdivision is uniquely defined by the
+    // permutation (face, edge, vtx, corner) of (0, 1, 2, 3).
+    // This is the tetrahedron that:
+    // - meets the boundary in the face opposite vertex "face";
+    // - meets that face in the edge opposite vertex "edge";
+    // - meets that edge in the vertex opposite vertex "vtx";
+    // - directly touches vertex "corner".
+
     unsigned long tet;
-    int face, edge, corner, other;
-    for (tet=0; tet<24*nOldTet; tet++)
+    for (tet = 0; tet < 24 * nOldTet; ++tet)
         newTet[tet] = staging.newTetrahedron();
 
     // Do all of the internal gluings
-    for (tet=0; tet<nOldTet; tet++) {
-        for (face=0; face<4; face++)
-            for (edge=0; edge<4; edge++)
-                if (edge != face)
-                    for (corner=0; corner<4; corner++)
-                        if ( (face != corner) && (edge != corner) ) {
-                            other = 6-face-edge-corner;
+    int permIdx;
+    NPerm4 perm, glue;
+    for (tet=0; tet < nOldTet; ++tet)
+        for (permIdx = 0; permIdx < 24; ++permIdx) {
+            perm = NPerm4::S4[permIdx];
+            // (0, 1, 2, 3) -> (face, edge, vtx, corner)
 
-                            // Glue to the tetrahedron on the same face and
-                            // on the same edge
-                            newTet[24*tet+tetIndex[face][edge][corner]]->
-                                joinTo(corner,
-                                newTet[24*tet+tetIndex[face][edge][other]],
-                                NPerm4(corner,other) );
+            // Internal gluings within the old tetrahedron:
+            newTet[24 * tet + permIdx]->joinTo(perm[3],
+                newTet[24 * tet + (perm * NPerm4(3, 2)).S4Index()],
+                NPerm4(perm[3], perm[2]));
 
-                            // Glue to the tetrahedron on the same face and
-                            // at the same corner
-                            newTet[24*tet+tetIndex[face][edge][corner]]->
-                                joinTo(other,
-                                newTet[24*tet+tetIndex[face][other][corner]],
-                                NPerm4(edge,other) );
+            newTet[24 * tet + permIdx]->joinTo(perm[2],
+                newTet[24 * tet + (perm * NPerm4(2, 1)).S4Index()],
+                NPerm4(perm[2], perm[1]));
 
-                            // Glue to the tetrahedron on the adjacent face
-                            // sharing an edge and a vertex
-                            newTet[24*tet+tetIndex[face][edge][corner]]->
-                                joinTo(edge,
-                                newTet[24*tet+tetIndex[edge][face][corner]],
-                                NPerm4(face, edge) );
+            newTet[24 * tet + permIdx]->joinTo(perm[1],
+                newTet[24 * tet + (perm * NPerm4(1, 0)).S4Index()],
+                NPerm4(perm[1], perm[0]));
 
-                            // Glue to the new tetrahedron across an existing
-                            // face
-                            oldTet = getTetrahedron(tet);
-                            if (oldTet->adjacentTetrahedron(face)) {
-                                p = oldTet->adjacentGluing(face);
-                                newTet[24*tet+tetIndex[face][edge][corner]]->
-                                    joinTo(face, newTet[24*tetrahedronIndex(
-                                    oldTet->adjacentTetrahedron(face))+
-                                    tetIndex[p[face]][p[edge]][p[corner]] ],
-                                    NPerm4(p) );
-                             }
-                        }
-    }
+            // Adjacent gluings to the adjacent tetrahedron:
+            oldTet = getTetrahedron(tet);
+            if (! oldTet->adjacentTetrahedron(perm[0]))
+                continue; // This hits a boundary face.
+            if (newTet[24 * tet + permIdx]->adjacentTetrahedron(perm[0]))
+                continue; // We've already done this gluing from the other side.
+
+            glue = oldTet->adjacentGluing(perm[0]);
+            newTet[24 * tet + permIdx]->joinTo(perm[0],
+                newTet[24 * tetrahedronIndex(
+                    oldTet->adjacentTetrahedron(perm[0])) +
+                    (glue * perm).S4Index()],
+                glue);
+        }
+
 
     // Delete the existing tetrahedra and put in the new ones.
     ChangeEventSpan span2(this);

@@ -104,6 +104,10 @@ Version 4.94  [ (under development) ]
                   Dim2Edge, Dim2Face, Dim2Isomorphism, Dim2VertexEmbedding,
                   Dim2Vertex, NXMLDim2TriangulationReader:
             - New classes to support Dim2Triangulation.
+        Class NTriangulation:
+            - Rewrote barycentricSubdivision(): the code is now clearer,
+              but note that the precise labelling of the new tetrahedra has
+              changed from earlier versions of Regina.
         Class NVertex:
             - New routine buildLink() to triangulate the vertex link.
     TEST SUITE:
