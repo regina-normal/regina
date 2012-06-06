@@ -80,7 +80,7 @@ namespace regina {
  * Note that in all cases triangulation U may contain more simplices
  * than triangulation T.
  *
- * \pre The dimension argument \a dim is either 2, 3 or 4.
+ * \pre The dimension argument \a dim is either 2 or 3.
  *
  * \ifacespython Not present, though the dimension-specific subclasses
  * (such as NIsomorphism and Dim4Isomorphism) are available for Python users.
