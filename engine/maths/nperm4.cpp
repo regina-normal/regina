@@ -40,6 +40,8 @@ const NPerm4 NPerm4::S4[24] = {
     NPerm4(18), NPerm4(19), NPerm4(20), NPerm4(21), NPerm4(22), NPerm4(23)
 };
 
+const NPerm4* NPerm4::Sn = NPerm4::S4;
+
 const NPerm4* allPermsS4 = NPerm4::S4;
 
 const unsigned NPerm4::invS4[24] = {

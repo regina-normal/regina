@@ -96,6 +96,14 @@ class REGINA_API NPerm4 {
         static const NPerm4 S4[24];
 
         /**
+         * A dimension-agnostic alias for NPerm4::S4.  In general, for
+         * each \a K the class NPerm<i>K</i> will define an alias \a Sn
+         * that references the list of all permutations
+         * NPerm<i>K</i>::S<i>K</i>.
+         */
+        static const NPerm4* Sn;
+
+        /**
          * Contains the inverses of the permutations in the array \a S4.
          *
          * Specifically, the inverse of permutation <tt>S4[i]</tt> is
@@ -155,6 +163,15 @@ class REGINA_API NPerm4 {
          * the permutation <tt>S2[ invS2[i] ]</tt>.
          */
         static const unsigned invS2[2];
+
+        enum {
+            /**
+             * The total number of permutations on four elements.
+             *
+             * \ifacespython Not present.
+             */
+            nPerms = 24
+        };
 
     private:
         unsigned char code_;

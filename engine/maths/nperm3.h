@@ -84,6 +84,14 @@ class REGINA_API NPerm3 {
         static const NPerm3 S3[6];
 
         /**
+         * A dimension-agnostic alias for NPerm3::S3.  In general, for
+         * each \a K the class NPerm<i>K</i> will define an alias \a Sn
+         * that references the list of all permutations
+         * NPerm<i>K</i>::S<i>K</i>.
+         */
+        static const NPerm3* Sn;
+
+        /**
          * Contains the inverses of the permutations in the array \a S3.
          *
          * Specifically, the inverse of permutation <tt>S3[i]</tt> is
@@ -99,27 +107,48 @@ class REGINA_API NPerm3 {
 
         enum {
             /**
+             * The total number of permutations on three elements.
+             *
+             * \ifacespython Not present.
+             */
+            nPerms = 6
+        };
+
+        enum {
+            /**
              * The internal code for the permutation (0,1,2).
+             *
+             * \ifacespython Not present.
              */
             code012 = 0,
             /**
              * The internal code for the permutation (0,2,1).
+             *
+             * \ifacespython Not present.
              */
             code021 = 1,
             /**
              * The internal code for the permutation (1,2,0).
+             *
+             * \ifacespython Not present.
              */
             code120 = 2,
             /**
              * The internal code for the permutation (1,0,2).
+             *
+             * \ifacespython Not present.
              */
             code102 = 3,
             /**
              * The internal code for the permutation (2,0,1).
+             *
+             * \ifacespython Not present.
              */
             code201 = 4,
             /**
              * The internal code for the permutation (2,1,0).
+             *
+             * \ifacespython Not present.
              */
             code210 = 5
         };
