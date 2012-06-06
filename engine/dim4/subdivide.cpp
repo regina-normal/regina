@@ -33,9 +33,6 @@
 namespace regina {
 
 void Dim4Triangulation::barycentricSubdivision() {
-    // This uses a sensible labelling scheme, unlike the 3-dimensional code.
-    // At some stage the 3-D code should be rewritten to look like this.
-
     unsigned long nOldPent = pentachora_.size();
     if (nOldPent == 0)
         return;
@@ -54,11 +51,9 @@ void Dim4Triangulation::barycentricSubdivision() {
     // - meets that face in the edge opposite vertex "edge";
     // - meets that edge in the vertex opposite vertex "vtx";
     // - directly touches vertex "corner".
-    //
-    int tet, face, edge, vtx, corner;
 
     unsigned long pent;
-    for (pent=0; pent<120*nOldPent; pent++)
+    for (pent=0; pent < 120 * nOldPent; ++pent)
         newPent[pent] = staging.newPentachoron();
 
     // Do all of the internal gluings
