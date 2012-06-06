@@ -34,10 +34,10 @@ using namespace boost::python;
 using regina::Dim2Isomorphism;
 
 namespace {
-    int (Dim2Isomorphism::*faceImage_const)(unsigned) const =
-        &Dim2Isomorphism::faceImage;
-    regina::NPerm3 (Dim2Isomorphism::*edgePerm_const)(unsigned) const =
-        &Dim2Isomorphism::edgePerm;
+    int (Dim2Isomorphism::*simpImage_const)(unsigned) const =
+        &Dim2Isomorphism::simpImage;
+    regina::NPerm3 (Dim2Isomorphism::*facetPerm_const)(unsigned) const =
+        &Dim2Isomorphism::facetPerm;
 
     /*
     regina::Dim2PentFacet Dim2iso_getItem(const Dim2Isomorphism& iso,
@@ -51,9 +51,12 @@ void addDim2Isomorphism() {
     class_<Dim2Isomorphism, bases<regina::ShareableObject>,
             std::auto_ptr<Dim2Isomorphism>, boost::noncopyable>
             ("Dim2Isomorphism", init<const Dim2Isomorphism&>())
-        .def("getSourceFaces", &Dim2Isomorphism::getSourceFaces)
-        .def("faceImage", faceImage_const)
-        .def("edgePerm", edgePerm_const)
+        .def("getSourceSimplices", &Dim2Isomorphism::getSourceSimplices)
+        .def("getSourceTriangles", &Dim2Isomorphism::getSourceTriangles)
+        .def("simpImage", simpImage_const)
+        .def("triImage", simpImage_const)
+        .def("facetPerm", facetPerm_const)
+        .def("edgePerm", facetPerm_const)
         // .def("__getitem__", Dim2iso_getItem)
         .def("isIdentity", &Dim2Isomorphism::isIdentity)
         .def("apply", &Dim2Isomorphism::apply,

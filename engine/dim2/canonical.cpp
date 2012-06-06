@@ -57,8 +57,8 @@ namespace {
         unsigned face;
 
         for (face = 0; face < nFaces; ++face)
-            if (face != currentInv.faceImage(0))
-                current.faceImage(face) = -1;
+            if (face != currentInv.simpImage(0))
+                current.simpImage(face) = -1;
 
         int edge;
 
@@ -79,12 +79,12 @@ namespace {
             // INV: We have already selected the preimage of face and
             // the corresponding edge permutation by the time we reach
             // this point.
-            origFace = currentInv.faceImage(face);
-            origFaceBest = bestInv.faceImage(face);
+            origFace = currentInv.simpImage(face);
+            origFaceBest = bestInv.simpImage(face);
 
             for (edge = 0; edge < 3; ++edge) {
-                origEdge = current.edgePerm(origFace).preImageOf(edge);
-                origEdgeBest = best.edgePerm(origFaceBest).preImageOf(edge);
+                origEdge = current.facetPerm(origFace).preImageOf(edge);
+                origEdgeBest = best.facetPerm(origFaceBest).preImageOf(edge);
 
                 // Check out the adjacency along face/edge.
                 adjFace = tri->getFace(origFace)->adjacentFace(origEdge);
@@ -96,18 +96,18 @@ namespace {
                     tri->faceIndex(adjFaceBest) : nFaces);
 
                 justAssigned = false;
-                if (adjFace && current.faceImage(adjFaceIndex) < 0) {
+                if (adjFace && current.simpImage(adjFaceIndex) < 0) {
                     // We have a new face that needs assignment.
                     ++lastAssigned;
-                    current.faceImage(adjFaceIndex) = lastAssigned;
-                    currentInv.faceImage(lastAssigned) = adjFaceIndex;
+                    current.simpImage(adjFaceIndex) = lastAssigned;
+                    currentInv.simpImage(lastAssigned) = adjFaceIndex;
                     justAssigned = true;
                 }
 
                 finalImage = (adjFace ?
-                    current.faceImage(adjFaceIndex) : nFaces);
+                    current.simpImage(adjFaceIndex) : nFaces);
                 finalImageBest = (adjFaceBest ?
-                    best.faceImage(adjFaceIndexBest) : nFaces);
+                    best.simpImage(adjFaceIndexBest) : nFaces);
 
                 // We now have a gluing (but possibly not a gluing
                 // permutation).  Compare adjacent face indices.
@@ -128,10 +128,10 @@ namespace {
                     // We can choose the permutation ourselves.
                     // Make it so that the final gluing (computed later
                     // below) becomes the identity.
-                    current.edgePerm(adjFaceIndex) =
-                        current.edgePerm(origFace) * gluingPerm.inverse();
-                    currentInv.edgePerm(lastAssigned) =
-                        current.edgePerm(adjFaceIndex).inverse();
+                    current.facetPerm(adjFaceIndex) =
+                        current.facetPerm(origFace) * gluingPerm.inverse();
+                    currentInv.facetPerm(lastAssigned) =
+                        current.facetPerm(adjFaceIndex).inverse();
                 }
 
                 // Although adjFace is guaranteed to exist, adjFaceBest is
@@ -142,10 +142,10 @@ namespace {
                     continue;
 
                 // Now we are guaranteed that adjFaceBest exists.
-                finalGluing = current.edgePerm(adjFaceIndex) *
-                    gluingPerm * current.edgePerm(origFace).inverse();
-                finalGluingBest = best.edgePerm(adjFaceIndexBest) *
-                    gluingPermBest * best.edgePerm(origFaceBest).inverse();
+                finalGluing = current.facetPerm(adjFaceIndex) *
+                    gluingPerm * current.facetPerm(origFace).inverse();
+                finalGluingBest = best.facetPerm(adjFaceIndexBest) *
+                    gluingPermBest * best.facetPerm(origFaceBest).inverse();
 
                 comp = finalGluing.compareWith(finalGluingBest);
                 if ((! better) && comp > 0)
@@ -173,8 +173,8 @@ bool Dim2Triangulation::makeCanonical() {
     // The thing to best is the identity isomorphism.
     unsigned face, inner;
     for (face = 0; face < nFaces; ++face) {
-        best.faceImage(face) = bestInv.faceImage(face) = face;
-        best.edgePerm(face) = bestInv.edgePerm(face) = NPerm3();
+        best.simpImage(face) = bestInv.simpImage(face) = face;
+        best.facetPerm(face) = bestInv.facetPerm(face) = NPerm3();
     }
 
     // Run through potential preimages of face 0.
@@ -183,19 +183,19 @@ bool Dim2Triangulation::makeCanonical() {
         for (perm = 0; perm < 6; ++perm) {
             // Build a "perhaps canonical" isomorphism based on this
             // preimage of face 0.
-            current.faceImage(face) = 0;
-            currentInv.faceImage(0) = face;
+            current.simpImage(face) = 0;
+            currentInv.simpImage(0) = face;
 
-            current.edgePerm(face) = NPerm3::S3[NPerm3::invS3[perm]];
-            currentInv.edgePerm(0) = NPerm3::S3[perm];
+            current.facetPerm(face) = NPerm3::S3[NPerm3::invS3[perm]];
+            currentInv.facetPerm(0) = NPerm3::S3[perm];
 
             if (extendIsomorphism(this, current, currentInv, best, bestInv)) {
                 // This is better than anything we've seen before.
                 for (inner = 0; inner < nFaces; ++inner) {
-                    best.faceImage(inner) = current.faceImage(inner);
-                    best.edgePerm(inner) = current.edgePerm(inner);
-                    bestInv.faceImage(inner) = currentInv.faceImage(inner);
-                    bestInv.edgePerm(inner) = currentInv.edgePerm(inner);
+                    best.simpImage(inner) = current.simpImage(inner);
+                    best.facetPerm(inner) = current.facetPerm(inner);
+                    bestInv.simpImage(inner) = currentInv.simpImage(inner);
+                    bestInv.facetPerm(inner) = currentInv.facetPerm(inner);
                 }
             }
         }

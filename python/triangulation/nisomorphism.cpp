@@ -34,10 +34,10 @@ using namespace boost::python;
 using regina::NIsomorphism;
 
 namespace {
-    int (NIsomorphism::*tetImage_const)(unsigned) const =
-        &NIsomorphism::tetImage;
-    regina::NPerm4 (NIsomorphism::*facePerm_const)(unsigned) const =
-        &NIsomorphism::facePerm;
+    int (NIsomorphism::*simpImage_const)(unsigned) const =
+        &NIsomorphism::simpImage;
+    regina::NPerm4 (NIsomorphism::*facetPerm_const)(unsigned) const =
+        &NIsomorphism::facetPerm;
 
     regina::NTetFace iso_getItem(const NIsomorphism& iso,
             const regina::NTetFace& f) {
@@ -49,9 +49,12 @@ void addNIsomorphism() {
     class_<NIsomorphism, bases<regina::ShareableObject>,
             std::auto_ptr<NIsomorphism>, boost::noncopyable>
             ("NIsomorphism", init<const NIsomorphism&>())
+        .def("getSourceSimplices", &NIsomorphism::getSourceSimplices)
         .def("getSourceTetrahedra", &NIsomorphism::getSourceTetrahedra)
-        .def("tetImage", tetImage_const)
-        .def("facePerm", facePerm_const)
+        .def("simpImage", simpImage_const)
+        .def("tetImage", simpImage_const)
+        .def("facetPerm", facetPerm_const)
+        .def("facePerm", facetPerm_const)
         .def("__getitem__", iso_getItem)
         .def("isIdentity", &NIsomorphism::isIdentity)
         .def("apply", &NIsomorphism::apply,
