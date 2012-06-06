@@ -112,6 +112,14 @@ Version 4.94  [ (under development) ]
         Class NGeneralIsomorphism:
             - New template base class that contains dimension-agnostic
               code for representing isomorphisms between triangulations.
+        Class NIsomorphism:
+            - Now a subclass of NGeneralIsomorphism<3>, with inherited
+              dimension-agnostic aliases for several routines.
+        Class NPerm3, NPerm4, NPerm5:
+            - New dimension-agnostic alias Sn that refers to S3, S4 and S5 in
+              NPerm3, NPerm4 and NPerm5 respectively.
+            - New dimension-agnostic enum constant nPerms that contains the
+              number of permutations in Sn (i.e., 3!, 4! and 5! respectively).
         Class NTriangulation:
             - Rewrote barycentricSubdivision(): the code is now clearer,
               but note that the precise labelling of the new tetrahedra has
