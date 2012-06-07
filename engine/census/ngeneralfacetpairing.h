@@ -54,7 +54,7 @@ namespace regina {
 /**
  * A dimension-agnostic base class that represents a pairwise
  * matching of facets of \a dim-dimensional simplices.
- * Each dimension that Regina works with (2, 3 and 4) offers its own subclass
+ * Each dimension that Regina works with (2 and 3) offers its own subclass
  * with richer functionality; users typically do not need to work with this
  * template base class directly.
  *
