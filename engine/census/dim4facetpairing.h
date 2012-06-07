@@ -64,7 +64,7 @@ namespace regina {
  *
  * \testpart
  */
-class REGINA_API Dim4FacetPairing : public NGeneralFacetPairing<4> {
+class REGINA_API Dim4FacetPairing : public NGenericFacetPairing<4> {
     public:
         /**
          * Creates a new facet pairing that is a clone of the given facet
@@ -100,7 +100,7 @@ class REGINA_API Dim4FacetPairing : public NGeneralFacetPairing<4> {
         Dim4FacetPairing(unsigned nPentachora);
 
     // Make sure the parent class can call the private constructor.
-    friend class NGeneralFacetPairing<4>;
+    friend class NGenericFacetPairing<4>;
 };
 
 /*@}*/
@@ -108,15 +108,15 @@ class REGINA_API Dim4FacetPairing : public NGeneralFacetPairing<4> {
 // Inline functions for Dim4FacetPairing
 
 inline Dim4FacetPairing::Dim4FacetPairing(const Dim4FacetPairing& cloneMe) :
-        NGeneralFacetPairing<4>(cloneMe) {
+        NGenericFacetPairing<4>(cloneMe) {
 }
 
 inline Dim4FacetPairing::Dim4FacetPairing(unsigned nPentachora) :
-        NGeneralFacetPairing<4>(nPentachora) {
+        NGenericFacetPairing<4>(nPentachora) {
 }
 
 inline Dim4FacetPairing::Dim4FacetPairing(const Dim4Triangulation& tri) :
-        NGeneralFacetPairing<4>(tri) {
+        NGenericFacetPairing<4>(tri) {
 }
 
 } // namespace regina

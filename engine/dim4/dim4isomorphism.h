@@ -88,7 +88,7 @@ class Dim4Triangulation;
  * Note that in all cases triangulation U may contain more pentachora
  * than triangulation T.
  */
-class REGINA_API Dim4Isomorphism : public NGeneralIsomorphism<4> {
+class REGINA_API Dim4Isomorphism : public NGenericIsomorphism<4> {
     public:
         /**
          * Creates a new isomorphism with no initialisation.
@@ -157,11 +157,11 @@ class REGINA_API Dim4Isomorphism : public NGeneralIsomorphism<4> {
 // Inline functions for Dim4Isomorphism
 
 inline Dim4Isomorphism::Dim4Isomorphism(unsigned sourcePentachora) :
-        NGeneralIsomorphism<4>(sourcePentachora) {
+        NGenericIsomorphism<4>(sourcePentachora) {
 }
 
 inline Dim4Isomorphism::Dim4Isomorphism(const Dim4Isomorphism& cloneMe) :
-        NGeneralIsomorphism<4>(cloneMe) {
+        NGenericIsomorphism<4>(cloneMe) {
 }
 
 inline unsigned Dim4Isomorphism::getSourcePentachora() const {

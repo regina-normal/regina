@@ -34,30 +34,30 @@
 namespace regina {
 
 // Instatiate all templates from the .tcc file.
-template NGeneralFacetPairing<4>::NGeneralFacetPairing(
-    const NGeneralFacetPairing<4>&);
-template NGeneralFacetPairing<4>::NGeneralFacetPairing(
+template NGenericFacetPairing<4>::NGenericFacetPairing(
+    const NGenericFacetPairing<4>&);
+template NGenericFacetPairing<4>::NGenericFacetPairing(
     const Dim4Triangulation&);
-template bool NGeneralFacetPairing<4>::isClosed() const;
-template std::string NGeneralFacetPairing<4>::toString() const;
-template std::string NGeneralFacetPairing<4>::dotHeader(const char*);
-template void NGeneralFacetPairing<4>::writeDotHeader(std::ostream&,
+template bool NGenericFacetPairing<4>::isClosed() const;
+template std::string NGenericFacetPairing<4>::toString() const;
+template std::string NGenericFacetPairing<4>::dotHeader(const char*);
+template void NGenericFacetPairing<4>::writeDotHeader(std::ostream&,
     const char*);
-template std::string NGeneralFacetPairing<4>::dot(const char*, bool, bool)
+template std::string NGenericFacetPairing<4>::dot(const char*, bool, bool)
     const;
-template void NGeneralFacetPairing<4>::writeDot(std::ostream&, const char*,
+template void NGenericFacetPairing<4>::writeDot(std::ostream&, const char*,
     bool, bool) const;
-template std::string NGeneralFacetPairing<4>::toTextRep() const;
-template Dim4FacetPairing* NGeneralFacetPairing<4>::fromTextRep(
+template std::string NGenericFacetPairing<4>::toTextRep() const;
+template Dim4FacetPairing* NGenericFacetPairing<4>::fromTextRep(
     const std::string&);
-template bool NGeneralFacetPairing<4>::isCanonical() const;
-template bool NGeneralFacetPairing<4>::isCanonicalInternal(
-    NGeneralFacetPairing<4>::IsoList&) const;
-template void NGeneralFacetPairing<4>::findAutomorphisms(
-    NGeneralFacetPairing<4>::IsoList&) const;
-template bool NGeneralFacetPairing<4>::findAllPairings(unsigned, NBoolSet,
-    int, NGeneralFacetPairing<4>::Use, void*, bool);
-template void* NGeneralFacetPairing<4>::run(void*);
+template bool NGenericFacetPairing<4>::isCanonical() const;
+template bool NGenericFacetPairing<4>::isCanonicalInternal(
+    NGenericFacetPairing<4>::IsoList&) const;
+template void NGenericFacetPairing<4>::findAutomorphisms(
+    NGenericFacetPairing<4>::IsoList&) const;
+template bool NGenericFacetPairing<4>::findAllPairings(unsigned, NBoolSet,
+    int, NGenericFacetPairing<4>::Use, void*, bool);
+template void* NGenericFacetPairing<4>::run(void*);
 
 } // namespace regina
 

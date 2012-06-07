@@ -92,7 +92,7 @@ class NTriangulation;
  *
  * \todo \feature Composition of isomorphisms.
  */
-class REGINA_API NIsomorphism : public NGeneralIsomorphism<3> {
+class REGINA_API NIsomorphism : public NGenericIsomorphism<3> {
     public:
         /**
          * Creates a new isomorphism with no initialisation.
@@ -230,11 +230,11 @@ class REGINA_API NIsomorphismDirect : public NIsomorphism {
 // Inline functions for NIsomorphism
 
 inline NIsomorphism::NIsomorphism(unsigned sourceTetrahedra) :
-        NGeneralIsomorphism<3>(sourceTetrahedra) {
+        NGenericIsomorphism<3>(sourceTetrahedra) {
 }
 
 inline NIsomorphism::NIsomorphism(const NIsomorphism& cloneMe) :
-        NGeneralIsomorphism<3>(cloneMe) {
+        NGenericIsomorphism<3>(cloneMe) {
 }
 
 inline unsigned NIsomorphism::getSourceTetrahedra() const {

@@ -87,7 +87,7 @@ typedef void (*UseFacePairing)(const NFacePairing*, const NFacePairingIsoList*,
  *
  * \testpart
  */
-class REGINA_API NFacePairing : public NGeneralFacetPairing<3> {
+class REGINA_API NFacePairing : public NGenericFacetPairing<3> {
     public:
         /**
          * Creates a new face pairing that is a clone of the given face
@@ -546,7 +546,7 @@ class REGINA_API NFacePairing : public NGeneralFacetPairing<3> {
         bool hasTripleOneEndedChain(unsigned tet, unsigned face) const;
 
     // Make sure the parent class can call the private constructor.
-    friend class NGeneralFacetPairing<3>;
+    friend class NGenericFacetPairing<3>;
 };
 
 /*@}*/
@@ -554,15 +554,15 @@ class REGINA_API NFacePairing : public NGeneralFacetPairing<3> {
 // Inline functions for NFacePairing
 
 inline NFacePairing::NFacePairing(const NFacePairing& cloneMe) :
-        NGeneralFacetPairing<3>(cloneMe) {
+        NGenericFacetPairing<3>(cloneMe) {
 }
 
 inline NFacePairing::NFacePairing(const NTriangulation& tri) :
-        NGeneralFacetPairing<3>(tri) {
+        NGenericFacetPairing<3>(tri) {
 }
 
 inline NFacePairing::NFacePairing(unsigned nTetrahedra) :
-        NGeneralFacetPairing<3>(nTetrahedra) {
+        NGenericFacetPairing<3>(nTetrahedra) {
 }
 
 inline unsigned NFacePairing::getNumberOfTetrahedra() const {

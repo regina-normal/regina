@@ -35,18 +35,18 @@
 namespace regina {
 
 template <int dim>
-void NGeneralIsomorphism<dim>::writeTextShort(std::ostream& out) const {
+void NGenericIsomorphism<dim>::writeTextShort(std::ostream& out) const {
     out << "Isomorphism between " << dim << "-manifold triangulations";
 }
 
 template <int dim>
-void NGeneralIsomorphism<dim>::writeTextLong(std::ostream& out) const {
+void NGenericIsomorphism<dim>::writeTextLong(std::ostream& out) const {
     for (unsigned i = 0; i < nSimplices_; ++i)
         out << i << " -> " << simpImage_[i] << " (" << facetPerm_[i] << ")\n";
 }
 
 template <int dim>
-bool NGeneralIsomorphism<dim>::isIdentity() const {
+bool NGenericIsomorphism<dim>::isIdentity() const {
     for (unsigned p = 0; p < nSimplices_; ++p) {
         if (simpImage_[p] != static_cast<int>(p))
             return false;
@@ -57,8 +57,8 @@ bool NGeneralIsomorphism<dim>::isIdentity() const {
 }
 
 template <int dim>
-NGeneralIsomorphism<dim>::NGeneralIsomorphism(
-        const NGeneralIsomorphism<dim>& cloneMe) :
+NGenericIsomorphism<dim>::NGenericIsomorphism(
+        const NGenericIsomorphism<dim>& cloneMe) :
         ShareableObject(),
         nSimplices_(cloneMe.nSimplices_),
         simpImage_(cloneMe.nSimplices_ > 0 ?
@@ -72,7 +72,7 @@ NGeneralIsomorphism<dim>::NGeneralIsomorphism(
 }
 
 template <int dim>
-typename NGeneralIsomorphism<dim>::Isomorphism* NGeneralIsomorphism<dim>::
+typename NGenericIsomorphism<dim>::Isomorphism* NGenericIsomorphism<dim>::
         random(unsigned nSimplices) {
     Isomorphism* ans = new Isomorphism(nSimplices);
 
@@ -90,9 +90,9 @@ typename NGeneralIsomorphism<dim>::Isomorphism* NGeneralIsomorphism<dim>::
 }
 
 template <int dim>
-typename NGeneralIsomorphism<dim>::Triangulation*
-        NGeneralIsomorphism<dim>::apply(
-        const typename NGeneralIsomorphism<dim>::Triangulation* original)
+typename NGenericIsomorphism<dim>::Triangulation*
+        NGenericIsomorphism<dim>::apply(
+        const typename NGenericIsomorphism<dim>::Triangulation* original)
         const {
     if (original->getNumberOfSimplices() != nSimplices_)
         return 0;
@@ -138,8 +138,8 @@ typename NGeneralIsomorphism<dim>::Triangulation*
 }
 
 template <int dim>
-void NGeneralIsomorphism<dim>::applyInPlace(
-        typename NGeneralIsomorphism<dim>::Triangulation* tri) const {
+void NGenericIsomorphism<dim>::applyInPlace(
+        typename NGenericIsomorphism<dim>::Triangulation* tri) const {
     if (tri->getNumberOfSimplices() != nSimplices_)
         return;
 

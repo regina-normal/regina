@@ -35,15 +35,15 @@
 namespace regina {
 
 // Instatiate all templates from the .tcc file.
-template void NGeneralIsomorphism<2>::writeTextShort(std::ostream&) const;
-template void NGeneralIsomorphism<2>::writeTextLong(std::ostream&) const;
-template bool NGeneralIsomorphism<2>::isIdentity() const;
-template NGeneralIsomorphism<2>::NGeneralIsomorphism(
-    const NGeneralIsomorphism<2>&);
-template Dim2Isomorphism* NGeneralIsomorphism<2>::random(unsigned);
-template Dim2Triangulation* NGeneralIsomorphism<2>::apply(
+template void NGenericIsomorphism<2>::writeTextShort(std::ostream&) const;
+template void NGenericIsomorphism<2>::writeTextLong(std::ostream&) const;
+template bool NGenericIsomorphism<2>::isIdentity() const;
+template NGenericIsomorphism<2>::NGenericIsomorphism(
+    const NGenericIsomorphism<2>&);
+template Dim2Isomorphism* NGenericIsomorphism<2>::random(unsigned);
+template Dim2Triangulation* NGenericIsomorphism<2>::apply(
         const Dim2Triangulation*) const;
-template void NGeneralIsomorphism<2>::applyInPlace(Dim2Triangulation*) const;
+template void NGenericIsomorphism<2>::applyInPlace(Dim2Triangulation*) const;
 
 } // namespace regina
 
