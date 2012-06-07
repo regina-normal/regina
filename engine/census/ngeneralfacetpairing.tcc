@@ -46,6 +46,28 @@ NGeneralFacetPairing<dim>::NGeneralFacetPairing(
 }
 
 template <int dim>
+NGeneralFacetPairing<dim>::NGeneralFacetPairing(
+        const typename NGeneralFacetPairing<dim>::Triangulation& tri) :
+        size_(tri.getNumberOfSimplices()),
+        pairs_(new NFacetSpec<dim>[tri.getNumberOfSimplices() * (dim + 1)]) {
+    unsigned p, f, index;
+    const Simplex *simp, *adj;
+    for (index = 0, p = 0; p < size_; ++p) {
+        simp = tri.getSimplex(p);
+        for (f = 0; f <= dim; ++f) {
+            adj = simp->adjacentSimplex(f);
+            if (adj) {
+                pairs_[index].simp = tri.simplexIndex(adj);
+                pairs_[index].facet = simp->adjacentFacet(f);
+            } else
+                pairs_[index].setBoundary(size_);
+
+            ++index;
+        }
+    }
+}
+
+template <int dim>
 bool NGeneralFacetPairing<dim>::isClosed() const {
     for (NFacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f)
         if (isUnmatched(f))
@@ -154,27 +176,27 @@ std::string NGeneralFacetPairing<dim>::toTextRep() const {
     return ans.str();
 }
 
-/*
 template <int dim>
-NGeneralFacetPairing* NGeneralFacetPairing::fromTextRep(const std::string& rep) {
+typename NGeneralFacetPairing<dim>::FacetPairing*
+        NGeneralFacetPairing<dim>::fromTextRep(const std::string& rep) {
     std::vector<std::string> tokens;
     unsigned nTokens = basicTokenise(back_inserter(tokens), rep);
 
-    if (nTokens == 0 || nTokens % 10 != 0)
+    if (nTokens == 0 || nTokens % (2 * (dim + 1)) != 0)
         return 0;
 
-    long nPent = nTokens / 10;
-    NGeneralFacetPairing* ans = new NGeneralFacetPairing(nPent);
+    long nSimp = nTokens / (2 * (dim + 1));
+    FacetPairing* ans = new FacetPairing(nSimp);
 
     // Read the raw values.
     // Check the range of each value while we're at it.
     long val;
-    for (long i = 0; i < nPent * (dim + 1); ++i) {
+    for (long i = 0; i < nSimp * (dim + 1); ++i) {
         if (! valueOf(tokens[2 * i], val)) {
             delete ans;
             return 0;
         }
-        if (val < 0 || val > nPent) {
+        if (val < 0 || val > nSimp) {
             delete ans;
             return 0;
         }
@@ -194,11 +216,11 @@ NGeneralFacetPairing* NGeneralFacetPairing::fromTextRep(const std::string& rep) 
     // Run a sanity check.
     NFacetSpec<dim> destFacet;
     bool broken = false;
-    for (NFacetSpec<dim> f(0, 0); ! f.isPastEnd(nPent, true); ++f) {
+    for (NFacetSpec<dim> f(0, 0); ! f.isPastEnd(nSimp, true); ++f) {
         destFacet = ans->dest(f);
-        if (destFacet.simp == nPent && destFacet.facet != 0)
+        if (destFacet.simp == nSimp && destFacet.facet != 0)
             broken = true;
-        else if (destFacet.simp < nPent && ! (ans->dest(destFacet) == f))
+        else if (destFacet.simp < nSimp && ! (ans->dest(destFacet) == f))
             broken = true;
         else
             continue;
@@ -213,7 +235,6 @@ NGeneralFacetPairing* NGeneralFacetPairing::fromTextRep(const std::string& rep) 
     // All is well.
     return ans;
 }
-*/
 
 template <int dim>
 bool NGeneralFacetPairing<dim>::isCanonical() const {

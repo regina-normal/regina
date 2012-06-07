@@ -85,6 +85,8 @@ class NGeneralFacetPairing : public NThread, public DimTraits<dim> {
         using typename DimTraits<dim>::FacetPairing;
         using typename DimTraits<dim>::Isomorphism;
         using typename DimTraits<dim>::Perm;
+        using typename DimTraits<dim>::Simplex;
+        using typename DimTraits<dim>::Triangulation;
 
         /**
          * A list of isomorphisms on pairwise matchings of simplex facets.
@@ -137,6 +139,19 @@ class NGeneralFacetPairing : public NThread, public DimTraits<dim> {
          * @param cloneMe the facet pairing to clone.
          */
         NGeneralFacetPairing(const NGeneralFacetPairing& cloneMe);
+
+        /**
+         * Creates the facet pairing of given triangulation.  This
+         * is the facet pairing that describes how the facets of
+         * simplices in the given triangulation are joined together, as
+         * described in the class notes.
+         *
+         * \pre The given triangulation is not empty.
+         *
+         * @param tri the triangulation whose facet pairing should
+         * be constructed.
+         */
+        NGeneralFacetPairing(const Triangulation& tri);
 
         /**
          * Deallocates any memory used by this structure.
@@ -427,8 +442,7 @@ class NGeneralFacetPairing : public NThread, public DimTraits<dim> {
          * @return the corresponding newly constructed facet pairing, or
          * \c null if the given text-based representation was invalid.
          */
-        // TODO static NGeneralFacetPairing<dim>* fromTextRep(
-            // const std::string& rep);
+        static FacetPairing* fromTextRep(const std::string& rep);
 
         /**
          * Writes header information for a Graphviz DOT file that will
