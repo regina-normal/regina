@@ -56,6 +56,7 @@ void addNTetrahedron() {
         .def("getAdjacentTetrahedronGluing",
             &NTetrahedron::getAdjacentTetrahedronGluing)
         .def("adjacentFace", &NTetrahedron::adjacentFace)
+        .def("adjacentFacet", &NTetrahedron::adjacentFacet)
         .def("getAdjacentFace", &NTetrahedron::getAdjacentFace)
         .def("hasBoundary", &NTetrahedron::hasBoundary)
         .def("joinTo", &NTetrahedron::joinTo)
