@@ -975,7 +975,7 @@ class REGINA_API Dim2Triangulation : public NPacket {
 
 } // namespace regina
 // Some more headers that are required for inline functions:
-#include "dim2/dim2face.h"
+#include "dim2/dim2triangle.h"
 #include "dim2/dim2edge.h"
 #include "dim2/dim2vertex.h"
 #include "dim2/dim2component.h"

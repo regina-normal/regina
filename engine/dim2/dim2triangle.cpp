@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#include "dim2/dim2face.h"
+#include "dim2/dim2triangle.h"
 #include "dim2/dim2triangulation.h"
 #include <algorithm>
 
