@@ -153,6 +153,16 @@ class NPerm5Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
+            int arr[5];
+            arr[0] = a; arr[1] = b; arr[2] = c; arr[3] = d; arr[4] = e;
+            NPerm5 parr(arr);
+            if (! looksEqual(parr, p, name.str())) {
+                std::ostringstream msg;
+                msg << "The array constructor fails for "
+                    "the permutation " << name.str() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
             NPerm5 p3(p);
             if (! looksEqual(p3, p, name.str())) {
                 std::ostringstream msg;

@@ -35,6 +35,7 @@ Version 4.94  [ (under development) ]
               NPerm3, NPerm4 and NPerm5 respectively.
             - New dimension-agnostic enum constant nPerms that contains the
               number of permutations in Sn (i.e., 3!, 4! and 5! respectively).
+            - New construtors that take an array of images.
         Class NTetrahedron:
             - New dimension-agnostic alias adjacentSimplex().  This is
               identical to adjacentTetrahedron(), and can help with

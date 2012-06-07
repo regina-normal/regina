@@ -175,6 +175,19 @@ class REGINA_API NPerm3 {
         NPerm3(int a, int b, int c);
 
         /**
+         * Creates a permutation mapping \a i to \a image[i] for each
+         * \a i = 0,1,2.
+         *
+         * \pre The array \a image contains three elements, which are
+         * 0, 1 and 2 in some order.
+         *
+         * \ifacespython Not present.
+         *
+         * @param image the array of images.
+         */
+        NPerm3(const int* image);
+
+        /**
          * Creates a permutation that is a clone of the given
          * permutation.
          *
@@ -424,6 +437,17 @@ inline NPerm3::NPerm3(int a, int b, int) {
             code_ = static_cast<unsigned char>(b == 2 ? 2 : 3); break;
         case 2:
             code_ = static_cast<unsigned char>(b == 0 ? 4 : 5); break;
+    }
+}
+
+inline NPerm3::NPerm3(const int* image) {
+    switch (image[0]) {
+        case 0:
+            code_ = static_cast<unsigned char>(image[1] == 1 ? 0 : 1); break;
+        case 1:
+            code_ = static_cast<unsigned char>(image[1] == 2 ? 2 : 3); break;
+        case 2:
+            code_ = static_cast<unsigned char>(image[1] == 0 ? 4 : 5); break;
     }
 }
 

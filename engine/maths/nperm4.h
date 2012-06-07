@@ -208,6 +208,19 @@ class REGINA_API NPerm4 {
         NPerm4(int a, int b, int c, int d);
 
         /**
+         * Creates a permutation mapping \a i to \a image[i] for each
+         * \a i = 0,1,2,3.
+         *
+         * \pre The array \a image contains four elements, which are
+         * 0, 1, 2 and 3 in some order.
+         *
+         * \ifacespython Not present.
+         *
+         * @param image the array of images.
+         */
+        NPerm4(const int* image);
+
+        /**
          * Creates a permutation mapping
          * (<i>a0</i>,<i>b0</i>,<i>c0</i>,<i>d0</i>) to
          * (<i>a1</i>,<i>b1</i>,<i>c1</i>,<i>d1</i>) respectively.
@@ -837,6 +850,11 @@ inline NPerm4::NPerm4(int a, int b) : code_(swapTable[a][b]) {
 
 inline NPerm4::NPerm4(int a, int b, int c, int d) :
         code_(static_cast<unsigned char>(S4Index(a, b, c, d))) {
+}
+
+inline NPerm4::NPerm4(const int* image) :
+        code_(static_cast<unsigned char>(S4Index(
+        image[0], image[1], image[2], image[3]))) {
 }
 
 inline NPerm4::NPerm4(const NPerm4& cloneMe) : code_(cloneMe.code_) {
