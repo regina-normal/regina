@@ -26,7 +26,7 @@
 
 /* end stub */
 
-#define SUPPORT_DIM4 1
+#define SUPPORT_DIM4 0
 
 #include <cctype>
 #include <fstream>
