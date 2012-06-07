@@ -38,7 +38,7 @@ namespace regina {
 const char NGluingPermSearcher::dataTag_ = 'g';
 
 NGluingPermSearcher::NGluingPermSearcher(
-        const NFacePairing* pairing, const NFacePairingIsoList* autos,
+        const NFacePairing* pairing, const NFacePairing::IsoList* autos,
         bool orientableOnly, bool finiteOnly, int whichPurge,
         UseGluingPerms use, void* useArgs) :
         NGluingPerms(pairing), autos_(autos), autosNew(autos == 0),
@@ -50,8 +50,8 @@ NGluingPermSearcher::NGluingPermSearcher(
     // This will require us to remove the const for a wee moment.
     if (autosNew) {
         const_cast<NGluingPermSearcher*>(this)->autos_ =
-            new NFacePairingIsoList();
-        pairing->findAutomorphisms(const_cast<NFacePairingIsoList&>(*autos_));
+            new NFacePairing::IsoList();
+        pairing->findAutomorphisms(const_cast<NFacePairing::IsoList&>(*autos_));
     }
 
     // Initialise arrays.
@@ -78,14 +78,15 @@ NGluingPermSearcher::~NGluingPermSearcher() {
     if (autosNew) {
         // We made them, so we'd better remove the const again and
         // delete them.
-        NFacePairingIsoList* autos = const_cast<NFacePairingIsoList*>(autos_);
+        NFacePairing::IsoList* autos =
+            const_cast<NFacePairing::IsoList*>(autos_);
         std::for_each(autos->begin(), autos->end(), FuncDelete<NIsomorphism>());
         delete autos;
     }
 }
 
 NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
-        const NFacePairing* pairing, const NFacePairingIsoList* autos,
+        const NFacePairing* pairing, const NFacePairing::IsoList* autos,
         bool orientableOnly, bool finiteOnly, int whichPurge,
         UseGluingPerms use, void* useArgs) {
     // Use an optimised algorithm if possible.
@@ -111,7 +112,7 @@ NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
 }
 
 void NGluingPermSearcher::findAllPerms(const NFacePairing* pairing,
-        const NFacePairingIsoList* autos, bool orientableOnly,
+        const NFacePairing::IsoList* autos, bool orientableOnly,
         bool finiteOnly, int whichPurge, UseGluingPerms use, void* useArgs) {
     NGluingPermSearcher* searcher = bestSearcher(pairing, autos,
         orientableOnly, finiteOnly, whichPurge, use, useArgs);
@@ -318,8 +319,9 @@ NGluingPermSearcher::NGluingPermSearcher(std::istream& in,
         return;
 
     // Recontruct the face pairing automorphisms.
-    const_cast<NGluingPermSearcher*>(this)->autos_ = new NFacePairingIsoList();
-    pairing->findAutomorphisms(const_cast<NFacePairingIsoList&>(*autos_));
+    const_cast<NGluingPermSearcher*>(this)->autos_ =
+        new NFacePairing::IsoList();
+    pairing->findAutomorphisms(const_cast<NFacePairing::IsoList&>(*autos_));
     autosNew = true;
 
     // Keep reading.
@@ -380,7 +382,7 @@ bool NGluingPermSearcher::isCanonical() const {
     NTetFace face, faceDest, faceImage;
     int ordering;
 
-    for (NFacePairingIsoList::const_iterator it = autos_->begin();
+    for (NFacePairing::IsoList::const_iterator it = autos_->begin();
             it != autos_->end(); it++) {
         // Compare the current set of gluing permutations with its
         // preimage under each face pairing automorphism, to see whether

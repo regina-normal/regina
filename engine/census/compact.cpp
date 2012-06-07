@@ -172,7 +172,7 @@ bool NCompactSearcher::TetEdgeState::readData(std::istream& in,
 }
 
 NCompactSearcher::NCompactSearcher(const NFacePairing* pairing,
-        const NFacePairingIsoList* autos, bool orientableOnly,
+        const NFacePairing::IsoList* autos, bool orientableOnly,
         int whichPurge, UseGluingPerms use, void* useArgs) :
         NGluingPermSearcher(pairing, autos, orientableOnly,
             true /* finiteOnly */, whichPurge, use, useArgs) {

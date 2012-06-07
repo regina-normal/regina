@@ -119,7 +119,7 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
                  and writing tagged data in text format. */
 
     protected:
-        const NFacePairingIsoList* autos_;
+        const NFacePairing::IsoList* autos_;
             /**< The set of isomorphisms that define equivalence of
                  gluing permutation sets.  Generally this is the set of all
                  automorphisms of the underlying face pairing. */
@@ -254,7 +254,7 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          * set found.
          */
         NGluingPermSearcher(const NFacePairing* pairing,
-                const NFacePairingIsoList* autos,
+                const NFacePairing::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
                 UseGluingPerms use, void* useArgs = 0);
 
@@ -386,7 +386,7 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          * constructed by NFacePairing::findAllPairings() are of this form.
          */
         static void findAllPerms(const NFacePairing* pairing,
-                const NFacePairingIsoList* autos,
+                const NFacePairing::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
                 UseGluingPerms use, void* useArgs = 0);
 
@@ -418,7 +418,7 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          * @return the newly created search manager.
          */
         static NGluingPermSearcher* bestSearcher(const NFacePairing* pairing,
-                const NFacePairingIsoList* autos,
+                const NFacePairing::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
                 UseGluingPerms use, void* useArgs = 0);
 
@@ -956,7 +956,7 @@ class REGINA_API NCompactSearcher : public NGluingPermSearcher {
          * constructed by NFacePairing::findAllPairings() are of this form.
          */
         NCompactSearcher(const NFacePairing* pairing,
-                const NFacePairingIsoList* autos,
+                const NFacePairing::IsoList* autos,
                 bool orientableOnly, int whichPurge,
                 UseGluingPerms use, void* useArgs = 0);
 
@@ -1468,7 +1468,7 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
          * least three tetrahedra.
          */
         NClosedPrimeMinSearcher(const NFacePairing* pairing,
-                const NFacePairingIsoList* autos,
+                const NFacePairing::IsoList* autos,
                 bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
 
         /**

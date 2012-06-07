@@ -98,16 +98,20 @@ class NGeneralFacetPairing : public NThread, public DimTraits<dim> {
         typedef std::list<Isomorphism*> IsoList;
 
         /**
-         * A routine used to do arbitrary processing upon a facet pairing
+         * A routine that can do arbitrary processing upon a facet pairing
          * and its automorphisms.  Such routines are used to process
-         * pairings found when running NGeneralFacetPairing::findAllPairings().
+         * pairings that are found when running findAllPairings().
          *
          * The first parameter passed should be a facet pairing
          * (this should not be deallocated by this routine).
          * The second parameter should be a list of all automorphisms of
          * this pairing (this should not be deallocated either).
          * The third parameter may contain arbitrary data as passed to
-         * NGeneralFacetPairing::findAllPairings().
+         * findAllPairings().
+         *
+         * It may be assumed that the pairing is of the appropriate
+         * dimension-specific subclass (such as NFacePairing for
+         * dimension three, or Dim2EdgePairing for dimension two).
          *
          * Note that the first two parameters passed might be \c null to
          * signal that facet pairing generation has finished.

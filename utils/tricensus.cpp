@@ -113,7 +113,7 @@ void foundGluingPerms(const regina::NGluingPermSearcher* perms,
  * What to do with each face pairing that is generated.
  */
 void foundFacePairing(const regina::NFacePairing* pairing,
-        const regina::NFacePairingIsoList* autos, void* container) {
+        const regina::NFacePairing::IsoList* autos, void* container) {
     if (pairing) {
         std::cout << pairing->toString() << std::endl;
 
@@ -127,7 +127,7 @@ void foundFacePairing(const regina::NFacePairing* pairing,
  * Dump the given face pairing to dumpStream.
  */
 void dumpPairing(const regina::NFacePairing* pair,
-        const regina::NFacePairingIsoList*, void*) {
+        const regina::NFacePairing::IsoList*, void*) {
     if (pair) {
         if (dumpStream.get())
             (*dumpStream) << (*pair).toTextRep() << std::endl;

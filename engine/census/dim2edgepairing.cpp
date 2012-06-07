@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2011, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -26,13 +26,38 @@
 
 /* end stub */
 
-void addNCensus();
-void addNFacePairing();
-void addDim2EdgePairing();
+#include "census/dim2edgepairing.h"
+#include "census/ngeneralfacetpairing.tcc"
+#include "dim2/dim2triangle.h"
+#include "dim2/dim2triangulation.h"
 
-void addCensus() {
-    addNCensus();
-    addNFacePairing();
-    addDim2EdgePairing();
-}
+namespace regina {
+
+// Instatiate all templates from the .tcc file.
+template NGeneralFacetPairing<2>::NGeneralFacetPairing(
+    const NGeneralFacetPairing<2>&);
+template NGeneralFacetPairing<2>::NGeneralFacetPairing(
+    const Dim2Triangulation&);
+template bool NGeneralFacetPairing<2>::isClosed() const;
+template std::string NGeneralFacetPairing<2>::toString() const;
+template std::string NGeneralFacetPairing<2>::dotHeader(const char*);
+template void NGeneralFacetPairing<2>::writeDotHeader(std::ostream&,
+    const char*);
+template std::string NGeneralFacetPairing<2>::dot(const char*, bool, bool)
+    const;
+template void NGeneralFacetPairing<2>::writeDot(std::ostream&, const char*,
+    bool, bool) const;
+template std::string NGeneralFacetPairing<2>::toTextRep() const;
+template Dim2EdgePairing* NGeneralFacetPairing<2>::fromTextRep(
+    const std::string&);
+template bool NGeneralFacetPairing<2>::isCanonical() const;
+template bool NGeneralFacetPairing<2>::isCanonicalInternal(
+    NGeneralFacetPairing<2>::IsoList&) const;
+template void NGeneralFacetPairing<2>::findAutomorphisms(
+    NGeneralFacetPairing<2>::IsoList&) const;
+template bool NGeneralFacetPairing<2>::findAllPairings(unsigned, NBoolSet,
+    int, NGeneralFacetPairing<2>::Use, void*, bool);
+template void* NGeneralFacetPairing<2>::run(void*);
+
+} // namespace regina
 
