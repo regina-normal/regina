@@ -261,6 +261,17 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          */
         unsigned long getNumberOfTetrahedra() const;
         /**
+         * A dimension-agnostic alias for getNumberOfTetrahedra().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 3-manifold triangulations means a tetrahedron).
+         * 
+         * See getNumberOfTetrahedra() for further information.
+         */
+        unsigned long getNumberOfSimplices() const;
+        /**
          * Returns all tetrahedra in the triangulation.
          *
          * The reference returned will remain valid
@@ -273,6 +284,17 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * @return the list of all tetrahedra.
          */
         const std::vector<NTetrahedron*>& getTetrahedra() const;
+        /**
+         * A dimension-agnostic alias for getTetrahedra().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 3-manifold triangulations means a tetrahedron).
+         * 
+         * See getTetrahedra() for further information.
+         */
+        const std::vector<NTetrahedron*>& getSimplices() const;
         /**
          * Returns the tetrahedron with the given index number in the
          * triangulation.
@@ -287,6 +309,17 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          */
         NTetrahedron* getTetrahedron(unsigned long index);
         /**
+         * A dimension-agnostic alias for getTetrahedron().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 3-manifold triangulations means a tetrahedron).
+         * 
+         * See getTetrahedron() for further information.
+         */
+        NTetrahedron* getSimplex(unsigned long index);
+        /**
          * Returns the tetrahedron with the given index number in the
          * triangulation.
          * Note that tetrahedron indexing may change when a tetrahedron
@@ -299,6 +332,17 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * triangulation.
          */
         const NTetrahedron* getTetrahedron(unsigned long index) const;
+        /**
+         * A dimension-agnostic alias for getTetrahedron().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 3-manifold triangulations means a tetrahedron).
+         * 
+         * See getTetrahedron() for further information.
+         */
+        const NTetrahedron* getSimplex(unsigned long index) const;
         /**
          * Returns the index of the given tetrahedron in the
          * triangulation.
@@ -326,6 +370,17 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * the first tetrahedron, 1 is the second and so on.
          */
         long tetrahedronIndex(const NTetrahedron* tet) const;
+        /**
+         * A dimension-agnostic alias for tetrahedronIndex().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 3-manifold triangulations means a tetrahedron).
+         * 
+         * See tetrahedronIndex() for further information.
+         */
+        long simplexIndex(const NTetrahedron* tet) const;
         /**
          * Returns the index of the given tetrahedron in the
          * triangulation.
@@ -356,6 +411,17 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          */
         NTetrahedron* newTetrahedron();
         /**
+         * A dimension-agnostic alias for newTetrahedron().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 3-manifold triangulations means a tetrahedron).
+         * 
+         * See newTetrahedron() for further information.
+         */
+        NTetrahedron* newSimplex();
+        /**
          * Creates a new tetrahedron with the given description and adds
          * it to this triangulation.
          * All four faces of the new tetrahedron will be boundary faces.
@@ -364,6 +430,17 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          * @return the new tetrahedron.
          */
         NTetrahedron* newTetrahedron(const std::string& desc);
+        /**
+         * A dimension-agnostic alias for newTetrahedron().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 3-manifold triangulations means a tetrahedron).
+         * 
+         * See newTetrahedron() for further information.
+         */
+        NTetrahedron* newSimplex(const std::string& desc);
         /**
          * Inserts the given tetrahedron into the triangulation.
          * No face gluings anywhere will be examined or altered.
@@ -412,6 +489,17 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          */
         void removeTetrahedron(NTetrahedron* tet);
         /**
+         * A dimension-agnostic alias for removeTetrahedron().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 3-manifold triangulations means a tetrahedron).
+         * 
+         * See removeTetrahedron() for further information.
+         */
+        void removeSimplex(NTetrahedron* tet);
+        /**
          * Removes the tetrahedron with the given index number
          * from the triangulation.  Note that tetrahedron indexing may
          * change when a tetrahedron is added or removed from the
@@ -430,10 +518,32 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          */
         void removeTetrahedronAt(unsigned long index);
         /**
+         * A dimension-agnostic alias for removeTetrahedronAt().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 3-manifold triangulations means a tetrahedron).
+         * 
+         * See removeTetrahedronAt() for further information.
+         */
+        void removeSimplexAt(unsigned long index);
+        /**
          * Removes all tetrahedra from the triangulation.
          * All tetrahedra will be deallocated.
          */
         void removeAllTetrahedra();
+        /**
+         * A dimension-agnostic alias for removeAllTetrahedra().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 3-manifold triangulations means a tetrahedron).
+         * 
+         * See removeAllTetrahedra() for further information.
+         */
+        void removeAllSimplices();
         /**
          * Swaps the contents of this and the given triangulation.
          * That is, all tetrahedra that belong to this triangulation
@@ -3202,7 +3312,15 @@ inline unsigned long NTriangulation::getNumberOfTetrahedra() const {
     return tetrahedra.size();
 }
 
+inline unsigned long NTriangulation::getNumberOfSimplices() const {
+    return tetrahedra.size();
+}
+
 inline NTetrahedron* NTriangulation::getTetrahedron(unsigned long index) {
+    return tetrahedra[index];
+}
+
+inline NTetrahedron* NTriangulation::getSimplex(unsigned long index) {
     return tetrahedra[index];
 }
 
@@ -3211,7 +3329,16 @@ inline const NTetrahedron* NTriangulation::getTetrahedron(unsigned long index)
     return tetrahedra[index];
 }
 
+inline const NTetrahedron* NTriangulation::getSimplex(unsigned long index)
+        const {
+    return tetrahedra[index];
+}
+
 inline long NTriangulation::tetrahedronIndex(const NTetrahedron* tet) const {
+    return tet->markedIndex();
+}
+
+inline long NTriangulation::simplexIndex(const NTetrahedron* tet) const {
     return tet->markedIndex();
 }
 
@@ -3226,6 +3353,10 @@ inline NTetrahedron* NTriangulation::newTetrahedron() {
     return tet;
 }
 
+inline NTetrahedron* NTriangulation::newSimplex() {
+    return newTetrahedron();
+}
+
 inline NTetrahedron* NTriangulation::newTetrahedron(const std::string& desc) {
     ChangeEventSpan span(this);
 
@@ -3235,6 +3366,10 @@ inline NTetrahedron* NTriangulation::newTetrahedron(const std::string& desc) {
     clearAllProperties();
 
     return tet;
+}
+
+inline NTetrahedron* NTriangulation::newSimplex(const std::string& desc) {
+    return newTetrahedron(desc);
 }
 
 inline long NTriangulation::getTetrahedronIndex(const NTetrahedron* tet) const {
@@ -3254,6 +3389,10 @@ inline void NTriangulation::removeTetrahedronAt(unsigned long index) {
     clearAllProperties();
 }
 
+inline void NTriangulation::removeSimplexAt(unsigned long index) {
+    removeTetrahedronAt(index);
+}
+
 inline void NTriangulation::removeTetrahedron(NTetrahedron* tet) {
     ChangeEventSpan span(this);
 
@@ -3264,10 +3403,18 @@ inline void NTriangulation::removeTetrahedron(NTetrahedron* tet) {
     clearAllProperties();
 }
 
+inline void NTriangulation::removeSimplex(NTetrahedron* tet) {
+    removeTetrahedron(tet);
+}
+
 inline void NTriangulation::removeAllTetrahedra() {
     ChangeEventSpan span(this);
     deleteTetrahedra();
     clearAllProperties();
+}
+
+inline void NTriangulation::removeAllSimplices() {
+    removeAllTetrahedra();
 }
 
 inline void NTriangulation::gluingsHaveChanged() {
@@ -3319,6 +3466,10 @@ inline long NTriangulation::getEulerCharacteristic() const {
 }
 
 inline const std::vector<NTetrahedron*>& NTriangulation::getTetrahedra() const {
+    return (const std::vector<NTetrahedron*>&)(tetrahedra);
+}
+
+inline const std::vector<NTetrahedron*>& NTriangulation::getSimplices() const {
     return (const std::vector<NTetrahedron*>&)(tetrahedra);
 }
 

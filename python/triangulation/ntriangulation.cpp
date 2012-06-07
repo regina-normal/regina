@@ -160,19 +160,31 @@ void addNTriangulation() {
             boost::noncopyable>("NTriangulation")
         .def(init<const NTriangulation&>())
         .def("getNumberOfTetrahedra", &NTriangulation::getNumberOfTetrahedra)
+        .def("getNumberOfSimplices", &NTriangulation::getNumberOfSimplices)
         .def("getTetrahedra", getTetrahedra_list)
+        .def("getSimplices", getTetrahedra_list)
         .def("getTetrahedron", getTetrahedron_non_const,
             return_value_policy<reference_existing_object>())
+        .def("getSimplex", getTetrahedron_non_const,
+            return_value_policy<reference_existing_object>())
         .def("tetrahedronIndex", &NTriangulation::tetrahedronIndex)
+        .def("simplexIndex", &NTriangulation::simplexIndex)
         .def("getTetrahedronIndex", &NTriangulation::getTetrahedronIndex)
         .def("newTetrahedron", newTetrahedron_void,
             return_value_policy<reference_existing_object>())
+        .def("newSimplex", newTetrahedron_void,
+            return_value_policy<reference_existing_object>())
         .def("newTetrahedron", newTetrahedron_string,
+            return_value_policy<reference_existing_object>())
+        .def("newSimplex", newTetrahedron_string,
             return_value_policy<reference_existing_object>())
         .def("addTetrahedron", addTetrahedron_own)
         .def("removeTetrahedron", &NTriangulation::removeTetrahedron)
+        .def("removeSimplex", &NTriangulation::removeSimplex)
         .def("removeTetrahedronAt", &NTriangulation::removeTetrahedronAt)
+        .def("removeSimplexAt", &NTriangulation::removeSimplexAt)
         .def("removeAllTetrahedra", &NTriangulation::removeAllTetrahedra)
+        .def("removeAllSimplices", &NTriangulation::removeAllSimplices)
         .def("swapContents", &NTriangulation::swapContents)
         .def("moveContentsTo", &NTriangulation::moveContentsTo)
         .def("gluingsHaveChanged", &NTriangulation::gluingsHaveChanged)

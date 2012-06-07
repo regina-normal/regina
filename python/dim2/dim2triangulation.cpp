@@ -102,17 +102,29 @@ void addDim2Triangulation() {
             boost::noncopyable>("Dim2Triangulation")
         .def(init<const Dim2Triangulation&>())
         .def("getNumberOfTriangles", &Dim2Triangulation::getNumberOfTriangles)
+        .def("getNumberOfSimplices", &Dim2Triangulation::getNumberOfSimplices)
         .def("getTriangles", Dim2_getTriangles_list)
+        .def("getSimplices", Dim2_getTriangles_list)
         .def("getTriangle", getTriangle_non_const,
             return_value_policy<reference_existing_object>())
+        .def("getSimplex", getTriangle_non_const,
+            return_value_policy<reference_existing_object>())
         .def("triangleIndex", &Dim2Triangulation::triangleIndex)
+        .def("simplexIndex", &Dim2Triangulation::simplexIndex)
         .def("newTriangle", newTriangle_void,
+            return_value_policy<reference_existing_object>())
+        .def("newSimplex", newTriangle_void,
             return_value_policy<reference_existing_object>())
         .def("newTriangle", newTriangle_string,
             return_value_policy<reference_existing_object>())
+        .def("newSimplex", newTriangle_string,
+            return_value_policy<reference_existing_object>())
         .def("removeTriangle", &Dim2Triangulation::removeTriangle)
+        .def("removeSimplex", &Dim2Triangulation::removeSimplex)
         .def("removeTriangleAt", &Dim2Triangulation::removeTriangleAt)
+        .def("removeSimplexAt", &Dim2Triangulation::removeSimplexAt)
         .def("removeAllTriangles", &Dim2Triangulation::removeAllTriangles)
+        .def("removeAllSimplices", &Dim2Triangulation::removeAllSimplices)
         .def("swapContents", &Dim2Triangulation::swapContents)
         .def("moveContentsTo", &Dim2Triangulation::moveContentsTo)
         .def("getNumberOfComponents", &Dim2Triangulation::getNumberOfComponents)

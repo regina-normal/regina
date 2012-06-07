@@ -48,6 +48,8 @@ void addNTetrahedron() {
         .def("setDescription", &NTetrahedron::setDescription)
         .def("adjacentTetrahedron", &NTetrahedron::adjacentTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("adjacentSimplex", &NTetrahedron::adjacentSimplex,
+            return_value_policy<reference_existing_object>())
         .def("getAdjacentTetrahedron", &NTetrahedron::getAdjacentTetrahedron,
             return_value_policy<reference_existing_object>())
         .def("adjacentGluing", &NTetrahedron::adjacentGluing)

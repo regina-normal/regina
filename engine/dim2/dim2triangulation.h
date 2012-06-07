@@ -179,6 +179,17 @@ class REGINA_API Dim2Triangulation : public NPacket {
          */
         unsigned long getNumberOfTriangles() const;
         /**
+         * A dimension-agnostic alias for getNumberOfTriangles().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 2-manifold triangulations means a triangle).
+         * 
+         * See getNumberOfTriangles() for further information.
+         */
+        unsigned long getNumberOfSimplices() const;
+        /**
          * Returns all triangular faces in the triangulation.
          *
          * The reference returned will remain valid for as long as the
@@ -191,6 +202,17 @@ class REGINA_API Dim2Triangulation : public NPacket {
          */
         const std::vector<Dim2Triangle*>& getTriangles() const;
         /**
+         * A dimension-agnostic alias for getTriangles().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 2-manifold triangulations means a triangle).
+         * 
+         * See getTriangles() for further information.
+         */
+        const std::vector<Dim2Triangle*>& getSimplices() const;
+        /**
          * Returns the triangle with the given index number in the
          * triangulation.  Note that triangle indexing may change when
          * a triangle is added or removed from the triangulation.
@@ -201,6 +223,17 @@ class REGINA_API Dim2Triangulation : public NPacket {
          */
         Dim2Triangle* getTriangle(unsigned long index);
         /**
+         * A dimension-agnostic alias for getTriangle().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 2-manifold triangulations means a triangle).
+         * 
+         * See getTriangle() for further information.
+         */
+        Dim2Triangle* getSimplex(unsigned long index);
+        /**
          * Returns the triangle with the given index number in the
          * triangulation.  Note that triangle indexing may change when
          * a triangle is added or removed from the triangulation.
@@ -210,6 +243,17 @@ class REGINA_API Dim2Triangulation : public NPacket {
          * @return the <tt>index</tt>th triangle in the triangulation.
          */
         const Dim2Triangle* getTriangle(unsigned long index) const;
+        /**
+         * A dimension-agnostic alias for getTriangle().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 2-manifold triangulations means a triangle).
+         * 
+         * See getTriangle() for further information.
+         */
+        const Dim2Triangle* getSimplex(unsigned long index) const;
         /**
          * Returns the index of the given triangle in the triangulation.
          *
@@ -230,6 +274,17 @@ class REGINA_API Dim2Triangulation : public NPacket {
          */
         long triangleIndex(const Dim2Triangle* tri) const;
         /**
+         * A dimension-agnostic alias for triangleIndex().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 2-manifold triangulations means a triangle).
+         * 
+         * See triangleIndex() for further information.
+         */
+        long simplexIndex(const Dim2Triangle* tri) const;
+        /**
          * Creates a new triangle and adds it to this triangulation.
          * The new triangle will have an empty description.
          * All three edges of the new triangle will be boundary edges.
@@ -237,6 +292,17 @@ class REGINA_API Dim2Triangulation : public NPacket {
          * @return the new triangle.
          */
         Dim2Triangle* newTriangle();
+        /**
+         * A dimension-agnostic alias for newTriangle().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 2-manifold triangulations means a triangle).
+         * 
+         * See newTriangle() for further information.
+         */
+        Dim2Triangle* newSimplex();
         /**
          * Creates a new triangle with the given description and adds
          * it to this triangulation.
@@ -247,6 +313,17 @@ class REGINA_API Dim2Triangulation : public NPacket {
          */
         Dim2Triangle* newTriangle(const std::string& desc);
         /**
+         * A dimension-agnostic alias for newTriangle().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 2-manifold triangulations means a triangle).
+         * 
+         * See newTriangle() for further information.
+         */
+        Dim2Triangle* newSimplex(const std::string& desc);
+        /**
          * Removes the given triangle from the triangulation.
          * All triangles glued to this triangle will be unglued.
          * The triangle will be deallocated.
@@ -256,6 +333,17 @@ class REGINA_API Dim2Triangulation : public NPacket {
          * @param tri the triangle to remove.
          */
         void removeTriangle(Dim2Triangle* tri);
+        /**
+         * A dimension-agnostic alias for removeTriangle().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 2-manifold triangulations means a triangle).
+         * 
+         * See removeTriangle() for further information.
+         */
+        void removeSimplex(Dim2Triangle* tri);
         /**
          * Removes the triangle with the given index number
          * from the triangulation.  Note that triangle indexing may
@@ -270,10 +358,32 @@ class REGINA_API Dim2Triangulation : public NPacket {
          */
         void removeTriangleAt(unsigned long index);
         /**
+         * A dimension-agnostic alias for removeTriangleAt().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 2-manifold triangulations means a triangle).
+         * 
+         * See removeTriangleAt() for further information.
+         */
+        void removeSimplexAt(unsigned long index);
+        /**
          * Removes all triangles from the triangulation.
          * All triangles will be deallocated.
          */
         void removeAllTriangles();
+        /**
+         * A dimension-agnostic alias for removeAllTriangles().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         *
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 2-manifold triangulations means a triangle).
+         * 
+         * See removeAllTriangles() for further information.
+         */
+        void removeAllSimplices();
         /**
          * Swaps the contents of this and the given triangulation.
          * That is, all triangles that belong to this triangulation
@@ -1015,7 +1125,16 @@ inline unsigned long Dim2Triangulation::getNumberOfTriangles() const {
     return triangles_.size();
 }
 
+inline unsigned long Dim2Triangulation::getNumberOfSimplices() const {
+    return triangles_.size();
+}
+
 inline const std::vector<Dim2Triangle*>& Dim2Triangulation::getTriangles()
+        const {
+    return (const std::vector<Dim2Triangle*>&)(triangles_);
+}
+
+inline const std::vector<Dim2Triangle*>& Dim2Triangulation::getSimplices()
         const {
     return (const std::vector<Dim2Triangle*>&)(triangles_);
 }
@@ -1024,12 +1143,25 @@ inline Dim2Triangle* Dim2Triangulation::getTriangle(unsigned long index) {
     return triangles_[index];
 }
 
+inline Dim2Triangle* Dim2Triangulation::getSimplex(unsigned long index) {
+    return triangles_[index];
+}
+
 inline const Dim2Triangle* Dim2Triangulation::getTriangle(unsigned long index)
         const {
     return triangles_[index];
 }
 
+inline const Dim2Triangle* Dim2Triangulation::getSimplex(unsigned long index)
+        const {
+    return triangles_[index];
+}
+
 inline long Dim2Triangulation::triangleIndex(const Dim2Triangle* tri) const {
+    return tri->markedIndex();
+}
+
+inline long Dim2Triangulation::simplexIndex(const Dim2Triangle* tri) const {
     return tri->markedIndex();
 }
 
@@ -1041,12 +1173,20 @@ inline Dim2Triangle* Dim2Triangulation::newTriangle() {
     return tri;
 }
 
+inline Dim2Triangle* Dim2Triangulation::newSimplex() {
+    return newTriangle();
+}
+
 inline Dim2Triangle* Dim2Triangulation::newTriangle(const std::string& desc) {
     ChangeEventSpan span(this);
     Dim2Triangle* tri = new Dim2Triangle(desc, this);
     triangles_.push_back(tri);
     clearAllProperties();
     return tri;
+}
+
+inline Dim2Triangle* Dim2Triangulation::newSimplex(const std::string& desc) {
+    return newTriangle(desc);
 }
 
 inline void Dim2Triangulation::removeTriangle(Dim2Triangle* tri) {
@@ -1057,6 +1197,10 @@ inline void Dim2Triangulation::removeTriangle(Dim2Triangle* tri) {
     delete tri;
 
     clearAllProperties();
+}
+
+inline void Dim2Triangulation::removeSimplex(Dim2Triangle* tri) {
+    removeTriangle(tri);
 }
 
 inline void Dim2Triangulation::removeTriangleAt(unsigned long index) {
@@ -1070,10 +1214,18 @@ inline void Dim2Triangulation::removeTriangleAt(unsigned long index) {
     clearAllProperties();
 }
 
+inline void Dim2Triangulation::removeSimplexAt(unsigned long index) {
+    removeTriangleAt(index);
+}
+
 inline void Dim2Triangulation::removeAllTriangles() {
     ChangeEventSpan span(this);
     deleteTriangles();
     clearAllProperties();
+}
+
+inline void Dim2Triangulation::removeAllSimplices() {
+    removeAllTriangles();
 }
 
 inline unsigned long Dim2Triangulation::getNumberOfBoundaryComponents() const {

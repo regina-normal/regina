@@ -35,10 +35,20 @@ Version 4.94  [ (under development) ]
               NPerm3, NPerm4 and NPerm5 respectively.
             - New dimension-agnostic enum constant nPerms that contains the
               number of permutations in Sn (i.e., 3!, 4! and 5! respectively).
+        Class NTetrahedron:
+            - New dimension-agnostic alias adjacentSimplex().  This is
+              identical to adjacentTetrahedron(), and can help with
+              writing code that works with more than one dimension.
         Class NTriangulation:
             - Rewrote barycentricSubdivision(): the code is now clearer,
               but note that the precise labelling of the new tetrahedra has
               changed from earlier versions of Regina.
+            - New dimension-agnostic aliases getNumberOfSimplices(),
+              getSimplices(), getSimplex(), simplexIndex(), newSimplex(),
+              removeSimplex(), removeSimplexAt() and removeAllSimplices().
+              These are identical to the corresponding routines for
+              operating on tetrahedra, and can help with writing code that
+              works with more than one dimension.
         Class NVertex:
             - New routine buildLink() to triangulate the vertex link.
     TEST SUITE:

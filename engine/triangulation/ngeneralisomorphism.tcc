@@ -72,9 +72,9 @@ NGeneralIsomorphism<dim>::NGeneralIsomorphism(
 }
 
 template <int dim>
-template <class Subclass>
-Subclass* NGeneralIsomorphism<dim>::randomInternal(unsigned nSimplices) {
-    Subclass* ans = new Subclass(nSimplices);
+typename NGeneralIsomorphism<dim>::Isomorphism* NGeneralIsomorphism<dim>::
+        random(unsigned nSimplices) {
+    Isomorphism* ans = new Isomorphism(nSimplices);
 
     // Randomly choose the destination simplices.
     unsigned i;
@@ -87,6 +87,102 @@ Subclass* NGeneralIsomorphism<dim>::randomInternal(unsigned nSimplices) {
         ans->facetPerm_[i] = Perm::Sn[rand() % Perm::nPerms];
 
     return ans;
+}
+
+template <int dim>
+typename NGeneralIsomorphism<dim>::Triangulation*
+        NGeneralIsomorphism<dim>::apply(
+        const typename NGeneralIsomorphism<dim>::Triangulation* original)
+        const {
+    if (original->getNumberOfSimplices() != nSimplices_)
+        return 0;
+
+    if (nSimplices_ == 0)
+        return new Triangulation();
+
+    Triangulation* ans = new Triangulation();
+    Simplex** tet = new Simplex*[nSimplices_];
+    unsigned long t;
+    int f;
+
+    NPacket::ChangeEventSpan span(ans);
+    for (t = 0; t < nSimplices_; t++)
+        tet[t] = ans->newSimplex();
+
+    for (t = 0; t < nSimplices_; t++)
+        tet[simpImage_[t]]->setDescription(
+            original->getSimplex(t)->getDescription());
+
+    const Simplex *myTet, *adjTet;
+    unsigned long adjTetIndex;
+    Perm gluingPerm;
+    for (t = 0; t < nSimplices_; t++) {
+        myTet = original->getSimplex(t);
+        for (f = 0; f <= dim; f++)
+            if ((adjTet = myTet->adjacentSimplex(f))) {
+                // We have an adjacent simplex.
+                adjTetIndex = original->simplexIndex(adjTet);
+                gluingPerm = myTet->adjacentGluing(f);
+
+                // Make the gluing from one side only.
+                if (adjTetIndex > t || (adjTetIndex == t &&
+                        gluingPerm[f] > f))
+                    tet[simpImage_[t]]->joinTo(facetPerm_[t][f],
+                        tet[simpImage_[adjTetIndex]],
+                        facetPerm_[adjTetIndex] * gluingPerm *
+                            facetPerm_[t].inverse());
+            }
+    }
+
+    return ans;
+}
+
+template <int dim>
+void NGeneralIsomorphism<dim>::applyInPlace(
+        typename NGeneralIsomorphism<dim>::Triangulation* tri) const {
+    if (tri->getNumberOfSimplices() != nSimplices_)
+        return;
+
+    if (nSimplices_ == 0)
+        return;
+
+    Triangulation staging;
+    Simplex** tet = new Simplex*[nSimplices_];
+    unsigned long t;
+    int f;
+
+    NPacket::ChangeEventSpan span1(&staging);
+    for (t = 0; t < nSimplices_; t++)
+        tet[t] = staging.newSimplex();
+
+    for (t = 0; t < nSimplices_; t++)
+        tet[simpImage_[t]]->setDescription(
+            tri->getSimplex(t)->getDescription());
+
+    const Simplex *myTet, *adjTet;
+    unsigned long adjTetIndex;
+    Perm gluingPerm;
+    for (t = 0; t < nSimplices_; t++) {
+        myTet = tri->getSimplex(t);
+        for (f = 0; f <= dim; f++)
+            if ((adjTet = myTet->adjacentSimplex(f))) {
+                // We have an adjacent simplex.
+                adjTetIndex = tri->simplexIndex(adjTet);
+                gluingPerm = myTet->adjacentGluing(f);
+
+                // Make the gluing from one side only.
+                if (adjTetIndex > t || (adjTetIndex == t &&
+                        gluingPerm[f] > f))
+                    tet[simpImage_[t]]->joinTo(facetPerm_[t][f],
+                        tet[simpImage_[adjTetIndex]],
+                        facetPerm_[adjTetIndex] * gluingPerm *
+                            facetPerm_[t].inverse());
+            }
+    }
+
+    NPacket::ChangeEventSpan span2(tri);
+    tri->removeAllSimplices();
+    tri->swapContents(staging);
 }
 
 } // namespace regina

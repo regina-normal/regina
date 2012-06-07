@@ -40,99 +40,10 @@ template void NGeneralIsomorphism<2>::writeTextLong(std::ostream&) const;
 template bool NGeneralIsomorphism<2>::isIdentity() const;
 template NGeneralIsomorphism<2>::NGeneralIsomorphism(
     const NGeneralIsomorphism<2>&);
-template Dim2Isomorphism*
-    NGeneralIsomorphism<2>::randomInternal<Dim2Isomorphism>(unsigned);
-
-Dim2Triangulation* Dim2Isomorphism::apply(
-        const Dim2Triangulation* original) const {
-    if (original->getNumberOfTriangles() != nSimplices_)
-        return 0;
-
-    if (nSimplices_ == 0)
-        return new Dim2Triangulation();
-
-    Dim2Triangulation* ans = new Dim2Triangulation();
-    Dim2Triangle** triangle = new Dim2Triangle*[nSimplices_];
-    unsigned long p;
-    int f;
-
-    NPacket::ChangeEventSpan span(ans);
-    for (p = 0; p < nSimplices_; ++p)
-        triangle[p] = ans->newTriangle();
-
-    for (p = 0; p < nSimplices_; ++p)
-        triangle[simpImage_[p]]->setDescription(
-            original->getTriangle(p)->getDescription());
-
-    const Dim2Triangle *myTri, *adjTri;
-    unsigned long adjTriIndex;
-    NPerm3 gluingPerm;
-    for (p = 0; p < nSimplices_; ++p) {
-        myTri = original->getTriangle(p);
-        for (f = 0; f < 3; ++f)
-            if ((adjTri = myTri->adjacentTriangle(f))) {
-                // We have an adjacent triangle.
-                adjTriIndex = original->triangleIndex(adjTri);
-                gluingPerm = myTri->adjacentGluing(f);
-
-                // Make the gluing from one side only.
-                if (adjTriIndex > p || (adjTriIndex == p &&
-                        gluingPerm[f] > f))
-                    triangle[simpImage_[p]]->joinTo(facetPerm_[p][f],
-                        triangle[simpImage_[adjTriIndex]],
-                        facetPerm_[adjTriIndex] * gluingPerm *
-                            facetPerm_[p].inverse());
-            }
-    }
-
-    return ans;
-}
-
-void Dim2Isomorphism::applyInPlace(Dim2Triangulation* tri) const {
-    if (tri->getNumberOfTriangles() != nSimplices_)
-        return;
-
-    if (nSimplices_ == 0)
-        return;
-
-    Dim2Triangulation staging;
-    NPacket::ChangeEventSpan span1(&staging);
-    Dim2Triangle** triangle = new Dim2Triangle*[nSimplices_];
-    unsigned long p;
-    int f;
-
-    for (p = 0; p < nSimplices_; ++p)
-        triangle[p] = staging.newTriangle();
-
-    for (p = 0; p < nSimplices_; ++p)
-        triangle[simpImage_[p]]->setDescription(tri->getTriangle(p)->
-            getDescription());
-
-    const Dim2Triangle *myTri, *adjTri;
-    unsigned long adjTriIndex;
-    NPerm3 gluingPerm;
-    for (p = 0; p < nSimplices_; ++p) {
-        myTri = tri->getTriangle(p);
-        for (f = 0; f < 3; ++f)
-            if ((adjTri = myTri->adjacentTriangle(f))) {
-                // We have an adjacent triangle.
-                adjTriIndex = tri->triangleIndex(adjTri);
-                gluingPerm = myTri->adjacentGluing(f);
-
-                // Make the gluing from one side only.
-                if (adjTriIndex > p || (adjTriIndex == p &&
-                        gluingPerm[f] > f))
-                    triangle[simpImage_[p]]->joinTo(facetPerm_[p][f],
-                        triangle[simpImage_[adjTriIndex]],
-                        facetPerm_[adjTriIndex] * gluingPerm *
-                            facetPerm_[p].inverse());
-            }
-    }
-
-    NPacket::ChangeEventSpan span2(tri);
-    tri->removeAllTriangles();
-    tri->swapContents(staging);
-}
+template Dim2Isomorphism* NGeneralIsomorphism<2>::random(unsigned);
+template Dim2Triangulation* NGeneralIsomorphism<2>::apply(
+        const Dim2Triangulation*) const;
+template void NGeneralIsomorphism<2>::applyInPlace(Dim2Triangulation*) const;
 
 } // namespace regina
 

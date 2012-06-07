@@ -45,6 +45,8 @@ void addDim2Triangle() {
         .def("setDescription", &Dim2Triangle::setDescription)
         .def("adjacentTriangle", &Dim2Triangle::adjacentTriangle,
             return_value_policy<reference_existing_object>())
+        .def("adjacentSimplex", &Dim2Triangle::adjacentSimplex,
+            return_value_policy<reference_existing_object>())
         .def("adjacentGluing", &Dim2Triangle::adjacentGluing)
         .def("adjacentEdge", &Dim2Triangle::adjacentEdge)
         .def("hasBoundary", &Dim2Triangle::hasBoundary)
