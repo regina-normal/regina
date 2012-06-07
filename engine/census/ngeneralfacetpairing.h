@@ -80,7 +80,7 @@ namespace regina {
  * \testpart
  */
 template <int dim>
-class NGeneralFacetPairing : public NThread, public DimTraits<dim> {
+class NGenericFacetPairing : public NThread, public DimTraits<dim> {
     public:
         using typename DimTraits<dim>::FacetPairing;
         using typename DimTraits<dim>::Isomorphism;
@@ -93,7 +93,7 @@ class NGeneralFacetPairing : public NThread, public DimTraits<dim> {
          *
          * Specifically, such an isomorphism can be used to convert one
          * pairwise matching of simplex facets (as described by class
-         * NGeneralFacetPairing) into another.
+         * NGenericFacetPairing) into another.
          */
         typedef std::list<Isomorphism*> IsoList;
 
@@ -142,7 +142,7 @@ class NGeneralFacetPairing : public NThread, public DimTraits<dim> {
          *
          * @param cloneMe the facet pairing to clone.
          */
-        NGeneralFacetPairing(const NGeneralFacetPairing& cloneMe);
+        NGenericFacetPairing(const NGenericFacetPairing& cloneMe);
 
         /**
          * Creates the facet pairing of given triangulation.  This
@@ -155,12 +155,12 @@ class NGeneralFacetPairing : public NThread, public DimTraits<dim> {
          * @param tri the triangulation whose facet pairing should
          * be constructed.
          */
-        NGeneralFacetPairing(const Triangulation& tri);
+        NGenericFacetPairing(const Triangulation& tri);
 
         /**
          * Deallocates any memory used by this structure.
          */
-        virtual ~NGeneralFacetPairing();
+        virtual ~NGenericFacetPairing();
 
         /*@}*/
         /**
@@ -510,7 +510,7 @@ class NGeneralFacetPairing : public NThread, public DimTraits<dim> {
          *
          * Performs the actual generation of facet pairings, possibly as a
          * separate thread.  At most one copy of this routine should be
-         * running at any given time for a particular NGeneralFacetPairing
+         * running at any given time for a particular NGenericFacetPairing
          * instance.
          *
          * \ifacespython Not present, even in the dimension-specific
@@ -518,7 +518,7 @@ class NGeneralFacetPairing : public NThread, public DimTraits<dim> {
          *
          * \pre This object is known to be of the dimension-specific subclass
          * FacetPairing, not an instance of the parent class
-         * NGeneralFacetPairing<dim>.
+         * NGenericFacetPairing<dim>.
          *
          * @param param a structure containing the parameters that were
          * passed to findAllPairings().
@@ -623,7 +623,7 @@ class NGeneralFacetPairing : public NThread, public DimTraits<dim> {
          * @param size the number of simplices under
          * consideration in this new facet pairing.
          */
-        NGeneralFacetPairing(unsigned size);
+        NGenericFacetPairing(unsigned size);
 
         /**
          * Returns the other facet to which the given simplex facet is
@@ -740,79 +740,79 @@ class NGeneralFacetPairing : public NThread, public DimTraits<dim> {
 
 /*@}*/
 
-// Inline functions for NGeneralFacetPairing
+// Inline functions for NGenericFacetPairing
 
 template <int dim>
-inline NGeneralFacetPairing<dim>::NGeneralFacetPairing(unsigned size) :
+inline NGenericFacetPairing<dim>::NGenericFacetPairing(unsigned size) :
         size_(size), pairs_(new NFacetSpec<dim>[size * (dim + 1)]) {
 }
 
 template <int dim>
-inline NGeneralFacetPairing<dim>::~NGeneralFacetPairing() {
+inline NGenericFacetPairing<dim>::~NGenericFacetPairing() {
     delete[] pairs_;
 }
 
 template <int dim>
-inline unsigned NGeneralFacetPairing<dim>::size() const {
+inline unsigned NGenericFacetPairing<dim>::size() const {
     return size_;
 }
 
 template <int dim>
-inline const NFacetSpec<dim>& NGeneralFacetPairing<dim>::dest(
+inline const NFacetSpec<dim>& NGenericFacetPairing<dim>::dest(
         const NFacetSpec<dim>& source) const {
     return pairs_[(dim + 1) * source.simp + source.facet];
 }
 
 template <int dim>
-inline const NFacetSpec<dim>& NGeneralFacetPairing<dim>::dest(
+inline const NFacetSpec<dim>& NGenericFacetPairing<dim>::dest(
         unsigned simp, unsigned facet) const {
     return pairs_[(dim + 1) * simp + facet];
 }
 
 template <int dim>
-inline const NFacetSpec<dim>& NGeneralFacetPairing<dim>::operator [](
+inline const NFacetSpec<dim>& NGenericFacetPairing<dim>::operator [](
         const NFacetSpec<dim>& source) const {
     return pairs_[(dim + 1) * source.simp + source.facet];
 }
 
 template <int dim>
-inline bool NGeneralFacetPairing<dim>::isUnmatched(
+inline bool NGenericFacetPairing<dim>::isUnmatched(
         const NFacetSpec<dim>& source) const {
     return pairs_[(dim + 1) * source.simp + source.facet].isBoundary(size_);
 }
 
 template <int dim>
-inline bool NGeneralFacetPairing<dim>::isUnmatched(
+inline bool NGenericFacetPairing<dim>::isUnmatched(
         unsigned simp, unsigned facet) const {
     return pairs_[(dim + 1) * simp + facet].isBoundary(size_);
 }
 
 template <int dim>
-inline NFacetSpec<dim>& NGeneralFacetPairing<dim>::dest(
+inline NFacetSpec<dim>& NGenericFacetPairing<dim>::dest(
         const NFacetSpec<dim>& source) {
     return pairs_[(dim + 1) * source.simp + source.facet];
 }
 
 template <int dim>
-inline NFacetSpec<dim>& NGeneralFacetPairing<dim>::dest(
+inline NFacetSpec<dim>& NGenericFacetPairing<dim>::dest(
         unsigned simp, unsigned facet) {
     return pairs_[(dim + 1) * simp + facet];
 }
 
 template <int dim>
-inline NFacetSpec<dim>& NGeneralFacetPairing<dim>::operator [](
+inline NFacetSpec<dim>& NGenericFacetPairing<dim>::operator [](
         const NFacetSpec<dim>& source) {
     return pairs_[(dim + 1) * source.simp + source.facet];
 }
 
 template <int dim>
-inline bool NGeneralFacetPairing<dim>::noDest(
+inline bool NGenericFacetPairing<dim>::noDest(
         const NFacetSpec<dim>& source) const {
     return dest(source) == source;
 }
 
 template <int dim>
-inline bool NGeneralFacetPairing<dim>::noDest(
+inline bool NGenericFacetPairing<dim>::noDest(
         unsigned simp, unsigned facet) const {
     NFacetSpec<dim>& f = pairs_[(dim + 1) * simp + facet];
     return (f.simp == static_cast<int>(simp) &&
@@ -820,8 +820,8 @@ inline bool NGeneralFacetPairing<dim>::noDest(
 }
 
 template <int dim>
-inline void NGeneralFacetPairing<dim>::findAutomorphisms(
-        typename NGeneralFacetPairing<dim>::IsoList& list) const {
+inline void NGenericFacetPairing<dim>::findAutomorphisms(
+        typename NGenericFacetPairing<dim>::IsoList& list) const {
     isCanonicalInternal(list);
 }
 

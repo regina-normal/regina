@@ -38,16 +38,16 @@
 namespace regina {
 
 template <int dim>
-NGeneralFacetPairing<dim>::NGeneralFacetPairing(
-        const NGeneralFacetPairing<dim>& cloneMe) : NThread(),
+NGenericFacetPairing<dim>::NGenericFacetPairing(
+        const NGenericFacetPairing<dim>& cloneMe) : NThread(),
         size_(cloneMe.size_),
         pairs_(new NFacetSpec<dim>[cloneMe.size_ * (dim + 1)]) {
     std::copy(cloneMe.pairs_, cloneMe.pairs_ + (size_ * (dim + 1)), pairs_);
 }
 
 template <int dim>
-NGeneralFacetPairing<dim>::NGeneralFacetPairing(
-        const typename NGeneralFacetPairing<dim>::Triangulation& tri) :
+NGenericFacetPairing<dim>::NGenericFacetPairing(
+        const typename NGenericFacetPairing<dim>::Triangulation& tri) :
         size_(tri.getNumberOfSimplices()),
         pairs_(new NFacetSpec<dim>[tri.getNumberOfSimplices() * (dim + 1)]) {
     unsigned p, f, index;
@@ -68,7 +68,7 @@ NGeneralFacetPairing<dim>::NGeneralFacetPairing(
 }
 
 template <int dim>
-bool NGeneralFacetPairing<dim>::isClosed() const {
+bool NGenericFacetPairing<dim>::isClosed() const {
     for (NFacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f)
         if (isUnmatched(f))
             return false;
@@ -76,7 +76,7 @@ bool NGeneralFacetPairing<dim>::isClosed() const {
 }
 
 template <int dim>
-std::string NGeneralFacetPairing<dim>::toString() const {
+std::string NGenericFacetPairing<dim>::toString() const {
     std::ostringstream ans;
 
     for (NFacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f) {
@@ -94,14 +94,14 @@ std::string NGeneralFacetPairing<dim>::toString() const {
 }
 
 template <int dim>
-std::string NGeneralFacetPairing<dim>::dotHeader(const char* graphName) {
+std::string NGenericFacetPairing<dim>::dotHeader(const char* graphName) {
     std::ostringstream ans;
     writeDotHeader(ans, graphName);
     return ans.str();
 }
 
 template <int dim>
-void NGeneralFacetPairing<dim>::writeDotHeader(
+void NGenericFacetPairing<dim>::writeDotHeader(
         std::ostream& out, const char* graphName) {
     static const char defaultGraphName[] = "G";
 
@@ -115,7 +115,7 @@ void NGeneralFacetPairing<dim>::writeDotHeader(
 }
 
 template <int dim>
-std::string NGeneralFacetPairing<dim>::dot(
+std::string NGenericFacetPairing<dim>::dot(
         const char* prefix, bool subgraph, bool labels) const {
     std::ostringstream ans;
     writeDot(ans, prefix, subgraph, labels);
@@ -123,7 +123,7 @@ std::string NGeneralFacetPairing<dim>::dot(
 }
 
 template <int dim>
-void NGeneralFacetPairing<dim>::writeDot(std::ostream& out,
+void NGenericFacetPairing<dim>::writeDot(std::ostream& out,
         const char* prefix, bool subgraph, bool labels) const {
     static const char defaultPrefix[] = "g";
 
@@ -164,7 +164,7 @@ void NGeneralFacetPairing<dim>::writeDot(std::ostream& out,
 }
 
 template <int dim>
-std::string NGeneralFacetPairing<dim>::toTextRep() const {
+std::string NGenericFacetPairing<dim>::toTextRep() const {
     std::ostringstream ans;
 
     for (NFacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f) {
@@ -177,8 +177,8 @@ std::string NGeneralFacetPairing<dim>::toTextRep() const {
 }
 
 template <int dim>
-typename NGeneralFacetPairing<dim>::FacetPairing*
-        NGeneralFacetPairing<dim>::fromTextRep(const std::string& rep) {
+typename NGenericFacetPairing<dim>::FacetPairing*
+        NGenericFacetPairing<dim>::fromTextRep(const std::string& rep) {
     std::vector<std::string> tokens;
     unsigned nTokens = basicTokenise(back_inserter(tokens), rep);
 
@@ -237,7 +237,7 @@ typename NGeneralFacetPairing<dim>::FacetPairing*
 }
 
 template <int dim>
-bool NGeneralFacetPairing<dim>::isCanonical() const {
+bool NGenericFacetPairing<dim>::isCanonical() const {
     // Check the preconditions for isCanonicalInternal().
     unsigned simp, facet;
     for (simp = 0; simp < size_; ++simp) {
@@ -260,8 +260,8 @@ bool NGeneralFacetPairing<dim>::isCanonical() const {
 }
 
 template <int dim>
-bool NGeneralFacetPairing<dim>::isCanonicalInternal(
-        typename NGeneralFacetPairing<dim>::IsoList& list) const {
+bool NGenericFacetPairing<dim>::isCanonicalInternal(
+        typename NGenericFacetPairing<dim>::IsoList& list) const {
     // Create the automorphisms one simplex at a time, selecting the
     // preimage of 0 first, then the preimage of 1 and so on.
 
@@ -541,9 +541,9 @@ bool NGeneralFacetPairing<dim>::isCanonicalInternal(
 }
 
 template <int dim>
-bool NGeneralFacetPairing<dim>::findAllPairings(unsigned nSimplices,
+bool NGenericFacetPairing<dim>::findAllPairings(unsigned nSimplices,
         NBoolSet boundary, int nBdryFacets,
-        typename NGeneralFacetPairing<dim>::Use use,
+        typename NGenericFacetPairing<dim>::Use use,
         void* useArgs, bool newThread) {
     // Create a set of arguments.
     Args* args = new Args;
@@ -564,7 +564,7 @@ bool NGeneralFacetPairing<dim>::findAllPairings(unsigned nSimplices,
 }
 
 template <int dim>
-void* NGeneralFacetPairing<dim>::run(void* param) {
+void* NGenericFacetPairing<dim>::run(void* param) {
     Args* args = static_cast<Args*>(param);
 
     // Bail if it's obvious that nothing will happen.

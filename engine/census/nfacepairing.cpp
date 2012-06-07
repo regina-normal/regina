@@ -40,28 +40,28 @@
 namespace regina {
 
 // Instatiate all templates from the .tcc file.
-template NGeneralFacetPairing<3>::NGeneralFacetPairing(
-    const NGeneralFacetPairing<3>&);
-template NGeneralFacetPairing<3>::NGeneralFacetPairing(const NTriangulation&);
-template bool NGeneralFacetPairing<3>::isClosed() const;
-template std::string NGeneralFacetPairing<3>::toString() const;
-template std::string NGeneralFacetPairing<3>::dotHeader(const char*);
-template void NGeneralFacetPairing<3>::writeDotHeader(std::ostream&,
+template NGenericFacetPairing<3>::NGenericFacetPairing(
+    const NGenericFacetPairing<3>&);
+template NGenericFacetPairing<3>::NGenericFacetPairing(const NTriangulation&);
+template bool NGenericFacetPairing<3>::isClosed() const;
+template std::string NGenericFacetPairing<3>::toString() const;
+template std::string NGenericFacetPairing<3>::dotHeader(const char*);
+template void NGenericFacetPairing<3>::writeDotHeader(std::ostream&,
     const char*);
-template std::string NGeneralFacetPairing<3>::dot(const char*, bool, bool)
+template std::string NGenericFacetPairing<3>::dot(const char*, bool, bool)
     const;
-template void NGeneralFacetPairing<3>::writeDot(std::ostream&, const char*,
+template void NGenericFacetPairing<3>::writeDot(std::ostream&, const char*,
     bool, bool) const;
-template std::string NGeneralFacetPairing<3>::toTextRep() const;
-template NFacePairing* NGeneralFacetPairing<3>::fromTextRep(const std::string&);
-template bool NGeneralFacetPairing<3>::isCanonical() const;
-template bool NGeneralFacetPairing<3>::isCanonicalInternal(
-    NGeneralFacetPairing<3>::IsoList&) const;
-template void NGeneralFacetPairing<3>::findAutomorphisms(
-    NGeneralFacetPairing<3>::IsoList&) const;
-template bool NGeneralFacetPairing<3>::findAllPairings(unsigned, NBoolSet,
-    int, NGeneralFacetPairing<3>::Use, void*, bool);
-template void* NGeneralFacetPairing<3>::run(void*);
+template std::string NGenericFacetPairing<3>::toTextRep() const;
+template NFacePairing* NGenericFacetPairing<3>::fromTextRep(const std::string&);
+template bool NGenericFacetPairing<3>::isCanonical() const;
+template bool NGenericFacetPairing<3>::isCanonicalInternal(
+    NGenericFacetPairing<3>::IsoList&) const;
+template void NGenericFacetPairing<3>::findAutomorphisms(
+    NGenericFacetPairing<3>::IsoList&) const;
+template bool NGenericFacetPairing<3>::findAllPairings(unsigned, NBoolSet,
+    int, NGenericFacetPairing<3>::Use, void*, bool);
+template void* NGenericFacetPairing<3>::run(void*);
 
 bool NFacePairing::hasTripleEdge() const {
     unsigned equal, i, j;

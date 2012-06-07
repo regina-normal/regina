@@ -88,7 +88,7 @@ class Dim2Triangulation;
  * Note that in all cases triangulation U may contain more triangles
  * than triangulation T.
  */
-class REGINA_API Dim2Isomorphism : public NGeneralIsomorphism<2> {
+class REGINA_API Dim2Isomorphism : public NGenericIsomorphism<2> {
     public:
         /**
          * Creates a new isomorphism with no initialisation.
@@ -197,11 +197,11 @@ class REGINA_API Dim2Isomorphism : public NGeneralIsomorphism<2> {
 // Inline functions for Dim2Isomorphism
 
 inline Dim2Isomorphism::Dim2Isomorphism(unsigned sourceTriangles) :
-        NGeneralIsomorphism<2>(sourceTriangles) {
+        NGenericIsomorphism<2>(sourceTriangles) {
 }
 
 inline Dim2Isomorphism::Dim2Isomorphism(const Dim2Isomorphism& cloneMe) :
-        NGeneralIsomorphism<2>(cloneMe) {
+        NGenericIsomorphism<2>(cloneMe) {
 }
 
 inline unsigned Dim2Isomorphism::getSourceTriangles() const {

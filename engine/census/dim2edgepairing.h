@@ -63,7 +63,7 @@ namespace regina {
  *
  * \testpart
  */
-class REGINA_API Dim2EdgePairing : public NGeneralFacetPairing<2> {
+class REGINA_API Dim2EdgePairing : public NGenericFacetPairing<2> {
     public:
         /**
          * Creates a new edge pairing that is a clone of the given edge
@@ -99,7 +99,7 @@ class REGINA_API Dim2EdgePairing : public NGeneralFacetPairing<2> {
         Dim2EdgePairing(unsigned nTriangles);
 
     // Make sure the parent class can call the private constructor.
-    friend class NGeneralFacetPairing<2>;
+    friend class NGenericFacetPairing<2>;
 };
 
 /*@}*/
@@ -107,15 +107,15 @@ class REGINA_API Dim2EdgePairing : public NGeneralFacetPairing<2> {
 // Inline functions for Dim2EdgePairing
 
 inline Dim2EdgePairing::Dim2EdgePairing(const Dim2EdgePairing& cloneMe) :
-        NGeneralFacetPairing<2>(cloneMe) {
+        NGenericFacetPairing<2>(cloneMe) {
 }
 
 inline Dim2EdgePairing::Dim2EdgePairing(unsigned nTriangles) :
-        NGeneralFacetPairing<2>(nTriangles) {
+        NGenericFacetPairing<2>(nTriangles) {
 }
 
 inline Dim2EdgePairing::Dim2EdgePairing(const Dim2Triangulation& tri) :
-        NGeneralFacetPairing<2>(tri) {
+        NGenericFacetPairing<2>(tri) {
 }
 
 } // namespace regina

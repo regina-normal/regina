@@ -24,17 +24,17 @@ Version 4.94  [ (under development) ]
         Class DimTraits:
             - New template class to assist with dimension-agnostic code.
         Class NFacePairing:
-            - Now derives from the template base class NGeneralFacePairing<3>.
+            - Now derives from the template base class NGenericFacetPairing<3>.
             - Renamed getNumberOfTetrahedra() to size().  The old name
               is deprecated, and will be removed in a future release.
-        Class NGeneralFacetPairing:
+        Class NGenericFacetPairing:
             - New template base class that contains dimension-agnostic
               code for representing face/facet pairings.
-        Class NGeneralIsomorphism:
+        Class NGenericIsomorphism:
             - New template base class that contains dimension-agnostic
               code for representing isomorphisms between triangulations.
         Class NIsomorphism:
-            - Now a subclass of NGeneralIsomorphism<3>, with inherited
+            - Now a subclass of NGenericIsomorphism<3>, with inherited
               dimension-agnostic aliases for several routines.
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic alias Sn that refers to S3, S4 and S5 in

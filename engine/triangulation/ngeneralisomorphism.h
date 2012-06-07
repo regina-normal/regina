@@ -97,8 +97,7 @@ namespace regina {
  * \testpart
  */
 template <int dim>
-class REGINA_API NGeneralIsomorphism : public ShareableObject,
-        public DimTraits<dim> {
+class NGenericIsomorphism : public ShareableObject, public DimTraits<dim> {
     public:
         using typename DimTraits<dim>::Isomorphism;
         using typename DimTraits<dim>::Perm;
@@ -121,18 +120,18 @@ class REGINA_API NGeneralIsomorphism : public ShareableObject,
          * @param nSimplices the number of simplices in the source
          * triangulation associated with this isomorphism; this may be zero.
          */
-        NGeneralIsomorphism(unsigned nSimplices);
+        NGenericIsomorphism(unsigned nSimplices);
         /**
          * Creates a new isomorphism identical to the given isomorphism.
          *
          * @param cloneMe the isomorphism upon which to base the new
          * isomorphism.
          */
-        NGeneralIsomorphism(const NGeneralIsomorphism& cloneMe);
+        NGenericIsomorphism(const NGenericIsomorphism& cloneMe);
         /**
          * Destroys this isomorphism.
          */
-        ~NGeneralIsomorphism();
+        ~NGenericIsomorphism();
 
         /**
          * Returns the number of simplices in the source triangulation
@@ -330,53 +329,53 @@ class REGINA_API NGeneralIsomorphism : public ShareableObject,
 
 /*@}*/
 
-// Inline functions for NGeneralIsomorphism
+// Inline functions for NGenericIsomorphism
 
 template <int dim>
-inline NGeneralIsomorphism<dim>::NGeneralIsomorphism(unsigned nSimplices) :
+inline NGenericIsomorphism<dim>::NGenericIsomorphism(unsigned nSimplices) :
         nSimplices_(nSimplices),
         simpImage_(nSimplices > 0 ? new int[nSimplices] : 0),
         facetPerm_(nSimplices > 0 ? new Perm[nSimplices] : 0) {
 }
 
 template <int dim>
-inline NGeneralIsomorphism<dim>::~NGeneralIsomorphism() {
+inline NGenericIsomorphism<dim>::~NGenericIsomorphism() {
     // Always safe to delete null.
     delete[] simpImage_;
     delete[] facetPerm_;
 }
 
 template <int dim>
-inline unsigned NGeneralIsomorphism<dim>::getSourceSimplices() const {
+inline unsigned NGenericIsomorphism<dim>::getSourceSimplices() const {
     return nSimplices_;
 }
 
 template <int dim>
-inline int& NGeneralIsomorphism<dim>::simpImage(unsigned sourceSimp) {
+inline int& NGenericIsomorphism<dim>::simpImage(unsigned sourceSimp) {
     return simpImage_[sourceSimp];
 }
 
 template <int dim>
-inline int NGeneralIsomorphism<dim>::simpImage(unsigned sourceSimp) const {
+inline int NGenericIsomorphism<dim>::simpImage(unsigned sourceSimp) const {
     return simpImage_[sourceSimp];
 }
 
 template <int dim>
-inline typename NGeneralIsomorphism<dim>::Perm&
-        NGeneralIsomorphism<dim>::facetPerm(
+inline typename NGenericIsomorphism<dim>::Perm&
+        NGenericIsomorphism<dim>::facetPerm(
         unsigned sourceSimp) {
     return facetPerm_[sourceSimp];
 }
 
 template <int dim>
-inline typename NGeneralIsomorphism<dim>::Perm
-        NGeneralIsomorphism<dim>::facetPerm(
+inline typename NGenericIsomorphism<dim>::Perm
+        NGenericIsomorphism<dim>::facetPerm(
         unsigned sourceSimp) const {
     return facetPerm_[sourceSimp];
 }
 
 template <int dim>
-inline NFacetSpec<dim> NGeneralIsomorphism<dim>::operator [] (
+inline NFacetSpec<dim> NGenericIsomorphism<dim>::operator [] (
         const NFacetSpec<dim>& source) const {
     return NFacetSpec<dim>(simpImage_[source.simp],
         facetPerm_[source.simp][source.facet]);
