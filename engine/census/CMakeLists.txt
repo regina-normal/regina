@@ -10,5 +10,5 @@ ENDFOREACH(SOURCE_FILE)
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
-  INSTALL(FILES dim2edgepairing.h dim4census.h dim4facetpairing.h dim4gluingperms.h dim4gluingpermsearcher.h ncensus.h nfacepairing.h ngeneralfacetpairing.h ngeneralfacetpairing.tcc ngluingperms.h ngluingpermsearcher.h DESTINATION ${INCLUDEDIR}/census COMPONENT Development)
+  INSTALL(FILES dim2edgepairing.h dim4census.h dim4facetpairing.h dim4gluingperms.h dim4gluingpermsearcher.h ncensus.h nfacepairing.h ngenericfacetpairing.h ngenericfacetpairing.tcc ngluingperms.h ngluingpermsearcher.h DESTINATION ${INCLUDEDIR}/census COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
