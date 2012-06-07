@@ -54,7 +54,7 @@ namespace regina {
 class Dim2BoundaryComponent;
 class Dim2Component;
 class Dim2Edge;
-class Dim2Face;
+class Dim2Triangle;
 class Dim2Vertex;
 class NXMLDim2TriangulationReader;
 class NXMLPacketReader;
@@ -71,7 +71,7 @@ class NXMLPacketReader;
  * triangulation is built from triangular faces.
  *
  * When the triangulation is deleted, the corresponding
- * faces, the cellular structure and all other properties
+ * triangles, the cellular structure and all other properties
  * will be deallocated.
  *
  * Elements of the 1- and 0-skeletons (edges and vertices respectively) are
@@ -84,8 +84,8 @@ class REGINA_API Dim2Triangulation : public NPacket {
     public:
         static const int packetType;
 
-        typedef std::vector<Dim2Face*>::const_iterator FaceIterator;
-            /**< Used to iterate through faces. */
+        typedef std::vector<Dim2Triangle*>::const_iterator TriangleIterator;
+            /**< Used to iterate through triangles. */
         typedef std::vector<Dim2Edge*>::const_iterator EdgeIterator;
             /**< Used to iterate through edges. */
         typedef std::vector<Dim2Vertex*>::const_iterator VertexIterator;
@@ -100,7 +100,7 @@ class REGINA_API Dim2Triangulation : public NPacket {
         mutable bool calculatedSkeleton_;
             /**< Has the skeleton been calculated? */
 
-        NMarkedVector<Dim2Face> faces_;
+        NMarkedVector<Dim2Triangle> triangles_;
             /**< The triangular faces that form the triangulation. */
         mutable NMarkedVector<Dim2Edge> edges_;
             /**< The edges in the triangulation skeleton. */
@@ -139,7 +139,7 @@ class REGINA_API Dim2Triangulation : public NPacket {
         /**
          * Destroys this triangulation.
          *
-         * The constituent faces, the cellular structure and all other
+         * The constituent triangles, the cellular structure and all other
          * properties will also be deallocated.
          */
         virtual ~Dim2Triangulation();
@@ -168,119 +168,119 @@ class REGINA_API Dim2Triangulation : public NPacket {
          */
 
         /**
-         * \name Faces
+         * \name Triangles
          */
         /*@{*/
 
         /**
-         * Returns the number of faces in the triangulation.
+         * Returns the number of triangular faces in the triangulation.
          *
-         * @return the number of faces.
+         * @return the number of triangles.
          */
-        unsigned long getNumberOfFaces() const;
+        unsigned long getNumberOfTriangles() const;
         /**
-         * Returns all faces in the triangulation.
+         * Returns all triangular faces in the triangulation.
          *
          * The reference returned will remain valid for as long as the
-         * triangulation exists, always reflecting the faces currently
+         * triangulation exists, always reflecting the triangles currently
          * in the triangulation.
          *
          * \ifacespython This routine returns a python list.
          *
-         * @return the list of all faces.
+         * @return the list of all triangles.
          */
-        const std::vector<Dim2Face*>& getFaces() const;
+        const std::vector<Dim2Triangle*>& getTriangles() const;
         /**
-         * Returns the face with the given index number in the
-         * triangulation.  Note that face indexing may change when
-         * a face is added or removed from the triangulation.
+         * Returns the triangle with the given index number in the
+         * triangulation.  Note that triangle indexing may change when
+         * a triangle is added or removed from the triangulation.
          *
-         * @param index specifies which face to return; this
-         * value should be between 0 and getNumberOfFaces()-1 inclusive.
-         * @return the <tt>index</tt>th face in the triangulation.
+         * @param index specifies which triangle to return; this
+         * value should be between 0 and getNumberOfTriangles()-1 inclusive.
+         * @return the <tt>index</tt>th triangle in the triangulation.
          */
-        Dim2Face* getFace(unsigned long index);
+        Dim2Triangle* getTriangle(unsigned long index);
         /**
-         * Returns the face with the given index number in the
-         * triangulation.  Note that face indexing may change when
-         * a face is added or removed from the triangulation.
+         * Returns the triangle with the given index number in the
+         * triangulation.  Note that triangle indexing may change when
+         * a triangle is added or removed from the triangulation.
          *
-         * @param index specifies which face to return; this
-         * value should be between 0 and getNumberOfFaces()-1 inclusive.
-         * @return the <tt>index</tt>th face in the triangulation.
+         * @param index specifies which triangle to return; this
+         * value should be between 0 and getNumberOfTriangles()-1 inclusive.
+         * @return the <tt>index</tt>th triangle in the triangulation.
          */
-        const Dim2Face* getFace(unsigned long index) const;
+        const Dim2Triangle* getTriangle(unsigned long index) const;
         /**
-         * Returns the index of the given face in the triangulation.
+         * Returns the index of the given triangle in the triangulation.
          *
-         * Note that face indexing may change when a face
+         * Note that triangle indexing may change when a triangle
          * is added or removed from the triangulation.
          *
-         * \pre The given face is contained in this triangulation.
+         * \pre The given triangle is contained in this triangulation.
          *
          * \warning Passing a null pointer to this routine will probably
          * crash your program.  If you are passing the result of some other
          * routine that \e might return null (such as
-         * Dim2Face::adjacentFace), it might be worth explicitly
+         * Dim2Triangle::adjacentTriangle), it might be worth explicitly
          * testing for null beforehand.
          *
-         * @param face specifies which face to find in the triangulation.
-         * @return the index of the specified face, where 0 is
-         * the first face, 1 is the second and so on.
+         * @param tri specifies which triangle to find in the triangulation.
+         * @return the index of the specified triangle, where 0 is
+         * the first triangle, 1 is the second and so on.
          */
-        long faceIndex(const Dim2Face* face) const;
+        long triangleIndex(const Dim2Triangle* tri) const;
         /**
-         * Creates a new face and adds it to this triangulation.
-         * The new face will have an empty description.
-         * All three edges of the new face will be boundary edges.
+         * Creates a new triangle and adds it to this triangulation.
+         * The new triangle will have an empty description.
+         * All three edges of the new triangle will be boundary edges.
          *
-         * @return the new face.
+         * @return the new triangle.
          */
-        Dim2Face* newFace();
+        Dim2Triangle* newTriangle();
         /**
-         * Creates a new face with the given description and adds
+         * Creates a new triangle with the given description and adds
          * it to this triangulation.
-         * All three edges of the new face will be boundary edges.
+         * All three edges of the new triangle will be boundary edges.
          *
-         * @param desc the description to assign to the new face.
-         * @return the new face.
+         * @param desc the description to assign to the new triangle.
+         * @return the new triangle.
          */
-        Dim2Face* newFace(const std::string& desc);
+        Dim2Triangle* newTriangle(const std::string& desc);
         /**
-         * Removes the given face from the triangulation.
-         * All faces glued to this face will be unglued.
-         * The face will be deallocated.
+         * Removes the given triangle from the triangulation.
+         * All triangles glued to this triangle will be unglued.
+         * The triangle will be deallocated.
          *
-         * \pre The given face exists in the triangulation.
+         * \pre The given triangle exists in the triangulation.
          *
-         * @param face the face to remove.
+         * @param tri the triangle to remove.
          */
-        void removeFace(Dim2Face* face);
+        void removeTriangle(Dim2Triangle* tri);
         /**
-         * Removes the face with the given index number
-         * from the triangulation.  Note that face indexing may
-         * change when a face is added or removed from the
+         * Removes the triangle with the given index number
+         * from the triangulation.  Note that triangle indexing may
+         * change when a triangle is added or removed from the
          * triangulation.
          *
-         * All faces glued to this face will be unglued.
-         * The face will be deallocated.
+         * All triangles glued to this triangle will be unglued.
+         * The triangle will be deallocated.
          *
-         * @param index specifies which face to remove; this
-         * should be between 0 and getNumberOfFaces()-1 inclusive.
+         * @param index specifies which triangle to remove; this
+         * should be between 0 and getNumberOfTriangles()-1 inclusive.
          */
-        void removeFaceAt(unsigned long index);
+        void removeTriangleAt(unsigned long index);
         /**
-         * Removes all faces from the triangulation.
-         * All faces will be deallocated.
+         * Removes all triangles from the triangulation.
+         * All triangles will be deallocated.
          */
-        void removeAllFaces();
+        void removeAllTriangles();
         /**
          * Swaps the contents of this and the given triangulation.
-         * That is, all faces that belong to this triangulation
-         * will be moved to \a other, and all faces that belong to
+         * That is, all triangles that belong to this triangulation
+         * will be moved to \a other, and all triangles that belong to
          * \a other will be moved to this triangulation.
          *
-         * All Dim2Face pointers or references will remain valid.
+         * All Dim2Triangle pointers or references will remain valid.
          *
          * @param other the triangulation whose contents should be
          * swapped with this.
@@ -289,22 +289,22 @@ class REGINA_API Dim2Triangulation : public NPacket {
         /**
          * Moves the contents of this triangulation into the given
          * destination triangulation, without destroying any pre-existing
-         * contents.  That is, all faces that currently belong to
-         * \a dest will remain there, and all faces that belong to this
+         * contents.  That is, all triangles that currently belong to
+         * \a dest will remain there, and all triangles that belong to this
          * triangulation will be moved across as additional
-         * faces in \a dest.
+         * triangles in \a dest.
          *
-         * All Dim2Face pointers or references will remain valid.
+         * All Dim2Triangle pointers or references will remain valid.
          * After this operation, this triangulation will be empty.
          *
-         * @param dest the triangulation to which faces should be
+         * @param dest the triangulation to which triangles should be
          * moved.
          */
         void moveContentsTo(Dim2Triangulation& dest);
 
         /*@}*/
         /**
-         * (end: Faces)
+         * (end: Triangles)
          */
 
         /**
@@ -527,7 +527,7 @@ class REGINA_API Dim2Triangulation : public NPacket {
          * Dim2Isomorphism class notes.
          *
          * In particular, note that this triangulation and \a other must
-         * contain the same number of faces for such an isomorphism
+         * contain the same number of triangles for such an isomorphism
          * to exist.
          *
          * If a boundary complete isomorphism is found, the details of
@@ -559,7 +559,7 @@ class REGINA_API Dim2Triangulation : public NPacket {
          *
          * In particular, note that boundary edges of this triangulation
          * need not correspond to boundary edges of \a other, and that
-         * \a other can contain more faces than this triangulation.
+         * \a other can contain more triangles than this triangulation.
          *
          * If a boundary incomplete isomorphism is found, the details of
          * this isomorphism are returned.  The isomorphism is newly
@@ -613,7 +613,7 @@ class REGINA_API Dim2Triangulation : public NPacket {
                 std::list<Dim2Isomorphism*>& results) const;
 
         /**
-         * Relabel the faces and their vertices so that this
+         * Relabel the triangles and their vertices so that this
          * triangulation is in canonical form.  This is essentially
          * the lexicographically smallest labelling when the edge
          * gluings are written out in order.
@@ -622,8 +622,8 @@ class REGINA_API Dim2Triangulation : public NPacket {
          * forms are identical.
          *
          * The lexicographic ordering assumes that the edge gluings are
-         * written in order of face index and then edge number.
-         * Each gluing is written as the destination face index
+         * written in order of triangle index and then edge number.
+         * Each gluing is written as the destination triangle index
          * followed by the gluing permutation (which in turn is written
          * as the images of 0,1,2 in order).
          *
@@ -686,7 +686,7 @@ class REGINA_API Dim2Triangulation : public NPacket {
         /**
          * Inserts a copy of the given triangulation into this triangulation.
          *
-         * The new faces will be inserted into this triangulation
+         * The new triangles will be inserted into this triangulation
          * in the order in which they appear in the given triangulation,
          * and the numbering of their vertices (0-2) will not change.
          * They will be given the same descriptions as appear in the
@@ -707,12 +707,12 @@ class REGINA_API Dim2Triangulation : public NPacket {
          *
          * The isomorphism signature is constructed entirely of
          * printable characters, and has length proportional to
-         * <tt>n log n</tt>, where \a n is the number of faces.
+         * <tt>n log n</tt>, where \a n is the number of triangles.
          *
          * Isomorphism signatures are more general than dehydrations:
          * they can be used with any triangulation (including closed,
          * bounded and/or disconnected triangulations, as well
-         * as triangulations with large numbers of faces).
+         * as triangulations with large numbers of triangles).
          *
          * The time required to construct the isomorphism signature of a
          * triangulation is <tt>O(n^2 log^2 n)</tt>.
@@ -746,7 +746,7 @@ class REGINA_API Dim2Triangulation : public NPacket {
          */
         static Dim2Triangulation* fromIsoSig(const std::string& signature);
         /**
-         * Inserts into this triangulation a set of faces and their
+         * Inserts into this triangulation a set of triangles and their
          * gluings as described by the given integer arrays.
          *
          * This routine is provided to make it easy to hard-code a
@@ -755,25 +755,25 @@ class REGINA_API Dim2Triangulation : public NPacket {
          * the beginning of the source file, avoiding an otherwise tedious
          * sequence of many joinTo() calls.
          *
-         * An additional \a nFaces faces will be inserted into
-         * this triangulation.  The relationships between these faces
+         * An additional \a nTriangles triangles will be inserted into
+         * this triangulation.  The relationships between these triangles
          * should be stored in the two arrays as follows.  Note that the
-         * new faces are numbered from 0 to (\a nFaces - 1), and
-         * individual face edges are numbered from 0 to 2.
+         * new triangles are numbered from 0 to (\a nTriangles - 1), and
+         * individual triangle edges are numbered from 0 to 2.
          *
-         * The \a adjacencies array describes which face edges are
+         * The \a adjacencies array describes which triangle edges are
          * joined to which others.  Specifically, <tt>adjacencies[f][e]</tt>
-         * should contain the number of the face joined to edge \a e
-         * of face \a f.  If this edge is to be left as a
+         * should contain the number of the triangle joined to edge \a e
+         * of triangle \a f.  If this edge is to be left as a
          * boundary edge, <tt>adjacencies[f][e]</tt> should be -1.
          *
          * The \a gluings array describes the particular gluing permutations
-         * used when joining these face edges together.  Specifically,
+         * used when joining these triangle edges together.  Specifically,
          * <tt>gluings[f][e][0..2]</tt> should describe the permutation
-         * used to join edge \a e of face \a f to its adjacent
-         * face.  These three integers should be 0, 1 and 2 in some
+         * used to join edge \a e of triangle \a f to its adjacent
+         * triangle.  These three integers should be 0, 1 and 2 in some
          * order, so that <tt>gluings[f][e][i]</tt> contains the image of
-         * \a i under this permutation.  If edge \a e of face \a f
+         * \a i under this permutation.  If edge \a e of triangle \a f
          * is to be left as a boundary edge, <tt>gluings[f][e][0..2]</tt>
          * may contain anything (and will be duly ignored).
          *
@@ -788,15 +788,15 @@ class REGINA_API Dim2Triangulation : public NPacket {
          *
          * \ifacespython Not present.
          *
-         * @param nFaces the number of additional faces to insert.
-         * @param adjacencies describes which of the new face edges
+         * @param nTriangles the number of additional triangles to insert.
+         * @param adjacencies describes which of the new triangle edges
          * are to be identified.  This array must have initial
-         * dimension at least \a nFaces.
+         * dimension at least \a nTriangles.
          * @param gluings describes the specific gluing permutations by
-         * which these new face edges should be identified.  This
-         * array must also have initial dimension at least \a nFaces.
+         * which these new triangle edges should be identified.  This
+         * array must also have initial dimension at least \a nTriangles.
          */
-        void insertConstruction(unsigned long nFaces,
+        void insertConstruction(unsigned long nTriangles,
             const int adjacencies[][3], const int gluings[][3][3]);
         /**
          * Returns C++ code that can be used with insertConstruction()
@@ -805,7 +805,7 @@ class REGINA_API Dim2Triangulation : public NPacket {
          * The code produced will consist of the following:
          *
          * - the declaration and initialisation of two integer arrays,
-         *   describing the face gluings in this trianguation;
+         *   describing the triangle gluings in this trianguation;
          * - two additional lines that declare a new Dim2Triangulation and
          *   call insertConstruction() to rebuild this triangulation.
          *
@@ -813,7 +813,7 @@ class REGINA_API Dim2Triangulation : public NPacket {
          * arrays, which can be tedious and error-prone to code up by hand.
          *
          * Note that the number of lines of code produced grows linearly
-         * with the number of faces.  If this triangulation is very
+         * with the number of triangles.  If this triangulation is very
          * large, the returned string will be very large as well.
          *
          * @return the C++ code that was generated.
@@ -842,8 +842,8 @@ class REGINA_API Dim2Triangulation : public NPacket {
         void cloneFrom(const Dim2Triangulation& from);
 
     private:
-        void deleteFaces();
-            /**< Deallocates all faces and empties the list. */
+        void deleteTriangles();
+            /**< Deallocates all triangles and empties the list. */
         void deleteSkeleton();
             /**< Deallocates all skeletal objects and empties all
                  corresponding lists. */
@@ -896,7 +896,7 @@ class REGINA_API Dim2Triangulation : public NPacket {
          * isomorphism may be boundary incomplete and may or may not be
          * onto.  That is, this triangulation must appear as a
          * subcomplex of the given triangulation, possibly with some
-         * original boundary edges joined to new faces.
+         * original boundary edges joined to new triangles.
          *
          * See the Dim2Isomorphism class notes for further details
          * regarding boundary complete and boundary incomplete
@@ -932,7 +932,7 @@ class REGINA_API Dim2Triangulation : public NPacket {
         /**
          * Internal to findIsomorphisms().
          *
-         * Examines properties of the given face to find any
+         * Examines properties of the given triangle to find any
          * immediate evidence that \a src may not map to \a dest in a
          * boundary complete isomorphism (in which the vertices of \a src
          * are mapped to the vertices of \a dest according to the
@@ -940,33 +940,34 @@ class REGINA_API Dim2Triangulation : public NPacket {
          *
          * In particular, the degrees of vertices are examined.
          *
-         * @param src the first of the two faces to examine.
-         * @param dest the second of the two faces to examine.
+         * @param src the first of the two triangles to examine.
+         * @param dest the second of the two triangles to examine.
          * @param p the permutation under which the vertices of \a src
          * must map to the vertices of \a dest.
          * @return \c true if no immediate incompatibilities between the
-         * faces were found, or \c false if properties of the
-         * faces were found that differ between \a src and \a dest.
+         * triangles were found, or \c false if properties of the
+         * triangles were found that differ between \a src and \a dest.
          */
-        static bool compatibleFaces(Dim2Face* src, Dim2Face* dest, NPerm3 p);
+        static bool compatibleTriangles(Dim2Triangle* src, Dim2Triangle* dest,
+            NPerm3 p);
 
         /**
          * Internal to isoSig().
          *
          * Constructs a candidate isomorphism signature for a single
          * component of this triangulation.  This candidate signature
-         * assumes that the given face with the given labelling
-         * of its vertices becomes face zero with vertices 0,1,2
+         * assumes that the given triangle with the given labelling
+         * of its vertices becomes triangle zero with vertices 0,1,2
          * under the "canonical isomorphism".
          *
-         * @param face the index of some face in this triangulation.
+         * @param tri the index of some triangle in this triangulation.
          * @param vertices some ordering of the three vertices of the
-         * given face.
+         * given triangle.
          * @return the candidate isomorphism signature.
          */
-        std::string isoSig(unsigned face, const NPerm3& vertices) const;
+        std::string isoSig(unsigned tri, const NPerm3& vertices) const;
 
-    friend class regina::Dim2Face;
+    friend class regina::Dim2Triangle;
     friend class regina::NXMLDim2TriangulationReader;
 };
 
@@ -994,7 +995,7 @@ inline Dim2Triangulation::Dim2Triangulation(const Dim2Triangulation& cloneMe) :
 
 inline Dim2Triangulation::~Dim2Triangulation() {
     clearAllProperties();
-    deleteFaces();
+    deleteTriangles();
 }
 
 inline void Dim2Triangulation::writePacket(NFile&) const {
@@ -1003,73 +1004,75 @@ inline void Dim2Triangulation::writePacket(NFile&) const {
 }
 
 inline void Dim2Triangulation::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << faces_.size() << " faces.";
+    out << "Triangulation with " << triangles_.size() << " triangles.";
 }
 
 inline bool Dim2Triangulation::dependsOnParent() const {
     return false;
 }
 
-inline unsigned long Dim2Triangulation::getNumberOfFaces() const {
-    return faces_.size();
+inline unsigned long Dim2Triangulation::getNumberOfTriangles() const {
+    return triangles_.size();
 }
 
-inline const std::vector<Dim2Face*>& Dim2Triangulation::getFaces() const {
-    return (const std::vector<Dim2Face*>&)(faces_);
+inline const std::vector<Dim2Triangle*>& Dim2Triangulation::getTriangles()
+        const {
+    return (const std::vector<Dim2Triangle*>&)(triangles_);
 }
 
-inline Dim2Face* Dim2Triangulation::getFace(unsigned long index) {
-    return faces_[index];
+inline Dim2Triangle* Dim2Triangulation::getTriangle(unsigned long index) {
+    return triangles_[index];
 }
 
-inline const Dim2Face* Dim2Triangulation::getFace(unsigned long index) const {
-    return faces_[index];
+inline const Dim2Triangle* Dim2Triangulation::getTriangle(unsigned long index)
+        const {
+    return triangles_[index];
 }
 
-inline long Dim2Triangulation::faceIndex(const Dim2Face* face) const {
-    return face->markedIndex();
+inline long Dim2Triangulation::triangleIndex(const Dim2Triangle* tri) const {
+    return tri->markedIndex();
 }
 
-inline Dim2Face* Dim2Triangulation::newFace() {
+inline Dim2Triangle* Dim2Triangulation::newTriangle() {
     ChangeEventSpan span(this);
-    Dim2Face* face = new Dim2Face(this);
-    faces_.push_back(face);
+    Dim2Triangle* tri = new Dim2Triangle(this);
+    triangles_.push_back(tri);
     clearAllProperties();
-    return face;
+    return tri;
 }
 
-inline Dim2Face* Dim2Triangulation::newFace(const std::string& desc) {
+inline Dim2Triangle* Dim2Triangulation::newTriangle(const std::string& desc) {
     ChangeEventSpan span(this);
-    Dim2Face* face = new Dim2Face(desc, this);
-    faces_.push_back(face);
+    Dim2Triangle* tri = new Dim2Triangle(desc, this);
+    triangles_.push_back(tri);
     clearAllProperties();
-    return face;
+    return tri;
 }
 
-inline void Dim2Triangulation::removeFace(Dim2Face* face) {
+inline void Dim2Triangulation::removeTriangle(Dim2Triangle* tri) {
     ChangeEventSpan span(this);
 
-    face->isolate();
-    faces_.erase(faces_.begin() + faceIndex(face));
-    delete face;
+    tri->isolate();
+    triangles_.erase(triangles_.begin() + triangleIndex(tri));
+    delete tri;
 
     clearAllProperties();
 }
 
-inline void Dim2Triangulation::removeFaceAt(unsigned long index) {
+inline void Dim2Triangulation::removeTriangleAt(unsigned long index) {
     ChangeEventSpan span(this);
 
-    Dim2Face* ans = faces_[index];
+    Dim2Triangle* ans = triangles_[index];
     ans->isolate();
-    faces_.erase(faces_.begin() + index);
+    triangles_.erase(triangles_.begin() + index);
     delete ans;
 
     clearAllProperties();
 }
 
-inline void Dim2Triangulation::removeAllFaces() {
+inline void Dim2Triangulation::removeAllTriangles() {
     ChangeEventSpan span(this);
-    deleteFaces();
+    deleteTriangles();
     clearAllProperties();
 }
 
@@ -1174,7 +1177,7 @@ inline long Dim2Triangulation::getEulerChar() const {
     // Cast away the unsignedness of std::vector::size().
     return static_cast<long>(vertices_.size())
         - static_cast<long>(edges_.size())
-        + static_cast<long>(faces_.size());
+        + static_cast<long>(triangles_.size());
 }
 
 inline bool Dim2Triangulation::isClosed() const {

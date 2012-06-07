@@ -45,9 +45,9 @@ namespace {
 
 void addDim2Edge() {
     class_<Dim2EdgeEmbedding>("Dim2EdgeEmbedding",
-            init<regina::Dim2Face*, int>())
+            init<regina::Dim2Triangle*, int>())
         .def(init<const Dim2EdgeEmbedding&>())
-        .def("getFace", &Dim2EdgeEmbedding::getFace,
+        .def("getTriangle", &Dim2EdgeEmbedding::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim2EdgeEmbedding::getEdge)
         .def("getVertices", &Dim2EdgeEmbedding::getVertices)

@@ -51,9 +51,9 @@ namespace {
 
 void addDim2Vertex() {
     class_<Dim2VertexEmbedding>("Dim2VertexEmbedding",
-            init<regina::Dim2Face*, int>())
+            init<regina::Dim2Triangle*, int>())
         .def(init<const Dim2VertexEmbedding&>())
-        .def("getFace", &Dim2VertexEmbedding::getFace,
+        .def("getTriangle", &Dim2VertexEmbedding::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim2VertexEmbedding::getVertex)
         .def("getVertices", &Dim2VertexEmbedding::getVertices)

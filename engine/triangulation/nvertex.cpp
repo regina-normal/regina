@@ -65,10 +65,10 @@ const Dim2Triangulation* NVertex::buildLink() const {
 
     std::vector<NVertexEmbedding>::const_iterator it, adjIt;
     for (it = embeddings.begin(); it != embeddings.end(); ++it)
-        ans->newFace();
+        ans->newTriangle();
 
     NTetrahedron *tet, *adj;
-    int i, exitFace, v;
+    int i, exitTri, v;
     int edgeInLink;
     int adjIndex;
     int adjVertex;
@@ -76,22 +76,22 @@ const Dim2Triangulation* NVertex::buildLink() const {
         tet = it->getTetrahedron();
         v = it->getVertex();
 
-        for (exitFace = 0; exitFace < 4; ++exitFace) {
-            if (exitFace == v)
+        for (exitTri = 0; exitTri < 4; ++exitTri) {
+            if (exitTri == v)
                 continue;
 
-            adj = tet->adjacentTetrahedron(exitFace);
+            adj = tet->adjacentTetrahedron(exitTri);
             if (! adj)
                 continue;
 
-            edgeInLink = tet->getFaceMapping(v).preImageOf(exitFace);
-            if (ans->getFace(i)->adjacentFace(edgeInLink)) {
+            edgeInLink = tet->getFaceMapping(v).preImageOf(exitTri);
+            if (ans->getTriangle(i)->adjacentTriangle(edgeInLink)) {
                 // We've already made this gluing in the vertex link
                 // from the other side.
                 continue;
             }
 
-            adjVertex = tet->adjacentGluing(exitFace)[v];
+            adjVertex = tet->adjacentGluing(exitTri)[v];
 
             // TODO: We need to find which *embedding* corresponds to
             // the adjacent tetrahedron/vertex pair.
@@ -104,9 +104,9 @@ const Dim2Triangulation* NVertex::buildLink() const {
                         adjIt->getVertex() == adjVertex)
                     break; // Sets adjIndex to the right value.
 
-            ans->getFace(i)->joinTo(edgeInLink, ans->getFace(adjIndex),
+            ans->getTriangle(i)->joinTo(edgeInLink, ans->getTriangle(adjIndex),
                 perm4to3(adj->getFaceMapping(adjVertex).inverse() *
-                    tet->adjacentGluing(exitFace) *
+                    tet->adjacentGluing(exitTri) *
                     tet->getFaceMapping(v)));
         }
     }
