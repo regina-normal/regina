@@ -34,7 +34,8 @@
 namespace regina {
 
 const NPerm4 NPerm4::S4[24] = {
-    NPerm4(0),  NPerm4(1),  NPerm4(2),  NPerm4(3),  NPerm4(4),  NPerm4(5),
+    NPerm4((unsigned char)0),
+                NPerm4(1),  NPerm4(2),  NPerm4(3),  NPerm4(4),  NPerm4(5),
     NPerm4(6),  NPerm4(7),  NPerm4(8),  NPerm4(9),  NPerm4(10), NPerm4(11),
     NPerm4(12), NPerm4(13), NPerm4(14), NPerm4(15), NPerm4(16), NPerm4(17),
     NPerm4(18), NPerm4(19), NPerm4(20), NPerm4(21), NPerm4(22), NPerm4(23)
@@ -56,7 +57,7 @@ const unsigned NPerm4::invS4[24] = {
 const unsigned* allPermsS4Inv = NPerm4::invS4;
 
 const NPerm4 NPerm4::orderedS4[24] = {
-    NPerm4(0),  NPerm4(1),  NPerm4(3),  NPerm4(2),
+    NPerm4((unsigned char)0),  NPerm4(1),  NPerm4(3),  NPerm4(2),
     NPerm4(4),  NPerm4(5),  NPerm4(7),  NPerm4(6),
     NPerm4(8),  NPerm4(9),  NPerm4(11), NPerm4(10),
     NPerm4(12), NPerm4(13), NPerm4(15), NPerm4(14),

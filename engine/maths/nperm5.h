@@ -143,6 +143,19 @@ class REGINA_API NPerm5 {
         NPerm5(int a, int b, int c, int d, int e);
 
         /**
+         * Creates a permutation mapping \a i to \a image[i] for each
+         * \a i = 0,1,2,3,4.
+         *
+         * \pre The array \a image contains five elements, which are
+         * 0, 1, 2, 3 and 4 in some order.
+         *
+         * \ifacespython Not present.
+         *
+         * @param image the array of images.
+         */
+        NPerm5(const int* image);
+
+        /**
          * Creates a permutation mapping
          * (<i>a0</i>,<i>b0</i>,<i>c0</i>,<i>d0</i>,<i>e0</i>) to
          * (<i>a1</i>,<i>b1</i>,<i>c1</i>,<i>d1</i>,<i>e1</i>) respectively.
@@ -430,6 +443,11 @@ inline NPerm5::NPerm5(int a, int b) {
 
 inline NPerm5::NPerm5(int a, int b, int c, int d, int e) {
     code = (e << 12) | (d << 9) | (c << 6) | (b << 3) | a;
+}
+
+inline NPerm5::NPerm5(const int* image) {
+    code = (image[4] << 12) | (image[3] << 9) | (image[2] << 6) |
+        (image[1] << 3) | image[0];
 }
 
 inline NPerm5::NPerm5(int a0, int a1, int b0, int b1,

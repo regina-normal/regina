@@ -146,6 +146,16 @@ class NPerm3Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
+            int arr[3];
+            arr[0] = a; arr[1] = b; arr[2] = c;
+            NPerm3 parr(arr);
+            if (! looksEqual(parr, p, name.str())) {
+                std::ostringstream msg;
+                msg << "The array constructor fails for "
+                    "the permutation " << name.str() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
             NPerm3 p3(p);
             if (! looksEqual(p3, p, name.str())) {
                 std::ostringstream msg;
