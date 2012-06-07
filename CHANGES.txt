@@ -63,8 +63,13 @@ Version 4.94  [ (under development) ]
             - These typedefs have been renamed as NFacePairing::IsoList
               and NFacePairing::Use respectively.  The old typedefs are
               deprecated, and will be removed in some future release.
+    UTILITIES:
+        tricensus:
+            - Now takes an optional argument -2/--dim2 to enumerate
+              2-manifold triangulations.
     TEST SUITE:
         - Added thorough tests for barycentric subdivision.
+        - Added enumeration tests for Dim2EdgePairing.
 
 Version 4.93  [ 30 May, 2012 ]
 
