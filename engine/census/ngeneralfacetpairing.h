@@ -80,8 +80,11 @@ namespace regina {
  * \testpart
  */
 template <int dim>
-class NGeneralFacetPairing /*: public NThread*/ {
+class NGeneralFacetPairing /*: TODO public NThread*/ : public DimTraits<dim> {
     public:
+        using typename DimTraits<dim>::Isomorphism;
+        using typename DimTraits<dim>::Perm;
+
         /**
          * A list of isomorphisms on pairwise matchings of simplex facets.
          *
@@ -266,7 +269,7 @@ class NGeneralFacetPairing /*: public NThread*/ {
          * @return \c true if and only if this facet pairing is in
          * canonical form.
          */
-        // TODO bool isCanonical() const;
+        bool isCanonical() const;
 
         /**
          * Fills the given list with the set of all combinatorial
@@ -295,7 +298,7 @@ class NGeneralFacetPairing /*: public NThread*/ {
          * @param list the list into which the newly created automorphisms
          * will be placed.
          */
-        // TODO void findAutomorphisms(NGeneralFacetPairingIsoList& list) const;
+        void findAutomorphisms(IsoList& list) const;
 
         /*@}*/
         /**
@@ -693,7 +696,7 @@ class NGeneralFacetPairing /*: public NThread*/ {
          * @return \c true if and only if this facet pairing is in
          * canonical form.
          */
-        // TODO bool isCanonicalInternal(IsoList& list) const;
+        bool isCanonicalInternal(IsoList& list) const;
 };
 
 /*@}*/
@@ -777,13 +780,11 @@ inline bool NGeneralFacetPairing<dim>::noDest(
         f.facet == static_cast<int>(facet));
 }
 
-/* TODO
 template <int dim>
 inline void NGeneralFacetPairing<dim>::findAutomorphisms(
-        NGeneralFacetPairingIsoList& list) const {
+        typename NGeneralFacetPairing<dim>::IsoList& list) const {
     isCanonicalInternal(list);
 }
-*/
 
 } // namespace regina
 
