@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file dim4/dim4isomorphism.h
+/*! \file triangulation/ngeneralisomorphism.h
  *  \brief Deals with combinatorial isomorphisms of \a n-manifold
  *  triangulations.
  */
@@ -51,6 +51,9 @@ namespace regina {
 /**
  * A dimension-agnostic base class that represents a combinatorial
  * isomorphism from one \a dim-manifold triangulation into another.
+ * Each dimension that Regina works with (2 and 3) offers its own
+ * subclass with richer functionality; users typically do not need to
+ * work with this template base class directly.
  *
  * In essence, a combinatorial isomorphism from triangulation T to
  * triangulation U is a one-to-one map from the simplices of T to the
