@@ -15,9 +15,9 @@ Version 4.94  [ (under development) ]
         Class Dim2Triangulation:
             - New 2-manifold triangulation class.  This is a new packet
               type that can be independently stored in data files.
-        Class Dim2BoundaryComponent, Dim2Component, Dim2EdgeEmbedding,
-                  Dim2Edge, Dim2Face, Dim2Isomorphism, Dim2VertexEmbedding,
-                  Dim2Vertex, NXMLDim2TriangulationReader:
+        Class Dim2BoundaryComponent, Dim2Component, Dim2Edge, Dim2EdgeEmbedding,
+                  Dim2Isomorphism, Dim2Triangle, Dim2Vertex,
+                  Dim2VertexEmbedding, NXMLDim2TriangulationReader:
             - New classes to support Dim2Triangulation.
         Class DimTraits:
             - New template class to assist with dimension-agnostic code.
