@@ -37,7 +37,7 @@
 #endif
 
 #include "regina-core.h"
-#include "census/ngeneralfacetpairing.h"
+#include "census/ngenericfacetpairing.h"
 #include "triangulation/nisomorphism.h"
 
 namespace regina {

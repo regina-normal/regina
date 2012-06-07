@@ -28,7 +28,7 @@
 
 #include "dim4/dim4isomorphism.h"
 #include "dim4/dim4triangulation.h"
-#include "triangulation/ngeneralisomorphism.tcc"
+#include "triangulation/ngenericisomorphism.tcc"
 
 namespace regina {
 

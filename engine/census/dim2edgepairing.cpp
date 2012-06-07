@@ -27,7 +27,7 @@
 /* end stub */
 
 #include "census/dim2edgepairing.h"
-#include "census/ngeneralfacetpairing.tcc"
+#include "census/ngenericfacetpairing.tcc"
 #include "dim2/dim2triangle.h"
 #include "dim2/dim2triangulation.h"
 

@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file triangulation/ngeneralisomorphism.h
+/*! \file triangulation/ngenericisomorphism.h
  *  \brief Deals with combinatorial isomorphisms of \a n-manifold
  *  triangulations.
  */

@@ -27,7 +27,7 @@
 /* end stub */
 
 #include "triangulation/ntriangulation.h"
-#include "triangulation/ngeneralisomorphism.tcc"
+#include "triangulation/ngenericisomorphism.tcc"
 #include "triangulation/nisomorphism.h"
 
 namespace regina {

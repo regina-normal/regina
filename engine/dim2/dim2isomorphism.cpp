@@ -30,7 +30,7 @@
 #include <cstdlib>
 #include "dim2/dim2isomorphism.h"
 #include "dim2/dim2triangulation.h"
-#include "triangulation/ngeneralisomorphism.tcc"
+#include "triangulation/ngenericisomorphism.tcc"
 
 namespace regina {
 

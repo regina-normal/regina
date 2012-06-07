@@ -27,7 +27,7 @@
 /* end stub */
 
 #include "census/dim4facetpairing.h"
-#include "census/ngeneralfacetpairing.tcc"
+#include "census/ngenericfacetpairing.tcc"
 #include "dim4/dim4pentachoron.h"
 #include "dim4/dim4triangulation.h"
 

@@ -39,7 +39,7 @@
 #include "shareableobject.h"
 #include "maths/nperm3.h"
 #include "triangulation/nfacetspec.h"
-#include "triangulation/ngeneralisomorphism.h"
+#include "triangulation/ngenericisomorphism.h"
 
 namespace regina {
 
