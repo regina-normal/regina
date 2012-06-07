@@ -32,13 +32,12 @@
 #include "testsuite/census/testcensus.h"
 
 using regina::NFacePairing;
-using regina::NFacePairingIsoList;
 using regina::NBoolSet;
 
 /**
  * Simply increment the given count when a face pairing is found.
  */
-void countFacePairings(const NFacePairing* pair, const NFacePairingIsoList*,
+void countFacePairings(const NFacePairing* pair, const NFacePairing::IsoList*,
         void* count) {
     if (pair)
         (*(unsigned*)count)++;
@@ -68,7 +67,7 @@ namespace {
     };
 }
 
-void countBadGraphs(const NFacePairing* pair, const NFacePairingIsoList*,
+void countBadGraphs(const NFacePairing* pair, const NFacePairing::IsoList*,
         void* badGraphsRaw) {
     if (pair) {
         BadGraphs* badGraphs = static_cast<BadGraphs*>(badGraphsRaw);

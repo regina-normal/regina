@@ -32,14 +32,13 @@
 #include "testsuite/census/testcensus.h"
 
 using regina::Dim4FacetPairing;
-using regina::Dim4FacetPairingIsoList;
 using regina::NBoolSet;
 
 /**
  * Simply increment the given count when a face pairing is found.
  */
 void countFacetPairings(const Dim4FacetPairing* pair,
-        const Dim4FacetPairingIsoList*, void* count) {
+        const Dim4FacetPairing::IsoList*, void* count) {
     if (pair)
         (*(unsigned*)count)++;
 }

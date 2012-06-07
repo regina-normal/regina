@@ -95,6 +95,8 @@ Version 5.0  [ (under development) ]
 Version 4.94  [ (under development) ]
 
     ENGINE:
+        Class Dim2EdgePairing:
+            - New class for building a census of 2-manifold triangulations.
         Class Dim2TriangleEdge:
             - New convenience typedef for NFacetSpec<2>.
         Class Dim2Triangulation:
@@ -106,6 +108,10 @@ Version 4.94  [ (under development) ]
             - New classes to support Dim2Triangulation.
         Class DimTraits:
             - New template class to assist with dimension-agnostic code.
+        Class NFacePairing:
+            - Now derives from the template base class NGeneralFacePairing<3>.
+            - Renamed getNumberOfTetrahedra() to size().  The old name
+              is deprecated, and will be removed in a future release.
         Class NGeneralFacetPairing:
             - New template base class that contains dimension-agnostic
               code for representing face/facet pairings.
@@ -122,8 +128,9 @@ Version 4.94  [ (under development) ]
               number of permutations in Sn (i.e., 3!, 4! and 5! respectively).
             - New construtors that take an array of images.
         Class NTetrahedron:
-            - New dimension-agnostic alias adjacentSimplex().  This is
-              identical to adjacentTetrahedron(), and can help with
+            - New dimension-agnostic aliases adjacentSimplex() and
+              adjacentFacet().  These are identical to adjacentTetrahedron()
+              and adjacentFace() respectively, and can help with
               writing code that works with more than one dimension.
         Class NTriangulation:
             - Rewrote barycentricSubdivision(): the code is now clearer,
@@ -137,6 +144,10 @@ Version 4.94  [ (under development) ]
               works with more than one dimension.
         Class NVertex:
             - New routine buildLink() to triangulate the vertex link.
+        Typedef NFacePairingIsoList, UseFacePairing:
+            - These typedefs have been renamed as NFacePairing::IsoList
+              and NFacePairing::Use respectively.  The old typedefs are
+              deprecated, and will be removed in some future release.
     TEST SUITE:
         - Added thorough tests for barycentric subdivision.
 

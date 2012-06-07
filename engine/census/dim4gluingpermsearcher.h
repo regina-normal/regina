@@ -408,7 +408,7 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
                  and writing tagged data in text format. */
 
     protected:
-        const Dim4FacetPairingIsoList* autos_;
+        const Dim4FacetPairing::IsoList* autos_;
             /**< The set of isomorphisms that define equivalence of
                  gluing permutation sets.  Generally this is the set of all
                  automorphisms of the underlying facet pairing. */
@@ -562,7 +562,7 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
          * set found.
          */
         Dim4GluingPermSearcher(const Dim4FacetPairing* pairing,
-                const Dim4FacetPairingIsoList* autos,
+                const Dim4FacetPairing::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
                 UseDim4GluingPerms use, void* useArgs = 0);
 
@@ -694,7 +694,7 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
          * constructed by Dim4FacetPairing::findAllPairings() are of this form.
          */
         static void findAllPerms(const Dim4FacetPairing* pairing,
-                const Dim4FacetPairingIsoList* autos,
+                const Dim4FacetPairing::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
                 UseDim4GluingPerms use, void* useArgs = 0);
 
@@ -727,7 +727,7 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
          */
         static Dim4GluingPermSearcher* bestSearcher(
                 const Dim4FacetPairing* pairing,
-                const Dim4FacetPairingIsoList* autos,
+                const Dim4FacetPairing::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
                 UseDim4GluingPerms use, void* useArgs = 0);
 

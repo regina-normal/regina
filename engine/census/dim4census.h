@@ -301,7 +301,7 @@ class REGINA_API Dim4Census {
          * this must really be of class Dim4Census.
          */
         static void foundFacetPairing(const Dim4FacetPairing* pairing,
-            const Dim4FacetPairingIsoList* autos, void* census);
+            const Dim4FacetPairing::IsoList* autos, void* census);
 
         /**
          * Called when a particular set of gluing permutations has been

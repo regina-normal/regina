@@ -82,6 +82,7 @@ void addNFacePairing() {
     class_<NFacePairing, std::auto_ptr<NFacePairing>, boost::noncopyable>
             ("NFacePairing", init<const NFacePairing&>())
         .def(init<const NTriangulation&>())
+        .def("size", &NFacePairing::size)
         .def("getNumberOfTetrahedra", &NFacePairing::getNumberOfTetrahedra)
         .def("dest", dest_face,
             return_value_policy<reference_existing_object>())

@@ -62,7 +62,7 @@ const char NClosedPrimeMinSearcher::coneNoTwist[12] = {
 const char NClosedPrimeMinSearcher::dataTag_ = 'c';
 
 NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
-        const NFacePairingIsoList* autos, bool orientableOnly,
+        const NFacePairing::IsoList* autos, bool orientableOnly,
         UseGluingPerms use, void* useArgs) :
         NCompactSearcher(pairing, autos, orientableOnly,
             NCensus::PURGE_NON_MINIMAL_PRIME | NCensus::PURGE_P2_REDUCIBLE,

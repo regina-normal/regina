@@ -201,21 +201,21 @@ bool Dim4GluingPermSearcher::PentTriangleState::readData(std::istream& in,
 }
 
 Dim4GluingPermSearcher::Dim4GluingPermSearcher(
-        const Dim4FacetPairing* pairing, const Dim4FacetPairingIsoList* autos,
+        const Dim4FacetPairing* pairing, const Dim4FacetPairing::IsoList* autos,
         bool orientableOnly, bool finiteOnly,
         UseDim4GluingPerms use, void* useArgs) :
         Dim4GluingPerms(pairing), autos_(autos), autosNew_(autos == 0),
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
         use_(use), useArgs_(useArgs),
         started_(false),
-        orientation_(new int[pairing->getNumberOfPentachora()]) {
+        orientation_(new int[pairing->size()]) {
     // Generate the list of facet pairing automorphisms if necessary.
     // This will require us to remove the const for a wee moment.
     if (autosNew_) {
         const_cast<Dim4GluingPermSearcher*>(this)->autos_ =
-            new Dim4FacetPairingIsoList();
+            new Dim4FacetPairing::IsoList();
         pairing->findAutomorphisms(
-            const_cast<Dim4FacetPairingIsoList&>(*autos_));
+            const_cast<Dim4FacetPairing::IsoList&>(*autos_));
     }
 
     // Initialise arrays.
@@ -272,8 +272,8 @@ Dim4GluingPermSearcher::~Dim4GluingPermSearcher() {
     if (autosNew_) {
         // We made them, so we'd better remove the const again and
         // delete them.
-        Dim4FacetPairingIsoList* autos =
-            const_cast<Dim4FacetPairingIsoList*>(autos_);
+        Dim4FacetPairing::IsoList* autos =
+            const_cast<Dim4FacetPairing::IsoList*>(autos_);
         std::for_each(autos->begin(), autos->end(),
             FuncDelete<Dim4Isomorphism>());
         delete autos;
@@ -281,7 +281,7 @@ Dim4GluingPermSearcher::~Dim4GluingPermSearcher() {
 }
 
 Dim4GluingPermSearcher* Dim4GluingPermSearcher::bestSearcher(
-        const Dim4FacetPairing* pairing, const Dim4FacetPairingIsoList* autos,
+        const Dim4FacetPairing* pairing, const Dim4FacetPairing::IsoList* autos,
         bool orientableOnly, bool finiteOnly,
         UseDim4GluingPerms use, void* useArgs) {
     // Do everything by brute force for now.
@@ -290,7 +290,7 @@ Dim4GluingPermSearcher* Dim4GluingPermSearcher::bestSearcher(
 }
 
 void Dim4GluingPermSearcher::findAllPerms(const Dim4FacetPairing* pairing,
-        const Dim4FacetPairingIsoList* autos, bool orientableOnly,
+        const Dim4FacetPairing::IsoList* autos, bool orientableOnly,
         bool finiteOnly, UseDim4GluingPerms use, void* useArgs) {
     Dim4GluingPermSearcher* searcher = bestSearcher(pairing, autos,
         orientableOnly, finiteOnly, use, useArgs);
@@ -638,8 +638,9 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
 
     // Recontruct the facet pairing automorphisms.
     const_cast<Dim4GluingPermSearcher*>(this)->autos_ =
-        new Dim4FacetPairingIsoList();
-    pairing_->findAutomorphisms(const_cast<Dim4FacetPairingIsoList&>(*autos_));
+        new Dim4FacetPairing::IsoList();
+    pairing_->findAutomorphisms(const_cast<Dim4FacetPairing::IsoList&>(
+        *autos_));
     autosNew_ = true;
 
     // Keep reading.
@@ -672,7 +673,7 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
         inputError_ = true; return;
     }
 
-    int nPent = pairing_->getNumberOfPentachora();
+    int nPent = pairing_->size();
     int p;
 
     orientation_ = new int[nPent];
@@ -747,13 +748,13 @@ bool Dim4GluingPermSearcher::isCanonical() const {
     Dim4PentFacet facet, facetDest, facetImage;
     int ordering;
 
-    for (Dim4FacetPairingIsoList::const_iterator it = autos_->begin();
+    for (Dim4FacetPairing::IsoList::const_iterator it = autos_->begin();
             it != autos_->end(); ++it) {
         // Compare the current set of gluing permutations with its
         // preimage under each facet pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.
         for (facet.setFirst(); facet.simp <
-                static_cast<int>(pairing_->getNumberOfPentachora()); facet++) {
+                static_cast<int>(pairing_->size()); facet++) {
             facetDest = pairing_->dest(facet);
             if (pairing_->isUnmatched(facet) || facetDest < facet)
                 continue;

@@ -27,53 +27,53 @@
 /* end stub */
 
 #include <boost/python.hpp>
-#include "census/dim4facetpairing.h"
-#include "dim4/dim4triangulation.h"
+#include "census/dim2edgepairing.h"
+#include "dim2/dim2triangulation.h"
 
 using namespace boost::python;
-using regina::Dim4FacetPairing;
-using regina::Dim4PentFacet;
-using regina::Dim4Triangulation;
+using regina::Dim2EdgePairing;
+using regina::Dim2TriangleEdge;
+using regina::Dim2Triangulation;
 
 namespace {
-    const Dim4PentFacet& (Dim4FacetPairing::*dest_facet)(const Dim4PentFacet&)
-        const = &Dim4FacetPairing::dest;
-    const Dim4PentFacet& (Dim4FacetPairing::*dest_unsigned)(unsigned, unsigned)
-        const = &Dim4FacetPairing::dest;
-    bool (Dim4FacetPairing::*isUnmatched_facet)(const Dim4PentFacet&) const =
-        &Dim4FacetPairing::isUnmatched;
-    bool (Dim4FacetPairing::*isUnmatched_unsigned)(unsigned, unsigned) const =
-        &Dim4FacetPairing::isUnmatched;
+    const Dim2TriangleEdge& (Dim2EdgePairing::*dest_facet)(
+        const Dim2TriangleEdge&) const = &Dim2EdgePairing::dest;
+    const Dim2TriangleEdge& (Dim2EdgePairing::*dest_unsigned)(
+        unsigned, unsigned) const = &Dim2EdgePairing::dest;
+    bool (Dim2EdgePairing::*isUnmatched_facet)(const Dim2TriangleEdge&) const =
+        &Dim2EdgePairing::isUnmatched;
+    bool (Dim2EdgePairing::*isUnmatched_unsigned)(unsigned, unsigned) const =
+        &Dim2EdgePairing::isUnmatched;
 
-    const Dim4PentFacet& getItem(const Dim4FacetPairing& p,
-            const Dim4PentFacet& index) {
+    const Dim2TriangleEdge& getItem(const Dim2EdgePairing& p,
+            const Dim2TriangleEdge& index) {
         return p[index];
     }
 
-    void writeDot_stdout(const Dim4FacetPairing& p, const char* prefix = 0,
+    void writeDot_stdout(const Dim2EdgePairing& p, const char* prefix = 0,
             bool subgraph = false, bool labels = false) {
         p.writeDot(std::cout, prefix, subgraph, labels);
     }
 
     void writeDotHeader_stdout(const char* graphName = 0) {
-        Dim4FacetPairing::writeDotHeader(std::cout, graphName);
+        Dim2EdgePairing::writeDotHeader(std::cout, graphName);
     }
 
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDot, writeDot_stdout, 1, 4);
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDotHeader, writeDotHeader_stdout,
         0, 1);
 
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_dot, Dim4FacetPairing::dot, 0, 3);
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dotHeader, Dim4FacetPairing::dotHeader,
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_dot, Dim2EdgePairing::dot, 0, 3);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dotHeader, Dim2EdgePairing::dotHeader,
         0, 1);
 }
 
-void addDim4FacetPairing() {
-    class_<Dim4FacetPairing, std::auto_ptr<Dim4FacetPairing>,
+void addDim2EdgePairing() {
+    class_<Dim2EdgePairing, std::auto_ptr<Dim2EdgePairing>,
             boost::noncopyable>
-            ("Dim4FacetPairing", init<const Dim4FacetPairing&>())
-        .def(init<const Dim4Triangulation&>())
-        .def("size", &Dim4FacetPairing::size)
+            ("Dim2EdgePairing", init<const Dim2EdgePairing&>())
+        .def(init<const Dim2Triangulation&>())
+        .def("size", &Dim2EdgePairing::size)
         .def("dest", dest_facet,
             return_value_policy<reference_existing_object>())
         .def("dest", dest_unsigned,
@@ -82,17 +82,17 @@ void addDim4FacetPairing() {
             return_value_policy<reference_existing_object>())
         .def("isUnmatched", isUnmatched_facet)
         .def("isUnmatched", isUnmatched_unsigned)
-        .def("isCanonical", &Dim4FacetPairing::isCanonical)
-        .def("toString", &Dim4FacetPairing::toString)
-        .def("toTextRep", &Dim4FacetPairing::toTextRep)
-        .def("fromTextRep", &Dim4FacetPairing::fromTextRep,
+        .def("isCanonical", &Dim2EdgePairing::isCanonical)
+        .def("toString", &Dim2EdgePairing::toString)
+        .def("toTextRep", &Dim2EdgePairing::toTextRep)
+        .def("fromTextRep", &Dim2EdgePairing::fromTextRep,
             return_value_policy<manage_new_object>())
         .def("writeDot", writeDot_stdout, OL_writeDot())
-        .def("dot", &Dim4FacetPairing::dot, OL_dot())
+        .def("dot", &Dim2EdgePairing::dot, OL_dot())
         .def("writeDotHeader", writeDotHeader_stdout, OL_writeDotHeader())
-        .def("dotHeader", &Dim4FacetPairing::dotHeader, OL_dotHeader())
-        .def("isClosed", &Dim4FacetPairing::isClosed)
-        .def("__str__", &Dim4FacetPairing::toString)
+        .def("dotHeader", &Dim2EdgePairing::dotHeader, OL_dotHeader())
+        .def("isClosed", &Dim2EdgePairing::isClosed)
+        .def("__str__", &Dim2EdgePairing::toString)
         .staticmethod("fromTextRep")
         .staticmethod("writeDotHeader")
         .staticmethod("dotHeader")

@@ -395,7 +395,7 @@ class REGINA_API NCensus {
          * this must really be of class NCensus.
          */
         static void foundFacePairing(const NFacePairing* pairing,
-            const NFacePairingIsoList* autos, void* census);
+            const NFacePairing::IsoList* autos, void* census);
 
         /**
          * Called when a particular set of gluing permutations has been

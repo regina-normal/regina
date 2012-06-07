@@ -80,7 +80,7 @@ unsigned long Dim4Census::formPartialCensus(const Dim4FacetPairing* pairing,
         return 0;
 
     // Make a list of automorphisms.
-    Dim4FacetPairingIsoList autos;
+    Dim4FacetPairing::IsoList autos;
     pairing->findAutomorphisms(autos);
 
     // Select the individual gluing permutations.
@@ -103,7 +103,7 @@ Dim4Census::Dim4Census(NPacket* parent, const NBoolSet& finiteness,
 }
 
 void Dim4Census::foundFacetPairing(const Dim4FacetPairing* pairing,
-        const Dim4FacetPairingIsoList* autos, void* census) {
+        const Dim4FacetPairing::IsoList* autos, void* census) {
     Dim4Census* realCensus = static_cast<Dim4Census*>(census);
     if (pairing) {
         // We've found another facet pairing.

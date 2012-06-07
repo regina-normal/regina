@@ -1,7 +1,7 @@
 # census
 
 # Files to compile
-SET ( FILES closedprimemin compact dim4census dim4facetpairing dim4gluingperms dim4gluingpermsearcher ncensus nfacepairing ngluingperms ngluingpermsearcher)
+SET ( FILES closedprimemin compact dim2edgepairing dim4census dim4facetpairing dim4gluingperms dim4gluingpermsearcher ncensus nfacepairing ngluingperms ngluingpermsearcher)
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
@@ -10,5 +10,5 @@ ENDFOREACH(SOURCE_FILE)
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
-  INSTALL(FILES dim4census.h dim4facetpairing.h dim4gluingperms.h dim4gluingpermsearcher.h ncensus.h nfacepairing.h ngeneralfacetpairing.h ngeneralfacetpairing.tcc ngluingperms.h ngluingpermsearcher.h DESTINATION ${INCLUDEDIR}/census COMPONENT Development)
+  INSTALL(FILES dim2edgepairing.h dim4census.h dim4facetpairing.h dim4gluingperms.h dim4gluingpermsearcher.h ncensus.h nfacepairing.h ngeneralfacetpairing.h ngeneralfacetpairing.tcc ngluingperms.h ngluingpermsearcher.h DESTINATION ${INCLUDEDIR}/census COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

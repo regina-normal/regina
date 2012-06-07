@@ -26,19 +26,19 @@
 
 /* end stub */
 
-/*! \file census/dim4facetpairing.h
- *  \brief Deals with pairing off pentachoron facets in a census of
- *  4-manifold triangulations.
+/*! \file census/dim2edgepairing.h
+ *  \brief Deals with pairing off edges of triangles in a census of
+ *  2-manifold triangulations.
  */
 
-#ifndef __DIM4FACETPAIRING_H
+#ifndef __DIM2EDGEPAIRING_H
 #ifndef __DOXYGEN
-#define __DIM4FACETPAIRING_H
+#define __DIM2EDGEPAIRING_H
 #endif
 
 #include "regina-core.h"
 #include "census/ngeneralfacetpairing.h"
-#include "dim4/dim4isomorphism.h"
+#include "dim2/dim2isomorphism.h"
 
 namespace regina {
 
@@ -48,75 +48,74 @@ namespace regina {
  */
 
 /**
- * Represents a specific pairwise matching of pentachoron facets.
- * Given a fixed number of pentachora, each pentachoron facet is either
- * paired with some other pentachoron facet (which is in turn paired with
- * it) or remains unmatched.  A pentachoron facet cannot be paired with
- * itself.
+ * Represents a specific pairwise matching of edges of triangles.
+ * Given a fixed number of triangles, each triangle edge is either
+ * paired with some other triangle edge (which is in turn paired with
+ * it) or remains unmatched.  A triangle edge cannot be paired with itself.
  *
- * Such a matching models part of the structure of a 4-manifold triangulation,
- * in which each pentachoron facet is either glued to some other pentachoron
- * facet (which is in turn glued to it) or is an unglued boundary facet.
+ * Such a matching models part of the structure of a 2-manifold triangulation,
+ * in which each triangle edge is either glued to some other triangle edge
+ * facet (which is in turn glued to it) or is an unglued boundary edge.
  *
- * Note that if this pairing is used to construct an actual 4-manifold
- * triangulation, the individual gluing permutations will still need to
+ * Note that if this pairing is used to construct an actual 2-manifold
+ * triangulation, the individual gluing orientations will still need to
  * be specified; they are not a part of this structure.
  *
  * \testpart
  */
-class REGINA_API Dim4FacetPairing : public NGeneralFacetPairing<4> {
+class REGINA_API Dim2EdgePairing : public NGeneralFacetPairing<2> {
     public:
         /**
-         * Creates a new facet pairing that is a clone of the given facet
+         * Creates a new edge pairing that is a clone of the given edge
          * pairing.
          *
          * @param cloneMe the facet pairing to clone.
          */
-        Dim4FacetPairing(const Dim4FacetPairing& cloneMe);
+        Dim2EdgePairing(const Dim2EdgePairing& cloneMe);
 
         /**
-         * Creates the facet pairing of the given 4-manifold triangulation.
-         * This is the facet pairing that describes how the pentachoron facets
-         * of the given 4-manifold triangulation are joined together, as
+         * Creates the edge pairing of the given 2-manifold triangulation.
+         * This is the edge pairing that describes how the triangle edges of
+         * the given 2-manifold triangulation are joined together, as
          * described in the class notes.
          *
          * \pre The given triangulation is not empty.
          *
-         * @param tri the 4-manifold triangulation whose facet pairing should
+         * @param tri the 2-manifold triangulation whose edge pairing should
          * be constructed.
          */
-        Dim4FacetPairing(const Dim4Triangulation& tri);
+        Dim2EdgePairing(const Dim2Triangulation& tri);
 
     private:
         /**
-         * Creates a new facet pairing.  All internal arrays will be
+         * Creates a new edge pairing.  All internal arrays will be
          * allocated but not initialised.
          *
-         * \pre \a nPentachora is at least 1.
+         * \pre \a nTriangles is at least 1.
          *
-         * @param nPentachora the number of pentachora under
-         * consideration in this new facet pairing.
+         * @param nTriangles the number of triangles under
+         * consideration in this new edge pairing.
          */
-        Dim4FacetPairing(unsigned nPentachora);
+        Dim2EdgePairing(unsigned nTriangles);
 
     // Make sure the parent class can call the private constructor.
-    friend class NGeneralFacetPairing<4>;
+    friend class NGeneralFacetPairing<2>;
 };
 
 /*@}*/
 
-// Inline functions for Dim4FacetPairing
+// Inline functions for Dim2EdgePairing
 
-inline Dim4FacetPairing::Dim4FacetPairing(const Dim4FacetPairing& cloneMe) :
-        NGeneralFacetPairing<4>(cloneMe) {
+inline Dim2EdgePairing::Dim2EdgePairing(const Dim2EdgePairing& cloneMe) :
+        NGeneralFacetPairing<2>(cloneMe) {
 }
 
-inline Dim4FacetPairing::Dim4FacetPairing(unsigned nPentachora) :
-        NGeneralFacetPairing<4>(nPentachora) {
+inline Dim2EdgePairing::Dim2EdgePairing(unsigned nTriangles) :
+        NGeneralFacetPairing<2>(nTriangles) {
 }
 
-inline Dim4FacetPairing::Dim4FacetPairing(const Dim4Triangulation& tri) :
-        NGeneralFacetPairing<4>(tri) {
+inline Dim2EdgePairing::Dim2EdgePairing(const Dim2Triangulation& tri) :
+        NGeneralFacetPairing<2>(tri) {
 }
 
 } // namespace regina

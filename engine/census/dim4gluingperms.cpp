@@ -112,7 +112,7 @@ Dim4GluingPerms::Dim4GluingPerms(std::istream& in) :
         inputError_ = true; return;
     }
 
-    unsigned nPent = pairing_->getNumberOfPentachora();
+    unsigned nPent = pairing_->size();
     if (nPent == 0) {
         inputError_ = true; return;
     }

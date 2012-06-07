@@ -86,7 +86,7 @@ unsigned long NCensus::formPartialCensus(const NFacePairing* pairing,
         return 0;
 
     // Make a list of automorphisms.
-    NFacePairingIsoList autos;
+    NFacePairing::IsoList autos;
     pairing->findAutomorphisms(autos);
 
     // Select the individual gluing permutations.
@@ -111,7 +111,7 @@ NCensus::NCensus(NPacket* newParent, const NBoolSet& newFiniteness,
 }
 
 void NCensus::foundFacePairing(const NFacePairing* pairing,
-        const NFacePairingIsoList* autos, void* census) {
+        const NFacePairing::IsoList* autos, void* census) {
     NCensus* realCensus = static_cast<NCensus*>(census);
     if (pairing) {
         // We've found another face pairing.

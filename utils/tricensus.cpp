@@ -89,7 +89,7 @@ int runCensus();
 // Differences between censuses of 3-manifolds vs 4-manifolds:
 struct Dim3Params {
     typedef regina::NFacePairing Pairing;
-    typedef regina::NFacePairingIsoList PairingIsoList;
+    typedef regina::NFacePairing::IsoList PairingIsoList;
     typedef regina::NGluingPermSearcher GluingPermSearcher;
     typedef regina::NTriangulation Triangulation;
 
@@ -112,7 +112,7 @@ struct Dim3Params {
 
 struct Dim4Params {
     typedef regina::Dim4FacetPairing Pairing;
-    typedef regina::Dim4FacetPairingIsoList PairingIsoList;
+    typedef regina::Dim4FacetPairing::IsoList PairingIsoList;
     typedef regina::Dim4GluingPermSearcher GluingPermSearcher;
     typedef regina::Dim4Triangulation Triangulation;
 

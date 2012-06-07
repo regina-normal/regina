@@ -423,7 +423,7 @@ class REGINA_API Dim4GluingPerms {
 
 inline Dim4GluingPerms::Dim4GluingPerms(const Dim4FacetPairing* pairing) :
         pairing_(pairing),
-        permIndices_(new int[pairing->getNumberOfPentachora() * 5]),
+        permIndices_(new int[pairing->size() * 5]),
         inputError_(false) {
 }
 
@@ -436,7 +436,7 @@ inline bool Dim4GluingPerms::inputError() const {
 }
 
 inline unsigned Dim4GluingPerms::getNumberOfPentachora() const {
-    return pairing_->getNumberOfPentachora();
+    return pairing_->size();
 }
 
 inline const Dim4FacetPairing* Dim4GluingPerms::getFacetPairing() const {
