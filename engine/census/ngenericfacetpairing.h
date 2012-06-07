@@ -26,7 +26,7 @@
 
 /* end stub */
 
-/*! \file census/ngeneralfacetpairing.h
+/*! \file census/ngenericfacetpairing.h
  *  \brief Deals with pairing off facets of simplices in a census of
  *  \a n-dimensional triangulations.
  */

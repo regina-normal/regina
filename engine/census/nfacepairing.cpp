@@ -30,7 +30,7 @@
 #include <sstream>
 #include <vector>
 #include "census/nfacepairing.h"
-#include "census/ngeneralfacetpairing.tcc"
+#include "census/ngenericfacetpairing.tcc"
 #include "triangulation/nfacepair.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"

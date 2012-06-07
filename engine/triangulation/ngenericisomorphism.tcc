@@ -26,11 +26,11 @@
 
 /* end stub */
 
-/* Template definitions for ngeneralisomorphism.h. */
+/* Template definitions for ngenericisomorphism.h. */
 
 #include <algorithm>
 #include <cstdlib>
-#include "triangulation/ngeneralisomorphism.h"
+#include "triangulation/ngenericisomorphism.h"
 
 namespace regina {
 

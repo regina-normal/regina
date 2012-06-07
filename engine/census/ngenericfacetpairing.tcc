@@ -26,12 +26,12 @@
 
 /* end stub */
 
-/* Template definitions for ngeneralfacetpairing.h. */
+/* Template definitions for ngenericfacetpairing.h. */
 
 #include <algorithm>
 #include <sstream>
 #include <vector>
-#include "census/ngeneralfacetpairing.h"
+#include "census/ngenericfacetpairing.h"
 #include "utilities/memutils.h"
 #include "utilities/stringutils.h"
 
