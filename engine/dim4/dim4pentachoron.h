@@ -170,6 +170,17 @@ class REGINA_API Dim4Pentachoron :
          */
         Dim4Pentachoron* adjacentPentachoron(int facet) const;
         /**
+         * A dimension-agnostic alias for adjacentPentachoron().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 4-manifold triangulations means a pentachoron).
+         * 
+         * See adjacentPentachoron() for further information.
+         */
+        Dim4Pentachoron* adjacentSimplex(int facet) const;
+        /**
          * Returns a permutation describing the correspondence between
          * vertices of this pentachoron and vertices of the adjacent
          * pentachoron glued to the given facet of this pentachoron.
@@ -535,6 +546,10 @@ inline void Dim4Pentachoron::setDescription(const std::string& desc) {
 }
 
 inline Dim4Pentachoron* Dim4Pentachoron::adjacentPentachoron(int facet) const {
+    return adj_[facet];
+}
+
+inline Dim4Pentachoron* Dim4Pentachoron::adjacentSimplex(int facet) const {
     return adj_[facet];
 }
 

@@ -190,101 +190,6 @@ class REGINA_API Dim2Isomorphism : public NGeneralIsomorphism<2> {
          * source triangle.
          */
         NPerm3 edgePerm(unsigned sourceTriangle) const;
-
-        /**
-         * Applies this isomorphism to the given triangulation and
-         * returns the result as a new triangulation.
-         *
-         * The given triangulation (call this T) is not modified in any way.
-         * A new triangulation (call this S) is returned, so that this
-         * isomorphism represents a one-to-one, onto and boundary complete
-         * isomorphism from T to S.  That is, T and S are combinatorially
-         * identical triangulations, and this isomorphism describes the
-         * corresponding mapping between triangles and triangle vertices/edges.
-         *
-         * The resulting triangulation S is newly created, and must be
-         * destroyed by the caller of this routine.
-         *
-         * There are several preconditions to this routine.  This
-         * routine does a small amount of sanity checking (and returns 0
-         * if an error is detected), but it certainly does not check the
-         * entire set of preconditions.  It is up to the caller of this
-         * routine to verify that all of the following preconditions are
-         * met.
-         *
-         * \pre The number of triangles in the given triangulation is
-         * precisely the number returned by getSourceTriangles() for
-         * this isomorphism.
-         * \pre This is a valid isomorphism (i.e., it has been properly
-         * initialised, so that all triangle images are non-negative
-         * and distinct, and all edge permutations are real permutations
-         * of (0,1,2).
-         * \pre Each triangle image for this isomorphism lies
-         * between 0 and <tt>getSourceTriangles()-1</tt> inclusive
-         * (i.e., this isomorphism does not represent a mapping from a
-         * smaller triangulation into a larger triangulation).
-         *
-         * @param original the triangulation to which this isomorphism
-         * should be applied.
-         * @return the resulting new triangulation, or 0 if a problem
-         * was encountered (i.e., an unmet precondition was noticed).
-         */
-        Dim2Triangulation* apply(const Dim2Triangulation* original) const;
-
-        /**
-         * Applies this isomorphism to the given triangulation,
-         * modifying the given triangulation directly.
-         *
-         * This is similar to apply(), except that instead of creating a
-         * new triangulation, the triangles and vertices of the given
-         * triangulation are modified directly.
-         *
-         * See apply() for further details on how this operation is performed.
-         *
-         * As with apply(), there are several preconditions to this routine.
-         * This routine does a small amount of sanity checking (and returns
-         * without changes if an error is detected), but it certainly does
-         * not check the entire set of preconditions.  It is up to the
-         * caller of this routine to verify that all of the following
-         * preconditions are met.
-         *
-         * \pre The number of triangles in the given triangulation is
-         * precisely the number returned by getSourceSimplices() for
-         * this isomorphism.
-         * \pre This is a valid isomorphism (i.e., it has been properly
-         * initialised, so that all triangle images are non-negative
-         * and distinct, and all edge permutations are real permutations
-         * of (0,1,2).
-         * \pre Each triangle image for this isomorphism lies
-         * between 0 and <tt>getSourceSimplices()-1</tt> inclusive
-         * (i.e., this isomorphism does not represent a mapping from a
-         * smaller triangulation into a larger triangulation).
-         *
-         * @param tri the triangulation to which this isomorphism
-         * should be applied.
-         */
-        void applyInPlace(Dim2Triangulation* tri) const;
-
-        /**
-         * Returns a random isomorphism for the given number of
-         * triangles.  This isomorphism will reorder triangles
-         * 0 to <tt>nTriangles-1</tt> in a random fashion, and for
-         * each triangle a random permutation of its three vertices
-         * will be selected.
-         *
-         * The isomorphism returned will be newly constructed, and must be
-         * destroyed by the caller of this routine.
-         *
-         * Note that both the STL random number generator and the
-         * standard C function rand() are used in this routine.  All
-         * possible isomorphisms for the given number of triangles are
-         * equally likely.
-         *
-         * @param nTriangles the number of triangles that the new
-         * isomorphism should operate upon.
-         * @return the newly constructed random isomorphism.
-         */
-        static Dim2Isomorphism* random(unsigned nTriangles);
 };
 
 /*@}*/
@@ -316,10 +221,6 @@ inline NPerm3& Dim2Isomorphism::edgePerm(unsigned sourceTriangle) {
 }
 inline NPerm3 Dim2Isomorphism::edgePerm(unsigned sourceTriangle) const {
     return facetPerm_[sourceTriangle];
-}
-
-inline Dim2Isomorphism* Dim2Isomorphism::random(unsigned nTriangles) {
-    return randomInternal<Dim2Isomorphism>(nTriangles);
 }
 
 } // namespace regina

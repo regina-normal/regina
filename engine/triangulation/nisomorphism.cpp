@@ -26,11 +26,9 @@
 
 /* end stub */
 
-#include <algorithm>
-#include <cstdlib>
+#include "triangulation/ntriangulation.h"
 #include "triangulation/ngeneralisomorphism.tcc"
 #include "triangulation/nisomorphism.h"
-#include "triangulation/ntriangulation.h"
 
 namespace regina {
 
@@ -40,98 +38,10 @@ template void NGeneralIsomorphism<3>::writeTextLong(std::ostream&) const;
 template bool NGeneralIsomorphism<3>::isIdentity() const;
 template NGeneralIsomorphism<3>::NGeneralIsomorphism(
     const NGeneralIsomorphism<3>&);
-template NIsomorphism*
-    NGeneralIsomorphism<3>::randomInternal<NIsomorphism>(unsigned);
-
-NTriangulation* NIsomorphism::apply(const NTriangulation* original) const {
-    if (original->getNumberOfTetrahedra() != nSimplices_)
-        return 0;
-
-    if (nSimplices_ == 0)
-        return new NTriangulation();
-
-    NTriangulation* ans = new NTriangulation();
-    NTetrahedron** tet = new NTetrahedron*[nSimplices_];
-    unsigned long t;
-    int f;
-
-    NPacket::ChangeEventSpan span(ans);
-    for (t = 0; t < nSimplices_; t++)
-        tet[t] = ans->newTetrahedron();
-
-    for (t = 0; t < nSimplices_; t++)
-        tet[simpImage_[t]]->setDescription(
-            original->getTetrahedron(t)->getDescription());
-
-    const NTetrahedron *myTet, *adjTet;
-    unsigned long adjTetIndex;
-    NPerm4 gluingPerm;
-    for (t = 0; t < nSimplices_; t++) {
-        myTet = original->getTetrahedron(t);
-        for (f = 0; f < 4; f++)
-            if ((adjTet = myTet->adjacentTetrahedron(f))) {
-                // We have an adjacent tetrahedron.
-                adjTetIndex = original->tetrahedronIndex(adjTet);
-                gluingPerm = myTet->adjacentGluing(f);
-
-                // Make the gluing from one side only.
-                if (adjTetIndex > t || (adjTetIndex == t &&
-                        gluingPerm[f] > f))
-                    tet[simpImage_[t]]->joinTo(facetPerm_[t][f],
-                        tet[simpImage_[adjTetIndex]],
-                        facetPerm_[adjTetIndex] * gluingPerm *
-                            facetPerm_[t].inverse());
-            }
-    }
-
-    return ans;
-}
-
-void NIsomorphism::applyInPlace(NTriangulation* tri) const {
-    if (tri->getNumberOfTetrahedra() != nSimplices_)
-        return;
-
-    if (nSimplices_ == 0)
-        return;
-
-    NTriangulation staging;
-    NTetrahedron** tet = new NTetrahedron*[nSimplices_];
-    unsigned long t;
-    int f;
-
-    NPacket::ChangeEventSpan span1(&staging);
-    for (t = 0; t < nSimplices_; t++)
-        tet[t] = staging.newTetrahedron();
-
-    for (t = 0; t < nSimplices_; t++)
-        tet[simpImage_[t]]->setDescription(
-            tri->getTetrahedron(t)->getDescription());
-
-    const NTetrahedron *myTet, *adjTet;
-    unsigned long adjTetIndex;
-    NPerm4 gluingPerm;
-    for (t = 0; t < nSimplices_; t++) {
-        myTet = tri->getTetrahedron(t);
-        for (f = 0; f < 4; f++)
-            if ((adjTet = myTet->adjacentTetrahedron(f))) {
-                // We have an adjacent tetrahedron.
-                adjTetIndex = tri->tetrahedronIndex(adjTet);
-                gluingPerm = myTet->adjacentGluing(f);
-
-                // Make the gluing from one side only.
-                if (adjTetIndex > t || (adjTetIndex == t &&
-                        gluingPerm[f] > f))
-                    tet[simpImage_[t]]->joinTo(facetPerm_[t][f],
-                        tet[simpImage_[adjTetIndex]],
-                        facetPerm_[adjTetIndex] * gluingPerm *
-                            facetPerm_[t].inverse());
-            }
-    }
-
-    NPacket::ChangeEventSpan span2(tri);
-    tri->removeAllTetrahedra();
-    tri->swapContents(staging);
-}
+template NIsomorphism* NGeneralIsomorphism<3>::random(unsigned);
+template NTriangulation* NGeneralIsomorphism<3>::apply(const NTriangulation*)
+    const;
+template void NGeneralIsomorphism<3>::applyInPlace(NTriangulation*) const;
 
 } // namespace regina
 

@@ -138,17 +138,29 @@ void addDim4Triangulation() {
             boost::noncopyable>("Dim4Triangulation")
         .def(init<const Dim4Triangulation&>())
         .def("getNumberOfPentachora", &Dim4Triangulation::getNumberOfPentachora)
+        .def("getNumberOfSimplices", &Dim4Triangulation::getNumberOfSimplices)
         .def("getPentachora", Dim4_getPentachora_list)
+        .def("getSimplices", Dim4_getPentachora_list)
         .def("getPentachoron", getPentachoron_non_const,
             return_value_policy<reference_existing_object>())
+        .def("getSimplex", getPentachoron_non_const,
+            return_value_policy<reference_existing_object>())
         .def("pentachoronIndex", &Dim4Triangulation::pentachoronIndex)
+        .def("simplexIndex", &Dim4Triangulation::simplexIndex)
         .def("newPentachoron", newPentachoron_void,
+            return_value_policy<reference_existing_object>())
+        .def("newSimplex", newPentachoron_void,
             return_value_policy<reference_existing_object>())
         .def("newPentachoron", newPentachoron_string,
             return_value_policy<reference_existing_object>())
+        .def("newSimplex", newPentachoron_string,
+            return_value_policy<reference_existing_object>())
         .def("removePentachoron", &Dim4Triangulation::removePentachoron)
+        .def("removeSimplex", &Dim4Triangulation::removeSimplex)
         .def("removePentachoronAt", &Dim4Triangulation::removePentachoronAt)
+        .def("removeSimplexAt", &Dim4Triangulation::removeSimplexAt)
         .def("removeAllPentachora", &Dim4Triangulation::removeAllPentachora)
+        .def("removeAllSimplices", &Dim4Triangulation::removeAllSimplices)
         .def("swapContents", &Dim4Triangulation::swapContents)
         .def("moveContentsTo", &Dim4Triangulation::moveContentsTo)
         .def("getNumberOfComponents", &Dim4Triangulation::getNumberOfComponents)

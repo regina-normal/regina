@@ -38,99 +38,10 @@ template void NGeneralIsomorphism<4>::writeTextLong(std::ostream&) const;
 template bool NGeneralIsomorphism<4>::isIdentity() const;
 template NGeneralIsomorphism<4>::NGeneralIsomorphism(
     const NGeneralIsomorphism<4>&);
-template Dim4Isomorphism*
-    NGeneralIsomorphism<4>::randomInternal<Dim4Isomorphism>(unsigned);
-
-Dim4Triangulation* Dim4Isomorphism::apply(
-        const Dim4Triangulation* original) const {
-    if (original->getNumberOfPentachora() != nSimplices_)
-        return 0;
-
-    if (nSimplices_ == 0)
-        return new Dim4Triangulation();
-
-    Dim4Triangulation* ans = new Dim4Triangulation();
-    Dim4Pentachoron** pent = new Dim4Pentachoron*[nSimplices_];
-    unsigned long p;
-    int f;
-
-    NPacket::ChangeEventSpan span(ans);
-    for (p = 0; p < nSimplices_; ++p)
-        pent[p] = ans->newPentachoron();
-
-    for (p = 0; p < nSimplices_; ++p)
-        pent[simpImage_[p]]->setDescription(
-            original->getPentachoron(p)->getDescription());
-
-    const Dim4Pentachoron *myPent, *adjPent;
-    unsigned long adjPentIndex;
-    NPerm5 gluingPerm;
-    for (p = 0; p < nSimplices_; ++p) {
-        myPent = original->getPentachoron(p);
-        for (f = 0; f < 5; ++f)
-            if ((adjPent = myPent->adjacentPentachoron(f))) {
-                // We have an adjacent pentachoron.
-                adjPentIndex = original->pentachoronIndex(adjPent);
-                gluingPerm = myPent->adjacentGluing(f);
-
-                // Make the gluing from one side only.
-                if (adjPentIndex > p || (adjPentIndex == p &&
-                        gluingPerm[f] > f))
-                    pent[simpImage_[p]]->joinTo(facetPerm_[p][f],
-                        pent[simpImage_[adjPentIndex]],
-                        facetPerm_[adjPentIndex] * gluingPerm *
-                            facetPerm_[p].inverse());
-            }
-    }
-
-    return ans;
-}
-
-void Dim4Isomorphism::applyInPlace(Dim4Triangulation* tri) const {
-    if (tri->getNumberOfPentachora() != nSimplices_)
-        return;
-
-    if (nSimplices_ == 0)
-        return;
-
-    Dim4Triangulation staging;
-    NPacket::ChangeEventSpan span1(&staging);
-    Dim4Pentachoron** pent = new Dim4Pentachoron*[nSimplices_];
-    unsigned long p;
-    int f;
-
-    for (p = 0; p < nSimplices_; ++p)
-        pent[p] = staging.newPentachoron();
-
-    for (p = 0; p < nSimplices_; ++p)
-        pent[simpImage_[p]]->setDescription(
-            tri->getPentachoron(p)->getDescription());
-
-    const Dim4Pentachoron *myPent, *adjPent;
-    unsigned long adjPentIndex;
-    NPerm5 gluingPerm;
-    for (p = 0; p < nSimplices_; ++p) {
-        myPent = tri->getPentachoron(p);
-        for (f = 0; f < 5; ++f)
-            if ((adjPent = myPent->adjacentPentachoron(f))) {
-                // We have an adjacent pentachoron.
-                adjPentIndex = tri->pentachoronIndex(adjPent);
-                gluingPerm = myPent->adjacentGluing(f);
-
-                // Make the gluing from one side only.
-                if (adjPentIndex > p || (adjPentIndex == p &&
-                        gluingPerm[f] > f))
-                    pent[simpImage_[p]]->joinTo(facetPerm_[p][f],
-                        pent[simpImage_[adjPentIndex]],
-                        facetPerm_[adjPentIndex] * gluingPerm *
-                            facetPerm_[p].inverse());
-            }
-    }
-
-    NPacket::ChangeEventSpan span2(tri);
-    tri->removeAllPentachora();
-    tri->swapContents(staging);
-}
+template Dim4Isomorphism* NGeneralIsomorphism<4>::random(unsigned);
+template Dim4Triangulation* NGeneralIsomorphism<4>::apply(
+        const Dim4Triangulation*) const;
+template void NGeneralIsomorphism<4>::applyInPlace(Dim4Triangulation*) const;
 
 } // namespace regina
 

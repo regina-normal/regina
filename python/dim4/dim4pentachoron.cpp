@@ -47,6 +47,8 @@ void addDim4Pentachoron() {
         .def("setDescription", &Dim4Pentachoron::setDescription)
         .def("adjacentPentachoron", &Dim4Pentachoron::adjacentPentachoron,
             return_value_policy<reference_existing_object>())
+        .def("adjacentSimplex", &Dim4Pentachoron::adjacentSimplex,
+            return_value_policy<reference_existing_object>())
         .def("adjacentGluing", &Dim4Pentachoron::adjacentGluing)
         .def("adjacentFacet", &Dim4Pentachoron::adjacentFacet)
         .def("hasBoundary", &Dim4Pentachoron::hasBoundary)

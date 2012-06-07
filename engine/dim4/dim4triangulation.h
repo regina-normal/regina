@@ -205,6 +205,17 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         unsigned long getNumberOfPentachora() const;
         /**
+         * A dimension-agnostic alias for getNumberOfPentachora().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 4-manifold triangulations means a pentachoron).
+         * 
+         * See getNumberOfPentachora() for further information.
+         */
+        unsigned long getNumberOfSimplices() const;
+        /**
          * Returns all pentachora in the triangulation.
          *
          * The reference returned will remain valid for as long as the
@@ -217,6 +228,17 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         const std::vector<Dim4Pentachoron*>& getPentachora() const;
         /**
+         * A dimension-agnostic alias for getPentachora().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 4-manifold triangulations means a pentachoron).
+         * 
+         * See getPentachora() for further information.
+         */
+        const std::vector<Dim4Pentachoron*>& getSimplices() const;
+        /**
          * Returns the pentachoron with the given index number in the
          * triangulation.  Note that pentachoron indexing may change when
          * a pentachoron is added or removed from the triangulation.
@@ -227,6 +249,17 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         Dim4Pentachoron* getPentachoron(unsigned long index);
         /**
+         * A dimension-agnostic alias for getPentachoron().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 4-manifold triangulations means a pentachoron).
+         * 
+         * See getPentachoron() for further information.
+         */
+        Dim4Pentachoron* getSimplex(unsigned long index);
+        /**
          * Returns the pentachoron with the given index number in the
          * triangulation.  Note that pentachoron indexing may change when
          * a pentachoron is added or removed from the triangulation.
@@ -236,6 +269,17 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * @return the <tt>index</tt>th pentachoron in the triangulation.
          */
         const Dim4Pentachoron* getPentachoron(unsigned long index) const;
+        /**
+         * A dimension-agnostic alias for getPentachoron().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 4-manifold triangulations means a pentachoron).
+         * 
+         * See getPentachoron() for further information.
+         */
+        const Dim4Pentachoron* getSimplex(unsigned long index) const;
         /**
          * Returns the index of the given pentachoron in the triangulation.
          *
@@ -256,6 +300,17 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         long pentachoronIndex(const Dim4Pentachoron* pent) const;
         /**
+         * A dimension-agnostic alias for pentachoronIndex().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 4-manifold triangulations means a pentachoron).
+         * 
+         * See pentachoronIndex() for further information.
+         */
+        long simplexIndex(const Dim4Pentachoron* pent) const;
+        /**
          * Creates a new pentachoron and adds it to this triangulation.
          * The new pentachoron will have an empty description.
          * All five facets of the new pentachoron will be boundary facets.
@@ -263,6 +318,17 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * @return the new pentachoron.
          */
         Dim4Pentachoron* newPentachoron();
+        /**
+         * A dimension-agnostic alias for newPentachoron().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 4-manifold triangulations means a pentachoron).
+         * 
+         * See newPentachoron() for further information.
+         */
+        Dim4Pentachoron* newSimplex();
         /**
          * Creates a new pentachoron with the given description and adds
          * it to this triangulation.
@@ -273,6 +339,17 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         Dim4Pentachoron* newPentachoron(const std::string& desc);
         /**
+         * A dimension-agnostic alias for newPentachoron().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 4-manifold triangulations means a pentachoron).
+         * 
+         * See newPentachoron() for further information.
+         */
+        Dim4Pentachoron* newSimplex(const std::string& desc);
+        /**
          * Removes the given pentachoron from the triangulation.
          * All triangles glued to this pentachoron will be unglued.
          * The pentachoron will be deallocated.
@@ -282,6 +359,17 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * @param pent the pentachoron to remove.
          */
         void removePentachoron(Dim4Pentachoron* pent);
+        /**
+         * A dimension-agnostic alias for removePentachoron().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 4-manifold triangulations means a pentachoron).
+         * 
+         * See removePentachoron() for further information.
+         */
+        void removeSimplex(Dim4Pentachoron* pent);
         /**
          * Removes the pentachoron with the given index number
          * from the triangulation.  Note that pentachoron indexing may
@@ -296,10 +384,32 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         void removePentachoronAt(unsigned long index);
         /**
+         * A dimension-agnostic alias for removePentachoronAt().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 4-manifold triangulations means a pentachoron).
+         * 
+         * See removePentachoronAt() for further information.
+         */
+        void removeSimplexAt(unsigned long index);
+        /**
          * Removes all pentachora from the triangulation.
          * All pentachora will be deallocated.
          */
         void removeAllPentachora();
+        /**
+         * A dimension-agnostic alias for removeAllPentachora().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 4-manifold triangulations means a pentachoron).
+         * 
+         * See removeAllPentachora() for further information.
+         */
+        void removeAllSimplices();
         /**
          * Swaps the contents of this and the given triangulation.
          * That is, all pentachora that belong to this triangulation
@@ -1650,7 +1760,16 @@ inline unsigned long Dim4Triangulation::getNumberOfPentachora() const {
     return pentachora_.size();
 }
 
+inline unsigned long Dim4Triangulation::getNumberOfSimplices() const {
+    return pentachora_.size();
+}
+
 inline const std::vector<Dim4Pentachoron*>& Dim4Triangulation::getPentachora()
+        const {
+    return (const std::vector<Dim4Pentachoron*>&)(pentachora_);
+}
+
+inline const std::vector<Dim4Pentachoron*>& Dim4Triangulation::getSimplices()
         const {
     return (const std::vector<Dim4Pentachoron*>&)(pentachora_);
 }
@@ -1659,12 +1778,26 @@ inline Dim4Pentachoron* Dim4Triangulation::getPentachoron(unsigned long index) {
     return pentachora_[index];
 }
 
+inline Dim4Pentachoron* Dim4Triangulation::getSimplex(unsigned long index) {
+    return pentachora_[index];
+}
+
 inline const Dim4Pentachoron* Dim4Triangulation::getPentachoron(
         unsigned long index) const {
     return pentachora_[index];
 }
 
+inline const Dim4Pentachoron* Dim4Triangulation::getSimplex(
+        unsigned long index) const {
+    return pentachora_[index];
+}
+
 inline long Dim4Triangulation::pentachoronIndex(const Dim4Pentachoron* pent)
+        const {
+    return pent->markedIndex();
+}
+
+inline long Dim4Triangulation::simplexIndex(const Dim4Pentachoron* pent)
         const {
     return pent->markedIndex();
 }
@@ -1677,6 +1810,10 @@ inline Dim4Pentachoron* Dim4Triangulation::newPentachoron() {
     return pent;
 }
 
+inline Dim4Pentachoron* Dim4Triangulation::newSimplex() {
+    return newPentachoron();
+}
+
 inline Dim4Pentachoron* Dim4Triangulation::newPentachoron(
         const std::string& desc) {
     ChangeEventSpan span(this);
@@ -1684,6 +1821,11 @@ inline Dim4Pentachoron* Dim4Triangulation::newPentachoron(
     pentachora_.push_back(pent);
     clearAllProperties();
     return pent;
+}
+
+inline Dim4Pentachoron* Dim4Triangulation::newSimplex(
+        const std::string& desc) {
+    return newPentachoron(desc);
 }
 
 inline void Dim4Triangulation::removePentachoron(Dim4Pentachoron* pent) {
@@ -1694,6 +1836,10 @@ inline void Dim4Triangulation::removePentachoron(Dim4Pentachoron* pent) {
     delete pent;
 
     clearAllProperties();
+}
+
+inline void Dim4Triangulation::removeSimplex(Dim4Pentachoron* pent) {
+    removePentachoron(pent);
 }
 
 inline void Dim4Triangulation::removePentachoronAt(unsigned long index) {
@@ -1707,10 +1853,18 @@ inline void Dim4Triangulation::removePentachoronAt(unsigned long index) {
     clearAllProperties();
 }
 
+inline void Dim4Triangulation::removeSimplexAt(unsigned long index) {
+    removePentachoronAt(index);
+}
+
 inline void Dim4Triangulation::removeAllPentachora() {
     ChangeEventSpan span(this);
     deletePentachora();
     clearAllProperties();
+}
+
+inline void Dim4Triangulation::removeAllSimplices() {
+    removeAllPentachora();
 }
 
 inline unsigned long Dim4Triangulation::getNumberOfBoundaryComponents() const {

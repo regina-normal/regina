@@ -150,6 +150,17 @@ class REGINA_API Dim2Triangle : public ShareableObject, public NMarkedElement {
          */
         Dim2Triangle* adjacentTriangle(int edge) const;
         /**
+         * A dimension-agnostic alias for adjacentTriangle().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 2-manifold triangulations means a triangle).
+         * 
+         * See adjacentTriangle() for further information.
+         */
+        Dim2Triangle* adjacentSimplex(int edge) const;
+        /**
          * Returns a permutation describing the correspondence between
          * vertices of this triangle and vertices of the adjacent
          * triangle glued to the given edge of this triangle.
@@ -394,6 +405,10 @@ inline void Dim2Triangle::setDescription(const std::string& desc) {
 }
 
 inline Dim2Triangle* Dim2Triangle::adjacentTriangle(int edge) const {
+    return adj_[edge];
+}
+
+inline Dim2Triangle* Dim2Triangle::adjacentSimplex(int edge) const {
     return adj_[edge];
 }
 

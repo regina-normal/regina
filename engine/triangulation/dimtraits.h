@@ -76,7 +76,7 @@ struct DimTraits {
 
 #ifndef __DOXYGEN
 class Dim2Triangulation;
-class Dim2Face;
+class Dim2Triangle;
 class Dim2Isomorphism;
 class Dim2EdgePairing;
 class NPerm3;
@@ -84,7 +84,7 @@ class NPerm3;
 template <>
 struct DimTraits<2> {
     typedef Dim2Triangulation Triangulation;
-    typedef Dim2Face Simplex;
+    typedef Dim2Triangle Simplex;
     typedef Dim2Isomorphism Isomorphism;
     typedef Dim2EdgePairing FacetPairing;
     typedef NPerm3 Perm;

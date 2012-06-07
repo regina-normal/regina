@@ -213,6 +213,17 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          */
         NTetrahedron* adjacentTetrahedron(int face) const;
         /**
+         * A dimension-agnostic alias for adjacentTetrahedron().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 3-manifold triangulations means a tetrahedron).
+         * 
+         * See adjacentTetrahedron() for further information.
+         */
+        NTetrahedron* adjacentSimplex(int face) const;
+        /**
          * Deprecated in favour of adjacentTetrahedron().  The old routine
          * getAdjacentTetrahedron() has been renamed to adjacentTetrahedron()
          * as part of an effort to make programming and scripting with
@@ -641,6 +652,10 @@ inline void NTetrahedron::setDescription(const std::string& desc) {
 }
 
 inline NTetrahedron* NTetrahedron::adjacentTetrahedron(int face) const {
+    return tetrahedra[face];
+}
+
+inline NTetrahedron* NTetrahedron::adjacentSimplex(int face) const {
     return tetrahedra[face];
 }
 
