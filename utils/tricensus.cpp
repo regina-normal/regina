@@ -26,30 +26,38 @@
 
 /* end stub */
 
+#define SUPPORT_DIM4 1
+
 #include <cctype>
 #include <fstream>
 #include <memory>
 #include <sstream>
 #include <popt.h>
 #include <unistd.h>
+#include "census/dim2edgepairing.h"
+#if SUPPORT_DIM4
 #include "census/dim4census.h"
 #include "census/dim4facetpairing.h"
 #include "census/dim4gluingpermsearcher.h"
+#endif
 #include "census/ncensus.h"
 #include "census/nfacepairing.h"
 #include "census/ngluingpermsearcher.h"
+#include "dim2/dim2triangulation.h"
+#if SUPPORT_DIM4
 #include "dim4/dim4triangulation.h"
+#endif
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
 #include "triangulation/ntriangulation.h"
 
-#define WORD_face (dim4 ? "facet" : "face")
-#define WORD_Face (dim4 ? "Facet" : "Face")
-#define WORD_faces (dim4 ? "facets" : "faces")
-#define WORD_tetrahedra (dim4 ? "pentachora" : "tetrahedra")
-#define WORD_tetrahedron (dim4 ? "pentachoron" : "tetrahedron")
-#define WORD_Tetrahedron (dim4 ? "Pentachoron" : "Tetrahedron")
+#define WORD_face (dim4 ? "facet" : dim2 ? "edge" : "face")
+#define WORD_Face (dim4 ? "Facet" : dim2 ? "Edge" : "Face")
+#define WORD_faces (dim4 ? "facets" : dim2 ? "edges" : "faces")
+#define WORD_tetrahedra (dim4 ? "pentachora" : dim2 ? "triangles" : "tetrahedra")
+#define WORD_tetrahedron (dim4 ? "pentachoron" : dim2 ? "triangle" : "tetrahedron")
+#define WORD_Tetrahedron (dim4 ? "Pentachoron" : dim2 ? "Triangle" : "Tetrahedron")
 
 // Constants.
 const long MAXTET = 15;
@@ -64,6 +72,7 @@ regina::NBoolSet
 int minimal = 0;
 int minimalPrime = 0;
 int minimalPrimeP2 = 0;
+int dim2 = 0;
 int dim4 = 0;
 int usePairs = 0;
 int sigs = 0;
@@ -86,15 +95,39 @@ void foundGluingPerms(const typename CensusType::GluingPermSearcher*, void*);
 template <class CensusType>
 int runCensus();
 
-// Differences between censuses of 3-manifolds vs 4-manifolds:
+// Differences between censuses of 2, 3 and 4-manifolds:
+struct Dim2Params {
+    typedef regina::Dim2EdgePairing Pairing;
+    typedef void GluingPermSearcher; // TODO
+    typedef regina::Dim2Triangulation Triangulation;
+
+    inline static void findAllPerms(const Pairing* p,
+            const Pairing::IsoList* autos, bool orientableOnly,
+            bool finiteOnly, int whichPurge, regina::NPacket* dest) {
+        // TODO
+        // GluingPermSearcher::findAllPerms(p, autos,
+        //    orientableOnly, finiteOnly, whichPurge,
+        //    foundGluingPerms<Dim3Params>, dest);
+    }
+
+    inline static bool mightBeMinimal(Triangulation* tri) {
+        // TODO return regina::NCensus::mightBeMinimal(tri, 0);
+        return true;
+    }
+
+    inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
+        // TODO return s->getEdgePairing();
+        return 0;
+    }
+};
+
 struct Dim3Params {
     typedef regina::NFacePairing Pairing;
-    typedef regina::NFacePairing::IsoList PairingIsoList;
     typedef regina::NGluingPermSearcher GluingPermSearcher;
     typedef regina::NTriangulation Triangulation;
 
     inline static void findAllPerms(const Pairing* p,
-            const PairingIsoList* autos, bool orientableOnly,
+            const Pairing::IsoList* autos, bool orientableOnly,
             bool finiteOnly, int whichPurge, regina::NPacket* dest) {
         GluingPermSearcher::findAllPerms(p, autos,
             orientableOnly, finiteOnly, whichPurge,
@@ -110,14 +143,14 @@ struct Dim3Params {
     }
 };
 
+#if SUPPORT_DIM4
 struct Dim4Params {
     typedef regina::Dim4FacetPairing Pairing;
-    typedef regina::Dim4FacetPairing::IsoList PairingIsoList;
     typedef regina::Dim4GluingPermSearcher GluingPermSearcher;
     typedef regina::Dim4Triangulation Triangulation;
 
     inline static void findAllPerms(const Pairing* p,
-            const PairingIsoList* autos, bool orientableOnly,
+            const Pairing::IsoList* autos, bool orientableOnly,
             bool finiteOnly, int /* whichPurge */, regina::NPacket* dest) {
         GluingPermSearcher::findAllPerms(p, autos,
             orientableOnly, finiteOnly,
@@ -132,6 +165,7 @@ struct Dim4Params {
         return s->getFacetPairing();
     }
 };
+#endif
 
 /**
  * What to do with each complete triangulation that is generated.
@@ -183,7 +217,7 @@ void foundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
  */
 template <class CensusType>
 void foundFacePairing(const typename CensusType::Pairing* pairing,
-        const typename CensusType::PairingIsoList* autos, void* container) {
+        const typename CensusType::Pairing::IsoList* autos, void* container) {
     if (pairing) {
         std::cout << pairing->toString() << std::endl;
 
@@ -198,7 +232,7 @@ void foundFacePairing(const typename CensusType::Pairing* pairing,
  */
 template <class CensusType>
 void dumpPairing(const typename CensusType::Pairing* pair,
-        const typename CensusType::PairingIsoList*, void*) {
+        const typename CensusType::Pairing::IsoList*, void*) {
     if (pair) {
         if (dumpStream.get())
             (*dumpStream) << (*pair).toTextRep() << std::endl;
@@ -218,6 +252,8 @@ regina::NText* parameterPacket() {
 
     if (dim4)
         descStream << "Searching for 4-manifold triangulations\n";
+    else if (dim2)
+        descStream << "Searching for 2-manifold triangulations\n";
     else
         descStream << "Searching for 3-manifold triangulations\n";
 
@@ -302,10 +338,16 @@ int main(int argc, const char* argv[]) {
             "Ignore obviously non-minimal, non-prime and/or disc-reducible triangulations.", 0 },
         { "minprimep2", 'N', POPT_ARG_NONE, &minimalPrimeP2, 0,
             "Ignore obviously non-minimal, non-prime, disc-reducible and/or P2-reducible triangulations.", 0 },
+        { "dim2", '2', POPT_ARG_NONE, &dim2, 0,
+            "Run a census of 2-manifold triangulations, "
+            "not 3-manifold triangulations.  Here --tetrahedra counts "
+            "triangles, and --bdryfaces counts boundary edges.", 0 },
+#if SUPPORT_DIM4
         { "dim4", '4', POPT_ARG_NONE, &dim4, 0,
             "Run a census of 4-manifold triangulations, "
             "not 3-manifold triangulations.  Here --tetrahedra counts "
             "pentachora, and --bdryfaces counts boundary facets.", 0 },
+#endif
         { "sigs", 's', POPT_ARG_NONE, &sigs, 0,
             "Write isomorphism signatures only, not full Regina data files.",
             0 },
@@ -359,6 +401,10 @@ int main(int argc, const char* argv[]) {
     } else if (genPairs && sigs) {
         std::cerr << "Signature output cannot be used with -p/--genpairs.\n";
         broken = true;
+    } else if (dim2 && dim4) {
+        std::cerr << "Options -2/--dim2 and -4/--dim4 cannot be used together.\n";
+        broken = true;
+    // TODO: Disallow other nonsensical dim2 options.
     } else if (dim4 && (minimal || minimalPrime || minimalPrimeP2)) {
         std::cerr << "Minimality options cannot be used with -4/--dim4.\n";
         broken = true;
@@ -408,14 +454,18 @@ int main(int argc, const char* argv[]) {
                 broken = true;
             } else
                 argNoBdry = 1;
-        } else if ((! dim4) && (nBdryFaces % 2 != 0)) {
+        } else if ((! dim4) && (! dim2) && (nBdryFaces % 2 != 0)) {
             std::cerr << "Number of boundary faces must be even.\n";
+            broken = true;
+        } else if (dim2 && ((nTet + nBdryFaces) % 2 != 0)) {
+            std::cerr << "Number of boundary edges must have the "
+                "same parity as the number of triangles.\n";
             broken = true;
         } else if (dim4 && ((nTet + nBdryFaces) % 2 != 0)) {
             std::cerr << "Number of boundary facets must have the "
                 "same parity as the number of pentachora.\n";
             broken = true;
-        } else if ((! dim4) && (nBdryFaces > 2 * nTet + 2)) {
+        } else if ((! dim4) && (! dim2) && (nBdryFaces > 2 * nTet + 2)) {
             std::cerr << "Number of boundary faces for " << nTet
                 << (nTet == 1 ? " tetrahedron" : " tetrahedra")
                 << " can be at most " << (2 * nTet + 2) << ".\n";
@@ -425,6 +475,7 @@ int main(int argc, const char* argv[]) {
                 << (nTet == 1 ? " pentachoron" : " pentachora")
                 << " can be at most " << (4 * nTet + 1) << ".\n";
             broken = true;
+            // TODO: Similar bound for 2-D.
         } else {
             // Asking for a valid positive number of boundary faces.
             if (argNoBdry) {
@@ -452,7 +503,14 @@ int main(int argc, const char* argv[]) {
     boundary = regina::NBoolSet(! argNoBdry, ! argBdry);
 
     // And off we go!
-    return (dim4 ? runCensus<Dim4Params>() : runCensus<Dim3Params>());
+    if (dim2)
+        return runCensus<Dim2Params>();
+#if SUPPORT_DIM4
+    else if (dim4)
+        return runCensus<Dim4Params>();
+#endif
+    else
+        return runCensus<Dim3Params>();
 }
 
 /**
@@ -558,7 +616,8 @@ int runCensus() {
         if (! sigs) {
             regina::NText* pairingPacket = new regina::NText(pairingList);
             pairingPacket->setPacketLabel(
-                dim4 ? "Facet Pairings" : "Face Pairings");
+                dim4 ? "Facet Pairings" : dim2 ? "Edge Pairings" :
+                "Face Pairings");
             parent->insertChildAfter(pairingPacket, desc);
         }
     } else {
