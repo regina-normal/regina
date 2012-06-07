@@ -80,8 +80,9 @@ namespace regina {
  * \testpart
  */
 template <int dim>
-class NGeneralFacetPairing /*: TODO public NThread*/ : public DimTraits<dim> {
+class NGeneralFacetPairing : public NThread, public DimTraits<dim> {
     public:
+        using typename DimTraits<dim>::FacetPairing;
         using typename DimTraits<dim>::Isomorphism;
         using typename DimTraits<dim>::Perm;
 
@@ -92,7 +93,7 @@ class NGeneralFacetPairing /*: TODO public NThread*/ : public DimTraits<dim> {
          * pairwise matching of simplex facets (as described by class
          * NGeneralFacetPairing) into another.
          */
-        typedef std::list<typename DimTraits<dim>::Isomorphism*> IsoList;
+        typedef std::list<Isomorphism*> IsoList;
 
         /**
          * A routine used to do arbitrary processing upon a facet pairing
@@ -109,7 +110,7 @@ class NGeneralFacetPairing /*: TODO public NThread*/ : public DimTraits<dim> {
          * Note that the first two parameters passed might be \c null to
          * signal that facet pairing generation has finished.
          */
-        typedef void (*Use)(const NGeneralFacetPairing*, const IsoList*, void*);
+        typedef void (*Use)(const FacetPairing*, const IsoList*, void*);
 
     protected:
         unsigned size_;
@@ -293,7 +294,8 @@ class NGeneralFacetPairing /*: TODO public NThread*/ : public DimTraits<dim> {
          * \pre This facet pairing is in canonical form as described by
          * isCanonical().
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, even in the dimension-specific
+         * subclasses.
          *
          * @param list the list into which the newly created automorphisms
          * will be placed.
@@ -493,13 +495,18 @@ class NGeneralFacetPairing /*: TODO public NThread*/ : public DimTraits<dim> {
          * running at any given time for a particular NGeneralFacetPairing
          * instance.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, even in the dimension-specific
+         * subclasses.
+         *
+         * \pre This object is known to be of the dimension-specific subclass
+         * FacetPairing, not an instance of the parent class
+         * NGeneralFacetPairing<dim>.
          *
          * @param param a structure containing the parameters that were
          * passed to findAllPairings().
          * @return the value 0.
          */
-        // TODO void* run(void* param);
+        void* run(void* param);
 
         /*@}*/
         /**
@@ -522,7 +529,10 @@ class NGeneralFacetPairing /*: TODO public NThread*/ : public DimTraits<dim> {
          *
          * For each facet pairing that is generated, routine \a use (as
          * passed to this function) will be called with that pairing and
-         * its automorphisms as arguments.
+         * its automorphisms as arguments.  Each pairing will be of the
+         * appropriate dimension-specific subclass (for instance,
+         * NFacePairing for dimension three, or Dim2EdgePairing for
+         * dimension two).
          *
          * Once the generation of facet pairings has finished, routine
          * \a use will be called once more, this time with \c null as its
@@ -541,7 +551,8 @@ class NGeneralFacetPairing /*: TODO public NThread*/ : public DimTraits<dim> {
          * pairing.
          * \todo \feature Allow cancellation of facet pairing generation.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, even in the dimension-specific
+         * subclasses.
          *
          * @param nSimplices the number of simplices whose facets should
          * be (potentially) matched.
@@ -580,10 +591,9 @@ class NGeneralFacetPairing /*: TODO public NThread*/ : public DimTraits<dim> {
          * if facet pairing generation has taken place in the current thread),
          * or \c false if the new thread could not be started.
          */
-        // TODO static bool findAllPairings(unsigned nSimplices,
-            // NBoolSet boundary, int nBdryFacets, UseFacetPairing use,
-            // void* useArgs = 0, bool newThread = false);
-        // TODO: Get rid of the NThread parent class for now.
+        static bool findAllPairings(unsigned nSimplices,
+            NBoolSet boundary, int nBdryFacets, Use use,
+            void* useArgs = 0, bool newThread = false);
 
     protected:
         /**
@@ -697,6 +707,17 @@ class NGeneralFacetPairing /*: TODO public NThread*/ : public DimTraits<dim> {
          * canonical form.
          */
         bool isCanonicalInternal(IsoList& list) const;
+
+    private:
+        /**
+         * Holds the arguments passed to findAllPairings().
+         */
+        struct Args {
+            NBoolSet boundary;
+            int nBdryFacets;
+            Use use;
+            void* useArgs;
+        };
 };
 
 /*@}*/
