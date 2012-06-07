@@ -198,6 +198,17 @@ class REGINA_API Dim2Triangle : public ShareableObject, public NMarkedElement {
          */
         int adjacentEdge(int edge) const;
         /**
+         * A dimension-agnostic alias for adjacentEdge().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "facet" refers to a facet of a top-dimensional simplex
+         * (which for 2-manifold triangulations means an edge of a triangle).
+         * 
+         * See adjacentEdge() for further information.
+         */
+        int adjacentFacet(int facet) const;
+        /**
          * Determines if this triangle has any edges that are boundary edges.
          *
          * @return \c true if and only if this triangle has any boundary edges.
@@ -418,6 +429,10 @@ inline NPerm3 Dim2Triangle::adjacentGluing(int edge) const {
 
 inline int Dim2Triangle::adjacentEdge(int edge) const {
     return adjPerm_[edge][edge];
+}
+
+inline int Dim2Triangle::adjacentFacet(int facet) const {
+    return adjPerm_[facet][facet];
 }
 
 inline Dim2Triangulation* Dim2Triangle::getTriangulation() const {

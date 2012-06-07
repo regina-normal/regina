@@ -298,6 +298,17 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          */
         int adjacentFace(int face) const;
         /**
+         * A dimension-agnostic alias for adjacentFace().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "facet" refers to a facet of a top-dimensional simplex
+         * (which for 3-manifold triangulations means a face of a tetrahedron).
+         * 
+         * See adjacentFace() for further information.
+         */
+        int adjacentFacet(int facet) const;
+        /**
          * Deprecated in favour of adjacentFace().  The old routine
          * getAdjacentFace() has been renamed to adjacentFace()
          * as part of an effort to make programming and scripting with
@@ -666,6 +677,10 @@ inline NTetrahedron* NTetrahedron::getAdjacentTetrahedron(int face) const {
 
 inline int NTetrahedron::adjacentFace(int face) const {
     return tetrahedronPerm[face][face];
+}
+
+inline int NTetrahedron::adjacentFacet(int facet) const {
+    return tetrahedronPerm[facet][facet];
 }
 
 inline int NTetrahedron::getAdjacentFace(int face) const {

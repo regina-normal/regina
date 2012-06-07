@@ -49,6 +49,7 @@ void addDim2Triangle() {
             return_value_policy<reference_existing_object>())
         .def("adjacentGluing", &Dim2Triangle::adjacentGluing)
         .def("adjacentEdge", &Dim2Triangle::adjacentEdge)
+        .def("adjacentFacet", &Dim2Triangle::adjacentFacet)
         .def("hasBoundary", &Dim2Triangle::hasBoundary)
         .def("joinTo", &Dim2Triangle::joinTo)
         .def("unjoin", &Dim2Triangle::unjoin,
