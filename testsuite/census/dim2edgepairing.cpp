@@ -26,21 +26,64 @@
 
 /* end stub */
 
+#include <sstream>
+#include <cppunit/extensions/HelperMacros.h>
+#include "census/dim2edgepairing.h"
+#include "testsuite/census/testcensus.h"
+
+using regina::Dim2EdgePairing;
+using regina::NBoolSet;
+
 /**
- * This file allows all tests from this directory to be added to
- * the overall test runner, without requiring any further inclusion
- * of headers that define the specific corresponding test fixtures.
- *
- * The routines declared below (which should add tests to the given
- * test runner) should be implemented in this directory and then called
- * from the top-level test suite directory.
+ * Simply increment the given count when a face pairing is found.
  */
+void countEdgePairings(const Dim2EdgePairing* pair,
+        const Dim2EdgePairing::IsoList*, void* count) {
+    if (pair)
+        (*(unsigned*)count)++;
+}
 
-#include <cppunit/ui/text/TestRunner.h>
+class Dim2EdgePairingTest : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(Dim2EdgePairingTest);
 
-void addNCensus(CppUnit::TextUi::TestRunner& runner);
-void addNFacePairing(CppUnit::TextUi::TestRunner& runner);
-void addDim2EdgePairing(CppUnit::TextUi::TestRunner& runner);
-void addDim4Census(CppUnit::TextUi::TestRunner& runner);
-void addDim4FacetPairing(CppUnit::TextUi::TestRunner& runner);
+    CPPUNIT_TEST(rawCounts);
+
+    CPPUNIT_TEST_SUITE_END();
+
+    private:
+        unsigned count;
+            /**< Used to hold arbitrary totals. */
+
+    public:
+        void setUp() {
+        }
+
+        void tearDown() {
+        }
+
+        void rawCounts() {
+            // Figures taken from the online encyclopedia of integer
+            // sequences, #A005967.
+            unsigned nPairs[] = { 0, 0, 2, 0, 5, 0, 17, 0, 71, 0, 388,
+                0, 2592 };
+
+            unsigned nTri;
+            for (nTri = 0; nTri <= 12; nTri++) {
+                count = 0;
+                Dim2EdgePairing::findAllPairings(nTri, NBoolSet::sFalse,
+                    0, countEdgePairings, &count, false);
+
+                std::ostringstream msg;
+                msg << "Edge pairing count for " << nTri
+                    << " triangles should be " << nPairs[nTri]
+                    << ", not " << count << '.';
+
+                CPPUNIT_ASSERT_MESSAGE(msg.str(), count == nPairs[nTri]);
+            }
+        }
+};
+
+void addDim2EdgePairing(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(Dim2EdgePairingTest::suite());
+}
 

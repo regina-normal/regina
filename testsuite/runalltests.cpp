@@ -162,6 +162,7 @@ bool runAllTests() {
     // Census:
     addNCensus(runner);
     addNFacePairing(runner);
+    addDim2EdgePairing(runner);
     addDim4Census(runner);
     addDim4FacetPairing(runner);
 
