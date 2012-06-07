@@ -26,13 +26,13 @@
 
 /* end stub */
 
-/*! \file dim2/dim2face.h
+/*! \file dim2/dim2triangle.h
  *  \brief Deals with triangular faces in a 2-manifold triangulation.
  */
 
-#ifndef __DIM2FACE_H
+#ifndef __DIM2TRIANGLE_H
 #ifndef __DOXYGEN
-#define __DIM2FACE_H
+#define __DIM2TRIANGLE_H
 #endif
 
 #include "regina-core.h"

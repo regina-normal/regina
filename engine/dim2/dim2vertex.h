@@ -228,7 +228,7 @@ class REGINA_API Dim2Vertex : public ShareableObject, public NMarkedElement {
 
 } // namespace regina
 // Some more headers that are required for inline functions:
-#include "dim2/dim2face.h"
+#include "dim2/dim2triangle.h"
 namespace regina {
 
 // Inline functions for Dim2VertexEmbedding

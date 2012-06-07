@@ -1,7 +1,7 @@
 # dim2 
 
 # Files to compile
-SET ( FILES dim2boundarycomponent dim2component dim2edge dim2face dim2isomorphism dim2triangleedge dim2triangulation dim2vertex pydim2 )
+SET ( FILES dim2boundarycomponent dim2component dim2edge dim2triangle dim2isomorphism dim2triangleedge dim2triangulation dim2vertex pydim2 )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
