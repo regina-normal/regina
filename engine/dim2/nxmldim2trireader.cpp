@@ -38,22 +38,22 @@ namespace regina {
  */
 namespace {
     /**
-     * Reads a single face with its name and gluings.
+     * Reads a single triangle with its name and gluings.
      */
-    class Dim2FaceReader : public NXMLElementReader {
+    class Dim2TriangleReader : public NXMLElementReader {
         private:
             Dim2Triangulation* tri_;
-            Dim2Face* face_;
+            Dim2Triangle* triangle_;
 
         public:
-            Dim2FaceReader(Dim2Triangulation* tri, unsigned whichFace) :
-                    tri_(tri), face_(tri->getFaces()[whichFace]) {
+            Dim2TriangleReader(Dim2Triangulation* tri, unsigned whichTri) :
+                    tri_(tri), triangle_(tri->getTriangles()[whichTri]) {
             }
 
             virtual void startElement(const std::string&,
                     const regina::xml::XMLPropertyDict& props,
                     NXMLElementReader*) {
-                face_->setDescription(props.lookup("desc"));
+                triangle_->setDescription(props.lookup("desc"));
             }
 
             virtual void initialChars(const std::string& chars) {
@@ -61,64 +61,65 @@ namespace {
                 if (basicTokenise(back_inserter(tokens), chars) != 6)
                     return;
 
-                long faceIndex, permCode;
+                long triIndex, permCode;
                 NPerm3 perm;
-                Dim2Face* adjFace;
+                Dim2Triangle* adjTri;
                 int adjEdge;
                 for (int k = 0; k < 3; ++k) {
-                    if (! valueOf(tokens[2 * k], faceIndex))
+                    if (! valueOf(tokens[2 * k], triIndex))
                         continue;
                     if (! valueOf(tokens[2 * k + 1], permCode))
                         continue;
 
-                    if (faceIndex < 0 || faceIndex >=
-                            static_cast<int>(tri_->getNumberOfFaces()))
+                    if (triIndex < 0 || triIndex >=
+                            static_cast<int>(tri_->getNumberOfTriangles()))
                         continue;
                     if (! NPerm3::isPermCode(permCode))
                         continue;
 
                     perm.setPermCode(permCode);
-                    adjFace = tri_->getFaces()[faceIndex];
+                    adjTri = tri_->getTriangles()[triIndex];
                     adjEdge = perm[k];
-                    if (adjFace == face_ && adjEdge == k)
+                    if (adjTri == triangle_ && adjEdge == k)
                         continue;
-                    if (face_->adjacentFace(k))
+                    if (triangle_->adjacentTriangle(k))
                         continue;
-                    if (adjFace->adjacentFace(adjEdge))
+                    if (adjTri->adjacentTriangle(adjEdge))
                         continue;
 
-                    face_->joinTo(k, adjFace, perm);
+                    triangle_->joinTo(k, adjTri, perm);
                 }
             }
     };
 
     /**
-     * Reads an entire set of faces with their names and gluings.
+     * Reads an entire set of triangles with their names and gluings.
      */
-    class Dim2FacesReader : public NXMLElementReader {
+    class Dim2TrianglesReader : public NXMLElementReader {
         private:
             Dim2Triangulation* tri_;
-            unsigned readFaces_;
+            unsigned readTriangles_;
 
         public:
-            Dim2FacesReader(Dim2Triangulation* tri) : tri_(tri), readFaces_(0) {
+            Dim2TrianglesReader(Dim2Triangulation* tri) :
+                    tri_(tri), readTriangles_(0) {
             }
 
             virtual void startElement(const std::string& /* tagName */,
                     const regina::xml::XMLPropertyDict& props,
                     NXMLElementReader*) {
-                long nFaces;
-                if (valueOf(props.lookup("nfaces"), nFaces))
-                    for ( ; nFaces > 0; --nFaces)
-                        tri_->newFace();
+                long nTriangles;
+                if (valueOf(props.lookup("ntriangles"), nTriangles))
+                    for ( ; nTriangles > 0; --nTriangles)
+                        tri_->newTriangle();
             }
 
             virtual NXMLElementReader* startSubElement(
                     const std::string& subTagName,
                     const regina::xml::XMLPropertyDict&) {
-                if (subTagName == "face") {
-                    if (readFaces_ < tri_->getNumberOfFaces())
-                        return new Dim2FaceReader(tri_, readFaces_++);
+                if (subTagName == "triangle") {
+                    if (readTriangles_ < tri_->getNumberOfTriangles())
+                        return new Dim2TriangleReader(tri_, readTriangles_++);
                     else
                         return new NXMLElementReader();
                 } else
@@ -130,8 +131,8 @@ namespace {
 NXMLElementReader* NXMLDim2TriangulationReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict&) {
-    if (subTagName == "faces")
-        return new Dim2FacesReader(tri_);
+    if (subTagName == "triangles")
+        return new Dim2TrianglesReader(tri_);
     return new NXMLElementReader();
 }
 

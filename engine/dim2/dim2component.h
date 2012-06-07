@@ -44,7 +44,7 @@ namespace regina {
 
 class Dim2BoundaryComponent;
 class Dim2Edge;
-class Dim2Face;
+class Dim2Triangle;
 class Dim2Vertex;
 
 /**
@@ -59,8 +59,8 @@ class Dim2Vertex;
  */
 class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
     private:
-        std::vector<Dim2Face*> faces_;
-            /**< List of faces in the component. */
+        std::vector<Dim2Triangle*> triangles_;
+            /**< List of triangles in the component. */
         std::vector<Dim2Edge*> edges_;
             /**< List of edges in the component. */
         std::vector<Dim2Vertex*> vertices_;
@@ -78,11 +78,11 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
         virtual ~Dim2Component();
 
         /**
-         * Returns the number of faces in this component.
+         * Returns the number of triangles in this component.
          *
-         * @return the number of faces.
+         * @return the number of triangles.
          */
-        unsigned long getNumberOfFaces() const;
+        unsigned long getNumberOfTriangles() const;
 
         /**
          * Returns the number of edges in this component.
@@ -106,17 +106,17 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
         unsigned long getNumberOfBoundaryComponents() const;
 
         /**
-         * Returns the requested face in this component.
+         * Returns the requested triangle in this component.
          *
-         * @param index the index of the requested face in the
+         * @param index the index of the requested triangle in the
          * component.  This should be between 0 and
-         * getNumberOfFaces()-1 inclusive.
-         * Note that the index of a face in the component need
-         * not be the index of the same face in the entire
+         * getNumberOfTriangles()-1 inclusive.
+         * Note that the index of a triangle in the component need
+         * not be the index of the same triangle in the entire
          * triangulation.
-         * @return the requested face.
+         * @return the requested triangle.
          */
-        Dim2Face* getFace(unsigned long index) const;
+        Dim2Triangle* getTriangle(unsigned long index) const;
 
         /**
          * Returns the requested edge in this component.
@@ -196,8 +196,8 @@ inline Dim2Component::Dim2Component() : orientable_(true) {
 inline Dim2Component::~Dim2Component() {
 }
 
-inline unsigned long Dim2Component::getNumberOfFaces() const {
-    return faces_.size();
+inline unsigned long Dim2Component::getNumberOfTriangles() const {
+    return triangles_.size();
 }
 
 inline unsigned long Dim2Component::getNumberOfEdges() const {
@@ -212,8 +212,8 @@ inline unsigned long Dim2Component::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline Dim2Face* Dim2Component::getFace(unsigned long index) const {
-    return faces_[index];
+inline Dim2Triangle* Dim2Component::getTriangle(unsigned long index) const {
+    return triangles_[index];
 }
 
 inline Dim2Edge* Dim2Component::getEdge(unsigned long index) const {
@@ -238,7 +238,7 @@ inline bool Dim2Component::isClosed() const {
 }
 
 inline void Dim2Component::writeTextShort(std::ostream& out) const {
-    out << "Component with " << getNumberOfFaces() << " faces";
+    out << "Component with " << getNumberOfTriangles() << " triangles";
 }
 
 } // namespace regina

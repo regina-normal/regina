@@ -40,12 +40,12 @@ void addDim2Component() {
     class_<Dim2Component, bases<regina::ShareableObject>,
             std::auto_ptr<Dim2Component>, boost::noncopyable>
             ("Dim2Component", no_init)
-        .def("getNumberOfFaces", &Dim2Component::getNumberOfFaces)
+        .def("getNumberOfTriangles", &Dim2Component::getNumberOfTriangles)
         .def("getNumberOfEdges", &Dim2Component::getNumberOfEdges)
         .def("getNumberOfVertices", &Dim2Component::getNumberOfVertices)
         .def("getNumberOfBoundaryComponents",
             &Dim2Component::getNumberOfBoundaryComponents)
-        .def("getFace", &Dim2Component::getFace,
+        .def("getTriangle", &Dim2Component::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim2Component::getEdge,
             return_value_policy<reference_existing_object>())

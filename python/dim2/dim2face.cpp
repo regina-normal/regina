@@ -34,35 +34,35 @@
 #include "dim2/dim2vertex.h"
 
 using namespace boost::python;
-using regina::Dim2Face;
+using regina::Dim2Triangle;
 
-void addDim2Face() {
-    class_<Dim2Face, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim2Face>, boost::noncopyable>(
-            "Dim2Face", no_init)
-        .def("getDescription", &Dim2Face::getDescription,
+void addDim2Triangle() {
+    class_<Dim2Triangle, bases<regina::ShareableObject>,
+            std::auto_ptr<Dim2Triangle>, boost::noncopyable>(
+            "Dim2Triangle", no_init)
+        .def("getDescription", &Dim2Triangle::getDescription,
             return_value_policy<return_by_value>())
-        .def("setDescription", &Dim2Face::setDescription)
-        .def("adjacentFace", &Dim2Face::adjacentFace,
+        .def("setDescription", &Dim2Triangle::setDescription)
+        .def("adjacentTriangle", &Dim2Triangle::adjacentTriangle,
             return_value_policy<reference_existing_object>())
-        .def("adjacentGluing", &Dim2Face::adjacentGluing)
-        .def("adjacentEdge", &Dim2Face::adjacentEdge)
-        .def("hasBoundary", &Dim2Face::hasBoundary)
-        .def("joinTo", &Dim2Face::joinTo)
-        .def("unjoin", &Dim2Face::unjoin,
+        .def("adjacentGluing", &Dim2Triangle::adjacentGluing)
+        .def("adjacentEdge", &Dim2Triangle::adjacentEdge)
+        .def("hasBoundary", &Dim2Triangle::hasBoundary)
+        .def("joinTo", &Dim2Triangle::joinTo)
+        .def("unjoin", &Dim2Triangle::unjoin,
             return_value_policy<reference_existing_object>())
-        .def("isolate", &Dim2Face::isolate)
-        .def("getTriangulation", &Dim2Face::getTriangulation,
+        .def("isolate", &Dim2Triangle::isolate)
+        .def("getTriangulation", &Dim2Triangle::getTriangulation,
             return_value_policy<reference_existing_object>())
-        .def("getComponent", &Dim2Face::getComponent,
+        .def("getComponent", &Dim2Triangle::getComponent,
             return_value_policy<reference_existing_object>())
-        .def("getVertex", &Dim2Face::getVertex,
+        .def("getVertex", &Dim2Triangle::getVertex,
             return_value_policy<reference_existing_object>())
-        .def("getEdge", &Dim2Face::getEdge,
+        .def("getEdge", &Dim2Triangle::getEdge,
             return_value_policy<reference_existing_object>())
-        .def("getVertexMapping", &Dim2Face::getVertexMapping)
-        .def("getEdgeMapping", &Dim2Face::getEdgeMapping)
-        .def("orientation", &Dim2Face::orientation)
+        .def("getVertexMapping", &Dim2Triangle::getVertexMapping)
+        .def("getEdgeMapping", &Dim2Triangle::getEdgeMapping)
+        .def("orientation", &Dim2Triangle::orientation)
     ;
 }
 

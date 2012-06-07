@@ -66,8 +66,8 @@ unsigned long Dim2Triangulation::findIsomorphisms(
         other.calculateSkeleton();
 
     // Deal with the empty triangulation first.
-    if (faces_.empty()) {
-        if (completeIsomorphism && ! other.faces_.empty())
+    if (triangles_.empty()) {
+        if (completeIsomorphism && ! other.triangles_.empty())
             return 0;
         results.push_back(new Dim2Isomorphism(0));
         return 1;
@@ -79,7 +79,7 @@ unsigned long Dim2Triangulation::findIsomorphisms(
         // Must be boundary complete, 1-to-1 and onto.
         // That is, combinatorially the two triangulations must be
         // identical.
-        if (faces_.size() != other.faces_.size())
+        if (triangles_.size() != other.triangles_.size())
             return 0;
         if (edges_.size() != other.edges_.size())
             return 0;
@@ -119,13 +119,13 @@ unsigned long Dim2Triangulation::findIsomorphisms(
             ComponentIterator it;
             for (it = components_.begin(); it != components_.end(); it++) {
                 mapIt = map1.insert(
-                    std::make_pair((*it)->getNumberOfFaces(), 0)).first;
+                    std::make_pair((*it)->getNumberOfTriangles(), 0)).first;
                 (*mapIt).second++;
             }
             for (it = other.components_.begin();
                     it != other.components_.end(); it++) {
                 mapIt = map2.insert(
-                    std::make_pair((*it)->getNumberOfFaces(), 0)).first;
+                    std::make_pair((*it)->getNumberOfTriangles(), 0)).first;
                 (*mapIt).second++;
             }
             if (! (map1 == map2))
@@ -155,7 +155,7 @@ unsigned long Dim2Triangulation::findIsomorphisms(
     } else {
         // May be boundary incomplete, and need not be onto.
         // Not much we can test for unfortunately.
-        if (faces_.size() > other.faces_.size())
+        if (triangles_.size() > other.triangles_.size())
             return 0;
         if ((! orientable_) && other.orientable_)
             return 0;
@@ -163,42 +163,42 @@ unsigned long Dim2Triangulation::findIsomorphisms(
 
     // Start searching for the isomorphism.
     // From the tests above, we are guaranteed that both triangulations
-    // have at least one face.
+    // have at least one triangle.
     unsigned long nResults = 0;
-    unsigned long nFaces = faces_.size();
-    unsigned long nDestFaces = other.faces_.size();
+    unsigned long nTriangles = triangles_.size();
+    unsigned long nDestTriangles = other.triangles_.size();
     unsigned long nComponents = components_.size();
     unsigned i;
 
-    Dim2Isomorphism iso(nFaces);
-    for (i = 0; i < nFaces; i++)
+    Dim2Isomorphism iso(nTriangles);
+    for (i = 0; i < nTriangles; i++)
         iso.simpImage(i) = -1;
 
-    // Which source component does each destination face correspond to?
-    long* whichComp = new long[nDestFaces];
-    std::fill(whichComp, whichComp + nDestFaces, -1);
+    // Which source component does each destination triangle correspond to?
+    long* whichComp = new long[nDestTriangles];
+    std::fill(whichComp, whichComp + nDestTriangles, -1);
 
-    // The image of the first source face of each component.  The
+    // The image of the first source triangle of each component.  The
     // remaining images can be derived by following gluings.
-    unsigned long* startFace = new unsigned long[nComponents];
-    std::fill(startFace, startFace + nComponents, 0);
+    unsigned long* startTri = new unsigned long[nComponents];
+    std::fill(startTri, startTri + nComponents, 0);
 
     int* startPerm = new int[nComponents];
     std::fill(startPerm, startPerm + nComponents, 0);
 
-    // The faces whose neighbours must be processed when filling
+    // The triangles whose neighbours must be processed when filling
     // out the current component.
     std::queue<long> toProcess;
 
     // Temporary variables.
     unsigned long compSize;
-    Dim2Face* face;
-    Dim2Face* adj;
-    Dim2Face* destFace;
-    Dim2Face* destAdj;
-    unsigned long myFaceIndex, adjIndex;
-    unsigned long destFaceIndex, destAdjIndex;
-    NPerm3 facePerm, adjPerm;
+    Dim2Triangle* tri;
+    Dim2Triangle* adj;
+    Dim2Triangle* destTri;
+    Dim2Triangle* destAdj;
+    unsigned long myTriIndex, adjIndex;
+    unsigned long destTriIndex, destAdjIndex;
+    NPerm3 triPerm, adjPerm;
     int edge;
     bool broken;
 
@@ -206,14 +206,14 @@ unsigned long Dim2Triangulation::findIsomorphisms(
     while (comp >= 0) {
         // Continue trying to find a mapping for the current component.
         // The next mapping to try is the one that starts with
-        // startFace[comp] and startPerm[comp].
+        // startTri[comp] and startPerm[comp].
         if (comp == static_cast<long>(nComponents)) {
             // We have an isomorphism!!!
             results.push_back(new Dim2Isomorphism(iso));
 
             if (firstOnly) {
                 delete[] whichComp;
-                delete[] startFace;
+                delete[] startTri;
                 delete[] startPerm;
                 return 1;
             } else
@@ -225,7 +225,7 @@ unsigned long Dim2Triangulation::findIsomorphisms(
             // Since nComponents > 0, we are guaranteed that comp > 0 also.
             comp--;
 
-            for (i = 0; i < nFaces; i++)
+            for (i = 0; i < nTriangles; i++)
                 if (iso.simpImage(i) >= 0 &&
                         whichComp[iso.simpImage(i)] == comp) {
                     whichComp[iso.simpImage(i)] = -1;
@@ -238,45 +238,45 @@ unsigned long Dim2Triangulation::findIsomorphisms(
 
         // Sort out the results of any previous startPerm++.
         if (startPerm[comp] == 6) {
-            // Move on to the next destination face.
-            startFace[comp]++;
+            // Move on to the next destination triangle.
+            startTri[comp]++;
             startPerm[comp] = 0;
         }
 
-        // Be sure we're looking at a face we can use.
-        compSize = components_[comp]->getNumberOfFaces();
+        // Be sure we're looking at a triangle we can use.
+        compSize = components_[comp]->getNumberOfTriangles();
         if (completeIsomorphism) {
             // Conditions:
-            // 1) The destination face is unused.
+            // 1) The destination triangle is unused.
             // 2) The component sizes match precisely.
-            while (startFace[comp] < nDestFaces &&
-                    (whichComp[startFace[comp]] >= 0 ||
-                     other.faces_[startFace[comp]]->getComponent()->
-                     getNumberOfFaces() != compSize))
-                startFace[comp]++;
+            while (startTri[comp] < nDestTriangles &&
+                    (whichComp[startTri[comp]] >= 0 ||
+                     other.triangles_[startTri[comp]]->getComponent()->
+                     getNumberOfTriangles() != compSize))
+                startTri[comp]++;
         } else {
             // Conditions:
-            // 1) The destination face is unused.
+            // 1) The destination triangle is unused.
             // 2) The destination component is at least as large as
             // the source component.
-            while (startFace[comp] < nDestFaces &&
-                    (whichComp[startFace[comp]] >= 0 ||
-                     other.faces_[startFace[comp]]->getComponent()->
-                     getNumberOfFaces() < compSize))
-                startFace[comp]++;
+            while (startTri[comp] < nDestTriangles &&
+                    (whichComp[startTri[comp]] >= 0 ||
+                     other.triangles_[startTri[comp]]->getComponent()->
+                     getNumberOfTriangles() < compSize))
+                startTri[comp]++;
         }
 
         // Have we run out of possibilities?
-        if (startFace[comp] == nDestFaces) {
+        if (startTri[comp] == nDestTriangles) {
             // No more possibilities for filling this component.
             // Move back to the previous component, and clear the
             // mapping for that previous component.
-            startFace[comp] = 0;
+            startTri[comp] = 0;
             startPerm[comp] = 0;
 
             comp--;
             if (comp >= 0) {
-                for (i = 0; i < nFaces; i++)
+                for (i = 0; i < nTriangles; i++)
                     if (iso.simpImage(i) >= 0 &&
                             whichComp[iso.simpImage(i)] == comp) {
                         whichComp[iso.simpImage(i)] = -1;
@@ -289,55 +289,55 @@ unsigned long Dim2Triangulation::findIsomorphisms(
         }
 
         // Try to fill the image of this component based on the selected
-        // image of its first source face.
+        // image of its first source triangle.
         // Note that there is only one way of doing this (as seen by
-        // following adjacent face gluings).  It either works or
+        // following adjacent triangle gluings).  It either works or
         // it doesn't.
-        myFaceIndex = faceIndex(components_[comp]->getFace(0));
+        myTriIndex = triangleIndex(components_[comp]->getTriangle(0));
 
-        whichComp[startFace[comp]] = comp;
-        iso.simpImage(myFaceIndex) = startFace[comp];
-        iso.facetPerm(myFaceIndex) = NPerm3::S3[startPerm[comp]];
-        toProcess.push(myFaceIndex);
+        whichComp[startTri[comp]] = comp;
+        iso.simpImage(myTriIndex) = startTri[comp];
+        iso.facetPerm(myTriIndex) = NPerm3::S3[startPerm[comp]];
+        toProcess.push(myTriIndex);
 
         broken = false;
         while ((! broken) && (! toProcess.empty())) {
-            myFaceIndex = toProcess.front();
+            myTriIndex = toProcess.front();
             toProcess.pop();
-            face = faces_[myFaceIndex];
-            facePerm = iso.facetPerm(myFaceIndex);
-            destFaceIndex = iso.simpImage(myFaceIndex);
-            destFace = other.faces_[destFaceIndex];
+            tri = triangles_[myTriIndex];
+            triPerm = iso.facetPerm(myTriIndex);
+            destTriIndex = iso.simpImage(myTriIndex);
+            destTri = other.triangles_[destTriIndex];
 
             // If we are after a complete isomorphism, we might as well
             // test whether the lower-dimensional face degrees match.
-            if (completeIsomorphism && ! compatibleFaces(face, destFace,
-                    facePerm)) {
+            if (completeIsomorphism && ! compatibleTriangles(tri, destTri,
+                    triPerm)) {
                 broken = true;
                 break;
             }
 
             for (edge = 0; edge < 3; ++edge) {
-                adj = face->adjacentFace(edge);
+                adj = tri->adjacentTriangle(edge);
                 if (adj) {
-                    // There is an adjacent source face.
-                    // Is there an adjacent destination face?
-                    destAdj = destFace->adjacentFace(facePerm[edge]);
+                    // There is an adjacent source triangle.
+                    // Is there an adjacent destination triangle?
+                    destAdj = destTri->adjacentTriangle(triPerm[edge]);
                     if (! destAdj) {
                         broken = true;
                         break;
                     }
                     // Work out what the isomorphism *should* say.
-                    adjIndex = faceIndex(adj);
-                    destAdjIndex = other.faceIndex(destAdj);
+                    adjIndex = triangleIndex(adj);
+                    destAdjIndex = other.triangleIndex(destAdj);
                     adjPerm =
-                        destFace->adjacentGluing(facePerm[edge]) *
-                        facePerm *
-                        face->adjacentGluing(edge).inverse();
+                        destTri->adjacentGluing(triPerm[edge]) *
+                        triPerm *
+                        tri->adjacentGluing(edge).inverse();
 
                     if (iso.simpImage(adjIndex) >= 0) {
                         // We've already decided upon an image for this
-                        // source face.  Does it match?
+                        // source triangle.  Does it match?
                         if (static_cast<long>(destAdjIndex) !=
                                 iso.simpImage(adjIndex) ||
                                 adjPerm != iso.facetPerm(adjIndex)) {
@@ -346,24 +346,24 @@ unsigned long Dim2Triangulation::findIsomorphisms(
                         }
                     } else if (whichComp[destAdjIndex] >= 0) {
                         // We haven't decided upon an image for this
-                        // source face but the destination
-                        // face has already been used.
+                        // source triangle but the destination
+                        // triangle has already been used.
                         broken = true;
                         break;
                     } else {
                         // We haven't seen either the source or the
-                        // destination face.
+                        // destination triangle.
                         whichComp[destAdjIndex] = comp;
                         iso.simpImage(adjIndex) = destAdjIndex;
                         iso.facetPerm(adjIndex) = adjPerm;
                         toProcess.push(adjIndex);
                     }
                 } else if (completeIsomorphism) {
-                    // There is no adjacent source face, and we
+                    // There is no adjacent source triangle, and we
                     // are after a boundary complete isomorphism.
                     // There had better be no adjacent destination
-                    // face also.
-                    if (destFace->adjacentFace(facePerm[edge])) {
+                    // triangle also.
+                    if (destTri->adjacentTriangle(triPerm[edge])) {
                         broken = true;
                         break;
                     }
@@ -383,7 +383,7 @@ unsigned long Dim2Triangulation::findIsomorphisms(
             while (! toProcess.empty())
                 toProcess.pop();
 
-            for (i = 0; i < nFaces; i++)
+            for (i = 0; i < nTriangles; i++)
                 if (iso.simpImage(i) >= 0 &&
                         whichComp[iso.simpImage(i)] == comp) {
                     whichComp[iso.simpImage(i)] = -1;
@@ -396,13 +396,13 @@ unsigned long Dim2Triangulation::findIsomorphisms(
 
     // All out of options.
     delete[] whichComp;
-    delete[] startFace;
+    delete[] startTri;
     delete[] startPerm;
     return nResults;
 }
 
-bool Dim2Triangulation::compatibleFaces(
-        Dim2Face* src, Dim2Face* dest, NPerm3 p) {
+bool Dim2Triangulation::compatibleTriangles(
+        Dim2Triangle* src, Dim2Triangle* dest, NPerm3 p) {
     for (int vertex = 0; vertex < 3; vertex++)
         if (src->getVertex(vertex)->getNumberOfEmbeddings() !=
                 dest->getVertex(p[vertex])->getNumberOfEmbeddings())

@@ -133,7 +133,7 @@ namespace {
 }
 
 std::string Dim2Triangulation::isoSig() const {
-    if (faces_.empty()) {
+    if (triangles_.empty()) {
         char c[2];
         c[0] = SCHAR(0);
         c[1] = 0;
@@ -144,19 +144,19 @@ std::string Dim2Triangulation::isoSig() const {
     // connected component.
     unsigned i, j;
     ComponentIterator it;
-    unsigned cFace;
-    unsigned face, perm;
+    unsigned cTri;
+    unsigned tri, perm;
     std::string curr;
 
     std::string* comp = new std::string[getNumberOfComponents()];
     for (it = components_.begin(), i = 0; it != components_.end(); ++it, ++i) {
-        cFace = (*it)->getNumberOfFaces();
+        cTri = (*it)->getNumberOfTriangles();
 
-        for (face = 0; face < (*it)->getNumberOfFaces(); ++face)
+        for (tri = 0; tri < (*it)->getNumberOfTriangles(); ++tri)
             for (perm = 0; perm < 6; ++perm) {
-                curr = isoSig((*it)->getFace(face)->markedIndex(),
+                curr = isoSig((*it)->getTriangle(tri)->markedIndex(),
                     NPerm3::orderedS3[perm]);
-                if ((face == 0 && perm == 0) || (curr < comp[i]))
+                if ((tri == 0 && perm == 0) || (curr < comp[i]))
                     comp[i].swap(curr);
             }
     }
@@ -172,28 +172,28 @@ std::string Dim2Triangulation::isoSig() const {
     return ans;
 }
 
-std::string Dim2Triangulation::isoSig(unsigned face, const NPerm3& vertices)
+std::string Dim2Triangulation::isoSig(unsigned tri, const NPerm3& vertices)
         const {
-    // Only process the component that face belongs to.
+    // Only process the component that tri belongs to.
 
     // ---------------------------------------------------------------------
     // Data for reconstructing a triangulation from an isomorphism signature
     // ---------------------------------------------------------------------
 
-    // The number of faces.
-    unsigned nFaces = faces_.size();
+    // The number of triangles.
+    unsigned nTriangles = triangles_.size();
 
     // What happens to each new edge that we encounter?
     // Options are:
     //   0 -> boundary
-    //   1 -> joined to a face not yet seen [gluing perm = identity]
-    //   2 -> joined to a face already seen
-    // These actions are stored in lexicographical order by (face, edge),
+    //   1 -> joined to a triangle not yet seen [gluing perm = identity]
+    //   2 -> joined to a triangle already seen
+    // These actions are stored in lexicographical order by (triangle, edge),
     // but only once for each edge (so we "skip" gluings that we've
     // already seen from the other direction).
     char* edgeAction = new char[getNumberOfEdges()];
 
-    // What are the destination faces and gluing permutations for
+    // What are the destination triangles and gluing permutations for
     // each edge under case #2 above?
     // For gluing permutations, we store the index of the permutation in
     // NPerm3::orderedS3.
@@ -202,58 +202,59 @@ std::string Dim2Triangulation::isoSig(unsigned face, const NPerm3& vertices)
 
     // ---------------------------------------------------------------------
     // Data for finding the unique canonical isomorphism from this
-    // connected component that maps (face, vertices) -> (0, 012)
+    // connected component that maps (triangle, vertices) -> (0, 012)
     // ---------------------------------------------------------------------
 
-    // The image for each face and its vertices:
-    int* image = new int[nFaces];
-    NPerm3* vertexMap = new NPerm3[nFaces];
+    // The image for each triangle and its vertices:
+    int* image = new int[nTriangles];
+    NPerm3* vertexMap = new NPerm3[nTriangles];
 
-    // The preimage for each face:
-    int* preImage = new int[nFaces];
+    // The preimage for each triangle:
+    int* preImage = new int[nTriangles];
 
     // ---------------------------------------------------------------------
     // Looping variables
     // ---------------------------------------------------------------------
-    unsigned edgePos, joinPos, nextUnusedFace;
-    unsigned faceImg, edgeImg;
-    unsigned faceSrc, edgeSrc, dest;
-    Dim2Face* p;
+    unsigned edgePos, joinPos, nextUnusedTri;
+    unsigned triImg, edgeImg;
+    unsigned triSrc, edgeSrc, dest;
+    Dim2Triangle* p;
 
     // ---------------------------------------------------------------------
     // The code!
     // ---------------------------------------------------------------------
 
-    std::fill(image, image + nFaces, -1);
-    std::fill(preImage, preImage + nFaces, -1);
+    std::fill(image, image + nTriangles, -1);
+    std::fill(preImage, preImage + nTriangles, -1);
 
-    image[face] = 0;
-    vertexMap[face] = vertices.inverse();
-    preImage[0] = face;
+    image[tri] = 0;
+    vertexMap[tri] = vertices.inverse();
+    preImage[0] = tri;
 
     edgePos = 0;
     joinPos = 0;
-    nextUnusedFace = 1;
+    nextUnusedTri = 1;
 
-    // To obtain a canonical isomorphism, we must run through the faces
+    // To obtain a canonical isomorphism, we must run through the triangles
     // and their edges in image order, not preimage order.
     //
     // This main loop is guaranteed to exit when (and only when) we have
     // exhausted a single connected component of the triangulation.
-    for (faceImg = 0; faceImg < nFaces && preImage[faceImg] >= 0; ++faceImg) {
-        faceSrc = preImage[faceImg];
-        p = faces_[faceSrc];
+    for (triImg = 0; triImg < nTriangles && preImage[triImg] >= 0;
+            ++triImg) {
+        triSrc = preImage[triImg];
+        p = triangles_[triSrc];
 
         for (edgeImg = 0; edgeImg < 3; ++edgeImg) {
-            edgeSrc = vertexMap[faceSrc].preImageOf(edgeImg);
+            edgeSrc = vertexMap[triSrc].preImageOf(edgeImg);
 
             // INVARIANTS (held while we stay within a single component):
-            // - nextUnusedFace > faceImg
-            // - image[faceSrc], preImage[image[faceSrc]] and vertexMap[faceSrc]
+            // - nextUnusedTri > triImg
+            // - image[triSrc], preImage[image[triSrc]] and vertexMap[triSrc]
             //   are already filled in.
 
             // Work out what happens to our source edge.
-            if (! p->adjacentFace(edgeSrc)) {
+            if (! p->adjacentTriangle(edgeSrc)) {
                 // A boundary edge.
                 edgeAction[edgePos++] = 0;
                 continue;
@@ -261,34 +262,34 @@ std::string Dim2Triangulation::isoSig(unsigned face, const NPerm3& vertices)
 
             // We have a real gluing.  Is it a gluing we've already seen
             // from the other side?
-            dest = faceIndex(p->adjacentFace(edgeSrc));
+            dest = triangleIndex(p->adjacentTriangle(edgeSrc));
 
             if (image[dest] >= 0)
-                if (image[dest] < image[faceSrc] ||
-                        (dest == faceSrc &&
-                         vertexMap[faceSrc][p->adjacentEdge(edgeSrc)]
-                         < vertexMap[faceSrc][edgeSrc])) {
+                if (image[dest] < image[triSrc] ||
+                        (dest == triSrc &&
+                         vertexMap[triSrc][p->adjacentEdge(edgeSrc)]
+                         < vertexMap[triSrc][edgeSrc])) {
                     // Yes.  Just skip this gluing entirely.
                     continue;
                 }
 
-            // Is it a completely new face?
+            // Is it a completely new triangle?
             if (image[dest] < 0) {
-                // Yes.  The new face takes the next available
+                // Yes.  The new triangle takes the next available
                 // index, and the canonical gluing becomes the identity.
-                image[dest] = nextUnusedFace++;
+                image[dest] = nextUnusedTri++;
                 preImage[image[dest]] = dest;
-                vertexMap[dest] = vertexMap[faceSrc] *
+                vertexMap[dest] = vertexMap[triSrc] *
                     p->adjacentGluing(edgeSrc).inverse();
 
                 edgeAction[edgePos++] = 1;
                 continue;
             }
 
-            // It's a face we've seen before.  Record the gluing.
+            // It's a triangle we've seen before.  Record the gluing.
             joinDest[joinPos] = image[dest];
             joinGluing[joinPos] = (vertexMap[dest] *
-                p->adjacentGluing(edgeSrc) * vertexMap[faceSrc].inverse()).
+                p->adjacentGluing(edgeSrc) * vertexMap[triSrc].inverse()).
                 orderedS3Index();
             ++joinPos;
 
@@ -298,7 +299,7 @@ std::string Dim2Triangulation::isoSig(unsigned face, const NPerm3& vertices)
 
     // We have all we need.  Pack it all together into a string.
     // We need to encode:
-    // - the number of faces in this component;
+    // - the number of triangles in this component;
     // - edgeAction[i], 0 <= i < edgePos;
     // - joinDest[i], 0 <= i < joinPos;
     // - joinGluing[i], 0 <= i < joinPos.
@@ -307,13 +308,13 @@ std::string Dim2Triangulation::isoSig(unsigned face, const NPerm3& vertices)
     // Keep it simple for small triangulations (1 character per integer).
     // For large triangulations, start with a special marker followed by
     // the number of chars per integer.
-    unsigned nCompFace = faceImg;
+    unsigned nCompTri = triImg;
     unsigned nChars;
-    if (nCompFace < 63)
+    if (nCompTri < 63)
         nChars = 1;
     else {
         nChars = 0;
-        unsigned tmp = nCompFace;
+        unsigned tmp = nCompTri;
         while (tmp > 0) {
             tmp >>= 6;
             ++nChars;
@@ -325,7 +326,7 @@ std::string Dim2Triangulation::isoSig(unsigned face, const NPerm3& vertices)
 
     // Off we go.
     unsigned i;
-    SAPPEND(ans, nCompFace, nChars);
+    SAPPEND(ans, nCompTri, nChars);
     for (i = 0; i < edgePos; i += 3)
         SAPPENDTRITS(ans, edgeAction + i, (edgePos >= i + 3 ? 3 : edgePos - i));
     for (i = 0; i < joinPos; ++i)
@@ -358,11 +359,11 @@ Dim2Triangulation* Dim2Triangulation::fromIsoSig(const std::string& sig) {
             return 0;
 
     unsigned i, j;
-    unsigned nFace, nChars;
+    unsigned nTri, nChars;
     while (*c) {
         // Read one component at a time.
-        nFace = SVAL(*c++);
-        if (nFace < 63)
+        nTri = SVAL(*c++);
+        if (nTri < 63)
             nChars = 1;
         else {
             if (! *c)
@@ -370,22 +371,22 @@ Dim2Triangulation* Dim2Triangulation::fromIsoSig(const std::string& sig) {
             nChars = SVAL(*c++);
             if (! SHASCHARS(c, nChars))
                 return 0;
-            nFace = SREAD(c, nChars);
+            nTri = SREAD(c, nChars);
             c += nChars;
         }
 
-        if (nFace == 0) {
+        if (nTri == 0) {
             // Empty component.
             continue;
         }
 
         // Non-empty component; keep going.
-        char* edgeAction = new char[3 * nFace + 2];
+        char* edgeAction = new char[3 * nTri + 2];
         unsigned nEdges = 0;
         unsigned edgePos = 0;
         unsigned nJoins = 0;
 
-        for ( ; nEdges < 3 * nFace; edgePos += 3) {
+        for ( ; nEdges < 3 * nTri; edgePos += 3) {
             if (! *c) {
                 delete[] edgeAction;
                 return 0;
@@ -394,7 +395,7 @@ Dim2Triangulation* Dim2Triangulation::fromIsoSig(const std::string& sig) {
             for (i = 0; i < 3; ++i) {
                 // If we're already finished, make sure the leftover trits
                 // are zero.
-                if (nEdges == 3 * nFace) {
+                if (nEdges == 3 * nTri) {
                     if (edgeAction[edgePos + i] != 0) {
                         delete[] edgeAction;
                         return 0;
@@ -413,7 +414,7 @@ Dim2Triangulation* Dim2Triangulation::fromIsoSig(const std::string& sig) {
                     delete[] edgeAction;
                     return 0;
                 }
-                if (nEdges > 3 * nFace) {
+                if (nEdges > 3 * nTri) {
                     delete[] edgeAction;
                     return 0;
                 }
@@ -453,38 +454,38 @@ Dim2Triangulation* Dim2Triangulation::fromIsoSig(const std::string& sig) {
         }
 
         // End of component!
-        Dim2Face** face = new Dim2Face*[nFace];
-        for (i = 0; i < nFace; ++i)
-            face[i] = ans->newFace();
+        Dim2Triangle** tri = new Dim2Triangle*[nTri];
+        for (i = 0; i < nTri; ++i)
+            tri[i] = ans->newTriangle();
 
         edgePos = 0;
         unsigned nextUnused = 1;
         unsigned joinPos = 0;
-        for (i = 0; i < nFace; ++i)
+        for (i = 0; i < nTri; ++i)
             for (j = 0; j < 3; ++j) {
                 // Already glued from the other side:
-                if (face[i]->adjacentFace(j))
+                if (tri[i]->adjacentTriangle(j))
                     continue;
 
                 if (edgeAction[edgePos] == 0) {
                     // Boundary edge.
                 } else if (edgeAction[edgePos] == 1) {
-                    // Join to new face.
-                    face[i]->joinTo(j, face[nextUnused++], NPerm3());
+                    // Join to new triangle.
+                    tri[i]->joinTo(j, tri[nextUnused++], NPerm3());
                 } else {
-                    // Join to existing face.
+                    // Join to existing triangle.
                     if (joinDest[joinPos] >= nextUnused ||
-                            face[joinDest[joinPos]]->adjacentFace(
+                            tri[joinDest[joinPos]]->adjacentTriangle(
                             NPerm3::orderedS3[joinGluing[joinPos]][j])) {
                         delete[] edgeAction;
                         delete[] joinDest;
                         delete[] joinGluing;
-                        for (int k = 0; k < nFace; ++k)
-                            delete face[k];
-                        delete[] face;
+                        for (int k = 0; k < nTri; ++k)
+                            delete tri[k];
+                        delete[] tri;
                         return 0;
                     }
-                    face[i]->joinTo(j, face[joinDest[joinPos]],
+                    tri[i]->joinTo(j, tri[joinDest[joinPos]],
                         NPerm3::orderedS3[joinGluing[joinPos]]);
                     ++joinPos;
                 }
@@ -495,7 +496,7 @@ Dim2Triangulation* Dim2Triangulation::fromIsoSig(const std::string& sig) {
         delete[] edgeAction;
         delete[] joinDest;
         delete[] joinGluing;
-        delete[] face;
+        delete[] tri;
     }
 
     return ans.release();

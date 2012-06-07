@@ -46,7 +46,7 @@ namespace regina {
 
 class Dim2BoundaryComponent;
 class Dim2Component;
-class Dim2Face;
+class Dim2Triangle;
 class Dim2Triangulation;
 
 /**
@@ -56,14 +56,14 @@ class Dim2Triangulation;
 
 /**
  * Details how a vertex in the skeleton of a 2-manifold triangulation forms
- * part of an individual face.
+ * part of an individual triangle.
  */
 class REGINA_API Dim2VertexEmbedding {
     private:
-        Dim2Face* face_;
-            /**< The face in which this vertex is contained. */
+        Dim2Triangle* triangle_;
+            /**< The triangle in which this vertex is contained. */
         int vertex_;
-            /**< The vertex number of the face that is this vertex. */
+            /**< The vertex number of the triangle that is this vertex. */
 
     public:
         /**
@@ -78,10 +78,10 @@ class REGINA_API Dim2VertexEmbedding {
         /**
          * Creates an embedding descriptor containing the given data.
          *
-         * @param face the face in which this vertex is contained.
-         * @param vertex the vertex number of \a face that is this vertex.
+         * @param tri the triangle in which this vertex is contained.
+         * @param vertex the vertex number of \a tri that is this vertex.
          */
-        Dim2VertexEmbedding(Dim2Face* face, int vertex);
+        Dim2VertexEmbedding(Dim2Triangle* tri, int vertex);
 
         /**
          * Creates an embedding descriptor containing the same data as
@@ -100,14 +100,14 @@ class REGINA_API Dim2VertexEmbedding {
         Dim2VertexEmbedding& operator =(const Dim2VertexEmbedding& cloneMe);
 
         /**
-         * Returns the face in which this vertex is contained.
+         * Returns the triangle in which this vertex is contained.
          *
-         * @return the face.
+         * @return the triangle.
          */
-        Dim2Face* getFace() const;
+        Dim2Triangle* getTriangle() const;
 
         /**
-         * Returns the vertex number within getFace() that is this vertex.
+         * Returns the vertex number within getTriangle() that is this vertex.
          *
          * @return the vertex number that is this vertex.
          */
@@ -115,13 +115,13 @@ class REGINA_API Dim2VertexEmbedding {
 
         /**
          * Returns a permutation that maps 0 to the vertex number within
-         * getFace() that is this vertex.  This permutation also maps
-         * (1,2) to the two remaining face vertices in a manner that
+         * getTriangle() that is this vertex.  This permutation also maps
+         * (1,2) to the two remaining triangle vertices in a manner that
          * preserves orientation as you walk around the vertex.
-         * See Dim2Face::getVertexMapping() for details.
+         * See Dim2Triangle::getVertexMapping() for details.
          *
          * @return a permutation that maps 0 to the corresponding
-         * vertex number of getFace().
+         * vertex number of getTriangle().
          */
         NPerm3 getVertices() const;
 };
@@ -135,7 +135,7 @@ class REGINA_API Dim2Vertex : public ShareableObject, public NMarkedElement {
     private:
         std::deque<Dim2VertexEmbedding> emb_;
             /**< A list of descriptors telling how this vertex forms a part of
-                 each individual face that it belongs to. */
+                 each individual triangle that it belongs to. */
         Dim2Component* component_;
             /**< The component that this vertex is a part of. */
         Dim2BoundaryComponent* boundaryComponent_;
@@ -145,10 +145,10 @@ class REGINA_API Dim2Vertex : public ShareableObject, public NMarkedElement {
     public:
         /**
          * Returns the list of descriptors detailing how this vertex forms
-         * a part of various faces in the triangulation.
+         * a part of various triangles in the triangulation.
          * Note that if this vertex represents multiple vertices of a
-         * particular face, then there will be multiple embedding
-         * descriptors in the list regarding that face.
+         * particular triangle, then there will be multiple embedding
+         * descriptors in the list regarding that triangle.
          *
          * \ifacespython This routine returns a python list.
          *
@@ -233,27 +233,28 @@ namespace regina {
 
 // Inline functions for Dim2VertexEmbedding
 
-inline Dim2VertexEmbedding::Dim2VertexEmbedding() : face_(0) {
+inline Dim2VertexEmbedding::Dim2VertexEmbedding() : triangle_(0) {
 }
 
-inline Dim2VertexEmbedding::Dim2VertexEmbedding(Dim2Face* face, int vertex) :
-        face_(face), vertex_(vertex) {
+inline Dim2VertexEmbedding::Dim2VertexEmbedding(Dim2Triangle* tri,
+        int vertex) :
+        triangle_(tri), vertex_(vertex) {
 }
 
 inline Dim2VertexEmbedding::Dim2VertexEmbedding(
         const Dim2VertexEmbedding& cloneMe) :
-        face_(cloneMe.face_), vertex_(cloneMe.vertex_) {
+        triangle_(cloneMe.triangle_), vertex_(cloneMe.vertex_) {
 }
 
 inline Dim2VertexEmbedding& Dim2VertexEmbedding::operator =
         (const Dim2VertexEmbedding& cloneMe) {
-    face_ = cloneMe.face_;
+    triangle_ = cloneMe.triangle_;
     vertex_ = cloneMe.vertex_;
     return *this;
 }
 
-inline Dim2Face* Dim2VertexEmbedding::getFace() const {
-    return face_;
+inline Dim2Triangle* Dim2VertexEmbedding::getTriangle() const {
+    return triangle_;
 }
 
 inline int Dim2VertexEmbedding::getVertex() const {
@@ -281,7 +282,7 @@ inline const Dim2VertexEmbedding& Dim2Vertex::getEmbedding(unsigned long index)
 }
 
 inline NPerm3 Dim2VertexEmbedding::getVertices() const {
-    return face_->getVertexMapping(vertex_);
+    return triangle_->getVertexMapping(vertex_);
 }
 
 inline Dim2Component* Dim2Vertex::getComponent() const {

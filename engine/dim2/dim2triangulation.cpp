@@ -42,12 +42,12 @@ void Dim2Triangulation::swapContents(Dim2Triangulation& other) {
     clearAllProperties();
     other.clearAllProperties();
 
-    faces_.swap(other.faces_);
+    triangles_.swap(other.triangles_);
 
-    FaceIterator it;
-    for (it = faces_.begin(); it != faces_.end(); ++it)
+    TriangleIterator it;
+    for (it = triangles_.begin(); it != triangles_.end(); ++it)
         (*it)->tri_ = this;
-    for (it = other.faces_.begin(); it != other.faces_.end(); ++it)
+    for (it = other.triangles_.begin(); it != other.triangles_.end(); ++it)
         (*it)->tri_ = &other;
 }
 
@@ -58,17 +58,17 @@ void Dim2Triangulation::moveContentsTo(Dim2Triangulation& dest) {
     clearAllProperties();
     dest.clearAllProperties();
 
-    FaceIterator it;
-    for (it = faces_.begin(); it != faces_.end(); ++it) {
+    TriangleIterator it;
+    for (it = triangles_.begin(); it != triangles_.end(); ++it) {
         // This is an abuse of NMarkedVector, since for a brief moment
-        // each face belongs to both vectors faces_ and dest.faces_.
+        // each triangle belongs to both vectors triangles_ and dest.triangles_.
         // However, the subsequent clear() operation does not touch the
-        // face markings (indices), and so we end up with the
+        // triangle markings (indices), and so we end up with the
         // correct result (i.e., the markings are correct for dest).
         (*it)->tri_ = &dest;
-        dest.faces_.push_back(*it);
+        dest.triangles_.push_back(*it);
     }
-    faces_.clear();
+    triangles_.clear();
 }
 
 void Dim2Triangulation::writeTextLong(std::ostream& out) const {
@@ -76,31 +76,31 @@ void Dim2Triangulation::writeTextLong(std::ostream& out) const {
         calculateSkeleton();
 
     out << "Size of the skeleton:\n";
-    out << "  Faces: " << faces_.size() << '\n';
+    out << "  Triangles: " << triangles_.size() << '\n';
     out << "  Edges: " << edges_.size() << '\n';
     out << "  Vertices: " << vertices_.size() << '\n';
     out << '\n';
 
-    Dim2Face* face;
-    Dim2Face* adjFace;
-    unsigned facePos;
+    Dim2Triangle* tri;
+    Dim2Triangle* adjTri;
+    unsigned triPos;
     int i, j, k;
     NPerm3 adjPerm;
 
-    out << "Face gluing:\n";
-    out << "  Face  |  glued to:     (01)     (02)     (12)\n";
-    out << "  ------+--------------------------------------\n";
-    for (facePos=0; facePos < faces_.size(); facePos++) {
-        face = faces_[facePos];
-        out << "  " << std::setw(4) << facePos << "  |           ";
+    out << "Triangle gluing:\n";
+    out << "  Triangle  |  glued to:     (01)     (02)     (12)\n";
+    out << "  ----------+--------------------------------------\n";
+    for (triPos=0; triPos < triangles_.size(); triPos++) {
+        tri = triangles_[triPos];
+        out << "      " << std::setw(4) << triPos << "  |           ";
         for (i = 2; i >= 0; --i) {
             out << " ";
-            adjFace = face->adjacentFace(i);
-            if (! adjFace)
+            adjTri = tri->adjacentTriangle(i);
+            if (! adjTri)
                 out << "boundary";
             else {
-                adjPerm = face->adjacentGluing(i);
-                out << std::setw(3) << faceIndex(adjFace) << " (";
+                adjPerm = tri->adjacentGluing(i);
+                out << std::setw(3) << triangleIndex(adjTri) << " (";
                 for (j = 0; j < 3; ++j) {
                     if (j == i) continue;
                     out << adjPerm[j];
@@ -113,26 +113,26 @@ void Dim2Triangulation::writeTextLong(std::ostream& out) const {
     out << '\n';
 
     out << "Vertices:\n";
-    out << "  Face  |  vertex:    0   1   2\n";
-    out << "  ------+----------------------\n";
-    for (facePos = 0; facePos < faces_.size(); ++facePos) {
-        face = faces_[facePos];
-        out << "  " << std::setw(4) << facePos << "  |          ";
+    out << "  Triangle  |  vertex:    0   1   2\n";
+    out << "  ----------+----------------------\n";
+    for (triPos = 0; triPos < triangles_.size(); ++triPos) {
+        tri = triangles_[triPos];
+        out << "      " << std::setw(4) << triPos << "  |          ";
         for (i = 0; i < 3; ++i)
             out << ' ' << std::setw(3) <<
-                vertexIndex(face->getVertex(i));
+                vertexIndex(tri->getVertex(i));
         out << '\n';
     }
     out << '\n';
 
     out << "Edges:\n";
-    out << "  Face  |  edge:   01  02  12\n";
-    out << "  ------+--------------------\n";
-    for (facePos = 0; facePos < faces_.size(); ++facePos) {
-        face = faces_[facePos];
-        out << "  " << std::setw(4) << facePos << "  |        ";
+    out << "  Triangle  |  edge:   01  02  12\n";
+    out << "  ----------+--------------------\n";
+    for (triPos = 0; triPos < triangles_.size(); ++triPos) {
+        tri = triangles_[triPos];
+        out << "      " << std::setw(4) << triPos << "  |        ";
         for (i = 2; i >= 0; --i)
-            out << ' ' << std::setw(3) << edgeIndex(face->getEdge(i));
+            out << ' ' << std::setw(3) << edgeIndex(tri->getEdge(i));
         out << '\n';
     }
     out << '\n';
@@ -141,62 +141,62 @@ void Dim2Triangulation::writeTextLong(std::ostream& out) const {
 void Dim2Triangulation::insertTriangulation(const Dim2Triangulation& X) {
     ChangeEventSpan span(this);
 
-    unsigned long nOrig = getNumberOfFaces();
+    unsigned long nOrig = getNumberOfTriangles();
 
-    FaceIterator it;
-    for (it = X.faces_.begin(); it != X.faces_.end(); ++it)
-        newFace((*it)->getDescription());
+    TriangleIterator it;
+    for (it = X.triangles_.begin(); it != X.triangles_.end(); ++it)
+        newTriangle((*it)->getDescription());
 
     // Make the gluings.
-    long facePos, adjPos;
-    Dim2Face* face;
-    Dim2Face* adjFace;
+    long triPos, adjPos;
+    Dim2Triangle* tri;
+    Dim2Triangle* adjTri;
     NPerm3 adjPerm;
     int edge;
-    facePos = 0;
-    for (it = X.faces_.begin(); it != X.faces_.end(); ++it) {
-        face = *it;
+    triPos = 0;
+    for (it = X.triangles_.begin(); it != X.triangles_.end(); ++it) {
+        tri = *it;
         for (edge = 0; edge < 3; ++edge) {
-            adjFace = face->adjacentFace(edge);
-            if (adjFace) {
-                adjPos = X.faceIndex(adjFace);
-                adjPerm = face->adjacentGluing(edge);
-                if (adjPos > facePos ||
-                        (adjPos == facePos && adjPerm[edge] > edge)) {
-                    faces_[nOrig + facePos]->joinTo(edge,
-                        faces_[nOrig + adjPos], adjPerm);
+            adjTri = tri->adjacentTriangle(edge);
+            if (adjTri) {
+                adjPos = X.triangleIndex(adjTri);
+                adjPerm = tri->adjacentGluing(edge);
+                if (adjPos > triPos ||
+                        (adjPos == triPos && adjPerm[edge] > edge)) {
+                    triangles_[nOrig + triPos]->joinTo(edge,
+                        triangles_[nOrig + adjPos], adjPerm);
                 }
             }
         }
-        ++facePos;
+        ++triPos;
     }
 }
 
-void Dim2Triangulation::insertConstruction(unsigned long nFaces,
+void Dim2Triangulation::insertConstruction(unsigned long nTriangles,
         const int adjacencies[][3], const int gluings[][3][3]) {
-    if (nFaces == 0)
+    if (nTriangles == 0)
         return;
 
-    Dim2Face** face = new Dim2Face*[nFaces];
+    Dim2Triangle** tri = new Dim2Triangle*[nTriangles];
 
     unsigned i, j;
     NPerm3 p;
 
     ChangeEventSpan span(this);
 
-    for (i = 0; i < nFaces; ++i)
-        face[i] = newFace();
+    for (i = 0; i < nTriangles; ++i)
+        tri[i] = newTriangle();
 
-    for (i = 0; i < nFaces; ++i)
+    for (i = 0; i < nTriangles; ++i)
         for (j = 0; j < 3; ++j)
             if (adjacencies[i][j] >= 0 &&
-                    ! face[i]->adjacentFace(j)) {
+                    ! tri[i]->adjacentTriangle(j)) {
                 p = NPerm3(gluings[i][j][0], gluings[i][j][1],
                     gluings[i][j][2]);
-                face[i]->joinTo(j, face[adjacencies[i][j]], p);
+                tri[i]->joinTo(j, tri[adjacencies[i][j]], p);
             }
 
-    delete[] face;
+    delete[] tri;
 }
 
 std::string Dim2Triangulation::dumpConstruction() const {
@@ -211,7 +211,7 @@ std::string Dim2Triangulation::dumpConstruction() const {
 " */\n"
 "\n";
 
-    if (faces_.empty()) {
+    if (triangles_.empty()) {
         ans <<
 "/* This triangulation is empty.  No code is being generated. */\n";
         return ans.str();
@@ -220,30 +220,30 @@ std::string Dim2Triangulation::dumpConstruction() const {
     ans <<
 "/**\n"
 " * The following arrays describe the individual gluings of\n"
-" * face edges.\n"
+" * triangle edges.\n"
 " */\n"
 "\n";
 
-    unsigned long nFaces = faces_.size();
-    Dim2Face* face;
+    unsigned long nTriangles = triangles_.size();
+    Dim2Triangle* tri;
     NPerm3 perm;
     unsigned long p;
     int e, i;
 
-    ans << "const int adjacencies[" << nFaces << "][3] = {\n";
-    for (p = 0; p < nFaces; ++p) {
-        face = faces_[p];
+    ans << "const int adjacencies[" << nTriangles << "][3] = {\n";
+    for (p = 0; p < nTriangles; ++p) {
+        tri = triangles_[p];
 
         ans << "    { ";
         for (e = 0; e < 3; ++e) {
-            if (face->adjacentFace(e)) {
-                ans << faceIndex(face->adjacentFace(e));
+            if (tri->adjacentTriangle(e)) {
+                ans << triangleIndex(tri->adjacentTriangle(e));
             } else
                 ans << "-1";
 
             if (e < 2)
                 ans << ", ";
-            else if (p != nFaces - 1)
+            else if (p != nTriangles - 1)
                 ans << "},\n";
             else
                 ans << "}\n";
@@ -251,14 +251,14 @@ std::string Dim2Triangulation::dumpConstruction() const {
     }
     ans << "};\n\n";
 
-    ans << "const int gluings[" << nFaces << "][3][3] = {\n";
-    for (p = 0; p < nFaces; ++p) {
-        face = faces_[p];
+    ans << "const int gluings[" << nTriangles << "][3][3] = {\n";
+    for (p = 0; p < nTriangles; ++p) {
+        tri = triangles_[p];
 
         ans << "    { ";
         for (e = 0; e < 3; ++e) {
-            if (face->adjacentFace(e)) {
-                perm = face->adjacentGluing(e);
+            if (tri->adjacentTriangle(e)) {
+                perm = tri->adjacentGluing(e);
                 ans << "{ ";
                 for (i = 0; i < 3; ++i) {
                     ans << perm[i];
@@ -272,7 +272,7 @@ std::string Dim2Triangulation::dumpConstruction() const {
 
             if (e < 2)
                 ans << ", ";
-            else if (p != nFaces - 1)
+            else if (p != nTriangles - 1)
                 ans << " },\n";
             else
                 ans << " }\n";
@@ -287,7 +287,7 @@ std::string Dim2Triangulation::dumpConstruction() const {
 " */\n"
 "\n"
 "Dim2Triangulation tri;\n"
-"tri.insertConstruction(" << nFaces << ", adjacencies, gluings);\n"
+"tri.insertConstruction(" << nTriangles << ", adjacencies, gluings);\n"
 "\n";
 
     return ans.str();
@@ -297,68 +297,69 @@ void Dim2Triangulation::writeXMLPacketData(std::ostream& out) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 
-    // Write the face gluings.
-    FaceIterator it;
-    Dim2Face* adjFace;
+    // Write the triangle gluings.
+    TriangleIterator it;
+    Dim2Triangle* adjTri;
     int edge;
 
-    out << "  <faces nfaces=\"" << faces_.size() << "\">\n";
-    for (it = faces_.begin(); it != faces_.end(); ++it) {
-        out << "    <face desc=\"" <<
+    out << "  <triangles ntriangles=\"" << triangles_.size() << "\">\n";
+    for (it = triangles_.begin(); it != triangles_.end(); ++it) {
+        out << "    <triangle desc=\"" <<
             xmlEncodeSpecialChars((*it)->getDescription()) << "\"> ";
         for (edge = 0; edge < 3; ++edge) {
-            adjFace = (*it)->adjacentFace(edge);
-            if (adjFace) {
-                out << faceIndex(adjFace) << ' '
+            adjTri = (*it)->adjacentTriangle(edge);
+            if (adjTri) {
+                out << triangleIndex(adjTri) << ' '
                     << (*it)->adjacentGluing(edge).getPermCode() << ' ';
             } else
                 out << "-1 -1 ";
         }
-        out << "</face>\n";
+        out << "</triangle>\n";
     }
-    out << "  </faces>\n";
+    out << "  </triangles>\n";
 }
 
 void Dim2Triangulation::cloneFrom(const Dim2Triangulation& X) {
     ChangeEventSpan span(this);
 
-    removeAllFaces();
+    removeAllTriangles();
 
-    FaceIterator it;
-    for (it = X.faces_.begin(); it != X.faces_.end(); ++it)
-        newFace((*it)->getDescription());
+    TriangleIterator it;
+    for (it = X.triangles_.begin(); it != X.triangles_.end(); ++it)
+        newTriangle((*it)->getDescription());
 
     // Make the gluings.
-    long facePos, adjPos;
-    Dim2Face* face;
-    Dim2Face* adjFace;
+    long triPos, adjPos;
+    Dim2Triangle* tri;
+    Dim2Triangle* adjTri;
     NPerm3 adjPerm;
     int edge;
-    facePos = 0;
-    for (it = X.faces_.begin(); it != X.faces_.end(); ++it) {
-        face = *it;
+    triPos = 0;
+    for (it = X.triangles_.begin(); it != X.triangles_.end(); ++it) {
+        tri = *it;
         for (edge = 0; edge < 3; ++edge) {
-            adjFace = face->adjacentFace(edge);
-            if (adjFace) {
-                adjPos = X.faceIndex(adjFace);
-                adjPerm = face->adjacentGluing(edge);
-                if (adjPos > facePos ||
-                        (adjPos == facePos && adjPerm[edge] > edge)) {
-                    faces_[facePos]->joinTo(edge, faces_[adjPos], adjPerm);
+            adjTri = tri->adjacentTriangle(edge);
+            if (adjTri) {
+                adjPos = X.triangleIndex(adjTri);
+                adjPerm = tri->adjacentGluing(edge);
+                if (adjPos > triPos ||
+                        (adjPos == triPos && adjPerm[edge] > edge)) {
+                    triangles_[triPos]->joinTo(edge,
+                        triangles_[adjPos], adjPerm);
                 }
             }
         }
-        ++facePos;
+        ++triPos;
     }
 
     // Properties:
     // None yet for 2-manifold triangulations.
 }
 
-void Dim2Triangulation::deleteFaces() {
-    for (FaceIterator it = faces_.begin(); it != faces_.end(); ++it)
+void Dim2Triangulation::deleteTriangles() {
+    for (TriangleIterator it = triangles_.begin(); it != triangles_.end(); ++it)
         delete *it;
-    faces_.clear();
+    triangles_.clear();
 }
 
 void Dim2Triangulation::deleteSkeleton() {

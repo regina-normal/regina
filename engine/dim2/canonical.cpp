@@ -34,7 +34,7 @@ namespace regina {
 namespace {
     /**
      * For internal use by makeCanonical().  This routines assumes that
-     * the preimage of face 0 has been fixed (along with the
+     * the preimage of triangle 0 has been fixed (along with the
      * corresponding edge permutation), and tries to extend
      * this to a "possibly canonical" isomorphism.
      *
@@ -53,20 +53,20 @@ namespace {
             const Dim2Isomorphism& best, const Dim2Isomorphism& bestInv) {
         bool better = false;
 
-        unsigned nFaces = tri->getNumberOfFaces();
-        unsigned face;
+        unsigned nTriangles = tri->getNumberOfTriangles();
+        unsigned triangle;
 
-        for (face = 0; face < nFaces; ++face)
-            if (face != currentInv.simpImage(0))
-                current.simpImage(face) = -1;
+        for (triangle = 0; triangle < nTriangles; ++triangle)
+            if (triangle != currentInv.simpImage(0))
+                current.simpImage(triangle) = -1;
 
         int edge;
 
-        unsigned origFace, origFaceBest;
+        unsigned origTri, origTriBest;
         int origEdge, origEdgeBest;
 
-        Dim2Face *adjFace, *adjFaceBest;
-        unsigned adjFaceIndex, adjFaceIndexBest;
+        Dim2Triangle *adjTri, *adjTriBest;
+        unsigned adjTriIndex, adjTriIndexBest;
         unsigned finalImage, finalImageBest;
 
         NPerm3 gluingPerm, gluingPermBest;
@@ -75,77 +75,79 @@ namespace {
 
         bool justAssigned;
         unsigned lastAssigned = 0;
-        for (face = 0; face < nFaces; ++face) {
-            // INV: We have already selected the preimage of face and
+        for (triangle = 0; triangle < nTriangles; ++triangle) {
+            // INV: We have already selected the preimage of triangle and
             // the corresponding edge permutation by the time we reach
             // this point.
-            origFace = currentInv.simpImage(face);
-            origFaceBest = bestInv.simpImage(face);
+            origTri = currentInv.simpImage(triangle);
+            origTriBest = bestInv.simpImage(triangle);
 
             for (edge = 0; edge < 3; ++edge) {
-                origEdge = current.facetPerm(origFace).preImageOf(edge);
-                origEdgeBest = best.facetPerm(origFaceBest).preImageOf(edge);
+                origEdge = current.facetPerm(origTri).preImageOf(edge);
+                origEdgeBest = best.facetPerm(origTriBest).preImageOf(edge);
 
-                // Check out the adjacency along face/edge.
-                adjFace = tri->getFace(origFace)->adjacentFace(origEdge);
-                adjFaceIndex = (adjFace ?
-                    tri->faceIndex(adjFace) : nFaces);
-                adjFaceBest = tri->getFace(origFaceBest)->
-                    adjacentFace(origEdgeBest);
-                adjFaceIndexBest = (adjFaceBest ?
-                    tri->faceIndex(adjFaceBest) : nFaces);
+                // Check out the adjacency along triangle/edge.
+                adjTri = tri->getTriangle(origTri)->adjacentTriangle(
+                    origEdge);
+                adjTriIndex = (adjTri ?
+                    tri->triangleIndex(adjTri) : nTriangles);
+                adjTriBest = tri->getTriangle(origTriBest)->
+                    adjacentTriangle(origEdgeBest);
+                adjTriIndexBest = (adjTriBest ?
+                    tri->triangleIndex(adjTriBest) : nTriangles);
 
                 justAssigned = false;
-                if (adjFace && current.simpImage(adjFaceIndex) < 0) {
-                    // We have a new face that needs assignment.
+                if (adjTri && current.simpImage(adjTriIndex) < 0) {
+                    // We have a new triangle that needs assignment.
                     ++lastAssigned;
-                    current.simpImage(adjFaceIndex) = lastAssigned;
-                    currentInv.simpImage(lastAssigned) = adjFaceIndex;
+                    current.simpImage(adjTriIndex) = lastAssigned;
+                    currentInv.simpImage(lastAssigned) = adjTriIndex;
                     justAssigned = true;
                 }
 
-                finalImage = (adjFace ?
-                    current.simpImage(adjFaceIndex) : nFaces);
-                finalImageBest = (adjFaceBest ?
-                    best.simpImage(adjFaceIndexBest) : nFaces);
+                finalImage = (adjTri ?
+                    current.simpImage(adjTriIndex) : nTriangles);
+                finalImageBest = (adjTriBest ?
+                    best.simpImage(adjTriIndexBest) : nTriangles);
 
                 // We now have a gluing (but possibly not a gluing
-                // permutation).  Compare adjacent face indices.
+                // permutation).  Compare adjacent triangle indices.
                 if ((! better) && finalImage > finalImageBest)
                     return false; // Worse than best-so-far.
                 if (finalImage < finalImageBest)
                     better = true;
 
                 // Time now to look at the gluing permutation.
-                if (! adjFace)
+                if (! adjTri)
                     continue;
 
-                gluingPerm = tri->getFace(origFace)->adjacentGluing(origEdge);
-                gluingPermBest = tri->getFace(origFaceBest)->
+                gluingPerm = tri->getTriangle(origTri)->adjacentGluing(
+                    origEdge);
+                gluingPermBest = tri->getTriangle(origTriBest)->
                     adjacentGluing(origEdgeBest);
 
                 if (justAssigned) {
                     // We can choose the permutation ourselves.
                     // Make it so that the final gluing (computed later
                     // below) becomes the identity.
-                    current.facetPerm(adjFaceIndex) =
-                        current.facetPerm(origFace) * gluingPerm.inverse();
+                    current.facetPerm(adjTriIndex) =
+                        current.facetPerm(origTri) * gluingPerm.inverse();
                     currentInv.facetPerm(lastAssigned) =
-                        current.facetPerm(adjFaceIndex).inverse();
+                        current.facetPerm(adjTriIndex).inverse();
                 }
 
-                // Although adjFace is guaranteed to exist, adjFaceBest is
-                // not.  However, if adjFaceBest does not exist then our
+                // Although adjTri is guaranteed to exist, adjTriBest is
+                // not.  However, if adjTriBest does not exist then our
                 // isomorphism-under-construction must already be an
                 // improvement over best.
                 if (better)
                     continue;
 
-                // Now we are guaranteed that adjFaceBest exists.
-                finalGluing = current.facetPerm(adjFaceIndex) *
-                    gluingPerm * current.facetPerm(origFace).inverse();
-                finalGluingBest = best.facetPerm(adjFaceIndexBest) *
-                    gluingPermBest * best.facetPerm(origFaceBest).inverse();
+                // Now we are guaranteed that adjTriBest exists.
+                finalGluing = current.facetPerm(adjTriIndex) *
+                    gluingPerm * current.facetPerm(origTri).inverse();
+                finalGluingBest = best.facetPerm(adjTriIndexBest) *
+                    gluingPermBest * best.facetPerm(origTriBest).inverse();
 
                 comp = finalGluing.compareWith(finalGluingBest);
                 if ((! better) && comp > 0)
@@ -160,38 +162,38 @@ namespace {
 }
 
 bool Dim2Triangulation::makeCanonical() {
-    unsigned nFaces = getNumberOfFaces();
+    unsigned nTriangles = getNumberOfTriangles();
 
     // Get the empty triangulation out of the way.
-    if (nFaces == 0)
+    if (nTriangles == 0)
         return false;
 
     // Prepare to search for isomorphisms.
-    Dim2Isomorphism current(nFaces), currentInv(nFaces);
-    Dim2Isomorphism best(nFaces), bestInv(nFaces);
+    Dim2Isomorphism current(nTriangles), currentInv(nTriangles);
+    Dim2Isomorphism best(nTriangles), bestInv(nTriangles);
 
     // The thing to best is the identity isomorphism.
-    unsigned face, inner;
-    for (face = 0; face < nFaces; ++face) {
-        best.simpImage(face) = bestInv.simpImage(face) = face;
-        best.facetPerm(face) = bestInv.facetPerm(face) = NPerm3();
+    unsigned tri, inner;
+    for (tri = 0; tri < nTriangles; ++tri) {
+        best.simpImage(tri) = bestInv.simpImage(tri) = tri;
+        best.facetPerm(tri) = bestInv.facetPerm(tri) = NPerm3();
     }
 
-    // Run through potential preimages of face 0.
+    // Run through potential preimages of triangle 0.
     int perm;
-    for (face = 0; face < nFaces; ++face) {
+    for (tri = 0; tri < nTriangles; ++tri) {
         for (perm = 0; perm < 6; ++perm) {
             // Build a "perhaps canonical" isomorphism based on this
-            // preimage of face 0.
-            current.simpImage(face) = 0;
-            currentInv.simpImage(0) = face;
+            // preimage of triangle 0.
+            current.simpImage(tri) = 0;
+            currentInv.simpImage(0) = tri;
 
-            current.facetPerm(face) = NPerm3::S3[NPerm3::invS3[perm]];
+            current.facetPerm(tri) = NPerm3::S3[NPerm3::invS3[perm]];
             currentInv.facetPerm(0) = NPerm3::S3[perm];
 
             if (extendIsomorphism(this, current, currentInv, best, bestInv)) {
                 // This is better than anything we've seen before.
-                for (inner = 0; inner < nFaces; ++inner) {
+                for (inner = 0; inner < nTriangles; ++inner) {
                     best.simpImage(inner) = current.simpImage(inner);
                     best.facetPerm(inner) = current.facetPerm(inner);
                     bestInv.simpImage(inner) = currentInv.simpImage(inner);

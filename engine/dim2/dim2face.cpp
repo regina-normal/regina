@@ -32,23 +32,23 @@
 
 namespace regina {
 
-Dim2Face::Dim2Face(Dim2Triangulation* tri) : tri_(tri) {
-    std::fill(adj_, adj_ + 3, static_cast<Dim2Face*>(0));
+Dim2Triangle::Dim2Triangle(Dim2Triangulation* tri) : tri_(tri) {
+    std::fill(adj_, adj_ + 3, static_cast<Dim2Triangle*>(0));
 }
 
-Dim2Face::Dim2Face(const std::string& desc, Dim2Triangulation* tri) :
+Dim2Triangle::Dim2Triangle(const std::string& desc, Dim2Triangulation* tri) :
         desc_(desc), tri_(tri) {
-    std::fill(adj_, adj_ + 3, static_cast<Dim2Face*>(0));
+    std::fill(adj_, adj_ + 3, static_cast<Dim2Triangle*>(0));
 }
 
-bool Dim2Face::hasBoundary() const {
+bool Dim2Triangle::hasBoundary() const {
     for (int i=0; i<3; ++i)
         if (adj_[i] == 0)
             return true;
     return false;
 }
 
-void Dim2Face::joinTo(int myEdge, Dim2Face* you, NPerm3 gluing) {
+void Dim2Triangle::joinTo(int myEdge, Dim2Triangle* you, NPerm3 gluing) {
     NPacket::ChangeEventSpan span(tri_);
 
     adj_[myEdge] = you;
@@ -60,10 +60,10 @@ void Dim2Face::joinTo(int myEdge, Dim2Face* you, NPerm3 gluing) {
     tri_->clearAllProperties();
 }
 
-Dim2Face* Dim2Face::unjoin(int myEdge) {
+Dim2Triangle* Dim2Triangle::unjoin(int myEdge) {
     NPacket::ChangeEventSpan span(tri_);
 
-    Dim2Face* you = adj_[myEdge];
+    Dim2Triangle* you = adj_[myEdge];
     int yourEdge = adjPerm_[myEdge][myEdge];
     you->adj_[yourEdge] = 0;
     adj_[myEdge] = 0;
@@ -73,7 +73,7 @@ Dim2Face* Dim2Face::unjoin(int myEdge) {
     return you;
 }
 
-void Dim2Face::isolate() {
+void Dim2Triangle::isolate() {
     for (int i=0; i<3; ++i)
         if (adj_[i])
             unjoin(i);

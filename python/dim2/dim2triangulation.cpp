@@ -35,19 +35,19 @@ using namespace boost::python;
 using regina::Dim2Triangulation;
 
 namespace {
-    regina::Dim2Face* (Dim2Triangulation::*newFace_void)() =
-        &Dim2Triangulation::newFace;
-    regina::Dim2Face* (Dim2Triangulation::*newFace_string)(
-        const std::string&) = &Dim2Triangulation::newFace;
-    regina::Dim2Face* (Dim2Triangulation::*getFace_non_const)(
-        unsigned long) = &Dim2Triangulation::getFace;
+    regina::Dim2Triangle* (Dim2Triangulation::*newTriangle_void)() =
+        &Dim2Triangulation::newTriangle;
+    regina::Dim2Triangle* (Dim2Triangulation::*newTriangle_string)(
+        const std::string&) = &Dim2Triangulation::newTriangle;
+    regina::Dim2Triangle* (Dim2Triangulation::*getTriangle_non_const)(
+        unsigned long) = &Dim2Triangulation::getTriangle;
     std::string (Dim2Triangulation::*isoSig_void)() const =
         &Dim2Triangulation::isoSig;
 
-    boost::python::list Dim2_getFaces_list(Dim2Triangulation& t) {
+    boost::python::list Dim2_getTriangles_list(Dim2Triangulation& t) {
         boost::python::list ans;
-        for (Dim2Triangulation::FaceIterator it =
-                t.getFaces().begin(); it != t.getFaces().end(); ++it)
+        for (Dim2Triangulation::TriangleIterator it =
+                t.getTriangles().begin(); it != t.getTriangles().end(); ++it)
             ans.append(boost::python::ptr(*it));
         return ans;
     }
@@ -101,18 +101,18 @@ void addDim2Triangulation() {
             std::auto_ptr<Dim2Triangulation>,
             boost::noncopyable>("Dim2Triangulation")
         .def(init<const Dim2Triangulation&>())
-        .def("getNumberOfFaces", &Dim2Triangulation::getNumberOfFaces)
-        .def("getFaces", Dim2_getFaces_list)
-        .def("getFace", getFace_non_const,
+        .def("getNumberOfTriangles", &Dim2Triangulation::getNumberOfTriangles)
+        .def("getTriangles", Dim2_getTriangles_list)
+        .def("getTriangle", getTriangle_non_const,
             return_value_policy<reference_existing_object>())
-        .def("faceIndex", &Dim2Triangulation::faceIndex)
-        .def("newFace", newFace_void,
+        .def("triangleIndex", &Dim2Triangulation::triangleIndex)
+        .def("newTriangle", newTriangle_void,
             return_value_policy<reference_existing_object>())
-        .def("newFace", newFace_string,
+        .def("newTriangle", newTriangle_string,
             return_value_policy<reference_existing_object>())
-        .def("removeFace", &Dim2Triangulation::removeFace)
-        .def("removeFaceAt", &Dim2Triangulation::removeFaceAt)
-        .def("removeAllFaces", &Dim2Triangulation::removeAllFaces)
+        .def("removeTriangle", &Dim2Triangulation::removeTriangle)
+        .def("removeTriangleAt", &Dim2Triangulation::removeTriangleAt)
+        .def("removeAllTriangles", &Dim2Triangulation::removeAllTriangles)
         .def("swapContents", &Dim2Triangulation::swapContents)
         .def("moveContentsTo", &Dim2Triangulation::moveContentsTo)
         .def("getNumberOfComponents", &Dim2Triangulation::getNumberOfComponents)

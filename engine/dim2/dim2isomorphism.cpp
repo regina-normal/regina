@@ -45,42 +45,42 @@ template Dim2Isomorphism*
 
 Dim2Triangulation* Dim2Isomorphism::apply(
         const Dim2Triangulation* original) const {
-    if (original->getNumberOfFaces() != nSimplices_)
+    if (original->getNumberOfTriangles() != nSimplices_)
         return 0;
 
     if (nSimplices_ == 0)
         return new Dim2Triangulation();
 
     Dim2Triangulation* ans = new Dim2Triangulation();
-    Dim2Face** face = new Dim2Face*[nSimplices_];
+    Dim2Triangle** triangle = new Dim2Triangle*[nSimplices_];
     unsigned long p;
     int f;
 
     NPacket::ChangeEventSpan span(ans);
     for (p = 0; p < nSimplices_; ++p)
-        face[p] = ans->newFace();
+        triangle[p] = ans->newTriangle();
 
     for (p = 0; p < nSimplices_; ++p)
-        face[simpImage_[p]]->setDescription(
-            original->getFace(p)->getDescription());
+        triangle[simpImage_[p]]->setDescription(
+            original->getTriangle(p)->getDescription());
 
-    const Dim2Face *myFace, *adjFace;
-    unsigned long adjFaceIndex;
+    const Dim2Triangle *myTri, *adjTri;
+    unsigned long adjTriIndex;
     NPerm3 gluingPerm;
     for (p = 0; p < nSimplices_; ++p) {
-        myFace = original->getFace(p);
+        myTri = original->getTriangle(p);
         for (f = 0; f < 3; ++f)
-            if ((adjFace = myFace->adjacentFace(f))) {
-                // We have an adjacent face.
-                adjFaceIndex = original->faceIndex(adjFace);
-                gluingPerm = myFace->adjacentGluing(f);
+            if ((adjTri = myTri->adjacentTriangle(f))) {
+                // We have an adjacent triangle.
+                adjTriIndex = original->triangleIndex(adjTri);
+                gluingPerm = myTri->adjacentGluing(f);
 
                 // Make the gluing from one side only.
-                if (adjFaceIndex > p || (adjFaceIndex == p &&
+                if (adjTriIndex > p || (adjTriIndex == p &&
                         gluingPerm[f] > f))
-                    face[simpImage_[p]]->joinTo(facetPerm_[p][f],
-                        face[simpImage_[adjFaceIndex]],
-                        facetPerm_[adjFaceIndex] * gluingPerm *
+                    triangle[simpImage_[p]]->joinTo(facetPerm_[p][f],
+                        triangle[simpImage_[adjTriIndex]],
+                        facetPerm_[adjTriIndex] * gluingPerm *
                             facetPerm_[p].inverse());
             }
     }
@@ -89,7 +89,7 @@ Dim2Triangulation* Dim2Isomorphism::apply(
 }
 
 void Dim2Isomorphism::applyInPlace(Dim2Triangulation* tri) const {
-    if (tri->getNumberOfFaces() != nSimplices_)
+    if (tri->getNumberOfTriangles() != nSimplices_)
         return;
 
     if (nSimplices_ == 0)
@@ -97,39 +97,40 @@ void Dim2Isomorphism::applyInPlace(Dim2Triangulation* tri) const {
 
     Dim2Triangulation staging;
     NPacket::ChangeEventSpan span1(&staging);
-    Dim2Face** face = new Dim2Face*[nSimplices_];
+    Dim2Triangle** triangle = new Dim2Triangle*[nSimplices_];
     unsigned long p;
     int f;
 
     for (p = 0; p < nSimplices_; ++p)
-        face[p] = staging.newFace();
+        triangle[p] = staging.newTriangle();
 
     for (p = 0; p < nSimplices_; ++p)
-        face[simpImage_[p]]->setDescription(tri->getFace(p)->getDescription());
+        triangle[simpImage_[p]]->setDescription(tri->getTriangle(p)->
+            getDescription());
 
-    const Dim2Face *myFace, *adjFace;
-    unsigned long adjFaceIndex;
+    const Dim2Triangle *myTri, *adjTri;
+    unsigned long adjTriIndex;
     NPerm3 gluingPerm;
     for (p = 0; p < nSimplices_; ++p) {
-        myFace = tri->getFace(p);
+        myTri = tri->getTriangle(p);
         for (f = 0; f < 3; ++f)
-            if ((adjFace = myFace->adjacentFace(f))) {
-                // We have an adjacent face.
-                adjFaceIndex = tri->faceIndex(adjFace);
-                gluingPerm = myFace->adjacentGluing(f);
+            if ((adjTri = myTri->adjacentTriangle(f))) {
+                // We have an adjacent triangle.
+                adjTriIndex = tri->triangleIndex(adjTri);
+                gluingPerm = myTri->adjacentGluing(f);
 
                 // Make the gluing from one side only.
-                if (adjFaceIndex > p || (adjFaceIndex == p &&
+                if (adjTriIndex > p || (adjTriIndex == p &&
                         gluingPerm[f] > f))
-                    face[simpImage_[p]]->joinTo(facetPerm_[p][f],
-                        face[simpImage_[adjFaceIndex]],
-                        facetPerm_[adjFaceIndex] * gluingPerm *
+                    triangle[simpImage_[p]]->joinTo(facetPerm_[p][f],
+                        triangle[simpImage_[adjTriIndex]],
+                        facetPerm_[adjTriIndex] * gluingPerm *
                             facetPerm_[p].inverse());
             }
     }
 
     NPacket::ChangeEventSpan span2(tri);
-    tri->removeAllFaces();
+    tri->removeAllTriangles();
     tri->swapContents(staging);
 }
 
