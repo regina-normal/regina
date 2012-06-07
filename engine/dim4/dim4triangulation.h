@@ -1610,7 +1610,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
 // Some more headers that are required for inline functions:
 #include "dim4/dim4pentachoron.h"
 #include "dim4/dim4tetrahedron.h"
-#include "dim4/dim4face.h"
+#include "dim4/dim4triangle.h"
 #include "dim4/dim4edge.h"
 #include "dim4/dim4vertex.h"
 #include "dim4/dim4component.h"

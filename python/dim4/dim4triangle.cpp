@@ -30,8 +30,8 @@
 #include "dim4/dim4boundarycomponent.h"
 #include "dim4/dim4component.h"
 #include "dim4/dim4edge.h"
-#include "dim4/dim4face.h"
 #include "dim4/dim4pentachoron.h"
+#include "dim4/dim4triangle.h"
 #include "dim4/dim4vertex.h"
 #include "../globalarray.h"
 

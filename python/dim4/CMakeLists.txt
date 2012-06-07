@@ -1,7 +1,7 @@
 # dim4 
 
 # Files to compile
-SET ( FILES dim4boundarycomponent dim4component dim4edge dim4exampletriangulation dim4face dim4isomorphism dim4pentachoron dim4pentfacet dim4tetrahedron dim4triangulation dim4vertex pydim4 )
+SET ( FILES dim4boundarycomponent dim4component dim4edge dim4exampletriangulation dim4triangle dim4isomorphism dim4pentachoron dim4pentfacet dim4tetrahedron dim4triangulation dim4vertex pydim4 )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
