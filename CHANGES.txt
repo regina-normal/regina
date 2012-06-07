@@ -21,7 +21,7 @@ Version 4.94  [ (under development) ]
             - New classes to support Dim2Triangulation.
         Class DimTraits:
             - New template class to assist with dimension-agnostic code.
-        Class NGeneralFacePairing:
+        Class NGeneralFacetPairing:
             - New template base class that contains dimension-agnostic
               code for representing face/facet pairings.
         Class NGeneralIsomorphism:
