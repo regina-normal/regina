@@ -200,7 +200,7 @@ class REGINA_API Dim2Isomorphism : public NGeneralIsomorphism<2> {
          * isomorphism represents a one-to-one, onto and boundary complete
          * isomorphism from T to S.  That is, T and S are combinatorially
          * identical triangulations, and this isomorphism describes the
-         * corresponding mapping between triangles and triangle edges.
+         * corresponding mapping between triangles and triangle vertices/edges.
          *
          * The resulting triangulation S is newly created, and must be
          * destroyed by the caller of this routine.
