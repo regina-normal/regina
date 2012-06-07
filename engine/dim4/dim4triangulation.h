@@ -56,9 +56,9 @@ namespace regina {
 class Dim4BoundaryComponent;
 class Dim4Component;
 class Dim4Edge;
-class Dim4Face;
 class Dim4Pentachoron;
 class Dim4Tetrahedron;
+class Dim4Triangle;
 class Dim4Vertex;
 class NXMLDim4TriangulationReader;
 class NXMLPacketReader;
@@ -79,7 +79,7 @@ class NXMLPacketReader;
  * pentachora, the cellular structure and all other properties
  * will be deallocated.
  *
- * Elements of the 3-, 2-, 1- and 0-skeletons (tetrahedra, faces, edges,
+ * Elements of the 3-, 2-, 1- and 0-skeletons (tetrahedra, triangles, edges,
  * vertices respectively) are always temporary, as are components and
  * boundary components.  Whenever a change occurs with the triangulation,
  * these objects will all be deleted and a new skeletal structure will be
@@ -95,8 +95,8 @@ class REGINA_API Dim4Triangulation : public NPacket {
         typedef std::vector<Dim4Tetrahedron*>::const_iterator
                 TetrahedronIterator;
             /**< Used to iterate through tetrahedra. */
-        typedef std::vector<Dim4Face*>::const_iterator FaceIterator;
-            /**< Used to iterate through faces. */
+        typedef std::vector<Dim4Triangle*>::const_iterator TriangleIterator;
+            /**< Used to iterate through triangles. */
         typedef std::vector<Dim4Edge*>::const_iterator EdgeIterator;
             /**< Used to iterate through edges. */
         typedef std::vector<Dim4Vertex*>::const_iterator VertexIterator;
@@ -115,8 +115,8 @@ class REGINA_API Dim4Triangulation : public NPacket {
             /**< The pentachora that form the triangulation. */
         mutable NMarkedVector<Dim4Tetrahedron> tetrahedra_;
             /**< The tetrahedra in the triangulation skeleton. */
-        mutable NMarkedVector<Dim4Face> faces_;
-            /**< The faces in the triangulation skeleton. */
+        mutable NMarkedVector<Dim4Triangle> triangles_;
+            /**< The triangles in the triangulation skeleton. */
         mutable NMarkedVector<Dim4Edge> edges_;
             /**< The edges in the triangulation skeleton. */
         mutable NMarkedVector<Dim4Vertex> vertices_;
@@ -274,7 +274,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
         Dim4Pentachoron* newPentachoron(const std::string& desc);
         /**
          * Removes the given pentachoron from the triangulation.
-         * All faces glued to this pentachoron will be unglued.
+         * All triangles glued to this pentachoron will be unglued.
          * The pentachoron will be deallocated.
          *
          * \pre The given pentachoron exists in the triangulation.
@@ -288,7 +288,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * change when a pentachoron is added or removed from the
          * triangulation.
          *
-         * All faces glued to this pentachoron will be unglued.
+         * All triangles glued to this pentachoron will be unglued.
          * The pentachoron will be deallocated.
          *
          * @param index specifies which pentachoron to remove; this
@@ -367,11 +367,11 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         unsigned long getNumberOfEdges() const;
         /**
-         * Returns the number of faces in this triangulation.
+         * Returns the number of triangles in this triangulation.
          *
-         * @return the number of faces.
+         * @return the number of triangles.
          */
-        unsigned long getNumberOfFaces() const;
+        unsigned long getNumberOfTriangles() const;
         /**
          * Returns the number of tetrahedra in this triangulation.
          *
@@ -449,10 +449,10 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         const std::vector<Dim4Edge*>& getEdges() const;
         /**
-         * Returns all faces of this triangulation.
+         * Returns all triangles of this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
-         * faces will be deleted and replaced with new
+         * triangles will be deleted and replaced with new
          * ones.  Thus the objects contained in this list should be
          * considered temporary only.
          *
@@ -461,9 +461,9 @@ class REGINA_API Dim4Triangulation : public NPacket {
          *
          * \ifacespython This routine returns a python list.
          *
-         * @return the list of all faces.
+         * @return the list of all triangles.
          */
-        const std::vector<Dim4Face*>& getFaces() const;
+        const std::vector<Dim4Triangle*>& getTriangles() const;
         /**
          * Returns all tetrahedra of this triangulation.
          *
@@ -477,11 +477,11 @@ class REGINA_API Dim4Triangulation : public NPacket {
          *
          * \ifacespython This routine returns a python list.
          *
-         * @return the list of all faces.
+         * @return the list of all triangles.
          */
         const std::vector<Dim4Tetrahedron*>& getTetrahedra() const;
         /**
-         * Returns the requested triangulation component.
+         * Returns the requested component of this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
          * components will be deleted and replaced with new
@@ -493,7 +493,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         Dim4Component* getComponent(unsigned long index) const;
         /**
-         * Returns the requested triangulation boundary component.
+         * Returns the requested boundary component of this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
          * boundary components will be deleted and replaced with new
@@ -505,7 +505,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         Dim4BoundaryComponent* getBoundaryComponent(unsigned long index) const;
         /**
-         * Returns the requested triangulation vertex.
+         * Returns the requested vertex in this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
          * vertices will be deleted and replaced with new
@@ -517,7 +517,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         Dim4Vertex* getVertex(unsigned long index) const;
         /**
-         * Returns the requested triangulation edge.
+         * Returns the requested edge in this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
          * edges will be deleted and replaced with new
@@ -529,19 +529,19 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         Dim4Edge* getEdge(unsigned long index) const;
         /**
-         * Returns the requested triangulation face.
+         * Returns the requested triangle in this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
-         * faces will be deleted and replaced with new
+         * triangles will be deleted and replaced with new
          * ones.  Thus this object should be considered temporary only.
          *
-         * @param index the index of the desired face, ranging from 0
-         * to getNumberOfFaces()-1 inclusive.
-         * @return the requested face.
+         * @param index the index of the desired triangle, ranging from 0
+         * to getNumberOfTriangles()-1 inclusive.
+         * @return the requested triangle.
          */
-        Dim4Face* getFace(unsigned long index) const;
+        Dim4Triangle* getTriangle(unsigned long index) const;
         /**
-         * Returns the requested triangulation tetrahedron.
+         * Returns the requested tetrahedron in this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
          * tetrahedra will be deleted and replaced with new
@@ -608,18 +608,18 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         long edgeIndex(const Dim4Edge* edge) const;
         /**
-         * Returns the index of the given face in the triangulation.
+         * Returns the index of the given triangle in the triangulation.
          *
-         * \pre The given face belongs to this triangulation.
+         * \pre The given triangle belongs to this triangulation.
          *
          * \warning Passing a null pointer to this routine will probably
          * crash your program.
          *
-         * @param face specifies which face to find in the triangulation.
-         * @return the index of the specified face, where 0 is the first
-         * face, 1 is the second and so on.
+         * @param tri specifies which triangle to find in the triangulation.
+         * @return the index of the specified triangle, where 0 is the first
+         * triangle, 1 is the second and so on.
          */
-        long faceIndex(const Dim4Face* face) const;
+        long triangleIndex(const Dim4Triangle* tri) const;
         /**
          * Returns the index of the given tetrahedron in the triangulation.
          *
@@ -826,7 +826,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * Determines if this triangulation is valid.
          *
          * A triangulation is valid unless it contains an invalid
-         * vertex, edge or face.
+         * vertex, edge or triangle.
          *
          * - An invalid vertex has a bad vertex link (specifically, the
          *   link is either an invalid 3-manifold triangulation, an ideal
@@ -835,12 +835,12 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * - An invalid edge has a bad edge link (neither a 2-sphere nor
          *   a disc), and/or is identified with itself in reverse.
          *
-         * - An invalid face is identified with itself using a
+         * - An invalid triangle is identified with itself using a
          *   non-trivial rotation or reflection.
          *
          * If you wish to find out why a particular triangulation is
          * invalid, see Dim4Vertex::isValid(), Dim4Edge::isValid() and
-         * Dim4Face::isValid() respectively.
+         * Dim4Triangle::isValid() respectively.
          *
          * @return \c true if and only if this triangulation is valid.
          */
@@ -1072,10 +1072,10 @@ class REGINA_API Dim4Triangulation : public NPacket {
         bool fourTwoMove(Dim4Edge* e, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 3-3 move
-         * about the given face.
+         * about the given triangle.
          * This involves replacing the three pentachora joined along that
-         * face with three pentachora joined along a transverse face.
-         * This can be done iff (i) the face is valid and non-boundary,
+         * triangle with three pentachora joined along a transverse triangle.
+         * This can be done iff (i) the triangle is valid and non-boundary,
          * and (ii) the three pentachora are distinct.
          *
          * If the routine is asked to both check and perform, the move
@@ -1088,9 +1088,9 @@ class REGINA_API Dim4Triangulation : public NPacket {
          *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
-         * \pre The given face is a face of this triangulation.
+         * \pre The given triangle is a triangle of this triangulation.
          *
-         * @param f the face about which to perform the move.
+         * @param t the triangle about which to perform the move.
          * @param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * @param perform \c true if we are to perform the move
@@ -1100,7 +1100,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool threeThreeMove(Dim4Face* f, bool check = true,
+        bool threeThreeMove(Dim4Triangle* t, bool check = true,
             bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 2-4 move
@@ -1137,25 +1137,26 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * Checks the eligibility of and/or performs a book opening move
          * about the given tetrahedron.
          * This involves taking a tetrahedron meeting the boundary along
-         * precisely one, two or three faces, and ungluing it to create two new
-         * boundary facets (thus exposing the pentachora it initially joined).
-         * This move is intended to open the way for new shellBoundary() moves.
+         * precisely one, two or three triangles, and ungluing it to create two
+         * new boundary facets (thus exposing the pentachora it initially
+         * joined).  This move is intended to open the way for new
+         * shellBoundary() moves.
          *
          * This move can be done if:
          *
-         * - all vertices, edges and faces of the tetrahedron are valid;
+         * - all vertices, edges and triangles of the tetrahedron are valid;
          *
          * - the tetrahedron meets the boundary in precisely one, two or
-         *   three faces (and therefore also joins two pentachora);
+         *   three triangles (and therefore also joins two pentachora);
          *
-         * - if the tetrahedron meets the boundary in precisely one face, then
-         *   the remaining vertex of the tetrahedron is non-boundary, and
+         * - if the tetrahedron meets the boundary in precisely one triangle,
+         *   then the remaining vertex of the tetrahedron is non-boundary, and
          *   no two of the remaining three edges of the tetrahedron are
          *   identified;
          *
-         * - if the tetrahedron meets the boundary in precisely two faces,
+         * - if the tetrahedron meets the boundary in precisely two triangles,
          *   then the remaining edge of the tetrahedron is non-boundary, and
-         *   the remaining two faces of the tetrahedron are not identified.
+         *   the remaining two triangles of the tetrahedron are not identified.
          *
          * The validity condition in particular is stronger than it
          * needs to be, but the resulting "lost opportunities" only
@@ -1192,7 +1193,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * the boundary.
          * This can be done if:
          *
-         * - all edges and faces of the pentachoron are valid;
+         * - all edges and triangles of the pentachoron are valid;
          *
          * - precisely one, two, three or four facets of the pentachoron
          *   lie in the boundary;
@@ -1202,10 +1203,10 @@ class REGINA_API Dim4Triangulation : public NPacket {
          *   four edges are identified;
          *
          * - if two facets lie in the boundary, then the edge that sits
-         *   opposite their common face does not lie in the boundary, and
-         *   no two of the remaining three faces are identified;
+         *   opposite their common triangle does not lie in the boundary, and
+         *   no two of the remaining three triangles are identified;
          *
-         * - if three facets lie in the boundary, then the face that sits
+         * - if three facets lie in the boundary, then the triangle that sits
          *   opposite their common edge does not lie in the boundary, and
          *   the remaining two facets of the tetrahedron are not identified.
          *
@@ -1284,7 +1285,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * Does a barycentric subdivision of the triangulation.
          * Each tetrahedron is divided into 120 tetrahedra by placing an
          * extra vertex at the centroid of each pentachoron,
-         * tetrahedron, face, and edge.
+         * tetrahedron, triangle, and edge.
          */
         void barycentricSubdivision();
 
@@ -1474,7 +1475,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
         virtual void clearAllProperties();
 
         /**
-         * Recalculates vertices, edges, faces, tetrahedra, components and
+         * Recalculates vertices, edges, triangles, tetrahedra, components and
          * boundary components, as well as various other skeletal properties
          * such as validity and vertex links.
          * All appropriate lists are filled.
@@ -1502,7 +1503,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.
          */
-        void calculateFaces() const;
+        void calculateTriangles() const;
         /**
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.
@@ -1527,7 +1528,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * isomorphism may be boundary incomplete and may or may not be
          * onto.  That is, this triangulation must appear as a
          * subcomplex of the given triangulation, possibly with some
-         * original boundary faces joined to new tetrahedra.
+         * original boundary facets joined to new pentachora.
          *
          * See the Dim4Isomorphism class notes for further details
          * regarding boundary complete and boundary incomplete
@@ -1569,7 +1570,8 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * are mapped to the vertices of \a dest according to the
          * permutation \a p).
          *
-         * In particular, the degrees of faces, edges and vertices are examined.
+         * In particular, the degrees of triangles, edges and vertices are
+         * examined.
          *
          * @param src the first of the two pentachora to examine.
          * @param dest the second of the two pentachora to examine.
@@ -1735,10 +1737,10 @@ inline unsigned long Dim4Triangulation::getNumberOfEdges() const {
     return edges_.size();
 }
 
-inline unsigned long Dim4Triangulation::getNumberOfFaces() const {
+inline unsigned long Dim4Triangulation::getNumberOfTriangles() const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
-    return faces_.size();
+    return triangles_.size();
 }
 
 inline unsigned long Dim4Triangulation::getNumberOfTetrahedra() const {
@@ -1773,10 +1775,11 @@ inline const std::vector<Dim4Edge*>& Dim4Triangulation::getEdges() const {
     return (const std::vector<Dim4Edge*>&)(edges_);
 }
 
-inline const std::vector<Dim4Face*>& Dim4Triangulation::getFaces() const {
+inline const std::vector<Dim4Triangle*>& Dim4Triangulation::getTriangles()
+        const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
-    return (const std::vector<Dim4Face*>&)(faces_);
+    return (const std::vector<Dim4Triangle*>&)(triangles_);
 }
 
 inline const std::vector<Dim4Tetrahedron*>& Dim4Triangulation::getTetrahedra()
@@ -1812,10 +1815,10 @@ inline Dim4Edge* Dim4Triangulation::getEdge(unsigned long index) const {
     return edges_[index];
 }
 
-inline Dim4Face* Dim4Triangulation::getFace(unsigned long index) const {
+inline Dim4Triangle* Dim4Triangulation::getTriangle(unsigned long index) const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
-    return faces_[index];
+    return triangles_[index];
 }
 
 inline Dim4Tetrahedron* Dim4Triangulation::getTetrahedron(unsigned long index)
@@ -1843,8 +1846,8 @@ inline long Dim4Triangulation::edgeIndex(const Dim4Edge* edge) const {
     return edge->markedIndex();
 }
 
-inline long Dim4Triangulation::faceIndex(const Dim4Face* face) const {
-    return face->markedIndex();
+inline long Dim4Triangulation::triangleIndex(const Dim4Triangle* tri) const {
+    return tri->markedIndex();
 }
 
 inline long Dim4Triangulation::tetrahedronIndex(const Dim4Tetrahedron* tet)
@@ -1859,7 +1862,7 @@ inline long Dim4Triangulation::getEulerCharTri() const {
     // Cast away the unsignedness of std::vector::size().
     return static_cast<long>(vertices_.size())
         - static_cast<long>(edges_.size())
-        + static_cast<long>(faces_.size())
+        + static_cast<long>(triangles_.size())
         - static_cast<long>(tetrahedra_.size())
         + static_cast<long>(pentachora_.size());
 }

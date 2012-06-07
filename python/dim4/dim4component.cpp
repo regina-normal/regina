@@ -44,7 +44,7 @@ void addDim4Component() {
             ("Dim4Component", no_init)
         .def("getNumberOfPentachora", &Dim4Component::getNumberOfPentachora)
         .def("getNumberOfTetrahedra", &Dim4Component::getNumberOfTetrahedra)
-        .def("getNumberOfFaces", &Dim4Component::getNumberOfFaces)
+        .def("getNumberOfTriangles", &Dim4Component::getNumberOfTriangles)
         .def("getNumberOfEdges", &Dim4Component::getNumberOfEdges)
         .def("getNumberOfVertices", &Dim4Component::getNumberOfVertices)
         .def("getNumberOfBoundaryComponents",
@@ -53,7 +53,7 @@ void addDim4Component() {
             return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &Dim4Component::getTetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("getFace", &Dim4Component::getFace,
+        .def("getTriangle", &Dim4Component::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim4Component::getEdge,
             return_value_policy<reference_existing_object>())

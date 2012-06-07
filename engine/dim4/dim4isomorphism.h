@@ -160,7 +160,8 @@ class REGINA_API Dim4Isomorphism : public NGeneralIsomorphism<4> {
          * isomorphism represents a one-to-one, onto and boundary complete
          * isomorphism from T to S.  That is, T and S are combinatorially
          * identical triangulations, and this isomorphism describes the
-         * corresponding mapping between pentachora and pentachoron faces.
+         * corresponding mapping between pentachora and pentachoron
+         * vertices/facets.
          *
          * The resulting triangulation S is newly created, and must be
          * destroyed by the caller of this routine.

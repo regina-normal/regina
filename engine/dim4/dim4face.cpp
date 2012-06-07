@@ -31,7 +31,7 @@
 
 namespace regina {
 
-const int Dim4Face::faceNumber[5][5][5] = {
+const int Dim4Triangle::triangleNumber[5][5][5] = {
     { { -1,-1,-1,-1,-1 },
       { -1,-1, 9, 8, 7 },
       { -1, 9,-1, 6, 5 },
@@ -62,7 +62,7 @@ const int Dim4Face::faceNumber[5][5][5] = {
       {  4, 1, 0,-1,-1 },
       { -1,-1,-1,-1,-1 } } };
 
-const int Dim4Face::faceVertex[10][3] = {
+const int Dim4Triangle::triangleVertex[10][3] = {
     { 2, 3, 4 },
     { 1, 3, 4 },
     { 1, 2, 4 },
@@ -74,7 +74,7 @@ const int Dim4Face::faceVertex[10][3] = {
     { 0, 1, 3 },
     { 0, 1, 2 } };
 
-const NPerm5 Dim4Face::ordering[10] = {
+const NPerm5 Dim4Triangle::ordering[10] = {
     NPerm5(2, 3, 4, 0, 1),
     NPerm5(1, 3, 4, 2, 0),
     NPerm5(1, 2, 4, 0, 3),
@@ -87,24 +87,24 @@ const NPerm5 Dim4Face::ordering[10] = {
     NPerm5(0, 1, 2, 3, 4)
 };
 
-Dim4Edge* Dim4Face::getEdge(int edge) const {
-    const Dim4FaceEmbedding& e(emb_.front());
+Dim4Edge* Dim4Triangle::getEdge(int edge) const {
+    const Dim4TriangleEmbedding& e(emb_.front());
     NPerm5 p = e.getVertices();
     return e.getPentachoron()->getEdge(
         Dim4Edge::edgeNumber[p[(edge + 1) % 3]][p[(edge + 2) % 3]]);
 }
 
-NPerm5 Dim4Face::getEdgeMapping(int edge) const {
-    const Dim4FaceEmbedding& e(emb_.front());
+NPerm5 Dim4Triangle::getEdgeMapping(int edge) const {
+    const Dim4TriangleEmbedding& e(emb_.front());
 
-    NPerm5 facePerm = e.getVertices();
+    NPerm5 trianglePerm = e.getVertices();
     NPerm5 edgePerm = e.getPentachoron()->getEdgeMapping(
-        Dim4Edge::edgeNumber[facePerm[(edge + 1) % 3]]
-                            [facePerm[(edge + 2) % 3]]);
+        Dim4Edge::edgeNumber[trianglePerm[(edge + 1) % 3]]
+                            [trianglePerm[(edge + 2) % 3]]);
 
     return NPerm5(
-        facePerm.preImageOf(edgePerm[0]),
-        facePerm.preImageOf(edgePerm[1]),
+        trianglePerm.preImageOf(edgePerm[0]),
+        trianglePerm.preImageOf(edgePerm[1]),
         edge, 3, 4);
 }
 

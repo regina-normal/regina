@@ -44,9 +44,9 @@ namespace regina {
 
 class Dim4BoundaryComponent;
 class Dim4Edge;
-class Dim4Face;
 class Dim4Pentachoron;
 class Dim4Tetrahedron;
+class Dim4Triangle;
 class Dim4Vertex;
 
 /**
@@ -65,8 +65,8 @@ class REGINA_API Dim4Component : public ShareableObject, public NMarkedElement {
             /**< List of pentachora in the component. */
         std::vector<Dim4Tetrahedron*> tetrahedra_;
             /**< List of tetrahedra in the component. */
-        std::vector<Dim4Face*> faces_;
-            /**< List of faces in the component. */
+        std::vector<Dim4Triangle*> triangles_;
+            /**< List of triangles in the component. */
         std::vector<Dim4Edge*> edges_;
             /**< List of edges in the component. */
         std::vector<Dim4Vertex*> vertices_;
@@ -100,11 +100,11 @@ class REGINA_API Dim4Component : public ShareableObject, public NMarkedElement {
         unsigned long getNumberOfTetrahedra() const;
 
         /**
-         * Returns the number of faces in this component.
+         * Returns the number of triangles in this component.
          *
-         * @return the number of faces.
+         * @return the number of triangles.
          */
-        unsigned long getNumberOfFaces() const;
+        unsigned long getNumberOfTriangles() const;
 
         /**
          * Returns the number of edges in this component.
@@ -154,17 +154,17 @@ class REGINA_API Dim4Component : public ShareableObject, public NMarkedElement {
         Dim4Tetrahedron* getTetrahedron(unsigned long index) const;
 
         /**
-         * Returns the requested face in this component.
+         * Returns the requested triangle in this component.
          *
-         * @param index the index of the requested face in the
+         * @param index the index of the requested triangle in the
          * component.  This should be between 0 and
-         * getNumberOfFaces()-1 inclusive.
-         * Note that the index of a face in the component need
-         * not be the index of the same face in the entire
+         * getNumberOfTriangles()-1 inclusive.
+         * Note that the index of a triangle in the component need
+         * not be the index of the same triangle in the entire
          * triangulation.
-         * @return the requested face.
+         * @return the requested triangle.
          */
-        Dim4Face* getFace(unsigned long index) const;
+        Dim4Triangle* getTriangle(unsigned long index) const;
 
         /**
          * Returns the requested edge in this component.
@@ -265,8 +265,8 @@ inline unsigned long Dim4Component::getNumberOfTetrahedra() const {
     return tetrahedra_.size();
 }
 
-inline unsigned long Dim4Component::getNumberOfFaces() const {
-    return faces_.size();
+inline unsigned long Dim4Component::getNumberOfTriangles() const {
+    return triangles_.size();
 }
 
 inline unsigned long Dim4Component::getNumberOfEdges() const {
@@ -291,8 +291,8 @@ inline Dim4Tetrahedron* Dim4Component::getTetrahedron(unsigned long index)
     return tetrahedra_[index];
 }
 
-inline Dim4Face* Dim4Component::getFace(unsigned long index) const {
-    return faces_[index];
+inline Dim4Triangle* Dim4Component::getTriangle(unsigned long index) const {
+    return triangles_[index];
 }
 
 inline Dim4Edge* Dim4Component::getEdge(unsigned long index) const {

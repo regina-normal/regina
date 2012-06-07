@@ -100,10 +100,10 @@ namespace {
         return ans;
     }
 
-    boost::python::list Dim4_getFaces_list(Dim4Triangulation& t) {
+    boost::python::list Dim4_getTriangles_list(Dim4Triangulation& t) {
         boost::python::list ans;
-        for (Dim4Triangulation::FaceIterator it =
-                t.getFaces().begin(); it != t.getFaces().end(); ++it)
+        for (Dim4Triangulation::TriangleIterator it =
+                t.getTriangles().begin(); it != t.getTriangles().end(); ++it)
             ans.append(boost::python::ptr(*it));
         return ans;
     }
@@ -156,13 +156,13 @@ void addDim4Triangulation() {
             &Dim4Triangulation::getNumberOfBoundaryComponents)
         .def("getNumberOfVertices", &Dim4Triangulation::getNumberOfVertices)
         .def("getNumberOfEdges", &Dim4Triangulation::getNumberOfEdges)
-        .def("getNumberOfFaces", &Dim4Triangulation::getNumberOfFaces)
+        .def("getNumberOfTriangles", &Dim4Triangulation::getNumberOfTriangles)
         .def("getNumberOfTetrahedra", &Dim4Triangulation::getNumberOfTetrahedra)
         .def("getComponents", Dim4_getComponents_list)
         .def("getBoundaryComponents", Dim4_getBoundaryComponents_list)
         .def("getVertices", Dim4_getVertices_list)
         .def("getEdges", Dim4_getEdges_list)
-        .def("getFaces", Dim4_getFaces_list)
+        .def("getTriangles", Dim4_getTriangles_list)
         .def("getTetrahedra", Dim4_getTetrahedra_list)
         .def("getComponent", &Dim4Triangulation::getComponent,
             return_value_policy<reference_existing_object>())
@@ -172,7 +172,7 @@ void addDim4Triangulation() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim4Triangulation::getEdge,
             return_value_policy<reference_existing_object>())
-        .def("getFace", &Dim4Triangulation::getFace,
+        .def("getTriangle", &Dim4Triangulation::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &Dim4Triangulation::getTetrahedron,
             return_value_policy<reference_existing_object>())
@@ -181,7 +181,7 @@ void addDim4Triangulation() {
             &Dim4Triangulation::boundaryComponentIndex)
         .def("vertexIndex", &Dim4Triangulation::vertexIndex)
         .def("edgeIndex", &Dim4Triangulation::edgeIndex)
-        .def("faceIndex", &Dim4Triangulation::faceIndex)
+        .def("triangleIndex", &Dim4Triangulation::triangleIndex)
         .def("tetrahedronIndex", &Dim4Triangulation::tetrahedronIndex)
         .def("isIsomorphicTo", isIsomorphicTo_ptr,
             return_value_policy<manage_new_object>())

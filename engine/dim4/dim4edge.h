@@ -146,7 +146,7 @@ class REGINA_API Dim4Edge : public ShareableObject, public NMarkedElement {
          * be given in any order.  The resulting edge number will be
          * between 0 and 9 inclusive.
          *
-         * Note that edge \i is always opposite face \i in a pentachoron.
+         * Note that edge \i is always opposite triangle \i in a pentachoron.
          *
          * This table is the 4-manifold analogue to the 3-manifold table
          * NEdge::edgeNumber.  Note that NEdge::edgeNumber is still used
@@ -166,7 +166,7 @@ class REGINA_API Dim4Edge : public ShareableObject, public NMarkedElement {
          * inclusive; the resulting vertex numbers will be between 0 and 4
          * inclusive.
          *
-         * Note that edge \i is always opposite face \i in a pentachoron.
+         * Note that edge \i is always opposite triangle \i in a pentachoron.
          * It is guaranteed that <tt>edgeVertex[i][0]</tt> will always
          * be smaller than <tt>edgeVertex[i][1]</tt>.
          *

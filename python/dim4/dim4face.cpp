@@ -36,20 +36,22 @@
 #include "../globalarray.h"
 
 using namespace boost::python;
-using regina::Dim4Face;
-using regina::Dim4FaceEmbedding;
+using regina::Dim4Triangle;
+using regina::Dim4TriangleEmbedding;
 using regina::python::GlobalArray;
 using regina::python::GlobalArray2D;
 using regina::python::GlobalArray3D;
 
 namespace {
-    GlobalArray3D<int> Dim4Face_faceNumber(Dim4Face::faceNumber, 5);
-    GlobalArray2D<int> Dim4Face_faceVertex(Dim4Face::faceVertex, 10);
-    GlobalArray<regina::NPerm5> Dim4Face_ordering(Dim4Face::ordering, 10);
+    GlobalArray3D<int> Dim4Triangle_triangleNumber(
+        Dim4Triangle::triangleNumber, 5);
+    GlobalArray2D<int> Dim4Triangle_triangleVertex(
+        Dim4Triangle::triangleVertex, 10);
+    GlobalArray<regina::NPerm5> Dim4Triangle_ordering(Dim4Triangle::ordering, 10);
 
-    boost::python::list Dim4Face_getEmbeddings_list(const Dim4Face* f) {
-        const std::deque<Dim4FaceEmbedding>& embs = f->getEmbeddings();
-        std::deque<Dim4FaceEmbedding>::const_iterator it;
+    boost::python::list Dim4Triangle_getEmbeddings_list(const Dim4Triangle* f) {
+        const std::deque<Dim4TriangleEmbedding>& embs = f->getEmbeddings();
+        std::deque<Dim4TriangleEmbedding>::const_iterator it;
 
         boost::python::list ans;
         for (it = embs.begin(); it != embs.end(); ++it)
@@ -58,38 +60,39 @@ namespace {
     }
 }
 
-void addDim4Face() {
-    class_<Dim4FaceEmbedding, boost::noncopyable>("Dim4FaceEmbedding",
+void addDim4Triangle() {
+    class_<Dim4TriangleEmbedding, boost::noncopyable>("Dim4TriangleEmbedding",
             init<regina::Dim4Pentachoron*, int>())
-        .def(init<const Dim4FaceEmbedding&>())
-        .def("getPentachoron", &Dim4FaceEmbedding::getPentachoron,
+        .def(init<const Dim4TriangleEmbedding&>())
+        .def("getPentachoron", &Dim4TriangleEmbedding::getPentachoron,
             return_value_policy<reference_existing_object>())
-        .def("getFace", &Dim4FaceEmbedding::getFace)
-        .def("getVertices", &Dim4FaceEmbedding::getVertices)
+        .def("getTriangle", &Dim4TriangleEmbedding::getTriangle)
+        .def("getVertices", &Dim4TriangleEmbedding::getVertices)
     ;
 
-    scope s = class_<Dim4Face, bases<regina::ShareableObject>,
-            std::auto_ptr<Dim4Face>, boost::noncopyable>("Dim4Face", no_init)
-        .def("getEmbeddings", Dim4Face_getEmbeddings_list)
-        .def("getNumberOfEmbeddings", &Dim4Face::getNumberOfEmbeddings)
-        .def("getEmbedding", &Dim4Face::getEmbedding,
+    scope s = class_<Dim4Triangle, bases<regina::ShareableObject>,
+            std::auto_ptr<Dim4Triangle>, boost::noncopyable>("Dim4Triangle",
+            no_init)
+        .def("getEmbeddings", Dim4Triangle_getEmbeddings_list)
+        .def("getNumberOfEmbeddings", &Dim4Triangle::getNumberOfEmbeddings)
+        .def("getEmbedding", &Dim4Triangle::getEmbedding,
             return_internal_reference<>())
-        .def("getComponent", &Dim4Face::getComponent,
+        .def("getComponent", &Dim4Triangle::getComponent,
             return_value_policy<reference_existing_object>())
-        .def("getBoundaryComponent", &Dim4Face::getBoundaryComponent,
+        .def("getBoundaryComponent", &Dim4Triangle::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
-        .def("getVertex", &Dim4Face::getVertex,
+        .def("getVertex", &Dim4Triangle::getVertex,
             return_value_policy<reference_existing_object>())
-        .def("getEdge", &Dim4Face::getEdge,
+        .def("getEdge", &Dim4Triangle::getEdge,
             return_value_policy<reference_existing_object>())
-        .def("getEdgeMapping", &Dim4Face::getEdgeMapping)
-        .def("getDegree", &Dim4Face::getDegree)
-        .def("isBoundary", &Dim4Face::isBoundary)
-        .def("isValid", &Dim4Face::isValid)
+        .def("getEdgeMapping", &Dim4Triangle::getEdgeMapping)
+        .def("getDegree", &Dim4Triangle::getDegree)
+        .def("isBoundary", &Dim4Triangle::isBoundary)
+        .def("isValid", &Dim4Triangle::isValid)
     ;
 
-    s.attr("faceNumber") = &Dim4Face_faceNumber;
-    s.attr("faceVertex") = &Dim4Face_faceVertex;
-    s.attr("ordering") = &Dim4Face_ordering;
+    s.attr("triangleNumber") = &Dim4Triangle_triangleNumber;
+    s.attr("triangleVertex") = &Dim4Triangle_triangleVertex;
+    s.attr("ordering") = &Dim4Triangle_ordering;
 }
 

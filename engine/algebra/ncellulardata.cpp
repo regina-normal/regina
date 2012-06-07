@@ -451,7 +451,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
      if ( (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 2) ) // H_2 x H_2 --> H_0
        for (unsigned long i=0; i<numRelativeCells[2]; i++)
         {
-         const Dim4Face* fac( tri4->getFace( rIx[2][i] ) );
+         const Dim4Triangle* fac( tri4->getTriangle( rIx[2][i] ) );
          const Dim4Pentachoron* pen( fac->getEmbedding(0).getPentachoron() );
          NPerm5 facinc( fac->getEmbedding(0).getVertices() );
          unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), rIx[2][i] ) - dcIx[2].begin() );
@@ -482,17 +482,17 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
      if ( (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 3) )// (dual)H_2 x (std_rel_bdry)H_3 --> H_1
        for (unsigned long i=0; i<numRelativeCells[3]; i++)
         { // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell...
-         const Dim4Tetrahedron* tet( tri4->getTetrahedron( rIx[3][i] ) ); const Dim4Face* fac(NULL);
+         const Dim4Tetrahedron* tet( tri4->getTetrahedron( rIx[3][i] ) ); const Dim4Triangle* fac(NULL);
          const Dim4Pentachoron* pen( tet->getEmbedding(1).getPentachoron() );
          NPerm5 tetinc( tet->getEmbedding(1).getVertices() );
          for (unsigned long j=0; j<4; j++)
 	  {
-	   fac = tet->getFace(j); if (!fac->isBoundary())
+	   fac = tet->getTriangle(j); if (!fac->isBoundary())
 	    { // intM[ J, i, 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*i+j ] += whatever
 	      // for orientation we need to compare normal orientation of intersection to product normal orientations
-             unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), tri4->faceIndex( fac ) ) - dcIx[2].begin() );
+             unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), tri4->triangleIndex( fac ) ) - dcIx[2].begin() );
 	     NMultiIndex< unsigned long > x(3); x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*rIx[3][i] + j;
-	     NPerm5 facinc( pen->getFaceMapping( Dim4Face::faceNumber[tetinc[(j+1)%4]][tetinc[(j+2)%4]][tetinc[(j+3)%4]] ) ); 
+	     NPerm5 facinc( pen->getTriangleMapping( Dim4Triangle::triangleNumber[tetinc[(j+1)%4]][tetinc[(j+2)%4]][tetinc[(j+3)%4]] ) ); 
              // adjust for coherent oriented normal fibres
 	     if (facinc.sign() != pen->orientation()) facinc=facinc*NPerm5(0,1);
 	     int inoutor = ( (tetinc.sign() == pen->orientation()) ? 1 : -1 );	     
@@ -507,7 +507,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
      if ( (f_desc.ldomain.dim == 3) && (f_desc.rdomain.dim == 2) )// (dual)H_3 x (std_red_bdry)H_2 --> H_1
        for (unsigned long i=0; i<numRelativeCells[2]; i++)
         { // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell...
-         const Dim4Face* fac( tri4->getFace( rIx[2][i] ) ); const Dim4Edge* edg(NULL);
+         const Dim4Triangle* fac( tri4->getTriangle( rIx[2][i] ) ); const Dim4Edge* edg(NULL);
          const Dim4Pentachoron* pen( fac->getEmbedding(0).getPentachoron() );
          NPerm5 facinc( fac->getEmbedding(0).getVertices() );
          for (unsigned long j=0; j<3; j++)
@@ -679,7 +679,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	   NLargeInteger sum(NLargeInteger::zero);
            for (unsigned long k=0; k<dual_1vec.size(); k++)
             {
-             const Dim4Face* fac( tri4->getFace( rIx[2][i] ) ); 
+             const Dim4Triangle* fac( tri4->getTriangle( rIx[2][i] ) ); 
              const Dim4Pentachoron* pen( fac->getEmbedding(0).getPentachoron() );
              NPerm5 facinc( fac->getEmbedding(0).getVertices() );
              sum += std_rel_bdry_2vec[k]*dual_1vec[k]*facinc.sign()*pen->orientation(); // orientation convention...
@@ -871,6 +871,7 @@ unsigned long NCellularData::components( submanifold_type ctype ) const
  if (ctype == whole_manifold) return 1;
  if (ctype == standard_boundary) return stdBdryPi1Gen.size();
  if (ctype == ideal_boundary) return idBdryPi1Gen.size();
+ // TODO: Missing default? - Ben.
 } 
 
 unsigned long NCellularData::cellCount( const ChainComplexLocator &coord_system) const

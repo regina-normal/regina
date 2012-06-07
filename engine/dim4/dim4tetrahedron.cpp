@@ -49,13 +49,13 @@ Dim4Edge* Dim4Tetrahedron::getEdge(int edge) const {
             [p[NEdge::edgeVertex[edge][1]]]);
 }
 
-Dim4Face* Dim4Tetrahedron::getFace(int face) const {
+Dim4Triangle* Dim4Tetrahedron::getTriangle(int tri) const {
     NPerm5 p = emb_[0].getVertices();
-    return emb_[0].getPentachoron()->getFace(
-        Dim4Face::faceNumber
-            [p[(face + 1) % 4]]
-            [p[(face + 2) % 4]]
-            [p[(face + 3) % 4]]);
+    return emb_[0].getPentachoron()->getTriangle(
+        Dim4Triangle::triangleNumber
+            [p[(tri + 1) % 4]]
+            [p[(tri + 2) % 4]]
+            [p[(tri + 3) % 4]]);
 }
 
 NPerm5 Dim4Tetrahedron::getEdgeMapping(int edge) const {
@@ -72,18 +72,18 @@ NPerm5 Dim4Tetrahedron::getEdgeMapping(int edge) const {
         4);
 }
 
-NPerm5 Dim4Tetrahedron::getFaceMapping(int face) const {
+NPerm5 Dim4Tetrahedron::getTriangleMapping(int tri) const {
     NPerm5 tetPerm = emb_[0].getVertices();
-    NPerm5 facePerm = emb_[0].getPentachoron()->getFaceMapping(
-        Dim4Face::faceNumber[tetPerm[(face + 1) % 4]]
-                            [tetPerm[(face + 2) % 4]]
-                            [tetPerm[(face + 3) % 4]]);
+    NPerm5 trianglePerm = emb_[0].getPentachoron()->getTriangleMapping(
+        Dim4Triangle::triangleNumber[tetPerm[(tri + 1) % 4]]
+                            [tetPerm[(tri + 2) % 4]]
+                            [tetPerm[(tri + 3) % 4]]);
 
     return NPerm5(
-        tetPerm.preImageOf(facePerm[0]),
-        tetPerm.preImageOf(facePerm[1]),
-        tetPerm.preImageOf(facePerm[2]),
-        face, 4);
+        tetPerm.preImageOf(trianglePerm[0]),
+        tetPerm.preImageOf(trianglePerm[1]),
+        tetPerm.preImageOf(trianglePerm[2]),
+        tri, 4);
 }
 
 } // namespace regina

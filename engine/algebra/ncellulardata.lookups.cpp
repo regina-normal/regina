@@ -43,8 +43,8 @@ unsigned long NCellularData::nicIxLookup(const Dim4Vertex* vrt) const
 { return lower_bound( nicIx[0].begin(), nicIx[0].end(), tri4->vertexIndex(vrt) ) - nicIx[0].begin(); }
 unsigned long NCellularData::nicIxLookup(const Dim4Edge* edg) const
 { return lower_bound( nicIx[1].begin(), nicIx[1].end(), tri4->edgeIndex(edg) ) - nicIx[1].begin(); }
-unsigned long NCellularData::nicIxLookup(const Dim4Face* fac) const
-{ return lower_bound( nicIx[2].begin(), nicIx[2].end(), tri4->faceIndex(fac) ) - nicIx[2].begin(); }
+unsigned long NCellularData::nicIxLookup(const Dim4Triangle* fac) const
+{ return lower_bound( nicIx[2].begin(), nicIx[2].end(), tri4->triangleIndex(fac) ) - nicIx[2].begin(); }
 unsigned long NCellularData::nicIxLookup(const Dim4Tetrahedron* tet) const
 { return lower_bound( nicIx[3].begin(), nicIx[3].end(), tri4->tetrahedronIndex(tet) ) - nicIx[3].begin(); }
 unsigned long NCellularData::nicIxLookup(const Dim4Pentachoron* pen) const
@@ -59,8 +59,8 @@ unsigned long NCellularData::icIxLookup(const NTetrahedron* tet, unsigned long i
 
 unsigned long NCellularData::icIxLookup(const Dim4Edge* edg, unsigned long i) const
 { return lower_bound( icIx[0].begin(), icIx[0].end(), 2*tri4->edgeIndex(edg) + i) - icIx[0].begin(); }
-unsigned long NCellularData::icIxLookup(const Dim4Face* fac, unsigned long i) const
-{ return lower_bound( icIx[1].begin(), icIx[1].end(), 3*tri4->faceIndex(fac) + i) - icIx[1].begin(); }
+unsigned long NCellularData::icIxLookup(const Dim4Triangle* fac, unsigned long i) const
+{ return lower_bound( icIx[1].begin(), icIx[1].end(), 3*tri4->triangleIndex(fac) + i) - icIx[1].begin(); }
 unsigned long NCellularData::icIxLookup(const Dim4Tetrahedron* tet, unsigned long i) const
 { return lower_bound( icIx[2].begin(), icIx[2].end(), 4*tri4->tetrahedronIndex(tet) + i) - icIx[2].begin(); }
 unsigned long NCellularData::icIxLookup(const Dim4Pentachoron* pen, unsigned long i) const
@@ -79,8 +79,8 @@ unsigned long NCellularData::dcIxLookup(const Dim4Pentachoron* pen) const
 { return lower_bound( dcIx[0].begin(), dcIx[0].end(), tri4->pentachoronIndex(pen) ) - dcIx[0].begin(); }
 unsigned long NCellularData::dcIxLookup(const Dim4Tetrahedron* tet) const 
 { return lower_bound( dcIx[1].begin(), dcIx[1].end(), tri4->tetrahedronIndex(tet) ) - dcIx[1].begin(); }
-unsigned long NCellularData::dcIxLookup(const Dim4Face* fac) const 
-{ return lower_bound( dcIx[2].begin(), dcIx[2].end(), tri4->faceIndex(fac) ) - dcIx[2].begin(); }
+unsigned long NCellularData::dcIxLookup(const Dim4Triangle* fac) const 
+{ return lower_bound( dcIx[2].begin(), dcIx[2].end(), tri4->triangleIndex(fac) ) - dcIx[2].begin(); }
 unsigned long NCellularData::dcIxLookup(const Dim4Edge* edg) const 
 { return lower_bound( dcIx[3].begin(), dcIx[3].end(), tri4->edgeIndex(edg) ) - dcIx[3].begin(); }
 unsigned long NCellularData::dcIxLookup(const Dim4Vertex* vrt) const 
@@ -97,8 +97,8 @@ unsigned long NCellularData::bcIxLookup(const Dim4Vertex* vrt) const
 { return lower_bound( bcIx[0].begin(), bcIx[0].end(), tri4->vertexIndex(vrt) ) - bcIx[0].begin(); }
 unsigned long NCellularData::bcIxLookup(const Dim4Edge* edg) const
 { return lower_bound( bcIx[1].begin(), bcIx[1].end(), tri4->edgeIndex(edg) ) - bcIx[1].begin(); }
-unsigned long NCellularData::bcIxLookup(const Dim4Face* fac) const
-{ return lower_bound( bcIx[2].begin(), bcIx[2].end(), tri4->faceIndex(fac) ) - bcIx[2].begin(); }
+unsigned long NCellularData::bcIxLookup(const Dim4Triangle* fac) const
+{ return lower_bound( bcIx[2].begin(), bcIx[2].end(), tri4->triangleIndex(fac) ) - bcIx[2].begin(); }
 unsigned long NCellularData::bcIxLookup(const Dim4Tetrahedron* tet) const
 { return lower_bound( bcIx[3].begin(), bcIx[3].end(), tri4->tetrahedronIndex(tet) ) - bcIx[3].begin(); }
 
@@ -115,8 +115,8 @@ unsigned long NCellularData::rIxLookup(const Dim4Vertex* vrt) const
 { return lower_bound( rIx[0].begin(), rIx[0].end(), tri4->vertexIndex(vrt) ) - rIx[0].begin(); }
 unsigned long NCellularData::rIxLookup(const Dim4Edge* edg) const
 { return lower_bound( rIx[1].begin(), rIx[1].end(), tri4->edgeIndex(edg) ) - rIx[1].begin(); }
-unsigned long NCellularData::rIxLookup(const Dim4Face* fac) const
-{ return lower_bound( rIx[2].begin(), rIx[2].end(), tri4->faceIndex(fac) ) - rIx[2].begin(); }
+unsigned long NCellularData::rIxLookup(const Dim4Triangle* fac) const
+{ return lower_bound( rIx[2].begin(), rIx[2].end(), tri4->triangleIndex(fac) ) - rIx[2].begin(); }
 unsigned long NCellularData::rIxLookup(const Dim4Tetrahedron* tet) const
 { return lower_bound( rIx[3].begin(), rIx[3].end(), tri4->tetrahedronIndex(tet) ) - rIx[3].begin(); }
 unsigned long NCellularData::rIxLookup(const Dim4Pentachoron* pen) const
@@ -125,7 +125,7 @@ unsigned long NCellularData::rIxLookup(const Dim4Pentachoron* pen) const
 // counts number of elements in thelist less than obj, defined in ncellulardata.init.pi1.cpp
 unsigned long num_less_than(const std::set<unsigned long> &thelist, const unsigned long &obj); // forward ref
 
-unsigned long NCellularData::pi1Lookup(const Dim4Face* fac) const // standard boundary
+unsigned long NCellularData::pi1Lookup(const Dim4Triangle* fac) const // standard boundary
 { unsigned long I = bcIxLookup( fac );
   return I - num_less_than( maxTreeStB, I ); }
 unsigned long NCellularData::pi1Lookup(const Dim4Tetrahedron* tet, unsigned long num) const // ideal boundary

@@ -756,7 +756,7 @@ private:
      *  maxTreeIdB, and MaxTreeSttIdB respectively.
      */
     bool inMaximalTree(const Dim4Tetrahedron* tet) const;
-    bool inMaximalTree(const Dim4Face* fac) const;
+    bool inMaximalTree(const Dim4Triangle* fac) const;
     bool inMaximalTree(const Dim4Tetrahedron* tet, unsigned long num) const;
     bool inMaximalTree(const Dim4Pentachoron* pen, unsigned long num) const;
     /**
@@ -777,7 +777,7 @@ private:
    unsigned long nicIxLookup(const NTetrahedron* tet) const;
    unsigned long nicIxLookup(const Dim4Vertex* vrt) const;
    unsigned long nicIxLookup(const Dim4Edge* edg) const;
-   unsigned long nicIxLookup(const Dim4Face* fac) const;
+   unsigned long nicIxLookup(const Dim4Triangle* fac) const;
    unsigned long nicIxLookup(const Dim4Tetrahedron* tet) const;
    unsigned long nicIxLookup(const Dim4Pentachoron* pen) const;
 
@@ -785,7 +785,7 @@ private:
    unsigned long icIxLookup(const NFace* fac, unsigned long i) const;
    unsigned long icIxLookup(const NTetrahedron* tet, unsigned long i) const;
    unsigned long icIxLookup(const Dim4Edge* edg, unsigned long i) const;
-   unsigned long icIxLookup(const Dim4Face* fac, unsigned long i) const;
+   unsigned long icIxLookup(const Dim4Triangle* fac, unsigned long i) const;
    unsigned long icIxLookup(const Dim4Tetrahedron* tet, unsigned long i) const;
    unsigned long icIxLookup(const Dim4Pentachoron* edg, unsigned long i) const;
 
@@ -795,7 +795,7 @@ private:
    unsigned long dcIxLookup(const NVertex* vrt) const; 
    unsigned long dcIxLookup(const Dim4Pentachoron* pen) const; 
    unsigned long dcIxLookup(const Dim4Tetrahedron* tet) const; 
-   unsigned long dcIxLookup(const Dim4Face* fac) const; 
+   unsigned long dcIxLookup(const Dim4Triangle* fac) const; 
    unsigned long dcIxLookup(const Dim4Edge* edg) const; 
    unsigned long dcIxLookup(const Dim4Vertex* vrt) const; 
 
@@ -804,7 +804,7 @@ private:
    unsigned long bcIxLookup(const NFace* fac) const; 
    unsigned long bcIxLookup(const Dim4Vertex* vrt) const;
    unsigned long bcIxLookup(const Dim4Edge* edg) const;
-   unsigned long bcIxLookup(const Dim4Face* fac) const;
+   unsigned long bcIxLookup(const Dim4Triangle* fac) const;
    unsigned long bcIxLookup(const Dim4Tetrahedron* tet) const;
 
    unsigned long rIxLookup(const NVertex* vrt) const;
@@ -813,12 +813,12 @@ private:
    unsigned long rIxLookup(const NTetrahedron* tet) const;
    unsigned long rIxLookup(const Dim4Vertex* vrt) const;
    unsigned long rIxLookup(const Dim4Edge* edg) const;
-   unsigned long rIxLookup(const Dim4Face* fac) const;
+   unsigned long rIxLookup(const Dim4Triangle* fac) const;
    unsigned long rIxLookup(const Dim4Tetrahedron* tet) const;
    unsigned long rIxLookup(const Dim4Pentachoron* pen) const;
 
    unsigned long pi1Lookup(const Dim4Tetrahedron* tet) const;
-   unsigned long pi1Lookup(const Dim4Face* fac) const;
+   unsigned long pi1Lookup(const Dim4Triangle* fac) const;
    unsigned long pi1Lookup(const Dim4Tetrahedron* tet, unsigned long num) const;
    unsigned long pi1Lookup(const Dim4Pentachoron* pen, unsigned long num) const;
    unsigned long pi1Lookup(const NFace* fac) const;

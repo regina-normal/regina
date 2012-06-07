@@ -97,7 +97,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
 
         // Bounded orientable:
         Dim4Triangulation ball_singlePent;
-            /**< A single pentachoron with no face gluings. */
+            /**< A single pentachoron with no facet gluings. */
         Dim4Triangulation ball_foldedPent;
             /**< A single pentachoron with two facets folded together. */
         Dim4Triangulation ball_singleConeS3;
@@ -266,10 +266,10 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
                         << tri.getPacketLabel() << " is reported as invalid.";
                     CPPUNIT_FAIL(msg.str());
                 }
-            for (i = 0; i < tri.getNumberOfFaces(); ++i)
-                if (! tri.getFace(i)->isValid()) {
+            for (i = 0; i < tri.getNumberOfTriangles(); ++i)
+                if (! tri.getTriangle(i)->isValid()) {
                     std::ostringstream msg;
-                    msg << "Face " << i << " of triangulation "
+                    msg << "Triangle " << i << " of triangulation "
                         << tri.getPacketLabel() << " is reported as invalid.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -277,7 +277,8 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
 
         void verifyInvalid(const Dim4Triangulation& tri,
                 int invalidVertices, int invalidEdges,
-                int invalidEdgeLinks, int invalidEdgeIDs, int invalidFaces) {
+                int invalidEdgeLinks, int invalidEdgeIDs,
+                int invalidTriangles) {
             if (tri.isValid()) {
                 CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
                     " is reported as valid.");
@@ -334,14 +335,14 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             }
 
             found = 0;
-            for (i = 0; i < tri.getNumberOfFaces(); ++i)
-                if (! tri.getFace(i)->isValid())
+            for (i = 0; i < tri.getNumberOfTriangles(); ++i)
+                if (! tri.getTriangle(i)->isValid())
                     ++found;
-            if (found != invalidFaces) {
+            if (found != invalidTriangles) {
                 std::ostringstream msg;
                 msg << "Triangulation " << tri.getPacketLabel()
-                    << " contains " << found << " invalid faces "
-                    "instead of the expected " << invalidFaces << ".";
+                    << " contains " << found << " invalid triangles "
+                    "instead of the expected " << invalidTriangles << ".";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -640,7 +641,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             int n = tri.getNumberOfBoundaryComponents();
             int count;
             int i, j;
-            int face;
+            int triangle;
             for (i = 0; i < n; ++i) {
                 bc = tri.getBoundaryComponent(i);
                 if (bc->isIdeal())
@@ -650,17 +651,18 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
                 for (j = 0; j < count; ++j) {
                     tet4 = bc->getTetrahedron(j);
                     tet3 = bc->getTriangulation()->getTetrahedron(j);
-                    for (face = 0; face < 4; ++face) {
-                        adj3 = tet3->adjacentTetrahedron(face);
+                    for (triangle = 0; triangle < 4; ++triangle) {
+                        adj3 = tet3->adjacentTetrahedron(triangle);
                         if (adj3) {
                             adj4 = bc->getTetrahedron(adj3->markedIndex());
-                            if (tet4->getFace(face) !=
-                                    adj4->getFace(tet3->adjacentFace(face))) {
+                            if (tet4->getTriangle(triangle) !=
+                                    adj4->getTriangle(
+                                    tet3->adjacentFace(triangle))) {
                                 std::ostringstream msg;
                                 msg << "Boundary tetrahedron adjacency "
                                     "test failed for " << tri.getPacketLabel()
                                     << ", BC #" << i << ", tet #" << j
-                                    << ", face #" << face << ".";
+                                    << ", triangle #" << triangle << ".";
                                 CPPUNIT_FAIL(msg.str());
                             }
                         }

@@ -69,10 +69,10 @@ if (!binary_search( maxTreeStd.begin(), maxTreeStd.end(), I ) ) return false;
 return true;
 }
 
-bool NCellularData::inMaximalTree(const Dim4Face* fac) const
+bool NCellularData::inMaximalTree(const Dim4Triangle* fac) const
 {
-if (!binary_search(bcIx[2].begin(), bcIx[2].end(), tri4->faceIndex( fac ) ) ) return false; // not in list of faces!
-unsigned long I = lower_bound( bcIx[2].begin(), bcIx[2].end(), tri4->faceIndex( fac ) ) - bcIx[2].begin();
+if (!binary_search(bcIx[2].begin(), bcIx[2].end(), tri4->triangleIndex( fac ) ) ) return false; // not in list of faces!
+unsigned long I = lower_bound( bcIx[2].begin(), bcIx[2].end(), tri4->triangleIndex( fac ) ) - bcIx[2].begin();
 if (!binary_search( maxTreeStB.begin(), maxTreeStB.end(), I ) ) return false;
 return true; 
 }
@@ -132,10 +132,10 @@ return true;
      *  also sets up an indexing so that one can determine from an (ideal) skeletal object which boundary
      *  component it lies in. 
      *
-     * normalsDim4BdryFaces is a vector that assigns to the i-th boundary face [tri4->getFace(bcIx[2][i])]
+     * normalsDim4BdryFaces is a vector that assigns to the i-th boundary face [tri4->getTriangle(bcIx[2][i])]
      *  the two boundary tetrahedra that contain it and the face number of the face in the tetrahedron. 
      *
-     * normalsDim4BdryEdges is a vector that assigns to the i-th boundary edge [tri4->getFace(bcIx[1][i])]
+     * normalsDim4BdryEdges is a vector that assigns to the i-th boundary edge [tri4->getTriangle(bcIx[1][i])]
      *  the circle of tetrahedra incident to that edge, with edginc[2] and edginc[3] forming the 
      *  normal orientation in agreement with the indexing of tet. 
      *
@@ -221,7 +221,7 @@ void NCellularData::buildExtraNormalData()
     for (NTriangulation::FaceIterator fit=bTriComp->getFaces().begin(); 
          fit!=bTriComp->getFaces().end(); fit++)
      {
-      unsigned long I = bcIxLookup( (*bcit)->getFace( bTriComp->faceIndex(*fit) ) );
+      unsigned long I = bcIxLookup( (*bcit)->getTriangle( bTriComp->faceIndex(*fit) ) );
    
       dim4BoundaryFaceInclusion dim4bfacInc;
       dim4bfacInc.firsttet = (*bcit)->getTetrahedron( bTriComp->tetrahedronIndex( 
@@ -367,8 +367,8 @@ void NCellularData::buildExtraNormalData()
     const Dim4BoundaryComponent* bcomp( tri4->getBoundaryComponent(i) );
     if (!bcomp->isIdeal())
      {
-      for (unsigned long j=0; j<bcomp->getNumberOfFaces(); j++)
-        stdBdryCompIndexCD1[bcIxLookup( bcomp->getFace(j) )] = numStdBdryComps; 
+      for (unsigned long j=0; j<bcomp->getNumberOfTriangles(); j++)
+        stdBdryCompIndexCD1[bcIxLookup( bcomp->getTriangle(j) )] = numStdBdryComps; 
        numStdBdryComps++; 
       }
     else // bcomp *is* ideal
@@ -487,7 +487,7 @@ void NCellularData::buildMaximalTree()
 
     for (unsigned long i=0; i<4; i++) // cross all faces
       {
-       const Dim4Face* fac( btet->getFace(i) ); 
+       const Dim4Triangle* fac( btet->getTriangle(i) ); 
          // look this up in normalsDim4BdryFaces, for that we need the bcIx[2] index.
        unsigned long facidx( bcIxLookup( fac ) );
        // one of normalsDim4BdryFaces[facidx] first/second represents this tetrahedron and face, 
@@ -717,7 +717,7 @@ void NCellularData::buildMaximalTree()
  // run through all dual boundary 1-cells, if not in max tree append to stdBdryPi1Gen, etc. 
  if (tri4 != NULL) 
   { for (unsigned long i=0; i<bcIx[2].size(); i++) 
-        if (!inMaximalTree( tri4->getFace(bcIx[2][i]) ) )
+        if (!inMaximalTree( tri4->getTriangle(bcIx[2][i]) ) )
        stdBdryPi1Gen[ stdBdryCompIndexCD1[i] ].push_back(i); 
     for (unsigned long i=0; i<icIx[2].size(); i++) 
         if (!inMaximalTree( tri4->getTetrahedron(icIx[2][i]/4), icIx[2][i]%4) )
@@ -767,13 +767,13 @@ void NCellularData::buildFundGrpPres() const
    //  1) Non-boundary. 
    //  2) Boundary. 
 
-   for (Dim4Triangulation::FaceIterator fac = tri4->getFaces().begin(); fac!=tri4->getFaces().end(); fac++)
+   for (Dim4Triangulation::TriangleIterator fac = tri4->getTriangles().begin(); fac!=tri4->getTriangles().end(); fac++)
     {
      NGroupExpression relator; 
 
      if ( !(*fac)->isBoundary() ) // non-boundary -- interior 2-cell
       {
-       std::deque<Dim4FaceEmbedding>::const_iterator embit;
+       std::deque<Dim4TriangleEmbedding>::const_iterator embit;
        for (embit = (*fac)->getEmbeddings().begin();
                     embit != (*fac)->getEmbeddings().end(); embit++)
         { // now we have to determine whether or not the embedding coincides with the normal or of the tet.
@@ -797,7 +797,7 @@ void NCellularData::buildFundGrpPres() const
      else // boundary face -- cell half on std boundary, half in interior
       {
        unsigned long tetind;
-       const Dim4FaceEmbedding facemb = (*fac)->getEmbedding(0);
+       const Dim4TriangleEmbedding facemb = (*fac)->getEmbedding(0);
        currPen = facemb.getPentachoron();
        currPenFace = facemb.getVertices()[4]; 
        tet = currPen->getTetrahedron(currPenFace); // boundary tet we start with
@@ -815,7 +815,7 @@ void NCellularData::buildFundGrpPres() const
         }
    
        // main loop
-       for (std::deque<Dim4FaceEmbedding>::const_iterator embit=(*fac)->getEmbeddings().begin();
+       for (std::deque<Dim4TriangleEmbedding>::const_iterator embit=(*fac)->getEmbeddings().begin();
             embit != (*fac)->getEmbeddings().end(); embit++)
         { // now we have to determine whether or not the embedding coincides with the normal or of the tet.
          currPen = (*embit).getPentachoron();
@@ -871,7 +871,7 @@ void NCellularData::buildFundGrpPres() const
         // unsigned long edgnum ( normalsDim4BdryEdges[i].edgenum[j] );
        NPerm4 edginc ( normalsDim4BdryEdges[i].edginc[j] );
        // find the face that edginc[2] [3] comes out of
-       const Dim4Face* bfac (tet -> getFace( edginc[3] ) ); 
+       const Dim4Triangle* bfac (tet -> getTriangle( edginc[3] ) ); 
        if (!inMaximalTree(bfac))
         {
          // find this bfac's bcIx[2] index
@@ -908,7 +908,7 @@ void NCellularData::buildFundGrpPres() const
      NGroupExpression relator, brelator; 
      unsigned long bcompidx(0);
 
-     const Dim4Face* fac ( tri4->getFace( icIx[1][i]/3 ) );
+     const Dim4Triangle* fac ( tri4->getTriangle( icIx[1][i]/3 ) );
      unsigned long idEdg ( icIx[1][i] % 3 );  // ideal edge number of fac
      // lets acquire all the Dim4Pentachora incident to fac. 
      for (unsigned long j=0; j<fac->getNumberOfEmbeddings(); j++)

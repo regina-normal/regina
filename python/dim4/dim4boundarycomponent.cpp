@@ -43,12 +43,13 @@ void addDim4BoundaryComponent() {
             ("Dim4BoundaryComponent", no_init)
         .def("getNumberOfTetrahedra",
             &Dim4BoundaryComponent::getNumberOfTetrahedra)
-        .def("getNumberOfFaces", &Dim4BoundaryComponent::getNumberOfFaces)
+        .def("getNumberOfTriangles",
+            &Dim4BoundaryComponent::getNumberOfTriangles)
         .def("getNumberOfEdges", &Dim4BoundaryComponent::getNumberOfEdges)
         .def("getNumberOfVertices", &Dim4BoundaryComponent::getNumberOfVertices)
         .def("getTetrahedron", &Dim4BoundaryComponent::getTetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("getFace", &Dim4BoundaryComponent::getFace,
+        .def("getTriangle", &Dim4BoundaryComponent::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim4BoundaryComponent::getEdge,
             return_value_policy<reference_existing_object>())

@@ -62,13 +62,13 @@ void addDim4Pentachoron() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim4Pentachoron::getEdge,
             return_value_policy<reference_existing_object>())
-        .def("getFace", &Dim4Pentachoron::getFace,
+        .def("getTriangle", &Dim4Pentachoron::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &Dim4Pentachoron::getTetrahedron,
             return_value_policy<reference_existing_object>())
         .def("getVertexMapping", &Dim4Pentachoron::getVertexMapping)
         .def("getEdgeMapping", &Dim4Pentachoron::getEdgeMapping)
-        .def("getFaceMapping", &Dim4Pentachoron::getFaceMapping)
+        .def("getTriangleMapping", &Dim4Pentachoron::getTriangleMapping)
         .def("getTetrahedronMapping", &Dim4Pentachoron::getTetrahedronMapping)
         .def("orientation", &Dim4Pentachoron::orientation)
     ;

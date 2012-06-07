@@ -69,7 +69,7 @@ typedef void (*UseDim4GluingPerms)(const Dim4GluingPermSearcher*, void*);
 
 /**
  * A utility class for searching through all possible gluing permutation
- * sets that correspond to a given pentachoron face pairing.  Subclasses of
+ * sets that correspond to a given pentachoron facet pairing.  Subclasses of
  * Dim4GluingPermSearcher correspond to specialised (and heavily optimised)
  * search algorithms that may be used in sufficiently constrained scenarios.
  * The main class Dim4GluingPermSearcher offers a default (but slower) search
@@ -86,8 +86,8 @@ typedef void (*UseDim4GluingPerms)(const Dim4GluingPermSearcher*, void*);
  * calling runSearch() on that object directly).
  *
  * The search algorithm used by this base class employs modified
- * union-find structures for both face and edge equivalence classes to
- * prune searches that are guaranteed to lead to invalid faces or edges.
+ * union-find structures for both triangle and edge equivalence classes to
+ * prune searches that are guaranteed to lead to invalid triangles or edges.
  * This is a 4-dimensional analogue to the algorithms described in
  * "Enumeration of non-orientable 3-manifolds using face-pairing graphs and
  * union-find", Benjamin A. Burton, Discrete Comput. Geom. 38 (2007), no. 3,
@@ -127,7 +127,7 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
          * edges are considered equivalent if they are identified within
          * the triangulation.
          *
-         * Pentachoron faces are indexed linearly by pentachoron and
+         * Pentachoron edges are indexed linearly by pentachoron and
          * then edge number.  Specifically, edge e (0..9) of
          * pentachoron p (0..nPents-1) has index 10p+e.
          *
@@ -304,19 +304,19 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
 
         /**
          * A structure used to track equivalence classes of pentachoron
-         * faces as the gluing permutation set is constructed.  Two
-         * faces are considered equivalent if they are identified within
+         * triangles as the gluing permutation set is constructed.  Two
+         * triangles are considered equivalent if they are identified within
          * the 4-manifold triangulation.
          *
-         * Pentachoron faces are indexed linearly by pentachoron and
-         * then face number.  Specifically, face f (0..9) of
+         * Pentachoron triangles are indexed linearly by pentachoron and
+         * then triangle number.  Specifically, triangle f (0..9) of
          * pentachoron p (0..nPents-1) has index 10p+f.
          *
-         * Each equivalence class of faces corresponds to a tree of
-         * PentFaceState objects, arranged to form a modified union-find
+         * Each equivalence class of triangles corresponds to a tree of
+         * PentTriangleState objects, arranged to form a modified union-find
          * structure.
          */
-        struct PentFaceState {
+        struct PentTriangleState {
             int parent;
                 /**< The index of the parent object in the current tree,
                      or -1 if this object is the root of the tree. */
@@ -327,13 +327,13 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
                 /**< The total number of objects in the subtree descending
                      from this object (where this object is counted also). */
             bool bounded;
-                /**< Does this equivalence class of pentachoron faces
-                     represent a boundary face?
+                /**< Does this equivalence class of pentachoron triangles
+                     represent a boundary triangle?
 
                      If this equivalence class describes a complete loop
-                     of pentachoron faces then the value of \a bounded
+                     of pentachoron triangles then the value of \a bounded
                      is \c false.  If this equivalence class describes a
-                     string of pentachoron faces with two endpoints, the
+                     string of pentachoron triangles with two endpoints, the
                      value of \a bounded is \c true.  Here we treat any
                      facet whose gluing permutation has not yet been
                      decided as a boundary facet.
@@ -343,14 +343,14 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
                      objects in the tree will have older values to
                      facilitate backtracking. */
             NPerm3 twistUp;
-                /**< The vertices of each pentachoron face can be labelled
+                /**< The vertices of each pentachoron triangle can be labelled
                      (0,1,2) by running through the underlying pentachoron
                      vertices from smallest index to largest index.
 
                      The parameter \a twistUp is a permutation that maps
-                     vertices (0,1,2) of this face to vertices (0,1,2) of
+                     vertices (0,1,2) of this triangle to vertices (0,1,2) of
                      its parent in the tree according to the way in which
-                     the two faces are identified.  If this object has
+                     the two triangles are identified.  If this object has
                      no parent, the value of \a twistUp is undefined. */
             bool hadEqualRank;
                 /**< Did this tree have rank equal to its parent
@@ -360,10 +360,10 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
                      still the root of its tree, this value is set to false. */
 
             /**
-             * Constructor for a standalone pentachoron face in an
+             * Constructor for a standalone pentachoron triangle in an
              * equivalence class all of its own.
              */
-            PentFaceState();
+            PentTriangleState();
 
             /**
              * Dumps all internal data in a plain text format to the
@@ -394,7 +394,7 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
              * test for end-of-file.
              *
              * @param in the input stream from which to read.
-             * @param nStates the total number of face states under
+             * @param nStates the total number of triangle states under
              * consideration (this must be ten times the number of pentachora).
              * @return \c false if any errors were encountered during
              * reading, or \c true otherwise.
@@ -483,26 +483,26 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
                  with root edgeState_[y], this array will store the value x.
                  Otherwise it will store the value -1. */
 
-        unsigned nFaceClasses_;
+        unsigned nTriangleClasses_;
             /**< The number of equivalence classes of identified
-                 pentachoron faces. */
-        PentFaceState* faceState_;
+                 pentachoron triangles. */
+        PentTriangleState* triState_;
             /**< Used for tracking equivalence classes of identified
-                 pentachoron faces.  See the PentFaceState description
-                 for details.  This array has size 10n, where face f of
+                 pentachoron triangles.  See the PentTriangleState description
+                 for details.  This array has size 10n, where triangle f of
                  pentachoron p has index 10p+f. */
-        int* faceStateChanged_;
-            /**< Tracks the way in which the faceState_[] array has been
+        int* triStateChanged_;
+            /**< Tracks the way in which the triState_[] array has been
                  updated over time.  This array has size [25n/2].  Suppose
                  the gluing for order[i] affects facet k of pentachoron p.
                  Then element 5i+v of this array describes how the gluing for
-                 order[i] affects the face of pentachoron p opposite vertices
-                 k and v (note that a fifth of this array will remain unused,
-                 since k and v are never equal).
+                 order[i] affects the triangle of pentachoron p opposite
+                 vertices k and v (note that a fifth of this array will remain
+                 unused, since k and v are never equal).
 
-                 If this identification of faces results in the tree
-                 with root faceState_[x] being grafted beneath the tree
-                 with root faceState_[y], this array will store the value x.
+                 If this identification of triangles results in the tree
+                 with root triState_[x] being grafted beneath the tree
+                 with root triState_[y], this array will store the value x.
                  Otherwise it will store the value -1. */
 
     public:
@@ -775,7 +775,7 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
 
         /**
          * Determines whether the permutations already constructed model
-         * a 4-manifold triangulation with a (2-dimensional) face identified
+         * a 4-manifold triangulation with a (2-dimensional) triangle identified
          * with itself using a non-trivial rotation or reflection.
          *
          * Tests that do not refer to the gluing permutation for the
@@ -789,10 +789,10 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
          * @param facet the specific pentachoron facet upon which tests
          * will be based.
          * @return \c true if the permutations under construction will
-         * lead to a face identified with itself using a non-trivial
-         * rotation or reflection, or \c false if no such face is found.
+         * lead to a triangle identified with itself using a non-trivial
+         * rotation or reflection, or \c false if no such triangle is found.
          */
-        bool badFaceLink(const Dim4PentFacet& facet) const;
+        bool badTriangleLink(const Dim4PentFacet& facet) const;
 
         /**
          * Returns the character used to identify this class when
@@ -804,52 +804,52 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
 
         /**
          * Returns the representative of the equivalence class containing
-         * the given pentachoron face.  The class representative is
+         * the given pentachoron triangle.  The class representative is
          * defined to be the root of the corresponding union-find tree.
          *
-         * See the PentFaceState class for further details.  See also
-         * the other variant of findFaceClass(), which is slower
-         * but which also tracks face rotations and reflections.
+         * See the PentTriangleState class for further details.  See also
+         * the other variant of findTriangleClass(), which is slower
+         * but which also tracks triangle rotations and reflections.
          *
-         * @param faceID the index of a single pentachoron face; this
+         * @param triID the index of a single pentachoron triangle; this
          * must be between 0 and 10p-1 inclusive, where \a p is the
-         * number of pentachora.  See the PentFaceState class notes for
-         * details on face indexing.
-         * @return the index of the pentachoron face at the root of the
+         * number of pentachora.  See the PentTriangleState class notes for
+         * details on triangle indexing.
+         * @return the index of the pentachoron triangle at the root of the
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
-        int findFaceClass(int faceID) const;
+        int findTriangleClass(int triID) const;
 
         /**
          * Returns the representative of the equivalence class containing
-         * the given pentachoron face.  The class representative is
+         * the given pentachoron triangle.  The class representative is
          * defined to be the root of the corresponding union-find tree.
          *
          * The argument \a twist is also modified to indicate what
          * rotation or reflection is used to identify vertices (0,1,2)
-         * of the given face with vertices (0,1,2) of the class
+         * of the given triangle with vertices (0,1,2) of the class
          * representative.  Note that this argument is \e not initialised.
          * Instead, the original \a twist will be multiplied on the left
          * by the mapping described above.
          *
-         * See the PentFaceState class for further details.  See also
-         * the other variant of findFaceClass(), which is faster
-         * but which does not track face rotations and reflections.
+         * See the PentTriangleState class for further details.  See also
+         * the other variant of findTriangleClass(), which is faster
+         * but which does not track triangle rotations and reflections.
          *
-         * @param faceID the index of a single pentachoron face; this
+         * @param triID the index of a single pentachoron triangle; this
          * must be between 0 and 10p-1 inclusive, where \a p is the
-         * number of pentachora.  See the PentFaceState class notes for
-         * details on face indexing.
-         * @param twist used to track face rotations and reflections, as
+         * number of pentachora.  See the PentTriangleState class notes for
+         * details on triangle indexing.
+         * @param twist used to track triangle rotations and reflections, as
          * described above.  This must be a mapping from (0,1,2) to (0,1,2)
          * as it is passed into the function, and it will also be a mapping
          * from (0,1,2) to (0,1,2) upon returning from the function.
-         * @return the index of the pentachoron face at the root of the
+         * @return the index of the pentachoron triangle at the root of the
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
-        int findFaceClass(int faceID, NPerm3& twist) const;
+        int findTriangleClass(int triID, NPerm3& twist) const;
 
         /**
          * Merges the classes of pentachoron edges as required by the
@@ -868,19 +868,19 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
         bool mergeEdgeClasses();
 
         /**
-         * Merges the classes of pentachoron faces as required by the
+         * Merges the classes of pentachoron triangles as required by the
          * new gluing made at stage \a orderElt of the search.
          *
-         * See the PentFaceState class for details.
+         * See the PentTriangleState class for details.
          *
          * This routine returns a boolean that indicates whether this
-         * merge creates an invalid face (i.e., a face identified with
+         * merge creates an invalid triangle (i.e., a triangle identified with
          * itself using a non-trivial rotation or reflection).
          *
-         * @return \c true if this merge creates an invalid face, or
+         * @return \c true if this merge creates an invalid triangle, or
          * \c false if not.
          */
-        bool mergeFaceClasses();
+        bool mergeTriangleClasses();
 
         /**
          * Splits the classes of pentachoron edges to mirror the undoing
@@ -891,12 +891,12 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
         void splitEdgeClasses();
 
         /**
-         * Splits the classes of pentachoron faces to mirror the undoing
+         * Splits the classes of pentachoron triangles to mirror the undoing
          * of the gluing at stage \a orderElt of the search.
          *
-         * See the PentFaceState class for details.
+         * See the PentTriangleState class for details.
          */
-        void splitFaceClasses();
+        void splitTriangleClasses();
 
         /**
          * Signifies that the boundary edges supplied by the linking triangles
@@ -1108,7 +1108,7 @@ inline Dim4GluingPermSearcher::PentEdgeState::PentEdgeState() :
         twistUpEdge(0), twistUpTriangle(0), hadEqualRank(false) {
 }
 
-inline Dim4GluingPermSearcher::PentFaceState::PentFaceState() :
+inline Dim4GluingPermSearcher::PentTriangleState::PentTriangleState() :
         parent(-1), rank(0), size(1), bounded(true), twistUp() /* ID */,
         hadEqualRank(false) {
 }
@@ -1121,19 +1121,19 @@ inline char Dim4GluingPermSearcher::dataTag() const {
     return Dim4GluingPermSearcher::dataTag_;
 }
 
-inline int Dim4GluingPermSearcher::findFaceClass(int faceID) const {
-    while (faceState_[faceID].parent >= 0)
-        faceID = faceState_[faceID].parent;
+inline int Dim4GluingPermSearcher::findTriangleClass(int triID) const {
+    while (triState_[triID].parent >= 0)
+        triID = triState_[triID].parent;
 
-    return faceID;
+    return triID;
 }
 
-inline int Dim4GluingPermSearcher::findFaceClass(int faceID, NPerm3& twist)
+inline int Dim4GluingPermSearcher::findTriangleClass(int triID, NPerm3& twist)
         const {
-    for ( ; faceState_[faceID].parent >= 0; faceID = faceState_[faceID].parent)
-        twist = faceState_[faceID].twistUp * twist;
+    for ( ; triState_[triID].parent >= 0; triID = triState_[triID].parent)
+        twist = triState_[triID].twistUp * twist;
 
-    return faceID;
+    return triID;
 }
 
 inline void Dim4GluingPermSearcher::edgeBdryJoin(int edgeID, char end,

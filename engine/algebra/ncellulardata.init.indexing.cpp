@@ -70,15 +70,15 @@ void setupIndices(const Dim4Triangulation* tri,
              icIx[0].push_back(2*tri->edgeIndex(*eit)+i); }
     }
     // nicIx[2] all, icIx[1] ideal ends, dcIx[2] nonboundary, bcIx[2] boundary
-    for (Dim4Triangulation::FaceIterator fit = tri->getFaces().begin();
-            fit != tri->getFaces().end(); fit++) {
-	nicIx[2].push_back( tri->faceIndex(*fit) );
-        if ((*fit)->isBoundary()) { bcIx[2].push_back( tri->faceIndex(*fit) ); }
+    for (Dim4Triangulation::TriangleIterator fit = tri->getTriangles().begin();
+            fit != tri->getTriangles().end(); fit++) {
+	nicIx[2].push_back( tri->triangleIndex(*fit) );
+        if ((*fit)->isBoundary()) { bcIx[2].push_back( tri->triangleIndex(*fit) ); }
 	 else
-	  { dcIx[2].push_back( tri->faceIndex(*fit) );
-            rIx[2].push_back( tri->faceIndex(*fit) );
+	  { dcIx[2].push_back( tri->triangleIndex(*fit) );
+            rIx[2].push_back( tri->triangleIndex(*fit) );
             for (unsigned i=0;i<3;i++) if ((*fit)->getVertex(i)->isIdeal()) 
-             icIx[1].push_back(3*tri->faceIndex(*fit)+i); }
+             icIx[1].push_back(3*tri->triangleIndex(*fit)+i); }
     }
    for (Dim4Triangulation::TetrahedronIterator tit = tri->getTetrahedra().begin();
             tit != tri->getTetrahedra().end(); tit++) {

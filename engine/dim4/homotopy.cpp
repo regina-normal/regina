@@ -43,7 +43,7 @@ const NGroupPresentation& Dim4Triangulation::getFundamentalGroup() const {
         calculateSkeleton();
 
     // Each non-boundary not-in-forest tetrahedron is a generator.
-    // Each non-boundary face is a relation.
+    // Each non-boundary triangle is a relation.
     long nBdryTets = 0;
     for (BoundaryComponentIterator bit = boundaryComponents_.begin();
             bit != boundaryComponents_.end(); ++bit)
@@ -65,17 +65,18 @@ const NGroupPresentation& Dim4Triangulation::getFundamentalGroup() const {
         if (! ((*tit)->isBoundary() || (*tit)->inDualMaximalForest()))
             genIndex[tit - tetrahedra_.begin()] = i++;
 
-    // Run through each face and insert the corresponding relations.
-    std::deque<Dim4FaceEmbedding>::const_iterator embit;
+    // Run through each triangle and insert the corresponding relations.
+    std::deque<Dim4TriangleEmbedding>::const_iterator embit;
     Dim4Pentachoron* pent;
     int facet;
     Dim4Tetrahedron* tet;
     NGroupExpression* rel;
-    for (FaceIterator fit = faces_.begin(); fit != faces_.end(); ++fit) {
+    for (TriangleIterator fit = triangles_.begin(); fit != triangles_.end();
+            ++fit) {
         if ((*fit)->isBoundary())
             continue;
 
-        // Put in the relation corresponding to this face.
+        // Put in the relation corresponding to this triangle.
         rel = new NGroupExpression();
         for (embit = (*fit)->emb_.begin();
                 embit != (*fit)->emb_.end(); ++embit) {
@@ -90,7 +91,7 @@ const NGroupPresentation& Dim4Triangulation::getFundamentalGroup() const {
             // from embedding tet->emb_[0] to embedding tet->emb_[1].
             //
             // Test whether we are traversing this dual edge forwards or
-            // backwards as we walk around the face (*fit).
+            // backwards as we walk around the triangle (*fit).
             if ((tet->emb_[0].getPentachoron() == pent) &&
                     (tet->emb_[0].getTetrahedron() == facet))
                 rel->addTermLast(genIndex[tet->markedIndex()], 1);

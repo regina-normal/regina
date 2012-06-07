@@ -83,20 +83,21 @@ void Dim4Triangulation::calculateSkeleton() const {
         // - valid_ and Dim4Edge::invalid_ in the case of bad edge self-gluings
         // - all other Dim4Edge members except boundaryComponent_
 
-    calculateFaces();
+    calculateTriangles();
         // Sets:
-        // - faces_
-        // - Dim4Component::faces_
-        // - Dim4Pentachoron::face_
-        // - Dim4Pentachoron::faceMapping_
-        // - valid_ and Dim4Face::valid_ in the case of bad face self-gluings
-        // - all other Dim4Face members except boundaryComponent_
+        // - triangles_
+        // - Dim4Component::triangles_
+        // - Dim4Pentachoron::triangle_
+        // - Dim4Pentachoron::triangleMapping_
+        // - valid_ and Dim4Triangle::valid_ in the case of bad face
+        //   self-gluings
+        // - all other Dim4Triangle members except boundaryComponent_
 
     calculateBoundary();
         // Sets:
         // - boundaryComponents_
         // - Dim4Component::boundaryComponents_
-        // - Dim4 [ Tetrahedron, Face, Edge, Vertex ]::boundaryComponent_
+        // - Dim4 [ Tetrahedron, Triangle, Edge, Vertex ]::boundaryComponent_
         // - all Dim4BoundaryComponent members
 
     calculateVertexLinks(); 
@@ -411,42 +412,44 @@ void Dim4Triangulation::calculateEdges() const {
     delete [] stack;
 }
 
-void Dim4Triangulation::calculateFaces() const {
+void Dim4Triangulation::calculateTriangles() const {
     PentachoronIterator it;
-    int loopFace;
+    int loopTriangle;
     for (it = pentachora_.begin(); it != pentachora_.end(); ++it)
-        for (loopFace = 0; loopFace < 10; ++loopFace)
-            (*it)->face_[loopFace] = 0;
+        for (loopTriangle = 0; loopTriangle < 10; ++loopTriangle)
+            (*it)->triangle_[loopTriangle] = 0;
 
-    Dim4Face* label;
+    Dim4Triangle* label;
     Dim4Pentachoron *loopPent, *pent, *adjPent;
-    int face, adjFace;
+    int tri, adjTri;
     NPerm5 map, adjMap;
     int dir, exitFacet;
     for (it = pentachora_.begin(); it != pentachora_.end(); ++it) {
         loopPent = *it;
-        for (loopFace = 9; loopFace >= 0; --loopFace) {
-            if (loopPent->face_[loopFace])
+        for (loopTriangle = 9; loopTriangle >= 0; --loopTriangle) {
+            if (loopPent->triangle_[loopTriangle])
                 continue;
 
-            label = new Dim4Face(loopPent->component_);
-            faces_.push_back(label);
-            loopPent->component_->faces_.push_back(label);
+            label = new Dim4Triangle(loopPent->component_);
+            triangles_.push_back(label);
+            loopPent->component_->triangles_.push_back(label);
 
-            // Since pentachoron faces are joined together in a loop, the
+            // Since pentachoron triangles are joined together in a loop, the
             // depth-first search is really just a straight line in either
             // direction.  We therefore do away with the usual stack and
-            // just keep track of the next face to process in the current
+            // just keep track of the next triangle to process in the current
             // direction.
-            loopPent->face_[loopFace] = label;
-            loopPent->faceMapping_[loopFace] = Dim4Face::ordering[loopFace];
-            label->emb_.push_back(Dim4FaceEmbedding(loopPent, loopFace));
+            loopPent->triangle_[loopTriangle] = label;
+            loopPent->triangleMapping_[loopTriangle] =
+                Dim4Triangle::ordering[loopTriangle];
+            label->emb_.push_back(Dim4TriangleEmbedding(loopPent,
+                loopTriangle));
 
             for (dir = 0; dir < 2; ++dir) {
                 // Start at the start and walk in one particular direction.
                 pent = loopPent;
-                face = loopFace;
-                map = pent->faceMapping_[face];
+                tri = loopTriangle;
+                map = pent->triangleMapping_[tri];
 
                 while (true) {
                     // Move through to the next pentachoron.
@@ -457,21 +460,21 @@ void Dim4Triangulation::calculateFaces() const {
 
                     adjMap = pent->adjacentGluing(exitFacet) * map *
                         NPerm5(3, 4);
-                    adjFace = Dim4Face::faceNumber
+                    adjTri = Dim4Triangle::triangleNumber
                         [adjMap[0]][adjMap[1]][adjMap[2]];
 
-                    if (adjPent->face_[adjFace]) {
+                    if (adjPent->triangle_[adjTri]) {
                         // We looped right around.
 
-                        // Check that we're not gluing the face to itself by a
-                        // non-trivial mapping.
+                        // Check that we're not gluing the triangle to itself
+                        // by a non-trivial mapping.
                         //
-                        // Since the face link must be orientable (it is just a
-                        // circle), we know adjMap[3,4] is the same as for the
-                        // original mapping.  Therefore, to test whether
+                        // Since the triangle link must be orientable (it is
+                        // just a circle), we know adjMap[3,4] is the same as
+                        // for the original mapping.  Therefore, to test whether
                         // adjMap[0,1,2] is consistent we can just compare the
                         // full permutations (which is in fact faster).
-                        if (adjPent->faceMapping_[adjFace] != adjMap) {
+                        if (adjPent->triangleMapping_[adjTri] != adjMap) {
                             // You have chosen unwisely, my son.
                             label->valid_ = false;
                             valid_ = false;
@@ -479,19 +482,20 @@ void Dim4Triangulation::calculateFaces() const {
                         break;
                     }
 
-                    // We have not yet seen this pentachoron face.  Label it.
-                    adjPent->face_[adjFace] = label;
-                    adjPent->faceMapping_[adjFace] = adjMap;
+                    // We have not yet seen this pentachoron triangle.
+                    // Label it.
+                    adjPent->triangle_[adjTri] = label;
+                    adjPent->triangleMapping_[adjTri] = adjMap;
 
                     if (dir == 0)
-                        label->emb_.push_back(Dim4FaceEmbedding(
-                            adjPent, adjFace));
+                        label->emb_.push_back(Dim4TriangleEmbedding(
+                            adjPent, adjTri));
                     else
-                        label->emb_.push_front(Dim4FaceEmbedding(
-                            adjPent, adjFace));
+                        label->emb_.push_front(Dim4TriangleEmbedding(
+                            adjPent, adjTri));
 
                     pent = adjPent;
-                    face = adjFace;
+                    tri = adjTri;
                     map = adjMap;
                 }
             }
@@ -522,10 +526,10 @@ void Dim4Triangulation::calculateBoundary() const {
     int facet, adjFacet;
     Dim4Vertex* vertex;
     Dim4Edge* edge;
-    Dim4Face* face;
-    Dim4FaceEmbedding faceEmb;
+    Dim4Triangle* tri;
+    Dim4TriangleEmbedding triEmb;
     Dim4Tetrahedron *tet, *adjTet;
-    int tetFace, adjTetFace;
+    int tetTri, adjTetTri;
     NTetrahedron *bdryTet, *adjBdryTet;
     int i, j;
     for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it) {
@@ -582,47 +586,47 @@ void Dim4Triangulation::calculateBoundary() const {
                 }
             }
 
-            // Now run through the faces of this tetrahedron, and follow
+            // Now run through the triangles of this tetrahedron, and follow
             // through them to adjacent tetrahedra.
             for (i = 0; i < 5; ++i) {
                 if (i == facet)
                     continue;
 
-                // Examine the face opposite vertices (i, facet).  This is
-                // the face opposite the edge joining vertices (i, facet).
-                face = pent->face_[Dim4Edge::edgeNumber[i][facet]];
-                if (! face->boundaryComponent_)
-                    face->boundaryComponent_ = label;
+                // Examine the triangle opposite vertices (i, facet).  This is
+                // the triangle opposite the edge joining vertices (i, facet).
+                tri = pent->triangle_[Dim4Edge::edgeNumber[i][facet]];
+                if (! tri->boundaryComponent_)
+                    tri->boundaryComponent_ = label;
 
                 // Okay, we can be clever about this.  The current
-                // boundary tetrahedron is one end of the face link; the
+                // boundary tetrahedron is one end of the triangle link; the
                 // *adjacent* boundary tetrahedron must be at the other.
-                faceEmb = face->emb_.front();
-                if (faceEmb.getPentachoron() == pent &&
-                        faceEmb.getVertices()[3] == i &&
-                        faceEmb.getVertices()[4] == facet) {
+                triEmb = tri->emb_.front();
+                if (triEmb.getPentachoron() == pent &&
+                        triEmb.getVertices()[3] == i &&
+                        triEmb.getVertices()[4] == facet) {
                     // We are currently looking at the embedding at the
                     // front of the list.  Take the one at the back.
-                    faceEmb = face->emb_.back();
+                    triEmb = tri->emb_.back();
 
-                    adjPent = faceEmb.getPentachoron();
-                    adjFacet = faceEmb.getVertices()[3];
+                    adjPent = triEmb.getPentachoron();
+                    adjFacet = triEmb.getVertices()[3];
                     adjTet = adjPent->tet_[adjFacet];
-                    j = faceEmb.getVertices()[4];
+                    j = triEmb.getVertices()[4];
                 } else {
                     // We must be looking at the embedding at the back
                     // of the list.  Take the one at the front (which is
-                    // already stored in faceEmb).
-                    adjPent = faceEmb.getPentachoron();
-                    adjFacet = faceEmb.getVertices()[4];
+                    // already stored in triEmb).
+                    adjPent = triEmb.getPentachoron();
+                    adjFacet = triEmb.getVertices()[4];
                     adjTet = adjPent->tet_[adjFacet];
-                    j = faceEmb.getVertices()[3];
+                    j = triEmb.getVertices()[3];
 
                     // TODO: Sanity checking; remove this eventually.
-                    faceEmb = face->emb_.back();
-                    if (! (faceEmb.getPentachoron() == pent &&
-                            faceEmb.getVertices()[4] == i &&
-                            faceEmb.getVertices()[3] == facet)) {
+                    triEmb = tri->emb_.back();
+                    if (! (triEmb.getPentachoron() == pent &&
+                            triEmb.getVertices()[4] == i &&
+                            triEmb.getVertices()[3] == facet)) {
                         std::cerr << "ERROR: Something has gone terribly "
                             "wrong in computeBoundaryComponents()."
                             << std::endl;
@@ -639,13 +643,13 @@ void Dim4Triangulation::calculateBoundary() const {
                     if (! bdryTet->adjacentTetrahedron(
                             pent->tetMapping_[facet].preImageOf(i))) {
                         // Glue away.
-                        tetFace = pent->tetMapping_[facet].preImageOf(i);
-                        adjTetFace = adjPent->tetMapping_[adjFacet].
+                        tetTri = pent->tetMapping_[facet].preImageOf(i);
+                        adjTetTri = adjPent->tetMapping_[adjFacet].
                             preImageOf(j);
 
-                        bdryTet->joinTo(tetFace, adjBdryTet,
-                            perm5to4(adjTet->getFaceMapping(adjTetFace) *
-                            tet->getFaceMapping(tetFace).inverse()));
+                        bdryTet->joinTo(tetTri, adjBdryTet,
+                            perm5to4(adjTet->getTriangleMapping(adjTetTri) *
+                            tet->getTriangleMapping(tetTri).inverse()));
                     }
                 }
 
@@ -661,7 +665,7 @@ void Dim4Triangulation::calculateBoundary() const {
 
         // This boundary 3-manifold triangulation is complete.
 
-        // Now run through the vertices, edges and faces of the
+        // Now run through the vertices, edges and triangles of the
         // 3-manifold triangulation and insert the corresponding 4-D
         // objects into the boundary component lists in the *same* order.
         for (NTriangulation::FaceIterator it =
@@ -669,7 +673,7 @@ void Dim4Triangulation::calculateBoundary() const {
                 it != label->boundary_->getFaces().end(); ++it) {
             const NFaceEmbedding& emb = (*it)->getEmbedding(0);
             tet = label->tetrahedra_[emb.getTetrahedron()->markedIndex()];
-            label->faces_.push_back(tet->getFace(emb.getFace()));
+            label->triangles_.push_back(tet->getTriangle(emb.getFace()));
         }
         for (NTriangulation::EdgeIterator it =
                 label->boundary_->getEdges().begin();
@@ -767,7 +771,7 @@ void Dim4Triangulation::calculateVertexLinks() const {
                 // tetrahedra, and so already belongs to a boundary component.
             }
         } else {
-            // The vertex link has no boundary faces, which means this
+            // The vertex link has no boundary triangles, which means this
             // vertex is not part of any boundary tetrahedra.
             // Let's see what we've got.
             if ((! vertex->link_->isValid()) || vertex->link_->isIdeal()) {

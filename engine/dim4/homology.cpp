@@ -46,20 +46,20 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH1() const {
 
     // Build a presentation matrix.
     // Each non-boundary not-in-forest tetrahedron is a generator.
-    // Each non-boundary face is a relation.
+    // Each non-boundary triangle is a relation.
     long nBdryTets = 0;
-    long nBdryFaces = 0;
+    long nBdryTriangles = 0;
     for (BoundaryComponentIterator bit = boundaryComponents_.begin();
             bit != boundaryComponents_.end(); ++bit) {
         nBdryTets += (*bit)->tetrahedra_.size();
-        nBdryFaces += (*bit)->faces_.size();
+        nBdryTriangles += (*bit)->triangles_.size();
     }
 
     // Cast away all unsignedness in case we run into problems subtracting.
     long nGens = static_cast<long>(tetrahedra_.size()) - nBdryTets
         - static_cast<long>(pentachora_.size())
         + static_cast<long>(components_.size());
-    long nRels = static_cast<long>(faces_.size()) - nBdryFaces;
+    long nRels = static_cast<long>(triangles_.size()) - nBdryTriangles;
 
     NMatrixInt pres(nRels, nGens);
 
@@ -71,18 +71,19 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH1() const {
         if (! ((*tit)->isBoundary() || (*tit)->inDualMaximalForest()))
             genIndex[tit - tetrahedra_.begin()] = i++;
 
-    // Run through each face and put the corresponding relations into
+    // Run through each triangle and put the corresponding relations into
     // the matrix.
-    std::deque<Dim4FaceEmbedding>::const_iterator embit;
+    std::deque<Dim4TriangleEmbedding>::const_iterator embit;
     Dim4Pentachoron* pent;
     int facet;
     Dim4Tetrahedron* tet;
     i = 0;
-    for (FaceIterator fit = faces_.begin(); fit != faces_.end(); ++fit) {
+    for (TriangleIterator fit = triangles_.begin(); fit != triangles_.end();
+            ++fit) {
         if ((*fit)->isBoundary())
             continue;
 
-        // Put in the relation corresponding to this face.
+        // Put in the relation corresponding to this triangle.
         for (embit = (*fit)->emb_.begin();
                 embit != (*fit)->emb_.end(); ++embit) {
             pent = (*embit).getPentachoron();
@@ -96,7 +97,7 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH1() const {
             // from embedding tet->emb_[0] to embedding tet->emb_[1].
             //
             // Test whether we are traversing this dual edge forwards or
-            // backwards as we walk around the face (*fit).
+            // backwards as we walk around the triangle (*fit).
             if ((tet->emb_[0].getPentachoron() == pent) &&
                     (tet->emb_[0].getTetrahedron() == facet))
                 pres.entry(i, genIndex[tet->markedIndex()]) += 1;
@@ -134,13 +135,13 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH2() const {
     unsigned long row, col;
     Dim4Pentachoron* pent;
     Dim4Edge* edge;
-    Dim4Face* face;
+    Dim4Triangle* triangle;
     Dim4Tetrahedron* tet;
     NPerm5 perm, tmpPerm;
-    int pentEdge, pentFace;
+    int pentEdge, pentTriangle;
 
     unsigned long nEdges = getNumberOfEdges();
-    unsigned long nFaces = getNumberOfFaces();
+    unsigned long nTriangles = getNumberOfTriangles();
     unsigned long nTetrahedra = getNumberOfTetrahedra();
 
     // Build a translation table from edge numbers -> "internal edge" indices.
@@ -150,12 +151,13 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH2() const {
         if (! getEdge(i)->isBoundary())
             edgeInternalIndex[i] = nEdgesInternal++;
 
-    // Build a translation table from face numbers -> "internal face" indices.
-    unsigned long nFacesInternal = 0;
-    unsigned long* faceInternalIndex = new unsigned long[nFaces];
-    for (i = 0; i < nFaces; ++i)
-        if (! getFace(i)->isBoundary())
-            faceInternalIndex[i] = nFacesInternal++;
+    // Build a translation table from triangle numbers -> "internal triangle"
+    // indices.
+    unsigned long nTrianglesInternal = 0;
+    unsigned long* triangleInternalIndex = new unsigned long[nTriangles];
+    for (i = 0; i < nTriangles; ++i)
+        if (! getTriangle(i)->isBoundary())
+            triangleInternalIndex[i] = nTrianglesInternal++;
 
     // Count the number of internal tetrahedra.
     unsigned long nTetrahedraInternal = 0;
@@ -168,24 +170,24 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH2() const {
     // --------------------------------------
     //
     // Rows: Internal dual polyhedra
-    // Cols: Internal dual faces
-    NMatrixInt bdry32(nEdgesInternal, nFacesInternal);
+    // Cols: Internal dual triangles
+    NMatrixInt bdry32(nEdgesInternal, nTrianglesInternal);
 
-    // Build the boundary map, one dual face at a time.
+    // Build the boundary map, one dual triangle at a time.
     col = 0;
-    for (i = 0; i < nFaces; ++i) {
-        face = getFace(i);
-        if (face->isBoundary())
+    for (i = 0; i < nTriangles; ++i) {
+        triangle = getTriangle(i);
+        if (triangle->isBoundary())
             continue;
 
-        // The dual face surrounding this face bounds the dual polyhedron
-        // surrounding each of its edges.
-        pent = face->getEmbedding(0).getPentachoron();
-        perm = face->getEmbedding(0).getVertices();
+        // The dual 2-face surrounding this triangle bounds the dual
+        // polyhedron surrounding each of its edges.
+        pent = triangle->getEmbedding(0).getPentachoron();
+        perm = triangle->getEmbedding(0).getVertices();
 
         for (j = 0; j < 3; ++j) {
-            // Edge j of the face is opposite vertex j of the face.
-            edge = face->getEdge(j);
+            // Edge j of the triangle is opposite vertex j of the triangle.
+            edge = triangle->getEdge(j);
             if (edge->isBoundary())
                 continue;
 
@@ -195,7 +197,7 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH2() const {
             tmpPerm = NPerm5(2, j) * perm.inverse() *
                 pent->getEdgeMapping(pentEdge);
             // tmpPerm maps (2,3,4) -> (2,3,4), and maps the dual edge into
-            // the dual face with the correct orientation.
+            // the dual 2-face with the correct orientation.
             // Force (0,1) to map to (0,1), and then read off the sign.
             if (tmpPerm[0] != 0)
                 tmpPerm = tmpPerm * NPerm5(0, 1);
@@ -209,9 +211,9 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH2() const {
     // Boundary map from 2-cycles to 1-cycles
     // --------------------------------------
     //
-    // Rows: Internal dual faces
+    // Rows: Internal dual 2-faces
     // Cols: Internal dual edges
-    NMatrixInt bdry21(nFacesInternal, nTetrahedraInternal);
+    NMatrixInt bdry21(nTrianglesInternal, nTetrahedraInternal);
 
     // Build the boundary map, one dual edge at a time.
     col = 0;
@@ -220,23 +222,23 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH2() const {
         if (tet->isBoundary())
             continue;
 
-        // The dual edge running through this tetrahedron bounds the dual face
-        // surrounding each of its faces.
+        // The dual edge running through this tetrahedron bounds the dual 2-face
+        // surrounding each of its triangles.
         pent = tet->getEmbedding(0).getPentachoron();
         perm = tet->getEmbedding(0).getVertices();
 
         for (j = 0; j < 4; ++j) {
-            // Face j of the tetrahedron is opposite vertex j of the
+            // Triangle j of the tetrahedron is opposite vertex j of the
             // tetrahedron.
-            face = tet->getFace(j);
-            if (face->isBoundary())
+            triangle = tet->getTriangle(j);
+            if (triangle->isBoundary())
                 continue;
 
-            row = faceInternalIndex[faceIndex(face)];
-            pentFace = Dim4Face::faceNumber
+            row = triangleInternalIndex[triangleIndex(triangle)];
+            pentTriangle = Dim4Triangle::triangleNumber
                 [perm[(j+1) % 4]][perm[(j+2) % 4]][perm[(j+3) % 4]];
             bdry21.entry(row, col) +=
-                (pent->getFaceMapping(pentFace)[4] == perm[4] ? 1 : -1);
+                (pent->getTriangleMapping(pentTriangle)[4] == perm[4] ? 1 : -1);
         }
 
         ++col;
@@ -246,7 +248,7 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH2() const {
     // Finished building boundary maps
     // -------------------------------
     delete[] edgeInternalIndex;
-    delete[] faceInternalIndex;
+    delete[] triangleInternalIndex;
 
     // --------------------------------------
     // Pair of boundary maps to abelian group

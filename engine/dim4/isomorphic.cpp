@@ -83,7 +83,7 @@ unsigned long Dim4Triangulation::findIsomorphisms(
             return 0;
         if (tetrahedra_.size() != other.tetrahedra_.size())
             return 0;
-        if (faces_.size() != other.faces_.size())
+        if (triangles_.size() != other.triangles_.size())
             return 0;
         if (edges_.size() != other.edges_.size())
             return 0;
@@ -102,15 +102,16 @@ unsigned long Dim4Triangulation::findIsomorphisms(
         std::map<unsigned long, unsigned long>::iterator mapIt;
 
         {
-            FaceIterator it;
-            for (it = faces_.begin(); it != faces_.end(); it++) {
+            TriangleIterator it;
+            for (it = triangles_.begin(); it != triangles_.end(); it++) {
                 // Find this degree, or insert it with frequency 0 if it's
                 // not already present.
                 mapIt = map1.insert(
                     std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
                 (*mapIt).second++;
             }
-            for (it = other.faces_.begin(); it != other.faces_.end(); it++) {
+            for (it = other.triangles_.begin(); it != other.triangles_.end();
+                    it++) {
                 mapIt = map2.insert(
                     std::make_pair((*it)->getNumberOfEmbeddings(), 0)).first;
                 (*mapIt).second++;
@@ -445,12 +446,12 @@ unsigned long Dim4Triangulation::findIsomorphisms(
 
 bool Dim4Triangulation::compatiblePents(
         Dim4Pentachoron* src, Dim4Pentachoron* dest, NPerm5 p) {
-    for (int face = 0; face < 10; face++)
-        if (src->getFace(face)->getNumberOfEmbeddings() !=
-                dest->getFace(Dim4Face::faceNumber
-                    [p[Dim4Face::faceVertex[face][0]]]
-                    [p[Dim4Face::faceVertex[face][1]]]
-                    [p[Dim4Face::faceVertex[face][2]]])
+    for (int triangle = 0; triangle < 10; triangle++)
+        if (src->getTriangle(triangle)->getNumberOfEmbeddings() !=
+                dest->getTriangle(Dim4Triangle::triangleNumber
+                    [p[Dim4Triangle::triangleVertex[triangle][0]]]
+                    [p[Dim4Triangle::triangleVertex[triangle][1]]]
+                    [p[Dim4Triangle::triangleVertex[triangle][2]]])
                 ->getNumberOfEmbeddings())
             return false;
 

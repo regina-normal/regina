@@ -343,9 +343,9 @@ NTriangulation* NNormalHypersurface::triangulate() const {
         for (type = 0; type < 10; ++type) {
             e0 = Dim4Edge::edgeVertex[type][0];
             e1 = Dim4Edge::edgeVertex[type][1];
-            f0 = Dim4Face::faceVertex[type][0];
-            f1 = Dim4Face::faceVertex[type][1];
-            f2 = Dim4Face::faceVertex[type][2];
+            f0 = Dim4Triangle::triangleVertex[type][0];
+            f1 = Dim4Triangle::triangleVertex[type][1];
+            f2 = Dim4Triangle::triangleVertex[type][2];
 
             for (pieceNumber = 0;
                     pieceNumber < getPrismCoord(pent, type).longValue();

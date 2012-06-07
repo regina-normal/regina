@@ -44,7 +44,7 @@
 namespace regina {
 
 class Dim4Tetrahedron;
-class Dim4Face;
+class Dim4Triangle;
 class Dim4Edge;
 class Dim4Vertex;
 class Dim4Component;
@@ -73,13 +73,6 @@ class Dim4Triangulation;
  * Dim4Trianguation::removePentachoronAt() or
  * Dim4Triangulation::removeAllPentachora(); these routines will
  * automatically destroy the pentachora as they are removed.
- *
- * It is probably worth noting the difference between a \e face and
- * a \e facet.  For our purposes, a \e face is a simplex in the 2-skeleton
- * of a 4-manifold triangulation, whereas a \e facet is a simplex in the
- * 3-skeleton of a 4-manifold triangulation.  In particular, a facet is one
- * of the five tetrahedra that forms the boundary of a pentachoron (hence
- * the name \e facet).
  */
 class REGINA_API Dim4Pentachoron :
         public ShareableObject, public NMarkedElement {
@@ -108,9 +101,9 @@ class REGINA_API Dim4Pentachoron :
         Dim4Edge* edge_[10];
             /**< Edges in the triangulation skeleton that are
                  edges of this pentachoron. */
-        Dim4Face* face_[10];
-            /**< 2-dimensional faces in the triangulation skeleton that are
-                 faces of this pentachoron. */
+        Dim4Triangle* triangle_[10];
+            /**< Triangles in the triangulation skeleton that are
+                 triangles of this pentachoron. */
         Dim4Tetrahedron* tet_[5];
             /**< Tetrahedra in the triangulation skeleton that are
                  facets of this pentachoron. */
@@ -123,11 +116,11 @@ class REGINA_API Dim4Pentachoron :
             /**< Maps (0,1) to the vertices of this pentachoron that form
                  each edge whilst mapping (2,3,4) in a suitably "orientation-
                  preserving" way, as described in getEdgeMapping(). */
-        NPerm5 faceMapping_[10];
+        NPerm5 triangleMapping_[10];
             /**< Maps (0,1,2) to the vertices of this pentachoron that form
-                 each 2-dimensional face whilst mapping (3,4) in a suitably
+                 each triangle whilst mapping (3,4) in a suitably
                  "orientation-preserving" way, as described in
-                 getFaceMapping(). */
+                 getTriangleMapping(). */
         NPerm5 tetMapping_[5];
             /**< Maps (0,1,2,3) to the vertices of this pentachoron that form
                  each 3-dimensional facet, as described in
@@ -179,14 +172,14 @@ class REGINA_API Dim4Pentachoron :
         /**
          * Returns a permutation describing the correspondence between
          * vertices of this pentachoron and vertices of the adjacent
-         * pentachoron glued to the given face of this pentachoron.
+         * pentachoron glued to the given facet of this pentachoron.
          *
          * If we call this permutation \c p, then for each vertex \c v of this
          * pentachoron, <tt>p[v]</tt> will be the vertex of the adjacent
          * pentachoron that is identified with \c v according to the gluing
-         * along the given face of this pentachoron.
+         * along the given facet of this pentachoron.
          *
-         * \pre The given face of this pentachoron has some pentachoron
+         * \pre The given facet of this pentachoron has some pentachoron
          * (possibly this one) glued to it.
          *
          * @param facet the facet of this pentachoron whose gluing we
@@ -201,7 +194,7 @@ class REGINA_API Dim4Pentachoron :
          * Examines the pentachoron glued to the given facet of this
          * pentachoron, and returns the corresponding facet of that
          * pentachoron.  That is, the returned facet of the adjacent
-         * pentachoron is glued to the given face of this pentachoron.
+         * pentachoron is glued to the given facet of this pentachoron.
          *
          * \pre The given facet of this pentachoron has some pentachoron
          * (possibly this one) glued to it.
@@ -304,32 +297,28 @@ class REGINA_API Dim4Pentachoron :
          *
          * @param edge the edge of this pentachoron to examine.
          * This should be between 0 and 9 inclusive.  Note that edge \c i
-         * lies opposite face \c i.
+         * lies opposite triangle \c i.
          * @return the edge of the skeleton corresponding to the
          * requested pentachoron edge.
          */
         Dim4Edge* getEdge(int edge) const;
         /**
-         * Returns the face in the 4-manifold triangulation skeleton
-         * corresponding to the given face of this pentachoron.
-         * Note that this is a piece of the 2-skeleton (as opposed to a
-         * \e facet, which is a piece of the 3-skeleton).
+         * Returns the triangle in the 4-manifold triangulation skeleton
+         * corresponding to the given triangle of this pentachoron.
          *
-         * See Dim4Edge::faceNumber and Dim4Edge::faceVertex for
-         * the conventions of how faces are numbered within a pentachoron.
+         * See Dim4Edge::triangleNumber and Dim4Edge::triangleVertex for
+         * the conventions of how triangles are numbered within a pentachoron.
          *
-         * @param face the face of this pentachoron to examine.
-         * This should be between 0 and 9 inclusive.  Note that face \c i
+         * @param triang the triangle of this pentachoron to examine.
+         * This should be between 0 and 9 inclusive.  Note that triangle \c i
          * lies opposite edge \c i.
-         * @return the face of the skeleton corresponding to the
-         * requested pentachoron face.
+         * @return the triangle of the skeleton corresponding to the
+         * requested pentachoron triangle.
          */
-        Dim4Face* getFace(int face) const;
+        Dim4Triangle* getTriangle(int triang) const;
         /**
          * Returns the tetrahedron in the 4-manifold triangulation skeleton
          * corresponding to the given facet of this pentachoron.
-         * Note that this is a piece of the 3-skeleton (as opposed to a
-         * \e face, which is a piece of the 2-skeleton).
          *
          * @param tet the tetrahedral facet of this pentachoron to examine.
          * This should be between 0 and 4 inclusive, where facet \c i
@@ -389,7 +378,7 @@ class REGINA_API Dim4Pentachoron :
          * getEdgeMapping()).
          *
          * The images of (2,3,4) under the returned permutation imply an
-         * orientation for the pentachoron face opposite the given edge.
+         * orientation for the pentachoron triangle opposite the given edge.
          * These orientations will be consistent for all pentachora
          * containing the given edge, if this is possible (i.e., if the edge
          * link is orientable, which is true for any valid triangulation).
@@ -404,55 +393,55 @@ class REGINA_API Dim4Pentachoron :
          */
         NPerm5 getEdgeMapping(int edge) const;
         /**
-         * Examines the given face of this pentachoron, and returns a
+         * Examines the given triangle of this pentachoron, and returns a
          * permutation that maps the "canonical" vertices (0,1,2) of the
-         * corresponding face of the triangulation to the matching vertices
+         * corresponding triangle of the triangulation to the matching vertices
          * of this pentachoron.  This permutation also maps (3,4) to the
          * remaining pentachoron vertices in an "orientation-preserving"
          * way, as described below.
          *
-         * In detail:  Suppose several faces of several pentachora are
+         * In detail:  Suppose several triangles of several pentachora are
          * identified within the overall 4-manifold triangulation.  We
-         * call this a single "face of the triangulation", and arbitrarily
+         * call this a single "triangle of the triangulation", and arbitrarily
          * label its vertices (0,1,2).  This routine then maps the vertices
-         * (0,1,2) of this face of the triangulation to the individual
-         * vertices of this pentachoron that make up the given face.
+         * (0,1,2) of this triangle of the triangulation to the individual
+         * vertices of this pentachoron that make up the given triangle.
          *
-         * Because we are passing the argument \a face, we already know
+         * Because we are passing the argument \a triang, we already know
          * \e which vertices of this pentachoron are involved.  What this
          * routine tells us is the \a order in which they appear to form the
-         * overall face of the triangulation.
+         * overall triangle of the triangulation.
          *
-         * As a consequence:  Consider some collection of pentachoron faces
-         * that are identified together as a single face of the triangulation,
-         * and choose some \a i from the set {0,1,2}.  Then the vertices
-         * <tt>getFaceMapping(...)[i]</tt> of the individual pentachora
-         * are all identified together, since they all become the same
-         * vertex of the same face of the triangulation (assuming of
-         * course that we pass the correct face number in each case to
-         * getFaceMapping()).
+         * As a consequence:  Consider some collection of pentachoron triangles
+         * that are identified together as a single triangle of the
+         * triangulation, and choose some \a i from the set {0,1,2}.  Then the
+         * vertices <tt>getTriangleMapping(...)[i]</tt> of the individual
+         * pentachora are all identified together, since they all become the
+         * same vertex of the same triangle of the triangulation (assuming of
+         * course that we pass the correct triangle number in each case to
+         * getTriangleMapping()).
          *
          * The images of 3 and 4 under the permutations that are returned
          * have the following properties.  In each pentachoron, the images
          * of 3 and 4 under this map form a directed edge of the pentachoron
          * (running from the image of vertex 3 to the image of vertex 4).
-         * For any given face of the triangulation, these corresponding
-         * directed edges together form an ordered path within the
-         * triangulation that circles the common face of the triangulation (like
-         * a face link, except that it is not near to the face and so might
-         * intersect itself).  Furthermore, if we consider the individual
+         * For any given triangle of the triangulation, these corresponding
+         * directed edges together form an ordered path within the triangulation
+         * that circles the common triangle of the triangulation (like
+         * a triangle link, except that it is not near to the triangle and so
+         * might intersect itself).  Furthermore, if we consider the individual
          * pentachora in the order in which they appear in the list
-         * Dim4Face::getEmbeddings(), these corresponding directed edges
+         * Dim4Triangle::getEmbeddings(), these corresponding directed edges
          * appear in order from the start of this path to the finish
-         * (for internal faces this path is actually a cycle, and the
+         * (for internal triangles this path is actually a cycle, and the
          * starting point is arbitrary).
          *
-         * @param face the face of this pentachoron to examine.
+         * @param triang the triangle of this pentachoron to examine.
          * This should be between 0 and 9 inclusive.
-         * @return a mapping from vertices (0,1,2) of the requested face
+         * @return a mapping from vertices (0,1,2) of the requested triangle
          * to the vertices of this pentachoron.
          */
-        NPerm5 getFaceMapping(int face) const;
+        NPerm5 getTriangleMapping(int triang) const;
         /**
          * Examines the given tetrahedral facet of this pentachoron, and
          * returns a mapping from the "canonical" vertices of the corresponding
@@ -514,7 +503,7 @@ class REGINA_API Dim4Pentachoron :
         Dim4Pentachoron(Dim4Triangulation* tri);
         /**
          * Creates a new pentachoron with the given description and
-         * no faces joined to anything.
+         * no facets joined to anything.
          *
          * @param desc the description to give the new pentachoron.
          * @param tri the triangulation to which the new pentachoron belongs.
@@ -579,10 +568,10 @@ inline Dim4Edge* Dim4Pentachoron::getEdge(int edge) const {
     return edge_[edge];
 }
 
-inline Dim4Face* Dim4Pentachoron::getFace(int face) const {
+inline Dim4Triangle* Dim4Pentachoron::getTriangle(int triang) const {
     if (! tri_->calculatedSkeleton_)
         tri_->calculateSkeleton();
-    return face_[face];
+    return triangle_[triang];
 }
 
 inline Dim4Tetrahedron* Dim4Pentachoron::getTetrahedron(int tet) const {
@@ -603,10 +592,10 @@ inline NPerm5 Dim4Pentachoron::getEdgeMapping(int edge) const {
     return edgeMapping_[edge];
 }
 
-inline NPerm5 Dim4Pentachoron::getFaceMapping(int face) const {
+inline NPerm5 Dim4Pentachoron::getTriangleMapping(int triang) const {
     if (! tri_->calculatedSkeleton_)
         tri_->calculateSkeleton();
-    return faceMapping_[face];
+    return triangleMapping_[triang];
 }
 
 inline NPerm5 Dim4Pentachoron::getTetrahedronMapping(int tet) const {

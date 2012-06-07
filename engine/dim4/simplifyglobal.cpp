@@ -47,14 +47,14 @@ bool Dim4Triangulation::intelligentSimplify() {
         Dim4Triangulation* use;
 
         // Variables for selecting random 3-3 moves.
-        std::vector<Dim4Face*> threeThreeAvailable;
-        Dim4Face* threeThreeChoice;
+        std::vector<Dim4Triangle*> threeThreeAvailable;
+        Dim4Triangle* threeThreeChoice;
 
         unsigned long threeThreeAttempts;
         unsigned long threeThreeCap;
 
-        Dim4Face* face;
-        FaceIterator fit;
+        Dim4Triangle* triangle;
+        TriangleIterator fit;
 
         while (true) {
             // --- Random 3-3 moves ---
@@ -70,12 +70,13 @@ bool Dim4Triangulation::intelligentSimplify() {
             while (true) {
                 // Calculate the list of available 3-3 moves.
                 threeThreeAvailable.clear();
-                // Use getFaces() to ensure the skeleton has been calculated.
-                for (fit = use->getFaces().begin();
-                        fit != use->getFaces().end(); ++fit) {
-                    face = *fit;
-                    if (use->threeThreeMove(face, true, false))
-                        threeThreeAvailable.push_back(face);
+                // Use getTriangles() to ensure the skeleton has been
+                // calculated.
+                for (fit = use->getTriangles().begin();
+                        fit != use->getTriangles().end(); ++fit) {
+                    triangle = *fit;
+                    if (use->threeThreeMove(triangle, true, false))
+                        threeThreeAvailable.push_back(triangle);
                 }
 
                 // Increment threeThreeCap if needed.
@@ -118,7 +119,7 @@ bool Dim4Triangulation::intelligentSimplify() {
 
             if (hasBoundaryTetrahedra()) {
                 // Clone again, always -- we don't want to create gratuitous
-                // boundary faces if they won't be of any help.
+                // boundary facets if they won't be of any help.
                 use = new Dim4Triangulation(*this);
 
                 // Perform every book opening move we can find.

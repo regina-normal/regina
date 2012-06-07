@@ -70,7 +70,7 @@ namespace {
     // A helper routine that describes the mapping between subcomplexes
     // in a 3-3 move.
     //
-    // For each three-pentachoron subcomplex, the common face is 012.
+    // For each three-pentachoron subcomplex, the common triangle is 012.
     // The pentachora are joined as follows:
     //   P0 : 0124 <-> P1 : 0123
     //   P1 : 0124 <-> P2 : 0123
@@ -260,8 +260,9 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
     return true;
 }
 
-bool Dim4Triangulation::threeThreeMove(Dim4Face* f, bool check, bool perform) {
-    const std::deque<Dim4FaceEmbedding>& embs = f->getEmbeddings();
+bool Dim4Triangulation::threeThreeMove(Dim4Triangle* f, bool check,
+        bool perform) {
+    const std::deque<Dim4TriangleEmbedding>& embs = f->getEmbeddings();
     if (check) {
         // f must be valid and non-boundary.
         if (f->isBoundary() || ! f->isValid())
@@ -273,7 +274,7 @@ bool Dim4Triangulation::threeThreeMove(Dim4Face* f, bool check, bool perform) {
 
     // f must meet three distinct pentachora.  Find these pentachora.
     Dim4Pentachoron* oldPent[3];
-    NPerm5 oldVertices[3]; // 012 -> face, 34 -> link
+    NPerm5 oldVertices[3]; // 012 -> triangle, 34 -> link
     int i,j;
     for (i = 0; i < 3; ++i) {
         oldPent[i] = embs[i].getPentachoron();
@@ -454,8 +455,8 @@ bool Dim4Triangulation::openBook(Dim4Tetrahedron* t, bool check, bool perform) {
     const Dim4TetrahedronEmbedding& emb = t->getEmbedding(0);
     Dim4Pentachoron* pent = emb.getPentachoron();
 
-    // Check that the face has exactly two boundary edges.
-    // Note that this will imply that the face joins two tetrahedra.
+    // Check that the triangle has exactly two boundary edges.
+    // Note that this will imply that the triangle joins two tetrahedra.
     if (check) {
         int i;
         for (i = 0; i < 4; ++i)
@@ -465,44 +466,44 @@ bool Dim4Triangulation::openBook(Dim4Tetrahedron* t, bool check, bool perform) {
             if (! t->getEdge(i)->isValid())
                 return false;
         for (i = 0; i < 4; ++i)
-            if (! t->getFace(i)->isValid())
+            if (! t->getTriangle(i)->isValid())
                 return false;
 
         NPerm5 vertices = emb.getVertices();
 
         int nBdry = 0;
-        int bdryFace[4];
+        int bdryTriangle[4];
 
         for (i = 0; i < 4; ++i)
-            if (t->getFace(i)->isBoundary())
-                bdryFace[nBdry++] = i;
+            if (t->getTriangle(i)->isBoundary())
+                bdryTriangle[nBdry++] = i;
 
         if (nBdry < 1 || nBdry > 3)
             return false;
 
         if (nBdry == 2) {
             // Remaining edge is non-boundary.
-            int edge = NEdge::edgeNumber[bdryFace[0]][bdryFace[1]];
+            int edge = NEdge::edgeNumber[bdryTriangle[0]][bdryTriangle[1]];
             if (t->getEdge(edge)->isBoundary())
                 return false;
 
-            // Remaining two faces are not identified.
-            if (t->getFace(NEdge::edgeVertex[5 - edge][0]) ==
-                    t->getFace(NEdge::edgeVertex[5 - edge][1]))
+            // Remaining two triangles are not identified.
+            if (t->getTriangle(NEdge::edgeVertex[5 - edge][0]) ==
+                    t->getTriangle(NEdge::edgeVertex[5 - edge][1]))
                 return false;
         } else if (nBdry == 1) {
             // Remaining vertex is non-boundary.
-            if (t->getVertex(bdryFace[0])->isBoundary())
+            if (t->getVertex(bdryTriangle[0])->isBoundary())
                 return false;
 
             // No two of the remaining three edges are identified.
             Dim4Edge* internal[3];
             internal[0] = t->getEdge(
-                NEdge::edgeNumber[bdryFace[0]][(bdryFace[0] + 1) % 4]);
+                NEdge::edgeNumber[bdryTriangle[0]][(bdryTriangle[0] + 1) % 4]);
             internal[1] = t->getEdge(
-                NEdge::edgeNumber[bdryFace[0]][(bdryFace[0] + 2) % 4]);
+                NEdge::edgeNumber[bdryTriangle[0]][(bdryTriangle[0] + 2) % 4]);
             internal[2] = t->getEdge(
-                NEdge::edgeNumber[bdryFace[0]][(bdryFace[0] + 3) % 4]);
+                NEdge::edgeNumber[bdryTriangle[0]][(bdryTriangle[0] + 3) % 4]);
 
             if (internal[0] == internal[1] || internal[1] == internal[2] ||
                     internal[2] == internal[0])
@@ -526,13 +527,13 @@ bool Dim4Triangulation::shellBoundary(Dim4Pentachoron* p,
         if (! calculatedSkeleton_)
             calculateSkeleton();
 
-        // All edges and faces must be valid.
+        // All edges and triangles must be valid.
         int i;
         for (i = 0; i < 10; ++i)
             if (! p->getEdge(i)->isValid())
                 return false;
         for (i = 0; i < 10; ++i)
-            if (! p->getFace(i)->isValid())
+            if (! p->getTriangle(i)->isValid())
                 return false;
 
         // Precisely 1, 2, 3 or 4 boundary facets.
@@ -567,22 +568,22 @@ bool Dim4Triangulation::shellBoundary(Dim4Pentachoron* p,
             if (p->getEdge(i)->isBoundary())
                 return false;
 
-            // No two of the remaining three faces identified.
-            Dim4Face* internal[3];
+            // No two of the remaining three triangles identified.
+            Dim4Triangle* internal[3];
             int j = 0;
             for (i = 0; i < 5; ++i)
                 if (i != bdry[0] && i != bdry[1])
-                    internal[j++] = p->getFace(
-                        Dim4Face::faceNumber[bdry[0]][bdry[1]][i]);
+                    internal[j++] = p->getTriangle(
+                        Dim4Triangle::triangleNumber[bdry[0]][bdry[1]][i]);
 
             if (internal[0] == internal[1] ||
                     internal[1] == internal[2] ||
                     internal[2] == internal[0])
                 return false;
         } else if (nBdry == 3) {
-            // Opposite face not in boundary.
-            i = Dim4Face::faceNumber[bdry[0]][bdry[1]][bdry[2]];
-            if (p->getFace(i)->isBoundary())
+            // Opposite triangle not in boundary.
+            i = Dim4Triangle::triangleNumber[bdry[0]][bdry[1]][bdry[2]];
+            if (p->getTriangle(i)->isBoundary())
                 return false;
 
             // Remaining two facets not identified.
@@ -617,7 +618,7 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
         // CHECK 0: The pentachora around the edge must be distinct.
         // We check this as follows:
         //
-        // - None of the faces containing edge e must contain e twice.
+        // - None of the triangles containing edge e must contain e twice.
         //   We throw this into check 2 below (see points [0a] and [0b]).
         //
         // - The only remaining bad cases involve some tetrahedron with
@@ -628,7 +629,7 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
         //   tetrahedra (which give a bad chain of boundary bigons).
 
         // CHECK 1: Can we collapse the edge to a point (which in turn
-        // collapses faces to bigons and so on up the dimensions)?
+        // collapses triangles to bigons and so on up the dimensions)?
 
         // The vertices must be distinct.
         if (e->getVertex(0) == e->getVertex(1))
@@ -650,7 +651,7 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
                 return false;
         }
 
-        // CHECK 2: Faces containing the edge have now become bigons.
+        // CHECK 2: Triangles containing the edge have now become bigons.
         // Can we flatten each bigon to an edge (leaving behind
         // triangular pillows behind and so on up the dimensions)?
         //
@@ -695,8 +696,8 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
             long* depth = new long[nEdges + 1];
 
             Dim4Edge *upper, *lower;
-            Dim4Face* face;
-            FaceIterator fit;
+            Dim4Triangle* triangle;
+            TriangleIterator fit;
             long id1, id2;
             int i;
 
@@ -706,26 +707,26 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
                 std::fill(parent, parent + nEdges + 1, -1);
                 std::fill(depth, depth + nEdges + 1, 0);
 
-                // Run through all boundary faces containing e.
-                for (fit = faces_.begin(); fit != faces_.end(); ++fit) {
-                    face = *fit;
-                    if (! face->isBoundary())
+                // Run through all boundary triangles containing e.
+                for (fit = triangles_.begin(); fit != triangles_.end(); ++fit) {
+                    triangle = *fit;
+                    if (! triangle->isBoundary())
                         continue;
 
                     for (i = 0; i < 3; ++i)
-                        if (face->getEdge(i) == e)
+                        if (triangle->getEdge(i) == e)
                             break;
                     if (i == 3)
                         continue;
 
-                    // This face contains edge e (specifically, as edge i
-                    // of this face).
+                    // This triangle contains edge e (specifically, as edge i
+                    // of this triangle).
 
-                    upper = face->getEdge((i + 1) % 3);
-                    lower = face->getEdge((i + 2) % 3);
+                    upper = triangle->getEdge((i + 1) % 3);
+                    lower = triangle->getEdge((i + 2) % 3);
 
                     if (upper == e || lower == e) {
-                        // [0a]: Check 0 fails; this face contains edge e
+                        // [0a]: Check 0 fails; this triangle contains edge e
                         // more than once.
                         delete[] depth;
                         delete[] parent;
@@ -749,26 +750,26 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
             std::fill(parent, parent + nEdges + 1, -1);
             std::fill(depth, depth + nEdges + 1, 0);
 
-            // Run through all internal faces containing e.
-            for (fit = faces_.begin(); fit != faces_.end(); ++fit) {
-                face = *fit;
-                if (face->isBoundary())
+            // Run through all internal triangles containing e.
+            for (fit = triangles_.begin(); fit != triangles_.end(); ++fit) {
+                triangle = *fit;
+                if (triangle->isBoundary())
                     continue;
 
                 for (i = 0; i < 3; ++i)
-                    if (face->getEdge(i) == e)
+                    if (triangle->getEdge(i) == e)
                         break;
                 if (i == 3)
                     continue;
 
-                // This face contains edge e (specifically, as edge i
-                // of this face).
+                // This triangle contains edge e (specifically, as edge i
+                // of this triangle).
 
-                upper = face->getEdge((i + 1) % 3);
-                lower = face->getEdge((i + 2) % 3);
+                upper = triangle->getEdge((i + 1) % 3);
+                lower = triangle->getEdge((i + 2) % 3);
 
                 if (upper == e || lower == e) {
-                    // [0b]: Check 0 fails; this face contains edge e
+                    // [0b]: Check 0 fails; this triangle contains edge e
                     // more than once.
                     delete[] depth;
                     delete[] parent;
@@ -796,28 +797,28 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
         }
 
         // CHECK 3: Tetrahedra containing the edge have now become
-        // triangular pillows.  Can we flatten each pillow to a face
+        // triangular pillows.  Can we flatten each pillow to a triangle
         // (leaving behind "tetrahedral 4-pillows" in higher dimensions)?
         //
         // We deal with this the same way we deal with flattening bigons
         // to edges.  Again, we must treat internal pillows and
         // boundary pillows separately.
         {
-            long nFaces = faces_.size();
+            long nTriangles = triangles_.size();
 
-            // The parent of each face in the union-find tree, or -1 if
-            // a face is at the root of a tree.
+            // The parent of each triangle in the union-find tree, or -1 if
+            // a triangle is at the root of a tree.
             //
-            // This array is indexed by face number in the triangulation.
-            // Although we might not use many of these faces, it's fast
-            // and simple.  The "unified boundary" is assigned the face
-            // number nFaces.
-            long* parent = new long[nFaces + 1];
+            // This array is indexed by triangle number in the triangulation.
+            // Although we might not use many of these triangles, it's fast
+            // and simple.  The "unified boundary" is assigned the triangle
+            // number nTriangles.
+            long* parent = new long[nTriangles + 1];
 
             // The depth of each subtree in the union-find tree.
-            long* depth = new long[nFaces + 1];
+            long* depth = new long[nTriangles + 1];
 
-            Dim4Face *upper, *lower;
+            Dim4Triangle *upper, *lower;
             Dim4Tetrahedron* tet;
             TetrahedronIterator tit;
             long id1, id2;
@@ -826,8 +827,8 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
             if (e->isBoundary()) {
                 // Search for cycles in boundary pillows.
 
-                std::fill(parent, parent + nFaces + 1, -1);
-                std::fill(depth, depth + nFaces + 1, 0);
+                std::fill(parent, parent + nTriangles + 1, -1);
+                std::fill(depth, depth + nTriangles + 1, 0);
 
                 // Run through all boundary tetrahedra containing e.
                 for (tit = tetrahedra_.begin(); tit != tetrahedra_.end();
@@ -845,8 +846,8 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
                     // This tetrahedron contains edge e (specifically, as
                     // edge i of this tetrahedron).
 
-                    upper = tet->getFace(NEdge::edgeVertex[i][0]);
-                    lower = tet->getFace(NEdge::edgeVertex[i][1]);
+                    upper = tet->getTriangle(NEdge::edgeVertex[i][0]);
+                    lower = tet->getTriangle(NEdge::edgeVertex[i][1]);
 
                     if (! unionFindInsert(parent, depth,
                             upper->markedIndex(), lower->markedIndex())) {
@@ -861,8 +862,8 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
 
             // Search for cycles in internal pillows.
 
-            std::fill(parent, parent + nFaces + 1, -1);
-            std::fill(depth, depth + nFaces + 1, 0);
+            std::fill(parent, parent + nTriangles + 1, -1);
+            std::fill(depth, depth + nTriangles + 1, 0);
 
             // Run through all internal tetrahedra containing e.
             for (tit = tetrahedra_.begin(); tit != tetrahedra_.end(); ++tit) {
@@ -879,13 +880,13 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
                 // This tetrahedron contains edge e (specifically, as edge i
                 // of this tetrahedron).
 
-                upper = tet->getFace(NEdge::edgeVertex[i][0]);
-                lower = tet->getFace(NEdge::edgeVertex[i][1]);
+                upper = tet->getTriangle(NEdge::edgeVertex[i][0]);
+                lower = tet->getTriangle(NEdge::edgeVertex[i][1]);
 
                 id1 = ((upper->isBoundary() || ! upper->isValid()) ?
-                    nFaces : upper->markedIndex());
+                    nTriangles : upper->markedIndex());
                 id2 = ((lower->isBoundary() || ! lower->isValid()) ?
-                    nFaces : lower->markedIndex());
+                    nTriangles : lower->markedIndex());
 
                 // This pillow joins nodes id1 and id2 in the graph G.
                 if (! unionFindInsert(parent, depth, id1, id2)) {
@@ -921,7 +922,7 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
             // or -1 if a tetrahedron is at the root of a tree.
             //
             // This array is indexed by tetrahedron number in the triangulation.
-            // The "unified boundary" is assigned the face number nTets.
+            // The "unified boundary" is assigned the triangle number nTets.
             long* parent = new long[nTets + 1];
             std::fill(parent, parent + nTets + 1, -1);
 

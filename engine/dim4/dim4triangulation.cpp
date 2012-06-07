@@ -80,7 +80,7 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
     out << "Size of the skeleton:\n";
     out << "  Pentachora: " << pentachora_.size() << '\n';
     out << "  Tetrahedra: " << tetrahedra_.size() << '\n';
-    out << "  Faces: " << faces_.size() << '\n';
+    out << "  Triangles: " << triangles_.size() << '\n';
     out << "  Edges: " << edges_.size() << '\n';
     out << "  Vertices: " << vertices_.size() << '\n';
     out << '\n';
@@ -143,18 +143,18 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
     }
     out << '\n';
 
-    out << "Faces:\n";
-    out << "  Pent  |  face:  012 013 014 023 024 034 123 124 134 234\n";
-    out << "  ------+------------------------------------------------\n";
+    out << "Triangles:\n";
+    out << "  Pent  |  triangle:  012 013 014 023 024 034 123 124 134 234\n";
+    out << "  ------+----------------------------------------------------\n";
     for (pentPos = 0; pentPos < pentachora_.size(); ++pentPos) {
         pent = pentachora_[pentPos];
-        out << "  " << std::setw(4) << pentPos << "  |        ";
+        out << "  " << std::setw(4) << pentPos << "  |            ";
         for (i = 0; i < 5; ++i)
             for (j = i + 1; j < 5; ++j)
                 for (k = j + 1; k < 5; ++k)
                     out << ' ' << std::setw(3)
-                        << faceIndex(pent->getFace(
-                            Dim4Face::faceNumber[i][j][k]));
+                        << triangleIndex(pent->getTriangle(
+                            Dim4Triangle::triangleNumber[i][j][k]));
         out << '\n';
     }
     out << '\n';
@@ -446,7 +446,7 @@ void Dim4Triangulation::deleteSkeleton() {
         delete *it;
     for (EdgeIterator it = edges_.begin(); it != edges_.end(); ++it)
         delete *it;
-    for (FaceIterator it = faces_.begin(); it != faces_.end(); ++it)
+    for (TriangleIterator it = triangles_.begin(); it != triangles_.end(); ++it)
         delete *it;
     for (TetrahedronIterator it = tetrahedra_.begin();
             it != tetrahedra_.end(); ++it)
@@ -460,7 +460,7 @@ void Dim4Triangulation::deleteSkeleton() {
 
     vertices_.clear();
     edges_.clear();
-    faces_.clear();
+    triangles_.clear();
     tetrahedra_.clear();
     components_.clear();
     boundaryComponents_.clear();

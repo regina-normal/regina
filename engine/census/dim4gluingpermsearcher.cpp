@@ -151,7 +151,8 @@ bool Dim4GluingPermSearcher::PentEdgeState::readData(std::istream& in,
     return true;
 }
 
-void Dim4GluingPermSearcher::PentFaceState::dumpData(std::ostream& out) const {
+void Dim4GluingPermSearcher::PentTriangleState::dumpData(std::ostream& out)
+        const {
     // Be careful with the permutation code, which is an unsigned char
     // but which should be written as an int.
     out << parent << ' ' << rank << ' ' << size << ' '
@@ -160,7 +161,7 @@ void Dim4GluingPermSearcher::PentFaceState::dumpData(std::ostream& out) const {
         << (hadEqualRank ? 1 : 0);
 }
 
-bool Dim4GluingPermSearcher::PentFaceState::readData(std::istream& in,
+bool Dim4GluingPermSearcher::PentTriangleState::readData(std::istream& in,
         unsigned long nStates) {
     in >> parent >> rank >> size;
 
@@ -234,11 +235,11 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(
             if (facet < pairing->dest(facet))
                 order_[orderSize_++] = facet;
 
-    // ---------- Tracking of edge / face equivalence classes ----------
+    // ---------- Tracking of edge / triangle equivalence classes ----------
 
     nEdgeClasses_ = nPent * 10;
     edgeState_ = new PentEdgeState[nPent * 10];
-    // The length of faceStateChanged_[] needs to be at least 10 * orderSize_.
+    // The length of triStateChanged_[] needs to be at least 10 * orderSize_.
     // Just be conservative here -- we know that orderSize_ <= 5 * nPent / 2.
     edgeStateChanged_ = new int[nPent * 25];
     std::fill(edgeStateChanged_, edgeStateChanged_ + nPent * 25, -1);
@@ -252,17 +253,17 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(
         edgeState_[i].bdryTwistOld[0] = edgeState_[i].bdryTwistOld[1] = 0;
     }
 
-    nFaceClasses_ = nPent * 10;
-    faceState_ = new PentFaceState[nPent * 10];
-    // The length of faceStateChanged_[] needs to be at least 5 * orderSize_.
+    nTriangleClasses_ = nPent * 10;
+    triState_ = new PentTriangleState[nPent * 10];
+    // The length of triStateChanged_[] needs to be at least 5 * orderSize_.
     // Just be conservative here -- we know that orderSize_ <= 5 * nPent / 2.
-    faceStateChanged_ = new int[25 * nPent / 2];
-    std::fill(faceStateChanged_, faceStateChanged_ + (25 * nPent / 2), -1);
+    triStateChanged_ = new int[25 * nPent / 2];
+    std::fill(triStateChanged_, triStateChanged_ + (25 * nPent / 2), -1);
 }
 
 Dim4GluingPermSearcher::~Dim4GluingPermSearcher() {
-    delete[] faceState_;
-    delete[] faceStateChanged_;
+    delete[] triState_;
+    delete[] triStateChanged_;
     delete[] edgeState_;
     delete[] edgeStateChanged_;
 
@@ -358,10 +359,10 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
             orderElt_--;
 
 #ifndef DIM4_NO_UNION_FIND
-            // Pull apart edge and face links at the previous level.
+            // Pull apart edge and triangle links at the previous level.
             if (orderElt_ >= minOrder) {
                 splitEdgeClasses();
-                splitFaceClasses();
+                splitTriangleClasses();
             }
 #endif
 
@@ -372,10 +373,10 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
         permIndex(adj) = NPerm4::invS4[permIndex(facet)];
 
 #ifndef DIM4_NO_UNION_FIND
-        // Merge face links and run corresponding tests.
-        if (mergeFaceClasses()) {
-            // We created an invalid face.
-            splitFaceClasses();
+        // Merge triangle links and run corresponding tests.
+        if (mergeTriangleClasses()) {
+            // We created an invalid triangle.
+            splitTriangleClasses();
             continue;
         }
 
@@ -383,12 +384,12 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
         if (mergeEdgeClasses()) {
             // We created an invalid edge.
             splitEdgeClasses();
-            splitFaceClasses();
+            splitTriangleClasses();
             continue;
         }
 #else
         // Is this going to lead to an unwanted triangulation?
-        if (badFaceLink(facet))
+        if (badTriangleLink(facet))
             continue;
 #endif
 
@@ -417,10 +418,10 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
             orderElt_--;
 
 #ifndef DIM4_NO_UNION_FIND
-            // Pull apart edge and face links at the previous level.
+            // Pull apart edge and triangle links at the previous level.
             if (orderElt_ >= minOrder) {
                 splitEdgeClasses();
-                splitFaceClasses();
+                splitTriangleClasses();
             }
 #endif
         } else {
@@ -454,10 +455,10 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
                 orderElt_--;
 
 #ifndef DIM4_NO_UNION_FIND
-                // Pull apart edge and face links at the previous level.
+                // Pull apart edge and triangle links at the previous level.
                 if (orderElt_ >= minOrder) {
                     splitEdgeClasses();
-                    splitFaceClasses();
+                    splitTriangleClasses();
                 }
 #endif
             }
@@ -512,32 +513,32 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
                     << edgeStateChanged_[i] << " at end of search!"
                     << std::endl;
 
-        // And our face classes had better be 10n standalone faces.
-        if (nFaceClasses_ != 10 * nPentachora)
-            std::cerr << "ERROR: nFaceClasses == "
-                << nFaceClasses_ << " at end of search!" << std::endl;
+        // And our triangle classes had better be 10n standalone triangles.
+        if (nTriangleClasses_ != 10 * nPentachora)
+            std::cerr << "ERROR: nTriangleClasses == "
+                << nTriangleClasses_ << " at end of search!" << std::endl;
         for (unsigned i = 0; i < nPentachora * 10; ++i) {
-            if (faceState_[i].parent != -1)
-                std::cerr << "ERROR: faceState[" << i << "].parent == "
-                    << faceState_[i].parent << " at end of search!"
+            if (triState_[i].parent != -1)
+                std::cerr << "ERROR: triState[" << i << "].parent == "
+                    << triState_[i].parent << " at end of search!"
                     << std::endl;
-            if (faceState_[i].rank != 0)
-                std::cerr << "ERROR: faceState[" << i << "].rank == "
-                    << faceState_[i].rank << " at end of search!" << std::endl;
-            if (faceState_[i].size != 1)
-                std::cerr << "ERROR: faceState[" << i << "].size == "
-                    << faceState_[i].size << " at end of search!" << std::endl;
-            if (! faceState_[i].bounded)
-                std::cerr << "ERROR: faceState[" << i << "].bounded == "
+            if (triState_[i].rank != 0)
+                std::cerr << "ERROR: triState[" << i << "].rank == "
+                    << triState_[i].rank << " at end of search!" << std::endl;
+            if (triState_[i].size != 1)
+                std::cerr << "ERROR: triState[" << i << "].size == "
+                    << triState_[i].size << " at end of search!" << std::endl;
+            if (! triState_[i].bounded)
+                std::cerr << "ERROR: triState[" << i << "].bounded == "
                     "false at end of search!" << std::endl;
-            if (faceState_[i].hadEqualRank)
-                std::cerr << "ERROR: faceState[" << i << "].hadEqualRank == "
+            if (triState_[i].hadEqualRank)
+                std::cerr << "ERROR: triState[" << i << "].hadEqualRank == "
                     "true at end of search!" << std::endl;
         }
         for (unsigned i = 0; i < nPentachora * 25 / 2; ++i)
-            if (faceStateChanged_[i] != -1)
-                std::cerr << "ERROR: faceStateChanged[" << i << "] == "
-                    << faceStateChanged_[i] << " at end of search!"
+            if (triStateChanged_[i] != -1)
+                std::cerr << "ERROR: triStateChanged[" << i << "] == "
+                    << triStateChanged_[i] << " at end of search!"
                     << std::endl;
     }
 #endif
@@ -598,7 +599,7 @@ void Dim4GluingPermSearcher::dumpData(std::ostream& out) const {
     }
     out << std::endl;
 
-    // ---------- Tracking of edge / face equivalence classes ----------
+    // ---------- Tracking of edge / triangle equivalence classes ----------
 
     out << nEdgeClasses_ << std::endl;
     for (i = 0; i < 10 * nPent; ++i) {
@@ -612,15 +613,15 @@ void Dim4GluingPermSearcher::dumpData(std::ostream& out) const {
     }
     out << std::endl;
 
-    out << nFaceClasses_ << std::endl;
+    out << nTriangleClasses_ << std::endl;
     for (i = 0; i < 10 * nPent; ++i) {
-        faceState_[i].dumpData(out);
+        triState_[i].dumpData(out);
         out << std::endl;
     }
     for (i = 0; i < 25 * nPent / 2; ++i) {
         if (i)
             out << ' ';
-        out << faceStateChanged_[i];
+        out << triStateChanged_[i];
     }
     out << std::endl;
 }
@@ -631,7 +632,7 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
         use_(use), useArgs_(useArgs), orientation_(0),
         order_(0), orderSize_(0), orderElt_(0),
         nEdgeClasses_(0), edgeState_(0), edgeStateChanged_(0),
-        nFaceClasses_(0), faceState_(0), faceStateChanged_(0) {
+        nTriangleClasses_(0), triState_(0), triStateChanged_(0) {
     if (inputError_)
         return;
 
@@ -693,7 +694,7 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
         inputError_ = true; return;
     }
 
-    // ---------- Tracking of edge / face equivalence classes ----------
+    // ---------- Tracking of edge / triangle equivalence classes ----------
 
     unsigned i;
 
@@ -717,22 +718,22 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
         }
     }
 
-    in >> nFaceClasses_;
-    if (nFaceClasses_ > 10 * nPent) {
+    in >> nTriangleClasses_;
+    if (nTriangleClasses_ > 10 * nPent) {
         inputError_ = true; return;
     }
 
-    faceState_ = new PentFaceState[10 * nPent];
+    triState_ = new PentTriangleState[10 * nPent];
     for (i = 0; i < 10 * nPent; ++i)
-        if (! faceState_[i].readData(in, 10 * nPent)) {
+        if (! triState_[i].readData(in, 10 * nPent)) {
             inputError_ = true; return;
         }
 
-    faceStateChanged_ = new int[25 * nPent / 2];
+    triStateChanged_ = new int[25 * nPent / 2];
     for (i = 0; i < 25 * nPent / 2; ++i) {
-        in >> faceStateChanged_[i];
-        if (faceStateChanged_[i] < -1 ||
-                 faceStateChanged_[i] >= 10 * static_cast<int>(nPent)) {
+        in >> triStateChanged_[i];
+        if (triStateChanged_[i] < -1 ||
+                 triStateChanged_[i] >= 10 * static_cast<int>(nPent)) {
             inputError_ = true; return;
         }
     }
@@ -779,8 +780,8 @@ bool Dim4GluingPermSearcher::isCanonical() const {
     return true;
 }
 
-bool Dim4GluingPermSearcher::badFaceLink(const Dim4PentFacet& facet) const {
-    // Run around all four faces bounding the facet.
+bool Dim4GluingPermSearcher::badTriangleLink(const Dim4PentFacet& facet) const {
+    // Run around all four triangles bounding the facet.
     Dim4PentFacet adj;
     unsigned pent;
     NPerm5 current;
@@ -790,11 +791,11 @@ bool Dim4GluingPermSearcher::badFaceLink(const Dim4PentFacet& facet) const {
         start = start * NPerm5(1, 2, 3, 0, 4);
 
         // start maps (0,1,2,3) to the four vertices of facet, with
-        // (0,1,2) mapped to the 2-dimensional face that we wish to examine.
+        // (0,1,2) mapped to the 2-dimensional triangle that we wish to examine.
 
         // Continue to push through a pentachoron and then across a
         // facet, until either we hit a boundary or we return to the
-        // original face.
+        // original facet.
 
         current = start;
         pent = facet.simp;
@@ -808,7 +809,7 @@ bool Dim4GluingPermSearcher::badFaceLink(const Dim4PentFacet& facet) const {
             started = true;
             current = current * NPerm5(3, 4);
 
-            // Push across a face.
+            // Push across a facet.
             if (pairing_->isUnmatched(pent, current[4])) {
                 incomplete = true;
                 break;
@@ -827,12 +828,12 @@ bool Dim4GluingPermSearcher::badFaceLink(const Dim4PentFacet& facet) const {
             pent = adj.simp;
         }
 
-        // Did we meet the original face with a rotation or reflection?
+        // Did we meet the original facet with a rotation or reflection?
         if ((! incomplete) && (start != current))
             return true;
     }
 
-    // No bad face links were found.
+    // No bad triangle links were found.
     return false;
 }
 
@@ -874,8 +875,8 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
             w3 = p[v3];
 
             // Look at the edge opposite v1, v2 and v3.
-            e = Dim4Face::faceNumber[v1][v2][v3];
-            f = Dim4Face::faceNumber[w1][w2][w3];
+            e = Dim4Triangle::triangleNumber[v1][v2][v3];
+            f = Dim4Triangle::triangleNumber[w1][w2][w3];
             eIdx = e + 10 * facet.simp;
             fIdx = f + 10 * adj.simp;
             orderIdx = e + 10 * orderElt_;
@@ -888,14 +889,17 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
             // Are the natural 012 representations of the two triangles
             // joined with reverse orientations?
             // Here we label triangles 012 by running through the
-            // three vertices of the opposite pentachoron face in
+            // three vertices of the opposite pentachoron triangle in
             // ascending numerical order.
             tmpInvariant = 0;
-            if (p[Dim4Face::faceVertex[e][0]] == Dim4Face::faceVertex[f][0])
+            if (p[Dim4Triangle::triangleVertex[e][0]] ==
+                    Dim4Triangle::triangleVertex[f][0])
                 ++tmpInvariant;
-            if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][1])
+            if (p[Dim4Triangle::triangleVertex[e][1]] ==
+                    Dim4Triangle::triangleVertex[f][1])
                 ++tmpInvariant;
-            if (p[Dim4Face::faceVertex[e][2]] == Dim4Face::faceVertex[f][2])
+            if (p[Dim4Triangle::triangleVertex[e][2]] ==
+                    Dim4Triangle::triangleVertex[f][2])
                 ++tmpInvariant;
             hasTwistTriangle = (tmpInvariant == 1 ? 0 : 1);
 
@@ -1173,8 +1177,8 @@ void Dim4GluingPermSearcher::splitEdgeClasses() {
             w3 = p[v3];
 
             // Look at the edge opposite v1, v2 and v3.
-            e = Dim4Face::faceNumber[v1][v2][v3];
-            f = Dim4Face::faceNumber[w1][w2][w3];
+            e = Dim4Triangle::triangleNumber[v1][v2][v3];
+            f = Dim4Triangle::triangleNumber[w1][w2][w3];
             eIdx = e + 10 * facet.simp;
             fIdx = f + 10 * adj.simp;
             orderIdx = e + 10 * orderElt_;
@@ -1253,7 +1257,7 @@ void Dim4GluingPermSearcher::splitEdgeClasses() {
     }
 }
 
-bool Dim4GluingPermSearcher::mergeFaceClasses() {
+bool Dim4GluingPermSearcher::mergeTriangleClasses() {
     Dim4PentFacet facet = order_[orderElt_];
     Dim4PentFacet adj = (*pairing_)[facet];
 
@@ -1275,71 +1279,77 @@ bool Dim4GluingPermSearcher::mergeFaceClasses() {
 
         w2 = p[v2];
 
-        // Look at the face opposite edge v1-v2.
+        // Look at the triangle opposite edge v1-v2.
         e = Dim4Edge::edgeNumber[v1][v2];
         f = Dim4Edge::edgeNumber[w1][w2];
 
         orderIdx = v2 + 5 * orderElt_;
 
-        // Vertices of a face are labelled in order from smallest to largest.
-        if (p[Dim4Face::faceVertex[e][0]] == Dim4Face::faceVertex[f][0]) {
-            if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][1])
+        // Vertices of a triangle are labelled in order from smallest to
+        // largest.
+        if (p[Dim4Triangle::triangleVertex[e][0]] ==
+                Dim4Triangle::triangleVertex[f][0]) {
+            if (p[Dim4Triangle::triangleVertex[e][1]] ==
+                    Dim4Triangle::triangleVertex[f][1])
                 directTwist.setPermCode(NPerm3::code012);
             else
                 directTwist.setPermCode(NPerm3::code021);
-        } else if (p[Dim4Face::faceVertex[e][0]] == Dim4Face::faceVertex[f][1]) {
-            if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][0])
+        } else if (p[Dim4Triangle::triangleVertex[e][0]] ==
+                Dim4Triangle::triangleVertex[f][1]) {
+            if (p[Dim4Triangle::triangleVertex[e][1]] ==
+                    Dim4Triangle::triangleVertex[f][0])
                 directTwist.setPermCode(NPerm3::code102);
             else
                 directTwist.setPermCode(NPerm3::code120);
         } else {
-            if (p[Dim4Face::faceVertex[e][1]] == Dim4Face::faceVertex[f][0])
+            if (p[Dim4Triangle::triangleVertex[e][1]] ==
+                    Dim4Triangle::triangleVertex[f][0])
                 directTwist.setPermCode(NPerm3::code201);
             else
                 directTwist.setPermCode(NPerm3::code210);
         }
 
         NPerm3 eTwist, fTwist; /* Initialise to identity permutations. */
-        eRep = findFaceClass(e + 10 * facet.simp, eTwist);
-        fRep = findFaceClass(f + 10 * adj.simp, fTwist);
+        eRep = findTriangleClass(e + 10 * facet.simp, eTwist);
+        fRep = findTriangleClass(f + 10 * adj.simp, fTwist);
 
         if (eRep == fRep) {
-            faceState_[eRep].bounded = false;
+            triState_[eRep].bounded = false;
 
             if (eTwist != fTwist * directTwist)
                 retVal = true;
 
-            faceStateChanged_[orderIdx] = -1;
+            triStateChanged_[orderIdx] = -1;
         } else {
-            if (faceState_[eRep].rank < faceState_[fRep].rank) {
+            if (triState_[eRep].rank < triState_[fRep].rank) {
                 // Join eRep beneath fRep.
-                faceState_[eRep].parent = fRep;
-                faceState_[eRep].twistUp =
+                triState_[eRep].parent = fRep;
+                triState_[eRep].twistUp =
                     fTwist * directTwist * eTwist.inverse();
-                faceState_[fRep].size += faceState_[eRep].size;
+                triState_[fRep].size += triState_[eRep].size;
 
-                faceStateChanged_[orderIdx] = eRep;
+                triStateChanged_[orderIdx] = eRep;
             } else {
                 // Join fRep beneath eRep.
-                faceState_[fRep].parent = eRep;
-                faceState_[fRep].twistUp =
+                triState_[fRep].parent = eRep;
+                triState_[fRep].twistUp =
                     eTwist * directTwist.inverse() * fTwist.inverse();
-                if (faceState_[eRep].rank == faceState_[fRep].rank) {
-                    faceState_[eRep].rank++;
-                    faceState_[fRep].hadEqualRank = true;
+                if (triState_[eRep].rank == triState_[fRep].rank) {
+                    triState_[eRep].rank++;
+                    triState_[fRep].hadEqualRank = true;
                 }
-                faceState_[eRep].size += faceState_[fRep].size;
+                triState_[eRep].size += triState_[fRep].size;
 
-                faceStateChanged_[orderIdx] = fRep;
+                triStateChanged_[orderIdx] = fRep;
             }
-            --nFaceClasses_;
+            --nTriangleClasses_;
         }
     }
 
     return retVal;
 }
 
-void Dim4GluingPermSearcher::splitFaceClasses() {
+void Dim4GluingPermSearcher::splitTriangleClasses() {
     Dim4PentFacet facet = order_[orderElt_];
 
     int v1, v2;
@@ -1353,28 +1363,28 @@ void Dim4GluingPermSearcher::splitFaceClasses() {
         if (v2 == v1)
             continue;
 
-        // Look at the face opposite edge v1-v2.
+        // Look at the triangle opposite edge v1-v2.
         f = Dim4Edge::edgeNumber[v1][v2];
 
         fIdx = f + 10 * facet.simp;
         orderIdx = v2 + 5 * orderElt_;
 
-        if (faceStateChanged_[orderIdx] < 0)
-            faceState_[findFaceClass(fIdx)].bounded = true;
+        if (triStateChanged_[orderIdx] < 0)
+            triState_[findTriangleClass(fIdx)].bounded = true;
         else {
-            subRep = faceStateChanged_[orderIdx];
-            rep = faceState_[subRep].parent;
+            subRep = triStateChanged_[orderIdx];
+            rep = triState_[subRep].parent;
 
-            faceState_[subRep].parent = -1;
-            if (faceState_[subRep].hadEqualRank) {
-                faceState_[subRep].hadEqualRank = false;
-                faceState_[rep].rank--;
+            triState_[subRep].parent = -1;
+            if (triState_[subRep].hadEqualRank) {
+                triState_[subRep].hadEqualRank = false;
+                triState_[rep].rank--;
             }
 
-            faceState_[rep].size -= faceState_[subRep].size;
+            triState_[rep].size -= triState_[subRep].size;
 
-            faceStateChanged_[orderIdx] = -1;
-            ++nFaceClasses_;
+            triStateChanged_[orderIdx] = -1;
+            ++nTriangleClasses_;
         }
     }
 }
@@ -1402,19 +1412,19 @@ void Dim4GluingPermSearcher::edgeBdryNext(int edgeID, int pent, int edge,
                     // yet (hence bdryEdges == 2 but only one boundary
                     // edge shows up in the gluing permutations).
                     // The boundary that we're not seeing must belong
-                    // to either the pentachoron face we are currently
+                    // to either the pentachoron triangle we are currently
                     // working with or its adjacent partner.
-                    int ghostFace = (bdryFacet == order_[orderElt_].facet ?
+                    int ghostTriangle = (bdryFacet == order_[orderElt_].facet ?
                         (*pairing_)[order_[orderElt_]].facet :
                         order_[orderElt_].facet);
-                    if (edgeLinkNextFacet[edge][bdryFacet] == ghostFace) {
+                    if (edgeLinkNextFacet[edge][bdryFacet] == ghostTriangle) {
                         next[0] = edgeState_[edgeID].bdryNext[0];
                         twist[0] = edgeState_[edgeID].bdryTwist[0];
                         next[1] = edgeID;
                         twist[1] = 0;
                     } else {
                         // Sanity check.
-                        if (edgeLinkPrevFacet[edge][bdryFacet] != ghostFace)
+                        if (edgeLinkPrevFacet[edge][bdryFacet] != ghostTriangle)
                             std::cerr << "ERROR: Inconsistent edge link "
                                 "boundary information!" << std::endl;
                         next[0] = edgeID;

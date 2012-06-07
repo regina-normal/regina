@@ -54,9 +54,9 @@ NLargeInteger NNormalHypersurfaceVectorStandard::getEdgeWeight(
     unsigned e = Dim4Edge::edgeNumber[start][end];
     for (unsigned i = 0; i < 3; ++i) {
         ans += (*this)[15 * pentIndex + 5 +
-            Dim4Edge::edgeNumber[start][Dim4Face::faceVertex[e][i]]];
+            Dim4Edge::edgeNumber[start][Dim4Triangle::triangleVertex[e][i]]];
         ans += (*this)[15 * pentIndex + 5 +
-            Dim4Edge::edgeNumber[end][Dim4Face::faceVertex[e][i]]];
+            Dim4Edge::edgeNumber[end][Dim4Triangle::triangleVertex[e][i]]];
     }
     return ans;
 }
@@ -143,7 +143,7 @@ NEnumConstraintList* NNormalHypersurfaceVectorStandard::makeEmbeddedConstraints(
             for (i = 0; i < 3; ++i) {
                 edge2 = Dim4Edge::edgeNumber[
                     Dim4Edge::edgeVertex[edge1][0]][
-                    Dim4Face::faceVertex[edge1][i]];
+                    Dim4Triangle::triangleVertex[edge1][i]];
                 if (edge1 < edge2) {
                     (*ans)[c].insert((*ans)[c].end(), base + edge1);
                     (*ans)[c].insert((*ans)[c].end(), base + edge2);
@@ -151,7 +151,7 @@ NEnumConstraintList* NNormalHypersurfaceVectorStandard::makeEmbeddedConstraints(
                 }
                 edge2 = Dim4Edge::edgeNumber[
                     Dim4Edge::edgeVertex[edge1][1]][
-                    Dim4Face::faceVertex[edge1][i]];
+                    Dim4Triangle::triangleVertex[edge1][i]];
                 if (edge1 < edge2) {
                     (*ans)[c].insert((*ans)[c].end(), base + edge1);
                     (*ans)[c].insert((*ans)[c].end(), base + edge2);

@@ -70,10 +70,10 @@ void addDim4Tetrahedron() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim4Tetrahedron::getEdge,
             return_value_policy<reference_existing_object>())
-        .def("getFace", &Dim4Tetrahedron::getFace,
+        .def("getTriangle", &Dim4Tetrahedron::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getEdgeMapping", &Dim4Tetrahedron::getEdgeMapping)
-        .def("getFaceMapping", &Dim4Tetrahedron::getFaceMapping)
+        .def("getTriangleMapping", &Dim4Tetrahedron::getTriangleMapping)
         .def("isBoundary", &Dim4Tetrahedron::isBoundary)
     ;
 

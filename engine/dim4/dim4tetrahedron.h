@@ -47,8 +47,8 @@ namespace regina {
 class Dim4BoundaryComponent;
 class Dim4Component;
 class Dim4Edge;
-class Dim4Face;
 class Dim4Pentachoron;
+class Dim4Triangle;
 class Dim4Vertex;
 
 /**
@@ -240,17 +240,17 @@ class REGINA_API Dim4Tetrahedron :
         Dim4Edge* getEdge(int edge) const;
 
         /**
-         * Returns the face of the 4-manifold triangulation corresponding
-         * to the given face of this tetrahedron.
+         * Returns the triangle of the 4-manifold triangulation corresponding
+         * to the given triangular face of this tetrahedron.
          *
-         * Note that face \a i of a tetrahedron is opposite vertex \a i of
+         * Note that triangle \a i of a tetrahedron is opposite vertex \a i of
          * the tetrahedron.
          *
-         * @param face the face of this tetrahedron to examine.  This
+         * @param tri the triangle of this tetrahedron to examine.  This
          * should be between 0 and 3 inclusive.
-         * @return the corresponding face of the 4-manifold triangulation.
+         * @return the corresponding triangle of the 4-manifold triangulation.
          */
-        Dim4Face* getFace(int face) const;
+        Dim4Triangle* getTriangle(int tri) const;
 
         /**
          * Examines the given edge of this tetrahedron, and returns a mapping
@@ -276,27 +276,27 @@ class REGINA_API Dim4Tetrahedron :
         NPerm5 getEdgeMapping(int edge) const;
 
         /**
-         * Examines the given face of this tetrahedron, and returns a mapping
-         * from the "canonical" vertices of the corresponding face of
-         * the triangulation to the vertices of this tetrahedron.
+         * Examines the given triangle of this tetrahedron, and returns a
+         * mapping from the "canonical" vertices of the corresponding triangle
+         * of the triangulation to the vertices of this tetrahedron.
          *
          * This routine behaves much the same way as
-         * Dim4Pentachoron::getFaceMapping(), except that it maps the
-         * face vertices into a tetrahedron, not into a pentachoron.  See
-         * Dim4Pentachoron::getFaceMapping() for a more detailed
+         * Dim4Pentachoron::getTriangleMapping(), except that it maps the
+         * triangle vertices into a tetrahedron, not into a pentachoron.  See
+         * Dim4Pentachoron::getTriangleMapping() for a more detailed
          * explanation of precisely what this mapping means.
          *
-         * This routine differs from Dim4Pentachoron::getFaceMapping()
+         * This routine differs from Dim4Pentachoron::getTriangleMapping()
          * in how it handles the images of 3 and 4.  This routine
          * will always map 3 to the remaining vertex of this tetrahedron (which
-         * is equal to the argument \a face), and will always map 4 to itself.
+         * is equal to the argument \a tri), and will always map 4 to itself.
          *
-         * @param face the face of this tetrahedron to examine.  This should
+         * @param tri the triangle of this tetrahedron to examine.  This should
          * be between 0 and 3 inclusive.
-         * @return a mapping from vertices (0,1,2) of the requested face
+         * @return a mapping from vertices (0,1,2) of the requested triangle
          * to the vertices of this tetrahedron.
          */
-        NPerm5 getFaceMapping(int face) const;
+        NPerm5 getTriangleMapping(int tri) const;
 
         /**
          * Determines if this tetrahedron lies entirely on the boundary of the

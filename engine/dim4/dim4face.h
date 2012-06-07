@@ -27,12 +27,12 @@
 /* end stub */
 
 /*! \file dim4/dim4face.h
- *  \brief Deals with faces in a 4-manifold triangulation.
+ *  \brief Deals with triangles in a 4-manifold triangulation.
  */
 
-#ifndef __DIM4FACE_H
+#ifndef __DIM4TRIANGLE_H
 #ifndef __DOXYGEN
-#define __DIM4FACE_H
+#define __DIM4TRIANGLE_H
 #endif
 
 #include <deque>
@@ -56,15 +56,16 @@ class Dim4Vertex;
  */
 
 /**
- * Details how a face in the skeleton of a 4-manifold triangulation forms
+ * Details how a triangle in the skeleton of a 4-manifold triangulation forms
  * part of an individual pentachoron.
  */
-class REGINA_API Dim4FaceEmbedding {
+class REGINA_API Dim4TriangleEmbedding {
     private:
         Dim4Pentachoron* pent_;
-            /**< The pentachoron in which this face is contained. */
-        int face_;
-            /**< The face number of the pentachoron that is this face. */
+            /**< The pentachoron in which this triangle is contained. */
+        int tri_;
+            /**< The triangle number of the pentachoron that is this
+                 triangle. */
 
     public:
         /**
@@ -74,15 +75,15 @@ class REGINA_API Dim4FaceEmbedding {
          *
          * \ifacespython Not present.
          */
-        Dim4FaceEmbedding();
+        Dim4TriangleEmbedding();
 
         /**
          * Creates an embedding descriptor containing the given data.
          *
-         * @param pent the pentachoron in which this face is contained.
-         * @param face the face number of \a pent that is this face.
+         * @param pent the pentachoron in which this triangle is contained.
+         * @param tri the triangle number of \a pent that is this triangle.
          */
-        Dim4FaceEmbedding(Dim4Pentachoron* pent, int face);
+        Dim4TriangleEmbedding(Dim4Pentachoron* pent, int tri);
 
         /**
          * Creates an embedding descriptor containing the same data as
@@ -90,7 +91,7 @@ class REGINA_API Dim4FaceEmbedding {
          *
          * @param cloneMe the embedding descriptor to clone.
          */
-        Dim4FaceEmbedding(const Dim4FaceEmbedding& cloneMe);
+        Dim4TriangleEmbedding(const Dim4TriangleEmbedding& cloneMe);
 
         /**
          * Assigns to this embedding descriptor the same data as is
@@ -98,137 +99,139 @@ class REGINA_API Dim4FaceEmbedding {
          *
          * @param cloneMe the embedding descriptor to clone.
          */
-        Dim4FaceEmbedding& operator =(const Dim4FaceEmbedding& cloneMe);
+        Dim4TriangleEmbedding& operator =(const Dim4TriangleEmbedding& cloneMe);
 
         /**
-         * Returns the pentachoron in which this face is contained.
+         * Returns the pentachoron in which this triangle is contained.
          *
          * @return the pentachoron.
          */
         Dim4Pentachoron* getPentachoron() const;
 
         /**
-         * Returns the face number within getPentachoron() that is this face.
+         * Returns the triangle number within getPentachoron() that is this
+         * triangle.
          *
-         * @return the face number that is this face.
+         * @return the triangle number that is this triangle.
          */
-        int getFace() const;
+        int getTriangle() const;
 
         /**
-         * Returns a mapping from vertices (0,1,2) of this face to the
+         * Returns a mapping from vertices (0,1,2) of this triangle to the
          * corresponding vertex numbers in getPentachoron().  This
          * permutation also maps (3,4) to the two remaining pentachoron
          * vertices in a manner that preserves orientation as you walk
-         * around the face.  See Dim4Pentachoron::getFaceMapping() for details.
+         * around the triangle.  See Dim4Pentachoron::getTriangleMapping() for
+         * details.
          *
-         * @return a mapping from the vertices of this face to the
+         * @return a mapping from the vertices of this triangle to the
          * vertices of getPentachoron().
          */
         NPerm5 getVertices() const;
 };
 
 /**
- * Represents a face in the skeleton of a 4-manifold triangulation.
- * Faces are highly temporary; once a triangulation changes, all its
- * face objects will be deleted and new ones will be created.
+ * Represents a triangle in the skeleton of a 4-manifold triangulation.
+ * Triangles are highly temporary; once a triangulation changes, all its
+ * triangle objects will be deleted and new ones will be created.
  */
-class REGINA_API Dim4Face : public ShareableObject, public NMarkedElement {
+class REGINA_API Dim4Triangle : public ShareableObject, public NMarkedElement {
     public:
         /**
-         * A table that maps vertices of a pentachoron to face numbers.
+         * A table that maps vertices of a pentachoron to triangle numbers.
          *
-         * Faces in a pentachoron are numbered 0,...,9.  This table
-         * converts vertices to face numbers; in particular, the face
-         * spanned by vertices \a i, \a j and \a k of a pentachoron is
-         * face number <tt>faceNumber[i][j][k]</tt>.  Here \a i, \a j and \a k
+         * Triangles in a pentachoron are numbered 0,...,9.  This table
+         * converts vertices to triangle numbers; in particular, the triangle
+         * spanned by vertices \a i, \a j and \a k of a pentachoron is triangle
+         * number <tt>triangleNumber[i][j][k]</tt>.  Here \a i, \a j and \a k
          * must be distinct, must be between 0 and 4 inclusive, and may
-         * be given in any order.  The resulting face number will be
+         * be given in any order.  The resulting triangle number will be
          * between 0 and 9 inclusive.
          *
-         * Note that face \i is always opposite edge \i in a pentachoron.
+         * Note that triangle \i is always opposite edge \i in a pentachoron.
          *
          * This is analagous to the lookup table NEdge::edgeNumber
          * for 3-manifold triangulations (and its deprecated predecessor,
          * the old global array regina::edgeNumber).
          */
-        static const int faceNumber[5][5][5];
+        static const int triangleNumber[5][5][5];
 
         /**
-         * A table that maps faces of a pentachoron to vertex numbers.
+         * A table that maps triangles of a pentachoron to vertex numbers.
          *
-         * Faces in a pentachoron are numbered 0,...,9.  This table
-         * converts face numbers to vertices; in particular, face \a i
-         * in a pentachoron is spanned by vertices <tt>faceVertex[i][0]</tt>,
-         * <tt>faceVertex[i][1]</tt> and <tt>faceVertex[i][2]</tt>.
+         * Triangles in a pentachoron are numbered 0,...,9.  This table converts
+         * triangle numbers to vertices; in particular, triangle \a i in a
+         * pentachoron is spanned by vertices <tt>triangleVertex[i][0]</tt>,
+         * <tt>triangleVertex[i][1]</tt> and <tt>triangleVertex[i][2]</tt>.
          * Here \a i must be between 0 and 9 inclusive; the resulting
          * vertex numbers will be between 0 and 4 inclusive.
          *
-         * Note that face \i is always opposite edge \i in a pentachoron.
-         * It is guaranteed that <tt>faceVertex[i][0]</tt> will always
-         * be smaller than <tt>faceVertex[i][1]</tt>, which in turn will
-         * always be smaller than <tt>faceVertex[i][2]</tt>.
+         * Note that triangle \i is always opposite edge \i in a pentachoron.
+         * It is guaranteed that <tt>triangleVertex[i][0]</tt> will always
+         * be smaller than <tt>triangleVertex[i][1]</tt>, which in turn will
+         * always be smaller than <tt>triangleVertex[i][2]</tt>.
          *
          * This is analagous to the lookup table NEdge::edgeVertex
          * for 3-manifold triangulations (and its deprecated predecessors,
          * the old global arrays regina::edgeStart and regina::edgeEnd).
          */
-        static const int faceVertex[10][3];
+        static const int triangleVertex[10][3];
 
         /**
-         * An array that maps face numbers within a pentachoron to the
+         * An array that maps triangle numbers within a pentachoron to the
          * canonical ordering of the individual pentachoron vertices
-         * that form each face.
+         * that form each triangle.
          *
-         * This means that the vertices of face \a i in a pentachoron
+         * This means that the vertices of triangle \a i in a pentachoron
          * are, in canonical order, <tt>ordering[i][0..2]</tt>.  The
          * images of 3 and 4 under each permutation are chosen to make
          * each permutation even.
          *
          * This table does \e not describe the mapping from specific
-         * triangulation faces into individual pentachora (for that, see
-         * Dim4Pentachoron::getFaceMapping() instead).  This table
+         * triangles of the triangulation into individual pentachora (for that,
+         * see Dim4Pentachoron::getTriangleMapping() instead).  This table
          * merely provides a neat and consistent way of listing the
-         * vertices of any given pentachoron face.
+         * vertices of any given triangle in a pentachoron.
          */
         static const NPerm5 ordering[10];
 
     private:
-        std::deque<Dim4FaceEmbedding> emb_;
-            /**< A list of descriptors telling how this face forms a part of
+        std::deque<Dim4TriangleEmbedding> emb_;
+            /**< A list of descriptors telling how this triangle forms a part of
                  each individual pentachoron that it belongs to. */
         Dim4Component* component_;
-            /**< The component that this face is a part of. */
+            /**< The component that this triangle is a part of. */
         Dim4BoundaryComponent* boundaryComponent_;
-            /**< The boundary component that this face is a part of,
-                 or 0 if this face is internal. */
+            /**< The boundary component that this triangle is a part of,
+                 or 0 if this triangle is internal. */
         bool valid_;
-            /**< Is this face valid? */
+            /**< Is this triangle valid? */
 
     public:
         /**
          * Default destructor.
          */
-        ~Dim4Face();
+        ~Dim4Triangle();
 
         /**
-         * Returns the list of descriptors detailing how this face forms a
+         * Returns the list of descriptors detailing how this triangle forms a
          * part of various pentachora in the 4-manifold triangulation.
-         * Note that if this face represents multiple faces of a
+         * Note that if this triangle represents multiple triangles of a
          * particular pentachoron, then there will be multiple embedding
          * descriptors in the list regarding that pentachoron.
          *
          * These embedding descriptors will be stored in order in the
          * list, so that if you run through the list and follow in turn
          * the edges of each pentachoron defined by the images of (3,4)
-         * under Dim4FaceEmbedding::getVertices(), then you will obtain
-         * an ordered chain circling this face.
+         * under Dim4TriangleEmbedding::getVertices(), then you will obtain
+         * an ordered chain circling this triangle.
          *
          * \ifacespython This routine returns a python list.
          *
          * @return the list of embedding descriptors.
-         * @see Dim4FaceEmbedding
+         * @see Dim4TriangleEmbedding
          */
-        const std::deque<Dim4FaceEmbedding>& getEmbeddings() const;
+        const std::deque<Dim4TriangleEmbedding>& getEmbeddings() const;
 
         /**
          * Returns the number of descriptors in the list returned by
@@ -246,32 +249,34 @@ class REGINA_API Dim4Face : public ShareableObject, public NMarkedElement {
          * should be between 0 and getNumberOfEmbeddings()-1 inclusive.
          * @return the requested embedding descriptor.
          */
-        const Dim4FaceEmbedding& getEmbedding(unsigned long index) const;
+        const Dim4TriangleEmbedding& getEmbedding(unsigned long index) const;
 
         /**
          * Returns the component of the triangulation to which this
-         * face belongs.
+         * triangle belongs.
          *
-         * @return the component containing this face.
+         * @return the component containing this triangle.
          */
         Dim4Component* getComponent() const;
 
         /**
          * Returns the boundary component of the triangulation to which
-         * this face belongs.
+         * this triangle belongs.
          *
-         * @return the boundary component containing this face, or 0 if this
-         * face does not lie entirely within the boundary of the triangulation.
+         * @return the boundary component containing this triangle, or 0 if this
+         * triangle does not lie entirely within the boundary of the
+         * triangulation.
          */
         Dim4BoundaryComponent* getBoundaryComponent() const;
 
         /**
          * Returns the vertex of the 4-manifold triangulation corresponding
-         * to the given vertex of this face.
+         * to the given vertex of this triangle.
          *
-         * Note that vertex \a i of a face is opposite edge \a i of the face.
+         * Note that vertex \a i of a triangle is opposite edge \a i of
+         * the triangle.
          *
-         * @param vertex the vertex of this face to examine.  This should
+         * @param vertex the vertex of this triangle to examine.  This should
          * be 0, 1 or 2.
          * @return the corresponding vertex of the 4-manifold triangulation.
          */
@@ -279,62 +284,63 @@ class REGINA_API Dim4Face : public ShareableObject, public NMarkedElement {
 
         /**
          * Returns the edge of the 4-manifold triangulation corresponding
-         * to the given edge of this face.
+         * to the given edge of this triangle.
          *
-         * Note that edge \a i of a face is opposite vertex \a i of the face.
+         * Note that edge \a i of a triangle is opposite vertex \a i of
+         * the triangle.
          *
-         * @param edge the edge of this face to examine.  This should
+         * @param edge the edge of this triangle to examine.  This should
          * be 0, 1 or 2.
          * @return the corresponding edge of the 4-manifold triangulation.
          */
         Dim4Edge* getEdge(int edge) const;
 
         /**
-         * Examines the given edge of this face, and returns a mapping
+         * Examines the given edge of this triangle, and returns a mapping
          * from the "canonical" vertices of the corresponding edge of
-         * the triangulation to the vertices of this face.
+         * the triangulation to the vertices of this triangle.
          *
          * This routine behaves much the same way as
          * Dim4Pentachoron::getEdgeMapping(), except that it maps the
-         * edge vertices into a face, not into a pentachoron.  See
+         * edge vertices into a triangle, not into a pentachoron.  See
          * Dim4Pentachoron::getEdgeMapping() for a more detailed
          * explanation of precisely what this mapping means.
          *
          * This routine differs from Dim4Pentachoron::getEdgeMapping()
          * in how it handles the images of 2, 3 and 4.  This routine
-         * will always map 2 to the remaining vertex of this face (which
+         * will always map 2 to the remaining vertex of this triangle (which
          * is equal to the argument \a edge), and will always map 3 and 4
          * to themselves.
          *
-         * @param edge the edge of this face to examine.  This should be
+         * @param edge the edge of this triangle to examine.  This should be
          * 0, 1 or 2.
          * @return a mapping from vertices (0,1) of the requested edge
-         * to the vertices of this face.
+         * to the vertices of this triangle.
          */
         NPerm5 getEdgeMapping(int edge) const;
 
         /**
-         * Returns the degree of this face.  Note that this is identical
+         * Returns the degree of this triangle.  Note that this is identical
          * to getNumberOfEmbeddings().
          *
-         * @return the degree of this face.
+         * @return the degree of this triangle.
          */
         unsigned long getDegree() const;
 
         /**
-         * Determines if this face lies entirely on the boundary of the
+         * Determines if this triangle lies entirely on the boundary of the
          * triangulation.
          *
-         * @return \c true if and only if this face lies on the boundary.
+         * @return \c true if and only if this triangle lies on the boundary.
          */
         bool isBoundary() const;
 
         /**
-         * Determines if this face is valid.
-         * A face is valid if and only if it is not glued to itself
+         * Determines if this triangle is valid.
+         * A triangle is valid if and only if it is not glued to itself
          * using a non-trivial rotation or reflection.
          *
-         * @return \c true if and only if this face is valid.
+         * @return \c true if and only if this triangle is valid.
          */
         bool isValid() const;
 
@@ -342,13 +348,13 @@ class REGINA_API Dim4Face : public ShareableObject, public NMarkedElement {
 
     private:
         /**
-         * Creates a new face and marks it as belonging to the
+         * Creates a new triangle and marks it as belonging to the
          * given triangulation component.
          *
          * @param component the triangulation component to which this
-         * face belongs.
+         * triangle belongs.
          */
-        Dim4Face(Dim4Component* component);
+        Dim4Triangle(Dim4Component* component);
 
     friend class Dim4Triangulation;
         /**< Allow access to private members. */
@@ -361,88 +367,91 @@ class REGINA_API Dim4Face : public ShareableObject, public NMarkedElement {
 #include "dim4/dim4pentachoron.h"
 namespace regina {
 
-// Inline functions for Dim4FaceEmbedding
+// Inline functions for Dim4TriangleEmbedding
 
-inline Dim4FaceEmbedding::Dim4FaceEmbedding() : pent_(0) {
+inline Dim4TriangleEmbedding::Dim4TriangleEmbedding() : pent_(0) {
 }
 
-inline Dim4FaceEmbedding::Dim4FaceEmbedding(Dim4Pentachoron* pent, int face) :
-        pent_(pent), face_(face) {
+inline Dim4TriangleEmbedding::Dim4TriangleEmbedding(Dim4Pentachoron* pent,
+        int tri) :
+        pent_(pent), tri_(tri) {
 }
 
-inline Dim4FaceEmbedding::Dim4FaceEmbedding(const Dim4FaceEmbedding& cloneMe) :
-        pent_(cloneMe.pent_), face_(cloneMe.face_) {
+inline Dim4TriangleEmbedding::Dim4TriangleEmbedding(
+        const Dim4TriangleEmbedding& cloneMe) :
+        pent_(cloneMe.pent_), tri_(cloneMe.tri_) {
 }
 
-inline Dim4FaceEmbedding& Dim4FaceEmbedding::operator =
-        (const Dim4FaceEmbedding& cloneMe) {
+inline Dim4TriangleEmbedding& Dim4TriangleEmbedding::operator =
+        (const Dim4TriangleEmbedding& cloneMe) {
     pent_ = cloneMe.pent_;
-    face_ = cloneMe.face_;
+    tri_ = cloneMe.tri_;
     return *this;
 }
 
-inline Dim4Pentachoron* Dim4FaceEmbedding::getPentachoron() const {
+inline Dim4Pentachoron* Dim4TriangleEmbedding::getPentachoron() const {
     return pent_;
 }
 
-inline int Dim4FaceEmbedding::getFace() const {
-    return face_;
+inline int Dim4TriangleEmbedding::getTriangle() const {
+    return tri_;
 }
 
-inline NPerm5 Dim4FaceEmbedding::getVertices() const {
-    return pent_->getFaceMapping(face_);
+inline NPerm5 Dim4TriangleEmbedding::getVertices() const {
+    return pent_->getTriangleMapping(tri_);
 }
 
-// Inline functions for Dim4Face
+// Inline functions for Dim4Triangle
 
-inline Dim4Face::Dim4Face(Dim4Component* component) :
+inline Dim4Triangle::Dim4Triangle(Dim4Component* component) :
         component_(component), boundaryComponent_(0), valid_(true) {
 }
 
-inline Dim4Face::~Dim4Face() {
+inline Dim4Triangle::~Dim4Triangle() {
 }
 
-inline const std::deque<Dim4FaceEmbedding>& Dim4Face::getEmbeddings() const {
+inline const std::deque<Dim4TriangleEmbedding>& Dim4Triangle::getEmbeddings()
+        const {
     return emb_;
 }
 
-inline unsigned long Dim4Face::getNumberOfEmbeddings() const {
+inline unsigned long Dim4Triangle::getNumberOfEmbeddings() const {
     return emb_.size();
 }
 
-inline const Dim4FaceEmbedding& Dim4Face::getEmbedding(unsigned long index)
-        const {
+inline const Dim4TriangleEmbedding& Dim4Triangle::getEmbedding(
+        unsigned long index) const {
     return emb_[index];
 }
 
-inline Dim4Component* Dim4Face::getComponent() const {
+inline Dim4Component* Dim4Triangle::getComponent() const {
     return component_;
 }
 
-inline Dim4BoundaryComponent* Dim4Face::getBoundaryComponent() const {
+inline Dim4BoundaryComponent* Dim4Triangle::getBoundaryComponent() const {
     return boundaryComponent_;
 }
 
-inline Dim4Vertex* Dim4Face::getVertex(int vertex) const {
-    const Dim4FaceEmbedding& e(emb_.front());
+inline Dim4Vertex* Dim4Triangle::getVertex(int vertex) const {
+    const Dim4TriangleEmbedding& e(emb_.front());
     return e.getPentachoron()->getVertex(e.getVertices()[vertex]);
 }
 
-inline unsigned long Dim4Face::getDegree() const {
+inline unsigned long Dim4Triangle::getDegree() const {
     return emb_.size();
 }
 
-inline bool Dim4Face::isBoundary() const {
+inline bool Dim4Triangle::isBoundary() const {
     return (boundaryComponent_ != 0);
 }
 
-inline bool Dim4Face::isValid() const {
+inline bool Dim4Triangle::isValid() const {
     return valid_;
 }
 
-inline void Dim4Face::writeTextShort(std::ostream& out) const {
+inline void Dim4Triangle::writeTextShort(std::ostream& out) const {
     out << (boundaryComponent_ ? "Boundary " : "Internal ")
-        << "face of degree " << emb_.size();
+        << "triangle of degree " << emb_.size();
 }
 
 } // namespace regina
