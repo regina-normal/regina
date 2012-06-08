@@ -107,7 +107,7 @@ class REGINA_API Dim2GluingPermSearcher : public Dim2GluingPerms {
         bool orientableOnly_;
             /**< Are we only searching for gluing permutations that
                  correspond to orientable triangulations? */
-        UseGluingPerms use_;
+        UseDim2GluingPerms use_;
             /**< A routine to call each time a gluing permutation set is
                  found during the search. */
         void* useArgs_;
@@ -190,7 +190,7 @@ class REGINA_API Dim2GluingPermSearcher : public Dim2GluingPerms {
          */
         Dim2GluingPermSearcher(const Dim2EdgePairing* pairing,
                 const Dim2EdgePairing::IsoList* autos,
-                bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
+                bool orientableOnly, UseDim2GluingPerms use, void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -214,7 +214,7 @@ class REGINA_API Dim2GluingPermSearcher : public Dim2GluingPerms {
          * @param useArgs as for the main Dim2GluingPermSearcher constructor.
          */
         Dim2GluingPermSearcher(std::istream& in,
-            UseGluingPerms use, void* useArgs = 0);
+            UseDim2GluingPerms use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
@@ -321,7 +321,7 @@ class REGINA_API Dim2GluingPermSearcher : public Dim2GluingPerms {
          */
         static void findAllPerms(const Dim2EdgePairing* pairing,
                 const Dim2EdgePairing::IsoList* autos,
-                bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
+                bool orientableOnly, UseDim2GluingPerms use, void* useArgs = 0);
 
         /**
          * Constructs a search manager of the best possible class for the
@@ -353,7 +353,7 @@ class REGINA_API Dim2GluingPermSearcher : public Dim2GluingPerms {
         static Dim2GluingPermSearcher* bestSearcher(
                 const Dim2EdgePairing* pairing,
                 const Dim2EdgePairing::IsoList* autos,
-                bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
+                bool orientableOnly, UseDim2GluingPerms use, void* useArgs = 0);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -383,7 +383,7 @@ class REGINA_API Dim2GluingPermSearcher : public Dim2GluingPerms {
          * @param in the input stream from which to read.
          */
         static Dim2GluingPermSearcher* readTaggedData(std::istream& in,
-                UseGluingPerms use, void* useArgs = 0);
+                UseDim2GluingPerms use, void* useArgs = 0);
 
     protected:
         /**

@@ -39,7 +39,7 @@ const char Dim2GluingPermSearcher::dataTag_ = 'g';
 
 Dim2GluingPermSearcher::Dim2GluingPermSearcher(
         const Dim2EdgePairing* pairing, const Dim2EdgePairing::IsoList* autos,
-        bool orientableOnly, UseGluingPerms use, void* useArgs) :
+        bool orientableOnly, UseDim2GluingPerms use, void* useArgs) :
         Dim2GluingPerms(pairing), autos_(autos), autosNew(autos == 0),
         orientableOnly_(orientableOnly), use_(use), useArgs_(useArgs),
         started(false),
@@ -57,7 +57,7 @@ Dim2GluingPermSearcher::Dim2GluingPermSearcher(
     unsigned nTris = size();
 
     std::fill(orientation, orientation + nTris, 0);
-    std::fill(permIndices, permIndices + nTris* 3, -1);
+    std::fill(permIndices_, permIndices_ + nTris* 3, -1);
 
     // Just fill the order[] array in a default left-to-right fashion.
     // Subclasses can rearrange things if they choose.
@@ -87,7 +87,7 @@ Dim2GluingPermSearcher::~Dim2GluingPermSearcher() {
 
 Dim2GluingPermSearcher* Dim2GluingPermSearcher::bestSearcher(
         const Dim2EdgePairing* pairing, const Dim2EdgePairing::IsoList* autos,
-        bool orientableOnly, UseGluingPerms use, void* useArgs) {
+        bool orientableOnly, UseDim2GluingPerms use, void* useArgs) {
     // We only have one algorithm for now.
     return new Dim2GluingPermSearcher(pairing, autos, orientableOnly,
         use, useArgs);
@@ -95,7 +95,7 @@ Dim2GluingPermSearcher* Dim2GluingPermSearcher::bestSearcher(
 
 void Dim2GluingPermSearcher::findAllPerms(const Dim2EdgePairing* pairing,
         const Dim2EdgePairing::IsoList* autos, bool orientableOnly,
-        UseGluingPerms use, void* useArgs) {
+        UseDim2GluingPerms use, void* useArgs) {
     Dim2GluingPermSearcher* searcher = bestSearcher(pairing, autos,
         orientableOnly, use, useArgs);
     searcher->runSearch();
@@ -116,7 +116,7 @@ void Dim2GluingPermSearcher::runSearch(long maxDepth) {
         started = true;
 
         // Do we in fact have no permutation at all to choose?
-        if (maxDepth == 0 || pairing->dest(0, 0).isBoundary(nTriangles)) {
+        if (maxDepth == 0 || pairing_->dest(0, 0).isBoundary(nTriangles)) {
             use_(this, useArgs_);
             use_(0, useArgs_);
             return;
@@ -143,7 +143,7 @@ void Dim2GluingPermSearcher::runSearch(long maxDepth) {
 
     while (orderElt >= minOrder) {
         edge = order[orderElt];
-        adj = (*pairing)[edge];
+        adj = (*pairing_)[edge];
 
         // TODO: Check for cancellation.
 
@@ -165,7 +165,7 @@ void Dim2GluingPermSearcher::runSearch(long maxDepth) {
         }
 
         // We are sitting on a new permutation to try.
-        permIndex(adj) = permIndex(face); // S2 elements are their own inverses.
+        permIndex(adj) = permIndex(edge); // S2 elements are their own inverses.
 
         // Fix the orientation if appropriate.
         if (adj.facet == 0 && orientableOnly_) {
@@ -196,9 +196,9 @@ void Dim2GluingPermSearcher::runSearch(long maxDepth) {
             // We've moved onto a new edge.
             // Be sure to get the orientation right.
             edge = order[orderElt];
-            if (orientableOnly_ && pairing->dest(edge).facet > 0) {
+            if (orientableOnly_ && pairing_->dest(edge).facet > 0) {
                 // permIndex(edge) will be set to -1 or -2 as appropriate.
-                adj = (*pairing)[edge];
+                adj = (*pairing_)[edge];
                 if (orientation[edge.simp] == orientation[adj.simp])
                     permIndex(edge) = 1;
                 else
@@ -233,7 +233,7 @@ void Dim2GluingPermSearcher::dumpTaggedData(std::ostream& out) const {
 }
 
 Dim2GluingPermSearcher* Dim2GluingPermSearcher::readTaggedData(std::istream& in,
-        UseGluingPerms use, void* useArgs) {
+        UseDim2GluingPerms use, void* useArgs) {
     // Read the class marker.
     char c;
     in >> c;
@@ -281,7 +281,7 @@ void Dim2GluingPermSearcher::dumpData(std::ostream& out) const {
 }
 
 Dim2GluingPermSearcher::Dim2GluingPermSearcher(std::istream& in,
-        UseGluingPerms use, void* useArgs) :
+        UseDim2GluingPerms use, void* useArgs) :
         Dim2GluingPerms(in), autos_(0), autosNew(false),
         use_(use), useArgs_(useArgs), orientation(0),
         order(0), orderSize(0), orderElt(0) {
@@ -291,7 +291,7 @@ Dim2GluingPermSearcher::Dim2GluingPermSearcher(std::istream& in,
     // Recontruct the face pairing automorphisms.
     const_cast<Dim2GluingPermSearcher*>(this)->autos_ =
         new Dim2EdgePairing::IsoList();
-    pairing->findAutomorphisms(const_cast<Dim2EdgePairing::IsoList&>(*autos_));
+    pairing_->findAutomorphisms(const_cast<Dim2EdgePairing::IsoList&>(*autos_));
     autosNew = true;
 
     // Keep reading.
@@ -315,7 +315,7 @@ Dim2GluingPermSearcher::Dim2GluingPermSearcher(std::istream& in,
         inputError_ = true; return;
     }
 
-    int nTris = pairing->size();
+    int nTris = pairing_->size();
     int t;
 
     orientation = new int[nTris];
@@ -347,9 +347,9 @@ bool Dim2GluingPermSearcher::isCanonical() const {
         // preimage under each edge pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.
         for (edge.setFirst(); edge.simp <
-                static_cast<int>(pairing->size()); edge++) {
-            edgeDest = pairing->dest(edge);
-            if (pairing->isUnmatched(edge) || edgeDest < edge)
+                static_cast<int>(pairing_->size()); edge++) {
+            edgeDest = pairing_->dest(edge);
+            if (pairing_->isUnmatched(edge) || edgeDest < edge)
                 continue;
 
             edgeImage = (**it)[edge];
