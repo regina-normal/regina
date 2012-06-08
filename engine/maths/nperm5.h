@@ -174,10 +174,19 @@ class REGINA_API NPerm5 {
         enum {
             /**
              * The total number of permutations on five elements.
+             * This is the size of the array Sn.
              *
              * \ifacespython Not present.
              */
-            nPerms = 120
+            nPerms = 120,
+
+            /**
+             * The total number of permutations on four elements.
+             * This is the size of the array Sn_1.
+             *
+             * \ifacespython Not present.
+             */
+            nPerms_1 = 24
         };
 
     private:
