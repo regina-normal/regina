@@ -95,7 +95,8 @@ Version 5.0  [ (under development) ]
 Version 4.94  [ (under development) ]
 
     ENGINE:
-        Class Dim2EdgePairing, Dim2GluingPerms, Dim2GluingPermSearcher:
+        Class Dim2Census, Dim2EdgePairing, Dim2GluingPerms,
+                Dim2GluingPermSearcher:
             - New classes for building a census of 2-manifold triangulations.
         Class Dim2TriangleEdge:
             - New convenience typedef for NFacetSpec<2>.
