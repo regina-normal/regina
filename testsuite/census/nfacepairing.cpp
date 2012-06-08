@@ -96,7 +96,8 @@ void countBadGraphs(const NFacePairing* pair, const NFacePairing::IsoList*,
 class NFacePairingTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NFacePairingTest);
 
-    CPPUNIT_TEST(rawCounts);
+    CPPUNIT_TEST(rawCountsClosed);
+    CPPUNIT_TEST(rawCountsBounded);
     CPPUNIT_TEST(badSubgraphs);
 
     CPPUNIT_TEST_SUITE_END();
@@ -112,10 +113,13 @@ class NFacePairingTest : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        void rawCounts() {
+        void rawCountsClosed() {
             // Figures taken from "Face pairing graphs and 3-manifold
             // enumeration", Benjamin A. Burton, J. Knot Theory
             // Ramifications 13 (2004), pp. 1057--1101.
+            //
+            // See also sequence A085549 from the On-Line Encyclopedia
+            // of Integer Sequences.
             unsigned nPairs[] = { 0, 1, 2, 4, 10, 28, 97, 359, 1635 };
 
             unsigned nTets;
@@ -124,12 +128,67 @@ class NFacePairingTest : public CppUnit::TestFixture {
                 NFacePairing::findAllPairings(nTets, NBoolSet::sFalse,
                     0, countFacePairings, &count, false);
 
-                std::ostringstream msg;
-                msg << "Face pairing count for " << nTets
-                    << " tetrahedra should be " << nPairs[nTets]
-                    << ", not " << count << '.';
+                if (count != nPairs[nTets]) {
+                    std::ostringstream msg;
+                    msg << "Face pairing count for " << nTets
+                        << " tetrahedra (closed) should be " << nPairs[nTets]
+                        << ", not " << count << '.';
 
-                CPPUNIT_ASSERT_MESSAGE(msg.str(), count == nPairs[nTets]);
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void rawCountsBounded() {
+            // Figures based on enumeration under Regina 4.93.
+            unsigned nBdry[] = { 0, 2, 6, 21, 100, 521, 3234, 22304 };
+            unsigned nBdry2[] = { 0, 1, 3, 8, 30, 118, 548, 2790, 16029 };
+
+            unsigned nTets;
+
+            for (nTets = 0; nTets <= 8; nTets++) {
+                count = 0;
+                NFacePairing::findAllPairings(nTets, NBoolSet::sTrue,
+                    1, countFacePairings, &count, false);
+
+                if (count != 0) {
+                    std::ostringstream msg;
+                    msg << "Face pairing count for " << nTets
+                        << " tetrahedra (1 bdry face) should be "
+                        << 0 << ", not " << count << '.';
+
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            for (nTets = 0; nTets <= 7; nTets++) {
+                count = 0;
+                NFacePairing::findAllPairings(nTets, NBoolSet::sTrue,
+                    2, countFacePairings, &count, false);
+
+                if (count != nBdry2[nTets]) {
+                    std::ostringstream msg;
+                    msg << "Face pairing count for " << nTets
+                        << " tetrahedra (2 bdry faces) should be "
+                        << nBdry2[nTets] << ", not " << count << '.';
+
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            for (nTets = 0; nTets <= 6; nTets++) {
+                count = 0;
+                NFacePairing::findAllPairings(nTets, NBoolSet::sTrue,
+                    -1, countFacePairings, &count, false);
+
+                if (count != nBdry[nTets]) {
+                    std::ostringstream msg;
+                    msg << "Face pairing count for " << nTets
+                        << " tetrahedra (any bdry faces) should be "
+                        << nBdry[nTets] << ", not " << count << '.';
+
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
         }
 
