@@ -42,14 +42,15 @@ Version 4.94  [ (under development) ]
               NPerm3, NPerm4 and NPerm5 respectively.
             - New dimension-agnostic alias Sn_1 that refers to S2, S3 and S4 in
               NPerm3, NPerm4 and NPerm5 respectively.
-            - New dimension-agnostic enum constant nPerms that contains the
-              number of permutations in Sn (i.e., 3!, 4! and 5! respectively).
+            - New dimension-agnostic enum constants nPerms and nPerms_1 that
+              contain the number of permutations in Sn and Sn_1 respectively.
             - New construtors that take an array of images.
             - NPerm3 and NPerm5 now have a copy of S2 (which NPerm4 already
               had).  Likewise, NPerm5 now has a copy of S3, orderedS3,
               S4 and orderedS4 (which NPerm4 again already had).
             - NPerm4::invS2 and NPerm4::invS3 are deprecated: the former
               is unnecessary, and the latter is identical to NPerm3::invS3.
+            - NPerm3 now has a transposition constructor: NPerm3(a,b).
         Class NTetrahedron:
             - New dimension-agnostic aliases adjacentSimplex() and
               adjacentFacet().  These are identical to adjacentTetrahedron()
