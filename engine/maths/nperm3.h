@@ -59,8 +59,9 @@ namespace regina {
  * The internal code is an integer between 0 and 5 inclusive,
  * representing the index of the permutation in the array NPerm3::S3.
  *
- * This class is faster and sleeker than related classes such as NPerm4.
- * On the other hand, this class does not offer quite as rich an interface.
+ * This class is faster and sleeker than related classes such as NPerm4 and
+ * NPerm5.  On the other hand, this class does not offer quite as rich an
+ * interface as the others.
  *
  * \testfull
  */
