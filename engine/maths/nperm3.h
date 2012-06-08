@@ -74,9 +74,9 @@ class REGINA_API NPerm3 {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * This array contains the same permutations in the same order
-         * as the corresponding array NPerm4::S3 (though of course this
-         * array stores NPerm3 objects instead of NPerm4 objects).
+         * For all permutation classes (NPerm3, NPerm4 and so on),
+         * the S3 array stores the same permutations in the same order
+         * (but of course using different data types).
          *
          * Note that these permutations are not necessarily in
          * lexicographical order.
@@ -104,6 +104,22 @@ class REGINA_API NPerm3 {
          * lexicographical order.
          */
         static const NPerm3 orderedS3[6];
+
+        /**
+         * Contains all possible permutations of two elements.
+         * In each permutation, 2 maps to 2 and 3 maps to 3.
+         *
+         * The permutations with even indices in the array are the even
+         * permutations, and those with odd indices in the array are the
+         * odd permutations.
+         *
+         * For all permutation classes (NPerm3, NPerm4 and so on),
+         * the S2 array stores the same permutations in the same order
+         * (but of course using different data types).
+         *
+         * Note that these permutations are already in lexicographical order.
+         */
+        static const NPerm3 S2[2];
 
         enum {
             /**

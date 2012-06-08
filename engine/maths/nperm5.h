@@ -98,6 +98,71 @@ class REGINA_API NPerm5 {
          */
         static const unsigned invS5[120];
 
+        /**
+         * Contains all possible permutations of four elements.
+         * In each permutation, 4 maps to 4.
+         *
+         * The permutations with even indices in the array are the even
+         * permutations, and those with odd indices in the array are the
+         * odd permutations.
+         *
+         * For all permutation classes (NPerm4, NPerm5 and so on), the
+         * S4 array stores the same permutations in the same order (but
+         * of course using different data types).
+         *
+         * Note that the permutations are not necessarily in
+         * lexicographical order.  For the corresponding inverse array,
+         * see NPerm4::invS4.
+         */
+        static const NPerm5 S4[24];
+
+        /**
+         * Contains all possible permutations of four elements in
+         * lexicographical order.  In each permutation, 4 maps to 4.
+         */
+        static const NPerm5 orderedS4[24];
+
+        /**
+         * Contains all possible permutations of three elements.
+         * In each permutation, 3 maps to 3 and 4 maps to 4.
+         *
+         * The permutations with even indices in the array are the even
+         * permutations, and those with odd indices in the array are the
+         * odd permutations.
+         *
+         * For all permutation classes (NPerm4, NPerm5 and so on), the
+         * S3 array stores the same permutations in the same order (but
+         * of course using different data types).
+         *
+         * Note that the permutations are not necessarily in
+         * lexicographical order.  For the corresponding inverse array,
+         * see NPerm3::invS3.
+         */
+        static const NPerm5 S3[6];
+
+        /**
+         * Contains all possible permutations of three elements in
+         * lexicographical order.  In each permutation, 3 maps to 3 and
+         * 4 maps to 4.
+         */
+        static const NPerm5 orderedS3[6];
+
+        /**
+         * Contains all possible permutations of two elements.
+         * In each permutation, 2 maps to 2, 3 maps to 3, and 4 maps to 4.
+         *
+         * The permutations with even indices in the array are the even
+         * permutations, and those with odd indices in the array are the
+         * odd permutations.
+         *
+         * For all permutation classes (NPerm4, NPerm5 and so on), the
+         * S2 array stores the same permutations in the same order (but
+         * of course using different data types).
+         *
+         * Note that these permutations are already in lexicographical order.
+         */
+        static const NPerm5 S2[2];
+
         enum {
             /**
              * The total number of permutations on five elements.

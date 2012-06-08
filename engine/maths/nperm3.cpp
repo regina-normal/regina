@@ -48,6 +48,10 @@ const NPerm3 NPerm3::orderedS3[6] = {
     NPerm3(code201), NPerm3(code210)
 };
 
+const NPerm3 NPerm3::S2[2] = {
+    NPerm3(code012), NPerm3(code102)
+};
+
 const unsigned char NPerm3::imageTable[6][3] = {
     { 0, 1, 2 },
     { 0, 2, 1 },

@@ -127,6 +127,11 @@ Version 4.94  [ (under development) ]
             - New dimension-agnostic enum constant nPerms that contains the
               number of permutations in Sn (i.e., 3!, 4! and 5! respectively).
             - New construtors that take an array of images.
+            - NPerm3 and NPerm5 now have a copy of S2 (which NPerm4 already
+              had).  Likewise, NPerm5 now has a copy of S3, orderedS3,
+              S4 and orderedS4 (which NPerm4 again already had).
+            - NPerm4::invS2 and NPerm4::invS3 are deprecated: the former
+              is unnecessary, and the latter is identical to NPerm3::invS3.
         Class NTetrahedron:
             - New dimension-agnostic aliases adjacentSimplex() and
               adjacentFacet().  These are identical to adjacentTetrahedron()
@@ -155,6 +160,8 @@ Version 4.94  [ (under development) ]
     TEST SUITE:
         - Added thorough tests for barycentric subdivision.
         - Added enumeration tests for Dim2EdgePairing.
+        - Additional tests for facet pairing classes.
+        - Additional tests for permutation databases Sk and orderedSk.
 
 Version 4.93  [ 30 May, 2012 ]
 

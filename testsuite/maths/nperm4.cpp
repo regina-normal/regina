@@ -29,6 +29,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/nperm4.h"
+#include "maths/permconv.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NPerm4;
@@ -42,6 +43,7 @@ class NPerm4Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(exhaustive);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(databases);
     CPPUNIT_TEST(deprecatedArrays);
 
     CPPUNIT_TEST_SUITE_END();
@@ -458,6 +460,23 @@ class NPerm4Test : public CppUnit::TestFixture {
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
+            }
+        }
+
+        void databases() {
+            unsigned i;
+            for (i = 0; i < 6; ++i) {
+                if (NPerm4::S3[i] != regina::perm3to4(regina::NPerm3::S3[i]))
+                    CPPUNIT_FAIL("NPerm4 and NPerm3 do not agree on S3.");
+            }
+            for (i = 0; i < 6; ++i) {
+                if (NPerm4::orderedS3[i] !=
+                        regina::perm3to4(regina::NPerm3::orderedS3[i]))
+                    CPPUNIT_FAIL("NPerm4 and NPerm3 do not agree on orderedS3.");
+            }
+            for (i = 0; i < 2; ++i) {
+                if (NPerm4::S2[i] != regina::perm3to4(regina::NPerm3::S2[i]))
+                    CPPUNIT_FAIL("NPerm4 and NPerm3 do not agree on S2.");
             }
         }
 
