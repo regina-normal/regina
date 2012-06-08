@@ -156,10 +156,12 @@ void NCensus::foundGluingPerms(const NGluingPermSearcher* perms, void* census) {
         if (ok) {
             // Put it in the census!
             // Make sure it has a charming label.
+            // Don't insist on unique labels, since this requirement
+            // will soon be dropped and it multiplies the running time
+            // by a factor of #triangulations.
             std::ostringstream out;
             out << "Item " << realCensus->whichSoln;
-            tri->setPacketLabel(realCensus->parent->makeUniqueLabel(
-                out.str()));
+            tri->setPacketLabel(out.str());
             realCensus->parent->insertChildLast(tri);
             realCensus->whichSoln++;
         } else {

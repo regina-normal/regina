@@ -142,10 +142,12 @@ void Dim2Census::foundGluingPerms(const Dim2GluingPermSearcher* perms,
         if (ok) {
             // Put it in the census!
             // Make sure it has a charming label.
+            // Don't insist on unique labels, since this requirement
+            // will soon be dropped and it multiplies the running time
+            // by a factor of #triangulations.
             std::ostringstream out;
             out << "Item " << realCensus->whichSoln_;
-            tri->setPacketLabel(realCensus->parent_->makeUniqueLabel(
-                out.str()));
+            tri->setPacketLabel(out.str());
             realCensus->parent_->insertChildLast(tri);
             realCensus->whichSoln_++;
         } else {
