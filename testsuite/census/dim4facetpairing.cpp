@@ -46,7 +46,8 @@ void countFacetPairings(const Dim4FacetPairing* pair,
 class Dim4FacetPairingTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(Dim4FacetPairingTest);
 
-    CPPUNIT_TEST(rawCounts);
+    CPPUNIT_TEST(rawCountsClosed);
+    CPPUNIT_TEST(rawCountsBounded);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -61,7 +62,7 @@ class Dim4FacetPairingTest : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        void rawCounts() {
+        void rawCountsClosed() {
             // Figures taken from sequence A129430 in the On-Line
             // Encyclopedia of Integer Sequences, as enumerated by
             // Brendan McKay using the software Nauty.
@@ -73,12 +74,69 @@ class Dim4FacetPairingTest : public CppUnit::TestFixture {
                 Dim4FacetPairing::findAllPairings(size, NBoolSet::sFalse,
                     0, countFacetPairings, &count, false);
 
-                std::ostringstream msg;
-                msg << "Facet pairing count for " << size
-                    << " pentachora should be " << nPairs[size]
-                    << ", not " << count << '.';
+                if (count != nPairs[size]) {
+                    std::ostringstream msg;
+                    msg << "Facet pairing count for " << size
+                        << " pentachora (closed) should be "
+                        << nPairs[size] << ", not " << count << '.';
 
-                CPPUNIT_ASSERT_MESSAGE(msg.str(), count == nPairs[size]);
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void rawCountsBounded() {
+            // Figures based on enumeration under the 4-manifolds branch
+            // at the time of the Regina 4.93 release.
+            unsigned nBdry[] = { 0, 3, 11, 61, 473, 4487 };
+            unsigned nBdry1[] = { 0, 1, 0, 10, 0, 284, 0, 17761 };
+            unsigned nBdry2[] = { 0, 0, 4, 0, 91, 0, 4665 };
+
+            unsigned size;
+
+            for (size = 0; size <= 6; ++size) {
+                count = 0;
+                Dim4FacetPairing::findAllPairings(size, NBoolSet::sTrue,
+                    1, countFacetPairings, &count, false);
+
+                if (count != nBdry1[size]) {
+                    std::ostringstream msg;
+                    msg << "Facet pairing count for " << size
+                        << " pentachora (1 bdry face) should be "
+                        << nBdry1[size] << ", not " << count << '.';
+
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            for (size = 0; size <= 5; ++size) {
+                count = 0;
+                Dim4FacetPairing::findAllPairings(size, NBoolSet::sTrue,
+                    2, countFacetPairings, &count, false);
+
+                if (count != nBdry2[size]) {
+                    std::ostringstream msg;
+                    msg << "Facet pairing count for " << size
+                        << " pentachora (2 bdry faces) should be "
+                        << nBdry2[size] << ", not " << count << '.';
+
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            for (size = 0; size <= 4; ++size) {
+                count = 0;
+                Dim4FacetPairing::findAllPairings(size, NBoolSet::sTrue,
+                    -1, countFacetPairings, &count, false);
+
+                if (count != nBdry[size]) {
+                    std::ostringstream msg;
+                    msg << "Facet pairing count for " << size
+                        << " pentachora (closed) should be "
+                        << nBdry[size] << ", not " << count << '.';
+
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
         }
 };
