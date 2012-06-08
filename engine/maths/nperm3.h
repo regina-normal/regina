@@ -188,6 +188,17 @@ class REGINA_API NPerm3 {
         NPerm3();
 
         /**
+         * Creates the transposition of \a a and \a b.
+         * Note that \a a and \a b need not be distinct.
+         *
+         * \pre \a a and \a b are in {0,1,2}.
+         *
+         * @param a the element to switch with \a b.
+         * @param b the element to switch with \a a.
+         */
+        NPerm3(int a, int b);
+
+        /**
          * Creates a permutation mapping (0,1,2) to
          * (<i>a</i>,<i>b</i>,<i>c</i>) respectively.
          *
@@ -454,7 +465,22 @@ inline NPerm3::NPerm3() : code_(0) {
 inline NPerm3::NPerm3(unsigned char code) : code_(code) {
 }
 
+inline NPerm3::NPerm3(int a, int b) {
+    // Transposition.
+    if (a == b)
+        code_ = code012;
+    else switch (a) {
+        case 0:
+            code_ = (b == 1 ? code102 : code210); break;
+        case 1:
+            code_ = (b == 0 ? code102 : code021); break;
+        case 2:
+            code_ = (b == 0 ? code210 : code021); break;
+    }
+}
+
 inline NPerm3::NPerm3(int a, int b, int) {
+    // Images of (0, 1, 2).
     switch (a) {
         case 0:
             code_ = static_cast<unsigned char>(b == 1 ? 0 : 1); break;

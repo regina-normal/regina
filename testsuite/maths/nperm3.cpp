@@ -40,6 +40,7 @@ class NPerm3Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(inverse);
     CPPUNIT_TEST(sign);
     CPPUNIT_TEST(index);
+    CPPUNIT_TEST(swaps);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(exhaustive);
     CPPUNIT_TEST(compareWith);
@@ -289,6 +290,47 @@ class NPerm3Test : public CppUnit::TestFixture {
                     << " does not appear to be correct.";
                 CPPUNIT_FAIL(msg.str());
             }
+        }
+
+        void swaps() {
+            for (int i = 0; i < 3; ++i)
+                for (int j = 0; j < 3; ++j) {
+                    NPerm3 p(i, j);
+
+                    if (p.imageOf[i] != j) {
+                        std::ostringstream msg;
+                        msg << "The (" << i << ", " << j << ") swap "
+                            "gives the wrong image for " << i << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (p.imageOf[j] != i) {
+                        std::ostringstream msg;
+                        msg << "The (" << i << ", " << j << ") swap "
+                            "gives the wrong image for " << j << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (i != j) {
+                        if (p.imageOf[3-i-j] != 3-i-j) {
+                            std::ostringstream msg;
+                            msg << "The (" << i << ", " << j << ") swap "
+                                "gives the wrong image for " << 3-i-j << ".";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } else {
+                        if (p.imageOf[(i+1)%3] != (i+1)%3) {
+                            std::ostringstream msg;
+                            msg << "The (" << i << ", " << j << ") swap "
+                                "gives the wrong image for " << (i+1)%3 << ".";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                        if (p.imageOf[(i+2)%3] != (i+2)%3) {
+                            std::ostringstream msg;
+                            msg << "The (" << i << ", " << j << ") swap "
+                                "gives the wrong image for " << (i+2)%3 << ".";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
+                }
         }
 
         void products() {
