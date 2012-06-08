@@ -65,12 +65,12 @@ namespace regina {
  * \ifacespython Not present.
  */
 template <int dim>
-class NGenericGluingPerms : public DimTraits<dim> {
+class NGenericGluingPerms {
     public:
-        using typename DimTraits<dim>::FacetPairing;
-        using typename DimTraits<dim>::Perm;
-        using typename DimTraits<dim>::Simplex;
-        using typename DimTraits<dim>::Triangulation;
+        typedef typename DimTraits<dim>::FacetPairing FacetPairing;
+        typedef typename DimTraits<dim>::Perm Perm;
+        typedef typename DimTraits<dim>::Simplex Simplex;
+        typedef typename DimTraits<dim>::Triangulation Triangulation;
     protected:
         const FacetPairing* pairing_;
             /**< The facet pairing that this permutation set complements.

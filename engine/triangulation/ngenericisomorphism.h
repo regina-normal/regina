@@ -97,12 +97,12 @@ namespace regina {
  * \testpart
  */
 template <int dim>
-class NGenericIsomorphism : public ShareableObject, public DimTraits<dim> {
+class NGenericIsomorphism : public ShareableObject {
     public:
-        using typename DimTraits<dim>::Isomorphism;
-        using typename DimTraits<dim>::Perm;
-        using typename DimTraits<dim>::Simplex;
-        using typename DimTraits<dim>::Triangulation;
+        typedef typename DimTraits<dim>::Isomorphism Isomorphism;
+        typedef typename DimTraits<dim>::Perm Perm;
+        typedef typename DimTraits<dim>::Simplex Simplex;
+        typedef typename DimTraits<dim>::Triangulation Triangulation;
     protected:
         unsigned nSimplices_;
             /**< The number of simplices in the source triangulation. */

@@ -80,13 +80,13 @@ namespace regina {
  * \testpart
  */
 template <int dim>
-class NGenericFacetPairing : public NThread, public DimTraits<dim> {
+class NGenericFacetPairing : public NThread {
     public:
-        using typename DimTraits<dim>::FacetPairing;
-        using typename DimTraits<dim>::Isomorphism;
-        using typename DimTraits<dim>::Perm;
-        using typename DimTraits<dim>::Simplex;
-        using typename DimTraits<dim>::Triangulation;
+        typedef typename DimTraits<dim>::FacetPairing FacetPairing;
+        typedef typename DimTraits<dim>::Isomorphism Isomorphism;
+        typedef typename DimTraits<dim>::Perm Perm;
+        typedef typename DimTraits<dim>::Simplex Simplex;
+        typedef typename DimTraits<dim>::Triangulation Triangulation;
 
         /**
          * A list of isomorphisms on pairwise matchings of simplex facets.
