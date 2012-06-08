@@ -90,6 +90,10 @@ class REGINA_API NPerm4 {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
+         * For all permutation classes (NPerm4, NPerm5 and so on), the
+         * S4 array stores the same permutations in the same order (but
+         * of course using different data types).
+         *
          * Note that the permutations are not necessarily in
          * lexicographical order.
          */
@@ -125,8 +129,13 @@ class REGINA_API NPerm4 {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
+         * For all permutation classes (NPerm4, NPerm5 and so on), the
+         * S3 array stores the same permutations in the same order (but
+         * of course using different data types).
+         *
          * Note that the permutations are not necessarily in
-         * lexicographical order.
+         * lexicographical order.  For the corresponding inverse array,
+         * see NPerm3::invS3.
          */
         static const NPerm4 S3[6];
 
@@ -135,6 +144,10 @@ class REGINA_API NPerm4 {
          *
          * Specifically, the inverse of permutation <tt>S3[i]</tt> is
          * the permutation <tt>S3[ invS3[i] ]</tt>.
+         *
+         * \deprecated This is identical to the array NPerm3::invS3.
+         * This unnecessary copy in NPerm4 will be removed in some
+         * future version of Regina.
          */
         static const unsigned invS3[6];
 
@@ -152,7 +165,11 @@ class REGINA_API NPerm4 {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * Note that the permutations are also in lexicographical order.
+         * For all permutation classes (NPerm4, NPerm5 and so on), the
+         * S2 array stores the same permutations in the same order (but
+         * of course using different data types).
+         *
+         * Note that these permutations are already in lexicographical order.
          */
         static const NPerm4 S2[2];
 
@@ -161,6 +178,10 @@ class REGINA_API NPerm4 {
          *
          * Specifically, the inverse of permutation <tt>S2[i]</tt> is
          * the permutation <tt>S2[ invS2[i] ]</tt>.
+         *
+         * \deprecated This array is unnecessary, since all elements of S2 are
+         * their own inverses.  This array will be removed in some future
+         * version of Regina.
          */
         static const unsigned invS2[2];
 
@@ -683,9 +704,9 @@ REGINA_API extern const NPerm4* allPermsS3;
  * Specifically, the inverse of permutation <tt>allPermsS3[i]</tt> is
  * the permutation <tt>allPermsS3[ allPermsS3Inv[i] ]</tt>.
  *
- * \deprecated This array has been moved into the NPerm4 class, and can now
- * be accessed as the static array NPerm4::invS3.  The deprecated name
- * regina::allPermsS3Inv now just points to NPerm4::invS3, and will be
+ * \deprecated This array has been moved into the NPerm3 class, and can now
+ * be accessed as the static array NPerm3::invS3.  The deprecated name
+ * regina::allPermsS3Inv now just points to NPerm3::invS3, and will be
  * removed in some future version of Regina.
  */
 REGINA_API extern const unsigned* allPermsS3Inv;
@@ -724,10 +745,9 @@ REGINA_API extern const NPerm4* allPermsS2;
  * Specifically, the inverse of permutation <tt>allPermsS2[i]</tt> is
  * the permutation <tt>allPermsS2[ allPermsS2Inv[i] ]</tt>.
  *
- * \deprecated This array has been moved into the NPerm4 class, and can now
- * be accessed as the static array NPerm4::invS2.  The deprecated name
- * regina::allPermsS2Inv now just points to NPerm4::invS2, and will be
- * removed in some future version of Regina.
+ * \deprecated This array is unnecessary, since all elements of S2 are
+ * their own inverses.  This array will be removed in some future version
+ * of Regina.
  */
 REGINA_API extern const unsigned* allPermsS2Inv;
 
