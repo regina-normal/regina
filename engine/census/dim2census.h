@@ -284,7 +284,7 @@ class REGINA_API Dim2Census {
          * @param census the census currently being generated;
          * this must really be of class Dim2Census.
          */
-        static void foundFacetPairing(const Dim2EdgePairing* pairing,
+        static void foundEdgePairing(const Dim2EdgePairing* pairing,
             const Dim2EdgePairing::IsoList* autos, void* census);
 
         /**
