@@ -40,5 +40,6 @@
 
 void addNCensus(CppUnit::TextUi::TestRunner& runner);
 void addNFacePairing(CppUnit::TextUi::TestRunner& runner);
+void addDim2Census(CppUnit::TextUi::TestRunner& runner);
 void addDim2EdgePairing(CppUnit::TextUi::TestRunner& runner);
 
