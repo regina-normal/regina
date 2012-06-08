@@ -50,6 +50,7 @@ namespace {
 
 void addNPerm3() {
     scope s = class_<NPerm3>("NPerm3")
+        .def(init<int, int>())
         .def(init<int, int, int>())
         .def(init<const NPerm3&>())
         .def("getPermCode", &NPerm3::getPermCode)
