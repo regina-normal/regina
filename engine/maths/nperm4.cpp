@@ -73,6 +73,8 @@ const NPerm4 NPerm4::S3[6] = {
     NPerm4(2,0,1,3), NPerm4(2,1,0,3)
 };
 
+const NPerm4* NPerm4::Sn_1 = NPerm4::S3;
+
 const NPerm4* allPermsS3 = NPerm4::S3;
 
 const unsigned NPerm4::invS3[6] = {

@@ -52,6 +52,8 @@ const NPerm3 NPerm3::S2[2] = {
     NPerm3(code012), NPerm3(code102)
 };
 
+const NPerm3* NPerm3::Sn_1 = NPerm3::S2;
+
 const unsigned char NPerm3::imageTable[6][3] = {
     { 0, 1, 2 },
     { 0, 2, 1 },

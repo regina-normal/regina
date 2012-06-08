@@ -121,6 +121,14 @@ class REGINA_API NPerm3 {
          */
         static const NPerm3 S2[2];
 
+        /**
+         * A dimension-agnostic alias for NPerm3::S2.  In general, for
+         * each \a K the class NPerm<i>K</i> will define an alias \a Sn_1
+         * that references the list of all permutations
+         * NPerm<i>K</i>::S<i>(K-1)</i>.
+         */
+        static const NPerm3* Sn_1;
+
         enum {
             /**
              * The total number of permutations on three elements.

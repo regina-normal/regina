@@ -39,6 +39,8 @@ Version 4.94  [ (under development) ]
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic alias Sn that refers to S3, S4 and S5 in
               NPerm3, NPerm4 and NPerm5 respectively.
+            - New dimension-agnostic alias Sn_1 that refers to S2, S3 and S4 in
+              NPerm3, NPerm4 and NPerm5 respectively.
             - New dimension-agnostic enum constant nPerms that contains the
               number of permutations in Sn (i.e., 3!, 4! and 5! respectively).
             - New construtors that take an array of images.
