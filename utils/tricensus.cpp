@@ -34,7 +34,9 @@
 #include <sstream>
 #include <popt.h>
 #include <unistd.h>
+#include "census/dim2census.h"
 #include "census/dim2edgepairing.h"
+#include "census/dim2gluingpermsearcher.h"
 #if SUPPORT_DIM4
 #include "census/dim4census.h"
 #include "census/dim4facetpairing.h"
@@ -98,26 +100,24 @@ int runCensus();
 // Differences between censuses of 2, 3 and 4-manifolds:
 struct Dim2Params {
     typedef regina::Dim2EdgePairing Pairing;
-    typedef void GluingPermSearcher; // TODO
+    typedef regina::Dim2GluingPermSearcher GluingPermSearcher;
     typedef regina::Dim2Triangulation Triangulation;
 
     inline static void findAllPerms(const Pairing* p,
             const Pairing::IsoList* autos, bool orientableOnly,
             bool finiteOnly, int whichPurge, regina::NPacket* dest) {
-        // TODO
-        // GluingPermSearcher::findAllPerms(p, autos,
-        //    orientableOnly, finiteOnly, whichPurge,
-        //    foundGluingPerms<Dim3Params>, dest);
+        GluingPermSearcher::findAllPerms(p, autos,
+            orientableOnly,
+            foundGluingPerms<Dim2Params>, dest);
     }
 
     inline static bool mightBeMinimal(Triangulation* tri) {
-        // TODO return regina::NCensus::mightBeMinimal(tri, 0);
+        // TODO: We can do better, and implement isMinimal().. some other time.
         return true;
     }
 
     inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
-        // TODO return s->getEdgePairing();
-        return 0;
+        return s->getFacetPairing();
     }
 };
 
@@ -404,7 +404,13 @@ int main(int argc, const char* argv[]) {
     } else if (dim2 && dim4) {
         std::cerr << "Options -2/--dim2 and -4/--dim4 cannot be used together.\n";
         broken = true;
-    // TODO: Disallow other nonsensical dim2 options.
+    } else if (dim2 && (argFinite || argIdeal)) {
+        std::cerr << "Finiteness options cannot be used with -2/--dim2.\n";
+        broken = true;
+    } else if (dim2 && (minimalPrime || minimalPrimeP2)) {
+        std::cerr << "Primeness options cannot be used with -2/--dim2 "
+            "(the weaker -m/--minimal can).\n";
+        broken = true;
     } else if (dim4 && (minimal || minimalPrime || minimalPrimeP2)) {
         std::cerr << "Minimality options cannot be used with -4/--dim4.\n";
         broken = true;
@@ -470,12 +476,16 @@ int main(int argc, const char* argv[]) {
                 << (nTet == 1 ? " tetrahedron" : " tetrahedra")
                 << " can be at most " << (2 * nTet + 2) << ".\n";
             broken = true;
-        } else if (dim4 && (5 * nTet - nBdryFaces < nTet - 1)) {
+        } else if (dim2 && (3 * nTet - nBdryFaces < 2 * (nTet - 1))) {
+            std::cerr << "Number of boundary edges for " << nTet
+                << (nTet == 1 ? " triangle" : " triangles")
+                << " can be at most " << (nTet + 2) << ".\n";
+            broken = true;
+        } else if (dim4 && (5 * nTet - nBdryFaces < 2 * (nTet - 1))) {
             std::cerr << "Number of boundary facets for " << nTet
                 << (nTet == 1 ? " pentachoron" : " pentachora")
-                << " can be at most " << (4 * nTet + 1) << ".\n";
+                << " can be at most " << (3 * nTet + 2) << ".\n";
             broken = true;
-            // TODO: Similar bound for 2-D.
         } else {
             // Asking for a valid positive number of boundary faces.
             if (argNoBdry) {

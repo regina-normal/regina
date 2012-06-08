@@ -1,7 +1,7 @@
 # census
 
 # Files to compile
-SET ( FILES dim2edgepairing dim4census dim4facetpairing ncensus nfacepairing pycensus)
+SET ( FILES dim2census dim2edgepairing dim4census dim4facetpairing ncensus nfacepairing pycensus)
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
