@@ -297,33 +297,33 @@ class NPerm3Test : public CppUnit::TestFixture {
                 for (int j = 0; j < 3; ++j) {
                     NPerm3 p(i, j);
 
-                    if (p.imageOf[i] != j) {
+                    if (p[i] != j) {
                         std::ostringstream msg;
                         msg << "The (" << i << ", " << j << ") swap "
                             "gives the wrong image for " << i << ".";
                         CPPUNIT_FAIL(msg.str());
                     }
-                    if (p.imageOf[j] != i) {
+                    if (p[j] != i) {
                         std::ostringstream msg;
                         msg << "The (" << i << ", " << j << ") swap "
                             "gives the wrong image for " << j << ".";
                         CPPUNIT_FAIL(msg.str());
                     }
                     if (i != j) {
-                        if (p.imageOf[3-i-j] != 3-i-j) {
+                        if (p[3-i-j] != 3-i-j) {
                             std::ostringstream msg;
                             msg << "The (" << i << ", " << j << ") swap "
                                 "gives the wrong image for " << 3-i-j << ".";
                             CPPUNIT_FAIL(msg.str());
                         }
                     } else {
-                        if (p.imageOf[(i+1)%3] != (i+1)%3) {
+                        if (p[(i+1)%3] != (i+1)%3) {
                             std::ostringstream msg;
                             msg << "The (" << i << ", " << j << ") swap "
                                 "gives the wrong image for " << (i+1)%3 << ".";
                             CPPUNIT_FAIL(msg.str());
                         }
-                        if (p.imageOf[(i+2)%3] != (i+2)%3) {
+                        if (p[(i+2)%3] != (i+2)%3) {
                             std::ostringstream msg;
                             msg << "The (" << i << ", " << j << ") swap "
                                 "gives the wrong image for " << (i+2)%3 << ".";
