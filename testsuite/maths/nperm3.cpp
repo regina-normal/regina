@@ -43,6 +43,7 @@ class NPerm3Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(exhaustive);
     CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(aliases);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -402,6 +403,18 @@ class NPerm3Test : public CppUnit::TestFixture {
                     }
                 }
             }
+        }
+
+        void aliases() {
+            unsigned i;
+
+            for (i = 0; i < 6; ++i)
+                if (NPerm3::S3[i] != NPerm3::Sn[i])
+                    CPPUNIT_FAIL("Arrays S3 and Sn disagree for NPerm3.");
+
+            for (i = 0; i < 2; ++i)
+                if (NPerm3::S2[i] != NPerm3::Sn_1[i])
+                    CPPUNIT_FAIL("Arrays S2 and Sn_1 disagree for NPerm3.");
         }
 };
 

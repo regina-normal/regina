@@ -121,6 +121,8 @@ const NPerm5 NPerm5::S4[24] = {
     NPerm5(3,1,0,2,4), NPerm5(3,1,2,0,4), NPerm5(3,2,1,0,4), NPerm5(3,2,0,1,4)
 };
 
+const NPerm5* NPerm5::Sn_1 = NPerm5::S4;
+
 const NPerm5 NPerm5::orderedS4[24] = {
     NPerm5(0,1,2,3,4), NPerm5(0,1,3,2,4), NPerm5(0,2,1,3,4), NPerm5(0,2,3,1,4),
     NPerm5(0,3,1,2,4), NPerm5(0,3,2,1,4), NPerm5(1,0,2,3,4), NPerm5(1,0,3,2,4),

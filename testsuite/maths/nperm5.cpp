@@ -45,6 +45,7 @@ class NPerm5Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(databases);
+    CPPUNIT_TEST(aliases);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -468,6 +469,18 @@ class NPerm5Test : public CppUnit::TestFixture {
                 if (NPerm5::S2[i] != regina::perm4to5(regina::NPerm4::S2[i]))
                     CPPUNIT_FAIL("NPerm4 and NPerm4 do not agree on S2.");
             }
+        }
+
+        void aliases() {
+            unsigned i;
+
+            for (i = 0; i < 120; ++i)
+                if (NPerm5::S5[i] != NPerm5::Sn[i])
+                    CPPUNIT_FAIL("Arrays S5 and Sn disagree for NPerm5.");
+
+            for (i = 0; i < 24; ++i)
+                if (NPerm5::S4[i] != NPerm5::Sn_1[i])
+                    CPPUNIT_FAIL("Arrays S4 and Sn_1 disagree for NPerm5.");
         }
 };
 

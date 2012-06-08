@@ -117,6 +117,14 @@ class REGINA_API NPerm5 {
         static const NPerm5 S4[24];
 
         /**
+         * A dimension-agnostic alias for NPerm5::S4.  In general, for
+         * each \a K the class NPerm<i>K</i> will define an alias \a Sn_1
+         * that references the list of all permutations
+         * NPerm<i>K</i>::S<i>(K-1)</i>.
+         */
+        static const NPerm5* Sn_1;
+
+        /**
          * Contains all possible permutations of four elements in
          * lexicographical order.  In each permutation, 4 maps to 4.
          */

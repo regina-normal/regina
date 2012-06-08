@@ -140,6 +140,14 @@ class REGINA_API NPerm4 {
         static const NPerm4 S3[6];
 
         /**
+         * A dimension-agnostic alias for NPerm4::S3.  In general, for
+         * each \a K the class NPerm<i>K</i> will define an alias \a Sn_1
+         * that references the list of all permutations
+         * NPerm<i>K</i>::S<i>(K-1)</i>.
+         */
+        static const NPerm4* Sn_1;
+
+        /**
          * Contains the inverses of the permutations in the array \a S3.
          *
          * Specifically, the inverse of permutation <tt>S3[i]</tt> is
