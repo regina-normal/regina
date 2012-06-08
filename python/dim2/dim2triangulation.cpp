@@ -154,9 +154,11 @@ void addDim2Triangulation() {
         .def("makeCanonical", &Dim2Triangulation::makeCanonical)
         .def("isContainedIn", isContainedIn_ptr,
             return_value_policy<manage_new_object>())
+        .def("isValid", &Dim2Triangulation::isValid)
         .def("getEulerChar", &Dim2Triangulation::getEulerChar)
         .def("isClosed", &Dim2Triangulation::isClosed)
         .def("isOrientable", &Dim2Triangulation::isOrientable)
+        .def("isIdeal", &Dim2Triangulation::isIdeal)
         .def("isConnected", &Dim2Triangulation::isConnected)
         .def("insertTriangulation", &Dim2Triangulation::insertTriangulation)
         .def("isoSig", isoSig_void)

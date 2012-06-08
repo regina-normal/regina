@@ -757,6 +757,20 @@ class REGINA_API Dim2Triangulation : public NPacket {
         /*@{*/
 
         /**
+         * Always returns \c true.
+         *
+         * This routine determines if this triangulation is valid; however,
+         * there is nothing that can go wrong with vertex links in 2-manifold
+         * triangulations, and so this routine always returns \c true.
+         *
+         * This no-op routine is provided for consistency with higher
+         * dimensional triangulations, and to assist with writing
+         * dimension-agnostic code.
+         *
+         * @return \c true.
+         */
+        bool isValid() const;
+        /**
          * Returns the Euler characteristic of this triangulation.
          * This will be evaluated as \a V-E+F.
          *
@@ -782,6 +796,22 @@ class REGINA_API Dim2Triangulation : public NPacket {
          * @return \c true if and only if this triangulation is connected.
          */
         bool isConnected() const;
+        /**
+         * Always returns \c false.
+         *
+         * This routine determines if this triangulation is ideal (has a
+         * non-trivial vertex link); however, every vertex link in a
+         * 2-manifold triangulation is either the interval or the
+         * circle, and so ideal triangulations cannot exist.
+         * Therefore this routine always returns \c false.
+         *
+         * This no-op routine is provided for consistency with higher
+         * dimensional triangulations, and to assist with writing
+         * dimension-agnostic code.
+         *
+         * @return \c false.
+         */
+        bool isIdeal() const;
 
         /*@}*/
         /**
@@ -1322,6 +1352,10 @@ inline long Dim2Triangulation::edgeIndex(const Dim2Edge* edge) const {
     return edge->markedIndex();
 }
 
+inline bool Dim2Triangulation::isValid() const {
+    return true;
+}
+
 inline long Dim2Triangulation::getEulerChar() const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
@@ -1342,6 +1376,10 @@ inline bool Dim2Triangulation::isOrientable() const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
     return orientable_;
+}
+
+inline bool Dim2Triangulation::isIdeal() const {
+    return false;
 }
 
 inline bool Dim2Triangulation::isConnected() const {
