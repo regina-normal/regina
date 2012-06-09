@@ -47,8 +47,13 @@ namespace regina {
  */
 
 /**
- * Represents a specific set of gluing permutations to complement a
- * particular pairwise matching of simplex facets.  Given a pairwise
+ * A dimension-agnostic base class that represents a specific set
+ * of gluing permutations to complement a particular pairwise matching of
+ * simplex facets.  Each dimension that Regina works with (2, 3 and 4)
+ * offers its own subclass, in some cases with richer functionality.
+ * Users should not need to work with this template base class directly.
+ *
+ * Given a pairwise
  * matching of facets (as described by class NGenericFacetPairing<dim>),
  * each facet that is matched with some other facet will have an associated
  * permutation of (\a dim + 1) elements.
@@ -61,6 +66,8 @@ namespace regina {
  * triangulation, in which each simplex facet that is glued to another
  * facet has a corresponding gluing permutation (and the matched facet has
  * the inverse gluing permutation).
+ *
+ * \pre The dimension argument \a dim is either 2, 3 or 4.
  *
  * \ifacespython Not present.
  */

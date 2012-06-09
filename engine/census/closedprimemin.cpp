@@ -324,12 +324,12 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
 
         // Begin by testing for face pairings that can never lead to such a
         // triangulation.
-        if (pairing->hasTripleEdge() ||
-                pairing->hasBrokenDoubleEndedChain() ||
-                pairing->hasOneEndedChainWithDoubleHandle() ||
-                pairing->hasOneEndedChainWithStrayBigon() ||
-                pairing->hasWedgedDoubleEndedChain() ||
-                pairing->hasTripleOneEndedChain()) {
+        if (pairing_->hasTripleEdge() ||
+                pairing_->hasBrokenDoubleEndedChain() ||
+                pairing_->hasOneEndedChainWithDoubleHandle() ||
+                pairing_->hasOneEndedChainWithStrayBigon() ||
+                pairing_->hasWedgedDoubleEndedChain() ||
+                pairing_->hasTripleOneEndedChain()) {
             use_(0, useArgs_);
             return;
         }
@@ -371,7 +371,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
     int mergeResult;
     while (orderElt >= minOrder) {
         face = order[orderElt];
-        adj = (*pairing)[face];
+        adj = (*pairing_)[face];
 
         // TODO (long-term): Check for cancellation.
 
@@ -538,9 +538,9 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
             // We've moved onto a new face.
             // Be sure to get the orientation right.
             face = order[orderElt];
-            if (orientableOnly_ && pairing->dest(face).facet > 0) {
+            if (orientableOnly_ && pairing_->dest(face).facet > 0) {
                 // permIndex(face) will be set to -1 or -2 as appropriate.
-                adj = (*pairing)[face];
+                adj = (*pairing_)[face];
                 if (orientation[face.simp] == orientation[adj.simp])
                     permIndex(face) = 1;
                 else
@@ -726,7 +726,7 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
 
 int NClosedPrimeMinSearcher::mergeEdgeClasses() {
     NTetFace face = order[orderElt];
-    NTetFace adj = (*pairing)[face];
+    NTetFace adj = (*pairing_)[face];
 
     int retVal = 0;
 
@@ -769,7 +769,7 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                 retVal |= ECLASS_LOWDEG;
             else if (edgeState[eRep].size == 3) {
                 // Flag as LOWDEG only if three distinct tetrahedra are used.
-                middleTet = pairing->dest(face.simp, v2).simp;
+                middleTet = pairing_->dest(face.simp, v2).simp;
                 if (face.simp != adj.simp && adj.simp != middleTet &&
                         middleTet != face.simp)
                     retVal |= ECLASS_LOWDEG;

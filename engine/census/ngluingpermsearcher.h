@@ -1661,7 +1661,7 @@ inline void NCompactSearcher::vtxBdryNext(int vertexID,
                     // to either the tetrahedron face we are currently
                     // working with or its adjacent partner.
                     int ghostFace = (bdryFace == order[orderElt].facet ?
-                        (*pairing)[order[orderElt]].facet :
+                        (*pairing_)[order[orderElt]].facet :
                         order[orderElt].facet);
                     if (vertexLinkNextFace[vertex][bdryFace] == ghostFace) {
                         next[0] = vertexState[vertexID].bdryNext[0];
