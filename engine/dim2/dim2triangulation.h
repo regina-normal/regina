@@ -813,6 +813,30 @@ class REGINA_API Dim2Triangulation : public NPacket {
          */
         bool isIdeal() const;
 
+        /**
+         * Determines whether this is a minimal triangulation of the
+         * underlying 2-manifold; that is, it uses the fewest possible
+         * triangles.
+         *
+         * Testing for minimality is simple in two dimensions (unlike
+         * higher dimensions, where it becomes extremely difficult).
+         * With the exception of the sphere, disc and projective plane
+         * (which require a minimum of 2, 1 and 2 triangles respectively),
+         * a closed triangulation is minimal if and only if it has one
+         * vertex, and a bounded triangulation is minimal if and only if
+         * it has one vertex per boundary component and no internal vertices.
+         *
+         * The proof is based on a simple Euler characteristic calculation,
+         * whereby the number of triangles <tt>T</tt> is
+         * <tt>T = 2Vi + Vb - 2C</tt>, where <tt>Vi</tt> and <tt>Vb</tt>
+         * are the number of internal and boundary vertices respectively,
+         * and where <tt>C</tt> is the Euler characteristic of the
+         * underlying manifold.
+         *
+         * @return \c true if and only if this is a minimal triangulation.
+         */
+        bool isMinimal() const;
+
         /*@}*/
         /**
          * (end: Basic Properties)

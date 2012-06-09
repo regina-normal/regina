@@ -29,6 +29,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "census/dim2census.h"
+#include "dim2/dim2triangulation.h"
 #include "packet/ncontainer.h"
 #include "testsuite/census/testcensus.h"
 
@@ -41,6 +42,7 @@ class Dim2CensusTest : public CppUnit::TestFixture {
 
     CPPUNIT_TEST(rawCountsClosed);
     CPPUNIT_TEST(rawCountsBounded);
+    CPPUNIT_TEST(rawCountsClosedMinimal);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -52,6 +54,7 @@ class Dim2CensusTest : public CppUnit::TestFixture {
         }
 
         void rawCountsClosed() {
+            // All counts taken from an enumeration using Regina 4.94.
             unsigned nAll[] = { 1, 0, 7, 0, 51, 0, 738, 0, 20540, 0, 911677 };
             rawCountsCompare(1, 8, nAll, "closed",
                 NBoolSet::sBoth, NBoolSet::sFalse, 0, 0);
@@ -62,6 +65,7 @@ class Dim2CensusTest : public CppUnit::TestFixture {
         }
 
         void rawCountsBounded() {
+            // All counts taken from an enumeration using Regina 4.94.
             unsigned nAll[] = { 1, 3, 6, 26, 105, 622, 3589, 28031, 202169 };
             rawCountsCompare(1, 7, nAll, "bounded",
                 NBoolSet::sBoth, NBoolSet::sTrue, -1, 0);
@@ -70,6 +74,23 @@ class Dim2CensusTest : public CppUnit::TestFixture {
                 { 1, 2, 4, 11, 41, 155, 750, 3967, 23260, 148885, 992299 };
             rawCountsCompare(1, 8, nOrientable, "bounded orbl",
                 NBoolSet::sTrue, NBoolSet::sTrue, -1, 0);
+        }
+
+        static bool sieveMinimal(regina::Dim2Triangulation* tri, void*) {
+            return tri->isMinimal();
+        }
+
+        void rawCountsClosedMinimal() {
+            // All counts taken from an enumeration using Regina 4.94.
+            unsigned nOrientable[] = { 1, 0, 3 /* sphere + torus */, 0, 0, 0,
+                8, 0, 0, 0, 927 };
+            rawCountsCompare(1, 10, nOrientable, "closed orbl minimal",
+                NBoolSet::sTrue, NBoolSet::sFalse, 0, sieveMinimal);
+
+            unsigned nNonOrientable[] = { 1, 0, 4 /* PP + KB */, 0, 11, 0,
+                144, 0, 3627, 0, 149288 };
+            rawCountsCompare(1, 8, nNonOrientable, "closed non-orbl minimal",
+                NBoolSet::sFalse, NBoolSet::sFalse, 0, sieveMinimal);
         }
 
         static void rawCountsCompare(unsigned minTris, unsigned maxTris,

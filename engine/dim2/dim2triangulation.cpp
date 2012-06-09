@@ -35,6 +35,23 @@
 
 namespace regina {
 
+bool Dim2Triangulation::isMinimal() const {
+    // 2-sphere:
+    if (getEulerChar() == 2)
+        return (triangles_.size() == 2);
+
+    // Projective plane and disc:
+    if (getEulerChar() == 1)
+        return (triangles_.size() == (isClosed() ? 2 : 1));
+
+    // All other closed manifolds:
+    if (isClosed())
+        return (vertices_.size() == 1);
+
+    // All other bounded manifolds:
+    return (vertices_.size() == boundaryComponents_.size());
+}
+
 void Dim2Triangulation::swapContents(Dim2Triangulation& other) {
     ChangeEventSpan span1(this);
     ChangeEventSpan span2(&other);
