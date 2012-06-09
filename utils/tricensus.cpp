@@ -112,8 +112,7 @@ struct Dim2Params {
     }
 
     inline static bool mightBeMinimal(Triangulation* tri) {
-        // TODO: We can do better, and implement isMinimal().. some other time.
-        return true;
+        return tri->isMinimal();
     }
 
     inline static const Pairing* pairingFor(const GluingPermSearcher* s) {

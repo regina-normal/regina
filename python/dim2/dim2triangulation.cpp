@@ -160,6 +160,7 @@ void addDim2Triangulation() {
         .def("isOrientable", &Dim2Triangulation::isOrientable)
         .def("isIdeal", &Dim2Triangulation::isIdeal)
         .def("isConnected", &Dim2Triangulation::isConnected)
+        .def("isMinimal", &Dim2Triangulation::isMinimal)
         .def("insertTriangulation", &Dim2Triangulation::insertTriangulation)
         .def("isoSig", isoSig_void)
         .def("fromIsoSig", &Dim2Triangulation::fromIsoSig,
