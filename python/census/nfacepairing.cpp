@@ -74,8 +74,10 @@ namespace {
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDotHeader, writeDotHeader_stdout,
         0, 1);
 
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_dot, NFacePairing::dot, 0, 3);
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dotHeader, NFacePairing::dotHeader, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_dot,
+        regina::NGenericFacetPairing<3>::dot, 0, 3);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dotHeader,
+        regina::NGenericFacetPairing<3>::dotHeader, 0, 1);
 }
 
 void addNFacePairing() {
