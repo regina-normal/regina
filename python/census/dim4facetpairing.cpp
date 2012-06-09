@@ -59,14 +59,25 @@ namespace {
         Dim4FacetPairing::writeDotHeader(std::cout, graphName);
     }
 
+    // Write dot() and dotHeader() as standalone functions: it seems
+    // difficult using boost overloads in a way that keeps both gcc and
+    // LLVM happy. :/
+    std::string dot_standalone(const Dim4FacetPairing& p,
+            const char* prefix = 0, bool subgraph = false,
+            bool labels = false) {
+        return p.dot(prefix, subgraph, labels);
+    }
+
+    std::string dotHeader_standalone(const char* graphName = 0) {
+        return Dim4FacetPairing::dotHeader(graphName);
+    }
+
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDot, writeDot_stdout, 1, 4);
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDotHeader, writeDotHeader_stdout,
         0, 1);
 
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_dot,
-        regina::NGenericFacetPairing<4>::dot, 0, 3);
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dotHeader,
-        regina::NGenericFacetPairing<4>::dotHeader, 0, 1);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dot, dot_standalone, 1, 4);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dotHeader, dotHeader_standalone, 0, 1);
 }
 
 void addDim4FacetPairing() {
@@ -89,9 +100,9 @@ void addDim4FacetPairing() {
         .def("fromTextRep", &Dim4FacetPairing::fromTextRep,
             return_value_policy<manage_new_object>())
         .def("writeDot", writeDot_stdout, OL_writeDot())
-        .def("dot", &Dim4FacetPairing::dot, OL_dot())
+        .def("dot", dot_standalone, OL_dot())
         .def("writeDotHeader", writeDotHeader_stdout, OL_writeDotHeader())
-        .def("dotHeader", &Dim4FacetPairing::dotHeader, OL_dotHeader())
+        .def("dotHeader", dotHeader_standalone, OL_dotHeader())
         .def("isClosed", &Dim4FacetPairing::isClosed)
         .def("__str__", &Dim4FacetPairing::toString)
         .staticmethod("fromTextRep")
