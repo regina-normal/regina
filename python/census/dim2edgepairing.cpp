@@ -63,9 +63,10 @@ namespace {
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDotHeader, writeDotHeader_stdout,
         0, 1);
 
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_dot, Dim2EdgePairing::dot, 0, 3);
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dotHeader, Dim2EdgePairing::dotHeader,
-        0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_dot,
+        regina::NGenericFacetPairing<2>::dot, 0, 3);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dotHeader,
+        regina::NGenericFacetPairing<2>::dotHeader, 0, 1);
 }
 
 void addDim2EdgePairing() {

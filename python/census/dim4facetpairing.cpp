@@ -63,9 +63,10 @@ namespace {
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDotHeader, writeDotHeader_stdout,
         0, 1);
 
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_dot, Dim4FacetPairing::dot, 0, 3);
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dotHeader, Dim4FacetPairing::dotHeader,
-        0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_dot,
+        regina::NGenericFacetPairing<4>::dot, 0, 3);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dotHeader,
+        regina::NGenericFacetPairing<4>::dotHeader, 0, 1);
 }
 
 void addDim4FacetPairing() {
