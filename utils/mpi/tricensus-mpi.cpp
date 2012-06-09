@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#define SUPPORT_DIM4 1
+
 #include "mpi.h"
 
 #include <cctype>
@@ -35,19 +37,26 @@
 #include <memory>
 #include <sstream>
 #include <popt.h>
+#include "census/dim2census.h"
+#include "census/dim2gluingpermsearcher.h"
+#if SUPPORT_DIM4
 #include "census/dim4census.h"
 #include "census/dim4gluingpermsearcher.h"
+#endif
 #include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
+#include "dim2/dim2triangulation.h"
+#if SUPPORT_DIM4
 #include "dim4/dim4triangulation.h"
+#endif
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
 #include "triangulation/ntriangulation.h"
 
 // Write messages tailored to the working dimension.
-#define WORD_face (dim4 ? "facet" : "face")
-#define WORD_Face (dim4 ? "Facet" : "Face")
+#define WORD_face (dim4 ? "facet" : dim2 ? "edge" : "face")
+#define WORD_Face (dim4 ? "Facet" : dim2 ? "Edge" : "Face")
 
 // MPI constants.
 #define TAG_REQUEST_TASK 10
@@ -69,7 +78,34 @@ template <class CensusType>
 void ctrlFarmPartialSearch(const typename CensusType::GluingPermSearcher*,
     void*);
 
-// Differences between censuses of 3-manifolds vs 4-manifolds:
+// Differences between censuses of 2, 3 and 4-manifolds:
+struct Dim2Params {
+    typedef regina::Dim2EdgePairing Pairing;
+    typedef regina::Dim2GluingPermSearcher GluingPermSearcher;
+    typedef regina::Dim2Triangulation Triangulation;
+
+    inline static GluingPermSearcher* bestSearcher(Pairing* p,
+            bool orientableOnly, bool /* finiteOnly */, int /* whichPurge */) {
+        return GluingPermSearcher::bestSearcher(p, 0 /* autos */,
+            orientableOnly, ctrlFarmPartialSearch<Dim2Params>);
+    }
+
+    inline static void findAllPerms(Pairing* p, bool orientableOnly,
+            bool /* finiteOnly */, int /* whichPurge */,
+            regina::NPacket* dest) {
+        GluingPermSearcher::findAllPerms(p, 0,
+            orientableOnly, slaveFoundGluingPerms<Dim2Params>, dest);
+    }
+
+    inline static bool mightBeMinimal(Triangulation* tri) {
+        return tri->isMinimal();
+    }
+
+    inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
+        return s->getFacetPairing();
+    }
+};
+
 struct Dim3Params {
     typedef regina::NFacePairing Pairing;
     typedef regina::NGluingPermSearcher GluingPermSearcher;
@@ -98,6 +134,7 @@ struct Dim3Params {
     }
 };
 
+#if SUPPORT_DIM4
 struct Dim4Params {
     typedef regina::Dim4FacetPairing Pairing;
     typedef regina::Dim4GluingPermSearcher GluingPermSearcher;
@@ -125,6 +162,7 @@ struct Dim4Params {
         return s->getFacetPairing();
     }
 };
+#endif
 
 // Census parameters.
 regina::NBoolSet
@@ -134,6 +172,7 @@ int minimal = 0;
 int minimalPrime = 0;
 int minimalPrimeP2 = 0;
 int whichPurge = 0;
+int dim2 = 0;
 int dim4 = 0;
 long depth = 0;
 int dryRun = 0;
@@ -195,9 +234,14 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
         { "minprimep2", 'N', POPT_ARG_NONE, &minimalPrimeP2, 0,
             "Ignore obviously non-minimal, non-prime, disc-reducible and/or "
             "P2-reducible triangulations.", 0 },
+        { "dim2", '2', POPT_ARG_NONE, &dim2, 0,
+            "Run a census of 2-manifold triangulations, "
+            "not 3-manifold triangulations.", 0 },
+#if SUPPORT_DIM4
         { "dim4", '4', POPT_ARG_NONE, &dim4, 0,
             "Run a census of 4-manifold triangulations, "
             "not 3-manifold triangulations.", 0 },
+#endif
         { "sigs", 's', POPT_ARG_NONE, &sigs, 0,
             "Write isomorphism signatures only, not full Regina data files.",
             0 },
@@ -262,6 +306,20 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
         if (isController)
             std::cerr << "Options -o/--orientable and -n/--nonorientable "
                 << "cannot be used together.\n";
+        broken = true;
+    } else if (dim2 && dim4) {
+        if (isController)
+            std::cerr << "Options -2/--dim2 and -4/--dim4 "
+                "cannot be used together.\n";
+        broken = true;
+    } else if (dim2 && (argFinite || argIdeal)) {
+        if (isController)
+            std::cerr << "Finiteness options cannot be used with -2/--dim2.\n";
+        broken = true;
+    } else if (dim2 && (minimalPrime || minimalPrimeP2)) {
+        if (isController)
+            std::cerr << "Primeness options cannot be used with -2/--dim2 "
+                "(the weaker -m/--minimal can).\n";
         broken = true;
     } else if (dim4 && (minimal || minimalPrime || minimalPrimeP2)) {
         if (isController)
@@ -660,6 +718,8 @@ void slaveFoundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
 void slaveDescribeCensusParameters(std::ostream& out) {
     if (dim4)
         out << "Searching for 4-manifold triangulations\n";
+    else if (dim2)
+        out << "Searching for 2-manifold triangulations\n";
     else
         out << "Searching for 3-manifold triangulations\n";
 
@@ -924,6 +984,8 @@ void slaveProcessPairing() {
     if (! pairing) {
         if (dim4)
             slaveBail(std::string("Invalid facet pairing: ") + pairingRep);
+        else if (dim2)
+            slaveBail(std::string("Invalid edge pairing: ") + pairingRep);
         else
             slaveBail(std::string("Invalid face pairing: ") + pairingRep);
         return;
@@ -931,6 +993,9 @@ void slaveProcessPairing() {
     if (! pairing->isCanonical()) {
         if (dim4)
             slaveBail(std::string("Non-canonical facet pairing: ") +
+                pairingRep);
+        else if (dim2)
+            slaveBail(std::string("Non-canonical edge pairing: ") +
                 pairingRep);
         else
             slaveBail(std::string("Non-canonical face pairing: ") +
@@ -1041,15 +1106,23 @@ int main(int argc, char* argv[]) {
                 retVal = 1;
             } else {
                 nSlaves = size - 1;
-                if (dim4)
+                if (dim2)
+                    retVal = mainController<Dim2Params>();
+#if SUPPORT_DIM4
+                else if (dim4)
                     retVal = mainController<Dim4Params>();
+#endif
                 else
                     retVal = mainController<Dim3Params>();
             }
         } else {
             // We're one of many slaves.
-            if (dim4)
+            if (dim2)
+                retVal = mainSlave<Dim2Params>();
+#if SUPPORT_DIM4
+            else if (dim4)
                 retVal = mainSlave<Dim4Params>();
+#endif
             else
                 retVal = mainSlave<Dim3Params>();
         }
