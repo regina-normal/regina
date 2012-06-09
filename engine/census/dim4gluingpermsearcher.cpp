@@ -31,6 +31,7 @@
 #include "census/dim4gluingpermsearcher.h"
 #include "dim4/dim4edge.h"
 #include "dim4/dim4triangle.h"
+#include "maths/nperm4.h"
 #include "utilities/memutils.h"
 
 // If this symbol is uncommented, then the algorithm will become fairly
@@ -219,7 +220,7 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(
     }
 
     // Initialise arrays.
-    unsigned nPent = getNumberOfPentachora();
+    unsigned nPent = size();
 
     std::fill(orientation_, orientation_ + nPent, 0);
     std::fill(permIndices_, permIndices_ + nPent * 5, -1);
@@ -301,7 +302,7 @@ void Dim4GluingPermSearcher::findAllPerms(const Dim4FacetPairing* pairing,
 void Dim4GluingPermSearcher::runSearch(long maxDepth) {
     // In this generation algorithm, each orientation is simply +/-1.
 
-    unsigned nPentachora = getNumberOfPentachora();
+    unsigned nPentachora = size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
         maxDepth = nPentachora * 5 + 1;
@@ -581,7 +582,7 @@ void Dim4GluingPermSearcher::dumpData(std::ostream& out) const {
     out << (started_ ? 's' : '.');
     out << std::endl;
 
-    int nPent = getNumberOfPentachora();
+    int nPent = size();
     int i;
 
     for (i = 0; i < nPent; ++i) {
@@ -1445,7 +1446,7 @@ void Dim4GluingPermSearcher::edgeBdryNext(int edgeID, int pent, int edge,
 
 void Dim4GluingPermSearcher::edgeBdryConsistencyCheck() {
     int adj, id, end;
-    for (id = 0; id < static_cast<int>(getNumberOfPentachora()) * 5; ++id)
+    for (id = 0; id < static_cast<int>(size()) * 5; ++id)
         if (edgeState_[id].bdryEdges > 0)
             for (end = 0; end < 2; ++end) {
                 adj = edgeState_[id].bdryNext[end];
@@ -1468,7 +1469,7 @@ void Dim4GluingPermSearcher::edgeBdryConsistencyCheck() {
 }
 
 void Dim4GluingPermSearcher::edgeBdryDump(std::ostream& out) {
-    for (unsigned id = 0; id < getNumberOfPentachora() * 5; ++id) {
+    for (unsigned id = 0; id < size() * 5; ++id) {
         if (id > 0)
             out << ' ';
         out << edgeState_[id].bdryNext[0]

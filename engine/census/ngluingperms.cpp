@@ -26,110 +26,22 @@
 
 /* end stub */
 
-#include <algorithm>
 #include "census/ngluingperms.h"
+#include "census/ngenericgluingperms.tcc"
 #include "triangulation/ntriangulation.h"
-#include "utilities/stringutils.h"
 
 namespace regina {
 
-NGluingPerms::NGluingPerms(const NGluingPerms& cloneMe) :
-        pairing(cloneMe.pairing), inputError_(false) {
-    unsigned nTet = cloneMe.getNumberOfTetrahedra();
-
-    permIndices = new int[nTet * 4];
-    std::copy(cloneMe.permIndices, cloneMe.permIndices + nTet * 4, permIndices);
-}
-
-NTriangulation* NGluingPerms::triangulate() const {
-    unsigned nTet = getNumberOfTetrahedra();
-
-    NTriangulation* ans = new NTriangulation;
-    NTetrahedron** tet = new NTetrahedron*[nTet];
-
-    unsigned t, face;
-    for (t = 0; t < nTet; t++)
-        tet[t] = ans->newTetrahedron();
-
-    for (t = 0; t < nTet; t++)
-        for (face = 0; face < 4; face++)
-            if ((! pairing->isUnmatched(t, face)) &&
-                    (! tet[t]->adjacentTetrahedron(face)))
-                tet[t]->joinTo(face, tet[pairing->dest(t, face).simp],
-                    gluingPerm(t, face));
-
-    delete[] tet;
-    return ans;
-}
-
-int NGluingPerms::gluingToIndex(const NTetFace& source,
-        const NPerm4& gluing) const {
-    NPerm4 permS3 = NPerm4(pairing->dest(source).facet, 3) * gluing *
-        NPerm4(source.facet, 3);
-    return (std::find(NPerm4::S3, NPerm4::S3 + 6, permS3) - NPerm4::S3);
-}
-
-int NGluingPerms::gluingToIndex(unsigned tet, unsigned face,
-        const NPerm4& gluing) const {
-    NPerm4 permS3 = NPerm4(pairing->dest(tet, face).facet, 3) * gluing *
-        NPerm4(face, 3);
-    return (std::find(NPerm4::S3, NPerm4::S3 + 6, permS3) - NPerm4::S3);
-}
-
-void NGluingPerms::dumpData(std::ostream& out) const {
-    out << pairing->toTextRep() << std::endl;
-
-    unsigned tet, face;
-    for (tet = 0; tet < getNumberOfTetrahedra(); tet++)
-        for (face = 0; face < 4; face++) {
-            if (tet || face)
-                out << ' ';
-            out << permIndex(tet, face);
-        }
-    out << std::endl;
-}
-
-NGluingPerms::NGluingPerms(std::istream& in) :
-        pairing(0), permIndices(0), inputError_(false) {
-    // Remember that we can safely abort before allocating arrays, since C++
-    // delete tests for nullness.
-    std::string line;
-
-    // Skip initial whitespace to find the face pairing.
-    while (true) {
-        std::getline(in, line);
-        if (in.eof()) {
-            inputError_ = true; return;
-        }
-        line = regina::stripWhitespace(line);
-        if (line.length() > 0)
-            break;
-    }
-
-    pairing = NFacePairing::fromTextRep(line);
-    if (! pairing) {
-        inputError_ = true; return;
-    }
-
-    unsigned nTets = pairing->getNumberOfTetrahedra();
-    if (nTets == 0) {
-        inputError_ = true; return;
-    }
-
-    permIndices = new int[nTets * 4];
-
-    unsigned tet, face;
-    for (tet = 0; tet < nTets; tet++)
-        for (face = 0; face < 4; face++) {
-            in >> permIndex(tet, face);
-            // Don't test the range of permIndex(tet, face) since the
-            // gluing permutation set could still be under construction.
-        }
-
-    // Did we hit an unexpected EOF?
-    if (in.eof())
-        inputError_ = true;
-}
+// Instantiate all templates from the .tcc file.
+template NGenericGluingPerms<3>::NGenericGluingPerms(
+        const NGenericGluingPerms<3>&);
+template NGenericGluingPerms<3>::NGenericGluingPerms(std::istream&);
+template NTriangulation* NGenericGluingPerms<3>::triangulate() const;
+template int NGenericGluingPerms<3>::gluingToIndex(
+        const NTetFace&, const NPerm4&) const;
+template int NGenericGluingPerms<3>::gluingToIndex(
+        unsigned, unsigned, const NPerm4&) const;
+template void NGenericGluingPerms<3>::dumpData(std::ostream&) const;
 
 } // namespace regina
 

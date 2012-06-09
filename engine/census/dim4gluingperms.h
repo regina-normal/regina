@@ -38,12 +38,9 @@
 
 #include "regina-core.h"
 #include "census/dim4facetpairing.h"
-#include "maths/permconv.h"
+#include "census/ngenericgluingperms.h"
 
 namespace regina {
-
-class Dim4GluingPerms;
-class Dim4Triangulation;
 
 /**
  * \weakgroup census
@@ -68,25 +65,7 @@ class Dim4Triangulation;
  *
  * \ifacespython Not present.
  */
-class REGINA_API Dim4GluingPerms {
-    protected:
-        const Dim4FacetPairing* pairing_;
-            /**< The facet pairing that this permutation set complements.
-                 This is guaranteed to be the minimal representative of
-                 its facet pairing isomorphism class. */
-        int* permIndices_;
-            /**< The index into array NPerm4::S4 describing how each
-                 pentachoron facet is glued to its partner.  Note that this
-                 is not a gluing permutation as such but rather a permutation
-                 of 0, 1, 2 and 3 only (see the routines gluingToIndex() and
-                 indexToGluing() for conversions).  If a permutation has not
-                 yet been selected (e.g., if this permutation set is still
-                 under construction) then this index is -1. */
-
-        bool inputError_;
-            /**< Has an error occurred during construction from an
-                 input stream? */
-
+class REGINA_API Dim4GluingPerms : public NGenericGluingPerms<4> {
     public:
         /**
          * Creates a new set of gluing permutations that is a clone of
@@ -114,111 +93,6 @@ class REGINA_API Dim4GluingPerms {
          */
         Dim4GluingPerms(std::istream& in);
 
-        /**
-         * Deallocates any memory used by this structure.
-         */
-        virtual ~Dim4GluingPerms();
-
-        /**
-         * Was an error found during construction from an input stream?
-         *
-         * This routine returns \c true if an input stream constructor was
-         * used to create this object but the data in the input stream
-         * was invalid or incorrectly formatted.
-         *
-         * If a different constructor was called (i.e., no input stream
-         * was used), then this routine will always return \c false.
-         *
-         * @return \c true if an error occurred during construction from
-         * an input stream, or \c false otherwise.
-         */
-        bool inputError() const;
-
-        /**
-         * Returns the total number of pentachora under consideration.
-         *
-         * @return the number of pentachora under consideration.
-         */
-        unsigned getNumberOfPentachora() const;
-
-        /**
-         * Returns the specific pairing of pentachoron facets that this
-         * set of gluing permutations complements.
-         *
-         * @return the corresponding pentachoron facet pairing.
-         */
-        const Dim4FacetPairing* getFacetPairing() const;
-
-        /**
-         * Returns the gluing permutation associated with the given
-         * pentachoron facet.
-         *
-         * \pre The given facet is actually paired with some other facet in
-         * the underlying pairwise matching (see routine getFacetPairing()).
-         * \pre The given facet is a real pentachoron
-         * facet (not boundary, before-the-start or past-the-end).
-         *
-         * @param source the pentachoron facet under investigation.
-         * @return the associated gluing permutation.
-         */
-        NPerm5 gluingPerm(const Dim4PentFacet& source) const;
-
-        /**
-         * Returns the gluing permutation associated with the given
-         * pentachoron facet.
-         *
-         * \pre The given facet is actually paired with some other facet in
-         * the underlying pairwise matching (see routine getFacetPairing()).
-         *
-         * @param pent the pentachoron under investigation (this must be
-         * strictly less than the total number of pentachora under
-         * consideration).
-         * @param facet the facet of the given pentachoron under
-         * investigation (between 0 and 4 inclusive).
-         * @return the associated gluing permutation.
-         */
-        NPerm5 gluingPerm(unsigned pent, unsigned facet) const;
-
-        /**
-         * Returns a newly created 4-manifold triangulation as modelled
-         * by this set of gluing permutations and the associated pentachoron
-         * facet pairing.
-         *
-         * Each matched pair of facets and their associated permutations
-         * will be realised as two pentachoron facets glued
-         * together with the corresponding gluing permutation.  Each
-         * unmatched facet will be realised as a boundary pentachoron facet.
-         *
-         * It is the responsibility of the caller of this routine to
-         * delete this triangulation once it is no longer required.
-         *
-         * @return a newly created 4-manifold triangulation modelled by
-         * this structure.
-         */
-        Dim4Triangulation* triangulate() const;
-
-        /**
-         * Dumps all internal data in a plain text format to the given
-         * output stream.  This object can be recreated from this text
-         * data by calling the input stream constructor for this class.
-         *
-         * This routine may be useful for transferring objects from
-         * one processor to another.
-         *
-         * Note that subclass data is written after superclass data, so
-         * it is safe to dump data from a subclass and then recreate a
-         * new superclass object from that data (though subclass-specific
-         * information will of course be lost).
-         *
-         * \warning The data format is liable to change between
-         * Regina releases.  Data in this format should be used on a
-         * short-term temporary basis only.
-         *
-         * @param out the output stream to which the data should be
-         * written.
-         */
-        virtual void dumpData(std::ostream& out) const;
-
     protected:
         /**
          * Creates a new permutation set.  All internal arrays will be
@@ -235,250 +109,22 @@ class REGINA_API Dim4GluingPerms {
          * that this permutation set will complement.
          */
         Dim4GluingPerms(const Dim4FacetPairing* pairing);
-
-        /**
-         * Returns the index into array NPerm4::S4 describing how the
-         * the given facet is joined to its partner.
-         *
-         * Note that this permutation is not a gluing permutation as such,
-         * but rather a permutation of 0, 1, 2 and 3 only.  For a real
-         * facet gluing permutation, see routine gluingPerm().
-         *
-         * \pre The given facet is a real pentachoron
-         * facet (not boundary, before-the-start or past-the-end).
-         *
-         * @param source the pentachoron facet under investigation.
-         * @return a reference to the corresponding array index.
-         */
-        int& permIndex(const Dim4PentFacet& source);
-
-        /**
-         * Returns the index into array NPerm4::S4 describing how the
-         * the given facet is joined to its partner.
-         *
-         * Note that this permutation is not a gluing permutation as such,
-         * but rather a permutation of 0, 1, 2 and 3 only.  For a real
-         * facet gluing permutation, see routine gluingPerm().
-         *
-         * @param pent the pentachoron under investigation (this must be
-         * strictly less than the total number of pentachora under
-         * consideration).
-         * @param facet the facet of the given pentachoron under
-         * investigation (between 0 and 4 inclusive).
-         * @return a reference to the corresponding array index.
-         */
-        int& permIndex(unsigned pent, unsigned facet);
-
-        /**
-         * Returns the index into array NPerm4::S4 describing how the
-         * the given facet is joined to its partner.
-         *
-         * Note that this permutation is not a gluing permutation as such,
-         * but rather a permutation of 0, 1, 2 and 3 only.  For a real
-         * facet gluing permutation, see routine gluingPerm().
-         *
-         * \pre The given facet is a real pentachoron
-         * facet (not boundary, before-the-start or past-the-end).
-         *
-         * @param source the pentachoron facet under investigation.
-         * @return a reference to the corresponding array index.
-         */
-        const int& permIndex(const Dim4PentFacet& source) const;
-
-        /**
-         * Returns the index into array NPerm4::S4 describing how the
-         * the given facet is joined to its partner.
-         *
-         * Note that this permutation is not a gluing permutation as such,
-         * but rather a permutation of 0, 1, 2 and 3 only.  For a real
-         * facet gluing permutation, see routine gluingPerm().
-         *
-         * @param pent the pentachoron under investigation (this must be
-         * strictly less than the total number of pentachora under
-         * consideration).
-         * @param facet the facet of the given pentachoron under
-         * investigation (between 0 and 4 inclusive).
-         * @return a reference to the corresponding array index.
-         */
-        const int& permIndex(unsigned pent, unsigned facet) const;
-
-        /**
-         * Returns the index into array NPerm4::S4 corresponding to
-         * the given gluing permutation from the given facet to its
-         * partner.  This need not be the index into NPerm4::S4 that
-         * is currently stored for the given facet.
-         *
-         * Indices into array NPerm4::S4 are stored internally in the
-         * array \a permIndices_.  Full gluing permutations on the other
-         * hand are used in constructing 4-manifold triangulations.
-         *
-         * \pre The given pentachoron facet has a partner according to
-         * the underlying facet pairing, i.e., is not a boundary facet.
-         * \pre If the given pentachoron facet and its partner are facets
-         * \a x and \a y of their respective pentachora, then the
-         * given gluing permutation maps \a x to \a y.
-         *
-         * @param source the pentachoron facet under investigation.
-         * @param gluing a possible gluing permutation from the given
-         * pentachoron facet to its partner according to the underlying
-         * facet pairing.
-         * @return the index into NPerm4::S4 corresponding to the
-         * given gluing permutation; this will be between 0 and 23
-         * inclusive.
-         */
-        int gluingToIndex(const Dim4PentFacet& source, const NPerm5& gluing)
-            const;
-
-        /**
-         * Returns the index into array NPerm4::S4 corresponding to
-         * the given gluing permutation from the given facet to its
-         * partner.  This need not be the index into NPerm4::S4 that
-         * is currently stored for the given facet.
-         *
-         * Indices into array NPerm4::S4 are stored internally in the
-         * array \a permIndices_.  Full gluing permutations on the other
-         * hand are used in constructing 4-manifold triangulations.
-         *
-         * \pre The given pentachoron facet has a partner according to
-         * the underlying facet pairing, i.e., is not a boundary facet.
-         * \pre If the given pentachoron facet and its partner are facets
-         * \a x and \a y of their respective pentachora, then the
-         * given gluing permutation maps \a x to \a y.
-         *
-         * @param pent the pentachoron under investigation; this must be
-         * strictly less than the total number of pentachora under
-         * consideration.
-         * @param facet the facet of the given pentachoron under
-         * investigation; this must be between 0 and 4 inclusive.
-         * @param gluing a possible gluing permutation from the given
-         * pentachoron facet to its partner according to the underlying
-         * facet pairing.
-         * @return the index into NPerm4::S4 corresponding to the
-         * given gluing permutation; this will be between 0 and 23
-         * inclusive.
-         */
-        int gluingToIndex(unsigned pent, unsigned facet, const NPerm5& gluing)
-            const;
-
-        /**
-         * Returns the gluing permutation from the given facet to its
-         * partner that corresponds to the given index into array
-         * NPerm4::S4.  This index into NPerm4::S4 need not
-         * be the index that is currently stored for the given facet.
-         *
-         * Indices into array NPerm4::S4 are stored internally in the
-         * array \a permIndices_.  Full gluing permutations on the other
-         * hand are used in constructing 4-manifold triangulations.
-         *
-         * If the given pentachoron facet and its partner according to
-         * the underlying facet pairing are facets \a x and \a y of their
-         * respective pentachora, then the resulting gluing permutation
-         * will map \a x to \a y.
-         *
-         * \pre The given pentachoron facet has a partner according to
-         * the underlying facet pairing, i.e., is not a boundary facet.
-         *
-         * @param source the pentachoron facet under investigation.
-         * @param index an index into NPerm4::S4; this must be
-         * between 0 and 23 inclusive.
-         * @return the gluing permutation corresponding to the given
-         * index into NPerm4::S4.
-         */
-        NPerm5 indexToGluing(const Dim4PentFacet& source, int index) const;
-
-        /**
-         * Returns the gluing permutation from the given facet to its
-         * partner that corresponds to the given index into array
-         * NPerm4::S4.  This index into NPerm4::S4 need not
-         * be the index that is currently stored for the given facet.
-         *
-         * Indices into array NPerm4::S4 are stored internally in the
-         * array \a permIndices_.  Full gluing permutations on the other
-         * hand are used in constructing 4-manifold triangulations.
-         *
-         * If the given pentachoron facet and its partner according to
-         * the underlying facet pairing are facets \a x and \a y of their
-         * respective pentachora, then the resulting gluing permutation
-         * will map \a x to \a y.
-         *
-         * \pre The given pentachoron facet has a partner according to
-         * the underlying facet pairing, i.e., is not a boundary facet.
-         *
-         * @param pent the pentachoron under investigation; this must be
-         * strictly less than the total number of pentachora under
-         * consideration.
-         * @param facet the facet of the given pentachoron under
-         * investigation; this must be between 0 and 4 inclusive.
-         * @param index an index into NPerm4::S4; this must be
-         * between 0 and 23 inclusive.
-         * @return the gluing permutation corresponding to the given
-         * index into NPerm4::S4.
-         */
-        NPerm5 indexToGluing(unsigned pent, unsigned facet, int index) const;
 };
 
 /*@}*/
 
 // Inline functions for Dim4GluingPerms
 
+inline Dim4GluingPerms::Dim4GluingPerms(const Dim4GluingPerms& cloneMe) :
+        NGenericGluingPerms<4>(cloneMe) {
+}
+
+inline Dim4GluingPerms::Dim4GluingPerms(std::istream& in) :
+        NGenericGluingPerms<4>(in) {
+}
+
 inline Dim4GluingPerms::Dim4GluingPerms(const Dim4FacetPairing* pairing) :
-        pairing_(pairing),
-        permIndices_(new int[pairing->size() * 5]),
-        inputError_(false) {
-}
-
-inline Dim4GluingPerms::~Dim4GluingPerms() {
-    delete[] permIndices_;
-}
-
-inline bool Dim4GluingPerms::inputError() const {
-    return inputError_;
-}
-
-inline unsigned Dim4GluingPerms::getNumberOfPentachora() const {
-    return pairing_->size();
-}
-
-inline const Dim4FacetPairing* Dim4GluingPerms::getFacetPairing() const {
-    return pairing_;
-}
-
-inline NPerm5 Dim4GluingPerms::gluingPerm(const Dim4PentFacet& source) const {
-    return indexToGluing(source, permIndex(source));
-}
-
-inline NPerm5 Dim4GluingPerms::gluingPerm(unsigned pent, unsigned facet) const {
-    return indexToGluing(pent, facet, permIndex(pent, facet));
-}
-
-inline int& Dim4GluingPerms::permIndex(const Dim4PentFacet& source) {
-    return permIndices_[5 * source.simp + source.facet];
-}
-
-inline int& Dim4GluingPerms::permIndex(unsigned pent, unsigned facet) {
-    return permIndices_[5 * pent + facet];
-}
-
-inline const int& Dim4GluingPerms::permIndex(const Dim4PentFacet& source)
-        const {
-    return permIndices_[5 * source.simp + source.facet];
-}
-
-inline const int& Dim4GluingPerms::permIndex(unsigned pent, unsigned facet)
-        const {
-    return permIndices_[5 * pent + facet];
-}
-
-inline NPerm5 Dim4GluingPerms::indexToGluing(
-        const Dim4PentFacet& source, int index) const {
-    return NPerm5(pairing_->dest(source).facet, 4) *
-        perm4to5(NPerm4::S4[index]) * NPerm5(source.facet, 4);
-}
-
-inline NPerm5 Dim4GluingPerms::indexToGluing(unsigned pent, unsigned facet,
-        int index) const {
-    return NPerm5(pairing_->dest(pent, facet).facet, 4) *
-        perm4to5(NPerm4::S4[index]) * NPerm5(facet, 4);
+        NGenericGluingPerms<4>(pairing) {
 }
 
 } // namespace regina

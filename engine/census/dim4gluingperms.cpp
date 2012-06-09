@@ -26,111 +26,22 @@
 
 /* end stub */
 
-#include <algorithm>
 #include "census/dim4gluingperms.h"
+#include "census/ngenericgluingperms.tcc"
 #include "dim4/dim4triangulation.h"
-#include "utilities/stringutils.h"
 
 namespace regina {
 
-Dim4GluingPerms::Dim4GluingPerms(const Dim4GluingPerms& cloneMe) :
-        pairing_(cloneMe.pairing_), inputError_(false) {
-    unsigned nPent = cloneMe.getNumberOfPentachora();
-
-    permIndices_ = new int[nPent * 5];
-    std::copy(cloneMe.permIndices_, cloneMe.permIndices_ + nPent * 5,
-        permIndices_);
-}
-
-Dim4Triangulation* Dim4GluingPerms::triangulate() const {
-    unsigned nPent = getNumberOfPentachora();
-
-    Dim4Triangulation* ans = new Dim4Triangulation;
-    Dim4Pentachoron** pent = new Dim4Pentachoron*[nPent];
-
-    unsigned p, facet;
-    for (p = 0; p < nPent; ++p)
-        pent[p] = ans->newPentachoron();
-
-    for (p = 0; p < nPent; ++p)
-        for (facet = 0; facet < 5; ++facet)
-            if ((! pairing_->isUnmatched(p, facet)) &&
-                    (! pent[p]->adjacentPentachoron(facet)))
-                pent[p]->joinTo(facet, pent[pairing_->dest(p, facet).simp],
-                    gluingPerm(p, facet));
-
-    delete[] pent;
-    return ans;
-}
-
-int Dim4GluingPerms::gluingToIndex(const Dim4PentFacet& source,
-        const NPerm5& gluing) const {
-    NPerm4 permS4 = perm5to4(NPerm5(pairing_->dest(source).facet, 4) *
-        gluing * NPerm5(source.facet, 4));
-    return (std::find(NPerm4::S4, NPerm4::S4 + 24, permS4) - NPerm4::S4);
-}
-
-int Dim4GluingPerms::gluingToIndex(unsigned pent, unsigned facet,
-        const NPerm5& gluing) const {
-    NPerm4 permS4 = perm5to4(NPerm5(pairing_->dest(pent, facet).facet, 4) *
-        gluing * NPerm5(facet, 4));
-    return (std::find(NPerm4::S4, NPerm4::S4 + 24, permS4) - NPerm4::S4);
-}
-
-void Dim4GluingPerms::dumpData(std::ostream& out) const {
-    out << pairing_->toTextRep() << std::endl;
-
-    unsigned pent, facet;
-    for (pent = 0; pent < getNumberOfPentachora(); ++pent)
-        for (facet = 0; facet < 5; ++facet) {
-            if (pent || facet)
-                out << ' ';
-            out << permIndex(pent, facet);
-        }
-    out << std::endl;
-}
-
-Dim4GluingPerms::Dim4GluingPerms(std::istream& in) :
-        pairing_(0), permIndices_(0), inputError_(false) {
-    // Remember that we can safely abort before allocating arrays, since C++
-    // delete tests for nullness.
-    std::string line;
-
-    // Skip initial whitespace to find the facet pairing.
-    while (true) {
-        std::getline(in, line);
-        if (in.eof()) {
-            inputError_ = true; return;
-        }
-        line = regina::stripWhitespace(line);
-        if (line.length() > 0)
-            break;
-    }
-
-    pairing_ = Dim4FacetPairing::fromTextRep(line);
-    if (! pairing_) {
-        inputError_ = true; return;
-    }
-
-    unsigned nPent = pairing_->size();
-    if (nPent == 0) {
-        inputError_ = true; return;
-    }
-
-    permIndices_ = new int[nPent * 5];
-
-    unsigned pent, facet;
-    for (pent = 0; pent < nPent; ++pent)
-        for (facet = 0; facet < 5; ++facet) {
-            in >> permIndex(pent, facet);
-            // Don't test the range of permIndex(pent, facet) since the
-            // gluing permutation set could still be under construction.
-        }
-
-    // Did we hit an unexpected EOF?
-    if (in.eof())
-        inputError_ = true;
-}
+// Instantiate all templates from the .tcc file.
+template NGenericGluingPerms<4>::NGenericGluingPerms(
+        const NGenericGluingPerms<4>&);
+template NGenericGluingPerms<4>::NGenericGluingPerms(std::istream&);
+template Dim4Triangulation* NGenericGluingPerms<4>::triangulate() const;
+template int NGenericGluingPerms<4>::gluingToIndex(
+        const Dim4PentFacet&, const NPerm5&) const;
+template int NGenericGluingPerms<4>::gluingToIndex(
+        unsigned, unsigned, const NPerm5&) const;
+template void NGenericGluingPerms<4>::dumpData(std::ostream&) const;
 
 } // namespace regina
 

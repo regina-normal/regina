@@ -216,7 +216,7 @@ void NCompactSearcher::runSearch(long maxDepth) {
         started = true;
 
         // Do we in fact have no permutation at all to choose?
-        if (maxDepth == 0 || pairing->dest(0, 0).isBoundary(nTets)) {
+        if (maxDepth == 0 || pairing_->dest(0, 0).isBoundary(nTets)) {
             use_(this, useArgs_);
             use_(0, useArgs_);
             return;
@@ -243,7 +243,7 @@ void NCompactSearcher::runSearch(long maxDepth) {
     int mergeResult;
     while (orderElt >= minOrder) {
         face = order[orderElt];
-        adj = (*pairing)[face];
+        adj = (*pairing_)[face];
 
         // TODO (long-term): Check for cancellation.
 
@@ -325,9 +325,9 @@ void NCompactSearcher::runSearch(long maxDepth) {
             // We've moved onto a new face.
             // Be sure to get the orientation right.
             face = order[orderElt];
-            if (orientableOnly_ && pairing->dest(face).facet > 0) {
+            if (orientableOnly_ && pairing_->dest(face).facet > 0) {
                 // permIndex(face) will be set to -1 or -2 as appropriate.
-                adj = (*pairing)[face];
+                adj = (*pairing_)[face];
                 if (orientation[face.simp] == orientation[adj.simp])
                     permIndex(face) = 1;
                 else
@@ -527,7 +527,7 @@ NCompactSearcher::NCompactSearcher(std::istream& in,
 int NCompactSearcher::mergeVertexClasses() {
     // Merge all three vertex pairs for the current face.
     NTetFace face = order[orderElt];
-    NTetFace adj = (*pairing)[face];
+    NTetFace adj = (*pairing_)[face];
 
     int retVal = 0;
 
@@ -780,7 +780,7 @@ int NCompactSearcher::mergeVertexClasses() {
 void NCompactSearcher::splitVertexClasses() {
     // Split all three vertex pairs for the current face.
     NTetFace face = order[orderElt];
-    NTetFace adj = (*pairing)[face];
+    NTetFace adj = (*pairing_)[face];
 
     int v, w;
     int vIdx, wIdx;
@@ -871,7 +871,7 @@ void NCompactSearcher::splitVertexClasses() {
 
 bool NCompactSearcher::mergeEdgeClasses() {
     NTetFace face = order[orderElt];
-    NTetFace adj = (*pairing)[face];
+    NTetFace adj = (*pairing_)[face];
 
     bool retVal = false;
 
