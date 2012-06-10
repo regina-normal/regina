@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include <set>
 #include <vector>
 
 #include "triangulation/ntriangulation.h"
@@ -36,6 +37,12 @@ namespace regina {
 
 void NTriangulation::barycentricSubdivision() {
     // Rewritten for Regina 4.94 to use a more sensible labelling scheme.
+
+    // IMPORTANT: If this code is ever rewritten (and in particular, if
+    // the labelling of new tetrahedra ever changes), then the
+    // drillEdge() code must be rewritten as well (since it relies on
+    // the specific labelling scheme that we use here).
+
     unsigned long nOldTet = tetrahedra.size();
     if (nOldTet == 0)
         return;
@@ -100,6 +107,69 @@ void NTriangulation::barycentricSubdivision() {
     removeAllTetrahedra();
     swapContents(staging);
     delete[] newTet;
+}
+
+void NTriangulation::drillEdge(NEdge* e) {
+    // Recall from the barycentric subdivision code above that
+    // a tetrahedron in the subdivision is uniquely defined by the
+    // permutation (face, edge, vtx, corner) of (0, 1, 2, 3).
+    //
+    // For an edge (i,j) opposite vertices (k,l), the tetrahedra that
+    // meet it are:
+    //
+    // (k,l,i,j) and (l,k,i,j), both containing the half-edge touching vertex j;
+    // (k,l,j,i) and (l,k,j,i), both containing the half-edge touching vertex i.
+    //
+    // In each case the corresponding edge number in the new tetrahedron
+    // equals the edge number from the original tetrahedron.
+
+    int edgeNum = e->getEmbedding(0).getEdge();
+    int tetNum = tetrahedronIndex(e->getEmbedding(0).getTetrahedron());
+
+    int oldToNew[2]; // Identifies two of the 24 tetrahedra in a subdivision
+                     // that contain the two corresponding half-edges.
+    oldToNew[0] = NPerm4(
+        NEdge::edgeVertex[5 - edgeNum][0], NEdge::edgeVertex[5 - edgeNum][1],
+        NEdge::edgeVertex[edgeNum][0], NEdge::edgeVertex[edgeNum][1]).
+        S4Index();
+    oldToNew[1] = NPerm4(
+        NEdge::edgeVertex[5 - edgeNum][0], NEdge::edgeVertex[5 - edgeNum][1],
+        NEdge::edgeVertex[edgeNum][1], NEdge::edgeVertex[edgeNum][0]).
+        S4Index();
+
+    ChangeEventSpan span(this);
+    barycentricSubdivision();
+    barycentricSubdivision();
+
+    std::set<unsigned> toRemove;
+
+    int i, j, k;
+    unsigned finalTet;
+    NVertex* finalVertex;
+    std::vector<NVertexEmbedding>::const_iterator it;
+    for (i = 0; i < 2; ++i)
+        for (j = 0; j < 2; ++j) {
+            finalTet = 24 * (24 * tetNum + oldToNew[i]) + oldToNew[j];
+
+            // Remove all tetrahedra that touch each endpoint of the
+            // resulting edge in the second barycentric subdivision.
+            for (k = 0; k < 2; ++k) {
+                finalVertex = tetrahedra[finalTet]->getEdge(edgeNum)->
+                    getVertex(k);
+                for (it = finalVertex->getEmbeddings().begin();
+                        it != finalVertex->getEmbeddings().end(); ++it)
+                    toRemove.insert(tetrahedronIndex(it->getTetrahedron()));
+            }
+        }
+
+    // Make sure we remove tetrahedra in reverse order, so the numbering
+    // doesn't change.
+    for (std::set<unsigned>::reverse_iterator rit = toRemove.rbegin();
+            rit != toRemove.rend(); ++rit)
+        removeTetrahedronAt(*rit);
+
+    // We have lots of tetrahedra now.  Simplify.
+    intelligentSimplify();
 }
 
 bool NTriangulation::idealToFinite(bool forceDivision) {

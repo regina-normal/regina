@@ -2000,12 +2000,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 return false;
 
             // Check that H1Rel is just Z_2.
-            const NAbelianGroup& h1Rel = tri->getHomologyH1Rel();
-            if (h1Rel.getNumberOfInvariantFactors() != 1)
-                return false;
-            if (h1Rel.getInvariantFactor(0) != 2)
-                return false;
-            if (h1Rel.getRank() != 0)
+            if (! tri->getHomologyH1Rel().isZn(2))
                 return false;
 
             return true;
@@ -2057,10 +2052,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 return false;
 
             // Check that H1Rel is just Z.
-            const NAbelianGroup& h1Rel = tri->getHomologyH1Rel();
-            if (h1Rel.getNumberOfInvariantFactors() != 0)
-                return false;
-            if (h1Rel.getRank() != 1)
+            if (! tri->getHomologyH1Rel().isZ())
                 return false;
 
             return true;

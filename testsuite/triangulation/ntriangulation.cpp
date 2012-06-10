@@ -73,6 +73,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(barycentricSubdivision);
     CPPUNIT_TEST(idealToFinite);
     CPPUNIT_TEST(finiteToIdeal);
+    CPPUNIT_TEST(drillEdge);
     CPPUNIT_TEST(dehydration);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(simplification);
@@ -2296,6 +2297,107 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Cusped solid genus 2 torus");
             verifyFiniteToIdeal(pinchedSolidTorus, "Pinched solid torus");
             verifyFiniteToIdeal(pinchedSolidKB, "Pinched solid Klein bottle");
+        }
+
+        void drillEdge() {
+            // Start with the snapped 1-tetrahedron triangulation of the
+            // 3-sphere.  Edges 0 and 2 make a Hopf link, and edge 1 is
+            // just an interval.
+            {
+                NTriangulation snap;
+                NTetrahedron* tet = snap.newTetrahedron();
+                tet->joinTo(0, tet, NPerm4(0, 1));
+                tet->joinTo(2, tet, NPerm4(2, 3));
+
+                NTriangulation tmp0(snap);
+                tmp0.drillEdge(tmp0.getEdge(0));
+                if (! tmp0.isSolidTorus())
+                    CPPUNIT_FAIL("Snapped 3-sphere: drilling edge 0 "
+                        "does not give a solid torus.");
+
+                NTriangulation tmp1(snap);
+                tmp1.drillEdge(tmp1.getEdge(1));
+                if (! tmp1.isBall())
+                    CPPUNIT_FAIL("Snapped 3-sphere: drilling edge 1 "
+                        "does not give a 3-ball.");
+
+                NTriangulation tmp2(snap);
+                tmp2.drillEdge(tmp2.getEdge(2));
+                if (! tmp2.isSolidTorus())
+                    CPPUNIT_FAIL("Snapped 3-sphere: drilling edge 2 "
+                        "does not give a solid torus.");
+            }
+
+            // Move on to the layered 1-tetrahedron triangulation of the
+            // 3-sphere.
+            // Edge 0 forms a trefoil, and edge 1 is unknotted.
+            {
+                NTriangulation layer;
+                NTetrahedron* tet = layer.newTetrahedron();
+                tet->joinTo(0, tet, NPerm4(1, 2, 3, 0));
+                tet->joinTo(2, tet, NPerm4(2, 3));
+
+                NTriangulation tmp0(layer);
+                tmp0.drillEdge(tmp0.getEdge(0));
+                if (! (tmp0.isValid() && (! tmp0.isIdeal()) &&
+                        (tmp0.getNumberOfBoundaryComponents() == 1) &&
+                        (tmp0.getHomologyH1().isZ()) &&
+                        (tmp0.getBoundaryComponent(0)->isOrientable()) &&
+                        (tmp0.getBoundaryComponent(0)->
+                            getEulerCharacteristic() == 0) &&
+                        (! tmp0.isSolidTorus())))
+                    CPPUNIT_FAIL("Layered 3-sphere: drilling edge 0 "
+                        "does not give a non-trivial knot complement.");
+
+                NTriangulation tmp1(layer);
+                tmp1.drillEdge(tmp1.getEdge(1));
+                if (! tmp1.isSolidTorus())
+                    CPPUNIT_FAIL("Layered 3-sphere: drilling edge 1 "
+                        "does not give a solid torus.");
+            }
+
+            // Next try a (1,2,3) layered solid torus.  Every edge is a
+            // boundary edge, and so drilling it should leave us with
+            // a solid torus again.
+            {
+                NTriangulation lst;
+                lst.insertLayeredSolidTorus(1, 2);
+
+                NTriangulation tmp0(lst);
+                tmp0.drillEdge(tmp0.getEdge(0));
+                if (! tmp0.isSolidTorus())
+                    CPPUNIT_FAIL("LST(1,2,3): drilling edge 0 "
+                        "does not give a solid torus.");
+
+                NTriangulation tmp1(lst);
+                tmp1.drillEdge(tmp1.getEdge(1));
+                if (! tmp1.isSolidTorus())
+                    CPPUNIT_FAIL("LST(1,2,3): drilling edge 1 "
+                        "does not give a solid torus.");
+
+                NTriangulation tmp2(lst);
+                tmp2.drillEdge(tmp2.getEdge(2));
+                if (! tmp2.isSolidTorus())
+                    CPPUNIT_FAIL("LST(1,2,3): drilling edge 2 "
+                        "does not give a solid torus.");
+            }
+
+            // Now try a 2-tetrahedron ball, where we drill the internal edge
+            // between the two tetrahedra.  The result should be a solid torus.
+            {
+                NTriangulation ball;
+                NTetrahedron* a = ball.newTetrahedron();
+                NTetrahedron* b = ball.newTetrahedron();
+                a->joinTo(0, b, NPerm4());
+                a->joinTo(1, b, NPerm4());
+
+                // The internal edge joins vertices 2-3.
+                NTriangulation tmp(ball);
+                tmp.drillEdge(tmp.getTetrahedron(0)->getEdge(5));
+                if (! tmp.isSolidTorus())
+                    CPPUNIT_FAIL("2-tetrahedron ball: drilling the "
+                        "internal edge does not give a solid torus.");
+            }
         }
 
         void verifyDehydration(const NTriangulation& tri, const char* name) {

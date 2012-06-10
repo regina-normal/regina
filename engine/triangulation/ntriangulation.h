@@ -2599,6 +2599,23 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
          */
         void barycentricSubdivision();
 
+        /**
+         * Drills out a regular neighbourhood of the given edge of the
+         * triangulation.
+         *
+         * This is done by (i) performing two barycentric subdivisions,
+         * (ii) removing all tetrahedra that touch the original edge,
+         * and (iii) simplifying the resulting triangulation.
+         *
+         * \warning The second barycentric subdivision will multiply the
+         * number of tetrahedra by 576; as a result this routine might
+         * be slow, and the number of tetrahedra at the end might be
+         * large (even taking the simplification into account).
+         *
+         * @param e the edge to drill out.
+         */
+        void drillEdge(NEdge* e);
+
         /*@}*/
         /**
          * (end: Subdivisions and Covers)

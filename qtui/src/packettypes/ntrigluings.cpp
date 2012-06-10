@@ -1048,9 +1048,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
                 NTriangulation* small = static_cast<NTriangulation*>
                     (base->getFirstTreeChild());
                 if (small->getNumberOfTetrahedra() <= 2 &&
-                        small->getHomologyH1().getRank() == 1 &&
-                        small->getHomologyH1().getNumberOfInvariantFactors()
-                            == 0) {
+                        small->getHomologyH1().isZ()) {
                     // The only closed prime orientable manifold with
                     // H_1 = Z and <= 2 tetrahedra is S2xS1.
                     ReginaSupport::info(ui,
@@ -1060,10 +1058,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
                         "However, I have constructed a new minimal "
                         "(but not 0-efficient) triangulation."));
                 } else if (small->getNumberOfTetrahedra() <= 2 &&
-                        small->getHomologyH1().getRank() == 0 &&
-                        small->getHomologyH1().getNumberOfInvariantFactors()
-                            == 1 &&
-                        small->getHomologyH1().getInvariantFactor(0) == 2) {
+                        small->getHomologyH1().isZn(2)) {
                     // The only closed prime orientable manifold with
                     // H_1 = Z_2 and <= 2 tetrahedra is RP3. */) {
                     ReginaSupport::info(ui,
@@ -1139,9 +1134,7 @@ void NTriGluingsUI::makeZeroEfficient() {
         if (finalTets <= 2) {
             // Check for special cases.
             if ((! tri->isZeroEfficient()) &&
-                    tri->getHomologyH1().getRank() == 0 &&
-                    tri->getHomologyH1().getNumberOfInvariantFactors() == 1 &&
-                    tri->getHomologyH1().getInvariantFactor(0) == 2) {
+                    tri->getHomologyH1().isZn(2)) {
                 // RP3.
                 if (finalTets < initTets)
                     ReginaSupport::info(ui,
@@ -1167,8 +1160,7 @@ void NTriGluingsUI::makeZeroEfficient() {
                         "of RP<sup>3</sup>.</qt>"));
                 return;
             } else if ((! tri->isZeroEfficient()) &&
-                    tri->getHomologyH1().getRank() == 1 &&
-                    tri->getHomologyH1().getNumberOfInvariantFactors() == 0) {
+                    tri->getHomologyH1().isZ()) {
                 // S2xS1.
                 if (finalTets < initTets)
                     ReginaSupport::info(ui,
