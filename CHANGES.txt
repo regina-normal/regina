@@ -109,6 +109,8 @@ Version 4.94  [ (under development) ]
             - New classes to support Dim2Triangulation.
         Class DimTraits:
             - New template class to assist with dimension-agnostic code.
+        Class NAbelianGroup:
+            - New convenience routines isZ() and isZn().
         Class NFacePairing:
             - Now derives from the template base class NGenericFacetPairing<3>.
             - Renamed getNumberOfTetrahedra() to size().  The old name
@@ -142,6 +144,8 @@ Version 4.94  [ (under development) ]
               and adjacentFace() respectively, and can help with
               writing code that works with more than one dimension.
         Class NTriangulation:
+            - New routine drillEdge() to drill out a regular
+              neighbourhood of an edge.
             - Rewrote barycentricSubdivision(): the code is now clearer,
               but note that the precise labelling of the new tetrahedra has
               changed from earlier versions of Regina.

@@ -439,8 +439,7 @@ bool NTriangulation::isSolidTorus() const {
     }
 
     // Check homology.
-    const NAbelianGroup& h1 = working.getHomologyH1();
-    if (! (h1.getRank() == 1 && h1.getNumberOfInvariantFactors() == 0)) {
+    if (! working.getHomologyH1().isZ()) {
         solidTorus = false;
         return false;
     }

@@ -288,6 +288,25 @@ class REGINA_API NAbelianGroup : public ShareableObject {
          */
         bool isTrivial() const;
         /**
+         * Determines whether this is the infinite cyclic group (Z).
+         *
+         * @return \c true if and only if this is the infinite cyclic group.
+         */
+        bool isZ() const;
+        /**
+         * Determines whether this is the non-trivial cyclic group on
+         * the given number of elements.
+         *
+         * As a special case, if \a n = 0 then this routine will test for the
+         * infinite cyclic group (i.e., it will behave the same as isZ()).
+         * If \a n = 1, then this routine will test for the trivial group
+         * (i.e., it will behave the same as isTrivial()).
+         *
+         * @param n the number of elements of the cyclic group in question.
+         * @return \c true if and only if this is the cyclic group Z_n.
+         */
+        bool isZn(unsigned long n) const;
+        /**
          * Determines whether this and the given abelian group are
          * isomorphic.
          *
@@ -403,6 +422,16 @@ inline unsigned long NAbelianGroup::getNumberOfInvariantFactors() const {
 
 inline bool NAbelianGroup::isTrivial() const {
     return (rank == 0 && invariantFactors.empty());
+}
+
+inline bool NAbelianGroup::isZ() const {
+    return (rank == 1 && invariantFactors.empty());
+}
+
+inline bool NAbelianGroup::isZn(unsigned long n) const {
+    return (n == 0 ? isZ() : n == 1 ? isTrivial() :
+        (rank == 0 && invariantFactors.size() == 1 &&
+            *invariantFactors.begin() == n));
 }
 
 inline bool NAbelianGroup::operator == (const NAbelianGroup& other) const {
