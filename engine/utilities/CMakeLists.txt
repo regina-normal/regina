@@ -12,5 +12,5 @@ ENDFOREACH(SOURCE_FILE)
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
-  INSTALL(FILES base64.h bitmanip.h boostutils.h hashmap.h hashset.h hashutils.h i18nutils.h memutils.h nbitmask.h nbooleans.h nindexedarray.h nlistoncall.h nmarkedvector.h nmatrix2.h nmpi.h nproperty.h nrational.h nthread.h ntrieset.h osutils.h ptrutils.h stlutils.h stringutils.h stringutils.tcc xmlutils.h zstream.h DESTINATION ${INCLUDEDIR}/utilities COMPONENT Development)
+  INSTALL(FILES base64.h bitmanip.h boostutils.h hashmap.h hashset.h hashutils.h i18nutils.h memutils.h nbitmask.h nbooleans.h nindexedarray.h nlistoncall.h nmarkedvector.h nmatrix2.h nmpi.h nproperty.h nrational.h nthread.h ntrieset.h ntritmask.h osutils.h ptrutils.h stlutils.h stringutils.h stringutils.tcc xmlutils.h zstream.h DESTINATION ${INCLUDEDIR}/utilities COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

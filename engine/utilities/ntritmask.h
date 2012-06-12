@@ -152,27 +152,48 @@ class NTritmask1 {
         }
 
         /**
-         * Sets this to the intersection of this and the given tritmask.
-         * Every bit that is unset in \a other will be unset in this
-         * tritmask.
+         * Sets this to the minimum of this and the given tritmask.
+         * That is, the ith trit will be set to the minimum of the
+         * ith trit in this tritmask and the ith trit in \a other.
          *
-         * @param other the tritmask to intersect with this.
+         * @param rhs the tritmask to "min" with this.
          * @return a reference to this tritmask.
          */
-        inline NTritmask1<T>& operator &= (const NTritmask1<T>& other) {
-            mask &= other.mask;
+        inline NTritmask1<T>& minWith(const NTritmask1<T>& rhs) {
+            mask1 &= rhs.mask1;
+            mask2 &= rhs.mask2;
             return *this;
         }
 
         /**
-         * Sets this to the union of this and the given tritmask.
-         * Every bit that is set in \a other will be set in this tritmask.
+         * Sets this to the maximum of this and the given tritmask.
+         * That is, the ith trit will be set to the maximum of the
+         * ith trit in this tritmask and the ith trit in \a other.
          *
-         * @param other the tritmask to union with this.
+         * @param rhs the tritmask to "max" with this.
          * @return a reference to this tritmask.
          */
-        inline NTritmask1<T>& operator |= (const NTritmask1<T>& other) {
-            mask |= other.mask;
+        inline NTritmask1<T>& maxWith(const NTritmask1<T>& rhs) {
+            mask1 |= rhs.mask1;
+            mask2 |= rhs.mask2;
+            return *this;
+        }
+
+        /**
+         * Sets this to the sum of this and the given tritmask.
+         * When adding trits, any digit greater than 2 will simply be
+         * replaced with 2.  That is:
+         *
+         * - 2+2 = 1+2 = 1+1 = 2;
+         *
+         * - 0+x = x for any \a x.
+         *
+         * @param rhs the tritmask to add to this.
+         * @return a reference to this tritmask.
+         */
+        inline NTritmask1<T>& operator += (const NTritmask1<T>& rhs) {
+            mask2 = (mask1 & rhs.mask1) | mask2 | rhs.mask2;
+            mask1 = (mask1 | rhs.mask1);
             return *this;
         }
 
@@ -354,29 +375,54 @@ class NTritmask2 {
         }
 
         /**
-         * Sets this to the intersection of this and the given tritmask.
-         * Every bit that is unset in \a other will be unset in this
-         * tritmask.
+         * Sets this to the minimum of this and the given tritmask.
+         * That is, the ith trit will be set to the minimum of the
+         * ith trit in this tritmask and the ith trit in \a other.
          *
-         * @param other the tritmask to intersect with this.
+         * @param rhs the tritmask to "min" with this.
          * @return a reference to this tritmask.
          */
-        inline NTritmask2<T, U>& operator &= (const NTritmask2<T, U>& other) {
-            low &= other.low;
-            high &= other.high;
+        inline NTritmask2<T, U>& minWith(const NTritmask2<T, U>& other) {
+            low1 &= rhs.low1;
+            low2 &= rhs.low2;
+            high1 &= rhs.high1;
+            high2 &= rhs.high2;
             return *this;
         }
 
         /**
-         * Sets this to the union of this and the given tritmask.
-         * Every bit that is set in \a other will be set in this tritmask.
+         * Sets this to the maximum of this and the given tritmask.
+         * That is, the ith trit will be set to the maximum of the
+         * ith trit in this tritmask and the ith trit in \a other.
          *
-         * @param other the tritmask to union with this.
+         * @param rhs the tritmask to "max" with this.
          * @return a reference to this tritmask.
          */
-        inline NTritmask2<T, U>& operator |= (const NTritmask2<T, U>& other) {
-            low |= other.low;
-            high |= other.high;
+        inline NTritmask2<T, U>& maxWith(const NTritmask2<T, U>& other) {
+            low1 |= rhs.low1;
+            low2 |= rhs.low2;
+            high1 |= rhs.high1;
+            high2 |= rhs.high2;
+            return *this;
+        }
+
+        /**
+         * Sets this to the sum of this and the given tritmask.
+         * When adding trits, any digit greater than 2 will simply be
+         * replaced with 2.  That is:
+         *
+         * - 2+2 = 1+2 = 1+1 = 2;
+         *
+         * - 0+x = x for any \a x.
+         *
+         * @param rhs the tritmask to add to this.
+         * @return a reference to this tritmask.
+         */
+        inline NTritmask2<T, U>& operator += (const NTritmask2<T, U>& rhs) {
+            low2 = (low1 & rhs.low1) | low2 | rhs.low2;
+            low1 = (low1 | rhs.low1);
+            high2 = (high1 & rhs.high1) | high2 | rhs.high2;
+            high1 = (high1 | rhs.high1);
             return *this;
         }
 
