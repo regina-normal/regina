@@ -346,7 +346,7 @@ class NQitmask2 {
          * @return the value of the (\a index)th qit; this will be
          * either 0, 1, 2 or 3.
          */
-        inline bool get(unsigned index) const {
+        inline char get(unsigned index) const {
             if (index < 8 * sizeof(T)) {
                 T bit = T(1) << index;
                 return ((low1 & bit) ? 1 : 0) | ((low2 & bit) ? 2 : 0);
@@ -364,7 +364,7 @@ class NQitmask2 {
          * @param value the value that will be assigned to the (\a index)th
          * qit; this must be 0, 1, 2 or 3.
          */
-        inline void set(unsigned index, bool value) {
+        inline void set(unsigned index, char value) {
             if (index < 8 * sizeof(T)) {
                 low1 |= (T(1) << index);
                 if (! (value & 1))

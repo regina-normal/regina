@@ -371,7 +371,7 @@ class NTritmask2 {
          * @return the value of the (\a index)th trit; this will be
          * either 0, 1 or 2.
          */
-        inline bool get(unsigned index) const {
+        inline char get(unsigned index) const {
             if (index < 8 * sizeof(T))
                 return (
                     (low2 & (T(1) << index)) ? 2 :
@@ -390,7 +390,7 @@ class NTritmask2 {
          * @param value the value that will be assigned to the (\a index)th
          * trit; this must be 0, 1 or 2.
          */
-        inline void set(unsigned index, bool value) {
+        inline void set(unsigned index, char value) {
             if (index < 8 * sizeof(T)) {
                 low1 |= (T(1) << index);
                 if (value == 0)
