@@ -30,9 +30,12 @@
 #include "pythonconsole.h"
 
 #include <iostream>
+#include <QAbstractItemView>
 #include <QApplication>
+#include <QCompleter>
 #include <QKeyEvent>
 #include <QKeySequence>
+#include <QPalette>
 
 #define COMMAND_EDIT_DEFAULT_SPACES_PER_TAB 4
 
@@ -40,6 +43,7 @@ CommandEdit::CommandEdit(PythonConsole* parent) :
         QLineEdit(parent), console(parent) { 
     setSpacesPerTab(COMMAND_EDIT_DEFAULT_SPACES_PER_TAB);
     historyPos = history.end();
+    oldColor = 0;
 }
 
 bool CommandEdit::event(QEvent* event) {
@@ -47,10 +51,25 @@ bool CommandEdit::event(QEvent* event) {
         return QLineEdit::event(event);
     } else {
         QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        bool completerUp = false;
+        if (completer() && completer()->popup() &&
+            completer()->popup()->hasFocus()) {
+            completerUp = true;
+        }
+        setCompleter(0); // Started typing again, disable completer
         if (keyEvent->key() == Qt::Key_Tab) {
-            insert(tabReplacement);
-            return true;
-        } else if (keyEvent->key() == Qt::Key_Up) {
+            // If we have some text, and it doesn't end in whitespace, we
+            // attempt tab completion. Else just insert tabs as normal.
+            if ((text().length() > 0) && (!text().right(1).contains(" "))) {
+                emit completionRequested();
+            } else {
+                insert(tabReplacement);
+                return true;
+            }
+        } else {
+            // Not pressing tab. Set foreground colour to normal.
+            clearErrorInInput();
+            if (keyEvent->key() == Qt::Key_Up) {
             // Browse backwards through history.
             if (historyPos == history.end())
                 newLine = text();
@@ -62,25 +81,31 @@ bool CommandEdit::event(QEvent* event) {
                 end(false);
             }
             return true;
-        } else if (keyEvent->key() == Qt::Key_Down) {
-            // Browse forwards through history.
-            if (historyPos == history.end())
-                QApplication::beep();
-            else {
-                historyPos++;
+            } else if (keyEvent->key() == Qt::Key_Down) {
+                // Browse forwards through history.
                 if (historyPos == history.end())
-                    setText(newLine);
-                else
-                    setText(*historyPos);
+                    QApplication::beep();
+                else {
+                    historyPos++;
+                    if (historyPos == history.end())
+                        setText(newLine);
+                    else
+                        setText(*historyPos);
+                }
+                return true;
+            } else if (keyEvent->key() == Qt::Key_Return) {
+                if (completerUp) {
+                    // Do nothing, completer will be closed. complete(completion);
+                } else {
+                    // Save the current line in history before we process it.
+                    history.push_back(text());
+                    historyPos = history.end();
+                    console->processCommand();
+                }
+                return true;
+            } else {
+                return QLineEdit::event(event);
             }
-            return true;
-        } else if (keyEvent->key() == Qt::Key_Return) {
-            // Save the current line in history before we process it.
-            history.push_back(text());
-            historyPos = history.end();
-            return QLineEdit::event(event);
-        } else {
-            return QLineEdit::event(event);
         }
     }
 }
@@ -98,6 +123,32 @@ void CommandEdit::keyPressEvent(QKeyEvent* event) {
         console->selectAll();
     else
         QLineEdit::keyPressEvent(event);
+}
+
+void CommandEdit::complete(QString completion) {
+    setText(lineStart + completion);
+}
+
+void CommandEdit::highlightErrorInInput() {
+    QPalette pal = palette();
+    if (!(oldColor))
+        oldColor = new QColor(pal.color(QPalette::Text));
+    pal.setColor(QPalette::Text, Qt::red);
+    setPalette(pal);
+}
+
+void CommandEdit::setCompletionLineStart(QString line) {
+    lineStart = line;
+}
+
+void CommandEdit::clearErrorInInput() {
+    if (oldColor) {
+        QPalette pal = palette();
+        pal.setColor(QPalette::Text, *oldColor);
+        setPalette(pal);
+        delete oldColor;
+        oldColor = 0;
+    }
 }
 
 // #include "commandedit.moc"

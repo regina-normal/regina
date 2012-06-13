@@ -57,9 +57,27 @@ class CommandEdit : public QLineEdit {
                  browsing through history. */
         QString tabReplacement;
             /**< The set of spaces to insert for each TAB keypress. */
-
+        QString lineStart;
+            /**< The start of the line when a completion is attempted. */
         PythonConsole* console;
             /**< The associated python console. */
+        QColor *oldColor;
+            /**< The default color of the input text, so we can 
+                 change colours if needed. */
+       
+        void clearErrorInInput();
+            /**< Return foreground colour of the input box to the default
+                 colour. */
+
+    signals:
+        void completionRequested();
+            /**< Emitted when tab completion is requested. 
+             */
+
+    private slots:
+        void complete(QString);
+            /**< Override from QT to work completions on words in the
+             *   middle of a QLineEdit. */
 
     public:
         /**
@@ -72,6 +90,18 @@ class CommandEdit : public QLineEdit {
          */
         unsigned getSpacesPerTab();
         void setSpacesPerTab(unsigned spacesPerTab);
+        
+        /**
+         * Set the foreground colour of the input box, to highlight
+         * that an error occured.
+         */
+        void highlightErrorInInput();
+       
+        /**
+         * Stores the part of the line that should not change when
+         * a completion is attempted mid-line.
+         */
+        void setCompletionLineStart(QString start);
 
     protected:
         /**
