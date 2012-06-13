@@ -84,7 +84,7 @@ class NTritmask1 {
 
     public:
         /**
-         * Creates a new tritmask with all bits set to 0.
+         * Creates a new tritmask with all trits set to 0.
          */
         inline NTritmask1() : mask1(0), mask2(0) {
         }
@@ -99,7 +99,7 @@ class NTritmask1 {
         }
 
         /**
-         * Sets all bits of this tritmask to 0.
+         * Sets all trits of this tritmask to 0.
          */
         inline void reset() {
             mask1 = mask2 = 0;
@@ -122,7 +122,7 @@ class NTritmask1 {
          *
          * @param index indicates which trit to query; this must be between
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
-         * @return the value of the (\a index)th bit; this will be
+         * @return the value of the (\a index)th trit; this will be
          * either 0, 1 or 2.
          */
         inline char get(unsigned index) const {
@@ -326,7 +326,7 @@ class NTritmask2 {
 
     public:
         /**
-         * Creates a new tritmask with all bits set to 0.
+         * Creates a new tritmask with all trits set to 0.
          */
         inline NTritmask2() : low1(0), low2(0), high1(0), high2(0) {
         }
@@ -342,7 +342,7 @@ class NTritmask2 {
         }
 
         /**
-         * Sets all bits of this tritmask to 0.
+         * Sets all trits of this tritmask to 0.
          */
         inline void reset() {
             low1 = low2 = 0;
@@ -368,7 +368,7 @@ class NTritmask2 {
          *
          * @param index indicates which trit to query; this must be between
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
-         * @return the value of the (\a index)th bit; this will be
+         * @return the value of the (\a index)th trit; this will be
          * either 0, 1 or 2.
          */
         inline bool get(unsigned index) const {
