@@ -137,10 +137,10 @@ void NCompactSearcher::TetEdgeState::dumpData(std::ostream& out, unsigned nTets)
         << (hadEqualRank ? 1 : 0) << ' ';
     unsigned i;
     for (i = 0; i < nTets * 4 && i < 64; ++i)
-        out << (facesPos.get(i) + '0');
+        out << char(facesPos.get(i) + '0');
     out << ' ';
     for (i = 0; i < nTets * 4 && i < 64; ++i)
-        out << (facesNeg.get(i) + '0');
+        out << char(facesNeg.get(i) + '0');
 }
 
 bool NCompactSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
