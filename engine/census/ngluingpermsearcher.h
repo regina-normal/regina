@@ -38,6 +38,7 @@
 
 #include "regina-core.h"
 #include "census/ngluingperms.h"
+#include "utilities/nqitmask.h"
 
 /**
  * Specifies whether the NClosedPrimeMinSearcher census generation code
@@ -838,6 +839,45 @@ class REGINA_API NCompactSearcher : public NGluingPermSearcher {
                      when grafting operations are undone.  If this object is
                      still the root of its tree, this value is set to false. */
 
+            NQitmaskLen64 facesPos;
+                /**< Indicates how many times this edge runs along the
+                     boundary of each tetrahedron face in the positive
+                     direction.  Specifically, the (4t+i)th trit counts
+                     how many times it runs in the positive direction
+                     around the boundary of face \a i of tetrahedron \a t.
+                     Which direction is "positive" is chosen arbitrarily
+                     for each face; for details see the implementation
+                     of the NCompactSearcher constructor.
+
+                     Because of the fixed-size data type, this only
+                     stores information for the faces of the first 16
+                     tetrahedra.
+
+                     Currently this data member is initialised by the
+                     NCompactSearcher constructors (since it belongs to
+                     TetEdgeState), but it is only used and updated in
+                     the subclass NClosedPrimeMinSearcher (where it
+                     allows us to optimise the census algorithm). */
+            NQitmaskLen64 facesNeg;
+                /**< Indicates how many times this edge runs along the
+                     boundary of each tetrahedron face in the negative
+                     direction.  Specifically, the (4t+i)th trit counts
+                     how many times it runs in the negative direction
+                     around the boundary of face \a i of tetrahedron \a t.
+                     Which direction is "negative" is chosen arbitrarily
+                     for each face; for details see the implementation
+                     of the NCompactSearcher constructor.
+
+                     Because of the fixed-size data type, this only
+                     stores information for the faces of the first 16
+                     tetrahedra.
+
+                     Currently this data member is initialised by the
+                     NCompactSearcher constructors (since it belongs to
+                     TetEdgeState), but it is only used and updated in
+                     the subclass NClosedPrimeMinSearcher (where it
+                     allows us to optimise the census algorithm). */
+
             /**
              * Constructor for a standalone tetrahedron edge in an
              * equivalence class all of its own.
@@ -856,10 +896,12 @@ class REGINA_API NCompactSearcher : public NGluingPermSearcher {
              * releases.  Data in this format should be used on a short-term
              * temporary basis only.
              *
+             * @param nTets the number of tetrahedra under consideration
+             * in the census.
              * @param out the output stream to which the data should be
              * written.
              */
-            void dumpData(std::ostream& out) const;
+            void dumpData(std::ostream& out, unsigned nTets) const;
 
             /**
              * Fills this state with data read from the given input stream.
@@ -873,13 +915,12 @@ class REGINA_API NCompactSearcher : public NGluingPermSearcher {
              * does \e not test for end-of-file.
              *
              * @param in the input stream from which to read.
-             * @param nStates the total number of edge states under
-             * consideration (this must be six times the number of
-             * tetrahedra).
+             * @param nTets the number of tetrahedra under consideration
+             * in the census.
              * @return \c false if any errors were encountered during
              * reading, or \c true otherwise.
              */
-            bool readData(std::istream& in, unsigned long nStates);
+            bool readData(std::istream& in, unsigned nTets);
         };
 
     public:

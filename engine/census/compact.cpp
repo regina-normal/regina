@@ -128,16 +128,22 @@ bool NCompactSearcher::TetVertexState::readData(std::istream& in,
     return true;
 }
 
-void NCompactSearcher::TetEdgeState::dumpData(std::ostream& out) const {
+void NCompactSearcher::TetEdgeState::dumpData(std::ostream& out, unsigned nTets)
+        const {
     // Be careful with twistUp, which is a char but which should be
     // written as an int.
     out << parent << ' ' << rank << ' ' << size << ' '
         << (bounded ? 1 : 0) << ' ' << (twistUp ? 1 : 0) << ' '
-        << (hadEqualRank ? 1 : 0);
+        << (hadEqualRank ? 1 : 0) << ' ';
+    unsigned i;
+    for (i = 0; i < nTets * 4 && i < 64; ++i)
+        out << (facesPos.get(i) + '0');
+    out << ' ';
+    for (i = 0; i < nTets * 4 && i < 64; ++i)
+        out << (facesNeg.get(i) + '0');
 }
 
-bool NCompactSearcher::TetEdgeState::readData(std::istream& in,
-        unsigned long nStates) {
+bool NCompactSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
     in >> parent >> rank >> size;
 
     // bounded is a bool, but we need to read it as an int.
@@ -155,17 +161,37 @@ bool NCompactSearcher::TetEdgeState::readData(std::istream& in,
     in >> bRank;
     hadEqualRank = bRank;
 
-    if (parent < -1 || parent >= static_cast<long>(nStates))
+    char cFaces;
+    bool facesBroken = false;
+    unsigned i;
+    for (i = 0; i < nTets && i < 64; ++i) {
+        in >> cFaces;
+        if (cFaces >= '0' && cFaces <= '3')
+            facesPos.set(i, cFaces - '0');
+        else
+            facesBroken = true;
+    }
+    for (i = 0; i < nTets && i < 64; ++i) {
+        in >> cFaces;
+        if (cFaces >= '0' && cFaces <= '3')
+            facesNeg.set(i, cFaces - '0');
+        else
+            facesBroken = true;
+    }
+
+    if (parent < -1 || parent >= static_cast<long>(6 * nTets))
         return false;
-    if (rank >= nStates)
+    if (rank >= 6 * nTets)
         return false;
-    if (size >= nStates)
+    if (size >= 6 * nTets)
         return false;
     if (bBounded != 1 && bBounded != 0)
         return false;
     if (twist != 1 && twist != 0)
         return false;
     if (bRank != 1 && bRank != 0)
+        return false;
+    if (facesBroken)
         return false;
 
     return true;
@@ -183,11 +209,13 @@ NCompactSearcher::NCompactSearcher(const NFacePairing* pairing,
 
     // ---------- Tracking of vertex / edge equivalence classes ----------
 
+    unsigned i;
+
     nVertexClasses = nTets * 4;
     vertexState = new TetVertexState[nTets * 4];
     vertexStateChanged = new int[nTets * 8];
     std::fill(vertexStateChanged, vertexStateChanged + nTets * 8, -1);
-    for (unsigned i = 0; i < nTets * 4; i++) {
+    for (i = 0; i < nTets * 4; i++) {
         vertexState[i].bdryEdges = 3;
         vertexState[i].bdryNext[0] = vertexState[i].bdryNext[1] = i;
         vertexState[i].bdryTwist[0] = vertexState[i].bdryTwist[1] = 0;
@@ -201,6 +229,31 @@ NCompactSearcher::NCompactSearcher(const NFacePairing* pairing,
     edgeState = new TetEdgeState[nTets * 6];
     edgeStateChanged = new int[nTets * 8];
     std::fill(edgeStateChanged, edgeStateChanged + nTets * 8, -1);
+
+    // Since NQitmaskLen64 only supports 64 faces, only work with
+    // the first 16 tetrahedra.  If n > 16, this just weakens the
+    // optimisation; however, this is no great loss since for n > 16 the
+    // census code is at present infeasibly slow anyway.
+    for (i = 0; i < nTets && i < 16; ++i) {
+        /* 01 on +012, +013             */
+        edgeState[6 * i    ].facesPos.set(4 * i + 3, 1);
+        edgeState[6 * i    ].facesPos.set(4 * i + 2, 1);
+        /* 02 on -012        +023       */
+        edgeState[6 * i + 1].facesNeg.set(4 * i + 3, 1);
+        edgeState[6 * i + 1].facesPos.set(4 * i + 1, 1);
+        /* 03 on       -013, -023       */
+        edgeState[6 * i + 2].facesNeg.set(4 * i + 2, 1);
+        edgeState[6 * i + 2].facesNeg.set(4 * i + 1, 1);
+        /* 12 on +012,             +123 */
+        edgeState[6 * i + 3].facesPos.set(4 * i + 3, 1);
+        edgeState[6 * i + 3].facesPos.set(4 * i + 0, 1);
+        /* 13 on       +013        -123 */
+        edgeState[6 * i + 4].facesPos.set(4 * i + 2, 1);
+        edgeState[6 * i + 4].facesNeg.set(4 * i + 0, 1);
+        /* 23 on             +023, +123 */
+        edgeState[6 * i + 5].facesPos.set(4 * i + 1, 1);
+        edgeState[6 * i + 5].facesPos.set(4 * i + 0, 1);
+    }
 }
 
 // TODO (net): See what was removed when we brought in vertex link checking.
@@ -457,7 +510,7 @@ void NCompactSearcher::dumpData(std::ostream& out) const {
 
     out << nEdgeClasses << std::endl;
     for (i = 0; i < 6 * nTets; i++) {
-        edgeState[i].dumpData(out);
+        edgeState[i].dumpData(out, nTets);
         out << std::endl;
     }
     for (i = 0; i < 8 * nTets; i++) {
@@ -506,7 +559,7 @@ NCompactSearcher::NCompactSearcher(std::istream& in,
 
     edgeState = new TetEdgeState[6 * nTets];
     for (i = 0; i < 6 * nTets; i++)
-        if (! edgeState[i].readData(in, 6 * nTets)) {
+        if (! edgeState[i].readData(in, nTets)) {
             inputError_ = true; return;
         }
 
