@@ -43,6 +43,7 @@
 class CommandEdit;
 class PythonInterpreter;
 class PythonManager;
+class QCompleter;
 class QLabel;
 class QTextEdit;
 
@@ -56,6 +57,8 @@ class QTextEdit;
 class PythonConsole : public QMainWindow {
     Q_OBJECT
 
+    friend class PythonOutputStream;
+    friend class CommandEdit;
     private:
         /**
          * Possible types of prompt.
@@ -139,7 +142,7 @@ class PythonConsole : public QMainWindow {
          */
         bool compileScript(const QString& script);
         void executeScript(const QString& script,
-            const QString& scriptName = QString::null);
+        const QString& scriptName = QString::null);
 
     public slots:
         /**
@@ -193,6 +196,40 @@ class PythonConsole : public QMainWindow {
          * Qt overrides.
          */
          virtual QSize sizeHint() const;
+        
+        /**
+         * Track who is getting output from python. 
+         */
+        bool outputToTabCompletion;
+        /**
+         * The list of possible completions. 
+         */
+        QStringList* completions;
+        /**
+         * Track what index into the completions has
+         * been returned by the python.
+         */
+        int nextCompletion;
+        /**
+         * A completer object to handle python tab completion.
+         */
+        QCompleter* completer;
+        /**
+         * Tab completion results are in, display them.
+         */
+        void completionsFinished();
+        /**
+         * Reqest another completion. Needs to be a function
+         * that the output stream can call, to emit a signal so
+         * the request isn't blocking.
+         */
+        void requestNextCompletion(); 
+
+    signals:
+        /**
+         * The signal sent when requesting another completion.
+         */
+        void doNextCompletion();
 
     private:
         /**
@@ -220,6 +257,16 @@ class PythonConsole : public QMainWindow {
         void inputSelectionChanged();
         void sessionSelectionChanged();
         void clipboardChanged();
+
+        /**
+         * Process tab completion on the partial line. 
+         **/
+        void processCompletion();
+        /**
+         * Request the next tab completion option from pythons readline
+         */
+        void getNextCompletion(); 
+        
 
     private:
         /**

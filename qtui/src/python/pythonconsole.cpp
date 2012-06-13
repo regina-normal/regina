@@ -46,6 +46,7 @@
 
 #include <QApplication>
 #include <QClipboard>
+#include <QCompleter>
 #include <QDesktopWidget>
 #include <QFileDialog>
 #include <QFileInfo>
@@ -86,7 +87,13 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     input = new CommandEdit(this);
     input->setWhatsThis(inputMsg);
     input->setFocus();
-    connect(input, SIGNAL(returnPressed()), this, SLOT(processCommand()));
+
+    outputToTabCompletion = false;
+    completions = new QStringList;
+    completer = NULL;
+    connect(input, SIGNAL(completionRequested()), this, SLOT(processCompletion()),Qt::QueuedConnection);
+    connect(this,SIGNAL(doNextCompletion()),this,SLOT(getNextCompletion()),Qt::QueuedConnection);
+
     inputAreaLayout->addWidget(input, 1);
     layout->addLayout(inputAreaLayout);
 
@@ -507,12 +514,159 @@ void PythonConsole::processCommand() {
         allowInput(done);
 }
 
+void PythonConsole::processCompletion() {
+    // Capture output and reset completion status.
+    outputToTabCompletion = true;
+    nextCompletion=0;
+    completions->clear();
+    getNextCompletion();
+}
+
+void PythonConsole::getNextCompletion() {
+    // Send a request for a completion to python.
+    // We only send the last "word", where a word starts with a character or
+    // underscore, and only contains letters,numbers,underscores and the dot
+    
+    // Note the "or \">\"" in the following line. If nothing is returned, we
+    // need to be able to capture it. Since > is not allowed in a function or
+    // variable name, we return it if completion fails.
+    QString cmd = "__regina_tab_completion.complete(\"%1\",%2) or \">\"";
+    QRegExp re("([A-Za-z_][A-Za-z0-9_.]*)$");
+    QString lastWord = input->text();
+    int pos=0;
+    if ((pos=re.indexIn(input->text())) != -1 ) {
+        input->setCompletionLineStart(input->text().left(pos));
+        lastWord = re.cap(1);
+        interpreter->executeLine(cmd.arg(lastWord)
+            .arg(nextCompletion).toAscii().constData());
+    } else {
+        outputToTabCompletion = false;
+    }
+}
+
+void PythonConsole::completionsFinished() {
+    if (completer) {
+        input->setCompleter(0); // Remove current completer
+        delete completer;
+        completer = 0;
+    }
+    // Focus can be lost here since the "console" has gotten the most recent
+    // signal.
+    input->setFocus();
+
+    if (completions->count() > 1) {
+        // Find a substring common to all suggestions
+        int common=completions->at(0).length();
+        for(int i=0; i < completions->count()-1; i++) {
+            QString a = completions->at(i);
+            QString b = completions->at(i+1);
+            if (b.length() < common) 
+                common = b.length();
+            int j;
+            for(j=0;j < common; j++) 
+                if (a[j] != b[j])
+                    break;
+            common=j;
+            if (common==0)
+                break;
+        }
+        // Get everything except the last word, and then append the letters
+        // common to all suggestions.
+        if (common) {
+            QRegExp re("^(.*[^A-Za-z_.])[[\\]A-Za-z_][A-Za-z0-9_.]*$");
+            QString start=""; 
+            int pos=0;
+            if (re.indexIn(input->text(),pos) != -1 ) {
+                start = re.cap(1);
+            }
+            start+=completions->at(0).left(common);
+            input->setText(start);
+        }
+
+        completer = new QCompleter(*completions,this);
+        completer->setCaseSensitivity(Qt::CaseInsensitive);
+        input->setCompleter(completer);
+        // Disconnect activated signal from completer
+        
+        // We call our own instead, since the default action is to completely
+        // replace the text.
+        disconnect(input->completer(), SIGNAL(activated(QString)), input, 0);
+        disconnect(input->completer(), SIGNAL(highlighted(QString)), input, 0);
+        connect(input->completer(), SIGNAL(activated(QString)), input, SLOT(complete(QString)));
+        connect(input->completer(), SIGNAL(highlighted(QString)), input, SLOT(complete(QString)));
+        // Tell the completer to give suggestions "now", normal operation is to
+        // wait until the user types something, but here the user has already
+        // typed.
+        input->completer()->complete();
+    } else if (completions->count() == 1) {
+        // Get everything except the last word, and then append the suggestion.
+        QRegExp re("^(.*[^A-Za-z_.])[[\\]A-Za-z_][A-Za-z0-9_.]*$");
+        QString start=""; 
+        int pos=0;
+        if (re.indexIn(input->text(),pos) != -1 ) {
+            start = re.cap(1);
+        }
+        start+=completions->at(0);
+        input->setText(start);
+    } else {
+        // No completions, an error occured.
+        // Note that if a valid word is completed (like "from") the whole word
+        // is also returned as the sole completion, so this part of the
+        // function only fires if python does not recognise the word at all.
+        input->highlightErrorInInput();
+    }
+}
+
+
+void PythonConsole::requestNextCompletion() {
+    // We just emit a signal here. We cannot call the function directly as that
+    // would result in a deadlock.
+    emit doNextCompletion();
+}
+
 void PythonConsole::OutputStream::processOutput(const std::string& data) {
-    // Strip the final newline (if any) before we process the string.
-    if ((! data.empty()) && *(data.rbegin()) == '\n')
-        console_->addOutput(data.substr(0, data.length() - 1).c_str());
-    else
-        console_->addOutput(data.c_str());
+    if (console_->outputToTabCompletion) {
+        // The returned completion data either looks like 'completed' or '>'
+        // where 'completed' is the new completion word.
+        int start = data.find_first_of('\'');
+        if ( data.find_first_of('>') != std::string::npos ) {
+            // First look for the > that signifies the end of completions.
+            console_->completionsFinished();
+            console_->outputToTabCompletion = false;
+        } else if (start != std::string::npos) {
+            // Else look for the quoted word
+            int len = data.find_last_of('\'') - start;
+           
+            // Skip anything that contains __
+            if (data.find("__") == std::string::npos) {
+                // If the completion ends in a (, remove it.
+                //if ( data.substr(start+1+len-2,1).compare("(")== 0 )
+                //    len--;
+                
+                
+                // start+1 to avoid first quote
+                // len-1 to avoid the trailing quote
+                QString comp = data.substr(start+1,len-1).c_str();
+                // Don't add repeated copies of words (sometimes python returns
+                // these).
+                if (! console_->completions->contains(comp))
+                    console_->completions->append(comp);
+            }
+            console_->nextCompletion++;
+            console_->requestNextCompletion();
+        } else {
+            // We should never get here. We simply fall out of completion-mode.
+            console_->completionsFinished();
+            console_->outputToTabCompletion = false;
+        }
+        return;
+    } else {
+      // Strip the final newline (if any) before we process the string.
+      if ((! data.empty()) && *(data.rbegin()) == '\n')
+          console_->addOutput(data.substr(0, data.length() - 1).c_str());
+      else
+          console_->addOutput(data.c_str());
+    }
 }
 
 void PythonConsole::ErrorStream::processOutput(const std::string& data) {
