@@ -803,6 +803,20 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                     retVal |= ECLASS_HIGHDEG;
 #endif
 
+                if (edgeState[eRep].twistUp) {
+                    edgeState[fRep].facesPos += edgeState[eRep].facesNeg;
+                    edgeState[fRep].facesNeg += edgeState[eRep].facesPos;
+                } else {
+                    edgeState[fRep].facesPos += edgeState[eRep].facesPos;
+                    edgeState[fRep].facesNeg += edgeState[eRep].facesNeg;
+                }
+                if (edgeState[fRep].facesPos.hasNonZeroMatch(
+                        edgeState[fRep].facesNeg))
+                    retVal |= ECLASS_CONE;
+                if (edgeState[fRep].facesPos.has3() ||
+                        edgeState[fRep].facesNeg.has3())
+                    retVal |= ECLASS_L31;
+
                 edgeStateChanged[orderIdx] = eRep;
             } else {
                 // Join fRep beneath eRep.
@@ -820,6 +834,20 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                     retVal |= ECLASS_HIGHDEG;
 #endif
 
+                if (edgeState[fRep].twistUp) {
+                    edgeState[eRep].facesPos += edgeState[fRep].facesNeg;
+                    edgeState[eRep].facesNeg += edgeState[fRep].facesPos;
+                } else {
+                    edgeState[eRep].facesPos += edgeState[fRep].facesPos;
+                    edgeState[eRep].facesNeg += edgeState[fRep].facesNeg;
+                }
+                if (edgeState[eRep].facesPos.hasNonZeroMatch(
+                        edgeState[eRep].facesNeg))
+                    retVal |= ECLASS_CONE;
+                if (edgeState[eRep].facesPos.has3() ||
+                        edgeState[eRep].facesNeg.has3())
+                    retVal |= ECLASS_L31;
+
                 edgeStateChanged[orderIdx] = fRep;
             }
 
@@ -832,72 +860,7 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
         }
     }
 
-    // If we've already found something bad, exit now.  No sense in
-    // looking for even more bad structures, since we're only going to
-    // discard the triangulation anyway.
-    if (retVal)
-        return retVal;
-
-    // Find representatives of the equivalence classes for all six edges
-    // of the current tetrahedron (instead of calculating them each time
-    // we want them).
-    int tRep[6];
-    char tTwist[6];
-    for (e = 0; e < 6; e++)
-        tRep[e] = findEdgeClass(e + 6 * face.simp, tTwist[e] = 0);
-
-    // Test for cones in all possible positions on all possible faces.
-    // Apologies for the tightness of the code; this part is being
-    // micro-optimised since it is run so very frequently.  The old,
-    // more readable version of this code is in the commented block below.
-    for (e = 0; e < 12; e++)
-        if (tRep[coneEdge[e][0]] == tRep[coneEdge[e][1]] && (coneNoTwist[e] ^
-            (tTwist[coneEdge[e][0]] ^ tTwist[coneEdge[e][1]])))
-                return ECLASS_CONE;
-
-    /*
-    // Test for cones on edges v1->w1->v2.
-    for (w1 = 0; w1 < 4; w1++)
-        for (v1 = 0; v1 < 3; v1++) {
-            if (v1 == w1)
-                continue;
-            for (v2 = v1 + 1; v2 < 4; v2++) {
-                if (v2 == w1)
-                    continue;
-
-                parentTwists = tTwist[NEdge::edgeNumber[v1][w1]] ^
-                    tTwist[NEdge::edgeNumber[v2][w1]];
-
-                if (tRep[NEdge::edgeNumber[v1][w1]] ==
-                        tRep[NEdge::edgeNumber[v2][w1]]) {
-                    hasTwist = (v1 < w1 && w1 < v2 ? 0 : 1);
-                    if (hasTwist ^ parentTwists) {
-                        return ECLASS_CONE;
-                    }
-                }
-            }
-        }
-    */
-
-    // Test for L(3,1) spines.
-    // Don't bother checking the directions of the edges -- if it's not an
-    // L(3,1) spine then it includes a cone, which we've already tested for.
-
-    // L(3,1) on face 012:
-    if (tRep[0] == tRep[1] && tRep[1] == tRep[3])
-        return ECLASS_L31;
-    // L(3,1) on face 013:
-    if (tRep[0] == tRep[2] && tRep[2] == tRep[4])
-        return ECLASS_L31;
-    // L(3,1) on face 023:
-    if (tRep[1] == tRep[2] && tRep[2] == tRep[5])
-        return ECLASS_L31;
-    // L(3,1) on face 123:
-    if (tRep[3] == tRep[4] && tRep[4] == tRep[5])
-        return ECLASS_L31;
-
-    // Nothing bad was found.
-    return 0;
+    return retVal;
 }
 
 void NClosedPrimeMinSearcher::splitEdgeClasses() {
@@ -944,6 +907,14 @@ void NClosedPrimeMinSearcher::splitEdgeClasses() {
             else if (edgeState[rep].size == 2 && edgeState[subRep].size == 2)
                 --highDegSum;
 #endif
+
+            if (edgeState[subRep].twistUp) {
+                edgeState[rep].facesPos -= edgeState[subRep].facesNeg;
+                edgeState[rep].facesNeg -= edgeState[subRep].facesPos;
+            } else {
+                edgeState[rep].facesPos -= edgeState[subRep].facesPos;
+                edgeState[rep].facesNeg -= edgeState[subRep].facesNeg;
+            }
 
             edgeStateChanged[orderIdx] = -1;
             nEdgeClasses++;
