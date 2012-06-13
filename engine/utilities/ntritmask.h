@@ -84,21 +84,9 @@ class NTritmask1 {
 
     public:
         /**
-         * Creates a new tritmask with all bits set to \c false.
+         * Creates a new tritmask with all bits set to 0.
          */
-        inline NTritmask1() : mask(0) {
-        }
-
-        /**
-         * Creates a new tritmask with all bits set to \c false.
-         *
-         * The integer argument is merely for compatibility with
-         * the NTritmask constructor, and will be ignored.
-         *
-         * \warning This is \e not a constructor that initialises the
-         * tritmask to a given pattern.
-         */
-        inline NTritmask1(unsigned) : mask(0) {
+        inline NTritmask1() : mask1(0), mask2(0) {
         }
 
         /**
@@ -106,14 +94,15 @@ class NTritmask1 {
          *
          * @param cloneMe the tritmask to clone.
          */
-        inline NTritmask1(const NTritmask1<T>& cloneMe) : mask(cloneMe.mask) {
+        inline NTritmask1(const NTritmask1<T>& cloneMe) :
+                mask1(cloneMe.mask1), mask2(cloneMe.mask2) {
         }
 
         /**
-         * Sets all bits of this tritmask to \c false.
+         * Sets all bits of this tritmask to 0.
          */
         inline void reset() {
-            mask = 0;
+            mask1 = mask2 = 0;
         }
 
         /**
@@ -123,38 +112,78 @@ class NTritmask1 {
          * @return a reference to this tritmask.
          */
         NTritmask1<T>& operator = (const NTritmask1<T>& other) {
-            mask = other.mask;
+            mask1 = other.mask1;
+            mask2 = other.mask2;
             return *this;
         }
 
         /**
-         * Returns the value of the given bit of this tritmask.
+         * Returns the value of the given trit in this tritmask.
          *
-         * @param index indicates which bit to query; this must be between
+         * @param index indicates which trit to query; this must be between
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
-         * @return the value of the (\a index)th bit.
+         * @return the value of the (\a index)th bit; this will be
+         * either 0, 1 or 2.
          */
-        inline bool get(unsigned index) const {
-            return (mask & (T(1) << index));
+        inline char get(unsigned index) const {
+            return (
+                (mask2 & (T(1) << index)) ? 2 :
+                (mask1 & (T(1) << index)) ? 1 : 0);
         }
 
         /**
-         * Sets the given bit of this tritmask to the given value.
+         * Sets the given trit of this tritmask to the given value.
          *
-         * @param index indicates which bit to set; this must be between
+         * @param index indicates which trit to set; this must be between
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
-         * @param value the value that will be assigned to the (\a index)th bit.
+         * @param value the value that will be assigned to the (\a index)th
+         * trit; this must be 0, 1 or 2.
          */
-        inline void set(unsigned index, bool value) {
-            mask |= (T(1) << index);
-            if (! value)
-                mask ^= (T(1) << index);
+        inline void set(unsigned index, char value) {
+            mask1 |= (T(1) << index);
+            if (value == 0)
+                mask1 ^= (T(1) << index);
+            mask2 |= (T(1) << index);
+            if (value != 2)
+                mask2 ^= (T(1) << index);
+        }
+
+        /**
+         * Determines whether this tritmask contains all zeroes.
+         *
+         * @return \c true if every trit is zero, or \c false otherwise.
+         */
+        inline bool empty() const {
+            return ! mask1;
+        }
+
+        /**
+         * Determines whether this tritmask contains at least one
+         * non-zero trit.
+         *
+         * @return \c true if at least one trit is non-zero, or
+         * \c false otherwise.
+         */
+        inline bool nonEmpty() const {
+            return mask1;
+        }
+
+        /**
+         * Determines whether this tritmask contains at least one trit
+         * with value 2.
+         *
+         * @return \c true if at least one trit is 2, or \c false otherwise.
+         */
+        inline bool has2() const {
+            return mask2;
         }
 
         /**
          * Sets this to the minimum of this and the given tritmask.
          * That is, the ith trit will be set to the minimum of the
          * ith trit in this tritmask and the ith trit in \a other.
+         *
+         * This is a "trit" version of boolean AND.
          *
          * @param rhs the tritmask to "min" with this.
          * @return a reference to this tritmask.
@@ -169,6 +198,8 @@ class NTritmask1 {
          * Sets this to the maximum of this and the given tritmask.
          * That is, the ith trit will be set to the maximum of the
          * ith trit in this tritmask and the ith trit in \a other.
+         *
+         * This is a "trit" version of boolean OR.
          *
          * @param rhs the tritmask to "max" with this.
          * @return a reference to this tritmask.
@@ -212,7 +243,7 @@ class NTritmask1 {
          * @return a reference to this tritmask.
          */
         inline NTritmask1<T>& operator -= (const NTritmask1<T>& rhs) {
-            mask1 = (mask1 & ~ rhs.mask1) | (mask2 & ~ rhs.mask1);
+            mask1 = (mask1 & ~ rhs.mask1) | (mask2 & ~ rhs.mask2);
             mask2 = (mask2 & ~ rhs.mask1);
             return *this;
         }
@@ -295,21 +326,9 @@ class NTritmask2 {
 
     public:
         /**
-         * Creates a new tritmask with all bits set to \c false.
+         * Creates a new tritmask with all bits set to 0.
          */
-        inline NTritmask2() : low(0), high(0) {
-        }
-
-        /**
-         * Creates a new tritmask with all bits set to \c false.
-         *
-         * The integer argument is merely for compatibility with
-         * the NTritmask constructor, and will be ignored.
-         *
-         * \warning This is \e not a constructor that initialises the
-         * tritmask to a given pattern.
-         */
-        inline NTritmask2(unsigned) : low(0), high(0) {
+        inline NTritmask2() : low1(0), low2(0), high1(0), high2(0) {
         }
 
         /**
@@ -318,15 +337,16 @@ class NTritmask2 {
          * @param cloneMe the tritmask to clone.
          */
         inline NTritmask2(const NTritmask2<T, U>& cloneMe) :
-                low(cloneMe.low), high(cloneMe.high) {
+                low1(cloneMe.low1), low2(cloneMe.low2),
+                high1(cloneMe.high1), high2(cloneMe.high2) {
         }
 
         /**
-         * Sets all bits of this tritmask to \c false.
+         * Sets all bits of this tritmask to 0.
          */
         inline void reset() {
-            low = 0;
-            high = 0;
+            low1 = low2 = 0;
+            high1 = high2 = 0;
         }
 
         /**
@@ -336,42 +356,86 @@ class NTritmask2 {
          * @return a reference to this tritmask.
          */
         NTritmask2<T, U>& operator = (const NTritmask2<T, U>& other) {
-            low = other.low;
-            high = other.high;
+            low1 = other.low1;
+            low2 = other.low2;
+            high1 = other.high1;
+            high2 = other.high2;
             return *this;
         }
 
         /**
-         * Returns the value of the given bit of this tritmask.
+         * Returns the value of the given trit in this tritmask.
          *
-         * @param index indicates which bit to query; this must be between
+         * @param index indicates which trit to query; this must be between
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
-         * @return the value of the (\a index)th bit.
+         * @return the value of the (\a index)th bit; this will be
+         * either 0, 1 or 2.
          */
         inline bool get(unsigned index) const {
             if (index < 8 * sizeof(T))
-                return (low & (T(1) << index));
+                return (
+                    (low2 & (T(1) << index)) ? 2 :
+                    (low1 & (T(1) << index)) ? 1 : 0);
             else
-                return (high & (U(1) << (index - 8 * sizeof(T))));
+                return (
+                    (high2 & (U(1) << (index - 8 * sizeof(T)))) ? 2 :
+                    (high1 & (U(1) << (index - 8 * sizeof(T)))) ? 1 : 0);
         }
 
         /**
-         * Sets the given bit of this tritmask to the given value.
+         * Sets the given trit of this tritmask to the given value.
          *
-         * @param index indicates which bit to set; this must be between
+         * @param index indicates which trit to set; this must be between
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
-         * @param value the value that will be assigned to the (\a index)th bit.
+         * @param value the value that will be assigned to the (\a index)th
+         * trit; this must be 0, 1 or 2.
          */
         inline void set(unsigned index, bool value) {
             if (index < 8 * sizeof(T)) {
-                low |= (T(1) << index);
-                if (! value)
-                    low ^= (T(1) << index);
+                low1 |= (T(1) << index);
+                if (value == 0)
+                    low1 ^= (T(1) << index);
+                low2 |= (T(1) << index);
+                if (value != 2)
+                    low2 ^= (T(1) << index);
             } else {
-                high |= (U(1) << (index - 8 * sizeof(T)));
-                if (! value)
-                    high ^= (U(1) << (index - 8 * sizeof(T)));
+                high1 |= (U(1) << (index - 8 * sizeof(T)));
+                if (value == 0)
+                    high1 ^= (U(1) << (index - 8 * sizeof(T)));
+                high2 |= (U(1) << (index - 8 * sizeof(T)));
+                if (value != 2)
+                    high2 ^= (U(1) << (index - 8 * sizeof(T)));
             }
+        }
+
+        /**
+         * Determines whether this tritmask contains all zeroes.
+         *
+         * @return \c true if every trit is zero, or \c false otherwise.
+         */
+        inline bool empty() const {
+            return ! (low1 || high1);
+        }
+
+        /**
+         * Determines whether this tritmask contains at least one
+         * non-zero trit.
+         *
+         * @return \c true if at least one trit is non-zero, or
+         * \c false otherwise.
+         */
+        inline bool nonEmpty() const {
+            return (low1 || high1);
+        }
+
+        /**
+         * Determines whether this tritmask contains at least one trit
+         * with value 2.
+         *
+         * @return \c true if at least one trit is 2, or \c false otherwise.
+         */
+        inline bool has2() const {
+            return (low2 || high2);
         }
 
         /**
@@ -379,10 +443,12 @@ class NTritmask2 {
          * That is, the ith trit will be set to the minimum of the
          * ith trit in this tritmask and the ith trit in \a other.
          *
+         * This is a "trit" version of boolean AND.
+         *
          * @param rhs the tritmask to "min" with this.
          * @return a reference to this tritmask.
          */
-        inline NTritmask2<T, U>& minWith(const NTritmask2<T, U>& other) {
+        inline NTritmask2<T, U>& minWith(const NTritmask2<T, U>& rhs) {
             low1 &= rhs.low1;
             low2 &= rhs.low2;
             high1 &= rhs.high1;
@@ -395,10 +461,12 @@ class NTritmask2 {
          * That is, the ith trit will be set to the maximum of the
          * ith trit in this tritmask and the ith trit in \a other.
          *
+         * This is a "trit" version of boolean OR.
+         *
          * @param rhs the tritmask to "max" with this.
          * @return a reference to this tritmask.
          */
-        inline NTritmask2<T, U>& maxWith(const NTritmask2<T, U>& other) {
+        inline NTritmask2<T, U>& maxWith(const NTritmask2<T, U>& rhs) {
             low1 |= rhs.low1;
             low2 |= rhs.low2;
             high1 |= rhs.high1;
@@ -441,9 +509,9 @@ class NTritmask2 {
          * @return a reference to this tritmask.
          */
         inline NTritmask2<T, U>& operator -= (const NTritmask2<T, U>& rhs) {
-            low1 = (low1 & ~ rhs.low1) | (low2 & ~ rhs.low1);
+            low1 = (low1 & ~ rhs.low1) | (low2 & ~ rhs.low2);
             low2 = (low2 & ~ rhs.low1);
-            high1 = (high1 & ~ rhs.high1) | (high2 & ~ rhs.high1);
+            high1 = (high1 & ~ rhs.high1) | (high2 & ~ rhs.high2);
             high2 = (high2 & ~ rhs.high1);
             return *this;
         }
