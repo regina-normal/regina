@@ -1463,18 +1463,23 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
                  possible permutations for the previous face.  */
 
 #if PRUNE_HIGH_DEG_EDGE_SET
+        int highDegLimit;
+            /**< The lowest allowable edge degree.  If the underlying
+                 face pairing graph supports a (1,3,4) layered solid
+                 torus, this will be 3.  Otherwise it will be 4. */
         int highDegSum;
-            /**< The sum of (\a degree - 3) over all edges whose degree
-                 is three or higher.  This sum is updated throughout the
-                 search as part of the high-degree edge pruning code.
-                 See the PRUNE_HIGH_DEG_EDGE_SET macro for further details. */
+            /**< The sum of (\a degree - \a highDegLimit) over all edges whose
+                 degree is \a highDegLimit or higher.  This sum is updated
+                 throughout the search as part of the high-degree edge pruning
+                 code.  See the PRUNE_HIGH_DEG_EDGE_SET macro for further
+                 details. */
         int highDegBound;
             /**< The maximum allowable value of \a highDegSum.  If the
                  sum \a highDegSum exceeds this bound then it can be proven
                  that some edge of the final triangulation must have degree
-                 one or two.  This is part of the high-degree edge pruning
-                 code; see the PRUNE_HIGH_DEG_EDGE_SET macro for further
-                 details. */
+                 less than \a highDegLimit.  This is part of the high-degree
+                 edge pruning code; see the PRUNE_HIGH_DEG_EDGE_SET macro for
+                 further details. */
 #endif
 
     public:
