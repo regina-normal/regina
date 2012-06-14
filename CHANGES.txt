@@ -29,6 +29,8 @@ Version 4.94  [ (under development) ]
         Class NClosedPrimeMinSearcher, NCompactSearcher:
             - Improved the way in which cones and L(3,1) spines are
               detected and pruned during census enumeration.
+            - Improved the way in which too many high degree edges are
+              detected and pruned during census enumeration.
         Class NFacePairing:
             - Now derives from the template base class NGenericFacetPairing<3>.
             - Renamed getNumberOfTetrahedra() to size().  The old name

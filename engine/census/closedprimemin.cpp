@@ -301,8 +301,16 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
     // ---------- Tracking of vertex / edge equivalence classes ----------
 
 #if PRUNE_HIGH_DEG_EDGE_SET
+    // Only allow degree three edges if the face pairing graph supports
+    // a (1,3,4) layered solid torus.  We can test this easily using the
+    // precondition that the face pairing graph must be in canonical form.
+    if (pairing->dest(0, 0).simp == 0 && pairing->dest(0, 2).simp == 1 &&
+            pairing->dest(0, 3).simp == 1)
+        highDegLimit = 3;
+    else
+        highDegLimit = 4;
     highDegSum = 0;
-    highDegBound = 3 * nTets - 3;
+    highDegBound = (6 - highDegLimit) * nTets - highDegLimit;
 #endif
 }
 
@@ -678,7 +686,9 @@ void NClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
     }
 
 #if PRUNE_HIGH_DEG_EDGE_SET
-    out << highDegSum << ' ' << highDegBound << std::endl;
+    out << highDegLimit << ' '
+        << highDegSum << ' '
+        << highDegBound << std::endl;
 #endif
 }
 
@@ -712,9 +722,10 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
     }
 
 #if PRUNE_HIGH_DEG_EDGE_SET
-    in >> highDegSum >> highDegBound;
-    if (highDegSum < 0 || highDegSum > 6 * static_cast<int>(nTets) ||
-            highDegBound != 3 * static_cast<int>(nTets) - 3) {
+    in >> highDegLimit >> highDegSum >> highDegBound;
+    if (highDegLimit < 3 || highDegLimit > 4 || highDegSum < 0 ||
+            highDegSum > 6 * static_cast<int>(nTets) || highDegBound !=
+                (6 - highDegLimit) * static_cast<int>(nTets) - highDegLimit) {
         inputError_ = true; return;
     }
 #endif
@@ -780,15 +791,17 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
             edgeStateChanged[orderIdx] = -1;
         } else {
 #if PRUNE_HIGH_DEG_EDGE_SET
-            if (edgeState[eRep].size >= 3) {
-                if (edgeState[fRep].size >= 3)
-                    highDegSum += 3;
+            if (edgeState[eRep].size >= highDegLimit) {
+                if (edgeState[fRep].size >= highDegLimit)
+                    highDegSum += highDegLimit;
                 else
                     highDegSum += edgeState[fRep].size;
-            } else if (edgeState[fRep].size >= 3)
+            } else if (edgeState[fRep].size >= highDegLimit)
                 highDegSum += edgeState[eRep].size;
-            else if (edgeState[eRep].size == 2 && edgeState[fRep].size == 2)
-                ++highDegSum;
+            else if (edgeState[eRep].size + edgeState[fRep].size >
+                    highDegLimit)
+                highDegSum += (edgeState[eRep].size + edgeState[fRep].size -
+                    highDegLimit);
 #endif
 
             if (edgeState[eRep].rank < edgeState[fRep].rank) {
@@ -897,15 +910,17 @@ void NClosedPrimeMinSearcher::splitEdgeClasses() {
 
             edgeState[rep].size -= edgeState[subRep].size;
 #if PRUNE_HIGH_DEG_EDGE_SET
-            if (edgeState[rep].size >= 3) {
-                if (edgeState[subRep].size >= 3)
-                    highDegSum -= 3;
+            if (edgeState[rep].size >= highDegLimit) {
+                if (edgeState[subRep].size >= highDegLimit)
+                    highDegSum -= highDegLimit;
                 else
                     highDegSum -= edgeState[subRep].size;
-            } else if (edgeState[subRep].size >= 3)
+            } else if (edgeState[subRep].size >= highDegLimit)
                 highDegSum -= edgeState[rep].size;
-            else if (edgeState[rep].size == 2 && edgeState[subRep].size == 2)
-                --highDegSum;
+            else if (edgeState[rep].size + edgeState[subRep].size >
+                    highDegLimit)
+                highDegSum -= (edgeState[rep].size + edgeState[subRep].size
+                    - highDegLimit);
 #endif
 
             if (edgeState[subRep].twistUp) {
