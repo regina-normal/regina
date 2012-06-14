@@ -164,14 +164,14 @@ bool NCompactSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) 
     char cFaces;
     bool facesBroken = false;
     unsigned i;
-    for (i = 0; i < nTets && i < 64; ++i) {
+    for (i = 0; i < nTets * 4 && i < 64; ++i) {
         in >> cFaces;
         if (cFaces >= '0' && cFaces <= '3')
             facesPos.set(i, cFaces - '0');
         else
             facesBroken = true;
     }
-    for (i = 0; i < nTets && i < 64; ++i) {
+    for (i = 0; i < nTets * 4 && i < 64; ++i) {
         in >> cFaces;
         if (cFaces >= '0' && cFaces <= '3')
             facesNeg.set(i, cFaces - '0');
