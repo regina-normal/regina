@@ -41,6 +41,10 @@ namespace {
         const std::string&) = &Dim4Triangulation::newPentachoron;
     regina::Dim4Pentachoron* (Dim4Triangulation::*getPentachoron_non_const)(
         unsigned long) = &Dim4Triangulation::getPentachoron;
+    bool (Dim4Triangulation::*twoZeroMove_triangle)(regina::Dim4Triangle*,
+        bool, bool) = &Dim4Triangulation::twoZeroMove;
+    bool (Dim4Triangulation::*twoZeroMove_edge)(regina::Dim4Edge*,
+        bool, bool) = &Dim4Triangulation::twoZeroMove;
     std::string (Dim4Triangulation::*isoSig_void)() const =
         &Dim4Triangulation::isoSig;
 
@@ -52,6 +56,8 @@ namespace {
         Dim4Triangulation::threeThreeMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoFourMove,
         Dim4Triangulation::twoFourMove, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoZeroMove,
+        Dim4Triangulation::twoZeroMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_openBook,
         Dim4Triangulation::openBook, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_shellBoundary,
@@ -223,6 +229,8 @@ void addDim4Triangulation() {
         .def("threeThreeMove", &Dim4Triangulation::threeThreeMove,
             OL_threeThreeMove())
         .def("twoFourMove", &Dim4Triangulation::twoFourMove, OL_twoFourMove())
+        .def("twoZeroMove", twoZeroMove_triangle, OL_twoZeroMove())
+        .def("twoZeroMove", twoZeroMove_edge, OL_twoZeroMove())
         .def("openBook", &Dim4Triangulation::openBook, OL_openBook())
         .def("shellBoundary", &Dim4Triangulation::shellBoundary,
             OL_shellBoundary())

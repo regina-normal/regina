@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "dim4/dim4triangulation.h"
+#include "maths/nperm3.h"
 #include "triangulation/nedge.h"
 
 namespace regina {
@@ -448,6 +449,248 @@ bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
         removePentachoron(oldPent[i]);
 
     // All done!
+    return true;
+}
+
+bool Dim4Triangulation::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
+    if (check) {
+        if (t->isBoundary() || ! t->isValid())
+            return false;
+        if (t->getNumberOfEmbeddings() != 2)
+            return false;
+    }
+
+    Dim4Pentachoron* pent[2];
+    NPerm5 perm[2];
+
+    int i;
+    for (i = 0; i < 2; ++i) {
+        pent[i] = t->getEmbedding(i).getPentachoron();
+        perm[i] = t->getEmbedding(i).getVertices();
+    }
+
+    // Lots of checks required...
+    if (check) {
+        // The two pentachora must be distinct.
+        if (pent[0] == pent[1])
+            return false;
+
+        Dim4Edge* edge[2];
+        Dim4Triangle* tri[2][3];
+        Dim4Tetrahedron* tet[2][3];
+
+        for (i = 0; i < 2; ++i) {
+            edge[i] = pent[i]->getEdge(
+                Dim4Edge::edgeNumber[perm[i][3]][perm[i][4]]);
+            tri[i][0] = pent[i]->getTriangle(Dim4Triangle::triangleNumber
+                [perm[i][0]][perm[i][3]][perm[i][4]]);
+            tri[i][1] = pent[i]->getTriangle(Dim4Triangle::triangleNumber
+                [perm[i][1]][perm[i][3]][perm[i][4]]);
+            tri[i][2] = pent[i]->getTriangle(Dim4Triangle::triangleNumber
+                [perm[i][2]][perm[i][3]][perm[i][4]]);
+            tet[i][0] = pent[i]->getTetrahedron(perm[i][0]);
+            tet[i][1] = pent[i]->getTetrahedron(perm[i][1]);
+            tet[i][2] = pent[i]->getTetrahedron(perm[i][2]);
+        }
+
+        // No bad loops of edges.
+        if (edge[0] == edge[1])
+            return false;
+        if (edge[0]->isBoundary() && edge[1]->isBoundary())
+            return false;
+
+        // No bad loops of triangles.
+        // Closed loops of length 1:
+        for (i = 0; i < 3; ++i)
+            if (tri[0][i] == tri[1][i])
+                return false;
+        // Closed loops of length 2:
+        for (i = 0; i < 3; ++i) {
+            if (tri[0][i] == tri[0][(i + 1) % 3] &&
+                    tri[1][i] == tri[1][(i + 1) % 3])
+                return false;
+            if (tri[0][i] == tri[1][(i + 1) % 3] &&
+                    tri[1][i] == tri[0][(i + 1) % 3])
+                return false;
+        }
+        // Closed loops of length 3:
+        if (tri[0][0] == tri[1][1] && tri[0][1] == tri[1][2] &&
+                tri[0][2] == tri[1][0])
+            return false;
+        if (tri[1][0] == tri[0][1] && tri[1][1] == tri[0][2] &&
+                tri[1][2] == tri[0][0])
+            return false;
+        for (i = 0; i < 6; ++i)
+            if (tri[0][NPerm3::S3[i][0]] == tri[0][NPerm3::S3[i][1]] &&
+                    tri[1][NPerm3::S3[i][1]] == tri[1][NPerm3::S3[i][2]] &&
+                    tri[0][NPerm3::S3[i][2]] == tri[1][NPerm3::S3[i][0]])
+                return false;
+
+        // No bad loops of tetrahedra.
+        // Closed loops of length 1:
+        for (i = 0; i < 3; ++i)
+            if (tet[0][i] == tet[1][i])
+                return false;
+        // Closed loops of length 2:
+        for (i = 0; i < 3; ++i) {
+            if (tet[0][i] == tet[0][(i + 1) % 3] &&
+                    tet[1][i] == tet[1][(i + 1) % 3])
+                return false;
+            if (tet[0][i] == tet[1][(i + 1) % 3] &&
+                    tet[1][i] == tet[0][(i + 1) % 3])
+                return false;
+        }
+        // Closed loops of length 3:
+        if (tet[0][0] == tet[1][1] && tet[0][1] == tet[1][2] &&
+                tet[0][2] == tet[1][0])
+            return false;
+        if (tet[1][0] == tet[0][1] && tet[1][1] == tet[0][2] &&
+                tet[1][2] == tet[0][0])
+            return false;
+        for (i = 0; i < 6; ++i)
+            if (tet[0][NPerm3::S3[i][0]] == tet[0][NPerm3::S3[i][1]] &&
+                    tet[1][NPerm3::S3[i][1]] == tet[1][NPerm3::S3[i][2]] &&
+                    tet[0][NPerm3::S3[i][2]] == tet[1][NPerm3::S3[i][0]])
+                return false;
+
+        // TODO: Still missing tests for bounded triangulations
+        // relating to bad loops of triangles or tetrahedra.
+    }
+
+    if (! perform)
+        return true;
+
+    // Perform the move.
+    ChangeEventSpan span(this);
+
+    // Unglue facets from the doomed pentachora and glue them to each other.
+    NPerm5 crossover = pent[0]->adjacentGluing(perm[0][3]);
+    NPerm5 gluing;
+    Dim4Pentachoron *top, *bottom;
+    int topFacet;
+    for (i = 0; i < 3; ++i) {
+        top = pent[0]->adjacentPentachoron(perm[0][i]);
+        bottom = pent[1]->adjacentPentachoron(perm[1][i]);
+
+        if (! top) {
+            // Bottom facet becomes boundary.
+            pent[1]->unjoin(perm[1][i]);
+        } else if (! bottom) {
+            // Top facet becomes boundary.
+            pent[0]->unjoin(perm[0][i]);
+        } else {
+            // Bottom and top facets join.
+            topFacet = pent[0]->adjacentFacet(perm[0][i]);
+            gluing = pent[1]->adjacentGluing(perm[1][i]) *
+                crossover * top->adjacentGluing(topFacet);
+            pent[0]->unjoin(perm[0][i]);
+            pent[1]->unjoin(perm[1][i]);
+            top->joinTo(topFacet, bottom, gluing);
+        }
+    }
+
+    // Finally remove and dispose of the pentachora.
+    removePentachoron(pent[0]);
+    removePentachoron(pent[1]);
+
+    return true;
+}
+
+bool Dim4Triangulation::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
+    if (check) {
+        // The follow test also implicitly ensures that the edge link is
+        // a 2-sphere.  See Dim4Edge::isValid() for details.
+        if (e->isBoundary() || ! e->isValid())
+            return false;
+        if (e->getNumberOfEmbeddings() != 2)
+            return false;
+    }
+
+    Dim4Pentachoron* pent[2];
+    NPerm5 perm[2];
+
+    int i;
+    for (i = 0; i < 2; ++i) {
+        pent[i] = e->getEmbedding(i).getPentachoron();
+        perm[i] = e->getEmbedding(i).getVertices();
+    }
+
+    if (check) {
+        if (pent[0] == pent[1])
+            return false;
+
+        // No bad loops of triangles.
+        Dim4Triangle* tri[2];
+        for (i = 0; i < 2; ++i)
+            tri[i] = pent[i]->getTriangle(Dim4Triangle::triangleNumber
+                [perm[i][2]][perm[i][3]][perm[i][4]]);
+
+        if (tri[0] == tri[1])
+            return false;
+        if (tri[0]->isBoundary() && tri[1]->isBoundary())
+            return false;
+
+        // No bad loops of tetrahedra.
+        Dim4Tetrahedron* tet[2][2];
+        for (i = 0; i < 2; ++i) {
+            tet[i][0] = pent[i]->getTetrahedron(perm[i][0]);
+            tet[i][1] = pent[i]->getTetrahedron(perm[i][1]);
+        }
+
+        if (tet[0][0] == tet[1][0] || tet[0][1] == tet[1][1])
+            return false;
+
+        // The cases with two pairs of identified facets and with one
+        // pair of identified facets plus one pair of boundary facets
+        // are all covered by the following check.
+        if (pent[0]->getComponent()->getNumberOfPentachora() == 2)
+            return false;
+
+        // Check that the pentachora are joined along all three facets.
+        if (pent[0]->adjacentPentachoron(perm[0][2]) != pent[1])
+            return false;
+        if (pent[0]->adjacentPentachoron(perm[0][3]) != pent[1])
+            return false;
+        if (pent[0]->adjacentPentachoron(perm[0][4]) != pent[1])
+            return false;
+    }
+
+    if (! perform)
+        return true;
+
+    // Perform the move.
+    ChangeEventSpan span(this);
+
+    // Unglue facets from the doomed pentachora and glue them to each other.
+    NPerm5 crossover = pent[0]->adjacentGluing(perm[0][2]);
+    NPerm5 gluing;
+    Dim4Pentachoron *top, *bottom;
+    int topFacet;
+    for (i = 0; i < 2; ++i) {
+        top = pent[0]->adjacentPentachoron(perm[0][i]);
+        bottom = pent[1]->adjacentPentachoron(perm[1][i]);
+
+        if (! top) {
+            // Bottom facet becomes boundary.
+            pent[1]->unjoin(perm[1][i]);
+        } else if (! bottom) {
+            // Top facet becomes boundary.
+            pent[0]->unjoin(perm[0][i]);
+        } else {
+            // Bottom and top facets join.
+            topFacet = pent[0]->adjacentFacet(perm[0][i]);
+            gluing = pent[1]->adjacentGluing(perm[1][i]) *
+                crossover * top->adjacentGluing(topFacet);
+            pent[0]->unjoin(perm[0][i]);
+            pent[1]->unjoin(perm[1][i]);
+            top->joinTo(topFacet, bottom, gluing);
+        }
+    }
+
+    // Finally remove and dispose of the pentachora.
+    removePentachoron(pent[0]);
+    removePentachoron(pent[1]);
+
     return true;
 }
 

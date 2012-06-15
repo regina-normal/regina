@@ -1244,6 +1244,91 @@ class REGINA_API Dim4Triangulation : public NPacket {
         bool twoFourMove(Dim4Tetrahedron* f, bool check = true,
             bool perform = true);
         /**
+         * Checks the eligibility of and/or performs a 2-0 move about
+         * the given triangle of degree 2.
+         * This involves taking the two pentachora joined at that triangle
+         * and squashing them flat.
+         *
+         * The eligibility requirements for this move are somewhat
+         * involved, and are discussed in detail in the source code for
+         * those who are interested.
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (tetrahedra, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a f)
+         * can no longer be used.
+         *
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
+         * \pre The given triangle is a triangle of this triangulation.
+         *
+         * @param t the triangle about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        bool twoZeroMove(Dim4Triangle* t, bool check = true,
+            bool perform = true);
+        /**
+         * Checks the eligibility of and/or performs a 2-0 move about
+         * the given edge of degree 2.
+         * This involves taking the two pentachora joined at that edge
+         * and squashing them flat.
+         * This can be done if:
+         *
+         * - the edge is valid and non-boundary and has a 2-sphere edge link;
+         *
+         * - the two pentachora are distinct;
+         *
+         * - the triangles opposite \a e in each pentachoron are
+         *   distinct and not both boundary;
+         *
+         * - if facets \a f1 and \a f2 of one pentachoron are to be
+         *   flattened onto facets \a g1 and \a g2 of the other
+         *   respectively, then
+         *   (a) \a f1 and \a g1 are distinct,
+         *   (b) \a f2 and \a g2 are distinct,
+         *   (c) we do not have both \a f1 = \a g2 and \a g1 = \a f2,
+         *   (d) we do not have both \a f1 = \a f2 and \a g1 = \a g2, and
+         *   (e) we do not have two of the facets boundary and the other
+         *   two identified;
+         *
+         * - the two pentachora meet each other on all three facets
+         *   touching the edge (as opposed to meeting each other on one
+         *   facet and being glued to themselves along the other two).
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (tetrahedra, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a f)
+         * can no longer be used.
+         *
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
+         * \pre The given edge is an edge of this triangulation.
+         *
+         * @param e the edge about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        bool twoZeroMove(Dim4Edge* e, bool check = true, bool perform = true);
+        /**
          * Checks the eligibility of and/or performs a book opening move
          * about the given tetrahedron.
          * This involves taking a tetrahedron meeting the boundary along

@@ -168,6 +168,7 @@ bool Dim4Triangulation::intelligentSimplify() {
 
 bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
     EdgeIterator eit;
+    TriangleIterator tit;
     BoundaryComponentIterator bit;
     Dim4Edge* edge;
     Dim4BoundaryComponent* bc;
@@ -208,6 +209,23 @@ bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
             for (eit = edges_.begin(); eit != edges_.end(); eit++) {
                 edge = *eit;
                 if (fourTwoMove(edge, true, perform)) {
+                    changedNow = changed = true;
+                    break;
+                }
+                if (twoZeroMove(edge, true, perform)) {
+                    changedNow = changed = true;
+                    break;
+                }
+            }
+            if (changedNow) {
+                if (perform)
+                    continue;
+                else
+                    return true;
+            }
+
+            for (tit = triangles_.begin(); tit != triangles_.end(); tit++) {
+                if (twoZeroMove(*tit, true, perform)) {
                     changedNow = changed = true;
                     break;
                 }
