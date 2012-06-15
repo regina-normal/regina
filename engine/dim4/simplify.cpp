@@ -967,24 +967,32 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
 
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
-    std::vector<Dim4EdgeEmbedding> embClones(embs);
-
-    for (it = embClones.begin(); it != embClones.end(); it++) {
-        pent = (*it).getPentachoron();
-        p = (*it).getVertices();
-
-        top = pent->adjacentPentachoron(p[0]);
-        topPerm = pent->adjacentGluing(p[0]);
-        bot = pent->adjacentPentachoron(p[1]);
-        botPerm = pent->adjacentGluing(p[1]);
-
-        pent->isolate();
-        if (top && bot)
-            top->joinTo(topPerm[p[0]], bot,
-                botPerm * NPerm5(p[0], p[1]) * topPerm.inverse());
-
-        removePentachoron(pent);
+    unsigned nEmbs = embs.size();
+    Dim4Pentachoron** embPent = new Dim4Pentachoron*[nEmbs];
+    NPerm5* embVert = new NPerm5[nEmbs];
+    unsigned i;
+    for (i = 0; i < embs.size(); ++i) {
+        embPent[i] = embs[i].getPentachoron();
+        embVert[i] = embs[i].getVertices();
     }
+
+    for (i = 0; i < nEmbs; ++i) {
+        top = embPent[i]->adjacentPentachoron(embVert[i][0]);
+        topPerm = embPent[i]->adjacentGluing(embVert[i][0]);
+        bot = embPent[i]->adjacentPentachoron(embVert[i][1]);
+        botPerm = embPent[i]->adjacentGluing(embVert[i][1]);
+
+        embPent[i]->isolate();
+        if (top && bot)
+            top->joinTo(topPerm[embVert[i][0]], bot,
+                botPerm * NPerm5(embVert[i][0], embVert[i][1]) *
+                topPerm.inverse());
+
+        removePentachoron(embPent[i]);
+    }
+
+    delete[] embPent;
+    delete[] embVert;
 
     return true;
 }
