@@ -494,8 +494,10 @@ bool Dim4Triangulation::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
         }
 
         // No bad loops of edges.
+        // Closed loops:
         if (edge[0] == edge[1])
             return false;
+        // Bounded loops:
         if (edge[0]->isBoundary() && edge[1]->isBoundary())
             return false;
 
@@ -525,6 +527,29 @@ bool Dim4Triangulation::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
                     tri[1][NPerm3::S3[i][1]] == tri[1][NPerm3::S3[i][2]] &&
                     tri[0][NPerm3::S3[i][2]] == tri[1][NPerm3::S3[i][0]])
                 return false;
+        // Bounded loops not already covered by the earlier edge-based test:
+        for (i = 0; i < 3; ++i) {
+            if (tri[0][i]->isBoundary() &&
+                    tri[1][i] == tri[1][(i + 1) % 3] &&
+                    tri[0][(i + 1) % 3]->isBoundary())
+                return false;
+            if (tri[1][i]->isBoundary() &&
+                    tri[0][i] == tri[0][(i + 1) % 3] &&
+                    tri[1][(i + 1) % 3]->isBoundary())
+                return false;
+        }
+        for (i = 0; i < 6; ++i) {
+            if (tri[0][NPerm3::S3[i][0]]->isBoundary() &&
+                    tri[1][NPerm3::S3[i][0]] == tri[1][NPerm3::S3[i][1]] &&
+                    tri[0][NPerm3::S3[i][1]] == tri[1][NPerm3::S3[i][2]] &&
+                    tri[0][NPerm3::S3[i][2]]->isBoundary())
+                return false;
+            if (tri[1][NPerm3::S3[i][0]]->isBoundary() &&
+                    tri[0][NPerm3::S3[i][0]] == tri[0][NPerm3::S3[i][1]] &&
+                    tri[1][NPerm3::S3[i][1]] == tri[0][NPerm3::S3[i][2]] &&
+                    tri[1][NPerm3::S3[i][2]]->isBoundary())
+                return false;
+        }
 
         // No bad loops of tetrahedra.
         // Closed loops of length 1:
@@ -540,21 +565,22 @@ bool Dim4Triangulation::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
                     tet[1][i] == tet[0][(i + 1) % 3])
                 return false;
         }
-        // Closed loops of length 3:
-        if (tet[0][0] == tet[1][1] && tet[0][1] == tet[1][2] &&
-                tet[0][2] == tet[1][0])
-            return false;
-        if (tet[1][0] == tet[0][1] && tet[1][1] == tet[0][2] &&
-                tet[1][2] == tet[0][0])
-            return false;
-        for (i = 0; i < 6; ++i)
-            if (tet[0][NPerm3::S3[i][0]] == tet[0][NPerm3::S3[i][1]] &&
-                    tet[1][NPerm3::S3[i][1]] == tet[1][NPerm3::S3[i][2]] &&
-                    tet[0][NPerm3::S3[i][2]] == tet[1][NPerm3::S3[i][0]])
+        // Bounded loops of length 2 not already covered by the earlier
+        // edge-based test:
+        for (i = 0; i < 3; ++i) {
+            if (tet[0][i]->isBoundary() &&
+                    tet[1][i] == tet[1][(i + 1) % 3] &&
+                    tet[0][(i + 1) % 3]->isBoundary())
                 return false;
-
-        // TODO: Still missing tests for bounded triangulations
-        // relating to bad loops of triangles or tetrahedra.
+            if (tet[1][i]->isBoundary() &&
+                    tet[0][i] == tet[0][(i + 1) % 3] &&
+                    tet[1][(i + 1) % 3]->isBoundary())
+                return false;
+        }
+        // Closed and bounded loops of length 3 are all covered by the
+        // following check:
+        if (pent[0]->getComponent()->getNumberOfPentachora() == 2)
+            return false;
     }
 
     if (! perform)
