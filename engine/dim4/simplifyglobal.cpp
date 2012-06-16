@@ -30,7 +30,7 @@
 #include "dim4/dim4triangulation.h"
 
 // Affects the number of random 3-3 moves attempted during simplification.
-#define COEFF_3_3 3
+#define COEFF_3_3 10
 
 namespace regina {
 
@@ -170,7 +170,6 @@ bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
     EdgeIterator eit;
     TriangleIterator tit;
     BoundaryComponentIterator bit;
-    Dim4Edge* edge;
     Dim4BoundaryComponent* bc;
     unsigned long nTetrahedra;
     unsigned long iTet;
@@ -191,8 +190,7 @@ bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
             if (vertices_.size() > components_.size() &&
                     vertices_.size() > boundaryComponents_.size()) {
                 for (eit = edges_.begin(); eit != edges_.end(); ++eit) {
-                    edge = *eit;
-                    if (collapseEdge(edge, true, perform)) {
+                    if (collapseEdge(*eit, true, perform)) {
                         changedNow = changed = true;
                         break;
                     }
@@ -206,13 +204,12 @@ bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
             }
 
             // Look for internal simplifications.
-            for (eit = edges_.begin(); eit != edges_.end(); eit++) {
-                edge = *eit;
-                if (fourTwoMove(edge, true, perform)) {
-                    changedNow = changed = true;
-                    break;
-                }
-                if (twoZeroMove(edge, true, perform)) {
+
+            // Experience suggests that 2-0 moves are more important to
+            // "unblock" other moves, and we should leave the simpler
+            // 4-2 moves until last.
+            for (tit = triangles_.begin(); tit != triangles_.end(); tit++) {
+                if (twoZeroMove(*tit, true, perform)) {
                     changedNow = changed = true;
                     break;
                 }
@@ -224,8 +221,21 @@ bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
                     return true;
             }
 
-            for (tit = triangles_.begin(); tit != triangles_.end(); tit++) {
-                if (twoZeroMove(*tit, true, perform)) {
+            for (eit = edges_.begin(); eit != edges_.end(); eit++) {
+                if (twoZeroMove(*eit, true, perform)) {
+                    changedNow = changed = true;
+                    break;
+                }
+            }
+            if (changedNow) {
+                if (perform)
+                    continue;
+                else
+                    return true;
+            }
+
+            for (eit = edges_.begin(); eit != edges_.end(); eit++) {
+                if (fourTwoMove(*eit, true, perform)) {
                     changedNow = changed = true;
                     break;
                 }
