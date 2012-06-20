@@ -196,6 +196,8 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
+    bool rememberSimpleLinks = knownSimpleLinks_;
+
     ChangeEventSpan span(this);
 
     // Create two new pentachora.
@@ -258,6 +260,7 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
         removePentachoron(oldPent[i]);
 
     // All done!
+    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -290,6 +293,8 @@ bool Dim4Triangulation::threeThreeMove(Dim4Triangle* f, bool check,
         return true;
 
     // Perform the move.
+    bool rememberSimpleLinks = knownSimpleLinks_;
+
     ChangeEventSpan span(this);
 
     // Create three new pentachora.
@@ -354,6 +359,7 @@ bool Dim4Triangulation::threeThreeMove(Dim4Triangle* f, bool check,
         removePentachoron(oldPent[i]);
 
     // All done!
+    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -382,6 +388,8 @@ bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
         return true;
 
     // Perform the move.
+    bool rememberSimpleLinks = knownSimpleLinks_;
+
     ChangeEventSpan span(this);
 
     // Create four new pentachora.
@@ -449,6 +457,7 @@ bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
         removePentachoron(oldPent[i]);
 
     // All done!
+    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -587,6 +596,8 @@ bool Dim4Triangulation::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
         return true;
 
     // Perform the move.
+    bool rememberSimpleLinks = knownSimpleLinks_;
+
     ChangeEventSpan span(this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
@@ -619,6 +630,7 @@ bool Dim4Triangulation::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
     removePentachoron(pent[0]);
     removePentachoron(pent[1]);
 
+    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -685,6 +697,8 @@ bool Dim4Triangulation::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
+    bool rememberSimpleLinks = knownSimpleLinks_;
+
     ChangeEventSpan span(this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
@@ -717,6 +731,7 @@ bool Dim4Triangulation::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
     removePentachoron(pent[0]);
     removePentachoron(pent[1]);
 
+    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -785,7 +800,11 @@ bool Dim4Triangulation::openBook(Dim4Tetrahedron* t, bool check, bool perform) {
 
     // Actually perform the move.
     // Don't bother with a block since this is so simple.
+    bool rememberSimpleLinks = knownSimpleLinks_;
+
     pent->unjoin(emb.getTetrahedron());
+
+    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -866,7 +885,11 @@ bool Dim4Triangulation::shellBoundary(Dim4Pentachoron* p,
 
     // Actually perform the move.
     // Don't bother with a block since this is so simple.
+    bool rememberSimpleLinks = knownSimpleLinks_;
+
     removePentachoron(p);
+
+    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -1230,6 +1253,8 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
+    bool rememberSimpleLinks = knownSimpleLinks_;
+
     ChangeEventSpan span(this);
     NPerm5 topPerm, botPerm;
     Dim4Pentachoron *top, *bot;
@@ -1263,6 +1288,7 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
     delete[] embPent;
     delete[] embVert;
 
+    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 

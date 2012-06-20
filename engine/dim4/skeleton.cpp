@@ -699,6 +699,8 @@ void Dim4Triangulation::calculateVertexLinks() const {
     if (n == 0)
         return;
 
+    bool foundNonSimpleLink = false;
+
     // Construct the vertex linking tetrahedra, and insert them into each
     // vertex link in the correct order as described by the
     // Dim4Vertex::getLink() docs.
@@ -765,8 +767,9 @@ void Dim4Triangulation::calculateVertexLinks() const {
 
         if (vertex->link_->hasBoundaryFaces()) {
             // It's a 3-ball or nothing.
-            if (! vertex->link_->isBall()) {
+            if ((! knownSimpleLinks_) && ! vertex->link_->isBall()) {
                 valid_ = vertex->valid_ = false;
+                foundNonSimpleLink = true;
                 // The vertex belongs to some pentachoron with boundary
                 // tetrahedra, and so already belongs to a boundary component.
             }
@@ -777,13 +780,16 @@ void Dim4Triangulation::calculateVertexLinks() const {
             if ((! vertex->link_->isValid()) || vertex->link_->isIdeal()) {
                 // Bapow.
                 valid_ = vertex->valid_ = false;
+                foundNonSimpleLink = true;
                 boundaryComponents_.push_back(
                     vertex->boundaryComponent_ =
                     new Dim4BoundaryComponent(vertex));
-            } else if (! vertex->link_->isThreeSphere()) {
+            } else if ((! knownSimpleLinks_) &&
+                    ! vertex->link_->isThreeSphere()) {
                 // The vertex is fine but it's not a 3-sphere.
                 // We have an ideal triangulation.
                 ideal_ = vertex->component_->ideal_ = vertex->ideal_ = true;
+                foundNonSimpleLink = true;
                 boundaryComponents_.push_back(
                     vertex->boundaryComponent_ =
                     new Dim4BoundaryComponent(vertex));
@@ -833,6 +839,11 @@ void Dim4Triangulation::calculateVertexLinks() const {
     }
 
     delete[] tet;
+
+    // If every vertex link was a 3-sphere or 3-ball, remember this for
+    // future optimisations.
+    if (! foundNonSimpleLink)
+        knownSimpleLinks_ = true;
 }
 
 } // namespace regina

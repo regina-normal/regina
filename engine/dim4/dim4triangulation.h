@@ -110,6 +110,14 @@ class REGINA_API Dim4Triangulation : public NPacket {
     private:
         mutable bool calculatedSkeleton_;
             /**< Has the skeleton been calculated? */
+        mutable bool knownSimpleLinks_;
+            /**< Is it known that all vertex links are 3-spheres or 3-balls?
+                 This may be \c true even if the skeleton has not yet been
+                 calculated (thereby allowing us to avoid costly 3-sphere or
+                 3-ball recognition when the skeleton is eventually computed).
+                 A value of \c false may mean that there are other vertex
+                 links, or it may mean that the vertex links have not yet
+                 been calculated. */
 
         NMarkedVector<Dim4Pentachoron> pentachora_;
             /**< The pentachora that form the triangulation. */
@@ -1815,11 +1823,11 @@ namespace regina {
 // Inline functions for Dim4Triangulation
 
 inline Dim4Triangulation::Dim4Triangulation() :
-        NPacket(), calculatedSkeleton_(false) {
+        NPacket(), calculatedSkeleton_(false), knownSimpleLinks_(false) {
 }
 
 inline Dim4Triangulation::Dim4Triangulation(const Dim4Triangulation& cloneMe) :
-        NPacket(), calculatedSkeleton_(false) {
+        NPacket(), calculatedSkeleton_(false), knownSimpleLinks_(false) {
     cloneFrom(cloneMe);
 }
 

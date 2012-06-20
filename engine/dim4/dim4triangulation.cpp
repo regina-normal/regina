@@ -426,6 +426,8 @@ void Dim4Triangulation::cloneFrom(const Dim4Triangulation& X) {
     }
 
     // Properties:
+    if (X.knownSimpleLinks_)
+        knownSimpleLinks_ = true;
     if (X.fundGroup_.known())
         fundGroup_ = new NGroupPresentation(*(X.fundGroup_.value()));
     if (X.H1_.known())
@@ -472,6 +474,7 @@ void Dim4Triangulation::clearAllProperties() {
     if (calculatedSkeleton_)
         deleteSkeleton();
 
+    knownSimpleLinks_ = false;
     fundGroup_.clear();
     H1_.clear();
     H2_.clear();
