@@ -218,7 +218,7 @@ class REGINA_API NLargeInteger {
         /**
          * Destroys this integer.
          */
-        virtual ~NLargeInteger();
+        ~NLargeInteger();
 
         /**
          * Determines if this large integer is infinity.
@@ -582,10 +582,10 @@ class REGINA_API NLargeInteger {
          *
          * \pre Neither this nor the divisor are infinite.
          *
-         * \ifacespython The argument \a r is missing; instead both
+         * \ifacespython The argument \a remainder is missing; instead both
          * the quotient and remainder are passed back through the return
          * value of the function.  Specifically, this function returns a
-         * (\a q, \a r) pair.
+         * (\a quotient, \a remainder) pair.
          *
          * @param divisor the divisor \a d.
          * @param remainder used to store the remainder \a r when the
