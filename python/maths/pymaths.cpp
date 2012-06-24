@@ -28,6 +28,7 @@
 
 void addMatrixOps();
 void addNLargeInteger();
+void addNLazyInteger();
 void addNMatrix2();
 void addNMatrixInt();
 void addNPerm3();
@@ -41,6 +42,7 @@ void addPermConv();
 void addMaths() {
     addMatrixOps();
     addNLargeInteger();
+    addNLazyInteger();
     addNMatrix2();
     addNMatrixInt();
     addNPerm3();

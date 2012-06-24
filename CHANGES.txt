@@ -44,6 +44,14 @@ Version 4.94  [ (under development) ]
         Class NIsomorphism:
             - Now a subclass of NGenericIsomorphism<3>, with inherited
               dimension-agnostic aliases for several routines.
+        Class NLargeInteger:
+            - Made the destructor non-virtual to avoid the unwanted class
+              overhead that comes with polymorphism.
+        Class NLazyInteger:
+            - New fast class for finite arbitrary precision integer arithmetic.
+              This class works with native C/C++ integers for as long as
+              possible, and only switches to GMP large integers when it
+              becomes unavoidable.
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic alias Sn that refers to S3, S4 and S5 in
               NPerm3, NPerm4 and NPerm5 respectively.
