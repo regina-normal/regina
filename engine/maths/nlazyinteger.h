@@ -1379,19 +1379,15 @@ inline NLazyInteger NLazyInteger::divExact(long other) const {
 
 inline NLazyInteger NLazyInteger::operator %(const NLazyInteger& other)
         const {
-    // TODO: Write.
-    //NLazyInteger ans;
-    //mpz_tdiv_r(ans.large_, large_, other.large_);
-    //return ans;
-    return NLazyInteger(small_ % other.small_);
+    // Do the standard thing for now.
+    NLazyInteger ans(*this);
+    return ans %= other;
 }
 
 inline NLazyInteger NLazyInteger::operator %(long other) const {
-    // TODO: Write.
-    //NLazyInteger ans;
-    //mpz_tdiv_r(ans.large_, large_, other.large_);
-    //return ans;
-    return NLazyInteger(small_ % other);
+    // Do the standard thing for now.
+    NLazyInteger ans(*this);
+    return ans %= other;
 }
 
 inline NLazyInteger NLazyInteger::operator -() const {
@@ -1540,7 +1536,7 @@ inline NLazyInteger& NLazyInteger::operator /=(const NLazyInteger& other) {
             }
             if (mpz_cmp_ui(other.large_,
                     LONG_MIN /* cast to ui makes this -LONG_MIN */) > 0 ||
-                    mpz_cmp_si(other.large, LONG_MIN) < 0) {
+                    mpz_cmp_si(other.large_, LONG_MIN) < 0) {
                 small_ = 0;
                 return *this;
             }
@@ -1554,14 +1550,14 @@ inline NLazyInteger& NLazyInteger::operator /=(const NLazyInteger& other) {
         // From here we have this in ( LONG_MIN, -LONG_MIN ).
         if (small_ >= 0) {
             if (mpz_cmp_si(other.large_, small_) > 0 ||
-                    mpz_cmp_si(other.large, -small_) < 0) {
+                    mpz_cmp_si(other.large_, -small_) < 0) {
                 small_ = 0;
                 return *this;
             }
         } else {
             // We can negate, since small_ != LONG_MIN.
             if (mpz_cmp_si(other.large_, -small_) > 0 ||
-                    mpz_cmp_si(other.large, small_) < 0) {
+                    mpz_cmp_si(other.large_, small_) < 0) {
                 small_ = 0;
                 return *this;
             }
@@ -1673,16 +1669,60 @@ inline NLazyInteger& NLazyInteger::divByExact(long other) {
 }
 
 inline NLazyInteger& NLazyInteger::operator %=(const NLazyInteger& other) {
-    // TODO: Write.
-    //mpz_tdiv_r(large_, large_, other.large_);
-    small_ %= other.small_;
-    return *this;
+    if (other.large_) {
+        if (large_) {
+            mpz_tdiv_r(large_, large_, other.large_);
+            return *this;
+        }
+
+        // We fit into a native long.  Either:
+        // (i) |other| > |this|, in which case the result is just this;
+        // (ii) |other| == |this|, in which case the result is 0;
+        // (iii) |other| < |this|, in which case we can convert
+        // everything to native C/C++ integer arithmetic.
+        int res = (small_ >= 0 ?
+            mpz_cmp_si(other.large_, small_) :
+            mpz_cmp_ui(other.large_, - small_) /* ui cast makes this work
+                                                 even if small_ = LONG_MIN */);
+        if (res > 0)
+            return *this;
+        if (res == 0) {
+            small_ = 0;
+            return *this;
+        }
+
+        res = (small_ >= 0 ?
+            mpz_cmp_si(other.large_, - small_) :
+            mpz_cmp_ui(other.large_, small_));
+
+        if (res < 0)
+            return *this;
+        if (res == 0) {
+            small_ = 0;
+            return *this;
+        }
+
+        // Everything can be made native integer arithmetic.
+        // Opportunistically reduce other while we're at it.
+        const_cast<NLazyInteger&>(other).forceReduce();
+        small_ %= other.small_;
+        return *this;
+    } else
+        return (*this) %= other.small_;
 }
 
 inline NLazyInteger& NLazyInteger::operator %=(long other) {
-    // TODO: Write.
-    //mpz_tdiv_r(large_, large_, other.large_);
-    small_ %= other;
+    // Since |result| < |other|, whatever happens we can fit the result
+    // into a native C/C++ long.
+    if (large_) {
+        // We can safely cast other to an unsigned long, because the rounding
+        // rules imply that (this % LONG_MIN) == (this % -LONG_MIN).
+        mpz_tdiv_r_ui(large_, large_, other >= 0 ? other : -other);
+        forceReduce();
+    } else {
+        // All native arithmetic from here.
+        small_ %= other;
+    }
     return *this;
 }
 
