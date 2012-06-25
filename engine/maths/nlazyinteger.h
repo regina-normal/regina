@@ -550,6 +550,12 @@ class REGINA_API NLazyInteger {
          *
          * \pre \a other is non-zero.
          *
+         * \warning As I understand it, the direction of rounding for
+         * native C/C++ integer division was fixed in the C++11
+         * specification, but left to the compiler implementation in
+         * earlier versions of the specification; however, any modern
+         * hardware should satisfy the C++11 rounding rule as described above.
+         *
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
          */
@@ -564,6 +570,12 @@ class REGINA_API NLazyInteger {
          * divExact() should be used instead.
          *
          * \pre \a other is non-zero.
+         *
+         * \warning As I understand it, the direction of rounding for
+         * native C/C++ integer division was fixed in the C++11
+         * specification, but left to the compiler implementation in
+         * earlier versions of the specification; however, any modern
+         * hardware should satisfy the C++11 rounding rule as described above.
          *
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
@@ -605,6 +617,13 @@ class REGINA_API NLazyInteger {
          *
          * \pre \a other is not zero.
          *
+         * \warning As I understand it, the sign of the result under
+         * native C/C++ integer division when the second operand is
+         * negative was fixed in the C++11 specification, but left to the
+         * compiler implementation in earlier versions of the specification;
+         * however, any modern hardware should satisfy the C++11 sign rule
+         * as described above.
+         *
          * @param other the integer to divide this by.
          * @return the remainder \a this modulo \a other.
          */
@@ -616,6 +635,13 @@ class REGINA_API NLazyInteger {
          * This integer is not changed.
          *
          * \pre \a other is not zero.
+         *
+         * \warning As I understand it, the sign of the result under
+         * native C/C++ integer division when the second operand is
+         * negative was fixed in the C++11 specification, but left to the
+         * compiler implementation in earlier versions of the specification;
+         * however, any modern hardware should satisfy the C++11 sign rule
+         * as described above.
          *
          * @param other the integer to divide this by.
          * @return the remainder \a this modulo \a other.
@@ -688,6 +714,12 @@ class REGINA_API NLazyInteger {
          *
          * \pre \a other is non-zero.
          *
+         * \warning As I understand it, the direction of rounding for
+         * native C/C++ integer division was fixed in the C++11
+         * specification, but left to the compiler implementation in
+         * earlier versions of the specification; however, any modern
+         * hardware should satisfy the C++11 rounding rule as described above.
+         *
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
          */
@@ -702,6 +734,12 @@ class REGINA_API NLazyInteger {
          * divByExact() should be used instead.
          *
          * \pre \a other is non-zero.
+         *
+         * \warning As I understand it, the direction of rounding for
+         * native C/C++ integer division was fixed in the C++11
+         * specification, but left to the compiler implementation in
+         * earlier versions of the specification; however, any modern
+         * hardware should satisfy the C++11 rounding rule as described above.
          *
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
@@ -743,6 +781,13 @@ class REGINA_API NLazyInteger {
          *
          * \pre \a other is not zero.
          *
+         * \warning As I understand it, the sign of the result under
+         * native C/C++ integer division when the second operand is
+         * negative was fixed in the C++11 specification, but left to the
+         * compiler implementation in earlier versions of the specification;
+         * however, any modern hardware should satisfy the C++11 sign rule
+         * as described above.
+         *
          * @param other the integer modulo which this integer will be
          * reduced.
          * @return a reference to this integer with its new value.
@@ -755,6 +800,13 @@ class REGINA_API NLazyInteger {
          * This integer is changed to reflect the result.
          *
          * \pre \a other is not zero.
+         *
+         * \warning As I understand it, the sign of the result under
+         * native C/C++ integer division when the second operand is
+         * negative was fixed in the C++11 specification, but left to the
+         * compiler implementation in earlier versions of the specification;
+         * however, any modern hardware should satisfy the C++11 sign rule
+         * as described above.
          *
          * @param other the integer modulo which this integer will be
          * reduced.
@@ -824,6 +876,17 @@ class REGINA_API NLazyInteger {
          * integer reprentation at present).
          */
         void clearLarge();
+
+        /**
+         * Converts this integer from a GMP large integer representation
+         * into a native C/C++ long representation.
+         *
+         * The contents of \a large will be extracted and copied into \a small.
+         *
+         * \pre \a large_ is non-null, and the large integer that it
+         * represents lies between LONG_MIN and LONG_MAX inclusive.
+         */
+        void forceReduce();
 
     friend std::ostream& operator << (std::ostream& out,
         const NLazyInteger& large);
@@ -1209,7 +1272,7 @@ inline NLazyInteger NLazyInteger::operator +(long other) const {
     // See operator += for an explanation of why all of this code works.
     if (! large_) {
         long ans = small_ + other;
-        if (! ((((ans ^ small_) & (ans ^ other))) >> (8 * sizeof(long) - 1)))
+        if (! ((((ans ^ small_) & (ans ^ other))) & LONG_MIN))
             return NLazyInteger(ans); // No overflow.
     }
 
@@ -1251,7 +1314,7 @@ inline NLazyInteger NLazyInteger::operator -(long other) const {
     // See operator -= for an explanation of why all of this code works.
     if (! large_) {
         long ans = small_ - other;
-        if (! ((((small_ ^ other) & (ans ^ small_))) >> (8 * sizeof(long) - 1)))
+        if (! ((((small_ ^ other) & (ans ^ small_))) & LONG_MIN))
             return NLazyInteger(ans); // No overflow.
     }
 
@@ -1290,36 +1353,28 @@ inline NLazyInteger NLazyInteger::operator *(long other) const {
 
 inline NLazyInteger NLazyInteger::operator /(const NLazyInteger& other)
         const {
-    // TODO: Write.
-    //NLazyInteger ans;
-    //mpz_tdiv_q(ans.large_, large_, other.large_);
-    //return ans;
-    return NLazyInteger(small_ / other.small_);
+    // Do the standard thing for now.
+    NLazyInteger ans(*this);
+    return ans /= other;
 }
 
 inline NLazyInteger NLazyInteger::operator /(long other) const {
-    // TODO: Write.
-    //NLazyInteger ans;
-    //mpz_tdiv_q(ans.large_, large_, other.large_);
-    //return ans;
-    return NLazyInteger(small_ / other);
+    // Do the standard thing for now.
+    NLazyInteger ans(*this);
+    return ans /= other;
 }
 
 inline NLazyInteger NLazyInteger::divExact(const NLazyInteger& other)
         const {
-    // TODO: Write.
-    //NLazyInteger ans;
-    //mpz_divexact(ans.large_, large_, other.large_);
-    //return ans;
-    return NLazyInteger(small_ / other.small_);
+    // Do the standard thing for now.
+    NLazyInteger ans(*this);
+    return ans.divExact(other);
 }
 
 inline NLazyInteger NLazyInteger::divExact(long other) const {
-    // TODO: Write.
-    //NLazyInteger ans;
-    //mpz_divexact(ans.large_, large_, other.large_);
-    //return ans;
-    return NLazyInteger(small_ / other);
+    // Do the standard thing for now.
+    NLazyInteger ans(*this);
+    return ans.divExact(other);
 }
 
 inline NLazyInteger NLazyInteger::operator %(const NLazyInteger& other)
@@ -1372,8 +1427,9 @@ inline NLazyInteger& NLazyInteger::operator +=(long other) {
         // Use native arithmetic if we can.
         // The following overflow test is taken from Hackers' Delight,
         // sec. 2-21.
+        // Here we use (... & LONG_MIN) to extract the sign bit.
         long ans = small_ + other;
-        if ((((ans ^ small_) & (ans ^ other))) >> (8 * sizeof(long) - 1)) {
+        if ((((ans ^ small_) & (ans ^ other))) & LONG_MIN) {
             // Boom.  It's an overflow.
             // Fall back to large integer arithmetic in the next block.
             makeLarge();
@@ -1411,8 +1467,9 @@ inline NLazyInteger& NLazyInteger::operator -=(long other) {
         // Use native arithmetic if we can.
         // The following overflow test is taken from Hackers' Delight,
         // sec. 2-21.
+        // Here we use (... & LONG_MIN) to extract the sign bit.
         long ans = small_ - other;
-        if ((((small_ ^ other) & (ans ^ small_))) >> (8 * sizeof(long) - 1)) {
+        if ((((small_ ^ other) & (ans ^ small_))) & LONG_MIN) {
             // Boom.  It's an overflow.
             // Fall back to large integer arithmetic in the next block.
             makeLarge();
@@ -1450,30 +1507,168 @@ inline NLazyInteger& NLazyInteger::operator *=(long other) {
 }
 
 inline NLazyInteger& NLazyInteger::operator /=(const NLazyInteger& other) {
-    // TODO: Write.
-    //mpz_tdiv_q(large_, large_, other.large_);
-    small_ /= other.small_;
-    return *this;
+    if (other.large_) {
+        if (large_) {
+            mpz_tdiv_q(large_, large_, other.large_);
+            return *this;
+        }
+        // This is a native C/C++ long.
+        // One of four things must happen:
+        // (i) |other| > |this|, in which case the result = 0;
+        // (ii) this = LONG_MIN and OTHER = -1, in which case the result
+        // is the large integer -LONG_MIN;
+        // (iii) this = LONG_MIN and OTHER is the large integer -LONG_MIN,
+        // in which case the result = -1;
+        // (iv) other can be converted to a native long, and the result
+        // is a native long also.
+        //
+        // Deal with the problematic LONG_MIN case first.
+        if (small_ == LONG_MIN) {
+            if (! mpz_cmp_ui(other.large_,
+                    LONG_MIN /* casting to unsigned makes this -LONG_MIN */)) {
+                small_ = -1;
+                return *this;
+            }
+            if (! mpz_cmp_si(other.large_, -1)) {
+                // The result is -LONG_MIN, which requires large integers.
+                // Reduce other while we're at it.
+                const_cast<NLazyInteger&>(other).forceReduce();
+                large_ = new mpz_t;
+                mpz_init_set_si(large_, LONG_MIN);
+                mpz_neg(large_, large_);
+                return *this;
+            }
+            if (mpz_cmp_ui(other.large_,
+                    LONG_MIN /* cast to ui makes this -LONG_MIN */) > 0 ||
+                    mpz_cmp_si(other.large, LONG_MIN) < 0) {
+                small_ = 0;
+                return *this;
+            }
+            // other is in [ LONG_MIN, -LONG_MIN ) \ {-1}.
+            // Reduce it and use native arithmetic.
+            const_cast<NLazyInteger&>(other).forceReduce();
+            small_ /= other.small_;
+            return *this;
+        }
+
+        // From here we have this in ( LONG_MIN, -LONG_MIN ).
+        if (small_ >= 0) {
+            if (mpz_cmp_si(other.large_, small_) > 0 ||
+                    mpz_cmp_si(other.large, -small_) < 0) {
+                small_ = 0;
+                return *this;
+            }
+        } else {
+            // We can negate, since small_ != LONG_MIN.
+            if (mpz_cmp_si(other.large_, -small_) > 0 ||
+                    mpz_cmp_si(other.large, small_) < 0) {
+                small_ = 0;
+                return *this;
+            }
+        }
+
+        // We can do this all in native longs from here.
+        // Opportunistically reduce other, since we know we can.
+        const_cast<NLazyInteger&>(other).forceReduce();
+        small_ /= other.small_;
+        return *this;
+    } else
+        return (*this) /= other.small_;
 }
 
 inline NLazyInteger& NLazyInteger::operator /=(long other) {
-    // TODO: Write.
-    //mpz_tdiv_q(large_, large_, other.large_);
-    small_ /= other;
+    if (large_) {
+        if (other >= 0)
+            mpz_tdiv_q_ui(large_, large_, other);
+        else {
+            // The cast to (unsigned long) makes this correct even if
+            // other = LONG_MIN.
+            mpz_tdiv_q_ui(large_, large_, - other);
+            mpz_neg(large_, large_);
+        }
+    } else if (small_ == LONG_MIN && other == -1) {
+        // This is the special case where we must switch from native to
+        // large integers.
+        large_ = new mpz_t;
+        mpz_init_set_si(large_, LONG_MIN);
+        mpz_neg(large_, large_);
+    } else {
+        // We can do this entirely in native arithmetic.
+        small_ /= other;
+    }
     return *this;
 }
 
 inline NLazyInteger& NLazyInteger::divByExact(const NLazyInteger& other) {
-    // TODO: Write.
-    //mpz_divexact(large_, large_, other.large_);
-    small_ /= other.small_;
-    return *this;
+    if (other.large_) {
+        if (large_) {
+            mpz_divexact(large_, large_, other.large_);
+            return *this;
+        }
+        // This is a native C/C++ long.
+        // Because we are guaranteed other | this, it follows that
+        // other must likewise fit within a native long, or else
+        // this == LONG_MIN and other == -LONG_MIN.
+        // It also follows that the result must fit within a native long,
+        // or else this == LONG_MIN and other == -1.
+        if (small_ == LONG_MIN) {
+            if (! mpz_cmp_ui(other.large_,
+                    LONG_MIN /* casting to unsigned makes this -LONG_MIN */)) {
+                // The result is -1, since we have LONG_MIN / -LONG_MIN.
+                small_ = -1;
+                return *this;
+            }
+
+            // At this point we know that other fits within a native long.
+            // Opportunistically reduce its representation.
+            const_cast<NLazyInteger&>(other).forceReduce();
+
+            if (other.small_ == -1) {
+                // The result is -LONG_MIN, which requires large integers.
+                large_ = new mpz_t;
+                mpz_init_set_si(large_, LONG_MIN);
+                mpz_neg(large_, large_);
+            } else {
+                // The result will fit within a native long also.
+                small_ /= other.small_;
+            }
+            return *this;
+        }
+
+        // Here we know that other always fits within a native long,
+        // and so does the result.
+        // Opportunisticaly reduce the representation of other, since
+        // we know we can.
+        const_cast<NLazyInteger&>(other).forceReduce();
+        small_ /= other.small_;
+        return *this;
+    } else {
+        // other is already a native int.
+        // Use the native version of this routine instead.
+        return divByExact(other.small_);
+    }
 }
 
 inline NLazyInteger& NLazyInteger::divByExact(long other) {
-    // TODO: Write.
-    //mpz_divexact(large_, large_, other.large_);
-    small_ /= other;
+    if (large_) {
+        if (other >= 0)
+            mpz_divexact_ui(large_, large_, other);
+        else {
+            // The cast to (unsigned long) makes this correct even if
+            // other = LONG_MIN.
+            mpz_divexact_ui(large_, large_, - other);
+            mpz_neg(large_, large_);
+        }
+    } else if (small_ == LONG_MIN && other == -1) {
+        // This is the special case where we must switch from native to
+        // large integers.
+        large_ = new mpz_t;
+        mpz_init_set_si(large_, LONG_MIN);
+        mpz_neg(large_, large_);
+    } else {
+        // We can do this entirely in native arithmetic.
+        small_ /= other;
+    }
     return *this;
 }
 
@@ -1534,6 +1729,13 @@ inline void NLazyInteger::makeLarge() {
 }
 
 inline void NLazyInteger::clearLarge() {
+    mpz_clear(large_);
+    delete large_;
+    large_ = 0;
+}
+
+inline void NLazyInteger::forceReduce() {
+    small_ = mpz_get_si(large_);
     mpz_clear(large_);
     delete large_;
     large_ = 0;
