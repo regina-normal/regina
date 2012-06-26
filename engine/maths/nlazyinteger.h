@@ -1336,19 +1336,15 @@ inline NLazyInteger NLazyInteger::operator -(long other) const {
 
 inline NLazyInteger NLazyInteger::operator *(const NLazyInteger& other)
         const {
-    // TODO: Write.
-    //NLazyInteger ans;
-    //mpz_mul(ans.large_, large_, other.large_);
-    //return ans;
-    return NLazyInteger(small_ * other.small_);
+    // Do the standard thing for now.
+    NLazyInteger ans(*this);
+    return ans *= other;
 }
 
 inline NLazyInteger NLazyInteger::operator *(long other) const {
-    // TODO: Write.
-    //NLazyInteger ans;
-    //mpz_mul(ans.large_, large_, other.large_);
-    //return ans;
-    return NLazyInteger(small_ * other);
+    // Do the standard thing for now.
+    NLazyInteger ans(*this);
+    return ans *= other;
 }
 
 inline NLazyInteger NLazyInteger::operator /(const NLazyInteger& other)
@@ -1489,16 +1485,47 @@ inline NLazyInteger& NLazyInteger::operator -=(long other) {
 }
 
 inline NLazyInteger& NLazyInteger::operator *=(const NLazyInteger& other) {
-    // TODO: Write.
-    //mpz_mul(large_, large_, other.large_);
-    small_ *= other.small_;
+    if (large_) {
+        if (other.large_)
+            mpz_mul(large_, large_, other.large_);
+        else
+            mpz_mul_si(large_, large_, other.small_);
+    } else if (other.large_) {
+        large_ = new mpz_t;
+        mpz_init(large_);
+        mpz_mul_si(large_, other.large_, small_);
+    } else {
+        long ans = small_ * other.small_;
+        // From Hacker's Delight, sec. 2-12:
+        // Overflow iff the following conditions hold:
+        if ((other.small_ < 0 && small_ == LONG_MIN) ||
+                (other.small_ != 0 && ans / other.small_ != small_)) {
+            // Overflow.
+            large_ = new mpz_t;
+            mpz_init_set_si(large_, small_);
+            mpz_mul_si(large_, large_, other.small_);
+        } else
+            small_ = ans;
+    }
     return *this;
 }
 
 inline NLazyInteger& NLazyInteger::operator *=(long other) {
-    // TODO: Write.
-    //mpz_mul(large_, large_, other.large_);
-    small_ *= other;
+    if (large_)
+        mpz_mul_si(large_, large_, other);
+    else {
+        long ans = small_ * other;
+        // From Hacker's Delight, sec. 2-12:
+        // Overflow iff the following conditions hold:
+        if ((other < 0 && small_ == LONG_MIN) ||
+                (other != 0 && ans / other != small_)) {
+            // Overflow.
+            large_ = new mpz_t;
+            mpz_init_set_si(large_, small_);
+            mpz_mul_si(large_, large_, other);
+        } else
+            small_ = ans;
+    }
     return *this;
 }
 

@@ -37,9 +37,14 @@ namespace regina {
 const NLazyInteger NLazyInteger::zero;
 const NLazyInteger NLazyInteger::one(1);
 
+// The use of errno in this file should be threadsafe, since (as I
+// understand it) each thread gets its own errno.  However, there may be
+// thread safety issues regarding locales when using strtol(), in
+// particular when another thread changes the locale mid-flight.
+// I could be wrong about this.
+
 NLazyInteger::NLazyInteger(const char* value, int base, bool* valid) :
         large_(0) {
-    // TODO: How to make this threadsafe with errno?
     char* endptr;
     small_ = strtol(value, &endptr, base);
     if (errno || *endptr) {
@@ -60,7 +65,6 @@ NLazyInteger::NLazyInteger(const char* value, int base, bool* valid) :
 
 NLazyInteger::NLazyInteger(const std::string& value, int base,
         bool* valid) : large_(0) {
-    // TODO: How to make this threadsafe with errno?
     char* endptr;
     small_ = strtol(value.c_str(), &endptr, base);
     if (errno || *endptr) {
@@ -86,13 +90,21 @@ std::string NLazyInteger::stringValue(int base) const {
         free(str);
         return ans;
     } else {
-        // TODO: I don't remember the magic function, sigh.
-        // TODO: Don't forget to return!!!
+        // Hmm.  std::setbase() only takes 8, 10 or 16 as i understand it.
+        // For now, be wasteful and always go through GMP.
+        mpz_t tmp;
+        mpz_init_set_si(tmp, small_);
+
+        char* str = mpz_get_str(0, base, tmp);
+        std::string ans(str);
+        free(str);
+
+        mpz_clear(tmp);
+        return ans;
     }
 }
 
 NLazyInteger& NLazyInteger::operator =(const char* value) {
-    // TODO: How to make this threadsafe with errno?
     char* endptr;
     small_ = strtol(value, &endptr, 10 /* base */);
     if (errno || *endptr) {
@@ -114,7 +126,6 @@ NLazyInteger& NLazyInteger::operator =(const char* value) {
 }
 
 NLazyInteger& NLazyInteger::operator =(const std::string& value) {
-    // TODO: How to make this threadsafe with errno?
     char* endptr;
     small_ = strtol(value.c_str(), &endptr, 10 /* base */);
     if (errno || *endptr) {
