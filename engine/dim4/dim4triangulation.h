@@ -1486,7 +1486,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
 
         /**
          * Does a barycentric subdivision of the triangulation.
-         * Each tetrahedron is divided into 120 tetrahedra by placing an
+         * Each pentachoron is divided into 120 pentachora by placing an
          * extra vertex at the centroid of each pentachoron,
          * tetrahedron, triangle, and edge.
          */
