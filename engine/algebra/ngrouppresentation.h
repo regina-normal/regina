@@ -217,10 +217,10 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * Returns a constant reference to the list of terms in this
          * expression.
          *
-	 * For instance, the expression <tt>g1^2 g3^-1 g6</tt> has list consisting
-	 * of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and <tt>g6^1</tt> in that
-	 * order.
-	 *
+         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> has list consisting
+         * of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and <tt>g6^1</tt> in that
+         * order.
+         *
          * \ifacespython This routine returns a python list of copied
          * NGroupExpressionTerm objects.  In particular, modifying this
          * list or the terms within it will not modify the group
@@ -231,19 +231,19 @@ class REGINA_API NGroupExpression : public ShareableObject {
         const std::list<NGroupExpressionTerm>& getTerms() const;
         /**
          * Returns the number of terms in this expression.
-	 *
-	 * For instance, the expression <tt>g1^2 g3^-1 g6</tt> contains three terms.	
-	 *  See also getWordLength(). 
+         *
+         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> contains three terms.	
+         *  See also getWordLength(). 
          *
          * @return the number of terms.
          */
         unsigned long getNumberOfTerms() const;
         /**
          * Returns the length of the word, i.e. the minimal number of letters with exponent
-	 *  +1 or -1 for which this word is expressable as a product. 
-	 *
-	 * For instance, the expression <tt>g1^2 g3^-1 g6</tt> is a word of length
-	 *  four.  See also getNumberOfTerms(). 
+         *  +1 or -1 for which this word is expressable as a product. 
+         *
+         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> is a word of length
+         *  four.  See also getNumberOfTerms(). 
          *
          * @return the length of the word. 
          */
@@ -344,14 +344,14 @@ class REGINA_API NGroupExpression : public ShareableObject {
          */
         void addTermLast(unsigned long generator, long exponent);
 
-	/**
-	 * Multiplies *this on the right by word. 
-	 */
-	void addTermsLast( const NGroupExpression& word);
-	/**
-	 * Multiplies *this on the left by word. 
-	 */
-	void addTermsFirst( const NGroupExpression& word);
+        /**
+         * Multiplies *this on the right by word. 
+         */
+        void addTermsLast( const NGroupExpression& word);
+        /**
+         * Multiplies *this on the left by word. 
+         */
+        void addTermsFirst( const NGroupExpression& word);
 
         /**
          * Returns a newly created expression that is the inverse of
@@ -362,10 +362,10 @@ class REGINA_API NGroupExpression : public ShareableObject {
          */
         NGroupExpression* inverse() const;
 
-	/**
-	 * Inverts this expression.  Does not allocate or deallocate anything. 
-	 */
-	void invert(); 
+        /**
+         * Inverts this expression.  Does not allocate or deallocate anything. 
+         */
+        void invert(); 
 
         /**
          * Returns a newly created expression that is
@@ -410,22 +410,22 @@ class REGINA_API NGroupExpression : public ShareableObject {
         bool substitute(unsigned long generator,
             const NGroupExpression& expansion, bool cyclic = false);
 
-	/**
-	 * Given two words, A and B, one wants to know how one can make 
+        /**
+         * Given two words, A and B, one wants to know how one can make 
          *  substitutions into A using variants of the word B.  This 
          *  structure holds that data.  For example, if:
-	 *
-	 *  A == a^5b^2abababa^4b^1  and  B == bababa^-1
-	 *    == aaaaabbabababaaaab  
-	 * start_sub_at == 6, start_from == 0, sub_length == 5 makes sense, 
+         *
+         *  A == a^5b^2abababa^4b^1  and  B == bababa^-1
+         *    == aaaaabbabababaaaab  
+         * start_sub_at == 6, start_from == 0, sub_length == 5 makes sense, 
          *  this singles out the subword aaaaab[babab]abaaaab. Since it would 
          *  reduce the length by four, the score is 4.
-	 * 
-	 * Similarly, if    A == baba^4b^1a^5b^2aba == babaaaabaaaaabbaba 
+         * 
+         * Similarly, if    A == baba^4b^1a^5b^2aba == babaaaabaaaaabbaba 
          *   and    B == baba^-1ba start_sub_at == 14, start_from == 5, 
          *   sub_length == 5 makes sense, and is a cyclic variation 
-	 *   on the above substitution, so the score is also 4. 
-	 */
+         *   on the above substitution, so the score is also 4. 
+         */
 	struct NWordSubstitutionData {
 		unsigned long start_sub_at; // where in A do we start?
 		unsigned long start_from;   // where in B do we start?
@@ -458,32 +458,32 @@ class REGINA_API NGroupExpression : public ShareableObject {
                         <<start_from<<" score "<<score;
 		}
 	};
-	/**
-	 *  This is the core of the Dehn algorithm for hyperbolic groups.       
+        /**
+         *  This is the core of the Dehn algorithm for hyperbolic groups.       
          *  Given two words, *this and that_word, this routine searches for 
          *  subwords of that_word (in the cyclic sense), and builds a table 
          *  of substitutions one can make from that_word into *this.  The 
          *  table is refined so that one knows the "value" of each 
          *  substitution -- the extent to which the substitution would shorten
          *  the word *this.   This is to allow for intelligent choices of
-	 *  substitutions by whichever algorithms call this one.  
-	 *
-	 *  This algorithm assumes that *this and that_word are cyclically      
+         *  substitutions by whichever algorithms call this one.  
+         *
+         *  This algorithm assumes that *this and that_word are cyclically      
          *  reduced words.  If you feed it non-cyclically reduced words it 
          *  will give you suggestions although they will not be as strong
          *  as if the words were cyclically reduced.  It also only adds 
          *  to sub_list, so for best results pass it an empty sub-list.
-	 */
+         */
 	void dehnAlgorithmSubMetric( const NGroupExpression &that_word, 
                std::set< NWordSubstitutionData > &sub_list ) const;
 
-	/**  
-	 *  Given a word *this and that_word, apply the substitution specified
+        /**  
+         *  Given a word *this and that_word, apply the substitution specified
          *  by sub_data to *this. See dehnAlgorithm() and struct 
          *  NWordSubstitutionData.  In particular sub_data needs to be a 
-	 *  valid substitution, usually it will be generated by 
+         *  valid substitution, usually it will be generated by 
          *  dehnAlgorithmSubMetric.  
-	 */
+         */
 	void applySubstitution( const NGroupExpression &that_word, const 
              NWordSubstitutionData &sub_data );
 
@@ -533,16 +533,16 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * true, it will assume your word is in an alphabet of
          * no more than 26 letters, and will write the word using
          * lower-case ASCII, i.e. <tt>c^4 n^-5 e</tt>.
-	 *
-	 * @return a std::string representation of the word.
+         *
+         * @return a std::string representation of the word.
          */
 	std::string stringOutput(bool shortword=false) const;
 
         /**
          * The text representation will be of the form
          * <tt>g_2^4 g_{13}^{-5} g_4</tt>, i.e. suitable for TeX.
-	 *
-	 * @return a std::string representation of the word.
+         *
+         * @return a std::string representation of the word.
          */
 	std::string TeXOutput() const;
 
