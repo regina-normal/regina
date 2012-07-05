@@ -647,11 +647,11 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * @return \c true if and only if the group presentation was changed.
          */
         bool intelligentSimplify();
-	/**
-	 * Reduces this presentation using the Dehn algorithm for hyperbolic 
+        /**
+         * Reduces this presentation using the Dehn algorithm for hyperbolic 
          * groups, i.e. small cancellation theory.   This means we look to see 
          * if part of one relator can be used to simplify others.  If so, 
-	 * make the substitution and simplify.  We continue until no more 
+         * make the substitution and simplify.  We continue until no more 
          * presentation-shortening substitutions are available.  We follow that
          *  by killing any available generators using words where generators
          * appear a single time. 
@@ -752,21 +752,21 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          */
         std::auto_ptr<NMarkedAbelianGroup> markedAbelianization() const;
 
-	/**
-	 * Writes a single string description of the group presentation. No endlines!
+        /**
+         * Writes a single string description of the group presentation. No endlines!
          * Provided the group has 26 or fewer generators, will use the regular lower-case
          * ASCII alphabet to describe words, such as ab^2c^-1, etc. 
-	 *
-	 * @return a std::string describing the presentation, < generators | relators >
-	 */
+         *
+         * @return a std::string describing the presentation, < generators | relators >
+         */
 	std::string stringOutput() const;
 
-	/**
-	 * Writes a single string description of the group presentation. No endlines. 
+        /**
+         * Writes a single string description of the group presentation. No endlines. 
          * In TeX 
-	 *
-	 * @return a std::string describing the presentation, < generators | relators >
-	 */
+         *
+         * @return a std::string describing the presentation, < generators | relators >
+         */
 	std::string TeXOutput() const;
 
         /**
