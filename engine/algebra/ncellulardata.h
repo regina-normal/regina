@@ -127,6 +127,12 @@ class Dim4Triangulation;
  *        R : vertices -> (0,\infty].  Code to find the circle packing, code to display it.  Should summarize
  *        the algorithm from Collins-Stephenson paper here. 
  *
+ * \todo  7) Implement a manifold-descriptor class.  The idea is to use the tools we have to give as
+ *        accurate as possible a description of the manifold.  Rather than Ben's NManifold and NStandardManifold
+ *        routines this will be inaccurate if that's all it can do, and precise if it can be precise. 
+ *        For 3-manifold recognition we'll use the connect sum decomp from Ben's work, but then we'll split
+ *        recognition into various flavours: using pi1, using triangulation tech, using SnapPea, and so on. 
+ *
  * \todo  \optlong To minimize memory usage we should consider having homs, bilinear forms, etc, 
  *        not store their initialization data, instead trusting it to the NCellularData stack.
  *        This is a slow-but-ongoing process....  
