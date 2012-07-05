@@ -1147,6 +1147,14 @@ public:
      *  Computes the H1 Alexander ideal. Tries to reduce it as much as possible.
      */
     std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > alexanderIdeal() const;
+
+    /**
+     *  Provides a text string that identifies the manifold uniquely (if possible) or provides as much 
+     *  detail as NCellularData can ascertain, if not.  
+     *
+     *  NOTE: at present very little has been implemented. This is on the current TODO list. 
+     */
+    std::string textDescriptor();
 };
 
 
