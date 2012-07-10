@@ -36,7 +36,7 @@ using namespace boost::python;
 using regina::NNormalHypersurfaceList;
 
 namespace {
-    // Write manual overload wrappers since this is a static member function.
+    // Write manual overload wrappers since these are static member functions.
     NNormalHypersurfaceList* enumerate_2(regina::Dim4Triangulation* owner,
             int flavour) {
         return NNormalHypersurfaceList::enumerate(owner, flavour);
@@ -49,6 +49,45 @@ namespace {
             int flavour, bool embedded, regina::NProgressManager* manager) {
         return NNormalHypersurfaceList::enumerate(owner, flavour, embedded,
             manager);
+    }
+
+    NNormalHypersurfaceList* enumerateFundPrimal_2(
+            regina::Dim4Triangulation* owner, int flavour) {
+        return NNormalHypersurfaceList::enumerateFundPrimal(owner, flavour);
+    }
+    NNormalHypersurfaceList* enumerateFundPrimal_3(
+            regina::Dim4Triangulation* owner, int flavour, bool embedded) {
+        return NNormalHypersurfaceList::enumerateFundPrimal(owner, flavour,
+            embedded);
+    }
+    NNormalHypersurfaceList* enumerateFundPrimal_4(
+            regina::Dim4Triangulation* owner, int flavour, bool embedded,
+            regina::NNormalHypersurfaceList* vtxSurfaces) {
+        return NNormalHypersurfaceList::enumerateFundPrimal(owner, flavour,
+            embedded, vtxSurfaces);
+    }
+    NNormalHypersurfaceList* enumerateFundPrimal_5(
+            regina::Dim4Triangulation* owner, int flavour, bool embedded,
+            regina::NNormalHypersurfaceList* vtxSurfaces,
+            regina::NProgressManager* manager) {
+        return NNormalHypersurfaceList::enumerateFundPrimal(owner, flavour,
+            embedded, vtxSurfaces, manager);
+    }
+
+    NNormalHypersurfaceList* enumerateFundDual_2(
+            regina::Dim4Triangulation* owner, int flavour) {
+        return NNormalHypersurfaceList::enumerateFundDual(owner, flavour);
+    }
+    NNormalHypersurfaceList* enumerateFundDual_3(
+            regina::Dim4Triangulation* owner, int flavour, bool embedded) {
+        return NNormalHypersurfaceList::enumerateFundDual(owner, flavour,
+            embedded);
+    }
+    NNormalHypersurfaceList* enumerateFundDual_4(
+            regina::Dim4Triangulation* owner, int flavour, bool embedded,
+            regina::NProgressManager* manager) {
+        return NNormalHypersurfaceList::enumerateFundDual(owner, flavour,
+            embedded, manager);
     }
 }
 
@@ -66,6 +105,20 @@ void addNNormalHypersurfaceList() {
             return_value_policy<reference_existing_object>())
         .def("enumerate", enumerate_4,
             return_value_policy<reference_existing_object>())
+        .def("enumerateFundPrimal", enumerateFundPrimal_2,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundPrimal", enumerateFundPrimal_3,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundPrimal", enumerateFundPrimal_4,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundPrimal", enumerateFundPrimal_5,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundDual", enumerateFundDual_2,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundDual", enumerateFundDual_3,
+            return_value_policy<reference_existing_object>())
+        .def("enumerateFundDual", enumerateFundDual_4,
+            return_value_policy<reference_existing_object>())
         .def("recreateMatchingEquations",
             &NNormalHypersurfaceList::recreateMatchingEquations,
             return_value_policy<manage_new_object>())
@@ -78,6 +131,8 @@ void addNNormalHypersurfaceList() {
         .def("getHypersurface", &NNormalHypersurfaceList::getHypersurface,
             return_internal_reference<>())
         .staticmethod("enumerate")
+        .staticmethod("enumerateFundPrimal")
+        .staticmethod("enumerateFundDual")
     ;
 
     s.attr("packetType") = NNormalHypersurfaceList::packetType;

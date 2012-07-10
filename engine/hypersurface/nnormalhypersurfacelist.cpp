@@ -29,6 +29,8 @@
 #include <list>
 #include "dim4/dim4triangulation.h"
 #include "enumerate/ndoubledescription.h"
+#include "enumerate/nhilbertdual.h"
+#include "enumerate/nhilbertprimal.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "hypersurface/hsflavourregistry.h"
 #include "maths/nmatrixint.h"
@@ -71,11 +73,26 @@ NMatrixInt* makeMatchingEquations(Dim4Triangulation* triangulation,
 }
 
 #undef REGISTER_HSFLAVOUR
-#define REGISTER_HSFLAVOUR(id_name, cls, n) \
+#define REGISTER_HSFLAVOUR(id_name, class, n) \
     case NNormalHypersurfaceList::id_name: \
-        constraints = cls::makeEmbeddedConstraints(triang_); break;
+        return class::makeEmbeddedConstraints(triangulation);
 
-void* NNormalHypersurfaceList::Enumerator::run(void*) {
+NEnumConstraintList* makeEmbeddedConstraints(Dim4Triangulation* triangulation,
+        int flavour) {
+    switch(flavour) {
+        // Import cases from the flavour registry.
+        #include "hypersurface/hsflavourregistry.h"
+    }
+    return 0;
+}
+
+#undef REGISTER_HSFLAVOUR
+#define REGISTER_HSFLAVOUR(id_name, cls, n) \
+    case id_name: NDoubleDescription::enumerateExtremalRays<cls>( \
+        HypersurfaceInserter(*list_, triang_), *eqns, constraints, progress); \
+        break;
+
+void* NNormalHypersurfaceList::VertexEnumerator::run(void*) {
     NProgressNumber* progress = 0;
     if (manager_) {
         progress = new NProgressNumber(0, 1);
@@ -85,17 +102,16 @@ void* NNormalHypersurfaceList::Enumerator::run(void*) {
     // Fetch any necessary validity constraints.
     NEnumConstraintList* constraints = 0;
     if (list_->embedded_)
-        switch(list_->flavour_) {
-            // Import cases from the flavour registry.
-            #include "hypersurface/hsflavourregistry.h"
-        }
+        constraints = makeEmbeddedConstraints(triang_, list_->flavour_);
 
     // Form the matching equations and starting cone.
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->flavour_);
 
     // Find the normal hypersurfaces.
-    enumerateExtremalRays(list_->flavour_,
-        HypersurfaceInserter(*list_, triang_), *eqns, constraints, progress);
+    switch(list_->flavour_) {
+        // Import cases from the flavour registry:
+        #include "hypersurface/hsflavourregistry.h"
+    }
 
     delete eqns;
     delete constraints;
@@ -113,18 +129,100 @@ void* NNormalHypersurfaceList::Enumerator::run(void*) {
 
 #undef REGISTER_HSFLAVOUR
 #define REGISTER_HSFLAVOUR(id_name, cls, n) \
-    case id_name: NDoubleDescription::enumerateExtremalRays<cls>( \
-        results, subspace, constraints, progress); \
-        return true;
+    case id_name: NHilbertPrimal::enumerateHilbertBasis<cls>( \
+        HypersurfaceInserter(*list_, triang_), \
+        useVtxSurfaces->beginVectors(), useVtxSurfaces->endVectors(), \
+        constraints, progress); \
+        break;
 
-bool NNormalHypersurfaceList::enumerateExtremalRays(int flavour,
-        const HypersurfaceInserter& results, const NMatrixInt& subspace,
-        const NEnumConstraintList* constraints, NProgressNumber* progress) {
-    switch(flavour) {
+void* NNormalHypersurfaceList::FundPrimalEnumerator::run(void*) {
+    NProgressMessage* progress = 0;
+    if (manager_) {
+        progress = new NProgressMessage("Initialising enumeration");
+        manager_->setProgress(progress);
+    }
+
+    // Fetch any necessary validity constraints.
+    NEnumConstraintList* constraints = 0;
+    if (list_->embedded_)
+        constraints = makeEmbeddedConstraints(triang_, list_->flavour_);
+
+    NNormalHypersurfaceList* useVtxSurfaces = vtxSurfaces_;
+    if (! vtxSurfaces_) {
+        // Enumerate all vertex normal hypersurfaces using the default
+        // (and hopefully best possible) algorithm.
+        if (progress)
+            progress->setMessage("Enumerating extremal rays");
+
+        useVtxSurfaces = new NNormalHypersurfaceList(list_->flavour_,
+            list_->embedded_);
+        VertexEnumerator e(useVtxSurfaces, triang_, 0);
+        e.run(0);
+    }
+
+    if (progress)
+        progress->setMessage("Enumerating Hilbert basis");
+
+    // Find the normal hypersurfaces.
+    switch(list_->flavour_) {
         // Import cases from the flavour registry:
         #include "hypersurface/hsflavourregistry.h"
     }
-    return false;
+
+    delete constraints;
+    if (! vtxSurfaces_)
+        delete useVtxSurfaces;
+
+    // All done!
+    triang_->insertChildLast(list_);
+
+    if (progress) {
+        progress->setMessage("Finished enumeration");
+        progress->setFinished();
+    }
+
+    return 0;
+}
+
+#undef REGISTER_HSFLAVOUR
+#define REGISTER_HSFLAVOUR(id_name, cls, n) \
+    case id_name: NHilbertDual::enumerateHilbertBasis<cls>( \
+        HypersurfaceInserter(*list_, triang_), *eqns, constraints, progress); \
+        break;
+
+void* NNormalHypersurfaceList::FundDualEnumerator::run(void*) {
+    NProgressNumber* progress = 0;
+    if (manager_) {
+        progress = new NProgressNumber(0, 1);
+        manager_->setProgress(progress);
+    }
+
+    // Fetch any necessary validity constraints.
+    NEnumConstraintList* constraints = 0;
+    if (list_->embedded_)
+        constraints = makeEmbeddedConstraints(triang_, list_->flavour_);
+
+    // Form the matching equations and starting cone.
+    NMatrixInt* eqns = makeMatchingEquations(triang_, list_->flavour_);
+
+    // Find the normal hypersurfaces.
+    switch(list_->flavour_) {
+        // Import cases from the flavour registry:
+        #include "hypersurface/hsflavourregistry.h"
+    }
+
+    delete eqns;
+    delete constraints;
+
+    // All done!
+    triang_->insertChildLast(list_);
+
+    if (progress) {
+        progress->incCompleted();
+        progress->setFinished();
+    }
+
+    return 0;
 }
 
 NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
@@ -132,7 +230,48 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
         NProgressManager* manager) {
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
         flavour, embeddedOnly);
-    Enumerator* e = new Enumerator(ans, owner, manager);
+    VertexEnumerator* e = new VertexEnumerator(ans, owner, manager);
+
+    if (manager) {
+        if (! e->start(0, true)) {
+            delete ans;
+            return 0;
+        }
+        return ans;
+    } else {
+        e->run(0);
+        delete e;
+        return ans;
+    }
+}
+
+NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundPrimal(
+        Dim4Triangulation* owner, int flavour, bool embeddedOnly,
+        NNormalHypersurfaceList* vtxSurfaces, NProgressManager* manager) {
+    NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
+        flavour, embeddedOnly);
+    FundPrimalEnumerator* e = new FundPrimalEnumerator(ans, owner, vtxSurfaces,
+        manager);
+
+    if (manager) {
+        if (! e->start(0, true)) {
+            delete ans;
+            return 0;
+        }
+        return ans;
+    } else {
+        e->run(0);
+        delete e;
+        return ans;
+    }
+}
+
+NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundDual(
+        Dim4Triangulation* owner, int flavour, bool embeddedOnly,
+        NProgressManager* manager) {
+    NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
+        flavour, embeddedOnly);
+    FundDualEnumerator* e = new FundDualEnumerator(ans, owner, manager);
 
     if (manager) {
         if (! e->start(0, true)) {

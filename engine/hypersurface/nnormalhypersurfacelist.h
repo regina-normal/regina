@@ -89,6 +89,8 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          */
         static const int EDGE_WEIGHT;
 
+        class VectorIterator;
+
     protected:
         std::vector<NNormalHypersurface*> surfaces_;
             /**< Contains the normal hypersurfaces stored in this packet. */
@@ -151,6 +153,131 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          */
         static NNormalHypersurfaceList* enumerate(Dim4Triangulation* owner,
             int flavour, bool embeddedOnly = true,
+            NProgressManager* manager = 0);
+
+        /**
+         * Enumerates all fundamental normal hypersurfaces in the given
+         * triangulation using the given flavour of coordinate system,
+         * using the primal Hilbert basis algorithm.
+         * These fundamental normal hypersurfaces will be stored in a new normal
+         * hypersurface list.  The option is offered to find only embedded
+         * normal hypersurfaces or to also include immersed and singular
+         * normal hypersurfaces.
+         *
+         * The primal algorithm is the recommended method for
+         * enumerating fundamental normal hypersurfaces, although other
+         * algorithms are made available in this class also.
+         * The procedure is the 4-dimensional analogue to the process
+         * described in "Fundamental normal surfaces and the enumeration
+         * of Hilbert bases", Burton, arXiv:1111.7055, Nov 2011.
+         *
+         * The normal hypersurface list that is created will be inserted as the
+         * last child of the given triangulation.  This triangulation \b must
+         * remain the parent of this normal hypersurface list, and must not
+         * change while this normal hypersurface list remains in existence.
+         *
+         * The first step of the primal algorithm is to enumerate all
+         * vertex normal hypersurfaces.  If you have already done this, you
+         * may pass the list of vertex normal hypersurfaces as the (optional)
+         * parameter \a vtxSurfaces.
+         *
+         * If a progress manager is passed, the normal hypersurface
+         * enumeration will take place in a new thread and this routine
+         * will return immediately.  The NProgress object assigned to
+         * this progress manager is guaranteed to be of the class
+         * NProgressMessage.
+         *
+         * If no progress manager is passed, the enumeration will run
+         * in the current thread and this routine will return only when
+         * the enumeration is complete.  Note that this enumeration can
+         * be extremely slow for larger triangulations.
+         *
+         * \pre If non-zero, the argument \a vtxSurfaces is precisely the set
+         * of all vertex normal hypersurfaces in the given triangulation,
+         * enumerated using the same coordinate system and embedded-only
+         * constraints as given here.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * hypersurfaces will be based.
+         * @param newFlavour the flavour of coordinate system to be used;
+         * this must be one of the predefined coordinate system
+         * constants in NNormalHypersurfaceList.
+         * @param embeddedOnly \c true if only embedded normal hypersurfaces
+         * are to be produced, or \c false if immersed and singular
+         * normal hypersurfaces are also to be produced; this defaults to
+         * \c true.
+         * @param vtxSurfaces the set of all \e vertex normal hypersurfaces
+         * as enumerated under the same coordinate system and
+         * constraints as given here; this may be 0 if unknown.
+         * @param manager a progress manager through which progress will
+         * be reported, or 0 if no progress reporting is required.  If
+         * non-zero, \a manager must point to a progress manager for
+         * which NProgressManager::isStarted() is still \c false.
+         * @return the newly created normal hypersurface list.  Note that if
+         * a progress manager is passed then this list may not be completely
+         * filled when this routine returns.  If a progress manager is
+         * passed and a new thread could not be started, this routine
+         * returns 0 (and no normal hypersurface list is created).
+         */
+        static NNormalHypersurfaceList* enumerateFundPrimal(
+            Dim4Triangulation* owner, int newFlavour, bool embeddedOnly = true,
+            NNormalHypersurfaceList* vtxSurfaces = 0,
+            NProgressManager* manager = 0);
+
+        /**
+         * Enumerates all fundamental normal hypersurfaces in the given
+         * triangulation using the given flavour of coordinate system,
+         * using the dual Hilbert basis algorithm.
+         * These fundamental normal hypersurfaces will be stored in a new normal
+         * hypersurface list.  The option is offered to find only embedded
+         * normal hypersurfaces or to also include immersed and singular
+         * normal hypersurfaces.
+         *
+         * The dual algorithm is fast but its performance is highly variable;
+         * for this reason the primal algorithm is recommended instead.
+         * For full details of both procedures, see
+         * "Fundamental normal surfaces and the enumeration of Hilbert bases",
+         * Burton, arXiv:1111.7055, Nov 2011 (this paper describes the
+         * process for normal surfaces in 3-manifold triangulations, but
+         * the ideas are essentially the same).
+         *
+         * The normal hypersurface list that is created will be inserted as the
+         * last child of the given triangulation.  This triangulation \b must
+         * remain the parent of this normal hypersurface list, and must not
+         * change while this normal hypersurface list remains in existence.
+         *
+         * If a progress manager is passed, the normal hypersurface
+         * enumeration will take place in a new thread and this routine
+         * will return immediately.  The NProgress object assigned to
+         * this progress manager is guaranteed to be of the class
+         * NProgressNumber.
+         *
+         * If no progress manager is passed, the enumeration will run
+         * in the current thread and this routine will return only when
+         * the enumeration is complete.  Note that this enumeration can
+         * be extremely slow for larger triangulations.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * hypersurfaces will be based.
+         * @param newFlavour the flavour of coordinate system to be used;
+         * this must be one of the predefined coordinate system
+         * constants in NNormalHypersurfaceList.
+         * @param embeddedOnly \c true if only embedded normal hypersurfaces
+         * are to be produced, or \c false if immersed and singular
+         * normal hypersurfaces are also to be produced; this defaults to
+         * \c true.
+         * @param manager a progress manager through which progress will
+         * be reported, or 0 if no progress reporting is required.  If
+         * non-zero, \a manager must point to a progress manager for
+         * which NProgressManager::isStarted() is still \c false.
+         * @return the newly created normal hypersurface list.  Note that if
+         * a progress manager is passed then this list may not be completely
+         * filled when this routine returns.  If a progress manager is
+         * passed and a new thread could not be started, this routine
+         * returns 0 (and no normal hypersurface list is created).
+         */
+        static NNormalHypersurfaceList* enumerateFundDual(
+            Dim4Triangulation* owner, int newFlavour, bool embeddedOnly = true,
             NProgressManager* manager = 0);
 
         /**
@@ -223,6 +350,134 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * hypersurface list.
          */
         NMatrixInt* recreateMatchingEquations() const;
+
+        /**
+         * An iterator that gives access to the raw vectors for hypersurfaces
+         * in this list, pointing to the beginning of this hypersurface list.
+         *
+         * \ifacespython Not present.
+         *
+         * @return an iterator at the beginning of this hypersurface list.
+         */
+        VectorIterator beginVectors() const;
+
+        /**
+         * An iterator that gives access to the raw vectors for hypersurfaces
+         * in this list, pointing past the end of this hypersurface list.
+         * This iterator is not dereferenceable.
+         *
+         * \ifacespython Not present.
+         *
+         * @return an iterator past the end of this hypersurface list.
+         */
+        VectorIterator endVectors() const;
+
+        /**
+         * A bidirectional iterator that runs through the raw vectors for
+         * hypersurfaces in this list.
+         *
+         * \ifacespython Not present.
+         */
+        class VectorIterator : public std::iterator<
+                std::bidirectional_iterator_tag,
+                const NNormalHypersurfaceVector*> {
+            private:
+                std::vector<NNormalHypersurface*>::const_iterator it_;
+                    /**< An iterator into the underlying list of
+                         hypersurfaces. */
+
+            public:
+                /**
+                 * Creates a new uninitialised iterator.
+                 */
+                VectorIterator();
+
+                /**
+                 * Creates a copy of the given iterator.
+                 *
+                 * @param cloneMe the iterator to clone.
+                 */
+                VectorIterator(const VectorIterator& cloneMe);
+
+                /**
+                 * Makes this a copy of the given iterator.
+                 *
+                 * @param cloneMe the iterator to clone.
+                 * @return a reference to this iterator.
+                 */
+                VectorIterator& operator = (const VectorIterator& cloneMe);
+
+                /**
+                 * Compares this with the given operator for equality.
+                 *
+                 * @param other the iterator to compare this with.
+                 * @return \c true if the iterators point to the same
+                 * element of the same normal surface list, or \c false
+                 * if they do not.
+                 */
+                bool operator == (const VectorIterator& other) const;
+
+                /**
+                 * Compares this with the given operator for inequality.
+                 *
+                 * @param other the iterator to compare this with.
+                 * @return \c false if the iterators point to the same
+                 * element of the same normal surface list, or \c true
+                 * if they do not.
+                 */
+                bool operator != (const VectorIterator& other) const;
+
+                /**
+                 * Returns the raw vector for the normal hypersurface that this
+                 * iterator is currently pointing to.
+                 *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
+                 * @return the corresponding normal hypersurface vector.
+                 */
+                const NNormalHypersurfaceVector* operator *() const;
+
+                /**
+                 * The preincrement operator.
+                 *
+                 * @return a reference to this iterator after the increment.
+                 */
+                VectorIterator& operator ++();
+
+                /**
+                 * The postincrement operator.
+                 *
+                 * @return a copy of this iterator before the
+                 * increment took place.
+                 */
+                VectorIterator operator ++(int);
+
+                /**
+                 * The predecrement operator.
+                 *
+                 * @return a reference to this iterator after the decrement.
+                 */
+                VectorIterator& operator --();
+
+                /**
+                 * The postdecrement operator.
+                 *
+                 * @return a copy of this iterator before the
+                 * decrement took place.
+                 */
+                VectorIterator operator --(int);
+
+            private:
+                /**
+                 * Initialise a new vector iterator using an iterator for
+                 * the internal list of normal hypersurfaces.
+                 */
+                VectorIterator(
+                    const std::vector<NNormalHypersurface*>::const_iterator& i);
+
+            friend class NNormalHypersurfaceList;
+        };
 
     protected:
         /**
@@ -349,29 +604,10 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
         NNormalHypersurfaceList(int flavour, bool embeddedOnly);
 
         /**
-         * Calls NDoubleDescription::enumerateExtremalRays() with the
-         * given arguments, and using the vector class that corresponds
-         * to the given coordinate flavour.
-         *
-         * All parameters not listed below are taken directly from
-         * NDoubleDescription::enumerateExtremalRays().
-         *
-         * @param flavour the flavour of coordinate system to be used;
-         * this must be one of the predefined coordinate system constants
-         * in NNormalHypersurfaceList.
-         * @return \c true if NDoubleDescription::enumerateExtremalRays()
-         * was successfully called, or \c false if the given flavour
-         * does not correspond to a known coordinate system.
+         * A thread class that actually performs the vertex normal
+         * hypersurface enumeration.
          */
-        static bool enumerateExtremalRays(int flavour,
-            const HypersurfaceInserter& results, const NMatrixInt& subspace,
-            const NEnumConstraintList* constraints, NProgressNumber* progress);
-
-        /**
-         * A thread class that actually performs the normal hypersurface
-         * enumeration.
-         */
-        class Enumerator : public NThread {
+        class VertexEnumerator : public NThread {
             private:
                 NNormalHypersurfaceList* list_;
                     /**< The normal hypersurface list to be filled. */
@@ -394,7 +630,80 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                  * progress reporting, or 0 if progress reporting is not
                  * required.
                  */
-                Enumerator(NNormalHypersurfaceList* list,
+                VertexEnumerator(NNormalHypersurfaceList* list,
+                    Dim4Triangulation* triang, NProgressManager* manager);
+
+                void* run(void*);
+        };
+
+        /**
+         * A thread class that performs fundamental normal hypersurface
+         * enumeration using the primal Hilbert basis algorithm.
+         */
+        class FundPrimalEnumerator : public NThread {
+            private:
+                NNormalHypersurfaceList* list_;
+                    /**< The normal hypersurface list to be filled. */
+                Dim4Triangulation* triang_;
+                    /**< The triangulation upon which this normal
+                         hypersurface list will be based. */
+                NNormalHypersurfaceList* vtxSurfaces_;
+                    /**< The list of all vertex normal hypersurfaces in
+                         \a triang_, or 0 if this information is not known. */
+                NProgressManager* manager_;
+                    /**< The progress manager through which progress is
+                         reported, or 0 if no progress manager is in use. */
+
+            public:
+                /**
+                 * Creates a new enumerator thread with the given
+                 * parameters.
+                 *
+                 * @param list the normal hypersurface list to be filled.
+                 * @param triang the triangulation upon which this
+                 * normal hypersurface list will be based.
+                 * @param vtxSurfaces the vertex normal hypersurfaces in
+                 * \a triang, or 0 if this information is not known.
+                 * @param manager the progress manager to use for
+                 * progress reporting, or 0 if progress reporting is not
+                 * required.
+                 */
+                FundPrimalEnumerator(NNormalHypersurfaceList* list,
+                    Dim4Triangulation* triang,
+                    NNormalHypersurfaceList* vtxSurfaces,
+                    NProgressManager* manager);
+
+                void* run(void*);
+        };
+
+        /**
+         * A thread class that performs fundamental normal hypersurface
+         * enumeration using the dual Hilbert basis algorithm.
+         */
+        class FundDualEnumerator : public NThread {
+            private:
+                NNormalHypersurfaceList* list_;
+                    /**< The normal hypersurface list to be filled. */
+                Dim4Triangulation* triang_;
+                    /**< The triangulation upon which this normal
+                         hypersurface list will be based. */
+                NProgressManager* manager_;
+                    /**< The progress manager through which progress is
+                         reported, or 0 if no progress manager is in use. */
+
+            public:
+                /**
+                 * Creates a new enumerator thread with the given
+                 * parameters.
+                 *
+                 * @param list the normal hypersurface list to be filled.
+                 * @param triang the triangulation upon which this
+                 * normal hypersurface list will be based.
+                 * @param manager the progress manager to use for
+                 * progress reporting, or 0 if progress reporting is not
+                 * required.
+                 */
+                FundDualEnumerator(NNormalHypersurfaceList* list,
                     Dim4Triangulation* triang, NProgressManager* manager);
 
                 void* run(void*);
@@ -442,6 +751,22 @@ REGINA_API NNormalHypersurfaceVector* makeZeroVector(
  */
 REGINA_API NMatrixInt* makeMatchingEquations(Dim4Triangulation* triangulation,
     int flavour);
+/**
+ * Creates a new set of validity constraints representing the condition that
+ * normal hypersurfaces be embedded.  The validity constraints will be expressed
+ * relative to the given flavour of coordinate system.
+ *
+ * \ifacespython Not present.
+ *
+ * @param triangulation the triangulation upon which these validity constraints
+ * will be based.
+ * @param flavour the flavour of coordinate system to be used;
+ * this must be one of the predefined coordinate system
+ * constants in NNormalHypersurfaceList.
+ * @return a newly allocated set of constraints.
+ */
+REGINA_API NEnumConstraintList* makeEmbeddedConstraints(
+    Dim4Triangulation* triangulation, int flavour);
 
 /*@}*/
 
@@ -478,6 +803,72 @@ inline bool NNormalHypersurfaceList::dependsOnParent() const {
 
 inline NMatrixInt* NNormalHypersurfaceList::recreateMatchingEquations() const {
     return makeMatchingEquations(getTriangulation(), flavour_);
+}
+
+inline NNormalHypersurfaceList::VectorIterator::VectorIterator() {
+}
+
+inline NNormalHypersurfaceList::VectorIterator::VectorIterator(
+        const NNormalHypersurfaceList::VectorIterator& cloneMe) :
+        it_(cloneMe.it_) {
+}
+
+inline NNormalHypersurfaceList::VectorIterator&
+        NNormalHypersurfaceList::VectorIterator::operator =(
+        const NNormalHypersurfaceList::VectorIterator& cloneMe) {
+    it_ = cloneMe.it_;
+    return *this;
+}
+
+inline bool NNormalHypersurfaceList::VectorIterator::operator ==(
+        const NNormalHypersurfaceList::VectorIterator& other) const {
+    return (it_ == other.it_);
+}
+
+inline bool NNormalHypersurfaceList::VectorIterator::operator !=(
+        const NNormalHypersurfaceList::VectorIterator& other) const {
+    return (it_ != other.it_);
+}
+
+inline const NNormalHypersurfaceVector*
+        NNormalHypersurfaceList::VectorIterator::operator *() const {
+    return (*it_)->rawVector();
+}
+
+inline NNormalHypersurfaceList::VectorIterator&
+        NNormalHypersurfaceList::VectorIterator::operator ++() {
+    ++it_;
+    return *this;
+}
+
+inline NNormalHypersurfaceList::VectorIterator
+        NNormalHypersurfaceList::VectorIterator::operator ++(int) {
+    return NNormalHypersurfaceList::VectorIterator(it_++);
+}
+
+inline NNormalHypersurfaceList::VectorIterator&
+        NNormalHypersurfaceList::VectorIterator::operator --() {
+    --it_;
+    return *this;
+}
+
+inline NNormalHypersurfaceList::VectorIterator
+        NNormalHypersurfaceList::VectorIterator::operator --(int) {
+    return NNormalHypersurfaceList::VectorIterator(it_--);
+}
+
+inline NNormalHypersurfaceList::VectorIterator::VectorIterator(
+        const std::vector<NNormalHypersurface*>::const_iterator& i) : it_(i) {
+}
+
+inline NNormalHypersurfaceList::VectorIterator
+        NNormalHypersurfaceList::beginVectors() const {
+    return VectorIterator(surfaces_.begin());
+}
+
+inline NNormalHypersurfaceList::VectorIterator
+        NNormalHypersurfaceList::endVectors() const {
+    return VectorIterator(surfaces_.end());
 }
 
 inline NNormalHypersurfaceList::HypersurfaceInserter::HypersurfaceInserter() :
@@ -536,7 +927,20 @@ inline NNormalHypersurfaceList::NNormalHypersurfaceList(int flavour,
         bool embeddedOnly) : flavour_(flavour), embedded_(embeddedOnly) {
 }
 
-inline NNormalHypersurfaceList::Enumerator::Enumerator(
+inline NNormalHypersurfaceList::VertexEnumerator::VertexEnumerator(
+        NNormalHypersurfaceList* list, Dim4Triangulation* triang,
+        NProgressManager* manager) :
+        list_(list), triang_(triang), manager_(manager) {
+}
+
+inline NNormalHypersurfaceList::FundPrimalEnumerator::FundPrimalEnumerator(
+        NNormalHypersurfaceList* list, Dim4Triangulation* triang,
+        NNormalHypersurfaceList* vtxSurfaces, NProgressManager* manager) :
+        list_(list), triang_(triang), vtxSurfaces_(vtxSurfaces),
+        manager_(manager) {
+}
+
+inline NNormalHypersurfaceList::FundDualEnumerator::FundDualEnumerator(
         NNormalHypersurfaceList* list, Dim4Triangulation* triang,
         NProgressManager* manager) :
         list_(list), triang_(triang), manager_(manager) {
