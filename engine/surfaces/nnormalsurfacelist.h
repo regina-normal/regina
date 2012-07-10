@@ -250,7 +250,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * enumeration will take place in a new thread and this routine
          * will return immediately.  The NProgress object assigned to
          * this progress manager is guaranteed to be of the class
-         * NProgressNumber.
+         * NProgressMessage.
          *
          * If no progress manager is passed, the enumeration will run
          * in the current thread and this routine will return only when
