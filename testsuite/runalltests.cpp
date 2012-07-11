@@ -117,6 +117,7 @@ bool runAllTests() {
     addNBitmask(runner);
     addNIndexedArray(runner);
     addNLargeInteger(runner);
+    addNLazyInteger(runner);
     addNRational(runner);
 
     // Maths:

@@ -96,6 +96,8 @@ void addNLazyInteger() {
         .def("abs", &NLazyInteger::abs)
         .def("gcd", &NLazyInteger::gcd)
         .def("lcm", &NLazyInteger::lcm)
+        .def("makeLarge", &NLazyInteger::makeLarge)
+        .def("tryReduce", &NLazyInteger::tryReduce)
         .def(self_ns::str(self))
     ;
 

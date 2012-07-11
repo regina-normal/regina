@@ -46,6 +46,7 @@ const NLazyInteger NLazyInteger::one(1);
 NLazyInteger::NLazyInteger(const char* value, int base, bool* valid) :
         large_(0) {
     char* endptr;
+    errno = 0;
     small_ = strtol(value, &endptr, base);
     if (errno || *endptr) {
         // Something went wrong.  Try again with large integers.
@@ -66,6 +67,7 @@ NLazyInteger::NLazyInteger(const char* value, int base, bool* valid) :
 NLazyInteger::NLazyInteger(const std::string& value, int base,
         bool* valid) : large_(0) {
     char* endptr;
+    errno = 0;
     small_ = strtol(value.c_str(), &endptr, base);
     if (errno || *endptr) {
         // Something went wrong.  Try again with large integers.
@@ -106,6 +108,7 @@ std::string NLazyInteger::stringValue(int base) const {
 
 NLazyInteger& NLazyInteger::operator =(const char* value) {
     char* endptr;
+    errno = 0;
     small_ = strtol(value, &endptr, 10 /* base */);
     if (errno || *endptr) {
         // Something went wrong.  Try again with large integers.
@@ -127,6 +130,7 @@ NLazyInteger& NLazyInteger::operator =(const char* value) {
 
 NLazyInteger& NLazyInteger::operator =(const std::string& value) {
     char* endptr;
+    errno = 0;
     small_ = strtol(value.c_str(), &endptr, 10 /* base */);
     if (errno || *endptr) {
         // Something went wrong.  Try again with large integers.
