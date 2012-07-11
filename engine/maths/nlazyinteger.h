@@ -852,6 +852,28 @@ class REGINA_API NLazyInteger {
          */
         NLazyInteger lcm(const NLazyInteger& other) const;
 
+        /**
+         * Converts this integer to use a GMP large integer representation,
+         * regardless of whether this is actually necessary.  The contents
+         * of this integer will be preserved.
+         *
+         * It does not matter which kind of representation this integer
+         * is currently using.
+         */
+        void makeLarge();
+
+        /**
+         * Converts this integer to use a native C/C++ long representation,
+         * if this is possible.  However, if this integer is outside the range
+         * of a C/C++ long, then it will remain as a GMP large integer instead
+         * (i.e., nothing will change).  Whatever happens, the contents of this
+         * integer will be preserved.
+         *
+         * It does not matter which kind of representation this integer
+         * is currently using.
+         */
+        void tryReduce();
+
     private:
         /**
          * Converts this integer from a native C/C++ long representation
@@ -862,7 +884,7 @@ class REGINA_API NLazyInteger {
          * \pre \a large_ is null (i.e., we are indeed using a native
          * C/C++ long representation at present).
          */
-        void makeLarge();
+        void forceLarge();
 
         /**
          * Destroys the GMP large integer representation and reverts to
@@ -1215,7 +1237,7 @@ inline NLazyInteger& NLazyInteger::operator ++() {
         ++small_;
     else {
         // This is the point at which we overflow.
-        makeLarge();
+        forceLarge();
         mpz_add_ui(large_, large_, 1);
     }
     return *this;
@@ -1236,7 +1258,7 @@ inline NLazyInteger& NLazyInteger::operator --() {
         --small_;
     else {
         // This is the point at which we overflow.
-        makeLarge();
+        forceLarge();
         mpz_sub_ui(large_, large_, 1);
     }
     return *this;
@@ -1407,7 +1429,7 @@ inline NLazyInteger NLazyInteger::operator -() const {
 inline NLazyInteger& NLazyInteger::operator +=(const NLazyInteger& other) {
     if (other.large_) {
         if (! large_)
-            makeLarge();
+            forceLarge();
         mpz_add(large_, large_, other.large_);
         return *this;
     } else
@@ -1424,7 +1446,7 @@ inline NLazyInteger& NLazyInteger::operator +=(long other) {
         if ((((ans ^ small_) & (ans ^ other))) & LONG_MIN) {
             // Boom.  It's an overflow.
             // Fall back to large integer arithmetic in the next block.
-            makeLarge();
+            forceLarge();
         } else {
             // All good: we're done.
             small_ = ans;
@@ -1447,7 +1469,7 @@ inline NLazyInteger& NLazyInteger::operator +=(long other) {
 inline NLazyInteger& NLazyInteger::operator -=(const NLazyInteger& other) {
     if (other.large_) {
         if (! large_)
-            makeLarge();
+            forceLarge();
         mpz_sub(large_, large_, other.large_);
         return *this;
     } else
@@ -1464,7 +1486,7 @@ inline NLazyInteger& NLazyInteger::operator -=(long other) {
         if ((((small_ ^ other) & (ans ^ small_))) & LONG_MIN) {
             // Boom.  It's an overflow.
             // Fall back to large integer arithmetic in the next block.
-            makeLarge();
+            forceLarge();
         } else {
             // All good: we're done.
             small_ = ans;
@@ -1758,7 +1780,7 @@ inline void NLazyInteger::negate() {
         mpz_neg(large_, large_);
     else if (small_ == LONG_MIN) {
         // Overflow, just.
-        makeLarge();
+        forceLarge();
         mpz_neg(large_, large_);
     } else
         small_ = -small_;
@@ -1791,6 +1813,17 @@ inline NLazyInteger operator *(long lhs, const NLazyInteger& rhs) {
 }
 
 inline void NLazyInteger::makeLarge() {
+    if (! large_)
+        forceLarge();
+}
+
+inline void NLazyInteger::tryReduce() {
+    if (large_ && mpz_cmp_si(large_, LONG_MAX) <= 0 &&
+            mpz_cmp_si(large_, LONG_MIN) >= 0)
+        forceReduce();
+}
+
+inline void NLazyInteger::forceLarge() {
     large_ = new mpz_t;
     mpz_init_set_si(large_, small_);
 }
