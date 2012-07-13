@@ -161,6 +161,10 @@ class REGINA_API NLargeInteger {
         /**
          * Initialises this integer to the given value.
          *
+         * This constructor is marked as explicit in the hope of
+         * avoiding accidental (and unintentional) mixing of the
+         * NLargeInteger and NLazyInteger classes.
+         *
          * @param value the new value of this integer.
          */
         explicit NLargeInteger(const NLazyInteger& value);
