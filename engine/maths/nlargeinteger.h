@@ -39,6 +39,7 @@
 #include <iostream>
 #include <string>
 #include "regina-core.h"
+#include "nlazyinteger.h"
 
 /**
  * \hideinitializer
@@ -78,6 +79,11 @@ namespace regina {
  *
  * All routines in this class, including random number generation, are
  * thread-safe.
+ *
+ * If you do not need support for infinity, and if you expect your
+ * integers to be small in a typical scenario (even if they may be very
+ * large in a pathological scenario), please consider using the
+ * faster class NLazyInteger instead (which was introduced in Regina 4.94).
  *
  * \testpart
  */
@@ -152,6 +158,12 @@ class REGINA_API NLargeInteger {
          * @param value the new value of this integer.
          */
         NLargeInteger(const NLargeInteger& value);
+        /**
+         * Initialises this integer to the given value.
+         *
+         * @param value the new value of this integer.
+         */
+        explicit NLargeInteger(const NLazyInteger& value);
         /**
          * Initialises this integer to the given value which is
          * represented as a string of digits in a given base.
@@ -257,6 +269,13 @@ class REGINA_API NLargeInteger {
          * @return a reference to this integer with its new value.
          */
         NLargeInteger& operator =(const NLargeInteger& value);
+        /**
+         * Sets this integer to the given value.
+         *
+         * @param value the new value of this integer.
+         * @return a reference to this integer with its new value.
+         */
+        NLargeInteger& operator =(const NLazyInteger& value);
         /**
          * Sets this integer to the given value.
          *
@@ -967,6 +986,13 @@ inline NLargeInteger::NLargeInteger(const NLargeInteger& value) :
         infinite(value.infinite) {
     mpz_init_set(data, value.data);
 }
+inline NLargeInteger::NLargeInteger(const NLazyInteger& value) :
+        infinite(false) {
+    if (value.large_)
+        mpz_init_set(data, value.large_);
+    else
+        mpz_init_set_si(data, value.small_);
+}
 inline NLargeInteger::NLargeInteger(const char* value, int base, bool* valid) :
         infinite(false) {
     if (valid)
@@ -999,6 +1025,14 @@ inline long NLargeInteger::longValue() const {
 inline NLargeInteger& NLargeInteger::operator =(const NLargeInteger& value) {
     infinite = value.infinite;
     mpz_set(data, value.data);
+    return *this;
+}
+inline NLargeInteger& NLargeInteger::operator =(const NLazyInteger& value) {
+    infinite = false;
+    if (value.large_)
+        mpz_set(data, value.large_);
+    else
+        mpz_set_si(data, value.small_);
     return *this;
 }
 inline NLargeInteger& NLargeInteger::operator =(int value) {
