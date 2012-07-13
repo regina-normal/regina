@@ -912,6 +912,8 @@ class REGINA_API NLazyInteger {
 
     friend std::ostream& operator << (std::ostream& out,
         const NLazyInteger& large);
+
+    friend class NLargeInteger;
 };
 
 /**

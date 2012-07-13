@@ -48,6 +48,7 @@ void addNLargeInteger() {
     scope s = class_<NLargeInteger>("NLargeInteger")
         .def(init<long>())
         .def(init<const NLargeInteger&>())
+        .def(init<const regina::NLazyInteger&>())
         .def(init<const char*, optional<int> >())
         .def("isInfinite", &NLargeInteger::isInfinite)
         .def("longValue", &NLargeInteger::longValue)
