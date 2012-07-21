@@ -1165,6 +1165,20 @@ std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > NCellularData::
  return std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > >(new std::list< NSVPolynomialRing< NLargeInteger > >(alexIdeal));
 }
 
+std::string NCellularData::stringInfo( const StringRequest &s_desc ) const
+{ //TODO
+//    TORFORM_powerdecomp,
+//    TORFORM_sigmastring,
+//    TORFORM_legendresymbol,
+//    TORFORM_tests,
+//    EMBINFO
+
+ return std::string("blah");
+}
+
+
+
+
 } // namespace regina
 
 

@@ -31,6 +31,7 @@
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/numbertheory.h"
 #include "triangulation/nhomologicaldata.h"
+#include "algebra/ncellulardata.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
@@ -58,6 +59,7 @@
 
 using regina::NPacket;
 using regina::NTriangulation;
+using regina::NCellularData;
 
 namespace {
     /**
@@ -684,41 +686,43 @@ void NTriTuraevViroUI::calculateInvariant() {
     invariants->addTopLevelItem(item);
 }
 
-//////////////////////////////////////////////////////////////////////////////
-/* RBADD */
 /** These routines puts up the interface for the detailed cellular information
         and it is a submenu of the Algebra menu. **/
 
 void NTriCellularInfoUI::refresh() {
     if (tri->isValid()) {
         regina::NHomologicalData minfo(*tri);
+        NCellularData Minfo(*tri);
 
-        Cells->setText(QObject::tr("%1, %2, %3, %4").
-            arg(minfo.standardCellCount(0)).
-            arg(minfo.standardCellCount(1)).
-            arg(minfo.standardCellCount(2)).
-            arg(minfo.standardCellCount(3)));
+       Cells->setText(QObject::tr("%1, %2, %3, %4").
+            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(0, NCellularData::STD_coord) ) ).
+            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(1, NCellularData::STD_coord) ) ).
+            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(2, NCellularData::STD_coord) ) ).
+            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(3, NCellularData::STD_coord) ) ));
 
         DualCells->setText(QObject::tr("%1, %2, %3, %4").
-            arg(minfo.dualCellCount(0)).
-            arg(minfo.dualCellCount(1)).
-            arg(minfo.dualCellCount(2)).
-            arg(minfo.dualCellCount(3)));
+            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(0, NCellularData::DUAL_coord) ) ).
+            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(1, NCellularData::DUAL_coord) ) ).
+            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(2, NCellularData::DUAL_coord) ) ).
+            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(3, NCellularData::DUAL_coord) ) ));
 
-        EulerChar->setText(QString::number(minfo.eulerChar()));
+        EulerChar->setText(QString::number(Minfo.eulerChar()));
 
         H0H1H2H3->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4").
-            arg(minfo.standardHomology(0).toString().c_str()).
-            arg(minfo.standardHomology(1).toString().c_str()).
-            arg(minfo.standardHomology(2).toString().c_str()).
-            arg(minfo.standardHomology(3).toString().c_str()));
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(0, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(1, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).            
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(2, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).           
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(3, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ) );          
 
-        HBdry->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3").
-            arg(minfo.boundaryHomology(0).toString().c_str()).
-            arg(minfo.boundaryHomology(1).toString().c_str()).
-            arg(minfo.boundaryHomology(2).toString().c_str()));
+         HBdry->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3").
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(0, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ).
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(1, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ).            
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(2, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ) );          
 
-        BdryMap->setText(minfo.boundaryHomologyMap(1).toString().c_str());
+        BdryMap->setText(Minfo.homGroup( NCellularData::HomLocator( 
+            NCellularData::GroupLocator( 1, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0 ), 
+            NCellularData::GroupLocator( 1, NCellularData::coVariant, NCellularData::STD_coord, 0 ) ) 
+                        )->toString().c_str() );
 
         if (! tri->isConnected()) {
             QString msg(QObject::tr("Triangulation is disconnected."));

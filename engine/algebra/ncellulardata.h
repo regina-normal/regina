@@ -273,6 +273,34 @@ public:
   contraVariant };
 
  /**
+  *  The routine NCellularData::stringInfo takes as input a StringRequest
+  *  This is a generic any-string-as-return-value routine. 
+  */
+ enum StringRequest {
+ /**
+  *  Returns the torsion form rank vector. 
+  */
+    TORFORM_powerdecomp,
+ /**
+  *  Returns the 2-torsion sigma vector. 
+  */
+    TORFORM_sigmastring,
+ /**
+  *  Returns the odd p-torsion Legendre symbol vector. 
+  */
+    TORFORM_legendresymbol,
+ /**
+  *  hyperbolicity, split, and Kawauchi-Kojima 2-torsion embedding obstruction. 
+  * Answer will have form "Hyp Yes, Split No, KKObst Yes"
+  */
+    TORFORM_tests,
+ /**
+  * Embeddability information. 
+  */
+    EMBINFO
+    };
+
+ /**
   *  NCellularData stores chain complexes internally in a stack. The Chain Complex Locator allows
   * unique identification of a chain complex when passing requests to NCellularData::chainComplex
   * Chain complexes are stored where dim indicates the dimension of the cells in the domain of
@@ -1147,6 +1175,11 @@ public:
      *  Computes the H1 Alexander ideal. Tries to reduce it as much as possible.
      */
     std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > alexanderIdeal() const;
+
+    /**
+     *  Generic routine for all string-response queries. 
+     */
+    std::string stringInfo( const StringRequest &s_desc ) const;
 
     /**
      *  Provides a text string that identifies the manifold uniquely (if possible) or provides as much 
