@@ -296,7 +296,7 @@ void NPacket::sortChildren() {
     NPacket* current;
     NPacket* largest;
 
-    treeParent->fireEvent(&NPacketListener::childrenToBeReordered);
+    fireEvent(&NPacketListener::childrenToBeReordered);
     while (1) {
         // Put current at the beginning of the clump of yet-unsorted children.
         if (! endpoint)
@@ -337,7 +337,7 @@ void NPacket::sortChildren() {
             endpoint = largest;
     }
 
-    treeParent->fireEvent(&NPacketListener::childrenWereReordered);
+    fireEvent(&NPacketListener::childrenWereReordered);
 }
 
 void NPacket::swapWithNextSibling() {

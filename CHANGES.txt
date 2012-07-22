@@ -54,6 +54,8 @@ Version 4.94  [ (under development) ]
               This class works with native C/C++ integers for as long as
               possible, and only switches to GMP large integers when it
               becomes unavoidable.
+        Class NPacket:
+            - Fix crash when sortChildren() is run on the root packet.
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic alias Sn that refers to S3, S4 and S5 in
               NPerm3, NPerm4 and NPerm5 respectively.
