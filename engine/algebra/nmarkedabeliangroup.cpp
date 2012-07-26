@@ -643,6 +643,30 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::cycleProjection( unsigned long c
 }
 
 
+// the trivially presented torsion subgroup
+NMarkedAbelianGroup NMarkedAbelianGroup::torsionSubgroup() const
+{
+ NMatrixInt dM(1, getNumberOfInvariantFactors() );
+ NMatrixInt dN(getNumberOfInvariantFactors(), getNumberOfInvariantFactors() );
+ for (unsigned long i=0; i<getNumberOfInvariantFactors(); i++)
+  dN.entry(i,i) = getInvariantFactor(i);
+ return NMarkedAbelianGroup( dM, dN ); 
+}
+
+// and its canonical inclusion map
+NHomMarkedAbelianGroup NMarkedAbelianGroup::torsionInclusion() const
+{
+ NMatrixInt iM( getRankCC(), getNumberOfInvariantFactors() );
+ for (unsigned long j=0; j<iM.columns(); j++)
+  {
+   std::vector<NLargeInteger> jtor( getTorsionRep(j) );
+   for (unsigned long i=0; i<iM.rows(); i++)
+    iM.entry(i,j) = jtor[i];
+  }
+ return NHomMarkedAbelianGroup( torsionSubgroup(), (*this), iM); 
+}
+
+
 // there appears to be an error for the orientable S^1 bundle over the klein bottle, 
 // for H_2 with Z_2-coefficients, in the STD->MIXed map. 
 NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NMatrixInt &tobeRedMat, 
@@ -655,7 +679,8 @@ NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NMatrixInt &tobeRedMat,
 
     // If using mod p coeff, p != 0: 
     //
-    // we build up the CC map in reverse from the way we computed the structure of the domain/range groups.
+    // we build up the CC map in reverse from the way we computed the structure of the 
+    //  domain/range groups.
     //  which was: 3) SNF(M,M'), truncate off first TORLoc coords. 
     //             2) SNF the tensorPres matrix, TOR coords fixed. Truncate off first tensorIfLoc terms.
     //             1) SNF the combined matrix, truncate off ifLoc terms.
@@ -667,7 +692,8 @@ NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NMatrixInt &tobeRedMat,
 
     // If using integer coefficients:
     // 
-    // we build up the CC map in reverse of the process for which we found the structure of the domain/range
+    // we build up the CC map in reverse of the process for which we found the structure of 
+    //  the domain/range
     // groups, which was:  2) SNF(M,M'), truncate off the first rankOM==TORLoc coords
     //                     1) SNF(N,N'), truncate off the first ifLoc terms.
     //
@@ -676,15 +702,19 @@ NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NMatrixInt &tobeRedMat,
     // Step 3: OMR*(step 1)*[trunc OMRi]
     // so we have a common Step 1. 
     NMatrixInt step1Mat(ran.ornCi->rows(), dom.ornC->rows());
-    for (unsigned long i=0; i<step1Mat.rows(); i++) for (unsigned long j=0; j<step1Mat.columns(); j++)
+    for (unsigned long i=0; i<step1Mat.rows(); i++) 
+        for (unsigned long j=0; j<step1Mat.columns(); j++)
     { // ran->ornCi.entry(i, k)*tobeRedMat.entry(k, l)*dom->ornC.entry(l, j)
-        for (unsigned long k=0; k<tobeRedMat.rows(); k++) for (unsigned long l=0;l<tobeRedMat.columns(); l++)
-            step1Mat.entry(i,j) += ran.ornCi->entry(i,k+ran.ifLoc)*tobeRedMat.entry(k,l)*dom.ornC->entry(l+dom.ifLoc,j);
+        for (unsigned long k=0; k<tobeRedMat.rows(); k++) 
+        for (unsigned long l=0;l<tobeRedMat.columns(); l++)
+            step1Mat.entry(i,j) += ran.ornCi->entry(i,k+ran.ifLoc)*tobeRedMat.entry(k,l)*
+             dom.ornC->entry(l+dom.ifLoc,j);
     }
     // with mod p coefficients we have this fiddly middle step 2.
 
     NMatrixInt step2Mat( step1Mat.rows()+ran.tensorIfLoc, step1Mat.columns()+dom.tensorIfLoc );
-    // if coeff==0, we'll just copy the step1Mat, if coeff>0 we multiply the tensor part by ran.otCi, dom.otC resp.
+    // if coeff==0, we'll just copy the step1Mat, if coeff>0 we multiply the tensor part by 
+    //  ran.otCi, dom.otC resp.
     if (dom.coeff == 0)
         for (unsigned long i=0; i<step2Mat.rows(); i++) for (unsigned long j=0; j<step2Mat.columns(); j++)
             step2Mat.entry(i,j) = step1Mat.entry(i,j);
@@ -709,7 +739,8 @@ NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NMatrixInt &tobeRedMat,
                     for (unsigned long k=ran.tensorIfLoc; k<ran.otCi->rows(); k++) 
                         for (unsigned long l=dom.tensorIfLoc; l<dom.otC->rows(); l++)
                             step2Mat.entry(i,j) += ran.otCi->entry(i-ran.TORVec.size(),k)*
-                                step1Mat.entry(k-ran.tensorIfLoc+ran.TORVec.size(),l-dom.tensorIfLoc+dom.TORVec.size())*
+                                step1Mat.entry(k-ran.tensorIfLoc+ran.TORVec.size(),
+                                l-dom.tensorIfLoc+dom.TORVec.size())*
                                 dom.otC->entry(l,j-dom.TORVec.size());
                 }
         }
@@ -968,6 +999,25 @@ bool NHomMarkedAbelianGroup::isCycleMap() const
         if (!range.isCycle(FcycJ)) return false;
     }
     return true;
+}
+
+//  Returns an NHomMarkedAbelianGroup representing the induced map
+//  on the torsion subgroups. 
+NHomMarkedAbelianGroup NHomMarkedAbelianGroup::torsionSubgroup() const
+{
+ NMarkedAbelianGroup dom( domain.torsionSubgroup() );
+ NMarkedAbelianGroup ran( range.torsionSubgroup() );
+
+ NMatrixInt mat(range.getNumberOfInvariantFactors(), domain.getNumberOfInvariantFactors() );
+ for (unsigned long j=0; j<domain.getNumberOfInvariantFactors(); j++)
+  {
+   // std::vector<NLargeInteger> in range's snfRep coords
+   std::vector<NLargeInteger> temp(range.snfRep(evalCC(domain.getTorsionRep(j)))); 
+   for (unsigned long i=0; i<range.getNumberOfInvariantFactors(); i++)
+    mat.entry(i,j) = temp[i];
+  }
+
+ return NHomMarkedAbelianGroup( dom, ran, mat );
 }
 
 

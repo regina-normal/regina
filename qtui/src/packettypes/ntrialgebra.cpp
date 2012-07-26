@@ -691,7 +691,7 @@ void NTriTuraevViroUI::calculateInvariant() {
 
 void NTriCellularInfoUI::refresh() {
     if (tri->isValid()) {
-        regina::NHomologicalData minfo(*tri);
+//        regina::NHomologicalData minfo(*tri);
         NCellularData Minfo(*tri);
 
        Cells->setText(QObject::tr("%1, %2, %3, %4").
@@ -735,12 +735,20 @@ void NTriCellularInfoUI::refresh() {
             // 8 principle cases:
             // orientable y/n, boundary y/n, torsion exists y/n
             if (tri->isOrientable()) {
+
                 TorForOrders->setText(
-                    minfo.torsionRankVectorString().c_str());
+                    Minfo.stringInfo( NCellularData::TORFORM_powerdecomp ).c_str() );
+//                TorForOrders->setText(
+//                    minfo.torsionRankVectorString().c_str());
                 TorForSigma->setText(
-                    minfo.torsionSigmaVectorString().c_str());
+                    Minfo.stringInfo( NCellularData::TORFORM_sigmastring ).c_str() );
+//                TorForSigma->setText(
+//                    minfo.torsionSigmaVectorString().c_str());
                 TorForLegendre->setText(
-                    minfo.torsionLegendreSymbolVectorString().c_str());
+                    Minfo.stringInfo( NCellularData::TORFORM_legendresymbol ).c_str() );
+
+//                TorForLegendre->setText(
+//                    minfo.torsionLegendreSymbolVectorString().c_str());
             } else {
                 // The torsion linking form routines insist on orientability,
                 // so we should avoid calling them.
@@ -755,7 +763,24 @@ void NTriCellularInfoUI::refresh() {
             // non-orientable triangulations.
             // Encase it in <qt>..</qt> so it can wrap over multiple lines.
             EmbeddingComments->setText(QString("<qt>%1</qt>").arg(
-                Qt::escape(minfo.embeddabilityComment().c_str())));
+                Qt::escape(Minfo.stringInfo(NCellularData::TORFORM_embinfo).c_str())));
+
+// okay this clearly breaks things.  
+// possible error: sigma and legendre strings using Minfo are different than with minfo
+// clear error: embed string is clearly wrong for lens spaces.  So it looks like the 
+//              sigma and legendre data is incorrect.  To the TLF is presumably wrong. 
+//              Need to debug it!
+
+// it's not clear where the problem starts.  Should write a script to run through
+// some lens spaces and output comparative data.  I suspect I might have got a map
+// reversed ??  maybe not.  Who knows? 
+
+// also check test suite to see exactly what it does and why it isn't picking any of
+//  this up. 
+
+
+//            EmbeddingComments->setText(QString("<qt>%1</qt>").arg(
+//                Qt::escape(minfo.embeddabilityComment().c_str())));
         }
     } else {
         QString msg(QObject::tr("Invalid Triangulation"));

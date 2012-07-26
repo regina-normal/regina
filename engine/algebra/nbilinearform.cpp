@@ -62,23 +62,26 @@ ShareableObject(), reducedPairing(NULL), unreducedPairing(NULL), lDomain(ldomain
       for (J[2]=0; J[2]<evalsnf.size(); J[2]++) reducedPairing->setEntry( J, evalsnf[J[2]] );
     }
   }
+ KKinvariantsComputed=false;
 }
 
 NBilinearForm::NBilinearForm(const NBilinearForm& cloneMe) : ShareableObject(),
-reducedPairing(clonePtr(cloneMe.reducedPairing)), unreducedPairing(clonePtr(cloneMe.unreducedPairing)),
-lDomain(cloneMe.lDomain), rDomain(cloneMe.rDomain), Range(cloneMe.Range) {}
+reducedPairing(clonePtr(cloneMe.reducedPairing)), 
+unreducedPairing(clonePtr(cloneMe.unreducedPairing)),
+lDomain(cloneMe.lDomain), 
+rDomain(cloneMe.rDomain), 
+Range(cloneMe.Range), 
+KKinvariantsComputed(cloneMe.KKinvariantsComputed), 
+torsionLinkingFormIsSplit(cloneMe.torsionLinkingFormIsSplit), 
+torsionLinkingFormIsHyperbolic(cloneMe.torsionLinkingFormIsHyperbolic), 
+torsionLinkingFormKKTTC(cloneMe.torsionLinkingFormKKTTC),  
+torsionRankString(cloneMe.torsionRankString), 
+torsionSigmaString(cloneMe.torsionSigmaString), 
+torsionLegendreString(cloneMe.torsionLegendreString) {}
 
 NBilinearForm::~NBilinearForm()
 { if (reducedPairing) delete reducedPairing;
   if (unreducedPairing) delete unreducedPairing; }
-
-NBilinearForm& NBilinearForm::operator = (const NBilinearForm& cloneMe)
-{
- if (reducedPairing) delete reducedPairing;
- if (unreducedPairing) delete unreducedPairing;
- reducedPairing = clonePtr(cloneMe.reducedPairing);
- unreducedPairing = clonePtr(cloneMe.unreducedPairing);
-}
 
 const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & NBilinearForm::unreducedMap() const
 { return unreducedPairing->getGrid(); }
@@ -128,37 +131,159 @@ long int NBilinearForm::signature() const
  return charPoly.descartesNo();
 }
 
+/*
+REGINA_API void computeTorsionLinkingFormInvariants(const NBilinearForm &intP, 
+	std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec, 
+    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,
+    std::vector<unsigned long> &ttVec, 
+    std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
+    std::vector< NMatrixRing<NRational>* > &linkingFormPD );
 
+REGINA_API void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, 
+                                                    std::vector< unsigned long > > > &ppVec,
+        const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,
+        const std::vector<unsigned long> &ttVec, 
+        const std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
+        const std::vector< NMatrixRing<NRational>* > &linkingFormPD, 
+        bool orientable, 
+        bool &torsionLinkingFormIsSplit, bool &torsionLinkingFormIsHyperbolic, 
+        std::string &torsionRankString,     std::string &torsionSigmaString,     
+        std::string &torsionLegendreString );
+        bool* torsionLinkingFormKKTTC, 
+*/
 
-std::vector< NLargeInteger > NBilinearForm::oddKKvec() const
+const std::string& NBilinearForm::kkTorRank() const
 {
-// assumes ldomain == rdomain, form symmetric, range cyclic of order the
-// order of the torsion subgroup of ldomain and rdomain. 
-std::vector<NLargeInteger> retval;
-// TODO
-
-return retval;
+ if (!KKinvariantsComputed)
+  {
+    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > ppVec;
+    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > ppList;
+    std::vector<unsigned long> ttVec;
+    std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
+    std::vector< NMatrixRing<NRational>* > linkingFormPD;
+    computeTorsionLinkingFormInvariants( (*this), ppVec, ppList, ttVec, ptVec, linkingFormPD );
+    readTeaLeavesTLF( ppVec, ppList, ttVec, ptVec, linkingFormPD, true, 
+                      const_cast<bool*> (&torsionLinkingFormIsSplit), 
+                      const_cast<bool*> (&torsionLinkingFormIsHyperbolic), 
+                      const_cast<bool*> (&torsionLinkingFormKKTTC), 
+                      const_cast<std::string*> (&torsionRankString), 
+                      const_cast<std::string*> (&torsionSigmaString), 
+                      const_cast<std::string*> (&torsionLegendreString) );
+    *(const_cast<bool*> (&KKinvariantsComputed)) = true;
+  }
+ return torsionRankString;
 }
 
-
-
-std::vector< NLargeInteger > NBilinearForm::twoKKvec() const
+const std::string& NBilinearForm::kkTorSigma() const 
 {
-// assumes ldomain == rdomain, form symmetric, range cyclic of order the
-// order of the torsion subgroup of ldomain and rdomain. 
-std::vector<NLargeInteger> retval;
-// TODO
-return retval;
+ if (!KKinvariantsComputed)
+  {
+    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > ppVec;
+    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > ppList;
+    std::vector<unsigned long> ttVec;
+    std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
+    std::vector< NMatrixRing<NRational>* > linkingFormPD;
+    computeTorsionLinkingFormInvariants( (*this), ppVec, ppList, ttVec, ptVec, linkingFormPD );
+    readTeaLeavesTLF( ppVec, ppList, ttVec, ptVec, linkingFormPD, true, 
+                      const_cast<bool*> (&torsionLinkingFormIsSplit), 
+                      const_cast<bool*> (&torsionLinkingFormIsHyperbolic), 
+                      const_cast<bool*> (&torsionLinkingFormKKTTC), 
+                      const_cast<std::string*> (&torsionRankString), 
+                      const_cast<std::string*> (&torsionSigmaString), 
+                      const_cast<std::string*> (&torsionLegendreString) );
+    *(const_cast<bool*> (&KKinvariantsComputed)) = true;
+  }
+ return torsionSigmaString;
 }
 
-
-
-bool NBilinearForm::isHyperbolic() const
+const std::string& NBilinearForm::kkTorLegendre() const 
 {
-// go through oddKKvec and twoKKvec and check... import from NHomologicalData
-// TODO
-return true;
+ if (!KKinvariantsComputed)
+  {
+    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > ppVec;
+    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > ppList;
+    std::vector<unsigned long> ttVec;
+    std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
+    std::vector< NMatrixRing<NRational>* > linkingFormPD;
+    computeTorsionLinkingFormInvariants( (*this), ppVec, ppList, ttVec, ptVec, linkingFormPD );
+    readTeaLeavesTLF( ppVec, ppList, ttVec, ptVec, linkingFormPD, true, 
+                      const_cast<bool*> (&torsionLinkingFormIsSplit), 
+                      const_cast<bool*> (&torsionLinkingFormIsHyperbolic), 
+                      const_cast<bool*> (&torsionLinkingFormKKTTC), 
+                      const_cast<std::string*> (&torsionRankString), 
+                      const_cast<std::string*> (&torsionSigmaString), 
+                      const_cast<std::string*> (&torsionLegendreString) );
+    *(const_cast<bool*> (&KKinvariantsComputed)) = true;
+  }
+ return torsionLegendreString;
 }
+
+bool NBilinearForm::kkIsSplit() const
+{
+ if (!KKinvariantsComputed)
+  {
+    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > ppVec;
+    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > ppList;
+    std::vector<unsigned long> ttVec;
+    std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
+    std::vector< NMatrixRing<NRational>* > linkingFormPD;
+    computeTorsionLinkingFormInvariants( (*this), ppVec, ppList, ttVec, ptVec, linkingFormPD );
+    readTeaLeavesTLF( ppVec, ppList, ttVec, ptVec, linkingFormPD, true, 
+                      const_cast<bool*> (&torsionLinkingFormIsSplit), 
+                      const_cast<bool*> (&torsionLinkingFormIsHyperbolic), 
+                      const_cast<bool*> (&torsionLinkingFormKKTTC), 
+                      const_cast<std::string*> (&torsionRankString), 
+                      const_cast<std::string*> (&torsionSigmaString), 
+                      const_cast<std::string*> (&torsionLegendreString) );
+    *(const_cast<bool*> (&KKinvariantsComputed)) = true;
+  }
+ return torsionLinkingFormIsSplit;
+}
+
+bool NBilinearForm::kkIsHyperbolic() const
+{
+ if (!KKinvariantsComputed)
+  {
+    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > ppVec;
+    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > ppList;
+    std::vector<unsigned long> ttVec;
+    std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
+    std::vector< NMatrixRing<NRational>* > linkingFormPD;
+    computeTorsionLinkingFormInvariants( (*this), ppVec, ppList, ttVec, ptVec, linkingFormPD );
+    readTeaLeavesTLF( ppVec, ppList, ttVec, ptVec, linkingFormPD, true, 
+                      const_cast<bool*> (&torsionLinkingFormIsSplit), 
+                      const_cast<bool*> (&torsionLinkingFormIsHyperbolic), 
+                      const_cast<bool*> (&torsionLinkingFormKKTTC), 
+                      const_cast<std::string*> (&torsionRankString), 
+                      const_cast<std::string*> (&torsionSigmaString), 
+                      const_cast<std::string*> (&torsionLegendreString) );
+    *(const_cast<bool*> (&KKinvariantsComputed)) = true;
+  }
+ return torsionLinkingFormIsHyperbolic;
+}
+
+bool NBilinearForm::kkTwoTor() const
+{
+ if (!KKinvariantsComputed)
+  {
+    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > ppVec;
+    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > ppList;
+    std::vector<unsigned long> ttVec;
+    std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
+    std::vector< NMatrixRing<NRational>* > linkingFormPD;
+    computeTorsionLinkingFormInvariants( (*this), ppVec, ppList, ttVec, ptVec, linkingFormPD );
+    readTeaLeavesTLF( ppVec, ppList, ttVec, ptVec, linkingFormPD, true, 
+                      const_cast<bool*> (&torsionLinkingFormIsSplit), 
+                      const_cast<bool*> (&torsionLinkingFormIsHyperbolic), 
+                      const_cast<bool*> (&torsionLinkingFormKKTTC), 
+                      const_cast<std::string*> (&torsionRankString), 
+                      const_cast<std::string*> (&torsionSigmaString), 
+                      const_cast<std::string*> (&torsionLegendreString) );
+    *(const_cast<bool*> (&KKinvariantsComputed)) = true;
+  } 
+ return torsionLinkingFormKKTTC;
+}
+
 
 NMarkedAbelianGroup NBilinearForm::image() const
 { 
@@ -223,37 +348,45 @@ return true;
 /* p(ei,ej)=sum_k p^k_ij, f(ei)=sum_j f^j_i e_j
  * p' = p( f x I ), p'^k_ij = sum_l f^l_i p^k_lj
  */
+// TODO: add flag for composition test
 NBilinearForm NBilinearForm::lCompose(const NHomMarkedAbelianGroup &f) const
 {
-// we need to compute the new unreducedPairing and pass it to an NBilinearForm constructor
-NSparseGridRing< NLargeInteger > newPairing(3);
-// 0th index is lDomain SNF coord, 1st index rDomain SNF coord, 3rd index Range SNF coord
-std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
+ // check to see if this is a valid operation
+ if (!lDomain.equalTo(f.getRange()))
+  { std::cerr<<"Error: Illegal composition in NBilinearForm::lCompose"<<std::endl; exit(1); }
+ // we need to compute the new unreducedPairing and pass it to an NBilinearForm constructor
+ NSparseGridRing< NLargeInteger > newPairing(3);
+ // 0th index is lDomain SNF coord, 1st index rDomain SNF coord, 3rd index Range SNF coord
+ std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
 
-for (unsigned long i=0; i<f.getDomain().getRankCC(); i++)
- for (J = unreducedPairing->getGrid().begin(); J!=unreducedPairing->getGrid().end(); J++)
-  { 
-  // newPairing[ i,J[1],J[2] ] += f.getDefiningMatrix.entry( J[0], i ) * unreducedPairing[ J ]
-  NMultiIndex< unsigned long > x(3);
-  x[0]=i; x[1]=J->first.entry(1); x[2]=J->first.entry(2);
-  newPairing.incEntry( x, f.getDefiningMatrix().entry( J->first.entry(0), i ) * (*J->second) );
-  }
+ for (unsigned long i=0; i<f.getDomain().getRankCC(); i++)
+  for (J = unreducedPairing->getGrid().begin(); J!=unreducedPairing->getGrid().end(); J++)
+   { 
+   // newPairing[ i,J[1],J[2] ] += f.getDefiningMatrix.entry( J[0], i ) * unreducedPairing[ J ]
+   NMultiIndex< unsigned long > x(3);
+   x[0]=i; x[1]=J->first.entry(1); x[2]=J->first.entry(2);
+   newPairing.incEntry( x, f.getDefiningMatrix().entry( J->first.entry(0), i ) * (*J->second) );
+   }
 
-return NBilinearForm( f.getDomain(), rDomain, Range, newPairing );
+ return NBilinearForm( f.getDomain(), rDomain, Range, newPairing );
 }
 
 
 /* p(ei,ej)=sum_k p^k_ij, f(ei)=sum_j f^j_i e_j
  * p' = p( I x f ), p'^k_ij = sum_l f^l_j p^k_il
  */
+// TODO: add flag for composition test
 NBilinearForm NBilinearForm::rCompose(const NHomMarkedAbelianGroup &f) const
 {
-// we need to compute the new unreducedPairing and pass it to an NBilinearForm constructor
-NSparseGridRing< NLargeInteger > newPairing(3);
-std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
+ // check to see if this is a valid operation
+ if (!rDomain.equalTo(f.getRange()))
+  { std::cerr<<"Error: Illegal composition in NBilinearForm::rCompose"<<std::endl; exit(1); }
+ // we need to compute the new unreducedPairing and pass it to an NBilinearForm constructor
+ NSparseGridRing< NLargeInteger > newPairing(3);
+ std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
 
-for (unsigned long i=0; i<f.getDomain().getRankCC(); i++)
- for (J = unreducedPairing->getGrid().begin(); J!=unreducedPairing->getGrid().end(); J++)
+ for (unsigned long i=0; i<f.getDomain().getRankCC(); i++)
+  for (J = unreducedPairing->getGrid().begin(); J!=unreducedPairing->getGrid().end(); J++)
   { 
   // newPairing[ ?,i,? ] += f.getDefiningMatrix.entry( ?, i ) * unreducedPairing[ ?, ?, ? ]
   NMultiIndex< unsigned long > x(3);
@@ -811,15 +944,17 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
 } // end computeTorsionLinkingForm()
 
 
-void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec,
+void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, 
+                            std::vector< unsigned long > > > &ppVec,
         const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,
         const std::vector<unsigned long> &ttVec, 
         const std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
         const std::vector< NMatrixRing<NRational>* > &linkingFormPD, 
         bool orientable, 
-        bool &torsionLinkingFormIsSplit, bool &torsionLinkingFormIsHyperbolic, 
-        std::string &torsionRankString,     std::string &torsionSigmaString,     
-        std::string &torsionLegendreString )
+        bool* torsionLinkingFormIsSplit, bool* torsionLinkingFormIsHyperbolic, 
+        bool* torsionLinkingFormKKTTC, 
+        std::string* torsionRankString,     std::string* torsionSigmaString,     
+        std::string* torsionLegendreString )
 {
     unsigned long starti, i, j; 
     NLargeInteger tN, tD, tR, tI;
@@ -827,9 +962,10 @@ void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, std::vector< 
     // step 4: kk test for: split, hyperbolic, and the embeddability
     //           2^k-torsion condition.
 
-    torsionLinkingFormIsSplit=true;
-    torsionLinkingFormIsHyperbolic=true;
-
+    (*torsionLinkingFormIsSplit)=true;
+    (*torsionLinkingFormIsHyperbolic)=true;
+    (*torsionLinkingFormKKTTC)=true; 
+    
     starti=0;
     if (ppVec.size() > 0)
         if (ppVec[0].first == NLargeInteger(2))
@@ -838,7 +974,7 @@ void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, std::vector< 
     for (i=0; i<ppVec.size(); i++)
         for (j=0; j<ppVec[i].second.size(); j++)
             if ( (ppVec[i].second[j] % 2) != 0 )
-                torsionLinkingFormIsSplit=false;
+                (*torsionLinkingFormIsSplit)=false;
     if (torsionLinkingFormIsSplit) {
         for (i=0; i<ptVec.size(); i++)
             for (j=0; j<ptVec[i].second.size(); j++) {
@@ -847,11 +983,11 @@ void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, std::vector< 
                         NLargeInteger::one))/NLargeInteger(4) ) %
                         NLargeInteger(2) == 0 ) {
                     if (ptVec[i].second[j] != 1)
-                        torsionLinkingFormIsSplit=false;
+                        (*torsionLinkingFormIsSplit)=false;
                 } // does this know how to deal with .second[j]==0??
                 else {
                     if (ptVec[i].second[j] == 1)
-                        torsionLinkingFormIsSplit=false;
+                        (*torsionLinkingFormIsSplit)=false;
                 }
             }
     }
@@ -859,21 +995,20 @@ void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, std::vector< 
     { // all the sigmas need to be 0 or inf.
         for (i=0; i<ttVec.size(); i++)
             if ( (ttVec[i]!=0) && (ttVec[i]!=8) )
-                torsionLinkingFormIsSplit=false;
+                (*torsionLinkingFormIsSplit)=false;
     }
 
-    if (torsionLinkingFormIsSplit==false) torsionLinkingFormIsHyperbolic=false;
+    if ((*torsionLinkingFormIsSplit)==false) (*torsionLinkingFormIsHyperbolic)=false;
 
-    if ( (torsionLinkingFormIsSplit) && (starti==1) ) {
-        torsionLinkingFormIsHyperbolic = true;
+    if ( (*torsionLinkingFormIsSplit) && (starti==1) ) {
+        (*torsionLinkingFormIsHyperbolic) = true;
         for (i=0; i<ttVec.size(); i++)
             if (ttVec[i]!=0)
-                torsionLinkingFormIsHyperbolic=false;
+                (*torsionLinkingFormIsHyperbolic)=false;
     }
 
     NRational tRat;
 
-    bool torsionLinkingFormSatisfiesKKtwoTorCondition=true;
     if (starti==1) { // for each k need to compute 2^{k-1}*form(x,x) on all
         // elements of order 2^k, check to see if it is zero.
         // so this is not yet quite implemented, yet....
@@ -892,61 +1027,61 @@ void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, std::vector< 
             tD = tRat.getDenominator();
             tN.divisionAlg(tD,tR);
             if (tR != 0)
-                torsionLinkingFormSatisfiesKKtwoTorCondition=false;
+                (*torsionLinkingFormKKTTC) = false; 
         }
 
     }
 
-    torsionRankString.assign("");
-    if (ppVec.size()==0) torsionRankString.append("no torsion");
+    torsionRankString->assign("");
+    if (ppVec.size()==0) torsionRankString->append("no torsion");
     else for (i=0; i<ppVec.size(); i++) {
-            torsionRankString.append(ppVec[i].first.stringValue());
-            torsionRankString.append("(");
+            torsionRankString->append(ppVec[i].first.stringValue());
+            torsionRankString->append("(");
             for (j=0; j<ppVec[i].second.size(); j++) {
-                torsionRankString.append(
+                torsionRankString->append(
                     NLargeInteger(ppVec[i].second[j]).stringValue() );
                 if (j < ppVec[i].second.size()-1)
-                    torsionRankString.append(" ");
+                    torsionRankString->append(" ");
             }
-            torsionRankString.append(")");
+            torsionRankString->append(")");
             if (i<(ppVec.size()-1))
-                torsionRankString.append(" ");
+                torsionRankString->append(" ");
     }
 
     if (orientable) {
-        torsionSigmaString.assign("");
-        if (ttVec.size()==0) torsionSigmaString.append("no 2-torsion");
+        torsionSigmaString->assign("");
+        if (ttVec.size()==0) torsionSigmaString->append("no 2-torsion");
         else for (i=0; i<ttVec.size(); i++) {
             std::stringstream ss; ss << ttVec[i]; 
             std::string tempS; ss >> tempS;
-            torsionSigmaString.append(tempS); 
-            if (i<(ttVec.size()-1)) torsionSigmaString.append(" ");
+            torsionSigmaString->append(tempS); 
+            if (i<(ttVec.size()-1)) torsionSigmaString->append(" ");
             }
         }
-    else torsionSigmaString.assign("manifold is non-orientable");
+    else torsionSigmaString->assign("manifold is non-orientable");
 
     if (orientable) {
-        torsionLegendreString.assign("");
+        torsionLegendreString->assign("");
         if (ptVec.size()==0)
-            torsionLegendreString.append("no odd p-torsion");
+            torsionLegendreString->append("no odd p-torsion");
         else for (i=0; i<ptVec.size(); i++) {
             std::stringstream ss; ss << ptVec[i].first; 
 	    std::string tempS; ss >> tempS;
-            torsionLegendreString.append(tempS);           
-            torsionLegendreString.append("(");
+            torsionLegendreString->append(tempS);           
+            torsionLegendreString->append("(");
             for (j=0; j<ptVec[i].second.size(); j++) {
-                torsionLegendreString.append( NLargeInteger(
+                torsionLegendreString->append( NLargeInteger(
                     ptVec[i].second[j]).stringValue());
                 if (j<ptVec[i].second.size()-1)
-                    torsionLegendreString.append(" ");
+                    torsionLegendreString->append(" ");
             }
-            torsionLegendreString.append(")");
+            torsionLegendreString->append(")");
             if (i<(ptVec.size()-1))
-                torsionLegendreString.append(" ");
+                torsionLegendreString->append(" ");
             }
         }
     else
-        torsionLegendreString.append("manifold is non-orientable");
+        torsionLegendreString->append("manifold is non-orientable");
 } // end readTeaLeavesTLF
 
 

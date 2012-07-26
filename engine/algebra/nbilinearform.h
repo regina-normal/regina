@@ -66,7 +66,8 @@ namespace regina {
  *
  * TODO : Specify different methods of computation -- have an enum that allows for honest computations
  *        where for example the domain of the leftAdjoint would satisfy isEqualTo(A), etc, vs one where
- *        only isIsomorphicTo(A) would be satisfied -- one using unreducedPairing, the other reducedPairing, etc.
+ *        only isIsomorphicTo(A) would be satisfied -- one using unreducedPairing, the other
+ *        reducedPairing, etc.
  *        need to implement things like torsionSubgroupInclusion() in NMarkedAbelianGroup, etc.
  *        Have an evalSNF as well?
  *
@@ -81,12 +82,25 @@ class REGINA_API NBilinearForm : public ShareableObject {
 	/**
 	 * The defining pairing.
 	 */
-        NSparseGridRing< NLargeInteger > *unreducedPairing;
+    NSparseGridRing< NLargeInteger > *unreducedPairing;
 
 	/**
 	 * record of ldomain, rdomain and range
 	 */
 	NMarkedAbelianGroup lDomain, rDomain, Range;
+
+    /**
+     *  This is internal storage for the precomputed Kawauchi-Kojima tests 
+     *  for torsion linking forms.  
+     */
+
+    bool KKinvariantsComputed;
+    bool torsionLinkingFormIsSplit;
+    bool torsionLinkingFormIsHyperbolic;
+    bool torsionLinkingFormKKTTC;
+    std::string torsionRankString;    
+    std::string torsionSigmaString;  
+    std::string torsionLegendreString;
 
     public:
         /**
@@ -106,15 +120,10 @@ class REGINA_API NBilinearForm : public ShareableObject {
          */
         NBilinearForm(const NBilinearForm& cloneMe);
 
-	/**
-	 * Destructor
-	 */
-	~NBilinearForm();
-
-        /**
-	 * Assignment of bilinear forms.
-         */
-        NBilinearForm& operator = (const NBilinearForm& cloneMe);
+    	/**
+	     * Destructor
+	     */
+        ~NBilinearForm();
 
         /**
          * Evaluates the bilinear form on an element of ldomain and rdomain respectively, all in the chain
@@ -124,50 +133,63 @@ class REGINA_API NBilinearForm : public ShareableObject {
          * @param rcc chain complex representative in rdomain
          * @returns chain complex representative in range. 
          */
-        std::vector<NLargeInteger> evalCC(std::vector<NLargeInteger> &lcc, std::vector<NLargeInteger> &rcc) const;
+        std::vector<NLargeInteger> evalCC(std::vector<NLargeInteger> &lcc, 
+                                          std::vector<NLargeInteger> &rcc) const;
 
-	/**
-	 * Access to the unreducedPairing map.
-	 */
+    	/**
+	     * Access to the unreducedPairing map.
+    	 */
         const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & unreducedMap() const;
 
-	/**
-	 * Access to the reducedPairing map.  So if you wanted to iterate through the
+        /**
+         * Access to the reducedPairing map.  So if you wanted to iterate through the
          * values of the bilinear form evaluated on the generators of the homology of
          * ldomain and rdomain, you'd construct an iterator to a 
          *  std::map< NMultiIndex< unsigned long >, NLargeInteger* > type and iterate 
          *  through reducedMap(). 
-	 */
+         */
         const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & reducedMap() const;
 
-	/**
-	 * reducedPairing access as an NSparseGridRing
-	 */
+        /**
+         * reducedPairing access as an NSparseGridRing
+        */
         const NSparseGridRing< NLargeInteger >* reducedSparseGrid() const;
  
-	/**
-	 * If this is a symmetric bilinear form, we can ask for its signature.  This
-	 * routine computes said signature. 
-         */
-	long int signature() const;
+        /**
+         * If this is a symmetric bilinear form, we can ask for its signature.  This
+         * routine computes said signature. 
+        */
+        long int signature() const;
 
-	/**
-         * Kawauchi-Kojima sigma vector describing the odd prime torsion, provided the
-         * form is symmetric. TODO not yet implemented
-         */
-	std::vector< NLargeInteger > oddKKvec() const;
+    	/**
+          * Kawauchi-Kojima vector describing the torsion ranks, as prime powers.
+          */
+    	const std::string& kkTorRank() const;
 
-	/**
-         * Kawauchi-Kojima vector describing the 2-torsion, provided the
-         * form is symmetric.  TODO not yet implemented
-         */
-	std::vector< NLargeInteger > twoKKvec() const;
+         /**
+          * Kawauchi-Kojima sigma vector.
+          */
+	    const std::string& kkTorSigma() const;
 
-	/**
-	 * Kawauchi-Kojima test for hyperbolicity, assuming form symmetric.
-         * TODO not yet implemented
-	 */
-	bool isHyperbolic() const;
+    	/**
+          * Kawauchi-Kojima Legendre symbol vector
+          */
+	    const std::string& kkTorLegendre() const;
+
+      	 /**
+          * Kawauchi-Kojima hyperbolicity test. 
+          */    	
+        bool kkIsHyperbolic() const;
+
+    	 /**
+          * Kawauchi-Kojima split test.
+          */
+        bool kkIsSplit() const;
+
+         /**
+          * Kawauchi-Kojima 2-torsion test.
+          */
+        bool kkTwoTor() const;
 
 	/**
 	 * The subgroup of the range generated by the image.
@@ -186,32 +208,32 @@ class REGINA_API NBilinearForm : public ShareableObject {
 
 	/**
 	 *  Given a bilinear form A x B --> C and a map A' --> A, there
-         *  is a natural composite A' x B --> C
+     *  is a natural composite A' x B --> C
 	 */
 	NBilinearForm lCompose(const NHomMarkedAbelianGroup &f) const; 
 	/**
 	 *  Given a bilinear form A x B --> C and a map B' --> B, there
-         *  is a natural composite A x B' --> C
+     *  is a natural composite A x B' --> C
 	 */
 	NBilinearForm rCompose(const NHomMarkedAbelianGroup &f) const; 
 
 	/**
 	 *  Given a bilinear form A x B --> C and a map C --> C', there
-         *  is a natural composite A x B --> C'
+     *  is a natural composite A x B --> C'
 	 */
 	NBilinearForm postCompose(const NHomMarkedAbelianGroup &f) const; 
 
 	/**
 	 * Given a map A x B --> C, there are two adjoints, 
 	 *  this returns A --> Hom(B,C), the "left" adjoint. At present
-         *  we use a cheap construction of this so the domain of this map
-         *  will not satisfy isEqualTo(A)
+     *  we use a cheap construction of this so the domain of this map
+     *  will not satisfy isEqualTo(A)
 	 */
 	NHomMarkedAbelianGroup leftAdjoint() const;
 
 	/**
 	 * Given a map A x B --> C, there are two adjoints, 
-         *  this returns B --> Hom(A,C), the "right" adjoint.   
+     *  this returns B --> Hom(A,C), the "right" adjoint.   
 	 */
 	NHomMarkedAbelianGroup rightAdjoint() const;
 
@@ -228,25 +250,24 @@ class REGINA_API NBilinearForm : public ShareableObject {
 	 */
 	const NMarkedAbelianGroup& range() const;
 
-        /**
-         * TODO: maybe talk about nullity, symmetry, l/rdomain, range, etc.
-         * various invariants if they make sense, etc.
-         */
-        void writeTextShort(std::ostream& out) const;
+    /**
+     * TODO: maybe talk about nullity, symmetry, l/rdomain, range, etc.
+     * various invariants if they make sense, etc.
+     */
+    void writeTextShort(std::ostream& out) const;
 
-        /**
-         * TODO: maybe talk about nullity, symmetry, l/rdomain, range, etc.
-         * various invariants if they make sense, etc.
-         */
-        void writeTextLong(std::ostream& out) const;
-
+    /**
+     * TODO: maybe talk about nullity, symmetry, l/rdomain, range, etc.
+     * various invariants if they make sense, etc.
+     */
+    void writeTextLong(std::ostream& out) const;
 };
 
 
 /**
  *  This procedure takes as input the NBilinearForm intP which is required to be a torsion linking 
  * form on an abelian group.  Specifically, it's assumed the map A x A --> Q/Z is symmetric, and 
- * the range is a trivially presented Z/nZ
+ * the range is a trivially presented Z/nZ. 
  *
  * The procedure outputs the complete Kawauchi-Kojima invariants of the form, which are:
  *
@@ -275,25 +296,27 @@ class REGINA_API NBilinearForm : public ShareableObject {
  *   subgroups of A divisible by all the prime factors of the order of A. 
  */
 REGINA_API void computeTorsionLinkingFormInvariants(const NBilinearForm &intP, 
-	std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec, // almost same except this counts
-        std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,// this lists 
-        std::vector<unsigned long> &ttVec, 
-        std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
-        std::vector< NMatrixRing<NRational>* > &linkingFormPD );
+	std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec, 
+    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,
+    std::vector<unsigned long> &ttVec, 
+    std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
+    std::vector< NMatrixRing<NRational>* > &linkingFormPD );
 
 /**
  * Function takes as input the output of computeTorsionLinkingFormInvariants, and returns various text
  * human-readable strings that interpret the result.
  */
-REGINA_API void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec,
+REGINA_API void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, 
+                                                    std::vector< unsigned long > > > &ppVec,
         const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,
         const std::vector<unsigned long> &ttVec, 
         const std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
         const std::vector< NMatrixRing<NRational>* > &linkingFormPD, 
         bool orientable, 
-        bool &torsionLinkingFormIsSplit, bool &torsionLinkingFormIsHyperbolic, 
-        std::string &torsionRankString,     std::string &torsionSigmaString,     
-        std::string &torsionLegendreString );
+        bool* torsionLinkingFormIsSplit, bool* torsionLinkingFormIsHyperbolic, 
+        bool* torsionLinkingFormKKTTC, 
+        std::string* torsionRankString,     std::string* torsionSigmaString,     
+        std::string* torsionLegendreString );
 
 
 /*@}*/

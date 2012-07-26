@@ -105,12 +105,16 @@ class Dim4Triangulation;
  *        for these.  We're still missing several coordinate systems for these (co)homology computations...
  *
  * \todo  3) test suite stuff: 
- *        Move all the test routines out of the NCellularData class and put them in the test suite proper. 
+ *        Move all the test routines out of the NCellularData class and put them in the 
+ *        test suite proper. 
  *        With the maximal tree code, add tests that will ensure there's the appropriate
  *        number of edges of each type.  There's the entire tree, then the boundary component
  *        trees, edge counts, etc.   Need some pi1 and group simplification tests. 
  *        Compute Alexander ideals of manifolds where H_1 = Z + Z_n and evaluate the
  *        polynomial at 1, etc.  
+ *        Currently only DUAL-DUAL TLF, maybe add STD-STD as well. 
+ *        Also put in flags in the code to add detailed checks if a compiler flag triggered, 
+ *        but we want the detailed checks (like "are these maps composable?") only then.
  *
  * \todo  4) Make sure all the maximal trees are copy-constructor safe.  I forget if the 
  *        maximal trees and extra normal data has been made copy-safe. 
@@ -118,27 +122,28 @@ class Dim4Triangulation;
  * \todo  5) New coordinate systems to implement:
  *        MIX_BDRY_coord, MIX_REL_BDRY_coord, DUAL_BDRY_coord, DUAL_REL_BDRY_coord and all the
  *        various maps.  This is required to get at things like H^i M x H^j M --> H^{i+j} M
- *        cup products. Not complete: Chain complex initialization. chain maps.  PD / intersection forms
- *        Note, current "mixed" chain complex does not subdivide ideal boundary.  Is this an issue? 
- *        Also, this is needed for (1) and (2).
+ *        cup products. Not complete: Chain complex initialization. chain maps.  PD / intersection 
+ *        forms Note, current "mixed" chain complex does not subdivide ideal boundary.  Is this 
+ *        an issue?  Also, this is needed for (1) and (2).
  *
- * \todo  6) Implement circle packings for 2-manifold triangulations.  Presumably we'll put this straight
- *        into the 2-manifold triangulation code.  Circle packings represented as the labelling function
- *        R : vertices -> (0,\infty].  Code to find the circle packing, code to display it.  Should summarize
- *        the algorithm from Collins-Stephenson paper here. 
+ * \todo  6) Implement circle packings for 2-manifold triangulations.  Presumably we'll put this
+ *        straight into the 2-manifold triangulation code.  Circle packings represented as the 
+ *        labelling function R : vertices -> (0,\infty].  Code to find the circle packing, code
+ *        to display it.  Should summarize the algorithm from Collins-Stephenson paper here. 
  *
- * \todo  7) Implement a manifold-descriptor class.  The idea is to use the tools we have to give as
- *        accurate as possible a description of the manifold.  Rather than Ben's NManifold and NStandardManifold
- *        routines this will be inaccurate if that's all it can do, and precise if it can be precise. 
- *        For 3-manifold recognition we'll use the connect sum decomp from Ben's work, but then we'll split
- *        recognition into various flavours: using pi1, using triangulation tech, using SnapPea, and so on. 
+ * \todo  7) Implement a manifold-descriptor class.  The idea is to use the tools we have to 
+ *        give as accurate as possible a description of the manifold.  Rather than Ben's 
+ *        NManifold and NStandardManifold routines this will be inaccurate if that's all it 
+ *        can do, and precise if it can be precise.  For 3-manifold recognition we'll use the
+ *        connect sum decomp from Ben's work, but then we'll split recognition into various 
+ *        flavours: using pi1, using triangulation tech, using SnapPea, and so on. 
  *
  * \todo  \optlong To minimize memory usage we should consider having homs, bilinear forms, etc, 
  *        not store their initialization data, instead trusting it to the NCellularData stack.
  *        This is a slow-but-ongoing process....  
  *
- * \todo \optlong We'll also eventually need maximal trees in the standard and mixed 1-skeleton, to implement
- *        Farber-Levine pairings and Poincare duality in covering spaces, in general. 
+ * \todo \optlong We'll also eventually need maximal trees in the standard and mixed 1-skeleton, 
+ *        to implement Farber-Levine pairings and Poincare duality in covering spaces, in general. 
  *
  * \todo \optlong Make writeTextShort and writeTextLong more pleasant to look at.  Currently it's not 
  *        clear what all the computations mean.  It could use a general re-think.  The idea now is they're
@@ -297,8 +302,17 @@ public:
  /**
   * Embeddability information. 
   */
-    EMBINFO
+    TORFORM_embinfo
     };
+
+ /**
+  * Enum for the NCellularData::boolInfo call. 
+  */
+ enum BoolRequest {
+    TORFORM_KKtwoTor,
+    TORFORM_hyp, 
+    TORFORM_split
+  };
 
  /**
   *  NCellularData stores chain complexes internally in a stack. The Chain Complex Locator allows
@@ -358,13 +372,15 @@ public:
  };
 
  /**
-  * NCellularData has several routines that require GroupLocator objects as arguments: unmarkedGroup, markedGroup, 
-  *  homGroup, bilinearForm. See NCellularData::unmarkedGroup, NCellularData::markedGroup, NCellularData::homGroup 
+  * NCellularData has several routines that require GroupLocator objects as 
+  * arguments: unmarkedGroup, markedGroup, homGroup, bilinearForm. See 
+  * NCellularData::unmarkedGroup, NCellularData::markedGroup, NCellularData::homGroup 
   *  and NCellularData::bilinearForm for usage.
   */
  struct GroupLocator {
-        // if its an unMarkedGroup or MarkedGroup we need to know dimension, variance, coordinates, coefficients
-        unsigned long dim;
+        // if its an unMarkedGroup or MarkedGroup we need to know dimension, 
+        // variance, coordinates, coefficients
+    unsigned long dim;
 	variance_type var;
 	homology_coordinate_system hcs;	
 	unsigned long cof;
@@ -425,6 +441,10 @@ public:
   intersectionForm, 
  /**
   * torsionlinkingForm is the induced pairing on the torsion classes in shifted degree.
+  * At present the domain of this routine is a product of the trivially-presented torsion
+  * subgroups you request, so if you call lDomain or rDomain you will not get an 
+  * NMarkedAbelianGroup isomorphic to the group you want but not identical.  Call
+  * torsionInclusion() if you want the map identifying the two. 
   */
   torsionlinkingForm, 
  /**
@@ -1112,15 +1132,17 @@ public:
      *  1) Homology-Cohomology pairing <.,.>  ? ie: H_i(M;R) x H^i(M;R) --> R  where R is the coefficients
      *     
      *
-     *  2) Intersection product               ie: (dual)H_i(M;R) x (std rel bdry)H_j(M;R) --> (mix)H_{(i+j)-n}(M;R)
-     *                                            (dual)H_i(M;R) x (dual)H_j(M;R) --> (mix)H_{(i+j)-n}(M;R)
-     *                                            (std)H_i(M;R) x (std rel bdry)H_j(M;R) --> (mix)H_{(i+j)-n}(M;R)
+     *  2) Intersection product  (dual)H_i(M;R) x (std rel bdry)H_j(M;R) --> (mix)H_{(i+j)-n}(M;R)
+     *                           (dual)H_i(M;R) x (dual)H_j(M;R) --> (mix)H_{(i+j)-n}(M;R)
+     *                           (std)H_i(M;R) x (std rel bdry)H_j(M;R) --> (mix)H_{(i+j)-n}(M;R)
      *
      *  3) Torsion linking form               ie: tH_i(M;Z) x tH_j(M;Z) --> Q/Z 
-     *     (not yet implemented)                  when i+j=n-1, i,j>0. So for 3-manifolds only defined for i,j = 1,1
+     *     (not yet implemented)   when i+j=n-1, i,j>0. So for 3-manifolds only defined for i,j = 1,1
      *						  and for 4-manifolds i,j=1,2 or 2,1. 
-     *      Present implementation has      The range of the form in Q/Z will be taken to be Z_k where k is the largest
-     *      ldomain and rdomain given        invariant factor of tH_j(M;Z), so we implement the range as Z_k with
+     *      Present implementation has The range of the form in Q/Z will be taken to be 
+     *       Z_k where k is the largest
+     *      ldomain and rdomain given        invariant factor of tH_j(M;Z), so we implement 
+     *      the range as Z_k with
      *      trivial presentations            trivial presentation 0 --> Z --k--> Z ---> Z_k ---> 0
      *
      *  4) cup products                       ie: H^i(M;R) x H^j(M;R) --> H^{i+j}(M;R)
@@ -1136,9 +1158,11 @@ public:
      *  The fundamental groups are computed by first finding a maximal tree in the dual 1-skeleton to
      *  the manifold.  Unlike NTriangulation and Dim4Triangulation's maximal forest routines, this routine
      *  produces a maximal tree in the dual 1-skeleton that restricts to maximal trees in the boundary
-     *  and ideal boundaries of the manifold. So it is quite a bit larger in general than the NTriangulation
+     *  and ideal boundaries of the manifold. So it is quite a bit larger in general than 
+     *  the NTriangulation
      *  and Dim4Triangulation routine outputs. But this allows for computations of maps between groups.
-     *  The generators of pi1 are the dual 1-cells not in the maximal tree. They are indexed in this order:
+     *  The generators of pi1 are the dual 1-cells not in the maximal tree. They are indexed 
+     *   in this order:
      *
      *  First the dual 1-cells that cross co-dimension 1 simplices from the triangulation. 
      *  Second the dual 1-cells in the standard boundary that cross co-dimension 2 simplices from the
@@ -1177,9 +1201,14 @@ public:
     std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > alexanderIdeal() const;
 
     /**
-     *  Generic routine for all string-response queries. 
+     *  Generic routine for all string-response queries with enum input. 
      */
     std::string stringInfo( const StringRequest &s_desc ) const;
+
+    /**
+     *  Generic routine for all bool-response queries with enum input.
+     */
+    bool boolInfo( const BoolRequest &b_desc) const;
 
     /**
      *  Provides a text string that identifies the manifold uniquely (if possible) or provides as much 

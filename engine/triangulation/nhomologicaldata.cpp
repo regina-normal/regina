@@ -1214,8 +1214,10 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
     // step 4: intersect, construct matrix.
 
-    NMatrixRing<NRational> torsionLinkingFormPresentationMat(
-        pvList.size(), pvList.size() );
+//    NMatrixRing<NRational> torsionLinkingFormPresentationMat(
+//        pvList.size(), pvList.size() );
+//  lets make it a pointer for now.
+       torsionLinkingFormPresentationMat = new NMatrixRing<NRational>(pvList.size(), pvList.size() );
 
     NLargeInteger tN,tD,tR;
 
@@ -1242,7 +1244,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
                 // the same dimension as the standard 2-cells + ideal 2-cells,
                 // standard ones coming first.
                 // pvList is vectors in dual 1-cells
-                torsionLinkingFormPresentationMat.entry(i,j) +=
+                torsionLinkingFormPresentationMat->entry(i,j) +=
                     NRational(
                         boundingMat.entry(dNBF[k],i)*pvList[j][k]*
                         NLargeInteger(
@@ -1251,13 +1253,13 @@ void NHomologicalData::computeTorsionLinkingForm() {
                             tri->getFace(dNBF[k])->getEmbedding(0).
                                 getVertices().sign() ), ppList[i] );
             }
-            tN=torsionLinkingFormPresentationMat.entry(i,j).getNumerator();
-            tD=torsionLinkingFormPresentationMat.entry(i,j).getDenominator();
+            tN=torsionLinkingFormPresentationMat->entry(i,j).getNumerator();
+            tD=torsionLinkingFormPresentationMat->entry(i,j).getDenominator();
             tN.divisionAlg(tD,tR);
             tN = tR.gcd(tD);
             tR.divByExact(tN);
             tD.divByExact(tN);
-            torsionLinkingFormPresentationMat.entry(i,j)=NRational(tR,tD);
+            torsionLinkingFormPresentationMat->entry(i,j)=NRational(tR,tD);
         }
 
     // Compute indexing.size() just once, since for std::list this might be
@@ -1278,7 +1280,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
         for (j=0; j<it1->second.size(); j++)
             for (k=0; k<it1->second.size(); k++)
                 linkingFormPD[i]->entry(j,k) =
-                    torsionLinkingFormPresentationMat.entry(
+                    torsionLinkingFormPresentationMat->entry(
                         it1->second[j].second,
                         it1->second[k].second
                     );
@@ -1799,6 +1801,8 @@ bool NHomologicalData::formIsHyperbolic() {
     if (torsionFormComputed)
         return torsionLinkingFormIsHyperbolic;
 
+    computeTorsionLinkingForm();
+
     unsigned long nif=tri->getHomologyH1().getNumberOfInvariantFactors();
     if (nif == 0)
         return true;
@@ -1814,7 +1818,7 @@ bool NHomologicalData::formIsHyperbolic() {
             return false;
     }
 
-    computeTorsionLinkingForm();
+//    computeTorsionLinkingForm();
     return torsionLinkingFormIsHyperbolic;
 }
 

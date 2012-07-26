@@ -116,13 +116,7 @@ class NTriangulation;
  *
  * \testpart
  *
- * \todo \optlong longer term, add cohomology w/coeffs, then once Hom, Ext, Tor, and \otimes
- * 		are added to NMarkedAbelianGroup, add the maps:
- *	UCT  0 --> Ext( H_{i-1}(M;Z); Z_p ) --> H^i(M;Z_p) --> Hom(H_i(M;Z); Z_p) --> 0 
- *      UCT  0 --> H_i(M;Z) \otimes Z_p --> H_i(M;Z_p) --> Tor(H_{i-1}(M;Z), Z_p) --> 0
- *      Would it be worth it?  Dunno.  Via UCT you can get at everything pretty effectively
- *      using only homology with integral coefficients. 
- * \todo \optlong torsion linking form and intersection product as maps out of tensor products.
+ * \todo This class is to be depreciated.  See NCellularData for replacement class. 
  *
  * @author Ryan Budney
  */
@@ -363,6 +357,12 @@ private:
     std::string embeddabilityString;
 
 public:
+
+// temp
+
+    NMatrixRing<NRational>* torsionLinkingFormPresentationMat;
+
+// end temp
 
     /**
      * Takes as input a triangulation.
@@ -858,6 +858,8 @@ inline NHomologicalData::~NHomologicalData() {
     if (torsionFormComputed) {
         for (unsigned long i=0; i<linkingFormPD.size(); i++)
             delete linkingFormPD[i];
+     // temp
+     delete torsionLinkingFormPresentationMat;
     }
 }
 

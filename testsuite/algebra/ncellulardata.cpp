@@ -249,8 +249,10 @@ class NCellularDataTest : public CppUnit::TestFixture {
 
         void lensspacehomotopyclassification_tests() {
          NLargeInteger maxP(22); 
-         // produce some random lens spaces, compute intersection form and check it is [\pm r^2 q/p] \in Q/Z
-         // p will be anywhere from 2 to 19, q will be chosen to be coprime, how? just choose randomly 0 < q < p, 
+         // produce some random lens spaces, compute intersection form and 
+         //   check it is [\pm r^2 q/p] \in Q/Z
+         // p will be anywhere from 2 to 19, q will be chosen to be coprime, 
+         //  how? just choose randomly 0 < q < p, 
          // until you find something coprime, I suppose. 
          maxP = maxP - 2;
          bool testpassed(true);
@@ -265,10 +267,12 @@ class NCellularDataTest : public CppUnit::TestFixture {
            lens = new NTriangulation(*NLensSpace(p.longValue(),q.longValue()).construct());
            // we have our random triangulation, lets test it. 
            NCellularData ncd( *lens );
+           // TODO: put in variant with STD_coord, STD_coord
            NCellularData::GroupLocator h1L( 1, NCellularData::coVariant, NCellularData::DUAL_coord, 0 );
            NCellularData::FormLocator tifL( NCellularData::torsionlinkingForm, h1L, h1L );
            tif = new NBilinearForm( *ncd.bilinearForm(tifL) );
-           // have the form, if it evaluates to a/p we need to make sure a/p = +- r^2 q/p mod 1 for some r == 1,2,...,p-1
+           // have the form, if it evaluates to a/p we need to make sure a/p = +- r^2 q/p mod 1 
+           //  for some r == 1,2,...,p-1
            bool itestpassed(false);
            std::vector<NLargeInteger> idV(1, NLargeInteger::one);
            std::vector<NLargeInteger> eval(tif->evalCC(idV, idV));
