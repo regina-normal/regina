@@ -60,6 +60,8 @@
 using regina::NPacket;
 using regina::NTriangulation;
 using regina::NCellularData;
+using regina::NLargeInteger;
+using regina::NSVPolynomialRing;
 
 namespace {
     /**
@@ -726,6 +728,7 @@ void NTriCellularInfoUI::refresh() {
         if (! tri->isConnected()) {
             QString msg(QObject::tr("Triangulation is disconnected."));
 
+            AlexInv->setText(msg);
             TorForOrders->setText(msg);
             TorForSigma->setText(msg);
             TorForLegendre->setText(msg);
@@ -750,6 +753,23 @@ void NTriCellularInfoUI::refresh() {
                 TorForLegendre->setText(msg);
             }
 
+            if (Minfo.unmarkedGroup( NCellularData::GroupLocator(1, 
+                NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->getRank()==1)
+             {
+                std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > alex(
+                    Minfo.alexanderIdeal() );
+                std::string aString;
+                for (std::list< NSVPolynomialRing<NLargeInteger> >::iterator i = alex->begin();
+                     i != alex->end(); i++)
+                  {
+                  aString.append( i->toString() );
+                  if (i!=alex->end()) aString.append(" ");
+                  }
+              AlexInv->setText(QObject::tr(aString.c_str()));
+             }
+            else
+             AlexInv->setText(QObject::tr("No Alexander invariant."));
+
             // The embeddability comment is good for both orientable and
             // non-orientable triangulations.
             // Encase it in <qt>..</qt> so it can wrap over multiple lines.
@@ -764,6 +784,7 @@ void NTriCellularInfoUI::refresh() {
         H0H1H2H3->setText(msg);
         HBdry->setText(msg);
         BdryMap->setText(msg);
+        AlexInv->setText(msg);
         TorForOrders->setText(msg);
         TorForSigma->setText(msg);
         TorForLegendre->setText(msg);
@@ -789,7 +810,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
 
     QGridLayout* homologyGrid = new QGridLayout(grid);//, 11, 4, 0, 5);
     homologyGrid->setRowStretch(0, 1);
-    homologyGrid->setRowStretch(11, 1);
+    homologyGrid->setRowStretch(12, 1);
     homologyGrid->setColumnStretch(0, 1);
     homologyGrid->setColumnStretch(2, 1); // Give the embeddability comment
                                        // a little room to breathe.
@@ -911,10 +932,18 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     TorForLegendre->setWhatsThis(msg);
 
-    label = new QLabel(QObject::tr("Comments: "), grid);
+    label = new QLabel(QObject::tr("Alexander ideal: "), grid);
     homologyGrid->addWidget(label, 10, 1);
+    AlexInv = new QLabel(grid);
+    homologyGrid->addWidget(AlexInv, 10, 2);
+    msg = QObject::tr("<qt>blah blah alexander ideal is blah blah</qt>");
+    label->setWhatsThis(msg);
+    AlexInv->setWhatsThis(msg);    
+
+    label = new QLabel(QObject::tr("Comments: "), grid);
+    homologyGrid->addWidget(label, 11, 1);
     EmbeddingComments = new QLabel(grid);
-    homologyGrid->addWidget(EmbeddingComments, 10, 2);
+    homologyGrid->addWidget(EmbeddingComments, 11, 2);
     msg = QObject::tr("<qt>If the homology allows us to make any deductions "
                 "about the embeddability of this manifold in "
                 "R<sup>3</sup>, S<sup>3</sup>, S<sup>4</sup> "

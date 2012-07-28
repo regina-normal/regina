@@ -1204,6 +1204,8 @@ std::string embeddabilityString(const NTriangulation* tri, const NCellularData* 
                                 const NBilinearForm* tlf) {
     // Only do this if we haven't done it already.
     std::string retval;
+    unsigned long totbcomp( cdat->components(NCellularData::standard_boundary) + 
+                            cdat->components(NCellularData::ideal_boundary) );
 
     if (tri->getNumberOfTetrahedra() == 0)
       {
@@ -1214,7 +1216,7 @@ std::string embeddabilityString(const NTriangulation* tri, const NCellularData* 
       { // orientable -- we need the torsion linking form
        const NMarkedAbelianGroup homol(tlf->ldomain());
 
-        if (cdat->components(NCellularData::standard_boundary)==0) 
+        if (totbcomp==0) 
         { // no boundary : orientable
             if (homol.getNumberOfInvariantFactors()==0) 
             { // no torsion : no boundary, orientable
@@ -1249,7 +1251,7 @@ std::string embeddabilityString(const NTriangulation* tri, const NCellularData* 
             NCellularData::GroupLocator( 1, NCellularData::coVariant, NCellularData::STD_coord, 0) ) ) );
 
             const NMarkedAbelianGroup bhomol( *cdat->markedGroup( NCellularData::GroupLocator( 
-                    1, NCellularData::coVariant, NCellularData::STD_coord, 0) ) );
+                    1, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) ) );
 
             if (homol.getNumberOfInvariantFactors()==0) 
                 {
@@ -1263,10 +1265,9 @@ std::string embeddabilityString(const NTriangulation* tri, const NCellularData* 
                     {
                     retval =
                         "Embeds in a homology 3-sphere as a ";
-                    if (bhomol.getRank() ==
-                            2*cdat->components(NCellularData::standard_boundary))
+                    if (bhomol.getRank() == 2*totbcomp)
                         {
-                        if (cdat->components(NCellularData::standard_boundary)==1)
+                        if (totbcomp==1)
                             retval += "knot complement.";
                         else
                             retval += "link complement.";
@@ -1283,10 +1284,9 @@ std::string embeddabilityString(const NTriangulation* tri, const NCellularData* 
                     {
                     retval =
                         "Embeds in a rational homology 3-sphere as a ";
-                    if (bhomol.getRank() ==
-                            2*cdat->components(NCellularData::standard_boundary) )
+                    if (bhomol.getRank() == 2*totbcomp )
                         {
-                        if (cdat->components(NCellularData::standard_boundary)==1)
+                        if (totbcomp==1)
                             retval += "knot complement.";
                         else
                             retval += "link complement.";
@@ -1351,7 +1351,8 @@ std::string embeddabilityString(const NTriangulation* tri, const NCellularData* 
          NCellularData::GroupLocator( 1, NCellularData::coVariant, NCellularData::STD_coord, 0) ) ) );
 
         // break up into two cases, boundary and no boundary...
-        if (covHomol.components(NCellularData::standard_boundary)==0)
+        if (covHomol.components(NCellularData::standard_boundary)+
+            covHomol.components(NCellularData::ideal_boundary)==0)
          { // no boundary
           if (covForm->kkIsHyperbolic())
             retval = "Orientation cover has hyperbolic"
