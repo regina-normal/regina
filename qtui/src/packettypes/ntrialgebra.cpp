@@ -30,7 +30,6 @@
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/numbertheory.h"
-#include "triangulation/nhomologicaldata.h"
 #include "algebra/ncellulardata.h"
 #include "triangulation/ntriangulation.h"
 
