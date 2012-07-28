@@ -1029,6 +1029,19 @@ const NHomMarkedAbelianGroup& NHomologicalData::boundaryHomologyMap(unsigned q) 
     }
 }
 
+
+// eraseme eventually, only for debugging july 2012
+std::string printMAT(const regina::NMatrixRing<regina::NRational>* input)
+{
+ std::stringstream retval;
+ if (input == NULL) { std::cerr<<"Null matrix!"<<std::endl; exit(1); }
+ for (unsigned long i=0; i<input->rows(); i++)
+  {for (unsigned long j=0; j<input->columns(); j++)
+     retval<<input->entry(i,j)<<" ";
+   retval<<"\n";}
+ return retval.str();
+}
+
 void NHomologicalData::computeTorsionLinkingForm() {
     // Only do this if we haven't done it already.
     if (torsionFormComputed)
@@ -1041,18 +1054,15 @@ void NHomologicalData::computeTorsionLinkingForm() {
     // for holding prime decompositions.:
     std::vector<std::pair<NLargeInteger, unsigned long> > tFac;
     NLargeInteger tI;
+
     // step 1: go through H1 of the manifold, take prime power decomposition
     //            of each summand.  building primePowerH1Torsion vector and
     //            pTorsionH1Mat matrix...
     //            also, we need to find the 2-chains bounding2c
     //            boundary(bounding2c[i]) = orderinh1(pvList[i])*pvList[i]
-
-    std::vector< NLargeInteger > tV; // temporary vector for holding dual
-                                     // cc vectors.
-
-    std::vector<NLargeInteger> ppList; // prime power list
-    std::vector< std::pair<NLargeInteger, unsigned long> >
-        pPrList; // proper prime power list.
+    std::vector< NLargeInteger > tV; // temporary vector for holding dual cc vectors.
+    std::vector< NLargeInteger > ppList; // prime power list
+    std::vector< std::pair<NLargeInteger, unsigned long> > pPrList; // proper prime power list.
     std::vector< std::vector<NLargeInteger> > pvList; // list of vectors
     // the above two lists will have the same length. for each i,
     // pvList[i] will be a vector in the dual h1 homology chain complex, and
@@ -1067,7 +1077,6 @@ void NHomologicalData::computeTorsionLinkingForm() {
         for (j=0; j<tFac.size(); j++) {
             pPrList.push_back(tFac[j]);
             NLargeInteger fac1, fac2, fac1i, fac2i;
-
             fac1 = tFac[j].first;
             fac1.raiseToPower(tFac[j].second);
             fac2 = tI;
@@ -1080,9 +1089,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
             // this will have to be fac1i * vector corresponding to
             // getInvariantFactor(i).
             tV = dmHomology1->getTorsionRep(i);
-
             for (k=0; k<tV.size(); k++) tV[k]=fac1i*fac2*tV[k];
-
             pvList.push_back(tV);
         }
     }
@@ -1091,8 +1098,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     // the indexing will be as a list of pairs
     // < prime, vector< pair< power, index> > >
     // Use a list because we are continually inserting items in the middle.
-    typedef std::vector<std::pair<unsigned long, unsigned long> >
-        IndexingPowerVector;
+    typedef std::vector<std::pair<unsigned long, unsigned long> > IndexingPowerVector;
     typedef std::pair<NLargeInteger, IndexingPowerVector> IndexingPrimePair;
     typedef std::list<IndexingPrimePair> IndexingList;
     IndexingList indexing;
@@ -1152,7 +1158,6 @@ void NHomologicalData::computeTorsionLinkingForm() {
                 }
                 il1->second.insert(il2, std::make_pair( pPrList[i].second, i ));
             }
-
     }
 
     // step 2: construct dual vectors
@@ -1262,29 +1267,35 @@ void NHomologicalData::computeTorsionLinkingForm() {
             torsionLinkingFormPresentationMat->entry(i,j)=NRational(tR,tD);
         }
 
+// TODO: print the torsionLinkingFormPResentationMat notice that this is in 
+//       prime power decomp of H1 coordinates... 
+//std::cout<<"HmlDat TLF pp coord: "<<printMAT(torsionLinkingFormPresentationMat)<<"\n";
+//std::string printMAT(const regina::NMatrixRing<regina::NRational>* input)
+
+
+
     // Compute indexing.size() just once, since for std::list this might be
     // a slow operation.
     unsigned long indexingSize = indexing.size();
 
     h1PrimePowerDecomp.resize(indexingSize);
     linkingFormPD.resize(indexingSize);
-    for (i=0, it1 = indexing.begin(); it1 != indexing.end(); i++, it1++) {
-        h1PrimePowerDecomp[i].second.resize(it1->second.size());
-        h1PrimePowerDecomp[i].first = it1->first;
+    for (i=0, it1 = indexing.begin(); it1 != indexing.end(); i++, it1++) 
+    {
+     h1PrimePowerDecomp[i].second.resize(it1->second.size());
+     h1PrimePowerDecomp[i].first = it1->first;
 
-        for (j=0; j<it1->second.size(); j++)
-            h1PrimePowerDecomp[i].second[j] = it1->second[j].first;
+     for (j=0; j<it1->second.size(); j++) h1PrimePowerDecomp[i].second[j] = it1->second[j].first;
 
-        linkingFormPD[i] = new NMatrixRing<NRational>(it1->second.size(),
-                it1->second.size() );
-        for (j=0; j<it1->second.size(); j++)
-            for (k=0; k<it1->second.size(); k++)
-                linkingFormPD[i]->entry(j,k) =
-                    torsionLinkingFormPresentationMat->entry(
-                        it1->second[j].second,
-                        it1->second[k].second
-                    );
+     linkingFormPD[i] = new NMatrixRing<NRational>(it1->second.size(), it1->second.size() );
+
+     for (j=0; j<it1->second.size(); j++) for (k=0; k<it1->second.size(); k++)
+        linkingFormPD[i]->entry(j,k) = torsionLinkingFormPresentationMat->entry(
+           it1->second[j].second, it1->second[k].second );
     }
+
+// so it appears NCellularData and NHomological data have essentially equivalent implementations
+//  up to this point. 
 
     // now we should implement the classification of these forms
     // due to Seifert, Wall, Burger, Kawauchi, Kojima, Deloup:
@@ -1509,13 +1520,49 @@ void NHomologicalData::computeTorsionLinkingForm() {
             // compute determinant.
 
             // increment curri
-            curri = curri + torRankV[i].second[j]; // crashes here.
+            curri = curri + torRankV[i].second[j]; 
         }
-        oddTorLegSymV.push_back( make_pair( torRankV[i].first , tempa) );
+        oddTorLegSymV.push_back( make_pair( torRankV[i].first, tempa) );
     }
 
-    // step 4: kk test for: split, hyperbolic, and the embeddability
-    //           2^k-torsion condition.
+// maybe this is a good point to compare what the two routines are doing. 
+// let's start by comparing ppVec and ppList. 
+/*std::cout<<"NHD ppList: ";
+for (unsigned long a=0; a<h1PrimePowerDecomp.size(); a++)
+ {
+  std::cout<<"[";
+  std::cout<<h1PrimePowerDecomp[a].first<<" : ";
+  for (unsigned long b=0; b<h1PrimePowerDecomp[a].second.size(); b++)
+   { std::cout<<h1PrimePowerDecomp[a].second[b]<<" "; }
+  std::cout<<"] ";
+ }
+std::cout<<"\n";
+std::cout<<"NHD twoTorSig: "; // and twoTorSigmaV
+for (unsigned long a=0; a<twoTorSigmaV.size(); a++)
+ {
+  std::cout<<twoTorSigmaV[a]<<" ";
+ }
+std::cout<<"\n";
+// let's now print oddTorLegSymV 
+std::cout<<"NHD legSym: ";
+for (unsigned long a=0; a<oddTorLegSymV.size(); a++)
+ {
+  std::cout<<"["<<oddTorLegSymV[a].first<<": ";
+  for (unsigned long b=0; b<oddTorLegSymV[a].second.size(); b++)
+   {
+    std::cout<<oddTorLegSymV[a].second[b]<<" ";
+   }
+  std::cout<<"] ";
+ }
+std::cout<<"\n";
+// and maybe the prime power decomp? here that's linkingFormPD
+std::cout<<"NHD primary decomp: ";
+for (unsigned long a=0; a<linkingFormPD.size(); a++)
+ {
+  std::cout<<"P "<<h1PrimePowerDecomp[a].first<<" "; // prime??
+  std::cout<<"lf "<<printMAT(linkingFormPD[a])<<" ";
+ }
+std::cout<<"\n";*/
 
     torsionLinkingFormIsSplit=true;
     torsionLinkingFormIsHyperbolic=true;
@@ -1549,7 +1596,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     { // all the sigmas need to be 0 or inf.
         for (i=0; i<twoTorSigmaV.size(); i++)
             if ( (twoTorSigmaV[i]!=0) &&
-                    (twoTorSigmaV[i]!=NLargeInteger::infinity) )
+                 (twoTorSigmaV[i]!=NLargeInteger::infinity) )
                 torsionLinkingFormIsSplit=false;
     }
 

@@ -37,23 +37,6 @@
 
 namespace regina {
 
-
-/*
-template <class T> void dumpMatrix( const regina::NMatrixRing<T> &mat )
-{for (unsigned long j=0; j<mat.rows(); j++) { std::cout<<"["; for (unsigned long i=0; i<mat.columns(); i++)
-  std::cout<<mat.entry(j,i)<<" "; std::cout<<"]\n"; } }
-*/
-
-/*
-template <class T>
-void dumpVector( const std::vector<T> &vec )
-{
-for (unsigned long j=0; j<vec.size(); j++)
- {  if (j != 0) std::cout<<" ";
-    std::cout<<vec[j]; }
-}
-*/
-
 void correctRelOrMat( NMatrixInt &CM, unsigned long domdim, const NTriangulation* tri3, 
         const Dim4Triangulation* tri4,  const std::vector< std::vector<unsigned long> > &dcIx ); 
         // forward reference, see ncellulardata_init.cpp for details
@@ -887,20 +870,20 @@ unsigned long NCellularData::components( submanifold_type ctype ) const
 
 unsigned long NCellularData::cellCount( const ChainComplexLocator &coord_system) const
 { // TODO all the new coordinate systems
-if ( (coord_system.dim > 4) && tri4 ) return 0; 
-if ( (coord_system.dim > 3) && tri3 ) return 0; // out of bounds check
-if (coord_system.hcs == STD_coord) return numStandardCells[coord_system.dim]; 
-if (coord_system.hcs == DUAL_coord) return numDualCells[coord_system.dim]; 
-if (coord_system.hcs == MIX_coord) return numMixCells[coord_system.dim];
-if (coord_system.hcs == MIX_REL_BDRY_coord) return numMixRelCells[coord_system.dim]; 
-if (coord_system.hcs == STD_REL_BDRY_coord) return numRelativeCells[coord_system.dim]; 
-if (coord_system.hcs == DUAL_REL_BDRY_coord) return numDualRelCells[coord_system.dim]; 
-if ( (coord_system.dim > 3) && tri4 ) return 0;
-if ( (coord_system.dim > 2) && tri3 ) return 0;
-if (coord_system.hcs == STD_BDRY_coord) return numStandardBdryCells[coord_system.dim]; 
-if (coord_system.hcs == MIX_BDRY_coord) return numMixBdryCells[coord_system.dim]; 
-if (coord_system.hcs == DUAL_BDRY_coord) return numDualBdryCells[coord_system.dim]; 
-return 0; // it will only get here if hcs is out of bounds. 
+ if ( (coord_system.dim > 4) && tri4 ) return 0; 
+ if ( (coord_system.dim > 3) && tri3 ) return 0; // out of bounds check
+ if (coord_system.hcs == STD_coord) return numStandardCells[coord_system.dim]; 
+ if (coord_system.hcs == DUAL_coord) return numDualCells[coord_system.dim]; 
+ if (coord_system.hcs == MIX_coord) return numMixCells[coord_system.dim];
+ if (coord_system.hcs == MIX_REL_BDRY_coord) return numMixRelCells[coord_system.dim]; 
+ if (coord_system.hcs == STD_REL_BDRY_coord) return numRelativeCells[coord_system.dim]; 
+ if (coord_system.hcs == DUAL_REL_BDRY_coord) return numDualRelCells[coord_system.dim]; 
+ if ( (coord_system.dim > 3) && tri4 ) return 0;
+ if ( (coord_system.dim > 2) && tri3 ) return 0;
+ if (coord_system.hcs == STD_BDRY_coord) return numStandardBdryCells[coord_system.dim]; 
+ if (coord_system.hcs == MIX_BDRY_coord) return numMixBdryCells[coord_system.dim]; 
+ if (coord_system.hcs == DUAL_BDRY_coord) return numDualBdryCells[coord_system.dim]; 
+ return 0; // it will only get here if hcs is out of bounds. 
 }
 
 long int NCellularData::eulerChar() const
@@ -910,7 +893,8 @@ long int NCellularData::signature() const
 {
  if (tri3) return 0; if (!tri4->isOrientable()) return 0;
  const NBilinearForm* b = bilinearForm( 
-       FormLocator( intersectionForm, GroupLocator(2, coVariant, DUAL_coord, 0), GroupLocator(2, coVariant, DUAL_coord, 0) ) );
+       FormLocator( intersectionForm, GroupLocator(2, coVariant, DUAL_coord, 0), 
+                                      GroupLocator(2, coVariant, DUAL_coord, 0) ) );
  return b->signature();
 }
 
@@ -1097,8 +1081,8 @@ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > NCellularData
 
  rowOpMat.makeIdentity(); rowOpInvMat.makeIdentity();
  // the single row of M consists of elements of the form t^n-1 for n an integer.  In particular entries
- // can be zero although there must be one non-zero entry.  Column reducing this matrix amounts to the GCD algorithm
- // on the exponents.
+ // can be zero although there must be one non-zero entry.  Column reducing this matrix amounts 
+ // to the GCD algorithm on the exponents.
  unsigned long pivotCol;
  signed long smallestNZdeg;
  find_small_degree:  // look for smallest non-zero degree elt, set index of column to pivotCol
@@ -1113,7 +1097,8 @@ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > NCellularData
  for (unsigned long i=0; i<M->columns(); i++)
   if ( (workM.entry(0,i).degree() != 0) && (i!=pivotCol) ) // use pivotCol to reduce i
   {
-   // so we compute the division alg on the two degrees, and use that to subtract a multiple of one from the other
+   // so we compute the division alg on the two degrees, and use that to subtract a multiple of 
+   // one from the other
    signed long d, r; 
    signedLongDivAlg( workM.entry(0,pivotCol).degree(), workM.entry(0,i).degree(), d, r);
    // t^m-1 = NSVPolynomialRing< NLargeInteger >(n,m,d)*(t^n-1) + t^r-1  
@@ -1183,7 +1168,6 @@ std::string embeddabilityString(const NTriangulation* tri, const NCellularData* 
 std::string NCellularData::stringInfo( const StringRequest &s_desc ) const
 { //TODO - this routine isn't complete yet. 
  std::string retval("Invalid request");
-
  const NBilinearForm* torForm(NULL);
  if ( ( (s_desc == TORFORM_powerdecomp) || 
         (s_desc == TORFORM_sigmastring) || 
@@ -1195,10 +1179,9 @@ std::string NCellularData::stringInfo( const StringRequest &s_desc ) const
         (tri3->isConnected() ) )
   {
    torForm = bilinearForm( FormLocator( torsionlinkingForm, 
-              GroupLocator( 1, coVariant, STD_coord, 0 ), 
-              GroupLocator( 1, coVariant, STD_coord, 0 ) ) );
+              GroupLocator( 1, coVariant, DUAL_coord, 0 ), 
+              GroupLocator( 1, coVariant, DUAL_coord, 0 ) ) );
   }
-
  if (torForm != NULL) 
  {
  if (s_desc == TORFORM_powerdecomp)
@@ -1210,15 +1193,13 @@ std::string NCellularData::stringInfo( const StringRequest &s_desc ) const
  else if (s_desc == TORFORM_tests)
   { } // TODO ?? what is this again ??
  else if (s_desc == TORFORM_embinfo)
-  { retval = embeddabilityString( tri3, this, torForm ); }
- }
+  { retval = embeddabilityString( tri3, this, torForm ); } }
 
  return retval;
 }
 
 // this routine computes a string describing embeddability of the manifold into S^4, 
 //  it assumes cdat is derived from tri, and tlf is the torsion linking form for cdat.
-// TODO - this routine still needs to be completely vetted. 
 std::string embeddabilityString(const NTriangulation* tri, const NCellularData* cdat,
                                 const NBilinearForm* tlf) {
     // Only do this if we haven't done it already.
@@ -1233,7 +1214,7 @@ std::string embeddabilityString(const NTriangulation* tri, const NCellularData* 
       { // orientable -- we need the torsion linking form
        const NMarkedAbelianGroup homol(tlf->ldomain());
 
-        if (cdat->components(NCellularData::standard_boundary)) 
+        if (cdat->components(NCellularData::standard_boundary)==0) 
         { // no boundary : orientable
             if (homol.getNumberOfInvariantFactors()==0) 
             { // no torsion : no boundary, orientable

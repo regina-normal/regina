@@ -102,7 +102,8 @@ class Dim4Triangulation;
  *
  * \todo  2) Complete collection of homology natural bilinear forms on a manifold, spin structures. 
  *        Derive chain complexes and maps from sparsely stored internal data.  Do not store matrices
- *        for these.  We're still missing several coordinate systems for these (co)homology computations...
+ *        for these.  We're still missing several coordinate systems for these (co)homology
+ *        computations...
  *
  * \todo  3) test suite stuff: 
  *        Move all the test routines out of the NCellularData class and put them in the 
@@ -146,8 +147,9 @@ class Dim4Triangulation;
  *        to implement Farber-Levine pairings and Poincare duality in covering spaces, in general. 
  *
  * \todo \optlong Make writeTextShort and writeTextLong more pleasant to look at.  Currently it's not 
- *        clear what all the computations mean.  It could use a general re-think.  The idea now is they're
- *        never really used for anything important so they haven't been well thought out from the start. 
+ *        clear what all the computations mean.  It could use a general re-think.  The idea now is
+ *        they're never really used for anything important so they haven't been well thought out 
+ *        from the start. 
  *
  * \todo \optlong We should add Bocksteins and the long exact sequence associated to a 
  *       change-of-coefficient map.
@@ -243,9 +245,12 @@ public:
  /**
   * This is the same as STD_coord except the boundary cells are thrown away. Dual to DUAL_coord
   */
-  STD_REL_BDRY_coord,  // indexed by rIx      
+  STD_REL_BDRY_coord,  // indexed by rIx  
+ /**
+  * This is a placeholder so that the tests know where to stop. 
+  */    
   last_implemented_coord, 
-  /**
+ /**
   * This is the barycentric subdivision of STD_BDRY_coord. TODO (incomplete)
   */
   MIX_BDRY_coord, 
@@ -278,24 +283,77 @@ public:
   contraVariant };
 
  /**
-  *  The routine NCellularData::stringInfo takes as input a StringRequest
-  *  This is a generic any-string-as-return-value routine. 
+  * The routine NCellularData::stringInfo takes as input a StringRequest
+  * This is a generic any-string-as-return-value routine.  One of the main
+  * requestable items is the Kawauch-Kojima classification of torsion linking
+  * forms, which we describe below. 
+  *
+  * Given a torsion linking form f : G x G --> Q/Z and a prime p, G_p is the subgroup 
+  * of elements of order a power of p.  G_p,k will be the subgroup of elements killed 
+  * by p^k, i.e. the kernel of the multiplication by p^k map on G.  f has its primary 
+  * orthogonal splitting f = \oplus_p f_p.  f_p : G_p x G_p --> Q/Z.   
+  * G_(p,k) is defined as the quotient G_p,k / (G_p,k-1 + pG_p,k+1).  f_p induces a map
+  * f_(p,k) : G_(p,k) x G_(p,k) --> Q/Z defined by f_(p,k)([x],[y]) = p^(k-1) f_p(x,y). 
+  * Fact: G_(p,k) is a vector space over Z_p. 
+  *
+  * See Theorem 4.1 of Kawauchi and Kojima's paper "Algebraic classification of linking
+  * pairings on $3$-manifolds."  Math. Ann. 253 (1980), no. 1, 29--42.  
+  *
+  * Note: when computing the torsion linking form, NCellularData chooses an orientation
+  *  convention for the 3-manifold.  Moreover, the Kawauchi-Kojima invariants are
+  *  orientation-sensitive.  We describe below how the invariants change under 
+  *  orientation-reversals. 
   */
  enum StringRequest {
  /**
-  *  Returns the torsion form rank vector. 
+  * Returns the torsion form rank vector. This is one of the three Kawauchi-Kojima invariants
+  * of a torsion linking form.  It is a notation for the prime power decomposition of the
+  * torsion subgroup of H1.  Z_8 would be 2(0 0 1), Z_8 + Z_8 would be 2(0 0 2).  Z_12 would be
+  * 2(0 1) 3(1), etc.  It is a list consisting of p(a b c ... ) elements, meaning the prime p
+  * appears in several ways: there are a summands of Z_p, b of Z_{p^2}, c of Z_{p^3}, etc. 
+  * It can also be seen as the dimension over Z_(p^k) of G_(p,k) described above.   This 
+  * is orientation-independent, as it only depends on H1 of the manifold. 
   */
     TORFORM_powerdecomp,
  /**
-  *  Returns the 2-torsion sigma vector. 
+  * Returns the 2-torsion sigma vector.  This is an object that takes values in the set
+  * {0,1,2,3,4,5,6,7,inf}, i.e. Z_8 \cup {inf}.  It is only relevant if H1 has 2-torsion. 
+  * Torsion linking forms with only odd torsion are classified by the power decomposition
+  * and the Legendre symbol vector.  This is the part of the classification of torsion
+  * linking forms due to Kawauchi and Kojima. 
+  *
+  * A characteristic element of f_(2,k) is an element q so that f_(2,k)(q,x)=f_(2,k)(x,x)
+  * for all x in G_(2,k).  It's a fact that this element exists and it is unique, so we
+  * denote it by c_(f,k).   If c_(f,k) is zero, we make the k-th element of the sigma
+  * string infinity.  Otherwise, consider the function q_k : G_2 / G_2,k--> Q/Z defined
+  * by q_k([x]) = 2^(k-1)f(x,x).  It's a fact that the sum 
+  *
+  *       GS_k := \Sum_{x in G_2/G_2,k} exp(2\pi iq_k(x))
+  *
+  * satisfies GS_k = |GS_k| e^{2 \pi i \sigma / 8} for some integer j.  This the 
+  * \sigma_k. 
+  *
+  * Notice that under an orientation reversal, inf is fixed, but GS_k is modified by
+  * conjugation, which on sigma is the involution 0<->0, 1<->7, 2<->6, 3<->5, 4<->4. 
   */
     TORFORM_sigmastring,
  /**
-  *  Returns the odd p-torsion Legendre symbol vector. 
+  * Returns the odd p-torsion Legendre symbol vector. This is the part of the Kawauchi-Kojima
+  * classification that's due to Seifert.  If G_(p,k) is a trivial group this is defined as
+  * zero, if G_(p,k) is non-trivial the idea is to think of f_(p,k) as a symmetric bilinear
+  * form on G_(p,k).  Plugging in a basis for G_(p,k) you get a square matrix whose entries are
+  * elements of Z_p.  We take the Legendre symbol of the determinant of this matrix.  This is
+  * a number -1, 0 or 1.   You get 1 if the determinant is a quadratic residue mod p (i.e. if
+  * its congruent mod p to the square of a non-zero integer), 0 if its congruent to 0 mod p, 
+  * and -1 otherwise, sometimes called "a quadratic non-residue mod p". 
+  * We do this for all k so that Z_p^k is a subgroup of G. 
+  *
+  * Under an orientation reversal, at most the sign can change.  And it does so by a factor
+  * of (-1)^{(p-1)rank(G_(p,k))/2}.  
   */
     TORFORM_legendresymbol,
  /**
-  *  hyperbolicity, split, and Kawauchi-Kojima 2-torsion embedding obstruction. 
+  * Hyperbolicity, split, and Kawauchi-Kojima 2-torsion embedding obstruction. 
   * Answer will have form "Hyp Yes, Split No, KKObst Yes"
   */
     TORFORM_tests,
@@ -744,29 +802,31 @@ private:
      * to build this by hand.  For a dim4Triangulation we need to build the boundary NTriangulation class
      * Ben suggests iterating through the dim4Boundary components, appending them into an NTriangulation
      * using dim4BoundaryComponent::getTriangulation and NTriangulation::insertTriangulation.  Building
-     * up the NTriangulation -> Dim4Triangulation indices using dim4BoundaryComponent::getEdge getFace, etc,
-     * maps.  Then we can build the classes below.  For 3-manifold and boundary 2-manifold triangulations
-     * we'll likely have to build these by hands.  The edges shouldn't be bad, the vertices might take work.
+     * up the NTriangulation -> Dim4Triangulation indices using dim4BoundaryComponent::getEdge 
+     * getFace, etc, maps.  Then we can build the classes below.  For 3-manifold and boundary 
+     * 2-manifold triangulations we'll likely have to build these by hands.  The edges shouldn't 
+     * be bad, the vertices might take work.
      *
      * normalsDim4BdryFaces is a vector that assigns to the i-th boundary face [tri4->getFace(bcIx[2][i])]
      *  the two boundary tetrahedra that contain it and the face number of the face in the tetrahedron. 
      *
      * normalsDim4BdryEdges is a vector that assigns to the i-th boundary edge [tri4->getFace(bcIx[1][i])]
-     *  the circle of tetrahedra incident to that edge, with edginc[2] and edginc[3] forming the normal orientation
-     *  in agreement with the indexing of tet. 
+     *  the circle of tetrahedra incident to that edge, with edginc[2] and edginc[3] forming the 
+     *  normal orientation in agreement with the indexing of tet. 
      *
-     * normalsDim4BdryVertices is a vector that assigns to the i-th boundary vertex [tri4->getVertex(bcIx[0][i])]
-     *  the sphere of tetrahedra incident to that vertex, with vrtinc[1], vrtinc[2], vrtinc[3] forming a normal
-     *  orientation.
+     * normalsDim4BdryVertices is a vector that assigns to the i-th boundary vertex 
+     * [tri4->getVertex(bcIx[0][i])] the sphere of tetrahedra incident to that vertex, with 
+     * vrtinc[1], vrtinc[2], vrtinc[3] forming a normal orientation.
      *
-     * normalsDim3BdryEdges is a vector that assigns to the i-th boundary face [tri3->getEdge(bcIx[1][i])]
-     *  the two boundary faces that contain it and the edge number of the edge in the NFace.  firstperm and
-     *  secondperm describe where the edge vertices 0, 1 get sent to in the face, with 2 going to the edge
-     *  number in the face. 
+     * normalsDim3BdryEdges is a vector that assigns to the i-th boundary face 
+     * [tri3->getEdge(bcIx[1][i])] the two boundary faces that contain it and the edge number 
+     * of the edge in the NFace.  firstperm and secondperm describe where the edge vertices 
+     * 0, 1 get sent to in the face, with 2 going to the edge number in the face. 
      *
-     * normalsDim3BdryVertices is a vector that assigns to the i-th boundary vertex [tri3->getVertex(bcIx[0][i])]
-     *  the circle of faces incident to that vertex, with vrtinc[1] and vrtinc[2] forming the normal orientation
-     *  in agreement with the indexing of face.  
+     * normalsDim3BdryVertices is a vector that assigns to the i-th boundary vertex 
+     * [tri3->getVertex(bcIx[0][i])] the circle of faces incident to that vertex, with 
+     * vrtinc[1] and vrtinc[2] forming the normal orientation in agreement with the indexing 
+     * of face.  
      */
    std::vector< dim4BoundaryFaceInclusion >   normalsDim4BdryFaces;
    std::vector< dim4BoundaryEdgeInclusion >   normalsDim4BdryEdges;  

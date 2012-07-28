@@ -32,8 +32,6 @@
 #include "shareableobject.h"
 
 #include <map>
-//#include <iostream>
-//#include <sstream>
 
 namespace regina {
 
@@ -131,27 +129,6 @@ long int NBilinearForm::signature() const
  return charPoly.descartesNo();
 }
 
-/*
-REGINA_API void computeTorsionLinkingFormInvariants(const NBilinearForm &intP, 
-	std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec, 
-    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,
-    std::vector<unsigned long> &ttVec, 
-    std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
-    std::vector< NMatrixRing<NRational>* > &linkingFormPD );
-
-REGINA_API void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, 
-                                                    std::vector< unsigned long > > > &ppVec,
-        const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,
-        const std::vector<unsigned long> &ttVec, 
-        const std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
-        const std::vector< NMatrixRing<NRational>* > &linkingFormPD, 
-        bool orientable, 
-        bool &torsionLinkingFormIsSplit, bool &torsionLinkingFormIsHyperbolic, 
-        std::string &torsionRankString,     std::string &torsionSigmaString,     
-        std::string &torsionLegendreString );
-        bool* torsionLinkingFormKKTTC, 
-*/
-
 const std::string& NBilinearForm::kkTorRank() const
 {
  if (!KKinvariantsComputed)
@@ -213,7 +190,7 @@ const std::string& NBilinearForm::kkTorLegendre() const
                       const_cast<std::string*> (&torsionRankString), 
                       const_cast<std::string*> (&torsionSigmaString), 
                       const_cast<std::string*> (&torsionLegendreString) );
-    *(const_cast<bool*> (&KKinvariantsComputed)) = true;
+   *(const_cast<bool*> (&KKinvariantsComputed)) = true;
   }
  return torsionLegendreString;
 }
@@ -445,7 +422,8 @@ NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
  NMarkedAbelianGroup HOM(M,N);
 
  // step 2: find matrix A --> Hom(B,C)
- NMatrixInt adjmat( rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(), lDomain.minNumberOfGenerators() );
+ NMatrixInt adjmat( rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(),
+                    lDomain.minNumberOfGenerators() );
  std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator I;
  for (I=reducedPairing->getGrid().begin(); I!=reducedPairing->getGrid().end(); I++)
         {
@@ -455,13 +433,13 @@ NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
 	  NLargeInteger P( rDomain.getInvariantFactor(I->first.entry(1)) );
 	  NLargeInteger Q( Range.getInvariantFactor(I->first.entry(2)) );
 	  NLargeInteger divBy( Q.divExact( P.gcd(Q) ) ); 
-          adjmat.entry( I->first.entry(1)*Range.minNumberOfGenerators() + I->first.entry(2), I->first.entry(0) ) = 
-           I->second->divExact( divBy ); // okay
+          adjmat.entry( I->first.entry(1)*Range.minNumberOfGenerators() + I->first.entry(2), 
+           I->first.entry(0) ) = I->second->divExact( divBy ); // okay
          } 
 	else
 	 {
-	  adjmat.entry( I->first.entry(1)*Range.minNumberOfGenerators() + I->first.entry(2), I->first.entry(0) ) = 
-           (*I->second); // okay
+	  adjmat.entry( I->first.entry(1)*Range.minNumberOfGenerators() + I->first.entry(2), 
+            I->first.entry(0) ) = (*I->second); // okay
 	 }
         }
 
@@ -517,13 +495,13 @@ NHomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
 	   NLargeInteger P( lDomain.getInvariantFactor( I->first.entry(0) ) );
 	   NLargeInteger Q( Range.getInvariantFactor( I->first.entry(2) ) );
 	   NLargeInteger divBy( Q.divExact( P.gcd(Q) ) );
-           adjmat.entry( I->first.entry(0)*Range.minNumberOfGenerators() + I->first.entry(2), I->first.entry(1) )
-	    = I->second->divExact( divBy );
+           adjmat.entry( I->first.entry(0)*Range.minNumberOfGenerators() + I->first.entry(2), 
+            I->first.entry(1) ) = I->second->divExact( divBy );
 	  }
 	 else
 	  {
-	   adjmat.entry( I->first.entry(0)*Range.minNumberOfGenerators() + I->first.entry(2), I->first.entry(1) )
-	    = (*I->second);
+	   adjmat.entry( I->first.entry(0)*Range.minNumberOfGenerators() + I->first.entry(2), 
+        I->first.entry(1) ) = (*I->second);
 	  }
 	}
  // step 3: return the adjoint
@@ -543,85 +521,88 @@ NHomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
 
 void NBilinearForm::writeTextShort(std::ostream& out) const
 {
-out<<"Bilinear form: [";
-lDomain.writeTextShort(out); out<<" x ";
-rDomain.writeTextShort(out); out<<" --> ";
-Range.writeTextShort(out);   out<<"]";
+ out<<"Bilinear form: [";
+ lDomain.writeTextShort(out); out<<" x ";
+ rDomain.writeTextShort(out); out<<" --> ";
+ Range.writeTextShort(out);   out<<"]";
 }
 
 void NBilinearForm::writeTextLong(std::ostream& out) const
 {
-writeTextShort(out);
-out<<"\nrp: "; reducedPairing->writeTextShort(out); out<<" / ";
-out<<"urp: "; unreducedPairing->writeTextShort(out); out<<"\n";
+ writeTextShort(out);
+ out<<"\nrp: "; reducedPairing->writeTextShort(out); out<<" / ";
+ out<<"urp: "; unreducedPairing->writeTextShort(out); out<<"\n";
 
-if (reducedPairing->getGrid().size() == 0) out<<" zero"; else
- {
- if (isSymmetric()) out<<" symmetric"; 
- if (isAntiSymmetric()) out<<" anti-symmetric";
- out<<" image == "; image().writeTextShort(out);
- }
+ if (reducedPairing->getGrid().size() == 0) out<<" zero"; else
+  {
+  if (isSymmetric()) out<<" symmetric"; 
+  if (isAntiSymmetric()) out<<" anti-symmetric";
+  out<<" image == "; image().writeTextShort(out);
+  }
 }
 
-
+/*  intP   is the input torsion linking form, the rest of the data is returned.
+ *  ppVec  is prime factors and the number of times p^k appears for each k.
+ *  ppList vector < prime p, vec < a, b, etc... > >, i.e. p^a, p^b. a=b ok. 
+ *  ttVec  the Kawauchi-Kojima 2-torsion sigma vector
+ *  ptVec  the Kawauchi-Kojima Legendre symbol vector. 
+ *  linkingFormPD is the p-primary orthogonal splitting of the torsion linking
+ *                form. 
+ */
 void computeTorsionLinkingFormInvariants(const NBilinearForm &intP, 
-	std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec, // almost same except this counts
-        std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,// this lists 
-        std::vector<unsigned long> &ttVec, 
-        std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
-        std::vector< NMatrixRing<NRational>* > &linkingFormPD ) 
+	std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec, 
+    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList, 
+    std::vector<unsigned long> &ttVec, 
+    std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
+    std::vector< NMatrixRing<NRational>* > &linkingFormPD ) 
 {
     NLargeInteger tN,tD,tR;
-    // min number of torsion gens:
+    // number of torsion generators:
     unsigned long niv(intP.ldomain().getNumberOfInvariantFactors());
     // for holding prime decompositions.:
     std::vector<std::pair<NLargeInteger, unsigned long> > tFac;
     NLargeInteger tI;
+    std::vector< NLargeInteger > tV; // temporary vector for holding dual cc vectors.
 
     // step 1: go through H1 of the manifold, take prime power decomposition
     //            of each summand.  building primePowerH1Torsion vector and
     //            pTorsionH1Mat matrix...
-    //            also, we need to find the 2-chains bounding2c
-    //            boundary(bounding2c[i]) = orderinh1(pvList[i])*pvList[i]
-    std::vector< NLargeInteger > tV; // temporary vector for holding dual cc vectors.
 
-    std::vector< std::pair<NLargeInteger, unsigned long> > pPrList; // proper prime power list.
+    // pPrList, PPList and pvList have same indexing, one integer for every 
+    // prime power Z_{p^n} summand of H_1.
+    //  
+    // 1) pPrList is the list of prime powers, (p,n) 
+    // 2) PPList  is p^n
+    // 3) pvList  is the CC coordinates in H1.  Of the generator of Z_{p^n}
+    std::vector< std::pair<NLargeInteger, unsigned long> > pPrList; 
     std::vector< NLargeInteger > PPList;
-    std::vector< std::vector<NLargeInteger> > pvList; // list of vectors
-    // the above two lists will have the same length. for each i,
-    // pvList[i] will be a vector in the dual h1 homology chain complex, and
-    // ppList[i] will be its order.
-
+    std::vector< std::vector<NLargeInteger> > pvList;
     unsigned long i, j, k, l;
 
     for (i=0; i<niv; i++) {
         tI = intP.ldomain().getInvariantFactor(i);
-        tFac = NPrimes::primePowerDecomp(tI);
-
+        tFac = NPrimes::primePowerDecomp(tI); 
         for (j=0; j<tFac.size(); j++) {
             pPrList.push_back(tFac[j]);
             NLargeInteger fac1, fac2, fac1i, fac2i;
-            fac1 = tFac[j].first;
-            fac1.raiseToPower(tFac[j].second);
-            fac2 = tI;
-            fac2.divByExact(fac1);
-            // fac2's should be the denominators in the matrix...
-            fac2.gcdWithCoeffs( fac1, fac1i, fac2i ); // fac2i unneccessary..
-            // fac1i is the inverse of fac1 mod fac2
-            PPList.push_back( fac1 ); // record the order...
-            // now the corresponding vector...
-            // this will have to be fac1i * vector corresponding to
-            // getInvariantFactor(i).
+            fac1 = tFac[j].first; fac1.raiseToPower(tFac[j].second);
+            fac2 = tI; fac2.divByExact(fac1); 
+            fac2.gcdWithCoeffs( fac1, fac1i, fac2i ); 
+            PPList.push_back( fac1 ); 
             tV = intP.ldomain().getTorsionRep(i);
             for (k=0; k<tV.size(); k++) tV[k]=fac1i*fac2*tV[k];
             pvList.push_back(tV);
         }
     }
 
+    // the above is not indexed in a convenient way.  We want to think of the torsion
+    // in ascending order, primes and powers.  Will store in indexing
+
     // step1a: construct (2 2 4) (3 3 9 27) ... indexing of ppList, pvList, etc.
-    // the indexing will be as a list of pairs
-    // < prime, vector< pair< power, index> > >
+    // the indexing will be as a list of pairs < prime, vector< pair< power, index> > >
     // Use a list because we are continually inserting items in the middle.
+    // (p, [(n,ind), ...]) where ind refers to the common indexing of ppList etc above. 
+
     typedef std::vector<std::pair<unsigned long, unsigned long> > IndexingPowerVector;
     typedef std::pair<NLargeInteger, IndexingPowerVector> IndexingPrimePair;
     typedef std::list<IndexingPrimePair> IndexingList;
@@ -687,31 +668,34 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
     // Compute indexing.size() just once, since for std::list this might be
     // a slow operation.
     unsigned long indexingSize = indexing.size();
-    ppList.resize(indexingSize);
+    ppList.resize(indexingSize); // one entry for every prime divisor of |H1|
     linkingFormPD.resize(indexingSize);
-
     // let's find the denominator of all our NRationals in our linking form matrices...
-    NLargeInteger DenOm( intP.range().getInvariantFactor(0) );
+    NLargeInteger DenOm( (intP.range().getNumberOfInvariantFactors()==0) ? 1 : 
+        intP.range().getInvariantFactor(0) ); // there is only one invariant factor in 
+                                              // the range unless the torsion group is trivial
  
-    for (i=0, it1 = indexing.begin(); it1 != indexing.end(); i++, it1++) {
-        ppList[i].second.resize(it1->second.size());
-        ppList[i].first = it1->first;
+    for (i=0, it1 = indexing.begin(); it1 != indexing.end(); i++, it1++) 
+    { 
+     ppList[i].first = it1->first; // this is the i-th prime in our list of primes
+     ppList[i].second.resize(it1->second.size());
+     for (j=0; j<it1->second.size(); j++) ppList[i].second[j] = it1->second[j].first;
 
-        for (j=0; j<it1->second.size(); j++)
-            ppList[i].second[j] = it1->second[j].first;
+     linkingFormPD[i] = new NMatrixRing<NRational>(it1->second.size(), it1->second.size() );
 
-        linkingFormPD[i] = new NMatrixRing<NRational>(it1->second.size(), it1->second.size() );
-        for (j=0; j<it1->second.size(); j++)
-            for (k=0; k<it1->second.size(); k++)
-                {
-                // this routine is currently slower than it should be because of the new
-	        // sparse implementation in nbilinearform -- if this is a problem it should eventually
-	        // be given a proper going-over as the slow-down is only due to inefficient coding
-	        // on my part (Budney) -- it's fast enough for my purposes so I'll stop mucking with it.
-                const NSparseGridRing< NLargeInteger >* presMap( intP.reducedSparseGrid() );
-		const NLargeInteger* nliP( presMap->getEntry( NMultiIndex< unsigned long >( it1->second[j].second, it1->second[k].second, 0 ) ) );
-		if (nliP) linkingFormPD[i]->entry(j,k) = NRational( *nliP, DenOm );
-                }
+     for (j=0; j<it1->second.size(); j++) 
+      { // need pvList[ appropriate index ]
+       std::vector< NLargeInteger > ccL( pvList[ it1->second[j].second ] );
+       
+       for (k=0; k<it1->second.size(); k++)
+        { // again need pvList [ appropriate index ]
+         std::vector< NLargeInteger > ccR( pvList[ it1->second[k].second ] );
+         NLargeInteger num( intP.evalCC(ccL, ccR)[0] % DenOm );
+         NLargeInteger G( num.gcd(DenOm) );
+         linkingFormPD[i]->entry(k,k) = NRational( num / G, DenOm / G );
+         // perhaps reduce this NRational? 
+        } 
+      }
     }
 
     // now we should implement the classification of these forms
@@ -888,7 +872,6 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
                 }
             }
         }
-
     // step 3: Seifert odd p-torsion legendre symbol invariant (done)
     //           to do this I need to add a determinant to NMatrixRing class
     //           this invariant will be expressed as a
@@ -939,21 +922,32 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
             // increment curri
             curri = curri + ppVec[i].second[j]; 
         }
-        ptVec.push_back( make_pair( ppVec[i].first.longValue() , tempa) );
+        ptVec.push_back( make_pair( ppVec[i].first.longValue(), tempa) );
     }
+
 } // end computeTorsionLinkingForm()
 
 
-void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, 
-                            std::vector< unsigned long > > > &ppVec,
+/*  intP   is the input torsion linking form, the rest of the data is returned.
+ *  ppVec  is prime factors and the number of times p^k appears for each k.
+ *  ppList vector < prime p, vec < a, b, etc... > >, i.e. p^a, p^b. a=b ok. 
+ *  ttVec  the Kawauchi-Kojima 2-torsion sigma vector
+ *  ptVec  the Kawauchi-Kojima Legendre symbol vector. 
+ *  linkingFormPD is the p-primary orthogonal splitting of the torsion linking
+ *                form. 
+ */
+void readTeaLeavesTLF(
+        const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec,
         const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,
         const std::vector<unsigned long> &ttVec, 
         const std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
         const std::vector< NMatrixRing<NRational>* > &linkingFormPD, 
         bool orientable, 
-        bool* torsionLinkingFormIsSplit, bool* torsionLinkingFormIsHyperbolic, 
+        bool* torsionLinkingFormIsSplit, 
+        bool* torsionLinkingFormIsHyperbolic, 
         bool* torsionLinkingFormKKTTC, 
-        std::string* torsionRankString,     std::string* torsionSigmaString,     
+        std::string* torsionRankString,     
+        std::string* torsionSigmaString,     
         std::string* torsionLegendreString )
 {
     unsigned long starti, i, j; 
@@ -1009,9 +1003,9 @@ void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger,
 
     NRational tRat;
 
-    if (starti==1) { // for each k need to compute 2^{k-1}*form(x,x) on all
+    if (starti==1) { // starti==1 means we have 2-torsion.  
+        // for each k need to compute 2^{k-1}*form(x,x) on all
         // elements of order 2^k, check to see if it is zero.
-        // so this is not yet quite implemented, yet....
         // std::vector< std::pair< NLargeInteger,
         //     std::vector<unsigned long> > > ppList;
         // stored as list { (2, (1, 1, 2)), (3, (1, 2, 2, 3)), (5, (1, 1, 2)) }
@@ -1026,10 +1020,8 @@ void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger,
             tN = tRat.getNumerator();
             tD = tRat.getDenominator();
             tN.divisionAlg(tD,tR);
-            if (tR != 0)
-                (*torsionLinkingFormKKTTC) = false; 
+            if (tR != 0) (*torsionLinkingFormKKTTC) = false; 
         }
-
     }
 
     torsionRankString->assign("");
@@ -1052,8 +1044,10 @@ void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger,
         torsionSigmaString->assign("");
         if (ttVec.size()==0) torsionSigmaString->append("no 2-torsion");
         else for (i=0; i<ttVec.size(); i++) {
-            std::stringstream ss; ss << ttVec[i]; 
-            std::string tempS; ss >> tempS;
+            std::stringstream ss; 
+            if (ttVec[i]==8) ss<<"inf"; // correct for fact that ttVec can't store inf..
+            else ss<<ttVec[i];
+            std::string tempS; ss >> tempS; 
             torsionSigmaString->append(tempS); 
             if (i<(ttVec.size()-1)) torsionSigmaString->append(" ");
             }
@@ -1078,7 +1072,7 @@ void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger,
             torsionLegendreString->append(")");
             if (i<(ptVec.size()-1))
                 torsionLegendreString->append(" ");
-            }
+            } // need to check if our ptVec is the same as oddTorLegSymV in NHomolDat...
         }
     else
         torsionLegendreString->append("manifold is non-orientable");
