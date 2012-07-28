@@ -358,11 +358,7 @@ private:
 
 public:
 
-// temp
-
     NMatrixRing<NRational>* torsionLinkingFormPresentationMat;
-
-// end temp
 
     /**
      * Takes as input a triangulation.

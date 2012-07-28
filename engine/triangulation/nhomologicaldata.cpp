@@ -1267,13 +1267,6 @@ void NHomologicalData::computeTorsionLinkingForm() {
             torsionLinkingFormPresentationMat->entry(i,j)=NRational(tR,tD);
         }
 
-// TODO: print the torsionLinkingFormPResentationMat notice that this is in 
-//       prime power decomp of H1 coordinates... 
-//std::cout<<"HmlDat TLF pp coord: "<<printMAT(torsionLinkingFormPresentationMat)<<"\n";
-//std::string printMAT(const regina::NMatrixRing<regina::NRational>* input)
-
-
-
     // Compute indexing.size() just once, since for std::list this might be
     // a slow operation.
     unsigned long indexingSize = indexing.size();
@@ -1293,9 +1286,6 @@ void NHomologicalData::computeTorsionLinkingForm() {
         linkingFormPD[i]->entry(j,k) = torsionLinkingFormPresentationMat->entry(
            it1->second[j].second, it1->second[k].second );
     }
-
-// so it appears NCellularData and NHomological data have essentially equivalent implementations
-//  up to this point. 
 
     // now we should implement the classification of these forms
     // due to Seifert, Wall, Burger, Kawauchi, Kojima, Deloup:
@@ -1524,45 +1514,6 @@ void NHomologicalData::computeTorsionLinkingForm() {
         }
         oddTorLegSymV.push_back( make_pair( torRankV[i].first, tempa) );
     }
-
-// maybe this is a good point to compare what the two routines are doing. 
-// let's start by comparing ppVec and ppList. 
-/*std::cout<<"NHD ppList: ";
-for (unsigned long a=0; a<h1PrimePowerDecomp.size(); a++)
- {
-  std::cout<<"[";
-  std::cout<<h1PrimePowerDecomp[a].first<<" : ";
-  for (unsigned long b=0; b<h1PrimePowerDecomp[a].second.size(); b++)
-   { std::cout<<h1PrimePowerDecomp[a].second[b]<<" "; }
-  std::cout<<"] ";
- }
-std::cout<<"\n";
-std::cout<<"NHD twoTorSig: "; // and twoTorSigmaV
-for (unsigned long a=0; a<twoTorSigmaV.size(); a++)
- {
-  std::cout<<twoTorSigmaV[a]<<" ";
- }
-std::cout<<"\n";
-// let's now print oddTorLegSymV 
-std::cout<<"NHD legSym: ";
-for (unsigned long a=0; a<oddTorLegSymV.size(); a++)
- {
-  std::cout<<"["<<oddTorLegSymV[a].first<<": ";
-  for (unsigned long b=0; b<oddTorLegSymV[a].second.size(); b++)
-   {
-    std::cout<<oddTorLegSymV[a].second[b]<<" ";
-   }
-  std::cout<<"] ";
- }
-std::cout<<"\n";
-// and maybe the prime power decomp? here that's linkingFormPD
-std::cout<<"NHD primary decomp: ";
-for (unsigned long a=0; a<linkingFormPD.size(); a++)
- {
-  std::cout<<"P "<<h1PrimePowerDecomp[a].first<<" "; // prime??
-  std::cout<<"lf "<<printMAT(linkingFormPD[a])<<" ";
- }
-std::cout<<"\n";*/
 
     torsionLinkingFormIsSplit=true;
     torsionLinkingFormIsHyperbolic=true;
@@ -1874,8 +1825,7 @@ bool NHomologicalData::formIsHyperbolic() {
 /** Compute the chain complexes from the point of view of the barycentric CW-decomposition.
      this will also compute all the relevant maps to the simplicial homology of the
      triangulation and the CW-homology of the dual polyhedral decomposition. **/
-// Note: currently this does not produce a chain complex.  It appears there's an orientation 
-//       inconsistency. 
+
 void NHomologicalData::computeBaryCC()
 {
  // only continue if this has not been called before.
