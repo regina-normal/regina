@@ -265,13 +265,13 @@ bool NBilinearForm::kkTwoTor() const
 NMarkedAbelianGroup NBilinearForm::image() const
 { 
  // lets compute the image based off of the reducedpairing. 
- NMarkedAbelianGroup dom( lDomain.minNumberOfGenerators()*rDomain.minNumberOfGenerators(), NLargeInteger::zero );
+ NMarkedAbelianGroup dom( 
+    lDomain.minNumberOfGenerators()*rDomain.minNumberOfGenerators(), NLargeInteger::zero );
  NMatrixInt mat( Range.minNumberOfGenerators(), dom.minNumberOfGenerators() );
- // fill mat -- we'll do this with an iterator through reducedPairing
  std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
  for (J = reducedPairing->getGrid().begin(); J!=reducedPairing->getGrid().end(); J++)
-   mat.entry( J->first.entry(2), J->first.entry(0)*rDomain.minNumberOfGenerators() + J->first.entry(1) ) = (*J->second);
- // now find an NMarkedAbelianGroup with the right presentation for Range such that mat makes sense as a map..
+   mat.entry( J->first.entry(2), 
+   J->first.entry(0)*rDomain.minNumberOfGenerators() + J->first.entry(1) ) = (*J->second);
  NMatrixInt zeroM(1, Range.minNumberOfGenerators() );
  NMatrixInt redN( Range.minNumberOfGenerators(), Range.getNumberOfInvariantFactors() );
  for (unsigned long i=0; i<Range.getNumberOfInvariantFactors(); i++)
@@ -284,11 +284,11 @@ NMarkedAbelianGroup NBilinearForm::image() const
 
 bool NBilinearForm::isSymmetric() const
 {
-if (!lDomain.equalTo(rDomain)) return 0;
-// now we check symmetry.... we'll use the reduced matrix for this...
-std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
+ if (!lDomain.equalTo(rDomain)) return 0;
+ // now we check symmetry.... we'll use the reduced matrix for this...
+ std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
 
-for (J = reducedPairing->getGrid().begin(); J!=reducedPairing->getGrid().end(); J++)
+ for (J = reducedPairing->getGrid().begin(); J!=reducedPairing->getGrid().end(); J++)
   { 
   NMultiIndex< unsigned long > x(3);
   x[0]=J->first.entry(1); x[1]=J->first.entry(0); x[2]=J->first.entry(2);
@@ -297,7 +297,7 @@ for (J = reducedPairing->getGrid().begin(); J!=reducedPairing->getGrid().end(); 
   if ( (*J->second) != (*t) ) return false;
   }
 
-return true;
+ return true;
 }
 
 
@@ -329,8 +329,10 @@ return true;
 NBilinearForm NBilinearForm::lCompose(const NHomMarkedAbelianGroup &f) const
 {
  // check to see if this is a valid operation
+ #ifdef DEBUG
  if (!lDomain.equalTo(f.getRange()))
   { std::cerr<<"Error: Illegal composition in NBilinearForm::lCompose"<<std::endl; exit(1); }
+ #endif
  // we need to compute the new unreducedPairing and pass it to an NBilinearForm constructor
  NSparseGridRing< NLargeInteger > newPairing(3);
  // 0th index is lDomain SNF coord, 1st index rDomain SNF coord, 3rd index Range SNF coord
@@ -356,8 +358,10 @@ NBilinearForm NBilinearForm::lCompose(const NHomMarkedAbelianGroup &f) const
 NBilinearForm NBilinearForm::rCompose(const NHomMarkedAbelianGroup &f) const
 {
  // check to see if this is a valid operation
+ #ifdef DEBUG
  if (!rDomain.equalTo(f.getRange()))
   { std::cerr<<"Error: Illegal composition in NBilinearForm::rCompose"<<std::endl; exit(1); }
+ #endif
  // we need to compute the new unreducedPairing and pass it to an NBilinearForm constructor
  NSparseGridRing< NLargeInteger > newPairing(3);
  std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
@@ -378,12 +382,17 @@ return NBilinearForm( lDomain, f.getDomain(), Range, newPairing );
 
 NBilinearForm NBilinearForm::postCompose(const NHomMarkedAbelianGroup &f) const
 {
-NSparseGridRing< NLargeInteger > newPairing(3);
+ #ifdef DEBUG
+ if (!Range.equalTo(f.getDomain()))
+  { std::cerr<<"Error: Illegal composition in NBilinearForm::postCompose"<<std::endl; exit(1); }
+ #endif
 
-std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
+ NSparseGridRing< NLargeInteger > newPairing(3);
 
-for (J = unreducedPairing->getGrid().begin(); J!=unreducedPairing->getGrid().end(); J++)
- for (unsigned long i=0; i<f.getRange().getRankCC(); i++)
+ std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
+
+ for (J = unreducedPairing->getGrid().begin(); J!=unreducedPairing->getGrid().end(); J++)
+  for (unsigned long i=0; i<f.getRange().getRankCC(); i++)
   { 
   // newPairing[ ?,?,i ] += f.getDefiningMatrix.entry( i, ? ) * unreducedPairing[ ?, ?, ? ]
   NMultiIndex< unsigned long > x(3);
@@ -391,7 +400,7 @@ for (J = unreducedPairing->getGrid().begin(); J!=unreducedPairing->getGrid().end
   newPairing.incEntry( x, f.getDefiningMatrix().entry( i, J->first.entry(2) ) * (*J->second)  );
   }
 
-return NBilinearForm( lDomain, rDomain, f.getRange(), newPairing );
+ return NBilinearForm( lDomain, rDomain, f.getRange(), newPairing );
 }
 
 
