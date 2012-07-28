@@ -43,5 +43,4 @@ void addElementaryMoves(CppUnit::TextUi::TestRunner& runner);
 void addConnectedSumDecomp(CppUnit::TextUi::TestRunner& runner);
 void addThreeSphere(CppUnit::TextUi::TestRunner& runner);
 void addNIsomorphism(CppUnit::TextUi::TestRunner& runner);
-void addNHomologicalData(CppUnit::TextUi::TestRunner& runner);
 
