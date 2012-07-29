@@ -274,11 +274,14 @@ public:
   */
  enum variance_type { 
  /**
-  * for Homology
+  * for Homology.  Using this means you ask for the homology of a given chain complex in some
+  * computation.
   */
   coVariant, 
  /**
-  * for coHomology
+  * for coHomology. Using this means you ask for the cohomology of a given chain complex
+  * in some computation, in effect this simply applies the transpose operator to the 
+  * matrices from the chain complex had you asked for coVariant. 
   */
   contraVariant };
 
@@ -367,8 +370,20 @@ public:
   * Enum for the NCellularData::boolInfo call. 
   */
  enum BoolRequest {
+ /**
+  *  True if there is a Kawauchi-Kojima 2-torsion obstruction to the manifold embedding
+  * in the 4-sphere.  This obstructs the punctured manifold from embedding. 
+  */
     TORFORM_KKtwoTor,
+ /**
+  *  True if the torsion linking form is of hyperbolic type -- this means the manifold
+  * is a candidate for embedding in the 4-sphere (or a homology sphere).  False means
+  * the torsion linking form is an obstruction to embedding.
+  */
     TORFORM_hyp, 
+ /**
+  * The form is split
+  */
     TORFORM_split
   };
 
@@ -384,24 +399,29 @@ public:
 
 	/**
 	 *  Initialization constructor.
+     *
+     * @param newDim - dimension of the cells.  So if you choose n here, the matrix you request
+     *                 with this ChainComplexLocator will describe how you n-dimensional cells 
+     *                 are incident to (n-1)-dimensional cells. 
+     * @param useHcs - which CW complex does this come from?
 	 */
 	ChainComplexLocator(unsigned long newDim, homology_coordinate_system useHcs);
 
 	/**
 	 *  Copy constructor.
 	 */
-        ChainComplexLocator(const ChainComplexLocator &cloneMe);
+    ChainComplexLocator(const ChainComplexLocator &cloneMe);
 
 	bool operator<(const ChainComplexLocator &rhs) const;
-        bool operator==(const ChainComplexLocator &rhs) const;
-        bool operator!=(const ChainComplexLocator &rhs) const;
-        /**
-         * Returns true if chain complex is of a boundary type. 
-         */
-        bool boundaryType() const; 
+    bool operator==(const ChainComplexLocator &rhs) const;
+    bool operator!=(const ChainComplexLocator &rhs) const;
+    /**
+     * Returns true if chain complex is of a boundary type. 
+     */
+    bool boundaryType() const; 
        
-        void writeTextShort(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
+    void writeTextShort(std::ostream& out) const;
+    void writeTextLong(std::ostream& out) const;
  };
 
  /**
@@ -413,20 +433,25 @@ public:
 
 	/**
 	 *  Initialization constructor.
+     *
+     * @param Domain - the ChainComplexLocator describing the domain
+     * @param Range  - the ChainComplexLocator describing the range.
 	 */
 	ChainMapLocator(const ChainComplexLocator &Domain, const ChainComplexLocator &Range);
 
 	/**
 	 *  Copy constructor.
+     *
+     * @param cloneMe - object to copy.
 	 */
-        ChainMapLocator(const ChainMapLocator &cloneMe);
+    ChainMapLocator(const ChainMapLocator &cloneMe);
 
 	bool operator<(const ChainMapLocator &rhs) const;
-        bool operator==(const ChainMapLocator &rhs) const;
-        bool operator!=(const ChainMapLocator &rhs) const;
+    bool operator==(const ChainMapLocator &rhs) const;
+    bool operator!=(const ChainMapLocator &rhs) const;
        
-        void writeTextShort(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
+    void writeTextShort(std::ostream& out) const;
+    void writeTextLong(std::ostream& out) const;
  };
 
  /**
@@ -445,20 +470,27 @@ public:
 
 	/**
 	 *  Initialization constructor.
+     *
+     * @param newDim - dimension of group
+     * @param newVar - coVariant or contraVariant? 
+     * @param useHcs - which CW complex do you want to use?
+     * @param useCof - 0 for integer coefficients, non-zero number n for Z/nZ coefficients.
 	 */
 	GroupLocator(unsigned long newDim, variance_type newVar, homology_coordinate_system useHcs, 
 			unsigned long useCof);
 	/**
 	 *  Copy constructor.
+     *
+     * @param cloneMe - the object to copy
 	 */
-        GroupLocator(const GroupLocator &cloneMe);
+    GroupLocator(const GroupLocator &cloneMe);
 
 	bool operator<(const GroupLocator &rhs) const;
-        bool operator==(const GroupLocator &rhs) const;
-        bool operator!=(const GroupLocator &rhs) const;
+    bool operator==(const GroupLocator &rhs) const;
+    bool operator!=(const GroupLocator &rhs) const;
        
-        void writeTextShort(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
+    void writeTextShort(std::ostream& out) const;
+    void writeTextLong(std::ostream& out) const;
  };
 
  /**
@@ -470,19 +502,24 @@ public:
 
 	/**
 	 *  Initialization constructor.
+     *
+     * @param newDomain - domain of the group homomorphism
+     * @param newRange  - range of the group homomorphism
 	 */
 	HomLocator(const GroupLocator &newDomain, const GroupLocator &newRange);
 	/**
 	 *  Copy constructor.
+     *
+     * @param cloneMe - object to copy.
 	 */
 	HomLocator(const HomLocator &cloneMe);
 
 	bool operator<(const HomLocator &rhs) const;
-        bool operator==(const HomLocator &rhs) const;
-        bool operator!=(const HomLocator &rhs) const;
+    bool operator==(const HomLocator &rhs) const;
+    bool operator!=(const HomLocator &rhs) const;
 
-        void writeTextShort(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
+    void writeTextShort(std::ostream& out) const;
+    void writeTextLong(std::ostream& out) const;
  };
 
  /**
@@ -524,19 +561,25 @@ public:
 
 	/**
 	 *  Initialization constructor.
+     * 
+     * @param FT - what kind of form are you looking for?
+     * @param newLdomain - the left group domain factor
+     * @param newRdomain - the right group domain factor
 	 */
 	FormLocator(form_type FT, const GroupLocator &newLdomain, const GroupLocator &newRdomain);
 	/**
 	 *  Copy constructor.
+     *
+     * @param cloneMe - the object to copy.
 	 */
 	FormLocator(const FormLocator &cloneMe);
 
 	bool operator<(const FormLocator &rhs) const;
-        bool operator==(const FormLocator &rhs) const;
-        bool operator!=(const FormLocator &rhs) const;
+    bool operator==(const FormLocator &rhs) const;
+    bool operator!=(const FormLocator &rhs) const;
 
-        void writeTextShort(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
+    void writeTextShort(std::ostream& out) const;
+    void writeTextLong(std::ostream& out) const;
  };
 
  /**
@@ -566,10 +609,15 @@ public:
 
    /**
     *  Initialization constructor.
+    *
+    * @param ST submanfold type 
+    * @param CI component index if appropriate
     */
-   GroupPresLocator( submanifold_type ST, unsigned long CI );
+   GroupPresLocator( submanifold_type ST, unsigned long CI=0 );
    /**
     *  Copy constructor.
+    *
+    * @param cloneMe - the object to copy
     */
    GroupPresLocator( const GroupPresLocator &cloneMe );
    
@@ -591,10 +639,15 @@ public:
 
    /**
     *  Initialization constructor.
+    * 
+    * @param ST is identifies the submanifold type for the inclusion, standard or ideal boundary
+    * @param CI is the index of that component. 
     */
-   HomGroupPresLocator( submanifold_type ST, unsigned long CI );
+   HomGroupPresLocator( submanifold_type ST, unsigned long CI=0 );
    /**
     *  Copy constructor.
+    *
+    * @param cloneMe - the object to copy. 
     */
    HomGroupPresLocator( const HomGroupPresLocator &cloneMe );
    
