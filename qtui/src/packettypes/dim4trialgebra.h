@@ -177,13 +177,11 @@ class Dim4TriCellularInfoUI: public PacketViewerTab {
         QLabel* EulerChar;
         QLabel* H0H1H2H3;
         QLabel* HBdry;
-        QLabel* BdryMap;
-        QLabel* TorForOrders; // torsion subgroup prime power decomp
-        QLabel* TorForSigma;  // the Kawauchi-Kojima 2-torsion sigma vector
-        QLabel* TorForLegendre; // the odd p-torsion Legendre symbol vector
+        QLabel* BdryMap1;
+        QLabel* BdryMap2;
+        QLabel* sig; // signature on H2
         QLabel* AlexInv; // Alexander module invariants (if exists)
-        QLabel* EmbeddingComments; // comments on what the manifold may
-                                   // or may not embed in.
+        QLabel* Comments; 
 
     public:
         /**

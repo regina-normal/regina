@@ -463,37 +463,34 @@ void Dim4TriCellularInfoUI::refresh() {
             arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(2, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ).            
             arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(3, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ) );          
 
-        BdryMap->setText(Minfo.homGroup( NCellularData::HomLocator( 
+        BdryMap1->setText(Minfo.homGroup( NCellularData::HomLocator( 
             NCellularData::GroupLocator( 1, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0 ), 
             NCellularData::GroupLocator( 1, NCellularData::coVariant, NCellularData::STD_coord, 0 ) ) 
+                        )->toString().c_str() );
+        BdryMap2->setText(Minfo.homGroup( NCellularData::HomLocator( 
+            NCellularData::GroupLocator( 2, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0 ), 
+            NCellularData::GroupLocator( 2, NCellularData::coVariant, NCellularData::STD_coord, 0 ) ) 
                         )->toString().c_str() );
 
         if (! tri->isConnected()) {
             QString msg(QObject::tr("Triangulation is disconnected."));
-
+            sig->setText(msg);
             AlexInv->setText(msg);
-            TorForOrders->setText(msg);
-            TorForSigma->setText(msg);
-            TorForLegendre->setText(msg);
-            EmbeddingComments->setText(msg);
+            Comments->setText(msg);
         } else {
-            // 8 principle cases:
-            // orientable y/n, boundary y/n, torsion exists y/n
             if (tri->isOrientable()) {
-                TorForOrders->setText(
-                    Minfo.stringInfo( NCellularData::TORFORM_powerdecomp ).c_str() );
-                TorForSigma->setText(
-                    Minfo.stringInfo( NCellularData::TORFORM_sigmastring ).c_str() );
-                TorForLegendre->setText(
-                    Minfo.stringInfo( NCellularData::TORFORM_legendresymbol ).c_str() );
+                std::stringstream ts;
+                ts << Minfo.bilinearForm( NCellularData::FormLocator( 
+            NCellularData::intersectionForm,
+            NCellularData::GroupLocator( 2, NCellularData::coVariant, NCellularData::DUAL_coord, 0 ), 
+            NCellularData::GroupLocator( 2, NCellularData::coVariant, NCellularData::DUAL_coord, 0 ) ) 
+                        )->signature() ;
+               sig->setText( ts.str().c_str() ); 
             } else {
                 // The torsion linking form routines insist on orientability,
                 // so we should avoid calling them.
                 QString msg(QObject::tr("Manifold is non-orientable."));
-
-                TorForOrders->setText(msg);
-                TorForSigma->setText(msg);
-                TorForLegendre->setText(msg);
+                sig->setText(msg);
             }
 
             if (Minfo.unmarkedGroup( NCellularData::GroupLocator(1, 
@@ -516,8 +513,9 @@ void Dim4TriCellularInfoUI::refresh() {
             // The embeddability comment is good for both orientable and
             // non-orientable triangulations.
             // Encase it in <qt>..</qt> so it can wrap over multiple lines.
-            EmbeddingComments->setText(QString("<qt>%1</qt>").arg(
-                Qt::escape(Minfo.stringInfo(NCellularData::TORFORM_embinfo).c_str())));
+            Comments->setText(QString("<qt>Nothing to say, yet. </qt>"));
+            //Comments->setText(QString("<qt>%1</qt>").arg(
+            //    Qt::escape(Minfo.stringInfo(NCellularData::TORFORM_embinfo).c_str())));
         }
     } else {
         QString msg(QObject::tr("Invalid Triangulation"));
@@ -526,12 +524,11 @@ void Dim4TriCellularInfoUI::refresh() {
         EulerChar->setText(msg);
         H0H1H2H3->setText(msg);
         HBdry->setText(msg);
-        BdryMap->setText(msg);
+        BdryMap1->setText(msg);
+        BdryMap2->setText(msg);
+        sig->setText(msg);
         AlexInv->setText(msg);
-        TorForOrders->setText(msg);
-        TorForSigma->setText(msg);
-        TorForLegendre->setText(msg);
-        EmbeddingComments->setText(msg);
+        Comments->setText(msg);
     }
 }
 
@@ -551,12 +548,11 @@ Dim4TriCellularInfoUI::Dim4TriCellularInfoUI(regina::Dim4Triangulation* packet,
     QWidget* grid = new QWidget(scroller->viewport());
     scroller->setWidget(grid);
 
-    QGridLayout* homologyGrid = new QGridLayout(grid);//, 11, 4, 0, 5);
+    QGridLayout* homologyGrid = new QGridLayout(grid);
     homologyGrid->setRowStretch(0, 1);
-    homologyGrid->setRowStretch(12, 1);
+    homologyGrid->setRowStretch(10, 1);
     homologyGrid->setColumnStretch(0, 1);
-    homologyGrid->setColumnStretch(2, 1); // Give the embeddability comment
-                                       // a little room to breathe.
+    homologyGrid->setColumnStretch(2, 1); 
     homologyGrid->setColumnStretch(3, 1);
 
     QLabel* label;
@@ -615,89 +611,50 @@ Dim4TriCellularInfoUI::Dim4TriCellularInfoUI(regina::Dim4Triangulation* packet,
     label = new QLabel(QObject::tr("<qt>H1(%1M &rarr; M): </qt>").
         arg(QChar(0x2202 /* bdry */)), grid);
     homologyGrid->addWidget(label, 6, 1);
-    BdryMap = new QLabel(grid);
-    homologyGrid->addWidget(BdryMap, 6, 2);
+    BdryMap1 = new QLabel(grid);
+    homologyGrid->addWidget(BdryMap1, 6, 2);
     msg = QObject::tr("<qt>The boundary is a submanifold of the original "
                 "manifold.  This item describes some properties of "
                 "the induced map on H<sub>1</sub>.</qt>"
                 );
     label->setWhatsThis(msg);
-    BdryMap->setWhatsThis(msg);
+    BdryMap1->setWhatsThis(msg);
 
-    label = new QLabel(QObject::tr("Torsion form rank vector: "), grid);
+    label = new QLabel(QObject::tr("<qt>H2(%1M &rarr; M): </qt>").
+        arg(QChar(0x2202 /* bdry */)), grid);
     homologyGrid->addWidget(label, 7, 1);
-    TorForOrders = new QLabel(grid);
-    homologyGrid->addWidget(TorForOrders, 7, 2);
-    msg = QObject::tr("<qt>This is the first of the three Kawauchi-Kojima "
-               "invariants.  These are invariants of the torsion linking "
-               "form on the torsion subgroup of H<sub>1</sub> of an "
-               "oriented manifold, and they form a complete set of "
-               "invariants.<p>"
-               "The torsion form rank vector lists the rank of all the "
-               "subgroups of various prime power orders."
-               "<p>For further information, see Kawauchi and Kojima's paper "
-               "<i>Algebraic classification of linking pairings "
-               "on 3-manifolds</i>, Math. Ann. <b>253</b> (1980), "
-               "no. 1, 29&ndash;42.</qt>"
+    BdryMap2 = new QLabel(grid);
+    homologyGrid->addWidget(BdryMap2, 7, 2);
+    msg = QObject::tr("<qt>The boundary is a submanifold of the original "
+                "manifold.  This item describes some properties of "
+                "the induced map on H<sub>2</sub>.</qt>"
                 );
     label->setWhatsThis(msg);
-    TorForOrders->setWhatsThis(msg);
+    BdryMap2->setWhatsThis(msg);
 
-    label = new QLabel(QObject::tr("Sigma vector: "), grid);
+    label = new QLabel(QObject::tr("Signature: "), grid);
     homologyGrid->addWidget(label, 8, 1);
-    TorForSigma = new QLabel(grid);
-    homologyGrid->addWidget(TorForSigma, 8, 2);
-    msg = QObject::tr("<qt>If H<sub>1</sub> has 2-torsion, this is the "
-               "2-torsion sigma-vector.  The sigma-vector is the "
-               "second of the Kawauchi-Kojima invariants, and is an "
-               "orientation-sensitive invariant."
-               "<p>For further information, see Kawauchi and Kojima's paper "
-               "<i>Algebraic classification of linking pairings "
-               "on 3-manifolds</i>, Math. Ann. <b>253</b> (1980), "
-               "no. 1, 29&ndash;42.</qt>"
-                );
+    sig = new QLabel(grid);
+    homologyGrid->addWidget(sig, 8, 2);
+    msg = QObject::tr("<qt>blah blah signature is blah blah</qt>");
     label->setWhatsThis(msg);
-    TorForSigma->setWhatsThis(msg);
-
-    label = new QLabel(QObject::tr("Legendre symbol vector: "), grid);
-    homologyGrid->addWidget(label, 9, 1);
-    TorForLegendre = new QLabel(grid);
-    homologyGrid->addWidget(TorForLegendre, 9, 2);
-    msg = QObject::tr("<qt>If H<sub>1</sub> has odd torsion, this is the "
-               "Legendre symbol vector.  The Legendre symbol vector "
-               "is the last of the Kawauchi-Kojima invariants, and was "
-               "originally constructed by Seifert."
-               "<p>For further information, see Kawauchi and Kojima's paper "
-               "<i>Algebraic classification of linking pairings "
-               "on 3-manifolds</i>, Math. Ann. <b>253</b> (1980), "
-               "no. 1, 29&ndash;42.</qt>"
-                );
-    label->setWhatsThis(msg);
-    TorForLegendre->setWhatsThis(msg);
+    sig->setWhatsThis(msg);    
 
     label = new QLabel(QObject::tr("Alexander ideal: "), grid);
-    homologyGrid->addWidget(label, 10, 1);
+    homologyGrid->addWidget(label, 9, 1);
     AlexInv = new QLabel(grid);
-    homologyGrid->addWidget(AlexInv, 10, 2);
+    homologyGrid->addWidget(AlexInv, 9, 2);
     msg = QObject::tr("<qt>blah blah alexander ideal is blah blah</qt>");
     label->setWhatsThis(msg);
     AlexInv->setWhatsThis(msg);    
 
     label = new QLabel(QObject::tr("Comments: "), grid);
-    homologyGrid->addWidget(label, 11, 1);
-    EmbeddingComments = new QLabel(grid);
-    homologyGrid->addWidget(EmbeddingComments, 11, 2);
-    msg = QObject::tr("<qt>If the homology allows us to make any deductions "
-                "about the embeddability of this manifold in "
-                "R<sup>3</sup>, S<sup>3</sup>, S<sup>4</sup> "
-                "or a homology sphere, we mention it here.  "
-                "Aside from the Kawauchi-Kojima paper, these comments "
-                "use C.T.C. Wall's theorem that 3-manifolds embed in "
-                "S<sup>5</sup> and some elementary homological "
-                "observations.</qt>"
-                );
+    homologyGrid->addWidget(label, 10, 1);
+    Comments = new QLabel(grid);
+    homologyGrid->addWidget(Comments, 10, 2);
+    msg = QObject::tr("<qt>Observations from above...currently nothing!</qt>");
     label->setWhatsThis(msg);
-    EmbeddingComments->setWhatsThis(msg);
+    Comments->setWhatsThis(msg);
 }
 
 
@@ -717,10 +674,10 @@ void Dim4TriCellularInfoUI::editingElsewhere() {
     EulerChar->setText(msg);
     H0H1H2H3->setText(msg);
     HBdry->setText(msg);
-    BdryMap->setText(msg);
-    TorForOrders->setText(msg);
-    TorForSigma->setText(msg);
-    TorForLegendre->setText(msg);
-    EmbeddingComments->setText(msg);
+    BdryMap1->setText(msg);
+    BdryMap2->setText(msg);
+    sig->setText(msg);
+    AlexInv->setText(msg);
+    Comments->setText(msg);
 }
 
