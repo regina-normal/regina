@@ -36,14 +36,14 @@
 #define __NBILINEARFORM_H
 #endif
 
-//#include <string>
 #include "regina-core.h"
 #include "maths/nsparsegrid.h"
+#include "maths/matrixops.h"
 #include "shareableobject.h"
 #include "maths/nlargeinteger.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "algebra/nsvpolynomialring.h"
-#include "maths/nrational.h" // eventually I should get rid of this
+#include "maths/nrational.h" 
 #include "maths/nlargeinteger.h"
 #include "maths/nprimes.h"
 #include <algorithm>
@@ -63,13 +63,6 @@ namespace regina {
  * groups, to an abelian group. It allows for the computation of things such as the signature
  * and Kawauchi-Kojima invariants of the bilinear forms coming from Poincare duality on a 4 or
  * 3-manifold respectively. 
- *
- * TODO : Specify different methods of computation -- have an enum that allows for honest computations
- *        where for example the domain of the leftAdjoint would satisfy isEqualTo(A), etc, vs one where
- *        only isIsomorphicTo(A) would be satisfied -- one using unreducedPairing, the other
- *        reducedPairing, etc.
- *        need to implement things like torsionSubgroupInclusion() in NMarkedAbelianGroup, etc.
- *        Have an evalSNF as well?
  *
  * @author Ryan Budney
  */
@@ -156,9 +149,16 @@ class REGINA_API NBilinearForm : public ShareableObject {
         const NSparseGridRing< NLargeInteger >* reducedSparseGrid() const;
  
         /**
-         * If this is a symmetric bilinear form, we can ask for its signature.  This
-         * routine computes said signature. 
-        */
+         *  Given a bilinear form whose range is the integers, we can ask for the 
+         * maximal dimension (rank) of a subspace on which it is non-degenerate. 
+         * This is that number.  Returns zero if your target space is not the integers.
+         */
+        unsigned long rank() const;
+
+        /**
+         * If this is a symmetric bilinear form with range the integers, we can ask for its 
+         * signature.  This routine computes said signature. 
+         */
         long int signature() const;
 
     	/**

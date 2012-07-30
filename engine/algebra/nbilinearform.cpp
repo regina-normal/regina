@@ -103,6 +103,28 @@ std::vector<NLargeInteger> NBilinearForm::evalCC(std::vector<NLargeInteger> &lcc
  return retval;
 }
 
+unsigned long NBilinearForm::rank() const
+{
+ if (!Range.isIsomorphicTo(NMarkedAbelianGroup(1, NLargeInteger::zero))) return 0;
+ NMatrixInt cM( lDomain.getRank(), rDomain.getRank() );
+
+ std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator i;
+ for (i = reducedPairing->getGrid().begin(); i!=reducedPairing->getGrid().end(); i++)
+  { 
+  if ( (i->first.entry(0) >= lDomain.getNumberOfInvariantFactors()) &&
+       (i->first.entry(1) >= rDomain.getNumberOfInvariantFactors()) )
+  cM.entry( i->first.entry(0) - lDomain.getNumberOfInvariantFactors() , 
+            i->first.entry(1) - rDomain.getNumberOfInvariantFactors() ) = 
+            (*i->second); 
+  }
+
+ metricalSmithNormalForm(cM);
+ unsigned long rk=0;
+ for (unsigned long i=0; i<cM.rows(); i++)
+  if (cM.entry(i,i) != NLargeInteger::zero) rk++;
+
+ return rk;
+}
 
 long int NBilinearForm::signature() const 
 {
@@ -325,7 +347,6 @@ return true;
 /* p(ei,ej)=sum_k p^k_ij, f(ei)=sum_j f^j_i e_j
  * p' = p( f x I ), p'^k_ij = sum_l f^l_i p^k_lj
  */
-// TODO: add flag for composition test
 NBilinearForm NBilinearForm::lCompose(const NHomMarkedAbelianGroup &f) const
 {
  // check to see if this is a valid operation
@@ -354,7 +375,6 @@ NBilinearForm NBilinearForm::lCompose(const NHomMarkedAbelianGroup &f) const
 /* p(ei,ej)=sum_k p^k_ij, f(ei)=sum_j f^j_i e_j
  * p' = p( I x f ), p'^k_ij = sum_l f^l_j p^k_il
  */
-// TODO: add flag for composition test
 NBilinearForm NBilinearForm::rCompose(const NHomMarkedAbelianGroup &f) const
 {
  // check to see if this is a valid operation

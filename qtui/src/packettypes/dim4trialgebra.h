@@ -35,7 +35,6 @@
 
 #include "../packettabui.h"
 
-
 class QToolBar;
 class Dim4TriAlgebraUI;
 class Dim4TriFundGroupUI;

@@ -479,12 +479,17 @@ void Dim4TriCellularInfoUI::refresh() {
             Comments->setText(msg);
         } else {
             if (tri->isOrientable()) {
-                std::stringstream ts;
-                ts << Minfo.bilinearForm( NCellularData::FormLocator( 
-            NCellularData::intersectionForm,
+                const regina::NBilinearForm* bil( Minfo.bilinearForm( NCellularData::FormLocator( 
+                NCellularData::intersectionForm,
             NCellularData::GroupLocator( 2, NCellularData::coVariant, NCellularData::DUAL_coord, 0 ), 
-            NCellularData::GroupLocator( 2, NCellularData::coVariant, NCellularData::DUAL_coord, 0 ) ) 
-                        )->signature() ;
+            NCellularData::GroupLocator( 2, NCellularData::coVariant, NCellularData::DUAL_coord, 0 ) ) ) );
+                std::stringstream ts;
+              // we need to record more than signature if the manifold has boundary since the
+              // intersection form is likely degenerate.  Let's record its rank. 
+                ts << bil->signature() ;
+               unsigned long rk (bil->rank());
+               if (rk != bil->ldomain().getRank()) 
+                ts << " [rank == "<<rk<<"]";
                sig->setText( ts.str().c_str() ); 
             } else {
                 // The torsion linking form routines insist on orientability,
@@ -502,8 +507,8 @@ void Dim4TriCellularInfoUI::refresh() {
                 for (std::list< NSVPolynomialRing<NLargeInteger> >::iterator i = alex->begin();
                      i != alex->end(); i++)
                   {
+                  if (i!=alex->begin()) aString.append(", ");
                   aString.append( i->toString() );
-                  if (i!=alex->end()) aString.append(" ");
                   }
               AlexInv->setText(QObject::tr(aString.c_str()));
              }
