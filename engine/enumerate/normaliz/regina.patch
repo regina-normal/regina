@@ -11,8 +11,20 @@ Index: libnormaliz.h
 -#else         // all other systems
 -	#include <gmpxx.h>
 -#endif
-+// Regina will gmpxx.h everywhere, even on Windows.
++// Regina will use gmpxx.h everywhere, even on Windows.
 +#include <gmpxx.h>
  
  #include "normaliz_exception.h"
  #include "cone_property.h"
+Index: libnormaliz.h
+===================================================================
+--- libnormaliz.h	(revision 7097)
++++ libnormaliz.h	(working copy)
+@@ -20,6 +20,7 @@
+ #define LIBNORMALIZ_H_
+ 
+ #include <iostream>
++#include <cstring>
+ #include <assert.h>
+ 
+ // Regina will use gmpxx.h everywhere, even on Windows.
