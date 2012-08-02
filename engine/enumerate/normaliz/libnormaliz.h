@@ -20,9 +20,10 @@
 #define LIBNORMALIZ_H_
 
 #include <iostream>
+#include <cstring>
 #include <assert.h>
 
-// Regina will gmpxx.h everywhere, even on Windows.
+// Regina will use gmpxx.h everywhere, even on Windows.
 #include <gmpxx.h>
 
 #include "normaliz_exception.h"
