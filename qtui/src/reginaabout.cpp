@@ -135,6 +135,7 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     thanksExpertise << "Nathan Dunfield";
     thanksExpertise << "William Jaco";
     thanksExpertise << "Craig Macintyre";
+    thanksExpertise << "Melih Ozlen";
     thanksExpertise << "Hyam Rubinstein";
     thanksExpertise << "Jonathan Shewchuk";
     thanksExpertise << "Stephan Tillmann";
