@@ -286,6 +286,12 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
          * the vertices of the face in the domain (012) to
          * the vertices of the face in the range (0123 excluding \a v).
          *
+         * Ryan's Addition: The triangles of this surface triangulation 
+         *  have a text descriptor which is an std::string, consisting of
+         *  two integers separated by a whitespace.  The first integer
+         *  is the index of the tetrahedron the triangle is from, the  
+         *  second is the vertex of that tetrahedron this triangle links.  
+         *
          * @return the triangulated link of this vertex.
          */
         const Dim2Triangulation* buildLink() const;
