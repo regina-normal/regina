@@ -29,6 +29,7 @@
 #include "dim2/dim2triangulation.h"
 #include "maths/permconv.h"
 #include "triangulation/nvertex.h"
+#include <sstream>
 
 namespace regina {
 
@@ -65,7 +66,16 @@ const Dim2Triangulation* NVertex::buildLink() const {
 
     std::vector<NVertexEmbedding>::const_iterator it, adjIt;
     for (it = embeddings.begin(); it != embeddings.end(); ++it)
-        ans->newTriangle();
+        {
+        Dim2Triangle* tTri( ans->newTriangle() );
+        std::stringstream temp;
+        temp << it->getTetrahedron()->getTriangulation()->getTetrahedronIndex( it->getTetrahedron() );
+        std::string tetDesc( temp.str() );
+        temp.str("");
+        temp << it->getVertex();
+        std::string vrtDesc( temp.str() );
+        tTri->setDescription( tetDesc + std::string(" ") + vrtDesc );
+        }
 
     NTetrahedron *tet, *adj;
     int i, exitTri, v;
