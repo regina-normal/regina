@@ -263,7 +263,7 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform, bool 
     // All done!
     knownSimpleLinks_ = rememberSimpleLinks;
 
-    // Ryan's edit
+    // Ryan's edit for inverse Pachner labels
     if (label)
      {  
       std::stringstream num; 
@@ -275,7 +275,7 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform, bool 
 }
 
 bool Dim4Triangulation::threeThreeMove(Dim4Triangle* f, bool check,
-        bool perform) {
+        bool perform, bool label) {
     const std::deque<Dim4TriangleEmbedding>& embs = f->getEmbeddings();
     if (check) {
         // f must be valid and non-boundary.
@@ -367,6 +367,14 @@ bool Dim4Triangulation::threeThreeMove(Dim4Triangle* f, bool check,
     // Delete the old pentachora and insert the new.
     for (i = 0; i < 3; ++i)
         removePentachoron(oldPent[i]);
+
+    // Ryan's edit for inverse Pachner labels
+    if (label)
+     {
+      std::stringstream num; 
+      num << triangleIndex( newPent[0]->getTriangle( Dim4Triangle::triangleNumber[0][1][2] ) );
+      setPacketLabel(std::string("Return via Pachner 3->3 on triangle: "+num.str()));
+     }
 
     // All done!
     knownSimpleLinks_ = rememberSimpleLinks;

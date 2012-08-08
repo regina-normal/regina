@@ -1223,7 +1223,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * is \c false, the function simply returns \c true.
          */
         bool threeThreeMove(Dim4Triangle* t, bool check = true,
-            bool perform = true);
+            bool perform = true, bool label = false);
         /**
          * Checks the eligibility of and/or performs a 2-4 move
          * about the given facet.
