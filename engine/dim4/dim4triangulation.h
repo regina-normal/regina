@@ -1191,7 +1191,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool fourTwoMove(Dim4Edge* e, bool check = true, bool perform = true, bool label = false);
+        bool fourTwoMove(Dim4Edge* e, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 3-3 move
          * about the given triangle.
@@ -1223,7 +1223,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * is \c false, the function simply returns \c true.
          */
         bool threeThreeMove(Dim4Triangle* t, bool check = true,
-            bool perform = true, bool label = false);
+            bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 2-4 move
          * about the given facet.
