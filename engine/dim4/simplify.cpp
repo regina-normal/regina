@@ -29,6 +29,7 @@
 #include "dim4/dim4triangulation.h"
 #include "maths/nperm3.h"
 #include "triangulation/nedge.h"
+#include <sstream>
 
 namespace regina {
 
@@ -134,7 +135,7 @@ namespace {
     }
 }
 
-bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
+bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform, bool label) {
     const std::vector<Dim4EdgeEmbedding>& embs = e->getEmbeddings();
     if (check) {
         // e must be valid and non-boundary.
@@ -261,6 +262,15 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
 
     // All done!
     knownSimpleLinks_ = rememberSimpleLinks;
+
+    // Ryan's edit
+    if (label)
+     {  
+      std::stringstream num; 
+      num << tetrahedronIndex( newPent[0]->getTetrahedron(4) );
+      setPacketLabel(std::string("Return via Pachner 2->4 on tetrahedron: "+num.str()));
+     }
+
     return true;
 }
 

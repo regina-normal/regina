@@ -1182,12 +1182,16 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * allowed (defaults to \c true).
          * @param perform \c true if we are to perform the move
          * (defaults to \c true).
+         * @param label if true, getPacketLabel() will be a string describing
+         *  the Pachner move to get back to the previous triangulation. 
+         *  So this will be "fourTwoMove(edge index)". This only happens
+         *  if perform == true.
          * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool fourTwoMove(Dim4Edge* e, bool check = true, bool perform = true);
+        bool fourTwoMove(Dim4Edge* e, bool check = true, bool perform = true, bool label = false);
         /**
          * Checks the eligibility of and/or performs a 3-3 move
          * about the given triangle.
