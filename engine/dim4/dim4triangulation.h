@@ -1541,9 +1541,16 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * recovered might not be identical to the original, but it will be
          * combinatorially isomorphic.
          *
+         * @param toIsoSigLabel if not a null pointer, it should be initialized
+         * before passing to isoSig  to be the size of getNumberOfPentachora(). 
+         * In this case it will return to be the Dim4Isomorphism so that when
+         * you call toIsoSigLabel.apply( this ) the returned triangulation is
+         * combinatorially identical to the result of 
+         * Dim4Triangulation::fromIsoSig(this->isoSig())
+         *
          * @return the isomorphism signature of this triangulation.
          */
-        std::string isoSig() const;
+        std::string isoSig(Dim4Isomorphism* toIsoSigLabel=NULL) const;
         /**
          * Recovers a full triangulation from an isomorphism signature.
          * See isoSig() for more information on isomorphism signatures.
