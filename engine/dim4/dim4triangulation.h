@@ -1172,7 +1172,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * (facets, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
-         *
+         * 
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
          * \pre The given edge is an edge of this triangulation.
@@ -1182,10 +1182,6 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * allowed (defaults to \c true).
          * @param perform \c true if we are to perform the move
          * (defaults to \c true).
-         * @param label if true, getPacketLabel() will be a string describing
-         *  the Pachner move to get back to the previous triangulation. 
-         *  So this will be "fourTwoMove(edge index)". This only happens
-         *  if perform == true.
          * @return If \a check is \c true, the function returns \c true
          * if and only if the requested move may be performed
          * without changing the topology of the manifold.  If \a check
