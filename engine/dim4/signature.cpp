@@ -132,13 +132,20 @@ namespace {
     }
 }
 
-std::string Dim4Triangulation::isoSig() const {
+// remember only build when toIsoSigLabel->getSourceSimplices() == getNumberOfPentachora() 
+std::string Dim4Triangulation::isoSig( Dim4Isomorphism* toIsoSigLabel ) const {
     if (pentachora_.empty()) {
         char c[2];
         c[0] = SCHAR(0);
         c[1] = 0;
         return c;
     }
+
+    // Ryan's addition
+    bool permFlag( false );
+    if ( toIsoSigLabel ) if ( getNumberOfPentachora() == toIsoSigLabel->getSourceSimplices() ) 
+        permFlag = true; // set to true if we are to build toIsoSigLabel
+    // end Ryan's addition
 
     // The triangulation is non-empty.  Get a signature string for each
     // connected component.
@@ -172,7 +179,9 @@ std::string Dim4Triangulation::isoSig() const {
     return ans;
 }
 
-std::string Dim4Triangulation::isoSig(unsigned pent, const NPerm5& vertices)
+// Ben's comment: to build toIsoSigLabel, the data is all contained in [perm], [image] and [preImage]. 
+//  also, remember we only build
+std::string Dim4Triangulation::isoSig(unsigned pent, const NPerm5& vertices,  Dim4Isomorphism* toIsoSigLabel )
         const {
     // Only process the component that pent belongs to.
 
@@ -333,6 +342,23 @@ std::string Dim4Triangulation::isoSig(unsigned pent, const NPerm5& vertices)
         SAPPEND(ans, joinDest[i], nChars);
     for (i = 0; i < joinPos; ++i)
         SAPPEND(ans, joinGluing[i], 2); // Two characters required for 5!=120.
+
+// Ryan's addition
+    if ( toIsoSigLabel ) if ( getNumberOfPentachora() == toIsoSigLabel->getSourceSimplices() ) 
+        {
+    // ---------------------------------------------------------------------
+    // Data for finding the unique canonical isomorphism from this
+    // connected component that maps (pent, vertices) -> (0, 01234)
+    // ---------------------------------------------------------------------
+
+    // The image for each pentachoron and its vertices:
+//    int* image = new int[nPents];
+//    NPerm5* vertexMap = new NPerm5[nPents];
+
+    // The preimage for each pentachoron:
+//    int* preImage = new int[nPents];
+        }
+// end Ryan's addition
 
     // Done!
     delete[] image;

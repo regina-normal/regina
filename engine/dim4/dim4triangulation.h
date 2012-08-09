@@ -1546,11 +1546,11 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * In this case it will return to be the Dim4Isomorphism so that when
          * you call toIsoSigLabel.apply( this ) the returned triangulation is
          * combinatorially identical to the result of 
-         * Dim4Triangulation::fromIsoSig(this->isoSig())
+         * Dim4Triangulation::fromIsoSig( this->isoSig() )
          *
          * @return the isomorphism signature of this triangulation.
          */
-        std::string isoSig(Dim4Isomorphism* toIsoSigLabel=NULL) const;
+        std::string isoSig( Dim4Isomorphism* toIsoSigLabel=NULL ) const;
         /**
          * Recovers a full triangulation from an isomorphism signature.
          * See isoSig() for more information on isomorphism signatures.
@@ -1808,7 +1808,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * given pentachoron.
          * @return the candidate isomorphism signature.
          */
-        std::string isoSig(unsigned pent, const NPerm5& vertices) const;
+        std::string isoSig(unsigned pent, const NPerm5& vertices,  Dim4Isomorphism* toIsoSigLabel=NULL ) const;
 
     friend class regina::Dim4Pentachoron;
     friend class regina::NXMLDim4TriangulationReader;

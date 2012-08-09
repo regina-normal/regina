@@ -564,6 +564,10 @@ class REGINA_API NGroupExpression : public ShareableObject {
  * \testpart
  */
 class REGINA_API NGroupPresentation : public ShareableObject {
+    private: 
+        // for now we'll keep this to ourselves.  Returns true if the presentation partitions the 
+        //  generators into disjoint non-trivial sets. 
+        bool obviously_freeproduct() const;
     protected:
         unsigned long nGenerators;
             /**< The number of generators. */

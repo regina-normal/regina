@@ -51,6 +51,7 @@ namespace regina {
 /**
  * A dimension-agnostic base class that represents a combinatorial
  * isomorphism from one \a dim-manifold triangulation into another.
+ *
  * Each dimension that Regina works with (2, 3 and 4) offers its own
  * subclass with richer functionality; users typically do not need to
  * work with this template base class directly.
@@ -60,6 +61,14 @@ namespace regina {
  * simplices of U that allows relabelling of both the simplices and
  * their facets (or equivalently, their vertices), and that preserves
  * gluings across adjacent simplices.
+ *
+ * Alternatively, think of this as a class that represents bijections
+ * {0,1,...,k} x Sigma_n --> {0,1,...,k} x Sigma_n which preserve the
+ * product structure, where k is the number of top-dimensional simplices 
+ * (and the top dimension is (n-1)).  Given a n-dimensional triangulation
+ * with k top-dimensional simplices, one pre-compose the characteristic
+ * maps with such an automorphism, getting a new triangulation.  
+ * NGenericIsomorphism represents precomposition with the *inverse*. 
  *
  * More precisely:  An isomorphism consists of (i) a one-to-one map f
  * from the simplices of T to the simplices of U, and (ii) for each
@@ -225,18 +234,25 @@ class NGenericIsomorphism : public ShareableObject {
          */
         bool isIdentity() const;
 
+// removed -- ryan
+//         * Applies this isomorphism to the given triangulation and
+//         * returns the result as a new triangulation.
+//         *
+
         /**
-         * Applies this isomorphism to the given triangulation and
-         * returns the result as a new triangulation.
+         * This NGenericIsomorphism object represents a combinatorial 
+         * identification from a triangulation T to a triangulation U. 
+         * This routine produces the triangulation U, i.e. the range. The 
+         * input parameter (original) represents the domain, T.  
          *
          * The given triangulation (call this T) is not modified in any way.
-         * A new triangulation (call this S) is returned, so that this
+         * A new triangulation (call this U) is returned, so that this
          * isomorphism represents a one-to-one, onto and boundary complete
-         * isomorphism from T to S.  That is, T and S are combinatorially
+         * isomorphism from T to U.  That is, T and U are combinatorially
          * identical triangulations, and this isomorphism describes the
          * corresponding mapping between simplex and simplex facets.
          *
-         * The resulting triangulation S is newly created, and must be
+         * The resulting triangulation U is newly created, and must be
          * destroyed by the caller of this routine.
          *
          * There are several preconditions to this routine.  This

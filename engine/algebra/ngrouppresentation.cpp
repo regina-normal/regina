@@ -940,5 +940,33 @@ void NGroupPresentation::writeToFile(NFile& out) const {
     out.writeAllPropertiesFooter();
 }
 
+// TODO: re-arrange this so that it returns a data type indicating how generators are 
+//       partitioned. Eventually we could ask for a free product decomposition routine.
+//       in revision user should be able to pass a pointer to a std::list< std::set< unsigned long > > *genBatch
+//       object.  If null the routine will do nothing with it, but if allocated (and empty) the routine will 
+//       fill it.  Something like that. 
+bool NGroupPresentation::obviously_freeproduct() const {
+ bool retval;
+ // let's create a list, and glom generators together if relations use both of them...
+ // start with empty std::list< std::list< int > > then run through relators, so [a,b] will create { {a,b} } etc... 
+ // every relator gets converted into the list of generators mentioned in the relator, *then* we
+ // perform a merge operation.  We can sort such relators lexicographically.  At end if some generators are not
+ // mentioned we know they're free summands and can deal with them at the end. 
+ std::list< std::set< unsigned long > > genBatch;
+ // total number of generators: getNumberOfGenerators() 
+ // next, run through relators, turn each into an std::list< unsigned long >, append to genBatch
+ for (unsigned long i=0; i<relations.size(); i++)
+    {
+     std::set< unsigned long > relLet;
+     // now run through relation[i] listing generators...
+     for (unsigned long j=0; j<relations[i]->getNumberOfTerms(); j++)
+         relLet.insert( relations[i]->getGenerator(j) );
+     genBatch.push_back(relLet);
+    }
+
+ return retval;
+}
+
+
 } // namespace regina
 
