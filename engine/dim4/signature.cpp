@@ -29,8 +29,6 @@
 #include <algorithm>
 #include "dim4/dim4triangulation.h"
 
-#include <sstream> // temp
-
 namespace regina {
 
 namespace {
@@ -134,11 +132,13 @@ namespace {
     }
 }
 
+// this is a local class, meant only for use in the isoSig routine below. 
+// not to be available outside of this file. 
 struct cPerm {
  std::string compStr;
  Dim4Isomorphism* compIsoPtr; // these will be null if not requested. 
  unsigned long compIdx; // which component is this originally? 
- // 
+
  cPerm(); // default constructor
  ~cPerm(); // default destructor
  bool operator<(const cPerm &oth) const;
@@ -155,7 +155,6 @@ cPerm::cPerm() // default constructor
 cPerm::~cPerm() // default destructor
  {
   if ( compIsoPtr != NULL ) delete compIsoPtr;
-  //compIsoPtr = NULL; 
  }
 
 bool cPerm::operator<(const cPerm &oth) const
@@ -166,8 +165,12 @@ bool cPerm::operator<(const cPerm &oth) const
 void cPerm::swap( cPerm &oth ) 
  {
   compStr.swap(oth.compStr);
-  Dim4Isomorphism* tempPtr( compIsoPtr ); compIsoPtr = oth.compIsoPtr; oth.compIsoPtr = tempPtr;
-  unsigned long tLong ( compIdx ); compIdx = oth.compIdx; oth.compIdx = tLong;
+  Dim4Isomorphism* tempPtr( compIsoPtr ); 
+  compIsoPtr = oth.compIsoPtr; 
+  oth.compIsoPtr = tempPtr;
+  unsigned long tLong ( compIdx ); 
+  compIdx = oth.compIdx; 
+  oth.compIdx = tLong;
  }
 
 std::string Dim4Triangulation::isoSig( Dim4Isomorphism* toIsoSigLabel ) const {
@@ -178,11 +181,12 @@ std::string Dim4Triangulation::isoSig( Dim4Isomorphism* toIsoSigLabel ) const {
         return c;
     }
 
-    // Ryan's addition
+    // this set permFlag if we are building toISoSigLabel
     bool permFlag( false );
-    if ( toIsoSigLabel ) if ( getNumberOfPentachora() == toIsoSigLabel->getSourceSimplices() ) 
-        permFlag = true; // set to true if we are to build toIsoSigLabel
-    // end Ryan's addition
+    if ( toIsoSigLabel ) if ( getNumberOfPentachora() == 
+                              toIsoSigLabel->getSourceSimplices() ) 
+        permFlag = true; 
+
     // The triangulation is non-empty.  Get a signature string for each
     // connected component.
     unsigned i, j;
@@ -192,21 +196,24 @@ std::string Dim4Triangulation::isoSig( Dim4Isomorphism* toIsoSigLabel ) const {
     std::string curr;
     Dim4Isomorphism* curri(NULL);
 
-    //std::string* comp = new std::string[getNumberOfComponents()]; // use if no Dim4Isomorphisms requested
     cPerm* comp = new cPerm[getNumberOfComponents()];
 
     for (it = components_.begin(), i = 0; it != components_.end(); ++it, ++i) {
         cPent = (*it)->getNumberOfPentachora();
         for (pent = 0; pent < (*it)->getNumberOfPentachora(); ++pent)
             for (perm = 0; perm < 120; ++perm) {
-                  if (permFlag) curri = new Dim4Isomorphism( (*it)->getNumberOfPentachora() );
+                  if (permFlag) curri = new Dim4Isomorphism( 
+                        (*it)->getNumberOfPentachora() );
                     else curri = NULL;
                   curr = isoSig((*it)->getPentachoron(pent)->markedIndex(),
                     NPerm5::orderedS5[perm], curri);
                   cPerm tLabel;
-                  tLabel.compStr = curr; tLabel.compIdx = i; tLabel.compIsoPtr = curri;
+                  tLabel.compStr = curr; 
+                  tLabel.compIdx = i; 
+                  tLabel.compIsoPtr = curri;
 
-                  if ((pent == 0 && perm == 0) || (tLabel < comp[i])) comp[i].swap( tLabel );                         
+                  if ((pent == 0 && perm == 0) || (tLabel < comp[i])) 
+                    comp[i].swap(tLabel);                         
             }
     }
 
@@ -215,13 +222,15 @@ std::string Dim4Triangulation::isoSig( Dim4Isomorphism* toIsoSigLabel ) const {
     std::sort(comp, comp + getNumberOfComponents());
     for (i = 0; i < getNumberOfComponents(); ++i) ans += comp[i].compStr;
 
-    if (permFlag) // build toIsoSigLabel
-      {
-      // compOrder[i] is the original component index of the i-th canonical component 
+    // build the toIsoSigLabel
+    if (permFlag) {
+      // compOrder[i] is the original component index of the 
+      //  i-th canonical/isoSig reconstructed component 
       std::vector<unsigned long> compOrder( getNumberOfComponents() );
       for (i=0; i<compOrder.size(); i++) compOrder[ comp[i].compIdx ] = i; 
 
-      // this tells us the number of pentachora in all components of canonical index less than i.
+      // this tells us the number of pentachora in all components of 
+      //  canonical index less than i.
       std::vector<unsigned long> canPenCount(getNumberOfComponents());
 
       for (i=0, j=0; i<getNumberOfComponents(); i++ )
@@ -232,17 +241,18 @@ std::string Dim4Triangulation::isoSig( Dim4Isomorphism* toIsoSigLabel ) const {
 
       unsigned long count=0;
       for (i=0; i<getNumberOfComponents(); i++) // i-th original component
-        {
-         for (j=0; j<getComponent(i)->getNumberOfPentachora(); j++, count++) // j-th pentachoron of i-th original component
-            { // pentachoron j of component i has is sent where in canonical ordering? 
+            // j-th pentachoron of i-th original component
+            // pentachoron j of component i has is sent where in canonical ordering? 
+         for (j=0; j<getComponent(i)->getNumberOfPentachora(); j++, count++) { 
               toIsoSigLabel->simpImage( count ) = canPenCount[i] + 
-                  comp[ compOrder[i] ].compIsoPtr->simpImage( j ); // set to its canonical ordering. 
-
-              toIsoSigLabel->facetPerm( count ) = comp[ compOrder[i] ].compIsoPtr->facetPerm(j);
-                    // component i has canonical component index compOrder[i]
-                    // there are canPenCont[i] pentachora before this one in the canonical ordering.       
+                  comp[ compOrder[i] ].compIsoPtr->simpImage( j ); 
+              // set to its canonical ordering. 
+              toIsoSigLabel->facetPerm( count ) = 
+                comp[ compOrder[i] ].compIsoPtr->facetPerm(j);
+                // component i has canonical component index compOrder[i]
+                // there are canPenCont[i] pentachora before this one in the 
+                // canonical ordering.       
             }          
-        }
       } // end build of toIsoSigLabel
 
     // clean up
@@ -250,8 +260,8 @@ std::string Dim4Triangulation::isoSig( Dim4Isomorphism* toIsoSigLabel ) const {
     return ans;
 }
 
-std::string Dim4Triangulation::isoSig(unsigned pent, const NPerm5& vertices,  Dim4Isomorphism* toIsoSigLabel )
-        const {
+std::string Dim4Triangulation::isoSig(unsigned pent, const NPerm5& vertices,  
+                                      Dim4Isomorphism* toIsoSigLabel ) const {
     // Only process the component that pent belongs to.
 
     // ---------------------------------------------------------------------
@@ -412,17 +422,15 @@ std::string Dim4Triangulation::isoSig(unsigned pent, const NPerm5& vertices,  Di
     for (i = 0; i < joinPos; ++i)
         SAPPEND(ans, joinGluing[i], 2); // Two characters required for 5!=120.
 
-// Ryan's addition
-    if ( toIsoSigLabel ) if ( getNumberOfPentachora() == toIsoSigLabel->getSourceSimplices() ) 
-        {         
+    // only run if we need to define toIsoSigLabel. 
+    if ( toIsoSigLabel ) if ( getNumberOfPentachora() == 
+                              toIsoSigLabel->getSourceSimplices() ) {         
          // it appears as if we need to fill it out with image and vertexMap. 
-         for (unsigned long i=0; i<getNumberOfPentachora(); i++)
-          {
+         for (unsigned long i=0; i<getNumberOfPentachora(); i++) {
            toIsoSigLabel->simpImage(i)=(image[i]);
            toIsoSigLabel->facetPerm(i)=(vertexMap[i]);
           }
         }
-// end Ryan's addition
 
     // Done!
     delete[] image;
