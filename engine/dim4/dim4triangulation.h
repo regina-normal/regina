@@ -322,6 +322,9 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * Creates a new pentachoron and adds it to this triangulation.
          * The new pentachoron will have an empty description.
          * All five facets of the new pentachoron will be boundary facets.
+         * 
+         * In calls to getPentachora() and getPentachoron(), this
+         * new pentachoron will be the last element of the list. 
          *
          * @return the new pentachoron.
          */
@@ -333,6 +336,9 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * 
          * Here "simplex" refers to a top-dimensional simplex (which for
          * 4-manifold triangulations means a pentachoron).
+         *
+         * In calls to getPentachora() and getPentachoron(), this
+         * new pentachoron will be the last element of the list. 
          * 
          * See newPentachoron() for further information.
          */
@@ -1157,9 +1163,8 @@ class REGINA_API Dim4Triangulation : public NPacket {
 
         /**
          * Checks the eligibility of and/or performs a 4-2 move
-         * about the given edge.
-         * This involves replacing the four pentachora joined at that
-         * edge with two pentachora joined along a single facet.
+         * about the given edge.  This involves replacing the four pentachora 
+         * joined at that edge with two pentachora joined along a single facet.
          * This can be done iff (i) the edge is valid and non-boundary,
          * (ii) the four pentachora are distinct, and (iii) the pentachora
          * are joined in such a way that the link of the edge is the
@@ -1172,6 +1177,25 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * (facets, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
+         * 
+         * When applying a Pachner move to a triangulated n-manifold, one is
+         * finding a link of a k-facet of your triangulated n-manifold N
+         * which is combinatorially isomorphic to the link of k-facet in 
+         * the boundary of triangulated (n+1)-simplex.  One then replaces
+         * the link of the k-facet in N with the complement of the link of
+         * k-facet in the boundary of the (n+1)-simplex.  The complement of the
+         * link of the k-facet in the boundary of the (n+1)-simplex is the
+         * link of an (n-k)-facet.  We call the k-facet the attaching facet, 
+         * this is the input to a Pachner move.  The corresponding (n-k)-facet
+         * in the new triangulation is the belt facet (in analogy with surgery). 
+         * Since the link of a k-facet in the boundary of an (n+1)-simplex has 
+         * (n+1-k) top dimensional simplices, the link of the belt (n-k)-facet
+         * has (k+1) top dimensional simplices, so in a Pachner move one swaps
+         * (n+1-k) top dimensional simplices for (k+1), provided k is the dimension
+         * of the input facet.  
+         *
+         * In the new triangulation, the belt facet will be: 
+         *      getPentachora().back()->getTetrahedron(4)
          * 
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
@@ -1204,6 +1228,25 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * any pointers to old skeletal objects (such as the argument \a f)
          * can no longer be used.
          *
+         * When applying a Pachner move to a triangulated n-manifold, one is
+         * finding a link of a k-facet of your triangulated n-manifold N
+         * which is combinatorially isomorphic to the link of k-facet in 
+         * the boundary of triangulated (n+1)-simplex.  One then replaces
+         * the link of the k-facet in N with the complement of the link of
+         * k-facet in the boundary of the (n+1)-simplex.  The complement of the
+         * link of the k-facet in the boundary of the (n+1)-simplex is the
+         * link of an (n-k)-facet.  We call the k-facet the attaching facet, 
+         * this is the input to a Pachner move.  The corresponding (n-k)-facet
+         * in the new triangulation is the belt facet (in analogy with surgery). 
+         * Since the link of a k-facet in the boundary of an (n+1)-simplex has 
+         * (n+1-k) top dimensional simplices, the link of the belt (n-k)-facet
+         * has (k+1) top dimensional simplices, so in a Pachner move one swaps
+         * (n+1-k) top dimensional simplices for (k+1), provided k is the dimension
+         * of the input facet.  
+         *
+         * In the new triangulation, the belt facet will be:
+         *  getPentachora().back()->getTriangle( Dim4Triangle::triangleNumber[0][1][2] )
+         * 
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
          * \pre The given triangle is a triangle of this triangulation.
@@ -1235,6 +1278,25 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * any pointers to old skeletal objects (such as the argument \a f)
          * can no longer be used.
          *
+         * When applying a Pachner move to a triangulated n-manifold, one is
+         * finding a link of a k-facet of your triangulated n-manifold N
+         * which is combinatorially isomorphic to the link of k-facet in 
+         * the boundary of triangulated (n+1)-simplex.  One then replaces
+         * the link of the k-facet in N with the complement of the link of
+         * k-facet in the boundary of the (n+1)-simplex.  The complement of the
+         * link of the k-facet in the boundary of the (n+1)-simplex is the
+         * link of an (n-k)-facet.  We call the k-facet the attaching facet, 
+         * this is the input to a Pachner move.  The corresponding (n-k)-facet
+         * in the new triangulation is the belt facet (in analogy with surgery). 
+         * Since the link of a k-facet in the boundary of an (n+1)-simplex has 
+         * (n+1-k) top dimensional simplices, the link of the belt (n-k)-facet
+         * has (k+1) top dimensional simplices, so in a Pachner move one swaps
+         * (n+1-k) top dimensional simplices for (k+1), provided k is the dimension
+         * of the input facet.  
+         *
+         * In the new triangulation, the belt facet will be:
+         *  getPentachora().back()->getEdge( Dim4Edge::edgeNumber[0][1] )
+         * 
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
          * \pre The given facet is a facet of this triangulation.

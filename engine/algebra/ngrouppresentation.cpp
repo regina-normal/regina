@@ -558,6 +558,12 @@ bool NGroupPresentation::intelligentSimplify() {
 //          So how should we weigh the change of coordinates?  This is to be
 //          in step 5. 
 //        
+//        3) Perhaps of more immediate benefit: multiply relators, then re-run
+//           intelligent simplify.  This would be to find relators that are
+//           harder to spot -- in particular it will catch some trivial groups
+//           we've missed so far.  Perhaps have an optional parameter we can
+//           pass to intelligentSimplify that can specify how many cycles of
+//           this we do. 
 bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& reductionMap)
 {
  bool didSomething(false);
