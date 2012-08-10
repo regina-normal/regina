@@ -1520,9 +1520,9 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * An <i>isomorphism signature</i> is a compact text representation of
          * a triangulation.  Unlike dehydrations for 3-manifold triangulations,
          * an isomorphism signature uniquely determines a triangulation up
-         * to combinatorial isomorphism.  That is, two 4-manifold
-         * triangulations are combinatorially isomorphic if and only if
-         * their isomorphism signatures are the same.
+         * to combinatorial isomorphism.  That is, two 4-manifold triangulations 
+         * are combinatorially isomorphic if and only if their isomorphism 
+         * signatures are the same.
          *
          * The isomorphism signature is constructed entirely of
          * printable characters, and has length proportional to

@@ -29,6 +29,8 @@
 #include <algorithm>
 #include "dim4/dim4triangulation.h"
 
+#include <sstream> // temp
+
 namespace regina {
 
 namespace {
@@ -132,7 +134,42 @@ namespace {
     }
 }
 
-// remember only build when toIsoSigLabel->getSourceSimplices() == getNumberOfPentachora() 
+struct cPerm {
+ std::string compStr;
+ Dim4Isomorphism* compIsoPtr; // these will be null if not requested. 
+ unsigned long compIdx; // which component is this originally? 
+ // 
+ cPerm(); // default constructor
+ ~cPerm(); // default destructor
+ bool operator<(const cPerm &oth) const;
+ void swap( cPerm &oth ); // swap contents
+ };
+
+cPerm::cPerm() // default constructor
+ {
+  compStr = std::string();
+  compIsoPtr = NULL; 
+  compIdx = 0; 
+ }
+
+cPerm::~cPerm() // default destructor
+ {
+  if ( compIsoPtr != NULL ) delete compIsoPtr;
+  //compIsoPtr = NULL; 
+ }
+
+bool cPerm::operator<(const cPerm &oth) const
+ { // we only sort on the string. 
+  if (compStr < oth.compStr) return true; else return false; 
+ } 
+
+void cPerm::swap( cPerm &oth ) 
+ {
+  compStr.swap(oth.compStr);
+  Dim4Isomorphism* tempPtr( compIsoPtr ); compIsoPtr = oth.compIsoPtr; oth.compIsoPtr = tempPtr;
+  unsigned long tLong ( compIdx ); compIdx = oth.compIdx; oth.compIdx = tLong;
+ }
+
 std::string Dim4Triangulation::isoSig( Dim4Isomorphism* toIsoSigLabel ) const {
     if (pentachora_.empty()) {
         char c[2];
@@ -146,7 +183,6 @@ std::string Dim4Triangulation::isoSig( Dim4Isomorphism* toIsoSigLabel ) const {
     if ( toIsoSigLabel ) if ( getNumberOfPentachora() == toIsoSigLabel->getSourceSimplices() ) 
         permFlag = true; // set to true if we are to build toIsoSigLabel
     // end Ryan's addition
-
     // The triangulation is non-empty.  Get a signature string for each
     // connected component.
     unsigned i, j;
@@ -154,33 +190,66 @@ std::string Dim4Triangulation::isoSig( Dim4Isomorphism* toIsoSigLabel ) const {
     unsigned cPent;
     unsigned pent, perm;
     std::string curr;
+    Dim4Isomorphism* curri(NULL);
 
-    std::string* comp = new std::string[getNumberOfComponents()];
+    //std::string* comp = new std::string[getNumberOfComponents()]; // use if no Dim4Isomorphisms requested
+    cPerm* comp = new cPerm[getNumberOfComponents()];
+
     for (it = components_.begin(), i = 0; it != components_.end(); ++it, ++i) {
         cPent = (*it)->getNumberOfPentachora();
-
         for (pent = 0; pent < (*it)->getNumberOfPentachora(); ++pent)
             for (perm = 0; perm < 120; ++perm) {
-                curr = isoSig((*it)->getPentachoron(pent)->markedIndex(),
-                    NPerm5::orderedS5[perm]);
-                if ((pent == 0 && perm == 0) || (curr < comp[i]))
-                    comp[i].swap(curr);
+                  if (permFlag) curri = new Dim4Isomorphism( (*it)->getNumberOfPentachora() );
+                    else curri = NULL;
+                  curr = isoSig((*it)->getPentachoron(pent)->markedIndex(),
+                    NPerm5::orderedS5[perm], curri);
+                  cPerm tLabel;
+                  tLabel.compStr = curr; tLabel.compIdx = i; tLabel.compIsoPtr = curri;
+
+                  if ((pent == 0 && perm == 0) || (tLabel < comp[i])) comp[i].swap( tLabel );                         
             }
     }
 
+    std::string ans;
     // Pack the components together.
     std::sort(comp, comp + getNumberOfComponents());
+    for (i = 0; i < getNumberOfComponents(); ++i) ans += comp[i].compStr;
 
-    std::string ans;
-    for (i = 0; i < getNumberOfComponents(); ++i)
-        ans += comp[i];
+    if (permFlag) // build toIsoSigLabel
+      {
+      // compOrder[i] is the original component index of the i-th canonical component 
+      std::vector<unsigned long> compOrder( getNumberOfComponents() );
+      for (i=0; i<compOrder.size(); i++) compOrder[ comp[i].compIdx ] = i; 
 
+      // this tells us the number of pentachora in all components of canonical index less than i.
+      std::vector<unsigned long> canPenCount(getNumberOfComponents());
+
+      for (i=0, j=0; i<getNumberOfComponents(); i++ )
+         {
+         canPenCount[i] = j;
+         j+=getComponent( compOrder[i] )->getNumberOfPentachora(); 
+         }
+
+      unsigned long count=0;
+      for (i=0; i<getNumberOfComponents(); i++) // i-th original component
+        {
+         for (j=0; j<getComponent(i)->getNumberOfPentachora(); j++, count++) // j-th pentachoron of i-th original component
+            { // pentachoron j of component i has is sent where in canonical ordering? 
+              toIsoSigLabel->simpImage( count ) = canPenCount[i] + 
+                  comp[ compOrder[i] ].compIsoPtr->simpImage( j ); // set to its canonical ordering. 
+
+              toIsoSigLabel->facetPerm( count ) = comp[ compOrder[i] ].compIsoPtr->facetPerm(j);
+                    // component i has canonical component index compOrder[i]
+                    // there are canPenCont[i] pentachora before this one in the canonical ordering.       
+            }          
+        }
+      } // end build of toIsoSigLabel
+
+    // clean up
     delete[] comp;
     return ans;
 }
 
-// Ben's comment: to build toIsoSigLabel, the data is all contained in [perm], [image] and [preImage]. 
-//  also, remember we only build
 std::string Dim4Triangulation::isoSig(unsigned pent, const NPerm5& vertices,  Dim4Isomorphism* toIsoSigLabel )
         const {
     // Only process the component that pent belongs to.
@@ -345,18 +414,13 @@ std::string Dim4Triangulation::isoSig(unsigned pent, const NPerm5& vertices,  Di
 
 // Ryan's addition
     if ( toIsoSigLabel ) if ( getNumberOfPentachora() == toIsoSigLabel->getSourceSimplices() ) 
-        {
-    // ---------------------------------------------------------------------
-    // Data for finding the unique canonical isomorphism from this
-    // connected component that maps (pent, vertices) -> (0, 01234)
-    // ---------------------------------------------------------------------
-
-    // The image for each pentachoron and its vertices:
-//    int* image = new int[nPents];
-//    NPerm5* vertexMap = new NPerm5[nPents];
-
-    // The preimage for each pentachoron:
-//    int* preImage = new int[nPents];
+        {         
+         // it appears as if we need to fill it out with image and vertexMap. 
+         for (unsigned long i=0; i<getNumberOfPentachora(); i++)
+          {
+           toIsoSigLabel->simpImage(i)=(image[i]);
+           toIsoSigLabel->facetPerm(i)=(vertexMap[i]);
+          }
         }
 // end Ryan's addition
 

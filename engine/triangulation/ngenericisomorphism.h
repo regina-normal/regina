@@ -234,11 +234,6 @@ class NGenericIsomorphism : public ShareableObject {
          */
         bool isIdentity() const;
 
-// removed -- ryan
-//         * Applies this isomorphism to the given triangulation and
-//         * returns the result as a new triangulation.
-//         *
-
         /**
          * This NGenericIsomorphism object represents a combinatorial 
          * identification from a triangulation T to a triangulation U. 
