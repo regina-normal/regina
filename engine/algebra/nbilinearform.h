@@ -106,8 +106,7 @@ class REGINA_API NBilinearForm : public ShareableObject {
 		      const NMarkedAbelianGroup &range,   const NSparseGridRing< NLargeInteger > &pairing);
 
         /**
-         * Creates a permutation that is a clone of the given
-         * bilinear form.
+         * Creates a clone of the given bilinear form.
          *
          * @param cloneMe the form to clone.
          */

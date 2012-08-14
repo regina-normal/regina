@@ -134,6 +134,7 @@ typename NGenericIsomorphism<dim>::Triangulation*
             }
     }
 
+    delete [] tet; // rybu do
     return ans;
 }
 
@@ -180,6 +181,7 @@ void NGenericIsomorphism<dim>::applyInPlace(
             }
     }
 
+    delete [] tet; // rybu do
     NPacket::ChangeEventSpan span2(tri);
     tri->removeAllSimplices();
     tri->swapContents(staging);
