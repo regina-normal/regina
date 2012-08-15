@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "dim4/dim4edge.h"
+#include "dim2/dim2triangulation.h"
 
 namespace regina {
 
@@ -61,6 +62,40 @@ const NPerm5 Dim4Edge::ordering[10] = {
     NPerm5(2, 4, 0, 1, 3),
     NPerm5(3, 4, 0, 1, 2)
 };
+
+std::auto_ptr< Dim2Triangulation > Dim4Edge::buildLink() const
+{
+    std::auto_ptr< Dim2Triangulation > retval ( new Dim2Triangulation );
+
+    for (unsigned long i=0; i<getNumberOfEmbeddings(); i++)
+      retval->newTriangle();
+
+    for (unsigned long i=0; i<getNumberOfEmbeddings(); i++) {
+       const Dim4EdgeEmbedding eEmb( getEmbedding(i) );
+       const NPerm5 edgInc( eEmb.getVertices() );
+
+       for (unsigned long j=2; j<5; j++) 
+            if (retval->getTriangle(i)->getEdge(j-2)->isBoundary()) { 
+          NPerm5 penGlue( eEmb.getPentachoron()->adjacentGluing(j) );
+
+          const Dim4EdgeEmbedding adjEdjInc( const_cast< Dim4Pentachoron* >
+            (eEmb.getPentachoron()->adjacentPentachoron(j)), 
+             Dim4Edge::edgeNumber[penGlue[edgInc[0]]][penGlue[edgInc[1]]]);
+          // lets lookup adjEdjInc in emb_
+          unsigned long adjeEmbIndx = find(emb_.begin(), emb_.end(), 
+                adjEdjInc) - emb_.begin();
+          NPerm5 incTrans( 
+            adjEdjInc.getVertices().inverse() * penGlue * edgInc );
+          NPerm3 tPerm( incTrans[2]-2, incTrans[3]-2, incTrans[4]-2 );
+          // which is the target triangle 
+          retval->getTriangle(i)->joinTo(j-2, 
+                retval->getTriangle(adjeEmbIndx), tPerm);
+        }
+     }
+
+    return retval;
+}
+
 
 } // namespace regina
 
