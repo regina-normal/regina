@@ -70,11 +70,8 @@ const Dim2Triangulation* NVertex::buildLink() const {
         Dim2Triangle* tTri( ans->newTriangle() );
         std::stringstream temp;
         temp << it->getTetrahedron()->getTriangulation()->getTetrahedronIndex( it->getTetrahedron() );
-        std::string tetDesc( temp.str() );
-        temp.str("");
-        temp << it->getVertex();
-        std::string vrtDesc( temp.str() );
-        tTri->setDescription( tetDesc + std::string(" ") + vrtDesc );
+        temp << " " << it->getVertex();
+        tTri->setDescription( temp.str() );
         }
 
     NTetrahedron *tet, *adj;
@@ -120,6 +117,10 @@ const Dim2Triangulation* NVertex::buildLink() const {
                     tet->getFaceMapping(v)));
         }
     }
+
+    // label the vertices
+
+    // label the edges
 
     const_cast<NVertex*>(this)->linkTri = ans;
     return linkTri;

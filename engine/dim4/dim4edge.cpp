@@ -99,6 +99,18 @@ std::auto_ptr< Dim2Triangulation > Dim4Edge::buildLink() const
                 retval->getTriangle(adjeEmbIndx), tPerm);
         }
      }
+    // label the vertices. 
+    for (unsigned long i=0; i<retval->getNumberOfVertices(); i++)
+     { 
+        const Dim2VertexEmbedding vEmb( retval->getVertex(i)->getEmbedding(0) );
+     }
+    // and edges
+    for (unsigned long i=0; i<retval->getNumberOfEdges(); i++)
+     { 
+        const Dim2EdgeEmbedding eEmb( retval->getEdge(i)->getEmbedding(0) );
+
+     }
+
 
     return retval;
 }
