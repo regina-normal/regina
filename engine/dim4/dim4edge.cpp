@@ -66,20 +66,19 @@ const NPerm5 Dim4Edge::ordering[10] = {
 std::auto_ptr< Dim2Triangulation > Dim4Edge::buildLink() const
 {
     std::auto_ptr< Dim2Triangulation > retval ( new Dim2Triangulation );
-
     for (unsigned long i=0; i<getNumberOfEmbeddings(); i++)
       retval->newTriangle();
-
     for (unsigned long i=0; i<getNumberOfEmbeddings(); i++) {
        const Dim4EdgeEmbedding eEmb( getEmbedding(i) );
        const NPerm5 edgInc( eEmb.getVertices() );
 
-       for (unsigned long j=2; j<5; j++) 
-            if (retval->getTriangle(i)->getEdge(j-2)->isBoundary()) { 
-          NPerm5 penGlue( eEmb.getPentachoron()->adjacentGluing(j) );
+       for (unsigned long j=2; j<5; j++)
+            if ( !(eEmb.getPentachoron()->getTetrahedron(edgInc[j])->isBoundary()) && 
+               (retval->getTriangle(i)->adjacentTriangle(j-2)==NULL) ) { 
+          NPerm5 penGlue( eEmb.getPentachoron()->adjacentGluing(edgInc[j]) );
 
           const Dim4EdgeEmbedding adjEdjInc( const_cast< Dim4Pentachoron* >
-            (eEmb.getPentachoron()->adjacentPentachoron(j)), 
+            (eEmb.getPentachoron()->adjacentPentachoron(edgInc[j])), 
              Dim4Edge::edgeNumber[penGlue[edgInc[0]]][penGlue[edgInc[1]]]);
           // lets lookup adjEdjInc in emb_
           unsigned long adjeEmbIndx = find(emb_.begin(), emb_.end(), 
