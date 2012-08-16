@@ -28,6 +28,7 @@
 
 #include "dim4/dim4edge.h"
 #include "dim2/dim2triangulation.h"
+#include <sstream>
 
 namespace regina {
 
@@ -67,7 +68,14 @@ std::auto_ptr< Dim2Triangulation > Dim4Edge::buildLink() const
 {
     std::auto_ptr< Dim2Triangulation > retval ( new Dim2Triangulation );
     for (unsigned long i=0; i<getNumberOfEmbeddings(); i++)
-      retval->newTriangle();
+       {
+        Dim2Triangle* tTri( retval->newTriangle() );
+        std::stringstream temp;
+        Dim4Pentachoron* pen( getEmbedding(i).getPentachoron() );
+        temp << pen->getTriangulation()->pentachoronIndex( pen );
+        temp << " " << getEmbedding(i).getEdge();
+        tTri->setDescription( temp.str() );        
+       }     
     for (unsigned long i=0; i<getNumberOfEmbeddings(); i++) {
        const Dim4EdgeEmbedding eEmb( getEmbedding(i) );
        const NPerm5 edgInc( eEmb.getVertices() );
