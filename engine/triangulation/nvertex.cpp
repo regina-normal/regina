@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "dim2/dim2triangulation.h"
+#include "triangulation/nisomorphism.h"
 #include "maths/permconv.h"
 #include "triangulation/nvertex.h"
 #include <sstream>
@@ -56,7 +57,9 @@ void NVertex::writeTextShort(std::ostream& out) const {
     out << "vertex of degree " << getNumberOfEmbeddings();
 }
 
-const Dim2Triangulation* NVertex::buildLink() const {
+// TODO: have a pass-by-reference Dim3Isomorphism that describes how
+//       the link is sitting the the NTriangulation
+const Dim2Triangulation* NVertex::buildLink(NIsomorphism* inc) const {
     if (linkTri)
         return linkTri;
 
@@ -118,9 +121,13 @@ const Dim2Triangulation* NVertex::buildLink() const {
         }
     }
 
-    // label the vertices
-
-    // label the edges
+    if ( (inc != NULL) ? (inc->getSourceTetrahedra() == ans->getNumberOfTriangles()) : false )
+     for (unsigned long j=0; j<getNumberOfEmbeddings(); j++)
+      {
+        NTetrahedron* tet( getEmbedding(j).getTetrahedron() );
+        inc->tetImage(j) = tet->getTriangulation()->tetrahedronIndex( tet );
+        inc->facetPerm(j) = getEmbedding(j).getVertices();
+      }
 
     const_cast<NVertex*>(this)->linkTri = ans;
     return linkTri;

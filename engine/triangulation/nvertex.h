@@ -48,6 +48,7 @@ class NBoundaryComponent;
 class NComponent;
 class Dim2Triangulation;
 class NTetrahedron;
+class NIsomorphism;
 
 /**
  * \weakgroup triangulation
@@ -292,9 +293,18 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
          *  is the index of the tetrahedron the triangle is from, the  
          *  second is the vertex of that tetrahedron this triangle links.  
          *
+         * If you call buildLink passing to it an allocated NIsomorphism
+         * pointer, initialized to have the same number of tetrahedra
+         * as getNumberOfEmbeddings(), then buildLink will fill it out
+         * with an NIsomorphism where tetImage(i) is the tetrahedron of
+         * the NTriangulation which contains the i-th triangle of the link.
+         * Moreover, facePerm will send 0 to this NVertex's index in that
+         * tetrahedron, and vertices 1,2,3 (describing the triangle) to 
+         * the triangle opposite tetImage(i). 
+         *
          * @return the triangulated link of this vertex.
          */
-        const Dim2Triangulation* buildLink() const;
+        const Dim2Triangulation* buildLink(NIsomorphism* inc=NULL) const;
 
         /**
          * Determines if the link of this vertex is closed.

@@ -52,6 +52,7 @@ class Dim4BoundaryComponent;
 class Dim4Pentachoron;
 class Dim4Vertex;
 class Dim2Triangulation;
+class Dim4Isomorphism;
 
 /**
  * \weakgroup dim4
@@ -361,8 +362,17 @@ class REGINA_API Dim4Edge : public ShareableObject, public NMarkedElement {
 
         /**
          * Returns a full triangulation of the link of the edge. 
+         *
+         * If you call buildLink passing to it an allocated Dim4Isomorphism
+         * pointer, initialized to have the same number of pentachora
+         * as getNumberOfEmbeddings(), then buildLink will fill it out
+         * with an Dim4Isomorphism where pentImage(i) is the pentachoron of
+         * the Dim4Triangulation which contains the i-th triangle of the link.
+         * Moreover, facePerm will send 0 and 1 to this Dim4Edge's vertices in that
+         * pentachoron, and vertices 2,3,4 (describing the triangle) to 
+         * the triangle opposite pentImage(i). 
          */
-        std::auto_ptr< Dim2Triangulation > buildLink() const;
+        std::auto_ptr< Dim2Triangulation > buildLink(Dim4Isomorphism* inc=NULL) const;
 
         void writeTextShort(std::ostream& out) const;
 

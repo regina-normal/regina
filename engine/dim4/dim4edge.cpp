@@ -27,6 +27,7 @@
 /* end stub */
 
 #include "dim4/dim4edge.h"
+#include "dim4/dim4isomorphism.h"
 #include "dim2/dim2triangulation.h"
 #include <sstream>
 
@@ -64,7 +65,9 @@ const NPerm5 Dim4Edge::ordering[10] = {
     NPerm5(3, 4, 0, 1, 2)
 };
 
-std::auto_ptr< Dim2Triangulation > Dim4Edge::buildLink() const
+// TODO: have a pass-by-reference Dim4Isomorphism that describes
+//       how the link is sitting in the Dim4Triangulation. 
+std::auto_ptr< Dim2Triangulation > Dim4Edge::buildLink(Dim4Isomorphism* inc) const
 {
     std::auto_ptr< Dim2Triangulation > retval ( new Dim2Triangulation );
     for (unsigned long i=0; i<getNumberOfEmbeddings(); i++)
@@ -99,18 +102,15 @@ std::auto_ptr< Dim2Triangulation > Dim4Edge::buildLink() const
                 retval->getTriangle(adjeEmbIndx), tPerm);
         }
      }
-    // label the vertices. 
-    for (unsigned long i=0; i<retval->getNumberOfVertices(); i++)
-     { 
-        const Dim2VertexEmbedding vEmb( retval->getVertex(i)->getEmbedding(0) );
-     }
-    // and edges
-    for (unsigned long i=0; i<retval->getNumberOfEdges(); i++)
-     { 
-        const Dim2EdgeEmbedding eEmb( retval->getEdge(i)->getEmbedding(0) );
 
-     }
-
+    if ( (inc != NULL) ? (inc->getSourcePentachora() == retval->getNumberOfTriangles()) : false )
+      for (unsigned long j=0; j<getNumberOfEmbeddings(); j++)
+       { // it will be set up so that 0 and 1 go to the edge vertices in the pentachora
+         // 2,3,4 will go to the triangle opposite. 
+         Dim4Pentachoron* pen( getEmbedding(j).getPentachoron() );
+         inc->pentImage(j) = pen->getTriangulation()->pentachoronIndex( pen );
+         inc->facetPerm(j) = getEmbedding(j).getVertices();
+       }
 
     return retval;
 }
