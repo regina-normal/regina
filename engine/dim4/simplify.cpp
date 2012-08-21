@@ -470,9 +470,7 @@ bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
 }
 
 
-// i==4 new pen coords, i=0 np0, i=1 np1, etc
-// this maps from the native (new pen, and newPens coords to the original pen coords
-// i==0
+// subordinate to oneFiveMove.  Make static (i.e. nonexported?)
 NPerm5 fourShift(const unsigned long &i)
 { // 4 maps to index of facet of old pen, which is 4-i, 
   // the pentachora: pen, newPen[i] are across from all other labels increasing
@@ -491,8 +489,10 @@ bool Dim4Triangulation::oneFiveMove(Dim4Pentachoron* pen, bool check,
     // before we unglue, record how the adjacent pentachora are glued to pen. 
     Dim4Pentachoron* oldPens[5];        
     NPerm5 oldGlue[5];
-    for (unsigned long i=0; i<5; i++) { oldPens[i] = pen->adjacentPentachoron(i); 
-                                        if (oldPens[i]!=NULL) oldGlue[i] = pen->adjacentGluing(i); }
+    for (unsigned long i=0; i<5; i++) { 
+        oldPens[i] = pen->adjacentPentachoron(i); 
+        if (oldPens[i]!=NULL) oldGlue[i] = pen->adjacentGluing(i); 
+        }
 
     // unglue facets 0,1,2,3 of pen, keep gluing of 4th facet. 
     for (unsigned long i=0; i<4; i++) if (pen->adjacentPentachoron(i)!=NULL)
@@ -516,22 +516,25 @@ bool Dim4Triangulation::oneFiveMove(Dim4Pentachoron* pen, bool check,
         if (newPens[3-i]->adjacentPentachoron(4) == NULL) // 1st time through
          {
           if (oldGlue[i][i]==4) // facet 4 was unglued, special case
-            newPens[3-i]->joinTo(4, pen, fourShift(4).inverse()*oldGlue[i]*fourShift(3-i));
+            newPens[3-i]->joinTo(4, pen, 
+            fourShift(4).inverse()*oldGlue[i]*fourShift(3-i));
           else // pair matching of two of facets 0,1,2,3
             newPens[3-i]->joinTo(4, newPens[3-oldGlue[i][i]], 
-                fourShift(3-oldGlue[i][i]).inverse()*oldGlue[i]*fourShift(3-i) );
+                fourShift(3-oldGlue[i][i]).inverse()*
+                oldGlue[i]*fourShift(3-i) );
          }
         } // end self-gluings
-       else if (oldPens[i]!=NULL) newPens[3-i]->joinTo(4, oldPens[i], oldGlue[i]*fourShift(3-i) );
+       else if (oldPens[i]!=NULL) newPens[3-i]->joinTo(4, oldPens[i], 
+                oldGlue[i]*fourShift(3-i) );
      } 
 
     // glue the newPens to each other, where appropriate
-    newPens[0]->joinTo(2, newPens[1], NPerm5() );           // nP[0] 2 to nP[1] 2
-    newPens[1]->joinTo(1, newPens[2], NPerm5() );           // nP[1] 1 to nP[2] 1
-    newPens[2]->joinTo(0, newPens[3], NPerm5() );           // nP[2] 0 to nP[3] 0
-    newPens[0]->joinTo(1, newPens[2], NPerm5(0,2,1,3,4) );  // nP[0] 1 to nP[2] 2
-    newPens[1]->joinTo(0, newPens[3], NPerm5(1,0,2,3,4) );  // nP[1] 0 to nP[3] 1 
-    newPens[0]->joinTo(0, newPens[3], NPerm5(2,0,1,3,4) );  // nP[0] 0 to nP[3] 2
+    newPens[0]->joinTo(2, newPens[1], NPerm5() );         // nP[0] 2 to nP[1] 2
+    newPens[1]->joinTo(1, newPens[2], NPerm5() );         // nP[1] 1 to nP[2] 1
+    newPens[2]->joinTo(0, newPens[3], NPerm5() );         // nP[2] 0 to nP[3] 0
+    newPens[0]->joinTo(1, newPens[2], NPerm5(0,2,1,3,4) );// nP[0] 1 to nP[2] 2
+    newPens[1]->joinTo(0, newPens[3], NPerm5(1,0,2,3,4) );// nP[1] 0 to nP[3] 1 
+    newPens[0]->joinTo(0, newPens[3], NPerm5(2,0,1,3,4) );// nP[0] 0 to nP[3] 2
 
     return true;
 }
