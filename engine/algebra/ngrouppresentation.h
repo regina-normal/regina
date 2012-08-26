@@ -203,10 +203,10 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * modifications made to this list will show up in the
          * expression itself.
          *
-	 * For instance, the expression <tt>g1^2 g3^-1 g6</tt> has list consisting
-	 * of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and <tt>g6^1</tt> in that
-	 * order.
-	 *
+    	 * For instance, the expression <tt>g1^2 g3^-1 g6</tt> has list 
+         * consisting of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and 
+         * <tt>g6^1</tt> in that order.
+    	 *
          * \ifacespython Not present; only the const version of this
          * routine is available.
          *
@@ -217,9 +217,9 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * Returns a constant reference to the list of terms in this
          * expression.
          *
-         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> has list consisting
-         * of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and <tt>g6^1</tt> in that
-         * order.
+         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> has list 
+         * consisting of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and 
+         * <tt>g6^1</tt> in that order.
          *
          * \ifacespython This routine returns a python list of copied
          * NGroupExpressionTerm objects.  In particular, modifying this
@@ -232,18 +232,19 @@ class REGINA_API NGroupExpression : public ShareableObject {
         /**
          * Returns the number of terms in this expression.
          *
-         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> contains three terms.	
-         *  See also getWordLength(). 
+         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> contains three
+         *  terms.  See also getWordLength(). 
          *
          * @return the number of terms.
          */
         unsigned long getNumberOfTerms() const;
         /**
-         * Returns the length of the word, i.e. the minimal number of letters with exponent
-         *  +1 or -1 for which this word is expressable as a product. 
+         * Returns the length of the word, i.e. the minimal number of letters 
+         * with exponent +1 or -1 for which this word is expressable as a 
+         * product. 
          *
-         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> is a word of length
-         *  four.  See also getNumberOfTerms(). 
+         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> is a word of 
+         * length four.  See also getNumberOfTerms(). 
          *
          * @return the length of the word. 
          */
@@ -430,7 +431,7 @@ class REGINA_API NGroupExpression : public ShareableObject {
 		unsigned long start_sub_at; // where in A do we start?
 		unsigned long start_from;   // where in B do we start?
 		unsigned long sub_length;   // how many letters from B do we use?
-	        bool invertB;               // do we invert B before making the substitution?
+	        bool invertB;    // do we invert B before making the substitution?
 		unsigned long score;        // what is the "score" of this substitution.
 		// needed to create std::set< NWordSubstitutionData > objects
 	 	// we set up the ordering so that highest score objects are at begin()
@@ -565,7 +566,8 @@ class REGINA_API NGroupExpression : public ShareableObject {
  */
 class REGINA_API NGroupPresentation : public ShareableObject {
     private: 
-        // for now we'll keep this to ourselves.  Returns true if the presentation partitions the 
+        // for now we'll keep this to ourselves.  Returns true if 
+        //  the presentation partitions the 
         //  generators into disjoint non-trivial sets. 
         bool obviously_freeproduct() const;
     protected:
@@ -669,7 +671,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * \todo \optlong This routine could use some small tweaks -- 
          *   recognition of utility of some score==0 moves, such as 
          *   commutators, for example. 
-	 */
+	     */
 	bool intelligentSimplify(NHomGroupPresentation*& reductionMap);
 
         /**
@@ -736,8 +738,8 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         static NGroupPresentation* readFromFile(NFile& in);
 
 	/**
-	 *  The sum of the wordLength()s of the relators.  Used as a coarse measure of the complexity
-	 * of the presentation.
+	 *  The sum of the wordLength()s of the relators.  Used as a coarse 
+     *  measure of the complexit of the presentation.
 	 */
 	unsigned long relatorLength() const;
 
