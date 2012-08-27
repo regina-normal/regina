@@ -122,6 +122,7 @@ class NTriFundGroupUI : public QObject, public PacketViewerTab {
         QLabel* fundRelCount;
         QListWidget* fundRels;
         QPushButton* btnGAP;
+        QPushButton* btnSIMP;
 
     public:
         /**
@@ -143,6 +144,10 @@ class NTriFundGroupUI : public QObject, public PacketViewerTab {
          * Group simplification actions.
          */
         void simplifyGAP();
+        /**
+         * Our internal pi1 simplification code.
+         */
+        void simplifyPI1();
 
     private:
         /**

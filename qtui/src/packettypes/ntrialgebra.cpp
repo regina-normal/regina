@@ -267,6 +267,21 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
     wideFundPresArea->addStretch(1);
     layout->addStretch(1);
 
+    QBoxLayout* btnArea2 = new QHBoxLayout();
+    layout->addLayout(btnArea2);
+    btnArea2->addStretch(1);
+    btnSIMP = new QPushButton(ReginaSupport::themeIcon("tools-wizard"),
+        tr("Attempt to simplify"));
+    btnSIMP->setToolTip(tr("Simplify the group presentation using "
+        "NGroupPresentation::proliferateRelators()"));
+    btnSIMP->setWhatsThis(tr("<qt>Simplify the presentation of the "
+        "fundamental group using an internal routine that explores "
+        "the consequences of the relations recursively, calling "
+        "NGroupPresentation::intelligentSimplify() afterwards.</qt>"));
+    connect(btnSIMP, SIGNAL(clicked()), this, SLOT(simplifyPI1()));
+    btnArea2->addWidget(btnSIMP);
+    btnArea2->addStretch(1);
+
     QBoxLayout* btnArea = new QHBoxLayout();
     layout->addLayout(btnArea);
     btnArea->addStretch(1);
@@ -293,11 +308,7 @@ QWidget* NTriFundGroupUI::getInterface() {
 
 void NTriFundGroupUI::refresh() {
     if (tri->getNumberOfComponents() <= 1) {
-        // old routine commented-out
-        //const regina::NGroupPresentation& pres = tri->getFundamentalGroup();
-        // new routine - let's try to clean pres up a bit more
-        regina::NGroupPresentation pres( tri->getFundamentalGroup() );
-        pres.proliferateRelators(); pres.intelligentSimplify();  
+        const regina::NGroupPresentation& pres = tri->getFundamentalGroup();
 
         std::string name = pres.recogniseGroup();
         if (name.length())
@@ -384,6 +395,15 @@ void NTriFundGroupUI::editingElsewhere() {
     fundRels->clear();
     fundRels->hide();
     btnGAP->setEnabled(false);
+}
+
+void NTriFundGroupUI::simplifyPI1() {
+ // TODO: try something to keep track of iterates of proliferateRelators()? 
+ regina::NGroupPresentation* group( new regina::NGroupPresentation( tri->getFundamentalGroup() ) );
+ group->proliferateRelators();
+ group->intelligentSimplify();
+ tri->simplifiedFundamentalGroup(group);
+ refresh(); 
 }
 
 void NTriFundGroupUI::simplifyGAP() {
