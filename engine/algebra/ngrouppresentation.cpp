@@ -541,9 +541,12 @@ for (it = word.terms.rbegin(); it != word.terms.rend(); it++)
          */
 void NGroupExpression::cycleRight()
 {
- NGroupExpressionTerm temp(terms.front());
- terms.pop_front();
- terms.push_back(temp);
+ if (terms.size() > 1)
+  {
+   NGroupExpressionTerm temp(terms.front());
+   terms.pop_front();
+   terms.push_back(temp);
+  }
 }
 
         /**
@@ -552,9 +555,12 @@ void NGroupExpression::cycleRight()
          */
 void NGroupExpression::cycleLeft()
 {
- NGroupExpressionTerm temp(terms.back());
- terms.pop_back();
- terms.push_front(temp);
+ if (terms.size() > 1)
+  {
+   NGroupExpressionTerm temp(terms.back());
+   terms.pop_back();
+   terms.push_front(temp);
+  }
 }
 
 
@@ -996,6 +1002,25 @@ bool NGroupPresentation::obviously_freeproduct() const {
  return retval;
 }
 
+// TODO: don't bother forming arbr^-1 if we know ahead of time
+//       it'll be killed in intelligentSimplify().  
+// Also can append relators of the form ab^-1 etc...
+
+// TODO: redo this algorithm in a less memory-intensive way. 
+//       maybe write a new version where you only append the
+//       relators that won't be immediately killed by 
+//       intelligentSimplify(). Yeah, so what we'll do is go looking
+//       for substrings of two relators which when spliced together
+//       intelligentSimplify() would eat in a different way.  So
+//       we'll have to think this through more carefully....
+//       And for now we'll call it something else, like 
+//       proliferateRelatorsTwo!   Maybe include word if one
+//       ?only? if cancellation happens when sticking words together?
+//       hard to say... if cancellation does not happen, we can
+//       totally kill this word in intelligentSimplify. 
+//       So this might be an intelligent way of choosing how to splice. 
+//       just find common letters in both and multiply (by the inverse)
+//       appropriately cycled, etc. 
 
 void NGroupPresentation::proliferateRelators() {
  std::list< NGroupExpression* > newRels;
@@ -1003,7 +1028,9 @@ void NGroupPresentation::proliferateRelators() {
  for (unsigned long i=0; i<relations.size(); i++)
   {
    NGroupExpression iWord( *(relations[i]) );
+   NGroupExpression* IWord( iWord.inverse() ); IWord->cycleLeft();
    // write down all cyclic permutations of relations[i]
+
    for (unsigned long j=0; j<relations[i]->getNumberOfTerms(); j++)
     {
      const NGroupExpressionTerm fTerm( iWord.getTerm(0) );
@@ -1020,16 +1047,28 @@ void NGroupPresentation::proliferateRelators() {
         newRel->addTermsLast( iWord );
         newRel->addTermLast( NGroupExpressionTerm( fTerm.generator, 
                (fTerm.exponent<0 ? -l : l ) ) );
-        newRel->simplify();
-        newRels.push_back(newRel); 
+        if (newRel->simplify(true) ? (newRel->getNumberOfTerms() > 0) : false)
+            newRels.push_back(newRel); 
+        // and let's do the same but using the inverse of relations[i]
+        NGroupExpression* newRel2( new NGroupExpression );
+        newRel2->addTermsLast( *(relations[k]) );
+        newRel2->addTermLast( NGroupExpressionTerm( fTerm.generator, 
+                (fTerm.exponent<0 ? l : -l ) ) );
+        newRel2->addTermsLast( *IWord );
+        newRel2->addTermLast( NGroupExpressionTerm( fTerm.generator, 
+               (fTerm.exponent<0 ? -l : l ) ) );
+        if (newRel2->simplify(true) ? (newRel2->getNumberOfTerms() > 0) : false)
+          newRels.push_back(newRel2); 
        }
       // relations[k] * (fTerm part) * relations[i] * (fTerm part^-1)
       // multiply with all the known relations, append to presentation. 
       // let's create a cycleWord routine...
       }
-     iWord.cycleRight();
+     iWord.cycleRight(); IWord->cycleLeft();
     }
+   delete IWord; IWord=NULL; 
   }
+
  for (std::list< NGroupExpression*>::iterator i=newRels.begin(); 
        i!=newRels.end(); i++) relations.push_back( *i );
 }

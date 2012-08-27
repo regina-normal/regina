@@ -667,6 +667,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * @return \c true if and only if the group presentation was changed.
          */
         bool intelligentSimplify();
+
         /**
          * Reduces this presentation using the Dehn algorithm for hyperbolic 
          * groups, i.e. small cancellation theory.   This means we look to see 
@@ -686,7 +687,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          *   recognition of utility of some score==0 moves, such as 
          *   commutators, for example. 
 	     */
-	bool intelligentSimplify(NHomGroupPresentation*& reductionMap);
+    	bool intelligentSimplify(NHomGroupPresentation*& reductionMap);
 
       /**
        *  Given a presentation <g_i | r_i> this routine appends consequences
@@ -696,7 +697,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
        * presentations but when small cancellation theory can't find the 
        * simplest relators. 
        */
-    void proliferateRelators();
+       void proliferateRelators();
 
         /**
          * Attempts to recognise the group corresponding to this
