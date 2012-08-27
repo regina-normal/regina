@@ -246,7 +246,11 @@ QWidget* Dim4TriFundGroupUI::getInterface() {
 
 void Dim4TriFundGroupUI::refresh() {
     if (tri->getNumberOfComponents() <= 1) {
-        const regina::NGroupPresentation& pres = tri->getFundamentalGroup();
+        // old routine commented-out
+        //const regina::NGroupPresentation& pres = tri->getFundamentalGroup();
+        // new routine - let's try to clean pres up a bit more
+        regina::NGroupPresentation pres( tri->getFundamentalGroup() );
+        pres.proliferateRelators(); pres.intelligentSimplify();  
 
         std::string name = pres.recogniseGroup();
         if (name.length())
