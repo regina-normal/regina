@@ -123,6 +123,7 @@ class NTriFundGroupUI : public QObject, public PacketViewerTab {
         QListWidget* fundRels;
         QPushButton* btnGAP;
         QPushButton* btnSIMP;
+        unsigned long simpAtt;
 
     public:
         /**

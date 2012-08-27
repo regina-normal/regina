@@ -189,6 +189,8 @@ Dim4TriFundGroupUI::Dim4TriFundGroupUI(regina::Dim4Triangulation* packet,
         PacketViewerTab(useParentUI), tri(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
+    simpAtt=1; // this is used to keep track of how many times 
+               // proliferateRelators() is called. 
 
     layout->addStretch(1);
 
@@ -226,7 +228,8 @@ Dim4TriFundGroupUI::Dim4TriFundGroupUI(regina::Dim4Triangulation* packet,
     btnSIMP = new QPushButton(ReginaSupport::themeIcon("tools-wizard"),
         tr("Attempt to simplify"));
     btnSIMP->setToolTip(tr("Simplify the group presentation using "
-        "NGroupPresentation::proliferateRelators()"));
+        "NGroupPresentation::proliferateRelators(). Calling this "
+        "routine more than once may produce better results."));
     btnSIMP->setWhatsThis(tr("<qt>Simplify the presentation of the "
         "fundamental group using an internal routine that explores "
         "the consequences of the relations recursively, calling "
@@ -353,10 +356,11 @@ void Dim4TriFundGroupUI::editingElsewhere() {
 void Dim4TriFundGroupUI::simplifyPI1() {
  // TODO: try something to keep track of iterates of proliferateRelators()? 
  regina::NGroupPresentation* group( new regina::NGroupPresentation( tri->getFundamentalGroup() ) );
- group->proliferateRelators();
+ for (unsigned long i=0; i<simpAtt; i++) group->proliferateRelators();
  group->intelligentSimplify();
  tri->simplifiedFundamentalGroup(group);
  refresh(); 
+ if (simpAtt < 2) simpAtt++; // let's not let the end-user go beyond 2 iterates for now. 
 }
 
 void Dim4TriFundGroupUI::simplifyGAP() {
