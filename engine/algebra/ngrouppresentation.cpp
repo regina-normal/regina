@@ -1002,25 +1002,9 @@ bool NGroupPresentation::obviously_freeproduct() const {
  return retval;
 }
 
-// TODO: don't bother forming arbr^-1 if we know ahead of time
-//       it'll be killed in intelligentSimplify().  
-// Also can append relators of the form ab^-1 etc...
-
 // TODO: redo this algorithm in a less memory-intensive way. 
-//       maybe write a new version where you only append the
-//       relators that won't be immediately killed by 
-//       intelligentSimplify(). Yeah, so what we'll do is go looking
-//       for substrings of two relators which when spliced together
-//       intelligentSimplify() would eat in a different way.  So
-//       we'll have to think this through more carefully....
-//       And for now we'll call it something else, like 
-//       proliferateRelatorsTwo!   Maybe include word if one
-//       ?only? if cancellation happens when sticking words together?
-//       hard to say... if cancellation does not happen, we can
-//       totally kill this word in intelligentSimplify. 
-//       So this might be an intelligent way of choosing how to splice. 
-//       just find common letters in both and multiply (by the inverse)
-//       appropriately cycled, etc. 
+//       keeping in mind how intelligentSimplify can use these
+//       relators. 
 
 void NGroupPresentation::proliferateRelators() {
  std::list< NGroupExpression* > newRels;
