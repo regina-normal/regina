@@ -996,13 +996,7 @@ bool NGroupPresentation::obviously_freeproduct() const {
  return retval;
 }
 
-/* for (it = terms.begin(); it!=terms.end(); it++)
-  { for (unsigned long i=0; i<abs((*it).exponent); i++)
-     this_word.push_back( NGroupExpressionTerm( (*it).generator, 
-                ((*it).exponent>0) ? 1 : -1 ) );  } */
 
-// TODO: test this on RHMS.HOS4 -- these are the homotopy 4-spheres that 
-//       intelligentSimplify() fails to simplify. 
 void NGroupPresentation::proliferateRelators() {
  std::list< NGroupExpression* > newRels;
  // run through all relators
@@ -1037,10 +1031,7 @@ void NGroupPresentation::proliferateRelators() {
     }
   }
  for (std::list< NGroupExpression*>::iterator i=newRels.begin(); 
-       i!=newRels.end(); i++)
-  {
-   relations.push_back( *i );
-  } 
+       i!=newRels.end(); i++) relations.push_back( *i );
 }
 
 
