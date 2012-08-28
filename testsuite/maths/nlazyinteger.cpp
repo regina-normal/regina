@@ -50,6 +50,10 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     private:
+        long zeroL;
+            /**< We need this so we can test things like (LONG_MAX + 1 < 0)
+                 without gcc's optimisations breaking the results. */
+
         NLazyInteger smallPosSeries[6];
             /**< A sequence of positive integers that fit into a long. */
         NLazyInteger smallNegSeries[6];
@@ -104,6 +108,8 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
+            zeroL = 0;
+
             smallPosSeries[0] = 1000;
             smallPosSeries[1] = 2000;
             smallPosSeries[2] = 3000;
@@ -208,11 +214,11 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                 }
             }
 
-            if (sign < 0 && (x.longValue() >= 0 || x.isZero())) {
+            if (sign < 0 && (x.longValue() >= zeroL || x.isZero())) {
                 std::ostringstream msg;
                 msg << name << " is not negative as a long.";
                 CPPUNIT_FAIL(msg.str());
-            } else if (sign > 0 && (x.longValue() <= 0 || x.isZero())) {
+            } else if (sign > 0 && (x.longValue() <= zeroL || x.isZero())) {
                 std::ostringstream msg;
                 msg << name << " is not positive as a long.";
                 CPPUNIT_FAIL(msg.str());
@@ -626,12 +632,14 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL("Special case -2 is not initialised correctly.");
             }
             if (! (longMax.isNative() && longMax.longValue() == LONG_MAX &&
-                    longMax.longValue() > 0 && (longMax.longValue() + 1) < 0)) {
+                    longMax.longValue() > zeroL &&
+                    (longMax.longValue() + 1) < zeroL)) {
                 CPPUNIT_FAIL("Special case LONG_MAX is not "
                     "initialised correctly.");
             }
             if (! (longMin.isNative() && longMin.longValue() == LONG_MIN &&
-                    longMin.longValue() < 0 && (longMin.longValue() - 1) > 0)) {
+                    longMin.longValue() < zeroL &&
+                    (longMin.longValue() - 1) > zeroL)) {
                 CPPUNIT_FAIL("Special case LONG_MIN is not "
                     "initialised correctly.");
             }
