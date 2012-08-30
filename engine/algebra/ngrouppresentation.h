@@ -444,9 +444,9 @@ class REGINA_API NGroupExpression : public ShareableObject {
 		unsigned long start_from;   // where in B do we start?
 		unsigned long sub_length;   // how many letters from B do we use?
 	        bool invertB;    // do we invert B before making the substitution?
-		unsigned long score;        // what is the "score" of this substitution.
-		// needed to create std::set< NWordSubstitutionData > objects
-	 	// we set up the ordering so that highest score objects are at begin()
+		long int score; // what is the "score" of this substitution this is the
+            // *net decrease* in the number of letters in a word, provided this
+            // substitution is made. 
 		bool operator<( const NWordSubstitutionData &other ) const
 		{
 			if (score < other.score) return false;           
@@ -489,6 +489,14 @@ class REGINA_API NGroupExpression : public ShareableObject {
          */
 	    void dehnAlgorithmSubMetric( const NGroupExpression &that_word, 
                std::set< NWordSubstitutionData > &sub_list ) const;
+
+        /**
+         *  Experimental variant of dehnAlgorithmSubMetric, with intentions
+         *  for more general (eventual) usage. 
+         */
+	    void dehnAlgorithmSubMetric2( const NGroupExpression &that_word, 
+               std::set< NWordSubstitutionData > &sub_list, 
+               unsigned long step=1 ) const;
 
         /**  
          *  Given a word *this and that_word, apply the substitution specified
@@ -698,6 +706,12 @@ class REGINA_API NGroupPresentation : public ShareableObject {
        * simplest relators. 
        */
        void proliferateRelators();
+    
+       /**
+        *  Experimental new version, meant to take less memory and time, 
+        * and hopefully be more effective. 
+        */
+       void proliferateRelators2(unsigned long depth=1);
 
         /**
          * Attempts to recognise the group corresponding to this

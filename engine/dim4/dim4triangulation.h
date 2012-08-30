@@ -1161,6 +1161,10 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         bool simplifyToLocalMinimum(bool perform = true);
 
+        // prototype for non-implemented move...
+        bool fiveOneMove(Dim4Vertex* vrt, bool check = true, 
+            bool perform = true);
+
         /**
          * Checks the eligibility of and/or performs a 4-2 move
          * about the given edge.  This involves replacing the four pentachora 
@@ -1363,11 +1367,6 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         bool oneFiveMove(Dim4Pentachoron* pen, bool check = true, 
             bool perform = true);
-
-        // prototype for non-implemented move...
-        bool fiveOneMove(Dim4Vertex* vrt, bool check = true, 
-            bool perform = true);
-
 
         /**
          * Checks the eligibility of and/or performs a 2-0 move about

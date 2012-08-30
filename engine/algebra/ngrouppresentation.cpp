@@ -308,9 +308,11 @@ std::auto_ptr<NMarkedAbelianGroup> NGroupPresentation::markedAbelianization() co
 
 /**
  *  This is a routine currently used in intelligentSimplify.  It records
- * the benefit of using the argument that_word to simplify the presentation
- * of a group.  The beneficial substitutions are recorded in sub_list.  
- * The point of this is that intelligentSimplify can repeatedly call 
+ * the benefit of using the argument that_word to simplify the *this word. 
+ * It is a key routine in intelligentSimplify().  The beneficial substitutions 
+ * are recorded in sub_list.  
+ *
+ *  The point of this is that intelligentSimplify can repeatedly call 
  * dehnAlgorithmSubmetric to make a locally-smart decision on the next
  * substitution to perform. 
  */
@@ -365,13 +367,13 @@ void NGroupExpression::dehnAlgorithmSubMetric( const NGroupExpression
          subData.start_sub_at=i; subData.start_from=j;
     if (comp_length == that_length)	
 	{ // special case, we record this regardless but its score is special.
-          // assemble the word with reducer removed, *reduce* the word any 
-          // further if possible, check the length. 
+      // assemble the word with reducer removed, *reduce* the word any 
+      // further if possible, check the length. 
 	  subData.score = that_length;
 	  // increment subData.score for every consecutive mutually-inverse
-          //  pair this_word[i-a] this_word[i+comp_length+a]
-          //  a=1,2,... up until (this_length-that_length)/2
-          unsigned long a=1; 
+      //  pair this_word[i-a] this_word[i+comp_length+a]
+      //  a=1,2,... up until (this_length-that_length)/2
+      unsigned long a=1; 
 	  while ( (this_word[( (i+this_length)-a )%this_length].inverse()==
                   this_word[( (i+comp_length)+(a-1) )%this_length]) &&
 		  (2*a+that_length <= this_length ) ) { a++; subData.score++; }
@@ -381,7 +383,7 @@ void NGroupExpression::dehnAlgorithmSubMetric( const NGroupExpression
         //  at least half of the relator
         { // so we'll record this but its score is relatively easy to compute
           subData.score = 2*comp_length - that_length;
-	  sub_list.insert(subData);
+	      sub_list.insert(subData);
         }
     // now lets look for inv_reducer substitutions. 
     comp_length = 0; 
@@ -390,19 +392,19 @@ void NGroupExpression::dehnAlgorithmSubMetric( const NGroupExpression
     while ( (this_word[(i+comp_length) % this_length] == 
                  inv_reducer[(j+comp_length) % that_length]) && 
             (comp_length < that_length) && (comp_length < this_length) ) 
-                comp_length++;  
+        comp_length++;  
     // okay, we've found a subword of reducer of length comp_length 
     // that agrees with a subword of this_word of the same length. 
     // now we need to measure how successful a substitution it might be.
     subData.invertB=true; subData.sub_length=comp_length; 
     if (comp_length == that_length)	
 	{ // special case, we record this regardless but its score is special.
-          // assemble the word with reducer removed, *reduce* the word any 
-          //  further if possible, check the length. 
+      // assemble the word with reducer removed, *reduce* the word any 
+      //  further if possible, check the length. 
 	  subData.score = that_length;
 	  // increment subData.score for every consecutive mutually-inverse 
-          //  pair this_word[i-a] this_word[i+comp_length+a]
-          //  a=1,2,... up until (this_length-that_length)/2
+      //  pair this_word[i-a] this_word[i+comp_length+a]
+      //  a=1,2,... up until (this_length-that_length)/2
           unsigned long a=1; 
 	  while ( (this_word[( (i+this_length)-a )%this_length].inverse()==
                 this_word[( (i+comp_length)+(a-1) )%this_length]) &&
@@ -413,10 +415,111 @@ void NGroupExpression::dehnAlgorithmSubMetric( const NGroupExpression
         //  least half of the relator
         { // so we'll record this but its score is relatively easy to compute
           subData.score = 2*comp_length - that_length;
-	  sub_list.insert(subData);
+	      sub_list.insert(subData);
         }
   }
 }
+
+/**
+ *  The original dehnAlgorithmSubMetric was optimized for small cancellation theory, 
+ * the idea being we're looking for substitutions that shorten the length of words
+ * in one step.  dehnAlgorithSubMetric2 is meant to be more flexible.  Perhaps
+ * we need to perform more than one substitution before we will find a new relator
+ * of interest.  
+ *
+ * step detaults to 1 meaning 1-step substitution.  In this case we do small cancellation
+ *  theory, looking for substitutions that strictly shorten word length. 
+ *
+ * step==2 means we're looking for 2-step substitutions, i.e. combinations of three
+ *  relators.  So when we do this, we are attempting at first to combine two relators
+ *  and we're okay if this does not shorten the length (as long as it only expands it
+ *  by a reasonably amount... etc. 
+ *
+ * Damn, the score is the length *decrease*.  Okay, we just need to change the score 
+ * to an int. 
+ */
+void NGroupExpression::dehnAlgorithmSubMetric2( const NGroupExpression &that_word, 
+               std::set< NWordSubstitutionData > &sub_list, unsigned long step ) const
+{
+ unsigned long this_length ( wordLength() );
+ unsigned long that_length ( that_word.wordLength() );
+ // generic early exit strategy
+ if ( (this_length < 2) || (that_length==0) ) return;
+ // early exit strategy based on step. 
+ if ( (step==1) && (2*this_length < that_length) ) return; 
+ if ( (step==2) && (3*this_length < that_length) ) return;
+ // TODO something general? 
+
+ // this -> splayed to this_word, that_word -> reducer
+ std::vector< NGroupExpressionTerm > this_word( 0 );
+ std::vector< NGroupExpressionTerm > reducer( 0 ); 
+ this_word.reserve( this_length ); reducer.reserve( that_length );
+ std::list<NGroupExpressionTerm>::const_iterator it; 
+ for (it = terms.begin(); it!=terms.end(); it++)
+  { for (unsigned long i=0; i<abs((*it).exponent); i++)
+     this_word.push_back( NGroupExpressionTerm( (*it).generator, 
+        ((*it).exponent>0) ? 1 : -1 ) );  }
+ for (it = that_word.terms.begin(); it!=that_word.terms.end(); it++)
+  { for (unsigned long i=0; i<abs((*it).exponent); i++)
+     reducer.push_back( NGroupExpressionTerm( (*it).generator, 
+        ((*it).exponent>0) ? 1 : -1 ) );    }
+ std::vector< NGroupExpressionTerm > inv_reducer( that_length );
+ for (unsigned long i=0; i<reducer.size(); i++) 
+        inv_reducer[that_length-(i+1)] = reducer[i].inverse(); 
+
+ // search for cyclic subwords of reducer in this_word...
+ for (unsigned long i=0; i<this_length; i++) 
+        for (unsigned long j=0; j<that_length; j++)
+  { 
+    unsigned long comp_length = 0; 
+    while ( (this_word[(i+comp_length) % this_length] == 
+                reducer[(j+comp_length) % that_length]) && 
+            (comp_length < that_length) && (comp_length < this_length) ) 
+                comp_length++;  
+    NWordSubstitutionData subData;
+    subData.invertB=false; subData.sub_length=comp_length;
+         subData.start_sub_at=i; subData.start_from=j;
+    if (comp_length == that_length)	
+	{ 
+	  subData.score = that_length;
+      unsigned long a=1; 
+	  while ( (this_word[( (i+this_length)-a )%this_length].inverse()==
+                  this_word[( (i+comp_length)+(a-1) )%this_length]) &&
+		  (2*a+that_length <= this_length ) ) { a++; subData.score++; }
+	  sub_list.insert(subData);
+	}
+    else if ( comp_length > 0 ) 
+        { 
+          subData.score = 2*comp_length - that_length;
+          if ( ( (step==1) && (subData.score >= 0) ) || 
+               ( (step==2) && (subData.score >= -1) ) )
+	      sub_list.insert(subData);
+        }
+    // and the corresponding search with the inverse of reducer.
+    comp_length = 0; 
+    while ( (this_word[(i+comp_length) % this_length] == 
+                 inv_reducer[(j+comp_length) % that_length]) && 
+            (comp_length < that_length) && (comp_length < this_length) ) 
+        comp_length++;  
+    subData.invertB=true; subData.sub_length=comp_length; 
+    if (comp_length == that_length)	
+	{ 
+	  subData.score = that_length;
+      unsigned long a=1; 
+	  while ( (this_word[( (i+this_length)-a )%this_length].inverse()==
+                this_word[( (i+comp_length)+(a-1) )%this_length]) &&
+		  (2*a+that_length <= this_length ) ) { a++; subData.score++; }
+	  sub_list.insert(subData);
+	}
+    else if ( comp_length > 0 ) 
+    { 
+      subData.score = 2*comp_length - that_length;
+      if ( ( (step==1) && (subData.score >= 0) ) || 
+           ( (step==2) && (subData.score >= -1) ) )
+      sub_list.insert(subData);
+    }
+  }
+} 
 
 /**
  *  This applies a substitution generated by dehnAlgorithmSubMetric. 
@@ -1004,7 +1107,28 @@ bool NGroupPresentation::obviously_freeproduct() const {
 
 // TODO: redo this algorithm in a less memory-intensive way. 
 //       keeping in mind how intelligentSimplify can use these
-//       relators. 
+//       relators.  It's really not very smart right now.  
+//       What we want is to multiply relators together in a 
+//       way that we can start to simplify this in a way that's
+//       not just killing one relator or another. 
+// 
+//       Idea for the new routine: Scan all pairs R_1 and R_2 
+//       relators, in R_1 find 1/4 of a relator, 
+//       and in R_2 similarly find about the next 1/4 of that
+//       same relator, and multiply them together that way. 
+//       Similarly we could use triples of relators to find
+//       1/6 of relators in each word, etc.  To do this
+//       we should write a routine that attempts to find 
+//       parts of a relator split-up among the other relators. 
+//
+//       we could also try for many applications of smaller
+//       relators, things like commutators, etc.  But in a
+//       similar way to the above. 
+//
+//       NOTE!  we can re-do this more intelligently with 
+//       dehnAlgorithmSubMetric.   It looks like that algorithm 
+//       only needs to be tweaked to look for these shorter-style
+//       substitutions. 
 
 void NGroupPresentation::proliferateRelators() {
  std::list< NGroupExpression* > newRels;
@@ -1031,8 +1155,9 @@ void NGroupPresentation::proliferateRelators() {
         newRel->addTermsLast( iWord );
         newRel->addTermLast( NGroupExpressionTerm( fTerm.generator, 
                (fTerm.exponent<0 ? -l : l ) ) );
-        if (newRel->simplify(true) ? (newRel->getNumberOfTerms() > 0) : false)
-            newRels.push_back(newRel); 
+        unsigned long len( newRel->wordLength() );
+        newRel->simplify(true);
+        if (newRel->wordLength() < len) newRels.push_back(newRel);
         // and let's do the same but using the inverse of relations[i]
         NGroupExpression* newRel2( new NGroupExpression );
         newRel2->addTermsLast( *(relations[k]) );
@@ -1041,8 +1166,9 @@ void NGroupPresentation::proliferateRelators() {
         newRel2->addTermsLast( *IWord );
         newRel2->addTermLast( NGroupExpressionTerm( fTerm.generator, 
                (fTerm.exponent<0 ? -l : l ) ) );
-        if (newRel2->simplify(true) ? (newRel2->getNumberOfTerms() > 0) : false)
-          newRels.push_back(newRel2); 
+        len = newRel2->wordLength();
+        newRel2->simplify(true);
+        if (newRel2->wordLength() < len) newRels.push_back(newRel2);
        }
       // relations[k] * (fTerm part) * relations[i] * (fTerm part^-1)
       // multiply with all the known relations, append to presentation. 
@@ -1057,6 +1183,32 @@ void NGroupPresentation::proliferateRelators() {
        i!=newRels.end(); i++) relations.push_back( *i );
 }
 
+// assumes intelligentSimplify run.  We will go through, apply dehnAlgSubMetric
+//  look for substitutions, then apply all of them within a reasonable length. 
+// if user requests we will go further and do a 2nd iteration with more care...
+// depth==1 by default. 
+// we will have two iterators running through the relator list, we then
+// do a dehnAlg on the pair, generate **all** substitutions from that list, 
+// then append all the generated stuff to the presentation.  
+
+void NGroupPresentation::proliferateRelators2(unsigned long depth) {
+ std::list< NGroupExpression* > newRels;
+ for (unsigned long i=0; i<relations.size(); i++)
+ for (unsigned long j=0; j<relations.size(); j++)
+  {
+   if (i==j) continue; // TODO: maybe accept novel self-substitutions? 
+   std::set< NGroupExpression::NWordSubstitutionData > sub_list; 
+   relations[i]->dehnAlgorithmSubMetric2( *(relations[j]), sub_list, depth ); 
+   while (!sub_list.empty())
+    {
+     NGroupExpression* newRel( new NGroupExpression( *(relations[i]) ) );
+     newRel->applySubstitution( *(relations[j]), *sub_list.begin() );
+     sub_list.erase( sub_list.begin() );
+     newRels.push_back(newRel);
+    }
+  }
+ while (!newRels.empty()) { relations.push_back( newRels.front() ); newRels.pop_front(); }
+}
 
 } // namespace regina
 

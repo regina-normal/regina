@@ -135,9 +135,20 @@ namespace {
     }
 }
 
-// not yet implemented
+/**
+ *  Not yet implemented. 
+ */
 bool Dim4Triangulation::fiveOneMove(Dim4Vertex* vrt, bool check, 
             bool perform) {
+    // step 1: check if this is a valid move.  Is the link of this vertex
+    //         the cone on a standard 5-tetrahedron sphere? 
+    if (vrt->getNumberOfEmbeddings()!=5) return false;
+    // TODO 
+
+
+    // step 2: if so, let's remove 4 of those pentachora, and re-glue...
+
+
     return false;
 }
 
