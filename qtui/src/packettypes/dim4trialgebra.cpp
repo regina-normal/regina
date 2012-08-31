@@ -359,7 +359,7 @@ void Dim4TriFundGroupUI::simplifyPI1() {
  group->intelligentSimplify();
  tri->simplifiedFundamentalGroup(group);
  refresh(); 
- simpAtt++; 
+ if (simpAtt<4) simpAtt++; 
 }
 
 void Dim4TriFundGroupUI::simplifyGAP() {
