@@ -316,6 +316,7 @@ std::auto_ptr<NMarkedAbelianGroup> NGroupPresentation::markedAbelianization() co
  * dehnAlgorithmSubmetric to make a locally-smart decision on the next
  * substitution to perform. 
  */
+/*
 void NGroupExpression::dehnAlgorithmSubMetric( const NGroupExpression 
         &that_word, std::set< NWordSubstitutionData > &sub_list ) const
 {
@@ -418,7 +419,7 @@ void NGroupExpression::dehnAlgorithmSubMetric( const NGroupExpression
 	      sub_list.insert(subData);
         }
   }
-}
+}*/
 
 /**
  *  The original dehnAlgorithmSubMetric was optimized for small cancellation theory, 
@@ -426,19 +427,8 @@ void NGroupExpression::dehnAlgorithmSubMetric( const NGroupExpression
  * in one step.  dehnAlgorithSubMetric2 is meant to be more flexible.  Perhaps
  * we need to perform more than one substitution before we will find a new relator
  * of interest.  
- *
- * step detaults to 1 meaning 1-step substitution.  In this case we do small cancellation
- *  theory, looking for substitutions that strictly shorten word length. 
- *
- * step==2 means we're looking for 2-step substitutions, i.e. combinations of three
- *  relators.  So when we do this, we are attempting at first to combine two relators
- *  and we're okay if this does not shorten the length (as long as it only expands it
- *  by a reasonably amount... etc. 
- *
- * Damn, the score is the length *decrease*.  Okay, we just need to change the score 
- * to an int. 
  */
-void NGroupExpression::dehnAlgorithmSubMetric2( const NGroupExpression &that_word, 
+void NGroupExpression::dehnAlgorithmSubMetric( const NGroupExpression &that_word, 
                std::set< NWordSubstitutionData > &sub_list, unsigned long step ) const
 {
  unsigned long this_length ( wordLength() );
@@ -446,9 +436,8 @@ void NGroupExpression::dehnAlgorithmSubMetric2( const NGroupExpression &that_wor
  // generic early exit strategy
  if ( (this_length < 2) || (that_length==0) ) return;
  // early exit strategy based on step. 
- if ( (step==1) && (2*this_length < that_length) ) return; 
- if ( (step==2) && (3*this_length < that_length) ) return;
- // TODO something general? 
+ if ( (step==1) && ((step+1)*this_length < that_length) ) return; 
+ // TODO: should check to whatever extent the above is of much use...
 
  // this -> splayed to this_word, that_word -> reducer
  std::vector< NGroupExpressionTerm > this_word( 0 );
@@ -490,10 +479,9 @@ void NGroupExpression::dehnAlgorithmSubMetric2( const NGroupExpression &that_wor
 	}
     else if ( comp_length > 0 ) 
         { 
-          subData.score = 2*comp_length - that_length;
-          if ( ( (step==1) && (subData.score >= 0) ) || 
-               ( (step==2) && (subData.score >= -1) ) )
-	      sub_list.insert(subData);
+         subData.score = 2*comp_length - that_length;
+         if ( subData.score > -((long int)step) )
+	       sub_list.insert(subData);
         }
     // and the corresponding search with the inverse of reducer.
     comp_length = 0; 
@@ -513,9 +501,8 @@ void NGroupExpression::dehnAlgorithmSubMetric2( const NGroupExpression &that_wor
 	}
     else if ( comp_length > 0 ) 
     { 
-      subData.score = 2*comp_length - that_length;
-      if ( ( (step==1) && (subData.score >= 0) ) || 
-           ( (step==2) && (subData.score >= -1) ) )
+     subData.score = 2*comp_length - that_length;
+     if ( subData.score > -((long int)step) )
       sub_list.insert(subData);
     }
   }
@@ -1130,6 +1117,7 @@ bool NGroupPresentation::obviously_freeproduct() const {
 //       only needs to be tweaked to look for these shorter-style
 //       substitutions. 
 
+/*
 void NGroupPresentation::proliferateRelators() {
  std::list< NGroupExpression* > newRels;
  // run through all relators
@@ -1181,7 +1169,7 @@ void NGroupPresentation::proliferateRelators() {
 
  for (std::list< NGroupExpression*>::iterator i=newRels.begin(); 
        i!=newRels.end(); i++) relations.push_back( *i );
-}
+}*/
 
 // assumes intelligentSimplify run.  We will go through, apply dehnAlgSubMetric
 //  look for substitutions, then apply all of them within a reasonable length. 
@@ -1191,14 +1179,14 @@ void NGroupPresentation::proliferateRelators() {
 // do a dehnAlg on the pair, generate **all** substitutions from that list, 
 // then append all the generated stuff to the presentation.  
 
-void NGroupPresentation::proliferateRelators2(unsigned long depth) {
+void NGroupPresentation::proliferateRelators(unsigned long depth) {
  std::list< NGroupExpression* > newRels;
  for (unsigned long i=0; i<relations.size(); i++)
  for (unsigned long j=0; j<relations.size(); j++)
   {
    if (i==j) continue; // TODO: maybe accept novel self-substitutions? 
    std::set< NGroupExpression::NWordSubstitutionData > sub_list; 
-   relations[i]->dehnAlgorithmSubMetric2( *(relations[j]), sub_list, depth ); 
+   relations[i]->dehnAlgorithmSubMetric( *(relations[j]), sub_list, depth ); 
    while (!sub_list.empty())
     {
      NGroupExpression* newRel( new NGroupExpression( *(relations[i]) ) );
@@ -1206,6 +1194,28 @@ void NGroupPresentation::proliferateRelators2(unsigned long depth) {
      sub_list.erase( sub_list.begin() );
      newRels.push_back(newRel);
     }
+  }
+ depth--;
+ while (depth>0) 
+  {
+   std::list< NGroupExpression* > tempRels;
+   for (unsigned long i=0; i<relations.size(); i++)
+   for (std::list< NGroupExpression* >::iterator j=newRels.begin(); j!=newRels.end(); j++)
+    { // attempt to tack relation[i] to *j. To do this, we should perhaps keep a record of 
+      // how *j was created, as in where the two junction points are so as to ensure what
+      // we're adding spans at least one of the junctions. 
+      std::set< NGroupExpression::NWordSubstitutionData > sub_list; 
+      (*j)->dehnAlgorithmSubMetric( *(relations[i]), sub_list, depth ); 
+      while (!sub_list.empty())
+       { // TODO: we might want to avoid some obviously repetitive subs as noted above? 
+        NGroupExpression* newRel( new NGroupExpression( *(*j) ) );
+        newRel->applySubstitution( *(relations[i]), *sub_list.begin() );
+        sub_list.erase( sub_list.begin() );
+        tempRels.push_back(newRel);
+       }
+    }
+   depth--;
+   while (!tempRels.empty()) { newRels.push_back( *tempRels.begin() ); tempRels.erase( tempRels.begin() ); }
   }
  while (!newRels.empty()) { relations.push_back( newRels.front() ); newRels.pop_front(); }
 }

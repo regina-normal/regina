@@ -354,13 +354,12 @@ void Dim4TriFundGroupUI::editingElsewhere() {
 }
 
 void Dim4TriFundGroupUI::simplifyPI1() {
- // TODO: try something to keep track of iterates of proliferateRelators()? 
  regina::NGroupPresentation* group( new regina::NGroupPresentation( tri->getFundamentalGroup() ) );
- for (unsigned long i=0; i<simpAtt; i++) group->proliferateRelators();
+ group->proliferateRelators(simpAtt);
  group->intelligentSimplify();
  tri->simplifiedFundamentalGroup(group);
  refresh(); 
- if (simpAtt < 2) simpAtt++; // let's not let the end-user go beyond 2 iterates for now. 
+ simpAtt++; 
 }
 
 void Dim4TriFundGroupUI::simplifyGAP() {

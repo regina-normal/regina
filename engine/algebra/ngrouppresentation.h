@@ -486,15 +486,16 @@ class REGINA_API NGroupExpression : public ShareableObject {
          *  will give you suggestions although they will not be as strong
          *  as if the words were cyclically reduced.  It also only adds 
          *  to sub_list, so for best results pass it an empty sub-list.
+         *
+         *  The default argument step==1 assumes you are looking for 
+         *  substitutions that shorten the length of a word, and that
+         *  you only want to make an immediate substitution.  Setting
+         *  step==2 assumes after you make your first substitution you
+         *  will want to attempt a further substitution, etc.  step>1
+         *  is used primarily when building relator tables for group 
+         *  recognition. 
          */
 	    void dehnAlgorithmSubMetric( const NGroupExpression &that_word, 
-               std::set< NWordSubstitutionData > &sub_list ) const;
-
-        /**
-         *  Experimental variant of dehnAlgorithmSubMetric, with intentions
-         *  for more general (eventual) usage. 
-         */
-	    void dehnAlgorithmSubMetric2( const NGroupExpression &that_word, 
                std::set< NWordSubstitutionData > &sub_list, 
                unsigned long step=1 ) const;
 
@@ -697,21 +698,20 @@ class REGINA_API NGroupPresentation : public ShareableObject {
 	     */
     	bool intelligentSimplify(NHomGroupPresentation*& reductionMap);
 
-      /**
-       *  Given a presentation <g_i | r_i> this routine appends consequences
-       * of the relators {r_i} to the presentation that are of the form 
-       * ab where both a and b are cyclic permutations of relators from 
-       * the collection {r_i}.  This is useful when attempting to simplify
-       * presentations but when small cancellation theory can't find the 
-       * simplest relators. 
-       */
-       void proliferateRelators();
-    
-       /**
-        *  Experimental new version, meant to take less memory and time, 
-        * and hopefully be more effective. 
-        */
-       void proliferateRelators2(unsigned long depth=1);
+        /**
+         *  Given a presentation <g_i | r_i> this routine appends consequences
+         * of the relators {r_i} to the presentation that are of the form 
+         * ab where both a and b are cyclic permutations of relators from 
+         * the collection {r_i}.  This is useful when attempting to simplify
+         * presentations but when small cancellation theory can't find the 
+         * simplest relators. depth=1 means it will only form products of two
+         * relators.  Depth==2 means products of three, etc.  Depth==4 is 
+         * typically the last depth after where the exponential growth of
+         * the operation isn't out of hand.  It also conveniently trivializes
+         * all the complicated trivial group presentations that we've come 
+         * across so far. 
+         */
+        void proliferateRelators(unsigned long depth=1);
 
         /**
          * Attempts to recognise the group corresponding to this
