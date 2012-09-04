@@ -35,13 +35,16 @@ void CPflower::computeAngleSum()
 	long double u = radius;
 	Dim2Triangle* tri;
 	int index;
-	for(std::deque<Dim2VertexEmbedding>::const_iterator it=hub->getEmbeddings().begin();
+	for(std::deque<Dim2VertexEmbedding>::const_iterator 
+        it=hub->getEmbeddings().begin();
 		it!=hub->getEmbeddings().end();it++)
 	{
 		tri = (*it).getTriangle();
 		index = (*it).getVertex();
-		long double v = packRef->getFlowerAt(tri->getVertex(mod(index+tri->orientation(),3)))->getRadius();
-		long double w = packRef->getFlowerAt(tri->getVertex(mod(index-tri->orientation(),3)))->getRadius();
+		long double v = packRef->getFlowerAt(
+         tri->getVertex(mod(index+tri->orientation(),3)))->getRadius();
+		long double w = packRef->getFlowerAt(
+         tri->getVertex(mod(index-tri->orientation(),3)))->getRadius();
 		angleSum += interiorAngle(u,v,w);
 	}
 	haveAngleSum=true;
@@ -88,7 +91,8 @@ long double CPflower::hyperbolicRelaxation()
   long double v_hat = (beta-sqrt(radius))/((beta*radius)-sqrt(radius));
   if(v_hat<0)
    v_hat=0;
-  long double t = (2*delta)/(sqrt(pow((1-v_hat),2)+(4*v_hat*pow(delta,2)))+1-v_hat);
+  long double t = (2*delta)/(sqrt(pow((1-v_hat),2)+
+                  (4*v_hat*pow(delta,2)))+1-v_hat);
   long double u = pow(t,2);
   radius = u;
  }

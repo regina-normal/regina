@@ -60,22 +60,27 @@ Dim2Triangle* firstTriangle(Dim2Triangulation* tri){
 	}
 	return temp;
 }
-//this tri has the highest vertex degree sums or is tied for the highest degree sums.  Add it to our collection(it is the first): (f2)
+//this tri has the highest vertex degree sums or is tied for the highest 
+// degree sums.  Add it to our collection(it is the first): (f2)
 
 //	std::set<Dim2Triangle*> disc;
 //	disc.insert(temp);
 
 //we build a list of boundary edges, ie the edges we will split the sphere on
-//simultaneously we want to collect all triangles that share an edge with a triangle in disc that are not already in disc: (f3)
+//simultaneously we want to collect all triangles that share an edge with a 
+// triangle in disc that are not already in disc: (f3)
 //we also want boundary vertices
-//building this collection is linear in the size of tri, so we recalculate at will
+//building this collection is linear in the size of tri,
+//  so we recalculate at will
 //	std::set<Dim2Vertex*> bvrt;
 //	std::set<Dim2Edge*> bdry;
 //	std::set<Dim2Triangle*> adj;
 
-void calcBoundary(std::set<Dim2Triangle*>* disc,std::set<Dim2Triangle*>* adj,std::set<Dim2Vertex*>* bvrt,std::set<Dim2Edge*>* bdry){
+void calcBoundary(std::set<Dim2Triangle*>* disc,std::set<Dim2Triangle*>* adj,
+                  std::set<Dim2Vertex*>* bvrt,std::set<Dim2Edge*>* bdry){
 	(*adj).clear();(*bvrt).clear();(*bdry).clear();
-	for(std::set<Dim2Triangle*>::iterator it=(*disc).begin();it!=(*disc).end();it++)
+	for(std::set<Dim2Triangle*>::iterator it=(*disc).begin();it!=(*disc).end();
+        it++)
 		for(int i=0;i<3;i++) 
 			if((*disc).find((*it)->adjacentTriangle(i))==(*disc).end()){
 				(*bdry).insert((*it)->getEdge(i));
@@ -85,10 +90,13 @@ void calcBoundary(std::set<Dim2Triangle*>* disc,std::set<Dim2Triangle*>* adj,std
 				}
 }
 //Next, check each of these for the property: (f4)
-//  >= 2 edges in bdry.  we want to add these triangles more than triangles with exactly one edge in bdry.  moreover, if we find any
-// triangles satisfying this property, we restart process in the hopes of obtaining more triangles with this property.
+//  >= 2 edges in bdry.  we want to add these triangles more than triangles 
+//  with exactly one edge in bdry.  moreover, if we find any
+// triangles satisfying this property, we restart process in the hopes of 
+//  obtaining more triangles with this property.
 
-bool addTwo(std::set<Dim2Triangle*>* disc, std::set<Dim2Triangle*>* adj, std::set<Dim2Edge*>* bdry,int breaker){
+bool addTwo(std::set<Dim2Triangle*>* disc, std::set<Dim2Triangle*>* adj, 
+            std::set<Dim2Edge*>* bdry,int breaker){
 	bool flag = false;
 	for(std::set<Dim2Triangle*>::iterator it=(*adj).begin(); it!=(*adj).end();it++)
 	{
@@ -97,7 +105,8 @@ bool addTwo(std::set<Dim2Triangle*>* disc, std::set<Dim2Triangle*>* adj, std::se
 			e++;
 		if(e>1){
 			(*disc).insert(*it);
-			if((*disc).size()>=breaker) return true;//gotta check if we can quit whenever we add a tri to disc.
+			if((*disc).size()>=breaker) return true;
+            //gotta check if we can quit whenever we add a tri to disc.
 			flag=true;
 		}
 	}
@@ -106,21 +115,26 @@ bool addTwo(std::set<Dim2Triangle*>* disc, std::set<Dim2Triangle*>* adj, std::se
 //Next add all of the triangles with:
 // exactly 1 edge in bdry
 // exactly 2 vert in bdry
-//Whenever we add a triangle in this way, we want to see if any more desirable triangles have come available
+//Whenever we add a triangle in this way, we want to see if any more desirable 
+// triangles have come available
 int checkSum(Dim2Triangle* tri, std::set<Dim2Triangle*> disc){
 	int sum=0;
 	for(int i=0;i!=3;i++)
-		for(std::deque<Dim2VertexEmbedding>::const_iterator it = tri->getVertex(i)->getEmbeddings().begin();
+		for(std::deque<Dim2VertexEmbedding>::const_iterator it = 
+            tri->getVertex(i)->getEmbeddings().begin();
 			it!=tri->getVertex(i)->getEmbeddings().end(); it++)
-			if(std::find(disc.begin(),disc.end(),(*it).getTriangle())!=disc.end())
+			if(std::find(disc.begin(),disc.end(),
+               (*it).getTriangle())!=disc.end())
 				sum++;
 	return sum;	
 }
 
 
-void addOne(std::set<Dim2Triangle*>* disc, std::set<Dim2Triangle*>* adj,std::set<Dim2Vertex*>* bvrt,std::set<Dim2Edge*>* bdry){
+void addOne(std::set<Dim2Triangle*>* disc, std::set<Dim2Triangle*>* adj,
+            std::set<Dim2Vertex*>* bvrt,std::set<Dim2Edge*>* bdry){
 	std::set<Dim2Triangle*> valid;
-	for(std::set<Dim2Triangle*>::iterator it=(*adj).begin(); it!=(*adj).end(); it++)
+	for(std::set<Dim2Triangle*>::iterator it=(*adj).begin(); 
+        it!=(*adj).end(); it++)
 	{
 		int e=0;
 		int v=0;
@@ -138,7 +152,8 @@ void addOne(std::set<Dim2Triangle*>* disc, std::set<Dim2Triangle*>* adj,std::set
 		}
 	}
 	Dim2Triangle* best = *(valid.begin());
-	for(std::set<Dim2Triangle*>::iterator it=valid.begin(); it!=valid.end(); it++)
+	for(std::set<Dim2Triangle*>::iterator it=valid.begin(); 
+        it!=valid.end(); it++)
 	{
 		if(best == NULL) best = (*it);
 		else if (checkSum(best,*disc)<checkSum(*it,*disc)) best = (*it);
@@ -166,7 +181,8 @@ std::set<Dim2Triangle*> getDisc(Dim2Triangulation* tri)
 
 bool split(Dim2Triangulation* tri, std::set<Dim2Triangle*> slice)
 {
-	for(std::set<Dim2Triangle*>::iterator it = slice.begin();it!=slice.end();it++)
+	for(std::set<Dim2Triangle*>::iterator it = slice.begin();
+        it!=slice.end();it++)
 		for(int i=0;i<3;i++)
 			if(slice.find((*it)->adjacentTriangle(i))==slice.end())
 				(*it)->unjoin(i);

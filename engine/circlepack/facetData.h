@@ -35,11 +35,13 @@
 #define __FACETDATA_H
 #endif
 
-//have another data structure edgeData indexed by d2edge* edg.  for each edge it contains
+// Have another data structure edgeData indexed by d2edge* edg.  
+// For each edge it contains
 //.. doubles x_i,y_i, i in[0,1] co-ords of vertices of the edge
 //.. int eCol that somehow tells us where this edge is from (face or tet)
 //.. bool bdry that tells us whether or not edge is a boundary edge
-//.. int oCol that tells us which (tet or pent) the triangle edge was formerly attached to is from 
+//.. int oCol that tells us which (tet or pent) the triangle edge was formerly 
+//   attached to is from 
 struct edgeData{
 	edgeData(){};
 
@@ -53,8 +55,10 @@ struct edgeData{
 	double y_1;
 };
 
-//begin with a data structure triData. The structure is indexed by Dim2Triangle* tri. for each tri it contains:
-//.. int tCol, corresponding to the tet or pent that tri originates from in buildLink()
+//begin with a data structure triData. The structure is indexed by Dim2Triangle* 
+// tri. for each tri it contains:
+//.. int tCol, corresponding to the tet or pent that tri originates from in 
+//   buildLink()
 //.. doubles x_i,y_i, i in[0,2] co-ords of vertices of the triangle
 struct triData{
 	triData(){};
@@ -72,7 +76,8 @@ struct triData{
 
 //one last data struct indexed by d2vert:
 //.. doubles x,y cords of vert
-//.. int vCol, corresponding to the edge or face that this vert originates from in buildLink()
+//.. int vCol, corresponding to the edge or face that this vert originates from 
+//   in buildLink()
 struct vertData{
 	vertData(){};
 

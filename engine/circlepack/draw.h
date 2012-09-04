@@ -62,21 +62,27 @@ regina::colour(0.03125,0,0.03125),  regina::colour(0,0.03125,0.03125),
 regina::colour(0.03125,0.03125,0.03125)
 };
 
-//begin with a data structure triData. The structure is indexed by Dim2Triangle* tri. for each tri it contains:
-//.. int tCol, corresponding to the tet or pent that tri originates from in buildLink()
+//begin with a data structure triData. The structure is indexed by Dim2Triangle*
+//  tri. for each tri it contains:
+//.. int tCol, corresponding to the tet or pent that tri originates from in 
+//   buildLink()
 //.. doubles x_i,y_i, i in[0,2] co-ords of vertices of the triangle
 
-//have another data structure edgeData indexed by d2edge* edg.  for each edge it contains
+//have another data structure edgeData indexed by d2edge* edg.  for each edge 
+//  it contains
 //.. doubles x_i,y_i, i in[0,1] co-ords of vertices of the edge
 //.. int eCol that somehow tells us where this edge is from (face or tet)
 //.. bool bdry that tells us whether or not edge is a boundary edge
-//.. int oCol that tells us which (tet or pent) the triangle edge was formerly attached to is from 
+//.. int oCol that tells us which (tet or pent) the triangle edge was formerly 
+// attached to is from 
 
 //one last data struct indexed by d2vert:
 //.. doubles x,y cords of vert
-//.. int vCol, corresponding to the edge or face that this vert originates from in buildLink()
+//.. int vCol, corresponding to the edge or face that this vert originates from 
+//  in buildLink()
 
-//first, there are some functions missing from dim2component class.  They are simple enough
+//first, there are some functions missing from dim2component class.  They are 
+// simple enough
 /*std::vector<Dim2Triangle*> getTriangles(Dim2Component* comp){
 	std::vector<Dim2Triangle*> tri;
 	for(unsigned long i=0;i!=comp->getNumberOfTriangles();i++)
@@ -101,8 +107,10 @@ std::vector<Dim2Vertex*> getVertices(Dim2Component* comp){
 namespace regina{
 
 //we want to draw the trianglulation of one component of our sphere:
-inline void triangles(std::ostream& out, Dim2Component* tri, std::map<Dim2Edge*, edgeData> edges_){
-	for(Dim2Triangulation::EdgeIterator it = tri->getEdges().begin(); it!=tri->getEdges().end(); it++){
+inline void triangles(std::ostream& out, Dim2Component* tri, std::map<Dim2Edge*, 
+    edgeData> edges_){
+	for(Dim2Triangulation::EdgeIterator it = tri->getEdges().begin(); 
+        it!=tri->getEdges().end(); it++){
 		out<< "newpath\n"<<
 		edges_[*it].x_0 << " " << edges_[*it].y_0 << " moveto\n" <<
 		edges_[*it].x_1 << " " << edges_[*it].y_1 << " lineto\n" <<
@@ -111,9 +119,12 @@ inline void triangles(std::ostream& out, Dim2Component* tri, std::map<Dim2Edge*,
 }
 
 //we want to colour the trianglulation of one component of our sphere:
-inline void triColour(std::ostream& out, Dim2Component* tri, std::map<Dim2Triangle*,triData> tri_, std::map<Dim2Vertex*,vertData> verts_, std::map<Dim2Edge*,edgeData> edges_){
+inline void triColour(std::ostream& out, Dim2Component* tri, 
+     std::map<Dim2Triangle*,triData> tri_, std::map<Dim2Vertex*,vertData> 
+     verts_, std::map<Dim2Edge*,edgeData> edges_){
 	out << "%!\n";
-	for(Dim2Triangulation::TriangleIterator it = tri->getTriangles().begin(); it!=tri->getTriangles().end(); it++){
+	for(Dim2Triangulation::TriangleIterator it = tri->getTriangles().begin(); 
+        it!=tri->getTriangles().end(); it++){
 		out<< "newpath\n"<<
 		tri_[*it].x_0 << " " << tri_[*it].y_0 << " moveto\n" <<
 		tri_[*it].x_1 << " " << tri_[*it].y_1 << " lineto\n" <<
@@ -121,26 +132,33 @@ inline void triColour(std::ostream& out, Dim2Component* tri, std::map<Dim2Triang
 		colourValues[(tri_[*it].tCol)].printForPS(out);
 		out << "setrgbcolor\nfill\n";
 	}
-	//recall that we split a sphere into two discs.  we want to know what our disc used to be attached to.
+	// Recall that we split a sphere into two discs. 
+    // We want to know what our disc used to be attached to.
 	double O_x, O_y; O_x=0; O_y=0;
-	for(Dim2Triangulation::VertexIterator it = tri->getVertices().begin(); it!=tri->getVertices().end(); it++){
-		O_x+=verts_[*it].x; O_y+=verts_[*it].y;}
+	for(Dim2Triangulation::VertexIterator it = tri->getVertices().begin(); 
+        it!=tri->getVertices().end(); it++) {
+		O_x+=verts_[*it].x; O_y+=verts_[*it].y; }
 	O_x=O_x/tri->getNumberOfVertices(); O_y=O_y/tri->getNumberOfVertices();
 	
-	for(Dim2Triangulation::TriangleIterator it = tri->getTriangles().begin(); it!=tri->getTriangles().end(); it++)
+	for(Dim2Triangulation::TriangleIterator it = tri->getTriangles().begin(); 
+        it!=tri->getTriangles().end(); it++)
 	for(int i=0;i<3; i++) if((*it)->getEdge(i)->isBoundary()){
 		out << O_x + 1000*(edges_[(*it)->getEdge(i)].x_0 - O_x) << " "
 		    << O_y + 1000*(edges_[(*it)->getEdge(i)].y_0 - O_y) << " moveto\n"
-		    << edges_[(*it)->getEdge(i)].x_0 << " " << edges_[(*it)->getEdge(i)].y_0 << " lineto\n"
-		    << edges_[(*it)->getEdge(i)].x_1 << " " << edges_[(*it)->getEdge(i)].y_1 << " lineto\n"
+		    << edges_[(*it)->getEdge(i)].x_0 << " " << 
+               edges_[(*it)->getEdge(i)].y_0 << " lineto\n"
+		    << edges_[(*it)->getEdge(i)].x_1 << " " << 
+               edges_[(*it)->getEdge(i)].y_1 << " lineto\n"
 		    << O_x + 1000*(edges_[(*it)->getEdge(i)].x_1 - O_x) << " "
-		    << O_y + 1000*(edges_[(*it)->getEdge(i)].y_1 - O_y) << " lineto\nclosepath\n";
+		    << O_y + 1000*(edges_[(*it)->getEdge(i)].y_1 - O_y) << 
+               " lineto\nclosepath\n";
 		
 		colourValues[tri_[*it].adj[i]].printForPS(out);
 			
 		out << " setrgbcolor\nfill\n";
 	}
-	for(Dim2Triangulation::VertexIterator it = tri->getVertices().begin(); it!=tri->getVertices().end(); it++)
+	for(Dim2Triangulation::VertexIterator it = tri->getVertices().begin(); 
+        it!=tri->getVertices().end(); it++)
 	if((*it)->isBoundary()){
 		out << verts_[*it].x << " " << verts_[*it].y << " moveto\n"
 		    << O_x + 1000*(verts_[*it].x - O_x) << " "
@@ -152,19 +170,23 @@ inline void triColour(std::ostream& out, Dim2Component* tri, std::map<Dim2Triang
 }
 /*
 //we want to draw the dual decomposition
-inline void dual(std::ostream& out, Dim2Component* tri, std::map<Dim2Triangle*,triData> tri_) 
+inline void dual(std::ostream& out, Dim2Component* tri, 
+    std::map<Dim2Triangle*,triData> tri_) 
 {
 	for(Dim2Triangulation::VertexIterator it=tri->getVertices().begin();
 		it!=tri->getVertices().end();it++)
 	{
 		bool flag=true;
 		out<<"newpath\n";
-		for(std::deque<Dim2VertexEmbedding>::const_iterator that=(*it)->getEmbeddings().begin();
+		for(std::deque<Dim2VertexEmbedding>::const_iterator 
+            that=(*it)->getEmbeddings().begin();
 			that!=(*it)->getEmbeddings().end();that++)
 		{
 			out<<
-		((tri_[(*that).getTriangle()].x_0) + (tri_[(*that).getTriangle()].x_1) + (tri_[(*that).getTriangle()].x_2))/3 <<" "<<
-		((tri_[(*that).getTriangle()].y_0) + (tri_[(*that).getTriangle()].y_1) + (tri_[(*that).getTriangle()].y_2))/3 <<" ";
+		((tri_[(*that).getTriangle()].x_0) + (tri_[(*that).getTriangle()].x_1) +
+         (tri_[(*that).getTriangle()].x_2))/3 <<" "<<
+		((tri_[(*that).getTriangle()].y_0) + (tri_[(*that).getTriangle()].y_1) + 
+         (tri_[(*that).getTriangle()].y_2))/3 <<" ";
 
 			if(flag)
 				out<<"moveto\n";
@@ -177,19 +199,24 @@ inline void dual(std::ostream& out, Dim2Component* tri, std::map<Dim2Triangle*,t
 }
 
 //we want to draw the dual decomposition this time with colour!
-inline void dualColour(std::ostream& out, Dim2Component* tri, std::map<Dim2Triangle*,triData> tri_, std::map<Dim2Vertex*,vertData> verts_) 
+inline void dualColour(std::ostream& out, Dim2Component* tri, 
+         std::map<Dim2Triangle*,triData> tri_,
+         std::map<Dim2Vertex*,vertData> verts_) 
 {
     for(Dim2Triangulation::VertexIterator it=tri->getVertices().begin();
         it!=tri->getVertices().end();it++)
         {
          bool flag=true;
          out<<"newpath\n";
-         for(std::deque<Dim2VertexEmbedding>::const_iterator that=(*it)->getEmbeddings().begin();
+         for(std::deque<Dim2VertexEmbedding>::const_iterator 
+             that=(*it)->getEmbeddings().begin();
              that!=(*it)->getEmbeddings().end();that++)
              {
               out<<
-               (tri_[(*that).getTriangle()].x_0+tri_[(*that).getTriangle()].x_1+tri_[(*that).getTriangle()].x_2)/3 <<" "<<
-               (tri_[(*that).getTriangle()].y_0+tri_[(*that).getTriangle()].y_1+tri_[(*that).getTriangle()].y_2)/3 <<" ";
+               (tri_[(*that).getTriangle()].x_0+tri_[(*that).getTriangle()].x_1+
+                tri_[(*that).getTriangle()].x_2)/3 <<" "<<
+               (tri_[(*that).getTriangle()].y_0+tri_[(*that).getTriangle()].y_1+
+                tri_[(*that).getTriangle()].y_2)/3 <<" ";
               if(flag)
                  out<<"moveto\n";
               else

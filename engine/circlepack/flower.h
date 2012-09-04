@@ -61,7 +61,8 @@ private:
 //	long double interiorAngle(long double u,long double v,long double w);
 
 	inline void giveContext(circlePacking* fromHere){ packRef = fromHere; }
-   	inline void setHub(Dim2Vertex* whereItIs){ hub = whereItIs;size = hub->getNumberOfEmbeddings(); }
+   	inline void setHub(Dim2Vertex* whereItIs){ hub = whereItIs;size = 
+                hub->getNumberOfEmbeddings(); }
 	
 	friend class circlePacking;
 
@@ -70,7 +71,8 @@ public:
 
 	inline long double getRadius(){ return radius; }
 	inline Dim2Vertex* getHub(){ return hub; }
-	inline long double getAngleSum(){ if(!haveAngleSum) computeAngleSum(); return angleSum; }
+	inline long double getAngleSum()
+     { if(!haveAngleSum) computeAngleSum(); return angleSum; }
 	inline long double getTargetSum(){ return targetSum; }
 
 };

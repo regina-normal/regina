@@ -34,7 +34,8 @@ namespace regina {
 
 std::string circlePackPS(Dim4Triangulation* tri, Dim4Edge* edge)
 {
-	Dim4Isomorphism* iso( new Dim4Isomorphism( edge->getNumberOfEmbeddings() ) );
+	Dim4Isomorphism* iso( 
+         new Dim4Isomorphism( edge->getNumberOfEmbeddings() ) );
 	const std::auto_ptr<Dim2Triangulation> toLink(edge->buildLink(iso));
 	Dim2Triangulation* link = toLink.get();
 
@@ -73,7 +74,8 @@ std::string circlePackPS(Dim4Triangulation* tri, Dim4Edge* edge)
 	{
 		std::map<Dim2Vertex*,std::pair<double,double> > temp;
 		std::map<Dim2Vertex*,long double> compLabel = pack->getLabel();
-		for(Dim2Triangulation::VertexIterator that = link->getVertices().begin();
+		for(Dim2Triangulation::VertexIterator that = 
+            link->getVertices().begin();
 			that!=link->getVertices().end(); that++)
 			if(std::find((*it)->getVertices().begin(),
             (*it)->getVertices().end(),*that)==(*it)->getVertices().end())
@@ -169,7 +171,8 @@ std::string circlePackPS(NTriangulation* tri, NVertex* vertex)
 	{
 		std::map<Dim2Vertex*,std::pair<double,double> > temp;
 		std::map<Dim2Vertex*,long double> compLabel = pack->getLabel();
-		for(Dim2Triangulation::VertexIterator that = link->getVertices().begin();
+		for(Dim2Triangulation::VertexIterator 
+             that = link->getVertices().begin();
 			that!=link->getVertices().end(); that++)
 			if(std::find((*it)->getVertices().begin(),
             (*it)->getVertices().end(),*that)==(*it)->getVertices().end())

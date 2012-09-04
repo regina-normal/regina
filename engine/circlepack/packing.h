@@ -64,8 +64,10 @@ private:
 
 	void populate(const Dim2Triangulation* tri);
 
-	std::vector<long double> superAcceleration(long double *c,long double *lambda,long double lambda_0,    
-      std::vector<long double> label_0, long double epsilon, long double delta, bool * flag);
+	std::vector<long double> superAcceleration(long double *c,
+           long double *lambda,long double lambda_0,    
+      std::vector<long double> label_0, long double epsilon, 
+           long double delta, bool * flag);
 
 public:
 	circlePacking();
@@ -77,7 +79,8 @@ public:
 	std::map<Dim2Vertex*,long double> getLabel();
 //	inline bool getGeometry(){ return geometry; }
 
-	long double fullRelaxation(long double epsilon, long double delta);//, bool code);
+	long double fullRelaxation(long double epsilon, long double delta);
+    //, bool code);
 };
 
 } // namespace regina

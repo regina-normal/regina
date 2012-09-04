@@ -57,8 +57,10 @@ std::map<Dim2Vertex*,long double> circlePacking::getLabel()
 	if(!haveLabel)
 	{
 		label.clear();
-		for(Dim2Triangulation::VertexIterator it = tri->getVertices().begin(); it!=tri->getVertices().end(); it++){
-			label.insert(std::pair<Dim2Vertex*,long double>(*it,meadow[*it]->getRadius()));
+		for(Dim2Triangulation::VertexIterator it = tri->getVertices().begin(); 
+             it!=tri->getVertices().end(); it++){
+			label.insert(std::pair<Dim2Vertex*,long double>
+             (*it,meadow[*it]->getRadius()));
 			}
 		haveLabel=true;
 	}
@@ -66,7 +68,8 @@ std::map<Dim2Vertex*,long double> circlePacking::getLabel()
 }
 
 
-long double circlePacking::fullRelaxation(long double epsilon, long double delta)//, bool code)
+long double circlePacking::fullRelaxation(long double epsilon, 
+                                          long double delta)//, bool code)
 {
 	if(!haveLabel) getLabel();
 	if(size<4)
@@ -87,14 +90,16 @@ long double circlePacking::fullRelaxation(long double epsilon, long double delta
 		c = sqrt(c); lambda = c/c_0; flag=true;
 		
 //		if(lambda<1 and flag_0==true)
-//			label = superAcceleration(&c,&lambda,lambda_0,label_0,epsilon,delta,&flag);
+//	label = superAcceleration(&c,&lambda,lambda_0,label_0,epsilon,delta,&flag);
 
 	}while ((c < epsilon+1 and c > 1) or (c > 1-epsilon and c < 1));
 
 	return c;
 }
 /*
-std::vector<long double> packing::superAcceleration(long double* c,long double* lambda,long double lambda_0, std::vector<long double> label_0, long double epsilon, long double delta, bool* flag)
+std::vector<long double> packing::superAcceleration(long double* c,
+        long double* lambda,long double lambda_0, std::vector<long double> 
+        label_0, long double epsilon, long double delta, bool* flag)
 {
 	if(!c or !lambda or !flag)
 	{	
@@ -131,7 +136,8 @@ std::vector<long double> packing::superAcceleration(long double* c,long double* 
 */
 long double circlePacking::relaxPacking(long double c)
 {
-	for(Dim2Triangulation::VertexIterator it = tri->getVertices().begin(); it!=tri->getVertices().end(); it++)
+	for(Dim2Triangulation::VertexIterator it = tri->getVertices().begin(); 
+            it!=tri->getVertices().end(); it++)
 		if(not (*it)->isBoundary())	
 			c+=pow(meadow[*it]->relax() - (2*PI_F),2);
 	haveLabel=false;
