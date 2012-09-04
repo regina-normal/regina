@@ -197,6 +197,14 @@ std::set<Dim2Triangle*> getDisc(Dim2Triangulation* tri) {
 	return disc;
 }
 
+/**
+ *  Given a triangulated 2-sphere, this routine splits it into two
+ *  triangulated discs.  It attempts to ensure the number of triangles
+ *  in each disc is equal.  It modifies the existing triangulation
+ *  by removing some identifications.  So the input is a triangulated
+ *  2-sphere, the output is a triangulated disjoint union of two 
+ *  discs. 
+ */
 bool split(Dim2Triangulation* tri, std::set<Dim2Triangle*> slice) {
 	for(std::set<Dim2Triangle*>::iterator it = slice.begin();
         it!=slice.end();it++)
