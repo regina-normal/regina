@@ -1925,7 +1925,8 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * given pentachoron.
          * @return the candidate isomorphism signature.
          */
-        std::string isoSig(unsigned pent, const NPerm5& vertices,  Dim4Isomorphism* toIsoSigLabel=NULL ) const;
+        std::string isoSigInternal(unsigned pent, const NPerm5& vertices,
+            Dim4Isomorphism* toIsoSigLabel=NULL) const;
 
     friend class regina::Dim4Pentachoron;
     friend class regina::NXMLDim4TriangulationReader;

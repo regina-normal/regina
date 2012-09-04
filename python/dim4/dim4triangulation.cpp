@@ -45,8 +45,6 @@ namespace {
         bool, bool) = &Dim4Triangulation::twoZeroMove;
     bool (Dim4Triangulation::*twoZeroMove_edge)(regina::Dim4Edge*,
         bool, bool) = &Dim4Triangulation::twoZeroMove;
-    std::string (Dim4Triangulation::*isoSig_void)() const =
-        &Dim4Triangulation::isoSig;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         Dim4Triangulation::simplifyToLocalMinimum, 0, 1);
@@ -64,6 +62,8 @@ namespace {
         Dim4Triangulation::shellBoundary, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_collapseEdge,
         Dim4Triangulation::collapseEdge, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_isoSig,
+        Dim4Triangulation::isoSig, 0, 1);
 
     boost::python::list Dim4_getPentachora_list(Dim4Triangulation& t) {
         boost::python::list ans;
@@ -239,7 +239,7 @@ void addDim4Triangulation() {
         .def("barycentricSubdivision",
             &Dim4Triangulation::barycentricSubdivision)
         .def("insertTriangulation", &Dim4Triangulation::insertTriangulation)
-        .def("isoSig", isoSig_void)
+        .def("isoSig", &Dim4Triangulation::isoSig, OL_isoSig())
         .def("fromIsoSig", &Dim4Triangulation::fromIsoSig,
             return_value_policy<manage_new_object>())
         .def("dumpConstruction", &Dim4Triangulation::dumpConstruction)

@@ -205,7 +205,8 @@ std::string Dim4Triangulation::isoSig( Dim4Isomorphism* toIsoSigLabel ) const {
                   if (permFlag) curri = new Dim4Isomorphism( 
                         (*it)->getNumberOfPentachora() );
                     else curri = NULL;
-                  curr = isoSig((*it)->getPentachoron(pent)->markedIndex(),
+                  curr = isoSigInternal(
+                    (*it)->getPentachoron(pent)->markedIndex(),
                     NPerm5::orderedS5[perm], curri);
                   cPerm tLabel;
                   tLabel.compStr = curr; 
@@ -260,8 +261,9 @@ std::string Dim4Triangulation::isoSig( Dim4Isomorphism* toIsoSigLabel ) const {
     return ans;
 }
 
-std::string Dim4Triangulation::isoSig(unsigned pent, const NPerm5& vertices,  
-                                      Dim4Isomorphism* toIsoSigLabel ) const {
+std::string Dim4Triangulation::isoSigInternal(
+        unsigned pent, const NPerm5& vertices,  
+        Dim4Isomorphism* toIsoSigLabel ) const {
     // Only process the component that pent belongs to.
 
     // ---------------------------------------------------------------------
