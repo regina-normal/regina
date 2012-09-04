@@ -30,7 +30,7 @@
 #include "triangulation/ntriangulation.h"
 
 // Affects the number of random 4-4 moves attempted during simplification.
-#define COEFF_4_4 3
+#define COEFF_4_4 5
 
 namespace regina {
 
