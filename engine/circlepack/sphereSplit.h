@@ -109,7 +109,8 @@ void calcBoundary(std::set<Dim2Triangle*>* disc,std::set<Dim2Triangle*>* adj,
 bool addTwo(std::set<Dim2Triangle*>* disc, std::set<Dim2Triangle*>* adj, 
             std::set<Dim2Edge*>* bdry,int breaker){
 	bool flag = false;
-	for(std::set<Dim2Triangle*>::iterator it=(*adj).begin(); it!=(*adj).end();it++)
+	for(std::set<Dim2Triangle*>::iterator it=(*adj).begin(); 
+        it!=(*adj).end();it++)
 	{
 		int e=0;
 		for(int i=0;i!=3;i++) if((*bdry).find((*it)->getEdge(i))!=(*bdry).end())
