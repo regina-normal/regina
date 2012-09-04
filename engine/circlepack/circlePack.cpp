@@ -1,12 +1,12 @@
-#include "regina/dim4/dim4triangulation.h"
-#include "regina/dim4/dim4edge.h"
-#include "regina/triangulation/ntriangulation.h"
-#include "regina/triangulation/nvertex.h"
-#include "regina/dim2/dim2component.h"
-#include "regina/dim2/dim2triangulation.h"
-#include "regina/dim2/dim2triangle.h"
-#include "regina/dim2/dim2edge.h"
-#include "regina/dim2/dim2vertex.h"
+#include "dim4/dim4triangulation.h"
+#include "dim4/dim4edge.h"
+#include "triangulation/ntriangulation.h"
+#include "triangulation/nvertex.h"
+#include "dim2/dim2component.h"
+#include "dim2/dim2triangulation.h"
+#include "dim2/dim2triangle.h"
+#include "dim2/dim2edge.h"
+#include "dim2/dim2vertex.h"
 
 #include <map>
 #include <utility>

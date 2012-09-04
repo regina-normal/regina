@@ -1,7 +1,7 @@
-#include "regina/dim2/dim2triangulation.h"
-#include "regina/dim2/dim2triangle.h"
-#include "regina/dim2/dim2vertex.h"
-#include "regina/dim2/dim2edge.h"
+#include "dim2/dim2triangulation.h"
+#include "dim2/dim2triangle.h"
+#include "dim2/dim2vertex.h"
+#include "dim2/dim2edge.h"
 #include <string>
 #include <sstream>
 #include <iostream>
