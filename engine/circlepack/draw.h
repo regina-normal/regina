@@ -38,28 +38,28 @@
 #include "colour.h"
 #include "facetData.h"
 
-static regina::colour colourValues[] = {
-regina::colour(1,0,0),              regina::colour(0,1,0),
-regina::colour(0,0,1),              regina::colour(0,1,1),      
-regina::colour(1,0,1),              regina::colour(1,1,0),
-regina::colour(0.5,0,0),            regina::colour(0,0.5,0),
-regina::colour(0,0,0.5),            regina::colour(0,0.5,0.5),  
-regina::colour(0.5,0,0.5),          regina::colour(0,0.5,0.5),
-regina::colour(0.5,0.5,0.5),        regina::colour(0.25,0,0),
-regina::colour(0,0.25,0),           regina::colour(0,0,0.25),
-regina::colour(0,0.25,0.25),        regina::colour(0.25,0,0.25),
-regina::colour(0,0.25,0.25),        regina::colour(0.25,0.25,0.25),
-regina::colour(0.125,0,0),          regina::colour(0,0.125,0),
-regina::colour(0,0,0.125),          regina::colour(0,0.125,0.125),
-regina::colour(0.125,0,0.125),      regina::colour(0,0.125,0.125),
-regina::colour(0.125,0.125,0.125),  regina::colour(0.0625,0,0),     
-regina::colour(0,0.0625,0),         regina::colour(0,0,0.0625),
-regina::colour(0,0.0625,0.0625),    regina::colour(0.0625,0,0.0625),
-regina::colour(0,0.0625,0.0625),    regina::colour(0.0625,0.0625,0.0625),
-regina::colour(0.03125,0,0),        regina::colour(0,0.03125,0),
-regina::colour(0,0,0.03125),        regina::colour(0,0.03125,0.03125),
-regina::colour(0.03125,0,0.03125),  regina::colour(0,0.03125,0.03125),
-regina::colour(0.03125,0.03125,0.03125)
+static regina::CPcolour colourValues[] = {
+regina::CPcolour(1,0,0),              regina::CPcolour(0,1,0),
+regina::CPcolour(0,0,1),              regina::CPcolour(0,1,1),      
+regina::CPcolour(1,0,1),              regina::CPcolour(1,1,0),
+regina::CPcolour(0.5,0,0),            regina::CPcolour(0,0.5,0),
+regina::CPcolour(0,0,0.5),            regina::CPcolour(0,0.5,0.5),  
+regina::CPcolour(0.5,0,0.5),          regina::CPcolour(0,0.5,0.5),
+regina::CPcolour(0.5,0.5,0.5),        regina::CPcolour(0.25,0,0),
+regina::CPcolour(0,0.25,0),           regina::CPcolour(0,0,0.25),
+regina::CPcolour(0,0.25,0.25),        regina::CPcolour(0.25,0,0.25),
+regina::CPcolour(0,0.25,0.25),        regina::CPcolour(0.25,0.25,0.25),
+regina::CPcolour(0.125,0,0),          regina::CPcolour(0,0.125,0),
+regina::CPcolour(0,0,0.125),          regina::CPcolour(0,0.125,0.125),
+regina::CPcolour(0.125,0,0.125),      regina::CPcolour(0,0.125,0.125),
+regina::CPcolour(0.125,0.125,0.125),  regina::CPcolour(0.0625,0,0),     
+regina::CPcolour(0,0.0625,0),         regina::CPcolour(0,0,0.0625),
+regina::CPcolour(0,0.0625,0.0625),    regina::CPcolour(0.0625,0,0.0625),
+regina::CPcolour(0,0.0625,0.0625),    regina::CPcolour(0.0625,0.0625,0.0625),
+regina::CPcolour(0.03125,0,0),        regina::CPcolour(0,0.03125,0),
+regina::CPcolour(0,0,0.03125),        regina::CPcolour(0,0.03125,0.03125),
+regina::CPcolour(0.03125,0,0.03125),  regina::CPcolour(0,0.03125,0.03125),
+regina::CPcolour(0.03125,0.03125,0.03125)
 };
 
 //begin with a data structure triData. The structure is indexed by Dim2Triangle*

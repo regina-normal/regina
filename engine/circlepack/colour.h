@@ -37,14 +37,14 @@
 
 namespace regina{
 
-class colour {
+class CPcolour {
 private:
 	float r;
 	float b;
 	float g;
 public:
-	colour();
-	colour(float setR, float setG, float setB);
+	CPcolour();
+	CPcolour(float setR, float setG, float setB);
 	float getR();
 	float getB();
 	float getG();

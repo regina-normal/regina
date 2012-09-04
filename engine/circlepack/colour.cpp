@@ -7,32 +7,32 @@
 
 namespace regina{
 
-colour::colour() {
+CPcolour::CPcolour() {
 	r=0;
 	g=0;
 	b=0;
 }
 
-colour::colour(float setR, float setG, float setB) {
+CPcolour::CPcolour(float setR, float setG, float setB) {
 	changeColour(setR,setG,setB);
 }
 
-float colour::getR() {return r;}
-float colour::getB() {return b;}
-float colour::getG() {return g;}
+float CPcolour::getR() {return r;}
+float CPcolour::getB() {return b;}
+float CPcolour::getG() {return g;}
 
-void colour::printForPS(std::ostream& out)
+void CPcolour::printForPS(std::ostream& out)
 {
 	out << r << " " << g << " " << b << '\n';
 }
 
-void colour::changeColour(float setR, float setG, float setB) {
+void CPcolour::changeColour(float setR, float setG, float setB) {
 	r = modOne(setR);
 	g = modOne(setG);
 	b = modOne(setB);
 }
 
-float colour::modOne(float num)
+float CPcolour::modOne(float num)
 {
 	if(num < 0)
 		num = std::abs(num);
