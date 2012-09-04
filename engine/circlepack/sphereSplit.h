@@ -161,8 +161,12 @@ void addOne(std::set<Dim2Triangle*>* disc, std::set<Dim2Triangle*>* adj,
 	disc->insert(best);
 }
 
-std::set<Dim2Triangle*> getDisc(Dim2Triangulation* tri)
-{
+/**
+ *  I think this routine takes a triangulated 2-sphere and 
+ * attempts to partition it into two triangulated discs with
+ * equal numbers of triangles.  Comments Sam? 
+ */
+std::set<Dim2Triangle*> getDisc(Dim2Triangulation* tri) {
 	int magicNumber = tri->getNumberOfTriangles()/2;
 	std::set<Dim2Triangle*> disc;
 	disc.insert(firstTriangle(tri));
@@ -173,14 +177,14 @@ std::set<Dim2Triangle*> getDisc(Dim2Triangulation* tri)
 	for(;;){
 		if(disc.size()>=magicNumber) break;
 		else calcBoundary(&disc,&adjacencies,&bndryVerts,&bndryEdges);
-		if(not addTwo(&disc,&adjacencies,&bndryEdges,magicNumber)) addOne(&disc,&adjacencies,&bndryVerts,&bndryEdges);		
+		if(not addTwo(&disc,&adjacencies,&bndryEdges,magicNumber)) 
+         addOne(&disc,&adjacencies,&bndryVerts,&bndryEdges);		
 	}
 	
 	return disc;
 }
 
-bool split(Dim2Triangulation* tri, std::set<Dim2Triangle*> slice)
-{
+bool split(Dim2Triangulation* tri, std::set<Dim2Triangle*> slice) {
 	for(std::set<Dim2Triangle*>::iterator it = slice.begin();
         it!=slice.end();it++)
 		for(int i=0;i<3;i++)
@@ -188,5 +192,6 @@ bool split(Dim2Triangulation* tri, std::set<Dim2Triangle*> slice)
 				(*it)->unjoin(i);
 	return(tri->getEulerChar()==2 and tri->getNumberOfComponents()==2);
 }
+
 } //namespace regina
 #endif

@@ -128,7 +128,8 @@ std::string circlePackPS(Dim4Triangulation* tri, Dim4Edge* edge)
 	{
 		triColour(ss,*it,isoTri,isoVert,isoEdge);
 	}
-    delete pack; delete iso; 
+    delete pack; 
+    delete iso; 
 	return ss.str();
 }
 
@@ -223,7 +224,9 @@ std::string circlePackPS(NTriangulation* tri, NVertex* vertex)
 	{
 		triColour(ss,*it,isoTri,isoVert,isoEdge);
 	}
-    delete pack; delete link; delete iso;
+    delete pack; 
+    delete link; 
+    delete iso;
 	return ss.str();
 
 }
