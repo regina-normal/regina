@@ -42,14 +42,14 @@ namespace regina{
  * this routine generates a postscript file that has a visual
  * image of a circle packed link of the edge. 
  */
-REGINA_API std::string circlePackPS(Dim4Triangulation* tri, Dim4Edge* edge);
+REGINA_API std::string CPpackSpherePS(Dim4Triangulation* tri, Dim4Edge* edge);
 
 /**
  *  Given an NTriangulation pointer and an NVertex pointer, 
  * this routine generates a postscript file that has a visual
  * image of a circle packed link of the vertex. 
  */
-REGINA_API std::string circlePackPS(NTriangulation* tri, NVertex* vertex);
+REGINA_API std::string CPpackSpherePS(NTriangulation* tri, NVertex* vertex);
 
 }//namespace regina
 #endif

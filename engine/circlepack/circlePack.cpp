@@ -32,7 +32,7 @@
 
 namespace regina {
 
-std::string circlePackPS(Dim4Triangulation* tri, Dim4Edge* edge)
+std::string CPpackSpherePS(Dim4Triangulation* tri, Dim4Edge* edge)
 {
 	Dim4Isomorphism* iso( 
          new Dim4Isomorphism( edge->getNumberOfEmbeddings() ) );
@@ -134,7 +134,7 @@ std::string circlePackPS(Dim4Triangulation* tri, Dim4Edge* edge)
 }
 
 
-std::string circlePackPS(NTriangulation* tri, NVertex* vertex)
+std::string CPpackSpherePS(NTriangulation* tri, NVertex* vertex)
 {
 	NIsomorphism* iso( new NIsomorphism( vertex->getNumberOfEmbeddings() ) );
 	Dim2Triangulation* link( new Dim2Triangulation( *vertex->buildLink(iso) ) );
