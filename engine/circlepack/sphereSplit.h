@@ -177,7 +177,7 @@ void addOne(std::set<Dim2Triangle*>* disc, std::set<Dim2Triangle*>* adj,
 /**
  *  I think this routine takes a triangulated 2-sphere and 
  * attempts to partition it into two triangulated discs with
- * equal numbers of triangles.  Comments Sam? 
+ * equal numbers of triangles.
  */
 std::set<Dim2Triangle*> getDisc(Dim2Triangulation* tri) {
 	int magicNumber = tri->getNumberOfTriangles()/2;
