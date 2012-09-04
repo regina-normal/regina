@@ -38,6 +38,11 @@
 
 namespace regina{
 
+/**
+ *  When you try to decompose the 2-sphere triangulation into two discs, we
+ * we start by picking one triangle.  This algorithm attempts to make an 
+ * intelligent first pick via a local extremization. 
+ */
 Dim2Triangle* firstTriangle(Dim2Triangulation* tri){
 	Dim2Triangle* temp=tri->getTriangle(0);
 	for(Dim2Triangulation::TriangleIterator it=tri->getTriangles().begin();
@@ -89,12 +94,18 @@ void calcBoundary(std::set<Dim2Triangle*>* disc,std::set<Dim2Triangle*>* adj,
 				(*bvrt).insert((*it)->getEdge(i)->getVertex(1));
 				}
 }
+
 //Next, check each of these for the property: (f4)
 //  >= 2 edges in bdry.  we want to add these triangles more than triangles 
 //  with exactly one edge in bdry.  moreover, if we find any
 // triangles satisfying this property, we restart process in the hopes of 
 //  obtaining more triangles with this property.
-
+/**
+ *  Sub-routine for splitting sphere triangulation into two discs.  This
+ *  attempts to find a triangle to add to the disc we're building, moreover
+ *  it looks for triangles that share two edges with the already-existing
+ *  disc. 
+ */
 bool addTwo(std::set<Dim2Triangle*>* disc, std::set<Dim2Triangle*>* adj, 
             std::set<Dim2Edge*>* bdry,int breaker){
 	bool flag = false;
@@ -112,6 +123,7 @@ bool addTwo(std::set<Dim2Triangle*>* disc, std::set<Dim2Triangle*>* adj,
 	}
 	return flag;
 }
+
 //Next add all of the triangles with:
 // exactly 1 edge in bdry
 // exactly 2 vert in bdry
