@@ -29,9 +29,8 @@
 
 #define EPSILON 0.0000000001
 #define DELTA 0.0000000001
-using namespace regina;
-using namespace std;
 
+namespace regina {
 
 std::string circlePackPS(Dim4Triangulation* tri, Dim4Edge* edge)
 {
@@ -225,3 +224,5 @@ std::string circlePackPS(NTriangulation* tri, NVertex* vertex)
 	return ss.str();
 
 }
+
+} // namespace regina
