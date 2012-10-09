@@ -59,7 +59,7 @@
  *
  *  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
  *  "Regina: Software for 3-manifold topology and normal surface theory",
- *  http://regina.sourceforge.net/, 1999-2012.
+ *  http://regina.sourceforge.net/ , 1999-2012.
  *
  *  <h3>Authors</h3>
  *
