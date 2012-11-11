@@ -1200,6 +1200,10 @@ std::string NCellularData::stringInfo( const StringRequest &s_desc ) const
 
 // this routine computes a string describing embeddability of the manifold into S^4, 
 //  it assumes cdat is derived from tri, and tlf is the torsion linking form for cdat.
+
+// TODO: edit.  Currently uses TLF to get homology, but this already has the free part of H1 stripped-out.
+//              this makes it think S1xS^2 is a homology sphere!
+
 std::string embeddabilityString(const NTriangulation* tri, const NCellularData* cdat,
                                 const NBilinearForm* tlf) {
     // Only do this if we haven't done it already.
@@ -1208,21 +1212,23 @@ std::string embeddabilityString(const NTriangulation* tri, const NCellularData* 
                             cdat->components(NCellularData::ideal_boundary) );
 
     if (tri->getNumberOfTetrahedra() == 0)
-      {
-        // special-case the empty triangulation
-        retval = "Manifold is empty.";
-      }
-    else if (tri->isOrientable())
+      return std::string("Manifold is empty.");
+    
+   const NMarkedAbelianGroup* homol( cdat->markedGroup( 
+        NCellularData::GroupLocator(1, NCellularData::coVariant, NCellularData::STD_coord, 0 )
+        ) );
+
+
+    if (tri->isOrientable())
       { // orientable -- we need the torsion linking form
-       const NMarkedAbelianGroup homol(tlf->ldomain());
 
         if (totbcomp==0) 
         { // no boundary : orientable
-            if (homol.getNumberOfInvariantFactors()==0) 
+            if (homol->getNumberOfInvariantFactors()==0) 
             { // no torsion : no boundary, orientable
                 if (tri->knowsThreeSphere() && tri->isThreeSphere())
                     retval = "This manifold is S^3.";
-                else if (homol.isTrivial())
+                else if (homol->isTrivial())
                     retval = "Manifold is a homology 3-sphere.";
                 else
                     retval = "No information.";
@@ -1239,7 +1245,7 @@ std::string embeddabilityString(const NTriangulation* tri, const NCellularData* 
                 else
                     retval = "The torsion linking form is "
                         "of hyperbolic type.";
-                if (homol.getRank()==0)
+                if (homol->getRank()==0)
                     retval += "  Manifold is a rational "
                         "homology sphere.";
             } // torsion : no boundary, orientable
@@ -1253,7 +1259,7 @@ std::string embeddabilityString(const NTriangulation* tri, const NCellularData* 
             const NMarkedAbelianGroup bhomol( *cdat->markedGroup( NCellularData::GroupLocator( 
                     1, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) ) );
 
-            if (homol.getNumberOfInvariantFactors()==0) 
+            if (homol->getNumberOfInvariantFactors()==0) 
                 {
                 // orientable with boundary, no torsion. We have no tests
                 // so far for checking if it embeds in a homology 4-sphere
