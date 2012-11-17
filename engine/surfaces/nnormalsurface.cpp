@@ -451,6 +451,8 @@ NMatrixInt* NNormalSurface::boundarySlopes() const {
     NTriangulation *tri = getTriangulation();
 
     // Check the preconditions.
+    if (! tri->isOriented())
+        return 0;
     if (vector->allowsAlmostNormal())
         return 0;
     for (NTriangulation::VertexIterator it = tri->getVertices().begin();
