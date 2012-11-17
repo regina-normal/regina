@@ -139,6 +139,10 @@ Version 4.94  [ (under development) ]
               This class works with native C/C++ integers for as long as
               possible, and only switches to GMP large integers when it
               becomes unavoidable.
+        Class NNormalSurface:
+            - Routine boundarySlopes() now requires that the
+              triangulation is oriented (otherwise SnapPea will relabel
+              tetrahedron vertices and the matrix returned will be null).
         Class NPacket:
             - Fix crash when sortChildren() is run on the root packet.
         Class NPerm3, NPerm4, NPerm5:
@@ -178,6 +182,9 @@ Version 4.94  [ (under development) ]
             - Fast classes for working with 0/1/2 trits, i.e., "ternary bits".
         Class NVertex:
             - New routine buildLink() to triangulate the vertex link.
+        Routine readOrb():
+            - Updated to correctly read the modern (and more verbose)
+              Orb file format.  Thanks to Lorenzo Losa for the patch.
         Typedef NFacePairingIsoList, UseFacePairing:
             - These typedefs have been renamed as NFacePairing::IsoList
               and NFacePairing::Use respectively.  The old typedefs are

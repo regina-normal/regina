@@ -443,7 +443,8 @@
             quadrilateral or quadrilateral-octagon coordinates.
            </para>
            <para>
-            If the vertex links are all tori and the underlying
+            If the triangulation is oriented,
+            the vertex links are all tori and the underlying
             coordinate system is normal (not almost normal), then
             &regina; will also show the boundary slopes for each
             spun-normal surface.  These are presented as a pair
