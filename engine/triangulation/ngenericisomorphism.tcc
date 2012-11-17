@@ -134,6 +134,7 @@ typename NGenericIsomorphism<dim>::Triangulation*
             }
     }
 
+    delete[] tet;
     return ans;
 }
 
@@ -179,6 +180,8 @@ void NGenericIsomorphism<dim>::applyInPlace(
                             facetPerm_[t].inverse());
             }
     }
+
+    delete[] tet;
 
     NPacket::ChangeEventSpan span2(tri);
     tri->removeAllSimplices();

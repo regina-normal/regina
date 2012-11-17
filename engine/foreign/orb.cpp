@@ -155,17 +155,27 @@ CassonFormat *readCassonFormat( std::istream &ts )
                         *ei;
         TetEdgeInfo     *ntei,
                         *tei;
+        bool        vertices_known = false;
 
         cf = new CassonFormat;
         cf->head = NULL;
         cf->num_tet = 0;
 
-        // Find a non-empty line.
+        // Skip any initial non-empty lines (looking whether there is
+        // "vertices_known") and then some empty lines.
+        // After that there should be the real information.
+
         // The code from Orb used QString::skipWhiteSpace(); we do it
         // manually.
         do {
                 getline(ts, line);
                 stripWhitespace(line);
+                if (line == "vertices_known") vertices_known=true;
+        } while ((!ts.eof()) && (!line.empty()));
+
+        do {
+            getline(ts,line);
+            stripWhitespace(line);
         } while ((! ts.eof()) && line.empty());
 
         // Process lines one at a time until we hit an empty line or EOF.
@@ -193,7 +203,9 @@ CassonFormat *readCassonFormat( std::istream &ts )
                 // We never use these two values; just suck them in and
                 // forget them.
                 tokens >> ei->singular_index >> ei->singular_order;
-
+                // if vertices are listed, discard
+                if (vertices_known)
+                    { tokens >> section; tokens>>section; }
                 tokens >> section;
                 while (!section.empty())
                 {
