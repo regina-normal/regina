@@ -1458,11 +1458,11 @@ class REGINA_API NNormalSurface :
          * rows in the resulting matrix are ordered by vertex number in the
          * triangulation.
          * 
-         * Regina can only compute boundary slopes if every vertex link
-         * in the triangulation is a torus, and if the underlying
-         * coordinate system is for normal surfaces (not almost normal
-         * surfaces).  If these conditions are not met, this routine
-         * will return 0.
+         * At present, Regina can only compute boundary slopes if the
+         * triangulation is oriented, if every vertex link in the
+         * triangulation is a torus, and if the underlying coordinate system
+         * is for normal surfaces (not almost normal surfaces).  If these
+         * conditions are not met, this routine will return 0.
          *
          * @author William Pettersson and Stephan Tillmann
          *

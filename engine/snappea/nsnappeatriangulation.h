@@ -165,7 +165,9 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * argument \a allowClosed for how to change this behaviour.
          *
          * Note also that the tetrahedron and vertex numbers might be changed
-         * in the new SnapPea triangulation.
+         * in the new SnapPea triangulation.  In particular, if the
+         * given triangulation is orientable but not oriented, then you
+         * should expect these numbers to change.
          *
          * \warning Passing \a allowClosed as \c true can occasionally
          * cause the program to crash!  See the notes above for details.
