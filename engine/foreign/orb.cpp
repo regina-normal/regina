@@ -161,7 +161,7 @@ CassonFormat *readCassonFormat( std::istream &ts )
         cf->head = NULL;
         cf->num_tet = 0;
 
-        // Skip some non-empty lines (looking whether there is
+        // Skip any initial non-empty lines (looking whether there is
         // "vertices_known") and then some empty lines.
         // After that there should be the real information.
 

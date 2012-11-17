@@ -106,29 +106,29 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
         unsigned long getNumberOfBoundaryComponents() const;
 
         /**
-         *  Returns all triangular faces in the component.
+         * Returns all triangular faces in the component.
          *
-         *  The reference returned will remain valid for as long as the 
-         *  triangulation exists, always reflecting the triangles currently 
-         *  in the triangulation.
+         * The reference returned will remain valid for as long as this
+         * component object exists, always reflecting the triangles currently 
+         * in the component.
          */
         const std::vector<Dim2Triangle*>& getTriangles() const;
 
         /**
-         *  Returns all edges in the component.
+         * Returns all edges in the component.
          *
-         *  The reference returned will remain valid for as long as the 
-         *  triangulation exists, always reflecting the edges currently 
-         *  in the triangulation.
+         * The reference returned will remain valid for as long as this
+         * component object exists, always reflecting the edges currently 
+         * in the component.
          */
         const std::vector<Dim2Edge*>& getEdges() const;
 
         /**
-         *  Returns all vertices in the component.
+         * Returns all vertices in the component.
          *
-         *  The reference returned will remain valid for as long as the 
-         *  triangulation exists, always reflecting the vertices currently 
-         * in the triangulation.
+         * The reference returned will remain valid for as long as this
+         * component object exists, always reflecting the vertices currently 
+         * in the component.
          */
         const std::vector<Dim2Vertex*>& getVertices() const;
 
@@ -239,14 +239,17 @@ inline unsigned long Dim2Component::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline const std::vector<Dim2Triangle*>& Dim2Component::getTriangles() const
- { return triangles_; }
+inline const std::vector<Dim2Triangle*>& Dim2Component::getTriangles() const {
+    return triangles_;
+}
 
-inline const std::vector<Dim2Edge*>& Dim2Component::getEdges() const
- { return edges_; }
+inline const std::vector<Dim2Edge*>& Dim2Component::getEdges() const {
+    return edges_;
+}
 
-inline const std::vector<Dim2Vertex*>& Dim2Component::getVertices() const
- { return vertices_; }
+inline const std::vector<Dim2Vertex*>& Dim2Component::getVertices() const {
+    return vertices_;
+}
 
 inline Dim2Triangle* Dim2Component::getTriangle(unsigned long index) const {
     return triangles_[index];
