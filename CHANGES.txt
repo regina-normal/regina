@@ -76,6 +76,10 @@ Version 5.0  [ (under development) ]
               from the original presentation to the reduced one.
             - New routine relatorLength() returns the sum of the wordLength()s
               of all relations in the presentation.
+	    - New procedure proliferateRelators().  This is useful for finding
+              "hard to find" relations that are implied by existing relations. 
+              Appears to be as effective as GAP (if not moreso) in simplifying
+              presentations of the trivial group, etc. 
         Routine readIsoSigList():
             - Now supports 4-manifold triangulations as well as
               3-manifold triangulations.
