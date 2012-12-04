@@ -35,6 +35,11 @@
 #define __CIRCLEPACK_H
 #endif
 
+#include "regina-core.h"
+#include <string> 
+#include "dim4/dim4triangulation.h"
+#include "triangulation/ntriangulation.h"
+
 namespace regina{
 
 /**

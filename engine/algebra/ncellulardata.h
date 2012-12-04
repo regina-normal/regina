@@ -84,6 +84,12 @@ class Dim4Triangulation;
  *
  * \testpart
  *
+ * \todo  0) The current torsion linking form test is buggy. Two different triangulations of
+ *        SFS[S^2: 1/3,1/3,-1/3] give two different results. The first triangulation has
+ *        isoSig() gLLPQaceedffjkxknnn, the 2nd triangulation is a re-labelling of this
+ *        same triangulation.  You acquire it as a prime factor of 
+ *        isoSig() nLvAAAvPQkcffggghjlkmmlmaaaaaoskkvxisp
+ *
  * \todo  1) (a) Homomorphisms to finite groups, (b) covering spaces, (c) Pi_2 presentations 
  *        as a module over Pi_1. Immediately: pi1 presentation simplification code needs 
  *        smoothing, recognition code expanding. For (a) GQuotients( F, G ) from GAP is 
