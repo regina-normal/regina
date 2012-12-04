@@ -29,10 +29,12 @@
 void addNAbelianGroup();
 void addNGroupPresentation();
 void addNMarkedAbelianGroup();
+void addNCellularData();
 
 void addAlgebra() {
     addNAbelianGroup();
     addNGroupPresentation();
     addNMarkedAbelianGroup();
+//    addNCellularData();
 }
 
