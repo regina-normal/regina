@@ -76,6 +76,13 @@ Version 4.94  [ (under development) ]
             - NPerm3 now has a transposition constructor: NPerm3(a,b).
         Class NQitmask1, NQitmask2:
             - Fast classes for working with 0/1/2/3 "qits", i.e., "base 4 bits".
+        Class NSatBlock:
+            - Routine nextBoundaryComponent() has acquired an extra boolean
+              argument, which allows us to choose between "next" and "previous".
+        Class NSatRegion:
+            - Routine createSFS() no longer need to be given the number
+              of boundary components, and now supports Klein bottle
+              boundaries.  The old two-argument version is now deprecated.
         Class NSnapPeaTriangulation:
             - New routine toRegina() to extract the underlying SnapPea
               triangulation.

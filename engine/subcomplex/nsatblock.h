@@ -378,8 +378,9 @@ class REGINA_API NSatBlock : public ShareableObject {
                 const NIsomorphism* iso, NTriangulation* newTri);
 
         /**
-         * Finds the next boundary annulus around from this, treating
-         * all adjacent blocks as part of a single large saturated region.
+         * Finds the next (or previous) boundary annulus around from this,
+         * treating all adjacent blocks as part of a single large saturated
+         * region.
          *
          * Suppose that all saturated blocks are merged together according
          * to adjacent boundary annuli, forming larger saturated structures.
@@ -389,23 +390,25 @@ class REGINA_API NSatBlock : public ShareableObject {
          * different blocks, and might or might not have a twist (thus
          * forming a large Klein bottle instead of a large torus).
          *
-         * This routine traces around such a boundary ring.  It is
+         * This routine is used to trace around such a boundary ring.  It is
          * assumed that annulus \a thisAnnulus of this block forms part
          * of a boundary ring (i.e., it has no adjacent block).  This
-         * routine will then return the next annulus around from this in
-         * the large boundary ring (in the direction following from
-         * the second face of this annulus).  This next annulus might
-         * belong to another block, or it might even be this original
-         * annulus again.
+         * routine will then return the next/previous annulus around from
+         * this in the large boundary ring.  Here "next" means in the direction
+         * following from the second face of this annulus, and
+         * "previous" means in the direction following from the first face;
+         * the boolean argument \a followPrev controls which we will be used.
+         * This next/previous annulus might belong to another block, or it
+         * might even be this original annulus again.
          *
-         * The next annulus itself is not returned, but rather a reference
-         * as to how it appears within its enclosing saturated block.
+         * The next/previous annulus itself is not returned, but rather a
+         * reference as to how it appears within its enclosing saturated block.
          * Specifically, a block and corresponding annulus number will be
          * returned in the arguments \a nextBlock and \a nextAnnulus
          * respectively.
          *
-         * It is possible that the next annulus as it appears within the
-         * returned block is oriented differently from how it appears
+         * It is possible that the next/previous annulus as it appears within
+         * the returned block is oriented differently from how it appears
          * within this large boundary ring.  For this reason, two
          * booleans are returned also.  The argument \a refVert will
          * describe whether the annulus is reflected vertically as it
@@ -429,8 +432,14 @@ class REGINA_API NSatBlock : public ShareableObject {
          * \pre Annulus \a thisAnnulus of this block has no block
          * adjacent to it.
          *
-         * \ifacespython This routine only takes a single argument (the
-         * integer \a thisAnnulus). The return value is a tuple of four
+         * \warning If you wish to trace around an entire boundary
+         * ring, you will need to adjust the argument \a followPrev
+         * according to whether or not the current annulus
+         * is reflected horizontally (since, under a horizontal
+         * reflection, "next" becomes "previous" and vice versa).
+         *
+         * \ifacespython This routine only takes two arguments (\a thisAnnulus
+         * and \a followPrev). The return value is a tuple of four
          * values: the block returned in \a nextBlock, the integer
          * returned in \a nextAnnulus, the boolean returned in \a refVert,
          * and the boolean returned in \a refHoriz.
@@ -451,9 +460,12 @@ class REGINA_API NSatBlock : public ShareableObject {
          * @param refHoriz a reference used to return \c true if the next
          * annulus around is horizontally reflected, or \c false if not;
          * see above for details.
+         * @param followPrev \c true if we should find the previous boundary
+         * annulus, or \c false if we should find the next boundary annulus.
          */
         void nextBoundaryAnnulus(unsigned thisAnnulus, NSatBlock*& nextBlock,
-                unsigned& nextAnnulus, bool& refVert, bool& refHoriz);
+                unsigned& nextAnnulus, bool& refVert, bool& refHoriz,
+                bool followPrev);
 
         /**
          * Returns an abbreviated name or symbol for this block.

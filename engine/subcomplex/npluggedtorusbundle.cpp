@@ -56,37 +56,10 @@ NPluggedTorusBundle::~NPluggedTorusBundle() {
 }
 
 NManifold* NPluggedTorusBundle::getManifold() const {
-    int nRegionBdries = 0;
-
-    // How many boundary components does the saturated region have?
-    // We know there are two boundary annuli, so we simply need to test
-    // whether they are adjacent in the region boundary.
-    unsigned long i;
-    NSatBlock *b;
-    for (i = 0; i < region_->numberOfBlocks(); ++i) {
-        b = region_->block(i).block;
-        if (b->nAnnuli() == 0)
-            continue;
-        if (b->nAnnuli() > 1) {
-            nRegionBdries = 1;
-            break;
-        }
-        NSatBlock* nextBlock;
-        unsigned nextAnnulus;
-        bool refVert, refHoriz;
-        b->nextBoundaryAnnulus(0, nextBlock, nextAnnulus, refVert, refHoriz);
-        nRegionBdries = (nextBlock == b ? 2 : 1);
-    }
-    if (nRegionBdries == 0) {
-        // Should never reach this point.
-        std::cerr << "ERROR: Could not find saturated region boundary."
-            << std::endl;
-    }
-
-    NSFSpace* sfs = region_->createSFS(nRegionBdries, false);
+    NSFSpace* sfs = region_->createSFS(false);
     if (! sfs)
         return 0;
-    if (nRegionBdries == 1) {
+    if (sfs->punctures() == 1) {
         // The region has one larger boundary, but we pinch it to create
         // two smaller boundaries.
         sfs->addPuncture();
