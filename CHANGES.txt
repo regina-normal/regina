@@ -165,6 +165,9 @@ Version 4.94  [ (under development) ]
             - NPerm3 now has a transposition constructor: NPerm3(a,b).
         Class NQitmask1, NQitmask2:
             - Fast classes for working with 0/1/2/3 "qits", i.e., "base 4 bits".
+        Class NSnapPeaTriangulation:
+            - New routine toRegina() to extract the underlying SnapPea
+              triangulation.
         Class NTetrahedron:
             - New dimension-agnostic aliases adjacentSimplex() and
               adjacentFacet().  These are identical to adjacentTetrahedron()
