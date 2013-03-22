@@ -49,12 +49,12 @@ namespace {
 
 /**
  * A subclass of NSatBlockStartSearcher that, upon finding a starter
- * saturated block, attempts to flesh this out to an entire closed
- * saturated region.
+ * saturated block, attempts to flesh this out to a saturated region
+ * that fills the entire triangulation (including all internal faces).
  */
 struct NBlockedSFSSearcher : public NSatBlockStarterSearcher {
     NSatRegion* region;
-        /**< The closed saturated region if one has been found, or 0
+        /**< The saturated region if one has been found, or 0
              if we are still searching. */
 
     /**
@@ -73,6 +73,10 @@ NBlockedSFS::~NBlockedSFS() {
 }
 
 bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
+    // The triangulation needs to be closed.
+    if (region_->numberOfBoundaryAnnuli() > 0)
+        return false;
+
     unsigned long n = region_->numberOfBlocks();
     if (n < 3 || n > 4)
         return false;
@@ -266,7 +270,7 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
 }
 
 NManifold* NBlockedSFS::getManifold() const {
-    NSFSpace* ans = region_->createSFS(0, false);
+    NSFSpace* ans = region_->createSFS(false);
     if (! ans)
         return 0;
 
@@ -326,9 +330,9 @@ void NBlockedSFS::writeTextLong(std::ostream& out) const {
 
 NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
     // Basic property checks.
-    if (! tri->isClosed())
-        return 0;
     if (tri->getNumberOfComponents() > 1)
+        return 0;
+    if (tri->isIdeal())
         return 0;
 
     // Watch out for twisted block boundaries that are incompatible with
@@ -344,7 +348,7 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
     // Any luck?
     if (searcher.region) {
         // The region expansion worked, and the triangulation is known
-        // to be closed and connected.
+        // to be connected.
         // This means we've got one!
         return new NBlockedSFS(searcher.region);
     }
