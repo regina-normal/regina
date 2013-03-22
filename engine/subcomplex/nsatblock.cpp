@@ -56,12 +56,15 @@ void NSatBlock::transform(const NTriangulation* originalTri,
 
 void NSatBlock::nextBoundaryAnnulus(unsigned thisAnnulus,
         NSatBlock*& nextBlock, unsigned& nextAnnulus, bool& refVert,
-        bool& refHoriz) {
+        bool& refHoriz, bool followPrev) {
     // Don't worry about testing the precondition (this annulus has no
     // adjacency) -- things won't break even if it's false.
 
     nextBlock = this;
-    nextAnnulus = (thisAnnulus + 1 == nAnnuli_ ? 0 : thisAnnulus + 1);
+    if (followPrev)
+        nextAnnulus = (thisAnnulus == 0 ? nAnnuli_ - 1 : thisAnnulus - 1);
+    else
+        nextAnnulus = (thisAnnulus + 1 == nAnnuli_ ? 0 : thisAnnulus + 1);
     refVert = refHoriz = false;
 
     unsigned tmp;
@@ -76,14 +79,13 @@ void NSatBlock::nextBoundaryAnnulus(unsigned thisAnnulus,
         nextBlock = nextBlock->adjBlock_[nextAnnulus];
         nextAnnulus = tmp;
 
-        if (refHoriz) {
-            // ... and step to the previous annulus around.
-            nextAnnulus = (nextAnnulus == 0 ? nextBlock->nAnnuli_ - 1 :
-                nextAnnulus - 1);
-        } else {
-            // ... and step to the next annulus around.
+        // ... and step to the previous/next annulus around.
+        if (refHoriz == followPrev) {
             nextAnnulus = (nextAnnulus + 1 == nextBlock->nAnnuli_ ? 0 :
                 nextAnnulus + 1);
+        } else {
+            nextAnnulus = (nextAnnulus == 0 ? nextBlock->nAnnuli_ - 1 :
+                nextAnnulus - 1);
         }
     }
 }

@@ -395,20 +395,11 @@ class REGINA_API NSatRegion : public ShareableObject {
          * Returns details of the Seifert fibred space represented by
          * this region.
          *
-         * In order to correctly construct the Seifert fibred space,
-         * this routine must know how many boundary components this
-         * region has (as each boundary component will become a puncture
-         * in the base orbifold).  Since the NSatRegion class does not
-         * yet have sophisticated boundary tracking, the caller of this
-         * routine must provide this information in the argument
-         * \a nBoundaries.  Be aware that this argument may be removed
-         * in future versions of Regina.
-         *
-         * Each boundary component will be formed from a ring of
-         * saturated annuli, which together form a torus (note that
-         * Klein bottles are disallowed here; see the preconditions below).
-         * The oriented curves representing the fibres and base orbifold
-         * on each boundary (see \ref sfsnotation) are as follows.
+         * Each boundary component of this region will be formed from a ring
+         * of saturated annuli, which together form a torus or a Klein bottle.
+         * For torus boundary components, the oriented curves
+         * representing the fibres and base orbifold on the boundary
+         * (see \ref sfsnotation) will be as follows.
          *
          * - Consider the 0/1/2 markings on the first and second faces
          *   of each saturated annulus, as described in the NSatAnnulus
@@ -430,21 +421,40 @@ class REGINA_API NSatRegion : public ShareableObject {
          * reflected.  In particular, each twist or exceptional fibre
          * will be negated before being added to the Seifert structure.
          *
-         * \pre The argument \a nBoundaries is indeed the number of
-         * boundary components of this region (or equivalently, the
-         * number of punctures in the base orbifold).
-         * \pre None of the boundary components of this region are
-         * twisted loops of saturated annuli.  In other words, each
-         * boundary component forms a torus, not a Klein bottle.
+         * For Klein bottle boundary components, these curves must (for
+         * now) be analysed by hand.
          *
-         * @param nBoundaries the number of boundary components of this
-         * saturated region.
          * @param reflect \c true if this region is to be reflected
          * as the Seifert fibred space is created, or \c false if not.
          * @return the newly created structure of the underlying Seifert
          * fibred space.
          */
-        NSFSpace* createSFS(long nBoundaries, bool reflect) const;
+        NSFSpace* createSFS(bool reflect) const;
+
+        /**
+         * A deprecated version of the routine that returns details of the
+         * Seifert fibred space represented by this region.
+         *
+         * This is an old and now-deprecated version of createSFS(), which
+         * imposed additional preconditions (all boundary components had to be
+         * tori), and required the user to pass the number of boundary
+         * components as the first argument.  This first argument is now
+         * ignored, and the preconditions have been relaxed to allow Klein
+         * bottle boundary components also.
+         *
+         * See createSFS(bool), the new version of this routine, for further
+         * details.
+         *
+         * \deprecated This routine simply ignores the first argument,
+         * and passes the second argument through to createSFS(bool).
+         * Code should be changed to call createSFS(bool) directly.
+         *
+         * @param reflect \c true if this region is to be reflected
+         * as the Seifert fibred space is created, or \c false if not.
+         * @return the newly created structure of the underlying Seifert
+         * fibred space.
+         */
+        NSFSpace* createSFS(long, bool reflect) const;
 
         /**
          * Expands this region as far as possible within the overall
@@ -566,6 +576,19 @@ class REGINA_API NSatRegion : public ShareableObject {
          * triangulation.
          */
         void calculateBaseEuler();
+
+        /**
+         * Each boundary component of this region will be formed from a ring
+         * of saturated annuli, which is either untwisted (forming a
+         * torus), or twisted (forming a Klein bottle).
+         * This routine counts the total number of boundaries of each type.
+         *
+         * @param untwisted returns the number of untwisted (torus)
+         * boundary components.
+         * @param twisted returns the number of twisted (Klein bottle)
+         * boundary components.
+         */
+        void countBoundaries(unsigned& untwisted, unsigned& twisted) const;
 };
 
 /*@}*/
@@ -592,6 +615,10 @@ inline const NSatBlockSpec& NSatRegion::block(unsigned long which) const {
 
 inline unsigned long NSatRegion::numberOfBoundaryAnnuli() const {
     return nBdryAnnuli_;
+}
+
+inline NSFSpace* NSatRegion::createSFS(long, bool reflect) const {
+    return createSFS(reflect);
 }
 
 inline void NSatRegion::writeTextLong(std::ostream& out) const {

@@ -71,11 +71,11 @@ NBlockedSFSPair::~NBlockedSFSPair() {
 }
 
 NManifold* NBlockedSFSPair::getManifold() const {
-    NSFSpace* sfs0 = region_[0]->createSFS(1, false);
+    NSFSpace* sfs0 = region_[0]->createSFS(false);
     if (! sfs0)
         return 0;
 
-    NSFSpace* sfs1 = region_[1]->createSFS(1, false);
+    NSFSpace* sfs1 = region_[1]->createSFS(false);
     if (! sfs1) {
         delete sfs0;
         return 0;
@@ -180,7 +180,7 @@ bool NBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     unsigned tmpAnnulus;
     bool tmpVert, tmpHoriz;
     bdryBlock->nextBoundaryAnnulus(bdryAnnulus, tmpBlock, tmpAnnulus,
-        tmpVert, tmpHoriz);
+        tmpVert, tmpHoriz, false);
     if (tmpVert) {
         delete region[0];
         region[0] = 0;

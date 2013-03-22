@@ -115,10 +115,15 @@ void NSatRegion::boundaryAnnulus(unsigned long which,
     // Given the precondition, we should never reach this point.
 }
 
-NSFSpace* NSatRegion::createSFS(long nBoundaries, bool reflect) const {
+NSFSpace* NSatRegion::createSFS(bool reflect) const {
+    // Count boundary components.
+    unsigned untwisted, twisted;
+    countBoundaries(untwisted, twisted);
+
+    // Go ahead and build the Seifert fibred space.
     NSFSpace::classType baseClass;
 
-    bool bdry = (nBoundaries || twistedBlocks_);
+    bool bdry = (twisted || untwisted || twistedBlocks_);
     if (baseOrbl_) {
         if (hasTwist_)
             baseClass = (bdry ? NSFSpace::bo2 : NSFSpace::o2);
@@ -142,10 +147,10 @@ NSFSpace* NSatRegion::createSFS(long nBoundaries, bool reflect) const {
     // the number of punctures.
 
     NSFSpace* sfs = new NSFSpace(baseClass,
-        (baseOrbl_ ?  (2 - nBoundaries - baseEuler_) / 2 :
-            (2 - nBoundaries - baseEuler_)),
-        nBoundaries /* punctures */, 0 /* twisted */,
-        0 /* reflectors */, twistedBlocks_ /* twisted */);
+        (baseOrbl_ ?  (2 - twisted - untwisted - baseEuler_) / 2 :
+            (2 - twisted - untwisted - baseEuler_)),
+        untwisted /* untwisted punctures */, twisted /* twisted punctures */,
+        0 /* untwisted reflectors */, twistedBlocks_ /* twisted reflectors */);
 
     for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
             it++)
@@ -432,6 +437,102 @@ void NSatRegion::writeTextShort(std::ostream& out) const {
     unsigned long size = blocks_.size();
     out << "Saturated region with " << size <<
         (size == 1 ? " block" : " blocks");
+}
+
+void NSatRegion::countBoundaries(unsigned& untwisted, unsigned& twisted) const {
+    untwisted = twisted = 0;
+
+    // Just trace around each boundary component in turn.
+    // Note that we are guaranteed that blocks_ is non-empty.
+    unsigned i, j;
+
+    // Count annuli in each block, and work out how to index all annuli
+    // from all blocks into a single monolithic array.
+    unsigned* nAnnuli = new unsigned[blocks_.size()];
+    unsigned* indexAnnuliFrom = new unsigned[blocks_.size()];
+    for (i = 0; i < blocks_.size(); ++i) {
+        nAnnuli[i] = blocks_[i].block->nAnnuli();
+        indexAnnuliFrom[i] = (i == 0 ? 0 : indexAnnuliFrom[i-1] + nAnnuli[i-1]);
+    }
+    unsigned totAnnuli = indexAnnuliFrom[blocks_.size() - 1] +
+        nAnnuli[blocks_.size() - 1];
+
+    // Prepare to keep track of which annuli we've processed.
+    bool* used = new bool[totAnnuli];
+    std::fill(used, used + totAnnuli, false);
+
+    // Off we go!
+    NSatBlock *b, *currBlock, *tmpBlock;
+    unsigned currBlockIndex, currAnnulus, tmpAnnulus;
+    bool hTwist, vTwist, tmpHTwist, tmpVTwist;
+    for (i = 0; i < blocks_.size(); ++i) {
+        b = blocks_[i].block;
+        for (j = 0; j < nAnnuli[i]; ++j) {
+            // Here's our next annulus to examine.
+            if (used[indexAnnuliFrom[i] + j]) {
+                // Ignore: we've already processed this before.
+                continue;
+            }
+            if (b->hasAdjacentBlock(j)) {
+                // Ignore: this annulus is internal.
+                used[indexAnnuliFrom[i] + j] = true;
+                continue;
+            }
+
+            // This annulus is on the boundary, and not yet processed.
+            // Run around the entire boundary component, marking annuli
+            // as processed, and testing whether we close with a twist.
+            currBlock = b;
+            currBlockIndex = i;
+            currAnnulus = j;
+            hTwist = false;
+            vTwist = false;
+
+            while (true) {
+                used[indexAnnuliFrom[currBlockIndex] + currAnnulus] = true;
+
+                currBlock->nextBoundaryAnnulus(currAnnulus, tmpBlock,
+                    tmpAnnulus, tmpVTwist, tmpHTwist, hTwist);
+                if (tmpVTwist)
+                    vTwist = ! vTwist;
+                if (tmpHTwist)
+                    hTwist = ! hTwist;
+                currBlock = tmpBlock;
+                currAnnulus = tmpAnnulus;
+                // Gaa.  We need a block pointer -> index lookup.
+                // Use a slow search for now.
+                for (currBlockIndex = 0; currBlockIndex < blocks_.size();
+                        ++currBlockIndex)
+                    if (blocks_[currBlockIndex].block == currBlock)
+                        break;
+                if (currBlockIndex >= blocks_.size()) {
+                    std::cerr << "ERROR: Could not index current block."
+                        << std::endl;
+                }
+
+                if (currBlock == b && currAnnulus == j)
+                    break;
+            }
+
+            // See how the boundary component closed itself off.
+            if (hTwist) {
+                std::cerr
+                    << "ERROR: Unexpected hTwist in boundary tracing."
+                    << std::endl;
+            }
+            if (vTwist)
+                ++twisted;
+            else
+                ++untwisted;
+        }
+    }
+
+    //std::cout << "Region: " << twisted << " twisted, " << untwisted
+    //    << " untwisted." << std::endl;
+
+    delete[] nAnnuli;
+    delete[] indexAnnuliFrom;
+    delete[] used;
 }
 
 } // namespace regina

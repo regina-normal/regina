@@ -37,12 +37,14 @@ using regina::NSatAnnulus;
 using regina::NSatBlock;
 
 namespace {
-    boost::python::tuple nextBoundaryAnnulus_tuple(NSatBlock& b, unsigned a) {
+    boost::python::tuple nextBoundaryAnnulus_tuple(NSatBlock& b, unsigned a,
+            bool fromPrev) {
         NSatBlock* nextBlock;
         unsigned nextAnnulus;
         bool refVert, refHoriz;
 
-        b.nextBoundaryAnnulus(a, nextBlock, nextAnnulus, refVert, refHoriz);
+        b.nextBoundaryAnnulus(a, nextBlock, nextAnnulus, refVert, refHoriz,
+            fromPrev);
 
         return make_tuple(ptr(nextBlock), nextAnnulus, refVert, refHoriz);
     }
