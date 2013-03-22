@@ -288,6 +288,10 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * will re-triangulate.  For end users, this function should not be
          * required.
          *
+         * This routine is equivalent to testing whether the given
+         * triangulation is identical to the triangulation returned by
+         * toRegina().
+         *
          * @param triangulation the triangulation to compare with this
          * SnapPea triangulation.
          * @return \c true if the face gluings match precisely, or
@@ -295,6 +299,24 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * null triangulation.
          */
         bool verifyTriangulation(const NTriangulation& triangulation) const;
+
+        /**
+         * Creates a new Regina triangulation that mirrors the internal
+         * SnapPea structure.
+         *
+         * Note that this might be different from the original triangulation
+         * that was passed into the NSnapPeaTriangulation constructor, since
+         * the SnapPea kernel can sometimes relabel tetrahedra and/or
+         * retriangulate the manifold.
+         *
+         * The resulting triangulation will be newly created, and it is
+         * the responsibility of the caller of this routine to
+         * eventually delete it.
+         *
+         * @return a new Regina triangulation, or \c null if this is a
+         * null SnapPea triangulation (see isNull()).
+         */
+        NTriangulation* toRegina() const;
 
         /**
          * Dumps the underlying SnapPea data to standard output.
@@ -408,6 +430,20 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          */
         static ::Triangulation* reginaToSnapPea(const NTriangulation& tri,
             bool allowClosed);
+
+        /**
+         * Creates a new Regina triangulation that mirrors the given
+         * SnapPea triangulation.
+         *
+         * The resulting triangulation will be newly created, and it is
+         * the responsibility of the caller of this routine to
+         * eventually delete it.
+         *
+         * @param tri the SnapPea triangulation to clone; this may be
+         * \c null, in which case \c null will be returned also.
+         * @return a new Regina triangulation.
+         */
+        static NTriangulation* snapPeaToRegina(::Triangulation* tri);
 };
 
 /*@}*/
@@ -416,6 +452,10 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
 
 inline bool NSnapPeaTriangulation::isNull() const {
     return (snappeaData == 0);
+}
+
+inline NTriangulation* NSnapPeaTriangulation::toRegina() const {
+    return snapPeaToRegina(snappeaData);
 }
 
 inline void NSnapPeaTriangulation::dump() const {

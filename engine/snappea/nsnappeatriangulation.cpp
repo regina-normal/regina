@@ -269,5 +269,34 @@ void NSnapPeaTriangulation::disableKernelMessages() {
     kernelMessages = false;
 }
 
+NTriangulation* NSnapPeaTriangulation::snapPeaToRegina(::Triangulation* tri) {
+    if (! tri)
+        return 0;
+
+    ::TriangulationData* data;
+    ::triangulation_to_data(tri, &data);
+
+    NTriangulation* ans = new NTriangulation();
+    ans->setPacketLabel(data->name);
+
+    NTetrahedron** tet = new NTetrahedron*[data->num_tetrahedra];
+
+    int i, j;
+    for (i = 0; i < data->num_tetrahedra; ++i)
+        tet[i] = ans->newTetrahedron();
+
+    int perm[4];
+    for (i = 0; i < data->num_tetrahedra; ++i)
+        for (j = 0; j < 4; ++j)
+            if (! tet[i]->adjacentTetrahedron(j))
+                tet[i]->joinTo(j,
+                    tet[data->tetrahedron_data[i].neighbor_index[j]],
+                    NPerm4(data->tetrahedron_data[i].gluing[j]));
+
+    delete[] tet;
+    ::free_triangulation_data(data);
+    return ans;
+}
+
 } // namespace regina
 

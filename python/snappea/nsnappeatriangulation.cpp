@@ -61,6 +61,8 @@ void addNSnapPeaTriangulation() {
         .def("slopeEquations", &NSnapPeaTriangulation::slopeEquations,
             return_value_policy<manage_new_object>())
         .def("verifyTriangulation", &NSnapPeaTriangulation::verifyTriangulation)
+        .def("toRegina", &NSnapPeaTriangulation::toRegina,
+            return_value_policy<manage_new_object>())
         .def("dump", &NSnapPeaTriangulation::dump)
         .def("saveAsSnapPea", &NSnapPeaTriangulation::saveAsSnapPea)
         .def("kernelMessagesEnabled",
