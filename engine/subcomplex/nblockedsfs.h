@@ -27,7 +27,7 @@
 /* end stub */
 
 /*! \file subcomplex/nblockedsfs.h
- *  \brief Supports closed Seifert fibred spaces that are triangulated using
+ *  \brief Supports Seifert fibred spaces that are triangulated using
  *  saturated blocks.
  */
 
@@ -50,11 +50,11 @@ class NSatRegion;
  */
 
 /**
- * Represents a blocked Seifert fibred space.  This is a particular type of
- * triangulation of a closed Seifert fibred space, where this triangulation
- * is formed from a single closed saturated region.  A saturated region is
- * in turn formed from saturated blocks by identifying their boundary annuli
- * in pairs; see the NSatRegion class for details.
+ * Represents a blocked Seifert fibred space (possibly with boundary).
+ * This is a particular type of triangulation of a Seifert fibred space,
+ * where this triangulation is formed from a single saturated region.
+ * A saturated region is in turn formed from saturated blocks by identifying
+ * their boundary annuli in pairs; see the NSatRegion class for details.
  *
  * Note that the routines writeName() and writeTeXName() do \e not
  * offer enough information to uniquely identify the triangulation,
@@ -79,7 +79,7 @@ class REGINA_API NBlockedSFS : public NStandardTriangulation {
         ~NBlockedSFS();
 
         /**
-         * Returns details of the single closed saturated region that
+         * Returns details of the single saturated region that
          * fills this triangulation.
          *
          * @return the single saturated region.
