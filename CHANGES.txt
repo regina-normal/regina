@@ -106,6 +106,7 @@ Version 4.94  [ (under development) ]
               These are identical to the corresponding routines for
               operating on tetrahedra, and can help with writing code that
               works with more than one dimension.
+            - Fixed minor memory leak in idealToFinite().
         Class NTritmask1, NTritmask2:
             - Fast classes for working with 0/1/2 trits, i.e., "ternary bits".
         Class NVertex:
