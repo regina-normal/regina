@@ -627,6 +627,7 @@ namespace {
     inline Block::~Block() {
         for (unsigned i = 0; i < 4; ++i)
             delete bdry_[i];
+        delete[] innerTet_;
     }
 
     inline NTetrahedron* Block::outerTet() {
