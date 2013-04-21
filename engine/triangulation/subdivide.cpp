@@ -293,6 +293,7 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
     for_each(tetList.begin(), tetList.end(),
         std::bind1st(std::mem_fun(&NTriangulation::removeTetrahedron), this));
 
+    delete[] newTet;
     return true;
 }
 
