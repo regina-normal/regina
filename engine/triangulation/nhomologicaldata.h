@@ -118,6 +118,12 @@ class NTriangulation;
  *
  * \todo This class is to be depreciated.  See NCellularData for replacement class. 
  *
+ * \todo  0) The current torsion linking form test in ncellulardata is buggy. Two different triangulations of
+ *        SFS[S^2: 1/3,1/3,-1/3] give two different results. The first triangulation has
+ *        isoSig() gLLPQaceedffjkxknnn, the 2nd triangulation is a re-labelling of this
+ *        same triangulation.  You acquire it as a prime factor of 
+ *        isoSig() nLvAAAvPQkcffggghjlkmmlmaaaaaoskkvxisp
+ *
  * @author Ryan Budney
  */
 class REGINA_API NHomologicalData : public ShareableObject {
