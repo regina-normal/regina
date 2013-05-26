@@ -374,7 +374,8 @@ void NCellularData::fillDualHomologyCC()
                               (tet->getEmbedding(1).getTetrahedron() == facinc[4] )) ? 1 : -1 );
             if ( (!inMaximalTree(tet)) && (sig==-1) ) 
                 wordle.addTermFirst( NGroupExpressionTerm( pi1Lookup(tet), -1 ) );
-            CC->setEntry( NMultiIndex< unsigned long >( j, i ), coverFacetData( dcIxLookup(tet), sig, wordle ) );
+            CC->setEntry( NMultiIndex< unsigned long >( j, i ), 
+                coverFacetData( dcIxLookup(tet), sig, wordle ) );
             if ( (!inMaximalTree(tet)) && (sig==1) ) 
                 wordle.addTermFirst( NGroupExpressionTerm( pi1Lookup(tet), 1 ) );
            }
@@ -397,7 +398,7 @@ void NCellularData::fillDualHomologyCC()
 	      NPerm5 edginc( pen->getEdgeMapping( 
 		Dim4Edge::edgeNumber[facinc[(j<=0) ? 1 : 0]][facinc[(j<=1)? 2 : 1]] 
 						) );
-	      NPerm5 delta( edginc.inverse()*facinc*NPerm5(2, j) ); // we consider this as a permutation of {2,3,4}
+	      NPerm5 delta( edginc.inverse()*facinc*NPerm5(2, j) ); // consider as permutation of {2,3,4}
               delta = delta * NPerm5( 0, delta[0] ); // kill permutation of {0,1} part of delta
               // TODO fill wordle
               CC->setEntry( NMultiIndex< unsigned long >( dcIxLookup( edg ), 3*i+j ),  
@@ -465,7 +466,8 @@ void NCellularData::fillDualHomologyCC()
                               (fac->getEmbedding(1).getFace() == edginc[3] )) ? 1 : -1 );
             if ( (!inMaximalTree(fac)) && (sig==-1) ) 
                 wordle.addTermFirst( NGroupExpressionTerm( pi1Lookup(fac), -1 ) );
-            CC->setEntry( NMultiIndex< unsigned long >( j, i ), coverFacetData( dcIxLookup(fac), sig, wordle ) );
+            CC->setEntry( NMultiIndex< unsigned long >( j, i ), 
+                coverFacetData( dcIxLookup(fac), sig, wordle ) );
             if ( (!inMaximalTree(fac)) && (sig==1) ) 
                 wordle.addTermFirst( NGroupExpressionTerm( pi1Lookup(fac), 1 ) );
            }
@@ -657,7 +659,8 @@ void NCellularData::fillMixedHomologyCC()
 	  I = nicIxLookup( fac );
           // TODO fill wordle
           CC->setEntry( NMultiIndex< unsigned long >( ci1 + j, i%2 ),  
-                        coverFacetData( ri1 + 3*I + (facinc.preImageOf(edginc[3-i])), ( i == 0 ? 1 : -1 ), wordle ) ); 
+                        coverFacetData( ri1 + 3*I + (facinc.preImageOf(edginc[3-i])), 
+                        ( i == 0 ? 1 : -1 ), wordle ) ); 
           // TODO fill wordle
           CC->setEntry( NMultiIndex< unsigned long >( ci1 + j, 2+(i%2) ),  
                         coverFacetData( ri2 + 4*(j/6)+edginc[i+2], ( i == 0 ? 1 : -1 ), wordle ) ); 
@@ -673,7 +676,8 @@ void NCellularData::fillMixedHomologyCC()
 	   I = nicIxLookup( tet );
            // TODO fill wordle
            CC->setEntry( NMultiIndex< unsigned long >( ci2 + j, i%2 ),  
-                         coverFacetData( ri2 + 4*I + tetinc.preImageOf(facinc[4-i]), ( i == 0 ? 1 : -1 ), wordle ) ); 
+                         coverFacetData( ri2 + 4*I + tetinc.preImageOf(facinc[4-i]), 
+                        ( i == 0 ? 1 : -1 ), wordle ) ); 
 	   int sig( (tet->getEmbedding(0).getPentachoron() == pen) &&
 		    (tet->getEmbedding(0).getTetrahedron() == facinc[i+3]) ? 1 : -1);
            // TODO fill wordle
@@ -729,7 +733,7 @@ void NCellularData::fillMixedHomologyCC()
    for (unsigned long j=0; j<10*numNonIdealCells[4]; j++) 
 	{ // j%10, mCC[D]->entry( *, ci1 + j )
 	 pen = tri4->getPentachoron( nicIx[D][j/10] ); NPerm5 edginc( pen->getEdgeMapping( j%10 ) );
-	 for (unsigned long i=2; i<5; i++) // boundary facets have 3 parts dual to edges in tets, 3 dual to faces in pen
+	 for (unsigned long i=2; i<5; i++) // bdry facets 3 pt dual to edges in tets, 3 dual to faces in pen
 	  { 
 	   tet = pen->getTetrahedron( edginc[i] ); NPerm5 tetinc( pen->getTetrahedronMapping( edginc[i] ) ); 
 	   NPerm5 edgtetinc( tet->getEdgeMapping( // how edg sits in tet
@@ -741,7 +745,8 @@ void NCellularData::fillMixedHomologyCC()
                 ri1 + 6*I + NEdge::edgeNumber[tetinc.preImageOf(edginc[0])][tetinc.preImageOf(edginc[1])], 
                 -( (tetinc*edgtetinc).inverse()*edginc).sign(), wordle ) ); 
 	   // part dual to a face in pen
-	   NPerm5 facinc( pen->getTriangleMapping( Dim4Triangle::triangleNumber[edginc[0]][edginc[1]][edginc[i]] ) );
+	   NPerm5 facinc( pen->getTriangleMapping( 
+        Dim4Triangle::triangleNumber[edginc[0]][edginc[1]][edginc[i]] ) );
 	   NPerm5 delta( edginc.inverse()*facinc*NPerm5( 2, facinc.preImageOf(edginc[i]) ) );
 	   delta = delta * NPerm5(0, delta[0]);
            // TODO fill wordle
@@ -826,7 +831,8 @@ void NCellularData::fillMixedHomologyCC()
           }
          else
           { 
-            I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), tri3->vertexIndex( vrt ) ) - nicIx[D-1].begin();
+            I = lower_bound( nicIx[D-1].begin(), nicIx[D-1].end(), 
+                tri3->vertexIndex( vrt ) ) - nicIx[D-1].begin();
             // TODO fill wordle
             CC->setEntry( NMultiIndex< unsigned long >( j, 0 ),
                           coverFacetData( I, ( (j%2)==0 ? -1 : 1 ), wordle ) );

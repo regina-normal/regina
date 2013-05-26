@@ -208,7 +208,7 @@ void fillBoundaryToStandardHomCM( unsigned aDim, // dimension of the triangulati
 }
 
 void fillStandardToRelativeHomCM( unsigned aDim, // dimension of the triangulation
-        const unsigned long numStandardCells[5],                 const unsigned long numRelativeCells[5], 
+    const unsigned long numStandardCells[5],             const unsigned long numRelativeCells[5], 
 	const unsigned long numNonIdealCells[5],
 	std::vector< std::vector<unsigned long> > &nicIx, 	 std::vector< std::vector<unsigned long> > &rIx, 
         std::vector< NMatrixInt* > &strCM)

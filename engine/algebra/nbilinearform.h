@@ -162,16 +162,57 @@ class REGINA_API NBilinearForm : public ShareableObject {
 
     	/**
           * Kawauchi-Kojima vector describing the torsion ranks, as prime powers.
+          *
+          * Returns the torsion form rank vector. This is one of the three Kawauchi-Kojima invariants
+          * of a torsion linking form.  It is a notation for the prime power decomposition of the
+          * torsion subgroup of H1.  Z_8 would be 2(0 0 1), Z_8 + Z_8 would be 2(0 0 2).  Z_12 would be
+          * 2(0 1) 3(1), etc.  It is a list consisting of p(a b c ... ) elements, meaning the prime p
+          * appears in several ways: there are a summands of Z_p, b of Z_{p^2}, c of Z_{p^3}, etc. 
+          * It can also be seen as the dimension over Z_(p^k) of G_(p,k) described above.   This 
+          * is orientation-independent, as it only depends on H1 of the manifold. 
           */
     	const std::string& kkTorRank() const;
 
          /**
           * Kawauchi-Kojima sigma vector.
+          *
+          * Returns the 2-torsion sigma vector.  This is an object that takes values in the set
+          * {0,1,2,3,4,5,6,7,inf}, i.e. Z_8 \cup {inf}.  It is only relevant if H1 has 2-torsion. 
+          * Torsion linking forms with only odd torsion are classified by the power decomposition
+          * and the Legendre symbol vector.  This is the part of the classification of torsion
+          * linking forms due to Kawauchi and Kojima. 
+          *
+          * A characteristic element of f_(2,k) is an element q so that f_(2,k)(q,x)=f_(2,k)(x,x)
+          * for all x in G_(2,k).  It's a fact that this element exists and it is unique, so we
+          * denote it by c_(f,k).   If c_(f,k) is zero, we make the k-th element of the sigma
+          * string infinity.  Otherwise, consider the function q_k : G_2 / G_2,k--> Q/Z defined
+          * by q_k([x]) = 2^(k-1)f(x,x).  It's a fact that the sum 
+          *
+          *       GS_k := \Sum_{x in G_2/G_2,k} exp(2\pi iq_k(x))
+          *
+          * satisfies GS_k = |GS_k| e^{2 \pi i \sigma / 8} for some integer j.  This the 
+          * \sigma_k. 
+          *
+          * Notice that under an orientation reversal, inf is fixed, but GS_k is modified by
+          * conjugation, which on sigma is the involution 0<->0, 1<->7, 2<->6, 3<->5, 4<->4. 
           */
 	    const std::string& kkTorSigma() const;
 
     	/**
           * Kawauchi-Kojima Legendre symbol vector
+          *
+          * Returns the odd p-torsion Legendre symbol vector. This is the part of the Kawauchi-Kojima
+          * classification that's due to Seifert.  If G_(p,k) is a trivial group this is defined as
+          * zero, if G_(p,k) is non-trivial the idea is to think of f_(p,k) as a symmetric bilinear
+          * form on G_(p,k).  Plugging in a basis for G_(p,k) you get a square matrix whose entries are
+          * elements of Z_p.  We take the Legendre symbol of the determinant of this matrix.  This is
+          * a number -1, 0 or 1.   You get 1 if the determinant is a quadratic residue mod p (i.e. if
+          * its congruent mod p to the square of a non-zero integer), 0 if its congruent to 0 mod p, 
+          * and -1 otherwise, sometimes called "a quadratic non-residue mod p". 
+          * We do this for all k so that Z_p^k is a subgroup of G. 
+          *
+          * Under an orientation reversal, at most the sign can change.  And it does so by a factor
+          * of (-1)^{(p-1)rank(G_(p,k))/2}.            
           */
 	    const std::string& kkTorLegendre() const;
 

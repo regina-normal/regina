@@ -297,10 +297,11 @@ public:
   * requestable items is the Kawauch-Kojima classification of torsion linking
   * forms, which we describe below. 
   *
-  * Given a torsion linking form f : G x G --> Q/Z and a prime p, G_p is the subgroup 
+  * Given a finite abelian group G, a torsion linking form is a symmetric bilinear
+  * function f : G x G --> Q/Z.  Given a prime p, let G_p be the subgroup 
   * of elements of order a power of p.  G_p,k will be the subgroup of elements killed 
   * by p^k, i.e. the kernel of the multiplication by p^k map on G.  f has its primary 
-  * orthogonal splitting f = \oplus_p f_p.  f_p : G_p x G_p --> Q/Z.   
+  * orthogonal splitting f = \oplus_p f_p, where  f_p : G_p x G_p --> Q/Z.   
   * G_(p,k) is defined as the quotient G_p,k / (G_p,k-1 + pG_p,k+1).  f_p induces a map
   * f_(p,k) : G_(p,k) x G_(p,k) --> Q/Z defined by f_(p,k)([x],[y]) = p^(k-1) f_p(x,y). 
   * Fact: G_(p,k) is a vector space over Z_p. 
@@ -563,7 +564,7 @@ public:
  struct FormLocator {
 	GroupLocator ldomain;
 	GroupLocator rdomain;
-        form_type ft;
+    form_type ft;
 
 	/**
 	 *  Initialization constructor.
@@ -750,8 +751,8 @@ private:
      */
    unsigned long numStandardCells[5], numDualCells[5],    numMixCells[5],          numStandardBdryCells[4], 
                  numNonIdealCells[5], numIdealCells[4],   numNonIdealBdryCells[4], 
-	         numRelativeCells[5], numDualRelCells[5], numMixRelCells[5],       numMixBdryCells[4], 
-		 numDualBdryCells[4];
+	             numRelativeCells[5], numDualRelCells[5], numMixRelCells[5],       numMixBdryCells[4], 
+		         numDualBdryCells[4];
 
     /** 
      * Chain complex indexing and orientation and boundary-map conventions:
