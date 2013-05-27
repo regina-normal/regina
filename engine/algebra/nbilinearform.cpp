@@ -708,7 +708,6 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
     NLargeInteger DenOm( (intP.range().getNumberOfInvariantFactors()==0) ? 1 : 
         intP.range().getInvariantFactor(0) ); // there is only one invariant factor in 
                                               // the range unless the torsion group is trivial
-std::cout<<"\n nBil DenOm "<<DenOm<<"\n";
     for (i=0, it1 = indexing.begin(); it1 != indexing.end(); i++, it1++) 
     { 
      ppList[i].first = it1->first; // this is the i-th prime in our list of primes
@@ -730,11 +729,6 @@ std::cout<<"\n nBil DenOm "<<DenOm<<"\n";
          // perhaps reduce this NRational? 
         } 
       }
-//std::cout<<"\n";
-// TODO: one possible concern is intP is recorded as numerators while using largest
-//       invariant factor to kill elts...
-// TODO: it appears the linkingFormPD is incorrect.
-linkingFormPD[i]->writeMatrix(std::cout);
     }
 
     // now we should implement the classification of these forms
@@ -974,7 +968,6 @@ linkingFormPD[i]->writeMatrix(std::cout);
  *  linkingFormPD is the p-primary orthogonal splitting of the torsion linking
  *                form. 
  *
- * TODO: the error is in the Legendre symbol test.
  */
 void readTeaLeavesTLF(
         const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec,

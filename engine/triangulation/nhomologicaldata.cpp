@@ -1282,7 +1282,6 @@ void NHomologicalData::computeTorsionLinkingForm() {
      for (j=0; j<it1->second.size(); j++) for (k=0; k<it1->second.size(); k++)
         linkingFormPD[i]->entry(j,k) = torsionLinkingFormPresentationMat->entry(
            it1->second[j].second, it1->second[k].second );
-linkingFormPD[i]->writeMatrix(std::cout);
     }
 
     // now we should implement the classification of these forms
