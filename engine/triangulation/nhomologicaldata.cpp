@@ -1219,10 +1219,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
     // step 4: intersect, construct matrix.
 
-//    NMatrixRing<NRational> torsionLinkingFormPresentationMat(
-//        pvList.size(), pvList.size() );
-//  lets make it a pointer for now.
-       torsionLinkingFormPresentationMat = new NMatrixRing<NRational>(pvList.size(), pvList.size() );
+    torsionLinkingFormPresentationMat = new NMatrixRing<NRational>(pvList.size(), pvList.size() );
 
     NLargeInteger tN,tD,tR;
 
@@ -1285,6 +1282,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
      for (j=0; j<it1->second.size(); j++) for (k=0; k<it1->second.size(); k++)
         linkingFormPD[i]->entry(j,k) = torsionLinkingFormPresentationMat->entry(
            it1->second[j].second, it1->second[k].second );
+linkingFormPD[i]->writeMatrix(std::cout);
     }
 
     // now we should implement the classification of these forms
@@ -1504,7 +1502,6 @@ void NHomologicalData::computeTorsionLinkingForm() {
                 for (l=0; l<torRankV[i].second[j]; l++)
                     tempM.entry(k,l) = (NRational(tI)*linkingFormPD[i]->
                         entry(k+curri,l+curri)).getNumerator();
-
             tempa.push_back( tempM.det().legendre(torRankV[i].first) );
             // legendre symbol, compute and append to tempa
             // compute determinant.
