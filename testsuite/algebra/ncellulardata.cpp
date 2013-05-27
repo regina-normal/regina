@@ -85,6 +85,8 @@ class NCellularDataTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(lensspacehomotopyclassification_tests); 
     // check alexander polynomials
     CPPUNIT_TEST(alexpoly_tests);
+    // torsion linking form for 3-manifold with non-cyclic torsion in H1
+    CPPUNIT_TEST(noncyclic_TLF_tests);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -246,6 +248,23 @@ class NCellularDataTest : public CppUnit::TestFixture {
 		for (unsigned long i=0; i<m4List.size(); i++)
 		 if (!m4List[i]->intersectionFormsVerified()) CPPUNIT_FAIL("Intersection forms misbehaving (4).");
 	}
+
+    void noncyclic_TLF_tests() {
+      // TODO: perhaps add 
+      NTriangulation* tri1(NTriangulation::fromIsoSig("gLLPQaceedffjkxknnn")); 
+      NTriangulation* tri2(NTriangulation::fromIsoSig("nLvAAAvPQkcffggghjlkmmlmaaaaaoskkvxisp")); 
+      NCellularData cDat1( *tri1 ); NCellularData cDat2( *tri2 ); 
+//std::cout<<cDat1.stringInfo(NCellularData::TORFORM_embinfo)<<"\n"; std::cout.flush();
+      if (cDat1.stringInfo(NCellularData::TORFORM_embinfo) != 
+        std::string("The torsion linking form is of hyperbolic type.  Manifold is a rational homology sphere.")) 
+        CPPUNIT_FAIL("Non-cyclic TLF test fails (1).");
+      if (cDat2.stringInfo(NCellularData::TORFORM_embinfo) != 
+        std::string("The torsion linking form is of hyperbolic type.")) 
+        CPPUNIT_FAIL("Non-cyclic TLF test fails (2).");
+
+      delete tri1; delete tri2;
+    }
+
 
         void lensspacehomotopyclassification_tests() {
          NLargeInteger maxP(22); 
