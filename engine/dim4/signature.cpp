@@ -445,6 +445,12 @@ std::string Dim4Triangulation::isoSigInternal(
     return ans;
 }
 
+unsigned Dim4Triangulation::pentInIsoSig(const std::string& sig) {
+    const char* c = sig.c_str();
+    if (!SVALID(*c)) return 0;
+    return SVAL(*c);
+}
+
 Dim4Triangulation* Dim4Triangulation::fromIsoSig(const std::string& sig) {
     std::auto_ptr<Dim4Triangulation> ans(new Dim4Triangulation());
 

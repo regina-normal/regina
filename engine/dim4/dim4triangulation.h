@@ -1688,6 +1688,13 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * isomorphism signature.
          */
         static Dim4Triangulation* fromIsoSig(const std::string& signature);
+
+        /**
+         *  Returns the number of pentachora in the triangulation corresponding
+         * to this isoSig, without building the triangulation. 
+         */
+        static unsigned pentInIsoSig(const std::string& sig);
+
         /**
          * Inserts into this triangulation a set of pentachora and their
          * gluings as described by the given integer arrays.
