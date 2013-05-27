@@ -586,6 +586,10 @@ class REGINA_API NGroupExpression : public ShareableObject {
  * If there are \a g generators, they will be numbered 0, 1, ..., <i>g</i>-1.
  *
  * \testpart
+ *
+ * \todo Implement a procedure to attempt Reidemeister-Schreir, perhaps with
+ *  respect to a homomorphism to a known group.  Something good-enough to 
+ *  detect if the group is a semi-direct product, for 2 and 3-manifold groups.
  */
 class REGINA_API NGroupPresentation : public ShareableObject {
     private: 
