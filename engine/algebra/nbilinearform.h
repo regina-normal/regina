@@ -64,6 +64,10 @@ namespace regina {
  * and Kawauchi-Kojima invariants of the bilinear forms coming from Poincare duality on a 4 or
  * 3-manifold respectively. 
  *
+ * TODO: currently there's an error in the torsion linking form test, in the Legendre symbol
+ *   computation. isoSig(): gLLPQaceedffjkxknnn and isoSig(): nLvAAAvPQkcffggghjlkmmlmaaaaaoskkvxisp
+ *   compare with nhomologicaldata, embedding tests, etc. 
+ * 
  * @author Ryan Budney
  */
 class REGINA_API NBilinearForm : public ShareableObject {

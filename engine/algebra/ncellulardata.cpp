@@ -625,7 +625,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
     GroupLocator rdd( f_desc.rdomain.dim, f_desc.rdomain.var, f_desc.rdomain.hcs, f_desc.rdomain.cof );
     const NMarkedAbelianGroup* ld(markedGroup(ldd));     
     const NMarkedAbelianGroup* rd(markedGroup(rdd));
-     // now we build ldomain and rdomain
+    // now we build ldomain and rdomain
     NMarkedAbelianGroup ldomain( ld->torsionSubgroup() ); // triv pres torsion subgroups
     NMarkedAbelianGroup rdomain( rd->torsionSubgroup() ); // ...
 
@@ -639,30 +639,31 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
     // TLF step 2: dimension-specific constructions
     if (aDim == 3)
      {
-	for (unsigned long i=0; i<ld->getNumberOfInvariantFactors(); i++)
- 	 for (unsigned long j=0; j<rd->getNumberOfInvariantFactors(); j++)
-	  {
+      for (unsigned long i=0; i<ld->getNumberOfInvariantFactors(); i++)
+ 	   for (unsigned long j=0; j<rd->getNumberOfInvariantFactors(); j++)
+	   {
 	   // take ccRep(j), multiply by order rd->getInvariantFactor(j), apply writeAsBoundary, 
-           std::vector< NLargeInteger > rFac( rd->getTorsionRep(j) );
-           for (unsigned long k=0; k<rFac.size(); k++) rFac[k]*=rd->getInvariantFactor(j);
-           std::vector< NLargeInteger > std_rel_bdry_2vec( rd->writeAsBoundary( rFac ) );
-           std::vector< NLargeInteger > dual_1vec( ld->getTorsionRep(i) );
+       std::vector< NLargeInteger > rFac( rd->getTorsionRep(j) );
+       for (unsigned long k=0; k<rFac.size(); k++) rFac[k]*=rd->getInvariantFactor(j);
+       std::vector< NLargeInteger > std_rel_bdry_2vec( rd->writeAsBoundary( rFac ) );
+       std::vector< NLargeInteger > dual_1vec( ld->getTorsionRep(i) );
 	   // intersect with ld->getInvariantFactor(i)
 	   NLargeInteger sum(NLargeInteger::zero);
-           for (unsigned long k=0; k<dual_1vec.size(); k++)
-            {
-             const NFace* fac( tri3->getFace( rIx[2][i] ) ); 
-             const NTetrahedron* tet( fac->getEmbedding(0).getTetrahedron() );
-             NPerm4 facinc( fac->getEmbedding(0).getVertices() );
-             sum += std_rel_bdry_2vec[k]*dual_1vec[k]*facinc.sign()*tet->orientation(); 
-             // orientation convention...
-            }
-           // rescale sum, check if relevant, append to intM if so...
-           sum *= (N / rd->getInvariantFactor(j));
-           sum %= N; if (sum < NLargeInteger::zero) sum += N;
-           NMultiIndex< unsigned long > x(3); x[0] = i; x[1] = j; x[2] = 0; 
-           if (sum != NLargeInteger::zero) intM.setEntry( x, sum );
-	  } }
+       for (unsigned long k=0; k<dual_1vec.size(); k++)
+        {
+         const NFace* fac( tri3->getFace( rIx[2][k] ) ); // shouldn't this be k? previously i
+         const NTetrahedron* tet( fac->getEmbedding(0).getTetrahedron() );
+         NPerm4 facinc( fac->getEmbedding(0).getVertices() );
+         sum += std_rel_bdry_2vec[k]*dual_1vec[k]*facinc.sign()*tet->orientation(); 
+         // orientation convention...
+        }
+       // rescale sum, check if relevant, append to intM if so...
+       sum *= (N / rd->getInvariantFactor(j));
+       sum %= N; if (sum < NLargeInteger::zero) sum += N;
+       NMultiIndex< unsigned long > x(3); x[0] = i; x[1] = j; x[2] = 0; 
+       if (sum != NLargeInteger::zero) intM.setEntry( x, sum );
+	   } 
+     }
     
     if ( (aDim == 4) && (f_desc.ldomain.dim == 2) )
      {

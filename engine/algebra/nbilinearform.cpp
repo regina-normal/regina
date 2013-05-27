@@ -352,7 +352,7 @@ NBilinearForm NBilinearForm::lCompose(const NHomMarkedAbelianGroup &f) const
  // check to see if this is a valid operation
  #ifdef DEBUG
  if (!lDomain.equalTo(f.getRange()))
-  { std::cerr<<"Error: Illegal composition in NBilinearForm::lCompose"<<std::endl; exit(1); }
+  { std::cerr<<"Error: Illegal composition in NBilinearForm::lCompose()"<<std::endl; exit(1); }
  #endif
  // we need to compute the new unreducedPairing and pass it to an NBilinearForm constructor
  NSparseGridRing< NLargeInteger > newPairing(3);
@@ -380,7 +380,7 @@ NBilinearForm NBilinearForm::rCompose(const NHomMarkedAbelianGroup &f) const
  // check to see if this is a valid operation
  #ifdef DEBUG
  if (!rDomain.equalTo(f.getRange()))
-  { std::cerr<<"Error: Illegal composition in NBilinearForm::rCompose"<<std::endl; exit(1); }
+  { std::cerr<<"Error: Illegal composition in NBilinearForm::rCompose()"<<std::endl; exit(1); }
  #endif
  // we need to compute the new unreducedPairing and pass it to an NBilinearForm constructor
  NSparseGridRing< NLargeInteger > newPairing(3);
@@ -404,7 +404,7 @@ NBilinearForm NBilinearForm::postCompose(const NHomMarkedAbelianGroup &f) const
 {
  #ifdef DEBUG
  if (!Range.equalTo(f.getDomain()))
-  { std::cerr<<"Error: Illegal composition in NBilinearForm::postCompose"<<std::endl; exit(1); }
+  { std::cerr<<"Error: Illegal composition in NBilinearForm::postCompose()"<<std::endl; exit(1); }
  #endif
 
  NSparseGridRing< NLargeInteger > newPairing(3);
@@ -556,6 +556,11 @@ void NBilinearForm::writeTextShort(std::ostream& out) const
  Range.writeTextShort(out);   out<<"]";
 }
 
+std::string dumpMatrix(const NMatrixRing< NRational > &mat)
+{
+ return std::string("blah");
+}
+
 void NBilinearForm::writeTextLong(std::ostream& out) const
 {
  writeTextShort(out);
@@ -703,7 +708,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
     NLargeInteger DenOm( (intP.range().getNumberOfInvariantFactors()==0) ? 1 : 
         intP.range().getInvariantFactor(0) ); // there is only one invariant factor in 
                                               // the range unless the torsion group is trivial
- 
+std::cout<<"\n nBil DenOm "<<DenOm<<"\n";
     for (i=0, it1 = indexing.begin(); it1 != indexing.end(); i++, it1++) 
     { 
      ppList[i].first = it1->first; // this is the i-th prime in our list of primes
@@ -721,10 +726,15 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
          std::vector< NLargeInteger > ccR( pvList[ it1->second[k].second ] );
          NLargeInteger num( intP.evalCC(ccL, ccR)[0] % DenOm );
          NLargeInteger G( num.gcd(DenOm) );
-         linkingFormPD[i]->entry(k,k) = NRational( num / G, DenOm / G );
+         linkingFormPD[i]->entry(j,k) = NRational( num / G, DenOm / G );
          // perhaps reduce this NRational? 
         } 
       }
+//std::cout<<"\n";
+// TODO: one possible concern is intP is recorded as numerators while using largest
+//       invariant factor to kill elts...
+// TODO: it appears the linkingFormPD is incorrect.
+linkingFormPD[i]->writeMatrix(std::cout);
     }
 
     // now we should implement the classification of these forms
@@ -943,7 +953,6 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
                 for (l=0; l<ppVec[i].second[j]; l++)
                     tempM.entry(k,l) = (NRational(tI)*linkingFormPD[i]->
                         entry(k+curri,l+curri)).getNumerator();
-
             tempa.push_back( tempM.det().legendre(ppVec[i].first) );
             // legendre symbol, compute and append to tempa
             // compute determinant.
@@ -951,7 +960,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
             // increment curri
             curri = curri + ppVec[i].second[j]; 
         }
-        ptVec.push_back( make_pair( ppVec[i].first.longValue(), tempa) );
+        ptVec.push_back( make_pair( ppVec[i].first.longValue(), tempa) ); 
     }
 
 } // end computeTorsionLinkingForm()
@@ -964,6 +973,8 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
  *  ptVec  the Kawauchi-Kojima Legendre symbol vector. 
  *  linkingFormPD is the p-primary orthogonal splitting of the torsion linking
  *                form. 
+ *
+ * TODO: the error is in the Legendre symbol test.
  */
 void readTeaLeavesTLF(
         const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec,
@@ -1085,6 +1096,7 @@ void readTeaLeavesTLF(
 
     if (orientable) {
         torsionLegendreString->assign("");
+
         if (ptVec.size()==0)
             torsionLegendreString->append("no odd p-torsion");
         else for (i=0; i<ptVec.size(); i++) {
