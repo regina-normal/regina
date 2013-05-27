@@ -254,7 +254,6 @@ class NCellularDataTest : public CppUnit::TestFixture {
       NTriangulation* tri1(NTriangulation::fromIsoSig("gLLPQaceedffjkxknnn")); 
       NTriangulation* tri2(NTriangulation::fromIsoSig("nLvAAAvPQkcffggghjlkmmlmaaaaaoskkvxisp")); 
       NCellularData cDat1( *tri1 ); NCellularData cDat2( *tri2 ); 
-//std::cout<<cDat1.stringInfo(NCellularData::TORFORM_embinfo)<<"\n"; std::cout.flush();
       if (cDat1.stringInfo(NCellularData::TORFORM_embinfo) != 
         std::string("The torsion linking form is of hyperbolic type.  Manifold is a rational homology sphere.")) 
         CPPUNIT_FAIL("Non-cyclic TLF test fails (1).");
