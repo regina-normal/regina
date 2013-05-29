@@ -734,8 +734,9 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          *
          * @return a simple string representation of the group if it is
          * recognised, or an empty string if the group is not
-         * recognised.  Return strings have the form "Z_n" for cyclic groups
-         * "Free(n generators)" for free groups, "Z" and "Z + Z (abelian)"
+         * recognised.  Return strings have the form "0" for the trivial 
+         * group, "Z_n" for cyclic groups with n > 1, "Free(n generators)" 
+         * for free groups with n>1, "Z" and "Z + Z (abelian)"
          * are the only two free abelian groups supported at present. 
          */
         std::string recogniseGroup() const;
