@@ -83,6 +83,15 @@ class REGINA_API Dim4ExampleTriangulation {
         static Dim4Triangulation* fourSphere();
 
         /**
+         * Returns the standard six-pentachoron triangulation of the 4-sphere
+         * as the boundary of a 5-simplex. 
+         *
+         * @return a newly constructed triangulation, which must be
+         *  destroyed by the caller of this routine. 
+         */
+        static Dim4Triangulation* simplicialFourSphere();
+
+        /**
          * Returns a four-pentachoron triangulation of real projective
          * 4-space.
          *

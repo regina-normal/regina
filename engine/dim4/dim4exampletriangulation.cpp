@@ -50,6 +50,31 @@ Dim4Triangulation* Dim4ExampleTriangulation::fourSphere() {
     return ans;
 }
 
+Dim4Triangulation* Dim4ExampleTriangulation::simplicialFourSphere() {
+    Dim4Triangulation* ans = new Dim4Triangulation();
+    ans->setPacketLabel("Standard simplicial 4-sphere");
+
+    std::vector<Dim4Pentachoron*> penList(6);
+     // one pentachoron for every vertex of the 5-simplex
+    for (unsigned long i=0; i<6; i++) penList[i] = ans->newPentachoron();
+     // one gluing for ever distinct pair of vertices of 5-simplex
+    for (unsigned long i=0; i<5; i++) for (unsigned long j=i+1; j<6; j++)
+     {
+     int map[5]; 
+     for (unsigned long k=0; k<5; k++)
+      {
+       if ( (k<i) || (k>=j) ) map[k]=k;
+       else if (k<(j-1)) map[k]=k+1;
+       else map[j-1]=i;
+      }
+     penList[i]->joinTo(j-1 , penList[j], NPerm5(map) );  
+     }
+     // we are gluing facet j-1 of pen i to facet i of pen j. 
+     // using the cycle i -> i+1 -> ... -> j-1 -> i. 
+    return ans;
+}
+
+
 Dim4Triangulation* Dim4ExampleTriangulation::rp4() {
     Dim4Triangulation* ans = new Dim4Triangulation();
     ans->setPacketLabel("Real projective 4-space");
