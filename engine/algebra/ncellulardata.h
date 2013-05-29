@@ -84,6 +84,10 @@ class Dim4Triangulation;
  *
  * \testpart
  *
+ * \todo  0) See to what extent the Singular library can replace my roll-my-own Groebner basis
+ *          algorithms.  It appears to do everything over finite fields and rational coefficients, 
+ *          but maybe I wouldn't be able to do much better than that for multi-variable polynomials. 
+ *
  * \todo  1) (a) Homomorphisms to finite groups, (b) covering spaces, (c) Pi_2 presentations 
  *        as a module over Pi_1. Immediately: pi1 presentation simplification code needs 
  *        smoothing, recognition code expanding. For (a) GQuotients( F, G ) from GAP is 
