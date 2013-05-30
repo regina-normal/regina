@@ -447,8 +447,31 @@ std::string Dim4Triangulation::isoSigInternal(
 
 unsigned Dim4Triangulation::pentInIsoSig(const std::string& sig) {
     const char* c = sig.c_str();
-    if (!SVALID(*c)) return 0;
-    return SVAL(*c);
+    // Initial check for invalid characters
+
+    const char* d;
+    for (d = c; *d; ++d)
+        if (! SVALID(*d))
+            return 0;
+
+    unsigned nPent, nChars;
+    while (*c) {
+        // Read one component at a time.
+        nPent = SVAL(*c++);
+        if (nPent < 63)
+            nChars = 1;
+        else {
+            if (! *c)
+                return 0;
+            nChars = SVAL(*c++);
+            if (! SHASCHARS(c, nChars))
+                return 0;
+            nPent = SREAD(c, nChars);
+            c += nChars;
+        }
+    }
+
+    return nPent;
 }
 
 Dim4Triangulation* Dim4Triangulation::fromIsoSig(const std::string& sig) {
