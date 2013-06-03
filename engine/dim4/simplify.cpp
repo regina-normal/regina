@@ -482,7 +482,7 @@ bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
 
 
 // subordinate to oneFiveMove.  Make static (i.e. nonexported?)
-NPerm5 fourShift(const unsigned long &i)
+static NPerm5 fourShift(const unsigned long &i)
 { // 4 maps to index of facet of old pen, which is 4-i, 
   // the pentachora: pen, newPen[i] are across from all other labels increasing
  if (i==4) return NPerm5();
