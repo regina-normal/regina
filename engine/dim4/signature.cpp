@@ -445,6 +445,9 @@ std::string Dim4Triangulation::isoSigInternal(
     return ans;
 }
 
+// Ryan's comment: there's probably a much smarter way to implement this code, but right 
+//  now it's just a stripped-down version of fromIsoSig that takes out all the unneccessary
+//  memory allocation for the Dim4Triangulation.  
 unsigned Dim4Triangulation::pentInIsoSig(const std::string& sig) {
     const char* c = sig.c_str();
 
@@ -490,7 +493,7 @@ unsigned Dim4Triangulation::pentInIsoSig(const std::string& sig) {
                 delete[] facetAction;
                 return 0;
             }
-            SREADTRITS(*c++, facetAction + facetPos); // TODO
+            SREADTRITS(*c++, facetAction + facetPos);
             for (i = 0; i < 3; ++i) {
                 // If we're already finished, make sure the leftover trits
                 // are zero.
@@ -529,7 +532,7 @@ unsigned Dim4Triangulation::pentInIsoSig(const std::string& sig) {
             }
 
             joinDest[i] = SREAD(c, nChars);
-            c += nChars; // TODO
+            c += nChars; 
         }
 
         unsigned* joinGluing = new unsigned[nJoins + 1];
@@ -542,7 +545,7 @@ unsigned Dim4Triangulation::pentInIsoSig(const std::string& sig) {
             }
 
             joinGluing[i] = SREAD(c, 2);
-            c += 2; // TODO
+            c += 2; 
 
             if (joinGluing[i] >= 120) {
                 delete[] facetAction;
@@ -557,8 +560,6 @@ unsigned Dim4Triangulation::pentInIsoSig(const std::string& sig) {
      delete[] joinGluing;
 
     } // end the component loop
-
-
 
     return penTot;
 }
