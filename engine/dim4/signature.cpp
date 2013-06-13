@@ -447,13 +447,15 @@ std::string Dim4Triangulation::isoSigInternal(
 
 unsigned Dim4Triangulation::pentInIsoSig(const std::string& sig) {
     const char* c = sig.c_str();
-    // Initial check for invalid characters
 
+    // Initial check for invalid characters.
     const char* d;
     for (d = c; *d; ++d)
         if (! SVALID(*d))
             return 0;
 
+    unsigned i, j;
+    unsigned penTot(0);
     unsigned nPent, nChars;
     while (*c) {
         // Read one component at a time.
@@ -469,9 +471,96 @@ unsigned Dim4Triangulation::pentInIsoSig(const std::string& sig) {
             nPent = SREAD(c, nChars);
             c += nChars;
         }
-    }
 
-    return nPent;
+        if (nPent == 0) {
+            // Empty component.
+            continue;
+        }
+        // pen total for this component
+        penTot += nPent;
+
+        // Non-empty component; keep going.
+        char* facetAction = new char[5 * nPent + 2];
+        unsigned nFacets = 0;
+        unsigned facetPos = 0;
+        unsigned nJoins = 0;
+
+        for ( ; nFacets < 5 * nPent; facetPos += 3) {
+            if (! *c) {
+                delete[] facetAction;
+                return 0;
+            }
+            SREADTRITS(*c++, facetAction + facetPos); // TODO
+            for (i = 0; i < 3; ++i) {
+                // If we're already finished, make sure the leftover trits
+                // are zero.
+                if (nFacets == 5 * nPent) {
+                    if (facetAction[facetPos + i] != 0) {
+                        delete[] facetAction;
+                        return 0;
+                    }
+                    continue;
+                }
+
+                if (facetAction[facetPos + i] == 0)
+                    ++nFacets;
+                else if (facetAction[facetPos + i] == 1)
+                    nFacets += 2;
+                else if (facetAction[facetPos + i] == 2) {
+                    nFacets += 2;
+                    ++nJoins;
+                } else {
+                    delete[] facetAction;
+                    return 0;
+                }
+                if (nFacets > 5 * nPent) {
+                    delete[] facetAction;
+                    return 0;
+                }
+            }
+        }
+
+        unsigned* joinDest = new unsigned[nJoins + 1];
+        for (i = 0; i < nJoins; ++i) {
+            if (! SHASCHARS(c, nChars)) {
+                delete[] facetAction;
+                delete[] joinDest;
+                return 0;
+            }
+
+            joinDest[i] = SREAD(c, nChars);
+            c += nChars; // TODO
+        }
+
+        unsigned* joinGluing = new unsigned[nJoins + 1];
+        for (i = 0; i < nJoins; ++i) {
+            if (! SHASCHARS(c, 1)) {
+                delete[] facetAction;
+                delete[] joinDest;
+                delete[] joinGluing;
+                return 0;
+            }
+
+            joinGluing[i] = SREAD(c, 2);
+            c += 2; // TODO
+
+            if (joinGluing[i] >= 120) {
+                delete[] facetAction;
+                delete[] joinDest;
+                delete[] joinGluing;
+                return 0;
+            }
+        }
+     // ensure all the pointers are killed
+     delete[] facetAction;
+     delete[] joinDest;
+     delete[] joinGluing;
+
+    } // end the component loop
+
+
+
+    return penTot;
 }
 
 Dim4Triangulation* Dim4Triangulation::fromIsoSig(const std::string& sig) {
