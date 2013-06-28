@@ -103,6 +103,8 @@ class Dim4Triangulation;
  *        Maybe create a static class SimpleListOfFiniteGroups and BigListOfFiniteGroups,
  *         with procedures hasEpiTo. That kind of thing.  SimpleList can have simple procedures, 
  *         BigList can have more multi-threaded and sophisticated procedures. 
+ *        TODO - Reidemeister-Schrier at least appropriate for homs G --> Z.  Maybe more 
+ *               general?  Can I do something for an arbitrary hom of groups? 
  *
  * \todo  2) Complete collection of homology natural bilinear forms on a manifold, spin structures. 
  *        Derive chain complexes and maps from sparsely stored internal data.  Do not store matrices

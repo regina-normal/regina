@@ -37,30 +37,6 @@
 
 namespace regina {
 
-/*
-void dumpIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &ideal )
-{
-std::cout<<"< ";
-std::list< NSVPolynomialRing< NLargeInteger > >::const_iterator I;
-for (I=ideal.begin(); I!=ideal.end(); I++)
- {
-  if (I!=ideal.begin()) std::cout<<", ";
-  std::cout<<*I; 
- }
-std::cout<<"> "; std::cout.flush();
-}
-
-template <class T>
-void dumpVector( const std::vector<T> &vec )
-{
-std::cout<<" <";
-for (unsigned long j=0; j<vec.size(); j++)
- {  if (j != 0) std::cout<<", ";
-    std::cout<<vec[j]; }
-std::cout<<"> "; std::cout.flush();
-}
-*/
-
 /**
  *  Comparison function for sorting ideals in NSVPolynomialRing< NLargeInteger >
  */
@@ -285,6 +261,7 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
  std::list< std::list< NSVPolynomialRing< NLargeInteger > > >::iterator I1,I2;
  std::list< NSVPolynomialRing< NLargeInteger > >::iterator i; 
  std::list< NSVPolynomialRing< NLargeInteger > >::const_iterator ci; 
+ bool subIdealSizeOne = false;
 
  // Step 1: basic reductions of ideal, check to see if this is a non-trivial case
  reduceIdealSortStep(ideal); // TODO: correct if laurentPoly false
@@ -302,7 +279,8 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
  std::list< std::list< NSVPolynomialRing< NLargeInteger > > > subIdeals; // break ideal into union of subIdeals
  std::list< NSVPolynomialRing< NLargeInteger > > subIdeal;               
 
- while (!ideal.empty())
+ while (!ideal.empty()) // group ideal into various subideals of size cbs or less, store in subIdeals
+   // this allows us to control (a little) the explosive growth in groebner basis computation
   { subIdeal.push_back( ideal.front() ); ideal.pop_front();
     if (subIdeal.size() >= cbs) { subIdeals.push_back(subIdeal); subIdeal.clear(); } }
  if (!subIdeal.empty()) subIdeals.push_back(subIdeal); subIdeal.clear(); // ensure the last subideal makes it.
@@ -323,14 +301,21 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
      if (I2->empty()) subIdeals.erase(I2++); else I2++; 
      if (I2==I1) I2++;
     }
-  } 
+  } // end iteration I1 
 
+  // step 3 - check for the final PU application.
   for (I1=subIdeals.begin(); I1!=subIdeals.end(); I1++) for (i = I1->begin(); i!= I1->end(); i++)
-    ideal.push_back(*i);
+    ideal.push_back(*i); // re-assemble the big ideal.
+  reduceIdealSortStep(ideal); // TODO: correct if laurentPoly false
+  elementaryReductions(ideal); 
 
-  // we're done if subIdeals.size() <= 1. 
-  if (subIdeals.size() > 1)
+  // we're done if subIdeals.size() <= 1 and we haven't iterated this on the ideal at least once.
+
+  if (ideal.size() <= 1) return;
+
+  if ( (subIdeals.size() > 1) || ( (!subIdealSizeOne) && (subIdeals.size()==1) ) )
    {
+    if (subIdeals.size()==1) subIdealSizeOne = true;
     // check to see if any of the subideals have any room for amalgamation, if so great, amalgamate and reloop.
     // increment partition size if we aren't making progress...
     if (ideal.size()/cbs + ( (ideal.size() % cbs) == 0 ? 0 : 1 ) >= subIdeals.size() )  cbs++; 
@@ -341,7 +326,9 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
      if (!subIdeal.empty()) subIdeals.push_back(subIdeal); subIdeal.clear(); // ensure the last subideal makes it.
     goto reloop_loop; 
    }
- // we're done
+
+ elementaryReductions(ideal); 
+ reduceIdealSortStep(ideal); // TODO: correct if laurentPoly false
 }
 
 
