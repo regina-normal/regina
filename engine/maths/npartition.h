@@ -112,9 +112,13 @@ public:
          */
         std::string textString() const;
         /**
-         * Text output in form of a NBitMask
+         * Text output in form of a NBitMask.  If there are n elements in your
+         * set your output will be a binary string of length n, with entries
+         * either 0 or 1.  00...0 indicates the empty subset, 11...1 indicates 
+         * the entire set. 
          */
-        friend std::ostream& operator<<(std::ostream& output, const NPartition& out);
+        friend std::ostream& operator<<(std::ostream& output, 
+                                        const NPartition& out);
 };
 
 

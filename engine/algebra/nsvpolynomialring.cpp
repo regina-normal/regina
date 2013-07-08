@@ -90,7 +90,10 @@ NLargeInteger gcd(const std::vector< NLargeInteger > &input,
  return X.entry(0,0);
 }
 
-bool reduceByIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &ideal, NSVPolynomialRing< NLargeInteger > &elt, 
+// takes as input an element elt, and attempts to reduce it by the ideal. 
+//  returns true only if the element is found in the ideal, i.e. reduced to zero.
+bool reduceByIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &ideal, 
+                    NSVPolynomialRing< NLargeInteger > &elt, 
                     bool laurentPoly )
 {
  if (elt.isZero()) return true;  if (ideal.size()==0) return false; // trivial cases
@@ -168,9 +171,21 @@ void reduceIdealSortStep( std::list< NSVPolynomialRing< NLargeInteger > > &ideal
 
 
 // run through elements of idea, see if they can be killed by the others, if so, do so!
+// also if it finds more than one degree zero polynomial, replaces them by their GCD
 void elementaryReductions( std::list< NSVPolynomialRing< NLargeInteger > > &ideal )
 {
  std::list< NSVPolynomialRing< NLargeInteger > >::iterator i;
+
+ // amalgamate width zero terms
+ std::vector< NLargeInteger > deg0s;
+ for (i=ideal.begin(); i!=ideal.end(); i++)
+  if (i->width()==0) { deg0s.push_back( i->eval(1) ); }
+ if ( deg0s.size() > 1 ) {
+  std::vector< NLargeInteger > outG( deg0s.size() ), outN( deg0s.size() );
+  ideal.push_front( NSVPolynomialRing< NLargeInteger >(gcd( deg0s, outG, outN ), 0 ) ); }
+
+ // TODO: consider further possible reductions. 
+
  ideal.reverse();
  i = ideal.begin(); 
  while (i!=ideal.end())
@@ -194,6 +209,7 @@ void elementaryReductions( std::list< NSVPolynomialRing< NLargeInteger > > &idea
 void pauer_unterkircher( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool laurentPoly )
 {
  if (ideal.size() < 2) return;
+
  reloop_loop:
  bool didSomething=false;
  std::list< NSVPolynomialRing< NLargeInteger > >::iterator i; 
@@ -203,8 +219,9 @@ void pauer_unterkircher( std::list< NSVPolynomialRing< NLargeInteger > > &ideal,
  std::vector< NSVPolynomialRing< NLargeInteger > > vecIdeal; 
  for (i=ideal.begin(); i!=ideal.end(); i++) vecIdeal.push_back(*i);
  
- // Step 2: right GCDs -- ouch, easily get 2^32 length loop here. Can we optimise this? Perhaps for
- //         polynomials of a given width only use reps where we can produce interesting GCDs...
+ // Step 2: right GCDs -- ouch, easily get 2^32 length loop here. Can we 
+ //         optimise this? Perhaps for polynomials of a given width only use 
+ //         reps where we can produce interesting GCDs...
  NPartition subSet( ideal.size(), 2, false );
  while (!subSet.atEnd())
   {
@@ -214,13 +231,16 @@ void pauer_unterkircher( std::list< NSVPolynomialRing< NLargeInteger > > &ideal,
    signed long maxExp( vecIdeal[0].lastTerm().first );
    for (unsigned long j=0; j<leadV.size(); j++) 
      { leadV[j] = vecIdeal[subsetV[j]].lastTerm().second;
-       if (vecIdeal[subsetV[j]].lastTerm().first > maxExp) maxExp = vecIdeal[subsetV[j]].lastTerm().first; }
+       if (vecIdeal[subsetV[j]].lastTerm().first > maxExp) maxExp = 
+          vecIdeal[subsetV[j]].lastTerm().first; }
    std::vector< NLargeInteger > gcdV(subsetV.size()), killV(subsetV.size());
    gcd( leadV, gcdV, killV );
    NSVPolynomialRing< NLargeInteger > combo;
    for (unsigned long j=0; j<killV.size(); j++)
-    combo += NSVPolynomialRing< NLargeInteger >(killV[j],maxExp - vecIdeal[subsetV[j]].lastTerm().first)*vecIdeal[subsetV[j]];
-   if (!reduceByIdeal( ideal, combo ) ) { ideal.push_back(combo); vecIdeal.push_back(combo); didSomething = true; }
+    combo += NSVPolynomialRing< NLargeInteger >(killV[j],maxExp - 
+             vecIdeal[subsetV[j]].lastTerm().first)*vecIdeal[subsetV[j]];
+   if (!reduceByIdeal( ideal, combo ) ) { ideal.push_back(combo); 
+      vecIdeal.push_back(combo); didSomething = true; }
    ++subSet;
   }
 
@@ -237,22 +257,30 @@ void pauer_unterkircher( std::list< NSVPolynomialRing< NLargeInteger > > &ideal,
    signed long minExp( vecIdeal[0].firstTerm().first );
    for (unsigned long j=0; j<leadV.size(); j++) 
      { leadV[j] = vecIdeal[subsetV[j]].firstTerm().second;
-       if (vecIdeal[subsetV[j]].firstTerm().first < minExp) minExp = vecIdeal[subsetV[j]].firstTerm().first; }
+       if (vecIdeal[subsetV[j]].firstTerm().first < minExp) minExp = 
+           vecIdeal[subsetV[j]].firstTerm().first; }
    std::vector< NLargeInteger > gcdV(subsetV.size()), killV(subsetV.size());
    gcd( leadV, gcdV, killV );
    NSVPolynomialRing< NLargeInteger > combo;
    for (unsigned long j=0; j<killV.size(); j++)
-    combo += NSVPolynomialRing< NLargeInteger >(killV[j],minExp - vecIdeal[subsetV[j]].firstTerm().first)*vecIdeal[subsetV[j]];
-   if (!reduceByIdeal( ideal, combo ) ) { ideal.push_back(combo); vecIdeal.push_back(combo); didSomething = true; }
+    combo += NSVPolynomialRing< NLargeInteger >(killV[j],minExp - 
+             vecIdeal[subsetV[j]].firstTerm().first)*vecIdeal[subsetV[j]];
+   if (!reduceByIdeal( ideal, combo ) ) { ideal.push_back(combo); 
+        vecIdeal.push_back(combo); didSomething = true; }
    ++subSet;
   }
- if (didSomething) { reduceIdealSortStep(ideal); elementaryReductions(ideal); goto reloop_loop; }
+ if (didSomething) { reduceIdealSortStep(ideal); elementaryReductions(ideal); 
+                      goto reloop_loop; }
 }
 
 /**
  *  Given a finitely-generated ideal in Z[t^\pm 1] this turns the ideal
  * into a Groebner basis for the ideal.  This is specifically for 
  * Laurent polynomial rings. 
+ *
+ * TODO: it still outputs junk like < 4, 6, -1+3t+t^2 >
+ *   and < 2,1-t+t^2>, <2,1+t-t^2> which are the same... fix!
+ *   the first thing is a real problem, the 2nd is an issue of presentation. 
  */
 void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool laurentPoly )
 { 
@@ -287,6 +315,7 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
 
  reloop_loop:
  // we'll apply pauer-unterkircher to *I1, and use it to reduce *I2 for all I1!=I2
+
  for (I1=subIdeals.begin(); I1!=subIdeals.end(); I1++)
   { 
    pauer_unterkircher( *I1, laurentPoly ); 
@@ -308,9 +337,7 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
     ideal.push_back(*i); // re-assemble the big ideal.
   reduceIdealSortStep(ideal); // TODO: correct if laurentPoly false
   elementaryReductions(ideal); 
-
   // we're done if subIdeals.size() <= 1 and we haven't iterated this on the ideal at least once.
-
   if (ideal.size() <= 1) return;
 
   if ( (subIdeals.size() > 1) || ( (!subIdealSizeOne) && (subIdeals.size()==1) ) )
@@ -326,7 +353,6 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, bool l
      if (!subIdeal.empty()) subIdeals.push_back(subIdeal); subIdeal.clear(); // ensure the last subideal makes it.
     goto reloop_loop; 
    }
-
  elementaryReductions(ideal); 
  reduceIdealSortStep(ideal); // TODO: correct if laurentPoly false
 }

@@ -69,6 +69,9 @@ namespace regina {
  *
  * @author Ryan Budney
  */
+// TODO: currently width returns zero for both a zero polynomial and a monomial. 
+//       like kt^j.  We should migrate to monomials being width 1, but this will
+//       require fixing old code. 
 template <class T>
 class NSVPolynomialRing {
     public:
@@ -106,10 +109,10 @@ class NSVPolynomialRing {
          */
         NSVPolynomialRing( signed long n, signed long m, signed long d );
 
-	/**
-	 * Destructor.
- 	 */
-	virtual ~NSVPolynomialRing();
+        /**
+         * Destructor.
+         */
+        virtual ~NSVPolynomialRing();
 
         /**
          * Creates a polynomial that is a clone of the given
@@ -125,48 +128,48 @@ class NSVPolynomialRing {
         NSVPolynomialRing<T>& operator = (const NSVPolynomialRing<T>& cloneMe);
 
         /**
-	 * Set a coefficient.
+         * Set a coefficient.
          */
         void setCoefficient (signed long i, const T& c);
 
         /**
-	 * Returns the product of two polynomials.
+         * Returns the product of two polynomials.
          */
         NSVPolynomialRing<T> operator * (const NSVPolynomialRing<T>& q) const;
 
         /**
-	 * Scalar multiplication of a polynomial.
+         * Scalar multiplication of a polynomial.
          */
         template <class F>
         friend NSVPolynomialRing<F> operator * (const F &k, const NSVPolynomialRing<F>& q);
 
-	/**
-	 * Returns the sum of two polynomials.
-	 */
-	NSVPolynomialRing<T> operator + (const NSVPolynomialRing<T>& q) const;
+        /**
+         * Returns the sum of two polynomials.
+         */
+        NSVPolynomialRing<T> operator + (const NSVPolynomialRing<T>& q) const;
 
-	/**
-	 * Returns the difference of two polynomials.
-	 */
-	NSVPolynomialRing<T> operator - (const NSVPolynomialRing<T>& q) const;
+        /**
+         * Returns the difference of two polynomials.
+        */
+        NSVPolynomialRing<T> operator - (const NSVPolynomialRing<T>& q) const;
 
         /**
          * Decrement operator. 
          */
-	NSVPolynomialRing<T>& operator -=(const NSVPolynomialRing<T>& q);
+        NSVPolynomialRing<T>& operator -=(const NSVPolynomialRing<T>& q);
 
         /**
          * Increment operator. 
          */
-	NSVPolynomialRing<T>& operator +=(const NSVPolynomialRing<T>& q);
+        NSVPolynomialRing<T>& operator +=(const NSVPolynomialRing<T>& q);
 
         /**
          * Negation operator. 
          */
-	NSVPolynomialRing<T> operator -() const;
+        NSVPolynomialRing<T> operator -() const;
 
         /**
-	 * Returns the the coefficient of t^i for this polynomial.
+         * Returns the the coefficient of t^i for this polynomial.
          */
         const T& operator[](signed long i) const;
 
@@ -176,7 +179,7 @@ class NSVPolynomialRing {
         bool operator == (const NSVPolynomialRing<T>& other) const;
 
         /**
-	 * Determines if two polynomials are not equal.
+         * Determines if two polynomials are not equal.
          */
         bool operator != (const NSVPolynomialRing<T>& other) const;
 
