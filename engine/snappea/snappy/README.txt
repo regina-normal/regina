@@ -2,7 +2,8 @@ Code from SnapPy
 ----------------
 
 This directory contains additional code from SnapPy that is not included in
-the SnapPea kernel.  This code is currently synced with SnapPy version 1.3.
+the SnapPea kernel.  This code is currently synced with SnapPy version 1.8.0
+(19 May 2013).
 
 SnapPy is released under the terms of the GNU General Public License.
 
