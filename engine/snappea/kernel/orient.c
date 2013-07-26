@@ -220,7 +220,7 @@ void extend_orientation(
     if (manifold->orientability == oriented_manifold
      && (   queue_first != manifold->num_tetrahedra
          || queue_last  != manifold->num_tetrahedra - 1))
-        uFatalError("orient", "orient.c");
+        uFatalError("orient", "orient");
 
     /*
      *  Another error check.
@@ -228,7 +228,7 @@ void extend_orientation(
      *  compute the Chern-Simons invariant.
      */
     if (manifold->CS_value_is_known || manifold->CS_fudge_is_known)
-        uFatalError("orient", "orient.c");
+        uFatalError("orient", "orient");
 
     /*
      *  Respect the conventions for peripheral curves and
@@ -798,7 +798,7 @@ void fix_peripheral_orientations(
      *  This function should get called only for orientable manifolds.
      */
     if (manifold->orientability != oriented_manifold)
-        uFatalError("fix_peripheral_orientations", "orient.c");
+        uFatalError("fix_peripheral_orientations", "orient");
 
     /*
      *  Compute the intersection number of the meridian and longitude.
@@ -830,7 +830,7 @@ void fix_peripheral_orientations(
 
                         if (tet->curve[M][left_handed][v][f] != 0.0
                          || tet->curve[L][left_handed][v][f] != 0.0)
-                            uFatalError("fix_peripheral_orientations", "orient.c");
+                            uFatalError("fix_peripheral_orientations", "orient");
                     }
 
     /*

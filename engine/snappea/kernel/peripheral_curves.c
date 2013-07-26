@@ -423,7 +423,7 @@ static void attach_extra(
          *  field in the Tetrahedron data structure.
          */
         if (tet->extra != NULL)
-            uFatalError("attach_extra", "peripheral_curves.c");
+            uFatalError("attach_extra", "peripheral_curves");
 
         /*
          *  Attach the locally defined struct extra.
@@ -546,7 +546,7 @@ static void pick_base_tet(
      *  If pick_base_tet() didn't find any vertex belonging
      *  to the specified cusp, we're in big trouble.
      */
-    uFatalError("pick_base_tet", "peripheral_curves.c");
+    uFatalError("pick_base_tet", "peripheral_curves");
 }
 
 

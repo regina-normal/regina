@@ -21,7 +21,7 @@ void bundle_LR_to_monodromy(
      *  The factorization should be available.
      */
     if (anLRFactorization->is_available == FALSE)
-        uFatalError("bundle_LR_to_monodromy", "punctured_torus_bundles.c");
+        uFatalError("bundle_LR_to_monodromy", "punctured_torus_bundles");
 
     /*
      *  Initialize aMonodromy to the identity.
@@ -60,7 +60,7 @@ void bundle_LR_to_monodromy(
                 break;
 
             default:
-                uFatalError("bundle_LR_to_monodromy", "punctured_torus_bundles.c");
+                uFatalError("bundle_LR_to_monodromy", "punctured_torus_bundles");
         }
 
     /*
@@ -275,7 +275,7 @@ void bundle_monodromy_to_LR(
             d -= c;
         }
         else
-            uFatalError("bundle_monodromy_to_LR", "punctured_torus_bundles.c");
+            uFatalError("bundle_monodromy_to_LR", "punctured_torus_bundles");
     }
 
     /*
@@ -413,7 +413,7 @@ void bundle_monodromy_to_LR(
      *  First an error check.
      */
     if (a < 0 || b < 0 || c < 0 || d < 0)
-        uFatalError("bundle_monodromy_to_LR", "punctured_torus_bundles.c");
+        uFatalError("bundle_monodromy_to_LR", "punctured_torus_bundles");
 
     /*
      *  Take a dry run through the algorithm to count
@@ -557,7 +557,7 @@ Triangulation *triangulate_punctured_torus_bundle(
                 theFactorizationContainsAnR = TRUE;
                 break;
             default:
-                uFatalError("triangulate_punctured_torus_bundle", "punctured_torus_bundles.c");
+                uFatalError("triangulate_punctured_torus_bundle", "punctured_torus_bundles");
         }
     if
     (
@@ -988,7 +988,7 @@ Triangulation *triangulate_punctured_torus_bundle(
          *  If necessary, it would be very easy to write code
          *  to discover the indexing scheme on the tet.
          */
-        uFatalError("triangulate_punctured_torus_bundle", "punctured_torus_bundle.c");
+        uFatalError("triangulate_punctured_torus_bundle", "punctured_torus_bundle");
     }
 
     /*
@@ -1038,7 +1038,7 @@ Triangulation *triangulate_punctured_torus_bundle(
                             signed_intersections[L],
                             &m10,
                             &m11) != 1)
-        uFatalError("triangulate_punctured_torus_bundle", "punctured_torus_bundle.c");
+        uFatalError("triangulate_punctured_torus_bundle", "punctured_torus_bundle");
     change_matrices[0][1][0] = m10;
     change_matrices[0][1][1] = m11;
 
@@ -1062,7 +1062,7 @@ Triangulation *triangulate_punctured_torus_bundle(
             break;
 
         default:
-            uFatalError("triangulate_punctured_torus_bundle", "punctured_torus_bundle.c");
+            uFatalError("triangulate_punctured_torus_bundle", "punctured_torus_bundle");
     }
 
     /*

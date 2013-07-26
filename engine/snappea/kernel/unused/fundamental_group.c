@@ -593,7 +593,7 @@ static void compute_one_edge_relation(
      *  nominally at least two of them.)
      */
     if (edge->num_incident_generators < 2)
-        uFatalError("compute_one_edge_relation", "fundamental_group.c");
+        uFatalError("compute_one_edge_relation", "fundamental_group");
 
     /*
      *  Initialize the new_word, and install it on the linked list.
@@ -642,7 +642,7 @@ static void compute_one_edge_relation(
                 break;
 
             default:
-                uFatalError("compute_one_edge_relation", "fundamental_group.c");
+                uFatalError("compute_one_edge_relation", "fundamental_group");
         }
 
         if (index != 0)
@@ -662,7 +662,7 @@ static void compute_one_edge_relation(
      *  Did we find the right number of generators?
      */
     if (new_word->itsLength != edge->num_incident_generators)
-        uFatalError("compute_one_edge_relation", "fundamental_group.c");
+        uFatalError("compute_one_edge_relation", "fundamental_group");
 
     /*
      *  Give new_word a valid pointer to the circular doubly linked list
@@ -809,7 +809,7 @@ static void compute_peripheral_word(
                 break;
 
             default:
-                uFatalError("compute_peripheral_word", "fundamental_group.c");
+                uFatalError("compute_peripheral_word", "fundamental_group");
         }
 
         if (index != 0)
@@ -955,7 +955,7 @@ static void find_standard_basepoint(
      *  If we get to this point, it means that no intersection
      *  was found, which is impossible.
      */
-    uFatalError("find_standard_basepoint", "fundamental_group.c");
+    uFatalError("find_standard_basepoint", "fundamental_group");
 }
 
 
@@ -1016,7 +1016,7 @@ static void find_curve_start(
              *  Make sure it worked out like we planned.
              */
             if (0 >= ptet->tet->curve[which_curve][ptet->orientation][ptet->bottom_face][ptet->near_face])
-                uFatalError("find_curve_start", "fundamental_group.c");
+                uFatalError("find_curve_start", "fundamental_group");
 
             return;
         }
@@ -1026,7 +1026,7 @@ static void find_curve_start(
      *  We should find a negative intersection number somewhere within
      *  the above loop, so we should never get to this point.
      */
-    uFatalError("find_curve_start", "fundamental_group.c");
+    uFatalError("find_curve_start", "fundamental_group");
 }
 
 
@@ -1045,7 +1045,7 @@ static void compute_Dehn_word(
      *  cusp->is_complete is FALSE, but we check anyhow.
      */
     if (m == 0  &&  l == 0)
-        uFatalError("compute_Dehn_word", "fundamental_group.c");
+        uFatalError("compute_Dehn_word", "fundamental_group");
 
     /*
      *  Initialize the new_word, and install it on the linked list.
@@ -1457,7 +1457,7 @@ static void remove_basepoint_in_word(
              *  Report an error if we've already found a basepoint before this one.
              */
             if (basepoint != NULL)
-                uFatalError("remove_basepoint_in_word", "fundamental_group.c");
+                uFatalError("remove_basepoint_in_word", "fundamental_group");
 
             basepoint = letter;
         }
@@ -1466,7 +1466,7 @@ static void remove_basepoint_in_word(
      *  Report an error if we found no basepoint.
      */
     if (basepoint == NULL)
-        uFatalError("remove_basepoint_in_word", "fundamental_group.c");
+        uFatalError("remove_basepoint_in_word", "fundamental_group");
 
 
     if (word->itsLength > 1)
@@ -1597,7 +1597,7 @@ static Boolean substring_occurs_in_group(
      */
 
     if (a == b || a == -b)
-        uFatalError("substring_occurs_in_group", "fundamental_group.c");
+        uFatalError("substring_occurs_in_group", "fundamental_group");
 
     /*
      *  Does the substring "ab" occur somewhere in the group?
@@ -1912,7 +1912,7 @@ static int compute_delta_runs(
                 /*
                  *  "aA" should not occur.
                  */
-                uFatalError("compute_delta_runs", "fundamental_group.c");
+                uFatalError("compute_delta_runs", "fundamental_group");
             else
             if (letter->next->itsValue ==  b)
                 /*
@@ -1944,7 +1944,7 @@ static int compute_delta_runs(
                     /*
                      *  "abB" should not occur.
                      */
-                    uFatalError("compute_delta_runs", "fundamental_group.c");
+                    uFatalError("compute_delta_runs", "fundamental_group");
                 else
                     /*
                      *  "abc" -> "aBbc" -> "ac"
@@ -1976,7 +1976,7 @@ static int compute_delta_runs(
                 /*
                  *  "aA" should not occur.
                  */
-                uFatalError("compute_delta_runs", "fundamental_group.c");
+                uFatalError("compute_delta_runs", "fundamental_group");
             else
             if (letter->prev->itsValue == -b)
                 /*
@@ -2008,7 +2008,7 @@ static int compute_delta_runs(
                     /*
                      *  "bBA" should not occur.
                      */
-                    uFatalError("compute_delta_runs", "fundamental_group.c");
+                    uFatalError("compute_delta_runs", "fundamental_group");
                 else
                     /*
                      *  "CBA" -> "CBbA" -> "CA"
@@ -2377,7 +2377,7 @@ static void eliminate_word(
      */
 
     if (generator_occurs_precisely_once_in_word(word, generator) == FALSE)
-        uFatalError("eliminate_word", "fundamental_group.c");
+        uFatalError("eliminate_word", "fundamental_group");
 
     /*
      *  Find the Letter containing the unique occurrence of the generator.
@@ -2602,7 +2602,7 @@ static Boolean insert_word_forwards(
      */
     if (word->itsLength == 0
      || target->itsLength == 0)
-        uFatalError("insert_word_forwards", "fundamental_group.c");
+        uFatalError("insert_word_forwards", "fundamental_group");
 
     /*
      *  More than half the Letters in word must cancel with letters in target.
@@ -2693,7 +2693,7 @@ static Boolean insert_word_backwards(
      */
     if (word->itsLength == 0
      || target->itsLength == 0)
-        uFatalError("insert_word_backwards", "fundamental_group.c");
+        uFatalError("insert_word_backwards", "fundamental_group");
 
     /*
      *  More than half the Letters in word must cancel with letters in target.
@@ -2979,7 +2979,7 @@ static CyclicWord *introduce_generator(
          || group->itsRelations->is_Dehn_relation == TRUE
         )
     )
-        uFatalError("introduce_generator", "fundamental_group.c");
+        uFatalError("introduce_generator", "fundamental_group");
 
     /*
      *  Create the new generator.
@@ -3141,7 +3141,7 @@ static void lens_space_recognition(
     if (group->itsRelations             == NULL
      || group->itsRelations->next       == NULL
      || group->itsRelations->next->next != NULL)
-        uFatalError("lens_space_recognition", "fundamental_group.c");
+        uFatalError("lens_space_recognition", "fundamental_group");
 
     /*
      *  Are both words of the form a^m = b^n ?
@@ -3310,7 +3310,7 @@ static Boolean lens_space_recognition_using_generator(
 
         if (insert_word_from_group(group) == FALSE)
 
-            uFatalError("lens_space_recognition_using_generator", "fundamental_group.c");
+            uFatalError("lens_space_recognition_using_generator", "fundamental_group");
 
     return TRUE;
 }
@@ -3438,7 +3438,7 @@ static void invert_generator_in_group(
     int                 a)
 {
     if (a < 1 || a > group->itsNumGenerators)
-        uFatalError("invert_generator_in_group", "fundamental_group.c");
+        uFatalError("invert_generator_in_group", "fundamental_group");
 
     o31_invert(group->itsMatrices[a - 1], group->itsMatrices[a - 1]);
 
@@ -3678,7 +3678,7 @@ static void conjugate_peripheral_words(
     {
         if (theMeridian  == NULL
          || theLongitude == NULL)
-            uFatalError("conjugate_peripheral_words", "fundamental_group.c");
+            uFatalError("conjugate_peripheral_words", "fundamental_group");
 
         /*
          *  Conjugate as necessary.
@@ -3753,7 +3753,7 @@ static void conjugate_word(
      *  pointing to the dummy basepoint Letter.
      */
     if (word->itsLetters->itsValue != 0)
-        uFatalError("conjugate_word", "fundamental_group.c");
+        uFatalError("conjugate_word", "fundamental_group");
 
     new_letter              = NEW_STRUCT(Letter);
     new_letter->itsValue    = value;
@@ -3926,7 +3926,7 @@ static void handle_slide(
      *  a and b should be distinct generators.
      */
     if (a == b || a == -b)
-        uFatalError("handle_slide", "fundamental_group.c");
+        uFatalError("handle_slide", "fundamental_group");
 
     /*
      *  Fix up the relations.
@@ -4109,7 +4109,7 @@ static void cancel_handles(
      *  Double check that the word has length one.
      */
     if (word->itsLength != 1)
-        uFatalError("cancel_handles", "fundamental_group.c");
+        uFatalError("cancel_handles", "fundamental_group");
 
     /*
      *  Which generator is being cancelled?
@@ -4171,7 +4171,7 @@ static void remove_word(
         list = &(*list)->next;
     }
 
-    uFatalError("remove_word", "fundamental_group.c");
+    uFatalError("remove_word", "fundamental_group");
 }
 
 
@@ -4435,7 +4435,7 @@ int *fg_get_relation(
     int                 which_relation)
 {
     if (which_relation < 0 || which_relation >= group->itsNumRelations)
-        uFatalError("fg_get_relation", "fundamental_group.c");
+        uFatalError("fg_get_relation", "fundamental_group");
 
     return fg_get_cyclic_word(group->itsRelations, which_relation);
 }
@@ -4446,7 +4446,7 @@ int *fg_get_meridian(
     int                 which_cusp)
 {
     if (which_cusp < 0 || which_cusp >= group->itsNumCusps)
-        uFatalError("fg_get_meridian", "fundamental_group.c");
+        uFatalError("fg_get_meridian", "fundamental_group");
 
     return fg_get_cyclic_word(group->itsMeridians, which_cusp);
 }
@@ -4457,7 +4457,7 @@ int *fg_get_longitude(
     int                 which_cusp)
 {
     if (which_cusp < 0 || which_cusp >= group->itsNumCusps)
-        uFatalError("fg_get_longitude", "fundamental_group.c");
+        uFatalError("fg_get_longitude", "fundamental_group");
 
     return fg_get_cyclic_word(group->itsLongitudes, which_cusp);
 }
@@ -4468,7 +4468,7 @@ int *fg_get_original_generator(
     int                 which_generator)
 {
     if (which_generator < 0 || which_generator >= group->itsNumOriginalGenerators)
-        uFatalError("fg_get_original_generator", "fundamental_group.c");
+        uFatalError("fg_get_original_generator", "fundamental_group");
 
     return fg_get_cyclic_word(group->itsOriginalGenerators, which_generator);
 }
@@ -4488,7 +4488,7 @@ static int *fg_get_cyclic_word(
         if (word != NULL)
             word = word->next;
     if (word == NULL)
-        uFatalError("fg_get_cyclic_word", "fundamental_group.c");
+        uFatalError("fg_get_cyclic_word", "fundamental_group");
 
     result = NEW_ARRAY(word->itsLength + 1, int);
     for (   i = 0, letter = word->itsLetters;

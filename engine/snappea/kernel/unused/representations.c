@@ -270,7 +270,7 @@ RepresentationList *find_representations(
      *  Begin with a quick error check.
      */
     if (manifold == NULL)
-        uFatalError("find_representations", "representations.c");
+        uFatalError("find_representations", "representations");
 
     /*
      *  Make sure the manifold has a set of generators.
@@ -1786,7 +1786,7 @@ static void compute_covering_type(
          *  so we should have assigned exactly n value to f().
          */
         if (count != n)
-            uFatalError("compute_covering_type", "representations.c");
+            uFatalError("compute_covering_type", "representations");
 
         /*
          *  The last time through the above loop we assigned no new

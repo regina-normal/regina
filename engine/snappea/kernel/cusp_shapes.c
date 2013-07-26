@@ -445,7 +445,7 @@ static PositionedTet find_start(
     /*
      *  The program should never get to this point.
      */
-    uFatalError("find_start", "cusp_shapes.c");
+    uFatalError("find_start", "cusp_shapes");
 
     /*
      *  The compiler would like a return value, even though

@@ -62,7 +62,7 @@ FuncResult change_peripheral_curves(
 
                 if (change_matrices[cusp->index][i][!i] != 0)
 
-                    uFatalError("change_peripheral_curves", "change_peripheral_curves.c");
+                    uFatalError("change_peripheral_curves", "change_peripheral_curves");
 
     /*
      *  Change the peripheral curves according to the change_matrices.

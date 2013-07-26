@@ -349,7 +349,7 @@ static void read_relations_from_group(
         for (j = 0; relation[j] != 0; j++)
         {
             if (ABS(relation[j]) > relation_matrix->num_columns)
-                uFatalError("read_relations_from_group", "homology.c");
+                uFatalError("read_relations_from_group", "homology");
 
             if (relation[j] > 0)
             {
@@ -473,7 +473,7 @@ static void find_edge_relations(
                     break;
 
                 default:
-                    uFatalError("find_edge_relations", "homology.c");
+                    uFatalError("find_edge_relations", "homology");
             }
 
             veer_left(&ptet);

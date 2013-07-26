@@ -1153,7 +1153,7 @@ static double distance_to_origin(
             /*
              *  The error is large.  Something went wrong.
              */
-            uFatalError("distance_to_origin", "length_spectrum.c");
+            uFatalError("distance_to_origin", "length_spectrum");
     }
 
     /*
@@ -1424,7 +1424,7 @@ static void make_conjugator_list(
      *  Do a quick error check.
      */
     if (*num_conjugators != num_translates)
-        uFatalError("make_conjugator_list", "length_spectrum.c");
+        uFatalError("make_conjugator_list", "length_spectrum");
 
     /*
      *  Sort the list by order of increasing basepoint translation
@@ -1981,7 +1981,7 @@ void ortholengths(
     theCount = 0;
     copy_tiling_tree_to_array(theTiling, theMatrixList, &theCount);
     if (theCount != theNumTranslates)
-        uFatalError("ortholengths", "ortholengths.c");
+        uFatalError("ortholengths", "ortholengths");
 
     //  Given the covering transformations, we now want to
     //

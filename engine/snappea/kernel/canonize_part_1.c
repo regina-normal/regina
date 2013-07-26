@@ -253,7 +253,7 @@ FuncResult proto_canonize(
          */
 
         if (++num_attempts > MAX_ATTEMPTS)
-            uFatalError("proto_canonize", "canonize_part_1.c");
+            uFatalError("proto_canonize", "canonize_part_1");
 
     } while (all_done == FALSE);
 
@@ -387,7 +387,7 @@ static Boolean attempt_three_to_two(
                      *  distinct.  But by Corolloary 3 of "Convex hulls..."
                      *  this cannot happen where the hull is concave.
                      */
-                    uFatalError("attempt_three_to_two", "canonize_part_1.c");
+                    uFatalError("attempt_three_to_two", "canonize_part_1");
             }
 
     return FALSE;

@@ -189,7 +189,7 @@ static Triangulation *try_Dirichlet_to_triangulation(
                     /* edge and nbr_edge point in opposite directions */
                     edge->tet[end][side]->neighbor[1] = nbr_edge->tet[end][!side];
                 else
-                    uFatalError("Dirichlet_to_triangulation", "Dirichlet_conversion.c");
+                    uFatalError("Dirichlet_to_triangulation", "Dirichlet_conversion");
 
                 /*
                  *  Neighbor[2] is associated to this same WEEdge.
@@ -302,7 +302,7 @@ static Boolean singular_set_is_empty(
 
         if (edge_class->singularity_order >= 2)
 
-            uFatalError("singular_set_is_empty", "Dirichlet_conversion.c");
+            uFatalError("singular_set_is_empty", "Dirichlet_conversion");
 
     for (face_class = polyhedron->face_class_begin.next;
          face_class != &polyhedron->face_class_end;
@@ -310,7 +310,7 @@ static Boolean singular_set_is_empty(
 
         if (face_class->num_elements != 2)
 
-            uFatalError("singular_set_is_empty", "Dirichlet_conversion.c");
+            uFatalError("singular_set_is_empty", "Dirichlet_conversion");
 
     /*
      *  No singularities are present.

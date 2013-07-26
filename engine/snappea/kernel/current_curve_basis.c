@@ -171,7 +171,7 @@ void install_current_curve_bases(
     {
         if (cusp->index < 0
          || cusp->index >= manifold->num_cusps)
-            uFatalError("install_current_curve_bases", "current_curve_basis.c");
+            uFatalError("install_current_curve_bases", "current_curve_basis");
 
         current_curve_basis_on_cusp(cusp, change_matrices[cusp->index]);
     }
@@ -182,7 +182,7 @@ void install_current_curve_bases(
 
     if (change_peripheral_curves(manifold, change_matrices) != func_OK)
 
-        uFatalError("install_current_curve_bases", "current_curve_basis.c");
+        uFatalError("install_current_curve_bases", "current_curve_basis");
 
     /*
      *  Free the array used to store the change of basis matrices.

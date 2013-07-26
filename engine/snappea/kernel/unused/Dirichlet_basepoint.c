@@ -603,14 +603,14 @@ static void verify_gen_list(
      */
 
     if (num_matrix_pairs < 2)
-        uFatalError("verify_gen_list", "Dirichlet_basepoint.c");
+        uFatalError("verify_gen_list", "Dirichlet_basepoint");
 
     /*
      *  The first MatrixPair on gen_list should be the identity.
      */
 
     if (gen_list->begin.next->height > 1.0 + IDENTITY_EPSILON)
-        uFatalError("verify_gen_list", "Dirichlet_basepoint.c");
+        uFatalError("verify_gen_list", "Dirichlet_basepoint");
 
     /*
      *  We want the MatrixPairs to be in order of increasing image height.
@@ -623,7 +623,7 @@ static void verify_gen_list(
 
         if (matrix_pair->height < matrix_pair->prev->height)
 
-            uFatalError("verify_gen_list", "Dirichlet_basepoint.c");
+            uFatalError("verify_gen_list", "Dirichlet_basepoint");
 }
 
 
@@ -946,7 +946,7 @@ static void linear_programming(
      *  step size constraints were written.)
      */
     if (solve_three_equations(active_constraints, apex) == func_failed)
-        uFatalError("linear_programming", "Dirichlet_basepoint.c");
+        uFatalError("linear_programming", "Dirichlet_basepoint");
 
     /*
      *  For future reference, set apex_height to the value of the
@@ -1519,7 +1519,7 @@ static void sort_gen_list(
      *  the right number of elements.
      */
     if (i != num_matrix_pairs)
-        uFatalError("sort_gen_list", "Dirichlet_basepoint.c");
+        uFatalError("sort_gen_list", "Dirichlet_basepoint");
 
     /*
      *  Sort the array of pointers.

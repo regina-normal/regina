@@ -263,7 +263,7 @@ FuncResult split_along_normal_surface(
      *  The present version of the software assumes all cusps are complete.
      */
     if (all_cusps_are_complete(surface_list->triangulation) == FALSE)
-        uFatalError("split_along_normal_surface", "normal_surface_splitting.c");
+        uFatalError("split_along_normal_surface", "normal_surface_splitting");
     
     /*
      *  Subdivide the manifold.  The result may or may not be connected.
@@ -371,7 +371,7 @@ static void install_normal_surface(
     VertexIndex v;
 
     if (index < 0 || index >= surface_list->num_normal_surfaces)
-        uFatalError("install_normal_surface", "normal_surface_splitting.c");
+        uFatalError("install_normal_surface", "normal_surface_splitting");
     
     for (old_tet = surface_list->triangulation->tet_list_begin.next;
          old_tet != &surface_list->triangulation->tet_list_end;
@@ -435,7 +435,7 @@ static Triangulation *subdivide_manifold(
                 new_cusps[1] = NULL;
             }
             else
-                uFatalError("subdivide_manifold", "normal_surface_splitting.c");
+                uFatalError("subdivide_manifold", "normal_surface_splitting");
             break;
         
         case 0:
@@ -461,7 +461,7 @@ static Triangulation *subdivide_manifold(
             break;
         
         default:
-            uFatalError("subdivide_manifold", "normal_surface_splitting.c");
+            uFatalError("subdivide_manifold", "normal_surface_splitting");
     }
 
     /*
@@ -627,7 +627,7 @@ static void copy_cusps(
     
     if (subdivision->num_cusps != 0
      || subdivision->cusp_list_begin.next != &subdivision->cusp_list_end)
-            uFatalError("copy_cusps", "normal_surface_splitting.c");
+            uFatalError("copy_cusps", "normal_surface_splitting");
     
     for (cusp = manifold->cusp_list_begin.next;
          cusp != &manifold->cusp_list_end;
@@ -637,7 +637,7 @@ static void copy_cusps(
         initialize_cusp(cusp->matching_cusp);
         
         if (cusp->is_complete != TRUE)
-            uFatalError("copy_cusps", "normal_surface_splitting.c");
+            uFatalError("copy_cusps", "normal_surface_splitting");
         
         cusp->matching_cusp->topology       = cusp->topology;
         cusp->matching_cusp->is_complete    = TRUE;
@@ -651,7 +651,7 @@ static void copy_cusps(
     }
     
     if (subdivision->num_cusps != manifold->num_cusps)
-        uFatalError("copy_cusps", "normal_surface_splitting.c");
+        uFatalError("copy_cusps", "normal_surface_splitting");
 }
 
 
@@ -1437,7 +1437,7 @@ static void distinguish_cusps(
                 break;
             }
     if (ivr_stack_size == 0)
-        uFatalError("distinguish_cusps", "normal_surface_splitting.c");
+        uFatalError("distinguish_cusps", "normal_surface_splitting");
 
     /*
      *  While the stack isn't empty...
@@ -1529,7 +1529,7 @@ static void separate_connected_components(
      *  put a pointer to it on the stack.
      */
     if (subdivision->tet_list_begin.next == &subdivision->tet_list_end)
-        uFatalError("separate_connected_components", "normal_surface_splitting.c");
+        uFatalError("separate_connected_components", "normal_surface_splitting");
     tet_stack[0] = subdivision->tet_list_begin.next;
     tet_stack_size = 1;
     tet_stack[0]->flag = TRUE;
@@ -1580,7 +1580,7 @@ static void separate_connected_components(
      *  A quick error check.
      */
     if ((subdivision->num_tetrahedra == 0) != (subdivision->tet_list_begin.next == &subdivision->tet_list_end))
-        uFatalError("separate_connected_components", "normal_surface_splitting.c");
+        uFatalError("separate_connected_components", "normal_surface_splitting");
 
     /*
      *  If any Tetrahedra remain in subdivision, transfer them to pieces[1].
@@ -1607,7 +1607,7 @@ static void separate_connected_components(
      *  Another quick error check.
      */
     if (subdivision->cusp_list_begin.next == &subdivision->cusp_list_end)
-        uFatalError("separate_connected_components", "normal_surface_splitting.c");
+        uFatalError("separate_connected_components", "normal_surface_splitting");
     
     /*
      *  If there's only one piece, transfer all the Cusps to it.
@@ -1658,7 +1658,7 @@ static void separate_connected_components(
                     cusp_index = tet->cusp[v]->index;
 
                     if (cusp_index < 0 || cusp_index >= subdivision->num_cusps)
-                        uFatalError("separate_connected_components", "normal_surface_splitting.c");
+                        uFatalError("separate_connected_components", "normal_surface_splitting");
 
                     switch (which_piece[cusp_index])
                     {
@@ -1667,17 +1667,17 @@ static void separate_connected_components(
                             break;
                         case 0:
                             if (i != 0)
-                                uFatalError("separate_connected_components", "normal_surface_splitting.c");
+                                uFatalError("separate_connected_components", "normal_surface_splitting");
                             break;
                         case 1:
                             if (i != 1)
-                                uFatalError("separate_connected_components", "normal_surface_splitting.c");
+                                uFatalError("separate_connected_components", "normal_surface_splitting");
                             break;
                     }
                 }
         for (i = 0; i < subdivision->num_cusps; i++)
             if (which_piece[i] == -1)
-                uFatalError("separate_connected_components", "normal_surface_splitting.c");
+                uFatalError("separate_connected_components", "normal_surface_splitting");
 
         /*
          *  The Cusps should be numbered consecutively within each piece,
@@ -1723,6 +1723,6 @@ static Tetrahedron *find_correctly_oriented_tet(
         
             return tet;
 
-    uFatalError("find_correctly_oriented_tet", "normal_surface_splitting.c");
+    uFatalError("find_correctly_oriented_tet", "normal_surface_splitting");
     return NULL;    /* provide a return value to keep the compiler happy */
 }

@@ -31,7 +31,7 @@ Cusp *find_cusp(
     /*
      *  No Cusp with the given index was found.
      */
-    uFatalError("find_cusp", "find_cusp.c");
+    uFatalError("find_cusp", "find_cusp");
 
     /*
      *  The C++ compiler would like a return value, even though

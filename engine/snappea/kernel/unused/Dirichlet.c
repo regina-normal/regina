@@ -451,7 +451,7 @@ void free_Dirichlet_domain(
     WEFaceClass     *dead_face_class;
 
     if (polyhedron == NULL)
-        uFatalError("free_Dirichlet_domain", "Dirichlet.c");
+        uFatalError("free_Dirichlet_domain", "Dirichlet");
 
     while (polyhedron->vertex_list_begin.next != &polyhedron->vertex_list_end)
     {
@@ -740,7 +740,7 @@ void change_basepoint(
                 generators, num_generators, displacement, vertex_epsilon,
                 interactivity, maximize_injectivity_radius);
         else
-            uFatalError("change_basepoint", "Dirichlet.c");
+            uFatalError("change_basepoint", "Dirichlet");
     }
 }
 
@@ -766,5 +766,5 @@ static void generators_from_polyhedron(
         o31_copy((*generators)[i], *face->group_element);
 
     if (i != *num_generators)
-        uFatalError("generators_from_polyhedron", "Dirichlet.c");
+        uFatalError("generators_from_polyhedron", "Dirichlet");
 }

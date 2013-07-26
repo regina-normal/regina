@@ -516,7 +516,7 @@ static void drill_tube(
         unique_cusp->cusp_shape[initial] = Zero;    /* force current_curve_basis() to ignore the cusp shape */
         current_curve_basis(manifold, 0, basis_change[0]);
         if (change_peripheral_curves(manifold, basis_change) != func_OK)
-            uFatalError("drill_tube", "finite_vertices.c");
+            uFatalError("drill_tube", "finite_vertices");
     }
 }
 

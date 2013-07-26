@@ -208,7 +208,7 @@ static void attach_canonize_info(
          *  Just to be safe . . .
          */
         if (tet->canonize_info != NULL)
-            uFatalError("attach_canonize_info", "canonize_part_2.c");
+            uFatalError("attach_canonize_info", "canonize_part_2");
 
         /*
          *  Attach the CanonizeInfo.
@@ -435,7 +435,7 @@ static Boolean cone_3_cell(
      */
 
     if (verify_coned_region(manifold) == FALSE)
-        uFatalError("cone_3_cell", "canonize_part_2.c");
+        uFatalError("cone_3_cell", "canonize_part_2");
 
     return TRUE;
 }
@@ -485,7 +485,7 @@ static Boolean expand_coned_region(
 
                         else    /* this should never occur */
 
-                            uFatalError("expand_coned_region", "canonize_part_2.c");
+                            uFatalError("expand_coned_region", "canonize_part_2");
                     }
 
     return FALSE;
@@ -513,7 +513,7 @@ static Boolean attempt_cancellation(
                  *  I don't think failure is possible, but if it is
                  *  I want to know about it.
                  */
-                uFatalError("attempt_cancellation", "canonize_part_2.c");
+                uFatalError("attempt_cancellation", "canonize_part_2");
         }
 
     return FALSE;
@@ -621,7 +621,7 @@ static Boolean eliminate_opaque_face(
 
                 else    /* this should never occur */
 
-                    uFatalError("expand_coned_region", "canonize_part_2.c");
+                    uFatalError("expand_coned_region", "canonize_part_2");
             }
 
     return FALSE;
