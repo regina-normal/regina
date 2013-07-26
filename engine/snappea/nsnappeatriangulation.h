@@ -59,7 +59,8 @@ class NTriangulation;
  * either a standard Regina triangulation or another SnapPea triangulation.
  *
  * Note that not all Regina triangulations can be represented in SnapPea
- * format.  You should always call isNull() to test whether any
+ * format, since Regina works with more general kinds of triangulation
+ * than SnapPea does.  You should always call isNull() to test whether any
  * Regina-to-SnapPea conversion was successful.
  *
  * This class is designed to act as the sole conduit between the Regina
@@ -149,8 +150,8 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * so this triangulation will not be affected if \a tri is later
          * changed or destroyed.
          *
-         * Note that, since Regina is written with a different purpose
-         * from SnapPea, not all Regina triangulations can be
+         * Note that, since Regina works with more general kinds of
+         * trianguations than SnapPea, not all Regina triangulations can be
          * represented in SnapPea format.  If the conversion is
          * unsuccessful, this will be marked as a null triangulation.
          * You should always test isNull() to determine whether the
@@ -192,8 +193,8 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          *
          * A null SnapPea triangulation can occur when converting unusual
          * types of Regina triangulation into SnapPea format, since
-         * Regina is written to deal with different types of triangulations
-         * from SnapPea.
+         * Regina is written to deal with more general types of triangulations
+         * than SnapPea.
          *
          * @return \c true if this is a null triangulation, or \c false
          * if this triangulation contains valid SnapPea data.
@@ -281,12 +282,49 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
         NMatrixInt* slopeEquations() const;
 
         /**
-         * Verifies that the face gluings from this SnapPea triangulation
-         * match the given NTriangulation from Regina.
+         * Constructs the canonical retriangulation of the canonical
+         * cell decomposition.
          *
-         * This is useful for developers, if you are not sure whether SnapPea
-         * will re-triangulate.  For end users, this function should not be
-         * required.
+         * The canonical cell decomposition is the one described in
+         * "Convex hulls and isometries of cusped hyperbolic 3-manifolds",
+         * Jeffrey R. Weeks, Topology Appl. 52 (1993), 127-149.
+         * The canoical retriangulation is defined as follows: If the
+         * canonical cell decomposition is already a triangulation then
+         * we leave it untouched.  Otherwise: (i) within each 3-cell of
+         * the original complex we introduce a new internal (finite)
+         * vertex and cone the 3-cell boundary to this new vertex, and
+         * (ii) for each 2-cell of the original complex we replace the
+         * two new cones on either side with a ring of tetrahedra surrounding
+         * a new edge that connects the two new vertices on either side.
+         * See canonize_part_2.c in the SnapPea source code for details.
+         *
+         * The resulting triangulation will be newly allocated, and it
+         * is the responsibility of the caller of this routine to destroy it.
+         *
+         * If for any reason either Regina or SnapPea are unable to
+         * construct the canonical retriangulation of the canonical cell
+         * decomposition, this routine will return 0.
+         *
+         * \warning This matches the triangulation produced by SnapPea's
+         * version of canonize().  However, it does not match the
+         * triangulation produced by SnapPy's version of canonize().
+         * This is because SnapPy returns an arbitrary simplicial subdivision
+         * of the canonical cell decomposition, whereas SnapPea follows
+         * this with a canonical retriangulation.
+         *
+         * \pre This is an ideal triangulation, not a closed triangulation.
+         *
+         * @return the canonical triangulation of the canonical cell
+         * decomposition, or 0 if this could not be constructed.
+         */
+        NTriangulation* canonize();
+
+        /**
+         * Verifies that the face gluings from this SnapPea triangulation
+         * match the given Regina triangulation precisely.
+         *
+         * This is useful if you are not sure whether SnapPea will relabel
+         * and/or retriangulate.
          *
          * This routine is equivalent to testing whether the given
          * triangulation is identical to the triangulation returned by
@@ -432,16 +470,15 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
             bool allowClosed);
 
         /**
-         * Creates a new Regina triangulation that mirrors the given
-         * SnapPea triangulation.
+         * Creates a new native Regina triangulation that mirrors the
+         * given raw SnapPea triangulation.
          *
-         * The resulting triangulation will be newly created, and it is
-         * the responsibility of the caller of this routine to
-         * eventually delete it.
+         * The resulting triangulation will be newly allocated, and it
+         * is the responsibility of the caller of this routine to destroy it.
          *
-         * @param tri the SnapPea triangulation to clone; this may be
-         * \c null, in which case \c null will be returned also.
-         * @return a new Regina triangulation.
+         * @param tri the SnapPea triangulation to clone.
+         * @return a corresponding Regina triangulation, or 0 if
+         * \a tri is a null pointer.
          */
         static NTriangulation* snapPeaToRegina(::Triangulation* tri);
 };

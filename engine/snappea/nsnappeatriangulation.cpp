@@ -83,6 +83,23 @@ double NSnapPeaTriangulation::volume(int& precision) const {
     return ::volume(snappeaData, &precision);
 }
 
+NTriangulation* NSnapPeaTriangulation::canonize() {
+    if (! snappeaData)
+        return 0;
+
+    ::Triangulation* tmp;
+    ::copy_triangulation(snappeaData, &tmp);
+
+    if (::canonize(tmp) != ::func_OK) {
+        ::free_triangulation(tmp);
+        return 0;
+    }
+
+    NTriangulation* ans = snapPeaToRegina(tmp);
+    ::free_triangulation(tmp);
+    return ans;
+}
+
 /**
  * Written by William Pettersson, 2011.
  */

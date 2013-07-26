@@ -63,6 +63,8 @@ void addNSnapPeaTriangulation() {
         .def("verifyTriangulation", &NSnapPeaTriangulation::verifyTriangulation)
         .def("toRegina", &NSnapPeaTriangulation::toRegina,
             return_value_policy<manage_new_object>())
+        .def("canonize", &NSnapPeaTriangulation::canonize,
+            return_value_policy<manage_new_object>())
         .def("dump", &NSnapPeaTriangulation::dump)
         .def("saveAsSnapPea", &NSnapPeaTriangulation::saveAsSnapPea)
         .def("kernelMessagesEnabled",
