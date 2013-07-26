@@ -268,7 +268,7 @@ void orient_edge_classes(
         if (relative_orientation != right_handed)
         {
             uAcknowledge("The triangulation has a cone-on-a-projective-plane singularity at the midpoint of an edge class.");
-            uFatalError("orient_edge_classes", "edge_classes.c");
+            uFatalError("orient_edge_classes", "edge_classes");
         }
     }
 }

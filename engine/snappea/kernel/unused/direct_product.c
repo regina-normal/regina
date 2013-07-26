@@ -349,7 +349,7 @@ static void compute_rank_zero_subgroup(
      */
 
     if (*the_list != NULL)
-        uFatalError("compute_rank_zero_subgroup", "direct_product.c");
+        uFatalError("compute_rank_zero_subgroup", "direct_product");
 
     /*
      *  Allocate the SymmetrySubgroup and initialize it
@@ -380,7 +380,7 @@ static void compute_rank_one_subgroups(
      */
 
     if (*the_list != NULL)
-        uFatalError("compute_rank_one_subgroups", "direct_product.c");
+        uFatalError("compute_rank_one_subgroups", "direct_product");
 
     /*
      *  For each element of the_group we compute the smallest normal
@@ -529,7 +529,7 @@ static void add_conjugates(
      *  Begin with a quick error check.
      */
     if (the_group->order != the_subset->group_order)
-        uFatalError("add_conjugates", "direct_product.c");
+        uFatalError("add_conjugates", "direct_product");
 
     /*
      *  For each element h in the_subset . . .
@@ -589,7 +589,7 @@ static void add_products(
      *  Begin with a quick error check.
      */
     if (the_group->order != the_subset->group_order)
-        uFatalError("add_products", "direct_product.c");
+        uFatalError("add_products", "direct_product");
 
     /*
      *  Allocate space for the_queue.
@@ -607,7 +607,7 @@ static void add_products(
      *  Make sure we found the number of elements we expected.
      */
     if (count != the_subset->subgroup_order)
-        uFatalError("add_products", "direct_product.c");
+        uFatalError("add_products", "direct_product");
 
     /*
      *  For each element on the_queue, compute the product with all
@@ -646,7 +646,7 @@ static void add_products(
      */
     if (the_subset->subgroup_order > the_subset->group_order
      || the_subset->group_order % the_subset->subgroup_order != 0)
-        uFatalError("add_products", "direct_product.c");
+        uFatalError("add_products", "direct_product");
 
     /*
      *  Free the_queue.
@@ -684,7 +684,7 @@ static Boolean subgroup_on_some_list(
      *  so in a group of order n it's a priori impossible to have more
      *  than (n-1) generators.)
      */
-    uFatalError("subgroup_on_some_list", "direct_product.c");
+    uFatalError("subgroup_on_some_list", "direct_product");
 
     /*
      *  The C++ compiler would like a return value, even though
@@ -718,7 +718,7 @@ static Boolean same_subgroup(
     int i;
 
     if (subgroupA->group_order != subgroupB->group_order)
-        uFatalError("same_subgroup", "direct_product.c");
+        uFatalError("same_subgroup", "direct_product");
 
     for (i = 0; i < subgroupA->group_order; i++)
         if (subgroupA->contains[i] != subgroupB->contains[i])
@@ -735,7 +735,7 @@ static Boolean is_subset(
     int i;
 
     if (subgroupA->group_order != subgroupB->group_order)
-        uFatalError("is_subset", "direct_product.c");
+        uFatalError("is_subset", "direct_product");
 
     for (i = 0; i < subgroupA->group_order; i++)
         if (subgroupA->contains[i] == TRUE
@@ -754,7 +754,7 @@ static SymmetrySubgroup *find_union(
     int                 i;
 
     if (subgroupA->group_order != subgroupB->group_order)
-        uFatalError("find_union", "direct_product.c");
+        uFatalError("find_union", "direct_product");
 
     the_union = new_symmetry_subgroup(subgroupA->group_order);
 
@@ -872,7 +872,7 @@ static Boolean theoremA(
     SymmetrySubgroup    *subgroup_K)
 {
     if (subgroup_H->group_order != subgroup_K->group_order)
-        uFatalError("theoremA", "direct_product.c");
+        uFatalError("theoremA", "direct_product");
 
     return(
         condition1(the_group, subgroup_H, subgroup_K)
@@ -898,7 +898,7 @@ static Boolean condition1(
 
     if (subgroup_H->contains[0] == FALSE
      || subgroup_K->contains[0] == FALSE)
-        uFatalError("condition1", "direct_product.c");
+        uFatalError("condition1", "direct_product");
 
     /*
      *  Now check that they have no other elements in common.
@@ -960,7 +960,7 @@ static Boolean condition3(
     if (subgroup_H->subgroup_order * subgroup_K->subgroup_order
         != the_group->order)
 
-        uFatalError("condition3", "direct_product.c");
+        uFatalError("condition3", "direct_product");
 
     return TRUE;
 }
@@ -1066,7 +1066,7 @@ static void set_up_index_conversion(
         }
 
     if (new_index != the_subgroup->subgroup_order)
-        uFatalError("set_up_index_conversion", "direct_product.c");
+        uFatalError("set_up_index_conversion", "direct_product");
 }
 
 

@@ -146,7 +146,7 @@
  *  doing several dozen Dehn fillings on each of thousands of cusped
  *  census manifolds, I got the
  *
- *      uFatalError("verify_mt_action", "dual_curves.c");
+ *      uFatalError("verify_mt_action", "dual_curves");
  *
  *  which indicated the previous value of BIG_MODULUS (namely 1e10)
  *  was not big enough ["too big"?  2002/11/05].
@@ -747,7 +747,7 @@ static void verify_mt_action(
          || complex_modulus(complex_div(complex_minus(fz, w), fz)) > FRACTIONAL_DIFF
         )
     )
-        uFatalError("verify_mt_action", "dual_curves.c");
+        uFatalError("verify_mt_action", "dual_curves");
 }
 
 
@@ -938,7 +938,7 @@ static void convert_tree_to_pointer_array(
      *  A quick error check.
      */
     if (count != *num_curves)
-        uFatalError("convert_tree_to_pointer_array", "dual_curves.c");
+        uFatalError("convert_tree_to_pointer_array", "dual_curves");
 }
 
 
@@ -1114,7 +1114,7 @@ void free_dual_curves(
         if (the_curves == NULL)
             return;
         else
-            uFatalError("free_dual_curves", "dual_curves.c");
+            uFatalError("free_dual_curves", "dual_curves");
     }
 
     /*

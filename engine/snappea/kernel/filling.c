@@ -107,7 +107,7 @@ Triangulation *fill_cusps(
          */
         at_least_one_cusp_is_left = check_fill_cusp_array(manifold, fill_cusp);
         if (at_least_one_cusp_is_left == FALSE)
-            uFatalError("fill_cusps", "filling.c");
+            uFatalError("fill_cusps", "filling");
     }
     else
     {
@@ -255,7 +255,7 @@ static Boolean check_fill_cusp_array(
         if (fill_cusp[cusp->index])
         {
             if (cusp_is_fillable_x(cusp) == FALSE)
-                uFatalError("check_fill_cusp_array", "filling.c");
+                uFatalError("check_fill_cusp_array", "filling");
         }
         else
             at_least_one_cusp_is_left = TRUE;

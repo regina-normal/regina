@@ -113,7 +113,7 @@ void allocate_cross_sections(
          *  are already allocated.
          */
         if (tet->cross_section != NULL)
-            uFatalError("allocate_cross_sections", "cusp_cross_sections.c");
+            uFatalError("allocate_cross_sections", "cusp_cross_sections");
 
         /*
          *  Allocate a VertexCrossSections structure.
@@ -137,7 +137,7 @@ void free_cross_sections(
          *  really are there.
          */
         if (tet->cross_section == NULL)
-            uFatalError("free_cross_sections", "cusp_cross_sections.c");
+            uFatalError("free_cross_sections", "cusp_cross_sections");
 
         /*
          *  Free the VertexCrossSections structure, and set the pointer
@@ -365,7 +365,7 @@ static void find_starting_point(
     /*
      *  We should never get to this point.
      */
-    uFatalError("find_starting_point", "cusp_cross_sections.c");
+    uFatalError("find_starting_point", "cusp_cross_sections");
 }
 
 

@@ -271,7 +271,7 @@ static void attach_extra(
          *  field in the Tetrahedron data structure.
          */
         if (tet->extra != NULL)
-            uFatalError("attach_extra", "filling.c");
+            uFatalError("attach_extra", "filling");
 
         /*
          *  Attach the locally defined struct extra.

@@ -418,7 +418,7 @@ void get_tet_shape(
      */
 
     if (which_tet < 0 || which_tet >= manifold->num_tetrahedra)
-        uFatalError("get_tet_shape", "interface.c");
+        uFatalError("get_tet_shape", "interface");
 
     /*
      *  Find the Tetrahedron in position which_tet.
@@ -436,7 +436,7 @@ void get_tet_shape(
      */
 
     if (tet == &manifold->tet_list_end)
-        uFatalError("get_tet_shape", "interface.c");
+        uFatalError("get_tet_shape", "interface");
 
     /*
      *  If fixed_alignment is TRUE, use a fixed coordinate system.

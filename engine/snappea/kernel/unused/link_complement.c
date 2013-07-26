@@ -418,7 +418,7 @@ static void add_nugatory_crossings_to_free_loops(
                 j;
     
     if (internal_link_projection->num_free_loops <= 0)
-        uFatalError("add_nugatory_crossings_to_free_loops", "link_complement.c");
+        uFatalError("add_nugatory_crossings_to_free_loops", "link_complement");
 
     /*
      *  Transfer the existing crossings to a bigger array.
@@ -463,7 +463,7 @@ static void add_nugatory_crossings_to_free_loops(
         {
             next_component++;
             if (next_component == internal_link_projection->num_components)
-                uFatalError("add_nugatory_crossings_to_free_loops", "link_complement.c");
+                uFatalError("add_nugatory_crossings_to_free_loops", "link_complement");
         }
         
         new_crossing->component[KLPStrandX] = next_component;
@@ -497,7 +497,7 @@ static void resize_crossing_array(
                 k;
 
     if (new_array_size < internal_link_projection->num_crossings)
-        uFatalError("resize_crossing_array", "link_complement.c");
+        uFatalError("resize_crossing_array", "link_complement");
     
     old_array = internal_link_projection->crossings;
     new_array = NEW_ARRAY(new_array_size, LCCrossing);
@@ -592,7 +592,7 @@ static Boolean projection_is_connected(
      */
     if (internal_link_projection->num_components == 0
      || internal_link_projection->num_free_loops > 0)
-        uFatalError("projection_is_connected", "link_complement.c");
+        uFatalError("projection_is_connected", "link_complement");
 
     /*
      *  Mark all crossings as unvisited.
@@ -646,7 +646,7 @@ static Boolean projection_is_connected(
      *  Do a quick "unnecessary" error check.
      */
     if (queue_end > internal_link_projection->num_crossings - 1)
-        uFatalError("projection_is_connected", "link_complement.c");
+        uFatalError("projection_is_connected", "link_complement");
 
     /*
      *  Free the queue.
@@ -798,7 +798,7 @@ static void make_all_components_have_crossings(
      *  The caller should have already checked that there are no free loops.
      */
     if (internal_link_projection->num_free_loops != 0)
-        uFatalError("make_all_components_have_crossings", "link_complement.c");
+        uFatalError("make_all_components_have_crossings", "link_complement");
     
     undercrossing_flags = NEW_ARRAY(internal_link_projection->num_components, Boolean);
     overcrossing_flags  = NEW_ARRAY(internal_link_projection->num_components, Boolean);
@@ -824,7 +824,7 @@ static void make_all_components_have_crossings(
                 break;
 
             default:
-                uFatalError("make_all_components_have_crossings", "link_complement.c");
+                uFatalError("make_all_components_have_crossings", "link_complement");
         }
 
     for (i = 0; i < internal_link_projection->num_components; i++)
@@ -857,7 +857,7 @@ static void add_nugatory_crossing(
      *  The caller should have already checked that there are no free loops.
      */
     if (internal_link_projection->num_free_loops != 0)
-        uFatalError("add_nugatory_crossing", "link_complement.c");
+        uFatalError("add_nugatory_crossing", "link_complement");
 
     /*
      *  Make room for the new crossing.
@@ -884,7 +884,7 @@ static void add_nugatory_crossing(
         if (internal_link_projection->crossings[i].component[KLPStrandX] == component_index)
             crossingA = &internal_link_projection->crossings[i];
     if (crossingA == NULL)
-        uFatalError("add_nugatory_crossing", "link_complement.c");
+        uFatalError("add_nugatory_crossing", "link_complement");
 
     /*
      *  Let crossingC be the crossing which follows crossingA

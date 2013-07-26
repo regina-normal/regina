@@ -82,7 +82,7 @@ FuncResult compute_closed_isometry(
      || all_cusps_are_filled(manifold1) == FALSE
      || all_Dehn_coefficients_are_relatively_prime_integers(manifold1) == FALSE)
     {
-        uFatalError("compute_closed_isometry", "isometry_closed.c");
+        uFatalError("compute_closed_isometry", "isometry_closed");
     }
 
     /*

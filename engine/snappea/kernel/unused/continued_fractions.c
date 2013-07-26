@@ -260,7 +260,7 @@ Boolean appears_rational(
      *  within MAX_ITERATIONS of the algorithm.  So we should
      *  never reach this point.
      */
-    uFatalError("appears_rational", "continued_fractions.c");
+    uFatalError("appears_rational", "continued_fractions");
 
     /*
      *  We'll never get past the uFatalError() call,

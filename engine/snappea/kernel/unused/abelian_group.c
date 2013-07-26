@@ -192,7 +192,7 @@ void expand_abelian_group(
             array_of_pointers[i] = this_prime_power;
 
         if (this_prime_power != NULL)
-            uFatalError("expand_abelian_group", "abelian_group.c");
+            uFatalError("expand_abelian_group", "abelian_group");
 
         qsort(array_of_pointers, num_prime_powers, sizeof(PrimePower *), compare_prime_powers);
 

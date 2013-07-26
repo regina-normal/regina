@@ -267,7 +267,7 @@ double birectangular_tetrahedron_volume(
                 - cos(beta) * cos(beta);
 
     if (big_delta >= 0.0)
-        uFatalError("birectangular_tetrahedron_volume", "volume.c");
+        uFatalError("birectangular_tetrahedron_volume", "volume");
 
     delta = atan(   safe_sqrt( - big_delta) /
                     (cos(alpha) * cos(gamma)) );

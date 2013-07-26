@@ -384,7 +384,7 @@ static Tetrahedron *get_tet(
     /*
      *  If we get to here, something went wrong.
      */
-    uFatalError("get_tet", "simplify_triangulation.c");
+    uFatalError("get_tet", "simplify_triangulation");
 
     /*
      *  The C++ compiler would like a return value, even though
@@ -588,7 +588,7 @@ static FuncResult remove_edge_of_order_one(
      */
 
     if (tet->shape[complete] != NULL)
-        uFatalError("remove_edge_of_order_one", "simplify_triangulation.c");
+        uFatalError("remove_edge_of_order_one", "simplify_triangulation");
 
     /*
      *  Let bottom_face be a candidate face for performing the
@@ -613,7 +613,7 @@ static FuncResult remove_edge_of_order_one(
      || edge->order != 2
      || cancel_tetrahedra(edge, where_to_resume, num_tetrahedra_ptr) == func_failed
     )
-        uFatalError("remove_edge_of_order_one", "simplify_triangulation.c");
+        uFatalError("remove_edge_of_order_one", "simplify_triangulation");
 
     return func_OK;
 }
@@ -649,7 +649,7 @@ static Boolean this_way_works(
      *  that the triangulation cannot be simplified.  JRW  2002/08/26
      */
     if (tet->neighbor[bottom_face] == tet)
-/*      uFatalError("this_way_works", "simplify_triangulation.c");  */
+/*      uFatalError("this_way_works", "simplify_triangulation");    */
         return FALSE;
 
     /*
@@ -721,7 +721,7 @@ FuncResult cancel_tetrahedra(
      */
 
     if (edge->order != 2)
-        uFatalError("cancel_tetrahedra", "simplify_triangulation.c");
+        uFatalError("cancel_tetrahedra", "simplify_triangulation");
 
     /*
      *  Let tet[0] and tet[1] be the two Tetrahedra incident
@@ -740,7 +740,7 @@ FuncResult cancel_tetrahedra(
 
     if (tet[0]->neighbor[v[0][2]] != tet[0]->neighbor[v[0][3]]
      || tet[0]->gluing  [v[0][2]] != tet[0]->gluing  [v[0][3]])
-        uFatalError("cancel_tetrahedra", "simplify_triangulation.c");
+        uFatalError("cancel_tetrahedra", "simplify_triangulation");
 
     tet[1] = tet[0]->neighbor[v[0][2]];
 
@@ -764,7 +764,7 @@ FuncResult cancel_tetrahedra(
      *
      *  99/06/04  Indeed we do want this code to simplify non-ideal
      *  triangulations of closed manifolds, so I replaced
-     *      uFatalError("cancel_tetrahedra", "simplify_triangulation.c");
+     *      uFatalError("cancel_tetrahedra", "simplify_triangulation");
      *  with
      *      return func_failed;
      */
@@ -1025,13 +1025,13 @@ static FuncResult cancel_tetrahedra_with_finite_vertex(
     gluing  = tet->gluing  [!finite_vertex];
 
     if (tet->cusp[finite_vertex]->is_finite != TRUE)
-        uFatalError("cancel_tetrahedra_with_finite_vertex", "simplify_triangulation.c");
+        uFatalError("cancel_tetrahedra_with_finite_vertex", "simplify_triangulation");
     
     for (f = 0; f < 4; f++)
         if (f != finite_vertex)
             if (tet->neighbor[f] != nbr
              || tet->gluing  [f] != gluing)
-                uFatalError("cancel_tetrahedra_with_finite_vertex", "simplify_triangulation.c");
+                uFatalError("cancel_tetrahedra_with_finite_vertex", "simplify_triangulation");
     
     /*
      *  If tet and nbr had four faces in common, then the manifold
@@ -1039,7 +1039,7 @@ static FuncResult cancel_tetrahedra_with_finite_vertex(
      *  We assume this isn't the case.
      */
     if (tet->neighbor[finite_vertex] == nbr)
-        uFatalError("cancel_tetrahedra_with_finite_vertex", "simplify_triangulation.c");
+        uFatalError("cancel_tetrahedra_with_finite_vertex", "simplify_triangulation");
     
     /*
      *  The peripheral curves will match up correctly after the cancellation.
@@ -1115,7 +1115,7 @@ static FuncResult cancel_tetrahedra_with_finite_vertex(
 
     if (nbr_outer->gluing[nbr_outer_f] != inverse_permutation[tet_outer->gluing[tet_outer_f]]
      || EVALUATE(tet_outer->gluing[tet_outer_f], tet_outer_f) != nbr_outer_f)
-        uFatalError("cancel_tetrahedra_with_finite_vertex", "simplify_triangulation.c");
+        uFatalError("cancel_tetrahedra_with_finite_vertex", "simplify_triangulation");
 
     /*
      *  Remove tet and nbr.
@@ -1184,7 +1184,7 @@ FuncResult three_to_two(
      */
 
     if (edge->order != 3)
-        uFatalError("three_to_two", "simplify_triangulation.c");
+        uFatalError("three_to_two", "simplify_triangulation");
 
     /*
      *  The three Tetrahedra incident to the EdgeClass *edge will be
@@ -1245,7 +1245,7 @@ FuncResult three_to_two(
      */
 
     if (tet[0]->canonize_info != NULL)
-        uFatalError("three_to_two", "simplify_triangulation.c");
+        uFatalError("three_to_two", "simplify_triangulation");
 
     /*
      *  Create the new Tetrahedra.
@@ -1445,7 +1445,7 @@ FuncResult three_to_two(
          *  Begin with a quick error check.
          */
         if (new_tet[0]->shape[complete] == NULL)
-            uFatalError("three_to_two", "simplify_triangulation.c");
+            uFatalError("three_to_two", "simplify_triangulation");
 
         /*
          *  Allocate space for the VertexCrossSections of the new Tetrahedra.
@@ -1492,7 +1492,7 @@ FuncResult three_to_two(
          *  Begin with a quick error check.
          */
         if (new_tet[0]->shape[complete] == NULL)
-            uFatalError("three_to_two", "simplify_triangulation.c");
+            uFatalError("three_to_two", "simplify_triangulation");
 
         /*
          *  Allocate space for the CuspNbhdPositions of the new Tetrahedra.
@@ -1934,7 +1934,7 @@ FuncResult two_to_three(
          */
 
         if (new_tet[0]->shape[complete] == NULL)
-            uFatalError("two_to_three", "simplify_triangulation.c");
+            uFatalError("two_to_three", "simplify_triangulation");
 
         /*
          *  Allocate space for the VertexCrossSections of the new Tetrahedra.
@@ -2019,7 +2019,7 @@ FuncResult two_to_three(
          *  Begin with a quick error check.
          */
         if (new_tet[0]->shape[complete] == NULL)
-            uFatalError("two_to_three", "simplify_triangulation.c");
+            uFatalError("two_to_three", "simplify_triangulation");
 
         /*
          *  Allocate space for the CuspNbhdPositions of the new Tetrahedra.
@@ -2151,7 +2151,7 @@ void one_to_four(
     if (tet->shape[complete]    != NULL
      || tet->cross_section      != NULL
      || tet->cusp_nbhd_position != NULL)
-        uFatalError("one_to_four", "simplify_triangulation.c");
+        uFatalError("one_to_four", "simplify_triangulation");
 
     /*
      *  To understand this code, I recommend you first make a drawing
@@ -2497,7 +2497,7 @@ static FuncResult try_adjacent_fours(
         if (tet0->shape[complete] != NULL)
             return func_failed;
         else
-            uFatalError("try_adjacent_fours", "simplify_triangulation.c");
+            uFatalError("try_adjacent_fours", "simplify_triangulation");
     }
 
     /*
@@ -2506,7 +2506,7 @@ static FuncResult try_adjacent_fours(
      */
     if (three_to_two(class0, where_to_resume, num_tetrahedra_ptr) == func_failed
      || three_to_two(class1, where_to_resume, num_tetrahedra_ptr) == func_failed)
-        uFatalError("try_adjacent_fours", "simplify_triangulation.c");
+        uFatalError("try_adjacent_fours", "simplify_triangulation");
 
     /*
      *  Note that where_to_resume will come out pointing to some
@@ -2560,7 +2560,7 @@ static FuncResult create_new_order_four(
                 if (three_to_two(edge, where_to_resume, num_tetrahedra_ptr) == func_OK)
                     return func_OK;
                 else
-                    uFatalError("create_new_order_four", "simplify_triangulation.c");
+                    uFatalError("create_new_order_four", "simplify_triangulation");
             }
             else
             {
@@ -2574,7 +2574,7 @@ static FuncResult create_new_order_four(
                  *  the hope that a different retriangulation will work.
                  */
                 if (ptet.tet->shape[complete] == NULL)
-                    uFatalError("create_new_order_four", "simplify_triangulation.c");
+                    uFatalError("create_new_order_four", "simplify_triangulation");
                 /*
                  *  else continue with do loop
                  */

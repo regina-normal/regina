@@ -353,7 +353,7 @@ FuncResult find_normal_surfaces(
      *  but we should check just to be safe.
      */
     if (num_independent_variables >= 8 * sizeof(int))
-        uFatalError("find_normal_surfaces", "normal_surface_construction.c");
+        uFatalError("find_normal_surfaces", "normal_surface_construction");
 
     /*
      *  Allocate space for a solution.
@@ -513,7 +513,7 @@ static void create_equations(
          *  The tetrahedra have already been numbered.
          */
         if (tet->index != i)
-            uFatalError("create_equations", "normal_surface_construction.c");
+            uFatalError("create_equations", "normal_surface_construction");
         
         z = tet->shape[filled]->cwl[ultimate];
         
@@ -582,7 +582,7 @@ static void create_equations(
                 break;
             
             default:
-                uFatalError("create_equations", "normal_surface_construction.c");
+                uFatalError("create_equations", "normal_surface_construction");
         }
 
         /*
@@ -1113,7 +1113,7 @@ static void transfer_list_to_array(
     }
 
     if (count != permanent_surface_list->num_normal_surfaces)
-        uFatalError("transfer_list_to_array", "normal_surface_construction.c");
+        uFatalError("transfer_list_to_array", "normal_surface_construction");
 }
 
 

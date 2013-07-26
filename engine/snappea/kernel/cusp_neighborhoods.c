@@ -1250,7 +1250,7 @@ void set_cusp_neighborhood_displacement(
      */
 
     if (proto_canonize(cusp_neighborhoods->its_triangulation) != func_OK)
-        uFatalError("set_cusp_neighborhood_displacement", "cusp_neighborhoods.c");
+        uFatalError("set_cusp_neighborhood_displacement", "cusp_neighborhoods");
 
     /*
      *  The cusp reaches won't have changed, but the stoppers might have.
@@ -1318,7 +1318,7 @@ void set_cusp_neighborhood_tie(
          *  relative to the minimum displacement.
          */
         if (proto_canonize(cusp_neighborhoods->its_triangulation) != func_OK)
-            uFatalError("set_cusp_neighborhood_tie", "cusp_neighborhoods.c");
+            uFatalError("set_cusp_neighborhood_tie", "cusp_neighborhoods");
 
         /*
          *  The cusp reaches won't have changed,
@@ -1399,7 +1399,7 @@ static void allocate_cusp_nbhd_positions(
          *  are already allocated.
          */
         if (tet->cusp_nbhd_position != NULL)
-            uFatalError("allocate_cusp_nbhd_positions", "cusp_neighborhoods.c");
+            uFatalError("allocate_cusp_nbhd_positions", "cusp_neighborhoods");
 
         /*
          *  Allocate a CuspNbhdPosition structure.
@@ -1619,7 +1619,7 @@ static void compute_cusp_nbhd_positions(
         cusp->scratch = cusp->translation[L];
         length = complex_modulus(cusp->scratch);
         if (length < LONGITUDE_EPSILON)
-            uFatalError("compute_cusp_nbhd_positions", "cusp_neighborhoods.c");
+            uFatalError("compute_cusp_nbhd_positions", "cusp_neighborhoods");
         cusp->scratch = complex_real_mult(1.0/length, cusp->scratch);
         cusp->scratch = complex_div(One, cusp->scratch);
 
@@ -1826,7 +1826,7 @@ static void set_one_component(
      *  An "unnecessary" error check.
      */
     if (queue_begin > max_triangles)
-        uFatalError("set_one_component", "cusp_neighborhoods.c");
+        uFatalError("set_one_component", "cusp_neighborhoods");
 
     /*
      *  Free the queue.
@@ -2083,7 +2083,7 @@ CuspNbhdSegmentList *get_cusp_neighborhood_triangulation(
      *  This should be impossible, but it doesn't hurt to check.
      */
     if (theSegmentList->num_segments > 12*cusp_neighborhoods->its_triangulation->num_tetrahedra)
-        uFatalError("get_cusp_neighborhood_triangulation", "cusp_neighborhoods.c");
+        uFatalError("get_cusp_neighborhood_triangulation", "cusp_neighborhoods");
 
     return theSegmentList;
 }
@@ -2235,7 +2235,7 @@ static CuspNbhdHoroballList *get_quick_horoball_list(
      *  This should be impossible, but it doesn't hurt to check.
      */
     if (theHoroballList->num_horoballs > 12*cusp_neighborhoods->its_triangulation->num_tetrahedra)
-        uFatalError("get_cusp_neighborhood_triangulation", "cusp_neighborhoods.c");
+        uFatalError("get_cusp_neighborhood_triangulation", "cusp_neighborhoods");
 
     return theHoroballList;
 }
@@ -4227,7 +4227,7 @@ CuspNbhdSegmentList *get_cusp_neighborhood_Ford_domain(
      *  This should be impossible, but it doesn't hurt to check.
      */
     if (theSegmentList->num_segments > 12*cusp_neighborhoods->its_triangulation->num_tetrahedra)
-        uFatalError("get_cusp_neighborhood_Ford_domain", "cusp_neighborhoods.c");
+        uFatalError("get_cusp_neighborhood_Ford_domain", "cusp_neighborhoods");
 
     return theSegmentList;
 }

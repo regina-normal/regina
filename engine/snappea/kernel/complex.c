@@ -69,7 +69,7 @@ Complex complex_div(
         if (z0.real != 0.0 || z0.imag != 0.0)
             return Infinity;
         else
-            uFatalError("complex_div", "complex.c");
+            uFatalError("complex_div", "complex");
     }
     quotient.real = (z0.real * z1.real  +  z0.imag * z1.imag)/mod_sq;
     quotient.imag = (z0.imag * z1.real  -  z0.real * z1.imag)/mod_sq;

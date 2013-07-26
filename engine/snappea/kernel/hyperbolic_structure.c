@@ -611,7 +611,7 @@ static void verify_coefficients(
             (cusp->m == 0.0 && cusp->l == 0.0) || (cusp->topology == Klein_cusp && cusp->l != 0.0)
            )
 
-            uFatalError("verify_coefficients", "hyperbolic_structure.c");
+            uFatalError("verify_coefficients", "hyperbolic_structure");
 }
 
 
@@ -1191,7 +1191,7 @@ void polish_hyperbolic_structures(
     ChernSimonsInfo chern_simons_info;
 
     if (manifold->solution_type[complete] == not_attempted)
-        uFatalError("polish_hyperbolic_structures", "polish_hyperbolic_structures.c");
+        uFatalError("polish_hyperbolic_structures", "polish_hyperbolic_structures");
 
     save_chern_simons(manifold, &chern_simons_info);
     allocate_arrays(manifold, &save_shapes, &save_cusp_info);

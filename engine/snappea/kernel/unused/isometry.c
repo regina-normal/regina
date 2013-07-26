@@ -114,7 +114,7 @@ FuncResult compute_isometries(
 
     if ((isometry_list          != NULL && *isometry_list          != NULL)
      || (isometry_list_of_links != NULL && *isometry_list_of_links != NULL))
-        uFatalError("compute_isometries", "isometry.c");
+        uFatalError("compute_isometries", "isometry");
 
     /*
      *  If one of the spaces isn't a manifold, return func_bad_input.
@@ -245,7 +245,7 @@ static Boolean same_homology(
      *  really are manifolds, so neither g0 nor g1 should be NULL.
      */
     if (g0 == NULL  ||  g1 == NULL)
-        uFatalError("same_homology", "isometry.c");
+        uFatalError("same_homology", "isometry");
 
     /*
      *  Put the homology groups into a canonical form.
