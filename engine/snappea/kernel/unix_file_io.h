@@ -1,8 +1,8 @@
 /*
- *	unix_file_io.h
+ *  unix_file_io.h
  *
- *	These two functions allow unix-style programs
- *	to read and save Triangulations.
+ *  These two functions allow unix-style programs
+ *  to read and save Triangulations.
  */
 
 #include "SnapPea.h"
@@ -11,8 +11,8 @@
 extern "C" {
 #endif
 
-extern Triangulation	*get_triangulation(const char *file_name);
-extern void				save_triangulation(Triangulation *manifold, const char *file_name);
+extern Triangulation    *get_triangulation(const char *file_name);
+extern void             save_triangulation(Triangulation *manifold, const char *file_name);
 
 #ifdef __cplusplus
 }
