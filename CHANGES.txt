@@ -88,7 +88,10 @@ Version 4.94  [ (under development) ]
               boundaries.  The old two-argument version is now deprecated.
         Class NSnapPeaTriangulation:
             - New routine toRegina() to extract the underlying SnapPea
-              triangulation.
+              triangulation, or to see exactly how SnapPea has relabelled
+              and/or retriangulated.
+            - New routine canonize() to produce the canonical retriangulation
+              of the canonical cell decomposition.
         Class NTetrahedron:
             - New dimension-agnostic aliases adjacentSimplex() and
               adjacentFacet().  These are identical to adjacentTetrahedron()

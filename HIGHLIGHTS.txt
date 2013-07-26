@@ -6,6 +6,24 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
+Version 4.94  [ (under development) ]
+
+    Features:
+        - You can now drill out the neighbourhood of an edge.
+        - Regina now works with 2-manifold triangulations as well as
+          3-manifold triangulations!
+    Optimisations:
+        - Normal surface enumeration is now completely different under
+          the hood: the old double description method is gone, and
+          instead Regina uses the tree traversal algorithm (arXiv:TODO).
+          This is a little slower for small problems but significantly
+          faster for large problems, and does not suffer from memory
+          blowouts like the old algorithm did.
+        - 0-efficiency testing and solid torus recognition (i.e., unknot
+          recognition) are now extremely fast (arXiv:TODO), thanks to
+          new linear programming techniques.
+        - Census enumeration is faster again, with new pruning techniques.
+
 Version 4.93  [ 30 May, 2012 ]
 
     Features:
