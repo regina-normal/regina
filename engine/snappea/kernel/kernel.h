@@ -1,8 +1,8 @@
 /*
- *	kernel.h
+ *  kernel.h
  *
- *	This file #includes all header files needed for the kernel.
- *	It should be #included in all kernel .c files, but nowhere else.
+ *  This file #includes all header files needed for the kernel.
+ *  It should be #included in all kernel .c files, but nowhere else.
  */
 
 #ifndef _kernel_
@@ -14,16 +14,16 @@
 #include <math.h>
 #include <limits.h>
 #include <float.h>
-/*	Some C implementations define DBL_MAX, DBL_MIN, FLT_MAX,		*/
-/*	and FLT_MIN	in limits.h as well as float.h, leading to			*/
-/*	"redefinition" warnings.  If this is the case on your system,	*/
-/*	uncomment the following lines and insert them between			*/
-/*	"#include <limits.h>"  and "#include <float.h>" above.			*/
-/*																	*/
-/*	#undef DBL_MAX	*/
-/*	#undef DBL_MIN	*/
-/*	#undef FLT_MAX	*/
-/*	#undef FLT_MIN	*/
+/*  Some C implementations define DBL_MAX, DBL_MIN, FLT_MAX,        */
+/*  and FLT_MIN in limits.h as well as float.h, leading to          */
+/*  "redefinition" warnings.  If this is the case on your system,   */
+/*  uncomment the following lines and insert them between           */
+/*  "#include <limits.h>"  and "#include <float.h>" above.          */
+/*                                                                  */
+/*  #undef DBL_MAX  */
+/*  #undef DBL_MIN  */
+/*  #undef FLT_MAX  */
+/*  #undef FLT_MIN  */
 
 #include "kernel_typedefs.h"
 #include "triangulation.h"
