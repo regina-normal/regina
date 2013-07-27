@@ -78,14 +78,12 @@ const QString ReginaAbout::regLicense( tr(
     "with this program; if not, write to the Free Software Foundation, Inc.,\n"
     "51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.\n\n"
     "SNAPPEA AND SNAPPY:\n\n"
-    "Regina includes portions of the SnapPea kernel, which it uses for some\n"
-    "geometric calculations.  SnapPea was written by Jeff Weeks, and is now\n"
-    "maintained by both Jeff Weeks and Nathan Dunfield.  The SnapPeaKernel is\n"
+    "Regina includes portions of the SnapPea kernel and its successor SnapPy,\n"
+    "which it uses for some geometric calculations.  The SnapPea kernel was\n"
+    "written by Jeff Weeks, and SnapPy was written by Marc Culler, Nathan\n"
+    "Dunfield, and others.  SnapPy and the corresponding SnapPea kernel are\n"
     "distributed under the terms of the GNU General Public License, version 2\n"
     "or any later version, as published by the Free Software Foundation.\n\n"
-    "Regina also includes code from SnapPy, the successor to SnapPea.\n"
-    "SnapPy was written by M. Culler, N. M. Dunfield and J. R. Weeks, and is\n"
-    "also released under the terms of the GNU General Public License.\n\n"
     "NORMALIZ LIBRARY:\n\n"
     "Regina includes a copy of libnormaliz, which it uses to help with the\n"
     "enumeration of fundamental normal surfaces.  Normaliz was written by\n"
@@ -127,7 +125,8 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     thanksCode << "David Letscher";
     thanksCode << "Winfried Bruns, Bogdan Ichim and Christof Soeger "
         "(for the Normaliz library)";
-    thanksCode << "Jeff Weeks (for the SnapPea kernel)";
+    thanksCode << "Marc Culler, Nathan Dunfield and Jeff Weeks "
+        "(for code from SnapPea and SnapPy)";
 
     thanksExpertise << "Bernard Blackham";
     thanksExpertise << "Marc Culler";

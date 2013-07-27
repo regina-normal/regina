@@ -93,15 +93,12 @@
  *
  *  <h3>SnapPea and SnapPy</h3>
  *
- *  Regina includes portions of the SnapPea kernel, which it uses for some
- *  geometric calculations.  SnapPea was written by Jeff Weeks, and is now
- *  maintained by both Jeff Weeks and Nathan Dunfield.  The SnapPeaKernel is
+ *  Regina includes portions of the SnapPea kernel and its successor SnapPy,
+ *  which it uses for some geometric calculations.  The SnapPea kernel was
+ *  written by Jeff Weeks, and SnapPy was written by Marc Culler, Nathan
+ *  Dunfield, and others.  SnapPy and the corresponding SnapPea kernel are
  *  distributed under the terms of the GNU General Public License, version 2
  *  or any later version, as published by the Free Software Foundation.
- *
- *  Regina also includes code from SnapPy, the successor to SnapPea.
- *  SnapPy was written by M. Culler, N. M. Dunfield and J. R. Weeks, and is
- *  also released under the terms of the GNU General Public License.
  *
  *  <h3>Normaliz Library</h3>
  *

@@ -21,7 +21,8 @@
     <listitem><para>David Letscher</para></listitem>
     <listitem><para>Winfried Bruns, Bogdan Ichim and Christof Soeger
      (for the &normaliz; library)</para></listitem>
-    <listitem><para>Jeff Weeks (for the &snappea; kernel)</para></listitem>
+    <listitem><para>Marc Culler, Nathan Dunfield and Jeff Weeks
+     (for code from &snappea; and &snappy;)</para></listitem>
    </itemizedlist>
   </para>
   <para>Thanks also to the help and expertise of:
@@ -107,18 +108,14 @@
    <sect3 id="license-snappea">
     <title>&snappea; and &snappy;</title>
     <para>
-     &regina; includes portions of the &snappea; kernel, which it uses for some
-     geometric calculations.  &snappea; was written by Jeff Weeks, and is now
-     maintained by both Jeff Weeks and Nathan Dunfield.  The SnapPeaKernel is
+     &regina; includes portions of the &snappea; kernel and its successor
+     &snappy;, which it uses for some geometric calculations.
+     The &snappea; kernel was
+     written by Jeff Weeks, and &snappy; was written by Marc Culler, Nathan
+     Dunfield, and others.  &snappy; and the corresponding &snappea; kernel are
      distributed under the terms of the &gnu; General Public License,
      version&nbsp;2
      or any later version, as published by the Free Software Foundation.
-    </para>
-    <para>
-     &regina; also includes code from &snappy;, the successor to &snappea;.
-     &snappy; was written by
-     M.&nbsp;Culler, N.&nbsp;M.&nbsp;Dunfield and J.&nbsp;R.&nbsp;Weeks, and is
-     also released under the terms of the &gnu; General Public License.
     </para>
    </sect3>
  
