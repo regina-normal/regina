@@ -193,9 +193,9 @@ static void cross_section(
     Cusp            *cusp)
 {
     double          cusp_area;
-    Tetrahedron     *tet0       = NULL,
+    Tetrahedron     *tet0,
                     *nbr_tet;
-    VertexIndex     v0          = 0,
+    VertexIndex     v0,
                     nbr_v;
     FaceIndex       f,
                     nbr_f;

@@ -459,7 +459,7 @@ static void compute_rhs(
          *  edge->edge_angle_sum.
          */
 
-        rhs = complex_minus(TwoPiI, edge->edge_angle_sum);
+        rhs = complex_minus(edge->target_angle_sum, edge->edge_angle_sum);
 
         if (manifold->orientability == oriented_manifold)
             edge->complex_edge_equation[manifold->num_tetrahedra] = rhs;
@@ -493,7 +493,7 @@ static void compute_rhs(
         }
         else
         {
-            desired_holonomy    = TwoPiI;
+            desired_holonomy    = cusp->target_holonomy;
             current_holonomy    = complex_plus(
                 complex_real_mult(cusp->m, cusp->holonomy[ultimate][M]),
                 complex_real_mult(cusp->l, cusp->holonomy[ultimate][L])

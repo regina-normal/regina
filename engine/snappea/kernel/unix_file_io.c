@@ -25,24 +25,91 @@
  *  in the function call (see section A7.3.2 in Appendix A of K&R 2nd ed.).
  *  Therefore I've changed "%lf" to "%f" in all fprintf() calls.
  *  If this makes trouble on your system, change it back, and please
- *  let me know (www.geometrygames.org/contact.html).
+ *  let me know (weeks@northnet.org).
  */
 
+/* Modified 2010/09/20 by Marc Culler to avoid quadratic time behavior
+ * caused by the fact that sscanf calls strlen.
+ */
 
-static TriangulationData    *ReadNewFileFormat(FILE *fp);
+/* Size for our temporary string buffers.
+ */
+#define SBSIZE 256
+
+/* Copy up to the specified number of words of the string str into the
+ * specified buffer, which must hold at least SBSIZE chars.  Return
+ * the number of chars copied.  This assumes that any line in a
+ * triangulation file will have length < SBSIZE.
+ */ 
+#define whitespace(x) (x=='\040'||x=='\f'||x=='\n'||x=='\r'||x=='\t'||x=='\v')
+ 
+static int read_head(char *headbuf, char *str, int words) {
+    char *ptr = headbuf;
+    int n;
+    for (n=0; n < words; n++) {
+        /* copy whitespace */
+        while ( whitespace(*str) && ptr-headbuf < SBSIZE-1 )
+            *ptr++ = *str++;
+	/* copy non-whitespace */
+	while ( *str != '\0' && !whitespace(*str) && ptr-headbuf < SBSIZE-1)
+             *ptr++ = *str++;
+    if ( *str == '\0' ) break;
+  }
+  /* add trailing null char */
+  *ptr = '\0';
+  return (ptr - headbuf); 
+}
+
+/* Modified 04/23/09 by Marc Culler to allow reading a triangulation
+ * from a string.
+ */
+
+static TriangulationData    *ReadNewFileFormat(char *buffer);
 static void                 WriteNewFileFormat(FILE *fp, TriangulationData *data);
+static char                 *StringNewFileFormat(TriangulationData *data);
 
 #if READ_OLD_FILE_FORMAT
 extern FuncResult           read_old_manifold(FILE *fp, Triangulation **manifold);
 #endif
 
+/* Modified 2010/7/27 by NMD to allow for Classic Mac OS and Windows line endings, as well Unix ones */
 
-Triangulation *get_triangulation(
-    const char  *file_name)
+static Boolean  is_eol_char(char *buffer);
+
+Boolean is_eol_char(char *buffer){
+  return (*buffer == '\n') ||  (*buffer == '\r');
+}
+
+/* Modified 04/24/09 by Marc Culler to allow extracting a triangulation from a C string. */
+
+Triangulation *read_triangulation_from_string(
+    char    *file_data)
+{
+    TriangulationData   *theTriangulationData;
+    Triangulation       *manifold;
+
+    if ( strncmp("% Triangulation", file_data, 15) != 0)
+      uFatalError("read_triangulation_from_string", "unix file io");
+	  
+    theTriangulationData = ReadNewFileFormat(file_data);
+    
+    data_to_triangulation(theTriangulationData, &manifold);
+    
+    free(theTriangulationData->name);
+    free(theTriangulationData->cusp_data);
+    free(theTriangulationData->tetrahedron_data);
+    free(theTriangulationData);
+
+    return manifold;
+}
+
+Triangulation *read_triangulation(
+    char    *file_name)
 {
     FILE            *fp;
     Boolean         theNewFormat;
     Triangulation   *manifold;
+    char            firstline[100];
 
     /*
      *  If the file_name is nonempty, read the file.
@@ -70,8 +137,23 @@ Triangulation *get_triangulation(
     if (theNewFormat == TRUE)
     {
         TriangulationData   *theTriangulationData;
+	long filesize;
+	char *buffer;
+	  
+	if ( fseek(fp, 0, SEEK_END) != 0    ||
+	     ( filesize = ftell(fp) ) == -1 ||
+	     fseek(fp, 0, SEEK_SET) != 0     )
+	    uFatalError("read_triangulation", "unix file io");
 
-        theTriangulationData = ReadNewFileFormat(fp);
+	buffer = malloc(filesize + 1);
+	if ( buffer == NULL)
+	    uFatalError("read_triangulation", "unix file io");
+	if ( fread(buffer, filesize, 1, fp) != 1 )
+	    uFatalError("read_triangulation", "unix file io");
+
+	buffer[filesize] = '\0';
+	theTriangulationData = ReadNewFileFormat(buffer);
+	free(buffer);
     
         data_to_triangulation(theTriangulationData, &manifold);
     
@@ -85,14 +167,11 @@ Triangulation *get_triangulation(
 #if READ_OLD_FILE_FORMAT
         read_old_manifold(fp, &manifold);
 #else
-        uAcknowledge("The manifold is in the old file format.  Questions?  Contact me at www.geometrygames.org/contact.html .");
-/*
- *      fprintf(stderr, "The manifold is in the old file format.\n");
- *      fprintf(stderr, "I recommend converting it to the new format.\n");
- *      fprintf(stderr, "If absolutely necessary, I can provide code for reading the old format.\n");
- *      fprintf(stderr, "Questions?  Contact me at www.geometrygames.org/contact.html .\n");
- */
-        uFatalError("get_triangulation", "unix file io");
+        fprintf(stderr, "The manifold is in the old file format.\n");
+        fprintf(stderr, "I recommend converting it to the new format.\n");
+        fprintf(stderr, "If absolutely necessary, I can provide code for reading the old format.\n");
+        fprintf(stderr, "Questions?  Contact me at weeks@northnet.org.\n");
+        uFatalError("read_triangulation", "unix file io");
 #endif
     }
 
@@ -104,55 +183,68 @@ Triangulation *get_triangulation(
 
 
 static TriangulationData *ReadNewFileFormat(
-    FILE    *fp)
+    char *buffer)
 {
-    char                theScratchString[100];
+    char                *ptr;
+    char                theScratchString[SBSIZE];
+    char                HeadBuffer[SBSIZE];
+    int                 count;
     TriangulationData   *theTriangulationData;
     int                 theTotalNumCusps,
                         i,
                         j,
                         k,
                         v,
-                        f,
-                        c;
+                        f;
+    size_t size = 0;
+
 
     /*
      *  Read and ignore the header (% Triangulation).
      */
-    fgets(theScratchString, 100, fp);
+    while (!is_eol_char(buffer)) buffer++;
 
     /*
      *  Allocate the TriangulationData.
      */
     theTriangulationData = (TriangulationData *) malloc(sizeof(TriangulationData));
     if (theTriangulationData == NULL)
-        uFatalError("ReadNewFileFormat", "unix file io");
+        uFatalError("ReadNewFileFormat 1", "unix file io");
     theTriangulationData->name              = NULL;
     theTriangulationData->cusp_data         = NULL;
     theTriangulationData->tetrahedron_data  = NULL;
 
     /*
      *  Allocate and read the name of the manifold.
-     */
-    theTriangulationData->name = (char *) malloc(100 * sizeof(char));
-    if (theTriangulationData->name == NULL)
-        uFatalError("ReadNewFileFormat", "unix file io");
-    /*
      *  The name will be on the first nonempty line.
      */
-    do
-        fgets(theTriangulationData->name, 100, fp);
-    while (theTriangulationData->name[0] == '\n');
-    /*
-     *  Overwrite the newline character.
-     */
-    theTriangulationData->name[strlen(theTriangulationData->name) - 1] = 0;
+
+   while (is_eol_char(buffer)) buffer++;
+   i = 0;
+   ptr = NULL;
+   while (!is_eol_char(buffer)){
+       if (i + 2 > size){
+	   size += 100;
+	   ptr = (char *) realloc(ptr, size);
+	   if (ptr == NULL){
+	       /* We could have saved the old pointer, to free it here.
+		* But why bother?  We are toast anyway.
+		*/
+	       uFatalError("ReadNewFileFormat 2", "unix file io");
+	       return 0;
+	   }
+       }
+       ptr[i++] = *buffer++;
+   }
+   ptr[i] = 0;
+   theTriangulationData->name = ptr;
 
     /*
      *  Read the filled solution type.
      */
-    fscanf(fp, "%s", theScratchString);
-         if (strcmp(theScratchString, "not_attempted") == 0)
+    buffer += read_head(HeadBuffer, buffer, 1);
+    sscanf(HeadBuffer, "%s", theScratchString);
+    if (strcmp(theScratchString, "not_attempted") == 0)
         theTriangulationData->solution_type = not_attempted;
     else if (strcmp(theScratchString, "geometric_solution") == 0)
         theTriangulationData->solution_type = geometric_solution;
@@ -167,38 +259,43 @@ static TriangulationData *ReadNewFileFormat(
     else if (strcmp(theScratchString, "no_solution") == 0)
         theTriangulationData->solution_type = no_solution;
     else
-        uFatalError("ReadNewFileFormat", "unix file io");
+        uFatalError("ReadNewFileFormat 3", "unix file io");
 
     /*
      *  Read the volume.
      */
-    fscanf(fp, "%lf", &theTriangulationData->volume);
+    buffer += read_head(HeadBuffer, buffer, 1);
+    sscanf(HeadBuffer, "%lf", &theTriangulationData->volume);
 
     /*
      *  Read the orientability.
      */
-    fscanf(fp, "%s", theScratchString);
-         if (strcmp(theScratchString, "oriented_manifold") == 0)
+    buffer += read_head(HeadBuffer, buffer, 1); 
+    sscanf(HeadBuffer, "%s", theScratchString);
+    if (strcmp(theScratchString, "oriented_manifold") == 0)
         theTriangulationData->orientability = oriented_manifold;
     else if (strcmp(theScratchString, "nonorientable_manifold") == 0)
         theTriangulationData->orientability = nonorientable_manifold;
     else if (strcmp(theScratchString, "unknown_orientability") == 0)
         theTriangulationData->orientability = unknown_orientability;
     else
-        uFatalError("ReadNewFileFormat", "unix file io");
+        uFatalError("ReadNewFileFormat 4", "unix file io");
 
     /*
      *  Read the Chern-Simons invariant, if present.
      */
-    fscanf(fp, "%s", theScratchString);
-         if (strcmp(theScratchString, "CS_known") == 0)
+    buffer += read_head(HeadBuffer, buffer, 1); 
+    sscanf(HeadBuffer, "%s", theScratchString);
+    if (strcmp(theScratchString, "CS_known") == 0)
         theTriangulationData->CS_value_is_known = TRUE;
     else if (strcmp(theScratchString, "CS_unknown") == 0)
         theTriangulationData->CS_value_is_known = FALSE;
     else
-        uFatalError("ReadNewFileFormat", "unix file io");
-    if (theTriangulationData->CS_value_is_known == TRUE)
-        fscanf(fp, "%lf", &theTriangulationData->CS_value);
+        uFatalError("ReadNewFileFormat 5", "unix file io");
+    if (theTriangulationData->CS_value_is_known == TRUE) {
+      buffer += read_head(HeadBuffer, buffer, 1); 
+      sscanf(HeadBuffer, "%lf", &theTriangulationData->CS_value);
+      }
     else
         theTriangulationData->CS_value = 0.0;
 
@@ -206,21 +303,23 @@ static TriangulationData *ReadNewFileFormat(
      *  Read the number of cusps, allocate an array for the cusp data,
      *  and read the cusp data.
      */
-    fscanf(fp, "%d%d",
-            &theTriangulationData->num_or_cusps,
-            &theTriangulationData->num_nonor_cusps);
+    buffer += read_head(HeadBuffer, buffer, 2); 
+    sscanf(HeadBuffer, "%d%d",
+	   &theTriangulationData->num_or_cusps,
+           &theTriangulationData->num_nonor_cusps);
     theTotalNumCusps = theTriangulationData->num_or_cusps
                      + theTriangulationData->num_nonor_cusps;
     theTriangulationData->cusp_data = (CuspData *) malloc(theTotalNumCusps * sizeof(CuspData));
     if (theTriangulationData->cusp_data == NULL)
-        uFatalError("ReadNewFileFormat", "unix file io");
+        uFatalError("ReadNewFileFormat 6", "unix file io");
     for (i = 0; i < theTotalNumCusps; i++)
     {
-        if (fscanf(fp, "%s%lf%lf",
-                theScratchString,
-                &theTriangulationData->cusp_data[i].m,
-                &theTriangulationData->cusp_data[i].l) != 3)
-            uFatalError("ReadNewFileFormat", "unix file io");
+        buffer += read_head(HeadBuffer, buffer, 3); 
+        if (sscanf(HeadBuffer, "%s%lf%lf",
+		   theScratchString,
+		   &theTriangulationData->cusp_data[i].m,
+		   &theTriangulationData->cusp_data[i].l) != 3)
+            uFatalError("ReadNewFileFormat 7", "unix file io");
         switch (theScratchString[0])
         {
             case 't':
@@ -234,7 +333,7 @@ static TriangulationData *ReadNewFileFormat(
                 break;
 
             default:
-                uFatalError("ReadNewFileFormat", "unix file io");
+                uFatalError("ReadNewFileFormat 8", "unix file io");
         }
     }
 
@@ -242,10 +341,11 @@ static TriangulationData *ReadNewFileFormat(
      *  Read the number of tetrahedra, allocate an array for the
      *  tetrahedron data, and read the tetrahedron data.
      */
-    fscanf(fp, "%d", &theTriangulationData->num_tetrahedra);
+    buffer += read_head(HeadBuffer, buffer, 1); 
+    sscanf(HeadBuffer, "%d", &theTriangulationData->num_tetrahedra);
     theTriangulationData->tetrahedron_data = (TetrahedronData *) malloc(theTriangulationData->num_tetrahedra * sizeof(TetrahedronData));
     if (theTriangulationData->tetrahedron_data == NULL)
-        uFatalError("ReadNewFileFormat", "unix file io");
+        uFatalError("ReadNewFileFormat 9", "unix file io");
     for (i = 0; i < theTriangulationData->num_tetrahedra; i++)
     {
         /*
@@ -253,31 +353,28 @@ static TriangulationData *ReadNewFileFormat(
          */
         for (j = 0; j < 4; j++)
         {
-            fscanf(fp, "%d", &theTriangulationData->tetrahedron_data[i].neighbor_index[j]);
-            if (theTriangulationData->tetrahedron_data[i].neighbor_index[j] < 0
+          buffer += read_head(HeadBuffer, buffer, 1); 
+	  sscanf(HeadBuffer, "%d", &theTriangulationData->tetrahedron_data[i].neighbor_index[j]);
+	  if (theTriangulationData->tetrahedron_data[i].neighbor_index[j] < 0
              || theTriangulationData->tetrahedron_data[i].neighbor_index[j] >= theTriangulationData->num_tetrahedra)
-                uFatalError("ReadNewFileFormat", "unix file io");
+                uFatalError("ReadNewFileFormat 10", "unix file io");
         }
 
         /*
          *  Read the gluings.
          */
+	/* This assumes that the gluings are groups of 4 digits with no
+           whitespace between, but with whitespace between groups. */
+	buffer += read_head(HeadBuffer, buffer, 4);
+	ptr = HeadBuffer;
         for (j = 0; j < 4; j++)
             for (k = 0; k < 4; k++)
             {
-                /*
-                 *  The Metrowerks implementation of fscanf() interprets
-                 *  the maximum field width limit to include white space.
-                 *  Thus the "%1d" reads a zero for each white space character.
-                 *  As a workaround, skip the white space manually.
-                 */
-                do {c = getc(fp);}
-                while (c < '0' || c > '9');
-                theTriangulationData->tetrahedron_data[i].gluing[j][k] = c - '0';
-            /*  fscanf(fp, "%1d", &theTriangulationData->tetrahedron_data[i].gluing[j][k]); */
-                if (theTriangulationData->tetrahedron_data[i].gluing[j][k] < 0
+	      sscanf(ptr, "%1d%n", &theTriangulationData->tetrahedron_data[i].gluing[j][k], &count);
+	      ptr += count;
+	      if (theTriangulationData->tetrahedron_data[i].gluing[j][k] < 0
                  || theTriangulationData->tetrahedron_data[i].gluing[j][k] > 3)
-                    uFatalError("ReadNewFileFormat", "unix file io");
+                    uFatalError("ReadNewFileFormat 11", "unix file io");
             }
 
         /*
@@ -288,10 +385,11 @@ static TriangulationData *ReadNewFileFormat(
          */
         for (j = 0; j < 4; j++)
         {
-            fscanf(fp, "%d", &theTriangulationData->tetrahedron_data[i].cusp_index[j]);
-            if (theTriangulationData->tetrahedron_data[i].cusp_index[j] < -1
+	  buffer += read_head(HeadBuffer, buffer, 1); 
+	  sscanf(HeadBuffer, "%d", &theTriangulationData->tetrahedron_data[i].cusp_index[j]);
+	  if (theTriangulationData->tetrahedron_data[i].cusp_index[j] < -1
              || theTriangulationData->tetrahedron_data[i].cusp_index[j] >= theTotalNumCusps)
-                uFatalError("ReadNewFileFormat", "unix file io");
+                uFatalError("ReadNewFileFormat 12", "unix file io");
         }
 
         /*
@@ -300,24 +398,27 @@ static TriangulationData *ReadNewFileFormat(
         for (j = 0; j < 2; j++)          /* meridian, longitude     */
             for (k = 0; k < 2; k++)      /* righthanded, lefthanded */
                 for (v = 0; v < 4; v++)
-                    for (f = 0; f < 4; f++)
-                        fscanf(fp, "%d", &theTriangulationData->tetrahedron_data[i].curve[j][k][v][f]);
+		  for (f = 0; f < 4; f++){
+		      buffer += read_head(HeadBuffer, buffer, 1);
+		      sscanf(HeadBuffer, "%d", &theTriangulationData->tetrahedron_data[i].curve[j][k][v][f]);
+		  }
 
         /*
          *  Read the filled shape (which the kernel ignores).
          */
-        fscanf(fp, "%lf%lf",
-            &theTriangulationData->tetrahedron_data[i].filled_shape.real,
-            &theTriangulationData->tetrahedron_data[i].filled_shape.imag);
+	buffer += read_head(HeadBuffer, buffer, 2);
+        sscanf(HeadBuffer, "%lf%lf",
+	       &theTriangulationData->tetrahedron_data[i].filled_shape.real,
+	       &theTriangulationData->tetrahedron_data[i].filled_shape.imag);
     }
 
     return theTriangulationData;
 }
 
 
-void save_triangulation(
+void write_triangulation(
     Triangulation   *manifold,
-    const char      *file_name)
+    char            *file_name)
 {
     TriangulationData   *theTriangulationData;
     FILE                *fp;
@@ -459,4 +560,143 @@ static void WriteNewFileFormat(
         else
             fprintf(fp, "%3.1f %3.1f\n\n", 0.0, 0.0);
     }
+}
+
+/* Added by Marc Culler 2010-12-17 to allow writing a triangulation
+ * to a string.  Memory is malloc'ed for the string.  Caller must free.
+ */
+
+char *string_triangulation(
+    Triangulation   *manifold)
+{
+    TriangulationData   *theTriangulationData;
+    char                *result;
+
+    triangulation_to_data(manifold, &theTriangulationData);
+    result = StringNewFileFormat(theTriangulationData);
+    free_triangulation_data(theTriangulationData);
+    return result;
+}
+
+static char *StringNewFileFormat(
+    TriangulationData   *data)
+{
+    int i,
+        j,
+        k,
+        v,
+        f,
+        size;
+    char *buffer;
+    char *p;
+
+    size = 100*(10 + data->num_or_cusps + data->num_nonor_cusps + 8*data->num_tetrahedra);
+    buffer = malloc(size);
+    if ( buffer == NULL)
+      uFatalError("StringNewFileFormat", "unix file io");
+    p = buffer;
+
+    p += sprintf(p, "%% Triangulation\n");
+
+    if (data->name != NULL)
+        p += sprintf(p, "%s\n", data->name);
+    else
+        p += sprintf(p, "untitled\n");
+
+    switch (data->solution_type)
+    {
+        case not_attempted:
+            p += sprintf(p, "not_attempted");
+            break;
+
+        case geometric_solution:
+            p += sprintf(p, "geometric_solution");
+            break;
+
+        case nongeometric_solution:
+            p += sprintf(p, "nongeometric_solution");
+            break;
+
+        case flat_solution:
+            p += sprintf(p, "flat_solution");
+            break;
+
+        case degenerate_solution:
+            p += sprintf(p, "degenerate_solution");
+            break;
+
+        case other_solution:
+            p += sprintf(p, "other_solution");
+            break;
+
+        case no_solution:
+            p += sprintf(p, "no_solution");
+            break;
+    }
+
+    if (data->solution_type != not_attempted)
+        p += sprintf(p, "  %.8f\n", data->volume);
+    else
+        p += sprintf(p, "  %.1f\n", 0.0);
+
+    switch (data->orientability)
+    {
+        case oriented_manifold:
+            p += sprintf(p, "oriented_manifold\n");
+            break;
+
+        case nonorientable_manifold:
+            p += sprintf(p, "nonorientable_manifold\n");
+            break;
+    }
+
+    if (data->CS_value_is_known == TRUE)
+        p += sprintf(p, "CS_known %.16f\n", data->CS_value);
+    else
+        p += sprintf(p, "CS_unknown\n");
+
+    p += sprintf(p, "\n%d %d\n", data->num_or_cusps, data->num_nonor_cusps);
+    for (i = 0; i < data->num_or_cusps + data->num_nonor_cusps; i++)
+        p += sprintf(p, "    %s %16.12f %16.12f\n",
+            (data->cusp_data[i].topology == torus_cusp) ? "torus" : "Klein",
+            data->cusp_data[i].m,
+            data->cusp_data[i].l);
+    p += sprintf(p, "\n");
+
+    p += sprintf(p, "%d\n", data->num_tetrahedra);
+    for (i = 0; i < data->num_tetrahedra; i++)
+    {
+        for (j = 0; j < 4; j++)
+            p += sprintf(p, "%4d ", data->tetrahedron_data[i].neighbor_index[j]);
+        p += sprintf(p, "\n");
+
+        for (j = 0; j < 4; j++)
+        {
+            p += sprintf(p, " ");
+            for (k = 0; k < 4; k++)
+                p += sprintf(p, "%d", data->tetrahedron_data[i].gluing[j][k]);
+        }
+        p += sprintf(p, "\n");
+
+        for (j = 0; j < 4; j++)
+            p += sprintf(p, "%4d ", data->tetrahedron_data[i].cusp_index[j]);
+        p += sprintf(p, "\n");
+
+        for (j = 0; j < 2; j++)         /* meridian, longitude     */
+            for (k = 0; k < 2; k++)     /* righthanded, lefthanded */
+            {
+                for (v = 0; v < 4; v++)
+                    for (f = 0; f < 4; f++)
+                        p += sprintf(p, " %2d", data->tetrahedron_data[i].curve[j][k][v][f]);
+                p += sprintf(p, "\n");
+            }
+
+        if (data->solution_type != not_attempted)
+            p += sprintf(p, "%16.12f %16.12f\n\n",
+                data->tetrahedron_data[i].filled_shape.real,
+                data->tetrahedron_data[i].filled_shape.imag);
+        else
+            p += sprintf(p, "%3.1f %3.1f\n\n", 0.0, 0.0);
+   }
+   return buffer;
 }

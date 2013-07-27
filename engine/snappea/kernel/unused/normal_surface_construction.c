@@ -239,20 +239,20 @@
 typedef int ArrayInt4[4];
 
 
-static void         create_equations(Triangulation *manifold, int ***equations, int *num_equations, int *num_variables);
-static void         simplify_equations(int **equations, int num_equations, int num_variables);
-static void         find_defining_rows(int **equations, int num_equations, int num_variables, int **defining_row);
-static unsigned int count_independent_variables(int *defining_row, unsigned int num_variables);
-static void         solve_equations(int **equations, int num_variables, int *defining_row, int index, int *solution);
-static Boolean      solution_is_nonnegative(int num_variables, int *solution);
-static void         create_squares(Triangulation *manifold, int *solution);
-static void         create_triangles(Triangulation *manifold);
-static int          count_surface_edges(Tetrahedron *tet, FaceIndex f, VertexIndex v);
-static void         copy_normal_surface(Triangulation *manifold, NormalSurface *surface);
-static Boolean      contains_positive_Euler_characteristic(NormalSurface *normal_surface_list);
-static void         remove_zero_Euler_characteristic(NormalSurface **normal_surface_list, int *num_surfaces);
-static void         transfer_list_to_array(NormalSurface **temporary_linked_list, NormalSurfaceList *permanent_surface_list);
-static void         free_equations(int **equations, int num_equations);
+static void     create_equations(Triangulation *manifold, int ***equations, int *num_equations, int *num_variables);
+static void     simplify_equations(int **equations, int num_equations, int num_variables);
+static void     find_defining_rows(int **equations, int num_equations, int num_variables, int **defining_row);
+static int      count_independent_variables(int *defining_row, int num_variables);
+static void     solve_equations(int **equations, int num_variables, int *defining_row, int index, int *solution);
+static Boolean  solution_is_nonnegative(int num_variables, int *solution);
+static void     create_squares(Triangulation *manifold, int *solution);
+static void     create_triangles(Triangulation *manifold);
+static int      count_surface_edges(Tetrahedron *tet, FaceIndex f, VertexIndex v);
+static void     copy_normal_surface(Triangulation *manifold, NormalSurface *surface);
+static Boolean  contains_positive_Euler_characteristic(NormalSurface *normal_surface_list);
+static void     remove_zero_Euler_characteristic(NormalSurface **normal_surface_list, int *num_surfaces);
+static void     transfer_list_to_array(NormalSurface **temporary_linked_list, NormalSurfaceList *permanent_surface_list);
+static void     free_equations(int **equations, int num_equations);
 
 
 FuncResult find_normal_surfaces(
@@ -263,10 +263,10 @@ FuncResult find_normal_surfaces(
                     num_equations,
                     num_variables,
                     *defining_row,
+                    num_independent_variables,
                     loop_stopper,
                     index,
                     *solution;
-    unsigned int    num_independent_variables;
     NormalSurface   *normal_surface_list,
                     *new_entry;
     Boolean         connected,
@@ -778,12 +778,12 @@ static void find_defining_rows(
 }
 
 
-static unsigned int count_independent_variables(
-    int             *defining_row,
-    unsigned int    num_variables)
+static int count_independent_variables(
+    int *defining_row,
+    int num_variables)
 {
-    unsigned int    c,
-                    count;
+    int c,
+        count;
     
     count = 0;
     

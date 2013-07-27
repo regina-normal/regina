@@ -41,7 +41,7 @@
  *  the "far" side of the slicing plane are discarded, a new face is
  *  introduced, and we know for sure that the surface of the polyhedron
  *  is still a combinatorial ball.  If the slicing plane does not divide
- *  the surface of the polyhedron into two combinatorial disks (as could
+ *  the surface of the polyhedron into two combinatorial disk (as could
  *  happen when the vertices are so close together that roundoff error
  *  introduces inconsistent combinatorial relations), the program gives up
  *  and returns NULL.
@@ -157,6 +157,7 @@ static FuncResult   slice_with_hyperplane(WEPolyhedron *polyhedron, O31Matrix m,
 static FuncResult   compute_normal_to_Dirichlet_plane(O31Matrix m, O31Vector normal_vector);
 static void         compute_vertex_to_hyperplane_distances(WEPolyhedron *polyhedron, O31Vector normal_vector);
 static Boolean      positive_vertices_exist(WEPolyhedron *polyhedron);
+static Boolean      negative_vertices_exist(WEPolyhedron *polyhedron);
 static void         cut_edges(WEPolyhedron *polyhedron);
 static FuncResult   cut_faces(WEPolyhedron *polyhedron);
 static FuncResult   check_topology_of_cut(WEPolyhedron *polyhedron);
@@ -415,7 +416,7 @@ static void make_cube(
     WEEdge      *initial_edges[12];
     WEFace      *initial_faces[6];
 
-    static const int evdata[12][2] =
+    const static int evdata[12][2] =
         {
             {0, 4},
             {2, 6},
@@ -430,7 +431,7 @@ static void make_cube(
             {2, 3},
             {6, 7}
         };
-    static const int eedata[12][2][2] =
+    const static int eedata[12][2][2] =
         {
             {{ 8,  4}, { 9,  6}},
             {{ 4, 10}, { 6, 11}},
@@ -445,7 +446,7 @@ static void make_cube(
             {{ 1,  4}, { 3,  5}},
             {{ 6,  1}, { 7,  3}}
         };
-    static const int efdata[12][2] =
+    const static int efdata[12][2] =
         {
             {2, 4},
             {4, 3},
@@ -460,7 +461,7 @@ static void make_cube(
             {3, 0},
             {1, 3}
         };
-    static const int fdata[6] = {4, 6, 0, 1, 0, 2};
+    const static int fdata[6] = {4, 6, 0, 1, 0, 2};
 
 
     /*
@@ -760,8 +761,13 @@ static FuncResult slice_with_hyperplane(
      *  If no vertices have which_side_of_plane == +1, then there is
      *  nothing to be cut off, so return func_OK immediately.
      *  If no vertices have which_side_of_plane == -1, then we're
-     *  cutting off everything, which merits a call to uFatalError().
+     *  cutting off everything, which merits a call to uFatalError(), 
+     *  but we don't since that crashes SnapPy (NMD 2011/5/4).
      */
+
+     if (negative_vertices_exist(polyhedron) == FALSE)
+        return func_failed;
+
     if (positive_vertices_exist(polyhedron) == FALSE)
         return func_OK;
 
@@ -986,11 +992,9 @@ static Boolean positive_vertices_exist(
     WEPolyhedron *polyhedron)
 {
     WEVertex    *vertex;
-    Boolean     positive_vertices_exist,
-                negative_vertices_exist;
+    Boolean     positive_vertices_exist;
 
     positive_vertices_exist = FALSE;
-    negative_vertices_exist = FALSE;
 
     for (vertex = polyhedron->vertex_list_begin.next;
          vertex != &polyhedron->vertex_list_end;
@@ -998,15 +1002,28 @@ static Boolean positive_vertices_exist(
     {
         if (vertex->which_side_of_plane == +1)
             positive_vertices_exist = TRUE;
+    }
 
+    return positive_vertices_exist;
+}
+
+static Boolean negative_vertices_exist(
+    WEPolyhedron *polyhedron)
+{
+    WEVertex    *vertex;
+    Boolean     negative_vertices_exist;
+
+    negative_vertices_exist = FALSE;
+
+    for (vertex = polyhedron->vertex_list_begin.next;
+         vertex != &polyhedron->vertex_list_end;
+         vertex = vertex->next)
+    {
         if (vertex->which_side_of_plane == -1)
             negative_vertices_exist = TRUE;
     }
 
-    if (negative_vertices_exist == FALSE)
-        uFatalError("positive_vertices_exist", "Dirichlet_construction");
-
-    return positive_vertices_exist;
+    return negative_vertices_exist;
 }
 
 

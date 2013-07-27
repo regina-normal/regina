@@ -167,12 +167,12 @@ static void connected_orientable_twosided(
     Tetrahedron             *tet,
                             *nbr;
     Permutation             gluing;
-    VertexIndex             v       = 0,
+    VertexIndex             v,
                             nbr_v;
     FaceIndex               f,
                             nbr_f;
     int                     i,
-                            index   = 0,
+                            index,
                             nbr_index;
     ListNode                *list,
                             *node,

@@ -75,7 +75,7 @@ static double Lobachevsky(double theta)
                     theta_over_pi_squared;
     const double    *lobcoefptr;
 
-    static const double lobcoef[30] = {
+    const static double lobcoef[30] = {
         5.4831135561607547882413838888201e-1,
         1.0823232337111381915160036965412e-1,
         4.8444907713545197129262758561472e-2,

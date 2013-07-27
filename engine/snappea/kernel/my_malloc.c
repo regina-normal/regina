@@ -210,6 +210,4 @@ void verify_my_malloc_usage()
             net_malloc_calls > 0 ? "more" : "fewer");
         uAcknowledge(the_message);
     }
-    else
-        uAcknowledge("Memory usage exactly zero.");
 }

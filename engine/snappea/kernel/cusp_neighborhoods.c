@@ -3096,7 +3096,7 @@ static Boolean face_contains_useful_edge(
 
     int         num_big_horoballs;
     VertexIndex v,
-                big_vertex      = 0;
+                big_vertex;
     double      min_separation_sq;
 
     num_big_horoballs = 0;

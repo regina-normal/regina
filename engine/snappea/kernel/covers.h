@@ -96,14 +96,14 @@ struct RepresentationIntoSn
      *  the permutation assigned to each "primitive" Dehn filling curve.
      *  If the Dehn filling coefficients are (a,b), the primitive Dehn
      *  filling curve is defined to be (a/c, b/c), where c = gcd(a,b).
-     *  (When the Dehn filling coefficients are relatively prime -- as is
+     *  (When the Dehn filling coefficients are relative prime -- as is
      *  always the case for a manifold -- the primitive Dehn filling curve
      *  is just the Dehn filling curve itself, and the assigned permutation
      *  is perforce the identity.  The concept of a primitive Dehn filling
      *  curve is useful only for orbifolds.)
      *
      *  The permutation corresponding to the primitive Dehn filling curve
-     *  on cusp i takes sheet j of the cover to sheet primitive_Dehn_image[i][j].
+     *  on cusp i takes sheet j of the cover to sheet Dehn_image[i][j].
      *  (For unfilled cusps, the identity permutation is given instead.)
      */
     int                     **primitive_Dehn_image;

@@ -231,7 +231,7 @@ void Moebius_to_O31(
     int         i,      /* which  row   of B        */
                 j;      /* which column of B        */
 
-    static CONST SL2CMatrix m[4] =
+    CONST static SL2CMatrix m[4] =
     {
         {{{ 1.0, 0.0},{ 0.0, 0.0}},
          {{ 0.0, 0.0},{ 1.0, 0.0}}},

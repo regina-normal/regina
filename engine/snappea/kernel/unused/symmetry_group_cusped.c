@@ -1461,7 +1461,7 @@ static void primary_part_generators(
             *regular_order,
             running_product,
             max_order,
-            new_generator   = 0,
+            new_generator,
             power_of_new_generator;
 
     /*

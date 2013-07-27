@@ -283,24 +283,24 @@ void maximize_the_injectivity_radius(
     Solution            solution;
     Boolean             may_be_saddle_point,
                         saddle_query_given;
-    int                 choice              = 0;
+    int                 choice;
 
     static const Solution   zero_solution = {0.0, 0.0, 0.0},
                             small_displacement = {0.001734, 0.002035, 0.000721};
 
-    static const char       *saddle_message = "The basepoint may be at a saddle point of the injectivity radius function.";
-    static const int        num_saddle_responses = 2;
-    static const char       *saddle_responses[2] = {
+    const static char       *saddle_message = "The basepoint may be at a saddle point of the injectivity radius function.";
+    const static int        num_saddle_responses = 2;
+    const static char       *saddle_responses[2] = {
                                 "Continue On",
                                 "Stop Here and See Dirichlet Domain"};
-    static const int        saddle_default = 1;
+    const static int        saddle_default = 1;
 
-    static const char       *zero_deriv_message = "The derivative of the distance to the closest translate of the basepoint is zero.";
-    static const char       num_zero_deriv_responses = 2;
-    static const char       *zero_deriv_responses[2] = {
+    const static char       *zero_deriv_message = "The derivative of the distance to the closest translate of the basepoint is zero.";
+    const static char       num_zero_deriv_responses = 2;
+    const static char       *zero_deriv_responses[2] = {
                                 "Displace Basepoint and Continue On",
                                 "Stop Here and See Dirichlet Domain"};
-    static const int        zero_deriv_default = 1;
+    const static int        zero_deriv_default = 1;
 
 
     /*
@@ -676,7 +676,7 @@ static void step_size_constraints(
 {
     int     i,
             j,
-            i0          = 0;
+            i0;
     double  v[3][3],
             w[3][3],
             max_abs,
@@ -922,7 +922,7 @@ static void linear_programming(
     double      apex_height,
                 new_height,
                 max_height;
-    int         inactive_constraint_index   = 0;
+    int         inactive_constraint_index;
 
     /*
      *  Initialize the three active_constraints to be the first three

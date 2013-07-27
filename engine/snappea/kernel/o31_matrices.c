@@ -209,7 +209,7 @@ double gl4R_determinant(
     int         r,
                 c,
                 cc,
-                pivot_row   = 0,
+                pivot_row,
                 row_swaps;
     double      max_abs,
                 this_abs,

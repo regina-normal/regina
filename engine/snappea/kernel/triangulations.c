@@ -246,11 +246,21 @@ void data_to_triangulation(
     /*
      *  Provide peripheral curves if necessary.
      *  This automatically records the CuspTopologies.
-     *  (Note:  all_peripheral_curves_are_zero is TRUE whenever
-     *  cusps_are_given is FALSE.)
      */
-    if (all_peripheral_curves_are_zero == TRUE)
-        peripheral_curves(manifold);
+    peripheral_curves_as_needed(manifold);
+
+    /*
+     *  Typically the manifold's orientability will already be known,
+     *  but if it isn't, try to orient it now.
+     */
+    if (manifold->orientability == unknown_orientability)
+    {
+        orient(manifold);
+        if (manifold->orientability == oriented_manifold)
+        {
+            fix_peripheral_orientations(manifold);
+        }
+    }
 
     /*
      *  If the given triangulation includes finite vertices, remove them.
@@ -270,21 +280,6 @@ void data_to_triangulation(
     my_free(tet_array);
     if (cusp_array != NULL)
         my_free(cusp_array);
-
-    /*
-     *  Typically the manifold's orientability will already be known,
-     *  but if it isn't, try to orient it now.
-     */
-    if (manifold->orientability == unknown_orientability)
-    {
-        orient(manifold);
-        if (manifold->orientability == oriented_manifold)
-        {
-            if (all_peripheral_curves_are_zero == FALSE)
-                uAcknowledge("Meridians may be reversed to insure right-handed {M,L} pairs.");
-            fix_peripheral_orientations(manifold);
-        }
-    }
 
     /*
      *  Compute the complete and filled hyperbolic structures.
@@ -911,6 +906,7 @@ void initialize_cusp(
     cusp->holonomy[   ultimate][L]  = Zero;
     cusp->holonomy[penultimate][M]  = Zero;
     cusp->holonomy[penultimate][L]  = Zero;
+    cusp->target_holonomy           = TwoPiI;
     cusp->complex_cusp_equation     = NULL;
     cusp->real_cusp_equation_re     = NULL;
     cusp->real_cusp_equation_im     = NULL;
@@ -938,6 +934,7 @@ void initialize_edge_class(
     edge_class->complex_edge_equation   = NULL;
     edge_class->real_edge_equation_re   = NULL;
     edge_class->real_edge_equation_im   = NULL;
+    edge_class->target_angle_sum        = TwoPiI;
     edge_class->prev                    = NULL;
     edge_class->next                    = NULL;
 }

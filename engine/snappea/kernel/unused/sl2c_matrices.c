@@ -11,11 +11,6 @@
  *      Complex sl2c_determinant(CONST SL2CMatrix a);
  *      void    sl2c_normalize(SL2CMatrix a);
  *      Boolean sl2c_matrix_is_real(CONST SL2CMatrix a);
- *      void    sl2c_minus(CONST SL2CMatrix a, CONST SL2CMatrix b, SL2CMatrix difference);
- *      double  sl2c_norm_squared(CONST SL2CMatrix a);
- *      void    sl2c_conjugate(CONST SL2CMatrix a, CONST SL2CMatrix b, SL2CMatrix baB);
- *      Boolean sl2c_same_matrix(CONST SL2CMatrix a, CONST SL2CMatrix b, CONST double aPrecisionSquared);
- *      Complex sl2c_trace(CONST SL2CMatrix m);
  */
 
 #include "kernel.h"
@@ -160,65 +155,3 @@ Boolean sl2c_matrix_is_real(
 
     return TRUE;
 }
-
-
-void sl2c_minus(
-    CONST SL2CMatrix    a,
-    CONST SL2CMatrix    b,
-          SL2CMatrix    difference)
-{
-    int i,
-        j;
-
-    for (i=0; i<2; i++)
-        for (j=0; j<2; j++)
-            difference[i][j] = complex_minus(a[i][j], b[i][j]);
-}
-
-
-double sl2c_norm_squared(CONST SL2CMatrix a)
-{
-    return complex_modulus_squared(a[0][0])
-         + complex_modulus_squared(a[0][1])
-         + complex_modulus_squared(a[1][0])
-         + complex_modulus_squared(a[1][1]);
-}
-
-
-void sl2c_conjugate(
-    CONST SL2CMatrix    a,
-    CONST SL2CMatrix    b,
-          SL2CMatrix    baB)
-{
-    SL2CMatrix  ba,
-                b_inverse;
-
-    sl2c_product(b, a, ba);
-    sl2c_invert(b, b_inverse);
-    sl2c_product(ba, b_inverse, baB);
-}
-
-
-Boolean sl2c_same_matrix(
-    CONST SL2CMatrix    a,
-    CONST SL2CMatrix    b,
-    CONST double        aPrecisionSquared)
-{
-    unsigned int    i,
-                    j;
-
-    for (i = 0; i < 2; i++)
-        for (j = 0; j < 2; j++)
-            if (complex_modulus_squared(complex_minus(a[i][j], b[i][j])) > aPrecisionSquared)
-                return FALSE;
-
-    return TRUE;
-}
-
-
-Complex sl2c_trace(
-    CONST SL2CMatrix    m)
-{
-    return complex_plus(m[0][0], m[1][1]);
-}
-

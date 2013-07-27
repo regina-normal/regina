@@ -176,11 +176,12 @@ struct EdgeClass
     Complex             *complex_edge_equation; /* gluing_equations.c (used locally)        */
     double              *real_edge_equation_re, /* gluing_equations.c (used locally)        */
                         *real_edge_equation_im; /* gluing_equations.c (used locally)        */
-    Complex             edge_angle_sum; /* used locally in hyperbolic structures module     */
-    int                 index;          /* used locally for saving Triangulations to disk   */
-    double              intercusp_distance; /* cusp_neighborhoods.c (used locally)          */
-    EdgeClass           *prev;          /* previous EdgeClass on doubly linked list         */
-    EdgeClass           *next;          /*   next   EdgeClass on doubly linked list         */
+    Complex             edge_angle_sum;     /* used locally in hyperbolic structures module   */
+    Complex             target_angle_sum;   /* used by MC -- force_tet_shapes                 */
+    int                 index;              /* used locally for saving Triangulations to disk */
+    double              intercusp_distance; /* cusp_neighborhoods.c (used locally)            */
+    EdgeClass           *prev;              /* previous EdgeClass on doubly linked list       */
+    EdgeClass           *next;              /*   next   EdgeClass on doubly linked list       */
 };
 
 struct Cusp
@@ -190,6 +191,7 @@ struct Cusp
     double              m,                      /* Dehn filling coefficient             */
                         l;                      /* Dehn filling coefficient             */
     Complex             holonomy[2][2];         /* holonomy.c                           */
+    Complex             target_holonomy;        /* used by MC -- force_tet_shapes       */    
     Complex             *complex_cusp_equation; /* gluing_equations.c (used locally)    */
     double              *real_cusp_equation_re, /* gluing_equations.c (used locally)    */
                         *real_cusp_equation_im; /* gluing_equations.c (used locally)    */

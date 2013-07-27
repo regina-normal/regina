@@ -10,6 +10,7 @@
  *                  Boolean         minimize_number_of_generators);
  *
  *      int     fg_get_num_generators   (GroupPresentation  *group);
+ *      int     fg_get_num_orig_gens    (GroupPresentation  *group);
  *      Boolean fg_integer_fillings     (GroupPresentation  *group);
  *      int     fg_get_num_relations    (GroupPresentation  *group);
  *      int     *fg_get_relation        (GroupPresentation  *group,
@@ -39,13 +40,16 @@
  *  fg_get_num_generators() returns the number of generators in the
  *      GroupPresentation.
  *
+ *  fg_get_num_geom_gens() returns the number of original generators for
+ *      of the  GroupPresentation.
+ *
  *  fg_integer_fillings() says whether the space is a manifold or orbifold,
  *      as opposed to some other generalized Dehn filling.
  *
  *  fg_get_num_relations() returns the number of relations in the
  *      GroupPresentation.
  *
- *  fg_get_relation() returns the specified relation.  It allocates
+ *  fg_get_relation() returns the specified relation.  Its allocate
  *      the memory for it, so you should pass the pointer back to
  *      fg_free_relation() when you're done with it.
  *      Each relation is a string of integers.  The integer 1 means the
@@ -84,6 +88,27 @@
  *  in the latter, so we now keep track of that information.  As with
  *  the expressions for meridians and longitudes, we use words with well
  *  defined basepoints, and don't do any cyclic cancellations.
+ *
+ *
+ *
+ * 2010/3/17 [NMD] Added keeping track of the latter as words in the
+ * former.  Rather that storing the entire words, which can get
+ * *really* long, we store the sequence of moves done during
+ * simplification.  These are recorded in group->itsWordMoves in the
+ * following scheme:
+ * 
+ * (a, a) with a > 0 means that the generator "a" is removed, and
+ * replaced with the final generator.
+ * 
+ * (a, -a) with a > 0 means that the generator "a" is replaced with
+ * it's inverse.
+ *
+ * (a, b) not of the above form means do the (a,b) handle slide.
+ *
+ * (n, word, n) where n is greater than the current number of
+ * generators means introduce a new generator, namely n, which is
+ * equal to "word" in terms of the current generators.
+ *
  *
  *  96/9/29  fundamental_group() nows records the basepoint of each Cusp
  *  in the Cusp's basepoint_tet, basepoint_vertex and basepoint_orientation
@@ -299,11 +324,12 @@ struct GroupPresentation
     /*
      *  We keep track of words which express each of the original generators
      *  (the ones defined in choose_generators.c) as products of the
-     *  current generators.  The words have well defined basepoints --
+     *  current generators, and vis versa.  The words have well defined basepoints --
      *  cyclic cancellations are not allowed.
      */
     int         itsNumOriginalGenerators;
-    CyclicWord  *itsOriginalGenerators;
+    CyclicWord  *itsOriginalGenerators;   /* Original in terms of current */
+    CyclicWord  *itsWordMoves;    /* Record of how the current generators relate to the current ones */
 
     /*
      *  Should we simplify the presentation?
@@ -356,8 +382,9 @@ static void                 compute_Dehn_word(CyclicWord *meridian, CyclicWord *
 static void                 append_copies(CyclicWord *source, int n, CyclicWord *dest);
 static void                 append_word(CyclicWord *source, CyclicWord *dest);
 static void                 append_inverse(CyclicWord *source, CyclicWord *dest);
+static void                 prepend_word(CyclicWord *source, CyclicWord *dest);
+static void                 prepend_inverse(CyclicWord *source, CyclicWord *dest);
 static void                 initialize_original_generators(GroupPresentation *group, int num_generators);
-
 static void                 simplify(GroupPresentation *group);
 static void                 insert_basepoints(GroupPresentation *group);
 static void                 insert_basepoints_on_list(CyclicWord *list);
@@ -438,6 +465,12 @@ static int                  *fg_get_cyclic_word(CyclicWord *list, int which_rela
 static void                 free_word_list(CyclicWord *aWordList);
 static void                 free_cyclic_word(CyclicWord *aCyclicWord);
 
+static void                 update_word_moves(GroupPresentation  *group, int a);
+static void                 update_word_moves2(GroupPresentation  *group, int a, int b);
+
+/* Debugging tool 
+static void                 print_word(CyclicWord *word); 
+*/
 
 GroupPresentation *fundamental_group(
     Triangulation   *manifold,
@@ -445,7 +478,9 @@ GroupPresentation *fundamental_group(
     Boolean         fillings_may_affect_generators,
     Boolean         minimize_number_of_generators)
 {
+
     GroupPresentation   *group;
+    uLongComputationBegins("Computing the fundamental group.", TRUE);
 
     /*
      *  Read a group presentation from the manifold, without worrying
@@ -471,6 +506,7 @@ GroupPresentation *fundamental_group(
         simplify(group);
 
     return group;
+    uLongComputationEnds();
 }
 
 
@@ -478,10 +514,22 @@ static GroupPresentation *compute_unsimplified_presentation(
     Triangulation   *manifold)
 {
     GroupPresentation   *group;
+    Boolean  compute_vertices;
+    SolutionType solution_type = get_filled_solution_type(manifold);
 
     group = NEW_STRUCT(GroupPresentation);
 
-    choose_generators(manifold, FALSE, FALSE);
+    /* 
+     *  MC 2012-03-20 added the test for degenerate solutions to avoid
+     *  division by zero errors when computing the fundamental groups
+     *  of certain MorwenLinks on platforms with accurate arithmetic.
+     */
+
+    compute_vertices =  (solution_type != not_attempted
+			 && solution_type != no_solution
+			 && solution_type != degenerate_solution);
+
+    choose_generators(manifold, compute_vertices, FALSE);
 
     group->itsNumGenerators = manifold->num_generators;
 
@@ -501,6 +549,8 @@ static void compute_matrix_generators(
     Triangulation       *manifold,
     GroupPresentation   *group)
 {
+    SolutionType solution_type = get_filled_solution_type(manifold);
+    Boolean use_identities;
     /*
      *  Pass centroid_at_origin = FALSE to matrix_generators()
      *  so the initial Tetrahedron will be positioned with vertices
@@ -511,22 +561,26 @@ static void compute_matrix_generators(
     
     group->itsMatrices = NEW_ARRAY(manifold->num_generators, O31Matrix);
 
-    if (get_filled_solution_type(manifold) != not_attempted
-     && get_filled_solution_type(manifold) != no_solution)
+    /* MC 2013-03-20: now checks if matrix_generators fails.*/
+    use_identities = ( solution_type == not_attempted
+		       || solution_type == no_solution );
+    if ( !use_identities )
     {
         MoebiusTransformation   *moebius_generators;
 
-        moebius_generators = NEW_ARRAY(manifold->num_generators, MoebiusTransformation);
+        moebius_generators = NEW_ARRAY(manifold->num_generators,
+				       MoebiusTransformation);
 
-        matrix_generators(manifold, moebius_generators, FALSE);
-
-        Moebius_array_to_O31_array( moebius_generators,
-                                    group->itsMatrices,
-                                    manifold->num_generators);
+        if ( matrix_generators(manifold, moebius_generators) == func_failed )
+	    use_identities = TRUE;
+	else
+	  Moebius_array_to_O31_array( moebius_generators,
+				      group->itsMatrices,
+				      manifold->num_generators);
 
         my_free(moebius_generators);
     }
-    else
+    if ( use_identities )
     {
         int i;
 
@@ -575,7 +629,7 @@ static void compute_one_edge_relation(
                     ptet;
     Letter          dummy_letter,
                     *new_letter;
-    int             index           = 0;
+    int             index;
 
     /*
      *  Ignore EdgeClasses which choose_generators() has already
@@ -743,7 +797,7 @@ static void compute_peripheral_word(
     CyclicWord      *new_word;
     Letter          dummy_letter,
                     *new_letter;
-    int             index       = 0;
+    int             index;
 
     /*
      *  Initialize the new_word, and install it on the linked list.
@@ -1029,7 +1083,6 @@ static void find_curve_start(
     uFatalError("find_curve_start", "fundamental_group");
 }
 
-
 static void compute_Dehn_word(
     CyclicWord  *meridian,
     CyclicWord  *longitude,
@@ -1066,8 +1119,33 @@ static void compute_Dehn_word(
      *  Append m meridians and l longitudes to new_word,
      *  taking into account the signs of m and l.
      */
+    /*
     append_copies(meridian,  m, new_word);
     append_copies(longitude, l, new_word);
+
+       MC 2013/02/12: Following a suggestion from John Berge we now
+       use the dth power of a primitive p/q word in meridian and
+       longitude, where d=(m,l), p=m/d, q=l/d, instead of mer^mlong^l.
+       This is more likely to give a geometric presentation.
+    */
+    {
+      int M=ABS(m), L=ABS(l);
+      int m_sign=(M == m ? 1 : -1), l_sign=(L == l ? 1 : -1);
+      int i=0, d = gcd(M,L);
+      if (d > 1) {
+	M /= d;
+	L /= d;
+      }
+      while (d > 0) {
+	do {
+	  if (i < M) append_copies(meridian, m_sign, new_word);
+	  else append_copies(longitude, l_sign, new_word);
+	  i += M;
+	  if (i >= M+L ) i -= (M+L);
+	} while (i != 0);
+	d -= 1;
+      }
+    }
 
     /*
      *  Give new_word a valid pointer to the circular doubly linked list
@@ -1118,6 +1196,26 @@ static void append_word(
     }
 }
 
+static void prepend_word(
+    CyclicWord  *source, 
+    CyclicWord  *dest)
+{
+    int     i;
+    Letter  *letter,
+            *letter_copy;
+
+    for (   letter = source->itsLetters->prev, i = 0;
+            i < source->itsLength;
+            letter = letter->prev, i++)
+    {
+      letter_copy = NEW_STRUCT(Letter);
+      letter_copy->itsValue = letter->itsValue;
+      INSERT_BEFORE(letter_copy, dest->itsLetters);
+      dest->itsLetters = letter_copy;
+      dest->itsLength++;
+    }
+}
+
 
 static void append_inverse(
     CyclicWord  *source,
@@ -1138,6 +1236,25 @@ static void append_inverse(
     }
 }
 
+static void prepend_inverse(
+    CyclicWord  *source,
+    CyclicWord  *dest)
+{
+    int     i;
+    Letter  *letter,
+            *letter_copy;
+
+    for (   letter = source->itsLetters, i = 0;
+            i < source->itsLength;
+            letter = letter->next, i++)
+    {
+      letter_copy = NEW_STRUCT(Letter);
+      letter_copy->itsValue = - letter->itsValue;
+      INSERT_BEFORE(letter_copy, dest->itsLetters);
+      dest->itsLetters = letter_copy;
+      dest->itsLength++;
+    }
+}
 
 static void initialize_original_generators(
     GroupPresentation   *group,
@@ -1171,6 +1288,23 @@ static void initialize_original_generators(
         new_word->next                  = group->itsOriginalGenerators;
         group->itsOriginalGenerators    = new_word;
     }
+
+    /*
+     *  Initially the current generators are the original generators,
+     *  so we just start with a dummy record.
+     */
+
+    new_letter = NEW_STRUCT(Letter); 
+    new_letter->itsValue = 0;
+    new_letter->prev = new_letter;
+    new_letter->next = new_letter;
+
+    new_word = NEW_STRUCT(CyclicWord);
+    new_word->itsLength             = 1;
+    new_word->itsLetters            = new_letter;
+    new_word->is_Dehn_relation      = FALSE;
+    new_word->next   = NULL;
+    group->itsWordMoves    = new_word;
 }
 
 
@@ -1256,7 +1390,7 @@ static void simplify(
      */
     while
     (
-        remove_empty_relations(group)
+         remove_empty_relations(group)
 
         /*
          *  If there is a relation of length one, e.g. "a", do a handle
@@ -1322,8 +1456,13 @@ static void simplify(
          *  of torus knots as a^n = b^m.
          */
      || simplify_one_word_presentations(group)
-    )
-         ;
+	)
+     {
+      /*NMD 2008/5/31*/
+      if (uLongComputationContinues() == func_cancelled) 
+        break;
+      }
+     
 
     /*
      *  Try to simplify presentations of finite cyclic groups.
@@ -1342,7 +1481,11 @@ static void simplify(
      */
     while ( invert_generators_where_necessary(group) == TRUE
         ||  invert_words_where_necessary(group) == TRUE)
-        ;
+       {
+      /*NMD 2008/5/31*/
+      if (uLongComputationContinues() == func_cancelled) 
+        break;
+      }
 
     /*
      *  The starting point of a cyclic word is arbitrary.
@@ -2760,82 +2903,81 @@ static Boolean insert_word_backwards(
     return TRUE;
 }
 
-
 static Boolean simplify_one_word_presentations(
-    GroupPresentation   *group)
+    GroupPresentation    *group)
 {
     /*
-     *  In general we'd like one-word presentations to be as simple
-     *  as possible.  In particular, we'd like to display the fundamental
-     *  group of a torus knot as a^n = b^m, so the user can recognize
-     *  it easily.
+     *    In general we'd like one-word presentations to be as simple
+     *    as possible.  In particular, we'd like to display the fundamental
+     *    group of a torus knot as a^n = b^m, so the user can recognize
+     *    it easily.
      *
-     *  Often the presentation for a torus knot group is something like
-     *  bbaabbbaabbaa.  We can use the repeating pattern (bbaa)b(bbaa)(bbaa)
-     *  to simplify the presentation.  Introduce c = bbaa, so the
-     *  presentation becomes {Cbbaa, bccc}, then eliminate b = CCC to get
-     *  {CCCCCCCaa}.
+     *    Often the presentation for a torus knot group is something like
+     *    bbaabbbaabbaa.  We can use the repeating pattern (bbaa)b(bbaa)(bbaa)
+     *    to simplify the presentation.  Introduce c = bbaa, so the
+     *    presentation becomes {Cbbaa, bccc}, then eliminate b = CCC to get
+     *    {CCCCCCCaa}.
      *
-     *  It's easy to prove that the word gets shorter iff it's
-     *  not a power of a single variable, like b^13 = b(bbbb)(bbbb)(bbbb).
-     *  [added 2008/5/31 by JRW]
+     *    It's easy to prove that the word gets shorter iff it's
+     *    not a power of a single variable, like b^13 = b(bbbb)(bbbb)(bbbb).
+     *    [added 2008/5/31 by JRW]
      */
 
-    CyclicWord  *word,
+    CyclicWord    *word,
                 *new_word;
-    int         num_matched_letters,
+    int            num_matched_letters,
                 period,
                 repetitions;
-    Letter      *unmatched_letter;
-    int         i,
+    Letter        *unmatched_letter;
+    int            i,
                 j;
 
     /*
-     *  If this isn't a one-word presentation with at least two generators,
-     *  don't do anything.
+     *    If this isn't a one-word presentation with at least two generators,
+     *    don't do anything.
      */
     if (group->itsNumRelations != 1
-     || group->itsNumGenerators < 2)
+     ||    group->itsNumGenerators < 2)
         return FALSE;
 
     /*
-     *  Find the unique relation.
+     *    Find the unique relation.
      */
     word = group->itsRelations;
     
     /*
-     *  If the unique relation is a power of a single variable, don't do anything.
-     *  [added 2008/5/31 by JRW]
+     *    If the unique relation is a power of a single variable, don't do anything.
+     *    [added 2008/5/31 by JRW]
      */
     if (count_runs(word) == 0)
         return FALSE;
 
     /*
-     *  Is it OK for this relation to influence the choice of generators?
+     *    Is it OK for this relation to influence the choice of generators?
      */
     if (word->is_Dehn_relation == TRUE
      && group->fillings_may_affect_generators == FALSE)
         return FALSE;
 
     /*
-     *  Terminology.  In the example (bbaa)b(bbaa)(bbaa), the 'b' not
-     *  in parentheses is called the "unmatched" letter.  The remaining
-     *  letters are "matched".  The period is 4, and the number of
-     *  repetitions is 3.
+     *    Terminology.  In the example (bbaa)b(bbaa)(bbaa), the 'b' not
+     *    in parentheses is called the "unmatched" letter.  The remaining
+     *    letters are "matched".  The period is 4, and the number of
+     *    repetitions is 3.
      */
 
     /*
-     *  We can ignore patterns of period one, because they will be either of
-     *  the form "aaaaaa" (which needs no simplification) or "baaaaaa" (which
-     *  would have already been eliminated by eliminate_word_in_group()).
+     *    We can ignore patterns of period one, because they will be either of
+     *    the form "aaaaaa" (which needs no simplification) or "baaaaaa" (which
+     *    would have already been eliminated by eliminate_word_in_group()).
      *
-     *  We can ignore patterns of period two, because they will be of the
-     *  form "bbabababa", which would have already been simplified by
-     *  try_handle_slides() -- this is a one-word presentation.
+     *    We can ignore patterns of period two, because they will be of the
+     *    form "bbabababa", which would have already been simplified by
+     *    try_handle_slides() -- this is a one-word presentation.
      *
-     *  We can ignore patterns of period three, for the same reason.
+     *    We can ignore patterns of period three, for the same reason.
      *
-     *  Therefore we look only for patterns of period four or greater.
+     *    Therefore we look only for patterns of period four or greater.
      */
 
     num_matched_letters = word->itsLength - 1;
@@ -2847,43 +2989,43 @@ static Boolean simplify_one_word_presentations(
             repetitions = num_matched_letters / period;
 
             /*
-             *  Try all possibilities for the unmatched_letter.
+             *    Try all possibilities for the unmatched_letter.
              */
-            for (   unmatched_letter = word->itsLetters, i = 0;
+            for (    unmatched_letter = word->itsLetters, i = 0;
                     i < word->itsLength;
                     unmatched_letter = unmatched_letter->next, i++)
 
-                if (word_contains_pattern(  unmatched_letter,
+                if (word_contains_pattern(    unmatched_letter,
                                             period,
                                             repetitions) == TRUE)
                 {
                     /*
-                     *  Create the new word,
-                     *  e.g. {bbaabbbaabbaa} -> {bbaabbbaabbaa, Cbbaa}.
+                     *    Create the new word,
+                     *    e.g. {bbaabbbaabbaa} -> {bbaabbbaabbaa, Cbbaa}.
                      */
-                    new_word = introduce_generator( group,
+                    new_word = introduce_generator(    group,
                                                     unmatched_letter->next,
                                                     period);
 
                     /*
-                     *  Make sure the new_word is inserted
-                     *  at the correct positon.
-                     *  JRW  28 Feb 2002
+                     *    Make sure the new_word is inserted
+                     *    at the correct positon.
+                     *    JRW  28 Feb 2002
                      */
-                        /*  Cbbaa -> bbaaC  */
+                        /*    Cbbaa -> bbaaC    */
                     new_word->itsLetters    = new_word->itsLetters->next;
-                        /*  bbaabbbaabbaa -> bbaabbaabbaab  */
+                        /*    bbaabbbaabbaa -> bbaabbaabbaab    */
                     word->itsLetters        = unmatched_letter->next;
 
                     /*
-                     *  Insert the new word into the old,
-                     *  e.g. {bbaabbaabbaab, bbaaC}
-                     *    -> {cbbaabbaab, bbaaC}
-                     *    -> {bbaabbaabc, bbaaC}
-                     *    -> {cbbaabc, bbaaC}
-                     *    -> {bbaabcc, bbaaC}
-                     *    -> {cbcc, bbaaC}
-                     *    -> {bccc, bbaaC}
+                     *    Insert the new word into the old,
+                     *    e.g. {bbaabbaabbaab, bbaaC}
+                     *      -> {cbbaabbaab, bbaaC}
+                     *      -> {bbaabbaabc, bbaaC}
+                     *      -> {cbbaabc, bbaaC}
+                     *      -> {bbaabcc, bbaaC}
+                     *      -> {cbcc, bbaaC}
+                     *      -> {bccc, bbaaC}
                      */
                     for (j = 0; j < repetitions; j++)
                     {
@@ -2893,13 +3035,13 @@ static Boolean simplify_one_word_presentations(
                     }
 
                     /*
-                     *  Eliminate the original word,
-                     *  e.g. {bccc, bbaaC} -> {CCCCCCCaa}.
+                     *    Eliminate the original word,
+                     *    e.g. {bccc, bbaaC} -> {CCCCCCCaa}.
                      */
                     eliminate_word(group, word, unmatched_letter->itsValue);
 
                     /*
-                     *  All done.
+                     *    All done.
                      */
                     return TRUE;
                 }
@@ -2957,7 +3099,7 @@ static CyclicWord *introduce_generator(
     O31Matrix   *new_array,
                 the_inverse;
     int         i;
-    Letter      *letter,
+    Letter      *letter, 
                 *new_generator_letter,
                 *letter_copy;
     CyclicWord  *new_word;
@@ -3049,10 +3191,20 @@ static CyclicWord *introduce_generator(
         INSERT_BEFORE(letter_copy, new_generator_letter);
     }
 
+    /*  
+     *  Record what we done so we can later reconstruct the current
+     *  generators in terms of the original ones.
+     */
+
+    update_word_moves(group, group->itsNumGenerators);
+    for (i = 0, letter = substring; i < length; i++, letter=letter->next)
+      update_word_moves(group, letter->itsValue);
+    update_word_moves(group, group->itsNumGenerators);
+
     /*
      *  The new_word may be considered an edge relation, as explained above.
      */
-    new_word->is_Dehn_relation = FALSE;
+      new_word->is_Dehn_relation = FALSE;
 
     new_word->next = group->itsRelations;
     group->itsRelations = new_word;
@@ -3446,6 +3598,7 @@ static void invert_generator_in_group(
     invert_generator_on_list(group->itsMeridians,          a);
     invert_generator_on_list(group->itsLongitudes,         a);
     invert_generator_on_list(group->itsOriginalGenerators, a);
+    update_word_moves2(group, a, -a);
 }
 
 
@@ -3948,6 +4101,11 @@ static void handle_slide(
     handle_slide_matrices(group, a, b);
 
     /*
+     * Record what we've done
+     */
+    update_word_moves2(group, a, b);
+
+    /*
      *  Cancel any pairs of inverses we may have created.
      */
     cancel_inverses(group);
@@ -4003,12 +4161,12 @@ static void handle_slide_word(
     }
 }
 
-
 static void handle_slide_matrices(
     GroupPresentation   *group,
     int                 a,
     int                 b)
 {
+
     /*
      *  Initially, generators a, b, etc. may be visualized as curves
      *  in the interior of the handlebody which pass once around their
@@ -4104,7 +4262,7 @@ static void cancel_handles(
      */
 
     int dead_generator;
-
+  
     /*
      *  Double check that the word has length one.
      */
@@ -4130,15 +4288,15 @@ static void cancel_handles(
      *  with one generator and one empty word.
      */
     remove_generator(group, dead_generator);
-
+    
     /*
      *  The highest numbered generator should assume the index of the
      *  dead_generator, to keep the indexing contiguous.
      */
-
     renumber_generator(group, group->itsNumGenerators, dead_generator);
     o31_copy(   group->itsMatrices[dead_generator - 1],
                 group->itsMatrices[group->itsNumGenerators - 1]);
+    update_word_moves2(group, dead_generator, dead_generator);
 
     group->itsNumGenerators--;
 
@@ -4275,8 +4433,7 @@ static void renumber_generator(
     renumber_generator_on_word_list(group->itsMeridians,          old_index, new_index);
     renumber_generator_on_word_list(group->itsLongitudes,         old_index, new_index);
     renumber_generator_on_word_list(group->itsOriginalGenerators, old_index, new_index);
-}
-
+}				    					
 
 static void renumber_generator_on_word_list(
     CyclicWord  *list,
@@ -4316,6 +4473,13 @@ int fg_get_num_generators(
     GroupPresentation   *group)
 {
     return group->itsNumGenerators;
+}
+
+/* Added by MC 01/26/08 */
+int fg_get_num_orig_gens(
+    GroupPresentation   *group)
+{
+  return group->itsNumOriginalGenerators;
 }
 
 
@@ -4473,6 +4637,30 @@ int *fg_get_original_generator(
     return fg_get_cyclic_word(group->itsOriginalGenerators, which_generator);
 }
 
+/* Added by NMD 2010/3/14 */
+
+int * fg_get_word_moves(GroupPresentation *group){
+      int         i;
+    CyclicWord  *word;
+    Letter      *letter;
+    int         *result;
+    int         length;
+
+
+    /* Have to skip the first dummy letter */
+
+    word = group->itsWordMoves;
+    length = word->itsLength;
+    result = NEW_ARRAY(length, int);
+    for (   i = 1, letter = word->itsLetters->next;
+            i < length;
+            i++, letter = letter->next)
+    {
+        result[i-1] = letter->itsValue;
+    }
+    result[length - 1] = 0;
+    return result;
+}
 
 static int *fg_get_cyclic_word(
     CyclicWord  *list,
@@ -4522,6 +4710,7 @@ void free_group_presentation(
         free_word_list(group->itsMeridians);
         free_word_list(group->itsLongitudes);
         free_word_list(group->itsOriginalGenerators);
+        free_word_list(group->itsWordMoves);
 
         my_free(group);
     }
@@ -4569,3 +4758,41 @@ static void free_cyclic_word(
 
     my_free(aCyclicWord);
 }
+
+
+static void update_word_moves(GroupPresentation  *group, int a){
+  Letter *letter;
+
+  letter = NEW_STRUCT(Letter); 
+  letter->itsValue = a;
+  INSERT_BEFORE(letter, group->itsWordMoves->itsLetters); 
+  group->itsWordMoves->itsLength++;
+}
+
+static void update_word_moves2(GroupPresentation  *group, int a, int b){
+  Letter *letter;
+
+  letter = NEW_STRUCT(Letter); 
+  letter->itsValue = a;
+  INSERT_BEFORE(letter, group->itsWordMoves->itsLetters); 
+
+  letter = NEW_STRUCT(Letter); 
+  letter->itsValue = b;
+  INSERT_BEFORE(letter, group->itsWordMoves->itsLetters); 
+
+  group->itsWordMoves->itsLength += 2; 
+}
+
+/*
+Debugging tool
+
+void print_word(CyclicWord *word){
+  int i;
+  Letter *letter;
+  printf("[");
+  for (i = 0, letter = word->itsLetters; i < word->itsLength; i++, letter = letter->next)
+    printf("%d ", letter->itsValue);
+  printf("] ");
+}
+
+*/

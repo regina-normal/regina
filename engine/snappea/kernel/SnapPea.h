@@ -18,20 +18,13 @@
  *  SnapPea 3.0 is funded by the U.S. National Science Foundation
  *  and the MacArthur Foundation.  SnapPea and its source code may
  *  be used freely for all noncommercial purposes.  Please direct
- *  questions, problems and suggestions to Jeff Weeks
- *  (www.geometrygames.org/contact.html).
+ *  questions, problems and suggestions to Jeff Weeks (weeks@northnet.org).
  *
  *  Copyright 1999 by Jeff Weeks.  All rights reserved.
  */
 
 #ifndef _SnapPea_
 #define _SnapPea_
-
-/*  BUFFER_LENGTH() measures the number of items in an array,
- *  not the number of bytes, and automatically adjusts to changes
- *  in the number of elements or the size of each element.
- */
-#define BUFFER_LENGTH(a)    ( sizeof(a) / sizeof((a)[0]) )
 
 /*
  *  Note:  values of the SolutionType enum are stored as integers in
@@ -67,7 +60,8 @@ typedef struct
             imag;
 } Complex;
 
-typedef unsigned char   Boolean;
+/*MC 02/01/08*/
+typedef char   Boolean;
 
 /*
  *  The values of MatrixParity should not be changed.
@@ -425,6 +419,14 @@ typedef struct NormalSurfaceList            NormalSurfaceList;
 #include "winged_edge.h"
 
 /*
+ *  tersest_triangulation.h describes the most compressed form
+ *  for a Triangulation.  The UI must have the actual definition
+ *  (not just an opaque typedef) because to read one from the
+ *  middle of a file it needs to know how long they are.
+ */
+#include "tersest_triangulation.h"
+
+/*
  *  link_projection.h describes the format in which the UI passes
  *  link projections to the kernel.
  */
@@ -441,6 +443,12 @@ typedef struct NormalSurfaceList            NormalSurfaceList;
  *  into the symmetric group on n letters.
  */
 #include "covers.h"
+
+/*  MC 01/26/08
+ *  homology.h defines a structure used to store a relation matrix for
+ *  the first homology group.
+ */
+#include "homology.h"
 
 /*  To guarantee thread-safety, it's useful to declare      */
 /*  global variables to be "const", for example             */
@@ -605,23 +613,6 @@ extern void free_abelian_group(AbelianGroup *g);
  *  Frees the storage used to hold the AbelianGroup *g.
  */
 
-
-/************************************************************************/
-/*                                                                      */
-/*                      ambiguous_cusp_bases.c                          */
-/*                                                                      */
-/************************************************************************/
-
-extern void resolve_ambiguous_bases(
-    Triangulation   *aTriangulation,
-    char            *aDehydratedDescription);
-/*
- *  For census manifolds with square or hexagonal cusps,
- *  chooses a well-defined (meridian, longitude) pair
- *  based on the homology of the manifold as a whole.
- *  For non-census manifolds, posts a warning and leaves
- *  the existing (meridian, longitude) unchanged.
- */
 
 /************************************************************************/
 /*                                                                      */
@@ -1064,20 +1055,6 @@ extern void free_cusp_neighborhood_segment_list(
 
 /************************************************************************/
 /*                                                                      */
-/*                              decode_CHW.c                            */
-/*                                                                      */
-/************************************************************************/
-
-extern Triangulation *CHW_to_tri(   char    *anEncoding,
-                                    Boolean aChernSimonsIsPresent,
-                                    double  aChernSimonsValue);
-/*
- *  Decode a CHW-encoded triangulation.  Please see decode_CHW.c for details.
- */
-
-
-/************************************************************************/
-/*                                                                      */
 /*                              Dirichlet.c                             */
 /*                                                                      */
 /************************************************************************/
@@ -1341,6 +1318,11 @@ extern int fg_get_num_generators(GroupPresentation *group);
  *  Returns the number of generators in the GroupPresentation.
  */
 
+extern int fg_get_num_orig_gens(GroupPresentation   *group);
+/*
+ * Returns the number of standard geometric generators.
+ */
+
 extern Boolean fg_integer_fillings(GroupPresentation *group);
 /*
  *  Says whether the underlying space is a manifold or orbifold,
@@ -1420,6 +1402,16 @@ extern int  *fg_get_original_generator( GroupPresentation   *group,
  *  Please free the word with fg_free_relation() when you're done.
  */
 
+extern int *fg_get_word_moves(GroupPresentation *group);
+
+/*
+ *  Returns a something describing how the current generators are
+ *  expressed in terms of the geometric generators.  See
+ *  fundamental_group.c for details.  Please free the word with
+ *  fg_free_relation() when you're done.
+ */
+
+
 extern void free_group_presentation(GroupPresentation *group);
 /*
  *  Frees the storage occupied by a GroupPresentation.
@@ -1451,6 +1443,19 @@ extern AbelianGroup *homology_from_fundamental_group(
  *  Returns NULL if overflows occur.
  */
 
+extern void homology_presentation(
+    Triangulation *manifold,
+    RelationMatrix *relation_matrix);
+/*
+ *  Fills in a RelationMatrix structure.  Sets relation_matrix->relations
+ *  to NULL if overflows occurs while computing the matrix.
+ *  MC 01/26/08
+ */
+
+extern void free_relations(RelationMatrix  *relation_matrix);
+/*
+  Frees the memory pointed to by relation_matrix->relations.
+ */
 
 /************************************************************************/
 /*                                                                      */
@@ -1504,7 +1509,7 @@ extern SolutionType remove_Dehn_fillings(Triangulation *manifold);
 /*                                                                      */
 /************************************************************************/
 
-extern double index_to_hue(unsigned int index);
+extern double index_to_hue(int index);
 /*
  *  Maps the nonnegative integers to a set of easily distinguishable hues.
  *
@@ -1512,13 +1517,7 @@ extern double index_to_hue(unsigned int index);
  *  hue     0       1/2     1/4     3/4     1/8     5/8     3/8   . . .
  */
 
-extern double index_to_prettier_hue(unsigned int aHueIndex);
-/*
- *  Similar to horoball_hue() but with a slightly different formula.
- *  (Note to self:  Think about these different options at some point.)
- */
-
-extern double horoball_hue(unsigned int index);
+extern double horoball_hue(int index);
 /*
  *  Provides hand chosen hues for indices 0-5, and uses index_to_hue()
  *  to interpolate thereafter.  The hope is for nicer looking horoball
@@ -1538,7 +1537,7 @@ extern char *get_triangulation_name(Triangulation *manifold);
  *  The pointer points to the actual name, not a copy.
  */
 
-extern void set_triangulation_name(Triangulation *manifold, const char *new_name);
+extern void set_triangulation_name(Triangulation *manifold, char *new_name);
 /*
  *  Sets the Triangulation's name to new_name.
  */
@@ -1675,15 +1674,15 @@ extern void get_holonomy(   Triangulation   *manifold,
 extern void get_tet_shape(  Triangulation   *manifold,
                             int             which_tet,
                             Boolean         fixed_alignment,
-                            double          *shape_rect_real,       /*  OK to pass NULL */
-                            double          *shape_rect_imag,       /*  OK to pass NULL */
-                            double          *shape_log_real,        /*  OK to pass NULL */
-                            double          *shape_log_imag,        /*  OK to pass NULL */
-                            int             *precision_rect_real,   /*  OK to pass NULL */
-                            int             *precision_rect_imag,   /*  OK to pass NULL */
-                            int             *precision_log_real,    /*  OK to pass NULL */
-                            int             *precision_log_imag,    /*  OK to pass NULL */
-                            Boolean         *is_geometric);         /*  OK to pass NULL */
+                            double          *shape_rect_real,
+                            double          *shape_rect_imag,
+                            double          *shape_log_real,
+                            double          *shape_log_imag,
+                            int             *precision_rect_real,
+                            int             *precision_rect_imag,
+                            int             *precision_log_real,
+                            int             *precision_log_imag,
+                            Boolean         *is_geometric);
 /*
  *  Provides information about the shape of the Tetrahedron in
  *  position which_tet in the linked list (which_tet takes a value
@@ -1822,24 +1821,6 @@ extern void free_length_spectrum(MultiLength *spectrum);
  *  Deallocates the memory used to store the length spectrum.
  */
 
-/*
- *      Added 2007/11/12:
- */
-    void ortholengths(  Triangulation   *manifold,          /*  input */
-                        double          tiling_radius,      /*  input */
-                        Complex         *shortest_geodesic, /*  output */
-                        double          *tube_radius,       /*  output */
-                        unsigned int    *num_ortholengths,  /*  output */
-                        Complex         **ortholengths,     /*  output */
-                        Complex         **basings);         /*  output */
-
-    void free_ortholengths( Complex         **ortholengths,
-                            Complex         **basings);
-/*
- *  ortholengths() doesn't test its tiling_radius and so doesn't provide
- *  a rigorous guarantee of anything, but in practice it works.
- */
-
 
 /************************************************************************/
 /*                                                                      */
@@ -1891,18 +1872,16 @@ extern Boolean O31_determinants_OK( O31Matrix   arrayB[],
 /*                                                                      */
 /************************************************************************/
 
-extern void matrix_generators(  Triangulation           *manifold,
-                                MoebiusTransformation   generators[],
-                                Boolean                 centroid_at_origin);
+ extern FuncResult matrix_generators( Triangulation           *manifold,
+				      MoebiusTransformation   generators[]);
 /*
- *  Computes the MoebiusTransformations representing the action
- *  of the generators of a manifold's fundamental group on the sphere at
- *  infinity.  Writes the MoebiusTransformations to the array generators[],
- *  which it assumes has already been allocated.  You may use
+ *  Computes the MoebiusTransformations representing the action of the
+ *  generators of a manifold's fundamental group on the sphere at
+ *  infinity.  Writes the MoebiusTransformations to the array
+ *  generators[], which it assumes has already been allocated.
+ *  Moreover, assumes that choose_generators has already been called
+ *  to compute the locations of the ideal vertices. You may use
  *  get_num_generators() to determine how long an array to allocate.
- *  If centroid_at_origin is TRUE, the initial tetrahedron is positioned
- *  with its centroid at the origin;  otherwise the initial tetrahedron
- *  is positioned with its vertices at {0, 1, infinity, z}.
  */
 
 
@@ -2074,6 +2053,23 @@ extern Triangulation *triangulate_punctured_torus_bundle(
 
 /************************************************************************/
 /*                                                                      */
+/*                          rehydrate_census.c                          */
+/*                                                                      */
+/************************************************************************/
+
+extern void rehydrate_census_manifold(
+                                TersestTriangulation    tersest,
+                                int                     which_census,
+                                int                     which_manifold,
+                                Triangulation           **manifold);
+/*
+ *  Rehydrates a census manifold from a tersest description, resolving
+ *  any ambiguities in the choice of peripheral curves for the cusps.
+ */
+
+
+/************************************************************************/
+/*                                                                      */
 /*                          representations.c                           */
 /*                                                                      */
 /************************************************************************/
@@ -2094,6 +2090,55 @@ void free_representation_list(
  *  Frees a RepresentationList.
  */
 
+/* MC: The next two declarations would not have to be public,
+   if the kernel provided a function that built a representation
+   from permutation data.
+*/
+RepresentationIntoSn *initialize_new_representation(
+      int num_original_generators,
+      int n,
+      int num_cusps);
+/*
+ *  Initializes a RepresentationIntoSn structure.  (Added by MC 01/27/08)
+ */
+
+RepresentationIntoSn *convert_candidateSn_to_original_generators(
+     int **candidateSn, 
+     int n, 
+     int num_original_generators, 
+     int **original_generators, 
+     Triangulation *manifold, 
+     int **meridians,
+     int **longitudes);
+ /*
+  *  This should be private to the kernel.  (Added by MC 01/27/08)
+  */
+
+void free_representation(
+     RepresentationIntoSn *representation,
+     int                  num_generators,
+     int                  num_cusps);
+/*
+ *  Frees a RepresentationIntoSn.  (Added by MC 01/27/08)
+ */
+
+Boolean candidateSn_is_valid(
+     int **candidateSn,
+     int n,
+     int **group_relations,
+     int num_relations);
+
+/*
+ *  Does the candidate representation satisfy all of the relations?
+ */
+
+Boolean candidateSn_is_transitive(
+     int **candidateSn,
+     int num_generators,
+     int n);
+/*
+ *  Is the candidate representation transitive?
+ */
 
 /************************************************************************/
 /*                                                                      */
@@ -2394,6 +2439,38 @@ extern Triangulation *terse_to_tri(TerseTriangulation *tt);
 extern void free_terse_triangulation(TerseTriangulation *tt);
 /*
  *  Releases the memory used to store a TerseTriangulation.
+ */
+
+
+/************************************************************************/
+/*                                                                      */
+/*                      tersest_triangulation.c                         */
+/*                                                                      */
+/************************************************************************/
+
+extern void terse_to_tersest(   TerseTriangulation      *terse,
+                                TersestTriangulation    tersest);
+/*
+ *  Converts a TerseTriangulation to a TersestTriangulation.
+ */
+
+extern void tersest_to_terse(   TersestTriangulation    tersest,
+                                TerseTriangulation      **terse);
+/*
+ *  Converts a TersestTriangulation to a TerseTriangulation.
+ *  Allocates space for the result.
+ */
+
+extern void tri_to_tersest(     Triangulation           *manifold,
+                                TersestTriangulation    tersest);
+/*
+ *  Composes tri_to_terse() and terse_to_tersest().
+ */
+
+extern void tersest_to_tri(     TersestTriangulation    tersest,
+                                Triangulation           **manifold);
+/*
+ *  Composes tersest_to_terse() and terse_to_tri().
  */
 
 
