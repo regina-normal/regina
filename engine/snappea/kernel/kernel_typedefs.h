@@ -456,16 +456,15 @@ typedef struct extra Extra;
  *      }
  *
  *  If all else fails, read the documentation for your C++ compiler,
- *  and contact Jeff Weeks (www.geometrygames.org/contact.html)
- *  if you have problems.   If this gets to be a headache, I can
- *  replace the standard library's qsort() with a hard-coded qsort
- *  (such as the one on page 120 of K&R 2nd ed.).
+ *  and contact weeks@northnet.org if you have problems.   If this
+ *  gets to be a headache, I can replace the standard library's qsort()
+ *  with a hard-coded qsort (such as the one on page 120 of K&R 2nd ed.).
  */
 
 #ifdef __cplusplus
 
 #define CDECL   _cdecl
-/*#define CDECL cdecl*/
+//#define CDECL cdecl
 
 #else
 

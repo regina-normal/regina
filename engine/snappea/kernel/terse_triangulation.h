@@ -10,7 +10,10 @@
  *  Chern-Simons invariant (mod 1/2).
  *
  *  Most often the TerseTriangulation will be used in conjunction with
- *  the CHW data format (cf. decode_CHW.c) used to store the census manifolds.
+ *  the TersestTriangulation data format (cf. tersest_triangulation.h),
+ *  which represents the TerseTriangulation as a short sequence of
+ *  characters, suitable for storage in a file or transmission over
+ *  a network.
  *
  *  Bill Thurston provided the original idea for this data structure.
  *  The implementation has evolved from code written by Martin Hildebrand at
@@ -68,7 +71,8 @@
  *  If there are n tetrahedra, there'll be 4n faces, and (4n)/2 = 2n
  *  decisions as to whether to glue to an old tetrahedron or a new one.
  *  (The last two "decisions" will always be to glue to an old tetrahedron,
- *  but we won't worry about that.)  Precisely (n - 1) of those
+ *  but we won't worry about that.  The terse string data format does,
+ *  however, take this into account.)  Precisely (n - 1) of those
  *  decisions will be to add a new tetrahedron, and the remaining (n + 1)
  *  decisions will be to glue to an old tetrahedron.  This means that
  *  the glues_to_old_tet[] array must have length 2n, while the
@@ -79,8 +83,8 @@
  *      typedef struct TerseTriangulation   TerseTriangulation;
  *
  *  which lets the UI declare and pass pointers to TerseTriangulations
- *  without actually knowing what they are.  This file provides the kernel
- *  with the actual definition.
+ *  without actually knowing what they are.    This file provides the
+ *  kernel with the actual definition.
  */
 
 

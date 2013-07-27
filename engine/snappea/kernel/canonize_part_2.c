@@ -315,7 +315,7 @@ static Boolean cone_3_cell(
     Triangulation   *manifold,
     int             *num_finite_vertices)
 {
-    Tetrahedron *tet0   = NULL;
+    Tetrahedron *tet0;
 
     /*
      *  Is there a Tetrahedron which is not yet part of a coned cell?

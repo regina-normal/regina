@@ -6,7 +6,7 @@
  *  data structure.
  *
  *  char            *get_triangulation_name(Triangulation *manifold);
- *  char            set_triangulation_name(Triangulation *manifold, const char *new_name);
+ *  char            set_triangulation_name(Triangulation *manifold, char *new_name);
  *  SolutionType    get_complete_solution_type(Triangulation *manifold);
  *  SolutionType    get_filled_solution_type(Triangulation *manifold);
  *  int             get_num_tetrahedra(Triangulation *manifold);
@@ -76,7 +76,7 @@ char *get_triangulation_name(
 
 void set_triangulation_name(
     Triangulation   *manifold,
-    const char      *new_name)
+    char            *new_name)
 {
     /*
      *  Free the old name, if there is one.
@@ -268,6 +268,9 @@ FuncResult set_cusp_info(
     Cusp    *cusp;
 
     cusp = find_cusp(manifold, cusp_index);
+    /* MC 2008-09-30 */
+    if ( cusp == NULL)
+      return func_failed;
 
     /*
      *  Write the given Dehn coefficients into the cusp.
@@ -367,15 +370,15 @@ void get_tet_shape(
     Triangulation   *manifold,
     int             which_tet,
     Boolean         fixed_alignment,
-    double          *shape_rect_real,       /*  may be NULL */
-    double          *shape_rect_imag,       /*  may be NULL */
-    double          *shape_log_real,        /*  may be NULL */
-    double          *shape_log_imag,        /*  may be NULL */
-    int             *precision_rect_real,   /*  may be NULL */
-    int             *precision_rect_imag,   /*  may be NULL */
-    int             *precision_log_real,    /*  may be NULL */
-    int             *precision_log_imag,    /*  may be NULL */
-    Boolean         *is_geometric)          /*  may be NULL */
+    double          *shape_rect_real,
+    double          *shape_rect_imag,
+    double          *shape_log_real,
+    double          *shape_log_imag,
+    int             *precision_rect_real,
+    int             *precision_rect_imag,
+    int             *precision_log_real,
+    int             *precision_log_imag,
+    Boolean         *is_geometric)
 {
     int             count,
                     the_coordinate_system;
@@ -389,26 +392,17 @@ void get_tet_shape(
 
     if (manifold->solution_type[filled] == not_attempted)
     {
-        if (shape_rect_real != NULL)
-            *shape_rect_real        = 0.0;
-        if (shape_rect_imag != NULL)
-            *shape_rect_imag        = 0.0;
-        if (shape_log_real  != NULL)
-            *shape_log_real         = 0.0;
-        if (shape_log_imag  != NULL)
-            *shape_log_imag         = 0.0;
+        *shape_rect_real        = 0.0;
+        *shape_rect_imag        = 0.0;
+        *shape_log_real         = 0.0;
+        *shape_log_imag         = 0.0;
 
-        if (precision_rect_real != NULL)
-            *precision_rect_real    = 0;
-        if (precision_rect_imag != NULL)
-            *precision_rect_imag    = 0;
-        if (precision_log_real  != NULL)
-            *precision_log_real     = 0;
-        if (precision_log_imag  != NULL)
-            *precision_log_imag     = 0;
+        *precision_rect_real    = 0;
+        *precision_rect_imag    = 0;
+        *precision_log_real     = 0;
+        *precision_log_imag     = 0;
 
-        if (is_geometric != NULL)
-            *is_geometric           = FALSE;
+        *is_geometric           = FALSE;
 
         return;
     }
@@ -460,34 +454,25 @@ void get_tet_shape(
      *  Report the ultimate shapes.
      */
 
-    if (shape_rect_real != NULL)
-        *shape_rect_real = ultimate_shape->rect.real;
-    if (shape_rect_imag != NULL)
-        *shape_rect_imag = ultimate_shape->rect.imag;
-    if (shape_log_real  != NULL)
-        *shape_log_real  = ultimate_shape->log.real;
-    if (shape_log_imag  != NULL)
-        *shape_log_imag  = ultimate_shape->log.imag;
+    *shape_rect_real = ultimate_shape->rect.real;
+    *shape_rect_imag = ultimate_shape->rect.imag;
+    *shape_log_real  = ultimate_shape->log.real;
+    *shape_log_imag  = ultimate_shape->log.imag;
 
     /*
      *  Estimate the precision.
      */
 
-    if (precision_rect_real != NULL)
-        *precision_rect_real = decimal_places_of_accuracy(ultimate_shape->rect.real, penultimate_shape->rect.real);
-    if (precision_rect_imag != NULL)
-        *precision_rect_imag = decimal_places_of_accuracy(ultimate_shape->rect.imag, penultimate_shape->rect.imag);
-    if (precision_log_real  != NULL)
-        *precision_log_real  = decimal_places_of_accuracy(ultimate_shape->log.real,  penultimate_shape->log.real);
-    if (precision_log_imag  != NULL)
-        *precision_log_imag  = decimal_places_of_accuracy(ultimate_shape->log.imag,  penultimate_shape->log.imag);
+    *precision_rect_real = decimal_places_of_accuracy(ultimate_shape->rect.real, penultimate_shape->rect.real);
+    *precision_rect_imag = decimal_places_of_accuracy(ultimate_shape->rect.imag, penultimate_shape->rect.imag);
+    *precision_log_real  = decimal_places_of_accuracy(ultimate_shape->log.real,  penultimate_shape->log.real);
+    *precision_log_imag  = decimal_places_of_accuracy(ultimate_shape->log.imag,  penultimate_shape->log.imag);
 
     /*
      *  Check whether the tetrahedron is geometric.
      */
 
-    if (is_geometric != NULL)
-        *is_geometric = tetrahedron_is_geometric(tet);
+    *is_geometric = tetrahedron_is_geometric(tet);
 }
 
 
@@ -495,7 +480,7 @@ static int longest_side(
     Tetrahedron *tet)
 {
     int     i,
-            desired_index   = 0;
+            desired_index;
     double  sine[3],
             max_sine;
 

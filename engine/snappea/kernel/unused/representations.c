@@ -216,6 +216,8 @@
  *  Z/n isn't a bottleneck:  creating the final Triangulations
  *  is much slower than finding the representations to begin with.
  */
+
+/* MC Modified 01/27/08 to make several functions non-static */
 #include "kernel.h"
 
 static int                  **compute_Sn(int n);
@@ -224,23 +226,22 @@ static int                  factorial(int n);
 static Boolean              first_indices_all_zero(int *representation_by_index, int num_generators);
 static Boolean              group_element_is_Sn_minimal(int *permutation, int num_sheets);
 static Boolean              group_element_is_Zn_minimal(int index, int num_sheets);
-static Boolean              candidateSn_is_valid(int **candidateSn, int n, int **group_relations, int num_relations);
+/*MC*/Boolean              candidateSn_is_valid(int **candidateSn, int n, int **group_relations, int num_relations);
 static Boolean              candidateZn_is_valid(int  *candidateZn, int n, int **group_relations, int num_relations);
-static Boolean              candidateSn_is_transitive(int **candidateSn, int num_generators, int n);
+/*MC*/Boolean              candidateSn_is_transitive(int **candidateSn, int num_generators, int n);
 static Boolean              candidateZn_is_transitive(int  *candidateZn, int num_generators, int n);
 static Boolean              candidateSn_is_conjugacy_minimal(int **candidateSn, int num_generators, int n, int **Sn, int n_factorial);
 static Boolean              candidateZn_is_conjugacy_minimal(int  *candidateZn, int num_generators, int n);
-static RepresentationIntoSn *convert_candidateSn_to_original_generators(int **candidateSn, int n, int num_original_generators, int **original_generators, Triangulation *manifold, int **meridians, int **longitudes);
+/*MC*/RepresentationIntoSn *convert_candidateSn_to_original_generators(int **candidateSn, int n, int num_original_generators, int **original_generators, Triangulation *manifold, int **meridians, int **longitudes);
 static RepresentationIntoSn *convert_candidateZn_to_original_generators(int  *candidateZn, int n, int num_original_generators, int **original_generators, Triangulation *manifold, int **meridians, int **longitudes);
-static RepresentationIntoSn *initialize_new_representation(int num_original_generators, int n, int num_cusps);
+/*MC*/RepresentationIntoSn *initialize_new_representation(int num_original_generators, int n, int num_cusps);
 static void                 word_to_Sn(int **candidateSn, int *word, int *permutation, int n);
 static int                  word_to_Zn(int  *candidateZn, int *word, int n);
 static void                 compute_primitive_Dehn_coefficients(Cusp *cusp, int *primitive_m, int *primitive_l);
 static void                 compose_with_power(int *product, int *factor, int power, int n);
 static void                 Zn_to_Sn(int element_of_Zn, int *element_of_Sn, int n);
 static void                 compute_covering_type(RepresentationIntoSn *representation, int num_generators, int n);
-static void                 free_representation(RepresentationIntoSn *representation, int num_generators, int num_cusps);
-
+/*MC*/void                 free_representation(RepresentationIntoSn *representation, int num_generators, int num_cusps);
 
 RepresentationList *find_representations(
     Triangulation       *manifold,
@@ -262,10 +263,10 @@ RepresentationList *find_representations(
                             **Sn,
                             *representation_by_index,
                             **candidateSn,
-                            *candidateZn    = NULL;
+                            *candidateZn,
+                            UI_counter = 0;
     GroupPresentation       *simplified_group;
     RepresentationIntoSn    *new_representation;
-
     /*
      *  Begin with a quick error check.
      */
@@ -405,8 +406,19 @@ RepresentationList *find_representations(
      *          55550
      *          00001   <-- the trailing 1 means were done
      */
-    while (representation_by_index[num_simplified_generators] == 0) /* Loop until we reach 00001 */
+    /*MC 01-31-08*/
+    uLongComputationBegins("Computing permutation reps.", 1);
+    while (representation_by_index[num_simplified_generators] == 0)
+    /* Loop until we reach 00001 */
     {
+      /*MC 01-31-08 -- counter added 04/24/2013*/
+      UI_counter++;
+      if (UI_counter > 500000) {
+	/* check for interrupts */
+	UI_counter = 0;
+	if (uLongComputationContinues() == func_cancelled)
+	  break;
+      }
         /*
          *  If the range is all of S(n), convert the representation_by_index[]
          *  to an array of pointers to rows of Sn.  Otherwise define
@@ -542,9 +554,10 @@ RepresentationList *find_representations(
     /*
      *  Done!
      */
+    /*MC 01-31-08*/
+    uLongComputationEnds();
     return representation_list;
 }
-
 
 static int **compute_Sn(
     int n)
@@ -822,7 +835,7 @@ static Boolean group_element_is_Zn_minimal(
 }
 
 
-static Boolean candidateSn_is_valid(
+/*MC*/ Boolean candidateSn_is_valid(
     int         **candidateSn,
     int         n,
     int         **group_relations,
@@ -930,7 +943,7 @@ static Boolean candidateZn_is_valid(
 }
 
 
-static Boolean candidateSn_is_transitive(
+/*MC*/ Boolean candidateSn_is_transitive(
     int         **candidateSn,
     int         num_generators,
     int         n)
@@ -1056,7 +1069,7 @@ static Boolean candidateSn_is_conjugacy_minimal(
         j,
         k,
         *scratch,
-        comparison  = 0;
+        comparison;
 
     /*
      *  Allocate scratch space to compute the conjugate.
@@ -1233,7 +1246,7 @@ static Boolean candidateZn_is_conjugacy_minimal(
 }
 
 
-static RepresentationIntoSn *convert_candidateSn_to_original_generators(
+/*MC*/ RepresentationIntoSn *convert_candidateSn_to_original_generators(
     int             **candidateSn,
     int             n,
     int             num_original_generators,
@@ -1418,7 +1431,7 @@ static RepresentationIntoSn *convert_candidateZn_to_original_generators(
 }
 
 
-static RepresentationIntoSn *initialize_new_representation(
+/*MC*/ RepresentationIntoSn *initialize_new_representation(
     int num_original_generators,
     int n,
     int num_cusps)
@@ -1853,7 +1866,7 @@ void free_representation_list(
 }
 
 
-static void free_representation(
+void free_representation(
     RepresentationIntoSn    *representation,
     int                     num_generators,
     int                     num_cusps)

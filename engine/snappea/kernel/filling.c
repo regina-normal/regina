@@ -11,8 +11,6 @@
  *      Triangulation   *fill_reasonable_cusps(Triangulation *manifold);
  *
  *      Boolean         cusp_is_fillable(Cusp *cusp);
- *      Boolean         cusp_is_fillable(   Triangulation   *manifold,
- *                                          int             cusp_index);
  *      Boolean         is_closed_manifold(Triangulation *manifold);
  *
  *  which the kernel provides to the UI.
@@ -80,7 +78,7 @@ Triangulation *fill_cusps(
 {
     Triangulation   *new_triangulation;
     Boolean         at_least_one_cusp_is_left;
-    Boolean         *all_true       = NULL;
+    Boolean         *all_true;
     int             i;
         
     /*

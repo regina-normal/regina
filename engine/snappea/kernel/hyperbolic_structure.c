@@ -92,7 +92,7 @@
 #include "kernel.h"
 
 
-static const ComplexWithLog regular_shape = {
+const static ComplexWithLog regular_shape = {
                                                 {0.5, ROOT_3_OVER_2},
                                                 {0.0, PI_OVER_3}
                                             };
@@ -391,15 +391,15 @@ static void copy_cusp_shapes(
 SolutionType do_Dehn_filling(
     Triangulation *manifold)
 {
-    Complex **complex_equations     = NULL,
+    Complex **complex_equations,
             *delta;
-    double  **real_equations        = NULL,
+    double  **real_equations,
             distance_to_solution,
             distance_ratio;
     int     num_rows,
             num_columns,
             iterations,
-            result                  = 0;
+            result;
     Boolean convergence_is_quadratic,
             solution_was_found,
             iteration_limit_exceeded;

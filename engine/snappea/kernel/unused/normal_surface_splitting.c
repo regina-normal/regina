@@ -391,7 +391,7 @@ static Triangulation *subdivide_manifold(
     int             Euler_characteristic)
 {
     Triangulation   *subdivision;
-    Cusp            *new_cusps[2]   = {NULL, NULL};
+    Cusp            *new_cusps[2];
     SubdivisionData *data;
     Tetrahedron     *old_tet;
     

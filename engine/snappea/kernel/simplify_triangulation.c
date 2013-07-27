@@ -202,7 +202,7 @@ static void         set_inverse_neighbor_and_gluing(Tetrahedron *tet, FaceIndex 
 void basic_simplification(
     Triangulation   *manifold)
 {
-    SolutionType    original_solution_type[2]   = {not_attempted, not_attempted};
+    SolutionType    original_solution_type[2];
     int             iter;
     EdgeClass       *edge,
                     *where_to_resume;
@@ -299,7 +299,7 @@ void basic_simplification(
 void randomize_triangulation(
     Triangulation   *manifold)
 {
-    SolutionType    original_solution_type[2]   = {not_attempted, not_attempted};
+    SolutionType    original_solution_type[2];
     int             count;
     Boolean         hyperbolic_structure_was_removed;
 

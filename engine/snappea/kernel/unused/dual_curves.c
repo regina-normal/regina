@@ -747,7 +747,15 @@ static void verify_mt_action(
          || complex_modulus(complex_div(complex_minus(fz, w), fz)) > FRACTIONAL_DIFF
         )
     )
-        uFatalError("verify_mt_action", "dual_curves");
+      /* NMD 2004-8-20: Changed the fatal error to just printing a
+	 warning, which isn't ideal, but is better than just crashing.
+      */
+	
+      /* printf("WARNING: verify_mt_action failed in dual_curves.c\n");*/
+      /* MC 2012-05-18 changed back - we can handle this now, and the printf
+       * generates compiler warnings.
+       */
+      uFatalError("verify_mt_action", "dual_curves");
 }
 
 

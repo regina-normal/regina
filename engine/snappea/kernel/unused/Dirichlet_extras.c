@@ -182,7 +182,7 @@ static void face_classes(
             face->mate->f_class = face->f_class;
 
             face->f_class->index    = count++;
-            face->f_class->hue      = index_to_prettier_hue(face->f_class->index);
+            face->f_class->hue      = index_to_hue(face->f_class->index);
 
             face->f_class->num_elements = (face->mate == face) ? 1 : 2;
 
@@ -315,7 +315,7 @@ static void match_incident_edges(
                 i,
                 j,
                 offset,
-                best_offset = 0;
+                best_offset;
     double      min_error,
                 error,
                 diff;
@@ -2637,7 +2637,7 @@ static void compute_spine_radius(
                     *region[2];
     double          max_value;
     WEEdge          *edge,
-                    *max_edge       = NULL;
+                    *max_edge;
     Boolean         union_is_3_ball;
 
     /*

@@ -33,10 +33,17 @@
 #include "snappea/nsnappeatriangulation.h"
 #include "snappea/kernel/kernel_prototypes.h"
 #include "snappea/kernel/triangulation.h"
-#include "snappea/kernel/unix_file_io.h"
 #include "snappea/snappy/SnapPy.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/nthread.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include "snappea/kernel/unix_file_io.h"
+#ifdef __cplusplus
+}
+#endif
 
 namespace regina {
 
@@ -182,7 +189,7 @@ bool NSnapPeaTriangulation::verifyTriangulation(const NTriangulation& tri)
 
 void NSnapPeaTriangulation::saveAsSnapPea(const char* filename) const {
     if (snappeaData)
-        save_triangulation(snappeaData, filename);
+        write_triangulation(snappeaData, const_cast<char*>(filename));
 }
 
 void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
