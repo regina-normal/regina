@@ -101,7 +101,7 @@ void Dim2Triangulation::writeTextLong(std::ostream& out) const {
     Dim2Triangle* tri;
     Dim2Triangle* adjTri;
     unsigned triPos;
-    int i, j, k;
+    int i, j;
     NPerm3 adjPerm;
 
     out << "Triangle gluing:\n";
