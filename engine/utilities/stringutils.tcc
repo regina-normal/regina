@@ -29,6 +29,7 @@
 /* To be included from stringutils.h. */
 
 #include <cctype>
+#include <string>
 #include "regina-core.h"
 
 namespace regina {
