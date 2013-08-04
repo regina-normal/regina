@@ -159,7 +159,7 @@ bool NSnapPeaTriangulation::verifyTriangulation(const NTriangulation& tri)
     ::TriangulationData *data;
     ::triangulation_to_data(snappeaData, &data);
 
-    int tet, face, i, j, k, l;
+    int tet, face, i;
     if (data->num_tetrahedra != tri.getNumberOfTetrahedra()) {
         free_triangulation_data(data);
         return false;
@@ -309,7 +309,6 @@ NTriangulation* NSnapPeaTriangulation::snapPeaToRegina(::Triangulation* tri) {
     for (i = 0; i < data->num_tetrahedra; ++i)
         tet[i] = ans->newTetrahedron();
 
-    int perm[4];
     for (i = 0; i < data->num_tetrahedra; ++i)
         for (j = 0; j < 4; ++j)
             if (! tet[i]->adjacentTetrahedron(j))

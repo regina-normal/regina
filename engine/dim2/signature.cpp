@@ -142,7 +142,7 @@ std::string Dim2Triangulation::isoSig() const {
 
     // The triangulation is non-empty.  Get a signature string for each
     // connected component.
-    unsigned i, j;
+    unsigned i;
     ComponentIterator it;
     unsigned cTri;
     unsigned tri, perm;
