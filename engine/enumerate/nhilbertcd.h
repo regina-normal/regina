@@ -37,6 +37,7 @@
 #endif
 
 #include "regina-core.h"
+#include "maths/nray.h"
 #include <iterator>
 #include <list>
 #include <vector>

@@ -28,7 +28,13 @@
 
 /* To be included from nmaxadmissible.h. */
 
+#ifndef __NMAXADMISSIBLE_TCC
+#ifndef __DOXYGEN
+#define __NMAXADMISSIBLE_TCC
+#endif
+
 #include "enumerate/nenumconstraint.h"
+#include "enumerate/nmaxadmissible.h"
 #include <algorithm>
 #include <list>
 
@@ -149,3 +155,4 @@ std::vector<BitmaskType>* NMaxAdmissible::enumerate(
 
 } // namespace regina
 
+#endif

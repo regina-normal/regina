@@ -38,6 +38,7 @@
 
 #include "regina-core.h"
 #include "triangulation/dimtraits.h"
+#include "triangulation/nfacetspec.h"
 
 namespace regina {
 

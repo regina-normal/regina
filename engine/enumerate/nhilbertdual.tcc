@@ -28,11 +28,18 @@
 
 /* To be included from nhilbertdual.h. */
 
+#ifndef __NHILBERTDUAL_TCC
+#ifndef __DOXYGEN
+#define __NHILBERTDUAL_TCC
+#endif
+
 #include <algorithm>
 #include <iterator>
 #include "enumerate/nenumconstraint.h"
+#include "enumerate/nhilbertdual.h"
 #include "enumerate/ordering.h"
 #include "progress/nprogresstypes.h"
+#include "utilities/nbitmask.h"
 
 namespace regina {
 
@@ -451,3 +458,5 @@ void NHilbertDual::intersectHyperplane(std::vector<VecSpec<BitmaskType>*>& list,
 }
 
 } // namespace regina
+
+#endif

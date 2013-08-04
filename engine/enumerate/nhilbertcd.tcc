@@ -28,9 +28,15 @@
 
 /* To be included from nhilbertcd.h. */
 
+#ifndef __NHILBERTCD_TCC
+#ifndef __DOXYGEN
+#define __NHILBERTCD_TCC
+#endif
+
 #include "regina-core.h"
 #include "regina-config.h"
 #include "enumerate/nenumconstraint.h"
+#include "enumerate/nhilbertcd.h"
 #include "maths/nmatrixint.h"
 #include "maths/nray.h"
 #include "progress/nprogresstypes.h"
@@ -280,3 +286,4 @@ void NHilbertCD::enumerateUsingBitmask(OutputIterator results,
 
 } // namespace regina
 
+#endif

@@ -29,6 +29,7 @@
 /* Template definitions for ngenericgluingperms.h. */
 
 #include <algorithm>
+#include <iostream>
 #include "census/ngenericgluingperms.h"
 #include "utilities/stringutils.h"
 

@@ -30,6 +30,7 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include "packet/npacket.h"
 #include "triangulation/ngenericisomorphism.h"
 
 namespace regina {

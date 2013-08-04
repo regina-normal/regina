@@ -28,10 +28,16 @@
 
 /* To be included from ndoubledescription.h. */
 
+#ifndef __NDOUBLEDESCRIPTION_TCC
+#ifndef __DOXYGEN
+#define __NDOUBLEDESCRIPTION_TCC
+#endif
+
 #include <algorithm>
 #include <iterator>
 #include "regina-core.h"
 #include "regina-config.h"
+#include "enumerate/ndoubledescription.h"
 #include "enumerate/nenumconstraint.h"
 #include "maths/matrixops.h"
 #include "maths/nray.h"
@@ -472,3 +478,4 @@ bool NDoubleDescription::intersectHyperplane(
 
 } // namespace regina
 
+#endif
