@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "regina-config.h" // For EXCLUDE_SNAPPEA
+
 #include <cctype>
 #include <iostream>
 #include <cppunit/Test.h>
@@ -37,7 +39,9 @@
 #include "testsuite/census/testcensus.h"
 #include "testsuite/dim4/testdim4.h"
 #include "testsuite/maths/testmaths.h"
+#ifndef EXCLUDE_SNAPPEA
 #include "testsuite/snappea/testsnappea.h"
+#endif
 #include "testsuite/subcomplex/testsubcomplex.h"
 #include "testsuite/surfaces/testsurfaces.h"
 #include "testsuite/triangulation/testtriangulation.h"
@@ -168,8 +172,10 @@ bool runAllTests() {
     addDim4Census(runner);
     addDim4FacetPairing(runner);
 
+#ifndef EXCLUDE_SNAPPEA
     // SnapPea:
     addNSnapPeaTriangulation(runner);
+#endif
 
     /**
      * END REGINA TEST SUITES
