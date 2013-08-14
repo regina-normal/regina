@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "regina-config.h" // For EXCLUDE_SNAPPEA
+
 // Regina core includes:
 #include "maths/nmatrixint.h"
 #include "surfaces/nnormalsurfacelist.h"
@@ -170,6 +172,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
             if (! s->isCompact()) {
+#ifndef EXCLUDE_SNAPPEA
                 regina::NMatrixInt* slopes = s->boundarySlopes();
                 if (slopes) {
                     QString ans = tr("Spun:");
@@ -181,6 +184,9 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                     return ans;
                 } else
                     return tr("Spun");
+#else
+                return tr("Spun");
+#endif
             } else if (s->hasRealBoundary())
                 return tr("Real");
             else

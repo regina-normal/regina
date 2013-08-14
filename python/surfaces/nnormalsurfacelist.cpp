@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "regina-config.h" // For EXCLUDE_NORMALIZ
+
 #include <boost/python.hpp>
 #include "maths/nmatrixint.h"
 #include "progress/nprogressmanager.h"
@@ -50,6 +52,7 @@ namespace {
         return NNormalSurfaceList::enumerate(owner, flavour, embedded, manager);
     }
 
+#ifndef EXCLUDE_NORMALIZ
     NNormalSurfaceList* enumerateFundPrimal_2(regina::NTriangulation* owner,
             int flavour) {
         return NNormalSurfaceList::enumerateFundPrimal(owner, flavour);
@@ -72,6 +75,7 @@ namespace {
         return NNormalSurfaceList::enumerateFundPrimal(owner, flavour,
             embedded, vtxSurfaces, manager);
     }
+#endif
 
     NNormalSurfaceList* enumerateFundDual_2(regina::NTriangulation* owner,
             int flavour) {
@@ -88,6 +92,7 @@ namespace {
             embedded, manager);
     }
 
+#ifndef EXCLUDE_NORMALIZ
     NNormalSurfaceList* enumerateFundFullCone_2(regina::NTriangulation* owner,
             int flavour) {
         return NNormalSurfaceList::enumerateFundFullCone(owner, flavour);
@@ -97,6 +102,7 @@ namespace {
         return NNormalSurfaceList::enumerateFundFullCone(owner, flavour,
             embedded);
     }
+#endif
 
     NNormalSurfaceList* enumerateFundCD_2(regina::NTriangulation* owner,
             int flavour) {
@@ -123,6 +129,7 @@ void addNNormalSurfaceList() {
             return_value_policy<reference_existing_object>())
         .def("enumerate", enumerate_4,
             return_value_policy<reference_existing_object>())
+#ifndef EXCLUDE_NORMALIZ
         .def("enumerateFundPrimal", enumerateFundPrimal_2,
             return_value_policy<reference_existing_object>())
         .def("enumerateFundPrimal", enumerateFundPrimal_3,
@@ -131,16 +138,19 @@ void addNNormalSurfaceList() {
             return_value_policy<reference_existing_object>())
         .def("enumerateFundPrimal", enumerateFundPrimal_5,
             return_value_policy<reference_existing_object>())
+#endif
         .def("enumerateFundDual", enumerateFundDual_2,
             return_value_policy<reference_existing_object>())
         .def("enumerateFundDual", enumerateFundDual_3,
             return_value_policy<reference_existing_object>())
         .def("enumerateFundDual", enumerateFundDual_4,
             return_value_policy<reference_existing_object>())
+#ifndef EXCLUDE_NORMALIZ
         .def("enumerateFundFullCone", enumerateFundFullCone_2,
             return_value_policy<reference_existing_object>())
         .def("enumerateFundFullCone", enumerateFundFullCone_3,
             return_value_policy<reference_existing_object>())
+#endif
         .def("enumerateFundCD", enumerateFundCD_2,
             return_value_policy<reference_existing_object>())
         .def("enumerateFundCD", enumerateFundCD_3,
@@ -174,9 +184,13 @@ void addNNormalSurfaceList() {
         .staticmethod("enumerate")
         .staticmethod("enumerateStandardDirect")
         .staticmethod("enumerateStandardANDirect")
+#ifndef EXCLUDE_NORMALIZ
         .staticmethod("enumerateFundPrimal")
+#endif
         .staticmethod("enumerateFundDual")
+#ifndef EXCLUDE_NORMALIZ
         .staticmethod("enumerateFundFullCone")
+#endif
         .staticmethod("enumerateFundCD")
     ;
 
