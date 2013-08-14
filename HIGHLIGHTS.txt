@@ -11,7 +11,8 @@ Version 4.94  [ (under development) ]
     Features:
         - You can now drill out the neighbourhood of an edge.
         - Regina now works with 2-manifold triangulations as well as
-          3-manifold triangulations!
+          3-manifold triangulations!  You can use these to study
+          boundary components and vertex links.
     Optimisations:
         - Normal surface enumeration is now completely different under
           the hood: the old double description method is gone, and
