@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "regina-config.h" // For EXCLUDE_NORMALIZ
+
 #include <boost/python.hpp>
 #include "maths/nmatrixint.h"
 #include "surfaces/nnormalsurface.h"
@@ -127,8 +129,10 @@ void addNNormalSurface() {
         .def("sameSurface", &NNormalSurface::sameSurface)
         .def("locallyCompatible", &NNormalSurface::locallyCompatible)
         .def("disjoint", &NNormalSurface::disjoint)
+#ifndef EXCLUDE_NORMALIZ
         .def("boundarySlopes", &NNormalSurface::boundarySlopes,
             return_value_policy<manage_new_object>())
+#endif
         .def("findNonTrivialSphere", &NNormalSurface::findNonTrivialSphere,
             return_value_policy<manage_new_object>())
         .def("findVtxOctAlmostNormalSphere", findVtxOctAlmostNormalSphere1,

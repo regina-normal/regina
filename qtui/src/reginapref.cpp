@@ -30,7 +30,9 @@
 
 #include "file/nfileinfo.h"
 #include "file/nglobaldirs.h"
+#ifndef EXCLUDE_SNAPPEA
 #include "snappea/nsnappeatriangulation.h"
+#endif
 
 #include "codecchooser.h"
 #include "coordinatechooser.h"
@@ -155,9 +157,13 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     item->addTab(pythonPrefs, ReginaSupport::themeIcon("utilities-terminal"),
         tr("Python"));
 
+#ifndef EXCLUDE_SNAPPEA
     snapPeaPrefs = new ReginaPrefSnapPea(this);
     item->addTab(snapPeaPrefs, ReginaSupport::regIcon("snappea"),
         tr("SnapPea"));
+#else
+    snapPeaPrefs = 0;
+#endif
 
     toolsPrefs = new ReginaPrefTools(this);
     item->addTab(toolsPrefs, ReginaSupport::themeIcon("configure"),
@@ -186,8 +192,10 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
             triPrefs->comboInitialTab->setCurrentIndex(3); break;
         case ReginaPrefSet::Surfaces:
             triPrefs->comboInitialTab->setCurrentIndex(4); break;
+#ifndef EXCLUDE_SNAPPEA
         case ReginaPrefSet::SnapPea:
             triPrefs->comboInitialTab->setCurrentIndex(5); break;
+#endif
         default:
             triPrefs->comboInitialTab->setCurrentIndex(0); break;
     }
@@ -256,9 +264,11 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     }
     pythonPrefs->updateActiveCount();
 
+#ifndef EXCLUDE_SNAPPEA
     snapPeaPrefs->cbClosed->setChecked(prefSet.snapPeaClosed);
     snapPeaPrefs->cbMessages->setChecked(
         regina::NSnapPeaTriangulation::kernelMessagesEnabled());
+#endif
 
     if (prefSet.pdfExternalViewer.isEmpty()) {
         toolsPrefs->cbDefaultPDFViewer->setChecked(true);
@@ -473,9 +483,11 @@ void ReginaPreferences::slotApply() {
             dynamic_cast<ReginaFilePrefItem*>(item)->getData());
     }
 
+#ifndef EXCLUDE_SNAPPEA
     prefSet.snapPeaClosed = snapPeaPrefs->cbClosed->isChecked();
     regina::NSnapPeaTriangulation::enableKernelMessages(
         snapPeaPrefs->cbMessages->isChecked());
+#endif
 
     // Don't be too fussy about what they put in the PDF viewer field, since
     // Regina tries hard to find a suitable PDF viewer regardless.
@@ -770,7 +782,9 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QWidget(parent) {
     comboInitialTab->addItem(tr("Algebra"));
     comboInitialTab->addItem(tr("Composition"));
     comboInitialTab->addItem(tr("Surfaces"));
+#ifndef EXCLUDE_SNAPPEA
     comboInitialTab->addItem(tr("SnapPea"));
+#endif
     box->addWidget(comboInitialTab);
     QString msg = tr("Specifies which tab should be initially visible "
         "when a new triangulation viewer/editor is opened.");

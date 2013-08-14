@@ -26,6 +26,8 @@
 
 /* end stub */
 
+#include "regina-config.h" // For EXCLUDE_NORMALIZ
+
 // Regina core includes:
 #include "progress/nprogressmanager.h"
 #include "surfaces/nnormalsurfacelist.h"
@@ -188,10 +190,16 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
             ui->tr("Enumerating fundamental normal surfaces"),
             parentWidget);
 
+#ifndef EXCLUDE_NORMALIZ
         NNormalSurfaceList* ans = NNormalSurfaceList::enumerateFundPrimal(
                 dynamic_cast<regina::NTriangulation*>(parent),
                 coordSystem, embedded->isChecked(),
                 0 /* vtx surfaces */, &manager);
+#else
+        NNormalSurfaceList* ans = NNormalSurfaceList::enumerateFundDual(
+                dynamic_cast<regina::NTriangulation*>(parent),
+                coordSystem, embedded->isChecked(), &manager);
+#endif
 
         if (dlg.run())
             return ans;
