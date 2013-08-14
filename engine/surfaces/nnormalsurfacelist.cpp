@@ -31,7 +31,9 @@
 #include "enumerate/ndoubledescription.h"
 #include "enumerate/nhilbertcd.h"
 #include "enumerate/nhilbertdual.h"
+#ifndef EXCLUDE_NORMALIZ
 #include "enumerate/nhilbertprimal.h"
+#endif
 #include "file/nfile.h"
 #include "maths/matrixops.h"
 #include "maths/nmatrixint.h"
@@ -159,6 +161,8 @@ void* NNormalSurfaceList::VertexEnumerator::run(void*) {
     return 0;
 }
 
+#ifndef EXCLUDE_NORMALIZ
+
 #undef REGISTER_FLAVOUR
 #define REGISTER_FLAVOUR(id_name, class, n, an, s, o) \
     case id_name: NHilbertPrimal::enumerateHilbertBasis<class>( \
@@ -214,6 +218,8 @@ void* NNormalSurfaceList::FundPrimalEnumerator::run(void*) {
 
     return 0;
 }
+
+#endif // EXCLUDE_NORMALIZ
 
 #undef REGISTER_FLAVOUR
 #define REGISTER_FLAVOUR(id_name, class, n, an, s, o) \
@@ -274,6 +280,8 @@ NNormalSurfaceList* NNormalSurfaceList::enumerate(NTriangulation* owner,
     }
 }
 
+#ifndef EXCLUDE_NORMALIZ
+
 NNormalSurfaceList* NNormalSurfaceList::enumerateFundPrimal(
         NTriangulation* owner, int newFlavour, bool embeddedOnly,
         NNormalSurfaceList* vtxSurfaces, NProgressManager* manager) {
@@ -293,6 +301,8 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundPrimal(
         return ans;
     }
 }
+
+#endif // EXCLUDE_NORMALIZ
 
 NNormalSurfaceList* NNormalSurfaceList::enumerateFundDual(
         NTriangulation* owner, int newFlavour, bool embeddedOnly,
@@ -356,6 +366,8 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateStandardANDirect(
     owner->insertChildLast(list);
     return list;
 }
+
+#ifndef EXCLUDE_NORMALIZ
 
 #undef REGISTER_FLAVOUR
 #define REGISTER_FLAVOUR(id_name, class, n, an, s, o) \
@@ -436,7 +448,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
                     return 0;
             }
             for (i = 0; i < dim; ++i) {
-                // Wem ake two copies of the GMP integer instead of one,
+                // We make two copies of the GMP integer instead of one,
                 // since NVector/NRay does not give us direct non-const
                 // access to its elements.
                 tmpInt.setRaw((*hlit)[i].get_mpz_t());
@@ -450,6 +462,8 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
     owner->insertChildLast(ans);
     return ans;
 }
+
+#endif // EXCLUDE_NORMALIZ
 
 #undef REGISTER_FLAVOUR
 #define REGISTER_FLAVOUR(id_name, class, n, an, s, o) \

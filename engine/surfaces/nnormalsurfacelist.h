@@ -36,6 +36,8 @@
 #define __NNORMALSURFACELIST_H
 #endif
 
+#include "regina-config.h" // For EXCLUDE_NORMALIZ.
+
 #include <algorithm>
 #include <iterator>
 #include <vector>
@@ -220,6 +222,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
             int newFlavour, bool embeddedOnly = true,
             NProgressManager* manager = 0);
 
+#ifndef EXCLUDE_NORMALIZ
         /**
          * Enumerates all fundamental normal surfaces in the given
          * triangulation using the given flavour of coordinate system,
@@ -288,6 +291,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
             NTriangulation* owner, int newFlavour, bool embeddedOnly = true,
             NNormalSurfaceList* vtxSurfaces = 0,
             NProgressManager* manager = 0);
+#endif
 
         /**
          * Enumerates all fundamental normal surfaces in the given
@@ -411,6 +415,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
         static NNormalSurfaceList* enumerateStandardANDirect(
             NTriangulation* owner);
 
+#ifndef EXCLUDE_NORMALIZ
         /**
          * Uses an extremely slow procedure to enumerate all embedded
          * fundamental surfaces in the given triangulation,
@@ -446,6 +451,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          */
         static NNormalSurfaceList* enumerateFundFullCone(
             NTriangulation* owner, int newFlavour, bool embeddedOnly = true);
+#endif
 
         /**
          * Uses an extremely slow modified Contejean-Devie procedure to
@@ -1278,6 +1284,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
                 void* run(void*);
         };
 
+#ifndef EXCLUDE_NORMALIZ
         /**
          * A thread class that performs fundamental normal surface enumeration
          * using the primal Hilbert basis algorithm.
@@ -1317,6 +1324,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
 
                 void* run(void*);
         };
+#endif
 
         /**
          * A thread class that performs fundamental normal surface enumeration
@@ -1577,12 +1585,14 @@ inline NNormalSurfaceList::VertexEnumerator::VertexEnumerator(
         list(newList), triang(useTriang), manager(useManager) {
 }
 
+#ifndef EXCLUDE_NORMALIZ
 inline NNormalSurfaceList::FundPrimalEnumerator::FundPrimalEnumerator(
         NNormalSurfaceList* newList, NTriangulation* useTriang,
         NNormalSurfaceList* newVtxSurfaces, NProgressManager* useManager) :
         list(newList), triang(useTriang), vtxSurfaces(newVtxSurfaces),
         manager(useManager) {
 }
+#endif
 
 inline NNormalSurfaceList::FundDualEnumerator::FundDualEnumerator(
         NNormalSurfaceList* newList,
