@@ -35,6 +35,8 @@
 #define __NSNAPPEATRIANGULATION_H
 #endif
 
+#include "regina-config.h" // For EXCLUDE_SNAPPEA
+
 #include "regina-core.h"
 #include "shareableobject.h"
 
@@ -50,6 +52,8 @@ class NTriangulation;
  * \weakgroup triangulation
  * @{
  */
+
+#ifndef EXCLUDE_SNAPPEA
 
 /**
  * Offers direct access to the SnapPea kernel from within Regina.
@@ -495,6 +499,8 @@ inline NTriangulation* NSnapPeaTriangulation::toRegina() const {
 inline void NSnapPeaTriangulation::dump() const {
     saveAsSnapPea("");
 }
+
+#endif // EXCLUDE_SNAPPEA
 
 } // namespace regina
 

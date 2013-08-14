@@ -29,7 +29,9 @@
 #include <algorithm>
 #include "file/nfile.h"
 #include "maths/nmatrixint.h"
+#ifndef EXCLUDE_SNAPPEA
 #include "snappea/nsnappeatriangulation.h"
+#endif
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/flavourregistry.h"
@@ -447,6 +449,7 @@ void NNormalSurface::calculateRealBoundary() const {
     realBoundary = false;
 }
 
+#ifndef EXCLUDE_SNAPPEA
 NMatrixInt* NNormalSurface::boundarySlopes() const {
     NTriangulation *tri = getTriangulation();
 
@@ -499,6 +502,7 @@ NMatrixInt* NNormalSurface::boundarySlopes() const {
     delete equations;
     return slopes;
 }
+#endif // EXCLUDE_SNAPPEA
 
 void NNormalSurface::writeXMLData(std::ostream& out) const {
     using regina::xml::xmlEncodeSpecialChars;

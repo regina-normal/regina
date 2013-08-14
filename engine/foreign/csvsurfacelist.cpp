@@ -104,6 +104,7 @@ namespace {
         }
         if (fields & surfaceExportBdry) {
             if (! s->isCompact()) {
+#ifndef EXCLUDE_SNAPPEA
                 regina::NMatrixInt* slopes = s->boundarySlopes();
                 if (slopes) {
                     out << "\"spun:";
@@ -114,6 +115,9 @@ namespace {
                     out << '\"';
                 } else
                     out << "spun";
+#else
+                out << "spun";
+#endif
             } else if (s->hasRealBoundary())
                 out << "real";
             else
