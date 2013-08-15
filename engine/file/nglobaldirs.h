@@ -56,8 +56,8 @@ namespace regina {
  *
  * If Regina may have been moved around on the filesystem (e.g., if you are
  * running an app bundle on MacOS), you \e must call setDirs() when your
- * application starts.  Otherwise the directories that NGlobalDirs might
- * be incorrect, and might not even exist.
+ * application starts.  Otherwise the directories that NGlobalDirs returns
+ * might be incorrect, and might not even exist.
  *
  * At present this class does not support running Regina directly out of
  * the source tree.  This might be supported in future versions of Regina.
