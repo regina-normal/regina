@@ -34,6 +34,14 @@
 /* Define as const if the declaration of iconv() needs const, or empty if not. */
 #define ICONV_CONST @ICONV_CONST@
 
+/* Define to Regina's primary home directory on the system.
+   This can always be changed at runtime vi NGlobalDirs::setDirs(). */
+#define REGINA_DATADIR "@PKGDATADIR@"
+
+/* Define to the directory on the system in which Regina's python module is
+   installed.  can always be changed at runtime vi NGlobalDirs::setDirs(). */
+#define REGINA_PYLIBDIR "@PYLIBDIR@"
+
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT "@PACKAGE_BUGREPORT@"
 

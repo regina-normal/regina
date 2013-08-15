@@ -26,6 +26,7 @@
 
 /* end stub */
 
+#include "regina-config.h"
 #include "file/nglobaldirs.h"
 
 namespace regina {
