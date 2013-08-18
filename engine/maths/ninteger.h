@@ -289,8 +289,7 @@ class REGINA_API NInteger : public InfinityPolicy<supportInfinity> {
          *
          * @param value the new value of this integer.
          */
-        template <bool rhsSupportInfinity>
-        explicit NInteger(const NInteger<rhsSupportInfinity>& value);
+        explicit NInteger(const NInteger<! supportInfinity>& value);
         /**
          * Initialises this integer to the given value which is
          * represented as a string of digits in a given base.
@@ -451,9 +450,7 @@ class REGINA_API NInteger : public InfinityPolicy<supportInfinity> {
          * @param value the new value of this integer.
          * @return a reference to this integer with its new value.
          */
-        template <bool rhsSupportInfinity>
-        NInteger& operator = (
-            const NInteger<rhsSupportInfinity>& value);
+        NInteger& operator = (const NInteger<! supportInfinity>& value);
         /**
          * Sets this integer to the given value.
          *
@@ -1514,9 +1511,8 @@ inline NInteger<supportInfinity>::NInteger(
 }
 
 template <bool supportInfinity>
-template <bool rhsSupportInfinity>
 inline NInteger<supportInfinity>::NInteger(
-        const NInteger<rhsSupportInfinity>& value) {
+        const NInteger<! supportInfinity>& value) {
     if (value.isInfinite()) {
         InfinityPolicy<supportInfinity>::makeInfinite();
         large_ = 0;
@@ -1584,10 +1580,9 @@ inline NInteger<supportInfinity>&
 }
 
 template <bool supportInfinity>
-template <bool rhsSupportInfinity>
 inline NInteger<supportInfinity>&
         NInteger<supportInfinity>::operator =(
-        const NInteger<rhsSupportInfinity>& value) {
+        const NInteger<! supportInfinity>& value) {
     if (value.isInfinite()) {
         InfinityPolicy<supportInfinity>::makeInfinite();
         return *this;

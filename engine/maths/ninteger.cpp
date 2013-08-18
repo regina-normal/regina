@@ -46,8 +46,6 @@ const NInteger<supportInfinity> NInteger<supportInfinity>::one(1);
 template <>
 const NInteger<true> NInteger<true>::infinity(false, false);
 
-// TODO: Infinity..?
-
 // The use of errno in this file should be threadsafe, since (as I
 // understand it) each thread gets its own errno.  However, there may be
 // thread safety issues regarding locales when using strtol(), in
