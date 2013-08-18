@@ -31,8 +31,8 @@
 #define __LEGACY_NMPI_H
 #endif
 
-#warning This header is deprecated; please use maths/nlargeinteger.h instead.
+#warning This header is deprecated; please use maths/ninteger.h instead.
 
-#include "maths/nlargeinteger.h"
+#include "maths/ninteger.h"
 
 #endif

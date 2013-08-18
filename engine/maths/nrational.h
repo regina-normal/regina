@@ -36,7 +36,7 @@
  */
 
 #include "regina-core.h"
-#include "maths/nlargeinteger.h"
+#include "maths/ninteger.h"
 
 namespace regina {
 
@@ -96,7 +96,8 @@ class REGINA_API NRational {
              *   normal (non-zero denominator). */
         mpq_t data;
             /**< Contains the arbitrary precision rational data for normal
-             *   (non-zero denominator) rationals. */
+             *   (non-zero denominator) rationals.
+             *   This is initialised even if the rational is infinite. */
 
         static const NRational maxDouble;
             /**< The largest positive rational number that can be converted
@@ -120,10 +121,12 @@ class REGINA_API NRational {
         NRational(const NRational& value);
         /**
          * Initialises to the given integer value.
+         * The given integer may be infinite.
          *
          * @param value the new integer value of this rational.
          */
-        NRational(const NLargeInteger& value);
+        template <bool supportInfinity>
+        NRational(const NInteger<supportInfinity>& value);
         /**
          * Initialises to the given integer value.
          *
@@ -143,10 +146,14 @@ class REGINA_API NRational {
          * which is different again from NRational(-1,-1) (which breaks
          * the non-negativity requirement).
          *
+         * \pre Neither of the given integers is infinite.
+         *
          * @param newNum the new numerator.
          * @param newDen the new denominator.
          */
-        NRational(const NLargeInteger& newNum, const NLargeInteger& newDen);
+        template <bool supportInfinity>
+        NRational(const NInteger<supportInfinity>& newNum,
+                  const NInteger<supportInfinity>& newDen);
         /**
          * Initialises to <i>newNum</i>/<i>newDen</i>.
          *
@@ -178,11 +185,13 @@ class REGINA_API NRational {
         NRational& operator = (const NRational& value);
         /**
          * Sets this rational to the given integer value.
+         * The given integer may be infinite.
          *
          * @param value the new value of this rational.
          * @return a reference to this rational with its new value.
          */
-        NRational& operator = (const NLargeInteger& value);
+        template <bool supportInfinity>
+        NRational& operator = (const NInteger<supportInfinity>& value);
         /**
          * Sets this rational to the given integer value.
          *
@@ -205,15 +214,15 @@ class REGINA_API NRational {
          *
          * @return the numerator.
          */
-        NLargeInteger getNumerator() const;
+        NInteger<> getNumerator() const;
         /**
          * Returns the denominator of this rational.
          * Note that rationals are always stored in lowest terms with
-         * non-negative denominator.
+         * non-negative denominator.  Infinity will be stored as 1/0.
          *
          * @return the denominator.
          */
-        NLargeInteger getDenominator() const;
+        NInteger<> getDenominator() const;
 
         /**
          * Calculates the product of two rationals.
@@ -463,13 +472,49 @@ inline NRational::NRational(const NRational& value) : flavour(value.flavour) {
     if (flavour == f_normal)
         mpq_set(data, value.data);
 }
-inline NRational::NRational(const NLargeInteger& value) : flavour(f_normal) {
+template <bool supportInfinity>
+inline NRational::NRational(const NInteger<supportInfinity>& value) :
+        flavour(f_normal) {
     mpq_init(data);
-    mpq_set_z(data, value.data);
+    if (value.isInfinite())
+        flavour = f_infinity;
+    else if (value.isNative())
+        mpq_set_si(data, value.longValue(), 1);
+    else
+        mpq_set_z(data, value.rawData());
 }
 inline NRational::NRational(long value) : flavour(f_normal) {
     mpq_init(data);
     mpq_set_si(data, value, 1);
+}
+template <bool supportInfinity>
+NRational::NRational(const NInteger<supportInfinity>& newNum,
+                     const NInteger<supportInfinity>& newDen) {
+    mpq_init(data);
+    if (newDen.isZero()) {
+        if (newNum.isZero())
+            flavour = f_undefined;
+        else
+            flavour = f_infinity;
+    } else {
+        flavour = f_normal;
+        if (newNum.isNative() && newDen.isNative())
+            mpq_set_si(data, newNum.longValue(), newDen.longValue());
+        else if (newNum.isNative()) {
+            // Avoid bloating newNum with a GMP representation.
+            NInteger<supportInfinity> tmp(newNum);
+            mpz_set(mpq_numref(data), tmp.rawData());
+            mpz_set(mpq_denref(data), newDen.rawData());
+        } else if (newDen.isNative()) {
+            // Avoid bloating newDen with a GMP representation.
+            NInteger<supportInfinity> tmp(newDen);
+            mpz_set(mpq_numref(data), newNum.rawData());
+            mpz_set(mpq_denref(data), tmp.rawData());
+        } else {
+            mpz_set(mpq_numref(data), newNum.rawData());
+            mpz_set(mpq_denref(data), newDen.rawData());
+        }
+    }
 }
 inline NRational::~NRational() {
     mpq_clear(data);
@@ -481,9 +526,18 @@ inline NRational& NRational::operator = (const NRational& value) {
         mpq_set(data, value.data);
     return *this;
 }
-inline NRational& NRational::operator = (const NLargeInteger& value) {
-    flavour = f_normal;
-    mpq_set_z(data, value.data);
+template <bool supportInfinity>
+inline NRational& NRational::operator = (
+        const NInteger<supportInfinity>& value) {
+    if (value.isInfinite())
+        flavour = f_infinity;
+    else if (value.isNative()) {
+        flavour = f_normal;
+        mpq_set_si(data, value.longValue(), 1);
+    } else {
+        flavour = f_normal;
+        mpq_set_z(data, value.rawData());
+    }
     return *this;
 }
 inline NRational& NRational::operator = (long value) {

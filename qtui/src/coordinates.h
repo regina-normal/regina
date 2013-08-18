@@ -33,7 +33,7 @@
 #ifndef __COORDINATES_H
 #define __COORDINATES_H
 
-#include "maths/nlargeinteger.h"
+#include "maths/ninteger.h"
 
 #include <QString>
 #include <QObject>

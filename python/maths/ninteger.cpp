@@ -27,34 +27,35 @@
 /* end stub */
 
 #include <boost/python.hpp>
-#include "maths/nlazyinteger.h"
+#include "maths/ninteger.h"
 
 using namespace boost::python;
-using regina::NLazyInteger;
+
+typedef regina::NInteger<false> NFiniteInteger;
 
 namespace {
-    NLazyInteger& (NLazyInteger::*divByExact_lazy)(const NLazyInteger&) =
-        &NLazyInteger::divByExact;
-    NLazyInteger& (NLazyInteger::*divByExact_long)(long) =
-        &NLazyInteger::divByExact;
-    NLazyInteger (NLazyInteger::*divExact_lazy)(const NLazyInteger&) const =
-        &NLazyInteger::divExact;
-    NLazyInteger (NLazyInteger::*divExact_long)(long) const =
-        &NLazyInteger::divExact;
+    NFiniteInteger& (NFiniteInteger::*divByExact_lazy)(const NFiniteInteger&) =
+        &NFiniteInteger::divByExact;
+    NFiniteInteger& (NFiniteInteger::*divByExact_long)(long) =
+        &NFiniteInteger::divByExact;
+    NFiniteInteger (NFiniteInteger::*divExact_lazy)(const NFiniteInteger&)
+        const = &NFiniteInteger::divExact;
+    NFiniteInteger (NFiniteInteger::*divExact_long)(long) const =
+        &NFiniteInteger::divExact;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_stringValue,
-        NLazyInteger::stringValue, 0, 1);
+        NFiniteInteger::stringValue, 0, 1);
 }
 
-void addNLazyInteger() {
-    scope s = class_<NLazyInteger>("NLazyInteger")
+void addNInteger() {
+    scope s = class_<NFiniteInteger>("NInteger")
         .def(init<long>())
-        .def(init<const NLazyInteger&>())
+        .def(init<const NFiniteInteger&>())
         .def(init<const char*, optional<int> >())
-        .def("isNative", &NLazyInteger::isNative)
-        .def("longValue", &NLazyInteger::longValue)
-        .def("stringValue", &NLazyInteger::stringValue, OL_stringValue())
-        .def("swap", &NLazyInteger::swap)
+        .def("isNative", &NFiniteInteger::isNative)
+        .def("longValue", &NFiniteInteger::longValue)
+        .def("stringValue", &NFiniteInteger::stringValue, OL_stringValue())
+        .def("swap", &NFiniteInteger::swap)
         .def(self == self)
         .def(self == long())
         .def(self != self)
@@ -92,21 +93,21 @@ void addNLazyInteger() {
         .def("divByExact", divByExact_long, return_internal_reference<>())
         .def(self %= self)
         .def(self %= long())
-        .def("negate", &NLazyInteger::negate)
-        .def("abs", &NLazyInteger::abs)
-        .def("gcd", &NLazyInteger::gcd)
-        .def("lcm", &NLazyInteger::lcm)
-        .def("makeLarge", &NLazyInteger::makeLarge)
-        .def("tryReduce", &NLazyInteger::tryReduce)
+        .def("negate", &NFiniteInteger::negate)
+        .def("abs", &NFiniteInteger::abs)
+        .def("gcd", &NFiniteInteger::gcd)
+        .def("lcm", &NFiniteInteger::lcm)
+        .def("makeLarge", &NFiniteInteger::makeLarge)
+        .def("tryReduce", &NFiniteInteger::tryReduce)
         .def(self_ns::str(self))
     ;
 
     // Apparently there is no way in python to make a module attribute
     // read-only.
-    s.attr("zero") = NLazyInteger::zero;
-    s.attr("one") = NLazyInteger::one;
+    s.attr("zero") = NFiniteInteger::zero;
+    s.attr("one") = NFiniteInteger::one;
 
-    boost::python::implicitly_convertible<long, NLazyInteger>();
-    boost::python::implicitly_convertible<std::string, NLazyInteger>();
+    boost::python::implicitly_convertible<long, NFiniteInteger>();
+    boost::python::implicitly_convertible<std::string, NFiniteInteger>();
 }
 

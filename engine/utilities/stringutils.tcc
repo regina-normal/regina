@@ -31,8 +31,16 @@
 #include <cctype>
 #include <string>
 #include "regina-core.h"
+#include "maths/ninteger.h"
 
 namespace regina {
+
+template <bool supportInfinity>
+bool valueOf(const std::string& str, NInteger<supportInfinity>& dest) {
+    bool valid;
+    dest = NInteger<supportInfinity>(str.c_str(), 10, &valid);
+    return valid;
+}
 
 template <class OutputIterator>
 unsigned basicTokenise(OutputIterator results, const std::string& str) {

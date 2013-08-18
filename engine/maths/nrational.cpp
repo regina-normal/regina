@@ -42,21 +42,6 @@ const NRational NRational::undefined(0, 0);
 const NRational NRational::maxDouble(0, 0);
 const NRational NRational::minDouble(0, 0);
 
-NRational::NRational(const NLargeInteger& newNum,
-        const NLargeInteger& newDen) {
-    mpq_init(data);
-    if (newDen == 0) {
-        if (newNum == 0)
-            flavour = f_undefined;
-        else
-            flavour = f_infinity;
-    } else {
-        flavour = f_normal;
-        mpz_set(mpq_numref(data), newNum.data);
-        mpz_set(mpq_denref(data), newDen.data);
-    }
-}
-
 NRational::NRational(long newNum, unsigned long newDen) {
     mpq_init(data);
     if (newDen == 0) {
@@ -68,25 +53,25 @@ NRational::NRational(long newNum, unsigned long newDen) {
         flavour = f_normal;
         mpq_set_si(data, newNum, newDen);
     }
-}   
+}
 
-NLargeInteger NRational::getNumerator() const {
+NInteger<> NRational::getNumerator() const {
     if (flavour == f_infinity)
-        return NLargeInteger::one;
+        return NInteger<>::one;
     else if (flavour == f_undefined)
-        return NLargeInteger::zero;
+        return NInteger<>::zero;
 
-    NLargeInteger ans;
-    mpz_set(ans.data, mpq_numref(data));
+    NInteger<> ans;
+    ans.setRaw(mpq_numref(data));
     return ans;
 }
 
-NLargeInteger NRational::getDenominator() const {
+NInteger<> NRational::getDenominator() const {
     if (flavour != f_normal)
-        return NLargeInteger::zero;
+        return NInteger<>::zero;
 
-    NLargeInteger ans;
-    mpz_set(ans.data, mpq_denref(data));
+    NInteger<> ans;
+    ans.setRaw(mpq_denref(data));
     return ans;
 }
 
@@ -353,15 +338,15 @@ void NRational::initDoubleBounds() {
     // In fact, we'll be even more conservative and divide by an extra
     // factor of FLT_RADIX to account for "minus a small amount".
 
-    NLargeInteger maxNum = FLT_RADIX;
+    NInteger<> maxNum = FLT_RADIX;
     maxNum.raiseToPower(DBL_MAX_EXP - 1);
 
-    NLargeInteger minNum = FLT_RADIX;
+    NInteger<> minNum = FLT_RADIX;
     minNum.raiseToPower(- DBL_MIN_EXP);
 
     // Cast away constness so we can actually change these variables.
-    const_cast<NRational&>(maxDouble) = NRational(maxNum, 1);
-    const_cast<NRational&>(minDouble) = NRational(1, minNum);
+    const_cast<NRational&>(maxDouble) = NRational(maxNum, NInteger<>(1));
+    const_cast<NRational&>(minDouble) = NRational(NInteger<>(1), minNum);
 }
 
 } // namespace regina

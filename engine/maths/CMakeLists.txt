@@ -1,7 +1,7 @@
 # maths 
 
 # Files to compile
-SET ( FILES approx matrixops nlargeinteger nlazyinteger nmatrix2 nperm3 nperm4 nperm5 nprimes nrational nray numbertheory seedprimes)
+SET ( FILES approx matrixops ninteger nmatrix2 nperm3 nperm4 nperm5 nprimes nrational nray numbertheory seedprimes)
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

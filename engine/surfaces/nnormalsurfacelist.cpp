@@ -388,7 +388,11 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
         std::vector<mpz_class>& v(input.back());
         v.reserve(eqns->columns());
         for (c = 0; c < eqns->columns(); ++c) {
-            v.push_back(mpz_class(eqns->entry(r, c).rawData()));
+            NLargeInteger& entry(eqns->entry(r, c));
+            if (entry.isNative())
+                v.push_back(mpz_class(entry.longValue()));
+            else
+                v.push_back(mpz_class(entry.rawData()));
         }
     }
     delete eqns;

@@ -28,7 +28,7 @@
 
 #include <cstdlib>
 #include <cctype>
-#include "maths/nlargeinteger.h"
+#include "maths/ninteger.h"
 #include "utilities/stringutils.h"
 #include "utilities/nbooleans.h"
 
@@ -87,12 +87,6 @@ bool valueOf(const std::string& str, unsigned long& dest) {
     char* endPtr;
     dest = strtoul(str.c_str(), &endPtr, 10);
     return ((! str.empty()) && (*endPtr == 0));
-}
-
-bool valueOf(const std::string& str, NLargeInteger& dest) {
-    bool valid;
-    dest = NLargeInteger(str.c_str(), 10, &valid);
-    return valid;
 }
 
 bool valueOf(const std::string& str, double& dest) {

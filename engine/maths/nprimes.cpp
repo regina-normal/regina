@@ -55,8 +55,12 @@ void NPrimes::growPrimeList(unsigned long extras) {
         largePrimes[largePrimes.size() - 1]);
     NLargeInteger newPrime;
 
+    // Since this is all being done through GMP, just bite the bullet
+    // and make them all GMP integers (not native integers).
+    // This means we can call rawData() with abandon.
     while (extras) {
-        mpz_nextprime(newPrime.data, lastPrime.data);
+        mpz_nextprime(newPrime.rawData(), lastPrime.rawData());
+        newPrime.tryReduce(); // since rawData() forced it into GMP format
         largePrimes.push_back(newPrime);
 
         lastPrime = newPrime;
@@ -107,14 +111,22 @@ std::vector<NLargeInteger> NPrimes::primeDecomp(const NLargeInteger& n) {
 
         cpi++;
         iterSinceDivision++;
-        if (iterSinceDivision == 500) // after 500 unsuccessful divisions,
-                                      // check to see if it is probably prime.
-            if (mpz_probab_prime_p (temp.data, 10) != 0) {
+
+        // after 500 unsuccessful divisions,
+        // check to see if it is probably prime.
+        if (iterSinceDivision == 500) {
+            int res = mpz_probab_prime_p (temp.rawData(), 10);
+            // Calling rawData() made temp fat (GMP); try to make it
+            // native again if we can (for performance).
+            temp.tryReduce();
+
+            if (res) {
                 // temp is likely prime.
                 // end the search.
                 retval.push_back(temp);
                 break;
             }
+        }
     }
 
     return retval; // now it's reasonably fast for small numbers.

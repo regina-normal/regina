@@ -110,25 +110,29 @@ class NRationalTest : public CppUnit::TestFixture {
             // or about 7^25.
             NLargeInteger in(7);
             in.raiseToPower(25);
-            checkDoubleInRange(NRational(in, 3), 4.470e+20, 4.471e+20,
-                "7^25/3");
-            checkDoubleInRange(NRational(-in, 3), -4.471e+20, -4.470e+20,
-                "-7^25/3");
+            checkDoubleInRange(NRational(in, NLargeInteger(3)),
+                4.470e+20, 4.471e+20, "7^25/3");
+            checkDoubleInRange(NRational(-in, NLargeInteger(3)),
+                -4.471e+20, -4.470e+20, "-7^25/3");
 
             // Construct something well out of double's usual range.
             // Here we aim for around 2^10000, or about 13^2702.
             NLargeInteger out(13);
             out.raiseToPower(2702);
-            checkDoubleOutOfRange(NRational(out, 2), "13^2702/2");
-            checkDoubleOutOfRange(NRational(-out, 2), "-13^2702/2");
+            checkDoubleOutOfRange(NRational(out, NLargeInteger(2)),
+                "13^2702/2");
+            checkDoubleOutOfRange(NRational(-out, NLargeInteger(2)),
+                "-13^2702/2");
 
             // Check precision bounds close to zero also.
-            checkDoubleInRange(NRational(3, in), 2.237e-21, 2.238e-21,
-                "3/7^25");
-            checkDoubleInRange(NRational(-3, in), -2.238e-21, -2.237e-21,
-                "-3/7^25");
-            checkDoubleOutOfRange(NRational(2, out), "2/13^2702");
-            checkDoubleOutOfRange(NRational(-2, out), "-2/13^2702");
+            checkDoubleInRange(NRational(NLargeInteger(3), in),
+                2.237e-21, 2.238e-21, "3/7^25");
+            checkDoubleInRange(NRational(NLargeInteger(-3), in),
+                -2.238e-21, -2.237e-21, "-3/7^25");
+            checkDoubleOutOfRange(NRational(NLargeInteger(2), out),
+                "2/13^2702");
+            checkDoubleOutOfRange(NRational(NLargeInteger(-2), out),
+                "-2/13^2702");
         }
 };
 

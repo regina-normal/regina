@@ -43,19 +43,22 @@ Version 4.94  [ (under development) ]
         Class NGenericIsomorphism:
             - New template base class that contains dimension-agnostic
               code for representing isomorphisms between triangulations.
+        Class NInteger, NLargeInteger:
+            - NLargeInteger is now superceded by a new template class
+              NInteger.  The boolean template argument indicates whether
+              the class supports infinity as an allowed value.
+              NLargeInteger is now a typedef for NInteger<true>, which
+              maintain compatibility with past behaviour.
+            - Heavily rewritten to work with native C/C++ integers for as long
+              as possible, and to only switche to GMP large integers when it
+              becomes unavoidable.  This makes the code enormously faster
+              (rough testing suggests a 7x speedup).
+            - Made the destructor non-virtual to avoid the unwanted class
+              overhead that comes with polymorphism.
+            - Added routine isZero().
         Class NIsomorphism:
             - Now a subclass of NGenericIsomorphism<3>, with inherited
               dimension-agnostic aliases for several routines.
-        Class NLargeInteger:
-            - Made the destructor non-virtual to avoid the unwanted class
-              overhead that comes with polymorphism.
-            - Added constructor and assignment operator that take a
-              reference to the new NLazyInteger class.
-        Class NLazyInteger:
-            - New fast class for finite arbitrary precision integer arithmetic.
-              This class works with native C/C++ integers for as long as
-              possible, and only switches to GMP large integers when it
-              becomes unavoidable.
         Class NNormalSurface:
             - Routine boundarySlopes() now requires that the
               triangulation is oriented (otherwise SnapPea will relabel
@@ -122,6 +125,8 @@ Version 4.94  [ (under development) ]
             - These typedefs have been renamed as NFacePairing::IsoList
               and NFacePairing::Use respectively.  The old typedefs are
               deprecated, and will be removed in some future release.
+        Header nlargeinteger.h:
+            - Deprecated in favour of the new ninteger.h.
     UTILITIES:
         tricensus:
             - Now takes an optional argument -2/--dim2 to enumerate
