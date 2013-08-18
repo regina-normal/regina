@@ -69,101 +69,28 @@ namespace regina {
  */
 
 /**
- * Policy classes for use with NInteger, indicating whether we
+ * Internal base classes for use with NInteger, templated on whether we
  * should support infinity as an allowed value.
  *
  * See the NInteger class notes for details.
  */
 template <bool supportInfinity>
-class REGINA_API InfinityPolicy;
+struct REGINA_API InfinityBase;
 
 template <>
-class REGINA_API InfinityPolicy<true> {
-    private:
-        bool infinite;
-            /**< Does this integer represent infinity? */
+struct REGINA_API InfinityBase<true> {
+    bool infinite_;
+        /**< Does this integer represent infinity? */
 
-    public:
-        /**
-         * Default constructor.
-         * Sets this integer to be finite.
-         */
-        inline InfinityPolicy() : infinite(false) {
-        }
-
-        /**
-         * Returns whether this integer is infinity.
-         *
-         * @return \c true if and only if this integer is infinity.
-         */
-        inline bool isInfinite() const {
-            return infinite;
-        };
-
-    protected:
-        /**
-         * Sets this integer to be finite.
-         */
-        inline void makeFinite() {
-            infinite = false;
-        }
-
-        /**
-         * Sets this integer to be infinite.
-         */
-        inline void makeInfinite() {
-            infinite = true;
-        }
-
-        /**
-         * Swaps the data held by this policy class between
-         * this and the given object.
-         *
-         * @param other the objects whose data is to be swapped with this.
-         */
-        inline void swap(InfinityPolicy<true>& other) {
-            std::swap(infinite, other.infinite);
-        }
+    /**
+     * Default constructor that sets this integer to be finite.
+     */
+    inline InfinityBase() : infinite_(false) {
+    }
 };
 
 template <>
-class REGINA_API InfinityPolicy<false> {
-    public:
-        /**
-         * Returns whether this integer is infinity.
-         * For IntegerWithoutInfinity, this routine always returns \c false.
-         *
-         * @return \c true if and only if this integer is infinity.
-         */
-        inline bool isInfinite() const {
-            return false;
-        };
-
-    protected:
-        /**
-         * Sets this integer to be finite.
-         * For IntegerWithoutInfinity, this routine does nothing.
-         */
-        inline void makeFinite() {
-        }
-
-        /**
-         * Sets this integer to be infinite.
-         * For IntegerWithoutInfinity, this routine does nothing
-         * (and should never be called, since infinity is not supported).
-         */
-        inline void makeInfinite() {
-        }
-
-        /**
-         * Swaps the data held by this policy class between
-         * this and the given object.
-         * For IntegerWithoutInfinity, this routine does nothing.
-         *
-         * @param other the objects whose data is to be swapped with this.
-         */
-        inline void swap(InfinityPolicy<false>& other) {
-        }
+struct REGINA_API InfinityBase<false> {
 };
 
 /**
@@ -201,7 +128,7 @@ class REGINA_API InfinityPolicy<false> {
  * \testpart
  */
 template <bool supportInfinity = false>
-class REGINA_API NInteger : public InfinityPolicy<supportInfinity> {
+class REGINA_API NInteger : private InfinityBase<supportInfinity> {
     public:
         static const NInteger<supportInfinity> zero;
             /**< Globally available zero. */
@@ -226,7 +153,6 @@ class REGINA_API NInteger : public InfinityPolicy<supportInfinity> {
                  We require that, whenever this pointer is non-null, the
                  corresponding GMP large integer is initialised.
                  If this integer is infinity then large_ must be null. */
-                 // TODO: Do that.
 
     public:
         /**
@@ -285,8 +211,6 @@ class REGINA_API NInteger : public InfinityPolicy<supportInfinity> {
          * \pre If this class does not support infinity, then \a value
          * must not be infinite.
          *
-         * TODO: Implement.
-         *
          * @param value the new value of this integer.
          */
         explicit NInteger(const NInteger<! supportInfinity>& value);
@@ -337,7 +261,7 @@ class REGINA_API NInteger : public InfinityPolicy<supportInfinity> {
          * the base will be assumed to be 16.  Otherwise, if the string
          * begins with \c 0, the base will be assumed to be 8.
          * Otherwise it will be taken as base 10.
-         * TODO: Text 0X.
+         * TODO: Test 0X.
          *
          * Whitespace may be present at the beginning of the given string,
          * and will simply be ignored.
@@ -397,11 +321,7 @@ class REGINA_API NInteger : public InfinityPolicy<supportInfinity> {
          *
          * @return \c true if and only if this integer is infinity.
          */
-#ifdef __DOXYGEN
         bool isInfinite() const;
-#else
-        using InfinityPolicy<supportInfinity>::isInfinite;
-#endif
 
         /**
          * Returns the value of this integer as a long.
@@ -444,8 +364,6 @@ class REGINA_API NInteger : public InfinityPolicy<supportInfinity> {
          *
          * \pre If this class does not support infinity, then \a value
          * must not be infinite.
-         *
-         * TODO: Implement.
          *
          * @param value the new value of this integer.
          * @return a reference to this integer with its new value.
@@ -904,7 +822,6 @@ class REGINA_API NInteger : public InfinityPolicy<supportInfinity> {
          * @return the quotient \a q.
          *
          * @author Ryan Budney, B.B.
-         * TODO: Implement.
          */
         NInteger<supportInfinity> divisionAlg(
                 const NInteger<supportInfinity>& divisor,
@@ -1137,7 +1054,6 @@ class REGINA_API NInteger : public InfinityPolicy<supportInfinity> {
          * \pre The given exponent is non-negative.
          *
          * @param exp the power to which this integer will be raised.
-         * TODO: Implement.
          */
         void raiseToPower(unsigned long exp);
 
@@ -1204,7 +1120,6 @@ class REGINA_API NInteger : public InfinityPolicy<supportInfinity> {
          * @param v a variable into which the final coefficient of
          * \a other will be placed.
          * @return the greatest common divisor of \a this and \a other.
-         * TODO: Implement.
          */
         NInteger<supportInfinity> gcdWithCoeffs(
             const NInteger<supportInfinity>& other,
@@ -1226,7 +1141,6 @@ class REGINA_API NInteger : public InfinityPolicy<supportInfinity> {
          * @return The Legendre symbol (0, 1 or -1) as described above.
          *
          * @author Ryan Budney
-         * TODO: implement
          */
         int legendre(const NInteger<supportInfinity>& p) const;
 
@@ -1241,7 +1155,6 @@ class REGINA_API NInteger : public InfinityPolicy<supportInfinity> {
          * \ifacespython Not available.
          *
          * @param fromData the raw GMP integer to clone.
-         * TODO: Implement.
          */
         void setRaw(mpz_srcptr fromData);
 
@@ -1323,6 +1236,25 @@ class REGINA_API NInteger : public InfinityPolicy<supportInfinity> {
          * will generate a linker error.
          */
         NInteger(bool, bool);
+
+        /**
+         * Sets this integer to be finite.
+         * Its new value will be determined by the current contents of
+         * \a small_ and large_, which will not be touched.
+         *
+         * If the template parameter \a supportInfinity is \c false,
+         * this routine safely does nothing.
+         */
+        inline void makeFinite();
+
+        /**
+         * Sets this integer to be infinite.
+         * Any existing data from \a large_ will be cleared and deallocated.
+         *
+         * If the template parameter \a supportInfinity is \c false,
+         * this routine safely does nothing.
+         */
+        inline void makeInfinite();
 
         /**
          * Converts this integer from a native C/C++ long representation
@@ -1499,7 +1431,7 @@ template <bool supportInfinity>
 inline NInteger<supportInfinity>::NInteger(
         const NInteger<supportInfinity>& value) {
     if (value.isInfinite()) {
-        InfinityPolicy<supportInfinity>::makeInfinite();
+        makeInfinite();
         large_ = 0;
     } else if (value.large_) {
         large_ = new mpz_t;
@@ -1514,7 +1446,7 @@ template <bool supportInfinity>
 inline NInteger<supportInfinity>::NInteger(
         const NInteger<! supportInfinity>& value) {
     if (value.isInfinite()) {
-        InfinityPolicy<supportInfinity>::makeInfinite();
+        makeInfinite();
         large_ = 0;
     } else if (value.large_) {
         large_ = new mpz_t;
@@ -1523,12 +1455,6 @@ inline NInteger<supportInfinity>::NInteger(
         small_ = value.small_;
         large_ = 0;
     }
-}
-
-template <>
-inline NInteger<true>::NInteger(bool, bool) : large_(0) {
-    // The infinity constructor.
-    InfinityPolicy<true>::makeInfinite();
 }
 
 template <bool supportInfinity>
@@ -1550,6 +1476,16 @@ inline bool NInteger<supportInfinity>::isZero() const {
         (((! large_) && (! small_)) || (large_ && mpz_sgn(large_) == 0));
 }
 
+template <>
+inline bool NInteger<true>::isInfinite() const {
+    return infinite_;
+}
+
+template <>
+inline bool NInteger<false>::isInfinite() const {
+    return false;
+}
+
 template <bool supportInfinity>
 inline long NInteger<supportInfinity>::longValue() const {
     return (large_ ? mpz_get_si(large_) : small_);
@@ -1560,10 +1496,10 @@ inline NInteger<supportInfinity>&
         NInteger<supportInfinity>::operator =(
         const NInteger<supportInfinity>& value) {
     if (value.isInfinite()) {
-        InfinityPolicy<supportInfinity>::makeInfinite();
+        makeInfinite();
         return *this;
     }
-    InfinityPolicy<supportInfinity>::makeFinite();
+    makeFinite();
     if (value.large_) {
         if (large_)
             mpz_set(large_, value.large_);
@@ -1584,10 +1520,10 @@ inline NInteger<supportInfinity>&
         NInteger<supportInfinity>::operator =(
         const NInteger<! supportInfinity>& value) {
     if (value.isInfinite()) {
-        InfinityPolicy<supportInfinity>::makeInfinite();
+        makeInfinite();
         return *this;
     }
-    InfinityPolicy<supportInfinity>::makeFinite();
+    makeFinite();
     if (value.large_) {
         if (large_)
             mpz_set(large_, value.large_);
@@ -1606,7 +1542,7 @@ inline NInteger<supportInfinity>&
 template <bool supportInfinity>
 inline NInteger<supportInfinity>&
         NInteger<supportInfinity>::operator =(int value) {
-    InfinityPolicy<supportInfinity>::makeFinite();
+    makeFinite();
     small_ = value;
     if (large_)
         clearLarge();
@@ -1616,7 +1552,7 @@ inline NInteger<supportInfinity>&
 template <bool supportInfinity>
 inline NInteger<supportInfinity>&
         NInteger<supportInfinity>::operator =(unsigned value) {
-    InfinityPolicy<supportInfinity>::makeFinite();
+    makeFinite();
     small_ = value;
 
     // Did we overflow?
@@ -1639,7 +1575,7 @@ inline NInteger<supportInfinity>&
 template <bool supportInfinity>
 inline NInteger<supportInfinity>&
         NInteger<supportInfinity>::operator =(long value) {
-    InfinityPolicy<supportInfinity>::makeFinite();
+    makeFinite();
     small_ = value;
     if (large_)
         clearLarge();
@@ -1649,7 +1585,7 @@ inline NInteger<supportInfinity>&
 template <bool supportInfinity>
 inline NInteger<supportInfinity>&
         NInteger<supportInfinity>::operator =(unsigned long value) {
-    InfinityPolicy<supportInfinity>::makeFinite();
+    makeFinite();
     small_ = value;
 
     // Did we overflow?
@@ -1667,15 +1603,6 @@ inline NInteger<supportInfinity>&
         clearLarge();
     }
     return *this;
-}
-
-template <bool supportInfinity>
-inline void NInteger<supportInfinity>::swap(
-        NInteger<supportInfinity>& other) {
-    // This should just work, since large_ is a pointer.
-    InfinityPolicy<supportInfinity>::swap(other);
-    std::swap(small_, other.small_);
-    std::swap(large_, other.large_);
 }
 
 template <bool supportInfinity>
@@ -2063,7 +1990,7 @@ inline NInteger<supportInfinity>
         return (long)0;
     if (other.isZero()) {
         NInteger<supportInfinity> ans;
-        ans.InfinityPolicy<supportInfinity>::makeInfinite();
+        ans.makeInfinite();
         return ans;
     }
 
@@ -2079,7 +2006,7 @@ inline NInteger<supportInfinity>
         return *this;
     if (other == 0) {
         NInteger<supportInfinity> ans;
-        ans.InfinityPolicy<supportInfinity>::makeInfinite();
+        ans.makeInfinite();
         return ans;
     }
 
@@ -2151,7 +2078,7 @@ inline NInteger<supportInfinity>&
     if (isInfinite())
         return *this;
     else if (other.isInfinite()) {
-        InfinityPolicy<supportInfinity>::makeInfinite();
+        makeInfinite();
         return *this;
     }
     if (other.large_) {
@@ -2170,7 +2097,7 @@ inline NInteger<supportInfinity>&
     if (isInfinite())
         return *this;
     else if (other.isInfinite()) {
-        InfinityPolicy<supportInfinity>::makeInfinite();
+        makeInfinite();
         return *this;
     }
     if (other.large_) {
@@ -2232,7 +2159,7 @@ inline NInteger<supportInfinity> operator *(long lhs,
 
 template <bool supportInfinity>
 inline void NInteger<supportInfinity>::setRaw(mpz_srcptr fromData) {
-    InfinityPolicy<supportInfinity>::makeFinite();
+    makeFinite();
     if (! large_) {
         large_ = new mpz_t;
         mpz_init_set(large_, fromData);
@@ -2287,6 +2214,51 @@ inline void NInteger<supportInfinity>::forceReduce() {
     mpz_clear(large_);
     delete large_;
     large_ = 0;
+}
+
+// Specialised template functions:
+
+template <>
+inline void NInteger<true>::swap(NInteger<true>& other) {
+    // This should just work, since large_ is a pointer.
+    std::swap(infinite_, other.infinite_);
+    std::swap(small_, other.small_);
+    std::swap(large_, other.large_);
+}
+
+template <>
+inline void NInteger<false>::swap(NInteger<false>& other) {
+    // This should just work, since large_ is a pointer.
+    std::swap(small_, other.small_);
+    std::swap(large_, other.large_);
+}
+
+template <>
+inline void NInteger<true>::makeFinite() {
+    infinite_ = false;
+}
+
+template <>
+inline void NInteger<false>::makeFinite() {
+}
+
+template <>
+inline void NInteger<true>::makeInfinite() {
+    infinite_ = true;
+    if (large_)
+        clearLarge();
+}
+
+template <>
+inline void NInteger<false>::makeInfinite() {
+}
+
+// This definition must come *after* the definition of makeInfinite()
+// to keep the compiler happy.
+template <>
+inline NInteger<true>::NInteger(bool, bool) : large_(0) {
+    // The infinity constructor.
+    makeInfinite();
 }
 
 } // namespace regina

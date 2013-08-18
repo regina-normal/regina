@@ -29,6 +29,7 @@
 #include <cerrno>
 #include <cstdlib>
 #include "maths/ninteger.h"
+#include "maths/numbertheory.h"
 #include "utilities/nthread.h"
 
 // We instantiate both variants of the NInteger template at the bottom
@@ -125,7 +126,7 @@ std::string NInteger<supportInfinity>::stringValue(int base) const {
 template <bool supportInfinity>
 NInteger<supportInfinity>& NInteger<supportInfinity>::operator =(
         const char* value) {
-    InfinityPolicy<supportInfinity>::makeFinite();
+    makeFinite();
 
     char* endptr;
     errno = 0;
@@ -151,7 +152,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator =(
 template <bool supportInfinity>
 NInteger<supportInfinity>& NInteger<supportInfinity>::operator =(
         const std::string& value) {
-    InfinityPolicy<supportInfinity>::makeFinite();
+    makeFinite();
 
     char* endptr;
     errno = 0;
@@ -261,7 +262,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator *=(
     if (isInfinite())
         return *this;
     else if (other.isInfinite()) {
-        InfinityPolicy<supportInfinity>::makeInfinite();
+        makeInfinite();
         return *this;
     }
     if (large_) {
@@ -319,7 +320,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator /=(
     if (other.isInfinite())
         return (*this = 0);
     if (other.isZero()) {
-        InfinityPolicy<supportInfinity>::makeInfinite();
+        makeInfinite();
         return *this;
     }
     if (other.large_) {
@@ -396,7 +397,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator /=(long other) {
     if (isInfinite())
         return *this;
     if (other == 0) {
-        InfinityPolicy<supportInfinity>::makeInfinite();
+        makeInfinite();
         return *this;
     }
     if (large_) {
@@ -672,10 +673,13 @@ template <bool supportInfinity>
 NInteger<supportInfinity> NInteger<supportInfinity>::gcdWithCoeffs(
         const NInteger<supportInfinity>& other,
         NInteger<supportInfinity>& u, NInteger<supportInfinity>& v) const {
-    // TODO: Fix for natives.
+    // TODO: Fix for natives:
+    // regina::gcdWithCoeffs(small_, other.small_, u.small_, v.small_);
+    // TODO: Escalate to GMP if anyone is equal to MINLONG.
+    // Otherwise smalls are fine, but check gmpWithCoeffs() for overflow.
     NInteger<supportInfinity> ans;
 
-    // Check for zero coefficients.
+    // Check for zero arguments.
     if (isZero()) {
         u = 0L;
         if (other.isZero()) {
@@ -789,8 +793,31 @@ NInteger<supportInfinity> NInteger<supportInfinity>::divisionAlg(
 template <bool supportInfinity>
 int NInteger<supportInfinity>::legendre(
         const NInteger<supportInfinity>& p) const {
-    // TODO: Fix this for natives.
-    return mpz_legendre(large_, p.large_);
+    // For now, just do this entirely through GMP.
+    mpz_ptr gmp_this = large_;
+    mpz_ptr gmp_p = p.large_;
+
+    if (! large_) {
+        gmp_this = new mpz_t;
+        mpz_init_set_si(gmp_this, small_);
+    }
+    if (! p.large_) {
+        gmp_p = new mpz_t;
+        mpz_init_set_si(gmp_p, p.small_);
+    }
+
+    int ans = mpz_legendre(gmp_this, gmp_p);
+
+    if (! large_) {
+        mpz_clear(gmp_this);
+        delete gmp_this;
+    }
+    if (! p.large_) {
+        mpz_clear(gmp_p);
+        delete gmp_p;
+    }
+
+    return ans;
 }
 
 // Instantiate the templates!
