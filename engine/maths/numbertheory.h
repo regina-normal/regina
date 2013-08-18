@@ -86,8 +86,9 @@ REGINA_API long gcd(long a, long b);
  * gcd returned is guaranteed to be non-negative.
  * As a special case, gcd(0,0) is considered to be zero.
  *
- * If \a d is the gcd of \a a and \a b, the values placed in \a u and \a
- * v will be those for which <tt>u*a + v*b = d</tt>,
+ * If \a d is the gcd of \a a and \a b, the values placed in \a u and \a v
+ * will be those for which
+ * <tt>u*a + v*b = d</tt>,
  * <tt>-abs(a)/d < v*sign(b) <= 0</tt> and
  * <tt>1 <= u*sign(a) <= abs(b)/d</tt>.
  *
