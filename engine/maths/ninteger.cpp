@@ -192,7 +192,376 @@ std::ostream& operator << (std::ostream& out,
 }
 
 template <bool supportInfinity>
-inline void NInteger<supportInfinity>::raiseToPower(unsigned long exp) {
+NInteger<supportInfinity>& NInteger<supportInfinity>::operator +=(long other) {
+    if (isInfinite())
+        return *this;
+    if (! large_) {
+        // Use native arithmetic if we can.
+        // The following overflow test is taken from Hackers' Delight,
+        // sec. 2-21.
+        // Here we use (... & LONG_MIN) to extract the sign bit.
+        long ans = small_ + other;
+        if ((((ans ^ small_) & (ans ^ other))) & LONG_MIN) {
+            // Boom.  It's an overflow.
+            // Fall back to large integer arithmetic in the next block.
+            forceLarge();
+        } else {
+            // All good: we're done.
+            small_ = ans;
+            return *this;
+        }
+    }
+
+    // And now we're down to large integer arithmetic.
+    // The following code should work even if other == LONG_MIN (in which case
+    // -other == LONG_MIN also), since passing -other to mpz_sub_ui casts it
+    // to an unsigned long (and gives it the correct positive value).
+    if (other >= 0)
+        mpz_add_ui(large_, large_, other);
+    else
+        mpz_sub_ui(large_, large_, -other);
+
+    return *this;
+}
+
+template <bool supportInfinity>
+NInteger<supportInfinity>& NInteger<supportInfinity>::operator -=(long other) {
+    if (isInfinite())
+        return *this;
+    if (! large_) {
+        // Use native arithmetic if we can.
+        // The following overflow test is taken from Hackers' Delight,
+        // sec. 2-21.
+        // Here we use (... & LONG_MIN) to extract the sign bit.
+        long ans = small_ - other;
+        if ((((small_ ^ other) & (ans ^ small_))) & LONG_MIN) {
+            // Boom.  It's an overflow.
+            // Fall back to large integer arithmetic in the next block.
+            forceLarge();
+        } else {
+            // All good: we're done.
+            small_ = ans;
+            return *this;
+        }
+    }
+
+    // And now we're down to large integer arithmetic.
+    // The following code should work even if other == LONG_MIN (in which case
+    // -other == LONG_MIN also), since passing -other to mpz_add_ui casts it
+    // to an unsigned long (and gives it the correct positive value).
+    if (other >= 0)
+        mpz_sub_ui(large_, large_, other);
+    else
+        mpz_add_ui(large_, large_, -other);
+
+    return *this;
+}
+
+template <bool supportInfinity>
+NInteger<supportInfinity>& NInteger<supportInfinity>::operator *=(
+        const NInteger<supportInfinity>& other) {
+    if (isInfinite())
+        return *this;
+    else if (other.isInfinite()) {
+        InfinityPolicy<supportInfinity>::makeInfinite();
+        return *this;
+    }
+    if (large_) {
+        if (other.large_)
+            mpz_mul(large_, large_, other.large_);
+        else
+            mpz_mul_si(large_, large_, other.small_);
+    } else if (other.large_) {
+        large_ = new mpz_t;
+        mpz_init(large_);
+        mpz_mul_si(large_, other.large_, small_);
+    } else {
+        long ans = small_ * other.small_;
+        // From Hacker's Delight, sec. 2-12:
+        // Overflow iff the following conditions hold:
+        if ((other.small_ < 0 && small_ == LONG_MIN) ||
+                (other.small_ != 0 && ans / other.small_ != small_)) {
+            // Overflow.
+            large_ = new mpz_t;
+            mpz_init_set_si(large_, small_);
+            mpz_mul_si(large_, large_, other.small_);
+        } else
+            small_ = ans;
+    }
+    return *this;
+}
+
+template <bool supportInfinity>
+NInteger<supportInfinity>& NInteger<supportInfinity>::operator *=(long other) {
+    if (isInfinite())
+        return *this;
+    if (large_)
+        mpz_mul_si(large_, large_, other);
+    else {
+        long ans = small_ * other;
+        // From Hacker's Delight, sec. 2-12:
+        // Overflow iff the following conditions hold:
+        if ((other < 0 && small_ == LONG_MIN) ||
+                (other != 0 && ans / other != small_)) {
+            // Overflow.
+            large_ = new mpz_t;
+            mpz_init_set_si(large_, small_);
+            mpz_mul_si(large_, large_, other);
+        } else
+            small_ = ans;
+    }
+    return *this;
+}
+
+template <bool supportInfinity>
+NInteger<supportInfinity>& NInteger<supportInfinity>::operator /=(
+        const NInteger<supportInfinity>& other) {
+    if (isInfinite())
+        return *this;
+    if (other.isInfinite())
+        return (*this = 0);
+    if (other.isZero()) {
+        InfinityPolicy<supportInfinity>::makeInfinite();
+        return *this;
+    }
+    if (other.large_) {
+        if (large_) {
+            mpz_tdiv_q(large_, large_, other.large_);
+            return *this;
+        }
+        // This is a native C/C++ long.
+        // One of four things must happen:
+        // (i) |other| > |this|, in which case the result = 0;
+        // (ii) this = LONG_MIN and OTHER = -1, in which case the result
+        // is the large integer -LONG_MIN;
+        // (iii) this = LONG_MIN and OTHER is the large integer -LONG_MIN,
+        // in which case the result = -1;
+        // (iv) other can be converted to a native long, and the result
+        // is a native long also.
+        //
+        // Deal with the problematic LONG_MIN case first.
+        if (small_ == LONG_MIN) {
+            if (! mpz_cmp_ui(other.large_,
+                    LONG_MIN /* casting to unsigned makes this -LONG_MIN */)) {
+                small_ = -1;
+                return *this;
+            }
+            if (! mpz_cmp_si(other.large_, -1)) {
+                // The result is -LONG_MIN, which requires large integers.
+                // Reduce other while we're at it.
+                const_cast<NInteger<supportInfinity>&>(other).forceReduce();
+                large_ = new mpz_t;
+                mpz_init_set_si(large_, LONG_MIN);
+                mpz_neg(large_, large_);
+                return *this;
+            }
+            if (mpz_cmp_ui(other.large_,
+                    LONG_MIN /* cast to ui makes this -LONG_MIN */) > 0 ||
+                    mpz_cmp_si(other.large_, LONG_MIN) < 0) {
+                small_ = 0;
+                return *this;
+            }
+            // other is in [ LONG_MIN, -LONG_MIN ) \ {-1}.
+            // Reduce it and use native arithmetic.
+            const_cast<NInteger<supportInfinity>&>(other).forceReduce();
+            small_ /= other.small_;
+            return *this;
+        }
+
+        // From here we have this in ( LONG_MIN, -LONG_MIN ).
+        if (small_ >= 0) {
+            if (mpz_cmp_si(other.large_, small_) > 0 ||
+                    mpz_cmp_si(other.large_, -small_) < 0) {
+                small_ = 0;
+                return *this;
+            }
+        } else {
+            // We can negate, since small_ != LONG_MIN.
+            if (mpz_cmp_si(other.large_, -small_) > 0 ||
+                    mpz_cmp_si(other.large_, small_) < 0) {
+                small_ = 0;
+                return *this;
+            }
+        }
+
+        // We can do this all in native longs from here.
+        // Opportunistically reduce other, since we know we can.
+        const_cast<NInteger<supportInfinity>&>(other).forceReduce();
+        small_ /= other.small_;
+        return *this;
+    } else
+        return (*this) /= other.small_;
+}
+
+template <bool supportInfinity>
+NInteger<supportInfinity>& NInteger<supportInfinity>::operator /=(long other) {
+    if (isInfinite())
+        return *this;
+    if (other == 0) {
+        InfinityPolicy<supportInfinity>::makeInfinite();
+        return *this;
+    }
+    if (large_) {
+        if (other >= 0)
+            mpz_tdiv_q_ui(large_, large_, other);
+        else {
+            // The cast to (unsigned long) makes this correct even if
+            // other = LONG_MIN.
+            mpz_tdiv_q_ui(large_, large_, - other);
+            mpz_neg(large_, large_);
+        }
+    } else if (small_ == LONG_MIN && other == -1) {
+        // This is the special case where we must switch from native to
+        // large integers.
+        large_ = new mpz_t;
+        mpz_init_set_si(large_, LONG_MIN);
+        mpz_neg(large_, large_);
+    } else {
+        // We can do this entirely in native arithmetic.
+        small_ /= other;
+    }
+    return *this;
+}
+
+template <bool supportInfinity>
+NInteger<supportInfinity>& NInteger<supportInfinity>::divByExact(
+        const NInteger<supportInfinity>& other) {
+    if (other.large_) {
+        if (large_) {
+            mpz_divexact(large_, large_, other.large_);
+            return *this;
+        }
+        // This is a native C/C++ long.
+        // Because we are guaranteed other | this, it follows that
+        // other must likewise fit within a native long, or else
+        // this == LONG_MIN and other == -LONG_MIN.
+        // It also follows that the result must fit within a native long,
+        // or else this == LONG_MIN and other == -1.
+        if (small_ == LONG_MIN) {
+            if (! mpz_cmp_ui(other.large_,
+                    LONG_MIN /* casting to unsigned makes this -LONG_MIN */)) {
+                // The result is -1, since we have LONG_MIN / -LONG_MIN.
+                small_ = -1;
+                return *this;
+            }
+
+            // At this point we know that other fits within a native long.
+            // Opportunistically reduce its representation.
+            const_cast<NInteger<supportInfinity>&>(other).forceReduce();
+
+            if (other.small_ == -1) {
+                // The result is -LONG_MIN, which requires large integers.
+                large_ = new mpz_t;
+                mpz_init_set_si(large_, LONG_MIN);
+                mpz_neg(large_, large_);
+            } else {
+                // The result will fit within a native long also.
+                small_ /= other.small_;
+            }
+            return *this;
+        }
+
+        // Here we know that other always fits within a native long,
+        // and so does the result.
+        // Opportunisticaly reduce the representation of other, since
+        // we know we can.
+        const_cast<NInteger<supportInfinity>&>(other).forceReduce();
+        small_ /= other.small_;
+        return *this;
+    } else {
+        // other is already a native int.
+        // Use the native version of this routine instead.
+        return divByExact(other.small_);
+    }
+}
+
+template <bool supportInfinity>
+NInteger<supportInfinity>& NInteger<supportInfinity>::divByExact(long other) {
+    if (large_) {
+        if (other >= 0)
+            mpz_divexact_ui(large_, large_, other);
+        else {
+            // The cast to (unsigned long) makes this correct even if
+            // other = LONG_MIN.
+            mpz_divexact_ui(large_, large_, - other);
+            mpz_neg(large_, large_);
+        }
+    } else if (small_ == LONG_MIN && other == -1) {
+        // This is the special case where we must switch from native to
+        // large integers.
+        large_ = new mpz_t;
+        mpz_init_set_si(large_, LONG_MIN);
+        mpz_neg(large_, large_);
+    } else {
+        // We can do this entirely in native arithmetic.
+        small_ /= other;
+    }
+    return *this;
+}
+
+template <bool supportInfinity>
+NInteger<supportInfinity>& NInteger<supportInfinity>::operator %=(
+        const NInteger<supportInfinity>& other) {
+    if (other.large_) {
+        if (large_) {
+            mpz_tdiv_r(large_, large_, other.large_);
+            return *this;
+        }
+
+        // We fit into a native long.  Either:
+        // (i) |other| > |this|, in which case the result is just this;
+        // (ii) |other| == |this|, in which case the result is 0;
+        // (iii) |other| < |this|, in which case we can convert
+        // everything to native C/C++ integer arithmetic.
+        int res = (small_ >= 0 ?
+            mpz_cmp_si(other.large_, small_) :
+            mpz_cmp_ui(other.large_, - small_) /* ui cast makes this work
+                                                 even if small_ = LONG_MIN */);
+        if (res > 0)
+            return *this;
+        if (res == 0) {
+            small_ = 0;
+            return *this;
+        }
+
+        res = (small_ >= 0 ?
+            mpz_cmp_si(other.large_, - small_) :
+            mpz_cmp_ui(other.large_, small_));
+
+        if (res < 0)
+            return *this;
+        if (res == 0) {
+            small_ = 0;
+            return *this;
+        }
+
+        // Everything can be made native integer arithmetic.
+        // Opportunistically reduce other while we're at it.
+        const_cast<NInteger<supportInfinity>&>(other).forceReduce();
+        small_ %= other.small_;
+        return *this;
+    } else
+        return (*this) %= other.small_;
+}
+
+template <bool supportInfinity>
+NInteger<supportInfinity>& NInteger<supportInfinity>::operator %=(long other) {
+    // Since |result| < |other|, whatever happens we can fit the result
+    // into a native C/C++ long.
+    if (large_) {
+        // We can safely cast other to an unsigned long, because the rounding
+        // rules imply that (this % LONG_MIN) == (this % -LONG_MIN).
+        mpz_tdiv_r_ui(large_, large_, other >= 0 ? other : -other);
+        forceReduce();
+    } else {
+        // All native arithmetic from here.
+        small_ %= other;
+    }
+    return *this;
+}
+
+template <bool supportInfinity>
+void NInteger<supportInfinity>::raiseToPower(unsigned long exp) {
     // TODO: Fix for natives also.
     if (exp == 0)
         (*this) = one;
@@ -420,7 +789,7 @@ NInteger<supportInfinity> NInteger<supportInfinity>::divisionAlg(
 }
 
 template <bool supportInfinity>
-inline int NInteger<supportInfinity>::legendre(
+int NInteger<supportInfinity>::legendre(
         const NInteger<supportInfinity>& p) const {
     // TODO: Fix this for natives.
     return mpz_legendre(large_, p.large_);
