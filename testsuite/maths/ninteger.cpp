@@ -33,9 +33,14 @@
 
 using regina::NIntegerBase;
 
+#define HUGE_INTEGER "12364981726394781629378461923786491874569283746672"
+
 class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NIntegerTest);
 
+    CPPUNIT_TEST(constructAssignCopyNative);
+    CPPUNIT_TEST(constructAssignCopyString);
+    CPPUNIT_TEST(constructSpecial);
     /*
     CPPUNIT_TEST(comparisons);
     CPPUNIT_TEST(incDec);
@@ -47,6 +52,10 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     private:
+        long zeroL;
+            /** We need this so we can test things like (LONG_MAX + 1 < 0)
+                without compiler optimisations breaking the results. */
+
         regina::NInteger smallPosSeries[6];
             /**< A sequence of positive integers that fit into a long. */
         regina::NInteger smallNegSeries[6];
@@ -74,8 +83,35 @@ class NIntegerTest : public CppUnit::TestFixture {
         long* smallSeriesVal[2];
             /**< A list of the long value arrays defined above. */
 
+        regina::NInteger zero;
+            /**< Special case (native): 0 */
+        regina::NInteger one;
+            /**< Special case (native): 1 */
+        regina::NInteger two;
+            /**< Special case (native): 2 */
+        regina::NInteger negOne;
+            /**< Special case (native): -1 */
+        regina::NInteger negTwo;
+            /**< Special case (native): -2 */
+        regina::NInteger longMax;
+            /**< Special case (native): LONG_MAX */
+        regina::NInteger longMin;
+            /**< Special case (native): LONG_MIN */
+        regina::NInteger longMaxInc;
+            /**< Special case (large): LONG_MAX + 1 */
+        regina::NInteger longMinDec;
+            /**< Special case (large): LONG_MIN - 1 */
+        regina::NInteger ulongMax;
+            /**< Special case (large): ULONG_MAX */
+        regina::NInteger hugePos;
+            /**< Special case (large): a huge positive integer */
+        regina::NInteger hugeNeg;
+            /**< Special case (large): a huge negative integer */
+
     public:
         void setUp() {
+            zeroL = 0;
+
             smallPosSeries[0] = 1000;
             smallPosSeries[1] = 2000;
             smallPosSeries[2] = 3000;
@@ -125,10 +161,38 @@ class NIntegerTest : public CppUnit::TestFixture {
 
             smallSeriesVal[0] = smallPosSeriesVal;
             smallSeriesVal[1] = smallNegSeriesVal;
+
+            zero = 0;
+            one = 1;
+            two = 2;
+            negOne = -1;
+            negTwo = -2;
+            longMax = LONG_MAX;
+            longMin = LONG_MIN;
+            longMaxInc = LONG_MAX; ++longMaxInc;
+            longMinDec = LONG_MIN; --longMinDec;
+            ulongMax = (unsigned long)(ULONG_MAX);
+            hugePos = HUGE_INTEGER;
+            hugeNeg = "-" HUGE_INTEGER;
         }
 
         void tearDown() {
         }
+
+        template <typename T>
+        std::string str(T x) {
+            std::ostringstream ans;
+            ans << x;
+            return ans.str();
+        }
+
+        // TODO: Test swap()
+        // TODO: Test comparisons (lazy && long)
+        // TODO: Test ++, -- (both versions)
+        // TODO: Test +, -, *, /, divExact, % (lazy && long); unary -
+        // TODO: Test +=, -=, *=, /=, divByExact, %= (lazy && long); negate
+        // TODO: Test abs, gcd, lcm
+        // TODO: Test tryReduce, makeLarge.
 
         std::string eltName(int whichSeries, int whichMember) {
             std::ostringstream ans;
@@ -173,6 +237,8 @@ class NIntegerTest : public CppUnit::TestFixture {
                 ! (a > b));
             CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + bName + ".",
                 a >= b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not str== " + bName + " (long).",
+                a.stringValue() == b.stringValue());
         }
 
         void shouldBeGreater(const NInteger& a, const NInteger& b,
@@ -230,6 +296,8 @@ class NIntegerTest : public CppUnit::TestFixture {
                 ! (a > b));
             CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + bName + " (long).",
                 a >= b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not str== " + bName + " (long).",
+                a.stringValue() == str(b));
         }
 
         void shouldBeGreater(const NInteger& a, long b,
@@ -409,9 +477,20 @@ class NIntegerTest : public CppUnit::TestFixture {
         void incDecArg() {
             typedef NIntegerBase<supportInfinity> IntType;
 
-            testIncDec(IntType::zero);
-            testIncDec(IntType::one);
+            testIncDec(zero);
+            testIncDec(one);
+            testIncDec(two);
+            testIncDec(negOne);
+            testIncDec(negTwo);
+            testIncDec(longMax);
+            testIncDec(longMin);
+            testIncDec(longMaxInc);
+            testIncDec(longMinDec);
+            testIncDec(ulongMax);
+            testIncDec(hugePos);
+            testIncDec(hugeNeg);
             testIncDec(IntType::infinity);
+
             for (int a = 0; a < nSeries; a++)
                 for (int i = 0; i < seriesLen; i++)
                     testIncDec(series[a][i]);
@@ -422,6 +501,542 @@ class NIntegerTest : public CppUnit::TestFixture {
             incDecArg<false>();
         }
         */
+
+        template <typename IntType>
+        void testNative(const IntType& x, const char* name, long value,
+                int sign, bool testCopy = false) {
+            if (! x.isNative()) {
+                std::ostringstream msg;
+                msg << name << " is non-native.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (x.longValue() != value) {
+                std::ostringstream msg;
+                msg << name << " != " << value << " as a long.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (x.stringValue() != str(value)) {
+                std::ostringstream msg;
+                msg << name << " != " << value << " as a string.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            {
+                std::ostringstream out;
+                out << x;
+                if (out.str() != str(value)) {
+                    std::ostringstream msg;
+                    msg << name << " != " << value << " on an ostream.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            if (sign < 0 && (x.longValue() >= zeroL || x.isZero())) {
+                std::ostringstream msg;
+                msg << name << " is not negative as a long.";
+                CPPUNIT_FAIL(msg.str());
+            } else if (sign > 0 && (x.longValue() <= zeroL || x.isZero())) {
+                std::ostringstream msg;
+                msg << name << " is not positive as a long.";
+                CPPUNIT_FAIL(msg.str());
+            } else if (sign == 0 && (x.longValue() != 0 || !  x.isZero())) {
+                std::ostringstream msg;
+                msg << name << " is not zero as a long.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (testCopy) {
+                // Test the copy constructor and copy assignment here
+                // also.
+                IntType y(x);
+                testNative(y, "Native copy", value, sign);
+
+                IntType z(5);
+                z = x;
+                testNative(z, "Native = from native", value, sign);
+
+                IntType w(HUGE_INTEGER);
+                w = x;
+                testNative(w, "Native = from large", value, sign);
+            }
+        }
+
+        template <typename IntType>
+        void testLarge(const IntType& x, const char* name,
+                const std::string& value, int sign, bool testCopy = false) {
+            if (x.isNative()) {
+                std::ostringstream msg;
+                msg << name << " should be non-native.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (x.stringValue() != value) {
+                std::ostringstream msg;
+                msg << name << " != " << value << " as a string.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            {
+                std::ostringstream out;
+                out << x;
+                if (out.str() != value) {
+                    std::ostringstream msg;
+                    msg << name << " != " << value << " on an ostream.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            if (sign < 0 && (x >= 0 || x.stringValue()[0] != '-' ||
+                    x.isZero())) {
+                std::ostringstream msg;
+                msg << name << " is not negative as a long.";
+                CPPUNIT_FAIL(msg.str());
+            } else if (sign > 0 && (x <= 0 || x.stringValue()[0] < '1' ||
+                    x.stringValue()[0] > '9' || x.isZero())) {
+                std::ostringstream msg;
+                msg << name << " is not positive as a long.";
+                CPPUNIT_FAIL(msg.str());
+            } else if (sign == 0 && (x != 0 || x.stringValue() != "0" ||
+                    ! x.isZero())) {
+                std::ostringstream msg;
+                msg << name << " is not zero as a long.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (testCopy) {
+                // Test the copy constructor and copy assignment here
+                // also.
+                IntType y(x);
+                testLarge(y, "Large copy", value, sign);
+
+                IntType z(5);
+                z = x;
+                testLarge(z, "Large = from native", value, sign);
+
+                IntType w(HUGE_INTEGER);
+                w = x;
+                testLarge(w, "Large = from large", value, sign);
+            }
+        }
+
+        template <bool supportInfinity>
+        void constructAssignCopyNative() {
+            typedef NIntegerBase<supportInfinity> IntType;
+
+            testNative(IntType(), "Default", 0, 0, true);
+            testNative(IntType(int(100)), "Int", 100, 1, true);
+            testNative(IntType(int(-32768)), "Int", -32768, -1, true);
+            testNative(IntType(unsigned(65535)), "UInt", 65535, 1, true);
+            testNative(IntType(long(2147483647)), "Long", 2147483647,
+                1, true);
+            testNative(IntType(long(-2147483648)), "Long", -2147483648,
+                -1, true);
+            testNative(IntType(long(LONG_MAX)), "Long", LONG_MAX,
+                1, true);
+            testNative(IntType(long(LONG_MIN)), "Long", LONG_MIN,
+                -1, true);
+            testNative(IntType((unsigned long)(LONG_MAX)), "ULong",
+                LONG_MAX, 1, true);
+            testLarge(IntType((unsigned long)(LONG_MAX) + 1), "ULong",
+                str((unsigned long)(LONG_MAX) + 1), 1, true);
+            testLarge(IntType((unsigned long)(ULONG_MAX)), "ULong",
+                str((unsigned long)(ULONG_MAX)), 1, true);
+
+            IntType x;
+
+            x = int(100);
+            testNative(x, "Int=", 100, 1, true);
+            x = int(-32768);
+            testNative(x, "Int=", -32768, -1, true);
+            x = unsigned(65535);
+            testNative(x, "UInt=", 65535, 1, true);
+            x = long(2147483647);
+            testNative(x, "Long=", 2147483647, 1, true);
+            x = long(-2147483648);
+            testNative(x, "Long=", -2147483648, -1, true);
+            x = long(LONG_MAX);
+            testNative(x, "Long=", LONG_MAX, 1, true);
+            x = long(LONG_MIN);
+            testNative(x, "Long=", LONG_MIN, -1, true);
+            x = (unsigned long)(LONG_MAX);
+            testNative(x, "ULong=", LONG_MAX, 1, true);
+            x = (unsigned long)(LONG_MAX) + 1;
+            testLarge(x, "ULong=", str((unsigned long)(LONG_MAX) + 1), 1, true);
+            x = (unsigned long)(ULONG_MAX);
+            testLarge(x, "ULong=", str((unsigned long)(ULONG_MAX)), 1, true);
+        }
+
+        void constructAssignCopyNative() {
+            constructAssignCopyNative<true>();
+            constructAssignCopyNative<false>();
+        }
+
+        template <typename IntType>
+        void testStringNative(const std::string& s, int base,
+                long value, int sign, bool testCopy = false) {
+            bool valid;
+            std::string str;
+            for (int i = 0; i < 2; ++i) {
+                if (i == 0)
+                    str = s;
+                else {
+                    // Try with whitespace prepended.
+                    str = " \t\r\n  ";
+                    str += s;
+                }
+
+                {
+                    std::ostringstream name;
+                    name << "C string \"" << str << "\"";
+                    IntType x(str.c_str(), base, &valid);
+                    if (! valid) {
+                        std::ostringstream msg;
+                        msg << name << " is not valid.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (base > 0 && x.stringValue(base) != s) {
+                        std::ostringstream msg;
+                        msg << name << " has incorrect stringValue(base).";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    testNative(x, name.str().c_str(), value, sign, testCopy);
+                }
+                {
+                    std::ostringstream name;
+                    name << "C++ string \"" << str << "\"";
+                    IntType x(str, base, &valid);
+                    if (! valid) {
+                        std::ostringstream msg;
+                        msg << name << " is not valid.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (base > 0 && x.stringValue(base) != s) {
+                        std::ostringstream msg;
+                        msg << name << " has incorrect stringValue(base).";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    testNative(x, name.str().c_str(), value, sign, testCopy);
+                }
+                if (base == 10) {
+                    {
+                        std::ostringstream name;
+                        name << "C string = \"" << str << "\"";
+                        IntType x(5);
+                        x = str.c_str();
+                        testNative(x, name.str().c_str(), value, sign,
+                            testCopy);
+                    }
+                    {
+                        std::ostringstream name;
+                        name << "C++ string = \"" << str << "\"";
+                        IntType y(5);
+                        y = str;
+                        testNative(y, name.str().c_str(), value, sign,
+                            testCopy);
+                    }
+                }
+            }
+
+            // Try strings with errors.
+            {
+                str = s + "!";
+                IntType x(str.c_str(), base, &valid);
+                if (valid) {
+                    std::ostringstream msg;
+                    msg << "C string \"" << str << "\" should be invalid.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            {
+                str = s + "!";
+                IntType x(str, base, &valid);
+                if (valid) {
+                    std::ostringstream msg;
+                    msg << "C++ string \"" << str << "\" should be invalid.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        template <typename IntType>
+        void testStringLarge(const std::string& s, int sign,
+                bool testCopy = false) {
+            bool valid;
+            std::string str;
+            for (int i = 0; i < 2; ++i) {
+                if (i == 0)
+                    str = s;
+                else {
+                    // Try with whitespace prepended.
+                    str = " \t\r\n  ";
+                    str += s;
+                }
+
+                {
+                    std::ostringstream name;
+                    name << "C string \"" << str << "\"";
+                    IntType x(str.c_str(), 10, &valid);
+                    if (! valid) {
+                        std::ostringstream msg;
+                        msg << name << " is not valid.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    testLarge(x, name.str().c_str(), s, sign, testCopy);
+                }
+                {
+                    std::ostringstream name;
+                    name << "C++ string \"" << str << "\"";
+                    IntType x(str, 10, &valid);
+                    if (! valid) {
+                        std::ostringstream msg;
+                        msg << name << " is not valid.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    testLarge(x, name.str().c_str(), s, sign, testCopy);
+                }
+                {
+                    std::ostringstream name;
+                    name << "C string = \"" << str << "\"";
+                    IntType x(5);
+                    x = str.c_str();
+                    testLarge(x, name.str().c_str(), s, sign, testCopy);
+                }
+                {
+                    std::ostringstream name;
+                    name << "C++ string = \"" << str << "\"";
+                    IntType y(5);
+                    y = str;
+                    testLarge(y, name.str().c_str(), s, sign, testCopy);
+                }
+            }
+
+            // Try strings with errors.
+            {
+                str = s + "!";
+                IntType x(str.c_str(), 10, &valid);
+                if (valid) {
+                    std::ostringstream msg;
+                    msg << "C string \"" << str << "\" should be invalid.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            {
+                str = s + "!";
+                IntType x(str, 10, &valid);
+                if (valid) {
+                    std::ostringstream msg;
+                    msg << "C++ string \"" << str << "\" should be invalid.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        template <typename IntType>
+        void testStringLarge(const std::string& s, int base,
+                const std::string& valueBase10, int sign,
+                bool testCopy = false) {
+            bool valid;
+            std::string str;
+            for (int i = 0; i < 2; ++i) {
+                if (i == 0)
+                    str = s;
+                else {
+                    // Try with whitespace prepended.
+                    str = " \t\r\n  ";
+                    str += s;
+                }
+
+                {
+                    std::ostringstream name;
+                    name << "C string \"" << str << "\"";
+                    IntType x(str.c_str(), base, &valid);
+                    if (! valid) {
+                        std::ostringstream msg;
+                        msg << name << " is not valid.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (base > 0 && x.stringValue(base) != s) {
+                        std::ostringstream msg;
+                        msg << name << " has incorrect stringValue(base).";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    testLarge(x, name.str().c_str(), valueBase10, sign,
+                        testCopy);
+                }
+                {
+                    std::ostringstream name;
+                    name << "C++ string \"" << str << "\"";
+                    IntType x(str, base, &valid);
+                    if (! valid) {
+                        std::ostringstream msg;
+                        msg << name << " is not valid.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (base > 0 && x.stringValue(base) != s) {
+                        std::ostringstream msg;
+                        msg << name << " has incorrect stringValue(base).";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    testLarge(x, name.str().c_str(), valueBase10, sign,
+                        testCopy);
+                }
+            }
+
+            // Try strings with errors.
+            {
+                str = s + "!";
+                IntType x(str.c_str(), base, &valid);
+                if (valid) {
+                    std::ostringstream msg;
+                    msg << "C string \"" << str << "\" should be invalid.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            {
+                str = s + "!";
+                IntType x(str, base, &valid);
+                if (valid) {
+                    std::ostringstream msg;
+                    msg << "C++ string \"" << str << "\" should be invalid.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        template <bool supportInfinity>
+        void constructAssignCopyString() {
+            typedef NIntegerBase<supportInfinity> IntType;
+
+            testStringNative<IntType>(str(long(LONG_MAX)), 10, LONG_MAX, 1,
+                true);
+            testStringNative<IntType>(str(long(LONG_MIN)), 10, LONG_MIN, -1,
+                true);
+            testStringLarge<IntType>(str((unsigned long)(LONG_MAX + 1)), 1,
+                true);
+            testStringLarge<IntType>(str((unsigned long)(ULONG_MAX)), 1, true);
+            testStringLarge<IntType>(HUGE_INTEGER, 1, true);
+            testStringLarge<IntType>("-" HUGE_INTEGER, -1, true);
+
+            // Test string constructors in different bases.
+            testStringNative<IntType>("101", 2, 5, 1, true);
+            testStringNative<IntType>("-101", 2, -5, -1, true);
+            testStringNative<IntType>("121", 3, 16, 1, true);
+            testStringNative<IntType>("-121", 3, -16, -1, true);
+            testStringNative<IntType>("1af", 16, 431, 1, true);
+            testStringNative<IntType>("-1af", 16, -431, -1, true);
+            testStringNative<IntType>("201", 31, 1923, 1, true);
+            testStringNative<IntType>("-201", 31, -1923, -1, true);
+            testStringNative<IntType>("121", 0, 121, 1, true);
+            testStringNative<IntType>("-121", 0, -121, -1, true);
+            testStringNative<IntType>("034", 0, 28, 1, true);
+            testStringNative<IntType>("-034", 0, -28, -1, true);
+            testStringNative<IntType>("0x1af", 0, 431, 1, true);
+            testStringNative<IntType>("-0x1af", 0, -431, -1, true);
+            testStringLarge<IntType>("1000000000000000000000000000000", 29,
+                "74462898441675122902293018227199467668020601", 1, true);
+            testStringLarge<IntType>("-1000000000000000000000000000000", 29,
+                "-74462898441675122902293018227199467668020601", -1, true);
+            testStringLarge<IntType>(
+                "74462898441675122902293018227199467668020601",
+                0, "74462898441675122902293018227199467668020601", 1, true);
+            testStringLarge<IntType>(
+                "-74462898441675122902293018227199467668020601",
+                0, "-74462898441675122902293018227199467668020601", -1, true);
+            testStringLarge<IntType>(
+                "01000000000000000000000000000000000000000000000",
+                0, "43556142965880123323311949751266331066368", 1, true);
+            testStringLarge<IntType>(
+                "-01000000000000000000000000000000000000000000000",
+                0, "-43556142965880123323311949751266331066368", -1, true);
+            testStringLarge<IntType>("0x10000000000000000000000000000000000",
+                0, "87112285931760246646623899502532662132736", 1, true);
+            testStringLarge<IntType>("-0x10000000000000000000000000000000000",
+                0, "-87112285931760246646623899502532662132736", -1, true);
+        }
+
+        void constructAssignCopyString() {
+            constructAssignCopyString<true>();
+            constructAssignCopyString<false>();
+        }
+
+        template <bool supportInfinity>
+        void constructSpecialArg() {
+            typedef NIntegerBase<supportInfinity> IntType;
+
+            // Make sure that our "special case" data members look
+            // correct,
+            // so we can use them with confidence throughout this class.
+            if (! (zero.isNative() && zero.longValue() == 0)) {
+                CPPUNIT_FAIL("Special case 0 is not initialised correctly.");
+            }
+            if (! (one.isNative() && one.longValue() == 1)) {
+                CPPUNIT_FAIL("Special case 1 is not initialised correctly.");
+            }
+            if (! (two.isNative() && two.longValue() == 2)) {
+                CPPUNIT_FAIL("Special case 2 is not initialised correctly.");
+            }
+            if (! (negOne.isNative() && negOne.longValue() == -1)) {
+                CPPUNIT_FAIL("Special case -1 is not initialised correctly.");
+            }
+            if (! (negTwo.isNative() && negTwo.longValue() == -2)) {
+                CPPUNIT_FAIL("Special case -2 is not initialised correctly.");
+            }
+            if (! (longMax.isNative() && longMax.longValue() == LONG_MAX &&
+                    longMax.longValue() > zeroL &&
+                    (longMax.longValue() + 1) < zeroL)) {
+                CPPUNIT_FAIL("Special case LONG_MAX is not "
+                    "initialised correctly.");
+            }
+            if (! (longMin.isNative() && longMin.longValue() == LONG_MIN &&
+                    longMin.longValue() < zeroL &&
+                    (longMin.longValue() - 1) > zeroL)) {
+                CPPUNIT_FAIL("Special case LONG_MIN is not "
+                    "initialised correctly.");
+            }
+            if (longMaxInc.isNative() || longMaxInc <= LONG_MAX ||
+                    longMaxInc.stringValue() !=
+                    (regina::NLargeInteger(LONG_MAX) + 1).stringValue()) {
+                CPPUNIT_FAIL("Special case LONG_MAX+1 is not "
+                    "initialised correctly.");
+            }
+            if (longMinDec.isNative() || longMinDec >= LONG_MIN ||
+                    longMinDec.stringValue() !=
+                    (- regina::NLargeInteger(LONG_MAX) - 2).stringValue()) {
+                CPPUNIT_FAIL("Special case LONG_MIN-1 is not "
+                    "initialised correctly.");
+            }
+            if (ulongMax.isNative() || ulongMax <= LONG_MAX ||
+                    ulongMax.stringValue() !=
+                    (regina::NLargeInteger(LONG_MAX) * 2 + 1).stringValue()) {
+                CPPUNIT_FAIL("Special case ULONG_MAX is not "
+                    "initialised correctly.");
+            }
+            if (hugePos.isNative() || hugePos <= LONG_MAX ||
+                    hugePos.stringValue() != HUGE_INTEGER) {
+                CPPUNIT_FAIL("Special case HUGE_INTEGER is not "
+                    "initialised correctly.");
+            }
+            if (hugeNeg.isNative() || hugeNeg >= LONG_MIN ||
+                    hugeNeg.stringValue() != "-" HUGE_INTEGER) {
+                CPPUNIT_FAIL("Special case -HUGE_INTEGER is not "
+                    "initialised correctly.");
+            }
+            {
+                IntType x(hugeNeg);
+                x.negate();
+                if (x.stringValue() != HUGE_INTEGER) {
+                    CPPUNIT_FAIL("Special case -HUGE_INTEGER does not "
+                        "negate correctly.");
+                }
+            }
+        }
+
+        void constructSpecial() {
+            constructSpecialArg<true>();
+            constructSpecialArg<false>();
+        }
 
         template <typename IntType>
         void checkDivisionAlg(int n, int divisor, int quotient,
