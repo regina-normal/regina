@@ -709,6 +709,12 @@ template <bool supportInfinity>
 NInteger<supportInfinity> NInteger<supportInfinity>::gcdWithCoeffs(
         const NInteger<supportInfinity>& other,
         NInteger<supportInfinity>& u, NInteger<supportInfinity>& v) const {
+    // TODO: Implement properly for native types.
+    const_cast<NInteger&>(*this).makeLarge();
+    const_cast<NInteger&>(other).makeLarge();
+    u.makeLarge();
+    v.makeLarge();
+
     // TODO: Fix for natives:
     // regina::gcdWithCoeffs(small_, other.small_, u.small_, v.small_);
     // TODO: Escalate to GMP if anyone is equal to MINLONG.
