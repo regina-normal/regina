@@ -308,7 +308,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator *=(
         mpz_mul_si(large_, other.large_, small_);
     } else {
         typedef IntOfSize<2 * sizeof(long)>::type Wide;
-        Wide ans = static_cast<Wide>(small_) * other.small_;
+        Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other.small_);
         if (ans > LONG_MAX || ans < LONG_MIN) {
             // Overflow.
             large_ = new mpz_t;
@@ -328,7 +328,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator *=(long other) {
         mpz_mul_si(large_, large_, other);
     else {
         typedef IntOfSize<2 * sizeof(long)>::type Wide;
-        Wide ans = static_cast<Wide>(small_) * other;
+        Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other);
         if (ans > LONG_MAX || ans < LONG_MIN) {
             // Overflow.
             large_ = new mpz_t;
