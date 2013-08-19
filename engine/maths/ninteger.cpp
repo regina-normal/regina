@@ -804,23 +804,105 @@ template <bool supportInfinity>
 NInteger<supportInfinity> NInteger<supportInfinity>::divisionAlg(
         const NInteger<supportInfinity>& divisor,
         NInteger<supportInfinity>& remainder) const {
-    // TODO: Fix for natives.
-    if (divisor == zero) {
+    if (divisor.isZero()) {
         remainder = *this;
         return zero;
     }
 
     // Preconditions state that nothing is infinite, and we've dealt with d=0.
-    // Pass it to GMP.
     NInteger<supportInfinity> quotient;
-    mpz_fdiv_qr(quotient.large_, remainder.large_, large_, divisor.large_);
 
-    // The remainder can still be negative (though this will only happen
-    // if the divisor is also negative).  In this case we still have
-    // more to do.
-    if (remainder < zero) {
-        remainder -= divisor;
-        quotient += 1;
+    // Throughout the following code, we must be aware that GMP routines
+    // could give a negative remainder, but that this will only ever
+    // happen if the divisor is also negative.
+
+    if (large_) {
+        // We will have to use GMP routines.
+        quotient.makeLarge();
+        remainder.makeLarge();
+
+        if (divisor.large_) {
+            // Just pass everything straight through to GMP.
+            mpz_fdiv_qr(quotient.large_, remainder.large_, large_,
+                divisor.large_);
+            if (remainder < 0) {
+                remainder -= divisor;
+                ++quotient;
+            }
+        } else {
+            // Put the divisor in GMP format for the GMP routines to use.
+            mpz_t divisorGMP;
+            mpz_init_set_si(divisorGMP, divisor.small_);
+            mpz_fdiv_qr(quotient.large_, remainder.large_, large_, divisorGMP);
+            mpz_clear(divisorGMP);
+
+            // The remainder must fit into a long, since
+            // 0 <= remainder < |divisor|.
+            remainder.forceReduce();
+            if (remainder.small_ < 0) {
+                remainder.small_ -= divisor.small_;
+                ++quotient;
+            }
+        }
+    } else {
+        // This integer fits into a long.
+        if (divisor.large_) {
+            // Cases:
+            //
+            // 1) Divisor needs to be large (does not fit into long).
+            // Subcases:
+            // 1a) |divisor| > |this|.
+            // --> quotient = -1/0/+1, remainder is large.
+            // 1b) divisor = |LONG_MIN| and this = LONG_MIN.
+            // --> quotient = -1, remainder = 0.
+            //
+            // 2) Otherwise, divisor actually fits into a long.
+            // Fall through to the next code block.
+            //
+            // NOTE: Be careful not to take -small_ when small_ is negative!
+            if (small_ >= 0 && (divisor > small_ || divisor < -small_)) {
+                quotient = 0;
+                remainder = small_;
+            } else if (small_ < 0 && divisor < small_) {
+                quotient = 1;
+                remainder = small_;
+                remainder -= divisor;
+            } else if (small_ < 0 && -divisor < small_) {
+                quotient = -1;
+                remainder = small_;
+                remainder += divisor;
+            } else if (small_ == LONG_MIN && -divisor == small_) {
+                quotient = -1;
+                remainder = 0;
+            } else {
+                // Since we know we can reduce divisor to a native integer,
+                // be kind: cast away the const and reduce it.
+                const_cast<NInteger&>(divisor).forceReduce();
+                // Fall through to the next block.
+            }
+        }
+        if (! divisor.large_) {
+            // Here we know divisor fits into a long.
+            // Thus remainder also fits into a long, since
+            // 0 <= |remainder| < |divisor|.
+            //
+            // Cases:
+            // 1) quotient = |LONG_MIN|.
+            // Only happens if this = LONG_MIN, divisor = -1.
+            // 2) |quotient| < |LONG_MIN| --> quotient fits into a long also.
+            if (small_ == LONG_MIN && divisor.small_ == -1) {
+                quotient = LONG_MIN;
+                quotient.negate();
+                remainder = 0;
+            } else {
+                quotient = small_ / divisor.small_;
+                remainder = small_ - (quotient.small_ * divisor.small_);
+                if (remainder.small_ < 0) {
+                    remainder.small_ -= divisor.small_;
+                    ++quotient;
+                }
+            }
+        }
     }
 
     return quotient;

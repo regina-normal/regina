@@ -821,7 +821,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * functon returns.  The initial value of this argument is ignored.
          * @return the quotient \a q.
          *
-         * @author Ryan Budney, B.B.
+         * @author Ryan Budney & B.B.
          */
         NInteger<supportInfinity> divisionAlg(
                 const NInteger<supportInfinity>& divisor,
