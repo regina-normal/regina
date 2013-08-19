@@ -46,22 +46,28 @@ Version 4.94  [ (under development) ]
         Class NGenericIsomorphism:
             - New template base class that contains dimension-agnostic
               code for representing isomorphisms between triangulations.
-        Class NInteger, NLargeInteger:
-            - NLargeInteger is now superceded by a new template class
-              NInteger.  The boolean template argument indicates whether
-              the class supports infinity as an allowed value.
-              NLargeInteger is now a typedef for NInteger<true>, which
-              maintain compatibility with past behaviour.
-            - Heavily rewritten to work with native C/C++ integers for as long
-              as possible, and to only switche to GMP large integers when it
-              becomes unavoidable.  This makes the code enormously faster
-              (rough testing suggests a 7x speedup).
+        Class NInteger:
+            - NInteger is a typedef for the new template class
+              NIntegerBase<false>, which offers fast arbitrary precision
+              integers but does not support infinity.
+        Class NIntegerBase:
+            - This is a new template class that supercedes (and is based on)
+              the old NLargeInteger.  The boolean template argument indicates
+              whether the class supports infinity as an allowed value.
+            - Heavily rewritten from the old NLargeInteger: this class works
+              with native C/C++ integers for as long as possible, and only
+              switche to GMP when it becomes unavoidable.  This makes the code
+              enormously faster (rough testing suggests a roughly 7x speedup).
             - Made the destructor non-virtual to avoid the unwanted class
               overhead that comes with polymorphism.
             - Added routine isZero().
         Class NIsomorphism:
             - Now a subclass of NGenericIsomorphism<3>, with inherited
               dimension-agnostic aliases for several routines.
+        Class NLargeInteger:
+            - NLargeInteger is now a typedef for the new template class
+              NIntegerBase<true>, and maintains backward compatibility.
+            - Performance is much, much faster; see NIntegerBase for details.
         Class NNormalSurface:
             - Routine boundarySlopes() now requires that the
               triangulation is oriented (otherwise SnapPea will relabel

@@ -36,9 +36,9 @@
 namespace regina {
 
 template <bool supportInfinity>
-bool valueOf(const std::string& str, NInteger<supportInfinity>& dest) {
+bool valueOf(const std::string& str, NIntegerBase<supportInfinity>& dest) {
     bool valid;
-    dest = NInteger<supportInfinity>(str.c_str(), 10, &valid);
+    dest = NIntegerBase<supportInfinity>(str.c_str(), 10, &valid);
     return valid;
 }
 

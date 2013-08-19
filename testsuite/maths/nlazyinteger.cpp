@@ -53,20 +53,20 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
             /**< We need this so we can test things like (LONG_MAX + 1 < 0)
                  without gcc's optimisations breaking the results. */
 
-        NInteger<> smallPosSeries[6];
+        NInteger smallPosSeries[6];
             /**< A sequence of positive integers that fit into a long. */
-        NInteger<> smallNegSeries[6];
+        NInteger smallNegSeries[6];
             /**< A sequence of negative integers that fit into a long. */
-        NInteger<> largePosSeries[6];
+        NInteger largePosSeries[6];
             /**< A sequence of positive integers too large for a long. */
-        NInteger<> largeNegSeries[6];
+        NInteger largeNegSeries[6];
             /**< A sequence of negative integers too large for a long. */
 
         static const unsigned nSeries = 4;
             /**< The number of sequences described above. */
         static const unsigned seriesLen = 6;
             /**< The number of integers in each of the above sequences. */
-        NInteger<>* series[4];
+        NInteger* series[4];
             /**< A list of the individual large integer sequences. */
         std::string seriesName[4];
             /**< The names of the individual large integer sequences. */
@@ -80,29 +80,29 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
         long* smallSeriesVal[2];
             /**< A list of the long value arrays defined above. */
 
-        NInteger<> zero;
+        NInteger zero;
             /**< Special case (native): 0 */
-        NInteger<> one;
+        NInteger one;
             /**< Special case (native): 1 */
-        NInteger<> two;
+        NInteger two;
             /**< Special case (native): 2 */
-        NInteger<> negOne;
+        NInteger negOne;
             /**< Special case (native): -1 */
-        NInteger<> negTwo;
+        NInteger negTwo;
             /**< Special case (native): -2 */
-        NInteger<> longMax;
+        NInteger longMax;
             /**< Special case (native): LONG_MAX */
-        NInteger<> longMin;
+        NInteger longMin;
             /**< Special case (native): LONG_MIN */
-        NInteger<> longMaxInc;
+        NInteger longMaxInc;
             /**< Special case (large): LONG_MAX + 1 */
-        NInteger<> longMinDec;
+        NInteger longMinDec;
             /**< Special case (large): LONG_MIN - 1 */
-        NInteger<> ulongMax;
+        NInteger ulongMax;
             /**< Special case (large): ULONG_MAX */
-        NInteger<> hugePos;
+        NInteger hugePos;
             /**< Special case (large): a huge positive integer */
-        NInteger<> hugeNeg;
+        NInteger hugeNeg;
             /**< Special case (large): a huge negative integer */
 
     public:
@@ -183,7 +183,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
             return ans.str();
         }
 
-        void testNative(const NInteger<>& x, const char* name, long value,
+        void testNative(const NInteger& x, const char* name, long value,
                 int sign, bool testCopy = false) {
             if (! x.isNative()) {
                 std::ostringstream msg;
@@ -229,20 +229,20 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
 
             if (testCopy) {
                 // Test the copy constructor and copy assignment here also.
-                NInteger<> y(x);
+                NInteger y(x);
                 testNative(y, "Native copy", value, sign);
 
-                NInteger<> z(5);
+                NInteger z(5);
                 z = x;
                 testNative(z, "Native = from native", value, sign);
 
-                NInteger<> w(HUGE_INTEGER);
+                NInteger w(HUGE_INTEGER);
                 w = x;
                 testNative(w, "Native = from large", value, sign);
             }
         }
 
-        void testLarge(const NInteger<>& x, const char* name,
+        void testLarge(const NInteger& x, const char* name,
                 const std::string& value, int sign, bool testCopy = false) {
             if (x.isNative()) {
                 std::ostringstream msg;
@@ -285,40 +285,40 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
 
             if (testCopy) {
                 // Test the copy constructor and copy assignment here also.
-                NInteger<> y(x);
+                NInteger y(x);
                 testLarge(y, "Large copy", value, sign);
 
-                NInteger<> z(5);
+                NInteger z(5);
                 z = x;
                 testLarge(z, "Large = from native", value, sign);
 
-                NInteger<> w(HUGE_INTEGER);
+                NInteger w(HUGE_INTEGER);
                 w = x;
                 testLarge(w, "Large = from large", value, sign);
             }
         }
 
         void constructAssignCopyNative() {
-            testNative(NInteger<>(), "Default", 0, 0, true);
-            testNative(NInteger<>(int(100)), "Int", 100, 1, true);
-            testNative(NInteger<>(int(-32768)), "Int", -32768, -1, true);
-            testNative(NInteger<>(unsigned(65535)), "UInt", 65535, 1, true);
-            testNative(NInteger<>(long(2147483647)), "Long", 2147483647,
+            testNative(NInteger(), "Default", 0, 0, true);
+            testNative(NInteger(int(100)), "Int", 100, 1, true);
+            testNative(NInteger(int(-32768)), "Int", -32768, -1, true);
+            testNative(NInteger(unsigned(65535)), "UInt", 65535, 1, true);
+            testNative(NInteger(long(2147483647)), "Long", 2147483647,
                 1, true);
-            testNative(NInteger<>(long(-2147483648)), "Long", -2147483648,
+            testNative(NInteger(long(-2147483648)), "Long", -2147483648,
                 -1, true);
-            testNative(NInteger<>(long(LONG_MAX)), "Long", LONG_MAX,
+            testNative(NInteger(long(LONG_MAX)), "Long", LONG_MAX,
                 1, true);
-            testNative(NInteger<>(long(LONG_MIN)), "Long", LONG_MIN,
+            testNative(NInteger(long(LONG_MIN)), "Long", LONG_MIN,
                 -1, true);
-            testNative(NInteger<>((unsigned long)(LONG_MAX)), "ULong",
+            testNative(NInteger((unsigned long)(LONG_MAX)), "ULong",
                 LONG_MAX, 1, true);
-            testLarge(NInteger<>((unsigned long)(LONG_MAX) + 1), "ULong",
+            testLarge(NInteger((unsigned long)(LONG_MAX) + 1), "ULong",
                 str((unsigned long)(LONG_MAX) + 1), 1, true);
-            testLarge(NInteger<>((unsigned long)(ULONG_MAX)), "ULong",
+            testLarge(NInteger((unsigned long)(ULONG_MAX)), "ULong",
                 str((unsigned long)(ULONG_MAX)), 1, true);
 
-            NInteger<> x;
+            NInteger x;
 
             x = int(100);
             testNative(x, "Int=", 100, 1, true);
@@ -358,7 +358,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C string \"" << str << "\"";
-                    NInteger<> x(str.c_str(), base, &valid);
+                    NInteger x(str.c_str(), base, &valid);
                     if (! valid) {
                         std::ostringstream msg;
                         msg << name << " is not valid.";
@@ -374,7 +374,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C++ string \"" << str << "\"";
-                    NInteger<> x(str, base, &valid);
+                    NInteger x(str, base, &valid);
                     if (! valid) {
                         std::ostringstream msg;
                         msg << name << " is not valid.";
@@ -391,7 +391,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                     {
                         std::ostringstream name;
                         name << "C string = \"" << str << "\"";
-                        NInteger<> x(5);
+                        NInteger x(5);
                         x = str.c_str();
                         testNative(x, name.str().c_str(), value, sign,
                             testCopy);
@@ -399,7 +399,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                     {
                         std::ostringstream name;
                         name << "C++ string = \"" << str << "\"";
-                        NInteger<> y(5);
+                        NInteger y(5);
                         y = str;
                         testNative(y, name.str().c_str(), value, sign,
                             testCopy);
@@ -410,7 +410,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
             // Try strings with errors.
             {
                 str = s + "!";
-                NInteger<> x(str.c_str(), base, &valid);
+                NInteger x(str.c_str(), base, &valid);
                 if (valid) {
                     std::ostringstream msg;
                     msg << "C string \"" << str << "\" should be invalid.";
@@ -419,7 +419,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
             }
             {
                 str = s + "!";
-                NInteger<> x(str, base, &valid);
+                NInteger x(str, base, &valid);
                 if (valid) {
                     std::ostringstream msg;
                     msg << "C++ string \"" << str << "\" should be invalid.";
@@ -444,7 +444,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C string \"" << str << "\"";
-                    NInteger<> x(str.c_str(), 10, &valid);
+                    NInteger x(str.c_str(), 10, &valid);
                     if (! valid) {
                         std::ostringstream msg;
                         msg << name << " is not valid.";
@@ -455,7 +455,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C++ string \"" << str << "\"";
-                    NInteger<> x(str, 10, &valid);
+                    NInteger x(str, 10, &valid);
                     if (! valid) {
                         std::ostringstream msg;
                         msg << name << " is not valid.";
@@ -466,14 +466,14 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C string = \"" << str << "\"";
-                    NInteger<> x(5);
+                    NInteger x(5);
                     x = str.c_str();
                     testLarge(x, name.str().c_str(), s, sign, testCopy);
                 }
                 {
                     std::ostringstream name;
                     name << "C++ string = \"" << str << "\"";
-                    NInteger<> y(5);
+                    NInteger y(5);
                     y = str;
                     testLarge(y, name.str().c_str(), s, sign, testCopy);
                 }
@@ -482,7 +482,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
             // Try strings with errors.
             {
                 str = s + "!";
-                NInteger<> x(str.c_str(), 10, &valid);
+                NInteger x(str.c_str(), 10, &valid);
                 if (valid) {
                     std::ostringstream msg;
                     msg << "C string \"" << str << "\" should be invalid.";
@@ -491,7 +491,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
             }
             {
                 str = s + "!";
-                NInteger<> x(str, 10, &valid);
+                NInteger x(str, 10, &valid);
                 if (valid) {
                     std::ostringstream msg;
                     msg << "C++ string \"" << str << "\" should be invalid.";
@@ -517,7 +517,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C string \"" << str << "\"";
-                    NInteger<> x(str.c_str(), base, &valid);
+                    NInteger x(str.c_str(), base, &valid);
                     if (! valid) {
                         std::ostringstream msg;
                         msg << name << " is not valid.";
@@ -534,7 +534,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C++ string \"" << str << "\"";
-                    NInteger<> x(str, base, &valid);
+                    NInteger x(str, base, &valid);
                     if (! valid) {
                         std::ostringstream msg;
                         msg << name << " is not valid.";
@@ -553,7 +553,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
             // Try strings with errors.
             {
                 str = s + "!";
-                NInteger<> x(str.c_str(), base, &valid);
+                NInteger x(str.c_str(), base, &valid);
                 if (valid) {
                     std::ostringstream msg;
                     msg << "C string \"" << str << "\" should be invalid.";
@@ -562,7 +562,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
             }
             {
                 str = s + "!";
-                NInteger<> x(str, base, &valid);
+                NInteger x(str, base, &valid);
                 if (valid) {
                     std::ostringstream msg;
                     msg << "C++ string \"" << str << "\" should be invalid.";
@@ -671,7 +671,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                     "initialised correctly.");
             }
             {
-                NInteger<> x(hugeNeg);
+                NInteger x(hugeNeg);
                 x.negate();
                 if (x.stringValue() != HUGE_INTEGER) {
                     CPPUNIT_FAIL("Special case -HUGE_INTEGER does not "
@@ -694,7 +694,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
             return ans.str();
         }
 
-        void shouldBeLess(const NInteger<>& a, const NInteger<>& b,
+        void shouldBeLess(const NInteger& a, const NInteger& b,
                 const std::string& aName, const std::string& bName) {
             std::string msgBase = "Integer ";
             msgBase = msgBase + aName + " is ";
@@ -713,7 +713,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                 ! (a >= b));
         }
 
-        void shouldBeEqual(const NInteger<>& a, const NInteger<>& b,
+        void shouldBeEqual(const NInteger& a, const NInteger& b,
                 const std::string& aName, const std::string& bName) {
             std::string msgBase = "Integer ";
             msgBase = msgBase + aName + " is ";
@@ -734,7 +734,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                 a.stringValue() == b.stringValue());
         }
 
-        void shouldBeGreater(const NInteger<>& a, const NInteger<>& b,
+        void shouldBeGreater(const NInteger& a, const NInteger& b,
                 const std::string& aName, const std::string& bName) {
             std::string msgBase = "Integer ";
             msgBase = msgBase + aName + " is ";
@@ -753,7 +753,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                 a >= b);
         }
 
-        void shouldBeLess(const NInteger<>& a, long b,
+        void shouldBeLess(const NInteger& a, long b,
                 const std::string& aName, const std::string& bName) {
             std::string msgBase = "Integer ";
             msgBase = msgBase + aName + " is ";
@@ -772,7 +772,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                 ! (a >= b));
         }
 
-        void shouldBeEqual(const NInteger<>& a, long b,
+        void shouldBeEqual(const NInteger& a, long b,
                 const std::string& aName, const std::string& bName) {
             std::string msgBase = "Integer ";
             msgBase = msgBase + aName + " is ";
@@ -793,7 +793,7 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                 a.stringValue() == str(b));
         }
 
-        void shouldBeGreater(const NInteger<>& a, long b,
+        void shouldBeGreater(const NInteger& a, long b,
                 const std::string& aName, const std::string& bName) {
             std::string msgBase = "Integer ";
             msgBase = msgBase + aName + " is ";
@@ -815,8 +815,8 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
         void comparisons() {
             unsigned a, b, i, j;
 
-            const NInteger<>& zero(NInteger<>::zero);
-            const NInteger<>& one(NInteger<>::one);
+            const NInteger& zero(NInteger::zero);
+            const NInteger& one(NInteger::one);
 
             shouldBeLess(zero, one, "zero", "one");
             shouldBeLess(zero, 1L, "zero", "one");
@@ -928,11 +928,11 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
                         }
         }
 
-        void testIncDec(const NInteger<>& x) {
-            NInteger<> i(x);
-            NInteger<> orig(x);
-            NInteger<> up(x + 1);
-            NInteger<> down(x - 1);
+        void testIncDec(const NInteger& x) {
+            NInteger i(x);
+            NInteger orig(x);
+            NInteger up(x + 1);
+            NInteger down(x - 1);
 
             if (i++ != orig)
                 CPPUNIT_FAIL("i++ does not return original value.");
@@ -975,25 +975,25 @@ class NLazyIntegerTest : public CppUnit::TestFixture {
         void gcd() {
             // For now, at least make sure we treat zero correctly.
             CPPUNIT_ASSERT_MESSAGE("gcd(0,x) incorrect.",
-                NInteger<>::zero.gcd(10) == 10);
+                NInteger::zero.gcd(10) == 10);
             CPPUNIT_ASSERT_MESSAGE("gcd(x,0) incorrect.",
-                NInteger<>(10).gcd(NInteger<>::zero) == 10);
+                NInteger(10).gcd(NInteger::zero) == 10);
             CPPUNIT_ASSERT_MESSAGE("gcd(0,0) incorrect.",
-                NInteger<>::zero.gcd(NInteger<>::zero) == 0);
+                NInteger::zero.gcd(NInteger::zero) == 0);
         }
 
         void lcm() {
             // For now, at least make sure we treat zero correctly.
             CPPUNIT_ASSERT_MESSAGE("lcm(0,x) incorrect.",
-                NInteger<>::zero.lcm(10) == 0);
+                NInteger::zero.lcm(10) == 0);
             CPPUNIT_ASSERT_MESSAGE("lcm(0,-x) incorrect.",
-                NInteger<>::zero.lcm(-10) == 0);
+                NInteger::zero.lcm(-10) == 0);
             CPPUNIT_ASSERT_MESSAGE("lcm(x,0) incorrect.",
-                NInteger<>(10).lcm(NInteger<>::zero) == 0);
+                NInteger(10).lcm(NInteger::zero) == 0);
             CPPUNIT_ASSERT_MESSAGE("lcm(-x,0) incorrect.",
-                NInteger<>(-10).lcm(NInteger<>::zero) == 0);
+                NInteger(-10).lcm(NInteger::zero) == 0);
             CPPUNIT_ASSERT_MESSAGE("lcm(0,0) incorrect.",
-                NInteger<>::zero.lcm(NInteger<>::zero) == 0);
+                NInteger::zero.lcm(NInteger::zero) == 0);
         }
 };
 

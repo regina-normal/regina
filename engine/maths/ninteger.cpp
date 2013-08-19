@@ -33,7 +33,7 @@
 #include "utilities/intutils.h"
 #include "utilities/nthread.h"
 
-// We instantiate both variants of the NInteger template at the bottom
+// We instantiate both variants of the NIntegerBase template at the bottom
 // of this file.
 
 /**
@@ -71,13 +71,13 @@ namespace regina {
 
 // Initialize const static data:
 template <bool supportInfinity>
-const NInteger<supportInfinity> NInteger<supportInfinity>::zero;
+const NIntegerBase<supportInfinity> NIntegerBase<supportInfinity>::zero;
 
 template <bool supportInfinity>
-const NInteger<supportInfinity> NInteger<supportInfinity>::one(1);
+const NIntegerBase<supportInfinity> NIntegerBase<supportInfinity>::one(1);
 
 template <>
-const NInteger<true> NInteger<true>::infinity(false, false);
+const NIntegerBase<true> NIntegerBase<true>::infinity(false, false);
 
 // The use of errno in this file should be threadsafe, since (as I
 // understand it) each thread gets its own errno.  However, there may be
@@ -86,7 +86,7 @@ const NInteger<true> NInteger<true>::infinity(false, false);
 // I could be wrong about this.
 
 template <bool supportInfinity>
-NInteger<supportInfinity>::NInteger(
+NIntegerBase<supportInfinity>::NIntegerBase(
         const char* value, int base, bool* valid) :
         large_(0) {
     char* endptr;
@@ -109,7 +109,7 @@ NInteger<supportInfinity>::NInteger(
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity>::NInteger(
+NIntegerBase<supportInfinity>::NIntegerBase(
         const std::string& value, int base, bool* valid) :
         large_(0) {
     char* endptr;
@@ -132,7 +132,7 @@ NInteger<supportInfinity>::NInteger(
 }
 
 template <bool supportInfinity>
-std::string NInteger<supportInfinity>::stringValue(int base) const {
+std::string NIntegerBase<supportInfinity>::stringValue(int base) const {
     if (isInfinite())
         return "inf";
     else if (large_) {
@@ -156,7 +156,7 @@ std::string NInteger<supportInfinity>::stringValue(int base) const {
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity>& NInteger<supportInfinity>::operator =(
+NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator =(
         const char* value) {
     makeFinite();
 
@@ -182,7 +182,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator =(
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity>& NInteger<supportInfinity>::operator =(
+NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator =(
         const std::string& value) {
     makeFinite();
 
@@ -210,7 +210,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator =(
 
 template <bool supportInfinity>
 std::ostream& operator << (std::ostream& out,
-        const NInteger<supportInfinity>& i) {
+        const NIntegerBase<supportInfinity>& i) {
     if (i.isInfinite())
         out << "inf";
     else if (i.large_) {
@@ -223,7 +223,7 @@ std::ostream& operator << (std::ostream& out,
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity>& NInteger<supportInfinity>::operator +=(long other) {
+NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator +=(long other) {
     if (isInfinite())
         return *this;
     if (! large_) {
@@ -253,7 +253,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator +=(long other) {
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity>& NInteger<supportInfinity>::operator -=(long other) {
+NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator -=(long other) {
     if (isInfinite())
         return *this;
     if (! large_) {
@@ -283,8 +283,8 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator -=(long other) {
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity>& NInteger<supportInfinity>::operator *=(
-        const NInteger<supportInfinity>& other) {
+NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator *=(
+        const NIntegerBase<supportInfinity>& other) {
     if (isInfinite())
         return *this;
     else if (other.isInfinite()) {
@@ -315,7 +315,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator *=(
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity>& NInteger<supportInfinity>::operator *=(long other) {
+NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator *=(long other) {
     if (isInfinite())
         return *this;
     if (large_)
@@ -335,8 +335,8 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator *=(long other) {
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity>& NInteger<supportInfinity>::operator /=(
-        const NInteger<supportInfinity>& other) {
+NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator /=(
+        const NIntegerBase<supportInfinity>& other) {
     if (isInfinite())
         return *this;
     if (other.isInfinite())
@@ -370,7 +370,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator /=(
             if (! mpz_cmp_si(other.large_, -1)) {
                 // The result is -LONG_MIN, which requires large integers.
                 // Reduce other while we're at it.
-                const_cast<NInteger<supportInfinity>&>(other).forceReduce();
+                const_cast<NIntegerBase<supportInfinity>&>(other).forceReduce();
                 large_ = new mpz_t;
                 mpz_init_set_si(large_, LONG_MIN);
                 mpz_neg(large_, large_);
@@ -384,7 +384,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator /=(
             }
             // other is in [ LONG_MIN, -LONG_MIN ) \ {-1}.
             // Reduce it and use native arithmetic.
-            const_cast<NInteger<supportInfinity>&>(other).forceReduce();
+            const_cast<NIntegerBase<supportInfinity>&>(other).forceReduce();
             small_ /= other.small_;
             return *this;
         }
@@ -407,7 +407,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator /=(
 
         // We can do this all in native longs from here.
         // Opportunistically reduce other, since we know we can.
-        const_cast<NInteger<supportInfinity>&>(other).forceReduce();
+        const_cast<NIntegerBase<supportInfinity>&>(other).forceReduce();
         small_ /= other.small_;
         return *this;
     } else
@@ -415,7 +415,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator /=(
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity>& NInteger<supportInfinity>::operator /=(long other) {
+NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator /=(long other) {
     if (isInfinite())
         return *this;
     if (other == 0) {
@@ -445,8 +445,8 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator /=(long other) {
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity>& NInteger<supportInfinity>::divByExact(
-        const NInteger<supportInfinity>& other) {
+NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::divByExact(
+        const NIntegerBase<supportInfinity>& other) {
     if (other.large_) {
         if (large_) {
             mpz_divexact(large_, large_, other.large_);
@@ -468,7 +468,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::divByExact(
 
             // At this point we know that other fits within a native long.
             // Opportunistically reduce its representation.
-            const_cast<NInteger<supportInfinity>&>(other).forceReduce();
+            const_cast<NIntegerBase<supportInfinity>&>(other).forceReduce();
 
             if (other.small_ == -1) {
                 // The result is -LONG_MIN, which requires large integers.
@@ -486,7 +486,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::divByExact(
         // and so does the result.
         // Opportunisticaly reduce the representation of other, since
         // we know we can.
-        const_cast<NInteger<supportInfinity>&>(other).forceReduce();
+        const_cast<NIntegerBase<supportInfinity>&>(other).forceReduce();
         small_ /= other.small_;
         return *this;
     } else {
@@ -497,7 +497,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::divByExact(
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity>& NInteger<supportInfinity>::divByExact(long other) {
+NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::divByExact(long other) {
     if (large_) {
         if (other >= 0)
             mpz_divexact_ui(large_, large_, other);
@@ -521,8 +521,8 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::divByExact(long other) {
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity>& NInteger<supportInfinity>::operator %=(
-        const NInteger<supportInfinity>& other) {
+NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator %=(
+        const NIntegerBase<supportInfinity>& other) {
     if (other.large_) {
         if (large_) {
             mpz_tdiv_r(large_, large_, other.large_);
@@ -558,7 +558,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator %=(
 
         // Everything can be made native integer arithmetic.
         // Opportunistically reduce other while we're at it.
-        const_cast<NInteger<supportInfinity>&>(other).forceReduce();
+        const_cast<NIntegerBase<supportInfinity>&>(other).forceReduce();
         small_ %= other.small_;
         return *this;
     } else
@@ -566,7 +566,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator %=(
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity>& NInteger<supportInfinity>::operator %=(long other) {
+NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator %=(long other) {
     // Since |result| < |other|, whatever happens we can fit the result
     // into a native C/C++ long.
     if (large_) {
@@ -582,7 +582,7 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator %=(long other) {
 }
 
 template <bool supportInfinity>
-void NInteger<supportInfinity>::raiseToPower(unsigned long exp) {
+void NIntegerBase<supportInfinity>::raiseToPower(unsigned long exp) {
     if (exp == 0)
         (*this) = one;
     else if (! isInfinite()) {
@@ -591,7 +591,7 @@ void NInteger<supportInfinity>::raiseToPower(unsigned long exp) {
             mpz_pow_ui(large_, large_, exp);
         } else {
             // Implement fast modular exponentiation ourselves.
-            NInteger<supportInfinity> base(*this);
+            NIntegerBase<supportInfinity> base(*this);
             *this = 1;
             while (exp) {
                 // INV: desired result = (base ^ exp) * this.
@@ -605,18 +605,18 @@ void NInteger<supportInfinity>::raiseToPower(unsigned long exp) {
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity> NInteger<supportInfinity>::gcd(
-        const NInteger<supportInfinity>& other) const {
+NIntegerBase<supportInfinity> NIntegerBase<supportInfinity>::gcd(
+        const NIntegerBase<supportInfinity>& other) const {
     if (large_) {
         if (other.large_) {
-            NInteger<supportInfinity> ans;
+            NIntegerBase<supportInfinity> ans;
             ans.large_ = new mpz_t;
             mpz_init(ans.large_);
             mpz_gcd(ans.large_, large_, other.large_);
             mpz_abs(ans.large_, ans.large_);
             return ans;
         } else {
-            NInteger<supportInfinity> ans;
+            NIntegerBase<supportInfinity> ans;
             ans.large_ = new mpz_t;
             mpz_init_set_si(ans.large_, other.small_);
             mpz_gcd(ans.large_, ans.large_, large_);
@@ -624,7 +624,7 @@ NInteger<supportInfinity> NInteger<supportInfinity>::gcd(
             return ans;
         }
     } else if (other.large_) {
-        NInteger<supportInfinity> ans;
+        NIntegerBase<supportInfinity> ans;
         ans.large_ = new mpz_t;
         mpz_init_set_si(ans.large_, small_);
         mpz_gcd(ans.large_, ans.large_, other.large_);
@@ -640,7 +640,7 @@ NInteger<supportInfinity> NInteger<supportInfinity>::gcd(
         if (b == LONG_MIN) {
             // gcd(a,b) = LONG_MIN, which means we can't make it
             // non-negative without switching to large integers.
-            NInteger<supportInfinity> ans;
+            NIntegerBase<supportInfinity> ans;
             ans.large_ = new mpz_t;
             mpz_init_set_si(ans.large_, LONG_MIN);
             mpz_neg(ans.large_, ans.large_);
@@ -659,9 +659,9 @@ NInteger<supportInfinity> NInteger<supportInfinity>::gcd(
      * The following code is based on Stein's binary GCD algorithm.
      */
     if (! a)
-        return NInteger<supportInfinity>(b);
+        return NIntegerBase<supportInfinity>(b);
     if (! b)
-        return NInteger<supportInfinity>(a);
+        return NIntegerBase<supportInfinity>(a);
 
     // Compute the largest common power of 2.
     int pow2;
@@ -690,28 +690,28 @@ NInteger<supportInfinity> NInteger<supportInfinity>::gcd(
             while (! (a & 1));
         }
     }
-    return NInteger<supportInfinity>(a << pow2);
+    return NIntegerBase<supportInfinity>(a << pow2);
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity> NInteger<supportInfinity>::lcm(
-        const NInteger<supportInfinity>& other) const {
+NIntegerBase<supportInfinity> NIntegerBase<supportInfinity>::lcm(
+        const NIntegerBase<supportInfinity>& other) const {
     if (isZero() || other.isZero())
         return zero;
 
-    NInteger<supportInfinity> ans(*this);
+    NIntegerBase<supportInfinity> ans(*this);
     ans.divByExact(gcd(other));
     ans *= other;
     return ans;
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity> NInteger<supportInfinity>::gcdWithCoeffs(
-        const NInteger<supportInfinity>& other,
-        NInteger<supportInfinity>& u, NInteger<supportInfinity>& v) const {
+NIntegerBase<supportInfinity> NIntegerBase<supportInfinity>::gcdWithCoeffs(
+        const NIntegerBase<supportInfinity>& other,
+        NIntegerBase<supportInfinity>& u, NIntegerBase<supportInfinity>& v) const {
     // TODO: Implement properly for native types.
-    const_cast<NInteger&>(*this).makeLarge();
-    const_cast<NInteger&>(other).makeLarge();
+    const_cast<NIntegerBase&>(*this).makeLarge();
+    const_cast<NIntegerBase&>(other).makeLarge();
     u.makeLarge();
     v.makeLarge();
 
@@ -719,7 +719,7 @@ NInteger<supportInfinity> NInteger<supportInfinity>::gcdWithCoeffs(
     // regina::gcdWithCoeffs(small_, other.small_, u.small_, v.small_);
     // TODO: Escalate to GMP if anyone is equal to MINLONG.
     // Otherwise smalls are fine, but check gmpWithCoeffs() for overflow.
-    NInteger<supportInfinity> ans;
+    NIntegerBase<supportInfinity> ans;
     ans.makeLarge();
 
     // Check for zero arguments.
@@ -761,8 +761,8 @@ NInteger<supportInfinity> NInteger<supportInfinity>::gcdWithCoeffs(
     }
 
     // Get u and v in the correct range.
-    NInteger<supportInfinity> addToU(other);
-    NInteger<supportInfinity> addToV(*this);
+    NIntegerBase<supportInfinity> addToU(other);
+    NIntegerBase<supportInfinity> addToV(*this);
     addToU.divByExact(ans);
     addToV.divByExact(ans);
     if (addToV < 0)
@@ -774,7 +774,7 @@ NInteger<supportInfinity> NInteger<supportInfinity>::gcdWithCoeffs(
     // We also know that addToV is positive.
 
     // Add enough copies to make v*sign(other) just non-positive.
-    NInteger<supportInfinity> copies(v);
+    NIntegerBase<supportInfinity> copies(v);
     if (other > 0) {
         // v must be just non-positive.
         if (v > 0) {
@@ -808,16 +808,16 @@ NInteger<supportInfinity> NInteger<supportInfinity>::gcdWithCoeffs(
 }
 
 template <bool supportInfinity>
-NInteger<supportInfinity> NInteger<supportInfinity>::divisionAlg(
-        const NInteger<supportInfinity>& divisor,
-        NInteger<supportInfinity>& remainder) const {
+NIntegerBase<supportInfinity> NIntegerBase<supportInfinity>::divisionAlg(
+        const NIntegerBase<supportInfinity>& divisor,
+        NIntegerBase<supportInfinity>& remainder) const {
     if (divisor.isZero()) {
         remainder = *this;
         return zero;
     }
 
     // Preconditions state that nothing is infinite, and we've dealt with d=0.
-    NInteger<supportInfinity> quotient;
+    NIntegerBase<supportInfinity> quotient;
 
     // Throughout the following code:
     // - GMP mpz_fdiv_qr() could give a negative remainder, but that this
@@ -887,7 +887,7 @@ NInteger<supportInfinity> NInteger<supportInfinity>::divisionAlg(
             } else {
                 // Since we know we can reduce divisor to a native integer,
                 // be kind: cast away the const and reduce it.
-                const_cast<NInteger&>(divisor).forceReduce();
+                const_cast<NIntegerBase&>(divisor).forceReduce();
                 // Fall through to the next block.
             }
         }
@@ -924,8 +924,8 @@ NInteger<supportInfinity> NInteger<supportInfinity>::divisionAlg(
 }
 
 template <bool supportInfinity>
-int NInteger<supportInfinity>::legendre(
-        const NInteger<supportInfinity>& p) const {
+int NIntegerBase<supportInfinity>::legendre(
+        const NIntegerBase<supportInfinity>& p) const {
     // For now, just do this entirely through GMP.
     mpz_ptr gmp_this = large_;
     mpz_ptr gmp_p = p.large_;
@@ -954,11 +954,11 @@ int NInteger<supportInfinity>::legendre(
 }
 
 // Instantiate the templates!
-template class NInteger<true>;
-template class NInteger<false>;
+template class NIntegerBase<true>;
+template class NIntegerBase<false>;
 
-template std::ostream& operator << (std::ostream&, const NInteger<true>&);
-template std::ostream& operator << (std::ostream&, const NInteger<false>&);
+template std::ostream& operator << (std::ostream&, const NIntegerBase<true>&);
+template std::ostream& operator << (std::ostream&, const NIntegerBase<false>&);
 
 } // namespace regina
 

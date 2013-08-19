@@ -69,10 +69,10 @@ namespace regina {
  */
 
 /**
- * Internal base classes for use with NInteger, templated on whether we
+ * Internal base classes for use with NIntegerBase, templated on whether we
  * should support infinity as an allowed value.
  *
- * See the NInteger class notes for details.
+ * See the NIntegerBase class notes for details.
  */
 template <bool supportInfinity>
 struct InfinityBase;
@@ -122,19 +122,19 @@ struct InfinityBase<false> {
  * these ideas.
  *
  * \ifacespython Both variants of this template are available through Python.
- * For \a supportInfinity = \c false (the default), simply use NInteger.
+ * For \a supportInfinity = \c false (the default), simply use NIntegerBase.
  * For \a supportInfinity = \c true, use NLargeInteger.
  *
  * \testpart
  */
 template <bool supportInfinity = false>
-class NInteger : private InfinityBase<supportInfinity> {
+class NIntegerBase : private InfinityBase<supportInfinity> {
     public:
-        static const NInteger<supportInfinity> zero;
+        static const NIntegerBase<supportInfinity> zero;
             /**< Globally available zero. */
-        static const NInteger<supportInfinity> one;
+        static const NIntegerBase<supportInfinity> one;
             /**< Globally available one. */
-        static const NInteger<supportInfinity> infinity;
+        static const NIntegerBase<supportInfinity> infinity;
             /**< Globally available infinity.
                  This is only defined if \a supportInfinity is \c true.
                  Any attempt to use it when \a supportInfinity is \c false
@@ -158,25 +158,25 @@ class NInteger : private InfinityBase<supportInfinity> {
         /**
          * Initialises this integer to zero.
          */
-        NInteger();
+        NIntegerBase();
         /**
          * Initialises this integer to the given value.
          *
          * \ifacespython In Python, the only native-integer constructor
-         * is NInteger(long).
+         * is NIntegerBase(long).
          *
          * @param value the new value of this integer.
          */
-        NInteger(int value);
+        NIntegerBase(int value);
         /**
          * Initialises this integer to the given value.
          *
          * \ifacespython In Python, the only native-integer constructor
-         * is NInteger(long).
+         * is NIntegerBase(long).
          *
          * @param value the new value of this integer.
          */
-        NInteger(unsigned value);
+        NIntegerBase(unsigned value);
         /**
          * Initialises this integer to the given value.
          *
@@ -185,22 +185,22 @@ class NInteger : private InfinityBase<supportInfinity> {
          *
          * @param value the new value of this integer.
          */
-        NInteger(long value);
+        NIntegerBase(long value);
         /**
          * Initialises this integer to the given value.
          *
          * \ifacespython In Python, the only native-integer constructor
-         * is NInteger(long).
+         * is NIntegerBase(long).
          *
          * @param value the new value of this integer.
          */
-        NInteger(unsigned long value);
+        NIntegerBase(unsigned long value);
         /**
          * Initialises this integer to the given value.
          *
          * @param value the new value of this integer.
          */
-        NInteger(const NInteger<supportInfinity>& value);
+        NIntegerBase(const NIntegerBase<supportInfinity>& value);
         /**
          * Initialises this integer to the given value.
          *
@@ -213,7 +213,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          *
          * @param value the new value of this integer.
          */
-        explicit NInteger(const NInteger<! supportInfinity>& value);
+        explicit NIntegerBase(const NIntegerBase<! supportInfinity>& value);
         /**
          * Initialises this integer to the given value which is
          * represented as a string of digits in a given base.
@@ -250,7 +250,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * will be set to \c true if the entire given string was a valid
          * large integer representation and \c false otherwise.
          */
-        NInteger(const char* value, int base = 10, bool* valid = 0);
+        NIntegerBase(const char* value, int base = 10, bool* valid = 0);
         /**
          * Initialises this integer to the given value which is
          * represented as a string of digits in a given base.
@@ -287,12 +287,12 @@ class NInteger : private InfinityBase<supportInfinity> {
          * will be set to \c true if the entire given string was a valid
          * large integer representation and \c false otherwise.
          */
-        NInteger(const std::string& value, int base = 10,
+        NIntegerBase(const std::string& value, int base = 10,
                 bool* valid = 0);
         /**
          * Destroys this integer.
          */
-        ~NInteger();
+        ~NIntegerBase();
 
         /**
          * Returns whether we are currently working with a native C/C++
@@ -358,7 +358,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param value the new value of this integer.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator =(const NInteger& value);
+        NIntegerBase& operator =(const NIntegerBase& value);
         /**
          * Sets this integer to the given value.
          *
@@ -368,35 +368,35 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param value the new value of this integer.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator = (const NInteger<! supportInfinity>& value);
+        NIntegerBase& operator = (const NIntegerBase<! supportInfinity>& value);
         /**
          * Sets this integer to the given value.
          *
          * @param value the new value of this integer.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator =(int value);
+        NIntegerBase& operator =(int value);
         /**
          * Sets this integer to the given value.
          *
          * @param value the new value of this integer.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator =(unsigned value);
+        NIntegerBase& operator =(unsigned value);
         /**
          * Sets this integer to the given value.
          *
          * @param value the new value of this integer.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator =(long value);
+        NIntegerBase& operator =(long value);
         /**
          * Sets this integer to the given value.
          *
          * @param value the new value of this integer.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator =(unsigned long value);
+        NIntegerBase& operator =(unsigned long value);
         /**
          * Sets this integer to the given value which is
          * represented as a string of digits in base 10.
@@ -411,7 +411,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * of digits in base 10.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator =(const char* value);
+        NIntegerBase& operator =(const char* value);
         /**
          * Sets this integer to the given value which is
          * represented as a string of digits in base 10.
@@ -427,14 +427,14 @@ class NInteger : private InfinityBase<supportInfinity> {
          * of digits in base 10.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator =(const std::string& value);
+        NIntegerBase& operator =(const std::string& value);
         /**
          * Swaps the values of this and the given integer.
          *
          * @param other the integer whose value will be swapped with
          * this.
          */
-        void swap(NInteger& other);
+        void swap(NIntegerBase& other);
 
         /**
          * Determines if this is equal to the given integer.
@@ -443,7 +443,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @return \c true if and only if this and the given integer are
          * equal.
          */
-        bool operator ==(const NInteger& rhs) const;
+        bool operator ==(const NIntegerBase& rhs) const;
         /**
          * Determines if this is equal to the given integer.
          *
@@ -459,7 +459,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @return \c true if and only if this and the given integer are
          * not equal.
          */
-        bool operator !=(const NInteger& rhs) const;
+        bool operator !=(const NIntegerBase& rhs) const;
         /**
          * Determines if this is not equal to the given integer.
          *
@@ -475,7 +475,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @return \c true if and only if this is less than the given
          * integer.
          */
-        bool operator <(const NInteger& rhs) const;
+        bool operator <(const NIntegerBase& rhs) const;
         /**
          * Determines if this is less than the given integer.
          *
@@ -491,7 +491,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @return \c true if and only if this is greater than the given
          * integer.
          */
-        bool operator >(const NInteger& rhs) const;
+        bool operator >(const NIntegerBase& rhs) const;
         /**
          * Determines if this is greater than the given integer.
          *
@@ -507,7 +507,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @return \c true if and only if this is less than or equal to
          * the given integer.
          */
-        bool operator <=(const NInteger& rhs) const;
+        bool operator <=(const NIntegerBase& rhs) const;
         /**
          * Determines if this is less than or equal to the given integer.
          *
@@ -523,7 +523,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @return \c true if and only if this is greater than or equal
          * to the given integer.
          */
-        bool operator >=(const NInteger& rhs) const;
+        bool operator >=(const NIntegerBase& rhs) const;
         /**
          * Determines if this is greater than or equal to the given integer.
          *
@@ -542,7 +542,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          *
          * @return a reference to this integer after the increment.
          */
-        NInteger& operator ++();
+        NIntegerBase& operator ++();
 
         /**
          * The postincrement operator.
@@ -554,7 +554,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @return a copy of this integer before the
          * increment took place.
          */
-        NInteger operator ++(int);
+        NIntegerBase operator ++(int);
 
         /**
          * The predecrement operator.
@@ -565,7 +565,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          *
          * @return a reference to this integer after the decrement.
          */
-        NInteger& operator --();
+        NIntegerBase& operator --();
 
         /**
          * The postdecrement operator.
@@ -577,7 +577,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @return a copy of this integer before the
          * decrement took place.
          */
-        NInteger operator --(int);
+        NIntegerBase operator --(int);
 
         /**
          * Adds this to the given integer and returns the result.
@@ -589,7 +589,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to add to this integer.
          * @return the sum \a this plus \a other.
          */
-        NInteger operator +(const NInteger& other) const;
+        NIntegerBase operator +(const NIntegerBase& other) const;
         /**
          * Adds this to the given integer and returns the result.
          * This integer is not changed.
@@ -600,7 +600,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to add to this integer.
          * @return the sum \a this plus \a other.
          */
-        NInteger operator +(long other) const;
+        NIntegerBase operator +(long other) const;
         /**
          * Subtracts the given integer from this and returns the result.
          * This integer is not changed.
@@ -611,7 +611,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to subtract from this integer.
          * @return the difference \a this minus \a other.
          */
-        NInteger operator -(const NInteger& other) const;
+        NIntegerBase operator -(const NIntegerBase& other) const;
         /**
          * Subtracts the given integer from this and returns the result.
          * This integer is not changed.
@@ -622,7 +622,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to subtract from this integer.
          * @return the difference \a this minus \a other.
          */
-        NInteger operator -(long other) const;
+        NIntegerBase operator -(long other) const;
         /**
          * Multiplies this by the given integer and returns the
          * result.
@@ -634,7 +634,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to multiply by this integer.
          * @return the product \a this times \a other.
          */
-        NInteger operator *(const NInteger& other) const;
+        NIntegerBase operator *(const NIntegerBase& other) const;
         /**
          * Multiplies this by the given integer and returns the
          * result.
@@ -646,7 +646,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to multiply by this integer.
          * @return the product \a this times \a other.
          */
-        NInteger operator *(long other) const;
+        NIntegerBase operator *(long other) const;
         /**
          * Divides this by the given integer and returns the result.
          * The result will be truncated to an integer, i.e. rounded
@@ -675,7 +675,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
          */
-        NInteger operator /(const NInteger& other) const;
+        NIntegerBase operator /(const NIntegerBase& other) const;
         /**
          * Divides this by the given integer and returns the result.
          * The result will be truncated to an integer, i.e. rounded
@@ -702,7 +702,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
          */
-        NInteger operator /(long other) const;
+        NIntegerBase operator /(long other) const;
         /**
          * Divides this by the given integer and returns the result.
          * This can only be used when the given integer divides into
@@ -717,7 +717,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
          */
-        NInteger divExact(const NInteger& other) const;
+        NIntegerBase divExact(const NIntegerBase& other) const;
         /**
          * Divides this by the given integer and returns the result.
          * This can only be used when the given integer divides into
@@ -732,7 +732,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
          */
-        NInteger divExact(long other) const;
+        NIntegerBase divExact(long other) const;
         /**
          * Determines the remainder when this integer is divided by the
          * given integer.  If non-zero, the result will have the same sign
@@ -755,7 +755,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to divide this by.
          * @return the remainder \a this modulo \a other.
          */
-        NInteger operator %(const NInteger& other) const;
+        NIntegerBase operator %(const NIntegerBase& other) const;
         /**
          * Determines the remainder when this integer is divided by the
          * given integer.  If non-zero, the result will have the same sign
@@ -778,7 +778,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to divide this by.
          * @return the remainder \a this modulo \a other.
          */
-        NInteger operator %(long other) const;
+        NIntegerBase operator %(long other) const;
 
         /**
          * Uses the division algorithm to obtain a quotient and
@@ -796,7 +796,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          *
          * Note that this differs from other division routines in this
          * class, in that it always rounds to give a non-negative remainder.
-         * Thus NInteger(-7).divisionAlg(3) gives quotient -3 and
+         * Thus NIntegerBase(-7).divisionAlg(3) gives quotient -3 and
          * remainder 2, whereas (-7)/3 gives quotient -2 and (-7)\%3 gives
          * remainder -1.
          *
@@ -823,9 +823,9 @@ class NInteger : private InfinityBase<supportInfinity> {
          *
          * @author Ryan Budney & B.B.
          */
-        NInteger<supportInfinity> divisionAlg(
-                const NInteger<supportInfinity>& divisor,
-                NInteger<supportInfinity>& remainder) const;
+        NIntegerBase<supportInfinity> divisionAlg(
+                const NIntegerBase<supportInfinity>& divisor,
+                NIntegerBase<supportInfinity>& remainder) const;
 
         /**
          * Determines the negative of this integer.
@@ -835,7 +835,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          *
          * @return the negative of this integer.
          */
-        NInteger operator -() const;
+        NIntegerBase operator -() const;
 
         /**
          * Adds the given integer to this.
@@ -847,7 +847,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to add to this integer.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator +=(const NInteger& other);
+        NIntegerBase& operator +=(const NIntegerBase& other);
         /**
          * Adds the given integer to this.
          * This integer is changed to reflect the result.
@@ -858,7 +858,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to add to this integer.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator +=(long other);
+        NIntegerBase& operator +=(long other);
         /**
          * Subtracts the given integer from this.
          * This integer is changed to reflect the result.
@@ -869,7 +869,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to subtract from this integer.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator -=(const NInteger& other);
+        NIntegerBase& operator -=(const NIntegerBase& other);
         /**
          * Subtracts the given integer from this.
          * This integer is changed to reflect the result.
@@ -880,7 +880,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to subtract from this integer.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator -=(long other);
+        NIntegerBase& operator -=(long other);
         /**
          * Multiplies the given integer by this.
          * This integer is changed to reflect the result.
@@ -891,7 +891,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to multiply with this integer.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator *=(const NInteger& other);
+        NIntegerBase& operator *=(const NIntegerBase& other);
         /**
          * Multiplies the given integer by this.
          * This integer is changed to reflect the result.
@@ -902,7 +902,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to multiply with this integer.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator *=(long other);
+        NIntegerBase& operator *=(long other);
         /**
          * Divides this by the given integer.
          * The result will be truncated to an integer, i.e. rounded
@@ -930,7 +930,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator /=(const NInteger& other);
+        NIntegerBase& operator /=(const NIntegerBase& other);
         /**
          * Divides this by the given integer.
          * The result will be truncated to an integer, i.e. rounded
@@ -957,7 +957,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator /=(long other);
+        NIntegerBase& operator /=(long other);
         /**
          * Divides this by the given integer.
          * This can only be used when the given integer divides into
@@ -972,7 +972,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
          */
-        NInteger& divByExact(const NInteger& other);
+        NIntegerBase& divByExact(const NIntegerBase& other);
         /**
          * Divides this by the given integer.
          * This can only be used when the given integer divides into
@@ -987,7 +987,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
          */
-        NInteger& divByExact(long other);
+        NIntegerBase& divByExact(long other);
         /**
          * Reduces this integer modulo the given integer.
          * If non-zero, the result will have the same sign as the original
@@ -1011,7 +1011,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * reduced.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator %=(const NInteger& other);
+        NIntegerBase& operator %=(const NIntegerBase& other);
         /**
          * Reduces this integer modulo the given integer.
          * If non-zero, the result will have the same sign as the original
@@ -1035,7 +1035,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * reduced.
          * @return a reference to this integer with its new value.
          */
-        NInteger& operator %=(long other);
+        NIntegerBase& operator %=(long other);
         /**
          * Negates this integer.
          * This integer is changed to reflect the result.
@@ -1063,7 +1063,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          *
          * @return the absolute value of this integer.
          */
-        NInteger abs() const;
+        NIntegerBase abs() const;
         /**
          * Determines the greatest common divisor of this and the given
          * integer.  This integer is not changed.
@@ -1078,7 +1078,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @return the greatest common divisor of this and the given
          * integer.
          */
-        NInteger gcd(const NInteger& other) const;
+        NIntegerBase gcd(const NIntegerBase& other) const;
         /**
          * Determines the lowest common multiple of this and the given
          * integer.  This integer is not changed.
@@ -1092,7 +1092,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * @return the lowest common multiple of this and the given
          * integer.
          */
-        NInteger lcm(const NInteger& other) const;
+        NIntegerBase lcm(const NIntegerBase& other) const;
 
         /**
          * Determines the greatest common divisor of this and the given
@@ -1121,9 +1121,9 @@ class NInteger : private InfinityBase<supportInfinity> {
          * \a other will be placed.
          * @return the greatest common divisor of \a this and \a other.
          */
-        NInteger<supportInfinity> gcdWithCoeffs(
-            const NInteger<supportInfinity>& other,
-            NInteger<supportInfinity>& u, NInteger<supportInfinity>& v) const;
+        NIntegerBase<supportInfinity> gcdWithCoeffs(
+            const NIntegerBase<supportInfinity>& other,
+            NIntegerBase<supportInfinity>& u, NIntegerBase<supportInfinity>& v) const;
 
         /**
          * Returns the Legendre symbol (\a a/\a p), where
@@ -1142,14 +1142,14 @@ class NInteger : private InfinityBase<supportInfinity> {
          *
          * @author Ryan Budney
          */
-        int legendre(const NInteger<supportInfinity>& p) const;
+        int legendre(const NIntegerBase<supportInfinity>& p) const;
 
         // TODO: random number routines.
 
         /**
          * Set this to a copy of the given raw GMP integer.
          *
-         * This routine allows NInteger to interact directly with
+         * This routine allows NIntegerBase to interact directly with
          * libgmp and libgmpxx if necessary.
          *
          * \ifacespython Not available.
@@ -1161,7 +1161,7 @@ class NInteger : private InfinityBase<supportInfinity> {
         /**
          * Returns the raw GMP data that describes this integer.
          *
-         * This routine allows NInteger to interact directly with
+         * This routine allows NIntegerBase to interact directly with
          * libgmp and libgmpxx if necessary.
          *
          * \warning This routine will have the side-effect of converting
@@ -1182,7 +1182,7 @@ class NInteger : private InfinityBase<supportInfinity> {
         /**
          * Returns the raw GMP data that describes this integer.
          *
-         * This routine allows NInteger to interact directly with
+         * This routine allows NIntegerBase to interact directly with
          * libgmp and libgmpxx if necessary.
          *
          * \warning This routine will have the side-effect of converting
@@ -1235,7 +1235,7 @@ class NInteger : private InfinityBase<supportInfinity> {
          * Any attempt to use it when \a supportInfinity is \c false
          * will generate a linker error.
          */
-        NInteger(bool, bool);
+        NIntegerBase(bool, bool);
 
         /**
          * Sets this integer to be finite.
@@ -1294,27 +1294,28 @@ class NInteger : private InfinityBase<supportInfinity> {
          */
         void forceReduce();
 
-    friend class NInteger<! supportInfinity>; // For conversions.
+    friend class NIntegerBase<! supportInfinity>; // For conversions.
 
     template <bool supportInfinity_>
     friend std::ostream& operator << (std::ostream& out,
-        const NInteger<supportInfinity_>& large);
+        const NIntegerBase<supportInfinity_>& large);
 };
 
 /**
- * A legacy typedef provided for backward compatibility.
+ * NLargeInteger is a typedef for NIntegerBase<true>, which offers
+ * arbitrary precision integers with support for infinity.
  *
- * \deprecated In C++, the old class NLargeInteger has been
- * replaced with the template class NInteger (which is significantly faster).
- * NLargeInteger is now a typedef for NInteger<true>, which offers the
- * same functionality as the old NLargeInteger.
- *
- * \ifacespython This typedef is available in Python, and indeed Python
- * users will need to use it to access integers with infinity (since the
- * Python class NInteger resolves to the C++ class NInteger<false>,
- * which does not support infinity).
+ * \ifacespython This typedef is available in Python.
  */
-typedef NInteger<true> NLargeInteger;
+typedef NIntegerBase<true> NLargeInteger;
+
+/**
+ * NInteger is a typedef for NIntegerBase<false>, which offers
+ * arbitrary precision integers without support for infinity.
+ *
+ * \ifacespython This typedef is available in Python.
+ */
+typedef NIntegerBase<false> NInteger;
 
 /**
  * Writes the given integer to the given output stream.
@@ -1325,7 +1326,7 @@ typedef NInteger<true> NLargeInteger;
  */
 template <bool supportInfinity>
 std::ostream& operator << (std::ostream& out,
-    const NInteger<supportInfinity>& i);
+    const NIntegerBase<supportInfinity>& i);
 
 /**
  * Adds the given native integer to the given large integer.
@@ -1338,8 +1339,8 @@ std::ostream& operator << (std::ostream& out,
  * @return the sum \a lhs plus \a rhs.
  */
 template <bool supportInfinity>
-NInteger<supportInfinity> operator + (long lhs,
-    const NInteger<supportInfinity>& rhs);
+NIntegerBase<supportInfinity> operator + (long lhs,
+    const NIntegerBase<supportInfinity>& rhs);
 
 /**
  * Multiplies the given native integer with the given large integer.
@@ -1352,8 +1353,8 @@ NInteger<supportInfinity> operator + (long lhs,
  * @return the product \a lhs times \a rhs.
  */
 template <bool supportInfinity>
-NInteger<supportInfinity> operator * (long lhs,
-    const NInteger<supportInfinity>& rhs);
+NIntegerBase<supportInfinity> operator * (long lhs,
+    const NIntegerBase<supportInfinity>& rhs);
 
 /*@}*/
 
@@ -1374,13 +1375,13 @@ template <typename Integer>
 long explicit_cast_to_long(const Integer& a);
 
 template <>
-inline long explicit_cast_to_long<regina::NInteger<true> >(
-        const regina::NInteger<true>& a) {
+inline long explicit_cast_to_long<regina::NIntegerBase<true> >(
+        const regina::NIntegerBase<true>& a) {
     return a.longValue();
 }
 template <>
-inline long explicit_cast_to_long<regina::NInteger<false> >(
-        const regina::NInteger<false>& a) {
+inline long explicit_cast_to_long<regina::NIntegerBase<false> >(
+        const regina::NIntegerBase<false>& a) {
     return a.longValue();
 }
 } //namespace libnormaliz
@@ -1388,20 +1389,20 @@ inline long explicit_cast_to_long<regina::NInteger<false> >(
 
 namespace regina {
 
-// Inline functions for NInteger
+// Inline functions for NIntegerBase
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>::NInteger() :
+inline NIntegerBase<supportInfinity>::NIntegerBase() :
         small_(0), large_(0) {
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>::NInteger(int value) :
+inline NIntegerBase<supportInfinity>::NIntegerBase(int value) :
         small_(value), large_(0) {
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>::NInteger(unsigned value) :
+inline NIntegerBase<supportInfinity>::NIntegerBase(unsigned value) :
         small_(value) {
     // Detect overflow.
     if (small_ < 0) {
@@ -1412,12 +1413,12 @@ inline NInteger<supportInfinity>::NInteger(unsigned value) :
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>::NInteger(long value) :
+inline NIntegerBase<supportInfinity>::NIntegerBase(long value) :
         small_(value), large_(0) {
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>::NInteger(unsigned long value) :
+inline NIntegerBase<supportInfinity>::NIntegerBase(unsigned long value) :
         small_(value) {
     // Detect overflow.
     if (small_ < 0) {
@@ -1428,8 +1429,8 @@ inline NInteger<supportInfinity>::NInteger(unsigned long value) :
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>::NInteger(
-        const NInteger<supportInfinity>& value) {
+inline NIntegerBase<supportInfinity>::NIntegerBase(
+        const NIntegerBase<supportInfinity>& value) {
     if (value.isInfinite()) {
         large_ = 0;
         makeInfinite();
@@ -1443,8 +1444,8 @@ inline NInteger<supportInfinity>::NInteger(
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>::NInteger(
-        const NInteger<! supportInfinity>& value) {
+inline NIntegerBase<supportInfinity>::NIntegerBase(
+        const NIntegerBase<! supportInfinity>& value) {
     if (value.isInfinite()) {
         large_ = 0;
         makeInfinite();
@@ -1458,7 +1459,7 @@ inline NInteger<supportInfinity>::NInteger(
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>::~NInteger() {
+inline NIntegerBase<supportInfinity>::~NIntegerBase() {
     if (large_) {
         mpz_clear(large_);
         delete large_;
@@ -1466,35 +1467,35 @@ inline NInteger<supportInfinity>::~NInteger() {
 }
 
 template <bool supportInfinity>
-inline bool NInteger<supportInfinity>::isNative() const {
+inline bool NIntegerBase<supportInfinity>::isNative() const {
     return (! isInfinite()) && (! large_);
 }
 
 template <bool supportInfinity>
-inline bool NInteger<supportInfinity>::isZero() const {
+inline bool NIntegerBase<supportInfinity>::isZero() const {
     return (! isInfinite()) &&
         (((! large_) && (! small_)) || (large_ && mpz_sgn(large_) == 0));
 }
 
 template <>
-inline bool NInteger<true>::isInfinite() const {
+inline bool NIntegerBase<true>::isInfinite() const {
     return infinite_;
 }
 
 template <>
-inline bool NInteger<false>::isInfinite() const {
+inline bool NIntegerBase<false>::isInfinite() const {
     return false;
 }
 
 template <bool supportInfinity>
-inline long NInteger<supportInfinity>::longValue() const {
+inline long NIntegerBase<supportInfinity>::longValue() const {
     return (large_ ? mpz_get_si(large_) : small_);
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>&
-        NInteger<supportInfinity>::operator =(
-        const NInteger<supportInfinity>& value) {
+inline NIntegerBase<supportInfinity>&
+        NIntegerBase<supportInfinity>::operator =(
+        const NIntegerBase<supportInfinity>& value) {
     if (value.isInfinite()) {
         makeInfinite();
         return *this;
@@ -1516,9 +1517,9 @@ inline NInteger<supportInfinity>&
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>&
-        NInteger<supportInfinity>::operator =(
-        const NInteger<! supportInfinity>& value) {
+inline NIntegerBase<supportInfinity>&
+        NIntegerBase<supportInfinity>::operator =(
+        const NIntegerBase<! supportInfinity>& value) {
     if (value.isInfinite()) {
         makeInfinite();
         return *this;
@@ -1540,8 +1541,8 @@ inline NInteger<supportInfinity>&
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>&
-        NInteger<supportInfinity>::operator =(int value) {
+inline NIntegerBase<supportInfinity>&
+        NIntegerBase<supportInfinity>::operator =(int value) {
     makeFinite();
     small_ = value;
     if (large_)
@@ -1550,8 +1551,8 @@ inline NInteger<supportInfinity>&
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>&
-        NInteger<supportInfinity>::operator =(unsigned value) {
+inline NIntegerBase<supportInfinity>&
+        NIntegerBase<supportInfinity>::operator =(unsigned value) {
     makeFinite();
     small_ = value;
 
@@ -1573,8 +1574,8 @@ inline NInteger<supportInfinity>&
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>&
-        NInteger<supportInfinity>::operator =(long value) {
+inline NIntegerBase<supportInfinity>&
+        NIntegerBase<supportInfinity>::operator =(long value) {
     makeFinite();
     small_ = value;
     if (large_)
@@ -1583,8 +1584,8 @@ inline NInteger<supportInfinity>&
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>&
-        NInteger<supportInfinity>::operator =(unsigned long value) {
+inline NIntegerBase<supportInfinity>&
+        NIntegerBase<supportInfinity>::operator =(unsigned long value) {
     makeFinite();
     small_ = value;
 
@@ -1606,8 +1607,8 @@ inline NInteger<supportInfinity>&
 }
 
 template <bool supportInfinity>
-inline bool NInteger<supportInfinity>::operator ==(
-        const NInteger<supportInfinity>& rhs) const {
+inline bool NIntegerBase<supportInfinity>::operator ==(
+        const NIntegerBase<supportInfinity>& rhs) const {
     if (isInfinite() && rhs.isInfinite())
         return true;
     if (isInfinite() || rhs.isInfinite())
@@ -1626,7 +1627,7 @@ inline bool NInteger<supportInfinity>::operator ==(
 }
 
 template <bool supportInfinity>
-inline bool NInteger<supportInfinity>::operator ==(long rhs) const {
+inline bool NIntegerBase<supportInfinity>::operator ==(long rhs) const {
     if (isInfinite())
         return false;
     if (large_)
@@ -1636,8 +1637,8 @@ inline bool NInteger<supportInfinity>::operator ==(long rhs) const {
 }
 
 template <bool supportInfinity>
-inline bool NInteger<supportInfinity>::operator !=(
-        const NInteger<supportInfinity>& rhs) const {
+inline bool NIntegerBase<supportInfinity>::operator !=(
+        const NIntegerBase<supportInfinity>& rhs) const {
     if (isInfinite() && rhs.isInfinite())
         return false;
     if (isInfinite() || rhs.isInfinite())
@@ -1656,7 +1657,7 @@ inline bool NInteger<supportInfinity>::operator !=(
 }
 
 template <bool supportInfinity>
-inline bool NInteger<supportInfinity>::operator !=(long rhs) const {
+inline bool NIntegerBase<supportInfinity>::operator !=(long rhs) const {
     if (isInfinite())
         return true;
     if (large_)
@@ -1666,8 +1667,8 @@ inline bool NInteger<supportInfinity>::operator !=(long rhs) const {
 }
 
 template <bool supportInfinity>
-inline bool NInteger<supportInfinity>::operator <(
-        const NInteger<supportInfinity>& rhs) const {
+inline bool NIntegerBase<supportInfinity>::operator <(
+        const NIntegerBase<supportInfinity>& rhs) const {
     if (isInfinite())
         return false;
     if (rhs.isInfinite())
@@ -1686,7 +1687,7 @@ inline bool NInteger<supportInfinity>::operator <(
 }
 
 template <bool supportInfinity>
-inline bool NInteger<supportInfinity>::operator <(long rhs) const {
+inline bool NIntegerBase<supportInfinity>::operator <(long rhs) const {
     if (isInfinite())
         return false;
     if (large_)
@@ -1696,8 +1697,8 @@ inline bool NInteger<supportInfinity>::operator <(long rhs) const {
 }
 
 template <bool supportInfinity>
-inline bool NInteger<supportInfinity>::operator >(
-        const NInteger<supportInfinity>& rhs) const {
+inline bool NIntegerBase<supportInfinity>::operator >(
+        const NIntegerBase<supportInfinity>& rhs) const {
     if (rhs.isInfinite())
         return false;
     if (isInfinite())
@@ -1716,7 +1717,7 @@ inline bool NInteger<supportInfinity>::operator >(
 }
 
 template <bool supportInfinity>
-inline bool NInteger<supportInfinity>::operator >(long rhs) const {
+inline bool NIntegerBase<supportInfinity>::operator >(long rhs) const {
     if (isInfinite())
         return true;
     if (large_)
@@ -1726,8 +1727,8 @@ inline bool NInteger<supportInfinity>::operator >(long rhs) const {
 }
 
 template <bool supportInfinity>
-inline bool NInteger<supportInfinity>::operator <=(
-        const NInteger<supportInfinity>& rhs) const {
+inline bool NIntegerBase<supportInfinity>::operator <=(
+        const NIntegerBase<supportInfinity>& rhs) const {
     if (rhs.isInfinite())
         return true;
     if (isInfinite())
@@ -1746,7 +1747,7 @@ inline bool NInteger<supportInfinity>::operator <=(
 }
 
 template <bool supportInfinity>
-inline bool NInteger<supportInfinity>::operator <=(long rhs) const {
+inline bool NIntegerBase<supportInfinity>::operator <=(long rhs) const {
     if (isInfinite())
         return false;
     if (large_)
@@ -1756,8 +1757,8 @@ inline bool NInteger<supportInfinity>::operator <=(long rhs) const {
 }
 
 template <bool supportInfinity>
-inline bool NInteger<supportInfinity>::operator >=(
-        const NInteger<supportInfinity>& rhs) const {
+inline bool NIntegerBase<supportInfinity>::operator >=(
+        const NIntegerBase<supportInfinity>& rhs) const {
     if (isInfinite())
         return true;
     if (rhs.isInfinite())
@@ -1776,7 +1777,7 @@ inline bool NInteger<supportInfinity>::operator >=(
 }
 
 template <bool supportInfinity>
-inline bool NInteger<supportInfinity>::operator >=(long rhs) const {
+inline bool NIntegerBase<supportInfinity>::operator >=(long rhs) const {
     if (isInfinite())
         return true;
     if (large_)
@@ -1786,8 +1787,8 @@ inline bool NInteger<supportInfinity>::operator >=(long rhs) const {
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>&
-        NInteger<supportInfinity>::operator ++() {
+inline NIntegerBase<supportInfinity>&
+        NIntegerBase<supportInfinity>::operator ++() {
     if (isInfinite())
         return *this;
 
@@ -1804,21 +1805,21 @@ inline NInteger<supportInfinity>&
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>
-        NInteger<supportInfinity>::operator ++(int) {
+inline NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::operator ++(int) {
     if (isInfinite())
         return *this;
 
     // Hrmph, just do the standard thing for now.
     // It's not clear how much microoptimisation will help..?
-    NInteger<supportInfinity> ans(*this);
+    NIntegerBase<supportInfinity> ans(*this);
     ++(*this);
     return ans;
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>&
-        NInteger<supportInfinity>::operator --() {
+inline NIntegerBase<supportInfinity>&
+        NIntegerBase<supportInfinity>::operator --() {
     if (isInfinite())
         return *this;
 
@@ -1835,188 +1836,188 @@ inline NInteger<supportInfinity>&
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>
-        NInteger<supportInfinity>::operator --(int) {
+inline NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::operator --(int) {
     if (isInfinite())
         return *this;
 
     // Hrmph, just do the standard thing for now.
     // It's not clear how much microoptimisation will help..?
-    NInteger<supportInfinity> ans(*this);
+    NIntegerBase<supportInfinity> ans(*this);
     --(*this);
     return ans;
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>
-        NInteger<supportInfinity>::operator +(
-        const NInteger<supportInfinity>& other) const {
+inline NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::operator +(
+        const NIntegerBase<supportInfinity>& other) const {
     if (isInfinite())
         return *this;
     if (other.isInfinite())
         return other;
 
     // Do the standard thing for now.
-    NInteger<supportInfinity> ans(*this);
+    NIntegerBase<supportInfinity> ans(*this);
     return ans += other;
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>
-        NInteger<supportInfinity>::operator +(long other) const {
+inline NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::operator +(long other) const {
     if (isInfinite())
         return *this;
 
     // Do the standard thing for now.
-    NInteger<supportInfinity> ans(*this);
+    NIntegerBase<supportInfinity> ans(*this);
     return ans += other;
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>
-        NInteger<supportInfinity>::operator -(
-        const NInteger<supportInfinity>& other) const {
+inline NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::operator -(
+        const NIntegerBase<supportInfinity>& other) const {
     if (isInfinite())
         return *this;
     if (other.isInfinite())
         return other;
 
     // Do the standard thing for now.
-    NInteger<supportInfinity> ans(*this);
+    NIntegerBase<supportInfinity> ans(*this);
     return ans -= other;
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>
-        NInteger<supportInfinity>::operator -(long other) const {
+inline NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::operator -(long other) const {
     if (isInfinite())
         return *this;
 
     // Do the standard thing for now.
-    NInteger<supportInfinity> ans(*this);
+    NIntegerBase<supportInfinity> ans(*this);
     return ans -= other;
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>
-        NInteger<supportInfinity>::operator *(
-        const NInteger<supportInfinity>& other) const {
+inline NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::operator *(
+        const NIntegerBase<supportInfinity>& other) const {
     if (isInfinite())
         return *this;
     if (other.isInfinite())
         return other;
 
     // Do the standard thing for now.
-    NInteger<supportInfinity> ans(*this);
+    NIntegerBase<supportInfinity> ans(*this);
     return ans *= other;
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>
-        NInteger<supportInfinity>::operator *(long other) const {
+inline NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::operator *(long other) const {
     if (isInfinite())
         return *this;
 
     // Do the standard thing for now.
-    NInteger<supportInfinity> ans(*this);
+    NIntegerBase<supportInfinity> ans(*this);
     return ans *= other;
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>
-        NInteger<supportInfinity>::operator /(
-        const NInteger<supportInfinity>& other) const {
+inline NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::operator /(
+        const NIntegerBase<supportInfinity>& other) const {
     if (isInfinite())
         return *this;
     if (other.isInfinite())
         return (long)0;
     if (other.isZero()) {
-        NInteger<supportInfinity> ans;
+        NIntegerBase<supportInfinity> ans;
         ans.makeInfinite();
         return ans;
     }
 
     // Do the standard thing for now.
-    NInteger<supportInfinity> ans(*this);
+    NIntegerBase<supportInfinity> ans(*this);
     return ans /= other;
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>
-        NInteger<supportInfinity>::operator /(long other) const {
+inline NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::operator /(long other) const {
     if (isInfinite())
         return *this;
     if (other == 0) {
-        NInteger<supportInfinity> ans;
+        NIntegerBase<supportInfinity> ans;
         ans.makeInfinite();
         return ans;
     }
 
     // Do the standard thing for now.
-    NInteger<supportInfinity> ans(*this);
+    NIntegerBase<supportInfinity> ans(*this);
     return ans /= other;
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>
-        NInteger<supportInfinity>::divExact(
-        const NInteger<supportInfinity>& other) const {
+inline NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::divExact(
+        const NIntegerBase<supportInfinity>& other) const {
     // Do the standard thing for now.
-    NInteger<supportInfinity> ans(*this);
+    NIntegerBase<supportInfinity> ans(*this);
     return ans.divByExact(other);
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>
-        NInteger<supportInfinity>::divExact(long other) const {
+inline NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::divExact(long other) const {
     // Do the standard thing for now.
-    NInteger<supportInfinity> ans(*this);
+    NIntegerBase<supportInfinity> ans(*this);
     return ans.divByExact(other);
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>
-        NInteger<supportInfinity>::operator %(
-        const NInteger<supportInfinity>& other) const {
+inline NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::operator %(
+        const NIntegerBase<supportInfinity>& other) const {
     // Do the standard thing for now.
-    NInteger<supportInfinity> ans(*this);
+    NIntegerBase<supportInfinity> ans(*this);
     return ans %= other;
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>
-        NInteger<supportInfinity>::operator %(long other) const {
+inline NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::operator %(long other) const {
     // Do the standard thing for now.
-    NInteger<supportInfinity> ans(*this);
+    NIntegerBase<supportInfinity> ans(*this);
     return ans %= other;
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>
-        NInteger<supportInfinity>::operator -() const {
+inline NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::operator -() const {
     if (isInfinite())
         return *this;
     if (large_) {
-        NInteger<supportInfinity> ans;
+        NIntegerBase<supportInfinity> ans;
         ans.large_ = new mpz_t;
         mpz_init(ans.large_);
         mpz_neg(ans.large_, large_);
         return ans;
     } else if (small_ == LONG_MIN) {
         // Overflow, just.
-        NInteger<supportInfinity> ans;
+        NIntegerBase<supportInfinity> ans;
         ans.large_ = new mpz_t;
         mpz_init_set_si(ans.large_, small_);
         mpz_neg(ans.large_, ans.large_);
         return ans;
     } else
-        return NInteger<supportInfinity>(-small_);
+        return NIntegerBase<supportInfinity>(-small_);
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>&
-        NInteger<supportInfinity>::operator +=(
-        const NInteger<supportInfinity>& other) {
+inline NIntegerBase<supportInfinity>&
+        NIntegerBase<supportInfinity>::operator +=(
+        const NIntegerBase<supportInfinity>& other) {
     if (isInfinite())
         return *this;
     else if (other.isInfinite()) {
@@ -2033,9 +2034,9 @@ inline NInteger<supportInfinity>&
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity>&
-        NInteger<supportInfinity>::operator -=(
-        const NInteger<supportInfinity>& other) {
+inline NIntegerBase<supportInfinity>&
+        NIntegerBase<supportInfinity>::operator -=(
+        const NIntegerBase<supportInfinity>& other) {
     if (isInfinite())
         return *this;
     else if (other.isInfinite()) {
@@ -2052,7 +2053,7 @@ inline NInteger<supportInfinity>&
 }
 
 template <bool supportInfinity>
-inline void NInteger<supportInfinity>::negate() {
+inline void NIntegerBase<supportInfinity>::negate() {
     if (isInfinite())
         return;
     if (large_)
@@ -2066,41 +2067,41 @@ inline void NInteger<supportInfinity>::negate() {
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity> NInteger<supportInfinity>::abs()
+inline NIntegerBase<supportInfinity> NIntegerBase<supportInfinity>::abs()
         const {
     if (isInfinite())
         return *this;
     if (large_) {
-        NInteger<supportInfinity> ans;
+        NIntegerBase<supportInfinity> ans;
         ans.large_ = new mpz_t;
         mpz_init_set(ans.large_, large_);
         mpz_abs(ans.large_, large_);
         return ans;
     } else if (small_ == LONG_MIN) {
         // Overflow, just.
-        NInteger<supportInfinity> ans;
+        NIntegerBase<supportInfinity> ans;
         ans.large_ = new mpz_t;
         mpz_init_set_si(ans.large_, small_);
         mpz_neg(ans.large_, ans.large_);
         return ans;
     } else
-        return NInteger<supportInfinity>(small_ >= 0 ? small_ : - small_);
+        return NIntegerBase<supportInfinity>(small_ >= 0 ? small_ : - small_);
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity> operator +(long lhs,
-        const NInteger<supportInfinity>& rhs) {
+inline NIntegerBase<supportInfinity> operator +(long lhs,
+        const NIntegerBase<supportInfinity>& rhs) {
     return rhs + lhs;
 }
 
 template <bool supportInfinity>
-inline NInteger<supportInfinity> operator *(long lhs,
-        const NInteger<supportInfinity>& rhs) {
+inline NIntegerBase<supportInfinity> operator *(long lhs,
+        const NIntegerBase<supportInfinity>& rhs) {
     return rhs * lhs;
 }
 
 template <bool supportInfinity>
-inline void NInteger<supportInfinity>::setRaw(mpz_srcptr fromData) {
+inline void NIntegerBase<supportInfinity>::setRaw(mpz_srcptr fromData) {
     makeFinite();
     if (! large_) {
         large_ = new mpz_t;
@@ -2111,47 +2112,47 @@ inline void NInteger<supportInfinity>::setRaw(mpz_srcptr fromData) {
 }
 
 template <bool supportInfinity>
-inline mpz_srcptr NInteger<supportInfinity>::rawData() const {
+inline mpz_srcptr NIntegerBase<supportInfinity>::rawData() const {
     // Cast away the const, since we are not changing the mathematical value.
     // We are, however, bulking up the representation.
-    const_cast<NInteger<supportInfinity>&>(*this).makeLarge();
+    const_cast<NIntegerBase<supportInfinity>&>(*this).makeLarge();
     return large_;
 }
 
 template <bool supportInfinity>
-inline mpz_ptr NInteger<supportInfinity>::rawData() {
+inline mpz_ptr NIntegerBase<supportInfinity>::rawData() {
     makeLarge();
     return large_;
 }
 
 template <bool supportInfinity>
-inline void NInteger<supportInfinity>::makeLarge() {
+inline void NIntegerBase<supportInfinity>::makeLarge() {
     if (! large_)
         forceLarge();
 }
 
 template <bool supportInfinity>
-inline void NInteger<supportInfinity>::tryReduce() {
+inline void NIntegerBase<supportInfinity>::tryReduce() {
     if (large_ && mpz_cmp_si(large_, LONG_MAX) <= 0 &&
             mpz_cmp_si(large_, LONG_MIN) >= 0)
         forceReduce();
 }
 
 template <bool supportInfinity>
-inline void NInteger<supportInfinity>::forceLarge() {
+inline void NIntegerBase<supportInfinity>::forceLarge() {
     large_ = new mpz_t;
     mpz_init_set_si(large_, small_);
 }
 
 template <bool supportInfinity>
-inline void NInteger<supportInfinity>::clearLarge() {
+inline void NIntegerBase<supportInfinity>::clearLarge() {
     mpz_clear(large_);
     delete large_;
     large_ = 0;
 }
 
 template <bool supportInfinity>
-inline void NInteger<supportInfinity>::forceReduce() {
+inline void NIntegerBase<supportInfinity>::forceReduce() {
     small_ = mpz_get_si(large_);
     mpz_clear(large_);
     delete large_;
@@ -2161,7 +2162,7 @@ inline void NInteger<supportInfinity>::forceReduce() {
 // Specialised template functions:
 
 template <>
-inline void NInteger<true>::swap(NInteger<true>& other) {
+inline void NIntegerBase<true>::swap(NIntegerBase<true>& other) {
     // This should just work, since large_ is a pointer.
     std::swap(infinite_, other.infinite_);
     std::swap(small_, other.small_);
@@ -2169,36 +2170,36 @@ inline void NInteger<true>::swap(NInteger<true>& other) {
 }
 
 template <>
-inline void NInteger<false>::swap(NInteger<false>& other) {
+inline void NIntegerBase<false>::swap(NIntegerBase<false>& other) {
     // This should just work, since large_ is a pointer.
     std::swap(small_, other.small_);
     std::swap(large_, other.large_);
 }
 
 template <>
-inline void NInteger<true>::makeFinite() {
+inline void NIntegerBase<true>::makeFinite() {
     infinite_ = false;
 }
 
 template <>
-inline void NInteger<false>::makeFinite() {
+inline void NIntegerBase<false>::makeFinite() {
 }
 
 template <>
-inline void NInteger<true>::makeInfinite() {
+inline void NIntegerBase<true>::makeInfinite() {
     infinite_ = true;
     if (large_)
         clearLarge();
 }
 
 template <>
-inline void NInteger<false>::makeInfinite() {
+inline void NIntegerBase<false>::makeInfinite() {
 }
 
 // This definition must come *after* the definition of makeInfinite()
 // to keep the compiler happy.
 template <>
-inline NInteger<true>::NInteger(bool, bool) : large_(0) {
+inline NIntegerBase<true>::NIntegerBase(bool, bool) : large_(0) {
     // The infinity constructor.
     makeInfinite();
 }

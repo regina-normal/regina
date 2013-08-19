@@ -44,7 +44,7 @@ class NBoolSet;
 class NTriBool;
 
 template <bool>
-class NInteger;
+class NIntegerBase;
 
 /**
  * \weakgroup utilities
@@ -180,7 +180,7 @@ REGINA_API bool valueOf(const std::string& str, unsigned long& dest);
  */
 template <bool supportInfinity>
 REGINA_API bool valueOf(const std::string& str,
-    NInteger<supportInfinity>& dest);
+    NIntegerBase<supportInfinity>& dest);
 /**
  * Converts the entire given string to a double precision real number and
  * reports whether this conversion was successful.

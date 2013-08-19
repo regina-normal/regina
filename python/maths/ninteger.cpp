@@ -30,32 +30,31 @@
 #include "maths/ninteger.h"
 
 using namespace boost::python;
-
-typedef regina::NInteger<false> NFiniteInteger;
+using regina::NInteger;
 
 namespace {
-    NFiniteInteger& (NFiniteInteger::*divByExact_lazy)(const NFiniteInteger&) =
-        &NFiniteInteger::divByExact;
-    NFiniteInteger& (NFiniteInteger::*divByExact_long)(long) =
-        &NFiniteInteger::divByExact;
-    NFiniteInteger (NFiniteInteger::*divExact_lazy)(const NFiniteInteger&)
-        const = &NFiniteInteger::divExact;
-    NFiniteInteger (NFiniteInteger::*divExact_long)(long) const =
-        &NFiniteInteger::divExact;
+    NInteger& (NInteger::*divByExact_lazy)(const NInteger&) =
+        &NInteger::divByExact;
+    NInteger& (NInteger::*divByExact_long)(long) =
+        &NInteger::divByExact;
+    NInteger (NInteger::*divExact_lazy)(const NInteger&)
+        const = &NInteger::divExact;
+    NInteger (NInteger::*divExact_long)(long) const =
+        &NInteger::divExact;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_stringValue,
-        NFiniteInteger::stringValue, 0, 1);
+        NInteger::stringValue, 0, 1);
 }
 
 void addNInteger() {
-    scope s = class_<NFiniteInteger>("NInteger")
+    scope s = class_<NInteger>("NInteger")
         .def(init<long>())
-        .def(init<const NFiniteInteger&>())
+        .def(init<const NInteger&>())
         .def(init<const char*, optional<int> >())
-        .def("isNative", &NFiniteInteger::isNative)
-        .def("longValue", &NFiniteInteger::longValue)
-        .def("stringValue", &NFiniteInteger::stringValue, OL_stringValue())
-        .def("swap", &NFiniteInteger::swap)
+        .def("isNative", &NInteger::isNative)
+        .def("longValue", &NInteger::longValue)
+        .def("stringValue", &NInteger::stringValue, OL_stringValue())
+        .def("swap", &NInteger::swap)
         .def(self == self)
         .def(self == long())
         .def(self != self)
@@ -93,22 +92,22 @@ void addNInteger() {
         .def("divByExact", divByExact_long, return_internal_reference<>())
         .def(self %= self)
         .def(self %= long())
-        .def("negate", &NFiniteInteger::negate)
-        .def("raiseToPower", &NFiniteInteger::raiseToPower)
-        .def("abs", &NFiniteInteger::abs)
-        .def("gcd", &NFiniteInteger::gcd)
-        .def("lcm", &NFiniteInteger::lcm)
-        .def("makeLarge", &NFiniteInteger::makeLarge)
-        .def("tryReduce", &NFiniteInteger::tryReduce)
+        .def("negate", &NInteger::negate)
+        .def("raiseToPower", &NInteger::raiseToPower)
+        .def("abs", &NInteger::abs)
+        .def("gcd", &NInteger::gcd)
+        .def("lcm", &NInteger::lcm)
+        .def("makeLarge", &NInteger::makeLarge)
+        .def("tryReduce", &NInteger::tryReduce)
         .def(self_ns::str(self))
     ;
 
     // Apparently there is no way in python to make a module attribute
     // read-only.
-    s.attr("zero") = NFiniteInteger::zero;
-    s.attr("one") = NFiniteInteger::one;
+    s.attr("zero") = NInteger::zero;
+    s.attr("one") = NInteger::one;
 
-    boost::python::implicitly_convertible<long, NFiniteInteger>();
-    boost::python::implicitly_convertible<std::string, NFiniteInteger>();
+    boost::python::implicitly_convertible<long, NInteger>();
+    boost::python::implicitly_convertible<std::string, NInteger>();
 }
 
