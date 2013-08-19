@@ -1431,8 +1431,8 @@ template <bool supportInfinity>
 inline NInteger<supportInfinity>::NInteger(
         const NInteger<supportInfinity>& value) {
     if (value.isInfinite()) {
-        makeInfinite();
         large_ = 0;
+        makeInfinite();
     } else if (value.large_) {
         large_ = new mpz_t;
         mpz_init_set(large_, value.large_);
@@ -1446,8 +1446,8 @@ template <bool supportInfinity>
 inline NInteger<supportInfinity>::NInteger(
         const NInteger<! supportInfinity>& value) {
     if (value.isInfinite()) {
-        makeInfinite();
         large_ = 0;
+        makeInfinite();
     } else if (value.large_) {
         large_ = new mpz_t;
         mpz_init_set(large_, value.large_);
