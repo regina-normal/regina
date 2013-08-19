@@ -120,8 +120,7 @@ bool runAllTests() {
     // Utilities:
     addNBitmask(runner);
     addNIndexedArray(runner);
-    addNLargeInteger(runner);
-    addNLazyInteger(runner);
+    addNInteger(runner);
     addNRational(runner);
 
     // Maths:
