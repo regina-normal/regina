@@ -32,22 +32,32 @@
 #include "testsuite/utilities/testutilities.h"
 
 using regina::NIntegerBase;
+using regina::NInteger;
+using regina::NLargeInteger;
 
 #define HUGE_INTEGER "12364981726394781629378461923786491874569283746672"
 
 class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NIntegerTest);
 
-    CPPUNIT_TEST(constructAssignCopyNative);
-    CPPUNIT_TEST(constructAssignCopyString);
-    CPPUNIT_TEST(constructSpecial);
+    CPPUNIT_TEST(constructAssignCopyNative<NInteger>);
+    CPPUNIT_TEST(constructAssignCopyNative<NLargeInteger>);
+    CPPUNIT_TEST(constructAssignCopyString<NInteger>);
+    CPPUNIT_TEST(constructAssignCopyString<NLargeInteger>);
+    CPPUNIT_TEST(constructSpecial<NInteger>);
+    CPPUNIT_TEST(constructSpecial<NLargeInteger>);
     /*
-    CPPUNIT_TEST(comparisons);
-    CPPUNIT_TEST(incDec);
+    CPPUNIT_TEST(comparisons<NInteger>);
+    CPPUNIT_TEST(comparisons<NLargeInteger>);
+    CPPUNIT_TEST(incDec<NInteger>);
+    CPPUNIT_TEST(incDec<NLargeInteger>);
     */
-    CPPUNIT_TEST(divisionAlg);
-    CPPUNIT_TEST(gcd);
-    CPPUNIT_TEST(lcm);
+    CPPUNIT_TEST(divisionAlg<NInteger>);
+    CPPUNIT_TEST(divisionAlg<NLargeInteger>);
+    CPPUNIT_TEST(gcd<NInteger>);
+    CPPUNIT_TEST(gcd<NLargeInteger>);
+    CPPUNIT_TEST(lcm<NInteger>);
+    CPPUNIT_TEST(lcm<NLargeInteger>);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -473,10 +483,8 @@ class NIntegerTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL("++i does not increment properly.");
         }
 
-        template <bool supportInfinity>
-        void incDecArg() {
-            typedef NIntegerBase<supportInfinity> IntType;
-
+        template <typename IntType>
+        void incDec() {
             testIncDec(zero);
             testIncDec(one);
             testIncDec(two);
@@ -494,11 +502,6 @@ class NIntegerTest : public CppUnit::TestFixture {
             for (int a = 0; a < nSeries; a++)
                 for (int i = 0; i < seriesLen; i++)
                     testIncDec(series[a][i]);
-        }
-
-        void incDec() {
-            incDecArg<true>();
-            incDecArg<false>();
         }
         */
 
@@ -621,10 +624,8 @@ class NIntegerTest : public CppUnit::TestFixture {
             }
         }
 
-        template <bool supportInfinity>
+        template <typename IntType>
         void constructAssignCopyNative() {
-            typedef NIntegerBase<supportInfinity> IntType;
-
             testNative(IntType(), "Default", 0, 0, true);
             testNative(IntType(int(100)), "Int", 100, 1, true);
             testNative(IntType(int(-32768)), "Int", -32768, -1, true);
@@ -666,11 +667,6 @@ class NIntegerTest : public CppUnit::TestFixture {
             testLarge(x, "ULong=", str((unsigned long)(LONG_MAX) + 1), 1, true);
             x = (unsigned long)(ULONG_MAX);
             testLarge(x, "ULong=", str((unsigned long)(ULONG_MAX)), 1, true);
-        }
-
-        void constructAssignCopyNative() {
-            constructAssignCopyNative<true>();
-            constructAssignCopyNative<false>();
         }
 
         template <typename IntType>
@@ -905,10 +901,8 @@ class NIntegerTest : public CppUnit::TestFixture {
             }
         }
 
-        template <bool supportInfinity>
+        template <typename IntType>
         void constructAssignCopyString() {
-            typedef NIntegerBase<supportInfinity> IntType;
-
             testStringNative<IntType>(str(long(LONG_MAX)), 10, LONG_MAX, 1,
                 true);
             testStringNative<IntType>(str(long(LONG_MIN)), 10, LONG_MIN, -1,
@@ -956,15 +950,8 @@ class NIntegerTest : public CppUnit::TestFixture {
                 0, "-87112285931760246646623899502532662132736", -1, true);
         }
 
-        void constructAssignCopyString() {
-            constructAssignCopyString<true>();
-            constructAssignCopyString<false>();
-        }
-
-        template <bool supportInfinity>
-        void constructSpecialArg() {
-            typedef NIntegerBase<supportInfinity> IntType;
-
+        template <typename IntType>
+        void constructSpecial() {
             // Make sure that our "special case" data members look
             // correct,
             // so we can use them with confidence throughout this class.
@@ -1033,11 +1020,6 @@ class NIntegerTest : public CppUnit::TestFixture {
             }
         }
 
-        void constructSpecial() {
-            constructSpecialArg<true>();
-            constructSpecialArg<false>();
-        }
-
         template <typename IntType>
         void checkDivisionAlg(int n, int divisor, int quotient,
                 int remainder) {
@@ -1060,10 +1042,8 @@ class NIntegerTest : public CppUnit::TestFixture {
             }
         }
 
-        template <bool supportInfinity>
-        void divisionAlgArg() {
-            typedef NIntegerBase<supportInfinity> IntType;
-
+        template <typename IntType>
+        void divisionAlg() {
             // Check all possible zero/positive/negative combinations.
             checkDivisionAlg<IntType>(0, 0, 0, 0);
             checkDivisionAlg<IntType>(0, 3, 0, 0);
@@ -1087,15 +1067,8 @@ class NIntegerTest : public CppUnit::TestFixture {
             checkDivisionAlg<IntType>(-1, -3, 1, 2);
         }
 
-        void divisionAlg() {
-            divisionAlgArg<true>();
-            divisionAlgArg<false>();
-        }
-
-        template <bool supportInfinity>
-        void gcdArg() {
-            typedef NIntegerBase<supportInfinity> IntType;
-
+        template <typename IntType>
+        void gcd() {
             // For now, at least make sure we treat zero correctly.
             CPPUNIT_ASSERT_MESSAGE("gcd(0,x) incorrect.",
                 IntType::zero.gcd(10) == 10);
@@ -1105,15 +1078,8 @@ class NIntegerTest : public CppUnit::TestFixture {
                 IntType::zero.gcd(IntType::zero) == 0);
         }
 
-        void gcd() {
-            gcdArg<true>();
-            gcdArg<false>();
-        }
-
-        template <bool supportInfinity>
-        void lcmArg() {
-            typedef NIntegerBase<supportInfinity> IntType;
-
+        template <typename IntType>
+        void lcm() {
             // For now, at least make sure we treat zero correctly.
             CPPUNIT_ASSERT_MESSAGE("lcm(0,x) incorrect.",
                 IntType::zero.lcm(10) == 0);
@@ -1125,11 +1091,6 @@ class NIntegerTest : public CppUnit::TestFixture {
                 IntType(-10).lcm(IntType::zero) == 0);
             CPPUNIT_ASSERT_MESSAGE("lcm(0,0) incorrect.",
                 IntType::zero.lcm(IntType::zero) == 0);
-        }
-
-        void lcm() {
-            lcmArg<true>();
-            lcmArg<false>();
         }
 };
 
