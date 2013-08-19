@@ -228,17 +228,14 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator +=(long other) {
         return *this;
     if (! large_) {
         // Use native arithmetic if we can.
-        // The following overflow test is taken from Hackers' Delight,
-        // sec. 2-21.
-        // Here we use (... & LONG_MIN) to extract the sign bit.
-        long ans = small_ + other;
-        if ((((ans ^ small_) & (ans ^ other))) & LONG_MIN) {
+        if (    (small_ > 0 && other > (LONG_MAX - small_)) ||
+                (small_ < 0 && other < (LONG_MIN - small_))) {
             // Boom.  It's an overflow.
             // Fall back to large integer arithmetic in the next block.
             forceLarge();
         } else {
             // All good: we're done.
-            small_ = ans;
+            small_ += other;
             return *this;
         }
     }
@@ -261,17 +258,14 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator -=(long other) {
         return *this;
     if (! large_) {
         // Use native arithmetic if we can.
-        // The following overflow test is taken from Hackers' Delight,
-        // sec. 2-21.
-        // Here we use (... & LONG_MIN) to extract the sign bit.
-        long ans = small_ - other;
-        if ((((small_ ^ other) & (ans ^ small_))) & LONG_MIN) {
+        if (    (other > 0 && small_ < (LONG_MIN + other)) ||
+                (other < 0 && small_ > (LONG_MAX + other))) {
             // Boom.  It's an overflow.
             // Fall back to large integer arithmetic in the next block.
             forceLarge();
         } else {
             // All good: we're done.
-            small_ = ans;
+            small_ -= other;
             return *this;
         }
     }
