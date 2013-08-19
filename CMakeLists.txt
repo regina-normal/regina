@@ -201,13 +201,19 @@ if(NOT LANGINFO_FOUND)
   MESSAGE(WARNING "langinfo not found: UTF-8 will be used always, and the locale-specific encoding will be ignored.")
 endif(NOT LANGINFO_FOUND)
 
-# 64 bit integer checks
+# Large integer checks
 CHECK_CXX_SOURCE_COMPILES("
   long long x;
   signed long long y;
   unsigned long long z;
   int main() { return 0; }"
   LONG_LONG_FOUND )
+
+CHECK_CXX_SOURCE_COMPILES("
+  __int128_t x;
+  __uint128_t y;
+  int main() { return 0; }"
+  INT128_FOUND )
 
 IF(LONG_LONG_FOUND)
   CHECK_CXX_SOURCE_COMPILES("
@@ -219,7 +225,6 @@ IF(LONG_LONG_FOUND)
     int main() { return 0; }"
     NUMERIC_64_LL_FOUND)
 ENDIF(LONG_LONG_FOUND)
-  
 
 # Dependencies used by all components of Regina
 FIND_PACKAGE(ZLIB)

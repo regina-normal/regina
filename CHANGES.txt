@@ -24,6 +24,9 @@ Version 4.94  [ (under development) ]
             - New classes to support Dim2Triangulation.
         Class DimTraits:
             - New template class to assist with dimension-agnostic code.
+        Class IntOfSize:
+            - New template class for using native integer types whose sizes
+              are not determined until compile time.
         Class NAbelianGroup:
             - New convenience routines isZ() and isZn().
         Class NBlockedSFS:

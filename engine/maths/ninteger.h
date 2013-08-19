@@ -75,10 +75,10 @@ namespace regina {
  * See the NInteger class notes for details.
  */
 template <bool supportInfinity>
-struct REGINA_API InfinityBase;
+struct InfinityBase;
 
 template <>
-struct REGINA_API InfinityBase<true> {
+struct InfinityBase<true> {
     bool infinite_;
         /**< Does this integer represent infinity? */
 
@@ -90,7 +90,7 @@ struct REGINA_API InfinityBase<true> {
 };
 
 template <>
-struct REGINA_API InfinityBase<false> {
+struct InfinityBase<false> {
 };
 
 /**
@@ -128,7 +128,7 @@ struct REGINA_API InfinityBase<false> {
  * \testpart
  */
 template <bool supportInfinity = false>
-class REGINA_API NInteger : private InfinityBase<supportInfinity> {
+class NInteger : private InfinityBase<supportInfinity> {
     public:
         static const NInteger<supportInfinity> zero;
             /**< Globally available zero. */
@@ -1324,7 +1324,7 @@ typedef NInteger<true> NLargeInteger;
  * @return a reference to \a out.
  */
 template <bool supportInfinity>
-REGINA_API std::ostream& operator << (std::ostream& out,
+std::ostream& operator << (std::ostream& out,
     const NInteger<supportInfinity>& i);
 
 /**
@@ -1338,7 +1338,7 @@ REGINA_API std::ostream& operator << (std::ostream& out,
  * @return the sum \a lhs plus \a rhs.
  */
 template <bool supportInfinity>
-REGINA_API NInteger<supportInfinity> operator + (long lhs,
+NInteger<supportInfinity> operator + (long lhs,
     const NInteger<supportInfinity>& rhs);
 
 /**
@@ -1352,7 +1352,7 @@ REGINA_API NInteger<supportInfinity> operator + (long lhs,
  * @return the product \a lhs times \a rhs.
  */
 template <bool supportInfinity>
-REGINA_API NInteger<supportInfinity> operator * (long lhs,
+NInteger<supportInfinity> operator * (long lhs,
     const NInteger<supportInfinity>& rhs);
 
 /*@}*/
