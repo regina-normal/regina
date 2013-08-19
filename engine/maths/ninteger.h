@@ -1963,7 +1963,7 @@ inline NInteger<supportInfinity>
         const NInteger<supportInfinity>& other) const {
     // Do the standard thing for now.
     NInteger<supportInfinity> ans(*this);
-    return ans.divExact(other);
+    return ans.divByExact(other);
 }
 
 template <bool supportInfinity>
@@ -1971,7 +1971,7 @@ inline NInteger<supportInfinity>
         NInteger<supportInfinity>::divExact(long other) const {
     // Do the standard thing for now.
     NInteger<supportInfinity> ans(*this);
-    return ans.divExact(other);
+    return ans.divByExact(other);
 }
 
 template <bool supportInfinity>

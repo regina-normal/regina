@@ -720,6 +720,7 @@ NInteger<supportInfinity> NInteger<supportInfinity>::gcdWithCoeffs(
     // TODO: Escalate to GMP if anyone is equal to MINLONG.
     // Otherwise smalls are fine, but check gmpWithCoeffs() for overflow.
     NInteger<supportInfinity> ans;
+    ans.makeLarge();
 
     // Check for zero arguments.
     if (isZero()) {
