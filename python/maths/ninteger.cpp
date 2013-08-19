@@ -94,6 +94,7 @@ void addNInteger() {
         .def(self %= self)
         .def(self %= long())
         .def("negate", &NFiniteInteger::negate)
+        .def("raiseToPower", &NFiniteInteger::raiseToPower)
         .def("abs", &NFiniteInteger::abs)
         .def("gcd", &NFiniteInteger::gcd)
         .def("lcm", &NFiniteInteger::lcm)

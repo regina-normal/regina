@@ -30,10 +30,42 @@
 #include <cstdlib>
 #include "maths/ninteger.h"
 #include "maths/numbertheory.h"
+#include "utilities/intutils.h"
 #include "utilities/nthread.h"
 
 // We instantiate both variants of the NInteger template at the bottom
 // of this file.
+
+/**
+ * Old macros for testing signed integer overflow, given in order from
+ * fastest to slowest (by experimentation).  All are based on section
+ * 2-21 from Hacker's Delight by Warren.
+ *
+ * These tests are all abandoned now because the 128-bit cast solution is
+ * significantly faster than any of these.
+ *
+ * Note that a slicker test (such as checking whether answer / y == x) is
+ * not possible, because compiler optimisations are too clever nowadays
+ * and strip out the very tests we are trying to perform
+ * (e.g., whether (x * y) / y == x).
+ *
+ * - Ben, 19/08/2013.
+ *
+#define LONG_OVERFLOW(x, y) \
+        (((x) > 0 && ( \
+            ((y) > 0 && (y) > LONG_MAX / (x)) || \
+             (y) < 0 && (y) < LONG_MIN / (x))) || \
+         ((x) < 0 && ( \
+            ((y) > 0 && (x) < LONG_MIN / (y)) || \
+            ((y) < 0 && (x) < LONG_MAX / (y)))))
+#define LONG_OVERFLOW(x, y) \
+        (((x) > 0 && (y) > 0 && (y) > LONG_MAX / (x)) || \
+         ((x) > 0 && (y) < 0 && (y) < LONG_MIN / (x)) || \
+         ((x) < 0 && (y) > 0 && (x) < LONG_MIN / (y)) || \
+         ((x) < 0 && (y) < 0 && (x) < LONG_MAX / (y)))
+#define LONG_OVERFLOW(x, y) \
+        ((y) && labs(x) > (((~((x) ^ (y))) >> (sizeof(long)*8-1)) / labs(y)))
+ */
 
 namespace regina {
 
@@ -275,11 +307,9 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator *=(
         mpz_init(large_);
         mpz_mul_si(large_, other.large_, small_);
     } else {
-        long ans = small_ * other.small_;
-        // From Hacker's Delight, sec. 2-12:
-        // Overflow iff the following conditions hold:
-        if ((other.small_ < 0 && small_ == LONG_MIN) ||
-                (other.small_ != 0 && ans / other.small_ != small_)) {
+        typedef IntOfSize<2 * sizeof(long)>::type Wide;
+        Wide ans = static_cast<Wide>(small_) * other.small_;
+        if (ans > LONG_MAX || ans < LONG_MIN) {
             // Overflow.
             large_ = new mpz_t;
             mpz_init_set_si(large_, small_);
@@ -297,11 +327,9 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator *=(long other) {
     if (large_)
         mpz_mul_si(large_, large_, other);
     else {
-        long ans = small_ * other;
-        // From Hacker's Delight, sec. 2-12:
-        // Overflow iff the following conditions hold:
-        if ((other < 0 && small_ == LONG_MIN) ||
-                (other != 0 && ans / other != small_)) {
+        typedef IntOfSize<2 * sizeof(long)>::type Wide;
+        Wide ans = static_cast<Wide>(small_) * other;
+        if (ans > LONG_MAX || ans < LONG_MIN) {
             // Overflow.
             large_ = new mpz_t;
             mpz_init_set_si(large_, small_);
@@ -561,11 +589,25 @@ NInteger<supportInfinity>& NInteger<supportInfinity>::operator %=(long other) {
 
 template <bool supportInfinity>
 void NInteger<supportInfinity>::raiseToPower(unsigned long exp) {
-    // TODO: Fix for natives also.
     if (exp == 0)
         (*this) = one;
-    else if (! isInfinite())
-        mpz_pow_ui(large_, large_, exp);
+    else if (! isInfinite()) {
+        if (large_) {
+            // Outsource it all to MPI.
+            mpz_pow_ui(large_, large_, exp);
+        } else {
+            // Implement fast modular exponentiation ourselves.
+            NInteger<supportInfinity> base(*this);
+            *this = 1;
+            while (exp) {
+                // INV: desired result = (base ^ exp) * this.
+                if (exp & 1)
+                    (*this) *= base;
+                exp >>= 1;
+                base *= base;
+            }
+        }
+    }
 }
 
 template <bool supportInfinity>
