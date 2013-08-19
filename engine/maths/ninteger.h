@@ -1856,20 +1856,9 @@ inline NInteger<supportInfinity>
     if (other.isInfinite())
         return other;
 
-    if (! other.large_)
-        return (*this) + other.small_;
-
-    NInteger<supportInfinity> ans;
-    ans.large_ = new mpz_t;
-    if (large_) {
-        mpz_init(ans.large_);
-        mpz_add(ans.large_, large_, other.large_);
-    } else {
-        mpz_init_set_si(ans.large_, small_);
-        mpz_add(ans.large_, ans.large_, other.large_);
-    }
-
-    return ans;
+    // Do the standard thing for now.
+    NInteger<supportInfinity> ans(*this);
+    return ans += other;
 }
 
 template <bool supportInfinity>
@@ -1878,27 +1867,9 @@ inline NInteger<supportInfinity>
     if (isInfinite())
         return *this;
 
-    // See operator += for an explanation of why all of this code works.
-    if (! large_) {
-        long ans = small_ + other;
-        if (! ((((ans ^ small_) & (ans ^ other))) & LONG_MIN))
-            return NInteger<supportInfinity>(ans); // No overflow.
-    }
-
-    // We have to use large integer arithmetic.
-    NInteger<supportInfinity> ans;
-    ans.large_ = new mpz_t;
-    if (large_)
-        mpz_init_set(ans.large_, large_);
-    else
-        mpz_init_set_si(ans.large_, small_);
-
-    if (other >= 0)
-        mpz_add_ui(ans.large_, ans.large_, other);
-    else
-        mpz_sub_ui(ans.large_, ans.large_, -other);
-
-    return ans;
+    // Do the standard thing for now.
+    NInteger<supportInfinity> ans(*this);
+    return ans += other;
 }
 
 template <bool supportInfinity>
@@ -1910,20 +1881,9 @@ inline NInteger<supportInfinity>
     if (other.isInfinite())
         return other;
 
-    if (! other.large_)
-        return (*this) - other.small_;
-
-    NInteger<supportInfinity> ans;
-    ans.large_ = new mpz_t;
-    if (large_) {
-        mpz_init(ans.large_);
-        mpz_sub(ans.large_, large_, other.large_);
-    } else {
-        mpz_init_set_si(ans.large_, small_);
-        mpz_sub(ans.large_, ans.large_, other.large_);
-    }
-
-    return ans;
+    // Do the standard thing for now.
+    NInteger<supportInfinity> ans(*this);
+    return ans -= other;
 }
 
 template <bool supportInfinity>
@@ -1932,27 +1892,9 @@ inline NInteger<supportInfinity>
     if (isInfinite())
         return *this;
 
-    // See operator -= for an explanation of why all of this code works.
-    if (! large_) {
-        long ans = small_ - other;
-        if (! ((((small_ ^ other) & (ans ^ small_))) & LONG_MIN))
-            return NInteger<supportInfinity>(ans); // No overflow.
-    }
-
-    // We have to use large integer arithmetic.
-    NInteger<supportInfinity> ans;
-    ans.large_ = new mpz_t;
-    if (large_)
-        mpz_init_set(ans.large_, large_);
-    else
-        mpz_init_set_si(ans.large_, small_);
-
-    if (other >= 0)
-        mpz_sub_ui(ans.large_, ans.large_, other);
-    else
-        mpz_add_ui(ans.large_, ans.large_, -other);
-
-    return ans;
+    // Do the standard thing for now.
+    NInteger<supportInfinity> ans(*this);
+    return ans -= other;
 }
 
 template <bool supportInfinity>
