@@ -5,6 +5,7 @@ DIR=../build/timing
 
 time "$DIR"/tree -q uLAwLvvQzzzQQQccbbdfilmnqnpqrsptststhhkhjcqehwogrqlfmuqrj
 time "$DIR"/tree -q zLAMzLvvALvQAAMPQkbcbdefhmkptqprusvtsvwxyyxyhhjhhhkxftkkbcxbxbcdrsjvkv
+time "$DIR"/tree -q zLAwvLLLvzAAPAQQMkcbbdgijornrpsrwusvuwwxxxyyqqjqqrvtfcgfcsdagitexudsxr
 # time "$DIR"/loadlarge ../../data/census/closed-hyp-census-large.rga
 # time "$DIR"/loadlarge -t ../../data/census/closed-hyp-census-large.rga
 # time "$DIR"/loadlarge ../../data/census/closed-or-census-11.rga
