@@ -818,9 +818,12 @@ NInteger<supportInfinity> NInteger<supportInfinity>::divisionAlg(
     // Preconditions state that nothing is infinite, and we've dealt with d=0.
     NInteger<supportInfinity> quotient;
 
-    // Throughout the following code, we must be aware that GMP routines
-    // could give a negative remainder, but that this will only ever
-    // happen if the divisor is also negative.
+    // Throughout the following code:
+    // - GMP mpz_fdiv_qr() could give a negative remainder, but that this
+    //   will only ever happen if the divisor is also negative.
+    // - native integer division could leave a negative remainder
+    //   regardless of the sign of the divisor (I think the standard
+    //   indicates that the decision is based on the sign of *this?).
 
     if (large_) {
         // We will have to use GMP routines.
@@ -904,8 +907,13 @@ NInteger<supportInfinity> NInteger<supportInfinity>::divisionAlg(
                 quotient = small_ / divisor.small_;
                 remainder = small_ - (quotient.small_ * divisor.small_);
                 if (remainder.small_ < 0) {
-                    remainder.small_ -= divisor.small_;
-                    ++quotient;
+                    if (divisor.small_ > 0) {
+                        remainder.small_ += divisor.small_;
+                        --quotient;
+                    } else {
+                        remainder.small_ -= divisor.small_;
+                        ++quotient;
+                    }
                 }
             }
         }
