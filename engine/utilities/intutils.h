@@ -36,12 +36,23 @@
 #define __INTUTILS_H
 #endif
 
-#include "regina-core.h"
+#include "regina-config.h"
 
 namespace regina {
 
+/**
+ * Gives access to k-byte integer types, where \a k is a constant that
+ * is not known until compile time.
+ */
 template <int bytes>
 struct IntOfSize {
+    /**
+     * A signed integer type with \a k bytes, where \a k is the template
+     * parameter.
+     *
+     * The default is \c void, which indicates that Regina does not know
+     * how to access an integer type of the requested size.
+     */
     typedef void type;
 };
 
@@ -65,10 +76,12 @@ struct IntOfSize<8> {
     typedef __int64_t type;
 };
 
+#ifdef INT128_FOUND
 template <>
 struct IntOfSize<16> {
     typedef __int128_t type;
 };
+#endif
 
 } // namespace regina
 
