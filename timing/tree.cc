@@ -45,7 +45,7 @@
 #include <cstring>
 #include <list>
 
-typedef regina::NInteger<> IntType;
+typedef regina::NInteger IntType;
 
 /**
  * Optimisation flags:
