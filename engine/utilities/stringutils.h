@@ -40,9 +40,11 @@
 
 namespace regina {
 
-class NLargeInteger;
 class NBoolSet;
 class NTriBool;
+
+template <bool>
+class NIntegerBase;
 
 /**
  * \weakgroup utilities
@@ -176,7 +178,9 @@ REGINA_API bool valueOf(const std::string& str, unsigned long& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-REGINA_API bool valueOf(const std::string& str, NLargeInteger& dest);
+template <bool supportInfinity>
+REGINA_API bool valueOf(const std::string& str,
+    NIntegerBase<supportInfinity>& dest);
 /**
  * Converts the entire given string to a double precision real number and
  * reports whether this conversion was successful.

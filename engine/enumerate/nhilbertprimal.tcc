@@ -132,8 +132,12 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
                 input.push_back(std::vector<mpz_class>());
                 std::vector<mpz_class>& v(input.back());
                 v.reserve(dim);
-                for (i = 0; i < dim; ++i)
-                    v.push_back(mpz_class((**rit)[i].rawData()));
+                for (i = 0; i < dim; ++i) {
+                    if ((**rit)[i].isNative())
+                        v.push_back(mpz_class((**rit)[i].longValue()));
+                    else
+                        v.push_back(mpz_class((**rit)[i].rawData()));
+                }
             }
         libnormaliz::Cone<mpz_class> cone(input,
             0 /* generators, integral closure */);

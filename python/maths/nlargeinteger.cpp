@@ -27,12 +27,21 @@
 /* end stub */
 
 #include <boost/python.hpp>
-#include "maths/nlargeinteger.h"
+#include "maths/ninteger.h"
 
 using namespace boost::python;
 using regina::NLargeInteger;
 
 namespace {
+    NLargeInteger& (NLargeInteger::*divByExact_large)(const NLargeInteger&) =
+        &NLargeInteger::divByExact;
+    NLargeInteger& (NLargeInteger::*divByExact_long)(long) =
+        &NLargeInteger::divByExact;
+    NLargeInteger (NLargeInteger::*divExact_large)(const NLargeInteger&) const =
+        &NLargeInteger::divExact;
+    NLargeInteger (NLargeInteger::*divExact_long)(long) const =
+        &NLargeInteger::divExact;
+
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_stringValue,
         NLargeInteger::stringValue, 0, 1);
 
@@ -48,8 +57,10 @@ void addNLargeInteger() {
     scope s = class_<NLargeInteger>("NLargeInteger")
         .def(init<long>())
         .def(init<const NLargeInteger&>())
-        .def(init<const regina::NLazyInteger&>())
+        .def(init<const regina::NInteger&>())
         .def(init<const char*, optional<int> >())
+        .def("isNative", &NLargeInteger::isNative)
+        .def("isZero", &NLargeInteger::isZero)
         .def("isInfinite", &NLargeInteger::isInfinite)
         .def("longValue", &NLargeInteger::longValue)
         .def("stringValue", &NLargeInteger::stringValue, OL_stringValue())
@@ -74,7 +85,8 @@ void addNLargeInteger() {
         .def(self * long())
         .def(self / self)
         .def(self / long())
-        .def("divExact", &NLargeInteger::divExact)
+        .def("divExact", divExact_large)
+        .def("divExact", divExact_long)
         .def(self % self)
         .def(self % long())
         .def("divisionAlg", divisionAlg)
@@ -87,8 +99,8 @@ void addNLargeInteger() {
         .def(self *= long())
         .def(self /= self)
         .def(self /= long())
-        .def("divByExact", &NLargeInteger::divByExact,
-            return_internal_reference<>())
+        .def("divByExact", divByExact_large, return_internal_reference<>())
+        .def("divByExact", divByExact_long, return_internal_reference<>())
         .def(self %= self)
         .def(self %= long())
         .def("negate", &NLargeInteger::negate)
@@ -98,12 +110,16 @@ void addNLargeInteger() {
         .def("lcm", &NLargeInteger::lcm)
         .def("gcdWithCoeffs", &NLargeInteger::gcdWithCoeffs)
         .def("legendre", &NLargeInteger::legendre)
-        .def("randomBoundedByThis", &NLargeInteger::randomBoundedByThis)
-        .def("randomBinary", &NLargeInteger::randomBinary)
-        .def("randomCornerBinary", &NLargeInteger::randomCornerBinary)
+        //.def("randomBoundedByThis", &NLargeInteger::randomBoundedByThis)
+        //.def("randomBinary", &NLargeInteger::randomBinary)
+        //.def("randomCornerBinary", &NLargeInteger::randomCornerBinary)
+        .def("makeLarge", &NLargeInteger::makeLarge)
+        .def("tryReduce", &NLargeInteger::tryReduce)
+        .def(long() + self)
+        .def(long() * self)
         .def(self_ns::str(self))
-        .staticmethod("randomBinary")
-        .staticmethod("randomCornerBinary")
+        //.staticmethod("randomBinary")
+        //.staticmethod("randomCornerBinary")
     ;
 
     // Apparently there is no way in python to make a module attribute

@@ -27,8 +27,8 @@
 /* end stub */
 
 void addMatrixOps();
+void addNInteger();
 void addNLargeInteger();
-void addNLazyInteger();
 void addNMatrix2();
 void addNMatrixInt();
 void addNPerm3();
@@ -41,8 +41,8 @@ void addPermConv();
 
 void addMaths() {
     addMatrixOps();
+    addNInteger();
     addNLargeInteger();
-    addNLazyInteger();
     addNMatrix2();
     addNMatrixInt();
     addNPerm3();

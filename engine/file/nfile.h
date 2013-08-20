@@ -43,7 +43,7 @@
 #include "regina-core.h"
 #include "shareableobject.h"
 #include "file/nresources.h"
-#include "maths/nlargeinteger.h"
+#include "maths/ninteger.h"
 #include "utilities/nbooleans.h"
 
 namespace regina {

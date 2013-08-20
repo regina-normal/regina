@@ -26,52 +26,64 @@
 
 /* end stub */
 
-/* To be included from stringutils.h. */
+/*! \file utilities/intutils.h
+ *  \brief Miscellaneous utility classes for analysing the built-in
+ *  integer types at compile time.
+ */
 
-#include <cctype>
-#include <string>
-#include "regina-core.h"
-#include "maths/ninteger.h"
+#ifndef __INTUTILS_H
+#ifndef __DOXYGEN
+#define __INTUTILS_H
+#endif
+
+#include "regina-config.h"
 
 namespace regina {
 
-template <bool supportInfinity>
-bool valueOf(const std::string& str, NIntegerBase<supportInfinity>& dest) {
-    bool valid;
-    dest = NIntegerBase<supportInfinity>(str.c_str(), 10, &valid);
-    return valid;
-}
+/**
+ * Gives access to k-byte integer types, where \a k is a constant that
+ * is not known until compile time.
+ */
+template <int bytes>
+struct IntOfSize {
+    /**
+     * A signed integer type with \a k bytes, where \a k is the template
+     * parameter.
+     *
+     * The default is \c void, which indicates that Regina does not know
+     * how to access an integer type of the requested size.
+     */
+    typedef void type;
+};
 
-template <class OutputIterator>
-unsigned basicTokenise(OutputIterator results, const std::string& str) {
-    std::string::size_type len = str.length();
-    std::string::size_type pos = 0;
+template <>
+struct IntOfSize<1> {
+    typedef __int8_t type;
+};
 
-    // Skip initial whitespace.
-    while (pos < len && isspace(str[pos]))
-        pos++;
+template <>
+struct IntOfSize<2> {
+    typedef __int16_t type;
+};
 
-    if (pos == len)
-        return 0;
+template <>
+struct IntOfSize<4> {
+    typedef __int32_t type;
+};
 
-    // Extract each token.
-    std::string::size_type total = 0;
-    std::string::size_type tokStart;
-    while (pos < len) {
-        // Find the characters making up this token.
-        tokStart = pos;
-        while (pos < len && ! isspace(str[pos]))
-            pos++;
-        *results++ = str.substr(tokStart, pos - tokStart);
-        total++;
+template <>
+struct IntOfSize<8> {
+    typedef __int64_t type;
+};
 
-        // Skip the subsequent whitespace.
-        while (pos < len && isspace(str[pos]))
-            pos++;
-    }
-
-    return static_cast<unsigned>(total);
-}
+#ifdef INT128_FOUND
+template <>
+struct IntOfSize<16> {
+    typedef __int128_t type;
+};
+#endif
 
 } // namespace regina
+
+#endif
 

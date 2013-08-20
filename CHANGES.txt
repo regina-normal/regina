@@ -113,6 +113,9 @@ Version 4.94  [ (under development) ]
             - New classes to support Dim2Triangulation.
         Class DimTraits:
             - New template class to assist with dimension-agnostic code.
+        Class IntOfSize:
+            - New template class for using native integer types whose sizes
+              are not determined until compile time.
         Class NAbelianGroup:
             - New convenience routines isZ() and isZn().
         Class NBlockedSFS:
@@ -132,19 +135,28 @@ Version 4.94  [ (under development) ]
         Class NGenericIsomorphism:
             - New template base class that contains dimension-agnostic
               code for representing isomorphisms between triangulations.
+        Class NInteger:
+            - NInteger is a typedef for the new template class
+              NIntegerBase<false>, which offers fast arbitrary precision
+              integers but does not support infinity.
+        Class NIntegerBase:
+            - This is a new template class that supercedes (and is based on)
+              the old NLargeInteger.  The boolean template argument indicates
+              whether the class supports infinity as an allowed value.
+            - Heavily rewritten from the old NLargeInteger: this class works
+              with native C/C++ integers for as long as possible, and only
+              switche to GMP when it becomes unavoidable.  This makes the code
+              enormously faster (rough testing suggests a roughly 7x speedup).
+            - Made the destructor non-virtual to avoid the unwanted class
+              overhead that comes with polymorphism.
+            - Added routine isZero().
         Class NIsomorphism:
             - Now a subclass of NGenericIsomorphism<3>, with inherited
               dimension-agnostic aliases for several routines.
         Class NLargeInteger:
-            - Made the destructor non-virtual to avoid the unwanted class
-              overhead that comes with polymorphism.
-            - Added constructor and assignment operator that take a
-              reference to the new NLazyInteger class.
-        Class NLazyInteger:
-            - New fast class for finite arbitrary precision integer arithmetic.
-              This class works with native C/C++ integers for as long as
-              possible, and only switches to GMP large integers when it
-              becomes unavoidable.
+            - NLargeInteger is now a typedef for the new template class
+              NIntegerBase<true>, and maintains backward compatibility.
+            - Performance is much, much faster; see NIntegerBase for details.
         Class NNormalSurface:
             - Routine boundarySlopes() now requires that the
               triangulation is oriented (otherwise SnapPea will relabel
@@ -211,6 +223,8 @@ Version 4.94  [ (under development) ]
             - These typedefs have been renamed as NFacePairing::IsoList
               and NFacePairing::Use respectively.  The old typedefs are
               deprecated, and will be removed in some future release.
+        Header nlargeinteger.h:
+            - Deprecated in favour of the new ninteger.h.
     UTILITIES:
         tricensus:
             - Now takes an optional argument -2/--dim2 to enumerate
