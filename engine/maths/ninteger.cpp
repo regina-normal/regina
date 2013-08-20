@@ -69,6 +69,15 @@
 
 namespace regina {
 
+namespace {
+    /**
+     * Global variables for the GMP random state data.
+     */
+    NMutex randMutex;
+    gmp_randstate_t randState;
+    bool randInitialised(false);
+}
+
 // Initialize const static data:
 template <bool supportInfinity>
 const NIntegerBase<supportInfinity> NIntegerBase<supportInfinity>::zero;
@@ -951,6 +960,73 @@ int NIntegerBase<supportInfinity>::legendre(
     }
 
     return ans;
+}
+
+template <bool supportInfinity>
+NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::randomBoundedByThis() const {
+    NMutex::MutexLock ml(randMutex);
+    if (! randInitialised) {
+        gmp_randinit_default(randState);
+        randInitialised = true;
+    }
+
+    NIntegerBase<supportInfinity> retval;
+    retval.makeLarge();
+
+    if (large_)
+        mpz_urandomm(retval.large_, randState, large_);
+    else {
+        // Go through GMP anyway, for the rand() routine, so that all
+        // our random number generators use a consistent algorithm.
+        mpz_t tmp;
+        mpz_init_set_si(tmp, small_);
+        mpz_urandomm(retval.large_, randState, tmp);
+        mpz_clear(tmp);
+
+        // Since this fits within a long, the result will also.
+        retval.forceReduce();
+    }
+
+    return retval;
+}
+
+template <bool supportInfinity>
+NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::randomBinary(unsigned long n) {
+    NMutex::MutexLock ml(randMutex);
+    if (! randInitialised) {
+        gmp_randinit_default(randState);
+        randInitialised = true;
+    }
+
+    NIntegerBase<supportInfinity> retval;
+    retval.makeLarge();
+    mpz_urandomb(retval.large_, randState, n);
+
+    // If n bits will fit within a signed long, reduce.
+    if (n < sizeof(long) * 8)
+        retval.forceReduce();
+    return retval;
+}
+
+template <bool supportInfinity>
+NIntegerBase<supportInfinity>
+        NIntegerBase<supportInfinity>::randomCornerBinary(unsigned long n) {
+    NMutex::MutexLock ml(randMutex);
+    if (! randInitialised) {
+        gmp_randinit_default(randState);
+        randInitialised = true;
+    }
+
+    NIntegerBase<supportInfinity> retval;
+    retval.makeLarge();
+    mpz_rrandomb(retval.large_, randState, n);
+
+    // If n bits will fit within a signed long, reduce.
+    if (n < sizeof(long) * 8)
+        retval.forceReduce();
+    return retval;
 }
 
 // Instantiate the templates!

@@ -110,16 +110,16 @@ void addNInteger() {
         .def("lcm", &NInteger::lcm)
         .def("gcdWithCoeffs", &NInteger::gcdWithCoeffs)
         .def("legendre", &NInteger::legendre)
-        //.def("randomBoundedByThis", &NInteger::randomBoundedByThis)
-        //.def("randomBinary", &NInteger::randomBinary)
-        //.def("randomCornerBinary", &NInteger::randomCornerBinary)
+        .def("randomBoundedByThis", &NInteger::randomBoundedByThis)
+        .def("randomBinary", &NInteger::randomBinary)
+        .def("randomCornerBinary", &NInteger::randomCornerBinary)
         .def("makeLarge", &NInteger::makeLarge)
         .def("tryReduce", &NInteger::tryReduce)
         .def(long() + self)
         .def(long() * self)
         .def(self_ns::str(self))
-        //.staticmethod("randomBinary")
-        //.staticmethod("randomCornerBinary")
+        .staticmethod("randomBinary")
+        .staticmethod("randomCornerBinary")
     ;
 
     // Apparently there is no way in python to make a module attribute

@@ -1144,7 +1144,42 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          */
         int legendre(const NIntegerBase<supportInfinity>& p) const;
 
-        // TODO: random number routines.
+        /**
+         * Generate a pseudo-random integer that is uniformly
+         * distributed in the interval [0,*this).
+         *
+         * \pre This integer is strictly positive.
+         *
+         * \warning Even if this integer is small, this routine is still
+         * slow - it always goes through the GMP large integer routines
+         * so that the random number generation algorithm is consistent.
+         * If you need a fast random number generator and this integer
+         * is small, consider using the standard rand() function instead.
+         *
+         * @return a pseudo-random integer.
+         */
+        NIntegerBase<supportInfinity> randomBoundedByThis() const;
+
+        /**
+         * Generate a pseudo-random integer that is uniformly
+         * distributed in the interval [0,2^n).
+         *
+         * @param n the maximum number of bits in the pseudo-random
+         * integer.
+         * @return a pseudo-random integer.
+         */
+        static NIntegerBase<supportInfinity> randomBinary(unsigned long n);
+
+        /**
+         * Generate a pseudo-random integer that is distributed in the
+         * interval [0,2^n), with a tendency to have long strings of 0s
+         * and 1s in its binary expansion.
+         *
+         * @param n the maximum number of bits in the pseudo-random integer.
+         * @return a pseudo-random integer.
+         */
+        static NIntegerBase<supportInfinity> randomCornerBinary(
+            unsigned long n);
 
         /**
          * Set this to a copy of the given raw GMP integer.
