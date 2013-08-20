@@ -46,12 +46,12 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(constructAssignCopyString<NLargeInteger>);
     CPPUNIT_TEST(constructSpecial<NInteger>);
     CPPUNIT_TEST(constructSpecial<NLargeInteger>);
-    /*
     CPPUNIT_TEST(comparisons<NInteger>);
     CPPUNIT_TEST(comparisons<NLargeInteger>);
+    CPPUNIT_TEST(comparisonsInfinity);
     CPPUNIT_TEST(incDec<NInteger>);
     CPPUNIT_TEST(incDec<NLargeInteger>);
-    */
+    CPPUNIT_TEST(incDecInfinity);
     CPPUNIT_TEST(divisionAlg<NInteger>);
     CPPUNIT_TEST(divisionAlg<NLargeInteger>);
     CPPUNIT_TEST(gcd<NInteger>);
@@ -62,128 +62,143 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     private:
+        template <typename IntType>
+        struct Data {
+            IntType smallPosSeries[6];
+                /**< A sequence of positive integers that fit into a long. */
+            IntType smallNegSeries[6];
+                /**< A sequence of negative integers that fit into a long. */
+            IntType largePosSeries[6];
+                /**< A sequence of positive integers too large for a long. */
+            IntType largeNegSeries[6];
+                /**< A sequence of negative integers too large for a long. */
+
+            static const unsigned nSeries = 4;
+                /**< The number of sequences described above. */
+            static const unsigned seriesLen = 6;
+                /**< The number of integers in each of the above sequences. */
+            IntType* series[4];
+                /**< A list of the individual large integer sequences. */
+            std::string seriesName[4];
+                /**< The names of the individual large integer sequences. */
+
+            static const unsigned nSmallSeries = 2;
+                /**< The number of sequences above that fit into longs. */
+            long smallPosSeriesVal[6];
+                /**< The long values found in the smallPosSeries sequence. */
+            long smallNegSeriesVal[6];
+                /**< The long values found in the smallNegSeries sequence. */
+            long* smallSeriesVal[2];
+                /**< A list of the long value arrays defined above. */
+
+            IntType zero;
+                /**< Special case (native): 0 */
+            IntType one;
+                /**< Special case (native): 1 */
+            IntType two;
+                /**< Special case (native): 2 */
+            IntType negOne;
+                /**< Special case (native): -1 */
+            IntType negTwo;
+                /**< Special case (native): -2 */
+            IntType longMax;
+                /**< Special case (native): LONG_MAX */
+            IntType longMin;
+                /**< Special case (native): LONG_MIN */
+            IntType longMaxInc;
+                /**< Special case (large): LONG_MAX + 1 */
+            IntType longMinDec;
+                /**< Special case (large): LONG_MIN - 1 */
+            IntType ulongMax;
+                /**< Special case (large): ULONG_MAX */
+            IntType hugePos;
+                /**< Special case (large): a huge positive integer */
+            IntType hugeNeg;
+                /**< Special case (large): a huge negative integer */
+
+            void setUp() {
+                smallPosSeries[0] = 1000;
+                smallPosSeries[1] = 2000;
+                smallPosSeries[2] = 3000;
+                smallPosSeries[3] = 4000;
+                smallPosSeries[4] = 6000;
+                smallPosSeries[5] = 6000000;
+                smallNegSeries[0] = -1000;
+                smallNegSeries[1] = -2000;
+                smallNegSeries[2] = -3000;
+                smallNegSeries[3] = -4000;
+                smallNegSeries[4] = -6000;
+                smallNegSeries[5] = -6000000;
+                largePosSeries[0] = "1000000000000000"; // 10^15
+                largePosSeries[1] = "2000000000000000"; // 2*10^15
+                largePosSeries[2] = "3000000000000000"; // 3*10^15
+                largePosSeries[3] = "4000000000000000"; // 4*10^15
+                largePosSeries[4] = "6000000000000000"; // 6*10^15
+                largePosSeries[5] = "6000000000000000000000000000000";// 6*10^30
+                largeNegSeries[0] = "-1000000000000000"; // 10^15
+                largeNegSeries[1] = "-2000000000000000"; // 2*10^15
+                largeNegSeries[2] = "-3000000000000000"; // 3*10^15
+                largeNegSeries[3] = "-4000000000000000"; // 4*10^15
+                largeNegSeries[4] = "-6000000000000000"; // 6*10^15
+                largeNegSeries[5] = "-6000000000000000000000000000000";//6*10^30
+
+                series[0] = smallPosSeries;
+                series[1] = smallNegSeries;
+                series[2] = largePosSeries;
+                series[3] = largeNegSeries;
+                seriesName[0] = "smallPosSeries";
+                seriesName[1] = "smallNegSeries";
+                seriesName[2] = "largePosSeries";
+                seriesName[3] = "largeNegSeries";
+
+                smallPosSeriesVal[0] = 1000;
+                smallPosSeriesVal[1] = 2000;
+                smallPosSeriesVal[2] = 3000;
+                smallPosSeriesVal[3] = 4000;
+                smallPosSeriesVal[4] = 6000;
+                smallPosSeriesVal[5] = 6000000;
+                smallNegSeriesVal[0] = -1000;
+                smallNegSeriesVal[1] = -2000;
+                smallNegSeriesVal[2] = -3000;
+                smallNegSeriesVal[3] = -4000;
+                smallNegSeriesVal[4] = -6000;
+                smallNegSeriesVal[5] = -6000000;
+
+                smallSeriesVal[0] = smallPosSeriesVal;
+                smallSeriesVal[1] = smallNegSeriesVal;
+
+                zero = 0;
+                one = 1;
+                two = 2;
+                negOne = -1;
+                negTwo = -2;
+                longMax = LONG_MAX;
+                longMin = LONG_MIN;
+                longMaxInc = LONG_MAX; ++longMaxInc;
+                longMinDec = LONG_MIN; --longMinDec;
+                ulongMax = (unsigned long)(ULONG_MAX);
+                hugePos = HUGE_INTEGER;
+                hugeNeg = "-" HUGE_INTEGER;
+            }
+        };
+
+    private:
+        Data<NLargeInteger> dataL;
+        Data<NInteger> dataI;
+
         long zeroL;
             /** We need this so we can test things like (LONG_MAX + 1 < 0)
                 without compiler optimisations breaking the results. */
 
-        regina::NInteger smallPosSeries[6];
-            /**< A sequence of positive integers that fit into a long. */
-        regina::NInteger smallNegSeries[6];
-            /**< A sequence of negative integers that fit into a long. */
-        regina::NInteger largePosSeries[6];
-            /**< A sequence of positive integers too large for a long. */
-        regina::NInteger largeNegSeries[6];
-            /**< A sequence of negative integers too large for a long. */
-
-        static const unsigned nSeries = 4;
-            /**< The number of sequences described above. */
-        static const unsigned seriesLen = 6;
-            /**< The number of integers in each of the above sequences. */
-        regina::NInteger* series[4];
-            /**< A list of the individual large integer sequences. */
-        std::string seriesName[4];
-            /**< The names of the individual large integer sequences. */
-
-        static const unsigned nSmallSeries = 2;
-            /**< The number of sequences above that fit into longs. */
-        long smallPosSeriesVal[6];
-            /**< The long values found in the smallPosSeries sequence. */
-        long smallNegSeriesVal[6];
-            /**< The long values found in the smallNegSeries sequence. */
-        long* smallSeriesVal[2];
-            /**< A list of the long value arrays defined above. */
-
-        regina::NInteger zero;
-            /**< Special case (native): 0 */
-        regina::NInteger one;
-            /**< Special case (native): 1 */
-        regina::NInteger two;
-            /**< Special case (native): 2 */
-        regina::NInteger negOne;
-            /**< Special case (native): -1 */
-        regina::NInteger negTwo;
-            /**< Special case (native): -2 */
-        regina::NInteger longMax;
-            /**< Special case (native): LONG_MAX */
-        regina::NInteger longMin;
-            /**< Special case (native): LONG_MIN */
-        regina::NInteger longMaxInc;
-            /**< Special case (large): LONG_MAX + 1 */
-        regina::NInteger longMinDec;
-            /**< Special case (large): LONG_MIN - 1 */
-        regina::NInteger ulongMax;
-            /**< Special case (large): ULONG_MAX */
-        regina::NInteger hugePos;
-            /**< Special case (large): a huge positive integer */
-        regina::NInteger hugeNeg;
-            /**< Special case (large): a huge negative integer */
+        template <typename IntType>
+        Data<IntType>& data();
 
     public:
         void setUp() {
+            dataL.setUp();
+            dataI.setUp();
+
             zeroL = 0;
-
-            smallPosSeries[0] = 1000;
-            smallPosSeries[1] = 2000;
-            smallPosSeries[2] = 3000;
-            smallPosSeries[3] = 4000;
-            smallPosSeries[4] = 6000;
-            smallPosSeries[5] = 6000000;
-            smallNegSeries[0] = -1000;
-            smallNegSeries[1] = -2000;
-            smallNegSeries[2] = -3000;
-            smallNegSeries[3] = -4000;
-            smallNegSeries[4] = -6000;
-            smallNegSeries[5] = -6000000;
-            largePosSeries[0] = "1000000000000000"; // 10^15
-            largePosSeries[1] = "2000000000000000"; // 2*10^15
-            largePosSeries[2] = "3000000000000000"; // 3*10^15
-            largePosSeries[3] = "4000000000000000"; // 4*10^15
-            largePosSeries[4] = "6000000000000000"; // 6*10^15
-            largePosSeries[5] = "6000000000000000000000000000000"; // 6*10^30
-            largeNegSeries[0] = "-1000000000000000"; // 10^15
-            largeNegSeries[1] = "-2000000000000000"; // 2*10^15
-            largeNegSeries[2] = "-3000000000000000"; // 3*10^15
-            largeNegSeries[3] = "-4000000000000000"; // 4*10^15
-            largeNegSeries[4] = "-6000000000000000"; // 6*10^15
-            largeNegSeries[5] = "-6000000000000000000000000000000"; // 6*10^30
-
-            series[0] = smallPosSeries;
-            series[1] = smallNegSeries;
-            series[2] = largePosSeries;
-            series[3] = largeNegSeries;
-            seriesName[0] = "smallPosSeries";
-            seriesName[1] = "smallNegSeries";
-            seriesName[2] = "largePosSeries";
-            seriesName[3] = "largeNegSeries";
-
-            smallPosSeriesVal[0] = 1000;
-            smallPosSeriesVal[1] = 2000;
-            smallPosSeriesVal[2] = 3000;
-            smallPosSeriesVal[3] = 4000;
-            smallPosSeriesVal[4] = 6000;
-            smallPosSeriesVal[5] = 6000000;
-            smallNegSeriesVal[0] = -1000;
-            smallNegSeriesVal[1] = -2000;
-            smallNegSeriesVal[2] = -3000;
-            smallNegSeriesVal[3] = -4000;
-            smallNegSeriesVal[4] = -6000;
-            smallNegSeriesVal[5] = -6000000;
-
-            smallSeriesVal[0] = smallPosSeriesVal;
-            smallSeriesVal[1] = smallNegSeriesVal;
-
-            zero = 0;
-            one = 1;
-            two = 2;
-            negOne = -1;
-            negTwo = -2;
-            longMax = LONG_MAX;
-            longMin = LONG_MIN;
-            longMaxInc = LONG_MAX; ++longMaxInc;
-            longMinDec = LONG_MIN; --longMinDec;
-            ulongMax = (unsigned long)(ULONG_MAX);
-            hugePos = HUGE_INTEGER;
-            hugeNeg = "-" HUGE_INTEGER;
         }
 
         void tearDown() {
@@ -204,14 +219,16 @@ class NIntegerTest : public CppUnit::TestFixture {
         // TODO: Test abs, gcd, lcm
         // TODO: Test tryReduce, makeLarge.
 
+        template <typename IntType>
         std::string eltName(int whichSeries, int whichMember) {
             std::ostringstream ans;
-            ans << seriesName[whichSeries] << '[' << whichMember << ']';
+            ans << data<IntType>().seriesName[whichSeries]
+                << '[' << whichMember << ']';
             return ans.str();
         }
 
-        /*
-        void shouldBeLess(const NInteger& a, const NInteger& b,
+        template <typename IntType>
+        void shouldBeLess(const IntType& a, const IntType& b,
                 const std::string& aName, const std::string& bName) {
             std::string msgBase = "Integer ";
             msgBase = msgBase + aName + " is ";
@@ -230,7 +247,8 @@ class NIntegerTest : public CppUnit::TestFixture {
                 ! (a >= b));
         }
 
-        void shouldBeEqual(const NInteger& a, const NInteger& b,
+        template <typename IntType>
+        void shouldBeEqual(const IntType& a, const IntType& b,
                 const std::string& aName, const std::string& bName) {
             std::string msgBase = "Integer ";
             msgBase = msgBase + aName + " is ";
@@ -251,7 +269,8 @@ class NIntegerTest : public CppUnit::TestFixture {
                 a.stringValue() == b.stringValue());
         }
 
-        void shouldBeGreater(const NInteger& a, const NInteger& b,
+        template <typename IntType>
+        void shouldBeGreater(const IntType& a, const IntType& b,
                 const std::string& aName, const std::string& bName) {
             std::string msgBase = "Integer ";
             msgBase = msgBase + aName + " is ";
@@ -270,7 +289,8 @@ class NIntegerTest : public CppUnit::TestFixture {
                 a >= b);
         }
 
-        void shouldBeLess(const NInteger& a, long b,
+        template <typename IntType>
+        void shouldBeLess(const IntType& a, long b,
                 const std::string& aName, const std::string& bName) {
             std::string msgBase = "Integer ";
             msgBase = msgBase + aName + " is ";
@@ -289,7 +309,8 @@ class NIntegerTest : public CppUnit::TestFixture {
                 ! (a >= b));
         }
 
-        void shouldBeEqual(const NInteger& a, long b,
+        template <typename IntType>
+        void shouldBeEqual(const IntType& a, long b,
                 const std::string& aName, const std::string& bName) {
             std::string msgBase = "Integer ";
             msgBase = msgBase + aName + " is ";
@@ -310,7 +331,8 @@ class NIntegerTest : public CppUnit::TestFixture {
                 a.stringValue() == str(b));
         }
 
-        void shouldBeGreater(const NInteger& a, long b,
+        template <typename IntType>
+        void shouldBeGreater(const IntType& a, long b,
                 const std::string& aName, const std::string& bName) {
             std::string msgBase = "Integer ";
             msgBase = msgBase + aName + " is ";
@@ -329,74 +351,84 @@ class NIntegerTest : public CppUnit::TestFixture {
                 a >= b);
         }
 
+        void comparisonsInfinity() {
+            const NLargeInteger& infinity(NLargeInteger::infinity);
+
+            shouldBeLess(NLargeInteger::one, infinity, "one", "infinity");
+            shouldBeLess(NLargeInteger::zero, infinity, "zero", "infinity");
+            shouldBeGreater(infinity, NLargeInteger::one, "infinity", "one");
+            shouldBeGreater(infinity, 1L, "infinity", "one");
+            shouldBeGreater(infinity, NLargeInteger::zero, "infinity", "zero");
+            shouldBeGreater(infinity, 0L, "infinity", "zero");
+            shouldBeEqual(infinity, infinity, "infinity", "infinity");
+
+            unsigned a, i;
+            for (a = 0; a < dataL.nSeries; a++)
+                for (i = 0; i < dataL.seriesLen; i++) {
+                    shouldBeLess(dataL.series[a][i], infinity,
+                        eltName<NLargeInteger>(a, i), "infinity");
+                    shouldBeGreater(infinity, dataL.series[a][i],
+                        "infinity", eltName<NLargeInteger>(a, i));
+                }
+        }
+
+        template <typename IntType>
         void comparisons() {
             unsigned a, b, i, j;
 
-            const NInteger& zero(NInteger::zero);
-            const NInteger& one(NInteger::one);
-            const NInteger& infinity(NInteger::infinity);
+            const IntType& zero(IntType::zero);
+            const IntType& one(IntType::one);
+            const Data<IntType>& d(data<IntType>());
 
             shouldBeLess(zero, one, "zero", "one");
             shouldBeLess(zero, 1L, "zero", "one");
-            shouldBeLess(one, infinity, "one", "infinity");
-            shouldBeLess(zero, infinity, "zero", "infinity");
             shouldBeGreater(one, zero, "one", "zero");
             shouldBeGreater(one, 0L, "one", "zero");
-            shouldBeGreater(infinity, one, "infinity", "one");
-            shouldBeGreater(infinity, 1L, "infinity", "one");
-            shouldBeGreater(infinity, zero, "infinity", "zero");
-            shouldBeGreater(infinity, 0L, "infinity", "zero");
             shouldBeEqual(zero, zero, "zero", "zero");
             shouldBeEqual(zero, 0L, "zero", "zero");
             shouldBeEqual(one, one, "one", "one");
             shouldBeEqual(one, 1L, "one", "one");
-            shouldBeEqual(infinity, infinity, "infinity", "infinity");
 
-            // Compare the elements of the series with zero, one and
-            // infinity.
-            for (a = 0; a < nSeries; a++)
-                for (i = 0; i < seriesLen; i++) {
-                    shouldBeLess(series[a][i], infinity,
-                        eltName(a, i), "infinity");
-                    shouldBeGreater(infinity, series[a][i],
-                        "infinity", eltName(a, i));
+            // Compare the elements of the series with zero and one.
+            for (a = 0; a < d.nSeries; a++)
+                for (i = 0; i < d.seriesLen; i++) {
                     if (a == 0 || a == 2) {
                         // Positive series.
-                        shouldBeGreater(series[a][i], zero,
-                            eltName(a, i), "zero");
-                        shouldBeGreater(series[a][i], 0L,
-                            eltName(a, i), "zero");
-                        shouldBeGreater(series[a][i], one,
-                            eltName(a, i), "one");
-                        shouldBeGreater(series[a][i], 1L,
-                            eltName(a, i), "one");
-                        shouldBeLess(zero, series[a][i],
-                            "zero", eltName(a, i));
-                        shouldBeLess(one, series[a][i],
-                            "one", eltName(a, i));
+                        shouldBeGreater(d.series[a][i], zero,
+                            eltName<IntType>(a, i), "zero");
+                        shouldBeGreater(d.series[a][i], 0L,
+                            eltName<IntType>(a, i), "zero");
+                        shouldBeGreater(d.series[a][i], one,
+                            eltName<IntType>(a, i), "one");
+                        shouldBeGreater(d.series[a][i], 1L,
+                            eltName<IntType>(a, i), "one");
+                        shouldBeLess(zero, d.series[a][i],
+                            "zero", eltName<IntType>(a, i));
+                        shouldBeLess(one, d.series[a][i],
+                            "one", eltName<IntType>(a, i));
                     } else {
                         // Negative series.
-                        shouldBeLess(series[a][i], zero,
-                            eltName(a, i), "zero");
-                        shouldBeLess(series[a][i], 0L,
-                            eltName(a, i), "zero");
-                        shouldBeLess(series[a][i], one,
-                            eltName(a, i), "one");
-                        shouldBeLess(series[a][i], 1L,
-                            eltName(a, i), "one");
-                        shouldBeGreater(zero, series[a][i],
-                            "zero", eltName(a, i));
-                        shouldBeGreater(one, series[a][i],
-                            "one", eltName(a, i));
+                        shouldBeLess(d.series[a][i], zero,
+                            eltName<IntType>(a, i), "zero");
+                        shouldBeLess(d.series[a][i], 0L,
+                            eltName<IntType>(a, i), "zero");
+                        shouldBeLess(d.series[a][i], one,
+                            eltName<IntType>(a, i), "one");
+                        shouldBeLess(d.series[a][i], 1L,
+                            eltName<IntType>(a, i), "one");
+                        shouldBeGreater(zero, d.series[a][i],
+                            "zero", eltName<IntType>(a, i));
+                        shouldBeGreater(one, d.series[a][i],
+                            "one", eltName<IntType>(a, i));
                     }
                 }
 
             // Compare all elements of all series in pairs.
             int expected;
-            for (a = 0; a < nSeries; a++)
-                for (b = 0; b < nSeries; b++)
-                    for (i = 0; i < seriesLen; i++)
-                        for (j = 0; j < seriesLen; j++) {
+            for (a = 0; a < d.nSeries; a++)
+                for (b = 0; b < d.nSeries; b++)
+                    for (i = 0; i < d.seriesLen; i++)
+                        for (j = 0; j < d.seriesLen; j++) {
                             // What should the result of the comparison be?
                             if (a == b && i == j)
                                 expected = 0;
@@ -428,41 +460,48 @@ class NIntegerTest : public CppUnit::TestFixture {
 
                             // Compare the elements of the series directly.
                             if (expected < 0) {
-                                shouldBeLess(series[a][i], series[b][j],
-                                    eltName(a, i), eltName(b, j));
+                                shouldBeLess(d.series[a][i], d.series[b][j],
+                                    eltName<IntType>(a, i),
+                                    eltName<IntType>(b, j));
                             } else if (expected > 0) {
-                                shouldBeGreater(series[a][i], series[b][j],
-                                    eltName(a, i), eltName(b, j));
+                                shouldBeGreater(d.series[a][i], d.series[b][j],
+                                    eltName<IntType>(a, i),
+                                    eltName<IntType>(b, j));
                             } else {
-                                shouldBeEqual(series[a][i], series[b][j],
-                                    eltName(a, i), eltName(b, j));
+                                shouldBeEqual(d.series[a][i], d.series[b][j],
+                                    eltName<IntType>(a, i),
+                                    eltName<IntType>(b, j));
                             }
 
                             // Compare with expected long values as
                             // well, if we have them.
-                            if (b < nSmallSeries) {
+                            if (b < d.nSmallSeries) {
                                 if (expected < 0) {
-                                    shouldBeLess(series[a][i],
-                                        smallSeriesVal[b][j],
-                                        eltName(a, i), eltName(b, j));
+                                    shouldBeLess(d.series[a][i],
+                                        d.smallSeriesVal[b][j],
+                                        eltName<IntType>(a, i),
+                                        eltName<IntType>(b, j));
                                 } else if (expected > 0) {
-                                    shouldBeGreater(series[a][i],
-                                        smallSeriesVal[b][j],
-                                        eltName(a, i), eltName(b, j));
+                                    shouldBeGreater(d.series[a][i],
+                                        d.smallSeriesVal[b][j],
+                                        eltName<IntType>(a, i),
+                                        eltName<IntType>(b, j));
                                 } else {
-                                    shouldBeEqual(series[a][i],
-                                        smallSeriesVal[b][j],
-                                        eltName(a, i), eltName(b, j));
+                                    shouldBeEqual(d.series[a][i],
+                                        d.smallSeriesVal[b][j],
+                                        eltName<IntType>(a, i),
+                                        eltName<IntType>(b, j));
                                 }
                             }
                         }
         }
 
-        void testIncDec(const NInteger& x) {
-            NInteger i(x);
-            NInteger orig(x);
-            NInteger up(x + 1);
-            NInteger down(x - 1);
+        template <typename IntType>
+        void testIncDec(const IntType& x) {
+            IntType i(x);
+            IntType orig(x);
+            IntType up(x + 1);
+            IntType down(x - 1);
 
             if (i++ != orig)
                 CPPUNIT_FAIL("i++ does not return original value.");
@@ -485,25 +524,56 @@ class NIntegerTest : public CppUnit::TestFixture {
 
         template <typename IntType>
         void incDec() {
-            testIncDec(zero);
-            testIncDec(one);
-            testIncDec(two);
-            testIncDec(negOne);
-            testIncDec(negTwo);
-            testIncDec(longMax);
-            testIncDec(longMin);
-            testIncDec(longMaxInc);
-            testIncDec(longMinDec);
-            testIncDec(ulongMax);
-            testIncDec(hugePos);
-            testIncDec(hugeNeg);
-            testIncDec(IntType::infinity);
+            const Data<IntType>& d(data<IntType>());
 
-            for (int a = 0; a < nSeries; a++)
-                for (int i = 0; i < seriesLen; i++)
-                    testIncDec(series[a][i]);
+            testIncDec(d.zero);
+            testIncDec(d.one);
+            testIncDec(d.two);
+            testIncDec(d.negOne);
+            testIncDec(d.negTwo);
+            testIncDec(d.longMax);
+            testIncDec(d.longMin);
+            testIncDec(d.longMaxInc);
+            testIncDec(d.longMinDec);
+            testIncDec(d.ulongMax);
+            testIncDec(d.hugePos);
+            testIncDec(d.hugeNeg);
+
+            for (int a = 0; a < d.nSeries; a++)
+                for (int i = 0; i < d.seriesLen; i++)
+                    testIncDec(d.series[a][i]);
         }
-        */
+
+        void incDecInfinity() {
+            {
+                NLargeInteger i(NLargeInteger::infinity);
+                if (++i != NLargeInteger::infinity)
+                    CPPUNIT_FAIL("++inf does not return inf.");
+                if (i != NLargeInteger::infinity)
+                    CPPUNIT_FAIL("++inf does not result in inf.");
+            }
+            {
+                NLargeInteger i(NLargeInteger::infinity);
+                if (i++ != NLargeInteger::infinity)
+                    CPPUNIT_FAIL("inf++ does not return inf.");
+                if (i != NLargeInteger::infinity)
+                    CPPUNIT_FAIL("inf++ does not result in inf.");
+            }
+            {
+                NLargeInteger i(NLargeInteger::infinity);
+                if (--i != NLargeInteger::infinity)
+                    CPPUNIT_FAIL("--inf does not return inf.");
+                if (i != NLargeInteger::infinity)
+                    CPPUNIT_FAIL("--inf does not result in inf.");
+            }
+            {
+                NLargeInteger i(NLargeInteger::infinity);
+                if (i-- != NLargeInteger::infinity)
+                    CPPUNIT_FAIL("inf-- does not return inf.");
+                if (i != NLargeInteger::infinity)
+                    CPPUNIT_FAIL("inf-- does not result in inf.");
+            }
+        }
 
         template <typename IntType>
         void testNative(const IntType& x, const char* name, long value,
@@ -952,66 +1022,68 @@ class NIntegerTest : public CppUnit::TestFixture {
 
         template <typename IntType>
         void constructSpecial() {
+            const Data<IntType>& d(data<IntType>());
+
             // Make sure that our "special case" data members look
             // correct,
             // so we can use them with confidence throughout this class.
-            if (! (zero.isNative() && zero.longValue() == 0)) {
+            if (! (d.zero.isNative() && d.zero.longValue() == 0)) {
                 CPPUNIT_FAIL("Special case 0 is not initialised correctly.");
             }
-            if (! (one.isNative() && one.longValue() == 1)) {
+            if (! (d.one.isNative() && d.one.longValue() == 1)) {
                 CPPUNIT_FAIL("Special case 1 is not initialised correctly.");
             }
-            if (! (two.isNative() && two.longValue() == 2)) {
+            if (! (d.two.isNative() && d.two.longValue() == 2)) {
                 CPPUNIT_FAIL("Special case 2 is not initialised correctly.");
             }
-            if (! (negOne.isNative() && negOne.longValue() == -1)) {
+            if (! (d.negOne.isNative() && d.negOne.longValue() == -1)) {
                 CPPUNIT_FAIL("Special case -1 is not initialised correctly.");
             }
-            if (! (negTwo.isNative() && negTwo.longValue() == -2)) {
+            if (! (d.negTwo.isNative() && d.negTwo.longValue() == -2)) {
                 CPPUNIT_FAIL("Special case -2 is not initialised correctly.");
             }
-            if (! (longMax.isNative() && longMax.longValue() == LONG_MAX &&
-                    longMax.longValue() > zeroL &&
-                    (longMax.longValue() + 1) < zeroL)) {
+            if (! (d.longMax.isNative() && d.longMax.longValue() == LONG_MAX &&
+                    d.longMax.longValue() > zeroL &&
+                    (d.longMax.longValue() + 1) < zeroL)) {
                 CPPUNIT_FAIL("Special case LONG_MAX is not "
                     "initialised correctly.");
             }
-            if (! (longMin.isNative() && longMin.longValue() == LONG_MIN &&
-                    longMin.longValue() < zeroL &&
-                    (longMin.longValue() - 1) > zeroL)) {
+            if (! (d.longMin.isNative() && d.longMin.longValue() == LONG_MIN &&
+                    d.longMin.longValue() < zeroL &&
+                    (d.longMin.longValue() - 1) > zeroL)) {
                 CPPUNIT_FAIL("Special case LONG_MIN is not "
                     "initialised correctly.");
             }
-            if (longMaxInc.isNative() || longMaxInc <= LONG_MAX ||
-                    longMaxInc.stringValue() !=
+            if (d.longMaxInc.isNative() || d.longMaxInc <= LONG_MAX ||
+                    d.longMaxInc.stringValue() !=
                     (regina::NLargeInteger(LONG_MAX) + 1).stringValue()) {
                 CPPUNIT_FAIL("Special case LONG_MAX+1 is not "
                     "initialised correctly.");
             }
-            if (longMinDec.isNative() || longMinDec >= LONG_MIN ||
-                    longMinDec.stringValue() !=
+            if (d.longMinDec.isNative() || d.longMinDec >= LONG_MIN ||
+                    d.longMinDec.stringValue() !=
                     (- regina::NLargeInteger(LONG_MAX) - 2).stringValue()) {
                 CPPUNIT_FAIL("Special case LONG_MIN-1 is not "
                     "initialised correctly.");
             }
-            if (ulongMax.isNative() || ulongMax <= LONG_MAX ||
-                    ulongMax.stringValue() !=
+            if (d.ulongMax.isNative() || d.ulongMax <= LONG_MAX ||
+                    d.ulongMax.stringValue() !=
                     (regina::NLargeInteger(LONG_MAX) * 2 + 1).stringValue()) {
                 CPPUNIT_FAIL("Special case ULONG_MAX is not "
                     "initialised correctly.");
             }
-            if (hugePos.isNative() || hugePos <= LONG_MAX ||
-                    hugePos.stringValue() != HUGE_INTEGER) {
+            if (d.hugePos.isNative() || d.hugePos <= LONG_MAX ||
+                    d.hugePos.stringValue() != HUGE_INTEGER) {
                 CPPUNIT_FAIL("Special case HUGE_INTEGER is not "
                     "initialised correctly.");
             }
-            if (hugeNeg.isNative() || hugeNeg >= LONG_MIN ||
-                    hugeNeg.stringValue() != "-" HUGE_INTEGER) {
+            if (d.hugeNeg.isNative() || d.hugeNeg >= LONG_MIN ||
+                    d.hugeNeg.stringValue() != "-" HUGE_INTEGER) {
                 CPPUNIT_FAIL("Special case -HUGE_INTEGER is not "
                     "initialised correctly.");
             }
             {
-                IntType x(hugeNeg);
+                IntType x(d.hugeNeg);
                 x.negate();
                 if (x.stringValue() != HUGE_INTEGER) {
                     CPPUNIT_FAIL("Special case -HUGE_INTEGER does not "
@@ -1096,5 +1168,15 @@ class NIntegerTest : public CppUnit::TestFixture {
 
 void addNInteger(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(NIntegerTest::suite());
+}
+
+template <>
+inline NIntegerTest::Data<NLargeInteger>& NIntegerTest::data<NLargeInteger>() {
+    return dataL;
+}
+
+template <>
+inline NIntegerTest::Data<NInteger>& NIntegerTest::data<NInteger>() {
+    return dataI;
 }
 
