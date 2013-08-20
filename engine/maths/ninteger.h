@@ -451,6 +451,14 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          * @return \c true if and only if this and the given integer are
          * equal.
          */
+        bool operator ==(const NIntegerBase<! supportInfinity>& rhs) const;
+        /**
+         * Determines if this is equal to the given integer.
+         *
+         * @param rhs the integer with which this will be compared.
+         * @return \c true if and only if this and the given integer are
+         * equal.
+         */
         bool operator ==(long rhs) const;
         /**
          * Determines if this is not equal to the given integer.
@@ -460,6 +468,14 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          * not equal.
          */
         bool operator !=(const NIntegerBase& rhs) const;
+        /**
+         * Determines if this is not equal to the given integer.
+         *
+         * @param rhs the integer with which this will be compared.
+         * @return \c true if and only if this and the given integer are
+         * not equal.
+         */
+        bool operator !=(const NIntegerBase<! supportInfinity>& rhs) const;
         /**
          * Determines if this is not equal to the given integer.
          *
@@ -1662,6 +1678,28 @@ inline bool NIntegerBase<supportInfinity>::operator ==(
 }
 
 template <bool supportInfinity>
+inline bool NIntegerBase<supportInfinity>::operator ==(
+        const NIntegerBase<! supportInfinity>& rhs) const {
+    // Implement these separately, since using a template for the RHS
+    // seems to make clang ICE when we explicitly instantiate in the .cpp file.
+
+    // The types are different, so both cannot be infinity.
+    if (isInfinite() || rhs.isInfinite())
+        return false;
+    if (large_) {
+        if (rhs.large_)
+            return (mpz_cmp(large_, rhs.large_) == 0);
+        else
+            return (mpz_cmp_si_cpp(large_, rhs.small_) == 0);
+    } else {
+        if (rhs.large_)
+            return (mpz_cmp_si_cpp(rhs.large_, small_) == 0);
+        else
+            return (small_ == rhs.small_);
+    }
+}
+
+template <bool supportInfinity>
 inline bool NIntegerBase<supportInfinity>::operator ==(long rhs) const {
     if (isInfinite())
         return false;
@@ -1676,6 +1714,28 @@ inline bool NIntegerBase<supportInfinity>::operator !=(
         const NIntegerBase<supportInfinity>& rhs) const {
     if (isInfinite() && rhs.isInfinite())
         return false;
+    if (isInfinite() || rhs.isInfinite())
+        return true;
+    if (large_) {
+        if (rhs.large_)
+            return (mpz_cmp(large_, rhs.large_) != 0);
+        else
+            return (mpz_cmp_si_cpp(large_, rhs.small_) != 0);
+    } else {
+        if (rhs.large_)
+            return (mpz_cmp_si_cpp(rhs.large_, small_) != 0);
+        else
+            return (small_ != rhs.small_);
+    }
+}
+
+template <bool supportInfinity>
+inline bool NIntegerBase<supportInfinity>::operator !=(
+        const NIntegerBase<! supportInfinity>& rhs) const {
+    // Implement these separately, since using a template for the RHS
+    // seems to make clang ICE when we explicitly instantiate in the .cpp file.
+
+    // The types are different, so both cannot be infinity.
     if (isInfinite() || rhs.isInfinite())
         return true;
     if (large_) {
