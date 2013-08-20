@@ -230,10 +230,12 @@ Version 4.94  [ (under development) ]
             - Now takes an optional argument -2/--dim2 to enumerate
               2-manifold triangulations.
     TEST SUITE:
+        - Extended tests for NInteger and NLargeInteger to be very thorough.
         - Added thorough tests for barycentric subdivision.
         - Added enumeration tests for Dim2EdgePairing.
         - Additional tests for facet pairing classes.
         - Additional tests for permutation databases Sk and orderedSk.
+        - Additional tests for NRational.
 
 Version 4.93  [ 30 May, 2012 ]
 
