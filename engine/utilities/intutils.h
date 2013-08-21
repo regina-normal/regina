@@ -36,6 +36,7 @@
 #define __INTUTILS_H
 #endif
 
+#include "regina-core.h"
 #include "regina-config.h"
 
 namespace regina {
