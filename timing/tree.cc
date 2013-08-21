@@ -1,30 +1,34 @@
-/**
- * Supporting code for "Computing closed essential surfaces in knot
- * complements", B.A. Burton, A. Coward and S. Tillmann, arXiv:1212.1531.
- *
- * Copyright (c) 2012, Benjamin A. Burton.
- *
- * Released under the GNU General Public License, version 2 or greater.
- *
- * This header file contains the full branching algorithms for
- * enumerating and identifying normal surfaces under various constraints.
- *
- * These algorithms are used by candidate.cc and compress.cc, which are
- * two small wrapper programs that use the branching algorithms to
- * enumerate and test candidate essential surfaces respectively.
- *
- * All of the code in this header file is thoroughly documented.
- *
- * This code needs to be built against Regina 4.94 or later.  Until
- * Regina 4.94 is released, you can build it against the current trunk in
- * Regina's online source code repository, which you can check out from
- * http://regina.sourceforge.net/ .
- *
- * Please check again for future versions of this software bundle at
- * http://www.maths.uq.edu.au/~bab/code/ .
- *
- * - Ben Burton, 15 December 2012.
- */
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Form a census of splitting surface signatures of given order          *
+ *                                                                        *
+ *  Copyright (c) 2013, Ben Burton                                        *
+ *  For further details contact Ben Burton (bab@debian.org).              *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  As an exception, when this program is distributed through (i) the     *
+ *  App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or     *
+ *  (iii) Google Play by Google Inc., then that store may impose any      *
+ *  digital rights management, device limits and/or redistribution        *
+ *  restrictions that are required by its terms of service.               *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,       *
+ *  MA 02110-1301, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
 
 #include <file/nxmlfile.h>
 #include <maths/matrixops.h>
