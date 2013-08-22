@@ -12,7 +12,7 @@
 #   supporting documentation.
 #
 # Changes to this script were made by Ben Burton <bab@debian.org> and are
-# licensed under the GNU General Public License.
+# released under the same license as above.
 
 prefix=@CMAKE_INSTALL_PREFIX@
 exec_prefix=@CMAKE_INSTALL_PREFIX@

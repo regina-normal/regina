@@ -53,7 +53,7 @@
 
 
 const QString ReginaAbout::regCopyright(
-    tr("Copyright (c) 1999-2012, The Regina development team"));
+    tr("Copyright (c) 1999-2013, The Regina development team"));
 
 const QString ReginaAbout::regDescription(
     tr("Software for 3-manifold topology and normal surface theory"));
@@ -64,7 +64,7 @@ const QString ReginaAbout::regReleased(
 const QString ReginaAbout::regWebsite("http://regina.sourceforge.net/");
 
 const QString ReginaAbout::regLicense( tr( 
-    "Copyright (c) 1999-2012, The Regina development team\n\n"
+    "Copyright (c) 1999-2013, The Regina development team\n\n"
     "CITATION:\n\n"
     "If you find Regina useful in your research, please consider citing it as\n"
     "you would any other paper that you use.  A suggested form of reference is:\n\n"
@@ -76,6 +76,8 @@ const QString ReginaAbout::regLicense( tr(
     "under the terms of the GNU General Public License as published by the\n"
     "Free Software Foundation; either version 2 of the License, or (at your\n"
     "option) any later version.\n\n"
+    "Some of this code comes with additional permissions; see the section\n"
+    "below regarding online distribution.\n\n"
     "This program is distributed in the hope that it will be useful, but\n"
     "WITHOUT ANY WARRANTY; without even the implied warranty of\n"
     "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General\n"
@@ -83,6 +85,18 @@ const QString ReginaAbout::regLicense( tr(
     "You should have received a copy of the GNU General Public License along\n"
     "with this program; if not, write to the Free Software Foundation, Inc.,\n"
     "51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.\n\n"
+    "ONLINE DISTRIBUTION:\n\n"
+    "Regina's own source code comes with the following permissions in\n"
+    "addition to the GNU General Public License:\n\n"
+    "As an exception, when this program is distributed through (i) the\n"
+    "App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or\n"
+    "(iii) Google Play by Google Inc., then that store may impose any\n"
+    "digital rights management, device limits and/or redistribution\n"
+    "restrictions that are required by its terms of service.\n\n"
+    "Some third-party libraries included in Regina are not granted this\n"
+    "exception, and must be removed from any build that is distributed on\n"
+    "stores that cannot comply with the GNU General Public License (such as\n"
+    "Apple's App Store).  See the third-party licenses below for details.\n\n"
     "SNAPPEA AND SNAPPY:\n\n"
     "Regina includes portions of the SnapPea kernel and its successor SnapPy,\n"
     "which it uses for some geometric calculations.  The SnapPea kernel was\n"
