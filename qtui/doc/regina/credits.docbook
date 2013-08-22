@@ -85,6 +85,10 @@
     your option) any later version.
    </para>
    <para>
+    Some of this code comes with additional permissions; see the section
+    below regarding online distribution.
+   </para>
+   <para>
     This program is distributed in the hope that it will be useful, but
     WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
@@ -96,6 +100,26 @@
     if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
+   </para>
+  </sect2>
+
+  <sect2 id="license-online">
+   <para>
+    Regina's own source code comes with the following permissions in
+    addition to the GNU General Public License:
+   </para>
+   <para>
+    As an exception, when this program is distributed through (i) the
+    App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+    (iii) Google Play by Google Inc., then that store may impose any
+    digital rights management, device limits and/or redistribution
+    restrictions that are required by its terms of service.
+   </para>
+   <para>
+    Some third-party libraries included in Regina are not granted this
+    exception, and must be removed from any build that is distributed on
+    stores that cannot comply with the GNU General Public License (such as
+    Apple's App Store).  See the third-party licenses below for details.
    </para>
   </sect2>
 

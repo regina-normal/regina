@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Source Stub Year Update Utility
 #
-# Copyright (c) 1999-2011, Ben Burton
+# Copyright (c) 1999-2013, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: updateyear <old_year> <new_year> [ <text-file> ... ]
@@ -16,6 +16,12 @@
 # modify it under the terms of the GNU General Public License as
 # published by the Free Software Foundation; either version 2 of the
 # License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
 #
 # This program is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -79,14 +85,14 @@ foreach my $file (@argFiles) {
         print "Accept? [Y/n] ";
         my $response = <STDIN>;
         $response =~ s/\s//g;
-		$response =~ tr/A-Z/a-z/;
-		$response eq '' and $response = 'y';
+        $response =~ tr/A-Z/a-z/;
+        $response eq '' and $response = 'y';
         while (not ($response eq 'y' or $response eq 'n')) {
             print "Accept? [Y/n] ";
             $response = <STDIN>;
             $response =~ s/\s//g;
-			$response =~ tr/A-Z/a-z/;
-			$response eq '' and $response = 'y';
+            $response =~ tr/A-Z/a-z/;
+            $response eq '' and $response = 'y';
         }
 
         if ($response eq 'y') {
