@@ -550,7 +550,10 @@
      <arg><option>-M, --minprime</option></arg>
      <arg><option>-N, --minprimep2</option></arg>
     </group>
-    <arg><option>-s, --sigs=</option></arg>
+    <group>
+    <arg><option>-s, --sigs</option></arg>
+    <arg><option>-c, --subcontainers</option></arg>
+    </group>
     <group>
      <arg><option>-p, --genpairs</option></arg>
      <arg><option>-P, --usepairs</option></arg>
@@ -740,7 +743,7 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term><option>-s, --sigs=</option></term>
+     <term><option>-s, --sigs</option></term>
      <listitem>
       <para>
        Instead of writing a full &regina; data file, just output a list
@@ -761,6 +764,20 @@
        triangulations can be written to the output file and forgotten
        immediately, instead of being kept in memory to construct a final
        &regina; data file.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-c, --subcontainers</option></term>
+     <listitem>
+      <para>
+       For each face pairing, a new container will be created, and
+       resultant triangulations will be placed into these containers.
+       These containers will be created even if the face pairing results
+       in no triangulations.
+      </para>
+      <para>
+       This option cannot be used with <option>--signatures</option>.
       </para>
      </listitem>
     </varlistentry>
