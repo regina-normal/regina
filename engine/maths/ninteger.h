@@ -214,8 +214,7 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          * avoiding accidental (and unintentional) mixing of template
          * parameters.
          *
-         * \pre If this class does not support infinity, then \a value
-         * must not be infinite.
+         * \pre The given integer is not infinite.
          *
          * @param value the new value of this integer.
          */
@@ -230,10 +229,9 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          * the base will be assumed to be 16.  Otherwise, if the string
          * begins with \c 0, the base will be assumed to be 8.
          * Otherwise it will be taken as base 10.
-         * TODO: Test 0X.
          *
-         * Whitespace may be present at the beginning of the given string,
-         * and will simply be ignored.
+         * Whitespace may be present at the beginning or the end
+         * of the given string, and will simply be ignored.
          *
          * Error detection is possible by passing a non-null boolean
          * pointer as the third parameter to this constructor.
@@ -245,7 +243,6 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          * \pre The given base is zero, or is between 2 and 36 inclusive.
          * \pre The given string represents a finite integer
          * in the given base, with optional whitespace beforehand.
-         * TODO: Test the validity of whitespace before and after.
          *
          * \ifacespython The final parameter \a valid is not present.
          *
@@ -267,10 +264,9 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          * the base will be assumed to be 16.  Otherwise, if the string
          * begins with \c 0, the base will be assumed to be 8.
          * Otherwise it will be taken as base 10.
-         * TODO: Test 0X.
          *
-         * Whitespace may be present at the beginning of the given string,
-         * and will simply be ignored.
+         * Whitespace may be present at the beginning or the end
+         * of the given string, and will simply be ignored.
          *
          * Error detection is possible by passing a non-null boolean
          * pointer as the third parameter to this constructor.
@@ -282,7 +278,6 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          * \pre The given base is zero, or is between 2 and 36 inclusive.
          * \pre The given string represents an integer
          * in the given base, with optional whitespace beforehand.
-         * TODO: Test the validity of whitespace before and after.
          *
          * \ifacespython The final parameter \a valid is not present.
          *
@@ -407,8 +402,8 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          * Sets this integer to the given value which is
          * represented as a string of digits in base 10.
          *
-         * Whitespace may be present in the given string and will simply
-         * be ignored.
+         * Whitespace may be present at the beginning or end of the given
+         * string and will simply be ignored.
          *
          * \pre The given string represents an integer
          * in base 10, with optional whitespace added.
@@ -422,12 +417,11 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          * Sets this integer to the given value which is
          * represented as a string of digits in base 10.
          *
-         * Whitespace may be present in the given string and will simply
-         * be ignored.
+         * Whitespace may be present at the beginning or end of the given
+         * string and will simply be ignored.
          *
          * \pre The given string represents an integer
          * in base 10, with optional whitespace added.
-         * TODO: Test whitespace.
          *
          * @param value the new value of this integer, represented as a string
          * of digits in base 10.
@@ -683,7 +677,6 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          * Anything finite divided by zero will return infinity.
          *
          * For a division routine that always rounds down, see divisionAlg().
-         * TODO: Test rounding direction, for all variants of division.
          *
          * \pre If this class does not support infinity, then
          * \a other must be non-zero.
@@ -1503,10 +1496,9 @@ inline NIntegerBase<supportInfinity>::NIntegerBase(
 template <bool supportInfinity>
 inline NIntegerBase<supportInfinity>::NIntegerBase(
         const NIntegerBase<! supportInfinity>& value) {
-    if (value.isInfinite()) {
-        large_ = 0;
-        makeInfinite();
-    } else if (value.large_) {
+    // If value is infinite, we cannot make this infinite.
+    // This is why we insist via preconditions that value is finite.
+    if (value.large_) {
         large_ = new mpz_t;
         mpz_init_set(large_, value.large_);
     } else {

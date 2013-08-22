@@ -111,11 +111,16 @@ NIntegerBase<supportInfinity>::NIntegerBase(
         // Something went wrong.  Try again with large integers.
         // Note that in the case of overflow, we may have errno != 0 but
         // *endptr == 0.
+        bool maybeTrailingWhitespace = (*endptr && ! errno);
         large_ = new mpz_t;
         if (valid)
             *valid = (mpz_init_set_str(large_, value, base) == 0);
         else
             mpz_init_set_str(large_, value, base);
+        // If the error was just trailing whitespace, we might still fit
+        // into a native long.
+        if (maybeTrailingWhitespace)
+            tryReduce();
     } else {
         // All good.
         if (valid)
@@ -134,11 +139,16 @@ NIntegerBase<supportInfinity>::NIntegerBase(
         // Something went wrong.  Try again with large integers.
         // Note that in the case of overflow, we may have errno != 0 but
         // *endptr == 0.
+        bool maybeTrailingWhitespace = (*endptr && ! errno);
         large_ = new mpz_t;
         if (valid)
             *valid = (mpz_init_set_str(large_, value.c_str(), base) == 0);
         else
             mpz_init_set_str(large_, value.c_str(), base);
+        // If the error was just trailing whitespace, we might still fit
+        // into a native long.
+        if (maybeTrailingWhitespace)
+            tryReduce();
     } else {
         // All good.
         if (valid)
@@ -182,6 +192,7 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator =(
         // Something went wrong.  Try again with large integers.
         // Note that in the case of overflow, we may have errno != 0 but
         // *endptr == 0.
+        bool maybeTrailingWhitespace = (*endptr && ! errno);
         bool result;
         if (large_)
             result = (mpz_set_str(large_, value, 10 /* base */) == 0);
@@ -189,6 +200,10 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator =(
             large_ = new mpz_t;
             result = (mpz_init_set_str(large_, value, 10 /* base */) == 0);
         }
+        // If the error was just trailing whitespace, we might still fit
+        // into a native long.
+        if (maybeTrailingWhitespace)
+            tryReduce();
     } else if (large_) {
         // All good, but we must clear out the old large integer.
         clearLarge();
@@ -208,6 +223,7 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator =(
         // Something went wrong.  Try again with large integers.
         // Note that in the case of overflow, we may have errno != 0 but
         // *endptr == 0.
+        bool maybeTrailingWhitespace = (*endptr && ! errno);
         bool result;
         if (large_)
             result = (mpz_set_str(large_, value.c_str(), 10 /* base */) == 0);
@@ -216,6 +232,10 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator =(
             result = (mpz_init_set_str(large_, value.c_str(),
                 10 /* base */) == 0);
         }
+        // If the error was just trailing whitespace, we might still fit
+        // into a native long.
+        if (maybeTrailingWhitespace)
+            tryReduce();
     } else if (large_) {
         // All good, but we must clear out the old large integer.
         clearLarge();
