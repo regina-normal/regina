@@ -86,6 +86,7 @@ int usePairs = 0;
 int sigs = 0;
 int whichPurge = 0;
 int genPairs = 0;
+int subContainers = 0;
 std::string outFile;
 
 // Variables used for a dump of face pairings.
@@ -225,10 +226,19 @@ void foundFacePairing(const typename CensusType::Pairing* pairing,
         const typename CensusType::Pairing::IsoList* autos, void* container) {
     if (pairing) {
         std::cout << pairing->toString() << std::endl;
-
+        regina::NPacket* subContainer;
+        // If creating a full .rga file, store triangulations for each face
+        // pairing in a different container.
+        if (subContainers) {
+            subContainer = new regina::NContainer();
+            subContainer->setPacketLabel(pairing->toString());
+            static_cast<regina::NPacket*>(container)->insertChildLast(subContainer);
+        } else {
+            subContainer = static_cast<regina::NPacket*>(container);
+        }
         CensusType::findAllPerms(pairing, autos,
             ! orientability.hasFalse(), ! finiteness.hasFalse(),
-            whichPurge, static_cast<regina::NPacket*>(container));
+            whichPurge, subContainer);
     }
 }
 
@@ -356,6 +366,9 @@ int main(int argc, const char* argv[]) {
         { "sigs", 's', POPT_ARG_NONE, &sigs, 0,
             "Write isomorphism signatures only, not full Regina data files.",
             0 },
+        { "subcontainers", 'c', POPT_ARG_NONE, &subContainers, 0,
+            "For each face pairing, place resulting triangulations into different subcontainers",
+            0 },
         { "genpairs", 'p', POPT_ARG_NONE, &genPairs, 0,
             "Only generate face pairings, not triangulations.", 0 },
         { "usepairs", 'P', POPT_ARG_NONE, &usePairs, 0,
@@ -449,6 +462,10 @@ int main(int argc, const char* argv[]) {
     } else if (genPairs && usePairs) {
         std::cerr << "Options -p/--genpairs and -P/--usepairs "
             << "cannot be used together.\n";
+        broken = true;
+    } else if (subContainers && sigs) {
+        std::cerr << "Signatures (-s/--sigs) cannot be used with "
+            << "sub-containers (-c/--subcontainers).\n";
         broken = true;
     }
 

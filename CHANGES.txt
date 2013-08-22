@@ -231,6 +231,8 @@ Version 4.94  [ (under development) ]
         tricensus:
             - Now takes an optional argument -2/--dim2 to enumerate
               2-manifold triangulations.
+            - Now takes an optional argument -c/--subcontainers to store
+              triangulations in subcontainers according to face pairings.
     TEST SUITE:
         - Extended tests for NInteger and NLargeInteger to be very thorough.
         - Added thorough tests for barycentric subdivision.
