@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include <cstdlib>
+#include <cstring>
 #include <file/nxmlfile.h>
 #include <packet/npacket.h>
 
