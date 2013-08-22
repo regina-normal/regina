@@ -12,7 +12,7 @@
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: runscript.py [ import | noimport ]
-#                     [ <library> ... ]
+#                     [ [-q] <library> ... ]
 #                     [ -- <script> [ <script-arg> ... ]]
 #
 # Initialises the python environment for working with the Regina
@@ -56,6 +56,7 @@ except:
 libNames = []
 scriptName = None
 scriptArgs = []
+quiet = False
 
 if len(sys.argv) < 2:
     print 'ERROR: The import/noimport argument was missing.'
@@ -69,7 +70,9 @@ elif sys.argv[1] != 'noimport':
 
 libsDone = 0
 for i in sys.argv[2:]:
-    if libsDone:
+    if i == '-q':
+        quiet=True
+    elif libsDone:
         if scriptName == None:
             scriptName = i
         else:
@@ -83,7 +86,8 @@ for i in sys.argv[2:]:
 
 for i in libNames:
     try:
-        print 'Running ' + i + '...'
+        if not quiet:
+            print 'Running ' + i + '...'
         execfile(i)
     except SystemExit:
         pass
