@@ -68,6 +68,7 @@ void addNLargeInteger() {
         .def("isNative", &NLargeInteger::isNative)
         .def("isZero", &NLargeInteger::isZero)
         .def("isInfinite", &NLargeInteger::isInfinite)
+        .def("makeInfinite", &NLargeInteger::makeInfinite)
         .def("longValue", &NLargeInteger::longValue)
         .def("stringValue", &NLargeInteger::stringValue, OL_stringValue())
         .def("swap", &NLargeInteger::swap)

@@ -325,6 +325,14 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
         bool isInfinite() const;
 
         /**
+         * Sets this integer to be infinity.
+         *
+         * If the template parameter \a supportInfinity is \c false,
+         * this routine safely does nothing.
+         */
+        inline void makeInfinite();
+
+        /**
          * Returns the value of this integer as a long.
          *
          * If this integer is outside the range of a long, the result is
@@ -1290,21 +1298,12 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Sets this integer to be finite.
          * Its new value will be determined by the current contents of
-         * \a small_ and large_, which will not be touched.
+         * \a small_ which will not be touched.
          *
          * If the template parameter \a supportInfinity is \c false,
          * this routine safely does nothing.
          */
         inline void makeFinite();
-
-        /**
-         * Sets this integer to be infinite.
-         * Any existing data from \a large_ will be cleared and deallocated.
-         *
-         * If the template parameter \a supportInfinity is \c false,
-         * this routine safely does nothing.
-         */
-        inline void makeInfinite();
 
         /**
          * Converts this integer from a native C/C++ long representation
@@ -1534,6 +1533,17 @@ inline bool NIntegerBase<true>::isInfinite() const {
 template <>
 inline bool NIntegerBase<false>::isInfinite() const {
     return false;
+}
+
+template <>
+inline void NIntegerBase<true>::makeInfinite() {
+    infinite_ = true;
+    if (large_)
+        clearLarge();
+}
+
+template <>
+inline void NIntegerBase<false>::makeInfinite() {
 }
 
 template <bool supportInfinity>
@@ -2276,17 +2286,6 @@ inline void NIntegerBase<true>::makeFinite() {
 
 template <>
 inline void NIntegerBase<false>::makeFinite() {
-}
-
-template <>
-inline void NIntegerBase<true>::makeInfinite() {
-    infinite_ = true;
-    if (large_)
-        clearLarge();
-}
-
-template <>
-inline void NIntegerBase<false>::makeInfinite() {
 }
 
 // This definition must come *after* the definition of makeInfinite()
