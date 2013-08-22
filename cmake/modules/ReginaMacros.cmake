@@ -2,6 +2,12 @@
 #
 # Copyright (c) Ben Burton, 2012
 # Licensed under the GNU General Public License, version 2 or later
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
 
 
 # Macro: REGINA_CREATE_HANDBOOK(lang)
