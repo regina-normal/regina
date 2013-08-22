@@ -50,6 +50,7 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(constructAssignCopyNative<NLargeInteger>);
     CPPUNIT_TEST(constructAssignCopyString<NInteger>);
     CPPUNIT_TEST(constructAssignCopyString<NLargeInteger>);
+    CPPUNIT_TEST(constructAssignCopyInfinity);
     CPPUNIT_TEST(constructSpecial<NInteger>);
     CPPUNIT_TEST(constructSpecial<NLargeInteger>);
     CPPUNIT_TEST(comparisons<NInteger>);
@@ -732,39 +733,104 @@ class NIntegerTest : public CppUnit::TestFixture {
                 0, "-87112285931760246646623899502532662132736", -1);
         }
 
+        void testInfinity(const NLargeInteger& x, const char* name,
+                bool testCopy = true) {
+            if (x.isNative()) {
+                std::ostringstream msg;
+                msg << name << " is native.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! x.isInfinite()) {
+                std::ostringstream msg;
+                msg << name << " is reported as non-infinite.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (x.stringValue() != "inf") {
+                std::ostringstream msg;
+                msg << name << " != inf as a string.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            {
+                std::ostringstream out;
+                out << x;
+                if (out.str() != "inf") {
+                    std::ostringstream msg;
+                    msg << name << " != inf on an ostream.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            if (x.isZero()) {
+                std::ostringstream msg;
+                msg << name << " is zero.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (testCopy) {
+                // Test the copy constructor and copy assignment here
+                // also.
+                NLargeInteger y(x);
+                testInfinity(y, "Native copy", false);
+
+                NLargeInteger z(5);
+                if (! z.isNative())
+                    CPPUNIT_FAIL("Hard-coded 5 is not native.");
+                z = x;
+                testInfinity(z, "Native = from native", false);
+
+                NLargeInteger w(HUGE_INTEGER);
+                if (w.isNative())
+                    CPPUNIT_FAIL("Hard-coded HUGE_INTEGER is native.");
+                w = x;
+                testInfinity(w, "Native = from large", false);
+            }
+        }
+
+        void constructAssignCopyInfinity() {
+            testInfinity(NLargeInteger::infinity, "Static infinity");
+
+            NLargeInteger x(5);
+            if (! x.isNative())
+                CPPUNIT_FAIL("Hard-coded 5 is not native.");
+            x.makeInfinite();
+            testInfinity(x, "5.makeInfinite()");
+
+            NLargeInteger y(HUGE_INTEGER);
+            if (y.isNative())
+                CPPUNIT_FAIL("Hard-coded HUGE_INTEGER is not native.");
+            y.makeInfinite();
+            testInfinity(y, "HUGE_INTEGER.makeInfinite()");
+
+            NLargeInteger z(NLargeInteger::infinity);
+            if (! z.isInfinite())
+                CPPUNIT_FAIL("Hard-coded infinity is not infinite.");
+            z.makeInfinite();
+            testInfinity(z, "inf.makeInfinite()");
+        }
+
         template <typename IntType>
         void constructSpecial() {
             const Data<IntType>& d(data<IntType>());
 
             // Make sure that our "special case" data members look correct,
             // so we can use them with confidence throughout this class.
-            if (! (d.zero.isNative() && d.zero.longValue() == 0)) {
-                CPPUNIT_FAIL("Special case 0 is not initialised correctly.");
-            }
-            if (! (d.one.isNative() && d.one.longValue() == 1)) {
-                CPPUNIT_FAIL("Special case 1 is not initialised correctly.");
-            }
-            if (! (d.two.isNative() && d.two.longValue() == 2)) {
-                CPPUNIT_FAIL("Special case 2 is not initialised correctly.");
-            }
-            if (! (d.negOne.isNative() && d.negOne.longValue() == -1)) {
-                CPPUNIT_FAIL("Special case -1 is not initialised correctly.");
-            }
-            if (! (d.negTwo.isNative() && d.negTwo.longValue() == -2)) {
-                CPPUNIT_FAIL("Special case -2 is not initialised correctly.");
-            }
-            if (! (d.longMax.isNative() && d.longMax.longValue() == LONG_MAX &&
-                    d.longMax.longValue() > zeroL &&
-                    (d.longMax.longValue() + 1) < zeroL)) {
-                CPPUNIT_FAIL("Special case LONG_MAX is not "
-                    "initialised correctly.");
-            }
-            if (! (d.longMin.isNative() && d.longMin.longValue() == LONG_MIN &&
-                    d.longMin.longValue() < zeroL &&
-                    (d.longMin.longValue() - 1) > zeroL)) {
-                CPPUNIT_FAIL("Special case LONG_MIN is not "
-                    "initialised correctly.");
-            }
+            testNative(d.zero, "Special case 0", 0, 0);
+            testNative(d.one, "Special case 1", 1, 1);
+            testNative(d.two, "Special case 2", 2, 1);
+            testNative(d.negOne, "Special case -1", -1, -1);
+            testNative(d.negTwo, "Special case -2", -2, -1);
+            testNative(d.longMax, "Special case LONG_MAX", LONG_MAX, 1);
+            if ((d.longMax.longValue() + 1) >= zeroL)
+                CPPUNIT_FAIL("Special case LONG_MAX does not "
+                    "wrap around correctly.");
+            testNative(d.longMin, "Special case LONG_MIN", LONG_MIN, -1);
+            if ((d.longMin.longValue() - 1) <= zeroL)
+                CPPUNIT_FAIL("Special case LONG_MIN does not "
+                    "wrap around correctly.");
+            // TODO: Here.
             if (d.longMaxInc.isNative() || d.longMaxInc <= LONG_MAX ||
                     d.longMaxInc.stringValue() !=
                     (regina::NLargeInteger(LONG_MAX) + 1).stringValue()) {

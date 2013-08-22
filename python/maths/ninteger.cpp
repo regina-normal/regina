@@ -68,6 +68,7 @@ void addNInteger() {
         .def("isNative", &NInteger::isNative)
         .def("isZero", &NInteger::isZero)
         .def("isInfinite", &NInteger::isInfinite)
+        .def("makeInfinite", &NInteger::makeInfinite)
         .def("longValue", &NInteger::longValue)
         .def("stringValue", &NInteger::stringValue, OL_stringValue())
         .def("swap", &NInteger::swap)
