@@ -137,6 +137,8 @@ Version 4.94  [ (under development) ]
         Header nlargeinteger.h:
             - Deprecated in favour of the new ninteger.h.
     UTILITIES:
+        regina-python:
+            - The --quiet option no longer lists libraries as they are loaded.
         tricensus:
             - Now takes an optional argument -2/--dim2 to enumerate
               2-manifold triangulations.
