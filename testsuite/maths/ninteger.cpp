@@ -37,8 +37,6 @@
 #include "maths/ninteger.h"
 #include "testsuite/utilities/testutilities.h"
 
-// TODO: Test comparisons (lazy && long)
-// TODO: Test ++, -- (both versions)
 // TODO: Test +, -, * (all lazy && long)
 // TODO: Review down to operator /.
 
@@ -54,6 +52,7 @@ using regina::NIntegerBase;
 using regina::NInteger;
 using regina::NLargeInteger;
 
+#define ENORMOUS_INTEGER "115792089237316195423570985008687907853269984665640564039457584007913129639936"
 #define HUGE_INTEGER "12364981726394781629378461923786491874569283746672"
 
 class NIntegerTest : public CppUnit::TestFixture {
@@ -86,32 +85,19 @@ class NIntegerTest : public CppUnit::TestFixture {
     private:
         template <typename IntType>
         struct Data {
-            IntType smallPosSeries[6];
-                /**< A sequence of positive integers that fit into a long. */
-            IntType smallNegSeries[6];
-                /**< A sequence of negative integers that fit into a long. */
-            IntType largePosSeries[6];
-                /**< A sequence of positive integers too large for a long. */
-            IntType largeNegSeries[6];
-                /**< A sequence of negative integers too large for a long. */
+            static const IntType cases[];
+                /**< An increasing sequence of arbitrary precision integers.
+                     These are defined at the bottom of this file (since
+                     static arrays must be defined out of line). */
+            static const unsigned nCases;
+                /**< The length of the sequence \a cases. */
 
-            static const unsigned nSeries = 4;
-                /**< The number of sequences described above. */
-            static const unsigned seriesLen = 6;
-                /**< The number of integers in each of the above sequences. */
-            IntType* series[4];
-                /**< A list of the individual large integer sequences. */
-            std::string seriesName[4];
-                /**< The names of the individual large integer sequences. */
-
-            static const unsigned nSmallSeries = 2;
-                /**< The number of sequences above that fit into longs. */
-            long smallPosSeriesVal[6];
-                /**< The long values found in the smallPosSeries sequence. */
-            long smallNegSeriesVal[6];
-                /**< The long values found in the smallNegSeries sequence. */
-            long* smallSeriesVal[2];
-                /**< A list of the long value arrays defined above. */
+            static const long longCases[];
+                /**< An increasing sequence of long integers.
+                     These are defined at the bottom of this file (since
+                     static arrays must be defined out of line). */
+            static const long nLongCases;
+                /**< The length of the sesquence \a longCases. */
 
             IntType zero;
                 /**< Special case (native): 0 */
@@ -139,56 +125,6 @@ class NIntegerTest : public CppUnit::TestFixture {
                 /**< Special case (large): a huge negative integer */
 
             void setUp() {
-                smallPosSeries[0] = 1000;
-                smallPosSeries[1] = 2000;
-                smallPosSeries[2] = 3000;
-                smallPosSeries[3] = 4000;
-                smallPosSeries[4] = 6000;
-                smallPosSeries[5] = 6000000;
-                smallNegSeries[0] = -1000;
-                smallNegSeries[1] = -2000;
-                smallNegSeries[2] = -3000;
-                smallNegSeries[3] = -4000;
-                smallNegSeries[4] = -6000;
-                smallNegSeries[5] = -6000000;
-                largePosSeries[0] = "1000000000000000"; // 10^15
-                largePosSeries[1] = "2000000000000000"; // 2*10^15
-                largePosSeries[2] = "3000000000000000"; // 3*10^15
-                largePosSeries[3] = "4000000000000000"; // 4*10^15
-                largePosSeries[4] = "6000000000000000"; // 6*10^15
-                largePosSeries[5] = "6000000000000000000000000000000";// 6*10^30
-                largeNegSeries[0] = "-1000000000000000"; // 10^15
-                largeNegSeries[1] = "-2000000000000000"; // 2*10^15
-                largeNegSeries[2] = "-3000000000000000"; // 3*10^15
-                largeNegSeries[3] = "-4000000000000000"; // 4*10^15
-                largeNegSeries[4] = "-6000000000000000"; // 6*10^15
-                largeNegSeries[5] = "-6000000000000000000000000000000";//6*10^30
-
-                series[0] = smallPosSeries;
-                series[1] = smallNegSeries;
-                series[2] = largePosSeries;
-                series[3] = largeNegSeries;
-                seriesName[0] = "smallPosSeries";
-                seriesName[1] = "smallNegSeries";
-                seriesName[2] = "largePosSeries";
-                seriesName[3] = "largeNegSeries";
-
-                smallPosSeriesVal[0] = 1000;
-                smallPosSeriesVal[1] = 2000;
-                smallPosSeriesVal[2] = 3000;
-                smallPosSeriesVal[3] = 4000;
-                smallPosSeriesVal[4] = 6000;
-                smallPosSeriesVal[5] = 6000000;
-                smallNegSeriesVal[0] = -1000;
-                smallNegSeriesVal[1] = -2000;
-                smallNegSeriesVal[2] = -3000;
-                smallNegSeriesVal[3] = -4000;
-                smallNegSeriesVal[4] = -6000;
-                smallNegSeriesVal[5] = -6000000;
-
-                smallSeriesVal[0] = smallPosSeriesVal;
-                smallSeriesVal[1] = smallNegSeriesVal;
-
                 zero = 0;
                 one = 1;
                 two = 2;
@@ -1043,277 +979,210 @@ class NIntegerTest : public CppUnit::TestFixture {
 
         template <typename IntType>
         void shouldBeLess(const IntType& a, const IntType& b,
-                const std::string& aName, const std::string& bName,
                 bool reorder = true) {
             std::string msgBase = "Integer ";
-            msgBase = msgBase + aName + " is ";
+            msgBase = msgBase + a.stringValue() + " is ";
 
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + b.stringValue() + ".",
                 ! (a == b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + b.stringValue() + ".",
                 a != b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not < " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not < " + b.stringValue() + ".",
                 a < b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + b.stringValue() + ".",
                 a <= b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + b.stringValue() + ".",
                 ! (a > b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + ">= " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + ">= " + b.stringValue() + ".",
                 ! (a >= b));
 
             if (reorder)
-                shouldBeGreater(b, a, bName, aName, false);
+                shouldBeGreater(b, a, false);
         }
 
         template <typename IntType>
         void shouldBeEqual(const IntType& a, const IntType& b,
-                const std::string& aName, const std::string& bName,
                 bool reorder = true) {
             std::string msgBase = "Integer ";
-            msgBase = msgBase + aName + " is ";
+            msgBase = msgBase + a.stringValue() + " is ";
 
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not == " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not == " + b.stringValue() + ".",
                 a == b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "!= " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "!= " + b.stringValue() + ".",
                 ! (a != b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + b.stringValue() + ".",
                 ! (a < b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + b.stringValue() + ".",
                 a <= b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + b.stringValue() + ".",
                 ! (a > b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + b.stringValue() + ".",
                 a >= b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not str== " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not str== " +
+                b.stringValue() + " (long).",
                 a.stringValue() == b.stringValue());
 
             if (reorder)
-                shouldBeEqual(b, a, bName, aName, false);
+                shouldBeEqual(b, a, false);
         }
 
         template <typename IntType>
         void shouldBeGreater(const IntType& a, const IntType& b,
-                const std::string& aName, const std::string& bName,
                 bool reorder = true) {
             std::string msgBase = "Integer ";
-            msgBase = msgBase + aName + " is ";
+            msgBase = msgBase + a.stringValue() + " is ";
 
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + b.stringValue() + ".",
                 ! (a == b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + b.stringValue() + ".",
                 a != b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + b.stringValue() + ".",
                 ! (a < b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "<= " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "<= " + b.stringValue() + ".",
                 ! (a <= b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not > " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not > " + b.stringValue() + ".",
                 a > b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + bName + ".",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + b.stringValue() + ".",
                 a >= b);
 
             if (reorder)
-                shouldBeLess(b, a, bName, aName, false);
+                shouldBeLess(b, a, false);
         }
 
         template <typename IntType>
-        void shouldBeLess(const IntType& a, long b,
-                const std::string& aName, const std::string& bName) {
+        void shouldBeLess(const IntType& a, long b) {
             std::string msgBase = "Integer ";
-            msgBase = msgBase + aName + " is ";
+            msgBase = msgBase + a.stringValue() + " is ";
 
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + str(b) + " (long).",
                 ! (a == b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + str(b) + " (long).",
                 a != b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not < " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not < " + str(b) + " (long).",
                 a < b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + str(b) + " (long).",
                 a <= b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + str(b) + " (long).",
                 ! (a > b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + ">= " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + ">= " + str(b) + " (long).",
                 ! (a >= b));
         }
 
         template <typename IntType>
-        void shouldBeEqual(const IntType& a, long b,
-                const std::string& aName, const std::string& bName) {
+        void shouldBeEqual(const IntType& a, long b) {
             std::string msgBase = "Integer ";
-            msgBase = msgBase + aName + " is ";
+            msgBase = msgBase + a.stringValue() + " is ";
 
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not == " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not == " + str(b) + " (long).",
                 a == b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "!= " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "!= " + str(b) + " (long).",
                 ! (a != b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + str(b) + " (long).",
                 ! (a < b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + str(b) + " (long).",
                 a <= b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + str(b) + " (long).",
                 ! (a > b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + str(b) + " (long).",
                 a >= b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not str== " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not str== " + str(b) + " (long).",
                 a.stringValue() == str(b));
         }
 
         template <typename IntType>
-        void shouldBeGreater(const IntType& a, long b,
-                const std::string& aName, const std::string& bName) {
+        void shouldBeGreater(const IntType& a, long b) {
             std::string msgBase = "Integer ";
-            msgBase = msgBase + aName + " is ";
+            msgBase = msgBase + a.stringValue() + " is ";
 
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + str(b) + " (long).",
                 ! (a == b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + str(b) + " (long).",
                 a != b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + str(b) + " (long).",
                 ! (a < b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "<= " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "<= " + str(b) + " (long).",
                 ! (a <= b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not > " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not > " + str(b) + " (long).",
                 a > b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + bName + " (long).",
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + str(b) + " (long).",
                 a >= b);
         }
 
         template <typename IntType>
         void comparisons() {
-            unsigned a, b, i, j;
+            unsigned a, b;
 
             const IntType& zero(IntType::zero);
             const IntType& one(IntType::one);
             const Data<IntType>& d(data<IntType>());
 
-            shouldBeLess(zero, one, "zero", "one");
-            shouldBeLess(zero, 1L, "zero", "one");
-            shouldBeGreater(one, zero, "one", "zero");
-            shouldBeGreater(one, 0L, "one", "zero");
-            shouldBeEqual(zero, zero, "zero", "zero");
-            shouldBeEqual(zero, 0L, "zero", "zero");
-            shouldBeEqual(one, one, "one", "one");
-            shouldBeEqual(one, 1L, "one", "one");
+            shouldBeLess(zero, 1L);
+            shouldBeEqual(zero, 0L);
+            shouldBeGreater(zero, -1L);
+            shouldBeLess(one, 2L);
+            shouldBeEqual(one, 1L);
+            shouldBeGreater(one, 0L);
+            shouldBeGreater(one, -1L);
+            shouldBeLess(zero, one);
+            shouldBeEqual(zero, zero);
+            shouldBeEqual(one, one);
 
-            // Compare the elements of the series with zero and one.
-            for (a = 0; a < d.nSeries; a++)
-                for (i = 0; i < d.seriesLen; i++) {
-                    if (a == 0 || a == 2) {
-                        // Positive series.
-                        shouldBeGreater(d.series[a][i], zero,
-                            eltName<IntType>(a, i), "zero");
-                        shouldBeGreater(d.series[a][i], 0L,
-                            eltName<IntType>(a, i), "zero");
-                        shouldBeGreater(d.series[a][i], one,
-                            eltName<IntType>(a, i), "one");
-                        shouldBeGreater(d.series[a][i], 1L,
-                            eltName<IntType>(a, i), "one");
-                        shouldBeLess(zero, d.series[a][i],
-                            "zero", eltName<IntType>(a, i));
-                        shouldBeLess(one, d.series[a][i],
-                            "one", eltName<IntType>(a, i));
-                    } else {
-                        // Negative series.
-                        shouldBeLess(d.series[a][i], zero,
-                            eltName<IntType>(a, i), "zero");
-                        shouldBeLess(d.series[a][i], 0L,
-                            eltName<IntType>(a, i), "zero");
-                        shouldBeLess(d.series[a][i], one,
-                            eltName<IntType>(a, i), "one");
-                        shouldBeLess(d.series[a][i], 1L,
-                            eltName<IntType>(a, i), "one");
-                        shouldBeGreater(zero, d.series[a][i],
-                            "zero", eltName<IntType>(a, i));
-                        shouldBeGreater(one, d.series[a][i],
-                            "one", eltName<IntType>(a, i));
+            for (a = 0; a < d.nCases; ++a) {
+                IntType x(d.cases[a]);
+                shouldBeEqual(x, x);
+                IntType y(d.cases[a]);
+                shouldBeEqual(x, y);
+                if (x.isNative())
+                    shouldBeEqual(x, x.longValue());
+            }
+
+            for (a = 0; a < d.nCases; ++a)
+                for (b = a + 1; b < d.nCases; ++b) {
+                    IntType x(d.cases[a]);
+                    IntType y(d.cases[b]);
+                    shouldBeLess(x, y);
+                    if (x.isNative())
+                        shouldBeGreater(y, x.longValue());
+                    if (y.isNative())
+                        shouldBeLess(x, y.longValue());
+                    if (x.isNative() && y.isNative() &&
+                            x.longValue() >= y.longValue()) {
+                        std::ostringstream msg;
+                        msg << "Long values for cases #" << a
+                            << " and #" << b << " are not properly ordered.";
+                        CPPUNIT_FAIL(msg.str());
                     }
                 }
 
-            // Compare all elements of all series in pairs.
-            int expected;
-            for (a = 0; a < d.nSeries; a++)
-                for (b = 0; b < d.nSeries; b++)
-                    for (i = 0; i < d.seriesLen; i++)
-                        for (j = 0; j < d.seriesLen; j++) {
-                            // What should the result of the comparison be?
-                            if (a == b && i == j)
-                                expected = 0;
-                            else if (a % 2 == 0 && b % 2 == 1)
-                                expected = 1;
-                            else if (a % 2 == 1 && b % 2 == 0)
-                                expected = -1;
-                            else if (a % 2 == 0) {
-                                // a and b both positive series.
-                                if (a < b)
-                                    expected = -1;
-                                else if (a > b)
-                                    expected = 1;
-                                else if (i < j)
-                                    expected = -1;
-                                else
-                                    expected = 1;
-                            } else {
-                                // a and b both negative series.
-                                if (a < b)
-                                    expected = 1;
-                                else if (a > b)
-                                    expected = -1;
-                                else if (i < j)
-                                    expected = 1;
-                                else
-                                    expected = -1;
-                            }
+            for (a = 0; a < d.nLongCases; ++a) {
+                IntType x(d.longCases[a]);
+                shouldBeEqual(x, d.longCases[a]);
+                x.makeLarge();
+                shouldBeEqual(x, d.longCases[a]);
+            }
 
-                            // Compare the elements of the series directly.
-                            if (expected < 0) {
-                                shouldBeLess(d.series[a][i], d.series[b][j],
-                                    eltName<IntType>(a, i),
-                                    eltName<IntType>(b, j));
-                            } else if (expected > 0) {
-                                shouldBeGreater(d.series[a][i], d.series[b][j],
-                                    eltName<IntType>(a, i),
-                                    eltName<IntType>(b, j));
-                            } else {
-                                shouldBeEqual(d.series[a][i], d.series[b][j],
-                                    eltName<IntType>(a, i),
-                                    eltName<IntType>(b, j));
-                            }
+            for (a = 0; a < d.nLongCases; ++a)
+                for (b = a + 1; b < d.nLongCases; ++b) {
+                    IntType x(d.longCases[a]);
+                    shouldBeLess(x, d.longCases[b]);
+                    x.makeLarge();
+                    shouldBeLess(x, d.longCases[b]);
 
-                            // Compare with expected long values as
-                            // well, if we have them.
-                            if (b < d.nSmallSeries) {
-                                if (expected < 0) {
-                                    shouldBeLess(d.series[a][i],
-                                        d.smallSeriesVal[b][j],
-                                        eltName<IntType>(a, i),
-                                        eltName<IntType>(b, j));
-                                } else if (expected > 0) {
-                                    shouldBeGreater(d.series[a][i],
-                                        d.smallSeriesVal[b][j],
-                                        eltName<IntType>(a, i),
-                                        eltName<IntType>(b, j));
-                                } else {
-                                    shouldBeEqual(d.series[a][i],
-                                        d.smallSeriesVal[b][j],
-                                        eltName<IntType>(a, i),
-                                        eltName<IntType>(b, j));
-                                }
-                            }
-                        }
+                    IntType y(d.longCases[b]);
+                    shouldBeGreater(y, d.longCases[a]);
+                    y.makeLarge();
+                    shouldBeGreater(y, d.longCases[a]);
+                }
 
             // Tests for infinity are hard-coded to NLargeInteger.
             const NLargeInteger& infinity(NLargeInteger::infinity);
 
-            shouldBeGreater(infinity, NLargeInteger::one, "infinity", "one");
-            shouldBeGreater(infinity, 1L, "infinity", "one");
-            shouldBeGreater(infinity, NLargeInteger::zero, "infinity", "zero");
-            shouldBeGreater(infinity, 0L, "infinity", "zero");
-            shouldBeEqual(infinity, NLargeInteger::infinity,
-                "infinity", "infinity");
+            for (a = 0; a < dataL.nCases; a++)
+                shouldBeGreater(infinity, dataL.cases[a]);
+            for (a = 0; a < dataL.nLongCases; a++)
+                shouldBeGreater(infinity, dataL.longCases[a]);
 
-            for (a = 0; a < dataL.nSeries; a++)
-                for (i = 0; i < dataL.seriesLen; i++)
-                    shouldBeGreater(infinity, dataL.series[a][i],
-                        "infinity", eltName<NLargeInteger>(a, i));
+            shouldBeEqual(infinity, NLargeInteger::infinity);
         }
 
         template <typename IntType>
@@ -1359,9 +1228,8 @@ class NIntegerTest : public CppUnit::TestFixture {
             testIncDec(d.hugePos);
             testIncDec(d.hugeNeg);
 
-            for (int a = 0; a < d.nSeries; a++)
-                for (int i = 0; i < d.seriesLen; i++)
-                    testIncDec(d.series[a][i]);
+            for (int a = 0; a < d.nCases; a++)
+                testIncDec(d.cases[a]);
 
             // Tests for infinity are hard-coded to NLargeInteger.
             {
@@ -1467,6 +1335,41 @@ class NIntegerTest : public CppUnit::TestFixture {
                 IntType::zero.lcm(IntType::zero) == 0);
         }
 };
+
+// Out-of-line definitions of static arrays.
+
+template <typename IntType>
+const IntType NIntegerTest::Data<IntType>::cases[] = {
+    // Too low for a native long:
+    "-"ENORMOUS_INTEGER,
+    "-"HUGE_INTEGER,
+    -IntType(static_cast<unsigned long>(ULONG_MAX)),
+    -IntType(static_cast<unsigned long>(LONG_MAX + 2)),
+    // Fit into a native long:
+    LONG_MIN, -LONG_MAX, -32768, -5000, -1000, -3, -2, -1,
+    0,
+    1, 2, 3, 1000, 5000, 32768, LONG_MAX-1, LONG_MAX,
+    // Too large for a native long:
+    static_cast<unsigned long>(LONG_MAX + 1),
+    static_cast<unsigned long>(ULONG_MAX),
+    HUGE_INTEGER,
+    ENORMOUS_INTEGER
+};
+
+template <typename IntType>
+const unsigned NIntegerTest::Data<IntType>::nCases = 25;
+
+template <typename IntType>
+const long NIntegerTest::Data<IntType>::longCases[] = {
+    LONG_MIN, -LONG_MAX, -32768, -5000, -1000, -3, -2, -1,
+    0,
+    1, 2, 3, 1000, 5000, 32768, LONG_MAX-1, LONG_MAX
+};
+
+template <typename IntType>
+const long NIntegerTest::Data<IntType>::nLongCases = 17;
+
+// Boilerplate stuff.
 
 void addNInteger(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(NIntegerTest::suite());
