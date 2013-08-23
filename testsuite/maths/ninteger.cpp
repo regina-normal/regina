@@ -37,12 +37,12 @@
 #include "maths/ninteger.h"
 #include "testsuite/utilities/testutilities.h"
 
-// TODO: Test stringValue() with various bases.
-// TODO: Review down to operator /.
-
 // TODO: Test comparisons (lazy && long)
 // TODO: Test ++, -- (both versions)
-// TODO: Test +, -, *, /, divExact, % (all lazy && long); unary -
+// TODO: Test +, -, * (all lazy && long)
+// TODO: Review down to operator /.
+
+// TODO: Test /, divExact, % (all lazy && long); unary -
 // TODO: Test rounding direction for all variants of division
 // TODO: Test divisionAlg
 // TODO: Test +=, -=, *=, /=, divByExact, %= (lazy && long); negate
@@ -66,15 +66,14 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(constructAssignCopyInfinity);
     CPPUNIT_TEST(constructSpecial<NInteger>);
     CPPUNIT_TEST(constructSpecial<NLargeInteger>);
+    CPPUNIT_TEST(stringValue<NInteger>);
+    CPPUNIT_TEST(stringValue<NLargeInteger>);
     CPPUNIT_TEST(swap<NInteger>);
     CPPUNIT_TEST(swap<NLargeInteger>);
-    CPPUNIT_TEST(swapInfinity);
     CPPUNIT_TEST(comparisons<NInteger>);
     CPPUNIT_TEST(comparisons<NLargeInteger>);
-    CPPUNIT_TEST(comparisonsInfinity);
     CPPUNIT_TEST(incDec<NInteger>);
     CPPUNIT_TEST(incDec<NLargeInteger>);
-    CPPUNIT_TEST(incDecInfinity);
     CPPUNIT_TEST(divisionAlg<NInteger>);
     CPPUNIT_TEST(divisionAlg<NLargeInteger>);
     CPPUNIT_TEST(gcd<NInteger>);
@@ -883,6 +882,74 @@ class NIntegerTest : public CppUnit::TestFixture {
         }
 
         template <typename IntType>
+        void testStringValue(const IntType& x, int base, const char* value) {
+            std::string ans = x.stringValue(base);
+            if (ans != value) {
+                std::ostringstream msg;
+                msg << "Conversion of " << x << " to base " << base
+                    << " is " << ans << ", not " << value << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        template <typename IntType>
+        void stringValue() {
+            // We've already tested stringValue() heavily with the
+            // default base of 10.  Here we test other bases.
+
+            testStringValue(IntType(0), 2, "0");
+            testStringValue(IntType(0), 3, "0");
+            testStringValue(IntType(0), 21, "0");
+            testStringValue(IntType(0), 22, "0");
+            testStringValue(IntType(0), 36, "0");
+            testStringValue(IntType(42), 2, "101010");
+            testStringValue(IntType(42), 3, "1120");
+            testStringValue(IntType(42), 21, "20");
+            testStringValue(IntType(42), 22, "1k");
+            testStringValue(IntType(42), 36, "16");
+            testStringValue(IntType(71), 36, "1z");
+            testStringValue(IntType(-42), 2, "-101010");
+            testStringValue(IntType(-42), 3, "-1120");
+            testStringValue(IntType(-42), 21, "-20");
+            testStringValue(IntType(-42), 22, "-1k");
+            testStringValue(IntType(-42), 36, "-16");
+            testStringValue(IntType(-71), 36, "-1z");
+
+            // In the following tests, the hard-coded integer is 2^130.
+            IntType pos("1361129467683753853853498429727072845824");
+            IntType neg("-1361129467683753853853498429727072845824");
+            testStringValue(pos, 2,
+                "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+            testStringValue(pos, 4,
+                "100000000000000000000000000000000000000000000000000000000000000000");
+            testStringValue(pos, 16,
+                "400000000000000000000000000000000");
+            testStringValue(pos, 32,
+                "100000000000000000000000000");
+            testStringValue(pos, 36,
+                "1omfro7zwmumr3umxudzyj6scg");
+            testStringValue(neg, 2,
+                "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+            testStringValue(neg, 4,
+                "-100000000000000000000000000000000000000000000000000000000000000000");
+            testStringValue(neg, 16,
+                "-400000000000000000000000000000000");
+            testStringValue(neg, 32,
+                "-100000000000000000000000000");
+            testStringValue(neg, 36,
+                "-1omfro7zwmumr3umxudzyj6scg");
+
+            // Test infinity (which must be hard-coded to NLargeInteger).
+            for (int i = 2; i <= 36; ++i)
+                if (NLargeInteger::infinity.stringValue(i) != "inf") {
+                    std::ostringstream msg;
+                    msg << "Conversion of infinity to base " << i
+                        << " is not \"inf\".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+        }
+
+        template <typename IntType>
         void swap() {
             {
                 IntType a(3);
@@ -925,57 +992,59 @@ class NIntegerTest : public CppUnit::TestFixture {
 
                 testLarge(e, "HUGE", HUGE_INTEGER, 1);
             }
-        }
 
-        void swapInfinity() {
-            NLargeInteger a(3);
-            NLargeInteger b(LONG_MIN);
-            NLargeInteger c(sLongMaxInc);
-            NLargeInteger d(HUGE_INTEGER);
-            NLargeInteger i(NLargeInteger::infinity);
-            NLargeInteger j;
-            j.makeInfinite();
+            // Tests for infinity are hard-coded to NLargeInteger.
+            {
+                NLargeInteger a(3);
+                NLargeInteger b(LONG_MIN);
+                NLargeInteger c(sLongMaxInc);
+                NLargeInteger d(HUGE_INTEGER);
+                NLargeInteger i(NLargeInteger::infinity);
+                NLargeInteger j;
+                j.makeInfinite();
 
-            testNative(a, "3", 3, 1);
-            testNative(b, "LONG_MIN", LONG_MIN, -1);
-            testLarge(c, "LONG_MAX+1", sLongMaxInc, 1);
-            testLarge(d, "HUGE", HUGE_INTEGER, 1);
-            testInfinity(i, "infinity");
-            testInfinity(j, "infinity");
+                testNative(a, "3", 3, 1);
+                testNative(b, "LONG_MIN", LONG_MIN, -1);
+                testLarge(c, "LONG_MAX+1", sLongMaxInc, 1);
+                testLarge(d, "HUGE", HUGE_INTEGER, 1);
+                testInfinity(i, "infinity");
+                testInfinity(j, "infinity");
 
-            std::swap(a, i); // native <-> infinity
+                std::swap(a, i); // native <-> infinity
 
-            testInfinity(a, "infinity");
-            testNative(i, "3", 3, 1);
+                testInfinity(a, "infinity");
+                testNative(i, "3", 3, 1);
 
-            std::swap(c, a); // long <-> infinity
+                std::swap(c, a); // long <-> infinity
 
-            testLarge(a, "LONG_MAX+1", sLongMaxInc, 1);
-            testInfinity(c, "infinity");
+                testLarge(a, "LONG_MAX+1", sLongMaxInc, 1);
+                testInfinity(c, "infinity");
 
-            std::swap(c, d); // infinity <-> long
+                std::swap(c, d); // infinity <-> long
 
-            testLarge(c, "HUGE", HUGE_INTEGER, 1);
-            testInfinity(d, "infinity");
+                testLarge(c, "HUGE", HUGE_INTEGER, 1);
+                testInfinity(d, "infinity");
 
-            std::swap(d, b); // infinity <-> native
+                std::swap(d, b); // infinity <-> native
 
-            testInfinity(b, "infinity");
-            testNative(d, "LONG_MIN", LONG_MIN, -1);
+                testInfinity(b, "infinity");
+                testNative(d, "LONG_MIN", LONG_MIN, -1);
 
-            std::swap(b, j); // infinity <-> infinity
+                std::swap(b, j); // infinity <-> infinity
 
-            testInfinity(b, "infinity");
-            testInfinity(j, "infinity");
+                testInfinity(b, "infinity");
+                testInfinity(j, "infinity");
 
-            std::swap(b, b); // infinity <-> self
+                std::swap(b, b); // infinity <-> self
 
-            testInfinity(b, "infinity");
+                testInfinity(b, "infinity");
+            }
         }
 
         template <typename IntType>
         void shouldBeLess(const IntType& a, const IntType& b,
-                const std::string& aName, const std::string& bName) {
+                const std::string& aName, const std::string& bName,
+                bool reorder = true) {
             std::string msgBase = "Integer ";
             msgBase = msgBase + aName + " is ";
 
@@ -991,11 +1060,15 @@ class NIntegerTest : public CppUnit::TestFixture {
                 ! (a > b));
             CPPUNIT_ASSERT_MESSAGE(msgBase + ">= " + bName + ".",
                 ! (a >= b));
+
+            if (reorder)
+                shouldBeGreater(b, a, bName, aName, false);
         }
 
         template <typename IntType>
         void shouldBeEqual(const IntType& a, const IntType& b,
-                const std::string& aName, const std::string& bName) {
+                const std::string& aName, const std::string& bName,
+                bool reorder = true) {
             std::string msgBase = "Integer ";
             msgBase = msgBase + aName + " is ";
 
@@ -1013,11 +1086,15 @@ class NIntegerTest : public CppUnit::TestFixture {
                 a >= b);
             CPPUNIT_ASSERT_MESSAGE(msgBase + "not str== " + bName + " (long).",
                 a.stringValue() == b.stringValue());
+
+            if (reorder)
+                shouldBeEqual(b, a, bName, aName, false);
         }
 
         template <typename IntType>
         void shouldBeGreater(const IntType& a, const IntType& b,
-                const std::string& aName, const std::string& bName) {
+                const std::string& aName, const std::string& bName,
+                bool reorder = true) {
             std::string msgBase = "Integer ";
             msgBase = msgBase + aName + " is ";
 
@@ -1033,6 +1110,9 @@ class NIntegerTest : public CppUnit::TestFixture {
                 a > b);
             CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + bName + ".",
                 a >= b);
+
+            if (reorder)
+                shouldBeLess(b, a, bName, aName, false);
         }
 
         template <typename IntType>
@@ -1095,27 +1175,6 @@ class NIntegerTest : public CppUnit::TestFixture {
                 a > b);
             CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + bName + " (long).",
                 a >= b);
-        }
-
-        void comparisonsInfinity() {
-            const NLargeInteger& infinity(NLargeInteger::infinity);
-
-            shouldBeLess(NLargeInteger::one, infinity, "one", "infinity");
-            shouldBeLess(NLargeInteger::zero, infinity, "zero", "infinity");
-            shouldBeGreater(infinity, NLargeInteger::one, "infinity", "one");
-            shouldBeGreater(infinity, 1L, "infinity", "one");
-            shouldBeGreater(infinity, NLargeInteger::zero, "infinity", "zero");
-            shouldBeGreater(infinity, 0L, "infinity", "zero");
-            shouldBeEqual(infinity, infinity, "infinity", "infinity");
-
-            unsigned a, i;
-            for (a = 0; a < dataL.nSeries; a++)
-                for (i = 0; i < dataL.seriesLen; i++) {
-                    shouldBeLess(dataL.series[a][i], infinity,
-                        eltName<NLargeInteger>(a, i), "infinity");
-                    shouldBeGreater(infinity, dataL.series[a][i],
-                        "infinity", eltName<NLargeInteger>(a, i));
-                }
         }
 
         template <typename IntType>
@@ -1240,6 +1299,21 @@ class NIntegerTest : public CppUnit::TestFixture {
                                 }
                             }
                         }
+
+            // Tests for infinity are hard-coded to NLargeInteger.
+            const NLargeInteger& infinity(NLargeInteger::infinity);
+
+            shouldBeGreater(infinity, NLargeInteger::one, "infinity", "one");
+            shouldBeGreater(infinity, 1L, "infinity", "one");
+            shouldBeGreater(infinity, NLargeInteger::zero, "infinity", "zero");
+            shouldBeGreater(infinity, 0L, "infinity", "zero");
+            shouldBeEqual(infinity, NLargeInteger::infinity,
+                "infinity", "infinity");
+
+            for (a = 0; a < dataL.nSeries; a++)
+                for (i = 0; i < dataL.seriesLen; i++)
+                    shouldBeGreater(infinity, dataL.series[a][i],
+                        "infinity", eltName<NLargeInteger>(a, i));
         }
 
         template <typename IntType>
@@ -1288,9 +1362,8 @@ class NIntegerTest : public CppUnit::TestFixture {
             for (int a = 0; a < d.nSeries; a++)
                 for (int i = 0; i < d.seriesLen; i++)
                     testIncDec(d.series[a][i]);
-        }
 
-        void incDecInfinity() {
+            // Tests for infinity are hard-coded to NLargeInteger.
             {
                 NLargeInteger i(NLargeInteger::infinity);
                 if (++i != NLargeInteger::infinity)
