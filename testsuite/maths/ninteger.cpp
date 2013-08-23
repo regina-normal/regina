@@ -37,6 +37,19 @@
 #include "maths/ninteger.h"
 #include "testsuite/utilities/testutilities.h"
 
+// TODO: Test stringValue() with various bases.
+// TODO: Review down to operator /.
+
+// TODO: Test comparisons (lazy && long)
+// TODO: Test ++, -- (both versions)
+// TODO: Test +, -, *, /, divExact, % (all lazy && long); unary -
+// TODO: Test rounding direction for all variants of division
+// TODO: Test divisionAlg
+// TODO: Test +=, -=, *=, /=, divByExact, %= (lazy && long); negate
+// TODO: Test raiseToPower, abs, gcd, lcm, gcdWithCoeffs
+// TODO: Test legendre, random functions
+// TODO: Test setRaw, rawData, tryReduce, makeLarge.
+
 using regina::NIntegerBase;
 using regina::NInteger;
 using regina::NLargeInteger;
@@ -53,6 +66,9 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(constructAssignCopyInfinity);
     CPPUNIT_TEST(constructSpecial<NInteger>);
     CPPUNIT_TEST(constructSpecial<NLargeInteger>);
+    CPPUNIT_TEST(swap<NInteger>);
+    CPPUNIT_TEST(swap<NLargeInteger>);
+    CPPUNIT_TEST(swapInfinity);
     CPPUNIT_TEST(comparisons<NInteger>);
     CPPUNIT_TEST(comparisons<NLargeInteger>);
     CPPUNIT_TEST(comparisonsInfinity);
@@ -197,20 +213,16 @@ class NIntegerTest : public CppUnit::TestFixture {
             /** We need this so we can test things like (LONG_MAX + 1 < 0)
                 without compiler optimisations breaking the results. */
 
+        std::string sLongMax;
+        std::string sLongMaxInc;
+        std::string sLongMin;
+        std::string sLongMinDec;
+        std::string sULongMax;
+
         template <typename IntType>
         Data<IntType>& data();
 
     public:
-        void setUp() {
-            dataL.setUp();
-            dataI.setUp();
-
-            zeroL = 0;
-        }
-
-        void tearDown() {
-        }
-
         template <typename T>
         std::string str(T x) {
             std::ostringstream ans;
@@ -218,20 +230,34 @@ class NIntegerTest : public CppUnit::TestFixture {
             return ans.str();
         }
 
-        // TODO: Lock down constructSpecial().
-        // TODO: Test stringValue() with various bases.
-        // TODO: Review down to operator =.
+        /**
+         * Convert the string for a positive integer n into the string
+         * for (n+1), or convert the string for a negative integer -n
+         * into the string for -(n+1).
+         *
+         * PRE: The last digit of s is not 9.
+         */
+        std::string incStrSimple(const std::string& s) {
+            std::string ans = s;
+            ans[ans.length() - 1]++;
+            return ans;
+        }
 
-        // TODO: Test swap()
-        // TODO: Test comparisons (lazy && long)
-        // TODO: Test ++, -- (both versions)
-        // TODO: Test +, -, *, /, divExact, % (lazy && long); unary -
-        // TODO: Test rounding direction for all variants of division
-        // TODO: Test divisionAlg
-        // TODO: Test +=, -=, *=, /=, divByExact, %= (lazy && long); negate
-        // TODO: Test raiseToPower, abs, gcd, lcm, gcdWithCoeffs
-        // TODO: Test legendre, random functions
-        // TODO: Test setRaw, rawData, tryReduce, makeLarge.
+        void setUp() {
+            dataL.setUp();
+            dataI.setUp();
+
+            zeroL = 0;
+
+            sLongMax = str(LONG_MAX);
+            sLongMaxInc = incStrSimple(sLongMax);
+            sLongMin = str(LONG_MIN);
+            sLongMinDec = incStrSimple(sLongMin);
+            sULongMax = str(ULONG_MAX);
+        }
+
+        void tearDown() {
+        }
 
         template <typename IntType>
         std::string eltName(int whichSeries, int whichMember) {
@@ -393,9 +419,9 @@ class NIntegerTest : public CppUnit::TestFixture {
             testNative(IntType((unsigned long)(LONG_MAX)), "ULong", LONG_MAX,
                 1);
             testLarge(IntType(((unsigned long)(LONG_MAX)) + 1), "ULong",
-                str(((unsigned long)(LONG_MAX)) + 1), 1);
+                sLongMaxInc, 1);
             testLarge(IntType((unsigned long)(ULONG_MAX)), "ULong",
-                str((unsigned long)(ULONG_MAX)), 1);
+                sULongMax, 1);
 
             IntType x;
 
@@ -416,9 +442,9 @@ class NIntegerTest : public CppUnit::TestFixture {
             x = (unsigned long)(LONG_MAX);
             testNative(x, "ULong=", LONG_MAX, 1);
             x = ((unsigned long)(LONG_MAX)) + 1;
-            testLarge(x, "ULong=", str(((unsigned long)(LONG_MAX)) + 1), 1);
+            testLarge(x, "ULong=", sLongMaxInc, 1);
             x = (unsigned long)(ULONG_MAX);
-            testLarge(x, "ULong=", str((unsigned long)(ULONG_MAX)), 1);
+            testLarge(x, "ULong=", sULongMax, 1);
         }
 
         template <typename IntType>
@@ -683,10 +709,10 @@ class NIntegerTest : public CppUnit::TestFixture {
 
         template <typename IntType>
         void constructAssignCopyString() {
-            testStringNative<IntType>(str(long(LONG_MAX)), 10, LONG_MAX, 1);
-            testStringNative<IntType>(str(long(LONG_MIN)), 10, LONG_MIN, -1);
-            testStringLarge<IntType>(str(((unsigned long)(LONG_MAX)) + 1), 1);
-            testStringLarge<IntType>(str((unsigned long)(ULONG_MAX)), 1);
+            testStringNative<IntType>(sLongMax, 10, LONG_MAX, 1);
+            testStringNative<IntType>(sLongMin, 10, LONG_MIN, -1);
+            testStringLarge<IntType>(sLongMaxInc, 1);
+            testStringLarge<IntType>(sULongMax, 1);
             testStringLarge<IntType>(HUGE_INTEGER, 1);
             testStringLarge<IntType>("-" HUGE_INTEGER, -1);
 
@@ -838,41 +864,113 @@ class NIntegerTest : public CppUnit::TestFixture {
             if ((d.longMin.longValue() - 1) <= zeroL)
                 CPPUNIT_FAIL("Special case LONG_MIN does not "
                     "wrap around correctly.");
-            testLarge(d.longMaxInc, "Special case LONG_MAX+1",
-                str(((unsigned long)(LONG_MAX)) + 1), 1);
+            testLarge(d.longMaxInc, "Special case LONG_MAX+1", sLongMaxInc, 1);
             if (d.longMaxInc <= LONG_MAX)
                 CPPUNIT_FAIL("Special case LONG_MAX+1 has overflowed.");
-            // TODO: Here.
-            if (d.longMinDec.isNative() || d.longMinDec >= LONG_MIN ||
-                    d.longMinDec.stringValue() !=
-                    (- regina::NLargeInteger(LONG_MAX) - 2).stringValue()) {
-                CPPUNIT_FAIL("Special case LONG_MIN-1 is not "
-                    "initialised correctly.");
-            }
-            if (d.ulongMax.isNative() || d.ulongMax <= LONG_MAX ||
-                    d.ulongMax.stringValue() !=
-                    (regina::NLargeInteger(LONG_MAX) * 2 + 1).stringValue()) {
-                CPPUNIT_FAIL("Special case ULONG_MAX is not "
-                    "initialised correctly.");
-            }
-            if (d.hugePos.isNative() || d.hugePos <= LONG_MAX ||
-                    d.hugePos.stringValue() != HUGE_INTEGER) {
-                CPPUNIT_FAIL("Special case HUGE_INTEGER is not "
-                    "initialised correctly.");
-            }
-            if (d.hugeNeg.isNative() || d.hugeNeg >= LONG_MIN ||
-                    d.hugeNeg.stringValue() != "-" HUGE_INTEGER) {
-                CPPUNIT_FAIL("Special case -HUGE_INTEGER is not "
-                    "initialised correctly.");
-            }
+            testLarge(d.longMinDec, "Special case LONG_MIN-1", sLongMinDec, -1);
+            if (d.longMinDec >= LONG_MIN)
+                CPPUNIT_FAIL("Special case LONG_MIN-1 has overflowed.");
+            testLarge(d.ulongMax, "Special case ULONG_MAX", sULongMax, 1);
+            if (d.ulongMax <= LONG_MAX)
+                CPPUNIT_FAIL("Special case ULONG_MAX has overflowed.");
+            testLarge(d.hugePos, "Special case HUGE", HUGE_INTEGER, 1);
+            if (d.hugePos <= LONG_MAX)
+                CPPUNIT_FAIL("Special case HUGE has overflowed.");
+            testLarge(d.hugeNeg, "Special case -HUGE", "-"HUGE_INTEGER, -1);
+            if (d.hugeNeg >= LONG_MIN)
+                CPPUNIT_FAIL("Special case -HUGE has overflowed.");
+            testLarge(-d.hugeNeg, "-(special case -HUGE)", HUGE_INTEGER, 1);
+        }
+
+        template <typename IntType>
+        void swap() {
             {
-                IntType x(d.hugeNeg);
-                x.negate();
-                if (x.stringValue() != HUGE_INTEGER) {
-                    CPPUNIT_FAIL("Special case -HUGE_INTEGER does not "
-                        "negate correctly.");
-                }
+                IntType a(3);
+                IntType b(LONG_MIN);
+                IntType c(sLongMaxInc);
+                IntType d(HUGE_INTEGER);
+                IntType e(1000);
+
+                testNative(a, "3", 3, 1);
+                testNative(b, "LONG_MIN", LONG_MIN, -1);
+                testLarge(c, "LONG_MAX+1", sLongMaxInc, 1);
+                testLarge(d, "HUGE", HUGE_INTEGER, 1);
+                testNative(e, "1000", 1000, 1);
+
+                std::swap(a, b); // native <-> native
+
+                testNative(b, "3", 3, 1);
+                testNative(a, "LONG_MIN", LONG_MIN, -1);
+
+                std::swap(a, c); // native <-> long
+
+                testLarge(a, "LONG_MAX+1", sLongMaxInc, 1);
+                testNative(c, "LONG_MIN", LONG_MIN, -1);
+
+                std::swap(a, d); // long <-> long
+
+                testLarge(a, "HUGE", HUGE_INTEGER, 1);
+                testLarge(d, "LONG_MAX+1", sLongMaxInc, 1);
+
+                std::swap(a, e); // long <-> native
+
+                testNative(a, "1000", 1000, 1);
+                testLarge(e, "HUGE", HUGE_INTEGER, 1);
+
+                std::swap(a, a); // long <-> self
+
+                testNative(a, "1000", 1000, 1);
+
+                std::swap(e, e); // large <-> self
+
+                testLarge(e, "HUGE", HUGE_INTEGER, 1);
             }
+        }
+
+        void swapInfinity() {
+            NLargeInteger a(3);
+            NLargeInteger b(LONG_MIN);
+            NLargeInteger c(sLongMaxInc);
+            NLargeInteger d(HUGE_INTEGER);
+            NLargeInteger i(NLargeInteger::infinity);
+            NLargeInteger j;
+            j.makeInfinite();
+
+            testNative(a, "3", 3, 1);
+            testNative(b, "LONG_MIN", LONG_MIN, -1);
+            testLarge(c, "LONG_MAX+1", sLongMaxInc, 1);
+            testLarge(d, "HUGE", HUGE_INTEGER, 1);
+            testInfinity(i, "infinity");
+            testInfinity(j, "infinity");
+
+            std::swap(a, i); // native <-> infinity
+
+            testInfinity(a, "infinity");
+            testNative(i, "3", 3, 1);
+
+            std::swap(c, a); // long <-> infinity
+
+            testLarge(a, "LONG_MAX+1", sLongMaxInc, 1);
+            testInfinity(c, "infinity");
+
+            std::swap(c, d); // infinity <-> long
+
+            testLarge(c, "HUGE", HUGE_INTEGER, 1);
+            testInfinity(d, "infinity");
+
+            std::swap(d, b); // infinity <-> native
+
+            testInfinity(b, "infinity");
+            testNative(d, "LONG_MIN", LONG_MIN, -1);
+
+            std::swap(b, j); // infinity <-> infinity
+
+            testInfinity(b, "infinity");
+            testInfinity(j, "infinity");
+
+            std::swap(b, b); // infinity <-> self
+
+            testInfinity(b, "infinity");
         }
 
         template <typename IntType>

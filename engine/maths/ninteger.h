@@ -371,8 +371,7 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Sets this integer to the given value.
          *
-         * \pre If this class does not support infinity, then \a value
-         * must not be infinite.
+         * \pre The given integer is not infinite.
          *
          * @param value the new value of this integer.
          * @return a reference to this integer with its new value.
@@ -1579,10 +1578,8 @@ template <bool supportInfinity>
 inline NIntegerBase<supportInfinity>&
         NIntegerBase<supportInfinity>::operator =(
         const NIntegerBase<! supportInfinity>& value) {
-    if (value.isInfinite()) {
-        makeInfinite();
-        return *this;
-    }
+    // If value is infinite, we cannot make this infinite.
+    // This is why we insist via preconditions that value is finite.
     makeFinite();
     if (value.large_) {
         if (large_)
@@ -1666,13 +1663,34 @@ inline NIntegerBase<supportInfinity>&
 }
 
 template <bool supportInfinity>
+inline NIntegerBase<supportInfinity>&
+        NIntegerBase<supportInfinity>::operator =(const std::string& value) {
+    return (*this) = value.c_str();
+}
+
+template <>
+inline void NIntegerBase<true>::swap(NIntegerBase<true>& other) {
+    // This should just work, since large_ is a pointer.
+    std::swap(infinite_, other.infinite_);
+    std::swap(small_, other.small_);
+    std::swap(large_, other.large_);
+}
+
+template <>
+inline void NIntegerBase<false>::swap(NIntegerBase<false>& other) {
+    // This should just work, since large_ is a pointer.
+    std::swap(small_, other.small_);
+    std::swap(large_, other.large_);
+}
+
+template <bool supportInfinity>
 inline bool NIntegerBase<supportInfinity>::operator ==(
         const NIntegerBase<supportInfinity>& rhs) const {
     if (isInfinite() && rhs.isInfinite())
         return true;
-    if (isInfinite() || rhs.isInfinite())
+    else if (isInfinite() || rhs.isInfinite())
         return false;
-    if (large_) {
+    else if (large_) {
         if (rhs.large_)
             return (mpz_cmp(large_, rhs.large_) == 0);
         else
@@ -1688,13 +1706,10 @@ inline bool NIntegerBase<supportInfinity>::operator ==(
 template <bool supportInfinity>
 inline bool NIntegerBase<supportInfinity>::operator ==(
         const NIntegerBase<! supportInfinity>& rhs) const {
-    // Implement these separately, since using a template for the RHS
-    // seems to make clang ICE when we explicitly instantiate in the .cpp file.
-
     // The types are different, so both cannot be infinity.
     if (isInfinite() || rhs.isInfinite())
         return false;
-    if (large_) {
+    else if (large_) {
         if (rhs.large_)
             return (mpz_cmp(large_, rhs.large_) == 0);
         else
@@ -1711,7 +1726,7 @@ template <bool supportInfinity>
 inline bool NIntegerBase<supportInfinity>::operator ==(long rhs) const {
     if (isInfinite())
         return false;
-    if (large_)
+    else if (large_)
         return (mpz_cmp_si_cpp(large_, rhs) == 0);
     else
         return (small_ == rhs);
@@ -1722,9 +1737,9 @@ inline bool NIntegerBase<supportInfinity>::operator !=(
         const NIntegerBase<supportInfinity>& rhs) const {
     if (isInfinite() && rhs.isInfinite())
         return false;
-    if (isInfinite() || rhs.isInfinite())
+    else if (isInfinite() || rhs.isInfinite())
         return true;
-    if (large_) {
+    else if (large_) {
         if (rhs.large_)
             return (mpz_cmp(large_, rhs.large_) != 0);
         else
@@ -1740,13 +1755,10 @@ inline bool NIntegerBase<supportInfinity>::operator !=(
 template <bool supportInfinity>
 inline bool NIntegerBase<supportInfinity>::operator !=(
         const NIntegerBase<! supportInfinity>& rhs) const {
-    // Implement these separately, since using a template for the RHS
-    // seems to make clang ICE when we explicitly instantiate in the .cpp file.
-
     // The types are different, so both cannot be infinity.
     if (isInfinite() || rhs.isInfinite())
         return true;
-    if (large_) {
+    else if (large_) {
         if (rhs.large_)
             return (mpz_cmp(large_, rhs.large_) != 0);
         else
@@ -1763,7 +1775,7 @@ template <bool supportInfinity>
 inline bool NIntegerBase<supportInfinity>::operator !=(long rhs) const {
     if (isInfinite())
         return true;
-    if (large_)
+    else if (large_)
         return (mpz_cmp_si_cpp(large_, rhs) != 0);
     else
         return (small_ != rhs);
@@ -1774,9 +1786,9 @@ inline bool NIntegerBase<supportInfinity>::operator <(
         const NIntegerBase<supportInfinity>& rhs) const {
     if (isInfinite())
         return false;
-    if (rhs.isInfinite())
+    else if (rhs.isInfinite())
         return true;
-    if (large_) {
+    else if (large_) {
         if (rhs.large_)
             return (mpz_cmp(large_, rhs.large_) < 0);
         else
@@ -1793,7 +1805,7 @@ template <bool supportInfinity>
 inline bool NIntegerBase<supportInfinity>::operator <(long rhs) const {
     if (isInfinite())
         return false;
-    if (large_)
+    else if (large_)
         return (mpz_cmp_si_cpp(large_, rhs) < 0);
     else
         return (small_ < rhs);
@@ -1804,9 +1816,9 @@ inline bool NIntegerBase<supportInfinity>::operator >(
         const NIntegerBase<supportInfinity>& rhs) const {
     if (rhs.isInfinite())
         return false;
-    if (isInfinite())
+    else if (isInfinite())
         return true;
-    if (large_) {
+    else if (large_) {
         if (rhs.large_)
             return (mpz_cmp(large_, rhs.large_) > 0);
         else
@@ -1823,7 +1835,7 @@ template <bool supportInfinity>
 inline bool NIntegerBase<supportInfinity>::operator >(long rhs) const {
     if (isInfinite())
         return true;
-    if (large_)
+    else if (large_)
         return (mpz_cmp_si_cpp(large_, rhs) > 0);
     else
         return (small_ > rhs);
@@ -1834,9 +1846,9 @@ inline bool NIntegerBase<supportInfinity>::operator <=(
         const NIntegerBase<supportInfinity>& rhs) const {
     if (rhs.isInfinite())
         return true;
-    if (isInfinite())
+    else if (isInfinite())
         return false;
-    if (large_) {
+    else if (large_) {
         if (rhs.large_)
             return (mpz_cmp(large_, rhs.large_) <= 0);
         else
@@ -1853,7 +1865,7 @@ template <bool supportInfinity>
 inline bool NIntegerBase<supportInfinity>::operator <=(long rhs) const {
     if (isInfinite())
         return false;
-    if (large_)
+    else if (large_)
         return (mpz_cmp_si_cpp(large_, rhs) <= 0);
     else
         return (small_ <= rhs);
@@ -1864,9 +1876,9 @@ inline bool NIntegerBase<supportInfinity>::operator >=(
         const NIntegerBase<supportInfinity>& rhs) const {
     if (isInfinite())
         return true;
-    if (rhs.isInfinite())
+    else if (rhs.isInfinite())
         return false;
-    if (large_) {
+    else if (large_) {
         if (rhs.large_)
             return (mpz_cmp(large_, rhs.large_) >= 0);
         else
@@ -1883,7 +1895,7 @@ template <bool supportInfinity>
 inline bool NIntegerBase<supportInfinity>::operator >=(long rhs) const {
     if (isInfinite())
         return true;
-    if (large_)
+    else if (large_)
         return (mpz_cmp_si_cpp(large_, rhs) >= 0);
     else
         return (small_ >= rhs);
@@ -1892,17 +1904,16 @@ inline bool NIntegerBase<supportInfinity>::operator >=(long rhs) const {
 template <bool supportInfinity>
 inline NIntegerBase<supportInfinity>&
         NIntegerBase<supportInfinity>::operator ++() {
-    if (isInfinite())
-        return *this;
-
-    if (large_)
-        mpz_add_ui(large_, large_, 1);
-    else if (small_ != LONG_MAX)
-        ++small_;
-    else {
-        // This is the point at which we overflow.
-        forceLarge();
-        mpz_add_ui(large_, large_, 1);
+    if (! isInfinite()) {
+        if (large_)
+            mpz_add_ui(large_, large_, 1);
+        else if (small_ != LONG_MAX)
+            ++small_;
+        else {
+            // This is the point at which we overflow.
+            forceLarge();
+            mpz_add_ui(large_, large_, 1);
+        }
     }
     return *this;
 }
@@ -1923,17 +1934,16 @@ inline NIntegerBase<supportInfinity>
 template <bool supportInfinity>
 inline NIntegerBase<supportInfinity>&
         NIntegerBase<supportInfinity>::operator --() {
-    if (isInfinite())
-        return *this;
-
-    if (large_)
-        mpz_sub_ui(large_, large_, 1);
-    else if (small_ != LONG_MIN)
-        --small_;
-    else {
-        // This is the point at which we overflow.
-        forceLarge();
-        mpz_sub_ui(large_, large_, 1);
+    if (! isInfinite()) {
+        if (large_)
+            mpz_sub_ui(large_, large_, 1);
+        else if (small_ != LONG_MIN)
+            --small_;
+        else {
+            // This is the point at which we overflow.
+            forceLarge();
+            mpz_sub_ui(large_, large_, 1);
+        }
     }
     return *this;
 }
@@ -2260,23 +2270,6 @@ inline void NIntegerBase<supportInfinity>::forceReduce() {
     mpz_clear(large_);
     delete large_;
     large_ = 0;
-}
-
-// Specialised template functions:
-
-template <>
-inline void NIntegerBase<true>::swap(NIntegerBase<true>& other) {
-    // This should just work, since large_ is a pointer.
-    std::swap(infinite_, other.infinite_);
-    std::swap(small_, other.small_);
-    std::swap(large_, other.large_);
-}
-
-template <>
-inline void NIntegerBase<false>::swap(NIntegerBase<false>& other) {
-    // This should just work, since large_ is a pointer.
-    std::swap(small_, other.small_);
-    std::swap(large_, other.large_);
 }
 
 template <>
