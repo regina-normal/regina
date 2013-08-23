@@ -780,12 +780,20 @@ class NIntegerTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL("Hard-coded 5 is not native.");
                 z = x;
                 testInfinity(z, "Native = from native", false);
-
-                NLargeInteger w(HUGE_INTEGER);
-                if (w.isNative())
-                    CPPUNIT_FAIL("Hard-coded HUGE_INTEGER is native.");
-                w = x;
-                testInfinity(w, "Native = from large", false);
+                z = 7;
+                testNative(z, "(5 = inf) = 7)", 7, 1);
+                z = x;
+                testInfinity(z, "Native = from native", false);
+                z = HUGE_INTEGER;
+                testLarge(z, "(7 = inf) = HUGE)", HUGE_INTEGER, 1);
+                z = x;
+                testInfinity(z, "Native = from large", false);
+                z = "-"HUGE_INTEGER;
+                testLarge(z, "(HUGE = inf) = -HUGE)", "-"HUGE_INTEGER, -1);
+                z = x;
+                testInfinity(z, "Native = from large", false);
+                z = 8;
+                testNative(z, "(-HUGE = inf) = 8)", 8, 1);
             }
         }
 
@@ -830,13 +838,11 @@ class NIntegerTest : public CppUnit::TestFixture {
             if ((d.longMin.longValue() - 1) <= zeroL)
                 CPPUNIT_FAIL("Special case LONG_MIN does not "
                     "wrap around correctly.");
+            testLarge(d.longMaxInc, "Special case LONG_MAX+1",
+                str(((unsigned long)(LONG_MAX)) + 1), 1);
+            if (d.longMaxInc <= LONG_MAX)
+                CPPUNIT_FAIL("Special case LONG_MAX+1 has overflowed.");
             // TODO: Here.
-            if (d.longMaxInc.isNative() || d.longMaxInc <= LONG_MAX ||
-                    d.longMaxInc.stringValue() !=
-                    (regina::NLargeInteger(LONG_MAX) + 1).stringValue()) {
-                CPPUNIT_FAIL("Special case LONG_MAX+1 is not "
-                    "initialised correctly.");
-            }
             if (d.longMinDec.isNative() || d.longMinDec >= LONG_MIN ||
                     d.longMinDec.stringValue() !=
                     (- regina::NLargeInteger(LONG_MAX) - 2).stringValue()) {
