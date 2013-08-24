@@ -73,6 +73,8 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(comparisons<NLargeInteger>);
     CPPUNIT_TEST(incDec<NInteger>);
     CPPUNIT_TEST(incDec<NLargeInteger>);
+    CPPUNIT_TEST(plusMinus<NInteger>);
+    CPPUNIT_TEST(plusMinus<NLargeInteger>);
     CPPUNIT_TEST(divisionAlg<NInteger>);
     CPPUNIT_TEST(divisionAlg<NLargeInteger>);
     CPPUNIT_TEST(gcd<NInteger>);
@@ -1087,6 +1089,11 @@ class NIntegerTest : public CppUnit::TestFixture {
                 a >= b);
             CPPUNIT_ASSERT_MESSAGE(msgBase + "not str== " + str(b) + " (long).",
                 a.stringValue() == str(b));
+
+            if (b == 0)
+                CPPUNIT_ASSERT_MESSAGE(msgBase + "not isZero().", a.isZero());
+            else
+                CPPUNIT_ASSERT_MESSAGE(msgBase + "isZero().", ! a.isZero());
         }
 
         template <typename IntType>
@@ -1260,6 +1267,69 @@ class NIntegerTest : public CppUnit::TestFixture {
                 if (i != NLargeInteger::infinity)
                     CPPUNIT_FAIL("inf-- does not result in inf.");
             }
+        }
+
+        template <typename IntType>
+        void plusMinus() {
+            unsigned a, b;
+
+            const Data<IntType>& d(data<IntType>());
+
+            IntType tmp;
+            for (a = 0; a < d.nCases; ++a) {
+                for (b = 0; b < d.nCases; ++b) {
+                    IntType x(d.cases[a]);
+                    IntType y(d.cases[b]);
+
+                    shouldBeEqual((x + y) - y, x);
+                    shouldBeEqual((x - y) + y, x);
+                    shouldBeEqual((x + y) - x, y);
+                    shouldBeEqual((x - y) - x, -y);
+                    shouldBeEqual(((x + y) - x) - y, 0L);
+                    shouldBeEqual(((x + y) - y) - x, 0L);
+                    shouldBeEqual(((x - y) - x) + y, 0L);
+                    shouldBeEqual(((x - y) + y) - x, 0L);
+                }
+
+                for (b = 0; b < d.nLongCases; ++b) {
+                    IntType x(d.cases[a]);
+                    long y = d.longCases[b];
+
+                    shouldBeEqual((x + y) - y, x);
+                    shouldBeEqual((x - y) + y, x);
+                    shouldBeEqual((x + y) - x, y);
+                    shouldBeEqual(-((x - y) - x), y); // -y could overflow
+                    shouldBeEqual(((x + y) - x) - y, 0L);
+                    shouldBeEqual(((x + y) - y) - x, 0L);
+                    shouldBeEqual(((x - y) - x) + y, 0L);
+                    shouldBeEqual(((x - y) + y) - x, 0L);
+                }
+
+                IntType z(d.cases[a]);
+                shouldBeEqual(z + 0L, z);
+                shouldBeEqual(z - 0L, z);
+                shouldBeEqual(0L + z, z);
+                shouldBeEqual(z + IntType::zero, z);
+                shouldBeEqual(z - IntType::zero, z);
+                shouldBeEqual(IntType::zero + z, z);
+            }
+
+            // TODO: Tests:
+            // {native, large} {+,-} {native, large}
+            // {negative, positive} {+,-} {negative, positive}
+            // overflow points
+            // +, +=, -, -=
+
+            // Tests for infinity are hard-coded to NLargeInteger.
+            // TODO: Here down.
+            const NLargeInteger& infinity(NLargeInteger::infinity);
+
+            for (a = 0; a < dataL.nCases; a++)
+                shouldBeGreater(infinity, dataL.cases[a]);
+            for (a = 0; a < dataL.nLongCases; a++)
+                shouldBeGreater(infinity, dataL.longCases[a]);
+
+            shouldBeEqual(infinity, NLargeInteger::infinity);
         }
 
         template <typename IntType>
