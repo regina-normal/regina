@@ -27,8 +27,8 @@
  */
 
 #include <maths/matrixops.h>
+#include <maths/ninteger.h>
 #include <maths/nmatrixint.h>
-#include <maths/nlazyinteger.h>
 #include <snappea/nsnappeatriangulation.h>
 #include <surfaces/nnormalsurfacelist.h>
 #include <surfaces/nsanstandard.h>
@@ -103,9 +103,9 @@ using namespace regina;
  * appended to its end.
  *
  * Internally, each node of the trie is represented by a separate
- * TypeTrie object, each of which is responsible for managing the
+ * NTypeTrie object, each of which is responsible for managing the
  * lifespan of its descendant nodes.  Externally, a user only needs
- * to create and manage a single TypeTrie object (which becomes
+ * to create and manage a single NTypeTrie object (which becomes
  * the root of the trie).
  *
  * \pre \a nTypes is at most 256.  The typical value for \a nTypes for
@@ -114,9 +114,9 @@ using namespace regina;
  * \ifacespython Not present.
  */
 template <int nTypes>
-class TypeTrie {
+class NTypeTrie {
     private:
-        TypeTrie<nTypes>* child_[nTypes];
+        NTypeTrie<nTypes>* child_[nTypes];
             /**< If this node is \a k levels deeper than the root of
                  the trie (that is, it corresponds to the \a kth position
                  in the type vector), then child_[i] stores the subtrie
@@ -137,14 +137,14 @@ class TypeTrie {
         /**
          * Initialises an empty trie.
          */
-        inline TypeTrie() : elementHere_(false) {
-            memset(child_, 0, sizeof(TypeTrie<nTypes>*) * nTypes);
+        inline NTypeTrie() : elementHere_(false) {
+            memset(child_, 0, sizeof(NTypeTrie<nTypes>*) * nTypes);
         }
 
         /**
          * Destroys this trie.
          */
-        inline ~TypeTrie() {
+        inline ~NTypeTrie() {
             for (int i = 0; i < nTypes; ++i)
                 delete child_[i];
         }
@@ -176,11 +176,11 @@ class TypeTrie {
                 --len;
 
             // Insert this type vector, creating new nodes only when required.
-            TypeTrie<nTypes>* node = this;
+            NTypeTrie<nTypes>* node = this;
             const char* next = entry;
             for (int pos = 0; pos < len; ++pos, ++next) {
                 if (! node->child_[*next])
-                    node->child_[*next] = new TypeTrie<nTypes>();
+                    node->child_[*next] = new NTypeTrie<nTypes>();
                 node = node->child_[*next];
             }
             node->elementHere_ = true;
@@ -211,8 +211,8 @@ class TypeTrie {
             // Here node[i] will store the next candidate node to try at
             // depth i in the tree (where the root is at depth 0), or 0
             // if we have exhausted our options at that level of the search.
-            const TypeTrie<nTypes>** node =
-                new const TypeTrie<nTypes>*[len + 2];
+            const NTypeTrie<nTypes>** node =
+                new const NTypeTrie<nTypes>*[len + 2];
 
             int level = 0;
             node[0] = this;
@@ -298,13 +298,13 @@ class TypeTrie {
  * elements than you originally reserved space for.
  *
  * This matrix is stored in dense form.  All elements are of the class
- * NLazyInteger.
+ * NInteger.
  *
  * \ifacespython Not present.
  */
 class LPMatrix {
     private:
-        NLazyInteger* dat_;
+        NInteger* dat_;
             /**< The elements of this matrix as a single long array,
                  stored in row-major order.  This array stores as many
                  elements as were originally reserved, which might be
@@ -340,9 +340,9 @@ class LPMatrix {
          * be strictly positive.
          */
         inline LPMatrix(unsigned rows, unsigned cols) :
-                dat_(new NLazyInteger[rows * cols]),
+                dat_(new NInteger[rows * cols]),
                 rows_(rows), cols_(cols) {
-            // The NLazyInteger default constructor sets all elements to zero.
+            // The NInteger default constructor sets all elements to zero.
         }
 
         /**
@@ -381,7 +381,7 @@ class LPMatrix {
          * you will need for this matrix.  This must be strictly positive.
          */
         inline void reserve(unsigned maxRows, unsigned maxCols) {
-            dat_ = new NLazyInteger[maxRows * maxCols];
+            dat_ = new NInteger[maxRows * maxCols];
         }
 
         /**
@@ -448,7 +448,7 @@ class LPMatrix {
          * @param col the column of the requested element.  This must be
          * between 0 and columns()-1 inclusive.
          */
-        inline NLazyInteger& entry(unsigned row, unsigned col) {
+        inline NInteger& entry(unsigned row, unsigned col) {
             return dat_[row * cols_ + col];
         }
 
@@ -461,7 +461,7 @@ class LPMatrix {
          * @param col the column of the requested element.  This must be
          * between 0 and columns()-1 inclusive.
          */
-        inline const NLazyInteger& entry(unsigned row, unsigned col) const {
+        inline const NInteger& entry(unsigned row, unsigned col) const {
             return dat_[row * cols_ + col];
         }
 
@@ -527,11 +527,11 @@ class LPMatrix {
          * @param div the integer to divide the final row by.  This must
          * be non-zero.
          */
-        inline void combRow(const NLazyInteger& destCoeff, unsigned dest,
-                const NLazyInteger& srcCoeff, unsigned src,
-                const NLazyInteger& div) {
-            NLazyInteger* ps = dat_ + src * cols_;
-            NLazyInteger* pd = dat_ + dest * cols_;
+        inline void combRow(const NInteger& destCoeff, unsigned dest,
+                const NInteger& srcCoeff, unsigned src,
+                const NInteger& div) {
+            NInteger* ps = dat_ + src * cols_;
+            NInteger* pd = dat_ + dest * cols_;
             if (div > 1)
                 for (unsigned i = 0; i < cols_; ++i) {
                     *pd *= destCoeff;
@@ -570,11 +570,11 @@ class LPMatrix {
          * @return the positive gcd that row \a dest was scaled down by,
          * or 0 if row \a dest is entirely zero.
          */
-        inline NLazyInteger combRowAndNorm(const NLazyInteger& destCoeff,
-                unsigned dest, const NLazyInteger& srcCoeff, unsigned src) {
-            NLazyInteger gcdRow; // Initialised to zero.
-            NLazyInteger* ps = dat_ + src * cols_;
-            NLazyInteger* pd = dat_ + dest * cols_;
+        inline NInteger combRowAndNorm(const NInteger& destCoeff,
+                unsigned dest, const NInteger& srcCoeff, unsigned src) {
+            NInteger gcdRow; // Initialised to zero.
+            NInteger* ps = dat_ + src * cols_;
+            NInteger* pd = dat_ + dest * cols_;
             unsigned i;
             for (i = 0; i < cols_; ++i, pd++, ps++) {
                 *pd *= destCoeff;
@@ -597,7 +597,7 @@ class LPMatrix {
          * This must be between 0 and rows()-1 inclusive.
          */
         inline void negateRow(unsigned row) {
-            NLazyInteger *p = dat_ + row * cols_;
+            NInteger *p = dat_ + row * cols_;
             for (unsigned i = 0; i < cols_; ++p, ++i)
                 p->negate();
         }
@@ -964,9 +964,9 @@ class LPInitialTableaux {
          * @param thisCol the column of this matrix to use in the inner product.
          * @return the resulting inner product.
          */
-        inline NLazyInteger multColByRow(const LPMatrix& m, unsigned mRow,
+        inline NInteger multColByRow(const LPMatrix& m, unsigned mRow,
                 unsigned thisCol) const {
-            NLazyInteger ans = col_[thisCol].innerProduct(m, mRow);
+            NInteger ans = col_[thisCol].innerProduct(m, mRow);
 
             unsigned i;
             for (i = 0; i < col_[thisCol].nPlus; ++i)
@@ -1021,9 +1021,9 @@ class LPInitialTableaux {
          * inner product.
          * @return the resulting adjusted inner product.
          */
-        inline NLazyInteger multColByRowOct(const LPMatrix& m,
+        inline NInteger multColByRowOct(const LPMatrix& m,
                 unsigned mRow, unsigned thisCol) const {
-            NLazyInteger ans = col_[thisCol].innerProductOct(m, mRow);
+            NInteger ans = col_[thisCol].innerProductOct(m, mRow);
 
             unsigned i;
             for (i = 0; i < col_[thisCol].nPlus; ++i)
@@ -1449,7 +1449,7 @@ class LPData {
             /**< The original starting tableaux that holds the adjusted
                  matrix of matching equations, before the tree traversal
                  algorithm began. */
-        NLazyInteger* rhs_;
+        NInteger* rhs_;
             /**< An array of length origTableaux_->rank() that stores
                  the column vector of constants on the right-hand side
                  of the current tableaux.  In the notation of Burton and
@@ -1544,7 +1544,7 @@ class LPData {
          */
         void reserve(const LPInitialTableaux<LPConstraint>* origTableaux) {
             origTableaux_ = origTableaux;
-            rhs_ = new NLazyInteger[origTableaux->rank()];
+            rhs_ = new NInteger[origTableaux->rank()];
             rowOps_.reserve(origTableaux->rank(), origTableaux->rank());
             basis_ = new int[origTableaux->rank()];
             basisRow_ = new int[origTableaux->columns()];
@@ -2004,7 +2004,7 @@ class LPData {
                 // look like anything.  We need to repair it so it
                 // contains all zeroes except for cell (row1, quad1),
                 // which must be strictly positive.
-                NLazyInteger e1 = entry(row1, quad1);
+                NInteger e1 = entry(row1, quad1);
                 if (! e1.isZero()) {
                     // The (row1, quad1) entry is non-zero.
                     // It's clear what to do from here: make sure
@@ -2017,8 +2017,8 @@ class LPData {
                         rowOps_.negateRow(row1);
                     }
 
-                    NLazyInteger coeff;
-                    NLazyInteger gcdRow;
+                    NInteger coeff;
+                    NInteger gcdRow;
                     for (int r = 0; r < rank_; ++r) {
                         if (r == row1)
                             continue;
@@ -2182,7 +2182,7 @@ class LPData {
             //
             // First compute this lcm.
             unsigned i;
-            NLazyInteger lcm(1);
+            NInteger lcm(1);
             for (i = 0; i < rank_; ++i)
                 lcm = lcm.lcm(entry(i, basis_[i]));
 
@@ -2200,14 +2200,14 @@ class LPData {
             // Because we are multiplying everything by lcm, the
             // divisions in the following code are all perfectly safe
             // (and give precise integer results).
-            NLazyInteger coord;
+            NInteger coord;
             for (i = 0; i < rank_; ++i) {
                 if (basis_[i] >= v.size())
                     continue;
                 coord = lcm;
                 coord *= rhs_[i];
                 coord /= entry(i, basis_[i]);
-                // Here we convert from the faster NLazyInteger back to the
+                // Here we convert from the faster NInteger back to the
                 // old NLargeInteger, which is still used with normal surfaces.
                 v.setElement(columnPerm[basis_[i]], NLargeInteger(coord));
             }
@@ -2219,7 +2219,7 @@ class LPData {
             unsigned pos;
             const unsigned nTets =
                 origTableaux_->tri()->getNumberOfTetrahedra();
-            NLargeInteger lcmAsLarge(lcm); // NLazyInteger -> NLargeInteger
+            NLargeInteger lcmAsLarge(lcm); // NInteger -> NLargeInteger
 
             // First take into account the quadrilateral types...
             for (i = 0; i < nTets; ++i)
@@ -2261,13 +2261,13 @@ class LPData {
          * and origTableaux_->columns()-1 inclusive.
          * @return the requested entry in this tableaux.
          */
-        inline NLazyInteger entry(unsigned row, unsigned col) const {
+        inline NInteger entry(unsigned row, unsigned col) const {
             // Remember to take into account any changes of variable due
             // to previous calls to constrainOct().
             if (octPrimary_ != col)
                 return origTableaux_->multColByRow(rowOps_, row, col);
             else {
-                NLazyInteger ans = origTableaux_->multColByRowOct(rowOps_,
+                NInteger ans = origTableaux_->multColByRowOct(rowOps_,
                     row, col);
                 ans += origTableaux_->multColByRowOct(rowOps_,
                     row, octSecondary_);
@@ -2303,7 +2303,7 @@ class LPData {
             basis_[defRow] = inCol;
 
             // Make sure that inCol has a positive coefficient in row defRow.
-            NLazyInteger base = entry(defRow, inCol);
+            NInteger base = entry(defRow, inCol);
             if (base < 0) {
                 base.negate();
                 rhs_[defRow].negate();
@@ -2313,8 +2313,8 @@ class LPData {
             // Walk through the entire tableaux and perform row operations
             // to ensure that the only non-zero entry in column \a inCol
             // is the entry base in row defRow (as extracted above).
-            NLazyInteger coeff;
-            NLazyInteger gcdRow;
+            NInteger coeff;
+            NInteger gcdRow;
             unsigned r;
             for (r = 0; r < rank_; ++r) {
                 if (r == defRow)
@@ -2367,8 +2367,8 @@ class LPData {
             // advance that every row will define some basic variable.
             unsigned row;
             unsigned r, c;
-            NLazyInteger base, coeff;
-            NLazyInteger gcdRow;
+            NInteger base, coeff;
+            NInteger gcdRow;
             for (row = 0; row < rank_; ++row) {
                 // Find the first non-zero entry in this row.
                 // The corresponding column will become our next basic variable.
@@ -2456,7 +2456,7 @@ class LPData {
          */
         void makeFeasible() {
             int r, c, outCol, outRow;
-            NLazyInteger outEntry, tmp;
+            NInteger outEntry, tmp;
 
             // Variables for detecting cycling.
             //
@@ -2624,7 +2624,7 @@ class LPData {
                     }
 
                 // Check that each row has gcd = 1.
-                NLazyInteger g; // Initialised to zero.
+                NInteger g; // Initialised to zero.
                 for (c = 0; c < rowOps_.columns(); ++c)
                     g = g.gcd(rowOps_.entry(r, c));
                 if (g != 1) {
@@ -2638,7 +2638,7 @@ class LPData {
 /**
  * A base class for additional linear constraints that we can add to the
  * tableaux of normal surface matching equations.  This is used with
- * TreeEnumeration, TreeSingleSoln and related algorithms for enumerating and
+ * NTreeEnumeration, NTreeSingleSoln and related algorithms for enumerating and
  * locating normal surfaces in a 3-manifold triangulation.  See the
  * LPInitialTableaux class notes for details on how these constraints
  * interact with the tableaux of matching equations.
@@ -2722,7 +2722,7 @@ class LPConstraintBase {
              * product.
              * @return the resulting portion of the inner product.
              */
-            NLazyInteger innerProduct(const LPMatrix& m, unsigned mRow) const;
+            NInteger innerProduct(const LPMatrix& m, unsigned mRow) const;
 
             /**
              * A variant of innerProduct() that takes into account any
@@ -2764,7 +2764,7 @@ class LPConstraintBase {
              * product.
              * @return the resulting portion of the inner product.
              */
-            NLazyInteger innerProductOct(const LPMatrix& m, unsigned mRow)
+            NInteger innerProductOct(const LPMatrix& m, unsigned mRow)
                 const;
         };
 
@@ -2896,13 +2896,13 @@ class LPConstraintNone : public LPConstraintSubspace {
 
             inline void fillFinalRows(LPMatrix& m, unsigned col) const {}
 
-            inline NLazyInteger innerProduct(const LPMatrix&, unsigned) const {
-                return NLazyInteger(); // Returns zero.
+            inline NInteger innerProduct(const LPMatrix&, unsigned) const {
+                return NInteger(); // Returns zero.
             }
 
-            inline NLazyInteger innerProductOct(const LPMatrix&, unsigned)
+            inline NInteger innerProductOct(const LPMatrix&, unsigned)
                     const {
-                return NLazyInteger(); // Returns zero.
+                return NInteger(); // Returns zero.
             }
         };
 
@@ -2955,14 +2955,14 @@ class LPConstraintEuler : public LPConstraintBase {
                 m.entry(m.rows() - 1, col) = euler;
             }
 
-            inline NLazyInteger innerProduct(const LPMatrix& m,
+            inline NInteger innerProduct(const LPMatrix& m,
                     unsigned mRow) const {
-                NLazyInteger ans(m.entry(mRow, m.rows() - 1));
+                NInteger ans(m.entry(mRow, m.rows() - 1));
                 ans *= euler;
                 return ans;
             }
 
-            inline NLazyInteger innerProductOct(const LPMatrix& m,
+            inline NInteger innerProductOct(const LPMatrix& m,
                     unsigned mRow) const {
                 // This is called for *two* quad columns (the two quads
                 // that combine to give a single octagon).
@@ -2976,7 +2976,7 @@ class LPConstraintEuler : public LPConstraintBase {
                 // Happily we can do this by subtracting one from the
                 // coefficient in each of the two columns, as
                 // implemented below.
-                NLazyInteger ans(m.entry(mRow, m.rows() - 1));
+                NInteger ans(m.entry(mRow, m.rows() - 1));
                 ans *= (euler - 1);
                 return ans;
             }
@@ -3070,17 +3070,17 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
                 m.entry(m.rows() - 1, col) = longitude;
             }
 
-            inline NLazyInteger innerProduct(const LPMatrix& m,
+            inline NInteger innerProduct(const LPMatrix& m,
                     unsigned mRow) const {
-                NLazyInteger ans1(m.entry(mRow, m.rows() - 2));
+                NInteger ans1(m.entry(mRow, m.rows() - 2));
                 ans1 *= meridian;
-                NLazyInteger ans2(m.entry(mRow, m.rows() - 1));
+                NInteger ans2(m.entry(mRow, m.rows() - 1));
                 ans2 *= longitude;
                 ans1 += ans2;
                 return ans1;
             }
 
-            inline NLazyInteger innerProductOct(const LPMatrix& m,
+            inline NInteger innerProductOct(const LPMatrix& m,
                     unsigned mRow) const {
                 // This should never be called, since we never use this
                 // constraint with almost normal surfaces.
@@ -3149,7 +3149,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
 /**
  * A base class for additional banning and marking constraints that we
  * can place on tree traversal algorithms.  This is used with
- * TreeEnumeration, TreeSingleSoln and related algorithms for
+ * NTreeEnumeration, NTreeSingleSoln and related algorithms for
  * enumerating and locating normal surfaces in a 3-manifold triangulation.
  *
  * This class adds constraints of two types:
@@ -3167,9 +3167,9 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  *
  * Currently marking is used in the following ways:
  *
- * - The TreeEnumeration algorithm does not use marking at all.
+ * - The NTreeEnumeration algorithm does not use marking at all.
  *
- * - In the TreeSingleSoln algorithm, marking affects what is considered
+ * - In the NTreeSingleSoln algorithm, marking affects what is considered
  *   a non-trivial surface.  Normally, a non-trivial surface is defined
  *   to be one in which some triangle coordinate is zero.  With marking,
  *   a non-trivial surface is redefined to be one in which some \e unmarked
@@ -3506,8 +3506,8 @@ class BanTorusBoundary : public BanConstraintBase {
 /**
  * A base class for searches that employ the tree traversal algorithm for
  * enumerating and locating vertex normal surfaces.  Users should not use this
- * base class directly; instead use one of the subclasses TreeEnumeration (for
- * enumerating all vertex normal surfaces) or TreeSingleSoln (for
+ * base class directly; instead use one of the subclasses NTreeEnumeration (for
+ * enumerating all vertex normal surfaces) or NTreeSingleSoln (for
  * locating a single non-trivial solution under additional constraints,
  * such as positive Euler characteristic).
  *
@@ -3520,7 +3520,7 @@ class BanTorusBoundary : public BanConstraintBase {
  * This base class provides the infrastructure for the search tree, and the
  * subclasses handle the mechanics of the moving through the tree according
  * to the backtracking search.  The domination test is handled separately by
- * the class TypeTrie, and the feasibility test is handled separately by the
+ * the class NTypeTrie, and the feasibility test is handled separately by the
  * class LPData.
  *
  * This class holds the particular state of the tree traversal
@@ -3568,7 +3568,7 @@ class BanTorusBoundary : public BanConstraintBase {
  * Also, there is optional support for banning normal disc types (so the
  * corresponding coordinates must be set to zero), and/or marking normal
  * disc types (which currently affects what is meant by a "non-trivial"
- * surface for the TreeSingleSoln algorithm, though this concept may be
+ * surface for the NTreeSingleSoln algorithm, though this concept may be
  * expanded in future versions of Regina).  These options are supplied
  * by the template parameter \a BanConstraint.  If there are no disc
  * types to ban or mark, simply use the template parameter \a BanNone.
@@ -3645,7 +3645,7 @@ class TreeTraversal : public BanConstraint {
                  to the root node.  In addition to these tableaux, we
                  also store other immediate children of these ancestores
                  that we have pre-prepared for future processing.  See the
-                 documentation within TreeEnumeration::next() for details of
+                 documentation within NTreeEnumeration::next() for details of
                  when and how these tableaux are constructed. */
         LPData<LPConstraint>** lpSlot_;
             /**< Recall from above that the array \a lp_ stores tableaux
@@ -3659,7 +3659,7 @@ class TreeTraversal : public BanConstraint {
                  points to the tableaux for the root node, and for each level
                  \a i in the range 0,...,\a level_, the corresponding
                  tableaux is *lpSlot_[i+1].  Again, see the documentation
-                 within TreeEnumeration::next() for details of when and how
+                 within NTreeEnumeration::next() for details of when and how
                  these tableaux are constructed and later overwritten. */
         LPData<LPConstraint>** nextSlot_;
             /**< Points to the next available tableaux in lp_ that is free to
@@ -3728,10 +3728,10 @@ class TreeTraversal : public BanConstraint {
          * The precise way that this number is calculated is subject to
          * change in future versions of Regina.
          *
-         * If you called TreeEnumeration::run() or TreeSingleSoln::find(),
+         * If you called NTreeEnumeration::run() or NTreeSingleSoln::find(),
          * then this will be the total number of nodes that were visited
          * in the entire tree traversal.  If you are calling
-         * TreeEnumeration::next() one surface at time, this will be the
+         * NTreeEnumeration::next() one surface at time, this will be the
          * partial count of how many nodes have been visited so far.
          *
          * @return the number of nodes visited so far.
@@ -3762,7 +3762,7 @@ class TreeTraversal : public BanConstraint {
          *
          * If the current type vector does not represent a \e vertex
          * normal surface (which may be the case when calling
-         * TreeSingleSoln::find()), then there may be many normal surfaces
+         * NTreeSingleSoln::find()), then there may be many normal surfaces
          * all represented by the same type vector; in this case there are
          * no further guarantees about \e which of these normal surfaces
          * you will get.
@@ -3770,9 +3770,9 @@ class TreeTraversal : public BanConstraint {
          * \pre This tree traversal is at a point in the search where
          * it has found a feasible solution that represents a normal surface
          * (though this need not be a vertex surface).
-         * This condition is always true after TreeEnumeration::next()
-         * or TreeSingleSoln::find() returns \c true, or any time that
-         * TreeEnumeration::run() calls its callback function.
+         * This condition is always true after NTreeEnumeration::next()
+         * or NTreeSingleSoln::find() returns \c true, or any time that
+         * NTreeEnumeration::run() calls its callback function.
          *
          * @return a normal surface that has been found at the current stage
          * of the search.
@@ -3906,7 +3906,7 @@ class TreeTraversal : public BanConstraint {
          * If and when the operation is cancelled is entirely up to the
          * subclass performing the search.  Examples of searches that
          * respect cancellation requests (and do so relatively quickly)
-         * are TreeEnumeration::next() and TreeSingleSoln::find().
+         * are NTreeEnumeration::next() and NTreeSingleSoln::find().
          */
         inline void cancel() {
             regina::NMutex::MutexLock lock(mCancel_);
@@ -3931,8 +3931,8 @@ class TreeTraversal : public BanConstraint {
          * Initialises a new base object for running the tree traversal
          * algorithm.  This routine may only be called by subclass constructors;
          * for more information on how to create and run a tree
-         * traversal, see the subclasses TreeEnumeration and
-         * TreeSingleSoln instead.
+         * traversal, see the subclasses NTreeEnumeration and
+         * NTreeSingleSoln instead.
          *
          * \pre The given triangulation is non-empty.
          *
@@ -4089,8 +4089,8 @@ class TreeTraversal : public BanConstraint {
          * the current state of the tableaux at the current level of the
          * search tree.  These assign 0, 1, 2 and 3 to the given
          * quadrilateral type and enforce the corresponding constraints;
-         * here types 0 and 1 are counted separately as in TreeEnumeration,
-         * not merged together as in TreeSingleSoln.
+         * here types 0 and 1 are counted separately as in NTreeEnumeration,
+         * not merged together as in NTreeSingleSoln.
          *
          * \pre The given quadrilateral type has not yet been processed in
          * the search tree (i.e., it has not had an explicit value selected).
@@ -4153,7 +4153,7 @@ class TreeTraversal : public BanConstraint {
  *
  * If you simply wish to detect a single non-trivial solution under
  * additional constraints (such as positive Euler characteristic), then
- * use the class TreeSingleSoln instead, which is optimised for this purpose.
+ * use the class NTreeSingleSoln instead, which is optimised for this purpose.
  *
  * This tree traversal can only enumerate surfaces in quadrilateral normal
  * coordinates (NNormalSurfaceList::QUAD), standard normal coordinates
@@ -4190,7 +4190,7 @@ class TreeTraversal : public BanConstraint {
  */
 template <typename LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone>
-class TreeEnumeration : public TreeTraversal<LPConstraint, BanConstraint> {
+class NTreeEnumeration : public TreeTraversal<LPConstraint, BanConstraint> {
     public:
         using TreeTraversal<LPConstraint, BanConstraint>::dumpTypes;
 
@@ -4213,7 +4213,7 @@ class TreeEnumeration : public TreeTraversal<LPConstraint, BanConstraint> {
         using TreeTraversal<LPConstraint, BanConstraint>::cancelled;
 
     private:
-        TypeTrie<7> solns_;
+        NTypeTrie<7> solns_;
             /**< A trie that holds the type vectors for all vertex
                  surfaces found so far.
                  We wastefully allow for 7 possible types always (which
@@ -4261,7 +4261,7 @@ class TreeEnumeration : public TreeTraversal<LPConstraint, BanConstraint> {
          * NNormalSurfaceList::STANDARD, NNormalSurfaceList::AN_QUAD_OCT, or
          * NNormalSurfaceList::AN_STANDARD.
          */
-        inline TreeEnumeration(NTriangulation* tri, int coords) :
+        inline NTreeEnumeration(NTriangulation* tri, int coords) :
                 TreeTraversal<LPConstraint, BanConstraint>(tri, coords,
                     (coords == NNormalSurfaceList::AN_QUAD_OCT ||
                      coords == NNormalSurfaceList::AN_STANDARD ?
@@ -4310,7 +4310,7 @@ class TreeEnumeration : public TreeTraversal<LPConstraint, BanConstraint> {
          * \c false, then run() will abort the search and return immediately.
          *
          * The usual way of using this routine is to construct a
-         * TreeEnumeration object and then immediately call run().  However,
+         * NTreeEnumeration object and then immediately call run().  However,
          * if you prefer, you may call run() after one or more calls to next().
          * In this case, run() will continue the search from the current point
          * and run it to its completion.  In other words, run() will locate
@@ -4328,7 +4328,7 @@ class TreeEnumeration : public TreeTraversal<LPConstraint, BanConstraint> {
          * @param arg the second argument to pass to the callback
          * function; this may be any type of data that you like.
          */
-        void run(bool (*useSoln)(const TreeEnumeration&, void*),
+        void run(bool (*useSoln)(const NTreeEnumeration&, void*),
                 void* arg = 0) {
             while (next())
                 if (! useSoln(*this, arg))
@@ -4733,7 +4733,7 @@ class TreeEnumeration : public TreeTraversal<LPConstraint, BanConstraint> {
          * @return \c true (which indicates to run() that we should
          * continue the tree traversal).
          */
-        static bool writeTypes(const TreeEnumeration& tree, void*) {
+        static bool writeTypes(const NTreeEnumeration& tree, void*) {
             std::cout << "SOLN #" << tree.nSolns() << ": ";
             tree.dumpTypes(std::cout);
             std::cout << std::endl;
@@ -4766,7 +4766,7 @@ class TreeEnumeration : public TreeTraversal<LPConstraint, BanConstraint> {
          * @return \c true (which indicates to run() that we should
          * continue the tree traversal).
          */
-        static bool writeSurface(const TreeEnumeration& tree, void*) {
+        static bool writeSurface(const NTreeEnumeration& tree, void*) {
             std::cout << "SOLN #" << tree.nSolns() << ": ";
             NNormalSurface* f = tree.buildSurface();
             std::cout << f->toString() << std::endl;
@@ -4818,13 +4818,13 @@ class TreeEnumeration : public TreeTraversal<LPConstraint, BanConstraint> {
  *
  * To use this class, i.e., to locate a non-trivial normal or almost normal
  * surface under the given constraints or to prove that no such surface exists,
- * you can simply construct a TreeSingleSoln object and call find().  You can
+ * you can simply construct a NTreeSingleSoln object and call find().  You can
  * then call buildSurface() to extract the details of the surface that was
  * found.
  *
  * If you wish to enumerate \e all vertex surfaces in a 3-manifold
  * triangulation (instead of finding just one), you should use the class
- * TreeEnumeration instead.
+ * NTreeEnumeration instead.
  *
  * This tree traversal can only enumerate surfaces in quadrilateral normal
  * coordinates (NNormalSurfaceList::QUAD), standard normal coordinates
@@ -4855,7 +4855,7 @@ class TreeEnumeration : public TreeTraversal<LPConstraint, BanConstraint> {
  */
 template <typename LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone>
-class TreeSingleSoln : public TreeTraversal<LPConstraint, BanConstraint> {
+class NTreeSingleSoln : public TreeTraversal<LPConstraint, BanConstraint> {
     public:
         using TreeTraversal<LPConstraint, BanConstraint>::dumpTypes;
 
@@ -4910,7 +4910,7 @@ class TreeSingleSoln : public TreeTraversal<LPConstraint, BanConstraint> {
          * NNormalSurfaceList::STANDARD, NNormalSurfaceList::AN_QUAD_OCT, or
          * NNormalSurfaceList::AN_STANDARD.
          */
-        inline TreeSingleSoln(NTriangulation* tri, int coords) :
+        inline NTreeSingleSoln(NTriangulation* tri, int coords) :
                 TreeTraversal<LPConstraint, BanConstraint>(tri, coords,
                     (coords == NNormalSurfaceList::AN_QUAD_OCT ||
                      coords == NNormalSurfaceList::AN_STANDARD ?
@@ -4928,14 +4928,14 @@ class TreeSingleSoln : public TreeTraversal<LPConstraint, BanConstraint> {
          * Note that, if a solution is found, it will have a maximal
          * (but not necessarily maximum) set of zero coordinates, which
          * in some settings is enough to guarantee a vertex normal surface.
-         * See the TreeSingleSoln class notes for details.
+         * See the NTreeSingleSoln class notes for details.
          *
          * If find() does return \c true, you can extract details of the
          * corresponding surface directly from this tree enumeration
          * object: for instance, you can dump the type vector using
          * dumpTypes(), or you can reconstruct the full surface using
          * buildSurface().  Be warned that this class defines the type
-         * vector in an unusual way (see the TreeSingleSoln class notes
+         * vector in an unusual way (see the NTreeSingleSoln class notes
          * for details).  If you call buildSurface(), remember
          * to delete the surface once you are finished with it.
          *
@@ -5003,9 +5003,10 @@ class TreeSingleSoln : public TreeTraversal<LPConstraint, BanConstraint> {
                 dumpTypes(std::cout);
                 std::cout << std::endl;
 #endif
-                // This code is based on TreeEnumeration::next().
+                // This code is based on NTreeEnumeration::next().
                 // For details on how it works, see the implementation of
-                // TreeEnumeration::next(), which is very thoroughly documented.
+                // NTreeEnumeration::next(), which is very thoroughly
+                // documented.
                 idx = typeOrder_[level_];
 
                 // Check whether type_[idx] is out of range,
