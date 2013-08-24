@@ -35,6 +35,7 @@ Don't forget:
     documentation in handbook, feature set & index
     any new tips of the day?
     journal references (www, KDE docs, example files, headers)
+    check that all headers are installed correctly
     check for doxygen warnings
     check for docbook warnings/errors
     update \test... notes in API docs
