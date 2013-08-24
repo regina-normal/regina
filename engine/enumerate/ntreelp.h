@@ -1176,25 +1176,10 @@ class LPData {
          * and rank_-1 inclusive.
          * @param the column of the requested entry; this must be between 0
          * and origTableaux_->columns()-1 inclusive.
-         * @return the requested entry in this tableaux.
+         * @param ans an integer that will be set to the requested entry
+         * in this tableaux.
          */
         inline void entry(unsigned row, unsigned col, NInteger& ans) const;
-
-        /**
-         * Determines whether the given entry in this tableaux is zero.
-         *
-         * Since we do not store the full tableaux, the entry is
-         * computed on the fly.  However, this computation is fast
-         * because the computations use sparse vector multiplication.
-         *
-         * @param the row of the requested entry; this must be between 0
-         * and rank_-1 inclusive.
-         * @param the column of the requested entry; this must be between 0
-         * and origTableaux_->columns()-1 inclusive.
-         * @return \c true if and only if the corresponding entry in this
-         * tableaux is zero.
-         */
-        inline bool entryZero(unsigned row, unsigned col) const;
 
         /**
          * Determines the sign of the given entry in this tableaux.
@@ -1547,19 +1532,6 @@ inline void LPData<LPConstraint>::entry(unsigned row, unsigned col,
     else {
         ans = origTableaux_->multColByRowOct(rowOps_, row, col);
         ans += origTableaux_->multColByRowOct(rowOps_, row, octSecondary_);
-    }
-}
-
-template <typename LPConstraint>
-inline bool LPData<LPConstraint>::entryZero(unsigned row, unsigned col) const {
-    // Remember to take into account any changes of variable due
-    // to previous calls to constrainOct().
-    if (octPrimary_ != col)
-        return origTableaux_->multColByRow(rowOps_, row, col).isZero();
-    else {
-        NInteger ans = origTableaux_->multColByRowOct(rowOps_, row, col);
-        ans += origTableaux_->multColByRowOct(rowOps_, row, octSecondary_);
-        return ans.isZero();
     }
 }
 
