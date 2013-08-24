@@ -420,7 +420,7 @@ void LPData<LPConstraint>::constrainZero(unsigned pos) {
             // this basis row.  Choose the one with largest index.
             for (c = origTableaux_->columns() - 1; c >= 0; --c)
                 if (basisRow_[c] < 0 /* c is active and non-basic */ &&
-                        ! entryZero(r, c))
+                        entrySign(r, c))
                     break;
             if (c >= 0) {
                 pivot(pos, c);
@@ -671,8 +671,7 @@ void LPData<LPConstraint>::constrainOct(unsigned quad1, unsigned quad2) {
 
                 entry(r, quad1, coeff);
                 if (! coeff.isZero()) {
-                    gcdRow = rowOps_.combRowAndNorm(e1, r,
-                        coeff, row1);
+                    gcdRow = rowOps_.combRowAndNorm(e1, r, coeff, row1);
 
                     // As usual, we already know in advance that
                     // gcdRow must divide into rhs_[r].
@@ -701,7 +700,7 @@ void LPData<LPConstraint>::constrainOct(unsigned quad1, unsigned quad2) {
             int c;
             for (c = origTableaux_->columns() - 1; c >= 0; --c)
                 if (basisRow_[c] < 0 /* active and non-basic */ &&
-                        ! entryZero(row1, c))
+                        entrySign(row1, c))
                     break;
             if (c >= 0) {
                 // We've found an alternative.
@@ -1109,7 +1108,7 @@ void LPData<LPConstraint>::verify() const {
     for (r = 0; r < rank_; ++r) {
         // Check that rowOps_ is an inverse matrix.
         for (c = 0; c < rank_; ++c)
-            if (r != c && ! entryZero(r, basis_[c])) {
+            if (r != c && entrySign(r, basis_[c])) {
                 std::cerr << "VERIFY: Inverse error" << std::endl;
                 ::exit(1);
             }
