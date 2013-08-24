@@ -135,6 +135,10 @@ class NTriangulation;
  * \pre The parameters LPConstraint and BanConstraint must be subclasses of
  * LPConstraintBase and BanConstraintBase respectively.  See the
  * LPConstraintBase and BanConstraintBase class notes for further details.
+ *
+ * \apinotfinal
+ *
+ * \ifacespython Not present.
  */
 template <typename LPConstraint, typename BanConstraint>
 class NTreeTraversal : public BanConstraint {
@@ -539,6 +543,10 @@ class NTreeTraversal : public BanConstraint {
  * solutions using quadrilateral or quadrilateral-octagon coordinates, and
  * then run the conversion procedure NNormalSurfaceList::quadToStandard()
  * or NNormalSurfaceList::quadOctToStandardAN().
+ *
+ * \apinotfinal
+ *
+ * \ifacespython Not present.
  */
 template <typename LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone>
@@ -840,6 +848,10 @@ class NTreeEnumeration : public NTreeTraversal<LPConstraint, BanConstraint> {
  * \pre The parameters LPConstraint and BanConstraint must be subclasses of
  * LPConstraintBase and BanConstraintBase respectively.  See the
  * LPConstraintBase and BanConstraintBase class notes for further details.
+ *
+ * \apinotfinal
+ *
+ * \ifacespython Not present.
  */
 template <typename LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone>

@@ -78,6 +78,10 @@ class LPData;
  * \e must implement.  We note again that LPConstraintBase does not
  * provide any implementations at all, and subclasses are completely
  * responsible for their own implementations.
+ *
+ * \apinotfinal
+ *
+ * \ifacespython Not present.
  */
 class LPConstraintBase {
 #ifdef __DOXYGEN
@@ -213,10 +217,10 @@ class LPConstraintBase {
          * coordinates, and it must also set a coefficient of -1 in the
          * column for the corresponding new variable.
          *
-         * This function is templated, since in reality we typically
-         * pass an array of full tableaux columns (of type
-         * LPInitialTableaux::Col), which are larger subclasses of the
-         * Coefficients class.  This templating is necessary because the
+         * For each subclass \a S of LPConstraintBase, the array \a col
+         * must be an array of objects of type LPInitialTableaux<S>::Col.
+         * The class LPInitialTableaux<S>::Col is itself a larger subclass of
+         * the Coefficients class.  This exact type must be used because the
          * compiler must know how large each column object is in
          * order to correct access each element of the given array.
          *
@@ -228,9 +232,6 @@ class LPConstraintBase {
          * \c false (but it must still set -1 coefficients for the new
          * variables as described above).  Otherwise (if the linear function
          * were successfully constructed) this routine should return \c true.
-         *
-         * \pre The template class \a ColClass is a subclass of
-         * Coefficients.
          *
          * \pre For all coefficients in the array \a col, the
          * Coefficients substructures have all been initialised with the
@@ -247,9 +248,8 @@ class LPConstraintBase {
          * constructed, or \c false if not (in which case they will be
          * replaced with the zero functions instead).
          */
-        template <typename ColClass>
-        static bool addRows(ColClass* col, const int* columnPerm,
-            NTriangulation* tri);
+        static bool addRows(LPInitialTableaux<LPConstraintBase>::Col* col,
+            const int* columnPerm, NTriangulation* tri);
 
         /**
          * Explicitly constraints each of these linear functions to an
@@ -304,6 +304,10 @@ class LPConstraintBase {
  *
  * This class does not provide any additional functionality.  It is
  * merely a convenience to help describe and enforce preconditions.
+ *
+ * \apinotfinal
+ *
+ * \ifacespython Not present.
  */
 class LPConstraintSubspace : public LPConstraintBase {
 };
@@ -323,8 +327,8 @@ class LPConstraintNone : public LPConstraintSubspace {
             NInteger innerProductOct(const LPMatrix&, unsigned) const;
         };
 
-        template <typename ColClass>
-        static bool addRows(ColClass*, const int*, NTriangulation*);
+        static bool addRows(LPInitialTableaux<LPConstraintNone>::Col*,
+                const int*, NTriangulation*);
         static void constrain(LPData<LPConstraintNone>&, unsigned);
         static bool verify(const NNormalSurface*);
 };
@@ -348,6 +352,10 @@ class LPConstraintNone : public LPConstraintSubspace {
  * (not quadrilateral or quadrilateral-octagon coordinates).  In
  * particular, the coordinate system passed to the corresponding
  * LPInitialTableaux class constructor must be NNormalSurfaceList::STANDARD.
+ *
+ * \apinotfinal
+ *
+ * \ifacespython Not present.
  */
 class LPConstraintEuler : public LPConstraintBase {
     public:
@@ -367,9 +375,8 @@ class LPConstraintEuler : public LPConstraintBase {
                     unsigned mRow) const;
         };
 
-        template <typename ColClass>
-        static bool addRows(ColClass* col, const int* columnPerm,
-                NTriangulation* tri);
+        static bool addRows(LPInitialTableaux<LPConstraintEuler>::Col* col,
+                const int* columnPerm, NTriangulation* tri);
         static void constrain(LPData<LPConstraintEuler>& lp,
                 unsigned numCols);
         static bool verify(const NNormalSurface* s);
@@ -400,6 +407,10 @@ class LPConstraintEuler : public LPConstraintBase {
  * the coordinate system passed to the corresponding LPInitialTableaux class
  * must be NNormalSurfaceList::QUAD, and constrainOct() must never be
  * called on any of the corresponding LPData tableaux.
+ *
+ * \apinotfinal
+ *
+ * \ifacespython Not present.
  */
 class LPConstraintNonSpun : public LPConstraintSubspace {
     public:
@@ -417,9 +428,8 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
                     unsigned mRow) const;
         };
 
-        template <typename ColClass>
-        static bool addRows(ColClass* col, const int* columnPerm,
-                NTriangulation* tri);
+        static bool addRows(LPInitialTableaux<LPConstraintNonSpun>::Col* col,
+                const int* columnPerm, NTriangulation* tri);
         static void constrain(LPData<LPConstraintNonSpun>& lp,
                 unsigned numCols);
         static bool verify(const NNormalSurface* s);
@@ -473,6 +483,10 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  * class, takes a triangulation and a coordinate system), and must also
  * implement the routine init() which determines which normal coordinates
  * are banned and/or marked.
+ *
+ * \apinotfinal
+ *
+ * \ifacespython Not present.
  */
 class BanConstraintBase {
     protected:
@@ -549,6 +563,10 @@ class BanConstraintBase {
 
 /**
  * A do-nothing class that bans no disc types and marks no disc types.
+ *
+ * \apinotfinal
+ *
+ * \ifacespython Not present.
  */
 class BanNone : public BanConstraintBase {
     protected:
@@ -581,6 +599,10 @@ class BanNone : public BanConstraintBase {
  * coordinates it will only ban quadrilaterals or octagons that touch
  * the boundary, but it will still allow \e triangles that meet the boundary
  * (since triangle types are not counted in these coordinate systems).
+ *
+ * \apinotfinal
+ *
+ * \ifacespython Not present.
  */
 class BanBoundary : public BanConstraintBase {
     protected:
@@ -622,6 +644,10 @@ class BanBoundary : public BanConstraintBase {
  * octagons that touch torus boundaries, but it will still allow \e triangles
  * that meet torus boundaries (since triangle types are not counted in these
  * coordinate systems).
+ *
+ * \apinotfinal
+ *
+ * \ifacespython Not present.
  */
 class BanTorusBoundary : public BanConstraintBase {
     protected:
@@ -665,8 +691,8 @@ inline NInteger LPConstraintNone::Coefficients::innerProductOct(
     return NInteger(); // Returns zero.
 }
 
-template <typename ColClass>
-inline bool LPConstraintNone::addRows(ColClass*, const int*,
+inline bool LPConstraintNone::addRows(
+        LPInitialTableaux<LPConstraintNone>::Col*, const int*,
         NTriangulation*) {
     return true;
 }
