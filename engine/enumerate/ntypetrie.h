@@ -1,4 +1,55 @@
 
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Computational Engine                                                  *
+ *                                                                        *
+ *  Copyright (c) 2011-2013, Ben Burton                                   *
+ *  For further details contact Ben Burton (bab@debian.org).              *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  As an exception, when this program is distributed through (i) the     *
+ *  App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or     *
+ *  (iii) Google Play by Google Inc., then that store may impose any      *
+ *  digital rights management, device limits and/or redistribution        *
+ *  restrictions that are required by its terms of service.               *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,       *
+ *  MA 02110-1301, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
+
+/* end stub */
+
+/*! \file enumerate/ntypetrie.h
+ *  \brief A supporting data structure for tree traversal enumeration methods.
+ */
+
+#ifndef __NTYPETRIE_H
+#ifndef __DOXYGEN
+#define __NTYPETRIE_H
+#endif
+
+#include <cstring>
+
+namespace regina {
+
+/**
+ * \weakgroup enumerate
+ * @{
+ */
+
 /**
  * A trie that stores a set of type vectors of a fixed length.
  *
@@ -61,28 +112,17 @@ class NTypeTrie {
         /**
          * Initialises an empty trie.
          */
-        inline NTypeTrie() : elementHere_(false) {
-            memset(child_, 0, sizeof(NTypeTrie<nTypes>*) * nTypes);
-        }
+        inline NTypeTrie();
 
         /**
          * Destroys this trie.
          */
-        inline ~NTypeTrie() {
-            for (int i = 0; i < nTypes; ++i)
-                delete child_[i];
-        }
+        inline ~NTypeTrie();
 
         /**
          * Resets this to the empty trie.
          */
-        inline void clear() {
-            for (int i = 0; i < nTypes; ++i) {
-                delete child_[i];
-                child_[i] = 0;
-            }
-            elementHere_ = false;
-        }
+        inline void clear();
 
         /**
          * Inserts the given type vector into this trie.
@@ -94,21 +134,7 @@ class NTypeTrie {
          * @param entry the type vector to insert.
          * @param len the number of elements in the given type vector.
          */
-        void insert(const char* entry, unsigned len) {
-            // Strip off trailing zeroes.
-            while (len > 0 && ! entry[len - 1])
-                --len;
-
-            // Insert this type vector, creating new nodes only when required.
-            NTypeTrie<nTypes>* node = this;
-            const char* next = entry;
-            for (int pos = 0; pos < len; ++pos, ++next) {
-                if (! node->child_[*next])
-                    node->child_[*next] = new NTypeTrie<nTypes>();
-                node = node->child_[*next];
-            }
-            node->elementHere_ = true;
-        }
+        void insert(const char* entry, unsigned len);
 
         /**
          * Determines whether the given type vector dominates any vector
@@ -123,68 +149,38 @@ class NTypeTrie {
          * @return \c true if and only if \a vec dominates some type
          * vector stored in this trie.
          */
-        bool dominates(const char* vec, unsigned len) const {
-            // Strip off trailing zeroes.
-            while (len > 0 && ! vec[len - 1])
-                --len;
-
-            // At worst we have a recursive O(2^len) search on our hands.
-            // Create a stack of options that describe which branch of the
-            // trie we follow at each stage of the search.
-            //
-            // Here node[i] will store the next candidate node to try at
-            // depth i in the tree (where the root is at depth 0), or 0
-            // if we have exhausted our options at that level of the search.
-            const NTypeTrie<nTypes>** node =
-                new const NTypeTrie<nTypes>*[len + 2];
-
-            int level = 0;
-            node[0] = this;
-            while (level >= 0) {
-                if ((! node[level]) || level > len) {
-                    // If node[level] is 0, then we ran out of siblings
-                    // at this level.
-                    // If level > len, then any vector in this subtree
-                    // must have non-zero elements where vec only has zeros.
-                    // Either way, we need to backtrack.
-
-                    // Move back up one level...
-                    --level;
-                    // ... and then move to the next sibling at this (higher)
-                    // level.
-                    if (level > 0 &&
-                            node[level] == node[level - 1]->child_[0] &&
-                            vec[level - 1])
-                        node[level] = node[level - 1]->child_[vec[level - 1]];
-                    else if (level >= 0)
-                        node[level] = 0;
-                    continue;
-                }
-
-                // Process the node at the current level.
-                if (node[level]->elementHere_) {
-                    // This node (padded with trailing zeroes) is
-                    // dominated by the given type vector.
-                    delete[] node;
-                    return true;
-                }
-
-                // Descend further into the tree.
-                //
-                // If vec[level] == 0, we must descend to child_[0].
-                // Otherwise we try child_[0] and then child_[type].
-                //
-                // The following code sets node[level + 1] to the first non-zero
-                // child in this selection, or to 0 if all such children are 0.
-                if (node[level]->child_[0])
-                    node[level + 1] = node[level]->child_[0];
-                else
-                    node[level + 1] = node[level]->child_[vec[level]];
-                ++level;
-            }
-
-            delete[] node;
-            return false;
-        }
+        bool dominates(const char* vec, unsigned len) const;
 };
+
+// Inline functions for NTypeTrie
+
+template <int nTypes>
+inline NTypeTrie<nTypes>::NTypeTrie() : elementHere_(false) {
+    ::memset(child_, 0, sizeof(NTypeTrie<nTypes>*) * nTypes);
+}
+
+/**
+ * Destroys this trie.
+ */
+template <int nTypes>
+inline NTypeTrie<nTypes>::~NTypeTrie() {
+    for (int i = 0; i < nTypes; ++i)
+        delete child_[i];
+}
+
+/**
+ * Resets this to the empty trie.
+ */
+template <int nTypes>
+inline void NTypeTrie<nTypes>::clear() {
+    for (int i = 0; i < nTypes; ++i) {
+        delete child_[i];
+        child_[i] = 0;
+    }
+    elementHere_ = false;
+}
+
+} // namespace regina
+
+#endif
 
