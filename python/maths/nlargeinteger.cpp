@@ -67,6 +67,7 @@ void addNLargeInteger() {
         .def(init<const char*, optional<int> >())
         .def("isNative", &NLargeInteger::isNative)
         .def("isZero", &NLargeInteger::isZero)
+        .def("sign", &NLargeInteger::sign)
         .def("isInfinite", &NLargeInteger::isInfinite)
         .def("makeInfinite", &NLargeInteger::makeInfinite)
         .def("longValue", &NLargeInteger::longValue)

@@ -318,6 +318,14 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
         bool isZero() const;
 
         /**
+         * Returns the sign of this integer.
+         *
+         * @return +1, -1 or 0 according to whether this integer is
+         * positive, negative or zero.
+         */
+        int sign() const;
+
+        /**
          * Returns whether this integer is infinity.
          *
          * @return \c true if and only if this integer is infinity.
@@ -1522,6 +1530,13 @@ template <bool supportInfinity>
 inline bool NIntegerBase<supportInfinity>::isZero() const {
     return (! isInfinite()) &&
         (((! large_) && (! small_)) || (large_ && mpz_sgn(large_) == 0));
+}
+
+template <bool supportInfinity>
+inline int NIntegerBase<supportInfinity>::sign() const {
+    return (isInfinite() ? 1 :
+        large_ ? mpz_sgn(large_) :
+        small_ > 0 ? 1 : small_ < 0 ? -1 : 0);
 }
 
 template <>
