@@ -3897,7 +3897,16 @@ class TreeTraversal : public BanConstraint {
         }
 
         /**
-         * TODO: Document.
+         * Cancels the current search operation.
+         *
+         * This may be called from another thread (it is thread-safe).
+         * If called, it signals that any major search operation
+         * underway should be cancelled.
+         *
+         * If and when the operation is cancelled is entirely up to the
+         * subclass performing the search.  Examples of searches that
+         * respect cancellation requests (and do so relatively quickly)
+         * are TreeEnumeration::next() and TreeSingleSoln::find().
          */
         inline void cancel() {
             regina::NMutex::MutexLock lock(mCancel_);
@@ -3905,7 +3914,12 @@ class TreeTraversal : public BanConstraint {
         }
 
         /**
-         * TODO: Document.
+         * Returns whether some thread has requested that the current
+         * search operation be cancelled.  This routine is thread-safe.
+         *
+         * See cancel() for details on how cancellation works.
+         *
+         * @return \c true if some thread has called cancel() on this object.
          */
         inline bool cancelled() const {
             regina::NMutex::MutexLock lock(mCancel_);
