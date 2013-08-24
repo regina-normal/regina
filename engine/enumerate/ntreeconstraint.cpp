@@ -38,11 +38,8 @@
 
 namespace regina {
 
-// Template are instantiated at the bottom of this file.
-
-template <typename ColClass>
-bool LPConstraintEuler::addRows(ColClass* col, const int* columnPerm,
-        NTriangulation* tri) {
+bool LPConstraintEuler::addRows(LPInitialTableaux<LPConstraintEuler>::Col* col,
+        const int* columnPerm, NTriangulation* tri) {
     int* obj = new int[7 * tri->getNumberOfTetrahedra()];
     unsigned tet, i;
     NPerm4 p;
@@ -79,9 +76,9 @@ bool LPConstraintEuler::addRows(ColClass* col, const int* columnPerm,
 }
 
 #ifndef EXCLUDE_SNAPPEA
-template <typename ColClass>
-bool LPConstraintNonSpun::addRows(ColClass* col, const int* columnPerm,
-        NTriangulation* tri) {
+bool
+LPConstraintNonSpun::addRows(LPInitialTableaux<LPConstraintNonSpun>::Col* col,
+        const int* columnPerm, NTriangulation* tri) {
     // Regardless of whether the constraints are broken,
     // we need to ensure that the matrix has full rank.
     // Therefore add the coefficients for the two new variables now.
@@ -253,19 +250,6 @@ void BanTorusBoundary::init(const int* columnPerm) {
     delete[] banFace;
     delete[] markVtx;
 }
-
-// TODO: Augh.
-template bool LPConstraintEuler::addRows<
-        LPInitialTableaux<LPConstraintEuler>::Col>(
-        LPInitialTableaux<LPConstraintEuler>::Col*,
-        const int*, NTriangulation*);
-
-#ifndef EXCLUDE_SNAPPEA
-template bool LPConstraintNonSpun::addRows<
-        LPInitialTableaux<LPConstraintNonSpun>::Col>(
-        LPInitialTableaux<LPConstraintNonSpun>::Col*,
-        const int*, NTriangulation*);
-#endif
 
 } // namespace regina
 

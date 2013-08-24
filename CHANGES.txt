@@ -10,6 +10,9 @@ Regina - A Normal Surface Theory Calculator
 Version 4.94  [ (under development) ]
 
     ENGINE:
+        Class BanConstraintBase, BanNone, BanBoundary, BanTorusBoundary:
+            - New constraint classes for use with the new tree traversal code
+              for enumerating normal surfaces.  See NTreeTraversal for details.
         Class Dim2Census, Dim2EdgePairing, Dim2GluingPerms,
                 Dim2GluingPermSearcher:
             - New classes for building a census of 2-manifold triangulations.
@@ -27,6 +30,14 @@ Version 4.94  [ (under development) ]
         Class IntOfSize:
             - New template class for using native integer types whose sizes
               are not determined until compile time.
+        Class LPConstraintBase, LPConstraintSubspace, LPConstraintNone,
+                LPConstraintEuler, LPConstraintNonSpun:
+            - New constraint classes for use with the new tree traversal code
+              for enumerating normal surfaces.  See NTreeTraversal for details.
+        Class LPData, LPInitialTableaux, LPMatrix:
+            - New classes that implement the dual simplex method, for use with
+              the new tree traversal code for enumerating normal surfaces.
+              See NTreeTraversal for details.
         Class NAbelianGroup:
             - New convenience routines isZ() and isZn().
         Class NBlockedSFS:
@@ -110,6 +121,12 @@ Version 4.94  [ (under development) ]
               adjacentFacet().  These are identical to adjacentTetrahedron()
               and adjacentFace() respectively, and can help with
               writing code that works with more than one dimension.
+        Class NTreeTraversal, NTreeEnumeration, NTreeSingleSolution:
+            - New class for enumerating vertex normal surfaces and
+              locating a single vertex normal surface under some linear
+              constraint (such as positive Euler characteristic).  These are a
+              significant improvement upon the old double description method.
+              For details see arXiv:1010.6200 and arXiv:1211.1079 respectively.
         Class NTriangulation:
             - New routine drillEdge() to drill out a regular
               neighbourhood of an edge.
@@ -125,6 +142,10 @@ Version 4.94  [ (under development) ]
             - Fixed minor memory leak in idealToFinite().
         Class NTritmask1, NTritmask2:
             - Fast classes for working with 0/1/2 trits, i.e., "ternary bits".
+        Class NTypeTrie:
+            - A fast data structure for storing zero/non-zero patterns in
+              vertex normal surfaces.  This supports the new tree
+              traversal enumeration code; see NTreeTraversal for details.
         Class NVertex:
             - New routine buildLink() to triangulate the vertex link.
         Routine readOrb():

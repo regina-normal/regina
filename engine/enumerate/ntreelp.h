@@ -98,6 +98,8 @@ class NTriangulation;
  * This matrix is stored in dense form.  All elements are of the class
  * NInteger.
  *
+ * \apinotfinal
+ *
  * \ifacespython Not present.
  */
 class LPMatrix {
@@ -399,10 +401,14 @@ class LPMatrix {
  *
  * \pre The template parameter LPConstraint must be one of the subclasses of
  * LPConstraintBase.  See the LPConstraintBase class notes for further details.
+ *
+ * \apinotfinal
+ *
+ * \ifacespython Not present.
  */
 template <typename LPConstraint>
 class LPInitialTableaux {
-    private:
+    public:
         /**
          * Stores a single column of the adjusted matching equation matrix
          * in sparse form.
@@ -449,6 +455,7 @@ class LPInitialTableaux {
             inline void push(unsigned row, int val);
         };
 
+    private:
         NTriangulation* tri_;
             /**< The underlying triangulation. */
         int coords_;
@@ -818,6 +825,10 @@ class LPInitialTableaux {
  *
  * \pre The template parameter LPConstraint must be one of the subclasses of
  * LPConstraintBase.  See the LPConstraintBase class notes for further details.
+ *
+ * \apinotfinal
+ *
+ * \ifacespython Not present.
  */
 template <typename LPConstraint>
 class LPData {
