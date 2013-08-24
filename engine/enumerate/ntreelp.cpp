@@ -38,11 +38,13 @@ namespace regina {
 
 // Instantiate templates:
 template class LPInitialTableaux<LPConstraintNone>;
-template class LPInitialTableaux<LPConstraintEuler>;
-template class LPInitialTableaux<LPConstraintNonSpun>;
 template class LPData<LPConstraintNone>;
+template class LPInitialTableaux<LPConstraintEuler>;
 template class LPData<LPConstraintEuler>;
+#ifndef EXCLUDE_SNAPPEA
+template class LPInitialTableaux<LPConstraintNonSpun>;
 template class LPData<LPConstraintNonSpun>;
+#endif
 
 void LPMatrix::combRow(const NInteger& destCoeff, unsigned dest,
         const NInteger& srcCoeff, unsigned src, const NInteger& div) {

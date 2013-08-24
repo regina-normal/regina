@@ -41,6 +41,7 @@
 #define __NTREECONSTRAINT_H
 #endif
 
+#include "regina-config.h" // For EXCLUDE_SNAPPEA
 #include "enumerate/ntreelp.h"
 #include "maths/ninteger.h"
 #include "surfaces/nnormalsurfacelist.h"
@@ -374,6 +375,7 @@ class LPConstraintEuler : public LPConstraintBase {
         static bool verify(const NNormalSurface* s);
 };
 
+#ifndef EXCLUDE_SNAPPEA
 /**
  * A class that constraints the tableaux of normal surface matching equations
  * to ensure that normal surfaces in an ideal triangulation are compact
@@ -422,6 +424,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
                 unsigned numCols);
         static bool verify(const NNormalSurface* s);
 };
+#endif // EXCLUDE_SNAPPEA
 
 /**
  * A base class for additional banning and marking constraints that we
@@ -718,6 +721,7 @@ inline bool LPConstraintEuler::verify(const NNormalSurface* s) {
     return (s->getEulerCharacteristic() > 0);
 }
 
+#ifndef EXCLUDE_SNAPPEA
 inline LPConstraintNonSpun::Coefficients::Coefficients() :
         meridian(0), longitude(0) {
 }
@@ -756,6 +760,7 @@ inline void LPConstraintNonSpun::constrain(
 inline bool LPConstraintNonSpun::verify(const NNormalSurface* s) {
     return s->isCompact();
 }
+#endif // EXCLUDE_SNAPPEA
 
 inline BanConstraintBase::~BanConstraintBase() {
     delete[] banned_;
