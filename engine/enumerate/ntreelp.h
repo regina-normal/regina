@@ -1150,6 +1150,9 @@ class LPData {
          * computed on the fly.  However, this computation is fast
          * because the computations use sparse vector multiplication.
          *
+         * There is an alternate version of this function that avoids
+         * creating spurious temporaries (which may help with performance).
+         *
          * @param the row of the requested entry; this must be between 0
          * and rank_-1 inclusive.
          * @param the column of the requested entry; this must be between 0
@@ -1157,6 +1160,57 @@ class LPData {
          * @return the requested entry in this tableaux.
          */
         inline NInteger entry(unsigned row, unsigned col) const;
+
+        /**
+         * Sets \a ans to the given entry in this tableaux.
+         *
+         * Since we do not store the full tableaux, this entry is
+         * computed on the fly.  However, this computation is fast
+         * because the computations use sparse vector multiplication.
+         *
+         * There is an alternate version of this function that is more
+         * natural (it returns its answer), but creates an additional
+         * temporary variable (which may hinder performance).
+         *
+         * @param the row of the requested entry; this must be between 0
+         * and rank_-1 inclusive.
+         * @param the column of the requested entry; this must be between 0
+         * and origTableaux_->columns()-1 inclusive.
+         * @return the requested entry in this tableaux.
+         */
+        inline void entry(unsigned row, unsigned col, NInteger& ans) const;
+
+        /**
+         * Determines whether the given entry in this tableaux is zero.
+         *
+         * Since we do not store the full tableaux, the entry is
+         * computed on the fly.  However, this computation is fast
+         * because the computations use sparse vector multiplication.
+         *
+         * @param the row of the requested entry; this must be between 0
+         * and rank_-1 inclusive.
+         * @param the column of the requested entry; this must be between 0
+         * and origTableaux_->columns()-1 inclusive.
+         * @return \c true if and only if the corresponding entry in this
+         * tableaux is zero.
+         */
+        inline bool entryZero(unsigned row, unsigned col) const;
+
+        /**
+         * Determines the sign of the given entry in this tableaux.
+         *
+         * Since we do not store the full tableaux, the entry is
+         * computed on the fly.  However, this computation is fast
+         * because the computations use sparse vector multiplication.
+         *
+         * @param the row of the requested entry; this must be between 0
+         * and rank_-1 inclusive.
+         * @param the column of the requested entry; this must be between 0
+         * and origTableaux_->columns()-1 inclusive.
+         * @return +1, -1 or 0 according to whether the requested entry
+         * is positive, negative or zero.
+         */
+        inline int entrySign(unsigned row, unsigned col) const;
 
         /**
          * Performs a pivot in the dual simplex method.
@@ -1477,11 +1531,48 @@ inline NInteger LPData<LPConstraint>::entry(unsigned row, unsigned col) const {
     if (octPrimary_ != col)
         return origTableaux_->multColByRow(rowOps_, row, col);
     else {
-        NInteger ans = origTableaux_->multColByRowOct(rowOps_,
-            row, col);
-        ans += origTableaux_->multColByRowOct(rowOps_,
-            row, octSecondary_);
+        NInteger ans = origTableaux_->multColByRowOct(rowOps_, row, col);
+        ans += origTableaux_->multColByRowOct(rowOps_, row, octSecondary_);
         return ans;
+    }
+}
+
+template <typename LPConstraint>
+inline void LPData<LPConstraint>::entry(unsigned row, unsigned col,
+        NInteger& ans) const {
+    // Remember to take into account any changes of variable due
+    // to previous calls to constrainOct().
+    if (octPrimary_ != col)
+        ans = origTableaux_->multColByRow(rowOps_, row, col);
+    else {
+        ans = origTableaux_->multColByRowOct(rowOps_, row, col);
+        ans += origTableaux_->multColByRowOct(rowOps_, row, octSecondary_);
+    }
+}
+
+template <typename LPConstraint>
+inline bool LPData<LPConstraint>::entryZero(unsigned row, unsigned col) const {
+    // Remember to take into account any changes of variable due
+    // to previous calls to constrainOct().
+    if (octPrimary_ != col)
+        return origTableaux_->multColByRow(rowOps_, row, col).isZero();
+    else {
+        NInteger ans = origTableaux_->multColByRowOct(rowOps_, row, col);
+        ans += origTableaux_->multColByRowOct(rowOps_, row, octSecondary_);
+        return ans.isZero();
+    }
+}
+
+template <typename LPConstraint>
+inline int LPData<LPConstraint>::entrySign(unsigned row, unsigned col) const {
+    // Remember to take into account any changes of variable due
+    // to previous calls to constrainOct().
+    if (octPrimary_ != col)
+        return origTableaux_->multColByRow(rowOps_, row, col).sign();
+    else {
+        NInteger ans = origTableaux_->multColByRowOct(rowOps_, row, col);
+        ans += origTableaux_->multColByRowOct(rowOps_, row, octSecondary_);
+        return ans.sign();
     }
 }
 

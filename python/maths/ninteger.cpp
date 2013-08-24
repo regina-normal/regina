@@ -67,6 +67,7 @@ void addNInteger() {
         .def(init<const char*, optional<int> >())
         .def("isNative", &NInteger::isNative)
         .def("isZero", &NInteger::isZero)
+        .def("sign", &NInteger::sign)
         .def("isInfinite", &NInteger::isInfinite)
         .def("makeInfinite", &NInteger::makeInfinite)
         .def("longValue", &NInteger::longValue)

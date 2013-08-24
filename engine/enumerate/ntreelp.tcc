@@ -420,7 +420,7 @@ void LPData<LPConstraint>::constrainZero(unsigned pos) {
             // this basis row.  Choose the one with largest index.
             for (c = origTableaux_->columns() - 1; c >= 0; --c)
                 if (basisRow_[c] < 0 /* c is active and non-basic */ &&
-                        entry(r, c) != 0)
+                        ! entryZero(r, c))
                     break;
             if (c >= 0) {
                 pivot(pos, c);
@@ -463,7 +463,7 @@ void LPData<LPConstraint>::constrainZero(unsigned pos) {
             // no such variable, the entire system becomes infeasible.
             for (c = origTableaux_->columns() - 1; c >= 0; --c)
                 if (basisRow_[c] < 0 /* c is active and non-basic */ &&
-                        entry(r, c) > 0)
+                        entrySign(r, c) > 0)
                     break;
             if (c < 0) {
                 // There is no possible variable to pivot in.
@@ -521,19 +521,23 @@ void LPData<LPConstraint>::constrainPositive(unsigned pos) {
     // right-hand side could become negative, we must remember to
     // pivot back to feasibility.
     int r = basisRow_[pos];
+    NInteger tmp;
     if (r >= 0) {
         // This variable is in the basis, and so there is only
         // one non-zero entry in column pos.
         // This makes subtracting column pos from rhs_ very easy
         // (just a single operation):
-        if ((rhs_[r] -= entry(r, pos)) < 0)
+        entry(r, pos, tmp);
+        if ((rhs_[r] -= tmp) < 0)
             makeFeasible();
     } else {
         // This variable is not in the basis.
         // We know nothing about the column, so just do a full
         // element-by-element column subtraction.
-        for (r = 0; r < rank_; ++r)
-            rhs_[r] -= entry(r, pos);
+        for (r = 0; r < rank_; ++r) {
+            entry(r, pos, tmp);
+            rhs_[r] -= tmp;
+        }
         makeFeasible();
     }
 }
@@ -646,7 +650,8 @@ void LPData<LPConstraint>::constrainOct(unsigned quad1, unsigned quad2) {
         // look like anything.  We need to repair it so it
         // contains all zeroes except for cell (row1, quad1),
         // which must be strictly positive.
-        NInteger e1 = entry(row1, quad1);
+        NInteger e1;
+        entry(row1, quad1, e1);
         if (! e1.isZero()) {
             // The (row1, quad1) entry is non-zero.
             // It's clear what to do from here: make sure
@@ -664,7 +669,7 @@ void LPData<LPConstraint>::constrainOct(unsigned quad1, unsigned quad2) {
                 if (r == row1)
                     continue;
 
-                coeff = entry(r, quad1);
+                entry(r, quad1, coeff);
                 if (! coeff.isZero()) {
                     gcdRow = rowOps_.combRowAndNorm(e1, r,
                         coeff, row1);
@@ -696,7 +701,7 @@ void LPData<LPConstraint>::constrainOct(unsigned quad1, unsigned quad2) {
             int c;
             for (c = origTableaux_->columns() - 1; c >= 0; --c)
                 if (basisRow_[c] < 0 /* active and non-basic */ &&
-                        ! entry(row1, c).isZero())
+                        ! entryZero(row1, c))
                     break;
             if (c >= 0) {
                 // We've found an alternative.
@@ -848,7 +853,8 @@ void LPData<LPConstraint>::pivot(unsigned outCol, unsigned inCol) {
     basis_[defRow] = inCol;
 
     // Make sure that inCol has a positive coefficient in row defRow.
-    NInteger base = entry(defRow, inCol);
+    NInteger base;
+    entry(defRow, inCol, base);
     if (base < 0) {
         base.negate();
         rhs_[defRow].negate();
@@ -864,7 +870,7 @@ void LPData<LPConstraint>::pivot(unsigned outCol, unsigned inCol) {
         if (r == defRow)
             continue;
 
-        coeff = entry(r, inCol);
+        entry(r, inCol, coeff);
         if (! coeff.isZero()) {
             // Perform the row operation on the matrix...
             gcdRow = rowOps_.combRowAndNorm(base, r, coeff, defRow);
@@ -1002,11 +1008,11 @@ void LPData<LPConstraint>::makeFeasible() {
                     // Use it until we find something better.
                     outRow = r;
                     outCol = basis_[r];
-                    outEntry = entry(r, outCol);
+                    entry(r, outCol, outEntry);
                     continue;
                 }
                 // Compare which variable is most negative.
-                tmp = entry(r, basis_[r]);
+                entry(r, basis_[r], tmp);
                 v1 = rhs_[r]; v1 *= outEntry; // Avoid spurious temporaries.
                 v2 = rhs_[outRow]; v2 *= tmp; // Avoid spurious temporaries.
                 if (v1 < v2) {
@@ -1026,7 +1032,7 @@ void LPData<LPConstraint>::makeFeasible() {
         // column with negative coefficient in this row.
         for (c = nCols - 1; c >= 0; --c)
             if (basisRow_[c] < 0 /* active, non-basic variable */ &&
-                    entry(outRow, c) < 0)
+                    entrySign(outRow, c) < 0)
                 break;
         if (c < 0) {
             // There is no possible variable to pivot in.
@@ -1085,7 +1091,7 @@ void LPData<LPConstraint>::makeFeasibleAntiCycling() {
         // column with negative coefficient in this row.
         for (c = origTableaux_->columns() - 1; c >= 0; --c)
             if (basisRow_[c] < 0 /* active, non-basic variable */ &&
-                    entry(basisRow_[outCol], c) < 0)
+                    entrySign(basisRow_[outCol], c) < 0)
                 break;
         if (c < 0) {
             // There is no possible variable to pivot in.
@@ -1103,7 +1109,7 @@ void LPData<LPConstraint>::verify() const {
     for (r = 0; r < rank_; ++r) {
         // Check that rowOps_ is an inverse matrix.
         for (c = 0; c < rank_; ++c)
-            if (r != c && ! entry(r, basis_[c]).isZero()) {
+            if (r != c && ! entryZero(r, basis_[c])) {
                 std::cerr << "VERIFY: Inverse error" << std::endl;
                 ::exit(1);
             }
