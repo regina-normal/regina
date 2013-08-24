@@ -659,8 +659,7 @@ void LPData<LPConstraint>::constrainOct(unsigned quad1, unsigned quad2) {
                 rowOps_.negateRow(row1);
             }
 
-            NInteger coeff;
-            NInteger gcdRow;
+            NInteger coeff, gcdRow, tmp;
             for (int r = 0; r < rank_; ++r) {
                 if (r == row1)
                     continue;
@@ -673,7 +672,9 @@ void LPData<LPConstraint>::constrainOct(unsigned quad1, unsigned quad2) {
                     // As usual, we already know in advance that
                     // gcdRow must divide into rhs_[r].
                     rhs_[r] *= e1;
-                    rhs_[r] -= (coeff * rhs_[row1]);
+                    tmp = coeff;
+                    tmp *= rhs_[row1]; // Avoid spurious temporary NIntegers.
+                    rhs_[r] -= tmp;
                     rhs_[r].divByExact(gcdRow);
                 }
             }
@@ -857,8 +858,7 @@ void LPData<LPConstraint>::pivot(unsigned outCol, unsigned inCol) {
     // Walk through the entire tableaux and perform row operations
     // to ensure that the only non-zero entry in column \a inCol
     // is the entry base in row defRow (as extracted above).
-    NInteger coeff;
-    NInteger gcdRow;
+    NInteger coeff, gcdRow, tmp;
     unsigned r;
     for (r = 0; r < rank_; ++r) {
         if (r == defRow)
@@ -874,7 +874,9 @@ void LPData<LPConstraint>::pivot(unsigned outCol, unsigned inCol) {
             // since rhs_ is obtained by multiplying the integer
             // matrix rowOps_ with an integer vector.
             rhs_[r] *= base;
-            rhs_[r] -= (coeff * rhs_[defRow]);
+            tmp = coeff;
+            tmp *= rhs_[defRow]; // Avoid spurious temporary NIntegers.
+            rhs_[r] -= tmp;
             rhs_[r].divByExact(gcdRow);
         }
     }
@@ -964,7 +966,7 @@ void LPData<LPConstraint>::findInitialBasis() {
 template <typename LPConstraint>
 void LPData<LPConstraint>::makeFeasible() {
     int r, c, outCol, outRow;
-    NInteger outEntry, tmp;
+    NInteger outEntry, tmp, v1, v2;
 
     // Variables for detecting cycling.
     //
@@ -1005,7 +1007,9 @@ void LPData<LPConstraint>::makeFeasible() {
                 }
                 // Compare which variable is most negative.
                 tmp = entry(r, basis_[r]);
-                if (rhs_[r] * outEntry < rhs_[outRow] * tmp) {
+                v1 = rhs_[r]; v1 *= outEntry; // Avoid spurious temporaries.
+                v2 = rhs_[outRow]; v2 *= tmp; // Avoid spurious temporaries.
+                if (v1 < v2) {
                     outRow = r;
                     outCol = basis_[r];
                     outEntry = tmp;

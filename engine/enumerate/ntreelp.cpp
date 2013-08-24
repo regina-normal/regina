@@ -50,16 +50,21 @@ void LPMatrix::combRow(const NInteger& destCoeff, unsigned dest,
         const NInteger& srcCoeff, unsigned src, const NInteger& div) {
     NInteger* ps = dat_ + src * cols_;
     NInteger* pd = dat_ + dest * cols_;
+    NInteger tmp; // Use this to avoid spurious temporary NIntegers.
     if (div > 1)
         for (unsigned i = 0; i < cols_; ++i) {
             *pd *= destCoeff;
-            *pd -= (srcCoeff * *ps++);
+            tmp = srcCoeff;
+            tmp *= *ps++;
+            *pd -= tmp;
             (*pd++).divByExact(div);
         }
     else
         for (unsigned i = 0; i < cols_; ++i) {
             *pd *= destCoeff;
-            *pd++ -= (srcCoeff * *ps++);
+            tmp = srcCoeff;
+            tmp *= *ps++;
+            *pd++ -= tmp;
         }
 }
 
@@ -68,10 +73,13 @@ NInteger LPMatrix::combRowAndNorm(const NInteger& destCoeff,
     NInteger gcdRow; // Initialised to zero.
     NInteger* ps = dat_ + src * cols_;
     NInteger* pd = dat_ + dest * cols_;
+    NInteger tmp; // Use this to avoid spurious temporary NIntegers.
     unsigned i;
     for (i = 0; i < cols_; ++i, pd++, ps++) {
         *pd *= destCoeff;
-        *pd -= (srcCoeff * *ps);
+        tmp = srcCoeff;
+        tmp *= *ps;
+        *pd -= tmp;
         if (gcdRow != 1)
             gcdRow = gcdRow.gcd(*pd); // gcd() guarantees to be >= 0.
     }
