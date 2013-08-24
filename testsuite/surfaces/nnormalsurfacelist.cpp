@@ -185,27 +185,40 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             NTetrahedron* s;
             NTetrahedron* t;
 
-            // The one-tetrahedron ball has no face identifications at all.
+            // Some triangulations have no face identifications at all.
+            empty.setPacketLabel("Empty");
+
             oneTet.newTetrahedron();
+            oneTet.setPacketLabel("Lone tetrahedron");
 
             // Use pre-coded triangulations where we can.
             copyAndDelete(figure8,
                 NExampleTriangulation::figureEightKnotComplement());
+            figure8.setPacketLabel("Figure eight knot complement");
+
             copyAndDelete(gieseking, NExampleTriangulation::gieseking());
+            gieseking.setPacketLabel("Gieseking manifold");
 
             // Layered loops can be constructed automatically.
             S3.insertLayeredLoop(1, false);
+            S3.setPacketLabel("S3");
+
             loopC2.insertLayeredLoop(2, false);
+            loopC2.setPacketLabel("C(2)");
+
             loopCtw3.insertLayeredLoop(3, true);
+            loopCtw3.setPacketLabel("C~(3)");
 
             // Some non-minimal triangulations can be generated from
             // splitting surfaces.
             generateFromSig(largeS3, "abcd.abe.c.d.e");
+            largeS3.setPacketLabel("Large S3");
+
             generateFromSig(largeRP3, "aabcd.be.c.d.e");
+            largeRP3.setPacketLabel("Large RP3");
 
             // A 3-tetrahedron non-orientable twisted I-bundle over the
-            // Klein bottle is described in Chapter 3 of Benjamin
-            // Burton's PhD thesis.
+            // Klein bottle is described in Chapter 3 of Burton's PhD thesis.
             r = twistedKxI.newTetrahedron();
             s = twistedKxI.newTetrahedron();
             t = twistedKxI.newTetrahedron();
@@ -214,10 +227,12 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             r->joinTo(2, t, NPerm4(1, 3, 2, 0));
             s->joinTo(1, t, NPerm4(0, 3, 2, 1));
             s->joinTo(2, t, NPerm4(3, 1, 0, 2));
+            twistedKxI.setPacketLabel("Twisted KxI");
 
             // Build the 9-tetrahedron SFS from its dehydration string;
             // obscure but painless at least.
             norSFS.insertRehydration("jnnafaabcfighhihimgbpqpepbr");
+            norSFS.setPacketLabel("SFS [RP2: (2,1) (2,1) (2,1)]");
         }
 
         void tearDown() {
@@ -452,10 +467,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             return ok;
         }
 
-        static void verifyConversions(NTriangulation* tri,
-                const char* triName = 0) {
-            const char* useName = (triName ? triName :
-                tri->getPacketLabel().c_str());
+        static void verifyConversions(NTriangulation* tri) {
+            const char* useName = tri->getPacketLabel().c_str();
 
             if (tri->isIdeal() || ! tri->isValid()) {
                 std::ostringstream msg;
@@ -520,10 +533,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             delete quadConv;
         }
 
-        static void verifyConversionsAN(NTriangulation* tri,
-                const char* triName = 0) {
-            const char* useName = (triName ? triName :
-                tri->getPacketLabel().c_str());
+        static void verifyConversionsAN(NTriangulation* tri) {
+            const char* useName = tri->getPacketLabel().c_str();
 
             if (tri->isIdeal() || ! tri->isValid()) {
                 std::ostringstream msg;
@@ -592,13 +603,15 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         static bool verifyConversionsCensus(NTriangulation* tri,
                 void* triName) {
-            verifyConversions(tri, static_cast<const char*>(triName));
+            tri->setPacketLabel(static_cast<const char*>(triName));
+            verifyConversions(tri);
             return false;
         }
 
         static bool verifyConversionsANCensus(NTriangulation* tri,
                 void* triName) {
-            verifyConversionsAN(tri, static_cast<const char*>(triName));
+            tri->setPacketLabel(static_cast<const char*>(triName));
+            verifyConversionsAN(tri);
             return false;
         }
 
@@ -1731,16 +1744,15 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void standardQuadConversionsConstructed() {
-            verifyConversions(&empty, "the empty triangulation");
-            verifyConversions(&oneTet, "a single tetrahedron");
-            verifyConversions(&S3, "the 3-sphere");
-            verifyConversions(&loopC2, "the untwisted layered loop C(2)");
-            verifyConversions(&loopCtw3, "the twisted layered loop C~(3)");
-            verifyConversions(&largeS3, "a non-minimal S^3");
-            verifyConversions(&largeRP3, "a non-minimal RP^3");
-            verifyConversions(&twistedKxI,
-                "a 3-tetrahedron non-orientable twisted KxI");
-            verifyConversions(&norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
+            verifyConversions(&empty);
+            verifyConversions(&oneTet);
+            verifyConversions(&S3);
+            verifyConversions(&loopC2);
+            verifyConversions(&loopCtw3);
+            verifyConversions(&largeS3);
+            verifyConversions(&largeRP3);
+            verifyConversions(&twistedKxI);
+            verifyConversions(&norSFS);
         }
 
         void standardQuadConversionsCensus() {
@@ -1777,16 +1789,15 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void standardANQuadOctConversionsConstructed() {
-            verifyConversionsAN(&empty, "the empty triangulation");
-            verifyConversionsAN(&oneTet, "a single tetrahedron");
-            verifyConversionsAN(&S3, "the 3-sphere");
-            verifyConversionsAN(&loopC2, "the untwisted layered loop C(2)");
-            verifyConversionsAN(&loopCtw3, "the twisted layered loop C~(3)");
-            verifyConversionsAN(&largeS3, "a non-minimal S^3");
-            verifyConversionsAN(&largeRP3, "a non-minimal RP^3");
-            verifyConversionsAN(&twistedKxI,
-                "a 3-tetrahedron non-orientable twisted KxI");
-            verifyConversionsAN(&norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
+            verifyConversionsAN(&empty);
+            verifyConversionsAN(&oneTet);
+            verifyConversionsAN(&S3);
+            verifyConversionsAN(&loopC2);
+            verifyConversionsAN(&loopCtw3);
+            verifyConversionsAN(&largeS3);
+            verifyConversionsAN(&largeRP3);
+            verifyConversionsAN(&twistedKxI);
+            verifyConversionsAN(&norSFS);
         }
 
         void standardANQuadOctConversionsCensus() {
@@ -1822,7 +1833,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             delete parent;
         }
 
-        static void testDisjoint(NTriangulation* tri, const char* triName) {
+        static void testDisjoint(NTriangulation* tri) {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
                 tri, NNormalSurfaceList::AN_STANDARD);
             unsigned long n = list->getNumberOfSurfaces();
@@ -1843,7 +1854,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                         t = list->getSurface(j);
                         if (! s->disjoint(*t)) {
                             std::ostringstream msg;
-                            msg << "Surface #" << i << " for " << triName
+                            msg << "Surface #" << i << " for "
+                                << tri->getPacketLabel()
                                 << " is a vertex link "
                                 "and therefore should be disjoint from "
                                 "surface #" << j << ".";
@@ -1866,7 +1878,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                         if (t->isVertexLinking()) {
                             if (! s->disjoint(*t)) {
                                 std::ostringstream msg;
-                                msg << "Surface #" << i << " for " << triName
+                                msg << "Surface #" << i << " for "
+                                    << tri->getPacketLabel()
                                     << " is a thin edge link and therefore "
                                     "should be disjoint from surface #" << j
                                     << ", which is a vertex link.";
@@ -1875,7 +1888,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                         } else if (t->getEdgeWeight(edge) == 0) {
                             if (! s->disjoint(*t)) {
                                 std::ostringstream msg;
-                                msg << "Surface #" << i << " for " << triName
+                                msg << "Surface #" << i << " for "
+                                    << tri->getPacketLabel()
                                     << " is a thin edge link and therefore "
                                     "should be disjoint from surface #" << j
                                     << ", which does not meet the "
@@ -1900,13 +1914,15 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 // iff it is two-sided.
                 if (s->isTwoSided() && ! s->disjoint(*s)) {
                     std::ostringstream msg;
-                    msg << "Surface #" << i << " for " << triName
+                    msg << "Surface #" << i << " for "
+                        << tri->getPacketLabel()
                         << " is two-sided and therefore should be "
                         "disjoint from itself.";
                     CPPUNIT_FAIL(msg.str());
                 } else if ((! s->isTwoSided()) && s->disjoint(*s)) {
                     std::ostringstream msg;
-                    msg << "Surface #" << i << " for " << triName
+                    msg << "Surface #" << i << " for "
+                        << tri->getPacketLabel()
                         << " is one-sided and therefore should not be "
                         "disjoint from itself.";
                     CPPUNIT_FAIL(msg.str());
@@ -1917,22 +1933,22 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         static bool testDisjointCensus(NTriangulation* tri, void* triName) {
-            testDisjoint(tri, static_cast<const char*>(triName));
+            tri->setPacketLabel(static_cast<const char*>(triName));
+            testDisjoint(tri);
             return false;
         }
 
         void disjointConstructed() {
-            testDisjoint(&oneTet, "a single tetrahedron");
-            testDisjoint(&figure8, "the figure eight knot complement");
-            testDisjoint(&gieseking, "the Gieseking manifold");
-            testDisjoint(&S3, "the 3-sphere");
-            testDisjoint(&loopC2, "the untwisted layered loop C(2)");
-            testDisjoint(&loopCtw3, "the twisted layered loop C~(3)");
-            testDisjoint(&largeS3, "a non-minimal S^3");
-            testDisjoint(&largeRP3, "a non-minimal RP^3");
-            testDisjoint(&twistedKxI,
-                "a 3-tetrahedron non-orientable twisted KxI");
-            testDisjoint(&norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
+            testDisjoint(&oneTet);
+            testDisjoint(&figure8);
+            testDisjoint(&gieseking);
+            testDisjoint(&S3);
+            testDisjoint(&loopC2);
+            testDisjoint(&loopCtw3);
+            testDisjoint(&largeS3);
+            testDisjoint(&largeRP3);
+            testDisjoint(&twistedKxI);
+            testDisjoint(&norSFS);
         }
 
         void disjointCensus() {
@@ -2099,7 +2115,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         /**
          * PRE: tri is valid and has only one component.
          */
-        static void testCutAlong(NTriangulation* tri, const char* triName) {
+        static void testCutAlong(NTriangulation* tri) {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
                 tri, NNormalSurfaceList::STANDARD);
             unsigned long n = list->getNumberOfSurfaces();
@@ -2139,7 +2155,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 expected = (separating ? 2 : 1);
                 if (nComp != expected) {
                     std::ostringstream msg;
-                    msg << "Cutting along surface #" << i << " for " << triName
+                    msg << "Cutting along surface #" << i << " for "
+                        << tri->getPacketLabel()
                         << " gives " << nComp << " component(s), not "
                         << expected << " as expected.";
                     CPPUNIT_FAIL(msg.str());
@@ -2149,7 +2166,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 if (nCompDouble != expected) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface #" << i
-                        << " for " << triName
+                        << " for " << tri->getPacketLabel()
                         << " gives " << nCompDouble << " component(s), not "
                         << expected << " as expected.";
                     CPPUNIT_FAIL(msg.str());
@@ -2157,14 +2174,15 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
                 if (! t->isValid()) {
                     std::ostringstream msg;
-                    msg << "Cutting along surface #" << i << " for " << triName
+                    msg << "Cutting along surface #" << i << " for "
+                        << tri->getPacketLabel()
                         << " gives an invalid triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (! tDouble->isValid()) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface #" << i
-                        << " for " << triName
+                        << " for " << tri->getPacketLabel()
                         << " gives an invalid triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2172,28 +2190,32 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 if (tri->isIdeal() && ! t->isIdeal()) {
                     std::ostringstream msg;
                     msg << "Cutting along surface #" << i
-                        << " for " << triName << " (which is ideal)"
+                        << " for "
+                        << tri->getPacketLabel() << " (which is ideal)"
                         << " gives a non-ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (tri->isIdeal() && ! tDouble->isIdeal()) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface #" << i
-                        << " for " << triName << " (which is ideal)"
+                        << " for "
+                        << tri->getPacketLabel() << " (which is ideal)"
                         << " gives a non-ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if ((! tri->isIdeal()) && t->isIdeal()) {
                     std::ostringstream msg;
                     msg << "Cutting along surface #" << i
-                        << " for " << triName << " (which is not ideal)"
+                        << " for "
+                        << tri->getPacketLabel() << " (which is not ideal)"
                         << " gives an ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if ((! tri->isIdeal()) && tDouble->isIdeal()) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface #" << i
-                        << " for " << triName << " (which is not ideal)"
+                        << " for "
+                        << tri->getPacketLabel() << " (which is not ideal)"
                         << " gives an ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2201,14 +2223,16 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 if (tri->isOrientable() && ! t->isOrientable()) {
                     std::ostringstream msg;
                     msg << "Cutting along surface #" << i
-                        << " for " << triName << " (which is orientable)"
+                        << " for "
+                        << tri->getPacketLabel() << " (which is orientable)"
                         << " gives a non-orientable triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (tri->isOrientable() && ! tDouble->isOrientable()) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface #" << i
-                        << " for " << triName << " (which is orientable)"
+                        << " for "
+                        << tri->getPacketLabel() << " (which is orientable)"
                         << " gives a non-orientable triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2218,7 +2242,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     if (! static_cast<NTriangulation*>(p)->hasBoundaryFaces()) {
                         std::ostringstream msg;
                         msg << "Cutting along surface #" << i
-                            << " for " << triName
+                            << " for " << tri->getPacketLabel()
                             << " gives a component with no boundary faces.";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -2227,7 +2251,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     if (! static_cast<NTriangulation*>(p)->hasBoundaryFaces()) {
                         std::ostringstream msg;
                         msg << "Cutting along double surface #" << i
-                            << " for " << triName
+                            << " for " << tri->getPacketLabel()
                             << " gives a component with no boundary faces.";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -2255,7 +2279,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 if (t->getNumberOfBoundaryComponents() !=
                         expectS + 2 * expectTwoCopies + expectDoubleCover) {
                     std::ostringstream msg;
-                    msg << "Cutting along surface #" << i << " for " << triName
+                    msg << "Cutting along surface #" << i << " for "
+                        << tri->getPacketLabel()
                         << " gives the wrong number of boundary components.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2267,7 +2292,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
                         foundDoubleCover < expectDoubleCover) {
                     std::ostringstream msg;
-                    msg << "Cutting along surface #" << i << " for " << triName
+                    msg << "Cutting along surface #" << i << " for "
+                        << tri->getPacketLabel()
                         << " gives boundary components of the wrong type.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2290,7 +2316,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                         expectS + 2 * expectTwoCopies + expectDoubleCover) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface #" << i
-                        << " for " << triName
+                        << " for " << tri->getPacketLabel()
                         << " gives the wrong number of boundary components.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2303,7 +2329,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                         foundDoubleCover < expectDoubleCover) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface #" << i
-                        << " for " << triName
+                        << " for " << tri->getPacketLabel()
                         << " gives boundary components of the wrong type.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2325,7 +2351,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 if (! p) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface #" << i
-                        << " for " << triName
+                        << " for " << tri->getPacketLabel()
                         << " does not yield a product piece as expected.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2335,22 +2361,22 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         static bool testCutAlongCensus(NTriangulation* tri, void* triName) {
-            testCutAlong(tri, static_cast<const char*>(triName));
+            tri->setPacketLabel(static_cast<const char*>(triName));
+            testCutAlong(tri);
             return false;
         }
 
         void cutAlongConstructed() {
-            testCutAlong(&oneTet, "a single tetrahedron");
-            testCutAlong(&figure8, "the figure eight knot complement");
-            testCutAlong(&gieseking, "the Gieseking manifold");
-            testCutAlong(&S3, "the 3-sphere");
-            testCutAlong(&loopC2, "the untwisted layered loop C(2)");
-            testCutAlong(&loopCtw3, "the twisted layered loop C~(3)");
-            testCutAlong(&largeS3, "a non-minimal S^3");
-            testCutAlong(&largeRP3, "a non-minimal RP^3");
-            testCutAlong(&twistedKxI,
-                "a 3-tetrahedron non-orientable twisted KxI");
-            testCutAlong(&norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
+            testCutAlong(&oneTet);
+            testCutAlong(&figure8);
+            testCutAlong(&gieseking);
+            testCutAlong(&S3);
+            testCutAlong(&loopC2);
+            testCutAlong(&loopCtw3);
+            testCutAlong(&largeS3);
+            testCutAlong(&largeRP3);
+            testCutAlong(&twistedKxI);
+            testCutAlong(&norSFS);
         }
 
         void cutAlongCensus() {
