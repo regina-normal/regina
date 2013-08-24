@@ -78,6 +78,7 @@ bool LPConstraintEuler::addRows(ColClass* col, const int* columnPerm,
     return true;
 }
 
+#ifndef EXCLUDE_SNAPPEA
 template <typename ColClass>
 bool LPConstraintNonSpun::addRows(ColClass* col, const int* columnPerm,
         NTriangulation* tri) {
@@ -122,6 +123,7 @@ bool LPConstraintNonSpun::addRows(ColClass* col, const int* columnPerm,
     delete coeffs;
     return true;
 }
+#endif // EXCLUDE_SNAPPEA
 
 BanConstraintBase::BanConstraintBase(NTriangulation* tri, int coords) :
         tri_(tri), coords_(coords) {
@@ -258,10 +260,12 @@ template bool LPConstraintEuler::addRows<
         LPInitialTableaux<LPConstraintEuler>::Col*,
         const int*, NTriangulation*);
 
+#ifndef EXCLUDE_SNAPPEA
 template bool LPConstraintNonSpun::addRows<
         LPInitialTableaux<LPConstraintNonSpun>::Col>(
         LPInitialTableaux<LPConstraintNonSpun>::Col*,
         const int*, NTriangulation*);
+#endif
 
 } // namespace regina
 
