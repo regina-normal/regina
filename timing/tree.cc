@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include <enumerate/ntreetraversal.h>
+#include <triangulation/ntriangulation.h>
 
 using namespace regina;
 
