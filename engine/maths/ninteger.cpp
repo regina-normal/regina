@@ -607,104 +607,103 @@ void NIntegerBase<supportInfinity>::raiseToPower(unsigned long exp) {
 }
 
 template <bool supportInfinity>
-NIntegerBase<supportInfinity> NIntegerBase<supportInfinity>::gcd(
-        const NIntegerBase<supportInfinity>& other) const {
+void NIntegerBase<supportInfinity>::gcdWith(
+        const NIntegerBase<supportInfinity>& other) {
     if (large_) {
         if (other.large_) {
-            NIntegerBase<supportInfinity> ans;
-            ans.large_ = new mpz_t;
-            mpz_init(ans.large_);
-            mpz_gcd(ans.large_, large_, other.large_);
-            mpz_abs(ans.large_, ans.large_);
-            return ans;
+            mpz_gcd(large_, large_, other.large_);
         } else {
-            NIntegerBase<supportInfinity> ans;
-            ans.large_ = new mpz_t;
-            mpz_init_set_si(ans.large_, other.small_);
-            mpz_gcd(ans.large_, ans.large_, large_);
-            mpz_abs(ans.large_, ans.large_);
-            return ans;
+            mpz_t tmp;
+            mpz_init_set_si(tmp, other.small_);
+            mpz_gcd(large_, large_, tmp);
+            mpz_clear(tmp);
         }
+        mpz_abs(large_, large_);
     } else if (other.large_) {
-        NIntegerBase<supportInfinity> ans;
-        ans.large_ = new mpz_t;
-        mpz_init_set_si(ans.large_, small_);
-        mpz_gcd(ans.large_, ans.large_, other.large_);
-        mpz_abs(ans.large_, ans.large_);
-        return ans;
-    }
+        makeLarge();
+        mpz_gcd(large_, large_, other.large_);
+        mpz_abs(large_, large_);
+    } else {
+        // Both integers are native.
+        long a = small_;
+        long b = other.small_;
 
-    // Both integers are native.
-    long a = small_;
-    long b = other.small_;
-
-    if (a == LONG_MIN) {
-        if (b == LONG_MIN) {
-            // gcd(a,b) = LONG_MIN, which means we can't make it
-            // non-negative without switching to large integers.
-            NIntegerBase<supportInfinity> ans;
-            ans.large_ = new mpz_t;
-            mpz_init_set_si(ans.large_, LONG_MIN);
-            mpz_neg(ans.large_, ans.large_);
-            return ans;
+        if (a == LONG_MIN) {
+            if (b == LONG_MIN) {
+                // gcd(a,b) = LONG_MIN, which means we can't make it
+                // non-negative without switching to large integers.
+                large_ = new mpz_t;
+                mpz_init_set_si(large_, LONG_MIN);
+                mpz_neg(large_, large_);
+                return;
+            }
+            a >>= 1; // Won't affect the gcd, but allows us to negate.
+        } else if (b == LONG_MIN) {
+            b >>= 1; // Won't affect the gcd, but allows us to negate.
         }
-        a >>= 1; // Won't affect the gcd, but allows us to negate.
-    } else if (b == LONG_MIN) {
-        b >>= 1; // Won't affect the gcd, but allows us to negate.
-    }
 
-    if (a < 0) a = -a;
-    if (b < 0) b = -b;
+        if (a < 0) a = -a;
+        if (b < 0) b = -b;
 
-    /**
-     * Now everything is non-negative.
-     * The following code is based on Stein's binary GCD algorithm.
-     */
-    if (! a)
-        return NIntegerBase<supportInfinity>(b);
-    if (! b)
-        return NIntegerBase<supportInfinity>(a);
-
-    // Compute the largest common power of 2.
-    int pow2;
-    for (pow2 = 0; ! ((a | b) & 1); ++pow2) {
-        a >>= 1;
-        b >>= 1;
-    }
-
-    // Strip out all remaining powers of 2 from a and b.
-    while (! (a & 1))
-        a >>= 1;
-    while (! (b & 1))
-        b >>= 1;
-
-    while (a != b) {
-        // INV: a and b are both odd and non-zero.
-        if (a < b) {
-            b -= a;
-            do
-                b >>= 1;
-            while (! (b & 1));
-        } else {
-            a -= b;
-            do
-                a >>= 1;
-            while (! (a & 1));
+        /**
+         * Now everything is non-negative.
+         * The following code is based on Stein's binary GCD algorithm.
+         */
+        if (! a) {
+            small_ = b;
+            return;
         }
+        if (! b) {
+            small_ = a;
+            return;
+        }
+
+        // Compute the largest common power of 2.
+        int pow2;
+        for (pow2 = 0; ! ((a | b) & 1); ++pow2) {
+            a >>= 1;
+            b >>= 1;
+        }
+
+        // Strip out all remaining powers of 2 from a and b.
+        while (! (a & 1))
+            a >>= 1;
+        while (! (b & 1))
+            b >>= 1;
+
+        while (a != b) {
+            // INV: a and b are both odd and non-zero.
+            if (a < b) {
+                b -= a;
+                do
+                    b >>= 1;
+                while (! (b & 1));
+            } else {
+                a -= b;
+                do
+                    a >>= 1;
+                while (! (a & 1));
+            }
+        }
+        small_ = (a << pow2);
     }
-    return NIntegerBase<supportInfinity>(a << pow2);
 }
 
 template <bool supportInfinity>
-NIntegerBase<supportInfinity> NIntegerBase<supportInfinity>::lcm(
-        const NIntegerBase<supportInfinity>& other) const {
-    if (isZero() || other.isZero())
-        return zero;
+void NIntegerBase<supportInfinity>::lcmWith(
+        const NIntegerBase<supportInfinity>& other) {
+    if (isZero())
+        return;
+    if (other.isZero()) {
+        large_ = 0;
+        small_ = 0;
+        return;
+    }
 
-    NIntegerBase<supportInfinity> ans(*this);
-    ans.divByExact(gcd(other));
-    ans *= other;
-    return ans;
+    NIntegerBase<supportInfinity> gcd(*this);
+    gcd.gcdWith(other);
+    divByExact(gcd);
+    (*this) *= other;
 }
 
 template <bool supportInfinity>

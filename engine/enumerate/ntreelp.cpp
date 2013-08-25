@@ -81,7 +81,7 @@ NInteger LPMatrix::combRowAndNorm(const NInteger& destCoeff,
         tmp *= *ps;
         *pd -= tmp;
         if (gcdRow != 1)
-            gcdRow = gcdRow.gcd(*pd); // gcd() guarantees to be >= 0.
+            gcdRow.gcdWith(*pd); // gcd() guarantees to be >= 0.
     }
     if (gcdRow > 1) {
         pd = dat_ + dest * cols_;

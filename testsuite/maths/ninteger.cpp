@@ -44,7 +44,7 @@
 // TODO: Test rounding direction for all variants of division
 // TODO: Test divisionAlg
 // TODO: Test +=, -=, *=, /=, divByExact, %= (lazy && long); negate
-// TODO: Test raiseToPower, abs, gcd, lcm, gcdWithCoeffs
+// TODO: Test raiseToPower, abs, gcd(With), lcm(With), gcdWithCoeffs
 // TODO: Test legendre, random functions
 // TODO: Test setRaw, rawData, tryReduce, makeLarge.
 
@@ -241,6 +241,12 @@ class NIntegerTest : public CppUnit::TestFixture {
                 }
             }
 
+            if (x.sign() != sign) {
+                std::ostringstream msg;
+                msg << name << " has the wrong sign.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
             if (sign < 0 && (x.longValue() >= zeroL || x.isZero())) {
                 std::ostringstream msg;
                 msg << name << " is not negative as a long.";
@@ -304,6 +310,12 @@ class NIntegerTest : public CppUnit::TestFixture {
                     msg << name << " != " << value << " on an ostream.";
                     CPPUNIT_FAIL(msg.str());
                 }
+            }
+
+            if (x.sign() != sign) {
+                std::ostringstream msg;
+                msg << name << " has the wrong sign.";
+                CPPUNIT_FAIL(msg.str());
             }
 
             if (sign < 0 && (x >= 0 || x.stringValue()[0] != '-' ||
@@ -729,6 +741,12 @@ class NIntegerTest : public CppUnit::TestFixture {
             if (x.isZero()) {
                 std::ostringstream msg;
                 msg << name << " is zero.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (x.sign() != 1) {
+                std::ostringstream msg;
+                msg << name << " has the wrong sign.";
                 CPPUNIT_FAIL(msg.str());
             }
 

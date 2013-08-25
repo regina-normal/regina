@@ -320,6 +320,8 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Returns the sign of this integer.
          *
+         * In this routine, infinity is considered to have sign +1.
+         *
          * @return +1, -1 or 0 according to whether this integer is
          * positive, negative or zero.
          */
@@ -1095,6 +1097,19 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          */
         NIntegerBase abs() const;
         /**
+         * Sets this integer to be the greatest common divisor of this
+         * and the given integer.
+         *
+         * The result is guaranteed to be non-negative.  As a
+         * special case, gcd(0,0) is considered to be zero.
+         *
+         * \pre Neither this integer nor \a other is infinite.
+         *
+         * @param other the integer whose greatest common divisor with
+         * this will be found.
+         */
+        void gcdWith(const NIntegerBase& other);
+        /**
          * Determines the greatest common divisor of this and the given
          * integer.  This integer is not changed.
          *
@@ -1109,6 +1124,18 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          * integer.
          */
         NIntegerBase gcd(const NIntegerBase& other) const;
+        /**
+         * Sets this integer to be the lowest common multiple of this
+         * and the given integer.
+         *
+         * Note that the result might possibly be negative.
+         *
+         * \pre Neither this integer nor \a other is infinite.
+         *
+         * @param other the integer whose lowest common multiple with
+         * this will be found.
+         */
+        void lcmWith(const NIntegerBase& other);
         /**
          * Determines the lowest common multiple of this and the given
          * integer.  This integer is not changed.
@@ -2214,6 +2241,24 @@ inline NIntegerBase<supportInfinity> NIntegerBase<supportInfinity>::abs()
         return ans;
     } else
         return NIntegerBase<supportInfinity>(small_ >= 0 ? small_ : - small_);
+}
+
+template <bool supportInfinity>
+NIntegerBase<supportInfinity> NIntegerBase<supportInfinity>::gcd(
+        const NIntegerBase<supportInfinity>& other) const {
+    // Do the standard thing for now.
+    NIntegerBase<supportInfinity> ans(*this);
+    ans.gcdWith(other);
+    return ans;
+}
+
+template <bool supportInfinity>
+NIntegerBase<supportInfinity> NIntegerBase<supportInfinity>::lcm(
+        const NIntegerBase<supportInfinity>& other) const {
+    // Do the standard thing for now.
+    NIntegerBase<supportInfinity> ans(*this);
+    ans.lcmWith(other);
+    return ans;
 }
 
 template <bool supportInfinity>
