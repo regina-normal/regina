@@ -86,7 +86,8 @@ Version 4.94  [ (under development) ]
               enormously faster (rough testing suggests a roughly 7x speedup).
             - Made the destructor non-virtual to avoid the unwanted class
               overhead that comes with polymorphism.
-            - Added routine isZero().
+            - Added new routines that were not in the old NLargeInteger,
+              including isZero(), sign(), gcdWith(), and lcmWith().
         Class NIsomorphism:
             - Now a subclass of NGenericIsomorphism<3>, with inherited
               dimension-agnostic aliases for several routines.

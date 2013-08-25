@@ -1116,7 +1116,7 @@ void LPData<LPConstraint>::verify() const {
         // Check that each row has gcd = 1.
         NInteger g; // Initialised to zero.
         for (c = 0; c < rowOps_.columns(); ++c)
-            g = g.gcd(rowOps_.entry(r, c));
+            g.gcdWith(rowOps_.entry(r, c));
         if (g != 1) {
             std::cerr << "VERIFY: GCD error" << std::endl;
             ::exit(1);
