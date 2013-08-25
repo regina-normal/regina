@@ -36,7 +36,6 @@
 #include <cstring>
 #include <fstream>
 #include "engine.h"
-#include "file/nfile.h"
 #include "file/nfileinfo.h"
 #include "file/nxmlcallback.h"
 #include "file/nxmlfile.h"
@@ -255,8 +254,6 @@ NPacket* readFileMagic(const std::string& fileName) {
     NPacket* ans;
     if (info->getType() == NFileInfo::TYPE_XML)
         ans = readXMLFile(fileName.c_str());
-    else if (info->getType() == NFileInfo::TYPE_BINARY)
-        ans = readFromFile(fileName.c_str());
     else
         ans = 0;
 

@@ -74,8 +74,7 @@ class NXMLAngleStructureListReader;
  *
  * \testpart
  */
-class REGINA_API NAngleStructureList :
-        public NPacket, public NFilePropertyReader {
+class REGINA_API NAngleStructureList : public NPacket {
     public:
         static const int packetType;
 
@@ -236,8 +235,6 @@ class REGINA_API NAngleStructureList :
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);
-        virtual void writePacket(NFile& out) const;
-        static NAngleStructureList* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;
 
     protected:
@@ -254,7 +251,6 @@ class REGINA_API NAngleStructureList :
 
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
-        virtual void readIndividualProperty(NFile& infile, unsigned propType);
 
         /**
          * Calculate whether the convex span of this list includes a

@@ -43,7 +43,6 @@
 
 #include "regina-core.h"
 #include "shareableobject.h"
-#include "file/nfilepropertyreader.h"
 #include "maths/nrational.h"
 #include "maths/nray.h"
 
@@ -108,8 +107,7 @@ class REGINA_API NAngleStructureVector : public NRay {
  *
  * \testpart
  */
-class REGINA_API NAngleStructure :
-        public ShareableObject, public NFilePropertyReader {
+class REGINA_API NAngleStructure : public ShareableObject {
     private:
         NAngleStructureVector* vector;
             /**< Stores (indirectly) the individual angles in this angle
@@ -254,48 +252,7 @@ class REGINA_API NAngleStructure :
          */
         void writeXMLData(std::ostream& out) const;
 
-        /**
-         * Writes this angle structure and all of its properties to the
-         * given old-style binary file.
-         *
-         * This routine writes precisely what readFromFile() reads.
-         *
-         * \deprecated For the preferred way to write data to file, see
-         * writeXMLData() instead.
-         *
-         * \pre The given file is currently opened for writing.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the file to which to write.
-         */
-        void writeToFile(NFile& out) const;
-
-        /**
-         * Reads an angle structure and all its properties from the
-         * given old-style binary file.
-         *
-         * This routine reads precisely what writeToFile() writes.
-         *
-         * \deprecated For the preferred way of reading angle structures
-         * from file, see class NXMLAngleStructureReader instead.
-         *
-         * \pre The given file is currently opened for reading.
-         *
-         * \ifacespython Not present.
-         *
-         * @param in the file from which to read.
-         * @param triangulation the triangulation on which this angle
-         * structure will lie.
-         * @return a newly allocated angle structure containing the
-         * information read from file.
-         */
-        static NAngleStructure* readFromFile(NFile& in,
-            NTriangulation* triangulation);
-
     protected:
-        virtual void readIndividualProperty(NFile& infile, unsigned propType);
-
         /**
          * Calculates the structure type (strict or taut) and stores it
          * as a property.

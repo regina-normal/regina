@@ -40,7 +40,6 @@
 #ifndef EXCLUDE_NORMALIZ
 #include "enumerate/nhilbertprimal.h"
 #endif
-#include "file/nfile.h"
 #include "maths/matrixops.h"
 #include "maths/nmatrixint.h"
 #include "progress/nprogressmanager.h"
@@ -597,20 +596,6 @@ void NNormalSurfaceList::writeTextLong(std::ostream& out) const {
     writeAllSurfaces(out);
 }
 
-void NNormalSurfaceList::writePacket(NFile& out) const {
-    out.writeInt(flavour);
-    out.writeBool(embedded);
-
-    out.writeULong(surfaces.size());
-    std::vector<NNormalSurface*>::const_iterator it;
-    for (it = surfaces.begin(); it != surfaces.end(); it++)
-        (*it)->writeToFile(out);
-
-    // Write the properties.
-    // At the moment there are no properties!
-    out.writeAllPropertiesFooter();
-}
-
 #undef REGISTER_FLAVOUR
 #define REGISTER_FLAVOUR(id_name, c, name, a, s, o) \
     case id_name: out << regina::xml::xmlEncodeSpecialChars(name); break;
@@ -637,38 +622,6 @@ void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
     std::vector<NNormalSurface*>::const_iterator it;
     for (it = surfaces.begin(); it != surfaces.end(); it++)
         (*it)->writeXMLData(out);
-}
-
-#undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, n, a, s, o) \
-    case id_name: break;
-
-NNormalSurfaceList* NNormalSurfaceList::readPacket(NFile& in,
-        NPacket* parent) {
-    // Check that we recognise the flavour of coordinate system being
-    // used.
-    int flavour = in.readInt();
-    switch(flavour) {
-        // Import cases from the flavour registry...
-        #include "surfaces/flavourregistry.h"
-        // ... and legacy cases:
-        case AN_LEGACY: break;
-        default: return 0;
-    }
-
-    NNormalSurfaceList* ans = new NNormalSurfaceList();
-    ans->flavour = flavour;
-    ans->embedded = in.readBool();
-
-    unsigned long nSurfaces = in.readULong();
-    for (unsigned long i=0; i<nSurfaces; i++)
-        ans->surfaces.push_back(NNormalSurface::readFromFile(in, ans->flavour,
-            dynamic_cast<NTriangulation*>(parent)));
-
-    // Read the properties.
-    in.readProperties(0);
-
-    return ans;
 }
 
 NNormalSurfaceList* NNormalSurfaceList::filterForLocallyCompatiblePairs()

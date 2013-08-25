@@ -34,7 +34,6 @@
 
 #include "angle/nanglestructurelist.h"
 #include "enumerate/ndoubledescription.h"
-#include "file/nfile.h"
 #include "maths/nmatrixint.h"
 #include "progress/nprogressmanager.h"
 #include "progress/nprogresstypes.h"
@@ -168,45 +167,6 @@ void NAngleStructureList::writeTextLong(std::ostream& o) const {
     }
 }
 
-void NAngleStructureList::writePacket(NFile& out) const {
-    out.writeULong(structures.size());
-    for (StructureIteratorConst it = structures.begin();
-            it != structures.end(); it++)
-        (*it)->writeToFile(out);
-
-    // Write the properties.
-    std::streampos bookmark(0);
-
-    if (doesSpanStrict.known()) {
-        bookmark = out.writePropertyHeader(PROPID_ALLOWSTRICT);
-        out.writeBool(doesSpanStrict.value());
-        out.writePropertyFooter(bookmark);
-    }
-    if (doesSpanTaut.known()) {
-        bookmark = out.writePropertyHeader(PROPID_ALLOWTAUT);
-        out.writeBool(doesSpanTaut.value());
-        out.writePropertyFooter(bookmark);
-    }
-
-    out.writeAllPropertiesFooter();
-}
-
-NAngleStructureList* NAngleStructureList::readPacket(NFile& in,
-        NPacket* parent) {
-    NAngleStructureList* ans = new NAngleStructureList(false
-        /* old-style files did not allow for taut only */);
-
-    unsigned long nStructures = in.readULong();
-    for (unsigned long i=0; i<nStructures; i++)
-        ans->structures.push_back(NAngleStructure::readFromFile(in,
-            dynamic_cast<NTriangulation*>(parent)));
-
-    // Read the properties.
-    in.readProperties(ans);
-
-    return ans;
-}
-
 void NAngleStructureList::writeXMLPacketData(std::ostream& out) const {
     using regina::xml::xmlValueTag;
 
@@ -239,14 +199,6 @@ NPacket* NAngleStructureList::internalClonePacket(NPacket* /* parent */)
         ans->doesSpanTaut = doesSpanTaut;
 
     return ans;
-}
-
-void NAngleStructureList::readIndividualProperty(NFile& infile,
-        unsigned propType) {
-    if (propType == PROPID_ALLOWSTRICT)
-        doesSpanStrict = infile.readBool();
-    else if (propType == PROPID_ALLOWTAUT)
-        doesSpanTaut = infile.readBool();
 }
 
 void NAngleStructureList::calculateSpanStrict() const {

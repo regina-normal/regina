@@ -109,8 +109,6 @@ class REGINA_API NText : public NPacket {
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);
-        virtual void writePacket(NFile& out) const;
-        static NText* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;
 
     protected:

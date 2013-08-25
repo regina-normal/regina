@@ -104,14 +104,12 @@ class REGINA_API NSurfaceFilterCombination : public NSurfaceFilter {
         virtual bool accept(const NNormalSurface& surface) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
-        static NSurfaceFilter* readFilter(NFile& in, NPacket* parent);
 
         virtual int getFilterID() const;
         virtual std::string getFilterName() const;
 
     protected:
         virtual void writeXMLFilterData(std::ostream& out) const;
-        virtual void writeFilter(NFile& out) const;
 };
 
 /*@}*/

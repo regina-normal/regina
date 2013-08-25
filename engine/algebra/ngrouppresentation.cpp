@@ -36,7 +36,6 @@
 #include <map>
 #include <sstream>
 #include "algebra/ngrouppresentation.h"
-#include "file/nfile.h"
 #include "maths/numbertheory.h"
 #include "utilities/boostutils.h"
 #include "utilities/stlutils.h"
@@ -48,15 +47,6 @@ typedef std::list<NGroupExpressionTerm>::const_iterator TermIteratorConst;
 typedef std::vector<NGroupExpression*>::iterator RelIterator;
 typedef std::vector<NGroupExpression*>::const_iterator RelIteratorConst;
 typedef std::list<NGroupExpression*>::iterator TmpRelIterator;
-
-NGroupExpressionTerm NGroupExpressionTerm::readFromFile(NFile& in) {
-    return NGroupExpressionTerm(in.readULong(), in.readLong());
-}
-
-void NGroupExpressionTerm::writeToFile(NFile& out) const {
-    out.writeULong(generator);
-    out.writeLong(exponent);
-}
 
 std::ostream& operator << (std::ostream& out,
         const NGroupExpressionTerm& term) {
@@ -209,20 +199,6 @@ void NGroupExpression::writeXMLData(std::ostream& out) const {
     for (TermIteratorConst it = terms.begin(); it != terms.end(); it++)
         out << (*it).generator << '^' << (*it).exponent << ' ';
     out << "</reln>";
-}
-
-void NGroupExpression::writeToFile(NFile& out) const {
-    out.writeULong(terms.size());
-    for (TermIteratorConst it = terms.begin(); it != terms.end(); it++)
-        (*it).writeToFile(out);
-}
-
-NGroupExpression* NGroupExpression::readFromFile(NFile& in) {
-    NGroupExpression* ans = new NGroupExpression();
-    unsigned long nTerms = in.readULong();
-    for (unsigned long i = 0; i < nTerms; i++)
-        ans->terms.push_back(NGroupExpressionTerm::readFromFile(in));
-    return ans;
 }
 
 void NGroupExpression::writeTextShort(std::ostream& out) const {
@@ -544,29 +520,6 @@ void NGroupPresentation::writeXMLData(std::ostream& out) const {
         out << '\n';
     }
     out << "</group>\n";
-}
-
-void NGroupPresentation::writeToFile(NFile& out) const {
-    out.writeULong(nGenerators);
-    out.writeULong(relations.size());
-    for (RelIteratorConst it = relations.begin(); it != relations.end(); it++)
-        (*it)->writeToFile(out);
-
-    // Write properties.
-    out.writeAllPropertiesFooter();
-}
-
-NGroupPresentation* NGroupPresentation::readFromFile(NFile& in) {
-    NGroupPresentation* ans = new NGroupPresentation();
-    ans->nGenerators = in.readULong();
-    unsigned long nRels = in.readULong();
-    for (unsigned long i = 0; i < nRels; i++)
-        ans->relations.push_back(NGroupExpression::readFromFile(in));
-
-    // Read properties.
-    in.readProperties(0);
-
-    return ans;
 }
 
 void NGroupPresentation::writeTextLong(std::ostream& out) const {

@@ -35,7 +35,6 @@
 #include <cstdio>
 #include <cstring>
 #include <sstream>
-#include "file/nfile.h"
 #include "file/nfileinfo.h"
 #include "utilities/zstream.h"
 
@@ -45,7 +44,7 @@ namespace regina {
 #define STARTS_TRUE 1
 #define STARTS_COULD_NOT_OPEN 2
 
-const int NFileInfo::TYPE_BINARY = 1;
+// const int NFileInfo::TYPE_BINARY = 1; // OBSOLETE as of Regina 4.94.
 const int NFileInfo::TYPE_XML = 2;
 
 namespace {
@@ -75,36 +74,13 @@ namespace {
 
 NFileInfo* NFileInfo::identify(const std::string& idPathname) {
     // Check for an old-style binary file.
-    int starts = fileStartsWith(idPathname.c_str(), "Normal");
-    if (starts == STARTS_FALSE)
-        starts = fileStartsWith(idPathname.c_str(), "Regina");
-
+    int starts = fileStartsWith(idPathname.c_str(), "<?xml");
     if (starts == STARTS_COULD_NOT_OPEN)
         return 0;
-    else if (starts == STARTS_TRUE) {
-        NFileInfo* ans = new NFileInfo();
-        ans->pathname = idPathname;
-        ans->type = NFileInfo::TYPE_BINARY;
-        ans->typeDescription = "Binary Regina data file (obsolete format)";
-        ans->compressed = false;
-
-        regina::NFile file;
-        if (! file.open(idPathname.c_str(),
-                regina::NRandomAccessResource::READ)) {
-            ans->invalid = true;
-        } else {
-            std::ostringstream out;
-            out << file.getMajorVersion() << '.' << file.getMinorVersion();
-            ans->engine = out.str();
-            ans->invalid = false;
-        }
-        file.close();
-        return ans;
-    }
 
     // Check for an XML file.
     NFileInfo* ans = 0;
-    if (fileStartsWith(idPathname.c_str(), "<?xml") == STARTS_TRUE) {
+    if (starts == STARTS_TRUE) {
         ans = new NFileInfo();
         ans->compressed = false;
     } else {

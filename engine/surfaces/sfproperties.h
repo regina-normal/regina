@@ -207,16 +207,12 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
         virtual bool accept(const NNormalSurface& surface) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
-        static NSurfaceFilter* readFilter(NFile& in, NPacket* parent);
 
         virtual int getFilterID() const;
         virtual std::string getFilterName() const;
 
     protected:
         virtual void writeXMLFilterData(std::ostream& out) const;
-        virtual void writeFilter(NFile& out) const;
-        virtual void writeProperties(NFile& out) const;
-        virtual void readIndividualProperty(NFile& infile, unsigned propType);
 };
 
 /*@}*/
@@ -277,9 +273,6 @@ inline void NSurfaceFilterProperties::setCompactness(const NBoolSet& value) {
 inline void NSurfaceFilterProperties::setRealBoundary(const NBoolSet& value) {
     ChangeEventSpan span(this);
     realBoundary = value;
-}
-
-inline void NSurfaceFilterProperties::writeFilter(NFile&) const {
 }
 
 } // namespace regina

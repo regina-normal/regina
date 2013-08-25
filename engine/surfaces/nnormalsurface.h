@@ -47,7 +47,6 @@
 #include <utility>
 #include "regina-core.h"
 #include "shareableobject.h"
-#include "file/nfilepropertyreader.h"
 #include "maths/nperm4.h"
 #include "maths/nray.h"
 #include "surfaces/ndisctype.h"
@@ -661,8 +660,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
  * \todo \featurelong Determine which faces in the solution space a
  * normal surface belongs to.
  */
-class REGINA_API NNormalSurface :
-        public ShareableObject, public NFilePropertyReader {
+class REGINA_API NNormalSurface : public ShareableObject {
     protected:
         NNormalSurfaceVector* vector;
             /**< Contains the coordinates of the normal surface in whichever
@@ -995,48 +993,6 @@ class REGINA_API NNormalSurface :
          * @param out the output stream to which the XML should be written.
          */
         virtual void writeXMLData(std::ostream& out) const;
-
-        /**
-         * Writes this normal surface and all of its properties to
-         * the given old-style binary file.
-         *
-         * This routine writes precisely what readFromFile() reads.
-         *
-         * \deprecated For the preferred way to write data to file, see
-         * writeXMLData() instead.
-         *
-         * \pre The given file is currently opened for writing.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the file to which to write.
-         */
-        void writeToFile(NFile& out) const;
-
-        /**
-         * Reads a normal surface and all of its properties from the
-         * given old-style binary file.  The flavour of coordinate system
-         * being used must be known in advance and passed to this routine.
-         *
-         * This routine reads precisely what writeToFile() writes.
-         *
-         * \deprecated For the preferred way to read surfaces from file,
-         * see class NXMLNormalSurfaceReader instead.
-         *
-         * \pre The given file is currently opened for reading.
-         *
-         * \ifacespython Not present.
-         *
-         * @param in the file from which to read.
-         * @param flavour the flavour of coordinate system that the
-         * normal surface will use.
-         * @param triangulation the triangulation within which
-         * this normal surface will lie.
-         * @return a newly allocated normal surface containing the
-         * information read from file.
-         */
-        static NNormalSurface* readFromFile(NFile& in, int flavour,
-            NTriangulation* triangulation);
 
         /**
          * Determines if this normal surface is empty (has no discs
@@ -1570,9 +1526,6 @@ class REGINA_API NNormalSurface :
             NTriangulation* tri, bool quadOct = false);
 
     protected:
-        virtual void readIndividualProperty(NFile& infile,
-            unsigned propType);
-
         /**
          * Calculates the position of the first non-zero octagon
          * coordinate and stores it as a property.

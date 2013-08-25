@@ -48,7 +48,6 @@
 
 namespace regina {
 
-class NFile;
 class NMatrixInt;
 
 /**
@@ -329,36 +328,6 @@ class REGINA_API NAbelianGroup : public ShareableObject {
          * @param out the output stream to which the XML should be written.
          */
         void writeXMLData(std::ostream& out) const;
-        /**
-         * Writes this abelian group to the given old-style binary file.
-         *
-         * \deprecated For the preferred way to write data to file, see
-         * writeXMLData() instead.
-         *
-         * \pre The given file is currently opened for writing.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the file to which to write.
-         */
-        void writeToFile(NFile& out) const;
-        /**
-         * Reads an abelian group from the given old-style binary file.
-         * The group will be newly allocated, and responsibility for its
-         * destruction lies with the caller of this routine.
-         *
-         * \deprecated For the preferred way of reading abelian groups
-         * from file, see class NXMLAbelianGroupReader instead.
-         *
-         * \pre The given file is currently opened for reading.
-         *
-         * \ifacespython Not present.
-         *
-         * @param in the file from which to read.
-         * @return a newly allocated group read from the given file, or
-         * 0 if problems arose.
-         */
-        static NAbelianGroup* readFromFile(NFile& in);
 
         /**
          * The text representation will be of the form

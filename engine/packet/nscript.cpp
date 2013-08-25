@@ -34,7 +34,6 @@
 
 #include <iterator>
 #include "packet/nscript.h"
-#include "file/nfile.h"
 #include "utilities/xmlutils.h"
 
 #define PROP_VARIABLE 1
@@ -85,41 +84,6 @@ NPacket* NScript::internalClonePacket(NPacket*) const {
     return ans;
 }
 
-void NScript::writePacket(NFile& out) const {
-    out.writeULong(lines.size());
-    for (std::vector<std::string>::const_iterator it = lines.begin();
-            it != lines.end(); it++)
-        out.writeString(*it);
-
-    // Write the properties.
-    std::streampos bookmark(0);
-
-    // The variables will be written as properties to allow for changing
-    // of their representation in future file formats.
-
-    for (std::map<std::string, std::string>::const_iterator vit =
-            variables.begin(); vit != variables.end(); vit++) {
-        bookmark = out.writePropertyHeader(PROP_VARIABLE);
-        out.writeString((*vit).first);
-        out.writeString((*vit).second);
-        out.writePropertyFooter(bookmark);
-    }
-
-    // At the moment there are no properties to write!
-    out.writeAllPropertiesFooter();
-}
-
-NScript* NScript::readPacket(NFile& in, NPacket*) {
-    NScript* ans = new NScript();
-    unsigned long size = in.readULong();
-    for (unsigned long i=0; i<size; i++)
-        ans->lines.push_back(in.readString());
-
-    in.readProperties(ans);
-
-    return ans;
-}
-
 void NScript::writeXMLPacketData(std::ostream& out) const {
     using regina::xml::xmlEncodeSpecialChars;
 
@@ -132,14 +96,6 @@ void NScript::writeXMLPacketData(std::ostream& out) const {
     for (std::vector<std::string>::const_iterator it = lines.begin();
             it != lines.end(); it++)
         out << "  <line>" << xmlEncodeSpecialChars(*it) << "</line>\n";
-}
-
-void NScript::readIndividualProperty(NFile& infile, unsigned propType) {
-    if (propType == PROP_VARIABLE) {
-        std::string name = infile.readString();
-        std::string value = infile.readString();
-        variables.insert(std::make_pair(name, value));
-    }
 }
 
 } // namespace regina

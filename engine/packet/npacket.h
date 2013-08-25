@@ -53,7 +53,6 @@
 
 namespace regina {
 
-class NFile;
 class NPacketListener;
 class NXMLPacketReader;
 
@@ -955,30 +954,6 @@ class REGINA_API NPacket : public ShareableObject {
          */
         void writeXMLFile(std::ostream& out) const;
 
-        /**
-         * Writes the packet details to the given old-style binary file.
-         *
-         * You may assume that the packet type and label have already
-         * been written.  Only the actual data stored in the packet need
-         * be written.
-         *
-         * The default implementation for this routine does nothing; new
-         * packet types should not implement this routine since this file
-         * format is now obsolete, and older calculation engines will
-         * simply skip unknown packet types when reading from binary files.
-         *
-         * \deprecated For the preferred way to write packets to file, see
-         * writeXMLFile() and writeXMLPacketData() instead.
-         *
-         * \pre The given file is open for writing and satisfies the
-         * assumptions listed above.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the file to be written to.
-         */
-        virtual void writePacket(NFile& out) const;
-
         /*@}*/
         /**
          * (end: File I/O)
@@ -1015,63 +990,6 @@ class REGINA_API NPacket : public ShareableObject {
          */
         #ifdef __DOXYGEN
         static NXMLPacketReader* getXMLReader(NPacket* parent);
-        #endif
-
-        /**
-         * Reads a single packet from the specified
-         * file and returns a newly created object containing that
-         * information.  You may assume that the packet to be read
-         * is of the same type as the class in which you are implementing
-         * this routine.  The newly created object must also be of this
-         * type.
-         * 
-         * For instance, NTriangulation::readPacket() may assume that
-         * the packet is of type NTriangulation, and must return a
-         * pointer to a newly created NTriangulation.  Deallocation of the
-         * newly created packet is the responsibility of whoever calls
-         * this routine.
-         *
-         * The packet type and label may be assumed to have already been
-         * read from the file, and should <b>not</b> be reread.  The
-         * readPacket() routine should read exactly what writePacket()
-         * writes, and vice versa.
-         *
-         * \a parent represents the packet which will become the new
-         * packet's parent in the tree structure, and may be assumed to
-         * have already been read from the file.  This information is
-         * for reference only, and does not need to be used.  This
-         * routine can either insert or not insert the new packet
-         * beneath \a parent in the tree structure as it pleases.  Note
-         * however that \a parent will be 0 if the new packet is to
-         * become a tree matriarch.
-         *
-         * This routine is not actually provided for NPacket itself, but
-         * must be declared and implemented for every packet subclass that
-         * will be instantiated.  Within each such subclass the function
-         * must be declared to return a pointer to an object of that
-         * subclass.  For instance, NTriangulation::readPacket() must
-         * be declared to return an NTriangulation*, not simply an NPacket*.
-         *
-         * New packet types should make this routine simply return 0
-         * since this file format is now obsolete, and older calculation
-         * engines will not understand newer packet types anyway.
-         *
-         * \deprecated For the preferred way to read packets from file, see
-         * getXMLReader() and class NXMLPacketReader instead.
-         *
-         * \pre The given file is open for reading and
-         * all above conditions have been satisfied.
-         *
-         * \ifacespython Not present.
-         *
-         * @param in the file from which to read the packet.
-         * @param parent the packet which will become the new packet's
-         * parent in the tree structure, or 0 if the new packet is to be
-         * tree matriarch.
-         * @return the packet read from file, or 0 if an error occurred.
-         */
-        #ifdef __DOXYGEN
-        static NPacket* readPacket(NFile& in, NPacket* parent);
         #endif
 
         /**
@@ -1339,14 +1257,11 @@ inline unsigned long NPacket::getNumberOfDescendants() const {
     return getTotalTreeSize() - 1;
 }
 
-inline void NPacket::writePacket(NFile&) const {
-}
-
 inline NPacket::ChangeEventSpan::ChangeEventSpan(NPacket* packet) :
         packet_(packet) {
     if (! packet_->changeEventSpans)
         packet_->fireEvent(&NPacketListener::packetToBeChanged);
-        
+
     packet_->changeEventSpans++;
 }
 
