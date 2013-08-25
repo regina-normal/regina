@@ -99,6 +99,8 @@ Version 4.94  [ (under development) ]
             - Performance is much, much faster; see NIntegerBase for details.
         Class NLocalFileResource, NRandomAccessResource:
             - Removed these classes, which were used for old-style binary files.
+        Class NMatrix:
+            - New routine isZero().
         Class NNormalSurface:
             - Routine boundarySlopes() now requires that the
               triangulation is oriented (otherwise SnapPea will relabel

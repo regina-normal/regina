@@ -410,6 +410,19 @@ class NMatrixRing : public NMatrix<T> {
         }
 
         /**
+         * Determines whether this is the zero matrix.
+         *
+         * @return \c true if and only if all entries in the matrix are zero.
+         */
+        bool isZero() const {
+            for (size_t r=0; r<this->nRows; ++r)
+                for (size_t c=0; c<this->nCols; ++c)
+                    if (this->data[r][c] != zero)
+                        return false;
+            return true;
+        }
+
+        /**
          * Adds the given source row to the given destination row.
          *
          * \pre The two given rows are distinct and between 0 and
