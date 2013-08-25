@@ -34,7 +34,6 @@
 
 #include "surfaces/sfproperties.h"
 #include "surfaces/nnormalsurface.h"
-#include "file/nfile.h"
 #include "utilities/xmlutils.h"
 
 #define PROPSF_EULER 1001
@@ -107,61 +106,6 @@ void NSurfaceFilterProperties::writeXMLFilterData(std::ostream& out) const {
         out << "    " << xmlValueTag("compact", compactness) << '\n';
     if (realBoundary != NBoolSet::sBoth)
         out << "    " << xmlValueTag("realbdry", realBoundary) << '\n';
-}
-
-void NSurfaceFilterProperties::writeProperties(NFile& out) const {
-    std::streampos bookmark(0);
-
-    if (eulerCharacteristic.size() > 0) {
-        bookmark = out.writePropertyHeader(PROPSF_EULER);
-        out.writeULong(eulerCharacteristic.size());
-        for (std::set<NLargeInteger>::const_iterator it =
-                eulerCharacteristic.begin(); it != eulerCharacteristic.end();
-                it++)
-            out.writeLarge(*it);
-        out.writePropertyFooter(bookmark);
-    }
-
-    if (orientability != NBoolSet::sBoth) {
-        bookmark = out.writePropertyHeader(PROPSF_ORIENT);
-        out.writeBoolSet(orientability);
-        out.writePropertyFooter(bookmark);
-    }
-
-    if (compactness != NBoolSet::sBoth) {
-        bookmark = out.writePropertyHeader(PROPSF_COMPACT);
-        out.writeBoolSet(compactness);
-        out.writePropertyFooter(bookmark);
-    }
-
-    if (realBoundary != NBoolSet::sBoth) {
-        bookmark = out.writePropertyHeader(PROPSF_REALBDRY);
-        out.writeBoolSet(realBoundary);
-        out.writePropertyFooter(bookmark);
-    }
-}
-
-NSurfaceFilter* NSurfaceFilterProperties::readFilter(NFile&, NPacket*) {
-    return new NSurfaceFilterProperties();
-}
-
-void NSurfaceFilterProperties::readIndividualProperty(NFile& in,
-        unsigned propType) {
-    NSurfaceFilter::readIndividualProperty(in, propType);
-
-    switch (propType) {
-        case PROPSF_EULER:
-            eulerCharacteristic.clear();
-            for (unsigned long size = in.readULong(); size != 0; size--)
-                eulerCharacteristic.insert(in.readLarge());
-            break;
-        case PROPSF_ORIENT:
-            orientability = in.readBoolSet(); break;
-        case PROPSF_COMPACT:
-            compactness = in.readBoolSet(); break;
-        case PROPSF_REALBDRY:
-            realBoundary = in.readBoolSet(); break;
-    }
 }
 
 } // namespace regina

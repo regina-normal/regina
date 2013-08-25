@@ -34,7 +34,6 @@
 
 #include "algebra/nabeliangroup.h"
 #include "maths/matrixops.h"
-#include "file/nfile.h"
 
 namespace regina {
 
@@ -251,24 +250,6 @@ void NAbelianGroup::writeXMLData(std::ostream& out) const {
             invariantFactors.begin(); it != invariantFactors.end(); it++)
         out << (*it) << ' ';
     out << "</abeliangroup>";
-}
-
-void NAbelianGroup::writeToFile(NFile& out) const {
-    out.writeUInt(rank);
-    out.writeULong(invariantFactors.size());
-    for (std::multiset<NLargeInteger>::const_iterator it =
-            invariantFactors.begin(); it != invariantFactors.end(); it++)
-        out.writeLarge(*it);
-}
-
-NAbelianGroup* NAbelianGroup::readFromFile(NFile& in) {
-    NAbelianGroup* ans = new NAbelianGroup();
-    ans->rank = in.readUInt();
-    unsigned long nFactors = in.readULong();
-    for (unsigned long i=0; i<nFactors; i++)
-        ans->invariantFactors.insert(ans->invariantFactors.end(),
-            in.readLarge());
-    return ans;
 }
 
 // ---N--> CC --M-->  ie: M*N = 0.

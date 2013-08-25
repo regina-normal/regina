@@ -48,7 +48,6 @@
 #include "regina-core.h"
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
-#include "file/nfilepropertyreader.h"
 #include "packet/npacket.h"
 #include "utilities/hashutils.h"
 #include "utilities/nbooleans.h"
@@ -118,7 +117,7 @@ class NXMLTriangulationReader;
  * subcomplex to a normal surface.
  * \todo \featurelong Implement writeTextLong() for skeletal objects.
  */
-class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
+class REGINA_API NTriangulation : public NPacket {
     public:
         static const int packetType;
 
@@ -244,11 +243,9 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
         virtual int getPacketType() const;
         virtual std::string getPacketTypeName() const;
 
-        virtual void writePacket(NFile& out) const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         virtual bool dependsOnParent() const;
-        virtual void readIndividualProperty(NFile& infile, unsigned propType);
 
         /*@}*/
         /**
@@ -3060,7 +3057,6 @@ class REGINA_API NTriangulation : public NPacket, public NFilePropertyReader {
                 std::ostream& out);
 
         static NXMLPacketReader* getXMLReader(NPacket* parent);
-        static NTriangulation* readPacket(NFile& in, NPacket* parent);
 
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
@@ -3314,7 +3310,7 @@ inline NTriangulation::NTriangulation() : calculatedSkeleton(false) {
 }
 
 inline NTriangulation::NTriangulation(const NTriangulation& cloneMe) :
-        NPacket(), NFilePropertyReader(), calculatedSkeleton(false) {
+        NPacket(), calculatedSkeleton(false) {
     cloneFrom(cloneMe);
 }
 

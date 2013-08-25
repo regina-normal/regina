@@ -57,11 +57,14 @@ namespace regina {
  *
  * Routine identify() can be used to determine this information for a
  * given file.
+ *
+ * As of Regina 4.94, the old-style binary files are no longer supported.
+ * These have not been in use for over a decade.  The only file type
+ * that this class now recognises is TYPE_XML (compressed or uncompressed
+ * XML data files).
  */
 class REGINA_API NFileInfo : public ShareableObject {
     public:
-        static const int TYPE_BINARY;
-            /**< Represents an old-style binary data file. */
         static const int TYPE_XML;
             /**< Represents a new-style XML data file. */
 

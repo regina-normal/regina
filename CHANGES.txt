@@ -98,7 +98,18 @@ Version 5.0  [ (under development) ]
 
 Version 4.94  [ (under development) ]
 
+    GENERAL:
+        - Old-style binary files are no longer supported.  These have not been
+          in use for over a decade.  If you have an old-style binary file that
+          you need to use, install Regina 4.93 and use the regconvert tool.
     ENGINE:
+        Class NAbelianGroup, NGroupExpression, NGroupExpressionTerm,
+                NGroupPresentation:
+            - Removed writeToFile(NFile&) and readFromFile(NFile&, ...),
+              which were used for old-style binary files.
+        Class NAngleStructure:
+            - Removed writeToFile(NFile&) and readFromFile(NFile&, ...),
+              which were used for old-style binary files.
         Class BanConstraintBase, BanNone, BanBoundary, BanTorusBoundary:
             - New constraint classes for use with the new tree traversal code
               for enumerating normal surfaces.  See NTreeTraversal for details.
@@ -140,6 +151,10 @@ Version 4.94  [ (under development) ]
             - Now derives from the template base class NGenericFacetPairing<3>.
             - Renamed getNumberOfTetrahedra() to size().  The old name
               is deprecated, and will be removed in a future release.
+        Class NFile, NFilePropertyReader:
+            - Removed these classes, which were used for old-style binary files.
+        Class NFileInfo:
+            - Removed TYPE_BINARY, which was used for old-style binary files.
         Class NGenericFacetPairing:
             - New template base class that contains dimension-agnostic
               code for representing face/facet pairings.
@@ -168,13 +183,19 @@ Version 4.94  [ (under development) ]
             - NLargeInteger is now a typedef for the new template class
               NIntegerBase<true>, and maintains backward compatibility.
             - Performance is much, much faster; see NIntegerBase for details.
+        Class NLocalFileResource, NRandomAccessResource:
+            - Removed these classes, which were used for old-style binary files.
         Class NNormalSurface:
             - Routine boundarySlopes() now requires that the
               triangulation is oriented (otherwise SnapPea will relabel
               tetrahedron vertices and the matrix returned will be null).
             - Fixed minor memory leak in cutAlong().
+            - Removed writeToFile(NFile&) and readFromFile(NFile&, ...),
+              which were used for old-style binary files.
         Class NPacket:
             - Fix crash when sortChildren() is run on the root packet.
+            - Removed writePacket(NFile&) and readPacket(NFile&), which
+              were used for old-style binary files.
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic alias Sn that refers to S3, S4 and S5 in
               NPerm3, NPerm4 and NPerm5 respectively.
@@ -205,6 +226,9 @@ Version 4.94  [ (under development) ]
               and/or retriangulated.
             - New routine canonize() to produce the canonical retriangulation
               of the canonical cell decomposition.
+        Class NSurfaceFilter:
+            - Removed writeFilter(NFile&) and readFilter(NFile&, ...),
+              which were used for old-style binary files.
         Class NTetrahedron:
             - New dimension-agnostic aliases adjacentSimplex() and
               adjacentFacet().  These are identical to adjacentTetrahedron()
@@ -237,6 +261,8 @@ Version 4.94  [ (under development) ]
               traversal enumeration code; see NTreeTraversal for details.
         Class NVertex:
             - New routine buildLink() to triangulate the vertex link.
+        Routine readFromFile(), writeToFile():
+            - Removed, since these were used with old-style binary files.
         Routine readOrb():
             - Updated to correctly read the modern (and more verbose)
               Orb file format.  Thanks to Lorenzo Losa for the patch.
@@ -247,6 +273,8 @@ Version 4.94  [ (under development) ]
         Header nlargeinteger.h:
             - Deprecated in favour of the new ninteger.h.
     UTILITIES:
+        regconvert:
+            - The option -b (for old-style binary files) is no longer supported.
         regina-python:
             - The --quiet option no longer lists libraries as they are loaded.
         tricensus:

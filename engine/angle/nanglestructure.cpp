@@ -34,7 +34,6 @@
 
 #include "angle/nanglestructure.h"
 #include "triangulation/ntriangulation.h"
-#include "file/nfile.h"
 #include "utilities/xmlutils.h"
 
 // Property IDs:
@@ -80,55 +79,6 @@ void NAngleStructure::writeTextShort(std::ostream& out) const {
     }
 }
 
-void NAngleStructure::writeToFile(NFile& out) const {
-    // Write the vector length.
-    unsigned vecLen = vector->size();
-    out.writeUInt(vecLen);
-
-    // Write all non-zero entries.
-    NLargeInteger entry;
-    for (unsigned i=0; i<vecLen; i++) {
-        entry = (*vector)[i];
-        if (entry != 0) {
-            out.writeInt(i);
-            out.writeLarge(entry);
-        }
-    }
-    out.writeInt(-1);
-
-    // Write properties.
-    std::streampos bookmark(0);
-
-    /** Flags in data files are deprecated as of Regina 4.93.
-    bookmark = out.writePropertyHeader(PROPID_FLAGS);
-    out.writeULong(flags);
-    out.writePropertyFooter(bookmark);
-    */
-
-    out.writeAllPropertiesFooter();
-}
-
-NAngleStructure* NAngleStructure::readFromFile(NFile& in,
-        NTriangulation* triangulation) {
-    // Read the vector length and make a new vector.
-    unsigned vecLen = in.readUInt();
-    NAngleStructureVector* vector = new NAngleStructureVector(vecLen);
-
-    // Read all non-zero vector entries.
-    int vecPos = in.readInt();
-    while (vecPos != -1) {
-        vector->setElement(vecPos, in.readLarge());
-        vecPos = in.readInt();
-    }
-
-    NAngleStructure* ans = new NAngleStructure(triangulation, vector);
-
-    // Read in properties.
-    in.readProperties(ans);
-
-    return ans;
-}
-
 void NAngleStructure::writeXMLData(std::ostream& out) const {
     // Write the vector length.
     unsigned vecLen = vector->size();
@@ -149,14 +99,6 @@ void NAngleStructure::writeXMLData(std::ostream& out) const {
 
     // Write the closing tag.
     out << "</struct>\n";
-}
-
-void NAngleStructure::readIndividualProperty(NFile& infile, unsigned propType) {
-    /** Flags in data files are deprecated as of Regina 4.93.
-    if (propType == PROPID_FLAGS) {
-        flags = infile.readULong();
-    }
-    */
 }
 
 void NAngleStructure::calculateType() const {

@@ -72,8 +72,6 @@ class REGINA_API NContainer : public NPacket {
 
         virtual void writeTextShort(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);
-        virtual void writePacket(NFile& out) const;
-        static NContainer* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;
     
     protected:
@@ -90,9 +88,6 @@ inline NContainer::NContainer() {
 
 inline void NContainer::writeTextShort(std::ostream& o) const {
     o << "Container";
-}
-
-inline void NContainer::writePacket(NFile&) const {
 }
 
 inline bool NContainer::dependsOnParent() const {

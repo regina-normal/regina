@@ -35,23 +35,11 @@
 #include "surfaces/nsurfacefilter.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/filterregistry.h"
-#include "file/nfile.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
 
 #define __FILTER_REGISTRY_BODY
-
-NSurfaceFilter* NSurfaceFilter::readFilter(NFile&, NPacket*) {
-    return new NSurfaceFilter();
-}
-
-void NSurfaceFilter::writePacket(NFile& out) const {
-    out.writeInt(getFilterID());
-    writeFilter(out);
-    writeProperties(out);
-    out.writeAllPropertiesFooter();
-}
 
 #define REGISTER_FILTER(id, c, name) \
     case id: out << regina::xml::xmlEncodeSpecialChars(name); break;
@@ -70,29 +58,6 @@ void NSurfaceFilter::writeXMLPacketData(std::ostream& out) const {
     writeXMLFilterData(out);
 
     out << "  </filter>\n";
-}
-
-void NSurfaceFilter::readIndividualProperty(NFile&, unsigned) {
-}
-
-void NSurfaceFilter::writeProperties(NFile&) const {
-}
-
-#undef REGISTER_FILTER
-#define REGISTER_FILTER(id, class, n) \
-    case id: ans = class::readFilter(in, parent); break;
-
-NSurfaceFilter* NSurfaceFilter::readPacket(NFile& in, NPacket* parent) {
-    NSurfaceFilter* ans = 0;
-    int id = in.readInt();
-    switch (id) {
-        // Import cases from the filter registry.
-        #include "surfaces/filterregistry.h"
-        default: ans = new NSurfaceFilter();
-    }
-
-    in.readProperties(ans);
-    return ans;
 }
 
 #undef REGISTER_FILTER

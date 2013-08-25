@@ -84,17 +84,6 @@ void NPDF::reset(char* data, size_t size, OwnershipPolicy alloc) {
     }
 }
 
-void NPDF::writePacket(NFile&) const {
-    // I have absolutely no intention of supporting the old pre-2002 binary
-    // format, especially since it is about to be removed from Regina entirely.
-}
-
-NPDF* NPDF::readPacket(NFile&, NPacket*) {
-    // Likewise.  Since we don't support PDF packets in the old binary files,
-    // just return an oops.
-    return 0;
-}
-
 void NPDF::writeXMLPacketData(std::ostream& out) const {
     if (! data_) {
         // We have an empty PDF packet.

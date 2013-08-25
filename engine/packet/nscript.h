@@ -45,7 +45,6 @@
 #include <utility>
 #include <vector>
 #include "regina-core.h"
-#include "file/nfilepropertyreader.h"
 #include "packet/npacket.h"
 
 namespace regina {
@@ -61,7 +60,7 @@ class NXMLPacketReader;
  * A packet representing a script that can be run.
  * Accessor methods for a script work a line at a time.
  */
-class REGINA_API NScript : public NPacket, public NFilePropertyReader {
+class REGINA_API NScript : public NPacket {
     private:
         std::vector<std::string> lines;
             /**< An array storing the lines of this script; none of
@@ -211,16 +210,11 @@ class REGINA_API NScript : public NPacket, public NFilePropertyReader {
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);
-        virtual void writePacket(NFile& out) const;
-        static NScript* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;
 
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
-
-        virtual void readIndividualProperty(NFile& infile,
-            unsigned propType);
 };
 
 /*@}*/

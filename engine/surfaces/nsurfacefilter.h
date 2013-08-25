@@ -42,7 +42,6 @@
 #endif
 
 #include "regina-core.h"
-#include "file/nfilepropertyreader.h"
 #include "packet/npacket.h"
 
 namespace regina {
@@ -83,7 +82,7 @@ class NXMLFilterReader;
  *
  * \todo \feature Implement property \a lastAppliedTo.
  */
-class REGINA_API NSurfaceFilter : public NPacket, public NFilePropertyReader {
+class REGINA_API NSurfaceFilter : public NPacket {
     public:
         /**
          * Contains the integer ID for this type of surface filter.
@@ -169,54 +168,11 @@ class REGINA_API NSurfaceFilter : public NPacket, public NFilePropertyReader {
          * @return the newly created XML filter reader.
          */
         static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
-        /**
-         * Reads the details of a normal surface filter from the
-         * specified old-style binary file and returns a newly created
-         * filter containing that information.  You may assume that the
-         * filter is of the same class as the class in which you are
-         * implementing this routine.  The newly created filter must also
-         * be of this type.
-         *
-         * The general packet information and the filter ID may be
-         * assumed to have already been read from the file, and should
-         * <b>not</b> be reread.  The readFilter() routine should read
-         * exactly what writeFilter() writes, and vice versa.
-         *
-         * Properties should not be read from here; this will be done later
-         * by another routine.
-         *
-         * \a parent represents the packet which will become the new
-         * filter's parent in the tree structure.  This information is
-         * for reference only, and need not be used.
-         * See the description of parameter \a parent in
-         * NPacket::readPacket() for further details.
-         *
-         * New filter types should make this routine simply return 0
-         * since this file format is now obsolete, and older calculation
-         * engines will not understand newer filter types anyway.
-         *
-         * \deprecated For the preferred way to read filters from file,
-         * see getXMLFilterReader() and class NXMLFilterReader instead.
-         *
-         * \pre The given file is open for reading and all above
-         * conditions have been satisfied.
-         *
-         * \ifacespython Not present.
-         *
-         * @param in the file from which to read the filter.
-         * @param parent the packet which will become the new filter's
-         * parent in the tree structure, or 0 if the new filter is to be
-         * tree matriarch.
-         * @return the filter read from file, or 0 if an error occurred.
-         */
-        static NSurfaceFilter* readFilter(NFile& in, NPacket* parent);
 
         virtual int getPacketType() const;
         virtual std::string getPacketTypeName() const;
         virtual void writeTextShort(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);
-        virtual void writePacket(NFile& out) const;
-        static NSurfaceFilter* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;
 
     protected:
@@ -232,57 +188,8 @@ class REGINA_API NSurfaceFilter : public NPacket, public NFilePropertyReader {
          * @param out the output stream to which the XML should be written.
          */
         virtual void writeXMLFilterData(std::ostream& out) const;
-        /**
-         * Writes the details of this filter to the given old-style
-         * binary file.
-         *
-         * You may assume that general packet information and the filter
-         * ID have already been written.  Only the actual data stored for
-         * this particular subclass of NSurfaceFilter need be written.
-         *
-         * Properties should not be written from here; this will be done later
-         * by another routine.
-         *
-         * The default implementation for this routine does nothing; new
-         * filter types should not implement this routine since this file
-         * format is now obsolete, and older calculation engines will
-         * simply skip unknown filter types when reading from binary files.
-         *
-         * \deprecated For the preferred way to write data to file,
-         * see writeXMLFilterData() instead.
-         *
-         * \pre The given file is open for writing and satisfies the
-         * assumptions listed above.
-         *
-         * @param out the file to be written to.
-         */
-        virtual void writeFilter(NFile& out) const;
-        /**
-         * Writes to the given old-style binary file any properties
-         * associated specifically with this particular subclass of
-         * NSurfaceFilter.
-         *
-         * This routine should consist of a call to the superclass
-         * implementation followed by a series of writePropertyHeader() and
-         * writePropertyFooter() calls with property information being
-         * written inside these pairs.
-         *
-         * This routine should <b>not</b> call writeAllPropertiesFooter().
-         *
-         * The default implementation for this routine does nothing; new
-         * filter types should not implement this routine since this file
-         * format is now obsolete, and older calculation engines will
-         * simply skip unknown filter types when reading from binary files.
-         *
-         * \deprecated For the preferred way to write data to file,
-         * see writeXMLFilterData() instead.
-         *
-         * @param out the file to be written to.
-         */
-        virtual void writeProperties(NFile& out) const;
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
-        virtual void readIndividualProperty(NFile& infile, unsigned propType);
 };
 
 /*@}*/
@@ -291,8 +198,7 @@ class REGINA_API NSurfaceFilter : public NPacket, public NFilePropertyReader {
 
 inline NSurfaceFilter::NSurfaceFilter() {
 }
-inline NSurfaceFilter::NSurfaceFilter(const NSurfaceFilter&) :
-        NPacket(), NFilePropertyReader() {
+inline NSurfaceFilter::NSurfaceFilter(const NSurfaceFilter&) : NPacket() {
 }
 inline NSurfaceFilter::~NSurfaceFilter() {
 }
@@ -302,9 +208,6 @@ inline bool NSurfaceFilter::accept(const NNormalSurface&) const {
 }
 
 inline void NSurfaceFilter::writeXMLFilterData(std::ostream&) const {
-}
-
-inline void NSurfaceFilter::writeFilter(NFile&) const {
 }
 
 inline void NSurfaceFilter::writeTextShort(std::ostream& o) const {

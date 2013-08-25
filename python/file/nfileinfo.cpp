@@ -58,7 +58,6 @@ void addNFileInfo() {
 
     // Apparently there is no way in python to make a module attribute
     // read-only.
-    s.attr("TYPE_BINARY") = NFileInfo::TYPE_BINARY;
     s.attr("TYPE_XML") = NFileInfo::TYPE_XML;
 }
 

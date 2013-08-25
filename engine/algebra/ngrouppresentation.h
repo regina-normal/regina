@@ -53,7 +53,6 @@
 
 namespace regina {
 
-class NFile;
 class NHomGroupPresentation; 
 
 /**
@@ -128,36 +127,6 @@ struct REGINA_API NGroupExpressionTerm {
      * \c false if the two terms have different generators.
      */
     bool operator += (const NGroupExpressionTerm& other);
-
-    /**
-     * Writes this term to the given old-style binary file.
-     *
-     * \deprecated For the preferred way to write data to file, see
-     * NGroupExpression::writeXMLData() instead.
-     *
-     * \pre The given file is currently opened for writing.
-     *
-     * \ifacespython Not present.
-     *
-     * @param out the file to which to write.
-     */
-    void writeToFile(NFile& out) const;
-    /**
-     * Reads a term from the given old-style binary file.
-     *
-     * \deprecated For the preferred way of reading group
-     * presentations from file, see class NXMLGroupPresentationReader
-     * instead.
-     *
-     * \pre The given file is currently opened for reading.
-     *
-     * \ifacespython Not present.
-     *
-     * @param in the file from which to read.
-     * @return the term read from the given file.
-     */
-    static NGroupExpressionTerm readFromFile(NFile& in);
-
 };
 
 /**
@@ -525,39 +494,6 @@ class REGINA_API NGroupExpression : public ShareableObject {
         void writeXMLData(std::ostream& out) const;
 
         /**
-         * Writes this expression to the given old-style binary file.
-         *
-         * \deprecated For the preferred way to write data to file, see
-         * writeXMLData() instead.
-         *
-         * \pre The given file is currently opened for writing.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the file to which to write.
-         */
-        void writeToFile(NFile& out) const;
-
-        /**
-         * Reads an expression from the given old-style binary file.
-         * The expression will be newly allocated, and responsibility for
-         * its destruction lies with the caller of this routine.
-         *
-         * \deprecated For the preferred way of reading group
-         * presentations from file, see class NXMLGroupPresentationReader
-         * instead.
-         *
-         * \pre The given file is currently opened for reading.
-         *
-         * \ifacespython Not present.
-         *
-         * @param in the file from which to read.
-         * @return a newly allocated expression read from the given file, or
-         * 0 if problems arose.
-         */
-        static NGroupExpression* readFromFile(NFile& in);
-
-        /**
          * The text representation will be of the form
          * <tt>g2^4 g13^-5 g4</tt>. If the shortword flag is
          * true, it will assume your word is in an alphabet of
@@ -755,37 +691,6 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * @param out the output stream to which the XML should be written.
          */
         void writeXMLData(std::ostream& out) const;
-        /**
-         * Writes this group presentation to the given old-style binary file.
-         *
-         * \deprecated For the preferred way to write data to file, see
-         * writeXMLData() instead.
-         *
-         * \pre The given file is currently opened for writing.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the file to which to write.
-         */
-        void writeToFile(NFile& out) const;
-        /**
-         * Reads a group presentation from the given old-style binary file.
-         * The presentation will be newly allocated, and responsibility for
-         * its destruction lies with the caller of this routine.
-         *
-         * \deprecated For the preferred way of reading group
-         * presentations from file, see class NXMLGroupPresentationReader
-         * instead.
-         *
-         * \pre The given file is currently opened for reading.
-         *
-         * \ifacespython Not present.
-         *
-         * @param in the file from which to read.
-         * @return a newly allocated presentation read from the given file, or
-         * 0 if problems arose.
-         */
-        static NGroupPresentation* readFromFile(NFile& in);
 
 	/**
 	 *  The sum of the wordLength()s of the relators.  Used as a coarse 

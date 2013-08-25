@@ -33,7 +33,6 @@
 /* end stub */
 
 #include <algorithm>
-#include "file/nfile.h"
 #include "maths/nmatrixint.h"
 #ifndef EXCLUDE_SNAPPEA
 #include "snappea/nsnappeatriangulation.h"
@@ -145,36 +144,6 @@ NNormalSurface* NNormalSurface::doubleSurface() const {
     // And some other properties are best left recalculated.
 
     return ans;
-}
-
-void NNormalSurface::readIndividualProperty(NFile& infile,
-        unsigned propType) {
-    if (propType == PROPID_EULERCHARACTERISTIC)
-        eulerChar = infile.readLarge();
-    else if (propType == PROPID_ORIENTABILITY) {
-        int val = infile.readInt();
-        if (val == 1)
-            orientable = true;
-        else if (val == -1)
-            orientable = false;
-    } else if (propType == PROPID_TWOSIDEDNESS) {
-        int val = infile.readInt();
-        if (val == 1)
-            twoSided = true;
-        else if (val == -1)
-            twoSided = false;
-    } else if (propType == PROPID_CONNECTEDNESS) {
-        int val = infile.readInt();
-        if (val == 1)
-            connected = true;
-        else if (val == -1)
-            connected = false;
-    } else if (propType == PROPID_REALBOUNDARY)
-        realBoundary = infile.readBool();
-    else if (propType == PROPID_COMPACT)
-        compact = infile.readBool();
-    else if (propType == PROPID_SURFACENAME)
-        name = infile.readString();
 }
 
 NNormalSurface::NNormalSurface(NTriangulation* triang,
@@ -543,97 +512,6 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
 
     // Write the closing tag.
     out << " </surface>\n";
-}
-
-void NNormalSurface::writeToFile(NFile& out) const {
-    // Write the vector length.
-    unsigned vecLen = vector->size();
-    out.writeUInt(vecLen);
-
-    // Write all non-zero entries.
-    NLargeInteger entry;
-    for (unsigned i=0; i<vecLen; i++) {
-        entry = (*vector)[i];
-        if (entry != 0) {
-            out.writeInt(i);
-            out.writeLarge(entry);
-        }
-    }
-    out.writeInt(-1);
-
-    // Write properties.
-    std::streampos bookmark(0);
-
-    bookmark = out.writePropertyHeader(PROPID_SURFACENAME);
-    out.writeString(name);
-    out.writePropertyFooter(bookmark);
-
-    if (eulerChar.known()) {
-        bookmark = out.writePropertyHeader(PROPID_EULERCHARACTERISTIC);
-        out.writeLarge(eulerChar.value());
-        out.writePropertyFooter(bookmark);
-    }
-    if (orientable.known()) {
-        bookmark = out.writePropertyHeader(PROPID_ORIENTABILITY);
-        out.writeInt(orientable.value() ? 1 : -1);
-        out.writePropertyFooter(bookmark);
-    }
-    if (twoSided.known()) {
-        bookmark = out.writePropertyHeader(PROPID_TWOSIDEDNESS);
-        out.writeInt(twoSided.value() ? 1 : -1);
-        out.writePropertyFooter(bookmark);
-    }
-    if (connected.known()) {
-        bookmark = out.writePropertyHeader(PROPID_CONNECTEDNESS);
-        out.writeInt(connected.value() ? 1 : -1);
-        out.writePropertyFooter(bookmark);
-    }
-    if (realBoundary.known()) {
-        bookmark = out.writePropertyHeader(PROPID_REALBOUNDARY);
-        out.writeBool(realBoundary.value());
-        out.writePropertyFooter(bookmark);
-    }
-    if (compact.known()) {
-        bookmark = out.writePropertyHeader(PROPID_COMPACT);
-        out.writeBool(compact.value());
-        out.writePropertyFooter(bookmark);
-    }
-
-    out.writeAllPropertiesFooter();
-}
-
-#define REGISTER_FLAVOUR(id_name, class, n, a, s, o) \
-    if (flavour == NNormalSurfaceList::id_name) \
-        vector = new class(vecLen); \
-    else
-
-NNormalSurface* NNormalSurface::readFromFile(NFile& in, int flavour,
-        NTriangulation* triangulation) {
-    // Read the vector length and make a new vector.
-    unsigned vecLen = in.readUInt();
-    NNormalSurfaceVector* vector;
-
-    // Bring in cases from the flavour registry...
-    #include "surfaces/flavourregistry.h"
-    // ... and legacy cases:
-    if (flavour == NNormalSurfaceList::AN_LEGACY)
-        vector = new NNormalSurfaceVectorANStandard(vecLen);
-    else
-        return 0;
-
-    // Read all non-zero vector entries.
-    int vecPos = in.readInt();
-    while (vecPos != -1) {
-        vector->setElement(vecPos, in.readLarge());
-        vecPos = in.readInt();
-    }
-
-    NNormalSurface* ans = new NNormalSurface(triangulation, vector);
-
-    // Read in properties.
-    in.readProperties(ans);
-
-    return ans;
 }
 
 // Default implementations for oriented surfaces. Returns zero as any

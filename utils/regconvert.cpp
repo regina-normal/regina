@@ -32,7 +32,6 @@
 
 /* end stub */
 
-#include "file/nfile.h"
 #include "file/nxmlfile.h"
 #include "packet/npacket.h"
 #include <cstdlib>
@@ -42,12 +41,11 @@ void usage(const char* progName, const std::string& error = std::string()) {
         std::cerr << error << "\n\n";
 
     std::cerr << "Usage:\n";
-    std::cerr << "    " << progName << " [ -x | -u | -b ]"
+    std::cerr << "    " << progName << " [ -x | -u ]"
         << " <old-file> [ <new-file> ]\n";
     std::cerr << std::endl;
     std::cerr << "    -x : Convert to compressed XML (default)\n";
     std::cerr << "    -u : Convert to uncompressed XML\n";
-    std::cerr << "    -b : Convert to old-style binary format\n";
     std::cerr << std::endl;
     std::cerr << "    <new-file> may be the same as <old-file>.\n";
     std::cerr << "    <new-file> defaults to standard output (implies -u).\n";
@@ -70,7 +68,7 @@ int main(int argc, char* argv[]) {
 
             // Argument has length 2.
             optChar = argv[i][1];
-            if (optChar == 'x' || optChar == 'u' || optChar == 'b') {
+            if (optChar == 'x' || optChar == 'u') {
                 if (typeOpt)
                     usage(argv[0],
                         "More than one file type has been specified.");
@@ -121,14 +119,8 @@ int main(int argc, char* argv[]) {
         newFile = "<stdout>"; // (for error messages)
     } else {
         // Real output file.
-        if (typeOpt == 'b') {
-            // Binary file
-            result = regina::writeToFile(newFile.c_str(), tree);
-        } else {
-            // Compressed / uncompressed XML
-            result = regina::writeXMLFile(newFile.c_str(), tree,
-                typeOpt == 'x');
-        }
+        // Use compressed / uncompressed XML
+        result = regina::writeXMLFile(newFile.c_str(), tree, typeOpt == 'x');
     }
 
     if (! result) {

@@ -33,7 +33,6 @@
 /* end stub */
 
 #include "surfaces/sfcombination.h"
-#include "file/nfile.h"
 
 #define TYPE_AND 1
 #define TYPE_OR 2
@@ -62,19 +61,6 @@ bool NSurfaceFilterCombination::accept(const NNormalSurface& surface) const {
 
 void NSurfaceFilterCombination::writeXMLFilterData(std::ostream& out) const {
     out << "    <op type=\"" << (usesAnd ? "and" : "or") << "\"/>\n";
-}
-
-void NSurfaceFilterCombination::writeFilter(NFile& out) const {
-    if (usesAnd)
-        out.writeInt(TYPE_AND);
-    else
-        out.writeInt(TYPE_OR);
-}
-
-NSurfaceFilter* NSurfaceFilterCombination::readFilter(NFile& in, NPacket*) {
-    NSurfaceFilterCombination* ans = new NSurfaceFilterCombination();
-    ans->usesAnd = (in.readInt() == TYPE_AND);
-    return ans;
 }
 
 } // namespace regina

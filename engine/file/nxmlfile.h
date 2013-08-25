@@ -96,15 +96,17 @@ REGINA_API bool writeXMLFile(const char* fileName, NPacket* subtree,
 REGINA_API NPacket* readXMLFile(const char* fileName);
 
 /**
- * Reads a packet tree from a file whose format is unknown.  The file
- * may be in either XML (optionally compressed) or old-style binary format.
+ * Reads a packet tree from a file whose format is unknown.
+ *
+ * As of Regina 4.94, old-style binary files are no longer supported.
+ * This means that the file must be in XML format (optionally compressed).
+ * In other words, this routine now behaves identically to readXMLFile().
  *
  * If the matriarch of the packet tree could not be read, this routine
  * will return 0.  If a lower-level packet could not be read, it (and
  * its descendants) will simply be ignored.
  *
- * The given file will almost certainly be opened and closed multiple
- * times during this routine.
+ * The given file may be opened and closed multiple times during this routine.
  *
  * \i18n This routine makes no assumptions about the
  * \ref i18n "character encoding" used in the given file \e name, and simply

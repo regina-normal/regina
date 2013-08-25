@@ -163,7 +163,6 @@ class REGINA_API Dim2Triangulation : public NPacket {
         virtual int getPacketType() const;
         virtual std::string getPacketTypeName() const;
 
-        virtual void writePacket(NFile& out) const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         virtual bool dependsOnParent() const;
@@ -1100,7 +1099,6 @@ class REGINA_API Dim2Triangulation : public NPacket {
 
 
         static NXMLPacketReader* getXMLReader(NPacket* parent);
-        static Dim2Triangulation* readPacket(NFile& in, NPacket* parent);
 
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
@@ -1270,11 +1268,6 @@ inline Dim2Triangulation::Dim2Triangulation(const Dim2Triangulation& cloneMe) :
 inline Dim2Triangulation::~Dim2Triangulation() {
     clearAllProperties();
     deleteTriangles();
-}
-
-inline void Dim2Triangulation::writePacket(NFile&) const {
-    // No need to add support for the old pre-2002 binary format.
-    // This format is deprecated and about to be removed from Regina entirely.
 }
 
 inline void Dim2Triangulation::writeTextShort(std::ostream& out) const {
@@ -1520,11 +1513,6 @@ inline bool Dim2Triangulation::isConnected() const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
     return (components_.size() <= 1);
-}
-
-inline Dim2Triangulation* Dim2Triangulation::readPacket(NFile&, NPacket*) {
-    // Don't bother supporting the old pre-2002 binary format.
-    return 0;
 }
 
 inline NPacket* Dim2Triangulation::internalClonePacket(NPacket*) const {

@@ -510,8 +510,6 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);
-        virtual void writePacket(NFile& out) const;
-        static NNormalSurfaceList* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;
 
         /**
