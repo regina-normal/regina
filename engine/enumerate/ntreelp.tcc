@@ -57,6 +57,7 @@
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/nbitmask.h"
+#include <cstring>
 
 namespace regina {
 
