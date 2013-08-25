@@ -388,8 +388,7 @@ void LPData<LPConstraint>::initClone(const LPData& parent) {
     rowOps_.initClone(parent.rowOps_);
     rank_ = parent.rank_;
     memcpy(basis_, parent.basis_, parent.rank_ * sizeof(int));
-    memcpy(basisRow_, parent.basisRow_,
-        origTableaux_->columns() * sizeof(int));
+    memcpy(basisRow_, parent.basisRow_, origTableaux_->columns() * sizeof(int));
     octPrimary_ = parent.octPrimary_;
     octSecondary_ = parent.octSecondary_;
 }
@@ -664,11 +663,14 @@ void LPData<LPConstraint>::constrainOct(unsigned quad1, unsigned quad2) {
                 rowOps_.negateRow(row1);
             }
 
-            NInteger coeff, gcdRow, tmp;
+            NInteger coeff, gcdRow;
             for (int r = 0; r < rank_; ++r) {
                 if (r == row1)
                     continue;
 
+                // We will reuse coeff, to avoid too many temporary NIntegers.
+                // We first set coeff here, and then we reuse and alter it
+                // within the IF block below.
                 entry(r, quad1, coeff);
                 if (! coeff.isZero()) {
                     gcdRow = rowOps_.combRowAndNorm(e1, r, coeff, row1);
@@ -676,9 +678,8 @@ void LPData<LPConstraint>::constrainOct(unsigned quad1, unsigned quad2) {
                     // As usual, we already know in advance that
                     // gcdRow must divide into rhs_[r].
                     rhs_[r] *= e1;
-                    tmp = coeff;
-                    tmp *= rhs_[row1]; // Avoid spurious temporary NIntegers.
-                    rhs_[r] -= tmp;
+                    coeff *= rhs_[row1];
+                    rhs_[r] -= coeff;
                     rhs_[r].divByExact(gcdRow);
                 }
             }
@@ -863,12 +864,15 @@ void LPData<LPConstraint>::pivot(unsigned outCol, unsigned inCol) {
     // Walk through the entire tableaux and perform row operations
     // to ensure that the only non-zero entry in column \a inCol
     // is the entry base in row defRow (as extracted above).
-    NInteger coeff, gcdRow, tmp;
+    NInteger coeff, gcdRow;
     unsigned r;
     for (r = 0; r < rank_; ++r) {
         if (r == defRow)
             continue;
 
+        // We will reuse coeff, to avoid too many temporary NIntegers.
+        // We first set coeff here, and then we reuse and alter it within the
+        // IF block below.
         entry(r, inCol, coeff);
         if (! coeff.isZero()) {
             // Perform the row operation on the matrix...
@@ -879,9 +883,8 @@ void LPData<LPConstraint>::pivot(unsigned outCol, unsigned inCol) {
             // since rhs_ is obtained by multiplying the integer
             // matrix rowOps_ with an integer vector.
             rhs_[r] *= base;
-            tmp = coeff;
-            tmp *= rhs_[defRow]; // Avoid spurious temporary NIntegers.
-            rhs_[r] -= tmp;
+            coeff *= rhs_[defRow];
+            rhs_[r] -= coeff;
             rhs_[r].divByExact(gcdRow);
         }
     }

@@ -51,21 +51,13 @@ void LPMatrix::combRow(const NInteger& destCoeff, unsigned dest,
     NInteger* ps = dat_ + src * cols_;
     NInteger* pd = dat_ + dest * cols_;
     NInteger tmp; // Use this to avoid spurious temporary NIntegers.
-    if (div > 1)
-        for (unsigned i = 0; i < cols_; ++i) {
-            *pd *= destCoeff;
-            tmp = srcCoeff;
-            tmp *= *ps++;
-            *pd -= tmp;
-            (*pd++).divByExact(div);
-        }
-    else
-        for (unsigned i = 0; i < cols_; ++i) {
-            *pd *= destCoeff;
-            tmp = srcCoeff;
-            tmp *= *ps++;
-            *pd++ -= tmp;
-        }
+    for (unsigned i = 0; i < cols_; ++i) {
+        *pd *= destCoeff;
+        tmp = srcCoeff;
+        tmp *= *ps++;
+        *pd -= tmp;
+        (*pd++).divByExact(div);
+    }
 }
 
 NInteger LPMatrix::combRowAndNorm(const NInteger& destCoeff,
