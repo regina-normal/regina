@@ -402,7 +402,7 @@ void NNormalSurfaceList::enumerateStandardViaReduced(
 template <class Variant>
 void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
         const std::vector<NNormalSurfaceVector*>& reducedList) {
-    unsigned nFacets = Variant::stdLen(owner->getNumberOfTetrahedra());
+    size_t nFacets = Variant::stdLen(owner->getNumberOfTetrahedra());
 
     // Choose a bitmask type for representing the set of facets that a
     // ray belongs to; in particular, use a (much faster) optimised
@@ -445,11 +445,11 @@ template <class Variant, class BitmaskType>
 void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
         const std::vector<NNormalSurfaceVector*>& reducedList) {
     // Prepare for the reduced-to-standard double description run.
-    unsigned n = owner->getNumberOfTetrahedra();
-    unsigned slen = Variant::stdLen(n); // # standard coordinates
-    unsigned llen = owner->getNumberOfVertices(); // # vertex links
+    size_t n = owner->getNumberOfTetrahedra();
+    size_t slen = Variant::stdLen(n); // # standard coordinates
+    size_t llen = owner->getNumberOfVertices(); // # vertex links
 
-    unsigned i;
+    size_t i;
 
     // Recreate the quadrilateral constraints (or the corresponding
     // constraints for almost normal surfaces) as bitmasks.

@@ -78,7 +78,7 @@ class REGINA_API NNormalSurfaceVectorOriented : public NNormalSurfaceVector {
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalSurfaceVectorOriented(unsigned length);
+        NNormalSurfaceVectorOriented(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
@@ -90,19 +90,19 @@ class REGINA_API NNormalSurfaceVectorOriented : public NNormalSurfaceVector {
         virtual bool allowsSpun() const;
         virtual bool allowsOriented() const;
 
-        virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
+        virtual NLargeInteger getTriangleCoord(size_t tetIndex,
             int vertex, NTriangulation* triang) const;
-        virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
+        virtual NLargeInteger getQuadCoord(size_t tetIndex,
             int quadType, NTriangulation* triang) const;
-        virtual NLargeInteger getOrientedTriangleCoord(unsigned long tetIndex,
+        virtual NLargeInteger getOrientedTriangleCoord(size_t tetIndex,
             int vertex, NTriangulation* triang, bool orientation) const;
-        virtual NLargeInteger getOrientedQuadCoord(unsigned long tetIndex,
+        virtual NLargeInteger getOrientedQuadCoord(size_t tetIndex,
             int quadType, NTriangulation* triang, bool orientation) const;
-        virtual NLargeInteger getOctCoord(unsigned long tetIndex,
+        virtual NLargeInteger getOctCoord(size_t tetIndex,
             int octType, NTriangulation* triang) const;
-        virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
+        virtual NLargeInteger getEdgeWeight(size_t edgeIndex,
             NTriangulation* triang) const;
-        virtual NLargeInteger getFaceArcs(unsigned long faceIndex,
+        virtual NLargeInteger getFaceArcs(size_t faceIndex,
             int faceVertex, NTriangulation* triang) const;
 
         virtual NNormalSurfaceVector* clone() const;
@@ -119,7 +119,7 @@ class REGINA_API NNormalSurfaceVectorOriented : public NNormalSurfaceVector {
 // Inline functions for NNormalSurfaceVectorOriented
 
 inline NNormalSurfaceVectorOriented::NNormalSurfaceVectorOriented(
-        unsigned length) : NNormalSurfaceVector(length) {
+        size_t length) : NNormalSurfaceVector(length) {
 }
 inline NNormalSurfaceVectorOriented::NNormalSurfaceVectorOriented(
         const NVector<NLargeInteger>& cloneMe) :
@@ -127,30 +127,30 @@ inline NNormalSurfaceVectorOriented::NNormalSurfaceVectorOriented(
 }
 
 inline NLargeInteger NNormalSurfaceVectorOriented::getTriangleCoord(
-        unsigned long tetIndex, int vertex, NTriangulation* tri) const {
+        size_t tetIndex, int vertex, NTriangulation* tri) const {
     return getOrientedTriangleCoord(tetIndex,vertex,tri, true)
            + getOrientedTriangleCoord(tetIndex,vertex,tri, false);
 }
 inline NLargeInteger NNormalSurfaceVectorOriented::getQuadCoord(
-        unsigned long tetIndex, int quadType, NTriangulation* tri) const {
+        size_t tetIndex, int quadType, NTriangulation* tri) const {
     return getOrientedQuadCoord(tetIndex,quadType,tri, true)
            + getOrientedQuadCoord(tetIndex,quadType,tri, false);
 }
 
 inline NLargeInteger NNormalSurfaceVectorOriented::getOrientedTriangleCoord(
-        unsigned long tetIndex, int vertex, NTriangulation*,
+        size_t tetIndex, int vertex, NTriangulation*,
         bool orientation) const {
     return (*this)[14 * tetIndex + 2 * vertex +
         (orientation ? 0 : 1)];
 }
 inline NLargeInteger NNormalSurfaceVectorOriented::getOrientedQuadCoord(
-        unsigned long tetIndex, int quadType, NTriangulation*, 
+        size_t tetIndex, int quadType, NTriangulation*, 
         bool orientation) const {
     return (*this)[14 * tetIndex + 8 + 2 * quadType +
         (orientation ? 0 : 1)];
 }
 inline NLargeInteger NNormalSurfaceVectorOriented::getOctCoord(
-        unsigned long, int, NTriangulation*) const {
+        size_t, int, NTriangulation*) const {
     return zero;
 }
 
