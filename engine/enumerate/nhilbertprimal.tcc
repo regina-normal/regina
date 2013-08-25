@@ -64,7 +64,7 @@ void NHilbertPrimal::enumerateHilbertBasis(OutputIterator results,
     }
 
     // Get the dimension of the space.
-    unsigned dim = (*raysBegin)->size();
+    size_t dim = (*raysBegin)->size();
     if (dim == 0)
         return;
 
@@ -114,7 +114,7 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
         const NEnumConstraintList* constraints, NProgressMessage* progress) {
     // We know at this point that the dimension is non-zero.
-    unsigned dim = (*raysBegin)->size();
+    size_t dim = (*raysBegin)->size();
 
     // First enumerate all maximal admissible faces.
     if (progress)
@@ -131,8 +131,7 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
     std::vector<const NRay*> face;
     typename std::vector<BitmaskType>::const_iterator mit;
     RayIterator rit;
-    RayClass* tmp;
-    unsigned i;
+    size_t i;
     std::list<std::vector<mpz_class> >::const_iterator hlit;
     std::set<std::vector<mpz_class> >::const_iterator hsit;
     std::vector<mpz_class>::const_iterator hvit;

@@ -41,11 +41,11 @@ const int ZBuffer::zEOF = EOF;
 
 std::streamsize ZBuffer::xsgetn(char* s, std::streamsize n) {
     if (next == -1) {
-        int ans = gzread(file, s, n);
+        int ans = gzread(file, s, static_cast<unsigned>(n));
         return (ans == -1 ? zEOF : ans);
     } else {
         *s = static_cast<char>(next);
-        int ans = gzread(file, s + 1, n - 1);
+        int ans = gzread(file, s + 1, static_cast<unsigned>(n) - 1);
         next = -1;
         return (ans == -1 ? zEOF : ans + 1);
     }

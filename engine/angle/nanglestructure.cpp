@@ -81,12 +81,12 @@ void NAngleStructure::writeTextShort(std::ostream& out) const {
 
 void NAngleStructure::writeXMLData(std::ostream& out) const {
     // Write the vector length.
-    unsigned vecLen = vector->size();
+    size_t vecLen = vector->size();
     out << "  <struct len=\"" << vecLen << "\"> ";
 
     // Write the non-zero elements.
     NLargeInteger entry;
-    for (unsigned i = 0; i < vecLen; i++) {
+    for (size_t i = 0; i < vecLen; i++) {
         entry = (*vector)[i];
         if (entry != 0)
             out << i << ' ' << entry << ' ';
@@ -102,7 +102,7 @@ void NAngleStructure::writeXMLData(std::ostream& out) const {
 }
 
 void NAngleStructure::calculateType() const {
-    unsigned long size = vector->size();
+    size_t size = vector->size();
     if (size == 1) {
         // We have no tetrahedra, which means this angle structure has it all:
         // strict, taut and veering.
@@ -118,8 +118,8 @@ void NAngleStructure::calculateType() const {
 
     // Run through the tetrahedra one by one.
     const NLargeInteger& scale = (*vector)[size - 1];
-    unsigned long pair;
-    for (unsigned long base = 0; base < size - 1; base += 3) {
+    unsigned pair;
+    for (size_t base = 0; base < size - 1; base += 3) {
         for (pair = 0; pair < 3; pair++) {
             if ((*vector)[base + pair] == scale) {
                 // We have a pi; thus all three angles in this
@@ -148,13 +148,13 @@ void NAngleStructure::calculateType() const {
         // Is it veering also?
         bool veering = true;
         if (triangulation->isOrientable()) {
-            int nEdges = triangulation->getNumberOfEdges();
+            size_t nEdges = triangulation->getNumberOfEdges();
             int* edgeColour = new int[nEdges];
             std::fill(edgeColour, edgeColour + nEdges, (int)0);
             NTetrahedron* tet;
             int orient;
-            int e;
-            for (unsigned i = 0; i < triangulation->getNumberOfTetrahedra();
+            size_t e;
+            for (size_t i = 0; i < triangulation->getNumberOfTetrahedra();
                     ++i) {
                 tet = triangulation->getTetrahedron(i);
                 orient = tet->orientation();

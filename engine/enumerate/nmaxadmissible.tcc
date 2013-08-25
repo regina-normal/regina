@@ -63,7 +63,7 @@ std::vector<BitmaskType>* NMaxAdmissible::enumerate(
     std::vector<BitmaskType> constMasks;
     if (constraints) {
         NEnumConstraintList::const_iterator cit;
-        std::set<unsigned>::const_iterator sit; 
+        std::set<size_t>::const_iterator sit; 
         for (cit = constraints->begin(); cit != constraints->end(); ++cit) {
             b.reset();
             for (sit = cit->begin(); sit != cit->end(); ++sit)

@@ -41,7 +41,7 @@
 namespace regina {
 
 NLargeInteger NNormalSurfaceVectorOriented::getEdgeWeight(
-        unsigned long edgeIndex, NTriangulation* triang) const {
+        size_t edgeIndex, NTriangulation* triang) const {
     // Find a tetrahedron next to the edge in question.
     const NEdgeEmbedding& emb = triang->getEdges()[edgeIndex]->
         getEmbeddings().front();
@@ -60,7 +60,7 @@ NLargeInteger NNormalSurfaceVectorOriented::getEdgeWeight(
 }
 
 NLargeInteger NNormalSurfaceVectorOriented::getFaceArcs(
-        unsigned long faceIndex, int faceVertex, NTriangulation* triang) const {
+        size_t faceIndex, int faceVertex, NTriangulation* triang) const {
     // Find a tetrahedron next to the face in question.
     const NFaceEmbedding& emb = triang->getFaces()[faceIndex]->
         getEmbedding(0);
@@ -84,7 +84,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOriented::makeZeroVector(
 
 NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
         NTriangulation* triangulation) {
-    unsigned long nCoords = 14 * triangulation->getNumberOfTetrahedra();
+    size_t nCoords = 14 * triangulation->getNumberOfTetrahedra();
     // Six equations per non-boundary face.
     // F_boundary + 2 F_internal = 4 T
     long nEquations = 6 * (4 * long(triangulation->getNumberOfTetrahedra()) -
@@ -93,9 +93,9 @@ NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
 
     // Run through each internal face and add the corresponding three
     // equations.
-    unsigned row = 0;
+    size_t row = 0;
     int i;
-    unsigned long tet0, tet1;
+    size_t tet0, tet1;
     NPerm4 perm0, perm1;
     bool natural;
     for (NTriangulation::FaceIterator fit = triangulation->getFaces().begin();
@@ -149,8 +149,8 @@ NEnumConstraintList* NNormalSurfaceVectorOriented::makeEmbeddedConstraints(
     NEnumConstraintList* ans = new NEnumConstraintList(
         8 * triangulation->getNumberOfTetrahedra());
 
-    unsigned base = 0;
-    unsigned c = 0;
+    size_t base = 0;
+    size_t c = 0;
     while (c < ans->size()) {
         for (unsigned d = 0; d < 2; d++) {
             for (unsigned e = 0; e < 2; e++) {
