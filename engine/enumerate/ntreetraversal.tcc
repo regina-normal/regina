@@ -272,6 +272,11 @@ int NTreeTraversal<LPConstraint, BanConstraint>::feasibleBranches(
     tmpLP_[2].constrainPositive(3 * quadType + 1);
 
     tmpLP_[0].constrainZero(3 * quadType + 1);
+    if (! tmpLP_[0].isFeasible()) {
+        // Branches 0 and 3 will both be infeasible.
+        return (tmpLP_[1].isFeasible() ? 1 : 0) +
+               (tmpLP_[2].isFeasible() ? 1 : 0);
+    }
 
     tmpLP_[3].initClone(tmpLP_[0]);
     tmpLP_[3].constrainPositive(3 * quadType + 2);
@@ -446,10 +451,8 @@ bool NTreeEnumeration<LPConstraint, BanConstraint>::next() {
                     // later, and for types 5 and 6 we must likewise
                     // fix all constraints later on.
                     nextSlot_[level_]->initClone(*lpSlot_[level_]);
-                    (nextSlot_[level_] + 4)->initClone(
-                        *lpSlot_[level_]);
-                    (nextSlot_[level_] + 5)->initClone(
-                        *lpSlot_[level_]);
+                    (nextSlot_[level_] + 4)->initClone(*lpSlot_[level_]);
+                    (nextSlot_[level_] + 5)->initClone(*lpSlot_[level_]);
 
                     // Now we can fix x_{3k} = 0.
                     lpSlot_[level_]->constrainZero(3 * idx);
@@ -460,10 +463,8 @@ bool NTreeEnumeration<LPConstraint, BanConstraint>::next() {
                     // will add the other constraints later (for
                     // instance, for type 2 we will add x_{3k+1} >= 1
                     // and x_{3k+2} = 0 later).
-                    (nextSlot_[level_] + 1)->initClone(
-                        *lpSlot_[level_]);
-                    (nextSlot_[level_] + 3)->initClone(
-                        *lpSlot_[level_]);
+                    (nextSlot_[level_] + 1)->initClone(*lpSlot_[level_]);
+                    (nextSlot_[level_] + 3)->initClone(*lpSlot_[level_]);
 
                     // Now we can fix x_{3k+1} = 0.
                     lpSlot_[level_]->constrainZero(3 * idx + 1);
@@ -472,8 +473,7 @@ bool NTreeEnumeration<LPConstraint, BanConstraint>::next() {
                     // with type_[idx] = 3.  This clone already
                     // inherits the constraint x_{3k} = x_{3k+1} = 0,
                     // which only leaves us x_{3k+2} >= 1 to add later.
-                    (nextSlot_[level_] + 2)->initClone(
-                        *lpSlot_[level_]);
+                    (nextSlot_[level_] + 2)->initClone(*lpSlot_[level_]);
 
                     // At last we add the final constraint x_{3k+2} = 0
                     // for this node.
@@ -490,13 +490,11 @@ bool NTreeEnumeration<LPConstraint, BanConstraint>::next() {
 
                     lpSlot_[level_]->constrainZero(3 * idx);
 
-                    (nextSlot_[level_] + 1)->initClone(
-                        *lpSlot_[level_]);
+                    (nextSlot_[level_] + 1)->initClone(*lpSlot_[level_]);
 
                     lpSlot_[level_]->constrainZero(3 * idx + 1);
 
-                    (nextSlot_[level_] + 2)->initClone(
-                        *lpSlot_[level_]);
+                    (nextSlot_[level_] + 2)->initClone(*lpSlot_[level_]);
 
                     lpSlot_[level_]->constrainZero(3 * idx + 2);
                 }
@@ -536,51 +534,39 @@ bool NTreeEnumeration<LPConstraint, BanConstraint>::next() {
             if (idx < nTets_) {
                 // Quadrilateral columns (type is 1, 2 or 3,
                 // or 4, 5 or 6 if we allow octagons):
-                lpSlot_[level_ + 1] =
-                    nextSlot_[level_] + type_[idx] - 1;
+                lpSlot_[level_ + 1] = nextSlot_[level_] + type_[idx] - 1;
 
                 switch (type_[idx]) {
                     case 1:
-                        lpSlot_[level_ + 1]->constrainZero(
-                            3 * idx + 1);
-                        lpSlot_[level_ + 1]->constrainZero(
-                            3 * idx + 2);
-                        lpSlot_[level_ + 1]->constrainPositive(
-                            3 * idx);
+                        lpSlot_[level_ + 1]->constrainZero(3 * idx + 1);
+                        lpSlot_[level_ + 1]->constrainZero(3 * idx + 2);
+                        lpSlot_[level_ + 1]->constrainPositive(3 * idx);
                         break;
                     case 2:
-                        lpSlot_[level_ + 1]->constrainZero(
-                            3 * idx + 2);
-                        lpSlot_[level_ + 1]->constrainPositive(
-                            3 * idx + 1);
+                        lpSlot_[level_ + 1]->constrainZero(3 * idx + 2);
+                        lpSlot_[level_ + 1]->constrainPositive(3 * idx + 1);
                         break;
                     case 3:
-                        lpSlot_[level_ + 1]->constrainPositive(
-                            3 * idx + 2);
+                        lpSlot_[level_ + 1]->constrainPositive(3 * idx + 2);
                         break;
                     case 4:
                         lpSlot_[level_ + 1]->constrainOct(
                             3 * idx + 1, 3 * idx + 2);
                         break;
                     case 5:
-                        lpSlot_[level_ + 1]->constrainZero(
-                            3 * idx + 1);
-                        lpSlot_[level_ + 1]->constrainOct(
-                            3 * idx, 3 * idx + 2);
+                        lpSlot_[level_ + 1]->constrainZero(3 * idx + 1);
+                        lpSlot_[level_ + 1]->constrainOct(3 * idx, 3 * idx + 2);
                         break;
                     case 6:
-                        lpSlot_[level_ + 1]->constrainZero(
-                            3 * idx + 2);
-                        lpSlot_[level_ + 1]->constrainOct(
-                            3 * idx, 3 * idx + 1);
+                        lpSlot_[level_ + 1]->constrainZero(3 * idx + 2);
+                        lpSlot_[level_ + 1]->constrainOct(3 * idx, 3 * idx + 1);
                         break;
                 }
             } else {
                 // Triangle columns (type is 1):
                 lpSlot_[level_ + 1] = nextSlot_[level_];
 
-                lpSlot_[level_ + 1]->constrainPositive(
-                    2 * nTets_ + idx);
+                lpSlot_[level_ + 1]->constrainPositive(2 * nTets_ + idx);
             }
         }
 
@@ -753,26 +739,21 @@ bool NTreeSingleSoln<LPConstraint, BanConstraint>::find() {
                     // We must support both quadrilaterals and octagons.
                     nextSlot_[level_ + 1] = nextSlot_[level_] + 5;
 
-                    (nextSlot_[level_] + 1)->initClone(
-                        *lpSlot_[level_]);
-                    (nextSlot_[level_] + 2)->initClone(
-                        *lpSlot_[level_]);
-                    (nextSlot_[level_] + 3)->initClone(
-                        *lpSlot_[level_]);
+                    (nextSlot_[level_] + 1)->initClone(*lpSlot_[level_]);
+                    (nextSlot_[level_] + 2)->initClone(*lpSlot_[level_]);
+                    (nextSlot_[level_] + 3)->initClone(*lpSlot_[level_]);
 
                     lpSlot_[level_]->constrainZero(3 * idx + 2);
 
                     nextSlot_[level_]->initClone(*lpSlot_[level_]);
-                    (nextSlot_[level_] + 4)->initClone(
-                        *lpSlot_[level_]);
+                    (nextSlot_[level_] + 4)->initClone(*lpSlot_[level_]);
 
                     lpSlot_[level_]->constrainZero(3 * idx + 1);
                 } else {
                     // We only support quadrilaterals.
                     nextSlot_[level_ + 1] = nextSlot_[level_] + 2;
 
-                    (nextSlot_[level_] + 1)->initClone(
-                        *lpSlot_[level_]);
+                    (nextSlot_[level_] + 1)->initClone(*lpSlot_[level_]);
 
                     lpSlot_[level_]->constrainZero(3 * idx + 2);
 
@@ -817,42 +798,32 @@ bool NTreeSingleSoln<LPConstraint, BanConstraint>::find() {
                     // types 0 and 1 together, there is not even a
                     // positivity constraint to add.
                     case 2:
-                        lpSlot_[level_ + 1]->constrainZero(
-                            3 * idx);
-                        lpSlot_[level_ + 1]->constrainPositive(
-                            3 * idx + 1);
+                        lpSlot_[level_ + 1]->constrainZero(3 * idx);
+                        lpSlot_[level_ + 1]->constrainPositive(3 * idx + 1);
                         break;
                     case 3:
-                        lpSlot_[level_ + 1]->constrainZero(
-                            3 * idx);
-                        lpSlot_[level_ + 1]->constrainZero(
-                            3 * idx + 1);
-                        lpSlot_[level_ + 1]->constrainPositive(
-                            3 * idx + 2);
+                        lpSlot_[level_ + 1]->constrainZero(3 * idx);
+                        lpSlot_[level_ + 1]->constrainZero(3 * idx + 1);
+                        lpSlot_[level_ + 1]->constrainPositive(3 * idx + 2);
                         break;
                     case 4:
-                        lpSlot_[level_ + 1]->constrainZero(
-                            3 * idx);
+                        lpSlot_[level_ + 1]->constrainZero(3 * idx);
                         lpSlot_[level_ + 1]->constrainOct(
                             3 * idx + 1, 3 * idx + 2);
                         break;
                     case 5:
-                        lpSlot_[level_ + 1]->constrainZero(
-                            3 * idx + 1);
-                        lpSlot_[level_ + 1]->constrainOct(
-                            3 * idx, 3 * idx + 2);
+                        lpSlot_[level_ + 1]->constrainZero(3 * idx + 1);
+                        lpSlot_[level_ + 1]->constrainOct(3 * idx, 3 * idx + 2);
                         break;
                     case 6:
-                        lpSlot_[level_ + 1]->constrainOct(
-                            3 * idx, 3 * idx + 1);
+                        lpSlot_[level_ + 1]->constrainOct(3 * idx, 3 * idx + 1);
                         break;
                 }
             } else {
                 // Triangle columns (type is 1):
                 lpSlot_[level_ + 1] = nextSlot_[level_];
 
-                lpSlot_[level_ + 1]->constrainPositive(
-                    2 * nTets_ + idx);
+                lpSlot_[level_ + 1]->constrainPositive(2 * nTets_ + idx);
             }
         }
 
