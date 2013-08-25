@@ -410,15 +410,16 @@ class NMatrixRing : public NMatrix<T> {
         }
 
         /**
-         * Determines if all entries in the matrix are zero. 
+         * Determines whether this is the zero matrix.
          *
-         * @return \c true if and only if all entries in matrix are zero.
+         * @return \c true if and only if all entries in the matrix are zero.
          */
         bool isZero() const {
-         for (unsigned long r=0; r<this->nRows; r++)
-          for (unsigned long c=0; c<this->nCols; c++)
-           if (this->data[r][c] != zero) return false;
-          return true;
+            for (size_t r=0; r<this->nRows; ++r)
+                for (size_t c=0; c<this->nCols; ++c)
+                    if (this->data[r][c] != zero)
+                        return false;
+            return true;
         }
 
         /**
