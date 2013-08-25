@@ -385,27 +385,6 @@ class REGINA_API NTriangulation : public NPacket {
          */
         long simplexIndex(const NTetrahedron* tet) const;
         /**
-         * Returns the index of the given tetrahedron in the
-         * triangulation.
-         *
-         * Note that tetrahedron indexing may change when a tetrahedron
-         * is added or removed from the triangulation.
-         *
-         * \deprecated As of Regina 4.5, this is now a slow linear
-         * time routine (a consequence of some significant memory
-         * optimisations).  The alternative tetrahedronIndex() is
-         * fast, but insists that \a tet belongs to the triangulation.
-         * This slower routine will be removed at some point in the future.
-         *
-         * @param tet specifies which tetrahedron to find in the
-         * triangulation.
-         * @return the index of the specified tetrahedron, where 0 is
-         * the first tetrahedron, 1 is the second and so on.  If the
-         * tetrahedron is not contained in the triangulation, a negative
-         * number is returned.
-         */
-        long getTetrahedronIndex(const NTetrahedron* tet) const;
-        /**
          * Creates a new tetrahedron and adds it to this triangulation.
          * The new tetrahedron will have an empty description.
          * All four faces of the new tetrahedron will be boundary faces.
@@ -791,22 +770,6 @@ class REGINA_API NTriangulation : public NPacket {
          */
         long componentIndex(const NComponent* component) const;
         /**
-         * Returns the index of the given component in the triangulation.
-         *
-         * \deprecated As of Regina 4.5, this is now a slow linear
-         * time routine (a consequence of some significant memory
-         * optimisations).  The alternative componentIndex() is
-         * fast, but insists that \a component belongs to the triangulation.
-         * This slower routine will be removed at some point in the future.
-         *
-         * @param component specifies which component to find in the
-         * triangulation.
-         * @return the index of the specified component, where 0 is the first
-         * component, 1 is the second and so on.  If the given component
-         * is not part of this triangulation, a negative number is returned.
-         */
-        long getComponentIndex(const NComponent* component) const;
-        /**
          * Returns the index of the given boundary component
          * in the triangulation.
          *
@@ -828,24 +791,6 @@ class REGINA_API NTriangulation : public NPacket {
          */
         long boundaryComponentIndex(const NBoundaryComponent* bc) const;
         /**
-         * Returns the index of the given boundary component
-         * in the triangulation.
-         *
-         * \deprecated As of Regina 4.5, this is now a slow linear
-         * time routine (a consequence of some significant memory
-         * optimisations).  The alternative boundaryComponentIndex() is
-         * fast, but insists that \a bc belongs to the triangulation.
-         * This slower routine will be removed at some point in the future.
-         *
-         * @param bc specifies which boundary component to find in the
-         * triangulation.
-         * @return the index of the specified boundary component,
-         * where 0 is the first boundary component,
-         * 1 is the second and so on.  If the given boundary component
-         * is not part of this triangulation, a negative number is returned.
-         */
-        long getBoundaryComponentIndex(const NBoundaryComponent* bc) const;
-        /**
          * Returns the index of the given vertex in the triangulation.
          *
          * This routine was introduced in Regina 4.5, and replaces the
@@ -865,22 +810,6 @@ class REGINA_API NTriangulation : public NPacket {
          * vertex, 1 is the second and so on.
          */
         long vertexIndex(const NVertex* vertex) const;
-        /**
-         * Returns the index of the given vertex in the triangulation.
-         *
-         * \deprecated As of Regina 4.5, this is now a slow linear
-         * time routine (a consequence of some significant memory
-         * optimisations).  The alternative vertexIndex() is
-         * fast, but insists that \a vertex belongs to the triangulation.
-         * This slower routine will be removed at some point in the future.
-         *
-         * @param vertex specifies which vertex to find in the
-         * triangulation.
-         * @return the index of the specified vertex, where 0 is the first
-         * vertex, 1 is the second and so on.  If the given vertex
-         * is not part of this triangulation, a negative number is returned.
-         */
-        long getVertexIndex(const NVertex* vertex) const;
         /**
          * Returns the index of the given edge in the triangulation.
          *
@@ -902,22 +831,6 @@ class REGINA_API NTriangulation : public NPacket {
          */
         long edgeIndex(const NEdge* edge) const;
         /**
-         * Returns the index of the given edge in the triangulation.
-         *
-         * \deprecated As of Regina 4.5, this is now a slow linear
-         * time routine (a consequence of some significant memory
-         * optimisations).  The alternative edgeIndex() is
-         * fast, but insists that \a edge belongs to the triangulation.
-         * This slower routine will be removed at some point in the future.
-         *
-         * @param edge specifies which edge to find in the
-         * triangulation.
-         * @return the index of the specified edge, where 0 is the first
-         * edge, 1 is the second and so on.  If the given edge
-         * is not part of this triangulation, a negative number is returned.
-         */
-        long getEdgeIndex(const NEdge* edge) const;
-        /**
          * Returns the index of the given face in the triangulation.
          *
          * This routine was introduced in Regina 4.5, and replaces the
@@ -937,22 +850,6 @@ class REGINA_API NTriangulation : public NPacket {
          * face, 1 is the second and so on.
          */
         long faceIndex(const NFace* face) const;
-        /**
-         * Returns the index of the given face in the triangulation.
-         *
-         * \deprecated As of Regina 4.5, this is now a slow linear
-         * time routine (a consequence of some significant memory
-         * optimisations).  The alternative faceIndex() is
-         * fast, but insists that \a face belongs to the triangulation.
-         * This slower routine will be removed at some point in the future.
-         *
-         * @param face specifies which face to find in the
-         * triangulation.
-         * @return the index of the specified face, where 0 is the first
-         * face, 1 is the second and so on.  If the given face
-         * is not part of this triangulation, a negative number is returned.
-         */
-        long getFaceIndex(const NFace* face) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -3391,12 +3288,6 @@ inline NTetrahedron* NTriangulation::newSimplex(const std::string& desc) {
     return newTetrahedron(desc);
 }
 
-inline long NTriangulation::getTetrahedronIndex(const NTetrahedron* tet) const {
-    TetrahedronIterator pos =
-        std::find(tetrahedra.begin(), tetrahedra.end(), tet);
-    return (pos == tetrahedra.end() ? -1 : pos - tetrahedra.begin());
-}
-
 inline void NTriangulation::removeTetrahedronAt(unsigned long index) {
     ChangeEventSpan span(this);
 
@@ -3560,66 +3451,21 @@ inline long NTriangulation::componentIndex(const NComponent* component) const {
     return component->markedIndex();
 }
 
-inline long NTriangulation::getComponentIndex(
-        const NComponent* component) const {
-    if (! calculatedSkeleton)
-        calculateSkeleton();
-
-    ComponentIterator pos = std::find(components.begin(), components.end(),
-        component);
-    return (pos == components.end() ? -1 : pos - components.begin());
-}
-
 inline long NTriangulation::boundaryComponentIndex(
         const NBoundaryComponent* boundaryComponent) const {
     return boundaryComponent->markedIndex();
-}
-
-inline long NTriangulation::getBoundaryComponentIndex(
-        const NBoundaryComponent* boundaryComponent) const {
-    if (! calculatedSkeleton)
-        calculateSkeleton();
-
-    BoundaryComponentIterator pos = std::find(boundaryComponents.begin(),
-        boundaryComponents.end(), boundaryComponent);
-    return (pos == boundaryComponents.end() ? -1 :
-        pos - boundaryComponents.begin());
 }
 
 inline long NTriangulation::vertexIndex(const NVertex* vertex) const {
     return vertex->markedIndex();
 }
 
-inline long NTriangulation::getVertexIndex(const NVertex* vertex) const {
-    if (! calculatedSkeleton)
-        calculateSkeleton();
-
-    VertexIterator pos = std::find(vertices.begin(), vertices.end(), vertex);
-    return (pos == vertices.end() ? -1 : pos - vertices.begin());
-}
-
 inline long NTriangulation::edgeIndex(const NEdge* edge) const {
     return edge->markedIndex();
 }
 
-inline long NTriangulation::getEdgeIndex(const NEdge* edge) const {
-    if (! calculatedSkeleton)
-        calculateSkeleton();
-
-    EdgeIterator pos = std::find(edges.begin(), edges.end(), edge);
-    return (pos == edges.end() ? -1 : pos - edges.begin());
-}
-
 inline long NTriangulation::faceIndex(const NFace* face) const {
     return face->markedIndex();
-}
-
-inline long NTriangulation::getFaceIndex(const NFace* face) const {
-    if (! calculatedSkeleton)
-        calculateSkeleton();
-
-    FaceIterator pos = std::find(faces.begin(), faces.end(), face);
-    return (pos == faces.end() ? -1 : pos - faces.begin());
 }
 
 inline bool NTriangulation::hasTwoSphereBoundaryComponents() const {
