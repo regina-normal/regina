@@ -253,6 +253,8 @@ Version 4.94  [ (under development) ]
               operating on tetrahedra, and can help with writing code that
               works with more than one dimension.
             - Fixed minor memory leak in idealToFinite().
+            - Removed the old (and slow) getTetrahedronIndex(), getFaceIndex()
+              and so on.  Use tetrahedronIndex(), faceIndex(), etc. instead.
         Class NTritmask1, NTritmask2:
             - Fast classes for working with 0/1/2 trits, i.e., "ternary bits".
         Class NTypeTrie:
