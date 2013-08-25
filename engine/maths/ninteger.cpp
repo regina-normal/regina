@@ -343,7 +343,7 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator /=(
         return *this;
     if (other.isInfinite())
         return (*this = 0);
-    if (other.isZero()) {
+    if (supportInfinity && other.isZero()) {
         makeInfinite();
         return *this;
     }
@@ -420,7 +420,7 @@ template <bool supportInfinity>
 NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator /=(long other) {
     if (isInfinite())
         return *this;
-    if (other == 0) {
+    if (supportInfinity && other == 0) {
         makeInfinite();
         return *this;
     }
