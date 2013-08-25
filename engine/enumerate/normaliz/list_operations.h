@@ -41,7 +41,7 @@ template<typename Integer>
  int l_read(const list< vector<int> >& l);  //used for tests, returns size of l
 
 template<typename Integer>
-int l_read(const list <pair<vector<size_t>,Integer> >& l);  //used for tests, returns size of l
+int l_read(const list <std::pair<vector<size_t>,Integer> >& l);  //used for tests, returns size of l
  
 template<typename Integer>
  int l_read(const list<int>& l);  //used for tests, returns size of l

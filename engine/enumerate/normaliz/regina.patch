@@ -28,3 +28,16 @@ Index: libnormaliz.h
  #include <assert.h>
  
  // Regina will use gmpxx.h everywhere, even on Windows.
+Index: list_operations.h
+===================================================================
+--- list_operations.h	(revision 7297)
++++ list_operations.h	(working copy)
+@@ -41,7 +41,7 @@
+  int l_read(const list< vector<int> >& l);  //used for tests, returns size of l
+ 
+ template<typename Integer>
+-int l_read(const list <pair<vector<size_t>,Integer> >& l);  //used for tests, returns size of l
++int l_read(const list <std::pair<vector<size_t>,Integer> >& l);  //used for tests, returns size of l
+  
+ template<typename Integer>
+  int l_read(const list<int>& l);  //used for tests, returns size of l

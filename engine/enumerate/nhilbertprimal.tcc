@@ -34,9 +34,15 @@
 
 /* To be included from nhilbertprimal.h. */
 
+#ifndef __NHILBERTPRIMAL_TCC
+#ifndef __DOXYGEN
+#define __NHILBERTPRIMAL_TCC
+#endif
+
 #include "regina-core.h"
 #include "regina-config.h"
 #include "enumerate/nenumconstraint.h"
+#include "enumerate/nhilbertprimal.h"
 #include "enumerate/nmaxadmissible.h"
 #include "enumerate/normaliz/cone.h"
 #include "maths/nray.h"
@@ -196,3 +202,4 @@ bool NHilbertPrimal::inFace(const NRay& ray, const BitmaskType& face) {
 
 } // namespace regina
 
+#endif
