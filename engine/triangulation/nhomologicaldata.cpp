@@ -516,7 +516,6 @@ void NHomologicalData::computeChainComplexes() {
         NPerm4 P1 = tri->getFace(dNBF[j])->getEmbedding(0).getVertices();
         NPerm4 P2 = tri->getFace(dNBF[j])->getEmbedding(1).getVertices();
         NPerm4 P3;
-        NPerm4 P0to1 = P2 * ( P1.inverse() ); 
         // the permutation from the start simplex vertices
         // to the end simplex.
 
