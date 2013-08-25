@@ -336,8 +336,6 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);
-        virtual void writePacket(NFile& out) const;
-        static NNormalHypersurfaceList* readPacket(NFile& in, NPacket* parent);
         virtual bool dependsOnParent() const;
 
         /**
@@ -950,17 +948,6 @@ inline NNormalHypersurfaceList::FundDualEnumerator::FundDualEnumerator(
         NNormalHypersurfaceList* list, Dim4Triangulation* triang,
         NProgressManager* manager) :
         list_(list), triang_(triang), manager_(manager) {
-}
-
-inline void NNormalHypersurfaceList::writePacket(NFile&) const {
-    // No need to add support for the old pre-2002 binary format.
-    // This format is deprecated and about to be removed from Regina entirely.
-}
-
-inline NNormalHypersurfaceList* NNormalHypersurfaceList::readPacket(
-        NFile&, NPacket*) {
-    // Don't bother supporting the old pre-2002 binary format.
-    return 0;
 }
 
 } // namespace regina

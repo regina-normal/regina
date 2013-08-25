@@ -36,7 +36,6 @@
 #include <sstream>
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nhomgrouppresentation.h"
-#include "file/nfile.h"
 #include "maths/numbertheory.h"
 #include "utilities/boostutils.h"
 #include "utilities/hashmap.h"
