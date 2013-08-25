@@ -78,7 +78,7 @@ const Dim2Triangulation* NVertex::buildLink(NIsomorphism* inc) const {
         {
         Dim2Triangle* tTri( ans->newTriangle() );
         std::stringstream temp;
-        temp << it->getTetrahedron()->getTriangulation()->getTetrahedronIndex( it->getTetrahedron() );
+        temp << it->getTetrahedron()->getTriangulation()->tetrahedronIndex( it->getTetrahedron() );
         temp << " " << it->getVertex();
         tTri->setDescription( temp.str() );
         }

@@ -2046,20 +2046,20 @@ void NHomologicalData::computeBaryCC()
 	  // getEmbedding(0 to 1).  So we need to figure out the respective two tetrahedra
 	  // and the vertices corresponding to the faces. Oh, boundary faces don't count so
 	  // there'll be some reindexing using dNBF
-	BM1->entry( w3 + 4*tri->getTetrahedronIndex(tri->getFace(dNBF[i])->getEmbedding(0).getTetrahedron())+
+	BM1->entry( w3 + 4*tri->tetrahedronIndex(tri->getFace(dNBF[i])->getEmbedding(0).getTetrahedron())+
 	   tri->getFace(dNBF[i])->getEmbedding(0).getFace(), i ) += 1;
-	BM1->entry( w3 + 4*tri->getTetrahedronIndex(tri->getFace(dNBF[i])->getEmbedding(1).getTetrahedron())+
+	BM1->entry( w3 + 4*tri->tetrahedronIndex(tri->getFace(dNBF[i])->getEmbedding(1).getTetrahedron())+
            tri->getFace(dNBF[i])->getEmbedding(1).getFace(), i ) -= 1;
 	}
    for (unsigned long i=0; i<numDualCells[2]; i++) // 2-cells
 	for (unsigned long j=0; j<tri->getEdge(dNBE[i])->getNumberOfEmbeddings(); j++)
-	 BM2->entry( q2 + 6*tri->getTetrahedronIndex(tri->getEdge(dNBE[i])->getEmbedding(j).getTetrahedron())+
+	 BM2->entry( q2 + 6*tri->tetrahedronIndex(tri->getEdge(dNBE[i])->getEmbedding(j).getTetrahedron())+
 	   tri->getEdge(dNBE[i])->getEmbedding(j).getEdge(), i) += 
 		tri->getEdge(dNBE[i])->getEmbedding(j).getVertices().sign() ;
 
    for (unsigned long i=0; i<numDualCells[3]; i++) // 3-cells
 	for (unsigned long j=0; j<tri->getVertex(dNINBV[i])->getNumberOfEmbeddings(); j++)
-	  BM3->entry( 4*tri->getTetrahedronIndex(tri->getVertex(dNINBV[i])->getEmbedding(j).getTetrahedron())+
+	  BM3->entry( 4*tri->tetrahedronIndex(tri->getVertex(dNINBV[i])->getEmbedding(j).getTetrahedron())+
  			tri->getVertex(dNINBV[i])->getEmbedding(j).getVertex(), i) += 
 			tri->getVertex(dNINBV[i])->getEmbedding(j).getVertices().sign();
 
