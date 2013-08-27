@@ -501,7 +501,7 @@ class REGINA_API NGroupExpression : public ShareableObject {
          *
          * @return a std::string representation of the word.
          */
-        std::string stringOutput(bool shortword=false) const;
+        std::string toString(bool shortword=false) const;
 
         /**
          * The text representation will be of the form
@@ -719,7 +719,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * @return a std::string describing the presentation, in form
          *  < generators | relators >
          */
-        std::string stringOutput() const;
+        std::string toString() const;
 
         /**
          * Writes a single string description of the group presentation. No 

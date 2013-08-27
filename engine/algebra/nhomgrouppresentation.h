@@ -133,7 +133,7 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
         /**
          * Writes the map as a string. 
          */
-        std::string stringOutput() const;
+        std::string toString() const;
 
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;

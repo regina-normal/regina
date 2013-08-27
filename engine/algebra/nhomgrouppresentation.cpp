@@ -75,19 +75,19 @@ for (unsigned long i=0; i<vals.size(); i++)
 return NHomGroupPresentation( domain, arg.range, vals );
 }
 
-std::string NHomGroupPresentation::stringOutput() const
+std::string NHomGroupPresentation::toString() const
 {
 std::string retval; 
 retval.append("Domain "); 
-retval.append(domain.stringOutput());
+retval.append(domain.toString());
 retval.append(" map[");
  for (unsigned long i=0; i<domain.getNumberOfGenerators(); i++)
   { if (i!=0) retval.append(", "); retval.append("g"); 
     std::stringstream num; num<<i; retval.append( num.str() );
-    retval.append(" --> "); retval.append(map[i]->stringOutput()); 
+    retval.append(" --> "); retval.append(map[i]->toString()); 
   }
  retval.append("] Range ");
- retval.append(range.stringOutput());
+ retval.append(range.toString());
 return retval;
 }
 
@@ -104,9 +104,9 @@ void NHomGroupPresentation::writeTextShort(std::ostream& out) const
 
 void NHomGroupPresentation::writeTextLong(std::ostream& out) const
 {
- out<<"Domain "<<domain.stringOutput()<<" "; 
+ out<<"Domain "<<domain.toString()<<" "; 
  writeTextShort(out);
- out<<" "<<range.stringOutput()<<" Range.";
+ out<<" "<<range.toString()<<" Range.";
 }
 
 // return true if and only if a modification to either domain, 

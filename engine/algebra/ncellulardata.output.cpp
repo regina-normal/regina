@@ -91,7 +91,7 @@ bool written=false;
 	 if (written) out<<" ";
 	 git->first.writeTextShort(out);
 	 out<<" is ";
-         out<<git->second->stringOutput();
+         out<<git->second->toString();
 //	 git->second->writeTextShort(out);
 	 written = true;
 	}
@@ -101,7 +101,7 @@ bool written=false;
 	 if (written) out<<" ";
 	 hit->first.writeTextShort(out);
 	 out<<" is ";
-         out<<hit->second->stringOutput();
+         out<<hit->second->toString();
 //	 hit->second->writeTextShort(out);
 	 written = true;
 	}

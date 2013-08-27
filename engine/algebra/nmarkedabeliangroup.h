@@ -878,13 +878,13 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
 
         /**
          *  Returns an NMarkedAbelianGroup representing the torsion subgroup
-         *  of this group. TODO: not yet implemented
+         *  of this group. 
          */
         NMarkedAbelianGroup torsionSubgroup() const;
 
         /**
          *  Returns an NHomMarkedAbelianGroup representing the inclusion of the
-         *  torsion subgroup into this group. TODO: not yet implemented
+         *  torsion subgroup into this group. 
          */
         NHomMarkedAbelianGroup torsionInclusion() const;
 };

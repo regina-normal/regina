@@ -123,7 +123,7 @@ void addNGroupPresentation() {
             return_internal_reference<>())
         .def("intelligentSimplify", intelligentSimplify_void)
         .def("recogniseGroup", &NGroupPresentation::recogniseGroup)
-        .def("stringOutput", &NGroupPresentation::stringOutput)
+        .def("toString", &NGroupPresentation::toString)
         .def("TeXOutput", &NGroupPresentation::TeXOutput)
     ;
 }
