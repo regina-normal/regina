@@ -303,13 +303,6 @@ const {
  return std::auto_ptr<NMarkedAbelianGroup>(new NMarkedAbelianGroup(M,N));
 }
 
-/**
- *  The original dehnAlgorithmSubMetric was optimized for small cancellation
- *  theory, the idea being we're looking for substitutions that shorten the 
- *  length of words in one step.  dehnAlgorithSubMetric2 is meant to be more 
- *  flexible.  Perhaps we need to perform more than one substitution before we 
- *  will find a new relator of interest.  
- */
 void NGroupExpression::dehnAlgorithmSubMetric( 
     const NGroupExpression &that_word, 
     std::set< NWordSubstitutionData > &sub_list, unsigned long step ) const

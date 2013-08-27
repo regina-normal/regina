@@ -459,7 +459,7 @@ class REGINA_API NGroupExpression : public ShareableObject {
          *  reduced words.  If you feed it non-cyclically reduced words it 
          *  will give you suggestions although they will not be as strong
          *  as if the words were cyclically reduced.  It also only adds 
-         *  to sub_list, so for best results pass it an empty sub-list.
+         *  to sub_list, so in normal usage one would pass it an empty sub-list.
          *
          *  The default argument step==1 assumes you are looking for 
          *  substitutions that shorten the length of a word, and that
@@ -534,9 +534,8 @@ class REGINA_API NGroupExpression : public ShareableObject {
  */
 class REGINA_API NGroupPresentation : public ShareableObject {
     private: 
-        // for now we'll keep this to ourselves.  Returns true if 
-        //  the presentation partitions the 
-        //  generators into disjoint non-trivial sets. 
+        // for now we'll keep this to ourselves.  Returns true if the 
+        // presentation partitions the gens into disjoint non-trivial sets. 
         bool obviously_freeproduct() const;
     protected:
         unsigned long nGenerators;
