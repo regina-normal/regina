@@ -60,17 +60,17 @@ class NGroupPresentation;
  */
 
 /**
- * Represents a homomorphism between groups which are described via finite presentations.
+ * Represents a homomorphism between groups which are described via finite 
+ * presentations.
  *
  * \testpart
  *
- * \todo add routine to attempt to verify validity of homomorphism. Will need to add a routine to
- *       NGroupPresentation to attempt to solve word problem.
+ * \todo add routine to attempt to verify validity of homomorphism. 
  */
 class REGINA_API NHomGroupPresentation : public ShareableObject {
     private:
-	NGroupPresentation domain, range; 
-	std::vector< NGroupExpression* > map;
+        NGroupPresentation domain, range; 
+        std::vector< NGroupExpression* > map;
 
     public:
         /**
@@ -79,8 +79,9 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
          * presentation, map the list that says the i-th generator of domain 
          * is sent to element map[i] of range.
          */
-        NHomGroupPresentation(const NGroupPresentation &Domain, const NGroupPresentation &Range, 
-			   const std::vector< NGroupExpression > &Map );
+        NHomGroupPresentation(const NGroupPresentation &Domain, 
+               const NGroupPresentation &Range, 
+                           const std::vector< NGroupExpression > &Map );
 
         /**
          * Creates a clone of the given group presentation.
@@ -106,24 +107,24 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
 
 
         /**
-	 * Evaluate the homomorphism at an element.
-	 */
-	NGroupExpression evaluate(const NGroupExpression &arg) const;
+         * Evaluate the homomorphism at an element.
+         */
+        NGroupExpression evaluate(const NGroupExpression &arg) const;
         /**
          * Evaluate the homomorphism on the generator gi
          */
-	NGroupExpression evaluate(unsigned long i) const;
+        NGroupExpression evaluate(unsigned long i) const;
 
         /**
-	 * Compose homomorphisms. 
-	 */
+         * Compose homomorphisms. 
+         */
         NHomGroupPresentation operator*(const NHomGroupPresentation &arg) const;
 
         /**
-         * Attempts to simplify simultaneously: 1) the presentation of the domain
-         *                                      2) the presentation of the range
-         *                                      3) the description of the map
-	 * Uses Dehn's algorithm / "small cancellation theory". 
+         * simplify simultaneously: 1) the presentation of the domain
+         *                          2) the presentation of the range
+         *                          3) the description of the map
+         * Uses Dehn's algorithm / "small cancellation theory". 
          *
          *  @return true if the presentations or map have changed.
          */
@@ -139,14 +140,22 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
 };
 
 /*@}*/
-inline NHomGroupPresentation::NHomGroupPresentation(const NGroupPresentation &Domain, const NGroupPresentation &Range, 
-			   const std::vector< NGroupExpression > &Map ) : ShareableObject(), domain(Domain), 
-			   range(Range), map(0) 
-{ map.resize(Map.size()); for (unsigned long i=0; i<map.size(); i++) map[i] = new NGroupExpression(Map[i]); }
+inline NHomGroupPresentation::NHomGroupPresentation(
+            const NGroupPresentation &Domain, 
+            const NGroupPresentation &Range, 
+            const std::vector< NGroupExpression > &Map ) : 
+        ShareableObject(), domain(Domain), range(Range), map(0) 
+{ map.resize(Map.size()); 
+  for (unsigned long i=0; i<map.size(); i++) map[i] = new NGroupExpression(Map[i]); 
+}
 
-inline NHomGroupPresentation::NHomGroupPresentation(const NHomGroupPresentation& cloneMe) : ShareableObject(), 
-				domain(cloneMe.domain), range(cloneMe.range), map(0) 
-{ map.resize(cloneMe.map.size()); for (unsigned long i=0; i<map.size(); i++) map[i] = new NGroupExpression(*(cloneMe.map[i])); }
+inline NHomGroupPresentation::NHomGroupPresentation(
+        const NHomGroupPresentation& cloneMe) : 
+    ShareableObject(), domain(cloneMe.domain), range(cloneMe.range), map(0) 
+{ map.resize(cloneMe.map.size()); 
+  for (unsigned long i=0; i<map.size(); i++) map[i] = 
+        new NGroupExpression(*(cloneMe.map[i])); 
+}
 
 inline NHomGroupPresentation::~NHomGroupPresentation() 
 { for (unsigned long i=0; i<map.size(); i++) delete map[i]; map.resize(0); }
