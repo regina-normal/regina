@@ -41,7 +41,7 @@
 namespace regina {
 
 NLargeInteger NNormalSurfaceVectorANStandard::getEdgeWeight(
-        size_t edgeIndex, NTriangulation* triang) const {
+        unsigned long edgeIndex, NTriangulation* triang) const {
     // Find a tetrahedron next to the edge in question.
     const NEdgeEmbedding& emb = triang->getEdges()[edgeIndex]->
         getEmbeddings().front();
@@ -65,7 +65,7 @@ NLargeInteger NNormalSurfaceVectorANStandard::getEdgeWeight(
 }
 
 NLargeInteger NNormalSurfaceVectorANStandard::getFaceArcs(
-        size_t faceIndex, int faceVertex, NTriangulation* triang) const {
+        unsigned long faceIndex, int faceVertex, NTriangulation* triang) const {
     // Find a tetrahedron next to the face in question.
     const NFaceEmbedding& emb = triang->getFaces()[faceIndex]->
         getEmbedding(0);
@@ -94,7 +94,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorANStandard::makeZeroVector(
 
 NMatrixInt* NNormalSurfaceVectorANStandard::makeMatchingEquations(
         NTriangulation* triangulation) {
-    size_t nCoords = 10 * triangulation->getNumberOfTetrahedra();
+    unsigned long nCoords = 10 * triangulation->getNumberOfTetrahedra();
     // Three equations per non-boundary face.
     // F_boundary + 2 F_internal = 4 T
     long nEquations = 3 * (4 * long(triangulation->getNumberOfTetrahedra()) -
@@ -103,9 +103,9 @@ NMatrixInt* NNormalSurfaceVectorANStandard::makeMatchingEquations(
 
     // Run through each internal face and add the corresponding three
     // equations.
-    size_t row = 0;
+    unsigned row = 0;
     int i;
-    size_t tet0, tet1;
+    unsigned long tet0, tet1;
     NPerm4 perm0, perm1;
     for (NTriangulation::FaceIterator fit = triangulation->getFaces().begin();
             fit != triangulation->getFaces().end(); fit++) {
@@ -148,8 +148,8 @@ NEnumConstraintList* NNormalSurfaceVectorANStandard::makeEmbeddedConstraints(
     NEnumConstraintList* ans = new NEnumConstraintList(
         triangulation->getNumberOfTetrahedra() + 1);
 
-    size_t base = 0;
-    for (size_t c = 1; c < ans->size(); ++c) {
+    unsigned base = 0;
+    for (unsigned c = 1; c < ans->size(); ++c) {
         (*ans)[c].insert((*ans)[c].end(), base + 4);
         (*ans)[c].insert((*ans)[c].end(), base + 5);
         (*ans)[c].insert((*ans)[c].end(), base + 6);

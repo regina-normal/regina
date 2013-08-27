@@ -13,8 +13,6 @@ Version 4.94  [ (under development) ]
         - Old-style binary files are no longer supported.  These have not been
           in use for over a decade.  If you have an old-style binary file that
           you need to use, install Regina 4.93 and use the regconvert tool.
-        - Widespread changes from unsigned (int/long) to size_t for size,
-          length and index variables.
     ENGINE:
         Class NAbelianGroup, NGroupExpression, NGroupExpressionTerm,
                 NGroupPresentation:

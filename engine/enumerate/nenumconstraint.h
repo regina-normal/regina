@@ -89,7 +89,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NEnumConstraintList : public std::vector<std::set<size_t> > {
+class REGINA_API NEnumConstraintList : public std::vector<std::set<unsigned> > {
     public:
         /**
          * Creates an empty list of constraints.
@@ -102,7 +102,7 @@ class REGINA_API NEnumConstraintList : public std::vector<std::set<size_t> > {
          *
          * @param size the number of constraints to include in the new list.
          */
-        NEnumConstraintList(size_t size);
+        NEnumConstraintList(unsigned size);
 };
 
 /*@}*/
@@ -112,8 +112,8 @@ class REGINA_API NEnumConstraintList : public std::vector<std::set<size_t> > {
 inline NEnumConstraintList::NEnumConstraintList() {
 }
 
-inline NEnumConstraintList::NEnumConstraintList(size_t size) :
-        std::vector<std::set<size_t> >(size) {
+inline NEnumConstraintList::NEnumConstraintList(unsigned size) :
+        std::vector<std::set<unsigned> >(size) {
 }
 
 } // namespace regina
