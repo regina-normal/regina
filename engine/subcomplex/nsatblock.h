@@ -50,7 +50,7 @@
 namespace regina {
 
 class NIsomorphism;
-class NSatAnnulus;
+struct NSatAnnulus;
 class NSFSpace;
 class NTetrahedron;
 class NTriangulation;

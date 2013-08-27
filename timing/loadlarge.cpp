@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
         usage(argv[0]);
 
     bool traverse;
-    const char* file;
+    const char* file = 0;
     if (argc == 2) {
         traverse = false;
         file = argv[1];

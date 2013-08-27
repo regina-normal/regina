@@ -114,9 +114,9 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
             apply<PythonOutputStream*>::type conv;
 
         if (pyStdOut)
-            PySys_SetObject("stdout", conv(pyStdOut));
+            PySys_SetObject(const_cast<char*>("stdout"), conv(pyStdOut));
         if (pyStdErr)
-            PySys_SetObject("stderr", conv(pyStdErr));
+            PySys_SetObject(const_cast<char*>("stderr"), conv(pyStdErr));
     }
 
     // Release the global interpreter lock.
@@ -282,7 +282,8 @@ bool PythonInterpreter::importRegina() {
     PyEval_RestoreThread(state);
 
     // Adjust the python path.
-    PyObject* path = PySys_GetObject("path"); // Borrowed reference.
+    PyObject* path = PySys_GetObject(
+        const_cast<char*>("path")); // Borrowed reference.
     if (path) {
         PyObject* regModuleDir = PyString_FromString(
             regina::NGlobalDirs::pythonModule().c_str());
@@ -358,7 +359,8 @@ bool PythonInterpreter::runScript(const char* code) {
 bool PythonInterpreter::runScript(const char* filename, const char* shortName) {
     PyEval_RestoreThread(state);
 
-    PyObject* script = PyFile_FromString(const_cast<char*>(filename), "r");
+    PyObject* script = PyFile_FromString(const_cast<char*>(filename),
+        const_cast<char*>("r"));
     if (script) {
         PyObject* ans = PyRun_File(PyFile_AsFile(script),
             const_cast<char*>(shortName),

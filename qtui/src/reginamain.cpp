@@ -865,8 +865,7 @@ bool ReginaMain::saveFile() {
             QMessageBox::AcceptRole);
         QPushButton* discard = msgBox.addButton(tr("Discard All"),
             QMessageBox::DestructiveRole);
-        QPushButton* cancel = msgBox.addButton(tr("Cancel"),
-            QMessageBox::RejectRole);
+        msgBox.addButton(tr("Cancel"), QMessageBox::RejectRole);
         msgBox.setDefaultButton(commit);
         msgBox.exec();
 

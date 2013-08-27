@@ -232,9 +232,9 @@ GraphvizStatus GraphvizStatus::status(const QString& userExec,
 }
 
 ReginaPrefSet::ReginaPrefSet() :
+        fileRecentMax(10),
         displayTagsInTree(false),
         fileImportExportCodec("UTF-8"),
-        fileRecentMax(10),
         helpIntroOnStartup(true),
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
