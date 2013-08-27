@@ -284,6 +284,7 @@ Version 4.94  [ (under development) ]
         regconvert:
             - The option -b (for old-style binary files) is no longer supported.
         regina-python:
+            - Enabled tab completion, courtesy of readline and rlcompleter.
             - The --quiet option no longer lists libraries as they are loaded.
         tricensus:
             - Now takes an optional argument -2/--dim2 to enumerate
