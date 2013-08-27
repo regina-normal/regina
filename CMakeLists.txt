@@ -371,18 +371,22 @@ ENDIF(NOT DISABLE_PYTHON)
 
 IF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
   # We can support python.
-  ADD_SUBDIRECTORY(pylib)  
-  ADD_SUBDIRECTORY(python)  
+  ADD_SUBDIRECTORY(pylib)
+  ADD_SUBDIRECTORY(python)
   SET(BOOST_PYTHON_FOUND TRUE)
   MESSAGE(STATUS "Python bindings enabled")
-ELSE(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
-  # We cannot support python.
-  # Recall that Boost.Python is now mandatory (from the Boost check above),
-  # so if we break here then it's Python's fault.
-  MESSAGE(WARNING "Could not find Python development files: Python bindings disabled.")
-ENDIF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
-MACRO_LOG_FEATURE(BOOST_PYTHON_FOUND
-  "Python development"
+ELSEIF(Boost_FOUND)
+  # Boost itself is mandatory - if it was not found then we have
+  # bigger problems.
+  MESSAGE(WARNING "Could not find Python interpreter and/or development files: Python bindings disabled.")
+ENDIF()
+MACRO_LOG_FEATURE(PYTHONINTERP_FOUND
+  "Python interpreter"
+  "Build Python bindings for Regina"
+  "http://www.python.org/"
+  REGINA_MANDATORY)
+MACRO_LOG_FEATURE(PYTHONLIBS_FOUND
+  "Python development files"
   "Build Python bindings for Regina"
   "http://www.python.org/"
   REGINA_MANDATORY)
