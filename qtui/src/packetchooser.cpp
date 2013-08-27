@@ -107,12 +107,12 @@ void PacketChooser::setAutoUpdate(bool shouldAutoUpdate) {
         return;
 
     onAutoUpdate = shouldAutoUpdate;
-    if (onAutoUpdate)
+    if (onAutoUpdate) {
         for (std::vector<regina::NPacket*>::iterator it = packets.begin();
                 it != packets.end(); it++)
             if (*it)
                 (*it)->listen(this);
-    else
+    } else
         unregisterFromAllPackets();
 }
 

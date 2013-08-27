@@ -68,6 +68,7 @@ bool CommandEdit::event(QEvent* event) {
             // attempt tab completion. Else just insert tabs as normal.
             if ((text().length() > 0) && (!text().right(1).contains(" "))) {
                 emit completionRequested();
+                return true;
             } else {
                 insert(tabReplacement);
                 return true;
@@ -76,17 +77,17 @@ bool CommandEdit::event(QEvent* event) {
             // Not pressing tab. Set foreground colour to normal.
             clearErrorInInput();
             if (keyEvent->key() == Qt::Key_Up) {
-            // Browse backwards through history.
-            if (historyPos == history.end())
-                newLine = text();
-            if (historyPos == history.begin())
-                QApplication::beep();
-            else {
-                historyPos--;
-                setText(*historyPos);
-                end(false);
-            }
-            return true;
+                // Browse backwards through history.
+                if (historyPos == history.end())
+                    newLine = text();
+                if (historyPos == history.begin())
+                    QApplication::beep();
+                else {
+                    historyPos--;
+                    setText(*historyPos);
+                    end(false);
+                }
+                return true;
             } else if (keyEvent->key() == Qt::Key_Down) {
                 // Browse forwards through history.
                 if (historyPos == history.end())

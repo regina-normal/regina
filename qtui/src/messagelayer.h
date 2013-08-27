@@ -48,7 +48,6 @@
 class MessageLayer : public QWidget {
     private:
         // Components:
-        QLabel* icon;
         QLabel* text;
 
     public:
