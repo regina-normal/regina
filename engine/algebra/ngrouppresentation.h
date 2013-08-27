@@ -47,8 +47,13 @@
 #include "regina-core.h"
 #include "utilities/memutils.h"
 #include "shareableobject.h"
+#include "utilities/ptrutils.h"
+#include "algebra/nmarkedabeliangroup.h"
+#include "algebra/nabeliangroup.h"
 
 namespace regina {
+
+class NHomGroupPresentation; 
 
 /**
  * \weakgroup algebra
@@ -173,6 +178,10 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * modifications made to this list will show up in the
          * expression itself.
          *
+         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> has list 
+         * consisting of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and 
+         * <tt>g6^1</tt> in that order.
+         *
          * \ifacespython Not present; only the const version of this
          * routine is available.
          *
@@ -182,6 +191,10 @@ class REGINA_API NGroupExpression : public ShareableObject {
         /**
          * Returns a constant reference to the list of terms in this
          * expression.
+         *
+         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> has list 
+         * consisting of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and 
+         * <tt>g6^1</tt> in that order.
          *
          * \ifacespython This routine returns a python list of copied
          * NGroupExpressionTerm objects.  In particular, modifying this
@@ -194,9 +207,29 @@ class REGINA_API NGroupExpression : public ShareableObject {
         /**
          * Returns the number of terms in this expression.
          *
+         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> contains three
+         *  terms.  See also getWordLength(). 
+         *
          * @return the number of terms.
          */
         unsigned long getNumberOfTerms() const;
+        /**
+         * Returns the length of the word, i.e. the minimal number of letters 
+         * with exponent +1 or -1 for which this word is expressable as a 
+         * product. 
+         *
+         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> is a word of 
+         * length four.  See also getNumberOfTerms(). 
+         *
+         * @return the length of the word. 
+         */
+        unsigned long wordLength() const;
+
+        /**
+         * Erases this word. Turns it into the identity element.
+         */
+        void erase();
+
         /**
          * Returns the term at the given index in this expression.
          * Index 0 represents the first term, index 1
@@ -288,6 +321,27 @@ class REGINA_API NGroupExpression : public ShareableObject {
         void addTermLast(unsigned long generator, long exponent);
 
         /**
+         * Multiplies *this on the right by word. 
+         */
+        void addTermsLast( const NGroupExpression& word);
+        /**
+         * Multiplies *this on the left by word. 
+         */
+        void addTermsFirst( const NGroupExpression& word);
+
+        /**
+         *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
+         * converts the word into g_i2^j2 ... g_in^jn g_i1^j1  
+         */
+        void cycleRight();
+
+        /**
+         *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
+         * converts the word into g_in^jn g_i1^j1 g_i1^j1 ... g_in-1^jn-1  
+         */
+        void cycleLeft();
+
+        /**
          * Returns a newly created expression that is the inverse of
          * this expression.  The terms will be reversed and the
          * exponents negated.
@@ -295,6 +349,12 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * @return the inverse of this expression.
          */
         NGroupExpression* inverse() const;
+
+        /**
+         * Inverts this expression.  Does not allocate or deallocate anything. 
+         */
+        void invert(); 
+
         /**
          * Returns a newly created expression that is
          * this expression raised to the given power.
@@ -339,6 +399,91 @@ class REGINA_API NGroupExpression : public ShareableObject {
             const NGroupExpression& expansion, bool cyclic = false);
 
         /**
+         * Given two words, A and B, one wants to know how one can make 
+         *  substitutions into A using variants of the word B.  This 
+         *  structure holds that data.  For example, if:
+         *
+         *  A == a^5b^2abababa^4b^1  and  B == bababa^-1
+         *    == aaaaabbabababaaaab  
+         * start_sub_at == 6, start_from == 0, sub_length == 5 makes sense, 
+         *  this singles out the subword aaaaab[babab]abaaaab. Since it would 
+         *  reduce the length by four, the score is 4.
+         * 
+         * Similarly, if    A == baba^4b^1a^5b^2aba == babaaaabaaaaabbaba 
+         *   and    B == baba^-1ba start_sub_at == 14, start_from == 5, 
+         *   sub_length == 5 makes sense, and is a cyclic variation 
+         *   on the above substitution, so the score is also 4. 
+         */
+        struct NWordSubstitutionData {
+                unsigned long start_sub_at; // where in A do we start?
+                unsigned long start_from;   // where in B do we start?
+                unsigned long sub_length;   // num letters from B to use.
+                bool invertB;    // invert B before making the substitution?
+                long int score; // score i.e. this is the in word letter count
+                                // provided this sub is made
+                bool operator<( const NWordSubstitutionData &other ) const
+                {
+                        if (score < other.score) return false;           
+                        if (score > other.score) return true; 
+                        if (sub_length < other.sub_length) return false;
+                        if (sub_length > other.sub_length) return true;
+                        if ( (invertB == true)  && (other.invertB == false) ) 
+                                return false; 
+                        if ( (invertB == false) && (other.invertB == true)  ) 
+                                return true;
+                        if (start_from < other.start_from) return false;     
+                        if (start_from > other.start_from) return true;
+                        if (start_sub_at < other.start_sub_at) return false; 
+                        if (start_sub_at > other.start_sub_at) return true;
+                        return false;
+                }
+                void writeTextShort(std::ostream& out) const
+                {
+                        out<<"Target position "<<start_sub_at<<
+                        " length of substitution "<<sub_length<<(invertB ?
+                         " inverse reducer position " : " reducer position ")
+                        <<start_from<<" score "<<score;
+                }
+        };
+        /**
+         *  This is the core of the Dehn algorithm for hyperbolic groups.       
+         *  Given two words, *this and that_word, this routine searches for 
+         *  subwords of that_word (in the cyclic sense), and builds a table 
+         *  of substitutions one can make from that_word into *this.  The 
+         *  table is refined so that one knows the "value" of each 
+         *  substitution -- the extent to which the substitution would shorten
+         *  the word *this.   This is to allow for intelligent choices of
+         *  substitutions by whichever algorithms call this one.  
+         *
+         *  This algorithm assumes that *this and that_word are cyclically      
+         *  reduced words.  If you feed it non-cyclically reduced words it 
+         *  will give you suggestions although they will not be as strong
+         *  as if the words were cyclically reduced.  It also only adds 
+         *  to sub_list, so in normal usage one would pass it an empty sub-list.
+         *
+         *  The default argument step==1 assumes you are looking for 
+         *  substitutions that shorten the length of a word, and that
+         *  you only want to make an immediate substitution.  Setting
+         *  step==2 assumes after you make your first substitution you
+         *  will want to attempt a further substitution, etc.  step>1
+         *  is used primarily when building relator tables for group 
+         *  recognition. 
+         */
+            void dehnAlgorithmSubMetric( const NGroupExpression &that_word, 
+               std::set< NWordSubstitutionData > &sub_list, 
+               unsigned long step=1 ) const;
+
+        /**  
+         *  Given a word *this and that_word, apply the substitution specified
+         *  by sub_data to *this. See dehnAlgorithm() and struct 
+         *  NWordSubstitutionData.  In particular sub_data needs to be a 
+         *  valid substitution, usually it will be generated by 
+         *  dehnAlgorithmSubMetric.  
+         */
+            void applySubstitution( const NGroupExpression &that_word, const 
+             NWordSubstitutionData &sub_data );
+
+        /**
          * Writes a chunk of XML containing this expression.
          *
          * \ifacespython Not present.
@@ -346,6 +491,25 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * @param out the output stream to which the XML should be written.
          */
         void writeXMLData(std::ostream& out) const;
+
+        /**
+         * The text representation will be of the form
+         * <tt>g2^4 g13^-5 g4</tt>. If the shortword flag is
+         * true, it will assume your word is in an alphabet of
+         * no more than 26 letters, and will write the word using
+         * lower-case ASCII, i.e. <tt>c^4 n^-5 e</tt>.
+         *
+         * @return a std::string representation of the word.
+         */
+        std::string stringOutput(bool shortword=false) const;
+
+        /**
+         * The text representation will be of the form
+         * <tt>g_2^4 g_{13}^{-5} g_4</tt>, i.e. suitable for TeX.
+         *
+         * @return a std::string representation of the word.
+         */
+        std::string TeXOutput() const;
 
         /**
          * The text representation will be of the form
@@ -364,9 +528,15 @@ class REGINA_API NGroupExpression : public ShareableObject {
  *
  * \testpart
  *
- * \todo \optlong The simplification routines really need work!
+ * \todo Implement a procedure to attempt Reidemeister-Schreir, perhaps with
+ *  respect to a homomorphism to a known group.  Something good-enough to 
+ *  detect if the group is a semi-direct product, for 2 and 3-manifold groups.
  */
 class REGINA_API NGroupPresentation : public ShareableObject {
+    private: 
+        // for now we'll keep this to ourselves.  Returns true if the 
+        // presentation partitions the gens into disjoint non-trivial sets. 
+        bool obviously_freeproduct() const;
     protected:
         unsigned long nGenerators;
             /**< The number of generators. */
@@ -445,33 +615,69 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         const NGroupExpression& getRelation(unsigned long index) const;
 
         /**
-         * Attempts to simplify the group presentation as intelligently
-         * as possible without further input.
-         *
-         * As with the NTriangulation routine of the same name, this
-         * routine is not as intelligent as it makes out to be.
-         * In fact, currently it does almost nothing.
-         *
-         * \todo \featurelong Make this simplification more effective.
+         * See intelligentSimplify(NHomGroupPresentation*&)
          *
          * @return \c true if and only if the group presentation was changed.
          */
         bool intelligentSimplify();
 
         /**
+         * Reduces this presentation using the Dehn algorithm for hyperbolic 
+         * groups, i.e. small cancellation theory.   This means we look to see 
+         * if part of one relator can be used to simplify others.  If so, 
+         * make the substitution and simplify.  We continue until no more 
+         * presentation-shortening substitutions are available.  We follow that
+         *  by killing any available generators using words where generators
+         * appear a single time. 
+         *
+         * @param must be a null pointer, the algorithm initializes the pointer
+         *  and reductionMap. This means the user is responsible for 
+         *  de-allocating reductionMap whenever they're done with it. 
+         *
+         * @return \c true if and only if the presentation was changed. 
+         * 
+         * \todo \optlong This routine could use some small tweaks -- 
+         *   recognition of utility of some score==0 moves, such as 
+         *   commutators, for example. 
+             */
+        bool intelligentSimplify(NHomGroupPresentation*& reductionMap);
+
+        /**
+         *  Given a presentation <g_i | r_i> this routine appends consequences
+         * of the relators {r_i} to the presentation that are of the form 
+         * ab where both a and b are cyclic permutations of relators from 
+         * the collection {r_i}.  This is useful when attempting to simplify
+         * presentations but when small cancellation theory can't find the 
+         * simplest relators. depth=1 means it will only form products of two
+         * relators.  Depth==2 means products of three, etc.  Depth==4 is 
+         * typically the last depth after where the exponential growth of
+         * the operation isn't out of hand.  It also conveniently trivializes
+         * all the complicated trivial group presentations that we've come 
+         * across so far. 
+         */
+        void proliferateRelators(unsigned long depth=1);
+
+        /**
          * Attempts to recognise the group corresponding to this
          * presentation.  This routine is much more likely to be
-         * successful if you have already called intelligentSimplify().
+         * successful if you have already whecalled intelligentSimplify().
          *
          * Note that the presentation might be simplified a little
          * during the execution of this routine, although not nearly as
          * much as would be done by intelligentSimplify().
          *
+         * Currently, if successful the only groups this routine
+         * recognises is the trivial group, cyclic groups, free groups,
+         * and the free abelian group of rank two. 
+         *
          * \todo \featurelong Make this recognition more effective.
          *
          * @return a simple string representation of the group if it is
          * recognised, or an empty string if the group is not
-         * recognised.
+         * recognised.  Return strings have the form "0" for the trivial 
+         * group, "Z_n" for cyclic groups with n > 1, "Free(n generators)" 
+         * for free groups with n>1, "Z" and "Z + Z (abelian)"
+         * are the only two free abelian groups supported at present. 
          */
         std::string recogniseGroup() const;
 
@@ -483,6 +689,51 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * @param out the output stream to which the XML should be written.
          */
         void writeXMLData(std::ostream& out) const;
+
+        /**
+         *  The sum of the wordLength()s of the relators.  Used as a coarse 
+         *  measure of the complexit of the presentation.
+         */
+        unsigned long relatorLength() const;
+
+        /**
+         * Computes the abelianization of this group. 
+         * @return a pointer to the abelianization. 
+         */
+        std::auto_ptr<NAbelianGroup> unMarkedAbelianization() const;
+
+        /**
+         * Computes the abelianization of this group. 
+         * The coordinates in the chain complex correspond
+         * to the generators and relators for this group. 
+         *
+         * @return a pointer to the abelianization. 
+         */
+        std::auto_ptr<NMarkedAbelianGroup> markedAbelianization() const;
+
+        /**
+         * Writes a single string description of the group presentation. 
+         * Provided the group has 26 or fewer generators, will use the regular 
+         * lower-case ASCII alphabet to describe words, such as ab^2c^-1, etc. 
+         *
+         * @return a std::string describing the presentation, in form
+         *  < generators | relators >
+         */
+        std::string stringOutput() const;
+
+        /**
+         * Writes a single string description of the group presentation. No 
+         * endlines. In TeX 
+         *
+         * @return a std::string describing the presentation, 
+         *  < generators | relators >
+         */
+        std::string TeXOutput() const;
+
+        /**
+         * Assignment operator.
+         */
+        void operator=(const NGroupPresentation& copyMe);
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
@@ -549,6 +800,13 @@ inline unsigned long NGroupExpression::getNumberOfTerms() const {
     return terms.size();
 }
 
+inline unsigned long NGroupExpression::wordLength() const {
+ unsigned long retval(0); 
+ std::list<NGroupExpressionTerm>::const_iterator it; 
+ for (it = terms.begin(); it!=terms.end(); it++) retval += abs((*it).exponent);
+ return retval; 
+}
+
 inline unsigned long NGroupExpression::getGenerator(unsigned long index)
         const {
     return getTerm(index).generator;
@@ -574,6 +832,11 @@ inline void NGroupExpression::addTermLast(const NGroupExpressionTerm& term) {
 inline void NGroupExpression::addTermLast(unsigned long generator,
         long exponent) {
     terms.push_back(NGroupExpressionTerm(generator, exponent));
+}
+
+inline void NGroupExpression::erase()
+{
+        terms.resize(0);
 }
 
 // Inline functions for NGroupPresentation
@@ -611,6 +874,15 @@ inline void NGroupPresentation::writeTextShort(std::ostream& out) const {
     out << "Group presentation: " << nGenerators << " generators, "
         << relations.size() << " relations";
 }
+
+inline unsigned long NGroupPresentation::relatorLength() const
+{
+unsigned long retval(0);
+for (unsigned long i=0; i<relations.size(); i++)
+ retval += relations[i]->wordLength();
+return retval;
+}
+
 
 } // namespace regina
 

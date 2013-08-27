@@ -1,7 +1,7 @@
 # algebra
 
 # Files to compile
-SET ( FILES nabeliangroup ngrouppresentation nmarkedabeliangroup nxmlalgebrareader )
+SET ( FILES nabeliangroup ngrouppresentation nhomgrouppresentation nmarkedabeliangroup nxmlalgebrareader )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
@@ -10,5 +10,5 @@ ENDFOREACH(SOURCE_FILE)
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
-  INSTALL(FILES nabeliangroup.h ngrouppresentation.h nmarkedabeliangroup.h nxmlalgebrareader.h DESTINATION ${INCLUDEDIR}/algebra COMPONENT Development)
+  INSTALL(FILES nabeliangroup.h ngrouppresentation.h nhomgrouppresentation.h nmarkedabeliangroup.h nxmlalgebrareader.h DESTINATION ${INCLUDEDIR}/algebra COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
