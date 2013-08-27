@@ -11,7 +11,7 @@
 # Copyright (c) 2003-2013, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Usage: runscript.py [ import | noimport ]
+# Usage: runscript.py [ import | noimport ] [ readline | noreadline ]
 #                     [ [-q] <library> ... ]
 #                     [ -- <script> [ <script-arg> ... ]]
 #
@@ -20,6 +20,7 @@
 #
 #   - Importing the 'regina' module;
 #   - If requested, running "from regina import *";
+#   - If requested, enabling readline tab completion;
 #   - Running a series of provided library scripts;
 #   - Running a selected script with the provided command-line arguments,
 #       or,
@@ -67,6 +68,9 @@ quiet = False
 if len(sys.argv) < 2:
     print 'ERROR: The import/noimport argument was missing.'
     sys.exit(1)
+if len(sys.argv) < 3:
+    print 'ERROR: The readline/noreadline argument was missing.'
+    sys.exit(1)
 
 if sys.argv[1] == 'import':
     from regina import *
@@ -74,8 +78,19 @@ elif sys.argv[1] != 'noimport':
     print 'ERROR: The import/noimport argument was incorrect.'
     sys.exit(1)
 
+if sys.argv[2] == 'readline':
+    # Enable tab completion through readline, if we can.
+    try:
+        import rlcompleter, readline
+        readline.parse_and_bind('bind ^I rl_complete')
+    except:
+        pass
+elif sys.argv[2] != 'noreadline':
+    print 'ERROR: The readline/noreadline argument was incorrect.'
+    sys.exit(1)
+
 libsDone = 0
-for i in sys.argv[2:]:
+for i in sys.argv[3:]:
     if i == '-q':
         quiet=True
     elif libsDone:
