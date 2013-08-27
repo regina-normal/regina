@@ -79,7 +79,7 @@ class REGINA_API NNormalSurfaceVectorANStandard : public NNormalSurfaceVector {
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalSurfaceVectorANStandard(size_t length);
+        NNormalSurfaceVectorANStandard(unsigned length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
@@ -91,15 +91,15 @@ class REGINA_API NNormalSurfaceVectorANStandard : public NNormalSurfaceVector {
         virtual bool allowsSpun() const;
         virtual bool allowsOriented() const;
 
-        virtual NLargeInteger getTriangleCoord(size_t tetIndex,
+        virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
             int vertex, NTriangulation* triang) const;
-        virtual NLargeInteger getQuadCoord(size_t tetIndex,
+        virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
             int quadType, NTriangulation* triang) const;
-        virtual NLargeInteger getOctCoord(size_t tetIndex,
+        virtual NLargeInteger getOctCoord(unsigned long tetIndex,
             int octType, NTriangulation* triang) const;
-        virtual NLargeInteger getEdgeWeight(size_t edgeIndex,
+        virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
             NTriangulation* triang) const;
-        virtual NLargeInteger getFaceArcs(size_t faceIndex,
+        virtual NLargeInteger getFaceArcs(unsigned long faceIndex,
             int faceVertex, NTriangulation* triang) const;
 
         virtual NNormalSurfaceVector* clone() const;
@@ -116,7 +116,7 @@ class REGINA_API NNormalSurfaceVectorANStandard : public NNormalSurfaceVector {
 // Inline functions for NNormalSurfaceVectorANStandard
 
 inline NNormalSurfaceVectorANStandard::NNormalSurfaceVectorANStandard(
-        size_t length) : NNormalSurfaceVector(length) {
+        unsigned length) : NNormalSurfaceVector(length) {
 }
 inline NNormalSurfaceVectorANStandard::NNormalSurfaceVectorANStandard(
         const NVector<NLargeInteger>& cloneMe) :
@@ -124,15 +124,15 @@ inline NNormalSurfaceVectorANStandard::NNormalSurfaceVectorANStandard(
 }
 
 inline NLargeInteger NNormalSurfaceVectorANStandard::getTriangleCoord(
-        size_t tetIndex, int vertex, NTriangulation*) const {
+        unsigned long tetIndex, int vertex, NTriangulation*) const {
     return (*this)[10 * tetIndex + vertex];
 }
 inline NLargeInteger NNormalSurfaceVectorANStandard::getQuadCoord(
-        size_t tetIndex, int quadType, NTriangulation*) const {
+        unsigned long tetIndex, int quadType, NTriangulation*) const {
     return (*this)[10 * tetIndex + 4 + quadType];
 }
 inline NLargeInteger NNormalSurfaceVectorANStandard::getOctCoord(
-        size_t tetIndex, int octType, NTriangulation*) const {
+        unsigned long tetIndex, int octType, NTriangulation*) const {
     return (*this)[10 * tetIndex + 7 + octType];
 }
 

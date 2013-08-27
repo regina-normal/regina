@@ -125,7 +125,7 @@ class NVector {
          * @param newVectorSize the number of elements in the new
          * vector; this must be strictly positive.
          */
-        inline NVector(size_t newVectorSize) :
+        inline NVector(unsigned newVectorSize) :
                 elements(new T[newVectorSize]), end(elements + newVectorSize) {
         }
         /**
@@ -137,7 +137,7 @@ class NVector {
          * @param initValue the value to assign to every element of the
          * vector.
          */
-        inline NVector(size_t newVectorSize, const T& initValue) :
+        inline NVector(unsigned newVectorSize, const T& initValue) :
                 elements(new T[newVectorSize]), end(elements + newVectorSize) {
             std::fill(elements, end, initValue);
         }
@@ -162,7 +162,7 @@ class NVector {
          *
          * @return the vector size.
          */
-        inline size_t size() const {
+        inline unsigned size() const {
             return end - elements;
         }
         /**
@@ -175,7 +175,7 @@ class NVector {
          * @param index the vector index to examine.
          * @return the vector element at the given index.
          */
-        inline const T& operator[](size_t index) const {
+        inline const T& operator[](unsigned index) const {
             return elements[index];
         }
         /**
@@ -188,7 +188,7 @@ class NVector {
          * @param value the new value to assign to the element.
          * @return the vector element at the given index.
          */
-        inline void setElement(size_t index, const T& value) {
+        inline void setElement(unsigned index, const T& value) {
             elements[index] = value;
         }
 
@@ -368,11 +368,11 @@ class NVector {
  */
 template <class T>
 std::ostream& operator << (std::ostream& out, const NVector<T>& vector) {
-    size_t size = vector.size();
+    unsigned size = vector.size();
     if (size == 0)
         return out;
     out << vector[0];
-    for (size_t i=1; i<size; i++)
+    for (unsigned i=1; i<size; i++)
         out << ' ' << vector[i];
     return out;
 }

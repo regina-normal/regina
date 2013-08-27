@@ -129,7 +129,7 @@ class REGINA_API NMatrix2 {
          * @return a two-integer array containing the elements of the
          * requested row.
          */
-        const long* operator [] (size_t row) const;
+        const long* operator [] (unsigned row) const;
         /**
          * Returns a single row of this matrix.
          *
@@ -141,7 +141,7 @@ class REGINA_API NMatrix2 {
          * @return a two-integer array containing the elements of the
          * requested row.
          */
-        long* operator [] (size_t row);
+        long* operator [] (unsigned row);
 
         /**
          * Calculates the matrix product of this and the given matrix.
@@ -370,11 +370,11 @@ inline NMatrix2& NMatrix2::operator = (const long values[2][2]) {
     return *this;
 }
 
-inline const long* NMatrix2::operator [] (size_t row) const {
+inline const long* NMatrix2::operator [] (unsigned row) const {
     return data[row];
 }
 
-inline long* NMatrix2::operator [] (size_t row) {
+inline long* NMatrix2::operator [] (unsigned row) {
     return data[row];
 }
 

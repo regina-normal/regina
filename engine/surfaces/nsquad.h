@@ -75,7 +75,7 @@ class REGINA_API NNormalSurfaceVectorQuad :
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalSurfaceVectorQuad(size_t length);
+        NNormalSurfaceVectorQuad(unsigned length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
@@ -90,7 +90,7 @@ class REGINA_API NNormalSurfaceVectorQuad :
         virtual bool allowsOriented() const;
         virtual const NVertex* isVertexLink(NTriangulation* triang) const;
 
-        virtual NLargeInteger getOctCoord(size_t tetIndex,
+        virtual NLargeInteger getOctCoord(unsigned long tetIndex,
             int octType, NTriangulation* triang) const;
 
         virtual NNormalSurfaceVector* clone() const;
@@ -107,7 +107,7 @@ class REGINA_API NNormalSurfaceVectorQuad :
 // Inline functions for NNormalSurfaceVectorQuad
 
 inline NNormalSurfaceVectorQuad::NNormalSurfaceVectorQuad(
-        size_t length) : NNormalSurfaceVectorMirrored(length) {
+        unsigned length) : NNormalSurfaceVectorMirrored(length) {
 }
 inline NNormalSurfaceVectorQuad::NNormalSurfaceVectorQuad(
         const NVector<NLargeInteger>& cloneMe) :
@@ -121,7 +121,7 @@ inline const NVertex* NNormalSurfaceVectorQuad::isVertexLink(
 }
 
 inline NLargeInteger NNormalSurfaceVectorQuad::getOctCoord(
-        size_t, int, NTriangulation*) const {
+        unsigned long, int, NTriangulation*) const {
     return zero;
 }
 

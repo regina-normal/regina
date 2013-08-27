@@ -207,7 +207,7 @@ template <class RayClass, class OutputIterator>
 void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
         NProgressNumber* progress, unsigned initialRows) {
-    size_t nFacets = subspace.columns();
+    unsigned nFacets = subspace.columns();
 
     // If the space has dimension zero, return no results.
     if (nFacets == 0)
@@ -259,10 +259,10 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
         NProgressNumber* progress, unsigned initialRows) {
     // Get the dimension of the entire space in which we are working.
-    size_t dim = subspace.columns();
+    unsigned dim = subspace.columns();
 
     // Are there any hyperplanes at all in the subspace?
-    size_t nEqns = subspace.rows();
+    unsigned nEqns = subspace.rows();
     if (nEqns == 0) {
         // No!  Just send back the vertices of the non-negative orthant.
         if (progress)

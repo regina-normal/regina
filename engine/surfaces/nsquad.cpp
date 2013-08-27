@@ -51,7 +51,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeZeroVector(
 
 NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
         NTriangulation* triangulation) {
-    size_t nCoords = 3 * triangulation->getNumberOfTetrahedra();
+    unsigned long nCoords = 3 * triangulation->getNumberOfTetrahedra();
     // One equation per non-boundary edge.
     long nEquations = long(triangulation->getNumberOfEdges());
     for (NTriangulation::BoundaryComponentIterator bit = triangulation->
@@ -60,13 +60,13 @@ NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
         nEquations -= (*bit)->getNumberOfEdges();
 
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
-    size_t row = 0;
+    unsigned long row = 0;
 
     // Run through each internal edge and add the corresponding
     // equation.
     std::deque<NEdgeEmbedding>::const_iterator embit;
     NPerm4 perm;
-    size_t tetIndex;
+    unsigned long tetIndex;
     for (NTriangulation::EdgeIterator eit = triangulation->getEdges().begin();
             eit != triangulation->getEdges().end(); eit++) {
         if (! (*eit)->isBoundary()) {
@@ -91,8 +91,8 @@ NEnumConstraintList* NNormalSurfaceVectorQuad::makeEmbeddedConstraints(
     NEnumConstraintList* ans = new NEnumConstraintList(
         triangulation->getNumberOfTetrahedra());
 
-    size_t base = 0;
-    for (size_t c = 0; c < ans->size(); ++c) {
+    unsigned base = 0;
+    for (unsigned c = 0; c < ans->size(); ++c) {
         (*ans)[c].insert((*ans)[c].end(), base);
         (*ans)[c].insert((*ans)[c].end(), base + 1);
         (*ans)[c].insert((*ans)[c].end(), base + 2);
@@ -126,14 +126,14 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
         NTriangulation* triang) const {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.
-    size_t nRows = 7 * triang->getNumberOfTetrahedra();
+    unsigned long nRows = 7 * triang->getNumberOfTetrahedra();
     NNormalSurfaceVectorStandard* ans =
         new NNormalSurfaceVectorStandard(nRows);
 
     // Set every triangular coordinate in the answer to infinity.
     // For coordinates about vertices not enjoying infinitely many discs,
     // infinity will mean "unknown".
-    size_t row;
+    unsigned long row;
     int i;
     for (row = 0; row < nRows; row+=7)
         for (i = 0; i < 4; i++)
@@ -162,7 +162,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
     NTetrahedron* tet;
     NTetrahedron* adj;
     NPerm4 tetPerm, adjPerm;
-    size_t tetIndex, adjIndex;
+    unsigned long tetIndex, adjIndex;
     NLargeInteger expect;
     for (NTriangulation::VertexIterator vit = triang->getVertices().begin();
             vit != triang->getVertices().end(); vit++) {

@@ -383,11 +383,11 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
     NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
     NMatrixInt* eqns = makeMatchingEquations(owner, newFlavour);
 
-    size_t rank = rowBasis(*eqns);
-    size_t dim = eqns->columns();
+    unsigned rank = rowBasis(*eqns);
+    unsigned long dim = eqns->columns();
 
     std::list<std::vector<mpz_class> > input;
-    size_t r, c;
+    unsigned r, c;
     for (r = 0; r < rank; ++r) {
         input.push_back(std::vector<mpz_class>());
         std::vector<mpz_class>& v(input.back());
@@ -424,7 +424,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
     int i;
     std::list<std::vector<mpz_class> >::const_iterator hlit;
     NEnumConstraintList::const_iterator eit;
-    std::set<size_t>::const_iterator sit;
+    std::set<unsigned>::const_iterator sit;
     NNormalSurfaceVector* v;
     NLargeInteger tmpInt;
     for (hlit = cone.getHilbertBasis().begin();

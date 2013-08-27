@@ -65,9 +65,9 @@ namespace regina {
 template <class T>
 class NMatrix {
     protected:
-        size_t nRows;
+        unsigned long nRows;
             /**< The number of rows in the matrix. */
-        size_t nCols;
+        unsigned long nCols;
             /**< The number of columns in the matrix. */
         T** data;
             /**< The actual entries in the matrix.
@@ -86,9 +86,9 @@ class NMatrix {
          * @param rows the number of rows in the new matrix.
          * @param cols the number of columns in the new matrix.
          */
-        NMatrix(size_t rows, size_t cols) :
+        NMatrix(unsigned long rows, unsigned long cols) :
                 nRows(rows), nCols(cols), data(new T*[rows]){
-            for (size_t i = 0; i < rows; i++)
+            for (unsigned long i = 0; i < rows; i++)
                 data[i] = new T[cols];
         }
         /**
@@ -98,7 +98,7 @@ class NMatrix {
          */
         NMatrix(const NMatrix& cloneMe) : nRows(cloneMe.nRows),
                 nCols(cloneMe.nCols), data(new T*[cloneMe.nRows]) {
-            size_t r, c;
+            unsigned long r, c;
             for (r = 0; r < nRows; r++) {
                 data[r] = new T[nCols];
                 for (c = 0; c < nCols; c++)
@@ -109,7 +109,7 @@ class NMatrix {
          * Destroys this matrix.
          */
         virtual ~NMatrix() {
-            for (size_t i = 0; i < nRows; i++)
+            for (unsigned long i = 0; i < nRows; i++)
                 delete[] data[i];
             delete[] data;
         }
@@ -120,7 +120,7 @@ class NMatrix {
          * @param value the value to assign to each entry.
          */
         void initialise(const T& value) {
-            size_t r, c;
+            unsigned long r, c;
             for (r = 0; r < nRows; r++)
                 for (c = 0; c < nCols; c++)
                     data[r][c] = value;
@@ -148,7 +148,7 @@ class NMatrix {
          *
          * @return the number of rows.
          */
-        size_t rows() const {
+        unsigned long rows() const {
             return nRows;
         }
         /**
@@ -156,7 +156,7 @@ class NMatrix {
          *
          * @return the number of columns.
          */
-        size_t columns() const {
+        unsigned long columns() const {
             return nCols;
         }
 
@@ -179,7 +179,7 @@ class NMatrix {
          * @param column the column of the desired entry.
          * @return a reference to the entry in the given row and column.
          */
-        T& entry(size_t row, size_t column) {
+        T& entry(unsigned long row, unsigned long column) {
             return data[row][column];
         }
         /**
@@ -196,7 +196,7 @@ class NMatrix {
          * @param column the column of the desired entry.
          * @return a reference to the entry in the given row and column.
          */
-        const T& entry(size_t row, size_t column) const {
+        const T& entry(unsigned long row, unsigned long column) const {
             return data[row][column];
         }
 
@@ -224,7 +224,7 @@ class NMatrix {
             if (nRows != other.nRows || nCols != other.nCols)
                 return false;
 
-            size_t r, c;
+            unsigned long r, c;
             for (r = 0; r < nRows; ++r)
                 for (c = 0; c < nCols; ++c)
                     if (! (data[r][c] == other.data[r][c]))
@@ -269,7 +269,7 @@ class NMatrix {
          * @param out the output stream to which to write.
          */
         virtual void writeMatrix(std::ostream& out) const {
-            size_t r, c;
+            unsigned long r, c;
             for (r = 0; r < nRows; r++) {
                 for (c = 0; c < nCols; c++) {
                     if (c > 0) out << ' ';
@@ -287,9 +287,9 @@ class NMatrix {
          * @param first the first row to swap.
          * @param second the second row to swap.
          */
-        void swapRows(size_t first, size_t second) {
+        void swapRows(unsigned long first, unsigned long second) {
             T tmp;
-            for (size_t i = 0; i < nCols; i++) {
+            for (unsigned long i = 0; i < nCols; i++) {
                 tmp = data[first][i];
                 data[first][i] = data[second][i];
                 data[second][i] = tmp;
@@ -303,9 +303,9 @@ class NMatrix {
          * @param first the first column to swap.
          * @param second the second column to swap.
          */
-        void swapColumns(size_t first, size_t second) {
+        void swapColumns(unsigned long first, unsigned long second) {
             T tmp;
-            for (size_t i = 0; i < nRows; i++) {
+            for (unsigned long i = 0; i < nRows; i++) {
                 tmp = data[i][first];
                 data[i][first] = data[i][second];
                 data[i][second] = tmp;
@@ -357,7 +357,7 @@ class NMatrixRing : public NMatrix<T> {
          * @param rows the number of rows in the new matrix.
          * @param cols the number of columns in the new matrix.
          */
-        NMatrixRing(size_t rows, size_t cols) :
+        NMatrixRing(unsigned long rows, unsigned long cols) :
                 NMatrix<T>(rows, cols) {
         }
         /**
@@ -377,7 +377,7 @@ class NMatrixRing : public NMatrix<T> {
          */
         void makeIdentity() {
             this->initialise(zero);
-            for (size_t i = 0; i < this->nRows && i < this->nCols; i++)
+            for (unsigned long i = 0; i < this->nRows && i < this->nCols; i++)
                 this->data[i][i] = one;
         }
 
@@ -397,7 +397,7 @@ class NMatrixRing : public NMatrix<T> {
             if (this->nRows != this->nCols)
                 return false;
 
-            size_t r, c;
+            unsigned long r, c;
             for (r = 0; r < this->nRows; ++r)
                 for (c = 0; c < this->nCols; ++c) {
                     if (r == c && this->data[r][c] != one)
@@ -431,8 +431,8 @@ class NMatrixRing : public NMatrix<T> {
          * @param source the row to add.
          * @param dest the row that will be added to.
          */
-        void addRow(size_t source, size_t dest) {
-            for (size_t i = 0; i < this->nCols; i++)
+        void addRow(unsigned long source, unsigned long dest) {
+            for (unsigned long i = 0; i < this->nCols; i++)
                 this->data[dest][i] += this->data[source][i];
         }
         /**
@@ -450,9 +450,9 @@ class NMatrixRing : public NMatrix<T> {
          * @param copies the number of copies of \a source to add to
          * \a dest.
          */
-        void addRow(size_t source, size_t dest,
+        void addRow(unsigned long source, unsigned long dest,
                 T copies) {
-            for (size_t i = 0; i < this->nCols; i++)
+            for (unsigned long i = 0; i < this->nCols; i++)
                 this->data[dest][i] += copies * this->data[source][i];
         }
         /**
@@ -464,8 +464,8 @@ class NMatrixRing : public NMatrix<T> {
          * @param source the columns to add.
          * @param dest the column that will be added to.
          */
-        void addCol(size_t source, size_t dest) {
-            for (size_t i = 0; i < this->nRows; i++)
+        void addCol(unsigned long source, unsigned long dest) {
+            for (unsigned long i = 0; i < this->nRows; i++)
                 this->data[i][dest] += this->data[i][source];
         }
         /**
@@ -483,9 +483,9 @@ class NMatrixRing : public NMatrix<T> {
          * @param copies the number of copies of \a source to add to
          * \a dest.
          */
-        void addCol(size_t source, size_t dest,
+        void addCol(unsigned long source, unsigned long dest,
                 T copies) {
-            for (size_t i = 0; i < this->nRows; i++)
+            for (unsigned long i = 0; i < this->nRows; i++)
                 this->data[i][dest] += copies * this->data[i][source];
         }
         /**
@@ -499,8 +499,8 @@ class NMatrixRing : public NMatrix<T> {
          * @param row the row to work with.
          * @param factor the factor by which to multiply the given row.
          */
-        void multRow(size_t row, T factor) {
-            for (size_t i = 0; i < this->nCols; i++)
+        void multRow(unsigned long row, T factor) {
+            for (unsigned long i = 0; i < this->nCols; i++)
                 this->data[row][i] *= factor;
         }
         /**
@@ -514,8 +514,8 @@ class NMatrixRing : public NMatrix<T> {
          * @param column the column to work with.
          * @param factor the factor by which to multiply the given column.
          */
-        void multCol(size_t column, T factor) {
-            for (size_t i = 0; i < this->nRows; i++)
+        void multCol(unsigned long column, T factor) {
+            for (unsigned long i = 0; i < this->nRows; i++)
                 this->data[i][column] *= factor;
         }
 
@@ -545,7 +545,7 @@ class NMatrixRing : public NMatrix<T> {
             std::auto_ptr<NMatrixRing<T> > ans(new NMatrixRing<T>(
                 this->nRows, other.nCols));
 
-            size_t row, col, k;
+            unsigned long row, col, k;
             for (row = 0; row < this->nRows; row++)
                 for (col = 0; col < other.nCols; col++) {
                     ans->data[row][col] = zero;
@@ -582,7 +582,7 @@ class NMatrixRing : public NMatrix<T> {
             std::auto_ptr<MatrixClass> ans(new MatrixClass(
                 this->nRows, other.nCols));
 
-            size_t row, col, k;
+            unsigned long row, col, k;
             for (row = 0; row < this->nRows; row++)
                 for (col = 0; col < other.nCols; col++) {
                     ans->data[row][col] = zero;
@@ -608,7 +608,7 @@ class NMatrixRing : public NMatrix<T> {
          * @return the determinant of this matrix.
          */
         T det() const {
-            size_t n = this->nRows;
+            unsigned long n = this->nRows;
 
             // Just in case...
             if (n != this->nCols || n == 0)
@@ -618,7 +618,7 @@ class NMatrixRing : public NMatrix<T> {
             partial[0] = new T[n * n];
             partial[1] = new T[n * n];
 
-            size_t len, head, curr, prevHead, prevCurr;
+            unsigned long len, head, curr, prevHead, prevCurr;
 
             // Treat the smallest cases of len = 1 separately.
             int layer = 0;

@@ -455,13 +455,13 @@ NMatrixInt* NNormalSurface::boundarySlopes() const {
         return 0;
     }
 
-    size_t cusps = equations->rows() / 2;
-    size_t numTet = tri->getNumberOfTetrahedra();
+    unsigned long cusps = equations->rows() / 2;
+    unsigned long numTet = tri->getNumberOfTetrahedra();
     NMatrixInt* slopes = new NMatrixInt(cusps, 2);
-    for(size_t i=0; i < cusps; i++) {
+    for(unsigned int i=0; i < cusps; i++) {
         NLargeInteger meridian; // constructor sets this to 0
         NLargeInteger longitude; // constructor sets this to 0
-        for(size_t j=0; j < numTet; j++) {
+        for(unsigned int j=0; j < numTet; j++) {
             meridian += 
                 equations->entry(2*i, 3*j)*getQuadCoord(j,vertexSplit[0][1]) +
                 equations->entry(2*i, 3*j+1)*getQuadCoord(j,vertexSplit[0][2]) +
@@ -484,13 +484,13 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
     using regina::xml::xmlValueTag;
 
     // Write the opening tag including vector length.
-    size_t vecLen = vector->size();
+    unsigned vecLen = vector->size();
     out << "  <surface len=\"" << vecLen << "\" name=\""
         << xmlEncodeSpecialChars(name) << "\">";
 
     // Write all non-zero entries.
     NLargeInteger entry;
-    for (size_t i = 0; i < vecLen; i++) {
+    for (unsigned i = 0; i < vecLen; i++) {
         entry = (*vector)[i];
         if (entry != 0)
             out << ' ' << i << ' ' << entry;
@@ -517,12 +517,12 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
 // Default implementations for oriented surfaces. Returns zero as any
 // coordinate system which supports orientation should override these.
 NLargeInteger NNormalSurfaceVector::getOrientedTriangleCoord(
-        size_t, int, NTriangulation*, bool) const {
+        unsigned long, int, NTriangulation*, bool) const {
     return NLargeInteger::zero;
 };
 
 NLargeInteger NNormalSurfaceVector::getOrientedQuadCoord(
-        size_t, int, NTriangulation*, bool) const {
+        unsigned long, int, NTriangulation*, bool) const {
     return NLargeInteger::zero;
 };
 
