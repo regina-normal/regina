@@ -692,11 +692,11 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          */
         void writeXMLData(std::ostream& out) const;
 
-	/**
-	 *  The sum of the wordLength()s of the relators.  Used as a coarse 
-     *  measure of the complexit of the presentation.
-	 */
-	unsigned long relatorLength() const;
+        /**
+         *  The sum of the wordLength()s of the relators.  Used as a coarse 
+         *  measure of the complexit of the presentation.
+         */
+        unsigned long relatorLength() const;
 
         /**
          * Computes the abelianization of this group. 
@@ -720,7 +720,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          *
          * @return a std::string describing the presentation, < generators | relators >
          */
-	std::string stringOutput() const;
+        std::string stringOutput() const;
 
         /**
          * Writes a single string description of the group presentation. No endlines. 
@@ -728,7 +728,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          *
          * @return a std::string describing the presentation, < generators | relators >
          */
-	std::string TeXOutput() const;
+        std::string TeXOutput() const;
 
         /**
          * Assignment operator.
