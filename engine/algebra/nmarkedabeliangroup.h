@@ -875,6 +875,18 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
          * @return the coefficients used in the homology calculation.
          */
         const NLargeInteger& coefficients() const;
+
+        /**
+         *  Returns an NMarkedAbelianGroup representing the torsion subgroup
+         *  of this group. TODO: not yet implemented
+         */
+        NMarkedAbelianGroup torsionSubgroup() const;
+
+        /**
+         *  Returns an NHomMarkedAbelianGroup representing the inclusion of the
+         *  torsion subgroup into this group. TODO: not yet implemented
+         */
+        NHomMarkedAbelianGroup torsionInclusion() const;
 };
 
 /**
@@ -1222,6 +1234,12 @@ class REGINA_API NHomMarkedAbelianGroup : public ShareableObject {
          */
         std::auto_ptr<NHomMarkedAbelianGroup> operator * (
             const NHomMarkedAbelianGroup &X) const;
+
+        /**
+         *  Returns an NHomMarkedAbelianGroup representing the induced map
+         *  on the torsion subgroups. 
+         */
+        NHomMarkedAbelianGroup torsionSubgroup() const;
 
         /**
          * Writes a human-readable version of the reduced matrix to the
