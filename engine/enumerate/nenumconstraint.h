@@ -41,6 +41,7 @@
 #define __NENUMCONSTRAINT_H
 #endif
 
+#include <cstddef>
 #include <set>
 #include <vector>
 #include "regina-core.h"
