@@ -63,6 +63,7 @@
 #endif
 
 #include "regina-core.h"
+#include <cstddef> // for size_t
 
 namespace regina {
 
