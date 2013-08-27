@@ -23,7 +23,7 @@ ADD_SUBDIRECTORY("utilities")
 ADD_SUBDIRECTORY("testsuite")
 
 
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/engine ${CMAKE_BINARY_DIR}/engine ${Boost_INCLUDE_DIR} ${PYTHON_INCLUDE_PATH})
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/engine ${CMAKE_BINARY_DIR}/engine ${Boost_INCLUDE_DIR} ${PYTHON_INCLUDE_DIRS})
 ADD_LIBRARY("regina" MODULE ${SOURCES} )
 
 # python modules on linux should not have the "lib" prefix 
