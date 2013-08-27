@@ -483,7 +483,7 @@ std::string substitutionString( const NGroupExpression &word,
         inv_reducer[(subData.start_from + i) % word_length] : 
             reducer[(subData.start_from + i) % word_length] );
  rep_word.simplify(); del_word.simplify();
- retval = del_word.stringOutput()+" -> "+rep_word.stringOutput();
+ retval = del_word.toString()+" -> "+rep_word.toString();
  return retval;
 }
 
@@ -771,7 +771,7 @@ void NGroupExpression::writeXMLData(std::ostream& out) const {
 
 // group expression output routines
 
-std::string NGroupExpression::stringOutput(bool shortword) const
+std::string NGroupExpression::toString(bool shortword) const
 {
     std::string retval;
     if (terms.empty())
@@ -828,7 +828,7 @@ void NGroupExpression::writeTextShort(std::ostream& out) const {
 
 // presentation output routines below
 
-std::string NGroupPresentation::stringOutput() const {
+std::string NGroupPresentation::toString() const {
 	std::string retval;
 	retval.append("< ");
         if (nGenerators == 0) { return("< >"); }
@@ -846,7 +846,7 @@ std::string NGroupPresentation::stringOutput() const {
 	for (RelIteratorConst it = relations.begin(); 
                 it != relations.end(); it++) { 
             if (it != relations.begin()) temp<<", ";
-            temp<<(*it)->stringOutput( (nGenerators <= 26) ? true : false ); }
+            temp<<(*it)->toString( (nGenerators <= 26) ? true : false ); }
         retval.append(temp.str());
         retval.append(" >");
 	return retval;
