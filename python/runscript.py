@@ -82,7 +82,12 @@ if sys.argv[2] == 'readline':
     # Enable tab completion through readline, if we can.
     try:
         import rlcompleter, readline
-        readline.parse_and_bind('bind ^I rl_complete')
+        if 'libedit' in readline.__doc__:
+            # Some systems work with libedit, not libreadline, which
+            # supports a different set of commands.
+            readline.parse_and_bind('bind ^I rl_complete')
+        else:
+            readline.parse_and_bind('tab: complete')
     except:
         pass
 elif sys.argv[2] != 'noreadline':
