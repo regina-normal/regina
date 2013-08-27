@@ -508,10 +508,10 @@ for (it = word.terms.rbegin(); it != word.terms.rend(); it++)
  addTermFirst( *it );
 }
 
-        /**
-         *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
-         * converts the word into g_i2^j2 ... g_in^jn g_i1^j1  
-         */
+/**
+ *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
+ * converts the word into g_i2^j2 ... g_in^jn g_i1^j1  
+ */
 void NGroupExpression::cycleRight()
 {
  if (terms.size() > 1)
@@ -522,10 +522,10 @@ void NGroupExpression::cycleRight()
   }
 }
 
-        /**
-         *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
-         * converts the word into g_in^jn g_i1^j1 g_i1^j1 ... g_in-1^jn-1  
-         */
+/**
+ *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
+ * converts the word into g_in^jn g_i1^j1 g_i1^j1 ... g_in-1^jn-1  
+ */
 void NGroupExpression::cycleLeft()
 {
  if (terms.size() > 1)
@@ -546,17 +546,6 @@ bool NGroupPresentation::intelligentSimplify() {
  return changed;
 }
 
-// TODO: 
-//       1) basic automorphisms of the free group, x_1 --> x_1, ...
-//             x_i --> x_ix_j, ..., x_n --> x_n, etc. 
-//          This should be used to simplify presentations like
-//          < a b | b^2a^2, abababab > etc. 
-//          In this situation if we make f the automorphism of the free group
-//          with f(a)=ab, f(b)=b, we get f^{-1}(b)=b, f^{-1}(a)=ab^-1, so
-//          f^{-1}(b^2a^2)=b^2ab^-1ab^-1, f^{-1}(abababab)=a^4. 
-//          the former cyclically reduces to bab^-1a.  This is good.  
-//          So how should we weigh the change of coordinates?  This is to be
-//          in step 5. 
 bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& 
     reductionMap) {
  bool didSomething(false);
