@@ -300,25 +300,12 @@ void base64Encode(const char* in, size_t inlen, char* out, size_t outlen) {
 size_t base64Encode(const char* in, size_t inlen, char** out) {
     size_t outlen = 1 + base64Length(inlen);
 
-    /* Check for overflow in outlen computation.
-     *
-     * If there is no overflow, outlen >= inlen.
-     *
-     * If the operation (inlen + 2) overflows then it yields at most +1, so
-     * outlen is 0.
-     *
-     * If the multiplication overflows, we lose at least half of the
-     * correct value, so the result is < ((inlen + 2) / 3) * 2, which is
-     * less than (inlen + 2) * 0.66667, which is less than inlen as soon as
-     * (inlen > 4).
-     */
+    // Check for overflow.
     if (inlen > outlen) {
-        *out = NULL;
+        *out = 0;
         return 0;
     }
 
-    // bab: Unlike malloc(), new[] never returns zero (instead it throws
-    // an exception if memory is exhausted).
     *out = new char[outlen];
 
     base64Encode(in, inlen, *out, outlen);
@@ -333,6 +320,12 @@ bool base64Decode (const char* in, size_t inlen, char* out, size_t *outlen) {
 
     size_t outsize = *outlen;
     *outlen = 0;
+
+    // The input may end with padding of '=' or '=='.
+    if (inlen && in[inlen - 1] == '=')
+        --inlen;
+    if (inlen && in[inlen - 1] == '=')
+        --inlen;
 
     while( inlen ) {
         for( len = 0; len < 4 && inlen; ++len ) {
@@ -363,20 +356,15 @@ bool base64Decode (const char* in, size_t inlen, char* out, size_t *outlen) {
 }
 
 bool base64Decode(const char* in, size_t inlen, char** out, size_t* outlen) {
-    /* This may allocate a few bytes too much, depending on input,
-       but it's not worth the extra CPU time to compute the exact amount.
-       The exact amount is 3 * inlen / 4, minus 1 if the input ends
-       with "=" and minus another 1 if the input ends with "==".
-       Dividing before multiplying avoids the possibility of overflow.  */
+    // This may allocate one or two bytes too much, but never too little.
+    // Dividing before multiplying avoids the possibility of overflow.
     size_t needlen = 3 * (inlen / 4) + 2;
 
-    // bab: Unlike malloc(), new[] never returns zero (instead it throws
-    // an exception if memory is exhausted).
     *out = new char[needlen];
 
     if (!base64Decode(in, inlen, *out, &needlen)) {
         delete[] *out;
-        *out = NULL;
+        *out = 0;
         return false;
     }
 

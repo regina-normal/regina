@@ -126,12 +126,13 @@ bool runAllTests() {
      */
 
     // Utilities:
+    addBase64(runner);
     addNBitmask(runner);
     addNIndexedArray(runner);
-    addNInteger(runner);
-    addNRational(runner);
 
     // Maths:
+    addNInteger(runner);
+    addNRational(runner);
     addNPerm3(runner);
     addNPerm4(runner);
     addNPerm5(runner);
