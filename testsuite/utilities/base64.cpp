@@ -42,6 +42,7 @@ class Base64Test : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(Base64Test);
 
     CPPUNIT_TEST(encodeAndDecode);
+    CPPUNIT_TEST(invalidEncodings);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -117,6 +118,70 @@ class Base64Test : public CppUnit::TestFixture {
             verifyEncDec("sadjfl8q34jr9awj;ljfap98q2up[]!@~|$/", 36);
             verifyEncDec("sadjfl8q34jr9awj;ljfap98q2up[]!@~|$/\t", 37);
             verifyEncDec("sadjfl8q34jr9awj;ljfap98q2up[]!@~|$/\t\n", 38);
+        }
+
+        void verifyInvalid(const char* enc, size_t validChars) {
+            char* dec;
+            size_t decLen;
+            bool res = regina::base64Decode(enc, strlen(enc), &dec, &decLen);
+            if (dec) {
+                std::ostringstream msg;
+                msg << "Invalid base64 string was decoded: " << enc;
+                delete[] dec;
+                CPPUNIT_FAIL(msg.str());
+                return;
+            }
+            /** In base64.h we indicate that decLen is left undefined.
+            if (decLen) {
+                std::ostringstream msg;
+                msg << "Invalid base64 string reported "
+                    "non-zero decoded length: " << enc;
+                CPPUNIT_FAIL(msg.str());
+                return;
+            }
+            **/
+            if (res) {
+                std::ostringstream msg;
+                msg << "Invalid base64 string reported "
+                    "a valid decoding: " << enc;
+                CPPUNIT_FAIL(msg.str());
+                return;
+            }
+
+            // Try the variant of base64Decode that decodes as much as it can.
+            size_t expectDecLen = (validChars / 4) * 3;
+            if (validChars % 4 > 1)
+                expectDecLen += ((validChars % 4) - 1);
+
+            dec = new char[expectDecLen + 10];
+            decLen = expectDecLen + 10;
+            res = regina::base64Decode(enc, strlen(enc), dec, &decLen);
+            if (res) {
+                std::ostringstream msg;
+                msg << "Invalid base64 string reported "
+                    "a valid decoding: " << enc;
+                delete[] dec;
+                CPPUNIT_FAIL(msg.str());
+                return;
+            }
+            if (decLen != expectDecLen) {
+                std::ostringstream msg;
+                msg << "Invalid base64 string reported "
+                    "incorrect decoded length of "
+                    << decLen << ", not " << expectDecLen << ": " << enc;
+                delete[] dec;
+                CPPUNIT_FAIL(msg.str());
+                return;
+            }
+        }
+
+        void invalidEncodings() {
+            verifyInvalid("AbCplo=6", 6);
+            verifyInvalid("AbCpl===", 5);
+            verifyInvalid("AbCp====", 4);
+            verifyInvalid("abde fghi", 4);
+            verifyInvalid("abde\nfghi", 4);
+            verifyInvalid("abde\tfghi", 4);
         }
 };
 

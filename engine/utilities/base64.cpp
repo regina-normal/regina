@@ -327,7 +327,8 @@ bool base64Decode (const char* in, size_t inlen, char* out, size_t *outlen) {
     if (inlen && in[inlen - 1] == '=')
         --inlen;
 
-    while( inlen ) {
+    bool unbroken = true;
+    while( inlen && unbroken ) {
         for( len = 0; len < 4 && inlen; ++len ) {
             v = *in++;
             --inlen;
@@ -335,8 +336,11 @@ bool base64Decode (const char* in, size_t inlen, char* out, size_t *outlen) {
             v = ((v < 43 || v > 122) ? 0 : (int) cd64[ v - 43 ]);
             if( v != 0 )
                 v = ((v == (int)'$') ? 0 : v - 61);
-            if (v == 0)
-                return false; // invalid character
+            if (v == 0) {
+                // Invalid character.
+                unbroken = false;
+                break;
+            }
             inc[ len ] = (unsigned char) (v - 1);
         }
         // decode 4 '6-bit' characters into 3 8-bit binary bytes
@@ -352,7 +356,7 @@ bool base64Decode (const char* in, size_t inlen, char* out, size_t *outlen) {
                 return false; // output buffer exhausted.
         }
     }
-    return true;
+    return unbroken;
 }
 
 bool base64Decode(const char* in, size_t inlen, char** out, size_t* outlen) {
