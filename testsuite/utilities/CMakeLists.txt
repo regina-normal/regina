@@ -1,7 +1,7 @@
 # utilities
 
 # Files to compile
-SET ( FILES nbitmask nindexedarray )
+SET ( FILES base64 nbitmask nindexedarray )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

@@ -33,28 +33,34 @@
 /* end stub */
 
 /*! \file utilities/base64.h
- *  \brief Routines for base64 encoding and decoding taken from
- *  the \a gnulib library.
+ *  \brief Routines for base64 encoding and decoding taken and modified
+ *  from the \a Base64 project at base64.sourceforge.net.
  *
- *  The \a gnulib base64 copyright notice is as follows:
+ *  The \a Base64 copyright notice is as follows:
  *
- *  base64.h -- Encode binary data using printable characters.<br>
- *  Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.<br>
- *  Written by Simon Josefsson.
+ *  Copyright (c) 2001 Bob Trower, Trantor Standard Systems Inc.
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2, or (at your option)
- *  any later version.
+ *  Permission is hereby granted, free of charge, to any person
+ *  obtaining a copy of this software and associated
+ *  documentation files (the "Software"), to deal in the
+ *  Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute,
+ *  sublicense, and/or sell copies of the Software, and to
+ *  permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  The above copyright notice and this permission notice shall
+ *  be included in all copies or substantial portions of the
+ *  Software.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software Foundation,
- *  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+ *  KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+ *  WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ *  PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
+ *  OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ *  OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ *  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ *  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #ifndef __BASE64_H
@@ -81,10 +87,6 @@ namespace regina {
  *
  * @param bytes the number of raw input bytes.
  * @return the corresponding number of base64 printable output characters.
- *
- * @author This routine was taken and modified from the \a gnulib
- * library.  The original was written by Simon Josefsson and licensed
- * under the GPL version 2 or later.  See the base64.h notes for details.
  */
 inline REGINA_API size_t base64Length(size_t bytes) {
     return (((bytes + 2) / 3) * 4);
@@ -104,12 +106,11 @@ inline REGINA_API size_t base64Length(size_t bytes) {
  * @param ch any character.
  * @return \c true if the given character is one of the base64 printable
  * characters used in Regina, or \c false if it is not.
- *
- * @author This routine was taken and modified from the \a gnulib
- * library.  The original was written by Simon Josefsson and licensed
- * under the GPL version 2 or later.  See the base64.h notes for details.
  */
-REGINA_API bool isBase64(char ch);
+inline REGINA_API bool isBase64(char ch) {
+    return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') ||
+            (ch >= '0' && ch <= '9') || ch == '+' || ch == '/');
+}
 
 /**
  * Encodes the given sequence of raw bytes in base64, and writes the
@@ -134,9 +135,9 @@ REGINA_API bool isBase64(char ch);
  * characters will be written.
  * @param outlen the length of the output buffer.
  *
- * @author This routine was taken and modified from the \a gnulib
- * library.  The original was written by Simon Josefsson and licensed
- * under the GPL version 2 or later.  See the base64.h notes for details.
+ * @author This routine is based on the \a Base64 project at
+ * base64.sourceforge.net.  The original was written by Bob Trower, and is
+ * licensed under the MIT license.  See the base64.h notes for details.
  */
 REGINA_API void base64Encode(const char* in, size_t inlen, char* out,
     size_t outlen);
@@ -160,9 +161,9 @@ REGINA_API void base64Encode(const char* in, size_t inlen, char* out,
  * array of base64 characters.
  * @return the length of the output array, not counting the terminating null.
  *
- * @author This routine was taken and modified from the \a gnulib
- * library.  The original was written by Simon Josefsson and licensed
- * under the GPL version 2 or later.  See the base64.h notes for details.
+ * @author This routine is based on the \a Base64 project at
+ * base64.sourceforge.net.  The original was written by Bob Trower, and is
+ * licensed under the MIT license.  See the base64.h notes for details.
  */
 REGINA_API size_t base64Encode(const char* in, size_t inlen, char** out);
 
@@ -195,9 +196,9 @@ REGINA_API size_t base64Encode(const char* in, size_t inlen, char** out);
  * @return \c true if decoding was successful, or \c false if the output
  * buffer was exhausted or an unexpected input character was found.
  *
- * @author This routine was taken and modified from the \a gnulib
- * library.  The original was written by Simon Josefsson and licensed
- * under the GPL version 2 or later.  See the base64.h notes for details.
+ * @author This routine is based on the \a Base64 project at
+ * base64.sourceforge.net.  The original was written by Bob Trower, and is
+ * licensed under the MIT license.  See the base64.h notes for details.
  */
 REGINA_API bool base64Decode(const char* in, size_t inlen, char* out,
     size_t* outlen);
@@ -235,9 +236,9 @@ REGINA_API bool base64Decode(const char* in, size_t inlen, char* out,
  * @return \c true if decoding was successful, or \c false if an unexpected
  * input character was found or some other error occurred.
  *
- * @author This routine was taken and modified from the \a gnulib
- * library.  The original was written by Simon Josefsson and licensed
- * under the GPL version 2 or later.  See the base64.h notes for details.
+ * @author This routine is based on the \a Base64 project at
+ * base64.sourceforge.net.  The original was written by Bob Trower, and is
+ * licensed under the MIT license.  See the base64.h notes for details.
  */
 REGINA_API bool base64Decode(const char* in, size_t inlen, char** out,
     size_t* outlen);
