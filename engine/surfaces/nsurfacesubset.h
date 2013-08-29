@@ -44,7 +44,7 @@
 #include <vector>
 #include "regina-core.h"
 #include "shareableobject.h"
-#include "surfaces/nsurfaceset.h"
+#include "surfaces/nnormalsurfacelist.h"
 
 namespace regina {
 
@@ -56,25 +56,25 @@ class NSurfaceFilter;
  */
 
 /**
- * Represents a subset of a normal surface set.
+ * Represents a subset of a normal surface list.
  * This subset merely contains pointers to some of the normal surfaces
- * stored in the original set.
+ * stored in the original list.
  *
- * If the surfaces in the original set
+ * If the surfaces in the original list
  * should change, the surfaces in this subset will thus change also.  If
- * the original set is deleted, this subset will become invalid.
+ * the original list is deleted, this subset will become invalid.
  *
- * \pre As long as this subset is in use, the surface set upon which this
- * subset is based will never be deleted.
+ * \pre As long as this subset is in use, the surface list upon which this
+ * subset is based must never be deleted.
  */
-class REGINA_API NSurfaceSubset : public ShareableObject, public NSurfaceSet {
+class REGINA_API NSurfaceSubset : public ShareableObject {
     private:
         std::vector<NNormalSurface*> surfaces;
             /**< Contains the surfaces contained in this subset.
                  These will all be pointers to surfaces stored in
                  \a source. */
-        const NSurfaceSet& source;
-            /**< The surface set for which this is a subset. */
+        const NNormalSurfaceList& source;
+            /**< The surface list for which this is a subset. */
 
     public:
         /**
@@ -82,25 +82,96 @@ class REGINA_API NSurfaceSubset : public ShareableObject, public NSurfaceSet {
          * The surfaces included in the subset will be those from the
          * given set that are accepted by the given filter.
          *
-         * @param set the surface set for which this will be a subset.
-         * @param filter the filter that defines which surfaces in \a set
+         * @param list the surface list for which this will be a subset.
+         * @param filter the filter that defines which surfaces in \a list
          * will be included in this subset.
          */
-        NSurfaceSubset(const NSurfaceSet& set, const NSurfaceFilter& filter);
+        NSurfaceSubset(const NNormalSurfaceList& list,
+            const NSurfaceFilter& filter);
         /**
          * Destroys this normal surface subset.
          */
         virtual ~NSurfaceSubset();
 
-        virtual int getFlavour() const;
-        virtual bool allowsAlmostNormal() const;
-        virtual bool allowsSpun() const;
-        virtual bool allowsOriented() const;
-        virtual bool isEmbeddedOnly() const;
-        virtual NTriangulation* getTriangulation() const;
-        virtual unsigned long getNumberOfSurfaces() const;
-        virtual const NNormalSurface* getSurface(unsigned long index) const;
-        virtual ShareableObject* getShareableObject();
+        /**
+         * Returns the flavour of coordinate system being used by the
+         * surfaces stored in this set.
+         *
+         * @return the flavour of coordinate system used.
+         */
+        NormalCoords getFlavour() const;
+        /**
+         * Determines if the flavour of coordinate system being used
+         * allows for almost normal surfaces, that is, allows for
+         * octagonal discs.
+         *
+         * @return \c true if and only if almost normal surfaces are
+         * allowed.
+         */
+        bool allowsAlmostNormal() const;
+        /**
+         * Determines if the flavour of coordinate system being used
+         * allows for spun normal surfaces.
+         *
+         * @return \c true if and only if spun normal surface are
+         * supported.
+         */
+        bool allowsSpun() const;
+        /**
+         * Determines if the flavour of coordinate system being used
+         * allows for transversely oriented normal surfaces.
+         *
+         * @return \c true if and only if transverse orientations are
+         * supported.
+         */
+        bool allowsOriented() const;
+        /**
+         * Returns whether this set is known to contain only embedded normal
+         * surfaces.
+         *
+         * If it is possible that there are non-embedded surfaces in this
+         * set but it is not known whether any are actually present or
+         * not, this routine should return \c false.
+         *
+         * @return \c true if it is known that only embedded normal surfaces
+         * exist in this list, or \c false if immersed and/or singular normal
+         * surfaces might be present.
+         */
+        bool isEmbeddedOnly() const;
+        /**
+         * Returns the triangulation in which these normal surfaces live.
+         * 
+         * @return the triangulation in which these surfaces live.
+         */
+        NTriangulation* getTriangulation() const;
+
+        /**
+         * Returns the number of surfaces stored in this set.
+         *
+         * @return the number of surfaces.
+         */
+        unsigned long getNumberOfSurfaces() const;
+        /**
+         * Returns the surface at the requested index in this set.
+         *
+         * @param index the index of the requested surface in this set;
+         * this must be between 0 and getNumberOfSurfaces()-1 inclusive.
+         *
+         * @return the normal surface at the requested index in this set.
+         */
+        const NNormalSurface* getSurface(unsigned long index) const;
+
+        /**
+         * Writes the number of surfaces in this set followed by the
+         * details of each surface to the given output stream.  Output
+         * will be over many lines.
+         *
+         * \ifacespython Parameter \a out is not present and is assumed
+         * to be standard output.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeAllSurfaces(std::ostream& out) const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
@@ -113,7 +184,7 @@ class REGINA_API NSurfaceSubset : public ShareableObject, public NSurfaceSet {
 inline NSurfaceSubset::~NSurfaceSubset() {
 }
 
-inline int NSurfaceSubset::getFlavour() const {
+inline NormalCoords NSurfaceSubset::getFlavour() const {
     return source.getFlavour();
 }
 inline bool NSurfaceSubset::allowsAlmostNormal() const {
@@ -137,9 +208,6 @@ inline unsigned long NSurfaceSubset::getNumberOfSurfaces() const {
 inline const NNormalSurface* NSurfaceSubset::getSurface(unsigned long index)
         const {
     return surfaces[index];
-}
-inline ShareableObject* NSurfaceSubset::getShareableObject() {
-    return this;
 }
 
 inline void NSurfaceSubset::writeTextShort(std::ostream& out) const {

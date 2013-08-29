@@ -241,7 +241,7 @@ ReginaPrefSet::ReginaPrefSet() :
         pythonWordWrap(false),
         snapPeaClosed(false),
         surfacesCompatThreshold(100),
-        surfacesCreationCoords(regina::NNormalSurfaceList::STANDARD),
+        surfacesCreationCoords(regina::NS_STANDARD),
         surfacesInitialCompat(LocalCompat),
         surfacesInitialTab(Summary),
         surfacesSupportOriented(false),
@@ -486,8 +486,8 @@ void ReginaPrefSet::readInternal() {
     settings.beginGroup("Surfaces");
     surfacesCompatThreshold = settings.value(
         "CompatibilityThreshold", 100).toInt();
-    surfacesCreationCoords = settings.value(
-        "CreationCoordinates", regina::NNormalSurfaceList::STANDARD).toInt();
+    surfacesCreationCoords = static_cast<regina::NormalCoords>(settings.value(
+        "CreationCoordinates", regina::NS_STANDARD).toInt());
 
     QString str = settings.value("InitialCompat").toString();
     if (str == "Global")

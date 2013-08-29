@@ -63,7 +63,7 @@ namespace regina {
 
 template <typename LPConstraint>
 LPInitialTableaux<LPConstraint>::LPInitialTableaux(
-        NTriangulation* tri, int coords, bool enumeration) :
+        NTriangulation* tri, NormalCoords coords, bool enumeration) :
         tri_(tri), coords_(coords) {
     // Fetch the original (unadjusted) matrix of matching equations.
     eqns_ = regina::makeMatchingEquations(tri, coords);
@@ -95,7 +95,7 @@ template <typename LPConstraint>
 void LPInitialTableaux<LPConstraint>::reorder(bool) {
     // This is a "do-nothing" version of reorder().
     int i, j;
-    if (coords_ == NNormalSurfaceList::QUAD) {
+    if (coords_ == NS_QUAD) {
         // Leave the columns exactly as they were.
         for (i = 0; i < cols_; ++i)
             columnPerm_[i] = i;
@@ -161,14 +161,13 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
 
     // Fill the columnPerm_ array according to what kind of
     // problem we're trying to solve.
-    if (coords_ == NNormalSurfaceList::STANDARD && enumeration) {
+    if (coords_ == NS_STANDARD && enumeration) {
         // We're doing vertex enumeration in standard coordinates.
         //
         // Use exactly the same ordering of quadrilaterals that we
         // use in quadrilateral coordinates, and then just fill
         // in the triangles at the end.
-        LPInitialTableaux quad(tri_, NNormalSurfaceList::QUAD,
-            true /* enumeration */);
+        LPInitialTableaux quad(tri_, NS_QUAD, true /* enumeration */);
         for (i = 0; i < n; ++i) {
             k = quad.columnPerm()[3 * i] / 3;
             columnPerm_[3 * i] = 7 * k + 4;
@@ -215,7 +214,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
                 for (k = 0; k < n; ++k) {
                     if (touched[k])
                         continue;
-                    if (coords_ == NNormalSurfaceList::QUAD) {
+                    if (coords_ == NS_QUAD) {
                         // We're in quadrilateral coordinates.
                         if (eqns_->entry(j, 3 * k) != 0 ||
                                 eqns_->entry(j, 3 * k + 1) != 0 ||
@@ -245,7 +244,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
             for (k = 0; k < n; ++k) {
                 if (touched[k])
                     continue;
-                if (coords_ == NNormalSurfaceList::QUAD) {
+                if (coords_ == NS_QUAD) {
                     // We're in quadrilateral coordinates.
                     if ((eqns_->entry(bestRow, 3 * k) != 0 ||
                             eqns_->entry(bestRow, 3 * k + 1) != 0 ||
@@ -292,7 +291,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
             if (touched[k])
                 continue;
             touched[k] = true;
-            if (coords_ == NNormalSurfaceList::QUAD) {
+            if (coords_ == NS_QUAD) {
                 // We're in quadrilateral coordinates.
                 columnPerm_[3 * (n - nTouched) - 3] = 3 * k;
                 columnPerm_[3 * (n - nTouched) - 2] = 3 * k + 1;

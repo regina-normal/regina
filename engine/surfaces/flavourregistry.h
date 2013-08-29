@@ -50,8 +50,8 @@
  *        REGISTER_FLAVOUR(id_name, class, name, almost_normal, spun, oriented)
  *
  *    where:
- *        id_name = the constant int member of NNormalSurfaceList that
- *            represents this flavour.
+ *        id_name = the enum value from NormalCoords that represents this
+ *            flavour.
  *        class = the C++ subclass of NNormalSurfaceVector that uses this
  *            coordinate system.
  *        name = the string (English) name of the new flavour.
@@ -87,17 +87,17 @@
     #include "surfaces/nsoriented.h"
     #include "surfaces/nsorientedquad.h"
 #else
-    REGISTER_FLAVOUR(STANDARD, NNormalSurfaceVectorStandard,
+    REGISTER_FLAVOUR(NS_STANDARD, NNormalSurfaceVectorStandard,
         "Standard normal (tri-quad)", false, false, false)
-    REGISTER_FLAVOUR(AN_STANDARD, NNormalSurfaceVectorANStandard,
+    REGISTER_FLAVOUR(NS_AN_STANDARD, NNormalSurfaceVectorANStandard,
         "Standard almost normal (tri-quad-oct)", true, false, false)
-    REGISTER_FLAVOUR(QUAD, NNormalSurfaceVectorQuad,
+    REGISTER_FLAVOUR(NS_QUAD, NNormalSurfaceVectorQuad,
         "Quad normal", false, true, false)
-    REGISTER_FLAVOUR(AN_QUAD_OCT, NNormalSurfaceVectorQuadOct,
+    REGISTER_FLAVOUR(NS_AN_QUAD_OCT, NNormalSurfaceVectorQuadOct,
         "Quad-oct almost normal", true, true, false)
-    REGISTER_FLAVOUR(ORIENTED, NNormalSurfaceVectorOriented,
+    REGISTER_FLAVOUR(NS_ORIENTED, NNormalSurfaceVectorOriented,
         "Transversely oriented standard normal", false, false, true)
-    REGISTER_FLAVOUR(ORIENTED_QUAD, NNormalSurfaceVectorOrientedQuad,
+    REGISTER_FLAVOUR(NS_ORIENTED_QUAD, NNormalSurfaceVectorOrientedQuad,
         "Transversely oriented quad normal", false, true, true)
 #endif
 

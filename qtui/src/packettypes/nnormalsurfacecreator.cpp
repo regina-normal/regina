@@ -133,7 +133,7 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
         return 0;
     }
 
-    int coordSystem = coords->getCurrentSystem();
+    regina::NormalCoords coordSystem = coords->getCurrentSystem();
 
     int basisId = basis->currentIndex();
 

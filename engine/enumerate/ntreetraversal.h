@@ -148,13 +148,12 @@ class NTreeTraversal : public BanConstraint {
             /**< The original starting tableaux that holds the adjusted
                  matrix of matching equations, before the tree traversal
                  algorithm begins. */
-        const int coords_;
+        const NormalCoords coords_;
             /**< The coordinate system in which we are enumerating or
                  searching for normal or almost normal surfaces.
-                 This must be one of NNormalSurfaceList::QUAD or
-                 NNormalSurfaceList::STANDARD if we are only supporting
-                 normal surfaces, or one of NNormalSurfaceList::AN_QUAD_OCT
-                 or NNormalSurfaceList::AN_STANDARD if we are allowing
+                 This must be one of NS_QUAD or NS_STANDARD if we are only
+                 supporting normal surfaces, or one of NS_AN_QUAD_OCT
+                 or NS_AN_STANDARD if we are allowing
                  octagons in almost normal surfaces. */
         const int nTets_;
             /**< The number of tetrahedra in the underlying triangulation. */
@@ -404,9 +403,8 @@ class NTreeTraversal : public BanConstraint {
          * @param tri the triangulation in which we wish to search for
          * normal surfaces.
          * @param coords the coordinate system in which wish to search for
-         * normal surfaces.  This must be one of
-         * NNormalSurfaceList::QUAD, NNormalSurfaceList::STANDARD,
-         * NNormalSurfaceList::AN_QUAD_OCT, or NNormalSurfaceList::AN_STANDARD.
+         * normal surfaces.  This must be one of NS_QUAD, NS_STANDARD,
+         * NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          * @param branchesPerQuad the maximum number of branches we
          * spawn in the search tree for each quadrilateral type
          * (e.g., 4 for a vanilla normal surface tree traversal algorithm).
@@ -418,7 +416,7 @@ class NTreeTraversal : public BanConstraint {
          * should optimise the tableaux for an existence test (such as
          * searching for a non-trivial normal disc or sphere).
          */
-        NTreeTraversal(NTriangulation* tri, int coords,
+        NTreeTraversal(NTriangulation* tri, NormalCoords coords,
                 int branchesPerQuad, int branchesPerTri, bool enumeration);
 
         /**
@@ -456,8 +454,8 @@ class NTreeTraversal : public BanConstraint {
          *
          * \pre We are working in standard normal or almost normal
          * coordinates.  That is, the coordinate system passed to the
-         * NTreeTraversal constructor was one of NNormalSurfaceList::STANDARD
-         * or NNormalSurfaceList::AN_STANDARD.
+         * NTreeTraversal constructor was one of NS_STANDARD
+         * or NS_AN_STANDARD.
          *
          * \pre The argument \a startFrom is at least \a nTets_ (i.e.,
          * it is at least as large as the index of the first triangle type).
@@ -512,10 +510,9 @@ class NTreeTraversal : public BanConstraint {
  * use the class NTreeSingleSoln instead, which is optimised for this purpose.
  *
  * This tree traversal can only enumerate surfaces in quadrilateral normal
- * coordinates (NNormalSurfaceList::QUAD), standard normal coordinates
- * (NNormalSurfaceList::STANDARD), quadrilateral-octagon almost normal
- * coordinates (NNormalSurfaceList::AN_QUAD_OCT), or standard almost
- * normal coordinates (NNormalSurfaceList::AN_STANDARD).  For almost
+ * coordinates (NS_QUAD), standard normal coordinates (NS_STANDARD),
+ * quadrilateral-octagon almost normal coordinates (NS_AN_QUAD_OCT), or
+ * standard almost normal coordinates (NS_AN_STANDARD).  For almost
  * normal surfaces, we allow any number of octagons (including zero),
  * but we only allow at most one octagon \e type in the entire triangulation.
  * No coordinate systems other than these are supported.
@@ -617,11 +614,10 @@ class NTreeEnumeration : public NTreeTraversal<LPConstraint, BanConstraint> {
          * @param tri the triangulation in which we wish to enumerate
          * vertex surfaces.
          * @param coords the coordinate system in which wish to enumerate
-         * vertex surfaces.  This must be one of NNormalSurfaceList::QUAD,
-         * NNormalSurfaceList::STANDARD, NNormalSurfaceList::AN_QUAD_OCT, or
-         * NNormalSurfaceList::AN_STANDARD.
+         * vertex surfaces.  This must be one of NS_QUAD, NS_STANDARD,
+         * NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
-        NTreeEnumeration(NTriangulation* tri, int coords);
+        NTreeEnumeration(NTriangulation* tri, NormalCoords coords);
 
         /**
          * Returns the total number of vertex normal or almost normal surfaces
@@ -823,10 +819,9 @@ class NTreeEnumeration : public NTreeTraversal<LPConstraint, BanConstraint> {
  * NTreeEnumeration instead.
  *
  * This tree traversal can only enumerate surfaces in quadrilateral normal
- * coordinates (NNormalSurfaceList::QUAD), standard normal coordinates
- * (NNormalSurfaceList::STANDARD), quadrilateral-octagon almost normal
- * coordinates (NNormalSurfaceList::AN_QUAD_OCT), or standard almost
- * normal coordinates (NNormalSurfaceList::AN_STANDARD).  For almost
+ * coordinates (NS_QUAD), standard normal coordinates (NS_STANDARD),
+ * quadrilateral-octagon almost normal coordinates (NS_AN_QUAD_OCT), or
+ * standard almost normal coordinates (NS_AN_STANDARD).  For almost
  * normal surfaces, we allow any number of octagons (including zero),
  * but we only allow at most one octagon \e type in the entire triangulation.
  * No coordinate systems other than these are supported.
@@ -906,11 +901,10 @@ class NTreeSingleSoln : public NTreeTraversal<LPConstraint, BanConstraint> {
          * @param tri the triangulation in which we wish to search for a
          * non-trivial surface.
          * @param coords the normal or almost normal coordinate system in
-         * which to work.  This must be one of NNormalSurfaceList::QUAD,
-         * NNormalSurfaceList::STANDARD, NNormalSurfaceList::AN_QUAD_OCT, or
-         * NNormalSurfaceList::AN_STANDARD.
+         * which to work.  This must be one of NS_QUAD, NS_STANDARD,
+         * NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
-        NTreeSingleSoln(NTriangulation* tri, int coords);
+        NTreeSingleSoln(NTriangulation* tri, NormalCoords coords);
 
         /**
          * Runs the tree traversal algorithm until it finds some non-trivial
@@ -984,10 +978,9 @@ inline int NTreeTraversal<LPConstraint, BanConstraint>::
 
 template <typename LPConstraint, typename BanConstraint>
 inline NTreeEnumeration<LPConstraint, BanConstraint>::NTreeEnumeration(
-        NTriangulation* tri, int coords) :
+        NTriangulation* tri, NormalCoords coords) :
         NTreeTraversal<LPConstraint, BanConstraint>(tri, coords,
-            (coords == NNormalSurfaceList::AN_QUAD_OCT ||
-             coords == NNormalSurfaceList::AN_STANDARD ?
+            (coords == NS_AN_QUAD_OCT || coords == NS_AN_STANDARD ?
              7 : 4) /* branches per quad */,
             2 /* branches per triangle */,
             true /* enumeration */),
@@ -1030,10 +1023,9 @@ inline bool NTreeEnumeration<LPConstraint, BanConstraint>::writeSurface(
 
 template <typename LPConstraint, typename BanConstraint>
 inline NTreeSingleSoln<LPConstraint, BanConstraint>::NTreeSingleSoln(
-        NTriangulation* tri, int coords) :
+        NTriangulation* tri, NormalCoords coords) :
         NTreeTraversal<LPConstraint, BanConstraint>(tri, coords,
-            (coords == NNormalSurfaceList::AN_QUAD_OCT ||
-             coords == NNormalSurfaceList::AN_STANDARD ?
+            (coords == NS_AN_QUAD_OCT || coords == NS_AN_STANDARD ?
              6 : 3) /* branches per quad */,
             2 /* branches per triangle */,
             false /* enumeration */),

@@ -82,26 +82,23 @@ NNormalSurface* NTreeTraversal<LPConstraint, BanConstraint>::buildSurface()
     // Note that the vector constructors automatically set all
     // elements to zero, as required by LPData::extractSolution().
     NNormalSurfaceVector* v;
-    if (coords_ == NNormalSurfaceList::QUAD ||
-            coords_ == NNormalSurfaceList::AN_QUAD_OCT)
+    if (coords_ == NS_QUAD || coords_ == NS_AN_QUAD_OCT)
         v = new NNormalSurfaceVectorQuad(3 * nTets_);
-    else if (coords_ == NNormalSurfaceList::STANDARD ||
-            coords_ == NNormalSurfaceList::AN_STANDARD)
+    else if (coords_ == NS_STANDARD || coords_ == NS_AN_STANDARD)
         v = new NNormalSurfaceVectorStandard(7 * nTets_);
     else
         return 0;
 
     lpSlot_[nTypes_]->extractSolution(*v, type_);
 
-    if (coords_ == NNormalSurfaceList::QUAD ||
-            coords_ == NNormalSurfaceList::STANDARD)
+    if (coords_ == NS_QUAD || coords_ == NS_STANDARD)
         return new NNormalSurface(origTableaux_.tri(), v);
 
     // We have an almost normal surface: restore the octagon
     // coordinates.
     NNormalSurfaceVector* an;
     unsigned i, j;
-    if (coords_ == NNormalSurfaceList::AN_QUAD_OCT) {
+    if (coords_ == NS_AN_QUAD_OCT) {
         an = new NNormalSurfaceVectorQuadOct(6 * nTets_);
         for (i = 0; i < nTets_; ++i)
             for (j = 0; j < 3; ++j)
@@ -165,32 +162,29 @@ bool NTreeTraversal<LPConstraint, BanConstraint>::verify(
 
 template <typename LPConstraint, typename BanConstraint>
 NTreeTraversal<LPConstraint, BanConstraint>::NTreeTraversal(
-        NTriangulation* tri, int coords,
+        NTriangulation* tri, NormalCoords coords,
         int branchesPerQuad, int branchesPerTri, bool enumeration) :
         BanConstraint(tri, coords),
         origTableaux_(tri,
-            (coords == NNormalSurfaceList::QUAD ||
-             coords == NNormalSurfaceList::AN_QUAD_OCT ?
-             NNormalSurfaceList::QUAD : NNormalSurfaceList::STANDARD),
+            (coords == NS_QUAD || coords == NS_AN_QUAD_OCT ?
+             NS_QUAD : NS_STANDARD),
              enumeration),
         coords_(coords),
         nTets_(tri->getNumberOfTetrahedra()),
-        nTypes_(coords == NNormalSurfaceList::QUAD ||
-            coords == NNormalSurfaceList::AN_QUAD_OCT ?
+        nTypes_(coords == NS_QUAD || coords == NS_AN_QUAD_OCT ?
             nTets_ : 5 * nTets_),
         /* Each time we branch, one LP can be solved in-place:
            therefore we use branchesPerQuad-1 and branchesPerTri-1.
            The final +1 is for the root node. */
-        nTableaux_(coords == NNormalSurfaceList::QUAD ||
-            coords == NNormalSurfaceList::AN_QUAD_OCT ?
+        nTableaux_(coords == NS_QUAD || coords == NS_AN_QUAD_OCT ?
             (branchesPerQuad - 1) * nTets_ + 1 :
             (branchesPerQuad - 1) * nTets_ +
                 (branchesPerTri - 1) * nTets_ * 4 + 1),
         type_(new char[nTypes_ + 1]),
         typeOrder_(new int[nTypes_]),
         level_(0),
-        octLevel_(coords == NNormalSurfaceList::AN_STANDARD ||
-            coords == NNormalSurfaceList::AN_QUAD_OCT ? -1 : nTypes_),
+        octLevel_(coords == NS_AN_STANDARD ||
+            coords == NS_AN_QUAD_OCT ? -1 : nTypes_),
         lp_(new LPData<LPConstraint>[nTableaux_]),
         lpSlot_(new LPData<LPConstraint>*[nTypes_ + 1]),
         nextSlot_(new LPData<LPConstraint>*[nTypes_ + 1]),

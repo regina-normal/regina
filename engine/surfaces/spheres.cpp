@@ -50,15 +50,15 @@ NNormalSurface* NNormalSurface::findNonTrivialSphere(NTriangulation* tri) {
      * for an explanation of why the following algorithm is correct.
      */
 
-    int coords;
+    NormalCoords coords;
     if ((! tri->hasBoundaryFaces()) && tri->isValid() &&
             (! tri->hasNegativeIdealBoundaryComponents())) {
         // We can guarantee that at least one normal sphere will show up
         // as a vertex surface in quad space, if any exist.
-        coords = NNormalSurfaceList::QUAD;
+        coords = NS_QUAD;
     } else {
         // We have to resort to standard tri-quad coordinates.
-        coords = NNormalSurfaceList::STANDARD;
+        coords = NS_STANDARD;
     }
 
     // Construct the vertex normal surfaces and look for any spheres
@@ -98,7 +98,7 @@ NNormalSurface* NNormalSurface::findNonTrivialSphere(NTriangulation* tri) {
 NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
         NTriangulation* tri, bool quadOct) {
     NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(tri, quadOct ?
-        NNormalSurfaceList::AN_QUAD_OCT : NNormalSurfaceList::AN_STANDARD);
+        NS_AN_QUAD_OCT : NS_AN_STANDARD);
     unsigned long nSurfaces = surfaces->getNumberOfSurfaces();
     unsigned long nTets = tri->getNumberOfTetrahedra();
 

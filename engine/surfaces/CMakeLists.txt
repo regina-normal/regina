@@ -1,7 +1,7 @@
 # surfaces
 
 # Files to compile
-SET ( FILES components crushandcut filters flavours links ndisc ndisctype nnormalsurface nnormalsurfacelist nprism nsanstandard nsoriented nsorientedquad nsquad nsquadoct nsstandard nsurfacefilter nsurfaceset nsurfacesubset nxmlfilterreader nxmlfilterreaders nxmlsurfacereader orientable quadtostd sfcombination sfproperties spheres stdtoquad )
+SET ( FILES components crushandcut filters flavours links ndisc ndisctype nnormalsurface nnormalsurfacelist nprism nsanstandard nsoriented nsorientedquad nsquad nsquadoct nsstandard nsurfacefilter nsurfacesubset nxmlfilterreader nxmlfilterreaders nxmlsurfacereader orientable quadtostd sfcombination sfproperties spheres stdtoquad )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
@@ -12,5 +12,5 @@ ENDFOREACH(SOURCE_FILE)
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
-  INSTALL(FILES filterregistry.h flavourregistry.h ndisc.h ndisctype.h nnormalsurface.h nnormalsurfacelist.h normalspec.tcc nprism.h nsanstandard.h nsmirrored.h nsoriented.h nsorientedquad.h nsquad.h nsquadoct.h nsstandard.h nsurfacefilter.h nsurfaceset.h nsurfacesubset.h nxmlfilterreader.h nxmlsurfacereader.h sfcombination.h sfproperties.h DESTINATION ${INCLUDEDIR}/surfaces COMPONENT Development)
+  INSTALL(FILES filterregistry.h flavourregistry.h ndisc.h ndisctype.h nnormalsurface.h nnormalsurfacelist.h normalcoords.h normalspec.tcc nprism.h nsanstandard.h nsmirrored.h nsoriented.h nsorientedquad.h nsquad.h nsquadoct.h nsstandard.h nsurfacefilter.h nsurfacesubset.h nxmlfilterreader.h nxmlsurfacereader.h sfcombination.h sfproperties.h DESTINATION ${INCLUDEDIR}/surfaces COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

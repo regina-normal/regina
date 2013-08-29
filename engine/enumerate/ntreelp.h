@@ -43,6 +43,7 @@
 
 #include "maths/ninteger.h"
 #include "maths/nmatrixint.h"
+#include "surfaces/normalcoords.h"
 #include <algorithm>
 
 /**
@@ -389,9 +390,8 @@ class LPMatrix {
  * other matrix).
  *
  * This class can only work in quadrilateral normal coordinates
- * (NNormalSurfaceList::QUAD) or standard normal coordinates
- * (NNormalSurfaceList::STANDARD).  No other coordinate systems are
- * supported.
+ * (NS_QUAD) or standard normal coordinates (NS_STANDARD).
+ * No other coordinate systems are supported.
  *
  * \warning The implementation of this class relies on the fact that the
  * sum of <i>absolute values</i> of all coefficients in each column is
@@ -458,10 +458,9 @@ class LPInitialTableaux {
     private:
         NTriangulation* tri_;
             /**< The underlying triangulation. */
-        int coords_;
+        NormalCoords coords_;
             /**< The coordinate system used for the matrix of matching
-                 equations; this must be one of NNormalSurfaceList::QUAD
-                 or NNormalSurfaceList::STANDARD. */
+                 equations; this must be one of NS_QUAD or NS_STANDARD. */
         NMatrixInt* eqns_;
             /**< The adjusted matching equation matrix, in dense form.
                  The precise adjustments that we make are described in the
@@ -499,14 +498,14 @@ class LPInitialTableaux {
          *
          * @param tri the underlying 3-manifold triangulation.
          * @param coords the coordinate system to use for the matrix of
-         * matching equations; this must be one of NNormalSurfaceList::QUAD
-         * or NNormalSurfaceList::STANDARD.
+         * matching equations; this must be one of NS_QUAD or NS_STANDARD.
          * @param enumeration \c true if we should optimise the tableaux
          * for a full enumeration of vertex surfaces, or \c false if we
          * should optimise the tableaux for an existence test (such as
          * searching for a non-trivial normal disc or sphere).
          */
-        LPInitialTableaux(NTriangulation* tri, int coords, bool enumeration);
+        LPInitialTableaux(NTriangulation* tri,
+            NormalCoords coords, bool enumeration);
 
         /**
          * Destroys this matrix.

@@ -51,7 +51,7 @@ void NXMLNormalSurfaceReader::startElement(const std::string&,
 }
 
 #define REGISTER_FLAVOUR(id_name, class, n, a, s, o) \
-    if (flavour == NNormalSurfaceList::id_name) \
+    if (flavour == id_name) \
         vec = new class(vecLen); \
     else
 
@@ -68,7 +68,7 @@ void NXMLNormalSurfaceReader::initialChars(const std::string& chars) {
     NNormalSurfaceVector* vec;
     #include "surfaces/flavourregistry.h"
     // ... and legacy cases:
-    if (flavour == NNormalSurfaceList::AN_LEGACY)
+    if (flavour == NS_AN_LEGACY)
         vec = new NNormalSurfaceVectorANStandard(vecLen);
     else
         return;
@@ -144,7 +144,7 @@ NXMLElementReader* NXMLNormalSurfaceListReader::startContentSubElement(
                 if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane; create the empty list.
                     list = new NNormalSurfaceList();
-                    list->flavour = flavour;
+                    list->flavour = static_cast<NormalCoords>(flavour);
                     list->embedded = embedded;
                 }
         }

@@ -65,23 +65,22 @@ struct REGINA_API NNormalSurfaceList::NormalSpec {
     typedef NNormalSurfaceVectorQuad ReducedVector;
 
     /**
-     * Returns the flavour constant in NNormalSurfaceList corresponding to
-     * standard form.
+     * Returns the coordinate system constant corresponding to standard form.
      *
-     * This has been made a routine (not a constant) to avoid nasty
-     * initialisation problems (since the "value" we seek is in fact a static
-     * constant in another class that also needs initialising).  The
-     * real solution is to use an enum in NNormalSurfaceList.. some day.
+     * This has been made a routine (not a constant) to ensure the
+     * correct return type.  Perhaps this can be changed to an enum some day...
      */
-    inline static int standardFlavour() {
-        return NNormalSurfaceList::STANDARD;
+    inline static NormalCoords standardFlavour() {
+        return NS_STANDARD;
     }
     /**
-     * Returns the flavour constant in NNormalSurfaceList corresponding to
-     * reduced form.  See above for why this is a routine and not a constant.
+     * Returns the coordinate system constant corresponding to reduced form.
+     *
+     * This has been made a routine (not a constant) to ensure the
+     * correct return type.  Perhaps this can be changed to an enum some day...
      */
-    inline static int reducedFlavour() {
-        return NNormalSurfaceList::QUAD;
+    inline static NormalCoords reducedFlavour() {
+        return NS_QUAD;
     }
 
     /**
@@ -149,24 +148,23 @@ struct REGINA_API NNormalSurfaceList::AlmostNormalSpec {
     typedef NNormalSurfaceVectorQuadOct ReducedVector;
 
     /**
-     * Returns the flavour constant in NNormalSurfaceList corresponding to
-     * standard form.
+     * Returns the coordinate system constant corresponding to standard form.
      *
-     * This has been made a routine (not a constant) to avoid nasty
-     * initialisation problems (since the "value" we seek is in fact a static
-     * constant in another class that also needs initialising).  The
-     * real solution is to use an enum in NNormalSurfaceList.. some day.
+     * This has been made a routine (not a constant) to ensure the
+     * correct return type.  Perhaps this can be changed to an enum some day...
      */
-    inline static int standardFlavour() {
-        return NNormalSurfaceList::AN_STANDARD;
+    inline static NormalCoords standardFlavour() {
+        return NS_AN_STANDARD;
     }
 
     /**
-     * Returns the flavour constant in NNormalSurfaceList corresponding to
-     * reduced form.
+     * Returns the coordinate system constant corresponding to reduced form.
+     *
+     * This has been made a routine (not a constant) to ensure the
+     * correct return type.  Perhaps this can be changed to an enum some day...
      */
-    inline static int reducedFlavour() {
-        return NNormalSurfaceList::AN_QUAD_OCT;
+    inline static NormalCoords reducedFlavour() {
+        return NS_AN_QUAD_OCT;
     }
 
     /**
