@@ -197,6 +197,8 @@ Version 4.94  [ (under development) ]
               traversal enumeration code; see NTreeTraversal for details.
         Class NVertex:
             - New routine buildLink() to triangulate the vertex link.
+        Class ZBuffer:
+            - Updated xsgetn() to support n larger than UINT_MAX.
         Routine base64Decode(), base64Encode():
             - Replace the old GPL-licensed implementation with a different
               MIT-licensed implementation.  Functionality is the same.

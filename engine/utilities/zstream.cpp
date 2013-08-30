@@ -32,6 +32,7 @@
 
 /* end stub */
 
+#include <climits>
 #include <cstdio>
 #include "utilities/zstream.h"
 
@@ -40,15 +41,32 @@ namespace regina {
 const int ZBuffer::zEOF = EOF;
 
 std::streamsize ZBuffer::xsgetn(char* s, std::streamsize n) {
-    if (next == -1) {
-        int ans = gzread(file, s, n);
-        return (ans == -1 ? zEOF : ans);
-    } else {
+    std::streamsize read = 0;
+    
+    if (next != -1) {
         *s = static_cast<char>(next);
-        int ans = gzread(file, s + 1, n - 1);
         next = -1;
-        return (ans == -1 ? zEOF : ans + 1);
+
+        --n;
+        ++s;
+        read = 1;
     }
+    
+    int ret;
+    while (n > 0) {
+        // Be careful: std::streamsize could be a larger integer type than
+        // zlib's unsigned int.
+        ret = gzread(file, s,
+            (n > UINT_MAX ? UINT_MAX : static_cast<unsigned>(n)));
+        if (ret == -1)
+            return zEOF;
+
+        n -= ret;
+        s += ret;
+        read += ret;
+    }
+    
+    return read;
 }
 
 int ZBuffer::close() {
