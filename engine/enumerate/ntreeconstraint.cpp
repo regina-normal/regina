@@ -124,8 +124,7 @@ LPConstraintNonSpun::addRows(LPInitialTableaux<LPConstraintNonSpun>::Col* col,
 
 BanConstraintBase::BanConstraintBase(NTriangulation* tri, int coords) :
         tri_(tri), coords_(coords) {
-    unsigned nCols = (coords == NNormalSurfaceList::QUAD ||
-        coords == NNormalSurfaceList::AN_QUAD_OCT ?
+    unsigned nCols = (coords == NS_QUAD || coords == NS_AN_QUAD_OCT ?
         3 * tri->getNumberOfTetrahedra() :
         7 * tri->getNumberOfTetrahedra());
     banned_ = new bool[nCols];
@@ -138,8 +137,7 @@ void BanBoundary::init(const int* columnPerm) {
     unsigned n = tri_->getNumberOfTetrahedra();
     unsigned tet, type, i, k;
 
-    bool quadOnly = (coords_ == NNormalSurfaceList::QUAD ||
-        coords_ == NNormalSurfaceList::AN_QUAD_OCT);
+    bool quadOnly = (coords_ == NS_QUAD || coords_ == NS_AN_QUAD_OCT);
 
     // The implementation here is a little inefficient (we repeat tests
     // three or four times over), but this routine is only called at
@@ -204,8 +202,7 @@ void BanTorusBoundary::init(const int* columnPerm) {
         }
     }
 
-    bool quadOnly = (coords_ == NNormalSurfaceList::QUAD ||
-        coords_ == NNormalSurfaceList::AN_QUAD_OCT);
+    bool quadOnly = (coords_ == NS_QUAD || coords_ == NS_AN_QUAD_OCT);
 
     // The implementation here is a little inefficient (we repeat tests
     // three or four times over), but this routine is only called at

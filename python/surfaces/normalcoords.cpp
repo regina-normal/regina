@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,19 +32,34 @@
 
 /* end stub */
 
-#include "surfaces/nsurfaceset.h"
-#include "surfaces/nnormalsurface.h"
+#include <boost/python.hpp>
+#include "surfaces/normalcoords.h"
 
-namespace regina {
+using namespace boost::python;
 
-void NSurfaceSet::writeAllSurfaces(std::ostream& out) const {
-    unsigned long n = getNumberOfSurfaces();
-    out << "Number of surfaces is " << n << '\n';
-    for (unsigned long i = 0; i < n; i++) {
-        getSurface(i)->writeTextShort(out);
-        out << '\n';
-    }
+void addNormalCoords() {
+    scope global;
+
+    enum_<regina::NormalCoords>("NormalCoords")
+        .value("NS_STANDARD", regina::NS_STANDARD)
+        .value("NS_AN_STANDARD", regina::NS_AN_STANDARD)
+        .value("NS_QUAD", regina::NS_QUAD)
+        .value("NS_AN_QUAD_OCT", regina::NS_AN_QUAD_OCT)
+        .value("NS_EDGE_WEIGHT", regina::NS_EDGE_WEIGHT)
+        .value("NS_FACE_ARCS", regina::NS_FACE_ARCS)
+        .value("NS_AN_LEGACY", regina::NS_AN_LEGACY)
+        .value("NS_ORIENTED", regina::NS_ORIENTED)
+        .value("NS_ORIENTED_QUAD", regina::NS_ORIENTED_QUAD)
+        ;
+
+    global.attr("NS_STANDARD") = regina::NS_STANDARD;
+    global.attr("NS_AN_STANDARD") = regina::NS_AN_STANDARD;
+    global.attr("NS_QUAD") = regina::NS_QUAD;
+    global.attr("NS_AN_QUAD_OCT") = regina::NS_AN_QUAD_OCT;
+    global.attr("NS_EDGE_WEIGHT") = regina::NS_EDGE_WEIGHT;
+    global.attr("NS_FACE_ARCS") = regina::NS_FACE_ARCS;
+    global.attr("NS_AN_LEGACY") = regina::NS_AN_LEGACY;
+    global.attr("NS_ORIENTED") = regina::NS_ORIENTED;
+    global.attr("NS_ORIENTED_QUAD") = regina::NS_ORIENTED_QUAD;
 }
-
-} // namespace regina
 

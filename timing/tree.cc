@@ -126,10 +126,10 @@ int main(int argc, char* argv[]) {
 
             std::cout << "PROCESSING: " << argv[i] << std::endl;
             if (mode == 's' || mode == 'q' || mode == 'a' || mode == 'o') {
-                int coords = (mode == 's' ? NNormalSurfaceList::STANDARD :
-                    mode == 'q' ? NNormalSurfaceList::QUAD :
-                    mode == 'a' ? NNormalSurfaceList::AN_STANDARD :
-                    NNormalSurfaceList::AN_QUAD_OCT);
+                NormalCoords coords = (mode == 's' ? NS_STANDARD :
+                    mode == 'q' ? NS_QUAD :
+                    mode == 'a' ? NS_AN_STANDARD :
+                    NS_AN_QUAD_OCT);
                 NTreeEnumeration<> search(t, coords);
                 if (search.constraintsBroken())
                     std::cerr << "ERROR: Constraints broken." << std::endl;
@@ -148,7 +148,7 @@ int main(int argc, char* argv[]) {
                 }
             } else {
                 NTreeSingleSoln<LPConstraintEuler>
-                    search(t, mode == '3');
+                    search(t, mode == '3' ? NS_AN_STANDARD : NS_STANDARD);
                 if (search.constraintsBroken())
                     std::cerr << "ERROR: Constraints broken." << std::endl;
                 else if (search.find()) {

@@ -44,19 +44,19 @@
 
 using regina::NNormalSurfaceList;
 
-void CoordinateChooser::insertSystem(int coordSystem) {
+void CoordinateChooser::insertSystem(regina::NormalCoords coordSystem) {
     addItem(tr(Coordinates::name(coordSystem)));
     systems.push_back(coordSystem);
 }
 
 void CoordinateChooser::insertAllCreators() {
-    insertSystem(NNormalSurfaceList::STANDARD);
-    insertSystem(NNormalSurfaceList::AN_STANDARD);
-    insertSystem(NNormalSurfaceList::QUAD);
-    insertSystem(NNormalSurfaceList::AN_QUAD_OCT);
+    insertSystem(regina::NS_STANDARD);
+    insertSystem(regina::NS_AN_STANDARD);
+    insertSystem(regina::NS_QUAD);
+    insertSystem(regina::NS_AN_QUAD_OCT);
     if (ReginaPrefSet::global().surfacesSupportOriented) {
-        insertSystem(NNormalSurfaceList::ORIENTED);
-        insertSystem(NNormalSurfaceList::ORIENTED_QUAD);
+        insertSystem(regina::NS_ORIENTED);
+        insertSystem(regina::NS_ORIENTED_QUAD);
     }
 }
 
@@ -65,28 +65,28 @@ void CoordinateChooser::insertAllViewers(regina::NNormalSurfaceList* surfaces) {
         // For lists created with Regina 4.5.1 or earlier, we have
         // already taken out surfaces with multiple octagons.  Make this
         // clear to the user.
-        if (surfaces->getFlavour() == NNormalSurfaceList::AN_LEGACY)
-            insertSystem(NNormalSurfaceList::AN_LEGACY);
+        if (surfaces->getFlavour() == regina::NS_AN_LEGACY)
+            insertSystem(regina::NS_AN_LEGACY);
         else {
-            insertSystem(NNormalSurfaceList::AN_STANDARD);
-            insertSystem(NNormalSurfaceList::AN_QUAD_OCT);
+            insertSystem(regina::NS_AN_STANDARD);
+            insertSystem(regina::NS_AN_QUAD_OCT);
         }
     } else {
-        insertSystem(NNormalSurfaceList::STANDARD);
-        insertSystem(NNormalSurfaceList::QUAD);
+        insertSystem(regina::NS_STANDARD);
+        insertSystem(regina::NS_QUAD);
 
         if (surfaces->allowsOriented()) {
-            insertSystem(NNormalSurfaceList::ORIENTED);
-            insertSystem(NNormalSurfaceList::ORIENTED_QUAD);
+            insertSystem(regina::NS_ORIENTED);
+            insertSystem(regina::NS_ORIENTED_QUAD);
         }
     }
 
-    insertSystem(NNormalSurfaceList::EDGE_WEIGHT);
-    insertSystem(NNormalSurfaceList::FACE_ARCS);
+    insertSystem(regina::NS_EDGE_WEIGHT);
+    insertSystem(regina::NS_FACE_ARCS);
 }
 
-void CoordinateChooser::setCurrentSystem(int newSystem) {
-    std::vector<int>::const_iterator it =
+void CoordinateChooser::setCurrentSystem(regina::NormalCoords newSystem) {
+    std::vector<regina::NormalCoords>::const_iterator it =
         std::find(systems.begin(), systems.end(), newSystem);
 
     if (it != systems.end())

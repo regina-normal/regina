@@ -32,11 +32,11 @@
 
 /* end stub */
 
-void addNSurfaceSet();
 void addNDisc();
 void addNDiscType();
 void addNNormalSurface();
 void addNNormalSurfaceList();
+void addNormalCoords();
 void addNPrism();
 void addNSurfaceFilter();
 void addNSurfaceFilterCombination();
@@ -44,7 +44,7 @@ void addNSurfaceFilterProperties();
 void addNSurfaceSubset();
 
 void addSurfaces() {
-    addNSurfaceSet();
+    addNormalCoords();
     addNDisc();
     addNDiscType();
     addNNormalSurface();

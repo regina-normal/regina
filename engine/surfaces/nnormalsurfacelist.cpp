@@ -58,55 +58,57 @@ namespace {
         "Legacy standard almost normal (pruned tri-quad-oct)";
 }
 
+void NNormalSurfaceList::writeAllSurfaces(std::ostream& out) const {
+    unsigned long n = getNumberOfSurfaces();
+    out << "Number of surfaces is " << n << '\n';
+    for (unsigned long i = 0; i < n; i++) {
+        getSurface(i)->writeTextShort(out);
+        out << '\n';
+    }
+}
+
 #define __FLAVOUR_REGISTRY_BODY
 
-const int NNormalSurfaceList::STANDARD = 0;
-const int NNormalSurfaceList::QUAD = 1;
-const int NNormalSurfaceList::AN_LEGACY = 100;
-const int NNormalSurfaceList::AN_QUAD_OCT = 101;
-const int NNormalSurfaceList::AN_STANDARD = 102;
-const int NNormalSurfaceList::EDGE_WEIGHT = 200;
-const int NNormalSurfaceList::FACE_ARCS = 201;
-const int NNormalSurfaceList::ORIENTED = 300;
-const int NNormalSurfaceList::ORIENTED_QUAD = 301;
-
 #define REGISTER_FLAVOUR(id_name, class, n, a, s, o) \
-    case NNormalSurfaceList::id_name: \
+    case id_name: \
         return class::makeZeroVector(triangulation);
 
 NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
-        int flavour) {
+        NormalCoords flavour) {
     switch(flavour) {
         // Import cases from the flavour registry.
         #include "surfaces/flavourregistry.h"
+        default: break;
     }
     return 0;
 }
 
 #undef REGISTER_FLAVOUR
 #define REGISTER_FLAVOUR(id_name, class, n, a, s, o) \
-    case NNormalSurfaceList::id_name: \
+    case id_name: \
         return class::makeMatchingEquations(triangulation);
 
 NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
-        int flavour) {
+        NormalCoords flavour) {
     switch(flavour) {
         // Import cases from the flavour registry.
         #include "surfaces/flavourregistry.h"
+        default: break;
     }
     return 0;
 }
 
 #undef REGISTER_FLAVOUR
 #define REGISTER_FLAVOUR(id_name, class, n, a, s, o) \
-    case NNormalSurfaceList::id_name: \
+    case id_name: \
         return class::makeEmbeddedConstraints(triangulation);
 
 NEnumConstraintList* makeEmbeddedConstraints(NTriangulation* triangulation,
-        int flavour) {
+        NormalCoords flavour) {
     switch(flavour) {
         // Import cases from the flavour registry.
         #include "surfaces/flavourregistry.h"
+        default: break;
     }
     return 0;
 }
@@ -125,11 +127,11 @@ void* NNormalSurfaceList::VertexEnumerator::run(void*) {
     }
 
     // Choose the most appropriate algorithm for the job.
-    if (list->flavour == NNormalSurfaceList::STANDARD && list->embedded &&
+    if (list->flavour == NS_STANDARD && list->embedded &&
             triang->isValid() && ! triang->isIdeal()) {
         // Enumerate solutions in standard space by going via quad space.
         list->enumerateStandardViaReduced<NormalSpec>(triang, progress);
-    } else if (list->flavour == NNormalSurfaceList::AN_STANDARD &&
+    } else if (list->flavour == NS_AN_STANDARD &&
             list->embedded && triang->isValid() && ! triang->isIdeal()) {
         // Enumerate solutions in standard almost normal space by going
         // via quad-oct space.
@@ -149,6 +151,7 @@ void* NNormalSurfaceList::VertexEnumerator::run(void*) {
         switch(list->flavour) {
             // Import cases from the flavour registry:
             #include "surfaces/flavourregistry.h"
+            default: break;
         }
 
         delete eqns;
@@ -207,6 +210,7 @@ void* NNormalSurfaceList::FundPrimalEnumerator::run(void*) {
     switch(list->flavour) {
         // Import cases from the flavour registry:
         #include "surfaces/flavourregistry.h"
+        default: break;
     }
 
     delete constraints;
@@ -251,6 +255,7 @@ void* NNormalSurfaceList::FundDualEnumerator::run(void*) {
     switch(list->flavour) {
         // Import cases from the flavour registry:
         #include "surfaces/flavourregistry.h"
+        default: break;
     }
 
     delete eqns;
@@ -268,7 +273,7 @@ void* NNormalSurfaceList::FundDualEnumerator::run(void*) {
 }
 
 NNormalSurfaceList* NNormalSurfaceList::enumerate(NTriangulation* owner,
-        int newFlavour, bool embeddedOnly, NProgressManager* manager) {
+        NormalCoords newFlavour, bool embeddedOnly, NProgressManager* manager) {
     NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
     VertexEnumerator* e = new VertexEnumerator(ans, owner, manager);
 
@@ -288,7 +293,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerate(NTriangulation* owner,
 #ifndef EXCLUDE_NORMALIZ
 
 NNormalSurfaceList* NNormalSurfaceList::enumerateFundPrimal(
-        NTriangulation* owner, int newFlavour, bool embeddedOnly,
+        NTriangulation* owner, NormalCoords newFlavour, bool embeddedOnly,
         NNormalSurfaceList* vtxSurfaces, NProgressManager* manager) {
     NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
     FundPrimalEnumerator* e = new FundPrimalEnumerator(ans, owner,
@@ -310,7 +315,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundPrimal(
 #endif // EXCLUDE_NORMALIZ
 
 NNormalSurfaceList* NNormalSurfaceList::enumerateFundDual(
-        NTriangulation* owner, int newFlavour, bool embeddedOnly,
+        NTriangulation* owner, NormalCoords newFlavour, bool embeddedOnly,
         NProgressManager* manager) {
     NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
     FundDualEnumerator* e = new FundDualEnumerator(ans, owner, manager);
@@ -330,14 +335,12 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundDual(
 
 NNormalSurfaceList* NNormalSurfaceList::enumerateStandardDirect(
         NTriangulation* owner) {
-    NNormalSurfaceList* list = new NNormalSurfaceList(
-        NNormalSurfaceList::STANDARD, true);
+    NNormalSurfaceList* list = new NNormalSurfaceList(NS_STANDARD, true);
 
     // Run a vanilla enumeration in standard coordinates.
     NEnumConstraintList* constraints =
         NNormalSurfaceVectorStandard::makeEmbeddedConstraints(owner);
-    NMatrixInt* eqns = makeMatchingEquations(owner,
-        NNormalSurfaceList::STANDARD);
+    NMatrixInt* eqns = makeMatchingEquations(owner, NS_STANDARD);
 
     NDoubleDescription::enumerateExtremalRays<NNormalSurfaceVectorStandard>(
         SurfaceInserter(*list, owner), *eqns, constraints);
@@ -352,14 +355,12 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateStandardDirect(
 
 NNormalSurfaceList* NNormalSurfaceList::enumerateStandardANDirect(
         NTriangulation* owner) {
-    NNormalSurfaceList* list = new NNormalSurfaceList(
-        NNormalSurfaceList::AN_STANDARD, true);
+    NNormalSurfaceList* list = new NNormalSurfaceList(NS_AN_STANDARD, true);
 
     // Run a vanilla enumeration in standard almost normal coordinates.
     NEnumConstraintList* constraints =
         NNormalSurfaceVectorANStandard::makeEmbeddedConstraints(owner);
-    NMatrixInt* eqns = makeMatchingEquations(owner,
-        NNormalSurfaceList::AN_STANDARD);
+    NMatrixInt* eqns = makeMatchingEquations(owner, NS_AN_STANDARD);
 
     NDoubleDescription::enumerateExtremalRays<NNormalSurfaceVectorANStandard>(
         SurfaceInserter(*list, owner), *eqns, constraints);
@@ -379,7 +380,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateStandardANDirect(
     case id_name: v = new class(dim); break; \
 
 NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
-        NTriangulation* owner, int newFlavour, bool embeddedOnly) {
+        NTriangulation* owner, NormalCoords newFlavour, bool embeddedOnly) {
     NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
     NMatrixInt* eqns = makeMatchingEquations(owner, newFlavour);
 
@@ -481,7 +482,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
         break;
 
 NNormalSurfaceList* NNormalSurfaceList::enumerateFundCD(
-        NTriangulation* owner, int newFlavour, bool embeddedOnly) {
+        NTriangulation* owner, NormalCoords newFlavour, bool embeddedOnly) {
     NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
 
     NMatrixInt* eqns = makeMatchingEquations(owner, newFlavour);
@@ -492,6 +493,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundCD(
     switch(newFlavour) {
         // Import cases from the flavour registry:
         #include "surfaces/flavourregistry.h"
+        default: break;
     }
 
     delete constraints;
@@ -515,7 +517,8 @@ bool NNormalSurfaceList::allowsAlmostNormal() const {
         // Import cases from the flavour registry...
         #include "surfaces/flavourregistry.h"
         // ... and legacy cases:
-        case AN_LEGACY: return true;
+        case NS_AN_LEGACY: return true;
+        default: break;
     }
     return false;
 }
@@ -529,7 +532,8 @@ bool NNormalSurfaceList::allowsSpun() const {
         // Import cases from the flavour registry...
         #include "surfaces/flavourregistry.h"
         // ... and legacy cases:
-        case AN_LEGACY: return false;
+        case NS_AN_LEGACY: return false;
+        default: break;
     }
     return false;
 }
@@ -543,7 +547,8 @@ bool NNormalSurfaceList::allowsOriented() const {
         // Import cases from the flavour registry...
         #include "surfaces/flavourregistry.h"
         // ... and legacy cases:
-        case AN_LEGACY: return false;
+        case NS_AN_LEGACY: return false;
+        default: break;
     }
     return false;
 }
@@ -561,7 +566,7 @@ void NNormalSurfaceList::writeTextShort(std::ostream& out) const {
         // Import cases from the flavour registry...
         #include "surfaces/flavourregistry.h"
         // ... and legacy cases:
-        case AN_LEGACY:
+        case NS_AN_LEGACY:
             out << AN_LEGACY_NAME;
             break;
         default:
@@ -586,7 +591,7 @@ void NNormalSurfaceList::writeTextLong(std::ostream& out) const {
         // Import cases from the flavour registry...
         #include "surfaces/flavourregistry.h"
         // ... and legacy cases:
-        case AN_LEGACY:
+        case NS_AN_LEGACY:
             out << AN_LEGACY_NAME << '\n';
             break;
         default:
@@ -609,7 +614,7 @@ void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
         // Import cases from the flavour registry...
         #include "surfaces/flavourregistry.h"
         // ... and legacy cases:
-        case AN_LEGACY:
+        case NS_AN_LEGACY:
             out << regina::xml::xmlEncodeSpecialChars(AN_LEGACY_NAME);
             break;
         default:

@@ -44,38 +44,43 @@ using namespace boost::python;
 using regina::NNormalSurfaceList;
 
 namespace {
+    void writeAllSurfaces_stdio(const NNormalSurfaceList& s) {
+        s.writeAllSurfaces(std::cout);
+    }
+
     // Write manual overload wrappers since these are static member functions.
     NNormalSurfaceList* enumerate_2(regina::NTriangulation* owner,
-            int flavour) {
+            regina::NormalCoords flavour) {
         return NNormalSurfaceList::enumerate(owner, flavour);
     }
     NNormalSurfaceList* enumerate_3(regina::NTriangulation* owner,
-            int flavour, bool embedded) {
+            regina::NormalCoords flavour, bool embedded) {
         return NNormalSurfaceList::enumerate(owner, flavour, embedded);
     }
     NNormalSurfaceList* enumerate_4(regina::NTriangulation* owner,
-            int flavour, bool embedded, regina::NProgressManager* manager) {
+            regina::NormalCoords flavour, bool embedded,
+            regina::NProgressManager* manager) {
         return NNormalSurfaceList::enumerate(owner, flavour, embedded, manager);
     }
 
 #ifndef EXCLUDE_NORMALIZ
     NNormalSurfaceList* enumerateFundPrimal_2(regina::NTriangulation* owner,
-            int flavour) {
+            regina::NormalCoords flavour) {
         return NNormalSurfaceList::enumerateFundPrimal(owner, flavour);
     }
     NNormalSurfaceList* enumerateFundPrimal_3(regina::NTriangulation* owner,
-            int flavour, bool embedded) {
+            regina::NormalCoords flavour, bool embedded) {
         return NNormalSurfaceList::enumerateFundPrimal(owner, flavour,
             embedded);
     }
     NNormalSurfaceList* enumerateFundPrimal_4(regina::NTriangulation* owner,
-            int flavour, bool embedded,
+            regina::NormalCoords flavour, bool embedded,
             regina::NNormalSurfaceList* vtxSurfaces) {
         return NNormalSurfaceList::enumerateFundPrimal(owner, flavour,
             embedded, vtxSurfaces);
     }
     NNormalSurfaceList* enumerateFundPrimal_5(regina::NTriangulation* owner,
-            int flavour, bool embedded,
+            regina::NormalCoords flavour, bool embedded,
             regina::NNormalSurfaceList* vtxSurfaces,
             regina::NProgressManager* manager) {
         return NNormalSurfaceList::enumerateFundPrimal(owner, flavour,
@@ -84,38 +89,39 @@ namespace {
 #endif
 
     NNormalSurfaceList* enumerateFundDual_2(regina::NTriangulation* owner,
-            int flavour) {
+            regina::NormalCoords flavour) {
         return NNormalSurfaceList::enumerateFundDual(owner, flavour);
     }
     NNormalSurfaceList* enumerateFundDual_3(regina::NTriangulation* owner,
-            int flavour, bool embedded) {
+            regina::NormalCoords flavour, bool embedded) {
         return NNormalSurfaceList::enumerateFundDual(owner, flavour,
             embedded);
     }
     NNormalSurfaceList* enumerateFundDual_4(regina::NTriangulation* owner,
-            int flavour, bool embedded, regina::NProgressManager* manager) {
+            regina::NormalCoords flavour, bool embedded,
+            regina::NProgressManager* manager) {
         return NNormalSurfaceList::enumerateFundDual(owner, flavour,
             embedded, manager);
     }
 
 #ifndef EXCLUDE_NORMALIZ
     NNormalSurfaceList* enumerateFundFullCone_2(regina::NTriangulation* owner,
-            int flavour) {
+            regina::NormalCoords flavour) {
         return NNormalSurfaceList::enumerateFundFullCone(owner, flavour);
     }
     NNormalSurfaceList* enumerateFundFullCone_3(regina::NTriangulation* owner,
-            int flavour, bool embedded) {
+            regina::NormalCoords flavour, bool embedded) {
         return NNormalSurfaceList::enumerateFundFullCone(owner, flavour,
             embedded);
     }
 #endif
 
     NNormalSurfaceList* enumerateFundCD_2(regina::NTriangulation* owner,
-            int flavour) {
+            regina::NormalCoords flavour) {
         return NNormalSurfaceList::enumerateFundCD(owner, flavour);
     }
     NNormalSurfaceList* enumerateFundCD_3(regina::NTriangulation* owner,
-            int flavour, bool embedded) {
+            regina::NormalCoords flavour, bool embedded) {
         return NNormalSurfaceList::enumerateFundCD(owner, flavour, embedded);
     }
 }
@@ -126,9 +132,20 @@ void addNNormalSurfaceList() {
         return_value_policy<manage_new_object>());
 
     scope s = class_<NNormalSurfaceList,
-            bases<regina::NPacket, regina::NSurfaceSet>,
+            bases<regina::NPacket>,
             std::auto_ptr<NNormalSurfaceList>, boost::noncopyable>
             ("NNormalSurfaceList", no_init)
+        .def("getFlavour", &NNormalSurfaceList::getFlavour)
+        .def("allowsAlmostNormal", &NNormalSurfaceList::allowsAlmostNormal)
+        .def("allowsSpun", &NNormalSurfaceList::allowsSpun)
+        .def("allowsOriented", &NNormalSurfaceList::allowsOriented)
+        .def("isEmbeddedOnly", &NNormalSurfaceList::isEmbeddedOnly)
+        .def("getTriangulation", &NNormalSurfaceList::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("getNumberOfSurfaces", &NNormalSurfaceList::getNumberOfSurfaces)
+        .def("getSurface", &NNormalSurfaceList::getSurface,
+            return_internal_reference<>())
+        .def("writeAllSurfaces", writeAllSurfaces_stdio)
         .def("enumerate", enumerate_2,
             return_value_policy<reference_existing_object>())
         .def("enumerate", enumerate_3,
@@ -201,19 +218,8 @@ void addNNormalSurfaceList() {
     ;
 
     s.attr("packetType") = NNormalSurfaceList::packetType;
-    s.attr("STANDARD") = NNormalSurfaceList::STANDARD;
-    s.attr("AN_STANDARD") = NNormalSurfaceList::AN_STANDARD;
-    s.attr("QUAD") = NNormalSurfaceList::QUAD;
-    s.attr("AN_QUAD_OCT") = NNormalSurfaceList::AN_QUAD_OCT;
-    s.attr("EDGE_WEIGHT") = NNormalSurfaceList::EDGE_WEIGHT;
-    s.attr("FACE_ARCS") = NNormalSurfaceList::FACE_ARCS;
-    s.attr("AN_LEGACY") = NNormalSurfaceList::AN_LEGACY;
-    s.attr("ORIENTED") = NNormalSurfaceList::ORIENTED;
-    s.attr("ORIENTED_QUAD") = NNormalSurfaceList::ORIENTED_QUAD;
 
     implicitly_convertible<std::auto_ptr<NNormalSurfaceList>,
         std::auto_ptr<regina::NPacket> >();
-    implicitly_convertible<std::auto_ptr<NNormalSurfaceList>,
-        std::auto_ptr<regina::NSurfaceSet> >();
 }
 

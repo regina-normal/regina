@@ -37,7 +37,7 @@
 
 namespace regina {
 
-NSurfaceSubset::NSurfaceSubset(const NSurfaceSet& set,
+NSurfaceSubset::NSurfaceSubset(const NNormalSurfaceList& set,
         const NSurfaceFilter& filter) : source(set) {
     unsigned long n = set.getNumberOfSurfaces();
     NNormalSurface* s;
@@ -45,6 +45,15 @@ NSurfaceSubset::NSurfaceSubset(const NSurfaceSet& set,
         s = const_cast<NNormalSurface*>(set.getSurface(i));
         if (filter.accept(*s))
             surfaces.push_back(s);
+    }
+}
+
+void NSurfaceSubset::writeAllSurfaces(std::ostream& out) const {
+    unsigned long n = getNumberOfSurfaces();
+    out << "Number of surfaces is " << n << '\n';
+    for (unsigned long i = 0; i < n; i++) {
+        getSurface(i)->writeTextShort(out);
+        out << '\n';
     }
 }
 

@@ -35,18 +35,34 @@
 #include <boost/python.hpp>
 #include "surfaces/nsurfacefilter.h"
 #include "surfaces/nsurfacesubset.h"
+#include "triangulation/ntriangulation.h"
 
 using namespace boost::python;
 using regina::NSurfaceSubset;
 
-void addNSurfaceSubset() {
-    scope s = class_<NSurfaceSubset, bases<regina::ShareableObject,
-            regina::NSurfaceSet>, std::auto_ptr<NSurfaceSubset>,
-            boost::noncopyable>("NSurfaceSubset",
-            init<const regina::NSurfaceSet&, const regina::NSurfaceFilter&>())
-    ;
+namespace {
+    void writeAllSurfaces_stdio(const regina::NNormalSurfaceList& s) {
+        s.writeAllSurfaces(std::cout);
+    }
+}
 
-    implicitly_convertible<std::auto_ptr<NSurfaceSubset>,
-        std::auto_ptr<regina::NSurfaceSet> >();
+void addNSurfaceSubset() {
+    scope s = class_<NSurfaceSubset, bases<regina::ShareableObject>,
+            std::auto_ptr<NSurfaceSubset>,
+            boost::noncopyable>("NSurfaceSubset",
+            init<const regina::NNormalSurfaceList&,
+                const regina::NSurfaceFilter&>())
+        .def("getFlavour", &NSurfaceSubset::getFlavour)
+        .def("allowsAlmostNormal", &NSurfaceSubset::allowsAlmostNormal)
+        .def("allowsSpun", &NSurfaceSubset::allowsSpun)
+        .def("allowsOriented", &NSurfaceSubset::allowsOriented)
+        .def("isEmbeddedOnly", &NSurfaceSubset::isEmbeddedOnly)
+        .def("getTriangulation", &NSurfaceSubset::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("getNumberOfSurfaces", &NSurfaceSubset::getNumberOfSurfaces)
+        .def("getSurface", &NSurfaceSubset::getSurface,
+            return_internal_reference<>())
+        .def("writeAllSurfaces", writeAllSurfaces_stdio)
+    ;
 }
 

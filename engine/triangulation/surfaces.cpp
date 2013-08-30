@@ -108,7 +108,7 @@ void NTriangulation::calculateQuadSurfaceProperties() {
     // changes to the packet tree.
     NTriangulation working(*this);
     NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(&working,
-        NNormalSurfaceList::QUAD);
+        NS_QUAD);
 
     // All we can test here is 0-efficiency.
 
@@ -162,7 +162,7 @@ void NTriangulation::calculateStandardSurfaceProperties() {
     // changes to the packet tree.
     NTriangulation working(*this);
     NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(&working,
-        NNormalSurfaceList::STANDARD);
+        NS_STANDARD);
 
     // Run through all vertex surfaces.
     unsigned long nSurfaces = surfaces->getNumberOfSurfaces();

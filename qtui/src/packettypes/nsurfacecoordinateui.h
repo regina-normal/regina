@@ -64,7 +64,7 @@ class SurfaceModel : public QAbstractItemModel {
          * Details of the normal surfaces being displayed
          */
         regina::NNormalSurfaceList* surfaces_;
-        int coordSystem_;
+        regina::NormalCoords coordSystem_;
 
         /**
          * A mapping from table indices to surface indices, for use with
@@ -95,13 +95,14 @@ class SurfaceModel : public QAbstractItemModel {
          */
         regina::NNormalSurfaceList* surfaces() const;
         const regina::NNormalSurface* surface(const QModelIndex& index) const;
-        int coordSystem() const;
+        regina::NormalCoords coordSystem() const;
 
         /**
          * Rebuild the model from scratch.
          */
-        void rebuild(int coordSystem_);
-        void rebuild(int coordSystem_, regina::NSurfaceFilter* filter);
+        void rebuild(regina::NormalCoords coordSystem_);
+        void rebuild(regina::NormalCoords coordSystem_,
+            regina::NSurfaceFilter* filter);
 
         /**
          * Loading and saving local data from/to the packet.
@@ -238,7 +239,7 @@ inline const regina::NNormalSurface* SurfaceModel::surface(
     return surfaces_->getSurface(realIndex[index.row()]);
 }
 
-inline int SurfaceModel::coordSystem() const {
+inline regina::NormalCoords SurfaceModel::coordSystem() const {
     return coordSystem_;
 }
 

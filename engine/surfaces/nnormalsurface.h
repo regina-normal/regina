@@ -228,9 +228,8 @@ class NMatrixInt;
  *
  * <b>When deriving classes from NNormalSurfaceVector:</b>
  * <ul>
- *   <li>A unique constant (static const int) must be added to the class
- *   NNormalSurfaceList to represent the new flavour of coordinate
- *   system.</li>
+ *   <li>A new value must must be added to the NormalCoords enum
+ *   to represent the new flavour of coordinate system.</li>
  *   <li>The file flavourregistry.h must be updated to reflect the new
  *   flavour of coordinate system.</li>
  *   <li>Constructors <tt>class(unsigned length)</tt> and

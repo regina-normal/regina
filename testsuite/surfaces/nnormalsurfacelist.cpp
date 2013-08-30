@@ -480,7 +480,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             NNormalSurfaceList* stdDirect = NNormalSurfaceList::
                 enumerateStandardDirect(tri);
             NNormalSurfaceList* quadDirect = NNormalSurfaceList::enumerate(
-                tri, NNormalSurfaceList::QUAD);
+                tri, regina::NS_QUAD);
 
             NNormalSurfaceList* stdConv = quadDirect->quadToStandard();
             NNormalSurfaceList* quadConv = stdDirect->standardToQuad();
@@ -546,7 +546,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             NNormalSurfaceList* stdANDirect = NNormalSurfaceList::
                 enumerateStandardANDirect(tri);
             NNormalSurfaceList* quadOctDirect = NNormalSurfaceList::enumerate(
-                tri, NNormalSurfaceList::AN_QUAD_OCT);
+                tri, regina::NS_AN_QUAD_OCT);
 
             NNormalSurfaceList* stdANConv =
                 quadOctDirect->quadOctToStandardAN();
@@ -617,7 +617,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void standardEmpty() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &empty, NNormalSurfaceList::STANDARD);
+                &empty, regina::NS_STANDARD);
 
             testSize(list, "the empty triangulation",
                 "standard normal surfaces", 0);
@@ -627,7 +627,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void quadEmpty() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &empty, NNormalSurfaceList::QUAD);
+                &empty, regina::NS_QUAD);
 
             testSize(list, "the empty triangulation",
                 "quad normal surfaces", 0);
@@ -637,7 +637,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void almostNormalEmpty() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &empty, NNormalSurfaceList::AN_STANDARD);
+                &empty, regina::NS_AN_STANDARD);
 
             testSize(list, "the empty triangulation",
                 "standard almost normal surfaces", 0);
@@ -647,7 +647,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void standardOneTet() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &oneTet, NNormalSurfaceList::STANDARD);
+                &oneTet, regina::NS_STANDARD);
 
             testSize(list, "a single tetrahedron",
                 "standard normal surfaces", 7);
@@ -671,7 +671,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void quadOneTet() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &oneTet, NNormalSurfaceList::QUAD);
+                &oneTet, regina::NS_QUAD);
 
             testSize(list, "a single tetrahedron",
                 "quad normal surfaces", 3);
@@ -688,7 +688,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void almostNormalOneTet() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &oneTet, NNormalSurfaceList::AN_STANDARD);
+                &oneTet, regina::NS_AN_STANDARD);
 
             testSize(list, "a single tetrahedron",
                 "standard almost normal surfaces", 10);
@@ -719,7 +719,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void standardGieseking() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &gieseking, NNormalSurfaceList::STANDARD);
+                &gieseking, regina::NS_STANDARD);
 
             testSize(list, "the Gieseking manifold",
                 "standard normal surfaces", 1);
@@ -736,7 +736,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void quadGieseking() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &gieseking, NNormalSurfaceList::QUAD);
+                &gieseking, regina::NS_QUAD);
 
             testSize(list, "the Gieseking manifold",
                 "quad normal surfaces", 0);
@@ -746,7 +746,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void almostNormalGieseking() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &gieseking, NNormalSurfaceList::AN_STANDARD);
+                &gieseking, regina::NS_AN_STANDARD);
 
             testSize(list, "the Gieseking manifold",
                 "standard almost normal surfaces", 1);
@@ -763,7 +763,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void standardFigure8() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &figure8, NNormalSurfaceList::STANDARD);
+                &figure8, regina::NS_STANDARD);
 
             testSize(list, "the figure eight knot complement",
                 "standard normal surfaces", 1);
@@ -780,7 +780,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void quadFigure8() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &figure8, NNormalSurfaceList::QUAD);
+                &figure8, regina::NS_QUAD);
 
             testSize(list, "the figure eight knot complement",
                 "quad normal surfaces", 4);
@@ -798,7 +798,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void almostNormalFigure8() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &figure8, NNormalSurfaceList::AN_STANDARD);
+                &figure8, regina::NS_AN_STANDARD);
 
             testSize(list, "the figure eight knot complement",
                 "standard almost normal surfaces", 1);
@@ -815,7 +815,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void standardS3() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &S3, NNormalSurfaceList::STANDARD);
+                &S3, regina::NS_STANDARD);
 
             testSize(list, "the 3-sphere",
                 "standard normal surfaces", 3);
@@ -839,7 +839,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void quadS3() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &S3, NNormalSurfaceList::QUAD);
+                &S3, regina::NS_QUAD);
 
             testSize(list, "the 3-sphere",
                 "quad normal surfaces", 1);
@@ -856,7 +856,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void almostNormalS3() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &S3, NNormalSurfaceList::AN_STANDARD);
+                &S3, regina::NS_AN_STANDARD);
 
             testSize(list, "the 3-sphere",
                 "standard almost normal surfaces", 4);
@@ -887,7 +887,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void standardLoopC2() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &loopC2, NNormalSurfaceList::STANDARD);
+                &loopC2, regina::NS_STANDARD);
 
             testSize(list, "the untwisted layered loop C(2)",
                 "standard normal surfaces", 5);
@@ -918,7 +918,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void quadLoopC2() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &loopC2, NNormalSurfaceList::QUAD);
+                &loopC2, regina::NS_QUAD);
 
             testSize(list, "the untwisted layered loop C(2)",
                 "quad normal surfaces", 3);
@@ -942,7 +942,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void almostNormalLoopC2() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &loopC2, NNormalSurfaceList::AN_STANDARD);
+                &loopC2, regina::NS_AN_STANDARD);
 
             testSize(list, "the untwisted layered loop C(2)",
                 "standard almost normal surfaces", 5);
@@ -973,7 +973,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void standardLoopCtw3() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &loopCtw3, NNormalSurfaceList::STANDARD);
+                &loopCtw3, regina::NS_STANDARD);
 
             testSize(list, "the twisted layered loop C~(3)",
                 "standard normal surfaces", 5);
@@ -1004,7 +1004,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void quadLoopCtw3() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &loopCtw3, NNormalSurfaceList::QUAD);
+                &loopCtw3, regina::NS_QUAD);
 
             testSize(list, "the twisted layered loop C~(3)",
                 "quad normal surfaces", 4);
@@ -1028,7 +1028,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void almostNormalLoopCtw3() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &loopCtw3, NNormalSurfaceList::AN_STANDARD);
+                &loopCtw3, regina::NS_AN_STANDARD);
 
             testSize(list, "the twisted layered loop C~(3)",
                 "standard almost normal surfaces", 5);
@@ -1059,7 +1059,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void standardLargeS3() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &largeS3, NNormalSurfaceList::STANDARD);
+                &largeS3, regina::NS_STANDARD);
 
             testSize(list, "a non-minimal S^3",
                 "standard normal surfaces", 15);
@@ -1125,7 +1125,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void quadLargeS3() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &largeS3, NNormalSurfaceList::QUAD);
+                &largeS3, regina::NS_QUAD);
 
             testSize(list, "a non-minimal S^3",
                 "quad normal surfaces", 4);
@@ -1156,7 +1156,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void almostNormalLargeS3() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &largeS3, NNormalSurfaceList::AN_STANDARD);
+                &largeS3, regina::NS_AN_STANDARD);
 
             // Bleh.  Too messy.  Just count them.
             testSize(list, "a non-minimal S^3",
@@ -1167,7 +1167,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void standardLargeRP3() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &largeRP3, NNormalSurfaceList::STANDARD);
+                &largeRP3, regina::NS_STANDARD);
 
             // Bleh.  Too messy.  Just count them.
             testSize(list, "a non-minimal RP^3",
@@ -1178,7 +1178,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void quadLargeRP3() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &largeRP3, NNormalSurfaceList::QUAD);
+                &largeRP3, regina::NS_QUAD);
 
             testSize(list, "a non-minimal RP^3",
                 "quad normal surfaces", 5);
@@ -1216,7 +1216,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void almostNormalLargeRP3() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &largeRP3, NNormalSurfaceList::AN_STANDARD);
+                &largeRP3, regina::NS_AN_STANDARD);
 
             // Bleh.  Too messy.  Just count them.
             testSize(list, "a non-minimal RP^3",
@@ -1227,7 +1227,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void standardTwistedKxI() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &twistedKxI, NNormalSurfaceList::STANDARD);
+                &twistedKxI, regina::NS_STANDARD);
 
             testSize(list, "a 3-tetrahedron non-orientable twisted KxI",
                 "standard normal surfaces", 8);
@@ -1293,7 +1293,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void quadTwistedKxI() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &twistedKxI, NNormalSurfaceList::QUAD);
+                &twistedKxI, regina::NS_QUAD);
 
             testSize(list, "a 3-tetrahedron non-orientable twisted KxI",
                 "quad normal surfaces", 6);
@@ -1343,7 +1343,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void almostNormalTwistedKxI() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &twistedKxI, NNormalSurfaceList::AN_STANDARD);
+                &twistedKxI, regina::NS_AN_STANDARD);
 
             testSize(list, "a 3-tetrahedron non-orientable twisted KxI",
                 "standard almost normal surfaces", 13);
@@ -1436,7 +1436,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void standardNorSFS() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &norSFS, NNormalSurfaceList::STANDARD);
+                &norSFS, regina::NS_STANDARD);
 
             testSize(list, "SFS [RP2: (2,1) (2,1) (2,1)]",
                 "standard normal surfaces", 25);
@@ -1535,7 +1535,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void quadNorSFS() {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &norSFS, NNormalSurfaceList::QUAD);
+                &norSFS, regina::NS_QUAD);
 
             testSize(list, "SFS [RP2: (2,1) (2,1) (2,1)]",
                 "quad normal surfaces", 21);
@@ -1612,7 +1612,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             NTriangulation loop;
             loop.insertLayeredLoop(len, true);
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &loop, NNormalSurfaceList::STANDARD);
+                &loop, regina::NS_STANDARD);
 
             std::ostringstream name;
             name << "the twisted layered loop C~(" << len << ")";
@@ -1648,7 +1648,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             NTriangulation loop;
             loop.insertLayeredLoop(len, true);
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &loop, NNormalSurfaceList::QUAD);
+                &loop, regina::NS_QUAD);
 
             std::ostringstream name;
             name << "the twisted layered loop C~(" << len << ")";
@@ -1678,7 +1678,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             NTriangulation loop;
             loop.insertLayeredLoop(len, true);
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                &loop, NNormalSurfaceList::AN_STANDARD);
+                &loop, regina::NS_AN_STANDARD);
 
             std::ostringstream name;
             name << "the twisted layered loop C~(" << len << ")";
@@ -1835,7 +1835,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         static void testDisjoint(NTriangulation* tri) {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                tri, NNormalSurfaceList::AN_STANDARD);
+                tri, regina::NS_AN_STANDARD);
             unsigned long n = list->getNumberOfSurfaces();
 
             unsigned long i, j;
@@ -2117,7 +2117,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
          */
         static void testCutAlong(NTriangulation* tri) {
             NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
-                tri, NNormalSurfaceList::STANDARD);
+                tri, regina::NS_STANDARD);
             unsigned long n = list->getNumberOfSurfaces();
 
             const NNormalSurface *s;

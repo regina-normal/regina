@@ -75,13 +75,14 @@ SurfaceModel::SurfaceModel(regina::NNormalSurfaceList* surfaces,
     refreshNames();
 }
 
-void SurfaceModel::rebuild(int coordSystem) {
+void SurfaceModel::rebuild(regina::NormalCoords coordSystem) {
     beginResetModel();
     coordSystem_ = coordSystem;
     endResetModel();
 }
 
-void SurfaceModel::rebuild(int coordSystem, regina::NSurfaceFilter* filter) {
+void SurfaceModel::rebuild(regina::NormalCoords coordSystem,
+        regina::NSurfaceFilter* filter) {
     beginResetModel();
 
     coordSystem_ = coordSystem;
@@ -622,7 +623,7 @@ void NSurfaceCoordinateUI::refreshLocal() {
     }
 
     // Rebuild the underlying data model.
-    int selectedSystem = coords->getCurrentSystem();
+    regina::NormalCoords selectedSystem = coords->getCurrentSystem();
     bool coordsChanged = (model->coordSystem() != selectedSystem);
     if (filterChanged)
         model->rebuild(selectedSystem, appliedFilter);

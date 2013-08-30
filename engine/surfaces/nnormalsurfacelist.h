@@ -50,7 +50,7 @@
 #include "regina-core.h"
 #include "packet/npacket.h"
 #include "surfaces/nnormalsurface.h"
-#include "surfaces/nsurfaceset.h"
+#include "surfaces/normalcoords.h"
 #include "utilities/memutils.h"
 #include "utilities/nthread.h"
 
@@ -90,77 +90,16 @@ class NXMLNormalSurfaceListReader;
  * \todo \feature Generate facets of the solution space representing
  * embedded surfaces.
  */
-class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
+class REGINA_API NNormalSurfaceList : public NPacket {
     public:
         static const int packetType;
-
-        /**
-         * Represents standard triangle-quadrilateral coordinates for
-         * normal surfaces.
-         */
-        static const int STANDARD;
-        /**
-         * Represents standard triangle-quadrilateral-octagon coordinates
-         * for octagonal almost normal surfaces.
-         */
-        static const int AN_STANDARD;
-        /**
-         * Represents quadrilateral coordinates for normal surfaces.
-         * For details, see "Normal surface Q-theory", Jeffrey L. Tollefson,
-         * Pacific J. Math. 183 (1998), no. 2, 359--374.
-         */
-        static const int QUAD;
-        /**
-         * Represents quadrilateral-octagon coordinates for octagonal
-         * almost normal surfaces.  For details, see
-         * "Quadrilateral-octagon coordinates for almost normal surfaces",
-         * Benjamin A. Burton, Experiment. Math. 19 (2010), 285-315.
-         */
-        static const int AN_QUAD_OCT;
-
-        /**
-         * Represents edge weight coordinates for normal surfaces.
-         * This flavour is for representation only; surface
-         * vectors and lists of this flavour cannot be created.
-         */
-        static const int EDGE_WEIGHT;
-        /**
-         * Represents face arc coordinates for normal surfaces.
-         * This flavour is for representation only; surface
-         * vectors and lists of this flavour cannot be created.
-         */
-        static const int FACE_ARCS;
-        /**
-         * Indicates that a list of almost normal surfaces was created
-         * using Regina 4.5.1 or earlier, where surfaces with more than
-         * one octagon of the same type were stripped out of the final
-         * solution set.  As of Regina 4.6 such surfaces are now
-         * included in the solution set, since we need them if we
-         * wish to enumerate \e all almost normal surfaces (not just
-         * the \e vertex almost normal surfaces).
-         *
-         * This flavour is only used with legacy data files; new vectors
-         * and lists of this flavour cannot be created.  The underlying
-         * coordinate system is identical to AN_STANDARD.
-         */
-        static const int AN_LEGACY;
-        /**
-         * Represents standard triangle-quadrilateral coordinates for
-         * transversely oriented normal surfaces.
-         */
-        static const int ORIENTED;
-        /**
-         * Represents quadrilateral coordinates for transversely oriented 
-         * normal surfaces.
-         */
-        static const int ORIENTED_QUAD;
 
         class VectorIterator;
 
     protected:
         std::vector<NNormalSurface*> surfaces;
             /**< Contains the normal surfaces stored in this packet. */
-        int flavour;
+        NormalCoords flavour;
             /**< Stores which flavour of coordinate system is being
              *   used by the normal surfaces in this packet. */
         bool embedded;
@@ -207,9 +146,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
-         * @param newFlavour the flavour of coordinate system to be used;
-         * this must be one of the predefined coordinate system
-         * constants in NNormalSurfaceList.
+         * @param newFlavour the flavour of coordinate system to be used.
          * @param embeddedOnly \c true if only embedded normal surfaces
          * are to be produced, or \c false if immersed and singular
          * normal surfaces are also to be produced; this defaults to
@@ -225,7 +162,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * returns 0 (and no normal surface list is created).
          */
         static NNormalSurfaceList* enumerate(NTriangulation* owner,
-            int newFlavour, bool embeddedOnly = true,
+            NormalCoords newFlavour, bool embeddedOnly = true,
             NProgressManager* manager = 0);
 
 #ifndef EXCLUDE_NORMALIZ
@@ -273,9 +210,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
-         * @param newFlavour the flavour of coordinate system to be used;
-         * this must be one of the predefined coordinate system
-         * constants in NNormalSurfaceList.
+         * @param newFlavour the flavour of coordinate system to be used.
          * @param embeddedOnly \c true if only embedded normal surfaces
          * are to be produced, or \c false if immersed and singular
          * normal surfaces are also to be produced; this defaults to
@@ -294,7 +229,8 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * returns 0 (and no normal surface list is created).
          */
         static NNormalSurfaceList* enumerateFundPrimal(
-            NTriangulation* owner, int newFlavour, bool embeddedOnly = true,
+            NTriangulation* owner, NormalCoords newFlavour,
+            bool embeddedOnly = true,
             NNormalSurfaceList* vtxSurfaces = 0,
             NProgressManager* manager = 0);
 #endif
@@ -332,9 +268,7 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
-         * @param newFlavour the flavour of coordinate system to be used;
-         * this must be one of the predefined coordinate system
-         * constants in NNormalSurfaceList.
+         * @param newFlavour the flavour of coordinate system to be used.
          * @param embeddedOnly \c true if only embedded normal surfaces
          * are to be produced, or \c false if immersed and singular
          * normal surfaces are also to be produced; this defaults to
@@ -350,7 +284,8 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * returns 0 (and no normal surface list is created).
          */
         static NNormalSurfaceList* enumerateFundDual(
-            NTriangulation* owner, int newFlavour, bool embeddedOnly = true,
+            NTriangulation* owner, NormalCoords newFlavour,
+            bool embeddedOnly = true,
             NProgressManager* manager = 0);
 
         /**
@@ -447,16 +382,15 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
-         * @param newFlavour the flavour of coordinate system to be used;
-         * this must be one of the predefined coordinate system
-         * constants in NNormalSurfaceList.
+         * @param newFlavour the flavour of coordinate system to be used.
          * @param embeddedOnly \c true if only embedded normal surfaces
          * are to be produced, or \c false if immersed and singular
          * normal surfaces are also to be produced; this defaults to \c true.
          * @return the newly created normal surface list.
          */
         static NNormalSurfaceList* enumerateFundFullCone(
-            NTriangulation* owner, int newFlavour, bool embeddedOnly = true);
+            NTriangulation* owner, NormalCoords newFlavour,
+            bool embeddedOnly = true);
 #endif
 
         /**
@@ -484,26 +418,93 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
-         * @param newFlavour the flavour of coordinate system to be used;
-         * this must be one of the predefined coordinate system
-         * constants in NNormalSurfaceList.
+         * @param newFlavour the flavour of coordinate system to be used.
          * @param embeddedOnly \c true if only embedded normal surfaces
          * are to be produced, or \c false if immersed and singular
          * normal surfaces are also to be produced; this defaults to \c true.
          * @return the newly created normal surface list.
          */
         static NNormalSurfaceList* enumerateFundCD(
-            NTriangulation* owner, int newFlavour, bool embeddedOnly = true);
+            NTriangulation* owner, NormalCoords newFlavour,
+            bool embeddedOnly = true);
 
-        virtual int getFlavour() const;
-        virtual bool allowsAlmostNormal() const;
-        virtual bool allowsSpun() const;
-        virtual bool allowsOriented() const;
-        virtual bool isEmbeddedOnly() const;
-        virtual NTriangulation* getTriangulation() const;
-        virtual unsigned long getNumberOfSurfaces() const;
-        virtual const NNormalSurface* getSurface(unsigned long index) const;
-        virtual ShareableObject* getShareableObject();
+        /**
+         * Returns the flavour of coordinate system being used by the
+         * surfaces stored in this set.
+         *
+         * @return the flavour of coordinate system used.
+         */
+        NormalCoords getFlavour() const;
+        /**
+         * Determines if the flavour of coordinate system being used
+         * allows for almost normal surfaces, that is, allows for
+         * octagonal discs.
+         *
+         * @return \c true if and only if almost normal surfaces are
+         * allowed.
+         */
+        bool allowsAlmostNormal() const;
+        /**
+         * Determines if the flavour of coordinate system being used
+         * allows for spun normal surfaces.
+         *
+         * @return \c true if and only if spun normal surface are
+         * supported.
+         */
+        bool allowsSpun() const;
+        /**
+         * Determines if the flavour of coordinate system being used
+         * allows for transversely oriented normal surfaces.
+         *
+         * @return \c true if and only if transverse orientations are
+         * supported.
+         */
+        bool allowsOriented() const;
+        /**
+         * Returns whether this set is known to contain only embedded normal
+         * surfaces.
+         *
+         * If it is possible that there are non-embedded surfaces in this
+         * set but it is not known whether any are actually present or
+         * not, this routine should return \c false.
+         *
+         * @return \c true if it is known that only embedded normal surfaces
+         * exist in this list, or \c false if immersed and/or singular normal
+         * surfaces might be present.
+         */
+        bool isEmbeddedOnly() const;
+        /**
+         * Returns the triangulation in which these normal surfaces live.
+         * 
+         * @return the triangulation in which these surfaces live.
+         */
+        NTriangulation* getTriangulation() const;
+        /**
+         * Returns the number of surfaces stored in this set.
+         *
+         * @return the number of surfaces.
+         */
+        unsigned long getNumberOfSurfaces() const;
+        /**
+         * Returns the surface at the requested index in this set.
+         *
+         * @param index the index of the requested surface in this set;
+         * this must be between 0 and getNumberOfSurfaces()-1 inclusive.
+         *
+         * @return the normal surface at the requested index in this set.
+         */
+        const NNormalSurface* getSurface(unsigned long index) const;
+        /**
+         * Writes the number of surfaces in this set followed by the
+         * details of each surface to the given output stream.  Output
+         * will be over many lines.
+         *
+         * \ifacespython Parameter \a out is not present and is assumed
+         * to be standard output.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeAllSurfaces(std::ostream& out) const;
 
         virtual int getPacketType() const;
         virtual std::string getPacketTypeName() const;
@@ -1103,13 +1104,12 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
          * parameters.
          *
          * @param newFlavour the flavour of coordinate system to be used
-         * for filling this list; this must be one of the predefined
-         * coordinate system constants in NNormalSurfaceList.
+         * for filling this list.
          * @param embeddedOnly \c true if only embedded normal surfaces
          * are to be produced, or \c false if immersed and singular
          * normal surfaces are also to be produced.
          */
-        NNormalSurfaceList(int newFlavour, bool embeddedOnly);
+        NNormalSurfaceList(NormalCoords newFlavour, bool embeddedOnly);
 
         /**
          * Enumerates all embedded vertex surfaces in (standard normal
@@ -1379,13 +1379,12 @@ class REGINA_API NNormalSurfaceList : public NPacket, public NSurfaceSet {
  *
  * @param triangulation the triangulation upon which the underlying
  * coordinate system is based.
- * @param flavour the flavour of coordinate system to be used;
- * this must be one of the predefined coordinate system
- * constants in NNormalSurfaceList.
+ * @param flavour the flavour of coordinate system to be used.
  * @return a new zero vector of the correct class and length.
  */
 REGINA_API NNormalSurfaceVector* makeZeroVector(
-        const NTriangulation* triangulation, int flavour);
+        const NTriangulation* triangulation,
+        NormalCoords flavour);
 /**
  * Creates a new set of normal surface matching equations for the
  * given triangulation using the given flavour of coordinate system.
@@ -1398,13 +1397,11 @@ REGINA_API NNormalSurfaceVector* makeZeroVector(
  *
  * @param triangulation the triangulation upon which these matching equations
  * will be based.
- * @param flavour the flavour of coordinate system to be used;
- * this must be one of the predefined coordinate system
- * constants in NNormalSurfaceList.
+ * @param flavour the flavour of coordinate system to be used.
  * @return a newly allocated set of matching equations.
  */
 REGINA_API NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
-    int flavour);
+    NormalCoords flavour);
 /**
  * Creates a new set of validity constraints representing the condition that
  * normal surfaces be embedded.  The validity constraints will be expressed
@@ -1414,13 +1411,11 @@ REGINA_API NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
  *
  * @param triangulation the triangulation upon which these validity constraints
  * will be based.
- * @param flavour the flavour of coordinate system to be used;
- * this must be one of the predefined coordinate system
- * constants in NNormalSurfaceList.
+ * @param flavour the flavour of coordinate system to be used.
  * @return a newly allocated set of constraints.
  */
 REGINA_API NEnumConstraintList* makeEmbeddedConstraints(
-    NTriangulation* triangulation, int flavour);
+    NTriangulation* triangulation, NormalCoords flavour);
 
 /*@}*/
 
@@ -1433,7 +1428,7 @@ inline NNormalSurfaceList::~NNormalSurfaceList() {
     for_each(surfaces.begin(), surfaces.end(), FuncDelete<NNormalSurface>());
 }
 
-inline int NNormalSurfaceList::getFlavour() const {
+inline NormalCoords NNormalSurfaceList::getFlavour() const {
     return flavour;
 }
 
@@ -1448,10 +1443,6 @@ inline unsigned long NNormalSurfaceList::getNumberOfSurfaces() const {
 inline const NNormalSurface* NNormalSurfaceList::getSurface(
         unsigned long index) const {
     return surfaces[index];
-}
-
-inline ShareableObject* NNormalSurfaceList::getShareableObject() {
-    return this;
 }
 
 inline bool NNormalSurfaceList::dependsOnParent() const {
@@ -1579,7 +1570,7 @@ inline NNormalSurfaceList::SurfaceInserter&
     return *this;
 }
 
-inline NNormalSurfaceList::NNormalSurfaceList(int newFlavour,
+inline NNormalSurfaceList::NNormalSurfaceList(NormalCoords newFlavour,
         bool embeddedOnly) : flavour(newFlavour), embedded(embeddedOnly) {
 }
 

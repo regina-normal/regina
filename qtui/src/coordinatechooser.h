@@ -42,21 +42,20 @@
 
 #include <QComboBox>
 #include <vector>
+#include "surfaces/normalcoords.h"
 
 namespace regina {
     class NNormalSurfaceList;
 }
 
 /**
- * A widget through which a normal surface coordinate system can be
- * selected.  Coordinate systems are described by the integer constants
- * declared in regina::NNormalSurfaceList.
+ * A widget through which a normal surface coordinate system can be selected.
  */
 class CoordinateChooser : public QComboBox {
     Q_OBJECT
 
     private:
-        std::vector<int> systems;
+        std::vector<regina::NormalCoords> systems;
             /**< A list of the coordinate systems corresponding to the
                  available entries in the combo box. */
 
@@ -69,21 +68,21 @@ class CoordinateChooser : public QComboBox {
         /**
          * Used to fill the combo box with coordinate systems.
          */
-        void insertSystem(int coordSystem);
+        void insertSystem(regina::NormalCoords coordSystem);
         void insertAllCreators();
         void insertAllViewers(regina::NNormalSurfaceList* surfaces);
 
         /**
          * Get and set the currently selected coordinate system.
          */
-        void setCurrentSystem(int newSystem);
-        int getCurrentSystem();
+        void setCurrentSystem(regina::NormalCoords newSystem);
+        regina::NormalCoords getCurrentSystem();
 };
 
 inline CoordinateChooser::CoordinateChooser() : QComboBox() {
 }
 
-inline int CoordinateChooser::getCurrentSystem() {
+inline regina::NormalCoords CoordinateChooser::getCurrentSystem() {
     return systems[currentIndex()];
 }
 

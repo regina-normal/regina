@@ -453,7 +453,7 @@ bool NTriangulation::isSolidTorus() const {
     // Pull out the big guns: normal surface time.
     // TODO: Can we do this in quad coordinates instead?
     NNormalSurfaceList* s = NNormalSurfaceList::enumerate(
-        &working, NNormalSurfaceList::STANDARD, true);
+        &working, NS_STANDARD, true);
     const NNormalSurface* f;
     NTriangulation* cutOpen;
     for (unsigned long i = 0; i < s->getNumberOfSurfaces(); ++i) {
@@ -566,8 +566,7 @@ bool NTriangulation::hasCompressingDisc() const {
     // use standard coordinates.  Jaco, Letscher and Rubinstein mention
     // quad space, but don't give details (which I'd prefer to see).
     // Leave it in standard coordinates for now.
-    NNormalSurfaceList* q = NNormalSurfaceList::enumerate(&use,
-        NNormalSurfaceList::STANDARD);
+    NNormalSurfaceList* q = NNormalSurfaceList::enumerate(&use, NS_STANDARD);
 
     // Run through all vertex surfaces looking for a compressing disc.
     unsigned long nSurfaces = q->getNumberOfSurfaces();

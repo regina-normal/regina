@@ -39,6 +39,7 @@
 #ifndef __REGINAPREFSET_H
 #define __REGINAPREFSET_H
 
+#include "surfaces/normalcoords.h"
 #include <qmutex.h>
 #include <QFont>
 #include <QList>
@@ -392,7 +393,7 @@ class ReginaPrefSet : public QObject {
         unsigned surfacesCompatThreshold;
             /**< The maximum number of normal surfaces in a list for which the
                  compatibility matrices will be automatically calculated. */
-        int surfacesCreationCoords;
+        regina::NormalCoords surfacesCreationCoords;
             /**< The default coordinate system for normal surface creation. */
         SurfacesCompatMatrix surfacesInitialCompat;
             /**< The matrix first shown when the compatibility tab is

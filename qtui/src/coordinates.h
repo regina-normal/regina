@@ -40,6 +40,7 @@
 #define __COORDINATES_H
 
 #include "maths/ninteger.h"
+#include "surfaces/normalcoords.h"
 
 #include <QString>
 #include <QObject>
@@ -53,7 +54,8 @@ namespace Coordinates {
     /**
      * Return a human-readable name for the given coordinate system.
      */
-    const char* name(int coordSystem, bool capitalise = true);
+    const char* name(regina::NormalCoords coordSystem,
+        bool capitalise = true);
 
     /**
      * Does the given coordinate system generate almost normal
@@ -62,13 +64,14 @@ namespace Coordinates {
      * Only coordinate systems that are used for enumerating surfaces
      * (not just viewing surfaces) are relevant here.
      */
-    bool generatesAlmostNormal(int coordSystem);
+    bool generatesAlmostNormal(regina::NormalCoords coordSystem);
 
     /**
      * Return the number of coordinate columns in the given coordinate
      * system.
      */
-    unsigned long numColumns(int coordSystem, regina::NTriangulation* tri);
+    unsigned long numColumns(regina::NormalCoords coordSystem,
+        regina::NTriangulation* tri);
 
     /**
      * Return a column header for the given coordinate of the given
@@ -78,7 +81,8 @@ namespace Coordinates {
      * information can be returned, though this routine will behave
      * well without it.
      */
-    QString columnName(int coordSystem, unsigned long whichCoord,
+    QString columnName(regina::NormalCoords coordSystem,
+        unsigned long whichCoord,
         regina::NTriangulation* tri = 0);
 
     /**
@@ -89,14 +93,15 @@ namespace Coordinates {
      * information can be returned, though this routine will behave
      * well without it.
      */
-    QString columnDesc(int coordSystem, unsigned long whichCoord,
+    QString columnDesc(regina::NormalCoords coordSystem,
+        unsigned long whichCoord,
         const QObject *context, regina::NTriangulation* tri = 0);
 
     /**
      * Return a particular coordinate of a normal surface in the given
      * coordinate system.
      */
-    regina::NLargeInteger getCoordinate(int coordSystem,
+    regina::NLargeInteger getCoordinate(regina::NormalCoords coordSystem,
         const regina::NNormalSurface& surface, unsigned long whichCoord);
 };
 

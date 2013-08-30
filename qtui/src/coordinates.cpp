@@ -41,92 +41,94 @@
 
 using regina::NFace;
 using regina::NNormalSurfaceList;
+using regina::NormalCoords;
 
 namespace Coordinates {
-    const char* name(int coordSystem, bool capitalise) {
+    const char* name(NormalCoords coordSystem, bool capitalise) {
         if (capitalise) {
-            if (coordSystem == NNormalSurfaceList::STANDARD)
+            if (coordSystem == regina::NS_STANDARD)
                 return QT_TR_NOOP("Standard normal (tri-quad)");
-            if (coordSystem == NNormalSurfaceList::AN_STANDARD)
+            if (coordSystem == regina::NS_AN_STANDARD)
                 return QT_TR_NOOP("Standard almost normal (tri-quad-oct)");
-            if (coordSystem == NNormalSurfaceList::AN_LEGACY)
+            if (coordSystem == regina::NS_AN_LEGACY)
                 return QT_TR_NOOP("Legacy almost normal (pruned tri-quad-oct)");
-            if (coordSystem == NNormalSurfaceList::QUAD)
+            if (coordSystem == regina::NS_QUAD)
                 return QT_TR_NOOP("Quad normal");
-            if (coordSystem == NNormalSurfaceList::AN_QUAD_OCT)
+            if (coordSystem == regina::NS_AN_QUAD_OCT)
                 return QT_TR_NOOP("Quad-oct almost normal");
-            if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT)
+            if (coordSystem == regina::NS_EDGE_WEIGHT)
                 return QT_TR_NOOP("Edge weight");
-            if (coordSystem == NNormalSurfaceList::FACE_ARCS)
+            if (coordSystem == regina::NS_FACE_ARCS)
                 return QT_TR_NOOP("Face arc");
-            if (coordSystem == NNormalSurfaceList::ORIENTED)
+            if (coordSystem == regina::NS_ORIENTED)
                 return QT_TR_NOOP("Transversely oriented normal");
-            if (coordSystem == NNormalSurfaceList::ORIENTED_QUAD)
+            if (coordSystem == regina::NS_ORIENTED_QUAD)
                 return QT_TR_NOOP("Transversely oriented quad normal");
             return QT_TR_NOOP("Unknown");
         } else {
-            if (coordSystem == NNormalSurfaceList::STANDARD)
+            if (coordSystem == regina::NS_STANDARD)
                 return QT_TR_NOOP("standard normal (tri-quad)");
-            if (coordSystem == NNormalSurfaceList::AN_STANDARD)
+            if (coordSystem == regina::NS_AN_STANDARD)
                 return QT_TR_NOOP("standard almost normal (tri-quad-oct)");
-            if (coordSystem == NNormalSurfaceList::AN_LEGACY)
+            if (coordSystem == regina::NS_AN_LEGACY)
                 return QT_TR_NOOP("legacy almost normal (pruned tri-quad-oct)");
-            if (coordSystem == NNormalSurfaceList::QUAD)
+            if (coordSystem == regina::NS_QUAD)
                 return QT_TR_NOOP("quad normal");
-            if (coordSystem == NNormalSurfaceList::AN_QUAD_OCT)
+            if (coordSystem == regina::NS_AN_QUAD_OCT)
                 return QT_TR_NOOP("quad-oct almost normal");
-            if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT)
+            if (coordSystem == regina::NS_EDGE_WEIGHT)
                 return QT_TR_NOOP("edge weight");
-            if (coordSystem == NNormalSurfaceList::FACE_ARCS)
+            if (coordSystem == regina::NS_FACE_ARCS)
                 return QT_TR_NOOP("face arc");
-            if (coordSystem == NNormalSurfaceList::ORIENTED)
+            if (coordSystem == regina::NS_ORIENTED)
                 return QT_TR_NOOP("transversely oriented normal");
-            if (coordSystem == NNormalSurfaceList::ORIENTED_QUAD)
+            if (coordSystem == regina::NS_ORIENTED_QUAD)
                 return QT_TR_NOOP("transversely oriented quad normal");
             return QT_TR_NOOP("unknown");
         }
     }
 
-    bool generatesAlmostNormal(int coordSystem) {
-        return (coordSystem == NNormalSurfaceList::AN_STANDARD ||
-                coordSystem == NNormalSurfaceList::AN_LEGACY ||
-                coordSystem == NNormalSurfaceList::AN_QUAD_OCT);
+    bool generatesAlmostNormal(NormalCoords coordSystem) {
+        return (coordSystem == regina::NS_AN_STANDARD ||
+                coordSystem == regina::NS_AN_LEGACY ||
+                coordSystem == regina::NS_AN_QUAD_OCT);
     }
 
-    unsigned long numColumns(int coordSystem, regina::NTriangulation* tri) {
-        if (coordSystem == NNormalSurfaceList::STANDARD)
+    unsigned long numColumns(NormalCoords coordSystem,
+            regina::NTriangulation* tri) {
+        if (coordSystem == regina::NS_STANDARD)
             return tri->getNumberOfTetrahedra() * 7;
-        else if (coordSystem == NNormalSurfaceList::AN_STANDARD)
+        else if (coordSystem == regina::NS_AN_STANDARD)
             return tri->getNumberOfTetrahedra() * 10;
-        else if (coordSystem == NNormalSurfaceList::AN_LEGACY)
+        else if (coordSystem == regina::NS_AN_LEGACY)
             return tri->getNumberOfTetrahedra() * 10;
-        else if (coordSystem == NNormalSurfaceList::QUAD)
+        else if (coordSystem == regina::NS_QUAD)
             return tri->getNumberOfTetrahedra() * 3;
-        else if (coordSystem == NNormalSurfaceList::AN_QUAD_OCT)
+        else if (coordSystem == regina::NS_AN_QUAD_OCT)
             return tri->getNumberOfTetrahedra() * 6;
-        else if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT)
+        else if (coordSystem == regina::NS_EDGE_WEIGHT)
             return tri->getNumberOfEdges();
-        else if (coordSystem == NNormalSurfaceList::FACE_ARCS)
+        else if (coordSystem == regina::NS_FACE_ARCS)
             return tri->getNumberOfFaces() * 3;
-        else if (coordSystem == NNormalSurfaceList::ORIENTED)
+        else if (coordSystem == regina::NS_ORIENTED)
             return tri->getNumberOfTetrahedra() * 14;
-        else if (coordSystem == NNormalSurfaceList::ORIENTED_QUAD)
+        else if (coordSystem == regina::NS_ORIENTED_QUAD)
             return tri->getNumberOfTetrahedra() * 6;
         else
             return 0;
     }
 
-    QString columnName(int coordSystem, unsigned long whichCoord,
+    QString columnName(NormalCoords coordSystem, unsigned long whichCoord,
             regina::NTriangulation* tri) {
-        if (coordSystem == NNormalSurfaceList::STANDARD) {
+        if (coordSystem == regina::NS_STANDARD) {
             if (whichCoord % 7 < 4)
                 return QString("%1: %2").arg(whichCoord / 7).
                     arg(whichCoord % 7);
             else
                 return QString("%1: %2").arg(whichCoord / 7).
                     arg(regina::vertexSplitString[(whichCoord % 7) - 4]);
-        } else if (coordSystem == NNormalSurfaceList::AN_STANDARD ||
-                coordSystem == NNormalSurfaceList::AN_LEGACY) {
+        } else if (coordSystem == regina::NS_AN_STANDARD ||
+                coordSystem == regina::NS_AN_LEGACY) {
             if (whichCoord % 10 < 4)
                 return QString("T%1: %2").arg(whichCoord / 10).
                     arg(whichCoord % 10);
@@ -136,24 +138,24 @@ namespace Coordinates {
             else
                 return QString("K%1: %2").arg(whichCoord / 10).
                     arg(regina::vertexSplitString[(whichCoord % 10) - 7]);
-        } else if (coordSystem == NNormalSurfaceList::QUAD) {
+        } else if (coordSystem == regina::NS_QUAD) {
             return QString("%1: %2").arg(whichCoord / 3).
                 arg(regina::vertexSplitString[whichCoord % 3]);
-        } else if (coordSystem == NNormalSurfaceList::AN_QUAD_OCT) {
+        } else if (coordSystem == regina::NS_AN_QUAD_OCT) {
             if (whichCoord % 6 < 3)
                 return QString("Q%1: %2").arg(whichCoord / 6).
                     arg(regina::vertexSplitString[whichCoord % 6]);
             else
                 return QString("K%1: %2").arg(whichCoord / 6).
                     arg(regina::vertexSplitString[(whichCoord % 6) - 3]);
-        } else if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT) {
+        } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
             if (! (tri && tri->getEdge(whichCoord)->isBoundary()))
                 return QString::number(whichCoord);
             else
                 return QString("%1 [B]").arg(whichCoord);
-        } else if (coordSystem == NNormalSurfaceList::FACE_ARCS) {
+        } else if (coordSystem == regina::NS_FACE_ARCS) {
             return QString("%1: %2").arg(whichCoord / 3).arg(whichCoord % 3);
-        } else if (coordSystem == NNormalSurfaceList::ORIENTED) {
+        } else if (coordSystem == regina::NS_ORIENTED) {
             unsigned long stdCoord = whichCoord / 2;
             if (whichCoord % 2 == 0) {
                 // "true" orientation.
@@ -175,7 +177,7 @@ namespace Coordinates {
                         arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][2]).
                         arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][3]);
             }
-        } else if (coordSystem == NNormalSurfaceList::ORIENTED_QUAD) {
+        } else if (coordSystem == regina::NS_ORIENTED_QUAD) {
             unsigned long quadCoord = whichCoord / 2;
             if (whichCoord % 2 == 0) {
                 // "true" orientation.
@@ -194,9 +196,9 @@ namespace Coordinates {
         return QString("Unknown");
     }
 
-    QString columnDesc(int coordSystem, unsigned long whichCoord,
+    QString columnDesc(NormalCoords coordSystem, unsigned long whichCoord,
             const QObject *context, regina::NTriangulation* tri) {
-        if (coordSystem == NNormalSurfaceList::STANDARD) {
+        if (coordSystem == regina::NS_STANDARD) {
             if (whichCoord % 7 < 4)
                 return context->tr("Tetrahedron %1, triangle about vertex %2").
                     arg(whichCoord / 7).arg(whichCoord % 7);
@@ -204,8 +206,8 @@ namespace Coordinates {
                 return context->tr("Tetrahedron %1, quad splitting vertices %2").
                     arg(whichCoord / 7).
                     arg(regina::vertexSplitString[(whichCoord % 7) - 4]);
-        } else if (coordSystem == NNormalSurfaceList::AN_STANDARD ||
-                coordSystem == NNormalSurfaceList::AN_LEGACY) {
+        } else if (coordSystem == regina::NS_AN_STANDARD ||
+                coordSystem == regina::NS_AN_LEGACY) {
             if (whichCoord % 10 < 4)
                 return context->tr("Tetrahedron %1, triangle about vertex %2").
                     arg(whichCoord / 10).arg(whichCoord % 10);
@@ -217,11 +219,11 @@ namespace Coordinates {
                 return context->tr("Tetrahedron %1, oct partitioning vertices %2").
                     arg(whichCoord / 10).
                     arg(regina::vertexSplitString[(whichCoord % 10) - 7]);
-        } else if (coordSystem == NNormalSurfaceList::QUAD) {
+        } else if (coordSystem == regina::NS_QUAD) {
             return context->tr("Tetrahedron %1, quad splitting vertices %2").
                 arg(whichCoord / 3).
                 arg(regina::vertexSplitString[whichCoord % 3]);
-        } else if (coordSystem == NNormalSurfaceList::AN_QUAD_OCT) {
+        } else if (coordSystem == regina::NS_AN_QUAD_OCT) {
             if (whichCoord % 6 < 3)
                 return context->tr("Tetrahedron %1, quad splitting vertices %2").
                     arg(whichCoord / 6).
@@ -230,7 +232,7 @@ namespace Coordinates {
                 return context->tr("Tetrahedron %1, oct partitioning vertices %2").
                     arg(whichCoord / 6).
                     arg(regina::vertexSplitString[(whichCoord % 6) - 3]);
-        } else if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT) {
+        } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
             if (tri) {
                 if (tri->getEdge(whichCoord)->isBoundary())
                     return context->tr("Weight of (boundary) edge %1").
@@ -240,10 +242,10 @@ namespace Coordinates {
                         arg(whichCoord);
             } else
                 return context->tr("Weight of edge %1").arg(whichCoord);
-        } else if (coordSystem == NNormalSurfaceList::FACE_ARCS) {
+        } else if (coordSystem == regina::NS_FACE_ARCS) {
             return context->tr("Arcs on face %1 crossing face vertex %2").
                 arg(whichCoord / 3).arg(whichCoord % 3);
-        } else if (coordSystem == NNormalSurfaceList::ORIENTED) {
+        } else if (coordSystem == regina::NS_ORIENTED) {
             unsigned long stdCoord = whichCoord / 2;
             if (whichCoord % 2 == 0) {
                 // "true" orientation.
@@ -273,7 +275,7 @@ namespace Coordinates {
                         arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][2]).
                         arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][3]);
             }
-        } else if (coordSystem == NNormalSurfaceList::ORIENTED_QUAD) {
+        } else if (coordSystem == regina::NS_ORIENTED_QUAD) {
             unsigned long quadCoord = whichCoord / 2;
             if (whichCoord % 2 == 0) {
                 // "true" orientation.
@@ -296,17 +298,17 @@ namespace Coordinates {
         return context->tr("This coordinate system is not known");
     }
 
-    regina::NLargeInteger getCoordinate(int coordSystem,
+    regina::NLargeInteger getCoordinate(NormalCoords coordSystem,
             const regina::NNormalSurface& surface, unsigned long whichCoord) {
-        if (coordSystem == NNormalSurfaceList::STANDARD) {
+        if (coordSystem == regina::NS_STANDARD) {
             if (whichCoord % 7 < 4)
                 return surface.getTriangleCoord(
                     whichCoord / 7, whichCoord % 7);
             else
                 return surface.getQuadCoord(
                     whichCoord / 7, (whichCoord % 7) - 4);
-        } else if (coordSystem == NNormalSurfaceList::AN_STANDARD ||
-                coordSystem == NNormalSurfaceList::AN_LEGACY) {
+        } else if (coordSystem == regina::NS_AN_STANDARD ||
+                coordSystem == regina::NS_AN_LEGACY) {
             if (whichCoord % 10 < 4)
                 return surface.getTriangleCoord(
                     whichCoord / 10, whichCoord % 10);
@@ -316,19 +318,19 @@ namespace Coordinates {
             else
                 return surface.getOctCoord(
                     whichCoord / 10, (whichCoord % 10) - 7);
-        } else if (coordSystem == NNormalSurfaceList::QUAD) {
+        } else if (coordSystem == regina::NS_QUAD) {
             return surface.getQuadCoord(whichCoord / 3, whichCoord % 3);
-        } else if (coordSystem == NNormalSurfaceList::AN_QUAD_OCT) {
+        } else if (coordSystem == regina::NS_AN_QUAD_OCT) {
             if (whichCoord % 6 < 3)
                 return surface.getQuadCoord(whichCoord / 6, whichCoord % 6);
             else
                 return surface.getOctCoord(
                     whichCoord / 6, (whichCoord % 6) - 3);
-        } else if (coordSystem == NNormalSurfaceList::EDGE_WEIGHT) {
+        } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
             return surface.getEdgeWeight(whichCoord);
-        } else if (coordSystem == NNormalSurfaceList::FACE_ARCS) {
+        } else if (coordSystem == regina::NS_FACE_ARCS) {
             return surface.getFaceArcs(whichCoord / 3, whichCoord % 3);
-        } else if (coordSystem == NNormalSurfaceList::ORIENTED) {
+        } else if (coordSystem == regina::NS_ORIENTED) {
             bool orientation = (whichCoord % 2 == 0);
             whichCoord /= 2;
             if (whichCoord % 7 < 4)
@@ -337,7 +339,7 @@ namespace Coordinates {
             else
                 return surface.getOrientedQuadCoord(
                     whichCoord / 7, (whichCoord % 7) - 4, orientation);
-        } else if (coordSystem == NNormalSurfaceList::ORIENTED_QUAD) {
+        } else if (coordSystem == regina::NS_ORIENTED_QUAD) {
             bool orientation = (whichCoord % 2 == 0);
             whichCoord /= 2;
             return surface.getOrientedQuadCoord(
