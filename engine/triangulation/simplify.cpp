@@ -1065,7 +1065,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
 
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
-    unsigned degree = embs.size();
+    unsigned long degree = embs.size();
     NTetrahedron** embTet = new NTetrahedron*[degree];
     NPerm4* embVertices = new NPerm4[degree];
 
@@ -1096,7 +1096,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
 }
 
 void NTriangulation::reorderTetrahedraBFS(bool reverse) {
-    unsigned n = getNumberOfTetrahedra();
+    unsigned long n = getNumberOfTetrahedra();
     if (n == 0)
         return;
 
@@ -1107,9 +1107,9 @@ void NTriangulation::reorderTetrahedraBFS(bool reverse) {
     bool* used = new bool[n];
 
     std::fill(used, used + n, false);
-    unsigned filled = 0;    /* Placed in the ordered array. */
-    unsigned processed = 0; /* All neighbours placed in the ordered array. */
-    unsigned nextTet = 0;   /* Used to search for connected components. */
+    unsigned long filled = 0;    /* Placed in ordered[]. */
+    unsigned long processed = 0; /* All neighbours placed in ordered[]. */
+    unsigned long nextTet = 0;   /* Used to search for connected components. */
 
     unsigned i;
     NTetrahedron *tet, *adj;
@@ -1141,12 +1141,13 @@ void NTriangulation::reorderTetrahedraBFS(bool reverse) {
     // the order in which they were found during the breadth-first search.
     tetrahedra.clear();
 
+    unsigned long j;
     if (reverse) {
-        for (i = n; i > 0; )
-            tetrahedra.push_back(ordered[--i]);
+        for (j = n; j > 0; )
+            tetrahedra.push_back(ordered[--j]);
     } else {
-        for (i = 0; i < n; )
-            tetrahedra.push_back(ordered[i++]);
+        for (j = 0; j < n; )
+            tetrahedra.push_back(ordered[j++]);
     }
 
     delete[] used;

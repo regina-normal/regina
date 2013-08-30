@@ -55,7 +55,7 @@ void NAbelianGroup::addTorsionElement(const NLargeInteger& degree,
     }
 
     // Build a presentation matrix for the torsion.
-    unsigned len = invariantFactors.size() + mult;
+    size_t len = invariantFactors.size() + mult;
     NMatrixInt a(len, len);
 
     // Put our own invariant factors in the top.
@@ -80,7 +80,7 @@ void NAbelianGroup::addTorsionElement(const NLargeInteger& degree,
 void NAbelianGroup::addTorsionElements(const std::multiset<NLargeInteger>&
         torsion) {
     // Build a presentation matrix for the torsion.
-    unsigned len = invariantFactors.size() + torsion.size();
+    size_t len = invariantFactors.size() + torsion.size();
     NMatrixInt a(len, len);
 
     // Put our own invariant factors in the top.
@@ -104,7 +104,7 @@ void NAbelianGroup::addTorsionElements(const std::multiset<NLargeInteger>&
 
 void NAbelianGroup::addGroup(const NMatrixInt& presentation) {
     // Prepare to calculate invariant factors.
-    unsigned len = invariantFactors.size();
+    size_t len = invariantFactors.size();
     NMatrixInt a(len + presentation.rows(), len + presentation.columns());
 
     // Fill in the complete presentation matrix.
@@ -140,7 +140,7 @@ void NAbelianGroup::addGroup(const NAbelianGroup& group) {
         return;
 
     // We will have to calculate the invariant factors ourselves.
-    unsigned len = invariantFactors.size() + group.invariantFactors.size();
+    size_t len = invariantFactors.size() + group.invariantFactors.size();
     NMatrixInt a(len, len);
 
     // Put our own invariant factors in the top.
@@ -226,8 +226,8 @@ void NAbelianGroup::replaceTorsion(const NMatrixInt& matrix) {
     // looking for 0 because the SNF calculation should end up with
     // many 1s for a unnecessarily large presentation matrix such as
     // is produced for instance by homology calculations.
-    unsigned rows = matrix.rows();
-    unsigned i = matrix.columns();
+    unsigned long rows = matrix.rows();
+    unsigned long i = matrix.columns();
     if (i > rows) {
         rank += (i - rows);
         i = rows;
