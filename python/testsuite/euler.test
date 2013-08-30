@@ -36,10 +36,10 @@ def printEuler(t, name):
 		'---', name
 
 	# Consistency check, while we're here.
-	eHom = regina.NCellularData(t).eulerChar()
-	if eHom != t.getEulerCharManifold():
-		print 'ERROR: NTriangulation::getEulerCharManifold() and'
-		print '       NCellularData.eulerChar() disagree!'
+	# eHom = regina.NCellularData(t).eulerChar()
+	# if eHom != t.getEulerCharManifold():
+	# 	print 'ERROR: NTriangulation::getEulerCharManifold() and'
+	# 	print '       NCellularData.eulerChar() disagree!'
 
 print 'Euler characteristics for triangulation vs compact manifold:'
 
