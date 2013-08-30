@@ -196,10 +196,11 @@ Version 4.94  [ (under development) ]
             - Removed writeToFile(NFile&) and readFromFile(NFile&, ...),
               which were used for old-style binary files.
         Class NNormalSurfaceList:
-            - The coordinate flavours (STANDARD, QUAD, etc.) are now deprecated.
-              Instead use the constants defined in the NormalCoords enum
+            - The coordinate flavours (STANDARD, QUAD, etc.) are deprecated,
+              and have changed from integers to NormalCoords enum types.
+              Instead of these, use the NormalCoords enum values directly
               (NS_STANDARD, NS_QUAD, etc.).  For both C++ and Python users,
-              these constants are now available directly in the namespace scope.
+              these enum values are available directly in the namespace scope.
             - No longer inherits from NSurfaceSet (which has been removed).
               As a result, getShareableObject() is no longer necessary and
               has likewise been removed.

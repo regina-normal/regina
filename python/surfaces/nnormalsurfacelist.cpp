@@ -218,6 +218,15 @@ void addNNormalSurfaceList() {
     ;
 
     s.attr("packetType") = NNormalSurfaceList::packetType;
+    s.attr("STANDARD") = regina::NS_STANDARD;
+    s.attr("AN_STANDARD") = regina::NS_AN_STANDARD;
+    s.attr("QUAD") = regina::NS_QUAD;
+    s.attr("AN_QUAD_OCT") = regina::NS_AN_QUAD_OCT;
+    s.attr("EDGE_WEIGHT") = regina::NS_EDGE_WEIGHT;
+    s.attr("FACE_ARCS") = regina::NS_FACE_ARCS;
+    s.attr("AN_LEGACY") = regina::NS_AN_LEGACY;
+    s.attr("ORIENTED") = regina::NS_ORIENTED;
+    s.attr("ORIENTED_QUAD") = regina::NS_ORIENTED_QUAD;
 
     implicitly_convertible<std::auto_ptr<NNormalSurfaceList>,
         std::auto_ptr<regina::NPacket> >();

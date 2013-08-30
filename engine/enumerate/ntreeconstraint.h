@@ -351,7 +351,7 @@ class LPConstraintNone : public LPConstraintSubspace {
  * \pre We are working in standard normal or almost normal coordinates
  * (not quadrilateral or quadrilateral-octagon coordinates).  In
  * particular, the coordinate system passed to the corresponding
- * LPInitialTableaux class constructor must be NNormalSurfaceList::STANDARD.
+ * LPInitialTableaux class constructor must be NS_STANDARD.
  *
  * \apinotfinal
  *
@@ -405,7 +405,7 @@ class LPConstraintEuler : public LPConstraintBase {
  *
  * \pre We are working in quadrilateral normal coordinates.  In particular,
  * the coordinate system passed to the corresponding LPInitialTableaux class
- * must be NNormalSurfaceList::QUAD, and constrainOct() must never be
+ * must be NS_QUAD, and constrainOct() must never be
  * called on any of the corresponding LPData tableaux.
  *
  * \apinotfinal
@@ -494,9 +494,8 @@ class BanConstraintBase {
             /**< The triangulation with which we are working. */
         int coords_;
             /**< The normal or almost normal coordinate system in which
-                 we are working.  This must be one of NNormalSurfaceList::QUAD,
-                 NNormalSurfaceList::STANDARD, NNormalSurfaceList::AN_QUAD_OCT,
-                 or NNormalSurfaceList::AN_STANDARD. */
+                 we are working.  This must be one of NS_QUAD,
+                 NS_STANDARD, NS_AN_QUAD_OCT, or NS_AN_STANDARD. */
         bool* banned_;
             /**< Indicates which columns of a tableaux correspond to banned
                  disc types.
@@ -524,9 +523,8 @@ class BanConstraintBase {
          *
          * @param tri the triangulation with which we are working.
          * @param coords the normal or almost normal coordinate system in
-         * which we are working.  This must be one of NNormalSurfaceList::QUAD,
-         * NNormalSurfaceList::STANDARD, NNormalSurfaceList::AN_QUAD_OCT, or
-         * NNormalSurfaceList::AN_STANDARD.
+         * which we are working.  This must be one of NS_QUAD,
+         * NS_STANDARD, NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
         BanConstraintBase(NTriangulation* tri, int coords);
 
@@ -581,9 +579,8 @@ class BanNone : public BanConstraintBase {
          *
          * @param tri the triangulation with which we are working.
          * @param coords the normal or almost normal coordinate system in
-         * which we are working.  This must be one of NNormalSurfaceList::QUAD,
-         * NNormalSurfaceList::STANDARD, NNormalSurfaceList::AN_QUAD_OCT, or
-         * NNormalSurfaceList::AN_STANDARD.
+         * which we are working.  This must be one of NS_QUAD,
+         * NS_STANDARD, NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
         BanNone(NTriangulation* tri, int coords);
 
@@ -618,9 +615,8 @@ class BanBoundary : public BanConstraintBase {
          *
          * @param tri the triangulation with which we are working.
          * @param coords the normal or almost normal coordinate system in
-         * which we are working.  This must be one of NNormalSurfaceList::QUAD,
-         * NNormalSurfaceList::STANDARD, NNormalSurfaceList::AN_QUAD_OCT, or
-         * NNormalSurfaceList::AN_STANDARD.
+         * which we are working.  This must be one of NS_QUAD,
+         * NS_STANDARD, NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
         BanBoundary(NTriangulation* tri, int coords);
 
@@ -663,9 +659,8 @@ class BanTorusBoundary : public BanConstraintBase {
          *
          * @param tri the triangulation with which we are working.
          * @param coords the normal or almost normal coordinate system in
-         * which we are working.  This must be one of NNormalSurfaceList::QUAD,
-         * NNormalSurfaceList::STANDARD, NNormalSurfaceList::AN_QUAD_OCT, or
-         * NNormalSurfaceList::AN_STANDARD.
+         * which we are working.  This must be one of NS_QUAD,
+         * NS_STANDARD, NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
         BanTorusBoundary(NTriangulation* tri, int coords);
 
