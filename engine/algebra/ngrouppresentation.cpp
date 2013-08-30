@@ -253,8 +253,8 @@ std::string NGroupPresentation::recogniseGroup() const {
             if (rel->getGenerator(0) == rel->getGenerator(2) &&
                     rel->getGenerator(1) == rel->getGenerator(3) &&
                     rel->getGenerator(0) != rel->getGenerator(1) &&
-                    abs(rel->getExponent(0)) == 1 &&
-                    abs(rel->getExponent(1)) == 1 &&
+                    labs(rel->getExponent(0)) == 1 &&
+                    labs(rel->getExponent(1)) == 1 &&
                     rel->getExponent(0) + rel->getExponent(2) == 0 &&
                     rel->getExponent(1) + rel->getExponent(3) == 0)
                 out << "Z + Z (abelian)";

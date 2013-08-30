@@ -129,8 +129,8 @@ void NTriangulation::drillEdge(NEdge* e) {
     // In each case the corresponding edge number in the new tetrahedron
     // equals the edge number from the original tetrahedron.
 
-    int edgeNum = e->getEmbedding(0).getEdge();
-    int tetNum = tetrahedronIndex(e->getEmbedding(0).getTetrahedron());
+    long edgeNum = e->getEmbedding(0).getEdge();
+    long tetNum = tetrahedronIndex(e->getEmbedding(0).getTetrahedron());
 
     int oldToNew[2]; // Identifies two of the 24 tetrahedra in a subdivision
                      // that contain the two corresponding half-edges.
@@ -147,10 +147,10 @@ void NTriangulation::drillEdge(NEdge* e) {
     barycentricSubdivision();
     barycentricSubdivision();
 
-    std::set<unsigned> toRemove;
+    std::set<unsigned long> toRemove;
 
     int i, j, k;
-    unsigned finalTet;
+    unsigned long finalTet;
     NVertex* finalVertex;
     std::vector<NVertexEmbedding>::const_iterator it;
     for (i = 0; i < 2; ++i)
@@ -170,7 +170,7 @@ void NTriangulation::drillEdge(NEdge* e) {
 
     // Make sure we remove tetrahedra in reverse order, so the numbering
     // doesn't change.
-    for (std::set<unsigned>::reverse_iterator rit = toRemove.rbegin();
+    for (std::set<unsigned long>::reverse_iterator rit = toRemove.rbegin();
             rit != toRemove.rend(); ++rit)
         removeTetrahedronAt(*rit);
 
@@ -185,7 +185,7 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
             return false;
 
     int i,j,k,l;
-    int numOldTet = tetrahedra.size();
+    long numOldTet = tetrahedra.size();
     if (! numOldTet)
         return false;
 
@@ -246,7 +246,7 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
 
     // Now deal with the gluings between the pieces inside adjacent tetrahedra.
     NTetrahedron *ot;
-    int oppTet;
+    long oppTet;
     NPerm4 p;
     for (i=0; i<numOldTet; i++) {
         ot = getTetrahedron(i);
@@ -309,7 +309,7 @@ bool NTriangulation::finiteToIdeal() {
 
     // Make a list of all boundary faces, indexed by face number,
     // and create the corresponding new tetrahedra.
-    unsigned nFaces = getNumberOfFaces();
+    unsigned long nFaces = getNumberOfFaces();
 
     NTriangulation staging;
     NTetrahedron** bdry = new NTetrahedron*[nFaces];
@@ -342,7 +342,7 @@ bool NTriangulation::finiteToIdeal() {
 
     // Glue the new tetrahedra to each other.
     NEdge* edge;
-    unsigned tetFace1, tetFace2;
+    unsigned long tetFace1, tetFace2;
     NPerm4 t1Perm, t2Perm;
     for (bit = boundaryComponents.begin();
             bit != boundaryComponents.end(); bit++)

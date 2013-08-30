@@ -803,7 +803,7 @@ inline unsigned long NGroupExpression::getNumberOfTerms() const {
 inline unsigned long NGroupExpression::wordLength() const {
  unsigned long retval(0); 
  std::list<NGroupExpressionTerm>::const_iterator it; 
- for (it = terms.begin(); it!=terms.end(); it++) retval += abs((*it).exponent);
+ for (it = terms.begin(); it!=terms.end(); it++) retval += labs((*it).exponent);
  return retval; 
 }
 
