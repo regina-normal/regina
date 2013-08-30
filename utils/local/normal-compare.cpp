@@ -224,7 +224,7 @@ int main(int argc, char* argv[]) {
         printf("0 0 0 0 0");
     } else {
         clockStart = ::clock();
-        q = NNormalSurfaceList::enumerate(t, NNormalSurfaceList::QUAD, true);
+        q = NNormalSurfaceList::enumerate(t, NS_QUAD, true);
         timeQuad = ::clock() - clockStart;
         numQuad = q->getNumberOfSurfaces();
 

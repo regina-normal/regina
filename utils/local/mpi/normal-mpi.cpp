@@ -398,8 +398,7 @@ int mainSlave() {
             if (p->getPacketType() == NTriangulation::packetType) {
                 t = static_cast<NTriangulation*>(p);
                 s = NNormalSurfaceList::enumerate(t,
-                    (quad ? NNormalSurfaceList::QUAD :
-                        NNormalSurfaceList::STANDARD));
+                    (quad ? NS_QUAD : NS_STANDARD));
                 out << t->getNumberOfTetrahedra() << ' '
                     << s->getNumberOfSurfaces() << " \""
                     << t->getPacketLabel() << '"' << std::endl;

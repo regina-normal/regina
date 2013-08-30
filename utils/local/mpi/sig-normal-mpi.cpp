@@ -398,12 +398,11 @@ int mainSlave() {
 
             t = NTriangulation::fromIsoSig(signature);
 
-            s = NNormalSurfaceList::enumerate(t, NNormalSurfaceList::QUAD);
+            s = NNormalSurfaceList::enumerate(t, NS_QUAD);
             nQuad = s->getNumberOfSurfaces();
             delete s;
 
-            s = NNormalSurfaceList::enumerate(t,
-                NNormalSurfaceList::STANDARD);
+            s = NNormalSurfaceList::enumerate(t, NS_STANDARD);
             nStd = s->getNumberOfSurfaces();
             delete s;
 

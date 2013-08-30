@@ -58,6 +58,16 @@ namespace {
         "Legacy standard almost normal (pruned tri-quad-oct)";
 }
 
+const NormalCoords NNormalSurfaceList::STANDARD = NS_STANDARD;;
+const NormalCoords NNormalSurfaceList::QUAD = NS_QUAD;
+const NormalCoords NNormalSurfaceList::AN_LEGACY = NS_AN_LEGACY;
+const NormalCoords NNormalSurfaceList::AN_QUAD_OCT = NS_AN_QUAD_OCT;
+const NormalCoords NNormalSurfaceList::AN_STANDARD = NS_AN_STANDARD;
+const NormalCoords NNormalSurfaceList::EDGE_WEIGHT = NS_EDGE_WEIGHT;
+const NormalCoords NNormalSurfaceList::FACE_ARCS = NS_FACE_ARCS;
+const NormalCoords NNormalSurfaceList::ORIENTED = NS_ORIENTED;
+const NormalCoords NNormalSurfaceList::ORIENTED_QUAD = NS_ORIENTED_QUAD;
+
 void NNormalSurfaceList::writeAllSurfaces(std::ostream& out) const {
     unsigned long n = getNumberOfSurfaces();
     out << "Number of surfaces is " << n << '\n';

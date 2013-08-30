@@ -106,7 +106,7 @@ void insertTri(const NTriangulation& source) {
     }
 
     if (makeSurfaces)
-        NNormalSurfaceList::enumerate(t, NNormalSurfaceList::STANDARD)->
+        NNormalSurfaceList::enumerate(t, NS_STANDARD)->
             setPacketLabel(t->getPacketLabel() + ": Surfaces");
 }
 

@@ -94,6 +94,94 @@ class REGINA_API NNormalSurfaceList : public NPacket {
     public:
         static const int packetType;
 
+        /**
+         * Represents standard triangle-quadrilateral coordinates for
+         * normal surfaces.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_STANDARD directly.
+         */
+        static const NormalCoords STANDARD;
+        /**
+         * Represents standard triangle-quadrilateral-octagon coordinates
+         * for octagonal almost normal surfaces.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_AN_STANDARD directly.
+         */
+        static const NormalCoords AN_STANDARD;
+        /**
+         * Represents quadrilateral coordinates for normal surfaces.
+         * For details, see "Normal surface Q-theory", Jeffrey L. Tollefson,
+         * Pacific J. Math. 183 (1998), no. 2, 359--374.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_QUAD directly.
+         */
+        static const NormalCoords QUAD;
+        /**
+         * Represents quadrilateral-octagon coordinates for octagonal
+         * almost normal surfaces.  For details, see
+         * "Quadrilateral-octagon coordinates for almost normal surfaces",
+         * Benjamin A. Burton, Experiment. Math. 19 (2010), 285-315.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_AN_QUAD_OCT directly.
+         */
+        static const NormalCoords AN_QUAD_OCT;
+
+        /**
+         * Represents edge weight coordinates for normal surfaces.
+         * This flavour is for representation only; surface
+         * vectors and lists of this flavour cannot be created.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_EDGE_WEIGHT directly.
+         */
+        static const NormalCoords EDGE_WEIGHT;
+        /**
+         * Represents face arc coordinates for normal surfaces.
+         * This flavour is for representation only; surface
+         * vectors and lists of this flavour cannot be created.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_FACE_ARCS directly.
+         */
+        static const NormalCoords FACE_ARCS;
+        /**
+         * Indicates that a list of almost normal surfaces was created
+         * using Regina 4.5.1 or earlier, where surfaces with more than
+         * one octagon of the same type were stripped out of the final
+         * solution set.  As of Regina 4.6 such surfaces are now
+         * included in the solution set, since we need them if we
+         * wish to enumerate \e all almost normal surfaces (not just
+         * the \e vertex almost normal surfaces).
+         *
+         * This flavour is only used with legacy data files; new vectors
+         * and lists of this flavour cannot be created.  The underlying
+         * coordinate system is identical to AN_STANDARD.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_AN_LEGACY directly.
+         */
+        static const NormalCoords AN_LEGACY;
+        /**
+         * Represents standard triangle-quadrilateral coordinates for
+         * transversely oriented normal surfaces.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_ORIENTED directly.
+         */
+        static const NormalCoords ORIENTED;
+        /**
+         * Represents quadrilateral coordinates for transversely oriented 
+         * normal surfaces.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_ORIENTED_QUAD directly.
+         */
+        static const NormalCoords ORIENTED_QUAD;
+
         class VectorIterator;
 
     protected:
@@ -560,7 +648,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * starting.  Specifically, it will check the validity and vertex
          * links of the underlying triangulation, and will verify that
          * the coordinate flavour and embedded-only flag are set to
-         * NNormalSurfaceList::QUAD and \c true respectively.  If any of
+         * NS_QUAD and \c true respectively.  If any of
          * these checks fails, this routine will do nothing and return 0.
          *
          * \pre The underlying triangulation (the parent packet of this
@@ -570,7 +658,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * embedded vertex normal surfaces in quadrilateral space; no more,
          * no less.  Moreover, these vectors are stored using quadrilateral
          * coordinates.  Typically this means that it was obtained through
-         * enumerate(), with the flavour set to NNormalSurfaceList::QUAD and
+         * enumerate(), with the flavour set to NS_QUAD and
          * with \a embeddedOnly set to \c true.
          *
          * @return a full list of vertex normal surfaces in standard (tri-quad)
@@ -595,8 +683,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * no less.  Moreover, these vectors are stored using
          * quadrilateral-octagon coordinates.  Typically this means that it
          * was obtained through enumerate(), with the flavour set to
-         * NNormalSurfaceList::AN_QUAD_OCT and with \a embeddedOnly set to
-         * \c true.
+         * NS_AN_QUAD_OCT and with \a embeddedOnly set to \c true.
          *
          * @return a full list of vertex almost normal surfaces in standard
          * tri-quad-oct coordinates, or 0 if any of the basic sanity checks
@@ -635,7 +722,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * starting.  Specifically, it will check the validity and vertex
          * links of the underlying triangulation, and will verify that
          * the coordinate flavour and embedded-only flag are set to
-         * NNormalSurfaceList::STANDARD and \c true respectively.  If any of
+         * NS_STANDARD and \c true respectively.  If any of
          * these checks fails, this routine will do nothing and return 0.
          *
          * \pre The underlying triangulation (the parent packet of this
@@ -646,8 +733,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * no more, no less.  Moreover, these vectors are stored using
          * standard coordinates.  Typically this means that this list was
          * obtained through enumerate(), with the flavour set to
-         * NNormalSurfaceList::STANDARD and with \a embeddedOnly set to
-         * \c true.
+         * NS_STANDARD and with \a embeddedOnly set to \c true.
          *
          * @return a full list of vertex normal surfaces in quadrilateral
          * coordinates, or 0 if any of the basic sanity checks failed.
@@ -670,8 +756,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * embedded vertex almost normal surfaces in standard tri-quad-oct
          * space; no more, no less.  Typically this means that it was obtained
          * through enumerate(), with the flavour set to
-         * NNormalSurfaceList::AN_STANDARD and with \a embeddedOnly set
-         * to \c true.
+         * NS_AN_STANDARD and with \a embeddedOnly set to \c true.
          *
          * @return a full list of vertex almost normal surfaces in
          * quadrilateral-octagon coordinates, or 0 if any of the basic
@@ -1136,10 +1221,9 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * or AlmostNormalSpec, according to whether we are working with
          * normal or almost normal surfaces.
          * \pre The flavour for this surface list is set to
-         * NNormalSurfaceList::STANDARD if we are working with normal
-         * surfaces, or NNormalSurfaceList::AN_STANDARD if we are working
-         * with almost normal surfaces.  Moreover, the embedded-only flag
-         * is set to \c true.
+         * NS_STANDARD if we are working with normal surfaces, or
+         * NS_AN_STANDARD if we are working with almost normal surfaces.
+         * Moreover, the embedded-only flag is set to \c true.
          * \pre The given triangulation is valid, and the link of every
          * vertex is either a sphere or a disc.
          *
@@ -1185,10 +1269,9 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * or AlmostNormalSpec, according to whether we are doing the
          * work for quadToStandard() or quadOctToStandardAN() respectively.
          * \pre The flavour for this surface list is set to
-         * NNormalSurfaceList::STANDARD or NNormalSurfaceList::AN_STANDARD,
-         * according to whether we are doing the work for quadToStandard()
-         * or quadOctToStandardAN() respectively, and the embedded-only
-         * flag is set to \c true.
+         * NS_STANDARD or NS_AN_STANDARD, according to whether we are doing
+         * the work for quadToStandard() or quadOctToStandardAN() respectively,
+         * and the embedded-only flag is set to \c true.
          * \pre The given triangulation is valid and non-empty, and the link
          * of every vertex is either a sphere or a disc.
          *

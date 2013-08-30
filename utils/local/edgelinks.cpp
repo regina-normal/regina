@@ -164,7 +164,7 @@ bool process(const std::string& filename) {
     for (NPacket* p = tree; p; p = p->nextTreePacket())
         if (p->getPacketType() == NTriangulation::packetType) {
             t = static_cast<NTriangulation*>(p);
-            s = NNormalSurfaceList::enumerate(t, NNormalSurfaceList::QUAD);
+            s = NNormalSurfaceList::enumerate(t, NS_QUAD);
 
             links = 0;
             n = s->getNumberOfSurfaces();
