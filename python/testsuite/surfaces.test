@@ -38,8 +38,7 @@ def surfaceStats(tri):
 	print tri.getPacketLabel()
 	print "-------------------------------"
 	print
-	n = regina.NNormalSurfaceList.enumerate(tri,
-		regina.NNormalSurfaceList.STANDARD)
+	n = regina.NNormalSurfaceList.enumerate(tri, regina.NS_STANDARD)
 
 	# Dump the surfaces in sort order, since don't really mind if the
 	# ordering changes between releases.
