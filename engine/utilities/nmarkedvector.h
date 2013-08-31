@@ -109,8 +109,7 @@ class REGINA_API NMarkedElement {
  * array indices.
  *
  * The way this class is able to provide fast constant-time reverse
- * lookups without consuming a great deal of space (unlike NIndexedArray
- * and its space-hungry hash tables) is by storing array indices
+ * lookups without consuming a great deal of space is by storing array indices
  * inside the objects themselves.  As a result, there are two
  * significant constraints:
  *

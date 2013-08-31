@@ -1453,8 +1453,7 @@ class REGINA_API NTriangulation : public NPacket {
          *
          * \deprecated In Regina 5.0, this routine will be changed to
          * use std::set instead of stdhash::hash_set.  This is part of
-         * the broader plan to remove any need for the non-standard
-         * hash_set and hash_map.
+         * the broader plan to remove any need for the non-standard hash_set.
          *
          * \ifacespython Not present.
          *
@@ -1484,8 +1483,7 @@ class REGINA_API NTriangulation : public NPacket {
          *
          * \deprecated In Regina 5.0, this routine will be changed to
          * use std::set instead of stdhash::hash_set.  This is part of
-         * the broader plan to remove any need for the non-standard
-         * hash_set and hash_map.
+         * the broader plan to remove any need for the non-standard hash_set.
          *
          * \ifacespython Not present.
          *
@@ -1509,8 +1507,7 @@ class REGINA_API NTriangulation : public NPacket {
          *
          * \deprecated In Regina 5.0, this routine will be changed to
          * use std::set instead of stdhash::hash_set.  This is part of
-         * the broader plan to remove any need for the non-standard
-         * hash_set and hash_map.
+         * the broader plan to remove any need for the non-standard hash_set.
          *
          * \ifacespython Not present.
          *
