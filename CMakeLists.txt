@@ -348,9 +348,6 @@ ENDIF (REGINA_DOCS)
 # Test suite
 ENABLE_TESTING() # This must appear before any calls to ADD_SUBDIRECTORY().
 
-# TODO: Get rid of this, eventually.
-SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated")
-
 # Core directories
 ADD_SUBDIRECTORY(engine)
 ADD_SUBDIRECTORY(utils)
