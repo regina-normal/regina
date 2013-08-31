@@ -299,12 +299,8 @@ QSize ReginaMain::sizeHint() const {
 }
 
 void ReginaMain::customEvent(QEvent* evt) {
-    switch (evt->type()) {
-        case EVT_PLUG_PACKET_MENU:
-            plugPacketMenu(); break;
-        default:
-            break;
-    }
+    if (evt->type() == EVT_PLUG_PACKET_MENU)
+        plugPacketMenu();
 }
 
 void ReginaMain::fileNew() {

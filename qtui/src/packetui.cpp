@@ -628,17 +628,14 @@ void PacketPane::refreshHeader() {
 }
 
 void PacketPane::customEvent(QEvent* evt) {
-    switch (evt->type()) {
-        case EVT_PANE_SET_READONLY:
-            setReadWrite(false); break;
-        case EVT_PANE_SET_READWRITE:
-            setReadWrite(true); break;
-        case EVT_REFRESH_HEADER:
-            refreshHeader(); break;
-        case EVT_COMMIT_PACKET:
-            commit(); break;
-        default:
-            break;
-    }
+    int type = evt->type();
+    if (type == EVT_PANE_SET_READONLY)
+        setReadWrite(false);
+    else if (type == EVT_PANE_SET_READWRITE)
+        setReadWrite(true);
+    else if (type == EVT_REFRESH_HEADER)
+        refreshHeader();
+    else if (type == EVT_COMMIT_PACKET)
+        commit();
 }
 
