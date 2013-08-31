@@ -72,6 +72,8 @@ Version 4.94  [ (under development) ]
         Class NGenericIsomorphism:
             - New template base class that contains dimension-agnostic
               code for representing isomorphisms between triangulations.
+        Class NHomologicalData:
+            - Removed all dependencies on the old NIndexedArray.
         Class NInteger:
             - NInteger is a typedef for the new template class
               NIntegerBase<false>, which offers fast arbitrary precision

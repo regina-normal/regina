@@ -126,7 +126,6 @@ bool runAllTests() {
     // Utilities:
     addBase64(runner);
     addNBitmask(runner);
-    addNIndexedArray(runner);
 
     // Maths:
     addNInteger(runner);

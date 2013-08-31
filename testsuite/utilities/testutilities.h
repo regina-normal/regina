@@ -46,5 +46,4 @@
 
 void addBase64(CppUnit::TextUi::TestRunner& runner);
 void addNBitmask(CppUnit::TextUi::TestRunner& runner);
-void addNIndexedArray(CppUnit::TextUi::TestRunner& runner);
 
