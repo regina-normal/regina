@@ -419,11 +419,10 @@ void NHomologicalData::computeChainComplexes() {
 
         // It seems best to compile a list of incident edges
         // which contains their endpoint data and sign.
-        // the list will be an NIndexedArray<long int> edge_adjacency,
+        // the list will be a std::set<long> edge_adjacency,
         // data will be stored as
         // 4*(edge index) + 2*(endpt index) + sign stored as 0 or 1.
-        NIndexedArray<long int> edge_adjacency;
-        edge_adjacency.resize(0);
+        std::set<long> edge_adjacency;
 
         for (j=0;j<vtetlist.size();j++)
             for (k=0;k<6;k++) {
@@ -447,14 +446,16 @@ void NHomologicalData::computeChainComplexes() {
                         vtetlist[j].getTetrahedron()->getEdge(k) )
                         + 2*ind2 + (p1.sign() == vtetlist[j].getVertices().sign() ? 1 : 0);  
 
-                    if (edge_adjacency.index(ind1) == (-1) )
-                        edge_adjacency.push_back(ind1);
+                    // Insertion in std::set is harmless if the key
+                    // already exists.
+                    edge_adjacency.insert(ind1);
                 }
             }
 
-        for (j=0;j<edge_adjacency.size();j++) {
-            B3->entry( dNBE.index(edge_adjacency[j]/4) , i) +=
-                ( ( (edge_adjacency[j] % 2)==0 ) ? 1 : -1 );
+        std::set<long>::const_iterator it;
+        for (it = edge_adjacency.begin(); it != edge_adjacency.end(); ++it) {
+            B3->entry( dNBE.index((*it)/4) , i) +=
+                ( ( ((*it) % 2)==0 ) ? 1 : -1 );
         }
     }
     // end B3

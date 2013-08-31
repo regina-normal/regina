@@ -45,7 +45,6 @@
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/nrational.h"
 #include "triangulation/ntriangulation.h"
-#include "utilities/nindexedarray.h"
 #include "utilities/ptrutils.h"
 #include <algorithm>
 #include <memory>
@@ -129,6 +128,80 @@ class NTriangulation;
 class REGINA_API NHomologicalData : public ShareableObject {
 private:
     /**
+     * A fairly primitive class that implements sorted arrays of
+     * unsigned integers, with logarithmic-time lookup.  The interface is
+     * extremely basic.
+     *
+     * This class is a placeholder, and is \emph not for long-term use.
+     * Eventually it will (probably) be replaced with something richer,
+     * slicker and/or more appropriate.
+     *
+     * \warning A precondition of using this class is that elements are
+     * inserted in increasing order only.
+     */
+    class SortedArray {
+        private:
+            std::vector<unsigned long> data_;
+                /**< The underlying array of integers. */
+
+        public:
+            /**
+             * Construct an empty array.
+             */
+            inline SortedArray() {
+            }
+
+            /**
+             * Return the number of elements in this array.
+             *
+             * @return the number of elements.
+             */
+            inline size_t size() const {
+                return data_.size();
+            }
+            /**
+             * Return the integer at the given index in this array.
+             *
+             * @param index the requested array index; this must be
+             * between 0 and size()-1 inclusive.
+             * @return the corresponding element of this array.
+             */
+            inline unsigned long operator [] (size_t index) const {
+                return data_[index];
+            }
+            /**
+             * Finds the index of the given integer in this array.
+             *
+             * This routine runs in logarithmic time (it uses a
+             * binary search).
+             *
+             * @param value the integer to search for.
+             * @return the array index that holds the given integer,
+             * or -1 if the given integer is not stored in this array.
+             */
+            inline ptrdiff_t index(unsigned long value) const {
+                std::vector<unsigned long>::const_iterator it =
+                    std::lower_bound(data_.begin(), data_.end(), value);
+                if (it != data_.end() && *it == value)
+                    return (it - data_.begin());
+                else
+                    return -1;
+            }
+
+            /**
+             * Pushes the given integer onto the end of this array.
+             *
+             * \pre The given integer is at least as large as every
+             * integer currently stored in the array.
+             *
+             * @param value the integer to insert into this array.
+             */
+            inline void push_back(unsigned long value) {
+                data_.push_back(value);
+            }
+    };
+
+    /**
      * Stored pointer to a valid triangulation. All routines use this
      * triangulation as reference.
      * This is the triangulation that it is initialized by.
@@ -198,25 +271,25 @@ private:
     unsigned long numIdBdryCells[3];
 
     /** non-ideal vertices */
-    NIndexedArray<unsigned long> sNIV;
+    SortedArray sNIV;
     /** vertices which are ideal endpoints of edges, stored as 2*edge index + {0,1} endpt data */
-    NIndexedArray<unsigned long> sIEOE;
+    SortedArray sIEOE;
     /** edges which are ideal end edges of faces, stored as 3*face index + {0,1,2} edge data */
-    NIndexedArray<unsigned long> sIEEOF;
+    SortedArray sIEEOF;
     /** faces which are ideal end faces of tetrahedra, stored as 4*tet index + {0,1,2,3} face data */
-    NIndexedArray<unsigned long> sIEFOT;
+    SortedArray sIEFOT;
     /** vertices which are not ideal, and nonboundary, stored as vertex index */
-    NIndexedArray<unsigned long> dNINBV;
+    SortedArray dNINBV;
     /** interior edges ie: non-boundary edges, stored as edge index */
-    NIndexedArray<unsigned long> dNBE;
+    SortedArray dNBE;
     /** non-boundary faces, stored as face index */
-    NIndexedArray<unsigned long> dNBF;
+    SortedArray dNBF;
     /** boundary, non-ideal vertices, stored as vertex index */
-    NIndexedArray<unsigned long> sBNIV;
+    SortedArray sBNIV;
     /** boundary non-ideal edges, stored as edge index */
-    NIndexedArray<unsigned long> sBNIE;
+    SortedArray sBNIE;
     /** boundary non-ideal faces, stored as face index */
-    NIndexedArray<unsigned long> sBNIF;
+    SortedArray sBNIF;
 
     /** True if the chain complexes A0,A1,A2,A3,A4, B0,B1,B2,B3,B4,
      ** Bd0,Bd1,Bd2,Bd3, B0Incl,B1Incl,B2Incl are computed */
@@ -755,11 +828,6 @@ inline NHomologicalData::NHomologicalData(const NTriangulation& input):
         tri(new NTriangulation(input)),
 
         ccIndexingComputed(false),
-
-        sNIV(0), sIEOE(0), sIEEOF(0), sIEFOT(0),
-        dNINBV(0), dNBE(0), dNBF(0),
-        sBNIV(0), sBNIE(0), sBNIF(0),
-
         chainComplexesComputed(false),
 
         torsionFormComputed(false),
