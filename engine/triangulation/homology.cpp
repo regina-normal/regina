@@ -50,7 +50,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1() const {
     // Calculate the first homology.
     // Find a maximal forest in the dual 1-skeleton.
     // Note that this will ensure the skeleton has been calculated.
-    stdhash::hash_set<NFace*, HashPointer> forest;
+    std::set<NFace*> forest;
     maximalForestInDualSkeleton(forest);
 
     // Build a presentation matrix.
@@ -128,7 +128,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
 
     // Find a maximal forest in the 1-skeleton.
     // Note that this will ensure the skeleton has been calculated.
-    stdhash::hash_set<NEdge*, HashPointer> forest;
+    std::set<NEdge*> forest;
     maximalForestInSkeleton(forest, false);
 
     // Build a presentation matrix.

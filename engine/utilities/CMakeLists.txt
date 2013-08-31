@@ -1,7 +1,7 @@
 # utilities
 
 # Files to compile
-SET ( FILES base64 hashutils i18nutils nbooleans nthread osutils stringutils xmlutils zstream)
+SET ( FILES base64 i18nutils nbooleans nthread osutils stringutils xmlutils zstream)
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
@@ -12,5 +12,5 @@ ENDFOREACH(SOURCE_FILE)
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
-  INSTALL(FILES base64.h bitmanip.h boostutils.h hashset.h hashutils.h i18nutils.h memutils.h nbitmask.h nbooleans.h nlistoncall.h nmarkedvector.h nmatrix2.h nmpi.h nproperty.h nqitmask.h nrational.h nthread.h ntrieset.h ntritmask.h osutils.h ptrutils.h stlutils.h stringutils.h stringutils.tcc xmlutils.h zstream.h DESTINATION ${INCLUDEDIR}/utilities COMPONENT Development)
+  INSTALL(FILES base64.h bitmanip.h boostutils.h i18nutils.h memutils.h nbitmask.h nbooleans.h nlistoncall.h nmarkedvector.h nmatrix2.h nmpi.h nproperty.h nqitmask.h nrational.h nthread.h ntrieset.h ntritmask.h osutils.h ptrutils.h stlutils.h stringutils.h stringutils.tcc xmlutils.h zstream.h DESTINATION ${INCLUDEDIR}/utilities COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
