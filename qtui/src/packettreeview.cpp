@@ -374,19 +374,13 @@ PacketTreeItem* PacketTreeView::createAndSelect(PacketTreeItem* parent,
 }
 
 void PacketTreeView::customEvent(QEvent* evt) {
-    switch (evt->type()) {
-        case EVT_TREE_CHILD_ADDED:
-            {
-                PacketTreeItem* item = static_cast<PacketTreeItemEvent*>(evt)->
-                    getItem();
+    if (evt->type() == EVT_TREE_CHILD_ADDED) {
+        PacketTreeItem* item = static_cast<PacketTreeItemEvent*>(evt)->
+            getItem();
 
-                item->refreshSubtree();
-                item->updateEditable();
-                mainWindow->setModified(true);
-            }
-            break;
-        default:
-            break;
+        item->refreshSubtree();
+        item->updateEditable();
+        mainWindow->setModified(true);
     }
 }
 
