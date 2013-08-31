@@ -533,10 +533,6 @@ class REGINA_API NGroupExpression : public ShareableObject {
  *  detect if the group is a semi-direct product, for 2 and 3-manifold groups.
  */
 class REGINA_API NGroupPresentation : public ShareableObject {
-    private: 
-        // for now we'll keep this to ourselves.  Returns true if the 
-        // presentation partitions the gens into disjoint non-trivial sets. 
-        bool obviously_freeproduct() const;
     protected:
         unsigned long nGenerators;
             /**< The number of generators. */
