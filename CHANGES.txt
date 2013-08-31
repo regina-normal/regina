@@ -38,6 +38,8 @@ Version 4.94  [ (under development) ]
             - New classes to support Dim2Triangulation.
         Class DimTraits:
             - New template class to assist with dimension-agnostic code.
+        Class HashPointer, HashString:
+            - Removed, after being deprecated for a very long time now.
         Class IntOfSize:
             - New template class for using native integer types whose sizes
               are not determined until compile time.
@@ -74,6 +76,8 @@ Version 4.94  [ (under development) ]
               code for representing isomorphisms between triangulations.
         Class NHomologicalData:
             - Removed all dependencies on the old NIndexedArray.
+        Class NIndexedArray:
+            - Removed, after being deprecated for a very long time now.
         Class NInteger:
             - NInteger is a typedef for the new template class
               NIntegerBase<false>, which offers fast arbitrary precision
@@ -214,6 +218,8 @@ Version 4.94  [ (under development) ]
             - These typedefs have been renamed as NFacePairing::IsoList
               and NFacePairing::Use respectively.  The old typedefs are
               deprecated, and will be removed in some future release.
+        Header hashmap.h, hashset.h, hashutils.h:
+            - Removed, after being deprecated for a very long time now.
         Header nlargeinteger.h:
             - Deprecated in favour of the new ninteger.h.
     UTILITIES:

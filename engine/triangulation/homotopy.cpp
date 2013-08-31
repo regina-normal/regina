@@ -47,7 +47,7 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
 
     // Find a maximal forest in the dual 1-skeleton.
     // Note that this will ensure the skeleton has been calculated.
-    stdhash::hash_set<NFace*, HashPointer> forest;
+    std::set<NFace*> forest;
     maximalForestInDualSkeleton(forest);
 
     // Each non-boundary not-in-forest face is a generator.

@@ -36,9 +36,8 @@
 
 namespace regina {
 
-void NTriangulation::maximalForestInBoundary(
-        stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
-        stdhash::hash_set<NVertex*, HashPointer>& vertexSet) const {
+void NTriangulation::maximalForestInBoundary(std::set<NEdge*>& edgeSet,
+        std::set<NVertex*>& vertexSet) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
 
@@ -51,8 +50,8 @@ void NTriangulation::maximalForestInBoundary(
 }
 
 void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
-        stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
-        stdhash::hash_set<NVertex*, HashPointer>& vertexSet) const {
+        std::set<NEdge*>& edgeSet,
+        std::set<NVertex*>& vertexSet) const {
     vertexSet.insert(from);
 
     std::vector<NVertexEmbedding>::const_iterator it =
@@ -82,14 +81,13 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
     }
 }
 
-void NTriangulation::maximalForestInSkeleton(
-        stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
+void NTriangulation::maximalForestInSkeleton(std::set<NEdge*>& edgeSet,
         bool canJoinBoundaries) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
 
-    stdhash::hash_set<NVertex*, HashPointer> vertexSet;
-    stdhash::hash_set<NVertex*, HashPointer> thisBranch;
+    std::set<NVertex*> vertexSet;
+    std::set<NVertex*> thisBranch;
 
     if (canJoinBoundaries)
         edgeSet.clear();
@@ -104,9 +102,9 @@ void NTriangulation::maximalForestInSkeleton(
 }
 
 bool NTriangulation::stretchForestFromVertex(NVertex* from,
-        stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
-        stdhash::hash_set<NVertex*, HashPointer>& vertexSet,
-        stdhash::hash_set<NVertex*, HashPointer>& thisStretch) const {
+        std::set<NEdge*>& edgeSet,
+        std::set<NVertex*>& vertexSet,
+        std::set<NVertex*>& thisStretch) const {
     // Moves out from the vertex until we hit a vertex that has already
     //     been visited; then stops.
     // Returns true if we make such a link.
@@ -144,13 +142,13 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
     return false;
 }
 
-void NTriangulation::maximalForestInDualSkeleton(
-        stdhash::hash_set<NFace*, HashPointer>& faceSet) const {
+void NTriangulation::maximalForestInDualSkeleton(std::set<NFace*>& faceSet)
+        const {
     if (! calculatedSkeleton)
         calculateSkeleton();
 
     faceSet.clear();
-    stdhash::hash_set<NTetrahedron*, HashPointer> visited;
+    std::set<NTetrahedron*> visited;
     for (TetrahedronIterator it = tetrahedra.begin(); it != tetrahedra.end();
             it++)
         if (! (visited.count(*it)))
@@ -158,8 +156,7 @@ void NTriangulation::maximalForestInDualSkeleton(
 }
 
 void NTriangulation::stretchDualForestFromTet(NTetrahedron* tet,
-        stdhash::hash_set<NFace*, HashPointer>& faceSet,
-        stdhash::hash_set<NTetrahedron*, HashPointer>& visited) const {
+        std::set<NFace*>& faceSet, std::set<NTetrahedron*>& visited) const {
     visited.insert(tet);
 
     NTetrahedron* adjTet;

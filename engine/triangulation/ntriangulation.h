@@ -44,12 +44,12 @@
 #include <map>
 #include <memory>
 #include <vector>
+#include <set>
 
 #include "regina-core.h"
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "packet/npacket.h"
-#include "utilities/hashutils.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
@@ -1451,10 +1451,6 @@ class REGINA_API NTriangulation : public NPacket {
          * Note that the edge and vertex pointers returned will become
          * invalid once the triangulation has changed.
          *
-         * \deprecated In Regina 5.0, this routine will be changed to
-         * use std::set instead of stdhash::hash_set.  This is part of
-         * the broader plan to remove any need for the non-standard hash_set.
-         *
          * \ifacespython Not present.
          *
          * @param edgeSet the set to be emptied and into which the edges
@@ -1462,9 +1458,8 @@ class REGINA_API NTriangulation : public NPacket {
          * @param vertexSet the set to be emptied and into which the
          * vertices of the maximal forest will be placed.
          */
-        void maximalForestInBoundary(
-                stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
-                stdhash::hash_set<NVertex*, HashPointer>& vertexSet) const;
+        void maximalForestInBoundary(std::set<NEdge*>& edgeSet,
+                std::set<NVertex*>& vertexSet) const;
         /**
          * Produces a maximal forest in the triangulation's 1-skeleton.
          * The given set will be emptied and will have the edges of the
@@ -1481,10 +1476,6 @@ class REGINA_API NTriangulation : public NPacket {
          * Note that the edge pointers returned will become
          * invalid once the triangulation has changed.
          *
-         * \deprecated In Regina 5.0, this routine will be changed to
-         * use std::set instead of stdhash::hash_set.  This is part of
-         * the broader plan to remove any need for the non-standard hash_set.
-         *
          * \ifacespython Not present.
          *
          * @param edgeSet the set to be emptied and into which the edges
@@ -1493,8 +1484,7 @@ class REGINA_API NTriangulation : public NPacket {
          * boundary components are allowed to be joined by the maximal
          * forest.
          */
-        void maximalForestInSkeleton(
-                stdhash::hash_set<NEdge*, HashPointer>& edgeSet,
+        void maximalForestInSkeleton(std::set<NEdge*>& edgeSet,
                 bool canJoinBoundaries = true) const;
         /**
          * Produces a maximal forest in the triangulation's dual
@@ -1505,17 +1495,12 @@ class REGINA_API NTriangulation : public NPacket {
          * Note that the face pointers returned will become invalid once
          * the triangulation has changed.
          *
-         * \deprecated In Regina 5.0, this routine will be changed to
-         * use std::set instead of stdhash::hash_set.  This is part of
-         * the broader plan to remove any need for the non-standard hash_set.
-         *
          * \ifacespython Not present.
          *
          * @param faceSet the set to be emptied and into which the faces
          * representing the maximal forest will be placed.
          */
-        void maximalForestInDualSkeleton(
-                stdhash::hash_set<NFace*, HashPointer>& faceSet) const;
+        void maximalForestInDualSkeleton(std::set<NFace*>& faceSet) const;
 
         /**
          * Attempts to simplify the triangulation as intelligently as
@@ -3168,18 +3153,14 @@ class REGINA_API NTriangulation : public NPacket {
          */
         void calculateQuadSurfaceProperties();
 
-        void stretchBoundaryForestFromVertex(NVertex*,
-                stdhash::hash_set<NEdge*, HashPointer>&,
-                stdhash::hash_set<NVertex*, HashPointer>&) const;
+        void stretchBoundaryForestFromVertex(NVertex*, std::set<NEdge*>&,
+                std::set<NVertex*>&) const;
             /**< Internal to maximalForestInBoundary(). */
-        bool stretchForestFromVertex(NVertex*,
-                stdhash::hash_set<NEdge*, HashPointer>&,
-                stdhash::hash_set<NVertex*, HashPointer>&,
-                stdhash::hash_set<NVertex*, HashPointer>&) const;
+        bool stretchForestFromVertex(NVertex*, std::set<NEdge*>&,
+                std::set<NVertex*>&, std::set<NVertex*>&) const;
             /**< Internal to maximalForestInSkeleton(). */
-        void stretchDualForestFromTet(NTetrahedron*,
-                stdhash::hash_set<NFace*, HashPointer>&,
-                stdhash::hash_set<NTetrahedron*, HashPointer>&) const;
+        void stretchDualForestFromTet(NTetrahedron*, std::set<NFace*>&,
+                std::set<NTetrahedron*>&) const;
             /**< Internal to maximalForestInDualSkeleton(). */
 
     friend class regina::NTetrahedron;

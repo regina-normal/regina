@@ -1,15 +1,3 @@
-/* Define if you have the <ext/hash_set> header file. */
-#cmakedefine HAVE_EXT_HASH_SET
-
-/* Define if you have the <hash_set> header file. */
-#cmakedefine HAVE_HASH_SET
-
-/* Namespace for class hash_set<...>. */
-#define __HASH_NAMESPACE @__HASH_NAMESPACE@
-
-/* Define if namespace std cannot be aliased. */
-#cmakedefine __NO_NAMESPACE_ALIASES
-
 /* Define if both signed and unsigned long long types are available. */
 #cmakedefine LONG_LONG_FOUND
 
