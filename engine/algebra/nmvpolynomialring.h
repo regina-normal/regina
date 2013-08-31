@@ -48,7 +48,7 @@
 
 #include "regina-core.h"
 #include "maths/nsparsegrid.h"
-#include "maths/nlargeinteger.h"
+#include "maths/ninteger.h"
 #include "algebra/nsvpolynomialring.h"
 #include "utilities/ptrutils.h"
 #include "maths/npartition.h"

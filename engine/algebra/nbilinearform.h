@@ -46,11 +46,10 @@
 #include "maths/nsparsegrid.h"
 #include "maths/matrixops.h"
 #include "shareableobject.h"
-#include "maths/nlargeinteger.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "algebra/nsvpolynomialring.h"
 #include "maths/nrational.h" 
-#include "maths/nlargeinteger.h"
+#include "maths/ninteger.h"
 #include "maths/nprimes.h"
 #include <algorithm>
 #include <map>

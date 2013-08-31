@@ -33,11 +33,6 @@
 /* end stub */
 
 #include "algebra/nbilinearform.h"
-#include "maths/nsparsegrid.h"
-#include "maths/nlargeinteger.h"
-#include "shareableobject.h"
-
-#include <map>
 
 namespace regina {
 

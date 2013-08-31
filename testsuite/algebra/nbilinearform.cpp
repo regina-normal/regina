@@ -36,7 +36,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include "maths/nsparsegrid.h"
-#include "maths/nlargeinteger.h"
+#include "maths/ninteger.h"
 #include "maths/nmatrixint.h"
 
 #include "algebra/nbilinearform.h";

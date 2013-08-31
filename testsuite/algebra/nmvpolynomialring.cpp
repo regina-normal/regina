@@ -36,7 +36,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/nmvpolynomialring.h"
 #include "maths/nsparsegrid.h"
-#include "maths/nlargeinteger.h"
+#include "maths/ninteger.h"
 #include "testsuite/utilities/testutilities.h"
 
 using regina::NLargeInteger;
