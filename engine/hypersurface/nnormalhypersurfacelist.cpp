@@ -48,46 +48,46 @@ namespace regina {
 
 #define __HSFLAVOUR_REGISTRY_BODY
 
-const int NNormalHypersurfaceList::STANDARD = 0;
-const int NNormalHypersurfaceList::EDGE_WEIGHT = 200;
-
 #define REGISTER_HSFLAVOUR(id_name, class, n) \
-    case NNormalHypersurfaceList::id_name: \
+    case regina::id_name: \
         return class::makeZeroVector(triangulation);
 
 NNormalHypersurfaceVector* makeZeroVector(
-        const Dim4Triangulation* triangulation, int flavour) {
+        const Dim4Triangulation* triangulation, HyperCoords flavour) {
     switch(flavour) {
         // Import cases from the flavour registry.
         #include "hypersurface/hsflavourregistry.h"
+        default: break;
     }
     return 0;
 }
 
 #undef REGISTER_HSFLAVOUR
 #define REGISTER_HSFLAVOUR(id_name, class, n) \
-    case NNormalHypersurfaceList::id_name: \
+    case regina::id_name: \
         return class::makeMatchingEquations(triangulation);
 
 NMatrixInt* makeMatchingEquations(Dim4Triangulation* triangulation,
-        int flavour) {
+        HyperCoords flavour) {
     switch(flavour) {
         // Import cases from the flavour registry.
         #include "hypersurface/hsflavourregistry.h"
+        default: break;
     }
     return 0;
 }
 
 #undef REGISTER_HSFLAVOUR
 #define REGISTER_HSFLAVOUR(id_name, class, n) \
-    case NNormalHypersurfaceList::id_name: \
+    case regina::id_name: \
         return class::makeEmbeddedConstraints(triangulation);
 
 NEnumConstraintList* makeEmbeddedConstraints(Dim4Triangulation* triangulation,
-        int flavour) {
+        HyperCoords flavour) {
     switch(flavour) {
         // Import cases from the flavour registry.
         #include "hypersurface/hsflavourregistry.h"
+        default: break;
     }
     return 0;
 }
@@ -117,6 +117,7 @@ void* NNormalHypersurfaceList::VertexEnumerator::run(void*) {
     switch(list_->flavour_) {
         // Import cases from the flavour registry:
         #include "hypersurface/hsflavourregistry.h"
+        default: break;
     }
 
     delete eqns;
@@ -173,6 +174,7 @@ void* NNormalHypersurfaceList::FundPrimalEnumerator::run(void*) {
     switch(list_->flavour_) {
         // Import cases from the flavour registry:
         #include "hypersurface/hsflavourregistry.h"
+        default: break;
     }
 
     delete constraints;
@@ -215,6 +217,7 @@ void* NNormalHypersurfaceList::FundDualEnumerator::run(void*) {
     switch(list_->flavour_) {
         // Import cases from the flavour registry:
         #include "hypersurface/hsflavourregistry.h"
+        default: break;
     }
 
     delete eqns;
@@ -232,7 +235,7 @@ void* NNormalHypersurfaceList::FundDualEnumerator::run(void*) {
 }
 
 NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
-        Dim4Triangulation* owner, int flavour, bool embeddedOnly,
+        Dim4Triangulation* owner, HyperCoords flavour, bool embeddedOnly,
         NProgressManager* manager) {
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
         flavour, embeddedOnly);
@@ -252,7 +255,7 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
 }
 
 NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundPrimal(
-        Dim4Triangulation* owner, int flavour, bool embeddedOnly,
+        Dim4Triangulation* owner, HyperCoords flavour, bool embeddedOnly,
         NNormalHypersurfaceList* vtxSurfaces, NProgressManager* manager) {
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
         flavour, embeddedOnly);
@@ -273,7 +276,7 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundPrimal(
 }
 
 NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundDual(
-        Dim4Triangulation* owner, int flavour, bool embeddedOnly,
+        Dim4Triangulation* owner, HyperCoords flavour, bool embeddedOnly,
         NProgressManager* manager) {
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
         flavour, embeddedOnly);

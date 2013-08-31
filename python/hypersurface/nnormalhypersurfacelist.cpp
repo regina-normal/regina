@@ -39,59 +39,63 @@
 #include "progress/nprogressmanager.h"
 
 using namespace boost::python;
+using regina::HyperCoords;
 using regina::NNormalHypersurfaceList;
 
 namespace {
     // Write manual overload wrappers since these are static member functions.
     NNormalHypersurfaceList* enumerate_2(regina::Dim4Triangulation* owner,
-            int flavour) {
+            HyperCoords flavour) {
         return NNormalHypersurfaceList::enumerate(owner, flavour);
     }
     NNormalHypersurfaceList* enumerate_3(regina::Dim4Triangulation* owner,
-            int flavour, bool embedded) {
+            HyperCoords flavour, bool embedded) {
         return NNormalHypersurfaceList::enumerate(owner, flavour, embedded);
     }
     NNormalHypersurfaceList* enumerate_4(regina::Dim4Triangulation* owner,
-            int flavour, bool embedded, regina::NProgressManager* manager) {
+            HyperCoords flavour, bool embedded,
+            regina::NProgressManager* manager) {
         return NNormalHypersurfaceList::enumerate(owner, flavour, embedded,
             manager);
     }
 
     NNormalHypersurfaceList* enumerateFundPrimal_2(
-            regina::Dim4Triangulation* owner, int flavour) {
+            regina::Dim4Triangulation* owner, HyperCoords flavour) {
         return NNormalHypersurfaceList::enumerateFundPrimal(owner, flavour);
     }
     NNormalHypersurfaceList* enumerateFundPrimal_3(
-            regina::Dim4Triangulation* owner, int flavour, bool embedded) {
+            regina::Dim4Triangulation* owner, HyperCoords flavour,
+            bool embedded) {
         return NNormalHypersurfaceList::enumerateFundPrimal(owner, flavour,
             embedded);
     }
     NNormalHypersurfaceList* enumerateFundPrimal_4(
-            regina::Dim4Triangulation* owner, int flavour, bool embedded,
-            regina::NNormalHypersurfaceList* vtxSurfaces) {
+            regina::Dim4Triangulation* owner, HyperCoords flavour,
+            bool embedded, regina::NNormalHypersurfaceList* vtxSurfaces) {
         return NNormalHypersurfaceList::enumerateFundPrimal(owner, flavour,
             embedded, vtxSurfaces);
     }
     NNormalHypersurfaceList* enumerateFundPrimal_5(
-            regina::Dim4Triangulation* owner, int flavour, bool embedded,
-            regina::NNormalHypersurfaceList* vtxSurfaces,
+            regina::Dim4Triangulation* owner, HyperCoords flavour,
+            bool embedded, regina::NNormalHypersurfaceList* vtxSurfaces,
             regina::NProgressManager* manager) {
         return NNormalHypersurfaceList::enumerateFundPrimal(owner, flavour,
             embedded, vtxSurfaces, manager);
     }
 
     NNormalHypersurfaceList* enumerateFundDual_2(
-            regina::Dim4Triangulation* owner, int flavour) {
+            regina::Dim4Triangulation* owner, HyperCoords flavour) {
         return NNormalHypersurfaceList::enumerateFundDual(owner, flavour);
     }
     NNormalHypersurfaceList* enumerateFundDual_3(
-            regina::Dim4Triangulation* owner, int flavour, bool embedded) {
+            regina::Dim4Triangulation* owner, HyperCoords flavour,
+            bool embedded) {
         return NNormalHypersurfaceList::enumerateFundDual(owner, flavour,
             embedded);
     }
     NNormalHypersurfaceList* enumerateFundDual_4(
-            regina::Dim4Triangulation* owner, int flavour, bool embedded,
-            regina::NProgressManager* manager) {
+            regina::Dim4Triangulation* owner, HyperCoords flavour,
+            bool embedded, regina::NProgressManager* manager) {
         return NNormalHypersurfaceList::enumerateFundDual(owner, flavour,
             embedded, manager);
     }
@@ -142,8 +146,6 @@ void addNNormalHypersurfaceList() {
     ;
 
     s.attr("packetType") = NNormalHypersurfaceList::packetType;
-    s.attr("STANDARD") = NNormalHypersurfaceList::STANDARD;
-    s.attr("EDGE_WEIGHT") = NNormalHypersurfaceList::EDGE_WEIGHT;
 
     implicitly_convertible<std::auto_ptr<NNormalHypersurfaceList>,
         std::auto_ptr<regina::NPacket> >();

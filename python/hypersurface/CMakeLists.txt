@@ -1,7 +1,7 @@
 # hypersurface
 
 # Files to compile
-SET ( FILES nnormalhypersurface nnormalhypersurfacelist pyhypersurface )
+SET ( FILES hypercoords nnormalhypersurface nnormalhypersurfacelist pyhypersurface )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

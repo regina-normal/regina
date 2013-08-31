@@ -51,7 +51,7 @@ void NXMLNormalHypersurfaceReader::startElement(const std::string&,
 }
 
 #define REGISTER_HSFLAVOUR(id_name, class, n) \
-    if (flavour_ == NNormalHypersurfaceList::id_name) \
+    if (flavour_ == id_name) \
         vec = new class(vecLen_); \
     else
 
@@ -124,7 +124,7 @@ NXMLElementReader* NXMLNormalHypersurfaceListReader::startContentSubElement(
                 if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane; create the empty list.
                     list_ = new NNormalHypersurfaceList();
-                    list_->flavour_ = flavour;
+                    list_->flavour_ = static_cast<HyperCoords>(flavour);
                     list_->embedded_ = embedded;
                 }
         }

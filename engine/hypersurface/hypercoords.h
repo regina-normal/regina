@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,13 +32,47 @@
 
 /* end stub */
 
-void addHyperCoords();
-void addNNormalHypersurface();
-void addNNormalHypersurfaceList();
+/*! \file hypersurface/hypercoords.h
+ *  \brief Defines constants for normal hypersurface coordinate systems.
+ */
 
-void addHypersurface() {
-    addHyperCoords();
-    addNNormalHypersurface();
-    addNNormalHypersurfaceList();
-}
+#ifndef __HYPERCOORDS_H
+#ifndef __DOXYGEN
+#define __HYPERCOORDS_H
+#endif
+
+#include "regina-core.h"
+
+namespace regina {
+
+/**
+ * \weakgroup hypersurface
+ * @{
+ */
+
+/**
+ * Represents different flavours of coordinate system that can
+ * be used for enumerating and displaying normal hypersurface
+ * within 4-manifold triangulations.
+ */
+enum HyperCoords {
+    /**
+     * Represents standard tetrahedron-prism coordinates for
+     * normal hypersurfaces.
+     */
+    HS_STANDARD = 0,
+
+    /**
+     * Represents edge weight coordinates for normal hypersurfaces.
+     * This flavour is for representation only; hypersurface
+     * vectors and lists of this flavour cannot be created.
+     */
+    HS_EDGE_WEIGHT = 200
+};
+
+/*@}*/
+
+} // namespace regina
+
+#endif
 

@@ -76,7 +76,7 @@
 #ifndef __HSFLAVOUR_REGISTRY_BODY
     #include "hypersurface/nhsstandard.h"
 #else
-    REGISTER_HSFLAVOUR(STANDARD, NNormalHypersurfaceVectorStandard,
+    REGISTER_HSFLAVOUR(HS_STANDARD, NNormalHypersurfaceVectorStandard,
         "Standard normal (tet-prism)")
 #endif
 

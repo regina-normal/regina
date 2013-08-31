@@ -32,13 +32,20 @@
 
 /* end stub */
 
-void addHyperCoords();
-void addNNormalHypersurface();
-void addNNormalHypersurfaceList();
+#include <boost/python.hpp>
+#include "hypersurface/hypercoords.h"
 
-void addHypersurface() {
-    addHyperCoords();
-    addNNormalHypersurface();
-    addNNormalHypersurfaceList();
+using namespace boost::python;
+
+void addHyperCoords() {
+    scope global;
+
+    enum_<regina::HyperCoords>("HyperCoords")
+        .value("HS_STANDARD", regina::HS_STANDARD)
+        .value("HS_EDGE_WEIGHT", regina::HS_EDGE_WEIGHT)
+        ;
+
+    global.attr("HS_STANDARD") = regina::HS_STANDARD;
+    global.attr("HS_EDGE_WEIGHT") = regina::HS_EDGE_WEIGHT;
 }
 

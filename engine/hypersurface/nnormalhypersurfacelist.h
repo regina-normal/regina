@@ -47,6 +47,7 @@
 #include <iterator>
 #include <vector>
 #include "regina-core.h"
+#include "hypersurface/hypercoords.h"
 #include "hypersurface/nnormalhypersurface.h"
 #include "packet/npacket.h"
 #include "utilities/memutils.h"
@@ -82,25 +83,12 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
     public:
         static const int packetType;
 
-        /**
-         * Represents standard tetrahedron-prism coordinates for
-         * normal hypersurfaces.
-         */
-        static const int STANDARD;
-
-        /**
-         * Represents edge weight coordinates for normal hypersurfaces.
-         * This flavour is for representation only; hypersurface
-         * vectors and lists of this flavour cannot be created.
-         */
-        static const int EDGE_WEIGHT;
-
         class VectorIterator;
 
     protected:
         std::vector<NNormalHypersurface*> surfaces_;
             /**< Contains the normal hypersurfaces stored in this packet. */
-        int flavour_;
+        HyperCoords flavour_;
             /**< Stores which flavour of coordinate system is being
              *   used by the normal hypersurfaces in this packet. */
         bool embedded_;
@@ -140,9 +128,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          *
          * @param owner the triangulation upon which this list of normal
          * hypersurfaces will be based.
-         * @param flavour the flavour of coordinate system to be used;
-         * this must be one of the predefined coordinate system
-         * constants in NNormalHypersurfaceList.
+         * @param flavour the flavour of coordinate system to be used.
          * @param embeddedOnly \c true if only embedded normal hypersurfaces
          * are to be produced, or \c false if immersed and singular
          * normal hypersurfaces are also to be produced; this defaults to
@@ -158,7 +144,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * returns 0 (and no normal hypersurface list is created).
          */
         static NNormalHypersurfaceList* enumerate(Dim4Triangulation* owner,
-            int flavour, bool embeddedOnly = true,
+            HyperCoords flavour, bool embeddedOnly = true,
             NProgressManager* manager = 0);
 
         /**
@@ -205,9 +191,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          *
          * @param owner the triangulation upon which this list of normal
          * hypersurfaces will be based.
-         * @param newFlavour the flavour of coordinate system to be used;
-         * this must be one of the predefined coordinate system
-         * constants in NNormalHypersurfaceList.
+         * @param newFlavour the flavour of coordinate system to be used.
          * @param embeddedOnly \c true if only embedded normal hypersurfaces
          * are to be produced, or \c false if immersed and singular
          * normal hypersurfaces are also to be produced; this defaults to
@@ -226,7 +210,8 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * returns 0 (and no normal hypersurface list is created).
          */
         static NNormalHypersurfaceList* enumerateFundPrimal(
-            Dim4Triangulation* owner, int newFlavour, bool embeddedOnly = true,
+            Dim4Triangulation* owner, HyperCoords newFlavour,
+            bool embeddedOnly = true,
             NNormalHypersurfaceList* vtxSurfaces = 0,
             NProgressManager* manager = 0);
 
@@ -265,9 +250,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          *
          * @param owner the triangulation upon which this list of normal
          * hypersurfaces will be based.
-         * @param newFlavour the flavour of coordinate system to be used;
-         * this must be one of the predefined coordinate system
-         * constants in NNormalHypersurfaceList.
+         * @param newFlavour the flavour of coordinate system to be used.
          * @param embeddedOnly \c true if only embedded normal hypersurfaces
          * are to be produced, or \c false if immersed and singular
          * normal hypersurfaces are also to be produced; this defaults to
@@ -283,17 +266,17 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * returns 0 (and no normal hypersurface list is created).
          */
         static NNormalHypersurfaceList* enumerateFundDual(
-            Dim4Triangulation* owner, int newFlavour, bool embeddedOnly = true,
+            Dim4Triangulation* owner, HyperCoords newFlavour,
+            bool embeddedOnly = true,
             NProgressManager* manager = 0);
 
         /**
          * Returns the flavour of coordinate system being used by the
-         * hypersurfaces stored in this set.  This will be one of the
-         * predefined coordinate system constants in NNormalHypersurfaceList.
+         * hypersurfaces stored in this set.
          *
          * @return the flavour of coordinate system used.
          */
-        virtual int getFlavour() const;
+        virtual HyperCoords getFlavour() const;
         /**
          * Returns whether this set is known to contain only embedded normal
          * hypersurfaces.
@@ -599,13 +582,12 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * parameters.
          *
          * @param flavour the flavour of coordinate system to be used
-         * for filling this list; this must be one of the predefined
-         * coordinate system constants in NNormalHypersurfaceList.
+         * for filling this list.
          * @param embeddedOnly \c true if only embedded normal hypersurfaces
          * are to be produced, or \c false if immersed and singular
          * normal hypersurfaces are also to be produced.
          */
-        NNormalHypersurfaceList(int flavour, bool embeddedOnly);
+        NNormalHypersurfaceList(HyperCoords flavour, bool embeddedOnly);
 
         /**
          * A thread class that actually performs the vertex normal
@@ -735,7 +717,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
  * @return a new zero vector of the correct class and length.
  */
 REGINA_API NNormalHypersurfaceVector* makeZeroVector(
-    const Dim4Triangulation* triangulation, int flavour);
+    const Dim4Triangulation* triangulation, HyperCoords flavour);
 /**
  * Creates a new set of normal hypersurface matching equations for the
  * given triangulation using the given flavour of coordinate system.
@@ -754,7 +736,7 @@ REGINA_API NNormalHypersurfaceVector* makeZeroVector(
  * @return a newly allocated set of matching equations.
  */
 REGINA_API NMatrixInt* makeMatchingEquations(Dim4Triangulation* triangulation,
-    int flavour);
+    HyperCoords flavour);
 /**
  * Creates a new set of validity constraints representing the condition that
  * normal hypersurfaces be embedded.  The validity constraints will be expressed
@@ -770,7 +752,7 @@ REGINA_API NMatrixInt* makeMatchingEquations(Dim4Triangulation* triangulation,
  * @return a newly allocated set of constraints.
  */
 REGINA_API NEnumConstraintList* makeEmbeddedConstraints(
-    Dim4Triangulation* triangulation, int flavour);
+    Dim4Triangulation* triangulation, HyperCoords flavour);
 
 /*@}*/
 
@@ -784,7 +766,7 @@ inline NNormalHypersurfaceList::~NNormalHypersurfaceList() {
         FuncDelete<NNormalHypersurface>());
 }
 
-inline int NNormalHypersurfaceList::getFlavour() const {
+inline HyperCoords NNormalHypersurfaceList::getFlavour() const {
     return flavour_;
 }
 
@@ -927,7 +909,7 @@ inline NNormalHypersurfaceList::HypersurfaceInserter&
     return *this;
 }
 
-inline NNormalHypersurfaceList::NNormalHypersurfaceList(int flavour,
+inline NNormalHypersurfaceList::NNormalHypersurfaceList(HyperCoords flavour,
         bool embeddedOnly) : flavour_(flavour), embedded_(embeddedOnly) {
 }
 
