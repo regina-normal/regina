@@ -84,6 +84,9 @@ Dim4TriAlgebraUI::Dim4TriAlgebraUI(regina::Dim4Triangulation* packet,
             setCurrentTab(1); break;
         case ReginaPrefSet::CellularInfo:
             setCurrentTab(2); break;
+        default:
+            // Some 3-manifold tabs do not exist for 4-manifolds.
+            break;
     }
 }
 

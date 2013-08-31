@@ -39,7 +39,7 @@
 #include "maths/ninteger.h"
 #include "maths/nmatrixint.h"
 
-#include "algebra/nbilinearform.h";
+#include "algebra/nbilinearform.h"
 #include "algebra/ncellulardata.h"
 #include "algebra/nmarkedabeliangroup.h"
 
