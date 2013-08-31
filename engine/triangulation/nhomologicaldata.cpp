@@ -393,13 +393,6 @@ void NHomologicalData::computeChainComplexes() {
     }
     // end B2
 
-    NIndexedArray<long int> unorientedlist; // this should be the list of
-                                            // unoriented tetrahedra
-    // together with marked vertices, stored as
-    // 4*tetindex + vertex no.
-    NIndexedArray<long int> orig_uol;
-    NIndexedArray<long int> edge_adjacency;
-
     std::vector<int> tetor;
     long int ind1;
     long int ind2;
@@ -415,16 +408,21 @@ void NHomologicalData::computeChainComplexes() {
         const std::vector<NVertexEmbedding>& vtetlist(
             tri->getVertex(dNINBV[i])->getEmbeddings());
         tetor.resize(vtetlist.size(),0);
-        unorientedlist.resize(0);
+
+        std::vector<std::pair<long, bool> > unorientedlist;
+        // This should be the list of unoriented tetrahedra, together
+        // with marked vertices.
+        // Indices into the vector are 4*tetindex + vertex no.
+        // Values are (index into vtetlist, already oriented).
+        unorientedlist.resize(4 * tri->getNumberOfTetrahedra());
 
         for (j=0;j<vtetlist.size();j++) {
             // unoriented list stores the tetrahedra adjacent to the vertex
             // plus the vertex index in that tetrahedra's coords
-            unorientedlist.push_back(
+            unorientedlist[
                 4*tri->tetrahedronIndex( vtetlist[j].getTetrahedron() ) +
-                vtetlist[j].getVertex() );
+                vtetlist[j].getVertex() ] = std::make_pair(j, false);
         }
-        orig_uol=unorientedlist;
 
         // need to set up a local orientation for the tangent
         // bundle at the vertex so that we can compare with the
@@ -435,17 +433,19 @@ void NHomologicalData::computeChainComplexes() {
         // ie: tetor[0]==1 always.
 
         tetor[0]=1;
-        unorientedlist.erase( 4*tri->tetrahedronIndex(
-            vtetlist[0].getTetrahedron()) + vtetlist[0].getVertex() );
+        unorientedlist[ 4*tri->tetrahedronIndex( vtetlist[0].getTetrahedron()) +
+            vtetlist[0].getVertex() ].second = true;
 
-        while (!unorientedlist.empty())
+        size_t stillToOrient = vtetlist.size() - 1;
+        while (stillToOrient > 0)
           for (j=0;j<vtetlist.size();j++)
             // go through all oriented tetrahedra and orient
             // the adjacent tetrahedra
             {
-                ind1=orig_uol[j];
+                ind1 = 4*tri->tetrahedronIndex( vtetlist[j].getTetrahedron() ) +
+                    vtetlist[j].getVertex();
 
-                if ( unorientedlist.index( ind1 ) == (-1) ) {
+                if ( unorientedlist[ ind1 ].second ) {
                     // this tetrahedron has been oriented check to see
                     // if any of the adjacent
                     // tetrahedra are unoriented, and if so, orient them.
@@ -457,13 +457,14 @@ void NHomologicalData::computeChainComplexes() {
                             ind2=4*tri->tetrahedronIndex(
                                 vtetlist[j].getTetrahedron() ->
                                 adjacentTetrahedron(k) ) + p1[ind1 % 4];
-                            if (unorientedlist.index( ind2 )  != (-1) )
+                            if (! unorientedlist[ ind2 ].second )
                             {
                                 // we have an adjacent unoriented tetrahedron.
-                                // we orient it and erase from unorientedlist.
-                                tetor[ orig_uol.index(ind2) ] =
+                                // we orient it.
+                                tetor[ unorientedlist[ind2].first ] =
                                    (-1)*tetor[j]*p1.sign();
-                                unorientedlist.erase( ind2 );
+                                unorientedlist[ ind2 ].second = true;
+                                --stillToOrient;
                             }
                         }
                     }
@@ -473,10 +474,10 @@ void NHomologicalData::computeChainComplexes() {
         // now a local orientation is set up and can compute the boundary.
         // to do this, it seems best to compile a list of incident edges
         // which contains their endpoint data and sign.
-        // the list will be an NIndexedArray<long int> edge_adjacency,
+        // the list will be a std::set<long> edge_adjacency,
         // data will be stored as
         // 4*(edge index) + 2*(endpt index) + sign stored as 0 or 1.
-        edge_adjacency.resize(0);
+        std::set<long> edge_adjacency;
 
         for (j=0;j<vtetlist.size();j++)
             for (k=0;k<6;k++) {
@@ -500,14 +501,16 @@ void NHomologicalData::computeChainComplexes() {
                         vtetlist[j].getTetrahedron()->getEdge(k) )
                         + 2*ind2 + (p1.sign() == tetor[j] ? 1 : 0);
 
-                    if (edge_adjacency.index(ind1) == (-1) )
-                        edge_adjacency.push_back(ind1);
+                    // Insertion in std::set is harmless if the key
+                    // already exists.
+                    edge_adjacency.insert(ind1);
                 }
             }
 
-        for (j=0;j<edge_adjacency.size();j++) {
-            B3->entry( dNBE.index(edge_adjacency[j]/4) , i) +=
-                ( ( (edge_adjacency[j] % 2)==0 ) ? 1 : -1 );
+        std::set<long>::const_iterator it;
+        for (it = edge_adjacency.begin(); it != edge_adjacency.end(); ++it) {
+            B3->entry( dNBE.index((*it)/4) , i) +=
+                ( ( ((*it) % 2)==0 ) ? 1 : -1 );
         }
     }
     // end B3
