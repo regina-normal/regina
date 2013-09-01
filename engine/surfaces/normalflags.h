@@ -32,14 +32,13 @@
 
 /* end stub */
 
-/*! \file surfaces/normalalgs.h
- *  \brief Defines constants and flags for normal surface enumeration
- *  algorithms.
+/*! \file surfaces/normalflags.h
+ *  \brief Defines constants and flags for normal surface enumeration.
  */
 
-#ifndef __NORMALALGS_H
+#ifndef __NORMALFLAGS_H
 #ifndef __DOXYGEN
-#define __NORMALALGS_H
+#define __NORMALFLAGS_H
 #endif
 
 #include "regina-core.h"
@@ -60,36 +59,80 @@ namespace regina {
  * whereas the NormalAlgFlags enumeration refers to the \e algorithm
  * used to build it.
  */
-enum NormalList {
+enum NormalListFlags {
     /**
-     * Indicates a list that was constructed using an old version of
-     * Regina (4.93 or earlier).  No additional information is
-     * available for such lists, since these older versions of Regina
-     * did not store specific information on how normal surface lists
-     * were constructed.
+     * Indicates that this list is restricted to properly embedded
+     * surfaces only.
+     *
+     * This flag is incompatible with NS_IMMERSED_SINGULAR.
      */
-    NS_LEGACY = 1,
+    NS_EMBEDDED_ONLY = 0x0001,
+    /**
+     * Indicates that the scope of this list includes not just properly
+     * embedded surfaces, but also immersed and/or branched surfaces.
+     *
+     * This is no guarantee that the list \e contains immersed and/or
+     * branched surfaces; it merely states that such surfaces have not
+     * been explicitly excluded (in particular, the quadrilateral
+     * constraints have not been enforced).
+     *
+     * This flag is incompatible with NS_EMBEDDED_ONLY.
+     */
+    NS_IMMERSED_SINGULAR = 0x0002,
+
     /**
      * Indicates a list of all vertex normal surfaces, with respect to
      * the particular normal coordinate system used by the list.
+     *
+     * This flag is incompatible with NS_FUNDAMENTAL.
      */
-    NS_VERTEX = 100,
+    NS_VERTEX = 0x0004,
     /**
      * Indicates a list of all fundamental normal surfaces, with respect to
      * the particular normal coordinate system used by the list.
+     *
+     * This flag is incompatible with NS_VERTEX.
      */
-    NS_FUNDAMENTAL = 101,
+    NS_FUNDAMENTAL = 0x0008,
+
+    /**
+     * Indicates a list that was constructed using an old version of
+     * Regina (4.93 or earlier).
+     *
+     * These older versions did not retain details of how each list was
+     * constructed, beyond whether immersed and/or singular surfaces were
+     * included.  Therefore no information is available for such lists,
+     * other than the presence or absence of the NS_EMBEDDED_ONLY and/or
+     * NS_IMMERSED_SINGULAR flags.
+     *
+     * If this flag is passed to an enumeration routine, it will be ignored.
+     */
+    NS_LEGACY = 0x4000,
     /**
      * Indicates some other type of list, typically hand-crafted by the
      * user or built by some customised algorithm.
-     * No further information is available.
+     *
+     * If this flag is passed to an enumeration routine, it will be ignored.
      */
-    NS_CUSTOM = 1000
+    NS_CUSTOM = 0x8000
 };
 
+typedef regina::Flags<NormalListFlags> NormalList;
+
 /**
- * Represents options for algorithms that enumerate various types of
- * normal surfaces.
+ * Returns the bitwise OR of the two given flags.
+ *
+ * @param lhs the first flag to combine.
+ * @param rhs the second flag to combine.
+ * @return the combination of both flags.
+ */
+inline NormalList operator | (NormalListFlags lhs, NormalListFlags rhs) {
+    return NormalList(lhs) | rhs;
+}
+
+/**
+ * Represents options and variants of algorithms for enumerating various
+ * types of normal surfaces.
  *
  * These options are typically combined in a bitwise fashion using the
  * NormalAlgs type, and then passed to enumeration routines such as
@@ -103,19 +146,6 @@ enum NormalAlgFlags {
      * when combined with other flags using bitwise OR).
      */
     NS_ALG_DEFAULT = 0x0000,
-
-    /**
-     * Indicates that the enumeration should include not just properly embedded
-     * normal surfaces, but also immersed and/or branched normal surfaces.
-     * In other words, this indicates to the enumeration routine that it
-     * should ignore the quadrilateral constraints (which insist that
-     * each tetrahedron contains quadrilaterals of at most one type).
-     *
-     * If this flag is not present then the quadrilateral constraints will
-     * be enforced, and only properly embedded normal surfaces will be
-     * enumerated.
-     */
-    NS_IMMERSED_SINGULAR = 0x0001,
 
     /**
      * When enumerating in standard normal or almost normal coordinates,
@@ -135,7 +165,7 @@ enum NormalAlgFlags {
      *
      * This flag is incompatible with NS_VERTEX_STD_DIRECT.
      */
-    NS_VERTEX_VIA_REDUCED = 0x0002,
+    NS_VERTEX_VIA_REDUCED = 0x0001,
 
     /**
      * When enumerating in standard normal or almost normal coordinates,
@@ -149,7 +179,7 @@ enum NormalAlgFlags {
      *
      * This flag is incompatible with NS_VERTEX_VIA_REDUCED.
      */
-    NS_VERTEX_STD_DIRECT = 0x0004,
+    NS_VERTEX_STD_DIRECT = 0x0002,
 
     /**
      * When enumerating vertex normal surfaces,
@@ -270,25 +300,35 @@ enum NormalAlgFlags {
      * Indicates that a normal surface list was enumerated using an
      * older version of Regina (4.93 or earlier).
      *
-     * These older versions did not store details of the algorithm
-     * used to build each list, beyond whether immersed and/or singular
-     * surfaces were included.  Therefore no algorithmic information is
-     * available for such lists, other than the presence or absence of
-     * the NS_IMMERSED_SINGULAR flag.
+     * These older versions did not retain details of the algorithm
+     * used to build each list, and so in such cases no further
+     * algorithmic information is available.
      *
      * If this flag is passed to an enumeration algorithm, it will be ignored.
      */
     NS_ALG_LEGACY = 0x4000,
     /**
      * Indicates that a normal surface list was built using a customised
-     * algorithm.
+     * algorithm.  In such cases, no further details on the algorithm are
+     * available.
      *
      * If this flag is passed to an enumeration algorithm, it will be ignored.
      */
     NS_ALG_CUSTOM = 0x8000
 };
 
-typedef regina::Flags<NormalAlgFlags> NormalAlgs;
+typedef regina::Flags<NormalAlgFlags> NormalAlg;
+
+/**
+ * Returns the bitwise OR of the two given flags.
+ *
+ * @param lhs the first flag to combine.
+ * @param rhs the second flag to combine.
+ * @return the combination of both flags.
+ */
+inline NormalAlg operator | (NormalAlgFlags lhs, NormalAlgFlags rhs) {
+    return NormalAlg(lhs) | rhs;
+}
 
 /*@}*/
 

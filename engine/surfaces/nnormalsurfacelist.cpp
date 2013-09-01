@@ -137,12 +137,13 @@ void* NNormalSurfaceList::VertexEnumerator::run(void*) {
     }
 
     // Choose the most appropriate algorithm for the job.
-    if (list->flavour == NS_STANDARD && list->embedded &&
+    if (list->flavour == NS_STANDARD && list->which_.has(NS_EMBEDDED_ONLY) &&
             triang->isValid() && ! triang->isIdeal()) {
         // Enumerate solutions in standard space by going via quad space.
         list->enumerateStandardViaReduced<NormalSpec>(triang, progress);
     } else if (list->flavour == NS_AN_STANDARD &&
-            list->embedded && triang->isValid() && ! triang->isIdeal()) {
+            list->which_.has(NS_EMBEDDED_ONLY) && triang->isValid() &&
+            ! triang->isIdeal()) {
         // Enumerate solutions in standard almost normal space by going
         // via quad-oct space.
         list->enumerateStandardViaReduced<AlmostNormalSpec>(triang, progress);
@@ -151,7 +152,7 @@ void* NNormalSurfaceList::VertexEnumerator::run(void*) {
 
         // Fetch any necessary validity constraints.
         NEnumConstraintList* constraints = 0;
-        if (list->embedded)
+        if (list->which_.has(NS_EMBEDDED_ONLY))
             constraints = makeEmbeddedConstraints(triang, list->flavour);
 
         // Form the matching equations and starting cone.
@@ -198,7 +199,7 @@ void* NNormalSurfaceList::FundPrimalEnumerator::run(void*) {
 
     // Fetch validity constraints from the registry.
     NEnumConstraintList* constraints = 0;
-    if (list->embedded)
+    if (list->which_.has(NS_EMBEDDED_ONLY))
         constraints = makeEmbeddedConstraints(triang, list->flavour);
 
     NNormalSurfaceList* useVtxSurfaces = vtxSurfaces;
@@ -208,7 +209,10 @@ void* NNormalSurfaceList::FundPrimalEnumerator::run(void*) {
         if (progress)
             progress->setMessage("Enumerating extremal rays");
 
-        useVtxSurfaces = new NNormalSurfaceList(list->flavour, list->embedded);
+        useVtxSurfaces = new NNormalSurfaceList(list->flavour,
+            NS_VERTEX | (list->which_.has(NS_EMBEDDED_ONLY) ?
+                NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+            NS_ALG_DEFAULT);
         VertexEnumerator e(useVtxSurfaces, triang, 0);
         e.run(0);
     }
@@ -255,7 +259,7 @@ void* NNormalSurfaceList::FundDualEnumerator::run(void*) {
 
     // Fetch validity constraints from the registry.
     NEnumConstraintList* constraints = 0;
-    if (list->embedded)
+    if (list->which_.has(NS_EMBEDDED_ONLY))
         constraints = makeEmbeddedConstraints(triang, list->flavour);
 
     // Form the matching equations and starting cone.
@@ -284,7 +288,9 @@ void* NNormalSurfaceList::FundDualEnumerator::run(void*) {
 
 NNormalSurfaceList* NNormalSurfaceList::enumerate(NTriangulation* owner,
         NormalCoords newFlavour, bool embeddedOnly, NProgressManager* manager) {
-    NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
+    NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour,
+        NS_VERTEX | (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+        NS_ALG_DEFAULT);
     VertexEnumerator* e = new VertexEnumerator(ans, owner, manager);
 
     if (manager) {
@@ -305,7 +311,10 @@ NNormalSurfaceList* NNormalSurfaceList::enumerate(NTriangulation* owner,
 NNormalSurfaceList* NNormalSurfaceList::enumerateFundPrimal(
         NTriangulation* owner, NormalCoords newFlavour, bool embeddedOnly,
         NNormalSurfaceList* vtxSurfaces, NProgressManager* manager) {
-    NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
+    NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour,
+        NS_FUNDAMENTAL |
+            (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+        NS_HILBERT_PRIMAL);
     FundPrimalEnumerator* e = new FundPrimalEnumerator(ans, owner,
         vtxSurfaces, manager);
 
@@ -327,7 +336,10 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundPrimal(
 NNormalSurfaceList* NNormalSurfaceList::enumerateFundDual(
         NTriangulation* owner, NormalCoords newFlavour, bool embeddedOnly,
         NProgressManager* manager) {
-    NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
+    NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour,
+        NS_FUNDAMENTAL |
+            (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+        NS_HILBERT_DUAL);
     FundDualEnumerator* e = new FundDualEnumerator(ans, owner, manager);
 
     if (manager) {
@@ -345,7 +357,8 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundDual(
 
 NNormalSurfaceList* NNormalSurfaceList::enumerateStandardDirect(
         NTriangulation* owner) {
-    NNormalSurfaceList* list = new NNormalSurfaceList(NS_STANDARD, true);
+    NNormalSurfaceList* list = new NNormalSurfaceList(NS_STANDARD,
+        NS_VERTEX, NS_VERTEX_STD_DIRECT);
 
     // Run a vanilla enumeration in standard coordinates.
     NEnumConstraintList* constraints =
@@ -365,7 +378,8 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateStandardDirect(
 
 NNormalSurfaceList* NNormalSurfaceList::enumerateStandardANDirect(
         NTriangulation* owner) {
-    NNormalSurfaceList* list = new NNormalSurfaceList(NS_AN_STANDARD, true);
+    NNormalSurfaceList* list = new NNormalSurfaceList(NS_AN_STANDARD,
+        NS_VERTEX, NS_VERTEX_STD_DIRECT);
 
     // Run a vanilla enumeration in standard almost normal coordinates.
     NEnumConstraintList* constraints =
@@ -391,7 +405,10 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateStandardANDirect(
 
 NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
         NTriangulation* owner, NormalCoords newFlavour, bool embeddedOnly) {
-    NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
+    NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour,
+        NS_FUNDAMENTAL |
+            (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+        NS_HILBERT_FULLCONE);
     NMatrixInt* eqns = makeMatchingEquations(owner, newFlavour);
 
     unsigned rank = rowBasis(*eqns);
@@ -493,7 +510,10 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
 
 NNormalSurfaceList* NNormalSurfaceList::enumerateFundCD(
         NTriangulation* owner, NormalCoords newFlavour, bool embeddedOnly) {
-    NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour, embeddedOnly);
+    NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour,
+        NS_FUNDAMENTAL |
+            (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+        NS_HILBERT_CD);
 
     NMatrixInt* eqns = makeMatchingEquations(owner, newFlavour);
     NEnumConstraintList* constraints = 0;
@@ -591,7 +611,7 @@ void NNormalSurfaceList::writeTextShort(std::ostream& out) const {
     case id_name: out << name << '\n'; break;
 
 void NNormalSurfaceList::writeTextLong(std::ostream& out) const {
-    if (embedded)
+    if (isEmbeddedOnly())
         out << "Embedded ";
     else
         out << "Embedded, immersed & singular ";
@@ -617,7 +637,8 @@ void NNormalSurfaceList::writeTextLong(std::ostream& out) const {
 
 void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
     // Write the surface list parameters.
-    out << "  <params embedded=\"" << (embedded ? 'T' : 'F')
+    // TODO: Update file I/O to include new flags.
+    out << "  <params embedded=\"" << (isEmbeddedOnly() ? 'T' : 'F')
         << "\" flavourid=\"" << flavour << "\"\n";
     out << "\tflavour=\"";
     switch(flavour) {
@@ -642,12 +663,11 @@ void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
 NNormalSurfaceList* NNormalSurfaceList::filterForLocallyCompatiblePairs()
         const {
     // Sanity check:
-    if (! embedded)
+    if (! isEmbeddedOnly())
         return 0;
 
-    NNormalSurfaceList* ans = new NNormalSurfaceList();
-    ans->flavour = flavour;
-    ans->embedded = true;
+    NNormalSurfaceList* ans = new NNormalSurfaceList(
+        flavour, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
 
     // Find all surfaces that have a compatible partner.
     std::vector<NNormalSurface*>::const_iterator first, second;
@@ -670,12 +690,11 @@ NNormalSurfaceList* NNormalSurfaceList::filterForLocallyCompatiblePairs()
 
 NNormalSurfaceList* NNormalSurfaceList::filterForDisjointPairs() const {
     // Sanity check:
-    if (! embedded)
+    if (! isEmbeddedOnly())
         return 0;
 
-    NNormalSurfaceList* ans = new NNormalSurfaceList();
-    ans->flavour = flavour;
-    ans->embedded = true;
+    NNormalSurfaceList* ans = new NNormalSurfaceList(
+        flavour, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
 
     // Collect all the surfaces that we might care about.
     // This means non-empty, connected and compact.
@@ -713,9 +732,12 @@ NNormalSurfaceList* NNormalSurfaceList::filterForDisjointPairs() const {
 
 NNormalSurfaceList* NNormalSurfaceList::filterForPotentiallyIncompressible()
         const {
-    NNormalSurfaceList* ans = new NNormalSurfaceList();
-    ans->flavour = flavour;
-    ans->embedded = true;
+    // Sanity check:
+    if (! isEmbeddedOnly())
+        return 0;
+
+    NNormalSurfaceList* ans = new NNormalSurfaceList(
+        flavour, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
 
     NTriangulation* t;
 #ifdef DEBUG
@@ -747,9 +769,8 @@ NNormalSurfaceList* NNormalSurfaceList::filterForPotentiallyIncompressible()
 }
 
 NPacket* NNormalSurfaceList::internalClonePacket(NPacket* /* parent */) const {
-    NNormalSurfaceList* ans = new NNormalSurfaceList();
-    ans->flavour = flavour;
-    ans->embedded = embedded;
+    NNormalSurfaceList* ans = new NNormalSurfaceList(
+        flavour, which_, algorithm_);
     transform(surfaces.begin(), surfaces.end(), back_inserter(ans->surfaces),
         FuncNewClonePtr<NNormalSurface>());
     return ans;

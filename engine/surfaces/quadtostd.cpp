@@ -313,14 +313,17 @@ NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
     NTriangulation* owner = getTriangulation();
 
     // Basic sanity checks:
-    if (flavour != Variant::reducedFlavour() || ! embedded)
+    if (flavour != Variant::reducedFlavour())
+        return 0;
+    if (which_ != (NS_EMBEDDED_ONLY | NS_VERTEX))
         return 0;
     if (owner->isIdeal() || ! owner->isValid())
         return 0;
 
     // Prepare a final surface list.
     NNormalSurfaceList* ans = new NNormalSurfaceList(
-        Variant::standardFlavour(), true);
+        Variant::standardFlavour(), NS_EMBEDDED_ONLY | NS_VERTEX,
+        NS_VERTEX_VIA_REDUCED);
 
     // Get the empty triangulation out of the way now.
     if (owner->getNumberOfTetrahedra() == 0) {

@@ -50,6 +50,7 @@
 #include "regina-core.h"
 #include "packet/npacket.h"
 #include "surfaces/nnormalsurface.h"
+#include "surfaces/normalflags.h"
 #include "surfaces/normalcoords.h"
 #include "utilities/memutils.h"
 #include "utilities/nthread.h"
@@ -189,10 +190,16 @@ class REGINA_API NNormalSurfaceList : public NPacket {
             /**< Contains the normal surfaces stored in this packet. */
         NormalCoords flavour;
             /**< Stores which flavour of coordinate system is being
-             *   used by the normal surfaces in this packet. */
-        bool embedded;
-            /**< Stores whether we are only interested in embedded
-             *   normal surfaces. */
+                 used by the normal surfaces in this packet. */
+        NormalList which_;
+            /**< Indicates which normal surfaces these represent within
+                 the underlying triangulation. */
+        NormalAlg algorithm_;
+            /**< Stores the details of the enumeration algorithm that
+                 was used to generate this list.  This might not be the
+                 same as the \a algorithmHints flag passed to the
+                 corresponding enumeration routine (e.g., if invalid
+                 or inappropriate flags were passed). */
 
     public:
         /**
@@ -549,16 +556,16 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          */
         bool allowsOriented() const;
         /**
-         * Returns whether this set is known to contain only embedded normal
-         * surfaces.
+         * Returns whether this list was constructed to contain only
+         * properly embedded surfaces.
          *
-         * If it is possible that there are non-embedded surfaces in this
-         * set but it is not known whether any are actually present or
-         * not, this routine should return \c false.
+         * If this returns \c false, it does not guarantee that immersed
+         * and/or singular surfaces are present; it merely indicates
+         * that they were not deliberately excluded (for instance, the
+         * quadrilateral constraints were not enforced).
          *
-         * @return \c true if it is known that only embedded normal surfaces
-         * exist in this list, or \c false if immersed and/or singular normal
-         * surfaces might be present.
+         * @return \c true if this list was constructed to contain only
+         * properly embedded surfaces, or \c false otherwise.
          */
         bool isEmbeddedOnly() const;
         /**
@@ -1039,12 +1046,6 @@ class REGINA_API NNormalSurfaceList : public NPacket {
         };
 
     protected:
-        /**
-         * Creates a new normal surface list performing no initialisation
-         * whatsoever other than property initialisation.
-         */
-        NNormalSurfaceList();
-
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
@@ -1190,11 +1191,13 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * @param newFlavour the flavour of coordinate system to be used
          * for filling this list.
-         * @param embeddedOnly \c true if only embedded normal surfaces
-         * are to be produced, or \c false if immersed and singular
-         * normal surfaces are also to be produced.
+         * @param which indicates which normal surfaces these will
+         * represent within the underlying triangulation.
+         * @param algorithm details of the enumeration algorithm that
+         * will be used to fill this list.
          */
-        NNormalSurfaceList(NormalCoords newFlavour, bool embeddedOnly);
+        NNormalSurfaceList(NormalCoords newFlavour, NormalList which,
+            NormalAlg algorithm);
 
         /**
          * Enumerates all embedded vertex surfaces in (standard normal
@@ -1504,9 +1507,6 @@ REGINA_API NEnumConstraintList* makeEmbeddedConstraints(
 
 // Inline functions for NNormalSurfaceList
 
-inline NNormalSurfaceList::NNormalSurfaceList() {
-}
-
 inline NNormalSurfaceList::~NNormalSurfaceList() {
     for_each(surfaces.begin(), surfaces.end(), FuncDelete<NNormalSurface>());
 }
@@ -1516,7 +1516,7 @@ inline NormalCoords NNormalSurfaceList::getFlavour() const {
 }
 
 inline bool NNormalSurfaceList::isEmbeddedOnly() const {
-    return embedded;
+    return which_.has(NS_EMBEDDED_ONLY);
 }
 
 inline unsigned long NNormalSurfaceList::getNumberOfSurfaces() const {
@@ -1654,7 +1654,8 @@ inline NNormalSurfaceList::SurfaceInserter&
 }
 
 inline NNormalSurfaceList::NNormalSurfaceList(NormalCoords newFlavour,
-        bool embeddedOnly) : flavour(newFlavour), embedded(embeddedOnly) {
+        NormalList which, NormalAlg algorithm) :
+        flavour(newFlavour), which_(which), algorithm_(algorithm) {
 }
 
 inline NNormalSurfaceList::VertexEnumerator::VertexEnumerator(

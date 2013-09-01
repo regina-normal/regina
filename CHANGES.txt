@@ -216,9 +216,9 @@ Version 4.94  [ (under development) ]
         Enum NormalCoords:
             - A new enumeration that contains constants for different normal
               surface coordinate systems.  Include "surfaces/normalcoords.h".
-        Enum NormalList:
-            - A new enumeration that contains constants for different
-              lists of normal surfaces within a given triangulation.
+        Enum NormalListFlags, Class NormalList:
+            - Flags that specify which normal surfaces a particular list
+              represents within a given triangulation.
         Enum NormalAlgFlags, Class NormalAlg:
             - Flags that specify details and parameters of normal surface
               enumeration algorithms.
