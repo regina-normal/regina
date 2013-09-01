@@ -143,9 +143,11 @@ NXMLElementReader* NXMLNormalSurfaceListReader::startContentSubElement(
             if (valueOf(props.lookup("flavourid"), flavour))
                 if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane; create the empty list.
-                    list = new NNormalSurfaceList();
-                    list->flavour = static_cast<NormalCoords>(flavour);
-                    list->embedded = embedded;
+                    list = new NNormalSurfaceList(
+                        static_cast<NormalCoords>(flavour),
+                        NS_LEGACY | (embedded ?
+                            NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+                        NS_ALG_LEGACY);
                 }
         }
     }
