@@ -637,9 +637,10 @@ void NNormalSurfaceList::writeTextLong(std::ostream& out) const {
 
 void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
     // Write the surface list parameters.
-    // TODO: Update file I/O to include new flags.
-    out << "  <params embedded=\"" << (isEmbeddedOnly() ? 'T' : 'F')
-        << "\" flavourid=\"" << flavour << "\"\n";
+    out << "  <params "
+        << "type=\"" << which_.intValue() << "\" "
+        << "algorithm=\"" << algorithm_.intValue() << "\" "
+        << "flavourid=\"" << flavour << "\"\n";
     out << "\tflavour=\"";
     switch(flavour) {
         // Import cases from the flavour registry...

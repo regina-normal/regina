@@ -97,6 +97,32 @@ class Flags {
         }
 
         /**
+         * Returns the integer representation of this set.
+         * This is suitable for file input and/or output.
+         *
+         * \warning This function should not be used widely, since it
+         * effectively works around inbuilt type safety mechanisms.
+         *
+         * @return the integer value of this set.
+         */
+        int intValue() const {
+            return static_cast<int>(value_);
+        }
+
+        /**
+         * Returns the set corresponding to the given integer value.
+         * This is suitable for file input and/or output.
+         *
+         * \warning This function should not be used widely, since it
+         * effectively works around inbuilt type safety mechanisms.
+         *
+         * @return the set corresponding to the given integer value.
+         */
+        inline static Flags<T> fromInt(int value) {
+            return Flags<T>(value);
+        }
+
+        /**
          * Returns whether the given flag is set.
          *
          * This requires \e all of the bits of the given flag to be set.

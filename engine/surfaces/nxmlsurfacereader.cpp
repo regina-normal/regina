@@ -139,16 +139,25 @@ NXMLElementReader* NXMLNormalSurfaceListReader::startContentSubElement(
         // The surface list has not yet been created.
         if (subTagName == "params") {
             long flavour;
+            int listType, algorithm;
             bool embedded;
-            if (valueOf(props.lookup("flavourid"), flavour))
-                if (valueOf(props.lookup("embedded"), embedded)) {
+            if (valueOf(props.lookup("flavourid"), flavour)) {
+                if (valueOf(props.lookup("type"), listType) &&
+                        valueOf(props.lookup("algorithm"), algorithm)) {
                     // Parameters look sane; create the empty list.
+                    list = new NNormalSurfaceList(
+                        static_cast<NormalCoords>(flavour),
+                        NormalList::fromInt(listType),
+                        NormalAlg::fromInt(algorithm));
+                } else if (valueOf(props.lookup("embedded"), embedded)) {
+                    // Parameters look sane but use the old format.
                     list = new NNormalSurfaceList(
                         static_cast<NormalCoords>(flavour),
                         NS_LEGACY | (embedded ?
                             NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
                         NS_ALG_LEGACY);
                 }
+            }
         }
     }
     return new NXMLElementReader();
