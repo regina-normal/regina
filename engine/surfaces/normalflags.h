@@ -58,6 +58,11 @@ namespace regina {
  * The NormalList enumeration refers to the \e contents of the list,
  * whereas the NormalAlgFlags enumeration refers to the \e algorithm
  * used to build it.
+ *
+ * \ifacespython The values in this enumeration type are present, but
+ * they are treated by Python as NormalList objects (and they can be
+ * combined and/or queried as such).
+ * The underlying enumeration type is not exposed to Python.
  */
 enum NormalListFlags {
     /**
@@ -117,6 +122,12 @@ enum NormalListFlags {
     NS_CUSTOM = 0x8000
 };
 
+/**
+ * A combination of flags for types of normal surface lists.
+ *
+ * \ifacespython This is present, and all values in the NormalListFlags
+ * enumeration type are treated as members of this NormalList class.
+ */
 typedef regina::Flags<NormalListFlags> NormalList;
 
 /**
@@ -137,6 +148,11 @@ inline NormalList operator | (NormalListFlags lhs, NormalListFlags rhs) {
  * These options are typically combined in a bitwise fashion using the
  * NormalAlgs type, and then passed to enumeration routines such as
  * NNormalSurfaceList::vertex().
+ *
+ * \ifacespython The values in this enumeration type are present, but
+ * they are treated by Python as NormalList objects (and they can be
+ * combined and/or queried as such).
+ * The underlying enumeration type is not exposed to Python.
  */
 enum NormalAlgFlags {
     /**
@@ -317,6 +333,12 @@ enum NormalAlgFlags {
     NS_ALG_CUSTOM = 0x8000
 };
 
+/**
+ * A combination of flags for types of normal surface lists.
+ *
+ * \ifacespython This is present, and all values in the NormalAlgFlags
+ * enumeration type are treated as members of this NormalAlg class.
+ */
 typedef regina::Flags<NormalAlgFlags> NormalAlg;
 
 /**
