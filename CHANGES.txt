@@ -38,6 +38,9 @@ Version 4.94  [ (under development) ]
             - New classes to support Dim2Triangulation.
         Class DimTraits:
             - New template class to assist with dimension-agnostic code.
+        Class Flags:
+            - New template class for forming bitwise combinations of
+              flags based on enumeration values.
         Class HashPointer, HashString:
             - Removed, after being deprecated for a very long time now.
         Class IntOfSize:
@@ -124,6 +127,12 @@ Version 4.94  [ (under development) ]
         Enum NormalCoords:
             - A new enumeration that contains constants for different normal
               surface coordinate systems.  Include "surfaces/normalcoords.h".
+        Enum NormalList:
+            - A new enumeration that contains constants for different
+              lists of normal surfaces within a given triangulation.
+        Enum NormalAlgFlags, Class NormalAlg:
+            - Flags that specify details and parameters of normal surface
+              enumeration algorithms.
         Class NPacket:
             - Fix crash when sortChildren() is run on the root packet.
             - Removed writePacket(NFile&) and readPacket(NFile&), which
