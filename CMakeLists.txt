@@ -288,10 +288,6 @@ MACRO_LOG_FEATURE(POPT_FOUND
   "http://rpm5.org/files/popt/"
   TRUE)
 
-# Not a package per se, but finds right header file
-# and right namespace
-FIND_PACKAGE(HashSet)
-
 # Optionals
 IF(NOT DISABLE_MPI)
   FIND_PACKAGE(MPI)
