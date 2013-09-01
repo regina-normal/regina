@@ -111,6 +111,21 @@ class Flags {
         }
 
         /**
+         * Returns whether all of the flags in the given set are set.
+         *
+         * This requires \e all of the bits of all of the flags in the
+         * given set to be present in this set.
+         * The test is equivalent to <tt>(*this & rhs) == rhs</tt>.
+         *
+         * @param rhs the set whose presence will be tested.
+         * @return \c true if and only if all of the bits of the given
+         * set are present in this set.
+         */
+        bool has(const Flags<T>& rhs) const {
+            return (value_ & rhs.value_) == rhs.value_;
+        }
+
+        /**
          * Determines whether this set is precisely equal to the given flag.
          *
          * @param rhs the flag to test this against.
