@@ -39,11 +39,8 @@
 #endif
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
-#include "surfaces/flavourregistry.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
-
-#define __FLAVOUR_REGISTRY_BODY
 
 // Property IDs:
 #define PROPID_EULERCHARACTERISTIC 1
@@ -525,10 +522,6 @@ NLargeInteger NNormalSurfaceVector::getOrientedQuadCoord(
         unsigned long, int, NTriangulation*, bool) const {
     return NLargeInteger::zero;
 };
-
-// Tidy up.
-#undef REGISTER_FLAVOUR
-#undef __FLAVOUR_REGISTRY_BODY
 
 } // namespace regina
 

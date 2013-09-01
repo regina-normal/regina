@@ -79,48 +79,58 @@ void NNormalSurfaceList::writeAllSurfaces(std::ostream& out) const {
 
 #define __FLAVOUR_REGISTRY_BODY
 
-#define REGISTER_FLAVOUR(id_name, class, n, a, s, o) \
-    case id_name: \
-        return class::makeZeroVector(triangulation);
+namespace {
+    struct ZeroVector : public FlavourFunction<NNormalSurfaceVector*> {
+        const NTriangulation* tri_;
+
+        ZeroVector(const NTriangulation* tri) : tri_(tri) {}
+
+        template <typename Flavour>
+        inline NNormalSurfaceVector* operator() (Flavour f) {
+            return Flavour::Vector::makeZeroVector(tri_);
+        }
+    };
+}
 
 NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
         NormalCoords flavour) {
-    switch(flavour) {
-        // Import cases from the flavour registry.
-        #include "surfaces/flavourregistry.h"
-        default: break;
-    }
-    return 0;
+    return forFlavour(flavour, ZeroVector(triangulation), 0);
 }
 
-#undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, class, n, a, s, o) \
-    case id_name: \
-        return class::makeMatchingEquations(triangulation);
+namespace {
+    struct MatchingEquations : public FlavourFunction<NMatrixInt*> {
+        NTriangulation* tri_;
+
+        MatchingEquations(NTriangulation* tri) : tri_(tri) {}
+
+        template <typename Flavour>
+        inline NMatrixInt* operator() (Flavour f) {
+            return Flavour::Vector::makeMatchingEquations(tri_);
+        }
+    };
+}
 
 NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
         NormalCoords flavour) {
-    switch(flavour) {
-        // Import cases from the flavour registry.
-        #include "surfaces/flavourregistry.h"
-        default: break;
-    }
-    return 0;
+    return forFlavour(flavour, MatchingEquations(triangulation), 0);
 }
 
-#undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, class, n, a, s, o) \
-    case id_name: \
-        return class::makeEmbeddedConstraints(triangulation);
+namespace {
+    struct EmbeddedConstraints : public FlavourFunction<NEnumConstraintList*> {
+        NTriangulation* tri_;
+
+        EmbeddedConstraints(NTriangulation* tri) : tri_(tri) {}
+
+        template <typename Flavour>
+        inline NEnumConstraintList* operator() (Flavour f) {
+            return Flavour::Vector::makeEmbeddedConstraints(tri_);
+        }
+    };
+}
 
 NEnumConstraintList* makeEmbeddedConstraints(NTriangulation* triangulation,
         NormalCoords flavour) {
-    switch(flavour) {
-        // Import cases from the flavour registry.
-        #include "surfaces/flavourregistry.h"
-        default: break;
-    }
-    return 0;
+    return forFlavour(flavour, EmbeddedConstraints(triangulation), 0);
 }
 
 #undef REGISTER_FLAVOUR
@@ -538,77 +548,62 @@ NTriangulation* NNormalSurfaceList::getTriangulation() const {
     return dynamic_cast<NTriangulation*>(getTreeParent());
 }
 
-#undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, n, almost_normal, s, o) \
-    case id_name: return almost_normal;
+namespace {
+    struct AlmostNormalFunction : public FlavourFunction<bool> {
+        template <typename Flavour>
+        inline bool operator() (Flavour f) { return f.almostNormal; }
+    };
+}
 
 bool NNormalSurfaceList::allowsAlmostNormal() const {
-    switch(flavour) {
-        // Import cases from the flavour registry...
-        #include "surfaces/flavourregistry.h"
-        // ... and legacy cases:
-        case NS_AN_LEGACY: return true;
-        default: break;
-    }
-    return false;
+    if (flavour == NS_AN_LEGACY)
+        return true;
+    else
+        return forFlavour(flavour, AlmostNormalFunction(), false);
 }
 
-#undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, n, a, spun, o) \
-    case id_name: return spun;
+namespace {
+    struct SpunFunction : public FlavourFunction<bool> {
+        template <typename Flavour>
+        inline bool operator() (Flavour f) { return f.spun; }
+    };
+}
 
 bool NNormalSurfaceList::allowsSpun() const {
-    switch(flavour) {
-        // Import cases from the flavour registry...
-        #include "surfaces/flavourregistry.h"
-        // ... and legacy cases:
-        case NS_AN_LEGACY: return false;
-        default: break;
-    }
-    return false;
+    // Both the default and the NS_AN_LEGACY cases should return false.
+    return forFlavour(flavour, SpunFunction(), false);
 }
 
-#undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, n, a, s, oriented) \
-    case id_name: return oriented;
+namespace {
+    struct OrientedFunction : public FlavourFunction<bool> {
+        template <typename Flavour>
+        inline bool operator() (Flavour f) { return f.oriented; }
+    };
+}
 
 bool NNormalSurfaceList::allowsOriented() const {
-    switch(flavour) {
-        // Import cases from the flavour registry...
-        #include "surfaces/flavourregistry.h"
-        // ... and legacy cases:
-        case NS_AN_LEGACY: return false;
-        default: break;
-    }
-    return false;
+    // Both the default and the NS_AN_LEGACY cases should return false.
+    return forFlavour(flavour, OrientedFunction(), false);
 }
 
-#undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, name, a, s, o) \
-    case id_name: out << name; break;
+namespace {
+    struct NameFunction : public FlavourFunction<const char*> {
+        template <typename Flavour>
+        inline const char* operator() (Flavour f) { return f.name(); }
+    };
+}
 
 void NNormalSurfaceList::writeTextShort(std::ostream& out) const {
     out << surfaces.size() << " vertex normal surface";
     if (surfaces.size() != 1)
         out << 's';
     out << " (";
-    switch(flavour) {
-        // Import cases from the flavour registry...
-        #include "surfaces/flavourregistry.h"
-        // ... and legacy cases:
-        case NS_AN_LEGACY:
-            out << AN_LEGACY_NAME;
-            break;
-        default:
-            out << "Unknown";
-            break;
-    }
+    if (flavour == NS_AN_LEGACY)
+        out << AN_LEGACY_NAME;
+    else
+        out << forFlavour(flavour, NameFunction(), "Unknown");
     out << ')';
 }
-
-#undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, name, a, s, o) \
-    case id_name: out << name << '\n'; break;
 
 void NNormalSurfaceList::writeTextLong(std::ostream& out) const {
     if (isEmbeddedOnly())
@@ -617,23 +612,12 @@ void NNormalSurfaceList::writeTextLong(std::ostream& out) const {
         out << "Embedded, immersed & singular ";
     out << "vertex normal surfaces\n";
     out << "Coordinates: ";
-    switch(flavour) {
-        // Import cases from the flavour registry...
-        #include "surfaces/flavourregistry.h"
-        // ... and legacy cases:
-        case NS_AN_LEGACY:
-            out << AN_LEGACY_NAME << '\n';
-            break;
-        default:
-            out << "Unknown\n";
-            break;
-    }
+    if (flavour == NS_AN_LEGACY)
+        out << AN_LEGACY_NAME << '\n';
+    else
+        out << forFlavour(flavour, NameFunction(), "Unknown") << '\n';
     writeAllSurfaces(out);
 }
-
-#undef REGISTER_FLAVOUR
-#define REGISTER_FLAVOUR(id_name, c, name, a, s, o) \
-    case id_name: out << regina::xml::xmlEncodeSpecialChars(name); break;
 
 void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
     // Write the surface list parameters.
@@ -642,17 +626,11 @@ void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
         << "algorithm=\"" << algorithm_.intValue() << "\" "
         << "flavourid=\"" << flavour << "\"\n";
     out << "\tflavour=\"";
-    switch(flavour) {
-        // Import cases from the flavour registry...
-        #include "surfaces/flavourregistry.h"
-        // ... and legacy cases:
-        case NS_AN_LEGACY:
-            out << regina::xml::xmlEncodeSpecialChars(AN_LEGACY_NAME);
-            break;
-        default:
-            out << "Unknown";
-            break;
-    }
+    if (flavour == NS_AN_LEGACY)
+        out << regina::xml::xmlEncodeSpecialChars(AN_LEGACY_NAME);
+    else
+        out << regina::xml::xmlEncodeSpecialChars(forFlavour(
+            flavour, NameFunction(), "Unknown"));
     out << "\"/>\n";
 
     // Write the individual surfaces.
