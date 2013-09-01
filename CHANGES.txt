@@ -41,6 +41,8 @@ Version 4.94  [ (under development) ]
         Class Flags:
             - New template class for forming bitwise combinations of
               flags based on enumeration values.
+        Class FlavourFunction:
+            - Convenience type to aid the new forFlavour() template functions.
         Class HashPointer, HashString:
             - Removed, after being deprecated for a very long time now.
         Class IntOfSize:
@@ -127,6 +129,10 @@ Version 4.94  [ (under development) ]
         Enum NormalCoords:
             - A new enumeration that contains constants for different normal
               surface coordinate systems.  Include "surfaces/normalcoords.h".
+        Class NormalFlavour:
+            - Template classes that store traits of the various normal
+              surface coordinate systems.  These are used with the new
+              forFlavour() template functions.
         Enum NormalListFlags, Class NormalList:
             - Flags that specify which normal surfaces a particular list
               represents within a given triangulation.
@@ -220,6 +226,12 @@ Version 4.94  [ (under development) ]
         Routine base64Decode(), base64Encode():
             - Replace the old GPL-licensed implementation with a different
               MIT-licensed implementation.  Functionality is the same.
+        Routine forFlavour():
+            - New template functions that offer a typesafe way of iterating
+              through cases of different normal coordinate systems without
+              abusing the C++ preprocessor.  These should be used instead of
+              the old (and now deprecated) REGISTER_FLAVOUR macros.  Variants
+              of forFlavour() are offered for different function types.
         Routine readFromFile(), writeToFile():
             - Removed, since these were used with old-style binary files.
         Routine readOrb():
@@ -229,6 +241,10 @@ Version 4.94  [ (under development) ]
             - These typedefs have been renamed as NFacePairing::IsoList
               and NFacePairing::Use respectively.  The old typedefs are
               deprecated, and will be removed in some future release.
+        Header flavourregistry.h:
+            - The old REGISTER_FLAVOUR macros are now deprecated, and will
+              eventually be removed.  The preferred way to iterate through
+              coordinate flavours is the new forFlavour() template functions.
         Header hashmap.h, hashset.h, hashutils.h:
             - Removed, after being deprecated for a very long time now.
         Header nlargeinteger.h:
