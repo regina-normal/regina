@@ -50,6 +50,8 @@ void addNormalFlags() {
     class_<NormalList>("NormalList")
         .def(init<const NormalList&>())
         .def("has", has_list)
+        .def("intValue", &NormalList::intValue)
+        .def("fromInt", &NormalList::fromInt)
         .def(self == self)
         .def(self != self)
         .def(self |= self)
@@ -58,6 +60,7 @@ void addNormalFlags() {
         .def(self | self)
         .def(self & self)
         .def(self ^ self)
+        .staticmethod("fromInt")
         ;
 
     global.attr("NS_EMBEDDED_ONLY") = NormalList(regina::NS_EMBEDDED_ONLY);
@@ -71,6 +74,8 @@ void addNormalFlags() {
     class_<NormalAlg>("NormalAlg")
         .def(init<const NormalAlg&>())
         .def("has", has_alg)
+        .def("intValue", &NormalAlg::intValue)
+        .def("fromInt", &NormalAlg::fromInt)
         .def(self == self)
         .def(self != self)
         .def(self |= self)
@@ -79,6 +84,7 @@ void addNormalFlags() {
         .def(self | self)
         .def(self & self)
         .def(self ^ self)
+        .staticmethod("fromInt")
         ;
 
     global.attr("NS_ALG_DEFAULT") = NormalAlg(regina::NS_ALG_DEFAULT);
