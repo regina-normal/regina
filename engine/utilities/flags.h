@@ -355,6 +355,51 @@ class Flags {
             return Flags(value_ ^ rhs.value_);
         }
 
+        /**
+         * Clears all bits from this set that appear in the given flag.
+         *
+         * @param rhs the flag to clear from this set.
+         */
+        inline void clear(T rhs) {
+            value_ |= rhs;
+            value_ ^= rhs;
+        }
+
+        /**
+         * Clears all bits from this set that appear in the given set.
+         *
+         * @param rhs identifies the bits to clear from this set.
+         */
+        inline void clear(const Flags<T>& rhs) {
+            value_ |= rhs.value_;
+            value_ ^= rhs.value_;
+        }
+
+        /**
+         * Adjust this set so that exactly one and only one of the two
+         * given flags are included.
+         *
+         * If neither flag is present or both flags are present, this
+         * set will be adjusted so that \a default_ is present and \a other
+         * is not.
+         *
+         * \pre Both \a default_ and \a other are each single-bit flags.
+         *
+         * \ifacespython Not present, even for flag types that are
+         * exposed to Python.
+         *
+         * @param default_ the flag that will be set if any adjustments
+         * need to be made.
+         * @param other the flag that will be cleared if any adjustments
+         * need to be made.
+         */
+        inline void ensureOne(T default_, T other) {
+            if (! ((value_ & default_) || (value_ & other)))
+                value_ |= default_;
+            else if ((value_ & default_) && (value_ & other))
+                value_ ^= other;
+        }
+
     private:
         /**
          * Constructs a new flag set with the given internal value.

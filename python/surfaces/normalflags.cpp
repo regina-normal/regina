@@ -42,6 +42,8 @@ using regina::NormalList;
 namespace {
     bool (NormalList::*has_list)(const NormalList&) const = &NormalList::has;
     bool (NormalAlg::*has_alg)(const NormalAlg&) const = &NormalAlg::has;
+    void (NormalList::*clear_list)(const NormalList&) = &NormalList::clear;
+    void (NormalAlg::*clear_alg)(const NormalAlg&) = &NormalAlg::clear;
 }
 
 void addNormalFlags() {
@@ -60,6 +62,7 @@ void addNormalFlags() {
         .def(self | self)
         .def(self & self)
         .def(self ^ self)
+        .def("clear", clear_list)
         .staticmethod("fromInt")
         ;
 
@@ -84,6 +87,7 @@ void addNormalFlags() {
         .def(self | self)
         .def(self & self)
         .def(self ^ self)
+        .def("clear", clear_alg)
         .staticmethod("fromInt")
         ;
 
