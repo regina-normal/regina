@@ -553,7 +553,9 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
 
         /**
          * Returns the rank of the chain complex supporting the homology
-         * computation.
+         *  computation. In the description of this class, this is also given
+         *  by M.columns() and N.rows() from the constructor that takes as
+         *  input two matrices, M and N.  
          *
          * @return the rank of the chain complex.
          */
@@ -610,10 +612,14 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
          *
          * \ifacespython Both \a v and the return value are python lists.
          *
-         * @param v a vector of length M.columns().
+         * @param v a vector of length M.columns(). M.columns() is also
+         *  getRankCC(). 
+         *  
          * @return a vector that describes \a v in the standard
-         * Z_{d1} + ... + Z_{dk} + Z^d form, or the empty vector if
-         * \a v is not in the kernel of \a M.
+         *  Z_{d1} + ... + Z_{dk} + Z^d form, or the empty vector if
+         *  \a v is not in the kernel of \a M. k+d is equal to 
+         *  minNumberOfGenerators(). 
+         * 
          */
         std::vector<NLargeInteger> snfRep(
             const std::vector<NLargeInteger>& v) const;
