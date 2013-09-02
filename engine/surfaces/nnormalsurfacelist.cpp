@@ -80,7 +80,7 @@ void NNormalSurfaceList::writeAllSurfaces(std::ostream& out) const {
 #define __FLAVOUR_REGISTRY_BODY
 
 namespace {
-    struct ZeroVector : public FlavourFunction<NNormalSurfaceVector*> {
+    struct ZeroVector : public Returns<NNormalSurfaceVector*> {
         const NTriangulation* tri_;
 
         ZeroVector(const NTriangulation* tri) : tri_(tri) {}
@@ -98,7 +98,7 @@ NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
 }
 
 namespace {
-    struct MatchingEquations : public FlavourFunction<NMatrixInt*> {
+    struct MatchingEquations : public Returns<NMatrixInt*> {
         NTriangulation* tri_;
 
         MatchingEquations(NTriangulation* tri) : tri_(tri) {}
@@ -116,7 +116,7 @@ NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
 }
 
 namespace {
-    struct EmbeddedConstraints : public FlavourFunction<NEnumConstraintList*> {
+    struct EmbeddedConstraints : public Returns<NEnumConstraintList*> {
         NTriangulation* tri_;
 
         EmbeddedConstraints(NTriangulation* tri) : tri_(tri) {}
@@ -549,7 +549,7 @@ NTriangulation* NNormalSurfaceList::getTriangulation() const {
 }
 
 namespace {
-    struct AlmostNormalFunction : public FlavourFunction<bool> {
+    struct AlmostNormalFunction : public Returns<bool> {
         template <typename Flavour>
         inline bool operator() (Flavour f) { return f.almostNormal; }
     };
@@ -563,7 +563,7 @@ bool NNormalSurfaceList::allowsAlmostNormal() const {
 }
 
 namespace {
-    struct SpunFunction : public FlavourFunction<bool> {
+    struct SpunFunction : public Returns<bool> {
         template <typename Flavour>
         inline bool operator() (Flavour f) { return f.spun; }
     };
@@ -575,7 +575,7 @@ bool NNormalSurfaceList::allowsSpun() const {
 }
 
 namespace {
-    struct OrientedFunction : public FlavourFunction<bool> {
+    struct OrientedFunction : public Returns<bool> {
         template <typename Flavour>
         inline bool operator() (Flavour f) { return f.oriented; }
     };
@@ -587,7 +587,7 @@ bool NNormalSurfaceList::allowsOriented() const {
 }
 
 namespace {
-    struct NameFunction : public FlavourFunction<const char*> {
+    struct NameFunction : public Returns<const char*> {
         template <typename Flavour>
         inline const char* operator() (Flavour f) { return f.name(); }
     };

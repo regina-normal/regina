@@ -52,7 +52,7 @@
  *    (2) a template specialisation NormalFlavour<id>, where id is the
  *        corresponding NormalCoords enum value;
  *
- *    (3) a corresponding case in both implementations of forFlavour();
+ *    (3) a corresponding case in the implementation of forFlavour();
  *
  *    (4) a macro REGISTER_FLAVOUR(id, class, name, an, spun, oriented), where:
  *        id = the enum value from NormalCoords that represents this flavour;
@@ -69,7 +69,7 @@
  *    There are two ways to use this flavour registry.
  *
  *    (1) The preferred way is to #include this file once, and then to use
- *        the forFlavour() template functions to do any processing that
+ *        the forFlavour() template function to do any processing that
  *        requires iterating through cases according to the flavour of
  *        coordinate system.
  *
@@ -99,121 +99,208 @@
 
 namespace regina {
 
-    template <int flavourType>
-    struct NormalFlavour;
+/**
+ * \weakgroup surfaces
+ * @{
+ */
 
-    template <>
-    struct NormalFlavour<NS_STANDARD> {
-        typedef NNormalSurfaceVectorStandard Vector;
-        inline static const char* name() {
-            return "Standard normal (tri-quad)";
-        }
-        enum {
-            almostNormal = 0,
-            spun = 0,
-            oriented = 0
-        };
-    };
+/**
+ * A template that stores information about a particular flavour of
+ * normal coordinate system.  Much of this information is given in the
+ * form of compile-time constants and types.
+ *
+ * To iterate through cases for a NormalCoords flavour that is not known
+ * until runtime, see the forFlavour() routine.
+ *
+ * This NormalFlavour template is only defined for \a flavourType arguments
+ * that represent coordinate systems in which you can create and store normal
+ * surfaces.
+ *
+ * At a bare minimum, this template should contain:
+ *
+ * - a typedef \a Vector that represents the corresponding
+ *   NNormalSurfaceVector class;
+ * - enum constants \a almostNormal, \a spun and \a oriented, which indicate
+ *   whether the coordinate system allows almost normal, spun and/or
+ *   transversely oriented surfaces;
+ * - a static function name() that returns a C-style string giving the
+ *   human-readable name of the coordinate system.
+ */
+template <NormalCoords flavourType>
+struct NormalFlavour;
 
-    template <>
-    struct NormalFlavour<NS_AN_STANDARD> {
-        typedef NNormalSurfaceVectorANStandard Vector;
-        inline static const char* name() {
-            return "Standard almost normal (tri-quad-oct)";
-        }
-        enum {
-            almostNormal = 1,
-            spun = 0,
-            oriented = 0
-        };
-    };
-
-    template <>
-    struct NormalFlavour<NS_QUAD> {
-        typedef NNormalSurfaceVectorQuad Vector;
-        inline static const char* name() {
-            return "Quad normal";
-        }
-        enum {
-            almostNormal = 0,
-            spun = 1,
-            oriented = 0
-        };
-    };
-
-    template <>
-    struct NormalFlavour<NS_AN_QUAD_OCT> {
-        typedef NNormalSurfaceVectorQuadOct Vector;
-        inline static const char* name() {
-            return "Quad-oct almost normal";
-        }
-        enum {
-            almostNormal = 1,
-            spun = 1,
-            oriented = 0
-        };
-    };
-
-    template <>
-    struct NormalFlavour<NS_ORIENTED> {
-        typedef NNormalSurfaceVectorOriented Vector;
-        inline static const char* name() {
-            return "Transversely oriented standard normal";
-        }
-        enum {
-            almostNormal = 0,
-            spun = 0,
-            oriented = 1
-        };
-    };
-
-    template <>
-    struct NormalFlavour<NS_ORIENTED_QUAD> {
-        typedef NNormalSurfaceVectorOrientedQuad Vector;
-        inline static const char* name() {
-            return "Transversely oriented quad normal";
-        }
-        enum {
-            almostNormal = 0,
-            spun = 1,
-            oriented = 1
-        };
-    };
-
-    template <typename ReturnType>
-    struct FlavourFunction {
-        typedef ReturnType Return;
-    };
-
-    template <typename ProcedureObject>
-    inline void forFlavour(NormalCoords flavour, ProcedureObject proc) {
-        switch (flavour) {
-            case NS_STANDARD : proc(NormalFlavour<NS_STANDARD>()); break;
-            case NS_AN_STANDARD : proc(NormalFlavour<NS_AN_STANDARD>()); break;
-            case NS_QUAD : proc(NormalFlavour<NS_QUAD>()); break;
-            case NS_AN_QUAD_OCT : proc(NormalFlavour<NS_AN_QUAD_OCT>()); break;
-            case NS_ORIENTED : proc(NormalFlavour<NS_ORIENTED>()); break;
-            case NS_ORIENTED_QUAD :
-                proc(NormalFlavour<NS_ORIENTED_QUAD>()); break;
-            default: break;
-        }
+/**
+ * Stores information about standard normal coordinates.
+ * See the general NormalFlavour template notes for further details.
+ */
+template <>
+struct NormalFlavour<NS_STANDARD> {
+    typedef NNormalSurfaceVectorStandard Vector;
+    inline static const char* name() {
+        return "Standard normal (tri-quad)";
     }
+    enum {
+        almostNormal = 0,
+        spun = 0,
+        oriented = 0
+    };
+};
 
-    template <typename FunctionObject>
-    inline typename FunctionObject::Return forFlavour(
-            NormalCoords flavour, FunctionObject func,
-            typename FunctionObject::Return defaultReturn) {
-        switch (flavour) {
-            case NS_STANDARD : return func(NormalFlavour<NS_STANDARD>());
-            case NS_AN_STANDARD : return func(NormalFlavour<NS_AN_STANDARD>());
-            case NS_QUAD : return func(NormalFlavour<NS_QUAD>());
-            case NS_AN_QUAD_OCT : return func(NormalFlavour<NS_AN_QUAD_OCT>());
-            case NS_ORIENTED : return func(NormalFlavour<NS_ORIENTED>());
-            case NS_ORIENTED_QUAD :
-                return func(NormalFlavour<NS_ORIENTED_QUAD>());
-            default: return defaultReturn;
-        }
+/**
+ * Stores information about standard almost normal coordinates.
+ * See the general NormalFlavour template notes for further details.
+ */
+template <>
+struct NormalFlavour<NS_AN_STANDARD> {
+    typedef NNormalSurfaceVectorANStandard Vector;
+    inline static const char* name() {
+        return "Standard almost normal (tri-quad-oct)";
     }
+    enum {
+        almostNormal = 1,
+        spun = 0,
+        oriented = 0
+    };
+};
+
+/**
+ * Stores information about quad normal coordinates.
+ * See the general NormalFlavour template notes for further details.
+ */
+template <>
+struct NormalFlavour<NS_QUAD> {
+    typedef NNormalSurfaceVectorQuad Vector;
+    inline static const char* name() {
+        return "Quad normal";
+    }
+    enum {
+        almostNormal = 0,
+        spun = 1,
+        oriented = 0
+    };
+};
+
+/**
+ * Stores information about quad-oct almost normal coordinates.
+ * See the general NormalFlavour template notes for further details.
+ */
+template <>
+struct NormalFlavour<NS_AN_QUAD_OCT> {
+    typedef NNormalSurfaceVectorQuadOct Vector;
+    inline static const char* name() {
+        return "Quad-oct almost normal";
+    }
+    enum {
+        almostNormal = 1,
+        spun = 1,
+        oriented = 0
+    };
+};
+
+/**
+ * Stores information about transversely oriented standard normal coordinates.
+ * See the general NormalFlavour template notes for further details.
+ */
+template <>
+struct NormalFlavour<NS_ORIENTED> {
+    typedef NNormalSurfaceVectorOriented Vector;
+    inline static const char* name() {
+        return "Transversely oriented standard normal";
+    }
+    enum {
+        almostNormal = 0,
+        spun = 0,
+        oriented = 1
+    };
+};
+
+/**
+ * Stores information about transversely oriented quad normal coordinates.
+ * See the general NormalFlavour template notes for further details.
+ */
+template <>
+struct NormalFlavour<NS_ORIENTED_QUAD> {
+    typedef NNormalSurfaceVectorOrientedQuad Vector;
+    inline static const char* name() {
+        return "Transversely oriented quad normal";
+    }
+    enum {
+        almostNormal = 0,
+        spun = 1,
+        oriented = 1
+    };
+};
+
+/**
+ * A convenience base class for a function object, which does nothing
+ * beyond provide a \a ReturnType typedef.
+ *
+ * Specifically, a function object \a F that returns type \a T could inherit
+ * from the base class \a Returns<T>.  This will ensure that \a F includes a
+ * typedef \a F::ReturnType representing type \a T.
+ *
+ * See the forFlavour() routine for an example of where
+ * such a function object might be used.
+ */
+template <typename ReturnType_>
+struct Returns {
+    /**
+     * Indicates the return type for a function object.
+     */
+    typedef ReturnType_ ReturnType;
+};
+
+/**
+ * A convenience routine that allows the user to call different
+ * functions for different flavours of normal coordinate system.
+ * The functions must all be known at compile time, and may
+ * (for example) incorporate the corresponding coordinate system
+ * flavours as compile-time constants (e.g., as template arguments);
+ * however, the precise flavour of coordinate system that is passed need
+ * not be known until runtime.
+ *
+ * This function can only work with flavours of coordinate system in which
+ * you can create and store normal surfaces.  All other flavours are
+ * considered invalid for our purposes here.
+ *
+ * In detail: the function object \a func must include a templated
+ * unary bracket operator, so that <tt>func(NormalFlavour<f>)</tt> is
+ * defined for any valid NormalCoords enum value \a f.  Then,
+ * when the user calls <tt>forFlavour(flavour, func, defaultReturn)</tt>,
+ * this will call <tt>func(NormalFlavour<flavour>)</tt> and pass back
+ * the corresponding return value.  If \a flavour does not denote a valid
+ * coordinate system as described above, then forFlavour() will pass back
+ * \a defaultReturn instead.
+ *
+ * The point of forFlavour() is that it allows the programmer to write a
+ * template function that incorporates the coordinate system into its template
+ * arguments, but then to choose between the various template instatiations at
+ * runtime without having to repeatedly hard-code switch/case lists of possible
+ * coordinate systems.
+ *
+ * See nnormalsurfacelist.cpp for several examples of this routine at work.
+ *
+ * \pre The function object must have a typedef \a ReturnType indicating
+ * the return type of the corresponding templated unary bracket operator.
+ * Inheriting from Returns<...> is a convenient way to ensure this.
+ */
+template <typename FunctionObject>
+inline typename FunctionObject::ReturnType forFlavour(
+        NormalCoords flavour, FunctionObject func,
+        typename FunctionObject::ReturnType defaultReturn) {
+    switch (flavour) {
+        case NS_STANDARD : return func(NormalFlavour<NS_STANDARD>());
+        case NS_AN_STANDARD : return func(NormalFlavour<NS_AN_STANDARD>());
+        case NS_QUAD : return func(NormalFlavour<NS_QUAD>());
+        case NS_AN_QUAD_OCT : return func(NormalFlavour<NS_AN_QUAD_OCT>());
+        case NS_ORIENTED : return func(NormalFlavour<NS_ORIENTED>());
+        case NS_ORIENTED_QUAD :
+            return func(NormalFlavour<NS_ORIENTED_QUAD>());
+        default: return defaultReturn;
+    }
+}
+
+/*@}*/
 
 } // namespace regina
 
