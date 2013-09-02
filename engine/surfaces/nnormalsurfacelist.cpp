@@ -368,7 +368,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundDual(
 NNormalSurfaceList* NNormalSurfaceList::enumerateStandardDirect(
         NTriangulation* owner) {
     NNormalSurfaceList* list = new NNormalSurfaceList(NS_STANDARD,
-        NS_VERTEX, NS_VERTEX_STD_DIRECT);
+        NS_VERTEX | NS_EMBEDDED_ONLY, NS_VERTEX_STD_DIRECT);
 
     // Run a vanilla enumeration in standard coordinates.
     NEnumConstraintList* constraints =
@@ -389,7 +389,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateStandardDirect(
 NNormalSurfaceList* NNormalSurfaceList::enumerateStandardANDirect(
         NTriangulation* owner) {
     NNormalSurfaceList* list = new NNormalSurfaceList(NS_AN_STANDARD,
-        NS_VERTEX, NS_VERTEX_STD_DIRECT);
+        NS_VERTEX | NS_EMBEDDED_ONLY, NS_VERTEX_STD_DIRECT);
 
     // Run a vanilla enumeration in standard almost normal coordinates.
     NEnumConstraintList* constraints =
