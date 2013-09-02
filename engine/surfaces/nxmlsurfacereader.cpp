@@ -38,8 +38,6 @@
 #include "triangulation/ntriangulation.h"
 #include "utilities/stringutils.h"
 
-#define __FLAVOUR_REGISTRY_BODY
-
 namespace regina {
 
 void NXMLNormalSurfaceReader::startElement(const std::string&,
@@ -50,10 +48,18 @@ void NXMLNormalSurfaceReader::startElement(const std::string&,
     name = props.lookup("name");
 }
 
-#define REGISTER_FLAVOUR(id_name, class, n, a, s, o) \
-    if (flavour == id_name) \
-        vec = new class(vecLen); \
-    else
+namespace {
+    struct NewVector : public Returns<NNormalSurfaceVector*> {
+        size_t len_;
+
+        NewVector(size_t len) : len_(len) {}
+
+        template <typename Flavour>
+        inline NNormalSurfaceVector* operator() (Flavour f) {
+            return new typename Flavour::Vector(len_);
+        }
+    };
+}
 
 void NXMLNormalSurfaceReader::initialChars(const std::string& chars) {
     if (vecLen < 0 || tri == 0)
@@ -66,11 +72,11 @@ void NXMLNormalSurfaceReader::initialChars(const std::string& chars) {
     // Create a new vector and read all non-zero entries.
     // Bring in cases from the flavour registry...
     NNormalSurfaceVector* vec;
-    #include "surfaces/flavourregistry.h"
-    // ... and legacy cases:
     if (flavour == NS_AN_LEGACY)
         vec = new NNormalSurfaceVectorANStandard(vecLen);
     else
+        vec = forFlavour(flavour, NewVector(vecLen), 0);
+    if (! vec)
         return;
 
     long pos;
@@ -178,10 +184,6 @@ NXMLPacketReader* NNormalSurfaceList::getXMLReader(NPacket* parent) {
     return new NXMLNormalSurfaceListReader(
         dynamic_cast<NTriangulation*>(parent));
 }
-
-// Tidy up.
-#undef REGISTER_FLAVOUR
-#undef __FLAVOUR_REGISTRY_BODY
 
 } // namespace regina
 
