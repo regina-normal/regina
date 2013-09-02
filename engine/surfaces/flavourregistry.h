@@ -32,6 +32,19 @@
 
 /* end stub */
 
+/*! \file surfaces/flavourregistry.h
+ *  \brief Contains a registry of coordinate system flavours known to the
+ *  engine that can actually be used to create and store normal surfaces
+ *  in 3-manifold triangulations.
+ *
+ *  Each time a new flavour is created, this flavour registry should be
+ *  updated.  Instructions regarding how to do this are included in
+ *  <i>flavourregistry.h</i>, which also contains instructions regarding
+ *  how to actually use the flavour registry.
+ *
+ *  See NNormalSurfaceList for further details.
+ */
+
 /*********************
  *
  *  Normal Surface Coordinate System Flavour Registry
@@ -89,13 +102,19 @@
  */
 
 #ifndef __FLAVOUR_REGISTRY_BODY
-    #include "surfaces/normalcoords.h"
-    #include "surfaces/nsstandard.h"
-    #include "surfaces/nsanstandard.h"
-    #include "surfaces/nsquad.h"
-    #include "surfaces/nsquadoct.h"
-    #include "surfaces/nsoriented.h"
-    #include "surfaces/nsorientedquad.h"
+
+#ifndef __FLAVOURREGISTRY_H
+#ifndef __DOXYGEN
+#define __FLAVOURREGISTRY_H
+#endif
+
+#include "surfaces/normalcoords.h"
+#include "surfaces/nsstandard.h"
+#include "surfaces/nsanstandard.h"
+#include "surfaces/nsquad.h"
+#include "surfaces/nsquadoct.h"
+#include "surfaces/nsoriented.h"
+#include "surfaces/nsorientedquad.h"
 
 namespace regina {
 
@@ -125,6 +144,8 @@ namespace regina {
  *   transversely oriented surfaces;
  * - a static function name() that returns a C-style string giving the
  *   human-readable name of the coordinate system.
+ *
+ * \ifacespython Not present.
  */
 template <NormalCoords flavourType>
 struct NormalFlavour;
@@ -132,6 +153,8 @@ struct NormalFlavour;
 /**
  * Stores information about standard normal coordinates.
  * See the general NormalFlavour template notes for further details.
+ *
+ * \ifacespython Not present.
  */
 template <>
 struct NormalFlavour<NS_STANDARD> {
@@ -149,6 +172,8 @@ struct NormalFlavour<NS_STANDARD> {
 /**
  * Stores information about standard almost normal coordinates.
  * See the general NormalFlavour template notes for further details.
+ *
+ * \ifacespython Not present.
  */
 template <>
 struct NormalFlavour<NS_AN_STANDARD> {
@@ -166,6 +191,8 @@ struct NormalFlavour<NS_AN_STANDARD> {
 /**
  * Stores information about quad normal coordinates.
  * See the general NormalFlavour template notes for further details.
+ *
+ * \ifacespython Not present.
  */
 template <>
 struct NormalFlavour<NS_QUAD> {
@@ -183,6 +210,8 @@ struct NormalFlavour<NS_QUAD> {
 /**
  * Stores information about quad-oct almost normal coordinates.
  * See the general NormalFlavour template notes for further details.
+ *
+ * \ifacespython Not present.
  */
 template <>
 struct NormalFlavour<NS_AN_QUAD_OCT> {
@@ -200,6 +229,8 @@ struct NormalFlavour<NS_AN_QUAD_OCT> {
 /**
  * Stores information about transversely oriented standard normal coordinates.
  * See the general NormalFlavour template notes for further details.
+ *
+ * \ifacespython Not present.
  */
 template <>
 struct NormalFlavour<NS_ORIENTED> {
@@ -217,6 +248,8 @@ struct NormalFlavour<NS_ORIENTED> {
 /**
  * Stores information about transversely oriented quad normal coordinates.
  * See the general NormalFlavour template notes for further details.
+ *
+ * \ifacespython Not present.
  */
 template <>
 struct NormalFlavour<NS_ORIENTED_QUAD> {
@@ -241,6 +274,8 @@ struct NormalFlavour<NS_ORIENTED_QUAD> {
  *
  * See the three-argument forFlavour() routine for an example of where
  * such a function object might be used.
+ *
+ * \ifacespython Not present.
  */
 template <typename ReturnType_>
 struct Returns {
@@ -280,6 +315,8 @@ struct Returns {
  * \pre The function object must have a typedef \a ReturnType indicating
  * the return type of the corresponding templated unary bracket operator.
  * Inheriting from Returns<...> is a convenient way to ensure this.
+ *
+ * \ifacespython Not present.
  *
  * @param flavour the given flavour of normal coordinate system.
  * @param func the function object whose unary bracket operator we will
@@ -332,6 +369,8 @@ inline typename FunctionObject::ReturnType forFlavour(
  * There is also a three-argument variant of forFlavour() that works with
  * functions with return values.
  *
+ * \ifacespython Not present.
+ *
  * @param flavour the given flavour of normal coordinate system.
  * @param func the function object whose unary bracket operator we will
  * call with a NormalFlavour<flavour> object.
@@ -353,6 +392,8 @@ inline void forFlavour(NormalCoords flavour, VoidFunctionObject func) {
 /**
  * A function object that creates a new normal surface vector,
  * for use with the three-argument version of forFlavour().
+ *
+ * \ifacespython Not present.
  */
 struct NewNormalSurfaceVector : public Returns<NNormalSurfaceVector*> {
     size_t len_;
@@ -384,7 +425,9 @@ struct NewNormalSurfaceVector : public Returns<NNormalSurfaceVector*> {
 
 } // namespace regina
 
-#else
+#endif // include guard __FLAVOURREGISTRY_H
+
+#else // ifndef __FLAVOUR_REGISTRY_BODY
     REGISTER_FLAVOUR(NS_STANDARD, NNormalSurfaceVectorStandard,
         "Standard normal (tri-quad)", false, false, false)
     REGISTER_FLAVOUR(NS_AN_STANDARD, NNormalSurfaceVectorANStandard,
@@ -398,17 +441,4 @@ struct NewNormalSurfaceVector : public Returns<NNormalSurfaceVector*> {
     REGISTER_FLAVOUR(NS_ORIENTED_QUAD, NNormalSurfaceVectorOrientedQuad,
         "Transversely oriented quad normal", false, true, true)
 #endif
-
-/*! \file surfaces/flavourregistry.h
- *  \brief Contains a registry of coordinate system flavours known to the
- *  engine that can actually be used to create and store normal surfaces
- *  in 3-manifold triangulations.
- *
- *  Each time a new flavour is created, this flavour registry should be
- *  updated.  Instructions regarding how to do this are included in
- *  <i>flavourregistry.h</i>, which also contains instructions regarding
- *  how to actually use the flavour registry.
- *
- *  See NNormalSurfaceList for further details.
- */
 
