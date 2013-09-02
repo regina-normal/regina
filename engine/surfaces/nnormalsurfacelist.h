@@ -1077,13 +1077,6 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  *   inserted are contained. */
 
             /**
-             * Creates a new uninitialised output iterator.
-             *
-             * \warning This iterator must not be used until its
-             * surface list and triangulation have been initialised.
-             */
-            SurfaceInserter();
-            /**
              * Creates a new output iterator.  The member variables of
              * this iterator will be initialised according to the
              * parameters passed to this constructor.
@@ -1599,10 +1592,6 @@ inline NNormalSurfaceList::VectorIterator NNormalSurfaceList::beginVectors()
 inline NNormalSurfaceList::VectorIterator NNormalSurfaceList::endVectors()
         const {
     return VectorIterator(surfaces.end());
-}
-
-inline NNormalSurfaceList::SurfaceInserter::SurfaceInserter() : list(0),
-        owner(0) {
 }
 
 inline NNormalSurfaceList::SurfaceInserter::SurfaceInserter(

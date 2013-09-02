@@ -52,7 +52,7 @@
  *    (2) a template specialisation NormalFlavour<id>, where id is the
  *        corresponding NormalCoords enum value;
  *
- *    (3) a corresponding case in the implementation of forFlavour();
+ *    (3) a corresponding case in each implementation of forFlavour();
  *
  *    (4) a macro REGISTER_FLAVOUR(id, class, name, an, spun, oriented), where:
  *        id = the enum value from NormalCoords that represents this flavour;
@@ -69,7 +69,7 @@
  *    There are two ways to use this flavour registry.
  *
  *    (1) The preferred way is to #include this file once, and then to use
- *        the forFlavour() template function to do any processing that
+ *        the forFlavour() template functions to do any processing that
  *        requires iterating through cases according to the flavour of
  *        coordinate system.
  *
@@ -110,7 +110,7 @@ namespace regina {
  * form of compile-time constants and types.
  *
  * To iterate through cases for a NormalCoords flavour that is not known
- * until runtime, see the forFlavour() routine.
+ * until runtime, see the various forFlavour() routines.
  *
  * This NormalFlavour template is only defined for \a flavourType arguments
  * that represent coordinate systems in which you can create and store normal
@@ -239,7 +239,7 @@ struct NormalFlavour<NS_ORIENTED_QUAD> {
  * from the base class \a Returns<T>.  This will ensure that \a F includes a
  * typedef \a F::ReturnType representing type \a T.
  *
- * See the forFlavour() routine for an example of where
+ * See the three-argument forFlavour() routine for an example of where
  * such a function object might be used.
  */
 template <typename ReturnType_>
@@ -251,38 +251,44 @@ struct Returns {
 };
 
 /**
- * A convenience routine that allows the user to call different
- * functions for different flavours of normal coordinate system.
- * The functions must all be known at compile time, and may
- * (for example) incorporate the corresponding coordinate system
- * flavours as compile-time constants (e.g., as template arguments);
- * however, the precise flavour of coordinate system that is passed need
- * not be known until runtime.
+ * Allows the user to call a template function whose template parameter
+ * matches a given flavour of normal coordinate system, which is not known
+ * until runtime.  In essence, this routine contains a switch/case statement
+ * that runs through all possible coordinate sytems.
+ *
+ * The advantages of this routine are that (i) the user does not need to
+ * repeatedly type such switch/case statements themselves; and (ii) if
+ * a new coordinate system is added then only a small amount of code
+ * needs to be extended to incorporate it.
  *
  * This function can only work with flavours of coordinate system in which
  * you can create and store normal surfaces.  All other flavours are
  * considered invalid for our purposes here.
  *
- * In detail: the function object \a func must include a templated
+ * In detail: the function object \a func must define a templated
  * unary bracket operator, so that <tt>func(NormalFlavour<f>)</tt> is
  * defined for any valid NormalCoords enum value \a f.  Then,
  * when the user calls <tt>forFlavour(flavour, func, defaultReturn)</tt>,
- * this will call <tt>func(NormalFlavour<flavour>)</tt> and pass back
+ * this routine will call <tt>func(NormalFlavour<flavour>)</tt> and pass back
  * the corresponding return value.  If \a flavour does not denote a valid
  * coordinate system as described above, then forFlavour() will pass back
  * \a defaultReturn instead.
  *
- * The point of forFlavour() is that it allows the programmer to write a
- * template function that incorporates the coordinate system into its template
- * arguments, but then to choose between the various template instatiations at
- * runtime without having to repeatedly hard-code switch/case lists of possible
- * coordinate systems.
- *
- * See nnormalsurfacelist.cpp for several examples of this routine at work.
+ * There is also a two-argument variant of forFlavour() that works with
+ * void functions.
  *
  * \pre The function object must have a typedef \a ReturnType indicating
  * the return type of the corresponding templated unary bracket operator.
  * Inheriting from Returns<...> is a convenient way to ensure this.
+ *
+ * @param flavour the given flavour of normal coordinate system.
+ * @param func the function object whose unary bracket operator we will
+ * call with a NormalFlavour<flavour> object.
+ * @param defaultReturn the value to return if the given flavour of
+ * coordinate system is invalid.
+ * @return the return value from the corresponding unary bracket
+ * operator of \a func, or \a defaultReturn if the given flavour of
+ * coordinate system is invalid.
  */
 template <typename FunctionObject>
 inline typename FunctionObject::ReturnType forFlavour(
@@ -299,6 +305,80 @@ inline typename FunctionObject::ReturnType forFlavour(
         default: return defaultReturn;
     }
 }
+
+/**
+ * Allows the user to call a template function whose template parameter
+ * matches a given flavour of normal coordinate system, which is not known
+ * until runtime.  In essence, this routine contains a switch/case statement
+ * that runs through all possible coordinate sytems.
+ *
+ * The advantages of this routine are that (i) the user does not need to
+ * repeatedly type such switch/case statements themselves; and (ii) if
+ * a new coordinate system is added then only a small amount of code
+ * needs to be extended to incorporate it.
+ *
+ * This function can only work with flavours of coordinate system in which
+ * you can create and store normal surfaces.  All other flavours are
+ * considered invalid for our purposes here.
+ *
+ * In detail: the function object \a func must define a templated
+ * unary bracket operator, so that <tt>func(NormalFlavour<f>)</tt> is
+ * defined for any valid NormalCoords enum value \a f.  Then,
+ * when the user calls <tt>forFlavour(flavour, func)</tt>,
+ * this routine will call <tt>func(NormalFlavour<flavour>)</tt> in turn.
+ * If \a flavour does not denote a valid coordinate system as described above,
+ * then forFlavour() will do nothing.
+ *
+ * There is also a three-argument variant of forFlavour() that works with
+ * functions with return values.
+ *
+ * @param flavour the given flavour of normal coordinate system.
+ * @param func the function object whose unary bracket operator we will
+ * call with a NormalFlavour<flavour> object.
+ */
+template <typename VoidFunctionObject>
+inline void forFlavour(NormalCoords flavour, VoidFunctionObject func) {
+    switch (flavour) {
+        case NS_STANDARD : func(NormalFlavour<NS_STANDARD>()); break;
+        case NS_AN_STANDARD : func(NormalFlavour<NS_AN_STANDARD>()); break;
+        case NS_QUAD : func(NormalFlavour<NS_QUAD>()); break;
+        case NS_AN_QUAD_OCT : func(NormalFlavour<NS_AN_QUAD_OCT>()); break;
+        case NS_ORIENTED : func(NormalFlavour<NS_ORIENTED>()); break;
+        case NS_ORIENTED_QUAD :
+            func(NormalFlavour<NS_ORIENTED_QUAD>()); break;
+        default: break;
+    }
+}
+
+/**
+ * A function object that creates a new normal surface vector,
+ * for use with the three-argument version of forFlavour().
+ */
+struct NewNormalSurfaceVector : public Returns<NNormalSurfaceVector*> {
+    size_t len_;
+        /**< The length of the new vector to create. */
+
+    /**
+     * Creates a new function object, whose bracket operator will create a
+     * new normal surface vector of the given length.
+     *
+     * @param len the length of the normal surface vector to create.
+     */
+    inline NewNormalSurfaceVector(size_t len) : len_(len) {
+    }
+
+    /**
+     * Creates a new normal surface vector of type Flavour::Vector.
+     * The length of the vector will match the value passed to the class
+     * constructor for this function object.
+     *
+     * @return a new normal surface vector of type Flavour::Vector.
+     */
+    template <typename Flavour>
+    inline NNormalSurfaceVector* operator() (Flavour) {
+        return new typename Flavour::Vector(len_);
+    }
+};
 
 /*@}*/
 
