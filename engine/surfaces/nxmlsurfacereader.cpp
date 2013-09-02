@@ -48,19 +48,6 @@ void NXMLNormalSurfaceReader::startElement(const std::string&,
     name = props.lookup("name");
 }
 
-namespace {
-    struct NewVector : public Returns<NNormalSurfaceVector*> {
-        size_t len_;
-
-        NewVector(size_t len) : len_(len) {}
-
-        template <typename Flavour>
-        inline NNormalSurfaceVector* operator() (Flavour f) {
-            return new typename Flavour::Vector(len_);
-        }
-    };
-}
-
 void NXMLNormalSurfaceReader::initialChars(const std::string& chars) {
     if (vecLen < 0 || tri == 0)
         return;
@@ -75,7 +62,7 @@ void NXMLNormalSurfaceReader::initialChars(const std::string& chars) {
     if (flavour == NS_AN_LEGACY)
         vec = new NNormalSurfaceVectorANStandard(vecLen);
     else
-        vec = forFlavour(flavour, NewVector(vecLen), 0);
+        vec = forFlavour(flavour, NewNormalSurfaceVector(vecLen), 0);
     if (! vec)
         return;
 
