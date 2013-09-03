@@ -481,13 +481,13 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
     using regina::xml::xmlValueTag;
 
     // Write the opening tag including vector length.
-    unsigned vecLen = vector->size();
+    size_t vecLen = vector->size();
     out << "  <surface len=\"" << vecLen << "\" name=\""
         << xmlEncodeSpecialChars(name) << "\">";
 
     // Write all non-zero entries.
     NLargeInteger entry;
-    for (unsigned i = 0; i < vecLen; i++) {
+    for (size_t i = 0; i < vecLen; i++) {
         entry = (*vector)[i];
         if (entry != 0)
             out << ' ' << i << ' ' << entry;

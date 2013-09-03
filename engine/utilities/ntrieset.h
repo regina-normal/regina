@@ -150,7 +150,7 @@ class NTrieSet {
          * can support.
          * \return \c true if a subset was found, or \c false otherwise.
          */
-        bool hasSubset(const T& superset, unsigned universeSize) const;
+        bool hasSubset(const T& superset, unsigned long universeSize) const;
 
         /**
          * Performs the particular superset search required by the double
@@ -188,7 +188,7 @@ class NTrieSet {
          * was found, or \c false otherwise.
          */
         bool hasExtraSuperset(const T& subset, const T& exc1, const T& exc2,
-            unsigned universeSize) const;
+            unsigned long universeSize) const;
 };
 
 /*@}*/
@@ -210,12 +210,12 @@ template <typename T>
 void NTrieSet<T>::insert(const T& entry) {
     ++descendants_;
 
-    int last = entry.lastBit();
+    long last = entry.lastBit();
     if (last < 0)
         return;
 
     NTrieSet<T>* node = this;
-    for (int pos = 0; pos <= last; ++pos) {
+    for (long pos = 0; pos <= last; ++pos) {
         if (entry.get(pos)) {
             // Follow right branch.
             if (! node->child_[1])
@@ -232,10 +232,11 @@ void NTrieSet<T>::insert(const T& entry) {
 }
 
 template <typename T>
-bool NTrieSet<T>::hasSubset(const T& superset, unsigned universeSize) const {
+bool NTrieSet<T>::hasSubset(const T& superset, unsigned long universeSize)
+        const {
     const NTrieSet<T>** node = new const NTrieSet<T>*[universeSize + 2];
 
-    int level = 0;
+    long level = 0;
     node[0] = this;
     while (level >= 0) {
         if (! node[level]) {
@@ -270,14 +271,14 @@ bool NTrieSet<T>::hasSubset(const T& superset, unsigned universeSize) const {
 
 template <typename T>
 bool NTrieSet<T>::hasExtraSuperset(const T& subset,
-        const T& exc1, const T& exc2, unsigned universeSize) const {
+        const T& exc1, const T& exc2, unsigned long universeSize) const {
     const NTrieSet<T>** node = new const NTrieSet<T>*[universeSize + 2];
 
-    int last = subset.lastBit();
+    long last = subset.lastBit();
 
-    int level = 0;
-    int prefixOfExc1 = 0; // Last layer for which this is true.
-    int prefixOfExc2 = 0; // Last layer for which this is true.
+    long level = 0;
+    long prefixOfExc1 = 0; // Last layer for which this is true.
+    long prefixOfExc2 = 0; // Last layer for which this is true.
 
     node[0] = this;
 

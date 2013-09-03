@@ -129,7 +129,7 @@ void NTriangulation::drillEdge(NEdge* e) {
     // In each case the corresponding edge number in the new tetrahedron
     // equals the edge number from the original tetrahedron.
 
-    long edgeNum = e->getEmbedding(0).getEdge();
+    int edgeNum = e->getEmbedding(0).getEdge();
     long tetNum = tetrahedronIndex(e->getEmbedding(0).getTetrahedron());
 
     int oldToNew[2]; // Identifies two of the 24 tetrahedra in a subdivision

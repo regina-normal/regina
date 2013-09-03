@@ -56,11 +56,11 @@
 namespace regina {
 
 template <class BitmaskType>
-NDoubleDescription::RaySpec<BitmaskType>::RaySpec(unsigned axis,
-        const NMatrixInt& subspace, const int* hypOrder) :
+NDoubleDescription::RaySpec<BitmaskType>::RaySpec(unsigned long axis,
+        const NMatrixInt& subspace, const long* hypOrder) :
         NRay(subspace.rows()),
         facets_(subspace.columns()) {
-    unsigned i;
+    size_t i;
 
     for (i = 0; i < subspace.columns(); ++i)
         if (i != axis)
@@ -76,7 +76,7 @@ NDoubleDescription::RaySpec<BitmaskType>::RaySpec(
         const RaySpec<BitmaskType>& second) :
         NRay(second.size() - 1),
         facets_(second.facets_) {
-    for (unsigned i = 0; i < size(); ++i)
+    for (size_t i = 0; i < size(); ++i)
         elements[i] = second.elements[i + 1] * (*first.elements) -
             first.elements[i + 1] * (*second.elements);
     scaleDown();
@@ -91,13 +91,13 @@ NDoubleDescription::RaySpec<BitmaskType>::RaySpec(
 template <class BitmaskType>
 void NDoubleDescription::RaySpec<BitmaskType>::recover(
         NRay& dest, const NMatrixInt& subspace) const {
-    unsigned i, j;
+    unsigned long i, j;
 
     unsigned long rows = subspace.rows();
     unsigned long cols = subspace.columns() - facets_.bits();
 
     // Extract the set of columns that we actually care about.
-    unsigned* use = new unsigned[cols];
+    unsigned long* use = new unsigned long[cols];
     for (i = 0, j = 0; i < subspace.columns(); ++i)
         if (facets_.get(i)) {
             // We know in advance that this coordinate will be zero.
@@ -127,14 +127,14 @@ void NDoubleDescription::RaySpec<BitmaskType>::recover(
     // Put this submatrix in echelon form; moreover, for the leading
     // entry in each row, set all other entries in the corresponding
     // column to zero.
-    unsigned* lead = new unsigned[cols];
+    unsigned long* lead = new unsigned long[cols];
     for (i = 0; i < cols; ++i)
         lead[i] = i;
 
     // More or less a stripped-down copy of rowBasisAndOrthComp() from here.
     // See rowBasisAndOrthComp() for further details on how this works.
-    unsigned done = 0;
-    unsigned tmp;
+    unsigned long done = 0;
+    unsigned long tmp;
     NLargeInteger coeff1, coeff2, common;
     while (done < rows) {
         // Find the first non-zero entry in row done.
@@ -206,7 +206,7 @@ void NDoubleDescription::RaySpec<BitmaskType>::recover(
 template <class RayClass, class OutputIterator>
 void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-        NProgressNumber* progress, unsigned initialRows) {
+        NProgressNumber* progress, unsigned long initialRows) {
     unsigned long nFacets = subspace.columns();
 
     // If the space has dimension zero, return no results.
@@ -257,7 +257,7 @@ void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
 template <class RayClass, class BitmaskType, class OutputIterator>
 void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-        NProgressNumber* progress, unsigned initialRows) {
+        NProgressNumber* progress, unsigned long initialRows) {
     // Get the dimension of the entire space in which we are working.
     unsigned long dim = subspace.columns();
 
@@ -269,7 +269,7 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
             progress->setOutOf(progress->getOutOf() + 1);
 
         RayClass* ans;
-        for (unsigned i = 0; i < dim; ++i) {
+        for (unsigned long i = 0; i < dim; ++i) {
             ans = new RayClass(dim);
             ans->setElement(i, NLargeInteger::one);
             *results++ = ans;
@@ -294,8 +294,8 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
     //
     // Sort the integers 0..(nEqns-1) into the order in which we plan to
     // process the hyperplanes.
-    int* hyperplanes = new int[nEqns];
-    unsigned i;
+    long* hyperplanes = new long[nEqns];
+    unsigned long i;
     for (i = 0; i < nEqns; ++i)
         hyperplanes[i] = i;
 
@@ -333,7 +333,7 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
     // At any point we should have the latest results in
     // list[workingList], with the other list empty.
     int workingList = 0;
-    unsigned used = 0;
+    unsigned long used = 0;
     for (i=0; i<nEqns; i++) {
         // Do not increment used if the old solution set sits entirely in
         // and/or to only one side of the new hyperplane.  This gives the
@@ -383,7 +383,7 @@ template <class BitmaskType>
 bool NDoubleDescription::intersectHyperplane(
         std::vector<RaySpec<BitmaskType>*>& src,
         std::vector<RaySpec<BitmaskType>*>& dest,
-        unsigned dim, unsigned prevHyperplanes,
+        unsigned long dim, unsigned long prevHyperplanes,
         const BitmaskType* constraintsBegin,
         const BitmaskType* constraintsEnd) {
     if (src.empty())
