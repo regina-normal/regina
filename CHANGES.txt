@@ -131,7 +131,9 @@ Version 4.94  [ (under development) ]
               these enum values are available directly in the namespace scope.
             - The old enumeration routines have been deprecated.  These
               include enumerate(NTriangulation*, int, bool, NProgressManager*),
-              enumerateStandardDirect() and enumerateStandardANDirect().
+              enumerateStandardDirect(), enumerateStandardANDirect(),
+              enumerateFundPrimal(), enumerateFundDual(),
+              enumerateFundCD() and enumerateFundFullCone().
               Users should now use the "universal" enumeration routine
               enumerate(NTriangulation*, NormalCoords, NormalList, NormalAlg,
               NProgressManager*), which offers sensible default as well
