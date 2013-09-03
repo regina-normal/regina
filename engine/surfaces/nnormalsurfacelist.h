@@ -186,7 +186,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
     protected:
         std::vector<NNormalSurface*> surfaces;
             /**< Contains the normal surfaces stored in this packet. */
-        NormalCoords flavour;
+        NormalCoords flavour_;
             /**< Stores which flavour of coordinate system is being
                  used by the normal surfaces in this packet. */
         NormalList which_;
@@ -250,7 +250,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
-         * @param newFlavour the flavour of coordinate system to be used.
+         * @param flavour the flavour of coordinate system to be used.
          * @param which indicates which normal surfaces should be enumerated.
          * @param algHints passes requests to Regina for which specific
          * enumeration algorithm should be used.
@@ -265,7 +265,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * returns 0 (and no normal surface list is created).
          */
         static NNormalSurfaceList* enumerate(NTriangulation* owner,
-            NormalCoords newFlavour,
+            NormalCoords flavour,
             NormalList which = NS_LIST_DEFAULT,
             NormalAlg algHints = NS_ALG_DEFAULT,
             NProgressManager* manager = 0);
@@ -281,13 +281,13 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * postconditions.
          *
          * \deprecated The correct way to access this procedure is to call
-         * <tt>enumerate(owner, newFlavour, NS_EMBEDDED_ONLY,
+         * <tt>enumerate(owner, flavour, NS_EMBEDDED_ONLY,
          * NS_ALG_DEFAULT, manager)</tt> if \a embeddedOnly is \c true, or
-         * <tt>enumerate(owner, newFlavour, NS_IMMERSED_SINGULAR,
+         * <tt>enumerate(owner, flavour, NS_IMMERSED_SINGULAR,
          * NS_ALG_DEFAULT, manager)</tt> if \a embeddedOnly is \c false.
          */
         static NNormalSurfaceList* enumerate(NTriangulation* owner,
-            NormalCoords newFlavour, bool embeddedOnly,
+            NormalCoords flavour, bool embeddedOnly,
             NProgressManager* manager = 0);
 
         /**
@@ -494,12 +494,22 @@ class REGINA_API NNormalSurfaceList : public NPacket {
             bool embeddedOnly = true);
 
         /**
+         * Deprecated routine to return the flavour of coordinate system
+         * being used by the surfaces stored in this set.
+         *
+         * \deprecated Users should switch to the identical routine
+         * flavour() instead.
+         *
+         * @return the flavour of coordinate system used.
+         */
+        NormalCoords getFlavour() const;
+        /**
          * Returns the flavour of coordinate system being used by the
          * surfaces stored in this set.
          *
          * @return the flavour of coordinate system used.
          */
-        NormalCoords getFlavour() const;
+        NormalCoords flavour() const;
         /**
          * Returns details of which normal surfaces this list represents
          * within the underlying triangulation.
@@ -1178,14 +1188,14 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * Creates an empty list of normal surfaces with the given
          * parameters.
          *
-         * @param newFlavour the flavour of coordinate system to be used
+         * @param flavour the flavour of coordinate system to be used
          * for filling this list.
          * @param which indicates which normal surfaces these will
          * represent within the underlying triangulation.
          * @param algorithm details of the enumeration algorithm that
          * will be used to fill this list.
          */
-        NNormalSurfaceList(NormalCoords newFlavour, NormalList which,
+        NNormalSurfaceList(NormalCoords flavour, NormalList which,
             NormalAlg algorithm);
 
         /**
@@ -1486,7 +1496,11 @@ inline NNormalSurfaceList::~NNormalSurfaceList() {
 }
 
 inline NormalCoords NNormalSurfaceList::getFlavour() const {
-    return flavour;
+    return flavour_;
+}
+
+inline NormalCoords NNormalSurfaceList::flavour() const {
+    return flavour_;
 }
 
 inline NormalList NNormalSurfaceList::which() const {
@@ -1515,9 +1529,9 @@ inline bool NNormalSurfaceList::dependsOnParent() const {
 }
 
 inline NNormalSurfaceList* NNormalSurfaceList::enumerate(
-        NTriangulation* owner, NormalCoords newFlavour,
+        NTriangulation* owner, NormalCoords flavour,
         bool embeddedOnly, NProgressManager* manager) {
-    return enumerate(owner, newFlavour,
+    return enumerate(owner, flavour,
         NS_VERTEX | (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
         NS_ALG_DEFAULT, manager);
 }
@@ -1535,43 +1549,43 @@ inline NNormalSurfaceList* NNormalSurfaceList::enumerateStandardANDirect(
 }
 
 inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundPrimal(
-        NTriangulation* owner, NormalCoords newFlavour,
+        NTriangulation* owner, NormalCoords flavour,
         bool embeddedOnly, NNormalSurfaceList*, NProgressManager* manager) {
-    return enumerate(owner, newFlavour,
+    return enumerate(owner, flavour,
         NS_FUNDAMENTAL |
             (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
         NS_HILBERT_PRIMAL, manager);
 }
 
 inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundDual(
-        NTriangulation* owner, NormalCoords newFlavour,
+        NTriangulation* owner, NormalCoords flavour,
         bool embeddedOnly, NProgressManager* manager) {
-    return enumerate(owner, newFlavour,
+    return enumerate(owner, flavour,
         NS_FUNDAMENTAL |
             (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
         NS_HILBERT_DUAL, manager);
 }
 
 inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundCD(
-        NTriangulation* owner, NormalCoords newFlavour,
+        NTriangulation* owner, NormalCoords flavour,
         bool embeddedOnly) {
-    return enumerate(owner, newFlavour,
+    return enumerate(owner, flavour,
         NS_FUNDAMENTAL |
             (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
         NS_HILBERT_CD);
 }
 
 inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
-        NTriangulation* owner, NormalCoords newFlavour,
+        NTriangulation* owner, NormalCoords flavour,
         bool embeddedOnly) {
-    return enumerate(owner, newFlavour,
+    return enumerate(owner, flavour,
         NS_FUNDAMENTAL |
             (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
         NS_HILBERT_FULLCONE);
 }
 
 inline NMatrixInt* NNormalSurfaceList::recreateMatchingEquations() const {
-    return makeMatchingEquations(getTriangulation(), flavour);
+    return makeMatchingEquations(getTriangulation(), flavour_);
 }
 
 inline NNormalSurfaceList::VectorIterator::VectorIterator() {
@@ -1687,9 +1701,9 @@ inline NNormalSurfaceList::SurfaceInserter&
     return *this;
 }
 
-inline NNormalSurfaceList::NNormalSurfaceList(NormalCoords newFlavour,
+inline NNormalSurfaceList::NNormalSurfaceList(NormalCoords flavour,
         NormalList which, NormalAlg algorithm) :
-        flavour(newFlavour), which_(which), algorithm_(algorithm) {
+        flavour_(flavour), which_(which), algorithm_(algorithm) {
 }
 
 inline NNormalSurfaceList::Enumerator::Enumerator(NNormalSurfaceList* list,
