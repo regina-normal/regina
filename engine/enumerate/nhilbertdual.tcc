@@ -339,7 +339,7 @@ void NHilbertDual::intersectHyperplane(std::vector<VecSpec<BitmaskType>*>& list,
     // Keep enlarging these sets until they enlarge no more.
     const BitmaskType* cit;
     BitmaskType comb, tmpMask;
-    std::set<unsigned>::const_iterator coordit;
+    std::set<unsigned long>::const_iterator coordit;
     bool broken;
     bool reachedPosPrevGen;
     VecSpec<BitmaskType> sum(subspace.columns());

@@ -435,7 +435,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
     int i;
     std::list<std::vector<mpz_class> >::const_iterator hlit;
     NEnumConstraintList::const_iterator eit;
-    std::set<unsigned>::const_iterator sit;
+    std::set<unsigned long>::const_iterator sit;
     NNormalSurfaceVector* v;
     NLargeInteger tmpInt;
     NewNormalSurfaceVector newVec(dim);

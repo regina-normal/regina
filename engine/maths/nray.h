@@ -79,7 +79,7 @@ class REGINA_API NRay : public NVector<NLargeInteger> {
          *
          * @param length the number of elements in the new vector.
          */
-        NRay(unsigned length);
+        NRay(size_t length);
         /**
          * Creates a new ray that is a clone of the given ray.
          *
@@ -109,7 +109,7 @@ class REGINA_API NRay : public NVector<NLargeInteger> {
 
 // Inline functions for NRay
 
-inline NRay::NRay(unsigned length) : NVector<NLargeInteger>(length) {
+inline NRay::NRay(size_t length) : NVector<NLargeInteger>(length) {
     // Don't bother passing zero to the parent constructor, since the
     // default NLargeInteger constructor already sets elements to zero.
 }

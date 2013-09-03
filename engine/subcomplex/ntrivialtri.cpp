@@ -121,7 +121,7 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
             if (comp->getNumberOfEdges() != 4)
                 return 0;
 
-            int degree[4];
+            long degree[4];
             for (i = 0; i < 4; i++)
                 degree[i] = comp->getEdge(i)->getDegree();
             std::sort(degree, degree + 4);
