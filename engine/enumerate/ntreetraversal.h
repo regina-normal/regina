@@ -568,6 +568,8 @@ class NTreeEnumeration : public NTreeTraversal<LPConstraint, BanConstraint> {
         using NTreeTraversal<LPConstraint, BanConstraint>::typeOrder_;
 
         using NTreeTraversal<LPConstraint, BanConstraint>::cancelled;
+        using NTreeTraversal<LPConstraint, BanConstraint>::feasibleBranches;
+        using NTreeTraversal<LPConstraint, BanConstraint>::setNext;
 
     private:
         NTypeTrie<7> solns_;
