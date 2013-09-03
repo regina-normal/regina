@@ -101,7 +101,7 @@ class NPosOrder {
          * @return \c true if and only if the hyperplane described by
          * row \a i is smaller than the hyperplane described by row \a j.
          */
-        inline bool operator () (int i, int j) const;
+        inline bool operator () (long i, long j) const;
 };
 
 /*@}*/
@@ -113,8 +113,8 @@ inline NPosOrder::NPosOrder(const NMatrixInt& matrix) :
 }
 
 inline bool NPosOrder::operator () (
-        int i, int j) const {
-    for (unsigned c = 0; c < matrix_.columns(); ++c) {
+        long i, long j) const {
+    for (unsigned long c = 0; c < matrix_.columns(); ++c) {
         if (matrix_.entry(i, c) == 0 && matrix_.entry(j, c) != 0)
             return true;
         if (matrix_.entry(i, c) != 0 && matrix_.entry(j, c) == 0)

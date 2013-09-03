@@ -237,7 +237,7 @@ void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
 
     ::TriangulationData data;
     data.name = strdup(tri.getPacketLabel().c_str());
-    data.num_tetrahedra = tri.getNumberOfTetrahedra();
+    data.num_tetrahedra = static_cast<int>(tri.getNumberOfTetrahedra());
 
     // Fields recalculated by SnapPea:
     data.solution_type = ::not_attempted;
@@ -254,8 +254,8 @@ void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
     NTriangulation::TetrahedronIterator it = tri.getTetrahedra().begin();
     for (tet = 0; tet < data.num_tetrahedra; tet++) {
         for (face = 0; face < 4; face++) {
-            data.tetrahedron_data[tet].neighbor_index[face] =
-                tri.tetrahedronIndex((*it)->adjacentTetrahedron(face));
+            data.tetrahedron_data[tet].neighbor_index[face] = static_cast<int>(
+                tri.tetrahedronIndex((*it)->adjacentTetrahedron(face)));
             for (i = 0; i < 4; i++)
                 data.tetrahedron_data[tet].gluing[face][i] =
                     (*it)->adjacentGluing(face)[i];

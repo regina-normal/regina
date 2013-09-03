@@ -141,7 +141,7 @@ class REGINA_API NDoubleDescription {
         template <class RayClass, class OutputIterator>
         static void enumerateExtremalRays(OutputIterator results,
             const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressNumber* progress = 0, unsigned initialRows = 0);
+            NProgressNumber* progress = 0, unsigned long initialRows = 0);
 
     private:
         /**
@@ -208,8 +208,8 @@ class REGINA_API NDoubleDescription {
                  * <i>i</i>th hyperplane to intersect must be described
                  * by row <tt>hypOrder[i]</tt> of \a subspace.
                  */
-                inline RaySpec(unsigned axis, const NMatrixInt& subspace,
-                    const int* hypOrder);
+                inline RaySpec(unsigned long axis, const NMatrixInt& subspace,
+                    const long* hypOrder);
 
                 /**
                  * Creates a copy of the given ray specification, with the
@@ -337,7 +337,7 @@ class REGINA_API NDoubleDescription {
         template <class RayClass, class BitmaskType, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
             const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressNumber* progress, unsigned initialRows);
+            NProgressNumber* progress, unsigned long initialRows);
 
         /**
          * A part of the full double description algorithm that
@@ -391,7 +391,7 @@ class REGINA_API NDoubleDescription {
         static bool intersectHyperplane(
             std::vector<RaySpec<BitmaskType>*>& src,
             std::vector<RaySpec<BitmaskType>*>& dest,
-            unsigned dim, unsigned prevHyperplanes,
+            unsigned long dim, unsigned long prevHyperplanes,
             const BitmaskType* constraintsBegin,
             const BitmaskType* constraintsEnd);
 };

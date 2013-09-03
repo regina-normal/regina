@@ -73,7 +73,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced() const {
         Variant::reducedFlavour(), NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM);
 
     // Get the empty triangulation out of the way now.
-    unsigned n = owner->getNumberOfTetrahedra();
+    unsigned long n = owner->getNumberOfTetrahedra();
     if (n == 0) {
         owner->insertChildLast(ans);
         return ans;

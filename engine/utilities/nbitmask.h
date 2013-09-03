@@ -68,7 +68,7 @@ namespace regina {
  * highly optimised NBitmask1 and NBitmask2 classes instead.
  *
  * Once a bitmask is created, the only way its length (the number of bits)
- * can be changed is by calling reset(unsigned).
+ * can be changed is by calling reset(size_t).
  *
  * The length of the bitmask is not actually stored in this structure.
  * This means that, upon construction (or reset), the length will be
@@ -94,7 +94,7 @@ class REGINA_API NBitmask {
         typedef unsigned Piece;
             /**< The types of the machine-native pieces into which this
                  bitmask is split. */
-        unsigned pieces;
+        size_t pieces;
             /**< The number of machine-native pieces into which this bitmask
                  is split. */
         Piece* mask;
@@ -104,7 +104,7 @@ class REGINA_API NBitmask {
     public:
         /**
          * Creates a new invalid bitmask.  You must call the one-argument
-         * reset(unsigned) or use the assignment operator to give the
+         * reset(size_t) or use the assignment operator to give the
          * bitmask a length before it can be used.
          *
          * Use of this default constructor is discouraged.  The only
@@ -113,7 +113,7 @@ class REGINA_API NBitmask {
          * individually assigned lengths.
          *
          * \warning No other routines can be used with this bitmask
-         * until it has been assigned a length via reset(unsigned) or
+         * until it has been assigned a length via reset(size_t) or
          * the assignment operator.  As the single exception, the class
          * destructor is safe to use even if a bitmask has never been
          * initialised.
@@ -127,14 +127,14 @@ class REGINA_API NBitmask {
          * @param length the number of bits stored in this bitmask; this must
          * be at least one.
          */
-        NBitmask(unsigned length);
+        NBitmask(size_t length);
 
         /**
          * Creates a clone of the given bitmask.
          *
          * It is fine if the given bitmask is invalid (but in this case,
          * the new bitmask will be invalid also).  Invalid bitmasks must be
-         * assigned a length using reset(unsigned) or the assignment operator.
+         * assigned a length using reset(size_t) or the assignment operator.
          *
          * @param cloneMe the bitmask to clone.
          */
@@ -152,7 +152,7 @@ class REGINA_API NBitmask {
          * zero and strictly less than the length of this bitmask.
          * @return the value of the (\a index)th bit.
          */
-        bool get(unsigned index) const;
+        bool get(size_t index) const;
 
         /**
          * Sets the given bit of this bitmask to the given value.
@@ -161,7 +161,7 @@ class REGINA_API NBitmask {
          * and strictly less than the length of this bitmask.
          * @param value the value that will be assigned to the (\a index)th bit.
          */
-        void set(unsigned index, bool value);
+        void set(size_t index, bool value);
 
         /**
          * Sets all bits in the given sorted list to the given value.
@@ -209,8 +209,8 @@ class REGINA_API NBitmask {
         void set(ForwardIterator indexBegin, ForwardIterator indexEnd,
                 bool value) {
             Piece* base = mask;
-            unsigned offset = 0;
-            unsigned diff;
+            size_t offset = 0;
+            size_t diff;
 
             for ( ; indexBegin != indexEnd; ++indexBegin) {
                 // INV: offset = (base - mask) * 8 * sizeof(Piece)
@@ -232,7 +232,7 @@ class REGINA_API NBitmask {
          *
          * \warning The length of this bitmask must already have been
          * initialised.  In particular, if the default constructor was
-         * used, you must call the one-argument reset(unsigned) before you
+         * used, you must call the one-argument reset(size_t) before you
          * can use this routine.
          */
         void reset();
@@ -247,7 +247,7 @@ class REGINA_API NBitmask {
          * @param length the number of bits to store in this bitmask; this
          * must be at least one.
          */
-        void reset(unsigned length);
+        void reset(size_t length);
 
         /**
          * Sets this bitmask to a copy of the given bitmask.
@@ -261,7 +261,7 @@ class REGINA_API NBitmask {
          *
          * If the given bitmask is invalid, this bitmask will become
          * invalid also.  Invalid bitmasks must be assigned a length using
-         * reset(unsigned) or this assignment operator.
+         * reset(size_t) or this assignment operator.
          *
          * @param other the bitmask to clone.
          * @return a reference to this bitmask.
@@ -280,7 +280,7 @@ class REGINA_API NBitmask {
          *
          * @param numBits the number of bits that will \e not be cleared.
          */
-        void truncate(unsigned numBits);
+        void truncate(size_t numBits);
 
         /**
          * Sets this to the intersection of this and the given bitmask.
@@ -426,7 +426,7 @@ class REGINA_API NBitmask {
          *
          * @return the number of \c true bits.
          */
-        unsigned bits() const;
+        size_t bits() const;
 
         /**
          * Returns the index of the first \c true bit in this bitmask,
@@ -434,7 +434,7 @@ class REGINA_API NBitmask {
          *
          * @return the index of the first \c true bit.
          */
-        int firstBit() const;
+        long firstBit() const;
 
         /**
          * Returns the index of the last \c true bit in this bitmask,
@@ -442,7 +442,7 @@ class REGINA_API NBitmask {
          *
          * @return the index of the last \c true bit.
          */
-        int lastBit() const;
+        long lastBit() const;
 
         /**
          * Determines whether at most one bit is set to \c true in this
@@ -521,7 +521,7 @@ class NBitmask1 {
          * \warning This is \e not a constructor that initialises the
          * bitmask to a given pattern.
          */
-        inline NBitmask1(unsigned) : mask(0) {
+        inline NBitmask1(size_t) : mask(0) {
         }
 
         /**
@@ -543,9 +543,9 @@ class NBitmask1 {
          * Sets all bits of this bitmask to \c false.
          *
          * The integer argument is merely for compatibility with
-         * NBitmask::reset(unsigned), and will be ignored.
+         * NBitmask::reset(size_t), and will be ignored.
          */
-        inline void reset(unsigned) {
+        inline void reset(size_t) {
             mask = 0;
         }
 
@@ -570,7 +570,7 @@ class NBitmask1 {
          *
          * @param numBits the number of bits that will \e not be cleared.
          */
-        inline void truncate(unsigned numBits) {
+        inline void truncate(size_t numBits) {
             if (numBits < 8 * sizeof(T))
                 mask &= ((T(1) << numBits) - T(1));
         }
@@ -582,7 +582,7 @@ class NBitmask1 {
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
          * @return the value of the (\a index)th bit.
          */
-        inline bool get(unsigned index) const {
+        inline bool get(size_t index) const {
             return (mask & (T(1) << index));
         }
 
@@ -593,7 +593,7 @@ class NBitmask1 {
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
          * @param value the value that will be assigned to the (\a index)th bit.
          */
-        inline void set(unsigned index, bool value) {
+        inline void set(size_t index, bool value) {
             mask |= (T(1) << index);
             if (! value)
                 mask ^= (T(1) << index);
@@ -801,7 +801,7 @@ class NBitmask1 {
          *
          * @return the number of \c true bits.
          */
-        inline unsigned bits() const {
+        inline size_t bits() const {
             return BitManipulator<T>::bits(mask);
         }
 
@@ -811,7 +811,7 @@ class NBitmask1 {
          *
          * @return the index of the first \c true bit.
          */
-        inline int firstBit() const {
+        inline long firstBit() const {
             return BitManipulator<T>::firstBit(mask);
         }
 
@@ -821,7 +821,7 @@ class NBitmask1 {
          *
          * @return the index of the last \c true bit.
          */
-        inline int lastBit() const {
+        inline long lastBit() const {
             return BitManipulator<T>::lastBit(mask);
         }
 
@@ -912,7 +912,7 @@ class NBitmask2 {
          * \warning This is \e not a constructor that initialises the
          * bitmask to a given pattern.
          */
-        inline NBitmask2(unsigned) : low(0), high(0) {
+        inline NBitmask2(size_t) : low(0), high(0) {
         }
 
         /**
@@ -936,9 +936,9 @@ class NBitmask2 {
          * Sets all bits of this bitmask to \c false.
          *
          * The integer argument is merely for compatibility with
-         * NBitmask::reset(unsigned), and will be ignored.
+         * NBitmask::reset(size_t), and will be ignored.
          */
-        inline void reset(unsigned) {
+        inline void reset(size_t) {
             low = 0;
             high = 0;
         }
@@ -965,7 +965,7 @@ class NBitmask2 {
          *
          * @param numBits the number of bits that will \e not be cleared.
          */
-        inline void truncate(unsigned numBits) {
+        inline void truncate(size_t numBits) {
             if (numBits < 8 * sizeof(T)) {
                 low &= ((T(1) << numBits) - T(1));
                 high = 0;
@@ -983,7 +983,7 @@ class NBitmask2 {
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
          * @return the value of the (\a index)th bit.
          */
-        inline bool get(unsigned index) const {
+        inline bool get(size_t index) const {
             if (index < 8 * sizeof(T))
                 return (low & (T(1) << index));
             else
@@ -997,7 +997,7 @@ class NBitmask2 {
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
          * @param value the value that will be assigned to the (\a index)th bit.
          */
-        inline void set(unsigned index, bool value) {
+        inline void set(size_t index, bool value) {
             if (index < 8 * sizeof(T)) {
                 low |= (T(1) << index);
                 if (! value)
@@ -1230,7 +1230,7 @@ class NBitmask2 {
          *
          * @return the number of \c true bits.
          */
-        inline unsigned bits() const {
+        inline size_t bits() const {
             return BitManipulator<T>::bits(low) + BitManipulator<U>::bits(high);
         }
 
@@ -1240,7 +1240,7 @@ class NBitmask2 {
          *
          * @return the index of the first \c true bit.
          */
-        inline int firstBit() const {
+        inline long firstBit() const {
             // -1 case does not work out of the box in the second IF branch
             // due to the 8 * sizeof(T).
             if (low)
@@ -1257,7 +1257,7 @@ class NBitmask2 {
          *
          * @return the index of the last \c true bit.
          */
-        inline int lastBit() const {
+        inline long lastBit() const {
             // -1 case works out of the box in the second IF branch.
             if (high)
                 return 8 * sizeof(T) + BitManipulator<U>::lastBit(high);
@@ -1434,7 +1434,7 @@ typedef InternalBitmaskLen64<>::Type NBitmaskLen64;
 inline NBitmask::NBitmask() : pieces(0), mask(0) {
 }
 
-inline NBitmask::NBitmask(unsigned length) :
+inline NBitmask::NBitmask(size_t length) :
         pieces((length - 1) / (8 * sizeof(Piece)) + 1),
         mask(new Piece[pieces]) {
     std::fill(mask, mask + pieces, 0);
@@ -1454,7 +1454,7 @@ inline void NBitmask::reset() {
     std::fill(mask, mask + pieces, 0);
 }
 
-inline void NBitmask::reset(unsigned length) {
+inline void NBitmask::reset(size_t length) {
     delete[] mask;
 
     pieces = (length - 1) / (8 * sizeof(Piece)) + 1;
@@ -1474,8 +1474,8 @@ inline NBitmask& NBitmask::operator = (const NBitmask& other) {
     return *this;
 }
 
-inline void NBitmask::truncate(unsigned numBits) {
-    unsigned skip = numBits / (8 * sizeof(Piece));
+inline void NBitmask::truncate(size_t numBits) {
+    size_t skip = numBits / (8 * sizeof(Piece));
     numBits = numBits % (8 * sizeof(Piece));
 
     Piece* piece = mask + skip;
@@ -1486,12 +1486,12 @@ inline void NBitmask::truncate(unsigned numBits) {
     }
 }
 
-inline bool NBitmask::get(unsigned index) const {
+inline bool NBitmask::get(size_t index) const {
     return (mask[index / (8 * sizeof(Piece))] &
         (Piece(1) << (index % (8 * sizeof(Piece)))));
 }
 
-inline void NBitmask::set(unsigned index, bool value) {
+inline void NBitmask::set(size_t index, bool value) {
     mask[index / (8 * sizeof(Piece))] |=
         (Piece(1) << (index % (8 * sizeof(Piece))));
     if (! value)
@@ -1500,25 +1500,25 @@ inline void NBitmask::set(unsigned index, bool value) {
 }
 
 inline NBitmask& NBitmask::operator &= (const NBitmask& other) {
-    for (unsigned i = 0; i < pieces; ++i)
+    for (size_t i = 0; i < pieces; ++i)
         mask[i] &= other.mask[i];
     return *this;
 }
 
 inline NBitmask& NBitmask::operator |= (const NBitmask& other) {
-    for (unsigned i = 0; i < pieces; ++i)
+    for (size_t i = 0; i < pieces; ++i)
         mask[i] |= other.mask[i];
     return *this;
 }
 
 inline NBitmask& NBitmask::operator ^= (const NBitmask& other) {
-    for (unsigned i = 0; i < pieces; ++i)
+    for (size_t i = 0; i < pieces; ++i)
         mask[i] ^= other.mask[i];
     return *this;
 }
 
 inline NBitmask& NBitmask::operator -= (const NBitmask& other) {
-    for (unsigned i = 0; i < pieces; ++i) {
+    for (size_t i = 0; i < pieces; ++i) {
         mask[i] |= other.mask[i];
         mask[i] ^= other.mask[i];
     }
@@ -1526,7 +1526,7 @@ inline NBitmask& NBitmask::operator -= (const NBitmask& other) {
 }
 
 inline void NBitmask::flip() {
-    for (unsigned i = 0; i < pieces; ++i)
+    for (size_t i = 0; i < pieces; ++i)
         mask[i] = ~mask[i];
 }
 
@@ -1535,7 +1535,7 @@ inline bool NBitmask::operator == (const NBitmask& other) const {
 }
 
 inline bool NBitmask::lessThan(const NBitmask& other) const {
-    for (int i = pieces - 1; i >= 0; --i)
+    for (long i = pieces - 1; i >= 0; --i)
         if (mask[i] < other.mask[i])
             return true;
         else if (mask[i] > other.mask[i])
@@ -1544,43 +1544,43 @@ inline bool NBitmask::lessThan(const NBitmask& other) const {
 }
 
 inline bool NBitmask::operator <= (const NBitmask& other) const {
-    for (unsigned i = 0; i < pieces; ++i)
+    for (size_t i = 0; i < pieces; ++i)
         if ((mask[i] | other.mask[i]) != other.mask[i])
             return false;
     return true;
 }
 
 inline bool NBitmask::inUnion(const NBitmask& x, const NBitmask& y) const {
-    for (unsigned i = 0; i < pieces; ++i)
+    for (size_t i = 0; i < pieces; ++i)
         if ((mask[i] & (x.mask[i] | y.mask[i])) != mask[i])
             return false;
     return true;
 }
 
 inline bool NBitmask::containsIntn(const NBitmask& x, const NBitmask& y) const {
-    for (unsigned i = 0; i < pieces; ++i)
+    for (size_t i = 0; i < pieces; ++i)
         if ((mask[i] | (x.mask[i] & y.mask[i])) != mask[i])
             return false;
     return true;
 }
 
-inline unsigned NBitmask::bits() const {
-    unsigned ans = 0;
-    for (unsigned i = 0; i < pieces; ++i)
+inline size_t NBitmask::bits() const {
+    size_t ans = 0;
+    for (size_t i = 0; i < pieces; ++i)
         ans += BitManipulator<Piece>::bits(mask[i]);
     return ans;
 }
 
-inline int NBitmask::firstBit() const {
-    for (unsigned i = 0; i < pieces; ++i)
+inline long NBitmask::firstBit() const {
+    for (size_t i = 0; i < pieces; ++i)
         if (mask[i])
             return 8 * sizeof(Piece) * i +
                 BitManipulator<Piece>::firstBit(mask[i]);
     return -1;
 }
 
-inline int NBitmask::lastBit() const {
-    for (int i = pieces - 1; i >= 0; --i)
+inline long NBitmask::lastBit() const {
+    for (long i = pieces - 1; i >= 0; --i)
         if (mask[i])
             return 8 * sizeof(Piece) * i +
                 BitManipulator<Piece>::lastBit(mask[i]);
@@ -1589,7 +1589,7 @@ inline int NBitmask::lastBit() const {
 
 inline bool NBitmask::atMostOneBit() const {
     unsigned bits = 0;
-    for (unsigned i = 0; i < pieces; ++i) {
+    for (size_t i = 0; i < pieces; ++i) {
         bits += BitManipulator<Piece>::bits(mask[i]);
         if (bits > 1)
             return false;
@@ -1599,7 +1599,7 @@ inline bool NBitmask::atMostOneBit() const {
 
 inline std::ostream& operator << (std::ostream& out, const NBitmask& mask) {
     NBitmask::Piece bit;
-    for (unsigned i = 0; i < mask.pieces; ++i)
+    for (size_t i = 0; i < mask.pieces; ++i)
         for (bit = 1; bit; bit <<= 1)
             out << ((bit & mask.mask[i]) ? '1' : '0');
     return out;

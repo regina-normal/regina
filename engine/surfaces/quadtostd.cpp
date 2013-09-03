@@ -122,7 +122,7 @@ namespace {
                     NRay(v->size()), facets_(v->size()) {
                 // Note that the vector is initialised to zero since
                 // this is what NLargeInteger's default constructor does.
-                for (unsigned i = 0; i < v->size(); ++i)
+                for (size_t i = 0; i < v->size(); ++i)
                     if ((elements[i] = (*v)[i]) == zero)
                         facets_.set(i, true);
             }
@@ -140,13 +140,13 @@ namespace {
              * working with normal surfaces, or 10 if we are working
              * with almost normal surfaces).
              */
-            RaySpec(const NTriangulation* tri, unsigned whichLink,
+            RaySpec(const NTriangulation* tri, unsigned long whichLink,
                     unsigned coordsPerTet) :
                     NRay(coordsPerTet * tri->getNumberOfTetrahedra()),
                     facets_(coordsPerTet * tri->getNumberOfTetrahedra()) {
                 // Note that the vector is initialised to zero since
                 // this is what NLargeInteger's default constructor does.
-                for (unsigned i = 0; i < size(); ++i)
+                for (size_t i = 0; i < size(); ++i)
                     if (i % coordsPerTet > 3) {
                         // Not a triangular coordinate.
                         facets_.set(i, true);
@@ -177,7 +177,7 @@ namespace {
              * @param coord the index of the coordinate that we must set
              * to zero to form the intersecting hyperplane.
              */
-            RaySpec(const RaySpec& pos, const RaySpec& neg, unsigned coord) :
+            RaySpec(const RaySpec& pos, const RaySpec& neg, size_t coord) :
                     NRay(pos.size()), facets_(pos.facets_) {
                 facets_ &= neg.facets_;
 
@@ -188,7 +188,7 @@ namespace {
                 NLargeInteger posDiff = pos[coord];
                 NLargeInteger negDiff = neg[coord];
 
-                for (unsigned i = 0; i < size(); ++i)
+                for (size_t i = 0; i < size(); ++i)
                     if ((elements[i] = neg[i] * posDiff - pos[i] * negDiff)
                             == zero)
                         facets_.set(i, true);
@@ -248,7 +248,7 @@ namespace {
                     return;
 
                 NLargeInteger max = NLargeInteger::infinity;
-                unsigned i;
+                size_t i;
                 for (i = 0; i < size(); ++i)
                     if (! link.facets_.get(i))
                         if (max > elements[i])
@@ -273,7 +273,7 @@ namespace {
             NNormalSurface* recover(NTriangulation* tri) const {
                 VectorClass* v = new VectorClass(size());
 
-                for (unsigned i = 0; i < size(); ++i)
+                for (size_t i = 0; i < size(); ++i)
                     v->setElement(i, elements[i]);
 
                 return new NNormalSurface(tri, v);
@@ -286,7 +286,7 @@ namespace {
              * element of this vector is positive, zero or negative
              * respectively.
              */
-            inline int sign(unsigned index) const {
+            inline int sign(size_t index) const {
                 if (facets_.get(index))
                     return 0;
                 return (elements[index] > zero ? 1 : -1);
@@ -326,7 +326,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
 template <class Variant>
 void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
         const std::vector<NNormalSurface*>& reducedList) {
-    unsigned nFacets = Variant::stdLen(owner->getNumberOfTetrahedra());
+    size_t nFacets = Variant::stdLen(owner->getNumberOfTetrahedra());
 
     // Choose a bitmask type for representing the set of facets that a
     // ray belongs to; in particular, use a (much faster) optimised
@@ -369,9 +369,9 @@ template <class Variant, class BitmaskType>
 void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
         const std::vector<NNormalSurface*>& reducedList) {
     // Prepare for the reduced-to-standard double description run.
-    unsigned n = owner->getNumberOfTetrahedra();
-    unsigned slen = Variant::stdLen(n); // # standard coordinates
-    unsigned llen = owner->getNumberOfVertices(); // # vertex links
+    unsigned long n = owner->getNumberOfTetrahedra();
+    size_t slen = Variant::stdLen(n); // # standard coordinates
+    unsigned long llen = owner->getNumberOfVertices(); // # vertex links
 
     unsigned i;
 
@@ -435,7 +435,7 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
     int workingList = 0;
 
     unsigned vtx;
-    unsigned tcoord;
+    size_t tcoord;
     RaySpec<BitmaskType>* linkSpec;
 
     RaySpecList pos, neg;
