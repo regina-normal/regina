@@ -42,8 +42,6 @@
 #define __NNORMALSURFACELIST_H
 #endif
 
-#include "regina-config.h" // For EXCLUDE_NORMALIZ.
-
 #include <algorithm>
 #include <iterator>
 #include <vector>
@@ -342,56 +340,35 @@ class REGINA_API NNormalSurfaceList : public NPacket {
         static NNormalSurfaceList* enumerateStandardANDirect(
             NTriangulation* owner);
 
-#ifndef EXCLUDE_NORMALIZ
         /**
-         * Enumerates all fundamental normal surfaces in the given
-         * triangulation using the given flavour of coordinate system,
-         * using the primal Hilbert basis algorithm.
-         * These fundamental normal surfaces will be stored in a new normal
-         * surface list.  The option is offered to find only embedded
-         * normal surfaces or to also include immersed and singular
-         * normal surfaces.
+         * Deprecated method that enumerates all fundamental normal surfaces
+         * in the given triangulation using the primal Hilbert basis algorithm.
+         * For details of the algorithm, see B. A. Burton, "Fundamental normal
+         * surfaces and the enumeration of Hilbert bases", arXiv:1111.7055,
+         * Nov 2011.
          *
-         * The primal algorithm is the recommended method for
-         * enumerating fundamental normal surfaces, although other
-         * algorithms are made available in this class also.
-         * For full details of the procedure, see "Fundamental normal
-         * surfaces and the enumeration of Hilbert bases", Burton,
-         * arXiv:1111.7055, Nov 2011.
+         * Users can still access this procedure if they need to;
+         * however, they should do this via enumerate(NTriangulation*,
+         * NormalCoords, NormalList, NormalAlg, NProgressManager*) instead.
+         * See the documentation for that routine for further details.
          *
-         * The normal surface list that is created will be inserted as the
-         * last child of the given triangulation.  This triangulation \b must
-         * remain the parent of this normal surface list, and must not
-         * change while this normal surface list remains in existence.
+         * \warning As of Regina 4.94, the \a vtxSurfaces argument is ignored.
+         * Future versions of Regina will automatically search existing surface
+         * lists in the packet tree for a ready-made list of vertex normal
+         * surfaces that can be used.
          *
-         * The first step of the primal algorithm is to enumerate all
-         * vertex normal surfaces.  If you have already done this, you
-         * may pass the list of vertex normal surfaces as the (optional)
-         * parameter \a vtxSurfaces.
-         *
-         * If a progress manager is passed, the normal surface
-         * enumeration will take place in a new thread and this routine
-         * will return immediately.  The NProgress object assigned to
-         * this progress manager is guaranteed to be of the class
-         * NProgressMessage.
-         *
-         * If no progress manager is passed, the enumeration will run
-         * in the current thread and this routine will return only when
-         * the enumeration is complete.  Note that this enumeration can
-         * be extremely slow for larger triangulations.
-         *
-         * \pre If non-zero, the argument \a vtxSurfaces is precisely
-         * the set of all vertex normal surfaces in the given triangulation,
-         * enumerated using the same coordinate system and embedded-only
-         * constraints as given here.
+         * \deprecated The correct way to access this procedure is to call
+         * <tt>enumerate(owner, flavour, NS_FUNDAMENTAL | NS_EMBEDDED_ONLY,
+         * NS_HILBERT_PRIMAL, manager)</tt> if \a embeddedOnly is \c true, or
+         * <tt>enumerate(owner, flavour, NS_FUNDAMENTAL | NS_IMMERSED_SINGULAR,
+         * NS_HILBERT_PRIMAL, manager)</tt> if \a embeddedOnly is \c false.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
-         * @param newFlavour the flavour of coordinate system to be used.
+         * @param flavour the flavour of coordinate system to be used.
          * @param embeddedOnly \c true if only embedded normal surfaces
          * are to be produced, or \c false if immersed and singular
-         * normal surfaces are also to be produced; this defaults to
-         * \c true.
+         * normal surfaces are also to be produced; this defaults to \c true.
          * @param vtxSurfaces the set of all \e vertex normal surfaces
          * as enumerated under the same coordinate system and
          * constraints as given here; this may be 0 if unknown.
@@ -406,50 +383,35 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * returns 0 (and no normal surface list is created).
          */
         static NNormalSurfaceList* enumerateFundPrimal(
-            NTriangulation* owner, NormalCoords newFlavour,
+            NTriangulation* owner, NormalCoords flavour,
             bool embeddedOnly = true,
             NNormalSurfaceList* vtxSurfaces = 0,
             NProgressManager* manager = 0);
-#endif
 
         /**
-         * Enumerates all fundamental normal surfaces in the given
-         * triangulation using the given flavour of coordinate system,
-         * using the dual Hilbert basis algorithm.
-         * These fundamental normal surfaces will be stored in a new normal
-         * surface list.  The option is offered to find only embedded
-         * normal surfaces or to also include immersed and singular
-         * normal surfaces.
+         * Deprecated method that enumerates all fundamental normal surfaces
+         * in the given triangulation using the dual Hilbert basis algorithm.
+         * For details of the algorithm, see B. A. Burton, "Fundamental normal
+         * surfaces and the enumeration of Hilbert bases", arXiv:1111.7055,
+         * Nov 2011.
          *
-         * The dual algorithm is fast but its performance is highly variable;
-         * for this reason the primal algorithm is recommended instead.
-         * For full details of both procedures, see
-         * "Fundamental normal surfaces and the enumeration of Hilbert bases",
-         * Burton, arXiv:1111.7055, Nov 2011.
+         * Users can still access this procedure if they need to;
+         * however, they should do this via enumerate(NTriangulation*,
+         * NormalCoords, NormalList, NormalAlg, NProgressManager*) instead.
+         * See the documentation for that routine for further details.
          *
-         * The normal surface list that is created will be inserted as the
-         * last child of the given triangulation.  This triangulation \b must
-         * remain the parent of this normal surface list, and must not
-         * change while this normal surface list remains in existence.
-         *
-         * If a progress manager is passed, the normal surface
-         * enumeration will take place in a new thread and this routine
-         * will return immediately.  The NProgress object assigned to
-         * this progress manager is guaranteed to be of the class
-         * NProgressNumber.
-         *
-         * If no progress manager is passed, the enumeration will run
-         * in the current thread and this routine will return only when
-         * the enumeration is complete.  Note that this enumeration can
-         * be extremely slow for larger triangulations.
+         * \deprecated The correct way to access this procedure is to call
+         * <tt>enumerate(owner, flavour, NS_FUNDAMENTAL | NS_EMBEDDED_ONLY,
+         * NS_HILBERT_DUAL, manager)</tt> if \a embeddedOnly is \c true, or
+         * <tt>enumerate(owner, flavour, NS_FUNDAMENTAL | NS_IMMERSED_SINGULAR,
+         * NS_HILBERT_DUAL, manager)</tt> if \a embeddedOnly is \c false.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
-         * @param newFlavour the flavour of coordinate system to be used.
+         * @param flavour the flavour of coordinate system to be used.
          * @param embeddedOnly \c true if only embedded normal surfaces
          * are to be produced, or \c false if immersed and singular
-         * normal surfaces are also to be produced; this defaults to
-         * \c true.
+         * normal surfaces are also to be produced; this defaults to \c true.
          * @param manager a progress manager through which progress will
          * be reported, or 0 if no progress reporting is required.  If
          * non-zero, \a manager must point to a progress manager for
@@ -461,80 +423,74 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * returns 0 (and no normal surface list is created).
          */
         static NNormalSurfaceList* enumerateFundDual(
-            NTriangulation* owner, NormalCoords newFlavour,
+            NTriangulation* owner, NormalCoords flavour,
             bool embeddedOnly = true,
             NProgressManager* manager = 0);
 
-#ifndef EXCLUDE_NORMALIZ
         /**
-         * Uses an extremely slow procedure to enumerate all embedded
-         * fundamental surfaces in the given triangulation,
+         * Deprecated method that uses an extremely slow procedure to enumerate
+         * all embedded fundamental surfaces in the given triangulation,
          * by running Normaliz over the full (and typically very large)
          * solution cone, and only enforcing embedded constraints (such as
          * the quadrilateral constraints) afterwards.
          *
-         * Aside from the underlying algorithm, the behaviour of this
-         * routine is identical to enumerateFundPrimal() and
-         * enumerateFundDual().  See those routines for details
-         * regarding preconditions, postconditions, ownership and so on.
+         * Users can still access this slower procedure if they need to;
+         * however, they should do this via enumerate(NTriangulation*,
+         * NormalCoords, NormalList, NormalAlg, NProgressManager*) instead.
+         * See the documentation for that routine for further details.
          *
-         * Unlike enumerateFundPrimal() and enumerateFundDual(), this
-         * routine does not support progress management, and does not
-         * support running in a separate thread.
+         * \deprecated The correct way to access this procedure is to call
+         * <tt>enumerate(owner, flavour, NS_FUNDAMENTAL | NS_EMBEDDED_ONLY,
+         * NS_HILBERT_FULLCONE, manager)</tt> if \a embeddedOnly is \c true, or
+         * <tt>enumerate(owner, flavour, NS_FUNDAMENTAL | NS_IMMERSED_SINGULAR,
+         * NS_HILBERT_FULLCONE, manager)</tt> if \a embeddedOnly is \c false.
          *
-         * \warning
-         * Users will generally not want to call this routine, since it
-         * is typically much slower than either enumerateFundPrimal()
-         * or enumerateFundDual(), and it gives precisely the same results.
-         * This routine is provided mainly for interest's sake, and to allow
-         * comparisons between different algorithms.
+         * \warning This routine is extremely slow, and users will not want to
+         * call it unless they have some specialised need.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
-         * @param newFlavour the flavour of coordinate system to be used.
+         * @param flavour the flavour of coordinate system to be used.
          * @param embeddedOnly \c true if only embedded normal surfaces
          * are to be produced, or \c false if immersed and singular
          * normal surfaces are also to be produced; this defaults to \c true.
          * @return the newly created normal surface list.
          */
         static NNormalSurfaceList* enumerateFundFullCone(
-            NTriangulation* owner, NormalCoords newFlavour,
+            NTriangulation* owner, NormalCoords flavour,
             bool embeddedOnly = true);
-#endif
 
         /**
-         * Uses an extremely slow modified Contejean-Devie procedure to
-         * enumerate all embedded fundamental surfaces in the given
-         * triangulation.  For details of the modifications, see
-         * "Fundamental normal surfaces and the enumeration of Hilbert bases",
-         * Burton, arXiv:1111.7055, Nov 2011.
+         * Deprecated method that uses an extremely slow modified
+         * Contejean-Devie procedure to enumerate all embedded fundamental
+         * surfaces in the given triangulation.  For details of the
+         * algorithm, see B. A. Burton, "Fundamental normal surfaces and the
+         * enumeration of Hilbert bases", arXiv:1111.7055, Nov 2011.
          *
-         * Aside from the underlying algorithm, the behaviour of this
-         * routine is identical to enumerateFundPrimal() and
-         * enumerateFundDual().  See those routines for details
-         * regarding preconditions, postconditions, ownership and so on.
+         * Users can still access this slower procedure if they need to;
+         * however, they should do this via enumerate(NTriangulation*,
+         * NormalCoords, NormalList, NormalAlg, NProgressManager*) instead.
+         * See the documentation for that routine for further details.
          *
-         * Unlike enumerateFundPrimal() and enumerateFundDual(), this
-         * routine does not support progress management, and does not
-         * support running in a separate thread.
+         * \deprecated The correct way to access this procedure is to call
+         * <tt>enumerate(owner, flavour, NS_FUNDAMENTAL | NS_EMBEDDED_ONLY,
+         * NS_HILBERT_CD, manager)</tt> if \a embeddedOnly is \c true, or
+         * <tt>enumerate(owner, flavour, NS_FUNDAMENTAL | NS_IMMERSED_SINGULAR,
+         * NS_HILBERT_CD, manager)</tt> if \a embeddedOnly is \c false.
          *
-         * \warning
-         * Users will generally not want to call this routine, since it
-         * is typically much slower than either enumerateFundPrimal()
-         * or enumerateFundDual(), and it gives precisely the same results.
-         * This routine is provided mainly for interest's sake, and to allow
-         * comparisons between different algorithms.
+         * \warning This routine is extremely slow, and users will not want to
+         * call it unless they have some specialised need.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
-         * @param newFlavour the flavour of coordinate system to be used.
+         * @param flavour the flavour of coordinate system to be used.
          * @param embeddedOnly \c true if only embedded normal surfaces
          * are to be produced, or \c false if immersed and singular
          * normal surfaces are also to be produced; this defaults to \c true.
          * @return the newly created normal surface list.
          */
         static NNormalSurfaceList* enumerateFundCD(
-            NTriangulation* owner, NormalCoords newFlavour,
+            NTriangulation* owner, NormalCoords flavour,
             bool embeddedOnly = true);
 
         /**
@@ -1433,81 +1389,38 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  */
                 template <typename Flavour>
                 void fillFundamental();
-        };
 
-#ifndef EXCLUDE_NORMALIZ
-        /**
-         * A thread class that performs fundamental normal surface enumeration
-         * using the primal Hilbert basis algorithm.
-         */
-        class FundPrimalEnumerator : public NThread {
-            private:
-                NNormalSurfaceList* list;
-                    /**< The normal surface list to be filled. */
-                NTriangulation* triang;
-                    /**< The triangulation upon which this normal
-                         surface list will be based. */
-                NNormalSurfaceList* vtxSurfaces;
-                    /**< The list of all vertex normal surfaces in \a triang,
-                         or 0 if this information is not known. */
-                NProgressManager* manager;
-                    /**< The progress manager through which progress is
-                         reported, or 0 if no progress manager is in use. */
-
-            public:
                 /**
-                 * Creates a new enumerator thread with the given
-                 * parameters.
-                 *
-                 * @param newList the normal surface list to be filled.
-                 * @param useTriang the triangulation upon which this
-                 * normal surface list will be based.
-                 * @param useVtxSurafces the vertex normal surfaces in
-                 * \a useTriang, or 0 if this information is not known.
-                 * @param useManager the progress manager to use for
-                 * progress reporting, or 0 if progress reporting is not
-                 * required.
+                 * The enumeration code for enumerating fundamental surfaces
+                 * using the primal method.
+                 * This is internal to fillFundamental().
                  */
-                FundPrimalEnumerator(NNormalSurfaceList* newList,
-                    NTriangulation* useTriang,
-                    NNormalSurfaceList* useVtxSurfaces,
-                    NProgressManager* useManager);
+                template <typename Flavour>
+                void fillFundamentalPrimal();
 
-                void* run(void*);
-        };
-#endif
-
-        /**
-         * A thread class that performs fundamental normal surface enumeration
-         * using the dual Hilbert basis algorithm.
-         */
-        class FundDualEnumerator : public NThread {
-            private:
-                NNormalSurfaceList* list;
-                    /**< The normal surface list to be filled. */
-                NTriangulation* triang;
-                    /**< The triangulation upon which this normal
-                         surface list will be based. */
-                NProgressManager* manager;
-                    /**< The progress manager through which progress is
-                         reported, or 0 if no progress manager is in use. */
-
-            public:
                 /**
-                 * Creates a new enumerator thread with the given
-                 * parameters.
-                 *
-                 * @param newList the normal surface list to be filled.
-                 * @param useTriang the triangulation upon which this
-                 * normal surface list will be based.
-                 * @param useManager the progress manager to use for
-                 * progress reporting, or 0 if progress reporting is not
-                 * required.
+                 * The enumeration code for enumerating fundamental surfaces
+                 * using the dual method.
+                 * This is internal to fillFundamental().
                  */
-                FundDualEnumerator(NNormalSurfaceList* newList,
-                    NTriangulation* useTriang, NProgressManager* useManager);
+                template <typename Flavour>
+                void fillFundamentalDual();
 
-                void* run(void*);
+                /**
+                 * The enumeration code for enumerating fundamental surfaces
+                 * using a slow Contejean-Devie method.
+                 * This is internal to fillFundamental().
+                 */
+                template <typename Flavour>
+                void fillFundamentalCD();
+
+                /**
+                 * The enumeration code for enumerating fundamental surfaces
+                 * using a slow full cone enumeration.
+                 * This is internal to fillFundamental().
+                 */
+                template <typename Flavour>
+                void fillFundamentalFullCone();
         };
 
     friend class regina::NXMLNormalSurfaceListReader;
@@ -1619,6 +1532,42 @@ inline NNormalSurfaceList* NNormalSurfaceList::enumerateStandardANDirect(
         NTriangulation* owner) {
     return enumerate(owner, NS_AN_STANDARD, NS_VERTEX | NS_EMBEDDED_ONLY,
         NS_VERTEX_STD_DIRECT);
+}
+
+inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundPrimal(
+        NTriangulation* owner, NormalCoords newFlavour,
+        bool embeddedOnly, NNormalSurfaceList*, NProgressManager* manager) {
+    return enumerate(owner, newFlavour,
+        NS_FUNDAMENTAL |
+            (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+        NS_HILBERT_PRIMAL, manager);
+}
+
+inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundDual(
+        NTriangulation* owner, NormalCoords newFlavour,
+        bool embeddedOnly, NProgressManager* manager) {
+    return enumerate(owner, newFlavour,
+        NS_FUNDAMENTAL |
+            (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+        NS_HILBERT_DUAL, manager);
+}
+
+inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundCD(
+        NTriangulation* owner, NormalCoords newFlavour,
+        bool embeddedOnly) {
+    return enumerate(owner, newFlavour,
+        NS_FUNDAMENTAL |
+            (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+        NS_HILBERT_CD);
+}
+
+inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
+        NTriangulation* owner, NormalCoords newFlavour,
+        bool embeddedOnly) {
+    return enumerate(owner, newFlavour,
+        NS_FUNDAMENTAL |
+            (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+        NS_HILBERT_FULLCONE);
 }
 
 inline NMatrixInt* NNormalSurfaceList::recreateMatchingEquations() const {
@@ -1746,21 +1695,6 @@ inline NNormalSurfaceList::NNormalSurfaceList(NormalCoords newFlavour,
 inline NNormalSurfaceList::Enumerator::Enumerator(NNormalSurfaceList* list,
         NTriangulation* triang, NProgressManager* manager) :
         list_(list), triang_(triang), manager_(manager) {
-}
-
-#ifndef EXCLUDE_NORMALIZ
-inline NNormalSurfaceList::FundPrimalEnumerator::FundPrimalEnumerator(
-        NNormalSurfaceList* newList, NTriangulation* useTriang,
-        NNormalSurfaceList* newVtxSurfaces, NProgressManager* useManager) :
-        list(newList), triang(useTriang), vtxSurfaces(newVtxSurfaces),
-        manager(useManager) {
-}
-#endif
-
-inline NNormalSurfaceList::FundDualEnumerator::FundDualEnumerator(
-        NNormalSurfaceList* newList,
-        NTriangulation* useTriang, NProgressManager* useManager) :
-        list(newList), triang(useTriang), manager(useManager) {
 }
 
 } // namespace regina
