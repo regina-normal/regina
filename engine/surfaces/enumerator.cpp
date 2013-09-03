@@ -243,73 +243,6 @@ namespace {
     // Template on the surface output iterator type, since the type we
     // want to use (NNormalSurfaceList::SurfaceIterator) is protected.
     template <typename OutputIterator>
-    struct HPrimalEnumerate : public EnumeratorBase {
-        OutputIterator out_;
-        NNormalSurfaceList* vtx_;
-        NProgressMessage* progress_;
-
-        HPrimalEnumerate(OutputIterator out) : out_(out) {}
-
-        template <typename Flavour>
-        inline void operator() (Flavour f) {
-            NHilbertPrimal::enumerateHilbertBasis<typename Flavour::Vector>(
-                out_, vtx_->beginVectors(), vtx_->endVectors(),
-                constraints_, progress_);
-        }
-    };
-}
-
-template <typename Flavour>
-void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
-    // TODO
-    HPrimalEnumerate<SurfaceInserter> hp(SurfaceInserter(*list_, triang_));
-
-    if (manager_) {
-        hp.progress_ = new NProgressMessage("Initialising enumeration");
-        manager_->setProgress(hp.progress_);
-    } else
-        hp.progress_ = 0;
-
-    // Fetch validity constraints from the registry.
-    if (list_->which_.has(NS_EMBEDDED_ONLY))
-        hp.constraints_ = makeEmbeddedConstraints(triang_, list_->flavour_);
-    else
-        hp.constraints_ = 0;
-
-    hp.vtx_ = 0;
-    {
-        // Enumerate all vertex normal surfaces using the default (and
-        // hopefully best possible) algorithm.
-        if (hp.progress_)
-            hp.progress_->setMessage("Enumerating extremal rays");
-
-        hp.vtx_ = new NNormalSurfaceList(list_->flavour_,
-            NS_VERTEX | (list_->which_.has(NS_EMBEDDED_ONLY) ?
-                NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
-            NS_ALG_DEFAULT);
-        Enumerator e(hp.vtx_, triang_, 0); // TODO: Straight to operator().
-        e.run(0);
-    }
-
-    if (hp.progress_)
-        hp.progress_->setMessage("Enumerating Hilbert basis");
-
-    // Find all fundamental normal surfaces.
-    forFlavour(list_->flavour_, hp);
-
-    delete hp.constraints_;
-    delete hp.vtx_;
-
-    if (hp.progress_) {
-        hp.progress_->setMessage("Finished enumeration");
-        hp.progress_->setFinished();
-    }
-}
-
-namespace {
-    // Template on the surface output iterator type, since the type we
-    // want to use (NNormalSurfaceList::SurfaceIterator) is protected.
-    template <typename OutputIterator>
     struct HDualEnumerate : public EnumeratorBase {
         OutputIterator out_;
         NProgressNumber* progress_;
@@ -388,6 +321,93 @@ void NNormalSurfaceList::Enumerator::fillFundamentalCD() {
 
     delete hcd.constraints_;
     delete hcd.eqns_;
+}
+
+#ifdef EXCLUDE_NORMALIZ
+
+template <typename Flavour>
+void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
+    // We are not compiling in normaliz.
+    // Fall back to some other option.
+    // TODO: Fix algorithm flags.
+    fillFundamentalDual<Flavour>();
+}
+
+template <typename Flavour>
+void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
+    // We are not compiling in normaliz.
+    // Fall back to some other option.
+    // TODO: Fix algorithm flags.
+    fillFundamentalDual<Flavour>();
+}
+
+#else
+
+namespace {
+    // Template on the surface output iterator type, since the type we
+    // want to use (NNormalSurfaceList::SurfaceIterator) is protected.
+    template <typename OutputIterator>
+    struct HPrimalEnumerate : public EnumeratorBase {
+        OutputIterator out_;
+        NNormalSurfaceList* vtx_;
+        NProgressMessage* progress_;
+
+        HPrimalEnumerate(OutputIterator out) : out_(out) {}
+
+        template <typename Flavour>
+        inline void operator() (Flavour f) {
+            NHilbertPrimal::enumerateHilbertBasis<typename Flavour::Vector>(
+                out_, vtx_->beginVectors(), vtx_->endVectors(),
+                constraints_, progress_);
+        }
+    };
+}
+
+template <typename Flavour>
+void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
+    // TODO
+    HPrimalEnumerate<SurfaceInserter> hp(SurfaceInserter(*list_, triang_));
+
+    if (manager_) {
+        hp.progress_ = new NProgressMessage("Initialising enumeration");
+        manager_->setProgress(hp.progress_);
+    } else
+        hp.progress_ = 0;
+
+    // Fetch validity constraints from the registry.
+    if (list_->which_.has(NS_EMBEDDED_ONLY))
+        hp.constraints_ = makeEmbeddedConstraints(triang_, list_->flavour_);
+    else
+        hp.constraints_ = 0;
+
+    hp.vtx_ = 0;
+    {
+        // Enumerate all vertex normal surfaces using the default (and
+        // hopefully best possible) algorithm.
+        if (hp.progress_)
+            hp.progress_->setMessage("Enumerating extremal rays");
+
+        hp.vtx_ = new NNormalSurfaceList(list_->flavour_,
+            NS_VERTEX | (list_->which_.has(NS_EMBEDDED_ONLY) ?
+                NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+            NS_ALG_DEFAULT);
+        Enumerator e(hp.vtx_, triang_, 0); // TODO: Straight to operator().
+        e.run(0);
+    }
+
+    if (hp.progress_)
+        hp.progress_->setMessage("Enumerating Hilbert basis");
+
+    // Find all fundamental normal surfaces.
+    forFlavour(list_->flavour_, hp);
+
+    delete hp.constraints_;
+    delete hp.vtx_;
+
+    if (hp.progress_) {
+        hp.progress_->setMessage("Finished enumeration");
+        hp.progress_->setFinished();
+    }
 }
 
 template <typename Flavour>
@@ -476,6 +496,8 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
         }
     }
 }
+
+#endif // EXCLUDE_NORMALIZ
 
 } // namespace regina
 
