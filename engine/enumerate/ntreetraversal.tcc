@@ -301,6 +301,18 @@ bool NTreeEnumeration<LPConstraint, BanConstraint>::next() {
         // If not, there can be no solutions at all.
         if (! lp_[0].isFeasible())
             return false;
+
+        /**
+         * If we ever need to reorder the search tree at the very
+         * beginning, here is where we do it.
+         *
+         * Note that, since setNext() works on typeOrder_[level_ + 1],
+         * we must temporarily set level_ = -1 before we call it.
+         *
+        level_ = -1;
+        setNext(...);
+        level_ = 0;
+         */
     } else {
         // We are starting the search from a previous solution.
         // Make the next incremental change to the type vector
@@ -584,6 +596,36 @@ bool NTreeEnumeration<LPConstraint, BanConstraint>::next() {
                 // We pass the feasibility test, but we're
                 // not at a leaf node.
                 // Head deeper into the tree.
+#if 0
+                if (level_ < nTets_) {
+                    // The next level is a quadrilateral type.
+                    // See if we can't find a better quadrilateral
+                    // type to branch on instead.  We will choose the
+                    // quadrilateral type that branches into the
+                    // fewest possible feasible subtrees.
+                    // Here we measure the old types 0, 1, 2, 3 as
+                    // four separate branches (not the three merged
+                    // branches 0=1, 2, 3 that we use in the actual
+                    // search).
+                    int bestQuad = -1;
+                    int minBranches = 5; // Greater than any soln.
+                    int tmp;
+                    for (int i = level_ + 1; i < nTypes_; ++i) {
+                        if (typeOrder_[i] < nTets_) {
+                            // It's an available quad type.
+                            tmp = feasibleBranches(typeOrder_[i]);
+                            if (tmp < minBranches) {
+                                minBranches = tmp;
+                                bestQuad = typeOrder_[i];
+                                if (tmp == 0)
+                                    break; // Can't get any better!
+                            }
+                        }
+                    }
+                    if (bestQuad >= 0)
+                        setNext(bestQuad);
+                }
+#endif
                 ++level_;
             } else {
                 // We pass the feasibility test, *and* we're at
