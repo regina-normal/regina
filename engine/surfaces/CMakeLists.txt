@@ -1,7 +1,7 @@
 # surfaces
 
 # Files to compile
-SET ( FILES components crushandcut filters flavours links ndisc ndisctype nnormalsurface nnormalsurfacelist nprism nsanstandard nsoriented nsorientedquad nsquad nsquadoct nsstandard nsurfacefilter nsurfacesubset nxmlfilterreader nxmlfilterreaders nxmlsurfacereader orientable quadtostd sfcombination sfproperties spheres stdtoquad )
+SET ( FILES components crushandcut enumerator enumfilter filters flavours links ndisc ndisctype nnormalsurface nnormalsurfacelist nprism nsanstandard nsoriented nsorientedquad nsquad nsquadoct nsstandard nsurfacefilter nsurfacesubset nxmlfilterreader nxmlfilterreaders nxmlsurfacereader orientable quadtostd sfcombination sfproperties spheres stdtoquad )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
