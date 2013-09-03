@@ -67,7 +67,7 @@ NInteger LPMatrix::combRowAndNorm(const NInteger& destCoeff,
     NInteger* pd = dat_ + dest * cols_;
     NInteger tmp; // Use this to avoid spurious temporary NIntegers.
     unsigned i;
-    for (i = 0; i < cols_; ++i, pd++, ps++) {
+    for (i = 0; i < cols_; ++i, ++pd, ++ps) {
         *pd *= destCoeff;
         tmp = srcCoeff;
         tmp *= *ps;
