@@ -1003,6 +1003,25 @@ class LPData {
         inline bool isActive(unsigned pos) const;
 
         /**
+         * Returns the sign of the given variable under the current
+         * basis.  This does \e not attempt to "undo" any changes of variable
+         * caused by prior calls to constrainPositive() or constrainOct();
+         * it simply tests the sign of the variable in the given column
+         * of the tableaux in its current form.
+         *
+         * Specifically: if the given variable is inactive or non-basic,
+         * this routine returns zero.  If the given variable is in the
+         * basis, this routine returns the sign of the corresponding
+         * integer on the right-hand side of the tableaux.
+         *
+         * @param pos the index of the variable to query.
+         * This must be between 0 and origTableaux_->columns()-1 inclusive.
+         * @return the sign of the variable as described above;
+         * this will be either 1, 0 or -1.
+         */
+        inline int sign(unsigned pos) const;
+
+        /**
          * Constrains this system further by setting the given variable
          * to zero and deactivating it.  See the LPData class notes for
          * details.
@@ -1506,6 +1525,18 @@ inline bool LPData<LPConstraint>::isActive(unsigned pos) const {
     //   - otherwise the variable is not active.
     return ! (basisRow_[pos] == 0 &&
         (rank_ == 0 || basis_[0] != pos));
+}
+
+template <typename LPConstraint>
+inline int LPData<LPConstraint>::sign(unsigned pos) const {
+    // If basisRow_[pos] < 0, the variable is active and non-basic.
+    // If basisRow_[pos] > 0, the variable is active and basic.
+    // If basisRow_[pos] == 0, then:
+    //   - if rank_ > 0 and basis_[0] == pos, then the variable
+    //     is active and basic;
+    //   - otherwise the variable is not active.
+    return ((basisRow_[pos] > 0 || (rank_ > 0 && basis_[0] == pos)) ?
+        rhs_[basisRow_[pos]].sign() : 0);
 }
 
 template <typename LPConstraint>
