@@ -66,6 +66,14 @@ namespace regina {
  */
 enum NormalListFlags {
     /**
+     * An empty flag, indicating to an enumeration routine that it
+     * should use its default behaviour.
+     * The numeric value of this flag is zero (i.e., it has no effect
+     * when combined with other flags using bitwise OR).
+     */
+    NS_LIST_DEFAULT = 0x0000,
+
+    /**
      * Indicates that this list is restricted to properly embedded
      * surfaces only.
      *

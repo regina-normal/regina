@@ -40,12 +40,13 @@
 #ifndef EXCLUDE_NORMALIZ
 #include "enumerate/nhilbertprimal.h"
 #endif
+#include "enumerate/ntreetraversal.h"
 #include "maths/matrixops.h"
 #include "maths/nmatrixint.h"
 #include "progress/nprogressmanager.h"
 #include "progress/nprogresstypes.h"
-#include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/flavourregistry.h"
+#include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
 
@@ -131,82 +132,191 @@ NEnumConstraintList* makeEmbeddedConstraints(NTriangulation* triangulation,
     return forFlavour(flavour, EmbeddedConstraints(triangulation), 0);
 }
 
+NNormalSurfaceList* NNormalSurfaceList::enumerate(
+        NTriangulation* owner, NormalCoords newFlavour,
+        NormalList which, NormalAlg algHints,
+        NProgressManager* manager) {
+    NNormalSurfaceList* list = new NNormalSurfaceList(
+        newFlavour, which, algHints);
+    Enumerator* e = new Enumerator(list, owner, manager);
+
+    if (manager) {
+        if (! e->start(0, true)) {
+            delete list;
+            list = 0;
+        }
+    } else {
+        e->run(0);
+        delete e;
+    }
+    return list;
+}
+
+void* NNormalSurfaceList::Enumerator::run(void*) {
+    forFlavour(list_->flavour, *this);
+    return 0;
+}
+
+template <typename Flavour>
+void NNormalSurfaceList::Enumerator::operator() (Flavour) {
+    // Clean up the "type of list" flag.
+    list_->which_ &= (
+        NS_EMBEDDED_ONLY | NS_IMMERSED_SINGULAR | NS_VERTEX | NS_FUNDAMENTAL);
+
+    list_->which_.ensureOne(NS_VERTEX, NS_FUNDAMENTAL);
+    list_->which_.ensureOne(NS_EMBEDDED_ONLY, NS_IMMERSED_SINGULAR);
+
+    // Farm out the real work to list-type-specific routines.
+    if (list_->which_.has(NS_VERTEX))
+        fillVertex<Flavour>();
+    else
+        fillFundamental<Flavour>();
+
+    // Insert the results into the packet tree, but only once they are ready.
+    triang_->insertChildLast(list_);
+}
+
+template <typename Flavour>
+void NNormalSurfaceList::Enumerator::fillVertex() {
+    list_->algorithm_ &= (
+        NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT |
+        NS_VERTEX_TREE | NS_VERTEX_DD);
+
+    // Choose between double description and tree traversal.
+    list_->algorithm_.ensureOne(NS_VERTEX_TREE, NS_VERTEX_DD);
+    // For now, tree traversal is only available for the four
+    // "first-class" coordinate systems:
+    if (! (list_->flavour == NS_STANDARD || list_->flavour == NS_AN_STANDARD ||
+            list_->flavour == NS_QUAD || list_->flavour == NS_AN_QUAD_OCT))
+        if (list_->algorithm_.has(NS_VERTEX_TREE)) {
+            // We can't use tree traversal here.  Switch.
+            list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
+        }
+
+    if (list_->flavour == NS_STANDARD || list_->flavour == NS_AN_STANDARD) {
+        // Here we have the option of standard-direct or via-reduced.
+        list_->algorithm_.ensureOne(
+            NS_VERTEX_VIA_REDUCED, NS_VERTEX_STD_DIRECT);
+        if (list_->algorithm_.has(NS_VERTEX_VIA_REDUCED)) {
+            // Ensure this is even an option.
+            if (! (list_->which_.has(NS_EMBEDDED_ONLY) &&
+                    triang_->isValid() &&
+                    (! triang_->isIdeal()) &&
+                    triang_->getNumberOfTetrahedra() > 0)) {
+                // No.  Switch to standard-direct.
+                list_->algorithm_ ^=
+                    (NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT);
+            }
+        }
+    } else
+        list_->algorithm_.clear(
+            NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT);
+
+    NProgressNumber* progress = 0;
+    if (manager_) {
+        progress = new NProgressNumber(0, 1);
+        manager_->setProgress(progress);
+    }
+
+    if (list_->algorithm_.has(NS_VERTEX_VIA_REDUCED)) {
+        // TODO: Reduce if/else cases in this block through more templates.
+
+        // Assign a fixed number of "steps" for the final conversion to
+        // standard form, which is usually very fast.
+        const unsigned PROGRESS_CONVERSION_STEPS = 1;
+        if (progress)
+            progress->setOutOf(progress->getOutOf() +
+                PROGRESS_CONVERSION_STEPS + 1);
+
+        // Enumerate in reduced (quad / quad-oct) form.
+        Enumerator e(new NNormalSurfaceList(
+                (list_->flavour == NS_STANDARD ? NS_QUAD : NS_AN_QUAD_OCT),
+                list_->which_, list_->algorithm_ ^ NS_VERTEX_VIA_REDUCED),
+            triang_, 0);
+        if (list_->flavour == NS_STANDARD) {
+            if (list_->algorithm_.has(NS_VERTEX_TREE))
+                e.fillVertexTree<NormalFlavour<NS_QUAD> >(progress);
+            else
+                e.fillVertexDD<NormalFlavour<NS_QUAD> >(progress);
+        } else {
+            if (list_->algorithm_.has(NS_VERTEX_TREE))
+                e.fillVertexTree<NormalFlavour<NS_AN_QUAD_OCT> >(progress);
+            else
+                e.fillVertexDD<NormalFlavour<NS_AN_QUAD_OCT> >(progress);
+        }
+
+        if (progress) {
+            progress->incCompleted();
+            if (progress->isCancelled())
+                return;
+        }
+
+        // Expand to the standard the solution set.
+        if (list_->flavour == NS_STANDARD)
+            list_->buildStandardFromReduced<NormalSpec>(triang_,
+                e.list_->surfaces);
+        else
+            list_->buildStandardFromReduced<AlmostNormalSpec>(triang_,
+                e.list_->surfaces);
+
+        // Clean up.
+        delete e.list_;
+        if (progress)
+            progress->incCompleted(PROGRESS_CONVERSION_STEPS);
+    } else if (list_->algorithm_.has(NS_VERTEX_TREE))
+        fillVertexTree<Flavour>(progress);
+    else
+        fillVertexDD<Flavour>(progress);
+
+    if (progress) {
+        progress->incCompleted();
+        progress->setFinished();
+    }
+}
+
+template <typename Flavour>
+void NNormalSurfaceList::Enumerator::fillVertexDD(NProgressNumber* progress) {
+    NMatrixInt* eqns = makeMatchingEquations(triang_, list_->flavour);
+
+    NEnumConstraintList* constraints = 0;
+    if (list_->which_.has(NS_EMBEDDED_ONLY))
+        constraints = makeEmbeddedConstraints(triang_, list_->flavour);
+
+    NDoubleDescription::enumerateExtremalRays<typename Flavour::Vector>(
+        SurfaceInserter(*list_, triang_), *eqns, constraints, progress);
+
+    delete constraints;
+    delete eqns;
+}
+
+template <typename Flavour>
+void NNormalSurfaceList::Enumerator::fillVertexTree(NProgressNumber* progress) {
+    // The tree traversal algorithm insists on a non-empty triangulation.
+    if (triang_->getNumberOfTetrahedra() == 0)
+        return;
+
+    // TODO: Progress reporting.
+    NTreeEnumeration<> search(triang_, list_->flavour);
+    while (search.next()) {
+        list_->surfaces.push_back(search.buildSurface());
+        if (progress && progress->isCancelled())
+            break;
+    }
+}
+
+template <typename Flavour>
+void NNormalSurfaceList::Enumerator::fillFundamental() {
+    // TODO
+}
+
+#ifndef EXCLUDE_NORMALIZ
+
 namespace {
     struct EnumeratorBase {
         NMatrixInt* eqns_;
         NEnumConstraintList* constraints_;
     };
 
-    // Template on the surface output iterator type, since the type we
-    // want to use (NNormalSurfaceList::SurfaceIterator) is protected.
-    template <typename OutputIterator>
-    struct DDEnumerate : public EnumeratorBase {
-        OutputIterator out_;
-        NProgressNumber* progress_;
-
-        DDEnumerate(OutputIterator out) : out_(out) {}
-
-        template <typename Flavour>
-        inline void operator() (Flavour f) {
-            NDoubleDescription::enumerateExtremalRays<typename Flavour::Vector>(
-                out_, *eqns_, constraints_, progress_);
-        }
-    };
-}
-
-void* NNormalSurfaceList::VertexEnumerator::run(void*) {
-    NProgressNumber* progress = 0;
-    if (manager) {
-        progress = new NProgressNumber(0, 1);
-        manager->setProgress(progress);
-    }
-
-    // Choose the most appropriate algorithm for the job.
-    if (list->flavour == NS_STANDARD && list->which_.has(NS_EMBEDDED_ONLY) &&
-            triang->isValid() && ! triang->isIdeal()) {
-        // Enumerate solutions in standard space by going via quad space.
-        list->enumerateStandardViaReduced<NormalSpec>(triang, progress);
-    } else if (list->flavour == NS_AN_STANDARD &&
-            list->which_.has(NS_EMBEDDED_ONLY) && triang->isValid() &&
-            ! triang->isIdeal()) {
-        // Enumerate solutions in standard almost normal space by going
-        // via quad-oct space.
-        list->enumerateStandardViaReduced<AlmostNormalSpec>(triang, progress);
-    } else {
-        // The catch-all double description method.
-        DDEnumerate<SurfaceInserter> dd(SurfaceInserter(*list, triang));
-        dd.progress_ = progress;
-
-        // Fetch any necessary validity constraints.
-        if (list->which_.has(NS_EMBEDDED_ONLY))
-            dd.constraints_ = makeEmbeddedConstraints(triang, list->flavour);
-        else
-            dd.constraints_ = 0;
-
-        // Form the matching equations and starting cone.
-        dd.eqns_ = makeMatchingEquations(triang, list->flavour);
-
-        // Find the normal surfaces.
-        forFlavour(list->flavour, dd);
-
-        delete dd.eqns_;
-        delete dd.constraints_;
-    }
-
-    // All done!
-    triang->insertChildLast(list);
-
-    if (progress) {
-        progress->incCompleted();
-        progress->setFinished();
-    }
-
-    return 0;
-}
-
-#ifndef EXCLUDE_NORMALIZ
-
-namespace {
     // Template on the surface output iterator type, since the type we
     // want to use (NNormalSurfaceList::SurfaceIterator) is protected.
     template <typename OutputIterator>
@@ -252,7 +362,7 @@ void* NNormalSurfaceList::FundPrimalEnumerator::run(void*) {
             NS_VERTEX | (list->which_.has(NS_EMBEDDED_ONLY) ?
                 NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
             NS_ALG_DEFAULT);
-        VertexEnumerator e(hp.vtx_, triang, 0);
+        Enumerator e(hp.vtx_, triang, 0); // TODO: Straight to operator().
         e.run(0);
     }
 
@@ -332,26 +442,6 @@ void* NNormalSurfaceList::FundDualEnumerator::run(void*) {
     return 0;
 }
 
-NNormalSurfaceList* NNormalSurfaceList::enumerate(NTriangulation* owner,
-        NormalCoords newFlavour, bool embeddedOnly, NProgressManager* manager) {
-    NNormalSurfaceList* ans = new NNormalSurfaceList(newFlavour,
-        NS_VERTEX | (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
-        NS_ALG_DEFAULT);
-    VertexEnumerator* e = new VertexEnumerator(ans, owner, manager);
-
-    if (manager) {
-        if (! e->start(0, true)) {
-            delete ans;
-            return 0;
-        }
-        return ans;
-    } else {
-        e->run(0);
-        delete e;
-        return ans;
-    }
-}
-
 #ifndef EXCLUDE_NORMALIZ
 
 NNormalSurfaceList* NNormalSurfaceList::enumerateFundPrimal(
@@ -399,48 +489,6 @@ NNormalSurfaceList* NNormalSurfaceList::enumerateFundDual(
         delete e;
         return ans;
     }
-}
-
-NNormalSurfaceList* NNormalSurfaceList::enumerateStandardDirect(
-        NTriangulation* owner) {
-    NNormalSurfaceList* list = new NNormalSurfaceList(NS_STANDARD,
-        NS_VERTEX | NS_EMBEDDED_ONLY, NS_VERTEX_STD_DIRECT);
-
-    // Run a vanilla enumeration in standard coordinates.
-    NEnumConstraintList* constraints =
-        NNormalSurfaceVectorStandard::makeEmbeddedConstraints(owner);
-    NMatrixInt* eqns = makeMatchingEquations(owner, NS_STANDARD);
-
-    NDoubleDescription::enumerateExtremalRays<NNormalSurfaceVectorStandard>(
-        SurfaceInserter(*list, owner), *eqns, constraints);
-
-    delete eqns;
-    delete constraints;
-
-    // All done!
-    owner->insertChildLast(list);
-    return list;
-}
-
-NNormalSurfaceList* NNormalSurfaceList::enumerateStandardANDirect(
-        NTriangulation* owner) {
-    NNormalSurfaceList* list = new NNormalSurfaceList(NS_AN_STANDARD,
-        NS_VERTEX | NS_EMBEDDED_ONLY, NS_VERTEX_STD_DIRECT);
-
-    // Run a vanilla enumeration in standard almost normal coordinates.
-    NEnumConstraintList* constraints =
-        NNormalSurfaceVectorANStandard::makeEmbeddedConstraints(owner);
-    NMatrixInt* eqns = makeMatchingEquations(owner, NS_AN_STANDARD);
-
-    NDoubleDescription::enumerateExtremalRays<NNormalSurfaceVectorANStandard>(
-        SurfaceInserter(*list, owner), *eqns, constraints);
-
-    delete eqns;
-    delete constraints;
-
-    // All done!
-    owner->insertChildLast(list);
-    return list;
 }
 
 #ifndef EXCLUDE_NORMALIZ
