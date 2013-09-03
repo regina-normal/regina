@@ -127,7 +127,7 @@ NXMLElementReader* NXMLNormalSurfaceListReader::startContentSubElement(
     if (list) {
         // The surface list has already been created.
         if (subTagName == "surface")
-            return new NXMLNormalSurfaceReader(tri, list->flavour);
+            return new NXMLNormalSurfaceReader(tri, list->flavour_);
     } else {
         // The surface list has not yet been created.
         if (subTagName == "params") {

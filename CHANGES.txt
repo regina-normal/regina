@@ -227,6 +227,8 @@ Version 4.94  [ (under development) ]
               enumerate(NTriangulation*, NormalCoords, NormalList, NormalAlg,
               NProgressManager*), which offers sensible default as well
               as fine-grained control over the underlying algorithms.
+            - The routine getFlavour() is now renamed to flavour().
+              The old getFlavour() is still available but deprected.
             - This class no longer inherits from NSurfaceSet (which has been
               removed).  As a result, getShareableObject() is no longer
               necessary and has likewise been removed.
