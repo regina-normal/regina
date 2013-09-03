@@ -93,8 +93,8 @@ void NDoubleDescription::RaySpec<BitmaskType>::recover(
         NRay& dest, const NMatrixInt& subspace) const {
     unsigned i, j;
 
-    unsigned rows = subspace.rows();
-    unsigned cols = subspace.columns() - facets_.bits();
+    unsigned long rows = subspace.rows();
+    unsigned long cols = subspace.columns() - facets_.bits();
 
     // Extract the set of columns that we actually care about.
     unsigned* use = new unsigned[cols];
@@ -207,7 +207,7 @@ template <class RayClass, class OutputIterator>
 void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
         NProgressNumber* progress, unsigned initialRows) {
-    unsigned nFacets = subspace.columns();
+    unsigned long nFacets = subspace.columns();
 
     // If the space has dimension zero, return no results.
     if (nFacets == 0)
@@ -259,10 +259,10 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
         NProgressNumber* progress, unsigned initialRows) {
     // Get the dimension of the entire space in which we are working.
-    unsigned dim = subspace.columns();
+    unsigned long dim = subspace.columns();
 
     // Are there any hyperplanes at all in the subspace?
-    unsigned nEqns = subspace.rows();
+    unsigned long nEqns = subspace.rows();
     if (nEqns == 0) {
         // No!  Just send back the vertices of the non-negative orthant.
         if (progress)

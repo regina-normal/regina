@@ -81,12 +81,12 @@ void NAngleStructure::writeTextShort(std::ostream& out) const {
 
 void NAngleStructure::writeXMLData(std::ostream& out) const {
     // Write the vector length.
-    unsigned vecLen = vector->size();
+    size_t vecLen = vector->size();
     out << "  <struct len=\"" << vecLen << "\"> ";
 
     // Write the non-zero elements.
     NLargeInteger entry;
-    for (unsigned i = 0; i < vecLen; i++) {
+    for (size_t i = 0; i < vecLen; i++) {
         entry = (*vector)[i];
         if (entry != 0)
             out << i << ' ' << entry << ' ';
@@ -148,12 +148,12 @@ void NAngleStructure::calculateType() const {
         // Is it veering also?
         bool veering = true;
         if (triangulation->isOrientable()) {
-            int nEdges = triangulation->getNumberOfEdges();
+            long nEdges = triangulation->getNumberOfEdges();
             int* edgeColour = new int[nEdges];
             std::fill(edgeColour, edgeColour + nEdges, (int)0);
             NTetrahedron* tet;
             int orient;
-            int e;
+            long e;
             for (unsigned i = 0; i < triangulation->getNumberOfTetrahedra();
                     ++i) {
                 tet = triangulation->getTetrahedron(i);

@@ -933,7 +933,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          *
          * @return the number of coordinates.
          */
-        unsigned getNumberOfCoords() const;
+        size_t getNumberOfCoords() const;
         /**
          * Returns the triangulation in which this normal surface
          * resides.
@@ -1610,7 +1610,7 @@ inline NDiscType NNormalSurface::getOctPosition() const {
     return octPosition.value();
 }
 
-inline unsigned NNormalSurface::getNumberOfCoords() const {
+inline size_t NNormalSurface::getNumberOfCoords() const {
     return vector->size();
 }
 inline NTriangulation* NNormalSurface::getTriangulation() const {
