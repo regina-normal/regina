@@ -207,14 +207,27 @@ Version 4.94  [ (under development) ]
             - Removed writeToFile(NFile&) and readFromFile(NFile&, ...),
               which were used for old-style binary files.
         Class NNormalSurfaceList:
+            - New routines which() and algorithm() now retain details of
+              which surfaces where enumerated and how this was done.
+            - Now uses the new tree traversal method as a preferred
+              enumeration algorithm where possible.  This is a significant
+              improvement upon the old double description method.  See
+              NTreeEnumeration and arXiv:1010.6200 for details.
             - The coordinate flavours (STANDARD, QUAD, etc.) are deprecated,
               and have changed from integers to NormalCoords enum types.
               Instead of these, use the NormalCoords enum values directly
               (NS_STANDARD, NS_QUAD, etc.).  For both C++ and Python users,
               these enum values are available directly in the namespace scope.
-            - No longer inherits from NSurfaceSet (which has been removed).
-              As a result, getShareableObject() is no longer necessary and
-              has likewise been removed.
+            - The old enumeration routines have been deprecated.  These
+              include enumerate(NTriangulation*, int, bool, NProgressManager*),
+              enumerateStandardDirect() and enumerateStandardANDirect().
+              Users should now use the "universal" enumeration routine
+              enumerate(NTriangulation*, NormalCoords, NormalList, NormalAlg,
+              NProgressManager*), which offers sensible default as well
+              as fine-grained control over the underlying algorithms.
+            - This class no longer inherits from NSurfaceSet (which has been
+              removed).  As a result, getShareableObject() is no longer
+              necessary and has likewise been removed.
         Enum NormalCoords:
             - A new enumeration that contains constants for different normal
               surface coordinate systems.  Include "surfaces/normalcoords.h".

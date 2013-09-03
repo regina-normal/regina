@@ -208,44 +208,54 @@ class REGINA_API NNormalSurfaceList : public NPacket {
         virtual ~NNormalSurfaceList();
 
         /**
-         * Enumerates all vertex normal surfaces in the given
-         * triangulation using the given flavour of coordinate system.
-         * These vertex normal surfaces will be stored in a new normal
-         * surface list.  Their representations will
-         * use the smallest possible integer coordinates.
-         * The option is offered to find only embedded normal surfaces
-         * or to also include immersed and singular normal surfaces.
+         * A unified routine for enumerating various classes of normal
+         * surfaces within a given triangulation.
          *
-         * The normal surface list that is created will be inserted as the
-         * last child of the given triangulation.  This triangulation \b must
-         * remain the parent of this normal surface list, and must not
+         * The NormalCoords argument allows you to specify an underlying
+         * flavour of coordinate system (e.g., standard coordinates,
+         * quadrilateral coordinates or almost normal coordinates).
+         *
+         * The NormalList argument is a combination of flags that
+         * allows you to specify exactly which normal surfaces you require.
+         * This includes (i) whether you want all vertex surfaces
+         * or all fundamental surfaces, which defaults to NS_VERTEX
+         * if you specify neither or both; and (ii) whether you want only
+         * properly embedded surfaces or you also wish to include
+         * immersed and/or singular surfaces, which defaults to
+         * NS_EMBEDDED_ONLY if you specify neither or both.
+         *
+         * The NormalAlg argument is a combination of flags that allows
+         * you to control the underlying enumeration algorithm.  These
+         * flags are treated as hints only: if your selection of
+         * algorithm is invalid, unavailable or unsupported then Regina
+         * will choose something more appropriate.  Unless you have
+         * some specialised need, the default NS_ALG_DEFAULT (which
+         * makes no hints at all) will allow Regina to choose what it
+         * thinks will be the most efficient method.
+         *
+         * The enumerated surfaces will be stored in a new normal
+         * surface list, and their representations will be scaled down
+         * to use the smallest possible integer coordinates.
+         * This normal surface list will be inserted into the packet tree as
+         * the last child of the given triangulation.  This triangulation
+         * \b must remain the parent of this normal surface list, and must not
          * change while this normal surface list remains in existence.
          *
          * If a progress manager is passed, the normal surface
          * enumeration will take place in a new thread and this routine
-         * will return immediately.  The NProgress object assigned to
-         * this progress manager is guaranteed to be of the class
-         * NProgressNumber.
+         * will return immediately.
          *
          * If no progress manager is passed, the enumeration will run
          * in the current thread and this routine will return only when
          * the enumeration is complete.  Note that this enumeration can
          * be extremely slow for larger triangulations.
          *
-         * \todo \feature Allow picking up the first ``interesting'' surface
-         * and bailing en route.
-         * \todo \featurelong Determine the faces of the normal solution
-         * space.
-         * \todo \featurelong Allow either subsets of normal surface
-         * lists or allow deletion of surfaces from lists.
-         *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
          * @param newFlavour the flavour of coordinate system to be used.
-         * @param embeddedOnly \c true if only embedded normal surfaces
-         * are to be produced, or \c false if immersed and singular
-         * normal surfaces are also to be produced; this defaults to
-         * \c true.
+         * @param which indicates which normal surfaces should be enumerated.
+         * @param algHints passes requests to Regina for which specific
+         * enumeration algorithm should be used.
          * @param manager a progress manager through which progress will
          * be reported, or 0 if no progress reporting is required.  If
          * non-zero, \a manager must point to a progress manager for
@@ -257,8 +267,80 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * returns 0 (and no normal surface list is created).
          */
         static NNormalSurfaceList* enumerate(NTriangulation* owner,
-            NormalCoords newFlavour, bool embeddedOnly = true,
+            NormalCoords newFlavour,
+            NormalList which = NS_LIST_DEFAULT,
+            NormalAlg algHints = NS_ALG_DEFAULT,
             NProgressManager* manager = 0);
+
+        /**
+         * Deprecated method for enumerating all vertex normal surfaces
+         * using the given flavour of coordinate system.
+         *
+         * Users should now call enumerate(NTriangulation*, NormalCoords,
+         * NormalList, NormalAlg, NProgressManager*) instead.
+         * See the documentation for that routine for further details,
+         * including all arguments, returns values, preconditions and
+         * postconditions.
+         *
+         * \deprecated The correct way to access this procedure is to call
+         * <tt>enumerate(owner, newFlavour, NS_EMBEDDED_ONLY,
+         * NS_ALG_DEFAULT, manager)</tt> if \a embeddedOnly is \c true, or
+         * <tt>enumerate(owner, newFlavour, NS_IMMERSED_SINGULAR,
+         * NS_ALG_DEFAULT, manager)</tt> if \a embeddedOnly is \c false.
+         */
+        static NNormalSurfaceList* enumerate(NTriangulation* owner,
+            NormalCoords newFlavour, bool embeddedOnly,
+            NProgressManager* manager = 0);
+
+        /**
+         * Deprecated method that uses a slow-but-direct procedure to
+         * enumerate all embedded vertex normal surfaces in standard
+         * coordinates, without using the faster procedure that works
+         * via quadrilateral coordinates.
+         *
+         * Users can still access this slower procedure if they need to;
+         * however, they should do this via enumerate(NTriangulation*,
+         * NormalCoords, NormalList, NormalAlg, NProgressManager*) instead.
+         * See the documentation for that routine for further details.
+         *
+         * \deprecated The correct way to access this procedure is to call
+         * <tt>enumerate(owner, NS_STANDARD, NS_LIST_DEFAULT,
+         * NS_VERTEX_STD_DIRECT)</tt>.
+         *
+         * \warning This routine is slow, and users will not want to
+         * call it unless they have some specialised need.
+         *
+         * @param owner the triangulation upon which this list of
+         * surfaces will be based.
+         * @return the newly created normal surface list.
+         */
+        static NNormalSurfaceList* enumerateStandardDirect(
+            NTriangulation* owner);
+
+        /**
+         * Deprecated method that uses a slow-but-direct procedure to
+         * enumerate all embedded vertex almost normal surfaces in standard
+         * almost normal coordinates, without using the faster procedure
+         * that works via quadrilateral-octagon coordinates.
+         *
+         * Users can still access this slower procedure if they need to;
+         * however, they should do this via enumerate(NTriangulation*,
+         * NormalCoords, NormalList, NormalAlg, NProgressManager*) instead.
+         * See the documentation for that routine for further details.
+         *
+         * \deprecated The correct way to access this procedure is to call
+         * <tt>enumerate(owner, NS_AN_STANDARD, NS_LIST_DEFAULT,
+         * NS_VERTEX_STD_DIRECT)</tt>.
+         *
+         * \warning This routine is slow, and users will not want to
+         * call it unless they have some specialised need.
+         *
+         * @param owner the triangulation upon which this list of
+         * surfaces will be based.
+         * @return the newly created normal surface list.
+         */
+        static NNormalSurfaceList* enumerateStandardANDirect(
+            NTriangulation* owner);
 
 #ifndef EXCLUDE_NORMALIZ
         /**
@@ -383,74 +465,6 @@ class REGINA_API NNormalSurfaceList : public NPacket {
             bool embeddedOnly = true,
             NProgressManager* manager = 0);
 
-        /**
-         * Uses a slow-but-direct procedure to enumerate all embedded
-         * vertex normal surfaces in standard (tri-quad) coordinates
-         * within the given triangulation.
-         *
-         * The standard enumerate() routine will choose the fastest
-         * available algorithm for enumerating vertex normal surfaces.
-         * In particular, when enumerating embedded vertex normal
-         * surfaces in standard (tri-quad) coordinates, it will often take
-         * a two-step approach: (i) enumerate vertex normal surfaces in
-         * \e quadrilateral space; (ii) convert the quadrilateral space
-         * solution set to a standard tri-quad space solution set.  This
-         * two-step procedure is typically \e much faster than enumerating
-         * solutions in standard coordinates directly.  For details on
-         * this procedure see "Converting between quadrilateral and
-         * standard solution sets in normal surface theory",
-         * Benjamin A. Burton, Algebr. Geom. Topol. 9 (2009), 2121-2174.
-         *
-         * This routine allows the user to force a direct enumeration in
-         * standard space, \e without going via quadrilateral space.
-         * The algorithm used is the souped-up double description method
-         * in standard coordinates as described in "Optimizing the
-         * double description method for normal surface enumeration",
-         * Benjamin A. Burton, Math. Comp. 79 (2010), 453-484.
-         *
-         * Aside from the underlying algorithm, the behaviour of this
-         * routine is identical to enumerate().  See enumerate() for
-         * details regarding preconditions, postconditions, ownership
-         * and so on.
-         *
-         * Unlike enumerate(), this routine does not support progress
-         * management and does not support running in a separate thread.
-         *
-         * \warning
-         * Users will generally not want to call this routine, since it
-         * is often much slower than enumerate() and it gives precisely
-         * the same results.  This routine is provided mainly for interest's
-         * sake, and to allow comparisons between different algorithms.
-         *
-         * @param owner the triangulation upon which this list of normal
-         * surfaces will be based.
-         * @return the newly created normal surface list.
-         */
-        static NNormalSurfaceList* enumerateStandardDirect(
-            NTriangulation* owner);
-
-        /**
-         * Uses a slow-but-direct procedure to enumerate all embedded
-         * vertex almost normal surfaces in standard (tri-quad-oct)
-         * coordinates within the given triangulation.
-         *
-         * This routine is the almost normal analogue to the
-         * enumerateStandardDirect() enumeration routine; see the
-         * enumerateStandardDirect() documentation for further information.
-         *
-         * \warning
-         * Users will generally not want to call this routine, since it
-         * is often much slower than enumerate() and it gives precisely
-         * the same results.  This routine is provided mainly for interest's
-         * sake, and to allow comparisons between different algorithms.
-         *
-         * @param owner the triangulation upon which this list of
-         * almost normal surfaces will be based.
-         * @return the newly created surface list.
-         */
-        static NNormalSurfaceList* enumerateStandardANDirect(
-            NTriangulation* owner);
-
 #ifndef EXCLUDE_NORMALIZ
         /**
          * Uses an extremely slow procedure to enumerate all embedded
@@ -530,6 +544,32 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * @return the flavour of coordinate system used.
          */
         NormalCoords getFlavour() const;
+        /**
+         * Returns details of which normal surfaces this list represents
+         * within the underlying triangulation.
+         *
+         * This may not be the same NormalList that was passed to
+         * enumerate().  In particular, default values will have be
+         * explicitly filled in (such as NS_VERTEX and/or NS_EMBEDDED_ONLY),
+         * and invalid and/or redundant values will have been removed.
+         *
+         * @return details of what this list represents.
+         */
+        NormalList which() const;
+        /**
+         * Returns details of the algorithm that was used to enumerate
+         * this list.
+         *
+         * These may not be the same NormalAlg flags that were passed to
+         * enumerate().  In particular, default values will have be
+         * explicitly filled in, invalid and/or redundant values will have
+         * been removed, and unavailable and/or unsupported combinations
+         * of algorithm flags will be replaced with whatever algorithm was
+         * actually used.
+         *
+         * @return details of the algorithm used to enumerate this list.
+         */
+        NormalAlg algorithm() const;
         /**
          * Determines if the flavour of coordinate system being used
          * allows for almost normal surfaces, that is, allows for
@@ -1193,50 +1233,6 @@ class REGINA_API NNormalSurfaceList : public NPacket {
             NormalAlg algorithm);
 
         /**
-         * Enumerates all embedded vertex surfaces in (standard normal
-         * or standard almost normal) coordinates by first enumerating
-         * surfaces in (quad or quad-oct) coordinates and then performing
-         * a conversion routine.  See quadToStandard() and
-         * quadOctToStandardAN() for further information on this procedure.
-         *
-         * The resulting surfaces in standard coordinates will be
-         * inserted directly into this list.
-         *
-         * This routine is designed to work with surface lists that are
-         * still under construction.  As such, it ignores the packet
-         * tree completely.  The parent packet is ignored (and not changed);
-         * instead the underlying triangulation is passed explicitly as
-         * the argument \a owner.
-         *
-         * This enumeration will always take place in the current thread.
-         * A numeric progress watcher may be passed for progress reporting,
-         * in which case this routine will poll for cancellation requests
-         * accordingly.
-         *
-         * \pre The template argument \a Variant is either NormalSpec
-         * or AlmostNormalSpec, according to whether we are working with
-         * normal or almost normal surfaces.
-         * \pre The flavour for this surface list is set to
-         * NS_STANDARD if we are working with normal surfaces, or
-         * NS_AN_STANDARD if we are working with almost normal surfaces.
-         * Moreover, the embedded-only flag is set to \c true.
-         * \pre The given triangulation is valid, and the link of every
-         * vertex is either a sphere or a disc.
-         *
-         * @param owner the triangulation upon which this list of normal
-         * surfaces is to be based.
-         * @param progress a numeric progress watcher through which
-         * progress will be reported, or 0 if no progress reporting is
-         * required.  If a progress watcher is passed, its expected
-         * total will be increased immediately by some number of steps
-         * and the completed total will be increased gradually by this
-         * same number.  NProgress::setFinished() will \e not be called.
-         */
-        template <class Variant>
-        void enumerateStandardViaReduced(NTriangulation* owner,
-            NProgressNumber* progress = 0);
-
-        /**
          * Converts a set of embedded vertex normal surfaces in
          * (quad or quad-oct) space to a set of embedded vertex normal
          * surfaces in (standard normal or standard almost normal) space.
@@ -1278,7 +1274,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          */
         template <class Variant>
         void buildStandardFromReduced(NTriangulation* owner,
-            const std::vector<NNormalSurfaceVector*>& reducedList);
+            const std::vector<NNormalSurface*>& reducedList);
 
         /**
          * Implements the one-template-argument version of
@@ -1298,7 +1294,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          */
         template <class Variant, class BitmaskType>
         void buildStandardFromReducedUsing(NTriangulation* owner,
-            const std::vector<NNormalSurfaceVector*>& reducedList);
+            const std::vector<NNormalSurface*>& reducedList);
 
         /**
          * Converts a set of embedded vertex surfaces in (quad or quad-oct)
@@ -1335,17 +1331,19 @@ class REGINA_API NNormalSurfaceList : public NPacket {
         NNormalSurfaceList* internalStandardToReduced() const;
 
         /**
-         * A thread class that actually performs the vertex normal surface
-         * enumeration.
+         * A thread class that performs all normal surface enumeration.
+         *
+         * The "real work" is in operator(), where the coordinate system
+         * becomes a compile-time constant.  The run() routine simply
+         * farms out the real work to some instantiation of operator().
          */
-        class VertexEnumerator : public NThread {
+        class Enumerator : public NThread {
             private:
-                NNormalSurfaceList* list;
-                    /**< The normal surface list to be filled. */
-                NTriangulation* triang;
-                    /**< The triangulation upon which this normal
-                         surface list will be based. */
-                NProgressManager* manager;
+                NNormalSurfaceList* list_;
+                    /**< The surface list to be filled. */
+                NTriangulation* triang_;
+                    /**< The triangulation in which these surfaces lie. */
+                NProgressManager* manager_;
                     /**< The progress manager through which progress is
                          reported, or 0 if no progress manager is in use. */
 
@@ -1354,17 +1352,87 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * Creates a new enumerator thread with the given
                  * parameters.
                  *
-                 * @param newList the normal surface list to be filled.
-                 * @param useTriang the triangulation upon which this
-                 * normal surface list will be based.
-                 * @param useManager the progress manager to use for
-                 * progress reporting, or 0 if progress reporting is not
-                 * required.
+                 * @param list the surface list to be filled.
+                 * @param triang the triangulation in which these surfaces lie.
+                 * @param manager the progress manager to use for progress
+                 * reporting, or 0 if progress reporting is not required.
                  */
-                VertexEnumerator(NNormalSurfaceList* newList,
-                    NTriangulation* useTriang, NProgressManager* useManager);
+                Enumerator(NNormalSurfaceList* list,
+                    NTriangulation* triang, NProgressManager* manager);
 
                 void* run(void*);
+
+                /**
+                 * Performs the real enumeration work, in a setting
+                 * where the underlying flavour of coordinate system is
+                 * a compile-time constant.
+                 *
+                 * We assume here that neither list_->which_ nor
+                 * list_->algorithm_ have been sanity-checked.
+                 *
+                 * This routine fills \a list_ with surfaces, and then once
+                 * this is finished it inserts \a list_ into the packet
+                 * tree as a child of \a triang_.
+                 */
+                template <typename Flavour>
+                void operator() (Flavour);
+
+            private:
+                /**
+                 * The enumeration code for enumerating vertex surfaces.
+                 * This is internal to operator().
+                 *
+                 * We assume that the flag set list_->which_ has been
+                 * cleaned up (and includes NS_VERTEX).  We make no
+                 * assumptions about the state of list_->algorithm_.
+                 *
+                 * This routine only fills \a list_ with surfaces.
+                 * It does not make any adjustments to the structure of
+                 * the packet tree.
+                 */
+                template <typename Flavour>
+                void fillVertex();
+
+                /**
+                 * The enumeration code for enumerating vertex surfaces
+                 * using the double description method.
+                 * This is internal to fillVertex().
+                 *
+                 * The \a progress argument may be null; however, if not then
+                 * when this routine begins the total steps required will be
+                 * raised by some amount, and over the course of this routine
+                 * the total steps completed will be raised by this same amount.
+                 */
+                template <typename Flavour>
+                void fillVertexDD(NProgressNumber* progress);
+
+                /**
+                 * The enumeration code for enumerating vertex surfaces
+                 * using the tree traversal method.
+                 * This is internal to fillVertex().
+                 *
+                 * The \a progress argument may be null; however, if not then
+                 * when this routine begins the total steps required will be
+                 * raised by some amount, and over the course of this routine
+                 * the total steps completed will be raised by this same amount.
+                 */
+                template <typename Flavour>
+                void fillVertexTree(NProgressNumber* progress);
+
+                /**
+                 * The enumeration code for enumerating fundamental surfaces.
+                 * This is internal to operator().
+                 *
+                 * We assume that the flag set list_->which_ has been
+                 * cleaned up (and includes NS_FUNDAMENTAL).  We make no
+                 * assumptions about the state of list_->algorithm_.
+                 *
+                 * This routine only fills \a list_ with surfaces.
+                 * It does not make any adjustments to the structure of
+                 * the packet tree.
+                 */
+                template <typename Flavour>
+                void fillFundamental();
         };
 
 #ifndef EXCLUDE_NORMALIZ
@@ -1508,6 +1576,14 @@ inline NormalCoords NNormalSurfaceList::getFlavour() const {
     return flavour;
 }
 
+inline NormalList NNormalSurfaceList::which() const {
+    return which_;
+}
+
+inline NormalAlg NNormalSurfaceList::algorithm() const {
+    return algorithm_;
+}
+
 inline bool NNormalSurfaceList::isEmbeddedOnly() const {
     return which_.has(NS_EMBEDDED_ONLY);
 }
@@ -1523,6 +1599,26 @@ inline const NNormalSurface* NNormalSurfaceList::getSurface(
 
 inline bool NNormalSurfaceList::dependsOnParent() const {
     return true;
+}
+
+inline NNormalSurfaceList* NNormalSurfaceList::enumerate(
+        NTriangulation* owner, NormalCoords newFlavour,
+        bool embeddedOnly, NProgressManager* manager) {
+    return enumerate(owner, newFlavour,
+        NS_VERTEX | (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+        NS_ALG_DEFAULT, manager);
+}
+
+inline NNormalSurfaceList* NNormalSurfaceList::enumerateStandardDirect(
+        NTriangulation* owner) {
+    return enumerate(owner, NS_STANDARD, NS_VERTEX | NS_EMBEDDED_ONLY,
+        NS_VERTEX_STD_DIRECT);
+}
+
+inline NNormalSurfaceList* NNormalSurfaceList::enumerateStandardANDirect(
+        NTriangulation* owner) {
+    return enumerate(owner, NS_AN_STANDARD, NS_VERTEX | NS_EMBEDDED_ONLY,
+        NS_VERTEX_STD_DIRECT);
 }
 
 inline NMatrixInt* NNormalSurfaceList::recreateMatchingEquations() const {
@@ -1647,10 +1743,9 @@ inline NNormalSurfaceList::NNormalSurfaceList(NormalCoords newFlavour,
         flavour(newFlavour), which_(which), algorithm_(algorithm) {
 }
 
-inline NNormalSurfaceList::VertexEnumerator::VertexEnumerator(
-        NNormalSurfaceList* newList,
-        NTriangulation* useTriang, NProgressManager* useManager) :
-        list(newList), triang(useTriang), manager(useManager) {
+inline NNormalSurfaceList::Enumerator::Enumerator(NNormalSurfaceList* list,
+        NTriangulation* triang, NProgressManager* manager) :
+        list_(list), triang_(triang), manager_(manager) {
 }
 
 #ifndef EXCLUDE_NORMALIZ

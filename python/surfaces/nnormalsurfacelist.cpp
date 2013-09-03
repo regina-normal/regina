@@ -49,10 +49,26 @@ namespace {
     }
 
     // Write manual overload wrappers since these are static member functions.
-    NNormalSurfaceList* enumerate_2(regina::NTriangulation* owner,
+    NNormalSurfaceList* unified_2(regina::NTriangulation* owner,
             regina::NormalCoords flavour) {
         return NNormalSurfaceList::enumerate(owner, flavour);
     }
+    NNormalSurfaceList* unified_3(regina::NTriangulation* owner,
+            regina::NormalCoords flavour, regina::NormalList which) {
+        return NNormalSurfaceList::enumerate(owner, flavour, which);
+    }
+    NNormalSurfaceList* unified_4(regina::NTriangulation* owner,
+            regina::NormalCoords flavour, regina::NormalList which,
+            regina::NormalAlg algHints) {
+        return NNormalSurfaceList::enumerate(owner, flavour, which, algHints);
+    }
+    NNormalSurfaceList* unified_5(regina::NTriangulation* owner,
+            regina::NormalCoords flavour, regina::NormalList which,
+            regina::NormalAlg algHints, regina::NProgressManager* manager) {
+        return NNormalSurfaceList::enumerate(owner, flavour, which, algHints,
+            manager);
+    }
+
     NNormalSurfaceList* enumerate_3(regina::NTriangulation* owner,
             regina::NormalCoords flavour, bool embedded) {
         return NNormalSurfaceList::enumerate(owner, flavour, embedded);
@@ -136,6 +152,8 @@ void addNNormalSurfaceList() {
             std::auto_ptr<NNormalSurfaceList>, boost::noncopyable>
             ("NNormalSurfaceList", no_init)
         .def("getFlavour", &NNormalSurfaceList::getFlavour)
+        .def("which", &NNormalSurfaceList::which)
+        .def("algorithm", &NNormalSurfaceList::algorithm)
         .def("allowsAlmostNormal", &NNormalSurfaceList::allowsAlmostNormal)
         .def("allowsSpun", &NNormalSurfaceList::allowsSpun)
         .def("allowsOriented", &NNormalSurfaceList::allowsOriented)
@@ -146,7 +164,13 @@ void addNNormalSurfaceList() {
         .def("getSurface", &NNormalSurfaceList::getSurface,
             return_internal_reference<>())
         .def("writeAllSurfaces", writeAllSurfaces_stdio)
-        .def("enumerate", enumerate_2,
+        .def("enumerate", unified_2,
+            return_value_policy<reference_existing_object>())
+        .def("enumerate", unified_3,
+            return_value_policy<reference_existing_object>())
+        .def("enumerate", unified_4,
+            return_value_policy<reference_existing_object>())
+        .def("enumerate", unified_5,
             return_value_policy<reference_existing_object>())
         .def("enumerate", enumerate_3,
             return_value_policy<reference_existing_object>())

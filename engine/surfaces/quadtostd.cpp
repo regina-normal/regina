@@ -61,22 +61,10 @@ NNormalSurfaceList* NNormalSurfaceList::quadOctToStandardAN() const {
     return internalReducedToStandard<AlmostNormalSpec>();
 }
 
-template void NNormalSurfaceList::enumerateStandardViaReduced<
-        NNormalSurfaceList::NormalSpec>(NTriangulation*, NProgressNumber*);
-template void NNormalSurfaceList::enumerateStandardViaReduced<
-        NNormalSurfaceList::AlmostNormalSpec>(NTriangulation*,
-        NProgressNumber*);
-
 /**
  * Put helper classes and constants into an anonymous namespace.
  */
 namespace {
-    /**
-     * How many progress "steps" shall we declare a reduced-to-standard
-     * conversion is worth?
-     */
-    const unsigned PROGRESS_CONVERSION_STEPS = 1;
-
     /**
      * A back insertion iterator that defines \a value_type, which is
      * required by NDoubleDescription::enumerate().
@@ -325,26 +313,10 @@ NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
         Variant::standardFlavour(), NS_EMBEDDED_ONLY | NS_VERTEX,
         NS_VERTEX_VIA_REDUCED);
 
-    // Get the empty triangulation out of the way now.
-    if (owner->getNumberOfTetrahedra() == 0) {
-        owner->insertChildLast(ans);
-        return ans;
+    if (owner->getNumberOfTetrahedra() > 0) {
+        // Run our internal conversion routine.
+        ans->buildStandardFromReduced<Variant>(owner, surfaces);
     }
-
-    // Build a vector of reduced form vectors to pass to our internal
-    // conversion routine.
-    // We will need to collect non-const pointers to vectors in this list,
-    // but this is okay (the internal conversion routine guarantees not
-    // to modify or delete them).
-    std::vector<NNormalSurfaceVector*> reducedVertices;
-    reducedVertices.reserve(surfaces.size());
-
-    std::vector<NNormalSurface*>::const_iterator it;
-    for (it = surfaces.begin(); it != surfaces.end(); ++it)
-        reducedVertices.push_back(const_cast<NNormalSurfaceVector*>(
-            (*it)->rawVector()));
-
-    ans->buildStandardFromReduced<Variant>(owner, reducedVertices);
 
     // All done!
     owner->insertChildLast(ans);
@@ -352,59 +324,8 @@ NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
 }
 
 template <class Variant>
-void NNormalSurfaceList::enumerateStandardViaReduced(
-        NTriangulation* owner, NProgressNumber* progress) {
-    // Hum.  What to do with progress?
-    // For now we shall treat quad or quad-oct surface enumeration as the
-    // main task, and assign an arbitrarily chosen fixed number of "steps"
-    // for the final conversion to standard form.
-    if (progress)
-        progress->setOutOf(
-            progress->getOutOf() + PROGRESS_CONVERSION_STEPS + 1);
-
-    // Get the empty triangulation out of the way now.
-    if (owner->getNumberOfTetrahedra() == 0) {
-        if (progress)
-            progress->incCompleted(PROGRESS_CONVERSION_STEPS + 1);
-        return;
-    }
-
-    // First enumerate all quad or quad-oct vertex surfaces.
-    NEnumConstraintList* constraints = Variant::ReducedVector::
-        makeEmbeddedConstraints(owner);
-    NMatrixInt* eqns = makeMatchingEquations(owner, Variant::reducedFlavour());
-
-    std::vector<NNormalSurfaceVector*> reducedVertices;
-    NDoubleDescription::enumerateExtremalRays<typename Variant::ReducedVector>(
-        VectorInserter(reducedVertices), *eqns, constraints, progress);
-
-    delete eqns;
-    delete constraints;
-
-    if (progress) {
-        progress->incCompleted();
-
-        // Check for cancellation before we go any further.
-        if (progress->isCancelled())
-            return;
-    }
-
-    // Feed the quad or quad-oct vertex surfaces through the
-    // reduced-to-standard conversion procedure:
-    buildStandardFromReduced<Variant>(owner, reducedVertices);
-
-    // Delete the old quad or quad-oct vertex surfaces and we're done!
-    std::vector<NNormalSurfaceVector*>::const_iterator qit;
-    for (qit = reducedVertices.begin(); qit != reducedVertices.end(); ++qit)
-        delete *qit;
-
-    if (progress)
-        progress->incCompleted(PROGRESS_CONVERSION_STEPS);
-}
-
-template <class Variant>
 void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
-        const std::vector<NNormalSurfaceVector*>& reducedList) {
+        const std::vector<NNormalSurface*>& reducedList) {
     unsigned nFacets = Variant::stdLen(owner->getNumberOfTetrahedra());
 
     // Choose a bitmask type for representing the set of facets that a
@@ -446,7 +367,7 @@ void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
 
 template <class Variant, class BitmaskType>
 void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
-        const std::vector<NNormalSurfaceVector*>& reducedList) {
+        const std::vector<NNormalSurface*>& reducedList) {
     // Prepare for the reduced-to-standard double description run.
     unsigned n = owner->getNumberOfTetrahedra();
     unsigned slen = Variant::stdLen(n); // # standard coordinates
@@ -493,10 +414,10 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
     RaySpecList list[2];
 
     NNormalSurfaceVector* v;
-    std::vector<NNormalSurfaceVector*>::const_iterator qit;
+    std::vector<NNormalSurface*>::const_iterator qit;
     for (qit = reducedList.begin(); qit != reducedList.end(); ++qit) {
-        v = static_cast<const typename Variant::ReducedVector*>(*qit)->
-            makeMirror(owner);
+        v = static_cast<const typename Variant::ReducedVector*>(
+            (*qit)->rawVector())->makeMirror(owner);
         list[0].push_back(new RaySpec<BitmaskType>(
             static_cast<typename Variant::StandardVector*>(v)));
         delete v;
