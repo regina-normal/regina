@@ -76,7 +76,7 @@ class REGINA_API NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalSurfaceVectorStandard(unsigned length);
+        NNormalSurfaceVectorStandard(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
@@ -113,7 +113,7 @@ class REGINA_API NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
 // Inline functions for NNormalSurfaceVectorStandard
 
 inline NNormalSurfaceVectorStandard::NNormalSurfaceVectorStandard(
-        unsigned length) : NNormalSurfaceVector(length) {
+        size_t length) : NNormalSurfaceVector(length) {
 }
 inline NNormalSurfaceVectorStandard::NNormalSurfaceVectorStandard(
         const NVector<NLargeInteger>& cloneMe) :

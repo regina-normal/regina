@@ -91,7 +91,7 @@ class REGINA_API NAngleStructureVector : public NRay {
          *
          * @param length the number of elements in the new vector.
          */
-        NAngleStructureVector(unsigned length);
+        NAngleStructureVector(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
@@ -266,7 +266,7 @@ class REGINA_API NAngleStructure : public ShareableObject {
 
 // Inline functions for NAngleStructureVector
 
-inline NAngleStructureVector::NAngleStructureVector(unsigned length) :
+inline NAngleStructureVector::NAngleStructureVector(size_t length) :
         NRay(length) {
 }
 

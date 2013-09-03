@@ -91,7 +91,7 @@ NEnumConstraintList* NNormalSurfaceVectorQuad::makeEmbeddedConstraints(
     NEnumConstraintList* ans = new NEnumConstraintList(
         triangulation->getNumberOfTetrahedra());
 
-    unsigned base = 0;
+    unsigned long base = 0;
     for (unsigned c = 0; c < ans->size(); ++c) {
         (*ans)[c].insert((*ans)[c].end(), base);
         (*ans)[c].insert((*ans)[c].end(), base + 1);

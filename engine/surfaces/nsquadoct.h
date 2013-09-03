@@ -76,7 +76,7 @@ class REGINA_API NNormalSurfaceVectorQuadOct :
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalSurfaceVectorQuadOct(unsigned length);
+        NNormalSurfaceVectorQuadOct(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
@@ -105,7 +105,7 @@ class REGINA_API NNormalSurfaceVectorQuadOct :
 // Inline functions for NNormalSurfaceVectorQuadOct
 
 inline NNormalSurfaceVectorQuadOct::NNormalSurfaceVectorQuadOct(
-        unsigned length) : NNormalSurfaceVectorMirrored(length) {
+        size_t length) : NNormalSurfaceVectorMirrored(length) {
 }
 inline NNormalSurfaceVectorQuadOct::NNormalSurfaceVectorQuadOct(
         const NVector<NLargeInteger>& cloneMe) :

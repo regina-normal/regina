@@ -79,7 +79,7 @@ class REGINA_API NNormalSurfaceVectorOrientedQuad :
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalSurfaceVectorOrientedQuad(unsigned length);
+        NNormalSurfaceVectorOrientedQuad(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
@@ -115,7 +115,7 @@ class REGINA_API NNormalSurfaceVectorOrientedQuad :
 // Inline functions for NNormalSurfaceVectorOrientedQuad
 
 inline NNormalSurfaceVectorOrientedQuad::NNormalSurfaceVectorOrientedQuad(
-        unsigned length) : NNormalSurfaceVectorMirrored(length) {
+        size_t length) : NNormalSurfaceVectorMirrored(length) {
 }
 inline NNormalSurfaceVectorOrientedQuad::NNormalSurfaceVectorOrientedQuad(
         const NVector<NLargeInteger>& cloneMe) :

@@ -102,6 +102,7 @@ Version 4.94  [ (under development) ]
         - Old-style binary files are no longer supported.  These have not been
           in use for over a decade.  If you have an old-style binary file that
           you need to use, install Regina 4.93 and use the regconvert tool.
+        - Widespread alignment of integer vs long types throughout the code.
     ENGINE:
         Class NAbelianGroup, NGroupExpression, NGroupExpressionTerm,
                 NGroupPresentation:
@@ -154,6 +155,9 @@ Version 4.94  [ (under development) ]
               detected and pruned during census enumeration.
             - Improved the way in which too many high degree edges are
               detected and pruned during census enumeration.
+        Class NEnumConstraintList:
+            - This now holds unsigned longs, not unsigned ints, for
+              consistency with the integer types used for NVector indexing.
         Class NFacePairing:
             - Now derives from the template base class NGenericFacetPairing<3>.
             - Renamed getNumberOfTetrahedra() to size().  The old name
@@ -232,6 +236,9 @@ Version 4.94  [ (under development) ]
             - This class no longer inherits from NSurfaceSet (which has been
               removed).  As a result, getShareableObject() is no longer
               necessary and has likewise been removed.
+        Class NVector:
+            - Size and index parameters are now type size_t, not unsigned int.
+              This has also been propagated to all subclasses.
         Enum NormalCoords:
             - A new enumeration that contains constants for different normal
               surface coordinate systems.  Include "surfaces/normalcoords.h".

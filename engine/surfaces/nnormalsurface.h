@@ -232,7 +232,7 @@ class NMatrixInt;
  *   to represent the new flavour of coordinate system.</li>
  *   <li>The file flavourregistry.h must be updated to reflect the new
  *   flavour of coordinate system.</li>
- *   <li>Constructors <tt>class(unsigned length)</tt> and
+ *   <li>Constructors <tt>class(size_t length)</tt> and
  *   <tt>class(const NVector<NLargeInteger>& cloneMe)</tt> must be
  *   declared and implemented; these will usually just call the
  *   corresponding superclass constructors.</li>
@@ -272,7 +272,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalSurfaceVector(unsigned length);
+        NNormalSurfaceVector(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
@@ -1558,7 +1558,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
 
 // Inline functions for NNormalSurfaceVector
 
-inline NNormalSurfaceVector::NNormalSurfaceVector(unsigned length) :
+inline NNormalSurfaceVector::NNormalSurfaceVector(size_t length) :
         NRay(length) {
 }
 inline NNormalSurfaceVector::NNormalSurfaceVector(
