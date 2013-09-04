@@ -289,6 +289,26 @@ class LPConstraintBase {
          * constraints, or \c false if it does not.
          */
         static bool verify(const NNormalSurface* s);
+
+        /**
+         * Indicates whether the given coordinate system is supported by
+         * this constraint class.
+         *
+         * This routine assumes that the given system is already known to be
+         * supported by the generic tree traversal infrastructure, and only
+         * returns \c false if there are additional prerequisites
+         * imposed by this particular constraint class that the given
+         * system does not satisfy.  If this constraint class does not impose
+         * any of its own additional conditions, this routine may
+         * simply return \c true.
+         *
+         * @param coords the coordinate system being queried; this must
+         * be one of the coordinate systems known to be supported by the
+         * generic NTreeTraversal infrastructure.
+         * @return \c true if and only if this coordinate system is
+         * also supported by this specific constraint class.
+         */
+        static bool supported(NormalCoords coords);
 #endif
 };
 
@@ -331,6 +351,7 @@ class LPConstraintNone : public LPConstraintSubspace {
                 const int*, NTriangulation*);
         static void constrain(LPData<LPConstraintNone>&, unsigned);
         static bool verify(const NNormalSurface*);
+        static bool supported(NormalCoords coords);
 };
 
 /**
@@ -380,6 +401,7 @@ class LPConstraintEuler : public LPConstraintBase {
         static void constrain(LPData<LPConstraintEuler>& lp,
                 unsigned numCols);
         static bool verify(const NNormalSurface* s);
+        static bool supported(NormalCoords coords);
 };
 
 #ifndef EXCLUDE_SNAPPEA
@@ -433,6 +455,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
         static void constrain(LPData<LPConstraintNonSpun>& lp,
                 unsigned numCols);
         static bool verify(const NNormalSurface* s);
+        static bool supported(NormalCoords coords);
 };
 #endif // EXCLUDE_SNAPPEA
 
@@ -480,9 +503,10 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  *
  * This base class provides limited functionality (as documented below).
  * Subclasses \e must implement a constructor (which, like this base
- * class, takes a triangulation and a coordinate system), and must also
- * implement the routine init() which determines which normal coordinates
- * are banned and/or marked.
+ * class, takes a triangulation and a coordinate system), must implement
+ * init() which determines which normal coordinates are banned and/or marked,
+ * and must implement supported(), which indicates which normal
+ * coordinate system this constraint class can work with.
  *
  * \apinotfinal
  *
@@ -556,6 +580,26 @@ class BanConstraintBase {
          * be the same permutation returned by LPInitialTableaux::columnPerm().
          */
         void init(const int* columnPerm);
+
+        /**
+         * Indicates whether the given coordinate system is supported by
+         * this constraint class.
+         *
+         * This routine assumes that the given system is already known to be
+         * supported by the generic tree traversal infrastructure, and only
+         * returns \c false if there are additional prerequisites
+         * imposed by this particular constraint class that the given
+         * system does not satisfy.  If this constraint class does not impose
+         * any of its own additional conditions, this routine may
+         * simply return \c true.
+         *
+         * @param coords the coordinate system being queried; this must
+         * be one of the coordinate systems known to be supported by the
+         * generic NTreeTraversal infrastructure.
+         * @return \c true if and only if this coordinate system is
+         * also supported by this specific constraint class.
+         */
+        static bool supported(NormalCoords coords);
 #endif
 };
 
@@ -585,6 +629,7 @@ class BanNone : public BanConstraintBase {
         BanNone(NTriangulation* tri, int coords);
 
         void init(const int*);
+        static bool supported(NormalCoords coords);
 };
 
 /**
@@ -596,6 +641,8 @@ class BanNone : public BanConstraintBase {
  * coordinates it will only ban quadrilaterals or octagons that touch
  * the boundary, but it will still allow \e triangles that meet the boundary
  * (since triangle types are not counted in these coordinate systems).
+ * The supported() routine will only return \c true in standard normal or
+ * almost normal coordinates.
  *
  * \apinotfinal
  *
@@ -621,6 +668,7 @@ class BanBoundary : public BanConstraintBase {
         BanBoundary(NTriangulation* tri, int coords);
 
         void init(const int* columnPerm);
+        static bool supported(NormalCoords coords);
 };
 
 /**
@@ -639,7 +687,8 @@ class BanBoundary : public BanConstraintBase {
  * quadrilateral-octagon coordinates it will only ban quadrilaterals or
  * octagons that touch torus boundaries, but it will still allow \e triangles
  * that meet torus boundaries (since triangle types are not counted in these
- * coordinate systems).
+ * coordinate systems).  The supported() routine will only return \c true
+ * in standard normal or almost normal coordinates.
  *
  * \apinotfinal
  *
@@ -665,6 +714,7 @@ class BanTorusBoundary : public BanConstraintBase {
         BanTorusBoundary(NTriangulation* tri, int coords);
 
         void init(const int* columnPerm);
+        static bool supported(NormalCoords coords);
 };
 
 // Inline functions
@@ -697,6 +747,10 @@ inline void LPConstraintNone::constrain(LPData<LPConstraintNone>&,
 }
 
 inline bool LPConstraintNone::verify(const NNormalSurface*) {
+    return true;
+}
+
+inline bool LPConstraintNone::supported(NormalCoords) {
     return true;
 }
 
@@ -742,6 +796,10 @@ inline bool LPConstraintEuler::verify(const NNormalSurface* s) {
     return (s->getEulerCharacteristic() > 0);
 }
 
+inline bool LPConstraintEuler::supported(NormalCoords coords) {
+    return (coords == NS_STANDARD || coords == NS_AN_STANDARD);
+}
+
 #ifndef EXCLUDE_SNAPPEA
 inline LPConstraintNonSpun::Coefficients::Coefficients() :
         meridian(0), longitude(0) {
@@ -781,6 +839,10 @@ inline void LPConstraintNonSpun::constrain(
 inline bool LPConstraintNonSpun::verify(const NNormalSurface* s) {
     return s->isCompact();
 }
+
+inline bool LPConstraintNonSpun::supported(NormalCoords coords) {
+    return (coords == NS_QUAD);
+}
 #endif // EXCLUDE_SNAPPEA
 
 inline BanConstraintBase::~BanConstraintBase() {
@@ -802,12 +864,24 @@ inline BanNone::BanNone(NTriangulation* tri, int coords) :
 inline void BanNone::init(const int*) {
 }
 
+inline bool BanNone::supported(NormalCoords) {
+    return true;
+}
+
 inline BanBoundary::BanBoundary(NTriangulation* tri, int coords) :
         BanConstraintBase(tri, coords) {
 }
 
+inline bool BanBoundary::supported(NormalCoords coords) {
+    return (coords == NS_STANDARD || NS_AN_STANDARD);
+}
+
 inline BanTorusBoundary::BanTorusBoundary(NTriangulation* tri, int coords) :
         BanConstraintBase(tri, coords) {
+}
+
+inline bool BanTorusBoundary::supported(NormalCoords coords) {
+    return (coords == NS_STANDARD || NS_AN_STANDARD);
 }
 
 } // namespace regina
