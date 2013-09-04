@@ -249,6 +249,21 @@ class NTreeTraversal : public BanConstraint {
 
     public:
         /**
+         * Indicates whether the given coordinate system is supported by
+         * this tree traversal infrastructure.
+         *
+         * Currently this is true only for NS_STANDARD and NS_QUAD (for
+         * normal surfaces), and NS_AN_STANDARD and NS_AN_QUAD_OCT (for
+         * almost normal surfaces).  Any additional restrictions imposed
+         * by LPConstraint and BanConstraint will also be taken into account.
+         *
+         * @param coords the coordinate system being queried.
+         * @return \c true if and only if this coordinate system is
+         * supported.
+         */
+        static bool supported(NormalCoords coords);
+
+        /**
          * Indicates whether or not the extra constraints from the template
          * parameter \a LPConstraints were added successfully to the
          * infrastructure for the search tree.
@@ -937,6 +952,14 @@ class NTreeSingleSoln : public NTreeTraversal<LPConstraint, BanConstraint> {
 };
 
 // Inline functions
+
+template <typename LPConstraint, typename BanConstraint>
+inline bool NTreeTraversal<LPConstraint, BanConstraint>::supported(
+        NormalCoords coords) {
+    return (coords == NS_STANDARD || coords == NS_AN_STANDARD ||
+        coords == NS_QUAD || coords == NS_AN_QUAD_OCT) &&
+        LPConstraint::supported(coords) && BanConstraint::supported(coords);
+}
 
 template <typename LPConstraint, typename BanConstraint>
 inline bool NTreeTraversal<LPConstraint, BanConstraint>::constraintsBroken()
