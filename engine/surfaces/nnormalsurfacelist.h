@@ -1355,35 +1355,12 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * This routine only fills \a list_ with surfaces.
                  * It does not make any adjustments to the structure of
                  * the packet tree.
+                 *
+                 * This routine initialises and finalises progress
+                 * reporting if \a manager is non-null.
                  */
                 template <typename Flavour>
                 void fillVertex();
-
-                /**
-                 * The enumeration code for enumerating vertex surfaces
-                 * using the double description method.
-                 * This is internal to fillVertex().
-                 *
-                 * The \a progress argument may be null; however, if not then
-                 * when this routine begins the total steps required will be
-                 * raised by some amount, and over the course of this routine
-                 * the total steps completed will be raised by this same amount.
-                 */
-                template <typename Flavour>
-                void fillVertexDD(NProgressNumber* progress);
-
-                /**
-                 * The enumeration code for enumerating vertex surfaces
-                 * using the tree traversal method.
-                 * This is internal to fillVertex().
-                 *
-                 * The \a progress argument may be null; however, if not then
-                 * when this routine begins the total steps required will be
-                 * raised by some amount, and over the course of this routine
-                 * the total steps completed will be raised by this same amount.
-                 */
-                template <typename Flavour>
-                void fillVertexTree(NProgressNumber* progress);
 
                 /**
                  * The enumeration code for enumerating fundamental surfaces.
@@ -1396,14 +1373,56 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * This routine only fills \a list_ with surfaces.
                  * It does not make any adjustments to the structure of
                  * the packet tree.
+                 *
+                 * This routine initialises and finalises progress
+                 * reporting if \a manager is non-null.
                  */
                 template <typename Flavour>
                 void fillFundamental();
 
                 /**
+                 * The enumeration code for enumerating vertex surfaces
+                 * using the double description method.
+                 * This is internal to fillVertex().
+                 *
+                 * This routine does not initialise or finalise progress
+                 * reporting.  However, it tracks progress numerically:
+                 * if the \a progress argument is non-null then
+                 * when this routine begins the total steps required will be
+                 * raised by some amount, and over the course of this routine
+                 * the total steps completed will be raised by this same amount.
+                 *
+                 * \pre The underlying triangulation is non-empty.
+                 */
+                template <typename Flavour>
+                void fillVertexDD(NProgressNumber* progress);
+
+                /**
+                 * The enumeration code for enumerating vertex surfaces
+                 * using the tree traversal method.
+                 * This is internal to fillVertex().
+                 *
+                 * This routine does not initialise or finalise progress
+                 * reporting.  However, it tracks progress numerically:
+                 * if the \a progress argument is non-null then
+                 * when this routine begins the total steps required will be
+                 * raised by some amount, and over the course of this routine
+                 * the total steps completed will be raised by this same amount.
+                 *
+                 * \pre The underlying triangulation is non-empty.
+                 */
+                template <typename Flavour>
+                void fillVertexTree(NProgressNumber* progress);
+
+                /**
                  * The enumeration code for enumerating fundamental surfaces
                  * using the primal method.
                  * This is internal to fillFundamental().
+                 *
+                 * This routine initialises and finalises progress
+                 * reporting if \a manager is non-null.
+                 *
+                 * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Flavour>
                 void fillFundamentalPrimal();
@@ -1412,6 +1431,11 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * The enumeration code for enumerating fundamental surfaces
                  * using the dual method.
                  * This is internal to fillFundamental().
+                 *
+                 * This routine initialises and finalises progress
+                 * reporting if \a manager is non-null.
+                 *
+                 * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Flavour>
                 void fillFundamentalDual();
@@ -1420,6 +1444,11 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * The enumeration code for enumerating fundamental surfaces
                  * using a slow Contejean-Devie method.
                  * This is internal to fillFundamental().
+                 *
+                 * This routine initialises and finalises progress
+                 * reporting if \a manager is non-null.
+                 *
+                 * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Flavour>
                 void fillFundamentalCD();
@@ -1428,6 +1457,11 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * The enumeration code for enumerating fundamental surfaces
                  * using a slow full cone enumeration.
                  * This is internal to fillFundamental().
+                 *
+                 * This routine initialises and finalises progress
+                 * reporting if \a manager is non-null.
+                 *
+                 * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Flavour>
                 void fillFundamentalFullCone();

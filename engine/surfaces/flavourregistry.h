@@ -139,6 +139,10 @@ namespace regina {
  *
  * - a typedef \a Vector that represents the corresponding
  *   NNormalSurfaceVector class;
+ * - typedefs \a StandardFlavour and \a ReducedFlavour that identify
+ *   NormalFlavour templates for the corresponding coordinate systems with and
+ *   without triangles (if this is not meaningful then both typedefs should
+ *   just identify this system);
  * - enum constants \a almostNormal, \a spun and \a oriented, which indicate
  *   whether the coordinate system allows almost normal, spun and/or
  *   transversely oriented surfaces;
@@ -159,6 +163,8 @@ struct NormalFlavour;
 template <>
 struct NormalFlavour<NS_STANDARD> {
     typedef NNormalSurfaceVectorStandard Vector;
+    typedef NormalFlavour<NS_STANDARD> StandardFlavour;
+    typedef NormalFlavour<NS_QUAD> ReducedFlavour;
     inline static const char* name() {
         return "Standard normal (tri-quad)";
     }
@@ -178,6 +184,8 @@ struct NormalFlavour<NS_STANDARD> {
 template <>
 struct NormalFlavour<NS_AN_STANDARD> {
     typedef NNormalSurfaceVectorANStandard Vector;
+    typedef NormalFlavour<NS_AN_STANDARD> StandardFlavour;
+    typedef NormalFlavour<NS_AN_QUAD_OCT> ReducedFlavour;
     inline static const char* name() {
         return "Standard almost normal (tri-quad-oct)";
     }
@@ -197,6 +205,8 @@ struct NormalFlavour<NS_AN_STANDARD> {
 template <>
 struct NormalFlavour<NS_QUAD> {
     typedef NNormalSurfaceVectorQuad Vector;
+    typedef NormalFlavour<NS_STANDARD> StandardFlavour;
+    typedef NormalFlavour<NS_QUAD> ReducedFlavour;
     inline static const char* name() {
         return "Quad normal";
     }
@@ -216,6 +226,8 @@ struct NormalFlavour<NS_QUAD> {
 template <>
 struct NormalFlavour<NS_AN_QUAD_OCT> {
     typedef NNormalSurfaceVectorQuadOct Vector;
+    typedef NormalFlavour<NS_AN_STANDARD> StandardFlavour;
+    typedef NormalFlavour<NS_AN_QUAD_OCT> ReducedFlavour;
     inline static const char* name() {
         return "Quad-oct almost normal";
     }
@@ -235,6 +247,8 @@ struct NormalFlavour<NS_AN_QUAD_OCT> {
 template <>
 struct NormalFlavour<NS_ORIENTED> {
     typedef NNormalSurfaceVectorOriented Vector;
+    typedef NormalFlavour<NS_ORIENTED> StandardFlavour;
+    typedef NormalFlavour<NS_ORIENTED_QUAD> ReducedFlavour;
     inline static const char* name() {
         return "Transversely oriented standard normal";
     }
@@ -254,6 +268,8 @@ struct NormalFlavour<NS_ORIENTED> {
 template <>
 struct NormalFlavour<NS_ORIENTED_QUAD> {
     typedef NNormalSurfaceVectorOrientedQuad Vector;
+    typedef NormalFlavour<NS_ORIENTED> StandardFlavour;
+    typedef NormalFlavour<NS_ORIENTED_QUAD> ReducedFlavour;
     inline static const char* name() {
         return "Transversely oriented quad normal";
     }
