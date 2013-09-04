@@ -32,8 +32,6 @@
 
 /* end stub */
 
-// TODO: EXCLUDE_NORMALIZ
-
 #include "regina-config.h" // For EXCLUDE_NORMALIZ.
 
 #include <iterator>
@@ -52,6 +50,8 @@
 #include "surfaces/flavourregistry.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
+
+// TODO: Manage cancellation well.
 
 namespace regina {
 
@@ -105,37 +105,40 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
         NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT |
         NS_VERTEX_TREE | NS_VERTEX_DD);
 
-    // Choose between double description and tree traversal.
-    list_->algorithm_.ensureOne(NS_VERTEX_TREE, NS_VERTEX_DD);
-    // For now, tree traversal is only available for the four
-    // "first-class" coordinate systems:
-    if (! (list_->flavour_ == NS_STANDARD ||
-            list_->flavour_ == NS_AN_STANDARD ||
-            list_->flavour_ == NS_QUAD ||
-            list_->flavour_ == NS_AN_QUAD_OCT))
-        if (list_->algorithm_.has(NS_VERTEX_TREE)) {
-            // We can't use tree traversal here.  Switch.
-            list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
-        }
+    // ----- Decide which algorithm to use -----
 
+    // Choose between double description and tree traversal.
+    // Note: This line is where we make the "default" decision for the user.
+    list_->algorithm_.ensureOne(NS_VERTEX_TREE, NS_VERTEX_DD);
+
+    // Check whether tree traversal supports our coordinate system.
+    // If not, switch back to double description.
+    if (list_->algorithm_.has(NS_VERTEX_TREE) &&
+            ! NTreeTraversal<LPConstraintNone, BanNone>::supported(
+            list_->flavour_))
+        list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
+
+    // For standard normal / almost normal coordinates, choose between
+    // standard-direct vs standard-via-reduced.
     if (list_->flavour_ == NS_STANDARD || list_->flavour_ == NS_AN_STANDARD) {
-        // Here we have the option of standard-direct or via-reduced.
         list_->algorithm_.ensureOne(
             NS_VERTEX_VIA_REDUCED, NS_VERTEX_STD_DIRECT);
-        if (list_->algorithm_.has(NS_VERTEX_VIA_REDUCED)) {
-            // Ensure this is even an option.
-            if (! (list_->which_.has(NS_EMBEDDED_ONLY) &&
+
+        // If we've chosen via-reduced, check that this is actually available.
+        // If not, switch back to standard-direct.
+        if (list_->algorithm_.has(NS_VERTEX_VIA_REDUCED) &&
+                ! (list_->which_.has(NS_EMBEDDED_ONLY) &&
                     triang_->isValid() &&
-                    (! triang_->isIdeal()) &&
-                    triang_->getNumberOfTetrahedra() > 0)) {
-                // No.  Switch to standard-direct.
+                    (! triang_->isIdeal())))
                 list_->algorithm_ ^=
                     (NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT);
-            }
-        }
-    } else
-        list_->algorithm_.clear(
-            NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT);
+    } else {
+        // Standard-direct is our only option.
+        list_->algorithm_ |= NS_VERTEX_STD_DIRECT;
+        list_->algorithm_.clear(NS_VERTEX_VIA_REDUCED);
+    }
+
+    // ----- Prepare progress reporting -----
 
     NProgressNumber* progress = 0;
     if (manager_) {
@@ -143,32 +146,42 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
         manager_->setProgress(progress);
     }
 
-    if (list_->algorithm_.has(NS_VERTEX_VIA_REDUCED)) {
-        // TODO: Reduce if/else cases in this block through more templates.
+    // ----- Run the enumeration algorithm -----
+
+    if (triang_->getNumberOfTetrahedra() == 0) {
+        // Handle the empty triangulation separately.
+        list_->algorithm_ = NS_VERTEX_DD; /* shrug */
+        // Nothing to do.
+    } else if (list_->algorithm_.has(NS_VERTEX_STD_DIRECT)) {
+        // A direct enumeration in the chosen coordinate system.
+        if (list_->algorithm_.has(NS_VERTEX_TREE))
+            fillVertexTree<Flavour>(progress);
+        else
+            fillVertexDD<Flavour>(progress);
+    } else {
+        // Enumerate in the reduced coordinate system, and then convert
+        // the solution set to the standard coordinate system.
 
         // Assign a fixed number of "steps" for the final conversion to
         // standard form, which is usually very fast.
-        const unsigned PROGRESS_CONVERSION_STEPS = 1;
+        const unsigned CONVERSION_STEPS = 1;
         if (progress)
-            progress->setOutOf(progress->getOutOf() +
-                PROGRESS_CONVERSION_STEPS + 1);
+            progress->setOutOf(progress->getOutOf() + CONVERSION_STEPS + 1);
+
+        // Since there are currently only two systems in which we can do
+        // this (NS_STANDARD and NS_AN_STANDARD), we hard-code these
+        // cases in if() statements to avoid generating template code
+        // for other, unsupported coordinate systems.
 
         // Enumerate in reduced (quad / quad-oct) form.
         Enumerator e(new NNormalSurfaceList(
                 (list_->flavour_ == NS_STANDARD ? NS_QUAD : NS_AN_QUAD_OCT),
                 list_->which_, list_->algorithm_ ^ NS_VERTEX_VIA_REDUCED),
             triang_, 0);
-        if (list_->flavour_ == NS_STANDARD) {
-            if (list_->algorithm_.has(NS_VERTEX_TREE))
-                e.fillVertexTree<NormalFlavour<NS_QUAD> >(progress);
-            else
-                e.fillVertexDD<NormalFlavour<NS_QUAD> >(progress);
-        } else {
-            if (list_->algorithm_.has(NS_VERTEX_TREE))
-                e.fillVertexTree<NormalFlavour<NS_AN_QUAD_OCT> >(progress);
-            else
-                e.fillVertexDD<NormalFlavour<NS_AN_QUAD_OCT> >(progress);
-        }
+        if (list_->algorithm_.has(NS_VERTEX_TREE))
+            e.fillVertexTree<typename Flavour::ReducedFlavour>(progress);
+        else
+            e.fillVertexDD<typename Flavour::ReducedFlavour>(progress);
 
         if (progress) {
             progress->incCompleted();
@@ -187,11 +200,10 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
         // Clean up.
         delete e.list_;
         if (progress)
-            progress->incCompleted(PROGRESS_CONVERSION_STEPS);
-    } else if (list_->algorithm_.has(NS_VERTEX_TREE))
-        fillVertexTree<Flavour>(progress);
-    else
-        fillVertexDD<Flavour>(progress);
+            progress->incCompleted(CONVERSION_STEPS);
+    }
+
+    // ----- Finalise progress reporting -----
 
     if (progress) {
         progress->incCompleted();
@@ -203,9 +215,8 @@ template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillVertexDD(NProgressNumber* progress) {
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->flavour_);
 
-    NEnumConstraintList* constraints = 0;
-    if (list_->which_.has(NS_EMBEDDED_ONLY))
-        constraints = makeEmbeddedConstraints(triang_, list_->flavour_);
+    NEnumConstraintList* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
+        makeEmbeddedConstraints(triang_, list_->flavour_) : 0);
 
     NDoubleDescription::enumerateExtremalRays<typename Flavour::Vector>(
         SurfaceInserter(*list_, triang_), *eqns, constraints, progress);
@@ -216,11 +227,7 @@ void NNormalSurfaceList::Enumerator::fillVertexDD(NProgressNumber* progress) {
 
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillVertexTree(NProgressNumber* progress) {
-    // The tree traversal algorithm insists on a non-empty triangulation.
-    if (triang_->getNumberOfTetrahedra() == 0)
-        return;
-
-    // TODO: Progress reporting.
+    // TODO: Progress reporting, multithreading, cancellation.
     NTreeEnumeration<> search(triang_, list_->flavour_);
     while (search.next()) {
         list_->surfaces.push_back(search.buildSurface());
@@ -231,188 +238,168 @@ void NNormalSurfaceList::Enumerator::fillVertexTree(NProgressNumber* progress) {
 
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillFundamental() {
-    // TODO
-}
+    list_->algorithm_ &= (
+        NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT |
+        NS_VERTEX_TREE | NS_VERTEX_DD |
+        NS_HILBERT_PRIMAL | NS_HILBERT_DUAL |
+        NS_HILBERT_CD | NS_HILBERT_FULLCONE
+        );
 
-namespace {
-    struct EnumeratorBase {
-        NMatrixInt* eqns_;
-        NEnumConstraintList* constraints_;
-    };
-
-    // Template on the surface output iterator type, since the type we
-    // want to use (NNormalSurfaceList::SurfaceIterator) is protected.
-    template <typename OutputIterator>
-    struct HDualEnumerate : public EnumeratorBase {
-        OutputIterator out_;
-        NProgressNumber* progress_;
-
-        HDualEnumerate(OutputIterator out) : out_(out) {}
-
-        template <typename Flavour>
-        inline void operator() (Flavour f) {
-            NHilbertDual::enumerateHilbertBasis<typename Flavour::Vector>(
-                out_, *eqns_, constraints_, progress_);
+    // Get the empty triangulation out of the way separately.
+    if (triang_->getNumberOfTetrahedra() == 0) {
+        list_->algorithm_ = NS_HILBERT_DUAL; /* shrug */
+        if (manager_) {
+            NProgressMessage* progress = new NProgressMessage(
+                "Trivial enumeration for empty triangulation");
+            manager_->setProgress(progress);
+            progress->setFinished();
         }
-    };
+        return;
+    }
+
+    // ----- Decide upon and run an appropriate algorithm -----
+
+    // This is where we make the "default" decision for the user.
+    list_->algorithm_.ensureOne(
+        NS_HILBERT_PRIMAL, NS_HILBERT_DUAL, NS_HILBERT_FULLCONE, NS_HILBERT_CD);
+
+    // Vertex enumeration flags are only relevant for the primal method.
+    if (! list_->algorithm_.has(NS_HILBERT_PRIMAL))
+        list_->algorithm_.clear(
+            NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT |
+            NS_VERTEX_TREE | NS_VERTEX_DD);
+
+    // Run the chosen algorithm.
+    if (list_->algorithm_.has(NS_HILBERT_PRIMAL))
+        fillFundamentalPrimal<Flavour>();
+    else if (list_->algorithm_.has(NS_HILBERT_DUAL))
+        fillFundamentalDual<Flavour>();
+    else if (list_->algorithm_.has(NS_HILBERT_CD))
+        fillFundamentalCD<Flavour>();
+    else if (! list_->algorithm_.has(NS_HILBERT_FULLCONE))
+        fillFundamentalFullCone<Flavour>();
 }
 
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillFundamentalDual() {
-    // TODO
-    HDualEnumerate<SurfaceInserter> hd(SurfaceInserter(*list_, triang_));
-
+    NProgressNumber* progress = 0;
     if (manager_) {
-        hd.progress_ = new NProgressNumber(0, 1);
-        manager_->setProgress(hd.progress_);
-    } else
-        hd.progress_ = 0;
-
-    // Fetch validity constraints from the registry.
-    if (list_->which_.has(NS_EMBEDDED_ONLY))
-        hd.constraints_ = makeEmbeddedConstraints(triang_, list_->flavour_);
-    else
-        hd.constraints_ = 0;
-
-    // Form the matching equations and starting cone.
-    hd.eqns_ = makeMatchingEquations(triang_, list_->flavour_);
-
-    // Find the normal surfaces.
-    forFlavour(list_->flavour_, hd);
-
-    delete hd.eqns_;
-    delete hd.constraints_;
-
-    if (hd.progress_) {
-        hd.progress_->incCompleted();
-        hd.progress_->setFinished();
+        progress = new NProgressNumber(0, 1);
+        manager_->setProgress(progress);
     }
-}
 
-namespace {
-    // Template on the surface output iterator type, since the type we
-    // want to use (NNormalSurfaceList::SurfaceIterator) is protected.
-    template <typename OutputIterator>
-    struct HCDEnumerate : public EnumeratorBase {
-        OutputIterator out_;
+    NMatrixInt* eqns = makeMatchingEquations(triang_, list_->flavour_);
 
-        HCDEnumerate(OutputIterator out) : out_(out) {}
+    NEnumConstraintList* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
+        makeEmbeddedConstraints(triang_, list_->flavour_) : 0);
 
-        template <typename Flavour>
-        inline void operator() (Flavour f) {
-            NHilbertCD::enumerateHilbertBasis<typename Flavour::Vector>(
-                out_, *eqns_, constraints_);
-        }
-    };
+    NHilbertDual::enumerateHilbertBasis<typename Flavour::Vector>(
+        SurfaceInserter(*list_, triang_), *eqns, constraints, progress);
+
+    delete constraints;
+    delete eqns;
+
+    if (progress) {
+        progress->incCompleted();
+        progress->setFinished();
+    }
 }
 
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillFundamentalCD() {
-    // TODO
-    HCDEnumerate<SurfaceInserter> hcd(SurfaceInserter(*list_, triang_));
+    NProgressMessage* progress = 0;
+    if (manager_) {
+        progress = new NProgressMessage("Initialising enumeration");
+        manager_->setProgress(progress);
+    }
 
-    hcd.eqns_ = makeMatchingEquations(triang_, list_->flavour_);
-    if (list_->which_.has(NS_EMBEDDED_ONLY))
-        hcd.constraints_ = makeEmbeddedConstraints(triang_, list_->flavour_);
-    else
-        hcd.constraints_ = 0;
+    NMatrixInt* eqns = makeMatchingEquations(triang_, list_->flavour_);
 
-    forFlavour(list_->flavour_, hcd);
+    NEnumConstraintList* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
+        makeEmbeddedConstraints(triang_, list_->flavour_) : 0);
 
-    delete hcd.constraints_;
-    delete hcd.eqns_;
+    NHilbertCD::enumerateHilbertBasis<typename Flavour::Vector>(
+        SurfaceInserter(*list_, triang_), *eqns, constraints, progress);
+
+    delete constraints;
+    delete eqns;
+
+    if (progress) {
+        progress->setMessage("Finished enumeration");
+        progress->setFinished();
+    }
 }
 
 #ifdef EXCLUDE_NORMALIZ
 
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
-    // We are not compiling in normaliz.
+    // This build of Regina does not include normaliz.
     // Fall back to some other option.
-    // TODO: Fix algorithm flags.
+    list_->algorithm_ = NS_HILBERT_DUAL; // Clears all other options.
     fillFundamentalDual<Flavour>();
 }
 
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
-    // We are not compiling in normaliz.
+    // This build of Regina does not include normaliz.
     // Fall back to some other option.
-    // TODO: Fix algorithm flags.
+    list_->algorithm_ = NS_HILBERT_DUAL; // Clears all other options.
     fillFundamentalDual<Flavour>();
 }
 
 #else
 
-namespace {
-    // Template on the surface output iterator type, since the type we
-    // want to use (NNormalSurfaceList::SurfaceIterator) is protected.
-    template <typename OutputIterator>
-    struct HPrimalEnumerate : public EnumeratorBase {
-        OutputIterator out_;
-        NNormalSurfaceList* vtx_;
-        NProgressMessage* progress_;
-
-        HPrimalEnumerate(OutputIterator out) : out_(out) {}
-
-        template <typename Flavour>
-        inline void operator() (Flavour f) {
-            NHilbertPrimal::enumerateHilbertBasis<typename Flavour::Vector>(
-                out_, vtx_->beginVectors(), vtx_->endVectors(),
-                constraints_, progress_);
-        }
-    };
-}
-
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
-    // TODO
-    HPrimalEnumerate<SurfaceInserter> hp(SurfaceInserter(*list_, triang_));
-
+    NProgressMessage* progress = 0;
     if (manager_) {
-        hp.progress_ = new NProgressMessage("Initialising enumeration");
-        manager_->setProgress(hp.progress_);
-    } else
-        hp.progress_ = 0;
-
-    // Fetch validity constraints from the registry.
-    if (list_->which_.has(NS_EMBEDDED_ONLY))
-        hp.constraints_ = makeEmbeddedConstraints(triang_, list_->flavour_);
-    else
-        hp.constraints_ = 0;
-
-    hp.vtx_ = 0;
-    {
-        // Enumerate all vertex normal surfaces using the default (and
-        // hopefully best possible) algorithm.
-        if (hp.progress_)
-            hp.progress_->setMessage("Enumerating extremal rays");
-
-        hp.vtx_ = new NNormalSurfaceList(list_->flavour_,
-            NS_VERTEX | (list_->which_.has(NS_EMBEDDED_ONLY) ?
-                NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
-            NS_ALG_DEFAULT);
-        Enumerator e(hp.vtx_, triang_, 0); // TODO: Straight to operator().
-        e.run(0);
+        progress = new NProgressMessage("Initialising enumeration");
+        manager_->setProgress(progress);
     }
 
-    if (hp.progress_)
-        hp.progress_->setMessage("Enumerating Hilbert basis");
+    // Fetch validity constraints from the registry.
+    NEnumConstraintList* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
+        makeEmbeddedConstraints(triang_, list_->flavour_) : 0);
 
-    // Find all fundamental normal surfaces.
-    forFlavour(list_->flavour_, hp);
+    // Enumerate all vertex normal surfaces.
+    if (progress)
+        progress->setMessage("Enumerating extremal rays");
 
-    delete hp.constraints_;
-    delete hp.vtx_;
+    NNormalSurfaceList* vtx = new NNormalSurfaceList(list_->flavour_,
+        NS_VERTEX | (list_->which_.has(NS_EMBEDDED_ONLY) ?
+            NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+        list_->algorithm_ /* passes through any vertex enumeration flags */);
+    {
+        Enumerator e(vtx, triang_, 0 /* Don't set another progress manager */);
+        e.fillVertex<Flavour>();
+    }
 
-    if (hp.progress_) {
-        hp.progress_->setMessage("Finished enumeration");
-        hp.progress_->setFinished();
+    // Expand this list to a full Hilbert basis.
+    if (progress)
+        progress->setMessage("Expanding to Hilbert basis");
+
+    NHilbertPrimal::enumerateHilbertBasis<typename Flavour::Vector>(
+        SurfaceInserter(*list_, triang_),
+        vtx->beginVectors(), vtx->endVectors(), constraints, progress);
+
+    delete vtx;
+    delete constraints;
+
+    if (progress) {
+        progress->setMessage("Finished enumeration");
+        progress->setFinished();
     }
 }
 
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
-    // TODO
+    NProgressMessage* progress = 0;
+    if (manager_) {
+        progress = new NProgressMessage("Initialising enumeration");
+        manager_->setProgress(progress);
+    }
+
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->flavour_);
 
     unsigned rank = rowBasis(*eqns);
@@ -438,62 +425,83 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
         input /* equalities */, std::list<std::vector<mpz_class> >());
     libnormaliz::ConeProperties wanted(
         libnormaliz::ConeProperty::HilbertBasis);
+
+    if (progress)
+        progress->setMessage("Enumerating Hilbert basis for full cone");
+
     cone.compute(wanted);
 
     if (! cone.isComputed(libnormaliz::ConeProperty::HilbertBasis)) {
-        // TODO: Bail properly.
-        return;
-    }
+        // Something has gone wrong inside Normaliz.
+        // Return an empty list.
+    } else {
+        if (progress) {
+            if (list_->which_.has(NS_EMBEDDED_ONLY))
+                progress->setMessage("Extracting admissible solutions");
+            else
+                progress->setMessage("Extracting all solutions");
+        }
 
-    // Fetch validity constraints from the registry.
-    NEnumConstraintList* constraints = 0;
-    if (list_->which_.has(NS_EMBEDDED_ONLY))
-        constraints = makeEmbeddedConstraints(triang_, list_->flavour_);
+        // Fetch validity constraints from the registry.
+        NEnumConstraintList* constraints =
+            (list_->which_.has(NS_EMBEDDED_ONLY) ?
+            makeEmbeddedConstraints(triang_, list_->flavour_) : 0);
 
-    bool broken;
-    int nonZero;
-    int i;
-    std::list<std::vector<mpz_class> >::const_iterator hlit;
-    NEnumConstraintList::const_iterator eit;
-    std::set<unsigned long>::const_iterator sit;
-    NNormalSurfaceVector* v;
-    NLargeInteger tmpInt;
-    NewNormalSurfaceVector newVec(dim);
-    for (hlit = cone.getHilbertBasis().begin();
-            hlit != cone.getHilbertBasis().end(); ++hlit) {
-        broken = false;
-        if (constraints) {
-            for (eit = constraints->begin(); eit != constraints->end(); ++eit) {
-                nonZero = 0;
-                for (sit = eit->begin(); sit != eit->end(); ++sit) {
-                    if ((*hlit)[*sit] != 0) {
-                        if (++nonZero > 1)
-                            break;
+        bool broken;
+        int nonZero;
+        int i;
+        std::list<std::vector<mpz_class> >::const_iterator hlit;
+        NEnumConstraintList::const_iterator eit;
+        std::set<unsigned long>::const_iterator sit;
+        NNormalSurfaceVector* v;
+        NLargeInteger tmpInt;
+        NewNormalSurfaceVector newVec(dim);
+        for (hlit = cone.getHilbertBasis().begin();
+                hlit != cone.getHilbertBasis().end(); ++hlit) {
+            broken = false;
+            if (constraints) {
+                for (eit = constraints->begin(); eit != constraints->end();
+                        ++eit) {
+                    nonZero = 0;
+                    for (sit = eit->begin(); sit != eit->end(); ++sit) {
+                        if ((*hlit)[*sit] != 0) {
+                            if (++nonZero > 1)
+                                break;
+                        }
+                    }
+                    if (nonZero > 1) {
+                        broken = true;
+                        break;
                     }
                 }
-                if (nonZero > 1) {
-                    broken = true;
+            }
+            if (! broken) {
+                // Insert a new surface.
+                v = forFlavour(list_->flavour_, newVec, 0);
+                if (! v) {
+                    // Coordinate system not recognised.
+                    // Return an empty list to indicate that something broke.
+                    list_->surfaces.clear();
                     break;
                 }
+                for (i = 0; i < dim; ++i) {
+                    // Inefficiency: We make two copies of the GMP integer
+                    // here instead of one, since NVector/NRay does not give
+                    // us direct non-const access to its elements.
+                    tmpInt.setRaw((*hlit)[i].get_mpz_t());
+                    tmpInt.tryReduce();
+                    v->setElement(i, tmpInt);
+                }
+                list_->surfaces.push_back(new NNormalSurface(triang_, v));
             }
         }
-        if (! broken) {
-            // Insert a new surface.
-            v = forFlavour(list_->flavour_, newVec, 0);
-            if (! v) {
-                // Coordinate system not recognised.
-                // TODO: Bail properly.
-                return;
-            }
-            for (i = 0; i < dim; ++i) {
-                // We make two copies of the GMP integer instead of one,
-                // since NVector/NRay does not give us direct non-const
-                // access to its elements.
-                tmpInt.setRaw((*hlit)[i].get_mpz_t());
-                v->setElement(i, tmpInt);
-            }
-            list_->surfaces.push_back(new NNormalSurface(triang_, v));
-        }
+
+        delete constraints;
+    }
+
+    if (progress) {
+        progress->setMessage("Finished enumeration");
+        progress->setFinished();
     }
 }
 

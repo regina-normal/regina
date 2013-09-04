@@ -311,7 +311,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
     // Prepare a final surface list.
     NNormalSurfaceList* ans = new NNormalSurfaceList(
         Variant::standardFlavour(), NS_EMBEDDED_ONLY | NS_VERTEX,
-        NS_VERTEX_VIA_REDUCED);
+        algorithm_ | NS_VERTEX_VIA_REDUCED);
 
     if (owner->getNumberOfTetrahedra() > 0) {
         // Run our internal conversion routine.

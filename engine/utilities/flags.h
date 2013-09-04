@@ -400,6 +400,63 @@ class Flags {
                 value_ ^= other;
         }
 
+        /**
+         * Adjust this set so that exactly one and only one of the three
+         * given flags are included.
+         *
+         * If neither flag is present, then \a default_ will be used.
+         * If multiple flags are present, then the flag that appears
+         * \e earlier in the argument list for this routine will be used.
+         *
+         * \pre Each of the given flags is single-bit.
+         *
+         * \ifacespython Not present, even for flag types that are
+         * exposed to Python.
+         *
+         * @param default_ the highest-priority flag.
+         * @param second the second-highest-priority flag.
+         * @param last the lowest-priority flag.
+         */
+        inline void ensureOne(T default_, T second, T last) {
+            // Cast to int, because (T | T) is overloaded to return Flags<T>.
+            if (! (value_ & (static_cast<int>(default_) | second | last)))
+                value_ = default_;
+            else if (value_ & default_)
+                clear(second | last);
+            else if (value_ & second)
+                clear(last);
+        }
+
+        /**
+         * Adjust this set so that exactly one and only one of the four
+         * given flags are included.
+         *
+         * If neither flag is present, then \a default_ will be used.
+         * If multiple flags are present, then the flag that appears
+         * \e earlier in the argument list for this routine will be used.
+         *
+         * \pre Each of the given flags is single-bit.
+         *
+         * \ifacespython Not present, even for flag types that are
+         * exposed to Python.
+         *
+         * @param default_ the highest-priority flag.
+         * @param second the second-highest-priority flag.
+         * @param third the third-highest-priority flag.
+         * @param last the lowest-priority flag.
+         */
+        inline void ensureOne(T default_, T second, T third, T last) {
+            // Cast to int, because (T | T) is overloaded to return Flags<T>.
+            if (! (value_ & (static_cast<int>(default_) | second | third | last)))
+                value_ = default_;
+            else if (value_ & default_)
+                clear(second | third | last);
+            else if (value_ & second)
+                clear(third | last);
+            else if (value_ & third)
+                clear(last);
+        }
+
     private:
         /**
          * Constructs a new flag set with the given internal value.
