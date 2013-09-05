@@ -116,6 +116,7 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
 
     // Check whether tree traversal supports our coordinate system.
     // If not, switch back to double description.
+    // The integer template argument is unimportant here; we just use NInteger.
     if (list_->algorithm_.has(NS_VERTEX_TREE) &&
             ! NTreeTraversal<LPConstraintNone, BanNone, NInteger>::supported(
             list_->flavour_))
@@ -230,7 +231,8 @@ void NNormalSurfaceList::Enumerator::fillVertexDD(NProgressNumber* progress) {
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillVertexTree(NProgressNumber* progress) {
     // TODO: Progress reporting, multithreading, cancellation.
-    NTreeEnumeration<> search(triang_, list_->flavour_);
+    NTreeEnumeration<LPConstraintNone, BanNone, NInteger> search(
+        triang_, list_->flavour_);
     while (search.next()) {
         list_->surfaces.push_back(search.buildSurface());
         if (progress && progress->isCancelled())
