@@ -51,8 +51,10 @@ void NRay::scaleDown() {
     if (gcd == zero)
         return;
     for (e = elements; e < end; ++e)
-        if ((! e->isInfinite()) && (*e) != zero)
+        if ((! e->isInfinite()) && (*e) != zero) {
             e->divByExact(gcd);
+            e->tryReduce();
+        }
 }
 
 } // namespace regina
