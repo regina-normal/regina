@@ -394,6 +394,10 @@ class LPMatrix {
  * (NS_QUAD) or standard normal coordinates (NS_STANDARD).
  * No other coordinate systems are supported.
  *
+ * All tableaux elements are of the integer class \a Integer, which is
+ * supplied as a template argument.  This same integer class will be
+ * used as a template argument for \a LPConstraint.
+ *
  * \warning The implementation of this class relies on the fact that the
  * sum of <i>absolute values</i> of all coefficients in each column is
  * at most four (not counting the rows for any optional extra constraints).
@@ -822,6 +826,10 @@ class LPInitialTableaux {
  * This class has been optimised to ensure that you only have one
  * octagon type declared at any given time (which is consistent with the
  * constraints of almost normal surface theory).
+ *
+ * All tableaux elements are of the integer class \a Integer, which is
+ * supplied as a template argument.  This same integer class will be
+ * used as a template argument for \a LPConstraint.
  *
  * \pre The template parameter LPConstraint must be one of the subclasses of
  * LPConstraintBase.  See the LPConstraintBase class notes for further details.

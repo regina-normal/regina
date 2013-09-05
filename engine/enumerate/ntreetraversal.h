@@ -132,6 +132,12 @@ class NTriangulation;
  * in your setting, you should call constraintsBroken() to test for this
  * once the NTreeTraversal object has been constructed.
  *
+ * The template argument \a Integer indicates the integer type that
+ * will be used throughout the underlying linear programming machinery.
+ * Unless you have a good reason to do otherwise, you should use the
+ * arbitrary-precision NInteger class (in which integers can grow
+ * arbitrarily large, and overflow can never occur).
+ *
  * \pre The parameters LPConstraint and BanConstraint must be subclasses of
  * LPConstraintBase and BanConstraintBase respectively.  See the
  * LPConstraintBase and BanConstraintBase class notes for further details.
@@ -544,6 +550,12 @@ class NTreeTraversal : public BanConstraint {
  * See the LPConstraintBase and BanConstraintBase class notes for
  * details.
  *
+ * The template argument \a Integer indicates the integer type that
+ * will be used throughout the underlying linear programming machinery.
+ * Unless you have a good reason to do otherwise, you should use the
+ * arbitrary-precision NInteger class (in which integers can grow
+ * arbitrarily large, and overflow can never occur).
+ *
  * \pre The parameters LPConstraint and BanConstraint must be subclasses of
  * LPConstraintSubspace and BanConstraintBase respectively.  Note in
  * particular that the base class LPConstraintBase is not enough here.
@@ -847,6 +859,12 @@ class NTreeEnumeration :
  * normal surfaces, we allow any number of octagons (including zero),
  * but we only allow at most one octagon \e type in the entire triangulation.
  * No coordinate systems other than these are supported.
+ *
+ * The template argument \a Integer indicates the integer type that
+ * will be used throughout the underlying linear programming machinery.
+ * Unless you have a good reason to do otherwise, you should use the
+ * arbitrary-precision NInteger class (in which integers can grow
+ * arbitrarily large, and overflow can never occur).
  *
  * \warning Typically one should only use this class with \e one-vertex
  * triangulations (since otherwise, setting at least one triangle coordinate

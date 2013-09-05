@@ -80,6 +80,11 @@ class LPData;
  * provide any implementations at all, and subclasses are completely
  * responsible for their own implementations.
  *
+ * The \a Integer template argument indicates how integer arithmetic
+ * will be performed, and must match the integer types used in the
+ * corresponding linear programming classes (such as LPMatrix,
+ * LPInitialTableaux and LPData).
+ *
  * \apinotfinal
  *
  * \ifacespython Not present.
