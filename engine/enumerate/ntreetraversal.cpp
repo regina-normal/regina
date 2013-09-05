@@ -37,10 +37,14 @@
 namespace regina {
 
 // Instantiate templates:
-template class NTreeTraversal<LPConstraintNone, BanNone>;
-template class NTreeEnumeration<LPConstraintNone, BanNone>;
+template class NTreeTraversal<LPConstraintNone, BanNone, NInteger>;
+template class NTreeTraversal<LPConstraintNone, BanNone, NNativeLong>;
+template class NTreeEnumeration<LPConstraintNone, BanNone, NInteger>;
+template class NTreeEnumeration<LPConstraintNone, BanNone, NNativeLong>;
 
-template class NTreeTraversal<LPConstraintEuler, BanNone>;
-template class NTreeSingleSoln<LPConstraintEuler, BanNone>;
+template class NTreeTraversal<LPConstraintEuler, BanNone, NInteger>;
+template class NTreeTraversal<LPConstraintEuler, BanNone, NNativeLong>;
+template class NTreeSingleSoln<LPConstraintEuler, BanNone, NInteger>;
+template class NTreeSingleSoln<LPConstraintEuler, BanNone, NNativeLong>;
 
 } // namespace regina

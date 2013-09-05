@@ -117,7 +117,7 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
     // Check whether tree traversal supports our coordinate system.
     // If not, switch back to double description.
     if (list_->algorithm_.has(NS_VERTEX_TREE) &&
-            ! NTreeTraversal<LPConstraintNone, BanNone>::supported(
+            ! NTreeTraversal<LPConstraintNone, BanNone, NInteger>::supported(
             list_->flavour_))
         list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
 
