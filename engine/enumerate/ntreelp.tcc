@@ -414,7 +414,7 @@ void LPData<LPConstraint>::constrainZero(unsigned pos) {
     if (basisRow_[pos] >= 0) {
         int r = basisRow_[pos];
         int c;
-        if (rhs_[r] == 0) {
+        if (rhs_[r].isZero()) {
             // We can pivot in any other variable that appears in
             // this basis row.  Choose the one with largest index.
             for (c = origTableaux_->columns() - 1; c >= 0; --c)
