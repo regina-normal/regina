@@ -728,12 +728,12 @@ inline void LPConstraintNone::Coefficients::fillFinalRows(
 
 inline NInteger LPConstraintNone::Coefficients::innerProduct(
         const LPMatrix&, unsigned) const {
-    return NInteger(); // Returns zero.
+    return 0;
 }
 
 inline NInteger LPConstraintNone::Coefficients::innerProductOct(
         const LPMatrix&, unsigned) const {
-    return NInteger(); // Returns zero.
+    return 0;
 }
 
 inline bool LPConstraintNone::addRows(
