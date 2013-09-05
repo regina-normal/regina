@@ -123,17 +123,38 @@ QWidget* NSurfaceHeaderUI::getInterface() {
 }
 
 void NSurfaceHeaderUI::refresh() {
-    QString embType = (surfaces->isEmbeddedOnly() ? header->tr("embedded") :
-        header->tr("embedded / immersed / singular"));
+    regina::NormalList which = surfaces->which();
+
+    QString sEmb, sType;
+    if (which.has(regina::NS_EMBEDDED_ONLY))
+        sEmb = header->tr("embedded");
+    else if (which.has(regina::NS_IMMERSED_SINGULAR))
+        sEmb = header->tr("embedded / immersed / singular");
+    else
+        sEmb = header->tr("unknown");
+    if (which.has(regina::NS_VERTEX))
+        sType = header->tr("vertex");
+    else if (which.has(regina::NS_FUNDAMENTAL))
+        sType = header->tr("fundamental");
+    else if (which.has(regina::NS_CUSTOM))
+        sType = header->tr("custom");
+    else if (which.has(regina::NS_LEGACY))
+        sType = header->tr("legacy");
+    else
+        sType = header->tr("unknown");
+
+    // Diagnostics:
+    // regina::NormalAlg alg = surfaces->algorithm();
+    // sType.append(QString(" [%1]").arg(alg.intValue()));
 
     QString count;
     if (surfaces->getNumberOfSurfaces() == 0)
-        count = header->tr("No %1 normal surfaces").arg(embType);
+        count = header->tr("No %1, %2 surfaces").arg(sType).arg(sEmb);
     else if (surfaces->getNumberOfSurfaces() == 1)
-        count = header->tr("1 %1 normal surface").arg(embType);
+        count = header->tr("1 %1, %2 surface").arg(sType).arg(sEmb);
     else
-        count = header->tr("%1 %2 normal surfaces").arg(
-            surfaces->getNumberOfSurfaces()).arg(embType);
+        count = header->tr("%1 %2, %3 surfaces").arg(
+            surfaces->getNumberOfSurfaces()).arg(sType).arg(sEmb);
 
     header->setText(header->tr(
         "<qt>%1<br>Enumerated in %2 coordinates<br>"

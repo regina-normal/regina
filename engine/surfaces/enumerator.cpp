@@ -101,11 +101,14 @@ void NNormalSurfaceList::Enumerator::operator() (Flavour) {
 
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillVertex() {
+    // ----- Decide which algorithm to use -----
+
+    // Here we will set the algorithm_ flag to precisely what we plan to do.
+
+    // First clear out all irrelevant options.
     list_->algorithm_ &= (
         NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT |
         NS_VERTEX_TREE | NS_VERTEX_DD);
-
-    // ----- Decide which algorithm to use -----
 
     // Choose between double description and tree traversal.
     // Note: This line is where we make the "default" decision for the user.
@@ -133,9 +136,8 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
                 list_->algorithm_ ^=
                     (NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT);
     } else {
-        // Standard-direct is our only option.
-        list_->algorithm_ |= NS_VERTEX_STD_DIRECT;
-        list_->algorithm_.clear(NS_VERTEX_VIA_REDUCED);
+        // Standard-direct vs standard-via-reduced is not relevant here.
+        list_->algorithm_.clear(NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT);
     }
 
     // ----- Prepare progress reporting -----
@@ -152,7 +154,7 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
         // Handle the empty triangulation separately.
         list_->algorithm_ = NS_VERTEX_DD; /* shrug */
         // Nothing to do.
-    } else if (list_->algorithm_.has(NS_VERTEX_STD_DIRECT)) {
+    } else if (! list_->algorithm_.has(NS_VERTEX_VIA_REDUCED)) {
         // A direct enumeration in the chosen coordinate system.
         if (list_->algorithm_.has(NS_VERTEX_TREE))
             fillVertexTree<Flavour>(progress);
@@ -238,13 +240,6 @@ void NNormalSurfaceList::Enumerator::fillVertexTree(NProgressNumber* progress) {
 
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillFundamental() {
-    list_->algorithm_ &= (
-        NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT |
-        NS_VERTEX_TREE | NS_VERTEX_DD |
-        NS_HILBERT_PRIMAL | NS_HILBERT_DUAL |
-        NS_HILBERT_CD | NS_HILBERT_FULLCONE
-        );
-
     // Get the empty triangulation out of the way separately.
     if (triang_->getNumberOfTetrahedra() == 0) {
         list_->algorithm_ = NS_HILBERT_DUAL; /* shrug */
@@ -263,12 +258,6 @@ void NNormalSurfaceList::Enumerator::fillFundamental() {
     list_->algorithm_.ensureOne(
         NS_HILBERT_PRIMAL, NS_HILBERT_DUAL, NS_HILBERT_FULLCONE, NS_HILBERT_CD);
 
-    // Vertex enumeration flags are only relevant for the primal method.
-    if (! list_->algorithm_.has(NS_HILBERT_PRIMAL))
-        list_->algorithm_.clear(
-            NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT |
-            NS_VERTEX_TREE | NS_VERTEX_DD);
-
     // Run the chosen algorithm.
     if (list_->algorithm_.has(NS_HILBERT_PRIMAL))
         fillFundamentalPrimal<Flavour>();
@@ -282,6 +271,8 @@ void NNormalSurfaceList::Enumerator::fillFundamental() {
 
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillFundamentalDual() {
+    list_->algorithm_ = NS_HILBERT_DUAL;
+
     NProgressNumber* progress = 0;
     if (manager_) {
         progress = new NProgressNumber(0, 1);
@@ -307,6 +298,8 @@ void NNormalSurfaceList::Enumerator::fillFundamentalDual() {
 
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillFundamentalCD() {
+    list_->algorithm_ = NS_HILBERT_CD;
+
     NProgressMessage* progress = 0;
     if (manager_) {
         progress = new NProgressMessage("Initialising enumeration");
@@ -336,7 +329,6 @@ template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
     // This build of Regina does not include normaliz.
     // Fall back to some other option.
-    list_->algorithm_ = NS_HILBERT_DUAL; // Clears all other options.
     fillFundamentalDual<Flavour>();
 }
 
@@ -344,7 +336,6 @@ template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
     // This build of Regina does not include normaliz.
     // Fall back to some other option.
-    list_->algorithm_ = NS_HILBERT_DUAL; // Clears all other options.
     fillFundamentalDual<Flavour>();
 }
 
@@ -352,6 +343,10 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
 
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
+    // We will not set algorithm_ until after the extremal ray
+    // enumeration has finished (since we might want pass additional flags
+    // to and/or from that routine).
+
     NProgressMessage* progress = 0;
     if (manager_) {
         progress = new NProgressMessage("Initialising enumeration");
@@ -370,10 +365,12 @@ void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
         NS_VERTEX | (list_->which_.has(NS_EMBEDDED_ONLY) ?
             NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
         list_->algorithm_ /* passes through any vertex enumeration flags */);
-    {
-        Enumerator e(vtx, triang_, 0 /* Don't set another progress manager */);
-        e.fillVertex<Flavour>();
-    }
+    Enumerator e(vtx, triang_, 0 /* Don't set another progress manager */);
+    e.fillVertex<Flavour>();
+
+    // Finalise the algorithm flags for this list: combine NS_HILBERT_PRIMAL
+    // with whatever vertex enumeration flags were used.
+    list_->algorithm_ = e.list_->algorithm_ | NS_HILBERT_PRIMAL;
 
     // Expand this list to a full Hilbert basis.
     if (progress)
@@ -394,6 +391,8 @@ void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
 
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
+    list_->algorithm_ = NS_HILBERT_FULLCONE;
+
     NProgressMessage* progress = 0;
     if (manager_) {
         progress = new NProgressMessage("Initialising enumeration");

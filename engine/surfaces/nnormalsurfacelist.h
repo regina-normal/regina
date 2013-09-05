@@ -1348,9 +1348,10 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * The enumeration code for enumerating vertex surfaces.
                  * This is internal to operator().
                  *
-                 * We assume that the flag set list_->which_ has been
-                 * cleaned up (and includes NS_VERTEX).  We make no
-                 * assumptions about the state of list_->algorithm_.
+                 * We assume that the flag set which_ is set correctly,
+                 * and we do not alter it here.
+                 * We make no assumptions about the state of algorithm_,
+                 * and we set this during the course of this routine.
                  *
                  * This routine only fills \a list_ with surfaces.
                  * It does not make any adjustments to the structure of
@@ -1366,9 +1367,10 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * The enumeration code for enumerating fundamental surfaces.
                  * This is internal to operator().
                  *
-                 * We assume that the flag set list_->which_ has been
-                 * cleaned up (and includes NS_FUNDAMENTAL).  We make no
-                 * assumptions about the state of list_->algorithm_.
+                 * We assume that the flag set which_ is set correctly,
+                 * and we do not alter it here.
+                 * We make no assumptions about the state of algorithm_,
+                 * and we set this during the course of this routine.
                  *
                  * This routine only fills \a list_ with surfaces.
                  * It does not make any adjustments to the structure of
@@ -1384,6 +1386,9 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * The enumeration code for enumerating vertex surfaces
                  * using the double description method.
                  * This is internal to fillVertex().
+                 *
+                 * This routine assumes that \a algorithm_ has been set
+                 * correctly, and does not alter it.
                  *
                  * This routine does not initialise or finalise progress
                  * reporting.  However, it tracks progress numerically:
@@ -1402,6 +1407,9 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * using the tree traversal method.
                  * This is internal to fillVertex().
                  *
+                 * This routine assumes that \a algorithm_ has been set
+                 * correctly, and does not alter it.
+                 *
                  * This routine does not initialise or finalise progress
                  * reporting.  However, it tracks progress numerically:
                  * if the \a progress argument is non-null then
@@ -1419,6 +1427,9 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * using the primal method.
                  * This is internal to fillFundamental().
                  *
+                 * This routine assumes nothing about the state of the
+                 * \a algorithm_ flag set, and sets it appropriately.
+                 *
                  * This routine initialises and finalises progress
                  * reporting if \a manager is non-null.
                  *
@@ -1431,6 +1442,9 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * The enumeration code for enumerating fundamental surfaces
                  * using the dual method.
                  * This is internal to fillFundamental().
+                 *
+                 * This routine assumes nothing about the state of the
+                 * \a algorithm_ flag set, and sets it appropriately.
                  *
                  * This routine initialises and finalises progress
                  * reporting if \a manager is non-null.
@@ -1445,6 +1459,9 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * using a slow Contejean-Devie method.
                  * This is internal to fillFundamental().
                  *
+                 * This routine assumes nothing about the state of the
+                 * \a algorithm_ flag set, and sets it appropriately.
+                 *
                  * This routine initialises and finalises progress
                  * reporting if \a manager is non-null.
                  *
@@ -1457,6 +1474,9 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * The enumeration code for enumerating fundamental surfaces
                  * using a slow full cone enumeration.
                  * This is internal to fillFundamental().
+                 *
+                 * This routine assumes nothing about the state of the
+                 * \a algorithm_ flag set, and sets it appropriately.
                  *
                  * This routine initialises and finalises progress
                  * reporting if \a manager is non-null.
