@@ -38,7 +38,7 @@
 #endif
 
 /*! \file maths/ninteger.h
- *  \brief Deals with arbitrary precision integers.
+ *  \brief Provides arbitrary-precision and fixed-precision integer types.
  */
 
 #include <climits>
@@ -1472,6 +1472,645 @@ inline long explicit_cast_to_long<regina::NIntegerBase<false> >(
 
 namespace regina {
 
+/**
+ * A wrapper class for a native, fixed-precision integer type \a T.
+ *
+ * This class behaves just like native integer arithmetic in type \a T.
+ * There is no overflow testing, and it is up to the user to ensure that
+ * overflows do not occur.  On the other hand, this class is almost as
+ * fast as native integer arithmetic in type \a T (i.e., there is very
+ * little overhead).
+ *
+ * The reason for using this class, instead of working directly in type
+ * \a T, is that this class offers an interface that is compatible with
+ * NInteger.  Only some of the NInteger member functions are offered here;
+ * however, those that are offered behave just like their NInteger
+ * counterparts (with the single exception that all arithmetic in
+ * NNativeInteger is subject to overflow).  Developers can therefore
+ * switch between integer types easily with minimal changes to
+ * their code, or support both NInteger and NNativeInteger types as
+ * template arguments.
+ *
+ * \pre The template argument \a T must be a signed native integer type,
+ * with at least as many bits as \c long.  Essentially, this implies that \a T
+ * is restricted to either \c long, or <tt>long long</tt>.
+ *
+ * \ifacespython Not present.
+ */
+template <typename T>
+class NNativeInteger {
+    private:
+        T data_;
+            /**< The value of this integer. */
+
+    public:
+        /**
+         * Initialises this integer to zero.
+         */
+        NNativeInteger();
+        /**
+         * Initialises this integer to the given value.
+         *
+         * @param value the new value of this integer.
+         */
+        NNativeInteger(T value);
+        /**
+         * Initialises this integer to the given value.
+         *
+         * @param value the new value of this integer.
+         */
+        NNativeInteger(const NNativeInteger<T>& value);
+
+        /**
+         * Returns whether or not this integer is zero.
+         *
+         * @return \c true if and only if this integer is zero.
+         */
+        bool isZero() const;
+
+        /**
+         * Returns the sign of this integer.
+         *
+         * @return +1, -1 or 0 according to whether this integer is
+         * positive, negative or zero.
+         */
+        int sign() const;
+        /**
+         * Returns the value of this integer in its native type.
+         *
+         * @return the value of this integer.
+         */
+        T nativeValue() const;
+
+        /**
+         * Sets this integer to the given value.
+         *
+         * @param value the new value of this integer.
+         * @return a reference to this integer with its new value.
+         */
+        NNativeInteger& operator =(const NNativeInteger& value);
+        /**
+         * Sets this integer to the given value.
+         *
+         * @param value the new value of this integer.
+         * @return a reference to this integer with its new value.
+         */
+        NNativeInteger& operator =(T value);
+        /**
+         * Swaps the values of this and the given integer.
+         *
+         * @param other the integer whose value will be swapped with
+         * this.
+         */
+        void swap(NNativeInteger& other);
+
+        /**
+         * Determines if this is equal to the given integer.
+         *
+         * @param rhs the integer with which this will be compared.
+         * @return \c true if and only if this and the given integer are
+         * equal.
+         */
+        bool operator ==(const NNativeInteger& rhs) const;
+        /**
+         * Determines if this is equal to the given integer.
+         *
+         * @param rhs the integer with which this will be compared.
+         * @return \c true if and only if this and the given integer are
+         * equal.
+         */
+        bool operator ==(T rhs) const;
+        /**
+         * Determines if this is not equal to the given integer.
+         *
+         * @param rhs the integer with which this will be compared.
+         * @return \c true if and only if this and the given integer are
+         * not equal.
+         */
+        bool operator !=(const NNativeInteger& rhs) const;
+        /**
+         * Determines if this is not equal to the given integer.
+         *
+         * @param rhs the integer with which this will be compared.
+         * @return \c true if and only if this and the given integer are
+         * not equal.
+         */
+        bool operator !=(T rhs) const;
+        /**
+         * Determines if this is less than the given integer.
+         *
+         * @param rhs the integer with which this will be compared.
+         * @return \c true if and only if this is less than the given
+         * integer.
+         */
+        bool operator <(const NNativeInteger& rhs) const;
+        /**
+         * Determines if this is less than the given integer.
+         *
+         * @param rhs the integer with which this will be compared.
+         * @return \c true if and only if this is less than the given
+         * integer.
+         */
+        bool operator <(T rhs) const;
+        /**
+         * Determines if this is greater than the given integer.
+         *
+         * @param rhs the integer with which this will be compared.
+         * @return \c true if and only if this is greater than the given
+         * integer.
+         */
+        bool operator >(const NNativeInteger& rhs) const;
+        /**
+         * Determines if this is greater than the given integer.
+         *
+         * @param rhs the integer with which this will be compared.
+         * @return \c true if and only if this is greater than the given
+         * integer.
+         */
+        bool operator >(T rhs) const;
+        /**
+         * Determines if this is less than or equal to the given integer.
+         *
+         * @param rhs the integer with which this will be compared.
+         * @return \c true if and only if this is less than or equal to
+         * the given integer.
+         */
+        bool operator <=(const NNativeInteger& rhs) const;
+        /**
+         * Determines if this is less than or equal to the given integer.
+         *
+         * @param rhs the integer with which this will be compared.
+         * @return \c true if and only if this is less than or equal to
+         * the given integer.
+         */
+        bool operator <=(T rhs) const;
+        /**
+         * Determines if this is greater than or equal to the given integer.
+         *
+         * @param rhs the integer with which this will be compared.
+         * @return \c true if and only if this is greater than or equal
+         * to the given integer.
+         */
+        bool operator >=(const NNativeInteger& rhs) const;
+        /**
+         * Determines if this is greater than or equal to the given integer.
+         *
+         * @param rhs the integer with which this will be compared.
+         * @return \c true if and only if this is greater than or equal
+         * to the given integer.
+         */
+        bool operator >=(T rhs) const;
+
+        /**
+         * The preincrement operator.
+         * This operator increments this integer by one, and returns a
+         * reference to the integer \e after the increment.
+         *
+         * \ifacespython Not available.
+         *
+         * @return a reference to this integer after the increment.
+         */
+        NNativeInteger& operator ++();
+
+        /**
+         * The postincrement operator.
+         * This operator increments this integer by one, and returns a
+         * copy of the integer \e before the increment.
+         *
+         * \ifacespython Not available.
+         *
+         * @return a copy of this integer before the
+         * increment took place.
+         */
+        NNativeInteger operator ++(int);
+
+        /**
+         * The predecrement operator.
+         * This operator decrements this integer by one, and returns a
+         * reference to the integer \e after the decrement.
+         *
+         * \ifacespython Not available.
+         *
+         * @return a reference to this integer after the decrement.
+         */
+        NNativeInteger& operator --();
+
+        /**
+         * The postdecrement operator.
+         * This operator decrements this integer by one, and returns a
+         * copy of the integer \e before the decrement.
+         *
+         * \ifacespython Not available.
+         *
+         * @return a copy of this integer before the
+         * decrement took place.
+         */
+        NNativeInteger operator --(int);
+
+        /**
+         * Adds this to the given integer and returns the result.
+         * This integer is not changed.
+         *
+         * @param other the integer to add to this integer.
+         * @return the sum \a this plus \a other.
+         */
+        NNativeInteger operator +(const NNativeInteger& other) const;
+        /**
+         * Adds this to the given integer and returns the result.
+         * This integer is not changed.
+         *
+         * @param other the integer to add to this integer.
+         * @return the sum \a this plus \a other.
+         */
+        NNativeInteger operator +(T other) const;
+        /**
+         * Subtracts the given integer from this and returns the result.
+         * This integer is not changed.
+         *
+         * @param other the integer to subtract from this integer.
+         * @return the difference \a this minus \a other.
+         */
+        NNativeInteger operator -(const NNativeInteger& other) const;
+        /**
+         * Subtracts the given integer from this and returns the result.
+         * This integer is not changed.
+         *
+         * @param other the integer to subtract from this integer.
+         * @return the difference \a this minus \a other.
+         */
+        NNativeInteger operator -(T other) const;
+        /**
+         * Multiplies this by the given integer and returns the
+         * result.
+         * This integer is not changed.
+         *
+         * @param other the integer to multiply by this integer.
+         * @return the product \a this times \a other.
+         */
+        NNativeInteger operator *(const NNativeInteger& other) const;
+        /**
+         * Multiplies this by the given integer and returns the
+         * result.
+         * This integer is not changed.
+         *
+         * @param other the integer to multiply by this integer.
+         * @return the product \a this times \a other.
+         */
+        NNativeInteger operator *(T other) const;
+        /**
+         * Divides this by the given integer and returns the result.
+         * The result will be truncated to an integer, i.e. rounded
+         * towards zero.
+         * This integer is not changed.
+         *
+         * For a division routine that always rounds down, see divisionAlg().
+         *
+         * \pre \a other must be non-zero.
+         *
+         * \warning As I understand it, the direction of rounding for
+         * native C/C++ integer division was fixed in the C++11
+         * specification, but left to the compiler implementation in
+         * earlier versions of the specification; however, any modern
+         * hardware should satisfy the C++11 rounding rule as described above.
+         *
+         * @param other the integer to divide this by.
+         * @return the quotient \a this divided by \a other.
+         */
+        NNativeInteger operator /(const NNativeInteger& other) const;
+        /**
+         * Divides this by the given integer and returns the result.
+         * The result will be truncated to an integer, i.e. rounded
+         * towards zero.
+         * This integer is not changed.
+         *
+         * For a division routine that always rounds down, see divisionAlg().
+         *
+         * \pre \a other must be non-zero.
+         *
+         * \warning As I understand it, the direction of rounding for
+         * native C/C++ integer division was fixed in the C++11
+         * specification, but left to the compiler implementation in
+         * earlier versions of the specification; however, any modern
+         * hardware should satisfy the C++11 rounding rule as described above.
+         *
+         * @param other the integer to divide this by.
+         * @return the quotient \a this divided by \a other.
+         */
+        NNativeInteger operator /(T other) const;
+        /**
+         * Divides this by the given integer and returns the result.
+         * For native integers, this is identical to operator /.
+         *
+         * \pre \a other is not zero.
+         *
+         * @param other the integer to divide this by.
+         * @return the quotient \a this divided by \a other.
+         */
+        NNativeInteger divExact(const NNativeInteger& other) const;
+        /**
+         * Divides this by the given integer and returns the result.
+         * For native integers, this is identical to operator /.
+         *
+         * \pre \a other is not zero.
+         *
+         * @param other the integer to divide this by.
+         * @return the quotient \a this divided by \a other.
+         */
+        NNativeInteger divExact(T other) const;
+        /**
+         * Determines the remainder when this integer is divided by the
+         * given integer.  If non-zero, the result will have the same sign
+         * as this integer.
+         * This integer is not changed.
+         *
+         * For a division routine that always returns a non-negative
+         * remainder, see divisionAlg().
+         *
+         * \pre \a other is not zero.
+         *
+         * \warning As I understand it, the sign of the result under
+         * native C/C++ integer division when the second operand is
+         * negative was fixed in the C++11 specification, but left to the
+         * compiler implementation in earlier versions of the specification;
+         * however, any modern hardware should satisfy the C++11 sign rule
+         * as described above.
+         *
+         * @param other the integer to divide this by.
+         * @return the remainder \a this modulo \a other.
+         */
+        NNativeInteger operator %(const NNativeInteger& other) const;
+        /**
+         * Determines the remainder when this integer is divided by the
+         * given integer.  If non-zero, the result will have the same sign
+         * as this integer.
+         * This integer is not changed.
+         *
+         * For a division routine that always returns a non-negative
+         * remainder, see divisionAlg().
+         *
+         * \pre \a other is not zero.
+         *
+         * \warning As I understand it, the sign of the result under
+         * native C/C++ integer division when the second operand is
+         * negative was fixed in the C++11 specification, but left to the
+         * compiler implementation in earlier versions of the specification;
+         * however, any modern hardware should satisfy the C++11 sign rule
+         * as described above.
+         *
+         * @param other the integer to divide this by.
+         * @return the remainder \a this modulo \a other.
+         */
+        NNativeInteger operator %(T other) const;
+
+        /**
+         * Uses the division algorithm to obtain a quotient and
+         * remainder when dividing by the given integer.
+         *
+         * Suppose this integer is \a n and we pass the divisor \a d.
+         * The <em>division algorithm</em> describes the result of
+         * dividing \a n by \a d; in particular, it expresses
+         * <tt>n = qd + r</tt>, where \a q is the quotient and
+         * \a r is the remainder.
+         *
+         * The division algorithm is precise about which values of \a q
+         * and \a r are chosen; in particular it chooses the unique \a r
+         * in the range <tt>0 <= r < |d|</tt>.
+         *
+         * Note that this differs from other division routines in this
+         * class, in that it always rounds to give a non-negative remainder.
+         * Thus NNativeInteger(-7).divisionAlg(3) gives quotient -3 and
+         * remainder 2, whereas (-7)/3 gives quotient -2 and (-7)\%3 gives
+         * remainder -1.
+         *
+         * The two results are passed back to the caller as follows:
+         * The quotient \a q is passed back as the return value of the
+         * function, and the remainder \a r is stored in the reference
+         * argument \a r.
+         *
+         * In the special case where the given divisor is 0 (not
+         * allowed by the usual division algorithm), this routine selects
+         * quotient 0 and remainder \a n.
+         *
+         * @param divisor the divisor \a d.
+         * @param remainder used to store the remainder \a r when the
+         * functon returns.  The initial value of this argument is ignored.
+         * @return the quotient \a q.
+         *
+         * @author Ryan Budney & B.B.
+         */
+        NNativeInteger<T> divisionAlg(
+                const NNativeInteger<T>& divisor,
+                NNativeInteger<T>& remainder) const;
+
+        /**
+         * Determines the negative of this integer.
+         * This integer is not changed.
+         *
+         * @return the negative of this integer.
+         */
+        NNativeInteger operator -() const;
+
+        /**
+         * Adds the given integer to this.
+         * This integer is changed to reflect the result.
+         *
+         * @param other the integer to add to this integer.
+         * @return a reference to this integer with its new value.
+         */
+        NNativeInteger& operator +=(const NNativeInteger& other);
+        /**
+         * Adds the given integer to this.
+         * This integer is changed to reflect the result.
+         *
+         * @param other the integer to add to this integer.
+         * @return a reference to this integer with its new value.
+         */
+        NNativeInteger& operator +=(T other);
+        /**
+         * Subtracts the given integer from this.
+         * This integer is changed to reflect the result.
+         *
+         * @param other the integer to subtract from this integer.
+         * @return a reference to this integer with its new value.
+         */
+        NNativeInteger& operator -=(const NNativeInteger& other);
+        /**
+         * Subtracts the given integer from this.
+         * This integer is changed to reflect the result.
+         *
+         * @param other the integer to subtract from this integer.
+         * @return a reference to this integer with its new value.
+         */
+        NNativeInteger& operator -=(T other);
+        /**
+         * Multiplies the given integer by this.
+         * This integer is changed to reflect the result.
+         *
+         * @param other the integer to multiply with this integer.
+         * @return a reference to this integer with its new value.
+         */
+        NNativeInteger& operator *=(const NNativeInteger& other);
+        /**
+         * Multiplies the given integer by this.
+         * This integer is changed to reflect the result.
+         *
+         * @param other the integer to multiply with this integer.
+         * @return a reference to this integer with its new value.
+         */
+        NNativeInteger& operator *=(T other);
+        /**
+         * Divides this by the given integer.
+         * The result will be truncated to an integer, i.e. rounded
+         * towards zero.
+         * This integer is changed to reflect the result.
+         *
+         * For a division routine that always rounds down, see divisionAlg().
+         *
+         * \pre \a other must be non-zero.
+         *
+         * \warning As I understand it, the direction of rounding for
+         * native C/C++ integer division was fixed in the C++11
+         * specification, but left to the compiler implementation in
+         * earlier versions of the specification; however, any modern
+         * hardware should satisfy the C++11 rounding rule as described above.
+         *
+         * @param other the integer to divide this by.
+         * @return a reference to this integer with its new value.
+         */
+        NNativeInteger& operator /=(const NNativeInteger& other);
+        /**
+         * Divides this by the given integer.
+         * The result will be truncated to an integer, i.e. rounded
+         * towards zero.
+         * This integer is changed to reflect the result.
+         *
+         * For a division routine that always rounds down, see divisionAlg().
+         *
+         * \pre \a other must be non-zero.
+         *
+         * \warning As I understand it, the direction of rounding for
+         * native C/C++ integer division was fixed in the C++11
+         * specification, but left to the compiler implementation in
+         * earlier versions of the specification; however, any modern
+         * hardware should satisfy the C++11 rounding rule as described above.
+         *
+         * @param other the integer to divide this by.
+         * @return a reference to this integer with its new value.
+         */
+        NNativeInteger& operator /=(T other);
+        /**
+         * Divides this by the given integer.
+         * For native integers, this routine is identical to operator /=.
+         *
+         * \pre \a other is not zero.
+         *
+         * @param other the integer to divide this by.
+         * @return a reference to this integer with its new value.
+         */
+        NNativeInteger& divByExact(const NNativeInteger& other);
+        /**
+         * Divides this by the given integer.
+         * For native integers, this routine is identical to operator /=.
+         *
+         * \pre \a other is not zero.
+         *
+         * @param other the integer to divide this by.
+         * @return a reference to this integer with its new value.
+         */
+        NNativeInteger& divByExact(T other);
+        /**
+         * Reduces this integer modulo the given integer.
+         * If non-zero, the result will have the same sign as the original
+         * value of this integer.
+         * This integer is changed to reflect the result.
+         *
+         * For a mod routine that always returns a non-negative
+         * remainder, see divisionAlg().
+         *
+         * \pre \a other is not zero.
+         *
+         * \warning As I understand it, the sign of the result under
+         * native C/C++ integer division when the second operand is
+         * negative was fixed in the C++11 specification, but left to the
+         * compiler implementation in earlier versions of the specification;
+         * however, any modern hardware should satisfy the C++11 sign rule
+         * as described above.
+         *
+         * @param other the integer modulo which this integer will be
+         * reduced.
+         * @return a reference to this integer with its new value.
+         */
+        NNativeInteger& operator %=(const NNativeInteger& other);
+        /**
+         * Reduces this integer modulo the given integer.
+         * If non-zero, the result will have the same sign as the original
+         * value of this integer.
+         * This integer is changed to reflect the result.
+         *
+         * For a mod routine that always returns a non-negative
+         * remainder, see divisionAlg().
+         *
+         * \pre \a other is not zero.
+         *
+         * \warning As I understand it, the sign of the result under
+         * native C/C++ integer division when the second operand is
+         * negative was fixed in the C++11 specification, but left to the
+         * compiler implementation in earlier versions of the specification;
+         * however, any modern hardware should satisfy the C++11 sign rule
+         * as described above.
+         *
+         * @param other the integer modulo which this integer will be
+         * reduced.
+         * @return a reference to this integer with its new value.
+         */
+        NNativeInteger& operator %=(T other);
+        /**
+         * Negates this integer.
+         * This integer is changed to reflect the result.
+         */
+        void negate();
+        /**
+         * Sets this integer to be the greatest common divisor of this
+         * and the given integer.
+         *
+         * The result is guaranteed to be non-negative.  As a
+         * special case, gcd(0,0) is considered to be zero.
+         *
+         * @param other the integer whose greatest common divisor with
+         * this will be found.
+         */
+        void gcdWith(const NNativeInteger& other);
+        /**
+         * Determines the greatest common divisor of this and the given
+         * integer.  This integer is not changed.
+         *
+         * The result is guaranteed to be non-negative.  As a
+         * special case, gcd(0,0) is considered to be zero.
+         *
+         * @param other the integer whose greatest common divisor with
+         * this will be found.
+         * @return the greatest common divisor of this and the given
+         * integer.
+         */
+        NNativeInteger gcd(const NNativeInteger& other) const;
+
+    template <typename T_>
+    friend std::ostream& operator << (std::ostream& out,
+        const NNativeInteger<T_>& large);
+};
+
+/**
+ * Writes the given integer to the given output stream.
+ *
+ * @param out the output stream to which to write.
+ * @param i the integer to write.
+ * @return a reference to \a out.
+ */
+template <typename T>
+std::ostream& operator << (std::ostream& out, const NNativeInteger<T>& i);
+
+/*@}*/
+
 // Inline functions for NIntegerBase
 
 template <bool supportInfinity>
@@ -2347,6 +2986,382 @@ template <>
 inline NIntegerBase<true>::NIntegerBase(bool, bool) : large_(0) {
     // The infinity constructor.
     makeInfinite();
+}
+
+// Inline functions for NNativeInteger
+
+template <typename T>
+inline NNativeInteger<T>::NNativeInteger() : data_(0) {
+}
+
+template <typename T>
+inline NNativeInteger<T>::NNativeInteger(T value) : data_(value) {
+}
+
+template <typename T>
+inline NNativeInteger<T>::NNativeInteger(const NNativeInteger<T>& value) :
+        data_(value.data_) {
+}
+
+template <typename T>
+inline bool NNativeInteger<T>::isZero() const {
+    return (data_ == 0);
+}
+
+template <typename T>
+inline int NNativeInteger<T>::sign() const {
+    return (data_ > 0 ? 1 : data_ < 0 ? -1 : 0);
+}
+
+template <typename T>
+inline T NNativeInteger<T>::nativeValue() const {
+    return data_;
+}
+
+template <typename T>
+inline NNativeInteger<T>& NNativeInteger<T>::operator =(
+        const NNativeInteger<T>& value) {
+    data_ = value.data_;
+    return *this;
+}
+
+template <typename T>
+inline NNativeInteger<T>& NNativeInteger<T>::operator =(T value) {
+    data_ = value;
+    return *this;
+}
+
+template <typename T>
+inline void NNativeInteger<T>::swap(NNativeInteger<T>& other) {
+    std::swap(data_, other.data_);
+}
+
+template <typename T>
+inline bool NNativeInteger<T>::operator ==(const NNativeInteger<T>& rhs) const {
+    return (data_ == rhs.data_);
+}
+
+template <typename T>
+inline bool NNativeInteger<T>::operator ==(T rhs) const {
+    return (data_ == rhs);
+}
+
+template <typename T>
+inline bool NNativeInteger<T>::operator !=(const NNativeInteger<T>& rhs) const {
+    return (data_ != rhs.data_);
+}
+
+template <typename T>
+inline bool NNativeInteger<T>::operator !=(T rhs) const {
+    return (data_ != rhs);
+}
+
+template <typename T>
+inline bool NNativeInteger<T>::operator <(const NNativeInteger<T>& rhs) const {
+    return (data_ < rhs.data_);
+}
+
+template <typename T>
+inline bool NNativeInteger<T>::operator <(T rhs) const {
+    return (data_ < rhs);
+}
+
+template <typename T>
+inline bool NNativeInteger<T>::operator >(const NNativeInteger<T>& rhs) const {
+    return (data_ > rhs.data_);
+}
+
+template <typename T>
+inline bool NNativeInteger<T>::operator >(T rhs) const {
+    return (data_ > rhs);
+}
+
+template <typename T>
+inline bool NNativeInteger<T>::operator <=(const NNativeInteger<T>& rhs) const {
+    return (data_ <= rhs.data_);
+}
+
+template <typename T>
+inline bool NNativeInteger<T>::operator <=(T rhs) const {
+    return (data_ <= rhs);
+}
+
+template <typename T>
+inline bool NNativeInteger<T>::operator >=(const NNativeInteger<T>& rhs) const {
+    return (data_ >= rhs.data_);
+}
+
+template <typename T>
+inline bool NNativeInteger<T>::operator >=(T rhs) const {
+    return (data_ >= rhs);
+}
+
+template <typename T>
+inline NNativeInteger<T>& NNativeInteger<T>::operator ++() {
+    ++data_;
+    return *this;
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::operator ++(int) {
+    return NNativeInteger<T>(data_++);
+}
+
+template <typename T>
+inline NNativeInteger<T>& NNativeInteger<T>::operator --() {
+    --data_;
+    return *this;
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::operator --(int) {
+    return NNativeInteger<T>(data_--);
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::operator +(
+        const NNativeInteger<T>& other) const {
+    return NNativeInteger<T>(data_ + other.data_);
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::operator +(T other) const {
+    return NNativeInteger<T>(data_ + other);
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::operator -(
+        const NNativeInteger<T>& other) const {
+    return NNativeInteger<T>(data_ - other.data_);
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::operator -(T other) const {
+    return NNativeInteger<T>(data_ - other);
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::operator *(
+        const NNativeInteger<T>& other) const {
+    return NNativeInteger<T>(data_ * other.data_);
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::operator *(T other) const {
+    return NNativeInteger<T>(data_ * other);
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::operator /(
+        const NNativeInteger<T>& other) const {
+    return NNativeInteger<T>(data_ / other.data_);
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::operator /(T other) const {
+    return NNativeInteger<T>(data_ / other);
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::divExact(
+        const NNativeInteger<T>& other) const {
+    return NNativeInteger<T>(data_ / other.data_);
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::divExact(T other) const {
+    return NNativeInteger<T>(data_ / other);
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::operator %(
+        const NNativeInteger<T>& other) const {
+    return NNativeInteger<T>(data_ % other.data_);
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::operator %(T other) const {
+    return NNativeInteger<T>(data_ % other);
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::divisionAlg(
+        const NNativeInteger<T>& divisor,
+        NNativeInteger<T>& remainder) const {
+    if (divisor == 0) {
+        remainder.data_ = data_;
+        return 0;
+    }
+
+    // Native integer division could leave a negative remainder
+    // regardless of the sign of the divisor (I think the standard
+    // indicates that the decision is based on the sign of *this?).
+    NNativeInteger<T> quotient = data_ / divisor.data_;
+    remainder = data_ - (quotient.data_ * divisor.data_);
+    if (remainder.data_ < 0) {
+        if (divisor.data_ > 0) {
+            remainder.data_ += divisor.data_;
+            --quotient.data_;
+        } else {
+            remainder.data_ -= divisor.data_;
+            ++quotient.data_;
+        }
+    }
+
+    return quotient;
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::operator -() const {
+    return NNativeInteger<T>(- data_);
+}
+
+template <typename T>
+inline NNativeInteger<T>& NNativeInteger<T>::operator += (
+        const NNativeInteger<T>& other) {
+    data_ += other.data_;
+    return *this;
+}
+
+template <typename T>
+inline NNativeInteger<T>& NNativeInteger<T>::operator += (T other) {
+    data_ += other;
+    return *this;
+}
+
+template <typename T>
+inline NNativeInteger<T>& NNativeInteger<T>::operator -= (
+        const NNativeInteger<T>& other) {
+    data_ -= other.data_;
+    return *this;
+}
+
+template <typename T>
+inline NNativeInteger<T>& NNativeInteger<T>::operator -= (T other) {
+    data_ -= other;
+    return *this;
+}
+
+template <typename T>
+inline NNativeInteger<T>& NNativeInteger<T>::operator *= (
+        const NNativeInteger<T>& other) {
+    data_ *= other.data_;
+    return *this;
+}
+
+template <typename T>
+inline NNativeInteger<T>& NNativeInteger<T>::operator *= (T other) {
+    data_ *= other;
+    return *this;
+}
+
+template <typename T>
+inline NNativeInteger<T>& NNativeInteger<T>::operator /= (
+        const NNativeInteger<T>& other) {
+    data_ /= other.data_;
+    return *this;
+}
+
+template <typename T>
+inline NNativeInteger<T>& NNativeInteger<T>::operator /= (T other) {
+    data_ /= other;
+    return *this;
+}
+
+template <typename T>
+inline NNativeInteger<T>& NNativeInteger<T>::divByExact(
+        const NNativeInteger<T>& other) {
+    data_ /= other.data_;
+    return *this;
+}
+
+template <typename T>
+inline NNativeInteger<T>& NNativeInteger<T>::divByExact(T other) {
+    data_ /= other;
+    return *this;
+}
+
+template <typename T>
+inline NNativeInteger<T>& NNativeInteger<T>::operator %= (
+        const NNativeInteger<T>& other) {
+    data_ %= other.data_;
+    return *this;
+}
+
+template <typename T>
+inline NNativeInteger<T>& NNativeInteger<T>::operator %= (T other) {
+    data_ %= other;
+    return *this;
+}
+
+template <typename T>
+inline void NNativeInteger<T>::negate() {
+    data_ = - data_;
+}
+
+template <typename T>
+void NNativeInteger<T>::gcdWith(const NNativeInteger<T>& other) {
+    T a = data_;
+    T b = other.data_;
+
+    if (a < 0) a = -a;
+    if (b < 0) b = -b;
+
+    /**
+     * Now everything is non-negative.
+     * The following code is based on Stein's binary GCD algorithm.
+     */
+    if (! a) {
+        data_ = b;
+        return;
+    }
+    if (! b) {
+        data_ = a;
+        return;
+    }
+
+    // Compute the largest common power of 2.
+    int pow2;
+    for (pow2 = 0; ! ((a | b) & 1); ++pow2) {
+        a >>= 1;
+        b >>= 1;
+    }
+
+    // Strip out all remaining powers of 2 from a and b.
+    while (! (a & 1))
+        a >>= 1;
+    while (! (b & 1))
+        b >>= 1;
+
+    while (a != b) {
+        // INV: a and b are both odd and non-zero.
+        if (a < b) {
+            b -= a;
+            do
+                b >>= 1;
+            while (! (b & 1));
+        } else {
+            a -= b;
+            do
+                a >>= 1;
+            while (! (a & 1));
+        }
+    }
+    data_ = (a << pow2);
+}
+
+template <typename T>
+inline NNativeInteger<T> NNativeInteger<T>::gcd(
+        const NNativeInteger<T>& other) const {
+    NNativeInteger<T> ans(data_);
+    ans.gcdWith(other);
+    return ans;
+}
+
+template <typename T>
+inline std::ostream& operator << (std::ostream& out,
+        const NNativeInteger<T>& i) {
+    return out << i.data_;
 }
 
 } // namespace regina
