@@ -74,6 +74,9 @@ namespace regina {
  * @{
  */
 
+template <typename T>
+class NNativeInteger;
+
 /**
  * Internal base classes for use with NIntegerBase, templated on whether we
  * should support infinity as an allowed value.
@@ -219,6 +222,20 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          * @param value the new value of this integer.
          */
         explicit NIntegerBase(const NIntegerBase<! supportInfinity>& value);
+        /**
+         * Initialises this integer to the given value.
+         *
+         * This constructor is marked as explicit in the hope of
+         * avoiding accidental (and unintentional) mixing of integer classes.
+         *
+         * At present the only explicit conversion from NNativeInteger is
+         * from the specific type NNativeInteger<long> (i.e., NNativeLong).
+         * In future releases this list may be expanded to include native
+         * data types of other sizes.
+         *
+         * @param value the new value of this integer.
+         */
+        explicit NIntegerBase(const NNativeInteger<long>& value);
         /**
          * Initialises this integer to the given value which is
          * represented as a string of digits in a given base.
@@ -2109,6 +2126,13 @@ class NNativeInteger {
 template <typename T>
 std::ostream& operator << (std::ostream& out, const NNativeInteger<T>& i);
 
+/**
+ * NNativeLong is a typedef for NNativeInteger<long>.
+ *
+ * \ifacespython Not present.
+ */
+typedef NNativeInteger<long> NNativeLong;
+
 /*@}*/
 
 // Inline functions for NIntegerBase
@@ -2177,6 +2201,12 @@ inline NIntegerBase<supportInfinity>::NIntegerBase(
         small_ = value.small_;
         large_ = 0;
     }
+}
+
+template <bool supportInfinity>
+inline NIntegerBase<supportInfinity>::NIntegerBase(
+        const NNativeInteger<long>& value) :
+        small_(value.nativeValue()), large_(0) {
 }
 
 template <bool supportInfinity>

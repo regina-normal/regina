@@ -76,9 +76,10 @@
 
 namespace regina {
 
-template <typename LPConstraint, typename BanConstraint>
-NNormalSurface* NTreeTraversal<LPConstraint, BanConstraint>::buildSurface()
-        const {
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+NNormalSurface* NTreeTraversal<LPConstraint, BanConstraint, Integer>::
+        buildSurface() const {
     // Note that the vector constructors automatically set all
     // elements to zero, as required by LPData::extractSolution().
     NNormalSurfaceVector* v;
@@ -131,8 +132,9 @@ NNormalSurface* NTreeTraversal<LPConstraint, BanConstraint>::buildSurface()
     return new NNormalSurface(origTableaux_.tri(), an);
 }
 
-template <typename LPConstraint, typename BanConstraint>
-bool NTreeTraversal<LPConstraint, BanConstraint>::verify(
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
         const NNormalSurface* s, const NMatrixInt* matchingEqns) const {
     // Rebuild the matching equations if necessary.
     NMatrixInt* tmpEqns = 0;
@@ -157,11 +159,12 @@ bool NTreeTraversal<LPConstraint, BanConstraint>::verify(
     delete tmpEqns;
 
     // Verify any additional constraints.
-    return LPConstraint::verify(s);
+    return LPConstraint<Integer>::verify(s);
 }
 
-template <typename LPConstraint, typename BanConstraint>
-NTreeTraversal<LPConstraint, BanConstraint>::NTreeTraversal(
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+NTreeTraversal<LPConstraint, BanConstraint, Integer>::NTreeTraversal(
         NTriangulation* tri, NormalCoords coords,
         int branchesPerQuad, int branchesPerTri, bool enumeration) :
         BanConstraint(tri, coords),
@@ -185,9 +188,9 @@ NTreeTraversal<LPConstraint, BanConstraint>::NTreeTraversal(
         level_(0),
         octLevel_(coords == NS_AN_STANDARD ||
             coords == NS_AN_QUAD_OCT ? -1 : nTypes_),
-        lp_(new LPData<LPConstraint>[nTableaux_]),
-        lpSlot_(new LPData<LPConstraint>*[nTypes_ + 1]),
-        nextSlot_(new LPData<LPConstraint>*[nTypes_ + 1]),
+        lp_(new LPData<LPConstraint, Integer>[nTableaux_]),
+        lpSlot_(new LPData<LPConstraint, Integer>*[nTypes_ + 1]),
+        nextSlot_(new LPData<LPConstraint, Integer>*[nTypes_ + 1]),
         nVisited_(0),
         cancelled_(false) {
     // Initialise the type vector to the zero vector.
@@ -219,8 +222,9 @@ NTreeTraversal<LPConstraint, BanConstraint>::NTreeTraversal(
 /**
  * Destroys this object.
  */
-template <typename LPConstraint, typename BanConstraint>
-NTreeTraversal<LPConstraint, BanConstraint>::~NTreeTraversal() {
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+NTreeTraversal<LPConstraint, BanConstraint, Integer>::~NTreeTraversal() {
     delete[] type_;
     delete[] typeOrder_;
     delete[] lp_;
@@ -228,8 +232,10 @@ NTreeTraversal<LPConstraint, BanConstraint>::~NTreeTraversal() {
     delete[] nextSlot_;
 }
 
-template <typename LPConstraint, typename BanConstraint>
-void NTreeTraversal<LPConstraint, BanConstraint>::setNext(int nextType) {
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+void NTreeTraversal<LPConstraint, BanConstraint, Integer>::setNext(
+        int nextType) {
     int* pos = std::find(typeOrder_ + level_ + 1,
         typeOrder_ + nTypes_, nextType);
     if (pos != typeOrder_ + level_ + 1) {
@@ -242,8 +248,9 @@ void NTreeTraversal<LPConstraint, BanConstraint>::setNext(int nextType) {
     }
 }
 
-template <typename LPConstraint, typename BanConstraint>
-int NTreeTraversal<LPConstraint, BanConstraint>::feasibleBranches(
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+int NTreeTraversal<LPConstraint, BanConstraint, Integer>::feasibleBranches(
         int quadType) {
     // Spin off clones for the new linear programs (reusing as much
     // work as possible).
@@ -284,8 +291,9 @@ int NTreeTraversal<LPConstraint, BanConstraint>::feasibleBranches(
         (tmpLP_[3].isFeasible() ? 1 : 0));
 }
 
-template <typename LPConstraint, typename BanConstraint>
-bool NTreeEnumeration<LPConstraint, BanConstraint>::next() {
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::next() {
     if (lastNonZero_ < 0) {
         // Our type vector is the zero vector.
         // This means we are starting the search from the very
@@ -648,8 +656,9 @@ bool NTreeEnumeration<LPConstraint, BanConstraint>::next() {
     return false;
 }
 
-template <typename LPConstraint, typename BanConstraint>
-bool NTreeSingleSoln<LPConstraint, BanConstraint>::find() {
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+bool NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::find() {
     // This code is similar to next(), but makes some changes to
     // account for the facts that:
     // - we only need a single solution that satisfies our

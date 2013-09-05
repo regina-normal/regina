@@ -37,61 +37,19 @@
 namespace regina {
 
 // Instantiate templates:
-template class LPInitialTableaux<LPConstraintNone>;
-template class LPData<LPConstraintNone>;
-template class LPInitialTableaux<LPConstraintEuler>;
-template class LPData<LPConstraintEuler>;
+template class LPInitialTableaux<LPConstraintNone, NInteger>;
+template class LPInitialTableaux<LPConstraintNone, NNativeLong>;
+template class LPData<LPConstraintNone, NInteger>;
+template class LPData<LPConstraintNone, NNativeLong>;
+template class LPInitialTableaux<LPConstraintEuler, NInteger>;
+template class LPInitialTableaux<LPConstraintEuler, NNativeLong>;
+template class LPData<LPConstraintEuler, NInteger>;
+template class LPData<LPConstraintEuler, NNativeLong>;
 #ifndef EXCLUDE_SNAPPEA
-template class LPInitialTableaux<LPConstraintNonSpun>;
-template class LPData<LPConstraintNonSpun>;
+template class LPInitialTableaux<LPConstraintNonSpun, NInteger>;
+template class LPInitialTableaux<LPConstraintNonSpun, NNativeLong>;
+template class LPData<LPConstraintNonSpun, NInteger>;
+template class LPData<LPConstraintNonSpun, NNativeLong>;
 #endif
-
-void LPMatrix::combRow(const NInteger& destCoeff, unsigned dest,
-        const NInteger& srcCoeff, unsigned src, const NInteger& div) {
-    NInteger* ps = dat_ + src * cols_;
-    NInteger* pd = dat_ + dest * cols_;
-    NInteger tmp; // Use this to avoid spurious temporary NIntegers.
-    for (unsigned i = 0; i < cols_; ++i) {
-        *pd *= destCoeff;
-        tmp = srcCoeff;
-        tmp *= *ps++;
-        *pd -= tmp;
-        (*pd++).divByExact(div);
-    }
-}
-
-NInteger LPMatrix::combRowAndNorm(const NInteger& destCoeff,
-        unsigned dest, const NInteger& srcCoeff, unsigned src) {
-    NInteger gcdRow; // Initialised to zero.
-    NInteger* ps = dat_ + src * cols_;
-    NInteger* pd = dat_ + dest * cols_;
-    NInteger tmp; // Use this to avoid spurious temporary NIntegers.
-    unsigned i;
-    for (i = 0; i < cols_; ++i, ++pd, ++ps) {
-        *pd *= destCoeff;
-        tmp = srcCoeff;
-        tmp *= *ps;
-        *pd -= tmp;
-        if (gcdRow != 1)
-            gcdRow.gcdWith(*pd); // gcd() guarantees to be >= 0.
-    }
-    if (gcdRow > 1) {
-        pd = dat_ + dest * cols_;
-        for (i = 0; i < cols_; ++i)
-            (*pd++).divByExact(gcdRow);
-    }
-    return gcdRow;
-}
-
-void LPMatrix::dump(std::ostream& out) const {
-    out << "---------------------------------" << std::endl;
-    unsigned r, c;
-    for (r = 0; r < rows_; ++r) {
-        for (c = 0; c < cols_; ++c)
-            out << entry(r, c) << ' ';
-        out << std::endl;
-    }
-    out << "---------------------------------" << std::endl;
-}
 
 } // namespace regina

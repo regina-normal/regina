@@ -208,6 +208,8 @@ Version 4.94  [ (under development) ]
         Class NNativeInteger:
             - New template class that wraps native integer types with very
               little overhead and offers an interface compatible with NInteger.
+        Class NNativeLong:
+            - A convenience typedef for the new class NNativeInteger<long>.
         Class NNormalSurface:
             - Routine boundarySlopes() now requires that the
               triangulation is oriented (otherwise SnapPea will relabel

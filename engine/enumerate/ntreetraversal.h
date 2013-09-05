@@ -140,11 +140,13 @@ class NTriangulation;
  *
  * \ifacespython Not present.
  */
-template <typename LPConstraint, typename BanConstraint>
+template <template <typename> class LPConstraint,
+          typename BanConstraint,
+          typename Integer>
 class NTreeTraversal : public BanConstraint {
     protected:
         // Global information about the search:
-        const LPInitialTableaux<LPConstraint> origTableaux_;
+        const LPInitialTableaux<LPConstraint, Integer> origTableaux_;
             /**< The original starting tableaux that holds the adjusted
                  matrix of matching equations, before the tree traversal
                  algorithm begins. */
@@ -189,7 +191,7 @@ class NTreeTraversal : public BanConstraint {
                  allow any octagons at all), then \a octLevel_ = \a nTypes_.
                  If we are allowing almost normal surfaces but we have not yet
                  chosen an octagon type, then \a octLevel_ = -1. */
-        LPData<LPConstraint>* lp_;
+        LPData<LPConstraint, Integer>* lp_;
             /**< Stores tableaux for linear programming at various nodes
                  in the search tree.  We only store a limited number of
                  tableaux at any given time, and as the search
@@ -203,7 +205,7 @@ class NTreeTraversal : public BanConstraint {
                  that we have pre-prepared for future processing.  See the
                  documentation within NTreeEnumeration::next() for details of
                  when and how these tableaux are constructed. */
-        LPData<LPConstraint>** lpSlot_;
+        LPData<LPConstraint, Integer>** lpSlot_;
             /**< Recall from above that the array \a lp_ stores tableaux
                  for the current node in the search tree and all of its
                  ancestors.  This means we have one tableaux for the
@@ -217,7 +219,7 @@ class NTreeTraversal : public BanConstraint {
                  tableaux is *lpSlot_[i+1].  Again, see the documentation
                  within NTreeEnumeration::next() for details of when and how
                  these tableaux are constructed and later overwritten. */
-        LPData<LPConstraint>** nextSlot_;
+        LPData<LPConstraint, Integer>** nextSlot_;
             /**< Points to the next available tableaux in lp_ that is free to
                  use at each level of the search tree.  Specifically:
                  nextSlot_[0] points to the next free tableaux at the root
@@ -231,7 +233,7 @@ class NTreeTraversal : public BanConstraint {
                  have visited thus far.  This may grow much faster than the
                  number of solutions, since it also counts traversals
                  through "dead ends" in the search tree. */
-        LPData<LPConstraint> tmpLP_[4];
+        LPData<LPConstraint, Integer> tmpLP_[4];
             /**< Temporary tableaux used by the function feasibleBranches()
                  to determine which quadrilateral types have good potential
                  for pruning the search tree.
@@ -560,31 +562,34 @@ class NTreeTraversal : public BanConstraint {
  *
  * \ifacespython Not present.
  */
-template <typename LPConstraint = LPConstraintNone,
-          typename BanConstraint = BanNone>
-class NTreeEnumeration : public NTreeTraversal<LPConstraint, BanConstraint> {
+template <template <typename> class LPConstraint = LPConstraintNone,
+          typename BanConstraint = BanNone,
+          typename Integer = NInteger>
+class NTreeEnumeration :
+        public NTreeTraversal<LPConstraint, BanConstraint, Integer> {
     public:
-        using NTreeTraversal<LPConstraint, BanConstraint>::dumpTypes;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::dumpTypes;
 
     protected:
         // Since we have a template base class, we need to explicitly
         // list the inherited member variables that we use.
         // Note that these are all protected in the base class, and so
         // we are not changing any access restrictions here.
-        using NTreeTraversal<LPConstraint, BanConstraint>::level_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::lp_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::lpSlot_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::nextSlot_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::nTets_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::nTypes_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::nVisited_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::octLevel_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::type_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::typeOrder_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::level_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::lp_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::lpSlot_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::nextSlot_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::nTets_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::nTypes_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::nVisited_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::octLevel_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::type_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::typeOrder_;
 
-        using NTreeTraversal<LPConstraint, BanConstraint>::cancelled;
-        using NTreeTraversal<LPConstraint, BanConstraint>::feasibleBranches;
-        using NTreeTraversal<LPConstraint, BanConstraint>::setNext;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::cancelled;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::
+            feasibleBranches;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::setNext;
 
     private:
         NTypeTrie<7> solns_;
@@ -865,31 +870,35 @@ class NTreeEnumeration : public NTreeTraversal<LPConstraint, BanConstraint> {
  *
  * \ifacespython Not present.
  */
-template <typename LPConstraint = LPConstraintNone,
-          typename BanConstraint = BanNone>
-class NTreeSingleSoln : public NTreeTraversal<LPConstraint, BanConstraint> {
+template <template <typename> class LPConstraint = LPConstraintNone,
+          typename BanConstraint = BanNone,
+          typename Integer = NInteger>
+class NTreeSingleSoln :
+        public NTreeTraversal<LPConstraint, BanConstraint, Integer> {
     public:
-        using NTreeTraversal<LPConstraint, BanConstraint>::dumpTypes;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::dumpTypes;
 
     protected:
-        using NTreeTraversal<LPConstraint, BanConstraint>::level_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::lp_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::lpSlot_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::nextSlot_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::nTets_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::nTypes_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::nVisited_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::octLevel_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::origTableaux_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::tmpLP_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::type_;
-        using NTreeTraversal<LPConstraint, BanConstraint>::typeOrder_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::level_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::lp_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::lpSlot_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::nextSlot_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::nTets_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::nTypes_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::nVisited_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::octLevel_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::
+            origTableaux_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::tmpLP_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::type_;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::typeOrder_;
 
-        using NTreeTraversal<LPConstraint, BanConstraint>::cancelled;
-        using NTreeTraversal<LPConstraint, BanConstraint>::feasibleBranches;
-        using NTreeTraversal<LPConstraint, BanConstraint>::
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::cancelled;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::
+            feasibleBranches;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::
             nextUnmarkedTriangleType;
-        using NTreeTraversal<LPConstraint, BanConstraint>::setNext;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::setNext;
 
     private:
         int nextZeroLevel_;
@@ -953,47 +962,56 @@ class NTreeSingleSoln : public NTreeTraversal<LPConstraint, BanConstraint> {
 
 // Inline functions
 
-template <typename LPConstraint, typename BanConstraint>
-inline bool NTreeTraversal<LPConstraint, BanConstraint>::supported(
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+inline bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::supported(
         NormalCoords coords) {
     return (coords == NS_STANDARD || coords == NS_AN_STANDARD ||
         coords == NS_QUAD || coords == NS_AN_QUAD_OCT) &&
-        LPConstraint::supported(coords) && BanConstraint::supported(coords);
+        LPConstraint<Integer>::supported(coords) &&
+        BanConstraint::supported(coords);
 }
 
-template <typename LPConstraint, typename BanConstraint>
-inline bool NTreeTraversal<LPConstraint, BanConstraint>::constraintsBroken()
-        const {
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+inline bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::
+        constraintsBroken() const {
     return origTableaux_.constraintsBroken();
 }
 
-template <typename LPConstraint, typename BanConstraint>
-inline unsigned long NTreeTraversal<LPConstraint, BanConstraint>::nVisited()
-        const {
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+inline unsigned long NTreeTraversal<LPConstraint, BanConstraint, Integer>::
+        nVisited() const {
     return nVisited_;
 }
 
-template <typename LPConstraint, typename BanConstraint>
-inline void NTreeTraversal<LPConstraint, BanConstraint>::dumpTypes(
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+inline void NTreeTraversal<LPConstraint, BanConstraint, Integer>::dumpTypes(
         std::ostream& out) const {
     for (unsigned i = 0; i < nTypes_; ++i)
         out << static_cast<int>(type_[i]);
 }
 
-template <typename LPConstraint, typename BanConstraint>
-inline void NTreeTraversal<LPConstraint, BanConstraint>::cancel() {
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+inline void NTreeTraversal<LPConstraint, BanConstraint, Integer>::cancel() {
     regina::NMutex::MutexLock lock(mCancel_);
     cancelled_ = true;
 }
 
-template <typename LPConstraint, typename BanConstraint>
-inline bool NTreeTraversal<LPConstraint, BanConstraint>::cancelled() const {
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+inline bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::cancelled()
+        const {
     regina::NMutex::MutexLock lock(mCancel_);
     return cancelled_;
 }
 
-template <typename LPConstraint, typename BanConstraint>
-inline int NTreeTraversal<LPConstraint, BanConstraint>::
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+inline int NTreeTraversal<LPConstraint, BanConstraint, Integer>::
         nextUnmarkedTriangleType(int startFrom) {
     while (startFrom < nTypes_ &&
             BanConstraint::marked_[2 * nTets_ + startFrom])
@@ -1001,10 +1019,11 @@ inline int NTreeTraversal<LPConstraint, BanConstraint>::
     return (startFrom == nTypes_ ? -1 : startFrom);
 }
 
-template <typename LPConstraint, typename BanConstraint>
-inline NTreeEnumeration<LPConstraint, BanConstraint>::NTreeEnumeration(
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+inline NTreeEnumeration<LPConstraint, BanConstraint, Integer>::NTreeEnumeration(
         NTriangulation* tri, NormalCoords coords) :
-        NTreeTraversal<LPConstraint, BanConstraint>(tri, coords,
+        NTreeTraversal<LPConstraint, BanConstraint, Integer>(tri, coords,
             (coords == NS_AN_QUAD_OCT || coords == NS_AN_STANDARD ?
              7 : 4) /* branches per quad */,
             2 /* branches per triangle */,
@@ -1013,22 +1032,25 @@ inline NTreeEnumeration<LPConstraint, BanConstraint>::NTreeEnumeration(
         lastNonZero_(-1) {
 }
 
-template <typename LPConstraint, typename BanConstraint>
-inline unsigned long NTreeEnumeration<LPConstraint, BanConstraint>::nSolns()
-        const {
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+inline unsigned long NTreeEnumeration<LPConstraint, BanConstraint, Integer>::
+        nSolns() const {
     return nSolns_;
 }
 
-template <typename LPConstraint, typename BanConstraint>
-inline void NTreeEnumeration<LPConstraint, BanConstraint>::run(
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+inline void NTreeEnumeration<LPConstraint, BanConstraint, Integer>::run(
         bool (*useSoln)(const NTreeEnumeration&, void*), void* arg) {
     while (next())
         if (! useSoln(*this, arg))
             return;
 }
 
-template <typename LPConstraint, typename BanConstraint>
-inline bool NTreeEnumeration<LPConstraint, BanConstraint>::writeTypes(
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+inline bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::writeTypes(
         const NTreeEnumeration& tree, void*) {
     std::cout << "SOLN #" << tree.nSolns() << ": ";
     tree.dumpTypes(std::cout);
@@ -1036,9 +1058,10 @@ inline bool NTreeEnumeration<LPConstraint, BanConstraint>::writeTypes(
     return true;
 }
 
-template <typename LPConstraint, typename BanConstraint>
-inline bool NTreeEnumeration<LPConstraint, BanConstraint>::writeSurface(
-        const NTreeEnumeration& tree, void*) {
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+inline bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::
+        writeSurface(const NTreeEnumeration& tree, void*) {
     std::cout << "SOLN #" << tree.nSolns() << ": ";
     NNormalSurface* f = tree.buildSurface();
     std::cout << f->toString() << std::endl;
@@ -1046,10 +1069,11 @@ inline bool NTreeEnumeration<LPConstraint, BanConstraint>::writeSurface(
     return true;
 }
 
-template <typename LPConstraint, typename BanConstraint>
-inline NTreeSingleSoln<LPConstraint, BanConstraint>::NTreeSingleSoln(
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+inline NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::NTreeSingleSoln(
         NTriangulation* tri, NormalCoords coords) :
-        NTreeTraversal<LPConstraint, BanConstraint>(tri, coords,
+        NTreeTraversal<LPConstraint, BanConstraint, Integer>(tri, coords,
             (coords == NS_AN_QUAD_OCT || coords == NS_AN_STANDARD ?
              6 : 3) /* branches per quad */,
             2 /* branches per triangle */,

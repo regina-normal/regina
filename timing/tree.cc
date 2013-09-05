@@ -58,9 +58,9 @@ void usage(const char* program) {
  * A variant of NTreeTraversal::writeTypes() that also performs sanity
  * checking on the normal surface.
  */
-template <typename LPConstraint, typename BanConstraint>
+template <template <typename> class LPConstraint, typename BanConstraint>
 bool writeTypesAndVerify(
-        const NTreeEnumeration<>& tree, void* eqns) {
+        const NTreeEnumeration<LPConstraint, BanConstraint>& tree, void* eqns) {
     /*
     std::cout << "SOLN #" << tree.nSolns() << ": ";
     tree.dumpTypes(std::cout);
