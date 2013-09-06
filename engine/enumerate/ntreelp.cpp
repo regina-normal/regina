@@ -52,4 +52,15 @@ template class LPData<LPConstraintNonSpun, NInteger>;
 template class LPData<LPConstraintNonSpun, NNativeLong>;
 #endif
 
+#ifdef INT128_FOUND
+template class LPInitialTableaux<LPConstraintNone, NNativeInteger<16> >;
+template class LPData<LPConstraintNone, NNativeInteger<16> >;
+template class LPInitialTableaux<LPConstraintEuler, NNativeInteger<16> >;
+template class LPData<LPConstraintEuler, NNativeInteger<16> >;
+#ifndef EXCLUDE_SNAPPEA
+template class LPInitialTableaux<LPConstraintNonSpun, NNativeInteger<16> >;
+template class LPData<LPConstraintNonSpun, NNativeInteger<16> >;
+#endif
+#endif
+
 } // namespace regina

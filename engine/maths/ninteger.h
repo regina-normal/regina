@@ -3446,6 +3446,16 @@ inline std::ostream& operator << (std::ostream& out,
     return out << i.data_;
 }
 
+#ifdef INT128_FOUND
+template <>
+inline std::ostream& operator << (std::ostream& out,
+        const NNativeInteger<16>& i) {
+    // The standard library does not support 128-bit integers (at least not
+    // always).  Go through NInteger and GMP instead (for now).
+    return out << NInteger(i);
+}
+#endif
+
 } // namespace regina
 
 #endif
