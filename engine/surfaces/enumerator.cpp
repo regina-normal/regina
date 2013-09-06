@@ -230,8 +230,18 @@ void NNormalSurfaceList::Enumerator::fillVertexDD(NProgressNumber* progress) {
 
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillVertexTree(NProgressNumber* progress) {
+    // TODO: Select an appropriate integer type.
+    fillVertexTreeWith<Flavour, NInteger>(progress);
+#ifdef INT128_FOUND
+    // TODO ...
+#endif
+}
+
+template <typename Flavour, typename Integer>
+void NNormalSurfaceList::Enumerator::fillVertexTreeWith(
+        NProgressNumber* progress) {
     // TODO: Progress reporting, multithreading, cancellation.
-    NTreeEnumeration<LPConstraintNone, BanNone, NInteger> search(
+    NTreeEnumeration<LPConstraintNone, BanNone, Integer> search(
         triang_, list_->flavour_);
     while (search.next()) {
         list_->surfaces.push_back(search.buildSurface());

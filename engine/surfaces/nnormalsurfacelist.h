@@ -1423,6 +1423,22 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                 void fillVertexTree(NProgressNumber* progress);
 
                 /**
+                 * Internal code for fillVertexTree() in which the underlying
+                 * integer type for the tree traversal method is fixed.
+                 *
+                 * This does all of the work for fillVertexTree(), aside
+                 * from the initial selection of an integer type.  See
+                 * the nodes for fillVertexTree() for further details.
+                 *
+                 * \pre The underlying triangulation is non-empty.
+                 * \pre The given integer type is known to be sufficient
+                 * (i.e., will not overflow) for the enumeration problem
+                 * under consideration.
+                 */
+                template <typename Flavour, typename Integer>
+                void fillVertexTreeWith(NProgressNumber* progress);
+
+                /**
                  * The enumeration code for enumerating fundamental surfaces
                  * using the primal method.
                  * This is internal to fillFundamental().
