@@ -45,6 +45,13 @@ template class LPConstraintNonSpun<NInteger>;
 template class LPConstraintNonSpun<NNativeLong>;
 #endif
 
+#ifdef INT128_FOUND
+template class LPConstraintEuler<NNativeInteger<16> >;
+#ifndef EXCLUDE_SNAPPEA
+template class LPConstraintNonSpun<NNativeInteger<16> >;
+#endif
+#endif
+
 BanConstraintBase::BanConstraintBase(NTriangulation* tri, int coords) :
         tri_(tri), coords_(coords) {
     unsigned nCols = (coords == NS_QUAD || coords == NS_AN_QUAD_OCT ?

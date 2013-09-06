@@ -47,4 +47,12 @@ template class NTreeTraversal<LPConstraintEuler, BanNone, NNativeLong>;
 template class NTreeSingleSoln<LPConstraintEuler, BanNone, NInteger>;
 template class NTreeSingleSoln<LPConstraintEuler, BanNone, NNativeLong>;
 
+#ifdef INT128_FOUND
+template class NTreeTraversal<LPConstraintNone, BanNone, NNativeInteger<16> >;
+template class NTreeEnumeration<LPConstraintNone, BanNone, NNativeInteger<16> >;
+
+template class NTreeTraversal<LPConstraintEuler, BanNone, NNativeInteger<16> >;
+template class NTreeSingleSoln<LPConstraintEuler, BanNone, NNativeInteger<16> >;
+#endif
+
 } // namespace regina
