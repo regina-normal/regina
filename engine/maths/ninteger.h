@@ -41,6 +41,7 @@
  *  \brief Provides arbitrary-precision and fixed-precision integer types.
  */
 
+#include <boost/static_assert.hpp>
 #include <climits>
 #include <gmp.h>
 #include <iostream>
@@ -233,6 +234,13 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          * from the specific type NNativeInteger<long> (i.e., NNativeLong).
          * In future releases this list may be expanded to include native
          * data types of other sizes.
+         *
+         * \pre If \a bytes is larger than the sizeof(long), then
+         * \a bytes is a strict \e multiple of sizeof(long).  For
+         * instance, if longs are 8 bytes then you can use \a bytes=16
+         * but not \a bytes=12.  This restriction is enforced through a
+         * compile-time assertion, but may be lifted in future versions
+         * of Regina.
          *
          * @param value the new value of this integer.
          */
@@ -1199,7 +1207,8 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          */
         NIntegerBase<supportInfinity> gcdWithCoeffs(
             const NIntegerBase<supportInfinity>& other,
-            NIntegerBase<supportInfinity>& u, NIntegerBase<supportInfinity>& v) const;
+            NIntegerBase<supportInfinity>& u,
+            NIntegerBase<supportInfinity>& v) const;
 
         /**
          * Returns the Legendre symbol (\a a/\a p), where
@@ -1397,6 +1406,9 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
         void forceReduce();
 
     friend class NIntegerBase<! supportInfinity>; // For conversions.
+
+    template <int bytes>
+    friend class NNativeInteger; // For conversions.
 
     template <bool supportInfinity_>
     friend std::ostream& operator << (std::ostream& out,
@@ -2210,12 +2222,24 @@ inline NIntegerBase<supportInfinity>::NIntegerBase(
     }
 }
 
-// TODO
 template <bool supportInfinity>
 template <int bytes>
 inline NIntegerBase<supportInfinity>::NIntegerBase(
         const NNativeInteger<bytes>& value) :
         small_(value.nativeValue()), large_(0) {
+    BOOST_STATIC_ASSERT(bytes % sizeof(long) == 0);
+    if (sizeof(long) < bytes && value.nativeValue() != small_) {
+        // It didn't fit.  Take things one long at a time.
+        unsigned blocks = bytes / sizeof(long);
+        large_ = new mpz_t;
+        mpz_init_set_si(large_, static_cast<long>(
+            value.nativeValue() >> ((blocks - 1) * 8 * sizeof(long))));
+        for (unsigned i = 2; i <= blocks; ++i) {
+            mpz_mul_2exp(large_, large_, 8 * sizeof(long));
+            mpz_add_ui(large_, large_, static_cast<long>(
+                value.nativeValue() >> ((blocks - i) * 8 * sizeof(long))));
+        }
+    }
 }
 
 template <bool supportInfinity>
