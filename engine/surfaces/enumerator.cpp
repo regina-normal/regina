@@ -231,7 +231,7 @@ void NNormalSurfaceList::Enumerator::fillVertexDD(NProgressNumber* progress) {
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillVertexTree(NProgressNumber* progress) {
     // TODO: Progress reporting, multithreading, cancellation.
-    NTreeEnumeration<LPConstraintNone, BanNone, NInteger> search(
+    NTreeEnumeration<LPConstraintNone, BanNone, NNativeLong> search(
         triang_, list_->flavour_);
     while (search.next()) {
         list_->surfaces.push_back(search.buildSurface());

@@ -1508,9 +1508,7 @@ namespace regina {
  * their code, or support both NInteger and NNativeInteger types as
  * template arguments.
  *
- * \pre The template argument \a T must be a signed native integer type,
- * with at least as many bits as \c long.  Essentially, this implies that \a T
- * is restricted to either \c long, or <tt>long long</tt>.
+ * \pre The template argument \a T must be a signed native integer type.
  *
  * \ifacespython Not present.
  */
