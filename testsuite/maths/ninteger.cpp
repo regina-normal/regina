@@ -65,6 +65,10 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(constructAssignCopyInfinity);
     CPPUNIT_TEST(constructSpecial<NInteger>);
     CPPUNIT_TEST(constructSpecial<NLargeInteger>);
+#ifdef INT128_FOUND
+    CPPUNIT_TEST(constructNative128<NInteger>);
+    CPPUNIT_TEST(constructNative128<NLargeInteger>);
+#endif
     CPPUNIT_TEST(stringValue<NInteger>);
     CPPUNIT_TEST(stringValue<NLargeInteger>);
     CPPUNIT_TEST(swap<NInteger>);
@@ -847,6 +851,51 @@ class NIntegerTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
         }
+
+#ifdef INT128_FOUND
+        template <typename IntType>
+        void constructNative128() {
+            // Test conversion from native types that are larger than long.
+            regina::NNativeInteger<16> pos62 = 1;
+            regina::NNativeInteger<16> pos63 = 1;
+            regina::NNativeInteger<16> pos64 = 1;
+            regina::NNativeInteger<16> pos126 = 1;
+            regina::NNativeInteger<16> neg62 = 1;
+            regina::NNativeInteger<16> neg63 = 1;
+            regina::NNativeInteger<16> neg64 = 1;
+            regina::NNativeInteger<16> neg126 = 1;
+            regina::NNativeInteger<16> pos127 = 1;
+            regina::NNativeInteger<16> neg127 = 1;
+            int i;
+            pos62 *= 1073741824; // 2^30
+            pos62 *= 1073741824; // 2^30
+            pos62 *= 4;
+            neg62 = -pos62;
+            pos63 = pos62 * 2;
+            neg63 = -pos63;
+            pos64 = pos63 * 2;
+            neg64 = -pos64;
+            pos126 = pos63 * pos63;
+            neg126 = -pos126;
+            pos127 = pos126 * 2; // Should overflow to -2^127
+            neg127 = neg126 * 2;
+
+            testStringValue(IntType(pos62), 10, "4611686018427387904");
+            testStringValue(IntType(neg62), 10, "-4611686018427387904");
+            testStringValue(IntType(pos63), 10, "9223372036854775808");
+            testStringValue(IntType(neg63), 10, "-9223372036854775808");
+            testStringValue(IntType(pos64), 10, "18446744073709551616");
+            testStringValue(IntType(neg64), 10, "-18446744073709551616");
+            testStringValue(IntType(pos126), 10,
+                "85070591730234615865843651857942052864");
+            testStringValue(IntType(neg126), 10,
+                "-85070591730234615865843651857942052864");
+            testStringValue(IntType(pos127), 10,
+                "-170141183460469231731687303715884105728"); // Overflows
+            testStringValue(IntType(neg127), 10,
+                "-170141183460469231731687303715884105728");
+        }
+#endif
 
         template <typename IntType>
         void stringValue() {
