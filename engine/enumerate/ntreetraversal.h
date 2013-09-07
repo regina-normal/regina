@@ -49,7 +49,7 @@
 
 namespace regina {
 
-class NProgress;
+class NProgressPercent;
 class NTriangulation;
 
 /**
@@ -480,6 +480,20 @@ class NTreeTraversal : public BanConstraint {
          * feasible system; this will be between 0 and 4 inclusive.
          */
         int feasibleBranches(int quadType);
+
+        /**
+         * Gives a rough estimate as to what percentage of the way the
+         * current type vector is through a full enumeration of the
+         * search tree.  This is useful for progress tracking.
+         *
+         * This routine only attemps to determine the percentage within
+         * a reasonable range of error (at the time of writing, 0.01%).
+         * This allows it to be more efficient (in particular, by only
+         * examining the branches closest to the root of the search tree).
+         *
+         * @return the percentage, as a number between 0 and 100 inclusive.
+         */
+        double percent() const;
 };
 
 /**
@@ -570,6 +584,7 @@ class NTreeEnumeration :
 
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::
             feasibleBranches;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::percent;
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::setNext;
 
     private:
@@ -724,7 +739,7 @@ class NTreeEnumeration :
          * \c false if the search has now finished and no more vertex
          * surfaces were found.
          */
-        bool next(NProgress* progress = 0);
+        bool next(NProgressPercent* progress = 0);
 
         /**
          * A callback function that writes to standard output the type vector
@@ -896,6 +911,7 @@ class NTreeSingleSoln :
             feasibleBranches;
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::
             nextUnmarkedTriangleType;
+        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::percent;
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::setNext;
 
     private:
