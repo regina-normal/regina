@@ -49,6 +49,7 @@
 
 namespace regina {
 
+class NProgress;
 class NTriangulation;
 
 /**
@@ -248,13 +249,6 @@ class NTreeTraversal : public BanConstraint {
                  also (as "scratch space"); however, be aware that any
                  call to feasibleBranches() will overwrite them. */
 
-    private:
-        bool cancelled_;
-            /**< Has the search been cancelled by another thread?
-                 See the cancel() and cancelled() routines for details. */
-        regina::NMutex mCancel_;
-            /**< A mutex used to serialise cancellation tests and requests. */
-
     public:
         /**
          * Indicates whether the given coordinate system is supported by
@@ -388,30 +382,6 @@ class NTreeTraversal : public BanConstraint {
          */
         bool verify(const NNormalSurface* s,
                 const NMatrixInt* matchingEqns = 0) const;
-
-        /**
-         * Cancels the current search operation.
-         *
-         * This may be called from another thread (it is thread-safe).
-         * If called, it signals that any major search operation
-         * underway should be cancelled.
-         *
-         * If and when the operation is cancelled is entirely up to the
-         * subclass performing the search.  Examples of searches that
-         * respect cancellation requests (and do so relatively quickly)
-         * are NTreeEnumeration::next() and NTreeSingleSoln::find().
-         */
-        void cancel();
-
-        /**
-         * Returns whether some thread has requested that the current
-         * search operation be cancelled.  This routine is thread-safe.
-         *
-         * See cancel() for details on how cancellation works.
-         *
-         * @return \c true if some thread has called cancel() on this object.
-         */
-        bool cancelled() const;
 
     protected:
         /**
@@ -598,7 +568,6 @@ class NTreeEnumeration :
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::type_;
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::typeOrder_;
 
-        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::cancelled;
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::
             feasibleBranches;
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::setNext;
@@ -734,16 +703,28 @@ class NTreeEnumeration :
          * operations upon it.  If you do call buildSurface(), remember
          * to delete the normal surface once you are finished with it.
          *
+         * A progress watcher may be passed for progress reporting.
+         * If so, this routine will (i) track the progress of this
+         * routine, and (ii) poll for cancellation requests.
+         * The progress will be given as a percentage in the context of
+         * a complete enumeration of all solutions (i.e., it will typically
+         * start at a percentage greater than 0, and end at a percentage less
+         * than 100).  This routine will not call \a NProgress::setFinished(),
+         * even if the search tree is exhausted; the responsibility for
+         * calling setFinished() is up to the caller of this routine.
+         *
          * \pre The tree traversal algorithm has not yet finished.
          * That is, you have not called run() before, and if you have
          * called next() then it has always returned \c true (indicating
          * that it has not yet finished the search).
          *
+         * @param progress a progress watcher through which progress
+         * will be reported, or 0 if no progress reporting is required.
          * @return \c true if we found another vertex surface, or
          * \c false if the search has now finished and no more vertex
          * surfaces were found.
          */
-        bool next();
+        bool next(NProgress* progress = 0);
 
         /**
          * A callback function that writes to standard output the type vector
@@ -911,7 +892,6 @@ class NTreeSingleSoln :
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::type_;
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::typeOrder_;
 
-        using NTreeTraversal<LPConstraint, BanConstraint, Integer>::cancelled;
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::
             feasibleBranches;
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::
@@ -925,6 +905,13 @@ class NTreeSingleSoln :
                  links by dynamically reorganising the search tree as we run
                  to ensure that at least one relevant triangle coordinate is
                  set to zero at all stages and all levels of the search. */
+
+        bool cancelled_;
+            /**< Has the search been cancelled by another thread?
+                 See the cancel() and cancelled() routines for details. */
+        regina::NMutex mCancel_;
+            /**< A mutex used to serialise cancellation tests and requests. */
+
 
     public:
         /**
@@ -976,6 +963,26 @@ class NTreeSingleSoln :
          * in the class notes, or \c false if no such solution exists.
          */
         bool find();
+
+        /**
+         * Cancels the current find() operation.
+         *
+         * This may be called from another thread (it is thread-safe).
+         * If called, it signals that if find() is currently running
+         * then it should be cancelled at the earliest convenient opportunity.
+         */
+        void cancel();
+
+    private:
+        /**
+         * Returns whether some thread has requested that the current
+         * search operation be cancelled.  This routine is thread-safe.
+         *
+         * See cancel() for details on how cancellation works.
+         *
+         * @return \c true if some thread has called cancel() on this object.
+         */
+        bool cancelled() const;
 };
 
 // Inline functions
@@ -1010,21 +1017,6 @@ inline void NTreeTraversal<LPConstraint, BanConstraint, Integer>::dumpTypes(
         std::ostream& out) const {
     for (unsigned i = 0; i < nTypes_; ++i)
         out << static_cast<int>(type_[i]);
-}
-
-template <template <typename> class LPConstraint, typename BanConstraint,
-        typename Integer>
-inline void NTreeTraversal<LPConstraint, BanConstraint, Integer>::cancel() {
-    regina::NMutex::MutexLock lock(mCancel_);
-    cancelled_ = true;
-}
-
-template <template <typename> class LPConstraint, typename BanConstraint,
-        typename Integer>
-inline bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::cancelled()
-        const {
-    regina::NMutex::MutexLock lock(mCancel_);
-    return cancelled_;
 }
 
 template <template <typename> class LPConstraint, typename BanConstraint,
@@ -1096,7 +1088,23 @@ inline NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::NTreeSingleSoln(
              6 : 3) /* branches per quad */,
             2 /* branches per triangle */,
             false /* enumeration */),
-        nextZeroLevel_(0) {
+        nextZeroLevel_(0),
+        cancelled_(false) {
+}
+
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+inline void NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::cancel() {
+    regina::NMutex::MutexLock lock(mCancel_);
+    cancelled_ = true;
+}
+
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
+inline bool NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::cancelled()
+        const {
+    regina::NMutex::MutexLock lock(mCancel_);
+    return cancelled_;
 }
 
 } // namespace regina

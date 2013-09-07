@@ -45,6 +45,7 @@
 #endif
 
 #include "enumerate/ntreetraversal.h"
+#include "progress/nprogress.h"
 #include "surfaces/nsanstandard.h"
 #include "surfaces/nsquad.h"
 #include "surfaces/nsquadoct.h"
@@ -191,8 +192,7 @@ NTreeTraversal<LPConstraint, BanConstraint, Integer>::NTreeTraversal(
         lp_(new LPData<LPConstraint, Integer>[nTableaux_]),
         lpSlot_(new LPData<LPConstraint, Integer>*[nTypes_ + 1]),
         nextSlot_(new LPData<LPConstraint, Integer>*[nTypes_ + 1]),
-        nVisited_(0),
-        cancelled_(false) {
+        nVisited_(0) {
     // Initialise the type vector to the zero vector.
     std::fill(type_, type_ + nTypes_ + 1, 0);
 
@@ -293,7 +293,8 @@ int NTreeTraversal<LPConstraint, BanConstraint, Integer>::feasibleBranches(
 
 template <template <typename> class LPConstraint, typename BanConstraint,
         typename Integer>
-bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::next() {
+bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::next(
+        NProgress* progress) {
     if (lastNonZero_ < 0) {
         // Our type vector is the zero vector.
         // This means we are starting the search from the very
@@ -345,7 +346,7 @@ bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::next() {
     // And... continue the search!
     unsigned idx; /* Index of the type we are currently choosing. */
     bool outOfRange;
-    while (! cancelled()) {
+    while (! (progress && progress->isCancelled())) {
 #ifdef REGINA_TREE_TRACE
         dumpTypes(std::cout);
         std::cout << std::endl;
