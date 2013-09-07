@@ -260,9 +260,59 @@ class REGINA_API NProgressPercent : public NProgress {
         virtual double internalGetPercent() const;
 };
 
+/**
+ * A progress report for a two-step procedure, each of which is tracked
+ * through a separate NProgress object.
+ *
+ * For cancellation support, as well as queries such as isStarted() and
+ * isFinished(), users must go through this parent object.  The inner
+ * NProgress objects for each stage are used only for measuring the
+ * current state of progress.
+ *
+ * \ifacespython Not present; all progress classes communicate with
+ * external interfaces through the NProgress interface.
+ */
+class REGINA_API NProgressTwoStep : public NProgress {
+    private:
+        NProgress* step1_;
+            /**< Tracks progress for the first step. */
+        NProgress* step2_;
+            /**< Tracks progress for the second step. */
+        double weight1_;
+            /**< The weight of the first step, as a fraction between
+                 0 and 1 inclusive. */
+
+    public:
+        /**
+         * Creates a new object that monitors its two steps using the
+         * two given progress trackers.
+         * This object will claim ownership of the two given progress trackers.
+         * Note that the internal mutex is not locked during construction.
+         *
+         * @param step1 tracks the first step of the procedure.
+         * @param step2 tracks the second step of the procedure.
+         * @param weight1 the fractional weight assigned to the first
+         * step; this must be between 0 and 1 inclusive.
+         */
+        NProgressTwoStep(NProgress* step1, NProgress* step2,
+            double weight1 = 0.5);
+
+        /**
+         * Destroys this object, as well as the two NProgress objects
+         * for the two individual steps.
+         */
+        ~NProgressTwoStep();
+
+        virtual bool isPercent() const;
+
+    protected:
+        virtual std::string internalGetDescription() const;
+        virtual double internalGetPercent() const;
+};
+
 /*@}*/
 
-// Inline functions for NProgressMessage
+// Inline functions
 
 inline NProgressMessage::NProgressMessage() : NProgress() {
 }
@@ -293,13 +343,9 @@ inline std::string NProgressMessage::internalGetDescription() const {
     return message;
 }
 
-// Inline functions for NProgressStateNumeric
-
 inline NProgressStateNumeric::NProgressStateNumeric(long newCompleted,
         long newOutOf) : completed(newCompleted), outOf(newOutOf) {
 }
-
-// Inline functions for NProgressNumber
 
 inline NProgressNumber::NProgressNumber(long newCompleted, long newOutOf) :
         NProgress(), completed(newCompleted), outOf(newOutOf) {
@@ -362,6 +408,25 @@ inline bool NProgressPercent::isPercent() const {
 
 inline double NProgressPercent::internalGetPercent() const {
     return percent;
+}
+
+inline NProgressTwoStep::NProgressTwoStep(NProgress* step1, NProgress* step2,
+        double weight1) :
+    step1_(step1), step2_(step2), weight1_(weight1) {
+}
+
+inline NProgressTwoStep::~NProgressTwoStep() {
+    delete step1_;
+    delete step2_;
+}
+
+inline bool NProgressTwoStep::isPercent() const {
+    return step1_->isPercent() && step2_->isPercent();
+}
+
+inline double NProgressTwoStep::internalGetPercent() const {
+    return weight1_ * step1_->getPercent() +
+        (1 - weight1_) * step2_->getPercent();
 }
 
 } // namespace regina

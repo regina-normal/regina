@@ -60,6 +60,7 @@ class NMatrixInt;
 class NProgressManager;
 class NProgressMessage;
 class NProgressNumber;
+class NProgressPercent;
 class NXMLPacketReader;
 class NXMLNormalSurfaceListReader;
 
@@ -1420,7 +1421,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Flavour>
-                void fillVertexTree(NProgressNumber* progress);
+                void fillVertexTree(NProgressPercent* progress);
 
                 /**
                  * Internal code for fillVertexTree() in which the underlying
@@ -1436,7 +1437,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * under consideration.
                  */
                 template <typename Flavour, typename Integer>
-                void fillVertexTreeWith(NProgressNumber* progress);
+                void fillVertexTreeWith(NProgressPercent* progress);
 
                 /**
                  * The enumeration code for enumerating fundamental surfaces

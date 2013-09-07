@@ -274,8 +274,8 @@ Version 4.94  [ (under development) ]
             - NPerm4::invS2 and NPerm4::invS3 are deprecated: the former
               is unnecessary, and the latter is identical to NPerm3::invS3.
             - NPerm3 now has a transposition constructor: NPerm3(a,b).
-        Class NProgressPercent:
-            - Progress class for tracking raw percentages.
+        Class NProgressPercent, NProgressTwoStep:
+            - Additional methods for tracking progress.
         Class NQitmask1, NQitmask2:
             - Fast classes for working with 0/1/2/3 "qits", i.e., "base 4 bits".
         Class NSatBlock:
