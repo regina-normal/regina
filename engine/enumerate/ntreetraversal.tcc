@@ -45,7 +45,7 @@
 #endif
 
 #include "enumerate/ntreetraversal.h"
-#include "progress/nprogress.h"
+#include "progress/nprogresstypes.h"
 #include "surfaces/nsanstandard.h"
 #include "surfaces/nsquad.h"
 #include "surfaces/nsquadoct.h"
@@ -293,8 +293,46 @@ int NTreeTraversal<LPConstraint, BanConstraint, Integer>::feasibleBranches(
 
 template <template <typename> class LPConstraint, typename BanConstraint,
         typename Integer>
+double NTreeTraversal<LPConstraint, BanConstraint, Integer>::percent() const {
+    double percent = 0.0;
+    double range = 100.0;
+    unsigned den;
+    unsigned quadsRemaining = nTets_;
+    // Just check the first few types, until the margin of
+    // error is sufficiently small.
+    for (unsigned i = 0; range > 0.01 && i < nTypes_; ++i) {
+        if (typeOrder_[i] >= nTets_) {
+            // Triangle coordinate.
+            range /= 2.0;
+            percent += (range * type_[typeOrder_[i]]);
+        } else {
+            // Quadrilateral or octagon coordinate.
+            if (octLevel_ == nTypes_ || octLevel_ < i) {
+                // Octagons have already been used, or were never available.
+                range /= 4.0;
+                percent += (range * type_[typeOrder_[i]]);
+            } else if (octLevel_ == i) {
+                // This coordinate is an octagon coordinate.
+                den = 3 * quadsRemaining + 4;
+                range /= den;
+                percent += range * ((den - 3) + (type_[typeOrder_[i]] - 4));
+            } else {
+                // This is a quad coordinate, but octagons are still
+                // available for use either here or deeper in the tree.
+                den = 3 * quadsRemaining + 4;
+                range = (range * (den - 3)) / (4 * den); // Floating pt division
+                percent += (range * type_[typeOrder_[i]]);
+            }
+            --quadsRemaining;
+        }
+    }
+    return percent;
+}
+
+template <template <typename> class LPConstraint, typename BanConstraint,
+        typename Integer>
 bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::next(
-        NProgress* progress) {
+        NProgressPercent* progress) {
     if (lastNonZero_ < 0) {
         // Our type vector is the zero vector.
         // This means we are starting the search from the very
@@ -346,7 +384,11 @@ bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::next(
     // And... continue the search!
     unsigned idx; /* Index of the type we are currently choosing. */
     bool outOfRange;
-    while (! (progress && progress->isCancelled())) {
+    while (true) {
+        // Update the state of progress and test for cancellation.
+        if (progress && ! progress->setPercent(percent()))
+            break;
+
 #ifdef REGINA_TREE_TRACE
         dumpTypes(std::cout);
         std::cout << std::endl;
