@@ -218,6 +218,48 @@ class REGINA_API NProgressNumber : public NProgress {
         virtual double internalGetPercent() const;
 };
 
+/**
+ * A progress report in which the current state of progress is stored as
+ * a percentage of work completed.
+ *
+ * \ifacespython Not present; all progress classes communicate with
+ * external interfaces through the NProgress interface.
+ */
+class REGINA_API NProgressPercent : public NProgress {
+    private:
+        double percent;
+            /**< The percentage of work completed. */
+
+    public:
+        /**
+         * Creates a new progress report containing the given details.
+         * Note that the internal mutex is not locked during construction.
+         *
+         * \pre The new percentage completed is between 0 and 100 inclusive.
+         *
+         * @param newPercent the percentage of work completed; this
+         * defaults to 0.
+         */
+        NProgressPercent(double newPercent = 0);
+
+        /**
+         * Sets the percentage of work completed.
+         *
+         * \pre The new percentage is between 0 and 100 inclusive.
+         *
+         * @param newPercent the percentage of work completed.
+         * @return \c false if an external interface has requested that
+         * this operation be cancelled, or \c true if not.
+         */
+        bool setPercent(double newPercent);
+
+        virtual bool isPercent() const;
+
+    protected:
+        virtual std::string internalGetDescription() const;
+        virtual double internalGetPercent() const;
+};
+
 /*@}*/
 
 // Inline functions for NProgressMessage
@@ -248,7 +290,6 @@ inline void NProgressMessage::setMessage(const char* newMessage) {
 }
 
 inline std::string NProgressMessage::internalGetDescription() const {
-    MutexLock(this);
     return message;
 }
 
@@ -301,8 +342,26 @@ inline bool NProgressNumber::isPercent() const {
 }
 
 inline double NProgressNumber::internalGetPercent() const {
-    MutexLock(this);
     return (outOf > 0 ? double(completed) * 100 / double(outOf) : double(0));
+}
+
+inline NProgressPercent::NProgressPercent(double newPercent) :
+        NProgress(), percent(newPercent) {
+}
+
+inline bool NProgressPercent::setPercent(double newPercent) {
+    MutexLock(this);
+    percent = newPercent;
+    changed = true;
+    return cancelled;
+}
+
+inline bool NProgressPercent::isPercent() const {
+    return true;
+}
+
+inline double NProgressPercent::internalGetPercent() const {
+    return percent;
 }
 
 } // namespace regina
