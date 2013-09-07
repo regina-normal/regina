@@ -353,7 +353,7 @@ inline bool NProgressPercent::setPercent(double newPercent) {
     MutexLock(this);
     percent = newPercent;
     changed = true;
-    return cancelled;
+    return ! cancelled;
 }
 
 inline bool NProgressPercent::isPercent() const {
