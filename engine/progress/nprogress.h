@@ -77,9 +77,6 @@ namespace regina {
  *
  * NProgress contains multithreading support; a mutex is used to ensure
  * that the reading and writing threads do not interfere.
- * Note that multithreading is in general not supported in the
- * calculation engine, and the second thread must <b>only</b> read the
- * current state of progress and do nothing else.
  *
  * NProgress also contains timing support, with measurements in both
  * real time and CPU time.  See the routines getRealTime() and
@@ -97,13 +94,13 @@ class REGINA_API NProgress : public ShareableObject, protected NMutex {
     protected:
         mutable bool changed;
             /**< Has the state of progress changed since the last query? */
+        bool cancelled;
+            /**< Has this operation been cancelled? */
 
     private:
         bool finished;
             /**< Is the operation whose progress we are reporting
              *   completely finished? */
-        bool cancelled;
-            /**< Has this operation been cancelled? */
         time_t startReal;
             /**< A real time marker representing when this progress
                  object was constructed. */
@@ -277,15 +274,25 @@ class REGINA_API NProgress : public ShareableObject, protected NMutex {
         /**
          * Returns a string description of the current state of progress.
          *
+         * This function must not touch the mutex, and is not required
+         * to alter the \a changed flag.  The getDescription() routine takes
+         * care of all of these issues.
+         *
+         * \pre The mutex is currently locked.
+         *
          * @return the current state of progress.
          */
         virtual std::string internalGetDescription() const = 0;
         /**
          * Returns the current state of progress as a percentage.
-         *
          * The default implementation returns 0.
          *
+         * This function must not touch the mutex, and is not required
+         * to alter the \a changed flag.  The getDescription() routine takes
+         * care of all of these issues.
+         *
          * \pre Progress can be expressed as a percentage (see isPercent()).
+         * \pre The mutex is currently locked.
          *
          * @return the current state of progress as a percentage.
          */
@@ -328,6 +335,7 @@ inline NProgress::~NProgress() {
 }
 
 inline bool NProgress::hasChanged() const {
+    MutexLock(this);
     return changed;
 }
 inline bool NProgress::isFinished() const {
@@ -342,13 +350,16 @@ inline void NProgress::setFinished() {
 }
 
 inline void NProgress::cancel() const {
+    MutexLock(this);
     const_cast<NProgress*>(this)->cancelled = true;
 }
 inline bool NProgress::isCancelled() const {
+    MutexLock(this);
     return cancelled;
 }
 
 inline std::string NProgress::getDescription() const {
+    MutexLock(this);
     changed = false;
     return internalGetDescription();
 }
@@ -356,6 +367,7 @@ inline bool NProgress::isPercent() const {
     return false;
 }
 inline double NProgress::getPercent() const {
+    MutexLock(this);
     changed = false;
     return internalGetPercent();
 }
