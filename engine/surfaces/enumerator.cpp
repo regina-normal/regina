@@ -141,35 +141,41 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
         list_->algorithm_.clear(NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT);
     }
 
-    // ----- Prepare progress reporting -----
-
-    NProgressNumber* progress = 0;
-    if (manager_) {
-        progress = new NProgressNumber(0, 1);
-        manager_->setProgress(progress);
-    }
-
     // ----- Run the enumeration algorithm -----
 
     if (triang_->getNumberOfTetrahedra() == 0) {
         // Handle the empty triangulation separately.
         list_->algorithm_ = NS_VERTEX_DD; /* shrug */
         // Nothing to do.
+        if (manager_)
+            manager_->setProgress(new NProgressFinished());
     } else if (! list_->algorithm_.has(NS_VERTEX_VIA_REDUCED)) {
         // A direct enumeration in the chosen coordinate system.
-        if (list_->algorithm_.has(NS_VERTEX_TREE))
-            fillVertexTree<Flavour>(progress);
-        else
-            fillVertexDD<Flavour>(progress);
+        if (list_->algorithm_.has(NS_VERTEX_TREE)) {
+            if (manager_) {
+                NProgressPercent* progress = new NProgressPercent();
+                manager_->setProgress(progress);
+                fillVertexTree<Flavour>(progress);
+                progress->setFinished();
+            } else {
+                fillVertexTree<Flavour>(0);
+            }
+        } else {
+            if (manager_) {
+                NProgressNumber* progress = new NProgressNumber(0, 1);
+                manager_->setProgress(progress);
+                fillVertexDD<Flavour>(progress);
+                progress->incCompleted();
+                progress->setFinished();
+            } else {
+                fillVertexDD<Flavour>(0);
+            }
+        }
     } else {
         // Enumerate in the reduced coordinate system, and then convert
         // the solution set to the standard coordinate system.
-
-        // Assign a fixed number of "steps" for the final conversion to
-        // standard form, which is usually very fast.
-        const unsigned CONVERSION_STEPS = 1;
-        if (progress)
-            progress->setOutOf(progress->getOutOf() + CONVERSION_STEPS + 1);
+        NProgressTwoStep* progress = 0;
+        NProgressNumber* progress2 = 0;
 
         // Since there are currently only two systems in which we can do
         // this (NS_STANDARD and NS_AN_STANDARD), we hard-code these
@@ -181,15 +187,30 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
                 (list_->flavour_ == NS_STANDARD ? NS_QUAD : NS_AN_QUAD_OCT),
                 list_->which_, list_->algorithm_ ^ NS_VERTEX_VIA_REDUCED),
             triang_, 0);
-        if (list_->algorithm_.has(NS_VERTEX_TREE))
-            e.fillVertexTree<typename Flavour::ReducedFlavour>(progress);
-        else
-            e.fillVertexDD<typename Flavour::ReducedFlavour>(progress);
+        if (list_->algorithm_.has(NS_VERTEX_TREE)) {
+            if (manager_) {
+                NProgressPercent* progress1 = new NProgressPercent();
+                progress2 = new NProgressNumber(0, 1);
+                progress = new NProgressTwoStep(progress1, progress2, 0.9);
+                manager_->setProgress(progress);
+                e.fillVertexTree<typename Flavour::ReducedFlavour>(progress1);
+            } else
+                e.fillVertexTree<typename Flavour::ReducedFlavour>(0);
+        } else {
+            if (manager_) {
+                NProgressNumber* progress1 = new NProgressNumber(0, 1);
+                progress2 = new NProgressNumber(0, 1);
+                progress = new NProgressTwoStep(progress1, progress2);
+                manager_->setProgress(progress);
+                e.fillVertexDD<typename Flavour::ReducedFlavour>(progress1);
+                progress1->incCompleted();
+            } else
+                e.fillVertexDD<typename Flavour::ReducedFlavour>(0);
+        }
 
-        if (progress) {
-            progress->incCompleted();
-            if (progress->isCancelled())
-                return;
+        if (progress && progress->isCancelled()) {
+            delete e.list_;
+            return;
         }
 
         // Expand to the standard the solution set.
@@ -202,15 +223,10 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
 
         // Clean up.
         delete e.list_;
-        if (progress)
-            progress->incCompleted(CONVERSION_STEPS);
-    }
-
-    // ----- Finalise progress reporting -----
-
-    if (progress) {
-        progress->incCompleted();
-        progress->setFinished();
+        if (progress) {
+            progress2->incCompleted();
+            progress->setFinished();
+        }
     }
 }
 
@@ -229,21 +245,27 @@ void NNormalSurfaceList::Enumerator::fillVertexDD(NProgressNumber* progress) {
 }
 
 template <typename Flavour>
-void NNormalSurfaceList::Enumerator::fillVertexTree(NProgressNumber* progress) {
+void NNormalSurfaceList::Enumerator::fillVertexTree(NProgressPercent* progress) {
     // TODO: Select an appropriate integer type.
-    fillVertexTreeWith<Flavour, NInteger>(progress);
+    // TODO: Don't forget to double it.
+    int bits = 128; // TODO
+
+    if (bits < sizeof(long) * 8 - 1)
+        fillVertexTreeWith<Flavour, NNativeLong>(progress);
 #ifdef INT128_FOUND
-    // TODO ...
+    else if (bits < 127)
+        fillVertexTreeWith<Flavour, NNativeInteger<16> >(progress);
 #endif
+    else
+        fillVertexTreeWith<Flavour, NInteger>(progress);
 }
 
 template <typename Flavour, typename Integer>
 void NNormalSurfaceList::Enumerator::fillVertexTreeWith(
-        NProgressNumber* progress) {
-    // TODO: Progress reporting, multithreading, cancellation.
+        NProgressPercent* progress) {
     NTreeEnumeration<LPConstraintNone, BanNone, Integer> search(
         triang_, list_->flavour_);
-    while (search.next()) {
+    while (search.next(progress)) {
         list_->surfaces.push_back(search.buildSurface());
         if (progress && progress->isCancelled())
             break;
