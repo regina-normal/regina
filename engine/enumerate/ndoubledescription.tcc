@@ -449,7 +449,7 @@ bool NDoubleDescription::intersectHyperplane(
         for (negit = neg.begin(); negit != neg.end(); ++negit) {
             // Test for cancellation, but not every time (since this
             // involves expensive mutex locking).
-            if (progress && ++iterations == 1000) {
+            if (progress && ++iterations == 100) {
                 iterations = 0;
                 if (progress->isCancelled()) {
                     for (otherit = src.begin(); otherit != src.end();

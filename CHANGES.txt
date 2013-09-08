@@ -142,6 +142,8 @@ Version 4.94  [ (under development) ]
               Instead of these, use the NormalCoords enum values directly
               (NS_STANDARD, NS_QUAD, etc.).  For both C++ and Python users,
               these enum values are available directly in the namespace scope.
+            - More frequent and robust cancellation checking during
+              enumeration of vertex surfaces.
             - The old enumeration routines have been deprecated.  These
               include enumerate(NTriangulation*, int, bool, NProgressManager*),
               enumerateStandardDirect(), enumerateStandardANDirect(),

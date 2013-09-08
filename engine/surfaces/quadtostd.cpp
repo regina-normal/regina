@@ -325,7 +325,8 @@ NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
 
 template <class Variant>
 void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
-        const std::vector<NNormalSurface*>& reducedList) {
+        const std::vector<NNormalSurface*>& reducedList,
+        NProgressNumber* progress) {
     size_t nFacets = Variant::stdLen(owner->getNumberOfTetrahedra());
 
     // Choose a bitmask type for representing the set of facets that a
@@ -335,39 +336,43 @@ void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
     // templated on the bitmask type.
     if (nFacets <= 8 * sizeof(unsigned))
         buildStandardFromReducedUsing<Variant,
-            NBitmask1<unsigned> >(owner, reducedList);
+            NBitmask1<unsigned> >(owner, reducedList, progress);
     else if (nFacets <= 8 * sizeof(unsigned long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask1<unsigned long> >(owner, reducedList);
+            NBitmask1<unsigned long> >(owner, reducedList, progress);
 #ifdef LONG_LONG_FOUND
     else if (nFacets <= 8 * sizeof(unsigned long long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask1<unsigned long long> >(owner, reducedList);
+            NBitmask1<unsigned long long> >(owner, reducedList, progress);
     else if (nFacets <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         buildStandardFromReducedUsing<Variant,
-            NBitmask2<unsigned long long, unsigned> >(owner, reducedList);
+            NBitmask2<unsigned long long, unsigned> >(owner, reducedList,
+                progress);
     else if (nFacets <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask2<unsigned long long, unsigned long> >(owner, reducedList);
+            NBitmask2<unsigned long long, unsigned long> >(owner, reducedList,
+                progress);
     else if (nFacets <= 16 * sizeof(unsigned long long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask2<unsigned long long> >(owner, reducedList);
+            NBitmask2<unsigned long long> >(owner, reducedList, progress);
 #else
     else if (nFacets <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
         buildStandardFromReducedUsing<Variant,
-            NBitmask2<unsigned long, unsigned> >(owner, reducedList);
+            NBitmask2<unsigned long, unsigned> >(owner, reducedList, progress);
     else if (nFacets <= 16 * sizeof(unsigned long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask2<unsigned long> >(owner, reducedList);
+            NBitmask2<unsigned long> >(owner, reducedList, progress);
 #endif
     else
-        buildStandardFromReducedUsing<Variant, NBitmask>(owner, reducedList);
+        buildStandardFromReducedUsing<Variant, NBitmask>(owner, reducedList,
+            progress);
 }
 
 template <class Variant, class BitmaskType>
 void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
-        const std::vector<NNormalSurface*>& reducedList) {
+        const std::vector<NNormalSurface*>& reducedList,
+        NProgressNumber* progress) {
     // Prepare for the reduced-to-standard double description run.
     unsigned long n = owner->getNumberOfTetrahedra();
     size_t slen = Variant::stdLen(n); // # standard coordinates
@@ -445,6 +450,10 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
     BitmaskType* constraintMask;
     bool broken;
 
+    if (progress)
+        progress->setOutOf(progress->getOutOf() + n * 4);
+
+    unsigned iterations;
     for (vtx = 0; vtx < llen; ++vtx) {
         linkSpec = new RaySpec<BitmaskType>(link[vtx]);
         delete link[vtx];
@@ -456,6 +465,16 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
             getEmbeddings();
         std::vector<NVertexEmbedding>::const_iterator embit;
         for (embit = emb.begin(); embit != emb.end(); ++embit) {
+            if (progress) {
+                progress->incCompleted();
+                if (progress->isCancelled()) {
+                    for (it = list[workingList].begin();
+                            it != list[workingList].end(); ++it)
+                        delete *it;
+                    return;
+                }
+            }
+
             tcoord = Variant::stdPos(embit->getTetrahedron()->markedIndex(),
                 embit->getVertex());
 
@@ -473,8 +492,23 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
                     neg.push_back(*it);
             }
 
+            iterations = 0;
             for (posit = pos.begin(); posit != pos.end(); ++posit)
                 for (negit = neg.begin(); negit != neg.end(); ++negit) {
+                    // Test for cancellation, but not every time (since
+                    // this involves expensive mutex locking).
+                    if (progress && ++iterations == 100) {
+                        iterations = 0;
+                        if (progress->isCancelled()) {
+                            for (it = list[1 - workingList].begin();
+                                    it != list[1 - workingList].end(); ++it)
+                                delete *it;
+                            for (it = neg.begin(); it != neg.end(); ++it)
+                                delete *it;
+                            return;
+                        }
+                    }
+
                     // Find the facets that both rays have in common.
                     BitmaskType join((*posit)->facets());
                     join &= ((*negit)->facets());

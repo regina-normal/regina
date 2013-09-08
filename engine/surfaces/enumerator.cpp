@@ -217,10 +217,10 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
         // Expand to the standard the solution set.
         if (list_->flavour_ == NS_STANDARD)
             list_->buildStandardFromReduced<NormalSpec>(triang_,
-                e.list_->surfaces);
+                e.list_->surfaces, progress2);
         else
             list_->buildStandardFromReduced<AlmostNormalSpec>(triang_,
-                e.list_->surfaces);
+                e.list_->surfaces, progress2);
 
         // Clean up.
         delete e.list_;
