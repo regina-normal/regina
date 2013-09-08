@@ -200,7 +200,7 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
             if (manager_) {
                 NProgressNumber* progress1 = new NProgressNumber(0, 1);
                 progress2 = new NProgressNumber(0, 1);
-                progress = new NProgressTwoStep(progress1, progress2);
+                progress = new NProgressTwoStep(progress1, progress2, 0.9);
                 manager_->setProgress(progress);
                 e.fillVertexDD<typename Flavour::ReducedFlavour>(progress1);
                 progress1->incCompleted();
@@ -210,6 +210,7 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
 
         if (progress && progress->isCancelled()) {
             delete e.list_;
+            progress->setFinished();
             return;
         }
 

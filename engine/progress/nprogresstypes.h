@@ -265,9 +265,10 @@ class REGINA_API NProgressPercent : public NProgress {
  * through a separate NProgress object.
  *
  * For cancellation support, as well as queries such as isStarted() and
- * isFinished(), users must go through this parent object.  The inner
- * NProgress objects for each stage are used only for measuring the
- * current state of progress.
+ * isFinished(), users must go through this parent object.
+ *
+ * Threads that run each step should use each corresponding inner
+ * NProgress object to report progress and to poll for cancellation.
  *
  * \ifacespython Not present; all progress classes communicate with
  * external interfaces through the NProgress interface.
@@ -303,6 +304,8 @@ class REGINA_API NProgressTwoStep : public NProgress {
          */
         ~NProgressTwoStep();
 
+        virtual bool hasChanged() const;
+        virtual void cancel() const;
         virtual bool isPercent() const;
 
     protected:
@@ -418,6 +421,16 @@ inline NProgressTwoStep::NProgressTwoStep(NProgress* step1, NProgress* step2,
 inline NProgressTwoStep::~NProgressTwoStep() {
     delete step1_;
     delete step2_;
+}
+
+inline bool NProgressTwoStep::hasChanged() const {
+    return step1_->hasChanged() || step2_->hasChanged();
+}
+
+inline void NProgressTwoStep::cancel() const {
+    NProgress::cancel();
+    step1_->cancel();
+    step2_->cancel();
 }
 
 inline bool NProgressTwoStep::isPercent() const {

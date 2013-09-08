@@ -343,7 +343,7 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
         // space *without* this hyperplane (and therefore satisfies the
         // relevant dimensional constraints without this hyperplane).
         if (intersectHyperplane(list[workingList], list[1 - workingList],
-                dim, used, constraintsBegin, constraintsEnd))
+                dim, used, constraintsBegin, constraintsEnd, progress))
             ++used;
 
         workingList = 1 - workingList;
@@ -364,9 +364,19 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
     if (constraintsBegin)
         delete[] constraintsBegin;
 
+    typename RaySpecList::iterator it;
+
+    if (progress && progress->isCancelled()) {
+        // The operation was cancelled.  Clean up before returning.
+        for (it = list[workingList].begin(); it != list[workingList].end();
+                ++it)
+            delete *it;
+        return;
+    }
+
+    // Convert the final solutions into the required ray class.
     RayClass* ans;
-    for (typename RaySpecList::iterator it = list[workingList].begin();
-            it != list[workingList].end(); ++it) {
+    for (it = list[workingList].begin(); it != list[workingList].end(); ++it) {
         ans = new RayClass(dim);
         (*it)->recover(*ans, subspace);
         *results++ = ans;
@@ -385,7 +395,8 @@ bool NDoubleDescription::intersectHyperplane(
         std::vector<RaySpec<BitmaskType>*>& dest,
         unsigned long dim, unsigned long prevHyperplanes,
         const BitmaskType* constraintsBegin,
-        const BitmaskType* constraintsEnd) {
+        const BitmaskType* constraintsEnd,
+        NProgress* progress) {
     if (src.empty())
         return false;
 
@@ -433,8 +444,26 @@ bool NDoubleDescription::intersectHyperplane(
     for (otherit = src.begin(); otherit != src.end(); ++otherit)
         trie.insert((*otherit)->facets());
 
+    unsigned iterations = 0;
     for (posit = pos.begin(); posit != pos.end(); ++posit)
         for (negit = neg.begin(); negit != neg.end(); ++negit) {
+            // Test for cancellation, but not every time (since this
+            // involves expensive mutex locking).
+            if (progress && ++iterations == 1000) {
+                iterations = 0;
+                if (progress->isCancelled()) {
+                    for (otherit = src.begin(); otherit != src.end();
+                            ++otherit)
+                        delete *otherit;
+                    src.clear();
+                    for (otherit = dest.begin(); otherit != dest.end();
+                            ++otherit)
+                        delete *otherit;
+                    dest.clear();
+                    return false;
+                }
+            }
+
             BitmaskType join((*posit)->facets());
             join &= ((*negit)->facets());
 

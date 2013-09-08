@@ -157,6 +157,8 @@ Version 4.94  [ (under development) ]
               detected and pruned during census enumeration.
             - Improved the way in which too many high degree edges are
               detected and pruned during census enumeration.
+        Class NDoubleDescription:
+            - More frequent polling for cancellation.
         Class NEnumConstraintList:
             - This now holds unsigned longs, not unsigned ints, for
               consistency with the integer types used for NVector indexing.
