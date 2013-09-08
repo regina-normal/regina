@@ -1220,6 +1220,9 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * Although this routine takes a vector of non-const pointers, it
          * guarantees not to modify (or destroy) any of the contents.
          *
+         * A numeric progress watcher may be passed for progress reporting.
+         * If so, this routine will poll for cancellation requests accordingly.
+         *
          * Although this is a template function, it is a private
          * template function and so is only defined in the one <tt>.cpp</tt>
          * file that needs it.
@@ -1238,10 +1241,18 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * surfaces is to be based.
          * @param reducedList a full list of vertex surfaces in
          * (quad or quad-oct) coordinates for the given triangulation.
+         * @param progress a numeric progress watcher through which
+         * progress will be reported and cancellation requests will be
+         * honoured, or 0 if no progress reporting is required.
+         * If a progress watcher is passed, its expected total will be
+         * increased immediately by some number of steps and the
+         * completd total will be increased gradually by this same number.
+         * NProgress::setFinished() will \e not be called.
          */
         template <class Variant>
         void buildStandardFromReduced(NTriangulation* owner,
-            const std::vector<NNormalSurface*>& reducedList);
+            const std::vector<NNormalSurface*>& reducedList,
+            NProgressNumber* progress = 0);
 
         /**
          * Implements the one-template-argument version of
@@ -1261,7 +1272,8 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          */
         template <class Variant, class BitmaskType>
         void buildStandardFromReducedUsing(NTriangulation* owner,
-            const std::vector<NNormalSurface*>& reducedList);
+            const std::vector<NNormalSurface*>& reducedList,
+            NProgressNumber* progress);
 
         /**
          * Converts a set of embedded vertex surfaces in (quad or quad-oct)
