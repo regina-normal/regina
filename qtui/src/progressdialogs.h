@@ -45,14 +45,13 @@
 namespace regina {
     class NProgress;
     class NProgressManager;
-    class NProgressNumber;
 };
 
 class QLabel;
 
 /**
- * A dialog that interacts with the calculation engine progress class
- * regina::NProgressNumber.
+ * A dialog that interacts with the calculation engine progress classes
+ * that return percentage progress counts.
  *
  * Upon calling ProgressDialogNumeric::run(), the dialog will be
  * displayed and it will follow the progress of the underlying
@@ -66,7 +65,7 @@ class ProgressDialogNumeric : public QProgressDialog {
         regina::NProgressManager* manager;
             /**< The progress manager handling the inter-thread
                  communication. */
-        const regina::NProgressNumber* progress;
+        const regina::NProgress* progress;
             /**< The calculation engine progress watcher. */
 
     public:
@@ -78,8 +77,8 @@ class ProgressDialogNumeric : public QProgressDialog {
          * <tt>manager->isStarted()</tt> must return \c false.
          * More importantly, it must be guaranteed by the calculation
          * engine that the progress watcher to be assigned by the
-         * underlying operation to this manager will be of the class
-         * regina::NProgressNumber.
+         * underlying operation to this manager will have isPercent()
+         * returning \c true.
          */
         ProgressDialogNumeric(regina::NProgressManager* useManager,
                 const QString& displayText, QWidget* parent = 0);
