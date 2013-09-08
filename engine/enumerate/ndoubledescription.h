@@ -54,8 +54,7 @@ namespace regina {
 class NEnumConstraintList;
 class NMatrixInt;
 class NRay;
-class NProgress;
-class NProgressNumber;
+class NProgressPercent;
 
 /**
  * \addtogroup enumerate Vertex Enumeration
@@ -128,12 +127,8 @@ class REGINA_API NDoubleDescription {
          * @param constraints a set of validity constraints as described
          * above, or 0 if no additional constraints should be imposed.
          * @param progress a numeric progress watcher through which progress
-         * will be reported, or 0 if no progress reporting is required.  If
-         * a progress watcher is passed, its expected total will be
-         * increased immediately by some number of steps and the completed
-         * total will be increased gradually by this same number.  Note that
-         * NProgress::setFinished() will \e not be called, since
-         * whoever called this routine may need to do further processing.
+         * will be reported, or 0 if no progress reporting is required.
+         * Note that NProgress::setFinished() will \e not be called.
          * @param initialRows specifies how many initial rows of \a subspace
          * are to be processed in the precise order in which they appear.
          * The remaining rows will be sorted using the NPosOrder class
@@ -142,7 +137,7 @@ class REGINA_API NDoubleDescription {
         template <class RayClass, class OutputIterator>
         static void enumerateExtremalRays(OutputIterator results,
             const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressNumber* progress = 0, unsigned long initialRows = 0);
+            NProgressPercent* progress = 0, unsigned long initialRows = 0);
 
     private:
         /**
@@ -338,7 +333,7 @@ class REGINA_API NDoubleDescription {
         template <class RayClass, class BitmaskType, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
             const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressNumber* progress, unsigned long initialRows);
+            NProgressPercent* progress, unsigned long initialRows);
 
         /**
          * A part of the full double description algorithm that
@@ -399,7 +394,7 @@ class REGINA_API NDoubleDescription {
             unsigned long dim, unsigned long prevHyperplanes,
             const BitmaskType* constraintsBegin,
             const BitmaskType* constraintsEnd,
-            NProgress* progress);
+            NProgressPercent* progress);
 };
 
 /*@}*/

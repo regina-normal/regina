@@ -96,7 +96,11 @@ void NNormalSurfaceList::Enumerator::operator() (Flavour) {
         fillFundamental<Flavour>();
 
     // Insert the results into the packet tree, but only once they are ready.
-    triang_->insertChildLast(list_);
+    if (! (manager_ && manager_->getProgress()->isCancelled()))
+        triang_->insertChildLast(list_);
+
+    if (manager_)
+        const_cast<NProgress*>(manager_->getProgress())->setFinished();
 }
 
 template <typename Flavour>
@@ -156,17 +160,14 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
                 NProgressPercent* progress = new NProgressPercent();
                 manager_->setProgress(progress);
                 fillVertexTree<Flavour>(progress);
-                progress->setFinished();
             } else {
                 fillVertexTree<Flavour>(0);
             }
         } else {
             if (manager_) {
-                NProgressNumber* progress = new NProgressNumber(0, 1);
+                NProgressPercent* progress = new NProgressPercent();
                 manager_->setProgress(progress);
                 fillVertexDD<Flavour>(progress);
-                progress->incCompleted();
-                progress->setFinished();
             } else {
                 fillVertexDD<Flavour>(0);
             }
@@ -175,7 +176,8 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
         // Enumerate in the reduced coordinate system, and then convert
         // the solution set to the standard coordinate system.
         NProgressTwoStep* progress = 0;
-        NProgressNumber* progress2 = 0;
+        NProgressPercent* progress1 = 0;
+        NProgressPercent* progress2 = 0;
 
         // Since there are currently only two systems in which we can do
         // this (NS_STANDARD and NS_AN_STANDARD), we hard-code these
@@ -189,8 +191,8 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
             triang_, 0);
         if (list_->algorithm_.has(NS_VERTEX_TREE)) {
             if (manager_) {
-                NProgressPercent* progress1 = new NProgressPercent();
-                progress2 = new NProgressNumber(0, 1);
+                progress1 = new NProgressPercent();
+                progress2 = new NProgressPercent();
                 progress = new NProgressTwoStep(progress1, progress2, 0.9);
                 manager_->setProgress(progress);
                 e.fillVertexTree<typename Flavour::ReducedFlavour>(progress1);
@@ -198,19 +200,17 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
                 e.fillVertexTree<typename Flavour::ReducedFlavour>(0);
         } else {
             if (manager_) {
-                NProgressNumber* progress1 = new NProgressNumber(0, 1);
-                progress2 = new NProgressNumber(0, 1);
+                progress1 = new NProgressPercent();
+                progress2 = new NProgressPercent();
                 progress = new NProgressTwoStep(progress1, progress2, 0.9);
                 manager_->setProgress(progress);
                 e.fillVertexDD<typename Flavour::ReducedFlavour>(progress1);
-                progress1->incCompleted();
             } else
                 e.fillVertexDD<typename Flavour::ReducedFlavour>(0);
         }
 
         if (progress && progress->isCancelled()) {
             delete e.list_;
-            progress->setFinished();
             return;
         }
 
@@ -224,15 +224,11 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
 
         // Clean up.
         delete e.list_;
-        if (progress) {
-            progress2->incCompleted();
-            progress->setFinished();
-        }
     }
 }
 
 template <typename Flavour>
-void NNormalSurfaceList::Enumerator::fillVertexDD(NProgressNumber* progress) {
+void NNormalSurfaceList::Enumerator::fillVertexDD(NProgressPercent* progress) {
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->flavour_);
 
     NEnumConstraintList* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
@@ -282,7 +278,6 @@ void NNormalSurfaceList::Enumerator::fillFundamental() {
             NProgressMessage* progress = new NProgressMessage(
                 "Trivial enumeration for empty triangulation");
             manager_->setProgress(progress);
-            progress->setFinished();
         }
         return;
     }
@@ -308,9 +303,9 @@ template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillFundamentalDual() {
     list_->algorithm_ = NS_HILBERT_DUAL;
 
-    NProgressNumber* progress = 0;
+    NProgressPercent* progress = 0;
     if (manager_) {
-        progress = new NProgressNumber(0, 1);
+        progress = new NProgressPercent();
         manager_->setProgress(progress);
     }
 
@@ -324,11 +319,6 @@ void NNormalSurfaceList::Enumerator::fillFundamentalDual() {
 
     delete constraints;
     delete eqns;
-
-    if (progress) {
-        progress->incCompleted();
-        progress->setFinished();
-    }
 }
 
 template <typename Flavour>
@@ -352,10 +342,8 @@ void NNormalSurfaceList::Enumerator::fillFundamentalCD() {
     delete constraints;
     delete eqns;
 
-    if (progress) {
+    if (progress)
         progress->setMessage("Finished enumeration");
-        progress->setFinished();
-    }
 }
 
 #ifdef EXCLUDE_NORMALIZ
@@ -418,10 +406,8 @@ void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
     delete vtx;
     delete constraints;
 
-    if (progress) {
+    if (progress)
         progress->setMessage("Finished enumeration");
-        progress->setFinished();
-    }
 }
 
 template <typename Flavour>
@@ -533,10 +519,8 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
         delete constraints;
     }
 
-    if (progress) {
+    if (progress)
         progress->setMessage("Finished enumeration");
-        progress->setFinished();
-    }
 }
 
 #endif // EXCLUDE_NORMALIZ

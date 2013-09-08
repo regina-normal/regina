@@ -52,7 +52,7 @@ namespace regina {
 template <class RayClass, class OutputIterator>
 void NHilbertDual::enumerateHilbertBasis(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-        NProgressNumber* progress, unsigned initialRows) {
+        NProgressPercent* progress, unsigned initialRows) {
     // Get the dimension of the entire space in which we are working.
     unsigned dim = subspace.columns();
 
@@ -103,7 +103,7 @@ void NHilbertDual::enumerateHilbertBasis(OutputIterator results,
 template <class RayClass, class BitmaskType, class OutputIterator>
 void NHilbertDual::enumerateUsingBitmask(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-        NProgressNumber* progress, unsigned initialRows) {
+        NProgressPercent* progress, unsigned initialRows) {
     // Get the dimension of the entire space in which we are working.
     // At this point we are guaranteed that the dimension is non-zero.
     unsigned dim = subspace.columns();
@@ -112,9 +112,6 @@ void NHilbertDual::enumerateUsingBitmask(OutputIterator results,
     unsigned nEqns = subspace.rows();
     if (nEqns == 0) {
         // No!  Just send back the unit vectors.
-        if (progress)
-            progress->setOutOf(progress->getOutOf() + 1);
-
         RayClass* ans;
         for (unsigned i = 0; i < dim; ++i) {
             ans = new RayClass(dim);
@@ -123,13 +120,11 @@ void NHilbertDual::enumerateUsingBitmask(OutputIterator results,
         }
 
         if (progress)
-            progress->incCompleted();
+            progress->setPercent(100);
         return;
     }
 
     // We actually have some work to do.
-    if (progress)
-        progress->setOutOf(progress->getOutOf() + nEqns + 1);
 
     // Process the hyperplanes in a good order.
     //
@@ -178,19 +173,24 @@ void NHilbertDual::enumerateUsingBitmask(OutputIterator results,
         std::cout << "LIST SIZE: " << list.size() << std::endl;
 #endif
 
-        if (progress) {
-            progress->incCompleted();
-            if (progress->isCancelled())
-                break;
-        }
+        if (progress && ! progress->setPercent(100.0 * i / nEqns))
+            break;
     }
 
     // We're done!
     delete[] hyperplanes;
     delete[] constraintsBegin;
 
-    RayClass* ans;
     typename std::vector<VecSpec<BitmaskType>*>::iterator it;
+
+    if (progress && progress->isCancelled()) {
+        // The operation was cancelled.  Clean up before returning.
+        for (it = list.begin(); it != list.end(); ++it)
+            delete *it;
+        return;
+    }
+
+    RayClass* ans;
     for (it = list.begin(); it != list.end(); ++it) {
         ans = new RayClass(dim);
         for (i = 0; i < dim; ++i)
@@ -202,7 +202,7 @@ void NHilbertDual::enumerateUsingBitmask(OutputIterator results,
 
     // All done!
     if (progress)
-        progress->incCompleted();
+        progress->setPercent(100);
 }
 
 template <class BitmaskType>

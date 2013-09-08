@@ -203,9 +203,10 @@ class REGINA_API NAngleStructureList : public NPacket {
          *
          * If a progress manager is passed, the angle structure
          * enumeration will take place in a new thread and this routine
-         * will return immediately.  The NProgress object assigned to
-         * this progress manager is guaranteed to be of the class
-         * NProgressNumber.
+         * will return immediately.  If the user cancels the operation
+         * from another thread, then the normal surface list will \e not
+         * be inserted into the packet tree (but the caller of this
+         * routine will still need to delete it).
          *
          * If no progress manager is passed, the enumeration will run
          * in the current thread and this routine will return only when
