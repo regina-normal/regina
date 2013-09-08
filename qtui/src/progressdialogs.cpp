@@ -45,6 +45,11 @@
 #include <QThread>
 #include <QVBoxLayout>
 
+// Indicates how we convert floating-point percentages to integer counts.
+// Integer progress will range from 0 to SLICES.
+// For the arithmetic to be correct, SLICES must be a multiple of 100.
+#define SLICES 1000
+
 namespace {
     /**
      * A subclass of QThread that gives us public access to sleep
@@ -77,23 +82,14 @@ bool ProgressDialogNumeric::run() {
     while (! manager->isStarted())
         WaitingThread::tinySleep();
 
-    progress = dynamic_cast<const regina::NProgressNumber*>(
-        manager->getProgress());
-    regina::NProgressStateNumeric state;
-    setMinimum(0); // Start at 0
+    progress = manager->getProgress();
+    setMinimum(0);
+    setMaximum(SLICES);
     while (! progress->isFinished()) {
         if (wasCanceled())
             progress->cancel();
-        if (progress->hasChanged()) {
-            state = progress->getNumericState();
-            if (state.outOf > 0) {
-                setMaximum(state.outOf);
-                setValue(state.completed);
-            } else {
-                setMaximum(0);
-                setValue(0);
-            }
-        }
+        if (progress->hasChanged())
+            setValue(progress->getPercent() * (SLICES / 100));
         QCoreApplication::instance()->processEvents();
         WaitingThread::tinySleep();
     }
