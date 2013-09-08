@@ -85,9 +85,12 @@ bool ProgressDialogNumeric::run() {
     progress = manager->getProgress();
     setMinimum(0);
     setMaximum(SLICES);
+    bool stillRunning = true;
     while (! progress->isFinished()) {
-        if (wasCanceled())
+        if (stillRunning && wasCanceled()) {
+            stillRunning = false;
             progress->cancel();
+        }
         if (progress->hasChanged())
             setValue(progress->getPercent() * (SLICES / 100));
         QCoreApplication::instance()->processEvents();

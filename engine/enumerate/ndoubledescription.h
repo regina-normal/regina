@@ -54,6 +54,7 @@ namespace regina {
 class NEnumConstraintList;
 class NMatrixInt;
 class NRay;
+class NProgress;
 class NProgressNumber;
 
 /**
@@ -382,10 +383,14 @@ class REGINA_API NDoubleDescription {
          * @param constraintsEnd a pointer just past the end of the
          * C-style array of validity constraints.  This should be 0
          * if no additional constraints are to be imposed.
+         * @param progress an optional progress tracker that will be polled
+         * for cancellation (though no incremental progress will be reported
+         * within this routine).  This may be null.
          * @return \c true if vertices of the old solution set were found
-         * on both sides of the new hyperplane, or \c false if one of
+         * on both sides of the new hyperplane, \c false if one of
          * the closed half-spaces defined by the new hyperplane contained
-         * the entire old solution set.
+         * the entire old solution set, or undefined if the operation
+         * was cancelled via the progress tracker.
          */
         template <class BitmaskType>
         static bool intersectHyperplane(
@@ -393,7 +398,8 @@ class REGINA_API NDoubleDescription {
             std::vector<RaySpec<BitmaskType>*>& dest,
             unsigned long dim, unsigned long prevHyperplanes,
             const BitmaskType* constraintsBegin,
-            const BitmaskType* constraintsEnd);
+            const BitmaskType* constraintsEnd,
+            NProgress* progress);
 };
 
 /*@}*/
