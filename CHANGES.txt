@@ -24,6 +24,9 @@ Version 4.94  [ (under development) ]
         Class NAngleStructure:
             - Removed writeToFile(NFile&) and readFromFile(NFile&, ...),
               which were used for old-style binary files.
+        Class NAngleStructureList:
+            - More frequent and robust cancellation checking during
+              enumeration of vertex angle structures.
         Class BanConstraintBase, BanNone, BanBoundary, BanTorusBoundary:
             - New constraint classes for use with the new tree traversal code
               for enumerating normal surfaces.  See NTreeTraversal for details.
@@ -70,6 +73,8 @@ Version 4.94  [ (under development) ]
               detected and pruned during census enumeration.
         Class NDoubleDescription:
             - More frequent polling for cancellation.
+            - The progress tracker passed to enumerateExtremalRays() is now of
+              class NProgressPercent, not NProgressNumber.
         Class NEnumConstraintList:
             - This now holds unsigned longs, not unsigned ints, for
               consistency with the integer types used for NVector indexing.
@@ -87,6 +92,10 @@ Version 4.94  [ (under development) ]
         Class NGenericIsomorphism:
             - New template base class that contains dimension-agnostic
               code for representing isomorphisms between triangulations.
+        Class NHilbertDual:
+            - More frequent polling for cancellation.
+            - The progress tracker passed to enumerateHilbertBasis() is now of
+              class NProgressPercent, not NProgressNumber.
         Class NHomologicalData:
             - Removed all dependencies on the old NIndexedArray.
         Class NIndexedArray:

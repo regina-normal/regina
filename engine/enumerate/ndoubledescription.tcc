@@ -206,7 +206,7 @@ void NDoubleDescription::RaySpec<BitmaskType>::recover(
 template <class RayClass, class OutputIterator>
 void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-        NProgressNumber* progress, unsigned long initialRows) {
+        NProgressPercent* progress, unsigned long initialRows) {
     unsigned long nFacets = subspace.columns();
 
     // If the space has dimension zero, return no results.
@@ -257,7 +257,7 @@ void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
 template <class RayClass, class BitmaskType, class OutputIterator>
 void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-        NProgressNumber* progress, unsigned long initialRows) {
+        NProgressPercent* progress, unsigned long initialRows) {
     // Get the dimension of the entire space in which we are working.
     unsigned long dim = subspace.columns();
 
@@ -265,9 +265,6 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
     unsigned long nEqns = subspace.rows();
     if (nEqns == 0) {
         // No!  Just send back the vertices of the non-negative orthant.
-        if (progress)
-            progress->setOutOf(progress->getOutOf() + 1);
-
         RayClass* ans;
         for (unsigned long i = 0; i < dim; ++i) {
             ans = new RayClass(dim);
@@ -276,13 +273,11 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
         }
 
         if (progress)
-            progress->incCompleted();
+            progress->setPercent(100);
         return;
     }
 
     // We actually have some work to do.
-    if (progress)
-        progress->setOutOf(progress->getOutOf() + nEqns + 1);
 
     // We want to process the hyperplanes in a good order;
     // Fukuda and Prodon (1996) recommend this, and experimental
@@ -352,11 +347,8 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
             << std::endl;
 #endif
 
-        if (progress) {
-            progress->incCompleted();
-            if (progress->isCancelled())
-                break;
-        }
+        if (progress && ! progress->setPercent(100.0 * i / nEqns))
+            break;
     }
 
     // We're done!
@@ -386,7 +378,7 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
 
     // All done!
     if (progress)
-        progress->incCompleted();
+        progress->setPercent(100);
 }
 
 template <class BitmaskType>
@@ -396,7 +388,7 @@ bool NDoubleDescription::intersectHyperplane(
         unsigned long dim, unsigned long prevHyperplanes,
         const BitmaskType* constraintsBegin,
         const BitmaskType* constraintsEnd,
-        NProgress* progress) {
+        NProgressPercent* progress) {
     if (src.empty())
         return false;
 

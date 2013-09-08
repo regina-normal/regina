@@ -59,7 +59,6 @@ class NTriangulation;
 class NMatrixInt;
 class NProgressManager;
 class NProgressMessage;
-class NProgressNumber;
 class NProgressPercent;
 class NXMLPacketReader;
 class NXMLNormalSurfaceListReader;
@@ -242,7 +241,10 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * If a progress manager is passed, the normal surface
          * enumeration will take place in a new thread and this routine
-         * will return immediately.
+         * will return immediately.  If the user cancels the operation
+         * from another thread, then the normal surface list will \e not
+         * be inserted into the packet tree (but the caller of this
+         * routine will still need to delete it).
          *
          * If no progress manager is passed, the enumeration will run
          * in the current thread and this routine will return only when
@@ -1244,15 +1246,12 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * @param progress a numeric progress watcher through which
          * progress will be reported and cancellation requests will be
          * honoured, or 0 if no progress reporting is required.
-         * If a progress watcher is passed, its expected total will be
-         * increased immediately by some number of steps and the
-         * completd total will be increased gradually by this same number.
-         * NProgress::setFinished() will \e not be called.
+         * Note that NProgress::setFinished() will \e not be called.
          */
         template <class Variant>
         void buildStandardFromReduced(NTriangulation* owner,
             const std::vector<NNormalSurface*>& reducedList,
-            NProgressNumber* progress = 0);
+            NProgressPercent* progress = 0);
 
         /**
          * Implements the one-template-argument version of
@@ -1273,7 +1272,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
         template <class Variant, class BitmaskType>
         void buildStandardFromReducedUsing(NTriangulation* owner,
             const std::vector<NNormalSurface*>& reducedList,
-            NProgressNumber* progress);
+            NProgressPercent* progress);
 
         /**
          * Converts a set of embedded vertex surfaces in (quad or quad-oct)
@@ -1404,16 +1403,13 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * correctly, and does not alter it.
                  *
                  * This routine does not initialise or finalise progress
-                 * reporting.  However, it tracks progress numerically:
-                 * if the \a progress argument is non-null then
-                 * when this routine begins the total steps required will be
-                 * raised by some amount, and over the course of this routine
-                 * the total steps completed will be raised by this same amount.
+                 * reporting.  However, it does track progress numerically
+                 * if the \a progress argument is non-null.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Flavour>
-                void fillVertexDD(NProgressNumber* progress);
+                void fillVertexDD(NProgressPercent* progress);
 
                 /**
                  * The enumeration code for enumerating vertex surfaces
@@ -1424,11 +1420,8 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * correctly, and does not alter it.
                  *
                  * This routine does not initialise or finalise progress
-                 * reporting.  However, it tracks progress numerically:
-                 * if the \a progress argument is non-null then
-                 * when this routine begins the total steps required will be
-                 * raised by some amount, and over the course of this routine
-                 * the total steps completed will be raised by this same amount.
+                 * reporting.  However, it does track progress numerically
+                 * if the \a progress argument is non-null.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */

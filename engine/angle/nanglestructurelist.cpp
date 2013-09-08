@@ -50,9 +50,9 @@ namespace regina {
 typedef std::vector<NAngleStructure*>::const_iterator StructureIteratorConst;
 
 void* NAngleStructureList::Enumerator::run(void*) {
-    NProgressNumber* progress = 0;
+    NProgressPercent* progress = 0;
     if (manager) {
-        progress = new NProgressNumber(0, 2);
+        progress = new NProgressPercent();
         manager->setProgress(progress);
     }
 
@@ -95,9 +95,6 @@ void* NAngleStructureList::Enumerator::run(void*) {
         row++;
     }
 
-    if (progress)
-        progress->incCompleted();
-
     // Form the taut constraints, if we need them.
     NEnumConstraintList* constraints = 0;
     if (list->tautOnly_) {
@@ -117,12 +114,12 @@ void* NAngleStructureList::Enumerator::run(void*) {
 
     // All done!
     delete constraints;
-    triang->insertChildLast(list);
 
-    if (progress) {
-        progress->incCompleted();
+    if (! (progress && progress->isCancelled()))
+        triang->insertChildLast(list);
+
+    if (progress)
         progress->setFinished();
-    }
 
     return 0;
 }

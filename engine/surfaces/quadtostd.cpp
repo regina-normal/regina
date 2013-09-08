@@ -326,7 +326,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
 template <class Variant>
 void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
         const std::vector<NNormalSurface*>& reducedList,
-        NProgressNumber* progress) {
+        NProgressPercent* progress) {
     size_t nFacets = Variant::stdLen(owner->getNumberOfTetrahedra());
 
     // Choose a bitmask type for representing the set of facets that a
@@ -372,7 +372,7 @@ void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
 template <class Variant, class BitmaskType>
 void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
         const std::vector<NNormalSurface*>& reducedList,
-        NProgressNumber* progress) {
+        NProgressPercent* progress) {
     // Prepare for the reduced-to-standard double description run.
     unsigned long n = owner->getNumberOfTetrahedra();
     size_t slen = Variant::stdLen(n); // # standard coordinates
@@ -450,9 +450,7 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
     BitmaskType* constraintMask;
     bool broken;
 
-    if (progress)
-        progress->setOutOf(progress->getOutOf() + n * 4);
-
+    unsigned long slices = 0;
     unsigned iterations;
     for (vtx = 0; vtx < llen; ++vtx) {
         linkSpec = new RaySpec<BitmaskType>(link[vtx]);
@@ -465,14 +463,12 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
             getEmbeddings();
         std::vector<NVertexEmbedding>::const_iterator embit;
         for (embit = emb.begin(); embit != emb.end(); ++embit) {
-            if (progress) {
-                progress->incCompleted();
-                if (progress->isCancelled()) {
-                    for (it = list[workingList].begin();
-                            it != list[workingList].end(); ++it)
-                        delete *it;
-                    return;
-                }
+            // Update the state of progress and test for cancellation.
+            if (progress && ! progress->setPercent(25.0 * slices++ / n)) {
+                for (it = list[workingList].begin();
+                        it != list[workingList].end(); ++it)
+                    delete *it;
+                return;
             }
 
             tcoord = Variant::stdPos(embit->getTetrahedron()->markedIndex(),
@@ -603,6 +599,9 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
 
     delete[] link;
     delete[] constraintsBegin;
+
+    if (progress)
+        progress->setPercent(100);
 }
 
 } // namespace regina

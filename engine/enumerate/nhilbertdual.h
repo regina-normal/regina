@@ -81,7 +81,7 @@ namespace regina {
 
 class NEnumConstraintList;
 class NMatrixInt;
-class NProgressNumber;
+class NProgressPercent;
 
 /**
  * \weakgroup enumerate
@@ -153,13 +153,9 @@ class NHilbertDual {
          * dimension of the overall space in which we are working.
          * @param constraints a set of validity constraints as described
          * above, or 0 if no additional constraints should be imposed.
-         * @param progress a numeric progress watcher through which progress
-         * will be reported, or 0 if no progress reporting is required.  If
-         * a progress watcher is passed, its expected total will be
-         * increased immediately by some number of steps and the completed
-         * total will be increased gradually by this same number.  Note that
-         * NProgress::setFinished() will \e not be called, since
-         * whoever called this routine may need to do further processing.
+         * @param progress a progress watcher through which progress
+         * will be reported, or 0 if no progress reporting is required.
+         * Note that NProgress::setFinished() will \e not be called.
          * @param initialRows specifies how many initial rows of \a subspace
          * are to be processed in the precise order in which they appear.
          * The remaining rows will be sorted using the NPosOrder class
@@ -168,7 +164,7 @@ class NHilbertDual {
         template <class RayClass, class OutputIterator>
         static void enumerateHilbertBasis(OutputIterator results,
             const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressNumber* progress = 0, unsigned initialRows = 0);
+            NProgressPercent* progress = 0, unsigned initialRows = 0);
 
     private:
         /**
@@ -343,7 +339,7 @@ class NHilbertDual {
         template <class RayClass, class BitmaskType, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
             const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressNumber* progress, unsigned initialRows);
+            NProgressPercent* progress, unsigned initialRows);
 
         /**
          * Private constructor to ensure that objects of this class are
