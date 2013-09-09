@@ -54,7 +54,7 @@
 
 namespace regina {
 
-class NProgressManager;
+class NProgressTracker;
 class NXMLPacketReader;
 class NXMLAngleStructureListReader;
 
@@ -201,14 +201,17 @@ class REGINA_API NAngleStructureList : public NPacket {
          * remain the parent of this angle structure list, and must not
          * change while this angle structure list remains in existence.
          *
-         * If a progress manager is passed, the angle structure
+         * If a progress tracker is passed, the angle structure
          * enumeration will take place in a new thread and this routine
          * will return immediately.  If the user cancels the operation
-         * from another thread, then the normal surface list will \e not
+         * from another thread, then the angle structure list will \e not
          * be inserted into the packet tree (but the caller of this
-         * routine will still need to delete it).
+         * routine will still need to delete it).  Regarding progress tracking,
+         * this routine will declare and work through a series of stages
+         * whose combined weights sum to 1; typically this means that the
+         * given tracker must not have been used before.
          *
-         * If no progress manager is passed, the enumeration will run
+         * If no progress tracker is passed, the enumeration will run
          * in the current thread and this routine will return only when
          * the enumeration is complete.  Note that this enumeration can
          * be extremely slow for larger triangulations.
@@ -218,18 +221,16 @@ class REGINA_API NAngleStructureList : public NPacket {
          * @param tautOnly \c true if only taut structures are to be
          * enuemrated, or \c false if we should enumerate all vertices
          * of the angle structure solution space; this defaults to \c false.
-         * @param manager a progress manager through which progress will
-         * be reported, or 0 if no progress reporting is required.  If
-         * non-zero, \a manager must point to a progress manager for
-         * which NProgressManager::isStarted() is still \c false.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
          * @return the newly created angle structure list.  Note that if
-         * a progress manager is passed then this list may not be completely
-         * filled when this routine returns.  If a progress manager is
+         * a progress tracker is passed then this list may not be completely
+         * filled when this routine returns.  If a progress tracker is
          * passed and a new thread could not be started, this routine
          * returns 0 (and no angle structure list is created).
          */
         static NAngleStructureList* enumerate(NTriangulation* owner,
-            bool tautOnly = false, NProgressManager* manager = 0);
+            bool tautOnly = false, NProgressTracker* tracker = 0);
 
         virtual int getPacketType() const;
         virtual std::string getPacketTypeName() const;
@@ -374,9 +375,9 @@ class REGINA_API NAngleStructureList : public NPacket {
                 NTriangulation* triang;
                     /**< The triangulation upon which this angle
                          structure list will be based. */
-                NProgressManager* manager;
-                    /**< The progress manager through which progress is
-                         reported, or 0 if no progress manager is in use. */
+                NProgressTracker* tracker;
+                    /**< The progress tracker through which progress is
+                         reported, or 0 if no progress tracker is in use. */
 
             public:
                 /**
@@ -386,12 +387,12 @@ class REGINA_API NAngleStructureList : public NPacket {
                  * @param newList the angle structure list to be filled.
                  * @param useTriang the triangulation upon which this
                  * angle structure list will be based.
-                 * @param useManager the progress manager to use for
+                 * @param useTracker the progress tracker to use for
                  * progress reporting, or 0 if progress reporting is not
                  * required.
                  */
                 Enumerator(NAngleStructureList* newList,
-                    NTriangulation* useTriang, NProgressManager* useManager);
+                    NTriangulation* useTriang, NProgressTracker* useTracker);
 
                 void* run(void*);
         };
@@ -501,8 +502,8 @@ inline NAngleStructureList::StructureInserter&
 }
 
 inline NAngleStructureList::Enumerator::Enumerator(NAngleStructureList* newList,
-        NTriangulation* useTriang, NProgressManager* useManager) :
-        list(newList), triang(useTriang), manager(useManager) {
+        NTriangulation* useTriang, NProgressTracker* useTracker) :
+        list(newList), triang(useTriang), tracker(useTracker) {
 }
 
 } // namespace regina

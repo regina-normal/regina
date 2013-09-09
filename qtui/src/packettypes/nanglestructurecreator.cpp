@@ -34,8 +34,7 @@
 
 // Regina core includes:
 #include "angle/nanglestructurelist.h"
-#include "progress/nprogressmanager.h"
-#include "progress/nprogressmanager.h"
+#include "progress/nprogresstracker.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
@@ -86,13 +85,13 @@ regina::NPacket* NAngleStructureCreator::createPacket(
         return 0;
     }
 
-    regina::NProgressManager manager;
-    ProgressDialogNumeric dlg(&manager,
+    regina::NProgressTracker tracker;
+    ProgressDialogNumeric dlg(&tracker,
         ui->tr("Enumerating vertex angle structures..."), parentWidget);
 
     regina::NAngleStructureList* ans = regina::NAngleStructureList::enumerate(
             dynamic_cast<regina::NTriangulation*>(parentPacket),
-            tautOnly->isChecked(), &manager);
+            tautOnly->isChecked(), &tracker);
 
     if (dlg.run())
         return ans;

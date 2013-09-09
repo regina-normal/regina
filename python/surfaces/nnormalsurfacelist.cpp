@@ -36,7 +36,7 @@
 
 #include <boost/python.hpp>
 #include "maths/nmatrixint.h"
-#include "progress/nprogressmanager.h"
+#include "progress/nprogresstracker.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 
@@ -64,9 +64,9 @@ namespace {
     }
     NNormalSurfaceList* unified_5(regina::NTriangulation* owner,
             regina::NormalCoords flavour, regina::NormalList which,
-            regina::NormalAlg algHints, regina::NProgressManager* manager) {
+            regina::NormalAlg algHints, regina::NProgressTracker* tracker) {
         return NNormalSurfaceList::enumerate(owner, flavour, which, algHints,
-            manager);
+            tracker);
     }
 
     NNormalSurfaceList* enumerate_3(regina::NTriangulation* owner,
@@ -75,8 +75,8 @@ namespace {
     }
     NNormalSurfaceList* enumerate_4(regina::NTriangulation* owner,
             regina::NormalCoords flavour, bool embedded,
-            regina::NProgressManager* manager) {
-        return NNormalSurfaceList::enumerate(owner, flavour, embedded, manager);
+            regina::NProgressTracker* tracker) {
+        return NNormalSurfaceList::enumerate(owner, flavour, embedded, tracker);
     }
 
 #ifndef EXCLUDE_NORMALIZ
@@ -98,9 +98,9 @@ namespace {
     NNormalSurfaceList* enumerateFundPrimal_5(regina::NTriangulation* owner,
             regina::NormalCoords flavour, bool embedded,
             regina::NNormalSurfaceList* vtxSurfaces,
-            regina::NProgressManager* manager) {
+            regina::NProgressTracker* tracker) {
         return NNormalSurfaceList::enumerateFundPrimal(owner, flavour,
-            embedded, vtxSurfaces, manager);
+            embedded, vtxSurfaces, tracker);
     }
 #endif
 
@@ -115,9 +115,9 @@ namespace {
     }
     NNormalSurfaceList* enumerateFundDual_4(regina::NTriangulation* owner,
             regina::NormalCoords flavour, bool embedded,
-            regina::NProgressManager* manager) {
+            regina::NProgressTracker* tracker) {
         return NNormalSurfaceList::enumerateFundDual(owner, flavour,
-            embedded, manager);
+            embedded, tracker);
     }
 
 #ifndef EXCLUDE_NORMALIZ

@@ -326,7 +326,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
 template <class Variant>
 void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
         const std::vector<NNormalSurface*>& reducedList,
-        NProgressPercent* progress) {
+        NProgressTracker* tracker) {
     size_t nFacets = Variant::stdLen(owner->getNumberOfTetrahedra());
 
     // Choose a bitmask type for representing the set of facets that a
@@ -336,43 +336,43 @@ void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
     // templated on the bitmask type.
     if (nFacets <= 8 * sizeof(unsigned))
         buildStandardFromReducedUsing<Variant,
-            NBitmask1<unsigned> >(owner, reducedList, progress);
+            NBitmask1<unsigned> >(owner, reducedList, tracker);
     else if (nFacets <= 8 * sizeof(unsigned long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask1<unsigned long> >(owner, reducedList, progress);
+            NBitmask1<unsigned long> >(owner, reducedList, tracker);
 #ifdef LONG_LONG_FOUND
     else if (nFacets <= 8 * sizeof(unsigned long long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask1<unsigned long long> >(owner, reducedList, progress);
+            NBitmask1<unsigned long long> >(owner, reducedList, tracker);
     else if (nFacets <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         buildStandardFromReducedUsing<Variant,
             NBitmask2<unsigned long long, unsigned> >(owner, reducedList,
-                progress);
+                tracker);
     else if (nFacets <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         buildStandardFromReducedUsing<Variant,
             NBitmask2<unsigned long long, unsigned long> >(owner, reducedList,
-                progress);
+                tracker);
     else if (nFacets <= 16 * sizeof(unsigned long long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask2<unsigned long long> >(owner, reducedList, progress);
+            NBitmask2<unsigned long long> >(owner, reducedList, tracker);
 #else
     else if (nFacets <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
         buildStandardFromReducedUsing<Variant,
-            NBitmask2<unsigned long, unsigned> >(owner, reducedList, progress);
+            NBitmask2<unsigned long, unsigned> >(owner, reducedList, tracker);
     else if (nFacets <= 16 * sizeof(unsigned long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask2<unsigned long> >(owner, reducedList, progress);
+            NBitmask2<unsigned long> >(owner, reducedList, tracker);
 #endif
     else
         buildStandardFromReducedUsing<Variant, NBitmask>(owner, reducedList,
-            progress);
+            tracker);
 }
 
 template <class Variant, class BitmaskType>
 void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
         const std::vector<NNormalSurface*>& reducedList,
-        NProgressPercent* progress) {
+        NProgressTracker* tracker) {
     // Prepare for the reduced-to-standard double description run.
     unsigned long n = owner->getNumberOfTetrahedra();
     size_t slen = Variant::stdLen(n); // # standard coordinates
@@ -464,7 +464,7 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
         std::vector<NVertexEmbedding>::const_iterator embit;
         for (embit = emb.begin(); embit != emb.end(); ++embit) {
             // Update the state of progress and test for cancellation.
-            if (progress && ! progress->setPercent(25.0 * slices++ / n)) {
+            if (tracker && ! tracker->setPercent(25.0 * slices++ / n)) {
                 for (it = list[workingList].begin();
                         it != list[workingList].end(); ++it)
                     delete *it;
@@ -493,9 +493,9 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
                 for (negit = neg.begin(); negit != neg.end(); ++negit) {
                     // Test for cancellation, but not every time (since
                     // this involves expensive mutex locking).
-                    if (progress && ++iterations == 100) {
+                    if (tracker && ++iterations == 100) {
                         iterations = 0;
-                        if (progress->isCancelled()) {
+                        if (tracker->isCancelled()) {
                             for (it = list[1 - workingList].begin();
                                     it != list[1 - workingList].end(); ++it)
                                 delete *it;
@@ -600,8 +600,8 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
     delete[] link;
     delete[] constraintsBegin;
 
-    if (progress)
-        progress->setPercent(100);
+    if (tracker)
+        tracker->setPercent(100);
 }
 
 } // namespace regina

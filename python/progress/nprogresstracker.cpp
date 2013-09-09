@@ -33,55 +33,24 @@
 /* end stub */
 
 #include <boost/python.hpp>
-#include "angle/nanglestructurelist.h"
 #include "progress/nprogresstracker.h"
-#include "triangulation/ntriangulation.h"
 
 using namespace boost::python;
-using regina::NAngleStructureList;
+using regina::NProgressTracker;
 
-namespace {
-    // Write manual overload wrappers since this is a static member function.
-    NAngleStructureList* enumerate_1(regina::NTriangulation* owner) {
-        return NAngleStructureList::enumerate(owner);
-    }
-    NAngleStructureList* enumerate_2(regina::NTriangulation* owner,
-            bool tautOnly) {
-        return NAngleStructureList::enumerate(owner, tautOnly);
-    }
-    NAngleStructureList* enumerate_3(regina::NTriangulation* owner,
-            bool tautOnly, regina::NProgressTracker* tracker) {
-        return NAngleStructureList::enumerate(owner, tautOnly, tracker);
-    }
-}
-
-void addNAngleStructureList() {
-    scope s = class_<NAngleStructureList, bases<regina::NPacket>,
-            std::auto_ptr<NAngleStructureList>, boost::noncopyable>
-            ("NAngleStructureList", no_init)
-        .def("getTriangulation", &NAngleStructureList::getTriangulation,
-            return_value_policy<reference_existing_object>())
-        .def("isTautOnly", &NAngleStructureList::isTautOnly)
-        .def("getNumberOfStructures",
-            &NAngleStructureList::getNumberOfStructures)
-        .def("getStructure", &NAngleStructureList::getStructure,
-            return_internal_reference<>())
-        .def("spansStrict", &NAngleStructureList::spansStrict)
-        .def("spansTaut", &NAngleStructureList::spansTaut)
-        .def("allowsStrict", &NAngleStructureList::allowsStrict)
-        .def("allowsTaut", &NAngleStructureList::allowsTaut)
-        .def("enumerate", enumerate_1,
-            return_value_policy<reference_existing_object>())
-        .def("enumerate", enumerate_2,
-            return_value_policy<reference_existing_object>())
-        .def("enumerate", enumerate_3,
-            return_value_policy<reference_existing_object>())
-        .staticmethod("enumerate")
+void addNProgressTracker() {
+    class_<NProgressTracker, std::auto_ptr<NProgressTracker>,
+            boost::noncopyable>("NProgressTracker", init<>())
+        .def("isFinished", &NProgressTracker::isFinished)
+        .def("percentChanged", &NProgressTracker::percentChanged)
+        .def("descriptionChanged", &NProgressTracker::descriptionChanged)
+        .def("percent", &NProgressTracker::percent)
+        .def("description", &NProgressTracker::description)
+        .def("cancel", &NProgressTracker::cancel)
+        .def("newStage", &NProgressTracker::newStage)
+        .def("isCancelled", &NProgressTracker::isCancelled)
+        .def("setPercent", &NProgressTracker::setPercent)
+        .def("setFinished", &NProgressTracker::setFinished)
     ;
-
-    s.attr("packetType") = NAngleStructureList::packetType;
-
-    implicitly_convertible<std::auto_ptr<NAngleStructureList>,
-        std::auto_ptr<regina::NPacket> >();
 }
 

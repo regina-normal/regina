@@ -81,7 +81,7 @@ namespace regina {
 
 class NEnumConstraintList;
 class NMatrixInt;
-class NProgressPercent;
+class NProgressTracker;
 
 /**
  * \weakgroup enumerate
@@ -137,8 +137,12 @@ class NHilbertDual {
          * contraints have the important property that, although validity is
          * not preserved under addition, \e invalidity is.
          *
-         * A numeric progress watcher may be passed for progress reporting.
-         * If so, this routine will poll for cancellation requests accordingly.
+         * An optional progress tracker may be passed.  If so, this routine
+         * will update the percentage progress and poll for cancellation
+         * requests.  It will be assumed that an appropriate stage has already
+         * been declared via NProgressTracker::newStage() before this routine
+         * is called, and that NProgressTracker::setFinished() will be
+         * called after this routine returns.
          *
          * \pre The template argument RayClass is derived from NRay (or
          * may possibly be NRay itself).
@@ -153,9 +157,8 @@ class NHilbertDual {
          * dimension of the overall space in which we are working.
          * @param constraints a set of validity constraints as described
          * above, or 0 if no additional constraints should be imposed.
-         * @param progress a progress watcher through which progress
+         * @param tracker a progress tracker through which progress
          * will be reported, or 0 if no progress reporting is required.
-         * Note that NProgress::setFinished() will \e not be called.
          * @param initialRows specifies how many initial rows of \a subspace
          * are to be processed in the precise order in which they appear.
          * The remaining rows will be sorted using the NPosOrder class
@@ -164,7 +167,7 @@ class NHilbertDual {
         template <class RayClass, class OutputIterator>
         static void enumerateHilbertBasis(OutputIterator results,
             const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressPercent* progress = 0, unsigned initialRows = 0);
+            NProgressTracker* tracker = 0, unsigned initialRows = 0);
 
     private:
         /**
@@ -339,7 +342,7 @@ class NHilbertDual {
         template <class RayClass, class BitmaskType, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
             const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressPercent* progress, unsigned initialRows);
+            NProgressTracker* tracker, unsigned initialRows);
 
         /**
          * Private constructor to ensure that objects of this class are

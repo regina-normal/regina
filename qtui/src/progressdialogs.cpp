@@ -33,8 +33,7 @@
 /* end stub */
 
 // Regina core includes:
-#include "progress/nprogressmanager.h"
-#include "progress/nprogresstypes.h"
+#include "progress/nprogresstracker.h"
 
 // UI includes:
 #include "progressdialogs.h"
@@ -64,11 +63,11 @@ namespace {
 }
 
 ProgressDialogNumeric::ProgressDialogNumeric(
-        regina::NProgressManager* useManager,
+        regina::NProgressTracker* tracker,
         const QString& displayText, QWidget* parent) :
         QProgressDialog(parent),
         /* Don't use Qt::Popup because the layout breaks under fink. */
-        manager(useManager), progress(0) {
+        tracker_(tracker) {
     setLabelText(displayText);
     setWindowTitle(tr("Working"));
     setMinimumDuration(500);
@@ -79,32 +78,29 @@ bool ProgressDialogNumeric::run() {
     show();
     QCoreApplication::instance()->processEvents();
 
-    while (! manager->isStarted())
-        WaitingThread::tinySleep();
-
-    progress = manager->getProgress();
     setMinimum(0);
     setMaximum(SLICES);
     bool stillRunning = true;
-    while (! progress->isFinished()) {
+    while (! tracker_->isFinished()) {
         if (stillRunning && wasCanceled()) {
             stillRunning = false;
-            progress->cancel();
+            tracker_->cancel();
         }
-        if (progress->hasChanged())
-            setValue(progress->getPercent() * (SLICES / 100));
+        if (tracker_->percentChanged())
+            setValue(tracker_->percent() * (SLICES / 100));
+        if (tracker_->descriptionChanged())
+            setLabelText(tracker_->description().c_str());
         QCoreApplication::instance()->processEvents();
         WaitingThread::tinySleep();
     }
 
-    return (! progress->isCancelled());
+    return (! tracker_->isCancelled());
 }
 
 ProgressDialogMessage::ProgressDialogMessage(
-        regina::NProgressManager* useManager,
+        regina::NProgressTracker* tracker,
         const QString& displayText, QWidget* parent) :
-        QDialog(parent),
-        manager(useManager), progress(0) {
+        QDialog(parent), tracker_(tracker) {
     setWindowTitle(tr("Working"));
     setWindowModality(Qt::WindowModal);
 
@@ -119,7 +115,7 @@ ProgressDialogMessage::ProgressDialogMessage(
     separator->setFrameShadow(QFrame::Sunken);
     layout->addWidget(separator);
 
-    msg = new QLabel(tr("Status: Starting"));
+    msg = new QLabel(tr("Starting"));
     msg->setAlignment(Qt::AlignLeft);
     msg->setTextFormat(Qt::PlainText);
     layout->addWidget(msg);
@@ -131,20 +127,15 @@ bool ProgressDialogMessage::run() {
     show();
     QCoreApplication::instance()->processEvents();
 
-    while (! manager->isStarted())
-        WaitingThread::tinySleep();
-
-    progress = manager->getProgress();
-    msg->setText(tr("Status: %1").arg(progress->getDescription().c_str()));
-    while (! progress->isFinished()) {
-        if (progress->hasChanged()) {
-            msg->setText(tr("Status: %1").arg(
-                progress->getDescription().c_str()));
+    msg->setText(tracker_->description().c_str());
+    while (! tracker_->isFinished()) {
+        if (tracker_->descriptionChanged()) {
+            msg->setText(tracker_->description().c_str());
         }
         QCoreApplication::instance()->processEvents();
         WaitingThread::tinySleep();
     }
 
-    return (! progress->isCancelled()); // Always true, for now.
+    return (! tracker_->isCancelled()); // Always true, for now.
 }
 

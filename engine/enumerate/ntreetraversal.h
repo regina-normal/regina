@@ -49,7 +49,7 @@
 
 namespace regina {
 
-class NProgressPercent;
+class NProgressTracker;
 class NTriangulation;
 
 /**
@@ -718,28 +718,30 @@ class NTreeEnumeration :
          * operations upon it.  If you do call buildSurface(), remember
          * to delete the normal surface once you are finished with it.
          *
-         * A progress watcher may be passed for progress reporting.
-         * If so, this routine will (i) track the progress of this
-         * routine, and (ii) poll for cancellation requests.
-         * The progress will be given as a percentage in the context of
-         * a complete enumeration of all solutions (i.e., it will typically
+         * An optional progress tracker may be passed.  If so, this routine
+         * will update the percentage progress and poll for cancellation
+         * requests.  It will be assumed that an appropriate stage has already
+         * been declared via NProgressTracker::newStage() before this routine
+         * is called, and that NProgressTracker::setFinished() will be
+         * called after this routine returns (and presumably not until
+         * the entire search tree is exhausted).
+         * The percentage progress will be given in the context of a complete
+         * enumeration of the entire search tree (i.e., it will typically
          * start at a percentage greater than 0, and end at a percentage less
-         * than 100).  This routine will not call \a NProgress::setFinished(),
-         * even if the search tree is exhausted; the responsibility for
-         * calling setFinished() is up to the caller of this routine.
+         * than 100).
          *
          * \pre The tree traversal algorithm has not yet finished.
          * That is, you have not called run() before, and if you have
          * called next() then it has always returned \c true (indicating
          * that it has not yet finished the search).
          *
-         * @param progress a progress watcher through which progress
+         * @param tracker a progress tracker through which progress
          * will be reported, or 0 if no progress reporting is required.
          * @return \c true if we found another vertex surface, or
          * \c false if the search has now finished and no more vertex
          * surfaces were found.
          */
-        bool next(NProgressPercent* progress = 0);
+        bool next(NProgressTracker* tracker = 0);
 
         /**
          * A callback function that writes to standard output the type vector

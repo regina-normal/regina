@@ -52,7 +52,6 @@ namespace regina {
 
 class NEnumConstraintList;
 class NMatrixInt;
-class NProgressMessage;
 class NRay;
 
 /**
@@ -114,9 +113,6 @@ class NHilbertCD {
          * important property that, although validity is not preserved under
          * addition, \e invalidity is.
          *
-         * A text-based progress watcher may be passed for progress reporting.
-         * If so, this routine will poll for cancellation requests accordingly.
-         *
          * \pre The template argument RayClass is derived from NRay (or
          * may possibly be NRay itself).
          *
@@ -135,15 +131,10 @@ class NHilbertCD {
          * dimension of the overall space in which we are working.
          * @param constraints a set of validity constraints as described
          * above, or 0 if no additional constraints should be imposed.
-         * @param progress a text-based progress watcher through which progress
-         * will be reported, or 0 if no progress reporting is required.
-         * Note that NProgress::setFinished() will \e not be called, since
-         * whoever called this routine may need to do further processing.
          */
         template <class RayClass, class OutputIterator>
         static void enumerateHilbertBasis(OutputIterator results,
-            const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressMessage* progress = 0);
+            const NMatrixInt& subspace, const NEnumConstraintList* constraints);
 
     private:
         /**
@@ -191,8 +182,7 @@ class NHilbertCD {
          */
         template <class RayClass, class BitmaskType, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
-            const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressMessage* progress);
+            const NMatrixInt& subspace, const NEnumConstraintList* constraints);
 
         /**
          * Private constructor to ensure that objects of this class are

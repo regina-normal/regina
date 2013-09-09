@@ -35,7 +35,7 @@
 #include "regina-config.h" // For EXCLUDE_NORMALIZ
 
 // Regina core includes:
-#include "progress/nprogressmanager.h"
+#include "progress/nprogresstracker.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 
@@ -173,14 +173,17 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
     }
 
     if (basisId == BASIS_VERTEX) {
-        regina::NProgressManager manager;
-        ProgressDialogNumeric dlg(&manager,
+        regina::NProgressTracker tracker;
+        ProgressDialogNumeric dlg(&tracker,
             ui->tr("Enumerating vertex normal surfaces"),
             parentWidget);
 
         NNormalSurfaceList* ans = NNormalSurfaceList::enumerate(
             dynamic_cast<regina::NTriangulation*>(parent),
-            coordSystem, embedded->isChecked(), &manager);
+            coordSystem,
+            regina::NS_VERTEX | (embedded->isChecked() ?
+                regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
+            regina::NS_ALG_DEFAULT, &tracker);
 
         if (dlg.run())
             return ans;
@@ -191,21 +194,17 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
             return 0;
         }
     } else {
-        regina::NProgressManager manager;
-        ProgressDialogMessage dlg(&manager,
+        regina::NProgressTracker tracker;
+        ProgressDialogMessage dlg(&tracker,
             ui->tr("Enumerating fundamental normal surfaces"),
             parentWidget);
 
-#ifndef EXCLUDE_NORMALIZ
-        NNormalSurfaceList* ans = NNormalSurfaceList::enumerateFundPrimal(
-                dynamic_cast<regina::NTriangulation*>(parent),
-                coordSystem, embedded->isChecked(),
-                0 /* vtx surfaces */, &manager);
-#else
-        NNormalSurfaceList* ans = NNormalSurfaceList::enumerateFundDual(
-                dynamic_cast<regina::NTriangulation*>(parent),
-                coordSystem, embedded->isChecked(), &manager);
-#endif
+        NNormalSurfaceList* ans = NNormalSurfaceList::enumerate(
+            dynamic_cast<regina::NTriangulation*>(parent),
+            coordSystem,
+            regina::NS_FUNDAMENTAL | (embedded->isChecked() ?
+                regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
+            regina::NS_ALG_DEFAULT, &tracker);
 
         if (dlg.run())
             return ans;

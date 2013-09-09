@@ -1,7 +1,7 @@
 # progress
 
 # Files to compile
-SET ( FILES nprogress nprogressmanager pyprogress)
+SET ( FILES nprogress nprogressmanager nprogresstracker pyprogress)
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

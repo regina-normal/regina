@@ -43,15 +43,15 @@
 #include <QProgressDialog>
 
 namespace regina {
-    class NProgress;
-    class NProgressManager;
+    class NProgressTracker;
 };
 
 class QLabel;
 
 /**
- * A dialog that interacts with the calculation engine progress classes
- * that return percentage progress counts.
+ * A dialog that interacts with a calculation engine progress tracker,
+ * displays both status messages and percentage progress, and supports
+ * cancellation.
  *
  * Upon calling ProgressDialogNumeric::run(), the dialog will be
  * displayed and it will follow the progress of the underlying
@@ -62,25 +62,19 @@ class ProgressDialogNumeric : public QProgressDialog {
     Q_OBJECT
 
     private:
-        regina::NProgressManager* manager;
-            /**< The progress manager handling the inter-thread
+        regina::NProgressTracker* tracker_;
+            /**< The progress tracker handling the inter-thread
                  communication. */
-        const regina::NProgress* progress;
-            /**< The calculation engine progress watcher. */
 
     public:
         /**
          * Creates a new progress dialog linked to the given
-         * calculation engine progress manager.
+         * calculation engine progress tracker.
          *
-         * The progress manager must not have been started, i.e.,
-         * <tt>manager->isStarted()</tt> must return \c false.
-         * More importantly, it must be guaranteed by the calculation
-         * engine that the progress watcher to be assigned by the
-         * underlying operation to this manager will have isPercent()
-         * returning \c true.
+         * The progress tracker must not have been started, i.e.,
+         * <tt>tracker->isStarted()</tt> must return \c false.
          */
-        ProgressDialogNumeric(regina::NProgressManager* useManager,
+        ProgressDialogNumeric(regina::NProgressTracker* tracker,
                 const QString& displayText, QWidget* parent = 0);
 
         /**
@@ -95,25 +89,22 @@ class ProgressDialogNumeric : public QProgressDialog {
 };
 
 /**
- * A dialog that can interact with any progress class from the
- * calculation engine.
+ * A dialog that interacts with a calculation engine progress tracker,
+ * displays only status messages (no percentage progress), and does not
+ * support cancellation.
  *
  * Upon calling ProgressDialogMessage::run(), the dialog will be
  * displayed and it will follow the progress of the underlying
  * operation in the calculation engine.  The operation itself should be
  * running in a separate thread.
- *
- * For the time being, this dialog has no cancellation button.
  */
 class ProgressDialogMessage : public QDialog {
     Q_OBJECT
 
     private:
-        regina::NProgressManager* manager;
-            /**< The progress manager handling the inter-thread
+        regina::NProgressTracker* tracker_;
+            /**< The progress tracker handling the inter-thread
                  communication. */
-        const regina::NProgress* progress;
-            /**< The calculation engine progress watcher. */
 
         QLabel* msg;
             /**< The current progress message. */
@@ -121,12 +112,12 @@ class ProgressDialogMessage : public QDialog {
     public:
         /**
          * Creates a new progress dialog linked to the given
-         * calculation engine progress manager.
+         * calculation engine progress tracker.
          *
-         * The progress manager must not have been started, i.e.,
-         * <tt>manager->isStarted()</tt> must return \c false.
+         * The progress tracker must not have been started, i.e.,
+         * <tt>tracker->isStarted()</tt> must return \c false.
          */
-        ProgressDialogMessage(regina::NProgressManager* useManager,
+        ProgressDialogMessage(regina::NProgressTracker* tracker,
                 const QString& displayText, QWidget* parent = 0);
 
         /**

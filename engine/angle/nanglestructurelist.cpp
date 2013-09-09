@@ -35,8 +35,7 @@
 #include "angle/nanglestructurelist.h"
 #include "enumerate/ndoubledescription.h"
 #include "maths/nmatrixint.h"
-#include "progress/nprogressmanager.h"
-#include "progress/nprogresstypes.h"
+#include "progress/nprogresstracker.h"
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
@@ -50,11 +49,8 @@ namespace regina {
 typedef std::vector<NAngleStructure*>::const_iterator StructureIteratorConst;
 
 void* NAngleStructureList::Enumerator::run(void*) {
-    NProgressPercent* progress = 0;
-    if (manager) {
-        progress = new NProgressPercent();
-        manager->setProgress(progress);
-    }
+    if (tracker)
+        tracker->newStage("Enumerating vertex angle structures");
 
     // Form the matching equations (one per non-boundary edge plus
     // one per tetrahedron).
@@ -110,26 +106,26 @@ void* NAngleStructureList::Enumerator::run(void*) {
 
     // Find the angle structures.
     NDoubleDescription::enumerateExtremalRays<NAngleStructureVector>(
-        StructureInserter(*list, triang), eqns, constraints, progress);
+        StructureInserter(*list, triang), eqns, constraints, tracker);
 
     // All done!
     delete constraints;
 
-    if (! (progress && progress->isCancelled()))
+    if (! (tracker && tracker->isCancelled()))
         triang->insertChildLast(list);
 
-    if (progress)
-        progress->setFinished();
+    if (tracker)
+        tracker->setFinished();
 
     return 0;
 }
 
 NAngleStructureList* NAngleStructureList::enumerate(NTriangulation* owner,
-        bool tautOnly, NProgressManager* manager) {
+        bool tautOnly, NProgressTracker* tracker) {
     NAngleStructureList* ans = new NAngleStructureList(tautOnly);
-    Enumerator* e = new Enumerator(ans, owner, manager);
+    Enumerator* e = new Enumerator(ans, owner, tracker);
 
-    if (manager) {
+    if (tracker) {
         if (! e->start(0, true)) {
             delete ans;
             return 0;

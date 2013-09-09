@@ -45,7 +45,6 @@
 #include "enumerate/nhilbertcd.h"
 #include "maths/nmatrixint.h"
 #include "maths/nray.h"
-#include "progress/nprogresstypes.h"
 #include "utilities/nbitmask.h"
 #include <list>
 
@@ -53,8 +52,7 @@ namespace regina {
 
 template <class RayClass, class OutputIterator>
 void NHilbertCD::enumerateHilbertBasis(OutputIterator results,
-        const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-        NProgressMessage* progress) {
+        const NMatrixInt& subspace, const NEnumConstraintList* constraints) {
     // Get the dimension of the space.
     unsigned dim = subspace.columns();
     if (dim == 0)
@@ -66,50 +64,46 @@ void NHilbertCD::enumerateHilbertBasis(OutputIterator results,
     // templated on the bitmask type.
     if (dim <= 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned> >(results,
-            subspace, constraints, progress);
+            subspace, constraints);
     else if (dim <= 8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned long> >(results,
-            subspace, constraints, progress);
+            subspace, constraints);
 #ifdef LONG_LONG_FOUND
     else if (dim <= 8 * sizeof(unsigned long long))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned long long> >(results,
-            subspace, constraints, progress);
+            subspace, constraints);
     else if (dim <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass,
             NBitmask2<unsigned long long, unsigned> >(results,
-            subspace, constraints, progress);
+            subspace, constraints);
     else if (dim <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass,
             NBitmask2<unsigned long long, unsigned long> >(
-            results, subspace, constraints, progress);
+            results, subspace, constraints);
     else if (dim <= 16 * sizeof(unsigned long long))
         enumerateUsingBitmask<RayClass, NBitmask2<unsigned long long> >(results,
-            subspace, constraints, progress);
+            subspace, constraints);
 #else
     else if (dim <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass,
             NBitmask2<unsigned long, unsigned> >(results,
-            subspace, constraints, progress);
+            subspace, constraints);
     else if (dim <= 16 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass, NBitmask2<unsigned long> >(results,
-            subspace, constraints, progress);
+            subspace, constraints);
 #endif
     else
         enumerateUsingBitmask<RayClass, NBitmask>(results,
-            subspace, constraints, progress);
+            subspace, constraints);
 }
 
 template <class RayClass, class BitmaskType, class OutputIterator>
 void NHilbertCD::enumerateUsingBitmask(OutputIterator results,
-        const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-        NProgressMessage* progress) {
+        const NMatrixInt& subspace, const NEnumConstraintList* constraints) {
     // Stack-based Contejean-Devie algorithm (Information & Computation, 1994).
     unsigned dim = subspace.columns();
     unsigned nEqns = subspace.rows();
-
-    if (progress)
-        progress->setMessage("Enumerating Hilbert basis");
 
     // Convert the set of constraints into bitmasks, where for every
     // original coordinate listed in the constraint, the corresponding
@@ -277,17 +271,11 @@ void NHilbertCD::enumerateUsingBitmask(OutputIterator results,
     delete[] frozen;
     delete[] constraintsBegin;
 
-    if (progress)
-        progress->setMessage("Collecting final basis elements");
-
     // Output basis elements.
     for (bit = basis.begin(); bit != basis.end(); ++bit) {
         *results++ = new RayClass(**bit);
         delete *bit;
     }
-
-    if (progress)
-        progress->setMessage("Hilbert basis enumeration complete");
 }
 
 } // namespace regina

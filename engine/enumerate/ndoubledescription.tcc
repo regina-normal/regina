@@ -47,7 +47,7 @@
 #include "enumerate/nenumconstraint.h"
 #include "maths/matrixops.h"
 #include "maths/nray.h"
-#include "progress/nprogresstypes.h"
+#include "progress/nprogresstracker.h"
 #include "utilities/boostutils.h"
 #include "utilities/memutils.h"
 #include "utilities/nbitmask.h"
@@ -206,7 +206,7 @@ void NDoubleDescription::RaySpec<BitmaskType>::recover(
 template <class RayClass, class OutputIterator>
 void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-        NProgressPercent* progress, unsigned long initialRows) {
+        NProgressTracker* tracker, unsigned long initialRows) {
     unsigned long nFacets = subspace.columns();
 
     // If the space has dimension zero, return no results.
@@ -220,44 +220,44 @@ void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
     // templated on the bitmask type.
     if (nFacets <= 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned> >(results,
-            subspace, constraints, progress, initialRows);
+            subspace, constraints, tracker, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned long> >(results,
-            subspace, constraints, progress, initialRows);
+            subspace, constraints, tracker, initialRows);
 #ifdef LONG_LONG_FOUND
     else if (nFacets <= 8 * sizeof(unsigned long long))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned long long> >(results,
-            subspace, constraints, progress, initialRows);
+            subspace, constraints, tracker, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass,
             NBitmask2<unsigned long long, unsigned> >(results,
-            subspace, constraints, progress, initialRows);
+            subspace, constraints, tracker, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass,
             NBitmask2<unsigned long long, unsigned long> >(
-            results, subspace, constraints, progress, initialRows);
+            results, subspace, constraints, tracker, initialRows);
     else if (nFacets <= 16 * sizeof(unsigned long long))
         enumerateUsingBitmask<RayClass, NBitmask2<unsigned long long> >(results,
-            subspace, constraints, progress, initialRows);
+            subspace, constraints, tracker, initialRows);
 #else
     else if (nFacets <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass,
             NBitmask2<unsigned long, unsigned> >(results,
-            subspace, constraints, progress, initialRows);
+            subspace, constraints, tracker, initialRows);
     else if (nFacets <= 16 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass, NBitmask2<unsigned long> >(results,
-            subspace, constraints, progress, initialRows);
+            subspace, constraints, tracker, initialRows);
 #endif
     else
         enumerateUsingBitmask<RayClass, NBitmask>(results,
-            subspace, constraints, progress, initialRows);
+            subspace, constraints, tracker, initialRows);
 }
 
 template <class RayClass, class BitmaskType, class OutputIterator>
 void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-        NProgressPercent* progress, unsigned long initialRows) {
+        NProgressTracker* tracker, unsigned long initialRows) {
     // Get the dimension of the entire space in which we are working.
     unsigned long dim = subspace.columns();
 
@@ -272,8 +272,8 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
             *results++ = ans;
         }
 
-        if (progress)
-            progress->setPercent(100);
+        if (tracker)
+            tracker->setPercent(100);
         return;
     }
 
@@ -338,7 +338,7 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
         // space *without* this hyperplane (and therefore satisfies the
         // relevant dimensional constraints without this hyperplane).
         if (intersectHyperplane(list[workingList], list[1 - workingList],
-                dim, used, constraintsBegin, constraintsEnd, progress))
+                dim, used, constraintsBegin, constraintsEnd, tracker))
             ++used;
 
         workingList = 1 - workingList;
@@ -347,7 +347,7 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
             << std::endl;
 #endif
 
-        if (progress && ! progress->setPercent(100.0 * i / nEqns))
+        if (tracker && ! tracker->setPercent(100.0 * i / nEqns))
             break;
     }
 
@@ -358,7 +358,7 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
 
     typename RaySpecList::iterator it;
 
-    if (progress && progress->isCancelled()) {
+    if (tracker && tracker->isCancelled()) {
         // The operation was cancelled.  Clean up before returning.
         for (it = list[workingList].begin(); it != list[workingList].end();
                 ++it)
@@ -377,8 +377,8 @@ void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
     }
 
     // All done!
-    if (progress)
-        progress->setPercent(100);
+    if (tracker)
+        tracker->setPercent(100);
 }
 
 template <class BitmaskType>
@@ -388,7 +388,7 @@ bool NDoubleDescription::intersectHyperplane(
         unsigned long dim, unsigned long prevHyperplanes,
         const BitmaskType* constraintsBegin,
         const BitmaskType* constraintsEnd,
-        NProgressPercent* progress) {
+        NProgressTracker* tracker) {
     if (src.empty())
         return false;
 
@@ -441,9 +441,9 @@ bool NDoubleDescription::intersectHyperplane(
         for (negit = neg.begin(); negit != neg.end(); ++negit) {
             // Test for cancellation, but not every time (since this
             // involves expensive mutex locking).
-            if (progress && ++iterations == 100) {
+            if (tracker && ++iterations == 100) {
                 iterations = 0;
-                if (progress->isCancelled()) {
+                if (tracker->isCancelled()) {
                     for (otherit = src.begin(); otherit != src.end();
                             ++otherit)
                         delete *otherit;

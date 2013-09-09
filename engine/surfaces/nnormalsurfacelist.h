@@ -57,9 +57,7 @@ namespace regina {
 
 class NTriangulation;
 class NMatrixInt;
-class NProgressManager;
-class NProgressMessage;
-class NProgressPercent;
+class NProgressTracker;
 class NXMLPacketReader;
 class NXMLNormalSurfaceListReader;
 
@@ -239,14 +237,17 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * \b must remain the parent of this normal surface list, and must not
          * change while this normal surface list remains in existence.
          *
-         * If a progress manager is passed, the normal surface
+         * If a progress tracker is passed, the normal surface
          * enumeration will take place in a new thread and this routine
          * will return immediately.  If the user cancels the operation
          * from another thread, then the normal surface list will \e not
          * be inserted into the packet tree (but the caller of this
-         * routine will still need to delete it).
+         * routine will still need to delete it).  Regarding progress tracking,
+         * this routine will declare and work through a series of stages
+         * whose combined weights sum to 1; typically this means that the
+         * given tracker must not have been used before.
          *
-         * If no progress manager is passed, the enumeration will run
+         * If no progress tracker is passed, the enumeration will run
          * in the current thread and this routine will return only when
          * the enumeration is complete.  Note that this enumeration can
          * be extremely slow for larger triangulations.
@@ -257,13 +258,11 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * @param which indicates which normal surfaces should be enumerated.
          * @param algHints passes requests to Regina for which specific
          * enumeration algorithm should be used.
-         * @param manager a progress manager through which progress will
-         * be reported, or 0 if no progress reporting is required.  If
-         * non-zero, \a manager must point to a progress manager for
-         * which NProgressManager::isStarted() is still \c false.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
          * @return the newly created normal surface list.  Note that if
-         * a progress manager is passed then this list may not be completely
-         * filled when this routine returns.  If a progress manager is
+         * a progress tracker is passed then this list may not be completely
+         * filled when this routine returns.  If a progress tracker is
          * passed and a new thread could not be started, this routine
          * returns 0 (and no normal surface list is created).
          */
@@ -271,27 +270,27 @@ class REGINA_API NNormalSurfaceList : public NPacket {
             NormalCoords flavour,
             NormalList which = NS_LIST_DEFAULT,
             NormalAlg algHints = NS_ALG_DEFAULT,
-            NProgressManager* manager = 0);
+            NProgressTracker* tracker = 0);
 
         /**
          * Deprecated method for enumerating all vertex normal surfaces
          * using the given flavour of coordinate system.
          *
          * Users should now call enumerate(NTriangulation*, NormalCoords,
-         * NormalList, NormalAlg, NProgressManager*) instead.
+         * NormalList, NormalAlg, NProgressTracker*) instead.
          * See the documentation for that routine for further details,
          * including all arguments, returns values, preconditions and
          * postconditions.
          *
          * \deprecated The correct way to access this procedure is to call
          * <tt>enumerate(owner, flavour, NS_EMBEDDED_ONLY,
-         * NS_ALG_DEFAULT, manager)</tt> if \a embeddedOnly is \c true, or
+         * NS_ALG_DEFAULT, tracker)</tt> if \a embeddedOnly is \c true, or
          * <tt>enumerate(owner, flavour, NS_IMMERSED_SINGULAR,
-         * NS_ALG_DEFAULT, manager)</tt> if \a embeddedOnly is \c false.
+         * NS_ALG_DEFAULT, tracker)</tt> if \a embeddedOnly is \c false.
          */
         static NNormalSurfaceList* enumerate(NTriangulation* owner,
             NormalCoords flavour, bool embeddedOnly,
-            NProgressManager* manager = 0);
+            NProgressTracker* tracker = 0);
 
         /**
          * Deprecated method that uses a slow-but-direct procedure to
@@ -301,7 +300,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * Users can still access this slower procedure if they need to;
          * however, they should do this via enumerate(NTriangulation*,
-         * NormalCoords, NormalList, NormalAlg, NProgressManager*) instead.
+         * NormalCoords, NormalList, NormalAlg, NProgressTracker*) instead.
          * See the documentation for that routine for further details.
          *
          * \deprecated The correct way to access this procedure is to call
@@ -326,7 +325,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * Users can still access this slower procedure if they need to;
          * however, they should do this via enumerate(NTriangulation*,
-         * NormalCoords, NormalList, NormalAlg, NProgressManager*) instead.
+         * NormalCoords, NormalList, NormalAlg, NProgressTracker*) instead.
          * See the documentation for that routine for further details.
          *
          * \deprecated The correct way to access this procedure is to call
@@ -352,7 +351,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * Users can still access this procedure if they need to;
          * however, they should do this via enumerate(NTriangulation*,
-         * NormalCoords, NormalList, NormalAlg, NProgressManager*) instead.
+         * NormalCoords, NormalList, NormalAlg, NProgressTracker*) instead.
          * See the documentation for that routine for further details.
          *
          * \warning As of Regina 4.94, the \a vtxSurfaces argument is ignored.
@@ -362,9 +361,9 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * \deprecated The correct way to access this procedure is to call
          * <tt>enumerate(owner, flavour, NS_FUNDAMENTAL | NS_EMBEDDED_ONLY,
-         * NS_HILBERT_PRIMAL, manager)</tt> if \a embeddedOnly is \c true, or
+         * NS_HILBERT_PRIMAL, tracker)</tt> if \a embeddedOnly is \c true, or
          * <tt>enumerate(owner, flavour, NS_FUNDAMENTAL | NS_IMMERSED_SINGULAR,
-         * NS_HILBERT_PRIMAL, manager)</tt> if \a embeddedOnly is \c false.
+         * NS_HILBERT_PRIMAL, tracker)</tt> if \a embeddedOnly is \c false.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
@@ -375,13 +374,11 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * @param vtxSurfaces the set of all \e vertex normal surfaces
          * as enumerated under the same coordinate system and
          * constraints as given here; this may be 0 if unknown.
-         * @param manager a progress manager through which progress will
-         * be reported, or 0 if no progress reporting is required.  If
-         * non-zero, \a manager must point to a progress manager for
-         * which NProgressManager::isStarted() is still \c false.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
          * @return the newly created normal surface list.  Note that if
-         * a progress manager is passed then this list may not be completely
-         * filled when this routine returns.  If a progress manager is
+         * a progress tracker is passed then this list may not be completely
+         * filled when this routine returns.  If a progress tracker is
          * passed and a new thread could not be started, this routine
          * returns 0 (and no normal surface list is created).
          */
@@ -389,7 +386,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
             NTriangulation* owner, NormalCoords flavour,
             bool embeddedOnly = true,
             NNormalSurfaceList* vtxSurfaces = 0,
-            NProgressManager* manager = 0);
+            NProgressTracker* tracker = 0);
 
         /**
          * Deprecated method that enumerates all fundamental normal surfaces
@@ -400,14 +397,14 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * Users can still access this procedure if they need to;
          * however, they should do this via enumerate(NTriangulation*,
-         * NormalCoords, NormalList, NormalAlg, NProgressManager*) instead.
+         * NormalCoords, NormalList, NormalAlg, NProgressTracker*) instead.
          * See the documentation for that routine for further details.
          *
          * \deprecated The correct way to access this procedure is to call
          * <tt>enumerate(owner, flavour, NS_FUNDAMENTAL | NS_EMBEDDED_ONLY,
-         * NS_HILBERT_DUAL, manager)</tt> if \a embeddedOnly is \c true, or
+         * NS_HILBERT_DUAL, tracker)</tt> if \a embeddedOnly is \c true, or
          * <tt>enumerate(owner, flavour, NS_FUNDAMENTAL | NS_IMMERSED_SINGULAR,
-         * NS_HILBERT_DUAL, manager)</tt> if \a embeddedOnly is \c false.
+         * NS_HILBERT_DUAL, tracker)</tt> if \a embeddedOnly is \c false.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
@@ -415,20 +412,18 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * @param embeddedOnly \c true if only embedded normal surfaces
          * are to be produced, or \c false if immersed and singular
          * normal surfaces are also to be produced; this defaults to \c true.
-         * @param manager a progress manager through which progress will
-         * be reported, or 0 if no progress reporting is required.  If
-         * non-zero, \a manager must point to a progress manager for
-         * which NProgressManager::isStarted() is still \c false.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
          * @return the newly created normal surface list.  Note that if
-         * a progress manager is passed then this list may not be completely
-         * filled when this routine returns.  If a progress manager is
+         * a progress tracker is passed then this list may not be completely
+         * filled when this routine returns.  If a progress tracker is
          * passed and a new thread could not be started, this routine
          * returns 0 (and no normal surface list is created).
          */
         static NNormalSurfaceList* enumerateFundDual(
             NTriangulation* owner, NormalCoords flavour,
             bool embeddedOnly = true,
-            NProgressManager* manager = 0);
+            NProgressTracker* tracker = 0);
 
         /**
          * Deprecated method that uses an extremely slow procedure to enumerate
@@ -439,14 +434,14 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * Users can still access this slower procedure if they need to;
          * however, they should do this via enumerate(NTriangulation*,
-         * NormalCoords, NormalList, NormalAlg, NProgressManager*) instead.
+         * NormalCoords, NormalList, NormalAlg, NProgressTracker*) instead.
          * See the documentation for that routine for further details.
          *
          * \deprecated The correct way to access this procedure is to call
          * <tt>enumerate(owner, flavour, NS_FUNDAMENTAL | NS_EMBEDDED_ONLY,
-         * NS_HILBERT_FULLCONE, manager)</tt> if \a embeddedOnly is \c true, or
+         * NS_HILBERT_FULLCONE)</tt> if \a embeddedOnly is \c true, or
          * <tt>enumerate(owner, flavour, NS_FUNDAMENTAL | NS_IMMERSED_SINGULAR,
-         * NS_HILBERT_FULLCONE, manager)</tt> if \a embeddedOnly is \c false.
+         * NS_HILBERT_FULLCONE)</tt> if \a embeddedOnly is \c false.
          *
          * \warning This routine is extremely slow, and users will not want to
          * call it unless they have some specialised need.
@@ -472,14 +467,14 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * Users can still access this slower procedure if they need to;
          * however, they should do this via enumerate(NTriangulation*,
-         * NormalCoords, NormalList, NormalAlg, NProgressManager*) instead.
+         * NormalCoords, NormalList, NormalAlg, NProgressTracker*) instead.
          * See the documentation for that routine for further details.
          *
          * \deprecated The correct way to access this procedure is to call
          * <tt>enumerate(owner, flavour, NS_FUNDAMENTAL | NS_EMBEDDED_ONLY,
-         * NS_HILBERT_CD, manager)</tt> if \a embeddedOnly is \c true, or
+         * NS_HILBERT_CD)</tt> if \a embeddedOnly is \c true, or
          * <tt>enumerate(owner, flavour, NS_FUNDAMENTAL | NS_IMMERSED_SINGULAR,
-         * NS_HILBERT_CD, manager)</tt> if \a embeddedOnly is \c false.
+         * NS_HILBERT_CD)</tt> if \a embeddedOnly is \c false.
          *
          * \warning This routine is extremely slow, and users will not want to
          * call it unless they have some specialised need.
@@ -1222,8 +1217,12 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * Although this routine takes a vector of non-const pointers, it
          * guarantees not to modify (or destroy) any of the contents.
          *
-         * A numeric progress watcher may be passed for progress reporting.
-         * If so, this routine will poll for cancellation requests accordingly.
+         * An optional progress tracker may be passed.  If so, this routine
+         * will update the percentage progress and poll for cancellation
+         * requests.  It will be assumed that an appropriate stage has already
+         * been declared via NProgressTracker::newStage() before this routine
+         * is called, and that NProgressTracker::setFinished() will be
+         * called after this routine returns.
          *
          * Although this is a template function, it is a private
          * template function and so is only defined in the one <tt>.cpp</tt>
@@ -1243,15 +1242,13 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * surfaces is to be based.
          * @param reducedList a full list of vertex surfaces in
          * (quad or quad-oct) coordinates for the given triangulation.
-         * @param progress a numeric progress watcher through which
-         * progress will be reported and cancellation requests will be
-         * honoured, or 0 if no progress reporting is required.
-         * Note that NProgress::setFinished() will \e not be called.
+         * @param tracker a progress tracker to be used for progress reporting
+         * and cancellation requests, or 0 if this is not required.
          */
         template <class Variant>
         void buildStandardFromReduced(NTriangulation* owner,
             const std::vector<NNormalSurface*>& reducedList,
-            NProgressPercent* progress = 0);
+            NProgressTracker* tracker = 0);
 
         /**
          * Implements the one-template-argument version of
@@ -1272,7 +1269,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
         template <class Variant, class BitmaskType>
         void buildStandardFromReducedUsing(NTriangulation* owner,
             const std::vector<NNormalSurface*>& reducedList,
-            NProgressPercent* progress);
+            NProgressTracker* tracker);
 
         /**
          * Converts a set of embedded vertex surfaces in (quad or quad-oct)
@@ -1321,9 +1318,10 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                     /**< The surface list to be filled. */
                 NTriangulation* triang_;
                     /**< The triangulation in which these surfaces lie. */
-                NProgressManager* manager_;
-                    /**< The progress manager through which progress is
-                         reported, or 0 if no progress manager is in use. */
+                NProgressTracker* tracker_;
+                    /**< The progress tracker through which progress is
+                         reported and cancellation requests are accepted,
+                         or 0 if no progress tracker is in use. */
 
             public:
                 /**
@@ -1332,11 +1330,12 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  *
                  * @param list the surface list to be filled.
                  * @param triang the triangulation in which these surfaces lie.
-                 * @param manager the progress manager to use for progress
-                 * reporting, or 0 if progress reporting is not required.
+                 * @param tracker the progress tracker to use for progress
+                 * reporting and cancellation polling, or 0 if these
+                 * capabilities are not required.
                  */
                 Enumerator(NNormalSurfaceList* list,
-                    NTriangulation* triang, NProgressManager* manager);
+                    NTriangulation* triang, NProgressTracker* tracker);
 
                 void* run(void*);
 
@@ -1369,8 +1368,10 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * It does not make any adjustments to the structure of
                  * the packet tree.
                  *
-                 * This routine initialises and finalises progress
-                 * reporting if \a manager is non-null.
+                 * If \a tracker_ is non-null, this routine declare and
+                 * work through a series of tracker stages whose
+                 * combined weights sum to 1.  It will not, however,
+                 * call NProgressTracker::setFinished().
                  */
                 template <typename Flavour>
                 void fillVertex();
@@ -1388,8 +1389,10 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * It does not make any adjustments to the structure of
                  * the packet tree.
                  *
-                 * This routine initialises and finalises progress
-                 * reporting if \a manager is non-null.
+                 * If \a tracker_ is non-null, this routine declare and
+                 * work through a series of tracker stages whose
+                 * combined weights sum to 1.  It will not, however,
+                 * call NProgressTracker::setFinished().
                  */
                 template <typename Flavour>
                 void fillFundamental();
@@ -1402,14 +1405,14 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * This routine assumes that \a algorithm_ has been set
                  * correctly, and does not alter it.
                  *
-                 * This routine does not initialise or finalise progress
-                 * reporting.  However, it does track progress numerically
-                 * if the \a progress argument is non-null.
+                 * If \a tracker_ is non-null, this routine assumes that
+                 * an appropriate tracker stage has already been
+                 * declared, and works through that stage only.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Flavour>
-                void fillVertexDD(NProgressPercent* progress);
+                void fillVertexDD();
 
                 /**
                  * The enumeration code for enumerating vertex surfaces
@@ -1419,14 +1422,14 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * This routine assumes that \a algorithm_ has been set
                  * correctly, and does not alter it.
                  *
-                 * This routine does not initialise or finalise progress
-                 * reporting.  However, it does track progress numerically
-                 * if the \a progress argument is non-null.
+                 * If \a tracker_ is non-null, this routine assumes that
+                 * an appropriate tracker stage has already been
+                 * declared, and works through that stage only.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Flavour>
-                void fillVertexTree(NProgressPercent* progress);
+                void fillVertexTree();
 
                 /**
                  * Internal code for fillVertexTree() in which the underlying
@@ -1442,7 +1445,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * under consideration.
                  */
                 template <typename Flavour, typename Integer>
-                void fillVertexTreeWith(NProgressPercent* progress);
+                void fillVertexTreeWith();
 
                 /**
                  * The enumeration code for enumerating fundamental surfaces
@@ -1452,8 +1455,10 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * This routine assumes nothing about the state of the
                  * \a algorithm_ flag set, and sets it appropriately.
                  *
-                 * This routine initialises and finalises progress
-                 * reporting if \a manager is non-null.
+                 * If \a tracker_ is non-null, this routine declare and
+                 * work through a series of tracker stages whose
+                 * combined weights sum to 1.  It will not, however,
+                 * call NProgressTracker::setFinished().
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1468,8 +1473,10 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * This routine assumes nothing about the state of the
                  * \a algorithm_ flag set, and sets it appropriately.
                  *
-                 * This routine initialises and finalises progress
-                 * reporting if \a manager is non-null.
+                 * If \a tracker_ is non-null, this routine declare and
+                 * work through a series of tracker stages whose
+                 * combined weights sum to 1.  It will not, however,
+                 * call NProgressTracker::setFinished().
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1484,8 +1491,10 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * This routine assumes nothing about the state of the
                  * \a algorithm_ flag set, and sets it appropriately.
                  *
-                 * This routine initialises and finalises progress
-                 * reporting if \a manager is non-null.
+                 * If \a tracker_ is non-null, this routine declare and
+                 * work through a series of tracker stages whose
+                 * combined weights sum to 1.  It will not, however,
+                 * call NProgressTracker::setFinished().
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1500,8 +1509,10 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * This routine assumes nothing about the state of the
                  * \a algorithm_ flag set, and sets it appropriately.
                  *
-                 * This routine initialises and finalises progress
-                 * reporting if \a manager is non-null.
+                 * If \a tracker_ is non-null, this routine declare and
+                 * work through a series of tracker stages whose
+                 * combined weights sum to 1.  It will not, however,
+                 * call NProgressTracker::setFinished().
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1606,10 +1617,10 @@ inline bool NNormalSurfaceList::dependsOnParent() const {
 
 inline NNormalSurfaceList* NNormalSurfaceList::enumerate(
         NTriangulation* owner, NormalCoords flavour,
-        bool embeddedOnly, NProgressManager* manager) {
+        bool embeddedOnly, NProgressTracker* tracker) {
     return enumerate(owner, flavour,
         NS_VERTEX | (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
-        NS_ALG_DEFAULT, manager);
+        NS_ALG_DEFAULT, tracker);
 }
 
 inline NNormalSurfaceList* NNormalSurfaceList::enumerateStandardDirect(
@@ -1626,20 +1637,20 @@ inline NNormalSurfaceList* NNormalSurfaceList::enumerateStandardANDirect(
 
 inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundPrimal(
         NTriangulation* owner, NormalCoords flavour,
-        bool embeddedOnly, NNormalSurfaceList*, NProgressManager* manager) {
+        bool embeddedOnly, NNormalSurfaceList*, NProgressTracker* tracker) {
     return enumerate(owner, flavour,
         NS_FUNDAMENTAL |
             (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
-        NS_HILBERT_PRIMAL, manager);
+        NS_HILBERT_PRIMAL, tracker);
 }
 
 inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundDual(
         NTriangulation* owner, NormalCoords flavour,
-        bool embeddedOnly, NProgressManager* manager) {
+        bool embeddedOnly, NProgressTracker* tracker) {
     return enumerate(owner, flavour,
         NS_FUNDAMENTAL |
             (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
-        NS_HILBERT_DUAL, manager);
+        NS_HILBERT_DUAL, tracker);
 }
 
 inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundCD(
@@ -1783,8 +1794,8 @@ inline NNormalSurfaceList::NNormalSurfaceList(NormalCoords flavour,
 }
 
 inline NNormalSurfaceList::Enumerator::Enumerator(NNormalSurfaceList* list,
-        NTriangulation* triang, NProgressManager* manager) :
-        list_(list), triang_(triang), manager_(manager) {
+        NTriangulation* triang, NProgressTracker* tracker) :
+        list_(list), triang_(triang), tracker_(tracker) {
 }
 
 } // namespace regina
