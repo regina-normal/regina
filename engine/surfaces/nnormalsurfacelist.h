@@ -1426,6 +1426,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * an appropriate tracker stage has already been
                  * declared, and works through that stage only.
                  *
+                 * \pre We are enumerating embedded surfaces only.
                  * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Flavour>
@@ -1439,6 +1440,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * from the initial selection of an integer type.  See
                  * the nodes for fillVertexTree() for further details.
                  *
+                 * \pre We are enumerating embedded surfaces only.
                  * \pre The underlying triangulation is non-empty.
                  * \pre The given integer type is known to be sufficient
                  * (i.e., will not overflow) for the enumeration problem
