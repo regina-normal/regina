@@ -36,7 +36,7 @@
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "maths/nmatrixint.h"
-#include "progress/nprogressmanager.h"
+#include "progress/nprogresstracker.h"
 
 using namespace boost::python;
 using regina::HyperCoords;
@@ -54,9 +54,9 @@ namespace {
     }
     NNormalHypersurfaceList* enumerate_4(regina::Dim4Triangulation* owner,
             HyperCoords flavour, bool embedded,
-            regina::NProgressManager* manager) {
+            regina::NProgressTracker* tracker) {
         return NNormalHypersurfaceList::enumerate(owner, flavour, embedded,
-            manager);
+            tracker);
     }
 
     NNormalHypersurfaceList* enumerateFundPrimal_2(
@@ -78,9 +78,9 @@ namespace {
     NNormalHypersurfaceList* enumerateFundPrimal_5(
             regina::Dim4Triangulation* owner, HyperCoords flavour,
             bool embedded, regina::NNormalHypersurfaceList* vtxSurfaces,
-            regina::NProgressManager* manager) {
+            regina::NProgressTracker* tracker) {
         return NNormalHypersurfaceList::enumerateFundPrimal(owner, flavour,
-            embedded, vtxSurfaces, manager);
+            embedded, vtxSurfaces, tracker);
     }
 
     NNormalHypersurfaceList* enumerateFundDual_2(
@@ -95,9 +95,9 @@ namespace {
     }
     NNormalHypersurfaceList* enumerateFundDual_4(
             regina::Dim4Triangulation* owner, HyperCoords flavour,
-            bool embedded, regina::NProgressManager* manager) {
+            bool embedded, regina::NProgressTracker* tracker) {
         return NNormalHypersurfaceList::enumerateFundDual(owner, flavour,
-            embedded, manager);
+            embedded, tracker);
     }
 }
 

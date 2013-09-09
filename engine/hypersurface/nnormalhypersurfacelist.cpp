@@ -40,8 +40,7 @@
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "hypersurface/hsflavourregistry.h"
 #include "maths/nmatrixint.h"
-#include "progress/nprogressmanager.h"
-#include "progress/nprogresstypes.h"
+#include "progress/nprogresstracker.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
@@ -95,15 +94,12 @@ NEnumConstraintList* makeEmbeddedConstraints(Dim4Triangulation* triangulation,
 #undef REGISTER_HSFLAVOUR
 #define REGISTER_HSFLAVOUR(id_name, cls, n) \
     case id_name: NDoubleDescription::enumerateExtremalRays<cls>( \
-        HypersurfaceInserter(*list_, triang_), *eqns, constraints, progress); \
+        HypersurfaceInserter(*list_, triang_), *eqns, constraints, tracker_); \
         break;
 
 void* NNormalHypersurfaceList::VertexEnumerator::run(void*) {
-    NProgressNumber* progress = 0;
-    if (manager_) {
-        progress = new NProgressNumber(0, 1);
-        manager_->setProgress(progress);
-    }
+    if (tracker_)
+        tracker_->newStage("Enumerating vertex hypersurfaces");
 
     // Fetch any necessary validity constraints.
     NEnumConstraintList* constraints = 0;
@@ -124,12 +120,11 @@ void* NNormalHypersurfaceList::VertexEnumerator::run(void*) {
     delete constraints;
 
     // All done!
-    triang_->insertChildLast(list_);
+    if (! (tracker_ && tracker_->isCancelled()))
+        triang_->insertChildLast(list_);
 
-    if (progress) {
-        progress->incCompleted();
-        progress->setFinished();
-    }
+    if (tracker_)
+        tracker_->setFinished();
 
     return 0;
 }
@@ -139,36 +134,33 @@ void* NNormalHypersurfaceList::VertexEnumerator::run(void*) {
     case id_name: NHilbertPrimal::enumerateHilbertBasis<cls>( \
         HypersurfaceInserter(*list_, triang_), \
         useVtxSurfaces->beginVectors(), useVtxSurfaces->endVectors(), \
-        constraints, progress); \
+        constraints, tracker_); \
         break;
 
 void* NNormalHypersurfaceList::FundPrimalEnumerator::run(void*) {
-    NProgressMessage* progress = 0;
-    if (manager_) {
-        progress = new NProgressMessage("Initialising enumeration");
-        manager_->setProgress(progress);
-    }
+    if (tracker_)
+        tracker_->newStage("Initialising Hilbert basis enumeration", 0.1);
 
     // Fetch any necessary validity constraints.
     NEnumConstraintList* constraints = 0;
     if (list_->embedded_)
         constraints = makeEmbeddedConstraints(triang_, list_->flavour_);
 
+    if (tracker_)
+        tracker_->newStage("Enumerating extremal rays", 0.4);
+
     NNormalHypersurfaceList* useVtxSurfaces = vtxSurfaces_;
     if (! vtxSurfaces_) {
         // Enumerate all vertex normal hypersurfaces using the default
         // (and hopefully best possible) algorithm.
-        if (progress)
-            progress->setMessage("Enumerating extremal rays");
-
         useVtxSurfaces = new NNormalHypersurfaceList(list_->flavour_,
             list_->embedded_);
         VertexEnumerator e(useVtxSurfaces, triang_, 0);
         e.run(0);
     }
 
-    if (progress)
-        progress->setMessage("Enumerating Hilbert basis");
+    if (tracker_)
+        tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
     // Find the normal hypersurfaces.
     switch(list_->flavour_) {
@@ -182,12 +174,11 @@ void* NNormalHypersurfaceList::FundPrimalEnumerator::run(void*) {
         delete useVtxSurfaces;
 
     // All done!
-    triang_->insertChildLast(list_);
+    if (! (tracker_ && tracker_->isCancelled()))
+        triang_->insertChildLast(list_);
 
-    if (progress) {
-        progress->setMessage("Finished enumeration");
-        progress->setFinished();
-    }
+    if (tracker_)
+        tracker_->setFinished();
 
     return 0;
 }
@@ -195,15 +186,12 @@ void* NNormalHypersurfaceList::FundPrimalEnumerator::run(void*) {
 #undef REGISTER_HSFLAVOUR
 #define REGISTER_HSFLAVOUR(id_name, cls, n) \
     case id_name: NHilbertDual::enumerateHilbertBasis<cls>( \
-        HypersurfaceInserter(*list_, triang_), *eqns, constraints, progress); \
+        HypersurfaceInserter(*list_, triang_), *eqns, constraints, tracker_); \
         break;
 
 void* NNormalHypersurfaceList::FundDualEnumerator::run(void*) {
-    NProgressNumber* progress = 0;
-    if (manager_) {
-        progress = new NProgressNumber(0, 1);
-        manager_->setProgress(progress);
-    }
+    if (tracker_)
+        tracker_->newStage("Enumerating Hilbert basis\n(dual method)");
 
     // Fetch any necessary validity constraints.
     NEnumConstraintList* constraints = 0;
@@ -224,24 +212,23 @@ void* NNormalHypersurfaceList::FundDualEnumerator::run(void*) {
     delete constraints;
 
     // All done!
-    triang_->insertChildLast(list_);
+    if (! (tracker_ && tracker_->isCancelled()))
+        triang_->insertChildLast(list_);
 
-    if (progress) {
-        progress->incCompleted();
-        progress->setFinished();
-    }
+    if (tracker_)
+        tracker_->setFinished();
 
     return 0;
 }
 
 NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
         Dim4Triangulation* owner, HyperCoords flavour, bool embeddedOnly,
-        NProgressManager* manager) {
+        NProgressTracker* tracker) {
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
         flavour, embeddedOnly);
-    VertexEnumerator* e = new VertexEnumerator(ans, owner, manager);
+    VertexEnumerator* e = new VertexEnumerator(ans, owner, tracker);
 
-    if (manager) {
+    if (tracker) {
         if (! e->start(0, true)) {
             delete ans;
             return 0;
@@ -256,13 +243,13 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
 
 NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundPrimal(
         Dim4Triangulation* owner, HyperCoords flavour, bool embeddedOnly,
-        NNormalHypersurfaceList* vtxSurfaces, NProgressManager* manager) {
+        NNormalHypersurfaceList* vtxSurfaces, NProgressTracker* tracker) {
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
         flavour, embeddedOnly);
     FundPrimalEnumerator* e = new FundPrimalEnumerator(ans, owner, vtxSurfaces,
-        manager);
+        tracker);
 
-    if (manager) {
+    if (tracker) {
         if (! e->start(0, true)) {
             delete ans;
             return 0;
@@ -277,12 +264,12 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundPrimal(
 
 NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundDual(
         Dim4Triangulation* owner, HyperCoords flavour, bool embeddedOnly,
-        NProgressManager* manager) {
+        NProgressTracker* tracker) {
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
         flavour, embeddedOnly);
-    FundDualEnumerator* e = new FundDualEnumerator(ans, owner, manager);
+    FundDualEnumerator* e = new FundDualEnumerator(ans, owner, tracker);
 
-    if (manager) {
+    if (tracker) {
         if (! e->start(0, true)) {
             delete ans;
             return 0;

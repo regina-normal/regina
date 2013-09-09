@@ -58,8 +58,7 @@ namespace regina {
 class Dim4Triangulation;
 class NMatrixInt;
 class NNormalHypersurface;
-class NProgressManager;
-class NProgressNumber;
+class NProgressTracker;
 class NXMLNormalHypersurfaceListReader;
 class NXMLPacketReader;
 
@@ -115,13 +114,17 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * remain the parent of this normal hypersurface list, and must not
          * change while this normal hypersurface list remains in existence.
          *
-         * If a progress manager is passed, the normal hypersurface
+         * If a progress tracker is passed, the normal hypersurface
          * enumeration will take place in a new thread and this routine
-         * will return immediately.  The NProgress object assigned to
-         * this progress manager is guaranteed to be of the class
-         * NProgressNumber.
+         * will return immediately.  If the user cancels the operation
+         * from another thread, then the normal hypersurface list will \e not
+         * be inserted into the packet tree (but the caller of this
+         * routine will still need to delete it).  Regarding progress
+         * tracking, this routine will declare and work through a series
+         * of stages whose combined weights sum to 1; typically this
+         * means that the given tracker must not have been used before.
          *
-         * If no progress manager is passed, the enumeration will run
+         * If no progress tracker is passed, the enumeration will run
          * in the current thread and this routine will return only when
          * the enumeration is complete.  Note that this enumeration can
          * be extremely slow for larger triangulations.
@@ -133,19 +136,17 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * are to be produced, or \c false if immersed and singular
          * normal hypersurfaces are also to be produced; this defaults to
          * \c true.
-         * @param manager a progress manager through which progress will
-         * be reported, or 0 if no progress reporting is required.  If
-         * non-zero, \a manager must point to a progress manager for
-         * which NProgressManager::isStarted() is still \c false.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
          * @return the newly created normal hypersurface list.  Note that if
-         * a progress manager is passed then this list may not be completely
-         * filled when this routine returns.  If a progress manager is
+         * a progress tracker is passed then this list may not be completely
+         * filled when this routine returns.  If a progress tracker is
          * passed and a new thread could not be started, this routine
          * returns 0 (and no normal hypersurface list is created).
          */
         static NNormalHypersurfaceList* enumerate(Dim4Triangulation* owner,
             HyperCoords flavour, bool embeddedOnly = true,
-            NProgressManager* manager = 0);
+            NProgressTracker* tracker = 0);
 
         /**
          * Enumerates all fundamental normal hypersurfaces in the given
@@ -173,13 +174,17 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * may pass the list of vertex normal hypersurfaces as the (optional)
          * parameter \a vtxSurfaces.
          *
-         * If a progress manager is passed, the normal hypersurface
+         * If a progress tracker is passed, the normal hypersurface
          * enumeration will take place in a new thread and this routine
-         * will return immediately.  The NProgress object assigned to
-         * this progress manager is guaranteed to be of the class
-         * NProgressMessage.
+         * will return immediately.  If the user cancels the operation
+         * from another thread, then the normal hypersurface list will \e not
+         * be inserted into the packet tree (but the caller of this
+         * routine will still need to delete it).  Regarding progress
+         * tracking, this routine will declare and work through a series
+         * of stages whose combined weights sum to 1; typically this
+         * means that the given tracker must not have been used before.
          *
-         * If no progress manager is passed, the enumeration will run
+         * If no progress tracker is passed, the enumeration will run
          * in the current thread and this routine will return only when
          * the enumeration is complete.  Note that this enumeration can
          * be extremely slow for larger triangulations.
@@ -199,13 +204,11 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * @param vtxSurfaces the set of all \e vertex normal hypersurfaces
          * as enumerated under the same coordinate system and
          * constraints as given here; this may be 0 if unknown.
-         * @param manager a progress manager through which progress will
-         * be reported, or 0 if no progress reporting is required.  If
-         * non-zero, \a manager must point to a progress manager for
-         * which NProgressManager::isStarted() is still \c false.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
          * @return the newly created normal hypersurface list.  Note that if
-         * a progress manager is passed then this list may not be completely
-         * filled when this routine returns.  If a progress manager is
+         * a progress tracker is passed then this list may not be completely
+         * filled when this routine returns.  If a progress tracker is
          * passed and a new thread could not be started, this routine
          * returns 0 (and no normal hypersurface list is created).
          */
@@ -213,7 +216,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
             Dim4Triangulation* owner, HyperCoords newFlavour,
             bool embeddedOnly = true,
             NNormalHypersurfaceList* vtxSurfaces = 0,
-            NProgressManager* manager = 0);
+            NProgressTracker* tracker = 0);
 
         /**
          * Enumerates all fundamental normal hypersurfaces in the given
@@ -237,13 +240,17 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * remain the parent of this normal hypersurface list, and must not
          * change while this normal hypersurface list remains in existence.
          *
-         * If a progress manager is passed, the normal hypersurface
+         * If a progress tracker is passed, the normal hypersurface
          * enumeration will take place in a new thread and this routine
-         * will return immediately.  The NProgress object assigned to
-         * this progress manager is guaranteed to be of the class
-         * NProgressNumber.
+         * will return immediately.  If the user cancels the operation
+         * from another thread, then the normal hypersurface list will \e not
+         * be inserted into the packet tree (but the caller of this
+         * routine will still need to delete it).  Regarding progress
+         * tracking, this routine will declare and work through a series
+         * of stages whose combined weights sum to 1; typically this
+         * means that the given tracker must not have been used before.
          *
-         * If no progress manager is passed, the enumeration will run
+         * If no progress tracker is passed, the enumeration will run
          * in the current thread and this routine will return only when
          * the enumeration is complete.  Note that this enumeration can
          * be extremely slow for larger triangulations.
@@ -255,20 +262,18 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * are to be produced, or \c false if immersed and singular
          * normal hypersurfaces are also to be produced; this defaults to
          * \c true.
-         * @param manager a progress manager through which progress will
-         * be reported, or 0 if no progress reporting is required.  If
-         * non-zero, \a manager must point to a progress manager for
-         * which NProgressManager::isStarted() is still \c false.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
          * @return the newly created normal hypersurface list.  Note that if
-         * a progress manager is passed then this list may not be completely
-         * filled when this routine returns.  If a progress manager is
+         * a progress tracker is passed then this list may not be completely
+         * filled when this routine returns.  If a progress tracker is
          * passed and a new thread could not be started, this routine
          * returns 0 (and no normal hypersurface list is created).
          */
         static NNormalHypersurfaceList* enumerateFundDual(
             Dim4Triangulation* owner, HyperCoords newFlavour,
             bool embeddedOnly = true,
-            NProgressManager* manager = 0);
+            NProgressTracker* tracker = 0);
 
         /**
          * Returns the flavour of coordinate system being used by the
@@ -600,9 +605,10 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                 Dim4Triangulation* triang_;
                     /**< The triangulation upon which this normal
                          hypersurface list will be based. */
-                NProgressManager* manager_;
-                    /**< The progress manager through which progress is
-                         reported, or 0 if no progress manager is in use. */
+                NProgressTracker* tracker_;
+                    /**< The progress tracker through which progress is
+                         reported and cancellation requests are accepted,
+                         or 0 if no progress tracker is in use. */
 
             public:
                 /**
@@ -612,12 +618,12 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                  * @param list the normal hypersurface list to be filled.
                  * @param triang the triangulation upon which this
                  * normal hypersurface list will be based.
-                 * @param manager the progress manager to use for
-                 * progress reporting, or 0 if progress reporting is not
-                 * required.
+                 * @param tracker the progress tracker to use for
+                 * progress reporting and cancellation polling, or 0 if
+                 * these capabilities are not required.
                  */
                 VertexEnumerator(NNormalHypersurfaceList* list,
-                    Dim4Triangulation* triang, NProgressManager* manager);
+                    Dim4Triangulation* triang, NProgressTracker* tracker);
 
                 void* run(void*);
         };
@@ -636,9 +642,10 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                 NNormalHypersurfaceList* vtxSurfaces_;
                     /**< The list of all vertex normal hypersurfaces in
                          \a triang_, or 0 if this information is not known. */
-                NProgressManager* manager_;
-                    /**< The progress manager through which progress is
-                         reported, or 0 if no progress manager is in use. */
+                NProgressTracker* tracker_;
+                    /**< The progress tracker through which progress is
+                         reported and cancellation requests are accepted,
+                         or 0 if no progress tracker is in use. */
 
             public:
                 /**
@@ -650,14 +657,14 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                  * normal hypersurface list will be based.
                  * @param vtxSurfaces the vertex normal hypersurfaces in
                  * \a triang, or 0 if this information is not known.
-                 * @param manager the progress manager to use for
-                 * progress reporting, or 0 if progress reporting is not
-                 * required.
+                 * @param tracker the progress tracker to use for
+                 * progress reporting and cancellation polling, or 0 if
+                 * these capabilities are not required.
                  */
                 FundPrimalEnumerator(NNormalHypersurfaceList* list,
                     Dim4Triangulation* triang,
                     NNormalHypersurfaceList* vtxSurfaces,
-                    NProgressManager* manager);
+                    NProgressTracker* tracker);
 
                 void* run(void*);
         };
@@ -673,9 +680,10 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                 Dim4Triangulation* triang_;
                     /**< The triangulation upon which this normal
                          hypersurface list will be based. */
-                NProgressManager* manager_;
-                    /**< The progress manager through which progress is
-                         reported, or 0 if no progress manager is in use. */
+                NProgressTracker* tracker_;
+                    /**< The progress tracker through which progress is
+                         reported and cancellation requests are accepted,
+                         or 0 if no progress tracker is in use. */
 
             public:
                 /**
@@ -685,12 +693,12 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                  * @param list the normal hypersurface list to be filled.
                  * @param triang the triangulation upon which this
                  * normal hypersurface list will be based.
-                 * @param manager the progress manager to use for
-                 * progress reporting, or 0 if progress reporting is not
-                 * required.
+                 * @param tracker the progress tracker to use for
+                 * progress reporting and cancellation polling, or 0 if
+                 * these capabilities are not required.
                  */
                 FundDualEnumerator(NNormalHypersurfaceList* list,
-                    Dim4Triangulation* triang, NProgressManager* manager);
+                    Dim4Triangulation* triang, NProgressTracker* tracker);
 
                 void* run(void*);
         };
@@ -915,21 +923,21 @@ inline NNormalHypersurfaceList::NNormalHypersurfaceList(HyperCoords flavour,
 
 inline NNormalHypersurfaceList::VertexEnumerator::VertexEnumerator(
         NNormalHypersurfaceList* list, Dim4Triangulation* triang,
-        NProgressManager* manager) :
-        list_(list), triang_(triang), manager_(manager) {
+        NProgressTracker* tracker) :
+        list_(list), triang_(triang), tracker_(tracker) {
 }
 
 inline NNormalHypersurfaceList::FundPrimalEnumerator::FundPrimalEnumerator(
         NNormalHypersurfaceList* list, Dim4Triangulation* triang,
-        NNormalHypersurfaceList* vtxSurfaces, NProgressManager* manager) :
+        NNormalHypersurfaceList* vtxSurfaces, NProgressTracker* tracker) :
         list_(list), triang_(triang), vtxSurfaces_(vtxSurfaces),
-        manager_(manager) {
+        tracker_(tracker) {
 }
 
 inline NNormalHypersurfaceList::FundDualEnumerator::FundDualEnumerator(
         NNormalHypersurfaceList* list, Dim4Triangulation* triang,
-        NProgressManager* manager) :
-        list_(list), triang_(triang), manager_(manager) {
+        NProgressTracker* tracker) :
+        list_(list), triang_(triang), tracker_(tracker) {
 }
 
 } // namespace regina
