@@ -92,6 +92,9 @@ namespace regina {
  *   any time.  The writing thread cannot destroy these objects because
  *   it has no guarantee that the reading thread is not still reading
  *   progress reports from them.
+ *
+ * \deprecated This class is deprecated.  Please use the more flexible
+ * and more streamlined NProgressTracker class instead.
  */
 class REGINA_API NProgressManager : public ShareableObject {
     private:
