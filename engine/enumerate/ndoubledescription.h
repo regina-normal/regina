@@ -54,7 +54,7 @@ namespace regina {
 class NEnumConstraintList;
 class NMatrixInt;
 class NRay;
-class NProgressPercent;
+class NProgressTracker;
 
 /**
  * \addtogroup enumerate Vertex Enumeration
@@ -110,8 +110,12 @@ class REGINA_API NDoubleDescription {
          * contraints have the important property that, although validity is
          * not preserved under convex combination, \e invalidity is.
          *
-         * A numeric progress watcher may be passed for progress reporting.
-         * If so, this routine will poll for cancellation requests accordingly.
+         * An optional progress tracker may be passed.  If so, this routine
+         * will update the percentage progress and poll for cancellation
+         * requests.  It will be assumed that an appropriate stage has already
+         * been declared via NProgressTracker::newStage() before this routine
+         * is called, and that NProgressTracker::setFinished() will be
+         * called after this routine returns.
          *
          * \pre The template argument RayClass is derived from NRay (or
          * may possibly be NRay itself).
@@ -126,9 +130,8 @@ class REGINA_API NDoubleDescription {
          * dimension of the overall space in which we are working.
          * @param constraints a set of validity constraints as described
          * above, or 0 if no additional constraints should be imposed.
-         * @param progress a numeric progress watcher through which progress
+         * @param tracker a progress tracker through which progress
          * will be reported, or 0 if no progress reporting is required.
-         * Note that NProgress::setFinished() will \e not be called.
          * @param initialRows specifies how many initial rows of \a subspace
          * are to be processed in the precise order in which they appear.
          * The remaining rows will be sorted using the NPosOrder class
@@ -137,7 +140,7 @@ class REGINA_API NDoubleDescription {
         template <class RayClass, class OutputIterator>
         static void enumerateExtremalRays(OutputIterator results,
             const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressPercent* progress = 0, unsigned long initialRows = 0);
+            NProgressTracker* tracker = 0, unsigned long initialRows = 0);
 
     private:
         /**
@@ -333,7 +336,7 @@ class REGINA_API NDoubleDescription {
         template <class RayClass, class BitmaskType, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
             const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressPercent* progress, unsigned long initialRows);
+            NProgressTracker* tracker, unsigned long initialRows);
 
         /**
          * A part of the full double description algorithm that
@@ -378,7 +381,7 @@ class REGINA_API NDoubleDescription {
          * @param constraintsEnd a pointer just past the end of the
          * C-style array of validity constraints.  This should be 0
          * if no additional constraints are to be imposed.
-         * @param progress an optional progress tracker that will be polled
+         * @param tracker an optional progress tracker that will be polled
          * for cancellation (though no incremental progress will be reported
          * within this routine).  This may be null.
          * @return \c true if vertices of the old solution set were found
@@ -394,7 +397,7 @@ class REGINA_API NDoubleDescription {
             unsigned long dim, unsigned long prevHyperplanes,
             const BitmaskType* constraintsBegin,
             const BitmaskType* constraintsEnd,
-            NProgressPercent* progress);
+            NProgressTracker* tracker);
 };
 
 /*@}*/

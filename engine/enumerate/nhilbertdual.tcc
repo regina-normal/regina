@@ -44,7 +44,7 @@
 #include "enumerate/nenumconstraint.h"
 #include "enumerate/nhilbertdual.h"
 #include "enumerate/ordering.h"
-#include "progress/nprogresstypes.h"
+#include "progress/nprogresstracker.h"
 #include "utilities/nbitmask.h"
 
 namespace regina {
@@ -52,7 +52,7 @@ namespace regina {
 template <class RayClass, class OutputIterator>
 void NHilbertDual::enumerateHilbertBasis(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-        NProgressPercent* progress, unsigned initialRows) {
+        NProgressTracker* tracker, unsigned initialRows) {
     // Get the dimension of the entire space in which we are working.
     unsigned dim = subspace.columns();
 
@@ -66,44 +66,44 @@ void NHilbertDual::enumerateHilbertBasis(OutputIterator results,
     // templated on the bitmask type.
     if (dim <= 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned> >(results,
-            subspace, constraints, progress, initialRows);
+            subspace, constraints, tracker, initialRows);
     else if (dim <= 8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned long> >(results,
-            subspace, constraints, progress, initialRows);
+            subspace, constraints, tracker, initialRows);
 #ifdef LONG_LONG_FOUND
     else if (dim <= 8 * sizeof(unsigned long long))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned long long> >(results,
-            subspace, constraints, progress, initialRows);
+            subspace, constraints, tracker, initialRows);
     else if (dim <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass,
             NBitmask2<unsigned long long, unsigned> >(results,
-            subspace, constraints, progress, initialRows);
+            subspace, constraints, tracker, initialRows);
     else if (dim <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass,
             NBitmask2<unsigned long long, unsigned long> >(
-            results, subspace, constraints, progress, initialRows);
+            results, subspace, constraints, tracker, initialRows);
     else if (dim <= 16 * sizeof(unsigned long long))
         enumerateUsingBitmask<RayClass, NBitmask2<unsigned long long> >(results,
-            subspace, constraints, progress, initialRows);
+            subspace, constraints, tracker, initialRows);
 #else
     else if (dim <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass,
             NBitmask2<unsigned long, unsigned> >(results,
-            subspace, constraints, progress, initialRows);
+            subspace, constraints, tracker, initialRows);
     else if (dim <= 16 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass, NBitmask2<unsigned long> >(results,
-            subspace, constraints, progress, initialRows);
+            subspace, constraints, tracker, initialRows);
 #endif
     else
         enumerateUsingBitmask<RayClass, NBitmask>(results,
-            subspace, constraints, progress, initialRows);
+            subspace, constraints, tracker, initialRows);
 }
 
 template <class RayClass, class BitmaskType, class OutputIterator>
 void NHilbertDual::enumerateUsingBitmask(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-        NProgressPercent* progress, unsigned initialRows) {
+        NProgressTracker* tracker, unsigned initialRows) {
     // Get the dimension of the entire space in which we are working.
     // At this point we are guaranteed that the dimension is non-zero.
     unsigned dim = subspace.columns();
@@ -119,8 +119,8 @@ void NHilbertDual::enumerateUsingBitmask(OutputIterator results,
             *results++ = ans;
         }
 
-        if (progress)
-            progress->setPercent(100);
+        if (tracker)
+            tracker->setPercent(100);
         return;
     }
 
@@ -173,7 +173,7 @@ void NHilbertDual::enumerateUsingBitmask(OutputIterator results,
         std::cout << "LIST SIZE: " << list.size() << std::endl;
 #endif
 
-        if (progress && ! progress->setPercent(100.0 * i / nEqns))
+        if (tracker && ! tracker->setPercent(100.0 * i / nEqns))
             break;
     }
 
@@ -183,7 +183,7 @@ void NHilbertDual::enumerateUsingBitmask(OutputIterator results,
 
     typename std::vector<VecSpec<BitmaskType>*>::iterator it;
 
-    if (progress && progress->isCancelled()) {
+    if (tracker && tracker->isCancelled()) {
         // The operation was cancelled.  Clean up before returning.
         for (it = list.begin(); it != list.end(); ++it)
             delete *it;
@@ -201,8 +201,8 @@ void NHilbertDual::enumerateUsingBitmask(OutputIterator results,
     }
 
     // All done!
-    if (progress)
-        progress->setPercent(100);
+    if (tracker)
+        tracker->setPercent(100);
 }
 
 template <class BitmaskType>

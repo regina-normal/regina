@@ -45,7 +45,7 @@
 #endif
 
 #include "enumerate/ntreetraversal.h"
-#include "progress/nprogresstypes.h"
+#include "progress/nprogresstracker.h"
 #include "surfaces/nsanstandard.h"
 #include "surfaces/nsquad.h"
 #include "surfaces/nsquadoct.h"
@@ -332,7 +332,7 @@ double NTreeTraversal<LPConstraint, BanConstraint, Integer>::percent() const {
 template <template <typename> class LPConstraint, typename BanConstraint,
         typename Integer>
 bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::next(
-        NProgressPercent* progress) {
+        NProgressTracker* tracker) {
     if (lastNonZero_ < 0) {
         // Our type vector is the zero vector.
         // This means we are starting the search from the very
@@ -386,7 +386,7 @@ bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::next(
     bool outOfRange;
     while (true) {
         // Update the state of progress and test for cancellation.
-        if (progress && ! progress->setPercent(percent()))
+        if (tracker && ! tracker->setPercent(percent()))
             break;
 
 #ifdef REGINA_TREE_TRACE

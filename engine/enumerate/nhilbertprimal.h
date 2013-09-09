@@ -51,7 +51,7 @@ namespace regina {
 
 class NEnumConstraintList;
 class NMatrixInt;
-class NProgressMessage;
+class NProgressTracker;
 class NRay;
 
 /**
@@ -110,8 +110,12 @@ class NHilbertPrimal {
          * important property that, although validity is not preserved under
          * addition, \e invalidity is.
          *
-         * A text-based progress watcher may be passed for progress reporting.
-         * If so, this routine will poll for cancellation requests accordingly.
+         * An optional progress tracker may be passed.  If so, this routine
+         * will update the percentage progress and poll for cancellation
+         * requests.  It will be assumed that an appropriate stage has already
+         * been declared via NProgressTracker::newStage() before this routine
+         * is called, and that NProgressTracker::setFinished() will be
+         * called after this routine returns.
          *
          * \pre If \a constraints is passed, then the given list of
          * extremal rays contains \e only those extremal rays that satisfy
@@ -120,6 +124,10 @@ class NHilbertPrimal {
          * may possibly be NRay itself).
          * \pre The template argument RayIterator is a forward iterator type,
          * and when dereferenced can be cast to (const NRay*).
+         *
+         * \warning If a progress tracker is passed, be aware that the
+         * present implementation updates percentage progress very infrequently,
+         * and may take a very long time to honour cancellation requests.
          *
          * @param results the output iterator to which the resulting basis
          * elements will be written; this must accept objects of type
@@ -130,16 +138,14 @@ class NHilbertPrimal {
          * list of extremal rays.
          * @param constraints a set of validity constraints as described
          * above, or 0 if no additional constraints should be imposed.
-         * @param progress a text-based progress watcher through which progress
+         * @param tracker a progress tracker through which progress
          * will be reported, or 0 if no progress reporting is required.
-         * Note that NProgress::setFinished() will \e not be called, since
-         * whoever called this routine may need to do further processing.
          */
         template <class RayClass, class RayIterator, class OutputIterator>
         static void enumerateHilbertBasis(OutputIterator results,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
             const NEnumConstraintList* constraints,
-            NProgressMessage* progress = 0);
+            NProgressTracker* tracker = 0);
 
     private:
         /**
@@ -161,7 +167,7 @@ class NHilbertPrimal {
             class RayIterator, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
-            const NEnumConstraintList* constraints, NProgressMessage* progress);
+            const NEnumConstraintList* constraints, NProgressTracker* tracker);
 
         /**
          * Determines whether the given ray lies in the face specified

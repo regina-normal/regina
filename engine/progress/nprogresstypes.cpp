@@ -47,15 +47,5 @@ std::string NProgressNumber::internalGetDescription() const {
     return out.str();
 }
 
-std::string NProgressPercent::internalGetDescription() const {
-    std::ostringstream out;
-    out << percent << '%';
-    return out.str();
-}
-
-std::string NProgressTwoStep::internalGetDescription() const {
-    return step1_->getDescription() + " / " + step2_->getDescription();
-}
-
 } // namespace regina
 

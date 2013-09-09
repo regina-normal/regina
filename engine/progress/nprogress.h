@@ -145,7 +145,7 @@ class REGINA_API NProgress : public ShareableObject, protected NMutex {
          * @return \c true if and only if the state of progress has
          * changed since the last query.
          */
-        virtual bool hasChanged() const;
+        bool hasChanged() const;
         /**
          * Is the operation whose progress we are reporting completely
          * finished?
@@ -189,7 +189,7 @@ class REGINA_API NProgress : public ShareableObject, protected NMutex {
          * able to cancel an operation even though it should never
          * modify the state of progress.
          */
-        virtual void cancel() const;
+        void cancel() const;
         /**
          * Determines whether an external interface has requested that
          * the operation whose progress we are reporting be cancelled.

@@ -46,7 +46,7 @@
 #include "enumerate/nmaxadmissible.h"
 #include "enumerate/normaliz/cone.h"
 #include "maths/nray.h"
-#include "progress/nprogresstypes.h"
+#include "progress/nprogresstracker.h"
 #include <list>
 #include <set>
 #include <vector>
@@ -57,7 +57,7 @@ namespace regina {
 template <class RayClass, class RayIterator, class OutputIterator>
 void NHilbertPrimal::enumerateHilbertBasis(OutputIterator results,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
-        const NEnumConstraintList* constraints, NProgressMessage* progress) {
+        const NEnumConstraintList* constraints, NProgressTracker* tracker) {
     if (raysBegin == raysEnd) {
         // No extremal rays; no Hilbert basis.
         return;
@@ -74,58 +74,57 @@ void NHilbertPrimal::enumerateHilbertBasis(OutputIterator results,
     // templated on the bitmask type.
     if (dim <= 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned> >(results,
-            raysBegin, raysEnd, constraints, progress);
+            raysBegin, raysEnd, constraints, tracker);
     else if (dim <= 8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned long> >(results,
-            raysBegin, raysEnd, constraints, progress);
+            raysBegin, raysEnd, constraints, tracker);
 #ifdef LONG_LONG_FOUND
     else if (dim <= 8 * sizeof(unsigned long long))
         enumerateUsingBitmask<RayClass, NBitmask1<unsigned long long> >(results,
-            raysBegin, raysEnd, constraints, progress);
+            raysBegin, raysEnd, constraints, tracker);
     else if (dim <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass,
             NBitmask2<unsigned long long, unsigned> >(results,
-            raysBegin, raysEnd, constraints, progress);
+            raysBegin, raysEnd, constraints, tracker);
     else if (dim <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass,
             NBitmask2<unsigned long long, unsigned long> >(
-            results, raysBegin, raysEnd, constraints, progress);
+            results, raysBegin, raysEnd, constraints, tracker);
     else if (dim <= 16 * sizeof(unsigned long long))
         enumerateUsingBitmask<RayClass, NBitmask2<unsigned long long> >(results,
-            raysBegin, raysEnd, constraints, progress);
+            raysBegin, raysEnd, constraints, tracker);
 #else
     else if (dim <= 8 * sizeof(unsigned long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass,
             NBitmask2<unsigned long, unsigned> >(results,
-            raysBegin, raysEnd, constraints, progress);
+            raysBegin, raysEnd, constraints, tracker);
     else if (dim <= 16 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass, NBitmask2<unsigned long> >(results,
-            raysBegin, raysEnd, constraints, progress);
+            raysBegin, raysEnd, constraints, tracker);
 #endif
     else
         enumerateUsingBitmask<RayClass, NBitmask>(results,
-            raysBegin, raysEnd, constraints, progress);
+            raysBegin, raysEnd, constraints, tracker);
 }
 
 template <class RayClass, class BitmaskType,
         class RayIterator, class OutputIterator>
 void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
-        const NEnumConstraintList* constraints, NProgressMessage* progress) {
+        const NEnumConstraintList* constraints, NProgressTracker* tracker) {
     // We know at this point that the dimension is non-zero.
     unsigned dim = (*raysBegin)->size();
 
     // First enumerate all maximal admissible faces.
-    if (progress)
-        progress->setMessage("Enumerating maximal admissible faces");
+    if (tracker)
+        tracker->setPercent(10);
     std::vector<BitmaskType>* maxFaces = NMaxAdmissible::enumerate<BitmaskType>(
         raysBegin, raysEnd, constraints);
 
     // Now use normaliz to process each face.
-    if (progress)
-        progress->setMessage(
-            "Running primal algorithm on maximal admissible faces");
+    if (tracker)
+        tracker->setPercent(30);
 
     std::set<std::vector<mpz_class> > finalBasis;
     std::vector<const NRay*> face;
@@ -167,8 +166,8 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
             finalBasis.insert(*hlit);
     }
 
-    if (progress)
-        progress->setMessage("Collecting results");
+    if (tracker)
+        tracker->setPercent(90);
 
     RayClass* ans;
     NLargeInteger tmpInt;
@@ -187,8 +186,8 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
 
     // All done!
     delete maxFaces;
-    if (progress)
-        progress->setMessage("Hilbert basis enumeration complete");
+    if (tracker)
+        tracker->setPercent(100);
 }
 
 template <class BitmaskType>
