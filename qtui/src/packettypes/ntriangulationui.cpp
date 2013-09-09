@@ -115,7 +115,7 @@ const QLinkedList<QAction*>& NTriangulationUI::getPacketTypeActions() {
 }
 
 QString NTriangulationUI::getPacketMenuText() const {
-    return QObject::tr("T&riangulation");
+    return QObject::tr("3-D T&riangulation");
 }
 
 NTriHeaderUI::NTriHeaderUI(regina::NTriangulation* packet,

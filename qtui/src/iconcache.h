@@ -56,6 +56,7 @@ class IconCache {
             regina = 0,
             packet_angles,
             packet_container,
+            packet_dim2triangulation,
             packet_filter,
             packet_pdf,
             packet_script,

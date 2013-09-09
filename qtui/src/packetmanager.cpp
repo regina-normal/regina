@@ -63,6 +63,8 @@ QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
     else if (packet->getPacketType() == NContainer::packetType)
         id = (packet->getTreeParent() ? IconCache::packet_container :
             IconCache::regina);
+    else if (packet->getPacketType() == Dim2Triangulation::packetType)
+        id = IconCache::packet_dim2triangulation;
     else if (packet->getPacketType() == NPDF::packetType)
         id = IconCache::packet_pdf;
     else if (packet->getPacketType() == NSurfaceFilter::packetType) {
