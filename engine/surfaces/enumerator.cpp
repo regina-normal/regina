@@ -115,12 +115,14 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
     // Note: This line is where we make the "default" decision for the user.
     list_->algorithm_.ensureOne(NS_VERTEX_TREE, NS_VERTEX_DD);
 
-    // Check whether tree traversal supports our coordinate system.
+    // Check whether tree traversal supports our enumeration arguments.
     // If not, switch back to double description.
-    // The integer template argument is unimportant here; we just use NInteger.
+    // The integer template argument for NTreeTraversal::supported()
+    // is unimportant here; we just use NInteger.
     if (list_->algorithm_.has(NS_VERTEX_TREE) &&
-            ! NTreeTraversal<LPConstraintNone, BanNone, NInteger>::supported(
-            list_->flavour_))
+            ! (list_->which_.has(NS_EMBEDDED_ONLY) &&
+                NTreeTraversal<LPConstraintNone, BanNone, NInteger>::supported(
+                list_->flavour_)))
         list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
 
     // For standard normal / almost normal coordinates, choose between
