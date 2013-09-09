@@ -341,6 +341,19 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.append(actContainer);
     treeMenu->addAction(actContainer);
 
+    QAction* actDim2Triangulation = new QAction(this);
+    actDim2Triangulation->setText(tr("New 2-D &Triangulation"));
+    actDim2Triangulation->setIcon(IconCache::icon(
+        IconCache::packet_dim2triangulation));
+    actDim2Triangulation->setShortcut(tr("Alt+2"));
+    actDim2Triangulation->setToolTip(tr("New 2-manifold triangulation"));
+    actDim2Triangulation->setWhatsThis(
+        tr("Create a new 2-manifold triangulation."));
+    connect(actDim2Triangulation, SIGNAL(triggered()), this,
+        SLOT(newDim2Triangulation()) );
+    treeGeneralEditActions.append(actDim2Triangulation);
+    treeMenu->addAction(actDim2Triangulation);
+
     QAction* actTriangulation = new QAction(this);
     actTriangulation->setText(tr("New 3-D &Triangulation"));
     actTriangulation->setIcon(IconCache::icon(IconCache::packet_triangulation));
@@ -753,6 +766,7 @@ void ReginaMain::setupActions() {
 
     toolBarPacket = addToolBar(tr("New Packets"));
     toolBarPacket->addAction(actContainer);
+    toolBarPacket->addAction(actDim2Triangulation);
     toolBarPacket->addAction(actTriangulation);
     toolBarPacket->addAction(actDim4Triangulation);
     toolBarPacket->addAction(actSurfaces);
