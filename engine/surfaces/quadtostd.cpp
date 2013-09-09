@@ -61,6 +61,13 @@ NNormalSurfaceList* NNormalSurfaceList::quadOctToStandardAN() const {
     return internalReducedToStandard<AlmostNormalSpec>();
 }
 
+template void NNormalSurfaceList::buildStandardFromReduced<
+        NNormalSurfaceList::NormalSpec>(NTriangulation*,
+        const std::vector<NNormalSurface*>&, NProgressTracker*);
+template void NNormalSurfaceList::buildStandardFromReduced<
+        NNormalSurfaceList::AlmostNormalSpec>(NTriangulation*,
+        const std::vector<NNormalSurface*>&, NProgressTracker*);
+
 /**
  * Put helper classes and constants into an anonymous namespace.
  */
