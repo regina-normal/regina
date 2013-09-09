@@ -1,6 +1,6 @@
 set (IMG_FILES )
 
-set (IMGS barycentric cone connsum csvexport dehydrated doublecover filter_comb filter_prop finite orb orient packet_angles packet_container packet_dim4tri packet_filter packet_pdf packet_script packet_surfaces packet_text packet_triangulation packet_view python_console regina snappea)
+set (IMGS barycentric cone connsum csvexport dehydrated doublecover filter_comb filter_prop finite orb orient packet_angles packet_container packet_dim2triangulation packet_dim4tri packet_filter packet_pdf packet_script packet_surfaces packet_text packet_triangulation packet_view python_console regina snappea)
 set (SIZES 16 22 32 48 64 128)
 
 foreach (IMG_CLASS ${IMGS})
