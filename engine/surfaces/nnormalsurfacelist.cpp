@@ -169,9 +169,30 @@ namespace {
 }
 
 void NNormalSurfaceList::writeTextShort(std::ostream& out) const {
-    out << surfaces.size() << " vertex normal surface";
+    out << surfaces.size();
+
+    if (which_.has(regina::NS_EMBEDDED_ONLY))
+        out << " embedded,";
+    else if (which_.has(regina::NS_IMMERSED_SINGULAR))
+        out << " embedded / immersed / singular,";
+    else
+        out << " unknown,";
+
+    if (which_.has(regina::NS_VERTEX))
+        out << " vertex";
+    else if (which_.has(regina::NS_FUNDAMENTAL))
+        out << " fundamental";
+    else if (which_.has(regina::NS_CUSTOM))
+        out << " custom";
+    else if (which_.has(regina::NS_LEGACY))
+        out << " legacy";
+    else
+        out << " unknown";
+
+    out << " surface";
     if (surfaces.size() != 1)
         out << 's';
+
     out << " (";
     if (flavour_ == NS_AN_LEGACY)
         out << AN_LEGACY_NAME;
@@ -181,16 +202,32 @@ void NNormalSurfaceList::writeTextShort(std::ostream& out) const {
 }
 
 void NNormalSurfaceList::writeTextLong(std::ostream& out) const {
-    if (isEmbeddedOnly())
-        out << "Embedded ";
+    if (which_.has(regina::NS_EMBEDDED_ONLY))
+        out << "Embedded,";
+    else if (which_.has(regina::NS_IMMERSED_SINGULAR))
+        out << "Embedded / immersed / singular,";
     else
-        out << "Embedded, immersed & singular ";
-    out << "vertex normal surfaces\n";
+        out << "Unknown,";
+
+    if (which_.has(regina::NS_VERTEX))
+        out << " vertex";
+    else if (which_.has(regina::NS_FUNDAMENTAL))
+        out << " fundamental";
+    else if (which_.has(regina::NS_CUSTOM))
+        out << " custom";
+    else if (which_.has(regina::NS_LEGACY))
+        out << " legacy";
+    else
+        out << " unknown";
+
+    out << " surfaces\n";
+
     out << "Coordinates: ";
     if (flavour_ == NS_AN_LEGACY)
         out << AN_LEGACY_NAME << '\n';
     else
         out << forFlavour(flavour_, NameFunction(), "Unknown") << '\n';
+
     writeAllSurfaces(out);
 }
 
