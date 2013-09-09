@@ -37,8 +37,6 @@
 #include "census/dim2census.h"
 #include "census/dim2gluingpermsearcher.h"
 #include "dim2/dim2triangulation.h"
-#include "progress/nprogressmanager.h"
-#include "progress/nprogresstypes.h"
 #include "utilities/memutils.h"
 
 namespace regina {
@@ -46,7 +44,7 @@ namespace regina {
 unsigned long Dim2Census::formCensus(NPacket* parent, unsigned nTriangles,
         NBoolSet orientability, NBoolSet boundary,
         int nBdryEdges, AcceptTriangulation sieve,
-        void* sieveArgs, NProgressManager* manager) {
+        void* sieveArgs) {
     // If obviously nothing is going to happen but we won't realise
     // it until we've actually generated the facet pairings, change
     // nTriangles to 0 so we'll realise it immediately once the new
@@ -55,27 +53,14 @@ unsigned long Dim2Census::formCensus(NPacket* parent, unsigned nTriangles,
         nTriangles = 0;
 
     // Start the census!
-    NProgressMessage* progress;
-    if (manager) {
-        progress = new NProgressMessage("Starting census generation...");
-        manager->setProgress(progress);
-    } else
-        progress = 0;
-
     Dim2Census* census = new Dim2Census(parent, orientability,
-        sieve, sieveArgs, progress);
+        sieve, sieveArgs);
 
-    if (manager) {
-        Dim2EdgePairing::findAllPairings(nTriangles, boundary, nBdryEdges,
-            Dim2Census::foundEdgePairing, census, true);
-        return 0;
-    } else {
-        Dim2EdgePairing::findAllPairings(nTriangles, boundary, nBdryEdges,
-            Dim2Census::foundEdgePairing, census, false);
-        unsigned long ans = census->whichSoln_ - 1;
-        delete census;
-        return ans;
-    }
+    Dim2EdgePairing::findAllPairings(nTriangles, boundary, nBdryEdges,
+        Dim2Census::foundEdgePairing, census, false);
+    unsigned long ans = census->whichSoln_ - 1;
+    delete census;
+    return ans;
 }
 
 unsigned long Dim2Census::formPartialCensus(const Dim2EdgePairing* pairing,
@@ -90,7 +75,7 @@ unsigned long Dim2Census::formPartialCensus(const Dim2EdgePairing* pairing,
     pairing->findAutomorphisms(autos);
 
     // Select the individual gluing permutations.
-    Dim2Census census(parent, orientability, sieve, sieveArgs, 0);
+    Dim2Census census(parent, orientability, sieve, sieveArgs);
     Dim2GluingPermSearcher::findAllPerms(pairing, &autos,
         ! census.orientability_.hasFalse(),
         Dim2Census::foundGluingPerms, &census);
@@ -102,9 +87,9 @@ unsigned long Dim2Census::formPartialCensus(const Dim2EdgePairing* pairing,
 
 Dim2Census::Dim2Census(NPacket* parent,
         const NBoolSet& orientability, AcceptTriangulation sieve,
-        void* sieveArgs, NProgressMessage* progress) :
+        void* sieveArgs) :
         parent_(parent), orientability_(orientability),
-        sieve_(sieve), sieveArgs_(sieveArgs), progress_(progress),
+        sieve_(sieve), sieveArgs_(sieveArgs),
         whichSoln_(1) {
 }
 
@@ -113,20 +98,12 @@ void Dim2Census::foundEdgePairing(const Dim2EdgePairing* pairing,
     Dim2Census* realCensus = static_cast<Dim2Census*>(census);
     if (pairing) {
         // We've found another edge pairing.
-        if (realCensus->progress_)
-            realCensus->progress_->setMessage(pairing->toString());
-
         // Select the individual gluing permutations.
         Dim2GluingPermSearcher::findAllPerms(pairing, autos,
             ! realCensus->orientability_.hasFalse(),
             Dim2Census::foundGluingPerms, census);
     } else {
         // Census generation has finished.
-        if (realCensus->progress_) {
-            realCensus->progress_->setMessage("Finished.");
-            realCensus->progress_->setFinished();
-            delete realCensus;
-        }
     }
 }
 

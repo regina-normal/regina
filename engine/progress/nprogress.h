@@ -89,6 +89,9 @@ namespace regina {
  * Any public subclass member function that changes the state of
  * progress must set the \a changed flag to \c true, and all public
  * subclass query functions must set the \a changed flag to \c false.
+ *
+ * \deprecated This class is deprecated.  Please use the more flexible
+ * and more streamlined NProgressTracker class instead.
  */
 class REGINA_API NProgress : public ShareableObject, protected NMutex {
     protected:
@@ -306,6 +309,9 @@ class REGINA_API NProgress : public ShareableObject, protected NMutex {
  *
  * \ifacespython Not present; all progress classes communicate with
  * external interfaces through the NProgress interface.
+ *
+ * \deprecated This class is deprecated.  Please use the more flexible
+ * and more streamlined NProgressTracker class instead.
  */
 class REGINA_API NProgressFinished : public NProgress {
     public:

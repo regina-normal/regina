@@ -57,6 +57,9 @@ namespace regina {
  *
  * \ifacespython Not present; all progress classes communicate with
  * external interfaces through the NProgress interface.
+ *
+ * \deprecated This class is deprecated.  Please use the more flexible
+ * and more streamlined NProgressTracker class instead.
  */
 class REGINA_API NProgressMessage : public NProgress {
     private:
@@ -110,6 +113,9 @@ class REGINA_API NProgressMessage : public NProgress {
 /**
  * A simple structure used for passing around a numeric state of
  * progress.
+ *
+ * \deprecated This class is deprecated.  Please use the more flexible
+ * and more streamlined NProgressTracker class instead.
  */
 struct REGINA_API NProgressStateNumeric {
     long completed;
@@ -135,6 +141,9 @@ struct REGINA_API NProgressStateNumeric {
  *
  * \ifacespython Not present; all progress classes communicate with
  * external interfaces through the NProgress interface.
+ *
+ * \deprecated This class is deprecated.  Please use the more flexible
+ * and more streamlined NProgressTracker class instead.
  */
 class REGINA_API NProgressNumber : public NProgress {
     private:
