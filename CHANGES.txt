@@ -155,6 +155,10 @@ Version 4.94  [ (under development) ]
             - New convenience routines isZ() and isZn().
         Class NBlockedSFS:
             - Now supports Seifert fibred spaces with boundary.
+        Class NCensus:
+            - The NProgressManager* argument has been removed from formCensus().
+              If you are doing serious census generation, use the command-line
+              utility tricensus (or tricensus-mpi) instead.
         Class NClosedPrimeMinSearcher, NCompactSearcher:
             - Improved the way in which cones and L(3,1) spines are
               detected and pruned during census enumeration.

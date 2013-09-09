@@ -36,8 +36,6 @@
 #include <sstream>
 #include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
-#include "progress/nprogressmanager.h"
-#include "progress/nprogresstypes.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
 
@@ -52,7 +50,7 @@ const int NCensus::PURGE_P2_REDUCIBLE = 4;
 unsigned long NCensus::formCensus(NPacket* parent, unsigned nTetrahedra,
         NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
         int nBdryFaces, int whichPurge, AcceptTriangulation sieve,
-        void* sieveArgs, NProgressManager* manager) {
+        void* sieveArgs) {
     // If obviously nothing is going to happen but we won't realise
     // it until we've actually generated the face pairings, change
     // nTetrahedra to 0 so we'll realise it immediately once the new
@@ -61,27 +59,14 @@ unsigned long NCensus::formCensus(NPacket* parent, unsigned nTetrahedra,
         nTetrahedra = 0;
 
     // Start the census!
-    NProgressMessage* progress;
-    if (manager) {
-        progress = new NProgressMessage("Starting census generation...");
-        manager->setProgress(progress);
-    } else
-        progress = 0;
-
     NCensus* census = new NCensus(parent, finiteness, orientability,
-        whichPurge, sieve, sieveArgs, progress);
+        whichPurge, sieve, sieveArgs);
 
-    if (manager) {
-        NFacePairing::findAllPairings(nTetrahedra, boundary, nBdryFaces,
-            NCensus::foundFacePairing, census, true);
-        return 0;
-    } else {
-        NFacePairing::findAllPairings(nTetrahedra, boundary, nBdryFaces,
-            NCensus::foundFacePairing, census, false);
-        unsigned long ans = census->whichSoln - 1;
-        delete census;
-        return ans;
-    }
+    NFacePairing::findAllPairings(nTetrahedra, boundary, nBdryFaces,
+        NCensus::foundFacePairing, census, false /* separate thread */);
+    unsigned long ans = census->whichSoln - 1;
+    delete census;
+    return ans;
 }
 
 unsigned long NCensus::formPartialCensus(const NFacePairing* pairing,
@@ -97,7 +82,7 @@ unsigned long NCensus::formPartialCensus(const NFacePairing* pairing,
 
     // Select the individual gluing permutations.
     NCensus census(parent, finiteness, orientability, whichPurge,
-        sieve, sieveArgs, 0);
+        sieve, sieveArgs);
     NGluingPermSearcher::findAllPerms(pairing, &autos,
         ! census.orientability.hasFalse(), ! census.finiteness.hasFalse(),
         census.whichPurge, NCensus::foundGluingPerms, &census);
@@ -109,11 +94,11 @@ unsigned long NCensus::formPartialCensus(const NFacePairing* pairing,
 
 NCensus::NCensus(NPacket* newParent, const NBoolSet& newFiniteness,
         const NBoolSet& newOrientability, int newWhichPurge,
-        AcceptTriangulation newSieve, void* newSieveArgs,
-        NProgressMessage* newProgress) : parent(newParent),
+        AcceptTriangulation newSieve, void* newSieveArgs) :
+        parent(newParent),
         finiteness(newFiniteness), orientability(newOrientability),
         whichPurge(newWhichPurge), sieve(newSieve), sieveArgs(newSieveArgs),
-        progress(newProgress), whichSoln(1) {
+        whichSoln(1) {
 }
 
 void NCensus::foundFacePairing(const NFacePairing* pairing,
@@ -121,9 +106,6 @@ void NCensus::foundFacePairing(const NFacePairing* pairing,
     NCensus* realCensus = static_cast<NCensus*>(census);
     if (pairing) {
         // We've found another face pairing.
-        if (realCensus->progress)
-            realCensus->progress->setMessage(pairing->toString());
-
         // Select the individual gluing permutations.
         NGluingPermSearcher::findAllPerms(pairing, autos,
             ! realCensus->orientability.hasFalse(),
@@ -131,11 +113,6 @@ void NCensus::foundFacePairing(const NFacePairing* pairing,
             realCensus->whichPurge, NCensus::foundGluingPerms, census);
     } else {
         // Census generation has finished.
-        if (realCensus->progress) {
-            realCensus->progress->setMessage("Finished.");
-            realCensus->progress->setFinished();
-            delete realCensus;
-        }
     }
 }
 
