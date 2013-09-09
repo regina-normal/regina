@@ -59,7 +59,8 @@ namespace regina {
  *
  * Note that many important functions (such as entry()) are inherited
  * from the superclasses NMatrix and NMatrixRing, and are not documented
- * again here.
+ * again here.  Many other algorithms that work on the NMatrixInt class
+ * are available in the maths/matrixops.h file. 
  *
  * \ifacespython Most inherited member functions are implemented.
  * Exceptions are noted in the documentation for each individual member
