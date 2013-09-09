@@ -12,5 +12,5 @@ ENDFOREACH(SOURCE_FILE)
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
-  INSTALL(FILES nprogress.h nprogressmanager.h nprogresstypes.h DESTINATION ${INCLUDEDIR}/progress COMPONENT Development)
+  INSTALL(FILES nprogress.h nprogressmanager.h nprogresstypes.h nprogresstracker.h DESTINATION ${INCLUDEDIR}/progress COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

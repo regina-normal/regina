@@ -51,8 +51,6 @@ namespace regina {
 class NGluingPerms;
 class NGluingPermSearcher;
 class NPacket;
-class NProgressManager;
-class NProgressMessage;
 class NTriangulation;
 
 /**
@@ -128,11 +126,6 @@ class REGINA_API NCensus {
         void* sieveArgs;
             /**< The second argument to pass to function \a sieve. */
 
-        NProgressMessage* progress;
-            /**< Reports the current state of progress of the census
-                 generation.  This will be 0 if progress reporting is
-                 not required. */
-
         unsigned long whichSoln;
             /**< The number of the solution we are up to. */
 
@@ -178,11 +171,6 @@ class REGINA_API NCensus {
          * Note that this routine should only be used if the census
          * contains a small enough total number of triangulations to
          * avoid any memory disasters.
-         *
-         * If a progress manager is passed, the calculation will run in a new
-         * thread and this routine will return immediately.  Otherwise
-         * the calculation will run in the current thread and this
-         * routine will only return once the census is complete.
          *
          * \ifacespython Parameters \a sieve, \a sieveArgs and \a manager
          * are not present (and will be treated as 0).
@@ -235,17 +223,12 @@ class REGINA_API NCensus {
          * for the function \a sieve which will be called upon each
          * triangulation found.  If \a sieve is \c null then \a sieveArgs
          * will be ignored.
-         * @param manager a progress manager via which progess will be reported,
-         * or 0 if no progress reporting is required.  If non-zero,
-         * \a manager must point to a progress manager for which
-         * NProgressManager::isStarted() is still \c false.
-         * @return the number of triangulations produced in the census, or 0 if
-         * a progress manager was passed.
+         * @return the number of triangulations produced in the census.
          */
         static unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
             NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
             int nBdryFaces, int whichPurge, AcceptTriangulation sieve = 0,
-            void* sieveArgs = 0, NProgressManager* manager = 0);
+            void* sieveArgs = 0);
 
         /**
          * Fills the given packet with all triangulations in a partial census
@@ -379,15 +362,10 @@ class REGINA_API NCensus {
          * Creates a new structure to hold the given information.
          * All parameters not explained are taken directly from
          * formCensus().
-         *
-         * @param newProgress the object with which to report progress
-         * for the census generation, or 0 if progress reporting is not
-         * required.
          */
         NCensus(NPacket* newParent, const NBoolSet& newFiniteness,
             const NBoolSet& newOrientability, int newWhichPurge,
-            AcceptTriangulation newSieve, void* newSieveArgs,
-            NProgressMessage* newProgress);
+            AcceptTriangulation newSieve, void* newSieveArgs);
 
         /**
          * Called when a particular tetrahedron face pairing has been
