@@ -233,6 +233,7 @@ GraphvizStatus GraphvizStatus::status(const QString& userExec,
 
 ReginaPrefSet::ReginaPrefSet() :
         fileRecentMax(10),
+        dim2InitialTab(Dim2Gluings),
         displayTagsInTree(false),
         fileImportExportCodec("UTF-8"),
         helpIntroOnStartup(true),
@@ -458,6 +459,14 @@ void ReginaPrefSet::readInternal() {
     // Additional user census files:
     ReginaFilePref::readUserKey(censusFiles, settings);
     settings.endGroup();
+
+    settings.beginGroup("Dim2");
+    QString str = settings.value("InitialTab").toString();
+    if (str == "Dim2Skeleton")
+        dim2InitialTab = ReginaPrefSet::Dim2Skeleton;
+    else
+        dim2InitialTab = ReginaPrefSet::Dim2Gluings; /* default */
+    settings.endGroup();
     
     settings.beginGroup("File");
     fileRecentMax = settings.value("RecentMax", 10).toInt();
@@ -489,7 +498,7 @@ void ReginaPrefSet::readInternal() {
     surfacesCreationCoords = static_cast<regina::NormalCoords>(settings.value(
         "CreationCoordinates", regina::NS_STANDARD).toInt());
 
-    QString str = settings.value("InitialCompat").toString();
+    str = settings.value("InitialCompat").toString();
     if (str == "Global")
         surfacesInitialCompat = ReginaPrefSet::GlobalCompat;
     else
@@ -590,6 +599,15 @@ void ReginaPrefSet::saveInternal() const {
 
     settings.beginGroup("Census");
     ReginaFilePref::writeKeys(censusFiles, settings);
+    settings.endGroup();
+
+    settings.beginGroup("Dim2");
+    switch (dim2InitialTab) {
+        case ReginaPrefSet::Dim2Skeleton:
+            settings.setValue("InitialTab", "Dim2Skeleton"); break;
+        default:
+            settings.setValue("InitialTab", "Dim2Gluings"); break;
+    }
     settings.endGroup();
 
     settings.beginGroup("File");

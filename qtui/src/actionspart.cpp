@@ -136,7 +136,20 @@ void ReginaMain::setupActions() {
     importMenu->addAction(act);
 
     act = new QAction(this);
-    act->setText(tr("&Isomorphism Signature List"));
+    act->setText(tr("&Isomorphism Signature List (2-D)"));
+    act->setIcon(ReginaSupport::themeIcon("document-sign"));
+    act->setToolTip(tr("Import an isomorphism signature list "
+        "for 2-manifold triangulations"));
+    act->setWhatsThis(tr("Import an external text file containing "
+        "isomorphism signatures for 2-manifold triangulations.  "
+        "For each isomorphism signature, "
+        "a new 2-manifold triangulation will be created in this packet tree."));
+    connect(act, SIGNAL(triggered()), this, SLOT(importIsoSig2()) );
+    treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
+
+    act = new QAction(this);
+    act->setText(tr("&Isomorphism Signature List (3-D)"));
     act->setIcon(ReginaSupport::themeIcon("document-sign"));
     act->setToolTip(tr("Import an isomorphism signature list "
         "for 3-manifold triangulations"));
