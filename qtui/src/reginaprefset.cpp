@@ -233,8 +233,6 @@ GraphvizStatus GraphvizStatus::status(const QString& userExec,
 
 ReginaPrefSet::ReginaPrefSet() :
         fileRecentMax(10),
-        dim2InitialTab(Dim2Gluings),
-        dim2InitialSkeletonTab(Dim2SkelComp),
         displayTagsInTree(false),
         fileImportExportCodec("UTF-8"),
         helpIntroOnStartup(true),
@@ -245,15 +243,17 @@ ReginaPrefSet::ReginaPrefSet() :
         surfacesCompatThreshold(100),
         surfacesCreationCoords(regina::NS_STANDARD),
         surfacesInitialCompat(LocalCompat),
-        surfacesInitialTab(Summary),
         surfacesSupportOriented(false),
         treeJumpSize(10),
+        tabDim2Tri(0),
+        tabDim2TriSkeleton(0),
+        tabDim3Tri(0),
+        tabDim3TriAlgebra(0),
+        tabDim3TriSkeleton(0),
+        tabSurfaceList(0),
         triGAPExec(defaultGAPExec),
         triGraphvizExec(defaultGraphvizExec),
         triGraphvizLabels(true),
-        triInitialTab(Gluings),
-        triInitialSkeletonTab(SkelComp),
-        triInitialAlgebraTab(Homology),
         triSurfacePropsThreshold(6),
         useDock(false),
         warnOnNonEmbedded(true) {
@@ -461,21 +461,6 @@ void ReginaPrefSet::readInternal() {
     ReginaFilePref::readUserKey(censusFiles, settings);
     settings.endGroup();
 
-    settings.beginGroup("Dim2");
-    QString str = settings.value("InitialTab").toString();
-    if (str == "Dim2Skeleton")
-        dim2InitialTab = ReginaPrefSet::Dim2Skeleton;
-    else
-        dim2InitialTab = ReginaPrefSet::Dim2Gluings; /* default */
-
-    str = settings.value("InitialSkeletonTab").toString();
-    if (str == "Dim2EdgePairingGraph")
-        dim2InitialSkeletonTab = ReginaPrefSet::Dim2EdgePairingGraph;
-    else
-        dim2InitialSkeletonTab = ReginaPrefSet::Dim2SkelComp; /* default */
-
-    settings.endGroup();
-    
     settings.beginGroup("File");
     fileRecentMax = settings.value("RecentMax", 10).toInt();
     fileImportExportCodec = settings.value("ImportExportCodec",
@@ -506,21 +491,11 @@ void ReginaPrefSet::readInternal() {
     surfacesCreationCoords = static_cast<regina::NormalCoords>(settings.value(
         "CreationCoordinates", regina::NS_STANDARD).toInt());
 
-    str = settings.value("InitialCompat").toString();
+    QString str = settings.value("InitialCompat").toString();
     if (str == "Global")
         surfacesInitialCompat = ReginaPrefSet::GlobalCompat;
     else
         surfacesInitialCompat = ReginaPrefSet::LocalCompat; /* default */
-
-    str = settings.value("InitialTab").toString();
-    if (str == "Coordinates")
-        surfacesInitialTab = ReginaPrefSet::Coordinates;
-    else if (str == "Matching")
-        surfacesInitialTab = ReginaPrefSet::Matching;
-    else if (str == "Compatibility")
-        surfacesInitialTab = ReginaPrefSet::Compatibility;
-    else
-        surfacesInitialTab = ReginaPrefSet::Summary; /* default */
 
     surfacesSupportOriented = settings.value("SupportOriented", false).toBool();
     settings.endGroup();
@@ -529,39 +504,17 @@ void ReginaPrefSet::readInternal() {
     treeJumpSize = settings.value("JumpSize", 10).toInt();
     settings.endGroup();
 
+    settings.beginGroup("Tabs");
+    tabDim2Tri = settings.value("Dim2Tri", 0).toUInt();
+    tabDim2TriSkeleton = settings.value("Dim2TriSkeleton", 0).toUInt();
+    tabDim3Tri = settings.value("Dim3Tri", 0).toUInt();
+    tabDim3TriAlgebra = settings.value("Dim3TriAlgebra", 0).toUInt();
+    tabDim3TriSkeleton = settings.value("Dim3TriSkeleton", 0).toUInt();
+    tabSurfaceList = settings.value("SurfaceList", 0).toUInt();
+    settings.endGroup();
+
     settings.beginGroup("Triangulation");
     triGraphvizLabels = settings.value("GraphvizLabels", true).toBool();
-
-    str = settings.value("InitialTab").toString();
-    if (str == "Skeleton")
-        triInitialTab = ReginaPrefSet::Skeleton;
-    else if (str == "Algebra")
-        triInitialTab = ReginaPrefSet::Algebra;
-    else if (str == "Composition")
-        triInitialTab = ReginaPrefSet::Composition;
-    else if (str == "Surfaces")
-        triInitialTab = ReginaPrefSet::Surfaces;
-    else if (str == "SnapPea")
-        triInitialTab = ReginaPrefSet::SnapPea;
-    else
-        triInitialTab = ReginaPrefSet::Gluings; /* default */
-
-    str = settings.value("InitialSkeletonTab").toString();
-    if (str == "FacePairingGraph")
-        triInitialSkeletonTab = ReginaPrefSet::FacePairingGraph;
-    else
-        triInitialSkeletonTab = ReginaPrefSet::SkelComp; /* default */
-
-    str = settings.value("InitialAlgebraTab").toString();
-    if (str == "FundGroup")
-        triInitialAlgebraTab = ReginaPrefSet::FundGroup;
-    else if (str == "TuraevViro")
-        triInitialAlgebraTab = ReginaPrefSet::TuraevViro;
-    else if (str == "CellularInfo")
-        triInitialAlgebraTab = ReginaPrefSet::CellularInfo;
-    else
-        triInitialAlgebraTab = ReginaPrefSet::Homology; /* default */
-
     triSurfacePropsThreshold = settings.value(
         "SurfacePropsThreshold", 6).toInt();
     settings.endGroup();
@@ -609,23 +562,6 @@ void ReginaPrefSet::saveInternal() const {
     ReginaFilePref::writeKeys(censusFiles, settings);
     settings.endGroup();
 
-    settings.beginGroup("Dim2");
-    switch (dim2InitialTab) {
-        case ReginaPrefSet::Dim2Skeleton:
-            settings.setValue("InitialTab", "Dim2Skeleton"); break;
-        default:
-            settings.setValue("InitialTab", "Dim2Gluings"); break;
-    }
-
-    switch (dim2InitialSkeletonTab) {
-        case ReginaPrefSet::Dim2EdgePairingGraph:
-            settings.setValue("InitialSkeletonTab", "Dim2EdgePairingGraph");
-                break;
-        default:
-            settings.setValue("InitialSkeletonTab", "Dim2SkelComp"); break;
-    }
-    settings.endGroup();
-
     settings.beginGroup("File");
     settings.setValue("RecentMax", fileRecentMax);
     settings.setValue("ImportExportCodec", fileImportExportCodec);
@@ -662,18 +598,16 @@ void ReginaPrefSet::saveInternal() const {
             settings.setValue("InitialCompat", "Local"); break;
     }
 
-    switch (surfacesInitialTab) {
-        case ReginaPrefSet::Coordinates:
-            settings.setValue("InitialTab", "Coordinates"); break;
-        case ReginaPrefSet::Matching:
-            settings.setValue("InitialTab", "Matching"); break;
-        case ReginaPrefSet::Compatibility:
-            settings.setValue("InitialTab", "Compatibility"); break;
-        default:
-            settings.setValue("InitialTab", "Summary"); break;
-    }
-
     settings.setValue("SupportOriented", surfacesSupportOriented);
+    settings.endGroup();
+
+    settings.beginGroup("Tabs");
+    settings.setValue("Dim2Tri", tabDim2Tri);
+    settings.setValue("Dim2TriSkeleton", tabDim2TriSkeleton);
+    settings.setValue("Dim3Tri", tabDim3Tri);
+    settings.setValue("Dim3TriAlgebra", tabDim3TriAlgebra);
+    settings.setValue("Dim3TriSkeleton", tabDim3TriSkeleton);
+    settings.setValue("SurfaceList", tabSurfaceList);
     settings.endGroup();
 
     settings.beginGroup("Tree");
@@ -682,40 +616,6 @@ void ReginaPrefSet::saveInternal() const {
 
     settings.beginGroup("Triangulation");
     settings.setValue("GraphvizLabels", triGraphvizLabels);
-
-    switch (triInitialTab) {
-        case ReginaPrefSet::Skeleton:
-            settings.setValue("InitialTab", "Skeleton"); break;
-        case ReginaPrefSet::Algebra:
-            settings.setValue("InitialTab", "Algebra"); break;
-        case ReginaPrefSet::Composition:
-            settings.setValue("InitialTab", "Composition"); break;
-        case ReginaPrefSet::Surfaces:
-            settings.setValue("InitialTab", "Surfaces"); break;
-        case ReginaPrefSet::SnapPea:
-            settings.setValue("InitialTab", "SnapPea"); break;
-        default:
-            settings.setValue("InitialTab", "Gluings"); break;
-    }
-
-    switch (triInitialSkeletonTab) {
-        case ReginaPrefSet::FacePairingGraph:
-            settings.setValue("InitialSkeletonTab", "FacePairingGraph"); break;
-        default:
-            settings.setValue("InitialSkeletonTab", "SkelComp"); break;
-    }
-
-    switch (triInitialAlgebraTab) {
-        case ReginaPrefSet::FundGroup:
-            settings.setValue("InitialAlgebraTab", "FundGroup"); break;
-        case ReginaPrefSet::TuraevViro:
-            settings.setValue("InitialAlgebraTab", "TuraevViro"); break;
-        case ReginaPrefSet::CellularInfo:
-            settings.setValue("InitialAlgebraTab", "CellularInfo"); break;
-        default:
-            settings.setValue("InitialAlgebraTab", "Homology"); break;
-    }
-
     settings.setValue("SurfacePropsThreshold", triSurfacePropsThreshold);
     settings.endGroup();
 

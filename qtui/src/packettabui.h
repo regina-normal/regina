@@ -43,13 +43,13 @@
 #include "packetui.h"
 
 #include <vector>
+#include <QTabWidget>
 
 class PacketEditorTab;
 class PacketTabbedViewerTab;
 class PacketViewerTab;
 class QBoxLayout;
 class QString;
-class QTabWidget;
 
 /**
  * A packet interface consisting of several tabbed pages.
@@ -101,11 +101,21 @@ class PacketTabbedUI : public QObject, public PacketUI {
         QBoxLayout* layout;
         QTabWidget* tabs;
 
+        /**
+         * Support for remembering the last tab that was selected for a
+         * given type of tab viewer (e.g., triangulation viewers,
+         * triangulation skeleton viewers, etc.).
+         * This is a reference to the corresponding member of the global
+         * ReginaPrefSet instance.
+         */
+        unsigned& indexPref_;
+        bool rememberTabSelection_;
+
     public:
         /**
          * Constructor and destructor.
          */
-        PacketTabbedUI(PacketPane* newEnclosingPane);
+        PacketTabbedUI(PacketPane* newEnclosingPane, unsigned& indexPref);
         virtual ~PacketTabbedUI();
 
         /**
@@ -115,6 +125,11 @@ class PacketTabbedUI : public QObject, public PacketUI {
          * there is no restriction upon the number of viewer pages.
          * At least one page must be added for this tabbed packet
          * interface to behave correctly.
+         *
+         * If this new tab is at the same index as the last tab selected for
+         * this type of tab viewer (according to the preference member that
+         * was passed to the class constructor), then this new tab will be
+         * automatically selected now.
          *
          * This packet interface will be responsible for the destruction
          * of the new page.
@@ -143,6 +158,7 @@ class PacketTabbedUI : public QObject, public PacketUI {
         PacketPane* getEnclosingPane();
         PacketUI* interfaceAtIndex(int tabIndex);
         PacketUI* currentInterface();
+        unsigned tabCount();
 
         /**
          * PacketUI overrides.
@@ -319,15 +335,28 @@ class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
         QBoxLayout* layout;
         QTabWidget* tabs;
 
+        /**
+         * Support for remembering the last opened tab.
+         * This is a reference to the corresponding member of the global
+         * ReginaPrefSet instance.
+         */
+        unsigned& indexPref_;
+        bool rememberTabSelection_;
+
     public:
         /**
          * Constructor and destructor.
          */
-        PacketTabbedViewerTab(PacketTabbedUI* useParentUI);
+        PacketTabbedViewerTab(PacketTabbedUI* useParentUI, unsigned& indexPref);
         virtual ~PacketTabbedViewerTab();
 
         /**
          * Add a new tabbed page to this packet interface.
+         *
+         * If this new tab is at the same index as the last tab selected for
+         * this type of tab viewer (according to the preference member that
+         * was passed to the class constructor), then this new tab will be
+         * automatically selected now.
          */
         void addTab(PacketViewerTab* viewer, const QString& label);
 
@@ -350,6 +379,7 @@ class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
          * Component queries.
          */
         PacketPane* getEnclosingPane();
+        unsigned tabCount();
 
         /**
          * PacketUI overrides.
@@ -368,6 +398,10 @@ class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
 
 inline PacketPane* PacketTabbedUI::getEnclosingPane() {
     return enclosingPane;
+}
+
+inline unsigned PacketTabbedUI::tabCount() {
+    return tabs->count();
 }
 
 inline PacketViewerTab::PacketViewerTab(PacketTabbedUI* useParentUI) :
@@ -397,6 +431,10 @@ inline QString PacketEditorTab::getPacketMenuText() const {
 
 inline PacketPane* PacketTabbedViewerTab::getEnclosingPane() {
     return enclosingPane;
+}
+
+inline unsigned PacketTabbedViewerTab::tabCount() {
+    return tabs->count();
 }
 
 #endif

@@ -316,8 +316,10 @@ class GraphvizStatus {
  * You can access this global object by calling ReginaPrefSet.global().
  *
  * Normally you should only read the data members in this class.  If you
- * change them, you should call propagate() to ensure that everyone sees
- * your changes.
+ * change them and you need other interface elements to notice your
+ * changes (for instance, if some elements may need to redraw or refresh
+ * themselves), then you should call propagate() to ensure that these
+ * elements notice your changes.
  */
 class ReginaPrefSet : public QObject {
     Q_OBJECT
@@ -341,36 +343,12 @@ class ReginaPrefSet : public QObject {
 
         // The preferences themselves:
 
-        enum Dim2Tab
-            { Dim2Gluings, Dim2Skeleton };
-            /**< Available top-level tabs in a 2-manifold triangulation
-                 viewer/editor. */
-        enum Dim2SkeletonTab { Dim2SkelComp, Dim2EdgePairingGraph };
-            /**< Available tabs in a 2-manifold triangulation
-                 skeleton viewer. */
-        enum TriTab
-            { Gluings, Skeleton, Algebra, Composition, Surfaces, SnapPea };
-            /**< Available top-level tabs in a 3-manifold triangulation
-                 viewer/editor. */
-        enum TriSkeletonTab { SkelComp, FacePairingGraph };
-            /**< Available tabs in a 3-manifold triangulation
-                 skeleton viewer. */
-        enum TriAlgebraTab { Homology, FundGroup, TuraevViro, CellularInfo };
-            /**< Available tabs in a 3-manifold triangulation algebra viewer. */
-        enum SurfacesTab { Summary, Coordinates, Matching, Compatibility };
-            /**< Available top-level tabs in a normal surface list viewer. */
         enum SurfacesCompatMatrix { LocalCompat, GlobalCompat };
             /**< Possible compatibility matrices that can be displayed for a
                  normal surface list. */
 
         QList<ReginaFilePref> censusFiles;
             /**< The list of data files to use for census lookups. */
-        Dim2Tab dim2InitialTab;
-            /**< The initially visible top-level tab for a new 2-manifold
-                 triangulation viewer/editor. */
-        Dim2SkeletonTab dim2InitialSkeletonTab;
-            /**< The initially visible tab for a new 2-manifold triangulation
-                 skeleton viewer. */
         bool displayTagsInTree;
             /**< Should we display packet tags in the visual tree? */
         QByteArray fileImportExportCodec;
@@ -404,12 +382,27 @@ class ReginaPrefSet : public QObject {
         SurfacesCompatMatrix surfacesInitialCompat;
             /**< The matrix first shown when the compatibility tab is
                  opened for a normal surface list. */
-        SurfacesTab surfacesInitialTab;
-            /**< The initially visible top-level tab for a new normal
-                 surface list viewer. */
         bool surfacesSupportOriented;
             /**< Should we offer support for transversely oriented
                  normal surfaces?  This is still highly experimental. */
+        unsigned tabDim2Tri;
+            /**< The index of the initial tab to open in a 2-manifold
+                 triangulation viewer. */
+        unsigned tabDim2TriSkeleton;
+            /**< The index of the initial sub-tab to open in a 2-manifold
+                 triangulation skeleton viewer. */
+        unsigned tabDim3Tri;
+            /**< The index of the initial tab to open in a 3-manifold
+                 triangulation viewer. */
+        unsigned tabDim3TriAlgebra;
+            /**< The index of the initial sub-tab to open in a 3-manifold
+                 triangulation algebra viewer. */
+        unsigned tabDim3TriSkeleton;
+            /**< The index of the initial sub-tab to open in a 3-manifold
+                 triangulation skeleton viewer. */
+        unsigned tabSurfaceList;
+            /**< The index of the initial sub-tab to open in a normal
+                 surface list viewer. */
         unsigned treeJumpSize;
             /**< The number of steps corresponding to a jump up or down in
                  the packet tree. */
@@ -425,15 +418,6 @@ class ReginaPrefSet : public QObject {
             /**< Indicates whether tetrahedron/pentachoron numbers should
                  be used to label vertices in face/facet pairing graphs
                  for 3/4-manifold triangulations. */
-        TriTab triInitialTab;
-            /**< The initially visible top-level tab for a new 3-manifold
-                 triangulation viewer/editor. */
-        TriSkeletonTab triInitialSkeletonTab;
-            /**< The initially visible tab for a new 3-manifold triangulation
-                 skeleton viewer. */
-        TriAlgebraTab triInitialAlgebraTab;
-            /**< The initially visible tab for a new 3-manifold triangulation
-                 algebra viewer. */
         unsigned triSurfacePropsThreshold;
             /**< The maximum number of tetrahedra for which surface-related
                  properties of 3-manifold triangulations will be automatically

@@ -53,17 +53,11 @@ using regina::NPacket;
 
 Dim2TriSkeletonUI::Dim2TriSkeletonUI(regina::Dim2Triangulation* packet,
         PacketTabbedUI* useParentUI) :
-        PacketTabbedViewerTab(useParentUI) {
+        PacketTabbedViewerTab(useParentUI,
+            ReginaPrefSet::global().tabDim2TriSkeleton) {
     addTab(new Dim2TriSkelCompUI(packet, this), tr("&Skeletal Components"));
     addTab(new FacetGraphTab(new Dim2EdgeGraphData(packet), this),
         tr("&Edge Pairing Graph"));
-
-    switch (ReginaPrefSet::global().dim2InitialSkeletonTab) {
-        case ReginaPrefSet::Dim2SkelComp:
-            /* already visible */ break;
-        case ReginaPrefSet::Dim2EdgePairingGraph:
-            setCurrentTab(1); break;
-    }
 }
 
 Dim2TriSkelCompUI::Dim2TriSkelCompUI(regina::Dim2Triangulation* packet,

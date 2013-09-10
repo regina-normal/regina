@@ -41,15 +41,18 @@
 
 using regina::NPacket;
 
-PacketTabbedUI::PacketTabbedUI(PacketPane* enclosingPane) :
-        PacketUI(enclosingPane), editorTab(0), header(0), visibleViewer(0) {
+PacketTabbedUI::PacketTabbedUI(PacketPane* enclosingPane,
+        unsigned& indexPref) : PacketUI(enclosingPane),
+        editorTab(0), header(0), visibleViewer(0),
+        indexPref_(indexPref), rememberTabSelection_(true) {
     ui = new QWidget();
     layout = new QVBoxLayout(ui);
     layout->setContentsMargins(0, 0, 0, 0);
 
     tabs = new QTabWidget(ui);
     layout->addWidget(tabs, 1);
-    connect(tabs, SIGNAL(currentChanged(int)), this, SLOT(notifyTabSelected(int)));
+    connect(tabs, SIGNAL(currentChanged(int)), this,
+        SLOT(notifyTabSelected(int)));
 
     ui->setFocusProxy(tabs);
 }
@@ -84,6 +87,8 @@ PacketTabbedUI::~PacketTabbedUI() {
 }
 
 void PacketTabbedUI::addTab(PacketViewerTab* viewer, const QString& label) {
+    rememberTabSelection_ = false; // Don't remember tabs during setup.
+
     viewerTabs.push_back(viewer);
 
     // Is this the first tab to be added?
@@ -93,9 +98,17 @@ void PacketTabbedUI::addTab(PacketViewerTab* viewer, const QString& label) {
         viewer->queuedAction = PacketViewerTab::Refresh;
 
     tabs->addTab(viewer->getInterface(), label);
+
+    // Have we just added our default tab?
+    if (tabs->count() == indexPref_ + 1)
+        setCurrentTab(indexPref_);
+
+    rememberTabSelection_ = true;
 }
 
 void PacketTabbedUI::addTab(PacketEditorTab* editor, const QString& label) {
+    rememberTabSelection_ = false; // Don't remember tabs during setup.
+
     if (editorTab) {
         std::cerr << "ERROR: Adding multiple editors to a PacketTabbedUI!\n";
         return;
@@ -105,6 +118,12 @@ void PacketTabbedUI::addTab(PacketEditorTab* editor, const QString& label) {
     viewerTabs.push_back(0);
 
     tabs->addTab(editor->getInterface(), label);
+
+    // Have we just added our default tab?
+    if (tabs->count() == indexPref_ + 1)
+        setCurrentTab(indexPref_);
+
+    rememberTabSelection_ = true;
 }
 
 void PacketTabbedUI::addHeader(PacketViewerTab* viewer) {
@@ -215,6 +234,10 @@ void PacketTabbedUI::notifyEditing() {
 }
 
 void PacketTabbedUI::notifyTabSelected(int newTab) {
+    // Remember this tab for next time.
+    if (rememberTabSelection_)
+        indexPref_ = newTab;
+
     // This covers all cases in which nothing has changed.
     if (visibleViewer == viewerTabs[newTab])
         return;
@@ -240,14 +263,17 @@ void PacketEditorTab::setDirty(bool newDirty) {
     PacketUI::setDirty(newDirty);
 }
 
-PacketTabbedViewerTab::PacketTabbedViewerTab(PacketTabbedUI* useParentUI) :
-        PacketViewerTab(useParentUI), header(0), visibleViewer(0) {
+PacketTabbedViewerTab::PacketTabbedViewerTab(PacketTabbedUI* useParentUI,
+        unsigned& indexPref) : PacketViewerTab(useParentUI),
+        header(0), visibleViewer(0),
+        indexPref_(indexPref), rememberTabSelection_(true) {
     ui = new QWidget();
     layout = new QVBoxLayout(ui);
 
     tabs = new QTabWidget(ui);
     layout->addWidget(tabs, 1);
-    connect(tabs, SIGNAL(currentChanged(int)), this, SLOT(notifyTabSelected(int)));
+    connect(tabs, SIGNAL(currentChanged(int)), this,
+        SLOT(notifyTabSelected(int)));
 }
 
 PacketTabbedViewerTab::~PacketTabbedViewerTab() {
@@ -277,8 +303,16 @@ PacketTabbedViewerTab::~PacketTabbedViewerTab() {
 
 void PacketTabbedViewerTab::addTab(PacketViewerTab* viewer,
         const QString& label) {
+    rememberTabSelection_ = false; // Don't remember tabs during setup.
+
     viewerTabs.push_back(viewer);
     tabs->addTab(viewer->getInterface(), label);
+
+    // Have we just added our default tab?
+    if (tabs->count() == indexPref_ + 1)
+        setCurrentTab(indexPref_);
+
+    rememberTabSelection_ = true;
 }
 
 void PacketTabbedViewerTab::addHeader(PacketViewerTab* viewer) {
@@ -325,6 +359,10 @@ void PacketTabbedViewerTab::editingElsewhere() {
 }
 
 void PacketTabbedViewerTab::notifyTabSelected(int newTab) {
+    // Remember this tab for next time.
+    if (rememberTabSelection_)
+        indexPref_ = newTab;
+
     // This covers all cases in which nothing has changed.
     if (visibleViewer == viewerTabs[newTab])
         return;
