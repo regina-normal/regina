@@ -131,6 +131,9 @@ Version 4.94  [ (under development) ]
                   Dim2Isomorphism, Dim2Triangle, Dim2Vertex,
                   Dim2VertexEmbedding, NXMLDim2TriangulationReader:
             - New classes to support Dim2Triangulation.
+        Class Dim2ExampleTriangulation:
+            - New class for building common 2-manifold triangulation.
+              Includes support for every possible 2-manifold.
         Class DimTraits:
             - New template class to assist with dimension-agnostic code.
         Class Flags:

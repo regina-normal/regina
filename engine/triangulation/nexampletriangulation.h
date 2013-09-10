@@ -33,8 +33,8 @@
 /* end stub */
 
 /*! \file triangulation/nexampletriangulation.h
- *  \brief Offers several example triangulations as starting points for
- *  testing code or getting used to Regina.
+ *  \brief Offers several example 3-manifold triangulations as starting
+ *  points for testing code or getting used to Regina.
  */
 
 #ifndef __NEXAMPLETRIANGULATION_H
@@ -54,8 +54,8 @@ class NTriangulation;
  */
 
 /**
- * This class offers routines for constructing sample triangulations of
- * various types.  These triangulations may be useful for testing new
+ * This class offers routines for constructing sample 3-manifold triangulations
+ * of various types.  These triangulations may be useful for testing new
  * code, or for simply getting a feel for how Regina works.
  *
  * The sample triangulations offered here may prove especially useful in
