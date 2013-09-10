@@ -304,6 +304,7 @@ class ReginaMain : public QMainWindow {
         void newAngleStructures();
         void newCensus();
         void newContainer();
+        void newDim2Triangulation();
         void newDim4Triangulation();
         void newFilter();
         void newNormalSurfaces();
@@ -316,6 +317,7 @@ class ReginaMain : public QMainWindow {
          * Packet import routines.
          */
         void importDehydration();
+        void importIsoSig2();
         void importIsoSig3();
         void importIsoSig4();
         void importPDF();

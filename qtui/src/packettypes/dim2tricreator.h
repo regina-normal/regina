@@ -32,57 +32,55 @@
 
 /* end stub */
 
-/*! \file isosighandler.h
- *  \brief Allows interaction with isomorphism signature lists.
+/*! \file dim2tricreator.h
+ *  \brief Allows the creation of 2-manifold triangulations.
  */
 
-#ifndef __ISOSIGHANDLER_H
-#define __ISOSIGHANDLER_H
+#ifndef __DIM2TRICREATOR_H
+#define __DIM2TRICREATOR_H
 
-#include "packetimporter.h"
+#include "../packetcreator.h"
+
+#include <QStackedWidget>
+
+class QCheckBox;
+class QComboBox;
+class QLineEdit;
 
 /**
- * An object responsible for importing data from
- * isomorphism signature lists.
- *
- * Rather than creating new objects of this class, the globally
- * available objects IsoSigHandler::instance2, IsoSigHandler::instance3
- * and IsoSigHandler::instance4 (for 2-manifold, 3-manifold and 4-manifold
- * triangulations respectively) should always be used.
+ * An interface for creating 2-manifold triangulations.
  */
-class IsoSigHandler : public PacketImporter {
-    using PacketImporter::importData;
+class Dim2TriangulationCreator : public PacketCreator {
     private:
         /**
-         * Which dimension of triangulations do our isomorphism
-         * signatures describe?
+         * Internal components
          */
-        unsigned dimension_;
+        QWidget* ui;
+        QComboBox* type;
+        QStackedWidget* details;
+
+        /**
+         * Details for specific triangulation types
+         */
+        QLineEdit* orGenus;
+        QLineEdit* orPunctures;
+        QLineEdit* norGenus;
+        QLineEdit* norPunctures;
+        QLineEdit* isoSig;
+        QComboBox* exampleWhich;
 
     public:
         /**
-         * Globally available instances of this class.
+         * Constructor.
          */
-        static const IsoSigHandler instance2;
-        static const IsoSigHandler instance3;
-        static const IsoSigHandler instance4;
+        Dim2TriangulationCreator();
 
-    public:
         /**
-         * PacketImporter overrides:
+         * PacketCreator overrides.
          */
-        virtual regina::NPacket* importData(const QString& fileName,
-            QWidget* parentWidget) const;
-
-    private:
-        /**
-         * Don't allow people to construct their own handlers.
-         */
-        IsoSigHandler(unsigned dimension);
+        QWidget* getInterface();
+        regina::NPacket* createPacket(regina::NPacket* parentPacket,
+            QWidget* parentWidget);
 };
-
-inline IsoSigHandler::IsoSigHandler(unsigned dimension) :
-        dimension_(dimension) {
-}
 
 #endif

@@ -53,6 +53,11 @@ void ReginaMain::importDehydration() {
         tr("Import Dehydrated Triangulation List"));
 }
 
+void ReginaMain::importIsoSig2() {
+    importFile(IsoSigHandler::instance2, 0, tr(FILTER_ALL),
+        tr("Import Isomorphism Signature List (2-D)"));
+}
+
 void ReginaMain::importIsoSig3() {
     importFile(IsoSigHandler::instance3, 0, tr(FILTER_ALL),
         tr("Import Isomorphism Signature List (3-D)"));

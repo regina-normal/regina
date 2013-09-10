@@ -341,6 +341,10 @@ class ReginaPrefSet : public QObject {
 
         // The preferences themselves:
 
+        enum Dim2Tab
+            { Dim2Gluings, Dim2Skeleton };
+            /**< Available top-level tabs in a 2-manifold triangulation
+                 viewer/editor. */
         enum Dim4Tab
             { Dim4Gluings, Dim4Skeleton, Dim4Algebra };
             /**< Available top-level tabs in a 4-manifold triangulation
@@ -362,6 +366,9 @@ class ReginaPrefSet : public QObject {
 
         QList<ReginaFilePref> censusFiles;
             /**< The list of data files to use for census lookups. */
+        Dim2Tab dim2InitialTab;
+            /**< The initially visible top-level tab for a new 2-manifold
+                 triangulation viewer/editor. */
         Dim4Tab dim4InitialTab;
             /**< The initially visible top-level tab for a new 4-manifold
                  triangulation viewer/editor. */

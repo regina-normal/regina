@@ -43,6 +43,7 @@
 #include <QFile>
 #include <QTextDocument>
 
+const IsoSigHandler IsoSigHandler::instance2(2);
 const IsoSigHandler IsoSigHandler::instance3(3);
 const IsoSigHandler IsoSigHandler::instance4(4);
 

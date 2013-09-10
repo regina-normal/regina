@@ -233,6 +233,7 @@ GraphvizStatus GraphvizStatus::status(const QString& userExec,
 
 ReginaPrefSet::ReginaPrefSet() :
         fileRecentMax(10),
+        dim2InitialTab(Dim2Gluings),
         dim4InitialTab(Dim4Gluings),
         displayTagsInTree(false),
         fileImportExportCodec("UTF-8"),
@@ -459,9 +460,17 @@ void ReginaPrefSet::readInternal() {
     // Additional user census files:
     ReginaFilePref::readUserKey(censusFiles, settings);
     settings.endGroup();
+
+    settings.beginGroup("Dim2");
+    QString str = settings.value("InitialTab").toString();
+    if (str == "Dim2Skeleton")
+        dim2InitialTab = ReginaPrefSet::Dim2Skeleton;
+    else
+        dim2InitialTab = ReginaPrefSet::Dim2Gluings; /* default */
+    settings.endGroup();
     
     settings.beginGroup("Dim4");
-    QString str = settings.value("InitialTab").toString();
+    str = settings.value("InitialTab").toString();
     if (str == "Dim4Skeleton")
         dim4InitialTab = ReginaPrefSet::Dim4Skeleton;
     else if (str == "Dim4Algebra")
@@ -601,6 +610,15 @@ void ReginaPrefSet::saveInternal() const {
 
     settings.beginGroup("Census");
     ReginaFilePref::writeKeys(censusFiles, settings);
+    settings.endGroup();
+
+    settings.beginGroup("Dim2");
+    switch (dim2InitialTab) {
+        case ReginaPrefSet::Dim2Skeleton:
+            settings.setValue("InitialTab", "Dim2Skeleton"); break;
+        default:
+            settings.setValue("InitialTab", "Dim2Gluings"); break;
+    }
     settings.endGroup();
 
     settings.beginGroup("Dim4");
