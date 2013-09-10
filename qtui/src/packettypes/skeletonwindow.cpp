@@ -32,6 +32,7 @@
 
 /* end stub */
 
+#include "dim2/dim2triangulation.h"
 #include "triangulation/ntriangulation.h"
 
 #include "skeletonwindow.h"
@@ -51,6 +52,10 @@ using regina::NComponent;
 using regina::NEdge;
 using regina::NFace;
 using regina::NVertex;
+using regina::Dim2BoundaryComponent;
+using regina::Dim2Component;
+using regina::Dim2Edge;
+using regina::Dim2Vertex;
 
 #define SKELETON_MAX_ROWS_DEFAULT 10
 namespace {
@@ -91,37 +96,18 @@ QSize SkeletonTreeView::sizeHint() const {
 }
 
 SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
-        SkeletalObject viewObjectType) : 
-        QDialog(packetUI->getInterface()), objectType(viewObjectType) {
-    tri = dynamic_cast<regina::NTriangulation*>(packetUI->getPacket());
+        SkeletalModel* useModel) :
+        QDialog(packetUI->getInterface()), model(useModel) {
     QBoxLayout* layout = new QVBoxLayout(this);
 
     // Set up the table of data.
-    switch (objectType) {
-        case Vertices:
-            model = new VertexModel(tri);
-            break;
-        case Edges:
-            model = new EdgeModel(tri);
-            break;
-        case Faces:
-            model = new FaceModel(tri);
-            break;
-        case Components:
-            model = new ComponentModel(tri);
-            break;
-        case BoundaryComponents:
-            model = new BoundaryComponentModel(tri);
-            break;
-    }
-
     table = new SkeletonTreeView();
     table->setItemsExpandable(false);
     table->setRootIsDecorated(false);
     table->setAlternatingRowColors(true);
     table->header()->setStretchLastSection(false);
     table->setSelectionMode(QAbstractItemView::NoSelection);
-    table->setWhatsThis(overview(objectType));
+    table->setWhatsThis(model->overview());
     // Add grid lines:
     table->setStyleSheet("QTreeView::item { "
                              "border: 1px solid #d9d9d9; "
@@ -144,7 +130,7 @@ SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
     // Resize columns now that the table is full of data.
     table->header()->resizeSections(QHeaderView::ResizeToContents);
 
-    tri->listen(this);
+    packetUI->getPacket()->listen(this);
 
     // Only one button to press (Close).
     connect(buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(accept()));
@@ -157,23 +143,8 @@ void SkeletonWindow::refresh() {
 }
 
 void SkeletonWindow::editingElsewhere() {
-    setWindowTitle(tr("Editing... (") + tri->getPacketLabel().c_str() + ')');
+    setWindowTitle(tr("Editing triangulation..."));
     model->makeEmpty();
-}
-
-void SkeletonWindow::updateCaption() {
-    QString label;
-    switch (objectType) {
-        case Vertices: label = tr("Vertices (%1)"); break;
-        case Edges: label = tr("Edges (%1)"); break;
-        case Faces: label = tr("Faces (%1)"); break;
-        case Components: label = tr("Components (%1)"); break;
-        case BoundaryComponents: label =
-            tr("Boundary Components (%1)"); break;
-        default: label = tr("Unknown skeletal items (%1)"); break;
-    }
-
-    setWindowTitle(label.arg(tri->getPacketLabel().c_str()));
 }
 
 void SkeletonWindow::packetWasChanged(regina::NPacket*) {
@@ -188,53 +159,19 @@ void SkeletonWindow::packetToBeDestroyed(regina::NPacket*) {
     accepted();
 }
 
-QString SkeletonWindow::overview(SkeletalObject type) {
-    switch (type) {
-        case Vertices: return tr("<qt>Displays details of each "
-            "vertex of this triangulation.<p>"
-            "The different vertices are numbered from 0 upwards.  "
-            "Each row describes properties of the vertex as well as "
-            "listing precisely which vertices of which tetrahedra it "
-            "corresponds to.<p>"
-            "See the users' handbook for further details on what each "
-            "column of the table means.</qt>");
-        case Edges: return tr("<qt>Displays details of each edge of "
-            "this triangulation.<p>"
-            "The different edges are numbered from 0 upwards.  "
-            "Each row describes properties of the edge as well as "
-            "listing precisely which vertices of which tetrahedra it "
-            "corresponds to.<p>"
-            "See the users' handbook for further details on what each "
-            "column of the table means.</qt>");
-        case Faces: return tr("<qt>Displays details of each "
-            "face of this triangulation.<p>"
-            "The different faces are numbered from 0 upwards.  "
-            "Each row describes the shape of the face as well as "
-            "listing precisely which vertices of which tetrahedra it "
-            "corresponds to.<p>"
-            "See the users' handbook for further details on what each "
-            "column of the table means.</qt>");
-        case Components: return tr("<qt>Displays details of each "
-            "connected component of this triangulation.<p>"
-            "The different components are numbered from 0 upwards.  "
-            "Each row describes properties of the component as well as "
-            "listing precisely which tetrahedra the component contains.<p>"
-            "See the users' handbook for further details on what each "
-            "column of the table means.</qt>");
-        case BoundaryComponents: return tr("<qt>Displays details of each "
-            "boundary component of this triangulation.  A boundary "
-            "component may be a collection of adjacent boundary faces, "
-            "or it may be a single ideal vertex, whose link is closed but "
-            "not a 2-sphere.<p>"
-            "The different boundary components are numbered from 0 upwards.  "
-            "Each row describes properties of the boundary component, as "
-            "well as which tetrahedron faces (for a real boundary component) "
-            "or which tetrahedron vertex (for an ideal boundary component) "
-            "it is formed from.<p>"
-            "See the users' handbook for further details on what each "
-            "column of the table means.</qt>");
-    }
-    return QString::null;
+QString VertexModel::caption() const {
+    return tr("Vertices (%1)").arg(tri->getPacketLabel().c_str());
+}
+
+QString VertexModel::overview() const {
+    return tr("<qt>Displays details of each "
+        "vertex of this triangulation.<p>"
+        "The different vertices are numbered from 0 upwards.  "
+        "Each row describes properties of the vertex as well as "
+        "listing precisely which vertices of which tetrahedra it "
+        "corresponds to.<p>"
+        "See the users' handbook for further details on what each "
+        "column of the table means.</qt>");
 }
 
 int VertexModel::rowCount(const QModelIndex& parent) const {
@@ -329,6 +266,21 @@ QString VertexModel::toolTipForCol(int column) {
     }
 }
 
+QString EdgeModel::caption() const {
+    return tr("Edges (%1)").arg(tri->getPacketLabel().c_str());
+}
+
+QString EdgeModel::overview() const {
+    return tr("<qt>Displays details of each edge of "
+        "this triangulation.<p>"
+        "The different edges are numbered from 0 upwards.  "
+        "Each row describes properties of the edge as well as "
+        "listing precisely which vertices of which tetrahedra it "
+        "corresponds to.<p>"
+        "See the users' handbook for further details on what each "
+        "column of the table means.</qt>");
+}
+
 int EdgeModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
@@ -403,6 +355,21 @@ QString EdgeModel::toolTipForCol(int column) {
             "that come together to form this edge of the triangulation.</qt>");
         default: return QString();
     }
+}
+
+QString FaceModel::caption() const {
+    return tr("Faces (%1)").arg(tri->getPacketLabel().c_str());
+}
+
+QString FaceModel::overview() const {
+    return tr("<qt>Displays details of each "
+        "face of this triangulation.<p>"
+        "The different faces are numbered from 0 upwards.  "
+        "Each row describes the shape of the face as well as "
+        "listing precisely which vertices of which tetrahedra it "
+        "corresponds to.<p>"
+        "See the users' handbook for further details on what each "
+        "column of the table means.</qt>");
 }
 
 int FaceModel::rowCount(const QModelIndex& parent) const {
@@ -499,6 +466,20 @@ QString FaceModel::toolTipForCol(int column) {
     }
 }
 
+QString ComponentModel::caption() const {
+    return tr("Components (%1)").arg(tri->getPacketLabel().c_str());
+}
+
+QString ComponentModel::overview() const {
+    return tr("<qt>Displays details of each "
+        "connected component of this triangulation.<p>"
+        "The different components are numbered from 0 upwards.  "
+        "Each row describes properties of the component as well as "
+        "listing precisely which tetrahedra the component contains.<p>"
+        "See the users' handbook for further details on what each "
+        "column of the table means.</qt>");
+}
+
 int ComponentModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
@@ -567,6 +548,25 @@ QString ComponentModel::toolTipForCol(int column) {
             "that belong to this component.</qt>");
         default: return QString();
     }
+}
+
+QString BoundaryComponentModel::caption() const {
+    return tr("Boundary Components (%1)").arg(tri->getPacketLabel().c_str());
+}
+
+QString BoundaryComponentModel::overview() const {
+    return tr("<qt>Displays details of each "
+        "boundary component of this triangulation.  A boundary "
+        "component may be a collection of adjacent boundary faces, "
+        "or it may be a single ideal vertex, whose link is closed but "
+        "not a 2-sphere.<p>"
+        "The different boundary components are numbered from 0 upwards.  "
+        "Each row describes properties of the boundary component, as "
+        "well as which tetrahedron faces (for a real boundary component) "
+        "or which tetrahedron vertex (for an ideal boundary component) "
+        "it is formed from.<p>"
+        "See the users' handbook for further details on what each "
+        "column of the table means.</qt>");
 }
 
 int BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
@@ -644,6 +644,346 @@ QString BoundaryComponentModel::toolTipForCol(int column) {
         case 3: return tr("<qt>Identifies the individual faces for a real "
             "boundary component, or the individual vertex for an ideal "
             "boundary component.</qt>");
+        default: return QString();
+    }
+}
+
+QString Dim2VertexModel::caption() const {
+    return tr("Vertices (%1)").arg(tri->getPacketLabel().c_str());
+}
+
+QString Dim2VertexModel::overview() const {
+    return tr("<qt>Displays details of each "
+        "vertex of this triangulation.<p>"
+        "The different vertices are numbered from 0 upwards.  "
+        "Each row describes properties of the vertex as well as "
+        "listing precisely which vertices of which triangles it "
+        "corresponds to.<p>"
+        "See the users' handbook for further details on what each "
+        "column of the table means.</qt>");
+}
+
+int Dim2VertexModel::rowCount(const QModelIndex& parent) const {
+    if (forceEmpty)
+        return 0;
+    return (parent.isValid() ? 0 : tri->getNumberOfVertices());
+}
+
+int Dim2VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
+    return 4;
+}
+
+QVariant Dim2VertexModel::data(const QModelIndex& index, int role) const {
+    if (role == Qt::DisplayRole) {
+        Dim2Vertex* item = tri->getVertex(index.row());
+        switch (index.column()) {
+            case 0:
+                return index.row();
+            case 1:
+                if (item->isBoundary())
+                    return tr("Bdry");
+                else
+                    return QString();
+            case 2:
+                return static_cast<unsigned>(item->getNumberOfEmbeddings());
+            case 3:
+                QString ans;
+                std::deque<regina::Dim2VertexEmbedding>::const_iterator it;
+                for (it = item->getEmbeddings().begin();
+                        it != item->getEmbeddings().end(); it++)
+                    appendToList(ans, QString("%1 (%2)").
+                        arg(tri->triangleIndex((*it).getTriangle())).
+                        arg((*it).getVertex()));
+                return ans;
+        }
+        return QString();
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(index.column());
+    } else
+        return QVariant();
+}
+
+QVariant Dim2VertexModel::headerData(int section,
+        Qt::Orientation orientation, int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        switch (section) {
+            case 0: return tr("Vertex #");
+            case 1: return tr("Type");
+            case 2: return tr("Degree");
+            case 3: return tr("Triangles (Triangle vertices)");
+            default: return QString();
+        }
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(section);
+    } else
+        return QVariant();
+}
+
+QString Dim2VertexModel::toolTipForCol(int column) {
+    switch (column) {
+        case 0: return tr("<qt>The number of the individual vertex.  "
+            "Vertices are numbered 0,1,2,...,<i>v</i>-1.</qt>");
+        case 1: return tr("<qt>Lists additional properties of the vertex, "
+            "such as whether it lies on the boundary.</qt>");
+        case 2: return tr("<qt>Gives the degree of this vertex, i.e., "
+            "the number of individual triangle vertices that are "
+            "identified to it.</qt>");
+        case 3: return tr("<qt>Lists the individual triangle vertices "
+            "that come together to form this vertex of the "
+            "triangulation.</qt>");
+        default: return QString();
+    }
+}
+
+QString Dim2EdgeModel::caption() const {
+    return tr("Edges (%1)").arg(tri->getPacketLabel().c_str());
+}
+
+QString Dim2EdgeModel::overview() const {
+    return tr("<qt>Displays details of each edge of "
+        "this triangulation.<p>"
+        "The different edges are numbered from 0 upwards.  "
+        "Each row describes properties of the edge as well as "
+        "listing precisely which vertices of which triangles it "
+        "corresponds to.<p>"
+        "See the users' handbook for further details on what each "
+        "column of the table means.</qt>");
+}
+
+int Dim2EdgeModel::rowCount(const QModelIndex& parent) const {
+    if (forceEmpty)
+        return 0;
+    return (parent.isValid() ? 0 : tri->getNumberOfEdges());
+}
+
+int Dim2EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
+    return 4;
+}
+
+QVariant Dim2EdgeModel::data(const QModelIndex& index, int role) const {
+    if (role == Qt::DisplayRole) {
+        Dim2Edge* item = tri->getEdge(index.row());
+        switch (index.column()) {
+            case 0:
+                return index.row();
+            case 1:
+                if (item->isBoundary())
+                    return tr("Bdry");
+                else
+                    return QString();
+            case 2:
+                return static_cast<unsigned>(item->getNumberOfEmbeddings());
+            case 3:
+                QString ans;
+                for (unsigned i = 0; i < item->getNumberOfEmbeddings(); i++)
+                    appendToList(ans, QString("%1 (%2)").
+                        arg(tri->triangleIndex(
+                            item->getEmbedding(i).getTriangle())).
+                        arg(item->getEmbedding(i).getVertices().
+                            trunc2().c_str()));
+                return ans;
+        }
+        return QString();
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(index.column());
+    } else
+        return QVariant();
+}
+
+QVariant Dim2EdgeModel::headerData(int section,
+        Qt::Orientation orientation, int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        switch (section) {
+            case 0: return tr("Edge #");
+            case 1: return tr("Type");
+            case 2: return tr("Degree");
+            case 3: return tr("Triangles (Triangle vertices)");
+            default: return QString();
+        }
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(section);
+    } else
+        return QVariant();
+}
+
+QString Dim2EdgeModel::toolTipForCol(int column) {
+    switch (column) {
+        case 0: return tr("<qt>The number of the individual edge.  "
+            "Edges are numbered 0,1,2,...,<i>e</i>-1.</qt>");
+        case 1: return tr("<qt>Lists additional properties of the edge, "
+            "such as whether it lies on the boundary.</qt>");
+        case 2: return tr("<qt>Gives the degree of this edge, i.e., "
+            "the number of individual triangle edges that are "
+            "identified to it.</qt>");
+        case 3: return tr("<qt>Lists the individual triangle edges "
+            "that come together to form this edge of the triangulation.</qt>");
+        default: return QString();
+    }
+}
+
+QString Dim2ComponentModel::caption() const {
+    return tr("Components (%1)").arg(tri->getPacketLabel().c_str());
+}
+
+QString Dim2ComponentModel::overview() const {
+    return tr("<qt>Displays details of each "
+        "connected component of this triangulation.<p>"
+        "The different components are numbered from 0 upwards.  "
+        "Each row describes properties of the component as well as "
+        "listing precisely which triangles the component contains.<p>"
+        "See the users' handbook for further details on what each "
+        "column of the table means.</qt>");
+}
+
+int Dim2ComponentModel::rowCount(const QModelIndex& parent) const {
+    if (forceEmpty)
+        return 0;
+    return (parent.isValid() ? 0 : tri->getNumberOfComponents());
+}
+
+int Dim2ComponentModel::columnCount(const QModelIndex& /* unused */) const {
+    return 4;
+}
+
+QVariant Dim2ComponentModel::data(const QModelIndex& index, int role) const {
+    if (role == Qt::DisplayRole) {
+        Dim2Component* item = tri->getComponent(index.row());
+        switch (index.column()) {
+            case 0:
+                return index.row();
+            case 1:
+                return (item->isOrientable() ? tr("Orbl") : tr("Non-orbl"));
+            case 2:
+                return static_cast<unsigned>(item->getNumberOfTriangles());
+            case 3:
+                QString ans;
+                for (unsigned long i = 0; i < item->getNumberOfTriangles(); ++i)
+                    appendToList(ans, QString::number(tri->triangleIndex(
+                        item->getTriangle(i))));
+                return ans;
+        }
+        return QString();
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(index.column());
+    } else
+        return QVariant();
+}
+
+QVariant Dim2ComponentModel::headerData(int section,
+        Qt::Orientation orientation, int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        switch (section) {
+            case 0: return tr("Cmpt #");
+            case 1: return tr("Type");
+            case 2: return tr("Size");
+            case 3: return tr("Triangles");
+            default: return QString();
+        }
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(section);
+    } else
+        return QVariant();
+}
+
+QString Dim2ComponentModel::toolTipForCol(int column) {
+    switch (column) {
+        case 0: return tr("<qt>The number of the individual component.  "
+            "Components are numbered 0,1,2,...,<i>c</i>-1.</qt>");
+        case 1: return tr("<qt>Lists additional properties of the component, "
+            "such as its orientability.</qt>");
+        case 2: return tr("<qt>Gives the size of this component, i.e., "
+            "the number of triangles that it contains.</qt>");
+        case 3: return tr("<qt>Identifies the individual triangles "
+            "that belong to this component.</qt>");
+        default: return QString();
+    }
+}
+
+QString Dim2BoundaryComponentModel::caption() const {
+    return tr("Boundary Components (%1)").arg(tri->getPacketLabel().c_str());
+}
+
+QString Dim2BoundaryComponentModel::overview() const {
+    return tr("<qt>Displays details of each "
+        "boundary component of this triangulation.<p>"
+        "The different boundary components are numbered from 0 upwards.  "
+        "Each row describes properties of the boundary component, as "
+        "well as which triangle edges it is formed from.<p>"
+        "See the users' handbook for further details on what each "
+        "column of the table means.</qt>");
+}
+
+int Dim2BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
+    if (forceEmpty)
+        return 0;
+    return (parent.isValid() ? 0 : tri->getNumberOfBoundaryComponents());
+}
+
+int Dim2BoundaryComponentModel::columnCount(const QModelIndex& /* unused */)
+        const {
+    return 3;
+}
+
+QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
+        int role) const {
+    if (role == Qt::DisplayRole) {
+        Dim2BoundaryComponent* item = tri->getBoundaryComponent(index.row());
+        switch (index.column()) {
+            case 0:
+                return index.row();
+            case 1:
+                return (item->getNumberOfEdges() == 1 ? tr("1 edge") :
+                    tr("%1 edges").arg(item->getNumberOfEdges()));
+            case 2:
+                QString ans;
+                for (unsigned long i = 0; i < item->getNumberOfEdges(); ++i)
+                    appendToList(ans, QString::number(tri->edgeIndex(
+                        item->getEdge(i))));
+                return tr("Edges ") + ans;
+        }
+        return QString();
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(index.column());
+    } else
+        return QVariant();
+}
+
+QVariant Dim2BoundaryComponentModel::headerData(int section,
+        Qt::Orientation orientation, int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        switch (section) {
+            case 0: return tr("Cmpt #");
+            case 1: return tr("Size");
+            case 2: return tr("Edges");
+            default: return QString();
+        }
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(section);
+    } else
+        return QVariant();
+}
+
+QString Dim2BoundaryComponentModel::toolTipForCol(int column) {
+    switch (column) {
+        case 0: return tr("<qt>The number of the individual boundary "
+            "component.  "
+            "Boundary components are numbered 0,1,2,...,<i>b</i>-1.</qt>");
+        case 1: return tr("<qt>Gives the size of this boundary component, "
+            "i.e., the number of edges it is formed from.</qt>");
+        case 2: return tr("<qt>Identifies the individual edges that "
+            "this boundary component contains.</qt>");
         default: return QString();
     }
 }
