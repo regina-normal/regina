@@ -948,7 +948,8 @@ QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
                 for (unsigned long i = 0; i < item->getNumberOfEdges(); ++i)
                     appendToList(ans, QString::number(tri->edgeIndex(
                         item->getEdge(i))));
-                return tr("Edges ") + ans;
+                return (item->getNumberOfEdges() == 1 ?
+                    tr("Edge ") : tr("Edges ")) + ans;
         }
         return QString();
     } else if (role == Qt::ToolTipRole) {

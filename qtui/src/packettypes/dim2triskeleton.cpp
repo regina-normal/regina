@@ -38,6 +38,7 @@
 
 // UI includes:
 #include "dim2triskeleton.h"
+#include "facetgraphtab.h"
 #include "skeletonwindow.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
@@ -62,16 +63,14 @@ using regina::NPacket;
 Dim2TriSkeletonUI::Dim2TriSkeletonUI(regina::Dim2Triangulation* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI) {
-    // TODO faceGraph = new NTriFaceGraphUI(packet, this);
-
     addTab(new Dim2TriSkelCompUI(packet, this), tr("&Skeletal Components"));
-    // TODO addTab(faceGraph, tr("&Face Pairing Graph"));
+    addTab(new FacetGraphTab(new Dim2EdgeGraphData(packet), this),
+        tr("&Edge Pairing Graph"));
 
-    // TODO
-    switch (ReginaPrefSet::global().triInitialSkeletonTab) {
-        case ReginaPrefSet::SkelComp:
+    switch (ReginaPrefSet::global().dim2InitialSkeletonTab) {
+        case ReginaPrefSet::Dim2SkelComp:
             /* already visible */ break;
-        case ReginaPrefSet::FacePairingGraph:
+        case ReginaPrefSet::Dim2EdgePairingGraph:
             setCurrentTab(1); break;
     }
 }
@@ -242,244 +241,4 @@ void Dim2TriSkelCompUI::viewBoundaryComponents() {
     win->show();
     viewers.append(win);
 }
-
-#if 0
-NTriFaceGraphUI::NTriFaceGraphUI(regina::NTriangulation* packet,
-        PacketTabbedViewerTab* useParentUI) :
-        PacketViewerTab(useParentUI), tri(packet), neverDrawn(true),
-        graphvizExec(ReginaPrefSet::global().triGraphvizExec),
-        graphvizLabels(ReginaPrefSet::global().triGraphvizLabels) {
-    ui = new QWidget();
-    QBoxLayout* baseLayout = new QVBoxLayout(ui);
-    stack = new QStackedWidget(ui);
-
-    // Information and error layers.
-    layerInfo = new MessageLayer("dialog-information", tr("Initialising..."));
-    layerError = new MessageLayer("dialog-warning", tr("Initialising..."));
-    stack->addWidget(layerInfo);
-    stack->addWidget(layerError);
-
-    // Graph layer.
-    layerGraph = new QScrollArea();
-    // Don't set transparency: a border and lighter background looks
-    // kind of nice here.
-    // layerGraph->setStyleSheet("QScrollArea, .QWidget { "
-    //                             "background-color:transparent; "
-    //                         "}");
-    graph = new QLabel(layerGraph);
-    graph->setAlignment(Qt::AlignCenter);
-    layerGraph->setWidget(graph);
-    layerGraph->setWhatsThis(tr("<qt>The <i>face pairing graph</i> "
-        "of a triangulation describes which tetrahedron faces are "
-        "identified with which.<p>Each vertex of the graph represents "
-        "a tetrahedron, and each edge represents a pair of tetrahedron "
-        "faces that are joined together.</qt>"));
-    stack->addWidget(layerGraph);
-
-    // Finish off.
-    baseLayout->addWidget(stack);
-
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
-}
-
-void NTriFaceGraphUI::updatePreferences() {
-    QString newGraphvizExec = ReginaPrefSet::global().triGraphvizExec;
-    bool newGraphvizLabels = ReginaPrefSet::global().triGraphvizLabels;
-
-    // If the graphviz executable or options have changed, redraw the graph.
-    // Otherwise do nothing.
-    //
-    // Note that if the executable *path* hasn't changed but somebody did a
-    // reinstall (i.e., the graphviz *behaviour* has changed), they
-    // can always hit refresh anyway.
-    if (graphvizExec == newGraphvizExec && graphvizLabels == newGraphvizLabels)
-        return;
-
-    graphvizExec = newGraphvizExec;
-    graphvizLabels = newGraphvizLabels;
-
-    // If we wanted to be polite, we could queue this refresh till
-    // later.  In practice there shouldn't be too many viewers
-    // actively open and we shouldn't be changing the graphviz
-    // executable too often, so it doesn't really seem worth losing
-    // sleep over.
-
-    // Actually, we can be a little polite.  If the face pairing
-    // graph hasn't been drawn yet (i.e., nobody has ever selected
-    // the graph tab), there's no need to refresh since this will
-    // be done anyway when the tab is first shown.
-    if (! neverDrawn)
-        refresh();
-}
-
-regina::NPacket* NTriFaceGraphUI::getPacket() {
-    return tri;
-}
-
-QWidget* NTriFaceGraphUI::getInterface() {
-    return ui;
-}
-
-void NTriFaceGraphUI::refresh() {
-    neverDrawn = false;
-
-    if (tri->getNumberOfTetrahedra() == 0) {
-        showInfo(tr("<qt>This triangulation is empty.</qt>"));
-        return;
-    }
-
-    if (tri->getNumberOfTetrahedra() > 500) {
-        showInfo(tr("<qt>This triangulation contains over 500 "
-            "tetrahedra.<p>Regina does not display face pairing graphs "
-            "for such large triangulations.</qt>"));
-        return;
-    }
-
-    // TODO: Tell them that we're processing, in case the graphviz call
-    // should lock up for some reason.
-
-    // Check out the status of the current graphviz installation.
-    QString useExec;
-    GraphvizStatus gvStatus = GraphvizStatus::status(graphvizExec, useExec);
-
-    if (useExec.isNull() || ! gvStatus.usable()) {
-        // There seems to be a problem.
-        QString header = tr("<qt>Regina uses <i>Graphviz</i> to display "
-            "face pairing graphs.  ");
-        QString footer = tr("<p>You can install Graphviz from "
-            "<a href=\"http://www.graphviz.org\">www.graphviz.org</a>.  "
-            "If it is already installed, please visit Regina's <i>Tools</i> "
-            "configuration and tell me where I can find it.</qt>");
-
-        QString error;
-        if (gvStatus == GraphvizStatus::unknown)
-            error = tr("However, Regina could not determine the status "
-                "of your Graphviz installation.");
-        else if (gvStatus == GraphvizStatus::notFound)
-            error = tr("However, I could not find the Graphviz "
-                "executable \"%1\" on the default search "
-                "path.").arg(graphvizExec);
-        else if (gvStatus == GraphvizStatus::notExist)
-            error = tr("However, the Graphviz executable \"%1\" "
-                "does not exist.").arg(graphvizExec);
-        else if (gvStatus == GraphvizStatus::notExecutable)
-            error = tr("However, the Graphviz executable \"%1\" "
-                "does not appear to be an executable "
-                "file.").arg(graphvizExec);
-        else if (gvStatus == GraphvizStatus::notStartable)
-            error = tr("However, I could not start "    
-                "the Graphviz executable \"%1\".").arg(graphvizExec);
-        else if (gvStatus == GraphvizStatus::unsupported) {
-#ifdef Q_OS_MACX
-            if (QSysInfo::MacintoshVersion == QSysInfo::MV_LEOPARD)
-                error = tr("However, I cannot determine the version of "
-                    "Graphviz that you are running.<p>"
-                    "<b>MacOS Leopard users:</b> "
-                    "Graphviz 2.28.0 is broken under Leopard, and can "
-                    "cause this error.  The older Graphviz 2.26.3 "
-                    "should work fine.");
-            else
-                error = tr("However, I cannot determine the version of "
-                    "Graphviz that you are running.  Perhaps your Graphviz "
-                    "is too old (version 0.x), or perhaps the program "
-                    "\"%1\" is not from Graphviz at all.").arg(graphvizExec);
-#else
-            error = tr("However, I cannot determine the version of "
-                "Graphviz that you are running.  Perhaps your Graphviz "
-                "is too old (version 0.x), or perhaps the program "
-                "\"%1\" is not from Graphviz at all.").arg(graphvizExec);
-#endif
-        } else if (gvStatus == GraphvizStatus::version1NotDot)
-            error = tr("Your Graphviz seems to be very old (version 1.x).  "
-                "Many tools in older versions of Graphviz cannot handle "
-                "multiple edges, including the tool <i>neato</i> which "
-                "Regina normally uses by default.<p>"
-                "For this reason, you will need to change your Graphviz "
-                "executable to <i>dot</i>, which handles multiple edges "
-                "correctly even in this old version.");
-
-        showError(header + error + footer);
-        return;
-    }
-
-    QTemporaryFile tmpDot(QString("%1/XXXXXX.dot").arg(QDir::tempPath()));
-    if (! tmpDot.open()) {
-        showError(tr("<qt>The temporary DOT file <i>%1</i> "
-            "could not be created.</qt>").arg(tmpDot.fileName()));
-        return;
-    }
-    tmpDot.close();
-
-    std::ofstream outDot(
-        static_cast<const char*>(QFile::encodeName(tmpDot.fileName())));
-    if (! outDot) {
-        showError(tr("<qt>The temporary DOT file <i>%1</i> "
-            "could not be opened for writing.</qt>").arg(tmpDot.fileName()));
-        return;
-    }
-
-    regina::NFacePairing* pairing = new regina::NFacePairing(*tri);
-    pairing->writeDot(outDot, 0 /* prefix */, false /* subgraphs */,
-        graphvizLabels);
-    outDot.close();
-    delete pairing;
-
-    QTemporaryFile tmpPng(QString("%1/XXXXXX.png").arg(QDir::tempPath()));;
-    if (! tmpPng.open()) {
-        showError(tr("<qt>The temporary PNG file <i>%1</i> "
-            "could not be created.</qt>").arg(tmpPng.fileName()));
-        return;
-    }
-    tmpPng.close();
-
-    QProcess graphviz;
-    QStringList args;
-    args << "-Tpng" << "-Gsize=2.5,4" << "-o" << tmpPng.fileName() 
-        << tmpDot.fileName();
-    graphviz.start(useExec,args);
-    graphviz.waitForFinished();
-    if ( graphviz.exitStatus() != QProcess::NormalExit) {
-        if ( graphviz.error() == QProcess::FailedToStart ) {
-            showError(tr("<qt>The Graphviz executable <i>%1</i> "
-                "could not be started.</qt>").arg(useExec));
-            return;
-        }
-        showError(tr("<qt>The Graphviz executable <i>%1</i> "
-            "did not exit normally, and may have encountered an "
-            "internal error.  It finished with exit status %2.</qt>")
-            .arg(useExec).arg(graphviz.exitCode()));
-        return;
-    }
-
-    QPixmap png(tmpPng.fileName());
-    if (png.isNull()) {
-        showError(tr("<qt>The PNG graphic created by Graphviz "
-            "could not be loaded.<p>The Graphviz executable used "
-            "was <i>%1</i>.  If this is not correct, please change it "
-            "in the Regina configuration (<i>Tools</i> section).</qt>").
-            arg(useExec));
-        return;
-    }
-
-    graph->setPixmap(png);
-    graph->resize(graph->sizeHint());
-
-    stack->setCurrentWidget(layerGraph);
-}
-
-void NTriFaceGraphUI::editingElsewhere() {
-    showInfo(tr("<qt>Editing...</qt>"));
-}
-
-void NTriFaceGraphUI::showInfo(const QString& msg) {
-    layerInfo->setText(msg);
-    stack->setCurrentWidget(layerInfo);
-}
-
-void NTriFaceGraphUI::showError(const QString& msg) {
-    layerError->setText(msg);
-    stack->setCurrentWidget(layerError);
-}
-#endif
 
