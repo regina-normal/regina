@@ -53,7 +53,7 @@ using regina::Dim2Triangulation;
 
 Dim2TriangulationUI::Dim2TriangulationUI(regina::Dim2Triangulation* packet,
         PacketPane* newEnclosingPane) :
-        PacketTabbedUI(newEnclosingPane) {
+        PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabDim2Tri) {
     Dim2TriHeaderUI* header = new Dim2TriHeaderUI(packet, this);
     gluings = new Dim2TriGluingsUI(packet, this,
         newEnclosingPane->isReadWrite());
@@ -61,19 +61,9 @@ Dim2TriangulationUI::Dim2TriangulationUI(regina::Dim2Triangulation* packet,
 
     gluings->fillToolBar(header->getToolBar());
 
-    // WARNING: If these tabs are reordered, the code below that sets
-    // the default tab must be updated accordingly.
     addHeader(header);
     addTab(gluings, QObject::tr("&Gluings"));
     addTab(skeleton, QObject::tr("&Skeleton"));
-
-    // Select the default tab.
-    switch (ReginaPrefSet::global().dim2InitialTab) {
-        case ReginaPrefSet::Dim2Gluings:
-            /* already visible */ break;
-        case ReginaPrefSet::Dim2Skeleton:
-            setCurrentTab(1); break;
-    }
 
     editIface = new PacketEditTabbedUI(this);
 }

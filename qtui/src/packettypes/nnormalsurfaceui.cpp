@@ -55,7 +55,8 @@ using regina::NNormalSurface;
 
 NNormalSurfaceUI::NNormalSurfaceUI(regina::NNormalSurfaceList* packet,
         PacketPane* newEnclosingPane) :
-        PacketTabbedUI(newEnclosingPane) {
+        PacketTabbedUI(newEnclosingPane,
+            ReginaPrefSet::global().tabSurfaceList) {
     NSurfaceHeaderUI* header = new NSurfaceHeaderUI(packet, this);
     addHeader(header);
 
@@ -71,18 +72,6 @@ NNormalSurfaceUI::NNormalSurfaceUI(regina::NNormalSurfaceList* packet,
 
     compat = new NSurfaceCompatibilityUI(packet, this);
     addTab(compat, tr("Com&patibility"));
-
-    // Select the default tab.
-    switch(ReginaPrefSet::global().surfacesInitialTab) {
-        case ReginaPrefSet::Summary:
-            /* already visible */ break;
-        case ReginaPrefSet::Coordinates:
-            setCurrentTab(1); break;
-        case ReginaPrefSet::Matching:
-            setCurrentTab(2); break;
-        case ReginaPrefSet::Compatibility:
-            setCurrentTab(3); break;
-    }
 }
 
 const QLinkedList<QAction*>& NNormalSurfaceUI::getPacketTypeActions() {

@@ -53,17 +53,11 @@ using regina::NTriangulation;
 
 NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
         PacketTabbedUI* useParentUI) :
-        PacketTabbedViewerTab(useParentUI) {
+        PacketTabbedViewerTab(useParentUI,
+            ReginaPrefSet::global().tabDim3TriSkeleton) {
     addTab(new NTriSkelCompUI(packet, this), tr("&Skeletal Components"));
     addTab(new FacetGraphTab(new Dim3FaceGraphData(packet), this),
         tr("&Face Pairing Graph"));
-
-    switch (ReginaPrefSet::global().triInitialSkeletonTab) {
-        case ReginaPrefSet::SkelComp:
-            /* already visible */ break;
-        case ReginaPrefSet::FacePairingGraph:
-            setCurrentTab(1); break;
-    }
 }
 
 NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,

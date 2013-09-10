@@ -59,7 +59,7 @@ using regina::NTriangulation;
 
 NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
         PacketPane* newEnclosingPane) :
-        PacketTabbedUI(newEnclosingPane) {
+        PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabDim3Tri) {
     NTriHeaderUI* header = new NTriHeaderUI(packet, this);
     gluings = new NTriGluingsUI(packet, this, newEnclosingPane->isReadWrite());
     skeleton = new NTriSkeletonUI(packet, this);
@@ -73,8 +73,6 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
 
     gluings->fillToolBar(header->getToolBar());
 
-    // WARNING: If these tabs are reordered, the code below that sets
-    // the default tab must be updated accordingly.
     addHeader(header);
     addTab(gluings, QObject::tr("&Gluings"));
     addTab(skeleton, QObject::tr("&Skeleton"));
@@ -84,24 +82,6 @@ NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
 #ifndef EXCLUDE_SNAPPEA
     addTab(snapPea, QObject::tr("Snap&Pea"));
 #endif
-
-    // Select the default tab.
-    switch (ReginaPrefSet::global().triInitialTab) {
-        case ReginaPrefSet::Gluings:
-            /* already visible */ break;
-        case ReginaPrefSet::Skeleton:
-            setCurrentTab(1); break;
-        case ReginaPrefSet::Algebra:
-            setCurrentTab(2); break;
-        case ReginaPrefSet::Composition:
-            setCurrentTab(3); break;
-        case ReginaPrefSet::Surfaces:
-            setCurrentTab(4); break;
-#ifndef EXCLUDE_SNAPPEA
-        case ReginaPrefSet::SnapPea:
-            setCurrentTab(5); break;
-#endif
-    }
 
     editIface = new PacketEditTabbedUI(this);
 }

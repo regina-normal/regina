@@ -189,58 +189,12 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     triPrefs->cbGraphvizLabels->setChecked(prefSet.triGraphvizLabels);
 
-    switch (prefSet.triInitialTab) {
-        case ReginaPrefSet::Skeleton:
-            triPrefs->comboInitialTab->setCurrentIndex(1); break;
-        case ReginaPrefSet::Algebra:
-            triPrefs->comboInitialTab->setCurrentIndex(2); break;
-        case ReginaPrefSet::Composition:
-            triPrefs->comboInitialTab->setCurrentIndex(3); break;
-        case ReginaPrefSet::Surfaces:
-            triPrefs->comboInitialTab->setCurrentIndex(4); break;
-#ifndef EXCLUDE_SNAPPEA
-        case ReginaPrefSet::SnapPea:
-            triPrefs->comboInitialTab->setCurrentIndex(5); break;
-#endif
-        default:
-            triPrefs->comboInitialTab->setCurrentIndex(0); break;
-    }
-
-    switch (prefSet.triInitialSkeletonTab) {
-        case ReginaPrefSet::FacePairingGraph:
-            triPrefs->comboInitialSkeletonTab->setCurrentIndex(1); break;
-        default:
-            triPrefs->comboInitialSkeletonTab->setCurrentIndex(0); break;
-    }
-
-    switch (prefSet.triInitialAlgebraTab) {
-        case ReginaPrefSet::FundGroup:
-            triPrefs->comboInitialAlgebraTab->setCurrentIndex(1); break;
-        case ReginaPrefSet::TuraevViro:
-            triPrefs->comboInitialAlgebraTab->setCurrentIndex(2); break;
-        case ReginaPrefSet::CellularInfo:
-            triPrefs->comboInitialAlgebraTab->setCurrentIndex(3); break;
-        default:
-            triPrefs->comboInitialAlgebraTab->setCurrentIndex(0); break;
-    }
-
     triPrefs->editSurfacePropsThreshold->setText(
         QString::number(prefSet.triSurfacePropsThreshold));
 
     surfacePrefs->chooserCreationCoords->setCurrentSystem(
         prefSet.surfacesCreationCoords);
     surfacePrefs->cbWarnOnNonEmbedded->setChecked(prefSet.warnOnNonEmbedded);
-
-    switch (prefSet.surfacesInitialTab) {
-        case ReginaPrefSet::Coordinates:
-            surfacePrefs->comboInitialTab->setCurrentIndex(1); break;
-        case ReginaPrefSet::Matching:
-            surfacePrefs->comboInitialTab->setCurrentIndex(2); break;
-        case ReginaPrefSet::Compatibility:
-            surfacePrefs->comboInitialTab->setCurrentIndex(3); break;
-        default:
-            surfacePrefs->comboInitialTab->setCurrentIndex(0); break;
-    }
 
     switch (prefSet.surfacesInitialCompat) {
         case ReginaPrefSet::GlobalCompat:
@@ -343,40 +297,6 @@ void ReginaPreferences::slotApply() {
 
     prefSet.triGraphvizLabels = triPrefs->cbGraphvizLabels->isChecked();
 
-    switch (triPrefs->comboInitialTab->currentIndex()) {
-        case 1:
-            prefSet.triInitialTab = ReginaPrefSet::Skeleton; break;
-        case 2:
-            prefSet.triInitialTab = ReginaPrefSet::Algebra; break;
-        case 3:
-            prefSet.triInitialTab = ReginaPrefSet::Composition; break;
-        case 4:
-            prefSet.triInitialTab = ReginaPrefSet::Surfaces; break;
-        case 5:
-            prefSet.triInitialTab = ReginaPrefSet::SnapPea; break;
-        default:
-            prefSet.triInitialTab = ReginaPrefSet::Gluings; break;
-    }
-
-    switch (triPrefs->comboInitialSkeletonTab->currentIndex()) {
-        case 1:
-            prefSet.triInitialSkeletonTab =
-                ReginaPrefSet::FacePairingGraph; break;
-        default:
-            prefSet.triInitialSkeletonTab = ReginaPrefSet::SkelComp; break;
-    }
-
-    switch (triPrefs->comboInitialAlgebraTab->currentIndex()) {
-        case 1:
-            prefSet.triInitialAlgebraTab = ReginaPrefSet::FundGroup; break;
-        case 2:
-            prefSet.triInitialAlgebraTab = ReginaPrefSet::TuraevViro; break;
-        case 3:
-            prefSet.triInitialAlgebraTab = ReginaPrefSet::CellularInfo; break;
-        default:
-            prefSet.triInitialAlgebraTab = ReginaPrefSet::Homology; break;
-    }
-
     uintVal = triPrefs->editSurfacePropsThreshold->text().toUInt(&ok);
     if (ok)
         prefSet.triSurfacePropsThreshold = uintVal;
@@ -410,17 +330,6 @@ void ReginaPreferences::slotApply() {
         prefSet.warnOnNonEmbedded = true;
     else
         prefSet.warnOnNonEmbedded = false;
-
-    switch (surfacePrefs->comboInitialTab->currentIndex()) {
-        case 1:
-            prefSet.surfacesInitialTab = ReginaPrefSet::Coordinates; break;
-        case 2:
-            prefSet.surfacesInitialTab = ReginaPrefSet::Matching; break;
-        case 3:
-            prefSet.surfacesInitialTab = ReginaPrefSet::Compatibility; break;
-        default:
-            prefSet.surfacesInitialTab = ReginaPrefSet::Summary; break;
-    }
 
     switch (surfacePrefs->comboInitialCompat->currentIndex()) {
         case 1:
@@ -774,66 +683,10 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
 ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QWidget(parent) {
     QBoxLayout* layout = new QVBoxLayout(this);
 
-    // WARNING: Note that any change of order in the combo boxes must be
-    // reflected in the ReginaPreferences methods as well.
-
-    // Set up the initial tab.
+    // Set up the surface properties threshold.
     QBoxLayout* box = new QHBoxLayout();
 
-    QLabel* label = new QLabel(tr("Default top-level tab:"));
-    box->addWidget(label);
-    comboInitialTab = new QComboBox();
-    comboInitialTab->addItem(tr("Gluings"));
-    comboInitialTab->addItem(tr("Skeleton"));
-    comboInitialTab->addItem(tr("Algebra"));
-    comboInitialTab->addItem(tr("Composition"));
-    comboInitialTab->addItem(tr("Surfaces"));
-#ifndef EXCLUDE_SNAPPEA
-    comboInitialTab->addItem(tr("SnapPea"));
-#endif
-    box->addWidget(comboInitialTab);
-    QString msg = tr("Specifies which tab should be initially visible "
-        "when a new triangulation viewer/editor is opened.");
-    label->setWhatsThis(msg);
-    comboInitialTab->setWhatsThis(msg);
-    layout->addLayout(box);
-
-    // Set up the initial skeleton tab.
-    box = new QHBoxLayout();
-
-    label = new QLabel(tr("Default skeleton tab:"));
-    box->addWidget(label);
-    comboInitialSkeletonTab = new QComboBox();
-    comboInitialSkeletonTab->addItem(tr("Skeletal Components"));
-    comboInitialSkeletonTab->addItem(tr("Face Pairing Graph"));
-    box->addWidget(comboInitialSkeletonTab);
-    msg = tr("Specifies which tab should be initially visible "
-        "when a new triangulation skeleton viewer is opened.");
-    label->setWhatsThis(msg);
-    comboInitialSkeletonTab->setWhatsThis(msg);
-    layout->addLayout(box);
-
-    // Set up the initial algebra tab.
-    box = new QHBoxLayout();
-
-    label = new QLabel(tr("Default algebra tab:"));
-    box->addWidget(label);
-    comboInitialAlgebraTab = new QComboBox();
-    comboInitialAlgebraTab->addItem(tr("Homology"));
-    comboInitialAlgebraTab->addItem(tr("Fundamental Group"));
-    comboInitialAlgebraTab->addItem(tr("Turaev-Viro"));
-    comboInitialAlgebraTab->addItem(tr("Cellular Info"));
-    box->addWidget(comboInitialAlgebraTab);
-    msg = tr("Specifies which tab should be initially visible "
-        "when a new triangulation algebra viewer is opened.");
-    label->setWhatsThis(msg);
-    comboInitialAlgebraTab->setWhatsThis(msg);
-    layout->addLayout(box);
-
-    // Set up the surface properties threshold.
-    box = new QHBoxLayout();
-
-    label = new QLabel(tr("Surface calculation threshold:"));
+    QLabel* label = new QLabel(tr("Surface calculation threshold:"));
     box->addWidget(label);
     editSurfacePropsThreshold = new QLineEdit();
     editSurfacePropsThreshold->setMaxLength(
@@ -841,7 +694,7 @@ ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QWidget(parent) {
     editSurfacePropsThreshold->setValidator(new QIntValidator(0,
          999 /* ridiculously high */, this));
     box->addWidget(editSurfacePropsThreshold);
-    msg = tr("The maximum number of tetrahedra for which normal "
+    QString msg = tr("The maximum number of tetrahedra for which normal "
         "surface properties will be calculated automatically.");
     label->setWhatsThis(msg);
     editSurfacePropsThreshold->setWhatsThis(msg);
@@ -876,23 +729,6 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QWidget(parent) {
         "surface lists.");
     label->setWhatsThis(msg);
     chooserCreationCoords->setWhatsThis(msg);
-    layout->addLayout(box);
-
-    // Set up the initial tab.
-    box = new QHBoxLayout();
-
-    label = new QLabel(tr("Default top-level tab:"));
-    box->addWidget(label);
-    comboInitialTab = new QComboBox();
-    comboInitialTab->addItem(tr("Summary"));
-    comboInitialTab->addItem(tr("Surface Coordinates"));
-    comboInitialTab->addItem(tr("Matching Equations"));
-    comboInitialTab->addItem(tr("Compatibility"));
-    box->addWidget(comboInitialTab);
-    msg = tr("Specifies which tab should be initially visible "
-        "when a new normal surface list viewer is opened.");
-    label->setWhatsThis(msg);
-    comboInitialTab->setWhatsThis(msg);
     layout->addLayout(box);
 
     // Set up the initial compatibility matrix.

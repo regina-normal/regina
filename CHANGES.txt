@@ -404,6 +404,11 @@ Version 4.94  [ (under development) ]
             - Removed, after being deprecated for a very long time now.
         Header nlargeinteger.h:
             - Deprecated in favour of the new ninteger.h.
+    USER INTERFACE:
+        In addition to incorporating the new mathematical changes above:
+            - Simplified preferences.  Some of the old preferences are
+              gone, and instead Regina simply remembers your last
+              selection (e.g., default tabs for various viewers).
     UTILITIES:
         regconvert:
             - The option -b (for old-style binary files) is no longer supported.

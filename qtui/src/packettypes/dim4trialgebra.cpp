@@ -70,24 +70,13 @@ using regina::NSVPolynomialRing;
 
 Dim4TriAlgebraUI::Dim4TriAlgebraUI(regina::Dim4Triangulation* packet,
         PacketTabbedUI* useParentUI) :
-        PacketTabbedViewerTab(useParentUI) {
+        PacketTabbedViewerTab(useParentUI,
+            ReginaPrefSet::global().tabDim4TriAlgebra) {
     fundGroup = new Dim4TriFundGroupUI(packet, this);
 
     addTab(new Dim4TriHomologyUI(packet, this), tr("&Homology"));
     addTab(fundGroup, tr("&Fund. Group"));
     addTab(new Dim4TriCellularInfoUI(packet, this), tr("&Cellular Info"));
-
-    switch (ReginaPrefSet::global().triInitialAlgebraTab) {
-        case ReginaPrefSet::Homology:
-            /* already visible */ break;
-        case ReginaPrefSet::FundGroup:
-            setCurrentTab(1); break;
-        case ReginaPrefSet::CellularInfo:
-            setCurrentTab(2); break;
-        default:
-            // Some 3-manifold tabs do not exist for 4-manifolds.
-            break;
-    }
 }
 
 Dim4TriHomologyUI::Dim4TriHomologyUI(regina::Dim4Triangulation* packet,

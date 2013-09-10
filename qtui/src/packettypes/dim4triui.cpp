@@ -52,7 +52,7 @@ using regina::Dim4Triangulation;
 
 Dim4TriangulationUI::Dim4TriangulationUI(regina::Dim4Triangulation* packet,
         PacketPane* newEnclosingPane) :
-        PacketTabbedUI(newEnclosingPane) {
+        PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabDim4Tri) {
     Dim4TriHeaderUI* header = new Dim4TriHeaderUI(packet, this);
     gluings = new Dim4TriGluingsUI(packet, this,
         newEnclosingPane->isReadWrite());
@@ -61,22 +61,10 @@ Dim4TriangulationUI::Dim4TriangulationUI(regina::Dim4Triangulation* packet,
 
     gluings->fillToolBar(header->getToolBar());
 
-    // WARNING: If these tabs are reordered, the code below that sets
-    // the default tab must be updated accordingly.
     addHeader(header);
     addTab(gluings, QObject::tr("&Gluings"));
     // TODO addTab(skeleton, QObject::tr("&Skeleton"));
     addTab(algebra, QObject::tr("&Algebra"));
-
-    // Select the default tab.
-    switch (ReginaPrefSet::global().dim4InitialTab) {
-        case ReginaPrefSet::Dim4Gluings:
-            /* already visible */ break;
-        case ReginaPrefSet::Dim4Skeleton:
-            setCurrentTab(1); break;
-        case ReginaPrefSet::Dim4Algebra:
-            setCurrentTab(2); break;
-    }
 
     editIface = new PacketEditTabbedUI(this);
 }
