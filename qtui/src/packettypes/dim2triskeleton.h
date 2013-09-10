@@ -32,57 +32,56 @@
 
 /* end stub */
 
-/*! \file ntriskeleton.h
- *  \brief Provides a skeletal properties viewer for 3-manifold triangulations.
+/*! \file dim2triskeleton.h
+ *  \brief Provides a skeletal properties viewer for 2-manifold triangulations.
  */
 
-#ifndef __NTRISKELETON_H
-#define __NTRISKELETON_H
+#ifndef __DIM2TRISKELETON_H
+#define __DIM2TRISKELETON_H
 
 #include "packettabui.h"
 #include "skeletonwindow.h"
 
 
 class MessageLayer;
-class NTriFaceGraphUI;
 
 class QScrollArea;
 class QStackedWidget;
 
 namespace regina {
+    class Dim2Triangulation;
     class NPacket;
-    class NTriangulation;
 };
 
 /**
  * A triangulation page for viewing skeletal properties.
  */
-class NTriSkeletonUI : public PacketTabbedViewerTab {
+class Dim2TriSkeletonUI : public PacketTabbedViewerTab {
     private:
         /**
          * Internal components
          */
-        NTriFaceGraphUI* faceGraph;
+        // TODO NTriFaceGraphUI* faceGraph;
 
     public:
         /**
          * Constructor.
          */
-        NTriSkeletonUI(regina::NTriangulation* packet,
+        Dim2TriSkeletonUI(regina::Dim2Triangulation* packet,
                 PacketTabbedUI* useParentUI);
 };
 
 /**
  * A triangulation page for accessing individual skeletal components.
  */
-class NTriSkelCompUI : public QObject, public PacketViewerTab {
+class Dim2TriSkelCompUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
         /**
          * Packet details
          */
-        regina::NTriangulation* tri;
+        regina::Dim2Triangulation* tri;
 
         /**
          * Internal components
@@ -90,8 +89,7 @@ class NTriSkelCompUI : public QObject, public PacketViewerTab {
         QWidget* ui;
         QLabel* nVertices;
         QLabel* nEdges;
-        QLabel* nFaces;
-        QLabel* nTets;
+        QLabel* nTriangles;
         QLabel* nComps;
         QLabel* nBdryComps;
 
@@ -104,7 +102,7 @@ class NTriSkelCompUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        NTriSkelCompUI(regina::NTriangulation* packet,
+        Dim2TriSkelCompUI(regina::Dim2Triangulation* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**
@@ -121,11 +119,11 @@ class NTriSkelCompUI : public QObject, public PacketViewerTab {
          */
         void viewVertices();
         void viewEdges();
-        void viewFaces();
         void viewComponents();
         void viewBoundaryComponents();
 };
 
+#if 0
 /**
  * A triangulation page for viewing the face pairing graph.
  */
@@ -136,7 +134,7 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::NTriangulation* tri;
+        regina::Dim2Triangulation* tri;
 
         /**
          * Internal components
@@ -159,7 +157,7 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        NTriFaceGraphUI(regina::NTriangulation* packet,
+        NTriFaceGraphUI(regina::Dim2Triangulation* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**
@@ -183,5 +181,6 @@ class NTriFaceGraphUI : public QObject, public PacketViewerTab {
         void showInfo(const QString& msg);
         void showError(const QString& msg);
 };
+#endif
 
 #endif

@@ -40,7 +40,7 @@
 // UI includes:
 #include "dim2triui.h"
 #include "dim2trigluings.h"
-// #include "dim2triskeleton.h" TODO
+#include "dim2triskeleton.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
 
@@ -57,7 +57,7 @@ Dim2TriangulationUI::Dim2TriangulationUI(regina::Dim2Triangulation* packet,
     Dim2TriHeaderUI* header = new Dim2TriHeaderUI(packet, this);
     gluings = new Dim2TriGluingsUI(packet, this,
         newEnclosingPane->isReadWrite());
-    // skeleton = new Dim2TriSkeletonUI(packet, this); TODO
+    skeleton = new Dim2TriSkeletonUI(packet, this);
 
     gluings->fillToolBar(header->getToolBar());
 
@@ -65,7 +65,7 @@ Dim2TriangulationUI::Dim2TriangulationUI(regina::Dim2Triangulation* packet,
     // the default tab must be updated accordingly.
     addHeader(header);
     addTab(gluings, QObject::tr("&Gluings"));
-    // addTab(skeleton, QObject::tr("&Skeleton")); TODO
+    addTab(skeleton, QObject::tr("&Skeleton"));
 
     // Select the default tab.
     switch (ReginaPrefSet::global().dim2InitialTab) {
