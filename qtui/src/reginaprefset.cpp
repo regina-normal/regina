@@ -234,6 +234,7 @@ GraphvizStatus GraphvizStatus::status(const QString& userExec,
 ReginaPrefSet::ReginaPrefSet() :
         fileRecentMax(10),
         dim2InitialTab(Dim2Gluings),
+        dim2InitialSkeletonTab(Dim2SkelComp),
         displayTagsInTree(false),
         fileImportExportCodec("UTF-8"),
         helpIntroOnStartup(true),
@@ -466,6 +467,13 @@ void ReginaPrefSet::readInternal() {
         dim2InitialTab = ReginaPrefSet::Dim2Skeleton;
     else
         dim2InitialTab = ReginaPrefSet::Dim2Gluings; /* default */
+
+    str = settings.value("InitialSkeletonTab").toString();
+    if (str == "Dim2EdgePairingGraph")
+        dim2InitialSkeletonTab = ReginaPrefSet::Dim2EdgePairingGraph;
+    else
+        dim2InitialSkeletonTab = ReginaPrefSet::Dim2SkelComp; /* default */
+
     settings.endGroup();
     
     settings.beginGroup("File");
@@ -607,6 +615,14 @@ void ReginaPrefSet::saveInternal() const {
             settings.setValue("InitialTab", "Dim2Skeleton"); break;
         default:
             settings.setValue("InitialTab", "Dim2Gluings"); break;
+    }
+
+    switch (dim2InitialSkeletonTab) {
+        case ReginaPrefSet::Dim2EdgePairingGraph:
+            settings.setValue("InitialSkeletonTab", "Dim2EdgePairingGraph");
+                break;
+        default:
+            settings.setValue("InitialSkeletonTab", "Dim2SkelComp"); break;
     }
     settings.endGroup();
 

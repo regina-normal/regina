@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,18 +32,18 @@
 
 /* end stub */
 
-/*! \file dim2triskeleton.h
- *  \brief Provides a skeletal properties viewer for 2-manifold triangulations.
+/*! \file facetgraphtab.h
+ *  \brief Provides a tab for viewing the facet pairing graph of
+ *  triangulations of arbitrary dimension.
  */
 
-#ifndef __DIM2TRISKELETON_H
-#define __DIM2TRISKELETON_H
+#ifndef __FACETGRAPHTAB_H
+#define __FACETGRAPHTAB_H
 
 #include "packettabui.h"
 #include "skeletonwindow.h"
 
 
-class FacetGraphTab;
 class MessageLayer;
 
 class QScrollArea;
@@ -52,53 +52,91 @@ class QStackedWidget;
 namespace regina {
     class Dim2Triangulation;
     class NPacket;
+    class NTriangulation;
 };
 
 /**
- * A triangulation page for viewing skeletal properties.
+ * Contains dimension-specific information for viewing a facet pairing
+ * graph.  Each dimension requires its own separate subclass.
  */
-class Dim2TriSkeletonUI : public PacketTabbedViewerTab {
+class FacetGraphData {
     public:
-        /**
-         * Constructor.
-         */
-        Dim2TriSkeletonUI(regina::Dim2Triangulation* packet,
-                PacketTabbedUI* useParentUI);
+        virtual ~FacetGraphData() {}
+
+        virtual regina::NPacket* getPacket() = 0;
+        virtual void writeDot(std::ostream& out, bool withLabels) = 0;
+        virtual unsigned long numberOfSimplices() = 0;
+        virtual QString simplicesName() = 0;
+        virtual QString overview() = 0;
+};
+
+class Dim2EdgeGraphData : public FacetGraphData {
+    private:
+        regina::Dim2Triangulation* tri_;
+
+    public:
+        Dim2EdgeGraphData(regina::Dim2Triangulation* tri) : tri_(tri) {}
+
+        regina::NPacket* getPacket();
+        void writeDot(std::ostream& out, bool withLabels);
+        unsigned long numberOfSimplices();
+        QString simplicesName();
+        QString overview();
+};
+
+class Dim3FaceGraphData : public FacetGraphData {
+    private:
+        regina::NTriangulation* tri_;
+
+    public:
+        Dim3FaceGraphData(regina::NTriangulation* tri) : tri_(tri) {}
+
+        regina::NPacket* getPacket();
+        void writeDot(std::ostream& out, bool withLabels);
+        unsigned long numberOfSimplices();
+        QString simplicesName();
+        QString overview();
 };
 
 /**
- * A triangulation page for accessing individual skeletal components.
+ * A packet viewer tab for viewing the face pairing graph.
+ * This can work with triangulations of arbitrary dimension, as long as
+ * an appropriate subclass of FacetGraphData is defined.
  */
-class Dim2TriSkelCompUI : public QObject, public PacketViewerTab {
+class FacetGraphTab : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
         /**
-         * Packet details
+         * Packet and graphing details
          */
-        regina::Dim2Triangulation* tri;
+        FacetGraphData* data;
 
         /**
          * Internal components
          */
         QWidget* ui;
-        QLabel* nVertices;
-        QLabel* nEdges;
-        QLabel* nTriangles;
-        QLabel* nComps;
-        QLabel* nBdryComps;
+        QStackedWidget* stack;
+        QScrollArea* layerGraph;
+        MessageLayer* layerInfo;
+        MessageLayer* layerError;
+        QLabel* graph;
+        bool neverDrawn;
 
         /**
-         * Skeleton viewers
+         * Graphviz options.
          */
-        QLinkedList<SkeletonWindow*> viewers;
+        QString graphvizExec;
+        bool graphvizLabels;
 
     public:
         /**
          * Constructor and destructor.
+         * This object will take ownership of \a useData.
          */
-        Dim2TriSkelCompUI(regina::Dim2Triangulation* packet,
+        FacetGraphTab(FacetGraphData* useData,
                 PacketTabbedViewerTab* useParentUI);
+        ~FacetGraphTab();
 
         /**
          * PacketViewerTab overrides.
@@ -110,12 +148,20 @@ class Dim2TriSkelCompUI : public QObject, public PacketViewerTab {
 
     public slots:
         /**
-         * Open skeleton windows.
+         * Reflect preference changes.
          */
-        void viewVertices();
-        void viewEdges();
-        void viewComponents();
-        void viewBoundaryComponents();
+        void updatePreferences();
+
+    private:
+        /**
+         * Set up internal components.
+         */
+        void showInfo(const QString& msg);
+        void showError(const QString& msg);
 };
+
+inline FacetGraphTab::~FacetGraphTab() {
+    delete data;
+}
 
 #endif

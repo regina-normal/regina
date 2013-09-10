@@ -345,6 +345,9 @@ class ReginaPrefSet : public QObject {
             { Dim2Gluings, Dim2Skeleton };
             /**< Available top-level tabs in a 2-manifold triangulation
                  viewer/editor. */
+        enum Dim2SkeletonTab { Dim2SkelComp, Dim2EdgePairingGraph };
+            /**< Available tabs in a 2-manifold triangulation
+                 skeleton viewer. */
         enum TriTab
             { Gluings, Skeleton, Algebra, Composition, Surfaces, SnapPea };
             /**< Available top-level tabs in a 3-manifold triangulation
@@ -365,6 +368,9 @@ class ReginaPrefSet : public QObject {
         Dim2Tab dim2InitialTab;
             /**< The initially visible top-level tab for a new 2-manifold
                  triangulation viewer/editor. */
+        Dim2SkeletonTab dim2InitialSkeletonTab;
+            /**< The initially visible tab for a new 2-manifold triangulation
+                 skeleton viewer. */
         bool displayTagsInTree;
             /**< Should we display packet tags in the visual tree? */
         QByteArray fileImportExportCodec;
