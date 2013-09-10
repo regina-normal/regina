@@ -32,25 +32,49 @@
 
 /* end stub */
 
-void addDim2BoundaryComponent();
-void addDim2Component();
-void addDim2Edge();
-void addDim2ExampleTriangulation();
-void addDim2Isomorphism();
-void addDim2Triangle();
-void addDim2TriangleEdge();
-void addDim2Triangulation();
-void addDim2Vertex();
+#include <boost/python.hpp>
+#include "dim2/dim2exampletriangulation.h"
+#include "dim2/dim2triangulation.h"
 
-void addDim2() {
-    addDim2BoundaryComponent();
-    addDim2Component();
-    addDim2Edge();
-    addDim2ExampleTriangulation();
-    addDim2Isomorphism();
-    addDim2Triangle();
-    addDim2TriangleEdge();
-    addDim2Triangulation();
-    addDim2Vertex();
+using namespace boost::python;
+using regina::Dim2ExampleTriangulation;
+using regina::Dim2Triangulation;
+
+void addDim2ExampleTriangulation() {
+    class_<Dim2ExampleTriangulation>("Dim2ExampleTriangulation", no_init)
+        .def("orientable", &Dim2ExampleTriangulation::orientable,
+            return_value_policy<manage_new_object>())
+        .def("nonOrientable", &Dim2ExampleTriangulation::nonOrientable,
+            return_value_policy<manage_new_object>())
+        .def("sphere", &Dim2ExampleTriangulation::sphere,
+            return_value_policy<manage_new_object>())
+        .def("sphereTetrahedron", &Dim2ExampleTriangulation::sphereTetrahedron,
+            return_value_policy<manage_new_object>())
+        .def("sphereOctahedron", &Dim2ExampleTriangulation::sphereOctahedron,
+            return_value_policy<manage_new_object>())
+        .def("disc", &Dim2ExampleTriangulation::disc,
+            return_value_policy<manage_new_object>())
+        .def("annulus", &Dim2ExampleTriangulation::annulus,
+            return_value_policy<manage_new_object>())
+        .def("mobius", &Dim2ExampleTriangulation::mobius,
+            return_value_policy<manage_new_object>())
+        .def("torus", &Dim2ExampleTriangulation::torus,
+            return_value_policy<manage_new_object>())
+        .def("rp2", &Dim2ExampleTriangulation::rp2,
+            return_value_policy<manage_new_object>())
+        .def("kb", &Dim2ExampleTriangulation::kb,
+            return_value_policy<manage_new_object>())
+        .staticmethod("orientable")
+        .staticmethod("nonOrientable")
+        .staticmethod("sphere")
+        .staticmethod("sphereTetrahedron")
+        .staticmethod("sphereOctahedron")
+        .staticmethod("disc")
+        .staticmethod("annulus")
+        .staticmethod("mobius")
+        .staticmethod("torus")
+        .staticmethod("rp2")
+        .staticmethod("kb")
+    ;
 }
 
