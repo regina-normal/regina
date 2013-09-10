@@ -44,18 +44,9 @@
 #include "reginasupport.h"
 #include "../messagelayer.h"
 
-#include <fstream>
-#include <QDir>
-#include <QFile>
-#include <QFileInfo>
 #include <QLabel>
 #include <QLayout>
-#include <QProcess>
 #include <QPushButton>
-#include <QScrollArea>
-#include <QSysInfo>
-#include <QStackedWidget>
-#include <QTemporaryFile>
 
 using regina::Dim2Triangulation;
 using regina::NPacket;

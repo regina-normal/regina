@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -42,13 +42,6 @@
 #include "packettabui.h"
 #include "skeletonwindow.h"
 
-
-class MessageLayer;
-class NTriFaceGraphUI;
-
-class QScrollArea;
-class QStackedWidget;
-
 namespace regina {
     class NPacket;
     class NTriangulation;
@@ -58,12 +51,6 @@ namespace regina {
  * A triangulation page for viewing skeletal properties.
  */
 class NTriSkeletonUI : public PacketTabbedViewerTab {
-    private:
-        /**
-         * Internal components
-         */
-        NTriFaceGraphUI* faceGraph;
-
     public:
         /**
          * Constructor.
@@ -124,64 +111,6 @@ class NTriSkelCompUI : public QObject, public PacketViewerTab {
         void viewFaces();
         void viewComponents();
         void viewBoundaryComponents();
-};
-
-/**
- * A triangulation page for viewing the face pairing graph.
- */
-class NTriFaceGraphUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
-    private:
-        /**
-         * Packet details
-         */
-        regina::NTriangulation* tri;
-
-        /**
-         * Internal components
-         */
-        QWidget* ui;
-        QStackedWidget* stack;
-        QScrollArea* layerGraph;
-        MessageLayer* layerInfo;
-        MessageLayer* layerError;
-        QLabel* graph;
-        bool neverDrawn;
-
-        /**
-         * Graphviz options.
-         */
-        QString graphvizExec;
-        bool graphvizLabels;
-
-    public:
-        /**
-         * Constructor and destructor.
-         */
-        NTriFaceGraphUI(regina::NTriangulation* packet,
-                PacketTabbedViewerTab* useParentUI);
-
-        /**
-         * PacketViewerTab overrides.
-         */
-        regina::NPacket* getPacket();
-        QWidget* getInterface();
-        void refresh();
-        void editingElsewhere();
-
-    public slots:
-        /**
-         * Reflect preference changes.
-         */
-        void updatePreferences();
-
-    private:
-        /**
-         * Set up internal components.
-         */
-        void showInfo(const QString& msg);
-        void showError(const QString& msg);
 };
 
 #endif

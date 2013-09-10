@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -41,13 +41,6 @@
 
 #include "packettabui.h"
 #include "skeletonwindow.h"
-
-
-class FacetGraphTab;
-class MessageLayer;
-
-class QScrollArea;
-class QStackedWidget;
 
 namespace regina {
     class Dim2Triangulation;
