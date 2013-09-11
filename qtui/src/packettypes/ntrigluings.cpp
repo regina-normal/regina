@@ -33,6 +33,7 @@
 /* end stub */
 
 // Regina core includes:
+#include "dim2/dim2triangulation.h"
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
@@ -46,6 +47,8 @@
 #include "patiencedialog.h"
 #include "reginamain.h"
 #include "reginasupport.h"
+#include "choosers/boundarycomponentchooser.h"
+#include "choosers/vertexchooser.h"
 
 #include <memory>
 #include <QAction>
@@ -706,6 +709,38 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     sep->setSeparator(true);
     triActionList.append(sep);
 
+    actBoundaryComponents = new QAction(this);
+    actBoundaryComponents->setText(tr("Boundar&y Components"));
+    actBoundaryComponents->setToolTip(tr(
+        "Build a 2-manifold triangulation from a boundary component"));
+    actBoundaryComponents->setWhatsThis(tr("<qt>Build a 2-manifold "
+        "triangulation from a boundary component of this triangulation.<p>"
+        "If you select a real boundary component, this will construct "
+        "a 2-manifold triangulation from its boundary faces.  "
+        "If you select an ideal boundary component, this will construct "
+        "a 2-manifold triangulation from the corresponding vertex link.</qt>"));
+    triActionList.append(actBoundaryComponents);
+    connect(actBoundaryComponents, SIGNAL(triggered()), this,
+        SLOT(boundaryComponents()));
+
+    QAction* actVertexLinks = new QAction(this);
+    actVertexLinks->setText(tr("&Vertex Links"));
+    actVertexLinks->setToolTip(tr(
+        "Build a 2-manifold triangulation from a vertex link"));
+    actVertexLinks->setWhatsThis(tr("<qt>Build a 2-manifold triangulation "
+        "from the link of a vertex of this triangulation.<p>"
+        "If <i>V</i> is a vertex, then the <i>link</i> of <i>V</i> is the "
+        "frontier of a small regular neighbourhood of <i>V</i>.  "
+        "The triangles that make up this link sit inside "
+        "the tetrahedron corners that meet together at <i>V</i>.</qt>"));
+    triActionList.append(actVertexLinks);
+    connect(actVertexLinks, SIGNAL(triggered()), this,
+        SLOT(vertexLinks()));
+
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.append(sep);
+
     QAction* actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
     actSplitIntoComponents->setToolTip(tr(
@@ -802,12 +837,13 @@ QWidget* NTriGluingsUI::getInterface() {
 
 void NTriGluingsUI::commit() {
     model->commitData(tri);
+    updateActionStates();
     setDirty(false);
 }
 
 void NTriGluingsUI::refresh() {
     model->refreshData(tri);
-    updateOrientState();
+    updateActionStates();
     setDirty(false);
 }
 
@@ -827,7 +863,7 @@ void NTriGluingsUI::setReadWrite(bool readWrite) {
         (it.next())->setEnabled(readWrite);
 
     updateRemoveState();
-    updateOrientState();
+    updateActionStates();
 }
 
 void NTriGluingsUI::addTet() {
@@ -959,6 +995,66 @@ void NTriGluingsUI::doubleCover() {
         return;
 
     tri->makeDoubleCover();
+}
+
+void NTriGluingsUI::boundaryComponents() {
+    // We assume the part hasn't become read-only, even though the
+    // packet might have changed its editable property.
+    if (! enclosingPane->tryCommit())
+        return;
+
+    if (tri->getBoundaryComponents().empty())
+        ReginaSupport::sorry(ui,
+            tr("This triangulation does not have any boundary components."));
+    else {
+        regina::NBoundaryComponent* chosen =
+            BoundaryComponentDialog::choose(ui, tri, 0 /* filter */,
+            tr("Boundary Components"),
+            tr("Please choose a boundary component to triangulate."),
+            tr("<qt>If you select a real boundary component, this will "
+                "construct a 2-manifold triangulation from its boundary "
+                "faces.<p>"
+                "If you select an ideal boundary component, this will "
+                "construct a 2-manifold triangulation from the "
+                "corresponding vertex link.</qt>"));
+        if (chosen) {
+            ReginaSupport::sorry(ui,
+                tr("This feature has yet to be implemented."));
+        }
+    }
+}
+
+void NTriGluingsUI::vertexLinks() {
+    // We assume the part hasn't become read-only, even though the
+    // packet might have changed its editable property.
+    if (! enclosingPane->tryCommit())
+        return;
+
+    if (tri->getVertices().empty())
+        ReginaSupport::sorry(ui,
+            tr("This triangulation does not have any vertices."));
+    else {
+        regina::NVertex* chosen =
+            VertexDialog::choose(ui, tri, 0 /* filter */,
+            tr("Vertex Links"),
+            tr("Please choose a vertex whose link should be triangulated."),
+            tr("<qt>Regina will triangulate the link of whichever "
+                "vertex you choose.<p>"
+                "If <i>V</i> is a vertex, then the <i>link</i> of "
+                "<i>V</i> is the "
+                "frontier of a small regular neighbourhood of <i>V</i>.  "
+                "The triangles that make up this link sit inside "
+                "the tetrahedron corners that meet together at "
+                "<i>V</i>.</qt>"));
+        if (chosen) {
+            regina::Dim2Triangulation* ans = new regina::Dim2Triangulation(
+                *chosen->buildLink());
+            ans->setPacketLabel(tr("Link of vertex %1").arg(
+                tri->vertexIndex(chosen)).toAscii().constData());
+            tri->insertChildLast(ans);
+            enclosingPane->getMainWindow()->ensureVisibleInTree(ans);
+        }
+    }
 }
 
 void NTriGluingsUI::splitIntoComponents() {
@@ -1345,13 +1441,15 @@ void NTriGluingsUI::updateRemoveState() {
         actRemoveTet->setEnabled(false);
 }
 
-void NTriGluingsUI::updateOrientState() {
+void NTriGluingsUI::updateActionStates() {
     if (! model->isReadWrite())
         actOrient->setEnabled(false);
     else if (! tri->isOrientable())
         actOrient->setEnabled(false);
     else
         actOrient->setEnabled(! tri->isOriented());
+
+    actBoundaryComponents->setEnabled(! tri->getBoundaryComponents().empty());
 }
 
 void NTriGluingsUI::notifyDataChanged() {

@@ -32,13 +32,13 @@
 
 /* end stub */
 
-/*! \file boundarycomponentchooser.h
- *  \brief Provides a widget for selecting a single boundary component
+/*! \file vertexchooser.h
+ *  \brief Provides a widget for selecting a single vertex
  *  of a 3-manifold triangulation.
  */
 
-#ifndef __BOUNDARYCOMPONENTCHOOSER_H
-#define __BOUNDARYCOMPONENTCHOOSER_H
+#ifndef __VERTEXCHOOSER_H
+#define __VERTEXCHOOSER_H
 
 #include "packet/npacketlistener.h"
 
@@ -47,36 +47,35 @@
 #include <vector>
 
 namespace regina {
-    class NBoundaryComponent;
+    class NVertex;
     class NTriangulation;
 };
 
 /**
- * A filter function, used to determine whether a given boundary component
+ * A filter function, used to determine whether a given vertex
  * should appear in the list.
  */
-typedef bool (*BoundaryComponentFilterFunc)(regina::NBoundaryComponent*);
+typedef bool (*VertexFilterFunc)(regina::NVertex*);
 
 /**
- * A widget through which a single boundary component of some triangulation
+ * A widget through which a single vertex of some triangulation
  * can be selected.  An optional filter may be applied to restrict the
  * available selections.
  *
  * The contents of this chooser will be updated in real time if the
  * triangulation is externally modified.
  */
-class BoundaryComponentChooser :
-        public QComboBox, public regina::NPacketListener {
+class VertexChooser : public QComboBox, public regina::NPacketListener {
     Q_OBJECT
 
     private:
         regina::NTriangulation* tri_;
-            /**< The triangulation whose boundary components we are
+            /**< The triangulation whose vertices we are
                  choosing from. */
-        BoundaryComponentFilterFunc filter_;
+        VertexFilterFunc filter_;
             /**< A filter to restrict the available selections, or
                  0 if no filter is necessary. */
-        std::vector<regina::NBoundaryComponent*> options_;
+        std::vector<regina::NVertex*> options_;
             /**< A list of the available options to choose from. */
 
     public:
@@ -86,28 +85,28 @@ class BoundaryComponentChooser :
          * This chooser will claim ownership of any filter that is
          * passed.
          */
-        BoundaryComponentChooser(regina::NTriangulation* tri,
-                BoundaryComponentFilterFunc filter, QWidget* parent);
-        ~BoundaryComponentChooser();
+        VertexChooser(regina::NTriangulation* tri,
+                VertexFilterFunc filter, QWidget* parent);
+        ~VertexChooser();
 
         /**
-         * Returns the currently selected boundary component.
+         * Returns the currently selected vertex.
          *
-         * If there are no available boundary components to choose from,
+         * If there are no available vertices to choose from,
          * this routine will return 0.
          */
-        regina::NBoundaryComponent* selected();
+        regina::NVertex* selected();
 
         /**
-         * Changes the selection to the given boundary component.
+         * Changes the selection to the given vertex.
          *
-         * If the given boundary component is not one of the options in this
+         * If the given vertex is not one of the options in this
          * chooser, or if the given pointer is 0, then the first entry
          * in the chooser will be selected.
          *
          * The activated() signal will \e not be emitted.
          */
-        void select(regina::NBoundaryComponent* option);
+        void select(regina::NVertex* option);
 
         /**
          * NPacketListener overrides.
@@ -120,7 +119,7 @@ class BoundaryComponentChooser :
         /**
          * The text to be displayed for a given option.
          */
-        QString description(regina::NBoundaryComponent* option);
+        QString description(regina::NVertex* option);
 
         /**
          * Fills the chooser with the set of allowable options.
@@ -129,46 +128,46 @@ class BoundaryComponentChooser :
 };
 
 /**
- * A dialog used to select a single boundary component of a given triangulation.
+ * A dialog used to select a single vertex of a given triangulation.
  */
-class BoundaryComponentDialog : public QDialog {
+class VertexDialog : public QDialog {
     Q_OBJECT
 
     private:
         /**
          * Internal components:
          */
-        BoundaryComponentChooser* chooser;
+        VertexChooser* chooser;
 
     public:
         /**
          * Constructor and destructor.
          */
-        BoundaryComponentDialog(QWidget* parent,
+        VertexDialog(QWidget* parent,
             regina::NTriangulation* tri,
-            BoundaryComponentFilterFunc filter,
+            VertexFilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
-        static regina::NBoundaryComponent* choose(QWidget* parent,
+        static regina::NVertex* choose(QWidget* parent,
             regina::NTriangulation* tri,
-            BoundaryComponentFilterFunc filter,
+            VertexFilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 };
 
-inline void BoundaryComponentChooser::packetToBeChanged(regina::NPacket*) {
+inline void VertexChooser::packetToBeChanged(regina::NPacket*) {
     clear();
     options_.clear();
 }
 
-inline void BoundaryComponentChooser::packetWasChanged(regina::NPacket*) {
+inline void VertexChooser::packetWasChanged(regina::NPacket*) {
     fill();
 }
 
-inline void BoundaryComponentChooser::packetToBeDestroyed(regina::NPacket*) {
+inline void VertexChooser::packetToBeDestroyed(regina::NPacket*) {
     clear();
     options_.clear();
 }

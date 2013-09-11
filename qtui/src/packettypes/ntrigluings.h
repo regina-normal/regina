@@ -168,6 +168,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         QAction* actRemoveTet;
         QAction* actSimplify;
         QAction* actOrient;
+        QAction* actBoundaryComponents;
         QLinkedList<QAction*> triActionList;
         QLinkedList<QAction*> enableWhenWritable;
 
@@ -215,6 +216,8 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         void finiteToIdeal();
         void elementaryMove();
         void doubleCover();
+        void boundaryComponents();
+        void vertexLinks();
         void splitIntoComponents();
         void connectedSumDecomposition();
         void makeZeroEfficient();
@@ -224,7 +227,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
          * Update the states of internal components.
          */
         void updateRemoveState();
-        void updateOrientState();
+        void updateActionStates();
 
         /**
          * Notify us of the fact that an edit has been made.
