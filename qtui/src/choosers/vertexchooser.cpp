@@ -47,16 +47,14 @@ using regina::NVertex;
 
 VertexChooser::VertexChooser(
         regina::NTriangulation* tri,
-        VertexFilterFunc filter, QWidget* parent) :
+        VertexFilterFunc filter, QWidget* parent,
+        bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
-    tri_->listen(this);
+    if (autoUpdate)
+        tri_->listen(this);
     fill();
-}
-
-VertexChooser::~VertexChooser() {
-    tri_->unlisten(this);
 }
 
 NVertex* VertexChooser::selected() {
