@@ -47,16 +47,14 @@ using regina::NBoundaryComponent;
 
 BoundaryComponentChooser::BoundaryComponentChooser(
         regina::NTriangulation* tri,
-        BoundaryComponentFilterFunc filter, QWidget* parent) :
+        BoundaryComponentFilterFunc filter, QWidget* parent,
+        bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
-    tri_->listen(this);
+    if (autoUpdate)
+        tri_->listen(this);
     fill();
-}
-
-BoundaryComponentChooser::~BoundaryComponentChooser() {
-    tri_->unlisten(this);
 }
 
 NBoundaryComponent* BoundaryComponentChooser::selected() {

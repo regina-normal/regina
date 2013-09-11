@@ -118,15 +118,18 @@ class EltMoveDialog : public QDialog, public regina::NPacketListener {
 
     protected slots:
         /**
-         * A button has been clicked.
+         * A button at the bottom of the dialog has been clicked.
          */
         virtual void clicked(QAbstractButton*);
 
-    private:
         /**
-         * Update the enabled states of buttons and boxes in the dialog.
+         * One of the move types has been selected.
          */
-        void updateStates();
+        void updateApply();
+
+    private:
+        template <typename ChooserClass>
+        void updateStates(ChooserClass* chooser, QRadioButton* button);
 };
 
 #endif

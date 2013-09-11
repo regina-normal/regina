@@ -47,16 +47,14 @@ using regina::NEdge;
 
 EdgeChooser::EdgeChooser(
         regina::NTriangulation* tri,
-        EdgeFilterFunc filter, QWidget* parent) :
+        EdgeFilterFunc filter, QWidget* parent,
+        bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
-    tri_->listen(this);
+    if (autoUpdate)
+        tri_->listen(this);
     fill();
-}
-
-EdgeChooser::~EdgeChooser() {
-    tri_->unlisten(this);
 }
 
 NEdge* EdgeChooser::selected() {

@@ -84,10 +84,19 @@ class EdgeChooser : public QComboBox, public regina::NPacketListener {
     public:
         /**
          * Constructors that fills the chooser with available selections.
+         *
+         * If \a autoUpdate is \c true (the default), then this chooser
+         * will be updated when the triangulation changes.
+         *
+         * If \a autoUpdate is \c false, then contents of this chooser will
+         * only be updated when refresh() is manually called.  Be careful
+         * when using this setting, since if the triangulation changes
+         * but the chooser is \e not refreshed, then selected() may end
+         * up returning an invalid pointer.
          */
         EdgeChooser(regina::NTriangulation* tri,
-                EdgeFilterFunc filter, QWidget* parent);
-        ~EdgeChooser();
+                EdgeFilterFunc filter, QWidget* parent,
+                bool autoUpdate = true);
 
         /**
          * Returns the currently selected edge.
@@ -107,6 +116,13 @@ class EdgeChooser : public QComboBox, public regina::NPacketListener {
          * The activated() signal will \e not be emitted.
          */
         void select(regina::NEdge* option);
+
+        /**
+         * Forces a manual refresh of the contents of this chooser.
+         * Returns \c true if and only if the chooser is non-empty
+         * (i.e., at least one option is present) after the refresh.
+         */
+        bool refresh();
 
         /**
          * NPacketListener overrides.
@@ -157,6 +173,13 @@ class EdgeDialog : public QDialog {
             const QString& message,
             const QString& whatsThis);
 };
+
+inline bool EdgeChooser::refresh() {
+    clear();
+    options_.clear();
+    fill();
+    return (count() > 0);
+}
 
 inline void EdgeChooser::packetToBeChanged(regina::NPacket*) {
     clear();

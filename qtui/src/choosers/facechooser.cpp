@@ -47,16 +47,14 @@ using regina::NFace;
 
 FaceChooser::FaceChooser(
         regina::NTriangulation* tri,
-        FaceFilterFunc filter, QWidget* parent) :
+        FaceFilterFunc filter, QWidget* parent,
+        bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
-    tri_->listen(this);
+    if (autoUpdate)
+        tri_->listen(this);
     fill();
-}
-
-FaceChooser::~FaceChooser() {
-    tri_->unlisten(this);
 }
 
 NFace* FaceChooser::selected() {

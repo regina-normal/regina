@@ -47,16 +47,14 @@ using regina::NTetrahedron;
 
 TetrahedronChooser::TetrahedronChooser(
         regina::NTriangulation* tri,
-        TetrahedronFilterFunc filter, QWidget* parent) :
+        TetrahedronFilterFunc filter, QWidget* parent,
+        bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
-    tri_->listen(this);
+    if (autoUpdate)
+        tri_->listen(this);
     fill();
-}
-
-TetrahedronChooser::~TetrahedronChooser() {
-    tri_->unlisten(this);
 }
 
 NTetrahedron* TetrahedronChooser::selected() {
