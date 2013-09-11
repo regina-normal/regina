@@ -189,22 +189,9 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     triPrefs->cbGraphvizLabels->setChecked(prefSet.triGraphvizLabels);
 
-    triPrefs->editSurfacePropsThreshold->setText(
-        QString::number(prefSet.triSurfacePropsThreshold));
-
     surfacePrefs->chooserCreationCoords->setCurrentSystem(
         prefSet.surfacesCreationCoords);
     surfacePrefs->cbWarnOnNonEmbedded->setChecked(prefSet.warnOnNonEmbedded);
-
-    switch (prefSet.surfacesInitialCompat) {
-        case ReginaPrefSet::GlobalCompat:
-            surfacePrefs->comboInitialCompat->setCurrentIndex(1); break;
-        default:
-            surfacePrefs->comboInitialCompat->setCurrentIndex(0); break;
-    }
-
-    surfacePrefs->editCompatThreshold->setText(
-        QString::number(prefSet.surfacesCompatThreshold));
 
     surfacePrefs->cbSupportOriented->setChecked(
         prefSet.surfacesSupportOriented);
@@ -297,22 +284,6 @@ void ReginaPreferences::slotApply() {
 
     prefSet.triGraphvizLabels = triPrefs->cbGraphvizLabels->isChecked();
 
-    uintVal = triPrefs->editSurfacePropsThreshold->text().toUInt(&ok);
-    if (ok)
-        prefSet.triSurfacePropsThreshold = uintVal;
-    else {
-        ReginaSupport::sorry(this,
-            tr("The surface calculation threshold must be a "
-            "non-negative integer."),
-            tr("<qt>This determines how large a triangulation must be "
-            "before normal surface properties "
-            "are no longer calculated automatically.<p>"
-            "I have reset this back to its old value of %1.</qt>").
-            arg(prefSet.triSurfacePropsThreshold));
-        triPrefs->editSurfacePropsThreshold->setText(
-            QString::number(prefSet.triSurfacePropsThreshold));
-    }
-
     // This is going to be needed a number of times further on.
     // Search through $PATH to find the executable
     QString paths = QProcessEnvironment::systemEnvironment().value("PATH");
@@ -330,42 +301,6 @@ void ReginaPreferences::slotApply() {
         prefSet.warnOnNonEmbedded = true;
     else
         prefSet.warnOnNonEmbedded = false;
-
-    switch (surfacePrefs->comboInitialCompat->currentIndex()) {
-        case 1:
-            prefSet.surfacesInitialCompat = ReginaPrefSet::GlobalCompat; break;
-        default:
-            prefSet.surfacesInitialCompat = ReginaPrefSet::LocalCompat; break;
-    }
-
-    uintVal = surfacePrefs->editCompatThreshold->text().toUInt(&ok);
-    if (ok) {
-        if (uintVal > 1000) {
-            ReginaSupport::sorry(this,
-                tr("I am not brave enough to allow "
-                "a compatibility matrix threshold over 1000."),
-                tr("<qt>Such a matrix would contain over a million cells, "
-                "which could cause severe performance problems.<p>"
-                "I have reset this back to its old value of %1.  "
-                "Remember that you can still compute compatibility "
-                "matrices manually at any time.</qt>").
-                arg(prefSet.surfacesCompatThreshold));
-            surfacePrefs->editCompatThreshold->setText(
-                QString::number(prefSet.surfacesCompatThreshold));
-        } else
-            prefSet.surfacesCompatThreshold = uintVal;
-    } else {
-        ReginaSupport::sorry(this,
-            tr("The compatibility matrix threshold must be a "
-            "non-negative integer."),
-            tr("<qt>This is the maximum number of normal surfaces <i>N</i> "
-            "for which the <i>N</i>&nbsp;x&nbsp;<i>N</i> compatibility "
-            "matrices will be calculated automatically.<p>"
-            "I have reset this back to its old value of %1.</qt>").
-            arg(prefSet.surfacesCompatThreshold));
-        surfacePrefs->editCompatThreshold->setText(
-            QString::number(prefSet.surfacesCompatThreshold));
-    }
 
     prefSet.surfacesSupportOriented =
         surfacePrefs->cbSupportOriented->isChecked();
@@ -683,23 +618,6 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
 ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QWidget(parent) {
     QBoxLayout* layout = new QVBoxLayout(this);
 
-    // Set up the surface properties threshold.
-    QBoxLayout* box = new QHBoxLayout();
-
-    QLabel* label = new QLabel(tr("Surface calculation threshold:"));
-    box->addWidget(label);
-    editSurfacePropsThreshold = new QLineEdit();
-    editSurfacePropsThreshold->setMaxLength(
-         3 /* ridiculously high number of digits */);
-    editSurfacePropsThreshold->setValidator(new QIntValidator(0,
-         999 /* ridiculously high */, this));
-    box->addWidget(editSurfacePropsThreshold);
-    QString msg = tr("The maximum number of tetrahedra for which normal "
-        "surface properties will be calculated automatically.");
-    label->setWhatsThis(msg);
-    editSurfacePropsThreshold->setWhatsThis(msg);
-    layout->addLayout(box);
-
     // Set up Graphviz options.
     cbGraphvizLabels = new QCheckBox(tr("Labels on face pairing graphs"));
     cbGraphvizLabels->setWhatsThis(tr("Labels each node in a "
@@ -729,47 +647,6 @@ ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QWidget(parent) {
         "surface lists.");
     label->setWhatsThis(msg);
     chooserCreationCoords->setWhatsThis(msg);
-    layout->addLayout(box);
-
-    // Set up the initial compatibility matrix.
-    box = new QHBoxLayout();
-
-    label = new QLabel(tr("Default compatibility matrix:"));
-    box->addWidget(label);
-    comboInitialCompat = new QComboBox();
-    comboInitialCompat->addItem(tr("Local (quads and octagons)"));
-    comboInitialCompat->addItem(tr("Global (disjoint surfaces)"));
-    box->addWidget(comboInitialCompat);
-    msg = tr("<qt>Specifies which compatibility matrix should be initially "
-        "displayed when the user opens the <i>Compatibility</i> tab.<p>"
-        "The <i>local</i> matrix tests whether two surfaces "
-        "can avoid local intersections within each tetrahedron (which is "
-        "determined entirely by quadrilateral and/or octagon types).  "
-        "The <i>global</i> matrix tests whether two surfaces can "
-        "simultaneously avoid intersections in <i>all</i> tetrahedra, "
-        "i.e., whether the two surfaces can be made disjoint.</qt>");
-    label->setWhatsThis(msg);
-    comboInitialCompat->setWhatsThis(msg);
-    layout->addLayout(box);
-
-    // Set up the compatibility matrix threshold.
-    box = new QHBoxLayout();
-
-    label = new QLabel(tr("Compatibility matrix threshold:"));
-    box->addWidget(label);
-    editCompatThreshold = new QLineEdit();
-    editCompatThreshold->setMaxLength(
-         6 /* ridiculously high number of digits */);
-    editCompatThreshold->setValidator(new QIntValidator(0,
-         999999 /* ridiculously high */, this));
-    box->addWidget(editCompatThreshold);
-    msg = tr("<qt>The maximum number of surfaces <i>N</i> in a normal "
-        "surface list for which the <i>N</i>-by-<i>N</i> compatibility "
-        "matrices will be calculated automatically.  For larger lists, "
-        "you can always press the <i>Calculate</i> button by hand "
-        "in the compatibility viewer.</qt>");
-    label->setWhatsThis(msg);
-    editCompatThreshold->setWhatsThis(msg);
     layout->addLayout(box);
 
     // Options for warnings.

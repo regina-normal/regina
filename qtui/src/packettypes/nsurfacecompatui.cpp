@@ -251,9 +251,13 @@ void NSurfaceCompatibilityUI::changeLayer(int index) {
     if (index == 0) {
         stack->setCurrentWidget(layerLocal);
         matrixLocal->fillLocal(*surfaces);
+        ReginaPrefSet::global().surfacesInitialCompat =
+            ReginaPrefSet::LocalCompat;
     } else {
         stack->setCurrentWidget(layerGlobal);
         matrixGlobal->fillGlobal(*surfaces);
+        ReginaPrefSet::global().surfacesInitialCompat =
+            ReginaPrefSet::GlobalCompat;
     }
 }
 

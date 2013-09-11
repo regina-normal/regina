@@ -317,9 +317,12 @@ Version 4.94  [ (under development) ]
             - Deprecated in favour of the new ninteger.h.
     USER INTERFACE:
         In addition to incorporating the new mathematical changes above:
-            - Simplified preferences.  Some of the old preferences are
-              gone, and instead Regina simply remembers your last
-              selection (e.g., default tabs for various viewers).
+            - The preference dialog is somewhat simpler now.
+              + Some preferences are gone, and instead Regina simply remembers
+                your last selection (e.g., default tabs for various viewers).
+              + Some preferences have just been removed from the dialog (e.g.,
+                the calculations thresholds), though users who really need
+                these can still access them through the configuration file.
     UTILITIES:
         regconvert:
             - The option -b (for old-style binary files) is no longer supported.
