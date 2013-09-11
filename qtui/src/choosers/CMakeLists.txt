@@ -1,8 +1,8 @@
 # Engine
 
-SET ( FILES boundarycomponentchooser edgechooser vertexchooser )
+SET ( FILES boundarycomponentchooser edgechooser facechooser tetrahedronchooser vertexchooser )
 
-SET ( MOC_FILES boundarycomponentchooser.h edgechooser.h vertexchooser.h )
+SET ( MOC_FILES boundarycomponentchooser.h edgechooser.h facechooser.h tetrahedronchooser.h vertexchooser.h )
 
 FOREACH( MOC ${MOC_FILES} )
   SET ( MOC_HEADERS ${MOC_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/${MOC} )
