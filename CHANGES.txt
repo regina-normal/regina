@@ -357,6 +357,8 @@ Version 4.94  [ (under development) ]
             - Rewrote barycentricSubdivision(): the code is now clearer,
               but note that the precise labelling of the new tetrahedra has
               changed from earlier versions of Regina.
+            - Routine insertTriangulation() now works in the case where
+              a triangulation tries to insert itself.
             - New dimension-agnostic aliases getNumberOfSimplices(),
               getSimplices(), getSimplex(), simplexIndex(), newSimplex(),
               removeSimplex(), removeSimplexAt() and removeAllSimplices().

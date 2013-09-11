@@ -165,20 +165,20 @@ void Dim2Triangulation::insertTriangulation(const Dim2Triangulation& X) {
     ChangeEventSpan span(this);
 
     unsigned long nOrig = getNumberOfTriangles();
+    unsigned long nX = X.getNumberOfTriangles();
 
-    TriangleIterator it;
-    for (it = X.triangles_.begin(); it != X.triangles_.end(); ++it)
-        newTriangle((*it)->getDescription());
+    unsigned long triPos;
+    for (triPos = 0; triPos < nX; ++triPos)
+        newTriangle(X.triangles_[triPos]->getDescription());
 
     // Make the gluings.
-    long triPos, adjPos;
+    unsigned long adjPos;
     Dim2Triangle* tri;
     Dim2Triangle* adjTri;
     NPerm3 adjPerm;
     int edge;
-    triPos = 0;
-    for (it = X.triangles_.begin(); it != X.triangles_.end(); ++it) {
-        tri = *it;
+    for (triPos = 0; triPos < nX; ++triPos) {
+        tri = X.triangles_[triPos];
         for (edge = 0; edge < 3; ++edge) {
             adjTri = tri->adjacentTriangle(edge);
             if (adjTri) {
@@ -191,7 +191,6 @@ void Dim2Triangulation::insertTriangulation(const Dim2Triangulation& X) {
                 }
             }
         }
-        ++triPos;
     }
 }
 

@@ -183,20 +183,20 @@ void Dim4Triangulation::insertTriangulation(const Dim4Triangulation& X) {
     ChangeEventSpan span(this);
 
     unsigned long nOrig = getNumberOfPentachora();
+    unsigned long nX = X.getNumberOfPentachora();
 
-    PentachoronIterator it;
-    for (it = X.pentachora_.begin(); it != X.pentachora_.end(); ++it)
-        newPentachoron((*it)->getDescription());
+    unsigned long pentPos;
+    for (pentPos = 0; pentPos < nX; ++pentPos)
+        newPentachoron(X.pentachora_[pentPos]->getDescription());
 
     // Make the gluings.
-    long pentPos, adjPos;
+    unsigned long adjPos;
     Dim4Pentachoron* pent;
     Dim4Pentachoron* adjPent;
     NPerm5 adjPerm;
     int facet;
-    pentPos = 0;
-    for (it = X.pentachora_.begin(); it != X.pentachora_.end(); ++it) {
-        pent = *it;
+    for (pentPos = 0; pentPos < nX; ++pentPos) {
+        pent = X.pentachora_[pentPos];
         for (facet = 0; facet < 5; ++facet) {
             adjPent = pent->adjacentPentachoron(facet);
             if (adjPent) {
@@ -209,7 +209,6 @@ void Dim4Triangulation::insertTriangulation(const Dim4Triangulation& X) {
                 }
             }
         }
-        ++pentPos;
     }
 }
 
