@@ -33,21 +33,21 @@
 /* end stub */
 
 // Regina core includes:
-#include "triangulation/nboundarycomponent.h"
+#include "triangulation/nvertex.h"
 
 // UI includes:
-#include "boundarycomponentchooser.h"
+#include "vertexchooser.h"
 
 #include <algorithm>
 #include <QBoxLayout>
 #include <QDialogButtonBox>
 #include <QLabel>
 
-using regina::NBoundaryComponent;
+using regina::NVertex;
 
-BoundaryComponentChooser::BoundaryComponentChooser(
+VertexChooser::VertexChooser(
         regina::NTriangulation* tri,
-        BoundaryComponentFilterFunc filter, QWidget* parent) :
+        VertexFilterFunc filter, QWidget* parent) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
@@ -55,21 +55,20 @@ BoundaryComponentChooser::BoundaryComponentChooser(
     fill();
 }
 
-BoundaryComponentChooser::~BoundaryComponentChooser() {
+VertexChooser::~VertexChooser() {
     tri_->unlisten(this);
 }
 
-NBoundaryComponent* BoundaryComponentChooser::selected() {
+NVertex* VertexChooser::selected() {
     if (count() == 0)
         return 0;
     int curr = currentIndex();
     return (curr < 0 ? 0 : options_[curr]);
 }
 
-void BoundaryComponentChooser::select(regina::NBoundaryComponent* option) {
+void VertexChooser::select(regina::NVertex* option) {
     int index = 0;
-    std::vector<regina::NBoundaryComponent*>::const_iterator it =
-        options_.begin();
+    std::vector<regina::NVertex*>::const_iterator it = options_.begin();
     while (it != options_.end()) {
         if ((*it) == option) {
             setCurrentIndex(index);
@@ -85,48 +84,46 @@ void BoundaryComponentChooser::select(regina::NBoundaryComponent* option) {
     return;
 }
 
-QString BoundaryComponentChooser::description(
-        regina::NBoundaryComponent* option) {
-    if (option->getNumberOfFaces() == 0) {
-        regina::NVertex* v = option->getVertex(0);
-        if (v->getNumberOfEmbeddings() == 1)
-            return tr("Bdry comp %1: Ideal vertex %2 [%3 (%4)]")
-                .arg(tri_->boundaryComponentIndex(option))
-                .arg(tri_->vertexIndex(v))
-                .arg(tri_->tetrahedronIndex(
-                    v->getEmbeddings().front().getTetrahedron()))
-                .arg(v->getEmbeddings().front().getVertex());
+QString VertexChooser::description(regina::NVertex* option) {
+    if (option->getNumberOfEmbeddings() == 1)
+        return trUtf8("Vertex %2 — %3 (%4)")
+            .arg(tri_->vertexIndex(option))
+            .arg(tri_->tetrahedronIndex(
+                option->getEmbeddings().front().getTetrahedron()))
+            .arg(option->getEmbeddings().front().getVertex());
+    else {
+        const regina::NVertexEmbedding& e0 = option->getEmbedding(0);
+        const regina::NVertexEmbedding& e1 = option->getEmbedding(1);
+        if (option->getNumberOfEmbeddings() == 2)
+            return trUtf8("Vertex %1 — %2 (%3), %4 (%5)")
+                .arg(tri_->vertexIndex(option))
+                .arg(tri_->tetrahedronIndex(e0.getTetrahedron()))
+                .arg(e0.getVertex())
+                .arg(tri_->tetrahedronIndex(e1.getTetrahedron()))
+                .arg(e1.getVertex());
         else
-            return tr("Bdry comp %1: Ideal vertex %2 [%3 (%4), ...]")
-                .arg(tri_->boundaryComponentIndex(option))
-                .arg(tri_->vertexIndex(v))
-                .arg(tri_->tetrahedronIndex(
-                    v->getEmbeddings().front().getTetrahedron()))
-                .arg(v->getEmbeddings().front().getVertex());
-    } else {
-        // The number of faces is always even, and therefore always >1.
-        regina::NFace* f = option->getFace(0);
-        return tr("Bdry comp %1: Faces %2, ... [%3 (%4), ...]")
-            .arg(tri_->boundaryComponentIndex(option))
-            .arg(tri_->faceIndex(f))
-            .arg(tri_->tetrahedronIndex(f->getEmbedding(0).getTetrahedron()))
-            .arg(f->getEmbedding(0).getVertices().trunc3().c_str());
+            return trUtf8("Vertex %1 — %2 (%3), %4 (%5), ...")
+                .arg(tri_->vertexIndex(option))
+                .arg(tri_->tetrahedronIndex(e0.getTetrahedron()))
+                .arg(e0.getVertex())
+                .arg(tri_->tetrahedronIndex(e1.getTetrahedron()))
+                .arg(e1.getVertex());
     }
 }
 
-void BoundaryComponentChooser::fill() {
-    regina::NTriangulation::BoundaryComponentIterator it;
-    for (it = tri_->getBoundaryComponents().begin();
-            it != tri_->getBoundaryComponents().end(); ++it)
+void VertexChooser::fill() {
+    regina::NTriangulation::VertexIterator it;
+    for (it = tri_->getVertices().begin();
+            it != tri_->getVertices().end(); ++it)
         if ((! filter_) || (*filter_)(*it)) {
             addItem(description(*it));
             options_.push_back(*it);
         }
 }
 
-BoundaryComponentDialog::BoundaryComponentDialog(QWidget* parent,
+VertexDialog::VertexDialog(QWidget* parent,
         regina::NTriangulation* tri,
-        BoundaryComponentFilterFunc filter,
+        VertexFilterFunc filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) :
@@ -138,7 +135,7 @@ BoundaryComponentDialog::BoundaryComponentDialog(QWidget* parent,
     QLabel* label = new QLabel(message);
     layout->addWidget(label);
 
-    chooser = new BoundaryComponentChooser(tri, filter, this);
+    chooser = new VertexChooser(tri, filter, this);
     layout->addWidget(chooser);
 
     QDialogButtonBox* buttonBox = new QDialogButtonBox(
@@ -149,13 +146,13 @@ BoundaryComponentDialog::BoundaryComponentDialog(QWidget* parent,
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
-regina::NBoundaryComponent* BoundaryComponentDialog::choose(QWidget* parent,
+regina::NVertex* VertexDialog::choose(QWidget* parent,
         regina::NTriangulation* tri,
-        BoundaryComponentFilterFunc filter,
+        VertexFilterFunc filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) {
-    BoundaryComponentDialog dlg(parent, tri, filter, title, message, whatsThis);
+    VertexDialog dlg(parent, tri, filter, title, message, whatsThis);
     if (dlg.exec())
         return dlg.chooser->selected();
     else
