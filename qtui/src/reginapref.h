@@ -45,7 +45,6 @@
 #include <QMainWindow>
 
 class CodecChooser;
-class CoordinateChooser;
 class QAbstractButton;
 class QDialogButtonBox;
 class QCheckBox;
@@ -74,7 +73,6 @@ class ReginaPreferences : public QDialog {
         ReginaMain* mainWindow;
 
         ReginaPrefGeneral* generalPrefs;
-        ReginaPrefTri* triPrefs;
         ReginaPrefSurfaces* surfacePrefs;
         ReginaPrefCensus* censusPrefs;
         ReginaPrefPython* pythonPrefs;
@@ -109,28 +107,13 @@ class ReginaPrefGeneral : public QWidget {
         QCheckBox* cbUseDock;
         // QCheckBox* cbDisplayTagsInTree;
         QLineEdit* editTreeJumpSize;
+        QCheckBox* cbGraphvizLabels;
         QCheckBox* cbTipOfDay;
         QCheckBox* cbIntroOnStartup;
         CodecChooser* chooserImportExportCodec;
 
     public:
         ReginaPrefGeneral(QWidget* parent = 0);
-
-    friend class ReginaPreferences;
-};
-
-/**
- * The page of the Regina configuration dialog for 3-manifold triangulation
- * preferences.
- */
-class ReginaPrefTri : public QWidget {
-    Q_OBJECT
-
-    private:
-        QCheckBox* cbGraphvizLabels;
-
-    public:
-        ReginaPrefTri(QWidget* parent = 0);
 
     friend class ReginaPreferences;
 };
@@ -143,7 +126,6 @@ class ReginaPrefSurfaces : public QWidget {
     Q_OBJECT
 
     private:
-        CoordinateChooser* chooserCreationCoords;
         QCheckBox* cbWarnOnNonEmbedded;
         QCheckBox* cbSupportOriented;
 

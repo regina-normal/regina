@@ -172,6 +172,9 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
         }
     }
 
+    // Remember our coordinate system selection for next time.
+    ReginaPrefSet::global().surfacesCreationCoords = coordSystem;
+
     if (basisId == BASIS_VERTEX) {
         regina::NProgressTracker tracker;
         ProgressDialogNumeric dlg(&tracker,
