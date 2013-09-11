@@ -98,12 +98,14 @@ NNormalSurfaceCreator::NNormalSurfaceCreator() {
     // BASIS_... constants are defined at the top of this file.
     basis->insertItem(BASIS_VERTEX, ui->tr("Vertex surfaces"));
     basis->insertItem(BASIS_FUND, ui->tr("Fundamental surfaces"));
-    basis->setCurrentIndex(0);
+    basis->setCurrentIndex(ReginaPrefSet::global().surfacesCreationList.has(
+        regina::NS_FUNDAMENTAL) ? BASIS_FUND : BASIS_VERTEX);
     basis->setWhatsThis(expln);
     basisArea->addWidget(basis, 1);
 
     embedded = new QCheckBox(ui->tr("Embedded surfaces only"), ui);
-    embedded->setChecked(true);
+    embedded->setChecked(! ReginaPrefSet::global().surfacesCreationList.has(
+        regina::NS_IMMERSED_SINGULAR));
     embedded->setWhatsThis(ui->tr("Specifies whether only embedded "
         "normal surfaces should be enumerated, or whether all normal "
         "surfaces (embedded, immersed and singular) should be enumerated."));
@@ -172,8 +174,12 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
         }
     }
 
-    // Remember our coordinate system selection for next time.
+    // Remember our selections for next time.
     ReginaPrefSet::global().surfacesCreationCoords = coordSystem;
+    ReginaPrefSet::global().surfacesCreationList =
+        (embedded->isChecked() ? regina::NS_EMBEDDED_ONLY :
+            regina::NS_IMMERSED_SINGULAR) |
+        (basisId == BASIS_VERTEX ? regina::NS_VERTEX : regina::NS_FUNDAMENTAL);
 
     if (basisId == BASIS_VERTEX) {
         regina::NProgressTracker tracker;
