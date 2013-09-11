@@ -40,10 +40,15 @@
 #ifndef __ELTMOVEDIALOG_H
 #define __ELTMOVEDIALOG_H
 
+#include "packet/npacketlistener.h"
+
 #include <QDialog>
 #include <vector>
 
+class QAbstractButton;
 class QButtonGroup;
+class QDialogButtonBox;
+class QLabel;
 class QRadioButton;
 class TetrahedronChooser;
 class FaceChooser;
@@ -59,13 +64,16 @@ namespace regina {
  * A dialog used to select and perform an elementary move on a
  * triangulation.
  */
-class EltMoveDialog : public QDialog {
+class EltMoveDialog : public QDialog, public regina::NPacketListener {
     Q_OBJECT
 
     private:
         /**
          * Internal components:
          */
+        QLabel* name;
+        QLabel* overview;
+
         EdgeChooser* box32;
         FaceChooser* box23;
         EdgeIntChooser* box44;
@@ -87,6 +95,7 @@ class EltMoveDialog : public QDialog {
         QRadioButton* useShellBdry;
         QRadioButton* useCollapseEdge;
         QButtonGroup* moveTypes;
+        QDialogButtonBox* buttons;
 
         /**
          * Packet tree structure:
@@ -100,11 +109,24 @@ class EltMoveDialog : public QDialog {
         EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri);
         ~EltMoveDialog();
 
+        /**
+         * Update the overview information if the triangulation changes.
+         */
+        void packetWasRenamed(regina::NPacket*);
+        void packetWasChanged(regina::NPacket*);
+        void packetToBeDestroyed(regina::NPacket*);
+
     protected slots:
         /**
-         * Ok has been clicked.
+         * A button has been clicked.
          */
-        virtual void slotOk();
+        virtual void clicked(QAbstractButton*);
+
+    private:
+        /**
+         * Update the enabled states of buttons and boxes in the dialog.
+         */
+        void updateStates();
 };
 
 #endif

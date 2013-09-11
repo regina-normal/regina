@@ -331,7 +331,8 @@ Version 4.94  [ (under development) ]
                 the calculations thresholds), though users who really need
                 these can still access them through the configuration file.
             - The elementary move dialog contains richer information
-              about where the moves can take place.
+              about where the moves can take place, and stays open so that
+              you can perform several moves one after another.
     UTILITIES:
         regconvert:
             - The option -b (for old-style binary files) is no longer supported.
