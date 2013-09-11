@@ -532,20 +532,20 @@ void NTriangulation::insertTriangulation(const NTriangulation& X) {
     ChangeEventSpan span(this);
 
     unsigned long norig = getNumberOfTetrahedra();
+    unsigned long nX = X.getNumberOfTetrahedra();
 
-    TetrahedronIterator it;
-    for (it = X.tetrahedra.begin(); it != X.tetrahedra.end(); it++)
-        newTetrahedron((*it)->getDescription());
+    unsigned long tetPos;
+    for (tetPos = 0; tetPos < nX; ++tetPos)
+        newTetrahedron(X.tetrahedra[tetPos]->getDescription());
 
     // Make the gluings.
-    long tetPos, adjPos;
+    unsigned long adjPos;
     NTetrahedron* tet;
     NTetrahedron* adjTet;
     NPerm4 adjPerm;
     int face;
-    tetPos = 0;
-    for (it = X.tetrahedra.begin(); it != X.tetrahedra.end(); it++) {
-        tet = *it;
+    for (tetPos = 0; tetPos < nX; ++tetPos) {
+        tet = X.tetrahedra[tetPos];
         for (face=0; face<4; face++) {
             adjTet = tet->adjacentTetrahedron(face);
             if (adjTet) {
@@ -558,7 +558,6 @@ void NTriangulation::insertTriangulation(const NTriangulation& X) {
                 }
             }
         }
-        tetPos++;
     }
 }
 
