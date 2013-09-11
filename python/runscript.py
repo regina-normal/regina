@@ -82,6 +82,18 @@ if sys.argv[2] == 'readline':
     # Enable tab completion through readline, if we can.
     try:
         import rlcompleter, readline
+        # readline by default completes an empty string, whereas if 
+        # we press tab we want to insert an actual tab character, 
+        # so we have our own completion function.
+
+        __internal_python_completer = readline.get_completer()
+        def regina_completer(text, state):
+          if not text:
+            return ('\t', None)[state]
+          else:
+            return __internal_python_completer(text, state)
+        readline.set_completer(regina_completer)
+
         if 'libedit' in readline.__doc__:
             # Some systems work with libedit, not libreadline, which
             # supports a different set of commands.
