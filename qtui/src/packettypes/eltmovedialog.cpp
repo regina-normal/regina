@@ -36,6 +36,10 @@
 
 #include "eltmovedialog.h"
 #include "reginasupport.h"
+#include "choosers/edgechooser.h"
+#include "choosers/facechooser.h"
+#include "choosers/tetrahedronchooser.h"
+#include "choosers/vertexchooser.h"
 
 #include <QButtonGroup>
 #include <QComboBox>
@@ -55,6 +59,38 @@ namespace {
     const int ID_CLOSEBOOK = 7;
     const int ID_SHELLBDRY = 8;
     const int ID_COLLAPSEEDGE = 9;
+
+    bool has20v(regina::NVertex* v) {
+        return v->getTriangulation()->twoZeroMove(v, true, false);
+    }
+
+    bool has32(regina::NEdge* e) {
+        return e->getTriangulation()->threeTwoMove(e, true, false);
+    }
+
+    bool has20e(regina::NEdge* e) {
+        return e->getTriangulation()->twoZeroMove(e, true, false);
+    }
+
+    bool hasCloseBook(regina::NEdge* e) {
+        return e->getTriangulation()->closeBook(e, true, false);
+    }
+
+    bool hasCollapseEdge(regina::NEdge* e) {
+        return e->getTriangulation()->collapseEdge(e, true, false);
+    }
+
+    bool has23(regina::NFace* f) {
+        return f->getTriangulation()->twoThreeMove(f, true, false);
+    }
+
+    bool hasOpenBook(regina::NFace* f) {
+        return f->getTriangulation()->openBook(f, true, false);
+    }
+
+    bool hasShellBoundary(regina::NTetrahedron* t) {
+        return t->getTriangulation()->shellBoundary(t, true, false);
+    }
 }
 
 EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
@@ -159,7 +195,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(useCollapseEdge, 9, 0);
 
-    box32 = new QComboBox(this);
+    box32 = new EdgeChooser(tri, &has32, this);
     box32->setWhatsThis( tr("<qt>Select the degree three edge about which "
         "the 3-2 move will be performed.  The edge numbers in this list "
         "correspond to the edge numbers seen when viewing the "
@@ -167,7 +203,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box32, 0, 1);
-    box23 = new QComboBox(this);
+    box23 = new FaceChooser(tri, &has23, this);
     box23->setWhatsThis( tr("<qt>Select the face about which "
         "the 2-3 move will be performed.  The face numbers in this list "
         "correspond to the face numbers seen when viewing the "
@@ -185,7 +221,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box44, 2, 1);
-    box20e = new QComboBox(this);
+    box20e = new EdgeChooser(tri, &has20e, this);
     box20e->setWhatsThis( tr("<qt>Select the degree two edge about which "
         "the 2-0 edge move will be performed.  The edge numbers in this list "
         "correspond to the edge numbers seen when viewing the "
@@ -193,7 +229,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box20e, 3, 1);
-    box20v = new QComboBox(this);
+    box20v = new VertexChooser(tri, &has20v, this);
     box20v->setWhatsThis( tr("<qt>Select the degree two vertex about "
         "which the 2-0 vertex move will be performed.  The vertex numbers "
         "in this list correspond to the vertex numbers seen when viewing the "
@@ -211,7 +247,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box21, 5, 1);
-    boxOpenBook = new QComboBox(this);
+    boxOpenBook = new FaceChooser(tri, &hasOpenBook, this);
     boxOpenBook->setWhatsThis( tr("<qt>Select the internal face "
         "that should be opened out.  The face numbers in this list "
         "correspond to the face numbers seen when viewing the "
@@ -219,7 +255,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(boxOpenBook, 6, 1);
-    boxCloseBook = new QComboBox(this);
+    boxCloseBook = new EdgeChooser(tri, &hasCloseBook, this);
     boxCloseBook->setWhatsThis( tr("<qt>Select the boundary edge "
         "around which the book will be closed.  The edge numbers in this list "
         "correspond to the edge numbers seen when viewing the "
@@ -227,14 +263,14 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(boxCloseBook, 7, 1);
-    boxShellBdry = new QComboBox(this);
+    boxShellBdry = new TetrahedronChooser(tri, &hasShellBoundary, this);
     boxShellBdry->setWhatsThis( tr("<qt>Select the boundary tetrahedron "
         "that should be removed.  The tetrahedron numbers in this list "
         "are the usual tetrahedron numbers seen in the gluings editor.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(boxShellBdry, 8, 1);
-    boxCollapseEdge = new QComboBox(this);
+    boxCollapseEdge = new EdgeChooser(tri, &hasCollapseEdge, this);
     boxCollapseEdge->setWhatsThis( tr("<qt>Select the edge joining "
         "two distinct vertices that should be collapsed.  "
         "The edge numbers in this list correspond to the edge numbers seen "
@@ -293,31 +329,29 @@ EltMoveDialog::~EltMoveDialog() {
 
 void EltMoveDialog::slotOk() {
     if (use32->isChecked())
-        tri->threeTwoMove(tri->getEdge(set32[box32->currentIndex()]));
+        tri->threeTwoMove(box32->selected());
     else if (use23->isChecked())
-        tri->twoThreeMove(tri->getFace(set23[box23->currentIndex()]));
+        tri->twoThreeMove(box23->selected());
     else if (use44->isChecked())
         tri->fourFourMove(
             tri->getEdge(set44[box44->currentIndex()].first),
             set44[box44->currentIndex()].second);
     else if (use20e->isChecked())
-        tri->twoZeroMove(tri->getEdge(set20e[box20e->currentIndex()]));
+        tri->twoZeroMove(box20e->selected());
     else if (use20v->isChecked())
-        tri->twoZeroMove(tri->getVertex(set20v[box20v->currentIndex()]));
+        tri->twoZeroMove(box20v->selected());
     else if (use21->isChecked())
         tri->twoOneMove(
             tri->getEdge(set21[box21->currentIndex()].first),
             set21[box21->currentIndex()].second);
     else if (useOpenBook->isChecked())
-        tri->openBook(tri->getFace(setOpenBook[boxOpenBook->currentIndex()]));
+        tri->openBook(boxOpenBook->selected());
     else if (useCloseBook->isChecked())
-        tri->closeBook(tri->getEdge(setCloseBook[boxCloseBook->currentIndex()]));
+        tri->closeBook(boxCloseBook->selected());
     else if (useShellBdry->isChecked())
-        tri->shellBoundary(tri->getTetrahedron(setShellBdry[
-            boxShellBdry->currentIndex()]));
+        tri->shellBoundary(boxShellBdry->selected());
     else if (useCollapseEdge->isChecked())
-        tri->collapseEdge(tri->getEdge(setCollapseEdge[
-            boxCollapseEdge->currentIndex()]));
+        tri->collapseEdge(boxCollapseEdge->selected());
     else {
         ReginaSupport::info(this, tr("Please select a move."));
         return;
@@ -327,26 +361,10 @@ void EltMoveDialog::slotOk() {
 }
 
 void EltMoveDialog::fillWithMoves() {
-    unsigned long nVertices = tri->getNumberOfVertices();
     unsigned long nEdges = tri->getNumberOfEdges();
-    unsigned long nFaces = tri->getNumberOfFaces();
-    unsigned long nTets = tri->getNumberOfTetrahedra();
-
-    unsigned long i;
-
-    for (i = 0; i < nVertices; i++)
-        if (tri->twoZeroMove(tri->getVertex(i), true, false)) {
-            box20v->insertItem(box20v->count(),tr("Vertex %1").arg(i));
-            set20v.push_back(i);
-        }
-
     regina::NEdge* e;
-    for (i = 0; i < nEdges; i++) {
+    for (unsigned long i = 0; i < nEdges; i++) {
         e = tri->getEdge(i);
-        if (tri->threeTwoMove(e, true, false)) {
-            box32->insertItem(box32->count(),tr("Edge %1").arg(i));
-            set32.push_back(i);
-        }
         if (tri->fourFourMove(e, 0, true, false)) {
             box44->insertItem(box44->count(),tr("Edge %1 (axis 0)").arg(i));
             set44.push_back(std::make_pair(i, 0));
@@ -354,10 +372,6 @@ void EltMoveDialog::fillWithMoves() {
         if (tri->fourFourMove(e, 1, true, false)) {
             box44->insertItem(box44->count(),tr("Edge %1 (axis 1)").arg(i));
             set44.push_back(std::make_pair(i, 1));
-        }
-        if (tri->twoZeroMove(e, true, false)) {
-            box20e->insertItem(box20e->count(),tr("Edge %1").arg(i));
-            set20e.push_back(i);
         }
         if (tri->twoOneMove(e, 0, true, false)) {
             box21->insertItem(box21->count(),tr("Edge %1 (end 0)").arg(i));
@@ -367,33 +381,6 @@ void EltMoveDialog::fillWithMoves() {
             box21->insertItem(box21->count(),tr("Edge %1 (end 1)").arg(i));
             set21.push_back(std::make_pair(i, 1));
         }
-        if (tri->closeBook(e, true, false)) {
-            boxCloseBook->insertItem(boxCloseBook->count(),tr("Edge %1").arg(i));
-            setCloseBook.push_back(i);
-        }
-        if (tri->collapseEdge(e, true, false)) {
-            boxCollapseEdge->insertItem(boxCollapseEdge->count(),tr("Edge %1").arg(i));
-            setCollapseEdge.push_back(i);
-        }
     }
-
-    regina::NFace* f;
-    for (i = 0; i < nFaces; i++) {
-        f = tri->getFace(i);
-        if (tri->twoThreeMove(f, true, false)) {
-            box23->insertItem(box23->count(),tr("Face %1").arg(i));
-            set23.push_back(i);
-        }
-        if (tri->openBook(f, true, false)) {
-            boxOpenBook->insertItem(boxOpenBook->count(),tr("Face %1").arg(i));
-            setOpenBook.push_back(i);
-        }
-    }
-
-    for (i = 0; i < nTets; i++)
-        if (tri->shellBoundary(tri->getTetrahedron(i), true, false)) {
-            boxShellBdry->insertItem(boxShellBdry->count(),tr("Tet %1").arg(i));
-            setShellBdry.push_back(i);
-        }
 }
 
