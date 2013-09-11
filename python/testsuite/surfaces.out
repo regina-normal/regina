@@ -4,7 +4,7 @@ Vertex surfaces (std)
 -------------------------------
 
 Number of surfaces is 0
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard normal (tri-quad)
 
 
@@ -14,7 +14,7 @@ Vertex surfaces (quad)
 -------------------------------
 
 Number of surfaces is 0
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad normal
 
 
@@ -24,7 +24,7 @@ Vertex surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 0
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 
 
@@ -34,7 +34,7 @@ Vertex surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 0
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad-oct almost normal
 
 
@@ -44,7 +44,7 @@ Fundamental surfaces (std)
 -------------------------------
 
 Number of surfaces is 0
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard normal (tri-quad)
 
 
@@ -54,7 +54,7 @@ Fundamental surfaces (quad)
 -------------------------------
 
 Number of surfaces is 0
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad normal
 
 
@@ -64,7 +64,7 @@ Fundamental surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 0
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 
 
@@ -74,7 +74,7 @@ Fundamental surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 0
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad-oct almost normal
 
 
@@ -84,7 +84,7 @@ Vertex surfaces (std)
 -------------------------------
 
 Number of surfaces is 2
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 1 ; 0 0 0
 0 0 1 1 ; 1 0 0
@@ -96,7 +96,7 @@ Vertex surfaces (quad)
 -------------------------------
 
 Number of surfaces is 1
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad normal
 0 0 1 1 ; 1 0 0
 
@@ -107,7 +107,7 @@ Vertex surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 3
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 1 1 1 1 ; 0 0 0 ; 0 0 0
 1 1 0 0 ; 0 0 0 ; 1 0 0
@@ -120,7 +120,7 @@ Vertex surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 2
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad-oct almost normal
 1 1 0 0 ; 0 0 0 ; 1 0 0
 0 0 1 1 ; 1 0 0 ; 0 0 0
@@ -132,7 +132,7 @@ Fundamental surfaces (std)
 -------------------------------
 
 Number of surfaces is 2
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 1 ; 0 0 0
 0 0 1 1 ; 1 0 0
@@ -144,7 +144,7 @@ Fundamental surfaces (quad)
 -------------------------------
 
 Number of surfaces is 1
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad normal
 0 0 1 1 ; 1 0 0
 
@@ -155,7 +155,7 @@ Fundamental surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 3
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 1 1 1 1 ; 0 0 0 ; 0 0 0
 1 1 0 0 ; 0 0 0 ; 1 0 0
@@ -168,7 +168,7 @@ Fundamental surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 2
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad-oct almost normal
 1 1 0 0 ; 0 0 0 ; 1 0 0
 0 0 1 1 ; 1 0 0 ; 0 0 0
@@ -180,7 +180,7 @@ Vertex surfaces (std)
 -------------------------------
 
 Number of surfaces is 4
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
 1 1 0 0 ; 1 0 0 || 0 0 1 1 ; 1 0 0
@@ -194,7 +194,7 @@ Vertex surfaces (quad)
 -------------------------------
 
 Number of surfaces is 3
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad normal
 1 1 0 0 ; 1 0 0 || 0 0 1 1 ; 1 0 0
 0 0 1 1 ; 0 0 1 || 1 1 0 0 ; 0 0 1
@@ -207,7 +207,7 @@ Vertex surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 4
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
 1 1 0 0 ; 1 0 0 ; 0 0 0 || 0 0 1 1 ; 1 0 0 ; 0 0 0
@@ -221,7 +221,7 @@ Vertex surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 3
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad-oct almost normal
 1 1 0 0 ; 1 0 0 ; 0 0 0 || 0 0 1 1 ; 1 0 0 ; 0 0 0
 0 0 1 1 ; 0 0 1 ; 0 0 0 || 1 1 0 0 ; 0 0 1 ; 0 0 0
@@ -234,7 +234,7 @@ Fundamental surfaces (std)
 -------------------------------
 
 Number of surfaces is 4
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
 1 1 0 0 ; 1 0 0 || 0 0 1 1 ; 1 0 0
@@ -248,7 +248,7 @@ Fundamental surfaces (quad)
 -------------------------------
 
 Number of surfaces is 3
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad normal
 1 1 0 0 ; 1 0 0 || 0 0 1 1 ; 1 0 0
 0 0 1 1 ; 0 0 1 || 1 1 0 0 ; 0 0 1
@@ -261,7 +261,7 @@ Fundamental surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 4
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
 1 1 0 0 ; 1 0 0 ; 0 0 0 || 0 0 1 1 ; 1 0 0 ; 0 0 0
@@ -275,7 +275,7 @@ Fundamental surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 3
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad-oct almost normal
 1 1 0 0 ; 1 0 0 ; 0 0 0 || 0 0 1 1 ; 1 0 0 ; 0 0 0
 0 0 1 1 ; 0 0 1 ; 0 0 0 || 1 1 0 0 ; 0 0 1 ; 0 0 0
@@ -288,7 +288,7 @@ Vertex surfaces (std)
 -------------------------------
 
 Number of surfaces is 6
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
 1 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0 || 1 0 1 0 ; 0 0 0
@@ -304,7 +304,7 @@ Vertex surfaces (quad)
 -------------------------------
 
 Number of surfaces is 4
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad normal
 1 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0 || 1 0 1 0 ; 0 0 0
 0 1 0 1 ; 0 1 0 || 1 1 1 1 ; 0 0 0 || 0 1 0 1 ; 0 1 0
@@ -318,7 +318,7 @@ Vertex surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 11
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
 1 1 1 0 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 0 1 || 1 0 1 1 ; 0 0 0 ; 0 0 0
@@ -339,7 +339,7 @@ Vertex surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 7
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad-oct almost normal
 1 1 1 0 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 0 1 || 1 0 1 1 ; 0 0 0 ; 0 0 0
 1 0 1 1 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 1 0 0 || 1 1 1 0 ; 0 0 0 ; 0 0 0
@@ -356,7 +356,7 @@ Fundamental surfaces (std)
 -------------------------------
 
 Number of surfaces is 6
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
 1 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0 || 1 0 1 0 ; 0 0 0
@@ -372,7 +372,7 @@ Fundamental surfaces (quad)
 -------------------------------
 
 Number of surfaces is 4
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad normal
 1 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0 || 1 0 1 0 ; 0 0 0
 0 1 0 1 ; 0 1 0 || 1 1 1 1 ; 0 0 0 || 0 1 0 1 ; 0 1 0
@@ -386,7 +386,7 @@ Fundamental surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 11
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
 1 1 1 0 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 0 1 || 1 0 1 1 ; 0 0 0 ; 0 0 0
@@ -407,7 +407,7 @@ Fundamental surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 7
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad-oct almost normal
 1 1 1 0 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 0 1 || 1 0 1 1 ; 0 0 0 ; 0 0 0
 1 0 1 1 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 1 0 0 || 1 1 1 0 ; 0 0 0 ; 0 0 0
@@ -424,7 +424,7 @@ Vertex surfaces (std)
 -------------------------------
 
 Number of surfaces is 9
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 0 0 1 1 ; 1 0 0
@@ -443,7 +443,7 @@ Vertex surfaces (quad)
 -------------------------------
 
 Number of surfaces is 4
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad normal
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 0 0 1 1 ; 1 0 0
 1 1 1 1 ; 0 0 0 || 0 0 1 1 ; 1 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
@@ -457,7 +457,7 @@ Vertex surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 15
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 1 0 0
@@ -482,7 +482,7 @@ Vertex surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 8
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad-oct almost normal
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 1 0 0
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 0 0 1 1 ; 1 0 0 ; 0 0 0
@@ -500,7 +500,7 @@ Fundamental surfaces (std)
 -------------------------------
 
 Number of surfaces is 9
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 0 0 1 1 ; 1 0 0
@@ -519,7 +519,7 @@ Fundamental surfaces (quad)
 -------------------------------
 
 Number of surfaces is 4
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad normal
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 0 0 1 1 ; 1 0 0
 1 1 1 1 ; 0 0 0 || 0 0 1 1 ; 1 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
@@ -533,7 +533,7 @@ Fundamental surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 15
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 1 0 0
@@ -558,7 +558,7 @@ Fundamental surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 8
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad-oct almost normal
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 1 0 0
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 0 0 1 1 ; 1 0 0 ; 0 0 0
@@ -576,7 +576,7 @@ Vertex surfaces (std)
 -------------------------------
 
 Number of surfaces is 2
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
 0 0 0 0 ; 0 0 1 || 0 0 0 0 ; 0 1 0
@@ -588,7 +588,7 @@ Vertex surfaces (quad)
 -------------------------------
 
 Number of surfaces is 1
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad normal
 0 0 0 0 ; 0 0 1 || 0 0 0 0 ; 0 1 0
 
@@ -599,7 +599,7 @@ Vertex surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 4
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
 1 1 0 0 ; 0 0 0 ; 0 1 0 || 1 1 0 0 ; 0 0 1 ; 0 0 0
@@ -613,7 +613,7 @@ Vertex surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 3
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad-oct almost normal
 1 1 0 0 ; 0 0 0 ; 0 1 0 || 1 1 0 0 ; 0 0 1 ; 0 0 0
 0 0 1 1 ; 0 1 0 ; 0 0 0 || 0 0 1 1 ; 0 0 0 ; 0 0 1
@@ -626,7 +626,7 @@ Fundamental surfaces (std)
 -------------------------------
 
 Number of surfaces is 2
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
 0 0 0 0 ; 0 0 1 || 0 0 0 0 ; 0 1 0
@@ -638,7 +638,7 @@ Fundamental surfaces (quad)
 -------------------------------
 
 Number of surfaces is 1
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad normal
 0 0 0 0 ; 0 0 1 || 0 0 0 0 ; 0 1 0
 
@@ -649,7 +649,7 @@ Fundamental surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 4
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
 1 1 0 0 ; 0 0 0 ; 0 1 0 || 1 1 0 0 ; 0 0 1 ; 0 0 0
@@ -663,7 +663,7 @@ Fundamental surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 3
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad-oct almost normal
 1 1 0 0 ; 0 0 0 ; 0 1 0 || 1 1 0 0 ; 0 0 1 ; 0 0 0
 0 0 1 1 ; 0 1 0 ; 0 0 0 || 0 0 1 1 ; 0 0 0 ; 0 0 1
@@ -676,7 +676,7 @@ Vertex surfaces (std)
 -------------------------------
 
 Number of surfaces is 7
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
 1 1 0 0 ; 1 0 0 || 1 0 1 0 ; 0 1 0 || 1 0 0 1 ; 0 0 1 || 0 1 0 1 ; 0 1 0 || 0 0 1 1 ; 1 0 0
@@ -693,7 +693,7 @@ Vertex surfaces (quad)
 -------------------------------
 
 Number of surfaces is 6
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad normal
 1 1 0 0 ; 1 0 0 || 1 0 1 0 ; 0 1 0 || 1 0 0 1 ; 0 0 1 || 0 1 0 1 ; 0 1 0 || 0 0 1 1 ; 1 0 0
 1 0 1 0 ; 0 1 0 || 1 0 0 1 ; 0 0 1 || 0 0 1 1 ; 1 0 0 || 1 0 1 0 ; 0 1 0 || 0 1 1 0 ; 0 0 1
@@ -709,7 +709,7 @@ Vertex surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 22
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 2 1 1 0 ; 0 0 1 ; 0 0 0 || 2 1 0 1 ; 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 2 0 || 1 0 1 2 ; 0 1 0 ; 0 0 0 || 0 1 1 2 ; 0 0 1 ; 0 0 0
 2 1 0 1 ; 0 1 0 ; 0 0 0 || 2 0 1 1 ; 1 0 0 ; 0 0 0 || 1 0 2 1 ; 0 0 1 ; 0 0 0 || 0 1 2 1 ; 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 2 0
@@ -741,7 +741,7 @@ Vertex surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 21
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad-oct almost normal
 2 1 1 0 ; 0 0 1 ; 0 0 0 || 2 1 0 1 ; 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 2 0 || 1 0 1 2 ; 0 1 0 ; 0 0 0 || 0 1 1 2 ; 0 0 1 ; 0 0 0
 2 1 0 1 ; 0 1 0 ; 0 0 0 || 2 0 1 1 ; 1 0 0 ; 0 0 0 || 1 0 2 1 ; 0 0 1 ; 0 0 0 || 0 1 2 1 ; 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 2 0
@@ -772,7 +772,7 @@ Fundamental surfaces (std)
 -------------------------------
 
 Number of surfaces is 7
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
 1 1 0 0 ; 1 0 0 || 1 0 1 0 ; 0 1 0 || 1 0 0 1 ; 0 0 1 || 0 1 0 1 ; 0 1 0 || 0 0 1 1 ; 1 0 0
@@ -789,7 +789,7 @@ Fundamental surfaces (quad)
 -------------------------------
 
 Number of surfaces is 6
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad normal
 1 1 0 0 ; 1 0 0 || 1 0 1 0 ; 0 1 0 || 1 0 0 1 ; 0 0 1 || 0 1 0 1 ; 0 1 0 || 0 0 1 1 ; 1 0 0
 1 0 1 0 ; 0 1 0 || 1 0 0 1 ; 0 0 1 || 0 0 1 1 ; 1 0 0 || 1 0 1 0 ; 0 1 0 || 0 1 1 0 ; 0 0 1
@@ -805,7 +805,7 @@ Fundamental surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 22
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 2 1 1 0 ; 0 0 1 ; 0 0 0 || 2 1 0 1 ; 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 2 0 || 1 0 1 2 ; 0 1 0 ; 0 0 0 || 0 1 1 2 ; 0 0 1 ; 0 0 0
 2 1 0 1 ; 0 1 0 ; 0 0 0 || 2 0 1 1 ; 1 0 0 ; 0 0 0 || 1 0 2 1 ; 0 0 1 ; 0 0 0 || 0 1 2 1 ; 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 2 0
@@ -837,7 +837,7 @@ Fundamental surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 21
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad-oct almost normal
 2 1 1 0 ; 0 0 1 ; 0 0 0 || 2 1 0 1 ; 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 2 0 || 1 0 1 2 ; 0 1 0 ; 0 0 0 || 0 1 1 2 ; 0 0 1 ; 0 0 0
 2 1 0 1 ; 0 1 0 ; 0 0 0 || 2 0 1 1 ; 1 0 0 ; 0 0 0 || 1 0 2 1 ; 0 0 1 ; 0 0 0 || 0 1 2 1 ; 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 2 0
@@ -868,7 +868,7 @@ Vertex surfaces (std)
 -------------------------------
 
 Number of surfaces is 9
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard normal (tri-quad)
 3 3 0 0 ; 0 0 1 || 1 1 0 0 ; 0 0 2 || 1 1 0 0 ; 0 0 1
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
@@ -887,7 +887,7 @@ Vertex surfaces (quad)
 -------------------------------
 
 Number of surfaces is 6
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad normal
 3 3 0 0 ; 0 0 1 || 1 1 0 0 ; 0 0 2 || 1 1 0 0 ; 0 0 1
 1 1 1 1 ; 0 0 0 || 1 1 0 0 ; 1 0 0 || 0 0 0 0 ; 0 2 0
@@ -903,7 +903,7 @@ Vertex surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 22
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 4 4 0 0 ; 0 0 2 ; 0 0 0 || 2 2 0 0 ; 0 0 2 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 1 0 0
 3 3 0 0 ; 0 0 1 ; 0 0 0 || 1 1 0 0 ; 0 0 2 ; 0 0 0 || 1 1 0 0 ; 0 0 1 ; 0 0 0
@@ -935,7 +935,7 @@ Vertex surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 17
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad-oct almost normal
 4 4 0 0 ; 0 0 2 ; 0 0 0 || 2 2 0 0 ; 0 0 2 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 1 0 0
 3 3 0 0 ; 0 0 1 ; 0 0 0 || 1 1 0 0 ; 0 0 2 ; 0 0 0 || 1 1 0 0 ; 0 0 1 ; 0 0 0
@@ -962,7 +962,7 @@ Fundamental surfaces (std)
 -------------------------------
 
 Number of surfaces is 9
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard normal (tri-quad)
 3 3 0 0 ; 0 0 1 || 1 1 0 0 ; 0 0 2 || 1 1 0 0 ; 0 0 1
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
@@ -981,7 +981,7 @@ Fundamental surfaces (quad)
 -------------------------------
 
 Number of surfaces is 7
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad normal
 3 3 0 0 ; 0 0 1 || 1 1 0 0 ; 0 0 2 || 1 1 0 0 ; 0 0 1
 1 1 1 1 ; 0 0 0 || 1 1 0 0 ; 1 0 0 || 0 0 0 0 ; 0 2 0
@@ -998,7 +998,7 @@ Fundamental surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 23
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 4 4 0 0 ; 0 0 2 ; 0 0 0 || 2 2 0 0 ; 0 0 2 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 1 0 0
 3 3 0 0 ; 0 0 1 ; 0 0 0 || 1 1 0 0 ; 0 0 2 ; 0 0 0 || 1 1 0 0 ; 0 0 1 ; 0 0 0
@@ -1031,7 +1031,7 @@ Fundamental surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 19
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad-oct almost normal
 4 4 0 0 ; 0 0 2 ; 0 0 0 || 2 2 0 0 ; 0 0 2 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 1 0 0
 3 3 0 0 ; 0 0 1 ; 0 0 0 || 1 1 0 0 ; 0 0 2 ; 0 0 0 || 1 1 0 0 ; 0 0 1 ; 0 0 0
@@ -1060,7 +1060,7 @@ Vertex surfaces (std)
 -------------------------------
 
 Number of surfaces is 12
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 0 ; 0 0 0 || 0 1 1 0 ; 0 0 0 || 0 1 0 0 ; 0 0 0
 1 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0 || 1 0 1 0 ; 0 0 0
@@ -1082,7 +1082,7 @@ Vertex surfaces (quad)
 -------------------------------
 
 Number of surfaces is 7
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad normal
 1 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0 || 1 0 1 0 ; 0 0 0
 1 0 0 0 ; 1 0 0 || 1 1 0 0 ; 0 0 0 || 1 0 0 0 ; 0 0 1
@@ -1099,7 +1099,7 @@ Vertex surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 39
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 2 0 1 0 ; 1 0 0 ; 0 0 0 || 1 1 0 0 ; 0 1 0 ; 0 0 0 || 1 0 0 0 ; 0 0 0 ; 1 0 0
 1 2 1 0 ; 0 0 0 ; 0 0 0 || 0 1 1 0 ; 1 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 1 0
@@ -1148,7 +1148,7 @@ Vertex surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 16
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad-oct almost normal
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 0 1 0 ; 0 0 0 ; 0 1 0
 1 1 1 0 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 0 1 || 1 0 1 1 ; 0 0 0 ; 0 0 0
@@ -1174,7 +1174,7 @@ Fundamental surfaces (std)
 -------------------------------
 
 Number of surfaces is 12
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 0 ; 0 0 0 || 0 1 1 0 ; 0 0 0 || 0 1 0 0 ; 0 0 0
 1 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0 || 1 0 1 0 ; 0 0 0
@@ -1196,7 +1196,7 @@ Fundamental surfaces (quad)
 -------------------------------
 
 Number of surfaces is 7
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad normal
 1 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0 || 1 0 1 0 ; 0 0 0
 1 0 0 0 ; 1 0 0 || 1 1 0 0 ; 0 0 0 || 1 0 0 0 ; 0 0 1
@@ -1213,7 +1213,7 @@ Fundamental surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 39
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 2 0 1 0 ; 1 0 0 ; 0 0 0 || 1 1 0 0 ; 0 1 0 ; 0 0 0 || 1 0 0 0 ; 0 0 0 ; 1 0 0
 1 2 1 0 ; 0 0 0 ; 0 0 0 || 0 1 1 0 ; 1 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 1 0
@@ -1262,7 +1262,7 @@ Fundamental surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 16
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad-oct almost normal
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 0 1 0 ; 0 0 0 ; 0 1 0
 1 1 1 0 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 0 ; 0 0 1 || 1 0 1 1 ; 0 0 0 ; 0 0 0
@@ -1288,7 +1288,7 @@ Vertex surfaces (std)
 -------------------------------
 
 Number of surfaces is 1
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
 
@@ -1303,7 +1303,7 @@ inf inf inf inf ; 1 0 0 || inf inf inf inf ; 0 0 2
 inf inf inf inf ; 0 2 0 || inf inf inf inf ; 1 0 0
 inf inf inf inf ; 0 0 2 || inf inf inf inf ; 1 0 0
 Number of surfaces is 4
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad normal
 
 
@@ -1313,7 +1313,7 @@ Vertex surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 1
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
 
@@ -1338,7 +1338,7 @@ inf inf inf inf ; 0 0 0 ; 0 1 0 || inf inf inf inf ; 0 0 1 ; 0 0 0
 inf inf inf inf ; 0 0 0 ; 0 0 1 || inf inf inf inf ; 0 1 0 ; 0 0 0
 inf inf inf inf ; 0 0 0 ; 0 0 1 || inf inf inf inf ; 0 0 1 ; 0 0 0
 Number of surfaces is 14
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad-oct almost normal
 
 
@@ -1348,7 +1348,7 @@ Fundamental surfaces (std)
 -------------------------------
 
 Number of surfaces is 1
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
 
@@ -1363,7 +1363,7 @@ inf inf inf inf ; 1 0 0 || inf inf inf inf ; 0 0 2
 inf inf inf inf ; 0 2 0 || inf inf inf inf ; 1 0 0
 inf inf inf inf ; 0 0 2 || inf inf inf inf ; 1 0 0
 Number of surfaces is 4
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad normal
 
 
@@ -1373,7 +1373,7 @@ Fundamental surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 1
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
 
@@ -1398,7 +1398,7 @@ inf inf inf inf ; 0 0 0 ; 0 1 0 || inf inf inf inf ; 0 0 1 ; 0 0 0
 inf inf inf inf ; 0 0 0 ; 0 0 1 || inf inf inf inf ; 0 1 0 ; 0 0 0
 inf inf inf inf ; 0 0 0 ; 0 0 1 || inf inf inf inf ; 0 0 1 ; 0 0 0
 Number of surfaces is 14
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad-oct almost normal
 
 
@@ -1408,7 +1408,7 @@ Vertex surfaces (std)
 -------------------------------
 
 Number of surfaces is 3
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 0 0 ; 0 0 0 || 1 1 0 0 ; 0 0 0 || 0 0 1 1 ; 0 0 0 || 0 0 1 1 ; 0 0 0
 0 0 1 1 ; 0 0 0 || 0 0 1 1 ; 0 0 0 || 1 1 0 0 ; 0 0 0 || 1 1 0 0 ; 0 0 0
@@ -1439,7 +1439,7 @@ inf inf inf inf ; 0 0 0 || inf inf inf inf ; 0 0 1 || inf inf inf inf ; 0 2 0 ||
 inf inf 1 0 ; 0 0 0 || inf inf 0 1 ; 0 0 0 || 1 0 inf inf ; 1 0 0 || 0 1 inf inf ; 1 0 0
 inf inf 0 1 ; 1 0 0 || inf inf 1 0 ; 1 0 0 || 0 1 inf inf ; 0 0 0 || 1 0 inf inf ; 0 0 0
 Number of surfaces is 20
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad normal
 1 0 inf inf ; 1 0 0 || 1 0 inf inf ; 0 0 0 || inf inf 0 1 ; 1 0 0 || inf inf 0 1 ; 0 0 0
 0 1 inf inf ; 0 0 0 || 0 1 inf inf ; 1 0 0 || inf inf 1 0 ; 0 0 0 || inf inf 1 0 ; 1 0 0
@@ -1451,7 +1451,7 @@ Vertex surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 3
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 1 1 0 0 ; 0 0 0 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 0 0 0 || 0 0 1 1 ; 0 0 0 ; 0 0 0 || 0 0 1 1 ; 0 0 0 ; 0 0 0
 0 0 1 1 ; 0 0 0 ; 0 0 0 || 0 0 1 1 ; 0 0 0 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 0 0 0
@@ -1518,7 +1518,7 @@ inf inf 0 0 ; 0 1 0 ; 0 0 0 || inf inf 0 1 ; 0 0 0 ; 0 0 0 || 0 0 inf inf ; 0 0 
 inf inf 0 0 ; 0 0 0 ; 1 0 0 || inf inf 0 1 ; 0 0 1 ; 0 0 0 || 1 1 inf inf ; 0 0 0 ; 0 0 0 || 0 1 inf inf ; 0 1 0 ; 0 0 0
 inf inf 0 0 ; 0 0 0 ; 0 1 0 || inf inf 1 0 ; 0 0 0 ; 0 0 0 || 0 0 inf inf ; 0 1 0 ; 0 0 0 || 1 0 inf inf ; 0 0 0 ; 0 0 0
 Number of surfaces is 64
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad-oct almost normal
 1 1 inf inf ; 0 0 0 ; 0 0 0 || 0 0 inf inf ; 0 0 0 ; 1 0 0 || inf inf 0 1 ; 0 1 0 ; 0 0 0 || inf inf 0 1 ; 0 0 1 ; 0 0 0
 1 0 inf inf ; 1 0 0 ; 0 0 0 || 1 0 inf inf ; 0 0 0 ; 0 0 0 || inf inf 0 1 ; 1 0 0 ; 0 0 0 || inf inf 0 1 ; 0 0 0 ; 0 0 0
@@ -1538,7 +1538,7 @@ Fundamental surfaces (std)
 -------------------------------
 
 Number of surfaces is 3
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 0 0 ; 0 0 0 || 1 1 0 0 ; 0 0 0 || 0 0 1 1 ; 0 0 0 || 0 0 1 1 ; 0 0 0
 0 0 1 1 ; 0 0 0 || 0 0 1 1 ; 0 0 0 || 1 1 0 0 ; 0 0 0 || 1 1 0 0 ; 0 0 0
@@ -1571,7 +1571,7 @@ inf inf 0 1 ; 1 0 0 || inf inf 1 0 ; 1 0 0 || 0 1 inf inf ; 0 0 0 || 1 0 inf inf
 inf inf 0 0 ; 0 1 0 || inf inf 0 0 ; 0 1 0 || 0 0 inf inf ; 0 0 1 || 0 0 inf inf ; 0 0 1
 inf inf 0 0 ; 0 0 1 || inf inf 0 0 ; 0 0 1 || 0 0 inf inf ; 0 1 0 || 0 0 inf inf ; 0 1 0
 Number of surfaces is 24
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad normal
 1 0 inf inf ; 1 0 0 || 1 0 inf inf ; 0 0 0 || inf inf 0 1 ; 1 0 0 || inf inf 0 1 ; 0 0 0
 0 1 inf inf ; 0 0 0 || 0 1 inf inf ; 1 0 0 || inf inf 1 0 ; 0 0 0 || inf inf 1 0 ; 1 0 0
@@ -1585,7 +1585,7 @@ Fundamental surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 3
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 1 1 0 0 ; 0 0 0 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 0 0 0 || 0 0 1 1 ; 0 0 0 ; 0 0 0 || 0 0 1 1 ; 0 0 0 ; 0 0 0
 0 0 1 1 ; 0 0 0 ; 0 0 0 || 0 0 1 1 ; 0 0 0 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 0 0 0 || 1 1 0 0 ; 0 0 0 ; 0 0 0
@@ -1654,7 +1654,7 @@ inf inf 0 0 ; 0 0 1 ; 0 0 0 || inf inf 0 0 ; 0 0 1 ; 0 0 0 || 0 0 inf inf ; 0 1 
 inf inf 0 0 ; 0 0 0 ; 1 0 0 || inf inf 0 1 ; 0 0 1 ; 0 0 0 || 1 1 inf inf ; 0 0 0 ; 0 0 0 || 0 1 inf inf ; 0 1 0 ; 0 0 0
 inf inf 0 0 ; 0 0 0 ; 0 1 0 || inf inf 1 0 ; 0 0 0 ; 0 0 0 || 0 0 inf inf ; 0 1 0 ; 0 0 0 || 1 0 inf inf ; 0 0 0 ; 0 0 0
 Number of surfaces is 68
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad-oct almost normal
 1 1 inf inf ; 0 0 0 ; 0 0 0 || 0 0 inf inf ; 0 0 0 ; 1 0 0 || inf inf 0 1 ; 0 1 0 ; 0 0 0 || inf inf 0 1 ; 0 0 1 ; 0 0 0
 1 0 inf inf ; 1 0 0 ; 0 0 0 || 1 0 inf inf ; 0 0 0 ; 0 0 0 || inf inf 0 1 ; 1 0 0 ; 0 0 0 || inf inf 0 1 ; 0 0 0 ; 0 0 0
@@ -1676,7 +1676,7 @@ Vertex surfaces (std)
 -------------------------------
 
 Number of surfaces is 1
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 1 ; 0 0 0
 
@@ -1687,7 +1687,7 @@ Vertex surfaces (quad)
 -------------------------------
 
 Number of surfaces is 0
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad normal
 
 
@@ -1697,7 +1697,7 @@ Vertex surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 1
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 1 1 1 1 ; 0 0 0 ; 0 0 0
 
@@ -1708,7 +1708,7 @@ Vertex surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 0
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Quad-oct almost normal
 
 
@@ -1718,7 +1718,7 @@ Fundamental surfaces (std)
 -------------------------------
 
 Number of surfaces is 1
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard normal (tri-quad)
 1 1 1 1 ; 0 0 0
 
@@ -1729,7 +1729,7 @@ Fundamental surfaces (quad)
 -------------------------------
 
 Number of surfaces is 0
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad normal
 
 
@@ -1739,7 +1739,7 @@ Fundamental surfaces (std almost normal)
 -------------------------------
 
 Number of surfaces is 1
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 1 1 1 1 ; 0 0 0 ; 0 0 0
 
@@ -1750,7 +1750,7 @@ Fundamental surfaces (quad-oct almost normal)
 -------------------------------
 
 Number of surfaces is 0
-Embedded vertex normal surfaces
+Embedded, fundamental surfaces
 Coordinates: Quad-oct almost normal
 
 

@@ -91,7 +91,7 @@ Faces:
 *
 ************************************************************
 
-Embedded vertex normal surfaces
+Embedded, legacy surfaces
 Coordinates: Standard normal (tri-quad)
 Number of surfaces is 1
 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
@@ -105,7 +105,7 @@ Number of surfaces is 1
 *
 ************************************************************
 
-Embedded vertex normal surfaces
+Embedded, legacy surfaces
 Coordinates: Quad normal
 Number of surfaces is 4
 inf inf inf inf ; 2 0 0 || inf inf inf inf ; 0 0 1
@@ -186,7 +186,7 @@ Faces:
 *
 ************************************************************
 
-Embedded vertex normal surfaces
+Embedded, legacy surfaces
 Coordinates: Standard normal (tri-quad)
 Number of surfaces is 12
 0 0 0 0 ; 0 0 1 || 0 0 0 0 ; 0 1 0 || 0 0 0 0 ; 1 0 0 || 0 0 0 0 ; 0 1 0
@@ -211,7 +211,7 @@ Number of surfaces is 12
 *
 ************************************************************
 
-Embedded vertex normal surfaces
+Embedded, legacy surfaces
 Coordinates: Standard almost normal (tri-quad-oct)
 Number of surfaces is 33
 0 0 1 1 ; 1 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
