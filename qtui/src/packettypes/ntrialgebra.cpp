@@ -245,7 +245,7 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
     wideFundPresArea->addStretch(1);
 
     QBoxLayout* fundPresArea = new QVBoxLayout();
-    wideFundPresArea->addLayout(fundPresArea);
+    wideFundPresArea->addLayout(fundPresArea, 2);
     fundGens = new QLabel();
     fundPresArea->addWidget(fundGens);
     fundRelCount = new QLabel();
