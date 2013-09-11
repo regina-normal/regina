@@ -37,6 +37,7 @@
 #include "triangulation/nboundarycomponent.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
 
@@ -72,6 +73,8 @@ void addNVertex() {
         .def("getNumberOfEmbeddings", &NVertex::getNumberOfEmbeddings)
         .def("getEmbedding", &NVertex::getEmbedding,
             return_internal_reference<>())
+        .def("getTriangulation", &NVertex::getTriangulation,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &NVertex::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &NVertex::getBoundaryComponent,

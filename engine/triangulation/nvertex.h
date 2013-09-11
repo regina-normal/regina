@@ -54,6 +54,7 @@ class NBoundaryComponent;
 class NComponent;
 class Dim2Triangulation;
 class NTetrahedron;
+class NTriangulation;
 
 /**
  * \weakgroup triangulation
@@ -215,6 +216,13 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
          * @return the requested embedding descriptor.
          */
         const NVertexEmbedding& getEmbedding(unsigned long index) const;
+
+        /**
+         * Returns the triangulation to which this vertex belongs.
+         *
+         * @return the triangulation containing this vertex.
+         */
+        NTriangulation* getTriangulation() const;
 
         /**
          * Returns the component of the triangulation to which this
@@ -384,6 +392,10 @@ namespace regina {
 inline NVertex::NVertex(NComponent* myComponent) : component(myComponent),
         boundaryComponent(0), linkOrientable(true),
         linkEulerCharacteristic(0), linkTri(0) {
+}
+
+inline NTriangulation* NVertex::getTriangulation() const {
+    return embeddings.front().getTetrahedron()->getTriangulation();
 }
 
 inline NComponent* NVertex::getComponent() const {

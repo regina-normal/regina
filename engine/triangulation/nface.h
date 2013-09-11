@@ -53,6 +53,7 @@ class NBoundaryComponent;
 class NComponent;
 class NEdge;
 class NTetrahedron;
+class NTriangulation;
 class NVertex;
 
 /**
@@ -268,6 +269,13 @@ class REGINA_API NFace : public ShareableObject, public NMarkedElement {
         const NFaceEmbedding& getEmbedding(unsigned index) const;
 
         /**
+         * Returns the triangulation to which this face belongs.
+         *
+         * @return the triangulation containing this face.
+         */
+        NTriangulation* getTriangulation() const;
+
+        /**
          * Returns the component of the triangulation to which this
          * face belongs.
          *
@@ -363,6 +371,10 @@ inline NFace::~NFace() {
         delete embeddings[0];
     if (nEmbeddings > 1)
         delete embeddings[1];
+}
+
+inline NTriangulation* NFace::getTriangulation() const {
+    return embeddings[0]->getTetrahedron()->getTriangulation();
 }
 
 inline NComponent* NFace::getComponent() const {

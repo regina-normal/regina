@@ -53,6 +53,7 @@ namespace regina {
 class NBoundaryComponent;
 class NComponent;
 class NTetrahedron;
+class NTriangulation;
 class NVertex;
 
 /**
@@ -318,6 +319,13 @@ class REGINA_API NEdge : public ShareableObject, public NMarkedElement {
         const NEdgeEmbedding& getEmbedding(unsigned long index) const;
 
         /**
+         * Returns the triangulation to which this edge belongs.
+         *
+         * @return the triangulation containing this edge.
+         */
+        NTriangulation* getTriangulation() const;
+
+        /**
          * Returns the component of the triangulation to which this
          * edge belongs.
          *
@@ -399,6 +407,10 @@ inline NEdge::NEdge(NComponent* myComponent) : component(myComponent),
 }
 
 inline NEdge::~NEdge() {
+}
+
+inline NTriangulation* NEdge::getTriangulation() const {
+    return embeddings.front().getTetrahedron()->getTriangulation();
 }
 
 inline NComponent* NEdge::getComponent() const {

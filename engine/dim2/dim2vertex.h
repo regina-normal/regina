@@ -182,6 +182,13 @@ class REGINA_API Dim2Vertex : public ShareableObject, public NMarkedElement {
         const Dim2VertexEmbedding& getEmbedding(unsigned long index) const;
 
         /**
+         * Returns the triangulation to which this vertex belongs.
+         *
+         * @return the triangulation containing this vertex.
+         */
+        Dim2Triangulation* getTriangulation() const;
+
+        /**
          * Returns the component of the triangulation to which this
          * vertex belongs.
          *
@@ -289,6 +296,10 @@ inline const Dim2VertexEmbedding& Dim2Vertex::getEmbedding(unsigned long index)
 
 inline NPerm3 Dim2VertexEmbedding::getVertices() const {
     return triangle_->getVertexMapping(vertex_);
+}
+
+inline Dim2Triangulation* Dim2Vertex::getTriangulation() const {
+    return emb_.front().getTriangle()->getTriangulation();
 }
 
 inline Dim2Component* Dim2Vertex::getComponent() const {

@@ -52,6 +52,7 @@ namespace regina {
 class Dim2BoundaryComponent;
 class Dim2Component;
 class Dim2Triangle;
+class Dim2Triangulation;
 class Dim2Vertex;
 
 /**
@@ -193,6 +194,13 @@ class REGINA_API Dim2Edge : public ShareableObject, public NMarkedElement {
         const Dim2EdgeEmbedding& getEmbedding(unsigned index) const;
 
         /**
+         * Returns the triangulation to which this edge belongs.
+         *
+         * @return the triangulation containing this edge.
+         */
+        Dim2Triangulation* getTriangulation() const;
+
+        /**
          * Returns the component of the triangulation to which this
          * edge belongs.
          *
@@ -301,6 +309,10 @@ inline unsigned Dim2Edge::getNumberOfEmbeddings() const {
 inline const Dim2EdgeEmbedding& Dim2Edge::getEmbedding(
         unsigned index) const {
     return emb_[index];
+}
+
+inline Dim2Triangulation* Dim2Edge::getTriangulation() const {
+    return emb_[0].getTriangle()->getTriangulation();
 }
 
 inline Dim2Component* Dim2Edge::getComponent() const {
