@@ -106,31 +106,16 @@ class ReginaPrefGeneral : public QWidget {
     private:
         QCheckBox* cbUseDock;
         // QCheckBox* cbDisplayTagsInTree;
-        QLineEdit* editTreeJumpSize;
+        QCheckBox* cbWarnOnNonEmbedded;
+        QCheckBox* cbSupportOriented;
         QCheckBox* cbGraphvizLabels;
+        QLineEdit* editTreeJumpSize;
         QCheckBox* cbTipOfDay;
         QCheckBox* cbIntroOnStartup;
         CodecChooser* chooserImportExportCodec;
 
     public:
         ReginaPrefGeneral(QWidget* parent = 0);
-
-    friend class ReginaPreferences;
-};
-
-/**
- * The page of the Regina configuration dialog for normal surface
- * preferences.
- */
-class ReginaPrefSurfaces : public QWidget {
-    Q_OBJECT
-
-    private:
-        QCheckBox* cbWarnOnNonEmbedded;
-        QCheckBox* cbSupportOriented;
-
-    public:
-        ReginaPrefSurfaces(QWidget* parent = 0);
 
     private slots:
         void orientedChecked(int);
