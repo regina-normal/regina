@@ -147,10 +147,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     item->addTab(generalPrefs, IconCache::icon(IconCache::regina),
         tr("General"));
 
-    triPrefs = new ReginaPrefTri(this);
-    item->addTab(triPrefs, IconCache::icon(IconCache::packet_triangulation), 
-        tr("Triangulation"));
-
     surfacePrefs = new ReginaPrefSurfaces(this);
     item->addTab(surfacePrefs, IconCache::icon(IconCache::packet_surfaces),
         tr("Surfaces"));
@@ -180,6 +176,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     // generalPrefs->cbDisplayTagsInTree->setChecked(prefSet.displayTagsInTree);
     generalPrefs->editTreeJumpSize->setText(
         QString::number(prefSet.treeJumpSize));
+    generalPrefs->cbGraphvizLabels->setChecked(prefSet.triGraphvizLabels);
 //    generalPrefs->cbTipOfDay->setChecked(
 //        KConfigGroup(KGlobal::config(), "TipOfDay").
 //        readEntry("RunOnStart", true));
@@ -187,10 +184,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     generalPrefs->chooserImportExportCodec->setCodecName(
         prefSet.fileImportExportCodec);
 
-    triPrefs->cbGraphvizLabels->setChecked(prefSet.triGraphvizLabels);
-
-    surfacePrefs->chooserCreationCoords->setCurrentSystem(
-        prefSet.surfacesCreationCoords);
     surfacePrefs->cbWarnOnNonEmbedded->setChecked(prefSet.warnOnNonEmbedded);
 
     surfacePrefs->cbSupportOriented->setChecked(
@@ -282,7 +275,7 @@ void ReginaPreferences::slotApply() {
     prefSet.fileImportExportCodec = generalPrefs->chooserImportExportCodec->
         selectedCodecName();
 
-    prefSet.triGraphvizLabels = triPrefs->cbGraphvizLabels->isChecked();
+    prefSet.triGraphvizLabels = generalPrefs->cbGraphvizLabels->isChecked();
 
     // This is going to be needed a number of times further on.
     // Search through $PATH to find the executable
@@ -295,8 +288,6 @@ void ReginaPreferences::slotApply() {
 #endif
     QStringList pathList = paths.split(pathSeparator);
 
-    prefSet.surfacesCreationCoords = surfacePrefs->chooserCreationCoords->
-        getCurrentSystem();
     if (surfacePrefs->cbWarnOnNonEmbedded->isChecked())
         prefSet.warnOnNonEmbedded = true;
     else
@@ -561,6 +552,12 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     layout->addWidget(cbDisplayTagsInTree);
     */
 
+    // Set up Graphviz options.
+    cbGraphvizLabels = new QCheckBox(tr("Labels on face pairing graphs"));
+    cbGraphvizLabels->setWhatsThis(tr("Labels each node in a "
+        "face pairing graph with the corresponding tetrahedron number."));
+    layout->addWidget(cbGraphvizLabels);
+
     // Set up the tree jump size.
     QBoxLayout* box = new QHBoxLayout();
 
@@ -615,43 +612,15 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     setLayout(layout);
 }
 
-ReginaPrefTri::ReginaPrefTri(QWidget* parent) : QWidget(parent) {
-    QBoxLayout* layout = new QVBoxLayout(this);
-
-    // Set up Graphviz options.
-    cbGraphvizLabels = new QCheckBox(tr("Labels on face pairing graphs"));
-    cbGraphvizLabels->setWhatsThis(tr("Labels each node in a "
-        "face pairing graph with the corresponding tetrahedron number."));
-    layout->addWidget(cbGraphvizLabels);
-
-    // Add some space at the end.
-    layout->addStretch(1);
-    setLayout(layout);
-}
-
 ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QWidget(parent) {
     QBoxLayout* layout = new QVBoxLayout(this);
 
     // WARNING: Note that any change of order in the combo boxes must be
     // reflected in the ReginaPreferences methods as well.
 
-    // Set up the default creation coordinate system.
-    QBoxLayout* box = new QHBoxLayout();
-
-    QLabel* label = new QLabel(tr("Default coordinate system:"));
-    box->addWidget(label);
-    chooserCreationCoords = new CoordinateChooser();
-    chooserCreationCoords->insertAllCreators();
-    box->addWidget(chooserCreationCoords);
-    QString msg = tr("The default coordinate system for creating new normal "
-        "surface lists.");
-    label->setWhatsThis(msg);
-    chooserCreationCoords->setWhatsThis(msg);
-    layout->addLayout(box);
-
     // Options for warnings.
     cbWarnOnNonEmbedded = new QCheckBox(tr("Warn before generating "
-        "non-embedded surfaces"));
+        "immersed and/or singular surfaces"));
     cbWarnOnNonEmbedded->setWhatsThis(tr("<qt>When creating a new "
         "normal surface list, should Regina ask for confirmation before "
         "enumerating immersed and/or singular surfaces?  This warning "
