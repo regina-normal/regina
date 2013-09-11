@@ -419,6 +419,8 @@ Version 4.94  [ (under development) ]
               + Some preferences have just been removed from the dialog (e.g.,
                 the calculations thresholds), though users who really need
                 these can still access them through the configuration file.
+            - The elementary move dialog contains richer information
+              about where the moves can take place.
     UTILITIES:
         regconvert:
             - The option -b (for old-style binary files) is no longer supported.

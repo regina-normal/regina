@@ -37,6 +37,7 @@
 #include "eltmovedialog.h"
 #include "reginasupport.h"
 #include "choosers/edgechooser.h"
+#include "choosers/edgeintchooser.h"
 #include "choosers/facechooser.h"
 #include "choosers/tetrahedronchooser.h"
 #include "choosers/vertexchooser.h"
@@ -78,6 +79,14 @@ namespace {
 
     bool hasCollapseEdge(regina::NEdge* e) {
         return e->getTriangulation()->collapseEdge(e, true, false);
+    }
+
+    bool has44(regina::NEdge* e, int axis) {
+        return e->getTriangulation()->fourFourMove(e, axis, true, false);
+    }
+
+    bool has21(regina::NEdge* e, int end) {
+        return e->getTriangulation()->twoOneMove(e, end, true, false);
     }
 
     bool has23(regina::NFace* f) {
@@ -211,7 +220,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box23, 1, 1);
-    box44 = new QComboBox(this);
+    box44 = new EdgeIntChooser(tri, 0, 1, tr("axis"), &has44, this);
     box44->setWhatsThis( tr("<qt>Select the degree four edge about which "
         "the 4-4 move will be performed.  You must also select the axis "
         "along which the four new tetrahedra will be inserted (there are "
@@ -237,7 +246,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box20v, 4, 1);
-    box21 = new QComboBox(this);
+    box21 = new EdgeIntChooser(tri, 0, 1, tr("end"), &has21, this);
     box21->setWhatsThis( tr("<qt>Select the degree one edge about which "
         "the 2-1 move will be performed.  You must also select at which "
         "end of the edge the surrounding tetrahedron will be merged with "
@@ -278,8 +287,6 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(boxCollapseEdge, 9, 1);
-
-    fillWithMoves();
 
     use32->setEnabled(box32->count() > 0);
     use23->setEnabled(box23->count() > 0);
@@ -332,19 +339,17 @@ void EltMoveDialog::slotOk() {
         tri->threeTwoMove(box32->selected());
     else if (use23->isChecked())
         tri->twoThreeMove(box23->selected());
-    else if (use44->isChecked())
-        tri->fourFourMove(
-            tri->getEdge(set44[box44->currentIndex()].first),
-            set44[box44->currentIndex()].second);
-    else if (use20e->isChecked())
+    else if (use44->isChecked()) {
+        std::pair<regina::NEdge*, int> s = box44->selected();
+        tri->fourFourMove(s.first, s.second);
+    } else if (use20e->isChecked())
         tri->twoZeroMove(box20e->selected());
     else if (use20v->isChecked())
         tri->twoZeroMove(box20v->selected());
-    else if (use21->isChecked())
-        tri->twoOneMove(
-            tri->getEdge(set21[box21->currentIndex()].first),
-            set21[box21->currentIndex()].second);
-    else if (useOpenBook->isChecked())
+    else if (use21->isChecked()) {
+        std::pair<regina::NEdge*, int> s = box21->selected();
+        tri->twoOneMove(s.first, s.second);
+    } else if (useOpenBook->isChecked())
         tri->openBook(boxOpenBook->selected());
     else if (useCloseBook->isChecked())
         tri->closeBook(boxCloseBook->selected());
@@ -358,29 +363,5 @@ void EltMoveDialog::slotOk() {
     }
 
     accept();
-}
-
-void EltMoveDialog::fillWithMoves() {
-    unsigned long nEdges = tri->getNumberOfEdges();
-    regina::NEdge* e;
-    for (unsigned long i = 0; i < nEdges; i++) {
-        e = tri->getEdge(i);
-        if (tri->fourFourMove(e, 0, true, false)) {
-            box44->insertItem(box44->count(),tr("Edge %1 (axis 0)").arg(i));
-            set44.push_back(std::make_pair(i, 0));
-        }
-        if (tri->fourFourMove(e, 1, true, false)) {
-            box44->insertItem(box44->count(),tr("Edge %1 (axis 1)").arg(i));
-            set44.push_back(std::make_pair(i, 1));
-        }
-        if (tri->twoOneMove(e, 0, true, false)) {
-            box21->insertItem(box21->count(),tr("Edge %1 (end 0)").arg(i));
-            set21.push_back(std::make_pair(i, 0));
-        }
-        if (tri->twoOneMove(e, 1, true, false)) {
-            box21->insertItem(box21->count(),tr("Edge %1 (end 1)").arg(i));
-            set21.push_back(std::make_pair(i, 1));
-        }
-    }
 }
 
