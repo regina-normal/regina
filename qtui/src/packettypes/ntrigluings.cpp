@@ -707,7 +707,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
     QAction* actDrillEdge = new QAction(this);
-    actDrillEdge->setText(tr("Drill ed&ge"));
+    actDrillEdge->setText(tr("Drill ed&ge..."));
     actDrillEdge->setToolTip(tr(
         "Drill out a regular neighbourhood of an edge"));
     actDrillEdge->setWhatsThis(tr("Drill out a regular neighbourhood "
@@ -721,7 +721,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(sep);
 
     actBoundaryComponents = new QAction(this);
-    actBoundaryComponents->setText(tr("Boundar&y Components"));
+    actBoundaryComponents->setText(tr("Boundar&y Components..."));
     actBoundaryComponents->setToolTip(tr(
         "Build a 2-manifold triangulation from a boundary component"));
     actBoundaryComponents->setWhatsThis(tr("<qt>Build a 2-manifold "
@@ -738,7 +738,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     */
 
     QAction* actVertexLinks = new QAction(this);
-    actVertexLinks->setText(tr("&Vertex Links"));
+    actVertexLinks->setText(tr("&Vertex Links..."));
     actVertexLinks->setToolTip(tr(
         "Build a 2-manifold triangulation from a vertex link"));
     actVertexLinks->setWhatsThis(tr("<qt>Build a 2-manifold triangulation "
