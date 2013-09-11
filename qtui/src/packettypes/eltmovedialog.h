@@ -46,6 +46,10 @@
 class QButtonGroup;
 class QComboBox;
 class QRadioButton;
+class TetrahedronChooser;
+class FaceChooser;
+class EdgeChooser;
+class VertexChooser;
 
 namespace regina {
     class NTriangulation;
@@ -62,16 +66,16 @@ class EltMoveDialog : public QDialog {
         /**
          * Internal components:
          */
-        QComboBox* box32;
-        QComboBox* box23;
+        EdgeChooser* box32;
+        FaceChooser* box23;
         QComboBox* box44;
-        QComboBox* box20e;
-        QComboBox* box20v;
+        EdgeChooser* box20e;
+        VertexChooser* box20v;
         QComboBox* box21;
-        QComboBox* boxOpenBook;
-        QComboBox* boxCloseBook;
-        QComboBox* boxShellBdry;
-        QComboBox* boxCollapseEdge;
+        FaceChooser* boxOpenBook;
+        EdgeChooser* boxCloseBook;
+        TetrahedronChooser* boxShellBdry;
+        EdgeChooser* boxCollapseEdge;
         QRadioButton* use32;
         QRadioButton* use23;
         QRadioButton* use44;
@@ -87,16 +91,8 @@ class EltMoveDialog : public QDialog {
         /**
          * Available moves:
          */
-        std::vector<unsigned long> set32;
-        std::vector<unsigned long> set23;
         std::vector<std::pair<unsigned long, int> > set44;
-        std::vector<unsigned long> set20e;
-        std::vector<unsigned long> set20v;
         std::vector<std::pair<unsigned long, int> > set21;
-        std::vector<unsigned long> setOpenBook;
-        std::vector<unsigned long> setCloseBook;
-        std::vector<unsigned long> setShellBdry;
-        std::vector<unsigned long> setCollapseEdge;
 
         /**
          * Packet tree structure:
