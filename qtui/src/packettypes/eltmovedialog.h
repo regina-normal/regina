@@ -44,11 +44,11 @@
 #include <vector>
 
 class QButtonGroup;
-class QComboBox;
 class QRadioButton;
 class TetrahedronChooser;
 class FaceChooser;
 class EdgeChooser;
+class EdgeIntChooser;
 class VertexChooser;
 
 namespace regina {
@@ -68,10 +68,10 @@ class EltMoveDialog : public QDialog {
          */
         EdgeChooser* box32;
         FaceChooser* box23;
-        QComboBox* box44;
+        EdgeIntChooser* box44;
         EdgeChooser* box20e;
         VertexChooser* box20v;
-        QComboBox* box21;
+        EdgeIntChooser* box21;
         FaceChooser* boxOpenBook;
         EdgeChooser* boxCloseBook;
         TetrahedronChooser* boxShellBdry;
@@ -87,12 +87,6 @@ class EltMoveDialog : public QDialog {
         QRadioButton* useShellBdry;
         QRadioButton* useCollapseEdge;
         QButtonGroup* moveTypes;
-
-        /**
-         * Available moves:
-         */
-        std::vector<std::pair<unsigned long, int> > set44;
-        std::vector<std::pair<unsigned long, int> > set21;
 
         /**
          * Packet tree structure:
@@ -111,12 +105,6 @@ class EltMoveDialog : public QDialog {
          * Ok has been clicked.
          */
         virtual void slotOk();
-
-    private:
-        /**
-         * Fill the dialog with available moves.
-         */
-        void fillWithMoves();
 };
 
 #endif

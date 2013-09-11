@@ -32,13 +32,13 @@
 
 /* end stub */
 
-/*! \file tetrahedronchooser.h
- *  \brief Provides a widget for selecting a single tetrahedron
- *  of a 3-manifold triangulation.
+/*! \file edgeintchooser.h
+ *  \brief Provides a widget for selecting a single edge
+ *  of a 3-manifold triangulation along with an integer argumet.
  */
 
-#ifndef __TETRAHEDRONCHOOSER_H
-#define __TETRAHEDRONCHOOSER_H
+#ifndef __EDGEINTCHOOSER_H
+#define __EDGEINTCHOOSER_H
 
 #include "packet/npacketlistener.h"
 
@@ -47,20 +47,26 @@
 #include <vector>
 
 namespace regina {
-    class NTetrahedron;
+    class NEdge;
     class NTriangulation;
 };
 
 /**
- * A filter function, used to determine whether a given tetrahedron
- * should appear in the list.
+ * A filter function, used to determine whether a given edge with
+ * integer argument should appear in the list.
  */
-typedef bool (*TetrahedronFilterFunc)(regina::NTetrahedron*);
+typedef bool (*EdgeIntFilterFunc)(regina::NEdge*, int);
 
 /**
- * A widget through which a single tetrahedron of some triangulation
- * can be selected.  An optional filter may be applied to restrict the
- * available selections.
+ * A widget through which a single edge of some triangulation along with
+ * an integer argument can be selected.  The integer argument must be
+ * within a given range; it may, for example, indicate one of the two
+ * ends of the edge, or one of the embeddings.  An optional filter may be
+ * applied to restrict the available selections.
+ *
+ * For now the integer range must be hard-coded in the class constructor.
+ * If/when it becomes necessary, this class will be extended to allow
+ * the range to be computed dynamically from each edge.
  *
  * The contents of this chooser will be updated in real time if the
  * triangulation is externally modified.
@@ -68,45 +74,50 @@ typedef bool (*TetrahedronFilterFunc)(regina::NTetrahedron*);
  * These chooser classes would be *much* better using templates, but my
  * understanding is that templates don't play well with Q_OBJECT and moc.
  */
-class TetrahedronChooser : public QComboBox, public regina::NPacketListener {
+class EdgeIntChooser : public QComboBox, public regina::NPacketListener {
     Q_OBJECT
 
     private:
         regina::NTriangulation* tri_;
-            /**< The triangulation whose tetrahedra we are
+            /**< The triangulation whose edges we are
                  choosing from. */
-        TetrahedronFilterFunc filter_;
+        EdgeIntFilterFunc filter_;
             /**< A filter to restrict the available selections, or
                  0 if no filter is necessary. */
-        std::vector<regina::NTetrahedron*> options_;
+        std::vector<std::pair<regina::NEdge*, int> > options_;
             /**< A list of the available options to choose from. */
+        int argMin_, argMax_;
+            /**< The allowable integer range. */
+        QString argDesc_;
+            /**< What does the integer argument describe? */
 
     public:
         /**
          * Constructors that fills the chooser with available selections.
          */
-        TetrahedronChooser(regina::NTriangulation* tri,
-                TetrahedronFilterFunc filter, QWidget* parent);
-        ~TetrahedronChooser();
+        EdgeIntChooser(regina::NTriangulation* tri,
+                int argMin, int argMax, const QString& argDesc,
+                EdgeIntFilterFunc filter, QWidget* parent);
+        ~EdgeIntChooser();
 
         /**
-         * Returns the currently selected tetrahedron.
+         * Returns the currently selected edge and argument.
          *
-         * If there are no available tetrahedra to choose from,
-         * this routine will return 0.
+         * If there are no available edges to choose from,
+         * this routine will return (0, 0).
          */
-        regina::NTetrahedron* selected();
+        std::pair<regina::NEdge*, int> selected();
 
         /**
-         * Changes the selection to the given tetrahedron.
+         * Changes the selection to the given edge and argument.
          *
-         * If the given tetrahedron is not one of the options in this
+         * If the given selection is not one of the options in this
          * chooser, or if the given pointer is 0, then the first entry
          * in the chooser will be selected.
          *
          * The activated() signal will \e not be emitted.
          */
-        void select(regina::NTetrahedron* option);
+        void select(regina::NEdge* option, int arg);
 
         /**
          * NPacketListener overrides.
@@ -119,7 +130,7 @@ class TetrahedronChooser : public QComboBox, public regina::NPacketListener {
         /**
          * The text to be displayed for a given option.
          */
-        QString description(regina::NTetrahedron* option);
+        QString description(regina::NEdge* option, int arg);
 
         /**
          * Fills the chooser with the set of allowable options.
@@ -128,46 +139,49 @@ class TetrahedronChooser : public QComboBox, public regina::NPacketListener {
 };
 
 /**
- * A dialog used to select a single tetrahedron of a given triangulation.
+ * A dialog used to select a single edge of a given triangulation
+ * along with an integer argument.
  */
-class TetrahedronDialog : public QDialog {
+class EdgeIntDialog : public QDialog {
     Q_OBJECT
 
     private:
         /**
          * Internal components:
          */
-        TetrahedronChooser* chooser;
+        EdgeIntChooser* chooser;
 
     public:
         /**
          * Constructor and destructor.
          */
-        TetrahedronDialog(QWidget* parent,
+        EdgeIntDialog(QWidget* parent,
             regina::NTriangulation* tri,
-            TetrahedronFilterFunc filter,
+            int argMin, int argMax, const QString& argDesc,
+            EdgeIntFilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
-        static regina::NTetrahedron* choose(QWidget* parent,
+        static std::pair<regina::NEdge*, int> choose(QWidget* parent,
             regina::NTriangulation* tri,
-            TetrahedronFilterFunc filter,
+            int argMin, int argMax, const QString& argDesc,
+            EdgeIntFilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 };
 
-inline void TetrahedronChooser::packetToBeChanged(regina::NPacket*) {
+inline void EdgeIntChooser::packetToBeChanged(regina::NPacket*) {
     clear();
     options_.clear();
 }
 
-inline void TetrahedronChooser::packetWasChanged(regina::NPacket*) {
+inline void EdgeIntChooser::packetWasChanged(regina::NPacket*) {
     fill();
 }
 
-inline void TetrahedronChooser::packetToBeDestroyed(regina::NPacket*) {
+inline void EdgeIntChooser::packetToBeDestroyed(regina::NPacket*) {
     clear();
     options_.clear();
 }

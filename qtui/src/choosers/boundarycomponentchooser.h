@@ -64,6 +64,9 @@ typedef bool (*BoundaryComponentFilterFunc)(regina::NBoundaryComponent*);
  *
  * The contents of this chooser will be updated in real time if the
  * triangulation is externally modified.
+ *
+ * These chooser classes would be *much* better using templates, but my
+ * understanding is that templates don't play well with Q_OBJECT and moc.
  */
 class BoundaryComponentChooser :
         public QComboBox, public regina::NPacketListener {
@@ -82,9 +85,6 @@ class BoundaryComponentChooser :
     public:
         /**
          * Constructors that fills the chooser with available selections.
-         *
-         * This chooser will claim ownership of any filter that is
-         * passed.
          */
         BoundaryComponentChooser(regina::NTriangulation* tri,
                 BoundaryComponentFilterFunc filter, QWidget* parent);
