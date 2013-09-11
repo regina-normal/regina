@@ -53,11 +53,12 @@
 
 namespace regina {
 
+class Dim2Triangulation;
 class Dim4Component;
 class Dim4BoundaryComponent;
 class Dim4Pentachoron;
 class Dim4Vertex;
-class Dim2Triangulation;
+class Dim4Triangulation;
 class Dim4Isomorphism;
 
 /**
@@ -280,6 +281,13 @@ class REGINA_API Dim4Edge : public ShareableObject, public NMarkedElement {
         const Dim4EdgeEmbedding& getEmbedding(unsigned long index) const;
 
         /**
+         * Returns the triangulation to which this edge belongs.
+         *
+         * @return the triangulation containing this edge.
+         */
+        Dim4Triangulation* getTriangulation() const;
+
+        /**
          * Returns the component of the triangulation to which this
          * edge belongs.
          *
@@ -466,6 +474,10 @@ inline unsigned long Dim4Edge::getNumberOfEmbeddings() const {
 inline const Dim4EdgeEmbedding& Dim4Edge::getEmbedding(unsigned long index)
         const {
     return emb_[index];
+}
+
+inline Dim4Triangulation* Dim4Edge::getTriangulation() const {
+    return emb_.front().getPentachoron()->getTriangulation();
 }
 
 inline Dim4Component* Dim4Edge::getComponent() const {

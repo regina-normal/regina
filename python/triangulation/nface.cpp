@@ -38,6 +38,7 @@
 #include "triangulation/nedge.h"
 #include "triangulation/nface.h"
 #include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
 
@@ -70,6 +71,8 @@ void addNFace() {
         .def("getNumberOfEmbeddings", &NFace::getNumberOfEmbeddings)
         .def("getEmbedding", &NFace::getEmbedding,
             return_internal_reference<>())
+        .def("getTriangulation", &NFace::getTriangulation,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &NFace::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &NFace::getBoundaryComponent,

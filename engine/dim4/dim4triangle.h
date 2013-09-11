@@ -54,6 +54,7 @@ class Dim4BoundaryComponent;
 class Dim4Component;
 class Dim4Edge;
 class Dim4Pentachoron;
+class Dim4Triangulation;
 class Dim4Vertex;
 
 /**
@@ -258,6 +259,13 @@ class REGINA_API Dim4Triangle : public ShareableObject, public NMarkedElement {
         const Dim4TriangleEmbedding& getEmbedding(unsigned long index) const;
 
         /**
+         * Returns the triangulation to which this triangle belongs.
+         *
+         * @return the triangulation containing this triangle.
+         */
+        Dim4Triangulation* getTriangulation() const;
+
+        /**
          * Returns the component of the triangulation to which this
          * triangle belongs.
          *
@@ -428,6 +436,10 @@ inline unsigned long Dim4Triangle::getNumberOfEmbeddings() const {
 inline const Dim4TriangleEmbedding& Dim4Triangle::getEmbedding(
         unsigned long index) const {
     return emb_[index];
+}
+
+inline Dim4Triangulation* Dim4Triangle::getTriangulation() const {
+    return emb_.front().getPentachoron()->getTriangulation();
 }
 
 inline Dim4Component* Dim4Triangle::getComponent() const {

@@ -55,6 +55,7 @@ class Dim4Component;
 class Dim4Edge;
 class Dim4Pentachoron;
 class Dim4Triangle;
+class Dim4Triangulation;
 class Dim4Vertex;
 
 /**
@@ -202,6 +203,13 @@ class REGINA_API Dim4Tetrahedron :
          * @return the requested embedding descriptor.
          */
         const Dim4TetrahedronEmbedding& getEmbedding(unsigned index) const;
+
+        /**
+         * Returns the triangulation to which this tetrahedron belongs.
+         *
+         * @return the triangulation containing this tetrahedron.
+         */
+        Dim4Triangulation* getTriangulation() const;
 
         /**
          * Returns the component of the triangulation to which this
@@ -407,6 +415,10 @@ inline unsigned Dim4Tetrahedron::getNumberOfEmbeddings() const {
 inline const Dim4TetrahedronEmbedding& Dim4Tetrahedron::getEmbedding(
         unsigned index) const {
     return emb_[index];
+}
+
+inline Dim4Triangulation* Dim4Tetrahedron::getTriangulation() const {
+    return emb_[0].getPentachoron()->getTriangulation();
 }
 
 inline Dim4Component* Dim4Tetrahedron::getComponent() const {

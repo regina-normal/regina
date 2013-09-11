@@ -37,6 +37,7 @@
 #include "triangulation/ncomponent.h"
 #include "triangulation/nedge.h"
 #include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
 
@@ -88,6 +89,8 @@ void addNEdge() {
         .def("getNumberOfEmbeddings", &NEdge::getNumberOfEmbeddings)
         .def("getEmbedding", &NEdge::getEmbedding,
             return_internal_reference<>())
+        .def("getTriangulation", &NEdge::getTriangulation,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &NEdge::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &NEdge::getBoundaryComponent,

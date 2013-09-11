@@ -171,9 +171,13 @@ Version 4.94  [ (under development) ]
             - More frequent polling for cancellation.
             - The progress tracker passed to enumerateExtremalRays() is now of
               class NProgresstracker, not NProgressNumber.
+        Class NEdge:
+            - New convenience routine getTriangulation().
         Class NEnumConstraintList:
             - This now holds unsigned longs, not unsigned ints, for
               consistency with the integer types used for NVector indexing.
+        Class NFace:
+            - New convenience routine getTriangulation().
         Class NFacePairing:
             - Now derives from the template base class NGenericFacetPairing<3>.
             - Renamed getNumberOfTetrahedra() to size().  The old name
@@ -378,6 +382,7 @@ Version 4.94  [ (under development) ]
               traversal enumeration code; see NTreeTraversal for details.
         Class NVertex:
             - New routine buildLink() to triangulate the vertex link.
+            - New convenience routine getTriangulation().
         Class ZBuffer:
             - Updated xsgetn() to support n larger than UINT_MAX.
         Routine base64Decode(), base64Encode():

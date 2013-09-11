@@ -39,6 +39,7 @@
 #include "dim4/dim4pentachoron.h"
 #include "dim4/dim4tetrahedron.h"
 #include "dim4/dim4triangle.h"
+#include "dim4/dim4triangulation.h"
 #include "dim4/dim4vertex.h"
 #include "../globalarray.h"
 
@@ -68,6 +69,8 @@ void addDim4Tetrahedron() {
         .def("getNumberOfEmbeddings", &Dim4Tetrahedron::getNumberOfEmbeddings)
         .def("getEmbedding", &Dim4Tetrahedron::getEmbedding,
             return_internal_reference<>())
+        .def("getTriangulation", &Dim4Tetrahedron::getTriangulation,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Tetrahedron::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim4Tetrahedron::getBoundaryComponent,

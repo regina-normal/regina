@@ -37,6 +37,7 @@
 #include "dim2/dim2component.h"
 #include "dim2/dim2edge.h"
 #include "dim2/dim2triangle.h"
+#include "dim2/dim2triangulation.h"
 #include "dim2/dim2vertex.h"
 #include "../globalarray.h"
 
@@ -64,6 +65,8 @@ void addDim2Edge() {
         .def("getNumberOfEmbeddings", &Dim2Edge::getNumberOfEmbeddings)
         .def("getEmbedding", &Dim2Edge::getEmbedding,
             return_internal_reference<>())
+        .def("getTriangulation", &Dim2Edge::getTriangulation,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Edge::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim2Edge::getBoundaryComponent,

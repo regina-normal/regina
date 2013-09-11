@@ -36,6 +36,7 @@
 #include "dim4/dim4boundarycomponent.h"
 #include "dim4/dim4component.h"
 #include "dim4/dim4pentachoron.h"
+#include "dim4/dim4triangulation.h"
 #include "dim4/dim4vertex.h"
 #include "triangulation/ntriangulation.h"
 #include "../globalarray.h"
@@ -73,6 +74,8 @@ void addDim4Vertex() {
         .def("getNumberOfEmbeddings", &Dim4Vertex::getNumberOfEmbeddings)
         .def("getEmbedding", &Dim4Vertex::getEmbedding,
             return_internal_reference<>())
+        .def("getTriangulation", &Dim4Vertex::getTriangulation,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Vertex::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim4Vertex::getBoundaryComponent,

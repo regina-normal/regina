@@ -53,6 +53,7 @@ namespace regina {
 class Dim4BoundaryComponent;
 class Dim4Component;
 class Dim4Pentachoron;
+class Dim4Triangulation;
 class NTriangulation;
 
 /**
@@ -196,6 +197,13 @@ class REGINA_API Dim4Vertex : public ShareableObject, public NMarkedElement {
          * @return the requested embedding descriptor.
          */
         const Dim4VertexEmbedding& getEmbedding(unsigned long index) const;
+
+        /**
+         * Returns the triangulation to which this vertex belongs.
+         *
+         * @return the triangulation containing this vertex.
+         */
+        Dim4Triangulation* getTriangulation() const;
 
         /**
          * Returns the component of the triangulation to which this
@@ -406,6 +414,10 @@ inline const Dim4VertexEmbedding& Dim4Vertex::getEmbedding(unsigned long index)
 
 inline NPerm5 Dim4VertexEmbedding::getVertices() const {
     return pent_->getVertexMapping(vertex_);
+}
+
+inline Dim4Triangulation* Dim4Vertex::getTriangulation() const {
+    return emb_.front().getPentachoron()->getTriangulation();
 }
 
 inline Dim4Component* Dim4Vertex::getComponent() const {
