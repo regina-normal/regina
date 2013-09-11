@@ -40,6 +40,7 @@
 #define __REGINAPREFSET_H
 
 #include "surfaces/normalcoords.h"
+#include "surfaces/normalflags.h"
 #include <qmutex.h>
 #include <QFont>
 #include <QList>
@@ -347,6 +348,9 @@ class ReginaPrefSet : public QObject {
             /**< Possible compatibility matrices that can be displayed for a
                  normal surface list. */
 
+        bool anglesCreationTaut;
+            /**< When enumerating angle structures, should the taut
+                 structures option be enabled by default? */
         QList<ReginaFilePref> censusFiles;
             /**< The list of data files to use for census lookups. */
         bool displayTagsInTree;
@@ -379,6 +383,8 @@ class ReginaPrefSet : public QObject {
                  compatibility matrices will be automatically calculated. */
         regina::NormalCoords surfacesCreationCoords;
             /**< The default coordinate system for normal surface creation. */
+        regina::NormalList surfacesCreationList;
+            /**< The default options for which normal surfaces to enumerate. */
         SurfacesCompatMatrix surfacesInitialCompat;
             /**< The matrix first shown when the compatibility tab is
                  opened for a normal surface list. */

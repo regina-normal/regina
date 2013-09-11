@@ -232,6 +232,7 @@ GraphvizStatus GraphvizStatus::status(const QString& userExec,
 }
 
 ReginaPrefSet::ReginaPrefSet() :
+        anglesCreationTaut(false),
         fileRecentMax(10),
         displayTagsInTree(false),
         fileImportExportCodec("UTF-8"),
@@ -242,6 +243,7 @@ ReginaPrefSet::ReginaPrefSet() :
         snapPeaClosed(false),
         surfacesCompatThreshold(100),
         surfacesCreationCoords(regina::NS_STANDARD),
+        surfacesCreationList(regina::NS_LIST_DEFAULT),
         surfacesInitialCompat(LocalCompat),
         surfacesSupportOriented(false),
         treeJumpSize(10),
@@ -440,6 +442,10 @@ void ReginaPrefSet::clearRecentFiles() {
 void ReginaPrefSet::readInternal() {
     QSettings settings;
 
+    settings.beginGroup("Angles");
+    anglesCreationTaut = settings.value("CreationTaut", false).toBool();
+    settings.endGroup();
+
     settings.beginGroup("Display");
     useDock = settings.value("UseDock", false).toBool();
     displayTagsInTree = settings.value("DisplayTagsInTree", false).toBool();
@@ -492,6 +498,8 @@ void ReginaPrefSet::readInternal() {
         "CompatibilityThreshold", 100).toInt();
     surfacesCreationCoords = static_cast<regina::NormalCoords>(settings.value(
         "CreationCoordinates", regina::NS_STANDARD).toInt());
+    surfacesCreationList = regina::NormalList::fromInt(settings.value(
+        "CreationList", regina::NS_LIST_DEFAULT).toInt());
 
     QString str = settings.value("InitialCompat").toString();
     if (str == "Global")
@@ -556,8 +564,11 @@ void ReginaPrefSet::readInternal() {
 
 void ReginaPrefSet::saveInternal() const {
     QSettings settings;
+    settings.beginGroup("Angles");
+    settings.setValue("CreationTaut", anglesCreationTaut);
+    settings.endGroup();
+
     settings.beginGroup("Display");
-    // Save the current set of preferences.
     settings.setValue("UseDock", useDock);
     settings.setValue("DisplayTagsInTree", displayTagsInTree);
     settings.endGroup();
@@ -594,6 +605,7 @@ void ReginaPrefSet::saveInternal() const {
     settings.beginGroup("Surfaces");
     settings.setValue("CompatibilityThreshold", surfacesCompatThreshold);
     settings.setValue("CreationCoordinates", surfacesCreationCoords);
+    settings.setValue("CreationList", surfacesCreationList.intValue());
 
     switch (surfacesInitialCompat) {
         case ReginaPrefSet::GlobalCompat:

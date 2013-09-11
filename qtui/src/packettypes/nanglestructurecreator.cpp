@@ -41,6 +41,7 @@
 #include "nanglestructurecreator.h"
 #include "../progressdialogs.h"
 #include "reginasupport.h"
+#include "reginaprefset.h"
 
 #include <QCheckBox>
 #include <QLabel>
@@ -53,7 +54,7 @@ NAngleStructureCreator::NAngleStructureCreator() {
     QBoxLayout* layout = new QVBoxLayout(ui);
 
     tautOnly = new QCheckBox(ui->tr("Taut angle structures only"), ui);
-    tautOnly->setChecked(false);
+    tautOnly->setChecked(ReginaPrefSet::global().anglesCreationTaut);
     tautOnly->setWhatsThis(ui->tr("If you check this box, only "
         "taut angle structures will be enumerated (that is, angle structures "
         "in which every angle is 0 or Pi).  "
@@ -84,6 +85,9 @@ regina::NPacket* NAngleStructureCreator::createPacket(
             "as the location in the tree for your new angle structure list."));
         return 0;
     }
+
+    // Remember our options for next time.
+    ReginaPrefSet::global().anglesCreationTaut = tautOnly->isChecked();
 
     regina::NProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker,
