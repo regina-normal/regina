@@ -719,9 +719,12 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "a 2-manifold triangulation from its boundary faces.  "
         "If you select an ideal boundary component, this will construct "
         "a 2-manifold triangulation from the corresponding vertex link.</qt>"));
+    /*
+    // TODO: Wait until it's actually implemented.
     triActionList.append(actBoundaryComponents);
     connect(actBoundaryComponents, SIGNAL(triggered()), this,
         SLOT(boundaryComponents()));
+    */
 
     QAction* actVertexLinks = new QAction(this);
     actVertexLinks->setText(tr("&Vertex Links"));
@@ -736,10 +739,6 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actVertexLinks);
     connect(actVertexLinks, SIGNAL(triggered()), this,
         SLOT(vertexLinks()));
-
-    sep = new QAction(this);
-    sep->setSeparator(true);
-    triActionList.append(sep);
 
     QAction* actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
@@ -1010,7 +1009,7 @@ void NTriGluingsUI::boundaryComponents() {
         regina::NBoundaryComponent* chosen =
             BoundaryComponentDialog::choose(ui, tri, 0 /* filter */,
             tr("Boundary Components"),
-            tr("Please choose a boundary component to triangulate."),
+            tr("Triangulate which boundary component?"),
             tr("<qt>If you select a real boundary component, this will "
                 "construct a 2-manifold triangulation from its boundary "
                 "faces.<p>"
@@ -1018,6 +1017,7 @@ void NTriGluingsUI::boundaryComponents() {
                 "construct a 2-manifold triangulation from the "
                 "corresponding vertex link.</qt>"));
         if (chosen) {
+            // TODO!
             ReginaSupport::sorry(ui,
                 tr("This feature has yet to be implemented."));
         }
@@ -1037,7 +1037,7 @@ void NTriGluingsUI::vertexLinks() {
         regina::NVertex* chosen =
             VertexDialog::choose(ui, tri, 0 /* filter */,
             tr("Vertex Links"),
-            tr("Please choose a vertex whose link should be triangulated."),
+            tr("Triangulate the link of which vertex?"),
             tr("<qt>Regina will triangulate the link of whichever "
                 "vertex you choose.<p>"
                 "If <i>V</i> is a vertex, then the <i>link</i> of "
