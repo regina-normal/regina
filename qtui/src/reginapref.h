@@ -127,7 +127,6 @@ class ReginaPrefTri : public QWidget {
     Q_OBJECT
 
     private:
-        QLineEdit* editSurfacePropsThreshold;
         QCheckBox* cbGraphvizLabels;
 
     public:
@@ -146,8 +145,6 @@ class ReginaPrefSurfaces : public QWidget {
     private:
         CoordinateChooser* chooserCreationCoords;
         QCheckBox* cbWarnOnNonEmbedded;
-        QComboBox* comboInitialCompat;
-        QLineEdit* editCompatThreshold;
         QCheckBox* cbSupportOriented;
 
     public:
