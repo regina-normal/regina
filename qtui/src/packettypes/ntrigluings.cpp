@@ -995,8 +995,7 @@ void NTriGluingsUI::elementaryMove() {
     if (! enclosingPane->commitToModify())
         return;
 
-    EltMoveDialog dlg(ui, tri);
-    dlg.exec();
+    (new EltMoveDialog(ui, tri))->show();
 }
 
 void NTriGluingsUI::doubleCover() {

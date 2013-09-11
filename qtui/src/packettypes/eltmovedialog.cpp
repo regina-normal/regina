@@ -45,6 +45,7 @@
 #include <QButtonGroup>
 #include <QComboBox>
 #include <QDialogButtonBox>
+#include <QLabel>
 #include <QLayout>
 #include <QRadioButton>
 #include <QWhatsThis>
@@ -105,8 +106,20 @@ namespace {
 EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         QDialog(parent), // tr("Elementary Move"), Ok|Cancel, Ok, parent),
         tri(useTri) {
+    setAttribute(Qt::WA_DeleteOnClose);
+
     setWindowTitle(tr("Elementary Move"));
     QVBoxLayout *dialogLayout = new QVBoxLayout(this);
+
+    name = new QLabel();
+    name->setAlignment(Qt::AlignCenter);
+    dialogLayout->addWidget(name);
+    packetWasRenamed(tri);
+
+    overview = new QLabel();
+    overview->setAlignment(Qt::AlignCenter);
+    dialogLayout->addWidget(overview);
+    packetWasChanged(tri);
 
     QGridLayout* layout = new QGridLayout();
       //, 10, 2, 0 /* margin */, spacingHint());
@@ -288,28 +301,6 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "offered.</qt>"));
     layout->addWidget(boxCollapseEdge, 9, 1);
 
-    use32->setEnabled(box32->count() > 0);
-    use23->setEnabled(box23->count() > 0);
-    use44->setEnabled(box44->count() > 0);
-    use20e->setEnabled(box20e->count() > 0);
-    use20v->setEnabled(box20v->count() > 0);
-    use21->setEnabled(box21->count() > 0);
-    useOpenBook->setEnabled(boxOpenBook->count() > 0);
-    useCloseBook->setEnabled(boxCloseBook->count() > 0);
-    useShellBdry->setEnabled(boxShellBdry->count() > 0);
-    useCollapseEdge->setEnabled(boxCollapseEdge->count() > 0);
-
-    box32->setEnabled(box32->count() > 0);
-    box23->setEnabled(box23->count() > 0);
-    box44->setEnabled(box44->count() > 0);
-    box20e->setEnabled(box20e->count() > 0);
-    box20v->setEnabled(box20v->count() > 0);
-    box21->setEnabled(box21->count() > 0);
-    boxOpenBook->setEnabled(boxOpenBook->count() > 0);
-    boxCloseBook->setEnabled(boxCloseBook->count() > 0);
-    boxShellBdry->setEnabled(boxShellBdry->count() > 0);
-    boxCollapseEdge->setEnabled(boxCollapseEdge->count() > 0);
-
     moveTypes = new QButtonGroup();
     moveTypes->addButton(use32, ID_32);
     moveTypes->addButton(use23, ID_23);
@@ -322,19 +313,29 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
     moveTypes->addButton(useShellBdry, ID_SHELLBDRY);
     moveTypes->addButton(useCollapseEdge, ID_COLLAPSEEDGE);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(
-        QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    dialogLayout->addWidget(buttonBox);
+    updateStates();
 
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOk()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    buttons = new QDialogButtonBox(
+        QDialogButtonBox::Apply | QDialogButtonBox::Close);
+    dialogLayout->addWidget(buttons);
+
+    connect(buttons, SIGNAL(clicked(QAbstractButton*)), this,
+        SLOT(clicked(QAbstractButton*)));
+
+    tri->listen(this);
 }
 
 EltMoveDialog::~EltMoveDialog() {
+    tri->unlisten(this);
     delete moveTypes;
 }
 
-void EltMoveDialog::slotOk() {
+void EltMoveDialog::clicked(QAbstractButton* btn) {
+    if (buttons->buttonRole(btn) == QDialogButtonBox::RejectRole)
+        reject();
+    if (buttons->buttonRole(btn) != QDialogButtonBox::ApplyRole)
+        return;
+
     if (use32->isChecked())
         tri->threeTwoMove(box32->selected());
     else if (use23->isChecked())
@@ -357,11 +358,48 @@ void EltMoveDialog::slotOk() {
         tri->shellBoundary(boxShellBdry->selected());
     else if (useCollapseEdge->isChecked())
         tri->collapseEdge(boxCollapseEdge->selected());
-    else {
+    else
         ReginaSupport::info(this, tr("Please select a move."));
-        return;
-    }
 
-    accept();
+    updateStates();
 }
 
+void EltMoveDialog::updateStates() {
+    use32->setEnabled(box32->count() > 0);
+    use23->setEnabled(box23->count() > 0);
+    use44->setEnabled(box44->count() > 0);
+    use20e->setEnabled(box20e->count() > 0);
+    use20v->setEnabled(box20v->count() > 0);
+    use21->setEnabled(box21->count() > 0);
+    useOpenBook->setEnabled(boxOpenBook->count() > 0);
+    useCloseBook->setEnabled(boxCloseBook->count() > 0);
+    useShellBdry->setEnabled(boxShellBdry->count() > 0);
+    useCollapseEdge->setEnabled(boxCollapseEdge->count() > 0);
+
+    box32->setEnabled(box32->count() > 0);
+    box23->setEnabled(box23->count() > 0);
+    box44->setEnabled(box44->count() > 0);
+    box20e->setEnabled(box20e->count() > 0);
+    box20v->setEnabled(box20v->count() > 0);
+    box21->setEnabled(box21->count() > 0);
+    boxOpenBook->setEnabled(boxOpenBook->count() > 0);
+    boxCloseBook->setEnabled(boxCloseBook->count() > 0);
+    boxShellBdry->setEnabled(boxShellBdry->count() > 0);
+    boxCollapseEdge->setEnabled(boxCollapseEdge->count() > 0);
+}
+
+void EltMoveDialog::packetWasRenamed(regina::NPacket*) {
+    name->setText(tri->getPacketLabel().c_str());
+}
+
+void EltMoveDialog::packetWasChanged(regina::NPacket*) {
+    if (tri->getNumberOfTetrahedra() == 1)
+        overview->setText(tr("1 tetrahedron"));
+    else
+        overview->setText(tr("%1 tetrahedra").
+            arg(tri->getNumberOfTetrahedra()));
+}
+
+void EltMoveDialog::packetToBeDestroyed(regina::NPacket*) {
+    delete this;
+}
