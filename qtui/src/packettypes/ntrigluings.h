@@ -216,6 +216,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         void finiteToIdeal();
         void elementaryMove();
         void doubleCover();
+        void drillEdge();
         void boundaryComponents();
         void vertexLinks();
         void splitIntoComponents();

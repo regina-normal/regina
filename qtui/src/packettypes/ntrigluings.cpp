@@ -48,6 +48,7 @@
 #include "reginamain.h"
 #include "reginasupport.h"
 #include "choosers/boundarycomponentchooser.h"
+#include "choosers/edgechooser.h"
 #include "choosers/vertexchooser.h"
 
 #include <memory>
@@ -705,6 +706,16 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     triActionList.append(actDoubleCover);
     connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
+    QAction* actDrillEdge = new QAction(this);
+    actDrillEdge->setText(tr("Drill ed&ge"));
+    actDrillEdge->setToolTip(tr(
+        "Drill out a regular neighbourhood of an edge"));
+    actDrillEdge->setWhatsThis(tr("Drill out a regular neighbourhood "
+        "of an edge of this triangulation.  "
+        "This triangulation will be modified directly."));
+    triActionList.append(actDrillEdge);
+    connect(actDrillEdge, SIGNAL(triggered()), this, SLOT(drillEdge()));
+
     sep = new QAction(this);
     sep->setSeparator(true);
     triActionList.append(sep);
@@ -737,8 +748,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "The triangles that make up this link sit inside "
         "the tetrahedron corners that meet together at <i>V</i>.</qt>"));
     triActionList.append(actVertexLinks);
-    connect(actVertexLinks, SIGNAL(triggered()), this,
-        SLOT(vertexLinks()));
+    connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
 
     QAction* actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
@@ -994,6 +1004,32 @@ void NTriGluingsUI::doubleCover() {
         return;
 
     tri->makeDoubleCover();
+}
+
+void NTriGluingsUI::drillEdge() {
+    // We assume the part hasn't become read-only, even though the
+    // packet might have changed its editable property.
+    if (! enclosingPane->tryCommit())
+        return;
+
+    if (tri->getEdges().empty())
+        ReginaSupport::sorry(ui,
+            tr("This triangulation does not have any edges."));
+    else {
+        regina::NEdge* chosen =
+            EdgeDialog::choose(ui, tri, 0 /* filter */,
+            tr("Drill Edge"),
+            tr("Drill out a regular neighbourhood of which edge?"),
+            tr("Regina will drill out a regular neighbourhood around whichever "
+                "edge you choose."));
+        if (chosen) {
+            std::auto_ptr<PatienceDialog> dlg(PatienceDialog::warn(tr(
+                "Drilling requires multiple subdivisions, and\n"
+                "can be quite slow for larger triangulations.\n\n"
+                "Please be patient."), ui));
+            tri->drillEdge(chosen);
+        }
+    }
 }
 
 void NTriGluingsUI::boundaryComponents() {
