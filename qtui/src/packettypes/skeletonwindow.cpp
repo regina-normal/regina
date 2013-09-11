@@ -98,8 +98,6 @@ QSize SkeletonTreeView::sizeHint() const {
 SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
         SkeletalModel* useModel) :
         QDialog(packetUI->getInterface()), model(useModel) {
-    setAttribute(Qt::WA_DeleteOnClose);
-
     QBoxLayout* layout = new QVBoxLayout(this);
 
     // Set up the table of data.

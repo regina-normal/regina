@@ -107,8 +107,6 @@ namespace {
 EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         QDialog(parent), // tr("Elementary Move"), Ok|Cancel, Ok, parent),
         tri(useTri) {
-    setAttribute(Qt::WA_DeleteOnClose);
-
     setWindowTitle(tr("Elementary Move"));
     QVBoxLayout *dialogLayout = new QVBoxLayout(this);
 
@@ -423,5 +421,6 @@ void EltMoveDialog::packetWasChanged(regina::NPacket*) {
 }
 
 void EltMoveDialog::packetToBeDestroyed(regina::NPacket*) {
-    delete this;
+    reject();
 }
+
