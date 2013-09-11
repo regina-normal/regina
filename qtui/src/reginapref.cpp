@@ -147,10 +147,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     item->addTab(generalPrefs, IconCache::icon(IconCache::regina),
         tr("General"));
 
-    surfacePrefs = new ReginaPrefSurfaces(this);
-    item->addTab(surfacePrefs, IconCache::icon(IconCache::packet_surfaces),
-        tr("Surfaces"));
-
     censusPrefs = new ReginaPrefCensus(this);
     item->addTab(censusPrefs, ReginaSupport::themeIcon("view-list-text"),
         tr("Census"));
@@ -184,9 +180,9 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     generalPrefs->chooserImportExportCodec->setCodecName(
         prefSet.fileImportExportCodec);
 
-    surfacePrefs->cbWarnOnNonEmbedded->setChecked(prefSet.warnOnNonEmbedded);
+    generalPrefs->cbWarnOnNonEmbedded->setChecked(prefSet.warnOnNonEmbedded);
 
-    surfacePrefs->cbSupportOriented->setChecked(
+    generalPrefs->cbSupportOriented->setChecked(
         prefSet.surfacesSupportOriented);
 
     foreach (const ReginaFilePref& f, prefSet.censusFiles) {
@@ -224,8 +220,8 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     toolsPrefs->editGraphvizExec->setText(prefSet.triGraphvizExec);
 
     // Finish off.
-    connect(surfacePrefs->cbSupportOriented, SIGNAL(stateChanged(int)),
-        surfacePrefs, SLOT(orientedChecked(int)));
+    connect(generalPrefs->cbSupportOriented, SIGNAL(stateChanged(int)),
+        generalPrefs, SLOT(orientedChecked(int)));
     connect(buttonBox, SIGNAL(clicked(QAbstractButton *)), this, SLOT(clicked(QAbstractButton *)));
 }
 
@@ -288,13 +284,13 @@ void ReginaPreferences::slotApply() {
 #endif
     QStringList pathList = paths.split(pathSeparator);
 
-    if (surfacePrefs->cbWarnOnNonEmbedded->isChecked())
+    if (generalPrefs->cbWarnOnNonEmbedded->isChecked())
         prefSet.warnOnNonEmbedded = true;
     else
         prefSet.warnOnNonEmbedded = false;
 
     prefSet.surfacesSupportOriented =
-        surfacePrefs->cbSupportOriented->isChecked();
+        generalPrefs->cbSupportOriented->isChecked();
 
     prefSet.censusFiles.clear();
     for (int i=0; i < censusPrefs->listFiles->count();i++) {
@@ -552,6 +548,24 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     layout->addWidget(cbDisplayTagsInTree);
     */
 
+    // Options for normal surfaces.
+    cbWarnOnNonEmbedded = new QCheckBox(tr("Warn before generating "
+        "immersed and/or singular surfaces"));
+    cbWarnOnNonEmbedded->setWhatsThis(tr("<qt>When creating a new "
+        "normal surface list, should Regina ask for confirmation before "
+        "enumerating immersed and/or singular surfaces?  This warning "
+        "will be issued whenever the <i>Embedded surfaces only</i> box "
+        "is not checked in the dialog for a new normal surface list.</qt>"));
+    layout->addWidget(cbWarnOnNonEmbedded);
+
+    cbSupportOriented = new QCheckBox(tr("Support transversely oriented "
+        "normal surfaces (highly experimental)"));
+    cbSupportOriented->setWhatsThis(tr("<qt>Allow the enumeration of "
+        "normal surfaces using transversely oriented coordinates.  "
+        "This feature is <b>highly experimental</b>, and some features "
+        "<b>will break</b>.</qt>"));
+    layout->addWidget(cbSupportOriented);
+
     // Set up Graphviz options.
     cbGraphvizLabels = new QCheckBox(tr("Labels on face pairing graphs"));
     cbGraphvizLabels->setWhatsThis(tr("Labels each node in a "
@@ -612,37 +626,7 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     setLayout(layout);
 }
 
-ReginaPrefSurfaces::ReginaPrefSurfaces(QWidget* parent) : QWidget(parent) {
-    QBoxLayout* layout = new QVBoxLayout(this);
-
-    // WARNING: Note that any change of order in the combo boxes must be
-    // reflected in the ReginaPreferences methods as well.
-
-    // Options for warnings.
-    cbWarnOnNonEmbedded = new QCheckBox(tr("Warn before generating "
-        "immersed and/or singular surfaces"));
-    cbWarnOnNonEmbedded->setWhatsThis(tr("<qt>When creating a new "
-        "normal surface list, should Regina ask for confirmation before "
-        "enumerating immersed and/or singular surfaces?  This warning "
-        "will be issued whenever the <i>Embedded surfaces only</i> box "
-        "is not checked in the dialog for a new normal surface list.</qt>"));
-    layout->addWidget(cbWarnOnNonEmbedded);
-
-    // Options for experimental features.
-    cbSupportOriented = new QCheckBox(tr("Support transversely oriented "
-        "normal surfaces (highly experimental)"));
-    cbSupportOriented->setWhatsThis(tr("<qt>Allow the enumeration of "
-        "normal surfaces using transversely oriented coordinates.  "
-        "This feature is <b>highly experimental</b>, and some features "
-        "<b>will break</b>.</qt>"));
-    layout->addWidget(cbSupportOriented);
-
-    // Add some space at the end.
-    layout->addStretch(1);
-    setLayout(layout);
-}
-
-void ReginaPrefSurfaces::orientedChecked(int state) {
+void ReginaPrefGeneral::orientedChecked(int state) {
     if (state == Qt::Checked) {
         QMessageBox box(QMessageBox::Warning,
             tr("Warning"),
