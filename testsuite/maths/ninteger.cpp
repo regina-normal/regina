@@ -37,7 +37,7 @@
 #include "maths/ninteger.h"
 #include "testsuite/utilities/testutilities.h"
 
-// TODO: Test +, -, * (all lazy && long)
+// TODO: Test * (all lazy && long)
 // TODO: Review down to operator /.
 
 // TODO: Test /, divExact, % (all lazy && long); unary -
@@ -54,6 +54,27 @@ using regina::NLargeInteger;
 
 #define ENORMOUS_INTEGER "115792089237316195423570985008687907853269984665640564039457584007913129639936"
 #define HUGE_INTEGER "12364981726394781629378461923786491874569283746672"
+#define ZERO3 "000"
+#define ZERO4 "0000"
+#define ZERO7 "0000000"
+#define ZERO8 "00000000"
+#define ZERO15 "000000000000000"
+#define ZERO16 "0000000000000000"
+#define ZERO31 ZERO15 ZERO16
+#define ZERO32 ZERO16 ZERO16
+#define ZERO63 ZERO31 ZERO32
+#define ZERO64 ZERO32 ZERO32
+#define ZEROES ZERO64 ZERO64 ZERO64 ZERO64
+#define F3 "FFF"
+#define F4 "FFFF"
+#define F7 "FFFFFFF"
+#define F8 "FFFFFFFF"
+#define F15 "FFFFFFFFFFFFFFF"
+#define F16 "FFFFFFFFFFFFFFFF"
+#define F31 F15 F16
+#define F32 F16 F16
+#define F63 F31 F32
+#define F64 F32 F32
 
 class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NIntegerTest);
@@ -1348,6 +1369,9 @@ class NIntegerTest : public CppUnit::TestFixture {
                     IntType x(d.cases[a]);
                     IntType y(d.cases[b]);
 
+                    shouldBeEqual(x + y, y + x);
+                    shouldBeEqual(x - y, -(y - x));
+
                     shouldBeEqual((x + y) - y, x);
                     shouldBeEqual((x - y) + y, x);
                     shouldBeEqual((x + y) - x, y);
@@ -1362,6 +1386,8 @@ class NIntegerTest : public CppUnit::TestFixture {
                     IntType x(d.cases[a]);
                     long y = d.longCases[b];
 
+                    shouldBeEqual(x + y, y + x);
+
                     shouldBeEqual((x + y) - y, x);
                     shouldBeEqual((x - y) + y, x);
                     shouldBeEqual((x + y) - x, y);
@@ -1370,6 +1396,11 @@ class NIntegerTest : public CppUnit::TestFixture {
                     shouldBeEqual(((x + y) - y) - x, 0L);
                     shouldBeEqual(((x - y) - x) + y, 0L);
                     shouldBeEqual(((x - y) + y) - x, 0L);
+
+                    shouldBeEqual((y + x) - y, x);
+                    shouldBeEqual((y + x) - x, y);
+                    shouldBeEqual(((y + x) - x) - y, 0L);
+                    shouldBeEqual(((y + x) - y) - x, 0L);
                 }
 
                 IntType z(d.cases[a]);
@@ -1381,22 +1412,204 @@ class NIntegerTest : public CppUnit::TestFixture {
                 shouldBeEqual(IntType::zero + z, z);
             }
 
-            // TODO: Tests:
-            // {native, large} {+,-} {native, large}
-            // {negative, positive} {+,-} {negative, positive}
-            // overflow points
-            // +, +=, -, -=
+            // Ad-hoc tests for native {+,-} native:
+            shouldBeEqual(IntType(3) + IntType(7), 10);
+            shouldBeEqual(IntType(3) + IntType(-7), -4);
+            shouldBeEqual(IntType(-3) + IntType(7), 4);
+            shouldBeEqual(IntType(-3) + IntType(-7), -10);
+            shouldBeEqual(IntType(3) - IntType(-7), 10);
+            shouldBeEqual(IntType(3) - IntType(7), -4);
+            shouldBeEqual(IntType(-3) - IntType(-7), 4);
+            shouldBeEqual(IntType(-3) - IntType(7), -10);
+            shouldBeEqual(IntType(3) + long(7), 10);
+            shouldBeEqual(IntType(3) + long(-7), -4);
+            shouldBeEqual(IntType(-3) + long(7), 4);
+            shouldBeEqual(IntType(-3) + long(-7), -10);
+            shouldBeEqual(IntType(3) - long(-7), 10);
+            shouldBeEqual(IntType(3) - long(7), -4);
+            shouldBeEqual(IntType(-3) - long(-7), 4);
+            shouldBeEqual(IntType(-3) - long(7), -10);
+            shouldBeEqual(long(3) + IntType(7), 10);
+            shouldBeEqual(long(3) + IntType(-7), -4);
+            shouldBeEqual(long(-3) + IntType(7), 4);
+            shouldBeEqual(long(-3) + IntType(-7), -10);
+
+            // Ad-hoc tests for large {+,-} native:
+            shouldBeEqual(IntType(ENORMOUS_INTEGER "0") + IntType(3),
+                IntType(ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "10") + IntType(3),
+                IntType("-" ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER "10") + IntType(-3),
+                IntType(ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "0") + IntType(-3),
+                IntType("-" ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER "0") - IntType(-3),
+                IntType(ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "10") - IntType(-3),
+                IntType("-" ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER "10") - IntType(3),
+                IntType(ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "0") - IntType(3),
+                IntType("-" ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER "0") + long(3),
+                IntType(ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "10") + long(3),
+                IntType("-" ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER "10") + long(-3),
+                IntType(ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "0") + long(-3),
+                IntType("-" ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER "0") - long(-3),
+                IntType(ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "10") - long(-3),
+                IntType("-" ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER "10") - long(3),
+                IntType(ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "0") - long(3),
+                IntType("-" ENORMOUS_INTEGER "3"));
+
+            // Ad-hoc tests for native {+,-} large:
+            shouldBeEqual(IntType(3) + IntType(ENORMOUS_INTEGER "0"),
+                IntType(ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType(3) + IntType("-" ENORMOUS_INTEGER "10"),
+                IntType("-" ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType(-3) + IntType(ENORMOUS_INTEGER "10"),
+                IntType(ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType(-3) + IntType("-" ENORMOUS_INTEGER "0"),
+                IntType("-" ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType(3) - IntType(ENORMOUS_INTEGER "10"),
+                IntType("-" ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType(3) - IntType("-" ENORMOUS_INTEGER "0"),
+                IntType(ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType(-3) - IntType(ENORMOUS_INTEGER "0"),
+                IntType("-" ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType(-3) - IntType("-" ENORMOUS_INTEGER "10"),
+                IntType(ENORMOUS_INTEGER "07"));
+            shouldBeEqual(long(3) + IntType(ENORMOUS_INTEGER "0"),
+                IntType(ENORMOUS_INTEGER "3"));
+            shouldBeEqual(long(3) + IntType("-" ENORMOUS_INTEGER "10"),
+                IntType("-" ENORMOUS_INTEGER "07"));
+            shouldBeEqual(long(-3) + IntType(ENORMOUS_INTEGER "10"),
+                IntType(ENORMOUS_INTEGER "07"));
+            shouldBeEqual(long(-3) + IntType("-" ENORMOUS_INTEGER "0"),
+                IntType("-" ENORMOUS_INTEGER "3"));
+
+            // Ad-hoc tests for large {+,-} large:
+            shouldBeEqual(IntType("3" ZEROES) + IntType("7" ZEROES),
+                IntType("10" ZEROES));
+            shouldBeEqual(IntType("3" ZEROES) + IntType("-7" ZEROES),
+                IntType("-4" ZEROES));
+            shouldBeEqual(IntType("-3" ZEROES) + IntType("7" ZEROES),
+                IntType("4" ZEROES));
+            shouldBeEqual(IntType("-3" ZEROES) + IntType("-7" ZEROES),
+                IntType("-10" ZEROES));
+            shouldBeEqual(IntType("3" ZEROES) - IntType("-7" ZEROES),
+                IntType("10" ZEROES));
+            shouldBeEqual(IntType("3" ZEROES) - IntType("7" ZEROES),
+                IntType("-4" ZEROES));
+            shouldBeEqual(IntType("-3" ZEROES) - IntType("-7" ZEROES),
+                IntType("4" ZEROES));
+            shouldBeEqual(IntType("-3" ZEROES) - IntType("7" ZEROES),
+                IntType("-10" ZEROES));
+
+            // Test around overflow points:
+            shouldBeEqual(d.longMax + IntType(1), d.longMaxInc);
+            shouldBeEqual(d.longMax - IntType(-1), d.longMaxInc);
+            shouldBeEqual(d.longMaxInc + IntType(-1), d.longMax);
+            shouldBeEqual(d.longMaxInc - IntType(1), d.longMax);
+            shouldBeEqual(d.longMin - IntType(1), d.longMinDec);
+            shouldBeEqual(d.longMin + IntType(-1), d.longMinDec);
+            shouldBeEqual(d.longMinDec + IntType(1), d.longMin);
+            shouldBeEqual(d.longMinDec - IntType(-1), d.longMin);
+            shouldBeEqual(IntType(1) + d.longMax, d.longMaxInc);
+            shouldBeEqual(IntType(-1) + d.longMaxInc, d.longMax);
+            shouldBeEqual(IntType(-1) + d.longMin, d.longMinDec);
+            shouldBeEqual(IntType(1) + d.longMinDec, d.longMin);
+            shouldBeEqual(IntType(-1) - d.longMax, d.longMin);
+            shouldBeEqual(IntType(-1) - d.longMin, d.longMax);
+            shouldBeEqual(IntType(-1) - d.longMaxInc, d.longMinDec);
+            shouldBeEqual(IntType(-1) - d.longMaxInc, d.longMinDec);
+            shouldBeEqual(IntType(0) - d.longMin, d.longMaxInc);
+            shouldBeEqual(IntType(0) - d.longMaxInc, d.longMin);
+            shouldBeEqual(d.longMax + long(1), d.longMaxInc);
+            shouldBeEqual(d.longMax - long(-1), d.longMaxInc);
+            shouldBeEqual(d.longMaxInc + long(-1), d.longMax);
+            shouldBeEqual(d.longMaxInc - long(1), d.longMax);
+            shouldBeEqual(d.longMin - long(1), d.longMinDec);
+            shouldBeEqual(d.longMin + long(-1), d.longMinDec);
+            shouldBeEqual(d.longMinDec + long(1), d.longMin);
+            shouldBeEqual(d.longMinDec - long(-1), d.longMin);
+            shouldBeEqual(long(1) + d.longMax, d.longMaxInc);
+            shouldBeEqual(long(-1) + d.longMaxInc, d.longMax);
+            shouldBeEqual(long(-1) + d.longMin, d.longMinDec);
+            shouldBeEqual(long(1) + d.longMinDec, d.longMin);
+            shouldBeEqual(d.longMax + d.longMax + IntType(1), d.ulongMax);
+            shouldBeEqual(d.longMax - d.longMax, 0L);
+            shouldBeEqual(d.longMaxInc - d.longMax, 1);
+            shouldBeEqual(d.longMax - d.longMaxInc, -1);
+            shouldBeEqual(d.longMin - d.longMin, 0L);
+            shouldBeEqual(d.longMinDec - d.longMin, -1);
+            shouldBeEqual(d.longMin - d.longMinDec, 1);
+            shouldBeEqual(d.ulongMax - d.longMaxInc, d.longMax);
+            shouldBeEqual(d.ulongMax - d.longMax, d.longMaxInc);
+
+            testStringValue(IntType(F4, 16) + IntType(1), 16, "1" ZERO4);
+            testStringValue(IntType(F8, 16) + IntType(1), 16, "1" ZERO8);
+            testStringValue(IntType(F16, 16) + IntType(1), 16, "1" ZERO16);
+            testStringValue(IntType(F32, 16) + IntType(1), 16, "1" ZERO32);
+            testStringValue(IntType(F64, 16) + IntType(1), 16, "1" ZERO64);
+            testStringValue(IntType(F4, 16) + long(1), 16, "1" ZERO4);
+            testStringValue(IntType(F8, 16) + long(1), 16, "1" ZERO8);
+            testStringValue(IntType(F16, 16) + long(1), 16, "1" ZERO16);
+            testStringValue(IntType(F32, 16) + long(1), 16, "1" ZERO32);
+            testStringValue(IntType(F64, 16) + long(1), 16, "1" ZERO64);
+            testStringValue(IntType(F4, 16) - IntType(-1), 16, "1" ZERO4);
+            testStringValue(IntType(F8, 16) - IntType(-1), 16, "1" ZERO8);
+            testStringValue(IntType(F16, 16) - IntType(-1), 16, "1" ZERO16);
+            testStringValue(IntType(F32, 16) - IntType(-1), 16, "1" ZERO32);
+            testStringValue(IntType(F64, 16) - IntType(-1), 16, "1" ZERO64);
+            testStringValue(IntType(F4, 16) - long(-1), 16, "1" ZERO4);
+            testStringValue(IntType(F8, 16) - long(-1), 16, "1" ZERO8);
+            testStringValue(IntType(F16, 16) - long(-1), 16, "1" ZERO16);
+            testStringValue(IntType(F32, 16) - long(-1), 16, "1" ZERO32);
+            testStringValue(IntType(F64, 16) - long(-1), 16, "1" ZERO64);
+            testStringValue(IntType("-1" ZERO4, 16) - IntType(1),
+                16, "-1" ZERO3 "1");
+            testStringValue(IntType("-1" ZERO8, 16) - IntType(1),
+                16, "-1" ZERO7 "1");
+            testStringValue(IntType("-1" ZERO16, 16) - IntType(1),
+                16, "-1" ZERO15 "1");
+            testStringValue(IntType("-1" ZERO32, 16) - IntType(1),
+                16, "-1" ZERO31 "1");
+            testStringValue(IntType("-1" ZERO64, 16) - IntType(1),
+                16, "-1" ZERO63 "1");
+            testStringValue(IntType("-1" ZERO4, 16) + IntType(-1),
+                16, "-1" ZERO3 "1");
+            testStringValue(IntType("-1" ZERO8, 16) + IntType(-1),
+                16, "-1" ZERO7 "1");
+            testStringValue(IntType("-1" ZERO16, 16) + IntType(-1),
+                16, "-1" ZERO15 "1");
+            testStringValue(IntType("-1" ZERO32, 16) + IntType(-1),
+                16, "-1" ZERO31 "1");
+            testStringValue(IntType("-1" ZERO64, 16) + IntType(-1),
+                16, "-1" ZERO63 "1");
 
             // Tests for infinity are hard-coded to NLargeInteger.
-            // TODO: Here down.
             const NLargeInteger& infinity(NLargeInteger::infinity);
 
-            for (a = 0; a < dataL.nCases; a++)
-                shouldBeGreater(infinity, dataL.cases[a]);
-            for (a = 0; a < dataL.nLongCases; a++)
-                shouldBeGreater(infinity, dataL.longCases[a]);
-
-            shouldBeEqual(infinity, NLargeInteger::infinity);
+            shouldBeEqual(infinity + infinity, infinity);
+            shouldBeEqual(infinity - infinity, infinity);
+            for (a = 0; a < dataL.nCases; a++) {
+                shouldBeEqual(dataL.cases[a] + infinity, infinity);
+                shouldBeEqual(dataL.cases[a] - infinity, infinity);
+                shouldBeEqual(infinity + dataL.cases[a], infinity);
+                shouldBeEqual(infinity - dataL.cases[a], infinity);
+            }
+            for (a = 0; a < dataL.nLongCases; a++) {
+                shouldBeEqual(dataL.longCases[a] + infinity, infinity);
+                shouldBeEqual(infinity + dataL.longCases[a], infinity);
+                shouldBeEqual(infinity - dataL.longCases[a], infinity);
+            }
         }
 
         template <typename IntType>
