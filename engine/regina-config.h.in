@@ -1,7 +1,7 @@
 /* Define if both signed and unsigned long long types are available. */
 #cmakedefine LONG_LONG_FOUND
 
-/* Define if both __int128_t and __uint128_t types are available and working. */
+/* Define if both __int128_t and __uint128_t types are available. */
 #cmakedefine INT128_FOUND
 
 /* Define if 64-bit integer literals are available with no suffix */
