@@ -708,6 +708,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     QAction* actDrillEdge = new QAction(this);
     actDrillEdge->setText(tr("Drill ed&ge..."));
+    actDrillEdge->setIcon(ReginaSupport::regIcon("drilledge"));
     actDrillEdge->setToolTip(tr(
         "Drill out a regular neighbourhood of an edge"));
     actDrillEdge->setWhatsThis(tr("Drill out a regular neighbourhood "
@@ -739,6 +740,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     QAction* actVertexLinks = new QAction(this);
     actVertexLinks->setText(tr("&Vertex Links..."));
+    actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
     actVertexLinks->setToolTip(tr(
         "Build a 2-manifold triangulation from a vertex link"));
     actVertexLinks->setWhatsThis(tr("<qt>Build a 2-manifold triangulation "
@@ -752,6 +754,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     QAction* actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
+    actSplitIntoComponents->setIcon(ReginaSupport::regIcon("components"));
     actSplitIntoComponents->setToolTip(tr(
         "Form a new triangulation for each disconnected component"));
     actSplitIntoComponents->setWhatsThis(tr("<qt>Split a disconnected "
