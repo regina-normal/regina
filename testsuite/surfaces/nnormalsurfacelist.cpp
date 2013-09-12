@@ -93,6 +93,8 @@ using regina::NS_AN_QUAD_OCT;
 using regina::NS_VERTEX;
 using regina::NS_FUNDAMENTAL;
 
+using regina::NS_VERTEX_DD;
+using regina::NS_VERTEX_TREE;
 using regina::NS_VERTEX_STD_DIRECT;
 using regina::NS_VERTEX_VIA_REDUCED;
 
@@ -138,6 +140,10 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(standardQuadConversionsCensus);
     CPPUNIT_TEST(standardANQuadOctConversionsConstructed);
     CPPUNIT_TEST(standardANQuadOctConversionsCensus);
+    CPPUNIT_TEST(treeVsDDCensus<NS_QUAD>);
+    CPPUNIT_TEST(treeVsDDCensus<NS_STANDARD>);
+    CPPUNIT_TEST(treeVsDDCensus<NS_AN_QUAD_OCT>);
+    CPPUNIT_TEST(treeVsDDCensus<NS_AN_STANDARD>);
     CPPUNIT_TEST(disjointConstructed);
     CPPUNIT_TEST(disjointCensus);
     CPPUNIT_TEST(cutAlongConstructed);
@@ -557,134 +563,6 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             delete[] lhsRaw;
             delete[] rhsRaw;
             return ok;
-        }
-
-        static void verifyConversions(NTriangulation* tri) {
-            std::auto_ptr<NNormalSurfaceList> stdDirect(
-                NNormalSurfaceList::enumerate(
-                tri, NS_STANDARD, NS_VERTEX, NS_VERTEX_STD_DIRECT));
-            std::auto_ptr<NNormalSurfaceList> stdConv(
-                NNormalSurfaceList::enumerate(
-                tri, NS_STANDARD, NS_VERTEX, NS_VERTEX_VIA_REDUCED));
-            if (tri->getNumberOfTetrahedra() > 0 &&
-                    (stdDirect->algorithm().has(NS_VERTEX_VIA_REDUCED) ||
-                    ! stdDirect->algorithm().has(NS_VERTEX_STD_DIRECT))) {
-                std::ostringstream msg;
-                msg << "Direct enumeration in standard coordinates gives "
-                    "incorrect algorithm flags for "
-                    << tri->getPacketLabel() << '.';
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (tri->isValid() && ! tri->isIdeal()) {
-                if (tri->getNumberOfTetrahedra() > 0 &&
-                        (stdConv->algorithm().has(NS_VERTEX_STD_DIRECT) ||
-                        ! stdConv->algorithm().has(NS_VERTEX_VIA_REDUCED))) {
-                    std::ostringstream msg;
-                    msg << "Quad-to-standard conversion gives "
-                        "incorrect algorithm flags for "
-                        << tri->getPacketLabel() << '.';
-                    CPPUNIT_FAIL(msg.str());
-                }
-            } else {
-                // Ideal or invalid triangluations should use the standard
-                // enumeration process regardless of what the user requested.
-                if (tri->getNumberOfTetrahedra() > 0 &&
-                        (stdConv->algorithm().has(NS_VERTEX_VIA_REDUCED) ||
-                        ! stdConv->algorithm().has(NS_VERTEX_STD_DIRECT))) {
-                    std::ostringstream msg;
-                    msg << "Quad-to-standard conversion request was "
-                        "incorrectly granted for "
-                        << tri->getPacketLabel() << '.';
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-            if (! identical(stdDirect.get(), stdConv.get())) {
-                std::ostringstream msg;
-                msg << "Direct enumeration vs conversion gives different "
-                    "surfaces in standard coordinates for "
-                        << tri->getPacketLabel() << '.';
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            // Only test standard-to-quad if the preconditions for
-            // standardToQuad() hold.
-            if (tri->isValid() && ! tri->isIdeal()) {
-                std::auto_ptr<NNormalSurfaceList> quadDirect(
-                    NNormalSurfaceList::enumerate(tri, NS_QUAD));
-                std::auto_ptr<NNormalSurfaceList> quadConv(
-                    stdDirect->standardToQuad());
-                if (! identical(quadDirect.get(), quadConv.get())) {
-                    std::ostringstream msg;
-                    msg << "Direct enumeration vs conversion gives different "
-                        "surfaces in quadrilateral coordinates for "
-                            << tri->getPacketLabel() << '.';
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-        }
-
-        static void verifyConversionsAN(NTriangulation* tri) {
-            std::auto_ptr<NNormalSurfaceList> stdDirect(
-                NNormalSurfaceList::enumerate(
-                tri, NS_AN_STANDARD, NS_VERTEX, NS_VERTEX_STD_DIRECT));
-            std::auto_ptr<NNormalSurfaceList> stdConv(
-                NNormalSurfaceList::enumerate(
-                tri, NS_AN_STANDARD, NS_VERTEX, NS_VERTEX_VIA_REDUCED));
-            if (tri->getNumberOfTetrahedra() > 0 &&
-                    (stdDirect->algorithm().has(NS_VERTEX_VIA_REDUCED) ||
-                    ! stdDirect->algorithm().has(NS_VERTEX_STD_DIRECT))) {
-                std::ostringstream msg;
-                msg << "Direct enumeration in standard AN coordinates gives "
-                    "incorrect algorithm flags for "
-                    << tri->getPacketLabel() << '.';
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (tri->isValid() && ! tri->isIdeal()) {
-                if (tri->getNumberOfTetrahedra() > 0 &&
-                        (stdConv->algorithm().has(NS_VERTEX_STD_DIRECT) ||
-                        ! stdConv->algorithm().has(NS_VERTEX_VIA_REDUCED))) {
-                    std::ostringstream msg;
-                    msg << "Quad-oct-to-standard-AN conversion gives "
-                        "incorrect algorithm flags for "
-                        << tri->getPacketLabel() << '.';
-                    CPPUNIT_FAIL(msg.str());
-                }
-            } else {
-                // Ideal or invalid triangluations should use the standard
-                // enumeration process regardless of what the user requested.
-                if (tri->getNumberOfTetrahedra() > 0 &&
-                        (stdConv->algorithm().has(NS_VERTEX_VIA_REDUCED) ||
-                        ! stdConv->algorithm().has(NS_VERTEX_STD_DIRECT))) {
-                    std::ostringstream msg;
-                    msg << "Quad-oct-to-standard-AN conversion request was "
-                        "incorrectly granted for "
-                        << tri->getPacketLabel() << '.';
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-            if (! identical(stdDirect.get(), stdConv.get())) {
-                std::ostringstream msg;
-                msg << "Direct enumeration vs conversion gives different "
-                    "surfaces in standard almost normal coordinates for "
-                        << tri->getPacketLabel() << '.';
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            // Only test standard-to-quad if the preconditions for
-            // standardToQuad() hold.
-            if (tri->isValid() && ! tri->isIdeal()) {
-                std::auto_ptr<NNormalSurfaceList> quadDirect(
-                    NNormalSurfaceList::enumerate(tri, NS_AN_QUAD_OCT));
-                std::auto_ptr<NNormalSurfaceList> quadConv(
-                    stdDirect->standardANToQuadOct());
-                if (! identical(quadDirect.get(), quadConv.get())) {
-                    std::ostringstream msg;
-                    msg << "Direct enumeration vs conversion gives different "
-                        "surfaces in quadrilateral-octagon coordinates for "
-                            << tri->getPacketLabel() << '.';
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
         }
 
         void standardEmpty() {
@@ -1735,6 +1613,134 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             testAlmostNormalLoopCtwGeneric(15);
         }
 
+        static void verifyConversions(NTriangulation* tri) {
+            std::auto_ptr<NNormalSurfaceList> stdDirect(
+                NNormalSurfaceList::enumerate(
+                tri, NS_STANDARD, NS_VERTEX, NS_VERTEX_STD_DIRECT));
+            std::auto_ptr<NNormalSurfaceList> stdConv(
+                NNormalSurfaceList::enumerate(
+                tri, NS_STANDARD, NS_VERTEX, NS_VERTEX_VIA_REDUCED));
+            if (tri->getNumberOfTetrahedra() > 0 &&
+                    (stdDirect->algorithm().has(NS_VERTEX_VIA_REDUCED) ||
+                    ! stdDirect->algorithm().has(NS_VERTEX_STD_DIRECT))) {
+                std::ostringstream msg;
+                msg << "Direct enumeration in standard coordinates gives "
+                    "incorrect algorithm flags for "
+                    << tri->getPacketLabel() << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (tri->isValid() && ! tri->isIdeal()) {
+                if (tri->getNumberOfTetrahedra() > 0 &&
+                        (stdConv->algorithm().has(NS_VERTEX_STD_DIRECT) ||
+                        ! stdConv->algorithm().has(NS_VERTEX_VIA_REDUCED))) {
+                    std::ostringstream msg;
+                    msg << "Quad-to-standard conversion gives "
+                        "incorrect algorithm flags for "
+                        << tri->getPacketLabel() << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else {
+                // Ideal or invalid triangluations should use the standard
+                // enumeration process regardless of what the user requested.
+                if (tri->getNumberOfTetrahedra() > 0 &&
+                        (stdConv->algorithm().has(NS_VERTEX_VIA_REDUCED) ||
+                        ! stdConv->algorithm().has(NS_VERTEX_STD_DIRECT))) {
+                    std::ostringstream msg;
+                    msg << "Quad-to-standard conversion request was "
+                        "incorrectly granted for "
+                        << tri->getPacketLabel() << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            if (! identical(stdDirect.get(), stdConv.get())) {
+                std::ostringstream msg;
+                msg << "Direct enumeration vs conversion gives different "
+                    "surfaces in standard coordinates for "
+                        << tri->getPacketLabel() << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Only test standard-to-quad if the preconditions for
+            // standardToQuad() hold.
+            if (tri->isValid() && ! tri->isIdeal()) {
+                std::auto_ptr<NNormalSurfaceList> quadDirect(
+                    NNormalSurfaceList::enumerate(tri, NS_QUAD));
+                std::auto_ptr<NNormalSurfaceList> quadConv(
+                    stdDirect->standardToQuad());
+                if (! identical(quadDirect.get(), quadConv.get())) {
+                    std::ostringstream msg;
+                    msg << "Direct enumeration vs conversion gives different "
+                        "surfaces in quadrilateral coordinates for "
+                            << tri->getPacketLabel() << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        static void verifyConversionsAN(NTriangulation* tri) {
+            std::auto_ptr<NNormalSurfaceList> stdDirect(
+                NNormalSurfaceList::enumerate(
+                tri, NS_AN_STANDARD, NS_VERTEX, NS_VERTEX_STD_DIRECT));
+            std::auto_ptr<NNormalSurfaceList> stdConv(
+                NNormalSurfaceList::enumerate(
+                tri, NS_AN_STANDARD, NS_VERTEX, NS_VERTEX_VIA_REDUCED));
+            if (tri->getNumberOfTetrahedra() > 0 &&
+                    (stdDirect->algorithm().has(NS_VERTEX_VIA_REDUCED) ||
+                    ! stdDirect->algorithm().has(NS_VERTEX_STD_DIRECT))) {
+                std::ostringstream msg;
+                msg << "Direct enumeration in standard AN coordinates gives "
+                    "incorrect algorithm flags for "
+                    << tri->getPacketLabel() << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (tri->isValid() && ! tri->isIdeal()) {
+                if (tri->getNumberOfTetrahedra() > 0 &&
+                        (stdConv->algorithm().has(NS_VERTEX_STD_DIRECT) ||
+                        ! stdConv->algorithm().has(NS_VERTEX_VIA_REDUCED))) {
+                    std::ostringstream msg;
+                    msg << "Quad-oct-to-standard-AN conversion gives "
+                        "incorrect algorithm flags for "
+                        << tri->getPacketLabel() << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else {
+                // Ideal or invalid triangluations should use the standard
+                // enumeration process regardless of what the user requested.
+                if (tri->getNumberOfTetrahedra() > 0 &&
+                        (stdConv->algorithm().has(NS_VERTEX_VIA_REDUCED) ||
+                        ! stdConv->algorithm().has(NS_VERTEX_STD_DIRECT))) {
+                    std::ostringstream msg;
+                    msg << "Quad-oct-to-standard-AN conversion request was "
+                        "incorrectly granted for "
+                        << tri->getPacketLabel() << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            if (! identical(stdDirect.get(), stdConv.get())) {
+                std::ostringstream msg;
+                msg << "Direct enumeration vs conversion gives different "
+                    "surfaces in standard almost normal coordinates for "
+                        << tri->getPacketLabel() << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Only test standard-to-quad if the preconditions for
+            // standardToQuad() hold.
+            if (tri->isValid() && ! tri->isIdeal()) {
+                std::auto_ptr<NNormalSurfaceList> quadDirect(
+                    NNormalSurfaceList::enumerate(tri, NS_AN_QUAD_OCT));
+                std::auto_ptr<NNormalSurfaceList> quadConv(
+                    stdDirect->standardANToQuadOct());
+                if (! identical(quadDirect.get(), quadConv.get())) {
+                    std::ostringstream msg;
+                    msg << "Direct enumeration vs conversion gives different "
+                        "surfaces in quadrilateral-octagon coordinates for "
+                            << tri->getPacketLabel() << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
         void standardQuadConversionsConstructed() {
             verifyConversions(&empty);
             verifyConversions(&oneTet);
@@ -1771,6 +1777,49 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             runCensusAllClosed(verifyConversionsAN);
             runCensusAllBounded(verifyConversionsAN);
             runCensusAllIdeal(verifyConversionsAN);
+        }
+
+        template <regina::NormalCoords coords>
+        static void verifyTreeVsDD(NTriangulation* tri) {
+            NNormalSurfaceList* dd = NNormalSurfaceList::enumerate(
+                tri, coords, NS_VERTEX, NS_VERTEX_DD | NS_VERTEX_STD_DIRECT);
+            NNormalSurfaceList* tree = NNormalSurfaceList::enumerate(
+                tri, coords, NS_VERTEX, NS_VERTEX_TREE | NS_VERTEX_STD_DIRECT);
+            if (tri->getNumberOfTetrahedra() > 0 &&
+                    (dd->algorithm().has(NS_VERTEX_TREE) ||
+                    ! dd->algorithm().has(NS_VERTEX_DD))) {
+                std::ostringstream msg;
+                msg << "Double description enumeration in coordinate system "
+                    << coords << " gives incorrect algorithm flags for "
+                    << tri->getPacketLabel() << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (tri->getNumberOfTetrahedra() > 0 &&
+                    (tree->algorithm().has(NS_VERTEX_DD) ||
+                    ! tree->algorithm().has(NS_VERTEX_TREE))) {
+                std::ostringstream msg;
+                msg << "Tree traversal enumeration in coordinate system "
+                    << coords << " gives incorrect algorithm flags for "
+                    << tri->getPacketLabel() << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! identical(dd, tree)) {
+                std::ostringstream msg;
+                msg << "Double description vs tree enumeration in "
+                    "coordinate system " << coords << " gives different "
+                    "surfaces for " << tri->getPacketLabel() << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete dd;
+            delete tree;
+        }
+
+        template <regina::NormalCoords coords>
+        void treeVsDDCensus() {
+            runCensusMinClosed(verifyTreeVsDD<coords>);
+            runCensusAllClosed(verifyTreeVsDD<coords>);
+            runCensusAllBounded(verifyTreeVsDD<coords>);
+            runCensusAllIdeal(verifyTreeVsDD<coords>);
         }
 
         static void testDisjoint(NTriangulation* tri) {
