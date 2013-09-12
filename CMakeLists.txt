@@ -236,12 +236,12 @@ IF(INT128_FOUND)
              || (arg & L) ) )   //       or lo bit of keep set )
         vv += L;
     return (int32_t)(vv>>SHIFT);
-  }"
+  }
+  int main() {}"
   INT128_WORKING )
 
   IF (NOT INT128_WORKING)
-    MESSAGE (STATUS "Your compiler's implementation of 128-bit integers is broken.  Disabling 128-bit integer support within Regina.")
-    SET (INT128_FOUND FALSE)
+    MESSAGE(FATAL_ERROR "Your compiler's implementation of 128-bit integers is broken.  This was an bug in old versions of gcc, but was fixed in gcc 4.3.0.  Please switch to a newer version of your compiler.")
   ENDIF (INT128_WORKING)
 ENDIF(INT128_FOUND)
 
