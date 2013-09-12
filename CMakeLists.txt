@@ -215,6 +215,36 @@ CHECK_CXX_SOURCE_COMPILES("
   int main() { return 0; }"
   INT128_FOUND )
 
+IF(INT128_FOUND)
+  # In some older versions of gcc, suport for __int128_t is buggy and
+  # causes an internal compiler error within Regina's code.
+  # See: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=31167
+  # If we hit this bug, disable __int128_t support within Regina.
+  CHECK_CXX_SOURCE_COMPILES("
+  typedef int int32_t;
+  int32_t round32hi(const __int128_t arg)
+  {
+    const int SHIFT = 96;
+    const int mshift = 96;
+    const __int128_t M = (~(__int128_t)0)<<mshift;
+    const __int128_t L = (~M) + 1;
+    const __int128_t L1 = ((__int128_t)L)>>1;
+    const __int128_t Mlo = ((__int128_t)(~M))>>1;
+    __int128_t vv = arg & M;
+    if( (arg & (L1))      // hi bit of discard set
+        && ( (arg & Mlo)  // and ( any other bits of discard set
+             || (arg & L) ) )   //       or lo bit of keep set )
+        vv += L;
+    return (int32_t)(vv>>SHIFT);
+  }"
+  INT128_BROKEN )
+
+  IF(INT128_BROKEN)
+    MESSAGE (STATUS "Your compiler's implementation of 128-bit integers is broken.  Disabling 128-bit integer support within Regina.")
+    SET (INT128_FOUND FALSE)
+  ENDIF(INT128_BROKEN)
+ENDIF(INT128_FOUND)
+
 IF(LONG_LONG_FOUND)
   CHECK_CXX_SOURCE_COMPILES("
     unsigned long long x = 0xFFFFFFFFFFFFFFFF;
