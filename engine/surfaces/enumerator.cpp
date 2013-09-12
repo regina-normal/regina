@@ -261,8 +261,15 @@ void NNormalSurfaceList::Enumerator::fillFundamental() {
     // ----- Decide upon and run an appropriate algorithm -----
 
     // This is where we make the "default" decision for the user.
-    list_->algorithm_.ensureOne(
-        NS_HILBERT_PRIMAL, NS_HILBERT_DUAL, NS_HILBERT_FULLCONE, NS_HILBERT_CD);
+    if (list_->which_.has(NS_IMMERSED_SINGULAR)) {
+        // The primal method makes no sense without the quadrilateral
+        // constraints.
+        list_->algorithm_.ensureOne(NS_HILBERT_DUAL, NS_HILBERT_FULLCONE,
+            NS_HILBERT_PRIMAL, NS_HILBERT_CD);
+    } else {
+        list_->algorithm_.ensureOne(NS_HILBERT_PRIMAL, NS_HILBERT_DUAL,
+            NS_HILBERT_FULLCONE, NS_HILBERT_CD);
+    }
 
     // Run the chosen algorithm.
     if (list_->algorithm_.has(NS_HILBERT_PRIMAL))
