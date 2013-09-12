@@ -332,7 +332,8 @@ void Dim2Triangulation::writeXMLPacketData(std::ostream& out) const {
             adjTri = (*it)->adjacentTriangle(edge);
             if (adjTri) {
                 out << triangleIndex(adjTri) << ' '
-                    << (*it)->adjacentGluing(edge).getPermCode() << ' ';
+                    << static_cast<int>((*it)->
+                        adjacentGluing(edge).getPermCode()) << ' ';
             } else
                 out << "-1 -1 ";
         }
