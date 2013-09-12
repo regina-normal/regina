@@ -59,7 +59,7 @@ const QString ReginaAbout::regDescription(
     tr("Software for 3-manifold topology and normal surface theory"));
 
 const QString ReginaAbout::regReleased(
-    tr("Released %1").arg(QDate(2012, 5, 30).toString(Qt::TextDate)));
+    tr("Released %1").arg(QDate(2013, 9, 24).toString(Qt::TextDate)));
 
 const QString ReginaAbout::regWebsite("http://regina.sourceforge.net/");
 
@@ -70,7 +70,7 @@ const QString ReginaAbout::regLicense( tr(
     "you would any other paper that you use.  A suggested form of reference is:\n\n"
     "  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,\n"
     "  \"Regina: Software for 3-manifold topology and normal surface theory\",\n"
-    "  http://regina.sourceforge.net/, 1999-2012.\n\n"
+    "  http://regina.sourceforge.net/, 1999-2013.\n\n"
     "COPYING AND MODIFICATION:\n\n"
     "This program is free software; you can redistribute it and/or modify it\n"
     "under the terms of the GNU General Public License as published by the\n"

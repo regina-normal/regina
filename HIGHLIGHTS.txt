@@ -6,7 +6,7 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
-Version 4.94  [ (under development) ]
+Version 4.94  [ 24 September, 2013 ]
 
     Features:
         - You can now drill out the neighbourhood of an edge.

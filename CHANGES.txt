@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 4.94  [ (under development) ]
+Version 4.94  [ 24 September, 2013 ]
 
     GENERAL:
         - Old-style binary files are no longer supported.  These have not been
