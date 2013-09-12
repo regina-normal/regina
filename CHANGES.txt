@@ -350,7 +350,7 @@ Version 4.94  [ 24 September, 2013 ]
         - Added enumeration tests for Dim2EdgePairing.
         - Additional tests for facet pairing classes.
         - Additional tests for permutation databases Sk and orderedSk.
-        - Additional tests for NRational.
+        - Additional tests for NNormalSurfaceList and NRational.
 
 Version 4.93  [ 30 May, 2012 ]
 
