@@ -1481,13 +1481,13 @@ const IntType NIntegerTest::Data<IntType>::cases[] = {
     "-"ENORMOUS_INTEGER,
     "-"HUGE_INTEGER,
     -IntType(static_cast<unsigned long>(ULONG_MAX)),
-    -IntType(static_cast<unsigned long>(LONG_MAX + 2)),
+    -IntType(static_cast<unsigned long>(LONG_MAX) + 2),
     // Fit into a native long:
     LONG_MIN, -LONG_MAX, -32768, -5000, -1000, -3, -2, -1,
     0,
     1, 2, 3, 1000, 5000, 32768, LONG_MAX-1, LONG_MAX,
     // Too large for a native long:
-    static_cast<unsigned long>(LONG_MAX + 1),
+    static_cast<unsigned long>(LONG_MAX) + 1,
     static_cast<unsigned long>(ULONG_MAX),
     HUGE_INTEGER,
     ENORMOUS_INTEGER
