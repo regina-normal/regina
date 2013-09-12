@@ -58,6 +58,8 @@
     #define SMALL_IDEAL_CENSUS_SIZE 2
 #endif
 
+#include "regina-config.h" // For EXCLUDE_NORMALIZ
+
 #include <algorithm>
 #include <cppunit/extensions/HelperMacros.h>
 #include <memory>
@@ -97,6 +99,9 @@ using regina::NS_VERTEX_DD;
 using regina::NS_VERTEX_TREE;
 using regina::NS_VERTEX_STD_DIRECT;
 using regina::NS_VERTEX_VIA_REDUCED;
+
+using regina::NS_HILBERT_DUAL;
+using regina::NS_HILBERT_PRIMAL;
 
 class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NNormalSurfaceListTest);
@@ -144,6 +149,10 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(treeVsDDCensus<NS_STANDARD>);
     CPPUNIT_TEST(treeVsDDCensus<NS_AN_QUAD_OCT>);
     CPPUNIT_TEST(treeVsDDCensus<NS_AN_STANDARD>);
+    CPPUNIT_TEST(fundPrimalVsDual<NS_QUAD>);
+    CPPUNIT_TEST(fundPrimalVsDual<NS_STANDARD>);
+    CPPUNIT_TEST(fundPrimalVsDual<NS_AN_QUAD_OCT>);
+    CPPUNIT_TEST(fundPrimalVsDual<NS_AN_STANDARD>);
     CPPUNIT_TEST(disjointConstructed);
     CPPUNIT_TEST(disjointCensus);
     CPPUNIT_TEST(cutAlongConstructed);
@@ -1820,6 +1829,64 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             runCensusAllClosed(verifyTreeVsDD<coords>);
             runCensusAllBounded(verifyTreeVsDD<coords>);
             runCensusAllIdeal(verifyTreeVsDD<coords>);
+        }
+
+        template <regina::NormalCoords coords>
+        static void verifyFundPrimalVsDual(NTriangulation* tri) {
+            NNormalSurfaceList* primal = NNormalSurfaceList::enumerate(
+                tri, coords, NS_FUNDAMENTAL, NS_HILBERT_PRIMAL);
+            NNormalSurfaceList* dual = NNormalSurfaceList::enumerate(
+                tri, coords, NS_FUNDAMENTAL, NS_HILBERT_DUAL);
+#ifdef EXCLUDE_NORMALIZ
+            // If we build without Normaliz, the primal algorithm falls
+            // through to the dual algorithm.
+            if (tri->getNumberOfTetrahedra() > 0 &&
+                    (primal->algorithm().has(NS_HILBERT_PRIMAL) ||
+                    ! primal->algorithm().has(NS_HILBERT_DUAL))) {
+                std::ostringstream msg;
+                msg << "Primal Hilbert basis enumeration in coordinate system "
+                    << coords << " does not fall through to dual Hilbert "
+                    "basis enumeration when Normaliz is excluded for "
+                    << tri->getPacketLabel() << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+#else
+            if (tri->getNumberOfTetrahedra() > 0 &&
+                    (primal->algorithm().has(NS_HILBERT_DUAL) ||
+                    ! primal->algorithm().has(NS_HILBERT_PRIMAL))) {
+                std::ostringstream msg;
+                msg << "Primal Hilbert basis enumeration in coordinate system "
+                    << coords << " gives incorrect algorithm flags for "
+                    << tri->getPacketLabel() << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+#endif
+            if (tri->getNumberOfTetrahedra() > 0 &&
+                    (dual->algorithm().has(NS_HILBERT_PRIMAL) ||
+                    ! dual->algorithm().has(NS_HILBERT_DUAL))) {
+                std::ostringstream msg;
+                msg << "Dual Hilbert basis enumeration in coordinate system "
+                    << coords << " gives incorrect algorithm flags for "
+                    << tri->getPacketLabel() << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! identical(primal, dual)) {
+                std::ostringstream msg;
+                msg << "Primal vs dual Hilbert basis enumeration in "
+                    "coordinate system " << coords << " gives different "
+                    "surfaces for " << tri->getPacketLabel() << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete primal;
+            delete dual;
+        }
+
+        template <regina::NormalCoords coords>
+        void fundPrimalVsDual() {
+            runCensusMinClosed(verifyFundPrimalVsDual<coords>);
+            runCensusAllClosed(verifyFundPrimalVsDual<coords>);
+            runCensusAllBounded(verifyFundPrimalVsDual<coords>);
+            runCensusAllIdeal(verifyFundPrimalVsDual<coords>);
         }
 
         static void testDisjoint(NTriangulation* tri) {
