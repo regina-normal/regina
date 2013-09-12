@@ -237,12 +237,12 @@ IF(INT128_FOUND)
         vv += L;
     return (int32_t)(vv>>SHIFT);
   }"
-  INT128_BROKEN )
+  INT128_WORKING )
 
-  IF(INT128_BROKEN)
+  IF (NOT INT128_WORKING)
     MESSAGE (STATUS "Your compiler's implementation of 128-bit integers is broken.  Disabling 128-bit integer support within Regina.")
     SET (INT128_FOUND FALSE)
-  ENDIF(INT128_BROKEN)
+  ENDIF (INT128_WORKING)
 ENDIF(INT128_FOUND)
 
 IF(LONG_LONG_FOUND)
