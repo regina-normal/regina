@@ -1,7 +1,7 @@
 example$ regina-python
-Regina 4.93
+Regina 4.94
 Software for 3-manifold topology and normal surface theory
-Copyright (c) 1999-2012, The Regina development team
+Copyright (c) 1999-2013, The Regina development team
 &gt;&gt;&gt; ################################
 ... #
 ... #  Sample Python Script
@@ -18,7 +18,7 @@ Copyright (c) 1999-2012, The Regina development team
 ... # triangulation of a solid torus.
 ... t = NTriangulation()
 &gt;&gt;&gt; t.insertLayeredSolidTorus(3,4)
-&lt;regina.NTetrahedron object at 0x108015750&gt;
+&lt;regina.NTetrahedron object at 0x10f671520&gt;
 &gt;&gt;&gt; print t
 Triangulation with 3 tetrahedra.
 &gt;&gt;&gt; 
@@ -72,7 +72,7 @@ Z
 False
 &gt;&gt;&gt; 
 &gt;&gt;&gt; # Make our own list of vertex normal surfaces in standard coordinates.
-... surfaces = NNormalSurfaceList.enumerate(t, NNormalSurfaceList.STANDARD)
+... surfaces = NNormalSurfaceList.enumerate(t, NS_STANDARD)
 &gt;&gt;&gt; 
 &gt;&gt;&gt; # Verify that the normal surface list is already a child packet of the
 ... # triangulation.  This happens automatically whenever you enumerate
@@ -86,14 +86,14 @@ OK: Parent-child relationship is correct.
 &gt;&gt;&gt; 
 &gt;&gt;&gt; # Print the full list of vertex normal surfaces.
 ... print surfaces.toStringLong()
-Embedded vertex normal surfaces
+Embedded, vertex surfaces
 Coordinates: Standard normal (tri-quad)
 Number of surfaces is 9
+1 1 1 1 ; 0 0 0 || 1 1 0 0 ; 1 0 0 || 0 0 0 0 ; 0 2 0
 0 0 1 1 ; 1 0 0 || 1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
 0 0 0 0 ; 0 2 0 || 0 0 1 1 ; 1 0 0 || 1 1 1 1 ; 0 0 0
-1 1 0 0 ; 0 0 1 || 1 1 0 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0
-1 1 1 1 ; 0 0 0 || 1 1 0 0 ; 1 0 0 || 0 0 0 0 ; 0 2 0
 0 0 0 0 ; 0 0 2 || 0 0 0 0 ; 0 2 0 || 0 0 1 1 ; 1 0 0
+1 1 0 0 ; 0 0 1 || 1 1 0 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0
 3 3 0 0 ; 0 0 1 || 1 1 0 0 ; 0 0 2 || 1 1 0 0 ; 0 0 1
 0 0 1 1 ; 1 0 0 || 1 1 0 0 ; 1 0 0 || 0 0 0 0 ; 0 2 0
 0 0 0 0 ; 0 1 0 || 0 0 0 0 ; 1 0 0 || 0 0 0 0 ; 0 1 0
@@ -105,11 +105,11 @@ Number of surfaces is 9
 ...     s = surfaces.getSurface(i)
 ...     print "Chi =", s.getEulerCharacteristic(), "; Or =", s.isOrientable()
 ... 
+Chi = -1 ; Or = True
+Chi = 0 ; Or = True
 Chi = 0 ; Or = True
 Chi = 0 ; Or = True
 Chi = 0 ; Or = False
-Chi = -1 ; Or = True
-Chi = 0 ; Or = True
 Chi = 1 ; Or = True
 Chi = -2 ; Or = True
 Chi = -1 ; Or = False

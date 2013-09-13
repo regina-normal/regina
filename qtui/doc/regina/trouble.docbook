@@ -68,9 +68,9 @@
 
 <screen>
     <prompt>example$</prompt> <userinput>regina-python</userinput>
-    Regina 4.92
+    Regina 4.94
     Software for 3-manifold topology and normal surface theory
-    Copyright (c) 1999-2012, The Regina development team
+    Copyright (c) 1999-2013, The Regina development team
     &gt;&gt;&gt;
 </screen>
 
@@ -84,9 +84,9 @@
 
 <screen>
     <prompt>example$</prompt> <userinput>/Applications/Regina.app/Contents/MacOS/regina-python</userinput>
-    Regina 4.92
+    Regina 4.94
     Software for 3-manifold topology and normal surface theory
-    Copyright (c) 1999-2012, The Regina development team
+    Copyright (c) 1999-2013, The Regina development team
     &gt;&gt;&gt;
 </screen>
 
