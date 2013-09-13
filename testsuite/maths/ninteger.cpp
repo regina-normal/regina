@@ -1380,6 +1380,33 @@ class NIntegerTest : public CppUnit::TestFixture {
                     shouldBeEqual(((x + y) - y) - x, 0L);
                     shouldBeEqual(((x - y) - x) + y, 0L);
                     shouldBeEqual(((x - y) + y) - x, 0L);
+
+                    IntType p(x);
+                    shouldBeEqual(p += y, x + y);
+                    IntType q(x);
+                    shouldBeEqual(q -= y, x - y);
+
+                    if (y.sign() > 0) {
+                        shouldBeGreater(x + y, x);
+                        shouldBeLess(x - y, x);
+                    } else if (y.sign() < 0) {
+                        shouldBeLess(x + y, x);
+                        shouldBeGreater(x - y, x);
+                    } else {
+                        shouldBeEqual(x + y, x);
+                        shouldBeEqual(x - y, x);
+                    }
+
+                    if (x.sign() > 0) {
+                        shouldBeGreater(x + y, y);
+                        shouldBeGreater(x - y, -y);
+                    } else if (x.sign() < 0) {
+                        shouldBeLess(x + y, y);
+                        shouldBeLess(x - y, -y);
+                    } else {
+                        shouldBeEqual(x + y, y);
+                        shouldBeEqual(x - y, -y);
+                    }
                 }
 
                 for (b = 0; b < d.nLongCases; ++b) {
@@ -1401,6 +1428,36 @@ class NIntegerTest : public CppUnit::TestFixture {
                     shouldBeEqual((y + x) - x, y);
                     shouldBeEqual(((y + x) - x) - y, 0L);
                     shouldBeEqual(((y + x) - y) - x, 0L);
+
+                    IntType p(x);
+                    shouldBeEqual(p += y, x + y);
+                    IntType q(x);
+                    shouldBeEqual(q -= y, x - y);
+
+                    if (y > 0) {
+                        shouldBeGreater(x + y, x);
+                        shouldBeGreater(y + x, x);
+                        shouldBeLess(x - y, x);
+                    } else if (y < 0) {
+                        shouldBeLess(x + y, x);
+                        shouldBeLess(y + x, x);
+                        shouldBeGreater(x - y, x);
+                    } else {
+                        shouldBeEqual(x + y, x);
+                        shouldBeEqual(y + x, x);
+                        shouldBeEqual(x - y, x);
+                    }
+
+                    if (x.sign() > 0) {
+                        shouldBeGreater(x + y, y);
+                        shouldBeLess(-(x - y), y); // -y could overflow
+                    } else if (x.sign() < 0) {
+                        shouldBeLess(x + y, y);
+                        shouldBeGreater(-(x - y), y); // -y could overflow
+                    } else {
+                        shouldBeEqual(x + y, y);
+                        shouldBeEqual(-(x - y), y); // -y could overflow
+                    }
                 }
 
                 IntType z(d.cases[a]);
