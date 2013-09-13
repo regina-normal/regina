@@ -37,16 +37,12 @@
 #include "maths/ninteger.h"
 #include "testsuite/utilities/testutilities.h"
 
-// TODO: Test * (all lazy && long)
 // TODO: Review down to operator /.
 
-// TODO: Test /, divExact, % (all lazy && long); unary -
-// TODO: Test rounding direction for all variants of division
-// TODO: Test divisionAlg
-// TODO: Test +=, -=, *=, /=, divByExact, %= (lazy && long); negate
-// TODO: Test raiseToPower, abs, gcd(With), lcm(With), gcdWithCoeffs
-// TODO: Test legendre, random functions
-// TODO: Test setRaw, rawData, tryReduce, makeLarge.
+// TODO: Test *(=), /(=), div(By)Exact, %(=) (all lazy && long)
+// TODO: Test raiseToPower
+// TODO: Maybe test setRaw, rawData
+// TODO: Maybe test legendre, random functions
 
 using regina::NIntegerBase;
 using regina::NInteger;
@@ -100,12 +96,18 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(incDec<NLargeInteger>);
     CPPUNIT_TEST(plusMinus<NInteger>);
     CPPUNIT_TEST(plusMinus<NLargeInteger>);
+    CPPUNIT_TEST(negate<NInteger>);
+    CPPUNIT_TEST(negate<NLargeInteger>);
+    CPPUNIT_TEST(abs<NInteger>);
+    CPPUNIT_TEST(abs<NLargeInteger>);
     CPPUNIT_TEST(divisionAlg<NInteger>);
     CPPUNIT_TEST(divisionAlg<NLargeInteger>);
-    CPPUNIT_TEST(gcd<NInteger>);
-    CPPUNIT_TEST(gcd<NLargeInteger>);
-    CPPUNIT_TEST(lcm<NInteger>);
-    CPPUNIT_TEST(lcm<NLargeInteger>);
+    CPPUNIT_TEST(gcdLcm<NInteger>);
+    CPPUNIT_TEST(gcdLcm<NLargeInteger>);
+    CPPUNIT_TEST(tryReduce<NInteger>);
+    CPPUNIT_TEST(tryReduce<NLargeInteger>);
+    CPPUNIT_TEST(makeLarge<NInteger>);
+    CPPUNIT_TEST(makeLarge<NLargeInteger>);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1670,76 +1672,270 @@ class NIntegerTest : public CppUnit::TestFixture {
         }
 
         template <typename IntType>
-        void checkDivisionAlg(int n, int divisor, int quotient,
-                int remainder) {
-            IntType q, r;
-            q = IntType(n).divisionAlg(IntType(divisor), r);
+        void testNegate(const IntType& x) {
+            IntType y(x);
 
-            if (q != quotient) {
-                std::ostringstream msg;
-                msg << "Division algorithm (n = " << n
-                    << ", d = " << divisor << ") gives quotient "
-                    << q << ", not " << quotient << ".";
-                CPPUNIT_FAIL(msg.str());
+            shouldBeEqual(x + (-y), 0L);
+            shouldBeEqual((-y) + x, 0L);
+            shouldBeEqual(-(-y), x);
+            shouldBeEqual(-y, x * (-1));
+
+            std::string orig = x.stringValue();
+            std::string neg = (-y).stringValue();
+            if (x.sign() > 0) {
+                orig.insert(orig.begin(), '-');
+                if (orig != neg) {
+                    std::ostringstream msg;
+                    msg << "Negation gives wrong string for " << x << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else if (x.sign() < 0) {
+                neg.insert(neg.begin(), '-');
+                if (orig != neg) {
+                    std::ostringstream msg;
+                    msg << "Negation gives wrong string for " << x << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else {
+                if (orig != neg) {
+                    std::ostringstream msg;
+                    msg << "Negation gives wrong string for " << x << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
-            if (r != remainder) {
-                std::ostringstream msg;
-                msg << "Division algorithm (n = " << n
-                    << ", d = " << divisor << ") gives remainder "
-                    << r << ", not " << remainder << ".";
-                CPPUNIT_FAIL(msg.str());
+
+            IntType z(x);
+            z.negate();
+            shouldBeEqual(z, -x);
+        }
+
+        template <typename IntType>
+        void negate() {
+            const Data<IntType>& d(data<IntType>());
+
+            testNegate(d.zero);
+            testNegate(d.one);
+            testNegate(d.two);
+            testNegate(d.negOne);
+            testNegate(d.negTwo);
+            testNegate(d.longMax);
+            testNegate(d.longMin);
+            testNegate(d.longMaxInc);
+            testNegate(d.longMinDec);
+            testNegate(d.ulongMax);
+            testNegate(d.hugePos);
+            testNegate(d.hugeNeg);
+
+            for (int a = 0; a < d.nCases; a++)
+                testNegate(d.cases[a]);
+
+            // Tests for infinity are hard-coded to NLargeInteger.
+            NLargeInteger i(NLargeInteger::infinity);
+            shouldBeEqual(-i, NLargeInteger::infinity);
+            i.negate();
+            shouldBeEqual(i, NLargeInteger::infinity);
+        }
+
+        template <typename IntType>
+        void testAbs(const IntType& x) {
+            IntType y(x);
+            IntType z = y.abs();
+
+            std::string orig = x.stringValue();
+            std::string abs = z.stringValue();
+
+            shouldBeEqual(z, x * x.sign());
+            shouldBeEqual(z, x >= 0 ? x : -x);
+
+            if (orig.length() > 0 && orig[0] == '-') {
+                abs.insert(abs.begin(), '-');
+                if (abs != orig) {
+                    std::ostringstream msg;
+                    msg << "Absolute value gives wrong string for " << x << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else {
+                if (abs != orig) {
+                    std::ostringstream msg;
+                    msg << "Absolute value gives wrong string for " << x << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        template <typename IntType>
+        void abs() {
+            const Data<IntType>& d(data<IntType>());
+
+            testAbs(d.zero);
+            testAbs(d.one);
+            testAbs(d.two);
+            testAbs(d.negOne);
+            testAbs(d.negTwo);
+            testAbs(d.longMax);
+            testAbs(d.longMin);
+            testAbs(d.longMaxInc);
+            testAbs(d.longMinDec);
+            testAbs(d.ulongMax);
+            testAbs(d.hugePos);
+            testAbs(d.hugeNeg);
+
+            for (int a = 0; a < d.nCases; a++)
+                testAbs(d.cases[a]);
+
+            // Tests for infinity are hard-coded to NLargeInteger.
+            NLargeInteger i(NLargeInteger::infinity);
+            shouldBeEqual(i.abs(), NLargeInteger::infinity);
+        }
+
+        template <typename IntType>
+        void testDivisionAlg(const IntType& n, const IntType& divisor) {
+            IntType q, r;
+            q = IntType(n).divisionAlg(divisor, r);
+
+            shouldBeEqual(q * divisor + r, n);
+            if (divisor == 0) {
+                shouldBeEqual(q, 0L);
+                shouldBeEqual(r, n);
+            } else {
+                shouldBeGreater(r, -1);
+                shouldBeLess(r, divisor >= 0 ? divisor : -divisor);
             }
         }
 
         template <typename IntType>
         void divisionAlg() {
-            // Check all possible zero/positive/negative combinations.
-            checkDivisionAlg<IntType>(0, 0, 0, 0);
-            checkDivisionAlg<IntType>(0, 3, 0, 0);
-            checkDivisionAlg<IntType>(0, -3, 0, 0);
-            checkDivisionAlg<IntType>(10, 0, 0, 10);
-            checkDivisionAlg<IntType>(-10, 0, 0, -10);
+            const Data<IntType>& d(data<IntType>());
 
-            checkDivisionAlg<IntType>(10, 3, 3, 1);
-            checkDivisionAlg<IntType>(-10, 3, -4, 2);
-            checkDivisionAlg<IntType>(10, -3, -3, 1);
-            checkDivisionAlg<IntType>(-10, -3, 4, 2);
-
-            checkDivisionAlg<IntType>(12, 3, 4, 0);
-            checkDivisionAlg<IntType>(-12, 3, -4, 0);
-            checkDivisionAlg<IntType>(12, -3, -4, 0);
-            checkDivisionAlg<IntType>(-12, -3, 4, 0);
-
-            checkDivisionAlg<IntType>(1, 3, 0, 1);
-            checkDivisionAlg<IntType>(1, -3, 0, 1);
-            checkDivisionAlg<IntType>(-1, 3, -1, 2);
-            checkDivisionAlg<IntType>(-1, -3, 1, 2);
+            // The list of cases includes cases at the overflow points.
+            // Just run through all n,d pairs.
+            int a, b;
+            for (a = 0; a < d.nCases; ++a)
+                for (b = a + 1; b < d.nCases; ++b)
+                    testDivisionAlg(d.cases[a], d.cases[b]);
         }
 
         template <typename IntType>
-        void gcd() {
-            // For now, at least make sure we treat zero correctly.
-            CPPUNIT_ASSERT_MESSAGE("gcd(0,x) incorrect.",
-                IntType::zero.gcd(10) == 10);
-            CPPUNIT_ASSERT_MESSAGE("gcd(x,0) incorrect.",
-                IntType(10).gcd(IntType::zero) == 10);
-            CPPUNIT_ASSERT_MESSAGE("gcd(0,0) incorrect.",
-                IntType::zero.gcd(IntType::zero) == 0);
+        void testGcdLcm(const IntType& x, const IntType& y) {
+            IntType g = x.gcd(y);
+            IntType g2 = y.gcd(x);
+            shouldBeEqual(g, g2);
+
+            IntType l = x.lcm(y);
+            IntType l2 = y.lcm(x);
+            shouldBeEqual(l, l2);
+
+            IntType u, v;
+            IntType g3 = x.gcdWithCoeffs(y, u, v);
+            shouldBeEqual(g, g3);
+
+            if (x == 0 && y == 0) {
+                shouldBeEqual(g, 0L);
+                shouldBeEqual(u, 0L);
+                shouldBeEqual(v, 0L);
+            } else if (x == 0 && y > 0) {
+                shouldBeEqual(g, y);
+                shouldBeEqual(u, 0L);
+                shouldBeEqual(v, 1);
+            } else if (x == 0 && y < 0) {
+                shouldBeEqual(g, -y);
+                shouldBeEqual(u, 0L);
+                shouldBeEqual(v, -1);
+            } else if (y == 0 && x > 0) {
+                shouldBeEqual(g, x);
+                shouldBeEqual(u, 1);
+                shouldBeEqual(v, 0L);
+            } else if (y == 0 && x < 0) {
+                shouldBeEqual(g, -x);
+                shouldBeEqual(u, -1);
+                shouldBeEqual(v, 0L);
+            } else {
+                // The following tests are enough to ensure that we have the
+                // right gcd.
+                shouldBeGreater(g, 0);
+                shouldBeEqual(x % g, 0L);
+                shouldBeEqual(y % g, 0L);
+                shouldBeEqual((x / g) * g, x);
+                shouldBeEqual((y / g) * g, y);
+                shouldBeEqual(u * x + v * y, g);
+
+                // These next tests ensure that u and v are correct.
+                shouldBeLess(-x.abs(), g * v * y.sign());
+                shouldBeLess(v * y.sign(), 1);
+            }
+
+            // Make sure the LCM is correct.
+            // Note that we make no guarantees about the sign of the LCM.
+            shouldBeEqual((g * l).abs(), (x * y).abs());
+
+            IntType p(x);
+            p.gcdWith(y);
+            shouldBeEqual(p, x.gcd(y));
+
+            IntType q(x);
+            q.lcmWith(y);
+            shouldBeEqual(q, x.lcm(y));
         }
 
         template <typename IntType>
-        void lcm() {
-            // For now, at least make sure we treat zero correctly.
-            CPPUNIT_ASSERT_MESSAGE("lcm(0,x) incorrect.",
-                IntType::zero.lcm(10) == 0);
-            CPPUNIT_ASSERT_MESSAGE("lcm(0,-x) incorrect.",
-                IntType::zero.lcm(-10) == 0);
-            CPPUNIT_ASSERT_MESSAGE("lcm(x,0) incorrect.",
-                IntType(10).lcm(IntType::zero) == 0);
-            CPPUNIT_ASSERT_MESSAGE("lcm(-x,0) incorrect.",
-                IntType(-10).lcm(IntType::zero) == 0);
-            CPPUNIT_ASSERT_MESSAGE("lcm(0,0) incorrect.",
-                IntType::zero.lcm(IntType::zero) == 0);
+        void gcdLcm() {
+            const Data<IntType>& d(data<IntType>());
+
+            // The list of cases includes cases at the overflow points.
+            // Just run through all pairs.
+            int a, b;
+            for (a = 0; a < d.nCases; ++a)
+                for (b = a + 1; b < d.nCases; ++b)
+                    testGcdLcm(d.cases[a], d.cases[b]);
+        }
+
+        template <typename IntType>
+        void tryReduce() {
+            const Data<IntType>& d(data<IntType>());
+
+            for (int a = 0; a < d.nCases; ++a) {
+                IntType x(d.cases[a]);
+                x.tryReduce();
+                shouldBeEqual(x, d.cases[a]);
+
+                IntType y(d.cases[a]);
+                y += IntType(ENORMOUS_INTEGER);
+                y += IntType(HUGE_INTEGER);
+                y -= IntType(ENORMOUS_INTEGER);
+                y -= IntType(HUGE_INTEGER);
+                y.tryReduce();
+                shouldBeEqual(y, d.cases[a]);
+
+                IntType z(d.cases[a]);
+                z.makeLarge();
+                if (z.isNative())
+                    CPPUNIT_FAIL("Integer is still native after makeLarge().");
+                z.tryReduce();
+
+                if (d.cases[a] <= LONG_MAX && d.cases[a] >= LONG_MIN) {
+                    if (! (x.isNative() && y.isNative() && z.isNative()))
+                        CPPUNIT_FAIL("Integers are not native after "
+                            "tryReduce() even though they are within range.");
+                } else {
+                    if (x.isNative() || y.isNative() || z.isNative())
+                        CPPUNIT_FAIL("Integers become native after "
+                            "tryReduce() even though they are out of range.");
+                }
+            }
+        }
+
+        template <typename IntType>
+        void makeLarge() {
+            const Data<IntType>& d(data<IntType>());
+
+            for (int a = 0; a < d.nCases; ++a) {
+                IntType x(d.cases[a]);
+                x.makeLarge();
+                shouldBeEqual(x, d.cases[a]);
+                if (x.isNative())
+                    CPPUNIT_FAIL("Integer is still native after makeLarge().");
+                shouldBeEqual(x, d.cases[a]);
+            }
         }
 };
 
@@ -1749,17 +1945,29 @@ template <typename IntType>
 const IntType NIntegerTest::Data<IntType>::cases[] = {
     // Too low for a native long:
     "-"ENORMOUS_INTEGER,
+    "-"HUGE_INTEGER"2",
+    "-"HUGE_INTEGER"1",
+    "-"HUGE_INTEGER"0",
     "-"HUGE_INTEGER,
     -IntType(static_cast<unsigned long>(ULONG_MAX)),
+    -IntType(static_cast<unsigned long>(LONG_MAX) + 3),
     -IntType(static_cast<unsigned long>(LONG_MAX) + 2),
     // Fit into a native long:
-    LONG_MIN, -LONG_MAX, -32768, -5000, -1000, -3, -2, -1,
+    LONG_MIN, -LONG_MAX, LONG_MIN+2, -32768, -32767,
+    -5000, -4999, -4998, -4997, -3000, -1000,
+    -5, -4, -3, -2, -1,
     0,
-    1, 2, 3, 1000, 5000, 32768, LONG_MAX-1, LONG_MAX,
+    1, 2, 3, 4, 5,
+    1000, 3000, 4997, 4998, 4999, 5000,
+    32767, 32768, LONG_MAX-2, LONG_MAX-1, LONG_MAX,
     // Too large for a native long:
     static_cast<unsigned long>(LONG_MAX) + 1,
+    static_cast<unsigned long>(LONG_MAX) + 2,
     static_cast<unsigned long>(ULONG_MAX),
     HUGE_INTEGER,
+    HUGE_INTEGER"0",
+    HUGE_INTEGER"1",
+    HUGE_INTEGER"2",
     ENORMOUS_INTEGER
 };
 
@@ -1768,9 +1976,13 @@ const unsigned NIntegerTest::Data<IntType>::nCases = 25;
 
 template <typename IntType>
 const long NIntegerTest::Data<IntType>::longCases[] = {
-    LONG_MIN, -LONG_MAX, -32768, -5000, -1000, -3, -2, -1,
+    LONG_MIN, -LONG_MAX, LONG_MIN+2, -32768, -32767,
+    -5000, -4999, -4998, -4997, -3000, -1000,
+    -5, -4, -3, -2, -1,
     0,
-    1, 2, 3, 1000, 5000, 32768, LONG_MAX-1, LONG_MAX
+    1, 2, 3, 4, 5,
+    1000, 3000, 4997, 4998, 4999, 5000,
+    32767, 32768, LONG_MAX-2, LONG_MAX-1, LONG_MAX
 };
 
 template <typename IntType>
