@@ -37,12 +37,6 @@
 #include "maths/ninteger.h"
 #include "testsuite/utilities/testutilities.h"
 
-// TODO: Review down to operator /.
-
-// TODO: Test *(=)
-// TODO: Test raiseToPower
-// TODO: Maybe test legendre, random functions
-
 using regina::NIntegerBase;
 using regina::NInteger;
 using regina::NLargeInteger;
@@ -95,6 +89,8 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(incDec<NLargeInteger>);
     CPPUNIT_TEST(plusMinus<NInteger>);
     CPPUNIT_TEST(plusMinus<NLargeInteger>);
+    CPPUNIT_TEST(multiply<NInteger>);
+    CPPUNIT_TEST(multiply<NLargeInteger>);
     CPPUNIT_TEST(divide<NInteger>);
     CPPUNIT_TEST(divide<NLargeInteger>);
     CPPUNIT_TEST(mod<NInteger>);
@@ -107,6 +103,8 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(divisionAlg<NLargeInteger>);
     CPPUNIT_TEST(gcdLcm<NInteger>);
     CPPUNIT_TEST(gcdLcm<NLargeInteger>);
+    CPPUNIT_TEST(raiseToPower<NInteger>);
+    CPPUNIT_TEST(raiseToPower<NLargeInteger>);
     CPPUNIT_TEST(tryReduce<NInteger>);
     CPPUNIT_TEST(tryReduce<NLargeInteger>);
     CPPUNIT_TEST(makeLarge<NInteger>);
@@ -1711,6 +1709,189 @@ class NIntegerTest : public CppUnit::TestFixture {
         }
 
         template <typename IntType>
+        void multiply() {
+            unsigned a, b;
+
+            const Data<IntType>& d(data<IntType>());
+
+            for (a = 0; a < d.nCases; ++a) {
+                for (b = 0; b < d.nCases; ++b) {
+                    IntType x(d.cases[a]);
+                    IntType y(d.cases[b]);
+
+                    // Test the commutative law.
+                    shouldBeEqual(x * y, y * x);
+
+                    // Test the distributive law.
+                    shouldBeEqual(x * (y + 1), (x * y) + x);
+                    shouldBeEqual(x * (y - 1), (x * y) - x);
+                    shouldBeEqual(x * (y + IntType(HUGE_INTEGER)),
+                        (x * y) + (x * IntType(HUGE_INTEGER)));
+                    shouldBeEqual(x * (y - IntType(HUGE_INTEGER)),
+                        (x * y) - (x * IntType(HUGE_INTEGER)));
+
+                    // Other simple arithmetic tests.
+                    shouldBeEqual(x * (-y), -(x * y));
+                    shouldBeEqual((-x) * (-y), x * y);
+                    shouldBeEqual(x * (-y) + x * y, 0L);
+
+                    // Test that *= behaves as it should.
+                    {
+                        IntType p(x);
+                        shouldBeEqual(p *= y, x * y);
+                    }
+
+                    // Test signs and ordering.
+                    if (x.sign() > 0 && y.sign() > 0) {
+                        shouldBeGreater(x * y, 0);
+                        shouldBeGreater(x * y, x - 1);
+                        shouldBeGreater(x * y, y - 1);
+                    } else if (x.sign() > 0 && y.sign() < 0) {
+                        shouldBeLess(x * y, 0);
+                        shouldBeLess(x * y, (-x) + 1);
+                        shouldBeLess(x * y, y + 1);
+                    } else if (x.sign() < 0 && y.sign() > 0) {
+                        shouldBeLess(x * y, 0);
+                        shouldBeLess(x * y, x + 1);
+                        shouldBeLess(x * y, (-y) + 1);
+                    } else if (x.sign() < 0 && y.sign() < 0) {
+                        shouldBeGreater(x * y, 0);
+                        shouldBeGreater(x * y, (-x) - 1);
+                        shouldBeGreater(x * y, (-y) - 1);
+                    }
+                }
+
+                for (b = 0; b < d.nLongCases; ++b) {
+                    IntType x(d.cases[a]);
+                    long y = d.longCases[b];
+
+                    // TODO: Replicate the tests above.
+                }
+
+                IntType z(d.cases[a]);
+                shouldBeEqual(z * 1, z);
+                shouldBeEqual(z * 0L, 0L);
+                shouldBeEqual(z * -1, -z);
+                shouldBeEqual(1 * z, z);
+                shouldBeEqual(0L * z, 0L);
+                shouldBeEqual(-1 * z, -z);
+                shouldBeEqual(z * IntType::one, z);
+                shouldBeEqual(z * IntType::zero, 0L);
+                shouldBeEqual(z * -IntType::one, -z);
+                shouldBeEqual(IntType::one * z, z);
+                shouldBeEqual(IntType::zero * z, 0L);
+                shouldBeEqual((-IntType::one) * z, -z);
+            }
+
+            // Ad-hoc tests for native * native: TODO
+            shouldBeEqual(IntType(3) + IntType(7), 10);
+            shouldBeEqual(IntType(3) + IntType(-7), -4);
+            shouldBeEqual(IntType(-3) + IntType(7), 4);
+            shouldBeEqual(IntType(-3) + IntType(-7), -10);
+            shouldBeEqual(IntType(3) - IntType(-7), 10);
+            shouldBeEqual(IntType(3) - IntType(7), -4);
+            shouldBeEqual(IntType(-3) - IntType(-7), 4);
+            shouldBeEqual(IntType(-3) - IntType(7), -10);
+            shouldBeEqual(IntType(3) + long(7), 10);
+            shouldBeEqual(IntType(3) + long(-7), -4);
+            shouldBeEqual(IntType(-3) + long(7), 4);
+            shouldBeEqual(IntType(-3) + long(-7), -10);
+            shouldBeEqual(IntType(3) - long(-7), 10);
+            shouldBeEqual(IntType(3) - long(7), -4);
+            shouldBeEqual(IntType(-3) - long(-7), 4);
+            shouldBeEqual(IntType(-3) - long(7), -10);
+            shouldBeEqual(long(3) + IntType(7), 10);
+            shouldBeEqual(long(3) + IntType(-7), -4);
+            shouldBeEqual(long(-3) + IntType(7), 4);
+            shouldBeEqual(long(-3) + IntType(-7), -10);
+
+            // Ad-hoc tests for large * native: TODO
+            shouldBeEqual(IntType(ENORMOUS_INTEGER "0") + IntType(3),
+                IntType(ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "10") + IntType(3),
+                IntType("-" ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER "10") + IntType(-3),
+                IntType(ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "0") + IntType(-3),
+                IntType("-" ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER "0") - IntType(-3),
+                IntType(ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "10") - IntType(-3),
+                IntType("-" ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER "10") - IntType(3),
+                IntType(ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "0") - IntType(3),
+                IntType("-" ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER "0") + long(3),
+                IntType(ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "10") + long(3),
+                IntType("-" ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER "10") + long(-3),
+                IntType(ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "0") + long(-3),
+                IntType("-" ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER "0") - long(-3),
+                IntType(ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "10") - long(-3),
+                IntType("-" ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER "10") - long(3),
+                IntType(ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "0") - long(3),
+                IntType("-" ENORMOUS_INTEGER "3"));
+
+            // Ad-hoc tests for native * large: TODO
+            shouldBeEqual(IntType(3) + IntType(ENORMOUS_INTEGER "0"),
+                IntType(ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType(3) + IntType("-" ENORMOUS_INTEGER "10"),
+                IntType("-" ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType(-3) + IntType(ENORMOUS_INTEGER "10"),
+                IntType(ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType(-3) + IntType("-" ENORMOUS_INTEGER "0"),
+                IntType("-" ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType(3) - IntType(ENORMOUS_INTEGER "10"),
+                IntType("-" ENORMOUS_INTEGER "07"));
+            shouldBeEqual(IntType(3) - IntType("-" ENORMOUS_INTEGER "0"),
+                IntType(ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType(-3) - IntType(ENORMOUS_INTEGER "0"),
+                IntType("-" ENORMOUS_INTEGER "3"));
+            shouldBeEqual(IntType(-3) - IntType("-" ENORMOUS_INTEGER "10"),
+                IntType(ENORMOUS_INTEGER "07"));
+            shouldBeEqual(long(3) + IntType(ENORMOUS_INTEGER "0"),
+                IntType(ENORMOUS_INTEGER "3"));
+            shouldBeEqual(long(3) + IntType("-" ENORMOUS_INTEGER "10"),
+                IntType("-" ENORMOUS_INTEGER "07"));
+            shouldBeEqual(long(-3) + IntType(ENORMOUS_INTEGER "10"),
+                IntType(ENORMOUS_INTEGER "07"));
+            shouldBeEqual(long(-3) + IntType("-" ENORMOUS_INTEGER "0"),
+                IntType("-" ENORMOUS_INTEGER "3"));
+
+            // Ad-hoc tests for large * large: TODO
+            shouldBeEqual(IntType("3" ZEROES) + IntType("7" ZEROES),
+                IntType("10" ZEROES));
+            shouldBeEqual(IntType("3" ZEROES) + IntType("-7" ZEROES),
+                IntType("-4" ZEROES));
+            shouldBeEqual(IntType("-3" ZEROES) + IntType("7" ZEROES),
+                IntType("4" ZEROES));
+            shouldBeEqual(IntType("-3" ZEROES) + IntType("-7" ZEROES),
+                IntType("-10" ZEROES));
+
+            // Test around overflow points: TODO
+
+            // Tests for infinity are hard-coded to NLargeInteger.
+            const NLargeInteger& infinity(NLargeInteger::infinity);
+
+            shouldBeEqual(infinity * infinity, infinity);
+            for (a = 0; a < dataL.nCases; a++) {
+                shouldBeEqual(dataL.cases[a] * infinity, infinity);
+                shouldBeEqual(infinity * dataL.cases[a], infinity);
+            }
+            for (a = 0; a < dataL.nLongCases; a++) {
+                shouldBeEqual(dataL.longCases[a] * infinity, infinity);
+                shouldBeEqual(infinity * dataL.longCases[a], infinity);
+            }
+        }
+
+        template <typename IntType>
         void divide() {
             unsigned a, b;
 
@@ -1945,6 +2126,10 @@ class NIntegerTest : public CppUnit::TestFixture {
 
                     IntType p(x);
                     shouldBeEqual(p %= y, ans);
+
+                    // Verify divExact() if we can.
+                    if (ans == 0)
+                        shouldBeEqual(x.divExact(y) * y, x);
                 }
 
                 for (b = 0; b < d.nLongCases; ++b) {
@@ -1972,6 +2157,10 @@ class NIntegerTest : public CppUnit::TestFixture {
 
                     IntType p(x);
                     shouldBeEqual(p %= y, ans);
+
+                    // Verify divExact() if we can.
+                    if (ans == 0)
+                        shouldBeEqual(x.divExact(y) * y, x);
                 }
 
                 IntType z(d.cases[a]);
@@ -2240,6 +2429,33 @@ class NIntegerTest : public CppUnit::TestFixture {
             for (a = 0; a < d.nCases; ++a)
                 for (b = a + 1; b < d.nCases; ++b)
                     testGcdLcm(d.cases[a], d.cases[b]);
+        }
+
+        template <typename IntType>
+        void raiseToPower() {
+            const Data<IntType>& d(data<IntType>());
+
+            int a;
+            unsigned exp;
+            for (a = 0; a < d.nCases; ++a) {
+                IntType ans(1);
+                IntType base(d.cases[a]);
+                for (exp = 0; exp < 32; ++exp) {
+                    IntType pow(base);
+                    pow.raiseToPower(exp);
+                    shouldBeEqual(ans, pow);
+                    ans *= base;
+                }
+            }
+
+            for (exp = 0; exp < 5; ++exp) {
+                NLargeInteger pow(NLargeInteger::infinity);
+                pow.raiseToPower(exp);
+                if (exp == 0)
+                    shouldBeEqual(pow, 1);
+                else
+                    shouldBeEqual(pow, NLargeInteger::infinity);
+            }
         }
 
         template <typename IntType>

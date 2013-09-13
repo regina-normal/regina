@@ -136,7 +136,8 @@ struct InfinityBase<false> {
  * For \a supportInfinity = \c false (the default), simply use NIntegerBase.
  * For \a supportInfinity = \c true, use NLargeInteger.
  *
- * \testpart
+ * \testfull At present, the only routines not thoroughly tested in the
+ * test suite are legendre() and the random number generation routines.
  */
 template <bool supportInfinity = false>
 class NIntegerBase : private InfinityBase<supportInfinity> {
