@@ -19,34 +19,25 @@ sig = 'sfLfvQvwwMQQQccjghjkmqlonrnrqpqrnsnksaisnrobocksks'
 tri = NTriangulation.fromIsoSig(sig)
 print tri.getNumberOfTetrahedra(), 'tetrahedra'
 
-# Create a progress manager to use during the normal surface enumeration.
+# Create a progress tracker to use during the normal surface enumeration.
 # This will report the state of progress while the enumeration runs in
 # the background.
-manager = NProgressManager()
+tracker = NProgressTracker()
 
 # Start the normal surface enumeration.
-# Because we are passing a progress manager to enumerate(), the
+# Because we are passing a progress tracker to enumerate(), the
 # enumeration will start in the background and control will return
 # immediately to the python console.
-surfaces = NNormalSurfaceList.enumerate(tri,
-    NNormalSurfaceList.STANDARD, 1, manager)
-
-# Wait for the surface enumeration to fully start up.
-while not manager.isStarted():
-    time.sleep(1)
-
+surfaces = NNormalSurfaceList.enumerate(tri, NS_STANDARD, NS_VERTEX,
+    NS_ALG_DEFAULT, tracker)
 
 # At this point the enumeration is up and running.
-# Output a progress report every second until it finishes.
-prog = manager.getProgress()
-while not manager.isFinished():
-    print 'Progress:', prog.getDescription()
-    time.sleep(1)
+# Output a progress report every half-second until it finishes.
+while not tracker.isFinished():
+    print 'Progress:', tracker.percent(), '%'
+    time.sleep(0.5)
 
 
 # The surface enumeration is now complete.
 print surfaces.getNumberOfSurfaces(), 'normal surfaces'
 
-# Output the total time spent during the surface enumeration.
-print 'Total real time:', prog.getRealTime(), 'seconds'
-print 'Total cpu time:', prog.totalCPUTime(), 'seconds'
