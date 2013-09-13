@@ -58,7 +58,7 @@ void usage(const char* program) {
  * A variant of NTreeTraversal::writeTypes() that also performs sanity
  * checking on the normal surface.
  */
-template <template <typename> class LPConstraint, typename BanConstraint>
+template <class LPConstraint, typename BanConstraint>
 bool writeTypesAndVerify(
         const NTreeEnumeration<LPConstraint, BanConstraint>& tree, void* eqns) {
     /*

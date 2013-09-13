@@ -77,8 +77,7 @@
 
 namespace regina {
 
-template <template <typename> class LPConstraint, typename BanConstraint,
-        typename Integer>
+template <class LPConstraint, typename BanConstraint, typename Integer>
 NNormalSurface* NTreeTraversal<LPConstraint, BanConstraint, Integer>::
         buildSurface() const {
     // Note that the vector constructors automatically set all
@@ -133,8 +132,7 @@ NNormalSurface* NTreeTraversal<LPConstraint, BanConstraint, Integer>::
     return new NNormalSurface(origTableaux_.tri(), an);
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
-        typename Integer>
+template <class LPConstraint, typename BanConstraint, typename Integer>
 bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
         const NNormalSurface* s, const NMatrixInt* matchingEqns) const {
     // Rebuild the matching equations if necessary.
@@ -160,11 +158,10 @@ bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
     delete tmpEqns;
 
     // Verify any additional constraints.
-    return LPConstraint<Integer>::verify(s);
+    return LPConstraint::verify(s);
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
-        typename Integer>
+template <class LPConstraint, typename BanConstraint, typename Integer>
 NTreeTraversal<LPConstraint, BanConstraint, Integer>::NTreeTraversal(
         NTriangulation* tri, NormalCoords coords,
         int branchesPerQuad, int branchesPerTri, bool enumeration) :
@@ -222,8 +219,7 @@ NTreeTraversal<LPConstraint, BanConstraint, Integer>::NTreeTraversal(
 /**
  * Destroys this object.
  */
-template <template <typename> class LPConstraint, typename BanConstraint,
-        typename Integer>
+template <class LPConstraint, typename BanConstraint, typename Integer>
 NTreeTraversal<LPConstraint, BanConstraint, Integer>::~NTreeTraversal() {
     delete[] type_;
     delete[] typeOrder_;
@@ -232,8 +228,7 @@ NTreeTraversal<LPConstraint, BanConstraint, Integer>::~NTreeTraversal() {
     delete[] nextSlot_;
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
-        typename Integer>
+template <class LPConstraint, typename BanConstraint, typename Integer>
 void NTreeTraversal<LPConstraint, BanConstraint, Integer>::setNext(
         int nextType) {
     int* pos = std::find(typeOrder_ + level_ + 1,
@@ -248,8 +243,7 @@ void NTreeTraversal<LPConstraint, BanConstraint, Integer>::setNext(
     }
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
-        typename Integer>
+template <class LPConstraint, typename BanConstraint, typename Integer>
 int NTreeTraversal<LPConstraint, BanConstraint, Integer>::feasibleBranches(
         int quadType) {
     // Spin off clones for the new linear programs (reusing as much
@@ -291,8 +285,7 @@ int NTreeTraversal<LPConstraint, BanConstraint, Integer>::feasibleBranches(
         (tmpLP_[3].isFeasible() ? 1 : 0));
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
-        typename Integer>
+template <class LPConstraint, typename BanConstraint, typename Integer>
 double NTreeTraversal<LPConstraint, BanConstraint, Integer>::percent() const {
     double percent = 0.0;
     double range = 100.0;
@@ -329,8 +322,7 @@ double NTreeTraversal<LPConstraint, BanConstraint, Integer>::percent() const {
     return percent;
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
-        typename Integer>
+template <class LPConstraint, typename BanConstraint, typename Integer>
 bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::next(
         NProgressTracker* tracker) {
     if (lastNonZero_ < 0) {
@@ -699,8 +691,7 @@ bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::next(
     return false;
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
-        typename Integer>
+template <class LPConstraint, typename BanConstraint, typename Integer>
 bool NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::find() {
     // This code is similar to next(), but makes some changes to
     // account for the facts that:

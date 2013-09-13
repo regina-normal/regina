@@ -53,8 +53,6 @@ class NTriangulation;
 
 template <typename Integer>
 class LPMatrix;
-template <template <typename> class LPConstraint, typename Integer>
-class LPData;
 
 /**
  * \weakgroup enumerate
@@ -80,16 +78,10 @@ class LPData;
  * provide any implementations at all, and subclasses are completely
  * responsible for their own implementations.
  *
- * The \a Integer template argument indicates how integer arithmetic
- * will be performed, and must match the integer types used in the
- * corresponding linear programming classes (such as LPMatrix,
- * LPInitialTableaux and LPData).
- *
  * \apinotfinal
  *
  * \ifacespython Not present.
  */
-template <typename Integer>
 class LPConstraintBase {
 #ifdef __DOXYGEN
     public:
@@ -142,6 +134,7 @@ class LPConstraintBase {
              * @param col the column of the given matrix in which to
              * place these coefficients.
              */
+            template <typename Integer>
             void fillFinalRows(LPMatrix<Integer>& m, unsigned col) const;
 
             /**
@@ -158,6 +151,7 @@ class LPConstraintBase {
              * product.
              * @return the resulting portion of the inner product.
              */
+            template <typename Integer>
             Integer innerProduct(const LPMatrix<Integer>& m, unsigned mRow)
                 const;
 
@@ -201,6 +195,7 @@ class LPConstraintBase {
              * product.
              * @return the resulting portion of the inner product.
              */
+            template <typename Integer>
             Integer innerProductOct(const LPMatrix<Integer>& m, unsigned mRow)
                 const;
         };
@@ -279,7 +274,9 @@ class LPConstraintBase {
          * functions.
          * @param numCols the number of columns in the given tableaux.
          */
-        static void constrain(LPData<LPConstraintNone>& lp, unsigned numCols);
+        template <typename Integer>
+        static void constrain(LPData<LPConstraintNone, Integer>& lp,
+            unsigned numCols);
 
         /**
          * Ensures that the given normal surface satisfies the extra
@@ -337,29 +334,30 @@ class LPConstraintBase {
  *
  * \ifacespython Not present.
  */
-template <typename Integer>
-class LPConstraintSubspace : public LPConstraintBase<Integer> {
+class LPConstraintSubspace : public LPConstraintBase {
 };
 
 /**
  * A do-nothing class that imposes no additional linear constraints on
  * the tableaux of normal surface matching equations.
  */
-template <typename Integer>
-class LPConstraintNone : public LPConstraintSubspace<Integer> {
+class LPConstraintNone : public LPConstraintSubspace {
     public:
         enum { nConstraints = 0 };
 
         struct Coefficients {
             Coefficients();
+            template<typename Integer>
             void fillFinalRows(LPMatrix<Integer>& m, unsigned col) const;
+            template<typename Integer>
             Integer innerProduct(const LPMatrix<Integer>&, unsigned) const;
+            template<typename Integer>
             Integer innerProductOct(const LPMatrix<Integer>&, unsigned) const;
         };
 
-        static bool addRows(
-            typename LPInitialTableaux<regina::LPConstraintNone, Integer>::Col*,
+        static bool addRows(LPInitialTableaux<regina::LPConstraintNone>::Col*,
             const int*, NTriangulation*);
+        template<typename Integer>
         static void constrain(
             LPData<regina::LPConstraintNone, Integer>&, unsigned);
         static bool verify(const NNormalSurface*);
@@ -390,8 +388,7 @@ class LPConstraintNone : public LPConstraintSubspace<Integer> {
  *
  * \ifacespython Not present.
  */
-template <typename Integer>
-class LPConstraintEuler : public LPConstraintBase<Integer> {
+class LPConstraintEuler : public LPConstraintBase {
     public:
         enum { nConstraints = 1 };
 
@@ -402,16 +399,20 @@ class LPConstraintEuler : public LPConstraintBase<Integer> {
                      equation matrix. */
 
             Coefficients();
+            template<typename Integer>
             void fillFinalRows(LPMatrix<Integer>& m, unsigned col) const;
+            template<typename Integer>
             Integer innerProduct(const LPMatrix<Integer>& m,
                     unsigned mRow) const;
+            template<typename Integer>
             Integer innerProductOct(const LPMatrix<Integer>& m,
                     unsigned mRow) const;
         };
 
-        static bool addRows(typename
-            LPInitialTableaux<regina::LPConstraintEuler, Integer>::Col* col,
+        static bool addRows(
+            LPInitialTableaux<regina::LPConstraintEuler>::Col* col,
             const int* columnPerm, NTriangulation* tri);
+        template<typename Integer>
         static void constrain(
             LPData<regina::LPConstraintEuler, Integer>& lp,
             unsigned numCols);
@@ -449,8 +450,7 @@ class LPConstraintEuler : public LPConstraintBase<Integer> {
  *
  * \ifacespython Not present.
  */
-template <typename Integer>
-class LPConstraintNonSpun : public LPConstraintSubspace<Integer> {
+class LPConstraintNonSpun : public LPConstraintSubspace {
     public:
         enum { nConstraints = 2 };
 
@@ -459,16 +459,20 @@ class LPConstraintNonSpun : public LPConstraintSubspace<Integer> {
             int longitude;
 
             Coefficients();
+            template <typename Integer>
             void fillFinalRows(LPMatrix<Integer>& m, unsigned col) const;
+            template <typename Integer>
             Integer innerProduct(const LPMatrix<Integer>& m,
                     unsigned mRow) const;
+            template <typename Integer>
             Integer innerProductOct(const LPMatrix<Integer>& m,
                     unsigned mRow) const;
         };
 
-        static bool addRows(typename
-            LPInitialTableaux<regina::LPConstraintNonSpun, Integer>::Col* col,
+        static bool addRows(
+            LPInitialTableaux<regina::LPConstraintNonSpun>::Col* col,
             const int* columnPerm, NTriangulation* tri);
+        template <typename Integer>
         static void constrain(
             LPData<regina::LPConstraintNonSpun, Integer>& lp,
             unsigned numCols);
@@ -583,7 +587,7 @@ class BanConstraintBase {
          *
          * @param lp the tableaux in which to enforce the bans.
          */
-        template <template <typename> class LPConstraint, typename Integer>
+        template <class LPConstraint, typename Integer>
         void enforceBans(LPData<LPConstraint, Integer>& lp) const;
 
 #ifdef __DOXYGEN
@@ -737,60 +741,55 @@ class BanTorusBoundary : public BanConstraintBase {
 
 // Inline functions
 
-template <typename Integer>
-inline LPConstraintNone<Integer>::Coefficients::Coefficients() {
+inline LPConstraintNone::Coefficients::Coefficients() {
 }
 
 template <typename Integer>
-inline void LPConstraintNone<Integer>::Coefficients::fillFinalRows(
+inline void LPConstraintNone::Coefficients::fillFinalRows(
         LPMatrix<Integer>& m, unsigned col) const {
 }
 
 template <typename Integer>
-inline Integer LPConstraintNone<Integer>::Coefficients::innerProduct(
+inline Integer LPConstraintNone::Coefficients::innerProduct(
         const LPMatrix<Integer>&, unsigned) const {
     return 0;
 }
 
 template <typename Integer>
-inline Integer LPConstraintNone<Integer>::Coefficients::innerProductOct(
+inline Integer LPConstraintNone::Coefficients::innerProductOct(
         const LPMatrix<Integer>&, unsigned) const {
     return 0;
 }
 
-template <typename Integer>
-inline bool LPConstraintNone<Integer>::addRows(
-        typename LPInitialTableaux<regina::LPConstraintNone, Integer>::Col*,
+inline bool LPConstraintNone::addRows(
+        LPInitialTableaux<regina::LPConstraintNone>::Col*,
         const int*, NTriangulation*) {
     return true;
 }
 
 template <typename Integer>
-inline void LPConstraintNone<Integer>::constrain(
+inline void LPConstraintNone::constrain(
         LPData<regina::LPConstraintNone, Integer>&, unsigned) {
 }
 
-template <typename Integer>
-inline bool LPConstraintNone<Integer>::verify(const NNormalSurface*) {
+inline bool LPConstraintNone::verify(const NNormalSurface*) {
     return true;
 }
 
-template <typename Integer>
-inline bool LPConstraintNone<Integer>::supported(NormalCoords) {
+inline bool LPConstraintNone::supported(NormalCoords) {
     return true;
 }
 
-template <typename Integer>
-inline LPConstraintEuler<Integer>::Coefficients::Coefficients() : euler(0) {}
+inline LPConstraintEuler::Coefficients::Coefficients() : euler(0) {}
 
 template <typename Integer>
-inline void LPConstraintEuler<Integer>::Coefficients::fillFinalRows(
+inline void LPConstraintEuler::Coefficients::fillFinalRows(
         LPMatrix<Integer>& m, unsigned col) const {
     m.entry(m.rows() - 1, col) = euler;
 }
 
 template <typename Integer>
-inline Integer LPConstraintEuler<Integer>::Coefficients::innerProduct(
+inline Integer LPConstraintEuler::Coefficients::innerProduct(
         const LPMatrix<Integer>& m, unsigned mRow) const {
     Integer ans(m.entry(mRow, m.rows() - 1));
     ans *= euler;
@@ -798,7 +797,7 @@ inline Integer LPConstraintEuler<Integer>::Coefficients::innerProduct(
 }
 
 template <typename Integer>
-inline Integer LPConstraintEuler<Integer>::Coefficients::innerProductOct(
+inline Integer LPConstraintEuler::Coefficients::innerProductOct(
         const LPMatrix<Integer>& m, unsigned mRow) const {
     // This is called for *two* quad columns (the two quads
     // that combine to give a single octagon).
@@ -818,36 +817,33 @@ inline Integer LPConstraintEuler<Integer>::Coefficients::innerProductOct(
 }
 
 template <typename Integer>
-inline void LPConstraintEuler<Integer>::constrain(
+inline void LPConstraintEuler::constrain(
         LPData<regina::LPConstraintEuler, Integer>& lp, unsigned numCols) {
     lp.constrainPositive(numCols - 1);
 }
 
-template <typename Integer>
-inline bool LPConstraintEuler<Integer>::verify(const NNormalSurface* s) {
+inline bool LPConstraintEuler::verify(const NNormalSurface* s) {
     return (s->getEulerCharacteristic() > 0);
 }
 
-template <typename Integer>
-inline bool LPConstraintEuler<Integer>::supported(NormalCoords coords) {
+inline bool LPConstraintEuler::supported(NormalCoords coords) {
     return (coords == NS_STANDARD || coords == NS_AN_STANDARD);
 }
 
 #ifndef EXCLUDE_SNAPPEA
-template <typename Integer>
-inline LPConstraintNonSpun<Integer>::Coefficients::Coefficients() :
+inline LPConstraintNonSpun::Coefficients::Coefficients() :
         meridian(0), longitude(0) {
 }
 
 template <typename Integer>
-inline void LPConstraintNonSpun<Integer>::Coefficients::fillFinalRows(
+inline void LPConstraintNonSpun::Coefficients::fillFinalRows(
         LPMatrix<Integer>& m, unsigned col) const {
     m.entry(m.rows() - 2, col) = meridian;
     m.entry(m.rows() - 1, col) = longitude;
 }
 
 template <typename Integer>
-inline Integer LPConstraintNonSpun<Integer>::Coefficients::innerProduct(
+inline Integer LPConstraintNonSpun::Coefficients::innerProduct(
         const LPMatrix<Integer>& m, unsigned mRow) const {
     Integer ans1(m.entry(mRow, m.rows() - 2));
     ans1 *= meridian;
@@ -858,7 +854,7 @@ inline Integer LPConstraintNonSpun<Integer>::Coefficients::innerProduct(
 }
 
 template <typename Integer>
-inline Integer LPConstraintNonSpun<Integer>::Coefficients::innerProductOct(
+inline Integer LPConstraintNonSpun::Coefficients::innerProductOct(
         const LPMatrix<Integer>& m, unsigned mRow) const {
     // This should never be called, since we never use this
     // constraint with almost normal surfaces.
@@ -868,19 +864,17 @@ inline Integer LPConstraintNonSpun<Integer>::Coefficients::innerProductOct(
 }
 
 template <typename Integer>
-inline void LPConstraintNonSpun<Integer>::constrain(
+inline void LPConstraintNonSpun::constrain(
         LPData<regina::LPConstraintNonSpun, Integer>& lp, unsigned numCols) {
     lp.constrainZero(numCols - 2);
     lp.constrainZero(numCols - 1);
 }
 
-template <typename Integer>
-inline bool LPConstraintNonSpun<Integer>::verify(const NNormalSurface* s) {
+inline bool LPConstraintNonSpun::verify(const NNormalSurface* s) {
     return s->isCompact();
 }
 
-template <typename Integer>
-inline bool LPConstraintNonSpun<Integer>::supported(NormalCoords coords) {
+inline bool LPConstraintNonSpun::supported(NormalCoords coords) {
     return (coords == NS_QUAD);
 }
 #endif // EXCLUDE_SNAPPEA
@@ -890,7 +884,7 @@ inline BanConstraintBase::~BanConstraintBase() {
     delete[] marked_;
 }
 
-template <template <typename> class LPConstraint, typename Integer>
+template <class LPConstraint, typename Integer>
 inline void BanConstraintBase::enforceBans(LPData<LPConstraint, Integer>& lp)
         const {
     for (unsigned i = 0; i < lp.coordinateColumns(); ++i)
