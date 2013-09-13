@@ -50,9 +50,8 @@
 
 namespace regina {
 
-template <typename Integer>
-bool LPConstraintEuler<Integer>::addRows(typename
-        LPInitialTableaux<regina::LPConstraintEuler, Integer>::Col* col,
+bool LPConstraintEuler::addRows(
+        LPInitialTableaux<regina::LPConstraintEuler>::Col* col,
         const int* columnPerm, NTriangulation* tri) {
     int* obj = new int[7 * tri->getNumberOfTetrahedra()];
     unsigned tet, i;
@@ -90,9 +89,8 @@ bool LPConstraintEuler<Integer>::addRows(typename
 }
 
 #ifndef EXCLUDE_SNAPPEA
-template <typename Integer>
-bool LPConstraintNonSpun<Integer>::addRows(typename
-        LPInitialTableaux<regina::LPConstraintNonSpun, Integer>::Col* col,
+bool LPConstraintNonSpun::addRows(
+        LPInitialTableaux<regina::LPConstraintNonSpun>::Col* col,
         const int* columnPerm, NTriangulation* tri) {
     // Regardless of whether the constraints are broken,
     // we need to ensure that the matrix has full rank.

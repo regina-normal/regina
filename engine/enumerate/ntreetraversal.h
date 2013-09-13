@@ -147,13 +147,11 @@ class NTriangulation;
  *
  * \ifacespython Not present.
  */
-template <template <typename> class LPConstraint,
-          typename BanConstraint,
-          typename Integer>
+template <class LPConstraint, typename BanConstraint, typename Integer>
 class NTreeTraversal : public BanConstraint {
     protected:
         // Global information about the search:
-        const LPInitialTableaux<LPConstraint, Integer> origTableaux_;
+        const LPInitialTableaux<LPConstraint> origTableaux_;
             /**< The original starting tableaux that holds the adjusted
                  matrix of matching equations, before the tree traversal
                  algorithm begins. */
@@ -558,7 +556,7 @@ class NTreeTraversal : public BanConstraint {
  *
  * \ifacespython Not present.
  */
-template <template <typename> class LPConstraint = LPConstraintNone,
+template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           typename Integer = NInteger>
 class NTreeEnumeration :
@@ -886,7 +884,7 @@ class NTreeEnumeration :
  *
  * \ifacespython Not present.
  */
-template <template <typename> class LPConstraint = LPConstraintNone,
+template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           typename Integer = NInteger>
 class NTreeSingleSoln :
@@ -1005,31 +1003,31 @@ class NTreeSingleSoln :
 
 // Inline functions
 
-template <template <typename> class LPConstraint, typename BanConstraint,
+template <class LPConstraint, typename BanConstraint,
         typename Integer>
 inline bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::supported(
         NormalCoords coords) {
     return (coords == NS_STANDARD || coords == NS_AN_STANDARD ||
         coords == NS_QUAD || coords == NS_AN_QUAD_OCT) &&
-        LPConstraint<Integer>::supported(coords) &&
+        LPConstraint::supported(coords) &&
         BanConstraint::supported(coords);
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
+template <class LPConstraint, typename BanConstraint,
         typename Integer>
 inline bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::
         constraintsBroken() const {
     return origTableaux_.constraintsBroken();
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
+template <class LPConstraint, typename BanConstraint,
         typename Integer>
 inline unsigned long NTreeTraversal<LPConstraint, BanConstraint, Integer>::
         nVisited() const {
     return nVisited_;
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
+template <class LPConstraint, typename BanConstraint,
         typename Integer>
 inline void NTreeTraversal<LPConstraint, BanConstraint, Integer>::dumpTypes(
         std::ostream& out) const {
@@ -1037,7 +1035,7 @@ inline void NTreeTraversal<LPConstraint, BanConstraint, Integer>::dumpTypes(
         out << static_cast<int>(type_[i]);
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
+template <class LPConstraint, typename BanConstraint,
         typename Integer>
 inline int NTreeTraversal<LPConstraint, BanConstraint, Integer>::
         nextUnmarkedTriangleType(int startFrom) {
@@ -1047,7 +1045,7 @@ inline int NTreeTraversal<LPConstraint, BanConstraint, Integer>::
     return (startFrom == nTypes_ ? -1 : startFrom);
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
+template <class LPConstraint, typename BanConstraint,
         typename Integer>
 inline NTreeEnumeration<LPConstraint, BanConstraint, Integer>::NTreeEnumeration(
         NTriangulation* tri, NormalCoords coords) :
@@ -1060,14 +1058,14 @@ inline NTreeEnumeration<LPConstraint, BanConstraint, Integer>::NTreeEnumeration(
         lastNonZero_(-1) {
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
+template <class LPConstraint, typename BanConstraint,
         typename Integer>
 inline unsigned long NTreeEnumeration<LPConstraint, BanConstraint, Integer>::
         nSolns() const {
     return nSolns_;
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
+template <class LPConstraint, typename BanConstraint,
         typename Integer>
 inline void NTreeEnumeration<LPConstraint, BanConstraint, Integer>::run(
         bool (*useSoln)(const NTreeEnumeration&, void*), void* arg) {
@@ -1076,7 +1074,7 @@ inline void NTreeEnumeration<LPConstraint, BanConstraint, Integer>::run(
             return;
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
+template <class LPConstraint, typename BanConstraint,
         typename Integer>
 inline bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::writeTypes(
         const NTreeEnumeration& tree, void*) {
@@ -1086,7 +1084,7 @@ inline bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::writeTypes(
     return true;
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
+template <class LPConstraint, typename BanConstraint,
         typename Integer>
 inline bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::
         writeSurface(const NTreeEnumeration& tree, void*) {
@@ -1097,7 +1095,7 @@ inline bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::
     return true;
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
+template <class LPConstraint, typename BanConstraint,
         typename Integer>
 inline NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::NTreeSingleSoln(
         NTriangulation* tri, NormalCoords coords) :
@@ -1110,14 +1108,14 @@ inline NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::NTreeSingleSoln(
         cancelled_(false) {
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
+template <class LPConstraint, typename BanConstraint,
         typename Integer>
 inline void NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::cancel() {
     regina::NMutex::MutexLock lock(mCancel_);
     cancelled_ = true;
 }
 
-template <template <typename> class LPConstraint, typename BanConstraint,
+template <class LPConstraint, typename BanConstraint,
         typename Integer>
 inline bool NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::cancelled()
         const {

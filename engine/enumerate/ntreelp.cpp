@@ -37,28 +37,23 @@
 namespace regina {
 
 // Instantiate templates:
-template class LPInitialTableaux<LPConstraintNone, NInteger>;
-template class LPInitialTableaux<LPConstraintNone, NNativeLong>;
+template class LPInitialTableaux<LPConstraintNone>;
+template class LPInitialTableaux<LPConstraintEuler>;
+template class LPInitialTableaux<LPConstraintNonSpun>;
+
 template class LPData<LPConstraintNone, NInteger>;
 template class LPData<LPConstraintNone, NNativeLong>;
-template class LPInitialTableaux<LPConstraintEuler, NInteger>;
-template class LPInitialTableaux<LPConstraintEuler, NNativeLong>;
 template class LPData<LPConstraintEuler, NInteger>;
 template class LPData<LPConstraintEuler, NNativeLong>;
 #ifndef EXCLUDE_SNAPPEA
-template class LPInitialTableaux<LPConstraintNonSpun, NInteger>;
-template class LPInitialTableaux<LPConstraintNonSpun, NNativeLong>;
 template class LPData<LPConstraintNonSpun, NInteger>;
 template class LPData<LPConstraintNonSpun, NNativeLong>;
 #endif
 
 #ifdef INT128_FOUND
-template class LPInitialTableaux<LPConstraintNone, NNativeInteger<16> >;
 template class LPData<LPConstraintNone, NNativeInteger<16> >;
-template class LPInitialTableaux<LPConstraintEuler, NNativeInteger<16> >;
 template class LPData<LPConstraintEuler, NNativeInteger<16> >;
 #ifndef EXCLUDE_SNAPPEA
-template class LPInitialTableaux<LPConstraintNonSpun, NNativeInteger<16> >;
 template class LPData<LPConstraintNonSpun, NNativeInteger<16> >;
 #endif
 #endif

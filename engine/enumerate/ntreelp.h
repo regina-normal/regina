@@ -394,10 +394,6 @@ class LPMatrix {
  * (NS_QUAD) or standard normal coordinates (NS_STANDARD).
  * No other coordinate systems are supported.
  *
- * All tableaux elements are of the integer class \a Integer, which is
- * supplied as a template argument.  This same integer class will be
- * used as a template argument for \a LPConstraint.
- *
  * \warning The implementation of this class relies on the fact that the
  * sum of <i>absolute values</i> of all coefficients in each column is
  * at most four (not counting the rows for any optional extra constraints).
@@ -411,7 +407,7 @@ class LPMatrix {
  *
  * \ifacespython Not present.
  */
-template <template <typename> class LPConstraint, typename Integer>
+template <class LPConstraint>
 class LPInitialTableaux {
     public:
         /**
@@ -426,7 +422,7 @@ class LPInitialTableaux {
          * For any additional rows that represent extra linear constraints,
          * we inherit the coefficients directly from LPConstraint::Coefficients.
          */
-        struct Col : public LPConstraint<Integer>::Coefficients {
+        struct Col : public LPConstraint::Coefficients {
             unsigned nPlus;
                 /**< The total number of +1 entries in this column. */
             unsigned plus[4];
@@ -640,6 +636,7 @@ class LPInitialTableaux {
          * @param thisCol the column of this matrix to use in the inner product.
          * @return the resulting inner product.
          */
+        template <typename Integer>
         inline Integer multColByRow(const LPMatrix<Integer>& m, unsigned mRow,
                 unsigned thisCol) const;
 
@@ -688,6 +685,7 @@ class LPInitialTableaux {
          * inner product.
          * @return the resulting adjusted inner product.
          */
+        template <typename Integer>
         inline Integer multColByRowOct(const LPMatrix<Integer>& m,
                 unsigned mRow, unsigned thisCol) const;
 
@@ -704,6 +702,7 @@ class LPInitialTableaux {
          *
          * @param m the matrix to fill.
          */
+        template <typename Integer>
         void fillInitialTableaux(LPMatrix<Integer>& m) const;
 
     private:
@@ -838,10 +837,10 @@ class LPInitialTableaux {
  *
  * \ifacespython Not present.
  */
-template <template <typename> class LPConstraint, typename Integer>
+template <class LPConstraint, typename Integer>
 class LPData {
     private:
-        const LPInitialTableaux<LPConstraint, Integer>* origTableaux_;
+        const LPInitialTableaux<LPConstraint>* origTableaux_;
             /**< The original starting tableaux that holds the adjusted
                  matrix of matching equations, before the tree traversal
                  algorithm began. */
@@ -933,8 +932,7 @@ class LPData {
          * adjusted matrix of matching equations, before the tree traversal
          * algorithm began.
          */
-        void reserve(const LPInitialTableaux<LPConstraint, Integer>*
-            origTableaux);
+        void reserve(const LPInitialTableaux<LPConstraint>* origTableaux);
 
         /**
          * Initialises this tableaux by beginning at the original
@@ -1402,14 +1400,12 @@ inline void LPMatrix<Integer>::negateRow(unsigned row) {
 
 // Inline functions for LPInitialTableaux
 
-template <template <typename> class LPConstraint, typename Integer>
-inline LPInitialTableaux<LPConstraint, Integer>::Col::Col() :
-        nPlus(0), nMinus(0) {
+template <class LPConstraint>
+inline LPInitialTableaux<LPConstraint>::Col::Col() : nPlus(0), nMinus(0) {
 }
 
-template <template <typename> class LPConstraint, typename Integer>
-inline void LPInitialTableaux<LPConstraint, Integer>::Col::push(
-        unsigned row, int val) {
+template <class LPConstraint>
+inline void LPInitialTableaux<LPConstraint>::Col::push(unsigned row, int val) {
 #ifdef REGINA_VERIFY_LPDATA
     if ((val > 0 && val + nPlus > 4) ||
             (val < 0 && val - nMinus < -4)) {
@@ -1423,47 +1419,46 @@ inline void LPInitialTableaux<LPConstraint, Integer>::Col::push(
         minus[nMinus++] = row;
 }
 
-template <template <typename> class LPConstraint, typename Integer>
-inline LPInitialTableaux<LPConstraint, Integer>::~LPInitialTableaux() {
+template <class LPConstraint>
+inline LPInitialTableaux<LPConstraint>::~LPInitialTableaux() {
     delete eqns_;
     delete[] col_;
     delete[] columnPerm_;
 }
 
-template <template <typename> class LPConstraint, typename Integer>
-inline NTriangulation* LPInitialTableaux<LPConstraint, Integer>::tri() const {
+template <class LPConstraint>
+inline NTriangulation* LPInitialTableaux<LPConstraint>::tri() const {
     return tri_;
 }
 
-template <template <typename> class LPConstraint, typename Integer>
-inline unsigned LPInitialTableaux<LPConstraint, Integer>::rank() const {
+template <class LPConstraint>
+inline unsigned LPInitialTableaux<LPConstraint>::rank() const {
     return rank_;
 }
 
-template <template <typename> class LPConstraint, typename Integer>
-inline unsigned LPInitialTableaux<LPConstraint, Integer>::columns() const {
+template <class LPConstraint>
+inline unsigned LPInitialTableaux<LPConstraint>::columns() const {
     return cols_;
 }
 
-template <template <typename> class LPConstraint, typename Integer>
-inline unsigned LPInitialTableaux<LPConstraint, Integer>::coordinateColumns()
-        const {
+template <class LPConstraint>
+inline unsigned LPInitialTableaux<LPConstraint>::coordinateColumns() const {
     return eqns_->columns();
 }
 
-template <template <typename> class LPConstraint, typename Integer>
-inline bool LPInitialTableaux<LPConstraint, Integer>::constraintsBroken()
-        const {
+template <class LPConstraint>
+inline bool LPInitialTableaux<LPConstraint>::constraintsBroken() const {
     return constraintsBroken_;
 }
 
-template <template <typename> class LPConstraint, typename Integer>
-inline const int* LPInitialTableaux<LPConstraint, Integer>::columnPerm() const {
+template <class LPConstraint>
+inline const int* LPInitialTableaux<LPConstraint>::columnPerm() const {
     return columnPerm_;
 }
 
-template <template <typename> class LPConstraint, typename Integer>
-inline Integer LPInitialTableaux<LPConstraint, Integer>::multColByRow(
+template <class LPConstraint>
+template <typename Integer>
+inline Integer LPInitialTableaux<LPConstraint>::multColByRow(
         const LPMatrix<Integer>& m, unsigned mRow, unsigned thisCol) const {
     Integer ans = col_[thisCol].innerProduct(m, mRow);
 
@@ -1475,8 +1470,9 @@ inline Integer LPInitialTableaux<LPConstraint, Integer>::multColByRow(
     return ans;
 }
 
-template <template <typename> class LPConstraint, typename Integer>
-inline Integer LPInitialTableaux<LPConstraint, Integer>::multColByRowOct(
+template <class LPConstraint>
+template <typename Integer>
+inline Integer LPInitialTableaux<LPConstraint>::multColByRowOct(
         const LPMatrix<Integer>& m, unsigned mRow, unsigned thisCol) const {
     Integer ans = col_[thisCol].innerProductOct(m, mRow);
 
@@ -1488,8 +1484,9 @@ inline Integer LPInitialTableaux<LPConstraint, Integer>::multColByRowOct(
     return ans;
 }
 
-template <template <typename> class LPConstraint, typename Integer>
-inline void LPInitialTableaux<LPConstraint, Integer>::fillInitialTableaux(
+template <class LPConstraint>
+template <typename Integer>
+inline void LPInitialTableaux<LPConstraint>::fillInitialTableaux(
         LPMatrix<Integer>& m) const {
     unsigned c, i;
     for (c = 0; c < cols_; ++c) {
@@ -1506,21 +1503,21 @@ inline void LPInitialTableaux<LPConstraint, Integer>::fillInitialTableaux(
 
 // Template functions for LPData
 
-template <template <typename> class LPConstraint, typename Integer>
+template <class LPConstraint, typename Integer>
 inline LPData<LPConstraint, Integer>::LPData() :
         rhs_(0), basis_(0), basisRow_(0) {
 }
 
-template <template <typename> class LPConstraint, typename Integer>
+template <class LPConstraint, typename Integer>
 inline LPData<LPConstraint, Integer>::~LPData() {
     delete[] rhs_;
     delete[] basis_;
     delete[] basisRow_;
 }
 
-template <template <typename> class LPConstraint, typename Integer>
+template <class LPConstraint, typename Integer>
 inline void LPData<LPConstraint, Integer>::reserve(
-        const LPInitialTableaux<LPConstraint, Integer>* origTableaux) {
+        const LPInitialTableaux<LPConstraint>* origTableaux) {
     origTableaux_ = origTableaux;
     rhs_ = new Integer[origTableaux->rank()];
     rowOps_.reserve(origTableaux->rank(), origTableaux->rank());
@@ -1528,22 +1525,22 @@ inline void LPData<LPConstraint, Integer>::reserve(
     basisRow_ = new int[origTableaux->columns()];
 }
 
-template <template <typename> class LPConstraint, typename Integer>
+template <class LPConstraint, typename Integer>
 inline unsigned LPData<LPConstraint, Integer>::columns() const {
     return origTableaux_->columns();
 }
 
-template <template <typename> class LPConstraint, typename Integer>
+template <class LPConstraint, typename Integer>
 inline unsigned LPData<LPConstraint, Integer>::coordinateColumns() const {
     return origTableaux_->coordinateColumns();
 }
 
-template <template <typename> class LPConstraint, typename Integer>
+template <class LPConstraint, typename Integer>
 inline bool LPData<LPConstraint, Integer>::isFeasible() const {
     return feasible_;
 }
 
-template <template <typename> class LPConstraint, typename Integer>
+template <class LPConstraint, typename Integer>
 inline bool LPData<LPConstraint, Integer>::isActive(unsigned pos) const {
     // If basisRow_[pos] < 0, the variable is active and non-basic.
     // If basisRow_[pos] > 0, the variable is active and basic.
@@ -1555,7 +1552,7 @@ inline bool LPData<LPConstraint, Integer>::isActive(unsigned pos) const {
         (rank_ == 0 || basis_[0] != pos));
 }
 
-template <template <typename> class LPConstraint, typename Integer>
+template <class LPConstraint, typename Integer>
 inline int LPData<LPConstraint, Integer>::sign(unsigned pos) const {
     // If basisRow_[pos] < 0, the variable is active and non-basic.
     // If basisRow_[pos] > 0, the variable is active and basic.
@@ -1567,7 +1564,7 @@ inline int LPData<LPConstraint, Integer>::sign(unsigned pos) const {
         rhs_[basisRow_[pos]].sign() : 0);
 }
 
-template <template <typename> class LPConstraint, typename Integer>
+template <class LPConstraint, typename Integer>
 inline Integer LPData<LPConstraint, Integer>::entry(unsigned row, unsigned col)
         const {
     // Remember to take into account any changes of variable due
@@ -1581,7 +1578,7 @@ inline Integer LPData<LPConstraint, Integer>::entry(unsigned row, unsigned col)
     }
 }
 
-template <template <typename> class LPConstraint, typename Integer>
+template <class LPConstraint, typename Integer>
 inline void LPData<LPConstraint, Integer>::entry(unsigned row, unsigned col,
         Integer& ans) const {
     // Remember to take into account any changes of variable due
@@ -1594,7 +1591,7 @@ inline void LPData<LPConstraint, Integer>::entry(unsigned row, unsigned col,
     }
 }
 
-template <template <typename> class LPConstraint, typename Integer>
+template <class LPConstraint, typename Integer>
 inline int LPData<LPConstraint, Integer>::entrySign(unsigned row, unsigned col)
         const {
     // Remember to take into account any changes of variable due
