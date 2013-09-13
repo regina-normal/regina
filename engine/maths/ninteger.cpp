@@ -457,10 +457,13 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::divByExact(
         // This is a native C/C++ long.
         // Because we are guaranteed other | this, it follows that
         // other must likewise fit within a native long, or else
-        // this == LONG_MIN and other == -LONG_MIN.
+        // (i) this == 0, or (ii) this == LONG_MIN and other == -LONG_MIN.
         // It also follows that the result must fit within a native long,
         // or else this == LONG_MIN and other == -1.
-        if (small_ == LONG_MIN) {
+        if (small_ == 0) {
+            // 0 / anything = 0 (we know from preconditions that other != 0).
+            return *this;
+        } else if (small_ == LONG_MIN) {
             if (! mpz_cmp_ui(other.large_,
                     LONG_MIN /* casting to unsigned makes this -LONG_MIN */)) {
                 // The result is -1, since we have LONG_MIN / -LONG_MIN.

@@ -39,7 +39,7 @@
 
 // TODO: Review down to operator /.
 
-// TODO: Test *(=), /(=), div(By)Exact
+// TODO: Test *(=)
 // TODO: Test raiseToPower
 // TODO: Maybe test setRaw, rawData
 // TODO: Maybe test legendre, random functions
@@ -96,6 +96,8 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(incDec<NLargeInteger>);
     CPPUNIT_TEST(plusMinus<NInteger>);
     CPPUNIT_TEST(plusMinus<NLargeInteger>);
+    CPPUNIT_TEST(divide<NInteger>);
+    CPPUNIT_TEST(divide<NLargeInteger>);
     CPPUNIT_TEST(mod<NInteger>);
     CPPUNIT_TEST(mod<NLargeInteger>);
     CPPUNIT_TEST(negate<NInteger>);
@@ -1669,6 +1671,206 @@ class NIntegerTest : public CppUnit::TestFixture {
                 shouldBeEqual(dataL.longCases[a] + infinity, infinity);
                 shouldBeEqual(infinity + dataL.longCases[a], infinity);
                 shouldBeEqual(infinity - dataL.longCases[a], infinity);
+            }
+        }
+
+        template <typename IntType>
+        void divide() {
+            unsigned a, b;
+
+            const Data<IntType>& d(data<IntType>());
+
+            // Rounding should always be towards zero.
+
+            for (a = 0; a < d.nCases; ++a) {
+                for (b = 0; b < d.nCases; ++b) {
+                    IntType x(d.cases[a]);
+                    IntType y(d.cases[b]);
+
+                    // We test divide by zero later.
+                    if (y == 0)
+                        continue;
+
+                    IntType ans = x / y;
+
+                    if (ans == 0) {
+                        // |x| < |y|.
+                        shouldBeLess(x.abs(), y.abs());
+                    } else {
+                        // Here ans != 0 and y != 0.
+
+                        // Check that we got the correct result, by
+                        // multiplying again and ensuring that the
+                        // difference is in the correct range.
+                        IntType recover = ans * y;
+                        if (recover > 0) {
+                            // recover <= x < recover + abs(y)
+                            shouldBeLess(recover, x + 1);
+                            shouldBeLess(x, recover + y.abs());
+                        } else {
+                            // recover - abs(y) < x <= recover
+                            shouldBeLess(recover, x + y.abs());
+                            shouldBeLess(x, recover + 1);
+                        }
+                    }
+
+                    shouldBeEqual((x * y) / y, x);
+                    shouldBeEqual(x / (-y), -ans);
+                    shouldBeEqual((-x) / y, -ans);
+                    shouldBeEqual((-x) / (-y), ans);
+
+                    IntType p(x);
+                    shouldBeEqual(p /= y, x / y);
+
+                    // Now test divExact().
+                    IntType product = x * y;
+                    shouldBeEqual(product.divExact(y), x);
+
+                    IntType q(product);
+                    shouldBeEqual(q.divByExact(y), x);
+                }
+
+                for (b = 0; b < d.nLongCases; ++b) {
+                    IntType x(d.cases[a]);
+                    long y = d.longCases[b];
+
+                    // We test divide by zero later.
+                    if (y == 0)
+                        continue;
+
+                    IntType ans = x / y;
+
+                    // Always prefer -abs(y) instead of abs(y), since
+                    // abs(LONG_MIN) will overflow.
+                    if (ans == 0) {
+                        // |x| < |y|.
+                        shouldBeGreater(-x.abs(), y >= 0 ? -y : y);
+                        continue;
+                    } else {
+                        // Here ans != 0 and y != 0.
+
+                        // Check that we got the correct result, by
+                        // multiplying again and ensuring that the
+                        // difference is in the correct range.
+                        IntType recover = ans * y;
+                        if (recover > 0) {
+                            // recover <= x < recover + abs(y)
+                            shouldBeLess(recover, x + 1);
+                            shouldBeLess(x, recover - (y >= 0 ? -y : y));
+                        } else {
+                            // recover - abs(y) < x <= recover
+                            shouldBeLess(recover, x - (y >= 0 ? -y : y));
+                            shouldBeLess(x, recover + 1);
+                        }
+                    }
+
+                    shouldBeEqual((x * y) / y, x);
+                    shouldBeEqual((-x) / y, -ans);
+                    if (y == LONG_MIN) {
+                        // -LONG_MIN will overflow.
+                        shouldBeEqual(x / (-IntType(y)), -ans);
+                        shouldBeEqual((-x) / (-IntType(y)), ans);
+                    } else {
+                        shouldBeEqual(x / (-y), -ans);
+                        shouldBeEqual((-x) / (-y), ans);
+                    }
+
+                    IntType p(x);
+                    shouldBeEqual(p /= y, x / y);
+
+                    // Now test divExact().
+                    IntType product = x * y;
+                    shouldBeEqual(product.divExact(y), x);
+                    shouldBeEqual(product, x * y);
+
+                    IntType q(product);
+                    shouldBeEqual(q.divByExact(y), x);
+                    shouldBeEqual(q, x);
+
+                    shouldBeEqual(product.divExact(y), product / y);
+                }
+
+                IntType z(d.cases[a]);
+                if (z != 0) {
+                    shouldBeEqual(IntType::zero / z, 0L);
+                    shouldBeEqual(z / z, 1);
+                    shouldBeEqual(z / -z, -1);
+                    shouldBeEqual((z + z) / z, 2);
+                    shouldBeEqual((z + z) / -z, -2);
+                    shouldBeEqual(IntType::zero.divExact(z), 0L);
+                    shouldBeEqual(z.divExact(z), 1);
+                    shouldBeEqual(z.divExact(-z), -1);
+                    shouldBeEqual((z + z).divExact(z), 2);
+                    shouldBeEqual((z + z).divExact(-z), -2);
+                }
+            }
+
+            // Test around overflow points:
+            shouldBeEqual(d.longMax / 1, LONG_MAX);
+            shouldBeEqual(d.longMax / -1, -LONG_MAX);
+            shouldBeEqual(d.longMin / 1, LONG_MIN);
+            shouldBeEqual(d.longMin / -1, d.longMaxInc);
+            shouldBeEqual(d.longMax / d.longMin, 0L);
+            shouldBeEqual((-d.longMax) / d.longMin, 0L);
+            shouldBeEqual(d.longMin / d.longMax, -1);
+            shouldBeEqual(d.longMin / (-d.longMax), 1);
+            shouldBeEqual(d.zero / d.longMax, 0);
+            shouldBeEqual(d.zero / d.longMin, 0);
+            shouldBeEqual(d.longMax / LONG_MIN, 0);
+            shouldBeEqual((-d.longMax) / LONG_MIN, 0);
+            shouldBeEqual(d.longMin / LONG_MAX, -1);
+            shouldBeEqual(d.longMin / (-LONG_MAX), 1);
+            shouldBeEqual(d.zero / LONG_MAX, 0);
+            shouldBeEqual(d.zero / LONG_MIN, 0);
+
+            shouldBeEqual(d.longMaxInc / 1, d.longMaxInc);
+            shouldBeEqual(d.longMaxInc / -1, LONG_MIN);
+            shouldBeEqual(d.longMinDec / 1, d.longMinDec);
+            shouldBeEqual(d.longMinDec / -1, d.longMaxInc + 1);
+            shouldBeEqual(d.longMaxInc / d.longMax, 1);
+            shouldBeEqual(d.longMaxInc / d.longMin, -1);
+            shouldBeEqual(d.longMaxInc / -d.longMax, -1);
+            shouldBeEqual(d.longMaxInc / -d.longMin, 1);
+            shouldBeEqual(d.longMinDec / d.longMax, -1);
+            shouldBeEqual(d.longMinDec / d.longMin, 1);
+            shouldBeEqual(d.longMinDec / -d.longMax, 1);
+            shouldBeEqual(d.longMinDec / -d.longMin, -1);
+            shouldBeEqual(d.longMaxInc / LONG_MAX, 1);
+            shouldBeEqual(d.longMaxInc / LONG_MIN, -1);
+            shouldBeEqual(d.longMaxInc / -LONG_MAX, -1);
+            shouldBeEqual(d.longMinDec / LONG_MAX, -1);
+            shouldBeEqual(d.longMinDec / LONG_MIN, 1);
+            shouldBeEqual(d.longMinDec / -LONG_MAX, 1);
+
+            shouldBeEqual(d.longMax.divExact(1), LONG_MAX);
+            shouldBeEqual(d.longMax.divExact(-1), -LONG_MAX);
+            shouldBeEqual(d.longMin.divExact(1), LONG_MIN);
+            shouldBeEqual(d.longMin.divExact(-1), d.longMaxInc);
+            shouldBeEqual(d.zero.divExact(d.longMax), 0);
+            shouldBeEqual(d.zero.divExact(d.longMin), 0);
+            shouldBeEqual(d.zero.divExact(LONG_MAX), 0);
+            shouldBeEqual(d.zero.divExact(LONG_MIN), 0);
+
+            shouldBeEqual(d.longMaxInc.divExact(1), d.longMaxInc);
+            shouldBeEqual(d.longMaxInc.divExact(-1), LONG_MIN);
+            shouldBeEqual(d.longMinDec.divExact(1), d.longMinDec);
+            shouldBeEqual(d.longMinDec.divExact(-1), d.longMaxInc + 1);
+            shouldBeEqual(d.longMaxInc.divExact(d.longMin), -1);
+            shouldBeEqual(d.longMaxInc.divExact(-d.longMin), 1);
+            shouldBeEqual(d.longMaxInc.divExact(LONG_MIN), -1);
+
+            // Tests for infinity are hard-coded to NLargeInteger.
+            const NLargeInteger& infinity(NLargeInteger::infinity);
+
+            shouldBeEqual(infinity / infinity, infinity);
+            for (a = 0; a < dataL.nCases; a++) {
+                shouldBeEqual(infinity / dataL.cases[a], infinity);
+                shouldBeEqual(dataL.cases[a] / infinity, 0L);
+                shouldBeEqual(dataL.cases[a] / NLargeInteger::zero, infinity);
+                shouldBeEqual(dataL.cases[a] / 0L, infinity);
+            }
+            for (a = 0; a < dataL.nLongCases; a++) {
+                shouldBeEqual(infinity / dataL.longCases[a], infinity);
             }
         }
 
