@@ -578,7 +578,11 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator %=(long o
         forceReduce();
     } else {
         // All native arithmetic from here.
-        small_ %= other;
+        // Some compilers will crash on LONG_MIN % -1, sigh.
+        if (other == -1)
+            small_ = 0;
+        else
+            small_ %= other;
     }
     return *this;
 }

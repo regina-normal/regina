@@ -39,7 +39,7 @@
 
 // TODO: Review down to operator /.
 
-// TODO: Test *(=), /(=), div(By)Exact, %(=) (all lazy && long)
+// TODO: Test *(=), /(=), div(By)Exact
 // TODO: Test raiseToPower
 // TODO: Maybe test setRaw, rawData
 // TODO: Maybe test legendre, random functions
@@ -96,6 +96,8 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(incDec<NLargeInteger>);
     CPPUNIT_TEST(plusMinus<NInteger>);
     CPPUNIT_TEST(plusMinus<NLargeInteger>);
+    CPPUNIT_TEST(mod<NInteger>);
+    CPPUNIT_TEST(mod<NLargeInteger>);
     CPPUNIT_TEST(negate<NInteger>);
     CPPUNIT_TEST(negate<NLargeInteger>);
     CPPUNIT_TEST(abs<NInteger>);
@@ -1365,7 +1367,6 @@ class NIntegerTest : public CppUnit::TestFixture {
 
             const Data<IntType>& d(data<IntType>());
 
-            IntType tmp;
             for (a = 0; a < d.nCases; ++a) {
                 for (b = 0; b < d.nCases; ++b) {
                     IntType x(d.cases[a]);
@@ -1672,6 +1673,120 @@ class NIntegerTest : public CppUnit::TestFixture {
         }
 
         template <typename IntType>
+        void mod() {
+            unsigned a, b;
+
+            const Data<IntType>& d(data<IntType>());
+
+            // Infinity is not supported.
+            // x % 0 is not supported.
+            // If result is non-zero then sign(x & y) = sign(x).
+
+            for (a = 0; a < d.nCases; ++a) {
+                for (b = 0; b < d.nCases; ++b) {
+                    IntType x(d.cases[a]);
+                    IntType y(d.cases[b]);
+
+                    if (y == 0)
+                        continue;
+
+                    IntType ans = x % y;
+
+                    // Ensure that ans is within range.
+                    if (ans < 0) {
+                        shouldBeLess(x, 0);
+                        shouldBeGreater(ans, -y.abs());
+                    } else if (ans > 0) {
+                        shouldBeGreater(x, 0);
+                        shouldBeLess(ans, y.abs());
+                    }
+
+                    // Ensure that y | (x - ans).
+                    IntType q = (x - ans) / y;
+                    shouldBeEqual(q * y + ans, x);
+
+                    IntType p(x);
+                    shouldBeEqual(p %= y, ans);
+                }
+
+                for (b = 0; b < d.nLongCases; ++b) {
+                    IntType x(d.cases[a]);
+                    long y = d.longCases[b];
+
+                    if (y == 0)
+                        continue;
+
+                    IntType ans = x % y;
+
+                    // Ensure that ans is within range.
+                    if (ans < 0) {
+                        shouldBeLess(x, 0);
+                        shouldBeGreater(ans, y < 0 ? y : -y);
+                    } else if (ans > 0) {
+                        shouldBeGreater(x, 0);
+                        shouldBeGreater(-ans, y < 0 ? y : -y); // abs(y) could
+                                                               // overflow.
+                    }
+
+                    // Ensure that y | (x - ans).
+                    IntType q = (x - ans) / y;
+                    shouldBeEqual(q * y + ans, x);
+
+                    IntType p(x);
+                    shouldBeEqual(p %= y, ans);
+                }
+
+                IntType z(d.cases[a]);
+                shouldBeEqual(z % 1, 0);
+                if (z != 0) {
+                    shouldBeEqual(IntType::zero % z, 0L);
+                    shouldBeEqual(IntType::zero % z, 0L);
+                    shouldBeEqual(z % z, 0L);
+                    shouldBeEqual((-z) % z, 0L);
+                    shouldBeEqual((z + z) % z, 0L);
+                    shouldBeEqual((-(z + z)) % z, 0L);
+                }
+            }
+
+            // Test around overflow points:
+            shouldBeEqual(d.longMax % 1, 0);
+            shouldBeEqual(d.longMax % -1, 0);
+            shouldBeEqual(d.longMin % 1, 0);
+            shouldBeEqual(d.longMin % -1, 0);
+            shouldBeEqual(d.longMax % d.longMin, d.longMax);
+            shouldBeEqual((-d.longMax) % d.longMin, -d.longMax);
+            shouldBeEqual(d.longMin % d.longMax, -1);
+            shouldBeEqual(d.longMin % (-d.longMax), -1);
+            shouldBeEqual(d.zero % d.longMax, 0);
+            shouldBeEqual(d.zero % d.longMin, 0);
+            shouldBeEqual(d.longMax % LONG_MIN, LONG_MAX);
+            shouldBeEqual((-d.longMax) % LONG_MIN, -LONG_MAX);
+            shouldBeEqual(d.longMin % LONG_MAX, -1);
+            shouldBeEqual(d.longMin % (-LONG_MAX), -1);
+            shouldBeEqual(d.zero % LONG_MAX, 0);
+            shouldBeEqual(d.zero % LONG_MIN, 0);
+
+            shouldBeEqual(d.longMaxInc % 1, 0);
+            shouldBeEqual(d.longMaxInc % -1, 0);
+            shouldBeEqual(d.longMinDec % 1, 0);
+            shouldBeEqual(d.longMinDec % -1, 0);
+            shouldBeEqual(d.longMaxInc % d.longMax, 1);
+            shouldBeEqual(d.longMaxInc % d.longMin, 0);
+            shouldBeEqual(d.longMaxInc % -d.longMax, 1);
+            shouldBeEqual(d.longMaxInc % -d.longMin, 0);
+            shouldBeEqual(d.longMinDec % d.longMax, -2);
+            shouldBeEqual(d.longMinDec % d.longMin, -1);
+            shouldBeEqual(d.longMinDec % -d.longMax, -2);
+            shouldBeEqual(d.longMinDec % -d.longMin, -1);
+            shouldBeEqual(d.longMaxInc % LONG_MAX, 1);
+            shouldBeEqual(d.longMaxInc % LONG_MIN, 0);
+            shouldBeEqual(d.longMaxInc % -LONG_MAX, 1);
+            shouldBeEqual(d.longMinDec % LONG_MAX, -2);
+            shouldBeEqual(d.longMinDec % LONG_MIN, -1);
+            shouldBeEqual(d.longMinDec % -LONG_MAX, -2);
+        }
+
+        template <typename IntType>
         void testNegate(const IntType& x) {
             IntType y(x);
 
@@ -1972,7 +2087,7 @@ const IntType NIntegerTest::Data<IntType>::cases[] = {
 };
 
 template <typename IntType>
-const unsigned NIntegerTest::Data<IntType>::nCases = 25;
+const unsigned NIntegerTest::Data<IntType>::nCases = 49;
 
 template <typename IntType>
 const long NIntegerTest::Data<IntType>::longCases[] = {
@@ -1986,7 +2101,7 @@ const long NIntegerTest::Data<IntType>::longCases[] = {
 };
 
 template <typename IntType>
-const long NIntegerTest::Data<IntType>::nLongCases = 17;
+const long NIntegerTest::Data<IntType>::nLongCases = 33;
 
 // Boilerplate stuff.
 
