@@ -41,7 +41,6 @@
 
 // TODO: Test *(=)
 // TODO: Test raiseToPower
-// TODO: Maybe test setRaw, rawData
 // TODO: Maybe test legendre, random functions
 
 using regina::NIntegerBase;
@@ -236,80 +235,139 @@ class NIntegerTest : public CppUnit::TestFixture {
         }
 
         template <typename IntType>
-        void testNative(const IntType& x, const char* name, long value,
-                int sign, bool testCopy = true) {
-            if (! x.isNative()) {
-                std::ostringstream msg;
-                msg << name << " is non-native.";
-                CPPUNIT_FAIL(msg.str());
-            }
+        void shouldBeLess(const IntType& a, const IntType& b,
+                bool reorder = true) {
+            std::string msgBase = "Integer ";
+            msgBase = msgBase + a.stringValue() + " is ";
 
-            if (x.isInfinite()) {
-                std::ostringstream msg;
-                msg << name << " is reported as infinite.";
-                CPPUNIT_FAIL(msg.str());
-            }
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + b.stringValue() + ".",
+                ! (a == b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + b.stringValue() + ".",
+                a != b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not < " + b.stringValue() + ".",
+                a < b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + b.stringValue() + ".",
+                a <= b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + b.stringValue() + ".",
+                ! (a > b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + ">= " + b.stringValue() + ".",
+                ! (a >= b));
 
-            if (x.longValue() != value) {
-                std::ostringstream msg;
-                msg << name << " != " << value << " as a long.";
-                CPPUNIT_FAIL(msg.str());
-            }
+            if (reorder)
+                shouldBeGreater(b, a, false);
+        }
 
-            if (x.stringValue() != str(value)) {
-                std::ostringstream msg;
-                msg << name << " != " << value << " as a string.";
-                CPPUNIT_FAIL(msg.str());
-            }
+        template <typename IntType>
+        void shouldBeEqual(const IntType& a, const IntType& b,
+                bool reorder = true) {
+            std::string msgBase = "Integer ";
+            msgBase = msgBase + a.stringValue() + " is ";
 
-            {
-                std::ostringstream out;
-                out << x;
-                if (out.str() != str(value)) {
-                    std::ostringstream msg;
-                    msg << name << " != " << value << " on an ostream.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not == " + b.stringValue() + ".",
+                a == b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "!= " + b.stringValue() + ".",
+                ! (a != b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + b.stringValue() + ".",
+                ! (a < b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + b.stringValue() + ".",
+                a <= b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + b.stringValue() + ".",
+                ! (a > b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + b.stringValue() + ".",
+                a >= b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not str== " +
+                b.stringValue() + " (long).",
+                a.stringValue() == b.stringValue());
 
-            if (x.sign() != sign) {
-                std::ostringstream msg;
-                msg << name << " has the wrong sign.";
-                CPPUNIT_FAIL(msg.str());
-            }
+            if (reorder)
+                shouldBeEqual(b, a, false);
+        }
 
-            if (sign < 0 && (x.longValue() >= zeroL || x.isZero())) {
-                std::ostringstream msg;
-                msg << name << " is not negative as a long.";
-                CPPUNIT_FAIL(msg.str());
-            } else if (sign > 0 && (x.longValue() <= zeroL || x.isZero())) {
-                std::ostringstream msg;
-                msg << name << " is not positive as a long.";
-                CPPUNIT_FAIL(msg.str());
-            } else if (sign == 0 && (x.longValue() != 0 || ! x.isZero())) {
-                std::ostringstream msg;
-                msg << name << " is not zero as a long.";
-                CPPUNIT_FAIL(msg.str());
-            }
+        template <typename IntType>
+        void shouldBeGreater(const IntType& a, const IntType& b,
+                bool reorder = true) {
+            std::string msgBase = "Integer ";
+            msgBase = msgBase + a.stringValue() + " is ";
 
-            if (testCopy) {
-                // Test the copy constructor and copy assignment here
-                // also.
-                IntType y(x);
-                testNative(y, "Native copy", value, sign, false);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + b.stringValue() + ".",
+                ! (a == b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + b.stringValue() + ".",
+                a != b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + b.stringValue() + ".",
+                ! (a < b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "<= " + b.stringValue() + ".",
+                ! (a <= b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not > " + b.stringValue() + ".",
+                a > b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + b.stringValue() + ".",
+                a >= b);
 
-                IntType z(5);
-                if (! z.isNative())
-                    CPPUNIT_FAIL("Hard-coded 5 is not native.");
-                z = x;
-                testNative(z, "Native = from native", value, sign, false);
+            if (reorder)
+                shouldBeLess(b, a, false);
+        }
 
-                IntType w(HUGE_INTEGER);
-                if (w.isNative())
-                    CPPUNIT_FAIL("Hard-coded HUGE_INTEGER is native.");
-                w = x;
-                testNative(w, "Native = from large", value, sign, false);
-            }
+        template <typename IntType>
+        void shouldBeLess(const IntType& a, long b) {
+            std::string msgBase = "Integer ";
+            msgBase = msgBase + a.stringValue() + " is ";
+
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + str(b) + " (long).",
+                ! (a == b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + str(b) + " (long).",
+                a != b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not < " + str(b) + " (long).",
+                a < b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + str(b) + " (long).",
+                a <= b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + str(b) + " (long).",
+                ! (a > b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + ">= " + str(b) + " (long).",
+                ! (a >= b));
+        }
+
+        template <typename IntType>
+        void shouldBeEqual(const IntType& a, long b) {
+            std::string msgBase = "Integer ";
+            msgBase = msgBase + a.stringValue() + " is ";
+
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not == " + str(b) + " (long).",
+                a == b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "!= " + str(b) + " (long).",
+                ! (a != b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + str(b) + " (long).",
+                ! (a < b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + str(b) + " (long).",
+                a <= b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + str(b) + " (long).",
+                ! (a > b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + str(b) + " (long).",
+                a >= b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not str== " + str(b) + " (long).",
+                a.stringValue() == str(b));
+
+            if (b == 0)
+                CPPUNIT_ASSERT_MESSAGE(msgBase + "not isZero().", a.isZero());
+            else
+                CPPUNIT_ASSERT_MESSAGE(msgBase + "isZero().", ! a.isZero());
+        }
+
+        template <typename IntType>
+        void shouldBeGreater(const IntType& a, long b) {
+            std::string msgBase = "Integer ";
+            msgBase = msgBase + a.stringValue() + " is ";
+
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + str(b) + " (long).",
+                ! (a == b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + str(b) + " (long).",
+                a != b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + str(b) + " (long).",
+                ! (a < b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "<= " + str(b) + " (long).",
+                ! (a <= b));
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not > " + str(b) + " (long).",
+                a > b);
+            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + str(b) + " (long).",
+                a >= b);
         }
 
         template <typename IntType>
@@ -383,6 +441,113 @@ class NIntegerTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL("Hard-coded HUGE_INTEGER is native.");
                 w = x;
                 testLarge(w, "Large = from large", value, sign, false);
+
+                // Test raw GMP assignment.
+                IntType v(5);
+                v.setRaw(y.rawData());
+                shouldBeEqual(v, y);
+                testLarge(y, "Raw GMP assignment src", str(value), sign, false);
+                testLarge(v, "Raw GMP assignment dest", str(value), sign,
+                    false);
+
+                IntType u(HUGE_INTEGER);
+                u.setRaw(y.rawData());
+                shouldBeEqual(u, y);
+                testLarge(y, "Raw GMP assignment src", str(value), sign, false);
+                testLarge(u, "Raw GMP assignment dest", str(value), sign,
+                    false);
+            }
+        }
+
+        template <typename IntType>
+        void testNative(const IntType& x, const char* name, long value,
+                int sign, bool testCopy = true) {
+            if (! x.isNative()) {
+                std::ostringstream msg;
+                msg << name << " is non-native.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (x.isInfinite()) {
+                std::ostringstream msg;
+                msg << name << " is reported as infinite.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (x.longValue() != value) {
+                std::ostringstream msg;
+                msg << name << " != " << value << " as a long.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (x.stringValue() != str(value)) {
+                std::ostringstream msg;
+                msg << name << " != " << value << " as a string.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            {
+                std::ostringstream out;
+                out << x;
+                if (out.str() != str(value)) {
+                    std::ostringstream msg;
+                    msg << name << " != " << value << " on an ostream.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            if (x.sign() != sign) {
+                std::ostringstream msg;
+                msg << name << " has the wrong sign.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (sign < 0 && (x.longValue() >= zeroL || x.isZero())) {
+                std::ostringstream msg;
+                msg << name << " is not negative as a long.";
+                CPPUNIT_FAIL(msg.str());
+            } else if (sign > 0 && (x.longValue() <= zeroL || x.isZero())) {
+                std::ostringstream msg;
+                msg << name << " is not positive as a long.";
+                CPPUNIT_FAIL(msg.str());
+            } else if (sign == 0 && (x.longValue() != 0 || ! x.isZero())) {
+                std::ostringstream msg;
+                msg << name << " is not zero as a long.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (testCopy) {
+                // Test the copy constructor and copy assignment here
+                // also.
+                IntType y(x);
+                testNative(y, "Native copy", value, sign, false);
+
+                IntType z(5);
+                if (! z.isNative())
+                    CPPUNIT_FAIL("Hard-coded 5 is not native.");
+                z = x;
+                testNative(z, "Native = from native", value, sign, false);
+
+                IntType w(HUGE_INTEGER);
+                if (w.isNative())
+                    CPPUNIT_FAIL("Hard-coded HUGE_INTEGER is native.");
+                w = x;
+                testNative(w, "Native = from large", value, sign, false);
+
+                // Test raw GMP assignment.
+                IntType v(5);
+                v.setRaw(y.rawData());
+                shouldBeEqual(v, y);
+                testLarge(y, "Raw GMP assignment src", str(value), sign, false);
+                testLarge(v, "Raw GMP assignment dest", str(value), sign,
+                    false);
+
+                IntType u(HUGE_INTEGER);
+                u.setRaw(y.rawData());
+                shouldBeEqual(u, y);
+                testLarge(y, "Raw GMP assignment src", str(value), sign, false);
+                testLarge(u, "Raw GMP assignment dest", str(value), sign,
+                    false);
             }
         }
 
@@ -806,6 +971,13 @@ class NIntegerTest : public CppUnit::TestFixture {
                 testInfinity(z, "Native = from large", false);
                 z = 8;
                 testNative(z, "(-HUGE = inf) = 8)", 8, 1);
+
+                // Test raw GMP assignment.
+                z = x;
+                testInfinity(z, "Native = from native", false);
+                NLargeInteger raw(HUGE_INTEGER);
+                z.setRaw(raw.rawData());
+                testLarge(z, "inf.setRaw()", HUGE_INTEGER, 1, false);
             }
         }
 
@@ -1071,142 +1243,6 @@ class NIntegerTest : public CppUnit::TestFixture {
 
                 testInfinity(b, "infinity");
             }
-        }
-
-        template <typename IntType>
-        void shouldBeLess(const IntType& a, const IntType& b,
-                bool reorder = true) {
-            std::string msgBase = "Integer ";
-            msgBase = msgBase + a.stringValue() + " is ";
-
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + b.stringValue() + ".",
-                ! (a == b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + b.stringValue() + ".",
-                a != b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not < " + b.stringValue() + ".",
-                a < b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + b.stringValue() + ".",
-                a <= b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + b.stringValue() + ".",
-                ! (a > b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + ">= " + b.stringValue() + ".",
-                ! (a >= b));
-
-            if (reorder)
-                shouldBeGreater(b, a, false);
-        }
-
-        template <typename IntType>
-        void shouldBeEqual(const IntType& a, const IntType& b,
-                bool reorder = true) {
-            std::string msgBase = "Integer ";
-            msgBase = msgBase + a.stringValue() + " is ";
-
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not == " + b.stringValue() + ".",
-                a == b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "!= " + b.stringValue() + ".",
-                ! (a != b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + b.stringValue() + ".",
-                ! (a < b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + b.stringValue() + ".",
-                a <= b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + b.stringValue() + ".",
-                ! (a > b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + b.stringValue() + ".",
-                a >= b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not str== " +
-                b.stringValue() + " (long).",
-                a.stringValue() == b.stringValue());
-
-            if (reorder)
-                shouldBeEqual(b, a, false);
-        }
-
-        template <typename IntType>
-        void shouldBeGreater(const IntType& a, const IntType& b,
-                bool reorder = true) {
-            std::string msgBase = "Integer ";
-            msgBase = msgBase + a.stringValue() + " is ";
-
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + b.stringValue() + ".",
-                ! (a == b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + b.stringValue() + ".",
-                a != b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + b.stringValue() + ".",
-                ! (a < b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "<= " + b.stringValue() + ".",
-                ! (a <= b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not > " + b.stringValue() + ".",
-                a > b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + b.stringValue() + ".",
-                a >= b);
-
-            if (reorder)
-                shouldBeLess(b, a, false);
-        }
-
-        template <typename IntType>
-        void shouldBeLess(const IntType& a, long b) {
-            std::string msgBase = "Integer ";
-            msgBase = msgBase + a.stringValue() + " is ";
-
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + str(b) + " (long).",
-                ! (a == b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + str(b) + " (long).",
-                a != b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not < " + str(b) + " (long).",
-                a < b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + str(b) + " (long).",
-                a <= b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + str(b) + " (long).",
-                ! (a > b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + ">= " + str(b) + " (long).",
-                ! (a >= b));
-        }
-
-        template <typename IntType>
-        void shouldBeEqual(const IntType& a, long b) {
-            std::string msgBase = "Integer ";
-            msgBase = msgBase + a.stringValue() + " is ";
-
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not == " + str(b) + " (long).",
-                a == b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "!= " + str(b) + " (long).",
-                ! (a != b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + str(b) + " (long).",
-                ! (a < b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not <= " + str(b) + " (long).",
-                a <= b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "> " + str(b) + " (long).",
-                ! (a > b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + str(b) + " (long).",
-                a >= b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not str== " + str(b) + " (long).",
-                a.stringValue() == str(b));
-
-            if (b == 0)
-                CPPUNIT_ASSERT_MESSAGE(msgBase + "not isZero().", a.isZero());
-            else
-                CPPUNIT_ASSERT_MESSAGE(msgBase + "isZero().", ! a.isZero());
-        }
-
-        template <typename IntType>
-        void shouldBeGreater(const IntType& a, long b) {
-            std::string msgBase = "Integer ";
-            msgBase = msgBase + a.stringValue() + " is ";
-
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "== " + str(b) + " (long).",
-                ! (a == b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not != " + str(b) + " (long).",
-                a != b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "< " + str(b) + " (long).",
-                ! (a < b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "<= " + str(b) + " (long).",
-                ! (a <= b));
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not > " + str(b) + " (long).",
-                a > b);
-            CPPUNIT_ASSERT_MESSAGE(msgBase + "not >= " + str(b) + " (long).",
-                a >= b);
         }
 
         template <typename IntType>
