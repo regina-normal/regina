@@ -1765,7 +1765,52 @@ class NIntegerTest : public CppUnit::TestFixture {
                     IntType x(d.cases[a]);
                     long y = d.longCases[b];
 
-                    // TODO: Replicate the tests above.
+                    // Test the commutative law.
+                    shouldBeEqual(x * y, y * x);
+
+                    // Test the distributive law.
+                    shouldBeEqual(x * (IntType(y) + 1), (x * y) + x);
+                    shouldBeEqual(x * (IntType(y) - 1), (x * y) - x);
+                    shouldBeEqual(x * (y + IntType(HUGE_INTEGER)),
+                        (x * y) + (x * IntType(HUGE_INTEGER)));
+                    shouldBeEqual(x * (y + IntType("-" HUGE_INTEGER)),
+                        (x * y) - (x * IntType(HUGE_INTEGER)));
+
+                    // Other simple arithmetic tests.
+                    if (y == LONG_MIN) {
+                        shouldBeEqual(x * d.longMaxInc, -(x * y));
+                        shouldBeEqual((-x) * d.longMaxInc, x * y);
+                        shouldBeEqual(x * d.longMaxInc + x * y, 0L);
+                    } else {
+                        shouldBeEqual(x * (-y), -(x * y));
+                        shouldBeEqual((-x) * (-y), x * y);
+                        shouldBeEqual(x * (-y) + x * y, 0L);
+                    }
+
+                    // Test that *= behaves as it should.
+                    {
+                        IntType p(x);
+                        shouldBeEqual(p *= y, x * y);
+                    }
+
+                    // Test signs and ordering.
+                    if (x.sign() > 0 && y > 0) {
+                        shouldBeGreater(x * y, 0);
+                        shouldBeGreater(x * y, x - 1);
+                        shouldBeGreater(x * y, y - 1);
+                    } else if (x.sign() > 0 && y < 0) {
+                        shouldBeLess(x * y, 0);
+                        shouldBeLess(x * y, (-x) + 1);
+                        shouldBeLess(x * y, y + 1);
+                    } else if (x.sign() < 0 && y > 0) {
+                        shouldBeLess(x * y, 0);
+                        shouldBeLess(x * y, x + 1);
+                        shouldBeLess(x * y, (-y) + 1);
+                    } else if (x.sign() < 0 && y < 0) {
+                        shouldBeGreater(x * y, 0);
+                        shouldBeGreater(x * y, (-x) - 1);
+                        shouldBeGreater(x * y, (-(y + 1)));
+                    }
                 }
 
                 IntType z(d.cases[a]);
@@ -1783,97 +1828,65 @@ class NIntegerTest : public CppUnit::TestFixture {
                 shouldBeEqual((-IntType::one) * z, -z);
             }
 
-            // Ad-hoc tests for native * native: TODO
-            shouldBeEqual(IntType(3) + IntType(7), 10);
-            shouldBeEqual(IntType(3) + IntType(-7), -4);
-            shouldBeEqual(IntType(-3) + IntType(7), 4);
-            shouldBeEqual(IntType(-3) + IntType(-7), -10);
-            shouldBeEqual(IntType(3) - IntType(-7), 10);
-            shouldBeEqual(IntType(3) - IntType(7), -4);
-            shouldBeEqual(IntType(-3) - IntType(-7), 4);
-            shouldBeEqual(IntType(-3) - IntType(7), -10);
-            shouldBeEqual(IntType(3) + long(7), 10);
-            shouldBeEqual(IntType(3) + long(-7), -4);
-            shouldBeEqual(IntType(-3) + long(7), 4);
-            shouldBeEqual(IntType(-3) + long(-7), -10);
-            shouldBeEqual(IntType(3) - long(-7), 10);
-            shouldBeEqual(IntType(3) - long(7), -4);
-            shouldBeEqual(IntType(-3) - long(-7), 4);
-            shouldBeEqual(IntType(-3) - long(7), -10);
-            shouldBeEqual(long(3) + IntType(7), 10);
-            shouldBeEqual(long(3) + IntType(-7), -4);
-            shouldBeEqual(long(-3) + IntType(7), 4);
-            shouldBeEqual(long(-3) + IntType(-7), -10);
+            // Ad-hoc tests for native * native:
+            shouldBeEqual(IntType(3) * IntType(7), 21);
+            shouldBeEqual(IntType(3) * IntType(-7), -21);
+            shouldBeEqual(IntType(-3) * IntType(7), -21);
+            shouldBeEqual(IntType(-3) * IntType(-7), 21);
+            shouldBeEqual(IntType(3) * long(7), 21);
+            shouldBeEqual(IntType(3) * long(-7), -21);
+            shouldBeEqual(IntType(-3) * long(7), -21);
+            shouldBeEqual(IntType(-3) * long(-7), 21);
+            shouldBeEqual(long(3) * IntType(7), 21);
+            shouldBeEqual(long(3) * IntType(-7), -21);
+            shouldBeEqual(long(-3) * IntType(7), -21);
+            shouldBeEqual(long(-3) * IntType(-7), 21);
 
-            // Ad-hoc tests for large * native: TODO
-            shouldBeEqual(IntType(ENORMOUS_INTEGER "0") + IntType(3),
-                IntType(ENORMOUS_INTEGER "3"));
-            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "10") + IntType(3),
-                IntType("-" ENORMOUS_INTEGER "07"));
-            shouldBeEqual(IntType(ENORMOUS_INTEGER "10") + IntType(-3),
-                IntType(ENORMOUS_INTEGER "07"));
-            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "0") + IntType(-3),
-                IntType("-" ENORMOUS_INTEGER "3"));
-            shouldBeEqual(IntType(ENORMOUS_INTEGER "0") - IntType(-3),
-                IntType(ENORMOUS_INTEGER "3"));
-            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "10") - IntType(-3),
-                IntType("-" ENORMOUS_INTEGER "07"));
-            shouldBeEqual(IntType(ENORMOUS_INTEGER "10") - IntType(3),
-                IntType(ENORMOUS_INTEGER "07"));
-            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "0") - IntType(3),
-                IntType("-" ENORMOUS_INTEGER "3"));
-            shouldBeEqual(IntType(ENORMOUS_INTEGER "0") + long(3),
-                IntType(ENORMOUS_INTEGER "3"));
-            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "10") + long(3),
-                IntType("-" ENORMOUS_INTEGER "07"));
-            shouldBeEqual(IntType(ENORMOUS_INTEGER "10") + long(-3),
-                IntType(ENORMOUS_INTEGER "07"));
-            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "0") + long(-3),
-                IntType("-" ENORMOUS_INTEGER "3"));
-            shouldBeEqual(IntType(ENORMOUS_INTEGER "0") - long(-3),
-                IntType(ENORMOUS_INTEGER "3"));
-            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "10") - long(-3),
-                IntType("-" ENORMOUS_INTEGER "07"));
-            shouldBeEqual(IntType(ENORMOUS_INTEGER "10") - long(3),
-                IntType(ENORMOUS_INTEGER "07"));
-            shouldBeEqual(IntType("-" ENORMOUS_INTEGER "0") - long(3),
-                IntType("-" ENORMOUS_INTEGER "3"));
+            // Ad-hoc tests for large * native:
+            shouldBeEqual(IntType(ENORMOUS_INTEGER) * IntType(100),
+                IntType(ENORMOUS_INTEGER "00"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER) * IntType(100),
+                IntType("-" ENORMOUS_INTEGER "00"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER) * IntType(-100),
+                IntType("-" ENORMOUS_INTEGER "00"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER) * IntType(-100),
+                IntType(ENORMOUS_INTEGER "00"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER) * long(100),
+                IntType(ENORMOUS_INTEGER "00"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER) * long(100),
+                IntType("-" ENORMOUS_INTEGER "00"));
+            shouldBeEqual(IntType(ENORMOUS_INTEGER) * long(-100),
+                IntType("-" ENORMOUS_INTEGER "00"));
+            shouldBeEqual(IntType("-" ENORMOUS_INTEGER) * long(-100),
+                IntType(ENORMOUS_INTEGER "00"));
 
-            // Ad-hoc tests for native * large: TODO
-            shouldBeEqual(IntType(3) + IntType(ENORMOUS_INTEGER "0"),
-                IntType(ENORMOUS_INTEGER "3"));
-            shouldBeEqual(IntType(3) + IntType("-" ENORMOUS_INTEGER "10"),
-                IntType("-" ENORMOUS_INTEGER "07"));
-            shouldBeEqual(IntType(-3) + IntType(ENORMOUS_INTEGER "10"),
-                IntType(ENORMOUS_INTEGER "07"));
-            shouldBeEqual(IntType(-3) + IntType("-" ENORMOUS_INTEGER "0"),
-                IntType("-" ENORMOUS_INTEGER "3"));
-            shouldBeEqual(IntType(3) - IntType(ENORMOUS_INTEGER "10"),
-                IntType("-" ENORMOUS_INTEGER "07"));
-            shouldBeEqual(IntType(3) - IntType("-" ENORMOUS_INTEGER "0"),
-                IntType(ENORMOUS_INTEGER "3"));
-            shouldBeEqual(IntType(-3) - IntType(ENORMOUS_INTEGER "0"),
-                IntType("-" ENORMOUS_INTEGER "3"));
-            shouldBeEqual(IntType(-3) - IntType("-" ENORMOUS_INTEGER "10"),
-                IntType(ENORMOUS_INTEGER "07"));
-            shouldBeEqual(long(3) + IntType(ENORMOUS_INTEGER "0"),
-                IntType(ENORMOUS_INTEGER "3"));
-            shouldBeEqual(long(3) + IntType("-" ENORMOUS_INTEGER "10"),
-                IntType("-" ENORMOUS_INTEGER "07"));
-            shouldBeEqual(long(-3) + IntType(ENORMOUS_INTEGER "10"),
-                IntType(ENORMOUS_INTEGER "07"));
-            shouldBeEqual(long(-3) + IntType("-" ENORMOUS_INTEGER "0"),
-                IntType("-" ENORMOUS_INTEGER "3"));
+            // Ad-hoc tests for native * large:
+            shouldBeEqual(IntType(100) * IntType(ENORMOUS_INTEGER),
+                IntType(ENORMOUS_INTEGER "00"));
+            shouldBeEqual(IntType(100) * IntType("-" ENORMOUS_INTEGER),
+                IntType("-" ENORMOUS_INTEGER "00"));
+            shouldBeEqual(IntType(-100) * IntType(ENORMOUS_INTEGER),
+                IntType("-" ENORMOUS_INTEGER "00"));
+            shouldBeEqual(IntType(-100) * IntType("-" ENORMOUS_INTEGER),
+                IntType(ENORMOUS_INTEGER "00"));
+            shouldBeEqual(long(100) * IntType(ENORMOUS_INTEGER),
+                IntType(ENORMOUS_INTEGER "00"));
+            shouldBeEqual(long(100) * IntType("-" ENORMOUS_INTEGER),
+                IntType("-" ENORMOUS_INTEGER "00"));
+            shouldBeEqual(long(-100) * IntType(ENORMOUS_INTEGER),
+                IntType("-" ENORMOUS_INTEGER "00"));
+            shouldBeEqual(long(-100) * IntType("-" ENORMOUS_INTEGER),
+                IntType(ENORMOUS_INTEGER "00"));
 
-            // Ad-hoc tests for large * large: TODO
-            shouldBeEqual(IntType("3" ZEROES) + IntType("7" ZEROES),
-                IntType("10" ZEROES));
-            shouldBeEqual(IntType("3" ZEROES) + IntType("-7" ZEROES),
-                IntType("-4" ZEROES));
-            shouldBeEqual(IntType("-3" ZEROES) + IntType("7" ZEROES),
-                IntType("4" ZEROES));
-            shouldBeEqual(IntType("-3" ZEROES) + IntType("-7" ZEROES),
-                IntType("-10" ZEROES));
+            // Ad-hoc tests for large * large:
+            shouldBeEqual(IntType("3" ZEROES) * IntType("7" ZEROES),
+                IntType("21" ZEROES ZEROES));
+            shouldBeEqual(IntType("3" ZEROES) * IntType("-7" ZEROES),
+                IntType("-21" ZEROES ZEROES));
+            shouldBeEqual(IntType("-3" ZEROES) * IntType("7" ZEROES),
+                IntType("-21" ZEROES ZEROES));
+            shouldBeEqual(IntType("-3" ZEROES) * IntType("-7" ZEROES),
+                IntType("21" ZEROES ZEROES));
 
             // Test around overflow points: TODO
 
