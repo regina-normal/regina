@@ -61,17 +61,6 @@ NGroupExpression NHomGroupPresentation::evaluate(
    return retval; 
  }
 
-std::auto_ptr<NHomGroupPresentation> NHomGroupPresentation::operator*(
-    const NHomGroupPresentation &arg) const {
-    std::vector< NGroupExpression > vals( domain_.getNumberOfGenerators() );
-    for (unsigned long i=0; i<vals.size(); i++) {
-        NGroupExpression gi; gi.addTermLast( i, 1 );
-        vals[i].addTermsLast(evaluate(arg.evaluate(gi)));
-    }
-    return std::auto_ptr<NHomGroupPresentation>(
-        new NHomGroupPresentation( domain_, arg.range_, vals ));
-}
-
 std::string NHomGroupPresentation::toString() const
 {
 std::string retval; 
