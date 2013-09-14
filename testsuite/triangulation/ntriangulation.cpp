@@ -41,6 +41,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "census/ncensus.h"
 #include "maths/approx.h"
+#include "maths/nmatrixint.h"
 #include "maths/numbertheory.h"
 #include "packet/ncontainer.h"
 #include "split/nsignature.h"
