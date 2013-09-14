@@ -770,11 +770,12 @@ void NGroupExpression::writeText(std::ostream& out, bool shortword) const {
     else {
         std::list<NGroupExpressionTerm>::const_iterator i;
         for (i = terms.begin(); i!=terms.end(); i++) {
+            if (i != terms.begin())
+                out << ' ';
             if (shortword)
                 out << char('a' + i->generator);
             else
                 out << "g_" << i->generator;
-
             if ( i->exponent != 1 )
                 out << '^' << i->exponent;
         }
@@ -845,9 +846,11 @@ void NGroupPresentation::writeTextLong(std::ostream& out) const {
     if (nGenerators == 0)
         out << "(none)";
     else if (nGenerators == 1)
-        out << "g0";
+        out << "a";
     else if (nGenerators == 2)
-        out << "g0, g1";
+        out << "a, b";
+    else if (nGenerators <= 26)
+        out << "a .. " << char('a' + nGenerators - 1);
     else
         out << "g0 .. g" << (nGenerators - 1);
     out << std::endl;
@@ -859,7 +862,7 @@ void NGroupPresentation::writeTextLong(std::ostream& out) const {
         for (RelIteratorConst it = relations.begin();
                 it != relations.end(); it++) {
             out << "    ";
-            (*it)->writeTextShort(out);
+            (*it)->writeText(out, nGenerators <= 26);
             out << std::endl;
         }
 }
