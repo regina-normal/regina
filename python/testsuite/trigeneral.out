@@ -194,7 +194,7 @@ Orientable: True
 Connected: True
 
 Fundamental group: Z
-Generators: g0
+Generators: a
 Relations:
     (none)
 
@@ -276,10 +276,10 @@ Orientable: False
 Connected: True
 
 Fundamental group: 
-Generators: g0, g1
+Generators: a, b
 Relations:
-    g1 g0 g1^-1 g0^-1
-    g0^2 g1^-2
+    b a b^-1 a^-1
+    a^2 b^-2
 
 H1: Z + Z_2
 H1Bdry: 0
@@ -363,10 +363,10 @@ Orientable: True
 Connected: True
 
 Fundamental group: 
-Generators: g0, g1
+Generators: a, b
 Relations:
-    g1^2
-    g0 g1^-1 g0 g1^-1
+    b^2
+    a b^-1 a b^-1
 
 H1: 2 Z_2
 H1Bdry: 0
@@ -442,9 +442,9 @@ Orientable: True
 Connected: True
 
 Fundamental group: Z_8
-Generators: g0
+Generators: a
 Relations:
-    g0^-8
+    a^-8
 
 H1: Z_8
 H1Bdry: 0
@@ -532,10 +532,10 @@ Orientable: True
 Connected: True
 
 Fundamental group: 
-Generators: g0, g1
+Generators: a, b
 Relations:
-    g1 g0^-1 g1^-1 g0^-1 g1 g0
-    g0 g1^-2 g0 g1 g0^-1 g1
+    b a^-1 b^-1 a^-1 b a
+    a b^-2 a b a^-1 b
 
 H1: 0
 H1Bdry: 0
@@ -639,10 +639,10 @@ Orientable: True
 Connected: True
 
 Fundamental group: 
-Generators: g0, g1
+Generators: a, b
 Relations:
-    g0^2 g1^-2 g0^-1 g1^-1 g0^-1 g1^-2
-    g1^2 g0^-2 g1^-1 g0^-1 g1^-1 g0^-2
+    a^2 b^-2 a^-1 b^-1 a^-1 b^-2
+    b^2 a^-2 b^-1 a^-1 b^-1 a^-2
 
 H1: 2 Z_5
 H1Bdry: 0
@@ -752,10 +752,10 @@ Orientable: False
 Connected: True
 
 Fundamental group: 
-Generators: g0, g1
+Generators: a, b
 Relations:
-    g1^-1 g0^-1 g1^2 g0 g1^2 g0^-2 g1^-2 g0
-    g0 g1^2 g0^-1 g1^2 g0^-1 g1^-2 g0 g1^-2 g0^-1 g1
+    b^-1 a^-1 b^2 a b^2 a^-2 b^-2 a
+    a b^2 a^-1 b^2 a^-1 b^-2 a b^-2 a^-1 b
 
 H1: Z
 H1Bdry: 0
@@ -833,7 +833,7 @@ Orientable: True
 Connected: True
 
 Fundamental group: Z
-Generators: g0
+Generators: a
 Relations:
     (none)
 
@@ -914,7 +914,7 @@ Orientable: False
 Connected: True
 
 Fundamental group: Z
-Generators: g0
+Generators: a
 Relations:
     (none)
 
@@ -991,9 +991,9 @@ Orientable: True
 Connected: True
 
 Fundamental group: 
-Generators: g0, g1
+Generators: a, b
 Relations:
-    g0 g1 g0 g1^-1 g0^-1 g1^2 g0^-1 g1^-1
+    a b a b^-1 a^-1 b^2 a^-1 b^-1
 
 H1: Z
 H1Bdry: 2 Z
@@ -1076,9 +1076,9 @@ Orientable: True
 Connected: True
 
 Fundamental group: 
-Generators: g0, g1
+Generators: a, b
 Relations:
-    g0 g1 g0^-1 g1 g0^2 g1 g0^-1 g1^-1 g0 g1^-1 g0^-2 g1^-1
+    a b a^-1 b a^2 b a^-1 b^-1 a b^-1 a^-2 b^-1
 
 H1: 2 Z
 H1Bdry: 4 Z
@@ -1149,9 +1149,9 @@ Orientable: False
 Connected: True
 
 Fundamental group: 
-Generators: g0, g1
+Generators: a, b
 Relations:
-    g0^-2 g1 g0 g1^-2
+    a^-2 b a b^-2
 
 H1: Z
 H1Bdry: Z + Z_2
@@ -1258,7 +1258,7 @@ Orientable: True
 Connected: True
 
 Fundamental group: Free (2 generators)
-Generators: g0, g1
+Generators: a, b
 Relations:
     (none)
 
