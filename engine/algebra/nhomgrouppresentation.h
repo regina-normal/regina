@@ -43,6 +43,7 @@
 
 #include <algorithm>
 #include <list>
+#include <memory>
 #include <vector>
 #include "regina-core.h"
 #include "utilities/memutils.h"
@@ -52,7 +53,7 @@
 namespace regina {
 
 class NFile;
-class NGroupPresentation; 
+class NGroupPresentation;
 
 /**
  * \weakgroup algebra
@@ -60,28 +61,37 @@ class NGroupPresentation;
  */
 
 /**
- * Represents a homomorphism between groups which are described via finite 
+ * Represents a homomorphism between groups which are described via finite
  * presentations.
  *
  * \testpart
  *
- * \todo add routine to attempt to verify validity of homomorphism. 
+ * \todo add routine to attempt to verify validity of homomorphism.
  */
 class REGINA_API NHomGroupPresentation : public ShareableObject {
     private:
-        NGroupPresentation domain, range; 
-        std::vector< NGroupExpression* > map;
+        NGroupPresentation domain_;
+            /**< The domain of the homomorphism. */
+        NGroupPresentation range_;
+            /**< The range of the homomorphism. */
+        std::vector<NGroupExpression*> map_;
+            /**< A map whose ith element is the image of the ith
+                 generator from the domain. */
 
     public:
         /**
-         * Creates a new presentation with no generators and no
-         * relations. domain is the domain presentation, range the range
-         * presentation, map the list that says the i-th generator of domain 
-         * is sent to element map[i] of range.
+         * Creates a new homomorphism from the given data.
+         *
+         * @param domain the domain of the homomorphism.
+         * @param range the range of the homomorphism.
+         * @param map a vector of length \a g, where \a g is the number
+         * of generators of the domain, and where this homomorphism
+         * sends the <i>i</i>th generator of the domain to the
+         * element <tt>map[i]</tt> of the range.
          */
-        NHomGroupPresentation(const NGroupPresentation &Domain, 
-               const NGroupPresentation &Range, 
-                           const std::vector< NGroupExpression > &Map );
+        NHomGroupPresentation(const NGroupPresentation &domain,
+                const NGroupPresentation &range,
+                const std::vector<NGroupExpression> &map);
 
         /**
          * Creates a clone of the given group presentation.
@@ -91,47 +101,72 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
         NHomGroupPresentation(const NHomGroupPresentation& cloneMe);
 
         /**
-         * Destroys the group presentation.
-         * All relations that are stored will be deallocated.
+         * Destroys the group homomorphism.
          */
         ~NHomGroupPresentation();
 
         /**
-         *  The domain of the map.
+         * The domain of the map.
+         *
+         * @return a reference to the domain.
          */
         const NGroupPresentation& getDomain() const;
         /**
-         *  The range of the map.
+         * The range of the map.
+         *
+         * @return a reference to the range.
          */
         const NGroupPresentation& getRange() const;
 
 
         /**
          * Evaluate the homomorphism at an element.
+         *
+         * @param arg an element of the domain.
+         * @return the image of this element in the range.
          */
         NGroupExpression evaluate(const NGroupExpression &arg) const;
         /**
-         * Evaluate the homomorphism on the generator gi
+         * Evaluate the homomorphism at a generator of the domain.
+         *
+         * @param i the index of a generator in the domain.
+         * @param the image of the <i>i</i>th generator in the range.
          */
         NGroupExpression evaluate(unsigned long i) const;
 
         /**
-         * Compose homomorphisms. 
+         * Compose homomorphisms.
+         *
+         * The resulting homomorphism maps element \a x from the domain
+         * of this homomorphism to the element
+         * <tt>arg.evaluate(this->evaluate(x))</tt>
+         * in the range of \a arg.
+         *
+         * \pre The range of this homomorphism is identical to the
+         * domain of \a arg.
+         *
+         * @param arg the homomorphism to compose with this.
          */
-        NHomGroupPresentation operator*(const NHomGroupPresentation &arg) const;
+        std::auto_ptr<NHomGroupPresentation> operator*(
+            const NHomGroupPresentation &arg) const;
 
         /**
-         * simplify simultaneously: 1) the presentation of the domain
-         *                          2) the presentation of the range
-         *                          3) the description of the map
-         * Uses Dehn's algorithm / "small cancellation theory". 
+         * Simultaneously simplifies:
          *
-         *  @return true if the presentations or map have changed.
+         * - the presentation of the domain;
+         * - the presentation of the range;
+         * - the description of the map.
+         *
+         * Uses Dehn's algorithm / "small cancellation theory".
+         *
+         * @return true if the presentations or map have changed.
          */
         bool intelligentSimplify();
 
         /**
-         * Writes the map as a string. 
+         * Writes the map as a string.
+         *
+         * @return a string representation of this map.
          */
         std::string toString() const;
 
@@ -140,35 +175,42 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
 };
 
 /*@}*/
+
 inline NHomGroupPresentation::NHomGroupPresentation(
-            const NGroupPresentation &Domain, 
-            const NGroupPresentation &Range, 
-            const std::vector< NGroupExpression > &Map ) : 
-        ShareableObject(), domain(Domain), range(Range), map(0) 
-{ map.resize(Map.size()); 
-  for (unsigned long i=0; i<map.size(); i++) map[i] = new NGroupExpression(Map[i]); 
+            const NGroupPresentation &domain,
+            const NGroupPresentation &range,
+            const std::vector<NGroupExpression> &map ) :
+        domain_(domain), range_(range) {
+    map_.resize(map.size());
+    for (unsigned long i=0; i<map_.size(); i++)
+        map_[i] = new NGroupExpression(map[i]);
 }
 
 inline NHomGroupPresentation::NHomGroupPresentation(
-        const NHomGroupPresentation& cloneMe) : 
-    ShareableObject(), domain(cloneMe.domain), range(cloneMe.range), map(0) 
-{ map.resize(cloneMe.map.size()); 
-  for (unsigned long i=0; i<map.size(); i++) map[i] = 
-        new NGroupExpression(*(cloneMe.map[i])); 
+        const NHomGroupPresentation& cloneMe) :
+        domain_(cloneMe.domain_),
+        range_(cloneMe.range_) {
+    map_.resize(cloneMe.map_.size());
+    for (unsigned long i=0; i<map_.size(); i++)
+        map_[i] = new NGroupExpression(*(cloneMe.map_[i]));
 }
 
-inline NHomGroupPresentation::~NHomGroupPresentation() 
-{ for (unsigned long i=0; i<map.size(); i++) delete map[i]; map.resize(0); }
+inline NHomGroupPresentation::~NHomGroupPresentation() {
+    for (unsigned long i=0; i<map_.size(); i++)
+        delete map_[i];
+}
 
-inline const NGroupPresentation& NHomGroupPresentation::getDomain() const
-{ return domain; }
+inline const NGroupPresentation& NHomGroupPresentation::getDomain() const {
+    return domain_;
+}
 
-inline const NGroupPresentation& NHomGroupPresentation::getRange() const
-{ return range; }
+inline const NGroupPresentation& NHomGroupPresentation::getRange() const {
+    return range_;
+}
 
-inline NGroupExpression NHomGroupPresentation::evaluate(unsigned long i) const
-{ return (*(map[i])); }
-
+inline NGroupExpression NHomGroupPresentation::evaluate(unsigned long i) const {
+    return (*(map_[i]));
+}
 
 } // namespace regina
 

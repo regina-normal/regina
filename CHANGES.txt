@@ -103,6 +103,9 @@ Version 4.94  [ 24 September, 2013 ]
         Class NGenericIsomorphism:
             - New template base class that contains dimension-agnostic
               code for representing isomorphisms between triangulations.
+        Class NGroupExpression:
+            - New routines wordLength(), erase(), cycleLeft(),
+              cycleRight(), invert().
         Class NHilbertCD:
             - The NProgressMessage* argument to enumerateHilbertBasis()
               has been removed, since in reality the current algorithm offers
@@ -114,6 +117,10 @@ Version 4.94  [ 24 September, 2013 ]
         Class NHilbertPrimal:
             - The progress tracker passed to enumerateHilbertBasis() is now of
               class NProgressTracker, not NProgressMessage.
+        Class NHomGroupPresentation:
+            - New class to represent homomorphisms between groups.
+        Class NHomMarkedAbelianGroup:
+            - New routine torsionSubgroup().
         Class NHomologicalData:
             - Removed all dependencies on the old NIndexedArray.
         Class NIndexedArray:
@@ -143,6 +150,8 @@ Version 4.94  [ 24 September, 2013 ]
             - Performance is much, much faster; see NIntegerBase for details.
         Class NLocalFileResource, NRandomAccessResource:
             - Removed these classes, which were used for old-style binary files.
+        Class NMarkedAbelianGroup:
+            - New routines torsionSubgroup() and torsionInclusion().
         Class NMatrix:
             - New routine isZero().
         Class NNativeInteger:
