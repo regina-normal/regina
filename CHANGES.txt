@@ -363,13 +363,19 @@ Version 4.94  [ 24 September, 2013 ]
             - Now takes an optional argument -c/--subcontainers to store
               triangulations in subcontainers according to face pairings.
     TEST SUITE:
-        - Extended tests for NInteger and NLargeInteger to be very thorough.
-        - Added thorough tests for barycentric subdivision.
-        - Added enumeration tests for Dim2EdgePairing.
-        - Additional tests for facet pairing classes.
-        - Additional tests for permutation databases Sk and orderedSk.
-        - Additional tests for NNormalSurfaceList and NRational.
-        - Additional tests to compare H1 with the abelianised fundamental group.
+        - Greatly expanded the tests for NLargeInteger and NInteger,
+          which are now extremely thorough.
+        - New NTriangulation tests for barycentric subdivision, drilling
+          edges, and comparing H1 with the abelianised fundamental group.
+        - New NNormalSurfaceList tests for comparing the results of different
+          vertex / fundamental surface enumeration algorithms.  Also,
+          exhaustive tests over census data now include ideal triangulations.
+        - New enumeration tests for Dim2EdgePairing and Dim2Census.
+        - New tests for permutation databases Sk and orderedSk.
+        - New tests for base64 conversion.
+        - Expanded tests for the NRational class.
+        - Expanded enumeration tests for facet pairing classes to
+          include pairings with boundary facets.
 
 Version 4.93  [ 30 May, 2012 ]
 
