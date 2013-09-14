@@ -53,7 +53,7 @@
 
 namespace regina {
 
-class NHomGroupPresentation; 
+class NHomGroupPresentation;
 
 /**
  * \weakgroup algebra
@@ -178,8 +178,8 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * modifications made to this list will show up in the
          * expression itself.
          *
-         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> has list 
-         * consisting of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and 
+         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> has list
+         * consisting of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and
          * <tt>g6^1</tt> in that order.
          *
          * \ifacespython Not present; only the const version of this
@@ -192,8 +192,8 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * Returns a constant reference to the list of terms in this
          * expression.
          *
-         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> has list 
-         * consisting of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and 
+         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> has list
+         * consisting of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and
          * <tt>g6^1</tt> in that order.
          *
          * \ifacespython This routine returns a python list of copied
@@ -208,7 +208,7 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * Returns the number of terms in this expression.
          *
          * For instance, the expression <tt>g1^2 g3^-1 g6</tt> contains three
-         *  terms.  See also getWordLength(). 
+         *  terms.  See also getWordLength().
          *
          * @return the number of terms.
          */
@@ -218,7 +218,7 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * with exponent +1 or -1 for which this word is expressable as a
          * product.
          *
-         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> is a word of 
+         * For instance, the expression <tt>g1^2 g3^-1 g6</tt> is a word of
          * length four.  See also getNumberOfTerms().
          *
          * No attempt is made to remove redundant terms (so the word
@@ -325,23 +325,23 @@ class REGINA_API NGroupExpression : public ShareableObject {
         void addTermLast(unsigned long generator, long exponent);
 
         /**
-         * Multiplies *this on the right by word. 
+         * Multiplies *this on the right by word.
          */
         void addTermsLast( const NGroupExpression& word);
         /**
-         * Multiplies *this on the left by word. 
+         * Multiplies *this on the left by word.
          */
         void addTermsFirst( const NGroupExpression& word);
 
         /**
          *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
-         * converts the word into g_i2^j2 ... g_in^jn g_i1^j1  
+         * converts the word into g_i2^j2 ... g_in^jn g_i1^j1
          */
         void cycleRight();
 
         /**
          *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
-         * converts the word into g_in^jn g_i1^j1 g_i1^j1 ... g_in-1^jn-1  
+         * converts the word into g_in^jn g_i1^j1 g_i1^j1 ... g_in-1^jn-1
          */
         void cycleLeft();
 
@@ -355,9 +355,9 @@ class REGINA_API NGroupExpression : public ShareableObject {
         NGroupExpression* inverse() const;
 
         /**
-         * Inverts this expression.  Does not allocate or deallocate anything. 
+         * Inverts this expression.  Does not allocate or deallocate anything.
          */
-        void invert(); 
+        void invert();
 
         /**
          * Returns a newly created expression that is
@@ -403,41 +403,45 @@ class REGINA_API NGroupExpression : public ShareableObject {
             const NGroupExpression& expansion, bool cyclic = false);
 
         /**
-         * Given two words, A and B, one wants to know how one can make 
-         *  substitutions into A using variants of the word B.  This 
-         *  structure holds that data.  For example, if:
+         * Given two words, A and B, one wants to know how one can make
+         * substitutions into A using variants of the word B.  This
+         * structure holds that data.  For example, if:
          *
          *  A == a^5b^2abababa^4b^1  and  B == bababa^-1
-         *    == aaaaabbabababaaaab  
-         * start_sub_at == 6, start_from == 0, sub_length == 5 makes sense, 
-         *  this singles out the subword aaaaab[babab]abaaaab. Since it would 
+         *    == aaaaabbabababaaaab
+         * start_sub_at == 6, start_from == 0, sub_length == 5 makes sense,
+         *  this singles out the subword aaaaab[babab]abaaaab. Since it would
          *  reduce the length by four, the score is 4.
-         * 
-         * Similarly, if    A == baba^4b^1a^5b^2aba == babaaaabaaaaabbaba 
-         *   and    B == baba^-1ba start_sub_at == 14, start_from == 5, 
-         *   sub_length == 5 makes sense, and is a cyclic variation 
-         *   on the above substitution, so the score is also 4. 
+         *
+         * Similarly, if    A == baba^4b^1a^5b^2aba == babaaaabaaaaabbaba
+         *   and    B == baba^-1ba start_sub_at == 14, start_from == 5,
+         *   sub_length == 5 makes sense, and is a cyclic variation
+         *   on the above substitution, so the score is also 4.
          */
         struct NWordSubstitutionData {
-                unsigned long start_sub_at; // where in A do we start?
-                unsigned long start_from;   // where in B do we start?
-                unsigned long sub_length;   // num letters from B to use.
-                bool invertB;    // invert B before making the substitution?
-                long int score; // score i.e. this is the in word letter count
-                                // provided this sub is made
-                bool operator<( const NWordSubstitutionData &other ) const
-                {
-                        if (score < other.score) return false;           
-                        if (score > other.score) return true; 
+                unsigned long start_sub_at;
+                    /**< Where in A do we start? */
+                unsigned long start_from;
+                    /**< Where in B do we start? */
+                unsigned long sub_length;
+                    /**< The number of letters from B to use. */
+                bool invertB;
+                    /**< Invert B before making the substitution? */
+                long int score;
+                    /**< The score, i.e., the in word letter count
+                         provided this substitution is made. */
+                bool operator<( const NWordSubstitutionData &other ) const {
+                        if (score < other.score) return false;
+                        if (score > other.score) return true;
                         if (sub_length < other.sub_length) return false;
                         if (sub_length > other.sub_length) return true;
-                        if ( (invertB == true)  && (other.invertB == false) ) 
-                                return false; 
-                        if ( (invertB == false) && (other.invertB == true)  ) 
+                        if ( (invertB == true)  && (other.invertB == false) )
+                                return false;
+                        if ( (invertB == false) && (other.invertB == true)  )
                                 return true;
-                        if (start_from < other.start_from) return false;     
+                        if (start_from < other.start_from) return false;
                         if (start_from > other.start_from) return true;
-                        if (start_sub_at < other.start_sub_at) return false; 
+                        if (start_sub_at < other.start_sub_at) return false;
                         if (start_sub_at > other.start_sub_at) return true;
                         return false;
                 }
@@ -450,42 +454,42 @@ class REGINA_API NGroupExpression : public ShareableObject {
                 }
         };
         /**
-         *  This is the core of the Dehn algorithm for hyperbolic groups.       
-         *  Given two words, *this and that_word, this routine searches for 
-         *  subwords of that_word (in the cyclic sense), and builds a table 
-         *  of substitutions one can make from that_word into *this.  The 
-         *  table is refined so that one knows the "value" of each 
+         *  This is the core of the Dehn algorithm for hyperbolic groups.
+         *  Given two words, *this and that_word, this routine searches for
+         *  subwords of that_word (in the cyclic sense), and builds a table
+         *  of substitutions one can make from that_word into *this.  The
+         *  table is refined so that one knows the "value" of each
          *  substitution -- the extent to which the substitution would shorten
          *  the word *this.   This is to allow for intelligent choices of
-         *  substitutions by whichever algorithms call this one.  
+         *  substitutions by whichever algorithms call this one.
          *
-         *  This algorithm assumes that *this and that_word are cyclically      
-         *  reduced words.  If you feed it non-cyclically reduced words it 
+         *  This algorithm assumes that *this and that_word are cyclically
+         *  reduced words.  If you feed it non-cyclically reduced words it
          *  will give you suggestions although they will not be as strong
-         *  as if the words were cyclically reduced.  It also only adds 
+         *  as if the words were cyclically reduced.  It also only adds
          *  to sub_list, so in normal usage one would pass it an empty sub-list.
          *
-         *  The default argument step==1 assumes you are looking for 
+         *  The default argument step==1 assumes you are looking for
          *  substitutions that shorten the length of a word, and that
          *  you only want to make an immediate substitution.  Setting
          *  step==2 assumes after you make your first substitution you
          *  will want to attempt a further substitution, etc.  step>1
-         *  is used primarily when building relator tables for group 
-         *  recognition. 
+         *  is used primarily when building relator tables for group
+         *  recognition.
          */
-            void dehnAlgorithmSubMetric( const NGroupExpression &that_word, 
-               std::set< NWordSubstitutionData > &sub_list, 
-               unsigned long step=1 ) const;
+        void dehnAlgorithmSubMetric( const NGroupExpression &that_word,
+            std::set< NWordSubstitutionData > &sub_list,
+            unsigned long step=1 ) const;
 
-        /**  
+        /**
          *  Given a word *this and that_word, apply the substitution specified
-         *  by sub_data to *this. See dehnAlgorithm() and struct 
-         *  NWordSubstitutionData.  In particular sub_data needs to be a 
-         *  valid substitution, usually it will be generated by 
-         *  dehnAlgorithmSubMetric.  
+         *  by sub_data to *this. See dehnAlgorithm() and struct
+         *  NWordSubstitutionData.  In particular sub_data needs to be a
+         *  valid substitution, usually it will be generated by
+         *  dehnAlgorithmSubMetric.
          */
-            void applySubstitution( const NGroupExpression &that_word, const 
-             NWordSubstitutionData &sub_data );
+        void applySubstitution( const NGroupExpression &that_word, const
+            NWordSubstitutionData &sub_data );
 
         /**
          * Writes a chunk of XML containing this expression.
@@ -513,7 +517,7 @@ class REGINA_API NGroupExpression : public ShareableObject {
          *
          * @return a std::string representation of the word.
          */
-        std::string TeXOutput() const;
+        std::string toTeX() const;
 
         /**
          * The text representation will be of the form
@@ -533,7 +537,7 @@ class REGINA_API NGroupExpression : public ShareableObject {
  * \testpart
  *
  * \todo Implement a procedure to attempt Reidemeister-Schreir, perhaps with
- *  respect to a homomorphism to a known group.  Something good-enough to 
+ *  respect to a homomorphism to a known group.  Something good-enough to
  *  detect if the group is a semi-direct product, for 2 and 3-manifold groups.
  */
 class REGINA_API NGroupPresentation : public ShareableObject {
@@ -560,6 +564,15 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * All relations that are stored will be deallocated.
          */
         virtual ~NGroupPresentation();
+
+        /**
+         * Assignment operator.
+         *
+         * @param copyMe the group presentation that this will become a
+         * copy of.
+         * @return a reference to this group presentation.
+         */
+        NGroupPresentation& operator=(const NGroupPresentation& copyMe);
 
         /**
          * Adds one or more generators to the group presentation.
@@ -615,58 +628,71 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         const NGroupExpression& getRelation(unsigned long index) const;
 
         /**
-         * See intelligentSimplify(NHomGroupPresentation*&)
+         * Attempts to simplify the group presentation as intelligently
+         * as possible without further input.
+         *
+         * See intelligentSimplifyDetail() for further details on how
+         * the simplification is done.
          *
          * @return \c true if and only if the group presentation was changed.
          */
         bool intelligentSimplify();
 
         /**
-         * Reduces this presentation using the Dehn algorithm for hyperbolic 
-         * groups, i.e. small cancellation theory.   This means we look to see 
-         * if part of one relator can be used to simplify others.  If so, 
-         * make the substitution and simplify.  We continue until no more 
-         * presentation-shortening substitutions are available.  We follow that
-         *  by killing any available generators using words where generators
-         * appear a single time. 
+         * Attempts to simplify the group presentation as intelligently
+         * as possible without further input.
          *
-         * @param must be a null pointer, the algorithm initializes the pointer
-         *  and reductionMap. This means the user is responsible for 
-         *  de-allocating reductionMap whenever they're done with it. 
+         * The current simplification method is based on the Dehn algorithm
+         * for hyperbolic groups, i.e. small cancellation theory.   This means
+         * we look to see if part of one relator can be used to simplify
+         * others.  If so, make the substitution and simplify.  We continue
+         * until no more presentation-shortening substitutions are available.
+         * We follow that by killing any available generators using words
+         * where generators appear a single time.
          *
-         * @return \c true if and only if the presentation was changed. 
-         * 
-         * \todo \optlong This routine could use some small tweaks -- 
-         *   recognition of utility of some score==0 moves, such as 
-         *   commutators, for example. 
+         * \todo \optlong This routine could use some small tweaks --
+         * recognition of utility of some score==0 moves, such as
+         * commutators, for example.
+         *
+         * @return a newly allocated homomorphism describing the
+         * reduction map from the original presentation to the new
+         * presentation, or a null pointer if this presentation was not
+         * changed.
          */
-        bool intelligentSimplify(NHomGroupPresentation*& reductionMap);
+        std::auto_ptr<NHomGroupPresentation> intelligentSimplifyDetail();
 
         /**
-         * Given a presentation <g_i | r_i> this routine appends consequences
-         * of the relators {r_i} to the presentation that are of the form 
-         * ab where both a and b are cyclic permutations of relators from 
-         * the collection {r_i}.  This is useful when attempting to simplify
-         * presentations but when small cancellation theory can't find the 
-         * simplest relators. depth=1 means it will only form products of two
-         * relators.  Depth==2 means products of three, etc.  Depth==4 is 
-         * typically the last depth after where the exponential growth of
-         * the operation isn't out of hand.  It also conveniently trivializes
-         * all the complicated trivial group presentations that we've come 
-         * across so far. 
+         * A routine that attempts to simplify presentations, which can
+         * help when small cancellation theory can't find the simplest
+         * relators.
+         *
+         * Given a presentation &lt;g_i | r_i&rt;, this routine appends
+         * consequences of the relators {r_i} to the presentation that
+         * are of the form ab, where both a and b are cyclic permutations
+         * of relators from the collection {r_i}.
+         *
+         * Passing depth=1 means it will only form products of two
+         * relators.  Depth=2 means products of three, etc.  Depth=4 is
+         * typically the last depth before the exponential growth of
+         * the operation grows out of hand.  It also conveniently trivializes
+         * all the complicated trivial group presentations that we've come
+         * across so far.
          *
          * \warning Do not call this routine with depth n before having called
-         *  it at depth n-1 first.  Depth=0 is invalid, depth==1 should be your
-         *  first call to this routine.  This routine gobbles-up an esponential
-         *  amount of memory (exponential in your presentation size times n). 
-         *  So do be careful when using it. 
+         * it at depth n-1 first.  Depth=0 is invalid, and depth=1 should be
+         * your first call to this routine.  This routine gobbles up an
+         * exponential amount of memory (exponential in your presentation
+         * size times n).  So do be careful when using it.
+         *
+         * @param depth controls the depth of the proliferation, as
+         * described above; this must be strictly positive.
          */
         void proliferateRelators(unsigned long depth=1);
 
         /**
          * Attempts to recognise the group corresponding to this
          * presentation.  This routine is much more likely to be
-         * successful if you have already whecalled intelligentSimplify().
+         * successful if you have already called intelligentSimplify().
          *
          * Note that the presentation might be simplified a little
          * during the execution of this routine, although not nearly as
@@ -674,16 +700,18 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          *
          * Currently, if successful the only groups this routine
          * recognises is the trivial group, cyclic groups, free groups,
-         * and the free abelian group of rank two. 
+         * and the free abelian group of rank two.
+         *
+         * Return strings have the form "0" for the trivial
+         * group, "Z_n" for cyclic groups with n > 1, "Free(n generators)"
+         * for free groups with n>1, and "Z" and "Z + Z (abelian)"
+         * are the only two free abelian groups supported at present.
          *
          * \todo \featurelong Make this recognition more effective.
          *
          * @return a simple string representation of the group if it is
          * recognised, or an empty string if the group is not
-         * recognised.  Return strings have the form "0" for the trivial 
-         * group, "Z_n" for cyclic groups with n > 1, "Free(n generators)" 
-         * for free groups with n>1, "Z" and "Z + Z (abelian)"
-         * are the only two free abelian groups supported at present. 
+         * recognised.
          */
         std::string recogniseGroup() const;
 
@@ -697,49 +725,50 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         void writeXMLData(std::ostream& out) const;
 
         /**
-         * The sum of the wordLength()s of the relators.  Used as a coarse 
-         * measure of the complexity of the presentation.
+         * The sum of the word lengths of the relators.
+         * Word lengths are computing using NGroupExpression::wordLength().
+         * Used as a coarse measure of the complexity of the presentation.
+         *
+         * @return the sum of word lengths.
          */
         unsigned long relatorLength() const;
 
         /**
-         * Computes the abelianization of this group. 
-         * @return a pointer to the abelianization. 
+         * Computes the abelianisation of this group.
+         *
+         * @return a newly allocated abelianisation of this group.
          */
-        std::auto_ptr<NAbelianGroup> unMarkedAbelianization() const;
+        std::auto_ptr<NAbelianGroup> abelianisation() const;
 
         /**
-         * Computes the abelianization of this group. 
+         * Computes the abelianisation of this group.
          * The coordinates in the chain complex correspond
-         * to the generators and relators for this group. 
+         * to the generators and relators for this group.
          *
-         * @return a pointer to the abelianization. 
+         * @return a newly allocated abelianisation of this group.
          */
-        std::auto_ptr<NMarkedAbelianGroup> markedAbelianization() const;
+        std::auto_ptr<NMarkedAbelianGroup> markedAbelianisation() const;
 
         /**
-         * Writes a single string description of the group presentation. 
-         * Provided the group has 26 or fewer generators, will use the regular 
-         * lower-case ASCII alphabet to describe words, such as ab^2c^-1, etc. 
+         * Writes a single string description of the group presentation.
+         * Provided the group has 26 or fewer generators, will use the regular
+         * lower-case ASCII alphabet to describe words, such as ab^2c^-1, etc.
          *
-         * @return a std::string describing the presentation, in form
-         *  < generators | relators >
+         * The string will be written in the form
+         * &lt; generators | relators &gt;.
+         *
+         * @return a std::string describing the presentation.
          */
         std::string toString() const;
 
         /**
-         * Writes a single string description of the group presentation. No 
-         * endlines. In TeX 
+         * Writes a single string description of the group presentation. No
+         * endlines. In TeX
          *
-         * @return a std::string describing the presentation, 
+         * @return a std::string describing the presentation,
          *  < generators | relators >
          */
-        std::string TeXOutput() const;
-
-        /**
-         * Assignment operator.
-         */
-        void operator=(const NGroupPresentation& copyMe);
+        std::string toTeX() const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
@@ -807,11 +836,11 @@ inline unsigned long NGroupExpression::getNumberOfTerms() const {
 }
 
 inline unsigned long NGroupExpression::wordLength() const {
-    unsigned long retval(0); 
-    std::list<NGroupExpressionTerm>::const_iterator it; 
+    unsigned long retval(0);
+    std::list<NGroupExpressionTerm>::const_iterator it;
     for (it = terms.begin(); it!=terms.end(); it++)
         retval += labs((*it).exponent);
-    return retval; 
+    return retval;
 }
 
 inline unsigned long NGroupExpression::getGenerator(unsigned long index)
@@ -888,6 +917,9 @@ inline unsigned long NGroupPresentation::relatorLength() const {
     return retval;
 }
 
+inline bool NGroupPresentation::intelligentSimplify() {
+    return intelligentSimplifyDetail().get();
+}
 
 } // namespace regina
 

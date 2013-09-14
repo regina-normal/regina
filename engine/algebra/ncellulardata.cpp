@@ -1021,7 +1021,7 @@ const NMatrixRing< NSVPolynomialRing< NLargeInteger > >*
   NCellularData::ccMapType thisCC( *q->second ); 
   // fundamental group and its abelianization. 
   const NGroupPresentation* pi1( groupPresentation( GroupPresLocator( whole_manifold, 0 ) ) );
-  std::auto_ptr<NMarkedAbelianGroup> pi1Ab( pi1->markedAbelianization() );
+  std::auto_ptr<NMarkedAbelianGroup> pi1Ab( pi1->markedAbelianisation() );
   // We adapt the chain complex because of the reduced number of 0 and 1-cells, 
   // since we're using a maximal tree in dual 1-skeleton to reduce the cell structure. 
   // this is an ad-hoc solution since we don't have good algorithms implemented to compute

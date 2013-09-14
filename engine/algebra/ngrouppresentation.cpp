@@ -273,7 +273,7 @@ std::string NGroupPresentation::recogniseGroup() const {
 }
 
 
-std::auto_ptr<NAbelianGroup> NGroupPresentation::unMarkedAbelianization() const
+std::auto_ptr<NAbelianGroup> NGroupPresentation::abelianisation() const
 {
  // create presentation matrices to pass to NAbelianGroup(M, N)
  NMatrixInt M(1, getNumberOfGenerators() ); // zero matrix
@@ -288,7 +288,7 @@ std::auto_ptr<NAbelianGroup> NGroupPresentation::unMarkedAbelianization() const
  return std::auto_ptr<NAbelianGroup>(new NAbelianGroup(M,N));
 }
 
-std::auto_ptr<NMarkedAbelianGroup> NGroupPresentation::markedAbelianization() 
+std::auto_ptr<NMarkedAbelianGroup> NGroupPresentation::markedAbelianisation() 
 const {
  // create presentation matrices to pass to NMarkedAbelianGroup(M, N)
  NMatrixInt M(1, getNumberOfGenerators() ); // zero matrix
@@ -530,17 +530,8 @@ void NGroupExpression::cycleLeft()
 }
 
 
-// this is a wrapper for the "real" intelligentSimplify() routine, 
-//  one that throws out the map that it produces. 
-bool NGroupPresentation::intelligentSimplify() {
- NHomGroupPresentation* reductionMap(NULL);
- bool changed( intelligentSimplify(reductionMap) );
- delete reductionMap;
- return changed;
-}
-
-bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*& 
-    reductionMap) {
+std::auto_ptr<NHomGroupPresentation>
+        NGroupPresentation::intelligentSimplifyDetail() {
  bool didSomething(false);
  // start by taking a copy of *this group, for construction of reductionMap
  NGroupPresentation oldGroup( *this );
@@ -731,21 +722,23 @@ bool NGroupPresentation::intelligentSimplify(NHomGroupPresentation*&
  for (it = relatorList.begin(); it != relatorList.end(); it++) 
   { relations.push_back( (*it) ); }
 
- NGroupPresentation newGroup( *this );
- reductionMap = new NHomGroupPresentation( oldGroup, newGroup, 
-                    substitutionTable );
- // now we can initialize reductionMap 
-
- return didSomething;
+ if (didSomething) {
+   // now we can initialize reductionMap 
+   return std::auto_ptr<NHomGroupPresentation>(new NHomGroupPresentation(
+    oldGroup, *this, substitutionTable));
+ } else
+   return std::auto_ptr<NHomGroupPresentation>();
 }// end dehnAlgorithm()
 
-void NGroupPresentation::operator=(const NGroupPresentation& copyMe)
-{
- nGenerators = copyMe.nGenerators; 
- for (unsigned long i=0; i<relations.size(); i++) delete relations[i];
- relations.resize(copyMe.relations.size());
- for (unsigned long i=0; i<relations.size(); i++)
-  relations[i] = new NGroupExpression( *copyMe.relations[i] );
+NGroupPresentation& NGroupPresentation::operator=(
+        const NGroupPresentation& copyMe) {
+    nGenerators = copyMe.nGenerators; 
+    for (unsigned long i=0; i<relations.size(); i++)
+        delete relations[i];
+    relations.resize(copyMe.relations.size());
+    for (unsigned long i=0; i<relations.size(); i++)
+        relations[i] = new NGroupExpression( *copyMe.relations[i] );
+    return *this;
 }
 
 ////////////////// ALL INPUT / OUTPUT routines below //////////////////////
@@ -795,7 +788,7 @@ std::string NGroupExpression::toString(bool shortword) const
     return retval;
 }
 
-std::string NGroupExpression::TeXOutput() const {
+std::string NGroupExpression::toTeX() const {
     std::string retval;
     if (terms.empty())
         retval.append("e");
@@ -852,7 +845,7 @@ std::string NGroupPresentation::toString() const {
 	return retval;
 }
 
-std::string NGroupPresentation::TeXOutput() const {
+std::string NGroupPresentation::toTeX() const {
 	std::string retval;
 	retval.append("\\langle ");
         if (nGenerators == 0) retval.append("\\cdot");
@@ -867,7 +860,7 @@ std::string NGroupPresentation::TeXOutput() const {
 	else for (RelIteratorConst it = relations.begin(); 
                 it != relations.end(); it++) {
             if (it != relations.begin()) retval.append(", ");
-            retval.append( (*it)->TeXOutput() ); }
+            retval.append( (*it)->toTeX() ); }
         retval.append(" \\rangle");
 	return retval;
 }

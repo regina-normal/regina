@@ -124,7 +124,7 @@ void addNGroupPresentation() {
         .def("intelligentSimplify", intelligentSimplify_void)
         .def("recogniseGroup", &NGroupPresentation::recogniseGroup)
         .def("toString", &NGroupPresentation::toString)
-        .def("TeXOutput", &NGroupPresentation::TeXOutput)
+        .def("toTeX", &NGroupPresentation::toTeX)
     ;
 }
 

@@ -193,8 +193,16 @@ Version 4.94  [ 24 September, 2013 ]
             - New template base class that contains dimension-agnostic
               code for representing isomorphisms between triangulations.
         Class NGroupExpression:
-            - New routines wordLength(), erase(), cycleLeft(),
-              cycleRight(), invert().
+            - New routines wordLength(), erase(), cycleLeft(), cycleRight(),
+              invert().
+        Class NGroupPresentation:
+            - Finally intelligentSimplify() really is intelligent.  It
+              now uses Dehn simplification / small cancellation theory.
+            - New routine intelligentSimplify(NHomGroupPresentation*)
+              for keeping track of how the group was simplified.
+            - New routines relatorLength(), abelianlisation(),
+              markedAbelianisation(),toString(), toTeX().
+            - New assignment operator (=).
         Class NHilbertCD:
             - The NProgressMessage* argument to enumerateHilbertBasis()
               has been removed, since in reality the current algorithm offers

@@ -94,6 +94,14 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
                 const std::vector<NGroupExpression> &map);
 
         /**
+         * Creates a new identity homomorphism for the given group.
+         *
+         * @param groupForIdentity both the range and domain of the
+         * new identity homomorphism.
+         */
+        NHomGroupPresentation(const NGroupPresentation& groupForIdentity);
+
+        /**
          * Creates a clone of the given group presentation.
          *
          * @param cloneMe the presentation to clone.
