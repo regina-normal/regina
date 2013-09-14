@@ -597,7 +597,7 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * help when small cancellation theory can't find the simplest
          * relators.
          *
-         * Given a presentation &lt;g_i | r_i&rt;, this routine appends
+         * Given a presentation &lt;g_i | r_i&gt;, this routine appends
          * consequences of the relators {r_i} to the presentation that
          * are of the form ab, where both a and b are cyclic permutations
          * of relators from the collection {r_i}.

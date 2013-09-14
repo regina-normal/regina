@@ -440,7 +440,7 @@ class NGenericGluingPerms {
 
 template <int dim>
 inline NGenericGluingPerms<dim>::NGenericGluingPerms(
-        const typename NGenericGluingPerms<dim>::FacetPairing* pairing) :
+        const FacetPairing* pairing) :
         pairing_(pairing),
         permIndices_(new int[pairing->size() * (dim + 1)]),
         inputError_(false) {

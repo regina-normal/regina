@@ -89,10 +89,19 @@ template <int dim>
 class NGenericFacetPairing : public NThread {
     public:
         typedef typename DimTraits<dim>::FacetPairing FacetPairing;
+            /**< The facet pairing class specific to this dimension.
+                 This is typically a subclass of NGenericFacetPairing<dim>. */
         typedef typename DimTraits<dim>::Isomorphism Isomorphism;
+            /**< The isomorphism class used for triangulations in
+                 this dimension. */
         typedef typename DimTraits<dim>::Perm Perm;
+            /**< The permutation class used to glue together facets of
+                 simplices when building triangulations in this dimension. */
         typedef typename DimTraits<dim>::Simplex Simplex;
+            /**< The class that represents a top-level simplex of a
+                 triangulation in this dimension. */
         typedef typename DimTraits<dim>::Triangulation Triangulation;
+            /**< The triangulation class specific to this dimension. */
 
         /**
          * A list of isomorphisms on pairwise matchings of simplex facets.

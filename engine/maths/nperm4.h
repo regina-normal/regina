@@ -107,9 +107,8 @@ class REGINA_API NPerm4 {
 
         /**
          * A dimension-agnostic alias for NPerm4::S4.  In general, for
-         * each \a K the class NPerm<i>K</i> will define an alias \a Sn
-         * that references the list of all permutations
-         * NPerm<i>K</i>::S<i>K</i>.
+         * each \a K the class NPermK will define an alias \a Sn
+         * that references the list of all permutations NPermK::SK.
          */
         static const NPerm4* Sn;
 
@@ -147,9 +146,8 @@ class REGINA_API NPerm4 {
 
         /**
          * A dimension-agnostic alias for NPerm4::S3.  In general, for
-         * each \a K the class NPerm<i>K</i> will define an alias \a Sn_1
-         * that references the list of all permutations
-         * NPerm<i>K</i>::S<i>(K-1)</i>.
+         * each \a K the class NPermK will define an alias \a Sn_1
+         * that references the list of all permutations NPermK::S(K-1).
          */
         static const NPerm4* Sn_1;
 

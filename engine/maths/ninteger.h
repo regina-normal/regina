@@ -88,6 +88,10 @@ class NNativeInteger;
 template <bool supportInfinity>
 struct InfinityBase;
 
+/**
+ * An internal base class inherited by NLargeInteger, which provides
+ * support for infinity as an allowed value.
+ */
 template <>
 struct InfinityBase<true> {
     bool infinite_;
@@ -100,6 +104,10 @@ struct InfinityBase<true> {
     }
 };
 
+/**
+ * An empty internal base class inherited by NInteger, which does not
+ * support infinity as an allowed value.
+ */
 template <>
 struct InfinityBase<false> {
 };
@@ -1436,7 +1444,7 @@ typedef NIntegerBase<false> NInteger;
  * Writes the given integer to the given output stream.
  *
  * @param out the output stream to which to write.
- * @param large the integer to write.
+ * @param i the integer to write.
  * @return a reference to \a out.
  */
 template <bool supportInfinity>

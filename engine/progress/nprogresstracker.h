@@ -218,7 +218,7 @@ class REGINA_API NProgressTracker {
          *
          * This is typically called by the writing thread.
          *
-         * @param a human-readable description of the new stage.
+         * @param desc a human-readable description of the new stage.
          * Typically this begins with a capital and does not include a
          * final period (full stop).
          * @param weight the relative weight of this stage as a fraction

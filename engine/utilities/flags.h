@@ -155,7 +155,7 @@ class Flags {
          * Determines whether this set is precisely equal to the given flag.
          *
          * @param rhs the flag to test this against.
-         * @param \c true if and only if this and the given flag are identical.
+         * @return \c true if and only if this and the given flag are identical.
          */
         inline bool operator == (T rhs) const {
             return (value_ == rhs);
@@ -166,7 +166,7 @@ class Flags {
          * flag set.
          *
          * @param rhs the flag set to test this against.
-         * @param \c true if and only if this and the given flag set are
+         * @return \c true if and only if this and the given flag set are
          * identical.
          */
         inline bool operator == (const Flags<T>& rhs) const {
@@ -177,7 +177,7 @@ class Flags {
          * Determines whether this set is not equal to the given flag.
          *
          * @param rhs the flag to test this against.
-         * @param \c true if and only if this and the given flag are not
+         * @return \c true if and only if this and the given flag are not
          * identical.
          */
         inline bool operator != (T rhs) const {
@@ -188,7 +188,7 @@ class Flags {
          * Determines whether this set is not equal to the given flag set.
          *
          * @param rhs the flag to test this against.
-         * @param \c true if and only if this and the given flag set are not
+         * @return \c true if and only if this and the given flag set are not
          * identical.
          */
         inline bool operator != (const Flags<T>& rhs) const {

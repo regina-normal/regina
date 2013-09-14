@@ -102,6 +102,12 @@ class REGINA_API NRay : public NVector<NLargeInteger> {
          */
         void scaleDown();
 
+        /**
+         * Negates every element of this vector.
+         *
+         * This is an optimised implementation that overrides
+         * NVector<NLargeInteger>::negate().
+         */
         inline void negate();
 };
 
