@@ -46,8 +46,8 @@
 #include <vector>
 #include <set>
 #include "regina-core.h"
-#include "utilities/memutils.h"
 #include "shareableobject.h"
+#include "utilities/memutils.h"
 #include "utilities/ptrutils.h"
 
 namespace regina {

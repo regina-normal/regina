@@ -1,7 +1,7 @@
 # algebra
 
 # Files to compile
-SET ( FILES nabeliangroup ngrouppresentation nmarkedabeliangroup pyalgebra ncellulardata)
+SET ( FILES nabeliangroup ngrouppresentation nhomgrouppresentation nmarkedabeliangroup pyalgebra ncellulardata)
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

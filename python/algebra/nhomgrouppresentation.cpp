@@ -32,17 +32,36 @@
 
 /* end stub */
 
-void addNAbelianGroup();
-void addNGroupPresentation();
-void addNHomGroupPresentation();
-void addNMarkedAbelianGroup();
-void addNCellularData();
+#include <boost/python.hpp>
+#include "algebra/nabeliangroup.h"
+#include "algebra/ngrouppresentation.h"
+#include "algebra/nhomgrouppresentation.h"
 
-void addAlgebra() {
-    addNAbelianGroup();
-    addNGroupPresentation();
-    addNHomGroupPresentation();
-    addNMarkedAbelianGroup();
-//    addNCellularData();
+using namespace boost::python;
+using regina::NGroupExpression;
+using regina::NGroupPresentation;
+using regina::NHomGroupPresentation;
+
+namespace {
+    NGroupExpression (NHomGroupPresentation::*evaluate_ulong)(
+        unsigned long) const = &NHomGroupPresentation::evaluate;
+    NGroupExpression (NHomGroupPresentation::*evaluate_exp)(
+        const NGroupExpression&) const = &NHomGroupPresentation::evaluate;
+}
+
+void addNHomGroupPresentation() {
+    class_<NHomGroupPresentation, bases<regina::ShareableObject>,
+            std::auto_ptr<NHomGroupPresentation>, boost::noncopyable>
+            ("NHomGroupPresentation", init<const NHomGroupPresentation&>())
+        .def(init<const NGroupPresentation&>())
+        .def("getDomain", &NHomGroupPresentation::getDomain,
+            return_internal_reference<>())
+        .def("getRange", &NHomGroupPresentation::getRange,
+            return_internal_reference<>())
+        .def("evaluate", evaluate_exp)
+        .def("evaluate", evaluate_ulong)
+        .def("intelligentSimplify",
+            &NHomGroupPresentation::intelligentSimplify)
+    ;
 }
 

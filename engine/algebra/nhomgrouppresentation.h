@@ -41,18 +41,12 @@
 #define __NHOMGROUPPRESENTATION_H
 #endif
 
-#include <algorithm>
-#include <list>
-#include <memory>
 #include <vector>
 #include "regina-core.h"
-#include "utilities/memutils.h"
-#include "algebra/ngrouppresentation.h"
 #include "shareableobject.h"
 
 namespace regina {
 
-class NFile;
 class NGroupPresentation;
 
 /**
@@ -88,6 +82,8 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
          * of generators of the domain, and where this homomorphism
          * sends the <i>i</i>th generator of the domain to the
          * element <tt>map[i]</tt> of the range.
+         *
+         * \ifacespython Not present.
          */
         NHomGroupPresentation(const NGroupPresentation &domain,
                 const NGroupPresentation &range,
