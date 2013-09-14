@@ -63,60 +63,34 @@ struct IntOfSize {
     typedef void type;
 };
 
-/**
- * An instantiation of IntOfSize that gives access to 8-bit integers.
- *
- * See the generic IntOfSize template notes for further details.
- */
+#ifndef __DOXYGEN
 template <>
 struct IntOfSize<1> {
     typedef __int8_t type;
 };
 
-/**
- * An instantiation of IntOfSize that gives access to 16-bit integers.
- *
- * See the generic IntOfSize template notes for further details.
- */
 template <>
 struct IntOfSize<2> {
     typedef __int16_t type;
 };
 
-/**
- * An instantiation of IntOfSize that gives access to 32-bit integers.
- *
- * See the generic IntOfSize template notes for further details.
- */
 template <>
 struct IntOfSize<4> {
     typedef __int32_t type;
 };
 
-/**
- * An instantiation of IntOfSize that gives access to 64-bit integers.
- *
- * See the generic IntOfSize template notes for further details.
- */
 template <>
 struct IntOfSize<8> {
     typedef __int64_t type;
 };
 
 #ifdef INT128_FOUND
-/**
- * An instantiation of IntOfSize that gives access to 128-bit integers.
- *
- * This is only available on systems that support the __int128_t type.
- * On other systems, IntOfSize<16>::type is defined as \c void.
- *
- * See the generic IntOfSize template notes for further details.
- */
 template <>
 struct IntOfSize<16> {
     typedef __int128_t type;
 };
-#endif
+#endif // INT128_FOUND
+#endif // __DOXYGEN
 
 } // namespace regina
 

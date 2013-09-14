@@ -117,6 +117,8 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
          * The reference returned will remain valid for as long as this
          * component object exists, always reflecting the triangles currently 
          * in the component.
+         *
+         * \ifacespython This routine returns a python list.
          */
         const std::vector<Dim2Triangle*>& getTriangles() const;
 
@@ -126,6 +128,8 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
          * The reference returned will remain valid for as long as this
          * component object exists, always reflecting the edges currently 
          * in the component.
+         *
+         * \ifacespython This routine returns a python list.
          */
         const std::vector<Dim2Edge*>& getEdges() const;
 
@@ -135,6 +139,8 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
          * The reference returned will remain valid for as long as this
          * component object exists, always reflecting the vertices currently 
          * in the component.
+         *
+         * \ifacespython This routine returns a python list.
          */
         const std::vector<Dim2Vertex*>& getVertices() const;
 

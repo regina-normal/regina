@@ -152,6 +152,7 @@ void addNNormalSurfaceList() {
             std::auto_ptr<NNormalSurfaceList>, boost::noncopyable>
             ("NNormalSurfaceList", no_init)
         .def("getFlavour", &NNormalSurfaceList::getFlavour)
+        .def("flavour", &NNormalSurfaceList::flavour)
         .def("which", &NNormalSurfaceList::which)
         .def("algorithm", &NNormalSurfaceList::algorithm)
         .def("allowsAlmostNormal", &NNormalSurfaceList::allowsAlmostNormal)

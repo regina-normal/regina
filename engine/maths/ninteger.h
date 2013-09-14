@@ -88,6 +88,7 @@ class NNativeInteger;
 template <bool supportInfinity>
 struct InfinityBase;
 
+#ifndef __DOXYGEN
 /**
  * An internal base class inherited by NLargeInteger, which provides
  * support for infinity as an allowed value.
@@ -111,6 +112,7 @@ struct InfinityBase<true> {
 template <>
 struct InfinityBase<false> {
 };
+#endif // __DOXYGEN
 
 /**
  * Represents an arbitrary precision integer.
@@ -250,6 +252,8 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          * but not \a bytes=12.  This restriction is enforced through a
          * compile-time assertion, but may be lifted in future versions
          * of Regina.
+         *
+         * \ifacespython Not present.
          *
          * @param value the new value of this integer.
          */
