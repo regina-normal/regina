@@ -39,6 +39,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
+#include "census/ncensus.h"
 #include "maths/approx.h"
 #include "maths/numbertheory.h"
 #include "packet/ncontainer.h"
@@ -73,6 +74,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(homologyH1);
     CPPUNIT_TEST(homologyH1Bdry);
     CPPUNIT_TEST(fundGroup);
+    CPPUNIT_TEST(fundGroupVsH1);
     CPPUNIT_TEST(zeroEfficiency);
     CPPUNIT_TEST(turaevViro);
     CPPUNIT_TEST(doubleCover);
@@ -1511,6 +1513,76 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Boundary H1(tri with projective plane cusps)", 0, 2, 2);
             verifyGroup(cuspedGenusTwoTorus.getHomologyH1Bdry(),
                 "Boundary H1(cusped solid genus two torus)", 4);
+        }
+
+        static bool verifyFundGroupVsH1(NTriangulation* tri, void* arg = 0) {
+            NGroupPresentation* pi1 =
+                new NGroupPresentation(tri->getFundamentalGroup());
+
+            pi1->intelligentSimplify();
+
+            // Abelianise, and make sure we get H1.
+            size_t gen = pi1->getNumberOfGenerators();
+            size_t rel = pi1->getNumberOfRelations();
+
+            regina::NMatrixInt m(rel, gen);
+            size_t i, j;
+            for (i = 0; i < rel; ++i) {
+                const regina::NGroupExpression& r = pi1->getRelation(i);
+                for (j = 0; j < r.getNumberOfTerms(); ++j) {
+                    const regina::NGroupExpressionTerm& t = r.getTerm(j);
+                    m.entry(i, t.generator) += t.exponent;
+                }
+            }
+            delete pi1;
+
+            NAbelianGroup abelian;
+            abelian.addGroup(m);
+
+            if (abelian.toStringLong() != tri->getHomologyH1().toStringLong()) {
+                std::ostringstream msg;
+                msg << "Abelianised fundamental group does not match H1 "
+                    "for " << tri->isoSig() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            return false;
+        }
+
+        void fundGroupVsH1() {
+            verifyFundGroupVsH1(&empty);
+            verifyFundGroupVsH1(&singleTet);
+            verifyFundGroupVsH1(&s3);
+            verifyFundGroupVsH1(&s2xs1);
+            verifyFundGroupVsH1(&rp3_1);
+            verifyFundGroupVsH1(&rp3_2);
+            verifyFundGroupVsH1(&lens3_1);
+            verifyFundGroupVsH1(&lens7_1_loop);
+            verifyFundGroupVsH1(&lens8_3);
+            verifyFundGroupVsH1(&lens8_3_large);
+            verifyFundGroupVsH1(&rp3rp3);
+            verifyFundGroupVsH1(&q28);
+            verifyFundGroupVsH1(&weberSeifert);
+            verifyFundGroupVsH1(&q32xz3);
+            verifyFundGroupVsH1(&lens100_1);
+            verifyFundGroupVsH1(&ball_large);
+            verifyFundGroupVsH1(&ball_large_pillows);
+            verifyFundGroupVsH1(&ball_large_snapped);
+            verifyFundGroupVsH1(&lst3_4_7);
+            verifyFundGroupVsH1(&figure8);
+            verifyFundGroupVsH1(&rp2xs1);
+            verifyFundGroupVsH1(&solidKB);
+            verifyFundGroupVsH1(&gieseking);
+            verifyFundGroupVsH1(&twoProjPlaneCusps);
+            verifyFundGroupVsH1(&cuspedGenusTwoTorus);
+
+            regina::NContainer parent;
+            regina::NCensus::formCensus(&parent, 3,
+                regina::NBoolSet::sBoth /* finite */,
+                regina::NBoolSet::sBoth /* orientable */,
+                regina::NBoolSet::sFalse /* bounded */,
+                -1 /* bdry faces */, 0 /* purge */,
+                verifyFundGroupVsH1, 0);
         }
 
         void verifyFundGroup(const NGroupPresentation& g,
