@@ -128,6 +128,8 @@ inline REGINA_API bool isBase64(char ch) {
  *
  * \ifacespython Not present.
  *
+ * \testpart
+ *
  * @param in the sequence of input bytes; this does not need to be
  * terminated in any special way.
  * @param inlen the length of the input sequence.
@@ -153,6 +155,8 @@ REGINA_API void base64Encode(const char* in, size_t inlen, char* out,
  * will overflow a \c size_t), the \a out pointer will be set to \c null.
  *
  * \ifacespython Not present.
+ *
+ * \testpart
  *
  * @param in the sequence of input bytes; this does not need to be
  * terminated in any special way.
@@ -185,6 +189,8 @@ REGINA_API size_t base64Encode(const char* in, size_t inlen, char** out);
  * array is not terminated in any special way.
  *
  * \ifacespython Not present.
+ *
+ * \testpart
  *
  * @param in the input sequence of base64 characters; this does not need
  * to be terminated in any special way.
@@ -225,6 +231,8 @@ REGINA_API bool base64Decode(const char* in, size_t inlen, char* out,
  * that the output array is not terminated in any special way.
  *
  * \ifacespython Not present.
+ *
+ * \testpart
  *
  * @param in the input sequence of base64 characters; this does not need
  * to be terminated in any special way.
