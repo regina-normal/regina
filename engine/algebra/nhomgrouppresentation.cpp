@@ -42,6 +42,16 @@
 
 namespace regina {
 
+NHomGroupPresentation::NHomGroupPresentation(
+            const NGroupPresentation& groupForIdentity) :
+        domain_(groupForIdentity), range_(groupForIdentity),
+        map_(groupForIdentity.getNumberOfGenerators()) {
+    for (unsigned long i=0; i<map_.size(); i++) {
+        map_[i] = new NGroupExpression();
+        map_[i]->addTermFirst(i, 1);
+    }
+}
+
 NGroupExpression NHomGroupPresentation::evaluate(
                         const NGroupExpression &arg) const
  { // evaluate at arg
@@ -99,25 +109,31 @@ void NHomGroupPresentation::writeTextLong(std::ostream& out) const
 //  range or the presentation is made.
 bool NHomGroupPresentation::intelligentSimplify()
 {
- bool didSomething(false);
-
  // step 1: simplify presentation of range. 
  //         the strategy is to completely mimic 
  // NGroupPresentation::intelligentSimplify(), and change the map accordingly
- regina::NHomGroupPresentation* rangeMap(NULL);
- didSomething = range_.intelligentSimplify(rangeMap);
+ std::auto_ptr<regina::NHomGroupPresentation> rangeMap =
+    range_.intelligentSimplifyDetail();
 
  // step 2: simplify presentation of domain. 
  //         the strategy is to completely mimic 
  // NGroupPresentation::intelligentSimplify(), and change the map accordingly
- regina::NHomGroupPresentation* domainMap(NULL);
- bool temp(domain_.intelligentSimplify(domainMap));
- didSomething = didSomething || temp; 
-  // doesn't call intelligentSimplify if didSomething==true?
+ std::auto_ptr<regina::NHomGroupPresentation> domainMap =
+    domain_.intelligentSimplifyDetail();
+  // doesn't call intelligentSimplify if we changed something?
 
  // step 3: find a hacky inverse to domainMap
  //         by the way domainMap is constructed we know each gi 
  //         comes from some gk, so look them up. 
+
+ bool didSomething = rangeMap.get() || domainMap.get();
+
+ // Since we need to compose rangeMap and domainMap, build identity maps
+ // if either map is null.
+ if (! domainMap.get())
+    domainMap.reset(new NHomGroupPresentation(domain_));
+ if (! rangeMap.get())
+    rangeMap.reset(new NHomGroupPresentation(range_));
 
  std::vector< unsigned long > invDomainMap( domain_.getNumberOfGenerators() );
  for (unsigned long i=0; i<domainMap->getDomain().getNumberOfGenerators(); i++)
@@ -140,8 +156,6 @@ bool NHomGroupPresentation::intelligentSimplify()
    new NGroupExpression(newMap[i]);
 
  // step 5: done, clean-up
- delete rangeMap;
- delete domainMap;
  return didSomething;
 }
 
