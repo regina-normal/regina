@@ -632,11 +632,11 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
     const NMarkedAbelianGroup* ld(markedGroup(ldd));     
     const NMarkedAbelianGroup* rd(markedGroup(rdd));
     // now we build ldomain and rdomain
-    NMarkedAbelianGroup ldomain( ld->torsionSubgroup() ); // triv pres torsion subgroups
-    NMarkedAbelianGroup rdomain( rd->torsionSubgroup() ); // ...
+    std::auto_ptr<NMarkedAbelianGroup> ldomain = ld->torsionSubgroup(); // triv pres torsion subgroups
+    std::auto_ptr<NMarkedAbelianGroup> rdomain = rd->torsionSubgroup(); // ...
 
     NLargeInteger N(NLargeInteger::one);
-    if ( !ldomain.isTrivial() && !rdomain.isTrivial() ) 
+    if ( !ldomain->isTrivial() && !rdomain->isTrivial() ) 
       N=ld->getInvariantFactor( ld->getNumberOfInvariantFactors()-1 ).gcd(
 							     rd->getInvariantFactor( rd->getNumberOfInvariantFactors()-1 ) );
     NMarkedAbelianGroup range( 1, N ); // Z_N with triv pres 0 --> Z --N--> Z --> Z_N --> 0
@@ -725,7 +725,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
            if (sum != NLargeInteger::zero) intM.setEntry( x, sum );	  }
     } 
 
-     bfptr = new NBilinearForm( ldomain, rdomain, range, intM );
+     bfptr = new NBilinearForm( *ldomain, *rdomain, range, intM );
      std::map< FormLocator, NBilinearForm* > *fptr = 
       const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
      fptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
@@ -747,11 +747,14 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
       const NHomMarkedAbelianGroup* sc_sb(homGroup( HomLocator( sc, sb ) ) );
       const NHomMarkedAbelianGroup* sc_mc(homGroup( HomLocator( sc, mc ) ) );
       const NHomMarkedAbelianGroup* dc_mc(homGroup( HomLocator( dc, mc ) ) );
-      NMarkedAbelianGroup rtrivG( dc_mc->getDomain().torsionSubgroup() );
+      std::auto_ptr<NMarkedAbelianGroup> rtrivG(
+        dc_mc->getDomain().torsionSubgroup() );
       // trivially presented dual torsion subgroup 
-      NHomMarkedAbelianGroup rinc( dc_mc->getDomain().torsionInclusion() );
+      std::auto_ptr<NHomMarkedAbelianGroup> rinc(
+        dc_mc->getDomain().torsionInclusion() );
       // triv pres dual torsion inclusion     
-      NMarkedAbelianGroup ltrivG( sc_sb->getRange().torsionSubgroup() );
+      std::auto_ptr<NMarkedAbelianGroup> ltrivG(
+        sc_sb->getRange().torsionSubgroup() );
       // triv pres std torsion subgroup
 
       NMatrixInt lMap( sc_sb->getRange().getNumberOfInvariantFactors(), 
@@ -763,11 +766,11 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
          for (unsigned long i=0; i<lMap.rows(); i++)
           lMap.entry( i, j ) = jtor[i];
     	}
-      NHomMarkedAbelianGroup lproj( sc_sb->getRange(), ltrivG, lMap );
+      NHomMarkedAbelianGroup lproj( sc_sb->getRange(), *ltrivG, lMap );
       // map std-rel-bdry to std coord
 
       std::auto_ptr<NHomMarkedAbelianGroup> f(
-        lproj * *((*sc_sb) * *((*sc_mc->inverseHom()) * *((*dc_mc) * rinc )))); 
+        lproj * *((*sc_sb) * *((*sc_mc->inverseHom()) * *((*dc_mc) * (*rinc) )))); 
         // dual -> std_rel_bdry
       FormLocator prim(f_desc); prim.rdomain.hcs = STD_REL_BDRY_coord;
 
@@ -788,12 +791,12 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
       GroupLocator mc( f_desc.rdomain.dim, coVariant, MIX_coord,          f_desc.rdomain.cof );
       GroupLocator sc( f_desc.rdomain.dim, coVariant, STD_coord,          f_desc.rdomain.cof );
       GroupLocator sb( f_desc.rdomain.dim, coVariant, STD_REL_BDRY_coord, f_desc.rdomain.cof );
-      NHomMarkedAbelianGroup sc_sb(homGroup( HomLocator( sc, sb ) )->torsionSubgroup() ); 
-      NHomMarkedAbelianGroup sc_mc(homGroup( HomLocator( sc, mc ) )->torsionSubgroup() );
-      NHomMarkedAbelianGroup dc_mc(homGroup( HomLocator( dc, mc ) )->torsionSubgroup() );
-      std::auto_ptr<NHomMarkedAbelianGroup> fl( (*dc_mc.inverseHom())*sc_mc ); // STD -> DUAL
+      std::auto_ptr<NHomMarkedAbelianGroup> sc_sb(homGroup( HomLocator( sc, sb ) )->torsionSubgroup() ); 
+      std::auto_ptr<NHomMarkedAbelianGroup> sc_mc(homGroup( HomLocator( sc, mc ) )->torsionSubgroup() );
+      std::auto_ptr<NHomMarkedAbelianGroup> dc_mc(homGroup( HomLocator( dc, mc ) )->torsionSubgroup() );
+      std::auto_ptr<NHomMarkedAbelianGroup> fl( (*dc_mc->inverseHom())*(*sc_mc) ); // STD -> DUAL
       FormLocator prim(f_desc); prim.ldomain.hcs = DUAL_coord; prim.rdomain.hcs = STD_REL_BDRY_coord;
-      bfptr = new NBilinearForm( (bilinearForm(prim)->lCompose(*fl)).rCompose(sc_sb) ); 
+      bfptr = new NBilinearForm( (bilinearForm(prim)->lCompose(*fl)).rCompose(*sc_sb) ); 
 
       std::map< FormLocator, NBilinearForm* > *mbfptr = 
        const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
