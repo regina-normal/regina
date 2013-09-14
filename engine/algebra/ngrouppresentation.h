@@ -662,6 +662,34 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         std::auto_ptr<NHomGroupPresentation> intelligentSimplifyDetail();
 
         /**
+         * A routine that attempts to simplify presentations, which can
+         * help when small cancellation theory can't find the simplest
+         * relators.
+         *
+         * Given a presentation &lt;g_i | r_i&rt;, this routine appends
+         * consequences of the relators {r_i} to the presentation that
+         * are of the form ab, where both a and b are cyclic permutations
+         * of relators from the collection {r_i}.
+         *
+         * Passing depth=1 means it will only form products of two
+         * relators.  Depth=2 means products of three, etc.  Depth=4 is
+         * typically the last depth before the exponential growth of
+         * the operation grows out of hand.  It also conveniently trivializes
+         * all the complicated trivial group presentations that we've come
+         * across so far.
+         *
+         * \warning Do not call this routine with depth n before having called
+         * it at depth n-1 first.  Depth=0 is invalid, and depth=1 should be
+         * your first call to this routine.  This routine gobbles up an
+         * exponential amount of memory (exponential in your presentation
+         * size times n).  So do be careful when using it.
+         *
+         * @param depth controls the depth of the proliferation, as
+         * described above; this must be strictly positive.
+         */
+        void proliferateRelators(unsigned long depth=1);
+
+        /**
          * Attempts to recognise the group corresponding to this
          * presentation.  This routine is much more likely to be
          * successful if you have already called intelligentSimplify().
@@ -744,28 +772,6 @@ class REGINA_API NGroupPresentation : public ShareableObject {
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
-
-    private:
-        /**
-         * Given a presentation <g_i | r_i> this routine appends consequences
-         * of the relators {r_i} to the presentation that are of the form
-         * ab where both a and b are cyclic permutations of relators from
-         * the collection {r_i}.  This is useful when attempting to simplify
-         * presentations but when small cancellation theory can't find the
-         * simplest relators. depth=1 means it will only form products of two
-         * relators.  Depth==2 means products of three, etc.  Depth==4 is
-         * typically the last depth after where the exponential growth of
-         * the operation isn't out of hand.  It also conveniently trivializes
-         * all the complicated trivial group presentations that we've come
-         * across so far.
-         *
-         * \warning Do not call this routine with depth n before having called
-         *  it at depth n-1 first.  Depth=0 is invalid, depth==1 should be your
-         *  first call to this routine.  This routine gobbles-up an esponential
-         *  amount of memory (exponential in your presentation size times n).
-         *  So do be careful when using it.
-         */
-        void proliferateRelators(unsigned long depth=1);
 };
 
 /*@}*/
