@@ -880,13 +880,13 @@ class REGINA_API NMarkedAbelianGroup : public ShareableObject {
          *  Returns an NMarkedAbelianGroup representing the torsion subgroup
          *  of this group. 
          */
-        NMarkedAbelianGroup torsionSubgroup() const;
+        std::auto_ptr<NMarkedAbelianGroup> torsionSubgroup() const;
 
         /**
          *  Returns an NHomMarkedAbelianGroup representing the inclusion of the
          *  torsion subgroup into this group. 
          */
-        NHomMarkedAbelianGroup torsionInclusion() const;
+        std::auto_ptr<NHomMarkedAbelianGroup> torsionInclusion() const;
 };
 
 /**
@@ -1239,7 +1239,7 @@ class REGINA_API NHomMarkedAbelianGroup : public ShareableObject {
          *  Returns an NHomMarkedAbelianGroup representing the induced map
          *  on the torsion subgroups. 
          */
-        NHomMarkedAbelianGroup torsionSubgroup() const;
+        std::auto_ptr<NHomMarkedAbelianGroup> torsionSubgroup() const;
 
         /**
          * Writes a human-readable version of the reduced matrix to the

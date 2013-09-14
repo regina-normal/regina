@@ -650,26 +650,26 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::cycleProjection( unsigned long c
 
 
 // the trivially presented torsion subgroup
-NMarkedAbelianGroup NMarkedAbelianGroup::torsionSubgroup() const
-{
- NMatrixInt dM(1, getNumberOfInvariantFactors() );
- NMatrixInt dN(getNumberOfInvariantFactors(), getNumberOfInvariantFactors() );
- for (unsigned long i=0; i<getNumberOfInvariantFactors(); i++)
-  dN.entry(i,i) = getInvariantFactor(i);
- return NMarkedAbelianGroup( dM, dN ); 
+std::auto_ptr<NMarkedAbelianGroup> NMarkedAbelianGroup::torsionSubgroup()
+        const {
+    NMatrixInt dM(1, getNumberOfInvariantFactors() );
+    NMatrixInt dN(getNumberOfInvariantFactors(), getNumberOfInvariantFactors() );
+    for (unsigned long i=0; i<getNumberOfInvariantFactors(); i++)
+        dN.entry(i,i) = getInvariantFactor(i);
+    return std::auto_ptr<NMarkedAbelianGroup>(new NMarkedAbelianGroup(dM, dN));
 }
 
 // and its canonical inclusion map
-NHomMarkedAbelianGroup NMarkedAbelianGroup::torsionInclusion() const
-{
- NMatrixInt iM( getRankCC(), getNumberOfInvariantFactors() );
- for (unsigned long j=0; j<iM.columns(); j++)
-  {
-   std::vector<NLargeInteger> jtor( getTorsionRep(j) );
-   for (unsigned long i=0; i<iM.rows(); i++)
-    iM.entry(i,j) = jtor[i];
-  }
- return NHomMarkedAbelianGroup( torsionSubgroup(), (*this), iM); 
+std::auto_ptr<NHomMarkedAbelianGroup> NMarkedAbelianGroup::torsionInclusion()
+        const {
+    NMatrixInt iM( getRankCC(), getNumberOfInvariantFactors() );
+    for (unsigned long j=0; j<iM.columns(); j++) {
+        std::vector<NLargeInteger> jtor( getTorsionRep(j) );
+        for (unsigned long i=0; i<iM.rows(); i++)
+            iM.entry(i,j) = jtor[i];
+    }
+    return std::auto_ptr<NHomMarkedAbelianGroup>(new NHomMarkedAbelianGroup(
+        *torsionSubgroup(), (*this), iM));
 }
 
 
@@ -1009,21 +1009,23 @@ bool NHomMarkedAbelianGroup::isCycleMap() const
 
 //  Returns an NHomMarkedAbelianGroup representing the induced map
 //  on the torsion subgroups. 
-NHomMarkedAbelianGroup NHomMarkedAbelianGroup::torsionSubgroup() const
-{
- NMarkedAbelianGroup dom( domain.torsionSubgroup() );
- NMarkedAbelianGroup ran( range.torsionSubgroup() );
+std::auto_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::torsionSubgroup()
+        const {
+    std::auto_ptr<NMarkedAbelianGroup> dom = domain.torsionSubgroup();
+    std::auto_ptr<NMarkedAbelianGroup> ran = range.torsionSubgroup();
 
- NMatrixInt mat(range.getNumberOfInvariantFactors(), domain.getNumberOfInvariantFactors() );
- for (unsigned long j=0; j<domain.getNumberOfInvariantFactors(); j++)
-  {
-   // std::vector<NLargeInteger> in range's snfRep coords
-   std::vector<NLargeInteger> temp(range.snfRep(evalCC(domain.getTorsionRep(j)))); 
-   for (unsigned long i=0; i<range.getNumberOfInvariantFactors(); i++)
-    mat.entry(i,j) = temp[i];
-  }
+    NMatrixInt mat(range.getNumberOfInvariantFactors(),
+        domain.getNumberOfInvariantFactors() );
+    for (unsigned long j=0; j<domain.getNumberOfInvariantFactors(); j++) {
+        // std::vector<NLargeInteger> in range's snfRep coords
+        std::vector<NLargeInteger> temp(range.snfRep(evalCC(
+            domain.getTorsionRep(j)))); 
+        for (unsigned long i=0; i<range.getNumberOfInvariantFactors(); i++)
+            mat.entry(i,j) = temp[i];
+    }
 
- return NHomMarkedAbelianGroup( dom, ran, mat );
+    return std::auto_ptr<NHomMarkedAbelianGroup>(new NHomMarkedAbelianGroup(
+        *dom, *ran, mat));
 }
 
 
