@@ -764,48 +764,40 @@ void NGroupExpression::writeXMLData(std::ostream& out) const {
 
 // group expression output routines
 
-std::string NGroupExpression::toString(bool shortword) const
-{
-    std::string retval;
+void NGroupExpression::writeText(std::ostream& out, bool shortword) const {
     if (terms.empty())
-        retval.append("1");
+        out << '1';
     else {
-       std::list<NGroupExpressionTerm>::const_iterator i;
-        for (i = terms.begin(); i!=terms.end(); i++)
-         {
-          // a through z should be ASCII 97 through 122, these are 26
-          // lower case roman letters. 
-          std::stringstream genss; if (shortword) 
-           genss<<((char) (97+(*i).generator)); else genss<<(*i).generator;
-          std::stringstream expss; expss<<(*i).exponent; 
-          if (shortword) retval.append(genss.str()); else { retval.append("g_"); 
-            retval.append(genss.str());
-          retval.append(""); }
-          if ( (*i).exponent != 1 ) {
-           retval.append("^"); retval.append(expss.str()); }
-         }
+        std::list<NGroupExpressionTerm>::const_iterator i;
+        for (i = terms.begin(); i!=terms.end(); i++) {
+            if (shortword)
+                out << char('a' + i->generator);
+            else
+                out << "g_" << i->generator;
+
+            if ( i->exponent != 1 )
+                out << '^' << i->exponent;
+        }
     }
-    return retval;
 }
 
 std::string NGroupExpression::toTeX() const {
-    std::string retval;
+    std::ostringstream out;
+    writeTeX(out);
+    return out.str();
+}
+
+void NGroupExpression::writeTeX(std::ostream& out) const {
     if (terms.empty())
-        retval.append("e");
+        out << 'e';
     else {
-       std::list<NGroupExpressionTerm>::const_iterator i;
-        for (i = terms.begin(); i!=terms.end(); i++)
-         {
-          std::stringstream genss; genss<<(*i).generator;
-          std::stringstream expss; expss<<(*i).exponent; 
-          retval.append("g_{"); retval.append(genss.str());
-          retval.append("}"); 
-          if ( (*i).exponent != 1 ) {
-           retval.append("^{"); retval.append(expss.str());
-           retval.append("}"); }
-         }
+        std::list<NGroupExpressionTerm>::const_iterator i;
+        for (i = terms.begin(); i!=terms.end(); i++) {
+            out << "g_{" << i->generator << '}';
+            if ( i->exponent != 1 )
+                out << "^{" << i->exponent << '}';
+        }
     }
-    return retval;
 }
 
 void NGroupExpression::writeTextShort(std::ostream& out) const {
@@ -821,48 +813,31 @@ void NGroupExpression::writeTextShort(std::ostream& out) const {
 
 // presentation output routines below
 
-std::string NGroupPresentation::toString() const {
-	std::string retval;
-	retval.append("< ");
-        if (nGenerators == 0) { return("< >"); }
-         // a through z should be ASCII 97 through 122, these are 26
-         // lower case roman letters. 
-        if (nGenerators <= 26) { 
-          for (unsigned long i=0; i<nGenerators; i++) 
-           { retval.append(std::string(1, char(i+97))); retval.append(" "); }
-          }
-        else { retval.append("g0 .. g"); std::stringstream num;
-                 num<<(nGenerators - 1); retval.append(num.str()); }
-        std::stringstream temp;
-        if (relations.empty()) { retval.append(">"); return retval; }
-        retval.append(" | ");
-	for (RelIteratorConst it = relations.begin(); 
-                it != relations.end(); it++) { 
-            if (it != relations.begin()) temp<<", ";
-            temp<<(*it)->toString( (nGenerators <= 26) ? true : false ); }
-        retval.append(temp.str());
-        retval.append(" >");
-	return retval;
+std::string NGroupPresentation::toTeX() const {
+    std::ostringstream out;
+    writeTeX(out);
+    return out.str();
 }
 
-std::string NGroupPresentation::toTeX() const {
-	std::string retval;
-	retval.append("\\langle ");
-        if (nGenerators == 0) retval.append("\\cdot");
-        else if (nGenerators == 1) retval.append("g_0");
-        else if (nGenerators == 2) retval.append("g_0, g_1");
-        else { retval.append("g0, \\cdots, g"); 
-        std::stringstream num; num<<(nGenerators - 1); 
-        retval.append(num.str()); }
-        retval.append(" | ");
-        // std::stringstream temp;
-        if (relations.empty()) retval.append("\\cdot"); 
-	else for (RelIteratorConst it = relations.begin(); 
+void NGroupPresentation::writeTeX(std::ostream& out) const {
+    out << "\\langle ";
+    if (nGenerators == 0) out << "\\cdot";
+    else if (nGenerators == 1) out << "g_0";
+    else if (nGenerators == 2) out << "g_0, g_1";
+    else {
+        out << "g0, \\cdots, g" <<(nGenerators - 1);
+    }
+    out << " | ";
+    if (relations.empty())
+        out << "\\cdot";
+    else
+        for (RelIteratorConst it = relations.begin();
                 it != relations.end(); it++) {
-            if (it != relations.begin()) retval.append(", ");
-            retval.append( (*it)->toTeX() ); }
-        retval.append(" \\rangle");
-	return retval;
+            if (it != relations.begin())
+                out << ", ";
+            (*it)->writeTeX(out);
+        }
+    out << " \\rangle";
 }
 
 void NGroupPresentation::writeTextLong(std::ostream& out) const {
@@ -887,6 +862,41 @@ void NGroupPresentation::writeTextLong(std::ostream& out) const {
             (*it)->writeTextShort(out);
             out << std::endl;
         }
+}
+
+std::string NGroupPresentation::toStringCompact() const {
+    std::ostringstream out;
+    writeTextCompact(out);
+    return out.str();
+}
+
+void NGroupPresentation::writeTextCompact(std::ostream& out) const {
+    if (nGenerators == 0) {
+        out << "< >";
+        return;
+    }
+
+    out << "<";
+    if (nGenerators <= 26) {
+        for (unsigned long i=0; i<nGenerators; i++)
+            out << ' ' << char('a' + i);
+    } else {
+        out << " g0 .. g" << (nGenerators - 1);
+    }
+
+    if (relations.empty()) {
+        out << " >";
+        return;
+    }
+
+    out << " | ";
+    for (RelIteratorConst it = relations.begin();
+            it != relations.end(); it++) {
+        if (it != relations.begin())
+            out << ", ";
+        (*it)->writeText(out, nGenerators <= 26);
+    }
+    out << " >";
 }
 
 

@@ -501,23 +501,43 @@ class REGINA_API NGroupExpression : public ShareableObject {
         void writeXMLData(std::ostream& out) const;
 
         /**
+         * Returns a TeX representation of this expression.
+         * See writeTeX() for details on how this is formed.
+         *
+         * @return a TeX representation of this expression.
+         */
+        std::string toTeX() const;
+
+        /**
+         * Writes a TeX represesentation of this expression to the given
+         * output stream.
+         *
+         * The text representation will be of the form
+         * <tt>g_2^4 g_{13}^{-5} g_4</tt>.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTeX(std::ostream& out) const;
+
+        /**
+         * Writes a text representation of this expression to the given
+         * output stream, using either numbered generators or
+         * alphabetic generators.
+         *
          * The text representation will be of the form
          * <tt>g2^4 g13^-5 g4</tt>. If the shortword flag is
          * true, it will assume your word is in an alphabet of
          * no more than 26 letters, and will write the word using
          * lower-case ASCII, i.e. <tt>c^4 n^-5 e</tt>.
          *
-         * @return a std::string representation of the word.
-         */
-        std::string toString(bool shortword=false) const;
-
-        /**
-         * The text representation will be of the form
-         * <tt>g_2^4 g_{13}^{-5} g_4</tt>, i.e. suitable for TeX.
+         * \pre If \a shortword is \c true, the number of generators in
+         * the corresponding group must be 26 or fewer.
          *
-         * @return a std::string representation of the word.
+         * @param out the output stream to which to write.
+         * @param shortword indicates whether to use numbered or
+         * alphabetic generators, as described above.
          */
-        std::string toTeX() const;
+        void writeText(std::ostream& out, bool shortword=false) const;
 
         /**
          * The text representation will be of the form
@@ -750,25 +770,43 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         std::auto_ptr<NMarkedAbelianGroup> markedAbelianisation() const;
 
         /**
-         * Writes a single string description of the group presentation.
-         * Provided the group has 26 or fewer generators, will use the regular
-         * lower-case ASCII alphabet to describe words, such as ab^2c^-1, etc.
+         * Returns a TeX representation of this group presentation.
+         * See writeTeX() for details on how this is formed.
          *
-         * The string will be written in the form
-         * &lt; generators | relators &gt;.
-         *
-         * @return a std::string describing the presentation.
-         */
-        std::string toString() const;
-
-        /**
-         * Writes a single string description of the group presentation. No
-         * endlines. In TeX
-         *
-         * @return a std::string describing the presentation,
-         *  < generators | relators >
+         * @return a TeX representation of this group presentation.
          */
         std::string toTeX() const;
+
+        /**
+         * Writes a TeX represesentation of this group presentation
+         * to the given output stream.
+         *
+         * The output will be of the form &lt; generators | relators &gt;.
+         * There will be no final newline.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTeX(std::ostream& out) const;
+
+        /**
+         * Returns a compact representation of this group presentation.
+         * See writeTextCompact() for details on how this is formed.
+         *
+         * @return a compact representation of this group presentation.
+         */
+        std::string toStringCompact() const;
+
+        /**
+         * Writes a compact represesentation of this group to the given
+         * output stream.
+         *
+         * The output will be of the form &lt; generators | relators &gt;.
+         * The full relations will be included, and the entire output
+         * will be written on a single line.  There will be no final newline.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextCompact(std::ostream& out) const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
