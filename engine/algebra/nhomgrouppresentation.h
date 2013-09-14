@@ -151,13 +151,6 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
          */
         bool intelligentSimplify();
 
-        /**
-         * Writes the map as a string.
-         *
-         * @return a string representation of this map.
-         */
-        std::string toString() const;
-
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
 };

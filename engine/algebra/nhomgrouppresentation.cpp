@@ -71,38 +71,31 @@ NGroupExpression NHomGroupPresentation::evaluate(
    return retval; 
  }
 
-std::string NHomGroupPresentation::toString() const
-{
-std::string retval; 
-retval.append("Domain "); 
-retval.append(domain_.toString());
-retval.append(" map[");
- for (unsigned long i=0; i<domain_.getNumberOfGenerators(); i++)
-  { if (i!=0) retval.append(", "); retval.append("g"); 
-    std::stringstream num; num<<i; retval.append( num.str() );
-    retval.append(" --> "); retval.append(map_[i]->toString()); 
-  }
- retval.append("] Range ");
- retval.append(range_.toString());
-return retval;
-}
-
-
-void NHomGroupPresentation::writeTextShort(std::ostream& out) const
-{
- std::cout<<"map[";
- for (unsigned long i=0; i<domain_.getNumberOfGenerators(); i++)
-  { if (i!=0) out<<", "; out<<"g"<<i<<" --> "; 
-    std::cout.flush(); map_[i]->writeTextShort( out ); 
-  }
-  out<<"]";
+void NHomGroupPresentation::writeTextShort(std::ostream& out) const {
+    out << "Map from ";
+    domain_.writeTextShort(out);
+    out << " to ";
+    range_.writeTextShort(out);
 }
 
 void NHomGroupPresentation::writeTextLong(std::ostream& out) const
 {
- out<<"Domain "<<domain_.toString()<<" "; 
- writeTextShort(out);
- out<<" "<<range_.toString()<<" Range.";
+    out<<"Domain ";
+    domain_.writeTextCompact(out);
+    out<<std::endl;
+
+    out<<"map[";
+    for (unsigned long i=0; i<domain_.getNumberOfGenerators(); i++) {
+        if (i!=0)
+            out<<", ";
+        out<<"g"<<i<<" --> "; 
+        map_[i]->writeTextShort(out);
+    }
+    out<<"]";
+
+    out<<"Range ";
+    range_.writeTextCompact(out);
+    out<<std::endl;
 }
 
 // return true if and only if a modification to either domain, 
