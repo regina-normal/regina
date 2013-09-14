@@ -138,7 +138,7 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
          * Evaluate the homomorphism at a generator of the domain.
          *
          * @param i the index of a generator in the domain.
-         * @param the image of the <i>i</i>th generator in the range.
+         * @return the image of the <i>i</i>th generator in the range.
          */
         NGroupExpression evaluate(unsigned long i) const;
 

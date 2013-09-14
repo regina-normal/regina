@@ -115,9 +115,18 @@ template <int dim>
 class NGenericIsomorphism : public ShareableObject {
     public:
         typedef typename DimTraits<dim>::Isomorphism Isomorphism;
+            /**< The isomorphism class used by triangulations of this
+                 specific dimension.  Typically this is a subclass of
+                 NGenericIsomorphism<dim>. */
         typedef typename DimTraits<dim>::Perm Perm;
+            /**< The permutation class used to glue together facets of
+                 simplices when building triangulations in this dimension. */
         typedef typename DimTraits<dim>::Simplex Simplex;
+            /**< The class that represents a top-level simplex of a
+                 triangulation in this dimension. */
         typedef typename DimTraits<dim>::Triangulation Triangulation;
+            /**< The triangulation class specific to this dimension. */
+
     protected:
         unsigned nSimplices_;
             /**< The number of simplices in the source triangulation. */

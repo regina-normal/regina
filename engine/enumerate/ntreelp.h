@@ -765,8 +765,8 @@ class LPInitialTableaux {
  * We do not store the full tableaux (which is dense and slow to work
  * with).  Instead we store the matrix of row operations that were
  * applied to the original starting tableaux (in the notation of Burton
- * and Ozlen, we store the matrix M_\beta^{-1}, where M is the original
- * matrix stored in the class LPInitialTableaux, and \beta is the current
+ * and Ozlen, we store the matrix M_beta^{-1}, where M is the original
+ * matrix stored in the class LPInitialTableaux, and beta is the current
  * basis).
  *
  * If the system is infeasible (because the constraints on variables as
@@ -848,7 +848,7 @@ class LPData {
             /**< An array of length origTableaux_->rank() that stores
                  the column vector of constants on the right-hand side
                  of the current tableaux.  In the notation of Burton and
-                 Ozlen, this is the column vector M_\beta^{-1} * b.
+                 Ozlen, this is the column vector M_beta^{-1} * b.
                  If \a rank_ is smaller than origTableaux_->rank() then
                  the "extra" entries rhs_[rank_, rank_+1, ...] may have
                  undefined values, and should simply be ignored. */
@@ -856,7 +856,7 @@ class LPData {
             /**< The matrix of row operations that we apply to the
                  original starting tableaux, as described in the class
                  notes.  In the notation of Burton and Ozlen, this is
-                 the matrix M_\beta^{-1}.  This is a square matrix of
+                 the matrix M_beta^{-1}.  This is a square matrix of
                  side length origTableaux_->rank(). */
         unsigned rank_;
             /**< The rank of the current tableaux, taking into account
@@ -1161,7 +1161,7 @@ class LPData {
          *
          * @param v the vector into which the values of the variables
          * will be placed.
-         * @param the type vector corresponding to the current state of
+         * @param type the type vector corresponding to the current state of
          * this tableaux, indicating which variables were previously fixed as
          * positive via calls to constrainPositive().  This is necessary
          * because LPData does not keep such historical data on its own.

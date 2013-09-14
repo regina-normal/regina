@@ -340,11 +340,21 @@ class LPConstraintSubspace : public LPConstraintBase {
 /**
  * A do-nothing class that imposes no additional linear constraints on
  * the tableaux of normal surface matching equations.
+ *
+ * See the LPConstraintBase class notes for details on all member
+ * functions and structs.
  */
 class LPConstraintNone : public LPConstraintSubspace {
     public:
         enum { nConstraints = 0 };
 
+        /**
+         * Stores the extra coefficients in the tableaux associated
+         * with this constraint class (which for this class is a no-op,
+         * since in this case there are no extra coefficients).
+         *
+         * See the LPConstraintBase::Coefficients notes for further details.
+         */
         struct Coefficients {
             Coefficients();
             template<typename Integer>
@@ -379,6 +389,9 @@ class LPConstraintNone : public LPConstraintSubspace {
  * is used to ensure we do not have more than two octagons when searching for
  * a normal or almost normal sphere in the 3-sphere recognition algorithm).
  *
+ * See the LPConstraintBase class notes for details on all member
+ * functions and structs.
+ *
  * \pre We are working in standard normal or almost normal coordinates
  * (not quadrilateral or quadrilateral-octagon coordinates).  In
  * particular, the coordinate system passed to the corresponding
@@ -392,6 +405,12 @@ class LPConstraintEuler : public LPConstraintBase {
     public:
         enum { nConstraints = 1 };
 
+        /**
+         * Stores the extra coefficients in the tableaux associated with this
+         * constraint class (in this case, one extra integer per column).
+         *
+         * See the LPConstraintBase::Coefficients notes for further details.
+         */
         struct Coefficients {
             int euler;
                 /**< The coefficient of the Euler characteristic
@@ -441,6 +460,9 @@ class LPConstraintEuler : public LPConstraintBase {
  * This is \e not explicitly checked; instead it appears as a
  * precondition (see below).
  *
+ * See the LPConstraintBase class notes for details on all member
+ * functions and structs.
+ *
  * \pre We are working in quadrilateral normal coordinates.  In particular,
  * the coordinate system passed to the corresponding LPInitialTableaux class
  * must be NS_QUAD, and constrainOct() must never be
@@ -454,9 +476,19 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
     public:
         enum { nConstraints = 2 };
 
+        /**
+         * Stores the extra coefficients in the tableaux associated with this
+         * constraint class (in this case, two extra integers per column).
+         *
+         * See the LPConstraintBase::Coefficients notes for further details.
+         */
         struct Coefficients {
             int meridian;
+                /**< The coefficient of the meridian equation for the
+                     corresponding column of the matching equation matrix. */
             int longitude;
+                /**< The coefficient of the longitude equation for the
+                     corresponding column of the matching equation matrix. */
 
             Coefficients();
             template <typename Integer>
@@ -628,6 +660,9 @@ class BanConstraintBase {
 /**
  * A do-nothing class that bans no disc types and marks no disc types.
  *
+ * See the BanConstraintBase class notes for details on all member
+ * functions and structs.
+ *
  * \apinotfinal
  *
  * \ifacespython Not present.
@@ -665,6 +700,9 @@ class BanNone : public BanConstraintBase {
  * (since triangle types are not counted in these coordinate systems).
  * The supported() routine will only return \c true in standard normal or
  * almost normal coordinates.
+ *
+ * See the BanConstraintBase class notes for details on all member
+ * functions and structs.
  *
  * \apinotfinal
  *
@@ -711,6 +749,9 @@ class BanBoundary : public BanConstraintBase {
  * that meet torus boundaries (since triangle types are not counted in these
  * coordinate systems).  The supported() routine will only return \c true
  * in standard normal or almost normal coordinates.
+ *
+ * See the BanConstraintBase class notes for details on all member
+ * functions and structs.
  *
  * \apinotfinal
  *
