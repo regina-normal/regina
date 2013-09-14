@@ -12,5 +12,5 @@ ENDFOREACH(SOURCE_FILE)
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
-  INSTALL(FILES filterregistry.h flavourregistry.h ndisc.h ndisctype.h nnormalsurface.h nnormalsurfacelist.h normalcoords.h normalspec.tcc nprism.h nsanstandard.h nsmirrored.h nsoriented.h nsorientedquad.h nsquad.h nsquadoct.h nsstandard.h nsurfacefilter.h nsurfacesubset.h nxmlfilterreader.h nxmlsurfacereader.h sfcombination.h sfproperties.h DESTINATION ${INCLUDEDIR}/surfaces COMPONENT Development)
+  INSTALL(FILES filterregistry.h flavourregistry.h ndisc.h ndisctype.h nnormalsurface.h nnormalsurfacelist.h normalcoords.h normalflags.h normalspec.tcc nprism.h nsanstandard.h nsmirrored.h nsoriented.h nsorientedquad.h nsquad.h nsquadoct.h nsstandard.h nsurfacefilter.h nsurfacesubset.h nxmlfilterreader.h nxmlsurfacereader.h sfcombination.h sfproperties.h DESTINATION ${INCLUDEDIR}/surfaces COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
