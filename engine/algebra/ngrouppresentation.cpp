@@ -37,6 +37,8 @@
 #include <sstream>
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nhomgrouppresentation.h"
+#include "algebra/nmarkedabeliangroup.h"
+#include "algebra/nabeliangroup.h"
 #include "maths/numbertheory.h"
 #include "utilities/boostutils.h"
 #include "utilities/stlutils.h"

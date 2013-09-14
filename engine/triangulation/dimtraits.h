@@ -57,6 +57,8 @@ namespace regina {
  *
  * Note that this file does not bring in all of the headers for the
  * individual types.
+ *
+ * \ifacespython Not present.
  */
 template <int dim>
 struct DimTraits {

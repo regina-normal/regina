@@ -115,6 +115,7 @@ void addNMatrixInt() {
         .def("entry", entry_non_const, return_internal_reference<>())
         .def("set", setEntry)
         .def("isIdentity", &NMatrixInt::isIdentity)
+        .def("isZero", &NMatrixInt::isZero)
         .def("swapRows", &NMatrixInt::swapRows)
         .def("swapColumns", &NMatrixInt::swapColumns)
         .def("makeIdentity", &NMatrixInt::makeIdentity)

@@ -33,7 +33,10 @@
 /* end stub */
 
 #include <boost/python.hpp>
+#include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
+#include "algebra/nhomgrouppresentation.h"
+#include "algebra/nmarkedabeliangroup.h"
 
 using namespace boost::python;
 using regina::NGroupExpressionTerm;
@@ -51,8 +54,6 @@ namespace {
         &NGroupExpression::addTermLast;
     NGroupExpressionTerm& (NGroupExpression::*getTerm_non_const)(
         unsigned long) = &NGroupExpression::getTerm;
-    bool (NGroupPresentation::*intelligentSimplify_void)(void) =
-        &NGroupPresentation::intelligentSimplify;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplify,
         NGroupExpression::simplify, 0, 1);
@@ -69,11 +70,47 @@ namespace {
         return ans;
     }
 
+    void expressionWriteText(const NGroupExpression& e, bool sw = false) {
+        e.writeText(std::cout, sw);
+    }
+
+    void expressionWriteTeX(const NGroupExpression& e) {
+        e.writeTeX(std::cout);
+    }
+
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_expressionWriteText,
+        expressionWriteText, 1, 2);
+
     void addRelation_own(NGroupPresentation& p,
             std::auto_ptr<NGroupExpression> e) {
         p.addRelation(e.get());
         e.release();
     }
+
+    void presentationWriteTeX(const NGroupPresentation& p) {
+        p.writeTeX(std::cout);
+    }
+
+    void presentationWriteTextCompact(const NGroupPresentation& p) {
+        p.writeTextCompact(std::cout);
+    }
+
+    regina::NHomGroupPresentation* intelligentSimplifyDetail_ptr(
+            NGroupPresentation& p) {
+        return p.intelligentSimplifyDetail().release();
+    }
+
+    regina::NAbelianGroup* abelianisation_ptr(const NGroupPresentation& p) {
+        return p.abelianisation().release();
+    }
+
+    regina::NMarkedAbelianGroup* markedAbelianisation_ptr(
+            const NGroupPresentation& p) {
+        return p.markedAbelianisation().release();
+    }
+
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_proliferateRelators,
+        NGroupPresentation::proliferateRelators, 0, 1);
 }
 
 void addNGroupPresentation() {
@@ -94,6 +131,8 @@ void addNGroupPresentation() {
         .def(init<const NGroupExpression&>())
         .def("getTerms", getTerms_list)
         .def("getNumberOfTerms", &NGroupExpression::getNumberOfTerms)
+        .def("wordLength", &NGroupExpression::wordLength)
+        .def("erase", &NGroupExpression::erase)
         .def("getTerm", getTerm_non_const, return_internal_reference<>())
         .def("getGenerator", &NGroupExpression::getGenerator)
         .def("getExponent", &NGroupExpression::getExponent)
@@ -101,12 +140,20 @@ void addNGroupPresentation() {
         .def("addTermFirst", addTermFirst_pair)
         .def("addTermLast", addTermLast_term)
         .def("addTermLast", addTermLast_pair)
+        .def("addTermsFirst", &NGroupExpression::addTermsFirst)
+        .def("addTermsLast", &NGroupExpression::addTermsLast)
+        .def("cycleLeft", &NGroupExpression::cycleLeft)
+        .def("cycleRight", &NGroupExpression::cycleRight)
         .def("inverse", &NGroupExpression::inverse,
             return_value_policy<manage_new_object>())
+        .def("invert", &NGroupExpression::invert)
         .def("power", &NGroupExpression::power,
             return_value_policy<manage_new_object>())
         .def("simplify", &NGroupExpression::simplify, OL_simplify())
         .def("substitute", &NGroupExpression::substitute, OL_substitute())
+        .def("toTeX", &NGroupExpression::toTeX)
+        .def("writeText", expressionWriteText, OL_expressionWriteText())
+        .def("writeTeX", expressionWriteTeX)
     ;
 
     class_<NGroupPresentation, bases<regina::ShareableObject>,
@@ -121,10 +168,22 @@ void addNGroupPresentation() {
         .def("getNumberOfRelations", &NGroupPresentation::getNumberOfRelations)
         .def("getRelation", &NGroupPresentation::getRelation,
             return_internal_reference<>())
-        .def("intelligentSimplify", intelligentSimplify_void)
+        .def("intelligentSimplify", &NGroupPresentation::intelligentSimplify)
+        .def("intelligentSimplifyDetail",
+            intelligentSimplifyDetail_ptr,
+            return_value_policy<manage_new_object>())
+        .def("proliferateRelators", &NGroupPresentation::proliferateRelators,
+            OL_proliferateRelators())
         .def("recogniseGroup", &NGroupPresentation::recogniseGroup)
-        .def("toStringCompact", &NGroupPresentation::toStringCompact)
+        .def("relatorLength", &NGroupPresentation::relatorLength)
+        .def("abelianisation", abelianisation_ptr,
+            return_value_policy<manage_new_object>())
+        .def("markedAbelianisation", markedAbelianisation_ptr,
+            return_value_policy<manage_new_object>())
         .def("toTeX", &NGroupPresentation::toTeX)
+        .def("toStringCompact", &NGroupPresentation::toStringCompact)
+        .def("writeTeX", presentationWriteTeX)
+        .def("writeTextCompact", presentationWriteTextCompact)
     ;
 }
 

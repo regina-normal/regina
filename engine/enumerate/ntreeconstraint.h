@@ -343,6 +343,8 @@ class LPConstraintSubspace : public LPConstraintBase {
  *
  * See the LPConstraintBase class notes for details on all member
  * functions and structs.
+ *
+ * \ifacespython Not present.
  */
 class LPConstraintNone : public LPConstraintSubspace {
     public:

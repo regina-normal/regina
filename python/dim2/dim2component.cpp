@@ -42,6 +42,32 @@
 using namespace boost::python;
 using regina::Dim2Component;
 
+namespace {
+    boost::python::list getVertices_list(Dim2Component& t) {
+        boost::python::list ans;
+        for (std::vector<regina::Dim2Vertex*>::const_iterator it =
+                t.getVertices().begin(); it != t.getVertices().end(); it++)
+            ans.append(boost::python::ptr(*it));
+        return ans;
+    }
+
+    boost::python::list getEdges_list(Dim2Component& t) {
+        boost::python::list ans;
+        for (std::vector<regina::Dim2Edge*>::const_iterator it =
+                t.getEdges().begin(); it != t.getEdges().end(); it++)
+            ans.append(boost::python::ptr(*it));
+        return ans;
+    }
+
+    boost::python::list getTriangles_list(Dim2Component& t) {
+        boost::python::list ans;
+        for (std::vector<regina::Dim2Triangle*>::const_iterator it =
+                t.getTriangles().begin(); it != t.getTriangles().end(); it++)
+            ans.append(boost::python::ptr(*it));
+        return ans;
+    }
+}
+
 void addDim2Component() {
     class_<Dim2Component, bases<regina::ShareableObject>,
             std::auto_ptr<Dim2Component>, boost::noncopyable>
@@ -51,6 +77,9 @@ void addDim2Component() {
         .def("getNumberOfVertices", &Dim2Component::getNumberOfVertices)
         .def("getNumberOfBoundaryComponents",
             &Dim2Component::getNumberOfBoundaryComponents)
+        .def("getTriangles", getTriangles_list)
+        .def("getEdges", getEdges_list)
+        .def("getVertices", getVertices_list)
         .def("getTriangle", &Dim2Component::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim2Component::getEdge,

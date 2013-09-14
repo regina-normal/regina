@@ -44,16 +44,17 @@
 #include <algorithm>
 #include <list>
 #include <vector>
+#include <set>
 #include "regina-core.h"
 #include "utilities/memutils.h"
 #include "shareableobject.h"
 #include "utilities/ptrutils.h"
-#include "algebra/nmarkedabeliangroup.h"
-#include "algebra/nabeliangroup.h"
 
 namespace regina {
 
+class NAbelianGroup;
 class NHomGroupPresentation;
+class NMarkedAbelianGroup;
 
 /**
  * \weakgroup algebra
@@ -426,6 +427,9 @@ class REGINA_API NGroupExpression : public ShareableObject {
          * The text representation will be of the form
          * <tt>g_2^4 g_{13}^{-5} g_4</tt>.
          *
+         * \ifacespython The parameter \a out does not exist;
+         * standard output will be used.
+         *
          * @param out the output stream to which to write.
          */
         void writeTeX(std::ostream& out) const;
@@ -443,6 +447,9 @@ class REGINA_API NGroupExpression : public ShareableObject {
          *
          * \pre If \a shortword is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
+         *
+         * \ifacespython The parameter \a out does not exist;
+         * standard output will be used.
          *
          * @param out the output stream to which to write.
          * @param shortword indicates whether to use numbered or
@@ -695,6 +702,9 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * The output will be of the form &lt; generators | relators &gt;.
          * There will be no final newline.
          *
+         * \ifacespython The parameter \a out does not exist;
+         * standard output will be used.
+         *
          * @param out the output stream to which to write.
          */
         void writeTeX(std::ostream& out) const;
@@ -714,6 +724,9 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * The output will be of the form &lt; generators | relators &gt;.
          * The full relations will be included, and the entire output
          * will be written on a single line.  There will be no final newline.
+         *
+         * \ifacespython The parameter \a out does not exist;
+         * standard output will be used.
          *
          * @param out the output stream to which to write.
          */
