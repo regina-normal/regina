@@ -214,19 +214,23 @@ class REGINA_API NGroupExpression : public ShareableObject {
          */
         unsigned long getNumberOfTerms() const;
         /**
-         * Returns the length of the word, i.e. the minimal number of letters 
-         * with exponent +1 or -1 for which this word is expressable as a 
-         * product. 
+         * Returns the length of the word, i.e. the number of letters
+         * with exponent +1 or -1 for which this word is expressable as a
+         * product.
          *
          * For instance, the expression <tt>g1^2 g3^-1 g6</tt> is a word of 
-         * length four.  See also getNumberOfTerms(). 
+         * length four.  See also getNumberOfTerms().
          *
-         * @return the length of the word. 
+         * No attempt is made to remove redundant terms (so the word
+         * <tt>g g^-1</tt> will count as length two).
+         *
+         * @return the length of the word.
          */
         unsigned long wordLength() const;
 
         /**
-         * Erases this word. Turns it into the identity element.
+         * Erases all terms from this this word.
+         * This effectively turns this word into the identity element.
          */
         void erase();
 
@@ -693,8 +697,8 @@ class REGINA_API NGroupPresentation : public ShareableObject {
         void writeXMLData(std::ostream& out) const;
 
         /**
-         *  The sum of the wordLength()s of the relators.  Used as a coarse 
-         *  measure of the complexit of the presentation.
+         * The sum of the wordLength()s of the relators.  Used as a coarse 
+         * measure of the complexity of the presentation.
          */
         unsigned long relatorLength() const;
 
@@ -803,10 +807,11 @@ inline unsigned long NGroupExpression::getNumberOfTerms() const {
 }
 
 inline unsigned long NGroupExpression::wordLength() const {
- unsigned long retval(0); 
- std::list<NGroupExpressionTerm>::const_iterator it; 
- for (it = terms.begin(); it!=terms.end(); it++) retval += labs((*it).exponent);
- return retval; 
+    unsigned long retval(0); 
+    std::list<NGroupExpressionTerm>::const_iterator it; 
+    for (it = terms.begin(); it!=terms.end(); it++)
+        retval += labs((*it).exponent);
+    return retval; 
 }
 
 inline unsigned long NGroupExpression::getGenerator(unsigned long index)
@@ -836,9 +841,8 @@ inline void NGroupExpression::addTermLast(unsigned long generator,
     terms.push_back(NGroupExpressionTerm(generator, exponent));
 }
 
-inline void NGroupExpression::erase()
-{
-        terms.resize(0);
+inline void NGroupExpression::erase() {
+    terms.clear();
 }
 
 // Inline functions for NGroupPresentation
@@ -877,12 +881,11 @@ inline void NGroupPresentation::writeTextShort(std::ostream& out) const {
         << relations.size() << " relations";
 }
 
-inline unsigned long NGroupPresentation::relatorLength() const
-{
-unsigned long retval(0);
-for (unsigned long i=0; i<relations.size(); i++)
- retval += relations[i]->wordLength();
-return retval;
+inline unsigned long NGroupPresentation::relatorLength() const {
+    unsigned long retval(0);
+    for (unsigned long i=0; i<relations.size(); i++)
+        retval += relations[i]->wordLength();
+    return retval;
 }
 
 
