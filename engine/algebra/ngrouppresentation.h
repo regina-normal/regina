@@ -533,10 +533,6 @@ class REGINA_API NGroupExpression : public ShareableObject {
  *  detect if the group is a semi-direct product, for 2 and 3-manifold groups.
  */
 class REGINA_API NGroupPresentation : public ShareableObject {
-    private: 
-        // for now we'll keep this to ourselves.  Returns true if the 
-        // presentation partitions the gens into disjoint non-trivial sets. 
-        bool obviously_freeproduct() const;
     protected:
         unsigned long nGenerators;
             /**< The number of generators. */
@@ -639,11 +635,11 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * \todo \optlong This routine could use some small tweaks -- 
          *   recognition of utility of some score==0 moves, such as 
          *   commutators, for example. 
-             */
+         */
         bool intelligentSimplify(NHomGroupPresentation*& reductionMap);
 
         /**
-         *  Given a presentation <g_i | r_i> this routine appends consequences
+         * Given a presentation <g_i | r_i> this routine appends consequences
          * of the relators {r_i} to the presentation that are of the form 
          * ab where both a and b are cyclic permutations of relators from 
          * the collection {r_i}.  This is useful when attempting to simplify
@@ -654,6 +650,12 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * the operation isn't out of hand.  It also conveniently trivializes
          * all the complicated trivial group presentations that we've come 
          * across so far. 
+         *
+         * \warning Do not call this routine with depth n before having called
+         *  it at depth n-1 first.  Depth=0 is invalid, depth==1 should be your
+         *  first call to this routine.  This routine gobbles-up an esponential
+         *  amount of memory (exponential in your presentation size times n). 
+         *  So do be careful when using it. 
          */
         void proliferateRelators(unsigned long depth=1);
 
