@@ -135,22 +135,6 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
         NGroupExpression evaluate(unsigned long i) const;
 
         /**
-         * Compose homomorphisms.
-         *
-         * The resulting homomorphism maps element \a x from the domain
-         * of this homomorphism to the element
-         * <tt>arg.evaluate(this->evaluate(x))</tt>
-         * in the range of \a arg.
-         *
-         * \pre The range of this homomorphism is identical to the
-         * domain of \a arg.
-         *
-         * @param arg the homomorphism to compose with this.
-         */
-        std::auto_ptr<NHomGroupPresentation> operator*(
-            const NHomGroupPresentation &arg) const;
-
-        /**
          * Simultaneously simplifies:
          *
          * - the presentation of the domain;
