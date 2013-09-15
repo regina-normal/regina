@@ -418,73 +418,135 @@ bool NTriangulation::isSolidTorus() const {
         return solidTorus.value();
 
     // Basic property checks.
-    if (! (isValid() && isOrientable() && isConnected())) {
-        solidTorus = false;
-        return false;
-    }
+    if (! (isValid() && isOrientable() && isConnected() &&
+            boundaryComponents.size() == 1 &&
+            boundaryComponents.front()->getEulerCharacteristic() == 0 &&
+            boundaryComponents.front()->isOrientable()))
+        return (solidTorus = false);
 
-    if (boundaryComponents.size() != 1) {
-        solidTorus = false;
-        return false;
-    }
-
-    if (boundaryComponents.front()->getEulerCharacteristic() != 0 ||
-            (! boundaryComponents.front()->isOrientable())) {
-        solidTorus = false;
-        return false;
-    }
-
-    // Make a triangulation with real boundary.
-    NTriangulation working(*this);
-    working.intelligentSimplify();
-    if (working.isIdeal()) {
-        working.idealToFinite();
-        working.intelligentSimplify();
+    // If it's ideal, make it a triangulation with real boundary.
+    // If it's not ideal, clone it anyway so we can modify it.
+    NTriangulation* working = new NTriangulation(*this);
+    working->intelligentSimplify();
+    if (working->isIdeal()) {
+        working->idealToFinite();
+        working->intelligentSimplify();
     }
 
     // Check homology.
-    if (! working.getHomologyH1().isZ()) {
-        solidTorus = false;
-        return false;
+    if (! (working->getHomologyH1().isZ() &&
+            working->getHomologyH1Rel().isTrivial())) {
+        delete working;
+        return (solidTorus = false);
     }
+
+    // So:
+    // We are valid, orientable, compact and connected.
+    // H1(M) = Z, and H1(M, bdry M) = 0.
+    // There is exactly one boundary component, and this is a torus.
+
+    // Note that the homology results imply that this is not a connected
+    // sum of something with S2xS1.  This observation simplifies the
+    // crushing cases later on.
 
     // Pull out the big guns: normal surface time.
-    // TODO: Can we do this in quad coordinates instead?
-    NNormalSurfaceList* s = NNormalSurfaceList::enumerate(
-        &working, NS_STANDARD, true);
-    const NNormalSurface* f;
-    NTriangulation* cutOpen;
-    for (unsigned long i = 0; i < s->getNumberOfSurfaces(); ++i) {
-        f = s->getSurface(i);
-        if (! f->isCompact()) // This test is unnecessary, strictly speaking.
-            continue;
-        if (f->getEulerCharacteristic() != 1)
-            continue;
-        if (! f->hasRealBoundary())
-            continue;
-        if (f->isVertexLinking())
-            continue;
-        if (f->isThinEdgeLink().first)
-            continue;
-
-        // We have a non-vertex-linking, non-edge-linking disc.
-        // Does cutting along this disc give a 3-ball?
-        cutOpen = f->cutAlong();
-        if (cutOpen->isBall()) {
-            // Yes!  We have a solid torus.
-            delete cutOpen;
-            delete s;
-            solidTorus = true;
-            return true;
+    NNormalSurface* s;
+    NTriangulation* crushed;
+    NPacket* p;
+    NTriangulation* comp;
+    while (true) {
+        // INVARIANT: working is homeomorphic to our original manifold.
+        if (working->getNumberOfVertices() > 1) {
+            // Try *really* hard to get to a 1-vertex triangulation,
+            // since this will make hasNonTrivialSphereOrDisc() much
+            // faster (it will be able to use linear programming).
+            working->intelligentSimplify();
+            if (working->getNumberOfVertices() > 1) {
+                working->barycentricSubdivision();
+                working->intelligentSimplify();
+                working->intelligentSimplify();
+            }
         }
-        delete cutOpen;
+
+        // Find a non-trivial normal disc or sphere.
+        s = working->hasNonTrivialSphereOrDisc();
+        if (! s) {
+            // No non-trivial normal disc.  This cannot be a solid torus.
+            delete working;
+            return (solidTorus = false);
+        }
+
+        // Crush it and see what happens.
+        // Given what we know about the manifold so far, the only things
+        // that can happen during crushing are:
+        // - undo connected sum decompositions;
+        // - cut along properly embedded discs;
+        // - gain and/or lose 3-balls and/or 3-spheres.
+        crushed = s->crush();
+        delete working;
+        working = 0;
+
+        crushed->intelligentSimplify();
+        crushed->splitIntoComponents(false);
+        for (p = crushed->getFirstTreeChild(); p; p = p->getNextTreeSibling()) {
+            // Examine each connected component after crushing.
+            comp = static_cast<NTriangulation*>(p);
+            if (comp->isClosed()) {
+                // A closed piece.
+                // Must be a 3-sphere, or else we didn't have a solid torus.
+                if (! comp->isThreeSphere()) {
+                    delete crushed;
+                    return (solidTorus = false);
+                }
+            } else if (comp->getNumberOfBoundaryComponents() > 1) {
+                // Multiple boundaries on the same component.
+                // This should never happen, since it implies there was
+                // an S2xS1 summand.
+                std::cerr << "ERROR: S2xS1 summand detected in "
+                    "isSolidTorus() that should not exist." << std::endl;
+
+                // At any rate, it means we did not have a solid torus.
+                delete crushed;
+                return (solidTorus = false);
+            } else if (comp->getBoundaryComponent(0)->
+                    getEulerCharacteristic() == 2) {
+                // A component with sphere boundary.
+                // Must be a 3-ball, or else we didn't have a solid torus.
+                if (! comp->isBall()) {
+                    delete crushed;
+                    return (solidTorus = false);
+                }
+            } else {
+                // The only other possibility is a component with torus
+                // boundary.  We should only see at most one of these.
+                //
+                // Unless some other non-trivial component was split off
+                // (i.e., a non-ball and/or non-sphere that will be
+                // detected separately in the tests above), this
+                // component must be identical to our original manifold.
+                if (working) {
+                    std::cerr << "ERROR: Multiple torus boundary "
+                        "components detected in isSolidTorus(), which "
+                        "should not be possible." << std::endl;
+                }
+                working = comp;
+            }
+        }
+
+        if (! working) {
+            // We have reduced everything down to balls and spheres.
+            // The only way this can happen is if we had a solid torus
+            // (and we crushed and/or cut along a compressing disc
+            // during the crushing operation).
+            delete crushed;
+            return (solidTorus = true);
+        }
+
+        // We have the original manifold in working, but this time with
+        // fewer tetrahedra.  Around we go again.
+        working->makeOrphan();
+        delete crushed;
     }
-
-    delete s;
-
-    // We didn't find the right compressing disc.
-    solidTorus = false;
-    return false;
 }
 
 bool NTriangulation::knowsSolidTorus() const {

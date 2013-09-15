@@ -2429,10 +2429,18 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyIsoSigNotSolidTorus("fLHPccdeeeqcieh");
             verifyIsoSigNotSolidTorus(
                 "oLALzLwMPOcbcbefijklnlmnnxxjnxmitnmfbae");
+            verifyIsoSigNotSolidTorus(
+                "rLLLvKPjQvQMkacfkljmjlmlppopqqjkgtaxknokbmgwvij");
+            verifyIsoSigNotSolidTorus(
+                "uLLvMPvwMwAMQkcacfgihjmklnnrqstrqrtnkvjhavkbveekgjxfcvp");
 
             // Some Seifert fibred spaces with torus boundary and Z homology:
             verifyIsoSigNotSolidTorus("eHLObcdddwun");
             verifyIsoSigNotSolidTorus("eHLObcdddwuj");
+
+            // The connected sum of the Poincare homology sphere and the
+            // solid torus:
+            verifyIsoSigNotSolidTorus("kLHKwvQQcceeijhjijakaawsnrsn");
 
             // Some larger solid tori from the census:
             verifyIsoSigSolidTorus("iHbfPPPbdfgfhhtbedbac");
