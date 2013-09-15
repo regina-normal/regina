@@ -1508,8 +1508,9 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * \warning Currently this routine can be quite slow since it
          * performs a full enumeration of vertex almost normal surfaces.
          *
-         * \todo \opt Use maximisation of Euler characteristic to
-         * make this routine much faster than a plain vertex enumeration.
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Use NTriangulation::hasOctagonalAlmostNormalSphere()
+         * instead, which offers significant optimisations over this routine.
          *
          * @param tri the triangulation in which to search.
          * @param quadOct \c true if we should search for vertex

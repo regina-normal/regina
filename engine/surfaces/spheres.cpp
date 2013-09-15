@@ -90,6 +90,12 @@ NNormalSurface* NNormalSurface::findNonTrivialSphere(NTriangulation* tri) {
 
 NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
         NTriangulation* tri, bool quadOct) {
+    // This routine is deprecated.
+    // However, stick with this implementation instead of running the
+    // faster NTriangulation::hasOctagonalAlmostNormalSphere(), since
+    // the docs for this routine insist on a vertex surface in a
+    // particular coordinate system.
+
     NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(tri, quadOct ?
         NS_AN_QUAD_OCT : NS_AN_STANDARD);
     unsigned long nSurfaces = surfaces->getNumberOfSurfaces();

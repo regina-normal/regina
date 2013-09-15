@@ -134,6 +134,83 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
     return ans;
 }
 
+NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
+    // Get the empty triangulation out of the way now.
+    if (tetrahedra.empty())
+        return 0;
+
+    // Use combinatorial optimisation if we can.
+    if (vertices.size() == 1) {
+        // For now, just use the safe arbitrary-precision NInteger type.
+        NTreeSingleSoln<LPConstraintEuler> tree(this, NS_AN_STANDARD);
+        if (tree.find()) {
+            // Since our preconditions ensure the triangulation is
+            // closed, orientable and 0-efficient, there are no
+            // non-vertex-linking normal surfaces with positive Euler
+            // characteristic.  Our optimisation asks for (Euler - #octs) > 0,
+            // which then implies that our surface here is almost normal
+            // with exactly 1 octagon and Euler = 2.  This is exactly
+            // what we're looking for.
+            NNormalSurface* s = tree.buildSurface();
+            return s;
+        } else
+            return 0;
+    }
+
+    // Fall back to a slow-but-general method: enumerate all vertex surfaces.
+    // Given our preconditions, we can do this in quadrilateral-octagon
+    // coordinates; for details see "Quadrilateral-octagon coordinates for
+    // almost normal surfaces", B.B., Experiment. Math. 19 (2010), 285-315.
+    NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(this,
+        NS_AN_QUAD_OCT);
+
+    // Our vertex surfaces are guaranteed to be in smallest possible
+    // integer coordinates, with at most one non-zero octagonal coordinate.
+    const NNormalSurface* s;
+    NNormalSurface* ans = 0;
+    unsigned long tet;
+    unsigned oct;
+    bool found, broken;
+    NLargeInteger coord;
+    for (size_t i = 0; i < surfaces->getNumberOfSurfaces() && ! ans; ++i) {
+        s = surfaces->getSurface(i);
+
+        // These are vertex surfaces, so we know they must be connected.
+        // Because we are working with a non-ideal triangulation, we know the
+        // vertex surfaces are compact.
+
+        // Hunt for spheres with exactly one octagon.
+        // Note that 1-sided projective planes are no good here,
+        // since when doubled they give too many octagonal discs.
+        if (s->getEulerCharacteristic() == 2) {
+            // Euler char = 2 implies no real boundary.
+            found = false; // At least one octagon found so far?
+            broken = false; // More than one octagon found so far?
+            for (tet = 0; tet < tetrahedra.size() && ! broken; ++tet)
+                for (oct = 0; oct < 3; ++oct) {
+                    coord = s->getOctCoord(tet, oct);
+                    if (coord > 1) {
+                        broken = true;
+                        break;
+                    } else if (coord == 1) {
+                        if (found) {
+                            broken = true;
+                            break;
+                        } else
+                            found = true;
+                    }
+                }
+            if (found && ! broken) {
+                // This is it!
+                ans = s->clone();
+            }
+        }
+    }
+
+    delete surfaces;
+    return ans;
+}
+
 bool NTriangulation::isZeroEfficient() {
     if (! zeroEfficient.known()) {
         if (hasTwoSphereBoundaryComponents())
