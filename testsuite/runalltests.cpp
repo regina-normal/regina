@@ -142,7 +142,6 @@ bool runAllTests() {
     addNTriangulation(runner);
     addElementaryMoves(runner);
     addConnectedSumDecomp(runner);
-    addThreeSphere(runner);
     addNIsomorphism(runner);
     addNHomologicalData(runner);
 
