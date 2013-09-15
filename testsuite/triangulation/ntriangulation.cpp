@@ -39,7 +39,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
-#include "census/ncensus.h"
 #include "maths/approx.h"
 #include "maths/nmatrixint.h"
 #include "maths/numbertheory.h"
@@ -50,6 +49,8 @@
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
+
+#include "testsuite/exhaustive.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NAbelianGroup;
@@ -1516,7 +1517,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Boundary H1(cusped solid genus two torus)", 4);
         }
 
-        static bool verifyFundGroupVsH1(NTriangulation* tri, void* arg = 0) {
+        static void verifyFundGroupVsH1(NTriangulation* tri) {
             NGroupPresentation* pi1 =
                 new NGroupPresentation(tri->getFundamentalGroup());
 
@@ -1546,8 +1547,6 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     "for " << tri->isoSig() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            return false;
         }
 
         void fundGroupVsH1() {
@@ -1577,13 +1576,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyFundGroupVsH1(&twoProjPlaneCusps);
             verifyFundGroupVsH1(&cuspedGenusTwoTorus);
 
-            regina::NContainer parent;
-            regina::NCensus::formCensus(&parent, 3,
-                regina::NBoolSet::sBoth /* finite */,
-                regina::NBoolSet::sBoth /* orientable */,
-                regina::NBoolSet::sFalse /* bounded */,
-                -1 /* bdry faces */, 0 /* purge */,
-                verifyFundGroupVsH1, 0);
+            runCensusAllClosed(verifyFundGroupVsH1);
+            runCensusAllBounded(verifyFundGroupVsH1);
+            runCensusAllIdeal(verifyFundGroupVsH1);
         }
 
         void verifyFundGroup(const NGroupPresentation& g,

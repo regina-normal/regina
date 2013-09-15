@@ -32,49 +32,23 @@
 
 /* end stub */
 
-// When we run tests over an entire census, do we use a larger census
-// (which takes a long time to run), or a smaller census?
-// #define LARGE_CENSUS
-
-#ifdef LARGE_CENSUS
-    #define MIN_CLOSED_CENSUS_SIZE 5
-    #define CLOSED_CENSUS_SIZE 4
-    #define BOUNDED_CENSUS_SIZE 3
-    #define IDEAL_CENSUS_SIZE 4
-
-    #define SMALL_MIN_CLOSED_CENSUS_SIZE 4
-    #define SMALL_CLOSED_CENSUS_SIZE 3
-    #define SMALL_BOUNDED_CENSUS_SIZE 2
-    #define SMALL_IDEAL_CENSUS_SIZE 3
-#else
-    #define MIN_CLOSED_CENSUS_SIZE 4
-    #define CLOSED_CENSUS_SIZE 3
-    #define BOUNDED_CENSUS_SIZE 2
-    #define IDEAL_CENSUS_SIZE 3
-
-    #define SMALL_MIN_CLOSED_CENSUS_SIZE 3
-    #define SMALL_CLOSED_CENSUS_SIZE 2
-    #define SMALL_BOUNDED_CENSUS_SIZE 1
-    #define SMALL_IDEAL_CENSUS_SIZE 2
-#endif
-
 #include "regina-config.h" // For EXCLUDE_NORMALIZ
 
 #include <algorithm>
 #include <cppunit/extensions/HelperMacros.h>
 #include <memory>
-#include "census/ncensus.h"
 #include "packet/ncontainer.h"
 #include "split/nsignature.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
+
+#include "testsuite/exhaustive.h"
 #include "testsuite/surfaces/testsurfaces.h"
 
 using regina::NAbelianGroup;
 using regina::NBoolSet;
 using regina::NBoundaryComponent;
-using regina::NCensus;
 using regina::NContainer;
 using regina::NEdge;
 using regina::NExampleTriangulation;
@@ -161,14 +135,6 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     private:
-        typedef void (*TestFunction)(NTriangulation*);
-        struct TestFunctionHolder {
-            // Work around the fact that we cannot cast between function
-            // pointers and void*.
-            TestFunction f_;
-            TestFunctionHolder(TestFunction f) : f_(f) {}
-        };
-
         NTriangulation empty;
             /**< An empty triangulation. */
         NTriangulation oneTet;
@@ -274,73 +240,6 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void tearDown() {
-        }
-
-        static bool testCensusTriangulation(NTriangulation* tri,
-                void* testFunctionHolder) {
-            tri->setPacketLabel(tri->isoSig());
-            (*(static_cast<TestFunctionHolder*>(testFunctionHolder)->f_))(tri);
-            return false;
-        }
-
-        void runCensusMinClosed(TestFunction testFunction) {
-            NContainer* parent = new NContainer();
-
-            TestFunctionHolder f(testFunction);
-            NCensus::formCensus(parent, MIN_CLOSED_CENSUS_SIZE,
-                NBoolSet::sTrue /* finite */,
-                NBoolSet::sBoth /* orientable */,
-                NBoolSet::sFalse /* bounded */,
-                -1, /* bdry faces */
-                NCensus::PURGE_NON_MINIMAL_PRIME | NCensus::PURGE_P2_REDUCIBLE,
-                testCensusTriangulation, &f);
-
-            delete parent;
-        }
-
-        void runCensusAllClosed(TestFunction testFunction, bool small = true) {
-            NContainer* parent = new NContainer();
-
-            TestFunctionHolder f(testFunction);
-            NCensus::formCensus(parent,
-                (small ? SMALL_CLOSED_CENSUS_SIZE : CLOSED_CENSUS_SIZE),
-                NBoolSet::sTrue /* finite */,
-                NBoolSet::sBoth /* orientable */,
-                NBoolSet::sFalse /* bounded */,
-                -1 /* bdry faces */, 0 /* purge */,
-                testCensusTriangulation, &f);
-
-            delete parent;
-        }
-
-        void runCensusAllBounded(TestFunction testFunction, bool small = true) {
-            NContainer* parent = new NContainer();
-
-            TestFunctionHolder f(testFunction);
-            NCensus::formCensus(parent,
-                (small ? SMALL_BOUNDED_CENSUS_SIZE : BOUNDED_CENSUS_SIZE),
-                NBoolSet::sTrue /* finite */,
-                NBoolSet::sBoth /* orientable */,
-                NBoolSet::sTrue /* bounded */,
-                -1 /* bdry faces */, 0 /* purge */,
-                testCensusTriangulation, &f);
-
-            delete parent;
-        }
-
-        void runCensusAllIdeal(TestFunction testFunction, bool small = true) {
-            NContainer* parent = new NContainer();
-
-            TestFunctionHolder f(testFunction);
-            NCensus::formCensus(parent,
-                (small ? SMALL_IDEAL_CENSUS_SIZE : IDEAL_CENSUS_SIZE),
-                NBoolSet::sFalse /* finite */,
-                NBoolSet::sBoth /* orientable */,
-                NBoolSet::sFalse /* bounded */,
-                -1 /* bdry faces */, 0 /* purge */,
-                testCensusTriangulation, &f);
-
-            delete parent;
         }
 
         void testSize(NNormalSurfaceList* list,
@@ -1883,10 +1782,10 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         template <regina::NormalCoords coords>
         void fundPrimalVsDual() {
-            runCensusMinClosed(verifyFundPrimalVsDual<coords>);
-            runCensusAllClosed(verifyFundPrimalVsDual<coords>);
-            runCensusAllBounded(verifyFundPrimalVsDual<coords>);
-            runCensusAllIdeal(verifyFundPrimalVsDual<coords>);
+            runCensusMinClosed(verifyFundPrimalVsDual<coords>, true);
+            runCensusAllClosed(verifyFundPrimalVsDual<coords>, true);
+            runCensusAllBounded(verifyFundPrimalVsDual<coords>, true);
+            runCensusAllIdeal(verifyFundPrimalVsDual<coords>, true);
         }
 
         static void testDisjoint(NTriangulation* tri) {
