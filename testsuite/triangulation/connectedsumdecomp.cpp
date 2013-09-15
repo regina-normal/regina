@@ -42,6 +42,8 @@
 #include "split/nsignature.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
+
+#include "testsuite/exhaustive.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NAbelianGroup;
@@ -60,6 +62,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(specialCases);
     CPPUNIT_TEST(primes);
     CPPUNIT_TEST(nonTrivialSums);
+    CPPUNIT_TEST(extendedCensus);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -447,6 +450,66 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             verifySigPair("(abacde)(dffgg)(b)(c)(e)", "L(8,3)", "S2 x S1");
             verifySigRP3x3("(aabccdeffeg)(b)(d)(g)");
             verifySigRP3x3("(aabcde)(cfg)(dgf)(b)(e)");
+        }
+
+        static void testDecomp(NTriangulation* tri) {
+            // Checked the connectedSumDecomposition() preconditions.
+            if (! (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
+                    tri->isConnected()))
+                return;
+
+            NContainer parent;
+            unsigned long ncomp = tri->connectedSumDecomposition(&parent);
+
+            if (ncomp != parent.getNumberOfChildren()) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri->getPacketLabel()
+                    << " reports a different number of connected sum "
+                    "components from how many it actually builds.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NAbelianGroup h1;
+            NTriangulation* term;
+            for (regina::NPacket* p = parent.getFirstTreeChild(); p;
+                    p = p->getNextTreeSibling()) {
+                term = static_cast<NTriangulation*>(p);
+                if (! term->isZeroEfficient()) {
+                    // Special cases: 2-tetrahedron RP3, L(3,1), S2xS1.
+                    if (! (term->getNumberOfTetrahedra() == 2 &&
+                            (term->isoSig() == "cMcabbgqw" /* RP3 */ ||
+                            term->isoSig() == "cMcabbgqj" /* L(3,1) */ ||
+                            term->isoSig() == "cPcbbbaai" /* L(3,1) */ ||
+                            term->isoSig() == "cMcabbjaj" /* S2xS1 */))) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << tri->getPacketLabel()
+                            << " reports a non-zero-efficient summand "
+                            << term->isoSig() << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+                if (term->isThreeSphere()) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << tri->getPacketLabel()
+                        << " reports a 3-sphere summand "
+                        << term->isoSig() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                h1.addGroup(term->getHomologyH1());
+            }
+
+            if (! (h1 == tri->getHomologyH1())) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri->getPacketLabel()
+                    << " has first homology that does not match "
+                    "the combination of its summands' first homologies.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void extendedCensus() {
+            runCensusAllClosed(&testDecomp);
+            runCensusMinClosed(&testDecomp);
         }
 };
 
