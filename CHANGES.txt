@@ -262,6 +262,8 @@ Version 4.94  [ 24 September, 2013 ]
               triangulation is oriented (otherwise SnapPea will relabel
               tetrahedron vertices and the matrix returned will be null).
             - Fixed minor memory leak in cutAlong().
+            - Routine findNonTrivialSphere() is deprecated.  Instead use
+              NTriangulation::hasNonTrivialSphereOrDisc().
             - Removed writeToFile(NFile&) and readFromFile(NFile&, ...),
               which were used for old-style binary files.
         Class NNormalSurfaceList:
@@ -376,6 +378,13 @@ Version 4.94  [ 24 September, 2013 ]
         Class NTriangulation:
             - New routine drillEdge() to drill out a regular
               neighbourhood of an edge.
+            - New optimised routine hasNonTrivialSphereOrDisc that uses linear
+              programming where possible to avoid a full enumeration of
+              vertex surfaces.  See arXiv:1211.1079 for details.
+            - Some routines are now *much* faster, thanks to the new
+              tree traversal code (arXiv:1211.1079).  These include
+              isZeroEfficient(), threeSphereRecognition(), and
+              connectedSumDecomposition().
             - Rewrote barycentricSubdivision(): the code is now clearer,
               but note that the precise labelling of the new tetrahedra has
               changed from earlier versions of Regina.

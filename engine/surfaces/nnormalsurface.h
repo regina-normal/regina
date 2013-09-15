@@ -1468,11 +1468,9 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * triangulation, and so must be destroyed before the triangulation
          * itself.
          *
-         * \warning Currently this routine is quite slow since it
-         * involves a full enumeration of vertex normal surfaces.
-         *
-         * \todo \opturgent Use maximisation of Euler characteristic to
-         * make this routine much faster than a plain vertex enumeration.
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Use NTriangulation::hasNonTrivialSphereOrDisc()
+         * instead.
          *
          * @param tri the triangulation in which to search.
          * @return a newly allocated non-vertex-linking normal sphere

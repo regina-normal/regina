@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "algebra/ngrouppresentation.h"
+#include "surfaces/nnormalsurface.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
 
@@ -257,6 +258,9 @@ void addNTriangulation() {
         .def("knowsZeroEfficient", &NTriangulation::knowsZeroEfficient)
         .def("hasSplittingSurface", &NTriangulation::hasSplittingSurface)
         .def("knowsSplittingSurface", &NTriangulation::knowsSplittingSurface)
+        .def("hasNonTrivialSphereOrDisc",
+            &NTriangulation::hasNonTrivialSphereOrDisc,
+            return_value_policy<manage_new_object>())
         .def("intelligentSimplify", &NTriangulation::intelligentSimplify)
         .def("simplifyToLocalMinimum", &NTriangulation::simplifyToLocalMinimum,
             OL_simplifyToLocalMinimum())

@@ -32,6 +32,7 @@
 
 /* end stub */
 
+#include "enumerate/ntreetraversal.h"
 #include "triangulation/ntriangulation.h"
 #include "surfaces/nnormalsurfacelist.h"
 
@@ -69,12 +70,85 @@ namespace regina {
  * vertex link.
  */
 
+NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
+    // Get the empty triangulation out of the way now.
+    if (tetrahedra.empty())
+        return 0;
+
+    // Do we already know the answer?
+    if (zeroEfficient.known() && zeroEfficient.value())
+        return 0;
+
+    // Use combinatorial optimisation if we can.
+    if (isValid() && vertices.size() == 1) {
+        // For now, just use the safe arbitrary-precision NInteger type.
+        NTreeSingleSoln<LPConstraintEuler> tree(this, NS_STANDARD);
+        if (tree.find()) {
+            NNormalSurface* s = tree.buildSurface();
+            if (! ((! s->hasRealBoundary()) &&
+                    (s->getEulerCharacteristic() == 1) && s->isTwoSided()))
+                return s;
+            // Looks like we've found a two-sided projective plane.
+            // Fall through to a full enumeration of vertex surfaces.
+            delete s;
+        } else
+            return 0;
+    }
+
+    // Fall back to a slow-but-general method: enumerate all vertex surfaces.
+    // For valid, non-ideal triangulations we can do this in quad
+    // coordinates (where a non-trivial sphere or disc is guaranteed to
+    // appear as a vertex surface).  Otherwise fall back to standard coords.
+    NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(this,
+        (isValid() && ! isIdeal()) ? NS_QUAD : NS_STANDARD);
+    const NNormalSurface* s;
+    NNormalSurface* ans = 0;
+    for (size_t i = 0; i < surfaces->getNumberOfSurfaces() && ! ans; ++i) {
+        s = surfaces->getSurface(i);
+
+        // These are vertex surfaces, so we know they must be connected.
+        // Because we are either (i) using standard coordinates, or
+        // (ii) working with a non-ideal triangulation; we know the
+        // vertex surfaces are compact also.
+
+        if (s->isVertexLinking())
+            continue;
+
+        // Now they are compact, connected and non-vertex-linking.
+        // We just need to pick out spheres and discs.
+        if (s->getEulerCharacteristic() == 2) {
+            // Must be a sphere; no bounded surface has chi=2.
+            ans = s->clone();
+        } else if (s->getEulerCharacteristic() == 1) {
+            if (s->hasRealBoundary()) {
+                // Must be a disc.
+                ans = s->clone();
+            } else if (! s->isTwoSided()) {
+                // A projective plane that doubles to a sphere.
+                ans = s->doubleSurface();
+            }
+        }
+    }
+
+    delete surfaces;
+    return ans;
+}
+
 bool NTriangulation::isZeroEfficient() {
     if (! zeroEfficient.known()) {
         if (hasTwoSphereBoundaryComponents())
             zeroEfficient = false;
-        else
-            calculateStandardSurfaceProperties();
+        else {
+            // Operate on a clone of this triangulation, to avoid
+            // changing the real packet tree.
+            NTriangulation clone(*this);
+            NNormalSurface* s = clone.hasNonTrivialSphereOrDisc();
+            if (s) {
+                zeroEfficient = false;
+                delete s;
+            } else
+                zeroEfficient = true;
+        }
     }
     return zeroEfficient.value();
 }
@@ -82,12 +156,9 @@ bool NTriangulation::isZeroEfficient() {
 bool NTriangulation::hasSplittingSurface() {
     // Splitting surfaces must unfortunately be calculated using
     // tri-quad coordinates.
-    if (! splittingSurface.known())
-        calculateStandardSurfaceProperties();
-    return splittingSurface.value();
-}
+    if (splittingSurface.known())
+        return splittingSurface.value();
 
-void NTriangulation::calculateStandardSurfaceProperties() {
     // Create a normal surface list.
     //
     // Work on a clone of this triangulation so we don't trigger any
@@ -107,38 +178,17 @@ void NTriangulation::calculateStandardSurfaceProperties() {
             if (s->isSplitting())
                 splittingSurface = true;
 
-        if (! zeroEfficient.known())
-            if (! s->isVertexLinking()) {
-                // No need to test for connectedness since these are
-                // vertex normal surfaces.
-                // No need to test for compactness since we're using
-                // standard tri-quad coordinates.
-                chi = s->getEulerCharacteristic();
-                if (s->hasRealBoundary()) {
-                    // Hunt for discs.
-                    if (chi == 1)
-                        zeroEfficient = false;
-                } else {
-                    // Hunt for spheres.
-                    if (chi == 2)
-                        zeroEfficient = false;
-                    else if (chi == 1 && ! s->isTwoSided())
-                        zeroEfficient = false;
-                }
-            }
-
         // See if there is no use running through the rest of the list.
-        if (zeroEfficient.known() && splittingSurface.known())
+        if (splittingSurface.known())
             break;
     }
 
     // Done!
-    if (! zeroEfficient.known())
-        zeroEfficient = true;
     if (! splittingSurface.known())
         splittingSurface = false;
 
     // The stack will clean things up for us automatically.
+    return splittingSurface.value();
 }
 
 } // namespace regina

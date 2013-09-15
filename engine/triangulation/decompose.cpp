@@ -150,7 +150,7 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
         processing->makeOrphan();
 
         // Find a normal 2-sphere to crush.
-        sphere = NNormalSurface::findNonTrivialSphere(processing);
+        sphere = processing->hasNonTrivialSphereOrDisc();
         if (sphere) {
             crushed = sphere->crush();
             delete sphere;
@@ -291,7 +291,7 @@ bool NTriangulation::isThreeSphere() const {
         processing->makeOrphan();
 
         // Find a normal 2-sphere to crush.
-        sphere = NNormalSurface::findNonTrivialSphere(processing);
+        sphere = processing->hasNonTrivialSphereOrDisc();
         if (sphere) {
             crushed = sphere->crush();
             delete sphere;

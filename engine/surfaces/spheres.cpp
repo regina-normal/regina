@@ -39,6 +39,15 @@
 namespace regina {
 
 NNormalSurface* NNormalSurface::findNonTrivialSphere(NTriangulation* tri) {
+    if (! tri->hasBoundaryFaces()) {
+        // Switch to the optimised (and non-deprecated) verison of this routine.
+        // Here we use the fact that, with no boundary faces, there
+        // cannot be any normal discs.
+        return tri->hasNonTrivialSphereOrDisc();
+    }
+
+    // The older, deprecated code follows.
+
     // If the triangulation is already known to be 0-efficient, there
     // are no non-trivial normal 2-spheres.
     if (tri->knowsZeroEfficient() && tri->isZeroEfficient())
