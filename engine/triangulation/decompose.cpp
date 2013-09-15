@@ -194,8 +194,7 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
                 // coordinates paper, we can restrict this search further
                 // to vertex octagonal almost normal surfaces in
                 // quadrilateral-octagonal space.
-                sphere = NNormalSurface::findVtxOctAlmostNormalSphere(
-                    processing, true /* quad-oct coordinates */);
+                sphere = processing->hasOctagonalAlmostNormalSphere();
                 if (sphere) {
                     // It's a 3-sphere.  Toss this component away.
                     delete sphere;
@@ -335,8 +334,7 @@ bool NTriangulation::isThreeSphere() const {
                 // coordinates paper, we can restrict this search further
                 // to vertex octagonal almost normal surfaces in
                 // quadrilateral-octagonal space.
-                sphere = NNormalSurface::findVtxOctAlmostNormalSphere(
-                    processing, true /* quad-oct coordinates */);
+                sphere = processing->hasOctagonalAlmostNormalSphere();
                 if (sphere) {
                     // It's a 3-sphere.  Toss this component away.
                     delete sphere;

@@ -1446,6 +1446,26 @@ class REGINA_API NTriangulation : public NPacket {
          * disc, or 0 if none exists.
          */
         NNormalSurface* hasNonTrivialSphereOrDisc();
+        /**
+         * Searches for an octagonal almost normal 2-sphere within this
+         * triangulation.  If such a surface exists, this routine is
+         * guaranteed to find one.
+         *
+         * Note that the surface returned (if any) depends upon this
+         * triangulation, and so the surface must be destroyed before this
+         * triangulation is destroyed.
+         *
+         * \pre This triangulation is valid, closed, orientable, connected,
+         * and 0-efficient.  These preconditions are almost certainly more
+         * restrictive than they need to be, but we stay safe for now.
+         *
+         * \warning This routine may, in some scenarios, temporarily modify the
+         * packet tree by creating and then destroying a normal surface list.
+         *
+         * @return a newly allocated non-vertex-linking normal sphere or
+         * disc, or 0 if none exists.
+         */
+        NNormalSurface* hasOctagonalAlmostNormalSphere();
 
         /*@}*/
         /**

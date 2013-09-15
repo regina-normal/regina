@@ -261,6 +261,9 @@ void addNTriangulation() {
         .def("hasNonTrivialSphereOrDisc",
             &NTriangulation::hasNonTrivialSphereOrDisc,
             return_value_policy<manage_new_object>())
+        .def("hasOctagonalAlmostNormalSphere",
+            &NTriangulation::hasOctagonalAlmostNormalSphere,
+            return_value_policy<manage_new_object>())
         .def("intelligentSimplify", &NTriangulation::intelligentSimplify)
         .def("simplifyToLocalMinimum", &NTriangulation::simplifyToLocalMinimum,
             OL_simplifyToLocalMinimum())
