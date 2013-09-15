@@ -298,6 +298,8 @@ Version 4.94  [ 24 September, 2013 ]
               These are identical to the corresponding routines for
               operating on tetrahedra, and can help with writing code that
               works with more than one dimension.
+            - Fixed isZeroEfficient(), which was reporting incorrect results
+              for triangulations containing a mix of real and ideal vertices.
             - Fixed minor memory leak in idealToFinite().
             - Removed the old (and slow) getTetrahedronIndex(), getFaceIndex()
               and so on.  Use tetrahedronIndex(), faceIndex(), etc. instead.
@@ -365,8 +367,9 @@ Version 4.94  [ 24 September, 2013 ]
     TEST SUITE:
         - Greatly expanded the tests for NLargeInteger and NInteger,
           which are now extremely thorough.
-        - New NTriangulation tests for barycentric subdivision, drilling
-          edges, and comparing H1 with the abelianised fundamental group.
+        - New and more thorough NTriangulation tests for barycentric
+          subdivision, drilling edges, 0-efficiency testing, and comparing
+          H1 with the abelianised fundamental group.
         - New NNormalSurfaceList tests for comparing the results of different
           vertex / fundamental surface enumeration algorithms.  Also,
           exhaustive tests over census data now include ideal triangulations.
