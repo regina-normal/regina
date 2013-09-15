@@ -70,6 +70,7 @@ class NTetrahedron;
 class NVertex;
 class NGroupPresentation;
 class NIsomorphism;
+class NNormalSurface;
 class NXMLPacketReader;
 class NXMLTriangulationReader;
 
@@ -1429,6 +1430,22 @@ class REGINA_API NTriangulation : public NPacket {
          * @return \c true if and only if this property is already known.
          */
         bool knowsSplittingSurface() const;
+        /**
+         * Searches for a non-vertex-linking normal sphere or disc
+         * within this triangulation.  If such a surface exists within
+         * this triangulation, this routine is guaranteed to find one.
+         *
+         * Note that the surface returned (if any) depends upon this
+         * triangulation, and so the surface must be destroyed before this
+         * triangulation is destroyed.
+         *
+         * \warning This routine may, in some scenarios, temporarily modify the
+         * packet tree by creating and then destroying a normal surface list.
+         *
+         * @return a newly allocated non-vertex-linking normal sphere or
+         * disc, or 0 if none exists.
+         */
+        NNormalSurface* hasNonTrivialSphereOrDisc();
 
         /*@}*/
         /**
@@ -3141,12 +3158,6 @@ class REGINA_API NTriangulation : public NPacket {
          * @return the candidate isomorphism signature.
          */
         std::string isoSig(unsigned tet, const NPerm4& vertices) const;
-
-        /**
-         * Calculates all properties that can be deduced from an
-         * examination of normal surfaces in standard tri-quad coordinates.
-         */
-        void calculateStandardSurfaceProperties();
 
         void stretchBoundaryForestFromVertex(NVertex*, std::set<NEdge*>&,
                 std::set<NVertex*>&) const;
