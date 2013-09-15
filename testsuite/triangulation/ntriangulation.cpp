@@ -45,6 +45,7 @@
 #include "packet/ncontainer.h"
 #include "split/nsignature.h"
 #include "subcomplex/nstandardtri.h"
+#include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
@@ -57,6 +58,8 @@ using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
 using regina::NIsomorphism;
+using regina::NNormalSurface;
+using regina::NNormalSurfaceList;
 using regina::NPerm4;
 using regina::NSignature;
 using regina::NStandardTriangulation;
@@ -1544,7 +1547,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             if (abelian.toStringLong() != tri->getHomologyH1().toStringLong()) {
                 std::ostringstream msg;
                 msg << "Abelianised fundamental group does not match H1 "
-                    "for " << tri->isoSig() << ".";
+                    "for " << tri->getPacketLabel() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -1655,6 +1658,72 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 "Fund(pinched solid Klein bottle)", "Z");
         }
 
+        static void testZeroEfficiency(NTriangulation* tri) {
+            bool ans = tri->isZeroEfficient();
+
+            if (tri->isClosed() && tri->isConnected()) {
+                if (tri->getNumberOfVertices() > 2 && ans) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << tri->getPacketLabel()
+                        << " has >2 vertices but is reported as 0-efficient.";
+                    CPPUNIT_FAIL(msg.str());
+                } else if (tri->getNumberOfVertices() == 2 && ans &&
+                        (! tri->getHomologyH1().isTrivial())) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << tri->getPacketLabel()
+                        << " has 2 vertices and non-trivial homology "
+                        "but is reported as 0-efficient.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            // Test it the long way, directly from the definition.
+            bool expected;
+            if (tri->hasTwoSphereBoundaryComponents())
+                expected = false;
+            else {
+                expected = true;
+                NNormalSurfaceList* s = NNormalSurfaceList::enumerate(
+                    tri, regina::NS_STANDARD);
+                const NNormalSurface* f;
+                for (size_t i = 0; i < s->getNumberOfSurfaces(); ++i) {
+                    f = s->getSurface(i);
+                    if (f->getEulerCharacteristic() == 2 &&
+                            (! f->hasRealBoundary()) &&
+                            ! f->isVertexLinking()) {
+                        // Normal sphere
+                        expected = false;
+                        break;
+                    } else if (f->getEulerCharacteristic() == 1 &&
+                            (! f->hasRealBoundary()) &&
+                            (! f->isTwoSided()) &&
+                            ! f->isVertexLinking()) {
+                        // Normal projective plane that doubles to a
+                        // normal sphere
+                        expected = false;
+                        break;
+                    } else if (f->getEulerCharacteristic() == 1 &&
+                            f->hasRealBoundary() && ! f->isVertexLinking()) {
+                        // Normal disc
+                        expected = false;
+                        break;
+                    }
+                }
+                delete s;
+            }
+            if (ans && ! expected) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri->getPacketLabel()
+                    << " is reported as 0-efficient but should not be.";
+                CPPUNIT_FAIL(msg.str());
+            } else if (expected && ! ans) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri->getPacketLabel()
+                    << " is not reported as 0-efficient but should be.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         void zeroEfficiency() {
             CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not "
                 "0-efficient.", empty.isZeroEfficient());
@@ -1713,6 +1782,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
             // CPPUNIT_ASSERT_MESSAGE("The cusped solid genus two torus "
             //     "is 0-efficient.",
             //     ! cuspedGenusTwoTorus.isZeroEfficient());
+
+            runCensusAllClosed(testZeroEfficiency);
+            runCensusAllBounded(testZeroEfficiency);
+            runCensusAllIdeal(testZeroEfficiency);
         }
 
         void verifyTV3(NTriangulation& t, const std::string& triName) {
