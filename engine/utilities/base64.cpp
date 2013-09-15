@@ -278,6 +278,8 @@ void base64Encode(const char* in, size_t inlen, char* out, size_t outlen) {
             inc[len] = *in++;
             --inlen;
         }
+        for (i = len; i < 3; ++i)
+            inc[i] = 0;
 
         // encode 3 8-bit binary bytes as 4 '6-bit' characters
         outc[0] = (unsigned char) cb64[ (int)(inc[0] >> 2) ];
