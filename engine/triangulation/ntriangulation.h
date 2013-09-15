@@ -3147,11 +3147,6 @@ class REGINA_API NTriangulation : public NPacket {
          * examination of normal surfaces in standard tri-quad coordinates.
          */
         void calculateStandardSurfaceProperties();
-        /**
-         * Calculates all properties that can be deduced from an
-         * examination of normal surfaces in quadrilateral-only coordinates.
-         */
-        void calculateQuadSurfaceProperties();
 
         void stretchBoundaryForestFromVertex(NVertex*, std::set<NEdge*>&,
                 std::set<NVertex*>&) const;

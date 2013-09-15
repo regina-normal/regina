@@ -299,7 +299,7 @@ Version 4.94  [ 24 September, 2013 ]
               operating on tetrahedra, and can help with writing code that
               works with more than one dimension.
             - Fixed isZeroEfficient(), which was reporting incorrect results
-              for triangulations containing a mix of real and ideal vertices.
+              for ideal triangulations.
             - Fixed minor memory leak in idealToFinite().
             - Removed the old (and slow) getTetrahedronIndex(), getFaceIndex()
               and so on.  Use tetrahedronIndex(), faceIndex(), etc. instead.

@@ -53,22 +53,15 @@ namespace regina {
  */
 
 /**
- * In general, in quad space the decomposition of a normal surface S is:
- *
- *   k * S + sum of vertex links = sum of vertex normal surfaces
- *
- * If S is a 2-sphere or a disc and every vertex link has non-negative
- * Euler characteristic, it follows that at least one vertex normal surface
- * has positive Euler characteristic.  From the above comments we see
- * that this vertex normal surface must be a 2-sphere, a disc or a
- * 1-sided projective plane (which doubles to a 2-sphere).
- *
- * Thus we can test 0-efficiency in quad space if all vertex links have
- * non-negative Euler characteristic.
+ * In the general case, 0-efficiency must be tested for in standard
+ * triangle-quad coordinates.  For example, the triangulation with
+ * isosig dLQacccbnli (which is ideal with one Klein bottle cusp) is
+ * not 0-efficient, but the non-trivial sphere does not appear as a
+ * vertex in quad coordinates.
  */
 
 /**
- * Splitting surfaces must alas be tested for in standard triangle-quad
+ * Splitting surfaces must also be tested for in standard triangle-quad
  * coordinates.  See the triangulation J_{1|3,-5} (chained triangular
  * solid torus of major type) of S^3 / Q_32 x Z_3 an an example of a
  * triangulation with a splitting surface having chi=-1 that can be
@@ -78,17 +71,10 @@ namespace regina {
 
 bool NTriangulation::isZeroEfficient() {
     if (! zeroEfficient.known()) {
-        if (hasTwoSphereBoundaryComponents()) {
-            // We have 2-sphere boundary components.
-            // No need to look through normal surfaces.
+        if (hasTwoSphereBoundaryComponents())
             zeroEfficient = false;
-        } else if (isValid() && ! hasNegativeIdealBoundaryComponents()) {
-            // We can calculate this using normal surfaces in quad space.
-            calculateQuadSurfaceProperties();
-        } else {
-            // We have to use the slower tri-quad coordinates.
+        else
             calculateStandardSurfaceProperties();
-        }
     }
     return zeroEfficient.value();
 }
@@ -99,60 +85,6 @@ bool NTriangulation::hasSplittingSurface() {
     if (! splittingSurface.known())
         calculateStandardSurfaceProperties();
     return splittingSurface.value();
-}
-
-void NTriangulation::calculateQuadSurfaceProperties() {
-    // Create a normal surface list.
-    //
-    // Work on a clone of this triangulation so we don't trigger any
-    // changes to the packet tree.
-    NTriangulation working(*this);
-    NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(&working,
-        NS_QUAD);
-
-    // All we can test here is 0-efficiency.
-
-    // Are we allowed to calculate 0-efficiency using quad coordinates?
-    if ((! isValid()) || hasNegativeIdealBoundaryComponents())
-        return;
-
-    // Run through all vertex surfaces.
-    unsigned long nSurfaces = surfaces->getNumberOfSurfaces();
-    const NNormalSurface* s;
-    NLargeInteger chi;
-    for (unsigned long i = 0; i < nSurfaces; i++) {
-        s = surfaces->getSurface(i);
-
-        if (! zeroEfficient.known()) {
-            // Note that all vertex surfaces in quad space are
-            // connected and non-vertex-linking.
-
-            if (s->isCompact()) {
-                chi = s->getEulerCharacteristic();
-                if (s->hasRealBoundary()) {
-                    // Hunt for discs.
-                    if (chi == 1)
-                        zeroEfficient = false;
-                } else {
-                    // Hunt for spheres.
-                    if (chi == 2)
-                        zeroEfficient = false;
-                    else if (chi == 1 && ! s->isTwoSided())
-                        zeroEfficient = false;
-                }
-            }
-        }
-
-        // See if there is no use running through the rest of the list.
-        if (zeroEfficient.known())
-            break;
-    }
-
-    // Done!
-    if (! zeroEfficient.known())
-        zeroEfficient = true;
-
-    // The stack will clean things up for us automatically.
 }
 
 void NTriangulation::calculateStandardSurfaceProperties() {

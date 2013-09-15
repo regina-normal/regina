@@ -41,29 +41,13 @@ namespace regina {
 NNormalSurface* NNormalSurface::findNonTrivialSphere(NTriangulation* tri) {
     // If the triangulation is already known to be 0-efficient, there
     // are no non-trivial normal 2-spheres.
-    if (tri->knowsZeroEfficient())
-        if (tri->isZeroEfficient())
-            return 0;
-
-    /**
-     * See the comments at the beginning of ../triangulation/surfaces.cpp
-     * for an explanation of why the following algorithm is correct.
-     */
-
-    NormalCoords coords;
-    if ((! tri->hasBoundaryFaces()) && tri->isValid() &&
-            (! tri->hasNegativeIdealBoundaryComponents())) {
-        // We can guarantee that at least one normal sphere will show up
-        // as a vertex surface in quad space, if any exist.
-        coords = NS_QUAD;
-    } else {
-        // We have to resort to standard tri-quad coordinates.
-        coords = NS_STANDARD;
-    }
+    if (tri->knowsZeroEfficient() && tri->isZeroEfficient())
+        return 0;
 
     // Construct the vertex normal surfaces and look for any spheres
     // or 1-sided projective planes.
-    NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(tri, coords);
+    NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(tri,
+        NS_STANDARD);
     unsigned long nSurfaces = surfaces->getNumberOfSurfaces();
 
     const NNormalSurface* s;
