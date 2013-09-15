@@ -36,16 +36,16 @@
 #include <memory>
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "census/ncensus.h"
 #include "packet/ncontainer.h"
 #include "split/nsignature.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
-#include "testsuite/triangulation/testtriangulation.h"
 #include "utilities/nbooleans.h"
 
+#include "testsuite/exhaustive.h"
+#include "testsuite/triangulation/testtriangulation.h"
+
 using regina::NBoolSet;
-using regina::NCensus;
 using regina::NContainer;
 using regina::NExampleTriangulation;
 using regina::NPerm4;
@@ -124,6 +124,11 @@ class ThreeSphereTest : public CppUnit::TestFixture {
             delete verifyNotThreeSphere(generateFromSig(sigStr), sigStr);
         }
 
+        void verifyIsoSigThreeSphere(const std::string& sigStr) {
+            delete verifyThreeSphere(NTriangulation::fromIsoSig(sigStr),
+                sigStr);
+        }
+
         void threeSphereRecognition() {
             NTriangulation* tri;
 
@@ -145,6 +150,35 @@ class ThreeSphereTest : public CppUnit::TestFixture {
             tri = new NTriangulation();
             tri->insertLayeredLensSpace(1,0);
             delete verifyThreeSphere(tri, "L(1,0)");
+
+            // 3-sphere triangulations that are difficult to simplify
+            // (taken from the 2013 Hyamfest paper on Regina):
+            verifyIsoSigThreeSphere("jLLvQPQbeghfifiihxxaaxxjxar");
+            verifyIsoSigThreeSphere("jLLLAQPbeggfhhhiihhlhegbgdw");
+            verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabspr");
+            verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabspk");
+            verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabwpr");
+            verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabwpk");
+            verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabsdw");
+            verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabsds");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggliajgr");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggliajgk");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggliawgr");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggliawgk");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggllajgw");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggllajgj");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggllawgw");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggllawgj");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggiiargr");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggiiargk");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggiiakgr");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggiiakgk");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggilargw");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggilargj");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggilakgw");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggilakgj");
+            verifyIsoSigThreeSphere("kLLLAPPkbeggfihjiijhhlhehgdahw");
+            verifyIsoSigThreeSphere("kLLvQPPkbeghfifjhjjxxaaxxjxrvc");
 
             // Non-3-spheres obtained from splitting surface signatures:
             verifySigNotThreeSphere("(aab)(b)");
@@ -272,7 +306,7 @@ class ThreeSphereTest : public CppUnit::TestFixture {
             delete verifyNotThreeSphere(tri, "Empty triangulation");
         }
 
-        static bool verifyThreeSphereCensus(NTriangulation* tri, void*) {
+        static void testThreeSphere(NTriangulation* tri) {
             // PRECONDITION: tri has <= 6 tetrahedra.
             //
             // We know from the closed orientable census data that the
@@ -285,39 +319,31 @@ class ThreeSphereTest : public CppUnit::TestFixture {
             // What did 3-sphere recognition say?
             bool found = tri->isThreeSphere();
 
-            bool real = (tri->isValid() &&
+            bool expected = (tri->isValid() &&
                          tri->isClosed() &&
                          tri->isOrientable() &&
                          tri->isConnected() &&
                          tri->getHomologyH1().isTrivial() &&
                          tri->turaevViro(5, 1) < 0.5);
 
-            if (real && ! found)
-                CPPUNIT_FAIL("A census 3-sphere was not recognised "
-                    "as a 3-sphere.");
-            else if (found && ! real)
-                CPPUNIT_FAIL("A census non-3-sphere was recognised "
-                    "as a 3-sphere.");
-
-            return false;
+            if (expected && ! found) {
+                std::ostringstream msg;
+                msg << "The census 3-sphere " << tri->getPacketLabel()
+                    << " was not recognised as a 3-sphere.";
+                CPPUNIT_FAIL(msg.str());
+            } else if (found && ! expected) {
+                std::ostringstream msg;
+                msg << "The census non-3-sphere " << tri->getPacketLabel()
+                    << " was recognised as a 3-sphere.";
+                CPPUNIT_FAIL(msg.str());
+            }
         }
 
         void threeSphereCensus() {
-            NContainer parent;
-
-            // Enumerate orientable triangulations.
-            NCensus::formCensus(&parent, 4 /* tetrahedra */,
-                NBoolSet::sTrue /* finite */,
-                NBoolSet::sTrue /* orientable */,
-                NBoolSet::sFalse /* bounded */,
-                -1, 0, &verifyThreeSphereCensus, 0);
-
-            // Enumerate non-orientable triangulations also, for good measure.
-            NCensus::formCensus(&parent, 3 /* tetrahedra */,
-                NBoolSet::sTrue /* finite */,
-                NBoolSet::sTrue /* orientable */,
-                NBoolSet::sFalse /* bounded */,
-                -1, 0, &verifyThreeSphereCensus, 0);
+            runCensusMinClosed(&testThreeSphere);
+            runCensusAllClosed(&testThreeSphere);
+            runCensusAllBounded(&testThreeSphere);
+            runCensusAllIdeal(&testThreeSphere);
         }
 
         NTriangulation* verifyThreeBall(NTriangulation* tri,
