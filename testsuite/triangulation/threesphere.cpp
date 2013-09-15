@@ -70,6 +70,7 @@ class ThreeSphereTest : public CppUnit::TestFixture {
                 return 0;
 
             NTriangulation* triNew = sig->triangulate();
+            triNew->setPacketLabel(sigStr);
             delete sig;
             return triNew;
         }
@@ -81,9 +82,12 @@ class ThreeSphereTest : public CppUnit::TestFixture {
         }
 
         NTriangulation* verifyThreeSphere(NTriangulation* tri,
-                const std::string& triName) {
+                const char* name = 0) {
+            if (name)
+                tri->setPacketLabel(name);
+
             if (! tri->isThreeSphere()) {
-                CPPUNIT_FAIL(("The 3-sphere " + triName +
+                CPPUNIT_FAIL(("The 3-sphere " + tri->getPacketLabel() +
                     " is not recognised as such.").c_str());
             }
 
@@ -92,16 +96,33 @@ class ThreeSphereTest : public CppUnit::TestFixture {
             big.barycentricSubdivision();
             if (! big.isThreeSphere()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the 3-sphere "
-                    + triName + " is not recognised as such.").c_str());
+                    + tri->getPacketLabel()
+                    + " is not recognised as such.").c_str());
+            }
+
+            if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
+                    tri->isConnected()) {
+                NContainer parent;
+                unsigned long comps = tri->connectedSumDecomposition(&parent);
+                if (comps > 0) {
+                    std::ostringstream msg;
+                    msg << "The 3-sphere " << tri->getPacketLabel()
+                        << " was reported as having one or more "
+                        "connected sum component.";
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
 
             return tri;
         }
 
         NTriangulation* verifyNotThreeSphere(NTriangulation* tri,
-                const std::string& triName) {
+                const char* name = 0) {
+            if (name)
+                tri->setPacketLabel(name);
+
             if (tri->isThreeSphere()) {
-                CPPUNIT_FAIL(("The non-3-sphere " + triName +
+                CPPUNIT_FAIL(("The non-3-sphere " + tri->getPacketLabel() +
                     " is recognised as a 3-sphere.").c_str());
             }
 
@@ -110,23 +131,38 @@ class ThreeSphereTest : public CppUnit::TestFixture {
             big.barycentricSubdivision();
             if (big.isThreeSphere()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the non-3-sphere "
-                    + triName + " is recognised as a 3-sphere.").c_str());
+                    + tri->getPacketLabel()
+                    + " is recognised as a 3-sphere.").c_str());
+            }
+
+            if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
+                    tri->isConnected()) {
+                NContainer parent;
+                unsigned long comps = tri->connectedSumDecomposition(&parent);
+                if (comps == 0) {
+                    std::ostringstream msg;
+                    msg << "The non-3-sphere " << tri->getPacketLabel()
+                        << " was reported as having no "
+                        "connected sum components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
 
             return tri;
         }
 
         void verifySigThreeSphere(const std::string& sigStr) {
-            delete verifyThreeSphere(generateFromSig(sigStr), sigStr);
+            delete verifyThreeSphere(generateFromSig(sigStr));
         }
 
         void verifySigNotThreeSphere(const std::string& sigStr) {
-            delete verifyNotThreeSphere(generateFromSig(sigStr), sigStr);
+            delete verifyNotThreeSphere(generateFromSig(sigStr));
         }
 
         void verifyIsoSigThreeSphere(const std::string& sigStr) {
-            delete verifyThreeSphere(NTriangulation::fromIsoSig(sigStr),
-                sigStr);
+            NTriangulation* t = NTriangulation::fromIsoSig(sigStr);
+            t->setPacketLabel(sigStr);
+            delete verifyThreeSphere(t);
         }
 
         void threeSphereRecognition() {
@@ -149,7 +185,8 @@ class ThreeSphereTest : public CppUnit::TestFixture {
             // 3-spheres obtained as Lens spaces:
             tri = new NTriangulation();
             tri->insertLayeredLensSpace(1,0);
-            delete verifyThreeSphere(tri, "L(1,0)");
+            tri->setPacketLabel("L(1,0)");
+            delete verifyThreeSphere(tri);
 
             // 3-sphere triangulations that are difficult to simplify
             // (taken from the 2013 Hyamfest paper on Regina):
@@ -306,7 +343,7 @@ class ThreeSphereTest : public CppUnit::TestFixture {
             delete verifyNotThreeSphere(tri, "Empty triangulation");
         }
 
-        static void testThreeSphere(NTriangulation* tri) {
+        static void testThreeSphere6(NTriangulation* tri) {
             // PRECONDITION: tri has <= 6 tetrahedra.
             //
             // We know from the closed orientable census data that the
@@ -337,13 +374,32 @@ class ThreeSphereTest : public CppUnit::TestFixture {
                     << " was recognised as a 3-sphere.";
                 CPPUNIT_FAIL(msg.str());
             }
+
+            if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
+                    tri->isConnected()) {
+                NContainer parent;
+                unsigned long comps = tri->connectedSumDecomposition(&parent);
+                if (expected && comps > 0) {
+                    std::ostringstream msg;
+                    msg << "The census 3-sphere " << tri->getPacketLabel()
+                        << " was reported as having one or more "
+                        "connected sum component.";
+                    CPPUNIT_FAIL(msg.str());
+                } else if (comps == 0 && ! expected) {
+                    std::ostringstream msg;
+                    msg << "The census non-3-sphere " << tri->getPacketLabel()
+                        << " was reported as having no "
+                        "connected sum components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
         }
 
         void threeSphereCensus() {
-            runCensusMinClosed(&testThreeSphere);
-            runCensusAllClosed(&testThreeSphere);
-            runCensusAllBounded(&testThreeSphere);
-            runCensusAllIdeal(&testThreeSphere);
+            runCensusMinClosed(&testThreeSphere6);
+            runCensusAllClosed(&testThreeSphere6);
+            runCensusAllBounded(&testThreeSphere6);
+            runCensusAllIdeal(&testThreeSphere6);
         }
 
         NTriangulation* verifyThreeBall(NTriangulation* tri,
