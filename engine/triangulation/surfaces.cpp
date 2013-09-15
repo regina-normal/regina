@@ -55,7 +55,7 @@ namespace regina {
 /**
  * In the general case, 0-efficiency must be tested for in standard
  * triangle-quad coordinates.  For example, the triangulation with
- * isosig dLQacccbnli (which is ideal with one Klein bottle cusp) is
+ * isosig dLQacccbnjk (which is ideal with one torus cusp) is
  * not 0-efficient, but the non-trivial sphere does not appear as a
  * vertex in quad coordinates.
  */
