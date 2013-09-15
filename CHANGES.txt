@@ -296,7 +296,7 @@ Version 4.94  [ 24 September, 2013 ]
               See arXiv:1211.1079 for details.
             - Some routines are now *much* faster for larger triangulations,
               thanks to the new linear programming code (arXiv:1211.1079).
-              These include isZeroEfficient(), threeSphereRecognition(),
+              These include isZeroEfficient(), isThreeSphere(), isSolidTorus(),
               connectedSumDecomposition(), and makeZeroEfficient().
             - Rewrote barycentricSubdivision(): the code is now clearer,
               but note that the precise labelling of the new tetrahedra has
@@ -380,8 +380,8 @@ Version 4.94  [ 24 September, 2013 ]
           which are now extremely thorough.
         - New and more thorough NTriangulation tests for barycentric
           subdivision, drilling edges, 0-efficiency testing, 3-sphere
-          recognition, connected sum decomposition, and comparing H1 with
-          the abelianised fundamental group.
+          recognition, connected sum decomposition, solid torus recognition,
+          and comparing H1 with the abelianised fundamental group.
         - New NNormalSurfaceList tests for comparing the results of different
           vertex / fundamental surface enumeration algorithms.  Also,
           exhaustive tests over census data now include ideal triangulations.
