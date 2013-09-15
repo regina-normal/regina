@@ -3438,6 +3438,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     "but it does.";
                 CPPUNIT_FAIL(msg.str());
             }
+            delete std;
         }
 
         void verifyNoSimplification(const NTriangulation& tri,

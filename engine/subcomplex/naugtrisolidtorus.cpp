@@ -481,16 +481,19 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     }
 
     // We now know nLayered >= 1.
+    int i, j;
 
     // Determine whether or not this augmented solid torus must contain a
     // layered chain.
     bool needChain = (usedTets + 3 != nTet);
-    if (needChain && nLayered != 1)
+    if (needChain && nLayered != 1) {
+        for (j = 0; j < nLayered; j++)
+            delete layered[j];
         return 0;
+    }
 
     // Examine each layered solid torus.
     NTetrahedron* top[3];
-    int i, j;
     for (i = 0; i < nLayered; i++) {
         top[i] = layered[i]->getTopLevel();
         if (top[i]->adjacentTetrahedron(layered[i]->getTopFace(0)) ==
