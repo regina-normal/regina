@@ -368,8 +368,8 @@ Version 4.94  [ 24 September, 2013 ]
         - Greatly expanded the tests for NLargeInteger and NInteger,
           which are now extremely thorough.
         - New and more thorough NTriangulation tests for barycentric
-          subdivision, drilling edges, 0-efficiency testing, and comparing
-          H1 with the abelianised fundamental group.
+          subdivision, drilling edges, 0-efficiency testing, 3-sphere
+          recognition, and comparing H1 with the abelianised fundamental group.
         - New NNormalSurfaceList tests for comparing the results of different
           vertex / fundamental surface enumeration algorithms.  Also,
           exhaustive tests over census data now include ideal triangulations.

@@ -42,7 +42,7 @@
 // #define LARGE_CENSUS
 
 #ifdef LARGE_CENSUS
-    #define MIN_CLOSED_CENSUS_SIZE 5
+    #define MIN_CLOSED_CENSUS_SIZE 6
     #define CLOSED_CENSUS_SIZE 4
     #define BOUNDED_CENSUS_SIZE 3
     #define IDEAL_CENSUS_SIZE 4
