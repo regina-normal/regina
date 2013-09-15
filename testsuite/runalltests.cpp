@@ -153,7 +153,6 @@ bool runAllTests() {
     addNTriangulation(runner);
     addElementaryMoves(runner);
     addConnectedSumDecomp(runner);
-    addThreeSphere(runner);
     addNIsomorphism(runner);
 
     // 4-manifold triangulations:
