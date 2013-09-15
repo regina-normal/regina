@@ -483,6 +483,7 @@ bool NTriangulation::isSolidTorus() const {
         // - cut along properly embedded discs;
         // - gain and/or lose 3-balls and/or 3-spheres.
         crushed = s->crush();
+        delete s;
         delete working;
         working = 0;
 

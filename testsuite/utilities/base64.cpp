@@ -173,6 +173,7 @@ class Base64Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
                 return;
             }
+            delete[] dec;
         }
 
         void invalidEncodings() {

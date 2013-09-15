@@ -350,6 +350,7 @@ std::string NTriangulation::dehydrate() const {
     ans += permChars;
 
     // Done!
+    delete[] newTet;
     delete[] permChars;
     delete[] destChars;
     delete[] vertexMap;

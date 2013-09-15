@@ -137,12 +137,11 @@ void NSatBlockStarterSearcher::findStarterBlocks(NTriangulation* tri) {
             // block elsewhere.
             if (! useStarterBlock(starter)) {
                 // The search ends now.
-                // Don't forget to destroy the remaining isomorphisms
-                // that we never looked at.
+                // Don't forget to destroy all remaining isomorphisms.
                 usedTets.clear();
 
-                for (isoIt++; isoIt != isos.end(); isoIt++)
-                    delete *isoIt;
+                while (isoIt != isos.end())
+                    delete *isoIt++;
 
                 return;
             }

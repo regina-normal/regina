@@ -369,22 +369,20 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             int precision;
             double foundVol = s.volume(precision);
-            {
+            if (precision < static_cast<int>(places)) {
                 std::ostringstream msg;
                 msg << "Volume for " << triName <<
                     " has a precision of " << precision
                     << " places, which is less than the desired "
                     << places << " places.";
-
-                CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    precision >= static_cast<int>(places));
+                CPPUNIT_FAIL(msg.str());
             }
 
             double epsilon = 0.5;
             for (unsigned i = 0; i < places; i++)
                 epsilon /= 10;
 
-            {
+            if (foundVol > vol + epsilon || foundVol < vol - epsilon) {
                 std::ostringstream msg;
                 msg << "Volume for " << triName << " should be "
                     << std::setprecision(
@@ -393,9 +391,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                     << std::setprecision(
                         precision + static_cast<int>(ceil(log10(foundVol))))
                     << foundVol << '.';
-
-                CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    foundVol <= vol + epsilon && foundVol >= vol - epsilon);
+                CPPUNIT_FAIL(msg.str());
             }
         }
 
