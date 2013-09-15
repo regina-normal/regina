@@ -9,21 +9,31 @@ Regina - A Normal Surface Theory Calculator
 Version 4.94  [ 24 September, 2013 ]
 
     Features:
+        - Regina now works with 2-manifold triangulations as well.
+          You can (for example) use these to study vertex links.
         - You can now drill out the neighbourhood of an edge.
-        - Regina now works with 2-manifold triangulations as well as
-          3-manifold triangulations!  You can use these to study
-          boundary components and vertex links.
     Optimisations:
-        - Normal surface enumeration is now completely different under
-          the hood: the old double description method is gone, and
-          instead Regina uses the tree traversal algorithm (arXiv:TODO).
-          This is a little slower for small problems but significantly
-          faster for large problems, and does not suffer from memory
-          blowouts like the old algorithm did.
-        - 0-efficiency testing and solid torus recognition (i.e., unknot
-          recognition) are now extremely fast (arXiv:TODO), thanks to
-          new linear programming techniques.
+        - Normal surface enumeration is now completely different under the
+          hood, and uses new linear programming techniques (arXiv:1010.6200,
+          arXiv:1211.1079).  This may be slower for small problems, but is
+          significantly faster for larger problems.
+        - In particular, 0-efficiency testing, solid torus recognition,
+          connected sum decomposition and 3-sphere recognition are now
+          *much* faster.  Try it: Regina can prove the Weber-Seifert
+          dodecahedral space to be 0-efficient in around 10 seconds.
+        - Simplification of fundamental groups is much more powerful,
+          thanks to small cancellation theory.
         - Census enumeration is faster again, with new pruning techniques.
+    Bug Fixes:
+        - Fixed 0-efficiency testing, which was reporting incorrect
+          results for ideal triangulations.  The automated test suite is
+          now greatly enhanced to avoid a similar problem appearing again.
+    Backward Compatibility:
+        - Old-style binary files are no longer supported.  These have
+          not been in use for over a decade now.
+        - For programmers: some old deprecated routines have now been removed.
+          If there is something you are missing, check the deprecation page
+          (regina.sourceforge.net/deprecation.html) to see what replaces it.
 
 Version 4.93  [ 30 May, 2012 ]
 
