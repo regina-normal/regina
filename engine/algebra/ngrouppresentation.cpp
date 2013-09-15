@@ -543,6 +543,11 @@ void NGroupExpression::cycleLeft()
   }
 }
 
+bool NGroupPresentation::intelligentSimplify() {
+    // This is not inline because it needs the NHomGroupPresentation
+    // class definition, so that the auto_ptr destructor works correctly.
+    return intelligentSimplifyDetail().get();
+}
 
 std::auto_ptr<NHomGroupPresentation>
         NGroupPresentation::intelligentSimplifyDetail() {

@@ -140,6 +140,9 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
         return 0;
 
     // Use combinatorial optimisation if we can.
+    // This is good for large problems, but for small problems a full
+    // enumeration is usually faster.  Still, the big problems are the
+    // ones we need to be more fussy about.
     if (vertices.size() == 1) {
         // For now, just use the safe arbitrary-precision NInteger type.
         NTreeSingleSoln<LPConstraintEuler> tree(this, NS_AN_STANDARD);

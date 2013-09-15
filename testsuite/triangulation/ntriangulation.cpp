@@ -82,6 +82,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(fundGroupVsH1);
     CPPUNIT_TEST(zeroEfficiency);
     CPPUNIT_TEST(threeSphereRecognition);
+    CPPUNIT_TEST(threeSphereRecognitionLarge);
     CPPUNIT_TEST(threeBallRecognition);
     CPPUNIT_TEST(solidTorusRecognition);
     CPPUNIT_TEST(turaevViro);
@@ -1891,6 +1892,12 @@ class NTriangulationTest : public CppUnit::TestFixture {
             delete verifyThreeSphere(t);
         }
 
+        void verifyIsoSigNotThreeSphere(const std::string& sigStr) {
+            NTriangulation* t = NTriangulation::fromIsoSig(sigStr);
+            t->setPacketLabel(sigStr);
+            delete verifyNotThreeSphere(t);
+        }
+
         static void testThreeSphere6(NTriangulation* tri) {
             // PRECONDITION: tri has <= 6 tetrahedra.
             //
@@ -1965,35 +1972,6 @@ class NTriangulationTest : public CppUnit::TestFixture {
             tri->insertLayeredLensSpace(1,0);
             tri->setPacketLabel("L(1,0)");
             delete verifyThreeSphere(tri);
-
-            // 3-sphere triangulations that are difficult to simplify
-            // (taken from the 2013 Hyamfest paper on Regina):
-            verifyIsoSigThreeSphere("jLLvQPQbeghfifiihxxaaxxjxar");
-            verifyIsoSigThreeSphere("jLLLAQPbeggfhhhiihhlhegbgdw");
-            verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabspr");
-            verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabspk");
-            verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabwpr");
-            verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabwpk");
-            verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabsdw");
-            verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabsds");
-            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggliajgr");
-            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggliajgk");
-            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggliawgr");
-            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggliawgk");
-            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggllajgw");
-            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggllajgj");
-            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggllawgw");
-            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggllawgj");
-            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggiiargr");
-            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggiiargk");
-            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggiiakgr");
-            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggiiakgk");
-            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggilargw");
-            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggilargj");
-            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggilakgw");
-            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggilakgj");
-            verifyIsoSigThreeSphere("kLLLAPPkbeggfihjiijhhlhehgdahw");
-            verifyIsoSigThreeSphere("kLLvQPPkbeghfifjhjjxxaaxxjxrvc");
 
             // Non-3-spheres obtained from splitting surface signatures:
             verifySigNotThreeSphere("(aab)(b)");
@@ -2127,6 +2105,47 @@ class NTriangulationTest : public CppUnit::TestFixture {
             runCensusAllIdeal(&testThreeSphere6);
         }
 
+        void threeSphereRecognitionLarge() {
+            // Comment out every second one of these tests, since all of them
+            // combined take a good 5-10 seconds (an annoyance if
+            // you run the test suite often).
+
+            // Homology spheres obtained from the hyperbolic census:
+            verifyIsoSigNotThreeSphere("kLLLPLQkccfeghjiijjlnahgnqqadk");
+            // verifyIsoSigNotThreeSphere("lLLLLPMQcbcgfhhihjkkktsmgsojfldor");
+            verifyIsoSigNotThreeSphere("lLvAvMQQcbefjjkiihkjklaljfxrkvufd");
+            // verifyIsoSigNotThreeSphere("lvLAAzMQcdefegihjkkjkjwarujwdaapj");
+
+            // 3-sphere triangulations that are difficult to simplify
+            // (taken from the 2013 Hyamfest paper on Regina):
+            verifyIsoSigThreeSphere("jLLvQPQbeghfifiihxxaaxxjxar");
+            //verifyIsoSigThreeSphere("jLLLAQPbeggfhhhiihhlhegbgdw");
+            verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabspr");
+            //verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabspk");
+            verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabwpr");
+            //verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabwpk");
+            verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabsdw");
+            //verifyIsoSigThreeSphere("jLLLPQPaegdehfgiibddbsabsds");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggliajgr");
+            //verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggliajgk");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggliawgr");
+            //verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggliawgk");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggllajgw");
+            //verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggllajgj");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggllawgw");
+            //verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggllawgj");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggiiargr");
+            //verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggiiargk");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggiiakgr");
+            //verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggiiakgk");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggilargw");
+            //verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggilargj");
+            verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggilakgw");
+            //verifyIsoSigThreeSphere("kLAzwwQkbcbdehjihijhlwggilakgj");
+            verifyIsoSigThreeSphere("kLLLAPPkbeggfihjiijhhlhehgdahw");
+            //verifyIsoSigThreeSphere("kLLvQPPkbeghfifjhjjxxaaxxjxrvc");
+        }
+
         NTriangulation* verifyThreeBall(NTriangulation* tri,
                 const std::string& triName) {
             if (! tri->isBall()) {
@@ -2233,8 +2252,48 @@ class NTriangulationTest : public CppUnit::TestFixture {
             delete verifyNotThreeBall(tri, "Poincare homology sphere");
         }
 
+        static void testSolidTorus4(NTriangulation* tri) {
+            // PRECONDITION: tri is not ideal, and has <= 4 tetrahedra.
+            //
+            // We know from the bounded orientable census data that the only
+            // triangulations  with torus boundary and H1=Z with <= 4 tetrahedra
+            // that are *not* solid tori are isosigs eHLObcdddwun and
+            // eHLObcdddwuj, both representing SFS [D: (2,1) (3,-2)].
+
+            // What did solid torus recognition say?
+            bool found = tri->isSolidTorus();
+
+            bool expected = (tri->isValid() &&
+                         (! tri->isIdeal()) &&
+                         tri->isOrientable() &&
+                         tri->isConnected() &&
+                         tri->getNumberOfBoundaryComponents() == 1 &&
+                         tri->getBoundaryComponent(0)->getEulerCharacteristic()
+                            == 0 &&
+                         tri->getHomologyH1().isZ() &&
+                         (tri->getNumberOfTetrahedra() < 4 ||
+                            (tri->getNumberOfTetrahedra() == 4 &&
+                            tri->isoSig() != "eHLObcdddwun" &&
+                            tri->isoSig() != "eHLObcdddwuj")));
+
+            if (expected && ! found) {
+                std::ostringstream msg;
+                msg << "The census solid torus " << tri->getPacketLabel()
+                    << " was not recognised as a solid torus.";
+                CPPUNIT_FAIL(msg.str());
+            } else if (found && ! expected) {
+                std::ostringstream msg;
+                msg << "The census solid torus " << tri->getPacketLabel()
+                    << " was recognised as a solid torus.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         NTriangulation* verifySolidTorus(NTriangulation* tri,
-                const std::string& triName) {
+                const char* triName = 0) {
+            if (triName)
+                tri->setPacketLabel(triName);
+
             NTriangulation bounded(*tri);
             if (bounded.isIdeal())
                 bounded.idealToFinite();
@@ -2250,19 +2309,23 @@ class NTriangulationTest : public CppUnit::TestFixture {
             idealBig.barycentricSubdivision();
 
             if (! bounded.isSolidTorus()) {
-                CPPUNIT_FAIL(("The real solid torus " + triName +
+                CPPUNIT_FAIL(("The real solid torus " +
+                    tri->getPacketLabel() +
                     " is not recognised as such.").c_str());
             }
             if (! ideal.isSolidTorus()) {
-                CPPUNIT_FAIL(("The ideal solid torus " + triName +
+                CPPUNIT_FAIL(("The ideal solid torus " +
+                    tri->getPacketLabel() +
                     " is not recognised as such.").c_str());
             }
             if (! boundedBig.isSolidTorus()) {
-                CPPUNIT_FAIL(("The subdivided real solid torus " + triName +
+                CPPUNIT_FAIL(("The subdivided real solid torus " +
+                    tri->getPacketLabel() +
                     " is not recognised as such.").c_str());
             }
             if (! idealBig.isSolidTorus()) {
-                CPPUNIT_FAIL(("The subdivided ideal solid torus " + triName +
+                CPPUNIT_FAIL(("The subdivided ideal solid torus " +
+                    tri->getPacketLabel() +
                     " is not recognised as such.").c_str());
             }
 
@@ -2270,7 +2333,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
         }
 
         NTriangulation* verifyNotSolidTorus(NTriangulation* tri,
-                const std::string& triName) {
+                const char* triName = 0) {
+            if (triName)
+                tri->setPacketLabel(triName);
+
             NTriangulation bounded(*tri);
             if (bounded.isIdeal())
                 bounded.idealToFinite();
@@ -2286,23 +2352,39 @@ class NTriangulationTest : public CppUnit::TestFixture {
             idealBig.barycentricSubdivision();
 
             if (bounded.isSolidTorus()) {
-                CPPUNIT_FAIL(("The real non-solid-torus " + triName +
+                CPPUNIT_FAIL(("The real non-solid-torus " +
+                    tri->getPacketLabel() +
                     " is recognised as a solid torus.").c_str());
             }
             if (ideal.isSolidTorus()) {
-                CPPUNIT_FAIL(("The ideal non-solid-torus " + triName +
+                CPPUNIT_FAIL(("The ideal non-solid-torus " +
+                    tri->getPacketLabel() +
                     " is recognised as a solid torus.").c_str());
             }
             if (boundedBig.isSolidTorus()) {
                 CPPUNIT_FAIL(("The subdivided real non-solid-torus " +
-                    triName + " is recognised as a solid torus.").c_str());
+                    tri->getPacketLabel() +
+                    " is recognised as a solid torus.").c_str());
             }
             if (idealBig.isSolidTorus()) {
                 CPPUNIT_FAIL(("The subdivided ideal non-solid-torus " +
-                    triName + " is recognised as a solid torus.").c_str());
+                    tri->getPacketLabel() +
+                    " is recognised as a solid torus.").c_str());
             }
 
             return tri;
+        }
+
+        void verifyIsoSigSolidTorus(const std::string& sigStr) {
+            NTriangulation* t = NTriangulation::fromIsoSig(sigStr);
+            t->setPacketLabel(sigStr);
+            delete verifySolidTorus(t);
+        }
+
+        void verifyIsoSigNotSolidTorus(const std::string& sigStr) {
+            NTriangulation* t = NTriangulation::fromIsoSig(sigStr);
+            t->setPacketLabel(sigStr);
+            delete verifyNotSolidTorus(t);
         }
 
         void solidTorusRecognition() {
@@ -2342,6 +2424,21 @@ class NTriangulationTest : public CppUnit::TestFixture {
             tri = NExampleTriangulation::figureEightKnotComplement();
             delete verifyNotSolidTorus(tri, "Figure 8 Knot Complement");
 
+            // Some knot complements (with real boundary):
+            verifyIsoSigNotSolidTorus("fHLykbcdeedwuqs");
+            verifyIsoSigNotSolidTorus("fLHPccdeeeqcieh");
+            verifyIsoSigNotSolidTorus(
+                "oLALzLwMPOcbcbefijklnlmnnxxjnxmitnmfbae");
+
+            // Some Seifert fibred spaces with torus boundary and Z homology:
+            verifyIsoSigNotSolidTorus("eHLObcdddwun");
+            verifyIsoSigNotSolidTorus("eHLObcdddwuj");
+
+            // Some larger solid tori from the census:
+            verifyIsoSigSolidTorus("iHbfPPPbdfgfhhtbedbac");
+            verifyIsoSigSolidTorus("iHerzQPadgffhhbbiqbao");
+            verifyIsoSigSolidTorus("iLAvPQacbbgehfgdicdffnf");
+
             // Throw in a couple of closed manifolds for good measure.
             tri = new NTriangulation();
             tri->insertLayeredLensSpace(1,0);
@@ -2353,6 +2450,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
 
             tri = NExampleTriangulation::poincareHomologySphere();
             delete verifyNotSolidTorus(tri, "Poincare homology sphere");
+
+            // An exhaustive census run:
+            runCensusAllBounded(&testSolidTorus4);
         }
 
         void verifyTV3(NTriangulation& t, const std::string& triName) {

@@ -983,10 +983,6 @@ inline unsigned long NGroupPresentation::relatorLength() const {
     return retval;
 }
 
-inline bool NGroupPresentation::intelligentSimplify() {
-    return intelligentSimplifyDetail().get();
-}
-
 } // namespace regina
 
 #endif
