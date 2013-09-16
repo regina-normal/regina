@@ -67,6 +67,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>2-manifold triangulation</primaryie>
+  <seeie>See: triangulation, 2-manifold</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>3-2 move</primaryie>
   <seeie>See: elementary moves</seeie>
  </indexentry>
@@ -84,6 +89,11 @@
  <indexentry>
   <primaryie><link linkend="tri-recognition">3-manifold
    recognition</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>3-manifold triangulation</primaryie>
+  <seeie>See: triangulation, 3-manifold</seeie>
  </indexentry>
 
  <indexentry>
@@ -287,8 +297,6 @@
  <indexentry>
   <primaryie>compatibility matrices for normal surfaces</primaryie>
   <secondaryie><link linkend="surfaces-compat">displaying</link></secondaryie>
-  <secondaryie><link linkend="options-surfaces">threshold for
-   automatic generation</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -318,11 +326,9 @@
   <primaryie>configuration</primaryie>
   <secondaryie><link linkend="options-census">census
    lookup</link></secondaryie>
-  <secondaryie><link linkend="options-triangulation">&gaplong;</link></secondaryie>
+  <secondaryie><link linkend="options-tools">&gaplong;</link></secondaryie>
   <secondaryie><link linkend="options-general">general</link></secondaryie>
-  <secondaryie><link linkend="options-triangulation">&graphviz;</link></secondaryie>
-  <secondaryie><link linkend="options-surfaces">normal surface
-   enumeration</link></secondaryie>
+  <secondaryie><link linkend="options-tools">&graphviz;</link></secondaryie>
   <secondaryie><link linkend="options-tools">&pdf;
    viewing</link></secondaryie>
   <secondaryie><link linkend="options-python">&python;
@@ -331,8 +337,6 @@
    interaction</link></secondaryie>
   <secondaryie><link linkend="options-tools">tools,
    third-party</link></secondaryie>
-  <secondaryie><link linkend="options-triangulation">triangulation
-   viewing and editing</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -357,8 +361,6 @@
 
  <indexentry>
   <primaryie>coordinate systems, normal surface</primaryie>
-  <secondaryie><link linkend="options-surfaces">configuring default
-   coordinate system</link></secondaryie>
   <secondaryie><link linkend="surfaces-selectcoords">enumerating in a
    particular coordinate system</link></secondaryie>
   <secondaryie><link linkend="surfaces-defstandard">explanation of
@@ -385,6 +387,11 @@
  <indexentry>
   <primaryie><link linkend="tri-vertices">cusps, identifying
    in a triangulation</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="surfaces-header-custom">custom
+   surfaces</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -446,6 +453,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>drilling edges</primaryie>
+  <seeie>See: edges, drilling out of a triangulation</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>dual 1-skeleton</primaryie>
   <seeie>See: face pairing graphs</seeie>
  </indexentry>
@@ -470,6 +482,11 @@
  <indexentry>
   <primaryie>edge weight normal coordinates</primaryie>
   <seeie>See: coordinate systems</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-drilledge">edges, drilling out of a
+   triangulation</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -517,8 +534,10 @@
 
  <indexentry>
   <primaryie>Euler characteristic</primaryie>
+  <secondaryie><link linkend="dim2-identify">of a
+   2-manifold</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-cellular">of a
-   manifold</link></secondaryie>
+   3-manifold</link></secondaryie>
   <secondaryie><link linkend="surfaces-propeuler">of a normal
    surface</link></secondaryie>
  </indexentry>
@@ -630,7 +649,7 @@
 
  <indexentry>
   <primaryie>&gaplong;</primaryie>
-  <secondaryie><link linkend="options-triangulation">configuration</link></secondaryie>
+  <secondaryie><link linkend="options-tools">configuration</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-fundgroup">using to
    simplify group presentations</link></secondaryie>
  </indexentry>
@@ -652,7 +671,7 @@
 
  <indexentry>
   <primaryie>&graphviz;</primaryie>
-  <secondaryie><link linkend="options-triangulation">configuration</link></secondaryie>
+  <secondaryie><link linkend="options-tools">configuration</link></secondaryie>
   <secondaryie><link linkend="tri-skeleton-facegraph">using to
    display face pairing graphs</link></secondaryie>
  </indexentry>
@@ -702,7 +721,7 @@
  <indexentry>
   <primaryie>immersed / singular normal surfaces</primaryie>
   <secondaryie><link linkend="surfaces-embeddedonly">enumerating</link></secondaryie>
-  <secondaryie><link linkend="options-surfaces">warn before
+  <secondaryie><link linkend="options-general">warn before
    enumerating</link></secondaryie>
  </indexentry>
 
@@ -786,6 +805,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="surfaces-header-legacy">legacy
+   surfaces</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>legacy almost normal coordinates</primaryie>
   <seeie>See: coordinate systems</seeie>
  </indexentry>
@@ -810,6 +834,11 @@
 
  <indexentry>
   <primaryie><link linkend="license">licence details</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>links, vertex</primaryie>
+  <seeie>See: vertex links</seeie>
  </indexentry>
 
  <indexentry>
@@ -882,8 +911,6 @@
    surfaces, recognising</link></secondaryie>
   <secondaryie><link linkend="surfaces-compat">compatibility
    matrices</link></secondaryie>
-  <secondaryie><link linkend="options-surfaces">coordinate
-   systems, configuring default</link></secondaryie>
   <secondaryie><link linkend="surfaces-defstandard">coordinate
    systems, different systems explained</link></secondaryie>
   <secondaryie><link linkend="surfaces-coords-coords">coordinate
@@ -1290,6 +1317,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>surface</primaryie>
+  <seeie>See: triangulation, 2-manifold</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>surface filters</primaryie>
   <secondaryie><link linkend="surfaces-filtercomb">combining
    filters</link></secondaryie>
@@ -1299,7 +1331,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>surfaces, normal</primaryie>
+  <primaryie>surface, normal</primaryie>
   <seeie>See: normal surfaces</seeie>
  </indexentry>
 
@@ -1348,7 +1380,16 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>triangulation</primaryie>
+  <primaryie>triangulation, 2-manifold</primaryie>
+  <secondaryie><link linkend="dim2-identify">Euler
+   characteristic</link></secondaryie>
+  <secondaryie><link linkend="dim2triangulations">overview</link></secondaryie>
+  <secondaryie><link linkend="dim2-identify">recognising the
+   underlying 2-manifold</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>triangulation, 3-manifold</primaryie>
   <secondaryie><link linkend="tri-prop0eff">0-efficiency,
    testing for</link></secondaryie>
   <secondaryie><link linkend="tri-make0eff">0-efficient triangulation,
@@ -1511,6 +1552,11 @@
  <indexentry>
   <primaryie><link linkend="surfaces-proplink">vertex linking surfaces,
    recognising</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-vertexlinks">vertex links,
+   constructing</link></primaryie>
  </indexentry>
 
  <indexentry>

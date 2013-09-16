@@ -118,7 +118,6 @@
     <group>
      <arg><option>-x</option></arg>
      <arg><option>-u</option></arg>
-     <arg><option>-b</option></arg>
     </group>
     <arg choice="req"><replaceable>old-file</replaceable></arg>
     <arg><replaceable>new-file</replaceable></arg>
@@ -128,14 +127,16 @@
   <refsect1>
    <title>Description</title>
    <para>
-    Between &regina; versions 2.4 and 3.0, the data files changed from
-    using an impenetrable and undocumented binary format to using
-    (optionally compressed) &xml;.
-   </para>
-   <para>
-    This utility converts back and forth between these different
+    This utility converts back and forth between different &regina;
     file formats.
    </para>
+   <note><para>
+    As of September&nbsp;2013, the ancient binary file format that was
+    used with &regina;&nbsp;2.x is no longer supported.
+    This format has not been in use for over a decade now.
+    If you still have files in this format, you will need to
+    download &regina;&nbsp;4.93 to convert them.
+   </para></note>
    <para>
     The argument <replaceable>old-file</replaceable> should be the file to
     read and convert; the argument <replaceable>new-file</replaceable> should
@@ -147,11 +148,6 @@
     new file will be written to standard output, which forces the output to be
     uncompressed &xml; (see option <option>-u</option>).
    </para>
-   <warning><para>
-    When writing an old-style binary file, some information might be
-    lost.  Old-style binary files can only store information that was
-    understood by the old version &regina;&nbsp;2.4.
-   </para></warning>
   </refsect1>
 
   <refsect1>
@@ -167,12 +163,6 @@
      <term><option>-u</option></term>
      <listitem>
       <para>Convert to plain (uncompressed) &xml;.</para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term><option>-b</option></term>
-     <listitem>
-      <para>Convert to the old-style binary format.</para>
      </listitem>
     </varlistentry>
    </variablelist>
@@ -532,6 +522,7 @@
    <cmdsynopsis>
     <command>tricensus</command>
     <arg><option>-t, --tetrahedra=</option><replaceable>tetrahedra</replaceable></arg>
+    <arg><option>-2, --dim2=</option></arg>
     <group>
      <arg><option>-b, --boundary</option></arg>
      <arg><option>-i, --internal</option></arg>
@@ -551,8 +542,8 @@
      <arg><option>-N, --minprimep2</option></arg>
     </group>
     <group>
-    <arg><option>-s, --sigs</option></arg>
-    <arg><option>-c, --subcontainers</option></arg>
+     <arg><option>-s, --sigs</option></arg>
+     <arg><option>-c, --subcontainers</option></arg>
     </group>
     <group>
      <arg><option>-p, --genpairs</option></arg>
@@ -569,18 +560,23 @@
   <refsect1>
    <title>Description</title>
    <para>
-    Forms a census of all 3-manifold triangulations that satisfy
+    Forms a census of all 3-manifold or 2-manifold triangulations that satisfy
     some set of conditions.
    </para>
    <para>
     These conditions are specified using various command-line arguments.
     The only condition that you <emphasis>must</emphasis> provide is
-    the number of
-    tetrahedra, but there are many other options available.
+    the number of tetrahedra, but there are many other options available.
+   </para>
+   <para>
+    The default behaviour is to enumerate 3-manifold triangulations.
+    If you wish to enumerate 2-manifold triangulations instead, you must
+    pass <option>--dim2</option>.
    </para>
    <para>
     Each triangulation will be output precisely once up to combinatorial
-    isomorphism.  Invalid triangulations (i.e., triangulations with edges
+    isomorphism.  Invalid 3-manifold triangulations
+    (i.e., triangulations with edges
     identified to themselves in reverse, or vertices whose links
     have boundary but are not discs) will not be output at all.
    </para>
@@ -623,6 +619,25 @@
       <para>
        Specifies the number of tetrahedra used to build the triangulations.
       </para>
+      <para>
+       If <option>--dim2</option> is passed, this same option must
+       be used to specify the number of triangles instead.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-2, --dim2</option></term>
+     <listitem>
+      <para>
+       Build a census of 2-manifold triangulations, not 3-manifold
+       triangulations.
+      </para>
+      <para>
+       This is incompatible with several options; for other options it
+       simply translates the relevant constraint into two dimensions.
+       See each individual option for details on how it interacts with
+       <option>--dim2</option>.
+      </para>
      </listitem>
     </varlistentry>
     <varlistentry>
@@ -630,6 +645,10 @@
      <listitem>
       <para>
        Only produce triangulations with at least one boundary face.
+      </para>
+      <para>
+       If <option>--dim2</option> is passed, this specifies at least one
+       boundary edge.
       </para>
      </listitem>
     </varlistentry>
@@ -640,6 +659,10 @@
        Only produce triangulations with all faces internal (i.e., with no
        boundary faces).
       </para>
+      <para>
+       If <option>--dim2</option> is passed, this indicates that all
+       edges must be internal.
+      </para>
      </listitem>
     </varlistentry>
     <varlistentry>
@@ -649,6 +672,10 @@
       <para>
        Only produce triangulations with the precise number of boundary
        faces specified.
+      </para>
+      <para>
+       If <option>--dim2</option> is passed, this specifies the number
+       of boundary edges.
       </para>
      </listitem>
     </varlistentry>
@@ -675,6 +702,9 @@
        Only produce finite triangulations (triangulations with no
        ideal vertices).
       </para>
+      <para>
+       This option cannot be used with <option>--dim2</option>.
+      </para>
      </listitem>
     </varlistentry>
     <varlistentry>
@@ -684,6 +714,9 @@
        Only produce triangulations with at least one ideal vertex.
        There might or might not be internal vertices (whose links are
        spheres) as well.
+      </para>
+      <para>
+       This option cannot be used with <option>--dim2</option>.
       </para>
      </listitem>
     </varlistentry>
@@ -719,6 +752,9 @@
        non-minimal, non-prime or disc-reducible, it will place the
        triangulation in the census regardless.
       </para>
+      <para>
+       This option cannot be used with <option>--dim2</option>.
+      </para>
      </listitem>
     </varlistentry>
     <varlistentry>
@@ -740,6 +776,9 @@
        non-minimal, non-prime, P2-reducible or disc-reducible, it will place
        the triangulation in the census regardless.
       </para>
+      <para>
+       This option cannot be used with <option>--dim2</option>.
+      </para>
      </listitem>
     </varlistentry>
     <varlistentry>
@@ -752,7 +791,7 @@
       <para>
        The output file will be a plain text file.  Each line will be a
        short string of letters, digits and punctuation that uniquely
-       encodes a 3-manifold triangulation up to combinatorial isomorphism.
+       encodes a triangulation up to combinatorial isomorphism.
        You can import this text file from within &regina; by selecting
        &menuimportsigs; from the menu.
       </para>
@@ -777,7 +816,7 @@
        in no triangulations.
       </para>
       <para>
-       This option cannot be used with <option>--signatures</option>.
+       This option cannot be used with <option>--sigs</option>.
       </para>
      </listitem>
     </varlistentry>
@@ -825,6 +864,10 @@
        You can always track the state of progress by counting lines in
        the output file.
       </para>
+      <para>
+       If <option>--dim2</option> is passed, this generates edge
+       pairings accordingly.
+      </para>
      </listitem>
     </varlistentry>
     <varlistentry>
@@ -858,6 +901,10 @@
        <option>--usepairs</option>; instead you should pass them earlier
        along with <option>--genpairs</option> when you split the original
        census into pieces.
+      </para>
+      <para>
+       If <option>--dim2</option> is passed, this takes a list of edge
+       pairings accordingly.
       </para>
      </listitem>
     </varlistentry>
@@ -1004,6 +1051,7 @@
     <command>tricensus-mpi</command>
     <arg><option>-D, --depth=</option><replaceable>levels</replaceable></arg>
     <arg><option>-x, --dryrun</option></arg>
+    <arg><option>-2, --dim2=</option></arg>
     <group>
      <arg><option>-o, --orientable</option></arg>
      <arg><option>-n, --nonorientable</option></arg>
@@ -1028,10 +1076,15 @@
    <para>
     Allows multiple processes, possibly running on a cluster of
     different machines, to
-    collaborate in forming a census of 3-manifold triangulations.
+    collaborate in forming a census of 3-manifold or 2-manifold triangulations.
     Coordination is done through &mpi; (the Message Passing Interface),
     and the entire census is run as a single &mpi; job.
     This program is well suited for high-performance clusters.
+   </para>
+   <para>
+    The default behaviour is to enumerate 3-manifold triangulations.
+    If you wish to enumerate 2-manifold triangulations instead, you must
+    pass <option>--dim2</option>.
    </para>
    <para>
     To prepare a census for distribution amongst several processes or

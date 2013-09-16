@@ -115,7 +115,7 @@
    <title>&snappea; Triangulations</title>
 
    <para>
-    You can import a triangulation from &snappea;.
+    You can import a 3-manifold triangulation from &snappea;.
     &snappea; is the excellent software written by Jeffrey Weeks
     for studying hyperbolic 3-manifolds;
     for more information on &snappea; and its successor &snappy;,
@@ -164,7 +164,7 @@
    <title>&orbcasson; Triangulations</title>
 
    <para>
-    You can import a triangulation from &orbcasson; format.
+    You can import a 3-manifold triangulation from &orbcasson; format.
     &orburl; is a variant of &snappea; for calculating hyperbolic
     structures on 3-orbifolds and 3-manifolds, written by Damien Heard.
    </para>
@@ -191,7 +191,7 @@
    <para>
     You can import a list of isomorphism signatures from a text file.
     This is a space-efficient, plain-text method of storing a list
-    of 3-manifold triangulations.
+    of either 2-manifold or 3-manifold triangulations.
    </para>
    <para>
     An <firstterm>isomorphism signature</firstterm> is a
@@ -200,7 +200,7 @@
     See the <link linkend="tri-composition-isosig">composition viewer</link>
     for a more detailed discussion on isomorphism signatures, or
     <xref linkend="bib-burton-pachner-orprime"/> for examples of their use
-    and a precise description of the signature format.
+    and a precise description of the 3-manifold signature format.
    </para>
    <para>
     The list should be stored in a plain text file with one triangulation
@@ -216,6 +216,15 @@
     dLQbcbcahks   S3
     dLQbcbchhjw   L(9,2)
    </programlisting>
+   <para>
+    An isomorphism signature list must contain either all 2-manifold
+    triangulations, or all 3-manifold triangulations (not a mix of both).  The
+    <menuchoice>
+     <guimenu>File</guimenu>
+     <guisubmenu>Import</guisubmenu>
+    </menuchoice>
+    has different menu items for importing lists for each dimension.
+   </para>
    <para>
     The import will appear in your packet tree as a new
     <link linkend="packet-container">container</link>,
@@ -243,8 +252,8 @@
    <para>
     You can import a list of dehydration strings from a text file.
     Like <link linkend="import-isosiglist">isomorphism signatures</link>,
-    dehydration strings allow you to encode a list of triangulations in
-    a space-efficient, plain-text manner.
+    dehydration strings allow you to encode a list of 3-manifold
+    triangulations in a space-efficient, plain-text manner.
    </para>
    <para>
     Dehydration strings are
@@ -327,7 +336,7 @@
    <programlisting>
     ### Regina Script: Homology Summary
     ###
-    ### Variable tri: Triangulations
+    ### Variable tri: 3-Manifolds
     ###
     ### Begin Script
 
@@ -483,7 +492,7 @@
    <title>&snappea; Triangulations</title>
 
    <para>
-    You can export a triangulation to &snappea;'s
+    You can export a 3-manifold triangulation to &snappea;'s
     native file format.  This is a plain text format,
     described in more detail in the section on
     <link linkend="import-snappea">&snappea; imports</link>.
@@ -505,7 +514,7 @@
    <title>&recogniser; Triangulations</title>
 
    <para>
-    You can export a triangulation to a plain text file that can be
+    You can export a 3-manifold triangulation to a plain text file that can be
     given as input to Matveev's &recogniserlink;.
    </para>
    <para>
@@ -522,7 +531,7 @@
    <title>&cpp; Source Code</title>
 
    <para>
-    You can export a triangulation as &cpp; source code.
+    You can export a 3-manifold triangulation as &cpp; source code.
     This &cpp; code will use classes and routines from
     &regina;'s calculation engine.  When run, this code will reconstruct
     your triangulation.

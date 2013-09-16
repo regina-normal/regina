@@ -146,80 +146,43 @@
    </para></tip>
   </sect2>
 
-  <sect2 id="packet-text">
-   <title>Text Packets</title>
+  <sect2 id="packet-dim2triangulation">
+   <title>2-Manifold Triangulations</title>
    <para>
-    A <firstterm>text</firstterm> packet contains an arbitrary amount of
-    plain text, with no formatting.
-    It can be used to add descriptions, observations or
-    other miscellaneous comments into your data file.
+    A <firstterm>2-manifold triangulation</firstterm> packet describes a
+    triangulated 2-manifold, formed by gluing edges of triangles
+    together in pairs.
    </para>
    <para>
-    Text packets are marked by the following icon:
+    2-manifold triangulations are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-text.png"/>
+      <imagedata fileref="icon-dim2triangulation.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="text.png"/>
-     </imageobject>
-    </inlinemediaobject>
-   </para>
-  </sect2>
-
-  <sect2 id="packet-pdf">
-   <title>&pdf; Documents</title>
-   <para>
-    Like text packets, a <firstterm>&pdf;</firstterm> packet allows you
-    to document your work.  &pdf; packets support richer content,
-    including diagrams and formulae.  The &pdf; document must be created
-    outside &regina; (using &latex; or your favourite word processor),
-    and then imported into your &regina; data file by selecting
-    <menuchoice>
-     <guimenu>Packet Tree</guimenu>
-     <guimenuitem>New PDF Document</guimenuitem>
-    </menuchoice>.
-   </para>
-   <para>
-    &pdf; packets are marked by the following icon:
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="icon-pdf.png"/>
-     </imageobject>
-    </inlinemediaobject>
-   </para>
-   <para>
-    When you open a &pdf; packet for viewing, it will open in your computer's
-    default &pdf; viewer (as illustrated below).  If you like, you can
-    specify a different &pdf; viewer in
-    <link linkend="options-tools">&regina;'s settings</link>.
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="pdf.png"/>
+      <imagedata fileref="dim2triangulation.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
   </sect2>
 
   <sect2 id="packet-triangulation">
-   <title>Triangulations</title>
+   <title>3-Manifold Triangulations</title>
    <para>
-    A <firstterm>triangulation</firstterm> packet represents a
-    3-manifold triangulation, described by gluing faces of tetrahedra
+    A <firstterm>3-manifold triangulation</firstterm> packet describes a
+    triangulated 3-manifold, formed by gluing faces of tetrahedra
     together in pairs.
-    Triangulations are central to &regina;, and you can learn more about
-    using them by reading the
+    3-manifold triangulations are central to &regina;,
+    and you can learn more about using them by reading the
     <link linkend="triangulations">chapter on triangulations</link> in
     this handbook.
    </para>
    <para>
-    Triangulations are marked by the following icon:
+    3-manifold triangulations are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
       <imagedata fileref="icon-triangulation.png"/>
@@ -240,7 +203,7 @@
    <para>
     A <firstterm>normal surface list</firstterm> represents a set
     of normal surfaces within a 3-manifold triangulation.
-    Typically this will be the set of all vertex normal surfaces
+    Typically this will be the set of all vertex or fundamental surfaces
     in some normal (or almost normal) coordinate system.
     Like triangulations, normal surfaces are central to &regina;,
     and you can learn more about using them in the
@@ -264,6 +227,38 @@
     <inlinemediaobject>
      <imageobject>
       <imagedata fileref="surfacelist.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="packet-anglestructures">
+   <title>Angle Structure Lists</title>
+   <para>
+    An <firstterm>angle structure list</firstterm> represents a set
+    of angle structures on a 3-manifold triangulation.
+    Typically this will be the
+    set of all vertex angle structures under the standard equations.
+    You can learn more about working with angle structure lists
+    in the <link linkend="angles">chapter on angle structures</link>
+    in this handbook.
+   </para>
+   <para>
+    Angle structure lists are marked by the following icon:
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="icon-angles.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    Like normal surface lists, an angle structure list must always appear as a
+    child of the corresponding 3-manifold triangulation.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="angles.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -339,33 +334,26 @@
    </sect3>
   </sect2>
 
-  <sect2 id="packet-anglestructures">
-   <title>Angle Structure Lists</title>
+  <sect2 id="packet-text">
+   <title>Text Packets</title>
    <para>
-    An <firstterm>angle structure list</firstterm> represents a set
-    of angle structures on a 3-manifold triangulation.
-    Typically this will be the
-    set of all vertex angle structures under the standard equations.
-    You can learn more about working with angle structure lists
-    in the <link linkend="angles">chapter on angle structures</link>
-    in this handbook.
+    A <firstterm>text</firstterm> packet contains an arbitrary amount of
+    plain text, with no formatting.
+    It can be used to add descriptions, observations or
+    other miscellaneous comments into your data file.
    </para>
    <para>
-    Angle structure lists are marked by the following icon:
+    Text packets are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-angles.png"/>
+      <imagedata fileref="icon-text.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
-    Like normal surface lists, an angle structure list must always appear as a
-    child of the corresponding 3-manifold triangulation.
-   </para>
-   <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="angles.png"/>
+      <imagedata fileref="text.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -400,6 +388,42 @@
     </inlinemediaobject>
    </para>
   </sect2>
+
+  <sect2 id="packet-pdf">
+   <title>&pdf; Documents</title>
+   <para>
+    Like text packets, a <firstterm>&pdf;</firstterm> packet allows you
+    to document your work.  &pdf; packets support richer content,
+    including diagrams and formulae.  The &pdf; document must be created
+    outside &regina; (using &latex; or your favourite word processor),
+    and then imported into your &regina; data file by selecting
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>New PDF Document</guimenuitem>
+    </menuchoice>.
+   </para>
+   <para>
+    &pdf; packets are marked by the following icon:
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="icon-pdf.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    When you open a &pdf; packet for viewing, it will open in your computer's
+    default &pdf; viewer (as illustrated below).  If you like, you can
+    specify a different &pdf; viewer in
+    <link linkend="options-tools">&regina;'s settings</link>.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="pdf.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
  </sect1>
 
  <sect1 id="packet-operations">
@@ -428,10 +452,10 @@
     </inlinemediaobject>
    </para>
    <para>
-    For example, to create a new triangulation, either select
+    For example, to create a new 3-manifold triangulation, either select
     <menuchoice>
      <guimenu>Packet Tree</guimenu>
-     <guimenuitem>New Triangulation</guimenuitem>
+     <guimenuitem>New 3-D Triangulation</guimenuitem>
     </menuchoice>
     in the menu, or press the toolbar button with the following icon:
     <inlinemediaobject>

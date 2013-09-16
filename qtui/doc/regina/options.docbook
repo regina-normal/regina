@@ -70,6 +70,50 @@
     </glossdef>
    </glossentry>
    <glossentry>
+    <glossterm><guilabel>Warn before generating non-embedded
+    surfaces</guilabel></glossterm>
+    <glossdef><para>
+     If checked, &regina; will ask for confirmation whenever you try to
+     <link linkend="surfaces-creation">enumerate normal surfaces</link>
+     <emphasis>without</emphasis> selecting
+     <link linkend="surfaces-embeddedonly">embedded surfaces only</link>.
+     &regina; asks for confirmation because non-embedded surfaces are
+     typically much slower to generate, far more numerous, and &regina;
+     only offers very basic support for them.
+    </para></glossdef>
+   </glossentry>
+   <glossentry>
+    <glossterm><guilabel>Support transversely oriented normal
+    surfaces</guilabel></glossterm>
+    <glossdef><para>
+     As of version&nbsp;4.92, &regina; offers support for transversely
+     oriented normal surfaces <xref linkend="bib-cooper-tons"/>.
+     However, this feature is highly experimental and still a work in
+     progress, and things <emphasis>will break</emphasis> if you use it.
+     Because of this, transversely oriented coordinate systems are hidden
+     from users by default.
+    </para><para>
+     If you check this box, &regina; will offer traversely oriented
+     coordinate systems for creating and viewing normal surfaces.
+     Once again, this is a work in progress, and you should
+     <emphasis>not trust any results</emphasis> in these coordinate systems.
+    </para><para>
+     Once this feature becomes stable in a later version of &regina;,
+     transversely oriented normal surfaces will be supported by default
+     (and this option will be removed).
+    </para></glossdef>
+   </glossentry>
+   <glossentry id="options-fpg-labels">
+    <glossterm><guilabel>Labels on face pairing graphs</guilabel></glossterm>
+    <glossdef><para>
+     If checked, &regina; will label each node in the
+     <link linkend="tri-skeleton-facegraph">face pairing graph</link>
+     of a 3-manifold triangulation with the corresponding tetrahedron number.
+     This will likewise affect edge pairing graphs of 2-manifold
+     triangulations in the same manner.
+    </para></glossdef>
+   </glossentry>
+   <glossentry>
     <glossterm><guilabel>Packet tree jump size</guilabel></glossterm>
     <glossdef><para>
      Specifies how many steps a packet moves through the tree when
@@ -136,190 +180,6 @@
      </para>
     </glossdef>
    </glossentry>
-   <!--glossentry>
-    <glossterm><guilabel>Show tip of the day</guilabel></glossterm>
-    <glossdef><para>
-     If checked, &regina; will offer occasional tips and hints on
-     startup.  These include tips on how to use &regina;, or
-     advanced features that you might not be aware of.
-    </para><para>
-     You can view these tips at any time by selecting
-     <menuchoice>
-      <guimenu>Help</guimenu>
-      <guimenuitem>Tip of the Day</guimenuitem>
-     </menuchoice>
-     from the menu.
-    </para></glossdef>
-   </glossentry-->
-  </glosslist>
- </sect1>
-
- <sect1 id="options-triangulation">
-  <title>Triangulation Options</title>
-
-  <para>
-   The <guilabel>Triangulation</guilabel> options panel controls how
-   &regina; works with 3-manifold triangulations.
-  </para>
-  <para>
-   <inlinemediaobject>
-    <imageobject>
-     <imagedata fileref="options-tri.png"/>
-    </imageobject>
-   </inlinemediaobject>
-  </para>
-  <para>
-   The settings here are:
-  </para>
-  <glosslist>
-   <glossentry>
-    <glossterm><guilabel>Default top-level tab</guilabel></glossterm>
-    <glossdef><para>
-     Specifies which tab in the
-     <link linkend="tri-analysis">triangulation viewer</link>
-     will first appear when you open a triangulation for viewing.
-    </para></glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>Default skeleton tab</guilabel></glossterm>
-    <glossdef><para>
-     Specifies which sub-tab will first appear
-     when you switch to the
-     <link linkend="tri-skeleton">triangulation skeleton tab</link>.
-    </para></glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>Default algebra tab</guilabel></glossterm>
-    <glossdef><para>
-     Specifies which sub-tab will first appear
-     when you switch to the
-     <link linkend="tri-algebra">triangulation algebra tab</link>.
-    </para></glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>Surface calculation threshold</guilabel></glossterm>
-    <glossdef>
-     <para>
-      Determines when &regina; will automatically compute information on the
-      <link linkend="tri-recognition">triangulation recognition tab</link>
-      that requires the enumeration of normal surfaces (such as
-      0-efficiency testing, 3-sphere recognition, or unknot recognition).
-      If the number of tetrahedra is at most the given value, then
-      &regina; will compute such information automatically.
-      If the number of tetrahedra is larger, then &regina; will not
-      compute this information until you manually press the
-      <guibutton>Calculate</guibutton> button.
-     </para>
-     <para>
-      Note that some algorithms (such as 3-sphere, 3-ball and solid torus
-      recognition) might use a lower
-      threshold than the one you set here.  This is because they rely on
-      even more complex operations, such as enumerating
-      <emphasis>almost normal</emphasis> surfaces,
-      which in the worst cases are much slower than ordinary normal surface
-      enumeration.
-     </para>
-    </glossdef>
-   </glossentry>
-   <glossentry id="options-fpg-labels">
-    <glossterm><guilabel>Labels on face pairing graphs</guilabel></glossterm>
-    <glossdef><para>
-     If checked, &regina; will label each node in the
-     <link linkend="tri-skeleton-facegraph">face pairing graph</link>
-     with the corresponding tetrahedron number.
-    </para></glossdef>
-   </glossentry>
-  </glosslist>
- </sect1>
-
- <sect1 id="options-surfaces">
-  <title>Normal Surface Options</title>
-
-  <para>
-   The <guilabel>Surfaces</guilabel> options panel controls how
-   &regina; works with lists of normal surfaces.
-  </para>
-  <para>
-   <inlinemediaobject>
-    <imageobject>
-     <imagedata fileref="options-surfaces.png"/>
-    </imageobject>
-   </inlinemediaobject>
-  </para>
-  <para>
-   The settings here are:
-  </para>
-  <glosslist>
-   <glossentry>
-    <glossterm><guilabel>Default coordinate system</guilabel></glossterm>
-    <glossdef><para>
-     Specifies which coordinate system will be the default when you
-     <link linkend="surfaces-creation">enumerate normal surfaces</link>.
-    </para></glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>Default top-level tab</guilabel></glossterm>
-    <glossdef><para>
-     Specifies which tab in the
-     <link linkend="tri-analysis">surface list viewer</link>
-     will first appear when you open a normal surface list for viewing.
-    </para></glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>Default compatibility matrix</guilabel></glossterm>
-    <glossdef><para>
-     Specifies which matrix (local or global)
-     will first appear when you switch to the
-     <link linkend="surfaces-compat">surface compatibility tab</link>.
-    </para></glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>Compatibility matrix threshold</guilabel></glossterm>
-    <glossdef><para>
-     Determines when the
-     <link linkend="surfaces-compat">surface compatibility matrices</link>
-     will be computed.
-     If the number of normal surfaces is at most the given value, then
-     &regina; will compute compatibility matrices automatically.
-     If the number of surfaces is larger, then &regina; will not
-     compute these matrices until you manually press the
-     <guibutton>Calculate</guibutton> button.
-    </para></glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>Warn before generating non-embedded
-    surfaces</guilabel></glossterm>
-    <glossdef><para>
-     If checked, &regina; will ask for confirmation whenever you try to
-     <link linkend="surfaces-creation">enumerate normal surfaces</link>
-     <emphasis>without</emphasis> selecting
-     <link linkend="surfaces-embeddedonly">embedded surfaces only</link>.
-     &regina; asks for confirmation because non-embedded surfaces are
-     typically much slower to generate, far more numerous, and &regina;
-     only offers very basic support for them.
-    </para></glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>Support transversely oriented normal
-    surfaces</guilabel></glossterm>
-    <glossdef><para>
-     As of version&nbsp;4.92, &regina; offers support for transversely
-     oriented normal surfaces <xref linkend="bib-cooper-tons"/>.
-     However, this feature is highly experimental and still a work in
-     progress, and things <emphasis>will break</emphasis> if you use it.
-     Because of this, transversely oriented coordinate systems are hidden
-     from users by default.
-    </para><para>
-     If you check this box, &regina; will offer traversely oriented
-     coordinate systems for creating and viewing normal surfaces.
-     Once again, this is a work in progress, and you should
-     <emphasis>not trust any results</emphasis> in these coordinate systems.
-    </para><para>
-     Once this feature becomes stable in a later version of &regina;,
-     transversely oriented normal surfaces will be supported by default
-     (and this option will be removed).
-    </para></glossdef>
-   </glossentry>
   </glosslist>
  </sect1>
 
@@ -342,8 +202,8 @@
 
   <para>
    The <link linkend="tri-censuslookup">census lookup facility</link>
-   allows you to select a triangulation and search for it within a list
-   of ready-made census files.
+   allows you to select a 3-manifold triangulation and search for it within a
+   list of ready-made census files.
    Through the settings here, you can add additional census files to this list,
    or disable the files that &regina; uses by default.
   </para>
