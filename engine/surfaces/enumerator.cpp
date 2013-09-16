@@ -52,6 +52,13 @@
 
 namespace regina {
 
+#ifdef INT128_FOUND
+/**
+ * The largest possible signed 128-bit integer,
+ */
+NInteger maxSigned128(NNativeInteger<16>((__int128_t(1) << 127) - 1));
+#endif
+
 NNormalSurfaceList* NNormalSurfaceList::enumerate(
         NTriangulation* owner, NormalCoords flavour,
         NormalList which, NormalAlg algHints,
@@ -225,18 +232,160 @@ void NNormalSurfaceList::Enumerator::fillVertexDD() {
 
 template <typename Flavour>
 void NNormalSurfaceList::Enumerator::fillVertexTree() {
-    // TODO: Select an appropriate integer type.
-    // TODO: Don't forget to double it.
-    int bits = 128; // TODO
+    // We can always do this with the arbitrary-precision NInteger,
+    // but it will be much faster if we can get away with native
+    // integers instead.  To do this, though, we need to be able to
+    // guarantee that all intermediate integers that could appear in the
+    // algorithm are sufficiently small in magnitude.
+    //
+    // Here we compute an upper bound on the magnitude of the integers that
+    // could appear in a vanilla NTreeEnumeration<LPConstraintNone, BanNone>
+    // algorithm.  For details on how these arguments work, see
+    // section 4 of the tree traversal algorithm paper (Burton & Ozlen,
+    // Algorithmica, 2013).
+    //
+    // All "maximum" quantities in the calculations below refer to
+    // maximum absolute value, and are always non-negative.
 
-    if (bits < sizeof(long) * 8 - 1)
+    // Here we use the fact that the coordinate system is known to be
+    // supported by the tree traversal algorithm, and therefore is one
+    // of NS_STANDARD, NS_QUAD, NS_AN_STANDARD or NS_AN_QUAD.
+
+    // The matching equation matrix that will be used by the tree traversal
+    // tableaux, which is always based on NS_STANDARD or NSQUAD (even
+    // for almost normal surfaces):
+    NMatrixInt* eqns;
+
+    // The maximum number of columns in the tableaux that could be added
+    // to form the right hand side, as a consequence of either
+    // LPData::constrainPositive() or LPData::constrainOct():
+    unsigned long maxColsRHS;
+
+    switch (list_->flavour_) {
+        case NS_STANDARD:
+            eqns = makeMatchingEquations(triang_, NS_STANDARD);
+            maxColsRHS = triang_->getNumberOfTetrahedra() * 5;
+            break;
+        case NS_QUAD:
+            eqns = makeMatchingEquations(triang_, NS_QUAD);
+            maxColsRHS = triang_->getNumberOfTetrahedra();
+            break;
+        case NS_AN_STANDARD:
+            eqns = makeMatchingEquations(triang_, NS_STANDARD);
+            maxColsRHS = triang_->getNumberOfTetrahedra() * 5 + 1;
+            break;
+        case NS_AN_QUAD_OCT:
+            eqns = makeMatchingEquations(triang_, NS_QUAD);
+            maxColsRHS = triang_->getNumberOfTetrahedra() + 1;
+            break;
+        default:
+            // We shouldn't be here.. just use arbitrary precision arithmetic.
+            fillVertexTreeWith<Flavour, NInteger>();
+            return;
+    }
+
+    size_t i, j;
+    NInteger tmp;
+
+    // The rank of the matching equation matrix:
+    unsigned long rank = rowBasis(*eqns);
+
+    // The maximum entry in the matching equation matrix:
+    NInteger maxEqnEntry = 0;
+    for (i = 0; i < rank; ++i)
+        for (j = 0; j < eqns->columns(); ++j) {
+            tmp = eqns->entry(i, j).abs();
+            if (tmp > maxEqnEntry)
+                maxEqnEntry = tmp;
+        }
+
+    // The maximum integer that can appear on the RHS of the original
+    // tableaux, after all calls to constrainPositive() and/or constrainOct():
+    NInteger maxOrigRHS = maxEqnEntry * maxColsRHS;
+
+    // The maximum sum of absolute values of entries in a single column
+    // of the original tableaux (noting that for almost normal surfaces,
+    // the octagon column will be the sum of two original columns):
+    NInteger maxOrigColSum = 0;
+    for (i = 0; i < eqns->columns(); ++i) {
+        tmp = 0;
+        for (j = 0; j < rank; ++j)
+            tmp += NInteger(eqns->entry(j, i).abs());
+        if (tmp > maxOrigColSum)
+            maxOrigColSum = tmp;
+    }
+    if (Flavour::almostNormal)
+        maxOrigColSum *= 2;
+
+    // The square of the Hadamard bound for the original tableaux:
+    NInteger hadamardSquare = 1;
+    NInteger* colNorm = new NInteger[eqns->columns()];
+    for (i = 0; i < eqns->columns(); ++i) {
+        colNorm[i] = 0;
+        for (j = 0; j < rank; ++j)
+            colNorm[i] += NInteger(eqns->entry(j, i) * eqns->entry(j, i));
+    }
+    std::sort(colNorm, colNorm + eqns->columns());
+    for (i = 0; i < rank; ++i)
+        hadamardSquare *= colNorm[eqns->columns() - 1 - i];
+    delete[] colNorm;
+
+    delete eqns; // We are done with the matching equations now.
+
+    if (Flavour::almostNormal) {
+        // The octagon column is the sum of two quadrilateral columns.
+        // This is no worse than doubling the Euclidean norm of the
+        // largest column.
+        hadamardSquare *= 4;
+    }
+
+    // The maximum entry in the tableaux, at any stage of the algorithm,
+    // is hadamard * maxOrigColSum.  Call this X.
+
+    // The maximum entry on the RHS, at any stage of the algorithm,
+    // is hadamard * rank * maxOrigRHS.  Call this Y.
+
+    // Assume nTetrahedra >= 2, since with 1 tetrahedron, all enumerations
+    // easily fit into small native integers.
+    // Then:
+    // maxOrigColSum <= rank * maxEqnEntry * 2
+    //               <= rank * maxEqnEntry * nTetrahedra
+    //               <= rank * maxEqnEntry * maxColsRHS
+    //                = rank * maxOrigRHS.
+    // So X <= Y.
+
+    // The worst computations we have to perform are
+    // (X * X + X * X) in the tableaux, and (X * Y +  X * Y) on the RHS.
+    // Therefore the largest integer we have to deal with is:
+    // 2XY = 2 * hadamardSquare * maxOrigColSum * rank * maxOrigRHS.
+    NInteger worst = hadamardSquare;
+    worst *= 2;
+    worst *= maxOrigColSum;
+    worst *= rank;
+    worst *= maxOrigRHS;
+
+    // Bridge builders add safety margins, and we can add one too.
+    worst *= 4;
+
+    // TODO: Rework this calculation so that maxOrigRHS is computed from
+    // row sums in the matching equation matrix (don't forget to double
+    // the highest term for almost normal surfaces).  This may mean that
+    // we need to take max(X, Y), since it will no longer be clear that
+    // X <= Y.
+
+    // Now we can select an appropriate integer type.
+    if (worst <= LONG_MAX) {
+        std::cerr << "Using NNativeLong." << std::endl;
         fillVertexTreeWith<Flavour, NNativeLong>();
 #ifdef INT128_FOUND
-    else if (bits < 127)
+    } else if (worst <= maxSigned128) {
+        std::cerr << "Using NNativeInteger<16>." << std::endl;
         fillVertexTreeWith<Flavour, NNativeInteger<16> >();
 #endif
-    else
+    } else {
+        std::cerr << "Using the fallback NInteger." << std::endl;
         fillVertexTreeWith<Flavour, NInteger>();
+    }
 }
 
 template <typename Flavour, typename Integer>
