@@ -2049,6 +2049,55 @@
     </para></caution>
    </sect3>
   </sect2>
+
+  <sect2 id="tri-vertexlinks">
+   <title>Vertex Links</title>
+
+   <para>
+    If you wish to examine a 3-manifold vertex link in detail,
+    you can explicitly construct it by selecting
+    <menuchoice>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
+     <guimenuitem>Vertex Links</guimenuitem>
+    </menuchoice>.
+    This will build the vertex link as a new
+    <link linkend="dim2triangulations">2-manifold triangulation</link>.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-vertexlinks.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    You will be asked which vertex link you wish to construct,
+    as illustrated below.
+    For each available vertex, the drop-down list shows the vertex number
+    (as seen in the <link linkend="tri-vertices">skeleton viewer</link>),
+    along with details of the individual tetrahedron vertices that combine to
+    form that vertex of the triangulation.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-vertexlinksbox.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The new 2-manifold trianguation will appear
+    beneath the original 3-manifold triangulation in the packet tree.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-vertexlinksresult.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
   <sect2 id="tri-censuslookup">
    <title>Census Lookup</title>
 
@@ -2207,7 +2256,7 @@
     using <firstterm>elementary moves</firstterm>, which are small
     local modifications
     to the triangulation that preserve the underlying 3-manifold.
-    To perform an elementary move, select
+    To perform elementary moves, select
     <menuchoice>
      <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Elementary Move</guimenuitem>
@@ -2239,14 +2288,16 @@
     locations at which the move can be performed.  If a move is disabled
     (greyed out), this means there are no suitable locations in your
     triangulation for that move type.
-    Select the type of move and its location, and press
-    <guibutton>OK</guibutton> to perform the move.
    </para>
    <para>
-    We do not give full details of the various moves here; see
-    <xref linkend="bib-burton-phd"/> or the
-    <classname>NTriangulation</classname> class notes in the &regenginedocs;
-    for full descriptions of the moves and restrictions on their
+    Select a move, and then press <guibutton>Apply</guibutton> to perform it.
+    You may continue to apply one move after another.  When you are done,
+    press <guibutton>Close</guibutton> to close the elementary move box.
+   </para>
+   <para>
+    We do not give full details of the various types of move here; see
+    <xref linkend="bib-burton-hyamfest"/>
+    for full descriptions as well as restrictions on their
     possible locations.  A brief summary is as follows.
    </para>
    <para>
@@ -2522,6 +2573,41 @@
    <para>
     If your triangulation has any orientable components, they will
     simply be duplicated.
+   </para>
+  </sect2>
+
+  <sect2 id="tri-drilledge">
+   <title>Drilling Edges</title>
+
+   <para>
+    You can drill out an edge of your triangulation by selecting
+    <menuchoice>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
+     <guimenuitem>Drill Edge</guimenuitem>
+    </menuchoice>.
+    This effectively removes a small regular neighbourhood of the edge
+    from the triangulation.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-drilledge.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    You will be asked which edge to drill out, as illustrated below.
+    For each available edge, the drop-down list shows the edge number
+    (as seen in the <link linkend="tri-edges">skeleton viewer</link>),
+    along with details of the individual tetrahedron edges that combine to
+    form that edge of the triangulation.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-drilledgebox.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
   </sect2>
 
