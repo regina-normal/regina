@@ -711,9 +711,11 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     actDrillEdge->setIcon(ReginaSupport::regIcon("drilledge"));
     actDrillEdge->setToolTip(tr(
         "Drill out a regular neighbourhood of an edge"));
+    actDrillEdge->setEnabled(readWrite);
     actDrillEdge->setWhatsThis(tr("Drill out a regular neighbourhood "
         "of an edge of this triangulation.  "
         "This triangulation will be modified directly."));
+    enableWhenWritable.append(actDrillEdge);
     triActionList.append(actDrillEdge);
     connect(actDrillEdge, SIGNAL(triggered()), this, SLOT(drillEdge()));
 
