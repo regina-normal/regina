@@ -39,7 +39,9 @@ namespace regina {
 // Instantiate templates:
 template class LPInitialTableaux<LPConstraintNone>;
 template class LPInitialTableaux<LPConstraintEuler>;
+#ifndef EXCLUDE_SNAPPEA
 template class LPInitialTableaux<LPConstraintNonSpun>;
+#endif
 
 template class LPData<LPConstraintNone, NInteger>;
 template class LPData<LPConstraintNone, NNativeLong>;

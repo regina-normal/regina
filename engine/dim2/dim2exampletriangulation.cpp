@@ -170,7 +170,7 @@ Dim2Triangulation* Dim2ExampleTriangulation::disc() {
     Dim2Triangulation* ans = new Dim2Triangulation();
     ans->setPacketLabel("Disc");
 
-    Dim2Triangle* r = ans->newTriangle();
+    ans->newTriangle();
 
     return ans;
 }
