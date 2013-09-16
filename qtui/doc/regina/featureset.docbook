@@ -56,7 +56,7 @@
     <itemizedlist>
      <listitem><para>
       detailed combinatorial information about the skeleton and
-      boundary components, including vertex links
+      boundary components, including triangulations of the vertex links
       and the shapes formed by the various triangulation faces;
      </para></listitem>
      <listitem><para>
@@ -159,11 +159,19 @@
      <listitem><para>
       cutting along normal surfaces within a triangulation
       or crushing them to a point, as
-      described <link linkend="features-surfaces">below</link>.
+      described <link linkend="features-surfaces">below</link>;
+     </para></listitem>
+     <listitem><para>
+      drilling out neighbourhoods of edges within the triangulation.
      </para></listitem>
     </itemizedlist>
    </para>
   </sect3>
+
+  <para>
+   &regina; can also study and manipulate 2-manifold triangulations,
+   and recognise their underlying 2-manifolds.
+  </para>
  </sect2>
 
  <sect2 id="features-census">
@@ -212,8 +220,9 @@
    are highly optimised, and are described in detail in
    <xref linkend="bib-burton-dd"/>,
    <xref linkend="bib-burton-convert"/>,
-   <xref linkend="bib-burton-quadoct"/> and
-   <xref linkend="bib-burton-fund"/>.
+   <xref linkend="bib-burton-quadoct"/>,
+   <xref linkend="bib-burton-fund"/>, and
+   <xref linkend="bib-bo-tree"/>.
   </para>
   <para>
    This enumeration can be performed in a variety of coordinate

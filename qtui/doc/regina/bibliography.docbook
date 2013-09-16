@@ -225,6 +225,48 @@
   <date>November 2011</date>
  </biblioentry>
 
+ <biblioentry id="bib-bo-branching">
+  <abbrev>BO12</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Benjamin</firstname>
+    <othername>A.</othername>
+    <surname>Burton</surname>
+   </author>
+   <author>
+    <firstname>Melih</firstname>
+    <surname>Ozlen</surname>
+   </author>
+  </authorgroup>
+  <title>A fast branching algorithm for unknot recognition with experimental
+   polynomial-time behaviour</title>
+  <edition>Preprint</edition>
+  <issuenum>arXiv:1211.1079</issuenum>
+  <date>November 2012</date>
+ </biblioentry>
+
+ <biblioentry id="bib-bo-tree">
+  <abbrev>BO13</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Benjamin</firstname>
+    <othername>A.</othername>
+    <surname>Burton</surname>
+   </author>
+   <author>
+    <firstname>Melih</firstname>
+    <surname>Ozlen</surname>
+   </author>
+  </authorgroup>
+  <title>A tree traversal algorithm for decision problems in knot theory
+   and 3-manifold topology</title>
+  <edition>Algorithmica</edition>
+  <volumenum>vol. 65</volumenum>
+  <issuenum>no. 4</issuenum>
+  <artpagenums>pp. 772&ndash;801</artpagenums>
+  <date>2013</date>
+ </biblioentry>
+
  <biblioentry id="bib-weber-seifert">
   <abbrev>BRT12</abbrev>
   <authorgroup>

@@ -148,6 +148,7 @@
   <!ENTITY reginafeatureset SYSTEM "featureset.docbook">
   <!ENTITY reginapacket SYSTEM "packet.docbook">
   <!ENTITY reginatriangulations SYSTEM "triangulations.docbook">
+  <!ENTITY reginadim2tri SYSTEM "dim2tri.docbook">
   <!ENTITY reginasurfaces SYSTEM "surfaces.docbook">
   <!ENTITY reginaangles SYSTEM "angles.docbook">
   <!ENTITY reginaforeign SYSTEM "foreign.docbook">
@@ -225,6 +226,7 @@
  &reginaabout;
  &reginapacket;
  &reginatriangulations;
+ &reginadim2tri;
  &reginasurfaces;
  &reginaangles;
  &reginaforeign;

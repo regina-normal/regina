@@ -102,9 +102,6 @@
       <para>
        This is the coordinate system that &regina; will use to enumerate
        normal surfaces.
-       If you have a favourite system that you use all the
-       time, you can change the default in &regina;'s
-       <link linkend="options-surfaces">normal surface options</link>.
       </para>
       <para>
        Your choice of coordinate system will affect which surfaces
@@ -228,12 +225,12 @@
      <glossdef>
       <para>
        If this box is checked (the default), this indicates that you are
-       only interested in embedded surfaces.  This is consistent with most
-       of the normal surface literature.
+       only interested in properly embedded surfaces.
+       This is consistent with most of the normal surface literature.
       </para>
       <para>
        If unchecked, this indicates that you are interested not only in
-       embedded normal surfaces, but also <emphasis>immersed</emphasis>
+       properly embedded normal surfaces, but also <emphasis>immersed</emphasis>
        and <emphasis>singular</emphasis> surfaces.
        &regina; currently offers only very basic support for such
        surfaces (it will not even tell you which are immersed and which are
@@ -291,13 +288,20 @@
   </para>
   <para>
    Above all of these tabs is a header displaying the total number of
-   surfaces and the original enumeration parameters
-   (i.e., the <link linkend="surfaces-selectcoords">coordinate system</link>
-   you selected, and whether or not you asked for
-   <link linkend="surfaces-embeddedonly">embedded surfaces only</link>).
-   It also offers a link that you can click on to view the underlying
-   triangulation.
+   surfaces, the original enumeration parameters, and a link to the
+   underlying triangulation.  The enumeration parameters include:
   </para>
+  <itemizedlist>
+   <listitem><para>whether you asked for
+    <link linkend="surfaces-selectenum">vertex or fundamental</link>
+    surfaces;</para></listitem>
+   <listitem><para>whether you asked for
+    <link linkend="surfaces-embeddedonly">embedded surfaces only</link>,
+    or for immersed and/or branched surfaces also;</para></listitem>
+   <listitem><para>the normal (or almost normal)
+    <link linkend="surfaces-selectcoords">coordinate system</link>
+    in which you performed the enumeration.</para></listitem>
+  </itemizedlist>
   <para>
    <inlinemediaobject>
     <imageobject>
@@ -306,12 +310,44 @@
    </inlinemediaobject>
   </para>
   <para>
-   If the header says that you enumerated in
-   <emphasis>legacy</emphasis> almost normal coordinates, it means
-   that the list was created using &regina;&nbsp;4.5.1 or earlier, and that
-   surfaces with more than one octagon were deleted.
-   See the discussion on <link linkend="surfaces-deflegacyan">legacy
-   coordinates</link> for details.
+   You might see some special types of surface lists:
+   <glosslist>
+    <glossentry id="surfaces-header-legacy">
+     <glossterm><guilabel>Legacy surfaces</guilabel></glossterm>
+     <glossdef><para>
+      You might see this instead of vertex or fundamental surfaces.
+      This means that the list of surfaces was created using
+      &regina; 4.93 or earlier (which did not save information on
+      whether the surfaces were vertex or fundamental).
+     </para></glossdef>
+    </glossentry>
+    <glossentry id="surfaces-header-custom">
+     <glossterm><guilabel>Custom surfaces</guilabel></glossterm>
+     <glossdef><para>
+      You might see this instead of vertex or fundamental surfaces.
+      This means that the list of surfaces was created using
+      some specialised or user-designed algorithm, and &regina; cannot
+      give you any more specific information about which surfaces these are.
+     </para></glossdef>
+    </glossentry>
+    <glossentry>
+     <glossterm><guilabel>Legacy almost normal
+      coordinates</guilabel></glossterm>
+     <glossdef><para>
+      This indicates that the list was created using
+      &regina;&nbsp;4.5.1 or earlier, and that surfaces with more than
+      one octagon were deleted.
+      See the discussion on <link linkend="surfaces-deflegacyan">legacy
+      coordinates</link> for details.
+     </para></glossdef>
+    </glossentry>
+   </glosslist>
+  </para>
+  <para>
+   As of version 4.94, &regina; also remembers details of the specific
+   enumeration algorithm that was used.  This information is not shown
+   in the user interface, but can be extracted using
+   <link linkend="python">&python; scripting</link>.
   </para>
 
   <sect2 id="surfaces-summary">
@@ -913,9 +949,6 @@
     generate these matrices automatically.
     You can still compute them by pressing the
     <guilabel>Calculate</guilabel> button (indicated below).
-    The default threshold for &ldquo;too many&rdquo; is 100 surfaces,
-    though you can change this in the
-    <link linkend="options-surfaces">normal surface options</link>.
    </para>
    <para>
     <inlinemediaobject>

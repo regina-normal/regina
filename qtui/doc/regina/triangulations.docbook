@@ -1,5 +1,5 @@
 <chapter id="triangulations">
- <title>Triangulations</title>
+ <title>3-Manifold Triangulations</title>
 
  <para>
   3-manifolds in &regina; are typically represented by
@@ -33,7 +33,7 @@
     The simplest way to create a triangulation is through the
     <menuchoice>
      <guimenu>Packet Tree</guimenu>
-     <guimenuitem>New Triangulation</guimenuitem>
+     <guimenuitem>New 3-D Triangulation</guimenuitem>
     </menuchoice>
     menu item (or the corresponding toolbar button),
     which will create a new triangulation from scratch.
@@ -1765,8 +1765,9 @@
        <xref linkend="bib-rubin-3sphere1"/>,
        <xref linkend="bib-rubin-3sphere2"/>,
        <xref linkend="bib-thinposition"/>,
-       <xref linkend="bib-0-efficiency"/> and
-       <xref linkend="bib-burton-quadoct"/>.
+       <xref linkend="bib-0-efficiency"/>,
+       <xref linkend="bib-burton-quadoct"/>, and
+       <xref linkend="bib-bo-branching"/>.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-prop3ball">
@@ -1847,11 +1848,6 @@
       </glossdef>
      </glossentry>
     </glosslist>
-   </para>
-   <para>
-    You can change the size threshold that controls when properties on this
-    tab are computed automatically.  See &regina;'s
-    <link linkend="options-triangulation">triangulation options</link>.
    </para>
   </sect2>
 
@@ -1974,7 +1970,7 @@
      <link linkend="tri-basicprops">disconnected</link>, you may wish to
      break it into its connected components.  To do this, select
      <menuchoice>
-      <guimenu>Triangulation</guimenu>
+      <guimenu>3-D&nbsp;Triangulation</guimenu>
       <guimenuitem>Extract Components</guimenuitem>
      </menuchoice>.
      You must open the triangulation for viewing before you can do this.
@@ -2009,7 +2005,7 @@
      connected sum of prime 3-manifolds (none of which are 3-spheres).
      To do this, select
      <menuchoice>
-      <guimenu>Triangulation</guimenu>
+      <guimenu>3-D&nbsp;Triangulation</guimenu>
       <guimenuitem>Connected Sum Decomposition</guimenuitem>
      </menuchoice>.
      You must open the triangulation for viewing before you can do this.
@@ -2061,7 +2057,7 @@
     triangulations.
     To search for your triangulation within these censuses, select
     <menuchoice>
-     <guimenu>Triangulation</guimenu>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Census Lookup</guimenuitem>
     </menuchoice>.
      You must open the triangulation for viewing before you can do this.
@@ -2115,7 +2111,7 @@
 
   <para>
    There are many ways of modifying a 3-manifold triangulation.
-   Many of these can be found in the <guimenu>Triangulation</guimenu> menu,
+   Many of these can be found in the <guimenu>3-D&nbsp;Triangulation</guimenu> menu,
    which appears when you open a triangulation for viewing.
   </para>
   <para>
@@ -2178,7 +2174,7 @@
     a triangulation without changing the underlying 3-manifold.
     If you press the <guibutton>Simplify</guibutton> button (or select
     <menuchoice>
-     <guimenu>Triangulation</guimenu>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Simplify</guimenuitem>
     </menuchoice>),
     then &regina; will use a combination of these moves to reduce the
@@ -2213,7 +2209,7 @@
     to the triangulation that preserve the underlying 3-manifold.
     To perform an elementary move, select
     <menuchoice>
-     <guimenu>Triangulation</guimenu>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Elementary Move</guimenuitem>
     </menuchoice>
    from the menu.
@@ -2348,7 +2344,7 @@
     you can convert it into a 0-efficient triangulation of the same
     3-manifold by selecting
     <menuchoice>
-     <guimenu>Triangulation</guimenu>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Make 0-Efficient</guimenuitem>
     </menuchoice>.
    </para>
@@ -2401,7 +2397,7 @@
    <para>
     If you have an ideal triangulation, you can select
     <menuchoice>
-     <guimenu>Triangulation</guimenu>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Truncate Ideal Vertices</guimenuitem>
     </menuchoice>
     to convert your ideal vertices into real boundary components.
@@ -2427,7 +2423,7 @@
     Conversely: if your triangulation has real boundary components and you
     wish to convert this into an ideal triangulation, select
     <menuchoice>
-     <guimenu>Triangulation</guimenu>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Make Ideal</guimenuitem>
     </menuchoice>.
    </para>
@@ -2464,7 +2460,7 @@
     You can perform a barycentric subdivision on your triangulation by
     selecting
     <menuchoice>
-     <guimenu>Triangulation</guimenu>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Barycentric Subdivision</guimenuitem>
     </menuchoice>.
     This involves splitting each original tetrahedron into 24 smaller
@@ -2491,7 +2487,7 @@
     adjacent tetrahedra have consistent orientations.
     To do this, press the <guibutton>Orient</guibutton> button (or select
     <menuchoice>
-     <guimenu>Triangulation</guimenu>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Orient</guimenuitem>
     </menuchoice>
     from the menu).
@@ -2512,7 +2508,7 @@
     To convert a non-orientable triangulation into its orientable double cover,
     select
     <menuchoice>
-     <guimenu>Triangulation</guimenu>
+     <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Double Cover</guimenuitem>
     </menuchoice>.
    </para>
