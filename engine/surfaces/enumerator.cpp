@@ -375,15 +375,15 @@ void NNormalSurfaceList::Enumerator::fillVertexTree() {
 
     // Now we can select an appropriate integer type.
     if (worst <= LONG_MAX) {
-        std::cerr << "Using NNativeLong." << std::endl;
+        // std::cerr << "Using NNativeLong." << std::endl;
         fillVertexTreeWith<Flavour, NNativeLong>();
 #ifdef INT128_FOUND
     } else if (worst <= maxSigned128) {
-        std::cerr << "Using NNativeInteger<16>." << std::endl;
+        // std::cerr << "Using NNativeInteger<16>." << std::endl;
         fillVertexTreeWith<Flavour, NNativeInteger<16> >();
 #endif
     } else {
-        std::cerr << "Using the fallback NInteger." << std::endl;
+        // std::cerr << "Using the fallback NInteger." << std::endl;
         fillVertexTreeWith<Flavour, NInteger>();
     }
 }
