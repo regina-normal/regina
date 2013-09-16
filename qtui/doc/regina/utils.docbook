@@ -522,7 +522,7 @@
    <cmdsynopsis>
     <command>tricensus</command>
     <arg><option>-t, --tetrahedra=</option><replaceable>tetrahedra</replaceable></arg>
-    <arg><option>-2, --dim2=</option></arg>
+    <arg><option>-2, --dim2</option></arg>
     <group>
      <arg><option>-b, --boundary</option></arg>
      <arg><option>-i, --internal</option></arg>
@@ -1051,7 +1051,7 @@
     <command>tricensus-mpi</command>
     <arg><option>-D, --depth=</option><replaceable>levels</replaceable></arg>
     <arg><option>-x, --dryrun</option></arg>
-    <arg><option>-2, --dim2=</option></arg>
+    <arg><option>-2, --dim2</option></arg>
     <group>
      <arg><option>-o, --orientable</option></arg>
      <arg><option>-n, --nonorientable</option></arg>
@@ -1065,7 +1065,7 @@
      <arg><option>-M, --minprime</option></arg>
      <arg><option>-N, --minprimep2</option></arg>
     </group>
-    <arg><option>-s, --sigs=</option></arg>
+    <arg><option>-s, --sigs</option></arg>
     <arg choice="req"><replaceable>pairs-file</replaceable></arg>
     <arg choice="req"><replaceable>output-file-prefix</replaceable></arg>
    </cmdsynopsis>

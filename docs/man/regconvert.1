@@ -3,22 +3,27 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGCONVERT" "1" "28 May 2012" "" "The Regina Handbook"
+.TH "REGCONVERT" "1" "16 September 2013" "" "The Regina Handbook"
 
 .SH NAME
 regconvert \- Convert between different Regina file formats
 .SH SYNOPSIS
 
-\fBregconvert\fR [ \fB-x\fR | \fB-u\fR | \fB-b\fR ] \fB\fIold-file\fB\fR [ \fB\fInew-file\fB\fR ]
+\fBregconvert\fR [ \fB-x\fR | \fB-u\fR ] \fB\fIold-file\fB\fR [ \fB\fInew-file\fB\fR ]
 
 .SH "DESCRIPTION"
 .PP
-Between Regina versions 2.4 and 3.0, the data files changed from
-using an impenetrable and undocumented binary format to using
-(optionally compressed) XML\&.
-.PP
-This utility converts back and forth between these different
+This utility converts back and forth between different Regina
 file formats.
+.sp
+.RS
+.B "Note:"
+As of September\~2013, the ancient binary file format that was
+used with Regina\~2.x is no longer supported.
+This format has not been in use for over a decade now.
+If you still have files in this format, you will need to
+download Regina\~4.93 to convert them.
+.RE
 .PP
 The argument \fIold-file\fR should be the file to
 read and convert; the argument \fInew-file\fR should
@@ -28,13 +33,6 @@ may be the same, in which case the old file will be replaced with the new.
 If the argument \fInew-file\fR is missing then the
 new file will be written to standard output, which forces the output to be
 uncompressed XML (see option \fB-u\fR).
-.sp
-.RS
-.B "Warning:"
-When writing an old-style binary file, some information might be
-lost.  Old-style binary files can only store information that was
-understood by the old version Regina\~2.4.
-.RE
 .SH "OPTIONS"
 .TP
 \fB-x (default)\fR
@@ -42,9 +40,6 @@ Convert to compressed XML\&.
 .TP
 \fB-u\fR
 Convert to plain (uncompressed) XML\&.
-.TP
-\fB-b\fR
-Convert to the old-style binary format.
 .SH "MACOS\\~X USERS"
 .PP
 If you downloaded a drag-and-drop app bundle, this utility is
@@ -58,7 +53,7 @@ The command-line utilities are installed beneath the
 machines this directory is called
 \fIProgram\~Files\~(x86)\fR\&.
 You can start this utility by running
-c:\\Program\~Files\\Regina\\Regina\~4.93\\bin\\regconvert.exe\&.
+c:\\Program\~Files\\Regina\\Regina\~4.94\\bin\\regconvert.exe\&.
 .SH "SEE ALSO"
 .PP
 regfiletype,
