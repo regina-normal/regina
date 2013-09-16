@@ -541,11 +541,11 @@
    </para>
    <para>
     The contents of the cell show how the face is glued.  In the example
-    above, the circled cell contains <literal>0&nbsp;(203)</literal>,
+    above, the circled cell contains <literal>0&nbsp;(230)</literal>,
     indicating that face&nbsp;123 of tetrahedron&nbsp;5 is glued to
-    face&nbsp;203 of tetrahedron&nbsp;0 using the affine map that
+    face&nbsp;230 of tetrahedron&nbsp;0 using the affine map that
     matches vertices 1,2,3 of tetrahedron&nbsp;5 with vertices
-    2,0,3 of tetrahedron&nbsp;0 respectively.
+    2,3,0 of tetrahedron&nbsp;0 respectively.
     The same gluing can be seen from the opposite direction in the row
     for tetrahedron&nbsp;0.
    </para>
@@ -553,7 +553,7 @@
     An empty cell indicates that a face is not glued to anything at all;
     that is, the face forms part of the <emphasis>boundary</emphasis> of
     the 3-manifold.  In the table above there are two boundary faces:
-    face&nbsp;013 of tetrahedron&nbsp;1, and face&nbsp;123 of
+    face&nbsp;123 of tetrahedron&nbsp;0, and face&nbsp;123 of
     tetrahedron&nbsp;4.  In our example these join together to form the torus
     boundary of the figure eight knot complement.
    </para>
