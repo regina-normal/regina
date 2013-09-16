@@ -434,20 +434,19 @@ bool NTriangulation::isSolidTorus() const {
     }
 
     // Check homology.
-    if (! (working->getHomologyH1().isZ() &&
-            working->getHomologyH1Rel().isTrivial())) {
+    if (! (working->getHomologyH1().isZ())) {
         delete working;
         return (solidTorus = false);
     }
 
     // So:
-    // We are valid, orientable, compact and connected.
-    // H1(M) = Z, and H1(M, bdry M) = 0.
+    // We are valid, orientable, compact and connected, with H1 = Z.
     // There is exactly one boundary component, and this is a torus.
 
     // Note that the homology results imply that this is not a connected
-    // sum of something with S2xS1.  This observation simplifies the
-    // crushing cases later on.
+    // sum of something with S2xS1 (otherwise we would have two Z terms
+    // in the homology: one from the torus boundary and one from the S2xS1).
+    // This observation simplifies the crushing cases later on.
 
     // Pull out the big guns: normal surface time.
     NNormalSurface* s;
