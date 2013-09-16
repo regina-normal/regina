@@ -702,8 +702,8 @@ void NIntegerBase<supportInfinity>::lcmWith(
     if (isZero())
         return;
     if (other.isZero()) {
-        delete large_;
-        large_ = 0;
+        if (large_)
+            clearLarge();
         small_ = 0;
         return;
     }

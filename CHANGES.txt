@@ -105,6 +105,7 @@ Version 4.94  [ 24 September, 2013 ]
         - Widespread alignment of integer sizes throughout the code.
           Many integers have changed from int to long, or from unsigned to
           unsigned long (or size_t), throughout the API.
+        - Fixed some minor memory leaks.
     ENGINE:
         Class NAbelianGroup, NGroupExpression, NGroupExpressionTerm,
                 NGroupPresentation:
@@ -261,7 +262,6 @@ Version 4.94  [ 24 September, 2013 ]
             - Routine boundarySlopes() now requires that the
               triangulation is oriented (otherwise SnapPea will relabel
               tetrahedron vertices and the matrix returned will be null).
-            - Fixed minor memory leak in cutAlong().
             - Routines findNonTrivialSphere() and findVtxOctAlmostNormalSphere()
               are deprecated.  Use NTriangulation::hasNonTrivialSphereOrDisc()
               and NTriangulation::hasOctagonalAlmostNormalSphere() instead.
@@ -400,7 +400,6 @@ Version 4.94  [ 24 September, 2013 ]
               works with more than one dimension.
             - Fixed isZeroEfficient(), which was reporting incorrect results
               for ideal triangulations.
-            - Fixed minor memory leak in idealToFinite().
             - Removed the old (and slow) getTetrahedronIndex(), getFaceIndex()
               and so on.  Use tetrahedronIndex(), faceIndex(), etc. instead.
             - All routines that took stdhash::hash_set arguments now take
