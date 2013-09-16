@@ -61,33 +61,47 @@ struct IntOfSize {
      * how to access an integer type of the requested size.
      */
     typedef void type;
+
+    /**
+     * An unsigned integer type with \a k bytes, where \a k is the template
+     * parameter.
+     *
+     * The default is \c void, which indicates that Regina does not know
+     * how to access an integer type of the requested size.
+     */
+    typedef void utype;
 };
 
 #ifndef __DOXYGEN
 template <>
 struct IntOfSize<1> {
     typedef __int8_t type;
+    typedef __uint8_t utype;
 };
 
 template <>
 struct IntOfSize<2> {
     typedef __int16_t type;
+    typedef __uint16_t utype;
 };
 
 template <>
 struct IntOfSize<4> {
     typedef __int32_t type;
+    typedef __uint32_t utype;
 };
 
 template <>
 struct IntOfSize<8> {
     typedef __int64_t type;
+    typedef __uint64_t utype;
 };
 
 #ifdef INT128_FOUND
 template <>
 struct IntOfSize<16> {
     typedef __int128_t type;
+    typedef __uint128_t utype;
 };
 #endif // INT128_FOUND
 #endif // __DOXYGEN

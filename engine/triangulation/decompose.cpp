@@ -488,7 +488,7 @@ bool NTriangulation::isSolidTorus() const {
         working = 0;
 
         crushed->intelligentSimplify();
-        crushed->splitIntoComponents(false);
+        crushed->splitIntoComponents(0, false);
         for (p = crushed->getFirstTreeChild(); p; p = p->getNextTreeSibling()) {
             // Examine each connected component after crushing.
             comp = static_cast<NTriangulation*>(p);

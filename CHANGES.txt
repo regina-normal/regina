@@ -239,7 +239,8 @@ Version 4.94  [ 24 September, 2013 ]
             - Made the destructor non-virtual to avoid the unwanted class
               overhead that comes with polymorphism.
             - Added new routines that were not in the old NLargeInteger,
-              including isZero(), sign(), gcdWith(), and lcmWith().
+              including isZero(), sign(), gcdWith(), lcmWith(), and
+              nativeValue<bytes>().
         Class NIsomorphism:
             - Now a subclass of NGenericIsomorphism<3>, with inherited
               dimension-agnostic aliases for several routines.

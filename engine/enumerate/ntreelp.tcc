@@ -945,24 +945,39 @@ void LPData<LPConstraint, Integer>::findInitialBasis() {
     // Start with all variables active but non-basic.
     std::fill(basisRow_, basisRow_ + origTableaux_->columns(), -1);
 
+    // We find our initial basis using Gauss-Jordan elimination.
+    // Until we sit down and prove some results about the magnitude of
+    // the intermediate integers that appear, we will need to do this
+    // entire process using the arbitrary-precision NInteger class.
+
+    // We do not touch rhs_ at all, since our preconditions ensure that
+    // rhs_ is the zero vector.
+
+    // Temporary matrices:
+    // tab = begins as starting tableaux, becomes identity in the basis columns.
+    // ops = begins as identity matrix, becomes the final row operation matrix.
+
     // Build a dense copy of the starting tableaux, which we
     // will work with as we perform our Gauss-Jordan elimination.
-    LPMatrix<Integer> tmp(origTableaux_->rank(), origTableaux_->columns());
-    origTableaux_->fillInitialTableaux(tmp);
+    LPMatrix<NInteger> tab(rank_, origTableaux_->columns());
+    origTableaux_->fillInitialTableaux(tab);
+
+    LPMatrix<NInteger> ops(rank_, rank_);
+    ops.initIdentity(rank_);
 
     // Off we go with our Gauss-Jordan elimination.
     // Since the original tableaux is full rank, we know in
     // advance that every row will define some basic variable.
     unsigned row;
     unsigned r, c;
-    Integer base, coeff;
-    Integer gcdRow;
+    NInteger base, coeff;
+    NInteger gcdRow;
     for (row = 0; row < rank_; ++row) {
         // Find the first non-zero entry in this row.
         // The corresponding column will become our next basic variable.
         for (c = 0; c < origTableaux_->columns(); ++c)
             if (basisRow_[c] < 0 /* non-basic variable */ &&
-                    ! tmp.entry(row, c).isZero())
+                    ! tab.entry(row, c).isZero())
                 break;
 
         // Since the original tableaux has full rank, we must
@@ -978,9 +993,8 @@ void LPData<LPConstraint, Integer>::findInitialBasis() {
             // ... but deal with it anyway by just dropping rank.
             --rank_;
             if (row != rank_) {
-                tmp.swapRows(row, rank_);
-                rowOps_.swapRows(row, rank_);
-                std::swap(rhs_[row], rhs_[rank_]);
+                tab.swapRows(row, rank_);
+                ops.swapRows(row, rank_);
             }
             --row; // We will ++row again for the next loop iteration.
             continue;
@@ -992,12 +1006,11 @@ void LPData<LPConstraint, Integer>::findInitialBasis() {
         basisRow_[c] = row;
 
         // Make the corresponding non-zero entry positive.
-        base = tmp.entry(row, c);
+        base = tab.entry(row, c);
         if (base < 0) {
             base.negate();
-            tmp.negateRow(row);
-            rowOps_.negateRow(row);
-            rhs_[row].negate();
+            tab.negateRow(row);
+            ops.negateRow(row);
         }
 
         // Make sure this basis variable has zero coefficients
@@ -1005,20 +1018,18 @@ void LPData<LPConstraint, Integer>::findInitialBasis() {
         for (r = 0; r < rank_; ++r) {
             if (r == row)
                 continue;
-            coeff = tmp.entry(r, c);
+            coeff = tab.entry(r, c);
             if (! coeff.isZero()) {
-                gcdRow = rowOps_.combRowAndNorm(base, r, coeff, row);
-                tmp.combRow(base, r, coeff, row, gcdRow);
-
-                // We already know that gcdRow must divide into rhs_[r],
-                // since rhs_ is obtained by multiplying the integer
-                // matrix rowOps_ with an integer vector.
-                rhs_[r] *= base;
-                rhs_[r] -= (coeff * rhs_[row]);
-                rhs_[r].divByExact(gcdRow);
+                gcdRow = ops.combRowAndNorm(base, r, coeff, row);
+                tab.combRow(base, r, coeff, row, gcdRow);
             }
         }
     }
+
+    // Copy the final tableaux into our own rowOps_ matrix.
+    for (r = 0; r < rank_; ++r)
+        for (c = 0; c < rank_; ++c)
+            rowOps_.entry(r, c) = Integer(ops.entry(r, c));
 }
 
 template <class LPConstraint, typename Integer>
