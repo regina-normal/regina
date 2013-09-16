@@ -225,6 +225,23 @@
   <date>November 2011</date>
  </biblioentry>
 
+ <biblioentry id="bib-burton-hyamfest">
+  <abbrev>Bur13</abbrev>
+  <authorgroup><author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author></authorgroup>
+  <title>Computational topology with Regina: Algorithms, heuristics and
+   implementations</title>
+  <edition>Geometry and Topology Down Under</edition>
+  <volumenum>vol. 597 of Contemp. Math.</volumenum>
+  <artpagenums>pp. 195&ndash;224</artpagenums>
+  <publishername>Amer. Math. Soc.</publishername>
+  <address>Providence, RI</address>
+  <date>2013</date>
+ </biblioentry>
+
  <biblioentry id="bib-bo-branching">
   <abbrev>BO12</abbrev>
   <authorgroup>

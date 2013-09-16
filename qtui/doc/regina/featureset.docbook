@@ -13,6 +13,8 @@
    3-manifold triangulations.  As such, a large part of
    the software is devoted to the creation, analysis and manipulation of
    these triangulations.
+   &regina; can also work with 2-manifold triangulations and
+   recognise their underlying manifolds.
   </para>
 
   <sect3 id="features-tricreation">
@@ -167,11 +169,6 @@
     </itemizedlist>
    </para>
   </sect3>
-
-  <para>
-   &regina; can also study and manipulate 2-manifold triangulations,
-   and recognise their underlying 2-manifolds.
-  </para>
  </sect2>
 
  <sect2 id="features-census">
