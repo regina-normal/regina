@@ -1259,9 +1259,16 @@ class LPData {
          * heavy-handed, but since we only call it once in the entire
          * tree traversal algorithm, this does not really matter.
          *
+         * In particular, it performs the entire Gauss-Jordan elimination
+         * using the arbitrary-precision NInteger class, so there is no need
+         * to worry about the magnitudes of any intermediate matrix
+         * entries that might appear during the process.  The final
+         * row operation matrix will of course be copied into rowOps_
+         * using the Integer class specified in the template arguments.
+         *
          * \pre The current tableaux is precisely the original starting
-         * tableaux; in particular, rhs_ is the zero vector, and rowOps_
-         * is the identity matrix.
+         * tableaux; in particular, rhs_ is the zero vector, rowOps_ is the
+         * identity matrix, and rank_ is precisely origTableaux_->rank().
          */
         void findInitialBasis();
 

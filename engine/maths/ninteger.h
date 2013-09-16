@@ -241,12 +241,7 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
          * This constructor is marked as explicit in the hope of
          * avoiding accidental (and unintentional) mixing of integer classes.
          *
-         * At present the only explicit conversion from NNativeInteger is
-         * from the specific type NNativeInteger<long> (i.e., NNativeLong).
-         * In future releases this list may be expanded to include native
-         * data types of other sizes.
-         *
-         * \pre If \a bytes is larger than the sizeof(long), then
+         * \pre If \a bytes is larger than sizeof(long), then
          * \a bytes is a strict \e multiple of sizeof(long).  For
          * instance, if longs are 8 bytes then you can use \a bytes=16
          * but not \a bytes=12.  This restriction is enforced through a
@@ -385,18 +380,46 @@ class NIntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Returns the value of this integer as a long.
          *
-         * If this integer is outside the range of a long, the result is
-         * unpredictable.  If it is within the range of a long however,
-         * it will give correct results regardless of whether the
+         * It is the programmer's reponsibility to ensure that this integer
+         * is within the required range.  If this integer is too large or
+         * small to fit into a long, then the result will be undefined.
+         *
+         * Note that, assuming the value is within the required range,
+         * this routine will give correct results regardless of whether the
          * underlying representation is a native or large integer.
-         * In particular, it guarantees to give correct results if
-         * isNative() returns \c true.
          *
          * \pre This integer is not infinity.
          *
          * @return the value of this integer.
          */
         long longValue() const;
+        /**
+         * Returns the value of this integer as a native integer of some
+         * fixed byte length.
+         *
+         * It is the programmer's reponsibility to ensure that this integer
+         * is within the required range.  If this integer is too large or
+         * small to fit into the return type, then the result will be undefined.
+         *
+         * Note that, assuming the value is within the required range,
+         * this routine will give correct results regardless of whether the
+         * underlying representation is a native or large integer.
+         *
+         * \pre If \a bytes is larger than sizeof(long), then
+         * \a bytes is a strict \e multiple of sizeof(long).  For
+         * instance, if longs are 8 bytes then you can use this
+         * routine with \a bytes=16 but not \a bytes=12.
+         * This restriction is enforced through a compile-time assertion,
+         * but may be lifted in future versions of Regina.
+         *
+         * \pre This integer is not infinity.
+         *
+         * \ifacespython Not present.
+         *
+         * @return the value of this integer.
+         */
+        template <int bytes>
+        typename IntOfSize<bytes>::type nativeValue() const;
         /**
          * Returns the value of this integer as a string in the given
          * base.  If not specified, the base defaults to 10.
@@ -1568,6 +1591,32 @@ class NNativeInteger {
          * @param value the new value of this integer.
          */
         NNativeInteger(const NNativeInteger<bytes>& value);
+        /**
+         * Initialises this integer to the given value.
+         *
+         * This constructor is marked as explicit in the hope of
+         * avoiding accidental (and unintentional) mixing of integer classes.
+         *
+         * It is the programmer's reponsibility to ensure that the given value
+         * fits within the required range.  If the given value is too large or
+         * small to fit into this native type, then this new NNativeInteger
+         * will have an undefined initial value.
+         *
+         * \pre If \a bytes is larger than sizeof(long), then
+         * \a bytes is a strict \e multiple of sizeof(long).  For
+         * instance, if longs are 8 bytes then you can use this
+         * routine with \a bytes=16 but not \a bytes=12.
+         * This restriction is enforced through a compile-time assertion,
+         * but may be lifted in future versions of Regina.
+         *
+         * \pre The given integer is not infinity.
+         *
+         * \ifacespython Not present.
+         *
+         * @param value the new value of this integer.
+         */
+        template <bool supportInfinity>
+        explicit NNativeInteger(const NIntegerBase<supportInfinity>& value);
 
         /**
          * Returns whether or not this integer is zero.
@@ -2249,10 +2298,45 @@ inline NIntegerBase<supportInfinity>::NIntegerBase(
             value.nativeValue() >> ((blocks - 1) * 8 * sizeof(long))));
         for (unsigned i = 2; i <= blocks; ++i) {
             mpz_mul_2exp(large_, large_, 8 * sizeof(long));
-            mpz_add_ui(large_, large_, static_cast<long>(
+            mpz_add_ui(large_, large_, static_cast<unsigned long>(
                 value.nativeValue() >> ((blocks - i) * 8 * sizeof(long))));
         }
     }
+}
+
+template <bool supportInfinity>
+template <int bytes>
+inline typename IntOfSize<bytes>::type
+        NIntegerBase<supportInfinity>::nativeValue() const {
+    typedef typename IntOfSize<bytes>::type Native;
+    typedef typename IntOfSize<bytes>::utype UNative;
+    BOOST_STATIC_ASSERT(bytes % sizeof(long) == 0);
+
+    if (sizeof(long) >= bytes || ! large_) {
+        // Suppose this integer lies within the given byte range.
+        // If sizeof(long) >= bytes, then it can be made to fit inside a long.
+        // If sizeof(long) < bytes but this is a native long, then we
+        // have already got it inside a long.
+        // Either way, we can just pass the long value across.
+        return static_cast<Native>(longValue());
+    }
+    // From here: this is a GMP integer, and the return type is too
+    // large for a long.  Take one long-sized chunk at a time.
+    Native ans = 0;
+    unsigned blocks = bytes / sizeof(long);
+
+    mpz_t tmp;
+    mpz_init_set(tmp, large_);
+    for (unsigned i = 0; i < blocks - 1; ++i) {
+        ans += (static_cast<UNative>(mpz_get_ui(tmp))
+            << (i * 8 * sizeof(long)));
+        mpz_fdiv_q_2exp(tmp, tmp, 8 * sizeof(long));
+    }
+    ans += (static_cast<Native>(mpz_get_si(tmp))
+        << ((blocks - 1) * 8 * sizeof(long)));
+
+    mpz_clear(tmp);
+    return ans;
 }
 
 template <bool supportInfinity>
@@ -3078,6 +3162,13 @@ template <int bytes>
 inline NNativeInteger<bytes>::NNativeInteger(
         const NNativeInteger<bytes>& value) :
         data_(value.data_) {
+}
+
+template <int bytes>
+template <bool supportInfinity>
+inline NNativeInteger<bytes>::NNativeInteger(
+        const NIntegerBase<supportInfinity>& value) :
+        data_(value.template nativeValue<bytes>()) {
 }
 
 template <int bytes>

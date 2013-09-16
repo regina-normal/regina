@@ -1056,6 +1056,50 @@ class NIntegerTest : public CppUnit::TestFixture {
 
 #ifdef INT128_FOUND
         template <typename IntType>
+        void test128Value(const regina::NNativeInteger<16>& x,
+                const regina::NNativeInteger<16>& y) {
+            if (x != y) {
+                std::ostringstream msg;
+                msg << "128-bit integers " << x << " vs " << y
+                    << " give different wrapped values.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (x.nativeValue() != y.nativeValue()) {
+                std::ostringstream msg;
+                msg << "128-bit integers " << x << " vs " << y
+                    << " give different native values.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (str(x) != str(y)) {
+                std::ostringstream msg;
+                msg << "128-bit integers " << x << " vs " << y
+                    << " give different string values.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+
+        template <typename IntType>
+        void testNative128(const regina::NNativeInteger<16>& native,
+                const char* string) {
+            if (str(native) != string) {
+                std::ostringstream msg;
+                msg << "128-bit integer " << native <<
+                    " has incorrect string representation.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            testStringValue(IntType(native), 10, string);
+
+            test128Value<IntType>(native, regina::NNativeInteger<16>(
+                IntType(string)));
+            test128Value<IntType>(native, regina::NNativeInteger<16>(
+                IntType(string).template nativeValue<16>()));
+            test128Value<IntType>(native, regina::NNativeInteger<16>(
+                IntType(native).template nativeValue<16>()));
+        }
+
+        template <typename IntType>
         void constructNative128() {
             // Test conversion from native types that are larger than long.
             regina::NNativeInteger<16> pos62 = 1;
@@ -1082,19 +1126,20 @@ class NIntegerTest : public CppUnit::TestFixture {
             pos127 = pos126 * 2; // Should overflow to -2^127
             neg127 = neg126 * 2;
 
-            testStringValue(IntType(pos62), 10, "4611686018427387904");
-            testStringValue(IntType(neg62), 10, "-4611686018427387904");
-            testStringValue(IntType(pos63), 10, "9223372036854775808");
-            testStringValue(IntType(neg63), 10, "-9223372036854775808");
-            testStringValue(IntType(pos64), 10, "18446744073709551616");
-            testStringValue(IntType(neg64), 10, "-18446744073709551616");
-            testStringValue(IntType(pos126), 10,
+            testNative128<IntType>(pos62, "4611686018427387904");
+            testNative128<IntType>(neg62, "-4611686018427387904");
+            testNative128<IntType>(pos63, "9223372036854775808");
+            testNative128<IntType>(neg63, "-9223372036854775808");
+            testNative128<IntType>(pos64, "18446744073709551616");
+            testNative128<IntType>(neg64, "-18446744073709551616");
+            testNative128<IntType>(pos126,
                 "85070591730234615865843651857942052864");
-            testStringValue(IntType(neg126), 10,
+            testNative128<IntType>(neg126,
                 "-85070591730234615865843651857942052864");
-            testStringValue(IntType(pos127), 10,
-                "-170141183460469231731687303715884105728"); // Overflows
-            testStringValue(IntType(neg127), 10,
+            // Recall that pos127 overflows.
+            testNative128<IntType>(pos127,
+                "-170141183460469231731687303715884105728");
+            testNative128<IntType>(neg127,
                 "-170141183460469231731687303715884105728");
         }
 #endif
