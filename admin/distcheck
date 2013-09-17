@@ -135,59 +135,14 @@ echo "Analysing subversion source tree..."
 
 if ! find "$svntree" -type f | sed -e 's%^[^/]*/%%' | \
     grep -v "$grep_builddirs" | \
-    grep -v '^\.$' | \
-    grep -v '^\.\.$' | \
     grep -v '\(^\|/\)\.svn$' | \
     grep -v '\.svn/' | \
-    grep -v '\.a$' | \
     grep -v '\.DS_Store$' | \
-    grep -v '\.deps\(/\|$\)' | \
-    grep -v '\.kidl$' | \
-    grep -v '\.la$' | \
-    grep -v '\.la\.closure$' | \
-    grep -v '\.libs\(/\|$\)' | \
-    grep -v '\.lo$' | \
-    grep -v '\.moc$' | \
-    grep -v '\.o$' | \
-    grep -v '^autom4te.cache\(/\|$\)' | \
-    grep -v '^config.log$' | \
-    grep -v '^config.status$' | \
-    grep -v '^docs/engine/.*\.css$' | \
-    grep -v '^docs/engine/.*\.gif$' | \
-    grep -v '^docs/engine/.*\.html$' | \
-    grep -v '^docs/engine/.*\.png$' | \
-    grep -v '^docs/engine/doxygen' | \
-    grep -v '^docs/engine/graph_legend' | \
-    grep -v '^docs/man/manpage\.' | \
-    grep -v '^engine/doxygen/docs.conf$' | \
-    grep -v '^engine/regina-config\.h$' | \
-    grep -v '^engine/regina-engine-config$' | \
     grep -v '^engine/snappea/kernel/unused\(/\|$\)' | \
-    grep -v '^engine/stamp-h' | \
-    grep -v '^hold\(/\|$\)' | \
-    grep -v '^icons/povray\(/\|$\)' | \
-    grep -v '^icons/src\(/\|$\)' | \
-    grep -v '^libtool$' | \
-    grep -v '^metrics\(/\|$\)' | \
-    grep -v '^packaging\(/\|$\)' | \
-    grep -v '^private\(/\|$\)' | \
-    grep -v '^python/regina-python$' | \
-    grep -v '^python/testsuite/testall$' | \
-    grep -v '^redist\(/\|$\)' | \
-    grep -v '^regina-[0-9.]\+\.tar\.bz2$' | \
     grep -v '^regina-[0-9.]\+\.tar\.gz$' | \
-    grep -v '^regina-[0-9.]\+\.zip$' | \
     grep -v '^sfdist\(/\|$\)' | \
-    grep -v '^stuff\(/\|$\)' | \
-    grep -v '^test\(/\|$\)' | \
-    grep -v '^testsuite/regtestsuite$' | \
-    grep -v '^utils/reg[a-z]\+$' | \
-    grep -v '^utils/[a-z]\+census[a-z]*$' | \
-    grep -v '^utils/trisetcmp$' | \
     grep -v '^utils/local\(/\|$\)' | \
-    grep -v '^utils/mpi/[a-z\-]\+-mpi$' | \
     grep -v '^utils/snappea\(/\|$\)' | \
-    grep -v '^www\(/\|$\)' | \
     sort > "$svnlist" ; then
   echo "The contents of the subversion source tree could not be listed."
   exit 1
