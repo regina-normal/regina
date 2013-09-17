@@ -1112,6 +1112,7 @@ class NIntegerTest : public CppUnit::TestFixture {
             regina::NNativeInteger<16> neg126 = 1;
             regina::NNativeInteger<16> pos127 = 1;
             regina::NNativeInteger<16> neg127 = 1;
+            regina::NNativeInteger<16> maxVal(~(__int128_t(1) << 127));
             int i;
             pos62 *= 1073741824; // 2^30
             pos62 *= 1073741824; // 2^30
@@ -1141,6 +1142,8 @@ class NIntegerTest : public CppUnit::TestFixture {
                 "-170141183460469231731687303715884105728");
             testNative128<IntType>(neg127,
                 "-170141183460469231731687303715884105728");
+            testNative128<IntType>(maxVal,
+                "170141183460469231731687303715884105727");
         }
 #endif
 
