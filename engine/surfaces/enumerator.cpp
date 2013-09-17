@@ -56,7 +56,7 @@ namespace regina {
 /**
  * The largest possible signed 128-bit integer,
  */
-NInteger maxSigned128(NNativeInteger<16>((__int128_t(1) << 127) - 1));
+NInteger maxSigned128(NNativeInteger<16>(~(__int128_t(1) << 127)));
 #endif
 
 NNormalSurfaceList* NNormalSurfaceList::enumerate(
