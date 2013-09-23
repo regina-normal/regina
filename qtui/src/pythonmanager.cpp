@@ -92,7 +92,6 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
 
     // First set up completion
     ans->executeLine("import rlcompleter");
-    ans->executeLine("import readline");
     ans->executeLine("__regina_tab_completion = rlcompleter.Completer()");
     
     // Initialise the python interpreter.
@@ -121,7 +120,6 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
 
     // First set up completion
     ans->executeLine("import rlcompleter");
-    ans->executeLine("import readline");
     ans->executeLine("__regina_tab_completion = rlcompleter.Completer()");
     
     // Initialise the python interpreter.
