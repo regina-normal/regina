@@ -150,7 +150,7 @@ struct InfinityBase<false> {
  * test suite are legendre() and the random number generation routines.
  */
 template <bool supportInfinity = false>
-class NIntegerBase : private InfinityBase<supportInfinity> {
+class REGINA_API NIntegerBase : private InfinityBase<supportInfinity> {
     public:
         static const NIntegerBase<supportInfinity> zero;
             /**< Globally available zero. */
@@ -1475,7 +1475,7 @@ typedef NIntegerBase<false> NInteger;
  * @return a reference to \a out.
  */
 template <bool supportInfinity>
-std::ostream& operator << (std::ostream& out,
+REGINA_API std::ostream& operator << (std::ostream& out,
     const NIntegerBase<supportInfinity>& i);
 
 /**
@@ -1489,7 +1489,7 @@ std::ostream& operator << (std::ostream& out,
  * @return the sum \a lhs plus \a rhs.
  */
 template <bool supportInfinity>
-NIntegerBase<supportInfinity> operator + (long lhs,
+REGINA_API NIntegerBase<supportInfinity> operator + (long lhs,
     const NIntegerBase<supportInfinity>& rhs);
 
 /**
@@ -1503,7 +1503,7 @@ NIntegerBase<supportInfinity> operator + (long lhs,
  * @return the product \a lhs times \a rhs.
  */
 template <bool supportInfinity>
-NIntegerBase<supportInfinity> operator * (long lhs,
+REGINA_API NIntegerBase<supportInfinity> operator * (long lhs,
     const NIntegerBase<supportInfinity>& rhs);
 
 /*@}*/
@@ -1565,7 +1565,7 @@ namespace regina {
  * \ifacespython Not present.
  */
 template <int bytes>
-class NNativeInteger {
+class REGINA_API NNativeInteger {
     public:
         typedef typename IntOfSize<bytes>::type Native;
             /**< The native data type used to store this integer. */
@@ -2204,7 +2204,7 @@ class NNativeInteger {
  * @return a reference to \a out.
  */
 template <int bytes>
-std::ostream& operator << (std::ostream& out, const NNativeInteger<bytes>& i);
+REGINA_API std::ostream& operator << (std::ostream& out, const NNativeInteger<bytes>& i);
 
 /**
  * NNativeLong is a typedef for the NNativeInteger template class whose
