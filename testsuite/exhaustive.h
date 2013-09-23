@@ -51,9 +51,9 @@ namespace regina {
 
 typedef void (*NTriangulationTestFunction)(regina::NTriangulation*);
 
-void runCensusMinClosed(NTriangulationTestFunction f, bool small = false);
-void runCensusAllClosed(NTriangulationTestFunction f, bool small = false);
-void runCensusAllBounded(NTriangulationTestFunction f, bool small = false);
-void runCensusAllIdeal(NTriangulationTestFunction f, bool small = false);
+void runCensusMinClosed(NTriangulationTestFunction f, bool small_ = false);
+void runCensusAllClosed(NTriangulationTestFunction f, bool small_ = false);
+void runCensusAllBounded(NTriangulationTestFunction f, bool small_ = false);
+void runCensusAllIdeal(NTriangulationTestFunction f, bool small_ = false);
 
 #endif
