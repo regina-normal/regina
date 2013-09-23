@@ -96,7 +96,7 @@ namespace regina {
  * \deprecated This class is deprecated.  Please use the more flexible
  * and more streamlined NProgressTracker class instead.
  */
-class REGINA_API NProgressManager : public ShareableObject {
+class NProgressManager : public ShareableObject {
     private:
         NProgress* progress;
             /**< The progress report object that we are managing. */
