@@ -74,7 +74,7 @@ namespace {
         TestFunctionHolder(NTriangulationTestFunction f) : f_(f) {}
     };
 
-    static bool testCensusTriangulation(regina::NTriangulation* tri,
+    bool testCensusTriangulation(regina::NTriangulation* tri,
             void* testFunctionHolder) {
         tri->setPacketLabel(tri->isoSig());
         (*(static_cast<TestFunctionHolder*>(testFunctionHolder)->f_))(tri);
@@ -82,52 +82,51 @@ namespace {
     }
 }
 
-void runCensusMinClosed(NTriangulationTestFunction testFunction, bool small) {
+void runCensusMinClosed(NTriangulationTestFunction testFunction, bool small_) {
     regina::NContainer parent;
     TestFunctionHolder f(testFunction);
     NCensus::formCensus(&parent,
-        (small ? SMALL_MIN_CLOSED_CENSUS_SIZE : MIN_CLOSED_CENSUS_SIZE),
+        (small_ ? SMALL_MIN_CLOSED_CENSUS_SIZE : MIN_CLOSED_CENSUS_SIZE),
         NBoolSet::sTrue /* finite */,
         NBoolSet::sBoth /* orientable */,
         NBoolSet::sFalse /* bounded */,
         -1, /* bdry faces */
         NCensus::PURGE_NON_MINIMAL_PRIME | NCensus::PURGE_P2_REDUCIBLE,
-        testCensusTriangulation, &f);
+        &testCensusTriangulation, &f);
 }
 
-void runCensusAllClosed(NTriangulationTestFunction testFunction, bool small) {
+void runCensusAllClosed(NTriangulationTestFunction testFunction, bool small_) {
     regina::NContainer parent;
     TestFunctionHolder f(testFunction);
     NCensus::formCensus(&parent,
-        (small ? SMALL_CLOSED_CENSUS_SIZE : CLOSED_CENSUS_SIZE),
+        (small_ ? SMALL_CLOSED_CENSUS_SIZE : CLOSED_CENSUS_SIZE),
         NBoolSet::sTrue /* finite */,
         NBoolSet::sBoth /* orientable */,
         NBoolSet::sFalse /* bounded */,
         -1 /* bdry faces */, 0 /* purge */,
-        testCensusTriangulation, &f);
+        &testCensusTriangulation, &f);
 }
 
-void runCensusAllBounded(NTriangulationTestFunction testFunction, bool small) {
+void runCensusAllBounded(NTriangulationTestFunction testFunction, bool small_) {
     regina::NContainer parent;
     TestFunctionHolder f(testFunction);
     NCensus::formCensus(&parent,
-        (small ? SMALL_BOUNDED_CENSUS_SIZE : BOUNDED_CENSUS_SIZE),
+        (small_ ? SMALL_BOUNDED_CENSUS_SIZE : BOUNDED_CENSUS_SIZE),
         NBoolSet::sTrue /* finite */,
         NBoolSet::sBoth /* orientable */,
         NBoolSet::sTrue /* bounded */,
         -1 /* bdry faces */, 0 /* purge */,
-        testCensusTriangulation, &f);
+        &testCensusTriangulation, &f);
 }
 
-void runCensusAllIdeal(NTriangulationTestFunction testFunction, bool small) {
+void runCensusAllIdeal(NTriangulationTestFunction testFunction, bool small_) {
     regina::NContainer parent;
     TestFunctionHolder f(testFunction);
     NCensus::formCensus(&parent,
-        (small ? SMALL_IDEAL_CENSUS_SIZE : IDEAL_CENSUS_SIZE),
+        (small_ ? SMALL_IDEAL_CENSUS_SIZE : IDEAL_CENSUS_SIZE),
         NBoolSet::sFalse /* finite */,
         NBoolSet::sBoth /* orientable */,
         NBoolSet::sFalse /* bounded */,
         -1 /* bdry faces */, 0 /* purge */,
-        testCensusTriangulation, &f);
+        &testCensusTriangulation, &f);
 }
-
