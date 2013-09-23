@@ -79,7 +79,7 @@ namespace regina {
  * \ifacespython Not present.
  */
 template <int dim>
-class NGenericGluingPerms {
+class REGINA_API NGenericGluingPerms {
     public:
         typedef typename DimTraits<dim>::FacetPairing FacetPairing;
         typedef typename DimTraits<dim>::Perm Perm;

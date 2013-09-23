@@ -86,7 +86,7 @@ namespace regina {
  * \testpart
  */
 template <int dim>
-class NGenericFacetPairing : public NThread {
+class REGINA_API NGenericFacetPairing : public NThread {
     public:
         typedef typename DimTraits<dim>::FacetPairing FacetPairing;
             /**< The facet pairing class specific to this dimension.

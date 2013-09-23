@@ -148,7 +148,7 @@ class NTriangulation;
  * \ifacespython Not present.
  */
 template <class LPConstraint, typename BanConstraint, typename Integer>
-class NTreeTraversal : public BanConstraint {
+class REGINA_API NTreeTraversal : public BanConstraint {
     protected:
         // Global information about the search:
         const LPInitialTableaux<LPConstraint> origTableaux_;
@@ -559,7 +559,7 @@ class NTreeTraversal : public BanConstraint {
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           typename Integer = NInteger>
-class NTreeEnumeration :
+class REGINA_API NTreeEnumeration :
         public NTreeTraversal<LPConstraint, BanConstraint, Integer> {
     public:
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::dumpTypes;
@@ -887,7 +887,7 @@ class NTreeEnumeration :
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           typename Integer = NInteger>
-class NTreeSingleSoln :
+class REGINA_API NTreeSingleSoln :
         public NTreeTraversal<LPConstraint, BanConstraint, Integer> {
     public:
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::dumpTypes;

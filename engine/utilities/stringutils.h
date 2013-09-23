@@ -275,7 +275,7 @@ REGINA_API bool valueOf(const std::string& str, NBoolSet& dest);
  * @return the number of tokens found.
  */
 template <class OutputIterator>
-unsigned basicTokenise(OutputIterator results, const std::string& str);
+REGINA_API unsigned basicTokenise(OutputIterator results, const std::string& str);
 
 /*@}*/
 

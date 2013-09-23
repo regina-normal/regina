@@ -112,7 +112,7 @@ namespace regina {
  * \testpart
  */
 template <int dim>
-class NGenericIsomorphism : public ShareableObject {
+class REGINA_API NGenericIsomorphism : public ShareableObject {
     public:
         typedef typename DimTraits<dim>::Isomorphism Isomorphism;
             /**< The isomorphism class used by triangulations of this
