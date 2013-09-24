@@ -44,7 +44,6 @@
 #include "regina-core.h"
 #include "maths/nmatrixint.h"
 #include <iterator>
-#include <list>
 #include <vector>
 
 namespace regina {

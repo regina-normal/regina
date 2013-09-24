@@ -35,7 +35,6 @@
 #include "regina-config.h" // For EXCLUDE_NORMALIZ.
 
 #include <iterator>
-#include <list>
 #include "enumerate/ndoubledescription.h"
 #include "enumerate/nhilbertcd.h"
 #include "enumerate/nhilbertdual.h"
@@ -541,7 +540,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
     unsigned rank = rowBasis(*eqns);
     unsigned long dim = eqns->columns();
 
-    std::list<std::vector<mpz_class> > input;
+    std::vector<std::vector<mpz_class> > input;
     unsigned r, c;
     for (r = 0; r < rank; ++r) {
         input.push_back(std::vector<mpz_class>());
@@ -557,8 +556,8 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
     }
     delete eqns;
 
-    libnormaliz::Cone<mpz_class> cone(std::list<std::vector<mpz_class> >(),
-        input /* equalities */, std::list<std::vector<mpz_class> >());
+    libnormaliz::Cone<mpz_class> cone(input,
+        libnormaliz::Type::equations);
     libnormaliz::ConeProperties wanted(
         libnormaliz::ConeProperty::HilbertBasis);
 
@@ -579,7 +578,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
         bool broken;
         int nonZero;
         int i;
-        std::list<std::vector<mpz_class> >::const_iterator hlit;
+        std::vector<std::vector<mpz_class> >::const_iterator hlit;
         NEnumConstraintList::const_iterator eit;
         std::set<unsigned long>::const_iterator sit;
         NNormalSurfaceVector* v;
