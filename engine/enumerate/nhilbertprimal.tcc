@@ -131,12 +131,12 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
     typename std::vector<BitmaskType>::const_iterator mit;
     RayIterator rit;
     unsigned i;
-    std::list<std::vector<mpz_class> >::const_iterator hlit;
+    std::vector<std::vector<mpz_class> >::const_iterator hlit;
     std::set<std::vector<mpz_class> >::const_iterator hsit;
     std::vector<mpz_class>::const_iterator hvit;
     for (mit = maxFaces->begin(); mit != maxFaces->end(); ++mit) {
         // Locate the extremal rays that generate this face.
-        std::list<std::vector<mpz_class> > input;
+        std::vector<std::vector<mpz_class> > input;
         for (rit = raysBegin; rit != raysEnd; ++rit)
             if (inFace(**rit, *mit)) {
                 input.push_back(std::vector<mpz_class>());
@@ -150,7 +150,7 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
                 }
             }
         libnormaliz::Cone<mpz_class> cone(input,
-            0 /* generators, integral closure */);
+            libnormaliz::Type::integral_closure);
         libnormaliz::ConeProperties wanted(
             libnormaliz::ConeProperty::HilbertBasis);
         cone.compute(wanted);
@@ -160,7 +160,7 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
             std::cerr << "ERROR: Hilbert basis not computed!" << std::endl;
             continue;
         }
-        const std::list<std::vector<mpz_class> >& basis =
+        const std::vector<std::vector<mpz_class> >& basis =
             cone.getHilbertBasis();
         for (hlit = basis.begin(); hlit != basis.end(); ++hlit)
             finalBasis.insert(*hlit);

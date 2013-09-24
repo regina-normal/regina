@@ -1,43 +1,20 @@
-Index: libnormaliz.h
+Index: general.h
 ===================================================================
---- libnormaliz.h	(revision 6435)
-+++ libnormaliz.h	(working copy)
-@@ -22,11 +22,8 @@
- #include <iostream>
- #include <assert.h>
+--- general.h	(revision 7811)
++++ general.h	(working copy)
+@@ -21,11 +21,15 @@
  
--#ifdef _WIN32 //for 32 and 64 bit windows
--	#include <mpirxx.h>
--#else         // all other systems
--	#include <gmpxx.h>
--#endif
-+// Regina will use gmpxx.h everywhere, even on Windows.
-+#include <gmpxx.h>
- 
- #include "normaliz_exception.h"
- #include "cone_property.h"
-Index: libnormaliz.h
-===================================================================
---- libnormaliz.h	(revision 7097)
-+++ libnormaliz.h	(working copy)
-@@ -20,6 +20,7 @@
- #define LIBNORMALIZ_H_
  
  #include <iostream>
 +#include <cstring>
  #include <assert.h>
  
- // Regina will use gmpxx.h everywhere, even on Windows.
-Index: list_operations.h
-===================================================================
---- list_operations.h	(revision 7297)
-+++ list_operations.h	(working copy)
-@@ -41,7 +41,7 @@
-  int l_read(const list< vector<int> >& l);  //used for tests, returns size of l
++/*
++// Regina will use GMP everywhere, even on Windows.
+ #ifdef _WIN32 //for 32 and 64 bit windows
+     #define NMZ_MPIR //always use MPIR
+ #endif
++*/
  
- template<typename Integer>
--int l_read(const list <pair<vector<size_t>,Integer> >& l);  //used for tests, returns size of l
-+int l_read(const list <std::pair<vector<size_t>,Integer> >& l);  //used for tests, returns size of l
-  
- template<typename Integer>
-  int l_read(const list<int>& l);  //used for tests, returns size of l
+ #ifdef NMZ_MPIR // use MPIR
+     #include <mpirxx.h>
