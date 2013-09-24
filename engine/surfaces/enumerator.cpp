@@ -426,7 +426,7 @@ void NNormalSurfaceList::Enumerator::fillFundamental() {
         fillFundamentalDual<Flavour>();
     else if (list_->algorithm_.has(NS_HILBERT_CD))
         fillFundamentalCD<Flavour>();
-    else if (! list_->algorithm_.has(NS_HILBERT_FULLCONE))
+    else
         fillFundamentalFullCone<Flavour>();
 }
 
@@ -542,6 +542,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
 
     std::vector<std::vector<mpz_class> > input;
     unsigned r, c;
+    input.reserve(rank);
     for (r = 0; r < rank; ++r) {
         input.push_back(std::vector<mpz_class>());
         std::vector<mpz_class>& v(input.back());
@@ -584,8 +585,10 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
         NNormalSurfaceVector* v;
         NLargeInteger tmpInt;
         NewNormalSurfaceVector newVec(dim);
-        for (hlit = cone.getHilbertBasis().begin();
-                hlit != cone.getHilbertBasis().end(); ++hlit) {
+
+        const std::vector<std::vector<mpz_class> > basis =
+            cone.getHilbertBasis();
+        for (hlit = basis.begin(); hlit != basis.end(); ++hlit) {
             broken = false;
             if (constraints) {
                 for (eit = constraints->begin(); eit != constraints->end();

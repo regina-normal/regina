@@ -160,7 +160,7 @@ void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
             std::cerr << "ERROR: Hilbert basis not computed!" << std::endl;
             continue;
         }
-        const std::vector<std::vector<mpz_class> >& basis =
+        const std::vector<std::vector<mpz_class> > basis =
             cone.getHilbertBasis();
         for (hlit = basis.begin(); hlit != basis.end(); ++hlit)
             finalBasis.insert(*hlit);
