@@ -1,6 +1,6 @@
 /*
- * Normaliz 2.7
- * Copyright (C) 2007-2011  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Normaliz
+ * Copyright (C) 2007-2013  Winfried Bruns, Bogdan Ichim, Christof Soeger
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -21,6 +21,7 @@
 
 #include <bitset>
 #include <iostream>
+#include "libnormaliz.h"
 
 namespace libnormaliz {
 
@@ -28,65 +29,70 @@ namespace libnormaliz {
  * The namespace prevents interfering with other names.
  */
 namespace ConeProperty {
-	enum Enum {
-		Generators,
-		ExtremeRays,
-		SupportHyperplanes,
-		Triangulation,
-		Multiplicity,
-		HilbertBasis,
-		Ht1Elements,
-		HVector,
-		HilbertPolynomial,
-		LinearForm,
-		IsPointed,
-		IsHt1Generated,
-		IsHt1ExtremeRays,
-		IsHt1HilbertBasis,
-		IsIntegrallyClosed,
-		GeneratorsOfToricRing,
-		ReesPrimary,
-		EnumSize //this has to be the last entry, to get the number of entries in the enum
-	};
+    enum Enum {
+        Generators,
+        ExtremeRays,
+        SupportHyperplanes,
+        TriangulationSize,
+        TriangulationDetSum,
+        Triangulation,
+        Multiplicity,
+        HilbertBasis,
+        Deg1Elements,
+        HilbertSeries,
+        Grading,
+        IsPointed,
+        IsDeg1Generated,
+        IsDeg1ExtremeRays,
+        IsDeg1HilbertBasis,
+        IsIntegrallyClosed,
+        GeneratorsOfToricRing,
+        ReesPrimary,
+        ReesPrimaryMultiplicity,
+        StanleyDec,
+        DualMode,
+        EnumSize // this has to be the last entry, to get the number of entries in the enum
+    }; // remember to change also the string conversion function if you change this enum
 }
-
-template<typename Integer> class Cone;
-template<typename Integer> class Full_Cone;
 
 class ConeProperties {
 public:
-	/* Constructors */
-	ConeProperties();
-	ConeProperties(ConeProperty::Enum);
-	ConeProperties(ConeProperty::Enum, ConeProperty::Enum);
-	ConeProperties(const std::bitset<ConeProperty::EnumSize>&);
+    /* Constructors */
+    ConeProperties();
+    ConeProperties(ConeProperty::Enum);
+    ConeProperties(ConeProperty::Enum, ConeProperty::Enum);
+    ConeProperties(const std::bitset<ConeProperty::EnumSize>&);
 
-	/* set properties */
-	ConeProperties& set(ConeProperty::Enum, bool value=true);
-	ConeProperties& set(ConeProperty::Enum, ConeProperty::Enum);
-	ConeProperties& set(const ConeProperties&);
+    /* set properties */
+    ConeProperties& set(ConeProperty::Enum, bool value=true);
+    ConeProperties& set(ConeProperty::Enum, ConeProperty::Enum);
+    ConeProperties& set(const ConeProperties&);
+    ConeProperties& set(Mode::ComputationMode mode);
 
-	/* reset (=unset) properties */
-	ConeProperties& reset(ConeProperty::Enum Property);
-	ConeProperties& reset(const ConeProperties&);
+    /* reset (=unset) properties */
+    ConeProperties& reset(ConeProperty::Enum Property);
+    ConeProperties& reset(const ConeProperties&);
 
-	/* test which/how many properties are set */
-	bool test(ConeProperty::Enum Property) const;
-	bool any() const;
-	bool none() const;
-	size_t count () const;
+    /* test which/how many properties are set */
+    bool test(ConeProperty::Enum Property) const;
+    bool any() const;
+    bool none() const;
+    size_t count () const;
 
 
-	/* print it in a nice way */
-	void print(std::ostream& out);
+    /* print it in a nice way */
+    friend std::ostream& operator<<(std::ostream&, const ConeProperties&);
 
 
 private:
-	std::bitset<ConeProperty::EnumSize> CPs;
+    std::bitset<ConeProperty::EnumSize> CPs;
 
-	template<typename Integer> friend class Cone;
-	template<typename Integer> friend class Full_Cone;
 };
+
+// conversion to/from strings
+ConeProperty::Enum toConeProperty(const std::string&);
+const std::string& toString(ConeProperty::Enum);
+std::ostream& operator<<(std::ostream&, const ConeProperties&);
 
 }
 

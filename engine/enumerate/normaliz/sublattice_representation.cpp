@@ -1,6 +1,6 @@
 /*
- * Normaliz 2.7
- * Copyright (C) 2007-2011  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Normaliz
+ * Copyright (C) 2007-2013  Winfried Bruns, Bogdan Ichim, Christof Soeger
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -28,6 +28,7 @@
 
 
 #include "sublattice_representation.h"
+#include "lineare_transformation.h"
 #include "vector_operations.h"
 
 //---------------------------------------------------------------------------
@@ -40,12 +41,12 @@ using namespace std;
  */
 template<typename Integer>
 Sublattice_Representation<Integer>::Sublattice_Representation(size_t n) {
-	dim = n;
-	rank = n;
-	index = 1;
-	A = Matrix<Integer>(n);
-	B = Matrix<Integer>(n);
-	c = 1;
+    dim = n;
+    rank = n;
+    index = 1;
+    A = Matrix<Integer>(n);
+    B = Matrix<Integer>(n);
+    c = 1;
 }
 
 //---------------------------------------------------------------------------
@@ -58,87 +59,80 @@ Sublattice_Representation<Integer>::Sublattice_Representation(size_t n) {
  */
 template<typename Integer>
 Sublattice_Representation<Integer>::Sublattice_Representation(const Matrix<Integer>& M, bool direct_summand) {
-	Lineare_Transformation<Integer> Basis_Change = Transformation(M);
-	initialize(Basis_Change, direct_summand);
+    Lineare_Transformation<Integer> Basis_Change = Transformation(M);
+    initialize(Basis_Change, direct_summand);
 }
 
 template<typename Integer>
 Sublattice_Representation<Integer>::Sublattice_Representation(const Lineare_Transformation<Integer>& Basis_Change, bool direct_summand) {
-	initialize(Basis_Change, direct_summand);
+    initialize(Basis_Change, direct_summand);
 }
 
 template<typename Integer>
 void Sublattice_Representation<Integer>::initialize(const Lineare_Transformation<Integer>& Basis_Change, bool direct_summand) {
-	size_t i,j;
-	
-	rank = Basis_Change.get_rank();
-	if (rank==0) {
-		errorOutput()<<"warning: matrix has rank 0. Please check input data."<<endl;
-	}
+    size_t i,j;
+    
+    rank = Basis_Change.get_rank();
+    if (rank==0) {
+        errorOutput()<<"warning: matrix has rank 0. Please check input data."<<endl;
+    }
 
-	//here: M=LCR  in LT: LMR=C
-	Matrix<Integer> R = Basis_Change.get_right_inv();
-	Matrix<Integer> R_Inv = Basis_Change.get_right();
+    //here: M=LCR  in LT: LMR=C
+    Matrix<Integer> R = Basis_Change.get_right_inv();
+    Matrix<Integer> R_Inv = Basis_Change.get_right();
 
-	dim = R.nr_of_columns();
-//	cout << "dim = "<<dim<<"    rank = "<<rank<<endl;
-	A = Matrix<Integer>(rank, dim);
-	B = Matrix<Integer>(dim, rank);
-	c = 1;
-	index = 1;
+    dim = R.nr_of_columns();
+    c = 1;
+    index = 1;
 
-	for (i = 1; i <= rank; i++) {
-		for (j = 1; j <= dim; j++) {
-			A.write(i,j, R.read(i,j));
-			B.write(j,i, R_Inv.read(j,i));
-		}
-	}
-	
+    Matrix<Integer> D = Basis_Change.get_center();
 
-	Matrix<Integer> D = Basis_Change.get_center();
+    //use the identity matrix when possible
+    bool is_identity = (dim==rank);
+    if (is_identity && !direct_summand) {
+        for (i = 0; i < rank; i++) {
+            if (Iabs(D.read(i,i)) != 1) {
+                is_identity = false;
+                break;
+            }
+        }
+    }
+    if (is_identity) {
+        A = B = Matrix<Integer>(dim);
+    } else {
+        A = Matrix<Integer>(rank, dim);
+        B = Matrix<Integer>(dim, rank);
+        for (i = 0; i < rank; i++) {
+            for (j = 0; j < dim; j++) {
+                A.write(i,j, R.read(i,j));
+                B.write(j,i, R_Inv.read(j,i));
+            }
+        }
+    }
 
-//	cout <<"rank="<<rank<<" Dia: "<<D.nr_of_rows()<<"x"<<D.nr_of_columns()<<endl;
-
-	if ( direct_summand ) {
-		for (i = 1; i <= rank; i++) {
-			index *= D.read(i,i);
-		}
-		index = Iabs(index);
-		
-	} else {
-		Matrix<Integer> Diagonal(rank);
-		for (i = 1; i <= rank; i++) {
-			Diagonal.write(i,i,D.read(i,i));
-		}
-		A = Diagonal.multiplication(A);
-		vector<Integer> c_vector = Diagonal.diagonale();
-		
-		c = v_lcm(c_vector);
-		//invert Diagonal, multiply c to maintain integer coefficients
-		for (i = 1; i <= rank; i++) {
-			Diagonal.write(i,i,c/c_vector[i-1]);
-		}
-		B = B.multiplication(Diagonal);
-	}	
+    if ( direct_summand ) {
+        for (i = 0; i < rank; i++) {
+            index *= D.read(i,i);
+        }
+        index = Iabs(index);
+        
+    } else if(!is_identity) {
+        Matrix<Integer> Diagonal(rank);
+        for (i = 0; i < rank; i++) {
+            Diagonal.write(i,i,D.read(i,i));
+        }
+        A = Diagonal.multiplication(A);
+        vector<Integer> c_vector = Diagonal.diagonale();
+        
+        c = v_lcm(c_vector);
+        //invert Diagonal, multiply c to maintain integer coefficients
+        for (i = 0; i < rank; i++) {
+            Diagonal.write(i,i,c/c_vector[i]);
+        }
+        B = B.multiplication(Diagonal);
+    }   
 
 }
-
-//---------------------------------------------------------------------------
-
-template<typename Integer>
-Sublattice_Representation<Integer>::Sublattice_Representation(const Sublattice_Representation& SR) {
-	A = SR.A;
-	B = SR.B;
-	c = SR.c;
-	dim = SR.dim;
-	rank = SR.rank;
-	index = SR.index;
-}
-//---------------------------------------------------------------------------
-
-template<typename Integer>
-Sublattice_Representation<Integer>::~Sublattice_Representation() {}
-
 
 //---------------------------------------------------------------------------
 //                       Manipulation operations
@@ -147,23 +141,23 @@ Sublattice_Representation<Integer>::~Sublattice_Representation() {}
 /* first this then SR when going from Z^n to Z^r */
 template<typename Integer>
 void Sublattice_Representation<Integer>::compose(const Sublattice_Representation& SR) {
-	assert(rank == SR.dim); //TODO vielleicht doch exception?
+    assert(rank == SR.dim); //TODO vielleicht doch exception?
 
-	rank = SR.rank;
-	index = index * SR.index;
-	// A = SR.A * A
-	A = SR.A.multiplication(A);
-	// B = B * SR.B
-	B = B.multiplication(SR.B);
-	c = c * SR.c;
-	
-	//check if a factor can be extraced from B  //TODO necessary?
-	Integer g = B.matrix_gcd();
-	g = gcd(g,c);  //TODO necessary??
-	if (g > 1) {
-		c /= g;
-		B.scalar_division(g);
-	}
+    rank = SR.rank;
+    index = index * SR.index;
+    // A = SR.A * A
+    A = SR.A.multiplication(A);
+    // B = B * SR.B
+    B = B.multiplication(SR.B);
+    c = c * SR.c;
+    
+    //check if a factor can be extraced from B  //TODO necessary?
+    Integer g = B.matrix_gcd();
+    g = gcd(g,c);  //TODO necessary??
+    if (g > 1) {
+        c /= g;
+        B.scalar_division(g);
+    }
 }
 
 //---------------------------------------------------------------------------
@@ -172,65 +166,73 @@ void Sublattice_Representation<Integer>::compose(const Sublattice_Representation
 
 template<typename Integer>
 Matrix<Integer> Sublattice_Representation<Integer>::to_sublattice (const Matrix<Integer>& M) const {
-	Matrix<Integer> N = M.multiplication(B);
-	if (c!=1) N.scalar_division(c);
-	return N;
+    Matrix<Integer> N = M.multiplication(B);
+    if (c!=1) N.scalar_division(c);
+    return N;
 }
 
 template<typename Integer>
 Matrix<Integer> Sublattice_Representation<Integer>::from_sublattice (const Matrix<Integer>& M) const {
-	Matrix<Integer> N = M.multiplication(A);
-	return N;
+    Matrix<Integer> N = M.multiplication(A);
+    return N;
 }
 
 template<typename Integer>
 Matrix<Integer> Sublattice_Representation<Integer>::to_sublattice_dual (const Matrix<Integer>& M) const {
-	Matrix<Integer> N = M.multiplication(A.transpose());
-	N.make_prime();
-	return N;
+    Matrix<Integer> N = M.multiplication(A.transpose());
+    N.make_prime();
+    return N;
 }
 
 template<typename Integer>
 Matrix<Integer> Sublattice_Representation<Integer>::from_sublattice_dual (const Matrix<Integer>& M) const {
-	Matrix<Integer> N = M.multiplication(B.transpose());
-	N.make_prime();
-	return N;
+    Matrix<Integer> N = M.multiplication(B.transpose());
+    N.make_prime();
+    return N;
 }
 
 
 template<typename Integer>
 vector<Integer> Sublattice_Representation<Integer>::to_sublattice (const vector<Integer>& V) const {
-	vector<Integer> N = B.VxM(V);
-	if (c!=1) v_scalar_division(N,c);
-	return N;
+    vector<Integer> N = B.VxM(V);
+    if (c!=1) v_scalar_division(N,c);
+    return N;
 }
 
 template<typename Integer>
 vector<Integer> Sublattice_Representation<Integer>::from_sublattice (const vector<Integer>& V) const {
-	vector<Integer> N = A.VxM(V);
-	return N;
+    vector<Integer> N = A.VxM(V);
+    return N;
 }
 
 template<typename Integer>
 vector<Integer> Sublattice_Representation<Integer>::to_sublattice_dual (const vector<Integer>& V) const {
-	vector<Integer> N = (A.transpose()).VxM(V);
-	return v_make_prime(N);
+    vector<Integer> N = A.MxV(V);
+    v_make_prime(N);
+    return N;
 }
 
 template<typename Integer>
 vector<Integer> Sublattice_Representation<Integer>::from_sublattice_dual (const vector<Integer>& V) const {
-	vector<Integer> N = (B.transpose()).VxM(V);
-	return v_make_prime(N);
+    vector<Integer> N = B.MxV(V);
+    v_make_prime(N);
+    return N;
+}
+
+template<typename Integer>
+vector<Integer> Sublattice_Representation<Integer>::to_sublattice_dual_no_div (const vector<Integer>& V) const {
+    vector<Integer> N = A.MxV(V);
+    return N;
 }
 
 //---------------------------------------------------------------------------
-//						 Data access
+//                       Data access
 //---------------------------------------------------------------------------
 
 /* returns the dimension of the ambient space */
 template<typename Integer>
 size_t Sublattice_Representation<Integer>::get_dim() const {
-	return dim;
+    return dim;
 }
 
 //---------------------------------------------------------------------------
@@ -238,7 +240,7 @@ size_t Sublattice_Representation<Integer>::get_dim() const {
 /* returns the rank of the sublattice */
 template<typename Integer>
 size_t Sublattice_Representation<Integer>::get_rank() const {
-	return rank;
+    return rank;
 }
 
 //---------------------------------------------------------------------------
@@ -246,28 +248,28 @@ size_t Sublattice_Representation<Integer>::get_rank() const {
 /* returns the index of the sublattice */
 template<typename Integer>
 Integer Sublattice_Representation<Integer>::get_index() const {
-	return index;
+    return index;
 }
 
 //---------------------------------------------------------------------------
 
 template<typename Integer>
 Matrix<Integer> Sublattice_Representation<Integer>::get_A() const {
-	return A;
+    return A;
 } 
 
 //---------------------------------------------------------------------------
 
 template<typename Integer>
 Matrix<Integer> Sublattice_Representation<Integer>::get_B() const {
-	return B;
+    return B;
 }
 
 //---------------------------------------------------------------------------
 
 template<typename Integer>
 Integer Sublattice_Representation<Integer>::get_c() const {
-	return c;
+    return c;
 }
 
 //---------------------------------------------------------------------------
@@ -275,33 +277,33 @@ Integer Sublattice_Representation<Integer>::get_c() const {
 /* returns the congruences defining the sublattice */
 template<typename Integer>
 Matrix<Integer> Sublattice_Representation<Integer>::get_congruences() const {
-	if ( c == 1 ) { // no congruences then
-		return Matrix<Integer>(0,dim+1);
-	}
+    if ( c == 1 ) { // no congruences then
+        return Matrix<Integer>(0,dim+1);
+    }
 
-	// Cong is B transposed and with an extra column for the modul m
-	Matrix<Integer> Cong = B;
-	Cong.append(Matrix<Integer>(1,rank));
-	Cong = Cong.transpose();
-	vector<Integer> gcds = Cong.make_prime();
-	Integer m; //the modul
-	Integer rowgcd;
-	Matrix<Integer> Cong2(0,dim+1); //only the relavant congruences
-	vector<Integer> new_row;
-	for (size_t j=1; j<=rank; j++) {
-		m = c/gcds[j-1];
-		if ( m != 1 ) {
-			new_row = Cong.read(j);
-			v_reduction_modulo(new_row,m);  
-			//new_row cannot be divisible by a factor of m
-			//so make_prime divides by an invertible element
-			new_row = v_make_prime(new_row,rowgcd);  
-			assert(gcd(m,rowgcd) == 1);
-			new_row[dim] = m;
-			Cong2.append(new_row);
-		}
-	}
-	return Cong2;
+    // Cong is B transposed and with an extra column for the modul m
+    Matrix<Integer> Cong = B;
+    Cong.append(Matrix<Integer>(1,rank));
+    Cong = Cong.transpose();
+    vector<Integer> gcds = Cong.make_prime();
+    Integer m; //the modul
+    Integer rowgcd;
+    Matrix<Integer> Cong2(0,dim+1); //only the relavant congruences
+    vector<Integer> new_row;
+    for (size_t j=0; j<rank; j++) {
+        m = c/gcds[j];
+        if ( m != 1 ) {
+            new_row = Cong.read(j);
+            v_reduction_modulo(new_row,m);  
+            //new_row cannot be divisible by a factor of m
+            //so make_prime divides by an invertible element
+            rowgcd = v_make_prime(new_row);  
+            assert(gcd(m,rowgcd) == 1);
+            new_row[dim] = m;
+            Cong2.append(new_row);
+        }
+    }
+    return Cong2;
 }
 
 }

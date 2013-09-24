@@ -15,7 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 #include "libnormaliz.cpp"
+#include "integer.cpp"
+#include "vector_operations.cpp"
+#include "matrix.cpp"
+#include "simplex.cpp"
+#include "list_operations.cpp"
+#include "lineare_transformation.cpp"
+#include "sublattice_representation.cpp"
+#include "full_cone.cpp"
+#include "cone_dual_mode.cpp"
+#include "cone.cpp"
 
 namespace libnormaliz {
 
@@ -43,12 +54,18 @@ template size_t decimal_length<long>(long);
 template size_t decimal_length<long long int>(long long int);
 template size_t decimal_length<mpz_class>(mpz_class);
 
-template mpz_class gcd<mpz_class>(const mpz_class& a, const mpz_class& b);
-template mpz_class lcm<mpz_class>(const mpz_class& a, const mpz_class& b);
+template long gcd<long>(const long& a, const long& b);
+template long lcm<long>(const long& a, const long& b);
+template long permutations<long>(const size_t& a, const size_t& b);
+template long long gcd<long long>(const long long& a, const long long& b);
+template long long lcm<long long>(const long long& a, const long long& b);
+template long long permutations<long long>(const size_t& a, const size_t& b);
+//template mpz_class gcd<mpz_class>(const mpz_class& a, const mpz_class& b);
+//template mpz_class lcm<mpz_class>(const mpz_class& a, const mpz_class& b);
 template mpz_class permutations<mpz_class>(const size_t& a, const size_t& b);
 
+template ostream& operator<< <long>(ostream& out, const vector<long>& v);
 template ostream& operator<< <long long>(ostream& out, const vector<long long>& v);
 template ostream& operator<< <mpz_class>(ostream& out, const vector<mpz_class>& v);
-template ostream& operator<< < vector<mpz_class> >(ostream& out, const vector< vector<mpz_class> >& v);
 
 }

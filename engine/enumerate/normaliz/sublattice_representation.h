@@ -1,6 +1,6 @@
 /*
- * Normaliz 2.7
- * Copyright (C) 2007-2011  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Normaliz
+ * Copyright (C) 2007-2013  Winfried Bruns, Bogdan Ichim, Christof Soeger
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -29,12 +29,18 @@
 #ifndef SUBLATTICE_REPRESENTATION_H
 #define SUBLATTICE_REPRESENTATION_H
 
+#include <vector>
 #include "libnormaliz.h"
-#include "lineare_transformation.h"
+#include "matrix.h"
 
 //---------------------------------------------------------------------------
 
 namespace libnormaliz {
+
+template<typename Integer> class Matrix;
+template<typename Integer> class Lineare_Transformation;
+using std::vector;
+
 
 template<typename Integer>
 class Sublattice_Representation {
@@ -53,7 +59,7 @@ public:
 	/**
 	 * creates a dummy object
 	 */
-	Sublattice_Representation() {};
+	Sublattice_Representation() {}
 
 	/**
 	 * creates a representation of Z^n as a sublattice of itself
@@ -68,9 +74,6 @@ public:
 	 */
 	Sublattice_Representation(const Matrix<Integer>& M, bool direct_summand);
 	Sublattice_Representation(const Lineare_Transformation<Integer>& LT, bool direct_summand);
-	Sublattice_Representation(const Sublattice_Representation<Integer>& SR);
-	~Sublattice_Representation();
-
 
 //---------------------------------------------------------------------------
 //                       Manipulation operations
@@ -96,6 +99,7 @@ public:
 	vector<Integer> to_sublattice_dual (const vector<Integer>& M) const;
 	vector<Integer> from_sublattice_dual (const vector<Integer>& V) const;
 
+	vector<Integer> to_sublattice_dual_no_div (const vector<Integer>& M) const;
 //---------------------------------------------------------------------------
 //						 Data acces
 //---------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 /*
- * Normaliz 2.7
- * Copyright (C) 2007-2011  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Normaliz
+ * Copyright (C) 2007-2013  Winfried Bruns, Bogdan Ichim, Christof Soeger
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -23,7 +23,6 @@
 #include <vector>
 
 #include "libnormaliz.h"
-#include "integer.h"
 #include "matrix.h"
 #include "sublattice_representation.h"
 
@@ -34,71 +33,84 @@ using std::vector;
 template<typename Integer>
 class Cone_Dual_Mode {
 public:
-	size_t dim;
-	size_t nr_sh;
-	size_t hyp_size;
-	
-	Matrix<Integer> SupportHyperplanes;
-	Matrix<Integer> Generators;
-	list<vector<Integer> > GeneratorList; //only temporarily used
-	list<vector<Integer> > Hilbert_Basis;
+    size_t dim;
+    size_t nr_sh;
+    size_t hyp_size;
+    
+    Matrix<Integer> SupportHyperplanes;
+    Matrix<Integer> Generators;
+    list<vector<Integer> > GeneratorList; //only temporarily used
+    list<vector<Integer> > Hilbert_Basis;
 
 /* ---------------------------------------------------------------------------
- *				Private routines, used in the public routines
+ *              Private routines, used in the public routines
  * ---------------------------------------------------------------------------
  */
+    /* splices a vector of lists into a total list*/
+    void splice_them(list< vector< Integer > >& Total, vector<list< vector< Integer > > >& Parts);
 
-	/* Returns true if new_element is reducible versus the elements in Ired
-	 * used for dual algorithm */
-	bool reduce(list<vector<Integer> *> & Ired, const vector<Integer> & new_element, const size_t & size);
+    /* records the order of Elements in pointer list Order */
+    void record_order(list< vector< Integer > >& Elements, list< vector< Integer >* >& Order);
 
-	/* reduce Red versus Ired */
-	void reduce(list<vector<Integer> > & Ired, list<vector<Integer> > & Red, const size_t & size);
+    /* Returns true if new_element is reducible versus the elements in Irred used for dual algorithm
+     *  ATTENTION: this is "random access" for new_element if ordered==false. 
+     * Otherrwise it is assumed that the new elements tested come in ascending total degree 
+     * after the list underlying Irred has been ordered the last time */
+    bool reducible(list<vector<Integer> *> & Irred, const vector<Integer> & new_element, 
+                            const size_t & size, const bool ordered);
 
-	/* adds a new element irreducible to the Hilbert basis
-	 * the new elements must come from a structure sorted by total degree
-	 * used for dual algorithm */
-	void reduce_and_insert(const vector<Integer> & new_element, const size_t & size);
-	/* select extreme rays by reduction
-	 * used for the dual algorithm */
-	void reduce_and_insert_extreme(const vector<Integer> & new_element);
+    /* reduce Red versus Irred ATTENTION: both lists must be ordered by total degree 
+     * Irred will not be changed, Red is returned without the reducible elements, but no other
+     * change 
+     * ATTENTION: not suitable for autoreduction */
+    void reduce(list<vector<Integer> > & Irred, list<vector<Integer> > & Red, const size_t & size);
 
-	/* computes the Hilbert basis after adding a support hyperplane with the dual algorithm */
-	void cut_with_halfspace_hilbert_basis(const size_t & hyp_counter, const bool & lifting, vector<Integer> & halfspace);
-	/* computes the Hilbert basis after adding a support hyperplane with the dual algorithm , general case */
-	Matrix<Integer> cut_with_halfspace(const size_t & hyp_counter, const Matrix<Integer>& Basis_Max_Subspace);
+    /* adds a new element that is irreducible w.r.t. Irred to Irred
+     * the new elements must come from a structure sorted by total degree
+     * used for dual algorithm */
+    void reduce_and_insert(const vector<Integer> & new_element, list<vector<Integer> >& Irred, const size_t & size);
+    
+    /* reduces a list against itself
+     * the list must be sorted  sorted by total degree as used for dual algorithm
+     * The irreducible elements are reurned in ascendingorder */
+    void auto_reduce(list< vector< Integer> >& To_Reduce, const size_t& size);
 
-	/* computes the extreme rays using reduction, used for the dual algorithm */
-	void extreme_rays_reduction();
-	/* computes the extreme rays using rank test, used for the dual algorithm */
-	void extreme_rays_rank();
 
-	void relevant_support_hyperplanes();
+    /* computes the Hilbert basis after adding a support hyperplane with the dual algorithm */
+    void cut_with_halfspace_hilbert_basis(const size_t & hyp_counter, const bool & lifting, vector<Integer> & halfspace);
+    
+    /* computes the Hilbert basis after adding a support hyperplane with the dual algorithm , general case */
+    Matrix<Integer> cut_with_halfspace(const size_t & hyp_counter, const Matrix<Integer>& Basis_Max_Subspace);
 
-	Cone_Dual_Mode();
-	Cone_Dual_Mode(Matrix<Integer> M);            //main constructor
-	Cone_Dual_Mode(const Cone_Dual_Mode<Integer> & C); //copy constructor
-	~Cone_Dual_Mode();                   //destructor
+    /* computes the extreme rays using reduction, used for the dual algorithm */
+    void extreme_rays_reduction();
+    
+    /* computes the extreme rays using rank test, used for the dual algorithm */
+    void extreme_rays_rank();
+
+    void relevant_support_hyperplanes();
+
+    Cone_Dual_Mode(Matrix<Integer> M);            //main constructor
 
 /*---------------------------------------------------------------------------
- *						Data access
+ *                      Data access
  *---------------------------------------------------------------------------
  */
-	void print() const;                //to be modified, just for tests
-	Matrix<Integer> get_support_hyperplanes() const;
-	Matrix<Integer> get_generators() const;
-	Matrix<Integer> read_hilbert_basis() const;
+    void print() const;                //to be modified, just for tests
+    Matrix<Integer> get_support_hyperplanes() const;
+    Matrix<Integer> get_generators() const;
+    Matrix<Integer> read_hilbert_basis() const;
 
 
 
 /*---------------------------------------------------------------------------
- *				Computation Methods
+ *              Computation Methods
  *---------------------------------------------------------------------------
  */
-	void hilbert_basis_dual();
+    void hilbert_basis_dual();
 
-	/* transforms all data to the sublattice */
-	void to_sublattice(Sublattice_Representation<Integer> SR);
+    /* transforms all data to the sublattice */
+    void to_sublattice(Sublattice_Representation<Integer> SR);
 
 };
 //class end *****************************************************************

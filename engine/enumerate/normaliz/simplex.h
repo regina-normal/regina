@@ -1,6 +1,6 @@
 /*
- * Normaliz 2.7
- * Copyright (C) 2007-2011  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Normaliz
+ * Copyright (C) 2007-2013  Winfried Bruns, Bogdan Ichim, Christof Soeger
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -31,6 +31,8 @@
 #include <list>
 
 #include "libnormaliz.h"
+#include "cone.h"
+#include "HilbertSeries.h"
 
 //---------------------------------------------------------------------------
 
@@ -38,100 +40,102 @@ namespace libnormaliz {
 using std::list;
 using std::vector;
 
+template<typename Integer> class Full_Cone;
+
 template<typename Integer>
 class Simplex {
-  size_t dim;
-  string status;
-  Integer volume;
-  vector<size_t> key;
-  Matrix<Integer> Generators;
-  vector< Integer > diagonal;
-  vector< Integer > multiplicators;
-  vector<size_t> New_Face; // to use with a shelling
-  Matrix<Integer> Support_Hyperplanes;
-  list< vector<Integer> > Hilbert_Basis;
-  list< vector<Integer> > Ht1_Elements;
-  vector<Integer> H_Vector;
-
-//---------------------------------------------------------------------------
-//                 Private routines, used in the public routines
-//---------------------------------------------------------------------------
-
-  void reduce_and_insert_interior(const vector< Integer >& new_element);
-  //adds a new element to the Hilbert basis
+    size_t dim;
+    Integer volume;
+    vector<key_t> key;
+    Matrix<Integer> Generators;
+    vector< Integer > diagonal;
+    vector< Integer > multiplicators;
+    Matrix<Integer> Support_Hyperplanes;
 
 //---------------------------------------------------------------------------
 public:
-//---------------------------------------------------------------------------
 //                      Construction and destruction
-//---------------------------------------------------------------------------
+    Simplex(const Matrix<Integer>& Map);  //contructor of the first in lexicographic
+    //order simplex inside Map, the rank of Map is assumed to equal the number of
+    //columns of Map
+    Simplex(const vector<key_t>& k, const Matrix<Integer>& Map); //main constuctor
+    //the rank of M is assumed to equal the number of columns of M
 
-  Simplex();
-  Simplex(const vector<size_t>& k);  //constructor, only key is initialized
-  Simplex(const Matrix<Integer>& Map);  //contructor of the first in lexicographic
-  //order simplex inside Map, the rank of Map is assumed to equal the number of
-  //columns of Map
-  Simplex(const vector<size_t>& k, const Matrix<Integer>& Map); //main constuctor
-  //the rank of M is assumed to equal the number of columns of M
-  Simplex(const Simplex<Integer>& S);   //copy constructor
-  ~Simplex();                 //destructor
-
-//---------------------------------------------------------------------------
 //                          Data acces
-//---------------------------------------------------------------------------
+    size_t read_dimension() const;              // returns dim
+    void write_volume(const Integer& vol);  // writes volume
+    Integer read_volume() const;            // returns volume
+    vector<key_t> read_key() const;          // returns key
+    Matrix<Integer> read_generators() const;        // returns generators
+    vector<Integer> read_diagonal() const;    // returns diagonal
+    vector<Integer> read_multiplicators() const;    // returns multiplicators
+    Matrix<Integer> read_support_hyperplanes() const;  // returns the support hyperplanes
 
-  void write_new_face(const vector<size_t>& Face);//writes the new face in case of a shelling
-  void read() const;                        // to be modified, just for tests
-  void read_k() const;                        // to be modified, just for tests
-  size_t read_dimension() const;              // returns dim
-  string read_status() const;              // returns status
-  void write_volume(const Integer& vol);  // writes volume
-  Integer read_volume() const;            // returns volume
-  vector<size_t> read_key() const;          // returns key
-  Matrix<Integer> read_generators() const;        // returns generators
-  vector<Integer> read_diagonal() const;    // returns diagonal
-  vector<Integer> read_multiplicators() const;    // returns multiplicators
-  vector<size_t> read_new_face() const;    // returns new face
-  size_t read_new_face_size() const;    // returns new face size
-  Matrix<Integer> read_support_hyperplanes() const;  // returns the support hyperplanes
-  Matrix<Integer> read_hilbert_basis()const; //read the Hilbert basis
-  list< vector<Integer> > read_ht1_elements()const; //read the ht1 elements
-  const list< vector<Integer> >& acces_hilbert_basis()const; //read the Hilbert basis
-  vector<Integer> read_h_vector() const; //returns the h-vector
-  size_t read_hilbert_basis_size() const; //returns the size of the Hilbert basis
-
-//---------------------------------------------------------------------------
-//                          Algoritms
-//---------------------------------------------------------------------------
-
-  int compare(const Simplex<Integer>& S) const; //compare the key of this with the key of S
-  void initialize(const Matrix<Integer>& Map); //change status from "key initialized" to "initialized"
-  void hilbert_basis_interior(); // computes the Hilbert basis,
-  //the generators are not considered !!!, status must be "initialized"
-  void hilbert_basis_interior(const Matrix<Integer>& Map); // computes the Hilbert basis,
-  //the generators are not considered !!!, status may be "key initialized" or "initialized"
-  void ht1_elements(const vector<Integer>& Form); //computes the volume and ht1 elements (unique without generators, stored in Hilbert_Basis)
-  void h_vector(const vector<Integer>& Form);
-  // computes the new elements of h vector in case of a shelling,
-  // status must be "initialized"
-  void h_vector(const Matrix<Integer>& Map, const vector<Integer>& Form); // computes
-  // computes the new elements of h vector in case of a shelling,
-  // status must be "key initialized"
-  void hilbert_basis_interior_h_vector(const vector<Integer>& Form); // computes the Hilbert basis
-  //and the new elements of h vector in case of a shelling,
-  //the generators are not considered !!!, status must be "initialized"
-  void hilbert_basis_interior_h_vector(const Matrix<Integer>& Map, const vector<Integer>& Form); // computes the Hilbert basis
-  //and the new elements of h vector in case of a shelling,
-  //the generators are not considered !!!, status must be "key initialized"
-  
-  Integer evaluate(Full_Cone<Integer>& C, const Integer& height);
-  
 };
-//class end *****************************************************************
+//class Simplex end 
+
+
+template<typename Integer>
+class SimplexEvaluator {
+    Full_Cone<Integer> * C_ptr;
+    size_t dim;
+    //Integer volume;
+    Integer det_sum; // sum of the determinants of all evaluated simplices
+    mpq_class mult_sum; // sum of the multiplicities of all evaluated simplices
+    size_t collected_elements_size;
+    Matrix<Integer> Generators;
+    Matrix<Integer> TGenerators;
+    Matrix<Integer> GenCopy;
+    Matrix<Integer> InvGenSelRows; // selected rows of inverse of Gen
+    Matrix<Integer> InvGenSelCols; // selected columns of inverse of Gen
+    Matrix<Integer> Sol;
+    Matrix<Integer> InvSol;
+    vector< Integer > GDiag; // diagonal of generator matrix after trigonalization
+    vector< Integer > TDiag; // diagonal of transpose of generaor matrix after trigonalization
+    vector< bool > Excluded;
+    vector< Integer > Indicator; 
+    vector< long > gen_degrees;
+    vector< num_t > hvector;  //h-vector of the current evaluation
+    HilbertSeries Hilbert_Series; //this is the summed Hilbert Series
+    list< vector<Integer> > Candidates;
+    list< vector<Integer> > Hilbert_Basis;
+    list< vector<Integer> > Collected_Elements;
+    //temporary objects are kept to prevent repeated alloc and dealloc
+    Matrix<Integer> RS; // right hand side to hold order vector
+    // Matrix<Integer> RSmult; // for multiple right hand sides
+
+
+    //checks whether a new element is reducible by the local Hilbert basis
+    bool is_reducible_interior(const vector< Integer >& new_element);
+
+    bool isDuplicate(const vector<Integer>& cand) const;
+
+	void addMult(const Integer& volume);
+
+//---------------------------------------------------------------------------
+
+public:
+
+    SimplexEvaluator(Full_Cone<Integer>& fc);
+
+    // full evaluation of the simplex, writes data back to the cone,
+    // returns volume
+    Integer evaluate(SHORTSIMPLEX<Integer>& s);
+
+    // moves the union of Hilbert basis / deg1 elements to the cone
+    // for partial triangulation it merges the sorted list
+    void transfer_candidates();
+    // returns sum of the determinants of all evaluated simplices
+    Integer getDetSum() const;
+    // returns sum of the multiplicities of all evaluated simplices
+    mpq_class getMultiplicitySum() const;
+    // returns sum of the Hilbert Series of all evaluated simplices
+    const HilbertSeries& getHilbertSeriesSum() const;
+};
+//class SimplexEvaluater end
 
 }
 
 //---------------------------------------------------------------------------
 #endif
 //---------------------------------------------------------------------------
-
