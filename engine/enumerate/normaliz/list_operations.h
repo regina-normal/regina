@@ -1,6 +1,6 @@
 /*
- * Normaliz 2.7
- * Copyright (C) 2007-2011  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Normaliz
+ * Copyright (C) 2007-2013  Winfried Bruns, Bogdan Ichim, Christof Soeger
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -32,22 +32,21 @@
 namespace libnormaliz {
 
 //---------------------------------------------------------------------------
-//							Data access
+//                          Data access
 //---------------------------------------------------------------------------
 
-template<typename Integer>
- int l_read(const list< vector<Integer> >& l);  //used for tests, returns size of l
-template<typename Integer>
- int l_read(const list< vector<int> >& l);  //used for tests, returns size of l
-
-template<typename Integer>
-int l_read(const list <std::pair<vector<size_t>,Integer> >& l);  //used for tests, returns size of l
- 
-template<typename Integer>
- int l_read(const list<int>& l);  //used for tests, returns size of l
+template <typename T>
+ostream& operator<< (ostream& out, const list<T>& l) {
+    typename list< vector<T> >::const_iterator i;
+    for (i =l.begin(); i != l.end(); i++) {
+        out << *i <<" ";
+    }
+    out << endl;
+    return out;
+}
 
 //---------------------------------------------------------------------------
-//						   List operations
+//                         List operations
 //---------------------------------------------------------------------------
 
 template<typename Integer>

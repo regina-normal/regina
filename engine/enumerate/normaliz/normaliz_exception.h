@@ -1,6 +1,6 @@
 /*
- * Normaliz 2.7
- * Copyright (C) 2007-2011  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Normaliz
+ * Copyright (C) 2007-2013  Winfried Bruns, Bogdan Ichim, Christof Soeger
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -20,22 +20,35 @@
 #define NORMALIZ_EXEPTION_H_
 
 #include <exception>
-#include "libnormaliz.h"
+//#include "libnormaliz.h"
 
 namespace libnormaliz {
 
-class NormalizException: public virtual std::exception {
-	virtual const char* what() const throw() {
-		return "NormalizException happened!";
-	}
+class NormalizException: public std::exception {
+    public:
+	virtual const char* what() const throw() = 0;
 };
 
-class ArithmeticException: public virtual NormalizException {
+class ArithmeticException: public NormalizException {
+    public:
 	virtual const char* what() const throw() {
 		return "Arithmetic Overflow detected, try a bigger integer type!";
 	}
 };
 
+class BadInputException: public NormalizException {
+    public:
+	virtual const char* what() const throw() {
+		return "Some error in the normaliz input data detected!";
+	}
+};
+
+class FatalException: public NormalizException {
+    public:
+	virtual const char* what() const throw() {
+		return "Fatal error! This should not happen, please contact the developers.";
+	}
+};
 
 
 } /* end namespace */

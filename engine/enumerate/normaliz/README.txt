@@ -2,7 +2,7 @@ Normaliz Library
 ----------------
 
 This directory contains a copy of the Normaliz kernel libnormaliz.
-This is currently synced with Normaliz version 2.7.
+This is currently synced with Normaliz version 2.10.1.
 
 Normaliz is distributed under the terms of the GNU General Public
 License, version 3.  The full text of this license is included in the

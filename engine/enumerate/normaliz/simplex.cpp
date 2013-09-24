@@ -1,6 +1,6 @@
 /*
- * Normaliz 2.7
- * Copyright (C) 2007-2011  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Normaliz
+ * Copyright (C) 2007-2013  Winfried Bruns, Bogdan Ichim, Christof Soeger
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -29,6 +29,8 @@
 #include "matrix.h"
 #include "simplex.h"
 #include "list_operations.h"
+#include "HilbertSeries.h"
+#include "cone.h"
 
 //---------------------------------------------------------------------------
 
@@ -36,510 +38,584 @@ namespace libnormaliz {
 using namespace std;
 
 //---------------------------------------------------------------------------
-//Private
-//---------------------------------------------------------------------------
-template<typename Integer>
-void Simplex<Integer>::reduce_and_insert_interior(const vector< Integer >& new_element){
-	//implementing this function as a tree searching may speed up computations ...
-	if (new_element[0]==0) {
-		return; // new_element=0
-	}
-	else {
-		register size_t i,c=1,d=dim+1;
-		typename list< vector<Integer> >::iterator j;
-		for (j =Hilbert_Basis.begin(); j != Hilbert_Basis.end(); j++) {
-			if (new_element[0]<2*(*j)[0]) {
-				break; //new_element is not reducible;
-			}
-			else  {
-				if ((*j)[c]<=new_element[c]){
-					for (i = 1; i < d; i++) {
-						if ((*j)[i]>new_element[i]){
-							c=i;
-							break;
-						}
-					}
-					if (i==d) {
-						Hilbert_Basis.push_front(*j);
-						Hilbert_Basis.erase(j);
-						return;
-					}
-					//new_element is not in the Hilbert Basis
-				}
-			}
-		}
-		Hilbert_Basis.push_back(new_element);
-	}
-}
-
-//---------------------------------------------------------------------------
-//Public
-//---------------------------------------------------------------------------
-
-template<typename Integer>
-Simplex<Integer>::Simplex(){
-	status="non initialized";
-}
-
-template<typename Integer>
-Simplex<Integer>::Simplex(const vector<size_t>& k){
-	dim=k.size();
-	key=k;
-	volume=0;
-	status="key initialized";
-}
 
 template<typename Integer>
 Simplex<Integer>::Simplex(const Matrix<Integer>& Map){
-	dim=Map.nr_of_columns();
-	key=Map.max_rank_submatrix_lex(dim);
-	Generators=Map.submatrix(key);
-	vector< Integer > help(dim);
-	Support_Hyperplanes=Invert(Generators, help, volume); //test for arithmetic
-	//overflow performed
-	diagonal=v_abs(help);
-	Support_Hyperplanes=Support_Hyperplanes.transpose();
-	multiplicators=Support_Hyperplanes.make_prime();
-	Hilbert_Basis = list< vector<Integer> >();
-	H_Vector = vector<Integer>(dim,0);
-	status="initialized";
+    dim=Map.nr_of_columns();
+    key=Map.max_rank_submatrix_lex(dim);
+    Generators=Map.submatrix(key);
+    diagonal = vector< Integer >(dim);
+    Support_Hyperplanes=invert(Generators, diagonal, volume); //test for arithmetic
+    //overflow performed
+    v_abs(diagonal);
+    Support_Hyperplanes = Support_Hyperplanes.transpose();
+    multiplicators = Support_Hyperplanes.make_prime();
 }
 
 //---------------------------------------------------------------------------
 
 template<typename Integer>
-Simplex<Integer>::Simplex(const vector<size_t>& k, const Matrix<Integer>& Map){
-	key=k;
-	Generators=Map.submatrix(k);
-	dim=k.size();
-	vector< Integer > help(dim);
-	Support_Hyperplanes=Invert(Generators, help, volume);  //test for arithmetic
-	//overflow performed
-	diagonal=v_abs(help);
-	Support_Hyperplanes=Support_Hyperplanes.transpose();
-	multiplicators=Support_Hyperplanes.make_prime();
-	Hilbert_Basis = list< vector<Integer> >();
-	H_Vector=vector<Integer>(dim,0);
-	status="initialized";
-}
-
-//---------------------------------------------------------------------------
-
-template<typename Integer>
-Simplex<Integer>::Simplex(const Simplex<Integer>& S){
-	dim=S.dim;
-	status=S.status;
-	volume=S.volume;
-	key=S.key;
-	Generators=S.Generators;
-	diagonal=S.diagonal;
-	multiplicators=S.multiplicators;
-	New_Face=S.New_Face;
-	Support_Hyperplanes=S.Support_Hyperplanes;
-	Hilbert_Basis=S.Hilbert_Basis;
-	Ht1_Elements=S.Ht1_Elements;
-	H_Vector=S.H_Vector;
-}
-
-//---------------------------------------------------------------------------
-
-template<typename Integer>
-Simplex<Integer>::~Simplex(){
-	//automatic destructor
-}
-
-//---------------------------------------------------------------------------
-
-template<typename Integer>
-void Simplex<Integer>::write_new_face(const vector<size_t>& Face){
-	New_Face=Face;
-}
-
-//---------------------------------------------------------------------------
-
-template<typename Integer>
-void Simplex<Integer>::read() const{
-	cout<<"\nDimension="<<dim<<"\n";
-	cout<<"\nStatus="<<status<<"\n";
-	cout<<"\nVolume="<<volume<<"\n";
-	cout<<"\nKey is:\n";
-	v_read(key);
-	cout<<"\nGenerators are:\n";
-	Generators.read();
-	cout<<"\nDiagonal is:\n";
-	v_read(diagonal);
-	cout<<"\nMultiplicators are:\n";
-	v_read(multiplicators);
-	cout<<"\nNew face is:\n";
-	v_read(New_Face);
-	cout<<"\nSupport Hyperplanes are:\n";
-	Support_Hyperplanes.read();
-	Matrix<Integer> M=read_hilbert_basis();
-	cout<<"\nHilbert Basis is:\n";
-	M.read();
-	cout<<"\nh-vector is:\n";
-	v_read(H_Vector);
-}
-
-//---------------------------------------------------------------------------
-
-template<typename Integer>
-void Simplex<Integer>::read_k() const{
-	v_read(key);
-	v_read(New_Face);
+Simplex<Integer>::Simplex(const vector<key_t>& k, const Matrix<Integer>& Map){
+    key=k;
+    Generators=Map.submatrix(k);
+    dim=k.size();
+    diagonal = vector< Integer >(dim);
+    Support_Hyperplanes=invert(Generators, diagonal, volume);  //test for arithmetic
+    //overflow performed
+    v_abs(diagonal);
+    Support_Hyperplanes=Support_Hyperplanes.transpose();
+    multiplicators=Support_Hyperplanes.make_prime();
 }
 
 //---------------------------------------------------------------------------
 
 template<typename Integer>
 size_t Simplex<Integer>::read_dimension() const{
-	return dim;
-}
-
-//---------------------------------------------------------------------------
-
-template<typename Integer>
-string Simplex<Integer>::read_status() const{
-	return status;
+    return dim;
 }
 
 //---------------------------------------------------------------------------
 
 template<typename Integer>
 void Simplex<Integer>::write_volume(const Integer& vol){
-	volume=vol;
+    volume=vol;
 }
 
 //---------------------------------------------------------------------------
 
 template<typename Integer>
 Integer Simplex<Integer>::read_volume() const{
-	return volume;
+    return volume;
 }
 
 //---------------------------------------------------------------------------
 
 template<typename Integer>
-vector<size_t> Simplex<Integer>::read_key() const{
-	return key;
+vector<key_t> Simplex<Integer>::read_key() const{
+    return key;
 }
 
 //---------------------------------------------------------------------------
 
 template<typename Integer>
 Matrix<Integer> Simplex<Integer>::read_generators() const{
-	return Generators;
+    return Generators;
 }
 
 //---------------------------------------------------------------------------
 
 template<typename Integer>
 vector<Integer> Simplex<Integer>::read_diagonal() const{
-	return diagonal;
+    return diagonal;
 }
 
 //---------------------------------------------------------------------------
 
 template<typename Integer>
 vector<Integer> Simplex<Integer>::read_multiplicators() const{
-	return multiplicators;
+    return multiplicators;
 }
 
 //---------------------------------------------------------------------------
 
-template<typename Integer>
-vector<size_t> Simplex<Integer>::read_new_face() const{
-	return New_Face;
-}
-
-//---------------------------------------------------------------------------
-
-template<typename Integer>
-size_t Simplex<Integer>::read_new_face_size() const{
-	return New_Face.size();
-}
-
-//---------------------------------------------------------------------------
 
 template<typename Integer>
 Matrix<Integer> Simplex<Integer>::read_support_hyperplanes() const{
-	return Support_Hyperplanes;
+    return Support_Hyperplanes;
+}
+
+//---------------------------------------------------------------------------
+// SimplexEvaluator
+//---------------------------------------------------------------------------
+
+template<typename Integer>
+SimplexEvaluator<Integer>::SimplexEvaluator(Full_Cone<Integer>& fc)
+: C_ptr(&fc),
+  dim(fc.dim),
+  det_sum(0),
+  mult_sum(0),
+  collected_elements_size(0),
+  Generators(dim,dim),
+  TGenerators(dim,dim),
+  GenCopy(dim,dim),
+  InvGenSelRows(dim,dim),
+  InvGenSelCols(dim,dim),
+  Sol(dim,dim+1),
+  InvSol(dim,dim+1),
+  GDiag(dim),
+  TDiag(dim),
+  Excluded(dim),
+  Indicator(dim),
+  gen_degrees(dim),
+  RS(dim,1)
+{
+    if (C_ptr->do_h_vector) {
+        // we need the generators to be sorted by degree
+        size_t hv_max=0;
+        for (size_t i=C_ptr->nr_gen-dim; i<C_ptr->nr_gen; i++)
+            hv_max += C_ptr->gen_degrees[i];
+        hvector.resize(hv_max);
+    }
+}
+
+//---------------------------------------------------------------------------
+
+size_t Unimod=0, Ht1NonUni=0, Gcd1NonUni=0, NonDecided=0, NonDecidedHyp=0;
+size_t TotDet=0;
+
+/* evaluates a simplex in regard to all data */
+template<typename Integer>
+Integer SimplexEvaluator<Integer>::evaluate(SHORTSIMPLEX<Integer>& s) {
+    Integer& volume = s.vol;
+    vector<key_t>& key = s.key;
+    Full_Cone<Integer>& C = *C_ptr;
+
+    bool do_only_multiplicity =
+        C.do_only_multiplicity;
+//        || (s.height==1 && C.do_partial_triangulation);
+
+    size_t i,j;
+
+
+    //degrees of the generators according to the Grading of C
+    if(C.isComputed(ConeProperty::Grading))
+        for (i=0; i<dim; i++)
+            gen_degrees[i] = C.gen_degrees[key[i]];
+
+    if(do_only_multiplicity){
+        if(volume == 0) { // not known in advance
+            for(i=0; i<dim; ++i)
+                Generators[i] = C.Generators[key[i]];
+            volume=Generators.vol_destructive();
+            #pragma omp atomic
+            TotDet++;
+        }
+        addMult(volume);
+        return volume;
+    }  // done if only mult is asked for
+    for(i=0; i<dim; ++i)
+        Generators[i] = C.Generators[key[i]];
+
+    bool unimodular=false;
+    bool GDiag_computed=false;
+    bool potentially_unimodular=(s.height==1);
+
+    if(potentially_unimodular && C.isComputed(ConeProperty::Grading)){
+        long g=0;
+        for(i=0;i<dim;++i){
+            g=gcd(g,gen_degrees[i]);
+            if(g==1)
+                break;
+        }
+        potentially_unimodular=(g==1);
+    }
+
+    if(potentially_unimodular){ // very likely unimodular, Indicator computed first uses transpose of Gen
+        for(i=0; i<dim; ++i)
+            TGenerators.write_column(i,C.Generators[key[i]]);
+        RS.write_column(0,C.Order_Vector);  // right hand side
+        TGenerators.solve_destructive_Sol(RS,TDiag,volume,Sol);
+        for (i=0; i<dim; i++)
+            Indicator[i]=Sol[i][0];
+        if(volume==1){
+            unimodular=true;
+            #pragma omp atomic
+            Unimod++;
+            for(i=0;i<dim;i++)
+                GDiag[i]=1;
+        }
+        else
+            #pragma omp atomic
+            Ht1NonUni++;
+    }
+
+    if (unimodular && !C.do_h_vector && !C.do_Stanley_dec) {
+        addMult(volume);
+        return volume;
+    }
+
+    // we need the GDiag if not unimodular (to be computed from Gen)
+    // if potentially unimodular, we combine its computation with that of the i-th support forms for Ind[i]==0
+    // stored in InvSol (transferred to InvGenSelCols later)
+    // if unimodular and all Ind[i] !=0, then nothing is done here
+
+    vector<key_t> Ind0_key;  //contains the indices i as above
+    Ind0_key.reserve(dim-1);
+
+    if(potentially_unimodular)
+        for(i=0;i<dim;i++)
+            if(Indicator[i]==0)
+                Ind0_key.push_back(i);
+    if(!unimodular || Ind0_key.size()>0){
+        for(i=0; i<dim; ++i)  // (uses Gen)
+            Generators[i] = C.Generators[key[i]];
+        if(!unimodular)
+            GenCopy=Generators;
+        if(Ind0_key.size()>0){
+            Matrix<Integer> RSmult(dim,Ind0_key.size());
+            for(i=0;i<Ind0_key.size();i++) // insert unit vectors
+                RSmult[Ind0_key[i]][i]=1;
+            Generators.solve_destructive_Sol(RSmult,GDiag,volume,InvSol);
+            v_abs(GDiag);
+            GDiag_computed=true;
+        }
+        if(!GDiag_computed){
+            Matrix<Integer> RSmult(dim,Ind0_key.size());
+            Generators.solve_destructive_Sol(RSmult,GDiag,volume,InvSol);
+            v_abs(GDiag);
+            GDiag_computed=true;
+        }
+    }
+
+    addMult(volume);
+
+
+    // now we must compute the matrix InvGenSelRows (selected rows of InvGen)
+    // for those i for which Gdiag[i]>1 combined with computation
+    // of Indicator in case of potentially_unimodular==false (uses transpose of Gen)
+
+    vector<key_t> Last_key;
+    Last_key.reserve(dim);
+    if (!unimodular) {
+        for(i=0; i<dim; ++i) {
+            TGenerators.write_column(i,C.Generators[key[i]]);
+            if(GDiag[i]>1)
+                Last_key.push_back(i);
+        }
+
+        size_t RScol;
+        if(potentially_unimodular)
+            RScol=Last_key.size();
+        else
+            RScol=Last_key.size()+1;
+        Matrix<Integer> RSmult(dim,RScol);
+
+        for(i=0;i<Last_key.size();i++) // insert unit vectors
+            RSmult[Last_key[i]][i]=1;
+        if(!potentially_unimodular) // insert order vector if necessary
+            RSmult.write_column(Last_key.size(),C.Order_Vector);
+        TGenerators.solve_destructive_Sol(RSmult,TDiag,volume,Sol);
+                // Sol.print(cout);
+
+        for(i=0;i<Last_key.size();i++) // write solutions as selected rows of InvDen
+            for(j=0;j<dim;j++){
+                InvGenSelRows[Last_key[i]][j]=Sol[j][i]%volume; //makes reduction mod volume easier
+                if(InvGenSelRows[Last_key[i]][j] <0)
+                    InvGenSelRows[Last_key[i]][j]+=volume;
+            }
+        if(!potentially_unimodular) // extract Indicator
+            for (i=0; i<dim; i++)
+                Indicator[i]=Sol[i][Last_key.size()];
+    }
+
+
+        // InvGenSelRows.print(cout);exit(0);
+
+    // if potentially_unimodular==false  it remains to compute support forms for i
+    // with Ind[i]>0 (if there are any)
+
+
+    if(!potentially_unimodular){
+        for(i=0;i<dim;i++)
+            if(Indicator[i]==0)
+                Ind0_key.push_back(i);
+        if(Ind0_key.size()>0){
+            Generators=GenCopy;
+            Matrix<Integer> RSmult(dim,Ind0_key.size());
+            for(i=0;i<Ind0_key.size();i++) // insert unit vectors
+                    RSmult[Ind0_key[i]][i]=1;
+            Generators.solve_destructive_Sol(RSmult,TDiag,volume,InvSol);  // keep GDiag from above
+        }
+    }
+
+    if(Ind0_key.size()>0){
+        #pragma omp atomic
+        NonDecided++;
+        #pragma omp atomic
+        NonDecidedHyp+=Ind0_key.size();
+    }
+
+    for(i=0;i<Ind0_key.size();i++) // insert selected columns of InvGen at right place
+        for(j=0;j<dim;j++){
+            InvGenSelCols[j][Ind0_key[i]]=InvSol[j][i];
+        }
+
+    // prepare h-vector if necessary
+    if (C.do_h_vector) {
+        for (i=0; i<hvector.size(); i++) {
+            hvector[i]=0;
+        }
+    }
+
+    Integer Test;
+    size_t Deg=0;
+    for(i=0;i<dim;i++)
+        Excluded[i]=false;
+    for(i=0;i<dim;i++){ // excluded facets and degree shift for 0-vector
+        Test=Indicator[i];
+        if(Test<0)
+        {
+            Excluded[i]=true; // the facet opposite to vertex i is excluded
+            if(C.do_h_vector)
+                Deg += gen_degrees[i];
+        }
+        if(Test==0){  // Order_Vector in facet, now lexicographic decision
+            for(j=0;j<dim;j++){
+                if(InvGenSelCols[j][i]<0){ // COLUMNS of InvGen give supp hyps
+                    Excluded[i]=true;
+                    if(C.do_h_vector)
+                        Deg += gen_degrees[i];
+                    break;
+                }
+                if(InvGenSelCols[j][i]>0) // facet included
+                    break;
+            }
+        }
+    }
+
+    if(C.do_h_vector) {
+        // count the 0-vector in h-vector with the right shift
+        hvector[Deg]++;
+    }
+    Matrix<Integer>* StanleyMat=&GenCopy; //just to initialize it and make GCC happy
+
+    if(C.do_Stanley_dec){
+        STANLEYDATA<Integer> SimplStanley;
+        SimplStanley.key=key;
+        Matrix<Integer> offsets(explicit_cast_to_long(volume),dim);
+        SimplStanley.offsets=offsets;
+        #pragma omp critical(STANLEY)
+        {
+        C.StanleyDec.push_back(SimplStanley);
+        StanleyMat= &C.StanleyDec.back().offsets;
+        }
+        for(i=0;i<dim;++i)
+            if(Excluded[i])
+                (*StanleyMat)[0][i]=volume;
+    }
+
+    size_t StanIndex=1;  // 0 already filled if necessary
+
+    if (unimodular) { // do_h_vector==true automatically here
+        Hilbert_Series.add(hvector,gen_degrees);
+        return volume;
+    } // the unimodular case has been taken care of
+
+
+    // now we create and evaluate the points in par
+    Integer norm;
+    Integer normG;
+    list < vector<Integer> > Candidates;
+    typename list <vector <Integer> >::iterator c;
+    size_t last;
+    vector<Integer> point(dim,0);
+
+    Matrix<Integer> elements(dim,dim); //all 0 matrix
+    vector<Integer> help;
+
+
+    //now we need to create the candidates
+    while (true) {
+        last = dim;
+        for (int k = dim-1; k >= 0; k--) {
+            if (point[k] < GDiag[k]-1) {
+                last = k;
+                break;
+            }
+        }
+        if (last >= dim) {
+            break;
+        }
+
+        point[last]++;
+        v_add_to_mod(elements[last], InvGenSelRows[last], volume);
+
+        for (i = last+1; i <dim; i++) {
+            point[i]=0;
+            elements[i] = elements[last];
+        }
+
+        norm=0; // norm is just the sum of coefficients, = volume*degree if homogenous
+                // it is used to sort the Hilbert basis candidates
+        normG = 0;  // the degree according to the grading
+        for (i = 0; i < dim; i++) {  // since generators have degree 1
+            norm+=elements[last][i];
+            if(C.do_h_vector || C.do_deg1_elements) {
+                normG += elements[last][i]*gen_degrees[i];
+            }
+        }
+
+        size_t Deg=0;
+        if(C.do_h_vector){
+            Deg = explicit_cast_to_long<Integer>(normG/volume);
+            for(i=0;i<dim;i++) { // take care of excluded facets and increase degree when necessary
+                if(elements[last][i]==0 && Excluded[i]) {
+                    Deg += gen_degrees[i];
+                }
+            }
+
+            //count point in the h-vector
+            hvector[Deg]++;
+        }
+
+        if(C.do_Stanley_dec){
+            (*StanleyMat)[StanIndex]=elements[last];
+            for(i=0;i<dim;i++)
+                if(Excluded[i]&&elements[last][i]==0)
+                    (*StanleyMat)[StanIndex][i]+=volume;
+            StanIndex++;
+        }
+
+        // the case of Hilbert bases and degree 1 elements, only added if height >=2
+//        if (!C.do_partial_triangulation || s.height >= 2) {
+            if (C.do_Hilbert_basis) {
+                Candidates.push_back(v_merge(elements[last],norm));
+                continue;
+            }
+            if(C.do_deg1_elements && normG==volume && !isDuplicate(elements[last])) {
+                help=GenCopy.VxM(elements[last]);
+                v_scalar_division(help,volume);
+                Collected_Elements.push_back(help);
+                collected_elements_size++;
+            }
+//        }
+    }
+
+
+    if(C.do_h_vector) {
+        // #pragma omp critical(HSERIES)
+        Hilbert_Series.add(hvector,gen_degrees);
+    }
+
+
+    if(!C.do_Hilbert_basis)
+        return volume;  // no local reduction in this case
+
+    Candidates.sort(compare_last<Integer>);
+    typename list <vector <Integer> >::iterator cand=Candidates.begin();
+    while(cand != Candidates.end()) {
+        if (is_reducible_interior(*cand)) // erase the candidate
+            cand = Candidates.erase(cand);
+        else // move it to the Hilbert basis
+            Hilbert_Basis.splice(Hilbert_Basis.end(), Candidates, cand++);
+    }
+
+    //inverse transformation
+    //some test for arithmetic overflow may be implemented here
+
+    typename list< vector<Integer> >::iterator jj = Hilbert_Basis.begin();
+    while (jj != Hilbert_Basis.end()) {
+        if (isDuplicate(*jj)) { //delete the element
+            jj = Hilbert_Basis.erase(jj);
+        } else {
+            jj->pop_back(); //remove the norm entry at the end
+            *jj = GenCopy.VxM(*jj);
+            v_scalar_division(*jj,volume);
+            ++jj;
+            collected_elements_size++;
+        }
+    }
+
+    Collected_Elements.splice(Collected_Elements.end(),Hilbert_Basis);
+
+    return volume;
 }
 
 //---------------------------------------------------------------------------
 
 template<typename Integer>
-Matrix<Integer> Simplex<Integer>::read_hilbert_basis()const{
-	size_t s= Hilbert_Basis.size();
-	Matrix<Integer> M(s,dim);
-	size_t i=1;
-	typename list< vector<Integer> >::const_iterator l;
-	for (l =Hilbert_Basis.begin(); l != Hilbert_Basis.end(); l++) {
-		M.write(i,(*l));
-		i++;
-	}
-	return M;
+bool SimplexEvaluator<Integer>::isDuplicate(const vector<Integer>& cand) const {
+    for (size_t i=0; i<dim; i++)
+        if (cand[i]==0 && Excluded[i])
+            return true;
+    return false;
 }
 
 //---------------------------------------------------------------------------
 
 template<typename Integer>
-list< vector<Integer> > Simplex<Integer>::read_ht1_elements()const{
-	list< vector<Integer> > HE=Ht1_Elements;
-	return HE;
+void SimplexEvaluator<Integer>::addMult(const Integer& volume) {
+    if (volume==0) throw volume;
+    det_sum += volume;
+    if (!C_ptr->isComputed(ConeProperty::Grading))
+        return;
+    if (C_ptr->deg1_triangulation) {
+        mult_sum += to_mpz(volume);
+    } else {
+        mpz_class deg_prod=gen_degrees[0];
+        for (size_t i=1; i<dim; i++) {
+            deg_prod *= gen_degrees[i];
+        }
+        mpq_class mult = to_mpz(volume);
+        mult /= deg_prod;
+        mult_sum += mult;
+    }
 }
 
 //---------------------------------------------------------------------------
 
 template<typename Integer>
-const list< vector<Integer> >& Simplex<Integer>::acces_hilbert_basis()const{
-	const list< vector<Integer> >& HB=Hilbert_Basis;
-	return HB;
+bool SimplexEvaluator<Integer>::is_reducible_interior(const vector< Integer >& new_element){
+    // the norm is at position dim
+    if (new_element[dim]==0) {
+        return true; // new_element=0
+    }
+    else {
+        size_t i,c=0;
+        typename list< vector<Integer> >::iterator j;
+        for (j =Hilbert_Basis.begin(); j != Hilbert_Basis.end(); ++j) {
+            if (new_element[dim]<2*(*j)[dim]) {
+                break; //new_element is not reducible;
+            }
+            else {
+                if ((*j)[c]<=new_element[c]){
+                    for (i = 0; i < dim; i++) {
+                        if ((*j)[i]>new_element[i]){
+                            c=i;
+                            break;
+                        }
+                    }
+                    if (i==dim) {
+                        // move the reducer to the begin
+                        Hilbert_Basis.splice(Hilbert_Basis.begin(), Hilbert_Basis, j);
+                        return true;
+                    }
+                    //new_element is not in the Hilbert Basis
+                }
+            }
+        }
+        return false;
+    }
 }
 
 //---------------------------------------------------------------------------
 
+
 template<typename Integer>
-vector<Integer> Simplex<Integer>::read_h_vector() const{
-	return H_Vector;
+void SimplexEvaluator<Integer>::transfer_candidates() {
+    if ( (C_ptr->do_deg1_elements || C_ptr->do_Hilbert_basis)
+       && collected_elements_size > 0 ) {
+        #pragma omp critical(CANDIDATES)
+        C_ptr->Candidates.splice(C_ptr->Candidates.begin(),Collected_Elements);
+        #pragma omp atomic
+        C_ptr->CandidatesSize += collected_elements_size;
+        collected_elements_size = 0;
+    }
 }
 
-//---------------------------------------------------------------------------
-
 template<typename Integer>
-size_t Simplex<Integer>::read_hilbert_basis_size() const{
-	return Hilbert_Basis.size();
+Integer SimplexEvaluator<Integer>::getDetSum() const {
+    return det_sum;
 }
 
-//---------------------------------------------------------------------------
-
 template<typename Integer>
-int Simplex<Integer>::compare(const Simplex<Integer>& S) const{
-	return v_difference_ordered_fast(key,S.key);
+mpq_class SimplexEvaluator<Integer>::getMultiplicitySum() const {
+    return mult_sum;
 }
 
-//---------------------------------------------------------------------------
-
 template<typename Integer>
-void Simplex<Integer>::initialize(const Matrix<Integer>& Map){
-	assert(status != "non initialized");
-
-	if (status=="key initialized") {
-		Generators=Map.submatrix(key);
-		vector< Integer > help(dim);
-		Support_Hyperplanes=Invert(Generators, help, volume); //test for arithmetic
-		//overflow performed
-		diagonal=v_abs(help);
-		Support_Hyperplanes=Support_Hyperplanes.transpose();
-		multiplicators=Support_Hyperplanes.make_prime();
-		Hilbert_Basis=list< vector<Integer> >();
-		Ht1_Elements=list< vector<Integer> >();
-		H_Vector=vector<Integer>(dim,0);
-		status="initialized";
-	}
-}
-
-//---------------------------------------------------------------------------
-
-//TODO remove
-size_t NrInvert=0;
-
-/* evaluates a simplex in regard to all data, key must be initialized */
-template<typename Integer>
-Integer Simplex<Integer>::evaluate(Full_Cone<Integer>& C, const Integer& height) {
- 
-	Generators=C.Generators.submatrix(key);
-	H_Vector=vector<Integer>(dim,0);
-	
-	bool unimodular=false;
-	vector<Integer> Indicator;
-	if(height >=-1 || (!C.do_h_vector && !C.do_Hilbert_basis && !C.do_ht1_elements)) {
-		Matrix<Integer> RS(1,dim);  // (transpose of) right hand side
-		RS.write(1,C.Order_Vector); // to hold order vector
-		RS=RS.transpose();
-		vector<Integer> diag(dim);
-		Matrix<Integer> Sol=Generators.transpose().solve_destructiv(RS,diag,volume);
-		Indicator=Sol.transpose().read(1);
-		if(volume==1)
-			unimodular=true;
-	}
-			
-	// in this cases we had to add the volume and nothing else is to be done
-	if ( (!C.do_h_vector && !C.do_Hilbert_basis && !C.do_ht1_elements) 
-	  || (unimodular && !C.do_h_vector) ) {
-		#pragma omp critical(MULTIPLICITY)
-		C.multiplicity+=volume;
-		return volume;
-	}
-
-	bool decided=true;
-	size_t i,j;
-	size_t Deg=0;        // Deg is the degree in which the 0 vector is counted
-	if(unimodular){   // it remains to count the 0-vector in the h-vector 
-		for(i=0;i<dim;i++){
-			if(Indicator[i]<0)   // facet opposite of vertex i excluded
-				Deg++;
-			if(Indicator[i]==0){ // Order_Vector in facet, to be decided later
-				decided=false;
-				break;
-			}
-		}
-		if(decided){
-			#pragma omp critical(HVECTOR) //only change in the H-vector, so done directliy
-			C.H_Vector[Deg]++;    // Done, provided decided==true
-			#pragma omp critical(MULTIPLICITY)
-			C.multiplicity+=volume;
-			return volume;               // if not we need lex decision, see below
-		}
-	} // We have tried to take care of the unimodular case WITHOUT the matrix inversion
-
-	#pragma omp atomic
-	NrInvert++;
-	vector< Integer > help(dim);
-	Matrix<Integer> InvGen=Invert(Generators, help, volume);
-	diagonal=v_abs(help);
-	vector<bool> Excluded(dim,false);
-	Integer Test; 
-	
-	if(C.do_h_vector){
-		Deg=0;
-		if (Indicator.size() != dim) { //it hasn't been computed yet
-			Indicator = InvGen.VxM(C.Order_Vector);
-		}
-		for(i=0;i<dim;i++) // register excluded facets and degree shift for 0-vector
-		{
-			Test=Indicator[i];
-			if(Test<0)
-			{
-				Excluded[i]=true; // the facet opposite to vertex i is excluded
-				Deg++;
-			}
-			if(Test==0){  // Order_Vector in facet, now lexicographic decision
-				for(j=0;j<dim;j++){
-					if(InvGen[j][i]<0){ // COLUMNS of InvGen give supp hyps
-						Excluded[i]=true;
-						Deg++;
-						break;
-					}
-					if(InvGen[j][i]>0) // facet included
-						break;
-				}
-			}
-		}
-		H_Vector[Deg]++; // now the 0 vector is finally taken care of
-		if(unimodular){     // and in the unimodular case nothing left to be done
-			#pragma omp critical(HVECTOR)
-			C.H_Vector[Deg]++; 
-			#pragma omp critical(MULTIPLICITY)
-			C.multiplicity+=volume;
-			return volume;
-		}
-	}
-	
-	vector < Integer > norm(1);
-	list < vector<Integer> > Candidates;
-	typename list <vector <Integer> >::iterator c;
-	size_t last;
-	vector<Integer> point(dim,0);
- 
-	Matrix<Integer> elements(dim,dim); //all 0 matrix
-	Matrix<Integer> V = InvGen; //Support_Hyperplanes.multiply_rows(multiplicators).transpose();
-	V.reduction_modulo(volume); //makes reduction when adding V easier
-
-	while (1){
-		last = dim;
-		for (int k = dim-1; k >= 0; k--) {
-			if (point[k] < diagonal[k]-1) {
-				last = k;
-				break;
-			}
-		}
-		if (last >= dim) {
-			break;
-		}
-
-		point[last]++;
-		elements[last] = v_add(elements[last], V[last]); //TODO angepasste operation
-		v_reduction_modulo(elements[last],volume);       //für beide schritte schreiben
-
-		for (i = last+1; i <dim; i++) {
-			point[i]=0;
-			elements[i] = elements[last];
-		}
-		
-		norm[0]=0; // norm[0] is just the sum of coefficients, = volume*degree
-		for (i = 0; i < dim; i++) {  // since generators have degree 1
-			norm[0]+=elements[last][i];
-		}
-
-		if(C.do_h_vector){
-			Deg=explicit_cast_to_long<Integer>(norm[0]/volume); // basic degree, here we use that all generators have degree 1            
-			for(i=0;i<dim;i++)  // take care of excluded facets and increase degree where necessary
-				if(elements[last][i]==0 && Excluded[i])
-					Deg++;
-			
-			H_Vector[Deg]++; // count element in h-vector        
-		}
-		
-		if(C.do_ht1_elements && norm[0]==volume) // found degree 1 element
-		{        
-			help=Generators.VxM(elements[last]);
-			v_scalar_division(help,volume);
-			Ht1_Elements.push_back(help);
-			continue;
-		} 
-		
-		// now we are left with the case of Hilbert bases
-
-		if(C.do_Hilbert_basis){
-			Candidates.push_back(v_merge(norm,elements[last]));
-		}
-	}
-	
-	if(C.do_h_vector) {
-		for(size_t i=0; i<dim; i++) {
-			if(H_Vector[i]!=0) {
-				#pragma omp critical(HVECTOR)
-				C.H_Vector[i]+=H_Vector[i];
-			}
-		}
-	}
-	
-	if(C.do_ht1_elements) {
-		#pragma omp critical(HT1ELEMENTS)
-		C.Ht1_Elements.splice(C.Ht1_Elements.begin(),Ht1_Elements);
-	}
-	
-	if(!C.do_Hilbert_basis) {
-		#pragma omp critical(MULTIPLICITY)
-		C.multiplicity+=volume;    
-		return volume;
-	}
-
-	Candidates.sort();        
-	typename list <vector <Integer> >::iterator cand=Candidates.begin();
-	while(cand != Candidates.end()) {
-		reduce_and_insert_interior((*cand));
-		Candidates.pop_front();
-		cand=Candidates.begin();
-	}
-
-	//inverse transformation
-	//some test for arithmetic overflow may be implemented here
-
-	l_cut_front(Hilbert_Basis,dim);
-	typename list< vector<Integer> >::iterator jj;
-	for (jj =Hilbert_Basis.begin(); jj != Hilbert_Basis.end(); jj++) {
-		*jj=Generators.VxM(*jj);
-		v_scalar_division(*jj,volume);
-	} 
-	
-	#pragma omp critical(CANDIDATES)
-	C.Candidates.splice(C.Candidates.begin(),Hilbert_Basis);
-	
-	#pragma omp critical(MULTIPLICITY)
-	C.multiplicity+=volume;
-	return volume; 
+const HilbertSeries& SimplexEvaluator<Integer>::getHilbertSeriesSum() const {
+    return Hilbert_Series;
 }
 
 } /* end namespace */
