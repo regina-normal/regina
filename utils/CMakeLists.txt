@@ -3,7 +3,15 @@ include_directories(${ENGINE_INCLUDES})
 include_directories(${CMAKE_BINARY_DIR}/engine)
 include_directories(${POPT_INCLUDE_DIR})
 
-set(UTILS regconcat regconvert regfiledump regfiletype sigcensus tricensus trisetcmp)
+set(UTILS
+  regconcat
+  regconvert
+  regfiledump
+  regfiletype
+  sigcensus
+  tricensus
+  trisetcmp
+  )
 
 foreach(UTIL ${UTILS})
   string(REGEX REPLACE _ - SOURCE_FILE ${UTIL})

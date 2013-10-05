@@ -1,8 +1,65 @@
 # Engine
 
-SET ( FILES dim2tricreator dim2trigluings dim2triskeleton dim2triui eltmovedialog facetgraphtab gaprunner nanglestructurecreator nanglestructureui ncompatcanvas ncontainerui nnormalsurfacecreator nnormalsurfaceui npdfui nscriptui nsurfacecompatui nsurfacecoordinateui nsurfacefiltercomb nsurfacefiltercreator nsurfacefilterprop nsurfacematchingui nsurfacesummaryui ntextui ntrialgebra ntriangulationcreator ntriangulationui ntricomposition ntrigluings ntriskeleton ntrisurfaces skeletonwindow )
+SET ( FILES
+  dim2tricreator
+  dim2trigluings
+  dim2triskeleton
+  dim2triui
+  eltmovedialog
+  facetgraphtab
+  gaprunner
+  nanglestructurecreator
+  nanglestructureui
+  ncompatcanvas
+  ncontainerui
+  nnormalsurfacecreator
+  nnormalsurfaceui
+  npdfui
+  nscriptui
+  nsurfacecompatui
+  nsurfacecoordinateui
+  nsurfacefiltercomb
+  nsurfacefiltercreator
+  nsurfacefilterprop
+  nsurfacematchingui
+  nsurfacesummaryui
+  ntextui
+  ntrialgebra
+  ntriangulationcreator
+  ntriangulationui
+  ntricomposition
+  ntrigluings
+  ntriskeleton
+  ntrisurfaces
+  skeletonwindow
+  )
 
-SET ( MOC_FILES dim2trigluings.h dim2triskeleton.h dim2triui.h facetgraphtab.h nanglestructureui.h gaprunner.h eltmovedialog.h ncompatcanvas.h nnormalsurfaceui.h nscriptui.h nsurfacecompatui.h nsurfacecoordinateui.h nsurfacefiltercomb.h nsurfacefilterprop.h nsurfacematchingui.h nsurfacesummaryui.h ntextui.h ntrialgebra.h ntriangulationui.h ntricomposition.h ntrigluings.h ntriskeleton.h ntrisurfaces.h skeletonwindow.h )
+SET ( MOC_FILES
+  dim2trigluings.h
+  dim2triskeleton.h
+  dim2triui.h
+  facetgraphtab.h
+  nanglestructureui.h
+  gaprunner.h
+  eltmovedialog.h
+  ncompatcanvas.h
+  nnormalsurfaceui.h
+  nscriptui.h
+  nsurfacecompatui.h
+  nsurfacecoordinateui.h
+  nsurfacefiltercomb.h
+  nsurfacefilterprop.h
+  nsurfacematchingui.h
+  nsurfacesummaryui.h
+  ntextui.h
+  ntrialgebra.h
+  ntriangulationui.h
+  ntricomposition.h
+  ntrigluings.h
+  ntriskeleton.h
+  ntrisurfaces.h
+  skeletonwindow.h
+  )
 
 IF (NOT EXCLUDE_SNAPPEA)
   SET (FILES ${FILES} ntrisnappea snappeacomponents)

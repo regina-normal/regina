@@ -1,7 +1,21 @@
 # triangulation 
 
 # Files to compile
-SET ( FILES nboundarycomponent ncomponent nedge nexampletriangulation nface nfacepair nhomologicaldata nisomorphism ntetface ntetrahedron ntriangulation nvertex pytriangulation)
+SET ( FILES
+  nboundarycomponent
+  ncomponent
+  nedge
+  nexampletriangulation
+  nface
+  nfacepair
+  nhomologicaldata
+  nisomorphism
+  ntetface
+  ntetrahedron
+  ntriangulation
+  nvertex
+  pytriangulation
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

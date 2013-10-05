@@ -1,7 +1,13 @@
 # triangulation
 
 # Files to compile
-SET ( FILES connectedsumdecomp eltmoves nhomologicaldata nisomorphism ntriangulation )
+SET ( FILES
+  connectedsumdecomp
+  eltmoves
+  nhomologicaldata
+  nisomorphism
+  ntriangulation
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
