@@ -138,60 +138,13 @@ namespace {
     }
 }
 
-// this is a local class, meant only for use in the isoSig routine below. 
-// not to be available outside of this file. 
-struct cPerm {
- std::string compStr;
- Dim4Isomorphism* compIsoPtr; // these will be null if not requested. 
- unsigned long compIdx; // which component is this originally? 
-
- cPerm(); // default constructor
- ~cPerm(); // default destructor
- bool operator<(const cPerm &oth) const;
- void swap( cPerm &oth ); // swap contents
- };
-
-cPerm::cPerm() // default constructor
- {
-  compStr = std::string();
-  compIsoPtr = NULL; 
-  compIdx = 0; 
- }
-
-cPerm::~cPerm() // default destructor
- {
-  if ( compIsoPtr != NULL ) delete compIsoPtr;
- }
-
-bool cPerm::operator<(const cPerm &oth) const
- { // we only sort on the string. 
-  if (compStr < oth.compStr) return true; else return false; 
- } 
-
-void cPerm::swap( cPerm &oth ) 
- {
-  compStr.swap(oth.compStr);
-  Dim4Isomorphism* tempPtr( compIsoPtr ); 
-  compIsoPtr = oth.compIsoPtr; 
-  oth.compIsoPtr = tempPtr;
-  unsigned long tLong ( compIdx ); 
-  compIdx = oth.compIdx; 
-  oth.compIdx = tLong;
- }
-
-std::string Dim4Triangulation::isoSig( Dim4Isomorphism* toIsoSigLabel ) const {
+std::string Dim4Triangulation::isoSig() const {
     if (pentachora_.empty()) {
         char c[2];
         c[0] = SCHAR(0);
         c[1] = 0;
         return c;
     }
-
-    // this set permFlag if we are building toISoSigLabel
-    bool permFlag( false );
-    if ( toIsoSigLabel ) if ( getNumberOfPentachora() == 
-                              toIsoSigLabel->getSourceSimplices() ) 
-        permFlag = true; 
 
     // The triangulation is non-empty.  Get a signature string for each
     // connected component.
@@ -200,76 +153,33 @@ std::string Dim4Triangulation::isoSig( Dim4Isomorphism* toIsoSigLabel ) const {
     unsigned cPent;
     unsigned pent, perm;
     std::string curr;
-    Dim4Isomorphism* curri(NULL);
 
-    cPerm* comp = new cPerm[getNumberOfComponents()];
-
+    std::string* comp = new std::string[getNumberOfComponents()];
     for (it = components_.begin(), i = 0; it != components_.end(); ++it, ++i) {
         cPent = (*it)->getNumberOfPentachora();
+
         for (pent = 0; pent < (*it)->getNumberOfPentachora(); ++pent)
             for (perm = 0; perm < 120; ++perm) {
-                  if (permFlag) curri = new Dim4Isomorphism( 
-                        (*it)->getNumberOfPentachora() );
-                    else curri = NULL;
-                  curr = isoSigInternal(
+                curr = isoSigInternal(
                     (*it)->getPentachoron(pent)->markedIndex(),
-                    NPerm5::orderedS5[perm], curri);
-                  cPerm tLabel;
-                  tLabel.compStr = curr; 
-                  tLabel.compIdx = i; 
-                  tLabel.compIsoPtr = curri;
-
-                  if ((pent == 0 && perm == 0) || (tLabel < comp[i])) 
-                    comp[i].swap(tLabel);                         
+                    NPerm5::orderedS5[perm]);
+                if ((pent == 0 && perm == 0) || (curr < comp[i]))
+                    comp[i].swap(curr);
             }
     }
 
-    std::string ans;
     // Pack the components together.
     std::sort(comp, comp + getNumberOfComponents());
-    for (i = 0; i < getNumberOfComponents(); ++i) ans += comp[i].compStr;
 
-    // build the toIsoSigLabel
-    if (permFlag) {
-      // compOrder[i] is the original component index of the 
-      //  i-th canonical/isoSig reconstructed component 
-      std::vector<unsigned long> compOrder( getNumberOfComponents() );
-      for (i=0; i<compOrder.size(); i++) compOrder[ comp[i].compIdx ] = i; 
-
-      // this tells us the number of pentachora in all components of 
-      //  canonical index less than i.
-      std::vector<unsigned long> canPenCount(getNumberOfComponents());
-
-      for (i=0, j=0; i<getNumberOfComponents(); i++ )
-         {
-         canPenCount[i] = j;
-         j+=getComponent( compOrder[i] )->getNumberOfPentachora(); 
-         }
-
-      unsigned long count=0;
-      for (i=0; i<getNumberOfComponents(); i++) // i-th original component
-            // j-th pentachoron of i-th original component
-            // pentachoron j of component i has is sent where in canonical ordering? 
-         for (j=0; j<getComponent(i)->getNumberOfPentachora(); j++, count++) { 
-              toIsoSigLabel->simpImage( count ) = canPenCount[i] + 
-                  comp[ compOrder[i] ].compIsoPtr->simpImage( j ); 
-              // set to its canonical ordering. 
-              toIsoSigLabel->facetPerm( count ) = 
-                comp[ compOrder[i] ].compIsoPtr->facetPerm(j);
-                // component i has canonical component index compOrder[i]
-                // there are canPenCont[i] pentachora before this one in the 
-                // canonical ordering.       
-            }          
-      } // end build of toIsoSigLabel
-
-    // clean up
+    std::string ans;
+    for (i = 0; i < getNumberOfComponents(); ++i)
+        ans += comp[i];
     delete[] comp;
     return ans;
 }
 
 std::string Dim4Triangulation::isoSigInternal(
-        unsigned pent, const NPerm5& vertices,  
-        Dim4Isomorphism* toIsoSigLabel ) const {
+        unsigned pent, const NPerm5& vertices) const {
     // Only process the component that pent belongs to.
 
     // ---------------------------------------------------------------------
@@ -430,16 +340,6 @@ std::string Dim4Triangulation::isoSigInternal(
     for (i = 0; i < joinPos; ++i)
         SAPPEND(ans, joinGluing[i], 2); // Two characters required for 5!=120.
 
-    // only run if we need to define toIsoSigLabel. 
-    if ( toIsoSigLabel ) if ( getNumberOfPentachora() == 
-                              toIsoSigLabel->getSourceSimplices() ) {         
-         // it appears as if we need to fill it out with image and vertexMap. 
-         for (unsigned long i=0; i<getNumberOfPentachora(); i++) {
-           toIsoSigLabel->simpImage(i)=(image[i]);
-           toIsoSigLabel->facetPerm(i)=(vertexMap[i]);
-          }
-        }
-
     // Done!
     delete[] image;
     delete[] vertexMap;
@@ -449,125 +349,6 @@ std::string Dim4Triangulation::isoSigInternal(
     delete[] joinGluing;
 
     return ans;
-}
-
-// Ryan's comment: there's probably a much smarter way to implement this code, but right 
-//  now it's just a stripped-down version of fromIsoSig that takes out all the unneccessary
-//  memory allocation for the Dim4Triangulation.  
-unsigned Dim4Triangulation::pentInIsoSig(const std::string& sig) {
-    const char* c = sig.c_str();
-
-    // Initial check for invalid characters.
-    const char* d;
-    for (d = c; *d; ++d)
-        if (! SVALID(*d))
-            return 0;
-
-    unsigned i, j;
-    unsigned penTot(0);
-    unsigned nPent, nChars;
-    while (*c) {
-        // Read one component at a time.
-        nPent = SVAL(*c++);
-        if (nPent < 63)
-            nChars = 1;
-        else {
-            if (! *c)
-                return 0;
-            nChars = SVAL(*c++);
-            if (! SHASCHARS(c, nChars))
-                return 0;
-            nPent = SREAD(c, nChars);
-            c += nChars;
-        }
-
-        if (nPent == 0) {
-            // Empty component.
-            continue;
-        }
-        // pen total for this component
-        penTot += nPent;
-
-        // Non-empty component; keep going.
-        char* facetAction = new char[5 * nPent + 2];
-        unsigned nFacets = 0;
-        unsigned facetPos = 0;
-        unsigned nJoins = 0;
-
-        for ( ; nFacets < 5 * nPent; facetPos += 3) {
-            if (! *c) {
-                delete[] facetAction;
-                return 0;
-            }
-            SREADTRITS(*c++, facetAction + facetPos);
-            for (i = 0; i < 3; ++i) {
-                // If we're already finished, make sure the leftover trits
-                // are zero.
-                if (nFacets == 5 * nPent) {
-                    if (facetAction[facetPos + i] != 0) {
-                        delete[] facetAction;
-                        return 0;
-                    }
-                    continue;
-                }
-
-                if (facetAction[facetPos + i] == 0)
-                    ++nFacets;
-                else if (facetAction[facetPos + i] == 1)
-                    nFacets += 2;
-                else if (facetAction[facetPos + i] == 2) {
-                    nFacets += 2;
-                    ++nJoins;
-                } else {
-                    delete[] facetAction;
-                    return 0;
-                }
-                if (nFacets > 5 * nPent) {
-                    delete[] facetAction;
-                    return 0;
-                }
-            }
-        }
-
-        unsigned* joinDest = new unsigned[nJoins + 1];
-        for (i = 0; i < nJoins; ++i) {
-            if (! SHASCHARS(c, nChars)) {
-                delete[] facetAction;
-                delete[] joinDest;
-                return 0;
-            }
-
-            joinDest[i] = SREAD(c, nChars);
-            c += nChars; 
-        }
-
-        unsigned* joinGluing = new unsigned[nJoins + 1];
-        for (i = 0; i < nJoins; ++i) {
-            if (! SHASCHARS(c, 1)) {
-                delete[] facetAction;
-                delete[] joinDest;
-                delete[] joinGluing;
-                return 0;
-            }
-
-            joinGluing[i] = SREAD(c, 2);
-            c += 2; 
-
-            if (joinGluing[i] >= 120) {
-                delete[] facetAction;
-                delete[] joinDest;
-                delete[] joinGluing;
-                return 0;
-            }
-        }
-     // ensure all the pointers are killed
-     delete[] facetAction;
-     delete[] joinDest;
-     delete[] joinGluing;
-
-    } // end the component loop
-
-    return penTot;
 }
 
 Dim4Triangulation* Dim4Triangulation::fromIsoSig(const std::string& sig) {

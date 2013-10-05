@@ -327,9 +327,6 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * Creates a new pentachoron and adds it to this triangulation.
          * The new pentachoron will have an empty description.
          * All five facets of the new pentachoron will be boundary facets.
-         * 
-         * In calls to getPentachora() and getPentachoron(), this
-         * new pentachoron will be the last element of the list. 
          *
          * @return the new pentachoron.
          */
@@ -341,9 +338,6 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * 
          * Here "simplex" refers to a top-dimensional simplex (which for
          * 4-manifold triangulations means a pentachoron).
-         *
-         * In calls to getPentachora() and getPentachoron(), this
-         * new pentachoron will be the last element of the list. 
          * 
          * See newPentachoron() for further information.
          */
@@ -1166,14 +1160,11 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         bool simplifyToLocalMinimum(bool perform = true);
 
-        // prototype for non-implemented move...
-        bool fiveOneMove(Dim4Vertex* vrt, bool check = true, 
-            bool perform = true);
-
         /**
          * Checks the eligibility of and/or performs a 4-2 move
-         * about the given edge.  This involves replacing the four pentachora 
-         * joined at that edge with two pentachora joined along a single facet.
+         * about the given edge.
+         * This involves replacing the four pentachora joined at that
+         * edge with two pentachora joined along a single facet.
          * This can be done iff (i) the edge is valid and non-boundary,
          * (ii) the four pentachora are distinct, and (iii) the pentachora
          * are joined in such a way that the link of the edge is the
@@ -1186,26 +1177,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * (facets, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
-         * 
-         * When applying a Pachner move to a triangulated n-manifold, one is
-         * finding a link of a k-facet of your triangulated n-manifold N
-         * which is combinatorially isomorphic to the link of k-facet in 
-         * the boundary of triangulated (n+1)-simplex.  One then replaces
-         * the link of the k-facet in N with the complement of the link of
-         * k-facet in the boundary of the (n+1)-simplex.  The complement of the
-         * link of the k-facet in the boundary of the (n+1)-simplex is the
-         * link of an (n-k)-facet.  We call the k-facet the attaching facet, 
-         * this is the input to a Pachner move.  The corresponding (n-k)-facet
-         * in the new triangulation is the belt facet (in analogy with surgery). 
-         * Since the link of a k-facet in the boundary of an (n+1)-simplex has 
-         * (n+1-k) top dimensional simplices, the link of the belt (n-k)-facet
-         * has (k+1) top dimensional simplices, so in a Pachner move one swaps
-         * (n+1-k) top dimensional simplices for (k+1), provided k is the dimension
-         * of the input facet.  
          *
-         * In the new triangulation, the belt facet will be: 
-         *      getPentachora().back()->getTetrahedron(4)
-         * 
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
          * \pre The given edge is an edge of this triangulation.
@@ -1237,25 +1209,6 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * any pointers to old skeletal objects (such as the argument \a f)
          * can no longer be used.
          *
-         * When applying a Pachner move to a triangulated n-manifold, one is
-         * finding a link of a k-facet of your triangulated n-manifold N
-         * which is combinatorially isomorphic to the link of k-facet in 
-         * the boundary of triangulated (n+1)-simplex.  One then replaces
-         * the link of the k-facet in N with the complement of the link of
-         * k-facet in the boundary of the (n+1)-simplex.  The complement of the
-         * link of the k-facet in the boundary of the (n+1)-simplex is the
-         * link of an (n-k)-facet.  We call the k-facet the attaching facet, 
-         * this is the input to a Pachner move.  The corresponding (n-k)-facet
-         * in the new triangulation is the belt facet (in analogy with surgery). 
-         * Since the link of a k-facet in the boundary of an (n+1)-simplex has 
-         * (n+1-k) top dimensional simplices, the link of the belt (n-k)-facet
-         * has (k+1) top dimensional simplices, so in a Pachner move one swaps
-         * (n+1-k) top dimensional simplices for (k+1), provided k is the dimension
-         * of the input facet.  
-         *
-         * In the new triangulation, the belt facet will be:
-         *  getPentachora().back()->getTriangle( Dim4Triangle::triangleNumber[0][1][2] )
-         * 
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
          * \pre The given triangle is a triangle of this triangulation.
@@ -1287,25 +1240,6 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * any pointers to old skeletal objects (such as the argument \a f)
          * can no longer be used.
          *
-         * When applying a Pachner move to a triangulated n-manifold, one is
-         * finding a link of a k-facet of your triangulated n-manifold N
-         * which is combinatorially isomorphic to the link of k-facet in 
-         * the boundary of triangulated (n+1)-simplex.  One then replaces
-         * the link of the k-facet in N with the complement of the link of
-         * k-facet in the boundary of the (n+1)-simplex.  The complement of the
-         * link of the k-facet in the boundary of the (n+1)-simplex is the
-         * link of an (n-k)-facet.  We call the k-facet the attaching facet, 
-         * this is the input to a Pachner move.  The corresponding (n-k)-facet
-         * in the new triangulation is the belt facet (in analogy with surgery). 
-         * Since the link of a k-facet in the boundary of an (n+1)-simplex has 
-         * (n+1-k) top dimensional simplices, the link of the belt (n-k)-facet
-         * has (k+1) top dimensional simplices, so in a Pachner move one swaps
-         * (n+1-k) top dimensional simplices for (k+1), provided k is the dimension
-         * of the input facet.  
-         *
-         * In the new triangulation, the belt facet will be:
-         *  getPentachora().back()->getEdge( Dim4Edge::edgeNumber[0][1] )
-         * 
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
          * \pre The given facet is a facet of this triangulation.
@@ -1322,57 +1256,6 @@ class REGINA_API Dim4Triangulation : public NPacket {
          */
         bool twoFourMove(Dim4Tetrahedron* f, bool check = true,
             bool perform = true);
-
-        /**
-         * Checks the eligibility of and/or performs a 1-5 move
-         * about the given facet. 
-         * This involves replacing the one pentachora with five, 
-         * one at each boundary tetrahedron of the original pentachoron.
-         *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
-         *
-         * Note that after performing this move, all skeletal objects
-         * (facets, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a f)
-         * can no longer be used.
-         *
-         * When applying a Pachner move to a triangulated n-manifold, one is
-         * finding a link of a k-facet of your triangulated n-manifold N
-         * which is combinatorially isomorphic to the link of k-facet in 
-         * the boundary of triangulated (n+1)-simplex.  One then replaces
-         * the link of the k-facet in N with the complement of the link of
-         * k-facet in the boundary of the (n+1)-simplex.  The complement of the
-         * link of the k-facet in the boundary of the (n+1)-simplex is the
-         * link of an (n-k)-facet.  We call the k-facet the attaching facet, 
-         * this is the input to a Pachner move.  The corresponding (n-k)-facet
-         * in the new triangulation is the belt facet (in analogy with surgery). 
-         * Since the link of a k-facet in the boundary of an (n+1)-simplex has 
-         * (n+1-k) top dimensional simplices, the link of the belt (n-k)-facet
-         * has (k+1) top dimensional simplices, so in a Pachner move one swaps
-         * (n+1-k) top dimensional simplices for (k+1), provided k is the dimension
-         * of the input facet.  
-         *
-         * In the new triangulation, the belt facet will be:
-         *  getPentachora().back()->getVertex( 4 )
-         * 
-         * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
-         * \pre The given facet is a facet of this triangulation.
-         *
-         * @param f the facet about which to perform the move.
-         * @param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
-         * is \c false, the function simply returns \c true.
-         */
-        bool oneFiveMove(Dim4Pentachoron* pen, bool check = true, 
-            bool perform = true);
-
         /**
          * Checks the eligibility of and/or performs a 2-0 move about
          * the given triangle of degree 2.
@@ -1642,9 +1525,9 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * An <i>isomorphism signature</i> is a compact text representation of
          * a triangulation.  Unlike dehydrations for 3-manifold triangulations,
          * an isomorphism signature uniquely determines a triangulation up
-         * to combinatorial isomorphism.  That is, two 4-manifold triangulations 
-         * are combinatorially isomorphic if and only if their isomorphism 
-         * signatures are the same.
+         * to combinatorial isomorphism.  That is, two 4-manifold
+         * triangulations are combinatorially isomorphic if and only if
+         * their isomorphism signatures are the same.
          *
          * The isomorphism signature is constructed entirely of
          * printable characters, and has length proportional to
@@ -1663,16 +1546,9 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * recovered might not be identical to the original, but it will be
          * combinatorially isomorphic.
          *
-         * @param toIsoSigLabel if not a null pointer, it should be initialized
-         * before passing to isoSig  to be the size of getNumberOfPentachora(). 
-         * In this case it will return to be the Dim4Isomorphism so that when
-         * you call toIsoSigLabel.apply( this ) the returned triangulation is
-         * combinatorially identical to the result of 
-         * Dim4Triangulation::fromIsoSig( this->isoSig() )
-         *
          * @return the isomorphism signature of this triangulation.
          */
-        std::string isoSig( Dim4Isomorphism* toIsoSigLabel=NULL ) const;
+        std::string isoSig() const;
         /**
          * Recovers a full triangulation from an isomorphism signature.
          * See isoSig() for more information on isomorphism signatures.
@@ -1693,13 +1569,6 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * isomorphism signature.
          */
         static Dim4Triangulation* fromIsoSig(const std::string& signature);
-
-        /**
-         *  Returns the number of pentachora in the triangulation corresponding
-         * to this isoSig, without building the triangulation. 
-         */
-        static unsigned pentInIsoSig(const std::string& sig);
-
         /**
          * Inserts into this triangulation a set of pentachora and their
          * gluings as described by the given integer arrays.
@@ -1936,8 +1805,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * given pentachoron.
          * @return the candidate isomorphism signature.
          */
-        std::string isoSigInternal(unsigned pent, const NPerm5& vertices,
-            Dim4Isomorphism* toIsoSigLabel=NULL) const;
+        std::string isoSigInternal(unsigned pent, const NPerm5& vertices) const;
 
     friend class regina::Dim4Pentachoron;
     friend class regina::NXMLDim4TriangulationReader;

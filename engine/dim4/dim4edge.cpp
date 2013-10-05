@@ -33,9 +33,6 @@
 /* end stub */
 
 #include "dim4/dim4edge.h"
-#include "dim4/dim4isomorphism.h"
-#include "dim2/dim2triangulation.h"
-#include <sstream>
 
 namespace regina {
 
@@ -70,57 +67,6 @@ const NPerm5 Dim4Edge::ordering[10] = {
     NPerm5(2, 4, 0, 1, 3),
     NPerm5(3, 4, 0, 1, 2)
 };
-
-// TODO: have a pass-by-reference Dim4Isomorphism that describes
-//       how the link is sitting in the Dim4Triangulation. 
-std::auto_ptr< Dim2Triangulation > Dim4Edge::buildLink(Dim4Isomorphism* inc) const
-{
-    std::auto_ptr< Dim2Triangulation > retval ( new Dim2Triangulation );
-    for (unsigned long i=0; i<getNumberOfEmbeddings(); i++)
-       {
-        Dim2Triangle* tTri( retval->newTriangle() );
-        std::stringstream temp;
-        Dim4Pentachoron* pen( getEmbedding(i).getPentachoron() );
-        temp << pen->getTriangulation()->pentachoronIndex( pen );
-        temp << " " << getEmbedding(i).getEdge();
-        tTri->setDescription( temp.str() );        
-       }     
-    for (unsigned long i=0; i<getNumberOfEmbeddings(); i++) {
-       const Dim4EdgeEmbedding eEmb( getEmbedding(i) );
-       const NPerm5 edgInc( eEmb.getVertices() );
-
-       for (unsigned long j=2; j<5; j++)
-            if ( !(eEmb.getPentachoron()->getTetrahedron(edgInc[j])->isBoundary()) && 
-               (retval->getTriangle(i)->adjacentTriangle(j-2)==NULL) ) { 
-          NPerm5 penGlue( eEmb.getPentachoron()->adjacentGluing(edgInc[j]) );
-
-          const Dim4EdgeEmbedding adjEdjInc( const_cast< Dim4Pentachoron* >
-            (eEmb.getPentachoron()->adjacentPentachoron(edgInc[j])), 
-             Dim4Edge::edgeNumber[penGlue[edgInc[0]]][penGlue[edgInc[1]]]);
-          // lets lookup adjEdjInc in emb_
-          unsigned long adjeEmbIndx = find(emb_.begin(), emb_.end(), 
-                adjEdjInc) - emb_.begin();
-          NPerm5 incTrans( 
-            adjEdjInc.getVertices().inverse() * penGlue * edgInc );
-          NPerm3 tPerm( incTrans[2]-2, incTrans[3]-2, incTrans[4]-2 );
-          // which is the target triangle 
-          retval->getTriangle(i)->joinTo(j-2, 
-                retval->getTriangle(adjeEmbIndx), tPerm);
-        }
-     }
-
-    if ( (inc != NULL) ? (inc->getSourcePentachora() == retval->getNumberOfTriangles()) : false )
-      for (unsigned long j=0; j<getNumberOfEmbeddings(); j++)
-       { // it will be set up so that 0 and 1 go to the edge vertices in the pentachora
-         // 2,3,4 will go to the triangle opposite. 
-         Dim4Pentachoron* pen( getEmbedding(j).getPentachoron() );
-         inc->pentImage(j) = pen->getTriangulation()->pentachoronIndex( pen );
-         inc->facetPerm(j) = getEmbedding(j).getVertices();
-       }
-
-    return retval;
-}
-
 
 } // namespace regina
 
