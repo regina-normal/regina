@@ -32,17 +32,40 @@
 
 /* end stub */
 
-void addNCensus();
-void addNFacePairing();
-void addDim2EdgePairing();
-void addDim4Census();
-void addDim4FacetPairing();
+#include <boost/python.hpp>
+#include "triangulation/nfacetspec.h"
 
-void addCensus() {
-    addNCensus();
-    addNFacePairing();
-    addDim2EdgePairing();
-    addDim4Census();
-    addDim4FacetPairing();
+using namespace boost::python;
+using regina::Dim4PentFacet;
+
+namespace {
+    Dim4PentFacet pentfacet_inc_operator(Dim4PentFacet& p) {
+        return p++;
+    }
+
+    Dim4PentFacet pentfacet_dec_operator(Dim4PentFacet& p) {
+        return p--;
+    }
+}
+
+void addDim4PentFacet() {
+    class_<Dim4PentFacet>("Dim4PentFacet")
+        .def(init<int, int>())
+        .def(init<const Dim4PentFacet&>())
+        .def_readwrite("simp", &Dim4PentFacet::simp)
+        .def_readwrite("facet", &Dim4PentFacet::facet)
+        .def("isBoundary", &Dim4PentFacet::isBoundary)
+        .def("isBeforeStart", &Dim4PentFacet::isBeforeStart)
+        .def("isPastEnd", &Dim4PentFacet::isPastEnd)
+        .def("setFirst", &Dim4PentFacet::setFirst)
+        .def("setBoundary", &Dim4PentFacet::setBoundary)
+        .def("setBeforeStart", &Dim4PentFacet::setBeforeStart)
+        .def("setPastEnd", &Dim4PentFacet::setPastEnd)
+        .def("inc", pentfacet_inc_operator)
+        .def("dec", pentfacet_dec_operator)
+        .def(self == self)
+        .def(self < self)
+        .def(self <= self)
+    ;
 }
 

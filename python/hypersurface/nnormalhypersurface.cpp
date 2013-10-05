@@ -32,17 +32,53 @@
 
 /* end stub */
 
-void addNCensus();
-void addNFacePairing();
-void addDim2EdgePairing();
-void addDim4Census();
-void addDim4FacetPairing();
+#include <boost/python.hpp>
+#include "dim4/dim4triangulation.h"
+#include "hypersurface/nnormalhypersurface.h"
+#include "triangulation/ntriangulation.h"
 
-void addCensus() {
-    addNCensus();
-    addNFacePairing();
-    addDim2EdgePairing();
-    addDim4Census();
-    addDim4FacetPairing();
+using namespace boost::python;
+using regina::NNormalHypersurface;
+using regina::Dim4Triangulation;
+
+namespace {
+    void writeTextShort_stdio(const NNormalHypersurface& s) {
+        s.writeTextShort(std::cout);
+    }
+    void writeRawVector_stdio(const NNormalHypersurface& s) {
+        s.writeRawVector(std::cout);
+    }
+}
+
+void addNNormalHypersurface() {
+    class_<NNormalHypersurface, bases<regina::ShareableObject>,
+            std::auto_ptr<NNormalHypersurface>, boost::noncopyable>
+            ("NNormalHypersurface", no_init)
+        .def("clone", &NNormalHypersurface::clone,
+            return_value_policy<manage_new_object>())
+        .def("getTetrahedronCoord", &NNormalHypersurface::getTetrahedronCoord)
+        .def("getPrismCoord", &NNormalHypersurface::getPrismCoord)
+        .def("getEdgeWeight", &NNormalHypersurface::getEdgeWeight)
+        .def("getNumberOfCoords", &NNormalHypersurface::getNumberOfCoords)
+        .def("getTriangulation", &NNormalHypersurface::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("getName", &NNormalHypersurface::getName,
+            return_value_policy<return_by_value>())
+        .def("setName", &NNormalHypersurface::setName)
+        .def("writeTextShort", writeTextShort_stdio)
+        .def("writeRawVector", writeRawVector_stdio)
+        .def("isEmpty", &NNormalHypersurface::isEmpty)
+        .def("isCompact", &NNormalHypersurface::isCompact)
+        .def("hasRealBoundary", &NNormalHypersurface::hasRealBoundary)
+        .def("isVertexLinking", &NNormalHypersurface::isVertexLinking)
+        .def("isVertexLink", &NNormalHypersurface::isVertexLink,
+            return_value_policy<reference_existing_object>())
+        .def("isThinEdgeLink", &NNormalHypersurface::isThinEdgeLink,
+            return_value_policy<reference_existing_object>())
+        .def("triangulate", &NNormalHypersurface::triangulate,
+            return_value_policy<manage_new_object>())
+        .def("sameSurface", &NNormalHypersurface::sameSurface)
+        .def("locallyCompatible", &NNormalHypersurface::locallyCompatible)
+    ;
 }
 

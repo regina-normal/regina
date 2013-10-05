@@ -32,17 +32,42 @@
 
 /* end stub */
 
-void addNCensus();
-void addNFacePairing();
-void addDim2EdgePairing();
-void addDim4Census();
-void addDim4FacetPairing();
+#include <boost/python.hpp>
+#include "dim4/dim4isomorphism.h"
+#include "dim4/dim4triangulation.h"
 
-void addCensus() {
-    addNCensus();
-    addNFacePairing();
-    addDim2EdgePairing();
-    addDim4Census();
-    addDim4FacetPairing();
+using namespace boost::python;
+using regina::Dim4Isomorphism;
+
+namespace {
+    int (Dim4Isomorphism::*simpImage_const)(unsigned) const =
+        &Dim4Isomorphism::simpImage;
+    regina::NPerm5 (Dim4Isomorphism::*facetPerm_const)(unsigned) const =
+        &Dim4Isomorphism::facetPerm;
+
+    regina::Dim4PentFacet Dim4iso_getItem(const Dim4Isomorphism& iso,
+            const regina::Dim4PentFacet& f) {
+        return iso[f];
+    }
+}
+
+void addDim4Isomorphism() {
+    class_<Dim4Isomorphism, bases<regina::ShareableObject>,
+            std::auto_ptr<Dim4Isomorphism>, boost::noncopyable>
+            ("Dim4Isomorphism", init<const Dim4Isomorphism&>())
+        .def("getSourceSimplices", &Dim4Isomorphism::getSourceSimplices)
+        .def("getSourcePentachora", &Dim4Isomorphism::getSourcePentachora)
+        .def("simpImage", simpImage_const)
+        .def("pentImage", simpImage_const)
+        .def("facetPerm", facetPerm_const)
+        .def("__getitem__", Dim4iso_getItem)
+        .def("isIdentity", &Dim4Isomorphism::isIdentity)
+        .def("apply", &Dim4Isomorphism::apply,
+            return_value_policy<manage_new_object>())
+        .def("applyInPlace", &Dim4Isomorphism::applyInPlace)
+        .def("random", &Dim4Isomorphism::random,
+            return_value_policy<manage_new_object>())
+        .staticmethod("random")
+    ;
 }
 

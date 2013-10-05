@@ -32,17 +32,29 @@
 
 /* end stub */
 
-void addNCensus();
-void addNFacePairing();
-void addDim2EdgePairing();
-void addDim4Census();
-void addDim4FacetPairing();
+void addDim4BoundaryComponent();
+void addDim4Component();
+void addDim4Edge();
+void addDim4ExampleTriangulation();
+void addDim4Isomorphism();
+void addDim4Pentachoron();
+void addDim4PentFacet();
+void addDim4Tetrahedron();
+void addDim4Triangle();
+void addDim4Triangulation();
+void addDim4Vertex();
 
-void addCensus() {
-    addNCensus();
-    addNFacePairing();
-    addDim2EdgePairing();
-    addDim4Census();
-    addDim4FacetPairing();
+void addDim4() {
+    addDim4BoundaryComponent();
+    addDim4Component();
+    addDim4Edge();
+    addDim4ExampleTriangulation();
+    addDim4Isomorphism();
+    addDim4Pentachoron();
+    addDim4PentFacet();
+    addDim4Tetrahedron();
+    addDim4Triangle();
+    addDim4Triangulation();
+    addDim4Vertex();
 }
 

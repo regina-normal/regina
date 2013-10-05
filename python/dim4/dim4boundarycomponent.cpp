@@ -32,17 +32,39 @@
 
 /* end stub */
 
-void addNCensus();
-void addNFacePairing();
-void addDim2EdgePairing();
-void addDim4Census();
-void addDim4FacetPairing();
+#include <boost/python.hpp>
+#include "dim4/dim4boundarycomponent.h"
+#include "dim4/dim4edge.h"
+#include "dim4/dim4tetrahedron.h"
+#include "dim4/dim4triangle.h"
+#include "dim4/dim4vertex.h"
+#include "triangulation/ntriangulation.h"
 
-void addCensus() {
-    addNCensus();
-    addNFacePairing();
-    addDim2EdgePairing();
-    addDim4Census();
-    addDim4FacetPairing();
+using namespace boost::python;
+using regina::Dim4BoundaryComponent;
+
+void addDim4BoundaryComponent() {
+    class_<Dim4BoundaryComponent, bases<regina::ShareableObject>,
+            std::auto_ptr<Dim4BoundaryComponent>, boost::noncopyable>
+            ("Dim4BoundaryComponent", no_init)
+        .def("getNumberOfTetrahedra",
+            &Dim4BoundaryComponent::getNumberOfTetrahedra)
+        .def("getNumberOfTriangles",
+            &Dim4BoundaryComponent::getNumberOfTriangles)
+        .def("getNumberOfEdges", &Dim4BoundaryComponent::getNumberOfEdges)
+        .def("getNumberOfVertices", &Dim4BoundaryComponent::getNumberOfVertices)
+        .def("getTetrahedron", &Dim4BoundaryComponent::getTetrahedron,
+            return_value_policy<reference_existing_object>())
+        .def("getTriangle", &Dim4BoundaryComponent::getTriangle,
+            return_value_policy<reference_existing_object>())
+        .def("getEdge", &Dim4BoundaryComponent::getEdge,
+            return_value_policy<reference_existing_object>())
+        .def("getVertex", &Dim4BoundaryComponent::getVertex,
+            return_value_policy<reference_existing_object>())
+        .def("getTriangulation", &Dim4BoundaryComponent::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("isIdeal", &Dim4BoundaryComponent::isIdeal)
+        .def("isInvalidVertex", &Dim4BoundaryComponent::isInvalidVertex)
+    ;
 }
 

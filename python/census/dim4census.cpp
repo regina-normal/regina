@@ -32,17 +32,32 @@
 
 /* end stub */
 
-void addNCensus();
-void addNFacePairing();
-void addDim2EdgePairing();
-void addDim4Census();
-void addDim4FacetPairing();
+#include <boost/python.hpp>
+#include "census/dim4census.h"
+#include "dim4/dim4triangulation.h"
 
-void addCensus() {
-    addNCensus();
-    addNFacePairing();
-    addDim2EdgePairing();
-    addDim4Census();
-    addDim4FacetPairing();
+using namespace boost::python;
+using regina::Dim4Census;
+
+namespace {
+    unsigned long formCensus(regina::NPacket* p, unsigned n,
+            regina::NBoolSet fin, regina::NBoolSet orb, regina::NBoolSet bdr,
+            int bf) {
+        return Dim4Census::formCensus(p, n, fin, orb, bdr, bf);
+    }
+    unsigned long formPartialCensus(const regina::Dim4FacetPairing* fp,
+            regina::NPacket* p, regina::NBoolSet fin, regina::NBoolSet orb) {
+        return Dim4Census::formPartialCensus(fp, p, fin, orb);
+    }
+}
+
+void addDim4Census() {
+    scope s = class_<Dim4Census, std::auto_ptr<Dim4Census>,
+            boost::noncopyable>("Dim4Census", no_init)
+        .def("formCensus", formCensus)
+        .def("formPartialCensus", formPartialCensus)
+        .staticmethod("formCensus")
+        .staticmethod("formPartialCensus")
+    ;
 }
 

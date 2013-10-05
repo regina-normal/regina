@@ -32,17 +32,44 @@
 
 /* end stub */
 
-void addNCensus();
-void addNFacePairing();
-void addDim2EdgePairing();
-void addDim4Census();
-void addDim4FacetPairing();
+#include <boost/python.hpp>
+#include "dim4/dim4boundarycomponent.h"
+#include "dim4/dim4component.h"
+#include "dim4/dim4edge.h"
+#include "dim4/dim4pentachoron.h"
+#include "dim4/dim4tetrahedron.h"
+#include "dim4/dim4triangle.h"
+#include "dim4/dim4vertex.h"
 
-void addCensus() {
-    addNCensus();
-    addNFacePairing();
-    addDim2EdgePairing();
-    addDim4Census();
-    addDim4FacetPairing();
+using namespace boost::python;
+using regina::Dim4Component;
+
+void addDim4Component() {
+    class_<Dim4Component, bases<regina::ShareableObject>,
+            std::auto_ptr<Dim4Component>, boost::noncopyable>
+            ("Dim4Component", no_init)
+        .def("getNumberOfPentachora", &Dim4Component::getNumberOfPentachora)
+        .def("getNumberOfTetrahedra", &Dim4Component::getNumberOfTetrahedra)
+        .def("getNumberOfTriangles", &Dim4Component::getNumberOfTriangles)
+        .def("getNumberOfEdges", &Dim4Component::getNumberOfEdges)
+        .def("getNumberOfVertices", &Dim4Component::getNumberOfVertices)
+        .def("getNumberOfBoundaryComponents",
+            &Dim4Component::getNumberOfBoundaryComponents)
+        .def("getPentachoron", &Dim4Component::getPentachoron,
+            return_value_policy<reference_existing_object>())
+        .def("getTetrahedron", &Dim4Component::getTetrahedron,
+            return_value_policy<reference_existing_object>())
+        .def("getTriangle", &Dim4Component::getTriangle,
+            return_value_policy<reference_existing_object>())
+        .def("getEdge", &Dim4Component::getEdge,
+            return_value_policy<reference_existing_object>())
+        .def("getVertex", &Dim4Component::getVertex,
+            return_value_policy<reference_existing_object>())
+        .def("getBoundaryComponent", &Dim4Component::getBoundaryComponent,
+            return_value_policy<reference_existing_object>())
+        .def("isIdeal", &Dim4Component::isIdeal)
+        .def("isOrientable", &Dim4Component::isOrientable)
+        .def("isClosed", &Dim4Component::isClosed)
+    ;
 }
 

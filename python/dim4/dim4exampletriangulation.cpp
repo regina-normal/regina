@@ -32,17 +32,37 @@
 
 /* end stub */
 
-void addNCensus();
-void addNFacePairing();
-void addDim2EdgePairing();
-void addDim4Census();
-void addDim4FacetPairing();
+#include <boost/python.hpp>
+#include "dim4/dim4exampletriangulation.h"
+#include "dim4/dim4triangulation.h"
+#include "triangulation/ntriangulation.h"
 
-void addCensus() {
-    addNCensus();
-    addNFacePairing();
-    addDim2EdgePairing();
-    addDim4Census();
-    addDim4FacetPairing();
+using namespace boost::python;
+using regina::Dim4ExampleTriangulation;
+
+void addDim4ExampleTriangulation() {
+    class_<Dim4ExampleTriangulation>("Dim4ExampleTriangulation", no_init)
+        .def("fourSphere", &Dim4ExampleTriangulation::fourSphere,
+            return_value_policy<manage_new_object>())
+        .def("rp4", &Dim4ExampleTriangulation::rp4,
+            return_value_policy<manage_new_object>())
+        .def("s3xs1", &Dim4ExampleTriangulation::s3xs1,
+            return_value_policy<manage_new_object>())
+        .def("s3xs1Twisted", &Dim4ExampleTriangulation::s3xs1Twisted,
+            return_value_policy<manage_new_object>())
+        .def("cappellShaneson", &Dim4ExampleTriangulation::cappellShaneson,
+            return_value_policy<manage_new_object>())
+        .def("doubleCone", &Dim4ExampleTriangulation::doubleCone,
+            return_value_policy<manage_new_object>())
+        .def("singleCone", &Dim4ExampleTriangulation::singleCone,
+            return_value_policy<manage_new_object>())
+        .staticmethod("fourSphere")
+        .staticmethod("rp4")
+        .staticmethod("s3xs1")
+        .staticmethod("s3xs1Twisted")
+        .staticmethod("cappellShaneson")
+        .staticmethod("doubleCone")
+        .staticmethod("singleCone")
+    ;
 }
 

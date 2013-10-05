@@ -32,17 +32,13 @@
 
 /* end stub */
 
-void addNCensus();
-void addNFacePairing();
-void addDim2EdgePairing();
-void addDim4Census();
-void addDim4FacetPairing();
+void addHyperCoords();
+void addNNormalHypersurface();
+void addNNormalHypersurfaceList();
 
-void addCensus() {
-    addNCensus();
-    addNFacePairing();
-    addDim2EdgePairing();
-    addDim4Census();
-    addDim4FacetPairing();
+void addHypersurface() {
+    addHyperCoords();
+    addNNormalHypersurface();
+    addNNormalHypersurfaceList();
 }
 
