@@ -42,6 +42,7 @@
 #include "testsuite/testparams.h"
 #include "testsuite/angle/testangle.h"
 #include "testsuite/census/testcensus.h"
+#include "testsuite/dim4/testdim4.h"
 #include "testsuite/maths/testmaths.h"
 #ifndef EXCLUDE_SNAPPEA
 #include "testsuite/snappea/testsnappea.h"
@@ -145,6 +146,9 @@ bool runAllTests() {
     addNIsomorphism(runner);
     addNHomologicalData(runner);
 
+    // 4-manifold triangulations:
+    addDim4Triangulation(runner);
+
     // Subcomplexes:
     addNStandardTriangulation(runner);
 
@@ -160,6 +164,8 @@ bool runAllTests() {
     addNFacePairing(runner);
     addDim2Census(runner);
     addDim2EdgePairing(runner);
+    addDim4Census(runner);
+    addDim4FacetPairing(runner);
 
 #ifndef EXCLUDE_SNAPPEA
     // SnapPea:
