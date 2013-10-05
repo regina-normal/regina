@@ -55,7 +55,7 @@ class NTriangulation;
 
 /**
  * \addtogroup census Census of Triangulations
- * Census building for 3-manifold and 4-manifold triangulations.
+ * Census building for triangulations of various dimensions.
  * @{
  */
 

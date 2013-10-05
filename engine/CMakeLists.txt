@@ -25,8 +25,6 @@ ADD_SUBDIRECTORY("subcomplex")
 ADD_SUBDIRECTORY("surfaces")
 ADD_SUBDIRECTORY("triangulation")
 ADD_SUBDIRECTORY("utilities")
-## circlepack isn't quite ready yet. 
-## ADD_SUBDIRECTORY("circlepack")
 
 ADD_DEFINITIONS(-DREGINA_DLL_EXPORTS=1)
 
