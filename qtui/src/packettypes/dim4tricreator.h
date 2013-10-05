@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,67 +32,50 @@
 
 /* end stub */
 
-#include "iconcache.h"
-#include "reginasupport.h"
+/*! \file dim4triangulationcreator.h
+ *  \brief Allows the creation of 4-manifold triangulations.
+ */
 
-QIcon IconCache::cache_[IconCache::END_OF_LIST];
-QIcon IconCache::locked_[IconCache::END_OF_LIST];
-QIcon IconCache::emblemLocked_;
+#ifndef __DIM4TRICREATOR_H
+#define __DIM4TRICREATOR_H
 
-void IconCache::load(IconID id) {
-    switch (id) {
-        case regina:
-            cache_[id] = ReginaSupport::regIcon("regina");
-            return;
-        case packet_angles:
-            cache_[id] = ReginaSupport::regIcon("packet_angles");
-            return;
-        case packet_container:
-            cache_[id] = ReginaSupport::regIcon("packet_container");
-            return;
-        case packet_dim2triangulation:
-            cache_[id] = ReginaSupport::regIcon("packet_dim2triangulation");
-            return;
-        case packet_dim4triangulation:
-            cache_[id] = ReginaSupport::regIcon("packet_dim4tri");
-            return;
-        case packet_filter:
-            cache_[id] = ReginaSupport::regIcon("packet_filter");
-            return;
-        case packet_pdf:
-            cache_[id] = ReginaSupport::regIcon("packet_pdf");
-            return;
-        case packet_script:
-            cache_[id] = ReginaSupport::regIcon("packet_script");
-            return;
-        case packet_surfaces:
-            cache_[id] = ReginaSupport::regIcon("packet_surfaces");
-            return;
-        case packet_text:
-            cache_[id] = ReginaSupport::regIcon("packet_text");
-            return;
-        case packet_triangulation:
-            cache_[id] = ReginaSupport::regIcon("packet_triangulation");
-            return;
-        case filter_comb:
-            cache_[id] = ReginaSupport::regIcon("filter_comb");
-            return;
-        case filter_prop:
-            cache_[id] = ReginaSupport::regIcon("filter_prop");
-            return;
+#include "../packetcreator.h"
 
-        // Keep gcc happy: list all enumeration values.
-        case END_OF_LIST:
-            return;
-    }
-}
+#include <QStackedWidget>
 
-void IconCache::constructLocked(IconID id) {
-    QIcon base = icon(id);
+class QCheckBox;
+class QComboBox;
+class QLineEdit;
 
-    if (emblemLocked_.isNull())
-        emblemLocked_ = ReginaSupport::themeIcon("emblem-locked");
+/**
+ * An interface for creating 4-manifold triangulations.
+ */
+class Dim4TriangulationCreator : public PacketCreator {
+    private:
+        /**
+         * Internal components
+         */
+        QWidget* ui;
+        QComboBox* type;
+        QStackedWidget* details;
 
-    locked_[id] = ReginaSupport::overlayIcon(base, emblemLocked_);
-}
+        /**
+         * Details for specific triangulation types
+         */
+        QComboBox* exampleWhich;
 
+    public:
+        /**
+         * Constructor.
+         */
+        Dim4TriangulationCreator();
+
+        /**
+         * PacketCreator overrides.
+         */
+        QWidget* getInterface();
+        regina::NPacket* createPacket(regina::NPacket* parentPacket,
+            QWidget* parentWidget);
+};
+
+#endif

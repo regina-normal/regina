@@ -162,6 +162,19 @@ void ReginaMain::setupActions() {
     importMenu->addAction(act);
 
     act = new QAction(this);
+    act->setText(tr("&Isomorphism Signature List (4-D)"));
+    act->setIcon(ReginaSupport::themeIcon("document-sign"));
+    act->setToolTip(tr("Import an isomorphism signature list "
+        "for 4-manifold triangulations"));
+    act->setWhatsThis(tr("Import an external text file containing "
+        "isomorphism signatures for 4-manifold triangulations.  "
+        "For each isomorphism signature, "
+        "a new 4-manifold triangulation will be created in this packet tree."));
+    connect(act, SIGNAL(triggered()), this, SLOT(importIsoSig4()) );
+    treeGeneralEditActions.append(act);
+    importMenu->addAction(act);
+
+    act = new QAction(this);
     act->setText(tr("&Dehydrated Triangulation List"));
     act->setIcon(ReginaSupport::regIcon("dehydrated"));
     act->setToolTip(tr("Import a dehydrated triangulation list"));
@@ -365,6 +378,19 @@ void ReginaMain::setupActions() {
         SLOT(newTriangulation()) );
     treeGeneralEditActions.append(actTriangulation);
     treeMenu->addAction(actTriangulation);
+
+    QAction* actDim4Triangulation = new QAction(this);
+    actDim4Triangulation->setText(tr("New &4-D Triangulation"));
+    actDim4Triangulation->setIcon(IconCache::icon(
+        IconCache::packet_dim4triangulation));
+    actDim4Triangulation->setShortcut(tr("Alt+4"));
+    actDim4Triangulation->setToolTip(tr("New 4-manifold triangulation"));
+    actDim4Triangulation->setWhatsThis(
+        tr("Create a new 4-manifold triangulation."));
+    connect(actDim4Triangulation, SIGNAL(triggered()), this,
+        SLOT(newDim4Triangulation()) );
+    treeGeneralEditActions.append(actDim4Triangulation);
+    treeMenu->addAction(actDim4Triangulation);
 
     QAction* actSurfaces = new QAction(this);
     actSurfaces->setText(tr("New &Normal Surface List"));
@@ -755,6 +781,7 @@ void ReginaMain::setupActions() {
     toolBarPacket->addAction(actContainer);
     toolBarPacket->addAction(actDim2Triangulation);
     toolBarPacket->addAction(actTriangulation);
+    toolBarPacket->addAction(actDim4Triangulation);
     toolBarPacket->addAction(actSurfaces);
     toolBarPacket->addAction(actAngleStructure);
     toolBarPacket->addAction(actFilter);

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,93 +32,107 @@
 
 /* end stub */
 
-/*! \file iconcache.h
- *  \brief Caches frequently-used icons for performance.
+/*! \file dim4triui.h
+ *  \brief Provides an interface for viewing 4-manifold triangulations.
  */
 
-#ifndef __ICONCACHE_H
-#define __ICONCACHE_H
+#ifndef __DIM4TRIUI_H
+#define __DIM4TRIUI_H
 
-#include <QIcon>
+#include "../packettabui.h"
 
-/**
- * A class that provides fast access to a hard-coded set of
- * frequently-used icons, without loading them from disk every time.
- * This is useful (for instance) in the packet tree, where we may be
- * loading thousands of copies of the same icon over and over.
- */
-class IconCache {
-    public:
-        /**
-         * The hard-coded list of cached icons.
-         */
-        enum IconID {
-            regina = 0,
-            packet_angles,
-            packet_container,
-            packet_dim2triangulation,
-            packet_dim4triangulation,
-            packet_filter,
-            packet_pdf,
-            packet_script,
-            packet_surfaces,
-            packet_text,
-            packet_triangulation,
-            filter_comb,
-            filter_prop,
-            END_OF_LIST /* this denotes the total number of icons */
-        };
+class QToolBar;
+class Dim4TriAlgebraUI;
+class Dim4TriGluingsUI;
+class Dim4TriSkeletonUI;
+class PacketEditIface;
+class QLabel;
 
-    private:
-        static QIcon cache_[END_OF_LIST];
-            /**< The main icon cache. */
-        static QIcon locked_[END_OF_LIST];
-            /**< Icons with an overlaid "locked" emblem. */
-        static QIcon emblemLocked_;
-            /**< The "locked" emblem, to use for overlays. */
-
-    public:
-        /**
-         * Return the requested icon.
-         * It will be loaded from disk the first time, and then
-         * pulled from the cache each time after that.
-         */
-        static QIcon icon(IconID id);
-
-        /**
-         * Return the requested icon with a "locked" overlay.
-         * It will be constructed the first time, and then
-         * pulled from the cache each time after that.
-         */
-        static QIcon lockedIcon(IconID id);
-
-    private:
-        /**
-         * Load the given icon from disk.
-         */
-        static void load(IconID id);
-
-        /**
-         * Construct the given "locked" icon.
-         */
-        static void constructLocked(IconID id);
+namespace regina {
+    class Dim4Triangulation;
 };
 
-inline QIcon IconCache::icon(IconID id) {
-    if (id < 0 || id >= END_OF_LIST)
-        return QIcon();
-    if (cache_[id].isNull())
-        load(id);
-    return cache_[id];
+/**
+ * A packet interface for viewing 4-manifold triangulations.
+ */
+class Dim4TriangulationUI : public PacketTabbedUI {
+    Q_OBJECT
+
+    private:
+        /**
+         * Internal components
+         */
+        Dim4TriGluingsUI* gluings;
+        Dim4TriSkeletonUI* skeleton;
+        Dim4TriAlgebraUI* algebra;
+
+        PacketEditIface* editIface;
+
+    public:
+        /**
+         * Constructor and destructor.
+         */
+        Dim4TriangulationUI(regina::Dim4Triangulation* packet,
+            PacketPane* newEnclosingPane);
+        ~Dim4TriangulationUI();
+
+        /**
+         * PacketUI overrides.
+         */
+        PacketEditIface* getEditIface();
+        const QLinkedList<QAction*>& getPacketTypeActions();
+        QString getPacketMenuText() const;
+};
+
+/**
+ * A header for the 4-manifold triangulation viewer.
+ */
+class Dim4TriHeaderUI : public PacketViewerTab {
+    private:
+        /**
+         * Packet details
+         */
+        regina::Dim4Triangulation* tri;
+
+        /**
+         * Internal components
+         */
+        QWidget* ui;
+        QLabel* header;
+        QToolBar* bar;
+
+    public:
+        /**
+         * Constructor.
+         */
+        Dim4TriHeaderUI(regina::Dim4Triangulation* packet,
+                PacketTabbedUI* useParentUI);
+
+        /**
+         * Component queries.
+         */
+        QToolBar* getToolBar();
+
+        /**
+         * PacketViewerTab overrides.
+         */
+        regina::NPacket* getPacket();
+        QWidget* getInterface();
+        void refresh();
+        void editingElsewhere();
+
+        /**
+         * Allow other UIs to access the summary information.
+         */
+        static QString summaryInfo(regina::Dim4Triangulation* tri);
+};
+
+inline PacketEditIface* Dim4TriangulationUI::getEditIface() {
+    return editIface;
 }
 
-inline QIcon IconCache::lockedIcon(IconID id) {
-    if (id < 0 || id >= END_OF_LIST)
-        return QIcon();
-    if (locked_[id].isNull())
-        constructLocked(id);
-    return locked_[id];
+inline QToolBar* Dim4TriHeaderUI::getToolBar() {
+    return bar;
 }
 
 #endif
-

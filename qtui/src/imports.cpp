@@ -63,6 +63,11 @@ void ReginaMain::importIsoSig3() {
         tr("Import Isomorphism Signature List (3-D)"));
 }
 
+void ReginaMain::importIsoSig4() {
+    importFile(IsoSigHandler::instance4, 0, tr(FILTER_ALL),
+        tr("Import Isomorphism Signature List (4-D)"));
+}
+
 void ReginaMain::importPDF() {
     importFile(PDFHandler::instance, 0, tr(FILTER_PDF),
         tr("Import PDF Document"));
