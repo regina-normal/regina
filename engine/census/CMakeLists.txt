@@ -8,6 +8,10 @@ SET ( FILES
   dim2edgepairing
   dim2gluingperms
   dim2gluingpermsearcher
+  dim4census
+  dim4facetpairing
+  dim4gluingperms
+  dim4gluingpermsearcher
   ncensus
   nfacepairing
   ngluingperms
@@ -26,6 +30,10 @@ if (${REGINA_INSTALL_DEV})
     dim2edgepairing.h
     dim2gluingperms.h
     dim2gluingpermsearcher.h
+    dim4census.h
+    dim4facetpairing.h
+    dim4gluingperms.h
+    dim4gluingpermsearcher.h
     ncensus.h
     nfacepairing.h
     ngenericfacetpairing.h
