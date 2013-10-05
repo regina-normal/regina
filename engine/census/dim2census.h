@@ -128,7 +128,7 @@ class REGINA_API Dim2Census {
          * contains a small enough total number of triangulations to
          * avoid any memory disasters.
          *
-         * \ifacespython Parameters \a sieve, \a sieveArgs and \a manager
+         * \ifacespython Parameters \a sieve and \a sieveArgs
          * are not present (and will be treated as 0).
          *
          * @param parent the packet beneath which members of the census will
