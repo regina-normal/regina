@@ -7,6 +7,12 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Version 5.0  [ (under development) ]
+
+    TODO:
+        - When we merge into master, update this file with what's new.
+          Determine exactly what is new by looking at the diff.
+
 Version 4.95  [ (under development) ]
 
     GENERAL:
