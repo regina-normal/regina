@@ -32,102 +32,61 @@
 
 /* end stub */
 
-/*! \file triangulation/dimtraits.h
- *  \brief A template class that provides information on working in
- *  different dimensions.
+/*! \file dim4/nxmldim4trireader.h
+ *  \brief Deals with parsing XML data for 4-manifold triangulation packets.
  */
 
-#ifndef __DIMTRAITS_H
+#ifndef __NXMLDIM4TRIREADER_H
 #ifndef __DOXYGEN
-#define __DIMTRAITS_H
+#define __NXMLDIM4TRIREADER_H
 #endif
 
 #include "regina-core.h"
+#include "packet/nxmlpacketreader.h"
+#include "dim4/dim4triangulation.h"
 
 namespace regina {
 
 /**
- * \weakgroup triangulation
+ * \weakgroup dim4
  * @{
  */
 
 /**
- * A template class that provides typedefs and other information about
- * working in each of the supported dimensions.
- *
- * Note that this file does not bring in all of the headers for the
- * individual types.
+ * An XML packet reader that reads a single 4-manifold triangulation.
  *
  * \ifacespython Not present.
  */
-template <int dim>
-struct DimTraits {
-    typedef void Triangulation;
-        /**< The main data type for a \a dim-manifold triangulation. */
-    typedef void Simplex;
-        /**< The data type for a top-dimensional simplex in a
-             \a dim-manifold triangulation. */
-    typedef void Isomorphism;
-        /**< The data type for an isomorphism between two
-             \a dim-manifold triangulations. */
-    typedef void FacetSpec;
-        /**< The lightweight data type that specifies an individual
-             facet of an individual top-dimensional simplex in a
-             \a dim-manifold triangulation. */
-    typedef void FacetPairing;
-        /**< The data type that represents a pairing of facets of
-             top-dimensional simplices in a \a dim-manifold triangulation. */
-    typedef void Perm;
-        /**< The permutation type used to describe gluings between
-             top-dimensional simplices in a \a dim-manifold triangulation. */
+class REGINA_API NXMLDim4TriangulationReader : public NXMLPacketReader {
+    private:
+        Dim4Triangulation* tri_;
+            /**< The triangulation currently being read. */
+
+    public:
+        /**
+         * Creates a new triangulation reader.
+         */
+        NXMLDim4TriangulationReader();
+
+        virtual NPacket* getPacket();
+        virtual NXMLElementReader* startContentSubElement(
+            const std::string& subTagName,
+            const regina::xml::XMLPropertyDict& subTagProps);
+        virtual void endContentSubElement(const std::string& subTagName,
+            NXMLElementReader* subReader);
 };
 
-#ifndef __DOXYGEN
-class Dim2Triangulation;
-class Dim2Triangle;
-class Dim2Isomorphism;
-class Dim2EdgePairing;
-class NPerm3;
+/*@}*/
 
-template <>
-struct DimTraits<2> {
-    typedef Dim2Triangulation Triangulation;
-    typedef Dim2Triangle Simplex;
-    typedef Dim2Isomorphism Isomorphism;
-    typedef Dim2EdgePairing FacetPairing;
-    typedef NPerm3 Perm;
-};
+// Inline functions for NXMLDim4TriangulationReader
 
-class NTriangulation;
-class NTetrahedron;
-class NIsomorphism;
-class NFacePairing;
-class NPerm4;
+inline NXMLDim4TriangulationReader::NXMLDim4TriangulationReader() :
+        tri_(new Dim4Triangulation()) {
+}
 
-template <>
-struct DimTraits<3> {
-    typedef NTriangulation Triangulation;
-    typedef NTetrahedron Simplex;
-    typedef NIsomorphism Isomorphism;
-    typedef NFacePairing FacetPairing;
-    typedef NPerm4 Perm;
-};
-
-class Dim4Triangulation;
-class Dim4Pentachoron;
-class Dim4Isomorphism;
-class Dim4FacetPairing;
-class NPerm5;
-
-template <>
-struct DimTraits<4> {
-    typedef Dim4Triangulation Triangulation;
-    typedef Dim4Pentachoron Simplex;
-    typedef Dim4Isomorphism Isomorphism;
-    typedef Dim4FacetPairing FacetPairing;
-    typedef NPerm5 Perm;
-};
-#endif
+inline NPacket* NXMLDim4TriangulationReader::getPacket() {
+    return tri_;
+}
 
 } // namespace regina
 
