@@ -35,9 +35,8 @@
 // Regina core includes:
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
+#include "dim4/dim4triangulation.h"
 #include "maths/numbertheory.h"
-#include "algebra/ncellulardata.h"
-#include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "gaprunner.h"
@@ -47,26 +46,14 @@
 
 #include <QDir>
 #include <QFileInfo>
-#include <QHeaderView>
 #include <QLabel>
 #include <QLayout>
-#include <QLineEdit>
 #include <QListWidget>
-#include <QMessageBox>
-#include <QPainter>
 #include <QPushButton>
-#include <QRegExp>
-#include <QScrollArea>
-#include <QStyle>
-#include <QTreeWidgetItem>
 #include <QTextDocument>
-#include <QValidator>
 
-using regina::NPacket;
 using regina::Dim4Triangulation;
-using regina::NCellularData;
-using regina::NLargeInteger;
-using regina::NSVPolynomialRing;
+using regina::NPacket;
 
 Dim4TriAlgebraUI::Dim4TriAlgebraUI(regina::Dim4Triangulation* packet,
         PacketTabbedUI* useParentUI) :
@@ -76,7 +63,6 @@ Dim4TriAlgebraUI::Dim4TriAlgebraUI(regina::Dim4Triangulation* packet,
 
     addTab(new Dim4TriHomologyUI(packet, this), tr("&Homology"));
     addTab(fundGroup, tr("&Fund. Group"));
-    addTab(new Dim4TriCellularInfoUI(packet, this), tr("&Cellular Info"));
 }
 
 Dim4TriHomologyUI::Dim4TriHomologyUI(regina::Dim4Triangulation* packet,
@@ -84,9 +70,9 @@ Dim4TriHomologyUI::Dim4TriHomologyUI(regina::Dim4Triangulation* packet,
         tri(packet) {
     ui = new QWidget();
 
-    QGridLayout* homologyGrid = new QGridLayout(ui);//, 7, 4, 0, 5);
+    QGridLayout* homologyGrid = new QGridLayout(ui);//, 4, 4, 0, 5);
     homologyGrid->setRowStretch(0, 1);
-    homologyGrid->setRowStretch(6, 1);
+    homologyGrid->setRowStretch(3, 1);
     homologyGrid->setColumnStretch(0, 1);
     homologyGrid->setColumnStretch(3, 1);
 
@@ -101,43 +87,13 @@ Dim4TriHomologyUI::Dim4TriHomologyUI(regina::Dim4Triangulation* packet,
     label->setWhatsThis(msg);
     H1->setWhatsThis(msg);
 
-
-//    label = new QLabel(QObject::tr("H1(M, %1M):").arg(QChar(0x2202 /* bdry */)));
-/*    homologyGrid->addWidget(label, 2, 1);
-    H1Rel = new QLabel(ui);
-    homologyGrid->addWidget(H1Rel, 2, 2);
-    msg = QObject::tr("The relative first homology group of this triangulation "
-        "with respect to the boundary.");
-    label->setWhatsThis(msg);
-    H1Rel->setWhatsThis(msg);*/
-
-//    label = new QLabel(QObject::tr("H1(%1M):").arg(QChar(0x2202 /* bdry */)));
-/*    homologyGrid->addWidget(label, 3, 1);
-    H1Bdry = new QLabel(ui);
-    homologyGrid->addWidget(H1Bdry, 3, 2);
-    msg = QObject::tr("The first homology group of the boundary of this "
-        "triangulation.");
-    label->setWhatsThis(msg);
-    H1Bdry->setWhatsThis(msg); */
-
     label = new QLabel(QObject::tr("H2(M):"));
-    homologyGrid->addWidget(label, 4, 1);
+    homologyGrid->addWidget(label, 2, 1);
     H2 = new QLabel(ui);
-    homologyGrid->addWidget(H2, 4, 2);
+    homologyGrid->addWidget(H2, 2, 2);
     msg = QObject::tr("The second homology group of this triangulation.");
     label->setWhatsThis(msg);
     H2->setWhatsThis(msg);
-
-//    label = new QLabel(QObject::tr("H2(M ; Z_2):"));
-    //label = new QLabel(QObject::tr("H2(M ; %1%2):").arg(QChar(0x2124 /* Z */)).
-    //    arg(QChar(0x2082 /* sub 2 */)));
-/*    homologyGrid->addWidget(label, 5, 1);
-    H2Z2 = new QLabel(ui);
-    homologyGrid->addWidget(H2Z2, 5, 2);
-    msg = QObject::tr("<qt>The second homology group of this triangulation "
-        "with coefficients in Z<sub>2</sub>.</qt>");
-    label->setWhatsThis(msg);
-    H2Z2->setWhatsThis(msg); */
 }
 
 regina::NPacket* Dim4TriHomologyUI::getPacket() {
@@ -149,26 +105,13 @@ QWidget* Dim4TriHomologyUI::getInterface() {
 }
 
 void Dim4TriHomologyUI::refresh() {
-    H1->setText(tri->getHomologyH1().toString().c_str());
-
     if (tri->isValid()) {
-     //   H1Rel->setText(tri->getHomologyH1Rel().toString().c_str());
-     //   H1Bdry->setText(tri->getHomologyH1Bdry().toString().c_str());
+        H1->setText(tri->getHomologyH1().toString().c_str());
         H2->setText(tri->getHomologyH2().toString().c_str());
- /*
-        unsigned long coeffZ2 = tri->getHomologyH2Z2();
-        if (coeffZ2 == 0)
-            H2Z2->setText("0");
-        else if (coeffZ2 == 1)
-            H2Z2->setText("Z_2");
-        else
-            H2Z2->setText(QString::number(coeffZ2) + " Z_2"); */
     } else {
         QString msg(QObject::tr("Invalid Triangulation"));
-  //      H1Rel->setText(msg);
-  //      H1Bdry->setText(msg);
+        H1->setText(msg);
         H2->setText(msg);
-  //      H2Z2->setText(msg);
     }
 }
 
@@ -176,10 +119,7 @@ void Dim4TriHomologyUI::editingElsewhere() {
     QString msg(QObject::tr("Editing..."));
 
     H1->setText(msg);
-   // H1Rel->setText(msg);
-   // H1Bdry->setText(msg);
     H2->setText(msg);
-   // H2Z2->setText(msg);
 }
 
 Dim4TriFundGroupUI::Dim4TriFundGroupUI(regina::Dim4Triangulation* packet,
@@ -187,8 +127,6 @@ Dim4TriFundGroupUI::Dim4TriFundGroupUI(regina::Dim4Triangulation* packet,
         PacketViewerTab(useParentUI), tri(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
-    simpAtt=1; // this is used to keep track of how many times 
-               // proliferateRelators() is called. 
 
     layout->addStretch(1);
 
@@ -220,27 +158,14 @@ Dim4TriFundGroupUI::Dim4TriFundGroupUI(regina::Dim4Triangulation* packet,
     wideFundPresArea->addStretch(1);
     layout->addStretch(1);
 
-    QBoxLayout* btnArea2 = new QHBoxLayout();
-    layout->addLayout(btnArea2);
-    btnArea2->addStretch(1);
-    btnSIMP = new QPushButton(ReginaSupport::themeIcon("tools-wizard"),
-        tr("Attempt to simplify"));
-    btnSIMP->setToolTip(tr("Simplify the group presentation using "
-        "NGroupPresentation::proliferateRelators(). Calling this "
-        "routine more than once may produce better results."));
-    btnSIMP->setWhatsThis(tr("<qt>Simplify the presentation of the "
-        "fundamental group using an internal routine that explores "
-        "the consequences of the relations recursively, calling "
-        "NGroupPresentation::intelligentSimplify() afterwards.</qt>"));
-    connect(btnSIMP, SIGNAL(clicked()), this, SLOT(simplifyPI1()));
-    btnArea2->addWidget(btnSIMP);
-    btnArea2->addStretch(1);
+    // The simplification buttons:
 
     QBoxLayout* btnArea = new QHBoxLayout();
     layout->addLayout(btnArea);
     btnArea->addStretch(1);
-    btnGAP = new QPushButton(ReginaSupport::themeIcon("tools-wizard"),
-        tr("Simplify using GAP"));
+    btnArea->addWidget(new QLabel(tr("Try to simplify:")));
+
+    btnGAP = new QPushButton(tr("Using GAP"));
     btnGAP->setToolTip(tr("Simplify the group presentation using "
         "GAP (Groups, Algorithms and Programming)"));
     btnGAP->setWhatsThis(tr("<qt>Simplify the presentation of the "
@@ -249,6 +174,7 @@ Dim4TriFundGroupUI::Dim4TriFundGroupUI(regina::Dim4Triangulation* packet,
         "on your system.</qt>"));
     connect(btnGAP, SIGNAL(clicked()), this, SLOT(simplifyGAP()));
     btnArea->addWidget(btnGAP);
+
     btnArea->addStretch(1);
 }
 
@@ -261,7 +187,21 @@ QWidget* Dim4TriFundGroupUI::getInterface() {
 }
 
 void Dim4TriFundGroupUI::refresh() {
-    if (tri->getNumberOfComponents() <= 1) {
+    if (! tri->isValid()) {
+        fundName->setText(tr("Cannot calculate\n(invalid triang.)"));
+        fundGens->hide();
+        fundRelCount->hide();
+        fundRels->clear();
+        fundRels->hide();
+        btnGAP->setEnabled(false);
+    } else if (tri->getNumberOfComponents() > 1) {
+        fundName->setText(tr("Cannot calculate\n(disconnected triang.)"));
+        fundGens->hide();
+        fundRelCount->hide();
+        fundRels->clear();
+        fundRels->hide();
+        btnGAP->setEnabled(false);
+    } else {
         const regina::NGroupPresentation& pres = tri->getFundamentalGroup();
 
         std::string name = pres.recogniseGroup();
@@ -332,13 +272,6 @@ void Dim4TriFundGroupUI::refresh() {
         }
 
         btnGAP->setEnabled(true);
-    } else {
-        fundName->setText(tr("Cannot calculate\n(disconnected triang.)"));
-        fundGens->hide();
-        fundRelCount->hide();
-        fundRels->clear();
-        fundRels->hide();
-        btnGAP->setEnabled(false);
     }
 }
 
@@ -349,15 +282,6 @@ void Dim4TriFundGroupUI::editingElsewhere() {
     fundRels->clear();
     fundRels->hide();
     btnGAP->setEnabled(false);
-}
-
-void Dim4TriFundGroupUI::simplifyPI1() {
- regina::NGroupPresentation* group( new regina::NGroupPresentation( tri->getFundamentalGroup() ) );
- group->proliferateRelators(simpAtt);
- group->intelligentSimplify();
- tri->simplifiedFundamentalGroup(group);
- refresh(); 
- if (simpAtt<4) simpAtt++; 
 }
 
 void Dim4TriFundGroupUI::simplifyGAP() {
@@ -403,7 +327,7 @@ QString Dim4TriFundGroupUI::verifyGAPExec() {
         QString pathSeparator = ":";
 #endif
         QStringList pathList = paths.split(pathSeparator);
-        
+
         bool found = false;
         for( QStringList::iterator it = pathList.begin(); it != pathList.end();
             ++it) {
@@ -449,265 +373,5 @@ QString Dim4TriFundGroupUI::verifyGAPExec() {
 
     // All good.
     return useExec;
-}
-
-
-/** These routines puts up the interface for the detailed cellular information
-        and it is a submenu of the Algebra menu. **/
-
-void Dim4TriCellularInfoUI::refresh() {
-    if (tri->isValid()) {
-        NCellularData Minfo(*tri);
-
-       Cells->setText(QObject::tr("%1, %2, %3, %4, %5").
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(0, NCellularData::STD_coord) ) ).
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(1, NCellularData::STD_coord) ) ).
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(2, NCellularData::STD_coord) ) ).
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(3, NCellularData::STD_coord) ) ).
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(4, NCellularData::STD_coord) ) ));
-
-        DualCells->setText(QObject::tr("%1, %2, %3, %4, %5").
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(0, NCellularData::DUAL_coord) ) ).
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(1, NCellularData::DUAL_coord) ) ).
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(2, NCellularData::DUAL_coord) ) ).
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(3, NCellularData::DUAL_coord) ) ).
-            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(4, NCellularData::DUAL_coord) ) ));
-
-        EulerChar->setText(QString::number(Minfo.eulerChar()));
-
-        H0H1H2H3->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4,  H4 = %5").
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(0, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(1, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).            
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(2, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).           
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(3, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).           
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(4, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ) );          
-
-         HBdry->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4").
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(0, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ).
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(1, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ).            
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(2, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ).            
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(3, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ) );          
-
-        BdryMap1->setText(Minfo.homGroup( NCellularData::HomLocator( 
-            NCellularData::GroupLocator( 1, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0 ), 
-            NCellularData::GroupLocator( 1, NCellularData::coVariant, NCellularData::STD_coord, 0 ) ) 
-                        )->toString().c_str() );
-        BdryMap2->setText(Minfo.homGroup( NCellularData::HomLocator( 
-            NCellularData::GroupLocator( 2, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0 ), 
-            NCellularData::GroupLocator( 2, NCellularData::coVariant, NCellularData::STD_coord, 0 ) ) 
-                        )->toString().c_str() );
-
-        if (! tri->isConnected()) {
-            QString msg(QObject::tr("Triangulation is disconnected."));
-            sig->setText(msg);
-            AlexInv->setText(msg);
-            Comments->setText(msg);
-        } else {
-            if (tri->isOrientable()) {
-                const regina::NBilinearForm* bil( Minfo.bilinearForm( NCellularData::FormLocator( 
-                NCellularData::intersectionForm,
-            NCellularData::GroupLocator( 2, NCellularData::coVariant, NCellularData::DUAL_coord, 0 ), 
-            NCellularData::GroupLocator( 2, NCellularData::coVariant, NCellularData::DUAL_coord, 0 ) ) ) );
-                std::stringstream ts;
-              // we need to record more than signature if the manifold has boundary since the
-              // intersection form is likely degenerate.  Let's record its rank. 
-                ts << bil->signature() ;
-               unsigned long rk (bil->rank());
-               if (rk != bil->ldomain().getRank()) 
-                ts << " [rank == "<<rk<<"]";
-               sig->setText( ts.str().c_str() ); 
-            } else {
-                // The torsion linking form routines insist on orientability,
-                // so we should avoid calling them.
-                QString msg(QObject::tr("Manifold is non-orientable."));
-                sig->setText(msg);
-            }
-
-            if (Minfo.unmarkedGroup( NCellularData::GroupLocator(1, 
-                NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->getRank()==1)
-             {
-                std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > alex(
-                    Minfo.alexanderIdeal() );
-                std::string aString;
-                for (std::list< NSVPolynomialRing<NLargeInteger> >::iterator i = alex->begin();
-                     i != alex->end(); i++)
-                  {
-                  if (i!=alex->begin()) aString.append(", ");
-                  aString.append( i->toString() );
-                  }
-              AlexInv->setText(QObject::tr(aString.c_str()));
-             }
-            else
-             AlexInv->setText(QObject::tr("No Alexander invariant."));
-
-            // The embeddability comment is good for both orientable and
-            // non-orientable triangulations.
-            // Encase it in <qt>..</qt> so it can wrap over multiple lines.
-            Comments->setText(QString("<qt>Nothing to say, yet. </qt>"));
-            //Comments->setText(QString("<qt>%1</qt>").arg(
-            //    Qt::escape(Minfo.stringInfo(NCellularData::TORFORM_embinfo).c_str())));
-        }
-    } else {
-        QString msg(QObject::tr("Invalid Triangulation"));
-        Cells->setText(msg);
-        DualCells->setText(msg);
-        EulerChar->setText(msg);
-        H0H1H2H3->setText(msg);
-        HBdry->setText(msg);
-        BdryMap1->setText(msg);
-        BdryMap2->setText(msg);
-        sig->setText(msg);
-        AlexInv->setText(msg);
-        Comments->setText(msg);
-    }
-}
-
-Dim4TriCellularInfoUI::Dim4TriCellularInfoUI(regina::Dim4Triangulation* packet,
-        PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
-        tri(packet) {
-    QScrollArea* scroller = new QScrollArea();
-    scroller->setWidgetResizable(true);
-    scroller->setFrameStyle(QFrame::NoFrame);
-    // Transparency must be applied to both the QScrollArea *and* some of its
-    // internal components (possibly the widget that holds the viewport?).
-    scroller->setStyleSheet("QScrollArea, .QWidget { "
-                                "background-color:transparent; "
-                            "}");
-    ui = scroller;
-
-    QWidget* grid = new QWidget(scroller->viewport());
-    scroller->setWidget(grid);
-
-    QGridLayout* homologyGrid = new QGridLayout(grid);
-    homologyGrid->setRowStretch(0, 1);
-    homologyGrid->setRowStretch(10, 1);
-    homologyGrid->setColumnStretch(0, 1);
-    homologyGrid->setColumnStretch(2, 1); 
-    homologyGrid->setColumnStretch(3, 1);
-
-    QLabel* label;
-    QString msg;
-
-    label = new QLabel(QObject::tr("Cells: "), grid);
-    homologyGrid->addWidget(label, 1, 1);
-    Cells = new QLabel(grid);
-    homologyGrid->addWidget(Cells, 1, 2);
-    msg = QObject::tr("The number of cells in a proper CW-decomposition of "
-               "the compact manifold specified by this triangulation.  "
-               "The four numbers displayed here count 0-cells, 1-cells, "
-               "2-cells and 3-cells respectively.");
-    label->setWhatsThis(msg);
-    Cells->setWhatsThis(msg);
-
-    label = new QLabel(QObject::tr("Dual cells: "), grid);
-    homologyGrid->addWidget(label, 2, 1);
-    DualCells = new QLabel(grid);
-    homologyGrid->addWidget(DualCells, 2, 2);
-    msg = QObject::tr("The number of cells in the dual CW-decomposition "
-                "corresponding to the triangulation of this "
-                "compact manifold.  The four numbers displayed here "
-                "count 0-cells, 1-cells, 2-cells and 3-cells respectively.");
-    label->setWhatsThis(msg);
-    DualCells->setWhatsThis(msg);
-
-    label = new QLabel(QObject::tr("Euler characteristic: "), grid);
-    homologyGrid->addWidget(label, 3, 1);
-    EulerChar = new QLabel(grid);
-    homologyGrid->addWidget(EulerChar, 3, 2);
-    msg = QObject::tr("The Euler characteristic of this compact manifold.");
-    label->setWhatsThis(msg);
-    EulerChar->setWhatsThis(msg);
-
-    label = new QLabel(QObject::tr("Homology groups: "), grid);
-    homologyGrid->addWidget(label, 4, 1);
-    H0H1H2H3 = new QLabel(grid);
-    homologyGrid->addWidget(H0H1H2H3, 4, 2);
-    msg = QObject::tr("The homology groups of this manifold with coefficients "
-               "in the integers.  The groups are listed in order of "
-                "increasing dimension.");
-    label->setWhatsThis(msg);
-    H0H1H2H3->setWhatsThis(msg);
-
-    label = new QLabel(QObject::tr("Boundary homology groups: "), grid);
-    homologyGrid->addWidget(label, 5, 1);
-    HBdry = new QLabel(grid);
-    homologyGrid->addWidget(HBdry, 5, 2);
-    msg = QObject::tr("The homology groups of this manifold's boundary with "
-               "coefficients in the integers.  The groups are listed "
-               "in order of increasing dimension.");
-    label->setWhatsThis(msg);
-    HBdry->setWhatsThis(msg);
-
-    label = new QLabel(QObject::tr("<qt>H1(%1M &rarr; M): </qt>").
-        arg(QChar(0x2202 /* bdry */)), grid);
-    homologyGrid->addWidget(label, 6, 1);
-    BdryMap1 = new QLabel(grid);
-    homologyGrid->addWidget(BdryMap1, 6, 2);
-    msg = QObject::tr("<qt>The boundary is a submanifold of the original "
-                "manifold.  This item describes some properties of "
-                "the induced map on H<sub>1</sub>.</qt>"
-                );
-    label->setWhatsThis(msg);
-    BdryMap1->setWhatsThis(msg);
-
-    label = new QLabel(QObject::tr("<qt>H2(%1M &rarr; M): </qt>").
-        arg(QChar(0x2202 /* bdry */)), grid);
-    homologyGrid->addWidget(label, 7, 1);
-    BdryMap2 = new QLabel(grid);
-    homologyGrid->addWidget(BdryMap2, 7, 2);
-    msg = QObject::tr("<qt>The boundary is a submanifold of the original "
-                "manifold.  This item describes some properties of "
-                "the induced map on H<sub>2</sub>.</qt>"
-                );
-    label->setWhatsThis(msg);
-    BdryMap2->setWhatsThis(msg);
-
-    label = new QLabel(QObject::tr("Signature: "), grid);
-    homologyGrid->addWidget(label, 8, 1);
-    sig = new QLabel(grid);
-    homologyGrid->addWidget(sig, 8, 2);
-    msg = QObject::tr("<qt>blah blah signature is blah blah</qt>");
-    label->setWhatsThis(msg);
-    sig->setWhatsThis(msg);    
-
-    label = new QLabel(QObject::tr("Alexander ideal: "), grid);
-    homologyGrid->addWidget(label, 9, 1);
-    AlexInv = new QLabel(grid);
-    homologyGrid->addWidget(AlexInv, 9, 2);
-    msg = QObject::tr("<qt>blah blah alexander ideal is blah blah</qt>");
-    label->setWhatsThis(msg);
-    AlexInv->setWhatsThis(msg);    
-
-    label = new QLabel(QObject::tr("Comments: "), grid);
-    homologyGrid->addWidget(label, 10, 1);
-    Comments = new QLabel(grid);
-    homologyGrid->addWidget(Comments, 10, 2);
-    msg = QObject::tr("<qt>Observations from above...currently nothing!</qt>");
-    label->setWhatsThis(msg);
-    Comments->setWhatsThis(msg);
-}
-
-
-regina::NPacket* Dim4TriCellularInfoUI::getPacket() {
-    return tri;
-}
-
-QWidget* Dim4TriCellularInfoUI::getInterface() {
-    return ui;
-}
-
-void Dim4TriCellularInfoUI::editingElsewhere() {
-    QString msg(QObject::tr("Editing..."));
-
-    Cells->setText(msg);
-    DualCells->setText(msg);
-    EulerChar->setText(msg);
-    H0H1H2H3->setText(msg);
-    HBdry->setText(msg);
-    BdryMap1->setText(msg);
-    BdryMap2->setText(msg);
-    sig->setText(msg);
-    AlexInv->setText(msg);
-    Comments->setText(msg);
 }
 
