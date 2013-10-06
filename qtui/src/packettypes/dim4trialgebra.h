@@ -126,7 +126,7 @@ class Dim4TriFundGroupUI : public QObject, public PacketViewerTab {
         QListWidget* fundRels;
         QPushButton* btnGAP;
         QPushButton* btnSimp;
-        unsigned simpAttempts;
+        unsigned simpDepth;
 
     public:
         /**

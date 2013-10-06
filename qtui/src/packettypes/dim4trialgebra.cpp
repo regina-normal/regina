@@ -127,8 +127,7 @@ Dim4TriFundGroupUI::Dim4TriFundGroupUI(regina::Dim4Triangulation* packet,
         PacketViewerTab(useParentUI), tri(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
-    simpAttempts = 1; // this is used to keep track of how many times
-                      // proliferateRelators() is called.
+    simpDepth = 1;
 
     layout->addStretch(1);
 
@@ -284,7 +283,7 @@ void Dim4TriFundGroupUI::refresh() {
                     pres.getRelation(i).toString().c_str(), fundRels);
         }
 
-        simpAttempts = 1;
+        simpDepth = 1;
 
         btnGAP->setEnabled(true);
         btnSimp->setEnabled(true);
@@ -308,14 +307,14 @@ void Dim4TriFundGroupUI::simplifyPi1() {
 
     regina::NGroupPresentation* group =
         new regina::NGroupPresentation(tri->getFundamentalGroup());
-    group->proliferateRelators(simpAttempts);
+    group->proliferateRelators(simpDepth);
     group->intelligentSimplify();
     tri->simplifiedFundamentalGroup(group);
     refresh();
 
     // Let's not let the end-user go beyond too many iterates for now.
-    if (simpAttempts < 4)
-        simpAttempts++;
+    if (simpDepth < 4)
+        simpDepth++;
 }
 
 void Dim4TriFundGroupUI::simplifyGAP() {
