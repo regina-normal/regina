@@ -60,26 +60,28 @@ Dim4Triangulation* Dim4ExampleTriangulation::simplicialFourSphere() {
     Dim4Triangulation* ans = new Dim4Triangulation();
     ans->setPacketLabel("Standard simplicial 4-sphere");
 
-    std::vector<Dim4Pentachoron*> penList(6);
-     // one pentachoron for every vertex of the 5-simplex
-    for (unsigned long i=0; i<6; i++) penList[i] = ans->newPentachoron();
-     // one gluing for ever distinct pair of vertices of 5-simplex
-    for (unsigned long i=0; i<5; i++) for (unsigned long j=i+1; j<6; j++)
-     {
-     int map[5]; 
-     for (unsigned long k=0; k<5; k++)
-      {
-       if ( (k<i) || (k>=j) ) map[k]=k;
-       else if (k<(j-1)) map[k]=k+1;
-       else map[j-1]=i;
-      }
-     penList[i]->joinTo(j-1 , penList[j], NPerm5(map) );  
-     }
-     // we are gluing facet j-1 of pen i to facet i of pen j. 
-     // using the cycle i -> i+1 -> ... -> j-1 -> i. 
+    Dim4Pentachoron* penList[6];
+        // one pentachoron for every vertex of the 5-simplex
+    unsigned i, j, k;
+    for (i=0; i<6; i++)
+        penList[i] = ans->newPentachoron();
+    // one gluing for every distinct pair of vertices of 5-simplex
+    // we are gluing facet j-1 of pen i to facet i of pen j. 
+    // using the cycle i -> i+1 -> ... -> j-1 -> i. 
+    for (i=0; i<5; i++)
+        for (j=i+1; j<6; j++) {
+            int map[5];
+            for (k=0; k<5; k++) {
+                if ( (k<i) || (k>=j) )
+                    map[k]=k;
+                else if (k<(j-1))
+                    map[k]=k+1;
+                else map[j-1]=i;
+            }
+            penList[i]->joinTo(j-1 , penList[j], NPerm5(map) );
+        }
     return ans;
 }
-
 
 Dim4Triangulation* Dim4ExampleTriangulation::rp4() {
     Dim4Triangulation* ans = new Dim4Triangulation();

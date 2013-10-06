@@ -93,7 +93,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * as the boundary of a 5-simplex. 
          *
          * @return a newly constructed triangulation, which must be
-         *  destroyed by the caller of this routine. 
+         * destroyed by the caller of this routine. 
          */
         static Dim4Triangulation* simplicialFourSphere();
 
