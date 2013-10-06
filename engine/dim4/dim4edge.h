@@ -42,19 +42,24 @@
 #endif
 
 #include <vector>
+#include <memory>
+
 #include "regina-core.h"
 #include "shareableobject.h"
 #include "maths/nperm5.h"
 #include "utilities/nmarkedvector.h"
+
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
+class Dim2Triangulation;
 class Dim4Component;
 class Dim4BoundaryComponent;
 class Dim4Pentachoron;
 class Dim4Vertex;
 class Dim4Triangulation;
+class Dim4Isomorphism;
 
 /**
  * \weakgroup dim4
@@ -133,6 +138,18 @@ class REGINA_API Dim4EdgeEmbedding {
          * vertices of getPentachoron().
          */
         NPerm5 getVertices() const;
+
+        /**
+         *  Equality operator for Dim4EdgeEmbeddings, allows for
+         *  find() lookups in getEmbeddings(). 
+         */
+        bool operator==(const Dim4EdgeEmbedding &oth) const;
+
+        /**
+         *  Inequality operator for Dim4EdgeEmbeddings.
+         */
+        bool operator!=(const Dim4EdgeEmbedding &oth) const;
+
 };
 
 /**
@@ -357,6 +374,20 @@ class REGINA_API Dim4Edge : public ShareableObject, public NMarkedElement {
          */
         bool hasBadLink() const;
 
+        /**
+         * Returns a full triangulation of the link of the edge. 
+         *
+         * If you call buildLink passing to it an allocated Dim4Isomorphism
+         * pointer, initialized to have the same number of pentachora
+         * as getNumberOfEmbeddings(), then buildLink will fill it out
+         * with an Dim4Isomorphism where pentImage(i) is the pentachoron of
+         * the Dim4Triangulation which contains the i-th triangle of the link.
+         * Moreover, facePerm will send 0 and 1 to this Dim4Edge's vertices in that
+         * pentachoron, and vertices 2,3,4 (describing the triangle) to 
+         * the triangle opposite pentImage(i). 
+         */
+        std::auto_ptr< Dim2Triangulation > buildLink(Dim4Isomorphism* inc=NULL) const;
+
         void writeTextShort(std::ostream& out) const;
 
     private:
@@ -413,6 +444,15 @@ inline int Dim4EdgeEmbedding::getEdge() const {
 inline NPerm5 Dim4EdgeEmbedding::getVertices() const {
     return pent_->getEdgeMapping(edge_);
 }
+
+inline bool Dim4EdgeEmbedding::operator==(const Dim4EdgeEmbedding &oth) const {
+    return ( (pent_ == oth.pent_) && (edge_ == oth.edge_) );
+}
+
+inline bool Dim4EdgeEmbedding::operator!=(const Dim4EdgeEmbedding &oth) const {
+    return ( (pent_ != oth.pent_) || (edge_ != oth.edge_) );
+}
+
 
 // Inline functions for Dim4Edge
 
