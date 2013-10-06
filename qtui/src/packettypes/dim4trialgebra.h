@@ -125,6 +125,8 @@ class Dim4TriFundGroupUI : public QObject, public PacketViewerTab {
         QLabel* fundRelCount;
         QListWidget* fundRels;
         QPushButton* btnGAP;
+        QPushButton* btnSimp;
+        unsigned simpAttempts;
 
     public:
         /**
@@ -146,6 +148,10 @@ class Dim4TriFundGroupUI : public QObject, public PacketViewerTab {
          * Group simplification actions.
          */
         void simplifyGAP();
+        /**
+         * Our internal pi1 simplification code.
+         */
+        void simplifyPi1();
 
     private:
         /**

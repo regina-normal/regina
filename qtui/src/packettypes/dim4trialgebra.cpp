@@ -127,6 +127,8 @@ Dim4TriFundGroupUI::Dim4TriFundGroupUI(regina::Dim4Triangulation* packet,
         PacketViewerTab(useParentUI), tri(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
+    simpAttempts = 1; // this is used to keep track of how many times
+                      // proliferateRelators() is called.
 
     layout->addStretch(1);
 
@@ -165,6 +167,15 @@ Dim4TriFundGroupUI::Dim4TriFundGroupUI(regina::Dim4Triangulation* packet,
     btnArea->addStretch(1);
     btnArea->addWidget(new QLabel(tr("Try to simplify:")));
 
+    btnSimp = new QPushButton(tr("Internally"));
+    btnSimp->setToolTip(tr("Simplify the group presentation by "
+        "recursively exploring the consequences of the relations."));
+    btnSimp->setWhatsThis(tr("<qt>Simplify the group presentation by "
+        "recursively exploring the consequences of the relations.  "
+        "Doing this more than once may produce better results.</qt>"));
+    connect(btnSimp, SIGNAL(clicked()), this, SLOT(simplifyPi1()));
+    btnArea->addWidget(btnSimp);
+
     btnGAP = new QPushButton(tr("Using GAP"));
     btnGAP->setToolTip(tr("Simplify the group presentation using "
         "GAP (Groups, Algorithms and Programming)"));
@@ -194,6 +205,7 @@ void Dim4TriFundGroupUI::refresh() {
         fundRels->clear();
         fundRels->hide();
         btnGAP->setEnabled(false);
+        btnSimp->setEnabled(false);
     } else if (tri->getNumberOfComponents() > 1) {
         fundName->setText(tr("Cannot calculate\n(disconnected triang.)"));
         fundGens->hide();
@@ -201,6 +213,7 @@ void Dim4TriFundGroupUI::refresh() {
         fundRels->clear();
         fundRels->hide();
         btnGAP->setEnabled(false);
+        btnSimp->setEnabled(false);
     } else {
         const regina::NGroupPresentation& pres = tri->getFundamentalGroup();
 
@@ -271,7 +284,10 @@ void Dim4TriFundGroupUI::refresh() {
                     pres.getRelation(i).toString().c_str(), fundRels);
         }
 
+        simpAttempts = 1;
+
         btnGAP->setEnabled(true);
+        btnSimp->setEnabled(true);
     }
 }
 
@@ -282,6 +298,24 @@ void Dim4TriFundGroupUI::editingElsewhere() {
     fundRels->clear();
     fundRels->hide();
     btnGAP->setEnabled(false);
+    btnSimp->setEnabled(false);
+}
+
+void Dim4TriFundGroupUI::simplifyPi1() {
+    // Make sure the triangulation is not being edited.
+    if (! btnSimp->isEnabled())
+        return;
+
+    regina::NGroupPresentation* group =
+        new regina::NGroupPresentation(tri->getFundamentalGroup());
+    group->proliferateRelators(simpAttempts);
+    group->intelligentSimplify();
+    tri->simplifiedFundamentalGroup(group);
+    refresh();
+
+    // Let's not let the end-user go beyond too many iterates for now.
+    if (simpAttempts < 4)
+        simpAttempts++;
 }
 
 void Dim4TriFundGroupUI::simplifyGAP() {
