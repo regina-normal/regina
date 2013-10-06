@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file triangulation/nhomologicaldata.h
- *  \brief Deals with all the details of the cellular homology of a manifold.
+ *  \brief Deals with all the details of the cellular homology of a 3-manifold.
  */
 
 #ifndef __NHOMOLOGICALDATA_H
@@ -72,6 +72,8 @@ class NTriangulation;
  *   cellular homology;
  * - the H1 torsion form;
  * - the Kawauchi-Kojima invariants of torsion linking forms.
+ * - the intersection pairing H_2 x H_2 --> H_1 and the corresponding triple product
+ *   H_2 x H_2 x H_2 --> Z.
  *
  * This class takes a "least effort" approach to all computations. It
  * only computes what is neccessary for your requests.  It also keeps a
@@ -119,6 +121,8 @@ class NTriangulation;
  * flexible class called NCellularData will take its place.
  *
  * \testpart
+ *
+ * \todo This class is to be depreciated.  See NCellularData for replacement class. 
  *
  * @author Ryan Budney
  */
@@ -206,78 +210,28 @@ private:
     std::auto_ptr<NTriangulation> tri;
 
     /**
-     * Pointer to the 0-th homology group in standard cellular coordinates,
-     * or 0 if it has not yet been computed.
+     * Pointer to homology groups in standard cellular coordinates, in dimensions
+     * 0 through 3 respectively. 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> mHomology0;
-    /**
-     * Pointer to the 1st homology group in standard cellular coordinates,
-     * or 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NMarkedAbelianGroup> mHomology1;
-    /**
-     * Pointer to the 2nd homology group in standard cellular coordinates,
-     * or 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NMarkedAbelianGroup> mHomology2;
-    /**
-     * Pointer to the 3rd homology group in standard cellular coordinates,
-     * or 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NMarkedAbelianGroup> mHomology3;
+    std::auto_ptr<NMarkedAbelianGroup> mHomology0, mHomology1, mHomology2, mHomology3;
 
     /**
-     * Pointer to the 0-th boundary homology group in standard cellular
-     * coordinates, or 0 if it has not yet been computed.
+     * Pointer to the boundary homology groups in standard cellular
+     * coordinates, dimensions 0 through 2 respectively. 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> bHomology0;
-    /**
-     * Pointer to the 1st boundary homology group in standard cellular
-     * coordinates, or 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NMarkedAbelianGroup> bHomology1;
-    /**
-     * Pointer to the 2nd boundary homology group in standard cellular
-     * coordinates, or 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NMarkedAbelianGroup> bHomology2;
+    std::auto_ptr<NMarkedAbelianGroup> bHomology0, bHomology1, bHomology2;
 
     /**
-     * Pointer to the boundary inclusion on 0-th homology, standard
+     * Pointer to the boundary inclusion on homology, standard
      * cellular coordinates, or 0 if it has not yet been computed.
      */
-    std::auto_ptr<NHomMarkedAbelianGroup> bmMap0;
-    /**
-     * Pointer to the boundary inclusion on 1st homology, standard
-     * cellular coordinates, or 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NHomMarkedAbelianGroup> bmMap1;
-    /**
-     * Pointer to the boundary inclusion on 2nd homology, standard
-     * cellular coordinates, or 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NHomMarkedAbelianGroup> bmMap2;
+    std::auto_ptr<NHomMarkedAbelianGroup> bmMap0, bmMap1, bmMap2;
 
     /**
-     * Pointer to the 0-th homology group in dual cellular coordinates, or
+     * Pointer to the homology groups in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    std::auto_ptr<NMarkedAbelianGroup> dmHomology0;
-    /**
-     * Pointer to the 1st homology group in dual cellular coordinates, or
-     * 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NMarkedAbelianGroup> dmHomology1;
-    /**
-     * Pointer to the 2nd homology group in dual cellular coordinates, or
-     * 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NMarkedAbelianGroup> dmHomology2;
-    /**
-     * Pointer to the 3rd homology group in dual cellular coordinates, or
-     * 0 if it has not yet been computed.
-     */
-    std::auto_ptr<NMarkedAbelianGroup> dmHomology3;
+    std::auto_ptr<NMarkedAbelianGroup> dmHomology0, dmHomology1, dmHomology2, dmHomology3;
 
     /**
      * Pointer to the cellular approx of the identity H1(M) --> H1(M)
@@ -285,6 +239,18 @@ private:
      * been computed.
      */
     std::auto_ptr<NHomMarkedAbelianGroup> dmTomMap1;
+
+    /**
+     * Pointers to the homology in mixed cellular coordinates. 
+     */
+    std::auto_ptr<NMarkedAbelianGroup> mH0, mH1, mH2, mH3;
+
+    /** 
+     * Pointers to the homomorphisms between dmHomology, mH and dmHomology groups
+     * respectively. 
+     */
+    std::auto_ptr<NHomMarkedAbelianGroup> SMHom0, SMHom1, SMHom2, SMHom3, 
+					  DMHom0, DMHom1, DMHom2, DMHom3;
 
     // below here and the public declaration go the internal bits of
     // data that are not publicly accessible...
@@ -300,26 +266,30 @@ private:
     unsigned long numDualCells[4];
     /** number of (standard) boundary cells in dimension 0, 1, 2. */
     unsigned long numBdryCells[3];
+    /** number of mixed cells in dimension 0, 1, 2, 3 */
+    unsigned long numMixCells[4];
+    /** number of ideal boundary cells */
+    unsigned long numIdBdryCells[3];
 
     /** non-ideal vertices */
     SortedArray sNIV;
-    /** vertices which are ideal endpoints of edges */
+    /** vertices which are ideal endpoints of edges, stored as 2*edge index + {0,1} endpt data */
     SortedArray sIEOE;
-    /** edges which are ideal end edges of faces */
+    /** edges which are ideal end edges of faces, stored as 3*face index + {0,1,2} edge data */
     SortedArray sIEEOF;
-    /** faces which are ideal end faces of tetrahedra */
+    /** faces which are ideal end faces of tetrahedra, stored as 4*tet index + {0,1,2,3} face data */
     SortedArray sIEFOT;
-    /** vertices which are not ideal, and nonboundary */
+    /** vertices which are not ideal, and nonboundary, stored as vertex index */
     SortedArray dNINBV;
-    /** interior edges ie: non-boundary edges */
+    /** interior edges ie: non-boundary edges, stored as edge index */
     SortedArray dNBE;
-    /** non-boundary faces */
+    /** non-boundary faces, stored as face index */
     SortedArray dNBF;
-    /** boundary, non-ideal vertices */
+    /** boundary, non-ideal vertices, stored as vertex index */
     SortedArray sBNIV;
-    /** boundary non-ideal edges */
+    /** boundary non-ideal edges, stored as edge index */
     SortedArray sBNIE;
-    /** boundary non-ideal faces */
+    /** boundary non-ideal faces, stored as face index */
     SortedArray sBNIF;
 
     /** True if the chain complexes A0,A1,A2,A3,A4, B0,B1,B2,B3,B4,
@@ -372,23 +342,42 @@ private:
     /** Isomorphism from C_1 dual to C_1 standard */
     std::auto_ptr<NMatrixInt> H1map;
 
+    /** 0th term in chain complex for mixed cellular homology C0 -> 0 */
+    std::auto_ptr<NMatrixInt> M0;
+    /** 1st term in chain complex for mixed cellular homology C1 -> C0 */
+    std::auto_ptr<NMatrixInt> M1;
+    /** 2nd term in chain complex for mixed cellular homology C2 -> C1 */
+    std::auto_ptr<NMatrixInt> M2;
+    /** 3rd term in chain complex for mixed cellular homology C3 -> C2 */
+    std::auto_ptr<NMatrixInt> M3;
+    /** 4th term in chain complex for mixed cellular homology 0 -> C3 */
+    std::auto_ptr<NMatrixInt> M4;
+
+    /** chain map standard to mixed 0 */
+    std::auto_ptr<NMatrixInt> AM0;
+    /** chain map AM1 */
+    std::auto_ptr<NMatrixInt> AM1;
+    /** chain map AM2 */
+    std::auto_ptr<NMatrixInt> AM2;
+    /** chain map AM3 */
+    std::auto_ptr<NMatrixInt> AM3;
+    /** chain map dual to mixed 0 */
+    std::auto_ptr<NMatrixInt> BM0;
+    /** chain map BM1 */
+    std::auto_ptr<NMatrixInt> BM1;
+    /** chain map BM2 */
+    std::auto_ptr<NMatrixInt> BM2;
+    /** chain map BM3 */
+    std::auto_ptr<NMatrixInt> BM3;
+
     /** Call this routine to demand the indexing of the chain complexes. */
     void computeccIndexing();
     /** This routine computes all the chain complexes. */
     void computeChainComplexes();
-    /** Computes all the homology groups of the manifold using standard
-        cells. */
-    void computeHomology();
-    /** Computes all the homology groups of the boundary using its standard
-        cells. */
-    void computeBHomology();
-    /** Computes all the homology groups of the manifold using dual cells. This
-     ** routine is the faster than computeHomology() but it's likely a bit
-     ** slower than NTriangulation's homology routines. */
-    void computeDHomology();
-    /** The induced map on homology corresponding to inclusion of the
-        boundary. */
-    void computeBIncl();
+    /** Compute the homology from the point of view of the barycentric CW-decomposition.
+	This will also compute all the relevant maps to the simplicial homology of the
+	triangulation and the CW-homology of the dual polyhedral decomposition. **/
+    void computeBaryCC();
 
     /** true when the torsionlinking form has been computed. */
     bool torsionFormComputed;
@@ -449,6 +438,8 @@ private:
 
 public:
 
+    NMatrixRing<NRational>* torsionLinkingFormPresentationMat;
+
     /**
      * Takes as input a triangulation.
      *
@@ -490,7 +481,7 @@ public:
      * getDualHomology() uses the dual CW-decomposition which typically
      * has an order of magnitude fewer cells.
      *
-     * Note that the groups returned by getHomology() and getDualHomology()
+     * Note that the groups returned by standardHomology() and getDualHomology()
      * are isomorphic, though they are generally described by different
      * presentations.
      *
@@ -498,7 +489,7 @@ public:
      * @return the q-th homology group, computed in the standard
      * CW-decomposition.
      */
-    const NMarkedAbelianGroup& getHomology(unsigned q);
+    const NMarkedAbelianGroup& standardHomology(unsigned q);
     /**
      * This routine gives access to the homology of the boundary
      * of the manifold, computed with the regular CW-decomposition.
@@ -507,7 +498,7 @@ public:
      * @return the q-th boundary homology group, in standard cellular
      * homology coordinates
      */
-    const NMarkedAbelianGroup& getBdryHomology(unsigned q);
+    const NMarkedAbelianGroup& boundaryHomology(unsigned q);
 
     /**
      * This routine gives access to the homomorphism from the
@@ -517,33 +508,57 @@ public:
      * @return the map from H_q of the boundary to H_q of the manifold,
      * computed in standard coordinates.
      */
-    const NHomMarkedAbelianGroup& getBdryHomologyMap(unsigned q);
+    const NHomMarkedAbelianGroup& boundaryHomologyMap(unsigned q);
 
     /**
      * This routine gives access to the manifold's homology computed
      * with the dual CW-decomposition.
      *
-     * This routine is typically faster than getHomology() since the
+     * This routine is typically faster than standardHomology() since the
      * dual CW-decomposition generally has far fewer cells.
      *
-     * Note that the groups returned by getHomology() and getDualHomology()
+     * Note that the groups returned by standardHomology() and getDualHomology()
      * are isomorphic, though they are generally described by different
      * presentations.
      *
      * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
      * @return the q-th homology group, computed in the dual CW-decomposition.
      */
-    const NMarkedAbelianGroup& getDualHomology(unsigned q);
+    const NMarkedAbelianGroup& dualHomology(unsigned q);
 
     /**
-     * Returns the isomorphism from getDualHomology(1) to getHomology(1)
+     * This routine gives access to the manifold's homology computed
+     * with the mixed dual+regular cellular decomposition. This is
+     * an expensive operation and should only be called if you're interested
+     * in the triple product H_2 x H_2 --> H_1
+     *
+     * Note that these groups are isomorphic to the groups given by 
+     * standardHomology() and getDualHomology() though they use different, simpler
+     * coordinates in their computations
+     *
+     * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
+     * @return the q-th homology group, computed in the dual CW-decomposition.
+     */
+    const NMarkedAbelianGroup& mixedHomology(unsigned q);
+
+    /**
+     * Returns the homomorphism from standard to mixed cellular homology
+     */
+    const NHomMarkedAbelianGroup& standardToMixedHom(unsigned q);
+    /**
+     * Returns the homomorphism from dual to mixed cellular homology
+     */
+    const NHomMarkedAbelianGroup& dualToMixedHom(unsigned q);
+
+    /**
+     * Returns the isomorphism from getDualHomology(1) to standardHomology(1)
      * given by a cellular approximation to the identity map on the manifold.
      *
-     * @return The isomorphism from getDualHomology(1) to getHomology(1)
+     * @return The isomorphism from getDualHomology(1) to standardHomology(1)
      * computed via a cellular approximation of the identity map from
      * the first 1-skeleton to the second.
      */
-    const NHomMarkedAbelianGroup& getH1CellAp();
+    const NHomMarkedAbelianGroup& fastDualToStandardH1();
 
     /**
      * Returns the number of cells of the given dimension
@@ -563,7 +578,7 @@ public:
      * @return the number of cells of the given dimension in the standard
      * CW-decomposition of the closed manifold.
      */
-    unsigned long getNumStandardCells(unsigned dimension);
+    unsigned long standardCellCount(unsigned dimension);
     /**
      * Returns the number of cells of the given dimension
      * in the dual CW-decomposition of the manifold. This is typically
@@ -574,7 +589,7 @@ public:
      * @return the number of cells of the given dimension in the dual
      * CW-decomposition to the triangulation.
      */
-    unsigned long getNumDualCells(unsigned dimension);
+    unsigned long dualCellCount(unsigned dimension);
     /**
      * Returns the number of cells of the given dimension in the
      * standard CW-decomposition of the boundary of the manifold.
@@ -585,7 +600,13 @@ public:
      * @return the number of cells of the given dimension in the standard
      * CW-decomposition of the boundary.
      */
-    unsigned long getNumBdryCells(unsigned dimension);
+    unsigned long boundaryCellCount(unsigned dimension);
+
+    /**
+     * Returns the number of cells in the mixed cellular decomposition 
+     */
+    unsigned long mixedCellCount(unsigned dimension);
+
     /**
      * The proper Euler characteristic of the manifold, computed from
      * the dual CW-decomposition.
@@ -606,7 +627,7 @@ public:
      * @return the Euler characteristic of the corresponding compact
      * triangulated 3-manifold.
      */
-    long getEulerChar();
+    long eulerChar();
 
     /**
      * Returns the torsion form rank vector. This is the first of
@@ -629,7 +650,7 @@ public:
      * @return the torsion form rank vector.
      */
     const std::vector< std::pair< NLargeInteger,
-        std::vector< unsigned long > > >& getTorsionRankVector();
+        std::vector< unsigned long > > >& torsionRankVector();
     /**
      * Same as getTorsionRankVector() but returns as a human-readable string.
      *
@@ -638,7 +659,7 @@ public:
      * @return human-readable prime power factorization of the order of
      * the torsion subgroup of H1.
      */
-    const std::string& getTorsionRankVectorString();
+    const std::string& torsionRankVectorString();
     /**
      * Returns the 2-torsion sigma vector. This is the second of the three
      * Kawauchi-Kojima invariants. It is orientation-sensitive.
@@ -654,7 +675,7 @@ public:
      *
      * @return the Kawauchi-Kojima sigma-vector.
      */
-    const std::vector<NLargeInteger>& getTorsionSigmaVector();
+    const std::vector<NLargeInteger>& torsionSigmaVector();
     /**
      * Same as getTorsionSigmaVector() but returns as a human-readable string.
      * This is an orientation-sensitive invariant.
@@ -663,7 +684,7 @@ public:
      *
      * @return the Kawauchi-Kojima sigma-vector in human readable form.
      */
-    const std::string& getTorsionSigmaVectorString();
+    const std::string& torsionSigmaVectorString();
 
     /**
      * Returns the odd p-torsion Legendre symbol vector. This is the
@@ -682,7 +703,7 @@ public:
      * linking form.
      */
     const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
-        getTorsionLegendreSymbolVector();
+        torsionLegendreSymbolVector();
     /**
      * Same as getTorsionLegendreSymbolVector() but returns as a
      * human-readable string.
@@ -691,7 +712,7 @@ public:
      *
      * @return the Legendre symbol vector in human-readable form.
      */
-    const std::string& getTorsionLegendreSymbolVectorString();
+    const std::string& torsionLegendreSymbolVectorString();
 
     /**
      * Returns true iff torsion linking form is `hyperbolic' in
@@ -754,7 +775,47 @@ public:
      * is known about where this manifold embeds, based solely
      * on the manifold's homological data.
      */
-    const std::string& getEmbeddabilityComment();
+    const std::string& embeddabilityComment();
+
+    /**
+     * Computes the image H_2(M;R) x H_2(M;R) --> H_1(M;R)
+     * as an abelian group. R represents any cyclic group. 
+     * Where the map is the H_2-intersection form -- Poincare Dual to the cup product 
+     * pairing H^1(M,\partial M;R) \otimes H^1(M, \partial M;R) --> H^2(M, \partial M;R).
+     *
+     * Warning: the current implementation can be painfully slow as the linear algebra gets a little
+     *  out of control.
+     *
+     * \pre The manifold needs to be oriented unless p==2, in which case non-orientable
+     *      manifolds are fine.
+     */
+    NMarkedAbelianGroup imgH2form(unsigned long p=0);
+
+    /**
+     * Runs through all the various standard homomorphisms between boundary, standard, dual and mixed
+     *  homologies and checks the matrices defining them really are chain maps.
+     *
+     * This procedure is largely for debugging purposes as in any release this should always produce
+     *  true.
+     *
+     * @return true if all homomorphisms are defined by matrices that really are chain maps of
+     *         chain complexes.
+     */
+    bool verifyChainComplexes();
+
+    /**
+     * If all the chain complexes check out, might as well verify a few basic isomorphisms as well. 
+     * There's the isomorphisms between all the homology groups in the 3 coordinate systems, and also
+     * there's the cellular homotopy between H1 in standard and dual coordiantes. 
+     *
+     * This is mainly for debugging purposes as in any release this should always produce an answer
+     * of true. 
+     *
+     * @return true provided every natural map between the various homology groups computable that
+     *         should be isomorphisms, actually are isomorphisms. 
+     */
+    bool verifyCoordinateIsomorphisms(NLargeInteger p = NLargeInteger::zero);
+
 };
 
 /*@}*/
@@ -776,6 +837,8 @@ inline NHomologicalData::NHomologicalData(const NTriangulation& input):
     std::fill(numStandardCells, numStandardCells + 4, 0);
     std::fill(numDualCells, numDualCells + 4, 0);
     std::fill(numBdryCells, numBdryCells + 3, 0);
+    std::fill(numIdBdryCells, numIdBdryCells + 3, 0);
+    std::fill(numMixCells, numMixCells+4, 0);
 }
 
 
@@ -786,39 +849,38 @@ inline NHomologicalData::NHomologicalData(const NHomologicalData& g) :
 
         tri(clonePtr(g.tri)),
 
-        mHomology0(clonePtr(g.mHomology0)),
-        mHomology1(clonePtr(g.mHomology1)),
-        mHomology2(clonePtr(g.mHomology2)),
-        mHomology3(clonePtr(g.mHomology3)),
+        mHomology0(clonePtr(g.mHomology0)), mHomology1(clonePtr(g.mHomology1)),
+        mHomology2(clonePtr(g.mHomology2)), mHomology3(clonePtr(g.mHomology3)),
 
-        bHomology0(clonePtr(g.bHomology0)),
-        bHomology1(clonePtr(g.bHomology1)),
+        bHomology0(clonePtr(g.bHomology0)), bHomology1(clonePtr(g.bHomology1)),
         bHomology2(clonePtr(g.bHomology2)),
 
-        bmMap0(clonePtr(g.bmMap0)),
-        bmMap1(clonePtr(g.bmMap1)),
-        bmMap2(clonePtr(g.bmMap2)),
+        bmMap0(clonePtr(g.bmMap0)), bmMap1(clonePtr(g.bmMap1)), bmMap2(clonePtr(g.bmMap2)),
 
-        dmHomology0(clonePtr(g.dmHomology0)),
-        dmHomology1(clonePtr(g.dmHomology1)),
-        dmHomology2(clonePtr(g.dmHomology2)),
-        dmHomology3(clonePtr(g.dmHomology3)),
+        dmHomology0(clonePtr(g.dmHomology0)),      dmHomology1(clonePtr(g.dmHomology1)),
+        dmHomology2(clonePtr(g.dmHomology2)),      dmHomology3(clonePtr(g.dmHomology3)),
 
         dmTomMap1(clonePtr(g.dmTomMap1)),
+
+	mH0(clonePtr(g.mH0)), mH1(clonePtr(g.mH1)), mH2(clonePtr(g.mH2)), mH3(clonePtr(g.mH3)),
+
+	SMHom0(clonePtr(g.SMHom0)), SMHom1(clonePtr(g.SMHom1)), 
+	SMHom2(clonePtr(g.SMHom2)), SMHom3(clonePtr(g.SMHom3)), 
+	DMHom0(clonePtr(g.DMHom0)), DMHom1(clonePtr(g.DMHom1)), 
+	DMHom2(clonePtr(g.DMHom2)), DMHom3(clonePtr(g.DMHom3)), 
 
         ccIndexingComputed(g.ccIndexingComputed),
 
         chainComplexesComputed(g.chainComplexesComputed),
         A0(clonePtr(g.A0)), A1(clonePtr(g.A1)), A2(clonePtr(g.A2)),
-        A3(clonePtr(g.A3)), A4(clonePtr(g.A4)),
-        B0_(clonePtr(g.B0_)), B1(clonePtr(g.B1)), B2(clonePtr(g.B2)),
-        B3(clonePtr(g.B3)), B4(clonePtr(g.B4)),
-        Bd0(clonePtr(g.Bd0)), Bd1(clonePtr(g.Bd1)),
-        Bd2(clonePtr(g.Bd2)), Bd3(clonePtr(g.Bd3)),
-        B0Incl(clonePtr(g.B0Incl)),
-        B1Incl(clonePtr(g.B1Incl)),
-        B2Incl(clonePtr(g.B2Incl)),
-        H1map(clonePtr(g.H1map)),
+        A3(clonePtr(g.A3)), A4(clonePtr(g.A4)), B0_(clonePtr(g.B0_)), 
+        B1(clonePtr(g.B1)), B2(clonePtr(g.B2)), B3(clonePtr(g.B3)), B4(clonePtr(g.B4)),
+        Bd0(clonePtr(g.Bd0)), Bd1(clonePtr(g.Bd1)), Bd2(clonePtr(g.Bd2)), Bd3(clonePtr(g.Bd3)),
+        B0Incl(clonePtr(g.B0Incl)), B1Incl(clonePtr(g.B1Incl)), B2Incl(clonePtr(g.B2Incl)),
+        H1map(clonePtr(g.H1map)), M0(clonePtr(g.M0)), M1(clonePtr(g.M1)), M2(clonePtr(g.M2)),
+        M3(clonePtr(g.M3)), M4(clonePtr(g.M4)),	AM0(clonePtr(g.AM0)), AM1(clonePtr(g.AM1)), 
+	AM2(clonePtr(g.AM2)), AM3(clonePtr(g.AM3)), BM0(clonePtr(g.BM0)), BM1(clonePtr(g.BM1)), 
+	BM2(clonePtr(g.BM2)), BM3(clonePtr(g.BM3)), 
 
         torsionFormComputed(g.torsionFormComputed),
         embeddabilityString(g.embeddabilityString)
@@ -829,6 +891,8 @@ inline NHomologicalData::NHomologicalData(const NHomologicalData& g) :
         std::copy(g.numStandardCells, g.numStandardCells + 4, numStandardCells);
         std::copy(g.numDualCells, g.numDualCells + 4, numDualCells);
         std::copy(g.numBdryCells, g.numBdryCells + 3, numBdryCells);
+        std::copy(g.numIdBdryCells, g.numIdBdryCells + 3, numIdBdryCells);
+        std::copy(g.numMixCells, g.numMixCells+4, numMixCells);
 
         sNIV = g.sNIV;   // non-ideal vertices
         sIEOE = g.sIEOE;  // ideal endpoints of edges
@@ -865,31 +929,39 @@ inline NHomologicalData::~NHomologicalData() {
     if (torsionFormComputed) {
         for (unsigned long i=0; i<linkingFormPD.size(); i++)
             delete linkingFormPD[i];
+     // temp
+     delete torsionLinkingFormPresentationMat;
     }
 }
 
-inline unsigned long NHomologicalData::getNumStandardCells(unsigned dimension)
+inline unsigned long NHomologicalData::standardCellCount(unsigned dimension)
 {
     // number of cells of dimension 0, 1, 2, 3.
     computeccIndexing();
     return numStandardCells[dimension];
 }
 
-inline unsigned long NHomologicalData::getNumDualCells(unsigned dimension)
+inline unsigned long NHomologicalData::dualCellCount(unsigned dimension)
 {
     // dual cells
     computeccIndexing();
     return numDualCells[dimension];
 }
 
-inline unsigned long NHomologicalData::getNumBdryCells(unsigned dimension)
+inline unsigned long NHomologicalData::boundaryCellCount(unsigned dimension)
 {
     // standard boundary cells
     computeccIndexing();
     return numBdryCells[dimension];
 }
 
-inline long int NHomologicalData::getEulerChar()
+inline unsigned long NHomologicalData::mixedCellCount(unsigned dimension)
+{
+     computeBaryCC();
+     return numMixCells[dimension];
+}
+
+inline long int NHomologicalData::eulerChar()
 {
     // euler characteristic
     computeccIndexing();
@@ -897,19 +969,19 @@ inline long int NHomologicalData::getEulerChar()
 }
 
 inline const std::vector< std::pair< NLargeInteger,
-std::vector< unsigned long > > >& NHomologicalData::getTorsionRankVector()
+std::vector< unsigned long > > >& NHomologicalData::torsionRankVector()
 {
     computeTorsionLinkingForm();
     return torRankV;
 }
 inline const std::vector<NLargeInteger>&
-NHomologicalData::getTorsionSigmaVector()
+NHomologicalData::torsionSigmaVector()
 {
     computeTorsionLinkingForm();
     return twoTorSigmaV;
 }
 inline const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
-NHomologicalData::getTorsionLegendreSymbolVector()
+NHomologicalData::torsionLegendreSymbolVector()
 {
     computeTorsionLinkingForm();
     return oddTorLegSymV;
@@ -925,26 +997,26 @@ inline bool NHomologicalData::formSatKK()
     computeTorsionLinkingForm();
     return torsionLinkingFormSatisfiesKKtwoTorCondition;
 }
-inline const std::string& NHomologicalData::getTorsionRankVectorString()
+inline const std::string& NHomologicalData::torsionRankVectorString()
 {
     computeTorsionLinkingForm();
     return torsionRankString;
 }
 
-inline const std::string& NHomologicalData::getTorsionSigmaVectorString()
+inline const std::string& NHomologicalData::torsionSigmaVectorString()
 {
     computeTorsionLinkingForm();
     return torsionSigmaString;
 }
 
 inline const std::string&
-NHomologicalData::getTorsionLegendreSymbolVectorString()
+NHomologicalData::torsionLegendreSymbolVectorString()
 {
     computeTorsionLinkingForm();
     return torsionLegendreString;
 }
 
-inline const std::string& NHomologicalData::getEmbeddabilityComment()
+inline const std::string& NHomologicalData::embeddabilityComment()
 {
     computeEmbeddabilityString();
     return embeddabilityString;

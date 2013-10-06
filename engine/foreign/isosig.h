@@ -55,8 +55,11 @@ class NContainer;
 /**
  * Reads a list of isomorphism signatures from the given text file.
  * The file should contain one isomorphism signature per line.
+ * Signatures for both 3-manifold triangulations and 4-manifold triangulations
+ * are accepted (though they cannot be mixed together within the same file).
  * These isomorphism signatures will be converted into triangulations using
- * NTriangulation::fromIsoSig().
+ * NTriangulation::fromIsoSig() and Dim4Triangulation::fromIsoSig()
+ * respectively.
  *
  * A newly allocated container will be returned; the imported
  * triangulations will be inserted as children of this container.
@@ -85,10 +88,9 @@ class NContainer;
  * It assumes however that the \e contents of the file are in UTF-8.
  *
  * @param filename the name of the text file from which to read.
- * @param dimension must be set to 3, indicating that isomorphism
- * signatures should be expanded into 3-manifold triangulations.
- * This argument is a placeholder for future expansion, and currently no
- * value other than 3 is allowed.
+ * @param dimension either 3 or 4, indicating whether isomorphism
+ * signatures should be expanded into 3-manifold triangulations or
+ * 4-manifold triangulations respectively.
  * @param colSigs the column of the text file containing the
  * isomorphism signatures.
  * @param colLabels the column of the text file containing the

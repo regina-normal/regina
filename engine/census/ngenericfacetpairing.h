@@ -60,7 +60,7 @@ namespace regina {
 /**
  * A dimension-agnostic base class that represents a pairwise
  * matching of facets of \a dim-dimensional simplices.
- * Each dimension that Regina works with (2 and 3) offers its own subclass
+ * Each dimension that Regina works with (2, 3 and 4) offers its own subclass
  * with richer functionality; users typically do not need to work with this
  * template base class directly.
  *
@@ -78,10 +78,10 @@ namespace regina {
  * triangulation, the individual gluing permutations will still need to
  * be specified; they are not a part of this structure.
  *
- * \pre The dimension argument \a dim is either 2 or 3.
+ * \pre The dimension argument \a dim is either 2, 3 or 4.
  *
  * \ifacespython Not present, though the dimension-specific subclasses
- * (such as NFacePairing) are available for Python users.
+ * (such as NFacePairing and Dim4FacetPairing) are available for Python users.
  *
  * \testpart
  */

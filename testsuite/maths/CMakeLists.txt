@@ -9,6 +9,7 @@ SET ( FILES
   nperm5
   nprimes
   nrational
+  nsparsegrid
   numbertheory
   permconv
   )

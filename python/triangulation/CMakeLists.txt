@@ -8,7 +8,6 @@ SET ( FILES
   nexampletriangulation
   nface
   nfacepair
-  nhomologicaldata
   nisomorphism
   ntetface
   ntetrahedron

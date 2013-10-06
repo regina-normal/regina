@@ -4,6 +4,8 @@
 SET ( FILES
   dim2census
   dim2edgepairing
+  dim4census
+  dim4facetpairing
   ncensus
   nfacepairing
   )

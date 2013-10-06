@@ -42,6 +42,7 @@
 #include "reginamain.h"
 #include "reginasupport.h"
 #include "packettypes/dim2triui.h"
+#include "packettypes/dim4triui.h"
 #include "packettypes/nanglestructureui.h"
 #include "packettypes/ncontainerui.h"
 #include "packettypes/nnormalsurfaceui.h"
@@ -66,6 +67,8 @@ QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
             IconCache::regina);
     else if (packet->getPacketType() == Dim2Triangulation::packetType)
         id = IconCache::packet_dim2triangulation;
+    else if (packet->getPacketType() == Dim4Triangulation::packetType)
+        id = IconCache::packet_dim4triangulation;
     else if (packet->getPacketType() == NPDF::packetType)
         id = IconCache::packet_pdf;
     else if (packet->getPacketType() == NSurfaceFilter::packetType) {
@@ -107,6 +110,9 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
             enclosingPane);
     if (packet->getPacketType() == Dim2Triangulation::packetType)
         return new Dim2TriangulationUI(dynamic_cast<Dim2Triangulation*>(packet),
+            enclosingPane);
+    if (packet->getPacketType() == Dim4Triangulation::packetType)
+        return new Dim4TriangulationUI(dynamic_cast<Dim4Triangulation*>(packet),
             enclosingPane);
     if (packet->getPacketType() == NNormalSurfaceList::packetType)
         return new NNormalSurfaceUI(dynamic_cast<NNormalSurfaceList*>(packet),

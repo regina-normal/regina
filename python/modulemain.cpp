@@ -44,8 +44,10 @@ void addAlgebra();
 void addAngle();
 void addCensus();
 void addDim2();
+void addDim4();
 void addFile();
 void addForeign();
+void addHypersurface();
 void addManifold();
 void addMaths();
 void addPacket();
@@ -65,7 +67,7 @@ using regina::ShareableObject;
 namespace {
     std::string welcome() {
         return std::string(PACKAGE_STRING) +
-            "\nSoftware for 3-manifold topology and normal surface theory" +
+            "\nSoftware for 3-manifolds, 4-manifolds and normal surface theory" +
             "\nCopyright (c) 1999-2013, The Regina development team";
     }
 
@@ -132,6 +134,7 @@ BOOST_PYTHON_MODULE(regina) {
     addPacket();
     addTriangulation();
     addCensus();
+    addDim4();
     addFile();
     addForeign();
     addSplit();
@@ -142,6 +145,7 @@ BOOST_PYTHON_MODULE(regina) {
     addManifold();
     addAngle();
     addSurfaces();
+    addHypersurface();
     addDim2();
 }
 

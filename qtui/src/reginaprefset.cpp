@@ -252,6 +252,8 @@ ReginaPrefSet::ReginaPrefSet() :
         tabDim3Tri(0),
         tabDim3TriAlgebra(0),
         tabDim3TriSkeleton(0),
+        tabDim4Tri(0),
+        tabDim4TriAlgebra(0),
         tabSurfaceList(0),
         triGAPExec(defaultGAPExec),
         triGraphvizExec(defaultGraphvizExec),
@@ -518,6 +520,8 @@ void ReginaPrefSet::readInternal() {
     tabDim3Tri = settings.value("Dim3Tri", 0).toUInt();
     tabDim3TriAlgebra = settings.value("Dim3TriAlgebra", 0).toUInt();
     tabDim3TriSkeleton = settings.value("Dim3TriSkeleton", 0).toUInt();
+    tabDim4Tri = settings.value("Dim4Tri", 0).toUInt();
+    tabDim4TriAlgebra = settings.value("Dim4TriAlgebra", 0).toUInt();
     tabSurfaceList = settings.value("SurfaceList", 0).toUInt();
     settings.endGroup();
 
@@ -619,6 +623,8 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("Dim3Tri", tabDim3Tri);
     settings.setValue("Dim3TriAlgebra", tabDim3TriAlgebra);
     settings.setValue("Dim3TriSkeleton", tabDim3TriSkeleton);
+    settings.setValue("Dim4Tri", tabDim4Tri);
+    settings.setValue("Dim4TriAlgebra", tabDim4TriAlgebra);
     settings.setValue("SurfaceList", tabSurfaceList);
     settings.endGroup();
 

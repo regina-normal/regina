@@ -46,9 +46,9 @@
  * isomorphism signature lists.
  *
  * Rather than creating new objects of this class, the globally
- * available objects IsoSigHandler::instance2 and IsoSigHandler::instance3
- * (for 2-manifold and 3-manifold triangulations respectively) should always
- * be used.
+ * available objects IsoSigHandler::instance2, IsoSigHandler::instance3
+ * and IsoSigHandler::instance4 (for 2-manifold, 3-manifold and 4-manifold
+ * triangulations respectively) should always be used.
  */
 class IsoSigHandler : public PacketImporter {
     using PacketImporter::importData;
@@ -65,6 +65,7 @@ class IsoSigHandler : public PacketImporter {
          */
         static const IsoSigHandler instance2;
         static const IsoSigHandler instance3;
+        static const IsoSigHandler instance4;
 
     public:
         /**

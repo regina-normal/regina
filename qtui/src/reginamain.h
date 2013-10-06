@@ -305,6 +305,7 @@ class ReginaMain : public QMainWindow {
         void newCensus();
         void newContainer();
         void newDim2Triangulation();
+        void newDim4Triangulation();
         void newFilter();
         void newNormalSurfaces();
         void newPDF();
@@ -318,6 +319,7 @@ class ReginaMain : public QMainWindow {
         void importDehydration();
         void importIsoSig2();
         void importIsoSig3();
+        void importIsoSig4();
         void importPDF();
         void importPython();
         void importRegina();

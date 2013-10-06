@@ -32,7 +32,7 @@
 
 /* end stub */
 
-#define SUPPORT_DIM4 0
+#define SUPPORT_DIM4 1
 
 #include "mpi.h"
 

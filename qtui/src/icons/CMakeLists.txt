@@ -17,6 +17,7 @@ set (IMGS
   packet_angles
   packet_container
   packet_dim2triangulation
+  packet_dim4tri
   packet_filter
   packet_pdf
   packet_script

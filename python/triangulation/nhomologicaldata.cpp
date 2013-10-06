@@ -44,35 +44,46 @@ void addNHomologicalData() {
             std::auto_ptr<NHomologicalData>, boost::noncopyable>
             ("NHomologicalData", init<const NTriangulation&>())
         .def(init<const NHomologicalData&>())
-        .def("getHomology", &NHomologicalData::getHomology,
+        .def("standardHomology", &NHomologicalData::standardHomology,
             return_internal_reference<>())
-        .def("getBdryHomology", &NHomologicalData::getBdryHomology,
+        .def("boundaryHomology", &NHomologicalData::boundaryHomology,
             return_internal_reference<>())
-        .def("getBdryHomologyMap", &NHomologicalData::getBdryHomologyMap,
+        .def("boundaryHomologyMap", &NHomologicalData::boundaryHomologyMap,
             return_internal_reference<>())
-        .def("getDualHomology", &NHomologicalData::getDualHomology,
+        .def("dualHomology", &NHomologicalData::dualHomology,
             return_internal_reference<>())
-        .def("getH1CellAp", &NHomologicalData::getH1CellAp,
+        .def("mixedHomology", &NHomologicalData::mixedHomology, 
             return_internal_reference<>())
-        .def("getNumStandardCells", &NHomologicalData::getNumStandardCells)
-        .def("getNumDualCells", &NHomologicalData::getNumDualCells)
-        .def("getNumBdryCells", &NHomologicalData::getNumBdryCells)
-        .def("getEulerChar", &NHomologicalData::getEulerChar)
-        .def("getTorsionRankVectorString",
-            &NHomologicalData::getTorsionRankVectorString,
+        .def("standardToMixedHom", &NHomologicalData::standardToMixedHom, 
+            return_internal_reference<>())
+        .def("dualToMixedHom", &NHomologicalData::dualToMixedHom, 
+            return_internal_reference<>())
+        .def("fastDualToStandardH1", &NHomologicalData::fastDualToStandardH1,
+            return_internal_reference<>())
+        .def("standardCellCount", &NHomologicalData::standardCellCount)
+        .def("dualCellCount", &NHomologicalData::dualCellCount)
+        .def("boundaryCellCount", &NHomologicalData::boundaryCellCount)
+        .def("mixedCellCount", &NHomologicalData::mixedCellCount)
+        .def("eulerChar", &NHomologicalData::eulerChar)
+        .def("torsionRankVectorString",
+            &NHomologicalData::torsionRankVectorString,
             return_value_policy<copy_const_reference>())
-        .def("getTorsionSigmaVectorString",
-            &NHomologicalData::getTorsionSigmaVectorString,
+        .def("torsionSigmaVectorString",
+            &NHomologicalData::torsionSigmaVectorString,
             return_value_policy<copy_const_reference>())
-        .def("getTorsionLegendreSymbolVectorString",
-            &NHomologicalData::getTorsionLegendreSymbolVectorString,
+        .def("torsionLegendreSymbolVectorString",
+            &NHomologicalData::torsionLegendreSymbolVectorString,
             return_value_policy<copy_const_reference>())
         .def("formIsHyperbolic", &NHomologicalData::formIsHyperbolic)
         .def("formIsSplit", &NHomologicalData::formIsSplit)
         .def("formSatKK", &NHomologicalData::formSatKK)
-        .def("getEmbeddabilityComment",
-            &NHomologicalData::getEmbeddabilityComment,
+        .def("embeddabilityComment",
+            &NHomologicalData::embeddabilityComment,
             return_value_policy<copy_const_reference>())
+        .def("verifyChainComplexes", &NHomologicalData::verifyChainComplexes)
+        .def("verifyCoordinateIsomorphisms", &NHomologicalData::verifyCoordinateIsomorphisms)
+//        .def("imgH2form", &NHomologicalData::imgH2form,    // no rush on implementing this as 
+//            return_internal_reference<>())                 // I'll probably change the internal rep
     ;
 }
 

@@ -289,6 +289,16 @@ typedef NFacetSpec<2> Dim2TriangleEdge;
  */
 typedef NFacetSpec<3> NTetFace;
 
+/**
+ * A lightweight class used to refer to a particular facet of a
+ * particular pentachoron in a 4-manifold triangulation.  This is a
+ * convenience typedef for the template instance NFacetSpec<4>.
+ *
+ * \ifacespython The specific class Dim4PentFacet is available through Python,
+ * even though the generic template NFacetSpec is not.
+ */
+typedef NFacetSpec<4> Dim4PentFacet;
+
 /*@}*/
 
 // Inline functions for NFacetSpec

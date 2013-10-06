@@ -112,6 +112,21 @@ struct DimTraits<3> {
     typedef NFacePairing FacetPairing;
     typedef NPerm4 Perm;
 };
+
+class Dim4Triangulation;
+class Dim4Pentachoron;
+class Dim4Isomorphism;
+class Dim4FacetPairing;
+class NPerm5;
+
+template <>
+struct DimTraits<4> {
+    typedef Dim4Triangulation Triangulation;
+    typedef Dim4Pentachoron Simplex;
+    typedef Dim4Isomorphism Isomorphism;
+    typedef Dim4FacetPairing FacetPairing;
+    typedef NPerm5 Perm;
+};
 #endif
 
 } // namespace regina

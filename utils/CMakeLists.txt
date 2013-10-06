@@ -8,6 +8,7 @@ set(UTILS
   regconvert
   regfiledump
   regfiletype
+  regmerge
   sigcensus
   tricensus
   trisetcmp

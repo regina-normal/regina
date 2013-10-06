@@ -232,6 +232,7 @@ class NTriCellularInfoUI: public PacketViewerTab {
         QLabel* TorForOrders; // torsion subgroup prime power decomp
         QLabel* TorForSigma;  // the Kawauchi-Kojima 2-torsion sigma vector
         QLabel* TorForLegendre; // the odd p-torsion Legendre symbol vector
+        QLabel* AlexInv; // Alexander module invariants (if exists)
         QLabel* EmbeddingComments; // comments on what the manifold may
                                    // or may not embed in.
 

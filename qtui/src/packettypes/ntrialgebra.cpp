@@ -36,7 +36,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/numbertheory.h"
-#include "triangulation/nhomologicaldata.h"
+#include "algebra/ncellulardata.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
@@ -64,6 +64,9 @@
 
 using regina::NPacket;
 using regina::NTriangulation;
+using regina::NCellularData;
+using regina::NLargeInteger;
+using regina::NSVPolynomialRing;
 
 namespace {
     /**
@@ -718,45 +721,47 @@ void NTriTuraevViroUI::calculateInvariant() {
     invariants->addTopLevelItem(item);
 }
 
-//////////////////////////////////////////////////////////////////////////////
-/* RBADD */
 /** These routines puts up the interface for the detailed cellular information
         and it is a submenu of the Algebra menu. **/
 
 void NTriCellularInfoUI::refresh() {
     if (tri->isValid()) {
-        regina::NHomologicalData minfo(*tri);
+        NCellularData Minfo(*tri);
 
-        Cells->setText(QObject::tr("%1, %2, %3, %4").
-            arg(minfo.getNumStandardCells(0)).
-            arg(minfo.getNumStandardCells(1)).
-            arg(minfo.getNumStandardCells(2)).
-            arg(minfo.getNumStandardCells(3)));
+       Cells->setText(QObject::tr("%1, %2, %3, %4").
+            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(0, NCellularData::STD_coord) ) ).
+            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(1, NCellularData::STD_coord) ) ).
+            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(2, NCellularData::STD_coord) ) ).
+            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(3, NCellularData::STD_coord) ) ));
 
         DualCells->setText(QObject::tr("%1, %2, %3, %4").
-            arg(minfo.getNumDualCells(0)).
-            arg(minfo.getNumDualCells(1)).
-            arg(minfo.getNumDualCells(2)).
-            arg(minfo.getNumDualCells(3)));
+            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(0, NCellularData::DUAL_coord) ) ).
+            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(1, NCellularData::DUAL_coord) ) ).
+            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(2, NCellularData::DUAL_coord) ) ).
+            arg(Minfo.cellCount( NCellularData::ChainComplexLocator(3, NCellularData::DUAL_coord) ) ));
 
-        EulerChar->setText(QString::number(minfo.getEulerChar()));
+        EulerChar->setText(QString::number(Minfo.eulerChar()));
 
         H0H1H2H3->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4").
-            arg(minfo.getHomology(0).toString().c_str()).
-            arg(minfo.getHomology(1).toString().c_str()).
-            arg(minfo.getHomology(2).toString().c_str()).
-            arg(minfo.getHomology(3).toString().c_str()));
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(0, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(1, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).            
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(2, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).           
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(3, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ) );          
 
-        HBdry->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3").
-            arg(minfo.getBdryHomology(0).toString().c_str()).
-            arg(minfo.getBdryHomology(1).toString().c_str()).
-            arg(minfo.getBdryHomology(2).toString().c_str()));
+         HBdry->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3").
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(0, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ).
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(1, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ).            
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(2, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ) );          
 
-        BdryMap->setText(minfo.getBdryHomologyMap(1).toString().c_str());
+        BdryMap->setText(Minfo.homGroup( NCellularData::HomLocator( 
+            NCellularData::GroupLocator( 1, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0 ), 
+            NCellularData::GroupLocator( 1, NCellularData::coVariant, NCellularData::STD_coord, 0 ) ) 
+                        )->toString().c_str() );
 
         if (! tri->isConnected()) {
             QString msg(QObject::tr("Triangulation is disconnected."));
 
+            AlexInv->setText(msg);
             TorForOrders->setText(msg);
             TorForSigma->setText(msg);
             TorForLegendre->setText(msg);
@@ -766,11 +771,11 @@ void NTriCellularInfoUI::refresh() {
             // orientable y/n, boundary y/n, torsion exists y/n
             if (tri->isOrientable()) {
                 TorForOrders->setText(
-                    minfo.getTorsionRankVectorString().c_str());
+                    Minfo.stringInfo( NCellularData::TORFORM_powerdecomp ).c_str() );
                 TorForSigma->setText(
-                    minfo.getTorsionSigmaVectorString().c_str());
+                    Minfo.stringInfo( NCellularData::TORFORM_sigmastring ).c_str() );
                 TorForLegendre->setText(
-                    minfo.getTorsionLegendreSymbolVectorString().c_str());
+                    Minfo.stringInfo( NCellularData::TORFORM_legendresymbol ).c_str() );
             } else {
                 // The torsion linking form routines insist on orientability,
                 // so we should avoid calling them.
@@ -781,11 +786,28 @@ void NTriCellularInfoUI::refresh() {
                 TorForLegendre->setText(msg);
             }
 
+            if (Minfo.unmarkedGroup( NCellularData::GroupLocator(1, 
+                NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->getRank()==1)
+             {
+                std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > alex(
+                    Minfo.alexanderIdeal() );
+                std::string aString;
+                for (std::list< NSVPolynomialRing<NLargeInteger> >::iterator i = alex->begin();
+                     i != alex->end(); i++)
+                  {
+                  aString.append( i->toString() );
+                  if (i!=alex->end()) aString.append(" ");
+                  }
+              AlexInv->setText(QObject::tr(aString.c_str()));
+             }
+            else
+             AlexInv->setText(QObject::tr("No Alexander invariant."));
+
             // The embeddability comment is good for both orientable and
             // non-orientable triangulations.
             // Encase it in <qt>..</qt> so it can wrap over multiple lines.
             EmbeddingComments->setText(QString("<qt>%1</qt>").arg(
-                Qt::escape(minfo.getEmbeddabilityComment().c_str())));
+                Qt::escape(Minfo.stringInfo(NCellularData::TORFORM_embinfo).c_str())));
         }
     } else {
         QString msg(QObject::tr("Invalid Triangulation"));
@@ -795,6 +817,7 @@ void NTriCellularInfoUI::refresh() {
         H0H1H2H3->setText(msg);
         HBdry->setText(msg);
         BdryMap->setText(msg);
+        AlexInv->setText(msg);
         TorForOrders->setText(msg);
         TorForSigma->setText(msg);
         TorForLegendre->setText(msg);
@@ -820,7 +843,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
 
     QGridLayout* homologyGrid = new QGridLayout(grid);//, 11, 4, 0, 5);
     homologyGrid->setRowStretch(0, 1);
-    homologyGrid->setRowStretch(11, 1);
+    homologyGrid->setRowStretch(12, 1);
     homologyGrid->setColumnStretch(0, 1);
     homologyGrid->setColumnStretch(2, 1); // Give the embeddability comment
                                        // a little room to breathe.
@@ -942,10 +965,18 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     TorForLegendre->setWhatsThis(msg);
 
-    label = new QLabel(QObject::tr("Comments: "), grid);
+    label = new QLabel(QObject::tr("Alexander ideal: "), grid);
     homologyGrid->addWidget(label, 10, 1);
+    AlexInv = new QLabel(grid);
+    homologyGrid->addWidget(AlexInv, 10, 2);
+    msg = QObject::tr("<qt>blah blah alexander ideal is blah blah</qt>");
+    label->setWhatsThis(msg);
+    AlexInv->setWhatsThis(msg);    
+
+    label = new QLabel(QObject::tr("Comments: "), grid);
+    homologyGrid->addWidget(label, 11, 1);
     EmbeddingComments = new QLabel(grid);
-    homologyGrid->addWidget(EmbeddingComments, 10, 2);
+    homologyGrid->addWidget(EmbeddingComments, 11, 2);
     msg = QObject::tr("<qt>If the homology allows us to make any deductions "
                 "about the embeddability of this manifold in "
                 "R<sup>3</sup>, S<sup>3</sup>, S<sup>4</sup> "

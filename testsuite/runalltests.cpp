@@ -40,8 +40,10 @@
 #include <cppunit/TestResult.h>
 #include <cppunit/TextTestProgressListener.h>
 #include "testsuite/testparams.h"
+#include "testsuite/algebra/testalgebra.h"
 #include "testsuite/angle/testangle.h"
 #include "testsuite/census/testcensus.h"
+#include "testsuite/dim4/testdim4.h"
 #include "testsuite/maths/testmaths.h"
 #ifndef EXCLUDE_SNAPPEA
 #include "testsuite/snappea/testsnappea.h"
@@ -137,13 +139,25 @@ bool runAllTests() {
     addNumberTheory(runner);
     addMatrixOps(runner);
     addPermConv(runner);
+    addNSparseGrid(runner);
+
+    // Algebra:
+    addNBinaryA5(runner);
+    addNBinaryS4(runner);
+    addNMarkedAbelianGroup(runner);
+    addNBilinearForm(runner);
+    addNMVPolynomialRing(runner);
+    addNSVPolynomialRing(runner);
+    addNCellularData(runner);
 
     // Triangulation:
     addNTriangulation(runner);
     addElementaryMoves(runner);
     addConnectedSumDecomp(runner);
     addNIsomorphism(runner);
-    addNHomologicalData(runner);
+
+    // 4-manifold triangulations:
+    addDim4Triangulation(runner);
 
     // Subcomplexes:
     addNStandardTriangulation(runner);
@@ -160,6 +174,8 @@ bool runAllTests() {
     addNFacePairing(runner);
     addDim2Census(runner);
     addDim2EdgePairing(runner);
+    addDim4Census(runner);
+    addDim4FacetPairing(runner);
 
 #ifndef EXCLUDE_SNAPPEA
     // SnapPea:

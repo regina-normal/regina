@@ -31,12 +31,14 @@ if (${REGINA_INSTALL_DEV})
     nmatrix.h
     nmatrix2.h
     nmatrixint.h
+    npartition.h
     nperm3.h
     nperm4.h
     nperm5.h
     nprimes.h
     nrational.h
     nray.h
+    nsparsegrid.h
     numbertheory.h
     nvector.h
     permconv.h

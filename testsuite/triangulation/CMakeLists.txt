@@ -4,7 +4,6 @@
 SET ( FILES
   connectedsumdecomp
   eltmoves
-  nhomologicaldata
   nisomorphism
   ntriangulation
   )

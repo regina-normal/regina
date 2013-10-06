@@ -7,6 +7,33 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Version 5.0  [ (under development) ]
+
+    TODO:
+        - When we merge into master, update this file with what's new.
+          Determine exactly what is new by looking at the diff.
+    ENGINE:
+        Class NBinaryS4:
+            - A standard embedding of the symmetric group on n letters
+              into SO_{n-1}.
+        Class NCellularData:
+            - A new catch-all class used for any detailed computations related
+              to the algebraic topology of a 3- or 4-manifold triangulation.
+        Class NSVPolynomialRing:
+            - A new class for a single-variable polynomial ring with
+              NLargeInteger coefficients.
+        Routine readIsoSigList():
+            - Now supports both 3-manifold and 4-manifold triangulations.
+    UTILITIES:
+        tricensus, tricensus-mpi:
+            - Can now run a census of 4-manifold triangulations (rather than
+              3-manifold triangulations) by passing the argument -4 / --dim4.
+        trisetcmp:
+            - Now runs through both 3-manifold and 4-manifold triangulations.
+              However, subcomplexes must be of the same dimension (i.e.,
+              it does not identify when a 3-manifold triangulation
+              appears as a subcomplex of a 4-manifold triangulation).
+
 Version 4.95  [ (under development) ]
 
     GENERAL:
@@ -19,6 +46,9 @@ Version 4.95  [ (under development) ]
         Class NVertex:
             - Added buildLinkDetail(), which returns details of how triangles
               of the vertex link are embedded within individual tetrahedra.
+    UTILITIES:
+        regmerge:
+            - New utility for merging several data files.
 
 Version 4.94  [ 24 September, 2013 ]
 
