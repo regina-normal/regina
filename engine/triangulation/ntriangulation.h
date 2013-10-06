@@ -390,6 +390,9 @@ class REGINA_API NTriangulation : public NPacket {
          * The new tetrahedron will have an empty description.
          * All four faces of the new tetrahedron will be boundary faces.
          *
+         * The new tetrahedron will become the last tetrahedron in this
+         * triangulation.
+         *
          * @return the new tetrahedron.
          */
         NTetrahedron* newTetrahedron();

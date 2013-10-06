@@ -34,6 +34,9 @@ Version 4.95  [ (under development) ]
             - Re-enabled enumeration using NS_HILBERT_FULLCONE, which previously
               returned an empty list.  Users will not be affected unless
               they were explicitly asking for this much slower algorithm.
+        Class NVertex:
+            - Added buildLinkDetail(), which returns details of how triangles
+              of the vertex link are embedded within individual tetrahedra.
 
 Version 4.94  [ 24 September, 2013 ]
 
