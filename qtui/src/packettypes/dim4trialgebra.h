@@ -161,4 +161,47 @@ class Dim4TriFundGroupUI : public QObject, public PacketViewerTab {
         QString verifyGAPExec();
 };
 
+/**
+ * A page for viewing detailed cellular information about the manifold.
+ *
+ * \author Ryan Budney
+ */
+class Dim4TriCellularInfoUI: public PacketViewerTab {
+    private:
+        /**
+         * Packet details
+         */
+        regina::Dim4Triangulation* tri;
+
+        /**
+         * Internal components
+         */
+        QWidget* ui;
+        QLabel* Cells;
+        QLabel* DualCells;
+        QLabel* EulerChar;
+        QLabel* H0H1H2H3;
+        QLabel* HBdry;
+        QLabel* BdryMap1;
+        QLabel* BdryMap2;
+        QLabel* sig; // signature on H2
+        QLabel* AlexInv; // Alexander module invariants (if exists)
+        QLabel* Comments; 
+
+    public:
+        /**
+         * Constructor.
+         */
+        Dim4TriCellularInfoUI(regina::Dim4Triangulation* packet,
+                PacketTabbedViewerTab* useParentUI);
+
+        /**
+         * PacketViewerTab overrides.
+         */
+        regina::NPacket* getPacket();
+        QWidget* getInterface();
+        void refresh();
+        void editingElsewhere();
+};
+
 #endif
