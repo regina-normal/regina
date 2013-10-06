@@ -2343,7 +2343,7 @@ template <bool supportInfinity>
 inline NIntegerBase<supportInfinity>::~NIntegerBase() {
     if (large_) {
         mpz_clear(large_);
-        delete large_;
+        delete[] large_;
     }
 }
 
@@ -3119,7 +3119,7 @@ inline void NIntegerBase<supportInfinity>::forceLarge() {
 template <bool supportInfinity>
 inline void NIntegerBase<supportInfinity>::clearLarge() {
     mpz_clear(large_);
-    delete large_;
+    delete[] large_;
     large_ = 0;
 }
 
@@ -3127,7 +3127,7 @@ template <bool supportInfinity>
 inline void NIntegerBase<supportInfinity>::forceReduce() {
     small_ = mpz_get_si(large_);
     mpz_clear(large_);
-    delete large_;
+    delete[] large_;
     large_ = 0;
 }
 
