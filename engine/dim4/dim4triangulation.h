@@ -328,6 +328,9 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * The new pentachoron will have an empty description.
          * All five facets of the new pentachoron will be boundary facets.
          *
+         * The new pentachoron will become the last pentachoron in this
+         * triangulation.
+         *
          * @return the new pentachoron.
          */
         Dim4Pentachoron* newPentachoron();
