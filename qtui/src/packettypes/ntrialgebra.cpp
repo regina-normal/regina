@@ -229,7 +229,7 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
         PacketViewerTab(useParentUI), tri(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
-    simpAtt=1; // this is used to keep track of how many times 
+    simpAttempts=1; // this is used to keep track of how many times 
                // proliferateRelators() is called. 
 
     layout->addStretch(1);
@@ -262,27 +262,23 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
     wideFundPresArea->addStretch(1);
     layout->addStretch(1);
 
-    QBoxLayout* btnArea2 = new QHBoxLayout();
-    layout->addLayout(btnArea2);
-    btnArea2->addStretch(1);
-    btnSIMP = new QPushButton(ReginaSupport::themeIcon("tools-wizard"),
-        tr("Attempt to simplify"));
-    btnSIMP->setToolTip(tr("Simplify the group presentation using "
-        "NGroupPresentation::proliferateRelators(). Calling this "
-        "routine more than once may produce better results."));
-    btnSIMP->setWhatsThis(tr("<qt>Simplify the presentation of the "
-        "fundamental group using an internal routine that explores "
-        "the consequences of the relations recursively, calling "
-        "NGroupPresentation::intelligentSimplify() afterwards.</qt>"));
-    connect(btnSIMP, SIGNAL(clicked()), this, SLOT(simplifyPI1()));
-    btnArea2->addWidget(btnSIMP);
-    btnArea2->addStretch(1);
+    // The simplification buttons:
 
     QBoxLayout* btnArea = new QHBoxLayout();
     layout->addLayout(btnArea);
     btnArea->addStretch(1);
-    btnGAP = new QPushButton(ReginaSupport::themeIcon("tools-wizard"),
-        tr("Simplify using GAP"));
+    btnArea->addWidget(new QLabel(tr("Try to simplify:")));
+
+    btnSimp = new QPushButton(tr("Internally"));
+    btnSimp->setToolTip(tr("Simplify the group presentation by "
+        "recursively exploring the consequences of the relations."));
+    btnSimp->setWhatsThis(tr("<qt>Simplify the group presentation by "
+        "recursively exploring the consequences of the relations.  "
+        "Doing this more than once may produce better results.</qt>"));
+    connect(btnSimp, SIGNAL(clicked()), this, SLOT(simplifyPi1()));
+    btnArea->addWidget(btnSimp);
+
+    btnGAP = new QPushButton(tr("Using GAP"));
     btnGAP->setToolTip(tr("Simplify the group presentation using "
         "GAP (Groups, Algorithms and Programming)"));
     btnGAP->setWhatsThis(tr("<qt>Simplify the presentation of the "
@@ -291,6 +287,7 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
         "on your system.</qt>"));
     connect(btnGAP, SIGNAL(clicked()), this, SLOT(simplifyGAP()));
     btnArea->addWidget(btnGAP);
+
     btnArea->addStretch(1);
 }
 
@@ -373,7 +370,10 @@ void NTriFundGroupUI::refresh() {
                     pres.getRelation(i).toString().c_str(), fundRels);
         }
 
+        simpAttempts = 1;
+
         btnGAP->setEnabled(true);
+        btnSimp->setEnabled(true);
     } else {
         fundName->setText(tr("Cannot calculate\n(disconnected triang.)"));
         fundGens->hide();
@@ -381,6 +381,7 @@ void NTriFundGroupUI::refresh() {
         fundRels->clear();
         fundRels->hide();
         btnGAP->setEnabled(false);
+        btnSimp->setEnabled(false);
     }
 }
 
@@ -391,16 +392,25 @@ void NTriFundGroupUI::editingElsewhere() {
     fundRels->clear();
     fundRels->hide();
     btnGAP->setEnabled(false);
+    btnSimp->setEnabled(false);
 }
 
-void NTriFundGroupUI::simplifyPI1() {
- // TODO: try something to keep track of iterates of proliferateRelators()? 
- regina::NGroupPresentation* group( new regina::NGroupPresentation( tri->getFundamentalGroup() ) );
- for (unsigned long i=0; i<simpAtt; i++) group->proliferateRelators();
- group->intelligentSimplify();
- tri->simplifiedFundamentalGroup(group);
- refresh(); 
- if (simpAtt < 2) simpAtt++; // let's not let the end-user go beyond 2 iterates for now. 
+void NTriFundGroupUI::simplifyPi1() {
+    // Make sure the triangulation is not being edited.
+    if (! btnSimp->isEnabled())
+        return;
+
+    regina::NGroupPresentation* group =
+        new regina::NGroupPresentation(tri->getFundamentalGroup());
+    for (unsigned i=0; i<simpAttempts; i++)
+        group->proliferateRelators();
+    group->intelligentSimplify();
+    tri->simplifiedFundamentalGroup(group);
+    refresh();
+
+    // Let's not let the end-user go beyond 2 iterates for now.
+    if (simpAttempts < 2)
+        simpAttempts++;
 }
 
 void NTriFundGroupUI::simplifyGAP() {
