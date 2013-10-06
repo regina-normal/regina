@@ -33,8 +33,8 @@
 /* end stub */
 
 #include "dim2/dim2triangulation.h"
-#include "triangulation/nisomorphism.h"
 #include "maths/permconv.h"
+#include "triangulation/nisomorphism.h"
 #include "triangulation/nvertex.h"
 #include <sstream>
 
@@ -63,28 +63,35 @@ void NVertex::writeTextShort(std::ostream& out) const {
     out << "vertex of degree " << getNumberOfEmbeddings();
 }
 
-// TODO: have a pass-by-reference Dim3Isomorphism that describes how
-//       the link is sitting the the NTriangulation
-const Dim2Triangulation* NVertex::buildLink(NIsomorphism* inc) const {
-    if (linkTri)
-        return linkTri;
-
+Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
+        NIsomorphism** inclusion) const {
     // Build the triangulation.
     Dim2Triangulation* ans = new Dim2Triangulation();
     NPacket::ChangeEventSpan span(ans);
 
+    if (inclusion)
+        *inclusion = new NIsomorphism(embeddings.size());
+
     std::vector<NVertexEmbedding>::const_iterator it, adjIt;
-    for (it = embeddings.begin(); it != embeddings.end(); ++it)
-        {
-        Dim2Triangle* tTri( ans->newTriangle() );
-        std::stringstream temp;
-        temp << it->getTetrahedron()->getTriangulation()->tetrahedronIndex( it->getTetrahedron() );
-        temp << " " << it->getVertex();
-        tTri->setDescription( temp.str() );
+    Dim2Triangle* tTri;
+    int i;
+    for (it = embeddings.begin(), i = 0; it != embeddings.end(); ++it, ++i) {
+        tTri = ans->newTriangle();
+        if (labels) {
+            std::stringstream s;
+            s << it->getTetrahedron()->markedIndex() <<
+                " (" << it->getVertex() << ')';
+            tTri->setDescription(s.str());
         }
+        if (inclusion) {
+            (*inclusion)->tetImage(i) = it->getTetrahedron()->markedIndex();
+            (*inclusion)->facetPerm(i) = it->getTetrahedron()->
+                getFaceMapping(it->getVertex());
+        }
+    }
 
     NTetrahedron *tet, *adj;
-    int i, exitTri, v;
+    int exitTri, v;
     int edgeInLink;
     int adjIndex;
     int adjVertex;
@@ -127,16 +134,7 @@ const Dim2Triangulation* NVertex::buildLink(NIsomorphism* inc) const {
         }
     }
 
-    if ( (inc != NULL) ? (inc->getSourceTetrahedra() == ans->getNumberOfTriangles()) : false )
-     for (unsigned long j=0; j<getNumberOfEmbeddings(); j++)
-      {
-        NTetrahedron* tet( getEmbedding(j).getTetrahedron() );
-        inc->tetImage(j) = tet->getTriangulation()->tetrahedronIndex( tet );
-        inc->facetPerm(j) = getEmbedding(j).getVertices();
-      }
-
-    const_cast<NVertex*>(this)->linkTri = ans;
-    return linkTri;
+    return ans;
 }
 
 } // namespace regina

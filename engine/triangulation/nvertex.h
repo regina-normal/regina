@@ -50,11 +50,11 @@
 
 namespace regina {
 
+class Dim2Triangulation;
 class NBoundaryComponent;
 class NComponent;
-class Dim2Triangulation;
-class NTetrahedron;
 class NIsomorphism;
+class NTetrahedron;
 class NTriangulation;
 
 /**
@@ -271,54 +271,99 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
         int getLink() const;
 
         /**
-         * Returns a full triangulation of the link of this vertex.
+         * Returns a full 2-manifold triangulation describing
+         * the link of this vertex.
          *
-         * The vertex link is a 2-manifold, and this routine returns a
-         * full-blown 2-manifold triangulation.  Note that this
-         * triangulation is read-only (though of course you can clone it
-         * and then operate upon the clone).
+         * This routine is fast (it uses a pre-computed triangulation if
+         * possible).  The downside is that the triangulation is read-only,
+         * and does not contain any information on how the triangles in the
+         * link correspond to tetrahedra in the original triangulation
+         * (though this is easily deduced; see below).
+         * If you want a writable triangulation, or one with this extra
+         * information, then call buildLinkDetail() instead.
          *
          * The triangulation of the vertex link is built as follows.
          * Let \a i lie between 0 and getDegree()-1 inclusive, let
          * \a tet represent <tt>getEmbedding(i).getTetrahedron()</tt>,
          * and let \a v represent <tt>getEmbedding(i).getVertex()</tt>.
-         * Then <tt>buildLink()->getFace(i)</tt> is the triangle
+         * Then <tt>buildLink()->getTriangle(i)</tt> is the triangle
          * in the vertex link that "slices off" vertex \a v from
          * tetrahedron \a tet.  In other words,
-         * <tt>buildLink()->getFace(i)</tt> in the vertex link
-         * corresponds to <tt>tet->getFace(v)</tt> in the
+         * <tt>buildLink()->getTriangle(i)</tt> in the vertex link
+         * is parallel to face <tt>tet->getFace(v)</tt> in the
          * surrounding 3-manifold triangulation.
          *
          * The vertices of each triangle in the vertex link are
          * numbered as follows.  Following the discussion above,
-         * suppose that <tt>buildLink()->getFace(i)</tt>
-         * corresponds to <tt>tet->getFace(v)</tt>.
-         * The correspondence from the vertices of
-         * <tt>buildLink()->getFace(i)</tt> to the vertices of
-         * <tt>tet->getFace(v)</tt> is given by the map
-         * <tt>tet->getFaceMapping(v)</tt>.
-         * This is an <tt>NPerm4</tt> object, sending 4 to \a v, and sending
-         * the vertices of the face in the domain (012) to
-         * the vertices of the face in the range (0123 excluding \a v).
+         * suppose that <tt>buildLink()->getTriangle(i)</tt> sits within
+         * \c tet and is parallel to <tt>tet->getFace(v)</tt>.
+         * Then vertices 0,1,2 of the triangle in the link will be
+         * parallel to vertices 0,1,2 of the corresponding NFace.
+         * The permutation <tt>tet->getFaceMapping(v)</tt> will map
+         * vertices 0,1,2 of the triangle in the link to the
+         * corresponding vertices of \c tet (those opposite \c v),
+         * and will map 3 to \c v itself.
          *
-         * Ryan's Addition: The triangles of this surface triangulation 
-         *  have a text descriptor which is an std::string, consisting of
-         *  two integers separated by a whitespace.  The first integer
-         *  is the index of the tetrahedron the triangle is from, the  
-         *  second is the vertex of that tetrahedron this triangle links.  
+         * This NVertex object will retain ownership of the triangulation
+         * that is returned.  If you wish to edit the triangulation, you
+         * should make a new clone and edit the clone instead.
          *
-         * If you call buildLink passing to it an allocated NIsomorphism
-         * pointer, initialized to have the same number of tetrahedra
-         * as getNumberOfEmbeddings(), then buildLink will fill it out
-         * with an NIsomorphism where tetImage(i) is the tetrahedron of
-         * the NTriangulation which contains the i-th triangle of the link.
-         * Moreover, facePerm will send 0 to this NVertex's index in that
-         * tetrahedron, and vertices 1,2,3 (describing the triangle) to 
-         * the triangle opposite tetImage(i). 
-         *
-         * @return the triangulated link of this vertex.
+         * @return the read-only triangulated link of the vertex.
          */
-        const Dim2Triangulation* buildLink(NIsomorphism* inc=NULL) const;
+        const Dim2Triangulation* buildLink() const;
+
+        /**
+         * Returns a full 2-manifold triangulation describing
+         * the link of this vertex.
+         *
+         * This routine is heavyweight (it computes a new triangulation
+         * each time).  The benefit is that the triangulation is writeable,
+         * and optionally contain detailed information on how the triangles
+         * in the link correspond to tetrahedra in the original triangulation.
+         * If you do not need this extra information, consider using the
+         * faster buildLink() instead.
+         *
+         * See the buildLink() documentation for an explanation of
+         * exactly how the triangulation will be constructed.
+         *
+         * If \a labels is passed as \c true, each triangle of the new
+         * vertex link will be given a text description of the form
+         * <tt>t&nbsp;(v)</tt>, where \c t is the index of the tetrahedron
+         * the triangle is from, and \c v is the vertex of that tetrahedron
+         * that this triangle links.
+         *
+         * If \a inclusion is non-null (i.e., it points to some
+         * NIsomorphism pointer \a p), then it will be modified to
+         * point to a new NIsomorphism that describes in detail how the
+         * individual triangles of the link sit within tetrahedra of
+         * the original triangulation.  Specifically, after this routine
+         * is called, <tt>p->tetImage(i)</tt> will indicate which tetrahedron
+         * \a tet of the 3-manifold triangulation contains the <i>i</i>th
+         * triangle of the link.  Moreover, <tt>p->facePerm(i)</tt> will
+         * indicate exactly where the <i>i</i>th triangle sits within \a tet:
+         * it will send 3 to the vertex of \a t that the triangle links,
+         * and it will send 0,1,2 to the vertices of \a tet that are
+         * parallel to vertices 0,1,2 of this triangle.
+         *
+         * The triangulation that is returned, as well as the isomorphism
+         * if one was requested, will be newly allocated.  The caller of
+         * this routine is responsible for destroying these objects.
+         *
+         * Strictly speaking, this is an abuse of the NIsomorphism class
+         * (the domain is a triangulation of the wrong dimension, and
+         * the map is not 1-to-1 into the range tetrahedra).  We use
+         * it anyway, but you should not attempt to call any high-level
+         * routines (such as NIsomorphism::apply).
+         *
+         * \ifacespython The second (isomorphism) argument is not present.
+         * Instead this routine returns a pair (triangulation, isomorphism).
+         * As a side-effect, the isomorphism will always be constructed
+         * (i.e., it is not optional).
+         *
+         * @return a newly constructed triangulation of the link of this vertex.
+         */
+        Dim2Triangulation* buildLinkDetail(bool labels = true,
+            NIsomorphism** inclusion = 0) const;
 
         /**
          * Determines if the link of this vertex is closed.
@@ -428,6 +473,15 @@ inline unsigned long NVertex::getDegree() const {
 
 inline int NVertex::getLink() const {
     return link;
+}
+
+inline const Dim2Triangulation* NVertex::buildLink() const {
+    if (! linkTri) {
+        // This is a construct-on-demand member: cast away constness to
+        // set it here.
+        const_cast<NVertex*>(this)->linkTri = buildLinkDetail(false, 0);
+    }
+    return linkTri;
 }
 
 inline bool NVertex::isLinkClosed() const {
