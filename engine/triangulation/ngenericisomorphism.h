@@ -68,14 +68,6 @@ namespace regina {
  * their facets (or equivalently, their vertices), and that preserves
  * gluings across adjacent simplices.
  *
- * Alternatively, think of this as a class that represents bijections
- * {0,1,...,k} x Sigma_n --> {0,1,...,k} x Sigma_n which preserve the
- * product structure, where k is the number of top-dimensional simplices 
- * (and the top dimension is (n-1)).  Given a n-dimensional triangulation
- * with k top-dimensional simplices, one pre-compose the characteristic
- * maps with such an automorphism, getting a new triangulation.  
- * NGenericIsomorphism represents precomposition with the *inverse*. 
- *
  * More precisely:  An isomorphism consists of (i) a one-to-one map f
  * from the simplices of T to the simplices of U, and (ii) for each
  * simplex S of T, a permutation f_S of the facets (0,...,\a dim) of S,
