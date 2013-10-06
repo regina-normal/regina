@@ -5,6 +5,7 @@ SET ( FILES
   dim2trigluings
   dim2triskeleton
   dim2triui
+  dim4trialgebra
   dim4tricreator
   dim4trigluings
   dim4triui
@@ -41,6 +42,7 @@ SET ( MOC_FILES
   dim2trigluings.h
   dim2triskeleton.h
   dim2triui.h
+  dim4trialgebra.h
   dim4trigluings.h
   dim4triui.h
   facetgraphtab.h
