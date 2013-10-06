@@ -310,7 +310,10 @@ void Dim4TriFundGroupUI::simplifyPi1() {
     group->proliferateRelators(simpDepth);
     group->intelligentSimplify();
     tri->simplifiedFundamentalGroup(group);
-    refresh();
+
+    unsigned oldDepth = simpDepth;
+    refresh(); // This will reset simpDepth by default...
+    simpDepth = oldDepth;
 
     // Let's not let the end-user go beyond too many iterates for now.
     if (simpDepth < 4)
