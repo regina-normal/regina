@@ -221,10 +221,10 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * A dimension-agnostic alias for getNumberOfPentachora().
          * This is to assist with writing dimension-agnostic code that
          * can be reused to work in different dimensions.
-         * 
+         *
          * Here "simplex" refers to a top-dimensional simplex (which for
          * 4-manifold triangulations means a pentachoron).
-         * 
+         *
          * See getNumberOfPentachora() for further information.
          */
         unsigned long getNumberOfSimplices() const;
@@ -244,10 +244,10 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * A dimension-agnostic alias for getPentachora().
          * This is to assist with writing dimension-agnostic code that
          * can be reused to work in different dimensions.
-         * 
+         *
          * Here "simplex" refers to a top-dimensional simplex (which for
          * 4-manifold triangulations means a pentachoron).
-         * 
+         *
          * See getPentachora() for further information.
          */
         const std::vector<Dim4Pentachoron*>& getSimplices() const;
@@ -265,10 +265,10 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * A dimension-agnostic alias for getPentachoron().
          * This is to assist with writing dimension-agnostic code that
          * can be reused to work in different dimensions.
-         * 
+         *
          * Here "simplex" refers to a top-dimensional simplex (which for
          * 4-manifold triangulations means a pentachoron).
-         * 
+         *
          * See getPentachoron() for further information.
          */
         Dim4Pentachoron* getSimplex(unsigned long index);
@@ -286,10 +286,10 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * A dimension-agnostic alias for getPentachoron().
          * This is to assist with writing dimension-agnostic code that
          * can be reused to work in different dimensions.
-         * 
+         *
          * Here "simplex" refers to a top-dimensional simplex (which for
          * 4-manifold triangulations means a pentachoron).
-         * 
+         *
          * See getPentachoron() for further information.
          */
         const Dim4Pentachoron* getSimplex(unsigned long index) const;
@@ -316,10 +316,10 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * A dimension-agnostic alias for pentachoronIndex().
          * This is to assist with writing dimension-agnostic code that
          * can be reused to work in different dimensions.
-         * 
+         *
          * Here "simplex" refers to a top-dimensional simplex (which for
          * 4-manifold triangulations means a pentachoron).
-         * 
+         *
          * See pentachoronIndex() for further information.
          */
         long simplexIndex(const Dim4Pentachoron* pent) const;
@@ -335,10 +335,10 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * A dimension-agnostic alias for newPentachoron().
          * This is to assist with writing dimension-agnostic code that
          * can be reused to work in different dimensions.
-         * 
+         *
          * Here "simplex" refers to a top-dimensional simplex (which for
          * 4-manifold triangulations means a pentachoron).
-         * 
+         *
          * See newPentachoron() for further information.
          */
         Dim4Pentachoron* newSimplex();
@@ -355,10 +355,10 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * A dimension-agnostic alias for newPentachoron().
          * This is to assist with writing dimension-agnostic code that
          * can be reused to work in different dimensions.
-         * 
+         *
          * Here "simplex" refers to a top-dimensional simplex (which for
          * 4-manifold triangulations means a pentachoron).
-         * 
+         *
          * See newPentachoron() for further information.
          */
         Dim4Pentachoron* newSimplex(const std::string& desc);
@@ -376,10 +376,10 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * A dimension-agnostic alias for removePentachoron().
          * This is to assist with writing dimension-agnostic code that
          * can be reused to work in different dimensions.
-         * 
+         *
          * Here "simplex" refers to a top-dimensional simplex (which for
          * 4-manifold triangulations means a pentachoron).
-         * 
+         *
          * See removePentachoron() for further information.
          */
         void removeSimplex(Dim4Pentachoron* pent);
@@ -400,10 +400,10 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * A dimension-agnostic alias for removePentachoronAt().
          * This is to assist with writing dimension-agnostic code that
          * can be reused to work in different dimensions.
-         * 
+         *
          * Here "simplex" refers to a top-dimensional simplex (which for
          * 4-manifold triangulations means a pentachoron).
-         * 
+         *
          * See removePentachoronAt() for further information.
          */
         void removeSimplexAt(unsigned long index);
@@ -416,10 +416,10 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * A dimension-agnostic alias for removeAllPentachora().
          * This is to assist with writing dimension-agnostic code that
          * can be reused to work in different dimensions.
-         * 
+         *
          * Here "simplex" refers to a top-dimensional simplex (which for
          * 4-manifold triangulations means a pentachoron).
-         * 
+         *
          * See removeAllPentachora() for further information.
          */
         void removeAllSimplices();
@@ -701,7 +701,7 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * @param bc specifies which boundary component to find in the
          * triangulation.
          * @return the index of the specified boundary component,
-         * where 0 is the first boundary component, 1 is the second and so on. 
+         * where 0 is the first boundary component, 1 is the second and so on.
          */
         long boundaryComponentIndex(const Dim4BoundaryComponent* bc) const;
         /**
