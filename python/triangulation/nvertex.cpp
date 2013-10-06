@@ -55,6 +55,23 @@ namespace {
             ans.append(*it);
         return ans;
     }
+
+    boost::python::tuple vertex_buildLinkDetail_bool(const NVertex* v,
+            bool labels = true) {
+        regina::NIsomorphism* iso;
+        regina::Dim2Triangulation* link = v->buildLinkDetail(labels, &iso);
+        return make_tuple(
+            boost::python::object(boost::python::handle<>(
+                boost::python::manage_new_object::
+                apply<regina::Dim2Triangulation*>::type()(link))),
+            boost::python::object(boost::python::handle<>(
+                boost::python::manage_new_object::
+                apply<regina::NIsomorphism*>::type()(iso))));
+    }
+
+    boost::python::tuple vertex_buildLinkDetail_void(const NVertex* v) {
+        return vertex_buildLinkDetail_bool(v);
+    }
 }
 
 void addNVertex() {
@@ -83,6 +100,8 @@ void addNVertex() {
         .def("getLink", &NVertex::getLink)
         .def("buildLink", &NVertex::buildLink,
             return_value_policy<reference_existing_object>())
+        .def("buildLinkDetail", vertex_buildLinkDetail_void)
+        .def("buildLinkDetail", vertex_buildLinkDetail_bool)
         .def("isLinkClosed", &NVertex::isLinkClosed)
         .def("isIdeal", &NVertex::isIdeal)
         .def("isBoundary", &NVertex::isBoundary)

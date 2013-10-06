@@ -294,6 +294,9 @@ class REGINA_API Dim2Triangulation : public NPacket {
          * The new triangle will have an empty description.
          * All three edges of the new triangle will be boundary edges.
          *
+         * The new triangle will become the last triangle in this
+         * triangulation.
+         *
          * @return the new triangle.
          */
         Dim2Triangle* newTriangle();
