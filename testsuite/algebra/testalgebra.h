@@ -44,14 +44,9 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
-void addMatrixOps(CppUnit::TextUi::TestRunner& runner);
-void addNInteger(CppUnit::TextUi::TestRunner& runner);
-void addNPerm3(CppUnit::TextUi::TestRunner& runner);
-void addNPerm4(CppUnit::TextUi::TestRunner& runner);
-void addNPerm5(CppUnit::TextUi::TestRunner& runner);
-void addNPrimes(CppUnit::TextUi::TestRunner& runner);
-void addNRational(CppUnit::TextUi::TestRunner& runner);
-void addNSparseGrid(CppUnit::TextUi::TestRunner& runner);
-void addNumberTheory(CppUnit::TextUi::TestRunner& runner);
-void addPermConv(CppUnit::TextUi::TestRunner& runner);
+void addNBinaryA5(CppUnit::TextUi::TestRunner& runner);
+void addNBinaryS4(CppUnit::TextUi::TestRunner& runner);
+void addNMVPolynomialRing(CppUnit::TextUi::TestRunner& runner);
+void addNSVPolynomialRing(CppUnit::TextUi::TestRunner& runner);
+
 

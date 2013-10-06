@@ -3,9 +3,14 @@
 # Files to compile
 SET ( FILES
   nabeliangroup
+  nbilinearform
+  nbinaryA5
+  nbinaryS4
   ngrouppresentation
   nhomgrouppresentation
   nmarkedabeliangroup
+  nmvpolynomialring
+  nsvpolynomialring
   nxmlalgebrareader
   )
 
@@ -18,9 +23,14 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     nabeliangroup.h
+    nbilinearform.h
+    nbinaryA5.h
+    nbinaryS4.h
     ngrouppresentation.h
     nhomgrouppresentation.h
     nmarkedabeliangroup.h
+    nmvpolynomialring.h
+    nsvpolynomialring.h
     nxmlalgebrareader.h
     DESTINATION ${INCLUDEDIR}/algebra COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

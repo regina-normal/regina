@@ -40,6 +40,7 @@
 #include <cppunit/TestResult.h>
 #include <cppunit/TextTestProgressListener.h>
 #include "testsuite/testparams.h"
+#include "testsuite/algebra/testalgebra.h"
 #include "testsuite/angle/testangle.h"
 #include "testsuite/census/testcensus.h"
 #include "testsuite/dim4/testdim4.h"
@@ -138,6 +139,13 @@ bool runAllTests() {
     addNumberTheory(runner);
     addMatrixOps(runner);
     addPermConv(runner);
+    addNSparseGrid(runner);
+
+    // Algebra:
+    addNBinaryA5(runner);
+    addNBinaryS4(runner);
+    addNMVPolynomialRing(runner);
+    addNSVPolynomialRing(runner);
 
     // Triangulation:
     addNTriangulation(runner);

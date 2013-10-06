@@ -13,6 +13,12 @@ Version 5.0  [ (under development) ]
         - When we merge into master, update this file with what's new.
           Determine exactly what is new by looking at the diff.
     ENGINE:
+        Class NBinaryS4:
+            - A standard embedding of the symmetric group on n letters
+              into SO_{n-1}.
+        Class NSVPolynomialRing:
+            - A new class for a single-variable polynomial ring with
+              NLargeInteger coefficients.
         Routine readIsoSigList():
             - Now supports both 3-manifold and 4-manifold triangulations.
     UTILITIES:

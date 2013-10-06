@@ -4,6 +4,7 @@
 SET ( SOURCES exhaustive runalltests testparams )
 # Each of these subdirectories modifies the SOURCES variable,
 # adding more source files
+ADD_SUBDIRECTORY("algebra")
 ADD_SUBDIRECTORY("angle")
 ADD_SUBDIRECTORY("census")
 ADD_SUBDIRECTORY("dim4")
