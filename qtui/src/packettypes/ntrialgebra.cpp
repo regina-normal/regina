@@ -229,6 +229,8 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
         PacketViewerTab(useParentUI), tri(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
+    simpAtt=1; // this is used to keep track of how many times 
+               // proliferateRelators() is called. 
 
     layout->addStretch(1);
 
@@ -259,6 +261,22 @@ NTriFundGroupUI::NTriFundGroupUI(regina::NTriangulation* packet,
 
     wideFundPresArea->addStretch(1);
     layout->addStretch(1);
+
+    QBoxLayout* btnArea2 = new QHBoxLayout();
+    layout->addLayout(btnArea2);
+    btnArea2->addStretch(1);
+    btnSIMP = new QPushButton(ReginaSupport::themeIcon("tools-wizard"),
+        tr("Attempt to simplify"));
+    btnSIMP->setToolTip(tr("Simplify the group presentation using "
+        "NGroupPresentation::proliferateRelators(). Calling this "
+        "routine more than once may produce better results."));
+    btnSIMP->setWhatsThis(tr("<qt>Simplify the presentation of the "
+        "fundamental group using an internal routine that explores "
+        "the consequences of the relations recursively, calling "
+        "NGroupPresentation::intelligentSimplify() afterwards.</qt>"));
+    connect(btnSIMP, SIGNAL(clicked()), this, SLOT(simplifyPI1()));
+    btnArea2->addWidget(btnSIMP);
+    btnArea2->addStretch(1);
 
     QBoxLayout* btnArea = new QHBoxLayout();
     layout->addLayout(btnArea);
@@ -373,6 +391,16 @@ void NTriFundGroupUI::editingElsewhere() {
     fundRels->clear();
     fundRels->hide();
     btnGAP->setEnabled(false);
+}
+
+void NTriFundGroupUI::simplifyPI1() {
+ // TODO: try something to keep track of iterates of proliferateRelators()? 
+ regina::NGroupPresentation* group( new regina::NGroupPresentation( tri->getFundamentalGroup() ) );
+ for (unsigned long i=0; i<simpAtt; i++) group->proliferateRelators();
+ group->intelligentSimplify();
+ tri->simplifiedFundamentalGroup(group);
+ refresh(); 
+ if (simpAtt < 2) simpAtt++; // let's not let the end-user go beyond 2 iterates for now. 
 }
 
 void NTriFundGroupUI::simplifyGAP() {
