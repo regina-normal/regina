@@ -36,11 +36,13 @@ void addNAbelianGroup();
 void addNGroupPresentation();
 void addNHomGroupPresentation();
 void addNMarkedAbelianGroup();
+void addNCellularData();
 
 void addAlgebra() {
     addNAbelianGroup();
     addNGroupPresentation();
     addNHomGroupPresentation();
     addNMarkedAbelianGroup();
+//    addNCellularData();
 }
 

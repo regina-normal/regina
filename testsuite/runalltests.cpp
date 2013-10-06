@@ -144,15 +144,17 @@ bool runAllTests() {
     // Algebra:
     addNBinaryA5(runner);
     addNBinaryS4(runner);
+    addNMarkedAbelianGroup(runner);
+    addNBilinearForm(runner);
     addNMVPolynomialRing(runner);
     addNSVPolynomialRing(runner);
+    addNCellularData(runner);
 
     // Triangulation:
     addNTriangulation(runner);
     addElementaryMoves(runner);
     addConnectedSumDecomp(runner);
     addNIsomorphism(runner);
-    addNHomologicalData(runner);
 
     // 4-manifold triangulations:
     addDim4Triangulation(runner);

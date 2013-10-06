@@ -16,6 +16,9 @@ Version 5.0  [ (under development) ]
         Class NBinaryS4:
             - A standard embedding of the symmetric group on n letters
               into SO_{n-1}.
+        Class NCellularData:
+            - A new catch-all class used for any detailed computations related
+              to the algebraic topology of a 3- or 4-manifold triangulation.
         Class NSVPolynomialRing:
             - A new class for a single-variable polynomial ring with
               NLargeInteger coefficients.

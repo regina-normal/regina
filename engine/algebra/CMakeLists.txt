@@ -6,6 +6,15 @@ SET ( FILES
   nbilinearform
   nbinaryA5
   nbinaryS4
+  ncellulardata
+  ncellulardata.init.cc
+  ncellulardata.init.hom
+  ncellulardata.init.indexing
+  ncellulardata.init.pi1
+  ncellulardata.locators
+  ncellulardata.lookups
+  ncellulardata.output
+  ncellulardata.tests
   ngrouppresentation
   nhomgrouppresentation
   nmarkedabeliangroup
@@ -26,6 +35,7 @@ if (${REGINA_INSTALL_DEV})
     nbilinearform.h
     nbinaryA5.h
     nbinaryS4.h
+    ncellulardata.h
     ngrouppresentation.h
     nhomgrouppresentation.h
     nmarkedabeliangroup.h

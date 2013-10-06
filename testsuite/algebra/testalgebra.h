@@ -44,8 +44,11 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
+void addNBilinearForm(CppUnit::TextUi::TestRunner& runner);
 void addNBinaryA5(CppUnit::TextUi::TestRunner& runner);
 void addNBinaryS4(CppUnit::TextUi::TestRunner& runner);
+void addNCellularData(CppUnit::TextUi::TestRunner& runner);
+void addNMarkedAbelianGroup(CppUnit::TextUi::TestRunner& runner);
 void addNMVPolynomialRing(CppUnit::TextUi::TestRunner& runner);
 void addNSVPolynomialRing(CppUnit::TextUi::TestRunner& runner);
 

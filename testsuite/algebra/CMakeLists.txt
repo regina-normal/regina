@@ -2,8 +2,11 @@
 
 # Files to compile
 SET ( FILES
+  nbilinearform
   nbinarya5
   nbinarys4
+  ncellulardata
+  nmarkedabeliangroup
   nmvpolynomialring
   nsvpolynomialring
   )
