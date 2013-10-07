@@ -2895,6 +2895,7 @@ class REGINA_API NTriangulation : public NPacket,
          * isomorphism signature.
          */
         static NTriangulation* fromIsoSig(const std::string& signature);
+        using NGenericTriangulation<3>::isoSigComponentSize;
         /**
          * Inserts into this triangulation a set of tetrahedra and their
          * gluings as described by the given integer arrays.

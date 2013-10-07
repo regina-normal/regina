@@ -20,6 +20,8 @@ Version 4.95  [ (under development) ]
               dimension-agnostic routine for counting faces of any dimension.
         Class Dim2Triangulation:
             - Now inherits from the new helper class NGenericTriangulation<2>.
+            - New routine isoSigComponentSize() for extracting the number of
+              triangles from a signature (inherited from NGenericTriangulation).
         Class NGenericTriangulation:
             - New template helper class that allows different triangulation
               classes to share the same implementations of member functions.
@@ -39,6 +41,8 @@ Version 4.95  [ (under development) ]
             - New template routine getNumberOfFaces<dim>(), which is a
               dimension-agnostic routine for counting faces of any dimension.
             - Now inherits from the new helper class NGenericTriangulation<3>.
+            - New routine isoSigComponentSize() for extracting the number of
+              triangles from a signature (inherited from NGenericTriangulation).
         Class NVertex:
             - Added buildLinkDetail(), which returns details of how triangles
               of the vertex link are embedded within individual tetrahedra.

@@ -3300,6 +3300,29 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
+            size_t sigSize = NTriangulation::isoSigComponentSize(sig);
+            if (tri.getNumberOfSimplices() == 0) {
+                if (sigSize != 0) {
+                    std::ostringstream msg;
+                    msg << name
+                        << ": isoSigSize() returns incorrect value: "
+                        << sigSize << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else {
+                size_t c;
+                for (c = 0; c < tri.getNumberOfComponents(); ++c)
+                    if (sigSize == tri.getComponent(c)->getNumberOfSimplices())
+                        break;
+                if (c == tri.getNumberOfComponents()) {
+                    std::ostringstream msg;
+                    msg << name
+                        << ": isoSigSize() returns incorrect value: "
+                        << sigSize << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
             NTriangulation* rebuild = NTriangulation::fromIsoSig(sig);
             if (! rebuild) {
                 std::ostringstream msg;

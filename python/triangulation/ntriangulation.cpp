@@ -322,6 +322,7 @@ void addNTriangulation() {
         .def("isoSig", isoSig_void)
         .def("fromIsoSig", &NTriangulation::fromIsoSig,
             return_value_policy<manage_new_object>())
+        .def("isoSigComponentSize", &NTriangulation::isoSigComponentSize)
         .def("dumpConstruction", &NTriangulation::dumpConstruction)
         .def("enterTextTriangulation", enterTextTriangulation_stdio,
             return_value_policy<manage_new_object>())

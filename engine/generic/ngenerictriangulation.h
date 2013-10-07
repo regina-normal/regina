@@ -146,6 +146,47 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          */
         static Triangulation* fromIsoSig(const std::string& sig);
 
+        /**
+         * Deduces the number of top-dimensional simplices in a
+         * connected triangulation from its isomorphism signature.
+         *
+         * See isoSig() for more information on isomorphism signatures.
+         * It will be assumed that the signature describes a triangulation of
+         * dimension \a dim.
+         *
+         * If the signature describes a connected triangulation, this
+         * routine will simply return the size of that triangulation
+         * (e.g., the number of tetrahedra in the case \a dim = 3).
+         * You can also pass an isomorphism signature that describes a
+         * disconnected triangulation; however, this routine will only
+         * return the number of simplices in the first connected component.
+         * If you need the total number of simplices in a disconnected
+         * triangulation, you will need to reconstruct the full triangulation
+         * by calling fromIsoSig() instead.
+         *
+         * This routine is very fast, since it only examines the first
+         * few characters of the isomorphism signature (in which the size
+         * of the first component is encoded).  However, it is therefore
+         * possible to pass an invalid isomorphism signature and still
+         * receive a positive result.  If you need to \e test whether a
+         * signature is valid or not, you must call fromIsoSig()
+         * instead, which will examine the entire signature in full.
+         *
+         * \warning Do not mix isomorphism signatures between dimensions!
+         * It is possible that the same string could corresponding to both a
+         * \a p-dimensional triangulation and a \a q-dimensional triangulation
+         * for different \a p and \a q.
+         *
+         * @param sig an isomorphism signature of a \a dim-dimensional
+         * triangulation.  Note that, unlike dehydration strings for
+         * 3-manifold triangulations, case is important for isomorphism
+         * signatures.
+         * @return the number of top-dimensional simplices in the first
+         * connected component, or 0 if this could not be determined
+         * because the given string was not a valid isomorphism signature.
+         */
+        static size_t isoSigComponentSize(const std::string& sig);
+
     private:
         /**
          * Internal to isoSig().
