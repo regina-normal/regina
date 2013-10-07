@@ -19,6 +19,10 @@ Version 4.95  [ (under development) ]
         Class NVertex:
             - Added buildLinkDetail(), which returns details of how triangles
               of the vertex link are embedded within individual tetrahedra.
+        Headers dimtraits.h, nfacetspec.h, ngenericisomorphism.{h,tcc}:
+            - Moved from triangulation/ to generic/.  The old header locations
+              are now deprecated.  They have been kept for backward
+              compatibility, but simply include the new headers instead.
 
 Version 4.94  [ 24 September, 2013 ]
 
