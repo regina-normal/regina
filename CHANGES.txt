@@ -12,6 +12,10 @@ Version 4.95  [ (under development) ]
     GENERAL:
         - Updated the bundled copy of Normaliz to version 2.10.1 (27 June 2013).
     ENGINE:
+        Class Dim2Component:
+            - New routines getNumberOfSimplices() and getSimplex(), which are
+              dimension-agnostic aliases for getNumberOfTriangles() and
+              getTriangle().
         Class NNormalSurfaceList:
             - Re-enabled enumeration using NS_HILBERT_FULLCONE, which previously
               returned an empty list.  Users will not be affected unless
@@ -19,6 +23,10 @@ Version 4.95  [ (under development) ]
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic alias orderedSn that refers to orderedS3,
               orderedS4 and orderedS5 in NPerm3, NPerm4 and NPerm5 respectively.
+        Class NTriangulation:
+            - New routines getNumberOfSimplices() and getSimplex(), which are
+              dimension-agnostic aliases for getNumberOfTetrahedra() and
+              getTetrahedron().
         Class NVertex:
             - Added buildLinkDetail(), which returns details of how triangles
               of the vertex link are embedded within individual tetrahedra.

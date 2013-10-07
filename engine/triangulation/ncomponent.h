@@ -94,6 +94,17 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
          * @return the number of tetrahedra.
          */
         unsigned long getNumberOfTetrahedra() const;
+        /**
+         * A dimension-agnostic alias for getNumberOfTetrahedra().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 3-manifold triangulations means a tetrahedron).
+         * 
+         * See getNumberOfTetrahedra() for further information.
+         */
+        unsigned long getNumberOfSimplices() const;
 
         /**
          * Returns the number of faces in this component.
@@ -135,6 +146,17 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
          * @return the requested tetrahedron.
          */
         NTetrahedron* getTetrahedron(unsigned long index) const;
+        /**
+         * A dimension-agnostic alias for getTetrahedron().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 3-manifold triangulations means a tetrahedron).
+         * 
+         * See getTetrahedron() for further information.
+         */
+        NTetrahedron* getSimplex(unsigned long index) const;
 
         /**
          * Returns the requested face in this component.
@@ -239,6 +261,10 @@ inline unsigned long NComponent::getNumberOfTetrahedra() const {
     return tetrahedra.size();
 }
 
+inline unsigned long NComponent::getNumberOfSimplices() const {
+    return tetrahedra.size();
+}
+
 inline unsigned long NComponent::getNumberOfFaces() const {
     return faces.size();
 }
@@ -256,6 +282,10 @@ inline unsigned long NComponent::getNumberOfBoundaryComponents() const {
 }
 
 inline NTetrahedron* NComponent::getTetrahedron(unsigned long index) const {
+    return tetrahedra[index];
+}
+
+inline NTetrahedron* NComponent::getSimplex(unsigned long index) const {
     return tetrahedra[index];
 }
 
