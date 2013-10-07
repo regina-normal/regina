@@ -144,7 +144,7 @@ bool runAllTests() {
     // Algebra:
     addNBinaryA5(runner);
     addNBinaryS4(runner);
-    addNMVPolynomialRing(runner);
+    // addNMVPolynomialRing(runner); <-- NMVPolynomialRing class not ready yet.
     addNSVPolynomialRing(runner);
 
     // Triangulation:
