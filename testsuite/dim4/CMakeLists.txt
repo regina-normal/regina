@@ -1,7 +1,9 @@
 # dim4
 
 # Files to compile
-SET ( FILES dim4triangulation )
+SET ( FILES
+  dim4triangulation
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
