@@ -1,7 +1,9 @@
 # generic 
 
 # Files to compile
-SET ( FILES )
+SET ( FILES
+  isosig
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

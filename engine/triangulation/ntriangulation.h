@@ -605,10 +605,25 @@ class REGINA_API NTriangulation : public NPacket {
          */
         unsigned long getNumberOfEdges() const;
         /**
-         * Returns the number of faces in this triangulation.
+         * Returns the number of 2-dimensional faces in this triangulation.
          *
-         * @return the number of faces.
+         * @return the number of 2-dimensional faces.
          */
+        unsigned long getNumberOfFaces() const;
+        /**
+         * Returns the number of faces of the given dimension in this
+         * triangulation.
+         *
+         * This template function is to assist with writing dimension-agnostic
+         * code that can be reused to work in different dimensions.
+         *
+         * \pre the template argument \a dim is between 0 and 3 inclusive.
+         *
+         * \ifacespython Not present.
+         *
+         * @return the number of faces of the given dimension.
+         */
+        template <int dim>
         unsigned long getNumberOfFaces() const;
 
         /**
@@ -3365,6 +3380,26 @@ inline unsigned long NTriangulation::getNumberOfFaces() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return faces.size();
+}
+
+template <>
+inline unsigned long NTriangulation::getNumberOfFaces<0>() const {
+    return getNumberOfVertices();
+}
+
+template <>
+inline unsigned long NTriangulation::getNumberOfFaces<1>() const {
+    return getNumberOfEdges();
+}
+
+template <>
+inline unsigned long NTriangulation::getNumberOfFaces<2>() const {
+    return getNumberOfFaces();
+}
+
+template <>
+inline unsigned long NTriangulation::getNumberOfFaces<3>() const {
+    return getNumberOfTetrahedra();
 }
 
 inline long NTriangulation::getEulerCharTri() const {

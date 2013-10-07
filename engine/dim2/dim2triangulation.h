@@ -454,6 +454,21 @@ class REGINA_API Dim2Triangulation : public NPacket {
          * @return the number of edges.
          */
         unsigned long getNumberOfEdges() const;
+        /**
+         * Returns the number of faces of the given dimension in this
+         * triangulation.
+         *
+         * This template function is to assist with writing dimension-agnostic
+         * code that can be reused to work in different dimensions.
+         *
+         * \pre the template argument \a dim is between 0 and 2 inclusive.
+         *
+         * \ifacespython Not present.
+         *
+         * @return the number of faces of the given dimension.
+         */
+        template <int dim>
+        unsigned long getNumberOfFaces() const;
 
         /**
          * Returns all components of this triangulation.
@@ -1306,6 +1321,21 @@ inline unsigned long Dim2Triangulation::getNumberOfEdges() const {
     if (! calculatedSkeleton_)
         calculateSkeleton();
     return edges_.size();
+}
+
+template <>
+inline unsigned long Dim2Triangulation::getNumberOfFaces<0>() const {
+    return getNumberOfVertices();
+}
+
+template <>
+inline unsigned long Dim2Triangulation::getNumberOfFaces<1>() const {
+    return getNumberOfEdges();
+}
+
+template <>
+inline unsigned long Dim2Triangulation::getNumberOfFaces<2>() const {
+    return getNumberOfTriangles();
 }
 
 inline const std::vector<Dim2Component*>& Dim2Triangulation::getComponents()
