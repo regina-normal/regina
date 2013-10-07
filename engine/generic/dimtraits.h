@@ -71,10 +71,6 @@ struct DimTraits {
     typedef void Isomorphism;
         /**< The data type for an isomorphism between two
              \a dim-manifold triangulations. */
-    typedef void FacetSpec;
-        /**< The lightweight data type that specifies an individual
-             facet of an individual top-dimensional simplex in a
-             \a dim-manifold triangulation. */
     typedef void FacetPairing;
         /**< The data type that represents a pairing of facets of
              top-dimensional simplices in a \a dim-manifold triangulation. */
