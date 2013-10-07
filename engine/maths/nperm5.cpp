@@ -105,6 +105,8 @@ const NPerm5 NPerm5::orderedS5[120] = {
     NPerm5(4,3,1,0,2), NPerm5(4,3,1,2,0), NPerm5(4,3,2,0,1), NPerm5(4,3,2,1,0),
 };
 
+const NPerm5* NPerm5::orderedSn = NPerm5::orderedS5;
+
 const unsigned NPerm5::invS5[120] = {
      0,  1,  4,  3,  2,  5,  6,  7, 12, 19, 18, 13,
      8, 11, 20, 15, 16, 23, 10,  9, 14, 21, 22, 17,

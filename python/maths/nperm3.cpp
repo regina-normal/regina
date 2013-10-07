@@ -84,6 +84,7 @@ void addNPerm3() {
     s.attr("S3") = &NPerm3_S3_arr;
     s.attr("Sn") = &NPerm3_S3_arr;
     s.attr("orderedS3") = &NPerm3_orderedS3_arr;
+    s.attr("orderedSn") = &NPerm3_orderedS3_arr;
     s.attr("invS3") = &NPerm3_invS3_arr;
     s.attr("S2") = &NPerm3_S2_arr;
     s.attr("Sn_1") = &NPerm3_S2_arr;

@@ -71,6 +71,8 @@ const NPerm4 NPerm4::orderedS4[24] = {
     NPerm4(20), NPerm4(21), NPerm4(23), NPerm4(22)
 };
 
+const NPerm4* NPerm4::orderedSn = NPerm4::orderedS4;
+
 const NPerm4* orderedPermsS4 = NPerm4::orderedS4;
 
 const NPerm4 NPerm4::S3[6] = {

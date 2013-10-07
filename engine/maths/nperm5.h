@@ -96,6 +96,13 @@ class REGINA_API NPerm5 {
         static const NPerm5 orderedS5[120];
 
         /**
+         * A dimension-agnostic alias for NPerm5::orderedS5.  In general, for
+         * each \a K the class NPermK will define an alias \a orderedSn
+         * that references the list of all permutations NPermK::orderedSK.
+         */
+        static const NPerm5* orderedSn;
+
+        /**
          * Contains the inverses of the permutations in the array \a S5.
          *
          * Specifically, the inverse of permutation <tt>S5[i]</tt> is

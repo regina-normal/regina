@@ -111,6 +111,13 @@ class REGINA_API NPerm3 {
         static const NPerm3 orderedS3[6];
 
         /**
+         * A dimension-agnostic alias for NPerm3::orderedS3.  In general, for
+         * each \a K the class NPermK will define an alias \a orderedSn
+         * that references the list of all permutations NPermK::orderedSK.
+         */
+        static const NPerm3* orderedSn;
+
+        /**
          * Contains all possible permutations of two elements.
          * In each permutation, 2 maps to 2 and 3 maps to 3.
          *

@@ -129,6 +129,7 @@ void addNPerm4() {
         s.attr("Sn") = &NPerm4_S4_arr;
         s.attr("invS4") = &NPerm4_invS4_arr;
         s.attr("orderedS4") = &NPerm4_orderedS4_arr;
+        s.attr("orderedSn") = &NPerm4_orderedS4_arr;
         s.attr("S3") = &NPerm4_S3_arr;
         s.attr("Sn_1") = &NPerm4_S3_arr;
         s.attr("invS3") = &NPerm4_invS3_arr;
