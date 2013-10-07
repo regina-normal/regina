@@ -1,7 +1,14 @@
 # packet
 
 # Files to compile
-SET ( FILES ncontainer npacket npdf nscript ntext pypacket)
+SET ( FILES
+  ncontainer
+  npacket
+  npdf
+  nscript
+  ntext
+  pypacket
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

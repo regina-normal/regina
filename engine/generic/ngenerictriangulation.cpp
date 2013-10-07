@@ -32,70 +32,17 @@
 
 /* end stub */
 
-#include <sstream>
-#include "maths/nperm3.h"
+#include "generic/ngenerictriangulation.h"
 
-namespace regina {
+// Template implementations:
+#include "generic/isosig.tcc"
 
-const NPerm3 NPerm3::S3[6] = {
-    NPerm3((unsigned char)0), NPerm3(1), NPerm3(2),
-    NPerm3(3), NPerm3(4), NPerm3(5)
-};
+// Dimension-specific headers required for template instantiations:
+#include "dim2/dim2triangulation.h"
+#include "triangulation/ntriangulation.h"
 
-const NPerm3* NPerm3::Sn = NPerm3::S3;
+// Instantiate the templates!
 
-const int NPerm3::invS3[6] = {
-    0, 1, 4, 3, 2, 5
-};
-
-const NPerm3 NPerm3::orderedS3[6] = {
-    NPerm3(code012), NPerm3(code021),
-    NPerm3(code102), NPerm3(code120),
-    NPerm3(code201), NPerm3(code210)
-};
-
-const NPerm3* NPerm3::orderedSn = NPerm3::orderedS3;
-
-const NPerm3 NPerm3::S2[2] = {
-    NPerm3(code012), NPerm3(code102)
-};
-
-const NPerm3* NPerm3::Sn_1 = NPerm3::S2;
-
-const unsigned char NPerm3::imageTable[6][3] = {
-    { 0, 1, 2 },
-    { 0, 2, 1 },
-    { 1, 2, 0 },
-    { 1, 0, 2 },
-    { 2, 0, 1 },
-    { 2, 1, 0 }
-};
-
-const unsigned char NPerm3::productTable[6][6] = {
-    { 0, 1, 2, 3, 4, 5 },
-    { 1, 0, 5, 4, 3, 2 },
-    { 2, 3, 4, 5, 0, 1 },
-    { 3, 2, 1, 0, 5, 4 },
-    { 4, 5, 0, 1, 2, 3 },
-    { 5, 4, 3, 2, 1, 0 }
-};
-
-std::string NPerm3::toString() const {
-    char ans[4];
-    ans[0] = static_cast<char>('0' + imageTable[code_][0]);
-    ans[1] = static_cast<char>('0' + imageTable[code_][1]);
-    ans[2] = static_cast<char>('0' + imageTable[code_][2]);
-    ans[3] = 0;
-    return ans;
-}
-
-std::string NPerm3::trunc2() const {
-    char ans[3];
-    ans[0] = static_cast<char>('0' + imageTable[code_][0]);
-    ans[1] = static_cast<char>('0' + imageTable[code_][1]);
-    ans[2] = 0;
-    return ans;
-}
-
-} // namespace regina
+template class regina::NGenericTriangulation<2>;
+template class regina::NGenericTriangulation<3>;
 

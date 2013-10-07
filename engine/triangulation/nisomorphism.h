@@ -43,8 +43,8 @@
 
 #include "regina-core.h"
 #include "shareableobject.h"
+#include "generic/ngenericisomorphism.h"
 #include "maths/nperm4.h"
-#include "triangulation/ngenericisomorphism.h"
 #include "triangulation/ntetface.h"
 
 namespace regina {

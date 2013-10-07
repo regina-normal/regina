@@ -48,12 +48,15 @@ void addNComponent() {
             std::auto_ptr<NComponent>, boost::noncopyable>
             ("NComponent", no_init)
         .def("getNumberOfTetrahedra", &NComponent::getNumberOfTetrahedra)
+        .def("getNumberOfSimplices", &NComponent::getNumberOfSimplices)
         .def("getNumberOfFaces", &NComponent::getNumberOfFaces)
         .def("getNumberOfEdges", &NComponent::getNumberOfEdges)
         .def("getNumberOfVertices", &NComponent::getNumberOfVertices)
         .def("getNumberOfBoundaryComponents",
             &NComponent::getNumberOfBoundaryComponents)
         .def("getTetrahedron", &NComponent::getTetrahedron,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &NComponent::getSimplex,
             return_value_policy<reference_existing_object>())
         .def("getFace", &NComponent::getFace,
             return_value_policy<reference_existing_object>())
