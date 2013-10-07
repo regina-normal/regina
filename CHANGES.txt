@@ -35,6 +35,9 @@ Version 4.95  [ (under development) ]
         Class NVertex:
             - Added buildLinkDetail(), which returns details of how triangles
               of the vertex link are embedded within individual tetrahedra.
+        Routine isoSig(), fromIsoSig():
+            - New template routines to work with isomorphism signatures
+              for triangulations of any dimension.
         Headers dimtraits.h, nfacetspec.h, ngenericisomorphism.{h,tcc}:
             - Moved from triangulation/ to generic/.  The old header locations
               are now deprecated.  They have been kept for backward
