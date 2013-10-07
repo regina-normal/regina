@@ -21,8 +21,9 @@ Version 4.95  [ (under development) ]
               returned an empty list.  Users will not be affected unless
               they were explicitly asking for this much slower algorithm.
         Class NPerm3, NPerm4, NPerm5:
-            - New dimension-agnostic alias orderedSn that refers to orderedS3,
-              orderedS4 and orderedS5 in NPerm3, NPerm4 and NPerm5 respectively.
+            - New dimension-agnostic aliases orderedSn, SnIndex() and
+              orderedSnIndex().  These all reference existing arrays/routines
+              involving S3, S4 or S5 in NPerm3, NPerm4 and NPerm5 respectively.
         Class NTriangulation:
             - New routines getNumberOfSimplices() and getSimplex(), which are
               dimension-agnostic aliases for getNumberOfTetrahedra() and

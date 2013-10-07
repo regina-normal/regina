@@ -118,6 +118,7 @@ void addNPerm4() {
             .def("trunc3", &NPerm4::toString)
             .def("S4Index", S4Index_void)
             .def("orderedS4Index", &NPerm4::orderedS4Index)
+            .def("orderedSnIndex", &NPerm4::orderedS4Index)
             .def("__str__", &NPerm4::toString)
             .staticmethod("fromPermCode")
             .staticmethod("fromPermCode2")

@@ -76,6 +76,7 @@ void addNPerm3() {
         .def("trunc2", &NPerm3::trunc2)
         .def("S3Index", &NPerm3::S3Index)
         .def("orderedS3Index", &NPerm3::orderedS3Index)
+        .def("orderedSnIndex", &NPerm3::orderedS3Index)
         .def("__str__", &NPerm3::toString)
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
