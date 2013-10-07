@@ -16,7 +16,6 @@ SET ( FILES
   homotopy
   isomorphic
   nxmldim4trireader
-  signature
   simplify
   simplifyglobal
   skeleton

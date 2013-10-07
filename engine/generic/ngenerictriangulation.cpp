@@ -39,10 +39,12 @@
 
 // Dimension-specific headers required for template instantiations:
 #include "dim2/dim2triangulation.h"
+#include "dim4/dim4triangulation.h"
 #include "triangulation/ntriangulation.h"
 
 // Instantiate the templates!
 
 template class regina::NGenericTriangulation<2>;
 template class regina::NGenericTriangulation<3>;
+template class regina::NGenericTriangulation<4>;
 

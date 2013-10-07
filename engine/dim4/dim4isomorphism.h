@@ -43,9 +43,9 @@
 
 #include "regina-core.h"
 #include "shareableobject.h"
+#include "generic/nfacetspec.h"
+#include "generic/ngenericisomorphism.h"
 #include "maths/nperm5.h"
-#include "triangulation/nfacetspec.h"
-#include "triangulation/ngenericisomorphism.h"
 
 namespace regina {
 
