@@ -52,6 +52,8 @@ namespace {
         &NTriangulation::twoZeroMove;
     bool (NTriangulation::*twoZeroMove_edge)(regina::NEdge*, bool, bool) =
         &NTriangulation::twoZeroMove;
+    unsigned long (NTriangulation::*getNumberOfFaces_nontemplate)() const =
+        &NTriangulation::getNumberOfFaces;
     std::string (NTriangulation::*isoSig_void)() const =
         &NTriangulation::isoSig;
 
@@ -199,7 +201,7 @@ void addNTriangulation() {
             &NTriangulation::getNumberOfBoundaryComponents)
         .def("getNumberOfVertices", &NTriangulation::getNumberOfVertices)
         .def("getNumberOfEdges", &NTriangulation::getNumberOfEdges)
-        .def("getNumberOfFaces", &NTriangulation::getNumberOfFaces)
+        .def("getNumberOfFaces", getNumberOfFaces_nontemplate)
         .def("getComponents", getComponents_list)
         .def("getBoundaryComponents", getBoundaryComponents_list)
         .def("getVertices", getVertices_list)
