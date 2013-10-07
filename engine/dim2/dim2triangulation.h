@@ -45,6 +45,7 @@
 #include <memory>
 #include <vector>
 #include "regina-core.h"
+#include "generic/ngenerictriangulation.h"
 #include "packet/npacket.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
@@ -86,7 +87,8 @@ class NXMLPacketReader;
  * these objects will all be deleted and a new skeletal structure will be
  * calculated.  The same is true of various other triangulation properties.
  */
-class REGINA_API Dim2Triangulation : public NPacket {
+class REGINA_API Dim2Triangulation : public NPacket,
+        public NGenericTriangulation<2> {
     public:
         static const int packetType;
 
@@ -1137,22 +1139,6 @@ class REGINA_API Dim2Triangulation : public NPacket {
         static bool compatibleTriangles(Dim2Triangle* src, Dim2Triangle* dest,
             NPerm3 p);
 
-        /**
-         * Internal to isoSig().
-         *
-         * Constructs a candidate isomorphism signature for a single
-         * component of this triangulation.  This candidate signature
-         * assumes that the given triangle with the given labelling
-         * of its vertices becomes triangle zero with vertices 0,1,2
-         * under the "canonical isomorphism".
-         *
-         * @param tri the index of some triangle in this triangulation.
-         * @param vertices some ordering of the three vertices of the
-         * given triangle.
-         * @return the candidate isomorphism signature.
-         */
-        std::string isoSig(unsigned tri, const NPerm3& vertices) const;
-
     friend class regina::Dim2Triangle;
     friend class regina::NXMLDim2TriangulationReader;
 };
@@ -1446,6 +1432,15 @@ inline bool Dim2Triangulation::isConnected() const {
 
 inline NPacket* Dim2Triangulation::internalClonePacket(NPacket*) const {
     return new Dim2Triangulation(*this);
+}
+
+inline std::string Dim2Triangulation::isoSig() const {
+    return NGenericTriangulation<2>::isoSig(*this);
+}
+
+inline Dim2Triangulation* Dim2Triangulation::fromIsoSig(
+        const std::string& signature) {
+    return NGenericTriangulation<2>::fromIsoSig(signature);
 }
 
 } // namespace regina

@@ -1,7 +1,7 @@
 # triangulation 
 
 # Files to compile
-SET ( FILES cover crushtri decompose homology homotopy hydrate insertlayered isomorphic nedge nexampletriangulation nface nfacepair nhomologicaldata nisomorphism ntetrahedron ntriangulation nvertex nxmltrireader reorder signature simplify simplifyglobal skeleton subdivide surfaces turaevviro)
+SET ( FILES cover crushtri decompose homology homotopy hydrate insertlayered isomorphic nedge nexampletriangulation nface nfacepair nhomologicaldata nisomorphism ntetrahedron ntriangulation nvertex nxmltrireader reorder simplify simplifyglobal skeleton subdivide surfaces turaevviro)
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

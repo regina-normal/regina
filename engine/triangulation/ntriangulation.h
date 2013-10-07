@@ -49,6 +49,7 @@
 #include "regina-core.h"
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
+#include "generic/ngenerictriangulation.h"
 #include "packet/npacket.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nmarkedvector.h"
@@ -118,7 +119,8 @@ class NXMLTriangulationReader;
  * subcomplex to a normal surface.
  * \todo \featurelong Implement writeTextLong() for skeletal objects.
  */
-class REGINA_API NTriangulation : public NPacket {
+class REGINA_API NTriangulation : public NPacket,
+        public NGenericTriangulation<3> {
     public:
         static const int packetType;
 
@@ -3181,22 +3183,6 @@ class REGINA_API NTriangulation : public NPacket {
         static bool compatibleTets(NTetrahedron* src, NTetrahedron* dest,
                 NPerm4 p);
 
-        /**
-         * Internal to isoSig().
-         *
-         * Constructs a candidate isomorphism signature for a single
-         * component of this triangulation.  This candidate signature
-         * assumes that the given tetrahedron with the given labelling
-         * of its vertices becomes tetrahedron zero with vertices 0,1,2,3
-         * under the "canonical isomorphism".
-         *
-         * @param tet the index of some tetrahedron in this triangulation.
-         * @param vertices some ordering of the four vertices of the
-         * given tetrahedron.
-         * @return the candidate isomorphism signature.
-         */
-        std::string isoSig(unsigned tet, const NPerm4& vertices) const;
-
         void stretchBoundaryForestFromVertex(NVertex*, std::set<NEdge*>&,
                 std::set<NVertex*>&) const;
             /**< Internal to maximalForestInBoundary(). */
@@ -3588,6 +3574,15 @@ inline const NTriangulation::TuraevViroSet&
 
 inline void NTriangulation::writeTextShort(std::ostream& out) const {
     out << "Triangulation with " << tetrahedra.size() << " tetrahedra.";
+}
+
+inline std::string NTriangulation::isoSig() const {
+    return NGenericTriangulation<3>::isoSig(*this);
+}
+
+inline NTriangulation* NTriangulation::fromIsoSig(
+        const std::string& signature) {
+    return NGenericTriangulation<3>::fromIsoSig(signature);
 }
 
 } // namespace regina

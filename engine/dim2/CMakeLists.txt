@@ -1,7 +1,7 @@
 # dim2 
 
 # Files to compile
-SET ( FILES canonical dim2edge dim2exampletriangulation dim2triangle dim2isomorphism dim2triangulation isomorphic nxmldim2trireader signature skeleton )
+SET ( FILES canonical dim2edge dim2exampletriangulation dim2triangle dim2isomorphism dim2triangulation isomorphic nxmldim2trireader skeleton )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

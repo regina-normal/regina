@@ -2,7 +2,7 @@
 
 # Files to compile
 SET ( FILES
-  isosig
+  ngenerictriangulation
   )
 
 # Prepend folder name
