@@ -60,7 +60,7 @@ class NTetrahedron;
  * boundary.
  *
  * A \e layering involves laying a new tetrahedron flat upon two
- * adjacent boundary faces in order to change the boundary curves.  Many
+ * adjacent boundary triangles in order to change the boundary curves.  Many
  * tetrahedra may be layered upon a boundary in succession in order to
  * change the boundary curves more dramatically.
  *
@@ -90,26 +90,26 @@ class NTetrahedron;
  * - edges \a p0[2]-\a p0[0] and \a p1[0]-\a p1[2] of tetrahedra
  *   \a t0 and \a t1 respectively are identified.
  *
- * Note that we do not actually require these faces to form a torus, and
- * this is never verifed by any of the routines in this class.  What
+ * Note that we do not actually require these triangular faces to form a torus,
+ * and this is never verifed by any of the routines in this class.  What
  * these routines do is use the diagram above to define the rules of
  * what forms a valid layering (and in fact the layering itself will
  * often be the cause of these edge identifications).  This allows the
  * NLayering class a little more versatility in degenerate and boundary cases.
  *
  * This class keeps track of an \e old boundary, which is the original
- * pair of faces upon which the first tetrahedron is layered, and a
+ * pair of triangles upon which the first tetrahedron is layered, and a
  * \e new boundary, which is formed by the last layered tetrahedron and
  * contains the modified boundary curves.  If no tetrahedra are layered
  * at all then the old and new boundaries will be identical.
  *
  * This class is used to search for layerings as follows.  The
- * constructor is called with a particular pair of faces that will form
- * the old boundary (note that these are generally \e not boundary faces
+ * constructor is called with a particular pair of triangles that will form
+ * the old boundary (note that these are generally \e not boundary triangles
  * in the triangulation, since we are searching for layerings that have
  * been placed upon them).  This forms a trivial (zero-tetrahedron)
  * layering.  The routines extend() or extendOne() are then called to see
- * how many additional tetrahedra have been layered upon this pair of faces
+ * how many additional tetrahedra have been layered upon this pair of triangles
  * according to the rules above.
  */
 class REGINA_API NLayering : public boost::noncopyable {
@@ -149,18 +149,18 @@ class REGINA_API NLayering : public boost::noncopyable {
          *
          * The boundary is described by two tetrahedra and two
          * permutations as explained in the class notes.  Note that the
-         * given tetrahedra need not be boundary faces in the triangulation
+         * given tetrahedra need not be boundary triangles in the triangulation
          * (and if search routines such as extend() are called then they
          * almost certainly should not be).
          *
-         * @param bdry0 the tetrahedron providing the first face of the
+         * @param bdry0 the tetrahedron providing the first triangle of the
          * boundary.
-         * @param roles0 the permutation describing how this first face is
+         * @param roles0 the permutation describing how this first triangle is
          * formed from three vertices of tetrahedron \a bdry0, as
          * described in the class notes.
-         * @param bdry1 the tetrahedron providing the second face of the
+         * @param bdry1 the tetrahedron providing the second triangle of the
          * boundary.
-         * @param roles1 the permutation describing how this second face is
+         * @param roles1 the permutation describing how this second triangle is
          * formed from three vertices of tetrahedron \a bdry1.
          */
         NLayering(NTetrahedron* bdry0, NPerm4 roles0, NTetrahedron* bdry1,
@@ -180,7 +180,7 @@ class REGINA_API NLayering : public boost::noncopyable {
         unsigned long getSize() const;
 
         /**
-         * Returns the tetrahedra that provide the old boundary faces.
+         * Returns the tetrahedra that provide the old boundary triangles.
          * These belong to the original boundary before any layerings
          * take place.
          *
@@ -193,7 +193,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          */
         NTetrahedron* getOldBoundaryTet(unsigned which) const;
         /**
-         * Returns the permutations that describe the old boundary faces.
+         * Returns the permutations that describe the old boundary triangles.
          * These refer to the original boundary before any layerings
          * take place.
          *
@@ -206,7 +206,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          */
         NPerm4 getOldBoundaryRoles(unsigned which) const;
         /**
-         * Returns the tetrahedra that provide the new boundary faces.
+         * Returns the tetrahedra that provide the new boundary triangles.
          * These belong to the final boundary after layerings have been
          * performed.
          *
@@ -219,7 +219,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          */
         NTetrahedron* getNewBoundaryTet(unsigned which) const;
         /**
-         * Returns the permutations that describe the new boundary faces.
+         * Returns the permutations that describe the new boundary triangles.
          * These refer to the final boundary after layerings have been
          * performed.
          *
@@ -286,7 +286,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          * Examines whether a single additional tetrahedron has been
          * layered upon the current new boundary.
          *
-         * The new boundary faces are assumed to form a torus as
+         * The new boundary triangles are assumed to form a torus as
          * described in the class notes (this is not verified, and there
          * are degenerate cases where this will likely be false).  This
          * defines three possible ways in which an additional tetrahedron
@@ -328,7 +328,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          * is identified with the given torus boundary.  In other words,
          * this routine determines whether the new torus boundary of
          * this structure and the given torus boundary represent
-         * opposite sides of the same two faces.
+         * opposite sides of the same two triangles.
          *
          * The two boundaries must be identified according to some
          * homeomorphism of the torus.  Note that there are 12 different
@@ -388,15 +388,15 @@ class REGINA_API NLayering : public boost::noncopyable {
          *
          * If no match is found, the matrix \a upperReln is not touched.
          *
-         * @param upperBdry0 the tetrahedron providing the first face of
+         * @param upperBdry0 the tetrahedron providing the first triangle of
          * the given boundary.
          * @param upperRoles0 the permutation describing how this
-         * first face is formed from three vertices of tetrahedron
+         * first triangle is formed from three vertices of tetrahedron
          * upperBdry0, as described in the class notes.
-         * @param upperBdry1 the tetrahedron providing the second face of
+         * @param upperBdry1 the tetrahedron providing the second triangle of
          * the given boundary.
          * @param upperRoles1 the permutation describing how this second
-         * face is formed from three vertices of tetrahedron upperBdry1.
+         * triangle is formed from three vertices of tetrahedron upperBdry1.
          * @param upperReln the matrix that is changed to reflect the
          * relationship between the old boundary of this structure and
          * the given boundary.

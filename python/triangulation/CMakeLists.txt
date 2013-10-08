@@ -6,12 +6,12 @@ SET ( FILES
   ncomponent
   nedge
   nexampletriangulation
-  nface
   nfacepair
   nhomologicaldata
   nisomorphism
   ntetface
   ntetrahedron
+  ntriangle
   ntriangulation
   nvertex
   pytriangulation

@@ -64,16 +64,16 @@ NLargeInteger NNormalSurfaceVectorANStandard::getEdgeWeight(
     return ans;
 }
 
-NLargeInteger NNormalSurfaceVectorANStandard::getFaceArcs(
-        unsigned long faceIndex, int faceVertex, NTriangulation* triang) const {
-    // Find a tetrahedron next to the face in question.
-    const NFaceEmbedding& emb = triang->getFaces()[faceIndex]->
+NLargeInteger NNormalSurfaceVectorANStandard::getTriangleArcs(
+        unsigned long triIndex, int triVertex, NTriangulation* triang) const {
+    // Find a tetrahedron next to the triangle in question.
+    const NTriangleEmbedding& emb = triang->getTriangles()[triIndex]->
         getEmbedding(0);
     long tetIndex = triang->tetrahedronIndex(emb.getTetrahedron());
-    int vertex = emb.getVertices()[faceVertex];
+    int vertex = emb.getVertices()[triVertex];
     int backOfFace = emb.getVertices()[3];
 
-    // Add up the discs meeting that face in that required arc.
+    // Add up the discs meeting that triangle in that required arc.
     // Triangles:
     NLargeInteger ans((*this)[10 * tetIndex + vertex]);
     // Quads:
@@ -95,20 +95,20 @@ NNormalSurfaceVector* NNormalSurfaceVectorANStandard::makeZeroVector(
 NMatrixInt* NNormalSurfaceVectorANStandard::makeMatchingEquations(
         NTriangulation* triangulation) {
     unsigned long nCoords = 10 * triangulation->getNumberOfTetrahedra();
-    // Three equations per non-boundary face.
+    // Three equations per non-boundary triangle.
     // F_boundary + 2 F_internal = 4 T
     long nEquations = 3 * (4 * long(triangulation->getNumberOfTetrahedra()) -
-        long(triangulation->getNumberOfFaces()));
+        long(triangulation->getNumberOfTriangles()));
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
 
-    // Run through each internal face and add the corresponding three
+    // Run through each internal triangle and add the corresponding three
     // equations.
     unsigned row = 0;
     int i;
     unsigned long tet0, tet1;
     NPerm4 perm0, perm1;
-    for (NTriangulation::FaceIterator fit = triangulation->getFaces().begin();
-            fit != triangulation->getFaces().end(); fit++) {
+    for (NTriangulation::TriangleIterator fit = triangulation->getTriangles().begin();
+            fit != triangulation->getTriangles().end(); fit++) {
         if (! (*fit)->isBoundary()) {
             tet0 = triangulation->tetrahedronIndex(
                 (*fit)->getEmbedding(0).getTetrahedron());

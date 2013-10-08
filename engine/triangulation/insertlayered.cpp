@@ -39,7 +39,7 @@
 namespace regina {
 
 NTetrahedron* NTriangulation::layerOn(NEdge* edge) {
-    // Locate the two boundary faces.
+    // Locate the two boundary triangles.
     // Note that our preconditions ensure they exist and are distinct;
     // we won't test this again here.
     const std::deque<NEdgeEmbedding>& embs(edge->getEmbeddings());
@@ -51,8 +51,8 @@ NTetrahedron* NTriangulation::layerOn(NEdge* edge) {
     NPerm4 roles2 = embs.back().getVertices();
 
     // At this stage, roles1 maps (0,1,2) to the tet1 tetrahedron vertices
-    // for the first boundary face, and roles2 maps (0,1,3) to the tet2
-    // tetrahedron vertices for the second boundary face.  In each case,
+    // for the first boundary triangle, and roles2 maps (0,1,3) to the tet2
+    // tetrahedron vertices for the second boundary triangle.  In each case,
     // (0,1) maps to the endpoints of the given edge.
     //
     // The simplest thing to do is let (0,1,2,3) in the preimages for

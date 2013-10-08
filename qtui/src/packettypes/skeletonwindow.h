@@ -51,6 +51,7 @@ class QTreeView;
 
 namespace regina {
     class Dim2Triangulation;
+    class Dim4Triangulation;
     class NTriangulation;
 };
 
@@ -232,7 +233,7 @@ class EdgeModel : public SkeletalModel {
         static QString toolTipForCol(int column);
 };
 
-class FaceModel : public SkeletalModel {
+class TriangleModel : public SkeletalModel {
     private:
         /**
          * The triangulation being displayed
@@ -243,7 +244,7 @@ class FaceModel : public SkeletalModel {
         /**
          * Constructor.
          */
-        FaceModel(regina::NTriangulation* tri_);
+        TriangleModel(regina::NTriangulation* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -470,6 +471,210 @@ class Dim2BoundaryComponentModel : public SkeletalModel {
         static QString toolTipForCol(int column);
 };
 
+class Dim4VertexModel : public SkeletalModel {
+    private:
+        /**
+         * The triangulation being displayed
+         */
+        regina::Dim4Triangulation* tri;
+
+    public:
+        /**
+         * Constructor.
+         */
+        Dim4VertexModel(regina::Dim4Triangulation* tri_);
+
+        /**
+         * Overrides for describing this subclass of model.
+         */
+        virtual QString caption() const;
+        virtual QString overview() const;
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Helper routine for generating tooltips.
+         */
+        static QString toolTipForCol(int column);
+};
+
+class Dim4EdgeModel : public SkeletalModel {
+    private:
+        /**
+         * The triangulation being displayed
+         */
+        regina::Dim4Triangulation* tri;
+
+    public:
+        /**
+         * Constructor.
+         */
+        Dim4EdgeModel(regina::Dim4Triangulation* tri_);
+
+        /**
+         * Overrides for describing this subclass of model.
+         */
+        virtual QString caption() const;
+        virtual QString overview() const;
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Helper routine for generating tooltips.
+         */
+        static QString toolTipForCol(int column);
+};
+
+class Dim4TriangleModel : public SkeletalModel {
+    private:
+        /**
+         * The triangulation being displayed
+         */
+        regina::Dim4Triangulation* tri;
+
+    public:
+        /**
+         * Constructor.
+         */
+        Dim4TriangleModel(regina::Dim4Triangulation* tri_);
+
+        /**
+         * Overrides for describing this subclass of model.
+         */
+        virtual QString caption() const;
+        virtual QString overview() const;
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Helper routine for generating tooltips.
+         */
+        static QString toolTipForCol(int column);
+};
+
+class Dim4TetrahedronModel : public SkeletalModel {
+    private:
+        /**
+         * The triangulation being displayed
+         */
+        regina::Dim4Triangulation* tri;
+
+    public:
+        /**
+         * Constructor.
+         */
+        Dim4TetrahedronModel(regina::Dim4Triangulation* tri_);
+
+        /**
+         * Overrides for describing this subclass of model.
+         */
+        virtual QString caption() const;
+        virtual QString overview() const;
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Helper routine for generating tooltips.
+         */
+        static QString toolTipForCol(int column);
+};
+
+class Dim4ComponentModel : public SkeletalModel {
+    private:
+        /**
+         * The triangulation being displayed
+         */
+        regina::Dim4Triangulation* tri;
+
+    public:
+        /**
+         * Constructor.
+         */
+        Dim4ComponentModel(regina::Dim4Triangulation* tri_);
+
+        /**
+         * Overrides for describing this subclass of model.
+         */
+        virtual QString caption() const;
+        virtual QString overview() const;
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Helper routine for generating tooltips.
+         */
+        static QString toolTipForCol(int column);
+};
+
+class Dim4BoundaryComponentModel : public SkeletalModel {
+    private:
+        /**
+         * The triangulation being displayed
+         */
+        regina::Dim4Triangulation* tri;
+
+    public:
+        /**
+         * Constructor.
+         */
+        Dim4BoundaryComponentModel(regina::Dim4Triangulation* tri_);
+
+        /**
+         * Overrides for describing this subclass of model.
+         */
+        virtual QString caption() const;
+        virtual QString overview() const;
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+
+        /**
+         * Helper routine for generating tooltips.
+         */
+        static QString toolTipForCol(int column);
+};
+
 inline SkeletalModel::SkeletalModel() : forceEmpty(false) {
 }
 
@@ -515,7 +720,7 @@ inline VertexModel::VertexModel(regina::NTriangulation* tri_) :
 inline EdgeModel::EdgeModel(regina::NTriangulation* tri_) :
         tri(tri_) {}
 
-inline FaceModel::FaceModel(regina::NTriangulation* tri_) :
+inline TriangleModel::TriangleModel(regina::NTriangulation* tri_) :
         tri(tri_) {}
 
 inline ComponentModel::ComponentModel(regina::NTriangulation* tri_) :
@@ -535,5 +740,23 @@ inline Dim2ComponentModel::Dim2ComponentModel(regina::Dim2Triangulation* tri_) :
 
 inline Dim2BoundaryComponentModel::Dim2BoundaryComponentModel(
         regina::Dim2Triangulation* tri_) : tri(tri_) {}
+
+inline Dim4VertexModel::Dim4VertexModel(regina::Dim4Triangulation* tri_) :
+        tri(tri_) {}
+
+inline Dim4EdgeModel::Dim4EdgeModel(regina::Dim4Triangulation* tri_) :
+        tri(tri_) {}
+
+inline Dim4TriangleModel::Dim4TriangleModel(regina::Dim4Triangulation* tri_) :
+        tri(tri_) {}
+
+inline Dim4TetrahedronModel::Dim4TetrahedronModel(
+        regina::Dim4Triangulation* tri_) : tri(tri_) {}
+
+inline Dim4ComponentModel::Dim4ComponentModel(regina::Dim4Triangulation* tri_) :
+        tri(tri_) {}
+
+inline Dim4BoundaryComponentModel::Dim4BoundaryComponentModel(
+        regina::Dim4Triangulation* tri_) : tri(tri_) {}
 
 #endif

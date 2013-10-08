@@ -37,8 +37,8 @@
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
-#include "triangulation/nface.h"
 #include "triangulation/nisomorphism.h"
+#include "triangulation/ntriangle.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
@@ -491,7 +491,8 @@ QString GluingsModel::destString(int srcFace, int destTet,
         return "";
     else
         return QString::number(destTet) + " (" +
-            (gluing * regina::NFace::ordering[srcFace]).trunc3().c_str() + ')';
+            (gluing * regina::NTriangle::ordering[srcFace]).trunc3().c_str() +
+            ')';
 }
 
 regina::NPerm4 GluingsModel::faceStringToPerm(int srcFace, const QString& str) {
@@ -506,7 +507,7 @@ regina::NPerm4 GluingsModel::faceStringToPerm(int srcFace, const QString& str) {
     }
 
     return regina::NPerm4(destVertex[0], destVertex[1], destVertex[2],
-        destVertex[3]) * regina::NFace::ordering[srcFace].inverse();
+        destVertex[3]) * regina::NTriangle::ordering[srcFace].inverse();
 }
 
 NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
@@ -664,7 +665,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     actIdealToFinite->setWhatsThis(tr("Convert this from an ideal "
         "triangulation to a finite triangulation.  Any vertices whose "
         "links are neither 2-spheres nor discs "
-        "will be truncated and converted into boundary faces.<p>"
+        "will be truncated and converted into boundary triangles.<p>"
         "This triangulation will be modified directly.  If there are no "
         "vertices of this type to truncate, this operation will have no "
         "effect.<p>"
@@ -681,7 +682,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     actFiniteToIdeal->setEnabled(readWrite);
     actFiniteToIdeal->setWhatsThis(tr("Convert this from a finite "
         "triangulation to an ideal triangulation.  Each real boundary "
-        "component (formed from two or more boundary faces) will be "
+        "component (formed from two or more boundary triangles) will be "
         "converted into a single ideal vertex.<p>"
         "A side-effect of this operation is that any spherical boundary "
         "components will be filled in with balls.<p>"
@@ -730,7 +731,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     actBoundaryComponents->setWhatsThis(tr("<qt>Build a 2-manifold "
         "triangulation from a boundary component of this triangulation.<p>"
         "If you select a real boundary component, this will construct "
-        "a 2-manifold triangulation from its boundary faces.  "
+        "a 2-manifold triangulation from its boundary triangles.  "
         "If you select an ideal boundary component, this will construct "
         "a 2-manifold triangulation from the corresponding vertex link.</qt>"));
     /*
@@ -987,7 +988,7 @@ void NTriGluingsUI::finiteToIdeal() {
     if (! enclosingPane->commitToModify())
         return;
 
-    if (! tri->hasBoundaryFaces())
+    if (! tri->hasBoundaryTriangles())
         ReginaSupport::info(ui,
             tr("This triangulation has no real boundary components."),
             tr("Only real boundary components will be converted into "

@@ -36,9 +36,9 @@
 #include "dim4/dim4triangulation.h"
 
 // UI includes:
-// TODO #include "dim4trialgebra.h"
+#include "dim4trialgebra.h"
 #include "dim4trigluings.h"
-// TODO #include "dim4triskeleton.h"
+#include "dim4triskeleton.h"
 #include "dim4triui.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
@@ -56,15 +56,15 @@ Dim4TriangulationUI::Dim4TriangulationUI(regina::Dim4Triangulation* packet,
     Dim4TriHeaderUI* header = new Dim4TriHeaderUI(packet, this);
     gluings = new Dim4TriGluingsUI(packet, this,
         newEnclosingPane->isReadWrite());
-    // TODO skeleton = new Dim4TriSkeletonUI(packet, this);
-    // TODO algebra = new Dim4TriAlgebraUI(packet, this);
+    skeleton = new Dim4TriSkeletonUI(packet, this);
+    algebra = new Dim4TriAlgebraUI(packet, this);
 
     gluings->fillToolBar(header->getToolBar());
 
     addHeader(header);
     addTab(gluings, QObject::tr("&Gluings"));
-    // TODO addTab(skeleton, QObject::tr("&Skeleton"));
-    // TODO addTab(algebra, QObject::tr("&Algebra"));
+    addTab(skeleton, QObject::tr("&Skeleton"));
+    addTab(algebra, QObject::tr("&Algebra"));
 
     editIface = new PacketEditTabbedUI(this);
 }

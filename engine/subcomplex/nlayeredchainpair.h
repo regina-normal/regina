@@ -61,8 +61,8 @@ class NComponent;
  *
  * Orient the hinge edges and diagonals of each chain so they all point
  * in the same direction around the solid tori formed by each layered
- * chain (a \e diagonal is an edge between the two top faces or an edge
- * between the two bottom faces of a layered chain).
+ * chain (a \e diagonal is an edge between the two top triangular faces or an
+ * edge between the two bottom triangular faces of a layered chain).
  *
  * The two top faces of the first chain are glued to a top and bottom
  * face of the second chain, and the two bottom faces of the first chain

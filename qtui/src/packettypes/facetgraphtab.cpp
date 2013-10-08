@@ -34,8 +34,10 @@
 
 // Regina core includes:
 #include "census/dim2edgepairing.h"
+#include "census/dim4facetpairing.h"
 #include "census/nfacepairing.h"
 #include "dim2/dim2triangulation.h"
+#include "dim4/dim4triangulation.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
@@ -340,3 +342,30 @@ QString Dim3FaceGraphData::overview() {
 regina::NPacket* Dim3FaceGraphData::getPacket() {
     return tri_;
 }
+
+void Dim4FacetGraphData::writeDot(std::ostream& out, bool withLabels) {
+    regina::Dim4FacetPairing* pairing = new regina::Dim4FacetPairing(*tri_);
+    pairing->writeDot(out, 0 /* prefix */, false /* subgraphs */, withLabels);
+    delete pairing;
+}
+
+unsigned long Dim4FacetGraphData::numberOfSimplices() {
+    return tri_->getNumberOfSimplices();
+}
+
+QString Dim4FacetGraphData::simplicesName() {
+    return QObject::tr("pentachora");
+}
+
+QString Dim4FacetGraphData::overview() {
+    return QObject::tr("<qt>The <i>facet pairing graph</i> "
+        "of a triangulation describes which pentachoron facets are "
+        "identified with which.<p>Each node of the graph represents "
+        "a pentachoron, and each arc of the graph represents a pair of "
+        "pentachoron facets that are joined together.</qt>");
+}
+
+regina::NPacket* Dim4FacetGraphData::getPacket() {
+    return tri_;
+}
+

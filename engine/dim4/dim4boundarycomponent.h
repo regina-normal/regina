@@ -171,7 +171,7 @@ class REGINA_API Dim4BoundaryComponent :
          * 4-manifold triangulation.  However, if this boundary component
          * is built from one or more tetrahedra (i.e., it is not ideal),
          * then the index of each Dim4Triangle in this boundary component
-         * matches the index of the corresponding NFace in the
+         * matches the index of the corresponding NTriangle in the
          * 3-manifold triangulation returned by getTriangulation().
          *
          * For an ideal boundary component (which consists of a single

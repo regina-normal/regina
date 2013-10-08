@@ -33,7 +33,8 @@
 /* end stub */
 
 /*! \file subcomplex/nsatannulus.h
- *  \brief Deals with saturated two-face annuli within a Seifert fibred space.
+ *  \brief Deals with saturated two-triangle annuli within a
+ *  Seifert fibred space.
  */
 
 #ifndef __NSATANNULUS_H
@@ -57,13 +58,13 @@ class NTriangulation;
  */
 
 /**
- * Represents an annulus formed from a pair of faces in a Seifert fibred
+ * Represents an annulus formed from a pair of triangles in a Seifert fibred
  * space.  This annulus is saturated, i.e., a union of fibres.  More than
  * that, the fibres run parallel to the two boundary edges of the annulus.
  *
  * The annulus is described from one side only.  The description
  * includes an array of indices \a tet[] describing which two tetrahedra
- * provide the faces of the annulus, as well as an array of permutations
+ * provide the triangles of the annulus, as well as an array of permutations
  * \a roles[] detailing how the annulus matches up with the individual
  * tetrahedron vertices.
  *
@@ -73,17 +74,17 @@ class NTriangulation;
  * <pre>
  *            *--->---*
  *            |0  2 / |
- *     First  |    / 1|  Second
- *     face   |   /   |   face
+ *    First   |    / 1|  Second
+ *   triangle |   /   | triangle
  *            |1 /    |
  *            | / 2  0|
  *            *--->---*
  * </pre>
  *
  * Suppose that \a tet[0] and \a tet[1] are the tetrahedra providing the
- * first and second faces respectively.  Then the markings 0..2 on the
- * first face above correspond to vertices \a roles[0][0..2] of tetrahedron
- * \a tet[0], and likewise the markings 0..2 on the second face above
+ * first and second triangles respectively.  Then the markings 0..2 on the
+ * first triangle above correspond to vertices \a roles[0][0..2] of tetrahedron
+ * \a tet[0], and likewise the markings 0..2 on the second triangle above
  * correspond to vertices \a roles[1][0..2] of tetrahedron \a tet[1].
  *
  * Note that the diagram above can also be drawn as follows.
@@ -91,8 +92,8 @@ class NTriangulation;
  * <pre>
  *            *--->---*
  *            | \ 2  1|
- *     First  |0 \    |  Second
- *     face   |   \   |   face
+ *    First   |0 \    |  Second
+ *   triangle |   \   | triangle
  *            |    \ 0|
  *            |1  2 \ |
  *            *--->---*
@@ -119,18 +120,18 @@ class NTriangulation;
  *
  * \ifacespython The member arrays \a tet and \a roles are accessed for
  * reading through functions \a tet() and \a roles() respectively.  For
- * instance, the first face tetrahedron for the saturated annulus \a a can
+ * instance, the first triangle tetrahedron for the saturated annulus \a a can
  * be accessed as <tt>a.tet(0)</tt>.  These same member arrays are
  * accessed for writing through functions \a setTet() and \a setRoles(),
- * so for instance the second face vertex roles for the saturated annulus
+ * so for instance the second triangle vertex roles for the saturated annulus
  * \a a can be modified by calling <tt>a.setRoles(1, newRoles)</tt>.
  */
 struct REGINA_API NSatAnnulus {
     NTetrahedron* tet[2];
         /**< Describes which tetrahedra provide the first and second
-             faces.  See the class notes for details. */
+             triangles.  See the class notes for details. */
     NPerm4 roles[2];
-        /**< Describes how the first and second faces match up with
+        /**< Describes how the first and second triangles match up with
              individual tetrahedron vertices.  See the class notes for
              details. */
 
@@ -185,28 +186,28 @@ struct REGINA_API NSatAnnulus {
     bool operator != (const NSatAnnulus& other) const;
 
     /**
-     * Determines how many faces of this annulus lie on the boundary
+     * Determines how many triangles of this annulus lie on the boundary
      * of the triangulation.
      *
      * Note that this routine can also be used as a boolean function
-     * to determine whether any faces of the annulus lie on the
+     * to determine whether any triangles of the annulus lie on the
      * triangulation boundary.
      *
-     * @return the number of faces of this annulus that lie on the boundary
+     * @return the number of triangles of this annulus that lie on the boundary
      * of the triangulation; this will be 0, 1 or 2.
      */
     unsigned meetsBoundary() const;
 
     /**
      * Converts this into a representation of the same annulus from the
-     * other side.  The first and second faces and their 0..2 markings
+     * other side.  The first and second triangles and their 0..2 markings
      * (as described in the class notes) remain unchanged.  However, the
      * two tetrahedra that are used to describe the annulus will be
      * replaced by their counterparts on the other side of the annulus
      * (i.e., the two new tetrahedra that meet the two original tetrahedra
      * along the annulus itself).
      *
-     * \pre Neither face of this annulus is a boundary face of the
+     * \pre Neither triangle of this annulus is a boundary triangle of the
      * triangulation.
      */
     void switchSides();
@@ -215,7 +216,7 @@ struct REGINA_API NSatAnnulus {
      * This structure will not be changed.  See switchSides() for further
      * details.
      *
-     * \pre Neither face of this annulus is a boundary face of the
+     * \pre Neither triangle of this annulus is a boundary triangle of the
      * triangulation.
      *
      * @return a new representation of this annulus from the other side.
@@ -224,9 +225,9 @@ struct REGINA_API NSatAnnulus {
 
     /**
      * Reverses the direction of the vertical fibres in this annulus
-     * representation.  The first and second faces (as described in the
+     * representation.  The first and second triangles (as described in the
      * class notes) will remain unchanged, but the markings 0 and 1 on
-     * each face will be switched.
+     * each triangle will be switched.
      */
     void reflectVertical();
     /**
@@ -242,7 +243,7 @@ struct REGINA_API NSatAnnulus {
     /**
      * Performs a left-to-right reflection of this annulus
      * representation.  The vertical direction of the fibres will remain
-     * unchanged, but the first and second faces will be switched (and
+     * unchanged, but the first and second triangles will be switched (and
      * the 0..2 markings changed to compensate).
      */
     void reflectHorizontal();
@@ -257,7 +258,7 @@ struct REGINA_API NSatAnnulus {
 
     /**
      * Rotates the representation of this annulus by 180 degrees.
-     * This has the effect of switching the first and second faces and
+     * This has the effect of switching the first and second triangles and
      * also reversing the direction of the vertical fibres.
      *
      * Calling this routine is equivalent to calling reflectVertical() and
@@ -330,10 +331,10 @@ struct REGINA_API NSatAnnulus {
      * whether this is true).  It then examines whether this and the
      * given annulus represent opposite sides of the same torus.
      * More specifically, it tests whether both annuli are formed from
-     * the same pair of faces, and whether the mapping of 0/1/2 markings
-     * from one annulus to the other is the same for each face.  Note that
-     * the faces are allowed to be switched (i.e., the first face of one
-     * annulus may be the second face of the other).
+     * the same pair of triangles, and whether the mapping of 0/1/2 markings
+     * from one annulus to the other is the same for each triangle.  Note that
+     * the triangles are allowed to be switched (i.e., the first triangle of one
+     * annulus may be the second triangle of the other).
      *
      * The critical difference between this routine and isAdjacent() is
      * that this routine allows the fibres on each annulus to be
@@ -345,8 +346,8 @@ struct REGINA_API NSatAnnulus {
      * the curves on each annulus will be returned in the matrix
      * \a matching.  Specifically, let \a x and \a y be the oriented
      * curves running from markings 0-1 and 0-2 respectively on the
-     * first face of this annulus.  Likewise, let \a x' and \a y' run
-     * from markings 0-1 and 0-2 respectively on the first face of the
+     * first triangle of this annulus.  Likewise, let \a x' and \a y' run
+     * from markings 0-1 and 0-2 respectively on the first triangle of the
      * annulus \a other.  Then the joining between the two annuli can
      * be expressed as follows:
      *
@@ -370,7 +371,7 @@ struct REGINA_API NSatAnnulus {
      * form an embedded two-sided torus within the surrounding triangulation.
      *
      * It will be verified that:
-     * - the two faces of this annulus are joined along all three pairs
+     * - the two triangles of this annulus are joined along all three pairs
      *   of edges to form a torus;
      * - the three edges of this torus remain distinct (i.e., different edges
      *   of the torus do not become identified within the larger triangulation);
@@ -433,7 +434,7 @@ struct REGINA_API NSatAnnulus {
      * (in particular, negating \a beta will negate the fibre).
      *
      * In the case of a (2,1) fibre, the layered solid torus will be
-     * degenerate (i.e., the two faces of the annulus will simply be
+     * degenerate (i.e., the two triangles of the annulus will simply be
      * joined together).
      *
      * \pre The given value \a alpha is not zero.

@@ -60,10 +60,8 @@ NTriangulation* NTriangulation::rehydrate(const std::string& dehydration) {
 }
 
 bool NTriangulation::insertRehydration(const std::string& dehydration) {
-    unsigned len = dehydration.length();
-
     // Ensure the string is non-empty.
-    if (len == 0)
+    if (dehydration.empty())
         return false;
 
     // Rewrite the string in lower case and verify that it contains only
@@ -84,7 +82,7 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
     unsigned lenGluings = nTet + 1;
 
     // Ensure the string has the expected length.
-    if (len != 1 + lenNewTet + lenGluings + lenGluings)
+    if (dehydration.length() != 1 + lenNewTet + lenGluings + lenGluings)
         return false;
 
     // Determine which face gluings should involve new tetrahedra.
@@ -211,7 +209,7 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
 
 std::string NTriangulation::dehydrate() const {
     // Can we even dehydrate at all?
-    if (tetrahedra.size() > 25 || hasBoundaryFaces() || ! isConnected())
+    if (tetrahedra.size() > 25 || hasBoundaryTriangles() || ! isConnected())
         return "";
 
     // Get the empty case out of the way, since it requires an
@@ -222,7 +220,7 @@ std::string NTriangulation::dehydrate() const {
 
     // Find an isomorphism that will put the triangulation in a form
     // sufficiently "canonical" to be described by a dehydration string.
-    // When walking through faces from start to finish, this affects
+    // When walking through tetrahedron faces from start to finish, this affects
     // only gluings to previously unseen tetrahedra:
     // (i) such gluings must be to the smallest numbered unused tetrahedron;
     // (ii) the gluing permutation must be the identity permutation.
@@ -235,7 +233,7 @@ std::string NTriangulation::dehydrate() const {
     // vertexMap[t][i] of tetrahedron image[t].
     //
     // Each element of newTet[] is an 8-bit integer.  These bits
-    // describe whether the gluings for some corresponding 8 faces
+    // describe whether the gluings for some corresponding 8 tetrahedron faces
     // point to previously-seen or previously-unseen tetrahedra.
     // See the Callahan, Hildebrand and Weeks paper for details.
     unsigned nTets = tetrahedra.size();

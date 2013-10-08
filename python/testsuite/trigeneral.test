@@ -61,7 +61,7 @@ def vitalStats(tri):
 	print tri.getNumberOfComponents(), "components"
 	print tri.getNumberOfBoundaryComponents(), "boundary components"
 	print tri.getNumberOfTetrahedra(), "tetrahedra"
-	print tri.getNumberOfFaces(), "faces"
+	print tri.getNumberOfTriangles(), "triangles"
 	print tri.getNumberOfEdges(), "edges"
 	print tri.getNumberOfVertices(), "vertices"
 	print "2-sphere boundaries:", tri.hasTwoSphereBoundaryComponents()
@@ -70,7 +70,7 @@ def vitalStats(tri):
 	print "Valid:", tri.isValid()
 	print "Ideal:", tri.isIdeal()
 	print "Standard:", tri.isStandard()
-	print "Boundary Faces:", tri.hasBoundaryFaces()
+	print "Boundary Triangles:", tri.hasBoundaryTriangles()
 	print "Closed:", tri.isClosed()
 	print "Orientable:", tri.isOrientable()
 	print "Connected:", tri.isConnected()
@@ -132,6 +132,7 @@ def vitalStats(tri):
 	print "Checksum =", checksum(t.toStringLong())
 
 	print "Dehydration:", tri.dehydrate()
+	print "Isomorphism signature:", tri.isoSig()
 
 	if tri.toStringLong() != old:
 		print "ERROR: Original triangulation has changed!"

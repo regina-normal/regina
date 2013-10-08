@@ -49,7 +49,7 @@
 
 namespace regina {
 
-class NFace;
+class NTriangle;
 class NEdge;
 class NVertex;
 class NComponent;
@@ -106,7 +106,7 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
         NTetrahedron* tetrahedra[4];
             /**< Stores the tetrahedra glued to each face of this
                  tetrahedron.  Specifically, <tt>tetrahedra[f]</tt>
-                 represents the tetrahedron joined to face \c f
+                 represents the tetrahedron joined to triangular face \c f
                  of this tetrahedron, or is 0
                  if face \c f lies on the triangulation boundary.  Faces are
                  numbered from 0 to 3 inclusive, where face \c i is opposite
@@ -128,13 +128,13 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
         NEdge* edges[6];
             /**< Edges in the triangulation skeleton that are
                  edges of this tetrahedron. */
-        NFace* faces[4];
-            /**< Faces in the triangulation skeleton that are
+        NTriangle* triangles[4];
+            /**< Triangles in the triangulation skeleton that are
                  faces of this tetrahedron. */
 
         int tmpOrientation[4];
             /**< Temporary array used to represent orientations
-                 of faces and vertex link triangles when calculating
+                 of triangles and vertex link triangles when calculating
                  orientability of boundary components and vertex links.
                  Each orientation will be +/-1.
                  The array should only be used within these
@@ -148,9 +148,9 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
             /**< Maps (0,1) to the vertices of this tetrahedron that form
                  each edge whilst mapping (2,3) in a suitably "orientation-
                  preserving" way, as described in getEdgeMapping(). */
-        NPerm4 faceMapping[4];
+        NPerm4 triMapping[4];
             /**< Maps (0,1,2) to the vertices of this tetrahedron that form
-                 each face, as described in getFaceMapping(). */
+                 each triangular face, as described in getTriangleMapping(). */
         int tetOrientation;
             /**< The orientation of this tetrahedron in the triangulation.
                  This will either be 1 or -1. */
@@ -333,10 +333,10 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
         int getAdjacentFace(int face) const;
         /**
          * Determines if this tetrahedron has any faces that are
-         * boundary faces.
+         * boundary triangles.
          *
          * @return \c true if and only if this tetrahedron has any
-         * boundary faces.
+         * boundary triangles.
          */
         bool hasBoundary() const;
 
@@ -467,7 +467,7 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          */
         NEdge* getEdge(int edge) const;
         /**
-         * Returns the face in the triangulation skeleton
+         * Returns the triangle in the triangulation skeleton
          * corresponding to the given face of this tetrahedron.
          *
          * As of Regina 4.90, if the skeletal information for the
@@ -482,10 +482,27 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          * @param face the face of this tetrahedron to examine.
          * This should be between 0 and 3 inclusive, where face \c i
          * lies opposite vertex \c i.
-         * @return the face of the skeleton corresponding to the
+         * @return the triangle of the skeleton corresponding to the
          * requested tetrahedron face.
          */
-        NFace* getFace(int face) const;
+        NTriangle* getTriangle(int face) const;
+        /**
+         * A deprecated alias for getTriangle().
+         *
+         * This routine returns the triangle in the triangulation
+         * skeleton corresponding to the given face of this tetrahedron.
+         * See getTriangle() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangle() instead.
+         *
+         * @param face the face of this tetrahedron to examine.
+         * This should be between 0 and 3 inclusive, where face \c i
+         * lies opposite vertex \c i.
+         * @return the triangle of the skeleton corresponding to the
+         * requested tetrahedron face.
+         */
+        NTriangle* getFace(int face) const;
         /**
          * Returns a permutation that maps 0 to the given vertex of this
          * tetrahedron, and that maps (1,2,3) to the three remaining vertices
@@ -578,14 +595,14 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
         /**
          * Examines the given face of this tetrahedron, and returns a
          * mapping from the "canonical" vertices of the corresponding
-         * face of the triangulation to the matching vertices of this
+         * triangle of the triangulation to the matching vertices of this
          * tetrahedron.
          *
          * In detail:  Suppose two faces of two tetrahedra are identified
          * within the overall triangulation.  We call this a single
-         * "face of the triangulation", and arbitrarily label its
+         * "triangle of the triangulation", and arbitrarily label its
          * vertices (0,1,2).  This routine then maps the vertices
-         * (0,1,2) of this face of the triangulation to the individual
+         * (0,1,2) of this triangle of the triangulation to the individual
          * vertices of this tetrahedron that make up the given face.
          *
          * Because we are passing the argument \a face, we already know
@@ -593,14 +610,14 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          * routine tells us is the \a order in which they appear to form the
          * overall face of the triangulation.
          *
-         * As a consequence:  Consider some pair of tetrahedron faces
-         * that are identified together as a single face of the triangulation,
+         * As a consequence:  Consider some pair of tetrahedron faces that are
+         * identified together as a single triangle of the triangulation,
          * and choose some \a i from the set {0,1,2}.  Then the vertices
-         * <tt>getFaceMapping(...)[i]</tt> of the individual tetrahedra
+         * <tt>getTriangleMapping(...)[i]</tt> of the individual tetrahedra
          * are identified together, since they both become the same
-         * vertex of the same face of the triangulation (assuming of
+         * vertex of the same triangle of the triangulation (assuming of
          * course that we pass the correct face number in each case to
-         * getFaceMapping()).
+         * getTriangleMapping()).
          *
          * As of Regina 4.90, if the skeletal information for the
          * triangulation has not been computed then this will be done
@@ -613,8 +630,25 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          *
          * @param face the face of this tetrahedron to examine.
          * This should be between 0 and 3 inclusive.
-         * @return a mapping from vertices (0,1,2) of the requested face
-         * to the vertices of this tetrahedron.
+         * @return a mapping from vertices (0,1,2) of the corresponding
+         * triangle to the vertices of this tetrahedron.
+         */
+        NPerm4 getTriangleMapping(int face) const;
+        /**
+         * A deprecated alias for getTriangleMapping().
+         *
+         * This routine examines the given face of this tetrahedron, and
+         * returns a mapping from the "canonical" vertices of the corresponding
+         * triangle of the triangulation to the matching vertices of this
+         * tetrahedron.  See getTriangleMapping() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangleMapping() instead.
+         *
+         * @param face the face of this tetrahedron to examine.
+         * This should be between 0 and 3 inclusive.
+         * @return a mapping from vertices (0,1,2) of the corresponding
+         * triangle to the vertices of this tetrahedron.
          */
         NPerm4 getFaceMapping(int face) const;
         /**
@@ -725,10 +759,14 @@ inline NEdge* NTetrahedron::getEdge(int edge) const {
     return edges[edge];
 }
 
-inline NFace* NTetrahedron::getFace(int face) const {
+inline NTriangle* NTetrahedron::getTriangle(int face) const {
     if (! tri->calculatedSkeleton)
         tri->calculateSkeleton();
-    return faces[face];
+    return triangles[face];
+}
+
+inline NTriangle* NTetrahedron::getFace(int face) const {
+    return getTriangle(face);
 }
 
 inline NPerm4 NTetrahedron::getVertexMapping(int vertex) const {
@@ -743,10 +781,14 @@ inline NPerm4 NTetrahedron::getEdgeMapping(int edge) const {
     return edgeMapping[edge];
 }
 
-inline NPerm4 NTetrahedron::getFaceMapping(int face) const {
+inline NPerm4 NTetrahedron::getTriangleMapping(int face) const {
     if (! tri->calculatedSkeleton)
         tri->calculateSkeleton();
-    return faceMapping[face];
+    return triMapping[face];
+}
+
+inline NPerm4 NTetrahedron::getFaceMapping(int face) const {
+    return getTriangleMapping(face);
 }
 
 inline int NTetrahedron::orientation() const {

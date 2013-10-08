@@ -1,7 +1,10 @@
 # surfaces
 
 # Files to compile
-SET ( FILES incompressible nnormalsurfacelist )
+SET ( FILES
+  incompressible
+  nnormalsurfacelist
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

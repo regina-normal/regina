@@ -498,7 +498,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
         top[i] = layered[i]->getTopLevel();
         if (top[i]->adjacentTetrahedron(layered[i]->getTopFace(0)) ==
                 top[i]->adjacentTetrahedron(layered[i]->getTopFace(1))) {
-            // These two top faces should be glued to different
+            // These two top triangles should be glued to different
             // tetrahedra.
             for (j = 0; j < nLayered; j++)
                 delete layered[j];
@@ -511,7 +511,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     int topFace = layered[0]->getTopFace(0);
     NTetrahedron* coreTet = top[0]->adjacentTetrahedron(topFace);
 
-    // We will declare that this face hooks onto vertex roles 0, 1 and 3
+    // We will declare that this triangle hooks onto vertex roles 0, 1 and 3
     // of the first core tetrahedron.  Thus the vertex roles permutation
     // should map 0, 1 and 3 (in some order) to all vertices except for
     // topCoreFace.
