@@ -222,7 +222,7 @@ bool NBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
     // This is it!  Build the matching matrix and stop searching.
 
     // First find mappings from the fibre/base curves (fi, oi) to
-    // annulus #i edges (first face: 01, first face: 02).
+    // annulus #i edges (first triangle: 01, first triangle: 02).
     // Note that each of these matrices is self-inverse.
     NMatrix2 curves0ToAnnulus0(bdryRefVert[0] ? 1 : -1, 0, 0,
         bdryRefHoriz[0] ? -1 : 1);

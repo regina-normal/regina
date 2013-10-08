@@ -145,11 +145,11 @@ QString NTriHeaderUI::summaryInfo(regina::NTriangulation* tri) {
     if (tri->isClosed())
         msg += QObject::tr("Closed, ");
     else {
-        if (tri->isIdeal() && tri->hasBoundaryFaces())
+        if (tri->isIdeal() && tri->hasBoundaryTriangles())
             msg += QObject::tr("Ideal & real bdry, ");
         else if (tri->isIdeal())
             msg += QObject::tr("Ideal bdry, ");
-        else if (tri->hasBoundaryFaces())
+        else if (tri->hasBoundaryTriangles())
             msg += QObject::tr("Real bdry, ");
     }
 

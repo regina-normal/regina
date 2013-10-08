@@ -307,8 +307,8 @@ class REGINA_API NSatRegion : public ShareableObject {
          * region, which will affect how the annulus is positioned as
          * part of the overall region boundary (e.g., the annulus might
          * be positioned upside-down in the overall region boundary,
-         * or it might be positioned with its second face appearing before
-         * its first face as one walks around the boundary).  To account
+         * or it might be positioned with its second triangle appearing before
+         * its first triangle as one walks around the boundary).  To account
          * for this, the two boolean arguments \a blockRefVert and
          * \a blockRefHoriz will be modified to indicate if and how the
          * block is reflected.
@@ -359,8 +359,8 @@ class REGINA_API NSatRegion : public ShareableObject {
          * This will affect how the annulus is positioned as
          * part of the overall region boundary (e.g., the annulus might
          * be positioned upside-down in the overall region boundary,
-         * or it might be positioned with its second face appearing before
-         * its first face as one walks around the boundary).  The two
+         * or it might be positioned with its second triangle appearing before
+         * its first triangle as one walks around the boundary).  The two
          * boolean arguments \a blockRefVert and \a blockRefHoriz will
          * be modified to indicate if and how the block is reflected.
          *
@@ -407,16 +407,16 @@ class REGINA_API NSatRegion : public ShareableObject {
          * representing the fibres and base orbifold on the boundary
          * (see \ref sfsnotation) will be as follows.
          *
-         * - Consider the 0/1/2 markings on the first and second faces
+         * - Consider the 0/1/2 markings on the first and second triangles
          *   of each saturated annulus, as described in the NSatAnnulus
          *   class notes.
          * - The fibres are represented by the oriented edge joining
-         *   markings 1 and 0 on the first face (or 0 and 1 on the
-         *   second face).  This is reversed if the block containing the
+         *   markings 1 and 0 on the first triangle (or 0 and 1 on the
+         *   second triangle).  This is reversed if the block containing the
          *   boundary annulus is vertically reflected.
          * - The curve representing the base orbifold run along the
-         *   oriented edge joining markings 0 and 2 on the first face
-         *   (or 2 and 0 on the second face).  This is reversed if the
+         *   oriented edge joining markings 0 and 2 on the first triangle
+         *   (or 2 and 0 on the second triangle).  This is reversed if the
          *   block containing the boundary annulus is horizontally
          *   reflected.
          * - See the NSatBlockSpec overview for descriptions of

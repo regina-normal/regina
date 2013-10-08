@@ -572,21 +572,46 @@ class REGINA_API NNormalSurfaceVector : public NRay {
             NTriangulation* triang) const = 0;
         /**
          * Returns the number of arcs in which this normal surface
-         * intersects the given face in the given direction.
-         * See NNormalSurface::getFaceArcs() for further details.
+         * intersects the given triangle in the given direction.
+         * See NNormalSurface::getTriangleArcs() for further details.
          *
-         * @param faceIndex the index in the triangulation of the face
+         * @param triIndex the index in the triangulation of the triangle
          * in which we are interested; this should be between 0 and
-         * NTriangulation::getNumberOfFaces()-1 inclusive.
-         * @param faceVertex the vertex of the face (0, 1 or 2) around
+         * NTriangulation::getNumberOfTriangles()-1 inclusive.
+         * @param triVertex the vertex of the triangle (0, 1 or 2) around
          * which the arcs of intersection that we are interested in lie;
          * only these arcs will be counted.
          * @param triang the triangulation in which this normal surface lives.
          * @return the number of times this normal surface intersect the
-         * given face with the given arc type.
+         * given triangle with the given arc type.
          */
-        virtual NLargeInteger getFaceArcs(unsigned long faceIndex,
-            int faceVertex, NTriangulation* triang) const = 0;
+        virtual NLargeInteger getTriangleArcs(unsigned long triIndex,
+            int triVertex, NTriangulation* triang) const = 0;
+        /**
+         * A deprecated alias for getTriangleArcs().
+         *
+         * This routine returns the number of arcs in which this normal
+         * surface intersects the given triangle in the given direction.
+         * See getTriangleArcs() for further details.
+         *
+         * Since this is an alias only, it is non-virtual and cannot be
+         * overridden.  Its implementation simply calls getTriangleArcs().
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangleArcs() instead.
+         *
+         * @param triIndex the index in the triangulation of the triangle
+         * in which we are interested; this should be between 0 and
+         * NTriangulation::getNumberOfTriangles()-1 inclusive.
+         * @param triVertex the vertex of the triangle (0, 1 or 2) around
+         * which the arcs of intersection that we are interested in lie;
+         * only these arcs will be counted.
+         * @param triang the triangulation in which this normal surface lives.
+         * @return the number of times this normal surface intersect the
+         * given triangle with the given arc type.
+         */
+        NLargeInteger getFaceArcs(unsigned long triIndex,
+            int triVertex, NTriangulation* triang) const;
 
         /**
          * Returns a new normal surface vector of the appropriate length
@@ -685,7 +710,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
             /**< Is this surface connected? */
         mutable NProperty<bool> realBoundary;
             /**< Does this surface have real boundary (i.e. does it meet
-             *   any boundary faces)? */
+             *   any boundary triangles)? */
         mutable NProperty<bool> compact;
             /**< Is this surface compact (i.e. does it only contain
              *   finitely many discs)? */
@@ -891,19 +916,39 @@ class REGINA_API NNormalSurface : public ShareableObject {
         NLargeInteger getEdgeWeight(unsigned long edgeIndex) const;
         /**
          * Returns the number of arcs in which this normal surface
-         * intersects the given face in the given direction.
+         * intersects the given triangle in the given direction.
          *
-         * @param faceIndex the index in the triangulation of the face
+         * @param triIndex the index in the triangulation of the triangle
          * in which we are interested; this should be between 0 and
-         * NTriangulation::getNumberOfFaces()-1 inclusive.
-         * @param faceVertex the vertex of the face (0, 1 or 2) around
+         * NTriangulation::getNumberOfTriangles()-1 inclusive.
+         * @param triVertex the vertex of the triangle (0, 1 or 2) around
          * which the arcs of intersection that we are interested in lie;
          * only these arcs will be counted.
          * @return the number of times this normal surface intersect the
-         * given face with the given arc type.
+         * given triangle with the given arc type.
          */
-        NLargeInteger getFaceArcs(unsigned long faceIndex,
-            int faceVertex) const;
+        NLargeInteger getTriangleArcs(unsigned long triIndex,
+            int triVertex) const;
+        /**
+         * A deprecated alias for getTriangleArcs().
+         *
+         * This routine returns the number of arcs in which this normal
+         * surface intersects the given triangle in the given direction.
+         * See getTriangleArcs() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangleArcs() instead.
+         *
+         * @param triIndex the index in the triangulation of the triangle
+         * in which we are interested; this should be between 0 and
+         * NTriangulation::getNumberOfTriangles()-1 inclusive.
+         * @param triVertex the vertex of the triangle (0, 1 or 2) around
+         * which the arcs of intersection that we are interested in lie;
+         * only these arcs will be counted.
+         * @return the number of times this normal surface intersect the
+         * given triangle with the given arc type.
+         */
+        NLargeInteger getFaceArcs(unsigned long triIndex, int triVertex) const;
 
         /**
          * Determines the first coordinate position at which this surface
@@ -1074,7 +1119,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
         bool isConnected() const;
         /**
          * Determines if this surface has any real boundary, that is,
-         * whether it meets any boundary faces of the triangulation.
+         * whether it meets any boundary triangles of the triangulation.
          *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
@@ -1267,7 +1312,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          *
          * Crushing the surface will produce a number of tetrahedra,
          * triangular pillows and/or footballs.  The pillows and
-         * footballs will then be flattened to faces and edges
+         * footballs will then be flattened to triangles and edges
          * respectively (resulting in the possible
          * changes mentioned below) to produce a proper triangulation.
          *
@@ -1565,6 +1610,10 @@ inline NNormalSurfaceVector::NNormalSurfaceVector(
 }
 inline NNormalSurfaceVector::~NNormalSurfaceVector() {
 }
+inline NLargeInteger NNormalSurfaceVector::getFaceArcs(unsigned long triIndex,
+        int triVertex, NTriangulation* triang) const {
+    return getTriangleArcs(triIndex, triVertex, triang);
+}
 
 // Inline functions for NNormalSurface
 
@@ -1598,9 +1647,13 @@ inline NLargeInteger NNormalSurface::getEdgeWeight(unsigned long edgeIndex)
         const {
     return vector->getEdgeWeight(edgeIndex, triangulation);
 }
-inline NLargeInteger NNormalSurface::getFaceArcs(unsigned long faceIndex,
-        int faceVertex) const {
-    return vector->getFaceArcs(faceIndex, faceVertex, triangulation);
+inline NLargeInteger NNormalSurface::getTriangleArcs(unsigned long triIndex,
+        int triVertex) const {
+    return vector->getTriangleArcs(triIndex, triVertex, triangulation);
+}
+inline NLargeInteger NNormalSurface::getFaceArcs(unsigned long triIndex,
+        int triVertex) const {
+    return vector->getTriangleArcs(triIndex, triVertex, triangulation);
 }
 
 inline NDiscType NNormalSurface::getOctPosition() const {

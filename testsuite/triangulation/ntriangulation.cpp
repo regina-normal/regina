@@ -2299,7 +2299,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 bounded.idealToFinite();
 
             NTriangulation ideal(*tri);
-            if (ideal.hasBoundaryFaces())
+            if (ideal.hasBoundaryTriangles())
                 ideal.finiteToIdeal();
 
             NTriangulation boundedBig(bounded);
@@ -2342,7 +2342,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 bounded.idealToFinite();
 
             NTriangulation ideal(*tri);
-            if (ideal.hasBoundaryFaces())
+            if (ideal.hasBoundaryTriangles())
                 ideal.finiteToIdeal();
 
             NTriangulation boundedBig(bounded);
@@ -2684,10 +2684,11 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (cover.getNumberOfFaces() != 2 * tri.getNumberOfFaces()) {
+                if (cover.getNumberOfTriangles() !=
+                        2 * tri.getNumberOfTriangles()) {
                     std::ostringstream msg;
                     msg << triName << ": Orientable double cover does not "
-                        "contain precisely twice as many faces.";
+                        "contain precisely twice as many triangles.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
@@ -2780,10 +2781,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri.hasBoundaryFaces() != b.hasBoundaryFaces()) {
+            if (tri.hasBoundaryTriangles() != b.hasBoundaryTriangles()) {
                 std::ostringstream msg;
                 msg << name
-                    << ": Barycentric subdivision breaks boundary faces.";
+                    << ": Barycentric subdivision breaks boundary triangles.";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -3023,10 +3024,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
             NTriangulation ideal(tri);
             ideal.finiteToIdeal();
 
-            // Are there any boundary faces remaining?
-            if (ideal.hasBoundaryFaces()) {
+            // Are there any boundary triangles remaining?
+            if (ideal.hasBoundaryTriangles()) {
                 std::ostringstream msg;
-                msg << triName << ": finiteToIdeal() leaves boundary faces.";
+                msg << triName << ": finiteToIdeal() leaves boundary triangles.";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -3298,6 +3299,29 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << name << ": Cannot create isomorphism signature.";
                 CPPUNIT_FAIL(msg.str());
+            }
+
+            size_t sigSize = NTriangulation::isoSigComponentSize(sig);
+            if (tri.getNumberOfSimplices() == 0) {
+                if (sigSize != 0) {
+                    std::ostringstream msg;
+                    msg << name
+                        << ": isoSigSize() returns incorrect value: "
+                        << sigSize << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else {
+                size_t c;
+                for (c = 0; c < tri.getNumberOfComponents(); ++c)
+                    if (sigSize == tri.getComponent(c)->getNumberOfSimplices())
+                        break;
+                if (c == tri.getNumberOfComponents()) {
+                    std::ostringstream msg;
+                    msg << name
+                        << ": isoSigSize() returns incorrect value: "
+                        << sigSize << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
 
             NTriangulation* rebuild = NTriangulation::fromIsoSig(sig);

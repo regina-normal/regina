@@ -327,8 +327,8 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
         NTriangulation* canonize();
 
         /**
-         * Verifies that the face gluings from this SnapPea triangulation
-         * match the given Regina triangulation precisely.
+         * Verifies that the tetrahedron face gluings from this SnapPea
+         * triangulation match the given Regina triangulation precisely.
          *
          * This is useful if you are not sure whether SnapPea will relabel
          * and/or retriangulate.
@@ -339,7 +339,7 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          *
          * @param triangulation the triangulation to compare with this
          * SnapPea triangulation.
-         * @return \c true if the face gluings match precisely, or
+         * @return \c true if the tetrahedron face gluings match precisely, or
          * \c false if the face gluings do not match or if this is a
          * null triangulation.
          */

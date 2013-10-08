@@ -215,7 +215,7 @@ void NSatMobius::writeAbbr(std::ostream& out, bool tex) const {
 }
 
 NSatMobius* NSatMobius::isBlockMobius(const NSatAnnulus& annulus, TetList&) {
-    // The two tetrahedra must be joined together along the annulus faces.
+    // The two tetrahedra must be joined together along the annulus triangles.
 
     if (annulus.tet[0]->adjacentTetrahedron(annulus.roles[0][3]) !=
             annulus.tet[1])
@@ -228,7 +228,7 @@ NSatMobius* NSatMobius::isBlockMobius(const NSatAnnulus& annulus, TetList&) {
     if (annulusGluing[3] != 3)
         return 0;
 
-    // The faces are glued together.  Is it one of the allowable
+    // The triangles are glued together.  Is it one of the allowable
     // (orientable) permutations?
 
     int position = -1;
@@ -305,7 +305,7 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
     // Is it a layering?
 
     // Here we find the endpoints of the edge from which the two layered
-    // faces fold out.
+    // triangles fold out.
     NFacePair centralEdge =
         NFacePair(annulus.roles[0][3], annulus.roles[1][3]).complement();
 

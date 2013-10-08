@@ -235,7 +235,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 "appears to have been incorrectly constructed.",
                 lst123.isValid() && lst123.isConnected() &&
                 lst123.isOrientable() && (! lst123.isIdeal()) &&
-                lst123.hasBoundaryFaces());
+                lst123.hasBoundaryTriangles());
             testIncompatible(lst123, "LST(1,2,3) "
                 "should not be representable in SnapPea format.");
 
@@ -243,7 +243,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 "appears to have been incorrectly constructed.",
                 m2_1_m2_1.isValid() && (! m2_1_m2_1.isConnected()) &&
                 m2_1_m2_1.isOrientable() && m2_1_m2_1.isIdeal() &&
-                m2_1_m2_1.isStandard() && (! m2_1_m2_1.hasBoundaryFaces()));
+                m2_1_m2_1.isStandard() && (! m2_1_m2_1.hasBoundaryTriangles()));
             testIncompatible(m2_1_m2_1, "The disconnected double M 2_1 "
                 "should not be representable in SnapPea format.");
 
@@ -255,7 +255,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 genusTwoTorusCusp.isOrientable() &&
                 genusTwoTorusCusp.isIdeal() &&
                 (! genusTwoTorusCusp.isStandard()) &&
-                (! genusTwoTorusCusp.hasBoundaryFaces()));
+                (! genusTwoTorusCusp.hasBoundaryTriangles()));
             testIncompatible(genusTwoTorusCusp,
                 "A triangulation with a genus two torus cusp "
                 "should not be representable in SnapPea format.");
@@ -268,7 +268,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 (! projPlaneCusps.isOrientable()) &&
                 projPlaneCusps.isIdeal() &&
                 (! projPlaneCusps.isStandard()) &&
-                (! projPlaneCusps.hasBoundaryFaces()));
+                (! projPlaneCusps.hasBoundaryTriangles()));
             testIncompatible(projPlaneCusps,
                 "A triangulation with two projective plane cusps "
                 "should not be representable in SnapPea format.");
@@ -281,7 +281,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 (! genusFourNonOrCusp.isOrientable()) &&
                 genusFourNonOrCusp.isIdeal() &&
                 (! genusFourNonOrCusp.isStandard()) &&
-                (! genusFourNonOrCusp.hasBoundaryFaces()));
+                (! genusFourNonOrCusp.hasBoundaryTriangles()));
             testIncompatible(genusFourNonOrCusp,
                 "A triangulation with a genus four non-orientable cusp "
                 "should not be representable in SnapPea format.");
@@ -294,7 +294,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 (! edgeInvalid.isOrientable()) &&
                 (! edgeInvalid.isIdeal()) &&
                 edgeInvalid.isStandard() &&
-                (! edgeInvalid.hasBoundaryFaces()));
+                (! edgeInvalid.hasBoundaryTriangles()));
             testIncompatible(edgeInvalid,
                 "A triangulation with two invalid edges "
                 "should not be representable in SnapPea format.");
@@ -307,7 +307,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 closedHypOr.isOrientable() &&
                 (! closedHypOr.isIdeal()) &&
                 closedHypOr.isStandard() &&
-                (! closedHypOr.hasBoundaryFaces()));
+                (! closedHypOr.hasBoundaryTriangles()));
             testIncompatible(closedHypOr,
                 "A closed orientable hyperbolic triangulation "
                 "should not be representable in SnapPea format.");
@@ -320,7 +320,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 (! closedHypNor.isOrientable()) &&
                 (! closedHypNor.isIdeal()) &&
                 closedHypNor.isStandard() &&
-                (! closedHypNor.hasBoundaryFaces()));
+                (! closedHypNor.hasBoundaryTriangles()));
             testIncompatible(closedHypNor,
                 "A closed non-orientable hyperbolic triangulation "
                 "should not be representable in SnapPea format.");
@@ -333,7 +333,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 weberSeifert.isOrientable() &&
                 (! weberSeifert.isIdeal()) &&
                 weberSeifert.isStandard() &&
-                (! weberSeifert.hasBoundaryFaces()));
+                (! weberSeifert.hasBoundaryTriangles()));
             testIncompatible(weberSeifert,
                 "The Weber-Seifert dodecahedral space is closed, and so "
                 "should not be representable in SnapPea format.");
@@ -346,7 +346,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 cuspedTorus.isOrientable() &&
                 cuspedTorus.isIdeal() &&
                 cuspedTorus.isStandard() &&
-                (! cuspedTorus.hasBoundaryFaces()) &&
+                (! cuspedTorus.hasBoundaryTriangles()) &&
                 cuspedTorus.getNumberOfTetrahedra() == 3);
             testIncompatible(cuspedTorus,
                 "A cusped solid torus with an additional finite vertex "

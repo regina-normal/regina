@@ -1,7 +1,11 @@
 # split 
 
 # Files to compile
-SET ( FILES nsigcensus nsigisomorphism nsignature)
+SET ( FILES
+  nsigcensus
+  nsigisomorphism
+  nsignature
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
@@ -12,5 +16,9 @@ ENDFOREACH(SOURCE_FILE)
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
-  INSTALL(FILES nsigcensus.h nsigisomorphism.h nsignature.h DESTINATION ${INCLUDEDIR}/split COMPONENT Development)
+  INSTALL(FILES
+    nsigcensus.h
+    nsigisomorphism.h
+    nsignature.h
+    DESTINATION ${INCLUDEDIR}/split COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

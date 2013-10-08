@@ -212,7 +212,7 @@ void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
     // Make sure SnapPea is likely to be comfortable with it.
     if (tri.getNumberOfTetrahedra() == 0)
         return 0;
-    if (tri.hasBoundaryFaces())
+    if (tri.hasBoundaryTriangles())
         return 0;
     if (! tri.isConnected())
         return 0;
@@ -225,7 +225,7 @@ void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
         if (tri.getNumberOfBoundaryComponents() < tri.getNumberOfVertices())
             return 0;
     } else {
-        // No boundary faces, not ideal.. must be closed.
+        // No boundary triangles, not ideal.. must be closed.
         if (! allowClosed)
             return 0;
         // If closed is okay, at least make sure it's one-vertex.

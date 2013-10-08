@@ -97,6 +97,17 @@ class REGINA_API Dim4Component : public ShareableObject, public NMarkedElement {
          * @return the number of pentachora.
          */
         unsigned long getNumberOfPentachora() const;
+        /**
+         * A dimension-agnostic alias for getNumberOfPentachora().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         *
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 4-manifold triangulations means a pentachoron).
+         *
+         * See getNumberOfPentachora() for further information.
+         */
+        unsigned long getNumberOfSimplices() const;
 
         /**
          * Returns the number of tetrahedra in this component.
@@ -145,6 +156,17 @@ class REGINA_API Dim4Component : public ShareableObject, public NMarkedElement {
          * @return the requested pentachoron.
          */
         Dim4Pentachoron* getPentachoron(unsigned long index) const;
+        /**
+         * A dimension-agnostic alias for getPentachoron().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         *
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 4-manifold triangulations means a pentachoron).
+         *
+         * See getPentachoron() for further information.
+         */
+        Dim4Pentachoron* getSimplex(unsigned long index) const;
 
         /**
          * Returns the requested tetrahedron in this component.
@@ -267,6 +289,10 @@ inline unsigned long Dim4Component::getNumberOfPentachora() const {
     return pentachora_.size();
 }
 
+inline unsigned long Dim4Component::getNumberOfSimplices() const {
+    return pentachora_.size();
+}
+
 inline unsigned long Dim4Component::getNumberOfTetrahedra() const {
     return tetrahedra_.size();
 }
@@ -289,6 +315,10 @@ inline unsigned long Dim4Component::getNumberOfBoundaryComponents() const {
 
 inline Dim4Pentachoron* Dim4Component::getPentachoron(unsigned long index)
         const {
+    return pentachora_[index];
+}
+
+inline Dim4Pentachoron* Dim4Component::getSimplex(unsigned long index) const {
     return pentachora_[index];
 }
 

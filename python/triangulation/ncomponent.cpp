@@ -36,8 +36,8 @@
 #include "triangulation/nboundarycomponent.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/nedge.h"
-#include "triangulation/nface.h"
 #include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangle.h"
 #include "triangulation/nvertex.h"
 
 using namespace boost::python;
@@ -48,14 +48,20 @@ void addNComponent() {
             std::auto_ptr<NComponent>, boost::noncopyable>
             ("NComponent", no_init)
         .def("getNumberOfTetrahedra", &NComponent::getNumberOfTetrahedra)
+        .def("getNumberOfSimplices", &NComponent::getNumberOfSimplices)
         .def("getNumberOfFaces", &NComponent::getNumberOfFaces)
+        .def("getNumberOfTriangles", &NComponent::getNumberOfTriangles)
         .def("getNumberOfEdges", &NComponent::getNumberOfEdges)
         .def("getNumberOfVertices", &NComponent::getNumberOfVertices)
         .def("getNumberOfBoundaryComponents",
             &NComponent::getNumberOfBoundaryComponents)
         .def("getTetrahedron", &NComponent::getTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("getSimplex", &NComponent::getSimplex,
+            return_value_policy<reference_existing_object>())
         .def("getFace", &NComponent::getFace,
+            return_value_policy<reference_existing_object>())
+        .def("getTriangle", &NComponent::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &NComponent::getEdge,
             return_value_policy<reference_existing_object>())

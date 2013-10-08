@@ -49,6 +49,7 @@ void addDim4Component() {
             std::auto_ptr<Dim4Component>, boost::noncopyable>
             ("Dim4Component", no_init)
         .def("getNumberOfPentachora", &Dim4Component::getNumberOfPentachora)
+        .def("getNumberOfSimplices", &Dim4Component::getNumberOfSimplices)
         .def("getNumberOfTetrahedra", &Dim4Component::getNumberOfTetrahedra)
         .def("getNumberOfTriangles", &Dim4Component::getNumberOfTriangles)
         .def("getNumberOfEdges", &Dim4Component::getNumberOfEdges)
@@ -56,6 +57,8 @@ void addDim4Component() {
         .def("getNumberOfBoundaryComponents",
             &Dim4Component::getNumberOfBoundaryComponents)
         .def("getPentachoron", &Dim4Component::getPentachoron,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &Dim4Component::getSimplex,
             return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &Dim4Component::getTetrahedron,
             return_value_policy<reference_existing_object>())

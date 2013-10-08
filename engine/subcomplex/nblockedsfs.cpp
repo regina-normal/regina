@@ -56,7 +56,7 @@ namespace {
 /**
  * A subclass of NSatBlockStartSearcher that, upon finding a starter
  * saturated block, attempts to flesh this out to a saturated region
- * that fills the entire triangulation (including all internal faces).
+ * that fills the entire triangulation (including all internal triangles).
  */
 struct NBlockedSFSSearcher : public NSatBlockStarterSearcher {
     NSatRegion* region;

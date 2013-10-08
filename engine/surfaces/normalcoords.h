@@ -99,9 +99,18 @@ enum NormalCoords {
      */
     NS_EDGE_WEIGHT = 200,
     /**
-     * Represents face arc coordinates for normal surfaces.
+     * Represents triangle arc coordinates for normal surfaces.
      * This flavour is for display only; surface
      * vectors and lists of this flavour cannot be created.
+     */
+    NS_TRIANGLE_ARCS = 201,
+    /**
+     * A deprecated alias for NS_TRIANGLE_ARCS.
+     * This represents triangle arc coordinates for normal surfaces.
+     * See NS_TRIANGLE_ARCS for further details.
+     *
+     * \deprecated This constant will be removed in a future version
+     * of Regina.  Please use NS_TRIANGLE_ARCS instead.
      */
     NS_FACE_ARCS = 201,
     /**

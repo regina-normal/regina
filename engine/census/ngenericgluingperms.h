@@ -43,8 +43,8 @@
 #endif
 
 #include "regina-core.h"
-#include "triangulation/dimtraits.h"
-#include "triangulation/nfacetspec.h"
+#include "generic/dimtraits.h"
+#include "generic/nfacetspec.h"
 
 namespace regina {
 

@@ -54,6 +54,8 @@ const NPerm3 NPerm3::orderedS3[6] = {
     NPerm3(code201), NPerm3(code210)
 };
 
+const NPerm3* NPerm3::orderedSn = NPerm3::orderedS3;
+
 const NPerm3 NPerm3::S2[2] = {
     NPerm3(code012), NPerm3(code102)
 };

@@ -127,6 +127,13 @@ class REGINA_API NPerm4 {
         static const NPerm4 orderedS4[24];
 
         /**
+         * A dimension-agnostic alias for NPerm4::orderedS4.  In general, for
+         * each \a K the class NPermK will define an alias \a orderedSn
+         * that references the list of all permutations NPermK::orderedSK.
+         */
+        static const NPerm4* orderedSn;
+
+        /**
          * Contains all possible permutations of three elements.
          * In each permutation, 3 maps to 3.
          *
@@ -581,12 +588,30 @@ class REGINA_API NPerm4 {
         int S4Index() const;
 
         /**
+         * Returns the index of this permutation in the NPerm4::S4 array.
+         * This is a dimension-agnostic alias for S4Index().
+         *
+         * @return the index \a i for which this permutation is equal to
+         * NPerm4::S4[i].  This will be between 0 and 23 inclusive.
+         */
+        int SnIndex() const;
+
+        /**
          * Returns the index of this permutation in the NPerm4::orderedS4 array.
          *
          * @return the index \a i for which this permutation is equal to
          * NPerm4::orderedS4[i].  This will be between 0 and 23 inclusive.
          */
         int orderedS4Index() const;
+
+        /**
+         * Returns the index of this permutation in the NPerm4::orderedS4 array.
+         * This is a dimension-agnostic alias for orderedS4Index().
+         *
+         * @return the index \a i for which this permutation is equal to
+         * NPerm4::orderedS4[i].  This will be between 0 and 23 inclusive.
+         */
+        int orderedSnIndex() const;
 
     private:
         /**
@@ -773,7 +798,7 @@ REGINA_API extern const NPerm4* allPermsS2;
 REGINA_API extern const unsigned* allPermsS2Inv;
 
 // Routines for constructing the permutations associated to
-// faces and edges of the triangulation
+// triangles and edges of the triangulation
 
 /**
  * Returns a permutation mapping (0,1,2) to the vertices of the
@@ -783,7 +808,7 @@ REGINA_API extern const unsigned* allPermsS2Inv;
  *
  * \deprecated This routine is no longer recommended, and will be
  * removed in some future version of Regina.  Please use the lookup
- * table NFace::ordering instead (which gives identical results).
+ * table NTriangle::ordering instead (which gives identical results).
  *
  * @param face a face number in a tetrahedron.  This should be between 0
  * and 3 inclusive.  Note that face <i>i</i> is opposite vertex
@@ -822,7 +847,7 @@ REGINA_API NPerm4 edgeOrdering(int edge);
  *
  * \deprecated This routine is no longer recommended, and will be
  * removed in some future version of Regina.  Please use
- * <tt>NFace::ordering[face].trunc3()</tt> (which gives identical results).
+ * <tt>NTriangle::ordering[face].trunc3()</tt> (which gives identical results).
  *
  * @param face a face number in a tetrahedron.  This should be between 0
  * and 3 inclusive.  Note that face <i>i</i> is opposite vertex
@@ -1009,6 +1034,10 @@ inline int NPerm4::orderedS4Index() const {
     return ((code_ & 2) ? (code_ ^ 1) : code_);
 }
 
+inline int NPerm4::orderedSnIndex() const {
+    return orderedS4Index();
+}
+
 inline int NPerm4::S4Index(int a, int b, int c, int d) {
     int orderedS4Index = 6 * a +
                          2 * (b - (b > a ? 1 : 0)) +
@@ -1016,6 +1045,10 @@ inline int NPerm4::S4Index(int a, int b, int c, int d) {
 
     // As above, to obtain an S4 index, interchange all pairs 4i+2 <--> 4i+3.
     return ((orderedS4Index & 2) ? (orderedS4Index ^ 1) : orderedS4Index);
+}
+
+inline int NPerm4::SnIndex() const {
+    return S4Index();
 }
 
 inline std::string faceDescription(const NPerm4& facePerm) {

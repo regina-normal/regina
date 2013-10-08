@@ -33,7 +33,17 @@
 /* end stub */
 
 #include <algorithm>
-#include "dim4/dim4triangulation.h"
+#include <string>
+#include "generic/ngenerictriangulation.h"
+#include "packet/npacket.h"
+
+/**
+ * The numbers of base64 characters required to store an index into
+ * DimTraits<dim>::Perm::Sn.
+ *
+ * This is 1 if dim <= 3  (since 4! <= 64), and 2 if dim = 4 (since 5! > 64).
+ */
+#define CHARS_PER_PERM(dim) ((dim) <= 3 ? 1 : 2)
 
 namespace regina {
 
@@ -138,128 +148,89 @@ namespace {
     }
 }
 
-std::string Dim4Triangulation::isoSig() const {
-    if (pentachora_.empty()) {
-        char c[2];
-        c[0] = SCHAR(0);
-        c[1] = 0;
-        return c;
-    }
-
-    // The triangulation is non-empty.  Get a signature string for each
-    // connected component.
-    unsigned i, j;
-    ComponentIterator it;
-    unsigned cPent;
-    unsigned pent, perm;
-    std::string curr;
-
-    std::string* comp = new std::string[getNumberOfComponents()];
-    for (it = components_.begin(), i = 0; it != components_.end(); ++it, ++i) {
-        cPent = (*it)->getNumberOfPentachora();
-
-        for (pent = 0; pent < (*it)->getNumberOfPentachora(); ++pent)
-            for (perm = 0; perm < 120; ++perm) {
-                curr = isoSigInternal(
-                    (*it)->getPentachoron(pent)->markedIndex(),
-                    NPerm5::orderedS5[perm]);
-                if ((pent == 0 && perm == 0) || (curr < comp[i]))
-                    comp[i].swap(curr);
-            }
-    }
-
-    // Pack the components together.
-    std::sort(comp, comp + getNumberOfComponents());
-
-    std::string ans;
-    for (i = 0; i < getNumberOfComponents(); ++i)
-        ans += comp[i];
-    delete[] comp;
-    return ans;
-}
-
-std::string Dim4Triangulation::isoSigInternal(
-        unsigned pent, const NPerm5& vertices) const {
-    // Only process the component that pent belongs to.
+template <int dim>
+std::string NGenericTriangulation<dim>::isoSig(const Triangulation& tri,
+        unsigned simp, const Perm& vertices) {
+    // Only process the component that simp belongs to.
 
     // ---------------------------------------------------------------------
     // Data for reconstructing a triangulation from an isomorphism signature
     // ---------------------------------------------------------------------
 
-    // The number of pentachora.
-    unsigned nPents = pentachora_.size();
+    // The number of simplices.
+    unsigned nSimp = tri.getNumberOfSimplices();
 
     // What happens to each new facet that we encounter?
     // Options are:
     //   0 -> boundary
-    //   1 -> joined to a pentachoron not yet seen [gluing perm = identity]
-    //   2 -> joined to a pentachoron already seen
-    // These actions are stored in lexicographical order by (pent, facet),
+    //   1 -> joined to a simplex not yet seen [gluing perm = identity]
+    //   2 -> joined to a simplex already seen
+    // These actions are stored in lexicographical order by (simplex, facet),
     // but only once for each facet (so we "skip" gluings that we've
     // already seen from the other direction).
-    char* facetAction = new char[getNumberOfTetrahedra()];
+    char* facetAction = new char[tri.template getNumberOfFaces<dim-1>()];
 
-    // What are the destination pentachora and gluing permutations for
+    // What are the destination simplices and gluing permutations for
     // each facet under case #2 above?
     // For gluing permutations, we store the index of the permutation in
-    // NPerm5::orderedS5.
-    unsigned* joinDest = new unsigned[getNumberOfTetrahedra()];
-    unsigned* joinGluing = new unsigned[getNumberOfTetrahedra()];
+    // Perm::orderedSn.
+    unsigned* joinDest = new unsigned[tri.template getNumberOfFaces<dim-1>()];
+    unsigned* joinGluing = new unsigned[tri.template getNumberOfFaces<dim-1>()];
 
     // ---------------------------------------------------------------------
     // Data for finding the unique canonical isomorphism from this
-    // connected component that maps (pent, vertices) -> (0, 01234)
+    // connected component that maps (simplex, vertices) -> (0, 0..dim)
     // ---------------------------------------------------------------------
 
-    // The image for each pentachoron and its vertices:
-    int* image = new int[nPents];
-    NPerm5* vertexMap = new NPerm5[nPents];
+    // The image for each simplex and its vertices:
+    int* image = new int[nSimp];
+    Perm* vertexMap = new Perm[nSimp];
 
-    // The preimage for each pentachoron:
-    int* preImage = new int[nPents];
+    // The preimage for each simplex:
+    int* preImage = new int[nSimp];
 
     // ---------------------------------------------------------------------
     // Looping variables
     // ---------------------------------------------------------------------
-    unsigned facetPos, joinPos, nextUnusedPent;
-    unsigned pentImg, facetImg;
-    unsigned pentSrc, facetSrc, dest;
-    Dim4Pentachoron* p;
+    unsigned facetPos, joinPos, nextUnusedSimp;
+    unsigned simpImg, facetImg;
+    unsigned simpSrc, facetSrc, dest;
+    const Simplex* s;
 
     // ---------------------------------------------------------------------
     // The code!
     // ---------------------------------------------------------------------
 
-    std::fill(image, image + nPents, -1);
-    std::fill(preImage, preImage + nPents, -1);
+    std::fill(image, image + nSimp, -1);
+    std::fill(preImage, preImage + nSimp, -1);
 
-    image[pent] = 0;
-    vertexMap[pent] = vertices.inverse();
-    preImage[0] = pent;
+    image[simp] = 0;
+    vertexMap[simp] = vertices.inverse();
+    preImage[0] = simp;
 
     facetPos = 0;
     joinPos = 0;
-    nextUnusedPent = 1;
+    nextUnusedSimp = 1;
 
-    // To obtain a canonical isomorphism, we must run through the pentachora
+    // To obtain a canonical isomorphism, we must run through the simplices
     // and their facets in image order, not preimage order.
     //
     // This main loop is guaranteed to exit when (and only when) we have
     // exhausted a single connected component of the triangulation.
-    for (pentImg = 0; pentImg < nPents && preImage[pentImg] >= 0; ++pentImg) {
-        pentSrc = preImage[pentImg];
-        p = pentachora_[pentSrc];
+    for (simpImg = 0; simpImg < nSimp && preImage[simpImg] >= 0; ++simpImg) {
+        simpSrc = preImage[simpImg];
+        s = tri.getSimplex(simpSrc);
 
-        for (facetImg = 0; facetImg < 5; ++facetImg) {
-            facetSrc = vertexMap[pentSrc].preImageOf(facetImg);
+        for (facetImg = 0; facetImg <= dim; ++facetImg) {
+            facetSrc = vertexMap[simpSrc].preImageOf(facetImg);
 
             // INVARIANTS (held while we stay within a single component):
-            // - nextUnusedPent > pentImg
-            // - image[pentSrc], preImage[image[pentSrc]] and vertexMap[pentSrc]
+            // - nextUnusedSimp > simpImg
+            // - image[simpSrc], preImage[image[simpSrc]] and vertexMap[simpSrc]
             //   are already filled in.
 
             // Work out what happens to our source facet.
-            if (! p->adjacentPentachoron(facetSrc)) {
+            if (! s->adjacentSimplex(facetSrc)) {
                 // A boundary facet.
                 facetAction[facetPos++] = 0;
                 continue;
@@ -267,35 +238,35 @@ std::string Dim4Triangulation::isoSigInternal(
 
             // We have a real gluing.  Is it a gluing we've already seen
             // from the other side?
-            dest = pentachoronIndex(p->adjacentPentachoron(facetSrc));
+            dest = tri.simplexIndex(s->adjacentSimplex(facetSrc));
 
             if (image[dest] >= 0)
-                if (image[dest] < image[pentSrc] ||
-                        (dest == pentSrc &&
-                         vertexMap[pentSrc][p->adjacentFacet(facetSrc)]
-                         < vertexMap[pentSrc][facetSrc])) {
+                if (image[dest] < image[simpSrc] ||
+                        (dest == simpSrc &&
+                         vertexMap[simpSrc][s->adjacentFacet(facetSrc)]
+                         < vertexMap[simpSrc][facetSrc])) {
                     // Yes.  Just skip this gluing entirely.
                     continue;
                 }
 
-            // Is it a completely new pentachoron?
+            // Is it a completely new simplex?
             if (image[dest] < 0) {
-                // Yes.  The new pentachoron takes the next available
+                // Yes.  The new simplex takes the next available
                 // index, and the canonical gluing becomes the identity.
-                image[dest] = nextUnusedPent++;
+                image[dest] = nextUnusedSimp++;
                 preImage[image[dest]] = dest;
-                vertexMap[dest] = vertexMap[pentSrc] *
-                    p->adjacentGluing(facetSrc).inverse();
+                vertexMap[dest] = vertexMap[simpSrc] *
+                    s->adjacentGluing(facetSrc).inverse();
 
                 facetAction[facetPos++] = 1;
                 continue;
             }
 
-            // It's a pentachoron we've seen before.  Record the gluing.
+            // It's a simplex we've seen before.  Record the gluing.
             joinDest[joinPos] = image[dest];
             joinGluing[joinPos] = (vertexMap[dest] *
-                p->adjacentGluing(facetSrc) * vertexMap[pentSrc].inverse()).
-                orderedS5Index();
+                s->adjacentGluing(facetSrc) * vertexMap[simpSrc].inverse()).
+                orderedSnIndex();
             ++joinPos;
 
             facetAction[facetPos++] = 2;
@@ -304,7 +275,7 @@ std::string Dim4Triangulation::isoSigInternal(
 
     // We have all we need.  Pack it all together into a string.
     // We need to encode:
-    // - the number of pentachora in this component;
+    // - the number of simplices in this component;
     // - facetAction[i], 0 <= i < facetPos;
     // - joinDest[i], 0 <= i < joinPos;
     // - joinGluing[i], 0 <= i < joinPos.
@@ -313,13 +284,13 @@ std::string Dim4Triangulation::isoSigInternal(
     // Keep it simple for small triangulations (1 character per integer).
     // For large triangulations, start with a special marker followed by
     // the number of chars per integer.
-    unsigned nCompPent = pentImg;
+    unsigned nCompSimp = simpImg;
     unsigned nChars;
-    if (nCompPent < 63)
+    if (nCompSimp < 63)
         nChars = 1;
     else {
         nChars = 0;
-        unsigned tmp = nCompPent;
+        unsigned tmp = nCompSimp;
         while (tmp > 0) {
             tmp >>= 6;
             ++nChars;
@@ -331,14 +302,14 @@ std::string Dim4Triangulation::isoSigInternal(
 
     // Off we go.
     unsigned i;
-    SAPPEND(ans, nCompPent, nChars);
+    SAPPEND(ans, nCompSimp, nChars);
     for (i = 0; i < facetPos; i += 3)
         SAPPENDTRITS(ans, facetAction + i,
             (facetPos >= i + 3 ? 3 : facetPos - i));
     for (i = 0; i < joinPos; ++i)
         SAPPEND(ans, joinDest[i], nChars);
     for (i = 0; i < joinPos; ++i)
-        SAPPEND(ans, joinGluing[i], 2); // Two characters required for 5!=120.
+        SAPPEND(ans, joinGluing[i], CHARS_PER_PERM(dim));
 
     // Done!
     delete[] image;
@@ -351,10 +322,54 @@ std::string Dim4Triangulation::isoSigInternal(
     return ans;
 }
 
-Dim4Triangulation* Dim4Triangulation::fromIsoSig(const std::string& sig) {
-    std::auto_ptr<Dim4Triangulation> ans(new Dim4Triangulation());
+template <int dim>
+std::string NGenericTriangulation<dim>::isoSig(const Triangulation& tri) {
+    if (tri.getSimplices().empty()) {
+        char c[2];
+        c[0] = SCHAR(0);
+        c[1] = 0;
+        return c;
+    }
 
-    ChangeEventSpan span(ans.get());
+    // The triangulation is non-empty.  Get a signature string for each
+    // connected component.
+    unsigned i;
+    typename Triangulation::ComponentIterator it;
+    unsigned cSimp;
+    unsigned simp, perm;
+    std::string curr;
+
+    std::string* comp = new std::string[tri.getNumberOfComponents()];
+    for (it = tri.getComponents().begin(), i = 0;
+            it != tri.getComponents().end(); ++it, ++i) {
+        cSimp = (*it)->getNumberOfSimplices();
+
+        for (simp = 0; simp < (*it)->getNumberOfSimplices(); ++simp)
+            for (perm = 0; perm < Perm::nPerms; ++perm) {
+                curr = isoSig(tri, (*it)->getSimplex(simp)->markedIndex(),
+                    Perm::orderedSn[perm]);
+                if ((simp == 0 && perm == 0) || (curr < comp[i]))
+                    comp[i].swap(curr);
+            }
+    }
+
+    // Pack the components together.
+    std::sort(comp, comp + tri.getNumberOfComponents());
+
+    std::string ans;
+    for (i = 0; i < tri.getNumberOfComponents(); ++i)
+        ans += comp[i];
+
+    delete[] comp;
+    return ans;
+}
+
+template <int dim>
+typename NGenericTriangulation<dim>::Triangulation*
+        NGenericTriangulation<dim>::fromIsoSig(const std::string& sig) {
+    std::auto_ptr<Triangulation> ans(new Triangulation());
+
+    NPacket::ChangeEventSpan span(ans.get());
 
     const char* c = sig.c_str();
 
@@ -365,11 +380,11 @@ Dim4Triangulation* Dim4Triangulation::fromIsoSig(const std::string& sig) {
             return 0;
 
     unsigned i, j;
-    unsigned nPent, nChars;
+    unsigned nSimp, nChars;
     while (*c) {
         // Read one component at a time.
-        nPent = SVAL(*c++);
-        if (nPent < 63)
+        nSimp = SVAL(*c++);
+        if (nSimp < 63)
             nChars = 1;
         else {
             if (! *c)
@@ -377,22 +392,22 @@ Dim4Triangulation* Dim4Triangulation::fromIsoSig(const std::string& sig) {
             nChars = SVAL(*c++);
             if (! SHASCHARS(c, nChars))
                 return 0;
-            nPent = SREAD(c, nChars);
+            nSimp = SREAD(c, nChars);
             c += nChars;
         }
 
-        if (nPent == 0) {
+        if (nSimp == 0) {
             // Empty component.
             continue;
         }
 
         // Non-empty component; keep going.
-        char* facetAction = new char[5 * nPent + 2];
+        char* facetAction = new char[(dim+1) * nSimp + 2];
         unsigned nFacets = 0;
         unsigned facetPos = 0;
         unsigned nJoins = 0;
 
-        for ( ; nFacets < 5 * nPent; facetPos += 3) {
+        for ( ; nFacets < (dim+1) * nSimp; facetPos += 3) {
             if (! *c) {
                 delete[] facetAction;
                 return 0;
@@ -401,7 +416,7 @@ Dim4Triangulation* Dim4Triangulation::fromIsoSig(const std::string& sig) {
             for (i = 0; i < 3; ++i) {
                 // If we're already finished, make sure the leftover trits
                 // are zero.
-                if (nFacets == 5 * nPent) {
+                if (nFacets == (dim+1) * nSimp) {
                     if (facetAction[facetPos + i] != 0) {
                         delete[] facetAction;
                         return 0;
@@ -420,7 +435,7 @@ Dim4Triangulation* Dim4Triangulation::fromIsoSig(const std::string& sig) {
                     delete[] facetAction;
                     return 0;
                 }
-                if (nFacets > 5 * nPent) {
+                if (nFacets > (dim+1) * nSimp) {
                     delete[] facetAction;
                     return 0;
                 }
@@ -448,10 +463,10 @@ Dim4Triangulation* Dim4Triangulation::fromIsoSig(const std::string& sig) {
                 return 0;
             }
 
-            joinGluing[i] = SREAD(c, 2);
-            c += 2;
+            joinGluing[i] = SREAD(c, CHARS_PER_PERM(dim));
+            c += CHARS_PER_PERM(dim);
 
-            if (joinGluing[i] >= 120) {
+            if (joinGluing[i] >= Perm::nPerms) {
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;
@@ -460,39 +475,39 @@ Dim4Triangulation* Dim4Triangulation::fromIsoSig(const std::string& sig) {
         }
 
         // End of component!
-        Dim4Pentachoron** pent = new Dim4Pentachoron*[nPent];
-        for (i = 0; i < nPent; ++i)
-            pent[i] = ans->newPentachoron();
+        Simplex** simp = new Simplex*[nSimp];
+        for (i = 0; i < nSimp; ++i)
+            simp[i] = ans->newSimplex();
 
         facetPos = 0;
         unsigned nextUnused = 1;
         unsigned joinPos = 0;
-        for (i = 0; i < nPent; ++i)
-            for (j = 0; j < 5; ++j) {
+        for (i = 0; i < nSimp; ++i)
+            for (j = 0; j <= dim; ++j) {
                 // Already glued from the other side:
-                if (pent[i]->adjacentPentachoron(j))
+                if (simp[i]->adjacentSimplex(j))
                     continue;
 
                 if (facetAction[facetPos] == 0) {
                     // Boundary facet.
                 } else if (facetAction[facetPos] == 1) {
-                    // Join to new pentachoron.
-                    pent[i]->joinTo(j, pent[nextUnused++], NPerm5());
+                    // Join to new simplex.
+                    simp[i]->joinTo(j, simp[nextUnused++], Perm());
                 } else {
-                    // Join to existing pentachoron.
+                    // Join to existing simplex.
                     if (joinDest[joinPos] >= nextUnused ||
-                            pent[joinDest[joinPos]]->adjacentPentachoron(
-                            NPerm5::orderedS5[joinGluing[joinPos]][j])) {
+                            simp[joinDest[joinPos]]->adjacentSimplex(
+                            Perm::orderedSn[joinGluing[joinPos]][j])) {
                         delete[] facetAction;
                         delete[] joinDest;
                         delete[] joinGluing;
-                        for (int k = 0; k < nPent; ++k)
-                            delete pent[k];
-                        delete[] pent;
+                        for (int k = 0; k < nSimp; ++k)
+                            delete simp[k];
+                        delete[] simp;
                         return 0;
                     }
-                    pent[i]->joinTo(j, pent[joinDest[joinPos]],
-                        NPerm5::orderedS5[joinGluing[joinPos]]);
+                    simp[i]->joinTo(j, simp[joinDest[joinPos]],
+                        Perm::orderedSn[joinGluing[joinPos]]);
                     ++joinPos;
                 }
 
@@ -502,10 +517,36 @@ Dim4Triangulation* Dim4Triangulation::fromIsoSig(const std::string& sig) {
         delete[] facetAction;
         delete[] joinDest;
         delete[] joinGluing;
-        delete[] pent;
+        delete[] simp;
     }
 
     return ans.release();
+}
+
+template <int dim>
+size_t NGenericTriangulation<dim>::isoSigComponentSize(const std::string& sig) {
+    const char* c = sig.c_str();
+
+    // Examine the first character.
+    // Note that SVALID also ensures that *c is non-null (i.e., it
+    // detects premature end of string).
+    if (! SVALID(*c))
+        return 0;
+    size_t nSimp = SVAL(*c);
+    if (nSimp < 63)
+        return nSimp;
+
+    // The number of simplices is so large that it requires several
+    // characters to store.
+    ++c;
+    if (! *c)
+        return 0;
+    size_t nChars = SVAL(*c++);
+
+    for (const char* d = c; d < c + nChars; ++d)
+        if (! SVALID(*d))
+            return 0;
+    return SREAD(c, nChars);
 }
 
 } // namespace regina
