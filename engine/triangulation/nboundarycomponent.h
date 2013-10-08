@@ -84,8 +84,8 @@ class NVertex;
 class REGINA_API NBoundaryComponent :
         public ShareableObject, public NMarkedElement {
     private:
-        std::vector<NTriangle*> faces;
-            /**< List of faces in the component. */
+        std::vector<NTriangle*> triangles;
+            /**< List of triangles in the component. */
         std::vector<NEdge*> edges;
             /**< List of edges in the component. */
         std::vector<NVertex*> vertices;
@@ -240,7 +240,7 @@ inline NBoundaryComponent::~NBoundaryComponent() {
 }
 
 inline unsigned long NBoundaryComponent::getNumberOfTriangles() const {
-    return faces.size();
+    return triangles.size();
 }
 
 inline unsigned long NBoundaryComponent::getNumberOfEdges() const {
@@ -252,7 +252,7 @@ inline unsigned long NBoundaryComponent::getNumberOfVertices() const {
 }
 
 inline NTriangle* NBoundaryComponent::getTriangle(unsigned long index) const {
-    return faces[index];
+    return triangles[index];
 }
 
 inline NEdge* NBoundaryComponent::getEdge(unsigned long index) const {
@@ -266,11 +266,11 @@ inline NVertex* NBoundaryComponent::getVertex(unsigned long index) const {
 inline long NBoundaryComponent::getEulerCharacteristic() const {
     return (isIdeal() ?
         vertices.front()->getLinkEulerCharacteristic() :
-        long(vertices.size()) - long(edges.size()) + long(faces.size()));
+        long(vertices.size()) - long(edges.size()) + long(triangles.size()));
 }
 
 inline bool NBoundaryComponent::isIdeal() const {
-    return faces.empty();
+    return triangles.empty();
 }
 
 inline bool NBoundaryComponent::isOrientable() const {

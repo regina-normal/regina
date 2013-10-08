@@ -68,8 +68,8 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
     private:
         std::vector<NTetrahedron*> tetrahedra;
             /**< List of tetrahedra in the component. */
-        std::vector<NTriangle*> faces;
-            /**< List of faces in the component. */
+        std::vector<NTriangle*> triangles;
+            /**< List of triangles in the component. */
         std::vector<NEdge*> edges;
             /**< List of edges in the component. */
         std::vector<NVertex*> vertices;
@@ -266,7 +266,7 @@ inline unsigned long NComponent::getNumberOfSimplices() const {
 }
 
 inline unsigned long NComponent::getNumberOfTriangles() const {
-    return faces.size();
+    return triangles.size();
 }
 
 inline unsigned long NComponent::getNumberOfEdges() const {
@@ -290,7 +290,7 @@ inline NTetrahedron* NComponent::getSimplex(unsigned long index) const {
 }
 
 inline NTriangle* NComponent::getTriangle(unsigned long index) const {
-    return faces[index];
+    return triangles[index];
 }
 
 inline NEdge* NComponent::getEdge(unsigned long index) const {

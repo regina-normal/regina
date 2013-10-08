@@ -387,7 +387,7 @@ void NTriangulation::calculateTriangles() const {
         for (face=3; face>=0; face--)
             if (! tet->faces[face]) {
                 label = new NTriangle(tet->component);
-                tet->component->faces.push_back(label);
+                tet->component->triangles.push_back(label);
                 tet->faces[face] = label;
                 tet->faceMapping[face] = NTriangle::ordering[face];
                 label->embeddings[0] = new NTriangleEmbedding(tet, face);
@@ -436,7 +436,7 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstFace,
 
     emb = firstFace->embeddings[0];
     firstFace->boundaryComponent = label;
-    label->faces.push_back(firstFace);
+    label->triangles.push_back(firstFace);
     emb->getTetrahedron()->tmpOrientation[emb->getTriangle()] = 1;
     faceQueue.push(firstFace);
 
@@ -515,7 +515,7 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstFace,
                 } else {
                     // Add this adjacent face to the queue.
                     nextFace->boundaryComponent = label;
-                    label->faces.push_back(nextFace);
+                    label->triangles.push_back(nextFace);
                     nextTet->tmpOrientation[nextFaceNumber] = yourOrientation;
                     faceQueue.push(nextFace);
                 }
