@@ -41,7 +41,7 @@
 #define __NTETFACE_H
 #endif
 
-#include "triangulation/nfacetspec.h"
+#include "generic/nfacetspec.h"
 
 #endif
 

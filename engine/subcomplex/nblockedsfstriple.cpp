@@ -263,7 +263,7 @@ bool NBlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
     NMatrix2 curvesCentreToLayering, layeringToEndAnnulus;
 
     for (e = 0; e < 2; e++) {
-        // Relation from centre fibre/orbifold to layering first face
+        // Relation from centre fibre/orbifold to layering first triangle
         // markings 01/02:
         curvesCentreToLayering = layering[e]->boundaryReln() *
             NMatrix2(-1, 0, 0, bdryRef[e] ? -1 : 1);
@@ -292,7 +292,7 @@ bool NBlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
             otherSide.tet[1] = layering[e]->getNewBoundaryTet(1);
 
             // In each case, also fill in the mapping from (layering first
-            // face markings 01/02) to (other side annulus first face
+            // triangle markings 01/02) to (other side annulus first triangle
             // markings 01/02).  This is stored in layeringToEndAnnulus.
             if (plugPos == 0) {
                 otherSide.roles[0] = layering[e]->getNewBoundaryRoles(0);
@@ -331,8 +331,8 @@ bool NBlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
 
                 if (end[e]->numberOfBoundaryAnnuli() == 1) {
                     // Got it!
-                    // Do a final conversion from annulus first face markings
-                    // 01/02 and move onto the next end space.
+                    // Do a final conversion from annulus first triangle
+                    // markings 01/02 and move onto the next end space.
                     matchingReln[e] = NMatrix2(-1, 0, 0, 1) *
                         layeringToEndAnnulus * curvesCentreToLayering;
                     break;

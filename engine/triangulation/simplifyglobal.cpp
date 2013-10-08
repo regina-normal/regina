@@ -126,21 +126,21 @@ bool NTriangulation::intelligentSimplify() {
 
             // --- Open book and close book moves ---
 
-            if (hasBoundaryFaces()) {
+            if (hasBoundaryTriangles()) {
                 // Clone again, always -- we don't want to create gratuitous
-                // boundary faces if they won't be of any help.
+                // boundary triangles if they won't be of any help.
                 use = new NTriangulation(*this);
 
                 // Perform every book opening move we can find.
-                FaceIterator fit;
+                TriangleIterator fit;
 
                 bool opened = false;
                 bool openedNow = true;
                 while (openedNow) {
                     openedNow = false;
 
-                    for (fit = use->getFaces().begin();
-                            fit != use->getFaces().end(); ++fit)
+                    for (fit = use->getTriangles().begin();
+                            fit != use->getTriangles().end(); ++fit)
                         if (use->openBook(*fit, true, true)) {
                             opened = openedNow = true;
                             break;
@@ -212,8 +212,8 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
     BoundaryComponentIterator bit;
     NEdge* edge;
     NBoundaryComponent* bc;
-    unsigned long nFaces;
-    unsigned long iFace;
+    unsigned long nTriangles;
+    unsigned long iTriangle;
     // unsigned long nEdges;
     // unsigned long iEdge;
     // std::deque<NEdgeEmbedding>::const_iterator embit, embbeginit, embendit;
@@ -288,16 +288,16 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
             }
 
             // Look for boundary simplifications.
-            if (hasBoundaryFaces()) {
+            if (hasBoundaryTriangles()) {
                 for (bit = boundaryComponents.begin();
                         bit != boundaryComponents.end(); bit++) {
                     bc = *bit;
 
-                    // Run through faces of this boundary component looking
+                    // Run through triangles of this boundary component looking
                     // for shell boundary moves.
-                    nFaces = (*bit)->getNumberOfFaces();
-                    for (iFace = 0; iFace < nFaces; iFace++) {
-                        if (shellBoundary((*bit)->getFace(iFace)->
+                    nTriangles = (*bit)->getNumberOfTriangles();
+                    for (iTriangle = 0; iTriangle < nTriangles; iTriangle++) {
+                        if (shellBoundary((*bit)->getTriangle(iTriangle)->
                                 getEmbedding(0).getTetrahedron(),
                                 true, perform)) {
                             changedNow = changed = true;

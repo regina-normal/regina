@@ -38,14 +38,80 @@ Version 4.95  [ (under development) ]
 
     GENERAL:
         - Updated the bundled copy of Normaliz to version 2.10.1 (27 June 2013).
+        - All 2-faces of a triangulation are now called "triangles" (not
+          just "faces" as before).  This is to avoid ambiguity in dimension.
     ENGINE:
+        Class Dim2Component:
+            - New routines getNumberOfSimplices() and getSimplex(), which are
+              dimension-agnostic aliases for getNumberOfTriangles() and
+              getTriangle().
+            - New template routine getNumberOfFaces<dim>(), which is a
+              dimension-agnostic routine for counting faces of any dimension.
+        Class Dim2Triangulation:
+            - Now inherits from the new helper class NGenericTriangulation<2>.
+            - New routine isoSigComponentSize() for extracting the number of
+              triangles from a signature (inherited from NGenericTriangulation).
+        Class NBoundaryComponent:
+            - Renamed getFace() and getNumberOfFaces() to getTriangle()
+              and getNumberOfTriangles().  The old names are deprecated but
+              have been kept for backward compatibility.
+        Class NComponent:
+            - Renamed getFace() and getNumberOfFaces() to getTriangle()
+              and getNumberOfTriangles().  The old names are deprecated but
+              have been kept for backward compatibility.
+        Class NFace:
+            - Renamed to NTriangle.  The old name is deprecated but has
+              been kept as a typedef for backward compatibility.
+        Class NFaceEmbedding:
+            - Renamed the class to NTriangleEmbedding, and renamed getFace()
+              to getTriangle().  The old names are deprecated but have been
+              kept for backward compatibility.
+        Class NGenericTriangulation:
+            - New template helper class that allows different triangulation
+              classes to share the same implementations of member functions.
+              Currently this class implements isoSig() and fromIsoSig().
+        Class NNormalSurface, NNormalSurfaceVector:
+            - Renamed getFaceArcs() to getTriangleArcs().  The old name is
+              deprecated but has been kept for backward compatibility.
         Class NNormalSurfaceList:
             - Re-enabled enumeration using NS_HILBERT_FULLCONE, which previously
               returned an empty list.  Users will not be affected unless
               they were explicitly asking for this much slower algorithm.
+        Enum NormalCoords:
+            - Renamed NS_FACE_ARCS to NS_TRIANGLE_ARCS.  The old name is
+              deprecated but has been kept for backward compatibility.
+        Class NPerm3, NPerm4, NPerm5:
+            - New dimension-agnostic aliases orderedSn, SnIndex() and
+              orderedSnIndex().  These all reference existing arrays/routines
+              involving S3, S4 or S5 in NPerm3, NPerm4 and NPerm5 respectively.
+        Class NPillowTwoSphere:
+            - Renamed getFace() and getFaceMapping() to getTriangle()
+              and getTriangleMapping().  The old names are deprecated but
+              have been kept for backward compatibility.
+        Class NTetrahedron:
+            - Renamed getFace() and getFaceMapping() to getTriangle()
+              and getTriangleMapping().  The old names are deprecated but
+              have been kept for backward compatibility.
+        Class NTriangulation:
+            - New routines getNumberOfSimplices() and getSimplex(), which are
+              dimension-agnostic aliases for getNumberOfTetrahedra() and
+              getTetrahedron().
+            - New template routine getNumberOfFaces<dim>(), which is a
+              dimension-agnostic routine for counting faces of any dimension.
+            - Now inherits from the new helper class NGenericTriangulation<3>.
+            - New routine isoSigComponentSize() for extracting the number of
+              triangles from a signature (inherited from NGenericTriangulation).
+            - Renamed FaceIterator, faceIndex(), getFace(), getFaces(),
+              getNumberOfFaces() and hasBoundaryFaces(), where "face"
+              now becomes "triangle".  The old names are deprecated but
+              have been kept for backward compatibility.
         Class NVertex:
             - Added buildLinkDetail(), which returns details of how triangles
               of the vertex link are embedded within individual tetrahedra.
+        Headers dimtraits.h, nfacetspec.h, ngenericisomorphism.{h,tcc}:
+            - Moved from triangulation/ to generic/.  The old header locations
+              are now deprecated.  They have been kept for backward
+              compatibility, but simply include the new headers instead.
 
 Version 4.94  [ 24 September, 2013 ]
 

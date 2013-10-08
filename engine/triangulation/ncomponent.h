@@ -49,7 +49,7 @@
 namespace regina {
 
 class NTetrahedron;
-class NFace;
+class NTriangle;
 class NEdge;
 class NVertex;
 class NBoundaryComponent;
@@ -68,8 +68,8 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
     private:
         std::vector<NTetrahedron*> tetrahedra;
             /**< List of tetrahedra in the component. */
-        std::vector<NFace*> faces;
-            /**< List of faces in the component. */
+        std::vector<NTriangle*> triangles;
+            /**< List of triangles in the component. */
         std::vector<NEdge*> edges;
             /**< List of edges in the component. */
         std::vector<NVertex*> vertices;
@@ -94,11 +94,34 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
          * @return the number of tetrahedra.
          */
         unsigned long getNumberOfTetrahedra() const;
+        /**
+         * A dimension-agnostic alias for getNumberOfTetrahedra().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 3-manifold triangulations means a tetrahedron).
+         * 
+         * See getNumberOfTetrahedra() for further information.
+         */
+        unsigned long getNumberOfSimplices() const;
 
         /**
-         * Returns the number of faces in this component.
+         * Returns the number of triangles in this component.
          *
-         * @return the number of faces.
+         * @return the number of triangles.
+         */
+        unsigned long getNumberOfTriangles() const;
+        /**
+         * A deprecated alias for getNumberOfTriangles().
+         *
+         * This routine returns the number of triangular faces in this
+         * component.  See getNumberOfTriangles() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getNumberOfTriangles() instead.
+         *
+         * @return the number of triangles.
          */
         unsigned long getNumberOfFaces() const;
 
@@ -135,19 +158,48 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
          * @return the requested tetrahedron.
          */
         NTetrahedron* getTetrahedron(unsigned long index) const;
+        /**
+         * A dimension-agnostic alias for getTetrahedron().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 3-manifold triangulations means a tetrahedron).
+         * 
+         * See getTetrahedron() for further information.
+         */
+        NTetrahedron* getSimplex(unsigned long index) const;
 
         /**
-         * Returns the requested face in this component.
+         * Returns the requested triangle in this component.
          *
-         * @param index the index of the requested face in the
+         * @param index the index of the requested triangle in the
          * component.  This should be between 0 and
-         * getNumberOfFaces()-1 inclusive.
-         * Note that the index of a face in the component need
-         * not be the index of the same face in the entire
+         * getNumberOfTriangles()-1 inclusive.
+         * Note that the index of a triangle in the component need
+         * not be the index of the same triangle in the entire
          * triangulation.
-         * @return the requested face.
+         * @return the requested triangle.
          */
-        NFace* getFace(unsigned long index) const;
+        NTriangle* getTriangle(unsigned long index) const;
+        /**
+         * A deprecated alias for getTriangle().
+         *
+         * This routine returns the requested triangular face in this
+         * component.  See getTriangle() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangle() instead.
+         *
+         * @param index the index of the requested triangle in the
+         * component.  This should be between 0 and
+         * getNumberOfTriangles()-1 inclusive.
+         * Note that the index of a triangle in the component need
+         * not be the index of the same triangle in the entire
+         * triangulation.
+         * @return the requested triangle.
+         */
+        NTriangle* getFace(unsigned long index) const;
 
         /**
          * Returns the requested edge in this component.
@@ -239,8 +291,16 @@ inline unsigned long NComponent::getNumberOfTetrahedra() const {
     return tetrahedra.size();
 }
 
+inline unsigned long NComponent::getNumberOfSimplices() const {
+    return tetrahedra.size();
+}
+
+inline unsigned long NComponent::getNumberOfTriangles() const {
+    return triangles.size();
+}
+
 inline unsigned long NComponent::getNumberOfFaces() const {
-    return faces.size();
+    return triangles.size();
 }
 
 inline unsigned long NComponent::getNumberOfEdges() const {
@@ -259,8 +319,16 @@ inline NTetrahedron* NComponent::getTetrahedron(unsigned long index) const {
     return tetrahedra[index];
 }
 
-inline NFace* NComponent::getFace(unsigned long index) const {
-    return faces[index];
+inline NTetrahedron* NComponent::getSimplex(unsigned long index) const {
+    return tetrahedra[index];
+}
+
+inline NTriangle* NComponent::getTriangle(unsigned long index) const {
+    return triangles[index];
+}
+
+inline NTriangle* NComponent::getFace(unsigned long index) const {
+    return triangles[index];
 }
 
 inline NEdge* NComponent::getEdge(unsigned long index) const {

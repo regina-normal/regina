@@ -176,7 +176,7 @@ bool writeSnapPea(const char* filename, NTriangulation& tri) {
     for (NTriangulation::TetrahedronIterator it = tri.getTetrahedra().begin();
             it != tri.getTetrahedra().end(); it++) {
         // Although our precondition states that there are no boundary
-        // faces, we test for this anyway.  If somebody makes a mistake and
+        // triangles, we test for this anyway.  If somebody makes a mistake and
         // calls this routine with a bounded triangulation, we don't want
         // to wind up calling tetrahedronIndex(0) and crashing.
         for (i = 0; i < 4; i++)

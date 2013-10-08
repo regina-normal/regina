@@ -1,5 +1,7 @@
 # Files to compile
-SET ( FILES snappy_gluing_equations )
+SET ( FILES
+  snappy_gluing_equations
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

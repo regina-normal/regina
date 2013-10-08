@@ -87,13 +87,13 @@ class REGINA_API NTrivialTri : public NStandardTriangulation {
         /**
          * Represents the three-tetrahedron triangulation N(3,1) of the
          * projective plane bundle over the circle.  This particular
-         * triangulation has no Mobius band faces.
+         * triangulation has no Mobius band triangles.
          */
         static const int N3_1;
         /**
          * Represents the three-tetrahedron triangulation N(3,2) of the
          * projective plane bundle over the circle.  This particular
-         * triangulation has two Mobius band faces.
+         * triangulation has two Mobius band triangles.
          */
         static const int N3_2;
     private:

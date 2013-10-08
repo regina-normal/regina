@@ -51,6 +51,7 @@ class QStackedWidget;
 
 namespace regina {
     class Dim2Triangulation;
+    class Dim4Triangulation;
     class NPacket;
     class NTriangulation;
 };
@@ -90,6 +91,20 @@ class Dim3FaceGraphData : public FacetGraphData {
 
     public:
         Dim3FaceGraphData(regina::NTriangulation* tri) : tri_(tri) {}
+
+        regina::NPacket* getPacket();
+        void writeDot(std::ostream& out, bool withLabels);
+        unsigned long numberOfSimplices();
+        QString simplicesName();
+        QString overview();
+};
+
+class Dim4FacetGraphData : public FacetGraphData {
+    private:
+        regina::Dim4Triangulation* tri_;
+
+    public:
+        Dim4FacetGraphData(regina::Dim4Triangulation* tri) : tri_(tri) {}
 
         regina::NPacket* getPacket();
         void writeDot(std::ostream& out, bool withLabels);

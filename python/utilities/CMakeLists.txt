@@ -1,7 +1,12 @@
 # utilities
 
 # Files to compile
-SET ( FILES i18nutils nbooleans osutils pyutilities)
+SET ( FILES
+  i18nutils
+  nbooleans
+  osutils
+  pyutilities
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

@@ -49,6 +49,7 @@
 #include "regina-core.h"
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
+#include "generic/ngenerictriangulation.h"
 #include "packet/npacket.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nmarkedvector.h"
@@ -65,7 +66,7 @@ namespace regina {
 class NBoundaryComponent;
 class NComponent;
 class NEdge;
-class NFace;
+class NTriangle;
 class NTetrahedron;
 class NVertex;
 class NGroupPresentation;
@@ -88,7 +89,7 @@ class NXMLTriangulationReader;
  * tetrahedra, the cellular structure and all other properties
  * will be deallocated.
  *
- * Faces, edges, vertices and components are always temporary;
+ * Triangles, edges, vertices and components are always temporary;
  * whenever a change
  * occurs with the triangulation, these will be deleted and a new
  * skeletal structure will be calculated.  The same is true of various
@@ -118,14 +119,17 @@ class NXMLTriangulationReader;
  * subcomplex to a normal surface.
  * \todo \featurelong Implement writeTextLong() for skeletal objects.
  */
-class REGINA_API NTriangulation : public NPacket {
+class REGINA_API NTriangulation : public NPacket,
+        public NGenericTriangulation<3> {
     public:
         static const int packetType;
 
         typedef std::vector<NTetrahedron*>::const_iterator TetrahedronIterator;
             /**< Used to iterate through tetrahedra. */
-        typedef std::vector<NFace*>::const_iterator FaceIterator;
-            /**< Used to iterate through faces. */
+        typedef std::vector<NTriangle*>::const_iterator TriangleIterator;
+            /**< Used to iterate through triangles. */
+        typedef std::vector<NTriangle*>::const_iterator FaceIterator;
+            /**< A deprecated alias for TriangleIterator. */
         typedef std::vector<NEdge*>::const_iterator EdgeIterator;
             /**< Used to iterate through edges. */
         typedef std::vector<NVertex*>::const_iterator VertexIterator;
@@ -146,8 +150,8 @@ class REGINA_API NTriangulation : public NPacket {
 
         NMarkedVector<NTetrahedron> tetrahedra;
             /**< The tetrahedra that form the triangulation. */
-        mutable NMarkedVector<NFace> faces;
-            /**< The faces in the triangulation skeleton. */
+        mutable NMarkedVector<NTriangle> triangles;
+            /**< The triangles in the triangulation skeleton. */
         mutable NMarkedVector<NEdge> edges;
             /**< The edges in the triangulation skeleton. */
         mutable NMarkedVector<NVertex> vertices;
@@ -388,7 +392,7 @@ class REGINA_API NTriangulation : public NPacket {
         /**
          * Creates a new tetrahedron and adds it to this triangulation.
          * The new tetrahedron will have an empty description.
-         * All four faces of the new tetrahedron will be boundary faces.
+         * All four faces of the new tetrahedron will be boundary triangles.
          *
          * The new tetrahedron will become the last tetrahedron in this
          * triangulation.
@@ -410,7 +414,7 @@ class REGINA_API NTriangulation : public NPacket {
         /**
          * Creates a new tetrahedron with the given description and adds
          * it to this triangulation.
-         * All four faces of the new tetrahedron will be boundary faces.
+         * All four faces of the new tetrahedron will be boundary triangles.
          *
          * @param desc the description to assign to the new tetrahedron.
          * @return the new tetrahedron.
@@ -605,10 +609,40 @@ class REGINA_API NTriangulation : public NPacket {
          */
         unsigned long getNumberOfEdges() const;
         /**
-         * Returns the number of faces in this triangulation.
+         * Returns the number of triangular faces in this triangulation.
          *
-         * @return the number of faces.
+         * @return the number of triangles.
          */
+        unsigned long getNumberOfTriangles() const;
+        /**
+         * A deprecated alias for getNumberOfTriangles().
+         *
+         * This routine returns the number of triangular faces in this
+         * triangulation.  See getNumberOfTriangles() for further details.
+         *
+         * Do not confuse this deprecated alias with the
+         * (non-deprecated) tempate function getNumberOfFaces<dim>().
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getNumberOfTriangles() instead.
+         *
+         * @return the number of triangles.
+         */
+        unsigned long getNumberOfFaces() const;
+        /**
+         * Returns the number of faces of the given dimension in this
+         * triangulation.
+         *
+         * This template function is to assist with writing dimension-agnostic
+         * code that can be reused to work in different dimensions.
+         *
+         * \pre the template argument \a dim is between 0 and 3 inclusive.
+         *
+         * \ifacespython Not present.
+         *
+         * @return the number of faces of the given dimension.
+         */
+        template <int dim>
         unsigned long getNumberOfFaces() const;
 
         /**
@@ -677,10 +711,10 @@ class REGINA_API NTriangulation : public NPacket {
          */
         const std::vector<NEdge*>& getEdges() const;
         /**
-         * Returns all faces of this triangulation.
+         * Returns all triangular faces of this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
-         * faces will be deleted and replaced with new
+         * triangles will be deleted and replaced with new
          * ones.  Thus the objects contained in this list should be
          * considered temporary only.
          *
@@ -689,9 +723,21 @@ class REGINA_API NTriangulation : public NPacket {
          *
          * \ifacespython This routine returns a python list.
          *
-         * @return the list of all faces.
+         * @return the list of all triangles.
          */
-        const std::vector<NFace*>& getFaces() const;
+        const std::vector<NTriangle*>& getTriangles() const;
+        /**
+         * A deprecated alias for getTriangles().
+         *
+         * This routine returns all triangular faces in this triangulation.
+         * See getTriangles() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangles() instead.
+         *
+         * @return the list of all triangles.
+         */
+        const std::vector<NTriangle*>& getFaces() const;
         /**
          * Returns the requested triangulation component.
          *
@@ -718,7 +764,7 @@ class REGINA_API NTriangulation : public NPacket {
          */
         NBoundaryComponent* getBoundaryComponent(unsigned long index) const;
         /**
-         * Returns the requested triangulation vertex.
+         * Returns the requested vertex in this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
          * vertices will be deleted and replaced with new
@@ -730,7 +776,7 @@ class REGINA_API NTriangulation : public NPacket {
          */
         NVertex* getVertex(unsigned long index) const;
         /**
-         * Returns the requested triangulation edge.
+         * Returns the requested edge in this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
          * edges will be deleted and replaced with new
@@ -742,17 +788,31 @@ class REGINA_API NTriangulation : public NPacket {
          */
         NEdge* getEdge(unsigned long index) const;
         /**
-         * Returns the requested triangulation face.
+         * Returns the requested triangular face in this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
-         * faces will be deleted and replaced with new
+         * triangles will be deleted and replaced with new
          * ones.  Thus this object should be considered temporary only.
          *
-         * @param index the index of the desired face, ranging from 0
-         * to getNumberOfFaces()-1 inclusive.
-         * @return the requested face.
+         * @param index the index of the desired triangle, ranging from 0
+         * to getNumberOfTriangles()-1 inclusive.
+         * @return the requested triangle.
          */
-        NFace* getFace(unsigned long index) const;
+        NTriangle* getTriangle(unsigned long index) const;
+        /**
+         * A deprecated alias for getTriangle().
+         *
+         * This routine returns the requested triangular face in the
+         * triangulation.  See getTriangle() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangle() instead.
+         *
+         * @param index the index of the desired triangle, ranging from 0
+         * to getNumberOfTriangles()-1 inclusive.
+         * @return the requested triangle.
+         */
+        NTriangle* getFace(unsigned long index) const;
         /**
          * Returns the index of the given component in the triangulation.
          *
@@ -835,25 +895,40 @@ class REGINA_API NTriangulation : public NPacket {
          */
         long edgeIndex(const NEdge* edge) const;
         /**
-         * Returns the index of the given face in the triangulation.
+         * Returns the index of the given triangle in the triangulation.
          *
          * This routine was introduced in Regina 4.5, and replaces the
          * old getFaceIndex().  The name has been changed
          * because, unlike the old routine, it requires that the given
-         * face belongs to the triangulation (a consequence of
+         * triangle belongs to the triangulation (a consequence of
          * some significant memory optimisations).
          *
-         * \pre The given face belongs to this triangulation.
+         * \pre The given triangle belongs to this triangulation.
          *
          * \warning Passing a null pointer to this routine will probably
          * crash your program.
          *
-         * @param face specifies which face to find in the
+         * @param triangle specifies which triangle to find in the
          * triangulation.
-         * @return the index of the specified face, where 0 is the first
-         * face, 1 is the second and so on.
+         * @return the index of the specified triangle, where 0 is the first
+         * triangle, 1 is the second and so on.
          */
-        long faceIndex(const NFace* face) const;
+        long triangleIndex(const NTriangle* tri) const;
+        /**
+         * A deprecated alias for triangleIndex().
+         *
+         * This routine returns the index of the given triangle in the
+         * triangulation.  See triangleIndex() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use triangleIndex() instead.
+         *
+         * @param triangle specifies which triangle to find in the
+         * triangulation.
+         * @return the index of the specified triangle, where 0 is the first
+         * triangle, 1 is the second and so on.
+         */
+        long faceIndex(const NTriangle* tri) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -927,8 +1002,8 @@ class REGINA_API NTriangulation : public NPacket {
          * to \a other.  Boundary incomplete isomorphisms are described
          * in detail in the NIsomorphism class notes.
          *
-         * In particular, note that boundary faces of this triangulation
-         * need not correspond to boundary faces of \a other, and that
+         * In particular, note that boundary triangles of this triangulation
+         * need not correspond to boundary triangles of \a other, and that
          * \a other can contain more tetrahedra than this triangulation.
          *
          * If a boundary incomplete isomorphism is found, the details of
@@ -1087,9 +1162,21 @@ class REGINA_API NTriangulation : public NPacket {
          */
         bool isStandard() const;
         /**
-         * Determines if this triangulation has any boundary faces.
+         * Determines if this triangulation has any boundary triangles.
          *
-         * @return \c true if and only if there are boundary faces.
+         * @return \c true if and only if there are boundary triangles.
+         */
+        bool hasBoundaryTriangles() const;
+        /**
+         * A deprecated alias for hasBoundaryTriangles().
+         *
+         * This routine determines whether this triangulation has any
+         * boundary triangles.  See hasBoundaryTriangles() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use hasBoundaryTriangles() instead.
+         *
+         * @return \c true if and only if there are boundary triangles.
          */
         bool hasBoundaryFaces() const;
         /**
@@ -1111,7 +1198,7 @@ class REGINA_API NTriangulation : public NPacket {
         /**
          * Determines if this triangulation is oriented; that is, if
          * tetrahedron vertices are labelled in a way that preserves
-         * orientation across adjacent faces.  Specifically, this
+         * orientation across adjacent tetrahedron faces.  Specifically, this
          * routine returns \c true if and only if every gluing permutation
          * has negative sign.
          *
@@ -1131,7 +1218,7 @@ class REGINA_API NTriangulation : public NPacket {
         /**
          * Determines if this triangulation is ordered; that is, if
          * tetrahedron vertices are labelled so that all gluing
-         * permutations are order-preserving on the faces.
+         * permutations are order-preserving on the tetrahedron faces.
          * Equivalently, this tests whether the edges of the triangulation
          * can all be oriented such that they induce a consistent ordering
          * on the vertices of each tetrahedron.
@@ -1141,7 +1228,7 @@ class REGINA_API NTriangulation : public NPacket {
          * to relabel tetrahedron vertices to give an ordered triangulation.
          *
          * @return \c true if and only if all gluing permutations are
-         * order preserving on the faces.
+         * order preserving on the tetrahedron faces.
          *
          * @author Matthias Goerner
          */
@@ -1529,24 +1616,25 @@ class REGINA_API NTriangulation : public NPacket {
         /**
          * Produces a maximal forest in the triangulation's dual
          * 1-skeleton.  The given set will be emptied and will have the
-         * faces corresponding to the edges of the maximal forest in the
+         * triangles corresponding to the edges of the maximal forest in the
          * dual 1-skeleton placed into it.
          *
-         * Note that the face pointers returned will become invalid once
+         * Note that the triangle pointers returned will become invalid once
          * the triangulation has changed.
          *
          * \ifacespython Not present.
          *
-         * @param faceSet the set to be emptied and into which the faces
-         * representing the maximal forest will be placed.
+         * @param triangleSet the set to be emptied and into which the
+         * triangles representing the maximal forest will be placed.
          */
-        void maximalForestInDualSkeleton(std::set<NFace*>& faceSet) const;
+        void maximalForestInDualSkeleton(std::set<NTriangle*>& triangleSet)
+            const;
 
         /**
          * Attempts to simplify the triangulation as intelligently as
          * possible without further input.  This routine will attempt to
          * reduce both the number of tetrahedra and the number of boundary
-         * faces (with the number of tetrahedra as its priority).
+         * triangles (with the number of tetrahedra as its priority).
          *
          * Currently this routine uses simplifyToLocalMinimum() in
          * combination with random 4-4 moves, book opening moves and
@@ -1592,7 +1680,7 @@ class REGINA_API NTriangulation : public NPacket {
          * Checks the eligibility of and/or performs a 3-2 move
          * about the given edge.
          * This involves replacing the three tetrahedra joined at that
-         * edge with two tetrahedra joined by a face.
+         * edge with two tetrahedra joined by a triangle.
          * This can be done iff (i) the edge is valid and non-boundary,
          * and (ii) the three tetrahedra are distinct.
          *
@@ -1600,7 +1688,7 @@ class REGINA_API NTriangulation : public NPacket {
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be reconstructed, which means
+         * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
          *
@@ -1622,25 +1710,25 @@ class REGINA_API NTriangulation : public NPacket {
         bool threeTwoMove(NEdge* e, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 2-3 move
-         * about the given face.
+         * about the given triangle.
          * This involves replacing the two tetrahedra joined at that
-         * face with three tetrahedra joined by an edge.
+         * triangle with three tetrahedra joined by an edge.
          * This can be done iff the two tetrahedra are distinct.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be reconstructed, which means
+         * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a f)
          * can no longer be used.
          *
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
          * is legal.
-         * \pre The given face is a face of this triangulation.
+         * \pre The given triangle is a triangle of this triangulation.
          *
-         * @param f the face about which to perform the move.
+         * @param t the triangle about which to perform the move.
          * @param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * @param perform \c true if we are to perform the move
@@ -1650,7 +1738,7 @@ class REGINA_API NTriangulation : public NPacket {
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool twoThreeMove(NFace* f, bool check = true, bool perform = true);
+        bool twoThreeMove(NTriangle* t, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 4-4 move
          * about the given edge.
@@ -1667,7 +1755,7 @@ class REGINA_API NTriangulation : public NPacket {
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be reconstructed, which means
+         * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
          *
@@ -1708,20 +1796,21 @@ class REGINA_API NTriangulation : public NPacket {
          * - the edges opposite \c e in each tetrahedron are distinct and
          *   not both boundary;
          *
-         * - if faces \a f1 and \a f2 of one tetrahedron are to be flattened
-         *   onto faces \a g1 and \a g2 of the other respectively, then
+         * - if triangles \a f1 and \a f2 from one tetrahedron are to be
+         *   flattened onto triangles \a g1 and \a g2 of the other
+         *   respectively, then
          *   (a) \a f1 and \a g1 are distinct,
          *   (b) \a f2 and \a g2 are distinct,
          *   (c) we do not have both \a f1 = \a g2 and \a g1 = \a f2,
          *   (d) we do not have both \a f1 = \a f2 and \a g1 = \a g2, and
-         *   (e) we do not have two of the faces boundary and the other
+         *   (e) we do not have two of the triangles boundary and the other
          *   two identified.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be reconstructed, which means
+         * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
          *
@@ -1752,8 +1841,8 @@ class REGINA_API NTriangulation : public NPacket {
          *
          * - the two tetrahedra are distinct;
          *
-         * - the faces opposite \c v in each tetrahedron are distinct and not
-         *   both boundary;
+         * - the triangles opposite \c v in each tetrahedron are distinct and
+         *   not both boundary;
          *
          * - the two tetrahedra meet each other on all three faces touching
          *   the vertex (as opposed to meeting each other on one face and
@@ -1763,7 +1852,7 @@ class REGINA_API NTriangulation : public NPacket {
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be reconstructed, which means
+         * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a v)
          * can no longer be used.
          *
@@ -1814,7 +1903,7 @@ class REGINA_API NTriangulation : public NPacket {
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be reconstructed, which means
+         * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
          *
@@ -1842,38 +1931,38 @@ class REGINA_API NTriangulation : public NPacket {
                 bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a book opening move
-         * about the given face.
-         * This involves taking a face meeting the boundary along two
-         * edges, and ungluing it to create two new boundary faces
+         * about the given triangle.
+         * This involves taking a triangle meeting the boundary along two
+         * edges, and ungluing it to create two new boundary triangles
          * (thus exposing the tetrahedra it initially joined).
          * This move is the inverse of the closeBook() move, and is
          * used to open the way for new shellBoundary() moves.
          *
          * This move can be done if:
          *
-         * - the face meets the boundary in precisely two edges (and thus
+         * - the triangle meets the boundary in precisely two edges (and thus
          *   also joins two tetrahedra);
          *
          * - the vertex between these two edges is a standard boundary
          *   vertex (its link is a disc);
          *
-         * - the remaining edge of the face (which is internal to the
+         * - the remaining edge of the triangle (which is internal to the
          *   triangulation) is valid.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be reconstructed, which means
+         * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a f)
          * can no longer be used.
          *
          * \pre If the move is being performed and no
          * check is being run, it must be known in advance that the move
          * is legal.
-         * \pre The given face is a face of this triangulation.
+         * \pre The given triangle is a triangle of this triangulation.
          *
-         * @param f the face about which to perform the move.
+         * @param f the triangle about which to perform the move.
          * @param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * @param perform \c true if we are to perform the move
@@ -1883,26 +1972,26 @@ class REGINA_API NTriangulation : public NPacket {
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool openBook(NFace* f, bool check = true, bool perform = true);
+        bool openBook(NTriangle* t, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a book closing move
          * about the given boundary edge.
          * This involves taking a boundary edge of the triangulation and
-         * folding together the two boundary faces on either side.  This
+         * folding together the two boundary triangles on either side.  This
          * move is the inverse of the openBook() move, and is used to
          * simplify the boundary of the triangulation.
          * This move can be done if:
          *
          * - the edge \a e is a boundary edge;
          *
-         * - the two boundary faces that it joins are distinct;
+         * - the two boundary triangles that it joins are distinct;
          *
-         * - the two vertices opposite \a e in each of these boundary faces
+         * - the two vertices opposite \a e in each of these boundary triangles
          *   are valid and distinct;
          *
-         * - if edges \a e1 and \a e2 of one boundary face are to be
+         * - if edges \a e1 and \a e2 of one boundary triangle are to be
          *   folded onto edges \a f1 and \a f2 of the other boundary
-         *   face respectively, then we do not have both \a e1 = \a e2
+         *   triangle respectively, then we do not have both \a e1 = \a e2
          *   and \a f1 = \a f2.
          *
          * There are in fact several other "distinctness" conditions on
@@ -1913,7 +2002,7 @@ class REGINA_API NTriangulation : public NPacket {
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be reconstructed, which means
+         * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a f)
          * can no longer be used.
          *
@@ -1957,7 +2046,7 @@ class REGINA_API NTriangulation : public NPacket {
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be reconstructed, which means
+         * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects can no longer be used.
          *
          * \pre If the move is being performed and no
@@ -1987,7 +2076,7 @@ class REGINA_API NTriangulation : public NPacket {
          * will only be performed if the check shows it is legal.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be reconstructed, which means
+         * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
          *
@@ -2041,7 +2130,7 @@ class REGINA_API NTriangulation : public NPacket {
          * This routine works by flipping vertices 2 and 3 of each
          * tetrahedron with negative orientation.  The result will be a
          * triangulation where the tetrahedron vertices are labelled in
-         * a way that preserves orientation across adjacent faces.
+         * a way that preserves orientation across adjacent tetrahedron faces.
          * In particular, every gluing permutation will have negative sign.
          *
          * If this triangulation includes both orientable and
@@ -2058,10 +2147,10 @@ class REGINA_API NTriangulation : public NPacket {
          * an ordered triangulation, if possible.
          *
          * To be an ordered triangulation, all face gluings (when restricted
-         * to the face) must be order preserving. In other words, it must
-         * be possible to orient all edges of the triangulation in such a
-         * fashion that they are consistent with the ordering of the vertices
-         * in each tetrahedron.
+         * to the tetrahedron face) must be order preserving. In other words,
+         * it must be possible to orient all edges of the triangulation in
+         * such a fashion that they are consistent with the ordering of the
+         * vertices in each tetrahedron.
          *
          * If it is possible to order this triangulation, the vertices
          * of each tetrahedron will be relabelled accordingly and this
@@ -2298,7 +2387,7 @@ class REGINA_API NTriangulation : public NPacket {
         /**
          * Determines whether this is a triangulation of the solid
          * torus; that is, the unknot complement.  This routine can be
-         * used on a triangulation with real boundary faces, or on an
+         * used on a triangulation with real boundary triangles, or on an
          * ideal triangulation (in which case all ideal vertices will
          * be assumed to be truncated).
          *
@@ -2397,7 +2486,7 @@ class REGINA_API NTriangulation : public NPacket {
          * that has a very simple combinatorial structure (here "simple"
          * is subject to change; see the warning below).  Examples
          * include the compressing disc inside a 1-tetrahedron solid
-         * torus, or a compressing disc formed from a single internal face
+         * torus, or a compressing disc formed from a single internal triangle
          * surrounded by three boundary edges.
          *
          * The purpose of this routine is to avoid enumerating normal
@@ -2495,9 +2584,9 @@ class REGINA_API NTriangulation : public NPacket {
          * boundary components will be filled in with balls.
          *
          * This operation is performed by attaching a new tetrahedron to
-         * each boundary face and then gluing these new tetrahedra
+         * each boundary triangle and then gluing these new tetrahedra
          * together in a way that mirrors the adjacencies of the
-         * underlying boundary faces.  Each boundary component will
+         * underlying boundary triangles.  Each boundary component will
          * thereby be pushed up through the new tetrahedra and converted
          * into a cusp formed using vertices of these new tetrahedra.
          *
@@ -2515,7 +2604,7 @@ class REGINA_API NTriangulation : public NPacket {
          * Does a barycentric subdivision of the triangulation.
          * Each tetrahedron is divided into 24 tetrahedra by placing
          * an extra vertex at the centroid of each tetrahedron, the
-         * centroid of each face and the midpoint of each edge.
+         * centroid of each triangle and the midpoint of each edge.
          *
          * @author David Letscher
          */
@@ -2554,7 +2643,7 @@ class REGINA_API NTriangulation : public NPacket {
          * details on what a layering entails.
          *
          * \pre The given edge is a boundary edge of this triangulation,
-         * and the two boundary faces on either side of it are distinct.
+         * and the two boundary triangles on either side of it are distinct.
          *
          * @param edge the boundary edge upon which to layer.
          * @return the new tetrahedron provided by the layering.
@@ -2796,7 +2885,7 @@ class REGINA_API NTriangulation : public NPacket {
          *   is dehydrated instead.  Note that the original triangulation
          *   is not changed.
          * - They require the triangulation to be connected.
-         * - They require the triangulation to have no boundary faces
+         * - They require the triangulation to have no boundary triangles
          *   (though ideal triangulations are fine).
          * - They can only support triangulations with at most 25 tetrahedra.
          *
@@ -2813,7 +2902,7 @@ class REGINA_API NTriangulation : public NPacket {
          * @return a dehydrated representation of this triangulation
          * (or an isomorphic variant of this triangulation), or the
          * empty string if dehydration is not possible because the
-         * triangulation is disconnected, has boundary faces or contains
+         * triangulation is disconnected, has boundary triangles or contains
          * too many tetrahedra.
          *
          * @see rehydrate
@@ -2878,6 +2967,7 @@ class REGINA_API NTriangulation : public NPacket {
          * isomorphism signature.
          */
         static NTriangulation* fromIsoSig(const std::string& signature);
+        using NGenericTriangulation<3>::isoSigComponentSize;
         /**
          * Inserts into this triangulation a set of tetrahedra and their
          * gluings as described by the given integer arrays.
@@ -2898,7 +2988,7 @@ class REGINA_API NTriangulation : public NPacket {
          * joined to which others.  Specifically, <tt>adjacencies[t][f]</tt>
          * should contain the number of the tetrahedron joined to face \a f
          * of tetrahedron \a t.  If this face is to be left as a
-         * boundary face, <tt>adjacencies[t][f]</tt> should be -1.
+         * boundary triangle, <tt>adjacencies[t][f]</tt> should be -1.
          *
          * The \a gluings array describes the particular gluing permutations
          * used when joining these tetrahedron faces together.  Specifically,
@@ -2907,7 +2997,7 @@ class REGINA_API NTriangulation : public NPacket {
          * tetrahedron.  These four integers should be 0, 1, 2 and 3 in some
          * order, so that <tt>gluings[t][f][i]</tt> contains the image of
          * \a i under this permutation.  If face \a f of tetrahedron \a t
-         * is to be left as a boundary face, <tt>gluings[t][f][0..3]</tt>
+         * is to be left as a boundary triangle, <tt>gluings[t][f][0..3]</tt>
          * may contain anything (and will be duly ignored).
          *
          * It is the responsibility of the caller of this routine to
@@ -3026,7 +3116,7 @@ class REGINA_API NTriangulation : public NPacket {
          */
         void checkPermutations() const;
         /**
-         * Recalculates vertices, edges, faces, components and
+         * Recalculates vertices, edges, triangles, components and
          * boundary components, as well as various other skeletal
          * properties such as validity and vertex links.
          * All appropriate lists are filled.
@@ -3065,13 +3155,13 @@ class REGINA_API NTriangulation : public NPacket {
         void labelEdge(NTetrahedron*, int, NEdge*) const;
             /**< Internal to calculateEdges(). */
         /**
-         * Calculates the triangulation faces and associated
+         * Calculates the triangles of this triangulation and associated
          * properties.
          *
          * \warning This should only be called from within
          * calculateSkeleton().
          */
-        void calculateFaces() const;
+        void calculateTriangles() const;
         /**
          * Calculates the triangulation boundary components and
          * properties of these boundary components.
@@ -3080,7 +3170,7 @@ class REGINA_API NTriangulation : public NPacket {
          * calculateSkeleton().
          */
         void calculateBoundary() const;
-        void labelBoundaryFace(NFace*, NBoundaryComponent*) const;
+        void labelBoundaryTriangle(NTriangle*, NBoundaryComponent*) const;
             /**< Internal to calculateBoundary(). */
         /**
          * Calculates the triangulation vertex links and associated
@@ -3110,7 +3200,7 @@ class REGINA_API NTriangulation : public NPacket {
          * isomorphism may be boundary incomplete and may or may not be
          * onto.  That is, this triangulation must appear as a
          * subcomplex of the given triangulation, possibly with some
-         * original boundary faces joined to new tetrahedra.
+         * original boundary triangles joined to new tetrahedra.
          *
          * See the NIsomorphism class notes for further details
          * regarding boundary complete and boundary incomplete
@@ -3166,29 +3256,13 @@ class REGINA_API NTriangulation : public NPacket {
         static bool compatibleTets(NTetrahedron* src, NTetrahedron* dest,
                 NPerm4 p);
 
-        /**
-         * Internal to isoSig().
-         *
-         * Constructs a candidate isomorphism signature for a single
-         * component of this triangulation.  This candidate signature
-         * assumes that the given tetrahedron with the given labelling
-         * of its vertices becomes tetrahedron zero with vertices 0,1,2,3
-         * under the "canonical isomorphism".
-         *
-         * @param tet the index of some tetrahedron in this triangulation.
-         * @param vertices some ordering of the four vertices of the
-         * given tetrahedron.
-         * @return the candidate isomorphism signature.
-         */
-        std::string isoSig(unsigned tet, const NPerm4& vertices) const;
-
         void stretchBoundaryForestFromVertex(NVertex*, std::set<NEdge*>&,
                 std::set<NVertex*>&) const;
             /**< Internal to maximalForestInBoundary(). */
         bool stretchForestFromVertex(NVertex*, std::set<NEdge*>&,
                 std::set<NVertex*>&, std::set<NVertex*>&) const;
             /**< Internal to maximalForestInSkeleton(). */
-        void stretchDualForestFromTet(NTetrahedron*, std::set<NFace*>&,
+        void stretchDualForestFromTet(NTetrahedron*, std::set<NTriangle*>&,
                 std::set<NTetrahedron*>&) const;
             /**< Internal to maximalForestInDualSkeleton(). */
 
@@ -3201,7 +3275,7 @@ class REGINA_API NTriangulation : public NPacket {
 } // namespace regina
 // Some more headers that are required for inline functions:
 #include "triangulation/ntetrahedron.h"
-#include "triangulation/nface.h"
+#include "triangulation/ntriangle.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nvertex.h"
 #include "triangulation/ncomponent.h"
@@ -3361,10 +3435,34 @@ inline unsigned long NTriangulation::getNumberOfEdges() const {
     return edges.size();
 }
 
-inline unsigned long NTriangulation::getNumberOfFaces() const {
+inline unsigned long NTriangulation::getNumberOfTriangles() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return faces.size();
+    return triangles.size();
+}
+
+inline unsigned long NTriangulation::getNumberOfFaces() const {
+    return getNumberOfTriangles();
+}
+
+template <>
+inline unsigned long NTriangulation::getNumberOfFaces<0>() const {
+    return getNumberOfVertices();
+}
+
+template <>
+inline unsigned long NTriangulation::getNumberOfFaces<1>() const {
+    return getNumberOfEdges();
+}
+
+template <>
+inline unsigned long NTriangulation::getNumberOfFaces<2>() const {
+    return getNumberOfTriangles();
+}
+
+template <>
+inline unsigned long NTriangulation::getNumberOfFaces<3>() const {
+    return getNumberOfTetrahedra();
 }
 
 inline long NTriangulation::getEulerCharTri() const {
@@ -3374,7 +3472,7 @@ inline long NTriangulation::getEulerCharTri() const {
     // Cast away the unsignedness of std::vector::size().
     return static_cast<long>(vertices.size())
         - static_cast<long>(edges.size())
-        + static_cast<long>(faces.size())
+        + static_cast<long>(triangles.size())
         - static_cast<long>(tetrahedra.size());
 }
 
@@ -3416,11 +3514,15 @@ inline const std::vector<NEdge*>& NTriangulation::getEdges()
     return (const std::vector<NEdge*>&)(edges);
 }
 
-inline const std::vector<NFace*>& NTriangulation::getFaces()
+inline const std::vector<NTriangle*>& NTriangulation::getTriangles()
         const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return (const std::vector<NFace*>&)(faces);
+    return (const std::vector<NTriangle*>&)(triangles);
+}
+
+inline const std::vector<NTriangle*>& NTriangulation::getFaces() const {
+    return getTriangles();
 }
 
 inline NComponent* NTriangulation::getComponent(unsigned long index) const {
@@ -3448,10 +3550,14 @@ inline NEdge* NTriangulation::getEdge(unsigned long index) const {
     return edges[index];
 }
 
-inline NFace* NTriangulation::getFace(unsigned long index) const {
+inline NTriangle* NTriangulation::getTriangle(unsigned long index) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return faces[index];
+    return triangles[index];
+}
+
+inline NTriangle* NTriangulation::getFace(unsigned long index) const {
+    return getTriangle(index);
 }
 
 inline long NTriangulation::componentIndex(const NComponent* component) const {
@@ -3471,8 +3577,12 @@ inline long NTriangulation::edgeIndex(const NEdge* edge) const {
     return edge->markedIndex();
 }
 
-inline long NTriangulation::faceIndex(const NFace* face) const {
-    return face->markedIndex();
+inline long NTriangulation::triangleIndex(const NTriangle* tri) const {
+    return tri->markedIndex();
+}
+
+inline long NTriangulation::faceIndex(const NTriangle* tri) const {
+    return tri->markedIndex();
 }
 
 inline bool NTriangulation::hasTwoSphereBoundaryComponents() const {
@@ -3505,10 +3615,14 @@ inline bool NTriangulation::isStandard() const {
     return standard;
 }
 
-inline bool NTriangulation::hasBoundaryFaces() const {
+inline bool NTriangulation::hasBoundaryTriangles() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return (faces.size() > 2 * tetrahedra.size());
+    return (triangles.size() > 2 * tetrahedra.size());
+}
+
+inline bool NTriangulation::hasBoundaryFaces() const {
+    return hasBoundaryTriangles();
 }
 
 inline bool NTriangulation::isClosed() const {
@@ -3553,6 +3667,15 @@ inline const NTriangulation::TuraevViroSet&
 
 inline void NTriangulation::writeTextShort(std::ostream& out) const {
     out << "Triangulation with " << tetrahedra.size() << " tetrahedra.";
+}
+
+inline std::string NTriangulation::isoSig() const {
+    return NGenericTriangulation<3>::isoSig(*this);
+}
+
+inline NTriangulation* NTriangulation::fromIsoSig(
+        const std::string& signature) {
+    return NGenericTriangulation<3>::fromIsoSig(signature);
 }
 
 } // namespace regina

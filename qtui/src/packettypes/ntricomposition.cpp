@@ -814,25 +814,25 @@ void NTriCompositionUI::findLayeredSolidTori() {
 }
 
 void NTriCompositionUI::findPillowSpheres() {
-    unsigned long nFaces = tri->getNumberOfFaces();
+    unsigned long nTriangles = tri->getNumberOfTriangles();
 
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
     unsigned long i, j;
-    regina::NFace* f1;
-    regina::NFace* f2;
+    regina::NTriangle* f1;
+    regina::NTriangle* f2;
     regina::NPillowTwoSphere* pillow;
-    for (i = 0; i < nFaces; i++) {
-        f1 = tri->getFace(i);
-        for (j = i + 1; j < nFaces; j++) {
-            f2 = tri->getFace(j);
+    for (i = 0; i < nTriangles; i++) {
+        f1 = tri->getTriangle(i);
+        for (j = i + 1; j < nTriangles; j++) {
+            f2 = tri->getTriangle(j);
             pillow = regina::NPillowTwoSphere::formsPillowTwoSphere(f1, f2);
             if (pillow) {
                 id = addComponentSection(tr("Pillow 2-sphere"));
 
                 details = new QTreeWidgetItem(id);
-                details->setText(0, tr("Faces: %1, %2").
+                details->setText(0, tr("Triangles: %1, %2").
                     arg(i).arg(j));
 
                 details = new QTreeWidgetItem(id, details);

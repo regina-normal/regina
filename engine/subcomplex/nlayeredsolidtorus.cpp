@@ -193,7 +193,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
                 tet != ans->topLevel->adjacentTetrahedron(ans->topFace[1]))
             break;
 
-        // There is a new tetrahedron glued to both torus boundary faces.
+        // There is a new tetrahedron glued to both torus boundary triangles.
         adjPerm[0] = ans->topLevel->adjacentGluing(
             ans->topFace[0]);
         adjPerm[1] = ans->topLevel->adjacentGluing(
@@ -592,12 +592,12 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
         return 0;
     if (comp->getNumberOfBoundaryComponents() != 1)
         return 0;
-    if (comp->getBoundaryComponent(0)->getNumberOfFaces() != 2)
+    if (comp->getBoundaryComponent(0)->getNumberOfTriangles() != 2)
         return 0;
 
-    NFaceEmbedding f0 = comp->getBoundaryComponent(0)->getFace(0)->
+    NTriangleEmbedding f0 = comp->getBoundaryComponent(0)->getTriangle(0)->
         getEmbedding(0);
-    NFaceEmbedding f1 = comp->getBoundaryComponent(0)->getFace(1)->
+    NTriangleEmbedding f1 = comp->getBoundaryComponent(0)->getTriangle(1)->
         getEmbedding(0);
 
     NTetrahedron* top = f0.getTetrahedron();
@@ -605,7 +605,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
         return 0;
 
     // We have precisely one boundary component, which consists of two
-    // faces belonging to the same tetrahedron.
+    // triangular faces belonging to the same tetrahedron.
 
     // Follow the adjacent tetrahedra down to what should be the base
     // tetrahedron.  Don't worry about gluing permutations for now.
@@ -617,7 +617,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
     // the top level tetrahedron (which we already know), but this would
     // also require us to code up the entire structure again.
 
-    NFacePair underFaces = NFacePair(f0.getFace(), f1.getFace()).complement();
+    NFacePair underFaces = NFacePair(f0.getTriangle(), f1.getTriangle()).complement();
     NTetrahedron* currTet = top;
     NTetrahedron* nextTet;
     while (1) {

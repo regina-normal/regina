@@ -99,14 +99,14 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     nEdges->setWhatsThis(msg);
 
-    label = new QLabel(tr("Faces:"), ui);
+    label = new QLabel(tr("Triangles:"), ui);
     grid->addWidget(label, 2, 1);
-    nFaces = new QLabel(ui);
-    nFaces->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    grid->addWidget(nFaces, 2, 3);
-    msg = tr("The total number of faces in this triangulation.");
+    nTriangles = new QLabel(ui);
+    nTriangles->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    grid->addWidget(nTriangles, 2, 3);
+    msg = tr("The total number of triangles in this triangulation.");
     label->setWhatsThis(msg);
-    nFaces->setWhatsThis(msg);
+    nTriangles->setWhatsThis(msg);
 
     label = new QLabel(tr("Components:"), ui);
     grid->addWidget(label, 0, 7);
@@ -125,7 +125,7 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     grid->addWidget(nBdryComps, 1, 9);
     msg = tr("The total number of boundary components in this "
         "triangulation.  Boundary components can either be ideal vertices "
-        "or collections of adjacent boundary faces.");
+        "or collections of adjacent boundary triangles.");
     label->setWhatsThis(msg);
     nBdryComps->setWhatsThis(msg);
 
@@ -158,11 +158,11 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
 
     btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
         tr("View..."), ui);
-    btn->setToolTip(tr("View details of individual faces"));
+    btn->setToolTip(tr("View details of individual triangles"));
     btn->setWhatsThis(tr("View details of this triangulation's "
-        "individual faces in a separate window."));
+        "individual triangles in a separate window."));
     // btn->setFlat(true);
-    connect(btn, SIGNAL(clicked()), this, SLOT(viewFaces()));
+    connect(btn, SIGNAL(clicked()), this, SLOT(viewTriangles()));
     grid->addWidget(btn, 2, 5);
 
     btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
@@ -180,7 +180,7 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual boundary components in a separate window.  Note that "
         "boundary components can either be ideal vertices of collections "
-        "of adjacent boundary faces."));
+        "of adjacent boundary triangles."));
     // btn->setFlat(true);
     connect(btn, SIGNAL(clicked()), this, SLOT(viewBoundaryComponents()));
     grid->addWidget(btn, 1, 11);
@@ -199,7 +199,7 @@ QWidget* NTriSkelCompUI::getInterface() {
 void NTriSkelCompUI::refresh() {
     nVertices->setText(QString::number(tri->getNumberOfVertices()));
     nEdges->setText(QString::number(tri->getNumberOfEdges()));
-    nFaces->setText(QString::number(tri->getNumberOfFaces()));
+    nTriangles->setText(QString::number(tri->getNumberOfTriangles()));
     nTets->setText(QString::number(tri->getNumberOfTetrahedra()));
     nComps->setText(QString::number(tri->getNumberOfComponents()));
     nBdryComps->setText(QString::number(tri->getNumberOfBoundaryComponents()));
@@ -212,7 +212,7 @@ void NTriSkelCompUI::refresh() {
 void NTriSkelCompUI::editingElsewhere() {
     nVertices->setText(tr("Editing..."));
     nEdges->setText(tr("Editing..."));
-    nFaces->setText(tr("Editing..."));
+    nTriangles->setText(tr("Editing..."));
     nTets->setText(tr("Editing..."));
     nComps->setText(tr("Editing..."));
     nBdryComps->setText(tr("Editing..."));
@@ -226,7 +226,7 @@ void NTriSkelCompUI::viewVertices() {
     // Because we pass this as parent to the new window, we are
     // guaranteed that the window will be closed and deleted
     // automatically if the packet pane is closed.
-    // Similarly for edges, faces, etc.
+    // Similarly for edges, triangles, etc.
     SkeletonWindow* win = new SkeletonWindow(this, new VertexModel(tri));
     win->show();
     viewers.append(win);
@@ -238,8 +238,8 @@ void NTriSkelCompUI::viewEdges() {
     viewers.append(win);
 }
 
-void NTriSkelCompUI::viewFaces() {
-    SkeletonWindow* win = new SkeletonWindow(this, new FaceModel(tri));
+void NTriSkelCompUI::viewTriangles() {
+    SkeletonWindow* win = new SkeletonWindow(this, new TriangleModel(tri));
     win->show();
     viewers.append(win);
 }

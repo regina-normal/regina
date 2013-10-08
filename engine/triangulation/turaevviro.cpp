@@ -143,10 +143,10 @@ namespace {
         }
 
         /**
-         * Determines the face-based contribution to the Turaev-Viro
+         * Determines the triangle-based contribution to the Turaev-Viro
          * invariant.  This corresponds to +/- Delta(i/2, j/2, k/2)^2.
          */
-        std::complex<double> faceContrib(unsigned long i, unsigned long j,
+        std::complex<double> triContrib(unsigned long i, unsigned long j,
                 unsigned long k) const {
             // By admissibility, (i + j + k) is guaranteed to be even.
             std::complex<double> ans =
@@ -168,7 +168,7 @@ namespace {
 
         /**
          * Determines the tetrahedron-based contribution to the Turaev-Viro
-         * invariant.  This combines with the square roots of the face-based
+         * invariant.  This combines with the square roots of the triangle-based
          * contributions for the four tetrahedron faces to give the symbol
          *
          *     | i/2 j/2 k/2 |
@@ -242,7 +242,7 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
     std::complex<double> ans = 0.0;
 
     unsigned long nEdges = getNumberOfEdges();
-    unsigned long nFaces = getNumberOfFaces();
+    unsigned long nTriangles = getNumberOfTriangles();
     unsigned long* colour = new unsigned long[nEdges];
 
     std::fill(colour, colour + nEdges, 0);
@@ -261,11 +261,11 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
                 valColour *= init.vertexContrib;
             for (i = 0; i < nEdges; i++)
                 valColour *= init.edgeContrib(colour[i]);
-            for (i = 0; i < nFaces; i++)
-                valColour *= init.faceContrib(
-                    colour[edgeIndex(faces[i]->getEdge(0))],
-                    colour[edgeIndex(faces[i]->getEdge(1))],
-                    colour[edgeIndex(faces[i]->getEdge(2))]);
+            for (i = 0; i < nTriangles; i++)
+                valColour *= init.triContrib(
+                    colour[edgeIndex(triangles[i]->getEdge(0))],
+                    colour[edgeIndex(triangles[i]->getEdge(1))],
+                    colour[edgeIndex(triangles[i]->getEdge(2))]);
             for (i = 0; i < tetrahedra.size(); i++)
                 valColour *= init.tetContrib(
                     colour[edgeIndex(tetrahedra[i]->getEdge(0))],
@@ -306,7 +306,7 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
                 [(*embit).getVertices()[2]]));
             if (index1 <= curr && index2 <= curr) {
                 // We've decided upon colours for all three edges of
-                // this face containing the current edge.
+                // this triangle containing the current edge.
                 if (! init.isAdmissible(colour[index1], colour[index2],
                         colour[curr])) {
                     admissible = false;

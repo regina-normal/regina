@@ -286,7 +286,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
 
             // Some of these tests cannot be run on the standalone tetrahedron.
             bool standalone = (t.getNumberOfTetrahedra() == 1 &&
-                t.getNumberOfFaces() == 4);
+                t.getNumberOfTriangles() == 4);
 
             // Unglue a face of t2.
             if (! standalone) {

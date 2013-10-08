@@ -47,6 +47,7 @@
 #include "regina-core.h"
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
+#include "generic/ngenerictriangulation.h"
 #include "packet/npacket.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
@@ -91,7 +92,8 @@ class NXMLPacketReader;
  * these objects will all be deleted and a new skeletal structure will be
  * calculated.  The same is true of various other triangulation properties.
  */
-class REGINA_API Dim4Triangulation : public NPacket {
+class REGINA_API Dim4Triangulation : public NPacket,
+        public NGenericTriangulation<4> {
     public:
         static const int packetType;
 
@@ -504,6 +506,21 @@ class REGINA_API Dim4Triangulation : public NPacket {
          * @return the number of tetrahedra.
          */
         unsigned long getNumberOfTetrahedra() const;
+        /**
+         * Returns the number of faces of the given dimension in this
+         * triangulation.
+         *
+         * This template function is to assist with writing dimension-agnostic
+         * code that can be reused to work in different dimensions.
+         *
+         * \pre the template argument \a dim is between 0 and 4 inclusive.
+         *
+         * \ifacespython Not present.
+         *
+         * @return the number of faces of the given dimension.
+         */
+        template <int dim>
+        unsigned long getNumberOfFaces() const;
 
         /**
          * Returns all components of this triangulation.
@@ -1794,22 +1811,6 @@ class REGINA_API Dim4Triangulation : public NPacket {
         static bool compatiblePents(
                 Dim4Pentachoron* src, Dim4Pentachoron* dest, NPerm5 p);
 
-        /**
-         * Internal to isoSig().
-         *
-         * Constructs a candidate isomorphism signature for a single
-         * component of this triangulation.  This candidate signature
-         * assumes that the given pentachoron with the given labelling
-         * of its vertices becomes pentachoron zero with vertices 0,1,2,3,4
-         * under the "canonical isomorphism".
-         *
-         * @param pent the index of some pentachoron in this triangulation.
-         * @param vertices some ordering of the five vertices of the
-         * given pentachoron.
-         * @return the candidate isomorphism signature.
-         */
-        std::string isoSigInternal(unsigned pent, const NPerm5& vertices) const;
-
     friend class regina::Dim4Pentachoron;
     friend class regina::NXMLDim4TriangulationReader;
 };
@@ -1998,6 +1999,31 @@ inline unsigned long Dim4Triangulation::getNumberOfTetrahedra() const {
     return tetrahedra_.size();
 }
 
+template <>
+inline unsigned long Dim4Triangulation::getNumberOfFaces<0>() const {
+    return getNumberOfVertices();
+}
+
+template <>
+inline unsigned long Dim4Triangulation::getNumberOfFaces<1>() const {
+    return getNumberOfEdges();
+}
+
+template <>
+inline unsigned long Dim4Triangulation::getNumberOfFaces<2>() const {
+    return getNumberOfTriangles();
+}
+
+template <>
+inline unsigned long Dim4Triangulation::getNumberOfFaces<3>() const {
+    return getNumberOfTetrahedra();
+}
+
+template <>
+inline unsigned long Dim4Triangulation::getNumberOfFaces<4>() const {
+    return getNumberOfPentachora();
+}
+
 inline const std::vector<Dim4Component*>& Dim4Triangulation::getComponents()
         const {
     if (! calculatedSkeleton_)
@@ -2159,6 +2185,15 @@ inline void Dim4Triangulation::simplifiedFundamentalGroup(
 
 inline NPacket* Dim4Triangulation::internalClonePacket(NPacket*) const {
     return new Dim4Triangulation(*this);
+}
+
+inline std::string Dim4Triangulation::isoSig() const {
+    return NGenericTriangulation<4>::isoSig(*this);
+}
+
+inline Dim4Triangulation* Dim4Triangulation::fromIsoSig(
+        const std::string& signature) {
+    return NGenericTriangulation<4>::fromIsoSig(signature);
 }
 
 } // namespace regina

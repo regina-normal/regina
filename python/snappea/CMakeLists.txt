@@ -1,8 +1,10 @@
 # snappea 
 
 # Files to compile
-SET ( FILES nsnappeatriangulation pysnappea)
-
+SET ( FILES
+  nsnappeatriangulation
+  pysnappea
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

@@ -35,7 +35,7 @@
 #include <sstream>
 #include "maths/nperm4.h"
 #include "triangulation/nedge.h" // deprecated
-#include "triangulation/nface.h" // deprecated
+#include "triangulation/ntriangle.h" // deprecated
 
 namespace regina {
 
@@ -70,6 +70,8 @@ const NPerm4 NPerm4::orderedS4[24] = {
     NPerm4(16), NPerm4(17), NPerm4(19), NPerm4(18),
     NPerm4(20), NPerm4(21), NPerm4(23), NPerm4(22)
 };
+
+const NPerm4* NPerm4::orderedSn = NPerm4::orderedS4;
 
 const NPerm4* orderedPermsS4 = NPerm4::orderedS4;
 
@@ -234,7 +236,7 @@ NPerm4 edgeOrdering(int edge) {
 
 std::string faceDescription(int face) {
     // deprecated
-    return NFace::ordering[face].trunc3();
+    return NTriangle::ordering[face].trunc3();
 }
 
 std::string edgeDescription(int edge) {

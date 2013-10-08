@@ -77,7 +77,7 @@ class NTriSkelCompUI : public QObject, public PacketViewerTab {
         QWidget* ui;
         QLabel* nVertices;
         QLabel* nEdges;
-        QLabel* nFaces;
+        QLabel* nTriangles;
         QLabel* nTets;
         QLabel* nComps;
         QLabel* nBdryComps;
@@ -108,7 +108,7 @@ class NTriSkelCompUI : public QObject, public PacketViewerTab {
          */
         void viewVertices();
         void viewEdges();
-        void viewFaces();
+        void viewTriangles();
         void viewComponents();
         void viewBoundaryComponents();
 };
