@@ -587,6 +587,31 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          */
         virtual NLargeInteger getTriangleArcs(unsigned long triIndex,
             int triVertex, NTriangulation* triang) const = 0;
+        /**
+         * A deprecated alias for getTriangleArcs().
+         *
+         * This routine returns the number of arcs in which this normal
+         * surface intersects the given triangle in the given direction.
+         * See getTriangleArcs() for further details.
+         *
+         * Since this is an alias only, it is non-virtual and cannot be
+         * overridden.  Its implementation simply calls getTriangleArcs().
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangleArcs() instead.
+         *
+         * @param triIndex the index in the triangulation of the triangle
+         * in which we are interested; this should be between 0 and
+         * NTriangulation::getNumberOfTriangles()-1 inclusive.
+         * @param triVertex the vertex of the triangle (0, 1 or 2) around
+         * which the arcs of intersection that we are interested in lie;
+         * only these arcs will be counted.
+         * @param triang the triangulation in which this normal surface lives.
+         * @return the number of times this normal surface intersect the
+         * given triangle with the given arc type.
+         */
+        NLargeInteger getFaceArcs(unsigned long triIndex,
+            int triVertex, NTriangulation* triang) const;
 
         /**
          * Returns a new normal surface vector of the appropriate length
@@ -904,6 +929,26 @@ class REGINA_API NNormalSurface : public ShareableObject {
          */
         NLargeInteger getTriangleArcs(unsigned long triIndex,
             int triVertex) const;
+        /**
+         * A deprecated alias for getTriangleArcs().
+         *
+         * This routine returns the number of arcs in which this normal
+         * surface intersects the given triangle in the given direction.
+         * See getTriangleArcs() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangleArcs() instead.
+         *
+         * @param triIndex the index in the triangulation of the triangle
+         * in which we are interested; this should be between 0 and
+         * NTriangulation::getNumberOfTriangles()-1 inclusive.
+         * @param triVertex the vertex of the triangle (0, 1 or 2) around
+         * which the arcs of intersection that we are interested in lie;
+         * only these arcs will be counted.
+         * @return the number of times this normal surface intersect the
+         * given triangle with the given arc type.
+         */
+        NLargeInteger getFaceArcs(unsigned long triIndex, int triVertex) const;
 
         /**
          * Determines the first coordinate position at which this surface
@@ -1565,6 +1610,10 @@ inline NNormalSurfaceVector::NNormalSurfaceVector(
 }
 inline NNormalSurfaceVector::~NNormalSurfaceVector() {
 }
+inline NLargeInteger NNormalSurfaceVector::getFaceArcs(unsigned long triIndex,
+        int triVertex, NTriangulation* triang) const {
+    return getTriangleArcs(triIndex, triVertex, triang);
+}
 
 // Inline functions for NNormalSurface
 
@@ -1599,6 +1648,10 @@ inline NLargeInteger NNormalSurface::getEdgeWeight(unsigned long edgeIndex)
     return vector->getEdgeWeight(edgeIndex, triangulation);
 }
 inline NLargeInteger NNormalSurface::getTriangleArcs(unsigned long triIndex,
+        int triVertex) const {
+    return vector->getTriangleArcs(triIndex, triVertex, triangulation);
+}
+inline NLargeInteger NNormalSurface::getFaceArcs(unsigned long triIndex,
         int triVertex) const {
     return vector->getTriangleArcs(triIndex, triVertex, triangulation);
 }

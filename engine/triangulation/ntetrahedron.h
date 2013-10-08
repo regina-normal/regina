@@ -487,6 +487,23 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          */
         NTriangle* getTriangle(int face) const;
         /**
+         * A deprecated alias for getTriangle().
+         *
+         * This routine returns the triangle in the triangulation
+         * skeleton corresponding to the given face of this tetrahedron.
+         * See getTriangle() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangle() instead.
+         *
+         * @param face the face of this tetrahedron to examine.
+         * This should be between 0 and 3 inclusive, where face \c i
+         * lies opposite vertex \c i.
+         * @return the triangle of the skeleton corresponding to the
+         * requested tetrahedron face.
+         */
+        NTriangle* getFace(int face) const;
+        /**
          * Returns a permutation that maps 0 to the given vertex of this
          * tetrahedron, and that maps (1,2,3) to the three remaining vertices
          * in the following "orientation-preserving" fashion.
@@ -618,6 +635,23 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          */
         NPerm4 getTriangleMapping(int face) const;
         /**
+         * A deprecated alias for getTriangleMapping().
+         *
+         * This routine examines the given face of this tetrahedron, and
+         * returns a mapping from the "canonical" vertices of the corresponding
+         * triangle of the triangulation to the matching vertices of this
+         * tetrahedron.  See getTriangleMapping() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangleMapping() instead.
+         *
+         * @param face the face of this tetrahedron to examine.
+         * This should be between 0 and 3 inclusive.
+         * @return a mapping from vertices (0,1,2) of the corresponding
+         * triangle to the vertices of this tetrahedron.
+         */
+        NPerm4 getFaceMapping(int face) const;
+        /**
          * Returns the orientation of this tetrahedron in the
          * triangulation.
          *
@@ -731,6 +765,10 @@ inline NTriangle* NTetrahedron::getTriangle(int face) const {
     return triangles[face];
 }
 
+inline NTriangle* NTetrahedron::getFace(int face) const {
+    return getTriangle(face);
+}
+
 inline NPerm4 NTetrahedron::getVertexMapping(int vertex) const {
     if (! tri->calculatedSkeleton)
         tri->calculateSkeleton();
@@ -747,6 +785,10 @@ inline NPerm4 NTetrahedron::getTriangleMapping(int face) const {
     if (! tri->calculatedSkeleton)
         tri->calculateSkeleton();
     return triMapping[face];
+}
+
+inline NPerm4 NTetrahedron::getFaceMapping(int face) const {
+    return getTriangleMapping(face);
 }
 
 inline int NTetrahedron::orientation() const {

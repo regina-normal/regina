@@ -112,6 +112,18 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
          * @return the number of triangles.
          */
         unsigned long getNumberOfTriangles() const;
+        /**
+         * A deprecated alias for getNumberOfTriangles().
+         *
+         * This routine returns the number of triangular faces in this
+         * component.  See getNumberOfTriangles() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getNumberOfTriangles() instead.
+         *
+         * @return the number of triangles.
+         */
+        unsigned long getNumberOfFaces() const;
 
         /**
          * Returns the number of edges in this component.
@@ -170,6 +182,24 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
          * @return the requested triangle.
          */
         NTriangle* getTriangle(unsigned long index) const;
+        /**
+         * A deprecated alias for getTriangle().
+         *
+         * This routine returns the requested triangular face in this
+         * component.  See getTriangle() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangle() instead.
+         *
+         * @param index the index of the requested triangle in the
+         * component.  This should be between 0 and
+         * getNumberOfTriangles()-1 inclusive.
+         * Note that the index of a triangle in the component need
+         * not be the index of the same triangle in the entire
+         * triangulation.
+         * @return the requested triangle.
+         */
+        NTriangle* getFace(unsigned long index) const;
 
         /**
          * Returns the requested edge in this component.
@@ -269,6 +299,10 @@ inline unsigned long NComponent::getNumberOfTriangles() const {
     return triangles.size();
 }
 
+inline unsigned long NComponent::getNumberOfFaces() const {
+    return triangles.size();
+}
+
 inline unsigned long NComponent::getNumberOfEdges() const {
     return edges.size();
 }
@@ -290,6 +324,10 @@ inline NTetrahedron* NComponent::getSimplex(unsigned long index) const {
 }
 
 inline NTriangle* NComponent::getTriangle(unsigned long index) const {
+    return triangles[index];
+}
+
+inline NTriangle* NComponent::getFace(unsigned long index) const {
     return triangles[index];
 }
 

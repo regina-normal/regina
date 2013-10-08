@@ -40,3 +40,21 @@
 
 #include "triangulation/ntriangle.h"
 
+/**
+ * A legacy typedef provided for backward compatibility only.
+ *
+ * \deprecated The old NFace class has been rename to NTriangle.
+ * This typedef is provided for backward compatibility, and will be removed
+ * in some future version of Regina.
+ */
+typedef NTriangle NFace;
+
+/**
+ * A legacy typedef provided for backward compatibility only.
+ *
+ * \deprecated The old NFaceEmbedding class has been rename to
+ * NTriangleEmbedding.  This typedef is provided for backward compatibility,
+ * and will be removed in some future version of Regina.
+ */
+typedef NTriangleEmbedding NFaceEmbedding;
+
