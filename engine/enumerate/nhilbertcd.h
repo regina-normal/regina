@@ -163,7 +163,7 @@ class NHilbertCD {
              * @param dim the total dimension of the space (and
              * therefore the toatl length of this vector).
              */
-            inline VecSpec(unsigned dim);
+            inline VecSpec(size_t dim);
         };
         /**
          * Identical to the public routine enumerateHilbertBasis(),
@@ -201,7 +201,7 @@ inline NHilbertCD::NHilbertCD() {
 // Inline functions for NHilbertCD::VecSpec
 
 template <class BitmaskType>
-inline NHilbertCD::VecSpec<BitmaskType>::VecSpec(unsigned dim) :
+inline NHilbertCD::VecSpec<BitmaskType>::VecSpec(size_t dim) :
         NRay(dim), mask_(dim) {
     // All vector elements are initialised to zero thanks to the
     // NLargeInteger default constructor.

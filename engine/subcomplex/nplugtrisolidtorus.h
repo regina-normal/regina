@@ -67,8 +67,8 @@ class NComponent;
  * If present, the chain should be attached so its hinge edges are
  * identified with the axis edges of the corresonding annulus and its bottom
  * tetrahedron is layered over either the major edge or minor edge of the
- * corresponding annulus.  The top two faces of the layered chain should
- * remain free.
+ * corresponding annulus.  The top two triangular faces of the layered chain
+ * should remain free.
  *
  * Thus we now have three annuli on the boundary, each represented as a
  * square two of whose (opposite) edges are axis edges of the original
@@ -76,20 +76,20 @@ class NComponent;
  * chain).
  *
  * Create a \e plug by gluing two tetrahedra together along a single
- * face.  The six edges that do not run along this common face split the
+ * triangle.  The six edges that do not run along this common triangle split the
  * plug boundary into three squares.  These three squares must be glued
  * to the three boundary annuli previously described.  Each axis edge meets
  * two of the annuli; the two corresponding edges of the plug must be
  * non-adjacent (have no common vertex) on the plug.
  * In this way each of the six edges of the plug not running along its
- * interior face corresponds to precisely one of the two instances of
+ * interior triangle corresponds to precisely one of the two instances of
  * precisely one of the three axis edges.
  *
  * If the axis edges are directed so that they all point the
  * same way around the triangular solid torus, these axis edges when
  * drawn on the plug must all point from one common tip of the plug to
  * the other (where the \e tips of the plug are the vertices not meeting the
- * interior face).  The gluings must also be made so that the resulting
+ * interior triangle).  The gluings must also be made so that the resulting
  * triangulation component is orientable.
  *
  * Of the optional NStandardTriangulation routines, getManifold() is

@@ -188,11 +188,11 @@ class REGINA_API NCensus {
          * if orientable triangulations are to be included, and should contain
          * \c false if non-orientable triangulations are to be included.
          * @param boundary determines whether to include triangulations with
-         * and/or without boundary faces.  The set should contain \c true
-         * if triangulations with boundary faces are to be included, and
+         * and/or without boundary triangles.  The set should contain \c true
+         * if triangulations with boundary triangles are to be included, and
          * should contain \c false if triangulations with only internal
-         * faces are to be included.
-         * @param nBdryFaces specifies the precise number of boundary faces
+         * triangles are to be included.
+         * @param nBdryTris specifies the precise number of boundary triangles
          * that should be present in the triangulations produced.  If this
          * parameter is negative, it is ignored and no additional restriction
          * is imposed.  See the documentation for routine
@@ -227,7 +227,7 @@ class REGINA_API NCensus {
          */
         static unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
             NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
-            int nBdryFaces, int whichPurge, AcceptTriangulation sieve = 0,
+            int nBdryTris, int whichPurge, AcceptTriangulation sieve = 0,
             void* sieveArgs = 0);
 
         /**
@@ -344,8 +344,8 @@ class REGINA_API NCensus {
          * NTriangulation::simplifyToLocalMinimum().
          *
          * Currently this routine is only useful for triangulations whose
-         * faces are all internal; if the given triangulation has
-         * boundary faces then this routine will simply return \c true.
+         * triangles are all internal; if the given triangulation has
+         * boundary triangles then this routine will simply return \c true.
          *
          * \ifacespython Parameter \a ignore is not present.
          *

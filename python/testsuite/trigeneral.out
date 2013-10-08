@@ -4,7 +4,7 @@ Empty triangulation
 
 Size of the skeleton:
   Tetrahedra: 0
-  Faces: 0
+  Triangles: 0
   Edges: 0
   Vertices: 0
 
@@ -20,7 +20,7 @@ Edges:
   Tet  |  edge:   01  02  03  12  13  23
   -----+--------------------------------
 
-Faces:
+Triangles:
   Tet  |  face:  012 013 023 123
   -----+------------------------
 
@@ -28,7 +28,7 @@ Faces:
 0 components
 0 boundary components
 0 tetrahedra
-0 faces
+0 triangles
 0 edges
 0 vertices
 2-sphere boundaries: False
@@ -37,7 +37,7 @@ EC: 0
 Valid: True
 Ideal: False
 Standard: True
-Boundary Faces: False
+Boundary Triangles: False
 Closed: True
 Orientable: True
 Connected: True
@@ -56,16 +56,17 @@ H2Z2: 0 Z_2
 Splitting surface: False
 3-sphere: False
 Double cover:
-Checksum = c1a7e74b4ddfeb576b210ebd21f1f4cc
+Checksum = 9464bf3edaf0e60e0e5b5ca024631f97
 Ideal to finite:
 Result = False
-Checksum = c1a7e74b4ddfeb576b210ebd21f1f4cc
+Checksum = 9464bf3edaf0e60e0e5b5ca024631f97
 Finite to ideal:
 Result = False
-Checksum = c1a7e74b4ddfeb576b210ebd21f1f4cc
+Checksum = 9464bf3edaf0e60e0e5b5ca024631f97
 Barycentric subdivision:
-Checksum = c1a7e74b4ddfeb576b210ebd21f1f4cc
+Checksum = 9464bf3edaf0e60e0e5b5ca024631f97
 Dehydration: aaa
+Isomorphism signature: a
 
 -------------------------------
 3-sphere
@@ -73,7 +74,7 @@ Dehydration: aaa
 
 Size of the skeleton:
   Tetrahedra: 1
-  Faces: 2
+  Triangles: 2
   Edges: 2
   Vertices: 1
 
@@ -92,7 +93,7 @@ Edges:
   -----+--------------------------------
     0  |           0   1   1   1   1   1
 
-Faces:
+Triangles:
   Tet  |  face:  012 013 023 123
   -----+------------------------
     0  |           0   0   1   1
@@ -101,7 +102,7 @@ Faces:
 1 components
 0 boundary components
 1 tetrahedra
-2 faces
+2 triangles
 2 edges
 1 vertices
 2-sphere boundaries: False
@@ -110,7 +111,7 @@ EC: 0
 Valid: True
 Ideal: False
 Standard: True
-Boundary Faces: False
+Boundary Triangles: False
 Closed: True
 Orientable: True
 Connected: True
@@ -130,16 +131,17 @@ TV(5, 3): 0.36180
 Splitting surface: False
 3-sphere: True
 Double cover:
-Checksum = 2f7895e707a28e5375ed56c64147367b
+Checksum = 317dfe735a1e7823eae845090ca36961
 Ideal to finite:
 Result = False
-Checksum = 09623473001ae40a0e6ac8e55b69d868
+Checksum = ea54199695677841d8d09fe63c2293db
 Finite to ideal:
 Result = False
-Checksum = 09623473001ae40a0e6ac8e55b69d868
+Checksum = ea54199695677841d8d09fe63c2293db
 Barycentric subdivision:
-Checksum = b446e8c8cb48e6f51456e9a5fdafa50a
+Checksum = e0164804925906d676b6730e9a826fb5
 Dehydration: baaaafr
+Isomorphism signature: bkaagj
 
 -------------------------------
 S2 x S1
@@ -147,7 +149,7 @@ S2 x S1
 
 Size of the skeleton:
   Tetrahedra: 2
-  Faces: 4
+  Triangles: 4
   Edges: 3
   Vertices: 1
 
@@ -169,7 +171,7 @@ Edges:
     0  |           0   1   0   0   1   2
     1  |           2   1   0   0   1   0
 
-Faces:
+Triangles:
   Tet  |  face:  012 013 023 123
   -----+------------------------
     0  |           0   0   1   2
@@ -179,7 +181,7 @@ Faces:
 1 components
 0 boundary components
 2 tetrahedra
-4 faces
+4 triangles
 3 edges
 1 vertices
 2-sphere boundaries: False
@@ -188,7 +190,7 @@ EC: 0
 Valid: True
 Ideal: False
 Standard: True
-Boundary Faces: False
+Boundary Triangles: False
 Closed: True
 Orientable: True
 Connected: True
@@ -208,16 +210,17 @@ TV(5, 3): 1.00000
 Splitting surface: True
 3-sphere: False
 Double cover:
-Checksum = d852703aa595aeb07c7f11635083faca
+Checksum = cf5d179c2a078e7880139676423082bc
 Ideal to finite:
 Result = False
-Checksum = 77cc47ea6dc11dfd963066ff1d44cfc2
+Checksum = 40ca9f1375b168cb4ebd46dd51a7c29c
 Finite to ideal:
 Result = False
-Checksum = 77cc47ea6dc11dfd963066ff1d44cfc2
+Checksum = 40ca9f1375b168cb4ebd46dd51a7c29c
 Barycentric subdivision:
-Checksum = 661e48c09c441ef824e5121b136e5ed4
+Checksum = d734e4b7c67118292fb622df76daa555
 Dehydration: cabbabxff
+Isomorphism signature: cMcabbjaj
 
 -------------------------------
 RP2 x S1
@@ -225,7 +228,7 @@ RP2 x S1
 
 Size of the skeleton:
   Tetrahedra: 3
-  Faces: 6
+  Triangles: 6
   Edges: 4
   Vertices: 1
 
@@ -250,7 +253,7 @@ Edges:
     1  |           2   3   0   0   3   2
     2  |           2   1   0   2   3   0
 
-Faces:
+Triangles:
   Tet  |  face:  012 013 023 123
   -----+------------------------
     0  |           0   1   2   3
@@ -261,7 +264,7 @@ Faces:
 1 components
 0 boundary components
 3 tetrahedra
-6 faces
+6 triangles
 4 edges
 1 vertices
 2-sphere boundaries: False
@@ -270,7 +273,7 @@ EC: 0
 Valid: True
 Ideal: False
 Standard: True
-Boundary Faces: False
+Boundary Triangles: False
 Closed: True
 Orientable: False
 Connected: True
@@ -291,16 +294,17 @@ TV(5, 3): 1.00000
 Splitting surface: True
 3-sphere: False
 Double cover:
-Checksum = 1ff24d9e17c01acdffc964898d3e16b3
+Checksum = 4f02146728fbd90f0fe371894106742e
 Ideal to finite:
 Result = False
-Checksum = 3c61777c3f6c28c3cec17c645630c186
+Checksum = 620f4fbabce53015a3e638a8141499c7
 Finite to ideal:
 Result = False
-Checksum = 3c61777c3f6c28c3cec17c645630c186
+Checksum = 620f4fbabce53015a3e638a8141499c7
 Barycentric subdivision:
-Checksum = 9c47aaba0413fac23c5a16ca8dfb071b
+Checksum = dabb1c5a0387261e1a2c63959f39d429
 Dehydration: dadbcccfxfh
+Isomorphism signature: dLQbcccajqs
 
 -------------------------------
 RP3 # RP3
@@ -308,7 +312,7 @@ RP3 # RP3
 
 Size of the skeleton:
   Tetrahedra: 4
-  Faces: 8
+  Triangles: 8
   Edges: 5
   Vertices: 1
 
@@ -336,7 +340,7 @@ Edges:
     2  |           0   3   3   3   3   0
     3  |           4   3   3   1   1   0
 
-Faces:
+Triangles:
   Tet  |  face:  012 013 023 123
   -----+------------------------
     0  |           0   1   2   0
@@ -348,7 +352,7 @@ Faces:
 1 components
 0 boundary components
 4 tetrahedra
-8 faces
+8 triangles
 5 edges
 1 vertices
 2-sphere boundaries: False
@@ -357,7 +361,7 @@ EC: 0
 Valid: True
 Ideal: False
 Standard: True
-Boundary Faces: False
+Boundary Triangles: False
 Closed: True
 Orientable: True
 Connected: True
@@ -378,16 +382,17 @@ TV(5, 3): 0.00000
 Splitting surface: True
 3-sphere: False
 Double cover:
-Checksum = 102c2bf34173f4bc6de5ee6d458a8668
+Checksum = 706db5ff6c6f2612538856b5447fa663
 Ideal to finite:
 Result = False
-Checksum = ea5975299810a07ec66bd29b43f3ded6
+Checksum = 0002c628225f24640b937843963c7903
 Finite to ideal:
 Result = False
-Checksum = ea5975299810a07ec66bd29b43f3ded6
+Checksum = 0002c628225f24640b937843963c7903
 Barycentric subdivision:
-Checksum = 1b474be3d2812bfbe231d886f9f401c5
+Checksum = 0c749bee87a756282056cfba87c16467
 Dehydration: eaoabcddgrwxg
+Isomorphism signature: eLMkabcddbrrag
 
 -------------------------------
 L(8,3)
@@ -395,7 +400,7 @@ L(8,3)
 
 Size of the skeleton:
   Tetrahedra: 2
-  Faces: 4
+  Triangles: 4
   Edges: 3
   Vertices: 1
 
@@ -417,7 +422,7 @@ Edges:
     0  |           0   0   1   1   0   2
     1  |           0   1   2   2   1   2
 
-Faces:
+Triangles:
   Tet  |  face:  012 013 023 123
   -----+------------------------
     0  |           0   0   1   2
@@ -427,7 +432,7 @@ Faces:
 1 components
 0 boundary components
 2 tetrahedra
-4 faces
+4 triangles
 3 edges
 1 vertices
 2-sphere boundaries: False
@@ -436,7 +441,7 @@ EC: 0
 Valid: True
 Ideal: False
 Standard: True
-Boundary Faces: False
+Boundary Triangles: False
 Closed: True
 Orientable: True
 Connected: True
@@ -456,16 +461,17 @@ TV(5, 3): 0.27639
 Splitting surface: True
 3-sphere: False
 Double cover:
-Checksum = 13d9515f1fee9b12d3cf31a890eb3a21
+Checksum = a1428e55771e39f41bbbd775c7710a5a
 Ideal to finite:
 Result = False
-Checksum = 365925df587e1bee6a71b30ba5644945
+Checksum = 1b5b09643b8642fe91a3e16fe0ed2ce5
 Finite to ideal:
 Result = False
-Checksum = 365925df587e1bee6a71b30ba5644945
+Checksum = 1b5b09643b8642fe91a3e16fe0ed2ce5
 Barycentric subdivision:
-Checksum = c4c67270625f70d49e7f997157ee0377
+Checksum = 01a9501578db9617cf51b4340ce9237b
 Dehydration: cabbabakn
+Isomorphism signature: cMcabbjqs
 
 -------------------------------
 Poincare homology sphere
@@ -473,7 +479,7 @@ Poincare homology sphere
 
 Size of the skeleton:
   Tetrahedra: 5
-  Faces: 10
+  Triangles: 10
   Edges: 6
   Vertices: 1
 
@@ -504,7 +510,7 @@ Edges:
     3  |           3   5   1   2   4   0
     4  |           5   2   4   3   0   1
 
-Faces:
+Triangles:
   Tet  |  face:  012 013 023 123
   -----+------------------------
     0  |           0   1   2   3
@@ -517,7 +523,7 @@ Faces:
 1 components
 0 boundary components
 5 tetrahedra
-10 faces
+10 triangles
 6 edges
 1 vertices
 2-sphere boundaries: False
@@ -526,7 +532,7 @@ EC: 0
 Valid: True
 Ideal: False
 Standard: True
-Boundary Faces: False
+Boundary Triangles: False
 Closed: True
 Orientable: True
 Connected: True
@@ -547,16 +553,17 @@ TV(5, 3): 0.05279
 Splitting surface: False
 3-sphere: False
 Double cover:
-Checksum = c7b1db4c44bde8b90bb0b1b9a3ba0964
+Checksum = 61da5cbdf32d41d6bfac238989de5e8c
 Ideal to finite:
 Result = False
-Checksum = a74b096797659437a04bc115230f7217
+Checksum = 755447660aded2889a506e9aef0a861c
 Finite to ideal:
 Result = False
-Checksum = a74b096797659437a04bc115230f7217
+Checksum = 755447660aded2889a506e9aef0a861c
 Barycentric subdivision:
-Checksum = 97a01feced74de19702894894467c700
+Checksum = 46e4583ce6543c41e2e3ee615b51582a
 Dehydration: fapaadecedenbokbo
+Isomorphism signature: fvPQcdecedekrsnrs
 
 -------------------------------
 Closed orientable hyperbolic 3-manifold
@@ -564,7 +571,7 @@ Closed orientable hyperbolic 3-manifold
 
 Size of the skeleton:
   Tetrahedra: 9
-  Faces: 18
+  Triangles: 18
   Edges: 10
   Vertices: 1
 
@@ -607,7 +614,7 @@ Edges:
     7  |           7   9   9   3   4   5
     8  |           1   0   2   3   6   1
 
-Faces:
+Triangles:
   Tet  |  face:  012 013 023 123
   -----+------------------------
     0  |           0   1   2   3
@@ -624,7 +631,7 @@ Faces:
 1 components
 0 boundary components
 9 tetrahedra
-18 faces
+18 triangles
 10 edges
 1 vertices
 2-sphere boundaries: False
@@ -633,7 +640,7 @@ EC: 0
 Valid: True
 Ideal: False
 Standard: True
-Boundary Faces: False
+Boundary Triangles: False
 Closed: True
 Orientable: True
 Connected: True
@@ -652,16 +659,17 @@ H2Z2: 0 Z_2
 TV(5, 3): 0.50000
 3-sphere: False
 Double cover:
-Checksum = 4ddc4e873944154fe9b1f94dfec8a345
+Checksum = 4121790e1eeae4a50d76725831daaf2a
 Ideal to finite:
 Result = False
-Checksum = 19e316c983afbbd29dac724b05e2329d
+Checksum = 5c214df82829ae225a98312e4f6c6cca
 Finite to ideal:
 Result = False
-Checksum = 19e316c983afbbd29dac724b05e2329d
+Checksum = 5c214df82829ae225a98312e4f6c6cca
 Barycentric subdivision:
-Checksum = 58240b3fcf99d07831680635ef75afec
+Checksum = f60fb23b935ff5ef0d534561605b71e0
 Dehydration: jphaeaacfgehggiiialhaggjbvw
+Isomorphism signature: jLvAzQQcfeghighiiuquanobwwr
 
 -------------------------------
 Closed non-orientable hyperbolic 3-manifold
@@ -669,7 +677,7 @@ Closed non-orientable hyperbolic 3-manifold
 
 Size of the skeleton:
   Tetrahedra: 11
-  Faces: 22
+  Triangles: 22
   Edges: 12
   Vertices: 1
 
@@ -718,7 +726,7 @@ Edges:
     9  |           4  11   7  11   5   9
    10  |           5   9   1  11   9   7
 
-Faces:
+Triangles:
   Tet  |  face:  012 013 023 123
   -----+------------------------
     0  |           0   1   2   3
@@ -737,7 +745,7 @@ Faces:
 1 components
 0 boundary components
 11 tetrahedra
-22 faces
+22 triangles
 12 edges
 1 vertices
 2-sphere boundaries: False
@@ -746,7 +754,7 @@ EC: 0
 Valid: True
 Ideal: False
 Standard: True
-Boundary Faces: False
+Boundary Triangles: False
 Closed: True
 Orientable: False
 Connected: True
@@ -765,16 +773,17 @@ H2Z2: 1 Z_2
 TV(5, 3): 2.61803
 3-sphere: False
 Double cover:
-Checksum = 386e2eacd3992134c955fd4d10e7fe5c
+Checksum = 966434332bc1c54b7b42aa8a4b738ca0
 Ideal to finite:
 Result = False
-Checksum = a7ec1f51412eb015b5846acf97caa35e
+Checksum = 6e31638cca83e125d11ba3cbbca478d6
 Finite to ideal:
 Result = False
-Checksum = a7ec1f51412eb015b5846acf97caa35e
+Checksum = 6e31638cca83e125d11ba3cbbca478d6
 Barycentric subdivision:
-Checksum = c10fa4a18e32f1d34f1a6d4a30714fce
+Checksum = 7a443b6136d4c93ed20d0dc7b697d40d
 Dehydration: lpdalaebciijhijjkkkknbxnxrhckje
+Isomorphism signature: lLLLALAQccegffiijkikkkknawmhvwcls
 
 -------------------------------
 Layered solid torus
@@ -782,7 +791,7 @@ Layered solid torus
 
 Size of the skeleton:
   Tetrahedra: 3
-  Faces: 7
+  Triangles: 7
   Edges: 5
   Vertices: 1
 
@@ -807,7 +816,7 @@ Edges:
     1  |           1   2   3   3   2   4
     2  |           2   4   3   3   4   3
 
-Faces:
+Triangles:
   Tet  |  face:  012 013 023 123
   -----+------------------------
     0  |           0   1   2   3
@@ -818,7 +827,7 @@ Faces:
 1 components
 1 boundary components
 3 tetrahedra
-7 faces
+7 triangles
 5 edges
 1 vertices
 2-sphere boundaries: False
@@ -827,7 +836,7 @@ EC: 0
 Valid: True
 Ideal: False
 Standard: True
-Boundary Faces: True
+Boundary Triangles: True
 Closed: False
 Orientable: True
 Connected: True
@@ -846,16 +855,17 @@ H2Z2: 0 Z_2
 Splitting surface: True
 3-sphere: False
 Double cover:
-Checksum = a22a31ecaa1076b4d372ad7de1d73b62
+Checksum = 6ed1aefdf98e978635444f8a08b8ccf3
 Ideal to finite:
 Result = False
-Checksum = c1ef1d6a96f66f6a35fce3c30185ccb6
+Checksum = b8f13c90570ff1c969319ed7c6de977f
 Finite to ideal:
 Result = True
-Checksum = ecf22caff6842258edd3122a4a2c93d6
+Checksum = 662b84caee7f99a6cd6d1d961b94276a
 Barycentric subdivision:
-Checksum = ae983a2971bbee488b541815c5c73949
+Checksum = 0f8aa5be7cb6025d061abc009e381517
 Dehydration: 
+Isomorphism signature: dHKcbcchqn
 
 -------------------------------
 Solid Klein bottle
@@ -863,7 +873,7 @@ Solid Klein bottle
 
 Size of the skeleton:
   Tetrahedra: 3
-  Faces: 8
+  Triangles: 8
   Edges: 7
   Vertices: 2
 
@@ -888,7 +898,7 @@ Edges:
     1  |           2   3   5   0   3   4
     2  |           2   6   5   4   3   5
 
-Faces:
+Triangles:
   Tet  |  face:  012 013 023 123
   -----+------------------------
     0  |           0   1   2   3
@@ -899,7 +909,7 @@ Faces:
 1 components
 1 boundary components
 3 tetrahedra
-8 faces
+8 triangles
 7 edges
 2 vertices
 2-sphere boundaries: False
@@ -908,7 +918,7 @@ EC: 0
 Valid: True
 Ideal: False
 Standard: True
-Boundary Faces: True
+Boundary Triangles: True
 Closed: False
 Orientable: False
 Connected: True
@@ -927,16 +937,17 @@ H2Z2: 0 Z_2
 Splitting surface: True
 3-sphere: False
 Double cover:
-Checksum = a10b1b332eb22191ed584b3158ba78fb
+Checksum = caf1078703410ed2f48b7c438475f9cc
 Ideal to finite:
 Result = False
-Checksum = a6f41af929758e372729fd08c0755acb
+Checksum = 6a3e2c60c14c300c6ae9ed34b6a4de5d
 Finite to ideal:
 Result = True
-Checksum = c63735d8a22c7c321fe7274d04db42f6
+Checksum = a10e921c5e39ebb3c3cb2b04343901fc
 Barycentric subdivision:
-Checksum = 547d3b13e41602200e65f92848b83f3f
+Checksum = 603234877351a96b23e2c5a24d8bfcd5
 Dehydration: 
+Isomorphism signature: dHKabcjj
 
 -------------------------------
 Figure eight knot complement
@@ -944,7 +955,7 @@ Figure eight knot complement
 
 Size of the skeleton:
   Tetrahedra: 2
-  Faces: 4
+  Triangles: 4
   Edges: 2
   Vertices: 1
 
@@ -966,7 +977,7 @@ Edges:
     0  |           0   1   0   0   1   1
     1  |           0   1   0   0   1   1
 
-Faces:
+Triangles:
   Tet  |  face:  012 013 023 123
   -----+------------------------
     0  |           0   1   2   3
@@ -976,7 +987,7 @@ Faces:
 1 components
 1 boundary components
 2 tetrahedra
-4 faces
+4 triangles
 2 edges
 1 vertices
 2-sphere boundaries: False
@@ -985,7 +996,7 @@ EC: 1
 Valid: True
 Ideal: True
 Standard: True
-Boundary Faces: False
+Boundary Triangles: False
 Closed: False
 Orientable: True
 Connected: True
@@ -1004,16 +1015,17 @@ H2Z2: 0 Z_2
 Splitting surface: False
 3-sphere: False
 Double cover:
-Checksum = 96e2fb429e6e46193746d624396af7a8
+Checksum = 44863d8cc092d706d2a4a79e5d22e95c
 Ideal to finite:
 Result = True
-Checksum = 64800e1f108c6bc3bafdde1709c49383
+Checksum = 93f23779dca5e76e0609fd3be2d2c054
 Finite to ideal:
 Result = False
-Checksum = 08d641e0fe4ff548dbdfb02031e320fc
+Checksum = 4edde99de04c5dcfad10a06f5cedc739
 Barycentric subdivision:
-Checksum = 8dd6591984a8af98f95534bc9f5bb079
+Checksum = bda7fc236c56fc2e81d76cbc6c6ef128
 Dehydration: cabbbbaei
+Isomorphism signature: cPcbbbiht
 
 -------------------------------
 Whitehead link complement
@@ -1021,7 +1033,7 @@ Whitehead link complement
 
 Size of the skeleton:
   Tetrahedra: 4
-  Faces: 8
+  Triangles: 8
   Edges: 4
   Vertices: 2
 
@@ -1049,7 +1061,7 @@ Edges:
     2  |           3   2   1   2   2   0
     3  |           3   1   1   2   1   0
 
-Faces:
+Triangles:
   Tet  |  face:  012 013 023 123
   -----+------------------------
     0  |           0   1   2   3
@@ -1061,7 +1073,7 @@ Faces:
 1 components
 2 boundary components
 4 tetrahedra
-8 faces
+8 triangles
 4 edges
 2 vertices
 2-sphere boundaries: False
@@ -1070,7 +1082,7 @@ EC: 2
 Valid: True
 Ideal: True
 Standard: True
-Boundary Faces: False
+Boundary Triangles: False
 Closed: False
 Orientable: True
 Connected: True
@@ -1089,16 +1101,17 @@ H2Z2: 1 Z_2
 Splitting surface: True
 3-sphere: False
 Double cover:
-Checksum = dce3f2c9ebfdb986b1e59522ce9f3920
+Checksum = 5ff7d3d8dd0d3a0db8d7be380b1250e5
 Ideal to finite:
 Result = True
-Checksum = 12af1542c0fd3ec32cbee8267270f2a0
+Checksum = 6d55b6a76dcfadd7c70f723aaf2bf854
 Finite to ideal:
 Result = False
-Checksum = 2fca5a52a127650c59154702e59f4f8a
+Checksum = 09d1b717f53c4b5ed2e0830ae5c0546e
 Barycentric subdivision:
-Checksum = ab19adf1184a650ea8cec1a095bf38f4
+Checksum = 4de185703ab91348be749ad473353faa
 Dehydration: eahbdcddqwwwr
+Isomorphism signature: eLPkbdcddhgggb
 
 -------------------------------
 Gieseking manifold
@@ -1106,7 +1119,7 @@ Gieseking manifold
 
 Size of the skeleton:
   Tetrahedra: 1
-  Faces: 2
+  Triangles: 2
   Edges: 1
   Vertices: 1
 
@@ -1125,7 +1138,7 @@ Edges:
   -----+--------------------------------
     0  |           0   0   0   0   0   0
 
-Faces:
+Triangles:
   Tet  |  face:  012 013 023 123
   -----+------------------------
     0  |           0   0   1   1
@@ -1134,7 +1147,7 @@ Faces:
 1 components
 1 boundary components
 1 tetrahedra
-2 faces
+2 triangles
 1 edges
 1 vertices
 2-sphere boundaries: False
@@ -1143,7 +1156,7 @@ EC: 1
 Valid: True
 Ideal: True
 Standard: True
-Boundary Faces: False
+Boundary Triangles: False
 Closed: False
 Orientable: False
 Connected: True
@@ -1162,16 +1175,17 @@ H2Z2: 0 Z_2
 Splitting surface: False
 3-sphere: False
 Double cover:
-Checksum = c7d244e50cc72e2af6d3336c34cf47f6
+Checksum = 5327d4c09735697963ec732043efe2a8
 Ideal to finite:
 Result = True
-Checksum = 0c5dc34f8f2280aa37cd0f4aa009fc36
+Checksum = 9ba6c57794b9ee9ccbeee30c7b3e2f87
 Finite to ideal:
 Result = False
-Checksum = 8676206277f68c6dfbaf60231699a0ad
+Checksum = 0ddb056ffd7b88c4aa375e8b9527fc32
 Barycentric subdivision:
-Checksum = b7fd53d2ca36043accb5f0c52a564785
+Checksum = fb0071b97f7c146d71d8f3d6a3d3fa87
 Dehydration: baaaatl
+Isomorphism signature: bkaaid
 
 -------------------------------
 Cusped genus two solid torus
@@ -1179,7 +1193,7 @@ Cusped genus two solid torus
 
 Size of the skeleton:
   Tetrahedra: 10
-  Faces: 20
+  Triangles: 20
   Edges: 10
   Vertices: 2
 
@@ -1225,7 +1239,7 @@ Edges:
     8  |           2   8   9   7   9   9
     9  |           2   6   9   4   9   9
 
-Faces:
+Triangles:
   Tet  |  face:  012 013 023 123
   -----+------------------------
     0  |           0   1   2   3
@@ -1243,7 +1257,7 @@ Faces:
 1 components
 1 boundary components
 10 tetrahedra
-20 faces
+20 triangles
 10 edges
 2 vertices
 2-sphere boundaries: False
@@ -1252,7 +1266,7 @@ EC: 2
 Valid: True
 Ideal: True
 Standard: False
-Boundary Faces: False
+Boundary Triangles: False
 Closed: False
 Orientable: True
 Connected: True
@@ -1269,14 +1283,15 @@ H2: 0
 H2Z2: 0 Z_2
 3-sphere: False
 Double cover:
-Checksum = 46d5f248b07a98c96b4f08f9df84b874
+Checksum = 48838c440cda8df3e48fc6300001ac44
 Ideal to finite:
 Result = True
-Checksum = efcb1241c7e6fbeabc6633e3ea326ebc
+Checksum = 694bbcbc248853716ec7404da3f2f353
 Finite to ideal:
 Result = False
-Checksum = e3bea259a8e5a0b3814f600e881b2226
+Checksum = ea04ca407e32632bb01d5a8d6294f27b
 Barycentric subdivision:
-Checksum = bcc1ad020054e142d4a38379e123290d
+Checksum = b23b35053b4cfebaf1ce52bd52d11e19
 Dehydration: kdpahaacdhhjjggiijojuxxjvfojj
+Isomorphism signature: kLLvMMQkccghfihhjjjdwawwgggxxt
 

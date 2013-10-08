@@ -1,7 +1,9 @@
 # angle
 
 # Files to compile
-SET ( FILES nanglestructurelist )
+SET ( FILES
+  nanglestructurelist
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

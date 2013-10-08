@@ -59,8 +59,8 @@ class NSnappedBall;
 /**
  * Represents a 2-sphere made from two snapped 3-balls in a triangulation.
  * This occurs when two snapped 3-balls are glued together at their
- * equators (note that this gluing does not have to extend to faces).  Each
- * 3-ball has a central disc (bounded by the 3-ball's equator and bisecting
+ * equators (note that this gluing does not have to extend to triangular faces).
+ * Each 3-ball has a central disc (bounded by the 3-ball's equator and bisecting
  * its internal edge), and these two discs together form an embedded
  * 2-sphere in the triangulation.
  *

@@ -1,7 +1,9 @@
 # subcomplex
 
 # Files to compile
-SET ( FILES nstandardtriangulation )
+SET ( FILES
+  nstandardtriangulation
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

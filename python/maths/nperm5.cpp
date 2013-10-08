@@ -83,6 +83,7 @@ void addNPerm5() {
         .def("trunc4", &NPerm5::trunc4)
         .def("S5Index", &NPerm5::S5Index)
         .def("orderedS5Index", &NPerm5::orderedS5Index)
+        .def("orderedSnIndex", &NPerm5::orderedS5Index)
         .def("__str__", &NPerm5::toString)
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
@@ -91,6 +92,7 @@ void addNPerm5() {
     s.attr("S5") = &NPerm5_S5_arr;
     s.attr("Sn") = &NPerm5_S5_arr;
     s.attr("orderedS5") = &NPerm5_orderedS5_arr;
+    s.attr("orderedSn") = &NPerm5_orderedS5_arr;
     s.attr("invS5") = &NPerm5_invS5_arr;
     s.attr("S4") = &NPerm5_S4_arr;
     s.attr("Sn_1") = &NPerm5_S4_arr;

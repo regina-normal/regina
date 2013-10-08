@@ -386,7 +386,7 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                     error = true;
             }
 
-            // Finally check the internal face of the plug.
+            // Finally check the internal triangle of the plug.
             if (! error) {
                 if (plugTet[0][0]->adjacentTetrahedron(realPlugRoles[0][3])
                         != plugTet[0][1])
