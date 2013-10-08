@@ -242,7 +242,7 @@ void Dim4TriSkelCompUI::viewVertices() {
     // Because we pass this as parent to the new window, we are
     // guaranteed that the window will be closed and deleted
     // automatically if the packet pane is closed.
-    // Similarly for edges, faces, etc.
+    // Similarly for edges, triangles, etc.
     SkeletonWindow* win = new SkeletonWindow(this, new Dim4VertexModel(tri));
     win->show();
     viewers.append(win);
