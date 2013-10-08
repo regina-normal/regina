@@ -870,7 +870,7 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the index of the specified face, where 0 is the first
          * face, 1 is the second and so on.
          */
-        long faceIndex(const NFace* face) const;
+        long triangleIndex(const NFace* face) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -3493,7 +3493,7 @@ inline long NTriangulation::edgeIndex(const NEdge* edge) const {
     return edge->markedIndex();
 }
 
-inline long NTriangulation::faceIndex(const NFace* face) const {
+inline long NTriangulation::triangleIndex(const NFace* face) const {
     return face->markedIndex();
 }
 

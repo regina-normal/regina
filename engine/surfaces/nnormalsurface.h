@@ -575,7 +575,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * intersects the given face in the given direction.
          * See NNormalSurface::getFaceArcs() for further details.
          *
-         * @param faceIndex the index in the triangulation of the face
+         * @param triIndex the index in the triangulation of the face
          * in which we are interested; this should be between 0 and
          * NTriangulation::getNumberOfFaces()-1 inclusive.
          * @param faceVertex the vertex of the face (0, 1 or 2) around
@@ -585,7 +585,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of times this normal surface intersect the
          * given face with the given arc type.
          */
-        virtual NLargeInteger getFaceArcs(unsigned long faceIndex,
+        virtual NLargeInteger getFaceArcs(unsigned long triIndex,
             int faceVertex, NTriangulation* triang) const = 0;
 
         /**
@@ -893,7 +893,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * Returns the number of arcs in which this normal surface
          * intersects the given face in the given direction.
          *
-         * @param faceIndex the index in the triangulation of the face
+         * @param triIndex the index in the triangulation of the face
          * in which we are interested; this should be between 0 and
          * NTriangulation::getNumberOfFaces()-1 inclusive.
          * @param faceVertex the vertex of the face (0, 1 or 2) around
@@ -902,7 +902,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * @return the number of times this normal surface intersect the
          * given face with the given arc type.
          */
-        NLargeInteger getFaceArcs(unsigned long faceIndex,
+        NLargeInteger getFaceArcs(unsigned long triIndex,
             int faceVertex) const;
 
         /**
@@ -1598,9 +1598,9 @@ inline NLargeInteger NNormalSurface::getEdgeWeight(unsigned long edgeIndex)
         const {
     return vector->getEdgeWeight(edgeIndex, triangulation);
 }
-inline NLargeInteger NNormalSurface::getFaceArcs(unsigned long faceIndex,
+inline NLargeInteger NNormalSurface::getFaceArcs(unsigned long triIndex,
         int faceVertex) const {
-    return vector->getFaceArcs(faceIndex, faceVertex, triangulation);
+    return vector->getFaceArcs(triIndex, faceVertex, triangulation);
 }
 
 inline NDiscType NNormalSurface::getOctPosition() const {
