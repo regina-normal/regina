@@ -162,7 +162,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
 
     out << "Size of the skeleton:\n";
     out << "  Tetrahedra: " << tetrahedra.size() << '\n';
-    out << "  Faces: " << faces.size() << '\n';
+    out << "  Triangles: " << faces.size() << '\n';
     out << "  Edges: " << edges.size() << '\n';
     out << "  Vertices: " << vertices.size() << '\n';
     out << '\n';
@@ -225,7 +225,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
     }
     out << '\n';
 
-    out << "Faces:\n";
+    out << "Triangles:\n";
     out << "  Tet  |  face:  012 013 023 123\n";
     out << "  -----+------------------------\n";
     for (tetPos=0; tetPos<tetrahedra.size(); tetPos++) {

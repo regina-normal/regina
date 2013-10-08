@@ -106,7 +106,7 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
         NTetrahedron* tetrahedra[4];
             /**< Stores the tetrahedra glued to each face of this
                  tetrahedron.  Specifically, <tt>tetrahedra[f]</tt>
-                 represents the tetrahedron joined to face \c f
+                 represents the tetrahedron joined to triangular face \c f
                  of this tetrahedron, or is 0
                  if face \c f lies on the triangulation boundary.  Faces are
                  numbered from 0 to 3 inclusive, where face \c i is opposite
@@ -129,7 +129,7 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
             /**< Edges in the triangulation skeleton that are
                  edges of this tetrahedron. */
         NTriangle* faces[4];
-            /**< Faces in the triangulation skeleton that are
+            /**< Triangles in the triangulation skeleton that are
                  faces of this tetrahedron. */
 
         int tmpOrientation[4];

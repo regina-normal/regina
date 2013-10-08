@@ -60,7 +60,7 @@ void NTriangulation::calculateSkeleton() const {
     calculateComponents();
         // Sets components, orientable, NComponent.orientable,
         //     NTetrahedron.component
-    calculateFaces();
+    calculateTriangles();
         // Sets faces, NTriangle.component
     calculateVertices();
         // Sets vertices, NVertex.component, NVertex.linkOrientable.
@@ -368,7 +368,7 @@ void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
     }
 }
 
-void NTriangulation::calculateFaces() const {
+void NTriangulation::calculateTriangles() const {
     TetrahedronIterator it;
     int face;
     NTetrahedron* tet;
@@ -422,14 +422,14 @@ void NTriangulation::calculateBoundary() const {
             if (face->boundaryComponent == 0) {
                 label = new NBoundaryComponent();
                 label->orientable = true;
-                labelBoundaryFace(face, label);
+                labelBoundaryTriangle(face, label);
                 boundaryComponents.push_back(label);
                 face->component->boundaryComponents.push_back(label);
             }
     }
 }
 
-void NTriangulation::labelBoundaryFace(NTriangle* firstFace,
+void NTriangulation::labelBoundaryTriangle(NTriangle* firstFace,
         NBoundaryComponent* label) const {
     std::queue<NTriangle*> faceQueue;
     NTriangleEmbedding* emb;

@@ -118,7 +118,7 @@ class REGINA_API NTriangleEmbedding {
 
 /**
  * Represents a face in the skeleton of a triangulation.
- * Faces are highly temporary; once a triangulation changes, all its
+ * Triangles are highly temporary; once a triangulation changes, all its
  * face objects will be deleted and new ones will be created.
  */
 class REGINA_API NTriangle : public ShareableObject, public NMarkedElement {

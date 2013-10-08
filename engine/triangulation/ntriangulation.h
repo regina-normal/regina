@@ -89,7 +89,7 @@ class NXMLTriangulationReader;
  * tetrahedra, the cellular structure and all other properties
  * will be deallocated.
  *
- * Faces, edges, vertices and components are always temporary;
+ * Triangles, edges, vertices and components are always temporary;
  * whenever a change
  * occurs with the triangulation, these will be deleted and a new
  * skeletal structure will be calculated.  The same is true of various
@@ -3089,7 +3089,7 @@ class REGINA_API NTriangulation : public NPacket,
          * \warning This should only be called from within
          * calculateSkeleton().
          */
-        void calculateFaces() const;
+        void calculateTriangles() const;
         /**
          * Calculates the triangulation boundary components and
          * properties of these boundary components.
@@ -3098,7 +3098,7 @@ class REGINA_API NTriangulation : public NPacket,
          * calculateSkeleton().
          */
         void calculateBoundary() const;
-        void labelBoundaryFace(NTriangle*, NBoundaryComponent*) const;
+        void labelBoundaryTriangle(NTriangle*, NBoundaryComponent*) const;
             /**< Internal to calculateBoundary(). */
         /**
          * Calculates the triangulation vertex links and associated
