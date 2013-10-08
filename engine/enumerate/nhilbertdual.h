@@ -211,7 +211,7 @@ class NHilbertDual {
                  * @param dim the total dimension of the space (and
                  * therefore the toatl length of this vector).
                  */
-                inline VecSpec(unsigned dim);
+                inline VecSpec(size_t dim);
 
                 /**
                  * Creates the given unit vector.
@@ -223,7 +223,7 @@ class NHilbertDual {
                  * @param dim the total dimension of the space (and
                  * therefore the total length of this vector).
                  */
-                inline VecSpec(unsigned pos, unsigned dim);
+                inline VecSpec(size_t pos, size_t dim);
 
                 /**
                  * Creates a clone of the given vector.
@@ -455,14 +455,14 @@ inline NHilbertDual::NHilbertDual() {
 // Inline functions for NHilbertDual::VecSpec
 
 template <class BitmaskType>
-inline NHilbertDual::VecSpec<BitmaskType>::VecSpec(unsigned dim) :
+inline NHilbertDual::VecSpec<BitmaskType>::VecSpec(size_t dim) :
         NRay(dim), mask_(dim) {
     // All vector elements, nextHyp_ and srcNextHyp_ are initialised to
     // zero thanks to the NLargeInteger default constructor.
 }
 
 template <class BitmaskType>
-inline NHilbertDual::VecSpec<BitmaskType>::VecSpec(unsigned pos, unsigned dim) :
+inline NHilbertDual::VecSpec<BitmaskType>::VecSpec(size_t pos, size_t dim) :
         NRay(dim), mask_(dim) {
     // All coordinates are initialised to zero by default thanks to
     // the NLargeInteger constructor.

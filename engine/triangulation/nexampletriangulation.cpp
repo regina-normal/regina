@@ -180,7 +180,7 @@ NTriangulation* NExampleTriangulation::s2xs1() {
 
 NTriangulation* NExampleTriangulation::rp2xs1() {
     // Section 3.5.1 of Benjamin Burton's PhD thesis describes how to
-    // construct RP^2 x S^1 by identifying the boundary faces of a
+    // construct RP^2 x S^1 by identifying the boundary triangles of a
     // solid Klein bottle.
     NTriangulation* ans = solidKleinBottle();
     ans->setPacketLabel("RP2 x S1");
@@ -239,7 +239,7 @@ NTriangulation* NExampleTriangulation::weberSeifert() {
     // but the alternative is 23 lines of hard-coded tetrahedron gluings.
     //
     // This triangulation was constructed by building a 60-tetrahedron
-    // dodecahedron and identifying opposite faces with a 3/10 twist,
+    // dodecahedron and identifying opposite pentagonal faces with a 3/10 twist,
     // and then simplifying down to one vertex and 23 tetrahedra.
     ans->insertRehydration(
         "xppphocgaeaaahimmnkontspmuuqrsvuwtvwwxwjjsvvcxxjjqattdwworrko");

@@ -46,10 +46,10 @@ bool LPConstraintEuler::addRows(
     NPerm4 p;
     for (i = 0; i < 7 * tri->getNumberOfTetrahedra(); ++i)
         obj[i] = 1;
-    for (i = 0; i < tri->getNumberOfFaces(); ++i) {
+    for (i = 0; i < tri->getNumberOfTriangles(); ++i) {
         tet = tri->tetrahedronIndex(
-            tri->getFace(i)->getEmbedding(0).getTetrahedron());
-        p = tri->getFace(i)->getEmbedding(0).getVertices();
+            tri->getTriangle(i)->getEmbedding(0).getTetrahedron());
+        p = tri->getTriangle(i)->getEmbedding(0).getVertices();
         --obj[7 * tet + p[0]];
         --obj[7 * tet + p[1]];
         --obj[7 * tet + p[2]];
@@ -159,8 +159,8 @@ void BanBoundary::init(const int* columnPerm) {
             }
     }
 
-    // Ban triangles in tetrahedra that meet the boundary (but
-    // only those triangles that meet the boundary faces).
+    // Ban normal triangles in tetrahedra that meet the boundary (but
+    // only those normal triangles that meet the boundary faces).
     if (! quadOnly)
         for (i = 3 * n; i < 7 * n; ++i) {
             tet = columnPerm[i] / 7;
@@ -181,11 +181,11 @@ void BanTorusBoundary::init(const int* columnPerm) {
     unsigned tet, type, i, k;
 
     // Which boundary faces are we banning?
-    unsigned nFaces = tri_->getNumberOfFaces();
-    bool* banFace = new bool[nFaces];
-    std::fill(banFace, banFace + nFaces, false);
+    unsigned nTriangles = tri_->getNumberOfTriangles();
+    bool* banTriangle = new bool[nTriangles];
+    std::fill(banTriangle, banTriangle + nTriangles, false);
 
-    // Which vertex links are we marking triangles around?
+    // Which vertex links are we marking normal triangles around?
     unsigned nVertices = tri_->getNumberOfVertices();
     bool* markVtx = new bool[nVertices];
     std::fill(markVtx, markVtx + nVertices, false);
@@ -196,8 +196,8 @@ void BanTorusBoundary::init(const int* columnPerm) {
         if ((! bc->isIdeal()) && bc->isOrientable() &&
                 bc->getEulerCharacteristic() == 0) {
             // We've found a real torus boundary.
-            for (k = 0; k < bc->getNumberOfFaces(); ++k)
-                banFace[bc->getFace(k)->markedIndex()] = true;
+            for (k = 0; k < bc->getNumberOfTriangles(); ++k)
+                banTriangle[bc->getTriangle(k)->markedIndex()] = true;
             for (k = 0; k < bc->getNumberOfVertices(); ++k)
                 markVtx[bc->getVertex(k)->markedIndex()] = true;
         }
@@ -217,16 +217,16 @@ void BanTorusBoundary::init(const int* columnPerm) {
             tet = columnPerm[i] / 7;
 
         for (k = 0; k < 4; ++k)
-            if (banFace[tri_->getTetrahedron(tet)->getFace(k)->
+            if (banTriangle[tri_->getTetrahedron(tet)->getTriangle(k)->
                     markedIndex()]) {
                 banned_[i] = true;
                 break;
             }
     }
 
-    // Ban triangles that touch torus boundaries, and mark all
-    // triangles that surround vertices on torus boundaries
-    // (even if the triangles do not actually touch the boundary).
+    // Ban normal triangles that touch torus boundaries, and mark all
+    // normal triangles that surround vertices on torus boundaries
+    // (even if the normal triangles do not actually touch the boundary).
     if (! quadOnly)
         for (i = 3 * n; i < 7 * n; ++i) {
             tet = columnPerm[i] / 7;
@@ -238,14 +238,14 @@ void BanTorusBoundary::init(const int* columnPerm) {
 
             for (k = 0; k < 4; ++k)
                 if (k != type &&
-                        banFace[tri_->getTetrahedron(tet)->getFace(k)->
+                        banTriangle[tri_->getTetrahedron(tet)->getTriangle(k)->
                         markedIndex()]) {
                     banned_[i] = true;
                     break;
                 }
         }
 
-    delete[] banFace;
+    delete[] banTriangle;
     delete[] markVtx;
 }
 

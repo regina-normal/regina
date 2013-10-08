@@ -195,7 +195,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
         for (regionPos = 0; regionPos < 3; regionPos++) {
             // Construct the permutation from 0/1/2 markings on the
             // first saturated annulus boundary to 0/1/2 markings on the
-            // first boundary face above the layering.
+            // first boundary triangle above the layering.
             annulusToUpperLayer = NPerm4(regionPos, (regionPos + 1) % 3,
                 (regionPos + 2) % 3, 3);
 
@@ -249,7 +249,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
             // Better work out what we've got here.
 
             // Mapping from fibre/base curves (f0, o0) to upperAnnulus
-            // edges (first face: 01, first face: 02).
+            // edges (first triangle: 01, first triangle: 02).
             NMatrix2 curvesToUpperAnnulus(-1, 0, 0, 1);
 
             // Mapping from upperAnnulus edges (first: 01, first: 02) to

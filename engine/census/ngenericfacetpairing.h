@@ -45,8 +45,8 @@
 #include <iostream>
 #include <list>
 #include "regina-core.h"
-#include "triangulation/dimtraits.h"
-#include "triangulation/nfacetspec.h"
+#include "generic/dimtraits.h"
+#include "generic/nfacetspec.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nthread.h"
 

@@ -34,7 +34,7 @@
 
 #include <boost/python.hpp>
 #include "subcomplex/npillowtwosphere.h"
-#include "triangulation/nface.h"
+#include "triangulation/ntriangle.h"
 #include "triangulation/ntriangulation.h"
 
 using namespace boost::python;
@@ -48,7 +48,10 @@ void addNPillowTwoSphere() {
             return_value_policy<manage_new_object>())
         .def("getFace", &NPillowTwoSphere::getFace,
             return_value_policy<reference_existing_object>())
+        .def("getTriangle", &NPillowTwoSphere::getTriangle,
+            return_value_policy<reference_existing_object>())
         .def("getFaceMapping", &NPillowTwoSphere::getFaceMapping)
+        .def("getTriangleMapping", &NPillowTwoSphere::getTriangleMapping)
         .def("formsPillowTwoSphere", &NPillowTwoSphere::formsPillowTwoSphere,
             return_value_policy<manage_new_object>())
         .staticmethod("formsPillowTwoSphere")

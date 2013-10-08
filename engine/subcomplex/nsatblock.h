@@ -66,11 +66,11 @@ class NTriangulation;
  * (no fibres may enter or exit the boundary of the block).  In addition,
  * the boundary of this block must be a ring of saturated annuli, as
  * described by the NSatAnnulus class.  Aside from this ring of saturated
- * annuli, there may be no other boundary faces within the block.
+ * annuli, there may be no other boundary triangles within the block.
  *
  * The boundary annuli are numbered consecutively as illustrated below,
  * where the markings 0 and 1 within the triangles represent the first
- * and second face of each annulus (see the NSatAnnulus class notes for
+ * and second triangle of each annulus (see the NSatAnnulus class notes for
  * details).  Note that the following diagram is viewed from \e inside
  * the block.
  *
@@ -105,8 +105,8 @@ class NTriangulation;
  * annulus of which other block.  Adjacencies may be \e reflected, meaning
  * that the adjacent annulus has its fibres reversed (i.e., the adjacent
  * annulus has undergone an up-to-down reflection); they may also be
- * \e backwards, meaning that the first face of one annulus is joined to
- * the second face of the other (and vice versa).
+ * \e backwards, meaning that the first triangle of one annulus is joined to
+ * the second triangle of the other (and vice versa).
  *
  * \warning In addition to mandatory overrides such as clone() and
  * adjustSFS(), some subclasses will need to override the virtual
@@ -401,8 +401,8 @@ class REGINA_API NSatBlock : public ShareableObject {
          * of a boundary ring (i.e., it has no adjacent block).  This
          * routine will then return the next/previous annulus around from
          * this in the large boundary ring.  Here "next" means in the direction
-         * following from the second face of this annulus, and
-         * "previous" means in the direction following from the first face;
+         * following from the second triangle of this annulus, and
+         * "previous" means in the direction following from the first triangle;
          * the boolean argument \a followPrev controls which we will be used.
          * This next/previous annulus might belong to another block, or it
          * might even be this original annulus again.
@@ -419,10 +419,10 @@ class REGINA_API NSatBlock : public ShareableObject {
          * booleans are returned also.  The argument \a refVert will
          * describe whether the annulus is reflected vertically as it
          * appears within the large boundary ring (i.e., the first and
-         * second faces remain the same but the fibre direction is
+         * second triangles remain the same but the fibre direction is
          * reversed).  Similarly, the argument \a refHoriz will describe
          * whether the annulus is reflected horizontally as it appears
-         * within the large boundary ring (i.e., first and second faces
+         * within the large boundary ring (i.e., first and second triangles
          * are switched but the fibre direction is unchanged).
          *
          * It is possible that both a horizontal and vertical reflection

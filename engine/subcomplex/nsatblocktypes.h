@@ -61,10 +61,10 @@ class NLayeredSolidTorus;
  * This is a degenerate case of the layered solid torus (see the class
  * NSatLST), where instead of joining a solid torus to an annulus
  * boundary we join a Mobius band.  The Mobius band can be thought of as
- * a zero-tetrahedron solid torus with two boundary faces, which in fact
- * are opposite sides of the same face.  By attaching a zero-tetrahedron
+ * a zero-tetrahedron solid torus with two boundary triangles, which in fact
+ * are opposite sides of the same triangle.  By attaching a zero-tetrahedron
  * Mobius band to an annulus boundary, we are effectively joining the
- * two faces of the annulus together.
+ * two triangles of the annulus together.
  *
  * The meridinal disc of this zero-tetrahedron solid torus meets the
  * three edges of the annulus in 1, 1 and 2 places, so it is in fact
@@ -97,7 +97,7 @@ class REGINA_API NSatMobius : public NSatBlock {
          *
          * In the NSatAnnulus class notes, the three edges of the
          * annulus are denoted vertical, horizontal and boundary, and
-         * the vertices of each face are given markings 0, 1 and 2.
+         * the vertices of each triangle are given markings 0, 1 and 2.
          *
          * The return value of this routine takes the value 0, 1 or 2 as
          * follows:

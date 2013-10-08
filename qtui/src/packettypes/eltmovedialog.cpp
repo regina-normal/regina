@@ -38,8 +38,8 @@
 #include "reginasupport.h"
 #include "choosers/edgechooser.h"
 #include "choosers/edgeintchooser.h"
-#include "choosers/facechooser.h"
 #include "choosers/tetrahedronchooser.h"
+#include "choosers/trianglechooser.h"
 #include "choosers/vertexchooser.h"
 
 #include <QButtonGroup>
@@ -91,11 +91,11 @@ namespace {
         return e->getTriangulation()->twoOneMove(e, end, true, false);
     }
 
-    bool has23(regina::NFace* f) {
+    bool has23(regina::NTriangle* f) {
         return f->getTriangulation()->twoThreeMove(f, true, false);
     }
 
-    bool hasOpenBook(regina::NFace* f) {
+    bool hasOpenBook(regina::NTriangle* f) {
         return f->getTriangulation()->openBook(f, true, false);
     }
 
@@ -127,7 +127,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "triangulation.<p>"
         "A <i>3-2 move</i> involves replacing three tetrahedra joined along "
         "an edge of degree three with two tetrahedra joined along a "
-        "single face.<p>"
+        "single triangle.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(use32, 0, 0);
@@ -135,7 +135,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
     use23->setWhatsThis( tr("<qt>Perform a 2-3 move on this "
         "triangulation.<p>"
         "A <i>2-3 move</i> involves replacing two tetrahedra joined along "
-        "a single face with three tetrahedra joined along an edge of "
+        "a single triangle with three tetrahedra joined along an edge of "
         "degree three.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
@@ -177,10 +177,11 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
     useOpenBook = new QRadioButton(tr("&Open book"), this);
     useOpenBook->setWhatsThis( tr("<qt>Perform a book opening "
         "move on this triangulation.<p>"
-        "A <i>book opening move</i> involves taking an internal face that "
+        "A <i>book opening move</i> involves taking an internal triangle that "
         "meets the boundary of the triangulation along at least one edge "
-        "and ungluing the tetrahedra along that face, thereby &quot;opening "
-        "out&quot; that face and exposing two more tetrahedron faces to "
+        "and ungluing the tetrahedra along that triangle, "
+        "thereby &quot;opening "
+        "out&quot; that triangle and exposing two more tetrahedron faces to "
         "the boundary.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
@@ -189,7 +190,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
     useCloseBook->setWhatsThis( tr("<qt>Perform a book closing "
         "move on this triangulation.<p>"
         "A <i>book closing move</i> involves taking an edge on the boundary "
-        "of the triangulation and folding together the two boundary faces "
+        "of the triangulation and folding together the two boundary triangles "
         "on either side.  The aim of this move is to simplify the boundary "
         "of the triangulation.<p>"
         "Only moves that do not change the underlying 3-manifold are "
@@ -200,7 +201,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "move on this triangulation.<p>"
         "A <i>boundary shelling move</i> simply involves removing a "
         "tetrahedron that meets the triangulation boundary along one or "
-        "more faces.<p>"
+        "more of its faces.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(useShellBdry, 8, 0);
@@ -209,7 +210,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "triangulation.<p>"
         "<i>Collapsing an edge</i> involves taking an edge between two "
         "distinct vertices and collapsing that edge to a point.  Any "
-        "tetrahedra containing that edge will be flattened into faces.<p>"
+        "tetrahedra containing that edge will be flattened into triangles.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(useCollapseEdge, 9, 0);
@@ -222,10 +223,10 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box32, 0, 1);
-    box23 = new FaceChooser(tri, &has23, this, false);
-    box23->setWhatsThis( tr("<qt>Select the face about which "
-        "the 2-3 move will be performed.  The face numbers in this list "
-        "correspond to the face numbers seen when viewing the "
+    box23 = new TriangleChooser(tri, &has23, this, false);
+    box23->setWhatsThis( tr("<qt>Select the triangle about which "
+        "the 2-3 move will be performed.  The triangle numbers in this list "
+        "correspond to the triangle numbers seen when viewing the "
         "triangulation skeleton.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
@@ -266,10 +267,10 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box21, 5, 1);
-    boxOpenBook = new FaceChooser(tri, &hasOpenBook, this, false);
-    boxOpenBook->setWhatsThis( tr("<qt>Select the internal face "
-        "that should be opened out.  The face numbers in this list "
-        "correspond to the face numbers seen when viewing the "
+    boxOpenBook = new TriangleChooser(tri, &hasOpenBook, this, false);
+    boxOpenBook->setWhatsThis( tr("<qt>Select the internal triangle "
+        "that should be opened out.  The triangle numbers in this list "
+        "correspond to the triangle numbers seen when viewing the "
         "triangulation skeleton.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
@@ -340,7 +341,7 @@ void EltMoveDialog::clicked(QAbstractButton* btn) {
         if (e)
             tri->threeTwoMove(e);
     } else if (use23->isChecked()) {
-        regina::NFace* f = box23->selected();
+        regina::NTriangle* f = box23->selected();
         if (f)
             tri->twoThreeMove(f);
     } else if (use44->isChecked()) {
@@ -360,7 +361,7 @@ void EltMoveDialog::clicked(QAbstractButton* btn) {
         if (s.first)
             tri->twoOneMove(s.first, s.second);
     } else if (useOpenBook->isChecked()) {
-        regina::NFace* f = boxOpenBook->selected();
+        regina::NTriangle* f = boxOpenBook->selected();
         if (f)
             tri->openBook(f);
     } else if (useCloseBook->isChecked()) {
