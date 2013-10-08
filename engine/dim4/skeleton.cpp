@@ -674,12 +674,12 @@ void Dim4Triangulation::calculateBoundary() const {
         // Now run through the vertices, edges and triangles of the
         // 3-manifold triangulation and insert the corresponding 4-D
         // objects into the boundary component lists in the *same* order.
-        for (NTriangulation::FaceIterator it =
-                label->boundary_->getFaces().begin();
-                it != label->boundary_->getFaces().end(); ++it) {
-            const NFaceEmbedding& emb = (*it)->getEmbedding(0);
+        for (NTriangulation::TriangleIterator it =
+                label->boundary_->getTriangles().begin();
+                it != label->boundary_->getTriangles().end(); ++it) {
+            const NTriangleEmbedding& emb = (*it)->getEmbedding(0);
             tet = label->tetrahedra_[emb.getTetrahedron()->markedIndex()];
-            label->triangles_.push_back(tet->getTriangle(emb.getFace()));
+            label->triangles_.push_back(tet->getTriangle(emb.getTriangle()));
         }
         for (NTriangulation::EdgeIterator it =
                 label->boundary_->getEdges().begin();
@@ -771,7 +771,7 @@ void Dim4Triangulation::calculateVertexLinks() const {
     for (vit = vertices_.begin(); vit != vertices_.end(); ++vit) {
         vertex = *vit;
 
-        if (vertex->link_->hasBoundaryFaces()) {
+        if (vertex->link_->hasBoundaryTriangles()) {
             // It's a 3-ball or nothing.
             if ((! knownSimpleLinks_) && ! vertex->link_->isBall()) {
                 valid_ = vertex->valid_ = false;

@@ -1,7 +1,9 @@
 # progress
 
 # Files to compile
-SET ( FILES nprogresstypes)
+SET ( FILES
+  nprogresstypes
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
@@ -12,5 +14,10 @@ ENDFOREACH(SOURCE_FILE)
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
-  INSTALL(FILES nprogress.h nprogressmanager.h nprogresstypes.h nprogresstracker.h DESTINATION ${INCLUDEDIR}/progress COMPONENT Development)
+  INSTALL(FILES
+    nprogress.h
+    nprogressmanager.h
+    nprogresstypes.h
+    nprogresstracker.h
+    DESTINATION ${INCLUDEDIR}/progress COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

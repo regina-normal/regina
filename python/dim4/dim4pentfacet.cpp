@@ -33,7 +33,7 @@
 /* end stub */
 
 #include <boost/python.hpp>
-#include "triangulation/nfacetspec.h"
+#include "generic/nfacetspec.h"
 
 using namespace boost::python;
 using regina::Dim4PentFacet;

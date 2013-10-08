@@ -96,6 +96,13 @@ class REGINA_API NPerm5 {
         static const NPerm5 orderedS5[120];
 
         /**
+         * A dimension-agnostic alias for NPerm5::orderedS5.  In general, for
+         * each \a K the class NPermK will define an alias \a orderedSn
+         * that references the list of all permutations NPermK::orderedSK.
+         */
+        static const NPerm5* orderedSn;
+
+        /**
          * Contains the inverses of the permutations in the array \a S5.
          *
          * Specifically, the inverse of permutation <tt>S5[i]</tt> is
@@ -463,6 +470,15 @@ class REGINA_API NPerm5 {
         int S5Index() const;
 
         /**
+         * Returns the index of this permutation in the NPerm5::S5 array.
+         * This is a dimension-agnostic alias for S5Index().
+         *
+         * @return the index \a i for which this permutation is equal to
+         * NPerm5::S5[i].  This will be between 0 and 119 inclusive.
+         */
+        int SnIndex() const;
+
+        /**
          * Returns the index of this permutation in the NPerm5::orderedS5 array.
          *
          * @return the index \a i for which this permutation is equal to
@@ -471,6 +487,15 @@ class REGINA_API NPerm5 {
          * @author Ryan Budney
          */
         int orderedS5Index() const;
+
+        /**
+         * Returns the index of this permutation in the NPerm5::orderedS5 array.
+         * This is a dimension-agnostic alias for orderedS5Index().
+         *
+         * @return the index \a i for which this permutation is equal to
+         * NPerm5::orderedS5[i].  This will be between 0 and 119 inclusive.
+         */
+        int orderedSnIndex() const;
 
     private:
         /**
@@ -606,6 +631,14 @@ inline bool NPerm5::isIdentity() const {
 
 inline int NPerm5::imageOf(int source) const {
     return (code >> (3*source)) & 7;
+}
+
+inline int NPerm5::SnIndex() const {
+    return S5Index();
+}
+
+inline int NPerm5::orderedSnIndex() const {
+    return orderedS5Index();
 }
 
 } // namespace regina

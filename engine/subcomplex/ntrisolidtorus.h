@@ -152,10 +152,10 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
         NPerm4 getVertexRoles(int index) const;
 
         /**
-         * Determines whether the two faces of the requested annulus are
+         * Determines whether the two triangles of the requested annulus are
          * glued to each other.
          *
-         * If the two faces are glued, parameter \a roleMap will be
+         * If the two triangles are glued, parameter \a roleMap will be
          * modified to return a permutation describing how the vertex
          * roles are glued to each other.  This will describe directly
          * how axis edges, major edges and minor edges map to each other
@@ -175,7 +175,7 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * @param roleMap a pointer to a permutation that, if this
          * routine returns \c true, will be modified to describe the gluing
          * of vertex roles.  This parameter may be \c null.
-         * @return \c true if and only if the two faces of the requested
+         * @return \c true if and only if the two triangles of the requested
          * annulus are glued together.
          */
         bool isAnnulusSelfIdentified(int index, NPerm4* roleMap) const;
@@ -249,8 +249,8 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * three-tetrahedron triangular solid torus with its vertices
          * playing the given roles in the solid torus.
          *
-         * Note that the six boundary faces of the triangular solid
-         * torus need not be boundary faces within the overall
+         * Note that the six boundary triangles of the triangular solid
+         * torus need not be boundary triangles within the overall
          * triangulation, i.e., they may be identified with each other
          * or with faces of other tetrahedra.
          *

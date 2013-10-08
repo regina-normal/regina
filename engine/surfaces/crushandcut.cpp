@@ -145,9 +145,9 @@ namespace {
                      Specifically, if this block contains a triangle on its
                      boundary surrounding vertex i of the outer tetrahedron,
                      and if this triangle is facing vertex i (so the block
-                     lies on the side of the face away from vertex i, not
+                     lies on the side of the triangle away from vertex i, not
                      towards vertex i), then link_[i] is the inner
-                     tetrahedron containing this face.  Otherwise, link_[i]
+                     tetrahedron containing this triangle.  Otherwise, link_[i]
                      is null. */
             NPerm4 linkVertices_[4];
                 /**< If link_[i] is non-zero, then linkVertices_[i] is
@@ -156,8 +156,8 @@ namespace {
                      \a outerTet.  Specifically, if we let V denote
                      vertex i of the outer tetrahedron, then this mapping
                      sends the three vertices of the inner vertex linking
-                     triangle surrounding V to the three "parallel" vertices
-                     of the face opposite V in the outer tetrahedron. */
+                     triangle surrounding V to the three "parallel" vertices of
+                     the triangular face opposite V in the outer tetrahedron. */
 
         public:
             /**
@@ -1165,23 +1165,23 @@ NTriangulation* NNormalSurface::cutAlong() const {
     for (i = 0; i < nTet; ++i)
         sets[i] = new TetBlockSet(this, i, ans);
 
-    NTriangulation::FaceIterator fit;
-    NFace* f;
+    NTriangulation::TriangleIterator fit;
+    NTriangle* f;
     unsigned long tet0, tet1;
     int face0, face1;
     int fromVertex0, fromVertex1;
     NPerm4 gluing;
     unsigned long quadBlocks;
-    for (fit = getTriangulation()->getFaces().begin();
-            fit != getTriangulation()->getFaces().end(); ++fit) {
+    for (fit = getTriangulation()->getTriangles().begin();
+            fit != getTriangulation()->getTriangles().end(); ++fit) {
         f = *fit;
         if (f->isBoundary())
             continue;
 
         tet0 = f->getEmbedding(0).getTetrahedron()->markedIndex();
         tet1 = f->getEmbedding(1).getTetrahedron()->markedIndex();
-        face0 = f->getEmbedding(0).getFace();
-        face1 = f->getEmbedding(1).getFace();
+        face0 = f->getEmbedding(0).getTriangle();
+        face1 = f->getEmbedding(1).getTriangle();
 
         gluing = f->getEmbedding(0).getTetrahedron()->adjacentGluing(face0);
 

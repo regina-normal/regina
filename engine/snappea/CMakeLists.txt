@@ -1,7 +1,9 @@
 # snappea 
 
 # Files to compile
-SET ( FILES nsnappeatriangulation uimessages)
+SET ( FILES
+  nsnappeatriangulation
+  uimessages)
 
 
 # Prepend folder name
@@ -17,6 +19,8 @@ ADD_SUBDIRECTORY(snappy)
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
-  INSTALL(FILES nsnappeatriangulation.h DESTINATION ${INCLUDEDIR}/snappea COMPONENT Development)
+  INSTALL(FILES
+    nsnappeatriangulation.h
+    DESTINATION ${INCLUDEDIR}/snappea COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
 

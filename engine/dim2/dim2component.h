@@ -89,6 +89,17 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
          * @return the number of triangles.
          */
         unsigned long getNumberOfTriangles() const;
+        /**
+         * A dimension-agnostic alias for getNumberOfTriangles().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 2-manifold triangulations means a triangle).
+         * 
+         * See getNumberOfTriangles() for further information.
+         */
+        unsigned long getNumberOfSimplices() const;
 
         /**
          * Returns the number of edges in this component.
@@ -156,6 +167,17 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
          * @return the requested triangle.
          */
         Dim2Triangle* getTriangle(unsigned long index) const;
+        /**
+         * A dimension-agnostic alias for getTriangle().
+         * This is to assist with writing dimension-agnostic code that
+         * can be reused to work in different dimensions.
+         * 
+         * Here "simplex" refers to a top-dimensional simplex (which for
+         * 2-manifold triangulations means a triangle).
+         * 
+         * See getTriangle() for further information.
+         */
+        Dim2Triangle* getSimplex(unsigned long index) const;
 
         /**
          * Returns the requested edge in this component.
@@ -239,6 +261,10 @@ inline unsigned long Dim2Component::getNumberOfTriangles() const {
     return triangles_.size();
 }
 
+inline unsigned long Dim2Component::getNumberOfSimplices() const {
+    return triangles_.size();
+}
+
 inline unsigned long Dim2Component::getNumberOfEdges() const {
     return edges_.size();
 }
@@ -264,6 +290,10 @@ inline const std::vector<Dim2Vertex*>& Dim2Component::getVertices() const {
 }
 
 inline Dim2Triangle* Dim2Component::getTriangle(unsigned long index) const {
+    return triangles_[index];
+}
+
+inline Dim2Triangle* Dim2Component::getSimplex(unsigned long index) const {
     return triangles_[index];
 }
 

@@ -290,16 +290,16 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
          * in the vertex link that "slices off" vertex \a v from
          * tetrahedron \a tet.  In other words,
          * <tt>buildLink()->getTriangle(i)</tt> in the vertex link
-         * is parallel to face <tt>tet->getFace(v)</tt> in the
+         * is parallel to triangle <tt>tet->getTriangle(v)</tt> in the
          * surrounding 3-manifold triangulation.
          *
          * The vertices of each triangle in the vertex link are
          * numbered as follows.  Following the discussion above,
          * suppose that <tt>buildLink()->getTriangle(i)</tt> sits within
-         * \c tet and is parallel to <tt>tet->getFace(v)</tt>.
+         * \c tet and is parallel to <tt>tet->getTriangle(v)</tt>.
          * Then vertices 0,1,2 of the triangle in the link will be
-         * parallel to vertices 0,1,2 of the corresponding NFace.
-         * The permutation <tt>tet->getFaceMapping(v)</tt> will map
+         * parallel to vertices 0,1,2 of the corresponding NTriangle.
+         * The permutation <tt>tet->getTriangleMapping(v)</tt> will map
          * vertices 0,1,2 of the triangle in the link to the
          * corresponding vertices of \c tet (those opposite \c v),
          * and will map 3 to \c v itself.

@@ -50,11 +50,11 @@ void Dim4Triangulation::barycentricSubdivision() {
     Dim4Pentachoron* oldPent;
 
     // A pentachoron in the subdivision is uniquely defined by the
-    // permutation (tet, face, edge, vtx, corner) of (0, 1, 2, 3, 4).
+    // permutation (tet, triangle, edge, vtx, corner) of (0, 1, 2, 3, 4).
     // This is the pentachoron that:
     // - meets the boundary in the tetrahedron opposite vertex "tet";
-    // - meets that tetrahedron in the face opposite veretx "face";
-    // - meets that face in the edge opposite vertex "edge";
+    // - meets that tetrahedron in the triangle opposite vertex "triangle";
+    // - meets that triangle in the edge opposite vertex "edge";
     // - meets that edge in the vertex opposite vertex "vtx";
     // - directly touches vertex "corner".
 
@@ -68,7 +68,7 @@ void Dim4Triangulation::barycentricSubdivision() {
     for (pent=0; pent < nOldPent; ++pent)
         for (permIdx = 0; permIdx < 120; ++permIdx) {
             perm = NPerm5::S5[permIdx];
-            // (0, 1, 2, 3, 4) -> (tet, face, edge, vtx, corner)
+            // (0, 1, 2, 3, 4) -> (tet, triangle, edge, vtx, corner)
 
             // Internal gluings within the old pentachoron:
             newPent[120 * pent + permIdx]->joinTo(perm[4],

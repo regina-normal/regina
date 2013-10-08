@@ -61,7 +61,7 @@ class NTetrahedron;
  *
  * A triangular pillow is formed from two tetrahedra with a single
  * degree three vertex in the interior of the pillow.  The two boundary
- * faces of this pillow are then identified with a one-third twist.
+ * triangles of this pillow are then identified with a one-third twist.
  *
  * All optional NStandardTriangulation routines are implemented for this
  * class.

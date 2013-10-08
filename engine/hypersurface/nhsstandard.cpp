@@ -76,7 +76,7 @@ NNormalHypersurfaceVector* NNormalHypersurfaceVectorStandard::makeZeroVector(
 NMatrixInt* NNormalHypersurfaceVectorStandard::makeMatchingEquations(
         Dim4Triangulation* triangulation) {
     unsigned long nCoords = 15 * triangulation->getNumberOfPentachora();
-    // Seven equations per non-boundary face.
+    // Seven equations per non-boundary facet.
     // T_boundary + 2 T_internal = 5 P
     long nEquations = 7 * (5 * long(triangulation->getNumberOfPentachora()) -
         long(triangulation->getNumberOfTetrahedra()));

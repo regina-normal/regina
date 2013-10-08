@@ -1,7 +1,12 @@
 # file 
 
 # Files to compile
-SET ( FILES nfileinfo nglobaldirs nxmlfile pyfile)
+SET ( FILES
+  nfileinfo
+  nglobaldirs
+  nxmlfile
+  pyfile
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

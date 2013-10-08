@@ -73,6 +73,7 @@ void addDim2Component() {
             std::auto_ptr<Dim2Component>, boost::noncopyable>
             ("Dim2Component", no_init)
         .def("getNumberOfTriangles", &Dim2Component::getNumberOfTriangles)
+        .def("getNumberOfSimplices", &Dim2Component::getNumberOfSimplices)
         .def("getNumberOfEdges", &Dim2Component::getNumberOfEdges)
         .def("getNumberOfVertices", &Dim2Component::getNumberOfVertices)
         .def("getNumberOfBoundaryComponents",
@@ -81,6 +82,8 @@ void addDim2Component() {
         .def("getEdges", getEdges_list)
         .def("getVertices", getVertices_list)
         .def("getTriangle", &Dim2Component::getTriangle,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &Dim2Component::getSimplex,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim2Component::getEdge,
             return_value_policy<reference_existing_object>())

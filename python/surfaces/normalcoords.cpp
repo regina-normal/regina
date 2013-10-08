@@ -47,6 +47,7 @@ void addNormalCoords() {
         .value("NS_AN_QUAD_OCT", regina::NS_AN_QUAD_OCT)
         .value("NS_EDGE_WEIGHT", regina::NS_EDGE_WEIGHT)
         .value("NS_FACE_ARCS", regina::NS_FACE_ARCS)
+        .value("NS_TRIANGLE_ARCS", regina::NS_TRIANGLE_ARCS)
         .value("NS_AN_LEGACY", regina::NS_AN_LEGACY)
         .value("NS_ORIENTED", regina::NS_ORIENTED)
         .value("NS_ORIENTED_QUAD", regina::NS_ORIENTED_QUAD)
@@ -58,6 +59,7 @@ void addNormalCoords() {
     global.attr("NS_AN_QUAD_OCT") = regina::NS_AN_QUAD_OCT;
     global.attr("NS_EDGE_WEIGHT") = regina::NS_EDGE_WEIGHT;
     global.attr("NS_FACE_ARCS") = regina::NS_FACE_ARCS;
+    global.attr("NS_TRIANGLE_ARCS") = regina::NS_TRIANGLE_ARCS;
     global.attr("NS_AN_LEGACY") = regina::NS_AN_LEGACY;
     global.attr("NS_ORIENTED") = regina::NS_ORIENTED;
     global.attr("NS_ORIENTED_QUAD") = regina::NS_ORIENTED_QUAD;

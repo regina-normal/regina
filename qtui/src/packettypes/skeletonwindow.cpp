@@ -33,6 +33,7 @@
 /* end stub */
 
 #include "dim2/dim2triangulation.h"
+#include "dim4/dim4triangulation.h"
 #include "triangulation/ntriangulation.h"
 
 #include "skeletonwindow.h"
@@ -50,12 +51,18 @@
 using regina::NBoundaryComponent;
 using regina::NComponent;
 using regina::NEdge;
-using regina::NFace;
+using regina::NTriangle;
 using regina::NVertex;
 using regina::Dim2BoundaryComponent;
 using regina::Dim2Component;
 using regina::Dim2Edge;
 using regina::Dim2Vertex;
+using regina::Dim4BoundaryComponent;
+using regina::Dim4Component;
+using regina::Dim4Edge;
+using regina::Dim4Tetrahedron;
+using regina::Dim4Triangle;
+using regina::Dim4Vertex;
 
 #define SKELETON_MAX_ROWS_DEFAULT 10
 namespace {
@@ -299,7 +306,7 @@ QVariant EdgeModel::data(const QModelIndex& index, int role) const {
                 return index.row();
             case 1:
                 if (! item->isValid())
-                    return tr("INVALID");
+                    return tr("Invalid");
                 else if (item->isBoundary())
                     return tr("Bdry");
                 else
@@ -357,34 +364,34 @@ QString EdgeModel::toolTipForCol(int column) {
     }
 }
 
-QString FaceModel::caption() const {
-    return tr("Faces (%1)").arg(tri->getPacketLabel().c_str());
+QString TriangleModel::caption() const {
+    return tr("Triangles (%1)").arg(tri->getPacketLabel().c_str());
 }
 
-QString FaceModel::overview() const {
+QString TriangleModel::overview() const {
     return tr("<qt>Displays details of each "
-        "face of this triangulation.<p>"
-        "The different faces are numbered from 0 upwards.  "
-        "Each row describes the shape of the face as well as "
+        "triangle of this triangulation.<p>"
+        "The different triangles are numbered from 0 upwards.  "
+        "Each row describes the shape of the triangle as well as "
         "listing precisely which vertices of which tetrahedra it "
         "corresponds to.<p>"
         "See the users' handbook for further details on what each "
         "column of the table means.</qt>");
 }
 
-int FaceModel::rowCount(const QModelIndex& parent) const {
+int TriangleModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfFaces());
+    return (parent.isValid() ? 0 : tri->getNumberOfTriangles());
 }
 
-int FaceModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int TriangleModel::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant FaceModel::data(const QModelIndex& index, int role) const {
+QVariant TriangleModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NFace* item = tri->getFace(index.row());
+        NTriangle* item = tri->getTriangle(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -394,21 +401,21 @@ QVariant FaceModel::data(const QModelIndex& index, int role) const {
                     prefix = tr("(Bdry) ");
 
                 int type = item->getType();
-                if (type == NFace::TRIANGLE)
+                if (type == NTriangle::TRIANGLE)
                     return prefix + tr("Triangle");
-                if (type == NFace::SCARF)
+                if (type == NTriangle::SCARF)
                     return prefix + tr("Scarf");
-                if (type == NFace::PARACHUTE)
+                if (type == NTriangle::PARACHUTE)
                     return prefix + tr("Parachute");
-                if (type == NFace::MOBIUS)
+                if (type == NTriangle::MOBIUS)
                     return prefix + tr("Mobius band");
-                if (type == NFace::CONE)
+                if (type == NTriangle::CONE)
                     return prefix + tr("Cone");
-                if (type == NFace::HORN)
+                if (type == NTriangle::HORN)
                     return prefix + tr("Horn");
-                if (type == NFace::DUNCEHAT)
+                if (type == NTriangle::DUNCEHAT)
                     return prefix + tr("Dunce hat");
-                if (type == NFace::L31)
+                if (type == NTriangle::L31)
                     return prefix + tr("L(3,1)");
                 return prefix + tr("UNKNOWN");
             }
@@ -431,14 +438,14 @@ QVariant FaceModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant FaceModel::headerData(int section,
+QVariant TriangleModel::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
 
     if (role == Qt::DisplayRole) {
         switch (section) {
-            case 0: return tr("Face #");
+            case 0: return tr("Triangle #");
             case 1: return tr("Type");
             case 2: return tr("Degree");
             case 3: return tr("Tetrahedra (Tet vertices)");
@@ -450,18 +457,18 @@ QVariant FaceModel::headerData(int section,
         return QVariant();
 }
 
-QString FaceModel::toolTipForCol(int column) {
+QString TriangleModel::toolTipForCol(int column) {
     switch (column) {
-        case 0: return tr("<qt>The number of the individual face.  "
-            "Faces are numbered 0,1,2,...,<i>f</i>-1.</qt>");
-        case 1: return tr("<qt>Lists additional properties of the face, "
+        case 0: return tr("<qt>The number of the individual triangle.  "
+            "Triangles are numbered 0,1,2,...,<i>t</i>-1.</qt>");
+        case 1: return tr("<qt>Lists additional properties of the triangle, "
             "such as the shape that it forms and whether it lies on the "
             "boundary.</qt>");
-        case 2: return tr("<qt>Gives the degree of this face, i.e., "
+        case 2: return tr("<qt>Gives the degree of this triangle, i.e., "
             "the number of individual tetrahedron faces that are "
             "identified to it.</qt>");
         case 3: return tr("<qt>Lists the individual tetrahedron faces "
-            "that come together to form this face of the triangulation.</qt>");
+            "that come together to form this triangle.</qt>");
         default: return QString();
     }
 }
@@ -557,7 +564,7 @@ QString BoundaryComponentModel::caption() const {
 QString BoundaryComponentModel::overview() const {
     return tr("<qt>Displays details of each "
         "boundary component of this triangulation.  A boundary "
-        "component may be a collection of adjacent boundary faces, "
+        "component may be a collection of adjacent boundary triangles, "
         "or it may be a single ideal vertex, whose link is closed but "
         "not a 2-sphere.<p>"
         "The different boundary components are numbered from 0 upwards.  "
@@ -589,19 +596,21 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
             case 1:
                 return (item->isIdeal() ? tr("Ideal") : tr("Real"));
             case 2:
-                // Note that we can't have just one face (by a parity argument).
+                // Note that we can't have just one triangle
+                // (by a parity argument).
                 return (item->isIdeal() ? tr("1 vertex") :
-                    tr("%1 faces").arg(item->getNumberOfFaces()));
+                    tr("%1 triangles").arg(item->getNumberOfTriangles()));
             case 3:
                 if (item->isIdeal())
                     return tr("Vertex %1").arg(tri->vertexIndex(
                         item->getVertex(0)));
                 else {
                     QString ans;
-                    for (unsigned long i = 0; i < item->getNumberOfFaces(); i++)
-                        appendToList(ans, QString::number(tri->faceIndex(
-                            item->getFace(i))));
-                    return tr("Faces ") + ans;
+                    for (unsigned long i = 0;
+                            i < item->getNumberOfTriangles(); i++)
+                        appendToList(ans, QString::number(tri->triangleIndex(
+                            item->getTriangle(i))));
+                    return tr("Triangles ") + ans;
                 }
         }
         return QString();
@@ -621,7 +630,7 @@ QVariant BoundaryComponentModel::headerData(int section,
             case 0: return tr("Cmpt #");
             case 1: return tr("Type");
             case 2: return tr("Size");
-            case 3: return tr("Faces / Vertex");
+            case 3: return tr("Triangles / Vertex");
             default: return QString();
         }
     } else if (role == Qt::ToolTipRole) {
@@ -638,10 +647,10 @@ QString BoundaryComponentModel::toolTipForCol(int column) {
         case 1: return tr("<qt>Lists whether this is an ideal or real "
             "boundary component.</qt>");
         case 2: return tr("<qt>Gives the size of this boundary component, "
-            "i.e., the number of faces (for a real boundary component) "
+            "i.e., the number of triangles (for a real boundary component) "
             "or the number of vertices (which is always one for an ideal "
             "boundary component).</qt>");
-        case 3: return tr("<qt>Identifies the individual faces for a real "
+        case 3: return tr("<qt>Identifies the individual triangles for a real "
             "boundary component, or the individual vertex for an ideal "
             "boundary component.</qt>");
         default: return QString();
@@ -985,6 +994,570 @@ QString Dim2BoundaryComponentModel::toolTipForCol(int column) {
             "i.e., the number of edges it is formed from.</qt>");
         case 2: return tr("<qt>Identifies the individual edges that "
             "this boundary component contains.</qt>");
+        default: return QString();
+    }
+}
+
+QString Dim4VertexModel::caption() const {
+    return tr("Vertices (%1)").arg(tri->getPacketLabel().c_str());
+}
+
+QString Dim4VertexModel::overview() const {
+    return tr("<qt>Displays details of each "
+        "vertex of this triangulation.<p>"
+        "The different vertices are numbered from 0 upwards.  "
+        "Each row describes properties of the vertex as well as "
+        "listing precisely which vertices of which pentachora it "
+        "corresponds to.<p>"
+        "See the users' handbook for further details on what each "
+        "column of the table means.</qt>");
+}
+
+int Dim4VertexModel::rowCount(const QModelIndex& parent) const {
+    if (forceEmpty)
+        return 0;
+    return (parent.isValid() ? 0 : tri->getNumberOfVertices());
+}
+
+int Dim4VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
+    return 4;
+}
+
+QVariant Dim4VertexModel::data(const QModelIndex& index, int role) const {
+    if (role == Qt::DisplayRole) {
+        Dim4Vertex* item = tri->getVertex(index.row());
+        switch (index.column()) {
+            case 0:
+                return index.row();
+            case 1: {
+                if (item->isIdeal())
+                    return tr("Ideal");
+                else if (! item->isValid())
+                    return tr("Invalid");
+                else if (item->isBoundary())
+                    return tr("Bdry");
+                else
+                    return QString();
+            }
+            case 2:
+                return static_cast<unsigned>(item->getNumberOfEmbeddings());
+            case 3:
+                QString ans;
+                std::vector<regina::Dim4VertexEmbedding>::const_iterator it;
+                for (it = item->getEmbeddings().begin();
+                        it != item->getEmbeddings().end(); it++)
+                    appendToList(ans, QString("%1 (%2)").
+                        arg(tri->pentachoronIndex((*it).getPentachoron())).
+                        arg((*it).getVertex()));
+                return ans;
+        }
+        return QString();
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(index.column());
+    } else
+        return QVariant();
+}
+
+QVariant Dim4VertexModel::headerData(int section,
+        Qt::Orientation orientation, int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        switch (section) {
+            case 0: return tr("Vertex #");
+            case 1: return tr("Type");
+            case 2: return tr("Degree");
+            case 3: return tr("Pentachora (Pent vertices)");
+            default: return QString();
+        }
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(section);
+    } else
+        return QVariant();
+}
+
+QString Dim4VertexModel::toolTipForCol(int column) {
+    switch (column) {
+        case 0: return tr("<qt>The number of the individual vertex.  "
+            "Vertices are numbered 0,1,2,...,<i>v</i>-1.</qt>");
+        case 1: return tr("<qt>Lists additional properties of the vertex, "
+            "such as whether this is an ideal or boundary vertex.</qt>");
+        case 2: return tr("<qt>Gives the degree of this vertex, i.e., "
+            "the number of individual pentachoron vertices that are "
+            "identified to it.</qt>");
+        case 3: return tr("<qt>Lists the individual pentachoron vertices "
+            "that come together to form this vertex of the "
+            "triangulation.</qt>");
+        default: return QString();
+    }
+}
+
+QString Dim4EdgeModel::caption() const {
+    return tr("Edges (%1)").arg(tri->getPacketLabel().c_str());
+}
+
+QString Dim4EdgeModel::overview() const {
+    return tr("<qt>Displays details of each edge of "
+        "this triangulation.<p>"
+        "The different edges are numbered from 0 upwards.  "
+        "Each row describes properties of the edge as well as "
+        "listing precisely which edges of which pentachora it "
+        "corresponds to.<p>"
+        "See the users' handbook for further details on what each "
+        "column of the table means.</qt>");
+}
+
+int Dim4EdgeModel::rowCount(const QModelIndex& parent) const {
+    if (forceEmpty)
+        return 0;
+    return (parent.isValid() ? 0 : tri->getNumberOfEdges());
+}
+
+int Dim4EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
+    return 4;
+}
+
+QVariant Dim4EdgeModel::data(const QModelIndex& index, int role) const {
+    if (role == Qt::DisplayRole) {
+        Dim4Edge* item = tri->getEdge(index.row());
+        switch (index.column()) {
+            case 0:
+                return index.row();
+            case 1:
+                if (! item->isValid()) {
+                    if (item->hasBadIdentification())
+                        return tr("Invalid (reverse gluing)");
+                    else if (item->hasBadLink())
+                        return tr("Invalid (bad link)");
+                    else // should never happen
+                        return tr("Invalid (unknown reason)");
+                }
+                else if (item->isBoundary())
+                    return tr("Bdry");
+                else
+                    return QString();
+            case 2:
+                return static_cast<unsigned>(item->getNumberOfEmbeddings());
+            case 3:
+                QString ans;
+                std::vector<regina::Dim4EdgeEmbedding>::const_iterator it;
+                for (it = item->getEmbeddings().begin();
+                        it != item->getEmbeddings().end(); it++)
+                    appendToList(ans, QString("%1 (%2)").
+                        arg(tri->pentachoronIndex((*it).getPentachoron())).
+                        arg((*it).getVertices().trunc2().c_str()));
+                return ans;
+        }
+        return QString();
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(index.column());
+    } else
+        return QVariant();
+}
+
+QVariant Dim4EdgeModel::headerData(int section,
+        Qt::Orientation orientation, int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        switch (section) {
+            case 0: return tr("Edge #");
+            case 1: return tr("Type");
+            case 2: return tr("Degree");
+            case 3: return tr("Pentachora (Pent vertices)");
+            default: return QString();
+        }
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(section);
+    } else
+        return QVariant();
+}
+
+QString Dim4EdgeModel::toolTipForCol(int column) {
+    switch (column) {
+        case 0: return tr("<qt>The number of the individual edge.  "
+            "Edges are numbered 0,1,2,...,<i>e</i>-1.</qt>");
+        case 1: return tr("<qt>Lists additional properties of the edge, "
+            "such as whether it lies on the boundary or is invalid.</qt>");
+        case 2: return tr("<qt>Gives the degree of this edge, i.e., "
+            "the number of individual pentachoron edges that are "
+            "identified to it.</qt>");
+        case 3: return tr("<qt>Lists the individual pentachoron edges "
+            "that come together to form this edge of the triangulation.</qt>");
+        default: return QString();
+    }
+}
+
+QString Dim4TriangleModel::caption() const {
+    return tr("Triangles (%1)").arg(tri->getPacketLabel().c_str());
+}
+
+QString Dim4TriangleModel::overview() const {
+    return tr("<qt>Displays details of each triangle of "
+        "this triangulation.<p>"
+        "The different triangles are numbered from 0 upwards.  "
+        "Each row describes properties of the triangle as well as "
+        "listing precisely which vertices of which pentachora it "
+        "corresponds to.<p>"
+        "See the users' handbook for further details on what each "
+        "column of the table means.</qt>");
+}
+
+int Dim4TriangleModel::rowCount(const QModelIndex& parent) const {
+    if (forceEmpty)
+        return 0;
+    return (parent.isValid() ? 0 : tri->getNumberOfTriangles());
+}
+
+int Dim4TriangleModel::columnCount(const QModelIndex& /* unused parent*/) const {
+    return 4;
+}
+
+QVariant Dim4TriangleModel::data(const QModelIndex& index, int role) const {
+    if (role == Qt::DisplayRole) {
+        Dim4Triangle* item = tri->getTriangle(index.row());
+        switch (index.column()) {
+            case 0:
+                return index.row();
+            case 1:
+                if (! item->isValid())
+                    return tr("Invalid");
+                else if (item->isBoundary())
+                    return tr("Bdry");
+                else
+                    return QString();
+            case 2:
+                return static_cast<unsigned>(item->getNumberOfEmbeddings());
+            case 3:
+                QString ans;
+                std::deque<regina::Dim4TriangleEmbedding>::const_iterator it;
+                for (it = item->getEmbeddings().begin();
+                        it != item->getEmbeddings().end(); it++)
+                    appendToList(ans, QString("%1 (%2)").
+                        arg(tri->pentachoronIndex((*it).getPentachoron())).
+                        arg((*it).getVertices().trunc3().c_str()));
+                return ans;
+        }
+        return QString();
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(index.column());
+    } else
+        return QVariant();
+}
+
+QVariant Dim4TriangleModel::headerData(int section,
+        Qt::Orientation orientation, int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        switch (section) {
+            case 0: return tr("Triangle #");
+            case 1: return tr("Type");
+            case 2: return tr("Degree");
+            case 3: return tr("Pentachora (Pent vertices)");
+            default: return QString();
+        }
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(section);
+    } else
+        return QVariant();
+}
+
+QString Dim4TriangleModel::toolTipForCol(int column) {
+    switch (column) {
+        case 0: return tr("<qt>The number of the individual triangle.  "
+            "Triangles are numbered 0,1,2,...,<i>t</i>-1.</qt>");
+        case 1: return tr("<qt>Lists additional properties of the triangle, "
+            "such as whether it lies on the boundary or is invalid.</qt>");
+        case 2: return tr("<qt>Gives the degree of this triangle, i.e., "
+            "the number of individual pentachoron triangles that are "
+            "identified to it.</qt>");
+        case 3: return tr("<qt>Lists the individual pentachoron triangles "
+            "that come together to form this triangle of the "
+            "triangulation.</qt>");
+        default: return QString();
+    }
+}
+
+QString Dim4TetrahedronModel::caption() const {
+    return tr("Tetrahedra (%1)").arg(tri->getPacketLabel().c_str());
+}
+
+QString Dim4TetrahedronModel::overview() const {
+    return tr("<qt>Displays details of each "
+        "tetrahedron of this triangulation.<p>"
+        "The different tetrahedra are numbered from 0 upwards.  "
+        "Each row describes properties of the tetrahedron as well as "
+        "listing precisely which vertices of which pentachora it "
+        "corresponds to.<p>"
+        "See the users' handbook for further details on what each "
+        "column of the table means.</qt>");
+}
+
+int Dim4TetrahedronModel::rowCount(const QModelIndex& parent) const {
+    if (forceEmpty)
+        return 0;
+    return (parent.isValid() ? 0 : tri->getNumberOfTetrahedra());
+}
+
+int Dim4TetrahedronModel::columnCount(const QModelIndex& /* unused parent*/)
+        const {
+    return 4;
+}
+
+QVariant Dim4TetrahedronModel::data(const QModelIndex& index, int role) const {
+    if (role == Qt::DisplayRole) {
+        Dim4Tetrahedron* item = tri->getTetrahedron(index.row());
+        switch (index.column()) {
+            case 0:
+                return index.row();
+            case 1: {
+                QString prefix;
+                if (item->isBoundary())
+                    return tr("Bdry");
+                return QString();
+            }
+            case 2:
+                return static_cast<unsigned>(item->getNumberOfEmbeddings());
+            case 3:
+                QString ans;
+                for (unsigned i = 0; i < item->getNumberOfEmbeddings(); i++)
+                    appendToList(ans, QString("%1 (%2)").
+                        arg(tri->pentachoronIndex(
+                            item->getEmbedding(i).getPentachoron())).
+                        arg(item->getEmbedding(i).getVertices().
+                            trunc4().c_str()));
+                return ans;
+        }
+        return QString();
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(index.column());
+    } else
+        return QVariant();
+}
+
+QVariant Dim4TetrahedronModel::headerData(int section,
+        Qt::Orientation orientation, int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        switch (section) {
+            case 0: return tr("Tet #");
+            case 1: return tr("Type");
+            case 2: return tr("Degree");
+            case 3: return tr("Pentachora (Pent vertices)");
+            default: return QString();
+        }
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(section);
+    } else
+        return QVariant();
+}
+
+QString Dim4TetrahedronModel::toolTipForCol(int column) {
+    switch (column) {
+        case 0: return tr("<qt>The number of the individual tetrahedron.  "
+            "Tetrahedra are numbered 0,1,2,...,<i>t</i>-1.</qt>");
+        case 1: return tr("<qt>Lists additional properties of the tetrahedron, "
+            "such as whether it lies on the boundary.</qt>");
+        case 2: return tr("<qt>Gives the degree of this tetrahedron, i.e., "
+            "the number of individual pentachoron facets that are "
+            "identified to it.</qt>");
+        case 3: return tr("<qt>Lists the individual pentachoron facets "
+            "that come together to form this tetrahedron "
+            "of the triangulation.</qt>");
+        default: return QString();
+    }
+}
+
+QString Dim4ComponentModel::caption() const {
+    return tr("Components (%1)").arg(tri->getPacketLabel().c_str());
+}
+
+QString Dim4ComponentModel::overview() const {
+    return tr("<qt>Displays details of each "
+        "connected component of this triangulation.<p>"
+        "The different components are numbered from 0 upwards.  "
+        "Each row describes properties of the component as well as "
+        "listing precisely which pentachora the component contains.<p>"
+        "See the users' handbook for further details on what each "
+        "column of the table means.</qt>");
+}
+
+int Dim4ComponentModel::rowCount(const QModelIndex& parent) const {
+    if (forceEmpty)
+        return 0;
+    return (parent.isValid() ? 0 : tri->getNumberOfComponents());
+}
+
+int Dim4ComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
+    return 4;
+}
+
+QVariant Dim4ComponentModel::data(const QModelIndex& index, int role) const {
+    if (role == Qt::DisplayRole) {
+        Dim4Component* item = tri->getComponent(index.row());
+        switch (index.column()) {
+            case 0:
+                return index.row();
+            case 1:
+                return (item->isIdeal() ? tr("Ideal, ") : tr("Real, ")) +
+                    (item->isOrientable() ? tr("Orbl") : tr("Non-orbl"));
+            case 2:
+                return static_cast<unsigned>(item->getNumberOfSimplices());
+            case 3:
+                QString ans;
+                for (unsigned long i = 0; i < item->getNumberOfSimplices(); i++)
+                    appendToList(ans, QString::number(tri->simplexIndex(
+                        item->getSimplex(i))));
+                return ans;
+        }
+        return QString();
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(index.column());
+    } else
+        return QVariant();
+}
+
+QVariant Dim4ComponentModel::headerData(int section,
+        Qt::Orientation orientation, int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        switch (section) {
+            case 0: return tr("Cmpt #");
+            case 1: return tr("Type");
+            case 2: return tr("Size");
+            case 3: return tr("Pentachora");
+            default: return QString();
+        }
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(section);
+    } else
+        return QVariant();
+}
+
+QString Dim4ComponentModel::toolTipForCol(int column) {
+    switch (column) {
+        case 0: return tr("<qt>The number of the individual component.  "
+            "Components are numbered 0,1,2,...,<i>c</i>-1.</qt>");
+        case 1: return tr("<qt>Lists additional properties of the component, "
+            "such as its orientability or whether it contains ideal "
+            "vertices.</qt>");
+        case 2: return tr("<qt>Gives the size of this component, i.e., "
+            "the number of pentachora that it contains.</qt>");
+        case 3: return tr("<qt>Identifies the individual pentachora "
+            "that belong to this component.</qt>");
+        default: return QString();
+    }
+}
+
+QString Dim4BoundaryComponentModel::caption() const {
+    return tr("Boundary Components (%1)").arg(tri->getPacketLabel().c_str());
+}
+
+QString Dim4BoundaryComponentModel::overview() const {
+    return tr("<qt>Displays details of each "
+        "boundary component of this triangulation.  A boundary "
+        "component may be: (i) a collection of adjacent boundary tetrahedra; "
+        "(ii) a single ideal vertex, whose link is closed but "
+        "not a 3-sphere; or "
+        "(iii) a single invalid vertex, which does not belong to any boundary "
+        "tetrahedra but whose link is not a valid closed 3-manifold.<p>"
+        "The different boundary components are numbered from 0 upwards.  "
+        "Each row describes properties of the boundary component, as "
+        "well as which pentachoron facets (for a real boundary component) "
+        "or which pentachoron vertex (for an ideal boundary component or "
+        "an invalid vertex) it is formed from.<p>"
+        "See the users' handbook for further details on what each "
+        "column of the table means.</qt>");
+}
+
+int Dim4BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
+    if (forceEmpty)
+        return 0;
+    return (parent.isValid() ? 0 : tri->getNumberOfBoundaryComponents());
+}
+
+int Dim4BoundaryComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
+    return 4;
+}
+
+QVariant Dim4BoundaryComponentModel::data(const QModelIndex& index,
+        int role) const {
+    if (role == Qt::DisplayRole) {
+        Dim4BoundaryComponent* item = tri->getBoundaryComponent(index.row());
+        switch (index.column()) {
+            case 0:
+                return index.row();
+            case 1:
+                return (item->isIdeal() ? tr("Ideal") :
+                    item->isInvalidVertex() ? tr("Invalid vertex") :
+                    tr("Real"));
+            case 2:
+                return ((item->isIdeal() || item->isInvalidVertex()) ?
+                    tr("1 vertex") :
+                    item->getNumberOfTetrahedra() == 1 ?  tr("1 tetrahedron") :
+                    tr("%1 tetrahedra").arg(item->getNumberOfTetrahedra()));
+            case 3:
+                if (item->isIdeal() || item->isInvalidVertex())
+                    return tr("Vertex %1").arg(tri->vertexIndex(
+                        item->getVertex(0)));
+                else {
+                    QString ans;
+                    for (unsigned long i = 0;
+                            i < item->getNumberOfTetrahedra(); i++)
+                        appendToList(ans,
+                            QString::number(tri->tetrahedronIndex(
+                            item->getTetrahedron(i))));
+                    return tr("Tetrahedra ") + ans;
+                }
+        }
+        return QString();
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(index.column());
+    } else
+        return QVariant();
+}
+
+QVariant Dim4BoundaryComponentModel::headerData(int section,
+        Qt::Orientation orientation, int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        switch (section) {
+            case 0: return tr("Cmpt #");
+            case 1: return tr("Type");
+            case 2: return tr("Size");
+            case 3: return tr("Tetrahedra / Vertex");
+            default: return QString();
+        }
+    } else if (role == Qt::ToolTipRole) {
+        return toolTipForCol(section);
+    } else
+        return QVariant();
+}
+
+QString Dim4BoundaryComponentModel::toolTipForCol(int column) {
+    switch (column) {
+        case 0: return tr("<qt>The number of the individual boundary "
+            "component.  "
+            "Boundary components are numbered 0,1,2,...,<i>b</i>-1.</qt>");
+        case 1: return tr("<qt>Lists whether this is an ideal or real "
+            "boundary component, or an invalid vertex.</qt>");
+        case 2: return tr("<qt>Gives the size of this boundary component, "
+            "i.e., the number of tetrahedra (for a real boundary component) "
+            "or the number of vertices (which is always one for an ideal "
+            "boundary component or an invalid vertex).</qt>");
+        case 3: return tr("<qt>Identifies the individual tetrahedra for a real "
+            "boundary component, or the individual vertex for an ideal "
+            "boundary component or an invalid vertex.</qt>");
         default: return QString();
     }
 }

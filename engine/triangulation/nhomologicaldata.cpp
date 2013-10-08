@@ -138,8 +138,8 @@ void NHomologicalData::computeccIndexing() {
     }
     j=0; // sIEOE
 
-    for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
-            fit != tri->getFaces().end(); fit++) {
+    for (NTriangulation::TriangleIterator fit = tri->getTriangles().begin();
+            fit != tri->getTriangles().end(); fit++) {
         for (i=0;i<3;i++) {
             if ((*fit)->getVertex(i)->isIdeal()) sIEEOF.push_back(3*j+i);
         }
@@ -172,8 +172,8 @@ void NHomologicalData::computeccIndexing() {
         j++;
     }
     j=0; // dNBE
-    for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
-            fit != tri->getFaces().end(); fit++) {
+    for (NTriangulation::TriangleIterator fit = tri->getTriangles().begin();
+            fit != tri->getTriangles().end(); fit++) {
         if (!((*fit)->isBoundary()))        dNBF.push_back(j);
         j++;
     }
@@ -190,8 +190,8 @@ void NHomologicalData::computeccIndexing() {
     {if ((*eit)->isBoundary()) sBNIE.push_back(i);
         i++;
     } i=0;
-    for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
-            fit != tri->getFaces().end(); fit++) // sBNIF
+    for (NTriangulation::TriangleIterator fit = tri->getTriangles().begin();
+            fit != tri->getTriangles().end(); fit++) // sBNIF
     {if ((*fit)->isBoundary()) sBNIF.push_back(i);
         i++;
     }
@@ -201,7 +201,7 @@ void NHomologicalData::computeccIndexing() {
     // standard (0..3)-cells:
     numStandardCells[0] = sNIV.size() + sIEOE.size();
     numStandardCells[1] = tri->getNumberOfEdges() + sIEEOF.size();
-    numStandardCells[2] = tri->getNumberOfFaces() + sIEFOT.size();
+    numStandardCells[2] = tri->getNumberOfTriangles() + sIEFOT.size();
     numStandardCells[3] = tri->getNumberOfTetrahedra();
 
     // dual (0..3)-cells:
@@ -268,46 +268,46 @@ void NHomologicalData::computeChainComplexes() {
     } // ok
 
     for (i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
-        // sIEEOF[i] /3 is the face index, and sIEEOF[i] % 3 tells us
-        // the vertex of this face
-        p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 1) % 3);
+        // sIEEOF[i] /3 is the triangle index, and sIEEOF[i] % 3 tells us
+        // the vertex of this triangle
+        p1=tri->getTriangle(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 1) % 3);
         if (p1.sign()==1) {
             A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->
+                tri->edgeIndex((tri->getTriangle(sIEEOF[i]/3))->
                 getEdge(p1[2])) )+1), tri->getNumberOfEdges()+i)-=1;
         } else {
             A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->
+                tri->edgeIndex((tri->getTriangle(sIEEOF[i]/3))->
                 getEdge(p1[2])) )) , tri->getNumberOfEdges()+i)-=1;
         }
-        p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 2) % 3);
+        p1=tri->getTriangle(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 2) % 3);
         if (p1.sign()==1) {
             A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->
+                tri->edgeIndex((tri->getTriangle(sIEEOF[i]/3))->
                 getEdge(p1[2])) )) , tri->getNumberOfEdges()+i)+=1;
         } else {
             A1->entry(sNIV.size() + sIEOE.index(2*(
-                tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->
+                tri->edgeIndex((tri->getTriangle(sIEEOF[i]/3))->
                 getEdge(p1[2])) )+1) , tri->getNumberOfEdges()+i)+=1;
         }
     }
     // that handles matrix A1.
 
     // start filling out A2...
-    for (i=0;i<tri->getNumberOfFaces();i++) {
+    for (i=0;i<tri->getNumberOfTriangles();i++) {
         // put boundary edges into A2..
         for (j=0;j<6;j++) {
-            // run through the 6 possible boundary edges of the face
+            // run through the 6 possible boundary edges of the triangle
             // the first 3 are standard, the last three are the ideal
             // edges (if they exist)
             if ( (j/3) == 0) {
-                p1=tri->getFace(i)->getEdgeMapping(j % 3);
+                p1=tri->getTriangle(i)->getEdgeMapping(j % 3);
                 A2->entry( tri->edgeIndex(
-                    tri->getFace(i)->getEdge(j % 3)) ,i) +=
+                    tri->getTriangle(i)->getEdge(j % 3)) ,i) +=
                     ( (p1.sign()==1) ? +1 : -1 );
             } else {
-                // check face i vertex j % 3 is ideal
-                if (tri->getFace(i)->getVertex(j % 3)->isIdeal())
+                // check triangle i vertex j % 3 is ideal
+                if (tri->getTriangle(i)->getVertex(j % 3)->isIdeal())
                     A2->entry( tri->getNumberOfEdges() +
                         sIEEOF.index((3*i) + (j % 3)), i) += 1;
             }
@@ -318,23 +318,23 @@ void NHomologicalData::computeChainComplexes() {
         // boundary edges from ideal faces of tetrahedra.
         // sIEFOT[i] /4 is the tetrahedron number
         // sIEFOT[i] % 4 is the vertex number for this tetrahedron
-        // tetrahedra[ sIEFOT[i]/4 ].getFace(sIEFOT[i] + 1,2,3 % 4)
+        // tetrahedra[ sIEFOT[i]/4 ].getTriangle(sIEFOT[i] + 1,2,3 % 4)
         // are the respective faces
-        // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4)
+        // tetrahedra[ sIEFOT[i]/4 ].getTriangleMapping(sIEFOT[i] + 1,2,3 % 4)
         // gives the perm
-        // faces().index( tetrahedra[sIEFOT[i]/4].getFace(
-        // sIEFOT[i] + 1,2,3 % 4) is therefore the face number, and
-        // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(
+        // triangles().index( tetrahedra[sIEFOT[i]/4].getTriangle(
+        // sIEFOT[i] + 1,2,3 % 4) is therefore the triangle number, and
+        // tetrahedra[ sIEFOT[i]/4 ].getTriangleMapping(
         // sIEFOT[i] + 1,2,3 % 4)^{-1} applied to sIEFOT[i] % 4 is the
-        // vertex of this face.
+        // vertex of this triangle.
         for (j=1;j<4;j++) {
-            p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping(
+            p1=tri->getTetrahedron( sIEFOT[i]/4 )->getTriangleMapping(
                 (sIEFOT[i] + j) % 4);
             A2->entry( tri->getNumberOfEdges() + sIEEOF.index(
-                3*tri->faceIndex(tri->getTetrahedron(
-                sIEFOT[i]/4 )->getFace( (sIEFOT[i] + j) % 4)) +
+                3*tri->triangleIndex(tri->getTetrahedron(
+                sIEFOT[i]/4 )->getTriangle( (sIEFOT[i] + j) % 4)) +
                 p1.preImageOf(sIEFOT[i] % 4) ) ,
-                tri->getNumberOfFaces()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
+                tri->getNumberOfTriangles()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
         }
     }
     // end A2
@@ -343,14 +343,14 @@ void NHomologicalData::computeChainComplexes() {
     for (i=0;i<tri->getNumberOfTetrahedra();i++) {
         for (j=0;j<4;j++) {
             // first go through standard faces 0 through 3
-            p1=tri->getTetrahedron(i)->getFaceMapping(j);
-            A3->entry( tri->faceIndex(
-                tri->getTetrahedron(i)->getFace(j) ), i) +=
+            p1=tri->getTetrahedron(i)->getTriangleMapping(j);
+            A3->entry( tri->triangleIndex(
+                tri->getTetrahedron(i)->getTriangle(j) ), i) +=
                 ( (p1.sign()==1) ? 1 : -1 );
             // then ideal faces 0 through 3, if they exist
             if (tri->getTetrahedron(i)->getVertex(j)->isIdeal()==1) {
                 // this part is in error.
-                A3->entry( tri->getNumberOfFaces() +
+                A3->entry( tri->getNumberOfTriangles() +
                     sIEFOT.index((4*i) + j), i) += 1;
             }
         }
@@ -358,17 +358,17 @@ void NHomologicalData::computeChainComplexes() {
     // end A3
 
 
-    // start B1: for each dual edge == non-boundary face,
+    // start B1: for each dual edge == non-boundary triangle,
     //              find the tetrahedra that bound it
     for (i=0;i<dNBF.size();i++) {
         B1->entry( tri->tetrahedronIndex(
-            tri->getFace(dNBF[i])->getEmbedding(1).getTetrahedron() ),i)+=1;
+            tri->getTriangle(dNBF[i])->getEmbedding(1).getTetrahedron() ),i)+=1;
         B1->entry( tri->tetrahedronIndex(
-            tri->getFace(dNBF[i])->getEmbedding(0).getTetrahedron() ),i)-=1;
+            tri->getTriangle(dNBF[i])->getEmbedding(0).getTetrahedron() ),i)-=1;
     }
     // end B1
 
-    // start B2: for each dual face == non-boundary edge,
+    // start B2: for each dual triangle == non-boundary edge,
     // find dual edges it bounds == link of tetrahedra that contain it
     for (i=0;i<dNBE.size();i++) {
         const std::deque<NEdgeEmbedding>& edgeque(
@@ -379,15 +379,15 @@ void NHomologicalData::computeChainComplexes() {
             // what we want to orient... but we need to decide on its
             // orientation.  For that we check to see if this face's
             // getEmbedding(0).getTetrahedron() is the current tet, and
-            // getEmbedding(0).getFace() is this current face p1[2]...
+            // getEmbedding(0).getTriangle() is this current face p1[2]...
 
-            B2->entry( dNBF.index( tri->faceIndex(
-                edgeque[j].getTetrahedron()->getFace(p1[2]) ) ) ,i)+=
+            B2->entry( dNBF.index( tri->triangleIndex(
+                edgeque[j].getTetrahedron()->getTriangle(p1[2]) ) ) ,i)+=
                     ( ( edgeque[j].getTetrahedron() ==
-                        edgeque[j].getTetrahedron()->getFace(
+                        edgeque[j].getTetrahedron()->getTriangle(
                             p1[2] )->getEmbedding( 0 ).getTetrahedron() &&
-                        edgeque[j].getTetrahedron()->getFace(
-                            p1[2] )->getEmbedding( 0 ).getFace() == p1[2] )
+                        edgeque[j].getTetrahedron()->getTriangle(
+                            p1[2] )->getEmbedding( 0 ).getTriangle() == p1[2] )
                               ? 1 : -1);
         }
     }
@@ -401,7 +401,7 @@ void NHomologicalData::computeChainComplexes() {
     NEdgeEmbedding tempe;
 
     // start B3: for each dual tetrahedron==nonboundary vertex,
-    //           find the corresp edges==non-boundary boundary faces
+    //           find the corresp edges==non-boundary boundary triangles
 
     for (i=0;i<dNINBV.size();i++) {
         // dNINBV[i] is the vertices.index() of this vertex.
@@ -540,37 +540,38 @@ void NHomologicalData::computeChainComplexes() {
     }
 
     // step 2) fill out the matrix. each dual 1-cell corresponds to a
-    // face of the ideal triangulation. the map of 0-cells has already
-    // been chosen so for the map of 1-cells simply choose any path
+    // triangular face of the ideal triangulation. the map of 0-cells has
+    // already been chosen so for the map of 1-cells simply choose any path
     // from the first 0-cell to the 2nd 0-cell with the condition that
     // the path stays inside the two ideal simplicies and only crosses
-    // the face corresponding to the dual 1-cell once. (and no other faces).
+    // the triangle corresponding to the dual 1-cell once. (and no other
+    // triangles).
 
     for (j=0; j<H1map->columns(); j++) // H1map.columns()==dNBF.size() 
         // while H1map.rows() is edges.size()+sIEEOF.size()
     {
         // now we have to decide where dual edge j == ideal triangulation
-        // face j is sent.
+        // triangle j is sent.
 
-        unsigned tet0FaceIndex = tri->getFace(dNBF[j])->
-            getEmbedding(0).getFace(); 
-        unsigned tet1FaceIndex = tri->getFace(dNBF[j])->
-            getEmbedding(1).getFace(); 
+        unsigned tet0TriIndex = tri->getTriangle(dNBF[j])->
+            getEmbedding(0).getTriangle(); 
+        unsigned tet1TriIndex = tri->getTriangle(dNBF[j])->
+            getEmbedding(1).getTriangle(); 
 
         unsigned vert0Num = zeroCellMap[tri->tetrahedronIndex(
-            tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron() )]/4;
+            tri->getTriangle(dNBF[j]) -> getEmbedding(0).getTetrahedron() )]/4;
             // vertex number of start vertex in tet0
         unsigned vert1Num = zeroCellMap[tri->tetrahedronIndex(
-            tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() )]/4;
+            tri->getTriangle(dNBF[j]) -> getEmbedding(1).getTetrahedron() )]/4;
             // vertex number of end vertex in tet1.
         unsigned vert0id = zeroCellMap[tri->tetrahedronIndex(
-            tri->getFace(dNBF[j]) -> getEmbedding(0).getTetrahedron() )]%4;
+            tri->getTriangle(dNBF[j]) -> getEmbedding(0).getTetrahedron() )]%4;
             // not equal to vert0Num if and only if vert0 is ideal.
         unsigned vert1id = zeroCellMap[tri->tetrahedronIndex(
-            tri->getFace(dNBF[j]) -> getEmbedding(1).getTetrahedron() )]%4;
+            tri->getTriangle(dNBF[j]) -> getEmbedding(1).getTetrahedron() )]%4;
             // not equal to vert1Num if and only if vert1 is ideal.
-        NPerm4 P1 = tri->getFace(dNBF[j])->getEmbedding(0).getVertices();
-        NPerm4 P2 = tri->getFace(dNBF[j])->getEmbedding(1).getVertices();
+        NPerm4 P1 = tri->getTriangle(dNBF[j])->getEmbedding(0).getVertices();
+        NPerm4 P2 = tri->getTriangle(dNBF[j])->getEmbedding(1).getVertices();
         NPerm4 P3;
         // the permutation from the start simplex vertices
         // to the end simplex.
@@ -582,21 +583,21 @@ void NHomologicalData::computeChainComplexes() {
         // that our chosen edge
         // with its induced orientation ends...
 
-        if (vert0Num == tet0FaceIndex)  // stage 0
+        if (vert0Num == tet0TriIndex)  // stage 0
         {
             stage0nec = true;
 
             if (vert0Num == vert0id) {
-                stage0choice = (tet0FaceIndex + 1) % 4;
+                stage0choice = (tet0TriIndex + 1) % 4;
             } // not ideal
             else {
                 stage0choice = vert0id;
             } // ideal
 
-            stage0edgeNum = tri->edgeIndex(tri->getFace(dNBF[j]) ->
+            stage0edgeNum = tri->edgeIndex(tri->getTriangle(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron() ->
                 getEdge( NEdge::edgeNumber[vert0Num][stage0choice] ));
-            stage0posOr = ( static_cast<unsigned>(tri->getFace(dNBF[j]) ->
+            stage0posOr = ( static_cast<unsigned>(tri->getTriangle(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron()->getEdgeMapping(
                 NEdge::edgeNumber[vert0Num][stage0choice])[1]) == stage0choice) ?
                 true : false ;
@@ -608,21 +609,21 @@ void NHomologicalData::computeChainComplexes() {
         bool stage4posOr = false;
         unsigned stage4choice = 0;
 
-        if (vert1Num == tet1FaceIndex) {
+        if (vert1Num == tet1TriIndex) {
             stage4nec = true;
 
             if (vert1Num == vert1id) // the non-ideal case.
             {
-                stage4choice = (tet1FaceIndex + 1) % 4;
+                stage4choice = (tet1TriIndex + 1) % 4;
             } // duh, this is all wrong.
             else {
                 stage4choice = vert1id;
             }
 
-            stage4edgeNum = tri->edgeIndex(tri->getFace(dNBF[j]) ->
+            stage4edgeNum = tri->edgeIndex(tri->getTriangle(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron() ->
                 getEdge( NEdge::edgeNumber[vert1Num][stage4choice] ));
-            stage4posOr = ( static_cast<unsigned>(tri->getFace(dNBF[j]) ->
+            stage4posOr = ( static_cast<unsigned>(tri->getTriangle(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron()->getEdgeMapping(
                 NEdge::edgeNumber[vert1Num][stage4choice])[1]) == vert1Num ) ?
                 true : false ;
@@ -634,9 +635,9 @@ void NHomologicalData::computeChainComplexes() {
         unsigned stage1vi = 0;
         unsigned long stage1edgeNum = 0;
         bool stage1posOr = false;
-        unsigned stage1FaceToUse = 0;
+        unsigned stage1TriToUse = 0;
 
-        if (stage0nec && tri->getFace(dNBF[j]) ->
+        if (stage0nec && tri->getTriangle(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron() ->
                 getVertex(stage0choice)->isIdeal() ) {
             stage1v = stage0choice;
@@ -644,21 +645,21 @@ void NHomologicalData::computeChainComplexes() {
             stage1nec=true;
         } else
             if ((!stage0nec) && (vert0Num != vert0id) &&
-                    (vert0id == tet0FaceIndex)) {
+                    (vert0id == tet0TriIndex)) {
                 stage1v = vert0Num;
                 stage1vi = vert0id;
                 stage1nec = true;
             }
-        if (stage1nec) { // we need to decide which face to use...
-            stage1FaceToUse = tri->getFace(dNBF[j]) ->
+        if (stage1nec) { // we need to decide which triangle to use...
+            stage1TriToUse = tri->getTriangle(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron()->getEdgeMapping(
-                NEdge::edgeNumber[stage1v][tet0FaceIndex] )[2];
-            P3 = tri->getFace(dNBF[j])->getEmbedding(0).getTetrahedron()->
-                getFaceMapping(stage1FaceToUse);
+                NEdge::edgeNumber[stage1v][tet0TriIndex] )[2];
+            P3 = tri->getTriangle(dNBF[j])->getEmbedding(0).getTetrahedron()->
+                getTriangleMapping(stage1TriToUse);
             stage1edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
-                3*(tri->faceIndex(tri->getFace(dNBF[j]) ->
+                3*(tri->triangleIndex(tri->getTriangle(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron() ->
-                getFace(stage1FaceToUse))) + P3.preImageOf(stage1v) );
+                getTriangle(stage1TriToUse))) + P3.preImageOf(stage1v) );
             stage1posOr = ( ( static_cast<unsigned>(
                 P3[(P3.preImageOf(stage1v)+1) % 3]) !=
                 stage1vi ) ? true : false );
@@ -668,9 +669,9 @@ void NHomologicalData::computeChainComplexes() {
         unsigned stage3vi = 0;
         unsigned long stage3edgeNum = 0;
         bool stage3posOr = false;
-        unsigned stage3FaceToUse = 0;
+        unsigned stage3TriToUse = 0;
 
-        if (stage4nec && tri->getFace(dNBF[j]) ->
+        if (stage4nec && tri->getTriangle(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron() ->
                 getVertex(stage4choice)->isIdeal() ) { // ideal case
             stage3v = stage4choice;
@@ -678,21 +679,21 @@ void NHomologicalData::computeChainComplexes() {
             stage3nec=true;
         } else
             if ((!stage4nec) && (vert1Num != vert1id) &&
-                    (vert1id == tet1FaceIndex)) { // non-ideal case
+                    (vert1id == tet1TriIndex)) { // non-ideal case
                 stage3v = vert1Num;
                 stage3vi = vert1id;
                 stage3nec = true;
             }
-        if (stage3nec) { // we need to decide which face to use...
-            stage3FaceToUse = tri->getFace(dNBF[j]) ->
+        if (stage3nec) { // we need to decide which triangle to use...
+            stage3TriToUse = tri->getTriangle(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron()->getEdgeMapping(
-                NEdge::edgeNumber[stage3v][tet1FaceIndex] )[2];
-            P3 = tri->getFace(dNBF[j])->getEmbedding(1).getTetrahedron()->
-                getFaceMapping(stage3FaceToUse);
+                NEdge::edgeNumber[stage3v][tet1TriIndex] )[2];
+            P3 = tri->getTriangle(dNBF[j])->getEmbedding(1).getTetrahedron()->
+                getTriangleMapping(stage3TriToUse);
             stage3edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
-                3*(tri->faceIndex(tri->getFace(dNBF[j]) ->
+                3*(tri->triangleIndex(tri->getTriangle(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron() ->
-                getFace(stage3FaceToUse))) + P3.preImageOf(stage3v) );
+                getTriangle(stage3TriToUse))) + P3.preImageOf(stage3v) );
             stage3posOr = ( ( static_cast<unsigned>(
                 P3[(P3.preImageOf(stage3v)+1) % 3]) ==
                 stage3vi ) ? true : false );
@@ -708,7 +709,7 @@ void NHomologicalData::computeChainComplexes() {
         if (stage1nec) // set up stage2startdata
         {
             stage2startdata = 3*P1.preImageOf( stage1v ) +
-                P1.preImageOf((tri->getFace(dNBF[j]) ->
+                P1.preImageOf((tri->getTriangle(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron() ->
                 getEdgeMapping( NEdge::edgeNumber[stage1v][stage1vi] ))[3] );
         } else {
@@ -733,7 +734,7 @@ void NHomologicalData::computeChainComplexes() {
         if (stage3nec) // set up stage2enddata
         {
             stage2enddata = 3*P2.preImageOf( stage3v ) +
-                P2.preImageOf((tri->getFace(dNBF[j]) ->
+                P2.preImageOf((tri->getTriangle(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron() ->
                 getEdgeMapping( NEdge::edgeNumber[stage3v][stage3vi] ))[3] );
         } else {
@@ -750,7 +751,7 @@ void NHomologicalData::computeChainComplexes() {
                         ((P2.preImageOf( vert1Num ) + 1) % 3);
             }
         }
-        // now cycle through pairs of adjacent vertices on the face
+        // now cycle through pairs of adjacent vertices on the triangle
         // and check to see if the corresponding edge is required...
 
         unsigned currV = stage2startdata;
@@ -759,7 +760,7 @@ void NHomologicalData::computeChainComplexes() {
             while (currV != stage2enddata) {
                 // first, increment currV -- this is a number from the
                 // set { 1, 2, 3, 5, 6, 7 } describing an ideal vertex
-                // of the face is triadic 3*vert num + direction...
+                // of the triangle is triadic 3*vert num + direction...
                 switch (currV) {
                 case 1:
                     currV = 3;
@@ -781,7 +782,7 @@ void NHomologicalData::computeChainComplexes() {
                     break;
                 }
                 // main alg here.
-                if (( currV/3  == prevV/3 ) && (tri->getFace(dNBF[j])->
+                if (( currV/3  == prevV/3 ) && (tri->getTriangle(dNBF[j])->
                         getVertex(currV/3)->isIdeal()) )  // ideal edge
                 {
                     H1map->entry( tri->getNumberOfEdges() +
@@ -789,11 +790,11 @@ void NHomologicalData::computeChainComplexes() {
                 }
                 if ( currV/3  != prevV/3 ) // regular edge
                 {
-                    H1map->entry(tri->edgeIndex(tri->getFace(dNBF[j])->getEdge(((currV/3) + 1) % 3 )), j) 
+                    H1map->entry(tri->edgeIndex(tri->getTriangle(dNBF[j])->getEdge(((currV/3) + 1) % 3 )), j) 
                       += ( 
                            ( 
                              static_cast<unsigned>( 
-                              tri->getFace(dNBF[j])->getEdgeMapping(((currV/3) + 1) % 3)[1]
+                              tri->getTriangle(dNBF[j])->getEdgeMapping(((currV/3) + 1) % 3)[1]
                                                   ) == currV/3
                            ) 
                          ? +1 : -1 );
@@ -827,26 +828,26 @@ void NHomologicalData::computeChainComplexes() {
     } // ok
 
     for (i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
-        // sIEEOF[i] /3 is the face index, and sIEEOF[i] % 3 tells us
-        // the vertex of this face
-        p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 1) % 3);
+        // sIEEOF[i] /3 is the triangle index, and sIEEOF[i] % 3 tells us
+        // the vertex of this triangle
+        p1=tri->getTriangle(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 1) % 3);
         if (p1.sign()==1) {
             Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->
+                tri->edgeIndex((tri->getTriangle(sIEEOF[i]/3))->
                 getEdge(p1[2])) )+1), sBNIE.size()+i)-=1;
         } else {
             Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->
+                tri->edgeIndex((tri->getTriangle(sIEEOF[i]/3))->
                 getEdge(p1[2])) )) , sBNIE.size()+i)-=1;
         }
-        p1=tri->getFace(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 2) % 3);
+        p1=tri->getTriangle(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 2) % 3);
         if (p1.sign()==1) {
             Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->
+                tri->edgeIndex((tri->getTriangle(sIEEOF[i]/3))->
                 getEdge(p1[2])) )) , sBNIE.size()+i)+=1;
         } else {
             Bd1->entry(sBNIV.size() + sIEOE.index(2*(
-                tri->edgeIndex((tri->getFace(sIEEOF[i]/3))->
+                tri->edgeIndex((tri->getTriangle(sIEEOF[i]/3))->
                 getEdge(p1[2])) )+1) , sBNIE.size()+i)+=1;
         }
     }
@@ -854,44 +855,44 @@ void NHomologicalData::computeChainComplexes() {
 
     // start filling out Bd2: rows==sBNIE.size()+sIEEOF.size(),
     // cols==sBNIF.size()+sIEFOT.size()
-    for (i=0;i<sBNIF.size();i++) // boundary non-ideal faces...
+    for (i=0;i<sBNIF.size();i++) // boundary non-ideal triangles...
     { // put boundary edges into Bd2..
         for (j=0;j<6;j++) {
-            // run through the 6 possible boundary edges of the face
+            // run through the 6 possible boundary edges of the triangle
             // the first 3 are standard, the last three are the ideal
             // edges (if they exist)
             if ( (j/3) == 0) {
-                p1=tri->getFace(sBNIF[i])->getEdgeMapping(j % 3);
-                Bd2->entry( sBNIE.index( tri->edgeIndex(tri->getFace(
+                p1=tri->getTriangle(sBNIF[i])->getEdgeMapping(j % 3);
+                Bd2->entry( sBNIE.index( tri->edgeIndex(tri->getTriangle(
                     sBNIF[i])->getEdge(j % 3)) ) ,i) +=
                     ( (p1.sign()==1) ? +1 : -1 );
             } else {
-                // check face i vertex j % 3 is ideal
-                if (tri->getFace(sBNIF[i])->getVertex(j % 3)->isIdeal())
+                // check triangle i vertex j % 3 is ideal
+                if (tri->getTriangle(sBNIF[i])->getVertex(j % 3)->isIdeal())
                     Bd2->entry( sBNIF.size() + sIEEOF.index(
                         (3*i) + (j % 3)), i) += 1;
             }
         }
     }
 
-    for (i=0;i<sIEFOT.size();i++) // ideal faces...
+    for (i=0;i<sIEFOT.size();i++) // ideal triangles...
     { // boundary edges from ideal faces of tetrahedra.
         // sIEFOT[i] /4 is the tetrahedron number
         // sIEFOT[i] % 4 is the vertex number for this tetrahedron
-        // tetrahedra[ sIEFOT[i]/4 ].getFace(sIEFOT[i] + 1,2,3 % 4) are
+        // tetrahedra[ sIEFOT[i]/4 ].getTriangle(sIEFOT[i] + 1,2,3 % 4) are
         // the respective faces
-        // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4)
+        // tetrahedra[ sIEFOT[i]/4 ].getTriangleMapping(sIEFOT[i] + 1,2,3 % 4)
         // gives the perm
-        // faces().index( tetrahedra[sIEFOT[i]/4].getFace(
+        // triangles().index( tetrahedra[sIEFOT[i]/4].getTriangle(
         //     sIEFOT[i] + 1,2,3 % 4) is therefore the
-        // face number, and tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(
+        // triangle number, and tetrahedra[ sIEFOT[i]/4 ].getTriangleMapping(
         //     sIEFOT[i] + 1,2,3 % 4)^{-1}
-        // applied to sIEFOT[i] % 4 is the vertex of this face.
+        // applied to sIEFOT[i] % 4 is the vertex of this triangle.
         for (j=1;j<4;j++) {
-            p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping(
+            p1=tri->getTetrahedron( sIEFOT[i]/4 )->getTriangleMapping(
                 (sIEFOT[i] + j) % 4);
-            Bd2->entry( sBNIE.size() + sIEEOF.index(3*tri->faceIndex(
-                tri->getTetrahedron(sIEFOT[i]/4 )->getFace(
+            Bd2->entry( sBNIE.size() + sIEEOF.index(3*tri->triangleIndex(
+                tri->getTetrahedron(sIEFOT[i]/4 )->getTriangle(
                 (sIEFOT[i] + j) % 4)) + p1.preImageOf(sIEFOT[i] % 4) ) ,
                 sBNIF.size()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
         }
@@ -911,7 +912,7 @@ void NHomologicalData::computeChainComplexes() {
     // fill out b2Incl
     for (i=0;i<B2Incl->columns();i++)
         B2Incl->entry( ( ( i < sBNIF.size() ) ? sBNIF[i] :
-                tri->getNumberOfFaces() + i - sBNIF.size() ) ,i)+=1;
+                tri->getNumberOfTriangles() + i - sBNIF.size() ) ,i)+=1;
 }
 
 const NMarkedAbelianGroup& NHomologicalData::getHomology(unsigned q) {
@@ -1295,12 +1296,12 @@ void NHomologicalData::computeTorsionLinkingForm() {
                 // tetrahedra[?]->orientation() is +1 or -1 depending on if the
                 //   natural orientation agrees with the manifolds one or not.
                 //
-                // dual orientation of face points into some tetrahedron given
-                //  by face[?]->getEmbedding(0) is an NFaceEmbedding
-                //     face[]->getEmbedding(0).getTetrahedron() tet pointer
-                //     face[]->getEmbedding(0).getVertices() is an NPerm
+                // dual orientation of triangle points into some tetrahedron
+                //  given by triangle[?]->getEmbedding(0) is an NTriangleEmbedding
+                //     triangle[]->getEmbedding(0).getTetrahedron() tet pointer
+                //     triangle[]->getEmbedding(0).getVertices() is an NPerm
                 //
-                // faces[dNBF[k]] is the face pointer of the dual 1-cell
+                // triangles[dNBF[k]] is the triangle pointer of the dual 1-cell
 
                 // boundingMat is vectors in standard 2-complex so it has
                 // the same dimension as the standard 2-cells + ideal 2-cells,
@@ -1310,9 +1311,9 @@ void NHomologicalData::computeTorsionLinkingForm() {
                     NRational(
                         boundingMat.entry(dNBF[k],i)*pvList[j][k]*
                         NLargeInteger(
-                            tri->getFace(dNBF[k])->getEmbedding(0).
+                            tri->getTriangle(dNBF[k])->getEmbedding(0).
                                 getTetrahedron()->orientation()*
-                            tri->getFace(dNBF[k])->getEmbedding(0).
+                            tri->getTriangle(dNBF[k])->getEmbedding(0).
                                 getVertices().sign() ), ppList[i] );
             }
             tN=torsionLinkingFormPresentationMat.entry(i,j).getNumerator();

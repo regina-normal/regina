@@ -111,6 +111,13 @@ class REGINA_API NPerm3 {
         static const NPerm3 orderedS3[6];
 
         /**
+         * A dimension-agnostic alias for NPerm3::orderedS3.  In general, for
+         * each \a K the class NPermK will define an alias \a orderedSn
+         * that references the list of all permutations NPermK::orderedSK.
+         */
+        static const NPerm3* orderedSn;
+
+        /**
          * Contains all possible permutations of two elements.
          * In each permutation, 2 maps to 2 and 3 maps to 3.
          *
@@ -413,12 +420,30 @@ class REGINA_API NPerm3 {
         int S3Index() const;
 
         /**
+         * Returns the index of this permutation in the NPerm3::S3 array.
+         * This is a dimension-agnostic alias for S3Index().
+         *
+         * @return the index \a i for which this permutation is equal to
+         * NPerm3::S3[i].  This will be between 0 and 5 inclusive.
+         */
+        int SnIndex() const;
+
+        /**
          * Returns the index of this permutation in the NPerm3::orderedS3 array.
          *
          * @return the index \a i for which this permutation is equal to
          * NPerm3::orderedS3[i].  This will be between 0 and 5 inclusive.
          */
         int orderedS3Index() const;
+
+        /**
+         * Returns the index of this permutation in the NPerm3::orderedS3 array.
+         * This is a dimension-agnostic alias for orderedS3Index().
+         *
+         * @return the index \a i for which this permutation is equal to
+         * NPerm3::orderedS3[i].  This will be between 0 and 5 inclusive.
+         */
+        int orderedSnIndex() const;
 
     private:
         /**
@@ -584,11 +609,19 @@ inline int NPerm3::S3Index() const {
     return code_;
 }
 
+inline int NPerm3::SnIndex() const {
+    return code_;
+}
+
 inline int NPerm3::orderedS3Index() const {
     if (code_ == 2 || code_ == 3)
         return code_ ^ 1;
     else
         return code_;
+}
+
+inline int NPerm3::orderedSnIndex() const {
+    return orderedS3Index();
 }
 
 } // namespace regina

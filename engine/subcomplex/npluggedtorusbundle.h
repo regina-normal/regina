@@ -74,7 +74,7 @@ class NTxICore;
  * so that each annulus becomes its own two-sided torus.
  *
  * Either way, the saturated region effectively has two torus boundaries,
- * each formed from two faces of the triangulation.  These boundaries
+ * each formed from two triangles of the triangulation.  These boundaries
  * are then joined to the two torus boundaries of the thin I-bundle,
  * possibly with layerings in between (for more detail on layerings, see
  * the NLayering class).  This is illustrated in the following diagram,
