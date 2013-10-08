@@ -47,7 +47,7 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
 
     // Find a maximal forest in the dual 1-skeleton.
     // Note that this will ensure the skeleton has been calculated.
-    std::set<NFace*> forest;
+    std::set<NTriangle*> forest;
     maximalForestInDualSkeleton(forest);
 
     // Each non-boundary not-in-forest face is a generator.
@@ -73,7 +73,7 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
     // Run through each edge and put the relations in the matrix.
     std::deque<NEdgeEmbedding>::const_iterator embit;
     NTetrahedron* currTet;
-    NFace* face;
+    NTriangle* face;
     int currTetFace;
     long faceGenIndex;
     NGroupExpression* rel;

@@ -65,7 +65,7 @@ class NVertex;
  * Details how a face in the skeleton forms part of an individual
  * tetrahedron.
  */
-class REGINA_API NFaceEmbedding {
+class REGINA_API NTriangleEmbedding {
     private:
         NTetrahedron* tetrahedron;
             /**< The tetrahedron in which this face is contained. */
@@ -80,7 +80,7 @@ class REGINA_API NFaceEmbedding {
          * contained.
          * @param newFace the face number of \a newTet that is this face.
          */
-        NFaceEmbedding(NTetrahedron* newTet, int newFace);
+        NTriangleEmbedding(NTetrahedron* newTet, int newFace);
 
         /**
          * Creates an embedding descriptor containing the same data as
@@ -88,7 +88,7 @@ class REGINA_API NFaceEmbedding {
          *
          * @param cloneMe the embedding descriptor to clone.
          */
-        NFaceEmbedding(const NFaceEmbedding& cloneMe);
+        NTriangleEmbedding(const NTriangleEmbedding& cloneMe);
 
         /**
          * Returns the tetrahedron in which this face is contained.
@@ -121,7 +121,7 @@ class REGINA_API NFaceEmbedding {
  * Faces are highly temporary; once a triangulation changes, all its
  * face objects will be deleted and new ones will be created.
  */
-class REGINA_API NFace : public ShareableObject, public NMarkedElement {
+class REGINA_API NTriangle : public ShareableObject, public NMarkedElement {
     public:
         static const int TRIANGLE;
             /**< Specifies a face with no identified vertices or edges. */
@@ -166,7 +166,7 @@ class REGINA_API NFace : public ShareableObject, public NMarkedElement {
         static const NPerm4 ordering[4];
 
     private:
-        NFaceEmbedding* embeddings[2];
+        NTriangleEmbedding* embeddings[2];
             /**< An array of descriptors telling how this face forms a part of
                  each individual tetrahedron that it belongs to.
                  These embeddings will be automatically deleted when the
@@ -181,7 +181,7 @@ class REGINA_API NFace : public ShareableObject, public NMarkedElement {
                  or 0 if this face is internal. */
         int type;
             /**< Specifies the face type according to one of the
-                 predefined face type constants in NFace, or 0 if type has
+                 predefined face type constants in NTriangle, or 0 if type has
                  not yet been determined. */
         int subtype;
             /**< Specifies the vertex or edge that plays a special role
@@ -194,7 +194,7 @@ class REGINA_API NFace : public ShareableObject, public NMarkedElement {
          * All embedding descriptors stored in this face will be
          * automatically deleted.
          */
-        virtual ~NFace();
+        virtual ~NTriangle();
 
         /**
          * Determines if this face lies entirely on the boundary of the
@@ -209,7 +209,7 @@ class REGINA_API NFace : public ShareableObject, public NMarkedElement {
          * The face type describes how the edges and vertices of the
          * face are identified.
          *
-         * @return one of the predefined face type constants in NFace.
+         * @return one of the predefined face type constants in NTriangle.
          */
         int getType();
 
@@ -266,7 +266,7 @@ class REGINA_API NFace : public ShareableObject, public NMarkedElement {
          * should be between 0 and getNumberOfEmbeddings()-1 inclusive.
          * @return the requested embedding descriptor.
          */
-        const NFaceEmbedding& getEmbedding(unsigned index) const;
+        const NTriangleEmbedding& getEmbedding(unsigned index) const;
 
         /**
          * Returns the triangulation to which this face belongs.
@@ -347,7 +347,7 @@ class REGINA_API NFace : public ShareableObject, public NMarkedElement {
          * @param myComponent the triangulation component to which this
          * face belongs.
          */
-        NFace(NComponent* myComponent);
+        NTriangle(NComponent* myComponent);
 
     friend class NTriangulation;
         /**< Allow access to private members. */
@@ -360,84 +360,84 @@ class REGINA_API NFace : public ShareableObject, public NMarkedElement {
 #include "triangulation/ntetrahedron.h"
 namespace regina {
 
-// Inline functions for NFace
+// Inline functions for NTriangle
 
-inline NFace::NFace(NComponent* myComponent) : nEmbeddings(0),
+inline NTriangle::NTriangle(NComponent* myComponent) : nEmbeddings(0),
         component(myComponent), boundaryComponent(0), type(0) {
 }
 
-inline NFace::~NFace() {
+inline NTriangle::~NTriangle() {
     if (nEmbeddings > 0)
         delete embeddings[0];
     if (nEmbeddings > 1)
         delete embeddings[1];
 }
 
-inline NTriangulation* NFace::getTriangulation() const {
+inline NTriangulation* NTriangle::getTriangulation() const {
     return embeddings[0]->getTetrahedron()->getTriangulation();
 }
 
-inline NComponent* NFace::getComponent() const {
+inline NComponent* NTriangle::getComponent() const {
     return component;
 }
 
-inline NBoundaryComponent* NFace::getBoundaryComponent() const {
+inline NBoundaryComponent* NTriangle::getBoundaryComponent() const {
     return boundaryComponent;
 }
 
-inline NVertex* NFace::getVertex(int vertex) const {
+inline NVertex* NTriangle::getVertex(int vertex) const {
     return embeddings[0]->getTetrahedron()->getVertex(
         embeddings[0]->getVertices()[vertex]);
 }
 
-inline bool NFace::isBoundary() const {
+inline bool NTriangle::isBoundary() const {
     return (boundaryComponent != 0);
 }
 
-inline int NFace::getSubtype() {
+inline int NTriangle::getSubtype() {
     getType();
     return subtype;
 }
 
-inline bool NFace::isMobiusBand() {
+inline bool NTriangle::isMobiusBand() {
     getType();
     return (type == L31 || type == DUNCEHAT || type == MOBIUS);
 }
 
-inline bool NFace::isCone() {
+inline bool NTriangle::isCone() {
     getType();
     return (type == DUNCEHAT || type == CONE || type == HORN);
 }
 
-inline unsigned NFace::getNumberOfEmbeddings() const {
+inline unsigned NTriangle::getNumberOfEmbeddings() const {
     return nEmbeddings;
 }
 
-inline const NFaceEmbedding& NFace::getEmbedding(unsigned index) const {
+inline const NTriangleEmbedding& NTriangle::getEmbedding(unsigned index) const {
     return *(embeddings[index]);
 }
 
-inline void NFace::writeTextShort(std::ostream& out) const {
+inline void NTriangle::writeTextShort(std::ostream& out) const {
     out << (isBoundary() ? "Boundary " : "Internal ") << "face";
 }
 
-inline NFaceEmbedding::NFaceEmbedding(NTetrahedron* newTet, int newFace) :
+inline NTriangleEmbedding::NTriangleEmbedding(NTetrahedron* newTet, int newFace) :
         tetrahedron(newTet), face(newFace) {
 }
 
-inline NFaceEmbedding::NFaceEmbedding(const NFaceEmbedding& cloneMe) :
+inline NTriangleEmbedding::NTriangleEmbedding(const NTriangleEmbedding& cloneMe) :
         tetrahedron(cloneMe.tetrahedron), face(cloneMe.face) {
 }
 
-inline NTetrahedron* NFaceEmbedding::getTetrahedron() const {
+inline NTetrahedron* NTriangleEmbedding::getTetrahedron() const {
     return tetrahedron;
 }
 
-inline int NFaceEmbedding::getFace() const {
+inline int NTriangleEmbedding::getFace() const {
     return face;
 }
 
-inline NPerm4 NFaceEmbedding::getVertices() const {
+inline NPerm4 NTriangleEmbedding::getVertices() const {
     return tetrahedron->getFaceMapping(face);
 }
 

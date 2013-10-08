@@ -50,7 +50,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1() const {
     // Calculate the first homology.
     // Find a maximal forest in the dual 1-skeleton.
     // Note that this will ensure the skeleton has been calculated.
-    std::set<NFace*> forest;
+    std::set<NTriangle*> forest;
     maximalForestInDualSkeleton(forest);
 
     // Build a presentation matrix.
@@ -84,7 +84,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1() const {
     // Run through each edge and put the relations in the matrix.
     std::deque<NEdgeEmbedding>::const_iterator embit;
     NTetrahedron* currTet;
-    NFace* face;
+    NTriangle* face;
     int currTetFace;
     long faceGenIndex;
     i = 0;

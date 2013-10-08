@@ -50,7 +50,7 @@
 namespace regina {
 
 class NEdge;
-class NFace;
+class NTriangle;
 class NTetrahedron;
 class NVertex;
 
@@ -84,7 +84,7 @@ class NVertex;
 class REGINA_API NBoundaryComponent :
         public ShareableObject, public NMarkedElement {
     private:
-        std::vector<NFace*> faces;
+        std::vector<NTriangle*> faces;
             /**< List of faces in the component. */
         std::vector<NEdge*> edges;
             /**< List of edges in the component. */
@@ -136,7 +136,7 @@ class REGINA_API NBoundaryComponent :
          * triangulation.
          * @return the requested face.
          */
-        NFace* getFace(unsigned long index) const;
+        NTriangle* getFace(unsigned long index) const;
 
         /**
          * Returns the requested edge in this boundary component.
@@ -251,7 +251,7 @@ inline unsigned long NBoundaryComponent::getNumberOfVertices() const {
     return vertices.size();
 }
 
-inline NFace* NBoundaryComponent::getFace(unsigned long index) const {
+inline NTriangle* NBoundaryComponent::getFace(unsigned long index) const {
     return faces[index];
 }
 

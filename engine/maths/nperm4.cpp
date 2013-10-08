@@ -236,7 +236,7 @@ NPerm4 edgeOrdering(int edge) {
 
 std::string faceDescription(int face) {
     // deprecated
-    return NFace::ordering[face].trunc3();
+    return NTriangle::ordering[face].trunc3();
 }
 
 std::string edgeDescription(int edge) {

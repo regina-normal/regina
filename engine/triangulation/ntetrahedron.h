@@ -49,7 +49,7 @@
 
 namespace regina {
 
-class NFace;
+class NTriangle;
 class NEdge;
 class NVertex;
 class NComponent;
@@ -128,7 +128,7 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
         NEdge* edges[6];
             /**< Edges in the triangulation skeleton that are
                  edges of this tetrahedron. */
-        NFace* faces[4];
+        NTriangle* faces[4];
             /**< Faces in the triangulation skeleton that are
                  faces of this tetrahedron. */
 
@@ -485,7 +485,7 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          * @return the face of the skeleton corresponding to the
          * requested tetrahedron face.
          */
-        NFace* getFace(int face) const;
+        NTriangle* getFace(int face) const;
         /**
          * Returns a permutation that maps 0 to the given vertex of this
          * tetrahedron, and that maps (1,2,3) to the three remaining vertices
@@ -725,7 +725,7 @@ inline NEdge* NTetrahedron::getEdge(int edge) const {
     return edges[edge];
 }
 
-inline NFace* NTetrahedron::getFace(int face) const {
+inline NTriangle* NTetrahedron::getFace(int face) const {
     if (! tri->calculatedSkeleton)
         tri->calculateSkeleton();
     return faces[face];

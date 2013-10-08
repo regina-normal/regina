@@ -46,7 +46,7 @@ NPillowTwoSphere* NPillowTwoSphere::clone() const {
 }
 
 NPillowTwoSphere* NPillowTwoSphere::formsPillowTwoSphere(
-        NFace* face1, NFace* face2) {
+        NTriangle* face1, NTriangle* face2) {
     if (face1 == face2 || face1->isBoundary() || face2->isBoundary())
         return 0;
     NEdge* edge[2][3];

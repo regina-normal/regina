@@ -1166,7 +1166,7 @@ NTriangulation* NNormalSurface::cutAlong() const {
         sets[i] = new TetBlockSet(this, i, ans);
 
     NTriangulation::FaceIterator fit;
-    NFace* f;
+    NTriangle* f;
     unsigned long tet0, tet1;
     int face0, face1;
     int fromVertex0, fromVertex1;

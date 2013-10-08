@@ -48,7 +48,7 @@
 
 namespace regina {
 
-class NFace;
+class NTriangle;
 class NTriangulation;
 
 /**
@@ -73,7 +73,7 @@ class NTriangulation;
  */
 class REGINA_API NPillowTwoSphere : public ShareableObject {
     private:
-        NFace* face[2];
+        NTriangle* face[2];
             /**< The two faces whose edges are joined. */
         NPerm4 faceMapping;
             /**< A mapping from vertices (0,1,2) of the first face to
@@ -95,7 +95,7 @@ class REGINA_API NPillowTwoSphere : public ShareableObject {
          * this must be either 0 or 1.
          * @return the corresponding face.
          */
-        NFace* getFace(int index) const;
+        NTriangle* getFace(int index) const;
         /**
          * Returns a permutation describing how the boundaries of the two
          * faces are joined.
@@ -122,8 +122,8 @@ class REGINA_API NPillowTwoSphere : public ShareableObject {
          * pillow 2-sphere, or \c null if the given faces do not
          * form a pillow 2-sphere.
          */
-        static NPillowTwoSphere* formsPillowTwoSphere(NFace* face1,
-            NFace* face2);
+        static NPillowTwoSphere* formsPillowTwoSphere(NTriangle* face1,
+            NTriangle* face2);
 
         void writeTextShort(std::ostream& out) const;
 
@@ -140,7 +140,7 @@ class REGINA_API NPillowTwoSphere : public ShareableObject {
 
 inline NPillowTwoSphere::NPillowTwoSphere() {
 }
-inline NFace* NPillowTwoSphere::getFace(int index) const {
+inline NTriangle* NPillowTwoSphere::getFace(int index) const {
     return face[index];
 }
 inline NPerm4 NPillowTwoSphere::getFaceMapping() const {

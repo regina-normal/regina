@@ -67,7 +67,7 @@ NLargeInteger NNormalSurfaceVectorANStandard::getEdgeWeight(
 NLargeInteger NNormalSurfaceVectorANStandard::getFaceArcs(
         unsigned long triIndex, int faceVertex, NTriangulation* triang) const {
     // Find a tetrahedron next to the face in question.
-    const NFaceEmbedding& emb = triang->getTriangles()[triIndex]->
+    const NTriangleEmbedding& emb = triang->getTriangles()[triIndex]->
         getEmbedding(0);
     long tetIndex = triang->tetrahedronIndex(emb.getTetrahedron());
     int vertex = emb.getVertices()[faceVertex];

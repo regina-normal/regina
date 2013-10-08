@@ -49,7 +49,7 @@ namespace {
         out << "triangulation" << std::endl;
 
         // Write face gluings.
-        NFace* f;
+        NTriangle* f;
         NTetrahedron* tet;
         NPerm4 vert;
         for (unsigned i = 0; i < tri.getNumberOfTriangles(); ++i) {

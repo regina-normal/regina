@@ -66,7 +66,7 @@ namespace regina {
 class NBoundaryComponent;
 class NComponent;
 class NEdge;
-class NFace;
+class NTriangle;
 class NTetrahedron;
 class NVertex;
 class NGroupPresentation;
@@ -126,7 +126,7 @@ class REGINA_API NTriangulation : public NPacket,
 
         typedef std::vector<NTetrahedron*>::const_iterator TetrahedronIterator;
             /**< Used to iterate through tetrahedra. */
-        typedef std::vector<NFace*>::const_iterator FaceIterator;
+        typedef std::vector<NTriangle*>::const_iterator FaceIterator;
             /**< Used to iterate through faces. */
         typedef std::vector<NEdge*>::const_iterator EdgeIterator;
             /**< Used to iterate through edges. */
@@ -148,7 +148,7 @@ class REGINA_API NTriangulation : public NPacket,
 
         NMarkedVector<NTetrahedron> tetrahedra;
             /**< The tetrahedra that form the triangulation. */
-        mutable NMarkedVector<NFace> faces;
+        mutable NMarkedVector<NTriangle> faces;
             /**< The faces in the triangulation skeleton. */
         mutable NMarkedVector<NEdge> edges;
             /**< The edges in the triangulation skeleton. */
@@ -708,7 +708,7 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * @return the list of all faces.
          */
-        const std::vector<NFace*>& getTriangles() const;
+        const std::vector<NTriangle*>& getTriangles() const;
         /**
          * Returns the requested triangulation component.
          *
@@ -769,7 +769,7 @@ class REGINA_API NTriangulation : public NPacket,
          * to getNumberOfTriangles()-1 inclusive.
          * @return the requested face.
          */
-        NFace* getFace(unsigned long index) const;
+        NTriangle* getFace(unsigned long index) const;
         /**
          * Returns the index of the given component in the triangulation.
          *
@@ -870,7 +870,7 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the index of the specified face, where 0 is the first
          * face, 1 is the second and so on.
          */
-        long triangleIndex(const NFace* face) const;
+        long triangleIndex(const NTriangle* face) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -1557,7 +1557,7 @@ class REGINA_API NTriangulation : public NPacket,
          * @param faceSet the set to be emptied and into which the faces
          * representing the maximal forest will be placed.
          */
-        void maximalForestInDualSkeleton(std::set<NFace*>& faceSet) const;
+        void maximalForestInDualSkeleton(std::set<NTriangle*>& faceSet) const;
 
         /**
          * Attempts to simplify the triangulation as intelligently as
@@ -1667,7 +1667,7 @@ class REGINA_API NTriangulation : public NPacket,
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool twoThreeMove(NFace* f, bool check = true, bool perform = true);
+        bool twoThreeMove(NTriangle* f, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 4-4 move
          * about the given edge.
@@ -1900,7 +1900,7 @@ class REGINA_API NTriangulation : public NPacket,
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool openBook(NFace* f, bool check = true, bool perform = true);
+        bool openBook(NTriangle* f, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a book closing move
          * about the given boundary edge.
@@ -3098,7 +3098,7 @@ class REGINA_API NTriangulation : public NPacket,
          * calculateSkeleton().
          */
         void calculateBoundary() const;
-        void labelBoundaryFace(NFace*, NBoundaryComponent*) const;
+        void labelBoundaryFace(NTriangle*, NBoundaryComponent*) const;
             /**< Internal to calculateBoundary(). */
         /**
          * Calculates the triangulation vertex links and associated
@@ -3190,7 +3190,7 @@ class REGINA_API NTriangulation : public NPacket,
         bool stretchForestFromVertex(NVertex*, std::set<NEdge*>&,
                 std::set<NVertex*>&, std::set<NVertex*>&) const;
             /**< Internal to maximalForestInSkeleton(). */
-        void stretchDualForestFromTet(NTetrahedron*, std::set<NFace*>&,
+        void stretchDualForestFromTet(NTetrahedron*, std::set<NTriangle*>&,
                 std::set<NTetrahedron*>&) const;
             /**< Internal to maximalForestInDualSkeleton(). */
 
@@ -3438,11 +3438,11 @@ inline const std::vector<NEdge*>& NTriangulation::getEdges()
     return (const std::vector<NEdge*>&)(edges);
 }
 
-inline const std::vector<NFace*>& NTriangulation::getTriangles()
+inline const std::vector<NTriangle*>& NTriangulation::getTriangles()
         const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return (const std::vector<NFace*>&)(faces);
+    return (const std::vector<NTriangle*>&)(faces);
 }
 
 inline NComponent* NTriangulation::getComponent(unsigned long index) const {
@@ -3470,7 +3470,7 @@ inline NEdge* NTriangulation::getEdge(unsigned long index) const {
     return edges[index];
 }
 
-inline NFace* NTriangulation::getFace(unsigned long index) const {
+inline NTriangle* NTriangulation::getFace(unsigned long index) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return faces[index];
@@ -3493,7 +3493,7 @@ inline long NTriangulation::edgeIndex(const NEdge* edge) const {
     return edge->markedIndex();
 }
 
-inline long NTriangulation::triangleIndex(const NFace* face) const {
+inline long NTriangulation::triangleIndex(const NTriangle* face) const {
     return face->markedIndex();
 }
 

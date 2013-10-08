@@ -595,9 +595,9 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
     if (comp->getBoundaryComponent(0)->getNumberOfTriangles() != 2)
         return 0;
 
-    NFaceEmbedding f0 = comp->getBoundaryComponent(0)->getFace(0)->
+    NTriangleEmbedding f0 = comp->getBoundaryComponent(0)->getFace(0)->
         getEmbedding(0);
-    NFaceEmbedding f1 = comp->getBoundaryComponent(0)->getFace(1)->
+    NTriangleEmbedding f1 = comp->getBoundaryComponent(0)->getFace(1)->
         getEmbedding(0);
 
     NTetrahedron* top = f0.getTetrahedron();

@@ -37,23 +37,23 @@
 
 namespace regina {
 
-const int NFace::TRIANGLE = 1;
-const int NFace::SCARF = 2;
-const int NFace::PARACHUTE = 3;
-const int NFace::CONE = 4;
-const int NFace::MOBIUS = 5;
-const int NFace::HORN = 6;
-const int NFace::DUNCEHAT = 7;
-const int NFace::L31 = 8;
+const int NTriangle::TRIANGLE = 1;
+const int NTriangle::SCARF = 2;
+const int NTriangle::PARACHUTE = 3;
+const int NTriangle::CONE = 4;
+const int NTriangle::MOBIUS = 5;
+const int NTriangle::HORN = 6;
+const int NTriangle::DUNCEHAT = 7;
+const int NTriangle::L31 = 8;
 
-const NPerm4 NFace::ordering[4] = {
+const NPerm4 NTriangle::ordering[4] = {
     NPerm4(1, 2, 3, 0),
     NPerm4(0, 2, 3, 1),
     NPerm4(0, 1, 3, 2),
     NPerm4(0, 1, 2, 3)
 };
 
-int NFace::getType() {
+int NTriangle::getType() {
     if (type)
         return type;
 
@@ -113,13 +113,13 @@ int NFace::getType() {
     return 0;
 }
 
-NEdge* NFace::getEdge(int edge) const {
+NEdge* NTriangle::getEdge(int edge) const {
     NPerm4 p = embeddings[0]->getVertices();
     return embeddings[0]->getTetrahedron()->getEdge(
         NEdge::edgeNumber[p[(edge + 1) % 3]][p[(edge + 2) % 3]]);
 }
 
-NPerm4 NFace::getEdgeMapping(int edge) const {
+NPerm4 NTriangle::getEdgeMapping(int edge) const {
     NPerm4 facePerm = embeddings[0]->getVertices();
         // Maps face -> tetrahedron
     NPerm4 edgePerm = embeddings[0]->getTetrahedron()->getEdgeMapping(

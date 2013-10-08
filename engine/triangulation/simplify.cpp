@@ -213,7 +213,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     return true;
 }
 
-bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
+bool NTriangulation::twoThreeMove(NTriangle* f, bool check, bool perform) {
     if (check) {
         if (f->getNumberOfEmbeddings() != 2)
             return false;
@@ -366,7 +366,7 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
 
     // Perform the 4-4 move as a 2-3 move followed by a 3-2 move.
     ChangeEventSpan span(this);
-    NFace* face23 = (newAxis == 0 ?
+    NTriangle* face23 = (newAxis == 0 ?
         oldTet[0]->getFace(embs[0].getVertices()[2]) :
         oldTet[1]->getFace(embs[1].getVertices()[2]));
     int edge32 = embs[3].getEdge();
@@ -403,7 +403,7 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
 
     if (check) {
         NEdge* edge[2];
-        NFace* face[2][2];
+        NTriangle* face[2][2];
             // face[i][j] will be on tetrahedron i opposite vertex j of the
             // internal edge.
         for (i=0; i<2; i++) {
@@ -500,7 +500,7 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
         if (tet[0] == tet[1])
             return false;
 
-        NFace* face[2];
+        NTriangle* face[2];
         for (i = 0; i < 2; i++)
             face[i] = tet[i]->getFace(vertex[i]);
         if (face[0] == face[1])
@@ -580,8 +580,8 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
         if (! top)
             return false;
 
-    NFace* centreFace = oldTet->getFace(oldVertices[edgeEnd]);
-    NFace* bottomFace = oldTet->getFace(oldVertices[otherEdgeEnd]);
+    NTriangle* centreFace = oldTet->getFace(oldVertices[edgeEnd]);
+    NTriangle* bottomFace = oldTet->getFace(oldVertices[otherEdgeEnd]);
     NPerm4 bottomToTop =
         oldTet->adjacentGluing(oldVertices[edgeEnd]);
     int topGlued[2];
@@ -685,8 +685,8 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     return true;
 }
 
-bool NTriangulation::openBook(NFace* f, bool check, bool perform) {
-    const NFaceEmbedding& emb = f->getEmbedding(0);
+bool NTriangulation::openBook(NTriangle* f, bool check, bool perform) {
+    const NTriangleEmbedding& emb = f->getEmbedding(0);
     NTetrahedron* tet = emb.getTetrahedron();
     NPerm4 vertices = emb.getVertices();
 
@@ -1024,7 +1024,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
             long* depth = new long[nFaces + 1];
             std::fill(depth, depth + nFaces + 1, 0);
 
-            NFace *upper, *lower;
+            NTriangle *upper, *lower;
             long id1, id2;
 
             for (it = embs.begin(); it != embs.end(); ++it) {
