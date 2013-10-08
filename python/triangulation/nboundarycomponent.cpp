@@ -35,7 +35,7 @@
 #include <boost/python.hpp>
 #include "triangulation/nboundarycomponent.h"
 #include "triangulation/nedge.h"
-#include "triangulation/nface.h"
+#include "triangulation/ntriangle.h"
 #include "triangulation/nvertex.h"
 
 using namespace boost::python;
@@ -45,10 +45,13 @@ void addNBoundaryComponent() {
     class_<NBoundaryComponent, bases<regina::ShareableObject>,
             std::auto_ptr<NBoundaryComponent>, boost::noncopyable>
             ("NBoundaryComponent", no_init)
-        .def("getNumberOfFaces", &NBoundaryComponent::getNumberOfFaces)
+        // TODO .def("getNumberOfFaces", &NBoundaryComponent::getNumberOfFaces)
+        .def("getNumberOfTriangles", &NBoundaryComponent::getNumberOfTriangles)
         .def("getNumberOfEdges", &NBoundaryComponent::getNumberOfEdges)
         .def("getNumberOfVertices", &NBoundaryComponent::getNumberOfVertices)
-        .def("getFace", &NBoundaryComponent::getFace,
+        // TODO .def("getFace", &NBoundaryComponent::getFace,
+        //     return_value_policy<reference_existing_object>())
+        .def("getTriangle", &NBoundaryComponent::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &NBoundaryComponent::getEdge,
             return_value_policy<reference_existing_object>())

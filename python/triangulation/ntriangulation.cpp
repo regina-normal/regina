@@ -52,8 +52,6 @@ namespace {
         &NTriangulation::twoZeroMove;
     bool (NTriangulation::*twoZeroMove_edge)(regina::NEdge*, bool, bool) =
         &NTriangulation::twoZeroMove;
-    unsigned long (NTriangulation::*getNumberOfFaces_nontemplate)() const =
-        &NTriangulation::getNumberOfFaces;
     std::string (NTriangulation::*isoSig_void)() const =
         &NTriangulation::isoSig;
 
@@ -154,10 +152,10 @@ namespace {
         return ans;
     }
 
-    boost::python::list getFaces_list(NTriangulation& t) {
+    boost::python::list getTriangles_list(NTriangulation& t) {
         boost::python::list ans;
-        for (NTriangulation::FaceIterator it =
-                t.getFaces().begin(); it != t.getFaces().end(); it++)
+        for (NTriangulation::TriangleIterator it =
+                t.getTriangles().begin(); it != t.getTriangles().end(); it++)
             ans.append(boost::python::ptr(*it));
         return ans;
     }
@@ -201,12 +199,14 @@ void addNTriangulation() {
             &NTriangulation::getNumberOfBoundaryComponents)
         .def("getNumberOfVertices", &NTriangulation::getNumberOfVertices)
         .def("getNumberOfEdges", &NTriangulation::getNumberOfEdges)
-        .def("getNumberOfFaces", getNumberOfFaces_nontemplate)
+        // TODO .def("getNumberOfFaces", &NTriangulation::getNumberOfTriangles)
+        .def("getNumberOfTriangles", &NTriangulation::getNumberOfTriangles)
         .def("getComponents", getComponents_list)
         .def("getBoundaryComponents", getBoundaryComponents_list)
         .def("getVertices", getVertices_list)
         .def("getEdges", getEdges_list)
-        .def("getFaces", getFaces_list)
+        // TODO .def("getFaces", getTriangles_list)
+        .def("getTriangles", getTriangles_list)
         .def("getComponent", &NTriangulation::getComponent,
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &NTriangulation::getBoundaryComponent,
@@ -215,14 +215,17 @@ void addNTriangulation() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &NTriangulation::getEdge,
             return_value_policy<reference_existing_object>())
-        .def("getFace", &NTriangulation::getFace,
+        // TODO .def("getFace", &NTriangulation::getFace,
+        //     return_value_policy<reference_existing_object>())
+        .def("getTriangle", &NTriangulation::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("componentIndex", &NTriangulation::componentIndex)
         .def("boundaryComponentIndex",
             &NTriangulation::boundaryComponentIndex)
         .def("vertexIndex", &NTriangulation::vertexIndex)
         .def("edgeIndex", &NTriangulation::edgeIndex)
-        .def("faceIndex", &NTriangulation::faceIndex)
+        // TODO .def("faceIndex", &NTriangulation::faceIndex)
+        .def("triangleIndex", &NTriangulation::triangleIndex)
         .def("isIsomorphicTo", isIsomorphicTo_ptr,
             return_value_policy<manage_new_object>())
         .def("isContainedIn", isContainedIn_ptr,
@@ -237,7 +240,8 @@ void addNTriangulation() {
         .def("isValid", &NTriangulation::isValid)
         .def("isIdeal", &NTriangulation::isIdeal)
         .def("isStandard", &NTriangulation::isStandard)
-        .def("hasBoundaryFaces", &NTriangulation::hasBoundaryFaces)
+        // TODO .def("hasBoundaryFaces", &NTriangulation::hasBoundaryFaces)
+        .def("hasBoundaryTriangles", &NTriangulation::hasBoundaryTriangles)
         .def("isClosed", &NTriangulation::isClosed)
         .def("isOrientable", &NTriangulation::isOrientable)
         .def("isOriented", &NTriangulation::isOriented)

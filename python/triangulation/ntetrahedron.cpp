@@ -35,8 +35,8 @@
 #include <boost/python.hpp>
 #include "triangulation/ncomponent.h"
 #include "triangulation/nedge.h"
-#include "triangulation/nface.h"
 #include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangle.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
@@ -77,11 +77,14 @@ void addNTetrahedron() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &NTetrahedron::getEdge,
             return_value_policy<reference_existing_object>())
-        .def("getFace", &NTetrahedron::getFace,
+        // TODO .def("getFace", &NTetrahedron::getFace,
+        //     return_value_policy<reference_existing_object>())
+        .def("getTriangle", &NTetrahedron::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getVertexMapping", &NTetrahedron::getVertexMapping)
         .def("getEdgeMapping", &NTetrahedron::getEdgeMapping)
-        .def("getFaceMapping", &NTetrahedron::getFaceMapping)
+        // TODO .def("getFaceMapping", &NTetrahedron::getFaceMapping)
+        .def("getTriangleMapping", &NTetrahedron::getTriangleMapping)
         .def("orientation", &NTetrahedron::orientation)
     ;
 }
