@@ -934,6 +934,7 @@ class REGINA_API Dim2Triangulation : public NPacket,
          * isomorphism signature.
          */
         static Dim2Triangulation* fromIsoSig(const std::string& signature);
+        using NGenericTriangulation<2>::isoSigComponentSize;
         /**
          * Inserts into this triangulation a set of triangles and their
          * gluings as described by the given integer arrays.

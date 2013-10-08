@@ -162,7 +162,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
 
     out << "Size of the skeleton:\n";
     out << "  Tetrahedra: " << tetrahedra.size() << '\n';
-    out << "  Faces: " << faces.size() << '\n';
+    out << "  Triangles: " << triangles.size() << '\n';
     out << "  Edges: " << edges.size() << '\n';
     out << "  Vertices: " << vertices.size() << '\n';
     out << '\n';
@@ -225,14 +225,14 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
     }
     out << '\n';
 
-    out << "Faces:\n";
+    out << "Triangles:\n";
     out << "  Tet  |  face:  012 013 023 123\n";
     out << "  -----+------------------------\n";
     for (tetPos=0; tetPos<tetrahedra.size(); tetPos++) {
         tet = tetrahedra[tetPos];
         out << "  " << std::setw(3) << tetPos << "  |        ";
         for (face=3; face>=0; face--)
-            out << ' ' << std::setw(3) << faceIndex(tet->getFace(face));
+            out << ' ' << std::setw(3) << triangleIndex(tet->getTriangle(face));
         out << '\n';
     }
     out << '\n';
@@ -454,7 +454,7 @@ void NTriangulation::deleteSkeleton() {
         delete *it;
     for (EdgeIterator it = edges.begin(); it != edges.end(); ++it)
         delete *it;
-    for (FaceIterator it = faces.begin(); it != faces.end(); ++it)
+    for (TriangleIterator it = triangles.begin(); it != triangles.end(); ++it)
         delete *it;
     for (ComponentIterator it = components.begin();
             it != components.end(); ++it)
@@ -465,7 +465,7 @@ void NTriangulation::deleteSkeleton() {
 
     vertices.clear();
     edges.clear();
-    faces.clear();
+    triangles.clear();
     components.clear();
     boundaryComponents.clear();
 

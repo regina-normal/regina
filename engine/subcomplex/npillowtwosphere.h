@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file subcomplex/npillowtwosphere.h
- *  \brief Deals with 2-spheres made from two faces glued along their
+ *  \brief Deals with 2-spheres made from two triangles glued along their
  *  three edges.
  */
 
@@ -48,7 +48,7 @@
 
 namespace regina {
 
-class NFace;
+class NTriangle;
 class NTriangulation;
 
 /**
@@ -57,13 +57,13 @@ class NTriangulation;
  */
 
 /**
- * Represents a 2-sphere made from two faces glued together along their
- * three edges.  The two faces must be distinct and the three edges of
- * each face must also be distinct.  Neither of the faces may be boundary
- * faces.
- * These two faces together form an embedded 2-sphere in the triangulation
+ * Represents a 2-sphere made from two triangles glued together along their
+ * three edges.  The two triangles must be distinct and the three edges of
+ * each triangle must also be distinct.  Neither of the triangles may be
+ * boundary triangles.
+ * These two triangless together form an embedded 2-sphere in the triangulation
  * (with the exception that two or three points of the sphere corresponding
- * to the face vertices may be identified).
+ * to the triangles vertices may be identified).
  *
  * This 2-sphere can be cut along and the two resulting 2-sphere
  * boundaries filled in with 3-balls, and the resulting triangulation has
@@ -73,13 +73,13 @@ class NTriangulation;
  */
 class REGINA_API NPillowTwoSphere : public ShareableObject {
     private:
-        NFace* face[2];
-            /**< The two faces whose edges are joined. */
-        NPerm4 faceMapping;
-            /**< A mapping from vertices (0,1,2) of the first face to
-                 vertices (0,1,2) of the second face describing how the
-                 face boundaries are joined. */
-    
+        NTriangle* triangle[2];
+            /**< The two triangles whose edges are joined. */
+        NPerm4 triMapping;
+            /**< A mapping from vertices (0,1,2) of the first triangle to
+                 vertices (0,1,2) of the second triangle describing how the
+                 triangle boundaries are joined. */
+
     public:
         /**
          * Returns a newly created clone of this structure.
@@ -89,41 +89,41 @@ class REGINA_API NPillowTwoSphere : public ShareableObject {
         NPillowTwoSphere* clone() const;
 
         /**
-         * Returns one of the two faces whose boundaries are joined.
+         * Returns one of the two triangles whose boundaries are joined.
          *
-         * @param index specifies which of the two faces to return;
+         * @param index specifies which of the two triangles to return;
          * this must be either 0 or 1.
-         * @return the corresponding face.
+         * @return the corresponding triangle.
          */
-        NFace* getFace(int index) const;
+        NTriangle* getTriangle(int index) const;
         /**
          * Returns a permutation describing how the boundaries of the two
-         * faces are joined.
+         * triangles are joined.
          *
          * The permutation will map vertices (0,1,2) of
-         * <tt>getFace(0)</tt> to vertices (0,1,2) of
-         * <tt>getFace(1)</tt>.  The map will represent how the vertices
-         * of the faces are identified by the three edge gluings.
+         * <tt>getTriangle(0)</tt> to vertices (0,1,2) of
+         * <tt>getTriangle(1)</tt>.  The map will represent how the vertices
+         * of the triangles are identified by the three edge gluings.
          *
-         * @return a permutation describing how the face boundaries are
+         * @return a permutation describing how the triangle boundaries are
          * joined.
          */
-        NPerm4 getFaceMapping() const;
+        NPerm4 getTriangleMapping() const;
 
         /**
-         * Determines if the two given faces together form a pillow
+         * Determines if the two given triangles together form a pillow
          * 2-sphere.
          *
-         * \pre The two given faces are distinct.
+         * \pre The two given triangles are distinct.
          *
-         * @param face1 the first face to examine.
-         * @param face2 the second face to examine.
+         * @param tri1 the first triangle to examine.
+         * @param tri2 the second triangle to examine.
          * @return a newly created structure containing details of the
-         * pillow 2-sphere, or \c null if the given faces do not
+         * pillow 2-sphere, or \c null if the given triangles do not
          * form a pillow 2-sphere.
          */
-        static NPillowTwoSphere* formsPillowTwoSphere(NFace* face1,
-            NFace* face2);
+        static NPillowTwoSphere* formsPillowTwoSphere(NTriangle* tri1,
+            NTriangle* tri2);
 
         void writeTextShort(std::ostream& out) const;
 
@@ -140,11 +140,11 @@ class REGINA_API NPillowTwoSphere : public ShareableObject {
 
 inline NPillowTwoSphere::NPillowTwoSphere() {
 }
-inline NFace* NPillowTwoSphere::getFace(int index) const {
-    return face[index];
+inline NTriangle* NPillowTwoSphere::getTriangle(int index) const {
+    return triangle[index];
 }
-inline NPerm4 NPillowTwoSphere::getFaceMapping() const {
-    return faceMapping;
+inline NPerm4 NPillowTwoSphere::getTriangleMapping() const {
+    return triMapping;
 }
 inline void NPillowTwoSphere::writeTextShort(std::ostream& out) const {
     out << "Pillow 2-sphere";

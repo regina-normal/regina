@@ -12,11 +12,11 @@ SET ( FILES
   isomorphic
   nedge
   nexampletriangulation
-  nface
   nfacepair
   nhomologicaldata
   nisomorphism
   ntetrahedron
+  ntriangle
   ntriangulation
   nvertex
   nxmltrireader
@@ -55,6 +55,7 @@ if (${REGINA_INSTALL_DEV})
     npermit.h
     ntetface.h
     ntetrahedron.h
+    ntriangle.h
     ntriangulation.h
     nvertex.h
     nxmltrireader.h

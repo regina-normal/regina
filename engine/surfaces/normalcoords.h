@@ -99,11 +99,11 @@ enum NormalCoords {
      */
     NS_EDGE_WEIGHT = 200,
     /**
-     * Represents face arc coordinates for normal surfaces.
+     * Represents triangle arc coordinates for normal surfaces.
      * This flavour is for display only; surface
      * vectors and lists of this flavour cannot be created.
      */
-    NS_FACE_ARCS = 201,
+    NS_TRIANGLE_ARCS = 201,
     /**
      * Represents standard triangle-quadrilateral coordinates for
      * transversely oriented normal surfaces.

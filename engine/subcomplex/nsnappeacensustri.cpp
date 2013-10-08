@@ -37,7 +37,7 @@
 #include "subcomplex/nsnappeacensustri.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/nedge.h"
-#include "triangulation/nface.h"
+#include "triangulation/ntriangle.h"
 #include "triangulation/nvertex.h"
 
 namespace regina {
@@ -67,7 +67,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
     // in the SnapPea census at all.  The component must not be
     // closed, every edge must be valid and every vertex link must be
     // either a torus or a Klein bottle.  Note that this implies
-    // that there are no boundary faces.
+    // that there are no boundary triangles.
 
     if (comp->isClosed())
         return 0;
@@ -106,9 +106,9 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                 return 0;
 
             // Now we know it's either m003 or m004.  We distinguish
-            // between them by face types, since all of m003's faces
-            // are Mobius bands and all of m004's faces are horns.
-            if (comp->getFace(0)->getType() == NFace::MOBIUS)
+            // between them by triangle types, since all of m003's triangles
+            // are Mobius bands and all of m004's triangles are horns.
+            if (comp->getTriangle(0)->getType() == NTriangle::MOBIUS)
                 return new NSnapPeaCensusTri(SEC_5, 3);
             else
                 return new NSnapPeaCensusTri(SEC_5, 4);
@@ -123,9 +123,9 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                        (comp->getEdge(0)->getNumberOfEmbeddings() == 8 &&
                         comp->getEdge(1)->getNumberOfEmbeddings() == 4)))
                     return 0;
-                // Census says it's m001 if no face forms a dunce hat.
+                // Census says it's m001 if no triangle forms a dunce hat.
                 for (int i = 0; i < 4; i++)
-                    if (comp->getFace(i)->getType() == NFace::DUNCEHAT)
+                    if (comp->getTriangle(i)->getType() == NTriangle::DUNCEHAT)
                         return 0;
                 return new NSnapPeaCensusTri(SEC_5, 1);
             } else if (comp->getNumberOfVertices() == 2) {
@@ -135,9 +135,9 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                 if (comp->getEdge(0)->getNumberOfEmbeddings() != 6 ||
                         comp->getEdge(1)->getNumberOfEmbeddings() != 6)
                     return 0;
-                // Census says it's m002 if some face forms a dunce hat.
+                // Census says it's m002 if some triangle forms a dunce hat.
                 for (int i = 0; i < 4; i++)
-                    if (comp->getFace(i)->getType() == NFace::DUNCEHAT)
+                    if (comp->getTriangle(i)->getType() == NTriangle::DUNCEHAT)
                         return new NSnapPeaCensusTri(SEC_5, 2);
                 return 0;
             }

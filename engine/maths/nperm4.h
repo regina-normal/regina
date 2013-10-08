@@ -798,7 +798,7 @@ REGINA_API extern const NPerm4* allPermsS2;
 REGINA_API extern const unsigned* allPermsS2Inv;
 
 // Routines for constructing the permutations associated to
-// faces and edges of the triangulation
+// triangles and edges of the triangulation
 
 /**
  * Returns a permutation mapping (0,1,2) to the vertices of the
@@ -808,7 +808,7 @@ REGINA_API extern const unsigned* allPermsS2Inv;
  *
  * \deprecated This routine is no longer recommended, and will be
  * removed in some future version of Regina.  Please use the lookup
- * table NFace::ordering instead (which gives identical results).
+ * table NTriangle::ordering instead (which gives identical results).
  *
  * @param face a face number in a tetrahedron.  This should be between 0
  * and 3 inclusive.  Note that face <i>i</i> is opposite vertex
@@ -847,7 +847,7 @@ REGINA_API NPerm4 edgeOrdering(int edge);
  *
  * \deprecated This routine is no longer recommended, and will be
  * removed in some future version of Regina.  Please use
- * <tt>NFace::ordering[face].trunc3()</tt> (which gives identical results).
+ * <tt>NTriangle::ordering[face].trunc3()</tt> (which gives identical results).
  *
  * @param face a face number in a tetrahedron.  This should be between 0
  * and 3 inclusive.  Note that face <i>i</i> is opposite vertex

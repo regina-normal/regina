@@ -82,7 +82,7 @@ void CoordinateChooser::insertAllViewers(regina::NNormalSurfaceList* surfaces) {
     }
 
     insertSystem(regina::NS_EDGE_WEIGHT);
-    insertSystem(regina::NS_FACE_ARCS);
+    insertSystem(regina::NS_TRIANGLE_ARCS);
 }
 
 void CoordinateChooser::setCurrentSystem(regina::NormalCoords newSystem) {

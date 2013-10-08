@@ -56,8 +56,8 @@ void NoSnapPea::refresh() {
         msg += tr("This is because the triangulation is empty.");
     else if (! tri->isValid())
         msg += tr("This is because the triangulation is not valid.");
-    else if (tri->hasBoundaryFaces())
-        msg += tr("This is because the triangulation has boundary faces.");
+    else if (tri->hasBoundaryTriangles())
+        msg += tr("This is because the triangulation has boundary triangles.");
     else if (! tri->isConnected())
         msg += tr("This is because the triangulation is disconnected.");
     else if (! tri->isStandard())

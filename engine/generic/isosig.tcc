@@ -523,5 +523,31 @@ typename NGenericTriangulation<dim>::Triangulation*
     return ans.release();
 }
 
+template <int dim>
+size_t NGenericTriangulation<dim>::isoSigComponentSize(const std::string& sig) {
+    const char* c = sig.c_str();
+
+    // Examine the first character.
+    // Note that SVALID also ensures that *c is non-null (i.e., it
+    // detects premature end of string).
+    if (! SVALID(*c))
+        return 0;
+    size_t nSimp = SVAL(*c);
+    if (nSimp < 63)
+        return nSimp;
+
+    // The number of simplices is so large that it requires several
+    // characters to store.
+    ++c;
+    if (! *c)
+        return 0;
+    size_t nChars = SVAL(*c++);
+
+    for (const char* d = c; d < c + nChars; ++d)
+        if (! SVALID(*d))
+            return 0;
+    return SREAD(c, nChars);
+}
+
 } // namespace regina
 

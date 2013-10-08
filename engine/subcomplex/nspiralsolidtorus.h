@@ -220,10 +220,10 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * spiralled solid torus with its vertices
          * playing the given roles in the solid torus.
          *
-         * Note that the boundary faces of the spiralled solid
-         * torus need not be boundary faces within the overall
+         * Note that the boundary triangles of the spiralled solid
+         * torus need not be boundary triangles within the overall
          * triangulation, i.e., they may be identified with each other
-         * or with faces of other tetrahedra.
+         * or with triangles of other tetrahedra.
          *
          * @param tet the tetrahedron to examine.
          * @param useVertexRoles a permutation describing the role each

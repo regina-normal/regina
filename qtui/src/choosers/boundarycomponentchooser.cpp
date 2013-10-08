@@ -85,7 +85,7 @@ void BoundaryComponentChooser::select(regina::NBoundaryComponent* option) {
 
 QString BoundaryComponentChooser::description(
         regina::NBoundaryComponent* option) {
-    if (option->getNumberOfFaces() == 0) {
+    if (option->getNumberOfTriangles() == 0) {
         regina::NVertex* v = option->getVertex(0);
         QString desc;
         if (v->getNumberOfEmbeddings() == 1)
@@ -98,14 +98,16 @@ QString BoundaryComponentChooser::description(
                     v->getEmbeddings().front().getTetrahedron()))
                 .arg(v->getEmbeddings().front().getVertex());
     } else {
-        // The number of faces is always even, and therefore always >1.
-        const regina::NFaceEmbedding& f0 = option->getFace(0)->getEmbedding(0);
-        const regina::NFaceEmbedding& f1 = option->getFace(1)->getEmbedding(0);
+        // The number of triangles is always even, and therefore always >1.
+        const regina::NTriangleEmbedding& f0 =
+            option->getTriangle(0)->getEmbedding(0);
+        const regina::NTriangleEmbedding& f1 =
+            option->getTriangle(1)->getEmbedding(0);
         QString desc;
-        if (option->getNumberOfFaces() == 2)
-            desc = trUtf8("Real bdry comp %1 — Faces %2 (%3), %4 (%5)");
+        if (option->getNumberOfTriangles() == 2)
+            desc = trUtf8("Real bdry comp %1 — Triangles %2 (%3), %4 (%5)");
         else
-            desc = trUtf8("Real bdry comp %1 — Faces %2 (%3), %4 (%5), ...");
+            desc = trUtf8("Real bdry comp %1 — Triangles %2 (%3), %4 (%5), ...");
         return desc.arg(tri_->boundaryComponentIndex(option))
                 .arg(tri_->tetrahedronIndex(f0.getTetrahedron()))
                 .arg(f0.getVertices().trunc3().c_str())

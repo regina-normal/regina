@@ -35,7 +35,7 @@
 #include <sstream>
 #include "maths/nperm4.h"
 #include "triangulation/nedge.h" // deprecated
-#include "triangulation/nface.h" // deprecated
+#include "triangulation/ntriangle.h" // deprecated
 
 namespace regina {
 
@@ -236,7 +236,7 @@ NPerm4 edgeOrdering(int edge) {
 
 std::string faceDescription(int face) {
     // deprecated
-    return NFace::ordering[face].trunc3();
+    return NTriangle::ordering[face].trunc3();
 }
 
 std::string edgeDescription(int edge) {

@@ -36,63 +36,65 @@
 #include "triangulation/nboundarycomponent.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/nedge.h"
-#include "triangulation/nface.h"
 #include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangle.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
 
 using namespace boost::python;
-using regina::NFace;
-using regina::NFaceEmbedding;
+using regina::NTriangle;
+using regina::NTriangleEmbedding;
 using regina::python::GlobalArray;
 
+// TODO: NFace, NFaceEmbedding typedefs
+
 namespace {
-    GlobalArray<regina::NPerm4> NFace_ordering(NFace::ordering, 4);
+    GlobalArray<regina::NPerm4> NTriangle_ordering(NTriangle::ordering, 4);
 }
 
-void addNFace() {
-    class_<NFaceEmbedding, boost::noncopyable>("NFaceEmbedding",
+void addNTriangle() {
+    class_<NTriangleEmbedding, boost::noncopyable>("NTriangleEmbedding",
             init<regina::NTetrahedron*, int>())
-        .def(init<const NFaceEmbedding&>())
-        .def("getTetrahedron", &NFaceEmbedding::getTetrahedron,
+        .def(init<const NTriangleEmbedding&>())
+        .def("getTetrahedron", &NTriangleEmbedding::getTetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("getFace", &NFaceEmbedding::getFace)
-        .def("getVertices", &NFaceEmbedding::getVertices)
+        .def("getTriangle", &NTriangleEmbedding::getTriangle)
+        .def("getVertices", &NTriangleEmbedding::getVertices)
     ;
 
-    scope s = class_<NFace, bases<regina::ShareableObject>,
-            std::auto_ptr<NFace>, boost::noncopyable>("NFace", no_init)
-        .def("isBoundary", &NFace::isBoundary)
-        .def("getType", &NFace::getType)
-        .def("getSubtype", &NFace::getSubtype)
-        .def("isMobiusBand", &NFace::isMobiusBand)
-        .def("isCone", &NFace::isCone)
-        .def("getNumberOfEmbeddings", &NFace::getNumberOfEmbeddings)
-        .def("getEmbedding", &NFace::getEmbedding,
+    scope s = class_<NTriangle, bases<regina::ShareableObject>,
+            std::auto_ptr<NTriangle>, boost::noncopyable>("NTriangle", no_init)
+        .def("isBoundary", &NTriangle::isBoundary)
+        .def("getType", &NTriangle::getType)
+        .def("getSubtype", &NTriangle::getSubtype)
+        .def("isMobiusBand", &NTriangle::isMobiusBand)
+        .def("isCone", &NTriangle::isCone)
+        .def("getNumberOfEmbeddings", &NTriangle::getNumberOfEmbeddings)
+        .def("getEmbedding", &NTriangle::getEmbedding,
             return_internal_reference<>())
-        .def("getTriangulation", &NFace::getTriangulation,
+        .def("getTriangulation", &NTriangle::getTriangulation,
             return_value_policy<reference_existing_object>())
-        .def("getComponent", &NFace::getComponent,
+        .def("getComponent", &NTriangle::getComponent,
             return_value_policy<reference_existing_object>())
-        .def("getBoundaryComponent", &NFace::getBoundaryComponent,
+        .def("getBoundaryComponent", &NTriangle::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
-        .def("getVertex", &NFace::getVertex,
+        .def("getVertex", &NTriangle::getVertex,
             return_value_policy<reference_existing_object>())
-        .def("getEdge", &NFace::getEdge,
+        .def("getEdge", &NTriangle::getEdge,
             return_value_policy<reference_existing_object>())
-        .def("getEdgeMapping", &NFace::getEdgeMapping)
+        .def("getEdgeMapping", &NTriangle::getEdgeMapping)
     ;
 
-    s.attr("TRIANGLE") = NFace::TRIANGLE;
-    s.attr("SCARF") = NFace::SCARF;
-    s.attr("PARACHUTE") = NFace::PARACHUTE;
-    s.attr("CONE") = NFace::CONE;
-    s.attr("MOBIUS") = NFace::MOBIUS;
-    s.attr("HORN") = NFace::HORN;
-    s.attr("DUNCEHAT") = NFace::DUNCEHAT;
-    s.attr("L31") = NFace::L31;
+    s.attr("TRIANGLE") = NTriangle::TRIANGLE;
+    s.attr("SCARF") = NTriangle::SCARF;
+    s.attr("PARACHUTE") = NTriangle::PARACHUTE;
+    s.attr("CONE") = NTriangle::CONE;
+    s.attr("MOBIUS") = NTriangle::MOBIUS;
+    s.attr("HORN") = NTriangle::HORN;
+    s.attr("DUNCEHAT") = NTriangle::DUNCEHAT;
+    s.attr("L31") = NTriangle::L31;
 
-    s.attr("ordering") = &NFace_ordering;
+    s.attr("ordering") = &NTriangle_ordering;
 }
 

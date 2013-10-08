@@ -4,8 +4,8 @@ SET ( FILES
   boundarycomponentchooser
   edgechooser
   edgeintchooser
-  facechooser
   tetrahedronchooser
+  trianglechooser
   vertexchooser
   )
 
@@ -13,8 +13,8 @@ SET ( MOC_FILES
   boundarycomponentchooser.h
   edgechooser.h
   edgeintchooser.h
-  facechooser.h
   tetrahedronchooser.h
+  trianglechooser.h
   vertexchooser.h
   )
 

@@ -47,35 +47,35 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
 
     // Find a maximal forest in the dual 1-skeleton.
     // Note that this will ensure the skeleton has been calculated.
-    std::set<NFace*> forest;
+    std::set<NTriangle*> forest;
     maximalForestInDualSkeleton(forest);
 
-    // Each non-boundary not-in-forest face is a generator.
+    // Each non-boundary not-in-forest triangle is a generator.
     // Each non-boundary edge is a relation.
-    unsigned long nBdryFaces = 0;
+    unsigned long nBdryTri = 0;
     for (BoundaryComponentIterator bit = boundaryComponents.begin();
             bit != boundaryComponents.end(); bit++)
-        nBdryFaces += (*bit)->getNumberOfFaces();
-    long nGens = getNumberOfFaces() - nBdryFaces - forest.size();
+        nBdryTri += (*bit)->getNumberOfTriangles();
+    long nGens = getNumberOfTriangles() - nBdryTri - forest.size();
 
     // Insert the generators.
     ans->addGenerator(nGens);
 
-    // Find out which face corresponds to which generator.
-    long *genIndex = new long[getNumberOfFaces()];
+    // Find out which triangle corresponds to which generator.
+    long *genIndex = new long[getNumberOfTriangles()];
     long i = 0;
-    for (FaceIterator fit = faces.begin(); fit != faces.end(); fit++)
+    for (TriangleIterator fit = triangles.begin(); fit != triangles.end(); fit++)
         if ((*fit)->isBoundary() || forest.count(*fit))
-            genIndex[fit - faces.begin()] = -1;
+            genIndex[fit - triangles.begin()] = -1;
         else
-            genIndex[fit - faces.begin()] = i++;
+            genIndex[fit - triangles.begin()] = i++;
 
     // Run through each edge and put the relations in the matrix.
     std::deque<NEdgeEmbedding>::const_iterator embit;
     NTetrahedron* currTet;
-    NFace* face;
+    NTriangle* triangle;
     int currTetFace;
-    long faceGenIndex;
+    long triGenIndex;
     NGroupExpression* rel;
     for (EdgeIterator eit = edges.begin(); eit != edges.end(); eit++)
         if (! (*eit)->isBoundary()) {
@@ -85,14 +85,14 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
                     embit != (*eit)->getEmbeddings().end(); embit++) {
                 currTet = (*embit).getTetrahedron();
                 currTetFace = (*embit).getVertices()[2];
-                face = currTet->getFace(currTetFace);
-                faceGenIndex = genIndex[faceIndex(face)];
-                if (faceGenIndex >= 0) {
-                    if ((face->getEmbedding(0).getTetrahedron() == currTet) &&
-                            (face->getEmbedding(0).getFace() == currTetFace))
-                        rel->addTermLast(faceGenIndex, 1);
+                triangle = currTet->getTriangle(currTetFace);
+                triGenIndex = genIndex[triangleIndex(triangle)];
+                if (triGenIndex >= 0) {
+                    if ((triangle->getEmbedding(0).getTetrahedron() == currTet) &&
+                            (triangle->getEmbedding(0).getTriangle() == currTetFace))
+                        rel->addTermLast(triGenIndex, 1);
                     else
-                        rel->addTermLast(faceGenIndex, -1);
+                        rel->addTermLast(triGenIndex, -1);
                 }
             }
             ans->addRelation(rel);

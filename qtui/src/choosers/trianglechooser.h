@@ -32,13 +32,13 @@
 
 /* end stub */
 
-/*! \file facechooser.h
- *  \brief Provides a widget for selecting a single face
+/*! \file trianglechooser.h
+ *  \brief Provides a widget for selecting a single triangle
  *  of a 3-manifold triangulation.
  */
 
-#ifndef __FACECHOOSER_H
-#define __FACECHOOSER_H
+#ifndef __TRIANGLECHOOSER_H
+#define __TRIANGLECHOOSER_H
 
 #include "packet/npacketlistener.h"
 
@@ -47,18 +47,18 @@
 #include <vector>
 
 namespace regina {
-    class NFace;
+    class NTriangle;
     class NTriangulation;
 };
 
 /**
- * A filter function, used to determine whether a given face
+ * A filter function, used to determine whether a given triangle
  * should appear in the list.
  */
-typedef bool (*FaceFilterFunc)(regina::NFace*);
+typedef bool (*TriangleFilterFunc)(regina::NTriangle*);
 
 /**
- * A widget through which a single face of some triangulation
+ * A widget through which a single triangle of some triangulation
  * can be selected.  An optional filter may be applied to restrict the
  * available selections.
  *
@@ -68,17 +68,17 @@ typedef bool (*FaceFilterFunc)(regina::NFace*);
  * These chooser classes would be *much* better using templates, but my
  * understanding is that templates don't play well with Q_OBJECT and moc.
  */
-class FaceChooser : public QComboBox, public regina::NPacketListener {
+class TriangleChooser : public QComboBox, public regina::NPacketListener {
     Q_OBJECT
 
     private:
         regina::NTriangulation* tri_;
-            /**< The triangulation whose faces we are
+            /**< The triangulation whose triangles we are
                  choosing from. */
-        FaceFilterFunc filter_;
+        TriangleFilterFunc filter_;
             /**< A filter to restrict the available selections, or
                  0 if no filter is necessary. */
-        std::vector<regina::NFace*> options_;
+        std::vector<regina::NTriangle*> options_;
             /**< A list of the available options to choose from. */
 
     public:
@@ -94,28 +94,28 @@ class FaceChooser : public QComboBox, public regina::NPacketListener {
          * but the chooser is \e not refreshed, then selected() may end
          * up returning an invalid pointer.
          */
-        FaceChooser(regina::NTriangulation* tri,
-                FaceFilterFunc filter, QWidget* parent,
+        TriangleChooser(regina::NTriangulation* tri,
+                TriangleFilterFunc filter, QWidget* parent,
                 bool autoUpdate = true);
 
         /**
-         * Returns the currently selected face.
+         * Returns the currently selected triangle.
          *
-         * If there are no available faces to choose from,
+         * If there are no available triangles to choose from,
          * this routine will return 0.
          */
-        regina::NFace* selected();
+        regina::NTriangle* selected();
 
         /**
-         * Changes the selection to the given face.
+         * Changes the selection to the given triangle.
          *
-         * If the given face is not one of the options in this
+         * If the given triangle is not one of the options in this
          * chooser, or if the given pointer is 0, then the first entry
          * in the chooser will be selected.
          *
          * The activated() signal will \e not be emitted.
          */
-        void select(regina::NFace* option);
+        void select(regina::NTriangle* option);
 
         /**
          * Forces a manual refresh of the contents of this chooser.
@@ -135,7 +135,7 @@ class FaceChooser : public QComboBox, public regina::NPacketListener {
         /**
          * The text to be displayed for a given option.
          */
-        QString description(regina::NFace* option);
+        QString description(regina::NTriangle* option);
 
         /**
          * Fills the chooser with the set of allowable options.
@@ -144,53 +144,53 @@ class FaceChooser : public QComboBox, public regina::NPacketListener {
 };
 
 /**
- * A dialog used to select a single face of a given triangulation.
+ * A dialog used to select a single triangle of a given triangulation.
  */
-class FaceDialog : public QDialog {
+class TriangleDialog : public QDialog {
     Q_OBJECT
 
     private:
         /**
          * Internal components:
          */
-        FaceChooser* chooser;
+        TriangleChooser* chooser;
 
     public:
         /**
          * Constructor and destructor.
          */
-        FaceDialog(QWidget* parent,
+        TriangleDialog(QWidget* parent,
             regina::NTriangulation* tri,
-            FaceFilterFunc filter,
+            TriangleFilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
-        static regina::NFace* choose(QWidget* parent,
+        static regina::NTriangle* choose(QWidget* parent,
             regina::NTriangulation* tri,
-            FaceFilterFunc filter,
+            TriangleFilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 };
 
-inline bool FaceChooser::refresh() {
+inline bool TriangleChooser::refresh() {
     clear();
     options_.clear();
     fill();
     return (count() > 0);
 }
 
-inline void FaceChooser::packetToBeChanged(regina::NPacket*) {
+inline void TriangleChooser::packetToBeChanged(regina::NPacket*) {
     clear();
     options_.clear();
 }
 
-inline void FaceChooser::packetWasChanged(regina::NPacket*) {
+inline void TriangleChooser::packetWasChanged(regina::NPacket*) {
     fill();
 }
 
-inline void FaceChooser::packetToBeDestroyed(regina::NPacket*) {
+inline void TriangleChooser::packetToBeDestroyed(regina::NPacket*) {
     clear();
     options_.clear();
 }

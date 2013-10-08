@@ -86,7 +86,7 @@ unsigned long NTriangulation::findIsomorphisms(
         // identical.
         if (tetrahedra.size() != other.tetrahedra.size())
             return 0;
-        if (faces.size() != other.faces.size())
+        if (triangles.size() != other.triangles.size())
             return 0;
         if (edges.size() != other.edges.size())
             return 0;
@@ -164,13 +164,13 @@ unsigned long NTriangulation::findIsomorphisms(
             for (it = boundaryComponents.begin();
                     it != boundaryComponents.end(); it++) {
                 mapIt = map1.insert(
-                    std::make_pair((*it)->getNumberOfFaces(), 0)).first;
+                    std::make_pair((*it)->getNumberOfTriangles(), 0)).first;
                 (*mapIt).second++;
             }
             for (it = other.boundaryComponents.begin();
                     it != other.boundaryComponents.end(); it++) {
                 mapIt = map2.insert(
-                    std::make_pair((*it)->getNumberOfFaces(), 0)).first;
+                    std::make_pair((*it)->getNumberOfTriangles(), 0)).first;
                 (*mapIt).second++;
             }
             if (! (map1 == map2))

@@ -178,7 +178,7 @@ struct NFacetSpec {
      * Increments this specifier.  It will be changed to point to the
      * next simplex facet.
      *
-     * Faces are ordered first by simplex index and then by facet
+     * Facets are ordered first by simplex index and then by facet
      * number.  The overall boundary appears after all other facets.
      *
      * \pre This specifier is not past-the-end.
@@ -193,7 +193,7 @@ struct NFacetSpec {
      * Increments this specifier.  It will be changed to point to the
      * next simplex facet.
      *
-     * Faces are ordered first by simplex index and then by facet
+     * Facets are ordered first by simplex index and then by facet
      * number.  The overall boundary appears after all other facets.
      *
      * \pre This specifier is not past-the-end.
@@ -208,7 +208,7 @@ struct NFacetSpec {
      * Decrements this specifier.  It will be changed to point to the
      * previous simplex facet.
      *
-     * Faces are ordered first by simplex index and then by facet
+     * Facets are ordered first by simplex index and then by facet
      * number.  The overall boundary appears after all other facets.
      *
      * \pre This specifier is not before-the-start.
@@ -223,7 +223,7 @@ struct NFacetSpec {
      * Decrements this specifier.  It will be changed to point to the
      * previous simplex facet.
      *
-     * Faces are ordered first by simplex index and then by facet
+     * Facets are ordered first by simplex index and then by facet
      * number.  The overall boundary appears after all other facets.
      *
      * \pre This specifier is not before-the-start.

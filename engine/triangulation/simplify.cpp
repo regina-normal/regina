@@ -39,20 +39,20 @@
 namespace regina {
 
 namespace {
-    // Mapping from vertices (0,1,2) of each external face of a new tetrahedron
-    //     to the vertices of this new tetrahedron in a 3-2 move.
+    // Mapping from vertices (0,1,2) of each external triangular face of a new
+    //     tetrahedron to the vertices of this new tetrahedron in a 3-2 move.
     // Each new tetrahedron has its vertices numbered so that the corresponding
-    //     face embedding permutation for the internal face is the identity.
+    //     embedding permutation for the internal triangle is the identity.
     // Also, threeTwoVertices[i] refers to face i of the new tetrahedron for
     //     each i.
     const NPerm4 threeTwoVertices[3] = {
         NPerm4(3,1,2,0), NPerm4(3,2,0,1), NPerm4(3,0,1,2)
     };
 
-    // Mapping from vertices (0,1,2) of each external face of a new tetrahedron
-    //     to the vertices of this new tetrahedron in a 2-3 move.
+    // Mapping from vertices (0,1,2) of each external triangular face of a new
+    //     tetrahedron to the vertices of this new tetrahedron in a 2-3 move.
     // Each new tetrahedron has its vertices numbered so that the corresponding
-    //     edge embedding permutation for the internal edge is the identity.
+    //     embedding permutation for the internal edge is the identity.
     // Also, twoThreeVertices[i] refers to face i of the new tetrahedron for
     //     each i.
     const NPerm4 twoThreeVertices[2] = {
@@ -213,11 +213,11 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     return true;
 }
 
-bool NTriangulation::twoThreeMove(NFace* f, bool check, bool perform) {
+bool NTriangulation::twoThreeMove(NTriangle* f, bool check, bool perform) {
     if (check) {
         if (f->getNumberOfEmbeddings() != 2)
             return false;
-        // We now know that the given face is not on the boundary.
+        // We now know that the given triangle is not on the boundary.
     }
 
     // Find the unwanted tetrahedra.
@@ -366,12 +366,12 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
 
     // Perform the 4-4 move as a 2-3 move followed by a 3-2 move.
     ChangeEventSpan span(this);
-    NFace* face23 = (newAxis == 0 ?
-        oldTet[0]->getFace(embs[0].getVertices()[2]) :
-        oldTet[1]->getFace(embs[1].getVertices()[2]));
+    NTriangle* tri23 = (newAxis == 0 ?
+        oldTet[0]->getTriangle(embs[0].getVertices()[2]) :
+        oldTet[1]->getTriangle(embs[1].getVertices()[2]));
     int edge32 = embs[3].getEdge();
 
-    twoThreeMove(face23, false, true);
+    twoThreeMove(tri23, false, true);
     threeTwoMove(oldTet[3]->getEdge(edge32), false, true);
 
     // Done!
@@ -403,27 +403,27 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
 
     if (check) {
         NEdge* edge[2];
-        NFace* face[2][2];
-            // face[i][j] will be on tetrahedron i opposite vertex j of the
+        NTriangle* triangle[2][2];
+            // triangle[i][j] will be on tetrahedron i opposite vertex j of the
             // internal edge.
         for (i=0; i<2; i++) {
             edge[i] = tet[i]->getEdge(
                 NEdge::edgeNumber[perm[i][2]][perm[i][3]]);
-            face[i][0] = tet[i]->getFace(perm[i][0]);
-            face[i][1] = tet[i]->getFace(perm[i][1]);
+            triangle[i][0] = tet[i]->getTriangle(perm[i][0]);
+            triangle[i][1] = tet[i]->getTriangle(perm[i][1]);
         }
 
         if (edge[0] == edge[1])
             return false;
         if (edge[0]->isBoundary() && edge[1]->isBoundary())
             return false;
-        if (face[0][0] == face[1][0])
+        if (triangle[0][0] == triangle[1][0])
             return false;
-        if (face[0][1] == face[1][1])
+        if (triangle[0][1] == triangle[1][1])
             return false;
 
-        // The cases with two pairs of identified faces and with one
-        // pair of identified faces plus one pair of boundary faces are
+        // The cases with two pairs of identified triangles and with one
+        // pair of identified triangles plus one pair of boundary triangles are
         // all covered by the following check.
         if (tet[0]->getComponent()->getNumberOfTetrahedra() == 2)
             return false;
@@ -451,13 +451,13 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
         bottom = tet[1]->adjacentTetrahedron(perm[1][i]);
 
         if (! top) {
-            // Bottom face becomes boundary.
+            // Bottom triangle becomes boundary.
             tet[1]->unjoin(perm[1][i]);
         } else if (! bottom) {
-            // Top face becomes boundary.
+            // Top triangle becomes boundary.
             tet[0]->unjoin(perm[0][i]);
         } else {
-            // Bottom and top faces join.
+            // Bottom and top triangles join.
             topFace = tet[0]->adjacentFace(perm[0][i]);
             gluing = tet[1]->adjacentGluing(perm[1][i]) *
                 crossover * top->adjacentGluing(topFace);
@@ -500,15 +500,15 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
         if (tet[0] == tet[1])
             return false;
 
-        NFace* face[2];
+        NTriangle* triangle[2];
         for (i = 0; i < 2; i++)
-            face[i] = tet[i]->getFace(vertex[i]);
-        if (face[0] == face[1])
+            triangle[i] = tet[i]->getTriangle(vertex[i]);
+        if (triangle[0] == triangle[1])
             return false;
-        if (face[0]->isBoundary() && face[1]->isBoundary())
+        if (triangle[0]->isBoundary() && triangle[1]->isBoundary())
             return false;
 
-        // Check that the tetrahedra are joined along all three faces.
+        // Check that the tetrahedra are joined along all three triangles.
         for (i = 0; i < 4; i++) {
             if (i == vertex[0])
                 continue;
@@ -580,8 +580,8 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
         if (! top)
             return false;
 
-    NFace* centreFace = oldTet->getFace(oldVertices[edgeEnd]);
-    NFace* bottomFace = oldTet->getFace(oldVertices[otherEdgeEnd]);
+    NTriangle* centreTri = oldTet->getTriangle(oldVertices[edgeEnd]);
+    NTriangle* bottomTri = oldTet->getTriangle(oldVertices[otherEdgeEnd]);
     NPerm4 bottomToTop =
         oldTet->adjacentGluing(oldVertices[edgeEnd]);
     int topGlued[2];
@@ -594,7 +594,7 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     }
 
     if (check) {
-        if (centreFace == bottomFace)
+        if (centreTri == bottomTri)
             return false;
         if (flatEdge[0] == flatEdge[1])
             return false;
@@ -602,7 +602,7 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
             return false;
         // This next test should follow from the two edges being distinct,
         // but we'll do it anyway.
-        if (top->getFace(topGlued[0]) == top->getFace(topGlued[1]))
+        if (top->getTriangle(topGlued[0]) == top->getTriangle(topGlued[1]))
             return false;
     }
 
@@ -685,13 +685,13 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     return true;
 }
 
-bool NTriangulation::openBook(NFace* f, bool check, bool perform) {
-    const NFaceEmbedding& emb = f->getEmbedding(0);
+bool NTriangulation::openBook(NTriangle* f, bool check, bool perform) {
+    const NTriangleEmbedding& emb = f->getEmbedding(0);
     NTetrahedron* tet = emb.getTetrahedron();
     NPerm4 vertices = emb.getVertices();
 
-    // Check that the face has exactly two boundary edges.
-    // Note that this will imply that the face joins two tetrahedra.
+    // Check that the triangle has exactly two boundary edges.
+    // Note that this will imply that the triangle joins two tetrahedra.
     if (check) {
         int fVertex = -1;
         int nBdry = 0;
@@ -728,7 +728,7 @@ bool NTriangulation::openBook(NFace* f, bool check, bool perform) {
 
     // Actually perform the move.
     // Don't bother with a block since this is so simple.
-    tet->unjoin(emb.getFace());
+    tet->unjoin(emb.getTriangle());
     return true;
 }
 
@@ -738,7 +738,7 @@ bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
             return false;
     }
 
-    // Find the two faces on either side of edge e.
+    // Find the two triangles on either side of edge e.
     const NEdgeEmbedding& front = e->getEmbeddings().front();
     const NEdgeEmbedding& back = e->getEmbeddings().back();
 
@@ -748,7 +748,7 @@ bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
     NPerm4 p1 = back.getVertices();
 
     if (check) {
-        if (t0->getFace(p0[3]) == t1->getFace(p1[2]))
+        if (t0->getTriangle(p0[3]) == t1->getTriangle(p1[2]))
             return false;
         if (t0->getVertex(p0[2]) == t1->getVertex(p1[3]))
             return false;
@@ -790,7 +790,7 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
         int i, j;
         int bdry[4];
         for (i=0; i<4; i++)
-            if (t->getFace(i)->isBoundary())
+            if (t->getTriangle(i)->isBoundary())
                 bdry[nBdry++] = i;
         if (nBdry < 1 || nBdry > 3)
             return false;
@@ -853,7 +853,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         // CHECK 0: The tetrahedra around the edge must be distinct.
         // We check this as follows:
         //
-        // - None of the faces containing edge e must contain e twice.
+        // - None of the triangles containing edge e must contain e twice.
         //   We throw this into check 2 below (see point [0a]).
         //
         // - The only remaining bad case is where a tetrahedron contains
@@ -922,13 +922,13 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         // What does this mean in a practical sense?  If edge e is a
         // boundary edge, we:
         //
-        // - verify that the boundary component has more than two faces;
+        // - verify that the boundary component has more than two triangles;
         //
         // - then ignore both boundary bigons from here onwards.
         //
         // Quite pleasant to deal with in the end.
         if (e->isBoundary())
-            if (e->getBoundaryComponent()->getNumberOfFaces() == 2)
+            if (e->getBoundaryComponent()->getNumberOfTriangles() == 2)
                 return false;
 
         {
@@ -951,7 +951,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
             NEdge *upper, *lower;
             long id1, id2;
 
-            // Run through all faces containing e.
+            // Run through all triangles containing e.
             it = embs.begin();
 
             for ( ; it != embs.end(); ++it) {
@@ -969,12 +969,12 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
                 }
 
                 // Now that we've run check 0, skip the first (boundary)
-                // face if e is a boundary edge.  We will skip the
-                // last boundary face automatically, since for a boundary
-                // edge there are k+1 faces but only k embeddings.
+                // triangle if e is a boundary edge.  We will skip the
+                // last boundary triangle automatically, since for a boundary
+                // edge there are k+1 triangles but only k embeddings.
                 //
                 // We do not need to worry about missing check 0 for
-                // the last boundary face, since if it fails there then
+                // the last boundary triangle, since if it fails there then
                 // it must also fail for the first.
                 if (e->isBoundary() && it == embs.begin())
                     continue;
@@ -997,7 +997,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
             delete[] parent;
         }
 
-        // CHECK 3: Can we flatten each triangular pillow to a face?
+        // CHECK 3: Can we flatten each triangular pillow to a triangle?
         //
         // Again, even if each individual pillow is okay, we don't want
         // a chain of pillows together to completely crush away a
@@ -1010,32 +1010,33 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         // overkill, since each vertex in the corresponding graph G will
         // have degree <= 2, but it's fast so we'll do it.
         {
-            long nFaces = faces.size();
+            long nTriangles = triangles.size();
 
-            // The parent of each face in the union-find tree, or -1 if
-            // a face is at the root of a tree.
+            // The parent of each triangle in the union-find tree, or -1 if
+            // a triangle is at the root of a tree.
             //
-            // This array is indexed by face number in the triangulation.
-            // The "unified boundary" is assigned the face number nFaces.
-            long* parent = new long[nFaces + 1];
-            std::fill(parent, parent + nFaces + 1, -1);
+            // This array is indexed by triangle number in the triangulation.
+            // The "unified boundary" is assigned the triangle number
+            // nTriangles.
+            long* parent = new long[nTriangles + 1];
+            std::fill(parent, parent + nTriangles + 1, -1);
 
             // The depth of each subtree in the union-find tree.
-            long* depth = new long[nFaces + 1];
-            std::fill(depth, depth + nFaces + 1, 0);
+            long* depth = new long[nTriangles + 1];
+            std::fill(depth, depth + nTriangles + 1, 0);
 
-            NFace *upper, *lower;
+            NTriangle *upper, *lower;
             long id1, id2;
 
             for (it = embs.begin(); it != embs.end(); ++it) {
                 tet = it->getTetrahedron();
                 p = it->getVertices();
 
-                upper = tet->getFace(p[0]);
-                lower = tet->getFace(p[1]);
+                upper = tet->getTriangle(p[0]);
+                lower = tet->getTriangle(p[1]);
 
-                id1 = (upper->isBoundary() ? nFaces : upper->markedIndex());
-                id2 = (lower->isBoundary() ? nFaces : lower->markedIndex());
+                id1 = (upper->isBoundary() ? nTriangles : upper->markedIndex());
+                id2 = (lower->isBoundary() ? nTriangles : lower->markedIndex());
 
                 // This pillow joins nodes id1 and id2 in the graph G.
                 if (! unionFindInsert(parent, depth, id1, id2)) {

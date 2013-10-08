@@ -49,7 +49,7 @@
 namespace regina {
 
 class NTetrahedron;
-class NFace;
+class NTriangle;
 class NEdge;
 class NVertex;
 class NBoundaryComponent;
@@ -68,8 +68,8 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
     private:
         std::vector<NTetrahedron*> tetrahedra;
             /**< List of tetrahedra in the component. */
-        std::vector<NFace*> faces;
-            /**< List of faces in the component. */
+        std::vector<NTriangle*> triangles;
+            /**< List of triangles in the component. */
         std::vector<NEdge*> edges;
             /**< List of edges in the component. */
         std::vector<NVertex*> vertices;
@@ -107,11 +107,11 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
         unsigned long getNumberOfSimplices() const;
 
         /**
-         * Returns the number of faces in this component.
+         * Returns the number of triangles in this component.
          *
-         * @return the number of faces.
+         * @return the number of triangles.
          */
-        unsigned long getNumberOfFaces() const;
+        unsigned long getNumberOfTriangles() const;
 
         /**
          * Returns the number of edges in this component.
@@ -159,17 +159,17 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
         NTetrahedron* getSimplex(unsigned long index) const;
 
         /**
-         * Returns the requested face in this component.
+         * Returns the requested triangle in this component.
          *
-         * @param index the index of the requested face in the
+         * @param index the index of the requested triangle in the
          * component.  This should be between 0 and
-         * getNumberOfFaces()-1 inclusive.
-         * Note that the index of a face in the component need
-         * not be the index of the same face in the entire
+         * getNumberOfTriangles()-1 inclusive.
+         * Note that the index of a triangle in the component need
+         * not be the index of the same triangle in the entire
          * triangulation.
-         * @return the requested face.
+         * @return the requested triangle.
          */
-        NFace* getFace(unsigned long index) const;
+        NTriangle* getTriangle(unsigned long index) const;
 
         /**
          * Returns the requested edge in this component.
@@ -265,8 +265,8 @@ inline unsigned long NComponent::getNumberOfSimplices() const {
     return tetrahedra.size();
 }
 
-inline unsigned long NComponent::getNumberOfFaces() const {
-    return faces.size();
+inline unsigned long NComponent::getNumberOfTriangles() const {
+    return triangles.size();
 }
 
 inline unsigned long NComponent::getNumberOfEdges() const {
@@ -289,8 +289,8 @@ inline NTetrahedron* NComponent::getSimplex(unsigned long index) const {
     return tetrahedra[index];
 }
 
-inline NFace* NComponent::getFace(unsigned long index) const {
-    return faces[index];
+inline NTriangle* NComponent::getTriangle(unsigned long index) const {
+    return triangles[index];
 }
 
 inline NEdge* NComponent::getEdge(unsigned long index) const {

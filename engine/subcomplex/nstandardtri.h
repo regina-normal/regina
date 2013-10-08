@@ -186,10 +186,10 @@ class REGINA_API NStandardTriangulation : public ShareableObject {
          * recognised triangulations is expected to grow between
          * releases.
          *
-         * If the standard triangulation returned has boundary faces
+         * If the standard triangulation returned has boundary triangles
          * then the given component must have the same corresponding
-         * boundary faces, i.e., the component cannot have any further
-         * identifications of these boundary faces with each other.
+         * boundary triangles, i.e., the component cannot have any further
+         * identifications of these boundary triangles with each other.
          *
          * Note that the triangulation-based routine
          * isStandardTriangulation(NTriangulation*) may recognise more
@@ -208,10 +208,10 @@ class REGINA_API NStandardTriangulation : public ShareableObject {
          * recognised triangulations is expected to grow between
          * releases.
          *
-         * If the standard triangulation returned has boundary faces
+         * If the standard triangulation returned has boundary triangles
          * then the given triangulation must have the same corresponding
-         * boundary faces, i.e., the triangulation cannot have any further
-         * identifications of these boundary faces with each other.
+         * boundary triangles, i.e., the triangulation cannot have any further
+         * identifications of these boundary triangles with each other.
          *
          * This routine may recognise more triangulations than the
          * component-based isStandardTriangulation(NComponent*),
