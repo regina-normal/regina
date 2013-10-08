@@ -1010,19 +1010,19 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         // overkill, since each vertex in the corresponding graph G will
         // have degree <= 2, but it's fast so we'll do it.
         {
-            long nFaces = triangles.size();
+            long nTriangles = triangles.size();
 
             // The parent of each face in the union-find tree, or -1 if
             // a face is at the root of a tree.
             //
             // This array is indexed by face number in the triangulation.
-            // The "unified boundary" is assigned the face number nFaces.
-            long* parent = new long[nFaces + 1];
-            std::fill(parent, parent + nFaces + 1, -1);
+            // The "unified boundary" is assigned the face number nTriangles.
+            long* parent = new long[nTriangles + 1];
+            std::fill(parent, parent + nTriangles + 1, -1);
 
             // The depth of each subtree in the union-find tree.
-            long* depth = new long[nFaces + 1];
-            std::fill(depth, depth + nFaces + 1, 0);
+            long* depth = new long[nTriangles + 1];
+            std::fill(depth, depth + nTriangles + 1, 0);
 
             NTriangle *upper, *lower;
             long id1, id2;
@@ -1034,8 +1034,8 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
                 upper = tet->getTriangle(p[0]);
                 lower = tet->getTriangle(p[1]);
 
-                id1 = (upper->isBoundary() ? nFaces : upper->markedIndex());
-                id2 = (lower->isBoundary() ? nFaces : lower->markedIndex());
+                id1 = (upper->isBoundary() ? nTriangles : upper->markedIndex());
+                id2 = (lower->isBoundary() ? nTriangles : lower->markedIndex());
 
                 // This pillow joins nodes id1 and id2 in the graph G.
                 if (! unionFindInsert(parent, depth, id1, id2)) {

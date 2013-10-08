@@ -181,9 +181,9 @@ void BanTorusBoundary::init(const int* columnPerm) {
     unsigned tet, type, i, k;
 
     // Which boundary faces are we banning?
-    unsigned nFaces = tri_->getNumberOfTriangles();
-    bool* banFace = new bool[nFaces];
-    std::fill(banFace, banFace + nFaces, false);
+    unsigned nTriangles = tri_->getNumberOfTriangles();
+    bool* banTriangle = new bool[nTriangles];
+    std::fill(banTriangle, banTriangle + nTriangles, false);
 
     // Which vertex links are we marking triangles around?
     unsigned nVertices = tri_->getNumberOfVertices();
@@ -197,7 +197,7 @@ void BanTorusBoundary::init(const int* columnPerm) {
                 bc->getEulerCharacteristic() == 0) {
             // We've found a real torus boundary.
             for (k = 0; k < bc->getNumberOfTriangles(); ++k)
-                banFace[bc->getTriangle(k)->markedIndex()] = true;
+                banTriangle[bc->getTriangle(k)->markedIndex()] = true;
             for (k = 0; k < bc->getNumberOfVertices(); ++k)
                 markVtx[bc->getVertex(k)->markedIndex()] = true;
         }
@@ -217,7 +217,7 @@ void BanTorusBoundary::init(const int* columnPerm) {
             tet = columnPerm[i] / 7;
 
         for (k = 0; k < 4; ++k)
-            if (banFace[tri_->getTetrahedron(tet)->getTriangle(k)->
+            if (banTriangle[tri_->getTetrahedron(tet)->getTriangle(k)->
                     markedIndex()]) {
                 banned_[i] = true;
                 break;
@@ -238,14 +238,14 @@ void BanTorusBoundary::init(const int* columnPerm) {
 
             for (k = 0; k < 4; ++k)
                 if (k != type &&
-                        banFace[tri_->getTetrahedron(tet)->getTriangle(k)->
+                        banTriangle[tri_->getTetrahedron(tet)->getTriangle(k)->
                         markedIndex()]) {
                     banned_[i] = true;
                     break;
                 }
         }
 
-    delete[] banFace;
+    delete[] banTriangle;
     delete[] markVtx;
 }
 

@@ -309,12 +309,12 @@ bool NTriangulation::finiteToIdeal() {
 
     // Make a list of all boundary faces, indexed by face number,
     // and create the corresponding new tetrahedra.
-    unsigned long nFaces = getNumberOfTriangles();
+    unsigned long nTriangles = getNumberOfTriangles();
 
     NTriangulation staging;
-    NTetrahedron** bdry = new NTetrahedron*[nFaces];
-    NPerm4* bdryPerm = new NPerm4[nFaces];
-    NTetrahedron** newTet = new NTetrahedron*[nFaces];
+    NTetrahedron** bdry = new NTetrahedron*[nTriangles];
+    NPerm4* bdryPerm = new NPerm4[nTriangles];
+    NTetrahedron** newTet = new NTetrahedron*[nTriangles];
 
     ChangeEventSpan span1(&staging);
 
@@ -376,7 +376,7 @@ bool NTriangulation::finiteToIdeal() {
 
     staging.moveContentsTo(*this);
 
-    for (i = 0; i < nFaces; ++i)
+    for (i = 0; i < nTriangles; ++i)
         if (newTet[i])
             newTet[i]->joinTo(3, bdry[i], bdryPerm[i]);
 

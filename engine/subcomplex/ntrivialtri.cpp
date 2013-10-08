@@ -130,8 +130,8 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
                     degree[3] == 6) {
                 // We have N(3,1) or N(3,2)!
                 // Search for Mobius band faces.
-                unsigned long nFaces = comp->getNumberOfTriangles();
-                for (i = 0; i < nFaces; i++)
+                unsigned long nTriangles = comp->getNumberOfTriangles();
+                for (i = 0; i < nTriangles; i++)
                     if (comp->getTriangle(i)->isMobiusBand())
                         return new NTrivialTri(N3_2);
                 return new NTrivialTri(N3_1);

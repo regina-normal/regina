@@ -242,7 +242,7 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
     std::complex<double> ans = 0.0;
 
     unsigned long nEdges = getNumberOfEdges();
-    unsigned long nFaces = getNumberOfTriangles();
+    unsigned long nTriangles = getNumberOfTriangles();
     unsigned long* colour = new unsigned long[nEdges];
 
     std::fill(colour, colour + nEdges, 0);
@@ -261,7 +261,7 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
                 valColour *= init.vertexContrib;
             for (i = 0; i < nEdges; i++)
                 valColour *= init.edgeContrib(colour[i]);
-            for (i = 0; i < nFaces; i++)
+            for (i = 0; i < nTriangles; i++)
                 valColour *= init.faceContrib(
                     colour[edgeIndex(triangles[i]->getEdge(0))],
                     colour[edgeIndex(triangles[i]->getEdge(1))],

@@ -212,7 +212,7 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
     BoundaryComponentIterator bit;
     NEdge* edge;
     NBoundaryComponent* bc;
-    unsigned long nFaces;
+    unsigned long nTriangles;
     unsigned long iFace;
     // unsigned long nEdges;
     // unsigned long iEdge;
@@ -295,8 +295,8 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
 
                     // Run through faces of this boundary component looking
                     // for shell boundary moves.
-                    nFaces = (*bit)->getNumberOfTriangles();
-                    for (iFace = 0; iFace < nFaces; iFace++) {
+                    nTriangles = (*bit)->getNumberOfTriangles();
+                    for (iFace = 0; iFace < nTriangles; iFace++) {
                         if (shellBoundary((*bit)->getTriangle(iFace)->
                                 getEmbedding(0).getTetrahedron(),
                                 true, perform)) {
