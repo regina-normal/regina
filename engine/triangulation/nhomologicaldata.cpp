@@ -138,7 +138,7 @@ void NHomologicalData::computeccIndexing() {
     }
     j=0; // sIEOE
 
-    for (NTriangulation::FaceIterator fit = tri->getTriangles().begin();
+    for (NTriangulation::TriangleIterator fit = tri->getTriangles().begin();
             fit != tri->getTriangles().end(); fit++) {
         for (i=0;i<3;i++) {
             if ((*fit)->getVertex(i)->isIdeal()) sIEEOF.push_back(3*j+i);
@@ -172,7 +172,7 @@ void NHomologicalData::computeccIndexing() {
         j++;
     }
     j=0; // dNBE
-    for (NTriangulation::FaceIterator fit = tri->getTriangles().begin();
+    for (NTriangulation::TriangleIterator fit = tri->getTriangles().begin();
             fit != tri->getTriangles().end(); fit++) {
         if (!((*fit)->isBoundary()))        dNBF.push_back(j);
         j++;
@@ -190,7 +190,7 @@ void NHomologicalData::computeccIndexing() {
     {if ((*eit)->isBoundary()) sBNIE.push_back(i);
         i++;
     } i=0;
-    for (NTriangulation::FaceIterator fit = tri->getTriangles().begin();
+    for (NTriangulation::TriangleIterator fit = tri->getTriangles().begin();
             fit != tri->getTriangles().end(); fit++) // sBNIF
     {if ((*fit)->isBoundary()) sBNIF.push_back(i);
         i++;

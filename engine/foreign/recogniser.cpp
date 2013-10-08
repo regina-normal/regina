@@ -85,7 +85,7 @@ bool writeRecogniser(const char* filename, NTriangulation& tri) {
     // Sanity checks.
     if (! tri.isValid())
         return false;
-    if (tri.hasBoundaryFaces())
+    if (tri.hasBoundaryTriangles())
         return false;
 
     // Write to file or stdout as appropriate.

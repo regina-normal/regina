@@ -209,7 +209,7 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
 
 std::string NTriangulation::dehydrate() const {
     // Can we even dehydrate at all?
-    if (tetrahedra.size() > 25 || hasBoundaryFaces() || ! isConnected())
+    if (tetrahedra.size() > 25 || hasBoundaryTriangles() || ! isConnected())
         return "";
 
     // Get the empty case out of the way, since it requires an

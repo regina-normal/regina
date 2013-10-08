@@ -126,7 +126,7 @@ class REGINA_API NTriangulation : public NPacket,
 
         typedef std::vector<NTetrahedron*>::const_iterator TetrahedronIterator;
             /**< Used to iterate through tetrahedra. */
-        typedef std::vector<NTriangle*>::const_iterator FaceIterator;
+        typedef std::vector<NTriangle*>::const_iterator TriangleIterator;
             /**< Used to iterate through triangles. */
         typedef std::vector<NEdge*>::const_iterator EdgeIterator;
             /**< Used to iterate through edges. */
@@ -1108,7 +1108,7 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * @return \c true if and only if there are boundary faces.
          */
-        bool hasBoundaryFaces() const;
+        bool hasBoundaryTriangles() const;
         /**
          * Determines if this triangulation is closed.
          * This is the case if and only if it has no boundary.
@@ -3527,7 +3527,7 @@ inline bool NTriangulation::isStandard() const {
     return standard;
 }
 
-inline bool NTriangulation::hasBoundaryFaces() const {
+inline bool NTriangulation::hasBoundaryTriangles() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return (triangles.size() > 2 * tetrahedra.size());

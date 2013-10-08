@@ -64,7 +64,7 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
     // Find out which face corresponds to which generator.
     long *genIndex = new long[getNumberOfTriangles()];
     long i = 0;
-    for (FaceIterator fit = triangles.begin(); fit != triangles.end(); fit++)
+    for (TriangleIterator fit = triangles.begin(); fit != triangles.end(); fit++)
         if ((*fit)->isBoundary() || forest.count(*fit))
             genIndex[fit - triangles.begin()] = -1;
         else

@@ -373,7 +373,7 @@ bool NTriangulation::isBall() const {
         return threeBall.value();
 
     // Basic property checks.
-    if (! (isValid() && hasBoundaryFaces() && isOrientable() && isConnected()
+    if (! (isValid() && hasBoundaryTriangles() && isOrientable() && isConnected()
             && boundaryComponents.size() == 1
             && boundaryComponents.front()->getEulerCharacteristic() == 2)) {
         threeBall = false;
@@ -402,7 +402,7 @@ bool NTriangulation::knowsBall() const {
         return true;
 
     // Run some very fast prelimiary tests before we give up and say no.
-    if (! (isValid() && hasBoundaryFaces() && isOrientable() && isConnected()
+    if (! (isValid() && hasBoundaryTriangles() && isOrientable() && isConnected()
             && boundaryComponents.size() == 1
             && boundaryComponents.front()->getEulerCharacteristic() == 2)) {
         threeBall = false;
@@ -606,7 +606,7 @@ NPacket* NTriangulation::makeZeroEfficient() {
 
 bool NTriangulation::hasCompressingDisc() const {
     // Some sanity checks; also enforce preconditions.
-    if (! hasBoundaryFaces())
+    if (! hasBoundaryTriangles())
         return false;
     if ((! isValid()) || isIdeal())
         return false;
@@ -642,7 +642,7 @@ bool NTriangulation::hasCompressingDisc() const {
 
 bool NTriangulation::hasSimpleCompressingDisc() const {
     // Some sanity checks; also enforce preconditions.
-    if (! hasBoundaryFaces())
+    if (! hasBoundaryTriangles())
         return false;
     if ((! isValid()) || isIdeal())
         return false;
@@ -665,7 +665,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
 
     // Open up as many boundary faces as possible (to make it easier to
     // find simple compressing discs).
-    FaceIterator fit;
+    TriangleIterator fit;
     bool opened = true;
     while (opened) {
         opened = false;

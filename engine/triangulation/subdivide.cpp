@@ -304,7 +304,7 @@ bool NTriangulation::idealToFinite(bool forceDivision) {
 }
 
 bool NTriangulation::finiteToIdeal() {
-    if (! hasBoundaryFaces())
+    if (! hasBoundaryTriangles())
         return false;
 
     // Make a list of all boundary faces, indexed by face number,
@@ -318,7 +318,7 @@ bool NTriangulation::finiteToIdeal() {
 
     ChangeEventSpan span1(&staging);
 
-    FaceIterator fit;
+    TriangleIterator fit;
     unsigned i;
     for (i = 0, fit = triangles.begin(); fit != triangles.end(); ++i, ++fit) {
         if (! (*fit)->isBoundary()) {

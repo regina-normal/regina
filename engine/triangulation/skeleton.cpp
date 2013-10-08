@@ -412,7 +412,7 @@ void NTriangulation::calculateBoundary() const {
     // Sets boundaryComponents, NTriangle.boundaryComponent,
     //     NEdge.boundaryComponent, NVertex.boundaryComponent,
     //     NComponent.boundaryComponents
-    FaceIterator it;
+    TriangleIterator it;
     NTriangle* face;
     NBoundaryComponent* label;
 

@@ -98,7 +98,7 @@ NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
     unsigned long tet0, tet1;
     NPerm4 perm0, perm1;
     bool natural;
-    for (NTriangulation::FaceIterator fit = triangulation->getTriangles().begin();
+    for (NTriangulation::TriangleIterator fit = triangulation->getTriangles().begin();
             fit != triangulation->getTriangles().end(); fit++) {
         if (! (*fit)->isBoundary()) {
             tet0 = triangulation->tetrahedronIndex(

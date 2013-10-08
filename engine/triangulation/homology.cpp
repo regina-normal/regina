@@ -70,7 +70,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1() const {
     // Find out which face corresponds to which generator.
     long* genIndex = new long[getNumberOfTriangles()];
     long i = 0;
-    for (FaceIterator fit = triangles.begin(); fit != triangles.end(); fit++) {
+    for (TriangleIterator fit = triangles.begin(); fit != triangles.end(); fit++) {
         if ((*fit)->isBoundary())
             genIndex[fit - triangles.begin()] = -1;
         else if (forest.count(*fit))
@@ -174,7 +174,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
     long edgeGenIndex;
     i = 0;
     int faceEdge, currEdgeStart, currEdgeEnd, currEdge;
-    for (FaceIterator fit = triangles.begin(); fit != triangles.end(); fit++) {
+    for (TriangleIterator fit = triangles.begin(); fit != triangles.end(); fit++) {
         if (! (*fit)->isBoundary()) {
             // Put in the relation corresponding to this face.
             currTet = (*fit)->getEmbedding(0).getTetrahedron();

@@ -454,7 +454,7 @@ void NTriangulation::deleteSkeleton() {
         delete *it;
     for (EdgeIterator it = edges.begin(); it != edges.end(); ++it)
         delete *it;
-    for (FaceIterator it = triangles.begin(); it != triangles.end(); ++it)
+    for (TriangleIterator it = triangles.begin(); it != triangles.end(); ++it)
         delete *it;
     for (ComponentIterator it = components.begin();
             it != components.end(); ++it)

@@ -212,7 +212,7 @@ void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
     // Make sure SnapPea is likely to be comfortable with it.
     if (tri.getNumberOfTetrahedra() == 0)
         return 0;
-    if (tri.hasBoundaryFaces())
+    if (tri.hasBoundaryTriangles())
         return 0;
     if (! tri.isConnected())
         return 0;

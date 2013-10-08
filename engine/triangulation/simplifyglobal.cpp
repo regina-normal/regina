@@ -126,13 +126,13 @@ bool NTriangulation::intelligentSimplify() {
 
             // --- Open book and close book moves ---
 
-            if (hasBoundaryFaces()) {
+            if (hasBoundaryTriangles()) {
                 // Clone again, always -- we don't want to create gratuitous
                 // boundary faces if they won't be of any help.
                 use = new NTriangulation(*this);
 
                 // Perform every book opening move we can find.
-                FaceIterator fit;
+                TriangleIterator fit;
 
                 bool opened = false;
                 bool openedNow = true;
@@ -288,7 +288,7 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
             }
 
             // Look for boundary simplifications.
-            if (hasBoundaryFaces()) {
+            if (hasBoundaryTriangles()) {
                 for (bit = boundaryComponents.begin();
                         bit != boundaryComponents.end(); bit++) {
                     bc = *bit;
