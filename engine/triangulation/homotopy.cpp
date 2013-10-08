@@ -55,14 +55,14 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
     unsigned long nBdryFaces = 0;
     for (BoundaryComponentIterator bit = boundaryComponents.begin();
             bit != boundaryComponents.end(); bit++)
-        nBdryFaces += (*bit)->getNumberOfFaces();
-    long nGens = getNumberOfFaces() - nBdryFaces - forest.size();
+        nBdryFaces += (*bit)->getNumberOfTriangles();
+    long nGens = getNumberOfTriangles() - nBdryFaces - forest.size();
 
     // Insert the generators.
     ans->addGenerator(nGens);
 
     // Find out which face corresponds to which generator.
-    long *genIndex = new long[getNumberOfFaces()];
+    long *genIndex = new long[getNumberOfTriangles()];
     long i = 0;
     for (FaceIterator fit = faces.begin(); fit != faces.end(); fit++)
         if ((*fit)->isBoundary() || forest.count(*fit))

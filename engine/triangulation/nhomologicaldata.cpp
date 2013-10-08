@@ -138,8 +138,8 @@ void NHomologicalData::computeccIndexing() {
     }
     j=0; // sIEOE
 
-    for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
-            fit != tri->getFaces().end(); fit++) {
+    for (NTriangulation::FaceIterator fit = tri->getTriangles().begin();
+            fit != tri->getTriangles().end(); fit++) {
         for (i=0;i<3;i++) {
             if ((*fit)->getVertex(i)->isIdeal()) sIEEOF.push_back(3*j+i);
         }
@@ -172,8 +172,8 @@ void NHomologicalData::computeccIndexing() {
         j++;
     }
     j=0; // dNBE
-    for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
-            fit != tri->getFaces().end(); fit++) {
+    for (NTriangulation::FaceIterator fit = tri->getTriangles().begin();
+            fit != tri->getTriangles().end(); fit++) {
         if (!((*fit)->isBoundary()))        dNBF.push_back(j);
         j++;
     }
@@ -190,8 +190,8 @@ void NHomologicalData::computeccIndexing() {
     {if ((*eit)->isBoundary()) sBNIE.push_back(i);
         i++;
     } i=0;
-    for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
-            fit != tri->getFaces().end(); fit++) // sBNIF
+    for (NTriangulation::FaceIterator fit = tri->getTriangles().begin();
+            fit != tri->getTriangles().end(); fit++) // sBNIF
     {if ((*fit)->isBoundary()) sBNIF.push_back(i);
         i++;
     }
@@ -201,7 +201,7 @@ void NHomologicalData::computeccIndexing() {
     // standard (0..3)-cells:
     numStandardCells[0] = sNIV.size() + sIEOE.size();
     numStandardCells[1] = tri->getNumberOfEdges() + sIEEOF.size();
-    numStandardCells[2] = tri->getNumberOfFaces() + sIEFOT.size();
+    numStandardCells[2] = tri->getNumberOfTriangles() + sIEFOT.size();
     numStandardCells[3] = tri->getNumberOfTetrahedra();
 
     // dual (0..3)-cells:
@@ -294,7 +294,7 @@ void NHomologicalData::computeChainComplexes() {
     // that handles matrix A1.
 
     // start filling out A2...
-    for (i=0;i<tri->getNumberOfFaces();i++) {
+    for (i=0;i<tri->getNumberOfTriangles();i++) {
         // put boundary edges into A2..
         for (j=0;j<6;j++) {
             // run through the 6 possible boundary edges of the face
@@ -334,7 +334,7 @@ void NHomologicalData::computeChainComplexes() {
                 3*tri->triangleIndex(tri->getTetrahedron(
                 sIEFOT[i]/4 )->getFace( (sIEFOT[i] + j) % 4)) +
                 p1.preImageOf(sIEFOT[i] % 4) ) ,
-                tri->getNumberOfFaces()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
+                tri->getNumberOfTriangles()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
         }
     }
     // end A2
@@ -350,7 +350,7 @@ void NHomologicalData::computeChainComplexes() {
             // then ideal faces 0 through 3, if they exist
             if (tri->getTetrahedron(i)->getVertex(j)->isIdeal()==1) {
                 // this part is in error.
-                A3->entry( tri->getNumberOfFaces() +
+                A3->entry( tri->getNumberOfTriangles() +
                     sIEFOT.index((4*i) + j), i) += 1;
             }
         }
@@ -911,7 +911,7 @@ void NHomologicalData::computeChainComplexes() {
     // fill out b2Incl
     for (i=0;i<B2Incl->columns();i++)
         B2Incl->entry( ( ( i < sBNIF.size() ) ? sBNIF[i] :
-                tri->getNumberOfFaces() + i - sBNIF.size() ) ,i)+=1;
+                tri->getNumberOfTriangles() + i - sBNIF.size() ) ,i)+=1;
 }
 
 const NMarkedAbelianGroup& NHomologicalData::getHomology(unsigned q) {

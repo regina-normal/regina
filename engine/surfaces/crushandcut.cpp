@@ -1172,8 +1172,8 @@ NTriangulation* NNormalSurface::cutAlong() const {
     int fromVertex0, fromVertex1;
     NPerm4 gluing;
     unsigned long quadBlocks;
-    for (fit = getTriangulation()->getFaces().begin();
-            fit != getTriangulation()->getFaces().end(); ++fit) {
+    for (fit = getTriangulation()->getTriangles().begin();
+            fit != getTriangulation()->getTriangles().end(); ++fit) {
         f = *fit;
         if (f->isBoundary())
             continue;

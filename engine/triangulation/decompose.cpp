@@ -656,7 +656,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
     for (ComponentIterator cit = use.getComponents().begin();
             cit != use.getComponents().end(); ++cit)
         if ((*cit)->getNumberOfTetrahedra() == 1 &&
-                (*cit)->getNumberOfFaces() == 3 &&
+                (*cit)->getNumberOfTriangles() == 3 &&
                 (*cit)->getNumberOfVertices() == 1) {
             // Because we know the triangulation is valid, this rules out
             // all one-tetrahedron triangulations except for LST(1,2,3).
@@ -669,7 +669,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
     bool opened = true;
     while (opened) {
         opened = false;
-        for (fit = use.getFaces().begin(); fit != use.getFaces().end(); ++fit)
+        for (fit = use.getTriangles().begin(); fit != use.getTriangles().end(); ++fit)
             if (use.openBook(*fit, true, true)) {
                 opened = true;
                 break;
@@ -691,7 +691,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
     // It doesn't matter whether the edges and/or vertices are distinct.
     NEdge *e0, *e1, *e2;
     unsigned long newSphereCount;
-    for (fit = use.getFaces().begin(); fit != use.getFaces().end(); ++fit) {
+    for (fit = use.getTriangles().begin(); fit != use.getTriangles().end(); ++fit) {
         if ((*fit)->isBoundary())
             continue;
 

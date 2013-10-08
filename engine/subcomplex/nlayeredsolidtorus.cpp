@@ -592,7 +592,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
         return 0;
     if (comp->getNumberOfBoundaryComponents() != 1)
         return 0;
-    if (comp->getBoundaryComponent(0)->getNumberOfFaces() != 2)
+    if (comp->getBoundaryComponent(0)->getNumberOfTriangles() != 2)
         return 0;
 
     NFaceEmbedding f0 = comp->getBoundaryComponent(0)->getFace(0)->

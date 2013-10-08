@@ -52,7 +52,7 @@ namespace {
         NFace* f;
         NTetrahedron* tet;
         NPerm4 vert;
-        for (unsigned i = 0; i < tri.getNumberOfFaces(); ++i) {
+        for (unsigned i = 0; i < tri.getNumberOfTriangles(); ++i) {
             f = tri.getFace(i);
 
             tet = f->getEmbedding(0).getTetrahedron();
@@ -69,7 +69,7 @@ namespace {
                 << ',' << (vert[1] + 1)
                 << ',' << (vert[2] + 1) << ')';
 
-            if (i != tri.getNumberOfFaces() - 1)
+            if (i != tri.getNumberOfTriangles() - 1)
                 out << ',';
             out << std::endl;
         }

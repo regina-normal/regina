@@ -61,14 +61,14 @@ const NAbelianGroup& NTriangulation::getHomologyH1() const {
     for (BoundaryComponentIterator bit = boundaryComponents.begin();
             bit != boundaryComponents.end(); bit++) {
         nBdryEdges += (*bit)->getNumberOfEdges();
-        nBdryFaces += (*bit)->getNumberOfFaces();
+        nBdryFaces += (*bit)->getNumberOfTriangles();
     }
-    long nGens = getNumberOfFaces() - nBdryFaces - forest.size();
+    long nGens = getNumberOfTriangles() - nBdryFaces - forest.size();
     long nRels = getNumberOfEdges() - nBdryEdges;
     NMatrixInt pres(nRels, nGens);
 
     // Find out which face corresponds to which generator.
-    long* genIndex = new long[getNumberOfFaces()];
+    long* genIndex = new long[getNumberOfTriangles()];
     long i = 0;
     for (FaceIterator fit = faces.begin(); fit != faces.end(); fit++) {
         if ((*fit)->isBoundary())
@@ -142,7 +142,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
             bit != boundaryComponents.end(); bit++) {
         nBdryVertices += (*bit)->getNumberOfVertices();
         nBdryEdges += (*bit)->getNumberOfEdges();
-        nBdryFaces += (*bit)->getNumberOfFaces();
+        nBdryFaces += (*bit)->getNumberOfTriangles();
     }
     for (ComponentIterator cit = components.begin();
             cit != components.end(); cit++)
@@ -151,7 +151,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
     long nGens = getNumberOfEdges() - nBdryEdges
         - getNumberOfVertices() + nBdryVertices
         + nClosedComponents;
-    long nRels = getNumberOfFaces() - nBdryFaces;
+    long nRels = getNumberOfTriangles() - nBdryFaces;
     NMatrixInt pres(nRels, nGens);
 
     // Find out which edge corresponds to which generator.

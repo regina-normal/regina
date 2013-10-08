@@ -309,7 +309,7 @@ bool NTriangulation::finiteToIdeal() {
 
     // Make a list of all boundary faces, indexed by face number,
     // and create the corresponding new tetrahedra.
-    unsigned long nFaces = getNumberOfFaces();
+    unsigned long nFaces = getNumberOfTriangles();
 
     NTriangulation staging;
     NTetrahedron** bdry = new NTetrahedron*[nFaces];
@@ -336,7 +336,7 @@ bool NTriangulation::finiteToIdeal() {
     BoundaryComponentIterator bit;
     for (bit = boundaryComponents.begin();
             bit != boundaryComponents.end(); bit++)
-        for (i = 0; i < (*bit)->getNumberOfFaces(); ++i)
+        for (i = 0; i < (*bit)->getNumberOfTriangles(); ++i)
             newTet[(*bit)->getFace(i)->markedIndex()] =
                 staging.newTetrahedron();
 

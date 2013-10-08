@@ -164,13 +164,13 @@ unsigned long NTriangulation::findIsomorphisms(
             for (it = boundaryComponents.begin();
                     it != boundaryComponents.end(); it++) {
                 mapIt = map1.insert(
-                    std::make_pair((*it)->getNumberOfFaces(), 0)).first;
+                    std::make_pair((*it)->getNumberOfTriangles(), 0)).first;
                 (*mapIt).second++;
             }
             for (it = other.boundaryComponents.begin();
                     it != other.boundaryComponents.end(); it++) {
                 mapIt = map2.insert(
-                    std::make_pair((*it)->getNumberOfFaces(), 0)).first;
+                    std::make_pair((*it)->getNumberOfTriangles(), 0)).first;
                 (*mapIt).second++;
             }
             if (! (map1 == map2))

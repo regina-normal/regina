@@ -46,7 +46,7 @@ bool LPConstraintEuler::addRows(
     NPerm4 p;
     for (i = 0; i < 7 * tri->getNumberOfTetrahedra(); ++i)
         obj[i] = 1;
-    for (i = 0; i < tri->getNumberOfFaces(); ++i) {
+    for (i = 0; i < tri->getNumberOfTriangles(); ++i) {
         tet = tri->tetrahedronIndex(
             tri->getFace(i)->getEmbedding(0).getTetrahedron());
         p = tri->getFace(i)->getEmbedding(0).getVertices();
@@ -181,7 +181,7 @@ void BanTorusBoundary::init(const int* columnPerm) {
     unsigned tet, type, i, k;
 
     // Which boundary faces are we banning?
-    unsigned nFaces = tri_->getNumberOfFaces();
+    unsigned nFaces = tri_->getNumberOfTriangles();
     bool* banFace = new bool[nFaces];
     std::fill(banFace, banFace + nFaces, false);
 
@@ -196,7 +196,7 @@ void BanTorusBoundary::init(const int* columnPerm) {
         if ((! bc->isIdeal()) && bc->isOrientable() &&
                 bc->getEulerCharacteristic() == 0) {
             // We've found a real torus boundary.
-            for (k = 0; k < bc->getNumberOfFaces(); ++k)
+            for (k = 0; k < bc->getNumberOfTriangles(); ++k)
                 banFace[bc->getFace(k)->markedIndex()] = true;
             for (k = 0; k < bc->getNumberOfVertices(); ++k)
                 markVtx[bc->getVertex(k)->markedIndex()] = true;

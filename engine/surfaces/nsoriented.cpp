@@ -62,7 +62,7 @@ NLargeInteger NNormalSurfaceVectorOriented::getEdgeWeight(
 NLargeInteger NNormalSurfaceVectorOriented::getFaceArcs(
         unsigned long triIndex, int faceVertex, NTriangulation* triang) const {
     // Find a tetrahedron next to the face in question.
-    const NFaceEmbedding& emb = triang->getFaces()[triIndex]->
+    const NFaceEmbedding& emb = triang->getTriangles()[triIndex]->
         getEmbedding(0);
     long tetIndex = triang->tetrahedronIndex(emb.getTetrahedron());
     int vertex = emb.getVertices()[faceVertex];
@@ -88,7 +88,7 @@ NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
     // Six equations per non-boundary face.
     // F_boundary + 2 F_internal = 4 T
     long nEquations = 6 * (4 * long(triangulation->getNumberOfTetrahedra()) -
-        long(triangulation->getNumberOfFaces()));
+        long(triangulation->getNumberOfTriangles()));
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
 
     // Run through each internal face and add the corresponding three
@@ -98,8 +98,8 @@ NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
     unsigned long tet0, tet1;
     NPerm4 perm0, perm1;
     bool natural;
-    for (NTriangulation::FaceIterator fit = triangulation->getFaces().begin();
-            fit != triangulation->getFaces().end(); fit++) {
+    for (NTriangulation::FaceIterator fit = triangulation->getTriangles().begin();
+            fit != triangulation->getTriangles().end(); fit++) {
         if (! (*fit)->isBoundary()) {
             tet0 = triangulation->tetrahedronIndex(
                 (*fit)->getEmbedding(0).getTetrahedron());

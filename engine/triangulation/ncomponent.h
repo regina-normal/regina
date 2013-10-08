@@ -111,7 +111,7 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
          *
          * @return the number of faces.
          */
-        unsigned long getNumberOfFaces() const;
+        unsigned long getNumberOfTriangles() const;
 
         /**
          * Returns the number of edges in this component.
@@ -163,7 +163,7 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
          *
          * @param index the index of the requested face in the
          * component.  This should be between 0 and
-         * getNumberOfFaces()-1 inclusive.
+         * getNumberOfTriangles()-1 inclusive.
          * Note that the index of a face in the component need
          * not be the index of the same face in the entire
          * triangulation.
@@ -265,7 +265,7 @@ inline unsigned long NComponent::getNumberOfSimplices() const {
     return tetrahedra.size();
 }
 
-inline unsigned long NComponent::getNumberOfFaces() const {
+inline unsigned long NComponent::getNumberOfTriangles() const {
     return faces.size();
 }
 

@@ -139,8 +139,8 @@ bool NTriangulation::intelligentSimplify() {
                 while (openedNow) {
                     openedNow = false;
 
-                    for (fit = use->getFaces().begin();
-                            fit != use->getFaces().end(); ++fit)
+                    for (fit = use->getTriangles().begin();
+                            fit != use->getTriangles().end(); ++fit)
                         if (use->openBook(*fit, true, true)) {
                             opened = openedNow = true;
                             break;
@@ -295,7 +295,7 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
 
                     // Run through faces of this boundary component looking
                     // for shell boundary moves.
-                    nFaces = (*bit)->getNumberOfFaces();
+                    nFaces = (*bit)->getNumberOfTriangles();
                     for (iFace = 0; iFace < nFaces; iFace++) {
                         if (shellBoundary((*bit)->getFace(iFace)->
                                 getEmbedding(0).getTetrahedron(),

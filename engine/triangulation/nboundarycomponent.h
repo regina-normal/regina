@@ -105,7 +105,7 @@ class REGINA_API NBoundaryComponent :
          *
          * @return the number of faces.
          */
-        unsigned long getNumberOfFaces() const;
+        unsigned long getNumberOfTriangles() const;
 
         /**
          * Returns the number of edges in this boundary component.
@@ -129,7 +129,7 @@ class REGINA_API NBoundaryComponent :
          * and this routine cannot be used.
          *
          * @param index the index of the requested face in the boundary
-         * component.  This should be between 0 and getNumberOfFaces()-1
+         * component.  This should be between 0 and getNumberOfTriangles()-1
          * inclusive.
          * Note that the index of a face in the boundary component need
          * not be the index of the same face in the entire
@@ -239,7 +239,7 @@ inline NBoundaryComponent::NBoundaryComponent(NVertex* idealVertex) {
 inline NBoundaryComponent::~NBoundaryComponent() {
 }
 
-inline unsigned long NBoundaryComponent::getNumberOfFaces() const {
+inline unsigned long NBoundaryComponent::getNumberOfTriangles() const {
     return faces.size();
 }
 

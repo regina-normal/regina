@@ -611,7 +611,7 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * @return the number of 2-dimensional faces.
          */
-        unsigned long getNumberOfFaces() const;
+        unsigned long getNumberOfTriangles() const;
         /**
          * Returns the number of faces of the given dimension in this
          * triangulation.
@@ -708,7 +708,7 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * @return the list of all faces.
          */
-        const std::vector<NFace*>& getFaces() const;
+        const std::vector<NFace*>& getTriangles() const;
         /**
          * Returns the requested triangulation component.
          *
@@ -766,7 +766,7 @@ class REGINA_API NTriangulation : public NPacket,
          * ones.  Thus this object should be considered temporary only.
          *
          * @param index the index of the desired face, ranging from 0
-         * to getNumberOfFaces()-1 inclusive.
+         * to getNumberOfTriangles()-1 inclusive.
          * @return the requested face.
          */
         NFace* getFace(unsigned long index) const;
@@ -3363,7 +3363,7 @@ inline unsigned long NTriangulation::getNumberOfEdges() const {
     return edges.size();
 }
 
-inline unsigned long NTriangulation::getNumberOfFaces() const {
+inline unsigned long NTriangulation::getNumberOfTriangles() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return faces.size();
@@ -3381,7 +3381,7 @@ inline unsigned long NTriangulation::getNumberOfFaces<1>() const {
 
 template <>
 inline unsigned long NTriangulation::getNumberOfFaces<2>() const {
-    return getNumberOfFaces();
+    return getNumberOfTriangles();
 }
 
 template <>
@@ -3438,7 +3438,7 @@ inline const std::vector<NEdge*>& NTriangulation::getEdges()
     return (const std::vector<NEdge*>&)(edges);
 }
 
-inline const std::vector<NFace*>& NTriangulation::getFaces()
+inline const std::vector<NFace*>& NTriangulation::getTriangles()
         const {
     if (! calculatedSkeleton)
         calculateSkeleton();

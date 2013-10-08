@@ -242,7 +242,7 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
     std::complex<double> ans = 0.0;
 
     unsigned long nEdges = getNumberOfEdges();
-    unsigned long nFaces = getNumberOfFaces();
+    unsigned long nFaces = getNumberOfTriangles();
     unsigned long* colour = new unsigned long[nEdges];
 
     std::fill(colour, colour + nEdges, 0);

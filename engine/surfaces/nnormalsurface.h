@@ -577,7 +577,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          *
          * @param triIndex the index in the triangulation of the face
          * in which we are interested; this should be between 0 and
-         * NTriangulation::getNumberOfFaces()-1 inclusive.
+         * NTriangulation::getNumberOfTriangles()-1 inclusive.
          * @param faceVertex the vertex of the face (0, 1 or 2) around
          * which the arcs of intersection that we are interested in lie;
          * only these arcs will be counted.
@@ -895,7 +895,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          *
          * @param triIndex the index in the triangulation of the face
          * in which we are interested; this should be between 0 and
-         * NTriangulation::getNumberOfFaces()-1 inclusive.
+         * NTriangulation::getNumberOfTriangles()-1 inclusive.
          * @param faceVertex the vertex of the face (0, 1 or 2) around
          * which the arcs of intersection that we are interested in lie;
          * only these arcs will be counted.
