@@ -159,8 +159,8 @@ void BanBoundary::init(const int* columnPerm) {
             }
     }
 
-    // Ban triangles in tetrahedra that meet the boundary (but
-    // only those triangles that meet the boundary faces).
+    // Ban normal triangles in tetrahedra that meet the boundary (but
+    // only those normal triangles that meet the boundary faces).
     if (! quadOnly)
         for (i = 3 * n; i < 7 * n; ++i) {
             tet = columnPerm[i] / 7;
@@ -185,7 +185,7 @@ void BanTorusBoundary::init(const int* columnPerm) {
     bool* banTriangle = new bool[nTriangles];
     std::fill(banTriangle, banTriangle + nTriangles, false);
 
-    // Which vertex links are we marking triangles around?
+    // Which vertex links are we marking normal triangles around?
     unsigned nVertices = tri_->getNumberOfVertices();
     bool* markVtx = new bool[nVertices];
     std::fill(markVtx, markVtx + nVertices, false);
@@ -224,9 +224,9 @@ void BanTorusBoundary::init(const int* columnPerm) {
             }
     }
 
-    // Ban triangles that touch torus boundaries, and mark all
-    // triangles that surround vertices on torus boundaries
-    // (even if the triangles do not actually touch the boundary).
+    // Ban normal triangles that touch torus boundaries, and mark all
+    // normal triangles that surround vertices on torus boundaries
+    // (even if the normal triangles do not actually touch the boundary).
     if (! quadOnly)
         for (i = 3 * n; i < 7 * n; ++i) {
             tet = columnPerm[i] / 7;
