@@ -193,7 +193,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
                 tet != ans->topLevel->adjacentTetrahedron(ans->topFace[1]))
             break;
 
-        // There is a new tetrahedron glued to both torus boundary faces.
+        // There is a new tetrahedron glued to both torus boundary triangles.
         adjPerm[0] = ans->topLevel->adjacentGluing(
             ans->topFace[0]);
         adjPerm[1] = ans->topLevel->adjacentGluing(
@@ -605,7 +605,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
         return 0;
 
     // We have precisely one boundary component, which consists of two
-    // faces belonging to the same tetrahedron.
+    // triangular faces belonging to the same tetrahedron.
 
     // Follow the adjacent tetrahedra down to what should be the base
     // tetrahedron.  Don't worry about gluing permutations for now.

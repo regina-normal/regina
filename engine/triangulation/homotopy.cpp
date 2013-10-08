@@ -50,18 +50,18 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
     std::set<NTriangle*> forest;
     maximalForestInDualSkeleton(forest);
 
-    // Each non-boundary not-in-forest face is a generator.
+    // Each non-boundary not-in-forest triangle is a generator.
     // Each non-boundary edge is a relation.
-    unsigned long nBdryFaces = 0;
+    unsigned long nBdryTri = 0;
     for (BoundaryComponentIterator bit = boundaryComponents.begin();
             bit != boundaryComponents.end(); bit++)
-        nBdryFaces += (*bit)->getNumberOfTriangles();
-    long nGens = getNumberOfTriangles() - nBdryFaces - forest.size();
+        nBdryTri += (*bit)->getNumberOfTriangles();
+    long nGens = getNumberOfTriangles() - nBdryTri - forest.size();
 
     // Insert the generators.
     ans->addGenerator(nGens);
 
-    // Find out which face corresponds to which generator.
+    // Find out which triangle corresponds to which generator.
     long *genIndex = new long[getNumberOfTriangles()];
     long i = 0;
     for (TriangleIterator fit = triangles.begin(); fit != triangles.end(); fit++)
@@ -73,9 +73,9 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
     // Run through each edge and put the relations in the matrix.
     std::deque<NEdgeEmbedding>::const_iterator embit;
     NTetrahedron* currTet;
-    NTriangle* face;
+    NTriangle* triangle;
     int currTetFace;
-    long faceGenIndex;
+    long triGenIndex;
     NGroupExpression* rel;
     for (EdgeIterator eit = edges.begin(); eit != edges.end(); eit++)
         if (! (*eit)->isBoundary()) {
@@ -85,14 +85,14 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
                     embit != (*eit)->getEmbeddings().end(); embit++) {
                 currTet = (*embit).getTetrahedron();
                 currTetFace = (*embit).getVertices()[2];
-                face = currTet->getTriangle(currTetFace);
-                faceGenIndex = genIndex[triangleIndex(face)];
-                if (faceGenIndex >= 0) {
-                    if ((face->getEmbedding(0).getTetrahedron() == currTet) &&
-                            (face->getEmbedding(0).getTriangle() == currTetFace))
-                        rel->addTermLast(faceGenIndex, 1);
+                triangle = currTet->getTriangle(currTetFace);
+                triGenIndex = genIndex[triangleIndex(triangle)];
+                if (triGenIndex >= 0) {
+                    if ((triangle->getEmbedding(0).getTetrahedron() == currTet) &&
+                            (triangle->getEmbedding(0).getTriangle() == currTetFace))
+                        rel->addTermLast(triGenIndex, 1);
                     else
-                        rel->addTermLast(faceGenIndex, -1);
+                        rel->addTermLast(triGenIndex, -1);
                 }
             }
             ans->addRelation(rel);

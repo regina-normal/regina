@@ -101,9 +101,9 @@ class REGINA_API NBoundaryComponent :
         virtual ~NBoundaryComponent();
 
         /**
-         * Returns the number of faces in this boundary component.
+         * Returns the number of triangles in this boundary component.
          *
-         * @return the number of faces.
+         * @return the number of triangles.
          */
         unsigned long getNumberOfTriangles() const;
 
@@ -122,19 +122,19 @@ class REGINA_API NBoundaryComponent :
         unsigned long getNumberOfVertices() const;
 
         /**
-         * Returns the requested face in this boundary component.
+         * Returns the requested triangle in this boundary component.
          *
          * For an ideal boundary component (which consists of a single
-         * vertex), there are no real faces in the boundary component
+         * vertex), there are no real triangles in the boundary component
          * and this routine cannot be used.
          *
-         * @param index the index of the requested face in the boundary
+         * @param index the index of the requested triangle in the boundary
          * component.  This should be between 0 and getNumberOfTriangles()-1
          * inclusive.
-         * Note that the index of a face in the boundary component need
-         * not be the index of the same face in the entire
+         * Note that the index of a triangle in the boundary component need
+         * not be the index of the same triangle in the entire
          * triangulation.
-         * @return the requested face.
+         * @return the requested triangle.
          */
         NTriangle* getTriangle(unsigned long index) const;
 
@@ -180,7 +180,7 @@ class REGINA_API NBoundaryComponent :
         /**
          * Determines if this boundary component is ideal.
          * This is the case if and only if it consists of a single
-         * (ideal) vertex and no faces.
+         * (ideal) vertex and no triangles.
          *
          * @return \c true if and only if this boundary component is
          * ideal.

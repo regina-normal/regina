@@ -220,7 +220,7 @@ std::string NTriangulation::dehydrate() const {
 
     // Find an isomorphism that will put the triangulation in a form
     // sufficiently "canonical" to be described by a dehydration string.
-    // When walking through faces from start to finish, this affects
+    // When walking through tetrahedron faces from start to finish, this affects
     // only gluings to previously unseen tetrahedra:
     // (i) such gluings must be to the smallest numbered unused tetrahedron;
     // (ii) the gluing permutation must be the identity permutation.
@@ -233,7 +233,7 @@ std::string NTriangulation::dehydrate() const {
     // vertexMap[t][i] of tetrahedron image[t].
     //
     // Each element of newTet[] is an 8-bit integer.  These bits
-    // describe whether the gluings for some corresponding 8 faces
+    // describe whether the gluings for some corresponding 8 tetrahedron faces
     // point to previously-seen or previously-unseen tetrahedra.
     // See the Callahan, Hildebrand and Weeks paper for details.
     unsigned nTets = tetrahedra.size();

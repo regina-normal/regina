@@ -63,7 +63,7 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
             NBoundaryComponent* bc = comp->getBoundaryComponent(0);
 
             if (! bc->isIdeal()) {
-                // The boundary component includes boundary faces.
+                // The boundary component includes boundary triangles.
                 // Look for a one-tetrahedron ball.
                 if (comp->getNumberOfTetrahedra() == 1) {
                     if (bc->getNumberOfTriangles() == 4)
@@ -117,7 +117,7 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
             // If the triangulation is valid and the edge degrees
             // are 2,4,4,6 then we have N(3,1) or N(3,2).
             // All of the vertices are valid since there are no boundary
-            // faces; we thus only need to check the edges.
+            // triangles; we thus only need to check the edges.
             if (comp->getNumberOfEdges() != 4)
                 return 0;
 
@@ -129,7 +129,7 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
             if (degree[0] == 2 && degree[1] == 4 && degree[2] == 6 &&
                     degree[3] == 6) {
                 // We have N(3,1) or N(3,2)!
-                // Search for Mobius band faces.
+                // Search for Mobius band triangles.
                 unsigned long nTriangles = comp->getNumberOfTriangles();
                 for (i = 0; i < nTriangles; i++)
                     if (comp->getTriangle(i)->isMobiusBand())

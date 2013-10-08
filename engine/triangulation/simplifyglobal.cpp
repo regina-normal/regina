@@ -128,7 +128,7 @@ bool NTriangulation::intelligentSimplify() {
 
             if (hasBoundaryTriangles()) {
                 // Clone again, always -- we don't want to create gratuitous
-                // boundary faces if they won't be of any help.
+                // boundary triangles if they won't be of any help.
                 use = new NTriangulation(*this);
 
                 // Perform every book opening move we can find.
@@ -213,7 +213,7 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
     NEdge* edge;
     NBoundaryComponent* bc;
     unsigned long nTriangles;
-    unsigned long iFace;
+    unsigned long iTriangle;
     // unsigned long nEdges;
     // unsigned long iEdge;
     // std::deque<NEdgeEmbedding>::const_iterator embit, embbeginit, embendit;
@@ -293,11 +293,11 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
                         bit != boundaryComponents.end(); bit++) {
                     bc = *bit;
 
-                    // Run through faces of this boundary component looking
+                    // Run through triangles of this boundary component looking
                     // for shell boundary moves.
                     nTriangles = (*bit)->getNumberOfTriangles();
-                    for (iFace = 0; iFace < nTriangles; iFace++) {
-                        if (shellBoundary((*bit)->getTriangle(iFace)->
+                    for (iTriangle = 0; iTriangle < nTriangles; iTriangle++) {
+                        if (shellBoundary((*bit)->getTriangle(iTriangle)->
                                 getEmbedding(0).getTetrahedron(),
                                 true, perform)) {
                             changedNow = changed = true;

@@ -290,7 +290,7 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
          * in the vertex link that "slices off" vertex \a v from
          * tetrahedron \a tet.  In other words,
          * <tt>buildLink()->getTriangle(i)</tt> in the vertex link
-         * is parallel to face <tt>tet->getTriangle(v)</tt> in the
+         * is parallel to triangle <tt>tet->getTriangle(v)</tt> in the
          * surrounding 3-manifold triangulation.
          *
          * The vertices of each triangle in the vertex link are

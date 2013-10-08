@@ -61,7 +61,7 @@ void NTriangulation::calculateSkeleton() const {
         // Sets components, orientable, NComponent.orientable,
         //     NTetrahedron.component
     calculateTriangles();
-        // Sets faces, NTriangle.component
+        // Sets triangles, NTriangle.component
     calculateVertices();
         // Sets vertices, NVertex.component, NVertex.linkOrientable.
     calculateEdges();
@@ -379,27 +379,27 @@ void NTriangulation::calculateTriangles() const {
     for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
         tet = *it;
         for (face=0; face<4; face++)
-            tet->faces[face] = 0;
+            tet->triangles[face] = 0;
     }
 
     for (it = tetrahedra.begin(); it != tetrahedra.end(); it++) {
         tet = *it;
         for (face=3; face>=0; face--)
-            if (! tet->faces[face]) {
+            if (! tet->triangles[face]) {
                 label = new NTriangle(tet->component);
                 tet->component->triangles.push_back(label);
-                tet->faces[face] = label;
-                tet->faceMapping[face] = NTriangle::ordering[face];
+                tet->triangles[face] = label;
+                tet->triMapping[face] = NTriangle::ordering[face];
                 label->embeddings[0] = new NTriangleEmbedding(tet, face);
                 label->nEmbeddings = 1;
                 adjTet = tet->adjacentTetrahedron(face);
                 if (adjTet) {
-                    // Face is not on the boundary.
+                    // Triangle is not on the boundary.
                     adjFace = tet->adjacentFace(face);
                     adjVertices = (tet->adjacentGluing(face))*
-                        tet->faceMapping[face];
-                    adjTet->faces[adjFace] = label;
-                    adjTet->faceMapping[adjFace] = adjVertices;
+                        tet->triMapping[face];
+                    adjTet->triangles[adjFace] = label;
+                    adjTet->triMapping[adjFace] = adjVertices;
                     label->embeddings[1] = new NTriangleEmbedding(adjTet, adjFace);
                     label->nEmbeddings = 2;
                 }
@@ -413,32 +413,32 @@ void NTriangulation::calculateBoundary() const {
     //     NEdge.boundaryComponent, NVertex.boundaryComponent,
     //     NComponent.boundaryComponents
     TriangleIterator it;
-    NTriangle* face;
+    NTriangle* triangle;
     NBoundaryComponent* label;
 
     for (it = triangles.begin(); it != triangles.end(); it++) {
-        face = *it;
-        if (face->nEmbeddings < 2)
-            if (face->boundaryComponent == 0) {
+        triangle = *it;
+        if (triangle->nEmbeddings < 2)
+            if (triangle->boundaryComponent == 0) {
                 label = new NBoundaryComponent();
                 label->orientable = true;
-                labelBoundaryTriangle(face, label);
+                labelBoundaryTriangle(triangle, label);
                 boundaryComponents.push_back(label);
-                face->component->boundaryComponents.push_back(label);
+                triangle->component->boundaryComponents.push_back(label);
             }
     }
 }
 
-void NTriangulation::labelBoundaryTriangle(NTriangle* firstFace,
+void NTriangulation::labelBoundaryTriangle(NTriangle* firstTriangle,
         NBoundaryComponent* label) const {
-    std::queue<NTriangle*> faceQueue;
+    std::queue<NTriangle*> triangleQueue;
     NTriangleEmbedding* emb;
 
-    emb = firstFace->embeddings[0];
-    firstFace->boundaryComponent = label;
-    label->triangles.push_back(firstFace);
+    emb = firstTriangle->embeddings[0];
+    firstTriangle->boundaryComponent = label;
+    label->triangles.push_back(firstTriangle);
     emb->getTetrahedron()->tmpOrientation[emb->getTriangle()] = 1;
-    faceQueue.push(firstFace);
+    triangleQueue.push(firstTriangle);
 
     NTetrahedron* tet;
     NPerm4 tetVertices;
@@ -447,8 +447,8 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstFace,
     NVertex* vertex;
     NEdge* edge;
 
-    NTriangle* face;
-    NTriangle* nextFace;
+    NTriangle* triangle;
+    NTriangle* nextTriangle;
     int nextFaceNumber;
     NPerm4 nextFacePerm;
     NTetrahedron* nextTet;
@@ -456,15 +456,15 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstFace,
     NPerm4 switchPerm;
     int yourOrientation;
 
-    while (! faceQueue.empty()) {
-        face = faceQueue.front();
-        faceQueue.pop();
+    while (! triangleQueue.empty()) {
+        triangle = triangleQueue.front();
+        triangleQueue.pop();
 
-        // Run through the edges and vertices on this face.
-        emb = face->embeddings[0];
+        // Run through the edges and vertices on this triangle.
+        emb = triangle->embeddings[0];
         tet = emb->getTetrahedron();
         tetFace = emb->getTriangle();
-        tetVertices = tet->faceMapping[tetFace];
+        tetVertices = tet->triMapping[tetFace];
 
         // Run through the vertices.
         for (i=0; i<3; i++) {
@@ -488,7 +488,7 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstFace,
                     label->edges.push_back(edge);
                 }
 
-                // Label the adjacent boundary face with the same label.
+                // Label the adjacent boundary triangle with the same label.
                 followFromFace = 6 - tetVertices[i] - tetVertices[j] - tetFace;
                 switchPerm = NPerm4(followFromFace, tetFace);
                 nextFaceNumber = followFromFace;
@@ -500,24 +500,24 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstFace,
                     nextTet = nextTet->adjacentTetrahedron(nextFaceNumber);
                     nextFaceNumber = nextFacePerm[followFromFace];
                 }
-                nextFace = nextTet->faces[nextFaceNumber];
-                // Find the expected orientation of the next face.
+                nextTriangle = nextTet->triangles[nextFaceNumber];
+                // Find the expected orientation of the next triangle.
                 yourOrientation =
-                    (nextTet->faceMapping[nextFaceNumber].inverse() *
-                    nextFacePerm * switchPerm * tet->faceMapping[tetFace])
+                    (nextTet->triMapping[nextFaceNumber].inverse() *
+                    nextFacePerm * switchPerm * tet->triMapping[tetFace])
                     .sign() == 1 ? -tet->tmpOrientation[tetFace] :
                     tet->tmpOrientation[tetFace];
-                if (nextFace->boundaryComponent) {
+                if (nextTriangle->boundaryComponent) {
                     // Check the orientation.
                     if (yourOrientation !=
                             nextTet->tmpOrientation[nextFaceNumber])
                         label->orientable = false;
                 } else {
-                    // Add this adjacent face to the queue.
-                    nextFace->boundaryComponent = label;
-                    label->triangles.push_back(nextFace);
+                    // Add this adjacent triangle to the queue.
+                    nextTriangle->boundaryComponent = label;
+                    label->triangles.push_back(nextTriangle);
                     nextTet->tmpOrientation[nextFaceNumber] = yourOrientation;
-                    faceQueue.push(nextFace);
+                    triangleQueue.push(nextTriangle);
                 }
             }
     }

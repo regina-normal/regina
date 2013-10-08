@@ -68,7 +68,7 @@ class NTriangulation;
  *
  * More precisely:  An isomorphism consists of (i) a one-to-one map f
  * from the tetrahedra of T to the tetrahedra of U, and (ii) for each
- * tetrahedron S of T, a permutation f_S of the facets (0,1,2,3) of S,
+ * tetrahedron S of T, a permutation f_S of the faces (0,1,2,3) of S,
  * for which the following condition holds:
  *
  *   - If face k of tetrahedron S and face k' of tetrahedron S'
@@ -82,8 +82,8 @@ class NTriangulation;
  * <i>boundary incomplete</i>.  A boundary complete isomorphism
  * satisfies the additional condition:
  *
- *   - If face x is a boundary face of T then face f(x) is a boundary
- *     face of U.
+ *   - If face x is a boundary triangle of T then face f(x) is a boundary
+ *     triangle of U.
  *
  * A boundary complete isomorphism thus indicates that a copy of
  * triangulation T is present as an entire component (or components) of U,

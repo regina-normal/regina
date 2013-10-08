@@ -95,7 +95,7 @@ void NTriangulation::barycentricSubdivision() {
             // Adjacent gluings to the adjacent tetrahedron:
             oldTet = getTetrahedron(tet);
             if (! oldTet->adjacentTetrahedron(perm[0]))
-                continue; // This hits a boundary face.
+                continue; // This hits a boundary triangle.
             if (newTet[24 * tet + permIdx]->adjacentTetrahedron(perm[0]))
                 continue; // We've already done this gluing from the other side.
 
@@ -307,7 +307,7 @@ bool NTriangulation::finiteToIdeal() {
     if (! hasBoundaryTriangles())
         return false;
 
-    // Make a list of all boundary faces, indexed by face number,
+    // Make a list of all boundary triangles, indexed by triangle number,
     // and create the corresponding new tetrahedra.
     unsigned long nTriangles = getNumberOfTriangles();
 
@@ -342,7 +342,7 @@ bool NTriangulation::finiteToIdeal() {
 
     // Glue the new tetrahedra to each other.
     NEdge* edge;
-    unsigned long tetFace1, tetFace2;
+    unsigned long tetTriangle1, tetTriangle2;
     NPerm4 t1Perm, t2Perm;
     for (bit = boundaryComponents.begin();
             bit != boundaryComponents.end(); bit++)
@@ -350,24 +350,24 @@ bool NTriangulation::finiteToIdeal() {
             edge = (*bit)->getEdge(i);
 
             // This must be a valid boundary edge.
-            // Find the boundary faces at either end.
+            // Find the boundary triangles at either end.
             NEdgeEmbedding e1 = edge->getEmbeddings().front();
             NEdgeEmbedding e2 = edge->getEmbeddings().back();
 
-            tetFace1 = e1.getTetrahedron()->getTriangle(
+            tetTriangle1 = e1.getTetrahedron()->getTriangle(
                 e1.getVertices()[3])->markedIndex();
-            tetFace2 = e2.getTetrahedron()->getTriangle(
+            tetTriangle2 = e2.getTetrahedron()->getTriangle(
                 e2.getVertices()[2])->markedIndex();
 
-            t1Perm = bdryPerm[tetFace1].inverse() * e1.getVertices();
-            t2Perm = bdryPerm[tetFace2].inverse() * e2.getVertices() *
+            t1Perm = bdryPerm[tetTriangle1].inverse() * e1.getVertices();
+            t2Perm = bdryPerm[tetTriangle2].inverse() * e2.getVertices() *
                 NPerm4(2, 3);
 
-            newTet[tetFace1]->joinTo(t1Perm[2], newTet[tetFace2],
+            newTet[tetTriangle1]->joinTo(t1Perm[2], newTet[tetTriangle2],
                 t2Perm * t1Perm.inverse());
         }
 
-    // Now join the new tetrahedra to the boundary faces of the original
+    // Now join the new tetrahedra to the boundary triangles of the original
     // triangulation.
 
     // Set up a change block, since here we start changing the original

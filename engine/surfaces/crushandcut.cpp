@@ -145,9 +145,9 @@ namespace {
                      Specifically, if this block contains a triangle on its
                      boundary surrounding vertex i of the outer tetrahedron,
                      and if this triangle is facing vertex i (so the block
-                     lies on the side of the face away from vertex i, not
+                     lies on the side of the triangle away from vertex i, not
                      towards vertex i), then link_[i] is the inner
-                     tetrahedron containing this face.  Otherwise, link_[i]
+                     tetrahedron containing this triangle.  Otherwise, link_[i]
                      is null. */
             NPerm4 linkVertices_[4];
                 /**< If link_[i] is non-zero, then linkVertices_[i] is
@@ -156,8 +156,8 @@ namespace {
                      \a outerTet.  Specifically, if we let V denote
                      vertex i of the outer tetrahedron, then this mapping
                      sends the three vertices of the inner vertex linking
-                     triangle surrounding V to the three "parallel" vertices
-                     of the face opposite V in the outer tetrahedron. */
+                     triangle surrounding V to the three "parallel" vertices of
+                     the triangular face opposite V in the outer tetrahedron. */
 
         public:
             /**

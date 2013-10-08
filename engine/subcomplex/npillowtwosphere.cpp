@@ -39,28 +39,28 @@ namespace regina {
 
 NPillowTwoSphere* NPillowTwoSphere::clone() const {
     NPillowTwoSphere* ans = new NPillowTwoSphere();
-    ans->face[0] = face[0];
-    ans->face[1] = face[1];
-    ans->faceMapping = faceMapping;
+    ans->triangle[0] = triangle[0];
+    ans->triangle[1] = triangle[1];
+    ans->triMapping = triMapping;
     return ans;
 }
 
 NPillowTwoSphere* NPillowTwoSphere::formsPillowTwoSphere(
-        NTriangle* face1, NTriangle* face2) {
-    if (face1 == face2 || face1->isBoundary() || face2->isBoundary())
+        NTriangle* tri1, NTriangle* tri2) {
+    if (tri1 == tri2 || tri1->isBoundary() || tri2->isBoundary())
         return 0;
     NEdge* edge[2][3];
     int i;
     for (i = 0; i < 3; i++) {
-        edge[0][i] = face1->getEdge(i);
-        edge[1][i] = face2->getEdge(i);
+        edge[0][i] = tri1->getEdge(i);
+        edge[1][i] = tri2->getEdge(i);
     }
     if (edge[0][0] == edge[0][1] || edge[0][0] == edge[0][2] ||
             edge[0][1] == edge[0][2])
         return 0;
 
-    // The first face has three distinct edges.  See if it matches to the
-    // second face.
+    // The first triangle has three distinct edges.  See if it matches to the
+    // second triangle.
     int joinTo0 = -1;
     for (i = 0; i < 3; i++)
         if (edge[0][0] == edge[1][i]) {
@@ -72,21 +72,21 @@ NPillowTwoSphere* NPillowTwoSphere::formsPillowTwoSphere(
 
     // Now make sure the edges all match up and with the correct
     // permutations.
-    NPerm4 perm = face2->getEdgeMapping(joinTo0) *
-        face1->getEdgeMapping(0).inverse();
+    NPerm4 perm = tri2->getEdgeMapping(joinTo0) *
+        tri1->getEdgeMapping(0).inverse();
     for (i = 1; i < 3; i++) {
         if (edge[0][i] != edge[1][perm[i]])
             return 0;
-        if (! (face2->getEdgeMapping(perm[i]) ==
-                perm * face1->getEdgeMapping(i)))
+        if (! (tri2->getEdgeMapping(perm[i]) ==
+                perm * tri1->getEdgeMapping(i)))
             return 0;
     }
 
     // We have an answer.
     NPillowTwoSphere* ans = new NPillowTwoSphere();
-    ans->face[0] = face1;
-    ans->face[1] = face2;
-    ans->faceMapping = perm;
+    ans->triangle[0] = tri1;
+    ans->triangle[1] = tri2;
+    ans->triMapping = perm;
     return ans;
 }
 

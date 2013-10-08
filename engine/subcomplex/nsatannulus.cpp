@@ -119,13 +119,13 @@ bool NSatAnnulus::isJoined(const NSatAnnulus& other, NMatrix2& matching) const {
     NSatAnnulus opposite(other);
     opposite.switchSides();
 
-    bool swapFaces;
+    bool swapTriangles;
     NPerm4 roleMap; // Maps this 0/1/2 roles -> opposite 0/1/2 roles.
     if (opposite.tet[0] == tet[0] &&
             opposite.tet[1] == tet[1] &&
             opposite.roles[0][3] == roles[0][3] &&
             opposite.roles[1][3] == roles[1][3]) {
-        swapFaces = false;
+        swapTriangles = false;
 
         roleMap = opposite.roles[0].inverse() * roles[0];
         if (roleMap != opposite.roles[1].inverse() * roles[1])
@@ -134,7 +134,7 @@ bool NSatAnnulus::isJoined(const NSatAnnulus& other, NMatrix2& matching) const {
             opposite.tet[1] == tet[0] &&
             opposite.roles[0][3] == roles[1][3] &&
             opposite.roles[1][3] == roles[0][3]) {
-        swapFaces = true;
+        swapTriangles = true;
 
         roleMap = opposite.roles[1].inverse() * roles[0];
         if (roleMap != opposite.roles[0].inverse() * roles[1])
@@ -156,7 +156,7 @@ bool NSatAnnulus::isJoined(const NSatAnnulus& other, NMatrix2& matching) const {
     } else if (roleMap == NPerm4(1, 0, 2, 3)) {
         matching = NMatrix2(-1, 0, -1, 1);
     }
-    if (swapFaces)
+    if (swapTriangles)
         matching.negate();
 
     return true;

@@ -798,7 +798,7 @@ REGINA_API extern const NPerm4* allPermsS2;
 REGINA_API extern const unsigned* allPermsS2Inv;
 
 // Routines for constructing the permutations associated to
-// faces and edges of the triangulation
+// triangles and edges of the triangulation
 
 /**
  * Returns a permutation mapping (0,1,2) to the vertices of the

@@ -59,7 +59,7 @@ int NTriangle::getType() {
 
     subtype = -1;
 
-    // Determine the face type.
+    // Determine the triangle type.
     NVertex* v[3];
     NEdge* e[3];
     int i;
@@ -120,13 +120,13 @@ NEdge* NTriangle::getEdge(int edge) const {
 }
 
 NPerm4 NTriangle::getEdgeMapping(int edge) const {
-    NPerm4 facePerm = embeddings[0]->getVertices();
-        // Maps face -> tetrahedron
+    NPerm4 triPerm = embeddings[0]->getVertices();
+        // Maps triangle -> tetrahedron
     NPerm4 edgePerm = embeddings[0]->getTetrahedron()->getEdgeMapping(
-        NEdge::edgeNumber[facePerm[(edge + 1) % 3]][facePerm[(edge + 2) % 3]]);
+        NEdge::edgeNumber[triPerm[(edge + 1) % 3]][triPerm[(edge + 2) % 3]]);
         // Maps edge -> tetrahedron
-    return NPerm4(facePerm.preImageOf(edgePerm[0]),
-        facePerm.preImageOf(edgePerm[1]), edge, 3);
+    return NPerm4(triPerm.preImageOf(edgePerm[0]),
+        triPerm.preImageOf(edgePerm[1]), edge, 3);
 }
 
 } // namespace regina

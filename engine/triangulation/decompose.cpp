@@ -663,7 +663,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
             return true;
         }
 
-    // Open up as many boundary faces as possible (to make it easier to
+    // Open up as many boundary triangles as possible (to make it easier to
     // find simple compressing discs).
     TriangleIterator fit;
     bool opened = true;
@@ -687,7 +687,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         if ((*bit)->getEulerCharacteristic() == 2)
             ++origSphereCount;
 
-    // Look for a single internal face surrounded by three boundary edges.
+    // Look for a single internal triangle surrounded by three boundary edges.
     // It doesn't matter whether the edges and/or vertices are distinct.
     NEdge *e0, *e1, *e2;
     unsigned long newSphereCount;
@@ -702,7 +702,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
             continue;
 
         // This could be a compressing disc.
-        // Cut along the face to be sure.
+        // Cut along the triangle to be sure.
         const NTriangleEmbedding& emb = (*fit)->getEmbedding(0);
 
         NTriangulation cut(use);

@@ -54,20 +54,20 @@ const NAbelianGroup& NTriangulation::getHomologyH1() const {
     maximalForestInDualSkeleton(forest);
 
     // Build a presentation matrix.
-    // Each non-boundary not-in-forest face is a generator.
+    // Each non-boundary not-in-forest triangle is a generator.
     // Each non-boundary edge is a relation.
     unsigned long nBdryEdges = 0;
-    unsigned long nBdryFaces = 0;
+    unsigned long nBdryTri = 0;
     for (BoundaryComponentIterator bit = boundaryComponents.begin();
             bit != boundaryComponents.end(); bit++) {
         nBdryEdges += (*bit)->getNumberOfEdges();
-        nBdryFaces += (*bit)->getNumberOfTriangles();
+        nBdryTri += (*bit)->getNumberOfTriangles();
     }
-    long nGens = getNumberOfTriangles() - nBdryFaces - forest.size();
+    long nGens = getNumberOfTriangles() - nBdryTri - forest.size();
     long nRels = getNumberOfEdges() - nBdryEdges;
     NMatrixInt pres(nRels, nGens);
 
-    // Find out which face corresponds to which generator.
+    // Find out which triangle corresponds to which generator.
     long* genIndex = new long[getNumberOfTriangles()];
     long i = 0;
     for (TriangleIterator fit = triangles.begin(); fit != triangles.end(); fit++) {
@@ -84,9 +84,9 @@ const NAbelianGroup& NTriangulation::getHomologyH1() const {
     // Run through each edge and put the relations in the matrix.
     std::deque<NEdgeEmbedding>::const_iterator embit;
     NTetrahedron* currTet;
-    NTriangle* face;
+    NTriangle* triangle;
     int currTetFace;
-    long faceGenIndex;
+    long triGenIndex;
     i = 0;
     for (EdgeIterator eit = edges.begin(); eit != edges.end(); eit++) {
         if (! (*eit)->isBoundary()) {
@@ -95,14 +95,14 @@ const NAbelianGroup& NTriangulation::getHomologyH1() const {
                     embit != (*eit)->getEmbeddings().end(); embit++) {
                 currTet = (*embit).getTetrahedron();
                 currTetFace = (*embit).getVertices()[2];
-                face = currTet->getTriangle(currTetFace);
-                faceGenIndex = genIndex[triangleIndex(face)];
-                if (faceGenIndex >= 0) {
-                    if ((face->getEmbedding(0).getTetrahedron() == currTet) &&
-                            (face->getEmbedding(0).getTriangle() == currTetFace))
-                        pres.entry(i, faceGenIndex) += 1;
+                triangle = currTet->getTriangle(currTetFace);
+                triGenIndex = genIndex[triangleIndex(triangle)];
+                if (triGenIndex >= 0) {
+                    if ((triangle->getEmbedding(0).getTetrahedron() == currTet) &&
+                            (triangle->getEmbedding(0).getTriangle() == currTetFace))
+                        pres.entry(i, triGenIndex) += 1;
                     else
-                        pres.entry(i, faceGenIndex) -= 1;
+                        pres.entry(i, triGenIndex) -= 1;
                 }
             }
             i++;
@@ -133,16 +133,16 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
 
     // Build a presentation matrix.
     // Each non-boundary not-in-forest edge is a generator.
-    // Each non-boundary face is a relation.
+    // Each non-boundary triangle is a relation.
     unsigned long nBdryVertices = 0;
     unsigned long nBdryEdges = 0;
-    unsigned long nBdryFaces = 0;
+    unsigned long nBdryTri = 0;
     unsigned long nClosedComponents = 0;
     for (BoundaryComponentIterator bit = boundaryComponents.begin();
             bit != boundaryComponents.end(); bit++) {
         nBdryVertices += (*bit)->getNumberOfVertices();
         nBdryEdges += (*bit)->getNumberOfEdges();
-        nBdryFaces += (*bit)->getNumberOfTriangles();
+        nBdryTri += (*bit)->getNumberOfTriangles();
     }
     for (ComponentIterator cit = components.begin();
             cit != components.end(); cit++)
@@ -151,7 +151,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
     long nGens = getNumberOfEdges() - nBdryEdges
         - getNumberOfVertices() + nBdryVertices
         + nClosedComponents;
-    long nRels = getNumberOfTriangles() - nBdryFaces;
+    long nRels = getNumberOfTriangles() - nBdryTri;
     NMatrixInt pres(nRels, nGens);
 
     // Find out which edge corresponds to which generator.
@@ -168,20 +168,20 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
         }
     }
 
-    // Run through each face and put the relations in the matrix.
+    // Run through each triangle and put the relations in the matrix.
     NTetrahedron* currTet;
     NPerm4 currTetVertices;
     long edgeGenIndex;
     i = 0;
-    int faceEdge, currEdgeStart, currEdgeEnd, currEdge;
+    int triEdge, currEdgeStart, currEdgeEnd, currEdge;
     for (TriangleIterator fit = triangles.begin(); fit != triangles.end(); fit++) {
         if (! (*fit)->isBoundary()) {
-            // Put in the relation corresponding to this face.
+            // Put in the relation corresponding to this triangle.
             currTet = (*fit)->getEmbedding(0).getTetrahedron();
             currTetVertices = (*fit)->getEmbedding(0).getVertices();
-            for (faceEdge = 0; faceEdge < 3; faceEdge++) {
-                currEdgeStart = currTetVertices[faceEdge];
-                currEdgeEnd = currTetVertices[(faceEdge + 1) % 3];
+            for (triEdge = 0; triEdge < 3; triEdge++) {
+                currEdgeStart = currTetVertices[triEdge];
+                currEdgeEnd = currTetVertices[(triEdge + 1) % 3];
                 // Examine the edge from vertex edgeStart to edgeEnd
                 // in tetrahedron currTet.
                 currEdge = NEdge::edgeNumber[currEdgeStart][currEdgeEnd];

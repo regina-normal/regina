@@ -321,7 +321,7 @@ bool NTriangulation::isOrdered() const {
             if((*it)->tetrahedra[face]) {
                 NPerm4 perm = (*it) -> tetrahedronPerm[face];
 
-                // check that the permuation is order preserving on the face
+                // check that the permutation is order preserving on the face
                 int last = -1;
                 for(int k = 0; k < 4; ++k)
                     if( k != face ) {
