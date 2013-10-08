@@ -50,7 +50,7 @@
 using regina::NBoundaryComponent;
 using regina::NComponent;
 using regina::NEdge;
-using regina::NFace;
+using regina::NTriangle;
 using regina::NVertex;
 using regina::Dim2BoundaryComponent;
 using regina::Dim2Component;
@@ -357,34 +357,34 @@ QString EdgeModel::toolTipForCol(int column) {
     }
 }
 
-QString FaceModel::caption() const {
-    return tr("Faces (%1)").arg(tri->getPacketLabel().c_str());
+QString TriangleModel::caption() const {
+    return tr("Triangles (%1)").arg(tri->getPacketLabel().c_str());
 }
 
-QString FaceModel::overview() const {
+QString TriangleModel::overview() const {
     return tr("<qt>Displays details of each "
-        "face of this triangulation.<p>"
-        "The different faces are numbered from 0 upwards.  "
-        "Each row describes the shape of the face as well as "
+        "triangle of this triangulation.<p>"
+        "The different triangles are numbered from 0 upwards.  "
+        "Each row describes the shape of the triangle as well as "
         "listing precisely which vertices of which tetrahedra it "
         "corresponds to.<p>"
         "See the users' handbook for further details on what each "
         "column of the table means.</qt>");
 }
 
-int FaceModel::rowCount(const QModelIndex& parent) const {
+int TriangleModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfFaces());
+    return (parent.isValid() ? 0 : tri->getNumberOfTriangles());
 }
 
-int FaceModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int TriangleModel::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant FaceModel::data(const QModelIndex& index, int role) const {
+QVariant TriangleModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NFace* item = tri->getFace(index.row());
+        NTriangle* item = tri->getTriangle(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -394,21 +394,21 @@ QVariant FaceModel::data(const QModelIndex& index, int role) const {
                     prefix = tr("(Bdry) ");
 
                 int type = item->getType();
-                if (type == NFace::TRIANGLE)
+                if (type == NTriangle::TRIANGLE)
                     return prefix + tr("Triangle");
-                if (type == NFace::SCARF)
+                if (type == NTriangle::SCARF)
                     return prefix + tr("Scarf");
-                if (type == NFace::PARACHUTE)
+                if (type == NTriangle::PARACHUTE)
                     return prefix + tr("Parachute");
-                if (type == NFace::MOBIUS)
+                if (type == NTriangle::MOBIUS)
                     return prefix + tr("Mobius band");
-                if (type == NFace::CONE)
+                if (type == NTriangle::CONE)
                     return prefix + tr("Cone");
-                if (type == NFace::HORN)
+                if (type == NTriangle::HORN)
                     return prefix + tr("Horn");
-                if (type == NFace::DUNCEHAT)
+                if (type == NTriangle::DUNCEHAT)
                     return prefix + tr("Dunce hat");
-                if (type == NFace::L31)
+                if (type == NTriangle::L31)
                     return prefix + tr("L(3,1)");
                 return prefix + tr("UNKNOWN");
             }
@@ -431,14 +431,14 @@ QVariant FaceModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant FaceModel::headerData(int section,
+QVariant TriangleModel::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
 
     if (role == Qt::DisplayRole) {
         switch (section) {
-            case 0: return tr("Face #");
+            case 0: return tr("Triangle #");
             case 1: return tr("Type");
             case 2: return tr("Degree");
             case 3: return tr("Tetrahedra (Tet vertices)");
@@ -450,18 +450,18 @@ QVariant FaceModel::headerData(int section,
         return QVariant();
 }
 
-QString FaceModel::toolTipForCol(int column) {
+QString TriangleModel::toolTipForCol(int column) {
     switch (column) {
-        case 0: return tr("<qt>The number of the individual face.  "
-            "Faces are numbered 0,1,2,...,<i>f</i>-1.</qt>");
-        case 1: return tr("<qt>Lists additional properties of the face, "
+        case 0: return tr("<qt>The number of the individual triangle.  "
+            "Triangles are numbered 0,1,2,...,<i>t</i>-1.</qt>");
+        case 1: return tr("<qt>Lists additional properties of the triangle, "
             "such as the shape that it forms and whether it lies on the "
             "boundary.</qt>");
-        case 2: return tr("<qt>Gives the degree of this face, i.e., "
+        case 2: return tr("<qt>Gives the degree of this triangle, i.e., "
             "the number of individual tetrahedron faces that are "
             "identified to it.</qt>");
         case 3: return tr("<qt>Lists the individual tetrahedron faces "
-            "that come together to form this face of the triangulation.</qt>");
+            "that come together to form this triangle.</qt>");
         default: return QString();
     }
 }
@@ -557,7 +557,7 @@ QString BoundaryComponentModel::caption() const {
 QString BoundaryComponentModel::overview() const {
     return tr("<qt>Displays details of each "
         "boundary component of this triangulation.  A boundary "
-        "component may be a collection of adjacent boundary faces, "
+        "component may be a collection of adjacent boundary triangles, "
         "or it may be a single ideal vertex, whose link is closed but "
         "not a 2-sphere.<p>"
         "The different boundary components are numbered from 0 upwards.  "
@@ -589,19 +589,21 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
             case 1:
                 return (item->isIdeal() ? tr("Ideal") : tr("Real"));
             case 2:
-                // Note that we can't have just one face (by a parity argument).
+                // Note that we can't have just one triangle
+                // (by a parity argument).
                 return (item->isIdeal() ? tr("1 vertex") :
-                    tr("%1 faces").arg(item->getNumberOfFaces()));
+                    tr("%1 triangles").arg(item->getNumberOfTriangles()));
             case 3:
                 if (item->isIdeal())
                     return tr("Vertex %1").arg(tri->vertexIndex(
                         item->getVertex(0)));
                 else {
                     QString ans;
-                    for (unsigned long i = 0; i < item->getNumberOfFaces(); i++)
-                        appendToList(ans, QString::number(tri->faceIndex(
-                            item->getFace(i))));
-                    return tr("Faces ") + ans;
+                    for (unsigned long i = 0;
+                            i < item->getNumberOfTriangles(); i++)
+                        appendToList(ans, QString::number(tri->triangleIndex(
+                            item->getTriangle(i))));
+                    return tr("Triangles ") + ans;
                 }
         }
         return QString();
@@ -621,7 +623,7 @@ QVariant BoundaryComponentModel::headerData(int section,
             case 0: return tr("Cmpt #");
             case 1: return tr("Type");
             case 2: return tr("Size");
-            case 3: return tr("Faces / Vertex");
+            case 3: return tr("Triangles / Vertex");
             default: return QString();
         }
     } else if (role == Qt::ToolTipRole) {
@@ -638,10 +640,10 @@ QString BoundaryComponentModel::toolTipForCol(int column) {
         case 1: return tr("<qt>Lists whether this is an ideal or real "
             "boundary component.</qt>");
         case 2: return tr("<qt>Gives the size of this boundary component, "
-            "i.e., the number of faces (for a real boundary component) "
+            "i.e., the number of triangles (for a real boundary component) "
             "or the number of vertices (which is always one for an ideal "
             "boundary component).</qt>");
-        case 3: return tr("<qt>Identifies the individual faces for a real "
+        case 3: return tr("<qt>Identifies the individual triangles for a real "
             "boundary component, or the individual vertex for an ideal "
             "boundary component.</qt>");
         default: return QString();

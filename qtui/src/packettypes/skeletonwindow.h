@@ -232,7 +232,7 @@ class EdgeModel : public SkeletalModel {
         static QString toolTipForCol(int column);
 };
 
-class FaceModel : public SkeletalModel {
+class TriangleModel : public SkeletalModel {
     private:
         /**
          * The triangulation being displayed
@@ -243,7 +243,7 @@ class FaceModel : public SkeletalModel {
         /**
          * Constructor.
          */
-        FaceModel(regina::NTriangulation* tri_);
+        TriangleModel(regina::NTriangulation* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -515,7 +515,7 @@ inline VertexModel::VertexModel(regina::NTriangulation* tri_) :
 inline EdgeModel::EdgeModel(regina::NTriangulation* tri_) :
         tri(tri_) {}
 
-inline FaceModel::FaceModel(regina::NTriangulation* tri_) :
+inline TriangleModel::TriangleModel(regina::NTriangulation* tri_) :
         tri(tri_) {}
 
 inline ComponentModel::ComponentModel(regina::NTriangulation* tri_) :

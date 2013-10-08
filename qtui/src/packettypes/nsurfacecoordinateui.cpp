@@ -552,7 +552,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         "3-manifold beyond just cutting along the surface (as opposed to "
         "the related <i>crushing</i> operation, which might).  However, "
         "because the new surface boundaries are created from real "
-        "boundary faces, the resulting number of tetrahedra might be very "
+        "boundary triangles, the resulting number of tetrahedra might be very "
         "large.</qt>"));
     connect(actCutAlong, SIGNAL(triggered()), this, SLOT(cutAlong()));
     surfaceActionList.append(actCutAlong);

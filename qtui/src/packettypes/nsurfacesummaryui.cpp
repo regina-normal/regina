@@ -257,7 +257,7 @@ void NSurfaceSummaryUI::refresh() {
         tableClosed->show();
     }
 
-    if (surfaces->getTriangulation()->hasBoundaryFaces()) {
+    if (surfaces->getTriangulation()->hasBoundaryTriangles()) {
         tableBounded->clear();
 
         if (bounded == 0) {
@@ -303,7 +303,7 @@ void NSurfaceSummaryUI::refresh() {
         }
         totBounded->show();
     } else {
-        // No boundary faces, so no possibility of bounded surfaces.
+        // No boundary triangles, so no possibility of bounded surfaces.
         totBounded->hide();
         tableBounded->hide();
     }

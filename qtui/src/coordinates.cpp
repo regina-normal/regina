@@ -39,9 +39,9 @@
 #include <QObject>
 #include <QString>
 
-using regina::NFace;
 using regina::NNormalSurfaceList;
 using regina::NormalCoords;
+using regina::NTriangle;
 
 namespace Coordinates {
     const char* name(NormalCoords coordSystem, bool capitalise) {
@@ -58,8 +58,8 @@ namespace Coordinates {
                 return QT_TR_NOOP("Quad-oct almost normal");
             if (coordSystem == regina::NS_EDGE_WEIGHT)
                 return QT_TR_NOOP("Edge weight");
-            if (coordSystem == regina::NS_FACE_ARCS)
-                return QT_TR_NOOP("Face arc");
+            if (coordSystem == regina::NS_TRIANGLE_ARCS)
+                return QT_TR_NOOP("Triangle arc");
             if (coordSystem == regina::NS_ORIENTED)
                 return QT_TR_NOOP("Transversely oriented normal");
             if (coordSystem == regina::NS_ORIENTED_QUAD)
@@ -78,8 +78,8 @@ namespace Coordinates {
                 return QT_TR_NOOP("quad-oct almost normal");
             if (coordSystem == regina::NS_EDGE_WEIGHT)
                 return QT_TR_NOOP("edge weight");
-            if (coordSystem == regina::NS_FACE_ARCS)
-                return QT_TR_NOOP("face arc");
+            if (coordSystem == regina::NS_TRIANGLE_ARCS)
+                return QT_TR_NOOP("triangle arc");
             if (coordSystem == regina::NS_ORIENTED)
                 return QT_TR_NOOP("transversely oriented normal");
             if (coordSystem == regina::NS_ORIENTED_QUAD)
@@ -108,8 +108,8 @@ namespace Coordinates {
             return tri->getNumberOfTetrahedra() * 6;
         else if (coordSystem == regina::NS_EDGE_WEIGHT)
             return tri->getNumberOfEdges();
-        else if (coordSystem == regina::NS_FACE_ARCS)
-            return tri->getNumberOfFaces() * 3;
+        else if (coordSystem == regina::NS_TRIANGLE_ARCS)
+            return tri->getNumberOfTriangles() * 3;
         else if (coordSystem == regina::NS_ORIENTED)
             return tri->getNumberOfTetrahedra() * 14;
         else if (coordSystem == regina::NS_ORIENTED_QUAD)
@@ -153,7 +153,7 @@ namespace Coordinates {
                 return QString::number(whichCoord);
             else
                 return QString("%1 [B]").arg(whichCoord);
-        } else if (coordSystem == regina::NS_FACE_ARCS) {
+        } else if (coordSystem == regina::NS_TRIANGLE_ARCS) {
             return QString("%1: %2").arg(whichCoord / 3).arg(whichCoord % 3);
         } else if (coordSystem == regina::NS_ORIENTED) {
             unsigned long stdCoord = whichCoord / 2;
@@ -171,7 +171,7 @@ namespace Coordinates {
                 // "false" orientation.
                 if (stdCoord % 7 < 4)
                     return QString("%1: %2").arg(stdCoord / 7).
-                        arg(NFace::ordering[stdCoord % 7].trunc3().c_str());
+                        arg(NTriangle::ordering[stdCoord % 7].trunc3().c_str());
                 else
                     return QString("%1: %2%3").arg(stdCoord / 7).
                         arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][2]).
@@ -242,8 +242,9 @@ namespace Coordinates {
                         arg(whichCoord);
             } else
                 return context->tr("Weight of edge %1").arg(whichCoord);
-        } else if (coordSystem == regina::NS_FACE_ARCS) {
-            return context->tr("Arcs on face %1 crossing face vertex %2").
+        } else if (coordSystem == regina::NS_TRIANGLE_ARCS) {
+            return context->tr(
+                "Arcs on triangle %1 crossing triangle vertex %2").
                 arg(whichCoord / 3).arg(whichCoord % 3);
         } else if (coordSystem == regina::NS_ORIENTED) {
             unsigned long stdCoord = whichCoord / 2;
@@ -267,7 +268,7 @@ namespace Coordinates {
                     return context->tr("Tetrahedron %1, "
                         "triangle oriented towards face %2").
                         arg(stdCoord / 7).
-                        arg(NFace::ordering[stdCoord % 7].trunc3().c_str());
+                        arg(NTriangle::ordering[stdCoord % 7].trunc3().c_str());
                 else
                     return context->tr("Tetrahedron %1, "
                         "quad oriented towards edge %2%3").
@@ -328,8 +329,8 @@ namespace Coordinates {
                     whichCoord / 6, (whichCoord % 6) - 3);
         } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
             return surface.getEdgeWeight(whichCoord);
-        } else if (coordSystem == regina::NS_FACE_ARCS) {
-            return surface.getFaceArcs(whichCoord / 3, whichCoord % 3);
+        } else if (coordSystem == regina::NS_TRIANGLE_ARCS) {
+            return surface.getTriangleArcs(whichCoord / 3, whichCoord % 3);
         } else if (coordSystem == regina::NS_ORIENTED) {
             bool orientation = (whichCoord % 2 == 0);
             whichCoord /= 2;
