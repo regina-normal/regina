@@ -299,7 +299,7 @@ QVariant EdgeModel::data(const QModelIndex& index, int role) const {
                 return index.row();
             case 1:
                 if (! item->isValid())
-                    return tr("INVALID");
+                    return tr("Invalid");
                 else if (item->isBoundary())
                     return tr("Bdry");
                 else
