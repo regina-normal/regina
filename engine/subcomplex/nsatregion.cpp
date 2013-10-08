@@ -185,7 +185,7 @@ bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfIncomplete) {
     unsigned long adjPos;
     bool adjVert, adjHoriz;
     bool currTwisted, currNor;
-    unsigned annBdryFaces;
+    unsigned annBdryTriangles;
 
     // Try to push past the boundary annuli of all blocks present and future.
     // We rely on a vector data type for BlockSet here, since this
@@ -200,13 +200,13 @@ bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfIncomplete) {
             if (currBlock->hasAdjacentBlock(ann))
                 continue;
 
-            // Do we have one or two boundary faces?
-            annBdryFaces = currBlock->annulus(ann).meetsBoundary();
-            if (annBdryFaces == 2) {
+            // Do we have one or two boundary triangles?
+            annBdryTriangles = currBlock->annulus(ann).meetsBoundary();
+            if (annBdryTriangles == 2) {
                 // The annulus lies completely on the triangulation
                 // boundary.  Just skip it.
                 continue;
-            } else if (annBdryFaces == 1) {
+            } else if (annBdryTriangles == 1) {
                 // The annulus lies half on the boundary.  No chance of
                 // extending it from here, but we have no chance of
                 // filling the entire triangulation.

@@ -63,7 +63,7 @@ namespace regina {
  *
  * This product has two torus boundaries, called the \a upper and
  * \a lower boundaries.  Each of these boundary tori must be formed from
- * precisely two faces.  This class tracks the mappings between parallel
+ * precisely two triangles.  This class tracks the mappings between parallel
  * curves on the upper and lower boundaries, as well as mappings from
  * boundary curves to specific tetrahedron edges.
  *
@@ -86,10 +86,10 @@ class REGINA_API NTxICore : public ShareableObject {
                  described. */
         unsigned bdryTet_[2][2];
             /**< The tetrahedra that provide the upper and lower
-                 boundary faces.  See bdryTet() for details. */
+                 boundary triangles.  See bdryTet() for details. */
         NPerm4 bdryRoles_[2][2];
             /**< Describes which tetrahedron vertices play which roles
-                 in the upper and lower boundary faces.  See bdryRoles()
+                 in the upper and lower boundary triangles.  See bdryRoles()
                  for details. */
         NMatrix2 bdryReln_[2];
             /**< Expresses the \a alpha and \a beta curves for each
@@ -117,43 +117,43 @@ class REGINA_API NTxICore : public ShareableObject {
         const NTriangulation& core() const;
         /**
          * Determines which tetrahedron provides the requested boundary
-         * face.
+         * triangle.
          *
          * Recall that the <tt>T x I</tt> triangulation has two torus
-         * boundaries, each consisting of two boundary faces.  This
+         * boundaries, each consisting of two boundary triangles.  This
          * routine returns the specific tetrahedron that provides the
-         * given face of the given torus boundary.
+         * given triangle of the given torus boundary.
          *
          * What is returned is the index number of the tetrahedron
          * within the triangulation.  To access the tetrahedron itself,
          * you may call <tt>core().getTetrahedron(bdryTet(...))</tt>.
          *
          * Note that the same tetrahedron may provide more than one
-         * boundary face.
+         * boundary triangle.
          *
          * @param whichBdry 0 if the upper boundary should be examined,
          * or 1 if the lower boundary should be examined.
-         * @param whichFace 0 if the first boundary face should be
-         * examined, or 1 if the second boundary face should be examined.
+         * @param whichTri 0 if the first boundary triangle should be
+         * examined, or 1 if the second boundary triangle should be examined.
          */
-        unsigned bdryTet(unsigned whichBdry, unsigned whichFace) const;
+        unsigned bdryTet(unsigned whichBdry, unsigned whichTri) const;
         /**
          * Describes which tetrahedron vertices play which roles in the
-         * upper and lower boundary faces.
+         * upper and lower boundary triangles.
          *
-         * Each boundary torus contains two faces, whose vertices can be
+         * Each boundary torus contains two triangles, whose vertices can be
          * numbered 0, 1 and 2 according to the following diagram.  This
          * diagram is completely symmetric, in that edges 1-2 are no
          * more special than edges 0-2 or 0-1.  The important
-         * observations are that edges 1-2 and 2-1 of each face are
-         * identified, edges 0-2 and 2-0 of each face are identified and
-         * edges 0-1 and 1-0 of each face are identified.
+         * observations are that edges 1-2 and 2-1 of each triangle are
+         * identified, edges 0-2 and 2-0 of each triangle are identified and
+         * edges 0-1 and 1-0 of each triangle are identified.
          *
          * <pre>
          *           *--->>--*
          *           |0  2 / |
-         *    First  |    / 1|  Second
-         *    face   v   /   v   face
+         *   First   |    / 1|  Second
+         *  triangle v   /   v triangle
          *           |1 /    |
          *           | / 2  0|
          *           *--->>--*
@@ -161,30 +161,30 @@ class REGINA_API NTxICore : public ShareableObject {
          *
          * This routine returns a permutation that maps these integers
          * 0,1,2 to real tetrahedron vertices.  Let \a t be the
-         * tetrahedron returned by bdryTet(\a whichBdry, \a whichFace)
+         * tetrahedron returned by bdryTet(\a whichBdry, \a whichTri)
          * and let \a p be the permutation returned by
-         * bdryRoles(\a whichBdry, \a whichFace).  Then vertices
+         * bdryRoles(\a whichBdry, \a whichTri).  Then vertices
          * \a p[0], \a p[1] and \a p[2] of tetrahedron \a t correspond to
          * the markings 0, 1 and 2 respectively in the diagram above (and
-         * therefore the boundary face is face \a p[3] of the tetrahedron).
+         * therefore the boundary triangle is face \a p[3] of the tetrahedron).
          *
          * The arguments to this routine affect whether we examine the
          * upper or lower boundary and whether we examine the first or
-         * second face of this boundary 
+         * second triangle of this boundary 
          *
          * @param whichBdry 0 if the upper boundary should be examined,
          * or 1 if the lower boundary should be examined.
-         * @param whichFace 0 if the first boundary face should be
-         * examined, or 1 if the second boundary face should be examined.
+         * @param whichTri 0 if the first boundary triangle should be
+         * examined, or 1 if the second boundary triangle should be examined.
          * @return the permutation mapping roles 0, 1 and 2 in the
          * diagram above to real tetrahedron vertex numbers.
          */
-        NPerm4 bdryRoles(unsigned whichBdry, unsigned whichFace) const;
+        NPerm4 bdryRoles(unsigned whichBdry, unsigned whichTri) const;
         /**
          * Returns a 2-by-2 matrix describing the \a alpha and \a beta curves
          * on a torus boundary in terms of specific tetrahedron edges.
          *
-         * Consider the first face of the given boundary.  Let
+         * Consider the first triangle of the given boundary.  Let
          * \a t be the tetrahedron returned by bdryTet(\a whichBdry, 0) and
          * let \a p be the permutation returned by bdryRoles(\a whichBdry, 0).
          *
@@ -334,10 +334,10 @@ class REGINA_API NTxICore : public ShareableObject {
  * and the adjacent edges at right angles to these are also identified).
  *
  * The four triangles in the central torus correspond to the four tetrahedra
- * in the triangulation that provide the boundary faces.  The upper boundary
+ * in the triangulation that provide the boundary triangles.  The upper boundary
  * is coned out from triangles \a u0 and \a u1, and the lower boundary is
  * coned out from triangles \a w0 and \a w1.  In each boundary, \a u0 or
- * \a w0 gives the first boundary face and \a u1 or \a w1 gives the second.
+ * \a w0 gives the first boundary triangle and \a u1 or \a w1 gives the second.
  * The directions of the corresponding \a alpha and \a beta curves are
  * illustrated below.
  *
@@ -409,10 +409,10 @@ class REGINA_API NTxIDiagonalCore : public NTxICore {
  * For reference, the central torus of this triangulation is depicted below.
  * The left and right sides of the diagram are identified, as are the
  * top and bottom.  The four triangles \a u0, \a u1, \a w0 and \a w1
- * provide the boundary faces of the overall triangulation, with the upper
+ * provide the boundary triangles of the overall triangulation, with the upper
  * boundary coned out from triangles \a u0 and \a u1 and the lower boundary
  * coned out from triangles \a w0 and \a w1.  In each boundary, \a u0 or
- * \a w0 gives the first boundary face and \a u1 or \a w1 gives the second.
+ * \a w0 gives the first boundary triangle and \a u1 or \a w1 gives the second.
  * The directions of the corresponding \a alpha and \a beta curves are
  * are also included.
  *
@@ -440,14 +440,14 @@ inline const NTriangulation& NTxICore::core() const {
     return core_;
 }
 
-inline unsigned NTxICore::bdryTet(unsigned whichBdry, unsigned whichFace)
+inline unsigned NTxICore::bdryTet(unsigned whichBdry, unsigned whichTri)
         const {
-    return bdryTet_[whichBdry][whichFace];
+    return bdryTet_[whichBdry][whichTri];
 }
 
-inline NPerm4 NTxICore::bdryRoles(unsigned whichBdry, unsigned whichFace)
+inline NPerm4 NTxICore::bdryRoles(unsigned whichBdry, unsigned whichTri)
         const {
-    return bdryRoles_[whichBdry][whichFace];
+    return bdryRoles_[whichBdry][whichTri];
 }
 
 inline const NMatrix2& NTxICore::bdryReln(unsigned whichBdry) const {

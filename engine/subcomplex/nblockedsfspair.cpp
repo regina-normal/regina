@@ -201,7 +201,7 @@ bool NBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     NLayering layering(bdry.tet[0], bdry.roles[0], bdry.tet[1], bdry.roles[1]);
     layering.extend();
 
-    // Relation from fibre/orbifold to layering first face markings 01/02:
+    // Relation from fibre/orbifold to layering first triangle markings 01/02:
     NMatrix2 curves0ToLayering = layering.boundaryReln() *
         NMatrix2(-1, 0, 0, firstRegionReflected ? -1 : 1);
 
@@ -216,8 +216,8 @@ bool NBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
         return true;
     }
 
-    // Mapping from (layering first face markings 01/02) to
-    // (other side annulus first face markings 01/02).  Like the other
+    // Mapping from (layering first triangle markings 01/02) to
+    // (other side annulus first triangle markings 01/02).  Like the other
     // side vertex roles, this mapping will be filled in later.
     NMatrix2 layeringToAnnulus1;
 
@@ -265,7 +265,7 @@ bool NBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
 
             if (region[1]->numberOfBoundaryAnnuli() == 1) {
                 // This is it!  Stop searching.
-                // Do a final conversion from annulus first face markings
+                // Do a final conversion from annulus first triangle markings
                 // 01/02 and exit.
                 matchingReln = NMatrix2(-1, 0, 0, 1) * layeringToAnnulus1 *
                     curves0ToLayering;

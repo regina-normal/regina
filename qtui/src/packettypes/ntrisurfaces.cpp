@@ -154,7 +154,7 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     btnSolidTorus->setToolTip(tr("Calculate whether this is a solid torus"));
     btnSolidTorus->setWhatsThis(tr("<qt>Calculate whether this "
         "is a triangulation of the solid torus (i.e., the unknot "
-        "complement).  The triangulation may have real boundary faces, "
+        "complement).  The triangulation may have real boundary triangles, "
         "or it may be ideal (in which case I will assume that "
         "any ideal vertices are truncated).<p>"
         "<b>Warning:</b> This calculation is occasionally quite slow for "

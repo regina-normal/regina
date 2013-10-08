@@ -2172,20 +2172,22 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
                 for (p = comp->getFirstTreeChild(); p;
                         p = p->getNextTreeSibling())
-                    if (! static_cast<NTriangulation*>(p)->hasBoundaryFaces()) {
+                    if (! static_cast<NTriangulation*>(p)->
+                            hasBoundaryTriangles()) {
                         std::ostringstream msg;
                         msg << "Cutting along surface #" << i
                             << " for " << tri->getPacketLabel()
-                            << " gives a component with no boundary faces.";
+                            << " gives a component with no boundary triangles.";
                         CPPUNIT_FAIL(msg.str());
                     }
                 for (p = compDouble->getFirstTreeChild(); p;
                         p = p->getNextTreeSibling())
-                    if (! static_cast<NTriangulation*>(p)->hasBoundaryFaces()) {
+                    if (! static_cast<NTriangulation*>(p)->
+                            hasBoundaryTriangles()) {
                         std::ostringstream msg;
                         msg << "Cutting along double surface #" << i
                             << " for " << tri->getPacketLabel()
-                            << " gives a component with no boundary faces.";
+                            << " gives a component with no boundary triangles.";
                         CPPUNIT_FAIL(msg.str());
                     }
 

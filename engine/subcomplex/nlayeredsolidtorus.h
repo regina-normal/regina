@@ -326,7 +326,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * faces of this tetrahedron representing the boundary of the
          * layered solid torus.
          *
-         * Note that the two given faces need not be boundary faces in the
+         * Note that the two given faces need not be boundary triangles in the
          * overall triangulation.  That is, the layered solid torus may be
          * a subcomplex of some larger triangulation.  For example, the
          * two given faces may be joined to some other tetrahedra outside
@@ -337,10 +337,10 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * @param tet the tetrahedron to examine as a potential top
          * level of a layered solid torus.
          * @param topFace1 the face number of the given tetrahedron that
-         * should represent the first boundary face of the layered solid
+         * should represent the first boundary triangle of the layered solid
          * torus.  This should be between 0 and 3 inclusive.
          * @param topFace2 the face number of the given tetrahedron that
-         * should represent the second boundary face of the layered solid
+         * should represent the second boundary triangle of the layered solid
          * torus.  This should be between 0 and 3 inclusive, and should
          * not be equal to \a topFace1.
          * @return a newly created structure containing details of the
@@ -357,8 +357,8 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * Note that, unlike formsLayeredSolidTorusBase(), this routine
          * tests for a component that is a layered solid torus with no
          * additional tetrahedra or gluings.  That is, the two boundary
-         * faces of the layered solid torus must in fact be boundary
-         * faces of the component.
+         * triangles of the layered solid torus must in fact be boundary
+         * triangles of the component.
          *
          * @param comp the triangulation component to examine.
          * @return a newly created structure containing details of the

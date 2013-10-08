@@ -65,7 +65,7 @@ class NComponent;
  *   - To each of these annuli, glue a layered solid torus.
  *     Note that the degenerate (2,1,1) layered solid torus
  *     (i.e., a one-triangle mobius strip) is allowed and corresponds to
- *     simply gluing the two faces of the annulus together.
+ *     simply gluing the two triangles of the annulus together.
  *
  *   - To one of these annuli, glue a layered solid torus as described
  *     above.  Join the other two annuli with a layered chain
@@ -154,7 +154,7 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * Returns the layered solid torus attached to the requested
          * annulus on the boundary of the core triangular solid torus.
          * If the layered solid torus is a degenerate (2,1,1) mobius
-         * band (i.e., the two faces of the corresponding annulus have
+         * band (i.e., the two triangles of the corresponding annulus have
          * simply been glued together), \c null will be returned.
          * 
          * @param annulus specifies which annulus to examine; this must

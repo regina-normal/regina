@@ -49,11 +49,11 @@ namespace {
         out << "triangulation" << std::endl;
 
         // Write face gluings.
-        NFace* f;
+        NTriangle* f;
         NTetrahedron* tet;
         NPerm4 vert;
-        for (unsigned i = 0; i < tri.getNumberOfFaces(); ++i) {
-            f = tri.getFace(i);
+        for (unsigned i = 0; i < tri.getNumberOfTriangles(); ++i) {
+            f = tri.getTriangle(i);
 
             tet = f->getEmbedding(0).getTetrahedron();
             vert = f->getEmbedding(0).getVertices();
@@ -69,7 +69,7 @@ namespace {
                 << ',' << (vert[1] + 1)
                 << ',' << (vert[2] + 1) << ')';
 
-            if (i != tri.getNumberOfFaces() - 1)
+            if (i != tri.getNumberOfTriangles() - 1)
                 out << ',';
             out << std::endl;
         }
@@ -85,7 +85,7 @@ bool writeRecogniser(const char* filename, NTriangulation& tri) {
     // Sanity checks.
     if (! tri.isValid())
         return false;
-    if (tri.hasBoundaryFaces())
+    if (tri.hasBoundaryTriangles())
         return false;
 
     // Write to file or stdout as appropriate.

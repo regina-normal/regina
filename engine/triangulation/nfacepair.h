@@ -53,7 +53,7 @@ namespace regina {
 /**
  * Represents a pair of tetrahedron face numbers.
  *
- * Note that we are not storing face numbers in a triangulation
+ * Note that we are not storing triangle numbers in a triangulation
  * skeleton, but merely face numbers 0, 1, 2 and 3 in a single
  * tetrahedron.  Thus there are only six possible face pairs; this class
  * merely makes working with such pairs more convenient.

@@ -171,6 +171,7 @@ void addDim2Triangulation() {
         .def("isoSig", isoSig_void)
         .def("fromIsoSig", &Dim2Triangulation::fromIsoSig,
             return_value_policy<manage_new_object>())
+        .def("isoSigComponentSize", &Dim2Triangulation::isoSigComponentSize)
         .def("dumpConstruction", &Dim2Triangulation::dumpConstruction)
         .staticmethod("fromIsoSig")
     ;

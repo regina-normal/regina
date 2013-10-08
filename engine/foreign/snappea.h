@@ -88,7 +88,7 @@ REGINA_API NTriangulation* readSnapPea(const char *filename);
  * label.
  *
  * \pre The given triangulation is not invalid, and does not contain any
- * boundary faces.
+ * boundary triangles.
  *
  * \i18n This routine makes no assumptions about the
  * \ref i18n "character encoding" used in the given file \e name, and

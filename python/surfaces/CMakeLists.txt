@@ -1,7 +1,20 @@
 # surfaces
 
 # Files to compile
-SET ( FILES ndisc ndisctype nnormalsurface nnormalsurfacelist normalcoords normalflags nprism nsurfacefilter nsurfacesubset sfcombination sfproperties pysurfaces )
+SET ( FILES
+  ndisc
+  ndisctype
+  nnormalsurface
+  nnormalsurfacelist
+  normalcoords
+  normalflags
+  nprism
+  nsurfacefilter
+  nsurfacesubset
+  sfcombination
+  sfproperties
+  pysurfaces
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

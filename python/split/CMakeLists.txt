@@ -1,7 +1,10 @@
 # split 
 
 # Files to compile
-SET ( FILES nsignature pysplit)
+SET ( FILES
+  nsignature
+  pysplit
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
