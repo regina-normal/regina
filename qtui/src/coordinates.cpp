@@ -33,7 +33,7 @@
 /* end stub */
 
 #include "surfaces/nnormalsurfacelist.h"
-#include "triangulation/nface.h"
+#include "triangulation/ntriangle.h"
 #include "triangulation/ntriangulation.h"
 
 #include <QObject>

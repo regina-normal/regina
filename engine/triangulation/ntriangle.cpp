@@ -33,7 +33,7 @@
 /* end stub */
 
 #include "triangulation/nedge.h"
-#include "triangulation/nface.h"
+#include "triangulation/ntriangle.h"
 
 namespace regina {
 

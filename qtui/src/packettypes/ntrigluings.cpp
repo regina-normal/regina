@@ -37,8 +37,8 @@
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
-#include "triangulation/nface.h"
 #include "triangulation/nisomorphism.h"
+#include "triangulation/ntriangle.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:

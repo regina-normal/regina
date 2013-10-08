@@ -33,7 +33,7 @@
 /* end stub */
 
 // Regina core includes:
-#include "triangulation/nface.h"
+#include "triangulation/ntriangle.h"
 
 // UI includes:
 #include "facechooser.h"

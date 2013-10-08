@@ -35,7 +35,7 @@
 #include <sstream>
 #include "maths/nperm4.h"
 #include "triangulation/nedge.h" // deprecated
-#include "triangulation/nface.h" // deprecated
+#include "triangulation/ntriangle.h" // deprecated
 
 namespace regina {
 

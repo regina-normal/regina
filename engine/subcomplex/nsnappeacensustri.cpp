@@ -37,7 +37,7 @@
 #include "subcomplex/nsnappeacensustri.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/nedge.h"
-#include "triangulation/nface.h"
+#include "triangulation/ntriangle.h"
 #include "triangulation/nvertex.h"
 
 namespace regina {

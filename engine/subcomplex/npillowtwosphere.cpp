@@ -32,8 +32,8 @@
 
 /* end stub */
 
-#include "triangulation/nface.h"
 #include "subcomplex/npillowtwosphere.h"
+#include "triangulation/ntriangle.h"
 
 namespace regina {
 

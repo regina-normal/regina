@@ -3205,7 +3205,7 @@ class REGINA_API NTriangulation : public NPacket,
 } // namespace regina
 // Some more headers that are required for inline functions:
 #include "triangulation/ntetrahedron.h"
-#include "triangulation/nface.h"
+#include "triangulation/ntriangle.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nvertex.h"
 #include "triangulation/ncomponent.h"
