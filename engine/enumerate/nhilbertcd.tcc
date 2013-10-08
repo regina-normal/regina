@@ -54,7 +54,7 @@ template <class RayClass, class OutputIterator>
 void NHilbertCD::enumerateHilbertBasis(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints) {
     // Get the dimension of the space.
-    unsigned dim = subspace.columns();
+    size_t dim = subspace.columns();
     if (dim == 0)
         return;
 
@@ -102,8 +102,8 @@ template <class RayClass, class BitmaskType, class OutputIterator>
 void NHilbertCD::enumerateUsingBitmask(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints) {
     // Stack-based Contejean-Devie algorithm (Information & Computation, 1994).
-    unsigned dim = subspace.columns();
-    unsigned nEqns = subspace.rows();
+    size_t dim = subspace.columns();
+    size_t nEqns = subspace.rows();
 
     // Convert the set of constraints into bitmasks, where for every
     // original coordinate listed in the constraint, the corresponding

@@ -55,7 +55,7 @@ std::vector<BitmaskType>* NMaxAdmissible::enumerate(
         return new std::vector<BitmaskType>();
     }
 
-    unsigned dim = (*beginExtremalRays)->size();
+    size_t dim = (*beginExtremalRays)->size();
     BitmaskType b(dim);
     int i;
 
