@@ -162,7 +162,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
 
     out << "Size of the skeleton:\n";
     out << "  Tetrahedra: " << tetrahedra.size() << '\n';
-    out << "  Triangles: " << faces.size() << '\n';
+    out << "  Triangles: " << triangles.size() << '\n';
     out << "  Edges: " << edges.size() << '\n';
     out << "  Vertices: " << vertices.size() << '\n';
     out << '\n';
@@ -454,7 +454,7 @@ void NTriangulation::deleteSkeleton() {
         delete *it;
     for (EdgeIterator it = edges.begin(); it != edges.end(); ++it)
         delete *it;
-    for (FaceIterator it = faces.begin(); it != faces.end(); ++it)
+    for (FaceIterator it = triangles.begin(); it != triangles.end(); ++it)
         delete *it;
     for (ComponentIterator it = components.begin();
             it != components.end(); ++it)
@@ -465,7 +465,7 @@ void NTriangulation::deleteSkeleton() {
 
     vertices.clear();
     edges.clear();
-    faces.clear();
+    triangles.clear();
     components.clear();
     boundaryComponents.clear();
 

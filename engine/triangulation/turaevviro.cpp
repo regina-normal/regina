@@ -263,9 +263,9 @@ double NTriangulation::turaevViro(unsigned long r, unsigned long whichRoot)
                 valColour *= init.edgeContrib(colour[i]);
             for (i = 0; i < nFaces; i++)
                 valColour *= init.faceContrib(
-                    colour[edgeIndex(faces[i]->getEdge(0))],
-                    colour[edgeIndex(faces[i]->getEdge(1))],
-                    colour[edgeIndex(faces[i]->getEdge(2))]);
+                    colour[edgeIndex(triangles[i]->getEdge(0))],
+                    colour[edgeIndex(triangles[i]->getEdge(1))],
+                    colour[edgeIndex(triangles[i]->getEdge(2))]);
             for (i = 0; i < tetrahedra.size(); i++)
                 valColour *= init.tetContrib(
                     colour[edgeIndex(tetrahedra[i]->getEdge(0))],

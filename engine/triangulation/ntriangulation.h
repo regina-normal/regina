@@ -127,7 +127,7 @@ class REGINA_API NTriangulation : public NPacket,
         typedef std::vector<NTetrahedron*>::const_iterator TetrahedronIterator;
             /**< Used to iterate through tetrahedra. */
         typedef std::vector<NTriangle*>::const_iterator FaceIterator;
-            /**< Used to iterate through faces. */
+            /**< Used to iterate through triangles. */
         typedef std::vector<NEdge*>::const_iterator EdgeIterator;
             /**< Used to iterate through edges. */
         typedef std::vector<NVertex*>::const_iterator VertexIterator;
@@ -148,8 +148,8 @@ class REGINA_API NTriangulation : public NPacket,
 
         NMarkedVector<NTetrahedron> tetrahedra;
             /**< The tetrahedra that form the triangulation. */
-        mutable NMarkedVector<NTriangle> faces;
-            /**< The faces in the triangulation skeleton. */
+        mutable NMarkedVector<NTriangle> triangles;
+            /**< The triangles in the triangulation skeleton. */
         mutable NMarkedVector<NEdge> edges;
             /**< The edges in the triangulation skeleton. */
         mutable NMarkedVector<NVertex> vertices;
@@ -3366,7 +3366,7 @@ inline unsigned long NTriangulation::getNumberOfEdges() const {
 inline unsigned long NTriangulation::getNumberOfTriangles() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return faces.size();
+    return triangles.size();
 }
 
 template <>
@@ -3396,7 +3396,7 @@ inline long NTriangulation::getEulerCharTri() const {
     // Cast away the unsignedness of std::vector::size().
     return static_cast<long>(vertices.size())
         - static_cast<long>(edges.size())
-        + static_cast<long>(faces.size())
+        + static_cast<long>(triangles.size())
         - static_cast<long>(tetrahedra.size());
 }
 
@@ -3442,7 +3442,7 @@ inline const std::vector<NTriangle*>& NTriangulation::getTriangles()
         const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return (const std::vector<NTriangle*>&)(faces);
+    return (const std::vector<NTriangle*>&)(triangles);
 }
 
 inline NComponent* NTriangulation::getComponent(unsigned long index) const {
@@ -3473,7 +3473,7 @@ inline NEdge* NTriangulation::getEdge(unsigned long index) const {
 inline NTriangle* NTriangulation::getTriangle(unsigned long index) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return faces[index];
+    return triangles[index];
 }
 
 inline long NTriangulation::componentIndex(const NComponent* component) const {
@@ -3530,7 +3530,7 @@ inline bool NTriangulation::isStandard() const {
 inline bool NTriangulation::hasBoundaryFaces() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
-    return (faces.size() > 2 * tetrahedra.size());
+    return (triangles.size() > 2 * tetrahedra.size());
 }
 
 inline bool NTriangulation::isClosed() const {

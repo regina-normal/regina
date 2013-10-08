@@ -320,7 +320,7 @@ bool NTriangulation::finiteToIdeal() {
 
     FaceIterator fit;
     unsigned i;
-    for (i = 0, fit = faces.begin(); fit != faces.end(); ++i, ++fit) {
+    for (i = 0, fit = triangles.begin(); fit != triangles.end(); ++i, ++fit) {
         if (! (*fit)->isBoundary()) {
             bdry[i] = newTet[i] = 0;
             continue;

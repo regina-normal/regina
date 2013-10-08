@@ -86,7 +86,7 @@ unsigned long NTriangulation::findIsomorphisms(
         // identical.
         if (tetrahedra.size() != other.tetrahedra.size())
             return 0;
-        if (faces.size() != other.faces.size())
+        if (triangles.size() != other.triangles.size())
             return 0;
         if (edges.size() != other.edges.size())
             return 0;

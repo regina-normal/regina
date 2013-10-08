@@ -64,11 +64,11 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
     // Find out which face corresponds to which generator.
     long *genIndex = new long[getNumberOfTriangles()];
     long i = 0;
-    for (FaceIterator fit = faces.begin(); fit != faces.end(); fit++)
+    for (FaceIterator fit = triangles.begin(); fit != triangles.end(); fit++)
         if ((*fit)->isBoundary() || forest.count(*fit))
-            genIndex[fit - faces.begin()] = -1;
+            genIndex[fit - triangles.begin()] = -1;
         else
-            genIndex[fit - faces.begin()] = i++;
+            genIndex[fit - triangles.begin()] = i++;
 
     // Run through each edge and put the relations in the matrix.
     std::deque<NEdgeEmbedding>::const_iterator embit;

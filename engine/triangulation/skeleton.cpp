@@ -403,7 +403,7 @@ void NTriangulation::calculateTriangles() const {
                     label->embeddings[1] = new NTriangleEmbedding(adjTet, adjFace);
                     label->nEmbeddings = 2;
                 }
-                faces.push_back(label);
+                triangles.push_back(label);
             }
     }
 }
@@ -416,7 +416,7 @@ void NTriangulation::calculateBoundary() const {
     NTriangle* face;
     NBoundaryComponent* label;
 
-    for (it = faces.begin(); it != faces.end(); it++) {
+    for (it = triangles.begin(); it != triangles.end(); it++) {
         face = *it;
         if (face->nEmbeddings < 2)
             if (face->boundaryComponent == 0) {

@@ -1010,7 +1010,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         // overkill, since each vertex in the corresponding graph G will
         // have degree <= 2, but it's fast so we'll do it.
         {
-            long nFaces = faces.size();
+            long nFaces = triangles.size();
 
             // The parent of each face in the union-find tree, or -1 if
             // a face is at the root of a tree.
