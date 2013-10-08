@@ -367,8 +367,8 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
     // Perform the 4-4 move as a 2-3 move followed by a 3-2 move.
     ChangeEventSpan span(this);
     NTriangle* face23 = (newAxis == 0 ?
-        oldTet[0]->getFace(embs[0].getVertices()[2]) :
-        oldTet[1]->getFace(embs[1].getVertices()[2]));
+        oldTet[0]->getTriangle(embs[0].getVertices()[2]) :
+        oldTet[1]->getTriangle(embs[1].getVertices()[2]));
     int edge32 = embs[3].getEdge();
 
     twoThreeMove(face23, false, true);
@@ -409,8 +409,8 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
         for (i=0; i<2; i++) {
             edge[i] = tet[i]->getEdge(
                 NEdge::edgeNumber[perm[i][2]][perm[i][3]]);
-            face[i][0] = tet[i]->getFace(perm[i][0]);
-            face[i][1] = tet[i]->getFace(perm[i][1]);
+            face[i][0] = tet[i]->getTriangle(perm[i][0]);
+            face[i][1] = tet[i]->getTriangle(perm[i][1]);
         }
 
         if (edge[0] == edge[1])
@@ -502,7 +502,7 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
 
         NTriangle* face[2];
         for (i = 0; i < 2; i++)
-            face[i] = tet[i]->getFace(vertex[i]);
+            face[i] = tet[i]->getTriangle(vertex[i]);
         if (face[0] == face[1])
             return false;
         if (face[0]->isBoundary() && face[1]->isBoundary())
@@ -580,8 +580,8 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
         if (! top)
             return false;
 
-    NTriangle* centreFace = oldTet->getFace(oldVertices[edgeEnd]);
-    NTriangle* bottomFace = oldTet->getFace(oldVertices[otherEdgeEnd]);
+    NTriangle* centreFace = oldTet->getTriangle(oldVertices[edgeEnd]);
+    NTriangle* bottomFace = oldTet->getTriangle(oldVertices[otherEdgeEnd]);
     NPerm4 bottomToTop =
         oldTet->adjacentGluing(oldVertices[edgeEnd]);
     int topGlued[2];
@@ -602,7 +602,7 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
             return false;
         // This next test should follow from the two edges being distinct,
         // but we'll do it anyway.
-        if (top->getFace(topGlued[0]) == top->getFace(topGlued[1]))
+        if (top->getTriangle(topGlued[0]) == top->getTriangle(topGlued[1]))
             return false;
     }
 
@@ -728,7 +728,7 @@ bool NTriangulation::openBook(NTriangle* f, bool check, bool perform) {
 
     // Actually perform the move.
     // Don't bother with a block since this is so simple.
-    tet->unjoin(emb.getFace());
+    tet->unjoin(emb.getTriangle());
     return true;
 }
 
@@ -748,7 +748,7 @@ bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
     NPerm4 p1 = back.getVertices();
 
     if (check) {
-        if (t0->getFace(p0[3]) == t1->getFace(p1[2]))
+        if (t0->getTriangle(p0[3]) == t1->getTriangle(p1[2]))
             return false;
         if (t0->getVertex(p0[2]) == t1->getVertex(p1[3]))
             return false;
@@ -790,7 +790,7 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
         int i, j;
         int bdry[4];
         for (i=0; i<4; i++)
-            if (t->getFace(i)->isBoundary())
+            if (t->getTriangle(i)->isBoundary())
                 bdry[nBdry++] = i;
         if (nBdry < 1 || nBdry > 3)
             return false;
@@ -1031,8 +1031,8 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
                 tet = it->getTetrahedron();
                 p = it->getVertices();
 
-                upper = tet->getFace(p[0]);
-                lower = tet->getFace(p[1]);
+                upper = tet->getTriangle(p[0]);
+                lower = tet->getTriangle(p[1]);
 
                 id1 = (upper->isBoundary() ? nFaces : upper->markedIndex());
                 id2 = (lower->isBoundary() ? nFaces : lower->markedIndex());

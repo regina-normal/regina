@@ -1180,8 +1180,8 @@ NTriangulation* NNormalSurface::cutAlong() const {
 
         tet0 = f->getEmbedding(0).getTetrahedron()->markedIndex();
         tet1 = f->getEmbedding(1).getTetrahedron()->markedIndex();
-        face0 = f->getEmbedding(0).getFace();
-        face1 = f->getEmbedding(1).getFace();
+        face0 = f->getEmbedding(0).getTriangle();
+        face1 = f->getEmbedding(1).getTriangle();
 
         gluing = f->getEmbedding(0).getTetrahedron()->adjacentGluing(face0);
 

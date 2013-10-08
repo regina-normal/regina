@@ -164,7 +164,7 @@ void NTriangulation::stretchDualForestFromTet(NTetrahedron* tet,
         adjTet = tet->adjacentTetrahedron(face);
         if (adjTet)
             if (! (visited.count(adjTet))) {
-                faceSet.insert(tet->getFace(face));
+                faceSet.insert(tet->getTriangle(face));
                 stretchDualForestFromTet(adjTet, faceSet, visited);
             }
     }

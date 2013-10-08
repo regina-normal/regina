@@ -769,7 +769,7 @@ class REGINA_API NTriangulation : public NPacket,
          * to getNumberOfTriangles()-1 inclusive.
          * @return the requested face.
          */
-        NTriangle* getFace(unsigned long index) const;
+        NTriangle* getTriangle(unsigned long index) const;
         /**
          * Returns the index of the given component in the triangulation.
          *
@@ -3470,7 +3470,7 @@ inline NEdge* NTriangulation::getEdge(unsigned long index) const {
     return edges[index];
 }
 
-inline NTriangle* NTriangulation::getFace(unsigned long index) const {
+inline NTriangle* NTriangulation::getTriangle(unsigned long index) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return faces[index];

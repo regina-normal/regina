@@ -485,7 +485,7 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          * @return the face of the skeleton corresponding to the
          * requested tetrahedron face.
          */
-        NTriangle* getFace(int face) const;
+        NTriangle* getTriangle(int face) const;
         /**
          * Returns a permutation that maps 0 to the given vertex of this
          * tetrahedron, and that maps (1,2,3) to the three remaining vertices
@@ -725,7 +725,7 @@ inline NEdge* NTetrahedron::getEdge(int edge) const {
     return edges[edge];
 }
 
-inline NTriangle* NTetrahedron::getFace(int face) const {
+inline NTriangle* NTetrahedron::getTriangle(int face) const {
     if (! tri->calculatedSkeleton)
         tri->calculateSkeleton();
     return faces[face];

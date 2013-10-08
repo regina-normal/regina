@@ -103,7 +103,7 @@ class REGINA_API NTriangleEmbedding {
          *
          * @return the face number that is this face.
          */
-        int getFace() const;
+        int getTriangle() const;
 
         /**
          * Returns a mapping from vertices (0,1,2) of this face to the
@@ -433,7 +433,7 @@ inline NTetrahedron* NTriangleEmbedding::getTetrahedron() const {
     return tetrahedron;
 }
 
-inline int NTriangleEmbedding::getFace() const {
+inline int NTriangleEmbedding::getTriangle() const {
     return face;
 }
 

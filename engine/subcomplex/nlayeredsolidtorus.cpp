@@ -595,9 +595,9 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
     if (comp->getBoundaryComponent(0)->getNumberOfTriangles() != 2)
         return 0;
 
-    NTriangleEmbedding f0 = comp->getBoundaryComponent(0)->getFace(0)->
+    NTriangleEmbedding f0 = comp->getBoundaryComponent(0)->getTriangle(0)->
         getEmbedding(0);
-    NTriangleEmbedding f1 = comp->getBoundaryComponent(0)->getFace(1)->
+    NTriangleEmbedding f1 = comp->getBoundaryComponent(0)->getTriangle(1)->
         getEmbedding(0);
 
     NTetrahedron* top = f0.getTetrahedron();
@@ -617,7 +617,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
     // the top level tetrahedron (which we already know), but this would
     // also require us to code up the entire structure again.
 
-    NFacePair underFaces = NFacePair(f0.getFace(), f1.getFace()).complement();
+    NFacePair underFaces = NFacePair(f0.getTriangle(), f1.getTriangle()).complement();
     NTetrahedron* currTet = top;
     NTetrahedron* nextTet;
     while (1) {

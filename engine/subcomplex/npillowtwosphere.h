@@ -95,14 +95,14 @@ class REGINA_API NPillowTwoSphere : public ShareableObject {
          * this must be either 0 or 1.
          * @return the corresponding face.
          */
-        NTriangle* getFace(int index) const;
+        NTriangle* getTriangle(int index) const;
         /**
          * Returns a permutation describing how the boundaries of the two
          * faces are joined.
          *
          * The permutation will map vertices (0,1,2) of
-         * <tt>getFace(0)</tt> to vertices (0,1,2) of
-         * <tt>getFace(1)</tt>.  The map will represent how the vertices
+         * <tt>getTriangle(0)</tt> to vertices (0,1,2) of
+         * <tt>getTriangle(1)</tt>.  The map will represent how the vertices
          * of the faces are identified by the three edge gluings.
          *
          * @return a permutation describing how the face boundaries are
@@ -140,7 +140,7 @@ class REGINA_API NPillowTwoSphere : public ShareableObject {
 
 inline NPillowTwoSphere::NPillowTwoSphere() {
 }
-inline NTriangle* NPillowTwoSphere::getFace(int index) const {
+inline NTriangle* NPillowTwoSphere::getTriangle(int index) const {
     return face[index];
 }
 inline NPerm4 NPillowTwoSphere::getFaceMapping() const {

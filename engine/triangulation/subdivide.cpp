@@ -337,7 +337,7 @@ bool NTriangulation::finiteToIdeal() {
     for (bit = boundaryComponents.begin();
             bit != boundaryComponents.end(); bit++)
         for (i = 0; i < (*bit)->getNumberOfTriangles(); ++i)
-            newTet[(*bit)->getFace(i)->markedIndex()] =
+            newTet[(*bit)->getTriangle(i)->markedIndex()] =
                 staging.newTetrahedron();
 
     // Glue the new tetrahedra to each other.
@@ -354,9 +354,9 @@ bool NTriangulation::finiteToIdeal() {
             NEdgeEmbedding e1 = edge->getEmbeddings().front();
             NEdgeEmbedding e2 = edge->getEmbeddings().back();
 
-            tetFace1 = e1.getTetrahedron()->getFace(
+            tetFace1 = e1.getTetrahedron()->getTriangle(
                 e1.getVertices()[3])->markedIndex();
-            tetFace2 = e2.getTetrahedron()->getFace(
+            tetFace2 = e2.getTetrahedron()->getTriangle(
                 e2.getVertices()[2])->markedIndex();
 
             t1Perm = bdryPerm[tetFace1].inverse() * e1.getVertices();

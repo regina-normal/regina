@@ -707,7 +707,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
 
         NTriangulation cut(use);
         cut.getTetrahedron(emb.getTetrahedron()->markedIndex())->unjoin(
-            emb.getFace());
+            emb.getTriangle());
 
         // If we don't see a new boundary component, the disc boundary is
         // non-separating in the manifold boundary and is therefore a

@@ -297,7 +297,7 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
                     // for shell boundary moves.
                     nFaces = (*bit)->getNumberOfTriangles();
                     for (iFace = 0; iFace < nFaces; iFace++) {
-                        if (shellBoundary((*bit)->getFace(iFace)->
+                        if (shellBoundary((*bit)->getTriangle(iFace)->
                                 getEmbedding(0).getTetrahedron(),
                                 true, perform)) {
                             changedNow = changed = true;

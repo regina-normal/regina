@@ -437,7 +437,7 @@ void NTriangulation::labelBoundaryFace(NTriangle* firstFace,
     emb = firstFace->embeddings[0];
     firstFace->boundaryComponent = label;
     label->faces.push_back(firstFace);
-    emb->getTetrahedron()->tmpOrientation[emb->getFace()] = 1;
+    emb->getTetrahedron()->tmpOrientation[emb->getTriangle()] = 1;
     faceQueue.push(firstFace);
 
     NTetrahedron* tet;
@@ -463,7 +463,7 @@ void NTriangulation::labelBoundaryFace(NTriangle* firstFace,
         // Run through the edges and vertices on this face.
         emb = face->embeddings[0];
         tet = emb->getTetrahedron();
-        tetFace = emb->getFace();
+        tetFace = emb->getTriangle();
         tetVertices = tet->faceMapping[tetFace];
 
         // Run through the vertices.

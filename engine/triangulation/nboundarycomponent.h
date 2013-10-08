@@ -136,7 +136,7 @@ class REGINA_API NBoundaryComponent :
          * triangulation.
          * @return the requested face.
          */
-        NTriangle* getFace(unsigned long index) const;
+        NTriangle* getTriangle(unsigned long index) const;
 
         /**
          * Returns the requested edge in this boundary component.
@@ -251,7 +251,7 @@ inline unsigned long NBoundaryComponent::getNumberOfVertices() const {
     return vertices.size();
 }
 
-inline NTriangle* NBoundaryComponent::getFace(unsigned long index) const {
+inline NTriangle* NBoundaryComponent::getTriangle(unsigned long index) const {
     return faces[index];
 }
 

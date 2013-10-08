@@ -232,7 +232,7 @@ void NTriangulation::writeTextLong(std::ostream& out) const {
         tet = tetrahedra[tetPos];
         out << "  " << std::setw(3) << tetPos << "  |        ";
         for (face=3; face>=0; face--)
-            out << ' ' << std::setw(3) << triangleIndex(tet->getFace(face));
+            out << ' ' << std::setw(3) << triangleIndex(tet->getTriangle(face));
         out << '\n';
     }
     out << '\n';

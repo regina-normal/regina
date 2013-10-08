@@ -53,7 +53,7 @@ namespace {
         NTetrahedron* tet;
         NPerm4 vert;
         for (unsigned i = 0; i < tri.getNumberOfTriangles(); ++i) {
-            f = tri.getFace(i);
+            f = tri.getTriangle(i);
 
             tet = f->getEmbedding(0).getTetrahedron();
             vert = f->getEmbedding(0).getVertices();

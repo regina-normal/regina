@@ -169,7 +169,7 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
          * triangulation.
          * @return the requested face.
          */
-        NTriangle* getFace(unsigned long index) const;
+        NTriangle* getTriangle(unsigned long index) const;
 
         /**
          * Returns the requested edge in this component.
@@ -289,7 +289,7 @@ inline NTetrahedron* NComponent::getSimplex(unsigned long index) const {
     return tetrahedra[index];
 }
 
-inline NTriangle* NComponent::getFace(unsigned long index) const {
+inline NTriangle* NComponent::getTriangle(unsigned long index) const {
     return faces[index];
 }
 

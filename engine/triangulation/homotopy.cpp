@@ -85,11 +85,11 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
                     embit != (*eit)->getEmbeddings().end(); embit++) {
                 currTet = (*embit).getTetrahedron();
                 currTetFace = (*embit).getVertices()[2];
-                face = currTet->getFace(currTetFace);
+                face = currTet->getTriangle(currTetFace);
                 faceGenIndex = genIndex[triangleIndex(face)];
                 if (faceGenIndex >= 0) {
                     if ((face->getEmbedding(0).getTetrahedron() == currTet) &&
-                            (face->getEmbedding(0).getFace() == currTetFace))
+                            (face->getEmbedding(0).getTriangle() == currTetFace))
                         rel->addTermLast(faceGenIndex, 1);
                     else
                         rel->addTermLast(faceGenIndex, -1);
