@@ -33,21 +33,21 @@
 /* end stub */
 
 // Regina core includes:
-#include "triangulation/nface.h"
+#include "triangulation/ntriangle.h"
 
 // UI includes:
-#include "facechooser.h"
+#include "trianglechooser.h"
 
 #include <algorithm>
 #include <QBoxLayout>
 #include <QDialogButtonBox>
 #include <QLabel>
 
-using regina::NFace;
+using regina::NTriangle;
 
-FaceChooser::FaceChooser(
+TriangleChooser::TriangleChooser(
         regina::NTriangulation* tri,
-        FaceFilterFunc filter, QWidget* parent,
+        TriangleFilterFunc filter, QWidget* parent,
         bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
@@ -57,16 +57,16 @@ FaceChooser::FaceChooser(
     fill();
 }
 
-NFace* FaceChooser::selected() {
+NTriangle* TriangleChooser::selected() {
     if (count() == 0)
         return 0;
     int curr = currentIndex();
     return (curr < 0 ? 0 : options_[curr]);
 }
 
-void FaceChooser::select(regina::NFace* option) {
+void TriangleChooser::select(regina::NTriangle* option) {
     int index = 0;
-    std::vector<regina::NFace*>::const_iterator it = options_.begin();
+    std::vector<regina::NTriangle*>::const_iterator it = options_.begin();
     while (it != options_.end()) {
         if ((*it) == option) {
             setCurrentIndex(index);
@@ -82,18 +82,18 @@ void FaceChooser::select(regina::NFace* option) {
     return;
 }
 
-QString FaceChooser::description(regina::NFace* option) {
+QString TriangleChooser::description(regina::NTriangle* option) {
     if (option->getNumberOfEmbeddings() == 1) {
-        const regina::NFaceEmbedding& e0 = option->getEmbedding(0);
-        return trUtf8("Face %2 — %3 (%4)")
-            .arg(tri_->faceIndex(option))
+        const regina::NTriangleEmbedding& e0 = option->getEmbedding(0);
+        return trUtf8("Triangle %2 — %3 (%4)")
+            .arg(tri_->triangleIndex(option))
             .arg(tri_->tetrahedronIndex(e0.getTetrahedron()))
             .arg(e0.getVertices().trunc3().c_str());
     } else {
-        const regina::NFaceEmbedding& e0 = option->getEmbedding(0);
-        const regina::NFaceEmbedding& e1 = option->getEmbedding(1);
-        return trUtf8("Face %1 — %2 (%3), %4 (%5)")
-            .arg(tri_->faceIndex(option))
+        const regina::NTriangleEmbedding& e0 = option->getEmbedding(0);
+        const regina::NTriangleEmbedding& e1 = option->getEmbedding(1);
+        return trUtf8("Triangle %1 — %2 (%3), %4 (%5)")
+            .arg(tri_->triangleIndex(option))
             .arg(tri_->tetrahedronIndex(e0.getTetrahedron()))
             .arg(e0.getVertices().trunc3().c_str())
             .arg(tri_->tetrahedronIndex(e1.getTetrahedron()))
@@ -101,19 +101,19 @@ QString FaceChooser::description(regina::NFace* option) {
     }
 }
 
-void FaceChooser::fill() {
-    regina::NTriangulation::FaceIterator it;
-    for (it = tri_->getFaces().begin();
-            it != tri_->getFaces().end(); ++it)
+void TriangleChooser::fill() {
+    regina::NTriangulation::TriangleIterator it;
+    for (it = tri_->getTriangles().begin();
+            it != tri_->getTriangles().end(); ++it)
         if ((! filter_) || (*filter_)(*it)) {
             addItem(description(*it));
             options_.push_back(*it);
         }
 }
 
-FaceDialog::FaceDialog(QWidget* parent,
+TriangleDialog::TriangleDialog(QWidget* parent,
         regina::NTriangulation* tri,
-        FaceFilterFunc filter,
+        TriangleFilterFunc filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) :
@@ -125,7 +125,7 @@ FaceDialog::FaceDialog(QWidget* parent,
     QLabel* label = new QLabel(message);
     layout->addWidget(label);
 
-    chooser = new FaceChooser(tri, filter, this);
+    chooser = new TriangleChooser(tri, filter, this);
     layout->addWidget(chooser);
 
     QDialogButtonBox* buttonBox = new QDialogButtonBox(
@@ -136,13 +136,13 @@ FaceDialog::FaceDialog(QWidget* parent,
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
-regina::NFace* FaceDialog::choose(QWidget* parent,
+regina::NTriangle* TriangleDialog::choose(QWidget* parent,
         regina::NTriangulation* tri,
-        FaceFilterFunc filter,
+        TriangleFilterFunc filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) {
-    FaceDialog dlg(parent, tri, filter, title, message, whatsThis);
+    TriangleDialog dlg(parent, tri, filter, title, message, whatsThis);
     if (dlg.exec())
         return dlg.chooser->selected();
     else

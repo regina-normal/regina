@@ -58,9 +58,9 @@ bool RecogniserHandler::exportData(regina::NPacket* data,
                 "to the 3-manifold recogniser format."));
         return false;
     }
-    if (tri->hasBoundaryFaces()) {
+    if (tri->hasBoundaryTriangles()) {
         ReginaSupport::sorry(parentWidget,
-            QObject::tr("This triangulation has boundary faces."),
+            QObject::tr("This triangulation has boundary triangles."),
             QObject::tr("I can only export closed or ideal triangulations "
                 "to the 3-manifold recogniser format."));
         return false;

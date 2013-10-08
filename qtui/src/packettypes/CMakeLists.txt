@@ -8,6 +8,7 @@ SET ( FILES
   dim4trialgebra
   dim4tricreator
   dim4trigluings
+  dim4triskeleton
   dim4triui
   eltmovedialog
   facetgraphtab
@@ -44,6 +45,7 @@ SET ( MOC_FILES
   dim2triui.h
   dim4trialgebra.h
   dim4trigluings.h
+  dim4triskeleton.h
   dim4triui.h
   facetgraphtab.h
   nanglestructureui.h

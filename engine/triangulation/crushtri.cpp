@@ -142,21 +142,21 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
     return false;
 }
 
-void NTriangulation::maximalForestInDualSkeleton(std::set<NFace*>& faceSet)
+void NTriangulation::maximalForestInDualSkeleton(std::set<NTriangle*>& triSet)
         const {
     if (! calculatedSkeleton)
         calculateSkeleton();
 
-    faceSet.clear();
+    triSet.clear();
     std::set<NTetrahedron*> visited;
     for (TetrahedronIterator it = tetrahedra.begin(); it != tetrahedra.end();
             it++)
         if (! (visited.count(*it)))
-            stretchDualForestFromTet(*it, faceSet, visited);
+            stretchDualForestFromTet(*it, triSet, visited);
 }
 
 void NTriangulation::stretchDualForestFromTet(NTetrahedron* tet,
-        std::set<NFace*>& faceSet, std::set<NTetrahedron*>& visited) const {
+        std::set<NTriangle*>& triSet, std::set<NTetrahedron*>& visited) const {
     visited.insert(tet);
 
     NTetrahedron* adjTet;
@@ -164,8 +164,8 @@ void NTriangulation::stretchDualForestFromTet(NTetrahedron* tet,
         adjTet = tet->adjacentTetrahedron(face);
         if (adjTet)
             if (! (visited.count(adjTet))) {
-                faceSet.insert(tet->getFace(face));
-                stretchDualForestFromTet(adjTet, faceSet, visited);
+                triSet.insert(tet->getTriangle(face));
+                stretchDualForestFromTet(adjTet, triSet, visited);
             }
     }
 }

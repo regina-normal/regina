@@ -50,7 +50,7 @@
 namespace regina {
 
 class NEdge;
-class NFace;
+class NTriangle;
 class NTetrahedron;
 class NVertex;
 
@@ -84,8 +84,8 @@ class NVertex;
 class REGINA_API NBoundaryComponent :
         public ShareableObject, public NMarkedElement {
     private:
-        std::vector<NFace*> faces;
-            /**< List of faces in the component. */
+        std::vector<NTriangle*> triangles;
+            /**< List of triangles in the component. */
         std::vector<NEdge*> edges;
             /**< List of edges in the component. */
         std::vector<NVertex*> vertices;
@@ -101,9 +101,21 @@ class REGINA_API NBoundaryComponent :
         virtual ~NBoundaryComponent();
 
         /**
-         * Returns the number of faces in this boundary component.
+         * Returns the number of triangles in this boundary component.
          *
-         * @return the number of faces.
+         * @return the number of triangles.
+         */
+        unsigned long getNumberOfTriangles() const;
+        /**
+         * A deprecated alias for getNumberOfTriangles().
+         *
+         * This routine returns the number of triangular faces in this
+         * boundary component.  See getNumberOfTriangles() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getNumberOfTriangles() instead.
+         *
+         * @return the number of triangles.
          */
         unsigned long getNumberOfFaces() const;
 
@@ -122,21 +134,39 @@ class REGINA_API NBoundaryComponent :
         unsigned long getNumberOfVertices() const;
 
         /**
-         * Returns the requested face in this boundary component.
+         * Returns the requested triangle in this boundary component.
          *
          * For an ideal boundary component (which consists of a single
-         * vertex), there are no real faces in the boundary component
+         * vertex), there are no real triangles in the boundary component
          * and this routine cannot be used.
          *
-         * @param index the index of the requested face in the boundary
-         * component.  This should be between 0 and getNumberOfFaces()-1
+         * @param index the index of the requested triangle in the boundary
+         * component.  This should be between 0 and getNumberOfTriangles()-1
          * inclusive.
-         * Note that the index of a face in the boundary component need
-         * not be the index of the same face in the entire
+         * Note that the index of a triangle in the boundary component need
+         * not be the index of the same triangle in the entire
          * triangulation.
-         * @return the requested face.
+         * @return the requested triangle.
          */
-        NFace* getFace(unsigned long index) const;
+        NTriangle* getTriangle(unsigned long index) const;
+        /**
+         * A deprecated alias for getTriangle().
+         *
+         * This routine returns the requested triangular face in this
+         * boundary component.  See getTriangle() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangle() instead.
+         *
+         * @param index the index of the requested triangle in the boundary
+         * component.  This should be between 0 and getNumberOfTriangles()-1
+         * inclusive.
+         * Note that the index of a triangle in the boundary component need
+         * not be the index of the same triangle in the entire
+         * triangulation.
+         * @return the requested triangle.
+         */
+        NTriangle* getFace(unsigned long index) const;
 
         /**
          * Returns the requested edge in this boundary component.
@@ -180,7 +210,7 @@ class REGINA_API NBoundaryComponent :
         /**
          * Determines if this boundary component is ideal.
          * This is the case if and only if it consists of a single
-         * (ideal) vertex and no faces.
+         * (ideal) vertex and no triangles.
          *
          * @return \c true if and only if this boundary component is
          * ideal.
@@ -239,8 +269,12 @@ inline NBoundaryComponent::NBoundaryComponent(NVertex* idealVertex) {
 inline NBoundaryComponent::~NBoundaryComponent() {
 }
 
+inline unsigned long NBoundaryComponent::getNumberOfTriangles() const {
+    return triangles.size();
+}
+
 inline unsigned long NBoundaryComponent::getNumberOfFaces() const {
-    return faces.size();
+    return triangles.size();
 }
 
 inline unsigned long NBoundaryComponent::getNumberOfEdges() const {
@@ -251,8 +285,12 @@ inline unsigned long NBoundaryComponent::getNumberOfVertices() const {
     return vertices.size();
 }
 
-inline NFace* NBoundaryComponent::getFace(unsigned long index) const {
-    return faces[index];
+inline NTriangle* NBoundaryComponent::getTriangle(unsigned long index) const {
+    return triangles[index];
+}
+
+inline NTriangle* NBoundaryComponent::getFace(unsigned long index) const {
+    return triangles[index];
 }
 
 inline NEdge* NBoundaryComponent::getEdge(unsigned long index) const {
@@ -266,11 +304,11 @@ inline NVertex* NBoundaryComponent::getVertex(unsigned long index) const {
 inline long NBoundaryComponent::getEulerCharacteristic() const {
     return (isIdeal() ?
         vertices.front()->getLinkEulerCharacteristic() :
-        long(vertices.size()) - long(edges.size()) + long(faces.size()));
+        long(vertices.size()) - long(edges.size()) + long(triangles.size()));
 }
 
 inline bool NBoundaryComponent::isIdeal() const {
-    return faces.empty();
+    return triangles.empty();
 }
 
 inline bool NBoundaryComponent::isOrientable() const {

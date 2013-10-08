@@ -39,9 +39,9 @@
 namespace regina {
 
 NNormalSurface* NNormalSurface::findNonTrivialSphere(NTriangulation* tri) {
-    if (! tri->hasBoundaryFaces()) {
+    if (! tri->hasBoundaryTriangles()) {
         // Switch to the optimised (and non-deprecated) verison of this routine.
-        // Here we use the fact that, with no boundary faces, there
+        // Here we use the fact that, with no boundary triangles, there
         // cannot be any normal discs.
         return tri->hasNonTrivialSphereOrDisc();
     }

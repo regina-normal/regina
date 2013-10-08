@@ -137,12 +137,12 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          */
         static const NormalCoords EDGE_WEIGHT;
         /**
-         * Represents face arc coordinates for normal surfaces.
+         * Represents triangle arc coordinates for normal surfaces.
          * This flavour is for representation only; surface
          * vectors and lists of this flavour cannot be created.
          *
          * \deprecated Instead of this class constant, you should use
-         * the NormalCoords enum value NS_FACE_ARCS directly.
+         * the NormalCoords enum value NS_TRIANGLE_ARCS.
          */
         static const NormalCoords FACE_ARCS;
         /**

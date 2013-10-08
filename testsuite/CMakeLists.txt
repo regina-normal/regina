@@ -1,7 +1,11 @@
 
 # Engine
 
-SET ( SOURCES exhaustive runalltests testparams )
+SET ( SOURCES
+  exhaustive
+  runalltests
+  testparams
+  )
 # Each of these subdirectories modifies the SOURCES variable,
 # adding more source files
 ADD_SUBDIRECTORY("algebra")

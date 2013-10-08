@@ -146,7 +146,7 @@ bool runAllTests() {
     addNBinaryS4(runner);
     addNMarkedAbelianGroup(runner);
     addNBilinearForm(runner);
-    addNMVPolynomialRing(runner);
+    // addNMVPolynomialRing(runner); <-- NMVPolynomialRing class not ready yet.
     addNSVPolynomialRing(runner);
     addNCellularData(runner);
 

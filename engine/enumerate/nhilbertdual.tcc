@@ -54,7 +54,7 @@ void NHilbertDual::enumerateHilbertBasis(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
         NProgressTracker* tracker, unsigned initialRows) {
     // Get the dimension of the entire space in which we are working.
-    unsigned dim = subspace.columns();
+    size_t dim = subspace.columns();
 
     // If the space has dimension zero, return no results.
     if (dim == 0)
@@ -106,10 +106,10 @@ void NHilbertDual::enumerateUsingBitmask(OutputIterator results,
         NProgressTracker* tracker, unsigned initialRows) {
     // Get the dimension of the entire space in which we are working.
     // At this point we are guaranteed that the dimension is non-zero.
-    unsigned dim = subspace.columns();
+    size_t dim = subspace.columns();
 
     // Are there any hyperplanes at all in the subspace?
-    unsigned nEqns = subspace.rows();
+    size_t nEqns = subspace.rows();
     if (nEqns == 0) {
         // No!  Just send back the unit vectors.
         RayClass* ans;

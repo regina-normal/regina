@@ -1,7 +1,15 @@
 # hypersurface
 
 # Files to compile
-SET ( FILES hsflavours links nhsstandard nnormalhypersurface nnormalhypersurfacelist nxmlhypersurfacereader triangulate )
+SET ( FILES
+  hsflavours
+  links
+  nhsstandard
+  nnormalhypersurface
+  nnormalhypersurfacelist
+  nxmlhypersurfacereader
+  triangulate
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
@@ -12,5 +20,13 @@ ENDFOREACH(SOURCE_FILE)
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
-  INSTALL(FILES hsflavourregistry.h hypercoords.h nhsmirrored.h nhsstandard.h nnormalhypersurface.h nnormalhypersurfacelist.h nxmlhypersurfacereader.h DESTINATION ${INCLUDEDIR}/hypersurface COMPONENT Development)
+  INSTALL(FILES
+    hsflavourregistry.h
+    hypercoords.h
+    nhsmirrored.h
+    nhsstandard.h
+    nnormalhypersurface.h
+    nnormalhypersurfacelist.h
+    nxmlhypersurfacereader.h
+    DESTINATION ${INCLUDEDIR}/hypersurface COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

@@ -1,7 +1,19 @@
 # manifold 
 
 # Files to compile
-SET ( FILES ngraphloop ngraphpair ngraphtriple nhandlebody nlensspace nmanifold nsfs nsimplesurfacebundle nsnappeacensusmfd ntorusbundle pymanifold)
+SET ( FILES
+  ngraphloop
+  ngraphpair
+  ngraphtriple
+  nhandlebody
+  nlensspace
+  nmanifold
+  nsfs
+  nsimplesurfacebundle
+  nsnappeacensusmfd
+  ntorusbundle
+  pymanifold
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

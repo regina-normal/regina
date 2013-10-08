@@ -85,8 +85,8 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
         NTetrahedron* getTetrahedron() const;
 
         /**
-         * Returns one of the two faces that forms the boundary of this
-         * snapped ball.
+         * Returns one of the two tetrahedron faces that forms the boundary
+         * of this snapped ball.
          *
          * You are guaranteed that index 0 will return a smaller face
          * number than index 1.
@@ -97,7 +97,8 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          */
         int getBoundaryFace(int index) const;
         /**
-         * Returns one of the two faces internal to this snapped ball.
+         * Returns one of the two tetrahedron faces internal to this snapped
+         * ball.
          *
          * You are guaranteed that index 0 will return a smaller face
          * number than index 1.
@@ -124,13 +125,13 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
         /**
          * Determines if the given tetrahedron forms a snapped 3-ball
          * within a triangulation.  The ball need not be the entire
-         * triangulation; the boundary faces may be glued to something
+         * triangulation; the boundary triangles may be glued to something
          * else (or to each other).
          *
-         * Note that the two boundary faces of the snapped 3-ball
-         * need not be boundary faces within the overall
+         * Note that the two boundary triangles of the snapped 3-ball
+         * need not be boundary triangles within the overall
          * triangulation, i.e., they may be identified with each other
-         * or with faces of other tetrahedra.
+         * or with triangles of other tetrahedra.
          *
          * @param tet the tetrahedron to examine as a potential 3-ball.
          * @return a newly created structure containing details of the

@@ -1,7 +1,16 @@
 # foreign
 
 # Files to compile
-SET ( FILES csvsurfacelist dehydration isosig orb pdf pyforeign recogniser snappea )
+SET ( FILES
+  csvsurfacelist
+  dehydration
+  isosig
+  orb
+  pdf
+  pyforeign
+  recogniser
+  snappea
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

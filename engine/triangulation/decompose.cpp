@@ -373,7 +373,7 @@ bool NTriangulation::isBall() const {
         return threeBall.value();
 
     // Basic property checks.
-    if (! (isValid() && hasBoundaryFaces() && isOrientable() && isConnected()
+    if (! (isValid() && hasBoundaryTriangles() && isOrientable() && isConnected()
             && boundaryComponents.size() == 1
             && boundaryComponents.front()->getEulerCharacteristic() == 2)) {
         threeBall = false;
@@ -402,7 +402,7 @@ bool NTriangulation::knowsBall() const {
         return true;
 
     // Run some very fast prelimiary tests before we give up and say no.
-    if (! (isValid() && hasBoundaryFaces() && isOrientable() && isConnected()
+    if (! (isValid() && hasBoundaryTriangles() && isOrientable() && isConnected()
             && boundaryComponents.size() == 1
             && boundaryComponents.front()->getEulerCharacteristic() == 2)) {
         threeBall = false;
@@ -606,7 +606,7 @@ NPacket* NTriangulation::makeZeroEfficient() {
 
 bool NTriangulation::hasCompressingDisc() const {
     // Some sanity checks; also enforce preconditions.
-    if (! hasBoundaryFaces())
+    if (! hasBoundaryTriangles())
         return false;
     if ((! isValid()) || isIdeal())
         return false;
@@ -642,7 +642,7 @@ bool NTriangulation::hasCompressingDisc() const {
 
 bool NTriangulation::hasSimpleCompressingDisc() const {
     // Some sanity checks; also enforce preconditions.
-    if (! hasBoundaryFaces())
+    if (! hasBoundaryTriangles())
         return false;
     if ((! isValid()) || isIdeal())
         return false;
@@ -656,20 +656,20 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
     for (ComponentIterator cit = use.getComponents().begin();
             cit != use.getComponents().end(); ++cit)
         if ((*cit)->getNumberOfTetrahedra() == 1 &&
-                (*cit)->getNumberOfFaces() == 3 &&
+                (*cit)->getNumberOfTriangles() == 3 &&
                 (*cit)->getNumberOfVertices() == 1) {
             // Because we know the triangulation is valid, this rules out
             // all one-tetrahedron triangulations except for LST(1,2,3).
             return true;
         }
 
-    // Open up as many boundary faces as possible (to make it easier to
+    // Open up as many boundary triangles as possible (to make it easier to
     // find simple compressing discs).
-    FaceIterator fit;
+    TriangleIterator fit;
     bool opened = true;
     while (opened) {
         opened = false;
-        for (fit = use.getFaces().begin(); fit != use.getFaces().end(); ++fit)
+        for (fit = use.getTriangles().begin(); fit != use.getTriangles().end(); ++fit)
             if (use.openBook(*fit, true, true)) {
                 opened = true;
                 break;
@@ -687,11 +687,11 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         if ((*bit)->getEulerCharacteristic() == 2)
             ++origSphereCount;
 
-    // Look for a single internal face surrounded by three boundary edges.
+    // Look for a single internal triangle surrounded by three boundary edges.
     // It doesn't matter whether the edges and/or vertices are distinct.
     NEdge *e0, *e1, *e2;
     unsigned long newSphereCount;
-    for (fit = use.getFaces().begin(); fit != use.getFaces().end(); ++fit) {
+    for (fit = use.getTriangles().begin(); fit != use.getTriangles().end(); ++fit) {
         if ((*fit)->isBoundary())
             continue;
 
@@ -702,12 +702,12 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
             continue;
 
         // This could be a compressing disc.
-        // Cut along the face to be sure.
-        const NFaceEmbedding& emb = (*fit)->getEmbedding(0);
+        // Cut along the triangle to be sure.
+        const NTriangleEmbedding& emb = (*fit)->getEmbedding(0);
 
         NTriangulation cut(use);
         cut.getTetrahedron(emb.getTetrahedron()->markedIndex())->unjoin(
-            emb.getFace());
+            emb.getTriangle());
 
         // If we don't see a new boundary component, the disc boundary is
         // non-separating in the manifold boundary and is therefore a

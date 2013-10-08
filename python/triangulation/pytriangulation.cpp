@@ -36,12 +36,12 @@ void addNBoundaryComponent();
 void addNComponent();
 void addNEdge();
 void addNExampleTriangulation();
-void addNFace();
 void addNFacePair();
 //void addNHomologicalData();
 void addNIsomorphism();
 void addNTetFace();
 void addNTetrahedron();
+void addNTriangle();
 void addNTriangulation();
 void addNVertex();
 
@@ -50,12 +50,12 @@ void addTriangulation() {
     addNComponent();
     addNEdge();
     addNExampleTriangulation();
-    addNFace();
     addNFacePair();
 //    addNHomologicalData();
     addNIsomorphism();
     addNTetFace();
     addNTetrahedron();
+    addNTriangle();
     addNTriangulation();
     addNVertex();
 }

@@ -1,7 +1,10 @@
 # utilities
 
 # Files to compile
-SET ( FILES base64 nbitmask )
+SET ( FILES
+  base64
+  nbitmask
+  )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

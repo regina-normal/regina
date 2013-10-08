@@ -76,6 +76,7 @@ void addNPerm3() {
         .def("trunc2", &NPerm3::trunc2)
         .def("S3Index", &NPerm3::S3Index)
         .def("orderedS3Index", &NPerm3::orderedS3Index)
+        .def("orderedSnIndex", &NPerm3::orderedS3Index)
         .def("__str__", &NPerm3::toString)
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
@@ -84,6 +85,7 @@ void addNPerm3() {
     s.attr("S3") = &NPerm3_S3_arr;
     s.attr("Sn") = &NPerm3_S3_arr;
     s.attr("orderedS3") = &NPerm3_orderedS3_arr;
+    s.attr("orderedSn") = &NPerm3_orderedS3_arr;
     s.attr("invS3") = &NPerm3_invS3_arr;
     s.attr("S2") = &NPerm3_S2_arr;
     s.attr("Sn_1") = &NPerm3_S2_arr;
