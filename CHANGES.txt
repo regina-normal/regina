@@ -76,8 +76,9 @@ Version 4.95  [ (under development) ]
               orderedSnIndex().  These all reference existing arrays/routines
               involving S3, S4 or S5 in NPerm3, NPerm4 and NPerm5 respectively.
         Class NPillowTwoSphere:
-            - Renamed getFace() to getTriangle().  The old name is deprecated
-              but has been kept for backward compatibility.
+            - Renamed getFace() and getFaceMapping() to getTriangle()
+              and getTriangleMapping().  The old names are deprecated but
+              have been kept for backward compatibility.
         Class NTetrahedron:
             - Renamed getFace() and getFaceMapping() to getTriangle()
               and getTriangleMapping().  The old names are deprecated but

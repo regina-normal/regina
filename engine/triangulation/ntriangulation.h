@@ -128,6 +128,8 @@ class REGINA_API NTriangulation : public NPacket,
             /**< Used to iterate through tetrahedra. */
         typedef std::vector<NTriangle*>::const_iterator TriangleIterator;
             /**< Used to iterate through triangles. */
+        typedef std::vector<NTriangle*>::const_iterator FaceIterator;
+            /**< A deprecated alias for TriangleIterator. */
         typedef std::vector<NEdge*>::const_iterator EdgeIterator;
             /**< Used to iterate through edges. */
         typedef std::vector<NVertex*>::const_iterator VertexIterator;
@@ -613,6 +615,21 @@ class REGINA_API NTriangulation : public NPacket,
          */
         unsigned long getNumberOfTriangles() const;
         /**
+         * A deprecated alias for getNumberOfTriangles().
+         *
+         * This routine returns the number of triangular faces in this
+         * triangulation.  See getNumberOfTriangles() for further details.
+         *
+         * Do not confuse this deprecated alias with the
+         * (non-deprecated) tempate function getNumberOfFaces<dim>().
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getNumberOfTriangles() instead.
+         *
+         * @return the number of triangles.
+         */
+        unsigned long getNumberOfFaces() const;
+        /**
          * Returns the number of faces of the given dimension in this
          * triangulation.
          *
@@ -710,6 +727,18 @@ class REGINA_API NTriangulation : public NPacket,
          */
         const std::vector<NTriangle*>& getTriangles() const;
         /**
+         * A deprecated alias for getTriangles().
+         *
+         * This routine returns all triangular faces in this triangulation.
+         * See getTriangles() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangles() instead.
+         *
+         * @return the list of all triangles.
+         */
+        const std::vector<NTriangle*>& getFaces() const;
+        /**
          * Returns the requested triangulation component.
          *
          * Bear in mind that each time the triangulation changes, the
@@ -770,6 +799,20 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the requested triangle.
          */
         NTriangle* getTriangle(unsigned long index) const;
+        /**
+         * A deprecated alias for getTriangle().
+         *
+         * This routine returns the requested triangular face in the
+         * triangulation.  See getTriangle() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangle() instead.
+         *
+         * @param index the index of the desired triangle, ranging from 0
+         * to getNumberOfTriangles()-1 inclusive.
+         * @return the requested triangle.
+         */
+        NTriangle* getFace(unsigned long index) const;
         /**
          * Returns the index of the given component in the triangulation.
          *
@@ -871,6 +914,21 @@ class REGINA_API NTriangulation : public NPacket,
          * triangle, 1 is the second and so on.
          */
         long triangleIndex(const NTriangle* tri) const;
+        /**
+         * A deprecated alias for triangleIndex().
+         *
+         * This routine returns the index of the given triangle in the
+         * triangulation.  See triangleIndex() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use triangleIndex() instead.
+         *
+         * @param triangle specifies which triangle to find in the
+         * triangulation.
+         * @return the index of the specified triangle, where 0 is the first
+         * triangle, 1 is the second and so on.
+         */
+        long faceIndex(const NTriangle* tri) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -1109,6 +1167,18 @@ class REGINA_API NTriangulation : public NPacket,
          * @return \c true if and only if there are boundary triangles.
          */
         bool hasBoundaryTriangles() const;
+        /**
+         * A deprecated alias for hasBoundaryTriangles().
+         *
+         * This routine determines whether this triangulation has any
+         * boundary triangles.  See hasBoundaryTriangles() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use hasBoundaryTriangles() instead.
+         *
+         * @return \c true if and only if there are boundary triangles.
+         */
+        bool hasBoundaryFaces() const;
         /**
          * Determines if this triangulation is closed.
          * This is the case if and only if it has no boundary.
@@ -3371,6 +3441,10 @@ inline unsigned long NTriangulation::getNumberOfTriangles() const {
     return triangles.size();
 }
 
+inline unsigned long NTriangulation::getNumberOfFaces() const {
+    return getNumberOfTriangles();
+}
+
 template <>
 inline unsigned long NTriangulation::getNumberOfFaces<0>() const {
     return getNumberOfVertices();
@@ -3447,6 +3521,10 @@ inline const std::vector<NTriangle*>& NTriangulation::getTriangles()
     return (const std::vector<NTriangle*>&)(triangles);
 }
 
+inline const std::vector<NTriangle*>& NTriangulation::getFaces() const {
+    return getTriangles();
+}
+
 inline NComponent* NTriangulation::getComponent(unsigned long index) const {
     if (! calculatedSkeleton)
         calculateSkeleton();
@@ -3478,6 +3556,10 @@ inline NTriangle* NTriangulation::getTriangle(unsigned long index) const {
     return triangles[index];
 }
 
+inline NTriangle* NTriangulation::getFace(unsigned long index) const {
+    return getTriangle(index);
+}
+
 inline long NTriangulation::componentIndex(const NComponent* component) const {
     return component->markedIndex();
 }
@@ -3496,6 +3578,10 @@ inline long NTriangulation::edgeIndex(const NEdge* edge) const {
 }
 
 inline long NTriangulation::triangleIndex(const NTriangle* tri) const {
+    return tri->markedIndex();
+}
+
+inline long NTriangulation::faceIndex(const NTriangle* tri) const {
     return tri->markedIndex();
 }
 
@@ -3533,6 +3619,10 @@ inline bool NTriangulation::hasBoundaryTriangles() const {
     if (! calculatedSkeleton)
         calculateSkeleton();
     return (triangles.size() > 2 * tetrahedra.size());
+}
+
+inline bool NTriangulation::hasBoundaryFaces() const {
+    return hasBoundaryTriangles();
 }
 
 inline bool NTriangulation::isClosed() const {

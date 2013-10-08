@@ -77,13 +77,13 @@ void addNTetrahedron() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &NTetrahedron::getEdge,
             return_value_policy<reference_existing_object>())
-        // TODO .def("getFace", &NTetrahedron::getFace,
-        //     return_value_policy<reference_existing_object>())
+        .def("getFace", &NTetrahedron::getFace,
+            return_value_policy<reference_existing_object>())
         .def("getTriangle", &NTetrahedron::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getVertexMapping", &NTetrahedron::getVertexMapping)
         .def("getEdgeMapping", &NTetrahedron::getEdgeMapping)
-        // TODO .def("getFaceMapping", &NTetrahedron::getFaceMapping)
+        .def("getFaceMapping", &NTetrahedron::getFaceMapping)
         .def("getTriangleMapping", &NTetrahedron::getTriangleMapping)
         .def("orientation", &NTetrahedron::orientation)
     ;

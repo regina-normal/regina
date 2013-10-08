@@ -49,7 +49,7 @@ void addNComponent() {
             ("NComponent", no_init)
         .def("getNumberOfTetrahedra", &NComponent::getNumberOfTetrahedra)
         .def("getNumberOfSimplices", &NComponent::getNumberOfSimplices)
-        // TODO .def("getNumberOfFaces", &NComponent::getNumberOfFaces)
+        .def("getNumberOfFaces", &NComponent::getNumberOfFaces)
         .def("getNumberOfTriangles", &NComponent::getNumberOfTriangles)
         .def("getNumberOfEdges", &NComponent::getNumberOfEdges)
         .def("getNumberOfVertices", &NComponent::getNumberOfVertices)
@@ -59,8 +59,8 @@ void addNComponent() {
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &NComponent::getSimplex,
             return_value_policy<reference_existing_object>())
-        // TODO .def("getFace", &NComponent::getFace,
-        //     return_value_policy<reference_existing_object>())
+        .def("getFace", &NComponent::getFace,
+            return_value_policy<reference_existing_object>())
         .def("getTriangle", &NComponent::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &NComponent::getEdge,

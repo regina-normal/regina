@@ -97,6 +97,20 @@ class REGINA_API NPillowTwoSphere : public ShareableObject {
          */
         NTriangle* getTriangle(int index) const;
         /**
+         * A deprecated alias for getTriangle().
+         *
+         * This routine returns one of the two triangles whose boundaries
+         * are joined.  See getTriangle() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangle() instead.
+         *
+         * @param index specifies which of the two triangles to return;
+         * this must be either 0 or 1.
+         * @return the corresponding triangle.
+         */
+        NTriangle* getFace(int index) const;
+        /**
          * Returns a permutation describing how the boundaries of the two
          * triangles are joined.
          *
@@ -109,6 +123,20 @@ class REGINA_API NPillowTwoSphere : public ShareableObject {
          * joined.
          */
         NPerm4 getTriangleMapping() const;
+        /**
+         * A deprecated alias for getTriangleMapping().
+         *
+         * This routine returns a permutation describing how the boundaries
+         * of the two triangles are joined.  See getTriangleMapping()
+         * for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangleMapping() instead.
+         *
+         * @return a permutation describing how the triangle boundaries are
+         * joined.
+         */
+        NPerm4 getFaceMapping() const;
 
         /**
          * Determines if the two given triangles together form a pillow
@@ -143,7 +171,13 @@ inline NPillowTwoSphere::NPillowTwoSphere() {
 inline NTriangle* NPillowTwoSphere::getTriangle(int index) const {
     return triangle[index];
 }
+inline NTriangle* NPillowTwoSphere::getFace(int index) const {
+    return triangle[index];
+}
 inline NPerm4 NPillowTwoSphere::getTriangleMapping() const {
+    return triMapping;
+}
+inline NPerm4 NPillowTwoSphere::getFaceMapping() const {
     return triMapping;
 }
 inline void NPillowTwoSphere::writeTextShort(std::ostream& out) const {

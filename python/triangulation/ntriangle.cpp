@@ -47,8 +47,6 @@ using regina::NTriangle;
 using regina::NTriangleEmbedding;
 using regina::python::GlobalArray;
 
-// TODO: NFace, NFaceEmbedding typedefs
-
 namespace {
     GlobalArray<regina::NPerm4> NTriangle_ordering(NTriangle::ordering, 4);
 }
@@ -59,42 +57,50 @@ void addNTriangle() {
         .def(init<const NTriangleEmbedding&>())
         .def("getTetrahedron", &NTriangleEmbedding::getTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("getFace", &NTriangleEmbedding::getFace)
         .def("getTriangle", &NTriangleEmbedding::getTriangle)
         .def("getVertices", &NTriangleEmbedding::getVertices)
     ;
 
-    scope s = class_<NTriangle, bases<regina::ShareableObject>,
-            std::auto_ptr<NTriangle>, boost::noncopyable>("NTriangle", no_init)
-        .def("isBoundary", &NTriangle::isBoundary)
-        .def("getType", &NTriangle::getType)
-        .def("getSubtype", &NTriangle::getSubtype)
-        .def("isMobiusBand", &NTriangle::isMobiusBand)
-        .def("isCone", &NTriangle::isCone)
-        .def("getNumberOfEmbeddings", &NTriangle::getNumberOfEmbeddings)
-        .def("getEmbedding", &NTriangle::getEmbedding,
-            return_internal_reference<>())
-        .def("getTriangulation", &NTriangle::getTriangulation,
-            return_value_policy<reference_existing_object>())
-        .def("getComponent", &NTriangle::getComponent,
-            return_value_policy<reference_existing_object>())
-        .def("getBoundaryComponent", &NTriangle::getBoundaryComponent,
-            return_value_policy<reference_existing_object>())
-        .def("getVertex", &NTriangle::getVertex,
-            return_value_policy<reference_existing_object>())
-        .def("getEdge", &NTriangle::getEdge,
-            return_value_policy<reference_existing_object>())
-        .def("getEdgeMapping", &NTriangle::getEdgeMapping)
-    ;
+    {
+        scope s = class_<NTriangle, bases<regina::ShareableObject>,
+                std::auto_ptr<NTriangle>,
+                boost::noncopyable>("NTriangle", no_init)
+            .def("isBoundary", &NTriangle::isBoundary)
+            .def("getType", &NTriangle::getType)
+            .def("getSubtype", &NTriangle::getSubtype)
+            .def("isMobiusBand", &NTriangle::isMobiusBand)
+            .def("isCone", &NTriangle::isCone)
+            .def("getNumberOfEmbeddings", &NTriangle::getNumberOfEmbeddings)
+            .def("getEmbedding", &NTriangle::getEmbedding,
+                return_internal_reference<>())
+            .def("getTriangulation", &NTriangle::getTriangulation,
+                return_value_policy<reference_existing_object>())
+            .def("getComponent", &NTriangle::getComponent,
+                return_value_policy<reference_existing_object>())
+            .def("getBoundaryComponent", &NTriangle::getBoundaryComponent,
+                return_value_policy<reference_existing_object>())
+            .def("getVertex", &NTriangle::getVertex,
+                return_value_policy<reference_existing_object>())
+            .def("getEdge", &NTriangle::getEdge,
+                return_value_policy<reference_existing_object>())
+            .def("getEdgeMapping", &NTriangle::getEdgeMapping)
+        ;
 
-    s.attr("TRIANGLE") = NTriangle::TRIANGLE;
-    s.attr("SCARF") = NTriangle::SCARF;
-    s.attr("PARACHUTE") = NTriangle::PARACHUTE;
-    s.attr("CONE") = NTriangle::CONE;
-    s.attr("MOBIUS") = NTriangle::MOBIUS;
-    s.attr("HORN") = NTriangle::HORN;
-    s.attr("DUNCEHAT") = NTriangle::DUNCEHAT;
-    s.attr("L31") = NTriangle::L31;
+        s.attr("TRIANGLE") = NTriangle::TRIANGLE;
+        s.attr("SCARF") = NTriangle::SCARF;
+        s.attr("PARACHUTE") = NTriangle::PARACHUTE;
+        s.attr("CONE") = NTriangle::CONE;
+        s.attr("MOBIUS") = NTriangle::MOBIUS;
+        s.attr("HORN") = NTriangle::HORN;
+        s.attr("DUNCEHAT") = NTriangle::DUNCEHAT;
+        s.attr("L31") = NTriangle::L31;
 
-    s.attr("ordering") = &NTriangle_ordering;
+        s.attr("ordering") = &NTriangle_ordering;
+    }
+
+    // Support for deprecated typedefs:
+    scope().attr("NFace") = scope().attr("NTriangle");
+    scope().attr("NFaceEmbedding") = scope().attr("NTriangleEmbedding");
 }
 

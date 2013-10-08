@@ -103,6 +103,18 @@ class REGINA_API NTriangleEmbedding {
          * @return the triangle number that is this triangle.
          */
         int getTriangle() const;
+        /**
+         * A deprecated alias for getTriangle().
+         *
+         * This routine returns the triangle number within getTetrahedron()
+         * that is this triangle.  See getTriangle() for further details.
+         *
+         * \deprecated This routine will be removed in a future version
+         * of Regina.  Please use getTriangle() instead.
+         *
+         * @return the triangle number that is this triangle.
+         */
+        int getFace() const;
 
         /**
          * Returns a mapping from vertices (0,1,2) of this triangle to the
@@ -438,6 +450,10 @@ inline NTetrahedron* NTriangleEmbedding::getTetrahedron() const {
 }
 
 inline int NTriangleEmbedding::getTriangle() const {
+    return tri_;
+}
+
+inline int NTriangleEmbedding::getFace() const {
     return tri_;
 }
 

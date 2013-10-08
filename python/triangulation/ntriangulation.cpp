@@ -199,13 +199,13 @@ void addNTriangulation() {
             &NTriangulation::getNumberOfBoundaryComponents)
         .def("getNumberOfVertices", &NTriangulation::getNumberOfVertices)
         .def("getNumberOfEdges", &NTriangulation::getNumberOfEdges)
-        // TODO .def("getNumberOfFaces", &NTriangulation::getNumberOfTriangles)
+        .def("getNumberOfFaces", &NTriangulation::getNumberOfTriangles)
         .def("getNumberOfTriangles", &NTriangulation::getNumberOfTriangles)
         .def("getComponents", getComponents_list)
         .def("getBoundaryComponents", getBoundaryComponents_list)
         .def("getVertices", getVertices_list)
         .def("getEdges", getEdges_list)
-        // TODO .def("getFaces", getTriangles_list)
+        .def("getFaces", getTriangles_list)
         .def("getTriangles", getTriangles_list)
         .def("getComponent", &NTriangulation::getComponent,
             return_value_policy<reference_existing_object>())
@@ -215,8 +215,8 @@ void addNTriangulation() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &NTriangulation::getEdge,
             return_value_policy<reference_existing_object>())
-        // TODO .def("getFace", &NTriangulation::getFace,
-        //     return_value_policy<reference_existing_object>())
+        .def("getFace", &NTriangulation::getFace,
+            return_value_policy<reference_existing_object>())
         .def("getTriangle", &NTriangulation::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("componentIndex", &NTriangulation::componentIndex)
@@ -224,7 +224,7 @@ void addNTriangulation() {
             &NTriangulation::boundaryComponentIndex)
         .def("vertexIndex", &NTriangulation::vertexIndex)
         .def("edgeIndex", &NTriangulation::edgeIndex)
-        // TODO .def("faceIndex", &NTriangulation::faceIndex)
+        .def("faceIndex", &NTriangulation::faceIndex)
         .def("triangleIndex", &NTriangulation::triangleIndex)
         .def("isIsomorphicTo", isIsomorphicTo_ptr,
             return_value_policy<manage_new_object>())
@@ -240,7 +240,7 @@ void addNTriangulation() {
         .def("isValid", &NTriangulation::isValid)
         .def("isIdeal", &NTriangulation::isIdeal)
         .def("isStandard", &NTriangulation::isStandard)
-        // TODO .def("hasBoundaryFaces", &NTriangulation::hasBoundaryFaces)
+        .def("hasBoundaryFaces", &NTriangulation::hasBoundaryFaces)
         .def("hasBoundaryTriangles", &NTriangulation::hasBoundaryTriangles)
         .def("isClosed", &NTriangulation::isClosed)
         .def("isOrientable", &NTriangulation::isOrientable)
