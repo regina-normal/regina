@@ -320,15 +320,15 @@ void NHomologicalData::computeChainComplexes() {
         // sIEFOT[i] % 4 is the vertex number for this tetrahedron
         // tetrahedra[ sIEFOT[i]/4 ].getTriangle(sIEFOT[i] + 1,2,3 % 4)
         // are the respective faces
-        // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4)
+        // tetrahedra[ sIEFOT[i]/4 ].getTriangleMapping(sIEFOT[i] + 1,2,3 % 4)
         // gives the perm
         // faces().index( tetrahedra[sIEFOT[i]/4].getTriangle(
         // sIEFOT[i] + 1,2,3 % 4) is therefore the face number, and
-        // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(
+        // tetrahedra[ sIEFOT[i]/4 ].getTriangleMapping(
         // sIEFOT[i] + 1,2,3 % 4)^{-1} applied to sIEFOT[i] % 4 is the
         // vertex of this face.
         for (j=1;j<4;j++) {
-            p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping(
+            p1=tri->getTetrahedron( sIEFOT[i]/4 )->getTriangleMapping(
                 (sIEFOT[i] + j) % 4);
             A2->entry( tri->getNumberOfEdges() + sIEEOF.index(
                 3*tri->triangleIndex(tri->getTetrahedron(
@@ -343,7 +343,7 @@ void NHomologicalData::computeChainComplexes() {
     for (i=0;i<tri->getNumberOfTetrahedra();i++) {
         for (j=0;j<4;j++) {
             // first go through standard faces 0 through 3
-            p1=tri->getTetrahedron(i)->getFaceMapping(j);
+            p1=tri->getTetrahedron(i)->getTriangleMapping(j);
             A3->entry( tri->triangleIndex(
                 tri->getTetrahedron(i)->getTriangle(j) ), i) +=
                 ( (p1.sign()==1) ? 1 : -1 );
@@ -654,7 +654,7 @@ void NHomologicalData::computeChainComplexes() {
                 getEmbedding(0).getTetrahedron()->getEdgeMapping(
                 NEdge::edgeNumber[stage1v][tet0FaceIndex] )[2];
             P3 = tri->getTriangle(dNBF[j])->getEmbedding(0).getTetrahedron()->
-                getFaceMapping(stage1FaceToUse);
+                getTriangleMapping(stage1FaceToUse);
             stage1edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
                 3*(tri->triangleIndex(tri->getTriangle(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron() ->
@@ -688,7 +688,7 @@ void NHomologicalData::computeChainComplexes() {
                 getEmbedding(1).getTetrahedron()->getEdgeMapping(
                 NEdge::edgeNumber[stage3v][tet1FaceIndex] )[2];
             P3 = tri->getTriangle(dNBF[j])->getEmbedding(1).getTetrahedron()->
-                getFaceMapping(stage3FaceToUse);
+                getTriangleMapping(stage3FaceToUse);
             stage3edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
                 3*(tri->triangleIndex(tri->getTriangle(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron() ->
@@ -880,15 +880,15 @@ void NHomologicalData::computeChainComplexes() {
         // sIEFOT[i] % 4 is the vertex number for this tetrahedron
         // tetrahedra[ sIEFOT[i]/4 ].getTriangle(sIEFOT[i] + 1,2,3 % 4) are
         // the respective faces
-        // tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(sIEFOT[i] + 1,2,3 % 4)
+        // tetrahedra[ sIEFOT[i]/4 ].getTriangleMapping(sIEFOT[i] + 1,2,3 % 4)
         // gives the perm
         // faces().index( tetrahedra[sIEFOT[i]/4].getTriangle(
         //     sIEFOT[i] + 1,2,3 % 4) is therefore the
-        // face number, and tetrahedra[ sIEFOT[i]/4 ].getFaceMapping(
+        // face number, and tetrahedra[ sIEFOT[i]/4 ].getTriangleMapping(
         //     sIEFOT[i] + 1,2,3 % 4)^{-1}
         // applied to sIEFOT[i] % 4 is the vertex of this face.
         for (j=1;j<4;j++) {
-            p1=tri->getTetrahedron( sIEFOT[i]/4 )->getFaceMapping(
+            p1=tri->getTetrahedron( sIEFOT[i]/4 )->getTriangleMapping(
                 (sIEFOT[i] + j) % 4);
             Bd2->entry( sBNIE.size() + sIEEOF.index(3*tri->triangleIndex(
                 tri->getTetrahedron(sIEFOT[i]/4 )->getTriangle(

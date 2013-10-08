@@ -150,7 +150,7 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
                  preserving" way, as described in getEdgeMapping(). */
         NPerm4 faceMapping[4];
             /**< Maps (0,1,2) to the vertices of this tetrahedron that form
-                 each face, as described in getFaceMapping(). */
+                 each face, as described in getTriangleMapping(). */
         int tetOrientation;
             /**< The orientation of this tetrahedron in the triangulation.
                  This will either be 1 or -1. */
@@ -596,11 +596,11 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          * As a consequence:  Consider some pair of tetrahedron faces
          * that are identified together as a single face of the triangulation,
          * and choose some \a i from the set {0,1,2}.  Then the vertices
-         * <tt>getFaceMapping(...)[i]</tt> of the individual tetrahedra
+         * <tt>getTriangleMapping(...)[i]</tt> of the individual tetrahedra
          * are identified together, since they both become the same
          * vertex of the same face of the triangulation (assuming of
          * course that we pass the correct face number in each case to
-         * getFaceMapping()).
+         * getTriangleMapping()).
          *
          * As of Regina 4.90, if the skeletal information for the
          * triangulation has not been computed then this will be done
@@ -616,7 +616,7 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
          * @return a mapping from vertices (0,1,2) of the requested face
          * to the vertices of this tetrahedron.
          */
-        NPerm4 getFaceMapping(int face) const;
+        NPerm4 getTriangleMapping(int face) const;
         /**
          * Returns the orientation of this tetrahedron in the
          * triangulation.
@@ -743,7 +743,7 @@ inline NPerm4 NTetrahedron::getEdgeMapping(int edge) const {
     return edgeMapping[edge];
 }
 
-inline NPerm4 NTetrahedron::getFaceMapping(int face) const {
+inline NPerm4 NTetrahedron::getTriangleMapping(int face) const {
     if (! tri->calculatedSkeleton)
         tri->calculateSkeleton();
     return faceMapping[face];

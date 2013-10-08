@@ -108,7 +108,7 @@ class REGINA_API NTriangleEmbedding {
         /**
          * Returns a mapping from vertices (0,1,2) of this face to the
          * corresponding vertex numbers in getTetrahedron(), as described
-         * in NTetrahedron::getFaceMapping().
+         * in NTetrahedron::getTriangleMapping().
          *
          * @return a mapping from the vertices of this face to the
          * vertices of getTetrahedron().
@@ -156,7 +156,7 @@ class REGINA_API NTriangle : public ShareableObject, public NMarkedElement {
          *
          * This table does \e not describe the mapping from specific
          * triangulation faces into individual tetrahedra (for that,
-         * see NTetrahedron::getFaceMapping() instead).  This table
+         * see NTetrahedron::getTriangleMapping() instead).  This table
          * merely provides a neat and consistent way of listing the
          * vertices of any given tetrahedron face.
          *
@@ -438,7 +438,7 @@ inline int NTriangleEmbedding::getTriangle() const {
 }
 
 inline NPerm4 NTriangleEmbedding::getVertices() const {
-    return tetrahedron->getFaceMapping(face);
+    return tetrahedron->getTriangleMapping(face);
 }
 
 } // namespace regina

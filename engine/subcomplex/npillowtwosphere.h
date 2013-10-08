@@ -108,7 +108,7 @@ class REGINA_API NPillowTwoSphere : public ShareableObject {
          * @return a permutation describing how the face boundaries are
          * joined.
          */
-        NPerm4 getFaceMapping() const;
+        NPerm4 getTriangleMapping() const;
 
         /**
          * Determines if the two given faces together form a pillow
@@ -143,7 +143,7 @@ inline NPillowTwoSphere::NPillowTwoSphere() {
 inline NTriangle* NPillowTwoSphere::getTriangle(int index) const {
     return face[index];
 }
-inline NPerm4 NPillowTwoSphere::getFaceMapping() const {
+inline NPerm4 NPillowTwoSphere::getTriangleMapping() const {
     return faceMapping;
 }
 inline void NPillowTwoSphere::writeTextShort(std::ostream& out) const {
