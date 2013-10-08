@@ -132,6 +132,7 @@ def vitalStats(tri):
 	print "Checksum =", checksum(t.toStringLong())
 
 	print "Dehydration:", tri.dehydrate()
+	print "Isomorphism signature:", tri.isoSig()
 
 	if tri.toStringLong() != old:
 		print "ERROR: Original triangulation has changed!"

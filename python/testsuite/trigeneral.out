@@ -66,6 +66,7 @@ Checksum = 9464bf3edaf0e60e0e5b5ca024631f97
 Barycentric subdivision:
 Checksum = 9464bf3edaf0e60e0e5b5ca024631f97
 Dehydration: aaa
+Isomorphism signature: a
 
 -------------------------------
 3-sphere
@@ -140,6 +141,7 @@ Checksum = ea54199695677841d8d09fe63c2293db
 Barycentric subdivision:
 Checksum = e0164804925906d676b6730e9a826fb5
 Dehydration: baaaafr
+Isomorphism signature: bkaagj
 
 -------------------------------
 S2 x S1
@@ -218,6 +220,7 @@ Checksum = 40ca9f1375b168cb4ebd46dd51a7c29c
 Barycentric subdivision:
 Checksum = d734e4b7c67118292fb622df76daa555
 Dehydration: cabbabxff
+Isomorphism signature: cMcabbjaj
 
 -------------------------------
 RP2 x S1
@@ -301,6 +304,7 @@ Checksum = 620f4fbabce53015a3e638a8141499c7
 Barycentric subdivision:
 Checksum = dabb1c5a0387261e1a2c63959f39d429
 Dehydration: dadbcccfxfh
+Isomorphism signature: dLQbcccajqs
 
 -------------------------------
 RP3 # RP3
@@ -388,6 +392,7 @@ Checksum = 0002c628225f24640b937843963c7903
 Barycentric subdivision:
 Checksum = 0c749bee87a756282056cfba87c16467
 Dehydration: eaoabcddgrwxg
+Isomorphism signature: eLMkabcddbrrag
 
 -------------------------------
 L(8,3)
@@ -466,6 +471,7 @@ Checksum = 1b5b09643b8642fe91a3e16fe0ed2ce5
 Barycentric subdivision:
 Checksum = 01a9501578db9617cf51b4340ce9237b
 Dehydration: cabbabakn
+Isomorphism signature: cMcabbjqs
 
 -------------------------------
 Poincare homology sphere
@@ -557,6 +563,7 @@ Checksum = 755447660aded2889a506e9aef0a861c
 Barycentric subdivision:
 Checksum = 46e4583ce6543c41e2e3ee615b51582a
 Dehydration: fapaadecedenbokbo
+Isomorphism signature: fvPQcdecedekrsnrs
 
 -------------------------------
 Closed orientable hyperbolic 3-manifold
@@ -662,6 +669,7 @@ Checksum = 5c214df82829ae225a98312e4f6c6cca
 Barycentric subdivision:
 Checksum = f60fb23b935ff5ef0d534561605b71e0
 Dehydration: jphaeaacfgehggiiialhaggjbvw
+Isomorphism signature: jLvAzQQcfeghighiiuquanobwwr
 
 -------------------------------
 Closed non-orientable hyperbolic 3-manifold
@@ -775,6 +783,7 @@ Checksum = 6e31638cca83e125d11ba3cbbca478d6
 Barycentric subdivision:
 Checksum = 7a443b6136d4c93ed20d0dc7b697d40d
 Dehydration: lpdalaebciijhijjkkkknbxnxrhckje
+Isomorphism signature: lLLLALAQccegffiijkikkkknawmhvwcls
 
 -------------------------------
 Layered solid torus
@@ -856,6 +865,7 @@ Checksum = 662b84caee7f99a6cd6d1d961b94276a
 Barycentric subdivision:
 Checksum = 0f8aa5be7cb6025d061abc009e381517
 Dehydration: 
+Isomorphism signature: dHKcbcchqn
 
 -------------------------------
 Solid Klein bottle
@@ -937,6 +947,7 @@ Checksum = a10e921c5e39ebb3c3cb2b04343901fc
 Barycentric subdivision:
 Checksum = 603234877351a96b23e2c5a24d8bfcd5
 Dehydration: 
+Isomorphism signature: dHKabcjj
 
 -------------------------------
 Figure eight knot complement
@@ -1014,6 +1025,7 @@ Checksum = 4edde99de04c5dcfad10a06f5cedc739
 Barycentric subdivision:
 Checksum = bda7fc236c56fc2e81d76cbc6c6ef128
 Dehydration: cabbbbaei
+Isomorphism signature: cPcbbbiht
 
 -------------------------------
 Whitehead link complement
@@ -1099,6 +1111,7 @@ Checksum = 09d1b717f53c4b5ed2e0830ae5c0546e
 Barycentric subdivision:
 Checksum = 4de185703ab91348be749ad473353faa
 Dehydration: eahbdcddqwwwr
+Isomorphism signature: eLPkbdcddhgggb
 
 -------------------------------
 Gieseking manifold
@@ -1172,6 +1185,7 @@ Checksum = 0ddb056ffd7b88c4aa375e8b9527fc32
 Barycentric subdivision:
 Checksum = fb0071b97f7c146d71d8f3d6a3d3fa87
 Dehydration: baaaatl
+Isomorphism signature: bkaaid
 
 -------------------------------
 Cusped genus two solid torus
@@ -1279,4 +1293,5 @@ Checksum = ea04ca407e32632bb01d5a8d6294f27b
 Barycentric subdivision:
 Checksum = b23b35053b4cfebaf1ce52bd52d11e19
 Dehydration: kdpahaacdhhjjggiijojuxxjvfojj
+Isomorphism signature: kLLvMMQkccghfihhjjjdwawwgggxxt
 
