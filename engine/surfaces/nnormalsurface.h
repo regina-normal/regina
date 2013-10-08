@@ -573,7 +573,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
         /**
          * Returns the number of arcs in which this normal surface
          * intersects the given triangle in the given direction.
-         * See NNormalSurface::getFaceArcs() for further details.
+         * See NNormalSurface::getTriangleArcs() for further details.
          *
          * @param triIndex the index in the triangulation of the triangle
          * in which we are interested; this should be between 0 and
@@ -585,7 +585,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of times this normal surface intersect the
          * given triangle with the given arc type.
          */
-        virtual NLargeInteger getFaceArcs(unsigned long triIndex,
+        virtual NLargeInteger getTriangleArcs(unsigned long triIndex,
             int triVertex, NTriangulation* triang) const = 0;
 
         /**
@@ -685,7 +685,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
             /**< Is this surface connected? */
         mutable NProperty<bool> realBoundary;
             /**< Does this surface have real boundary (i.e. does it meet
-             *   any boundary faces)? */
+             *   any boundary triangles)? */
         mutable NProperty<bool> compact;
             /**< Is this surface compact (i.e. does it only contain
              *   finitely many discs)? */
@@ -902,7 +902,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * @return the number of times this normal surface intersect the
          * given triangle with the given arc type.
          */
-        NLargeInteger getFaceArcs(unsigned long triIndex,
+        NLargeInteger getTriangleArcs(unsigned long triIndex,
             int triVertex) const;
 
         /**
@@ -1074,7 +1074,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
         bool isConnected() const;
         /**
          * Determines if this surface has any real boundary, that is,
-         * whether it meets any boundary faces of the triangulation.
+         * whether it meets any boundary triangles of the triangulation.
          *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
@@ -1267,7 +1267,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          *
          * Crushing the surface will produce a number of tetrahedra,
          * triangular pillows and/or footballs.  The pillows and
-         * footballs will then be flattened to faces and edges
+         * footballs will then be flattened to triangles and edges
          * respectively (resulting in the possible
          * changes mentioned below) to produce a proper triangulation.
          *
@@ -1598,9 +1598,9 @@ inline NLargeInteger NNormalSurface::getEdgeWeight(unsigned long edgeIndex)
         const {
     return vector->getEdgeWeight(edgeIndex, triangulation);
 }
-inline NLargeInteger NNormalSurface::getFaceArcs(unsigned long triIndex,
+inline NLargeInteger NNormalSurface::getTriangleArcs(unsigned long triIndex,
         int triVertex) const {
-    return vector->getFaceArcs(triIndex, triVertex, triangulation);
+    return vector->getTriangleArcs(triIndex, triVertex, triangulation);
 }
 
 inline NDiscType NNormalSurface::getOctPosition() const {

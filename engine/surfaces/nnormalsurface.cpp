@@ -359,7 +359,7 @@ void NNormalSurface::calculateEulerCharacteristic() const {
     tot = triangulation->getNumberOfTriangles();
     for (index = 0; index < tot; index++)
         for (type = 0; type < 3; type++)
-            ans -= getFaceArcs(index, type);
+            ans -= getTriangleArcs(index, type);
 
     // Add faces.
     tot = triangulation->getNumberOfTetrahedra();

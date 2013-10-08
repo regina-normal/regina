@@ -59,7 +59,7 @@ NLargeInteger NNormalSurfaceVectorStandard::getEdgeWeight(
     return ans;
 }
 
-NLargeInteger NNormalSurfaceVectorStandard::getFaceArcs(
+NLargeInteger NNormalSurfaceVectorStandard::getTriangleArcs(
         unsigned long triIndex, int triVertex, NTriangulation* triang) const {
     // Find a tetrahedron next to the triangle in question.
     const NTriangleEmbedding& emb = triang->getTriangles()[triIndex]->
@@ -68,7 +68,7 @@ NLargeInteger NNormalSurfaceVectorStandard::getFaceArcs(
     int vertex = emb.getVertices()[triVertex];
     int backOfFace = emb.getVertices()[3];
 
-    // Add up the triangles and quads meeting that face in the required arc.
+    // Add up the triangles and quads meeting that triangle in the required arc.
     // Triangles:
     NLargeInteger ans((*this)[7 * tetIndex + vertex]);
     // Quads:
@@ -85,13 +85,13 @@ NNormalSurfaceVector* NNormalSurfaceVectorStandard::makeZeroVector(
 NMatrixInt* NNormalSurfaceVectorStandard::makeMatchingEquations(
         NTriangulation* triangulation) {
     unsigned long nCoords = 7 * triangulation->getNumberOfTetrahedra();
-    // Three equations per non-boundary face.
+    // Three equations per non-boundary triangle.
     // F_boundary + 2 F_internal = 4 T
     long nEquations = 3 * (4 * long(triangulation->getNumberOfTetrahedra()) -
         long(triangulation->getNumberOfTriangles()));
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
 
-    // Run through each internal face and add the corresponding three
+    // Run through each internal triangle and add the corresponding three
     // equations.
     unsigned row = 0;
     int i;
