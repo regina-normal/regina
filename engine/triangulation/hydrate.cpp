@@ -60,10 +60,8 @@ NTriangulation* NTriangulation::rehydrate(const std::string& dehydration) {
 }
 
 bool NTriangulation::insertRehydration(const std::string& dehydration) {
-    unsigned len = dehydration.length();
-
     // Ensure the string is non-empty.
-    if (len == 0)
+    if (dehydration.empty())
         return false;
 
     // Rewrite the string in lower case and verify that it contains only
@@ -84,7 +82,7 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
     unsigned lenGluings = nTet + 1;
 
     // Ensure the string has the expected length.
-    if (len != 1 + lenNewTet + lenGluings + lenGluings)
+    if (dehydration.length() != 1 + lenNewTet + lenGluings + lenGluings)
         return false;
 
     // Determine which face gluings should involve new tetrahedra.
