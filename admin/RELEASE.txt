@@ -10,6 +10,7 @@ Program version:
     qtui/doc/regina/manonly.docbook (&regversion;)
     qtui/doc/regina-xml/index.docbook (same as for .../regina/index.docbook)
     qtui/src/reginaabout.cpp (regReleased)
+    preconfig/*/regina-config.h (PACKAGE_* macros)
     www/index.html (last updated, current version, contents, news,
                     filenames, what's new)
     www/source.html (unpacking instructions: filename, directory)
