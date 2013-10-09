@@ -493,6 +493,11 @@
 		052FA0A2180600FB00FAE4DF /* xmlutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E80180600FB00FAE4DF /* xmlutils.h */; };
 		052FA0A3180600FB00FAE4DF /* zstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E81180600FB00FAE4DF /* zstream.cpp */; };
 		052FA0A4180600FB00FAE4DF /* zstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E82180600FB00FAE4DF /* zstream.h */; };
+		052FA0A61806047E00FAE4DF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
+		052FA0AB180604A100FAE4DF /* libgmp.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A7180604A100FAE4DF /* libgmp.10.dylib */; };
+		052FA0AC180604A100FAE4DF /* libgmpxx.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */; };
+		052FA0AD180604A100FAE4DF /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A9180604A100FAE4DF /* libiconv.2.dylib */; };
+		052FA0AE180604A100FAE4DF /* libxml2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0AA180604A100FAE4DF /* libxml2.2.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1066,6 +1071,11 @@
 		052F9E80180600FB00FAE4DF /* xmlutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlutils.h; sourceTree = "<group>"; };
 		052F9E81180600FB00FAE4DF /* zstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = zstream.cpp; sourceTree = "<group>"; };
 		052F9E82180600FB00FAE4DF /* zstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zstream.h; sourceTree = "<group>"; };
+		052FA0A51806047E00FAE4DF /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		052FA0A7180604A100FAE4DF /* libgmp.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgmp.10.dylib; path = /sw/lib/gmp5/libgmp.10.dylib; sourceTree = "<absolute>"; };
+		052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgmpxx.4.dylib; path = /sw/lib/gmp5/libgmpxx.4.dylib; sourceTree = "<absolute>"; };
+		052FA0A9180604A100FAE4DF /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = /sw/lib/libiconv.2.dylib; sourceTree = "<absolute>"; };
+		052FA0AA180604A100FAE4DF /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.2.dylib; path = /sw/lib/libxml2.2.dylib; sourceTree = "<absolute>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -1074,6 +1084,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				052FA0AB180604A100FAE4DF /* libgmp.10.dylib in Frameworks */,
+				052FA0AC180604A100FAE4DF /* libgmpxx.4.dylib in Frameworks */,
+				052FA0AD180604A100FAE4DF /* libiconv.2.dylib in Frameworks */,
+				052FA0AE180604A100FAE4DF /* libxml2.2.dylib in Frameworks */,
+				052FA0A61806047E00FAE4DF /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1841,11 +1856,24 @@
 			path = utilities;
 			sourceTree = "<group>";
 		};
+		052FA0AF180604A900FAE4DF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				052FA0A7180604A100FAE4DF /* libgmp.10.dylib */,
+				052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */,
+				052FA0A9180604A100FAE4DF /* libiconv.2.dylib */,
+				052FA0AA180604A100FAE4DF /* libxml2.2.dylib */,
+				052FA0A51806047E00FAE4DF /* libz.dylib */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		0575E6501805F36D009E3FC4 = {
 			isa = PBXGroup;
 			children = (
 				052F9BFD180600FA00FAE4DF /* engine */,
 				0575E65A1805F36D009E3FC4 /* Products */,
+				052FA0AF180604A900FAE4DF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2441,6 +2469,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/sw/include,
+					/sw/include/libxml2,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -2473,6 +2509,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/sw/include,
+					/sw/include/libxml2,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
 			};
@@ -2482,6 +2526,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/sw/lib/gmp5,
+					/sw/lib,
+				);
 				PRODUCT_NAME = "regina-engine";
 			};
 			name = Debug;
@@ -2490,6 +2539,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/sw/lib/gmp5,
+					/sw/lib,
+				);
 				PRODUCT_NAME = "regina-engine";
 			};
 			name = Release;
