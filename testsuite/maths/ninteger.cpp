@@ -1114,7 +1114,6 @@ class NIntegerTest : public CppUnit::TestFixture {
             regina::NNativeInteger<16> neg127 = 1;
             regina::NNativeInteger<16> maxVal(
                 ~(regina::IntOfSize<16>::type(1) << 127));
-            int i;
             pos62 *= 1073741824; // 2^30
             pos62 *= 1073741824; // 2^30
             pos62 *= 4;
