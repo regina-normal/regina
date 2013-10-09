@@ -211,7 +211,7 @@ inline NHilbertCD::VecSpec<BitmaskType>::VecSpec(size_t dim) :
 
 // Template definitions
 
-#include "enumerate/nhilbertcd.tcc"
+#include "enumerate/nhilbertcd-impl.h"
 
 #endif
 

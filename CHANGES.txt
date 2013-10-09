@@ -112,6 +112,10 @@ Version 4.95  [ (under development) ]
             - Moved from triangulation/ to generic/.  The old header locations
               are now deprecated.  They have been kept for backward
               compatibility, but simply include the new headers instead.
+        Headers *.tcc:
+            - All *.tcc headers have been renamed as *-impl.h, to play
+              better with development IDEs.  The old header names are now
+              deprecated but have likewise been kept for backward compatibility.
 
 Version 4.94  [ 24 September, 2013 ]
 

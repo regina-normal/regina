@@ -36,7 +36,7 @@
 #include <sstream>
 #include <vector>
 #include "census/nfacepairing.h"
-#include "census/ngenericfacetpairing.tcc"
+#include "census/ngenericfacetpairing-impl.h"
 #include "triangulation/nfacepair.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
@@ -45,7 +45,7 @@
 
 namespace regina {
 
-// Instatiate all templates from the .tcc file.
+// Instantiate all templates from the -impl.h file.
 template NGenericFacetPairing<3>::NGenericFacetPairing(
     const NGenericFacetPairing<3>&);
 template NGenericFacetPairing<3>::NGenericFacetPairing(const NTriangulation&);
