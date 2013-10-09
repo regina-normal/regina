@@ -210,10 +210,20 @@ CHECK_CXX_SOURCE_COMPILES("
   LONG_LONG_FOUND )
 
 CHECK_CXX_SOURCE_COMPILES("
+  #include <stdint.h>
+  int128_t x;
+  uint128_t y;
+  int main() { return 0; }"
+  INT128_T_FOUND )
+
+CHECK_CXX_SOURCE_COMPILES("
+  #include <stdint.h>
   __int128_t x;
   __uint128_t y;
   int main() { return 0; }"
-  INT128_FOUND )
+  __INT128_T_FOUND )
+
+SET(INT128_AVAILABLE (INT128_T_FOUND OR __INT128_T_FOUND))
 
 IF(LONG_LONG_FOUND)
   CHECK_CXX_SOURCE_COMPILES("
