@@ -75,7 +75,7 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(constructAssignCopyInfinity);
     CPPUNIT_TEST(constructSpecial<NInteger>);
     CPPUNIT_TEST(constructSpecial<NLargeInteger>);
-#ifdef INT128_FOUND
+#ifdef INT128_AVAILABLE
     CPPUNIT_TEST(constructNative128<NInteger>);
     CPPUNIT_TEST(constructNative128<NLargeInteger>);
 #endif
@@ -1054,7 +1054,7 @@ class NIntegerTest : public CppUnit::TestFixture {
             }
         }
 
-#ifdef INT128_FOUND
+#ifdef INT128_AVAILABLE
         template <typename IntType>
         void test128Value(const regina::NNativeInteger<16>& x,
                 const regina::NNativeInteger<16>& y) {
@@ -1112,7 +1112,8 @@ class NIntegerTest : public CppUnit::TestFixture {
             regina::NNativeInteger<16> neg126 = 1;
             regina::NNativeInteger<16> pos127 = 1;
             regina::NNativeInteger<16> neg127 = 1;
-            regina::NNativeInteger<16> maxVal(~(__int128_t(1) << 127));
+            regina::NNativeInteger<16> maxVal(
+                ~(regina::IntOfSize<16>::type(1) << 127));
             int i;
             pos62 *= 1073741824; // 2^30
             pos62 *= 1073741824; // 2^30

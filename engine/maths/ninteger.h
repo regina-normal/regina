@@ -3550,7 +3550,7 @@ inline std::ostream& operator << (std::ostream& out,
     return out << i.data_;
 }
 
-#ifdef INT128_FOUND
+#ifdef INT128_AVAILABLE
 template <>
 inline std::ostream& operator << (std::ostream& out,
         const NNativeInteger<16>& i) {

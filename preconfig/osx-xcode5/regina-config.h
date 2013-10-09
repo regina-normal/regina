@@ -1,8 +1,15 @@
 /* Define if both signed and unsigned long long types are available. */
 #define LONG_LONG_FOUND
 
+/* Define if both int128_t and uint128_t types are available. */
+/* #undef INT128_T_FOUND */
+
 /* Define if both __int128_t and __uint128_t types are available. */
-#define INT128_FOUND
+#define __INT128_T_FOUND
+
+/* Define if native 128-bit arithmetic is available through either
+   of the types defined above. */
+#define INT128_AVAILABLE
 
 /* Define if 64-bit integer literals are available with no suffix */
 #define NUMERIC_64_FOUND
