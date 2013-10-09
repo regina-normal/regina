@@ -37,14 +37,14 @@
 #define PACKAGE_BUGREPORT "regina-user@lists.sourceforge.net"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Regina 4.95"
+#define PACKAGE_STRING "Regina 5.0"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "4.95"
+#define PACKAGE_VERSION "5.0"
 
 /* Major version number of the package. */
-#define PACKAGE_VERSION_MAJOR 4
+#define PACKAGE_VERSION_MAJOR 5
 
 /* Minor version number of the package. */
-#define PACKAGE_VERSION_MINOR 95
+#define PACKAGE_VERSION_MINOR 0
 
