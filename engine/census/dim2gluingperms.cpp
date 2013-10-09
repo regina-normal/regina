@@ -33,12 +33,12 @@
 /* end stub */
 
 #include "census/dim2gluingperms.h"
-#include "census/ngenericgluingperms.tcc"
+#include "census/ngenericgluingperms-impl.h"
 #include "dim2/dim2triangulation.h"
 
 namespace regina {
 
-// Instantiate all templates from the .tcc file.
+// Instantiate all templates from the -impl.h file.
 template NGenericGluingPerms<2>::NGenericGluingPerms(
         const NGenericGluingPerms<2>&);
 template NGenericGluingPerms<2>::NGenericGluingPerms(std::istream&);

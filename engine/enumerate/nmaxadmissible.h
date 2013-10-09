@@ -134,7 +134,7 @@ class NMaxAdmissible {
 
 // Template definitions
 
-#include "enumerate/nmaxadmissible.tcc"
+#include "enumerate/nmaxadmissible-impl.h"
 
 #endif
 

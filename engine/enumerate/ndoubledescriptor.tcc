@@ -32,7 +32,7 @@
 
 /* end stub */
 
-#warning This header is deprecated; please use ndoubledescription.tcc instead.
+#warning This header is deprecated; please use ndoubledescription-impl.h instead.
 
 // Include the outer header ndoubledescription.h so that we get the
 // backward-compatibility typedefs.
