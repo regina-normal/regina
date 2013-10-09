@@ -32,7 +32,7 @@
 
 /* end stub */
 
-#include "surfaces/normalspec.tcc"
+#include "surfaces/normalspec-impl.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "surfaces/nsquad.h"

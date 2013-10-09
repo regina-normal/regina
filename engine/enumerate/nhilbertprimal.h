@@ -204,7 +204,7 @@ inline NHilbertPrimal::NHilbertPrimal() {
 
 // Template definitions
 
-#include "enumerate/nhilbertprimal.tcc"
+#include "enumerate/nhilbertprimal-impl.h"
 
 #endif
 

@@ -1166,7 +1166,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * write generic template code that works with both normal
          * \e and almost normal surfaces.
          *
-         * The full definition of this class is in the file normalspec.tcc .
+         * The full definition of this class is in the file normalspec-impl.h .
          */
         struct NormalSpec;
 
@@ -1178,7 +1178,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * write generic template code that works with both normal
          * \e and almost normal surfaces.
          *
-         * The full definition of this class is in the file normalspec.tcc .
+         * The full definition of this class is in the file normalspec-impl.h .
          */
         struct AlmostNormalSpec;
 
