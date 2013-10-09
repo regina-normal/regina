@@ -500,6 +500,18 @@
 		052FA0AE180604A100FAE4DF /* libxml2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0AA180604A100FAE4DF /* libxml2.2.dylib */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		052FA0BF1806072900FAE4DF /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		052F9BFF180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -1076,10 +1088,18 @@
 		052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgmpxx.4.dylib; path = /sw/lib/gmp5/libgmpxx.4.dylib; sourceTree = "<absolute>"; };
 		052FA0A9180604A100FAE4DF /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = /sw/lib/libiconv.2.dylib; sourceTree = "<absolute>"; };
 		052FA0AA180604A100FAE4DF /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.2.dylib; path = /sw/lib/libxml2.2.dylib; sourceTree = "<absolute>"; };
+		052FA0C11806072900FAE4DF /* regtestsuite */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = regtestsuite; sourceTree = BUILT_PRODUCTS_DIR; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		052FA0BE1806072900FAE4DF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0575E6561805F36D009E3FC4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1881,6 +1901,7 @@
 			isa = PBXGroup;
 			children = (
 				0575E6591805F36D009E3FC4 /* libregina-engine.dylib */,
+				052FA0C11806072900FAE4DF /* regtestsuite */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2148,6 +2169,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		052FA0C01806072900FAE4DF /* Test Suite */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 052FA0C91806072A00FAE4DF /* Build configuration list for PBXNativeTarget "Test Suite" */;
+			buildPhases = (
+				052FA0BD1806072900FAE4DF /* Sources */,
+				052FA0BE1806072900FAE4DF /* Frameworks */,
+				052FA0BF1806072900FAE4DF /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Test Suite";
+			productName = "Test Suite";
+			productReference = 052FA0C11806072900FAE4DF /* regtestsuite */;
+			productType = "com.apple.product-type.tool";
+		};
 		0575E6581805F36D009E3FC4 /* Engine */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0575E65D1805F36D009E3FC4 /* Build configuration list for PBXNativeTarget "Engine" */;
@@ -2187,11 +2225,19 @@
 			projectRoot = "";
 			targets = (
 				0575E6581805F36D009E3FC4 /* Engine */,
+				052FA0C01806072900FAE4DF /* Test Suite */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		052FA0BD1806072900FAE4DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0575E6551805F36D009E3FC4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2438,6 +2484,24 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		052FA0C71806072900FAE4DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				PRODUCT_NAME = regtestsuite;
+			};
+			name = Debug;
+		};
+		052FA0C81806072900FAE4DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = regtestsuite;
+			};
+			name = Release;
+		};
 		0575E65B1805F36D009E3FC4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2557,6 +2621,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		052FA0C91806072A00FAE4DF /* Build configuration list for PBXNativeTarget "Test Suite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				052FA0C71806072900FAE4DF /* Debug */,
+				052FA0C81806072900FAE4DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		0575E6541805F36D009E3FC4 /* Build configuration list for PBXProject "Regina" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
