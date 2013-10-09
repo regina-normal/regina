@@ -34,11 +34,11 @@
 
 #include "dim4/dim4isomorphism.h"
 #include "dim4/dim4triangulation.h"
-#include "generic/ngenericisomorphism.tcc"
+#include "generic/ngenericisomorphism-impl.h"
 
 namespace regina {
 
-// Instatiate all templates from the .tcc file.
+// Instatiate all templates from the -impl.h file.
 template void NGenericIsomorphism<4>::writeTextShort(std::ostream&) const;
 template void NGenericIsomorphism<4>::writeTextLong(std::ostream&) const;
 template bool NGenericIsomorphism<4>::isIdentity() const;
