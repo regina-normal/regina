@@ -442,7 +442,7 @@ inline NDoubleDescription::NDoubleDescription() {
 
 // Template definitions
 
-#include "enumerate/ndoubledescription.tcc"
+#include "enumerate/ndoubledescription-impl.h"
 
 #endif
 
