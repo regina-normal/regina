@@ -526,6 +526,10 @@
 		052FA11C1806088B00FAE4DF /* ntriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0FC1806088B00FAE4DF /* ntriangulation.cpp */; };
 		052FA11D1806088B00FAE4DF /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0FF1806088B00FAE4DF /* base64.cpp */; };
 		052FA11E1806088B00FAE4DF /* nbitmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1011806088B00FAE4DF /* nbitmask.cpp */; };
+		052FA11F18060A4C00FAE4DF /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		052FA12018060A6C00FAE4DF /* libgmp.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A7180604A100FAE4DF /* libgmp.10.dylib */; };
+		052FA12118060A6C00FAE4DF /* libgmpxx.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */; };
+		052FA12318060AA700FAE4DF /* libcppunit-1.12.1.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA12218060AA700FAE4DF /* libcppunit-1.12.1.0.0.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1165,6 +1169,7 @@
 		052FA1001806088B00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052FA1011806088B00FAE4DF /* nbitmask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nbitmask.cpp; sourceTree = "<group>"; };
 		052FA1021806088B00FAE4DF /* testutilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testutilities.h; sourceTree = "<group>"; };
+		052FA12218060AA700FAE4DF /* libcppunit-1.12.1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libcppunit-1.12.1.0.0.dylib"; path = "../../../../sw/lib/libcppunit-1.12.1.0.0.dylib"; sourceTree = "<group>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -1173,6 +1178,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				052FA12318060AA700FAE4DF /* libcppunit-1.12.1.0.0.dylib in Frameworks */,
+				052FA12018060A6C00FAE4DF /* libgmp.10.dylib in Frameworks */,
+				052FA12118060A6C00FAE4DF /* libgmpxx.4.dylib in Frameworks */,
+				052FA11F18060A4C00FAE4DF /* libregina-engine.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1955,6 +1964,7 @@
 		052FA0AF180604A900FAE4DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				052FA12218060AA700FAE4DF /* libcppunit-1.12.1.0.0.dylib */,
 				052FA0A7180604A100FAE4DF /* libgmp.10.dylib */,
 				052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */,
 				052FA0A9180604A100FAE4DF /* libiconv.2.dylib */,
@@ -2715,6 +2725,20 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/sw/include,
+					/sw/include/libxml2,
+					"\"$(SRCROOT)\"",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/sw/lib/gmp5,
+					/sw/lib,
+				);
 				PRODUCT_NAME = regtestsuite;
 			};
 			name = Debug;
@@ -2722,6 +2746,20 @@
 		052FA0C81806072900FAE4DF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/sw/include,
+					/sw/include/libxml2,
+					"\"$(SRCROOT)\"",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/sw/lib/gmp5,
+					/sw/lib,
+				);
 				PRODUCT_NAME = regtestsuite;
 			};
 			name = Release;
