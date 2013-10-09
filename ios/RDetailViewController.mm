@@ -32,6 +32,10 @@
 
 #import "RDetailViewController.h"
 
+// TODO: Proof of concept that the engine runs.  Delete this eventually.
+#import "triangulation/nexampletriangulation.h"
+#import "triangulation/ntriangulation.h"
+
 @interface RDetailViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
 - (void)configureView;
@@ -69,6 +73,13 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     [self configureView];
+
+    // TODO: Proof of concept that the engine runs.  Delete this eventually.
+    regina::NTriangulation* t = regina::NExampleTriangulation::weberSeifert();
+    NSString *h1 = [NSString stringWithUTF8String:t->getHomologyH1().toString().c_str()];
+    [self.detailDescriptionLabel setText:[NSString stringWithFormat:
+                                          @"Weber-Seifert: H1 = %@", h1]];
+    delete t;
 }
 
 - (void)didReceiveMemoryWarning
