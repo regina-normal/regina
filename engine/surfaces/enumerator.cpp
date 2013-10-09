@@ -51,11 +51,11 @@
 
 namespace regina {
 
-#ifdef INT128_FOUND
+#ifdef INT128_AVAILABLE
 /**
  * The largest possible signed 128-bit integer,
  */
-NInteger maxSigned128(NNativeInteger<16>(~(__int128_t(1) << 127)));
+NInteger maxSigned128(NNativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
 #endif
 
 NNormalSurfaceList* NNormalSurfaceList::enumerate(
@@ -376,7 +376,7 @@ void NNormalSurfaceList::Enumerator::fillVertexTree() {
     if (worst <= LONG_MAX) {
         // std::cerr << "Using NNativeLong." << std::endl;
         fillVertexTreeWith<Flavour, NNativeLong>();
-#ifdef INT128_FOUND
+#ifdef INT128_AVAILABLE
     } else if (worst <= maxSigned128) {
         // std::cerr << "Using NNativeInteger<16>." << std::endl;
         fillVertexTreeWith<Flavour, NNativeInteger<16> >();
