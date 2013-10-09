@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0575E6581805F36D009E3FC4"
-               BuildableName = "libRegina.dylib"
+               BuildableName = "libregina-engine.dylib"
                BlueprintName = "Engine"
                ReferencedContainer = "container:Regina.xcodeproj">
             </BuildableReference>
