@@ -32,7 +32,7 @@
 
 /* end stub */
 
-#include "enumerate/ntreelp.tcc"
+#include "enumerate/ntreelp-impl.h"
 
 namespace regina {
 

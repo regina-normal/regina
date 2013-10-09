@@ -32,52 +32,11 @@
 
 /* end stub */
 
-/* To be included from stringutils.h. */
+/*! \file utilities/stringutils.tcc
+ *  \brief Deprecated header.
+ */
 
-#include <cctype>
-#include <string>
-#include "regina-core.h"
-#include "maths/ninteger.h"
+#warning This header is deprecated; please use stringutils-impl.h instead.
 
-namespace regina {
-
-template <bool supportInfinity>
-bool valueOf(const std::string& str, NIntegerBase<supportInfinity>& dest) {
-    bool valid;
-    dest = NIntegerBase<supportInfinity>(str.c_str(), 10, &valid);
-    return valid;
-}
-
-template <class OutputIterator>
-unsigned basicTokenise(OutputIterator results, const std::string& str) {
-    std::string::size_type len = str.length();
-    std::string::size_type pos = 0;
-
-    // Skip initial whitespace.
-    while (pos < len && isspace(str[pos]))
-        pos++;
-
-    if (pos == len)
-        return 0;
-
-    // Extract each token.
-    std::string::size_type total = 0;
-    std::string::size_type tokStart;
-    while (pos < len) {
-        // Find the characters making up this token.
-        tokStart = pos;
-        while (pos < len && ! isspace(str[pos]))
-            pos++;
-        *results++ = str.substr(tokStart, pos - tokStart);
-        total++;
-
-        // Skip the subsequent whitespace.
-        while (pos < len && isspace(str[pos]))
-            pos++;
-    }
-
-    return static_cast<unsigned>(total);
-}
-
-} // namespace regina
+#include "utilities/stringutils-impl.h"
 

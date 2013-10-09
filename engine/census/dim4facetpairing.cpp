@@ -33,13 +33,13 @@
 /* end stub */
 
 #include "census/dim4facetpairing.h"
-#include "census/ngenericfacetpairing.tcc"
+#include "census/ngenericfacetpairing-impl.h"
 #include "dim4/dim4pentachoron.h"
 #include "dim4/dim4triangulation.h"
 
 namespace regina {
 
-// Instatiate all templates from the .tcc file.
+// Instatiate all templates from the -impl.h file.
 template NGenericFacetPairing<4>::NGenericFacetPairing(
     const NGenericFacetPairing<4>&);
 template NGenericFacetPairing<4>::NGenericFacetPairing(
