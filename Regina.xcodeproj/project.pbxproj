@@ -86,36 +86,25 @@
 		052F9ECF180600FB00FAE4DF /* nmaxadmissible-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C64180600FA00FAE4DF /* nmaxadmissible-impl.h */; };
 		052F9ED0180600FB00FAE4DF /* nmaxadmissible.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C65180600FA00FAE4DF /* nmaxadmissible.h */; };
 		052F9ED1180600FB00FAE4DF /* nmaxadmissible.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C66180600FA00FAE4DF /* nmaxadmissible.tcc */; };
-		052F9ED2180600FB00FAE4DF /* cone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C69180600FA00FAE4DF /* cone.cpp */; };
 		052F9ED3180600FB00FAE4DF /* cone.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C6A180600FA00FAE4DF /* cone.h */; };
-		052F9ED4180600FB00FAE4DF /* cone_dual_mode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C6B180600FA00FAE4DF /* cone_dual_mode.cpp */; };
 		052F9ED5180600FB00FAE4DF /* cone_dual_mode.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C6C180600FA00FAE4DF /* cone_dual_mode.h */; };
 		052F9ED6180600FB00FAE4DF /* cone_property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C6D180600FA00FAE4DF /* cone_property.cpp */; };
 		052F9ED7180600FB00FAE4DF /* cone_property.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C6E180600FA00FAE4DF /* cone_property.h */; };
-		052F9ED8180600FB00FAE4DF /* full_cone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C70180600FA00FAE4DF /* full_cone.cpp */; };
 		052F9ED9180600FB00FAE4DF /* full_cone.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C71180600FA00FAE4DF /* full_cone.h */; };
 		052F9EDA180600FB00FAE4DF /* general.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C72180600FA00FAE4DF /* general.h */; };
 		052F9EDB180600FB00FAE4DF /* HilbertSeries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C73180600FA00FAE4DF /* HilbertSeries.cpp */; };
 		052F9EDC180600FB00FAE4DF /* HilbertSeries.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C74180600FA00FAE4DF /* HilbertSeries.h */; };
-		052F9EDD180600FB00FAE4DF /* integer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C75180600FA00FAE4DF /* integer.cpp */; };
 		052F9EDE180600FB00FAE4DF /* integer.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C76180600FA00FAE4DF /* integer.h */; };
 		052F9EDF180600FB00FAE4DF /* libnormaliz-templated.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C77180600FA00FAE4DF /* libnormaliz-templated.cpp */; };
-		052F9EE0180600FB00FAE4DF /* libnormaliz.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C78180600FA00FAE4DF /* libnormaliz.cpp */; };
 		052F9EE1180600FB00FAE4DF /* libnormaliz.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C79180600FA00FAE4DF /* libnormaliz.h */; };
-		052F9EE2180600FB00FAE4DF /* lineare_transformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C7A180600FA00FAE4DF /* lineare_transformation.cpp */; };
 		052F9EE3180600FB00FAE4DF /* lineare_transformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C7B180600FA00FAE4DF /* lineare_transformation.h */; };
-		052F9EE4180600FB00FAE4DF /* list_operations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C7C180600FA00FAE4DF /* list_operations.cpp */; };
 		052F9EE5180600FB00FAE4DF /* list_operations.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C7D180600FA00FAE4DF /* list_operations.h */; };
 		052F9EE6180600FB00FAE4DF /* map_operations.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C7E180600FA00FAE4DF /* map_operations.h */; };
-		052F9EE7180600FB00FAE4DF /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C7F180600FA00FAE4DF /* matrix.cpp */; };
 		052F9EE8180600FB00FAE4DF /* matrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C80180600FA00FAE4DF /* matrix.h */; };
 		052F9EE9180600FB00FAE4DF /* my_omp.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C81180600FA00FAE4DF /* my_omp.h */; };
 		052F9EEA180600FB00FAE4DF /* normaliz_exception.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C82180600FA00FAE4DF /* normaliz_exception.h */; };
-		052F9EEB180600FB00FAE4DF /* simplex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C85180600FA00FAE4DF /* simplex.cpp */; };
 		052F9EEC180600FB00FAE4DF /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C86180600FA00FAE4DF /* simplex.h */; };
-		052F9EED180600FB00FAE4DF /* sublattice_representation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C87180600FA00FAE4DF /* sublattice_representation.cpp */; };
 		052F9EEE180600FB00FAE4DF /* sublattice_representation.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C88180600FA00FAE4DF /* sublattice_representation.h */; };
-		052F9EF1180600FB00FAE4DF /* vector_operations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C8C180600FA00FAE4DF /* vector_operations.cpp */; };
 		052F9EF2180600FB00FAE4DF /* vector_operations.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C8D180600FA00FAE4DF /* vector_operations.h */; };
 		052F9EF3180600FB00FAE4DF /* ntreeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C8E180600FA00FAE4DF /* ntreeconstraint.cpp */; };
 		052F9EF4180600FB00FAE4DF /* ntreeconstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C8F180600FA00FAE4DF /* ntreeconstraint.h */; };
@@ -2187,8 +2176,6 @@
 				052F9F23180600FB00FAE4DF /* ngraphtriple.cpp in Sources */,
 				052FA053180600FB00FAE4DF /* spheres.cpp in Sources */,
 				052F9FD8180600FB00FAE4DF /* update_shapes.c in Sources */,
-				052F9ED2180600FB00FAE4DF /* cone.cpp in Sources */,
-				052F9EE4180600FB00FAE4DF /* list_operations.cpp in Sources */,
 				052F9F00180600FB00FAE4DF /* nfileinfo.cpp in Sources */,
 				052FA034180600FB00FAE4DF /* normalspec.tcc in Sources */,
 				052F9ECE180600FB00FAE4DF /* nhilbertprimal.tcc in Sources */,
@@ -2196,7 +2183,6 @@
 				052FA01C180600FB00FAE4DF /* ntrivialtri.cpp in Sources */,
 				052F9F6A180600FB00FAE4DF /* shareableobject.cpp in Sources */,
 				052F9F2C180600FB00FAE4DF /* nsfs.cpp in Sources */,
-				052F9EDD180600FB00FAE4DF /* integer.cpp in Sources */,
 				052F9FF0180600FB00FAE4DF /* nl31pillow.cpp in Sources */,
 				052F9F97180600FB00FAE4DF /* shortest_cusp_basis.c in Sources */,
 				052F9F46180600FB00FAE4DF /* nperm5.cpp in Sources */,
@@ -2207,7 +2193,6 @@
 				052FA012180600FB00FAE4DF /* nsnappedball.cpp in Sources */,
 				052F9EA7180600FB00FAE4DF /* ngluingperms.cpp in Sources */,
 				052F9F25180600FB00FAE4DF /* nhandlebody.cpp in Sources */,
-				052F9ED8180600FB00FAE4DF /* full_cone.cpp in Sources */,
 				052FA028180600FB00FAE4DF /* links.cpp in Sources */,
 				052F9F37180600FB00FAE4DF /* approx.cpp in Sources */,
 				052F9F52180600FB00FAE4DF /* seedprimes.cpp in Sources */,
@@ -2216,7 +2201,6 @@
 				052FA06C180600FB00FAE4DF /* nisomorphism.cpp in Sources */,
 				052FA00C180600FB00FAE4DF /* nsatblocktypes.cpp in Sources */,
 				052F9F1F180600FB00FAE4DF /* ngraphloop.cpp in Sources */,
-				052F9EF1180600FB00FAE4DF /* vector_operations.cpp in Sources */,
 				052FA006180600FB00FAE4DF /* nsatannulus.cpp in Sources */,
 				052F9E91180600FB00FAE4DF /* nxmlanglestructreader.cpp in Sources */,
 				052FA07B180600FB00FAE4DF /* reorder.cpp in Sources */,
@@ -2229,7 +2213,6 @@
 				052FA02F180600FB00FAE4DF /* nnormalsurfacelist.cpp in Sources */,
 				052F9E8B180600FB00FAE4DF /* nxmlalgebrareader.cpp in Sources */,
 				052F9F21180600FB00FAE4DF /* ngraphpair.cpp in Sources */,
-				052F9EE0180600FB00FAE4DF /* libnormaliz.cpp in Sources */,
 				052F9F39180600FB00FAE4DF /* matrixops.cpp in Sources */,
 				052FA021180600FB00FAE4DF /* crushandcut.cpp in Sources */,
 				052F9F76180600FB00FAE4DF /* core_geodesics.c in Sources */,
@@ -2237,7 +2220,6 @@
 				052F9E9D180600FB00FAE4DF /* ncensus.cpp in Sources */,
 				052F9F4E180600FB00FAE4DF /* numbertheory.cpp in Sources */,
 				052F9F30180600FB00FAE4DF /* nsimplesurfacebundle.cpp in Sources */,
-				052F9EEB180600FB00FAE4DF /* simplex.cpp in Sources */,
 				052F9F54180600FB00FAE4DF /* npacket.cpp in Sources */,
 				052FA0A0180600FB00FAE4DF /* stringutils.tcc in Sources */,
 				052FA07F180600FB00FAE4DF /* subdivide.cpp in Sources */,
@@ -2331,7 +2313,6 @@
 				052F9EA9180600FB00FAE4DF /* ngluingpermsearcher.cpp in Sources */,
 				052F9F59180600FB00FAE4DF /* npdf.cpp in Sources */,
 				052FA04B180600FB00FAE4DF /* nxmlsurfacereader.cpp in Sources */,
-				052F9EE7180600FB00FAE4DF /* matrix.cpp in Sources */,
 				052FA065180600FB00FAE4DF /* nfacepair.cpp in Sources */,
 				052F9F5D180600FB00FAE4DF /* ntext.cpp in Sources */,
 				052F9FF8180600FB00FAE4DF /* nlayeredloop.cpp in Sources */,
@@ -2345,7 +2326,6 @@
 				052F9F72180600FB00FAE4DF /* chern_simons.c in Sources */,
 				052F9F3F180600FB00FAE4DF /* nmatrix2.cpp in Sources */,
 				052F9FEA180600FB00FAE4DF /* nblockedsfsloop.cpp in Sources */,
-				052F9EED180600FB00FAE4DF /* sublattice_representation.cpp in Sources */,
 				052FA027180600FB00FAE4DF /* flavours.cpp in Sources */,
 				052F9FA2180600FB00FAE4DF /* tidy_peripheral_curves.c in Sources */,
 				052F9F44180600FB00FAE4DF /* nperm4.cpp in Sources */,
@@ -2356,7 +2336,6 @@
 				052F9E97180600FB00FAE4DF /* dim2edgepairing.cpp in Sources */,
 				052F9F74180600FB00FAE4DF /* close_cusps.c in Sources */,
 				052FA059180600FB00FAE4DF /* homology.cpp in Sources */,
-				052F9ED4180600FB00FAE4DF /* cone_dual_mode.cpp in Sources */,
 				052F9E83180600FB00FAE4DF /* nabeliangroup.cpp in Sources */,
 				052F9E8F180600FB00FAE4DF /* nanglestructurelist.cpp in Sources */,
 				052F9FDF180600FB00FAE4DF /* uimessages.cpp in Sources */,
@@ -2410,7 +2389,6 @@
 				052F9ED1180600FB00FAE4DF /* nmaxadmissible.tcc in Sources */,
 				052F9ECB180600FB00FAE4DF /* nhilbertdual.tcc in Sources */,
 				052FA04F180600FB00FAE4DF /* sfcombination.cpp in Sources */,
-				052F9EE2180600FB00FAE4DF /* lineare_transformation.cpp in Sources */,
 				052F9EC8180600FB00FAE4DF /* nhilbertcd.tcc in Sources */,
 				052FA07D180600FB00FAE4DF /* simplifyglobal.cpp in Sources */,
 				052FA069180600FB00FAE4DF /* ngenericisomorphism.tcc in Sources */,
