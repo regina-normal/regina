@@ -537,7 +537,7 @@
 		052FA13A1806103000FAE4DF /* RAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1391806103000FAE4DF /* RAppDelegate.m */; };
 		052FA13D1806103000FAE4DF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 052FA13B1806103000FAE4DF /* Main.storyboard */; };
 		052FA1401806103000FAE4DF /* RMasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 052FA13F1806103000FAE4DF /* RMasterViewController.m */; };
-		052FA1431806103000FAE4DF /* RDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1421806103000FAE4DF /* RDetailViewController.m */; };
+		052FA1431806103000FAE4DF /* RDetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1421806103000FAE4DF /* RDetailViewController.mm */; };
 		052FA1451806103000FAE4DF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 052FA1441806103000FAE4DF /* Images.xcassets */; };
 		052FA15F1806129B00FAE4DF /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */; };
 		052FA1601806129B00FAE4DF /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C02180600FA00FAE4DF /* ngrouppresentation.cpp */; };
@@ -1422,7 +1422,7 @@
 		052FA13E1806103000FAE4DF /* RMasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMasterViewController.h; sourceTree = "<group>"; };
 		052FA13F1806103000FAE4DF /* RMasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RMasterViewController.m; sourceTree = "<group>"; };
 		052FA1411806103000FAE4DF /* RDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RDetailViewController.h; sourceTree = "<group>"; };
-		052FA1421806103000FAE4DF /* RDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RDetailViewController.m; sourceTree = "<group>"; };
+		052FA1421806103000FAE4DF /* RDetailViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = RDetailViewController.mm; sourceTree = "<group>"; };
 		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		052FA23E180613A900FAE4DF /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../../Library/Frameworks/boost.framework; sourceTree = "<group>"; };
 		052FA23F180613A900FAE4DF /* libgmp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmp.framework; path = ../../Library/Frameworks/libgmp.framework; sourceTree = "<group>"; };
@@ -2388,7 +2388,7 @@
 				052FA13E1806103000FAE4DF /* RMasterViewController.h */,
 				052FA13F1806103000FAE4DF /* RMasterViewController.m */,
 				052FA1411806103000FAE4DF /* RDetailViewController.h */,
-				052FA1421806103000FAE4DF /* RDetailViewController.m */,
+				052FA1421806103000FAE4DF /* RDetailViewController.mm */,
 				052FA1441806103000FAE4DF /* Images.xcassets */,
 				052FA1301806102F00FAE4DF /* Supporting Files */,
 			);
@@ -2912,7 +2912,7 @@
 				052FA234180612DD00FAE4DF /* solve_equations.c in Sources */,
 				052FA1AF1806129B00FAE4DF /* shareableobject.cpp in Sources */,
 				052FA1621806129B00FAE4DF /* nmarkedabeliangroup.cpp in Sources */,
-				052FA1431806103000FAE4DF /* RDetailViewController.m in Sources */,
+				052FA1431806103000FAE4DF /* RDetailViewController.mm in Sources */,
 				052FA1D91806129B00FAE4DF /* ndisc.cpp in Sources */,
 				052FA1A91806129B00FAE4DF /* npdf.cpp in Sources */,
 				052FA22D180612DD00FAE4DF /* o31_matrices.c in Sources */,
