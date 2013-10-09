@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		0575E6591805F36D009E3FC4 /* libRegina.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libRegina.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,7 +31,7 @@
 		0575E65A1805F36D009E3FC4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0575E6591805F36D009E3FC4 /* libRegina.dylib */,
+				0575E6591805F36D009E3FC4 /* libregina-engine.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -49,9 +49,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		0575E6581805F36D009E3FC4 /* Regina */ = {
+		0575E6581805F36D009E3FC4 /* Engine */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0575E65D1805F36D009E3FC4 /* Build configuration list for PBXNativeTarget "Regina" */;
+			buildConfigurationList = 0575E65D1805F36D009E3FC4 /* Build configuration list for PBXNativeTarget "Engine" */;
 			buildPhases = (
 				0575E6551805F36D009E3FC4 /* Sources */,
 				0575E6561805F36D009E3FC4 /* Frameworks */,
@@ -61,9 +61,9 @@
 			);
 			dependencies = (
 			);
-			name = Regina;
+			name = Engine;
 			productName = Regina;
-			productReference = 0575E6591805F36D009E3FC4 /* libRegina.dylib */;
+			productReference = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 /* End PBXNativeTarget section */
@@ -87,7 +87,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0575E6581805F36D009E3FC4 /* Regina */,
+				0575E6581805F36D009E3FC4 /* Engine */,
 			);
 		};
 /* End PBXProject section */
@@ -175,7 +175,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "regina-engine";
 			};
 			name = Debug;
 		};
@@ -183,7 +183,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "regina-engine";
 			};
 			name = Release;
 		};
@@ -199,13 +199,14 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0575E65D1805F36D009E3FC4 /* Build configuration list for PBXNativeTarget "Regina" */ = {
+		0575E65D1805F36D009E3FC4 /* Build configuration list for PBXNativeTarget "Engine" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0575E65E1805F36D009E3FC4 /* Debug */,
 				0575E65F1805F36D009E3FC4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
