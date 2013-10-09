@@ -32,24 +32,52 @@
 
 /* end stub */
 
-#include <algorithm>
-#include <cstdlib>
-#include "dim2/dim2isomorphism.h"
-#include "dim2/dim2triangulation.h"
-#include "generic/ngenericisomorphism-impl.h"
+/* To be included from stringutils.h. */
+
+#include <cctype>
+#include <string>
+#include "regina-core.h"
+#include "maths/ninteger.h"
 
 namespace regina {
 
-// Instantiate all templates from the -impl.h file.
-template void NGenericIsomorphism<2>::writeTextShort(std::ostream&) const;
-template void NGenericIsomorphism<2>::writeTextLong(std::ostream&) const;
-template bool NGenericIsomorphism<2>::isIdentity() const;
-template NGenericIsomorphism<2>::NGenericIsomorphism(
-    const NGenericIsomorphism<2>&);
-template Dim2Isomorphism* NGenericIsomorphism<2>::random(unsigned);
-template Dim2Triangulation* NGenericIsomorphism<2>::apply(
-        const Dim2Triangulation*) const;
-template void NGenericIsomorphism<2>::applyInPlace(Dim2Triangulation*) const;
+template <bool supportInfinity>
+bool valueOf(const std::string& str, NIntegerBase<supportInfinity>& dest) {
+    bool valid;
+    dest = NIntegerBase<supportInfinity>(str.c_str(), 10, &valid);
+    return valid;
+}
+
+template <class OutputIterator>
+unsigned basicTokenise(OutputIterator results, const std::string& str) {
+    std::string::size_type len = str.length();
+    std::string::size_type pos = 0;
+
+    // Skip initial whitespace.
+    while (pos < len && isspace(str[pos]))
+        pos++;
+
+    if (pos == len)
+        return 0;
+
+    // Extract each token.
+    std::string::size_type total = 0;
+    std::string::size_type tokStart;
+    while (pos < len) {
+        // Find the characters making up this token.
+        tokStart = pos;
+        while (pos < len && ! isspace(str[pos]))
+            pos++;
+        *results++ = str.substr(tokStart, pos - tokStart);
+        total++;
+
+        // Skip the subsequent whitespace.
+        while (pos < len && isspace(str[pos]))
+            pos++;
+    }
+
+    return static_cast<unsigned>(total);
+}
 
 } // namespace regina
 
