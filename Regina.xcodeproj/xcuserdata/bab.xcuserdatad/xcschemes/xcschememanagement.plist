@@ -9,10 +9,25 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>Regina.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>052FA0C01806072900FAE4DF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>052FA1271806102F00FAE4DF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>052FA1491806103000FAE4DF</key>
 		<dict>
 			<key>primary</key>
 			<true/>
