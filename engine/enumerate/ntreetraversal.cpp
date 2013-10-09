@@ -32,7 +32,7 @@
 
 /* end stub */
 
-#include "enumerate/ntreetraversal.tcc"
+#include "enumerate/ntreetraversal-impl.h"
 
 namespace regina {
 

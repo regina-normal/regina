@@ -283,7 +283,7 @@ REGINA_API unsigned basicTokenise(OutputIterator results, const std::string& str
 
 // Template definitions
 
-#include "utilities/stringutils.tcc"
+#include "utilities/stringutils-impl.h"
 
 #endif
 

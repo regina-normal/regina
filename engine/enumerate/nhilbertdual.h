@@ -566,7 +566,7 @@ inline bool NHilbertDual::VecSpec<BitmaskType>::operator <= (
 
 // Template definitions
 
-#include "enumerate/nhilbertdual.tcc"
+#include "enumerate/nhilbertdual-impl.h"
 
 #endif
 

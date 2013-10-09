@@ -32,13 +32,13 @@
 
 /* end stub */
 
-#include "generic/ngenericisomorphism.tcc"
+#include "generic/ngenericisomorphism-impl.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nisomorphism.h"
 
 namespace regina {
 
-// Instatiate all templates from the .tcc file.
+// Instatiate all templates from the -impl.h file.
 template void NGenericIsomorphism<3>::writeTextShort(std::ostream&) const;
 template void NGenericIsomorphism<3>::writeTextLong(std::ostream&) const;
 template bool NGenericIsomorphism<3>::isIdentity() const;

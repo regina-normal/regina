@@ -38,7 +38,7 @@
 #include "maths/nray.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
-#include "surfaces/normalspec.tcc"
+#include "surfaces/normalspec-impl.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
 #include "utilities/nbitmask.h"
