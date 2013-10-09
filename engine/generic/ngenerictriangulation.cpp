@@ -35,7 +35,7 @@
 #include "generic/ngenerictriangulation.h"
 
 // Template implementations:
-#include "generic/isosig.tcc"
+#include "generic/isosig-impl.h"
 
 // Dimension-specific headers required for template instantiations:
 #include "dim2/dim2triangulation.h"
