@@ -540,22 +540,7 @@
 		052FA1401806103000FAE4DF /* RMasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 052FA13F1806103000FAE4DF /* RMasterViewController.m */; };
 		052FA1431806103000FAE4DF /* RDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1421806103000FAE4DF /* RDetailViewController.m */; };
 		052FA1451806103000FAE4DF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 052FA1441806103000FAE4DF /* Images.xcassets */; };
-		052FA14C1806103000FAE4DF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA14B1806103000FAE4DF /* XCTest.framework */; };
-		052FA14D1806103000FAE4DF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA1291806102F00FAE4DF /* Foundation.framework */; };
-		052FA14E1806103000FAE4DF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA12D1806102F00FAE4DF /* UIKit.framework */; };
-		052FA1561806103000FAE4DF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 052FA1541806103000FAE4DF /* InfoPlist.strings */; };
-		052FA1581806103000FAE4DF /* ReginaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1571806103000FAE4DF /* ReginaTests.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		052FA14F1806103000FAE4DF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 052FA1271806102F00FAE4DF;
-			remoteInfo = Regina;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		052FA0BF1806072900FAE4DF /* CopyFiles */ = {
@@ -1211,11 +1196,6 @@
 		052FA1411806103000FAE4DF /* RDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RDetailViewController.h; sourceTree = "<group>"; };
 		052FA1421806103000FAE4DF /* RDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RDetailViewController.m; sourceTree = "<group>"; };
 		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		052FA14A1806103000FAE4DF /* ReginaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReginaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		052FA14B1806103000FAE4DF /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		052FA1531806103000FAE4DF /* ReginaTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ReginaTests-Info.plist"; sourceTree = "<group>"; };
-		052FA1551806103000FAE4DF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		052FA1571806103000FAE4DF /* ReginaTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReginaTests.m; sourceTree = "<group>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -1238,16 +1218,6 @@
 				052FA12C1806102F00FAE4DF /* CoreGraphics.framework in Frameworks */,
 				052FA12E1806102F00FAE4DF /* UIKit.framework in Frameworks */,
 				052FA12A1806102F00FAE4DF /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		052FA1471806103000FAE4DF /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				052FA14C1806103000FAE4DF /* XCTest.framework in Frameworks */,
-				052FA14E1806103000FAE4DF /* UIKit.framework in Frameworks */,
-				052FA14D1806103000FAE4DF /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2039,7 +2009,6 @@
 				052FA1291806102F00FAE4DF /* Foundation.framework */,
 				052FA12B1806102F00FAE4DF /* CoreGraphics.framework */,
 				052FA12D1806102F00FAE4DF /* UIKit.framework */,
-				052FA14B1806103000FAE4DF /* XCTest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2163,7 +2132,7 @@
 			path = utilities;
 			sourceTree = "<group>";
 		};
-		052FA12F1806102F00FAE4DF /* Regina */ = {
+		052FA12F1806102F00FAE4DF /* ios */ = {
 			isa = PBXGroup;
 			children = (
 				052FA1381806103000FAE4DF /* RAppDelegate.h */,
@@ -2176,7 +2145,7 @@
 				052FA1441806103000FAE4DF /* Images.xcassets */,
 				052FA1301806102F00FAE4DF /* Supporting Files */,
 			);
-			path = Regina;
+			path = ios;
 			sourceTree = "<group>";
 		};
 		052FA1301806102F00FAE4DF /* Supporting Files */ = {
@@ -2190,31 +2159,12 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		052FA1511806103000FAE4DF /* ReginaTests */ = {
-			isa = PBXGroup;
-			children = (
-				052FA1571806103000FAE4DF /* ReginaTests.m */,
-				052FA1521806103000FAE4DF /* Supporting Files */,
-			);
-			path = ReginaTests;
-			sourceTree = "<group>";
-		};
-		052FA1521806103000FAE4DF /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				052FA1531806103000FAE4DF /* ReginaTests-Info.plist */,
-				052FA1541806103000FAE4DF /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		0575E6501805F36D009E3FC4 = {
 			isa = PBXGroup;
 			children = (
 				052F9BFD180600FA00FAE4DF /* engine */,
 				052FA0CA1806088B00FAE4DF /* testsuite */,
-				052FA12F1806102F00FAE4DF /* Regina */,
-				052FA1511806103000FAE4DF /* ReginaTests */,
+				052FA12F1806102F00FAE4DF /* ios */,
 				0575E65A1805F36D009E3FC4 /* Products */,
 				052FA0AF180604A900FAE4DF /* Frameworks */,
 			);
@@ -2226,7 +2176,6 @@
 				0575E6591805F36D009E3FC4 /* libregina-engine.dylib */,
 				052FA0C11806072900FAE4DF /* regtestsuite */,
 				052FA1281806102F00FAE4DF /* Regina.app */,
-				052FA14A1806103000FAE4DF /* ReginaTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2528,24 +2477,6 @@
 			productReference = 052FA1281806102F00FAE4DF /* Regina.app */;
 			productType = "com.apple.product-type.application";
 		};
-		052FA1491806103000FAE4DF /* ReginaTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 052FA15E1806103000FAE4DF /* Build configuration list for PBXNativeTarget "ReginaTests" */;
-			buildPhases = (
-				052FA1461806103000FAE4DF /* Sources */,
-				052FA1471806103000FAE4DF /* Frameworks */,
-				052FA1481806103000FAE4DF /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				052FA1501806103000FAE4DF /* PBXTargetDependency */,
-			);
-			name = ReginaTests;
-			productName = ReginaTests;
-			productReference = 052FA14A1806103000FAE4DF /* ReginaTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		0575E6581805F36D009E3FC4 /* Engine */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0575E65D1805F36D009E3FC4 /* Build configuration list for PBXNativeTarget "Engine" */;
@@ -2571,11 +2502,6 @@
 			attributes = {
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Regina Development Team";
-				TargetAttributes = {
-					052FA1491806103000FAE4DF = {
-						TestTargetID = 0575E6581805F36D009E3FC4;
-					};
-				};
 			};
 			buildConfigurationList = 0575E6541805F36D009E3FC4 /* Build configuration list for PBXProject "Regina" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2593,7 +2519,6 @@
 				0575E6581805F36D009E3FC4 /* Engine */,
 				052FA0C01806072900FAE4DF /* Test Suite */,
 				052FA1271806102F00FAE4DF /* Regina */,
-				052FA1491806103000FAE4DF /* ReginaTests */,
 			);
 		};
 /* End PBXProject section */
@@ -2606,14 +2531,6 @@
 				052FA1451806103000FAE4DF /* Images.xcassets in Resources */,
 				052FA1341806102F00FAE4DF /* InfoPlist.strings in Resources */,
 				052FA13D1806103000FAE4DF /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		052FA1481806103000FAE4DF /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				052FA1561806103000FAE4DF /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2663,14 +2580,6 @@
 				052FA1401806103000FAE4DF /* RMasterViewController.m in Sources */,
 				052FA1431806103000FAE4DF /* RDetailViewController.m in Sources */,
 				052FA13A1806103000FAE4DF /* RAppDelegate.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		052FA1461806103000FAE4DF /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				052FA1581806103000FAE4DF /* ReginaTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2919,14 +2828,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		052FA1501806103000FAE4DF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 052FA1271806102F00FAE4DF /* Regina */;
-			targetProxy = 052FA14F1806103000FAE4DF /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		052FA1321806102F00FAE4DF /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -2942,14 +2843,6 @@
 				052FA13C1806103000FAE4DF /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		052FA1541806103000FAE4DF /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				052FA1551806103000FAE4DF /* en */,
-			);
-			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -3020,12 +2913,12 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Regina/Regina-Prefix.pch";
+				GCC_PREFIX_HEADER = "ios/Regina-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "Regina/Regina-Info.plist";
+				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -3047,63 +2940,14 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Regina/Regina-Prefix.pch";
-				INFOPLIST_FILE = "Regina/Regina-Info.plist";
+				GCC_PREFIX_HEADER = "ios/Regina-Prefix.pch";
+				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
-			};
-			name = Release;
-		};
-		052FA15B1806103000FAE4DF /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/libregina-engine.dylib";
-				CLANG_ENABLE_MODULES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Regina/Regina-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "ReginaTests/ReginaTests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		052FA15C1806103000FAE4DF /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/libregina-engine.dylib";
-				CLANG_ENABLE_MODULES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Regina/Regina-Prefix.pch";
-				INFOPLIST_FILE = "ReginaTests/ReginaTests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				VALIDATE_PRODUCT = YES;
-				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
 		};
@@ -3240,14 +3084,6 @@
 			buildConfigurations = (
 				052FA1591806103000FAE4DF /* Debug */,
 				052FA15A1806103000FAE4DF /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-		};
-		052FA15E1806103000FAE4DF /* Build configuration list for PBXNativeTarget "ReginaTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				052FA15B1806103000FAE4DF /* Debug */,
-				052FA15C1806103000FAE4DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
