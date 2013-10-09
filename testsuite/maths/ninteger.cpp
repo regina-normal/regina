@@ -75,7 +75,7 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(constructAssignCopyInfinity);
     CPPUNIT_TEST(constructSpecial<NInteger>);
     CPPUNIT_TEST(constructSpecial<NLargeInteger>);
-#ifdef INT128_FOUND
+#ifdef INT128_AVAILABLE
     CPPUNIT_TEST(constructNative128<NInteger>);
     CPPUNIT_TEST(constructNative128<NLargeInteger>);
 #endif
@@ -617,12 +617,12 @@ class NIntegerTest : public CppUnit::TestFixture {
                     IntType x(str.c_str(), base, &valid);
                     if (! valid) {
                         std::ostringstream msg;
-                        msg << name << " is not valid.";
+                        msg << name.str() << " is not valid.";
                         CPPUNIT_FAIL(msg.str());
                     }
                     if (base > 0 && x.stringValue(base) != s) {
                         std::ostringstream msg;
-                        msg << name << " has incorrect stringValue(base).";
+                        msg << name.str() << " has incorrect stringValue(base).";
                         CPPUNIT_FAIL(msg.str());
                     }
                     testNative(x, name.str().c_str(), value, sign);
@@ -633,12 +633,12 @@ class NIntegerTest : public CppUnit::TestFixture {
                     IntType x(str, base, &valid);
                     if (! valid) {
                         std::ostringstream msg;
-                        msg << name << " is not valid.";
+                        msg << name.str() << " is not valid.";
                         CPPUNIT_FAIL(msg.str());
                     }
                     if (base > 0 && x.stringValue(base) != s) {
                         std::ostringstream msg;
-                        msg << name << " has incorrect stringValue(base).";
+                        msg << name.str() << " has incorrect stringValue(base).";
                         CPPUNIT_FAIL(msg.str());
                     }
                     testNative(x, name.str().c_str(), value, sign);
@@ -707,7 +707,7 @@ class NIntegerTest : public CppUnit::TestFixture {
                     IntType x(str.c_str(), 10, &valid);
                     if (! valid) {
                         std::ostringstream msg;
-                        msg << name << " is not valid.";
+                        msg << name.str() << " is not valid.";
                         CPPUNIT_FAIL(msg.str());
                     }
                     testLarge(x, name.str().c_str(), s, sign);
@@ -718,7 +718,7 @@ class NIntegerTest : public CppUnit::TestFixture {
                     IntType x(str, 10, &valid);
                     if (! valid) {
                         std::ostringstream msg;
-                        msg << name << " is not valid.";
+                        msg << name.str() << " is not valid.";
                         CPPUNIT_FAIL(msg.str());
                     }
                     testLarge(x, name.str().c_str(), s, sign);
@@ -786,12 +786,12 @@ class NIntegerTest : public CppUnit::TestFixture {
                     IntType x(str.c_str(), base, &valid);
                     if (! valid) {
                         std::ostringstream msg;
-                        msg << name << " is not valid.";
+                        msg << name.str() << " is not valid.";
                         CPPUNIT_FAIL(msg.str());
                     }
                     if (base > 0 && x.stringValue(base) != s) {
                         std::ostringstream msg;
-                        msg << name << " has incorrect stringValue(base).";
+                        msg << name.str() << " has incorrect stringValue(base).";
                         CPPUNIT_FAIL(msg.str());
                     }
                     testLarge(x, name.str().c_str(), valueBase10, sign);
@@ -802,12 +802,12 @@ class NIntegerTest : public CppUnit::TestFixture {
                     IntType x(str, base, &valid);
                     if (! valid) {
                         std::ostringstream msg;
-                        msg << name << " is not valid.";
+                        msg << name.str() << " is not valid.";
                         CPPUNIT_FAIL(msg.str());
                     }
                     if (base > 0 && x.stringValue(base) != s) {
                         std::ostringstream msg;
-                        msg << name << " has incorrect stringValue(base).";
+                        msg << name.str() << " has incorrect stringValue(base).";
                         CPPUNIT_FAIL(msg.str());
                     }
                     testLarge(x, name.str().c_str(), valueBase10, sign);
@@ -968,8 +968,8 @@ class NIntegerTest : public CppUnit::TestFixture {
                 testLarge(z, "(7 = inf) = HUGE)", HUGE_INTEGER, 1);
                 z = x;
                 testInfinity(z, "Native = from large", false);
-                z = "-"HUGE_INTEGER;
-                testLarge(z, "(HUGE = inf) = -HUGE)", "-"HUGE_INTEGER, -1);
+                z = "-" HUGE_INTEGER;
+                testLarge(z, "(HUGE = inf) = -HUGE)", "-" HUGE_INTEGER, -1);
                 z = x;
                 testInfinity(z, "Native = from large", false);
                 z = 8;
@@ -1037,7 +1037,7 @@ class NIntegerTest : public CppUnit::TestFixture {
             testLarge(d.hugePos, "Special case HUGE", HUGE_INTEGER, 1);
             if (d.hugePos <= LONG_MAX)
                 CPPUNIT_FAIL("Special case HUGE has overflowed.");
-            testLarge(d.hugeNeg, "Special case -HUGE", "-"HUGE_INTEGER, -1);
+            testLarge(d.hugeNeg, "Special case -HUGE", "-" HUGE_INTEGER, -1);
             if (d.hugeNeg >= LONG_MIN)
                 CPPUNIT_FAIL("Special case -HUGE has overflowed.");
             testLarge(-d.hugeNeg, "-(special case -HUGE)", HUGE_INTEGER, 1);
@@ -1054,7 +1054,7 @@ class NIntegerTest : public CppUnit::TestFixture {
             }
         }
 
-#ifdef INT128_FOUND
+#ifdef INT128_AVAILABLE
         template <typename IntType>
         void test128Value(const regina::NNativeInteger<16>& x,
                 const regina::NNativeInteger<16>& y) {
@@ -1112,8 +1112,8 @@ class NIntegerTest : public CppUnit::TestFixture {
             regina::NNativeInteger<16> neg126 = 1;
             regina::NNativeInteger<16> pos127 = 1;
             regina::NNativeInteger<16> neg127 = 1;
-            regina::NNativeInteger<16> maxVal(~(__int128_t(1) << 127));
-            int i;
+            regina::NNativeInteger<16> maxVal(
+                ~(regina::IntOfSize<16>::type(1) << 127));
             pos62 *= 1073741824; // 2^30
             pos62 *= 1073741824; // 2^30
             pos62 *= 4;
@@ -2565,11 +2565,11 @@ class NIntegerTest : public CppUnit::TestFixture {
 template <typename IntType>
 const IntType NIntegerTest::Data<IntType>::cases[] = {
     // Too low for a native long:
-    "-"ENORMOUS_INTEGER,
-    "-"HUGE_INTEGER"2",
-    "-"HUGE_INTEGER"1",
-    "-"HUGE_INTEGER"0",
-    "-"HUGE_INTEGER,
+    "-" ENORMOUS_INTEGER,
+    "-" HUGE_INTEGER"2",
+    "-" HUGE_INTEGER"1",
+    "-" HUGE_INTEGER"0",
+    "-" HUGE_INTEGER,
     -IntType(static_cast<unsigned long>(ULONG_MAX)),
     -IntType(static_cast<unsigned long>(LONG_MAX) + 3),
     -IntType(static_cast<unsigned long>(LONG_MAX) + 2),

@@ -47,7 +47,7 @@ template class NTreeTraversal<LPConstraintEuler, BanNone, NNativeLong>;
 template class NTreeSingleSoln<LPConstraintEuler, BanNone, NInteger>;
 template class NTreeSingleSoln<LPConstraintEuler, BanNone, NNativeLong>;
 
-#ifdef INT128_FOUND
+#ifdef INT128_AVAILABLE
 template class NTreeTraversal<LPConstraintNone, BanNone, NNativeInteger<16> >;
 template class NTreeEnumeration<LPConstraintNone, BanNone, NNativeInteger<16> >;
 
