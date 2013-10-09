@@ -36,7 +36,7 @@
  *  \brief Deprecated header.
  */
 
-#warning This header is deprecated; please use generic/ngenericisomorphism.tcc instead.
+#warning This header is deprecated; please use generic/ngenericisomorphism-impl.h instead.
 
-#include "generic/ngenericisomorphism.tcc"
+#include "generic/ngenericisomorphism-impl.h"
 
