@@ -52,7 +52,7 @@ template class LPData<LPConstraintNonSpun, NInteger>;
 template class LPData<LPConstraintNonSpun, NNativeLong>;
 #endif
 
-#ifdef INT128_FOUND
+#ifdef INT128_AVAILABLE
 template class LPData<LPConstraintNone, NNativeInteger<16> >;
 template class LPData<LPConstraintEuler, NNativeInteger<16> >;
 #ifndef EXCLUDE_SNAPPEA
