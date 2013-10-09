@@ -44,6 +44,7 @@
 
 #include "regina-core.h"
 #include "regina-config.h"
+#include <stdint.h>
 
 namespace regina {
 
@@ -75,35 +76,41 @@ struct IntOfSize {
 #ifndef __DOXYGEN
 template <>
 struct IntOfSize<1> {
-    typedef __int8_t type;
-    typedef __uint8_t utype;
+    typedef int8_t type;
+    typedef uint8_t utype;
 };
 
 template <>
 struct IntOfSize<2> {
-    typedef __int16_t type;
-    typedef __uint16_t utype;
+    typedef int16_t type;
+    typedef uint16_t utype;
 };
 
 template <>
 struct IntOfSize<4> {
-    typedef __int32_t type;
-    typedef __uint32_t utype;
+    typedef int32_t type;
+    typedef uint32_t utype;
 };
 
 template <>
 struct IntOfSize<8> {
-    typedef __int64_t type;
-    typedef __uint64_t utype;
+    typedef int64_t type;
+    typedef uint64_t utype;
 };
 
-#ifdef INT128_FOUND
 template <>
 struct IntOfSize<16> {
+#if defined(__INT128_T_FOUND)
     typedef __int128_t type;
     typedef __uint128_t utype;
+#elif defined(INT128_T_FOUND)
+    typedef int128_t type;
+    typedef uint128_t utype;
+#else
+    typedef void type;
+    typedef void utype;
+#endif
 };
-#endif // INT128_FOUND
 #endif // __DOXYGEN
 
 } // namespace regina
