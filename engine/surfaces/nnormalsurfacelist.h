@@ -57,6 +57,7 @@ namespace regina {
 
 class NTriangulation;
 class NMatrixInt;
+class NNormalSurfaceList;
 class NProgressTracker;
 class NXMLPacketReader;
 class NXMLNormalSurfaceListReader;
@@ -65,6 +66,20 @@ class NXMLNormalSurfaceListReader;
  * \weakgroup surfaces
  * @{
  */
+
+/**
+ * Stores information about the normal surface list packet.
+ * See the general PacketInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct PacketInfo<PACKET_NORMALSURFACELIST> {
+    typedef NNormalSurfaceList Class;
+    inline static const char* name() {
+        return "Normal Surface List";
+    }
+};
 
 /**
  * A packet representing a collection of normal surfaces in a 3-manifold.
@@ -88,9 +103,9 @@ class NXMLNormalSurfaceListReader;
  * embedded surfaces.
  */
 class REGINA_API NNormalSurfaceList : public NPacket {
-    public:
-        static const int packetType;
+    REGINA_PACKET(NNormalSurfaceList, PACKET_NORMALSURFACELIST)
 
+    public:
         /**
          * Represents standard triangle-quadrilateral coordinates for
          * normal surfaces.
@@ -605,8 +620,6 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          */
         void writeAllSurfaces(std::ostream& out) const;
 
-        virtual int getPacketType() const;
-        virtual std::string getPacketTypeName() const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);

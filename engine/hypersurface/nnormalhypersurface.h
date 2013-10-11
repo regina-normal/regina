@@ -100,7 +100,7 @@ struct HyperInfo;
  *
  * This macro provides the class with:
  *
- * - a compile-time enum constant \a flavourID, which is equal to the
+ * - a compile-time enum constant \a coordType, which is equal to the
  *   corresponding HyperCoords constant;
  * - a typedef \a Info, which refers to the corresponding specialisation 
  *   of the HyperInfo<> tempate;
@@ -113,7 +113,7 @@ struct HyperInfo;
 #define REGINA_NORMAL_HYPERSURFACE_FLAVOUR(class_, id) \
     public: \
         typedef HyperInfo<id> Info; \
-        enum { flavourID = id }; \
+        enum { coordType = id }; \
         inline virtual NNormalHypersurfaceVector* clone() const { \
             return new class_(*this); \
         }

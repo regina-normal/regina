@@ -19,5 +19,6 @@ if (${REGINA_INSTALL_DEV})
     nfacetspec.h
     ngenericisomorphism-impl.h
     ngenericisomorphism.h
+    ngenerictriangulation.h
     DESTINATION ${INCLUDEDIR}/generic COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

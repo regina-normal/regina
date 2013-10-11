@@ -88,27 +88,47 @@ struct SurfaceFilterInfo;
  *
  * This macro provides the class with:
  *
- * - a compile-time enum constant \a filterID, which is equal to the
+ * - a compile-time enum constant \a filterType, which is equal to the
  *   corresponding SurfaceFilterType constant;
- * - a typedef \a Info, which refers to the corresponding specialisation
- *   of the SurfaceFilterInfo<> template;
+ * - a deprecated compile-time enum constant \a filterID, which is
+ *   identical to \a filterType;
  * - declarations and implementations of the virtual functions
- *   NSurfaceFilter::getFilterID() and
- *   NSurfaceFilter::getFilterName().
+ *   NSurfaceFilter::getFilterType() and NSurfaceFilter::getFilterTypeName();
+ * - declarations and implementations of the deprecated virtual functions
+ *   NSurfaceFilter::getFilterID() and NSurfaceFilter::getFilterName().
  *
  * @param class_ the name of this descendant class of NSurfaceFilter.
  * @param id the corresponding SurfaceFilterType constant.
  */
 #define REGINA_SURFACE_FILTER(class_, id) \
     public: \
-        typedef SurfaceFilterInfo<id> Info; \
-        enum { filterID = id }; \
+        enum { filterType = id, filterID = id }; \
+        inline virtual SurfaceFilterType getFilterType() const { \
+            return id; \
+        } \
         inline virtual SurfaceFilterType getFilterID() const { \
             return id; \
         } \
+        inline virtual std::string getFilterTypeName() const { \
+            return SurfaceFilterInfo<id>::name(); \
+        } \
         inline virtual std::string getFilterName() const { \
-            return Info::name(); \
+            return SurfaceFilterInfo<id>::name(); \
         }
+
+/**
+ * Stores information about the normal surface filter packet type.
+ * See the general PacketInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct PacketInfo<PACKET_SURFACEFILTER> {
+    typedef NSurfaceFilter Class;
+    inline static const char* name() {
+        return "Surface Filter";
+    }
+};
 
 /**
  * Stores information about the default accept-all surface filter.
@@ -154,10 +174,8 @@ struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
  * \todo \feature Implement property \a lastAppliedTo.
  */
 class REGINA_API NSurfaceFilter : public NPacket {
+    REGINA_PACKET(NSurfaceFilter, PACKET_SURFACEFILTER)
     REGINA_SURFACE_FILTER(NSurfaceFilter, NS_FILTER_DEFAULT)
-
-    public:
-        static const int packetType;
 
     public:
         /**
@@ -197,9 +215,25 @@ class REGINA_API NSurfaceFilter : public NPacket {
          *
          * @return the unique integer filtering method ID.
          */
+        virtual SurfaceFilterType getFilterType() const;
+        /**
+         * A deprecated alias for getFilterType().
+         * This returns the unique integer ID corresponding to the filtering
+         * method that is this particular subclass of NSurfaceFilter.
+         *
+         * @return the unique integer filtering method ID.
+         */
         virtual SurfaceFilterType getFilterID() const;
         /**
          * Returns a string description of the filtering method that is
+         * this particular subclass of NSurfaceFilter.
+         *
+         * @return a string description of this filtering method.
+         */
+        virtual std::string getFilterTypeName() const;
+        /**
+         * A deprecated alias for getFilterTypeName().
+         * This returns a string description of the filtering method that is
          * this particular subclass of NSurfaceFilter.
          *
          * @return a string description of this filtering method.
@@ -231,8 +265,6 @@ class REGINA_API NSurfaceFilter : public NPacket {
          */
         static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
 
-        virtual int getPacketType() const;
-        virtual std::string getPacketTypeName() const;
         virtual void writeTextShort(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);
         virtual bool dependsOnParent() const;
@@ -273,7 +305,7 @@ inline void NSurfaceFilter::writeXMLFilterData(std::ostream&) const {
 }
 
 inline void NSurfaceFilter::writeTextShort(std::ostream& o) const {
-    o << getFilterName();
+    o << getFilterTypeName();
 }
 
 inline bool NSurfaceFilter::dependsOnParent() const {

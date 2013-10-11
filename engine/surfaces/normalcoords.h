@@ -55,7 +55,7 @@ namespace regina {
  * be used for enumerating and displaying normal surfaces.
  *
  * IDs 0-9999 are reserved for future use by Regina.  If you are extending
- * Regina to include your own flavor of coordinate system, you should choose
+ * Regina to include your own flavour of coordinate system, you should choose
  * an ID >= 10000.
  */
 enum NormalCoords {

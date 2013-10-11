@@ -58,6 +58,7 @@ namespace regina {
 class Dim4Triangulation;
 class NMatrixInt;
 class NNormalHypersurface;
+class NNormalHypersurfaceList;
 class NProgressTracker;
 class NXMLNormalHypersurfaceListReader;
 class NXMLPacketReader;
@@ -66,6 +67,20 @@ class NXMLPacketReader;
  * \weakgroup hypersurface
  * @{
  */
+
+/**
+ * Stores information about the normal hypersurface list packet.
+ * See the general PacketInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct PacketInfo<PACKET_NORMALHYPERSURFACELIST> {
+    typedef NNormalHypersurfaceList Class;
+    inline static const char* name() {
+        return "Normal Hypersurface List";
+    }
+};
 
 /**
  * A packet representing a collection of normal hypersurfaces in a 4-manifold
@@ -79,9 +94,9 @@ class NXMLPacketReader;
  * Normal hypersurface lists should be created using the routine enumerate().
  */
 class REGINA_API NNormalHypersurfaceList : public NPacket {
-    public:
-        static const int packetType;
+    REGINA_PACKET(NNormalHypersurfaceList, PACKET_NORMALHYPERSURFACELIST)
 
+    public:
         class VectorIterator;
 
     protected:
@@ -319,8 +334,6 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
         virtual const NNormalHypersurface* getHypersurface(
             unsigned long index) const;
 
-        virtual int getPacketType() const;
-        virtual std::string getPacketTypeName() const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);

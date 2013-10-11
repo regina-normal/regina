@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,26 +32,81 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
-#include "packet/npdf.h"
+/*! \file packet/packettype.h
+ *  \brief Defines constants for the various packet types known to Regina.
+ */
 
-using namespace boost::python;
-using regina::NPDF;
+#ifndef __PACKETTYPE_H
+#ifndef __DOXYGEN
+#define __PACKETTYPE_H
+#endif
 
-namespace {
-    void (NPDF::*reset_empty)() = &NPDF::reset;
-}
+#include "regina-core.h"
 
-void addNPDF() {
-    scope s = class_<NPDF, bases<regina::NPacket>,
-            std::auto_ptr<NPDF>, boost::noncopyable>("NPDF", init<>())
-        .def("size", &NPDF::size)
-        .def("reset", reset_empty)
-    ;
+namespace regina {
 
-    s.attr("packetType") = regina::PacketType(NPDF::packetType);
+/**
+ * \weakgroup packet
+ * @{
+ */
 
-    implicitly_convertible<std::auto_ptr<NPDF>,
-        std::auto_ptr<regina::NPacket> >();
-}
+/**
+ * Represents the different types of packet that are available in Regina.
+ *
+ * IDs 0-9999 are reserved for future use by Regina.  If you are extending
+ * Regina to include your own packet type, you should choose an ID >= 10000.
+ */
+enum PacketType {
+    /**
+     * Represents a container packet, of class NContainer.
+     */
+    PACKET_CONTAINER = 1,
+    /**
+     * Represents a text packet, of class NText.
+     */
+    PACKET_TEXT = 2,
+    /**
+     * Represents a 3-manifold triangulation, of class NTriangulation.
+     */
+    PACKET_TRIANGULATION = 3,
+    /**
+     * Represents a normal surface list, of class NNormalSurfaceList.
+     */
+    PACKET_NORMALSURFACELIST = 6,
+    /**
+     * Represents a script packet, of class NScript.
+     */
+    PACKET_SCRIPT = 7,
+    /**
+     * Represents a normal surface filter, of class NSurfaceFilter or
+     * one of its descendant classes.
+     */
+    PACKET_SURFACEFILTER = 8,
+    /**
+     * Represents an angle structure list, of class NAngleStructureList.
+     */
+    PACKET_ANGLESTRUCTURELIST = 9,
+    /**
+     * Represents a PDF document, of class NPDF.
+     */
+    PACKET_PDF = 10,
+    /**
+     * Represents a 4-manifold triangulation, of class Dim4Triangulation.
+     */
+    PACKET_DIM4TRIANGULATION = 11,
+    /**
+     * Represents a normal hypersurface list, of class NNormalHypersurfaceList.
+     */
+    PACKET_NORMALHYPERSURFACELIST = 13,
+    /**
+     * Represents a 2-manifold triangulation, of class Dim2Triangulation.
+     */
+    PACKET_DIM2TRIANGULATION = 15
+};
+
+/*@}*/
+
+} // namespace regina
+
+#endif
 

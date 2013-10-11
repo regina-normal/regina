@@ -49,6 +49,7 @@
 #include "regina-core.h"
 #include "shareableobject.h"
 #include "packet/npacketlistener.h"
+#include "packet/packettype.h"
 #include "utilities/boostutils.h"
 
 namespace regina {
@@ -63,6 +64,53 @@ class NXMLPacketReader;
  */
 
 /**
+ * A template that stores information about a particular type of packet.
+ * Much of this information is given in the form of compile-time constants
+ * and types.
+ *
+ * To iterate through cases for a given value of PacketInfo that is not
+ * known until runtime, see the various forPacket() routines defined in
+ * packetregistry.h.
+ *
+ * At a bare minimum, each specialisation of this template must provide:
+ *
+ * - a typedef \a Class that represents the corresponding NPacket subclass;
+ * - a static function name() that returns a C-style string giving the
+ *   human-readable name of the packet type.
+ *
+ * \ifacespython Not present.
+ */
+template <PacketType packetType>
+struct PacketInfo;
+
+/**
+ * Defines various constants, types and virtual functions for a
+ * subclass of NPacket.
+ *
+ * Every subclass of NPacket \a must include REGINA_PACKET at the beginning
+ * of the class definition.
+ *
+ * This macro provides the class with:
+ *
+ * - a compile-time enum constant \a packetType, which is equal to the
+ *   corresponding PacketType constant;
+ * - declarations and implementations of the virtual functions
+ *   NPacket::getPacketType() and NPacket::getPacketTypeName().
+ *
+ * @param class_ the name of this descendant class of NSurfaceFilter.
+ * @param id the corresponding PacketType constant.
+ */
+#define REGINA_PACKET(class_, id) \
+    public: \
+        enum { packetType = id }; \
+        inline virtual PacketType getPacketType() const { \
+            return id; \
+        } \
+        inline virtual std::string getPacketTypeName() const { \
+            return PacketInfo<id>::name(); \
+        }
+
+/**
  * Represents a packet of information that may be individually edited or
  * operated upon.  Packets are stored in a dependency tree,
  * where child packets fit within the context of (or otherwise
@@ -70,14 +118,18 @@ class NXMLPacketReader;
  *
  * <b>When deriving classes from NPacket:</b>
  * <ul>
- *   <li>The file packetregistry.h must be updated to reflect the new
- *     packet type.</li>
- *   <li>Virtual functions getPacketType() and getPacketTypeName() must
- *     be declared but not implemented.  The registry utilities
- *     will take care of their implementations.</li>
- *   <li><tt>public static const int packetType</tt> must be declared.
- *     The registry utilities will take care of assigning it a value.</li>
- *   <li>All abstract functions must be implemented.</li>
+ *   <li>A new value must be added to the PacketType enum in packettype.h
+ *     to represent the new packet type.</li>
+ *   <li>The file packetregistry.h must be updated to reflect the new packet
+ *     type (the file itself contains instructions on how to do this).</li>
+ *   <li>A corresponding specialisation of PacketInfo<> must be defined,
+ *     typically in the same header as the new packet class.</li>
+ *   <li>The macro REGINA_PACKET must be added to the beginning of the new
+ *     packet class.  This will declare and define various constants, typedefs
+ *     and virtual functions (see the REGINA_PACKET macro documentation for
+ *     details).
+ *   <li>All abstract functions must be implemented, except for those
+ *     already provided by REGINA_PACKET.</li>
  *   <li>A public function
  *     <tt>static NXMLPacketReader* getXMLReader(NPacket* parent)</tt>
  *     must be declared and implemented.  See the notes for getXMLReader()
@@ -95,21 +147,6 @@ class NXMLPacketReader;
  * child packet insertion.
  */
 class REGINA_API NPacket : public ShareableObject {
-    public:
-        /**
-         * Contains the integer ID for this packet.
-         * Each distinct packet type must have a unique ID, and this
-         * should be a positive integer.  See packetregistry.h for
-         * further requirements regarding ID selection.
-         *
-         * This member is not actually provided for NPacket itself, but
-         * must be declared for every packet subclass that will be
-         * instantiated.  A value need not be assigned; packetregistry.h
-         * will take care of this task when you register the packet.
-         */
-        #ifdef __DOXYGEN
-        static const int packetType;
-        #endif
     private:
         std::string packetLabel;
             /**< The unique label for this individual packet of information. */
@@ -176,12 +213,12 @@ class REGINA_API NPacket : public ShareableObject {
         /*@{*/
 
         /**
-         * Returns the integer ID representing this type of packet.
+         * Returns the unique integer ID representing this type of packet.
          * This is the same for all packets of this class.
          *
          * @return the packet type ID.
          */
-        virtual int getPacketType() const = 0;
+        virtual PacketType getPacketType() const = 0;
 
         /**
          * Returns an English name for this type of packet.

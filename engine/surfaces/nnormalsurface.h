@@ -238,7 +238,7 @@ struct NormalInfo;
  *
  * This macro provides the class with:
  *
- * - a compile-time enum constant \a flavourID, which is equal to the
+ * - a compile-time enum constant \a coordType, which is equal to the
  *   corresponding NormalCoords constant;
  * - a typedef \a Info, which refers to the corresponding specialisation
  *   of the NormalInfo<> template;
@@ -254,7 +254,7 @@ struct NormalInfo;
 #define REGINA_NORMAL_SURFACE_FLAVOUR(class_, id) \
     public: \
         typedef NormalInfo<id> Info; \
-        enum { flavourID = id }; \
+        enum { coordType = id }; \
         inline virtual NNormalSurfaceVector* clone() const { \
             return new class_(*this); \
         } \

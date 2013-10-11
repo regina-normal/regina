@@ -46,7 +46,7 @@ Container
 ************************************************************
 *
 * Label: Figure 8 Knot Complement
-* Type: Triangulation
+* Type: 3-Manifold Triangulation
 * Parent: Triangulations
 *
 ************************************************************
@@ -133,7 +133,7 @@ inf inf inf inf ; 0 0 1 || inf inf inf inf ; 0 2 0
 ************************************************************
 *
 * Label: Layered Solid Torus
-* Type: Triangulation
+* Type: 3-Manifold Triangulation
 * Parent: Triangulations
 *
 ************************************************************
@@ -252,7 +252,7 @@ Number of surfaces is 33
 ************************************************************
 *
 * Label: Poincaré Homology Sphere
-* Type: Triangulation
+* Type: 3-Manifold Triangulation
 * Parent: Triangulations
 *
 ************************************************************
@@ -304,7 +304,7 @@ Triangles:
 ************************************************************
 *
 * Label: RP2xS1
-* Type: Triangulation
+* Type: 3-Manifold Triangulation
 * Parent: Triangulations
 *
 ************************************************************

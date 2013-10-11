@@ -50,6 +50,7 @@
 namespace regina {
 
 class NXMLPacketReader;
+class NScript;
 
 /**
  * \weakgroup packet
@@ -57,10 +58,26 @@ class NXMLPacketReader;
  */
 
 /**
+ * Stores information about the script packet.
+ * See the general PacketInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct PacketInfo<PACKET_SCRIPT> {
+    typedef NScript Class;
+    inline static const char* name() {
+        return "Script";
+    }
+};
+
+/**
  * A packet representing a script that can be run.
  * Accessor methods for a script work a line at a time.
  */
 class REGINA_API NScript : public NPacket {
+    REGINA_PACKET(NScript, PACKET_SCRIPT)
+
     private:
         std::vector<std::string> lines;
             /**< An array storing the lines of this script; none of
@@ -71,8 +88,6 @@ class REGINA_API NScript : public NPacket {
              *   corresponding values. */
 
     public:
-        static const int packetType;
-
         /**
          * Initialises to a script with no lines and no variables.
          */
@@ -203,9 +218,6 @@ class REGINA_API NScript : public NPacket {
          * Removes all variables associated with this script.
          */
         void removeAllVariables();
-
-        virtual int getPacketType() const;
-        virtual std::string getPacketTypeName() const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
