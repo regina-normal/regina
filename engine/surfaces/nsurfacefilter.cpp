@@ -39,19 +39,11 @@
 
 namespace regina {
 
-namespace {
-    struct NameFunction : public Returns<const char*> {
-        template <typename Filter>
-        inline const char* operator() (Filter f) { return f.name(); }
-    };
-}
-
 void NSurfaceFilter::writeXMLPacketData(std::ostream& out) const {
     SurfaceFilterType id = getFilterID();
 
     out << "  <filter type=\""
-        << regina::xml::xmlEncodeSpecialChars(forFilter(
-            id, NameFunction(), "Unknown"))
+        << regina::xml::xmlEncodeSpecialChars(getFilterName())
         << "\" typeid=\"" << id << "\">\n";
 
     writeXMLFilterData(out);
