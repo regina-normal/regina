@@ -52,9 +52,9 @@ Version 4.95  [ (under development) ]
             - Renamed getFaceArcs() to getTriangleArcs().  The old name is
               deprecated but has been kept for backward compatibility.
             - All normal surface vector classes have now gained the enum
-              constant flavourID (representing the corresponding NormalCoords
+              constant coordType (representing the corresponding NormalCoords
               constant), and the typedef Info (representing the
-              template specialisation NormalInfo<flavourId>).
+              template specialisation NormalInfo<coordType>).
             - The requirements for new vector subclasses have changed, since the
               old macro-based registry was replaced with the new template-based
               registry.  See the NNormalSurfaceVector class notes for details.
