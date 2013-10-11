@@ -17,7 +17,7 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     dimtraits.h
     nfacetspec.h
+    ngenericisomorphism-impl.h
     ngenericisomorphism.h
-    ngenericisomorphism.tcc
     DESTINATION ${INCLUDEDIR}/generic COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

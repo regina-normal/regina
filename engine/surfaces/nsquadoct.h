@@ -62,9 +62,9 @@ class NNormalSurfaceVectorQuadOct;
  */
 template <>
 struct NormalInfo<NS_AN_QUAD_OCT> {
-    typedef NNormalSurfaceVectorQuadOct Vector;
-    typedef NormalInfo<NS_AN_STANDARD> StandardFlavour;
-    typedef NormalInfo<NS_AN_QUAD_OCT> ReducedFlavour;
+    typedef NNormalSurfaceVectorQuadOct Class;
+    typedef NormalInfo<NS_AN_STANDARD> Standard;
+    typedef NormalInfo<NS_AN_QUAD_OCT> Reduced;
     inline static const char* name() {
         return "Quad-oct almost normal";
     }

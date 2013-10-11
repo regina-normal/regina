@@ -212,12 +212,12 @@ class NMatrixInt;
  *
  * At a bare minimum, each specialisation of this template must provide:
  *
- * - a typedef \a Vector that represents the corresponding
+ * - a typedef \a Class that represents the corresponding
  *   NNormalSurfaceVector subclass;
- * - typedefs \a StandardFlavour and \a ReducedFlavour that identify
- *   NormalInfo templates for the corresponding coordinate systems with and
- *   without triangles (if this is not meaningful then both typedefs should
- *   just identify this system);
+ * - typedefs \a Standard and \a Reduced that identify NormalInfo templates
+ *   for the corresponding coordinate systems with and without triangles
+ *   (if this is not meaningful then both typedefs should just identify this
+ *   system);
  * - enum constants \a almostNormal, \a spun and \a oriented, which indicate
  *   whether the coordinate system allows almost normal, spun and/or
  *   transversely oriented surfaces;
@@ -240,7 +240,7 @@ struct NormalInfo;
  *
  * - a compile-time enum constant \a flavourID, which is equal to the
  *   corresponding NormalCoords constant;
- * - a typedef \a Flavour, which refers to the corresponding specialisation
+ * - a typedef \a Info, which refers to the corresponding specialisation
  *   of the NormalInfo<> template;
  * - declarations and implementations of the virtual functions
  *   NNormalSurfaceVector::clone(),
@@ -253,19 +253,19 @@ struct NormalInfo;
  */
 #define REGINA_NORMAL_SURFACE_FLAVOUR(class_, id) \
     public: \
-        typedef NormalInfo<id> Flavour; \
+        typedef NormalInfo<id> Info; \
         enum { flavourID = id }; \
         inline virtual NNormalSurfaceVector* clone() const { \
             return new class_(*this); \
         } \
         inline virtual bool allowsAlmostNormal() const { \
-            return Flavour::almostNormal; \
+            return Info::almostNormal; \
         } \
         inline virtual bool allowsSpun() const { \
-            return Flavour::spun; \
+            return Info::spun; \
         } \
         inline virtual bool allowsOriented() const { \
-            return Flavour::oriented; \
+            return Info::oriented; \
         }
 
 /**

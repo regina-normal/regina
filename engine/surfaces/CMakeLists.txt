@@ -6,7 +6,6 @@ SET ( FILES
   crushandcut
   enumerator
   enumfilter
-  filters
   links
   ndisc
   ndisctype
@@ -43,6 +42,7 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     filterregistry.h
+    filterregistry-impl.h
     flavourregistry.h
     flavourregistry-impl.h
     ndisc.h
@@ -66,5 +66,6 @@ if (${REGINA_INSTALL_DEV})
     nxmlsurfacereader.h
     sfcombination.h
     sfproperties.h
+    surfacefiltertype.h
     DESTINATION ${INCLUDEDIR}/surfaces COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

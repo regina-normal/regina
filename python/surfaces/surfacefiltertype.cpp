@@ -33,24 +33,21 @@
 /* end stub */
 
 #include <boost/python.hpp>
-#include "surfaces/sfcombination.h"
+#include "surfaces/surfacefiltertype.h"
 
 using namespace boost::python;
-using regina::NSurfaceFilterCombination;
 
-void addNSurfaceFilterCombination() {
-    scope s = class_<NSurfaceFilterCombination, bases<regina::NSurfaceFilter>,
-            std::auto_ptr<NSurfaceFilterCombination>, boost::noncopyable>
-            ("NSurfaceFilterCombination")
-        .def(init<const NSurfaceFilterCombination&>())
-        .def("getUsesAnd", &NSurfaceFilterCombination::getUsesAnd)
-        .def("setUsesAnd", &NSurfaceFilterCombination::setUsesAnd)
-    ;
+void addSurfaceFilterType() {
+    scope global;
 
-    s.attr("filterID") = regina::SurfaceFilterType(
-        NSurfaceFilterCombination::filterID);
+    enum_<regina::SurfaceFilterType>("SurfaceFilterType")
+        .value("NS_FILTER_DEFAULT", regina::NS_FILTER_DEFAULT)
+        .value("NS_FILTER_PROPERTIES", regina::NS_FILTER_PROPERTIES)
+        .value("NS_FILTER_COMBINATION", regina::NS_FILTER_COMBINATION)
+        ;
 
-    implicitly_convertible<std::auto_ptr<NSurfaceFilterCombination>,
-        std::auto_ptr<regina::NSurfaceFilter> >();
+    global.attr("NS_FILTER_DEFAULT") = regina::NS_FILTER_DEFAULT;
+    global.attr("NS_FILTER_PROPERTIES") = regina::NS_FILTER_PROPERTIES;
+    global.attr("NS_FILTER_COMBINATION") = regina::NS_FILTER_COMBINATION;
 }
 
