@@ -64,7 +64,7 @@ class REGINA_API NXMLNormalHypersurfaceReader : public NXMLElementReader {
             /**< The normal hypersurface currently being read. */
         Dim4Triangulation* tri_;
             /**< The triangulation in which this hypersurface lives. */
-        int flavour_;
+        HyperCoords flavour_;
             /**< The flavour of coordinate system used by this hypersurface. */
         long vecLen_;
             /**< The length of corresponding normal hypersurface vector. */
@@ -79,7 +79,8 @@ class REGINA_API NXMLNormalHypersurfaceReader : public NXMLElementReader {
          * @param flavour the flavour of coordinate system used by
          * this normal hypersurface.
          */
-        NXMLNormalHypersurfaceReader(Dim4Triangulation* tri, int flavour);
+        NXMLNormalHypersurfaceReader(Dim4Triangulation* tri,
+            HyperCoords flavour);
 
         /**
          * Returns the normal hypersurface that has been read.
@@ -135,7 +136,7 @@ class REGINA_API NXMLNormalHypersurfaceListReader : public NXMLPacketReader {
 // Inline functions for NXMLNormalHypersurfaceReader
 
 inline NXMLNormalHypersurfaceReader::NXMLNormalHypersurfaceReader(
-        Dim4Triangulation* tri, int flavour) : surface_(0), tri_(tri),
+        Dim4Triangulation* tri, HyperCoords flavour) : surface_(0), tri_(tri),
         flavour_(flavour), vecLen_(-1) {
 }
 

@@ -45,6 +45,7 @@
 #include <utility>
 #include "regina-core.h"
 #include "shareableobject.h"
+#include "hypersurface/hypercoords.h"
 #include "maths/nperm5.h"
 #include "maths/nray.h"
 #include "utilities/nbooleans.h"
@@ -64,6 +65,58 @@ class Dim4Vertex;
 class NEnumConstraintList;
 class NTriangulation;
 class NXMLNormalHypersurfaceReader;
+
+/**
+ * A template that stores information about a particular flavour of
+ * normal hypersurface coordinate system.  Much of this information is
+ * given in the form of compile-time constants and types.
+ *
+ * To iterate through cases for a given value of HyperCoords that is not
+ * known until runtime, see the various forFlavour() routines defined in
+ * hsflavourregistry.h.
+ *
+ * This HyperInfo template should only be defined for \a flavourType
+ * arguments that represent coordinate systems in which you can create
+ * and store normal hypersurfaces within 4-manifold triangulations.
+ *
+ * At a bare minimum, each specialisation of this template must provide:
+ *
+ * - a typedef \a Vector that represents the corresponding
+ *   NNormalHypersurfaceVector subclass;
+ * - a static function name() that returns a C-style string giving the
+ *   human-readable name of the coordinate system.
+ *
+ * \ifacespython Not present.
+ */
+template <HyperCoords flavourType>
+struct HyperInfo;
+
+/**
+ * Defines various constants, types and virtual functions for a subclass
+ * of NNormalHypersurfaceVector.
+ *
+ * Every subclass of NNormalHypersurfaceVector \a must include
+ * REGINA_NORMAL_HYPERSURFACE_FLAVOUR at the beginning of the class definition.
+ *
+ * This macro provides the class with:
+ *
+ * - a compile-time enum constant \a flavourID, which is equal to the
+ *   corresponding HyperCoords constant;
+ * - a typedef \a Info, which refers to the corresponding specialisation 
+ *   of the HyperInfo<> tempate;
+ * - declarations and implementations of the virtual function
+ *   NNormalHypersurfaceVector::clone().
+ *
+ * @param class_ the name of this subclass of NNormalHypersurfaceVector.
+ * @param id the corresponding NNormalCoords constant.
+ */
+#define REGINA_NORMAL_HYPERSURFACE_FLAVOUR(class_, id) \
+    public: \
+        typedef HyperInfo<id> Info; \
+        enum { flavourID = id }; \
+        inline virtual NNormalHypersurfaceVector* clone() const { \
+            return new class_(*this); \
+        }
 
 /**
  * Stores the vector of a single normal hypersurface in a 4-manifold
@@ -96,19 +149,23 @@ class NXMLNormalHypersurfaceReader;
  *
  * <b>When deriving classes from NNormalHypersurfaceVector:</b>
  * <ul>
- *   <li>A unique constant (static const int) must be added to the class
- *   NNormalHypersurfaceList to represent the new flavour of coordinate
- *   system.</li>
- *   <li>The file hsflavourregistry.h must be updated to reflect the new
- *   flavour of coordinate system.</li>
+ *   <li>A new value must be added to the HyperCoords enum in hypercoords.h
+ *   to represent the new flavour of coordinate system.</li>
+ *   <li>The file hsflavourregistry-impl.h must be updated to reflect the new
+ *   flavour of coordinate system (the file itself contains instructions on
+ *   how to do this).</li>
+ *   <li>A corresponding specialisation of HyperInfo<> must be defined,
+ *   typically in the same header as the new vector subclass.</li>
+ *   <li>The macro REGINA_NORMAL_HYPERSURFACE_FLAVOUR must be added to
+ *   the beginning of the new vector subclass.  This will declare and
+ *   define various constants, typedefs and virtual functions (see the
+ *   REGINA_NORMAL_HYPERSURFACE_FLAVOUR macro documentation for details).</li>
  *   <li>Constructors <tt>class(unsigned length)</tt> and
  *   <tt>class(const NVector<NLargeInteger>& cloneMe)</tt> must be
  *   declared and implemented; these will usually just call the
  *   corresponding superclass constructors.</li>
- *   <li>The virtual function <tt>NNormalHypersurfaceVector* clone() const</tt>
- *   must be declared but not implemented.  The registry utilities will take
- *   care of its implementation.</li>
- *   <li>All abstract functions must be implemented.
+ *   <li>All abstract functions must be implemented, except for those
+ *   already provided by REGINA_NORMAL_HYPERSURFACE_FLAVOUR.
  *   Note that coordinate functions such as getTetrahedronCoord() must return
  *   the \e total number of pieces of the requested type; if your new
  *   coordinate system adorns pieces with extra information (such as

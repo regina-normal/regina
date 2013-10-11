@@ -48,11 +48,26 @@
 namespace regina {
 
 class NMatrixInt;
+class NNormalHypersurfaceVectorStandard;
 
 /**
  * \weakgroup hypersurface
  * @{
  */
+
+/**
+ * Stores information about standard normal hypersurface coordinates.
+ * See the general HyperInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct HyperInfo<HS_STANDARD> {
+    typedef NNormalHypersurfaceVectorStandard Vector;
+    inline static const char* name() {
+        return "Standard normal (tet-prism)";
+    }
+};
 
 /**
  * A normal hypersurface vector using standard tetrahedron-prism coordinates.
@@ -70,6 +85,8 @@ class NMatrixInt;
  */
 class REGINA_API NNormalHypersurfaceVectorStandard :
         public NNormalHypersurfaceVector {
+    REGINA_NORMAL_HYPERSURFACE_FLAVOUR(NNormalHypersurfaceVectorStandard, HS_STANDARD)
+
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -92,8 +109,6 @@ class REGINA_API NNormalHypersurfaceVectorStandard :
             int prismType, Dim4Triangulation* triang) const;
         virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
             Dim4Triangulation* triang) const;
-
-        virtual NNormalHypersurfaceVector* clone() const;
 
         static NNormalHypersurfaceVector* makeZeroVector(
             const Dim4Triangulation* triangulation);
