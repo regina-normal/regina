@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,25 +32,58 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
+/*! \file surfaces/filterregistry-impl.h
+ *  \brief Contains the registry of all normal surface filter classes that can
+ *  be used to filter lists of normal surfaces in 3-manifold triangulations.
+ *
+ * Each time a new filter is created, this registry must be updated to:
+ *
+ * - add a #include line for the corresponding filter class;
+ * - add a corresponding case to each implementation of forFilter().
+ *
+ * See filterregistry.h for how other routines can use this registry.
+ */
+
+#ifndef __FILTERREGISTRY_IMPL_H
+#ifndef __DOXYGEN
+#define __FILTERREGISTRY_IMPL_H
+#endif
+
+#include "surfaces/nsurfacefilter.h"
+#include "surfaces/sfproperties.h"
 #include "surfaces/sfcombination.h"
 
-using namespace boost::python;
-using regina::NSurfaceFilterCombination;
+namespace regina {
 
-void addNSurfaceFilterCombination() {
-    scope s = class_<NSurfaceFilterCombination, bases<regina::NSurfaceFilter>,
-            std::auto_ptr<NSurfaceFilterCombination>, boost::noncopyable>
-            ("NSurfaceFilterCombination")
-        .def(init<const NSurfaceFilterCombination&>())
-        .def("getUsesAnd", &NSurfaceFilterCombination::getUsesAnd)
-        .def("setUsesAnd", &NSurfaceFilterCombination::setUsesAnd)
-    ;
-
-    s.attr("filterID") = regina::SurfaceFilterType(
-        NSurfaceFilterCombination::filterID);
-
-    implicitly_convertible<std::auto_ptr<NSurfaceFilterCombination>,
-        std::auto_ptr<regina::NSurfaceFilter> >();
+template <typename FunctionObject>
+inline typename FunctionObject::ReturnType forFilter(
+        SurfaceFilterType filter, FunctionObject func,
+        typename FunctionObject::ReturnType defaultReturn) {
+    switch (filter) {
+        case NS_FILTER_DEFAULT :
+            return func(SurfaceFilterInfo<NS_FILTER_DEFAULT>());
+        case NS_FILTER_PROPERTIES :
+            return func(SurfaceFilterInfo<NS_FILTER_PROPERTIES>());
+        case NS_FILTER_COMBINATION :
+            return func(SurfaceFilterInfo<NS_FILTER_COMBINATION>());
+        default: return defaultReturn;
+    }
 }
+
+template <typename VoidFunctionObject>
+inline void forFilter(SurfaceFilterType filter, VoidFunctionObject func) {
+    switch (filter) {
+        case NS_FILTER_DEFAULT :
+            func(SurfaceFilterInfo<NS_FILTER_DEFAULT>()); break;
+        case NS_FILTER_PROPERTIES :
+            func(SurfaceFilterInfo<NS_FILTER_PROPERTIES>()); break;
+        case NS_FILTER_COMBINATION :
+            func(SurfaceFilterInfo<NS_FILTER_COMBINATION>()); break;
+        default: break;
+    }
+}
+
+} // namespace regina
+
+#endif
 
