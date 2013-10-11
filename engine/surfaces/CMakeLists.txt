@@ -7,7 +7,6 @@ SET ( FILES
   enumerator
   enumfilter
   filters
-  flavours
   links
   ndisc
   ndisctype

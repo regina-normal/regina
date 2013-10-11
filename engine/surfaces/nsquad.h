@@ -47,11 +47,33 @@
 namespace regina {
 
 class NMatrixInt;
+class NNormalSurfaceVectorQuad;
 
 /**
  * \weakgroup surfaces
  * @{
  */
+
+/**
+ * Stores information about quad normal coordinates.
+ * See the general NormalFlavour template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct NormalFlavour<NS_QUAD> {
+    typedef NNormalSurfaceVectorQuad Vector;
+    typedef NormalFlavour<NS_STANDARD> StandardFlavour;
+    typedef NormalFlavour<NS_QUAD> ReducedFlavour;
+    inline static const char* name() {
+        return "Quad normal";
+    }
+    enum {
+        almostNormal = 0,
+        spun = 1,
+        oriented = 0
+    };
+};
 
 /**
  * A normal surface vector using quad coordinates.
@@ -68,6 +90,8 @@ class NMatrixInt;
  */
 class REGINA_API NNormalSurfaceVectorQuad :
         public NNormalSurfaceVectorMirrored {
+    REGINA_NORMAL_SURFACE_FLAVOUR(NNormalSurfaceVectorQuad, NS_QUAD)
+
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -85,15 +109,10 @@ class REGINA_API NNormalSurfaceVectorQuad :
 
         virtual NNormalSurfaceVector* makeMirror(NTriangulation* triang) const;
 
-        virtual bool allowsAlmostNormal() const;
-        virtual bool allowsSpun() const;
-        virtual bool allowsOriented() const;
         virtual const NVertex* isVertexLink(NTriangulation* triang) const;
 
         virtual NLargeInteger getOctCoord(unsigned long tetIndex,
             int octType, NTriangulation* triang) const;
-
-        virtual NNormalSurfaceVector* clone() const;
 
         static NNormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);
