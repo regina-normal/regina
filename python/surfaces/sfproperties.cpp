@@ -71,6 +71,8 @@ void addNSurfaceFilterProperties() {
 
     s.attr("filterID") = regina::SurfaceFilterType(
         NSurfaceFilterProperties::filterID);
+    s.attr("filterType") = regina::SurfaceFilterType(
+        NSurfaceFilterProperties::filterType);
 
     implicitly_convertible<std::auto_ptr<NSurfaceFilterProperties>,
         std::auto_ptr<regina::NSurfaceFilter> >();

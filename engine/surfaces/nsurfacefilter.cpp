@@ -40,10 +40,10 @@
 namespace regina {
 
 void NSurfaceFilter::writeXMLPacketData(std::ostream& out) const {
-    SurfaceFilterType id = getFilterID();
+    SurfaceFilterType id = getFilterType();
 
     out << "  <filter type=\""
-        << regina::xml::xmlEncodeSpecialChars(getFilterName())
+        << regina::xml::xmlEncodeSpecialChars(getFilterTypeName())
         << "\" typeid=\"" << id << "\">\n";
 
     writeXMLFilterData(out);
@@ -66,7 +66,7 @@ namespace {
 }
 
 NPacket* NSurfaceFilter::internalClonePacket(NPacket* /* parent */) const {
-    return forFilter(getFilterID(), CloneFunction(this), 0);
+    return forFilter(getFilterType(), CloneFunction(this), 0);
 }
 
 } // namespace regina

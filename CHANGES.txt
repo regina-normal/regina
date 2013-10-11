@@ -95,8 +95,12 @@ Version 4.95  [ (under development) ]
             - The requirements for new subclasses have changed, since the old
               macro-based registry was replaced with the new template-based
               registry.  See the NSurfaceFilter class notes for details.
-            - The constant filterID is now a compile-time enum constant,
-              not a static const int.
+            - The constant filterID has been renamed to filterType, and
+              is now a compile-time enum constant (not a static const int).
+              The old name has been kept as a deprecated alias.
+            - Routines getFilterID() and getFilterName() have been renamed
+              to getFilterType() and getFilterTypeName().  The old names
+              have been kept as deprecated aliases.
         Class NTetrahedron:
             - Renamed getFace() and getFaceMapping() to getTriangle()
               and getTriangleMapping().  The old names are deprecated but
