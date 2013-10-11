@@ -57,15 +57,15 @@ class NNormalSurfaceVectorANStandard;
 
 /**
  * Stores information about standard almost normal coordinates.
- * See the general NormalFlavour template notes for further details.
+ * See the general NormalInfo template notes for further details.
  *
  * \ifacespython Not present.
  */
 template <>
-struct NormalFlavour<NS_AN_STANDARD> {
+struct NormalInfo<NS_AN_STANDARD> {
     typedef NNormalSurfaceVectorANStandard Vector;
-    typedef NormalFlavour<NS_AN_STANDARD> StandardFlavour;
-    typedef NormalFlavour<NS_AN_QUAD_OCT> ReducedFlavour;
+    typedef NormalInfo<NS_AN_STANDARD> StandardFlavour;
+    typedef NormalInfo<NS_AN_QUAD_OCT> ReducedFlavour;
     inline static const char* name() {
         return "Standard almost normal (tri-quad-oct)";
     }

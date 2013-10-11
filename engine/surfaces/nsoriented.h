@@ -56,15 +56,15 @@ class NNormalSurfaceVectorOriented;
 
 /**
  * Stores information about transversely oriented standard normal coordinates.
- * See the general NormalFlavour template notes for further details.
+ * See the general NormalInfo template notes for further details.
  *
  * \ifacespython Not present.
  */
 template <>
-struct NormalFlavour<NS_ORIENTED> {
+struct NormalInfo<NS_ORIENTED> {
     typedef NNormalSurfaceVectorOriented Vector;
-    typedef NormalFlavour<NS_ORIENTED> StandardFlavour;
-    typedef NormalFlavour<NS_ORIENTED_QUAD> ReducedFlavour;
+    typedef NormalInfo<NS_ORIENTED> StandardFlavour;
+    typedef NormalInfo<NS_ORIENTED_QUAD> ReducedFlavour;
     inline static const char* name() {
         return "Transversely oriented standard normal";
     }
