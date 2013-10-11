@@ -87,9 +87,7 @@ inline void forFlavour(NormalCoords flavour, VoidFunctionObject func) {
     }
 }
 
-/*@}*/
-
 } // namespace regina
 
-#endif // include guard __FLAVOURREGISTRY_IMPL_H
+#endif
 
