@@ -64,6 +64,10 @@ Version 4.95  [ (under development) ]
         Class NNormalSurface, NNormalSurfaceVector:
             - Renamed getFaceArcs() to getTriangleArcs().  The old name is
               deprecated but has been kept for backward compatibility.
+            - All normal surface vector classes have now gained the enum
+              constant flavourID (representing the corresponding NormalCoords
+              constant), and the typedef Flavour (representing the
+              template specialisation NormalFlavour<flavourId>).
         Class NNormalSurfaceList:
             - Re-enabled enumeration using NS_HILBERT_FULLCONE, which previously
               returned an empty list.  Users will not be affected unless
@@ -71,6 +75,10 @@ Version 4.95  [ (under development) ]
         Enum NormalCoords:
             - Renamed NS_FACE_ARCS to NS_TRIANGLE_ARCS.  The old name is
               deprecated but has been kept for backward compatibility.
+        Class NormalFlavour<...>:
+            - The declaration has moved to normalsurface.h, and the
+              specialisations have moved to the corresponding coordinate
+              system headers (nsstandard.h and so on).
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic aliases orderedSn, SnIndex() and
               orderedSnIndex().  These all reference existing arrays/routines
@@ -99,6 +107,12 @@ Version 4.95  [ (under development) ]
         Class NVertex:
             - Added buildLinkDetail(), which returns details of how triangles
               of the vertex link are embedded within individual tetrahedra.
+        Struct Returns:
+            - Moved into utilities/registry.h.  However, its contents are
+              still included from its previous header surfaces/filterregistry.h.
+        Header flavourregistry.h:
+            - The REGISTER_FLAVOUR macros have been removed.  To iterate through
+              coordinate systems, use the forFlavour() template functions.
         Headers dimtraits.h, nfacetspec.h, ngenericisomorphism.{h,tcc}:
             - Moved from triangulation/ to generic/.  The old header locations
               are now deprecated.  They have been kept for backward

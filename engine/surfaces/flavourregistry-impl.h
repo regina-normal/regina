@@ -32,33 +32,66 @@
 
 /* end stub */
 
+/*! \file surfaces/flavourregistry-impl.h
+ *  \brief Contains the registry of all normal coordinate systems that can
+ *  be used to create and store normal surfaces in 3-manifold triangulations.
+ *
+ *  Each time a new flavour is created, this registry must be updated to:
+ *
+ *  - add a #include line for the corresponding vector subclass;
+ *  - add a corresponding case to each implementation of forFlavour().
+ *
+ *  See flavourregistry.h for how other routines can use this registry.
+ */
+
+#ifndef __FLAVOURREGISTRY_IMPL_H
+#ifndef __DOXYGEN
+#define __FLAVOURREGISTRY_IMPL_H
+#endif
+
 #include "surfaces/flavourregistry.h"
+#include "surfaces/nsstandard.h"
+#include "surfaces/nsanstandard.h"
+#include "surfaces/nsquad.h"
+#include "surfaces/nsquadoct.h"
+#include "surfaces/nsoriented.h"
+#include "surfaces/nsorientedquad.h"
 
 namespace regina {
 
-#define __FLAVOUR_REGISTRY_BODY
-
-// Bring in routines from the flavour registry.
-
-#define REGISTER_FLAVOUR(id_name, class, n, almost_normal, spun, oriented) \
-    NNormalSurfaceVector* class::clone() const { \
-        return new class(*this); \
-    } \
-    bool class::allowsAlmostNormal() const { \
-        return almost_normal; \
-    } \
-    bool class::allowsSpun() const { \
-        return spun; \
-    } \
-    bool class::allowsOriented() const { \
-        return oriented; \
+template <typename FunctionObject>
+inline typename FunctionObject::ReturnType forFlavour(
+        NormalCoords flavour, FunctionObject func,
+        typename FunctionObject::ReturnType defaultReturn) {
+    switch (flavour) {
+        case NS_STANDARD : return func(NormalFlavour<NS_STANDARD>());
+        case NS_AN_STANDARD : return func(NormalFlavour<NS_AN_STANDARD>());
+        case NS_QUAD : return func(NormalFlavour<NS_QUAD>());
+        case NS_AN_QUAD_OCT : return func(NormalFlavour<NS_AN_QUAD_OCT>());
+        case NS_ORIENTED : return func(NormalFlavour<NS_ORIENTED>());
+        case NS_ORIENTED_QUAD :
+            return func(NormalFlavour<NS_ORIENTED_QUAD>());
+        default: return defaultReturn;
     }
+}
 
-#include "surfaces/flavourregistry.h"
+template <typename VoidFunctionObject>
+inline void forFlavour(NormalCoords flavour, VoidFunctionObject func) {
+    switch (flavour) {
+        case NS_STANDARD : func(NormalFlavour<NS_STANDARD>()); break;
+        case NS_AN_STANDARD : func(NormalFlavour<NS_AN_STANDARD>()); break;
+        case NS_QUAD : func(NormalFlavour<NS_QUAD>()); break;
+        case NS_AN_QUAD_OCT : func(NormalFlavour<NS_AN_QUAD_OCT>()); break;
+        case NS_ORIENTED : func(NormalFlavour<NS_ORIENTED>()); break;
+        case NS_ORIENTED_QUAD :
+            func(NormalFlavour<NS_ORIENTED_QUAD>()); break;
+        default: break;
+    }
+}
 
-// Tidy up.
-#undef REGISTER_FLAVOUR
-#undef __FLAVOUR_REGISTRY_BODY
+/*@}*/
 
 } // namespace regina
+
+#endif // include guard __FLAVOURREGISTRY_IMPL_H
 
