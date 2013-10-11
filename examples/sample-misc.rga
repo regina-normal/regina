@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<reginadata engine="4.94">
+<reginadata engine="4.95">
 <packet label="Sample Data File"
 	type="Container" typeid="1"
 	parent="">
@@ -670,7 +670,7 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
 	type="Container" typeid="1"
 	parent="Sample Data File">
 <packet label="Figure 8 Knot Complement"
-	type="Triangulation" typeid="3"
+	type="3-Manifold Triangulation" typeid="3"
 	parent="3-Manifolds">
   <tetrahedra ntet="2">
     <tet desc=""> 1 108 1 75 1 30 1 198 </tet>
@@ -730,9 +730,9 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
   <spanstrict value="T"/>
   <spantaut value="T"/>
 </packet> <!-- Angle Structures (Angle Structure List) -->
-</packet> <!-- Figure 8 Knot Complement (Triangulation) -->
+</packet> <!-- Figure 8 Knot Complement (3_Manifold Triangulation) -->
 <packet label="Layered Solid Torus"
-	type="Triangulation" typeid="3"
+	type="3-Manifold Triangulation" typeid="3"
 	parent="3-Manifolds">
   <tetrahedra ntet="4">
     <tet desc=""> 1 54 1 156 -1 -1 -1 -1 </tet>
@@ -1075,9 +1075,9 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
 </packet> <!-- Fundamental Normal Surfaces (Normal Surface List) -->
-</packet> <!-- Layered Solid Torus (Triangulation) -->
+</packet> <!-- Layered Solid Torus (3_Manifold Triangulation) -->
 <packet label="Poincaré Homology Sphere"
-	type="Triangulation" typeid="3"
+	type="3-Manifold Triangulation" typeid="3"
 	parent="3-Manifolds">
   <tetrahedra ntet="5">
     <tet desc=""> 1 120 2 147 3 78 4 39 </tet>
@@ -1098,9 +1098,9 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
   <H2><abeliangroup rank="0"> </abeliangroup></H2>
   <zeroeff value="T"/>
   <splitsfce value="F"/>
-</packet> <!-- Poincaré Homology Sphere (Triangulation) -->
+</packet> <!-- Poincaré Homology Sphere (3_Manifold Triangulation) -->
 <packet label="RP2xS1"
-	type="Triangulation" typeid="3"
+	type="3-Manifold Triangulation" typeid="3"
 	parent="3-Manifolds">
   <tetrahedra ntet="3">
     <tet desc=""> 1 228 1 228 2 141 2 120 </tet>
@@ -1122,7 +1122,7 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
 	parent="RP2xS1">
   <text>There are in fact two triangulations of this 3-manifold with three tetrahedra.</text>
 </packet> <!-- Note (Text) -->
-</packet> <!-- RP2xS1 (Triangulation) -->
+</packet> <!-- RP2xS1 (3_Manifold Triangulation) -->
 </packet> <!-- 3_Manifolds (Container) -->
 <packet label="2-Manifolds"
 	type="Container" typeid="1"
