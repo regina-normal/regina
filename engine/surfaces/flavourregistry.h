@@ -49,6 +49,13 @@
  *  system in the registry.
  */
 
+// The old registry macros will silently compile but do nothing.
+// This could lead to nasty surprises, so throw an error if it looks like
+// people are still trying to use them.
+#ifdef __FLAVOUR_REGISTRY_BODY
+#error "The old REGISTER_FLAVOUR macros have been removed.  Use forFlavour() instead."
+#endif
+
 #ifndef __FLAVOURREGISTRY_H
 #ifndef __DOXYGEN
 #define __FLAVOURREGISTRY_H
