@@ -367,7 +367,6 @@
 		052FA024180600FB00FAE4DF /* filterregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9DFE180600FB00FAE4DF /* filterregistry.h */; };
 		052FA025180600FB00FAE4DF /* filters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DFF180600FB00FAE4DF /* filters.cpp */; };
 		052FA026180600FB00FAE4DF /* flavourregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E00180600FB00FAE4DF /* flavourregistry.h */; };
-		052FA027180600FB00FAE4DF /* flavours.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E01180600FB00FAE4DF /* flavours.cpp */; };
 		052FA028180600FB00FAE4DF /* links.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E02180600FB00FAE4DF /* links.cpp */; };
 		052FA029180600FB00FAE4DF /* ndisc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E03180600FB00FAE4DF /* ndisc.cpp */; };
 		052FA02A180600FB00FAE4DF /* ndisc.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E04180600FB00FAE4DF /* ndisc.h */; };
@@ -659,7 +658,6 @@
 		052FA1D41806129B00FAE4DF /* enumerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DFC180600FB00FAE4DF /* enumerator.cpp */; };
 		052FA1D51806129B00FAE4DF /* enumfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DFD180600FB00FAE4DF /* enumfilter.cpp */; };
 		052FA1D61806129B00FAE4DF /* filters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DFF180600FB00FAE4DF /* filters.cpp */; };
-		052FA1D71806129B00FAE4DF /* flavours.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E01180600FB00FAE4DF /* flavours.cpp */; };
 		052FA1D81806129B00FAE4DF /* links.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E02180600FB00FAE4DF /* links.cpp */; };
 		052FA1D91806129B00FAE4DF /* ndisc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E03180600FB00FAE4DF /* ndisc.cpp */; };
 		052FA1DA1806129B00FAE4DF /* ndisctype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E05180600FB00FAE4DF /* ndisctype.cpp */; };
@@ -769,6 +767,8 @@
 		057FA753180615F6008E25F6 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA750180615F5008E25F6 /* libxml2.dylib */; };
 		057FA754180615F6008E25F6 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA751180615F5008E25F6 /* libz.dylib */; };
 		057FA7561806184B008E25F6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA7551806184A008E25F6 /* UIKit.framework */; };
+		05CA99E418078452006161DC /* flavourregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E318078451006161DC /* flavourregistry-impl.h */; };
+		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1226,7 +1226,6 @@
 		052F9DFE180600FB00FAE4DF /* filterregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filterregistry.h; sourceTree = "<group>"; };
 		052F9DFF180600FB00FAE4DF /* filters.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = filters.cpp; sourceTree = "<group>"; };
 		052F9E00180600FB00FAE4DF /* flavourregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = flavourregistry.h; sourceTree = "<group>"; };
-		052F9E01180600FB00FAE4DF /* flavours.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = flavours.cpp; sourceTree = "<group>"; };
 		052F9E02180600FB00FAE4DF /* links.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = links.cpp; sourceTree = "<group>"; };
 		052F9E03180600FB00FAE4DF /* ndisc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ndisc.cpp; sourceTree = "<group>"; };
 		052F9E04180600FB00FAE4DF /* ndisc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndisc.h; sourceTree = "<group>"; };
@@ -1432,6 +1431,8 @@
 		057FA750180615F5008E25F6 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libxml2.dylib; sourceTree = DEVELOPER_DIR; };
 		057FA751180615F5008E25F6 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
 		057FA7551806184A008E25F6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		05CA99E318078451006161DC /* flavourregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "flavourregistry-impl.h"; sourceTree = "<group>"; };
+		05CA99E518078465006161DC /* registryutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registryutils.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2091,8 +2092,8 @@
 				052F9DFD180600FB00FAE4DF /* enumfilter.cpp */,
 				052F9DFE180600FB00FAE4DF /* filterregistry.h */,
 				052F9DFF180600FB00FAE4DF /* filters.cpp */,
+				05CA99E318078451006161DC /* flavourregistry-impl.h */,
 				052F9E00180600FB00FAE4DF /* flavourregistry.h */,
-				052F9E01180600FB00FAE4DF /* flavours.cpp */,
 				052F9E02180600FB00FAE4DF /* links.cpp */,
 				052F9E03180600FB00FAE4DF /* ndisc.cpp */,
 				052F9E04180600FB00FAE4DF /* ndisc.h */,
@@ -2225,6 +2226,7 @@
 				052F9E77180600FB00FAE4DF /* osutils.cpp */,
 				052F9E78180600FB00FAE4DF /* osutils.h */,
 				052F9E79180600FB00FAE4DF /* ptrutils.h */,
+				05CA99E518078465006161DC /* registryutils.h */,
 				052F9E7A180600FB00FAE4DF /* stlutils.h */,
 				052F9E7B180600FB00FAE4DF /* stringutils-impl.h */,
 				052F9E7C180600FB00FAE4DF /* stringutils.cpp */,
@@ -2577,6 +2579,7 @@
 				052F9F5E180600FB00FAE4DF /* ntext.h in Headers */,
 				052F9E8E180600FB00FAE4DF /* nanglestructure.h in Headers */,
 				052F9FEF180600FB00FAE4DF /* nblockedsfstriple.h in Headers */,
+				05CA99E618078466006161DC /* registryutils.h in Headers */,
 				052FA072180600FB00FAE4DF /* ntetrahedron.h in Headers */,
 				052F9F77180600FB00FAE4DF /* covers.h in Headers */,
 				052FA09B180600FB00FAE4DF /* ptrutils.h in Headers */,
@@ -2612,6 +2615,7 @@
 				052F9ED9180600FB00FAE4DF /* full_cone.h in Headers */,
 				052F9FF9180600FB00FAE4DF /* nlayeredloop.h in Headers */,
 				052FA064180600FB00FAE4DF /* nface.h in Headers */,
+				05CA99E418078452006161DC /* flavourregistry-impl.h in Headers */,
 				052F9EAD180600FB00FAE4DF /* dim2component.h in Headers */,
 				052F9FE9180600FB00FAE4DF /* nblockedsfs.h in Headers */,
 				052FA003180600FB00FAE4DF /* npluggedtorusbundle.h in Headers */,
@@ -2864,7 +2868,6 @@
 				052FA18D1806129B00FAE4DF /* ngenerictriangulation.cpp in Sources */,
 				052FA1771806129B00FAE4DF /* isomorphic.cpp in Sources */,
 				052FA1B71806129B00FAE4DF /* nblockedsfsloop.cpp in Sources */,
-				052FA1D71806129B00FAE4DF /* flavours.cpp in Sources */,
 				052FA21A180612DD00FAE4DF /* core_geodesics.c in Sources */,
 				052FA1971806129B00FAE4DF /* nsnappeacensusmfd.cpp in Sources */,
 				052FA1881806129B00FAE4DF /* isosig.cpp in Sources */,
@@ -3220,7 +3223,6 @@
 				052F9F72180600FB00FAE4DF /* chern_simons.c in Sources */,
 				052F9F3F180600FB00FAE4DF /* nmatrix2.cpp in Sources */,
 				052F9FEA180600FB00FAE4DF /* nblockedsfsloop.cpp in Sources */,
-				052FA027180600FB00FAE4DF /* flavours.cpp in Sources */,
 				052F9FA2180600FB00FAE4DF /* tidy_peripheral_curves.c in Sources */,
 				052F9F44180600FB00FAE4DF /* nperm4.cpp in Sources */,
 				052FA014180600FB00FAE4DF /* nsnappedtwosphere.cpp in Sources */,
