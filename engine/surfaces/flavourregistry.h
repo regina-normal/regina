@@ -42,7 +42,7 @@
  *  how to do this are included in flavourregistry-impl.h.
  *
  *  External routines can access the registry by calling one of the
- *  forFlavour() template functions.
+ *  forFlavour() template functions defined in flavourregistry.h.
  *
  *  \warning You should not include this header unless it is necessary,
  *  since it will automatically import every header for every coordinate
@@ -56,11 +56,10 @@
 
 #include "surfaces/normalcoords.h"
 #include "utilities/registryutils.h"
-#include <cstddef>
 
 namespace regina {
 
-class NNormalSurfaceVector;
+class NNormalSurfaceVector; // For the deprecated NewNormalSurfaceVector.
 
 /**
  * \weakgroup surfaces
@@ -83,8 +82,8 @@ class NNormalSurfaceVector;
  * considered invalid for our purposes here.
  *
  * In detail: the function object \a func must define a templated
- * unary bracket operator, so that <tt>func(NormalFlavour<f>)</tt> is
- * defined for any valid NormalCoords enum value \a f.  Then,
+ * unary bracket operator, so that <tt>func(NormalFlavour<c>)</tt> is
+ * defined for any valid NormalCoords enum value \a c.  Then,
  * when the user calls <tt>forFlavour(flavour, func, defaultReturn)</tt>,
  * this routine will call <tt>func(NormalFlavour<flavour>)</tt> and pass back
  * the corresponding return value.  If \a flavour does not denote a valid
@@ -150,42 +149,20 @@ template <typename VoidFunctionObject>
 void forFlavour(NormalCoords flavour, VoidFunctionObject func);
 
 /**
- * A function object that creates a new normal surface vector,
- * for use with the three-argument version of forFlavour().
+ * A legacy typedef provided for backward compatibility only.
  *
- * \ifacespython Not present.
+ * \deprecated The old NewNormalSurfaceVector class has been redesigned
+ * as the more general template class NewVector, and moved into the
+ * header registryutils.h.  This typedef is provided for backward
+ * compatibility, and will be removed in some future version of Regina.
  */
-struct NewNormalSurfaceVector : public Returns<NNormalSurfaceVector*> {
-    size_t len_;
-        /**< The length of the new vector to create. */
-
-    /**
-     * Creates a new function object, whose bracket operator will create a
-     * new normal surface vector of the given length.
-     *
-     * @param len the length of the normal surface vector to create.
-     */
-    inline NewNormalSurfaceVector(size_t len) : len_(len) {
-    }
-
-    /**
-     * Creates a new normal surface vector of type Flavour::Vector.
-     * The length of the vector will match the value passed to the class
-     * constructor for this function object.
-     *
-     * @return a new normal surface vector of type Flavour::Vector.
-     */
-    template <typename Flavour>
-    inline NNormalSurfaceVector* operator() (Flavour) {
-        return new typename Flavour::Vector(len_);
-    }
-};
+typedef NewVector<NNormalSurfaceVector> NewNormalSurfaceVector;
 
 /*@}*/
 
 } // namespace regina
 
 // Import template implementations:
-#include "flavourregistry-impl.h"
+#include "surfaces/flavourregistry-impl.h"
 
 #endif

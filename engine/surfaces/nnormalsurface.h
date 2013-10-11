@@ -213,7 +213,7 @@ class NMatrixInt;
  * At a bare minimum, each specialisation of this template must provide:
  *
  * - a typedef \a Vector that represents the corresponding
- *   NNormalSurfaceVector class;
+ *   NNormalSurfaceVector subclass;
  * - typedefs \a StandardFlavour and \a ReducedFlavour that identify
  *   NormalFlavour templates for the corresponding coordinate systems with and
  *   without triangles (if this is not meaningful then both typedefs should
@@ -247,6 +247,9 @@ struct NormalFlavour;
  *   NNormalSurfaceVector::allowsAlmostNormal(),
  *   NNormalSurfaceVector::allowsSpun(), and
  *   NNormalSurfaceVector::allowsOriented().
+ *
+ * @param class_ the name of this subclass of NNormalSurfaceVector.
+ * @param id the corresponding NNormalCoords constant.
  */
 #define REGINA_NORMAL_SURFACE_FLAVOUR(class_, id) \
     public: \
