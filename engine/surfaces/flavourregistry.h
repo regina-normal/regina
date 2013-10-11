@@ -82,10 +82,10 @@ class NNormalSurfaceVector; // For the deprecated NewNormalSurfaceVector.
  * considered invalid for our purposes here.
  *
  * In detail: the function object \a func must define a templated
- * unary bracket operator, so that <tt>func(NormalFlavour<c>)</tt> is
+ * unary bracket operator, so that <tt>func(NormalInfo<c>)</tt> is
  * defined for any valid NormalCoords enum value \a c.  Then,
  * when the user calls <tt>forFlavour(flavour, func, defaultReturn)</tt>,
- * this routine will call <tt>func(NormalFlavour<flavour>)</tt> and pass back
+ * this routine will call <tt>func(NormalInfo<flavour>)</tt> and pass back
  * the corresponding return value.  If \a flavour does not denote a valid
  * coordinate system as described above, then forFlavour() will pass back
  * \a defaultReturn instead.
@@ -101,7 +101,7 @@ class NNormalSurfaceVector; // For the deprecated NewNormalSurfaceVector.
  *
  * @param flavour the given flavour of normal coordinate system.
  * @param func the function object whose unary bracket operator we will
- * call with a NormalFlavour<flavour> object.
+ * call with a NormalInfo<flavour> object.
  * @param defaultReturn the value to return if the given flavour of
  * coordinate system is invalid.
  * @return the return value from the corresponding unary bracket
@@ -129,10 +129,10 @@ typename FunctionObject::ReturnType forFlavour(
  * considered invalid for our purposes here.
  *
  * In detail: the function object \a func must define a templated
- * unary bracket operator, so that <tt>func(NormalFlavour<f>)</tt> is
- * defined for any valid NormalCoords enum value \a f.  Then,
+ * unary bracket operator, so that <tt>func(NormalInfo<c>)</tt> is
+ * defined for any valid NormalCoords enum value \a c.  Then,
  * when the user calls <tt>forFlavour(flavour, func)</tt>,
- * this routine will call <tt>func(NormalFlavour<flavour>)</tt> in turn.
+ * this routine will call <tt>func(NormalInfo<flavour>)</tt> in turn.
  * If \a flavour does not denote a valid coordinate system as described above,
  * then forFlavour() will do nothing.
  *
@@ -143,7 +143,7 @@ typename FunctionObject::ReturnType forFlavour(
  *
  * @param flavour the given flavour of normal coordinate system.
  * @param func the function object whose unary bracket operator we will
- * call with a NormalFlavour<flavour> object.
+ * call with a NormalInfo<flavour> object.
  */
 template <typename VoidFunctionObject>
 void forFlavour(NormalCoords flavour, VoidFunctionObject func);

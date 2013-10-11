@@ -206,7 +206,7 @@ class NMatrixInt;
  * known until runtime, see the various forFlavour() routines defined in
  * flavourregistry.h.
  *
- * This NormalFlavour template should only be defined for \a flavourType
+ * This NormalInfo template should only be defined for \a flavourType
  * arguments that represent coordinate systems in which you can create and
  * store normal surfaces.
  *
@@ -215,7 +215,7 @@ class NMatrixInt;
  * - a typedef \a Vector that represents the corresponding
  *   NNormalSurfaceVector subclass;
  * - typedefs \a StandardFlavour and \a ReducedFlavour that identify
- *   NormalFlavour templates for the corresponding coordinate systems with and
+ *   NormalInfo templates for the corresponding coordinate systems with and
  *   without triangles (if this is not meaningful then both typedefs should
  *   just identify this system);
  * - enum constants \a almostNormal, \a spun and \a oriented, which indicate
@@ -227,7 +227,7 @@ class NMatrixInt;
  * \ifacespython Not present.
  */
 template <NormalCoords flavourType>
-struct NormalFlavour;
+struct NormalInfo;
 
 /**
  * Defines various constants, types and virtual functions for a subclass
@@ -241,7 +241,7 @@ struct NormalFlavour;
  * - a compile-time enum constant \a flavourID, which is equal to the
  *   corresponding NormalCoords constant;
  * - a typedef \a Flavour, which refers to the corresponding specialisation
- *   of the NormalFlavour<> template;
+ *   of the NormalInfo<> template;
  * - declarations and implementations of the virtual functions
  *   NNormalSurfaceVector::clone(),
  *   NNormalSurfaceVector::allowsAlmostNormal(),
@@ -253,7 +253,7 @@ struct NormalFlavour;
  */
 #define REGINA_NORMAL_SURFACE_FLAVOUR(class_, id) \
     public: \
-        typedef NormalFlavour<id> Flavour; \
+        typedef NormalInfo<id> Flavour; \
         enum { flavourID = id }; \
         inline virtual NNormalSurfaceVector* clone() const { \
             return new class_(*this); \
@@ -305,7 +305,7 @@ struct NormalFlavour;
  *   <li>The file flavourregistry-impl.h must be updated to reflect the new
  *   flavour of coordinate system (the file itself contains instructions
  *   on how to do this).</li>
- *   <li>A corresponding specialisation of NormalFlavour<> must be
+ *   <li>A corresponding specialisation of NormalInfo<> must be
  *   defined, typically in the same header as the new vector subclass.</li>
  *   <li>The macro REGINA_NORMAL_SURFACE_FLAVOUR must be added to the
  *   beginning of the new vector subclass.  This will declare and define

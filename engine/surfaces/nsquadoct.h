@@ -56,15 +56,15 @@ class NNormalSurfaceVectorQuadOct;
 
 /**
  * Stores information about quad-oct almost normal coordinates.
- * See the general NormalFlavour template notes for further details.
+ * See the general NormalInfo template notes for further details.
  *
  * \ifacespython Not present.
  */
 template <>
-struct NormalFlavour<NS_AN_QUAD_OCT> {
+struct NormalInfo<NS_AN_QUAD_OCT> {
     typedef NNormalSurfaceVectorQuadOct Vector;
-    typedef NormalFlavour<NS_AN_STANDARD> StandardFlavour;
-    typedef NormalFlavour<NS_AN_QUAD_OCT> ReducedFlavour;
+    typedef NormalInfo<NS_AN_STANDARD> StandardFlavour;
+    typedef NormalInfo<NS_AN_QUAD_OCT> ReducedFlavour;
     inline static const char* name() {
         return "Quad-oct almost normal";
     }
