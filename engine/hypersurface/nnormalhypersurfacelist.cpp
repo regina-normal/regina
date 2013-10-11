@@ -53,7 +53,7 @@ namespace {
 
         template <typename Flavour>
         inline NNormalHypersurfaceVector* operator() (Flavour f) {
-            return Flavour::Vector::makeZeroVector(tri_);
+            return Flavour::Class::makeZeroVector(tri_);
         }
     };
 }
@@ -71,7 +71,7 @@ namespace {
 
         template <typename Flavour>
         inline NMatrixInt* operator() (Flavour f) {
-            return Flavour::Vector::makeMatchingEquations(tri_);
+            return Flavour::Class::makeMatchingEquations(tri_);
         }
     };
 }
@@ -89,7 +89,7 @@ namespace {
 
         template <typename Flavour>
         inline NEnumConstraintList* operator() (Flavour f) {
-            return Flavour::Vector::makeEmbeddedConstraints(tri_);
+            return Flavour::Class::makeEmbeddedConstraints(tri_);
         }
     };
 }
@@ -118,7 +118,7 @@ void NNormalHypersurfaceList::VertexEnumerator::operator() (Flavour) {
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->flavour_);
 
     // Find the normal hypersurfaces.
-    NDoubleDescription::enumerateExtremalRays<typename Flavour::Vector>(
+    NDoubleDescription::enumerateExtremalRays<typename Flavour::Class>(
         HypersurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
 
     delete eqns;
@@ -164,7 +164,7 @@ void NNormalHypersurfaceList::FundPrimalEnumerator::operator() (Flavour) {
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
     // Find the normal hypersurfaces.
-    NHilbertPrimal::enumerateHilbertBasis<typename Flavour::Vector>(
+    NHilbertPrimal::enumerateHilbertBasis<typename Flavour::Class>(
         HypersurfaceInserter(*list_, triang_),
         useVtxSurfaces->beginVectors(), useVtxSurfaces->endVectors(),
         constraints, tracker_);
@@ -200,7 +200,7 @@ void NNormalHypersurfaceList::FundDualEnumerator::operator() (Flavour) {
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->flavour_);
 
     // Find the normal hypersurfaces.
-    NHilbertDual::enumerateHilbertBasis<typename Flavour::Vector>(
+    NHilbertDual::enumerateHilbertBasis<typename Flavour::Class>(
         HypersurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
 
     delete eqns;

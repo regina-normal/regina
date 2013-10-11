@@ -63,7 +63,7 @@ class NNormalHypersurfaceVectorStandard;
  */
 template <>
 struct HyperInfo<HS_STANDARD> {
-    typedef NNormalHypersurfaceVectorStandard Vector;
+    typedef NNormalHypersurfaceVectorStandard Class;
     inline static const char* name() {
         return "Standard normal (tet-prism)";
     }
