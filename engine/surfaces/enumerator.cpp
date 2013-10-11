@@ -187,12 +187,12 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
             if (tracker_)
                 tracker_->newStage("Enumerating reduced solution set\n"
                     "(tree traversal method)", 0.9);
-            e.fillVertexTree<typename Flavour::ReducedFlavour>();
+            e.fillVertexTree<typename Flavour::Reduced>();
         } else {
             if (tracker_)
                 tracker_->newStage("Enumerating reduced solution set\n"
                     "(double description method)", 0.9);
-            e.fillVertexDD<typename Flavour::ReducedFlavour>();
+            e.fillVertexDD<typename Flavour::Reduced>();
         }
 
         if (tracker_ && tracker_->isCancelled()) {
@@ -222,7 +222,7 @@ void NNormalSurfaceList::Enumerator::fillVertexDD() {
     NEnumConstraintList* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->flavour_) : 0);
 
-    NDoubleDescription::enumerateExtremalRays<typename Flavour::Vector>(
+    NDoubleDescription::enumerateExtremalRays<typename Flavour::Class>(
         SurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
 
     delete constraints;
@@ -442,7 +442,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalDual() {
     NEnumConstraintList* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->flavour_) : 0);
 
-    NHilbertDual::enumerateHilbertBasis<typename Flavour::Vector>(
+    NHilbertDual::enumerateHilbertBasis<typename Flavour::Class>(
         SurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
 
     delete constraints;
@@ -462,7 +462,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalCD() {
     NEnumConstraintList* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->flavour_) : 0);
 
-    NHilbertCD::enumerateHilbertBasis<typename Flavour::Vector>(
+    NHilbertCD::enumerateHilbertBasis<typename Flavour::Class>(
         SurfaceInserter(*list_, triang_), *eqns, constraints);
 
     delete constraints;
@@ -519,7 +519,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
     if (tracker_)
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
-    NHilbertPrimal::enumerateHilbertBasis<typename Flavour::Vector>(
+    NHilbertPrimal::enumerateHilbertBasis<typename Flavour::Class>(
         SurfaceInserter(*list_, triang_),
         vtx->beginVectors(), vtx->endVectors(), constraints, tracker_);
 

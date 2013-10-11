@@ -43,9 +43,13 @@ void addNSurfaceFilter();
 void addNSurfaceFilterCombination();
 void addNSurfaceFilterProperties();
 void addNSurfaceSubset();
+void addSurfaceFilterType();
 
 void addSurfaces() {
+    // Enum types must go first.
     addNormalCoords();
+    addSurfaceFilterType();
+
     addNormalFlags();
     addNDisc();
     addNDiscType();

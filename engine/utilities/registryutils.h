@@ -93,18 +93,18 @@ struct NewVector : public Returns<VectorBase*> {
     }
 
     /**
-     * Creates a new vector of the subclass Flavour::Vector.
+     * Creates a new vector of the subclass Flavour::Class.
      * The length of the vector will match the value passed to the class
      * constructor for this function object.
      *
-     * \pre It is known at compile time that Flavour::Vector will be a
+     * \pre It is known at compile time that Flavour::Class will be a
      * subclass of \a VectorBase.
      *
-     * @return a new vector of the subclass Flavour::Vector.
+     * @return a new vector of the subclass Flavour::Class.
      */
     template <typename Flavour>
     inline VectorBase* operator() (Flavour) {
-        return new typename Flavour::Vector(len_);
+        return new typename Flavour::Class(len_);
     }
 };
 

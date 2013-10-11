@@ -39,42 +39,43 @@
 
 namespace regina {
 
-#define __FILTER_REGISTRY_BODY
-
-#define REGISTER_FILTER(id, c, name) \
-    case id: out << regina::xml::xmlEncodeSpecialChars(name); break;
+namespace {
+    struct NameFunction : public Returns<const char*> {
+        template <typename Filter>
+        inline const char* operator() (Filter f) { return f.name(); }
+    };
+}
 
 void NSurfaceFilter::writeXMLPacketData(std::ostream& out) const {
-    int id = getFilterID();
+    SurfaceFilterType id = getFilterID();
 
-    out << "  <filter type=\"";
-    switch(id) {
-        // Import cases from the filter registry.
-        #include "surfaces/filterregistry.h"
-        default: out << "Unknown"; break;
-    }
-    out << "\" typeid=\"" << id << "\">\n";
+    out << "  <filter type=\""
+        << regina::xml::xmlEncodeSpecialChars(forFilter(
+            id, NameFunction(), "Unknown"))
+        << "\" typeid=\"" << id << "\">\n";
 
     writeXMLFilterData(out);
 
     out << "  </filter>\n";
 }
 
-#undef REGISTER_FILTER
-#define REGISTER_FILTER(id, class, n) \
-    case id: return new class(dynamic_cast<const class&>(*this));
+namespace {
+    struct CloneFunction : public Returns<NSurfaceFilter*> {
+        const NSurfaceFilter* from_;
 
-NPacket* NSurfaceFilter::internalClonePacket(NPacket* /* parent */) const {
-    switch (getFilterID()) {
-        // Import cases from the filter registry.
-        #include "surfaces/filterregistry.h"
-        default: return new NSurfaceFilter();
-    }
+        CloneFunction(const NSurfaceFilter* from) : from_(from) {}
+
+        template <typename Filter>
+        inline NSurfaceFilter* operator() (Filter f) {
+            return new typename Filter::Class(
+                dynamic_cast<const typename Filter::Class&>(*from_));
+        }
+    };
 }
 
-// Tidy up.
-#undef REGISTER_FILTER
-#undef __FILTER_REGISTRY_BODY
+NPacket* NSurfaceFilter::internalClonePacket(NPacket* /* parent */) const {
+    return forFilter(getFilterID(), CloneFunction(this), 0);
+}
 
 } // namespace regina
 

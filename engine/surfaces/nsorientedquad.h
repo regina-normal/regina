@@ -62,9 +62,9 @@ class NNormalSurfaceVectorOrientedQuad;
  */
 template <>
 struct NormalInfo<NS_ORIENTED_QUAD> {
-    typedef NNormalSurfaceVectorOrientedQuad Vector;
-    typedef NormalInfo<NS_ORIENTED> StandardFlavour;
-    typedef NormalInfo<NS_ORIENTED_QUAD> ReducedFlavour;
+    typedef NNormalSurfaceVectorOrientedQuad Class;
+    typedef NormalInfo<NS_ORIENTED> Standard;
+    typedef NormalInfo<NS_ORIENTED_QUAD> Reduced;
     inline static const char* name() {
         return "Transversely oriented quad normal";
     }
