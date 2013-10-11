@@ -44,6 +44,7 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     filterregistry.h
     flavourregistry.h
+    flavourregistry-impl.h
     ndisc.h
     ndisctype.h
     nnormalsurface.h
