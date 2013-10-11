@@ -49,7 +49,7 @@ void addNSurfaceFilter() {
         .def("getFilterName", &NSurfaceFilter::getFilterName)
     ;
 
-    s.attr("packetType") = NSurfaceFilter::packetType;
+    s.attr("packetType") = regina::PacketType(NSurfaceFilter::packetType);
     s.attr("filterID") = regina::SurfaceFilterType(NSurfaceFilter::filterID);
 
     implicitly_convertible<std::auto_ptr<NSurfaceFilter>,

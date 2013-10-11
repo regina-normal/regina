@@ -90,8 +90,6 @@ struct SurfaceFilterInfo;
  *
  * - a compile-time enum constant \a filterID, which is equal to the
  *   corresponding SurfaceFilterType constant;
- * - a typedef \a Info, which refers to the corresponding specialisation
- *   of the SurfaceFilterInfo<> template;
  * - declarations and implementations of the virtual functions
  *   NSurfaceFilter::getFilterID() and
  *   NSurfaceFilter::getFilterName().
@@ -101,14 +99,27 @@ struct SurfaceFilterInfo;
  */
 #define REGINA_SURFACE_FILTER(class_, id) \
     public: \
-        typedef SurfaceFilterInfo<id> Info; \
         enum { filterID = id }; \
         inline virtual SurfaceFilterType getFilterID() const { \
             return id; \
         } \
         inline virtual std::string getFilterName() const { \
-            return Info::name(); \
+            return SurfaceFilterInfo<id>::name(); \
         }
+
+/**
+ * Stores information about the normal surface filter packet type.
+ * See the general PacketInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct PacketInfo<PACKET_SURFACEFILTER> {
+    typedef NSurfaceFilter Class;
+    inline static const char* name() {
+        return "Surface Filter";
+    }
+};
 
 /**
  * Stores information about the default accept-all surface filter.
@@ -154,10 +165,8 @@ struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
  * \todo \feature Implement property \a lastAppliedTo.
  */
 class REGINA_API NSurfaceFilter : public NPacket {
+    REGINA_PACKET(NSurfaceFilter, PACKET_SURFACEFILTER)
     REGINA_SURFACE_FILTER(NSurfaceFilter, NS_FILTER_DEFAULT)
-
-    public:
-        static const int packetType;
 
     public:
         /**
@@ -231,8 +240,6 @@ class REGINA_API NSurfaceFilter : public NPacket {
          */
         static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
 
-        virtual int getPacketType() const;
-        virtual std::string getPacketTypeName() const;
         virtual void writeTextShort(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);
         virtual bool dependsOnParent() const;

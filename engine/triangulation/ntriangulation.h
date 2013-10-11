@@ -72,6 +72,7 @@ class NVertex;
 class NGroupPresentation;
 class NIsomorphism;
 class NNormalSurface;
+class NTriangulation;
 class NXMLPacketReader;
 class NXMLTriangulationReader;
 
@@ -80,6 +81,20 @@ class NXMLTriangulationReader;
  * Triangulations of 3-manifolds.
  * @{
  */
+
+/**
+ * Stores information about the 3-manifold triangulation packet.
+ * See the general PacketInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct PacketInfo<PACKET_TRIANGULATION> {
+    typedef NTriangulation Class;
+    inline static const char* name() {
+        return "3-Manifold Triangulation";
+    }
+};
 
 /**
  * Stores the triangulation of a 3-manifold along with its
@@ -121,9 +136,9 @@ class NXMLTriangulationReader;
  */
 class REGINA_API NTriangulation : public NPacket,
         public NGenericTriangulation<3> {
-    public:
-        static const int packetType;
+    REGINA_PACKET(NTriangulation, PACKET_TRIANGULATION)
 
+    public:
         typedef std::vector<NTetrahedron*>::const_iterator TetrahedronIterator;
             /**< Used to iterate through tetrahedra. */
         typedef std::vector<NTriangle*>::const_iterator TriangleIterator;
@@ -244,9 +259,6 @@ class REGINA_API NTriangulation : public NPacket,
          * \name Packet Administration
          */
         /*@{*/
-
-        virtual int getPacketType() const;
-        virtual std::string getPacketTypeName() const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
