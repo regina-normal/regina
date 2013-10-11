@@ -62,7 +62,7 @@ void NXMLNormalSurfaceReader::initialChars(const std::string& chars) {
     if (flavour == NS_AN_LEGACY)
         vec = new NNormalSurfaceVectorANStandard(vecLen);
     else
-        vec = forFlavour(flavour, NewNormalSurfaceVector(vecLen), 0);
+        vec = forFlavour(flavour, NewVector<NNormalSurfaceVector>(vecLen), 0);
     if (! vec)
         return;
 

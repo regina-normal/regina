@@ -43,7 +43,7 @@
 /**
  * A legacy typedef provided for backward compatibility only.
  *
- * \deprecated The old NFace class has been rename to NTriangle.
+ * \deprecated The old NFace class has been renamed to NTriangle.
  * This typedef is provided for backward compatibility, and will be removed
  * in some future version of Regina.
  */
@@ -52,7 +52,7 @@ typedef NTriangle NFace;
 /**
  * A legacy typedef provided for backward compatibility only.
  *
- * \deprecated The old NFaceEmbedding class has been rename to
+ * \deprecated The old NFaceEmbedding class has been renamed to
  * NTriangleEmbedding.  This typedef is provided for backward compatibility,
  * and will be removed in some future version of Regina.
  */

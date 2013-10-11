@@ -42,6 +42,8 @@
 #define __REGISTRYUTILS_H
 #endif
 
+#include <cstddef>
+
 namespace regina {
 
 /**
@@ -63,6 +65,47 @@ struct Returns {
      * Indicates the return type for a function object.
      */
     typedef ReturnType_ ReturnType;
+};
+
+/**
+ * A function object that creates a new vector subclassed from
+ * \a VectorBase, where the particular subclass is chosen according to
+ * the template argument to operator().  Typically \a VectorBase will be a
+ * normal surface vector base class (such as NNormalSurfaceVector).
+ *
+ * This routine is intended for use with normal surface flavour registry
+ * routines, such as the three-argument variant of forFlavour().
+ *
+ * \ifacespython Not present.
+ */
+template <class VectorBase>
+struct NewVector : public Returns<VectorBase*> {
+    size_t len_;
+        /**< The length of the new vector to create. */
+
+    /**
+     * Creates a new function object, whose bracket operator will create a
+     * new vector of the given length.
+     *
+     * @param len the length of the vector to create.
+     */
+    inline NewVector(size_t len) : len_(len) {
+    }
+
+    /**
+     * Creates a new vector of the subclass Flavour::Vector.
+     * The length of the vector will match the value passed to the class
+     * constructor for this function object.
+     *
+     * \pre It is known at compile time that Flavour::Vector will be a
+     * subclass of \a VectorBase.
+     *
+     * @return a new vector of the subclass Flavour::Vector.
+     */
+    template <typename Flavour>
+    inline VectorBase* operator() (Flavour) {
+        return new typename Flavour::Vector(len_);
+    }
 };
 
 } // namespace regina
