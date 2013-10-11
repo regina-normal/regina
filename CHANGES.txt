@@ -53,8 +53,11 @@ Version 4.95  [ (under development) ]
               deprecated but has been kept for backward compatibility.
             - All normal surface vector classes have now gained the enum
               constant flavourID (representing the corresponding NormalCoords
-              constant), and the typedef Flavour (representing the
-              template specialisation NormalFlavour<flavourId>).
+              constant), and the typedef Info (representing the
+              template specialisation NormalInfo<flavourId>).
+            - The requirements for new vector subclasses have changed, since the
+              old macro-based registry was replaced with the new template-based
+              registry.  See the NNormalSurfaceVector class notes for details.
         Class NNormalSurfaceList:
             - Re-enabled enumeration using NS_HILBERT_FULLCONE, which previously
               returned an empty list.  Users will not be affected unless
@@ -62,10 +65,18 @@ Version 4.95  [ (under development) ]
         Enum NormalCoords:
             - Renamed NS_FACE_ARCS to NS_TRIANGLE_ARCS.  The old name is
               deprecated but has been kept for backward compatibility.
-        Class NormalFlavour<...>:
-            - The declaration has moved to normalsurface.h, and the
-              specialisations have moved to the corresponding coordinate
-              system headers (nsstandard.h and so on).
+        Class NormalFlavour<...>, NormalInfo<...>:
+            - This recently-added registry helper template has changed since
+              the last release.  Since this is a very new class whose primary
+              role is in the redesign of the coordinate system registry,
+              no backward compatibility aliases are provided.
+            - The template itself has been renamed from NormalFlavour<...>
+              to NormalInfo<...>.
+            - The declaration has moved from flavourregistry.h to
+              normalsurface.h, and the specialisations have moved to the
+              corresponding coordinate system headers (nsstandard.h and so on).
+            - The typedefs Vector, StandardFlavour and ReducedFlavour
+              have been renamed to Class, Standard and Reduced.
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic aliases orderedSn, SnIndex() and
               orderedSnIndex().  These all reference existing arrays/routines

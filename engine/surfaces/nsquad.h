@@ -62,9 +62,9 @@ class NNormalSurfaceVectorQuad;
  */
 template <>
 struct NormalInfo<NS_QUAD> {
-    typedef NNormalSurfaceVectorQuad Vector;
-    typedef NormalInfo<NS_STANDARD> StandardFlavour;
-    typedef NormalInfo<NS_QUAD> ReducedFlavour;
+    typedef NNormalSurfaceVectorQuad Class;
+    typedef NormalInfo<NS_STANDARD> Standard;
+    typedef NormalInfo<NS_QUAD> Reduced;
     inline static const char* name() {
         return "Quad normal";
     }
