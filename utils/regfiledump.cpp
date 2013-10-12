@@ -108,7 +108,7 @@ void dumpPacket(std::ostream& out, NPacket* p, char dumpOpt) {
     else if (dumpOpt == 'f') {
         dumpPacketHeader(out, p);
         out << '\n';
-        out << p->toStringLong() << '\n';
+        out << p->detail() << '\n';
         out << '\n';
     }
 }
