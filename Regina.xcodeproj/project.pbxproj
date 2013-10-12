@@ -776,6 +776,7 @@
 		05A47FC21809D11900F86BFD /* knot-link-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F9D1809CB7600F86BFD /* knot-link-census.rga */; };
 		05A47FC31809D11900F86BFD /* sample-misc.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47FA11809CB7600F86BFD /* sample-misc.rga */; };
 		05A47FC41809D11900F86BFD /* snappea-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47FA41809CB7600F86BFD /* snappea-census.rga */; };
+		05A47FC71809D1D600F86BFD /* Example.m in Sources */ = {isa = PBXBuildFile; fileRef = 05A47FC61809D1D600F86BFD /* Example.m */; };
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 /* End PBXBuildFile section */
 
@@ -1477,6 +1478,8 @@
 		05A47FA61809CB7600F86BFD /* tree.session */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tree.session; sourceTree = "<group>"; };
 		05A47FA71809CB7600F86BFD /* triangulation.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = triangulation.py; sourceTree = "<group>"; };
 		05A47FA81809CB7600F86BFD /* triangulation.session */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = triangulation.session; sourceTree = "<group>"; };
+		05A47FC51809D1D600F86BFD /* Example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Example.h; sourceTree = "<group>"; };
+		05A47FC61809D1D600F86BFD /* Example.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Example.m; sourceTree = "<group>"; };
 		05CA99E518078465006161DC /* registryutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registryutils.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -2441,6 +2444,8 @@
 				052FA1421806103000FAE4DF /* RDetailViewController.mm */,
 				052FA1441806103000FAE4DF /* Images.xcassets */,
 				052FA1301806102F00FAE4DF /* Supporting Files */,
+				05A47FC51809D1D600F86BFD /* Example.h */,
+				05A47FC61809D1D600F86BFD /* Example.m */,
 			);
 			path = ios;
 			sourceTree = "<group>";
@@ -3095,6 +3100,7 @@
 				052FA23C180612DD00FAE4DF /* update_shapes.c in Sources */,
 				052FA23A180612DD00FAE4DF /* triangulations.c in Sources */,
 				052FA1BF1806129B00FAE4DF /* nlayeredsolidtorus.cpp in Sources */,
+				05A47FC71809D1D600F86BFD /* Example.m in Sources */,
 				052FA1FD1806129B00FAE4DF /* ntriangle.cpp in Sources */,
 				052FA1C71806129B00FAE4DF /* nsatblockstarter.cpp in Sources */,
 				052FA1C61806129B00FAE4DF /* nsatblock.cpp in Sources */,

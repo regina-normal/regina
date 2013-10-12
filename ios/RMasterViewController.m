@@ -30,12 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
+#import "Example.h"
 #import "RMasterViewController.h"
 
 #import "RDetailViewController.h"
 
 @interface RMasterViewController () {
     NSMutableArray *_objects;
+    NSArray *_examples;
 }
 @end
 
@@ -44,6 +46,9 @@
 - (void)awakeFromNib
 {
     self.clearsSelectionOnViewWillAppear = NO;
+    // TODO: The following line crashes iOS6 (unrecognised selector).
+    // Stack Overflow says to put it inside:
+    // if ([[[UIDevice currentDevice] systemVersion] compare:@"7" options:NSNumericSearch] != NSOrderedAscending)
     self.preferredContentSize = CGSizeMake(320.0, 600.0);
     [super awakeFromNib];
 }
@@ -57,6 +62,8 @@
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
     self.navigationItem.rightBarButtonItem = addButton;
     self.detailViewController = (RDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+    
+    _examples = [Example all];
 }
 
 - (void)didReceiveMemoryWarning
@@ -85,7 +92,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 0)
-        return 1;
+        return [_examples count];
     else
         return _objects.count;
 }
@@ -104,7 +111,7 @@
     
     if (indexPath.section == 0) {
         cell = [tableView dequeueReusableCellWithIdentifier:@"Example" forIndexPath:indexPath];
-        cell.textLabel.text = @"Introductory Examples";
+        cell.textLabel.text = [_examples[indexPath.row] desc];
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:@"Document" forIndexPath:indexPath];
         NSDate *object = _objects[indexPath.row];
