@@ -33,8 +33,8 @@
 /* end stub */
 
 #include <vector>
+#include "surfaces/coordregistry.h"
 #include "surfaces/nxmlsurfacereader.h"
-#include "surfaces/flavourregistry.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/stringutils.h"
 
@@ -62,7 +62,7 @@ void NXMLNormalSurfaceReader::initialChars(const std::string& chars) {
     if (coords == NS_AN_LEGACY)
         vec = new NNormalSurfaceVectorANStandard(vecLen);
     else
-        vec = forFlavour(coords,
+        vec = forCoords(coords,
             NewFunction1<NNormalSurfaceVector, size_t>(vecLen), 0);
     if (! vec)
         return;

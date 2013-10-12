@@ -203,8 +203,8 @@ class NMatrixInt;
  * form of compile-time constants and types.
  *
  * To iterate through cases for a given value of NormalCoords that is not
- * known until runtime, see the various forFlavour() routines defined in
- * flavourregistry.h.
+ * known until runtime, see the various forCoords() routines defined in
+ * coordregistry.h.
  *
  * This NormalInfo template should only be defined for \a coordType
  * arguments that represent coordinate systems in which you can create and
@@ -302,7 +302,7 @@ struct NormalInfo;
  * <ul>
  *   <li>A new value must must be added to the NormalCoords enum in
  *   normalcoords.h to represent the new coordinate system.</li>
- *   <li>The file flavourregistry-impl.h must be updated to reflect the new
+ *   <li>The file coordregistry-impl.h must be updated to reflect the new
  *   coordinate system (the file itself contains instructions
  *   on how to do this).</li>
  *   <li>A corresponding specialisation of NormalInfo<> must be

@@ -45,7 +45,7 @@
 #include "maths/matrixops.h"
 #include "maths/nmatrixint.h"
 #include "progress/nprogresstracker.h"
-#include "surfaces/flavourregistry.h"
+#include "surfaces/coordregistry.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 
@@ -79,7 +79,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerate(
 }
 
 void* NNormalSurfaceList::Enumerator::run(void*) {
-    forFlavour(list_->coords_, *this);
+    forCoords(list_->coords_, *this);
     return 0;
 }
 
@@ -608,7 +608,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
             }
             if (! broken) {
                 // Insert a new surface.
-                v = forFlavour(list_->coords_, newVec, 0);
+                v = forCoords(list_->coords_, newVec, 0);
                 if (! v) {
                     // Coordinate system not recognised.
                     // Return an empty list to indicate that something broke.

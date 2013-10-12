@@ -32,7 +32,7 @@
 
 /* end stub */
 
-/*! \file surfaces/flavourregistry-impl.h
+/*! \file surfaces/coordregistry-impl.h
  *  \brief Contains the registry of all normal coordinate systems that can
  *  be used to create and store normal surfaces in 3-manifold triangulations.
  *
@@ -40,9 +40,9 @@
  *  updated to:
  *
  *  - add a #include line for the corresponding vector subclass;
- *  - add a corresponding case to each implementation of forFlavour().
+ *  - add a corresponding case to each implementation of forCoords().
  *
- *  See flavourregistry.h for how other routines can use this registry.
+ *  See coordregistry.h for how other routines can use this registry.
  */
 
 #ifndef __FLAVOURREGISTRY_IMPL_H
@@ -50,7 +50,7 @@
 #define __FLAVOURREGISTRY_IMPL_H
 #endif
 
-#include "surfaces/flavourregistry.h"
+#include "surfaces/coordregistry.h"
 #include "surfaces/nsstandard.h"
 #include "surfaces/nsanstandard.h"
 #include "surfaces/nsquad.h"
@@ -61,7 +61,7 @@
 namespace regina {
 
 template <typename FunctionObject>
-inline typename FunctionObject::ReturnType forFlavour(
+inline typename FunctionObject::ReturnType forCoords(
         NormalCoords coords, FunctionObject func,
         typename FunctionObject::ReturnType defaultReturn) {
     switch (coords) {
@@ -76,7 +76,7 @@ inline typename FunctionObject::ReturnType forFlavour(
 }
 
 template <typename VoidFunctionObject>
-inline void forFlavour(NormalCoords coords, VoidFunctionObject func) {
+inline void forCoords(NormalCoords coords, VoidFunctionObject func) {
     switch (coords) {
         case NS_STANDARD : func(NormalInfo<NS_STANDARD>()); break;
         case NS_AN_STANDARD : func(NormalInfo<NS_AN_STANDARD>()); break;

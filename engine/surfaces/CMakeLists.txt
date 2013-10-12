@@ -41,10 +41,11 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    coordregistry.h
+    coordregistry-impl.h
     filterregistry.h
     filterregistry-impl.h
     flavourregistry.h
-    flavourregistry-impl.h
     ndisc.h
     ndisctype.h
     nnormalsurface.h

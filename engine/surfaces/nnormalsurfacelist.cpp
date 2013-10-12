@@ -32,7 +32,7 @@
 
 /* end stub */
 
-#include "surfaces/flavourregistry.h"
+#include "surfaces/coordregistry.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
@@ -80,7 +80,7 @@ namespace {
 
 NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
         NormalCoords coords) {
-    return forFlavour(coords, ZeroVector(triangulation), 0);
+    return forCoords(coords, ZeroVector(triangulation), 0);
 }
 
 namespace {
@@ -98,7 +98,7 @@ namespace {
 
 NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
         NormalCoords coords) {
-    return forFlavour(coords, MatchingEquations(triangulation), 0);
+    return forCoords(coords, MatchingEquations(triangulation), 0);
 }
 
 namespace {
@@ -116,7 +116,7 @@ namespace {
 
 NEnumConstraintList* makeEmbeddedConstraints(NTriangulation* triangulation,
         NormalCoords coords) {
-    return forFlavour(coords, EmbeddedConstraints(triangulation), 0);
+    return forCoords(coords, EmbeddedConstraints(triangulation), 0);
 }
 
 NTriangulation* NNormalSurfaceList::getTriangulation() const {
@@ -134,7 +134,7 @@ bool NNormalSurfaceList::allowsAlmostNormal() const {
     if (coords_ == NS_AN_LEGACY)
         return true;
     else
-        return forFlavour(coords_, AlmostNormalFunction(), false);
+        return forCoords(coords_, AlmostNormalFunction(), false);
 }
 
 namespace {
@@ -146,7 +146,7 @@ namespace {
 
 bool NNormalSurfaceList::allowsSpun() const {
     // Both the default and the NS_AN_LEGACY cases should return false.
-    return forFlavour(coords_, SpunFunction(), false);
+    return forCoords(coords_, SpunFunction(), false);
 }
 
 namespace {
@@ -158,7 +158,7 @@ namespace {
 
 bool NNormalSurfaceList::allowsOriented() const {
     // Both the default and the NS_AN_LEGACY cases should return false.
-    return forFlavour(coords_, OrientedFunction(), false);
+    return forCoords(coords_, OrientedFunction(), false);
 }
 
 namespace {
@@ -197,7 +197,7 @@ void NNormalSurfaceList::writeTextShort(std::ostream& out) const {
     if (coords_ == NS_AN_LEGACY)
         out << AN_LEGACY_NAME;
     else
-        out << forFlavour(coords_, NameFunction(), "Unknown");
+        out << forCoords(coords_, NameFunction(), "Unknown");
     out << ')';
 }
 
@@ -226,7 +226,7 @@ void NNormalSurfaceList::writeTextLong(std::ostream& out) const {
     if (coords_ == NS_AN_LEGACY)
         out << AN_LEGACY_NAME << '\n';
     else
-        out << forFlavour(coords_, NameFunction(), "Unknown") << '\n';
+        out << forCoords(coords_, NameFunction(), "Unknown") << '\n';
 
     writeAllSurfaces(out);
 }
@@ -241,7 +241,7 @@ void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
     if (coords_ == NS_AN_LEGACY)
         out << regina::xml::xmlEncodeSpecialChars(AN_LEGACY_NAME);
     else
-        out << regina::xml::xmlEncodeSpecialChars(forFlavour(
+        out << regina::xml::xmlEncodeSpecialChars(forCoords(
             coords_, NameFunction(), "Unknown"));
     out << "\"/>\n";
 
