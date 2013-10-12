@@ -145,7 +145,8 @@ void addNNormalHypersurfaceList() {
         .staticmethod("enumerateFundDual")
     ;
 
-    s.attr("packetType") = NNormalHypersurfaceList::packetType;
+    s.attr("packetType") =
+        regina::PacketType(NNormalHypersurfaceList::packetType);
 
     implicitly_convertible<std::auto_ptr<NNormalHypersurfaceList>,
         std::auto_ptr<regina::NPacket> >();

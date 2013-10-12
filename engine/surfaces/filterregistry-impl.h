@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,26 +32,58 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
-#include "packet/npdf.h"
+/*! \file surfaces/filterregistry-impl.h
+ *  \brief Contains the registry of all normal surface filter classes that can
+ *  be used to filter lists of normal surfaces in 3-manifold triangulations.
+ *
+ * Each time a new filter is created, this registry must be updated to:
+ *
+ * - add a #include line for the corresponding filter class;
+ * - add a corresponding case to each implementation of forFilter().
+ *
+ * See filterregistry.h for how other routines can use this registry.
+ */
 
-using namespace boost::python;
-using regina::NPDF;
+#ifndef __FILTERREGISTRY_IMPL_H
+#ifndef __DOXYGEN
+#define __FILTERREGISTRY_IMPL_H
+#endif
 
-namespace {
-    void (NPDF::*reset_empty)() = &NPDF::reset;
+#include "surfaces/nsurfacefilter.h"
+#include "surfaces/sfproperties.h"
+#include "surfaces/sfcombination.h"
+
+namespace regina {
+
+template <typename FunctionObject>
+inline typename FunctionObject::ReturnType forFilter(
+        SurfaceFilterType filter, FunctionObject func,
+        typename FunctionObject::ReturnType defaultReturn) {
+    switch (filter) {
+        case NS_FILTER_DEFAULT :
+            return func(SurfaceFilterInfo<NS_FILTER_DEFAULT>());
+        case NS_FILTER_PROPERTIES :
+            return func(SurfaceFilterInfo<NS_FILTER_PROPERTIES>());
+        case NS_FILTER_COMBINATION :
+            return func(SurfaceFilterInfo<NS_FILTER_COMBINATION>());
+        default: return defaultReturn;
+    }
 }
 
-void addNPDF() {
-    scope s = class_<NPDF, bases<regina::NPacket>,
-            std::auto_ptr<NPDF>, boost::noncopyable>("NPDF", init<>())
-        .def("size", &NPDF::size)
-        .def("reset", reset_empty)
-    ;
-
-    s.attr("packetType") = regina::PacketType(NPDF::packetType);
-
-    implicitly_convertible<std::auto_ptr<NPDF>,
-        std::auto_ptr<regina::NPacket> >();
+template <typename VoidFunctionObject>
+inline void forFilter(SurfaceFilterType filter, VoidFunctionObject func) {
+    switch (filter) {
+        case NS_FILTER_DEFAULT :
+            func(SurfaceFilterInfo<NS_FILTER_DEFAULT>()); break;
+        case NS_FILTER_PROPERTIES :
+            func(SurfaceFilterInfo<NS_FILTER_PROPERTIES>()); break;
+        case NS_FILTER_COMBINATION :
+            func(SurfaceFilterInfo<NS_FILTER_COMBINATION>()); break;
+        default: break;
+    }
 }
+
+} // namespace regina
+
+#endif
 

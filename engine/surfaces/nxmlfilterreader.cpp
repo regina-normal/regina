@@ -36,13 +36,20 @@
 #include "surfaces/filterregistry.h"
 #include "utilities/stringutils.h"
 
-#define __FILTER_REGISTRY_BODY
-
 namespace regina {
 
-#define REGISTER_FILTER(id, class, n) \
-    if (type == id) \
-        return class::getXMLFilterReader(parent); \
+namespace {
+    struct XMLReaderFunction : public Returns<NXMLElementReader*> {
+        NPacket* parent_;
+
+        XMLReaderFunction(NPacket* parent) : parent_(parent) {}
+
+        template <typename Filter>
+        inline NXMLElementReader* operator() (Filter) {
+            return Filter::Class::getXMLFilterReader(parent_);
+        }
+    };
+}
 
 NXMLElementReader* NXMLFilterPacketReader::startContentSubElement(
         const std::string& subTagName,
@@ -51,9 +58,13 @@ NXMLElementReader* NXMLFilterPacketReader::startContentSubElement(
         if (subTagName == "filter") {
             int type;
             if (valueOf(props.lookup("typeid"), type)) {
-                // Import cases from the filter registry.
-                #include "surfaces/filterregistry.h"
-                return new NXMLFilterReader();
+                NXMLElementReader* ans = forFilter(
+                    static_cast<SurfaceFilterType>(type),
+                    XMLReaderFunction(parent), 0);
+                if (ans)
+                    return ans;
+                else
+                    return new NXMLFilterReader();
             }
         }
     return new NXMLElementReader();
@@ -70,10 +81,6 @@ void NXMLFilterPacketReader::endContentSubElement(
 NXMLPacketReader* NSurfaceFilter::getXMLReader(NPacket* parent) {
     return new NXMLFilterPacketReader(parent);
 }
-
-// Tidy up.
-#undef REGISTER_FILTER
-#undef __FILTER_REGISTRY_BODY
 
 } // namespace regina
 

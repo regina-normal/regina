@@ -45,59 +45,67 @@
 
 namespace regina {
 
-#define __HSFLAVOUR_REGISTRY_BODY
+namespace {
+    struct ZeroVector : public Returns<NNormalHypersurfaceVector*> {
+        const Dim4Triangulation* tri_;
 
-#define REGISTER_HSFLAVOUR(id_name, class, n) \
-    case regina::id_name: \
-        return class::makeZeroVector(triangulation);
+        ZeroVector(const Dim4Triangulation* tri) : tri_(tri) {}
+
+        template <typename Flavour>
+        inline NNormalHypersurfaceVector* operator() (Flavour f) {
+            return Flavour::Class::makeZeroVector(tri_);
+        }
+    };
+}
 
 NNormalHypersurfaceVector* makeZeroVector(
         const Dim4Triangulation* triangulation, HyperCoords flavour) {
-    switch(flavour) {
-        // Import cases from the flavour registry.
-        #include "hypersurface/hsflavourregistry.h"
-        default: break;
-    }
-    return 0;
+    return forFlavour(flavour, ZeroVector(triangulation), 0);
 }
 
-#undef REGISTER_HSFLAVOUR
-#define REGISTER_HSFLAVOUR(id_name, class, n) \
-    case regina::id_name: \
-        return class::makeMatchingEquations(triangulation);
+namespace {
+    struct MatchingEquations : public Returns<NMatrixInt*> {
+        Dim4Triangulation* tri_;
+
+        MatchingEquations(Dim4Triangulation* tri) : tri_(tri) {}
+
+        template <typename Flavour>
+        inline NMatrixInt* operator() (Flavour f) {
+            return Flavour::Class::makeMatchingEquations(tri_);
+        }
+    };
+}
 
 NMatrixInt* makeMatchingEquations(Dim4Triangulation* triangulation,
         HyperCoords flavour) {
-    switch(flavour) {
-        // Import cases from the flavour registry.
-        #include "hypersurface/hsflavourregistry.h"
-        default: break;
-    }
-    return 0;
+    return forFlavour(flavour, MatchingEquations(triangulation), 0);
 }
 
-#undef REGISTER_HSFLAVOUR
-#define REGISTER_HSFLAVOUR(id_name, class, n) \
-    case regina::id_name: \
-        return class::makeEmbeddedConstraints(triangulation);
+namespace {
+    struct EmbeddedConstraints : public Returns<NEnumConstraintList*> {
+        Dim4Triangulation* tri_;
+
+        EmbeddedConstraints(Dim4Triangulation* tri) : tri_(tri) {}
+
+        template <typename Flavour>
+        inline NEnumConstraintList* operator() (Flavour f) {
+            return Flavour::Class::makeEmbeddedConstraints(tri_);
+        }
+    };
+}
 
 NEnumConstraintList* makeEmbeddedConstraints(Dim4Triangulation* triangulation,
         HyperCoords flavour) {
-    switch(flavour) {
-        // Import cases from the flavour registry.
-        #include "hypersurface/hsflavourregistry.h"
-        default: break;
-    }
+    return forFlavour(flavour, EmbeddedConstraints(triangulation), 0);
+}
+
+void* NNormalHypersurfaceList::VertexEnumerator::run(void*) {
+    forFlavour(list_->flavour_, *this);
     return 0;
 }
 
-#undef REGISTER_HSFLAVOUR
-#define REGISTER_HSFLAVOUR(id_name, cls, n) \
-    case id_name: NDoubleDescription::enumerateExtremalRays<cls>( \
-        HypersurfaceInserter(*list_, triang_), *eqns, constraints, tracker_); \
-        break;
-
-void* NNormalHypersurfaceList::VertexEnumerator::run(void*) {
+template <typename Flavour>
+void NNormalHypersurfaceList::VertexEnumerator::operator() (Flavour) {
     if (tracker_)
         tracker_->newStage("Enumerating vertex hypersurfaces");
 
@@ -110,11 +118,8 @@ void* NNormalHypersurfaceList::VertexEnumerator::run(void*) {
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->flavour_);
 
     // Find the normal hypersurfaces.
-    switch(list_->flavour_) {
-        // Import cases from the flavour registry:
-        #include "hypersurface/hsflavourregistry.h"
-        default: break;
-    }
+    NDoubleDescription::enumerateExtremalRays<typename Flavour::Class>(
+        HypersurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
 
     delete eqns;
     delete constraints;
@@ -125,19 +130,15 @@ void* NNormalHypersurfaceList::VertexEnumerator::run(void*) {
 
     if (tracker_)
         tracker_->setFinished();
+}
 
+void* NNormalHypersurfaceList::FundPrimalEnumerator::run(void*) {
+    forFlavour(list_->flavour_, *this);
     return 0;
 }
 
-#undef REGISTER_HSFLAVOUR
-#define REGISTER_HSFLAVOUR(id_name, cls, n) \
-    case id_name: NHilbertPrimal::enumerateHilbertBasis<cls>( \
-        HypersurfaceInserter(*list_, triang_), \
-        useVtxSurfaces->beginVectors(), useVtxSurfaces->endVectors(), \
-        constraints, tracker_); \
-        break;
-
-void* NNormalHypersurfaceList::FundPrimalEnumerator::run(void*) {
+template <typename Flavour>
+void NNormalHypersurfaceList::FundPrimalEnumerator::operator() (Flavour) {
     if (tracker_)
         tracker_->newStage("Initialising Hilbert basis enumeration", 0.1);
 
@@ -163,11 +164,10 @@ void* NNormalHypersurfaceList::FundPrimalEnumerator::run(void*) {
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
     // Find the normal hypersurfaces.
-    switch(list_->flavour_) {
-        // Import cases from the flavour registry:
-        #include "hypersurface/hsflavourregistry.h"
-        default: break;
-    }
+    NHilbertPrimal::enumerateHilbertBasis<typename Flavour::Class>(
+        HypersurfaceInserter(*list_, triang_),
+        useVtxSurfaces->beginVectors(), useVtxSurfaces->endVectors(),
+        constraints, tracker_);
 
     delete constraints;
     if (! vtxSurfaces_)
@@ -179,17 +179,15 @@ void* NNormalHypersurfaceList::FundPrimalEnumerator::run(void*) {
 
     if (tracker_)
         tracker_->setFinished();
+}
 
+void* NNormalHypersurfaceList::FundDualEnumerator::run(void*) {
+    forFlavour(list_->flavour_, *this);
     return 0;
 }
 
-#undef REGISTER_HSFLAVOUR
-#define REGISTER_HSFLAVOUR(id_name, cls, n) \
-    case id_name: NHilbertDual::enumerateHilbertBasis<cls>( \
-        HypersurfaceInserter(*list_, triang_), *eqns, constraints, tracker_); \
-        break;
-
-void* NNormalHypersurfaceList::FundDualEnumerator::run(void*) {
+template <typename Flavour>
+void NNormalHypersurfaceList::FundDualEnumerator::operator() (Flavour) {
     if (tracker_)
         tracker_->newStage("Enumerating Hilbert basis\n(dual method)");
 
@@ -202,11 +200,8 @@ void* NNormalHypersurfaceList::FundDualEnumerator::run(void*) {
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->flavour_);
 
     // Find the normal hypersurfaces.
-    switch(list_->flavour_) {
-        // Import cases from the flavour registry:
-        #include "hypersurface/hsflavourregistry.h"
-        default: break;
-    }
+    NHilbertDual::enumerateHilbertBasis<typename Flavour::Class>(
+        HypersurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
 
     delete eqns;
     delete constraints;
@@ -217,8 +212,6 @@ void* NNormalHypersurfaceList::FundDualEnumerator::run(void*) {
 
     if (tracker_)
         tracker_->setFinished();
-
-    return 0;
 }
 
 NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
@@ -286,28 +279,19 @@ Dim4Triangulation* NNormalHypersurfaceList::getTriangulation() const {
     return dynamic_cast<Dim4Triangulation*>(getTreeParent());
 }
 
-#undef REGISTER_HSFLAVOUR
-#define REGISTER_HSFLAVOUR(id_name, c, name) \
-    case id_name: o << name; break;
+namespace {
+    struct NameFunction : public Returns<const char*> {
+        template <typename Flavour>
+        inline const char* operator() (Flavour f) { return f.name(); }
+    };
+}
 
 void NNormalHypersurfaceList::writeTextShort(std::ostream& o) const {
     o << surfaces_.size() << " vertex normal hypersurface";
     if (surfaces_.size() != 1)
         o << 's';
-    o << " (";
-    switch(flavour_) {
-        // Import cases from the flavour registry...
-        #include "hypersurface/hsflavourregistry.h"
-        default:
-            o << "Unknown";
-            break;
-    }
-    o << ')';
+    o << " (" << forFlavour(flavour_, NameFunction(), "Unknown") << ')';
 }
-
-#undef REGISTER_HSFLAVOUR
-#define REGISTER_HSFLAVOUR(id_name, c, name) \
-    case id_name: o << name << '\n'; break;
 
 void NNormalHypersurfaceList::writeTextLong(std::ostream& o) const {
     if (embedded_)
@@ -315,14 +299,8 @@ void NNormalHypersurfaceList::writeTextLong(std::ostream& o) const {
     else
         o << "Embedded, immersed & singular ";
     o << "vertex normal hypersurfaces\n";
-    o << "Coordinates: ";
-    switch(flavour_) {
-        // Import cases from the flavour registry...
-        #include "hypersurface/hsflavourregistry.h"
-        default:
-            o << "Unknown\n";
-            break;
-    }
+    o << "Coordinates: " << forFlavour(flavour_, NameFunction(), "Unknown")
+        << '\n';
 
     unsigned long n = getNumberOfHypersurfaces();
     o << "Number of hypersurfaces is " << n << '\n';
@@ -332,23 +310,13 @@ void NNormalHypersurfaceList::writeTextLong(std::ostream& o) const {
     }
 }
 
-#undef REGISTER_HSFLAVOUR
-#define REGISTER_HSFLAVOUR(id_name, c, name) \
-    case id_name: out << regina::xml::xmlEncodeSpecialChars(name); break;
-
 void NNormalHypersurfaceList::writeXMLPacketData(std::ostream& out) const {
     // Write the surface list parameters.
     out << "  <params embedded=\"" << (embedded_ ? 'T' : 'F')
         << "\" flavourid=\"" << flavour_ << "\"\n";
-    out << "\tflavour=\"";
-    switch (flavour_) {
-        // Import cases from the flavour registry...
-        #include "hypersurface/hsflavourregistry.h"
-        default:
-            out << "Unknown";
-            break;
-    }
-    out << "\"/>\n";
+    out << "\tflavour=\""
+        << regina::xml::xmlEncodeSpecialChars(forFlavour(
+           flavour_, NameFunction(), "Unknown")) << "\"/>\n";
 
     // Write the individual hypersurfaces.
     std::vector<NNormalHypersurface*>::const_iterator it;
@@ -365,10 +333,6 @@ NPacket* NNormalHypersurfaceList::internalClonePacket(NPacket* /* parent */)
         FuncNewClonePtr<NNormalHypersurface>());
     return ans;
 }
-
-// Tidy up.
-#undef REGISTER_HSFLAVOUR
-#undef __HSFLAVOUR_REGISTRY_BODY
 
 } // namespace regina
 

@@ -335,7 +335,7 @@ void addNTriangulation() {
         .staticmethod("enterTextTriangulation")
     ;
 
-    s.attr("packetType") = NTriangulation::packetType;
+    s.attr("packetType") = regina::PacketType(NTriangulation::packetType);
 
     implicitly_convertible<std::auto_ptr<NTriangulation>,
         std::auto_ptr<regina::NPacket> >();

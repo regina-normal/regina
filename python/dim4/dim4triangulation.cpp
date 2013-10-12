@@ -250,7 +250,7 @@ void addDim4Triangulation() {
         .staticmethod("fromIsoSig")
     ;
 
-    s.attr("packetType") = Dim4Triangulation::packetType;
+    s.attr("packetType") = regina::PacketType(Dim4Triangulation::packetType);
 
     implicitly_convertible<std::auto_ptr<Dim4Triangulation>,
         std::auto_ptr<regina::NPacket> >();

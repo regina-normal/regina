@@ -47,7 +47,10 @@ void addNSurfaceFilterCombination() {
         .def("setUsesAnd", &NSurfaceFilterCombination::setUsesAnd)
     ;
 
-    s.attr("filterID") = NSurfaceFilterCombination::filterID;
+    s.attr("filterID") = regina::SurfaceFilterType(
+        NSurfaceFilterCombination::filterID);
+    s.attr("filterType") = regina::SurfaceFilterType(
+        NSurfaceFilterCombination::filterType);
 
     implicitly_convertible<std::auto_ptr<NSurfaceFilterCombination>,
         std::auto_ptr<regina::NSurfaceFilter> >();

@@ -47,10 +47,26 @@
 
 namespace regina {
 
+class NSurfaceFilterCombination;
+
 /**
  * \weakgroup surfaces
  * @{
  */
+
+/**
+ * Stores information about the combination surface filter.
+ * See the general SurfaceFilterInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct SurfaceFilterInfo<NS_FILTER_COMBINATION> {
+    typedef NSurfaceFilterCombination Class;
+    inline static const char* name() {
+        return "Combination filter";
+    }
+};
 
 /**
  * A normal surface filter that simply combines other filters.
@@ -64,8 +80,7 @@ namespace regina {
  * filter.
  */
 class REGINA_API NSurfaceFilterCombination : public NSurfaceFilter {
-    public:
-        static const int filterID;
+    REGINA_SURFACE_FILTER(NSurfaceFilterCombination, NS_FILTER_COMBINATION)
 
     private:
         bool usesAnd;
@@ -105,10 +120,8 @@ class REGINA_API NSurfaceFilterCombination : public NSurfaceFilter {
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
 
-        virtual int getFilterID() const;
-        virtual std::string getFilterName() const;
-
     protected:
+        virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLFilterData(std::ostream& out) const;
 };
 
@@ -133,6 +146,10 @@ inline void NSurfaceFilterCombination::setUsesAnd(bool value) {
 
 inline void NSurfaceFilterCombination::writeTextLong(std::ostream& o) const {
     o << (usesAnd ? "AND" : "OR") << " combination normal surface filter\n";
+}
+
+inline NPacket* NSurfaceFilterCombination::internalClonePacket(NPacket*) const {
+    return new NSurfaceFilterCombination(*this);
 }
 
 } // namespace regina
