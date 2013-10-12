@@ -73,7 +73,7 @@ namespace {
 
         template <typename Flavour>
         inline NNormalSurfaceVector* operator() (Flavour f) {
-            return Flavour::Vector::makeZeroVector(tri_);
+            return Flavour::Class::makeZeroVector(tri_);
         }
     };
 }
@@ -91,7 +91,7 @@ namespace {
 
         template <typename Flavour>
         inline NMatrixInt* operator() (Flavour f) {
-            return Flavour::Vector::makeMatchingEquations(tri_);
+            return Flavour::Class::makeMatchingEquations(tri_);
         }
     };
 }
@@ -109,7 +109,7 @@ namespace {
 
         template <typename Flavour>
         inline NEnumConstraintList* operator() (Flavour f) {
-            return Flavour::Vector::makeEmbeddedConstraints(tri_);
+            return Flavour::Class::makeEmbeddedConstraints(tri_);
         }
     };
 }
