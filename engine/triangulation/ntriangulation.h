@@ -2853,34 +2853,6 @@ class REGINA_API NTriangulation : public NPacket,
          */
         bool insertRehydration(const std::string& dehydration);
         /**
-         * Rehydrates the given alphabetical string into a new triangulation.
-         * See dehydrate() for more information on dehydration strings.
-         *
-         * This routine will rehydrate the given string into a new
-         * triangulation, and return this new triangulation.
-         *
-         * The converse routine dehydrate() can be used to extract a
-         * dehydration string from an existing triangulation.  Dehydration
-         * followed by rehydration might not produce a triangulation identical
-         * to the original, but it is guaranteed to produce an isomorphic
-         * copy.  See dehydrate() for the reasons behind this.
-         *
-         * For a full description of the dehydrated triangulation
-         * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
-         * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
-         * 1999.
-         *
-         * @param dehydration a dehydrated representation of the
-         * triangulation to construct.  Case is irrelevant; all letters
-         * will be treated as if they were lower case.
-         * @return a newly allocated triangulation if the rehydration was
-         * successful, or null if the given string could not be rehydrated.
-         *
-         * @see dehydrate
-         * @see insertRehydration
-         */
-        static NTriangulation* rehydrate(const std::string& dehydration);
-        /**
          * Dehydrates this triangulation into an alphabetical string.
          *
          * A <i>dehydration string</i> is a compact text representation
@@ -2955,30 +2927,6 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the isomorphism signature of this triangulation.
          */
         std::string isoSig() const;
-        /**
-         * Recovers a full triangulation from an isomorphism signature.
-         * See isoSig() for more information on isomorphism signatures.
-         *
-         * The triangulation that is returned will be newly created.
-         *
-         * Calling isoSig() followed by fromIsoSig() is not guaranteed to
-         * produce an identical triangulation to the original, but it
-         * \e is guaranteed to produce a combinatorially isomorphic
-         * triangulation.
-         *
-         * For a full and precise description of the isomorphism signature
-         * format, see <i>Simplification paths in the Pachner graphs of
-         * closed orientable 3-manifold triangulations</i>, Burton, 2011,
-         * <tt>arXiv:1110.6080</tt>.
-         *
-         * @param signature the isomorphism signature of the
-         * triangulation to construct.  Note that, unlike dehydration
-         * strings, case is important for isomorphism signatures.
-         * @return a newly allocated triangulation if the reconstruction was
-         * successful, or null if the given string was not a valid
-         * isomorphism signature.
-         */
-        static NTriangulation* fromIsoSig(const std::string& signature);
         using NGenericTriangulation<3>::isoSigComponentSize;
         /**
          * Inserts into this triangulation a set of tetrahedra and their
@@ -3076,6 +3024,58 @@ class REGINA_API NTriangulation : public NPacket,
          */
         static NTriangulation* enterTextTriangulation(std::istream& in,
                 std::ostream& out);
+        /**
+         * Rehydrates the given alphabetical string into a new triangulation.
+         * See dehydrate() for more information on dehydration strings.
+         *
+         * This routine will rehydrate the given string into a new
+         * triangulation, and return this new triangulation.
+         *
+         * The converse routine dehydrate() can be used to extract a
+         * dehydration string from an existing triangulation.  Dehydration
+         * followed by rehydration might not produce a triangulation identical
+         * to the original, but it is guaranteed to produce an isomorphic
+         * copy.  See dehydrate() for the reasons behind this.
+         *
+         * For a full description of the dehydrated triangulation
+         * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
+         * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
+         * 1999.
+         *
+         * @param dehydration a dehydrated representation of the
+         * triangulation to construct.  Case is irrelevant; all letters
+         * will be treated as if they were lower case.
+         * @return a newly allocated triangulation if the rehydration was
+         * successful, or null if the given string could not be rehydrated.
+         *
+         * @see dehydrate
+         * @see insertRehydration
+         */
+        static NTriangulation* rehydrate(const std::string& dehydration);
+        /**
+         * Recovers a full triangulation from an isomorphism signature.
+         * See isoSig() for more information on isomorphism signatures.
+         *
+         * The triangulation that is returned will be newly created.
+         *
+         * Calling isoSig() followed by fromIsoSig() is not guaranteed to
+         * produce an identical triangulation to the original, but it
+         * \e is guaranteed to produce a combinatorially isomorphic
+         * triangulation.
+         *
+         * For a full and precise description of the isomorphism signature
+         * format, see <i>Simplification paths in the Pachner graphs of
+         * closed orientable 3-manifold triangulations</i>, Burton, 2011,
+         * <tt>arXiv:1110.6080</tt>.
+         *
+         * @param signature the isomorphism signature of the
+         * triangulation to construct.  Note that, unlike dehydration
+         * strings, case is important for isomorphism signatures.
+         * @return a newly allocated triangulation if the reconstruction was
+         * successful, or null if the given string was not a valid
+         * isomorphism signature.
+         */
+        static NTriangulation* fromIsoSig(const std::string& signature);
 
         static NXMLPacketReader* getXMLReader(NPacket* parent);
 
