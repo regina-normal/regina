@@ -252,10 +252,6 @@ class REGINA_API NTriangulation : public NPacket,
 
         /*@}*/
         /**
-         * (end: Constructors and Destructors)
-         */
-
-        /**
          * \name Packet Administration
          */
         /*@{*/
@@ -265,10 +261,6 @@ class REGINA_API NTriangulation : public NPacket,
         virtual bool dependsOnParent() const;
 
         /*@}*/
-        /**
-         * (end: Packet Administration)
-         */
-
         /**
          * \name Tetrahedra
          */
@@ -585,10 +577,6 @@ class REGINA_API NTriangulation : public NPacket,
         void gluingsHaveChanged();
 
         /*@}*/
-        /**
-         * (end: Tetrahedra)
-         */
-
         /**
          * \name Skeletal Queries
          */
@@ -961,10 +949,6 @@ class REGINA_API NTriangulation : public NPacket,
 
         /*@}*/
         /**
-         * (end: Skeletal Queries)
-         */
-
-        /**
          * \name Isomorphism Testing
          */
         /*@{*/
@@ -1070,10 +1054,6 @@ class REGINA_API NTriangulation : public NPacket,
                 std::list<NIsomorphism*>& results) const;
 
         /*@}*/
-        /**
-         * (end: Isomorphism Testing)
-         */
-
         /**
          * \name Basic Properties
          */
@@ -1255,10 +1235,6 @@ class REGINA_API NTriangulation : public NPacket,
         bool isConnected() const;
 
         /*@}*/
-        /**
-         * (end: Basic Properties)
-         */
-
         /**
          * \name Algebraic Properties
          */
@@ -1469,10 +1445,6 @@ class REGINA_API NTriangulation : public NPacket,
 
         /*@}*/
         /**
-         * (end: Algebraic Properties)
-         */
-
-        /**
          * \name Normal Surface Properties
          */
         /*@{*/
@@ -1570,10 +1542,6 @@ class REGINA_API NTriangulation : public NPacket,
         NNormalSurface* hasOctagonalAlmostNormalSphere();
 
         /*@}*/
-        /**
-         * (end: Normal Surface Properties)
-         */
-
         /**
          * \name Skeletal Transformations
          */
@@ -2186,10 +2154,6 @@ class REGINA_API NTriangulation : public NPacket,
 
         /*@}*/
         /**
-         * (end: Skeletal Transformations)
-         */
-
-        /**
          * \name Decompositions
          */
         /*@{*/
@@ -2538,10 +2502,6 @@ class REGINA_API NTriangulation : public NPacket,
 
         /*@}*/
         /**
-         * (end: Decompositions)
-         */
-
-        /**
          * \name Subdivisions, Extensions and Covers
          */
         /*@{*/
@@ -2640,10 +2600,6 @@ class REGINA_API NTriangulation : public NPacket,
         void drillEdge(NEdge* e);
 
         /*@}*/
-        /**
-         * (end: Subdivisions and Covers)
-         */
-
         /**
          * \name Building Triangulations
          */
@@ -2853,6 +2809,66 @@ class REGINA_API NTriangulation : public NPacket,
          */
         bool insertRehydration(const std::string& dehydration);
         /**
+         * Inserts into this triangulation a set of tetrahedra and their
+         * gluings as described by the given integer arrays.
+         *
+         * This routine is provided to make it easy to hard-code a
+         * medium-sized triangulation in a C++ source file.  All of the
+         * pertinent data can be hard-coded into a pair of integer arrays at
+         * the beginning of the source file, avoiding an otherwise tedious
+         * sequence of many joinTo() calls.
+         *
+         * An additional \a nTetrahedra tetrahedra will be inserted into
+         * this triangulation.  The relationships between these tetrahedra
+         * should be stored in the two arrays as follows.  Note that the
+         * new tetrahedra are numbered from 0 to (\a nTetrahedra - 1), and
+         * individual tetrahedron faces are numbered from 0 to 3.
+         *
+         * The \a adjacencies array describes which tetrahedron faces are
+         * joined to which others.  Specifically, <tt>adjacencies[t][f]</tt>
+         * should contain the number of the tetrahedron joined to face \a f
+         * of tetrahedron \a t.  If this face is to be left as a
+         * boundary triangle, <tt>adjacencies[t][f]</tt> should be -1.
+         *
+         * The \a gluings array describes the particular gluing permutations
+         * used when joining these tetrahedron faces together.  Specifically,
+         * <tt>gluings[t][f][0..3]</tt> should describe the permutation
+         * used to join face \a f of tetrahedron \a t to its adjacent
+         * tetrahedron.  These four integers should be 0, 1, 2 and 3 in some
+         * order, so that <tt>gluings[t][f][i]</tt> contains the image of
+         * \a i under this permutation.  If face \a f of tetrahedron \a t
+         * is to be left as a boundary triangle, <tt>gluings[t][f][0..3]</tt>
+         * may contain anything (and will be duly ignored).
+         *
+         * It is the responsibility of the caller of this routine to
+         * ensure that the given arrays are correct and consistent.
+         * No error checking will be performed by this routine.
+         *
+         * Note that, for an existing triangulation, dumpConstruction()
+         * will output a pair of C++ arrays that can be copied into a
+         * source file and used to reconstruct the triangulation via
+         * this routine.
+         *
+         * \ifacespython Not present.
+         *
+         * @param nTetrahedra the number of additional tetrahedra to insert.
+         * @param adjacencies describes which of the new tetrahedron
+         * faces are to be identified.  This array must have initial
+         * dimension at least \a nTetrahedra.
+         * @param gluings describes the specific gluing permutations by
+         * which these new tetrahedron faces should be identified.  This
+         * array must also have initial dimension at least \a nTetrahedra.
+         */
+        void insertConstruction(unsigned long nTetrahedra,
+            const int adjacencies[][4], const int gluings[][4][4]);
+
+        /*@}*/
+        /**
+         * \name Exporting Triangulations
+         */
+        /*@{*/
+
+        /**
          * Dehydrates this triangulation into an alphabetical string.
          *
          * A <i>dehydration string</i> is a compact text representation
@@ -2925,62 +2941,11 @@ class REGINA_API NTriangulation : public NPacket,
          * <tt>arXiv:1110.6080</tt>.
          *
          * @return the isomorphism signature of this triangulation.
+         *
+         * @see fromIsoSig
          */
         std::string isoSig() const;
         using NGenericTriangulation<3>::isoSigComponentSize;
-        /**
-         * Inserts into this triangulation a set of tetrahedra and their
-         * gluings as described by the given integer arrays.
-         *
-         * This routine is provided to make it easy to hard-code a
-         * medium-sized triangulation in a C++ source file.  All of the
-         * pertinent data can be hard-coded into a pair of integer arrays at
-         * the beginning of the source file, avoiding an otherwise tedious
-         * sequence of many joinTo() calls.
-         *
-         * An additional \a nTetrahedra tetrahedra will be inserted into
-         * this triangulation.  The relationships between these tetrahedra
-         * should be stored in the two arrays as follows.  Note that the
-         * new tetrahedra are numbered from 0 to (\a nTetrahedra - 1), and
-         * individual tetrahedron faces are numbered from 0 to 3.
-         *
-         * The \a adjacencies array describes which tetrahedron faces are
-         * joined to which others.  Specifically, <tt>adjacencies[t][f]</tt>
-         * should contain the number of the tetrahedron joined to face \a f
-         * of tetrahedron \a t.  If this face is to be left as a
-         * boundary triangle, <tt>adjacencies[t][f]</tt> should be -1.
-         *
-         * The \a gluings array describes the particular gluing permutations
-         * used when joining these tetrahedron faces together.  Specifically,
-         * <tt>gluings[t][f][0..3]</tt> should describe the permutation
-         * used to join face \a f of tetrahedron \a t to its adjacent
-         * tetrahedron.  These four integers should be 0, 1, 2 and 3 in some
-         * order, so that <tt>gluings[t][f][i]</tt> contains the image of
-         * \a i under this permutation.  If face \a f of tetrahedron \a t
-         * is to be left as a boundary triangle, <tt>gluings[t][f][0..3]</tt>
-         * may contain anything (and will be duly ignored).
-         *
-         * It is the responsibility of the caller of this routine to
-         * ensure that the given arrays are correct and consistent.
-         * No error checking will be performed by this routine.
-         *
-         * Note that, for an existing triangulation, dumpConstruction()
-         * will output a pair of C++ arrays that can be copied into a
-         * source file and used to reconstruct the triangulation via
-         * this routine.
-         *
-         * \ifacespython Not present.
-         *
-         * @param nTetrahedra the number of additional tetrahedra to insert.
-         * @param adjacencies describes which of the new tetrahedron
-         * faces are to be identified.  This array must have initial
-         * dimension at least \a nTetrahedra.
-         * @param gluings describes the specific gluing permutations by
-         * which these new tetrahedron faces should be identified.  This
-         * array must also have initial dimension at least \a nTetrahedra.
-         */
-        void insertConstruction(unsigned long nTetrahedra,
-            const int adjacencies[][4], const int gluings[][4][4]);
         /**
          * Returns C++ code that can be used with insertConstruction()
          * to reconstruct this triangulation.
@@ -3020,10 +2985,6 @@ class REGINA_API NTriangulation : public NPacket,
         std::string snapPea() const;
 
         /*@}*/
-        /**
-         * (end: Exporting Triangulations)
-         */
-
         /**
          * \name Importing Triangulations
          */
@@ -3099,9 +3060,6 @@ class REGINA_API NTriangulation : public NPacket,
         static NTriangulation* fromIsoSig(const std::string& signature);
 
         /*@}*/
-        /**
-         * (end: Importing Triangulations)
-         */
 
         static NXMLPacketReader* getXMLReader(NPacket* parent);
 

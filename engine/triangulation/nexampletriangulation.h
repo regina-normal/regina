@@ -197,10 +197,6 @@ class REGINA_API NExampleTriangulation {
 
         /*@}*/
         /**
-         * (end: Closed Triangulations)
-         */
-
-        /**
          * \name Finite Bounded Triangulations
          */
         /*@{*/
@@ -223,10 +219,6 @@ class REGINA_API NExampleTriangulation {
         static NTriangulation* solidKleinBottle();
 
         /*@}*/
-        /**
-         * (end: Finite Bounded Triangulations)
-         */
-
         /**
          * \name Ideal Triangulations
          */
@@ -270,9 +262,6 @@ class REGINA_API NExampleTriangulation {
         static NTriangulation* cuspedGenusTwoTorus();
 
         /*@}*/
-        /**
-         * (end: Ideal Triangulations)
-         */
 };
 
 /*@}*/
