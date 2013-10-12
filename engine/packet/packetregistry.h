@@ -32,79 +32,122 @@
 
 /* end stub */
 
-/*********************
+/*! \file packet/packetregistry.h
+ *  \brief Provides access to a registry of all packet types known to Regina.
  *
- *  Packet Registry
- *  ---------------
+ *  Each time a new packet type is created, the file packetregistry-impl.h
+ *  must be updated to include it.  Instructions on how to do this are
+ *  included in packetregistry-impl.h.
  *
+ *  External routines can access the registry by calling one of the
+ *  forPacket() template functions defined in packetregistry.h.
  *
- *    THIS FILE SHOULD BE EDITED EACH TIME A NEW PACKET TYPE IS CREATED!
- *
- *    For each packet type there should be a line of the form:
- *
- *        REGISTER_PACKET(class, type, name)
- *
- *    where:
- *        class = the C++ class representing this packet type;
- *        type = the integer ID of the new packet type;
- *        name = the string (English) name of the new packet type.
- *
- *    The appropriate include files should also be placed with full path
- *        and without full path in the appropriate include sections below.
- *
- *    To use the packet registry, simply #include this file.  If you have
- *        not defined __PACKET_REGISTRY_BODY, only the include sections will
- *        be brought in.  If you have defined __PACKET_REGISTRY_BODY, the
- *        include sections will be skipped and the REGISTER_PACKET lines
- *        will be brought in instead.  By suitably defining the macro
- *        REGISTER_PACKET before including this file, you can have these
- *        lines do whatever you wish.
- *
- *    If you do #include this file, be sure to #undef both
- *        REGISTER_PACKET and __PACKET_REGISTRY_BODY when you are
- *        finished, so that if --enable-final is being used then these
- *        macros are left undefined for the following files.
- *
- *    Packet Types:
- *    ------------
- *    When selecting an integer ID for your new packet type, the following
- *        guidelines should be adhered to:
- *
- *    1-999:      Reserved for use with the official program distribution.
- *    1000-9999:  Reserved for future use.
- *    10000-:     Unreserved.
+ *  \warning You should not include this header unless it is necessary,
+ *  since it will automatically import every header for every packet type
+ *  in the registry.
  */
 
-#ifndef __PACKET_REGISTRY_BODY
-    #include "packet/ncontainer.h"
-    #include "packet/ntext.h"
-    #include "triangulation/ntriangulation.h"
-    #include "surfaces/nnormalsurfacelist.h"
-    #include "packet/nscript.h"
-    #include "surfaces/nsurfacefilter.h"
-    #include "angle/nanglestructurelist.h"
-    #include "packet/npdf.h"
-    #include "dim2/dim2triangulation.h"
-#else
-    REGISTER_PACKET(NContainer, 1, "Container")
-    REGISTER_PACKET(NText, 2, "Text")
-    REGISTER_PACKET(NTriangulation, 3, "Triangulation")
-    REGISTER_PACKET(NNormalSurfaceList, 6, "Normal Surface List")
-    REGISTER_PACKET(NScript, 7, "Script")
-    REGISTER_PACKET(NSurfaceFilter, 8, "Surface Filter")
-    REGISTER_PACKET(NAngleStructureList, 9, "Angle Structure List")
-    REGISTER_PACKET(NPDF, 10, "PDF")
-    REGISTER_PACKET(Dim2Triangulation, 15, "2-Manifold Triangulation")
+// The old registry macros will silently compile but do nothing.
+// This could lead to nasty surprises, so throw an error if it looks like
+// people are still trying to use them.
+#ifdef __PACKET_REGISTRY_BODY
+#error "The old REGISTER_PACKET macros have been removed.  Use forPacket() instead."
 #endif
 
-/*! \file packet/packetregistry.h
- *  \brief Contains a registry of packet types known to the engine.
- *
- *  Each time a new packet type is created, this packet registry should be
- *  updated.  Instructions regarding how to do this are included in
- *  <i>packetregistry.h</i>, which also contains instructions regarding
- *  how to actually use the packet registry.
- *
- *  See NPacket for further details.
+#ifndef __PACKETREGISTRY_H
+#ifndef __DOXYGEN
+#define __PACKETREGISTRY_H
+#endif
+
+#include "packet/packettype.h"
+#include "utilities/registryutils.h"
+
+namespace regina {
+
+/**
+ * \weakgroup packet
+ * @{
  */
+
+/**
+ * Allows the user to call a template function whose template parameter
+ * matches a given value of PacketType, which is not known
+ * until runtime.  In essence, this routine contains a switch/case statement
+ * that runs through all possible packet types known to Regina.
+ *
+ * The advantages of this routine are that (i) the user does not need to
+ * repeatedly type such switch/case statements themselves; and (ii) if
+ * a new packet type is added then only a small amount of code
+ * needs to be extended to incorporate it.
+ *
+ * In detail: the function object \a func must define a templated
+ * unary bracket operator, so that <tt>func(PacketInfo<t>)</tt> is
+ * defined for any valid PacketType enum value \a t.  Then,
+ * when the user calls <tt>forPacket(packetType, func, defaultReturn)</tt>,
+ * this routine will call <tt>func(PacketInfo<packetType>)</tt> and pass
+ * back the corresponding return value.  If \a packetType does not denote a
+ * valid packet type, then forPacket() will pass back \a defaultReturn instead.
+ *
+ * There is also a two-argument variant of forPacket() that works with
+ * void functions.
+ *
+ * \pre The function object must have a typedef \a ReturnType indicating
+ * the return type of the corresponding templated unary bracket operator.
+ * Inheriting from Returns<...> is a convenient way to ensure this.
+ *
+ * \ifacespython Not present.
+ *
+ * @param packetType the given packet type.
+ * @param func the function object whose unary bracket operator we will
+ * call with a PacketInfo<packetType> object.
+ * @param defaultReturn the value to return if the given packet type
+ * is not valid.
+ * @return the return value from the corresponding unary bracket
+ * operator of \a func, or \a defaultReturn if the given packet type
+ * is not valid.
+ */
+template <typename FunctionObject>
+typename FunctionObject::ReturnType forPacket(
+        PacketType packetType, FunctionObject func,
+        typename FunctionObject::ReturnType defaultReturn);
+
+/**
+ * Allows the user to call a template function whose template parameter
+ * matches a given value of PacketType, which is not known
+ * until runtime.  In essence, this routine contains a switch/case statement
+ * that runs through all possible packet types known to Regina.
+ *
+ * The advantages of this routine are that (i) the user does not need to
+ * repeatedly type such switch/case statements themselves; and (ii) if
+ * a new packet type is added then only a small amount of code
+ * needs to be extended to incorporate it.
+ *
+ * In detail: the function object \a func must define a templated
+ * unary bracket operator, so that <tt>func(PacketInfo<t>)</tt> is
+ * defined for any valid PacketType enum value \a t.  Then,
+ * when the user calls <tt>forPacket(packetType, func)</tt>,
+ * this routine will call <tt>func(PacketInfo<packetType>)</tt> in turn.
+ * If \a packetType does not denote a valid packet type, then forPacket()
+ * will do nothing.
+ *
+ * There is also a three-argument variant of forPacket() that works with
+ * functions with return values.
+ *
+ * \ifacespython Not present.
+ *
+ * @param packetType the given packet type.
+ * @param func the function object whose unary bracket operator we will
+ * call with a PacketInfo<packetType> object.
+ */
+template <typename VoidFunctionObject>
+void forPacket(PacketType packetType, VoidFunctionObject func);
+
+/*@}*/
+
+} // namespace regina
+
+// Import template implementations:
+#include "packet/packetregistry-impl.h"
+
+#endif
 

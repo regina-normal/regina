@@ -39,42 +39,16 @@
 
 namespace regina {
 
-namespace {
-    struct NameFunction : public Returns<const char*> {
-        template <typename Filter>
-        inline const char* operator() (Filter f) { return f.name(); }
-    };
-}
-
 void NSurfaceFilter::writeXMLPacketData(std::ostream& out) const {
-    SurfaceFilterType id = getFilterID();
+    SurfaceFilterType id = getFilterType();
 
     out << "  <filter type=\""
-        << regina::xml::xmlEncodeSpecialChars(forFilter(
-            id, NameFunction(), "Unknown"))
+        << regina::xml::xmlEncodeSpecialChars(getFilterTypeName())
         << "\" typeid=\"" << id << "\">\n";
 
     writeXMLFilterData(out);
 
     out << "  </filter>\n";
-}
-
-namespace {
-    struct CloneFunction : public Returns<NSurfaceFilter*> {
-        const NSurfaceFilter* from_;
-
-        CloneFunction(const NSurfaceFilter* from) : from_(from) {}
-
-        template <typename Filter>
-        inline NSurfaceFilter* operator() (Filter f) {
-            return new typename Filter::Class(
-                dynamic_cast<const typename Filter::Class&>(*from_));
-        }
-    };
-}
-
-NPacket* NSurfaceFilter::internalClonePacket(NPacket* /* parent */) const {
-    return forFilter(getFilterID(), CloneFunction(this), 0);
 }
 
 } // namespace regina

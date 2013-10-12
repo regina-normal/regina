@@ -39,11 +39,18 @@
 
 namespace regina {
 
-#define __PACKET_REGISTRY_BODY
+namespace {
+    struct XMLReaderFunction : public Returns<NXMLElementReader*> {
+        NPacket* me_;
 
-#define REGISTER_PACKET(class, type, name) \
-    if (typeID == class::packetType) \
-        return class::getXMLReader(me);
+        XMLReaderFunction(NPacket* me) : me_(me) {}
+
+        template <typename Packet>
+        inline NXMLElementReader* operator() (Packet) {
+            return Packet::Class::getXMLReader(me_);
+        }
+    };
+}
 
 NXMLElementReader* NXMLPacketReader::startSubElement(
         const std::string& subTagName,
@@ -70,9 +77,13 @@ NXMLElementReader* NXMLPacketReader::startSubElement(
         if (typeID <= 0)
             return new NXMLPacketReader();
 
-        // Pull in cases from the packet registry.
-        #include "packet/packetregistry.h"
-        return new NXMLPacketReader();
+        NXMLElementReader* ans = forPacket(
+            static_cast<PacketType>(typeID),
+            XMLReaderFunction(me), 0);
+        if (ans)
+            return ans;
+        else
+            return new NXMLPacketReader();
     } else if (subTagName == "tag") {
         if (NPacket* me = getPacket()) {
             std::string packetTag = subTagProps.lookup("name");
@@ -110,10 +121,6 @@ void NXMLPacketReader::abort(NXMLElementReader* /* subReader */) {
         if (! me->getTreeParent())
             delete me;
 }
-
-// Tidy up.
-#undef REGISTER_PACKET
-#undef __PACKET_REGISTRY_BODY
 
 } // namespace regina
 

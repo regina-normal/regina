@@ -47,6 +47,7 @@
 namespace regina {
 
 class NXMLPacketReader;
+class NText;
 
 /**
  * \weakgroup packet
@@ -54,15 +55,29 @@ class NXMLPacketReader;
  */
 
 /**
+ * Stores information about the text packet.
+ * See the general PacketInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct PacketInfo<PACKET_TEXT> {
+    typedef NText Class;
+    inline static const char* name() {
+        return "Text";
+    }
+};
+
+/**
  * A packet representing a text string.
  */
 class REGINA_API NText : public NPacket {
+    REGINA_PACKET(NText, PACKET_TEXT)
+
     private:
         std::string text;
             /**< The text string stored in this packet. */
     public:
-        static const int packetType;
-
         /**
          * Initialises the packet to the empty string.
          */
@@ -102,9 +117,6 @@ class REGINA_API NText : public NPacket {
          * @param newText the new value for the packet.
          */
         void setText(const char* newText);
-
-        virtual int getPacketType() const;
-        virtual std::string getPacketTypeName() const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;

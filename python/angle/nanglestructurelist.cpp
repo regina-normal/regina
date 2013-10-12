@@ -79,7 +79,7 @@ void addNAngleStructureList() {
         .staticmethod("enumerate")
     ;
 
-    s.attr("packetType") = NAngleStructureList::packetType;
+    s.attr("packetType") = regina::PacketType(NAngleStructureList::packetType);
 
     implicitly_convertible<std::auto_ptr<NAngleStructureList>,
         std::auto_ptr<regina::NPacket> >();

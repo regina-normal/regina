@@ -224,6 +224,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
         static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
 
     protected:
+        virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLFilterData(std::ostream& out) const;
 };
 
@@ -285,6 +286,10 @@ inline void NSurfaceFilterProperties::setCompactness(const NBoolSet& value) {
 inline void NSurfaceFilterProperties::setRealBoundary(const NBoolSet& value) {
     ChangeEventSpan span(this);
     realBoundary = value;
+}
+
+inline NPacket* NSurfaceFilterProperties::internalClonePacket(NPacket*) const {
+    return new NSurfaceFilterProperties(*this);
 }
 
 } // namespace regina
