@@ -38,7 +38,7 @@
 #include "enumerate/nhilbertdual.h"
 #include "enumerate/nhilbertprimal.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
-#include "hypersurface/hsflavourregistry.h"
+#include "hypersurface/hscoordregistry.h"
 #include "maths/nmatrixint.h"
 #include "progress/nprogresstracker.h"
 #include "utilities/xmlutils.h"
@@ -60,7 +60,7 @@ namespace {
 
 NNormalHypersurfaceVector* makeZeroVector(
         const Dim4Triangulation* triangulation, HyperCoords flavour) {
-    return forFlavour(flavour, ZeroVector(triangulation), 0);
+    return forCoords(flavour, ZeroVector(triangulation), 0);
 }
 
 namespace {
@@ -78,7 +78,7 @@ namespace {
 
 NMatrixInt* makeMatchingEquations(Dim4Triangulation* triangulation,
         HyperCoords flavour) {
-    return forFlavour(flavour, MatchingEquations(triangulation), 0);
+    return forCoords(flavour, MatchingEquations(triangulation), 0);
 }
 
 namespace {
@@ -96,11 +96,11 @@ namespace {
 
 NEnumConstraintList* makeEmbeddedConstraints(Dim4Triangulation* triangulation,
         HyperCoords flavour) {
-    return forFlavour(flavour, EmbeddedConstraints(triangulation), 0);
+    return forCoords(flavour, EmbeddedConstraints(triangulation), 0);
 }
 
 void* NNormalHypersurfaceList::VertexEnumerator::run(void*) {
-    forFlavour(list_->flavour_, *this);
+    forCoords(list_->flavour_, *this);
     return 0;
 }
 
@@ -133,7 +133,7 @@ void NNormalHypersurfaceList::VertexEnumerator::operator() (Flavour) {
 }
 
 void* NNormalHypersurfaceList::FundPrimalEnumerator::run(void*) {
-    forFlavour(list_->flavour_, *this);
+    forCoords(list_->flavour_, *this);
     return 0;
 }
 
@@ -182,7 +182,7 @@ void NNormalHypersurfaceList::FundPrimalEnumerator::operator() (Flavour) {
 }
 
 void* NNormalHypersurfaceList::FundDualEnumerator::run(void*) {
-    forFlavour(list_->flavour_, *this);
+    forCoords(list_->flavour_, *this);
     return 0;
 }
 
@@ -290,7 +290,7 @@ void NNormalHypersurfaceList::writeTextShort(std::ostream& o) const {
     o << surfaces_.size() << " vertex normal hypersurface";
     if (surfaces_.size() != 1)
         o << 's';
-    o << " (" << forFlavour(flavour_, NameFunction(), "Unknown") << ')';
+    o << " (" << forCoords(flavour_, NameFunction(), "Unknown") << ')';
 }
 
 void NNormalHypersurfaceList::writeTextLong(std::ostream& o) const {
@@ -299,7 +299,7 @@ void NNormalHypersurfaceList::writeTextLong(std::ostream& o) const {
     else
         o << "Embedded, immersed & singular ";
     o << "vertex normal hypersurfaces\n";
-    o << "Coordinates: " << forFlavour(flavour_, NameFunction(), "Unknown")
+    o << "Coordinates: " << forCoords(flavour_, NameFunction(), "Unknown")
         << '\n';
 
     unsigned long n = getNumberOfHypersurfaces();
@@ -315,7 +315,7 @@ void NNormalHypersurfaceList::writeXMLPacketData(std::ostream& out) const {
     out << "  <params embedded=\"" << (embedded_ ? 'T' : 'F')
         << "\" flavourid=\"" << flavour_ << "\"\n";
     out << "\tflavour=\""
-        << regina::xml::xmlEncodeSpecialChars(forFlavour(
+        << regina::xml::xmlEncodeSpecialChars(forCoords(
            flavour_, NameFunction(), "Unknown")) << "\"/>\n";
 
     // Write the individual hypersurfaces.

@@ -32,16 +32,16 @@
 
 /* end stub */
 
-/*! \file hypersurface/hsflavourregistry.h
+/*! \file hypersurface/hscoordregistry.h
  *  \brief Provides access to a registry of all coordinate systems that can be
  *  used to create and store normal hypersurfaces in 4-manifold triangulations.
  *
  *  Each time a new flavour of coordinate system is created, the file
- *  hsflavourregistry-impl.h must be updated to include it.  Instructions on
- *  how to do this are included in hsflavourregistry-impl.h.
+ *  hscoordregistry-impl.h must be updated to include it.  Instructions on
+ *  how to do this are included in hscoordregistry-impl.h.
  *
  *  External routines can access the registry by calling one of the
- *  forFlavour() template functions defined in hsflavourregistry.h.
+ *  forCoords() template functions defined in hscoordregistry.h.
  *
  *  \warning You should not include this header unless it is necessary,
  *  since it will automatically import every header for every coordinate
@@ -81,13 +81,13 @@ namespace regina {
  * In detail: the function object \a func must define a templated
  * unary bracket operator, so that <tt>func(HyperInfo<c>)</tt> is
  * defined for any valid HyperCoords enum value \a c.  Then,
- * when the user calls <tt>forFlavour(flavour, func, defaultReturn)</tt>,
+ * when the user calls <tt>forCoords(flavour, func, defaultReturn)</tt>,
  * this routine will call <tt>func(HyperInfo<flavour>)</tt> and pass back
  * the corresponding return value.  If \a flavour does not denote a valid
- * coordinate system as described above, then forFlavour() will pass back
+ * coordinate system as described above, then forCoords() will pass back
  * \a defaultReturn instead.
  *
- * There is also a two-argument variant of forFlavour() that works with
+ * There is also a two-argument variant of forCoords() that works with
  * void functions.
  *
  * \pre The function object must have a typedef \a ReturnType indicating
@@ -106,7 +106,7 @@ namespace regina {
  * coordinate system is invalid.
  */
 template <typename FunctionObject>
-typename FunctionObject::ReturnType forFlavour(
+typename FunctionObject::ReturnType forCoords(
         HyperCoords flavour, FunctionObject func,
         typename FunctionObject::ReturnType defaultReturn);
 
@@ -128,12 +128,12 @@ typename FunctionObject::ReturnType forFlavour(
  * In detail: the function object \a func must define a templated
  * unary bracket operator, so that <tt>func(HyperInfo<c>)</tt> is
  * defined for any valid HyperCoords enum value \a c.  Then,
- * when the user calls <tt>forFlavour(flavour, func)</tt>,
+ * when the user calls <tt>forCoords(flavour, func)</tt>,
  * this routine will call <tt>func(HyperInfo<flavour>)</tt> in turn.
  * If \a flavour does not denote a valid coordinate system as described above,
- * then forFlavour() will do nothing.
+ * then forCoords() will do nothing.
  *
- * There is also a three-argument variant of forFlavour() that works with
+ * There is also a three-argument variant of forCoords() that works with
  * functions with return values.
  *
  * \ifacespython Not present.
@@ -143,13 +143,13 @@ typename FunctionObject::ReturnType forFlavour(
  * call with a HyperInfo<flavour> object.
  */
 template <typename VoidFunctionObject>
-void forFlavour(HyperCoords flavour, VoidFunctionObject func);
+void forCoords(HyperCoords flavour, VoidFunctionObject func);
 
 /*@}*/
 
 } // namespace regina
 
 // Import template implementations:
-#include "hypersurface/hsflavourregistry-impl.h"
+#include "hypersurface/hscoordregistry-impl.h"
 
 #endif

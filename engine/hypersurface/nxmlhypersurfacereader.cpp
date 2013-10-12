@@ -35,7 +35,7 @@
 #include <vector>
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nxmlhypersurfacereader.h"
-#include "hypersurface/hsflavourregistry.h"
+#include "hypersurface/hscoordregistry.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
@@ -59,7 +59,7 @@ void NXMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
     // Create a new vector and read all non-zero entries.
     // Bring in cases from the flavour registry...
     NNormalHypersurfaceVector* vec =
-        forFlavour(flavour_,
+        forCoords(flavour_,
             NewFunction1<NNormalHypersurfaceVector, size_t>(vecLen_), 0);
     if (! vec)
         return;

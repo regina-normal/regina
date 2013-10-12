@@ -72,8 +72,8 @@ class NXMLNormalHypersurfaceReader;
  * given in the form of compile-time constants and types.
  *
  * To iterate through cases for a given value of HyperCoords that is not
- * known until runtime, see the various forFlavour() routines defined in
- * hsflavourregistry.h.
+ * known until runtime, see the various forCoords() routines defined in
+ * hscoordregistry.h.
  *
  * This HyperInfo template should only be defined for \a flavourType
  * arguments that represent coordinate systems in which you can create
@@ -151,7 +151,7 @@ struct HyperInfo;
  * <ul>
  *   <li>A new value must be added to the HyperCoords enum in hypercoords.h
  *   to represent the new flavour of coordinate system.</li>
- *   <li>The file hsflavourregistry-impl.h must be updated to reflect the new
+ *   <li>The file hscoordregistry-impl.h must be updated to reflect the new
  *   flavour of coordinate system (the file itself contains instructions on
  *   how to do this).</li>
  *   <li>A corresponding specialisation of HyperInfo<> must be defined,
