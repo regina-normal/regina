@@ -2446,8 +2446,6 @@
 				052FA1421806103000FAE4DF /* RDetailViewController.mm */,
 				052FA1441806103000FAE4DF /* Images.xcassets */,
 				052FA1301806102F00FAE4DF /* Supporting Files */,
-				05A47FC51809D1D600F86BFD /* Example.h */,
-				05A47FC61809D1D600F86BFD /* Example.m */,
 			);
 			path = ios;
 			sourceTree = "<group>";
