@@ -207,7 +207,6 @@
 		052F9F55180600FB00FAE4DF /* npacket.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CFF180600FA00FAE4DF /* npacket.h */; };
 		052F9F56180600FB00FAE4DF /* npacketlistener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D00180600FA00FAE4DF /* npacketlistener.cpp */; };
 		052F9F57180600FB00FAE4DF /* npacketlistener.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D01180600FA00FAE4DF /* npacketlistener.h */; };
-		052F9F58180600FB00FAE4DF /* npackettype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D02180600FA00FAE4DF /* npackettype.cpp */; };
 		052F9F59180600FB00FAE4DF /* npdf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D03180600FA00FAE4DF /* npdf.cpp */; };
 		052F9F5A180600FB00FAE4DF /* npdf.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D04180600FA00FAE4DF /* npdf.h */; };
 		052F9F5B180600FB00FAE4DF /* nscript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D05180600FA00FAE4DF /* nscript.cpp */; };
@@ -610,7 +609,6 @@
 		052FA1A51806129B00FAE4DF /* seedprimes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CFA180600FA00FAE4DF /* seedprimes.cpp */; };
 		052FA1A61806129B00FAE4DF /* npacket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CFE180600FA00FAE4DF /* npacket.cpp */; };
 		052FA1A71806129B00FAE4DF /* npacketlistener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D00180600FA00FAE4DF /* npacketlistener.cpp */; };
-		052FA1A81806129B00FAE4DF /* npackettype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D02180600FA00FAE4DF /* npackettype.cpp */; };
 		052FA1A91806129B00FAE4DF /* npdf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D03180600FA00FAE4DF /* npdf.cpp */; };
 		052FA1AA1806129B00FAE4DF /* nscript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D05180600FA00FAE4DF /* nscript.cpp */; };
 		052FA1AB1806129B00FAE4DF /* ntext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D07180600FA00FAE4DF /* ntext.cpp */; };
@@ -767,6 +765,8 @@
 		057FA753180615F6008E25F6 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA750180615F5008E25F6 /* libxml2.dylib */; };
 		057FA754180615F6008E25F6 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA751180615F5008E25F6 /* libz.dylib */; };
 		057FA7561806184B008E25F6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA7551806184A008E25F6 /* UIKit.framework */; };
+		0588F1181808D43B006BDC79 /* packetregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1161808D43B006BDC79 /* packetregistry-impl.h */; };
+		0588F1191808D43B006BDC79 /* packettype.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1171808D43B006BDC79 /* packettype.h */; };
 		05CA99E418078452006161DC /* flavourregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E318078451006161DC /* flavourregistry-impl.h */; };
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 /* End PBXBuildFile section */
@@ -1027,7 +1027,6 @@
 		052F9CFF180600FA00FAE4DF /* npacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npacket.h; sourceTree = "<group>"; };
 		052F9D00180600FA00FAE4DF /* npacketlistener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npacketlistener.cpp; sourceTree = "<group>"; };
 		052F9D01180600FA00FAE4DF /* npacketlistener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npacketlistener.h; sourceTree = "<group>"; };
-		052F9D02180600FA00FAE4DF /* npackettype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npackettype.cpp; sourceTree = "<group>"; };
 		052F9D03180600FA00FAE4DF /* npdf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npdf.cpp; sourceTree = "<group>"; };
 		052F9D04180600FA00FAE4DF /* npdf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npdf.h; sourceTree = "<group>"; };
 		052F9D05180600FA00FAE4DF /* nscript.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nscript.cpp; sourceTree = "<group>"; };
@@ -1432,6 +1431,8 @@
 		057FA750180615F5008E25F6 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libxml2.dylib; sourceTree = DEVELOPER_DIR; };
 		057FA751180615F5008E25F6 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
 		057FA7551806184A008E25F6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		0588F1161808D43B006BDC79 /* packetregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "packetregistry-impl.h"; sourceTree = "<group>"; };
+		0588F1171808D43B006BDC79 /* packettype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packettype.h; sourceTree = "<group>"; };
 		05CA99E318078451006161DC /* flavourregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "flavourregistry-impl.h"; sourceTree = "<group>"; };
 		05CA99E518078465006161DC /* registryutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registryutils.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1851,7 +1852,6 @@
 				052F9CFF180600FA00FAE4DF /* npacket.h */,
 				052F9D00180600FA00FAE4DF /* npacketlistener.cpp */,
 				052F9D01180600FA00FAE4DF /* npacketlistener.h */,
-				052F9D02180600FA00FAE4DF /* npackettype.cpp */,
 				052F9D03180600FA00FAE4DF /* npdf.cpp */,
 				052F9D04180600FA00FAE4DF /* npdf.h */,
 				052F9D05180600FA00FAE4DF /* nscript.cpp */,
@@ -1862,7 +1862,9 @@
 				052F9D0A180600FA00FAE4DF /* nxmlpacketreader.h */,
 				052F9D0B180600FA00FAE4DF /* nxmlpacketreaders.cpp */,
 				052F9D0C180600FA00FAE4DF /* nxmlpacketreaders.h */,
+				0588F1161808D43B006BDC79 /* packetregistry-impl.h */,
 				052F9D0D180600FA00FAE4DF /* packetregistry.h */,
+				0588F1171808D43B006BDC79 /* packettype.h */,
 			);
 			path = packet;
 			sourceTree = "<group>";
@@ -2624,6 +2626,7 @@
 				052F9FE9180600FB00FAE4DF /* nblockedsfs.h in Headers */,
 				052FA003180600FB00FAE4DF /* npluggedtorusbundle.h in Headers */,
 				052FA068180600FB00FAE4DF /* ngenericisomorphism.h in Headers */,
+				0588F1181808D43B006BDC79 /* packetregistry-impl.h in Headers */,
 				052F9F3A180600FB00FAE4DF /* matrixops.h in Headers */,
 				052F9F95180600FB00FAE4DF /* positioned_tet.h in Headers */,
 				052F9ED0180600FB00FAE4DF /* nmaxadmissible.h in Headers */,
@@ -2657,6 +2660,7 @@
 				052FA089180600FB00FAE4DF /* intutils.h in Headers */,
 				052FA08A180600FB00FAE4DF /* memutils.h in Headers */,
 				052F9FE3180600FB00FAE4DF /* nsigisomorphism.h in Headers */,
+				0588F1191808D43B006BDC79 /* packettype.h in Headers */,
 				052F9F18180600FB00FAE4DF /* dimtraits.h in Headers */,
 				052F9F1B180600FB00FAE4DF /* ngenericisomorphism-impl.h in Headers */,
 				052F9EB3180600FB00FAE4DF /* dim2isomorphism.h in Headers */,
@@ -2942,7 +2946,6 @@
 				052FA22F180612DD00FAE4DF /* peripheral_curves.c in Sources */,
 				052FA1791806129B00FAE4DF /* skeleton.cpp in Sources */,
 				052FA1BA1806129B00FAE4DF /* nl31pillow.cpp in Sources */,
-				052FA1A81806129B00FAE4DF /* npackettype.cpp in Sources */,
 				052FA22E180612DD00FAE4DF /* orient.c in Sources */,
 				052FA1A31806129B00FAE4DF /* nray.cpp in Sources */,
 				052FA1601806129B00FAE4DF /* ngrouppresentation.cpp in Sources */,
@@ -3203,7 +3206,6 @@
 				052F9F82180600FB00FAE4DF /* finite_vertices.c in Sources */,
 				052F9F8A180600FB00FAE4DF /* intersection_numbers.c in Sources */,
 				052F9F7A180600FB00FAE4DF /* cusp_neighborhoods.c in Sources */,
-				052F9F58180600FB00FAE4DF /* npackettype.cpp in Sources */,
 				052F9F27180600FB00FAE4DF /* nlensspace.cpp in Sources */,
 				052F9F14180600FB00FAE4DF /* recogniser.cpp in Sources */,
 				052F9FA1180600FB00FAE4DF /* tet_shapes.c in Sources */,
