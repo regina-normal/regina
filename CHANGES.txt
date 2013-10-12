@@ -139,6 +139,8 @@ Version 4.95  [ (under development) ]
         Enum SurfaceFilterType:
             - A new enumeration that contains constants for different types of
               normal surface filter.  Include "surfaces/surfacefiltertype.h".
+        Routine stringToToken():
+            - Moved from foreign/snappea.h into utilities/stringutils.h.
         Headers dimtraits.h, nfacetspec.h, ngenericisomorphism.{h,tcc}:
             - Moved from triangulation/ to generic/.  The old header locations
               are now deprecated.  They have been kept for backward
