@@ -62,6 +62,11 @@ Version 4.95  [ (under development) ]
             - Re-enabled enumeration using NS_HILBERT_FULLCONE, which previously
               returned an empty list.  Users will not be affected unless
               they were explicitly asking for this much slower algorithm.
+            - Routine flavour() has been renamed to coords().  The old
+              name remains for now as a deprecated alias.
+        Class NNormalSurfaceSubset:
+            - Routine getFlavour() has been renamed to coords().  The old
+              name remains for now as a deprecated alias.
         Enum NormalCoords:
             - Renamed NS_FACE_ARCS to NS_TRIANGLE_ARCS.  The old name is
               deprecated but has been kept for backward compatibility.

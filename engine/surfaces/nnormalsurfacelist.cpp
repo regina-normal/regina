@@ -40,7 +40,7 @@
 namespace regina {
 
 namespace {
-    // Since legacy coordinate systems don't appear in the flavour
+    // Since legacy coordinate systems don't appear in the coordinate system
     // registry, give them a consistent name here.
     const char* AN_LEGACY_NAME =
         "Legacy standard almost normal (pruned tri-quad-oct)";
@@ -71,16 +71,16 @@ namespace {
 
         ZeroVector(const NTriangulation* tri) : tri_(tri) {}
 
-        template <typename Flavour>
-        inline NNormalSurfaceVector* operator() (Flavour f) {
-            return Flavour::Class::makeZeroVector(tri_);
+        template <typename Coords>
+        inline NNormalSurfaceVector* operator() (Coords) {
+            return Coords::Class::makeZeroVector(tri_);
         }
     };
 }
 
 NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
-        NormalCoords flavour) {
-    return forFlavour(flavour, ZeroVector(triangulation), 0);
+        NormalCoords coords) {
+    return forFlavour(coords, ZeroVector(triangulation), 0);
 }
 
 namespace {
@@ -89,16 +89,16 @@ namespace {
 
         MatchingEquations(NTriangulation* tri) : tri_(tri) {}
 
-        template <typename Flavour>
-        inline NMatrixInt* operator() (Flavour f) {
-            return Flavour::Class::makeMatchingEquations(tri_);
+        template <typename Coords>
+        inline NMatrixInt* operator() (Coords) {
+            return Coords::Class::makeMatchingEquations(tri_);
         }
     };
 }
 
 NMatrixInt* makeMatchingEquations(NTriangulation* triangulation,
-        NormalCoords flavour) {
-    return forFlavour(flavour, MatchingEquations(triangulation), 0);
+        NormalCoords coords) {
+    return forFlavour(coords, MatchingEquations(triangulation), 0);
 }
 
 namespace {
@@ -107,16 +107,16 @@ namespace {
 
         EmbeddedConstraints(NTriangulation* tri) : tri_(tri) {}
 
-        template <typename Flavour>
-        inline NEnumConstraintList* operator() (Flavour f) {
-            return Flavour::Class::makeEmbeddedConstraints(tri_);
+        template <typename Coords>
+        inline NEnumConstraintList* operator() (Coords) {
+            return Coords::Class::makeEmbeddedConstraints(tri_);
         }
     };
 }
 
 NEnumConstraintList* makeEmbeddedConstraints(NTriangulation* triangulation,
-        NormalCoords flavour) {
-    return forFlavour(flavour, EmbeddedConstraints(triangulation), 0);
+        NormalCoords coords) {
+    return forFlavour(coords, EmbeddedConstraints(triangulation), 0);
 }
 
 NTriangulation* NNormalSurfaceList::getTriangulation() const {
@@ -125,46 +125,46 @@ NTriangulation* NNormalSurfaceList::getTriangulation() const {
 
 namespace {
     struct AlmostNormalFunction : public Returns<bool> {
-        template <typename Flavour>
-        inline bool operator() (Flavour f) { return f.almostNormal; }
+        template <typename Coords>
+        inline bool operator() (Coords f) { return f.almostNormal; }
     };
 }
 
 bool NNormalSurfaceList::allowsAlmostNormal() const {
-    if (flavour_ == NS_AN_LEGACY)
+    if (coords_ == NS_AN_LEGACY)
         return true;
     else
-        return forFlavour(flavour_, AlmostNormalFunction(), false);
+        return forFlavour(coords_, AlmostNormalFunction(), false);
 }
 
 namespace {
     struct SpunFunction : public Returns<bool> {
-        template <typename Flavour>
-        inline bool operator() (Flavour f) { return f.spun; }
+        template <typename Coords>
+        inline bool operator() (Coords f) { return f.spun; }
     };
 }
 
 bool NNormalSurfaceList::allowsSpun() const {
     // Both the default and the NS_AN_LEGACY cases should return false.
-    return forFlavour(flavour_, SpunFunction(), false);
+    return forFlavour(coords_, SpunFunction(), false);
 }
 
 namespace {
     struct OrientedFunction : public Returns<bool> {
-        template <typename Flavour>
-        inline bool operator() (Flavour f) { return f.oriented; }
+        template <typename Coords>
+        inline bool operator() (Coords f) { return f.oriented; }
     };
 }
 
 bool NNormalSurfaceList::allowsOriented() const {
     // Both the default and the NS_AN_LEGACY cases should return false.
-    return forFlavour(flavour_, OrientedFunction(), false);
+    return forFlavour(coords_, OrientedFunction(), false);
 }
 
 namespace {
     struct NameFunction : public Returns<const char*> {
-        template <typename Flavour>
-        inline const char* operator() (Flavour f) { return f.name(); }
+        template <typename Coords>
+        inline const char* operator() (Coords f) { return f.name(); }
     };
 }
 
@@ -194,10 +194,10 @@ void NNormalSurfaceList::writeTextShort(std::ostream& out) const {
         out << 's';
 
     out << " (";
-    if (flavour_ == NS_AN_LEGACY)
+    if (coords_ == NS_AN_LEGACY)
         out << AN_LEGACY_NAME;
     else
-        out << forFlavour(flavour_, NameFunction(), "Unknown");
+        out << forFlavour(coords_, NameFunction(), "Unknown");
     out << ')';
 }
 
@@ -223,10 +223,10 @@ void NNormalSurfaceList::writeTextLong(std::ostream& out) const {
     out << " surfaces\n";
 
     out << "Coordinates: ";
-    if (flavour_ == NS_AN_LEGACY)
+    if (coords_ == NS_AN_LEGACY)
         out << AN_LEGACY_NAME << '\n';
     else
-        out << forFlavour(flavour_, NameFunction(), "Unknown") << '\n';
+        out << forFlavour(coords_, NameFunction(), "Unknown") << '\n';
 
     writeAllSurfaces(out);
 }
@@ -236,13 +236,13 @@ void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
     out << "  <params "
         << "type=\"" << which_.intValue() << "\" "
         << "algorithm=\"" << algorithm_.intValue() << "\" "
-        << "flavourid=\"" << flavour_ << "\"\n";
+        << "flavourid=\"" << coords_ << "\"\n";
     out << "\tflavour=\"";
-    if (flavour_ == NS_AN_LEGACY)
+    if (coords_ == NS_AN_LEGACY)
         out << regina::xml::xmlEncodeSpecialChars(AN_LEGACY_NAME);
     else
         out << regina::xml::xmlEncodeSpecialChars(forFlavour(
-            flavour_, NameFunction(), "Unknown"));
+            coords_, NameFunction(), "Unknown"));
     out << "\"/>\n";
 
     // Write the individual surfaces.
@@ -253,7 +253,7 @@ void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
 
 NPacket* NNormalSurfaceList::internalClonePacket(NPacket* /* parent */) const {
     NNormalSurfaceList* ans = new NNormalSurfaceList(
-        flavour_, which_, algorithm_);
+        coords_, which_, algorithm_);
     transform(surfaces.begin(), surfaces.end(), back_inserter(ans->surfaces),
         FuncNewClonePtr<NNormalSurface>());
     return ans;

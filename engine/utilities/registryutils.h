@@ -34,7 +34,7 @@
 
 /*! \file utilities/registryutils.h
  *  \brief Miscellaneous utility classes for working with registries of
- *  packet types, normal coordinate flavours, and so on.
+ *  packet types, normal coordinate systems, and so on.
  */
 
 #ifndef __REGISTRYUTILS_H

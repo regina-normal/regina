@@ -37,7 +37,7 @@
  *  that can be used to create and store normal surfaces in 3-manifold
  *  triangulations.
  *
- *  Each time a new flavour of coordinate system is created, the file
+ *  Each time a new coordinate system is created, the file
  *  flavourregistry-impl.h must be updated to include it.  Instructions on
  *  how to do this are included in flavourregistry-impl.h.
  *
@@ -84,16 +84,16 @@ class NNormalSurfaceVector; // For the deprecated NewNormalSurfaceVector.
  * a new coordinate system is added then only a small amount of code
  * needs to be extended to incorporate it.
  *
- * This function can only work with flavours of coordinate system in which
- * you can create and store normal surfaces.  All other flavours are
+ * This function can only work with coordinate systems in which
+ * you can create and store normal surfaces.  All other coordinate systems are
  * considered invalid for our purposes here.
  *
  * In detail: the function object \a func must define a templated
  * unary bracket operator, so that <tt>func(NormalInfo<c>)</tt> is
  * defined for any valid NormalCoords enum value \a c.  Then,
- * when the user calls <tt>forFlavour(flavour, func, defaultReturn)</tt>,
- * this routine will call <tt>func(NormalInfo<flavour>)</tt> and pass back
- * the corresponding return value.  If \a flavour does not denote a valid
+ * when the user calls <tt>forFlavour(coords, func, defaultReturn)</tt>,
+ * this routine will call <tt>func(NormalInfo<coords>)</tt> and pass back
+ * the corresponding return value.  If \a coords does not denote a valid
  * coordinate system as described above, then forFlavour() will pass back
  * \a defaultReturn instead.
  *
@@ -106,18 +106,18 @@ class NNormalSurfaceVector; // For the deprecated NewNormalSurfaceVector.
  *
  * \ifacespython Not present.
  *
- * @param flavour the given flavour of normal coordinate system.
+ * @param coords the given normal coordinate system.
  * @param func the function object whose unary bracket operator we will
- * call with a NormalInfo<flavour> object.
- * @param defaultReturn the value to return if the given flavour of
+ * call with a NormalInfo<coords> object.
+ * @param defaultReturn the value to return if the given
  * coordinate system is invalid.
  * @return the return value from the corresponding unary bracket
- * operator of \a func, or \a defaultReturn if the given flavour of
+ * operator of \a func, or \a defaultReturn if the given
  * coordinate system is invalid.
  */
 template <typename FunctionObject>
 typename FunctionObject::ReturnType forFlavour(
-        NormalCoords flavour, FunctionObject func,
+        NormalCoords coords, FunctionObject func,
         typename FunctionObject::ReturnType defaultReturn);
 
 /**
@@ -131,16 +131,16 @@ typename FunctionObject::ReturnType forFlavour(
  * a new coordinate system is added then only a small amount of code
  * needs to be extended to incorporate it.
  *
- * This function can only work with flavours of coordinate system in which
- * you can create and store normal surfaces.  All other flavours are
+ * This function can only work with coordinate systems in which
+ * you can create and store normal surfaces.  All other coordinate systems are
  * considered invalid for our purposes here.
  *
  * In detail: the function object \a func must define a templated
  * unary bracket operator, so that <tt>func(NormalInfo<c>)</tt> is
  * defined for any valid NormalCoords enum value \a c.  Then,
- * when the user calls <tt>forFlavour(flavour, func)</tt>,
- * this routine will call <tt>func(NormalInfo<flavour>)</tt> in turn.
- * If \a flavour does not denote a valid coordinate system as described above,
+ * when the user calls <tt>forFlavour(coords, func)</tt>,
+ * this routine will call <tt>func(NormalInfo<coords>)</tt> in turn.
+ * If \a coords does not denote a valid coordinate system as described above,
  * then forFlavour() will do nothing.
  *
  * There is also a three-argument variant of forFlavour() that works with
@@ -148,12 +148,12 @@ typename FunctionObject::ReturnType forFlavour(
  *
  * \ifacespython Not present.
  *
- * @param flavour the given flavour of normal coordinate system.
+ * @param coords the given normal coordinate system.
  * @param func the function object whose unary bracket operator we will
- * call with a NormalInfo<flavour> object.
+ * call with a NormalInfo<coords> object.
  */
 template <typename VoidFunctionObject>
-void forFlavour(NormalCoords flavour, VoidFunctionObject func);
+void forFlavour(NormalCoords coords, VoidFunctionObject func);
 
 /**
  * A legacy typedef provided for backward compatibility only.

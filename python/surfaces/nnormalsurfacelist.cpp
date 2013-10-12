@@ -50,95 +50,95 @@ namespace {
 
     // Write manual overload wrappers since these are static member functions.
     NNormalSurfaceList* unified_2(regina::NTriangulation* owner,
-            regina::NormalCoords flavour) {
-        return NNormalSurfaceList::enumerate(owner, flavour);
+            regina::NormalCoords coords) {
+        return NNormalSurfaceList::enumerate(owner, coords);
     }
     NNormalSurfaceList* unified_3(regina::NTriangulation* owner,
-            regina::NormalCoords flavour, regina::NormalList which) {
-        return NNormalSurfaceList::enumerate(owner, flavour, which);
+            regina::NormalCoords coords, regina::NormalList which) {
+        return NNormalSurfaceList::enumerate(owner, coords, which);
     }
     NNormalSurfaceList* unified_4(regina::NTriangulation* owner,
-            regina::NormalCoords flavour, regina::NormalList which,
+            regina::NormalCoords coords, regina::NormalList which,
             regina::NormalAlg algHints) {
-        return NNormalSurfaceList::enumerate(owner, flavour, which, algHints);
+        return NNormalSurfaceList::enumerate(owner, coords, which, algHints);
     }
     NNormalSurfaceList* unified_5(regina::NTriangulation* owner,
-            regina::NormalCoords flavour, regina::NormalList which,
+            regina::NormalCoords coords, regina::NormalList which,
             regina::NormalAlg algHints, regina::NProgressTracker* tracker) {
-        return NNormalSurfaceList::enumerate(owner, flavour, which, algHints,
+        return NNormalSurfaceList::enumerate(owner, coords, which, algHints,
             tracker);
     }
 
     NNormalSurfaceList* enumerate_3(regina::NTriangulation* owner,
-            regina::NormalCoords flavour, bool embedded) {
-        return NNormalSurfaceList::enumerate(owner, flavour, embedded);
+            regina::NormalCoords coords, bool embedded) {
+        return NNormalSurfaceList::enumerate(owner, coords, embedded);
     }
     NNormalSurfaceList* enumerate_4(regina::NTriangulation* owner,
-            regina::NormalCoords flavour, bool embedded,
+            regina::NormalCoords coords, bool embedded,
             regina::NProgressTracker* tracker) {
-        return NNormalSurfaceList::enumerate(owner, flavour, embedded, tracker);
+        return NNormalSurfaceList::enumerate(owner, coords, embedded, tracker);
     }
 
 #ifndef EXCLUDE_NORMALIZ
     NNormalSurfaceList* enumerateFundPrimal_2(regina::NTriangulation* owner,
-            regina::NormalCoords flavour) {
-        return NNormalSurfaceList::enumerateFundPrimal(owner, flavour);
+            regina::NormalCoords coords) {
+        return NNormalSurfaceList::enumerateFundPrimal(owner, coords);
     }
     NNormalSurfaceList* enumerateFundPrimal_3(regina::NTriangulation* owner,
-            regina::NormalCoords flavour, bool embedded) {
-        return NNormalSurfaceList::enumerateFundPrimal(owner, flavour,
+            regina::NormalCoords coords, bool embedded) {
+        return NNormalSurfaceList::enumerateFundPrimal(owner, coords,
             embedded);
     }
     NNormalSurfaceList* enumerateFundPrimal_4(regina::NTriangulation* owner,
-            regina::NormalCoords flavour, bool embedded,
+            regina::NormalCoords coords, bool embedded,
             regina::NNormalSurfaceList* vtxSurfaces) {
-        return NNormalSurfaceList::enumerateFundPrimal(owner, flavour,
+        return NNormalSurfaceList::enumerateFundPrimal(owner, coords,
             embedded, vtxSurfaces);
     }
     NNormalSurfaceList* enumerateFundPrimal_5(regina::NTriangulation* owner,
-            regina::NormalCoords flavour, bool embedded,
+            regina::NormalCoords coords, bool embedded,
             regina::NNormalSurfaceList* vtxSurfaces,
             regina::NProgressTracker* tracker) {
-        return NNormalSurfaceList::enumerateFundPrimal(owner, flavour,
+        return NNormalSurfaceList::enumerateFundPrimal(owner, coords,
             embedded, vtxSurfaces, tracker);
     }
 #endif
 
     NNormalSurfaceList* enumerateFundDual_2(regina::NTriangulation* owner,
-            regina::NormalCoords flavour) {
-        return NNormalSurfaceList::enumerateFundDual(owner, flavour);
+            regina::NormalCoords coords) {
+        return NNormalSurfaceList::enumerateFundDual(owner, coords);
     }
     NNormalSurfaceList* enumerateFundDual_3(regina::NTriangulation* owner,
-            regina::NormalCoords flavour, bool embedded) {
-        return NNormalSurfaceList::enumerateFundDual(owner, flavour,
+            regina::NormalCoords coords, bool embedded) {
+        return NNormalSurfaceList::enumerateFundDual(owner, coords,
             embedded);
     }
     NNormalSurfaceList* enumerateFundDual_4(regina::NTriangulation* owner,
-            regina::NormalCoords flavour, bool embedded,
+            regina::NormalCoords coords, bool embedded,
             regina::NProgressTracker* tracker) {
-        return NNormalSurfaceList::enumerateFundDual(owner, flavour,
+        return NNormalSurfaceList::enumerateFundDual(owner, coords,
             embedded, tracker);
     }
 
 #ifndef EXCLUDE_NORMALIZ
     NNormalSurfaceList* enumerateFundFullCone_2(regina::NTriangulation* owner,
-            regina::NormalCoords flavour) {
-        return NNormalSurfaceList::enumerateFundFullCone(owner, flavour);
+            regina::NormalCoords coords) {
+        return NNormalSurfaceList::enumerateFundFullCone(owner, coords);
     }
     NNormalSurfaceList* enumerateFundFullCone_3(regina::NTriangulation* owner,
-            regina::NormalCoords flavour, bool embedded) {
-        return NNormalSurfaceList::enumerateFundFullCone(owner, flavour,
+            regina::NormalCoords coords, bool embedded) {
+        return NNormalSurfaceList::enumerateFundFullCone(owner, coords,
             embedded);
     }
 #endif
 
     NNormalSurfaceList* enumerateFundCD_2(regina::NTriangulation* owner,
-            regina::NormalCoords flavour) {
-        return NNormalSurfaceList::enumerateFundCD(owner, flavour);
+            regina::NormalCoords coords) {
+        return NNormalSurfaceList::enumerateFundCD(owner, coords);
     }
     NNormalSurfaceList* enumerateFundCD_3(regina::NTriangulation* owner,
-            regina::NormalCoords flavour, bool embedded) {
-        return NNormalSurfaceList::enumerateFundCD(owner, flavour, embedded);
+            regina::NormalCoords coords, bool embedded) {
+        return NNormalSurfaceList::enumerateFundCD(owner, coords, embedded);
     }
 }
 
@@ -153,6 +153,7 @@ void addNNormalSurfaceList() {
             ("NNormalSurfaceList", no_init)
         .def("getFlavour", &NNormalSurfaceList::getFlavour)
         .def("flavour", &NNormalSurfaceList::flavour)
+        .def("coords", &NNormalSurfaceList::coords)
         .def("which", &NNormalSurfaceList::which)
         .def("algorithm", &NNormalSurfaceList::algorithm)
         .def("allowsAlmostNormal", &NNormalSurfaceList::allowsAlmostNormal)
