@@ -33,21 +33,18 @@
 /* end stub */
 
 #include <boost/python.hpp>
-#include "foreign/snappea.h"
-#include "triangulation/ntriangulation.h"
+#include "utilities/stringutils.h"
 
 using namespace boost::python;
 
 namespace {
-    regina::NTriangulation* (*readSnapPea_file)(const char*) =
-        &regina::readSnapPea;
-    bool (*writeSnapPea_file)(const char*, const regina::NTriangulation&) =
-        &regina::writeSnapPea;
+    std::string (*stringToToken_chars)(const char*) = &regina::stringToToken;
+    std::string (*stringToToken_string)(const std::string&) =
+        &regina::stringToToken;
 }
 
-void addForeignSnapPea() {
-    def("readSnapPea", readSnapPea_file,
-        return_value_policy<manage_new_object>());
-    def("writeSnapPea", writeSnapPea_file);
+void addStringUtils() {
+    def("stringToToken", stringToToken_chars);
+    def("stringToToken", stringToToken_string);
 }
 

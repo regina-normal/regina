@@ -179,10 +179,6 @@ class REGINA_API NGenericFacetPairing : public NThread {
 
         /*@}*/
         /**
-         * (end: Constructors and Destructors)
-         */
-
-        /**
          * \name Basic Queries
          */
         /*@{*/
@@ -276,10 +272,6 @@ class REGINA_API NGenericFacetPairing : public NThread {
 
         /*@}*/
         /**
-         * (end: Basic Queries)
-         */
-
-        /**
          * \name Isomorphic Representations
          */
         /*@{*/
@@ -337,10 +329,6 @@ class REGINA_API NGenericFacetPairing : public NThread {
         void findAutomorphisms(IsoList& list) const;
 
         /*@}*/
-        /**
-         * (end: Isomorphic Representations)
-         */
-
         /**
          * \name Input and Output
          */
@@ -441,9 +429,35 @@ class REGINA_API NGenericFacetPairing : public NThread {
             bool labels = false) const;
 
         /*@}*/
+
         /**
-         * (end: Input and Output)
+         * \name Internal Routines
          */
+        /*@{*/
+
+        /**
+         * Internal to findAllPairings().  This routine should never be
+         * called directly.
+         *
+         * Performs the actual generation of facet pairings, possibly as a
+         * separate thread.  At most one copy of this routine should be
+         * running at any given time for a particular NGenericFacetPairing
+         * instance.
+         *
+         * \ifacespython Not present, even in the dimension-specific
+         * subclasses.
+         *
+         * \pre This object is known to be of the dimension-specific subclass
+         * FacetPairing, not an instance of the parent class
+         * NGenericFacetPairing<dim>.
+         *
+         * @param param a structure containing the parameters that were
+         * passed to findAllPairings().
+         * @return the value 0.
+         */
+        void* run(void* param);
+
+        /*@}*/
 
         /**
          * Reconstructs a facet pairing from a text-based representation.
@@ -513,38 +527,6 @@ class REGINA_API NGenericFacetPairing : public NThread {
          * @return the output of writeDotHeader(), as outlined above.
          */
         static std::string dotHeader(const char* graphName = 0);
-
-        /**
-         * \name Graph Enumeration
-         */
-        /*@{*/
-
-        /**
-         * Internal to findAllPairings().  This routine should never be
-         * called directly.
-         *
-         * Performs the actual generation of facet pairings, possibly as a
-         * separate thread.  At most one copy of this routine should be
-         * running at any given time for a particular NGenericFacetPairing
-         * instance.
-         *
-         * \ifacespython Not present, even in the dimension-specific
-         * subclasses.
-         *
-         * \pre This object is known to be of the dimension-specific subclass
-         * FacetPairing, not an instance of the parent class
-         * NGenericFacetPairing<dim>.
-         *
-         * @param param a structure containing the parameters that were
-         * passed to findAllPairings().
-         * @return the value 0.
-         */
-        void* run(void* param);
-
-        /*@}*/
-        /**
-         * (end: Graph Enumeration)
-         */
 
         /**
          * Generates all possible facet pairings satisfying the given

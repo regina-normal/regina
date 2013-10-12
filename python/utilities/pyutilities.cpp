@@ -36,11 +36,13 @@ void addLocale();
 void addNBoolSet();
 void addNTriBool();
 void addOSUtils();
+void addStringUtils();
 
 void addUtilities() {
     addLocale();
     addNBoolSet();
     addNTriBool();
     addOSUtils();
+    addStringUtils();
 }
 
