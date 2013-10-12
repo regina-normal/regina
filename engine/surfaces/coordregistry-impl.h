@@ -32,16 +32,17 @@
 
 /* end stub */
 
-/*! \file surfaces/flavourregistry-impl.h
+/*! \file surfaces/coordregistry-impl.h
  *  \brief Contains the registry of all normal coordinate systems that can
  *  be used to create and store normal surfaces in 3-manifold triangulations.
  *
- *  Each time a new flavour is created, this registry must be updated to:
+ *  Each time a new coordinate system is created, this registry must be
+ *  updated to:
  *
  *  - add a #include line for the corresponding vector subclass;
- *  - add a corresponding case to each implementation of forFlavour().
+ *  - add a corresponding case to each implementation of forCoords().
  *
- *  See flavourregistry.h for how other routines can use this registry.
+ *  See coordregistry.h for how other routines can use this registry.
  */
 
 #ifndef __FLAVOURREGISTRY_IMPL_H
@@ -49,7 +50,7 @@
 #define __FLAVOURREGISTRY_IMPL_H
 #endif
 
-#include "surfaces/flavourregistry.h"
+#include "surfaces/coordregistry.h"
 #include "surfaces/nsstandard.h"
 #include "surfaces/nsanstandard.h"
 #include "surfaces/nsquad.h"
@@ -60,10 +61,10 @@
 namespace regina {
 
 template <typename FunctionObject>
-inline typename FunctionObject::ReturnType forFlavour(
-        NormalCoords flavour, FunctionObject func,
+inline typename FunctionObject::ReturnType forCoords(
+        NormalCoords coords, FunctionObject func,
         typename FunctionObject::ReturnType defaultReturn) {
-    switch (flavour) {
+    switch (coords) {
         case NS_STANDARD : return func(NormalInfo<NS_STANDARD>());
         case NS_AN_STANDARD : return func(NormalInfo<NS_AN_STANDARD>());
         case NS_QUAD : return func(NormalInfo<NS_QUAD>());
@@ -75,8 +76,8 @@ inline typename FunctionObject::ReturnType forFlavour(
 }
 
 template <typename VoidFunctionObject>
-inline void forFlavour(NormalCoords flavour, VoidFunctionObject func) {
-    switch (flavour) {
+inline void forCoords(NormalCoords coords, VoidFunctionObject func) {
+    switch (coords) {
         case NS_STANDARD : func(NormalInfo<NS_STANDARD>()); break;
         case NS_AN_STANDARD : func(NormalInfo<NS_AN_STANDARD>()); break;
         case NS_QUAD : func(NormalInfo<NS_QUAD>()); break;

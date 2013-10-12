@@ -61,7 +61,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced() const {
     NTriangulation* owner = getTriangulation();
 
     // Basic sanity checks:
-    if (flavour_ != Variant::standardCoords())
+    if (coords_ != Variant::standardCoords())
         return 0;
     if (which_ != (NS_EMBEDDED_ONLY | NS_VERTEX))
         return 0;

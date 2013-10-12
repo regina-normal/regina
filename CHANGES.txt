@@ -62,6 +62,11 @@ Version 4.95  [ (under development) ]
             - Re-enabled enumeration using NS_HILBERT_FULLCONE, which previously
               returned an empty list.  Users will not be affected unless
               they were explicitly asking for this much slower algorithm.
+            - Routine flavour() has been renamed to coords().  The old
+              name remains for now as a deprecated alias.
+        Class NNormalSurfaceSubset:
+            - Routine getFlavour() has been renamed to coords().  The old
+              name remains for now as a deprecated alias.
         Enum NormalCoords:
             - Renamed NS_FACE_ARCS to NS_TRIANGLE_ARCS.  The old name is
               deprecated but has been kept for backward compatibility.
@@ -141,6 +146,9 @@ Version 4.95  [ (under development) ]
         Enum SurfaceFilterType:
             - A new enumeration that contains constants for different types of
               normal surface filter.  Include "surfaces/surfacefiltertype.h".
+        Routine forFlavour(), forCoords():
+            - Renamed each variant of forFlavour() to forCoords().  The
+              old names have been kept as deprecated aliases.
         Routine stringToToken():
             - Moved from foreign/snappea.h into utilities/stringutils.h.
         Routine readSnapPea(), writeSnapPea():
@@ -153,9 +161,11 @@ Version 4.95  [ (under development) ]
         Header filterregistry.h:
             - The REGISTER_FILTER macros have been removed.  To iterate through
               surface filter types, use the new forFilter() template functions.
-        Header flavourregistry.h:
+        Header flavourregistry.h, coordregistry.h:
+            - Renamed flavourregistry.h to coordregistry.h.  The old header
+              has been kept as a deprecated alias.
             - The REGISTER_FLAVOUR macros have been removed.  To iterate through
-              coordinate systems, use the forFlavour() template functions.
+              coordinate systems, use the forCoords() template functions.
         Header packetregistry.h:
             - The REGISTER_PACKET macros have been removed.  To iterate through
               packet types, use the new forPacket() template functions.
