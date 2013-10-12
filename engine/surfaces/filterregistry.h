@@ -32,75 +32,124 @@
 
 /* end stub */
 
-/*********************
+/*! \file surfaces/filterregistry.h
+ *  \brief Provides access to a registry of all normal surface filter classes
+ *  that can be used to filter lists of normal surfaces in 3-manifold
+ *  triangulations.
  *
- *  Normal Surface Filter Registry
- *  ------------------------------
+ *  Each time a new filter is created, the file filterregistry-impl.h must be
+ *  updated to include it.  Instructions on how to do this are included in
+ *  filterregistry-impl.h.
  *
+ *  External routines can access the registry by calling one of the
+ *  forFilter() template functions defined in filterregistry.h.
  *
- *    THIS FILE SHOULD BE EDITED EACH TIME A NEW FILTERING CLASS
- *        IS CREATED!
- *
- *    Note that each normal surface filtering class should be a subclass
- *        of NSurfaceFilter.
- *
- *    For each such filtering class there should be a line of the form:
- *
- *        REGISTER_FILTER(id, class, name)
- *
- *    where:
- *        id = the integer ID of the new filtering class.
- *        class = the C++ subclass of NSurfaceFilter being registered.
- *        name = the string (English) name of the corresponding
- *            filtering method.
- *
- *    The appropriate include files should also be placed with full path
- *        and without full path in the appropriate include sections below.
- *
- *    To use the filter registry, simply #include this file.  If you
- *        have not defined __FILTER_REGISTRY_BODY, only the include
- *        sections will be brought in.  If you have defined
- *        __FILTER_REGISTRY_BODY, the include sections will be skipped
- *        and the REGISTER_FILTER lines will be brought in instead.
- *        By suitably defining the macro REGISTER_FILTER before including
- *        this file, you can have these lines do whatever you wish.
- *
- *    If you do #include this file, be sure to #undef both
- *        REGISTER_FILTER and __FILTER_REGISTRY_BODY when you are
- *        finished, so that if --enable-final is being used then these
- *        macros are left undefined for the following files.
- *
- *    Filter IDs:
- *    ----------
- *    When selecting an integer ID for your new filtering class, the
- *        following guidelines should be adhered to:
- *
- *    0-999:      Reserved for use with the official program distribution.
- *    1000-9999:  Reserved for future use.
- *    10000-:     Unreserved.
+ *  \warning You should not include this header unless it is necessary,
+ *  since it will automatically import every header for every filter class
+ *  in the registry.
  */
 
-#ifndef __FILTER_REGISTRY_BODY
-    #include "surfaces/nsurfacefilter.h"
-    #include "surfaces/sfproperties.h"
-    #include "surfaces/sfcombination.h"
-#else
-    REGISTER_FILTER(0, NSurfaceFilter, "Default filter")
-    REGISTER_FILTER(1, NSurfaceFilterProperties,
-        "Filter by basic properties")
-    REGISTER_FILTER(2, NSurfaceFilterCombination,
-        "Combination filter")
+// The old registry macros will silently compile but do nothing.
+// This could lead to nasty surprises, so throw an error if it looks like
+// people are still trying to use them.
+#ifdef __FILTER_REGISTRY_BODY
+#error "The old REGISTER_FILTER macros have been removed.  Use forFilter() instead."
 #endif
 
-/*! \file surfaces/filterregistry.h
- *  \brief Contains a registry of normal surface filtering classes known to
- *  the engine.  Each such class should be a subclass of NSurfaceFilter.
- *
- *  Each time a new filtering class is created, this filter registry should be
- *  updated.  Instructions regarding how to do this are included in
- *  <i>filterregistry.h</i>, which also contains instructions regarding
- *  how to actually use the filter registry.
- *
- *  See NSurfaceFilter for further details.
+#ifndef __FILTERREGISTRY_H
+#ifndef __DOXYGEN
+#define __FILTERREGISTRY_H
+#endif
+
+#include "surfaces/surfacefiltertype.h"
+#include "utilities/registryutils.h"
+
+namespace regina {
+
+/**
+ * \weakgroup surfaces
+ * @{
  */
+
+/**
+ * Allows the user to call a template function whose template parameter
+ * matches a given value of SurfaceFilterType, which is not known
+ * until runtime.  In essence, this routine contains a switch/case statement
+ * that runs through all possible normal surface filter types.
+ *
+ * The advantages of this routine are that (i) the user does not need to
+ * repeatedly type such switch/case statements themselves; and (ii) if
+ * a new filter type is added then only a small amount of code
+ * needs to be extended to incorporate it.
+ *
+ * In detail: the function object \a func must define a templated
+ * unary bracket operator, so that <tt>func(SurfaceFilterInfo<t>)</tt> is
+ * defined for any valid SurfaceFilterType enum value \a t.  Then,
+ * when the user calls <tt>forFilter(filter, func, defaultReturn)</tt>,
+ * this routine will call <tt>func(SurfaceFilterInfo<filter>)</tt> and pass
+ * back the corresponding return value.  If \a filter does not denote a valid
+ * filter type, then forFilter() will pass back \a defaultReturn instead.
+ *
+ * There is also a two-argument variant of forFilter() that works with
+ * void functions.
+ *
+ * \pre The function object must have a typedef \a ReturnType indicating
+ * the return type of the corresponding templated unary bracket operator.
+ * Inheriting from Returns<...> is a convenient way to ensure this.
+ *
+ * \ifacespython Not present.
+ *
+ * @param filter the given type of normal surface filter.
+ * @param func the function object whose unary bracket operator we will
+ * call with a SurfaceFilterInfo<filter> object.
+ * @param defaultReturn the value to return if the given filter type
+ * is not valid.
+ * @return the return value from the corresponding unary bracket
+ * operator of \a func, or \a defaultReturn if the given filter type
+ * is not valid.
+ */
+template <typename FunctionObject>
+typename FunctionObject::ReturnType forFilter(
+        SurfaceFilterType filter, FunctionObject func,
+        typename FunctionObject::ReturnType defaultReturn);
+
+/**
+ * Allows the user to call a template function whose template parameter
+ * matches a given value of SurfaceFilterType, which is not known
+ * until runtime.  In essence, this routine contains a switch/case statement
+ * that runs through all possible normal surface filter types.
+ *
+ * The advantages of this routine are that (i) the user does not need to
+ * repeatedly type such switch/case statements themselves; and (ii) if
+ * a new filter type is added then only a small amount of code
+ * needs to be extended to incorporate it.
+ *
+ * In detail: the function object \a func must define a templated
+ * unary bracket operator, so that <tt>func(SurfaceFilterInfo<t>)</tt> is
+ * defined for any valid SurfaceFilterType enum value \a t.  Then,
+ * when the user calls <tt>forFilter(filter, func)</tt>,
+ * this routine will call <tt>func(SurfaceFilterInfo<filter>)</tt> in turn.
+ * If \a filter does not denote a valid filter type, then forFilter()
+ * will do nothing.
+ *
+ * There is also a three-argument variant of forFilter() that works with
+ * functions with return values.
+ *
+ * \ifacespython Not present.
+ *
+ * @param filter the given type of normal surface filter.
+ * @param func the function object whose unary bracket operator we will
+ * call with a SurfaceFilterInfo<filter> object.
+ */
+template <typename VoidFunctionObject>
+void forFilter(SurfaceFilterType filter, VoidFunctionObject func);
+
+/*@}*/
+
+} // namespace regina
+
+// Import template implementations:
+#include "surfaces/filterregistry-impl.h"
+
+#endif
 

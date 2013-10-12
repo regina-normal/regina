@@ -33,25 +33,21 @@
 /* end stub */
 
 #include <boost/python.hpp>
-#include "packet/npdf.h"
+#include "surfaces/surfacefiltertype.h"
 
 using namespace boost::python;
-using regina::NPDF;
 
-namespace {
-    void (NPDF::*reset_empty)() = &NPDF::reset;
-}
+void addSurfaceFilterType() {
+    scope global;
 
-void addNPDF() {
-    scope s = class_<NPDF, bases<regina::NPacket>,
-            std::auto_ptr<NPDF>, boost::noncopyable>("NPDF", init<>())
-        .def("size", &NPDF::size)
-        .def("reset", reset_empty)
-    ;
+    enum_<regina::SurfaceFilterType>("SurfaceFilterType")
+        .value("NS_FILTER_DEFAULT", regina::NS_FILTER_DEFAULT)
+        .value("NS_FILTER_PROPERTIES", regina::NS_FILTER_PROPERTIES)
+        .value("NS_FILTER_COMBINATION", regina::NS_FILTER_COMBINATION)
+        ;
 
-    s.attr("packetType") = regina::PacketType(NPDF::packetType);
-
-    implicitly_convertible<std::auto_ptr<NPDF>,
-        std::auto_ptr<regina::NPacket> >();
+    global.attr("NS_FILTER_DEFAULT") = regina::NS_FILTER_DEFAULT;
+    global.attr("NS_FILTER_PROPERTIES") = regina::NS_FILTER_PROPERTIES;
+    global.attr("NS_FILTER_COMBINATION") = regina::NS_FILTER_COMBINATION;
 }
 

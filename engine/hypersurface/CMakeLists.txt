@@ -2,7 +2,6 @@
 
 # Files to compile
 SET ( FILES
-  hsflavours
   links
   nhsstandard
   nnormalhypersurface
@@ -22,6 +21,7 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     hsflavourregistry.h
+    hsflavourregistry-impl.h
     hypercoords.h
     nhsmirrored.h
     nhsstandard.h

@@ -58,6 +58,7 @@ namespace regina {
 class Dim4Triangulation;
 class NMatrixInt;
 class NNormalHypersurface;
+class NNormalHypersurfaceList;
 class NProgressTracker;
 class NXMLNormalHypersurfaceListReader;
 class NXMLPacketReader;
@@ -66,6 +67,20 @@ class NXMLPacketReader;
  * \weakgroup hypersurface
  * @{
  */
+
+/**
+ * Stores information about the normal hypersurface list packet.
+ * See the general PacketInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct PacketInfo<PACKET_NORMALHYPERSURFACELIST> {
+    typedef NNormalHypersurfaceList Class;
+    inline static const char* name() {
+        return "Normal Hypersurface List";
+    }
+};
 
 /**
  * A packet representing a collection of normal hypersurfaces in a 4-manifold
@@ -79,9 +94,9 @@ class NXMLPacketReader;
  * Normal hypersurface lists should be created using the routine enumerate().
  */
 class REGINA_API NNormalHypersurfaceList : public NPacket {
-    public:
-        static const int packetType;
+    REGINA_PACKET(NNormalHypersurfaceList, PACKET_NORMALHYPERSURFACELIST)
 
+    public:
         class VectorIterator;
 
     protected:
@@ -319,8 +334,6 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
         virtual const NNormalHypersurface* getHypersurface(
             unsigned long index) const;
 
-        virtual int getPacketType() const;
-        virtual std::string getPacketTypeName() const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);
@@ -597,6 +610,10 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
         /**
          * A thread class that actually performs the vertex normal
          * hypersurface enumeration.
+         *
+         * The "real work" is in operator(), where the coordinate system
+         * becomes a compile-time constant.  The run() routine simply
+         * farms out the real work to some instantiation of operator().
          */
         class VertexEnumerator : public NThread {
             private:
@@ -626,11 +643,30 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                     Dim4Triangulation* triang, NProgressTracker* tracker);
 
                 void* run(void*);
+
+                /**
+                 * Performs the real enumeration work, in a setting
+                 * where the underlying flavour of coordinate system is
+                 * a compile-time constant.
+                 *
+                 * We assume here that neither list_->which_ nor
+                 * list_->algorithm_ have been sanity-checked.
+                 *
+                 * This routine fills \a list_ with surfaces, and then once
+                 * this is finished it inserts \a list_ into the packet
+                 * tree as a child of \a triang_.
+                 */
+                template <typename Flavour>
+                void operator() (Flavour);
         };
 
         /**
          * A thread class that performs fundamental normal hypersurface
          * enumeration using the primal Hilbert basis algorithm.
+         *
+         * The "real work" is in operator(), where the coordinate system
+         * becomes a compile-time constant.  The run() routine simply
+         * farms out the real work to some instantiation of operator().
          */
         class FundPrimalEnumerator : public NThread {
             private:
@@ -667,11 +703,30 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                     NProgressTracker* tracker);
 
                 void* run(void*);
+
+                /**
+                 * Performs the real enumeration work, in a setting
+                 * where the underlying flavour of coordinate system is
+                 * a compile-time constant.
+                 *
+                 * We assume here that neither list_->which_ nor
+                 * list_->algorithm_ have been sanity-checked.
+                 *
+                 * This routine fills \a list_ with surfaces, and then once
+                 * this is finished it inserts \a list_ into the packet
+                 * tree as a child of \a triang_.
+                 */
+                template <typename Flavour>
+                void operator() (Flavour);
         };
 
         /**
          * A thread class that performs fundamental normal hypersurface
          * enumeration using the dual Hilbert basis algorithm.
+         *
+         * The "real work" is in operator(), where the coordinate system
+         * becomes a compile-time constant.  The run() routine simply
+         * farms out the real work to some instantiation of operator().
          */
         class FundDualEnumerator : public NThread {
             private:
@@ -701,6 +756,21 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                     Dim4Triangulation* triang, NProgressTracker* tracker);
 
                 void* run(void*);
+
+                /**
+                 * Performs the real enumeration work, in a setting
+                 * where the underlying flavour of coordinate system is
+                 * a compile-time constant.
+                 *
+                 * We assume here that neither list_->which_ nor
+                 * list_->algorithm_ have been sanity-checked.
+                 *
+                 * This routine fills \a list_ with surfaces, and then once
+                 * this is finished it inserts \a list_ into the packet
+                 * tree as a child of \a triang_.
+                 */
+                template <typename Flavour>
+                void operator() (Flavour);
         };
 
     friend class regina::NXMLNormalHypersurfaceListReader;

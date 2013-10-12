@@ -50,6 +50,7 @@
 #include "maths/nperm4.h"
 #include "maths/nray.h"
 #include "surfaces/ndisctype.h"
+#include "surfaces/normalcoords.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nproperty.h"
 
@@ -197,6 +198,77 @@ class NXMLNormalSurfaceReader;
 class NMatrixInt;
 
 /**
+ * A template that stores information about a particular flavour of
+ * normal coordinate system.  Much of this information is given in the
+ * form of compile-time constants and types.
+ *
+ * To iterate through cases for a given value of NormalCoords that is not
+ * known until runtime, see the various forFlavour() routines defined in
+ * flavourregistry.h.
+ *
+ * This NormalInfo template should only be defined for \a flavourType
+ * arguments that represent coordinate systems in which you can create and
+ * store normal surfaces.
+ *
+ * At a bare minimum, each specialisation of this template must provide:
+ *
+ * - a typedef \a Class that represents the corresponding
+ *   NNormalSurfaceVector subclass;
+ * - typedefs \a Standard and \a Reduced that identify NormalInfo templates
+ *   for the corresponding coordinate systems with and without triangles
+ *   (if this is not meaningful then both typedefs should just identify this
+ *   system);
+ * - enum constants \a almostNormal, \a spun and \a oriented, which indicate
+ *   whether the coordinate system allows almost normal, spun and/or
+ *   transversely oriented surfaces;
+ * - a static function name() that returns a C-style string giving the
+ *   human-readable name of the coordinate system.
+ *
+ * \ifacespython Not present.
+ */
+template <NormalCoords flavourType>
+struct NormalInfo;
+
+/**
+ * Defines various constants, types and virtual functions for a subclass
+ * of NNormalSurfaceVector.
+ *
+ * Every subclass of NNormalSurfaceVector \a must include
+ * REGINA_NORMAL_SURFACE_FLAVOUR at the beginning of the class definition.
+ *
+ * This macro provides the class with:
+ *
+ * - a compile-time enum constant \a coordType, which is equal to the
+ *   corresponding NormalCoords constant;
+ * - a typedef \a Info, which refers to the corresponding specialisation
+ *   of the NormalInfo<> template;
+ * - declarations and implementations of the virtual functions
+ *   NNormalSurfaceVector::clone(),
+ *   NNormalSurfaceVector::allowsAlmostNormal(),
+ *   NNormalSurfaceVector::allowsSpun(), and
+ *   NNormalSurfaceVector::allowsOriented().
+ *
+ * @param class_ the name of this subclass of NNormalSurfaceVector.
+ * @param id the corresponding NNormalCoords constant.
+ */
+#define REGINA_NORMAL_SURFACE_FLAVOUR(class_, id) \
+    public: \
+        typedef NormalInfo<id> Info; \
+        enum { coordType = id }; \
+        inline virtual NNormalSurfaceVector* clone() const { \
+            return new class_(*this); \
+        } \
+        inline virtual bool allowsAlmostNormal() const { \
+            return Info::almostNormal; \
+        } \
+        inline virtual bool allowsSpun() const { \
+            return Info::spun; \
+        } \
+        inline virtual bool allowsOriented() const { \
+            return Info::oriented; \
+        }
+
+/**
  * Stores the vector of a single normal surface in a 3-manifold.
  * The different subclasses of NNormalSurfaceVector use different
  * underlying coordinate systems for the normal solution space.
@@ -228,21 +300,23 @@ class NMatrixInt;
  *
  * <b>When deriving classes from NNormalSurfaceVector:</b>
  * <ul>
- *   <li>A new value must must be added to the NormalCoords enum
- *   to represent the new flavour of coordinate system.</li>
- *   <li>The file flavourregistry.h must be updated to reflect the new
- *   flavour of coordinate system.</li>
+ *   <li>A new value must must be added to the NormalCoords enum in
+ *   normalcoords.h to represent the new flavour of coordinate system.</li>
+ *   <li>The file flavourregistry-impl.h must be updated to reflect the new
+ *   flavour of coordinate system (the file itself contains instructions
+ *   on how to do this).</li>
+ *   <li>A corresponding specialisation of NormalInfo<> must be
+ *   defined, typically in the same header as the new vector subclass.</li>
+ *   <li>The macro REGINA_NORMAL_SURFACE_FLAVOUR must be added to the
+ *   beginning of the new vector subclass.  This will declare and define
+ *   various constants, typedefs and virtual functions (see the
+ *   REGINA_NORMAL_SURFACE_FLAVOUR macro documentation for details).</li>
  *   <li>Constructors <tt>class(size_t length)</tt> and
  *   <tt>class(const NVector<NLargeInteger>& cloneMe)</tt> must be
  *   declared and implemented; these will usually just call the
  *   corresponding superclass constructors.</li>
- *   <li>Virtual functions <tt>NNormalSurfaceVector* clone() const</tt>,
- *   <tt>bool allowsAlmostNormal() const</tt>,
- *   <tt>bool allowsSpun() const</tt> and
- *   <tt>bool allowsOriented()</tt> must be declared but not
- *   implemented.  The registry utilities will take care of their
- *   implementations.</li>
- *   <li>All abstract functions must be implemented.
+ *   <li>All abstract functions must be implemented, except for those
+ *   already provided by REGINA_NORMAL_SURFACE_FLAVOUR.
  *   Note that coordinate functions such as getTriangleCoord() must return the
  *   \e total number of discs of the requested type; if your new coordinate
  *   system adorns discs with extra information (such as orientation) then

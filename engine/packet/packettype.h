@@ -32,33 +32,81 @@
 
 /* end stub */
 
-#include "surfaces/flavourregistry.h"
+/*! \file packet/packettype.h
+ *  \brief Defines constants for the various packet types known to Regina.
+ */
+
+#ifndef __PACKETTYPE_H
+#ifndef __DOXYGEN
+#define __PACKETTYPE_H
+#endif
+
+#include "regina-core.h"
 
 namespace regina {
 
-#define __FLAVOUR_REGISTRY_BODY
+/**
+ * \weakgroup packet
+ * @{
+ */
 
-// Bring in routines from the flavour registry.
+/**
+ * Represents the different types of packet that are available in Regina.
+ *
+ * IDs 0-9999 are reserved for future use by Regina.  If you are extending
+ * Regina to include your own packet type, you should choose an ID >= 10000.
+ */
+enum PacketType {
+    /**
+     * Represents a container packet, of class NContainer.
+     */
+    PACKET_CONTAINER = 1,
+    /**
+     * Represents a text packet, of class NText.
+     */
+    PACKET_TEXT = 2,
+    /**
+     * Represents a 3-manifold triangulation, of class NTriangulation.
+     */
+    PACKET_TRIANGULATION = 3,
+    /**
+     * Represents a normal surface list, of class NNormalSurfaceList.
+     */
+    PACKET_NORMALSURFACELIST = 6,
+    /**
+     * Represents a script packet, of class NScript.
+     */
+    PACKET_SCRIPT = 7,
+    /**
+     * Represents a normal surface filter, of class NSurfaceFilter or
+     * one of its descendant classes.
+     */
+    PACKET_SURFACEFILTER = 8,
+    /**
+     * Represents an angle structure list, of class NAngleStructureList.
+     */
+    PACKET_ANGLESTRUCTURELIST = 9,
+    /**
+     * Represents a PDF document, of class NPDF.
+     */
+    PACKET_PDF = 10,
+    /**
+     * Represents a 4-manifold triangulation, of class Dim4Triangulation.
+     */
+    PACKET_DIM4TRIANGULATION = 11,
+    /**
+     * Represents a normal hypersurface list, of class NNormalHypersurfaceList.
+     */
+    PACKET_NORMALHYPERSURFACELIST = 13,
+    /**
+     * Represents a 2-manifold triangulation, of class Dim2Triangulation.
+     */
+    PACKET_DIM2TRIANGULATION = 15
+};
 
-#define REGISTER_FLAVOUR(id_name, class, n, almost_normal, spun, oriented) \
-    NNormalSurfaceVector* class::clone() const { \
-        return new class(*this); \
-    } \
-    bool class::allowsAlmostNormal() const { \
-        return almost_normal; \
-    } \
-    bool class::allowsSpun() const { \
-        return spun; \
-    } \
-    bool class::allowsOriented() const { \
-        return oriented; \
-    }
-
-#include "surfaces/flavourregistry.h"
-
-// Tidy up.
-#undef REGISTER_FLAVOUR
-#undef __FLAVOUR_REGISTRY_BODY
+/*@}*/
 
 } // namespace regina
+
+#endif
 
