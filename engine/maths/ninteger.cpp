@@ -311,7 +311,7 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator *=(
             mpz_init_set_si(large_, small_);
             mpz_mul_si(large_, large_, other.small_);
         } else
-            small_ = ans;
+            small_ = static_cast<long>(ans);
     }
     return *this;
 }
@@ -331,7 +331,7 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator *=(long o
             mpz_init_set_si(large_, small_);
             mpz_mul_si(large_, large_, other);
         } else
-            small_ = ans;
+            small_ = static_cast<long>(ans);
     }
     return *this;
 }

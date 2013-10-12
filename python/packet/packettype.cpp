@@ -33,25 +33,33 @@
 /* end stub */
 
 #include <boost/python.hpp>
-#include "packet/npdf.h"
+#include "packet/packettype.h"
 
 using namespace boost::python;
-using regina::NPDF;
 
-namespace {
-    void (NPDF::*reset_empty)() = &NPDF::reset;
-}
+void addPacketType() {
+    scope global;
 
-void addNPDF() {
-    scope s = class_<NPDF, bases<regina::NPacket>,
-            std::auto_ptr<NPDF>, boost::noncopyable>("NPDF", init<>())
-        .def("size", &NPDF::size)
-        .def("reset", reset_empty)
-    ;
+    enum_<regina::PacketType>("PacketType")
+        .value("PACKET_CONTAINER", regina::PACKET_CONTAINER)
+        .value("PACKET_TEXT", regina::PACKET_TEXT)
+        .value("PACKET_SCRIPT", regina::PACKET_SCRIPT)
+        .value("PACKET_PDF", regina::PACKET_PDF)
+        .value("PACKET_TRIANGULATION", regina::PACKET_TRIANGULATION)
+        .value("PACKET_ANGLESTRUCTURELIST", regina::PACKET_ANGLESTRUCTURELIST)
+        .value("PACKET_NORMALSURFACELIST", regina::PACKET_NORMALSURFACELIST)
+        .value("PACKET_DIM2TRIANGULATION", regina::PACKET_DIM2TRIANGULATION)
+        .value("PACKET_SURFACEFILTER", regina::PACKET_SURFACEFILTER)
+        ;
 
-    s.attr("packetType") = regina::PacketType(NPDF::packetType);
-
-    implicitly_convertible<std::auto_ptr<NPDF>,
-        std::auto_ptr<regina::NPacket> >();
+    global.attr("PACKET_CONTAINER") = regina::PACKET_CONTAINER;
+    global.attr("PACKET_TEXT") = regina::PACKET_TEXT;
+    global.attr("PACKET_SCRIPT") = regina::PACKET_SCRIPT;
+    global.attr("PACKET_PDF") = regina::PACKET_PDF;
+    global.attr("PACKET_TRIANGULATION") = regina::PACKET_TRIANGULATION;
+    global.attr("PACKET_ANGLESTRUCTURELIST") = regina::PACKET_ANGLESTRUCTURELIST;
+    global.attr("PACKET_NORMALSURFACELIST") = regina::PACKET_NORMALSURFACELIST;
+    global.attr("PACKET_DIM2TRIANGULATION") = regina::PACKET_DIM2TRIANGULATION;
+    global.attr("PACKET_SURFACEFILTER") = regina::PACKET_SURFACEFILTER;
 }
 

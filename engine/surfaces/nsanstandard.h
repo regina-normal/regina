@@ -48,11 +48,33 @@
 namespace regina {
 
 class NMatrixInt;
+class NNormalSurfaceVectorANStandard;
 
 /**
  * \weakgroup surfaces
  * @{
  */
+
+/**
+ * Stores information about standard almost normal coordinates.
+ * See the general NormalInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct NormalInfo<NS_AN_STANDARD> {
+    typedef NNormalSurfaceVectorANStandard Class;
+    typedef NormalInfo<NS_AN_STANDARD> Standard;
+    typedef NormalInfo<NS_AN_QUAD_OCT> Reduced;
+    inline static const char* name() {
+        return "Standard almost normal (tri-quad-oct)";
+    }
+    enum {
+        almostNormal = 1,
+        spun = 0,
+        oriented = 0
+    };
+};
 
 /**
  * An almost normal surface vector using standard triangle-quad-oct
@@ -72,6 +94,8 @@ class NMatrixInt;
  * \ifacespython Not present.
  */
 class REGINA_API NNormalSurfaceVectorANStandard : public NNormalSurfaceVector {
+    REGINA_NORMAL_SURFACE_FLAVOUR(NNormalSurfaceVectorANStandard, NS_AN_STANDARD)
+
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -87,10 +111,6 @@ class REGINA_API NNormalSurfaceVectorANStandard : public NNormalSurfaceVector {
          */
         NNormalSurfaceVectorANStandard(const NVector<NLargeInteger>& cloneMe);
 
-        virtual bool allowsAlmostNormal() const;
-        virtual bool allowsSpun() const;
-        virtual bool allowsOriented() const;
-
         virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
             int vertex, NTriangulation* triang) const;
         virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
@@ -101,8 +121,6 @@ class REGINA_API NNormalSurfaceVectorANStandard : public NNormalSurfaceVector {
             NTriangulation* triang) const;
         virtual NLargeInteger getTriangleArcs(unsigned long triIndex,
             int triVertex, NTriangulation* triang) const;
-
-        virtual NNormalSurfaceVector* clone() const;
 
         static NNormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);

@@ -49,11 +49,26 @@
 namespace regina {
 
 class NXMLPacketReader;
+class NPDF;
 
 /**
  * \weakgroup packet
  * @{
  */
+
+/**
+ * Stores information about the PDF packet.
+ * See the general PacketInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct PacketInfo<PACKET_PDF> {
+    typedef NPDF Class;
+    inline static const char* name() {
+        return "PDF";
+    }
+};
 
 /**
  * A packet that can hold a PDF document.
@@ -62,6 +77,8 @@ class NXMLPacketReader;
  * This state can be changed by calling reset().
  */
 class REGINA_API NPDF : public NPacket {
+    REGINA_PACKET(NPDF, PACKET_PDF)
+
     public:
         /**
          * Describes how a PDF packet should claim ownership of a block
@@ -99,8 +116,6 @@ class REGINA_API NPDF : public NPacket {
                  must be either \a OWN_MALLOC or \a OWN_NEW. */
 
     public:
-        static const int packetType;
-
         /**
          * Creates a PDF packet with no document stored.
          */
@@ -188,9 +203,6 @@ class REGINA_API NPDF : public NPacket {
          * of the given block of data; see the notes above for details.
          */
         void reset(char* data, size_t size, OwnershipPolicy alloc);
-
-        virtual int getPacketType() const;
-        virtual std::string getPacketTypeName() const;
 
         virtual void writeTextShort(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);
