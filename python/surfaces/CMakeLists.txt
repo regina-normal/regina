@@ -13,6 +13,7 @@ SET ( FILES
   nsurfacesubset
   sfcombination
   sfproperties
+  surfacefiltertype
   pysurfaces
   )
 

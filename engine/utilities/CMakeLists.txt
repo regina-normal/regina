@@ -43,6 +43,7 @@ if (${REGINA_INSTALL_DEV})
     ntritmask.h
     osutils.h
     ptrutils.h
+    registryutils.h
     stlutils.h
     stringutils.h
     stringutils.tcc

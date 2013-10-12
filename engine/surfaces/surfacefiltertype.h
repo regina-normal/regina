@@ -32,26 +32,52 @@
 
 /* end stub */
 
-#include "packet/packetregistry.h"
+/*! \file surfaces/surfacefiltertype.h
+ *  \brief Defines constants for normal surface filter types.
+ */
+
+#ifndef __SURFACEFILTERTYPE_H
+#ifndef __DOXYGEN
+#define __SURFACEFILTERTYPE_H
+#endif
+
+#include "regina-core.h"
 
 namespace regina {
 
-// Define a task for each REGISTER_PACKET to perform.
-#define REGISTER_PACKET(class, type, name)         \
-    int class::getPacketType() const {             \
-        return type;                               \
-    }                                              \
-    const int class::packetType = type;            \
-    std::string class::getPacketTypeName() const { \
-        return name;                               \
-    }
+/**
+ * \weakgroup surfaces
+ * @{
+ */
 
-// Import all the REGISTER_PACKET lines.
-#define __PACKET_REGISTRY_BODY
-#include "packet/packetregistry.h"
+/**
+ * Represents different types of filter classes that can be used to filter
+ * lists of normal surfaces in 3-manifold triangulations.
+ *
+ * IDs 0-9999 are reserved for future use by Regina.  If you are extending
+ * Regina to include your own filter class, you should choose an ID >= 10000.
+ */
+enum SurfaceFilterType {
+    /**
+     * Represents the NSurfaceFilter class: a do-nothing filter that
+     * accepts any normal surface.
+     */
+    NS_FILTER_DEFAULT = 0,
+    /**
+     * Represents the NSurfaceFilterProperties subclass: a filter that
+     * examines simple properties of a normal surface.
+     */
+    NS_FILTER_PROPERTIES = 1,
+    /**
+     * Represents the NSurfaceFilterCombination subclass: a filter that
+     * combines other filters using boolean AND or OR.
+     */
+    NS_FILTER_COMBINATION = 2
+};
 
-// Tidy up.
-#undef REGISTER_PACKET
-#undef __PACKET_REGISTRY_BODY
+/*@}*/
 
 } // namespace regina
+
+#endif
+

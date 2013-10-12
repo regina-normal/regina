@@ -66,6 +66,7 @@ class Dim4Edge;
 class Dim4Pentachoron;
 class Dim4Tetrahedron;
 class Dim4Triangle;
+class Dim4Triangulation;
 class Dim4Vertex;
 class NXMLDim4TriangulationReader;
 class NXMLPacketReader;
@@ -75,6 +76,20 @@ class NXMLPacketReader;
  * Triangulations of 4-manifolds.
  * @{
  */
+
+/**
+ * Stores information about the 4-manifold triangulation packet.
+ * See the general PacketInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct PacketInfo<PACKET_DIM4TRIANGULATION> {
+    typedef Dim4Triangulation Class;
+    inline static const char* name() {
+        return "4-Manifold Triangulation";
+    }
+};
 
 /**
  * Stores the triangulation of a 4-manifold along with its
@@ -94,9 +109,9 @@ class NXMLPacketReader;
  */
 class REGINA_API Dim4Triangulation : public NPacket,
         public NGenericTriangulation<4> {
-    public:
-        static const int packetType;
+    REGINA_PACKET(Dim4Triangulation, PACKET_DIM4TRIANGULATION)
 
+    public:
         typedef std::vector<Dim4Pentachoron*>::const_iterator
                 PentachoronIterator;
             /**< Used to iterate through pentachora. */
@@ -195,9 +210,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * \name Packet Administration
          */
         /*@{*/
-
-        virtual int getPacketType() const;
-        virtual std::string getPacketTypeName() const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;

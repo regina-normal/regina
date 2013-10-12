@@ -50,10 +50,26 @@
 
 namespace regina {
 
+class NSurfaceFilterProperties;
+
 /**
  * \weakgroup surfaces
  * @{
  */
+
+/**
+ * Stores information about the property-based surface filter.
+ * See the general SurfaceFilterInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct SurfaceFilterInfo<NS_FILTER_PROPERTIES> {
+    typedef NSurfaceFilterProperties Class;
+    inline static const char* name() {
+        return "Filter by basic properties";
+    }
+};
 
 /**
  * A normal surface filter that filters by basic properties of the normal
@@ -67,8 +83,7 @@ namespace regina {
  * basis of whether or not it is compact.
  */
 class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
-    public:
-        static const int filterID;
+    REGINA_SURFACE_FILTER(NSurfaceFilterProperties, NS_FILTER_PROPERTIES)
 
     private:
         std::set<NLargeInteger> eulerCharacteristic;
@@ -208,10 +223,8 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
 
-        virtual int getFilterID() const;
-        virtual std::string getFilterName() const;
-
     protected:
+        virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLFilterData(std::ostream& out) const;
 };
 
@@ -273,6 +286,10 @@ inline void NSurfaceFilterProperties::setCompactness(const NBoolSet& value) {
 inline void NSurfaceFilterProperties::setRealBoundary(const NBoolSet& value) {
     ChangeEventSpan span(this);
     realBoundary = value;
+}
+
+inline NPacket* NSurfaceFilterProperties::internalClonePacket(NPacket*) const {
+    return new NSurfaceFilterProperties(*this);
 }
 
 } // namespace regina

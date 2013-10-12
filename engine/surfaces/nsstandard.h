@@ -48,11 +48,33 @@
 namespace regina {
 
 class NMatrixInt;
+class NNormalSurfaceVectorStandard;
 
 /**
  * \weakgroup surfaces
  * @{
  */
+
+/**
+ * Stores information about standard normal coordinates.
+ * See the general NormalInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct NormalInfo<NS_STANDARD> {
+    typedef NNormalSurfaceVectorStandard Class;
+    typedef NormalInfo<NS_STANDARD> Standard;
+    typedef NormalInfo<NS_QUAD> Reduced;
+    inline static const char* name() {
+        return "Standard normal (tri-quad)";
+    }
+    enum {
+        almostNormal = 0,
+        spun = 0,
+        oriented = 0
+    };
+};
 
 /**
  * A normal surface vector using standard triangle-quad coordinates.
@@ -69,6 +91,8 @@ class NMatrixInt;
  * \ifacespython Not present.
  */
 class REGINA_API NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
+    REGINA_NORMAL_SURFACE_FLAVOUR(NNormalSurfaceVectorStandard, NS_STANDARD)
+
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -84,10 +108,6 @@ class REGINA_API NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
          */
         NNormalSurfaceVectorStandard(const NVector<NLargeInteger>& cloneMe);
 
-        virtual bool allowsAlmostNormal() const;
-        virtual bool allowsSpun() const;
-        virtual bool allowsOriented() const;
-
         virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
             int vertex, NTriangulation* triang) const;
         virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
@@ -98,8 +118,6 @@ class REGINA_API NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
             NTriangulation* triang) const;
         virtual NLargeInteger getTriangleArcs(unsigned long triIndex,
             int triVertex, NTriangulation* triang) const;
-
-        virtual NNormalSurfaceVector* clone() const;
 
         static NNormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);

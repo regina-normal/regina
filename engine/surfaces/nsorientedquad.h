@@ -47,11 +47,33 @@
 namespace regina {
 
 class NMatrixInt;
+class NNormalSurfaceVectorOrientedQuad;
 
 /**
  * \weakgroup surfaces
  * @{
  */
+
+/**
+ * Stores information about transversely oriented quad normal coordinates.
+ * See the general NormalInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct NormalInfo<NS_ORIENTED_QUAD> {
+    typedef NNormalSurfaceVectorOrientedQuad Class;
+    typedef NormalInfo<NS_ORIENTED> Standard;
+    typedef NormalInfo<NS_ORIENTED_QUAD> Reduced;
+    inline static const char* name() {
+        return "Transversely oriented quad normal";
+    }
+    enum {
+        almostNormal = 0,
+        spun = 1,
+        oriented = 1
+    };
+};
 
 /**
  * A normal surface vector using transversely oriented quadrilateral
@@ -72,6 +94,8 @@ class NMatrixInt;
  */
 class REGINA_API NNormalSurfaceVectorOrientedQuad :
         public NNormalSurfaceVectorMirrored {
+    REGINA_NORMAL_SURFACE_FLAVOUR(NNormalSurfaceVectorOrientedQuad, NS_ORIENTED_QUAD)
+
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -89,9 +113,6 @@ class REGINA_API NNormalSurfaceVectorOrientedQuad :
 
         virtual NNormalSurfaceVector* makeMirror(NTriangulation* triang) const;
 
-        virtual bool allowsAlmostNormal() const;
-        virtual bool allowsSpun() const;
-        virtual bool allowsOriented() const;
         virtual const NVertex* isVertexLink(NTriangulation* triang) const;
 
         virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
@@ -100,8 +121,6 @@ class REGINA_API NNormalSurfaceVectorOrientedQuad :
             int quadType, NTriangulation* triang, bool orientation) const;
         virtual NLargeInteger getOctCoord(unsigned long tetIndex,
             int octType, NTriangulation* triang) const;
-
-        virtual NNormalSurfaceVector* clone() const;
 
         static NNormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);

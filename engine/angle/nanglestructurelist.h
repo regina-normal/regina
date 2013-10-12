@@ -54,6 +54,7 @@
 
 namespace regina {
 
+class NAngleStructureList;
 class NProgressTracker;
 class NXMLPacketReader;
 class NXMLAngleStructureListReader;
@@ -62,6 +63,20 @@ class NXMLAngleStructureListReader;
  * \weakgroup angle
  * @{
  */
+
+/**
+ * Stores information about the angle structure list packet.
+ * See the general PacketInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct PacketInfo<PACKET_ANGLESTRUCTURELIST> {
+    typedef NAngleStructureList Class;
+    inline static const char* name() {
+        return "Angle Structure List";
+    }
+};
 
 /**
  * A packet representing a collection of angle structures on a triangulation.
@@ -75,8 +90,7 @@ class NXMLAngleStructureListReader;
  * \testpart
  */
 class REGINA_API NAngleStructureList : public NPacket {
-    public:
-        static const int packetType;
+    REGINA_PACKET(NAngleStructureList, PACKET_ANGLESTRUCTURELIST)
 
     private:
         std::vector<NAngleStructure*> structures;
@@ -232,8 +246,6 @@ class REGINA_API NAngleStructureList : public NPacket {
         static NAngleStructureList* enumerate(NTriangulation* owner,
             bool tautOnly = false, NProgressTracker* tracker = 0);
 
-        virtual int getPacketType() const;
-        virtual std::string getPacketTypeName() const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);

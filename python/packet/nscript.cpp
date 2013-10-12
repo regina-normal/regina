@@ -69,7 +69,7 @@ void addNScript() {
         .def("removeAllVariables", &NScript::removeAllVariables)
     ;
 
-    s.attr("packetType") = NScript::packetType;
+    s.attr("packetType") = regina::PacketType(NScript::packetType);
 
     implicitly_convertible<std::auto_ptr<NScript>,
         std::auto_ptr<regina::NPacket> >();

@@ -47,11 +47,33 @@
 namespace regina {
 
 class NMatrixInt;
+class NNormalSurfaceVectorQuadOct;
 
 /**
  * \weakgroup surfaces
  * @{
  */
+
+/**
+ * Stores information about quad-oct almost normal coordinates.
+ * See the general NormalInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct NormalInfo<NS_AN_QUAD_OCT> {
+    typedef NNormalSurfaceVectorQuadOct Class;
+    typedef NormalInfo<NS_AN_STANDARD> Standard;
+    typedef NormalInfo<NS_AN_QUAD_OCT> Reduced;
+    inline static const char* name() {
+        return "Quad-oct almost normal";
+    }
+    enum {
+        almostNormal = 1,
+        spun = 1,
+        oriented = 0
+    };
+};
 
 /**
  * An almost normal surface vector using quad-oct coordinates.
@@ -69,6 +91,8 @@ class NMatrixInt;
  */
 class REGINA_API NNormalSurfaceVectorQuadOct :
         public NNormalSurfaceVectorMirrored {
+    REGINA_NORMAL_SURFACE_FLAVOUR(NNormalSurfaceVectorQuadOct, NS_AN_QUAD_OCT)
+
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -86,12 +110,7 @@ class REGINA_API NNormalSurfaceVectorQuadOct :
 
         virtual NNormalSurfaceVector* makeMirror(NTriangulation* triang) const;
 
-        virtual bool allowsAlmostNormal() const;
-        virtual bool allowsSpun() const;
-        virtual bool allowsOriented() const;
         virtual const NVertex* isVertexLink(NTriangulation* triang) const;
-
-        virtual NNormalSurfaceVector* clone() const;
 
         static NNormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);
