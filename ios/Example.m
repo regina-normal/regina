@@ -8,6 +8,10 @@
 
 #import "Example.h"
 
+// The internal global array of all available examples.
+// This will be created the first time it is required.
+static NSArray* _all = nil;
+
 @implementation Example
 
 - (id)initWithFile:(NSString*)f desc:(NSString*)d {
@@ -24,12 +28,14 @@
 }
 
 + (NSArray*)all {
-    return [NSArray arrayWithObjects:
+    if (! _all)
+        _all = [NSArray arrayWithObjects:
             [Example exampleWithFile:@"sample-misc.rga" desc:@"Introductory examples"],
             [Example exampleWithFile:@"closed-or-census.rga" desc:@"Closed orientable census"],
             [Example exampleWithFile:@"snappea-census.rga" desc:@"Cusped hyperbolic census"],
             [Example exampleWithFile:@"knot-link-census.rga" desc:@"Hyperbolic knot/link complements"],
             nil];
+    return _all;
 }
 
 @end

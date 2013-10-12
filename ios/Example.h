@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ * Details of an example file that can be opened within Regina.
+ */
 @interface Example : NSObject
 
 @property (strong, nonatomic, readonly) NSString* file;

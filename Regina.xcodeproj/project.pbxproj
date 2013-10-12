@@ -2435,6 +2435,8 @@
 		052FA12F1806102F00FAE4DF /* ios */ = {
 			isa = PBXGroup;
 			children = (
+				05A47FC51809D1D600F86BFD /* Example.h */,
+				05A47FC61809D1D600F86BFD /* Example.m */,
 				052FA1381806103000FAE4DF /* RAppDelegate.h */,
 				052FA1391806103000FAE4DF /* RAppDelegate.m */,
 				052FA13B1806103000FAE4DF /* Main.storyboard */,
