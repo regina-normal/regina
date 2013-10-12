@@ -552,6 +552,16 @@ class REGINA_API NPerm4 {
         bool isIdentity() const;
 
         /**
+         * A deprecated alias for str(), which returns a string representation
+         * of this permutation.
+         *
+         * \deprecated This routine has (at long last) been deprecated;
+         * use the simpler-to-type str() instead.
+         *
+         * @return a string representation of this permutation.
+         */
+        std::string toString() const;
+        /**
          * Returns a string representation of this permutation.
          * The representation will consist of four adjacent digits
          * representing the images of 0, 1, 2 and 3 respectively.  An
@@ -559,7 +569,7 @@ class REGINA_API NPerm4 {
          *
          * @return a string representation of this permutation.
          */
-        std::string toString() const;
+        std::string str() const;
 
         /**
          * Returns a string representation of this permutation with only
@@ -674,7 +684,7 @@ class REGINA_API NPerm4 {
 /**
  * Writes a string representation of the given permutation to the given
  * output stream.  The format will be the same as is used by
- * NPerm4::toString().
+ * NPerm4::str().
  *
  * @param out the output stream to which to write.
  * @param p the permutation to write.
@@ -682,7 +692,7 @@ class REGINA_API NPerm4 {
  */
 inline REGINA_API std::ostream& operator << (std::ostream& out,
         const NPerm4& p) {
-    return (out << p.toString());
+    return (out << p.str());
 }
 
 // Constants
@@ -1011,6 +1021,10 @@ inline int NPerm4::compareWith(const NPerm4& other) const {
 
 inline bool NPerm4::isIdentity() const {
     return (code_ == 0);
+}
+
+inline std::string NPerm4::toString() const {
+    return str();
 }
 
 inline bool NPerm4::operator == (const NPerm4& other) const {

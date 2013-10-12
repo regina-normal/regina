@@ -51,13 +51,13 @@ def checksum(str):
 
 def vitalStats(tri):
 	# To guard against accidental changes.
-	old = tri.toStringLong()
+	old = tri.detail()
 
 	print "-------------------------------"
 	print tri.getPacketLabel()
 	print "-------------------------------"
 	print
-	print tri.toStringLong()
+	print tri.detail()
 	print tri.getNumberOfComponents(), "components"
 	print tri.getNumberOfBoundaryComponents(), "boundary components"
 	print tri.getNumberOfTetrahedra(), "tetrahedra"
@@ -76,7 +76,7 @@ def vitalStats(tri):
 	print "Connected:", tri.isConnected()
 	print
 	print "Fundamental group:", tri.getFundamentalGroup().recogniseGroup()
-	print tri.getFundamentalGroup().toStringLong()
+	print tri.getFundamentalGroup().detail()
 	print "H1:", tri.getHomologyH1()
 	if tri.isValid():
 		print "H1Bdry:", tri.getHomologyH1Bdry()
@@ -114,27 +114,27 @@ def vitalStats(tri):
 	print "Double cover:"
 	t = regina.NTriangulation(tri)
 	t.makeDoubleCover()
-	print "Checksum =", checksum(t.toStringLong())
+	print "Checksum =", checksum(t.detail())
 
 	print "Ideal to finite:"
 	t = regina.NTriangulation(tri)
 	print "Result =", t.idealToFinite()
-	print "Checksum =", checksum(t.toStringLong())
+	print "Checksum =", checksum(t.detail())
 
 	print "Finite to ideal:"
 	t = regina.NTriangulation(tri)
 	print "Result =", t.finiteToIdeal()
-	print "Checksum =", checksum(t.toStringLong())
+	print "Checksum =", checksum(t.detail())
 
 	print "Barycentric subdivision:"
 	t = regina.NTriangulation(tri)
 	t.barycentricSubdivision()
-	print "Checksum =", checksum(t.toStringLong())
+	print "Checksum =", checksum(t.detail())
 
 	print "Dehydration:", tri.dehydrate()
 	print "Isomorphism signature:", tri.isoSig()
 
-	if tri.toStringLong() != old:
+	if tri.detail() != old:
 		print "ERROR: Original triangulation has changed!"
 
 	print

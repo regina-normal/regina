@@ -1340,7 +1340,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 unsigned rank) {
             // Construct the error message.
             std::ostringstream msg;
-            msg << grpName << " is " << g.toString() << ", not ";
+            msg << grpName << " is " << g.str() << ", not ";
             if (rank == 0)
                 msg << "0";
             else if (rank == 1)
@@ -1360,7 +1360,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 unsigned rank, unsigned long torsionDegree) {
             // Construct the error message.
             std::ostringstream msg;
-            msg << grpName << " is " << g.toString() << ", not ";
+            msg << grpName << " is " << g.str() << ", not ";
             if (rank == 1)
                 msg << "Z + ";
             else if (rank > 1)
@@ -1383,7 +1383,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 unsigned long torsionDegree2) {
             // Construct the error message.
             std::ostringstream msg;
-            msg << grpName << " is " << g.toString() << ", not ";
+            msg << grpName << " is " << g.str() << ", not ";
             if (rank == 1)
                 msg << "Z + ";
             else if (rank > 1)
@@ -1407,7 +1407,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 unsigned long torsionDegree2, unsigned long torsionDegree3) {
             // Construct the error message.
             std::ostringstream msg;
-            msg << grpName << " is " << g.toString() << ", not ";
+            msg << grpName << " is " << g.str() << ", not ";
             if (rank == 1)
                 msg << "Z + ";
             else if (rank > 1)
@@ -1564,7 +1564,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             NAbelianGroup abelian;
             abelian.addGroup(m);
 
-            if (abelian.toStringLong() != tri->getHomologyH1().toStringLong()) {
+            if (abelian.detail() != tri->getHomologyH1().detail()) {
                 std::ostringstream msg;
                 msg << "Abelianised fundamental group does not match H1 "
                     "for " << tri->getPacketLabel() << ".";
@@ -2717,9 +2717,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
                     if (! (tri.getHomologyH1() == hCover)) {
                         std::ostringstream msg;
                         msg << triName << ": Orientable double cover has H1 = "
-                            << cover.getHomologyH1().toString()
+                            << cover.getHomologyH1().str()
                             << ", which does not match the original H1 = "
-                            << tri.getHomologyH1().toString() << '.';
+                            << tri.getHomologyH1().str() << '.';
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
@@ -3536,10 +3536,10 @@ class NTriangulationTest : public CppUnit::TestFixture {
             tet[2]->joinTo(0, tet[0], NPerm4(3, 0, 1, 2));
             tet[1]->joinTo(3, tet[0], NPerm4(0, 3, 1, 2));
             tet[1]->joinTo(1, tet[0], NPerm4());
-            if (tri->getHomologyH1().toString() != "Z")
+            if (tri->getHomologyH1().str() != "Z")
                 CPPUNIT_FAIL("Custom solid torus has incorrect H1.");
             tri->intelligentSimplify();
-            if (tri->getHomologyH1().toString() != "Z")
+            if (tri->getHomologyH1().str() != "Z")
                 CPPUNIT_FAIL("Custom solid torus simplifies to "
                     "something different.");
             delete tri;

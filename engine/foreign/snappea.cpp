@@ -196,7 +196,7 @@ void writeSnapPea(std::ostream& out, const NTriangulation& tri) {
                 out << "   -1 ";
         out << '\n';
         for (i = 0; i < 4; i++)
-            out << ' ' << (*it)->adjacentGluing(i).toString();
+            out << ' ' << (*it)->adjacentGluing(i).str();
         out << '\n';
 
         // Incident cusps.
