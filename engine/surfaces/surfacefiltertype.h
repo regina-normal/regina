@@ -32,28 +32,52 @@
 
 /* end stub */
 
-#include "surfaces/filterregistry.h"
+/*! \file surfaces/surfacefiltertype.h
+ *  \brief Defines constants for normal surface filter types.
+ */
+
+#ifndef __SURFACEFILTERTYPE_H
+#ifndef __DOXYGEN
+#define __SURFACEFILTERTYPE_H
+#endif
+
+#include "regina-core.h"
 
 namespace regina {
 
-#define __FILTER_REGISTRY_BODY
+/**
+ * \weakgroup surfaces
+ * @{
+ */
 
-// Bring in routines from the filter registry.
+/**
+ * Represents different types of filter classes that can be used to filter
+ * lists of normal surfaces in 3-manifold triangulations.
+ *
+ * IDs 0-9999 are reserved for future use by Regina.  If you are extending
+ * Regina to include your own filter class, you should choose an ID >= 10000.
+ */
+enum SurfaceFilterType {
+    /**
+     * Represents the NSurfaceFilter class: a do-nothing filter that
+     * accepts any normal surface.
+     */
+    NS_FILTER_DEFAULT = 0,
+    /**
+     * Represents the NSurfaceFilterProperties subclass: a filter that
+     * examines simple properties of a normal surface.
+     */
+    NS_FILTER_PROPERTIES = 1,
+    /**
+     * Represents the NSurfaceFilterCombination subclass: a filter that
+     * combines other filters using boolean AND or OR.
+     */
+    NS_FILTER_COMBINATION = 2
+};
 
-#define REGISTER_FILTER(id, class, name) \
-    int class::getFilterID() const { \
-        return id; \
-    } \
-    const int class::filterID = id; \
-    std::string class::getFilterName() const { \
-        return name; \
-    }
-
-#include "surfaces/filterregistry.h"
-
-// Tidy up.
-#undef REGISTER_FILTER
-#undef __FILTER_REGISTRY_BODY
+/*@}*/
 
 } // namespace regina
+
+#endif
 

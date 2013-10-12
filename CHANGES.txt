@@ -32,6 +32,11 @@ Version 4.95  [ (under development) ]
             - Renamed getFace() and getNumberOfFaces() to getTriangle()
               and getNumberOfTriangles().  The old names are deprecated but
               have been kept for backward compatibility.
+        Struct NewNormalSurfaceVector:
+            - Moved into registryutils.h and redesigned as the more general
+              template struct NewFunction1<>.  The old type is equivalent to
+              NewFunction1<NNormalSurfaceVector, size_t>, and a deprecated
+              typedef has been kept for backward compatibility.
         Class NFace:
             - Renamed to NTriangle.  The old name is deprecated but has
               been kept as a typedef for backward compatibility.
@@ -46,6 +51,13 @@ Version 4.95  [ (under development) ]
         Class NNormalSurface, NNormalSurfaceVector:
             - Renamed getFaceArcs() to getTriangleArcs().  The old name is
               deprecated but has been kept for backward compatibility.
+            - All normal surface vector classes have now gained the enum
+              constant coordType (representing the corresponding NormalCoords
+              constant), and the typedef Info (representing the
+              template specialisation NormalInfo<coordType>).
+            - The requirements for new vector subclasses have changed, since the
+              old macro-based registry was replaced with the new template-based
+              registry.  See the NNormalSurfaceVector class notes for details.
         Class NNormalSurfaceList:
             - Re-enabled enumeration using NS_HILBERT_FULLCONE, which previously
               returned an empty list.  Users will not be affected unless
@@ -53,6 +65,24 @@ Version 4.95  [ (under development) ]
         Enum NormalCoords:
             - Renamed NS_FACE_ARCS to NS_TRIANGLE_ARCS.  The old name is
               deprecated but has been kept for backward compatibility.
+        Class NormalFlavour<...>, NormalInfo<...>:
+            - This recently-added registry helper template has changed since
+              the last release.  Since this is a very new class whose primary
+              role is in the redesign of the coordinate system registry,
+              no backward compatibility aliases are provided.
+            - The template itself has been renamed from NormalFlavour<...>
+              to NormalInfo<...>.
+            - The declaration has moved from flavourregistry.h to
+              normalsurface.h, and the specialisations have moved to the
+              corresponding coordinate system headers (nsstandard.h and so on).
+            - The typedefs Vector, StandardFlavour and ReducedFlavour
+              have been renamed to Class, Standard and Reduced.
+        Class NPacket:
+            - The requirements for new subclasses have changed, since the old
+              macro-based registery was replaced with the new template-based
+              registry.  See the NPacket class notes for details.
+            - The constant packetType is now a compile-time enum constant,
+              not a static const int.
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic aliases orderedSn, SnIndex() and
               orderedSnIndex().  These all reference existing arrays/routines
@@ -61,6 +91,16 @@ Version 4.95  [ (under development) ]
             - Renamed getFace() and getFaceMapping() to getTriangle()
               and getTriangleMapping().  The old names are deprecated but
               have been kept for backward compatibility.
+        Class NSurfaceFilter:
+            - The requirements for new subclasses have changed, since the old
+              macro-based registry was replaced with the new template-based
+              registry.  See the NSurfaceFilter class notes for details.
+            - The constant filterID has been renamed to filterType, and
+              is now a compile-time enum constant (not a static const int).
+              The old name has been kept as a deprecated alias.
+            - Routines getFilterID() and getFilterName() have been renamed
+              to getFilterType() and getFilterTypeName().  The old names
+              have been kept as deprecated aliases.
         Class NTetrahedron:
             - Renamed getFace() and getFaceMapping() to getTriangle()
               and getTriangleMapping().  The old names are deprecated but
@@ -78,13 +118,40 @@ Version 4.95  [ (under development) ]
               getNumberOfFaces() and hasBoundaryFaces(), where "face"
               now becomes "triangle".  The old names are deprecated but
               have been kept for backward compatibility.
+            - The output from getPacketTypeName() has changed from
+              "Triangulation" to "3-Manifold Triangulation".
         Class NVertex:
             - Added buildLinkDetail(), which returns details of how triangles
               of the vertex link are embedded within individual tetrahedra.
+        Class PacketInfo:
+            - Template classes that store traits of the various packet types.
+              These are used with the new forPacket() template functions.
+        Enum PacketType:
+            - A new enumeration that contains constants representing
+              different packet types.  Include "packet/packettype.h".
+        Struct Returns:
+            - Moved into utilities/registry.h.  However, its contents are
+              still included from its previous header surfaces/filterregistry.h.
+        Class SurfaceFilterInfo:
+            - Template classes that store traits of the various normal
+              surface filter classes.  These are used with the new
+              forFilter() template functions.
+        Enum SurfaceFilterType:
+            - A new enumeration that contains constants for different types of
+              normal surface filter.  Include "surfaces/surfacefiltertype.h".
         Headers dimtraits.h, nfacetspec.h, ngenericisomorphism.{h,tcc}:
             - Moved from triangulation/ to generic/.  The old header locations
               are now deprecated.  They have been kept for backward
               compatibility, but simply include the new headers instead.
+        Header filterregistry.h:
+            - The REGISTER_FILTER macros have been removed.  To iterate through
+              surface filter types, use the new forFilter() template functions.
+        Header flavourregistry.h:
+            - The REGISTER_FLAVOUR macros have been removed.  To iterate through
+              coordinate systems, use the forFlavour() template functions.
+        Header packetregistry.h:
+            - The REGISTER_PACKET macros have been removed.  To iterate through
+              packet types, use the new forPacket() template functions.
         Headers *.tcc:
             - All *.tcc headers have been renamed as *-impl.h, to play
               better with development IDEs.  The old header names are now

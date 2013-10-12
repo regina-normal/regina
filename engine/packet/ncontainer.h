@@ -48,6 +48,7 @@
 namespace regina {
 
 class NXMLPacketReader;
+class NContainer;
 
 /**
  * \weakgroup packet
@@ -55,25 +56,36 @@ class NXMLPacketReader;
  */
 
 /**
+ * Stores information about the container packet.
+ * See the general PacketInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct PacketInfo<PACKET_CONTAINER> {
+    typedef NContainer Class;
+    inline static const char* name() {
+        return "Container";
+    }
+};
+
+/**
  * A packet that simply contains other packets.  Such
  * a packet contains no real data.
  */
 class REGINA_API NContainer : public NPacket {
-    public:
-        static const int packetType;
+    REGINA_PACKET(NContainer, PACKET_CONTAINER)
 
+    public:
         /**
          * Default constructor.
          */
         NContainer();
 
-        virtual int getPacketType() const;
-        virtual std::string getPacketTypeName() const;
-
         virtual void writeTextShort(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);
         virtual bool dependsOnParent() const;
-    
+
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;

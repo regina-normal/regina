@@ -39,42 +39,17 @@
 
 namespace regina {
 
-#define __FILTER_REGISTRY_BODY
-
-#define REGISTER_FILTER(id, c, name) \
-    case id: out << regina::xml::xmlEncodeSpecialChars(name); break;
-
 void NSurfaceFilter::writeXMLPacketData(std::ostream& out) const {
-    int id = getFilterID();
+    SurfaceFilterType id = getFilterType();
 
-    out << "  <filter type=\"";
-    switch(id) {
-        // Import cases from the filter registry.
-        #include "surfaces/filterregistry.h"
-        default: out << "Unknown"; break;
-    }
-    out << "\" typeid=\"" << id << "\">\n";
+    out << "  <filter type=\""
+        << regina::xml::xmlEncodeSpecialChars(getFilterTypeName())
+        << "\" typeid=\"" << id << "\">\n";
 
     writeXMLFilterData(out);
 
     out << "  </filter>\n";
 }
-
-#undef REGISTER_FILTER
-#define REGISTER_FILTER(id, class, n) \
-    case id: return new class(dynamic_cast<const class&>(*this));
-
-NPacket* NSurfaceFilter::internalClonePacket(NPacket* /* parent */) const {
-    switch (getFilterID()) {
-        // Import cases from the filter registry.
-        #include "surfaces/filterregistry.h"
-        default: return new NSurfaceFilter();
-    }
-}
-
-// Tidy up.
-#undef REGISTER_FILTER
-#undef __FILTER_REGISTRY_BODY
 
 } // namespace regina
 
