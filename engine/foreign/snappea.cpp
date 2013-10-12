@@ -39,15 +39,19 @@
 
 #include "foreign/snappea.h"
 #include "triangulation/ntriangulation.h"
+#include "utilities/stringutils.h"
 
 namespace regina {
 
 NTriangulation* readSnapPea(const char* filename) {
-    // Open the file.
     std::ifstream in(filename);
     if (!in)
         return 0;
+    else
+        return readSnapPea(in);
+}
 
+NTriangulation* readSnapPea(std::istream& in) {
     // Check that this is a SnapPea triangulation.
     char name[1001];
     unsigned len;
@@ -148,12 +152,17 @@ NTriangulation* readSnapPea(const char* filename) {
     return triang;
 }
 
-bool writeSnapPea(const char* filename, NTriangulation& tri) {
-    // Open the file.
+bool writeSnapPea(const char* filename, const NTriangulation& tri) {
     std::ofstream out(filename);
     if (!out)
-        return 0;
+        return false;
+    else {
+        writeSnapPea(out, tri);
+        return true;
+    }
+}
 
+void writeSnapPea(std::ostream& out, const NTriangulation& tri) {
     // Write header information.
     out << "% Triangulation\n";
     if (tri.getPacketLabel().length() == 0)
@@ -205,24 +214,6 @@ bool writeSnapPea(const char* filename, NTriangulation& tri) {
         // Tetrahedron shape.
         out << "0.0 0.0\n";
     }
-
-    return true;
-}
-
-std::string stringToToken(const char* str) {
-    std::string ans(str);
-    for (std::string::iterator it = ans.begin(); it != ans.end(); it++)
-        if (isspace(*it))
-            *it = '_';
-    return ans;
-}
-
-std::string stringToToken(const std::string& str) {
-    std::string ans(str);
-    for (std::string::iterator it = ans.begin(); it != ans.end(); it++)
-        if (isspace(*it))
-            *it = '_';
-    return ans;
 }
 
 } // namespace regina
