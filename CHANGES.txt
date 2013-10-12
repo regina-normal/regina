@@ -34,9 +34,9 @@ Version 4.95  [ (under development) ]
               have been kept for backward compatibility.
         Struct NewNormalSurfaceVector:
             - Moved into registryutils.h and redesigned as the more general
-              template struct NewVector<>.  The old type is equivalent to
-              NewVector<NNormalSurfaceVector>, and a deprecated typedef
-              has been kept for backward compatibility.
+              template struct NewFunction1<>.  The old type is equivalent to
+              NewFunction1<NNormalSurfaceVector, size_t>, and a deprecated
+              typedef has been kept for backward compatibility.
         Class NFace:
             - Renamed to NTriangle.  The old name is deprecated but has
               been kept as a typedef for backward compatibility.

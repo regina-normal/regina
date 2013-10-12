@@ -68,43 +68,49 @@ struct Returns {
 };
 
 /**
- * A function object that creates a new vector subclassed from
- * \a VectorBase, where the particular subclass is chosen according to
- * the template argument to operator().  Typically \a VectorBase will be a
- * normal surface vector base class (such as NNormalSurfaceVector).
+ * A function object that creates a new object subclassed from \a Base,
+ * where the particular subclass is chosen according to the template argument
+ * to operator().  The template argument to the bracket operator would
+ * typically be one of the registry helper classes, such as PacketInfo or
+ * NormalInfo.
  *
- * This routine is intended for use with normal surface flavour registry
- * routines, such as the three-argument variant of forFlavour().
+ * The new object will be created using a single-argument constructor,
+ * where the argument is of type \a Arg.
+ *
+ * This routine is intended for use with registry routines, such as the
+ * three-argument variants of forPacket() and forFlavour().
  *
  * \ifacespython Not present.
  */
-template <class VectorBase>
-struct NewVector : public Returns<VectorBase*> {
-    size_t len_;
+template <class Base, typename Arg>
+struct NewFunction1 : public Returns<Base*> {
+    size_t arg_;
         /**< The length of the new vector to create. */
 
     /**
      * Creates a new function object, whose bracket operator will create a
-     * new vector of the given length.
+     * new object by passing \a arg to its constructor.
      *
-     * @param len the length of the vector to create.
+     * @param arg the argument to pass to the new object's class constructor.
      */
-    inline NewVector(size_t len) : len_(len) {
+    inline NewFunction1(Arg arg) : arg_(arg) {
     }
 
     /**
-     * Creates a new vector of the subclass Flavour::Class.
-     * The length of the vector will match the value passed to the class
-     * constructor for this function object.
+     * Creates a new object of the subclass Info::Class.
+     * The object will be created using a single-argument constructor
+     * for Info::Class, and the argument to this constructor will be
+     * the same argument \a arg that was passed to this function
+     * object's NewFunction1 constructor.
      *
-     * \pre It is known at compile time that Flavour::Class will be a
-     * subclass of \a VectorBase.
+     * \pre It is known in advance that Info::Class will be a subclass of
+     * \a Base.
      *
-     * @return a new vector of the subclass Flavour::Class.
+     * @return a new object of the subclass Info::Class.
      */
-    template <typename Flavour>
-    inline VectorBase* operator() (Flavour) {
-        return new typename Flavour::Class(len_);
+    template <typename Info>
+    inline Base* operator() (Info) {
+        return new typename Info::Class(arg_);
     }
 };
 

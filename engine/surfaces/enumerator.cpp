@@ -584,7 +584,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
         std::set<unsigned long>::const_iterator sit;
         NNormalSurfaceVector* v;
         NLargeInteger tmpInt;
-        NewVector<NNormalSurfaceVector> newVec(dim);
+        NewFunction1<NNormalSurfaceVector, size_t> newVec(dim);
 
         const std::vector<std::vector<mpz_class> > basis =
             cone.getHilbertBasis();
