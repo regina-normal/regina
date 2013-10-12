@@ -59,7 +59,8 @@ void NXMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
     // Create a new vector and read all non-zero entries.
     // Bring in cases from the flavour registry...
     NNormalHypersurfaceVector* vec =
-        forFlavour(flavour_, NewVector<NNormalHypersurfaceVector>(vecLen_), 0);
+        forFlavour(flavour_,
+            NewFunction1<NNormalHypersurfaceVector, size_t>(vecLen_), 0);
     if (! vec)
         return;
 
