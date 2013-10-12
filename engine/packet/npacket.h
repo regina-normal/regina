@@ -120,8 +120,9 @@ struct PacketInfo;
  * <ul>
  *   <li>A new value must be added to the PacketType enum in packettype.h
  *     to represent the new packet type.</li>
- *   <li>The file packetregistry.h must be updated to reflect the new packet
- *     type (the file itself contains instructions on how to do this).</li>
+ *   <li>The file packetregistry-impl.h must be updated to reflect the new
+ *     packet type (the file itself contains instructions on how to do
+ *     this).</li>
  *   <li>A corresponding specialisation of PacketInfo<> must be defined,
  *     typically in the same header as the new packet class.</li>
  *   <li>The macro REGINA_PACKET must be added to the beginning of the new

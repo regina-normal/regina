@@ -159,11 +159,11 @@ void forFlavour(NormalCoords flavour, VoidFunctionObject func);
  * A legacy typedef provided for backward compatibility only.
  *
  * \deprecated The old NewNormalSurfaceVector class has been redesigned
- * as the more general template class NewVector, and moved into the
+ * as the more general template class NewFunction1, and moved into the
  * header registryutils.h.  This typedef is provided for backward
  * compatibility, and will be removed in some future version of Regina.
  */
-typedef NewVector<NNormalSurfaceVector> NewNormalSurfaceVector;
+typedef NewFunction1<NNormalSurfaceVector, size_t> NewNormalSurfaceVector;
 
 /*@}*/
 
