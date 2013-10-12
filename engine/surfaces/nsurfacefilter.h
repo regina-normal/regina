@@ -165,7 +165,7 @@ struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
  *   be declared and implemented.  You may assume that parameter
  *   \a cloneMe is of the same class as that whose constructor you are
  *   writing.</li>
- *   <li>Virtual functions accept(), writeTextLong() and
+ *   <li>Virtual functions accept(), internalClonePacket(), writeTextLong() and
  *   writeXMLFilterData() must be overridden.</li>
  *   <li>Static function getXMLFilterReader() must be declared and
  *   implemented as described in the documentation below.</li>
@@ -310,6 +310,10 @@ inline void NSurfaceFilter::writeTextShort(std::ostream& o) const {
 
 inline bool NSurfaceFilter::dependsOnParent() const {
     return false;
+}
+
+inline NPacket* NSurfaceFilter::internalClonePacket(NPacket*) const {
+    return new NSurfaceFilter();
 }
 
 } // namespace regina

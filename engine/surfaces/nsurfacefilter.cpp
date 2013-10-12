@@ -51,23 +51,5 @@ void NSurfaceFilter::writeXMLPacketData(std::ostream& out) const {
     out << "  </filter>\n";
 }
 
-namespace {
-    struct CloneFunction : public Returns<NSurfaceFilter*> {
-        const NSurfaceFilter* from_;
-
-        CloneFunction(const NSurfaceFilter* from) : from_(from) {}
-
-        template <typename Filter>
-        inline NSurfaceFilter* operator() (Filter f) {
-            return new typename Filter::Class(
-                dynamic_cast<const typename Filter::Class&>(*from_));
-        }
-    };
-}
-
-NPacket* NSurfaceFilter::internalClonePacket(NPacket* /* parent */) const {
-    return forFilter(getFilterType(), CloneFunction(this), 0);
-}
-
 } // namespace regina
 
