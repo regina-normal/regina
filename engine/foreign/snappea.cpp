@@ -36,7 +36,6 @@
 #include <cstring>
 #include <fstream>
 #include <iomanip>
-#include <sstream>
 
 #include "foreign/snappea.h"
 #include "triangulation/ntriangulation.h"
@@ -153,15 +152,17 @@ NTriangulation* readSnapPea(std::istream& in) {
     return triang;
 }
 
-bool writeSnapPea(const char* filename, NTriangulation& tri) {
+bool writeSnapPea(const char* filename, const NTriangulation& tri) {
     std::ofstream out(filename);
     if (!out)
         return false;
-    else
-        return writeSnapPea(out, tri);
+    else {
+        writeSnapPea(out, tri);
+        return true;
+    }
 }
 
-bool writeSnapPea(std::ostream& out, NTriangulation& tri) {
+void writeSnapPea(std::ostream& out, const NTriangulation& tri) {
     // Write header information.
     out << "% Triangulation\n";
     if (tri.getPacketLabel().length() == 0)
@@ -213,8 +214,6 @@ bool writeSnapPea(std::ostream& out, NTriangulation& tri) {
         // Tetrahedron shape.
         out << "0.0 0.0\n";
     }
-
-    return true;
 }
 
 } // namespace regina

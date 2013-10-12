@@ -41,7 +41,7 @@ using namespace boost::python;
 namespace {
     regina::NTriangulation* (*readSnapPea_file)(const char*) =
         &regina::readSnapPea;
-    bool (*writeSnapPea_file)(const char*, regina::NTriangulation&) =
+    bool (*writeSnapPea_file)(const char*, const regina::NTriangulation&) =
         &regina::writeSnapPea;
 }
 

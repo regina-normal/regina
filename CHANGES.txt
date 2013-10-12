@@ -114,6 +114,8 @@ Version 4.95  [ (under development) ]
             - Now inherits from the new helper class NGenericTriangulation<3>.
             - New routine isoSigComponentSize() for extracting the number of
               triangles from a signature (inherited from NGenericTriangulation).
+            - New routine snapPea() to export a SnapPea file as a string,
+              without writing to the filesystem.
             - Renamed FaceIterator, faceIndex(), getFace(), getFaces(),
               getNumberOfFaces() and hasBoundaryFaces(), where "face"
               now becomes "triangle".  The old names are deprecated but
@@ -141,6 +143,9 @@ Version 4.95  [ (under development) ]
               normal surface filter.  Include "surfaces/surfacefiltertype.h".
         Routine stringToToken():
             - Moved from foreign/snappea.h into utilities/stringutils.h.
+        Routine readSnapPea(), writeSnapPea():
+            - Added istream/ostream versions of these routines.
+            - In writeSnapPea(), the NTriangulation& argument is now const.
         Headers dimtraits.h, nfacetspec.h, ngenericisomorphism.{h,tcc}:
             - Moved from triangulation/ to generic/.  The old header locations
               are now deprecated.  They have been kept for backward

@@ -3002,11 +3002,32 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the C++ code that was generated.
          */
         std::string dumpConstruction() const;
+        /**
+         * Returns a string containing the full contents of a SnapPea
+         * data file that describes this triangulation.  This string
+         * can, for instance, be used to pass the triangulation to SnapPy
+         * without writing to the filesystem.
+         *
+         * For details on how the SnapPea file will be constructed and
+         * what will be included, see the documentation for writeSnapPea().
+         *
+         * \pre This triangulation is not invalid, and does not contain
+         * any boundary triangles.
+         *
+         * @return a string containing the contents of the corresponding
+         * SnapPea data file.
+         */
+        std::string snapPea() const;
 
         /*@}*/
         /**
-         * (end: Building Triangulations)
+         * (end: Exporting Triangulations)
          */
+
+        /**
+         * \name Importing Triangulations
+         */
+        /*@{*/
 
         /**
          * Allows the user to interactively enter a triangulation in
@@ -3076,6 +3097,11 @@ class REGINA_API NTriangulation : public NPacket,
          * isomorphism signature.
          */
         static NTriangulation* fromIsoSig(const std::string& signature);
+
+        /*@}*/
+        /**
+         * (end: Importing Triangulations)
+         */
 
         static NXMLPacketReader* getXMLReader(NPacket* parent);
 

@@ -135,9 +135,10 @@ REGINA_API NTriangulation* readSnapPea(std::istream& in);
  *
  * @param filename the name of the SnapPea file to which to write.
  * @param tri the triangulation to write to the SnapPea file.
- * @return \c true if the export was successful, or \c false otherwise.
+ * @return \c true if the export was successful, or \c false if there
+ * was a problem writing to the file.
  */
-REGINA_API bool writeSnapPea(const char* filename, NTriangulation& tri);
+REGINA_API bool writeSnapPea(const char* filename, const NTriangulation& tri);
 
 /**
  * Writes the given triangulation to the given output stream using SnapPea's
@@ -162,9 +163,8 @@ REGINA_API bool writeSnapPea(const char* filename, NTriangulation& tri);
  *
  * @param out the output stream to which to write.
  * @param tri the triangulation to write to the SnapPea file.
- * @return \c true if the export was successful, or \c false otherwise.
  */
-REGINA_API bool writeSnapPea(std::ostream& out, NTriangulation& tri);
+REGINA_API void writeSnapPea(std::ostream& out, const NTriangulation& tri);
 
 /*@}*/
 
