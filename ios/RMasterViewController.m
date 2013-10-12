@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #import "Example.h"
+#import "PacketTreeController.h"
 #import "RMasterViewController.h"
-
 #import "RDetailViewController.h"
 
 @interface RMasterViewController () {
@@ -164,6 +164,17 @@
     NSDate *object = _objects[indexPath.row];
     self.detailViewController.detailItem = object;
     */
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"openExample"]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        
+        // TODO: Activity indicator.
+        // See, perhaps: https://github.com/jdg/MBProgressHUD
+        
+        [[segue destinationViewController] openExample:_examples[indexPath.row]];
+    }
 }
 
 @end
