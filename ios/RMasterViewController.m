@@ -57,10 +57,14 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
-
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
+    /**
+     * TODO
+     self.navigationItem.leftBarButtonItem = self.editButtonItem;
+     
+     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
     self.navigationItem.rightBarButtonItem = addButton;
+     */
+
     self.detailViewController = (RDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     
     _examples = [Example all];
@@ -72,6 +76,7 @@
     // Dispose of any resources that can be recreated.
 }
 
+/*
 - (void)insertNewObject:(id)sender
 {
     if (!_objects) {
@@ -81,6 +86,7 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
+ */
 
 #pragma mark - Table View
 
@@ -94,7 +100,7 @@
     if (section == 0)
         return [_examples count];
     else
-        return _objects.count;
+        return 0; // TODO _objects.count;
 }
 
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -123,7 +129,7 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the specified item to be editable.
-    return YES;
+    return NO;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
