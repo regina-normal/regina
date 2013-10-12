@@ -82,7 +82,7 @@ bool NGenericFacetPairing<dim>::isClosed() const {
 }
 
 template <int dim>
-std::string NGenericFacetPairing<dim>::toString() const {
+std::string NGenericFacetPairing<dim>::str() const {
     std::ostringstream ans;
 
     for (NFacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f) {

@@ -45,7 +45,7 @@ template NGenericFacetPairing<2>::NGenericFacetPairing(
 template NGenericFacetPairing<2>::NGenericFacetPairing(
     const Dim2Triangulation&);
 template bool NGenericFacetPairing<2>::isClosed() const;
-template std::string NGenericFacetPairing<2>::toString() const;
+template std::string NGenericFacetPairing<2>::str() const;
 template std::string NGenericFacetPairing<2>::dotHeader(const char*);
 template void NGenericFacetPairing<2>::writeDotHeader(std::ostream&,
     const char*);

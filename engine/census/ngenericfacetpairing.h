@@ -335,13 +335,25 @@ class REGINA_API NGenericFacetPairing : public NThread {
         /*@{*/
 
         /**
-         * Returns a human-readable representation of this facet pairing.
+         * A deprecated alias for str(), which returns a human-readable
+         * representation of this facet pairing.
          *
-         * The string returned will contain no newlines.
+         * \deprecated This routine has (at long last) been deprecated;
+         * use the simpler-to-type str() instead.
          *
          * @return a string representation of this pairing.
          */
         std::string toString() const;
+        /**
+         * Returns a human-readable representation of this facet pairing.
+         *
+         * The string returned will contain no newlines.
+         *
+         * \ifacespython This implements the <tt>__str__()</tt> function.
+         *
+         * @return a string representation of this pairing.
+         */
+        std::string str() const;
 
         /**
          * Returns a text-based representation of this facet pairing that can be
@@ -349,8 +361,7 @@ class REGINA_API NGenericFacetPairing : public NThread {
          * done through routine fromTextRep().
          *
          * The text produced is not particularly readable; for a
-         * human-readable text representation, see routine toString()
-         * instead.
+         * human-readable text representation, see routine str() instead.
          *
          * The string returned will contain no newlines.
          *
@@ -820,6 +831,11 @@ template <int dim>
 inline void NGenericFacetPairing<dim>::findAutomorphisms(
         typename NGenericFacetPairing<dim>::IsoList& list) const {
     isCanonicalInternal(list);
+}
+
+template <int dim>
+inline std::string NGenericFacetPairing<dim>::toString() const {
+    return str();
 }
 
 } // namespace regina

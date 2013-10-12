@@ -112,8 +112,7 @@ void process(NTriangulation* t) {
                 homChecked++;
                 if (! (*h1 == t->getHomologyH1())) {
                     std::cout << "  ...  HOMOLOGY ERROR: "
-                        << h1->toString() << " != "
-                        << t->getHomologyH1().toString();
+                        << h1->str() << " != " << t->getHomologyH1().str();
                     homBad++;
                 }
 

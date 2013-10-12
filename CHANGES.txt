@@ -62,6 +62,9 @@ Version 4.95  [ (under development) ]
             - Renamed the class to NTriangleEmbedding, and renamed getFace()
               to getTriangle().  The old names are deprecated but have been
               kept for backward compatibility.
+        Class NGenericFacetPairing:
+            - Renamed toString() to the simpler-to-type str().  The old name
+              has been kept as a deprecated alias.
         Class NGenericTriangulation:
             - New template helper class that allows different triangulation
               classes to share the same implementations of member functions.
@@ -110,6 +113,8 @@ Version 4.95  [ (under development) ]
             - New dimension-agnostic aliases orderedSn, SnIndex() and
               orderedSnIndex().  These all reference existing arrays/routines
               involving S3, S4 or S5 in NPerm3, NPerm4 and NPerm5 respectively.
+            - Renamed toString() to the simper-to-type str().  The old name
+              has been kept as a deprecated alias.
         Class NPillowTwoSphere:
             - Renamed getFace() and getFaceMapping() to getTriangle()
               and getTriangleMapping().  The old names are deprecated but
@@ -157,6 +162,9 @@ Version 4.95  [ (under development) ]
         Struct Returns:
             - Moved into utilities/registry.h.  However, its contents are
               still included from its previous header surfaces/filterregistry.h.
+        Class ShareableObject:
+            - Renamed toString() and toStringLong() to the simper-to-type str()
+              and detail().  The old names have been kept as deprecated aliases.
         Class SurfaceFilterInfo:
             - Template classes that store traits of the various normal
               surface filter classes.  These are used with the new

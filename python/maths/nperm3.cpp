@@ -73,11 +73,12 @@ void addNPerm3() {
         .def("compareWith", &NPerm3::compareWith)
         .def("isIdentity", &NPerm3::isIdentity)
         .def("toString", &NPerm3::toString)
+        .def("str", &NPerm3::str)
         .def("trunc2", &NPerm3::trunc2)
         .def("S3Index", &NPerm3::S3Index)
         .def("orderedS3Index", &NPerm3::orderedS3Index)
         .def("orderedSnIndex", &NPerm3::orderedS3Index)
-        .def("__str__", &NPerm3::toString)
+        .def("__str__", &NPerm3::str)
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
     ;
