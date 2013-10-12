@@ -62,6 +62,7 @@ class Dim2BoundaryComponent;
 class Dim2Component;
 class Dim2Edge;
 class Dim2Triangle;
+class Dim2Triangulation;
 class Dim2Vertex;
 class NXMLDim2TriangulationReader;
 class NXMLPacketReader;
@@ -71,6 +72,20 @@ class NXMLPacketReader;
  * Triangulations of 2-manifolds.
  * @{
  */
+
+/**
+ * Stores information about the 2-manifold triangulation packet.
+ * See the general PacketInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct PacketInfo<PACKET_DIM2TRIANGULATION> {
+    typedef Dim2Triangulation Class;
+    inline static const char* name() {
+        return "2-Manifold Triangulation";
+    }
+};
 
 /**
  * Stores the triangulation of a 2-manifold along with its
@@ -89,9 +104,9 @@ class NXMLPacketReader;
  */
 class REGINA_API Dim2Triangulation : public NPacket,
         public NGenericTriangulation<2> {
-    public:
-        static const int packetType;
+    REGINA_PACKET(Dim2Triangulation, PACKET_DIM2TRIANGULATION)
 
+    public:
         typedef std::vector<Dim2Triangle*>::const_iterator TriangleIterator;
             /**< Used to iterate through triangles. */
         typedef std::vector<Dim2Edge*>::const_iterator EdgeIterator;
@@ -161,9 +176,6 @@ class REGINA_API Dim2Triangulation : public NPacket,
          * \name Packet Administration
          */
         /*@{*/
-
-        virtual int getPacketType() const;
-        virtual std::string getPacketTypeName() const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
