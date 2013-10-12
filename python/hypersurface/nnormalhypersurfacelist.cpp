@@ -45,58 +45,58 @@ using regina::NNormalHypersurfaceList;
 namespace {
     // Write manual overload wrappers since these are static member functions.
     NNormalHypersurfaceList* enumerate_2(regina::Dim4Triangulation* owner,
-            HyperCoords flavour) {
-        return NNormalHypersurfaceList::enumerate(owner, flavour);
+            HyperCoords coords) {
+        return NNormalHypersurfaceList::enumerate(owner, coords);
     }
     NNormalHypersurfaceList* enumerate_3(regina::Dim4Triangulation* owner,
-            HyperCoords flavour, bool embedded) {
-        return NNormalHypersurfaceList::enumerate(owner, flavour, embedded);
+            HyperCoords coords, bool embedded) {
+        return NNormalHypersurfaceList::enumerate(owner, coords, embedded);
     }
     NNormalHypersurfaceList* enumerate_4(regina::Dim4Triangulation* owner,
-            HyperCoords flavour, bool embedded,
+            HyperCoords coords, bool embedded,
             regina::NProgressTracker* tracker) {
-        return NNormalHypersurfaceList::enumerate(owner, flavour, embedded,
+        return NNormalHypersurfaceList::enumerate(owner, coords, embedded,
             tracker);
     }
 
     NNormalHypersurfaceList* enumerateFundPrimal_2(
-            regina::Dim4Triangulation* owner, HyperCoords flavour) {
-        return NNormalHypersurfaceList::enumerateFundPrimal(owner, flavour);
+            regina::Dim4Triangulation* owner, HyperCoords coords) {
+        return NNormalHypersurfaceList::enumerateFundPrimal(owner, coords);
     }
     NNormalHypersurfaceList* enumerateFundPrimal_3(
-            regina::Dim4Triangulation* owner, HyperCoords flavour,
+            regina::Dim4Triangulation* owner, HyperCoords coords,
             bool embedded) {
-        return NNormalHypersurfaceList::enumerateFundPrimal(owner, flavour,
+        return NNormalHypersurfaceList::enumerateFundPrimal(owner, coords,
             embedded);
     }
     NNormalHypersurfaceList* enumerateFundPrimal_4(
-            regina::Dim4Triangulation* owner, HyperCoords flavour,
+            regina::Dim4Triangulation* owner, HyperCoords coords,
             bool embedded, regina::NNormalHypersurfaceList* vtxSurfaces) {
-        return NNormalHypersurfaceList::enumerateFundPrimal(owner, flavour,
+        return NNormalHypersurfaceList::enumerateFundPrimal(owner, coords,
             embedded, vtxSurfaces);
     }
     NNormalHypersurfaceList* enumerateFundPrimal_5(
-            regina::Dim4Triangulation* owner, HyperCoords flavour,
+            regina::Dim4Triangulation* owner, HyperCoords coords,
             bool embedded, regina::NNormalHypersurfaceList* vtxSurfaces,
             regina::NProgressTracker* tracker) {
-        return NNormalHypersurfaceList::enumerateFundPrimal(owner, flavour,
+        return NNormalHypersurfaceList::enumerateFundPrimal(owner, coords,
             embedded, vtxSurfaces, tracker);
     }
 
     NNormalHypersurfaceList* enumerateFundDual_2(
-            regina::Dim4Triangulation* owner, HyperCoords flavour) {
-        return NNormalHypersurfaceList::enumerateFundDual(owner, flavour);
+            regina::Dim4Triangulation* owner, HyperCoords coords) {
+        return NNormalHypersurfaceList::enumerateFundDual(owner, coords);
     }
     NNormalHypersurfaceList* enumerateFundDual_3(
-            regina::Dim4Triangulation* owner, HyperCoords flavour,
+            regina::Dim4Triangulation* owner, HyperCoords coords,
             bool embedded) {
-        return NNormalHypersurfaceList::enumerateFundDual(owner, flavour,
+        return NNormalHypersurfaceList::enumerateFundDual(owner, coords,
             embedded);
     }
     NNormalHypersurfaceList* enumerateFundDual_4(
-            regina::Dim4Triangulation* owner, HyperCoords flavour,
+            regina::Dim4Triangulation* owner, HyperCoords coords,
             bool embedded, regina::NProgressTracker* tracker) {
-        return NNormalHypersurfaceList::enumerateFundDual(owner, flavour,
+        return NNormalHypersurfaceList::enumerateFundDual(owner, coords,
             embedded, tracker);
     }
 }
@@ -132,7 +132,7 @@ void addNNormalHypersurfaceList() {
         .def("recreateMatchingEquations",
             &NNormalHypersurfaceList::recreateMatchingEquations,
             return_value_policy<manage_new_object>())
-        .def("getFlavour", &NNormalHypersurfaceList::getFlavour)
+        .def("coords", &NNormalHypersurfaceList::coords)
         .def("isEmbeddedOnly", &NNormalHypersurfaceList::isEmbeddedOnly)
         .def("getTriangulation", &NNormalHypersurfaceList::getTriangulation,
             return_value_policy<reference_existing_object>())

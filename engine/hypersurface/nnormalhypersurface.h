@@ -67,7 +67,7 @@ class NTriangulation;
 class NXMLNormalHypersurfaceReader;
 
 /**
- * A template that stores information about a particular flavour of
+ * A template that stores information about a particular
  * normal hypersurface coordinate system.  Much of this information is
  * given in the form of compile-time constants and types.
  *
@@ -75,7 +75,7 @@ class NXMLNormalHypersurfaceReader;
  * known until runtime, see the various forCoords() routines defined in
  * hscoordregistry.h.
  *
- * This HyperInfo template should only be defined for \a flavourType
+ * This HyperInfo template should only be defined for \a coordType
  * arguments that represent coordinate systems in which you can create
  * and store normal hypersurfaces within 4-manifold triangulations.
  *
@@ -88,7 +88,7 @@ class NXMLNormalHypersurfaceReader;
  *
  * \ifacespython Not present.
  */
-template <HyperCoords flavourType>
+template <HyperCoords coordType>
 struct HyperInfo;
 
 /**
@@ -150,9 +150,9 @@ struct HyperInfo;
  * <b>When deriving classes from NNormalHypersurfaceVector:</b>
  * <ul>
  *   <li>A new value must be added to the HyperCoords enum in hypercoords.h
- *   to represent the new flavour of coordinate system.</li>
+ *   to represent the new coordinate system.</li>
  *   <li>The file hscoordregistry-impl.h must be updated to reflect the new
- *   flavour of coordinate system (the file itself contains instructions on
+ *   coordinate system (the file itself contains instructions on
  *   how to do this).</li>
  *   <li>A corresponding specialisation of HyperInfo<> must be defined,
  *   typically in the same header as the new vector subclass.</li>
@@ -327,7 +327,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
 
         /**
          * Returns a new normal hypersurface vector of the appropriate length
-         * for the given triangulation and for the flavour of coordinate
+         * for the given triangulation and for the coordinate
          * system corresponding to this subclass of NNormalHypersurfaceVector.
          * All elements of the new vector will be initialised to zero.
          *
@@ -343,7 +343,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
         #endif
         /**
          * Creates a new set of normal hypersurface matching equations for
-         * the given triangulation using the flavour of coordinate
+         * the given triangulation using the coordinate
          * system corresponding to this particular subclass of
          * NNormalHypersurfaceVector.
          *
@@ -361,7 +361,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          * Creates a new set of validity constraints representing
          * the condition that normal hypersurfaces be embedded.  The
          * validity constraints will be expressed relative to the
-         * flavour of coordinate system corresponding to this particular
+         * coordinate system corresponding to this particular
          * subclass of NNormalHypersurfaceVector.
          *
          * @param triangulation the triangulation upon which these
@@ -382,7 +382,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
  * The information provided by the various query methods is independent
  * of the underlying coordinate system being used.
  * See the NNormalHypersurfaceVector class notes for details of what to do
- * when introducing a new flavour of coordinate system.
+ * when introducing a new coordinate system.
  *
  * Note that non-compact surfaces (surfaces with infinitely many pieces,
  * are allowed; in these cases, the corresponding coordinate lookup routines
