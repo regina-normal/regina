@@ -54,7 +54,7 @@ void addNText() {
         .def("setText", setText_chars)
     ;
 
-    s.attr("packetType") = NText::packetType;
+    s.attr("packetType") = regina::PacketType(NText::packetType);
 
     implicitly_convertible<std::auto_ptr<NText>,
         std::auto_ptr<regina::NPacket> >();

@@ -7,6 +7,7 @@ SET ( FILES
   npdf
   nscript
   ntext
+  packettype
   pypacket
   )
 

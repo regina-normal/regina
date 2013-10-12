@@ -37,8 +37,12 @@ void addNPacket();
 void addNPDF();
 void addNScript();
 void addNText();
+void addPacketType();
 
 void addPacket() {
+    // Enums must come first.
+    addPacketType();
+
     addNPacket();
     addNContainer();
     addNPDF();

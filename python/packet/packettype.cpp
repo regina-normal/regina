@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,28 +32,38 @@
 
 /* end stub */
 
-#include "surfaces/filterregistry.h"
+#include <boost/python.hpp>
+#include "packet/packettype.h"
 
-namespace regina {
+using namespace boost::python;
 
-#define __FILTER_REGISTRY_BODY
+void addPacketType() {
+    scope global;
 
-// Bring in routines from the filter registry.
+    enum_<regina::PacketType>("PacketType")
+        .value("PACKET_CONTAINER", regina::PACKET_CONTAINER)
+        .value("PACKET_TEXT", regina::PACKET_TEXT)
+        .value("PACKET_SCRIPT", regina::PACKET_SCRIPT)
+        .value("PACKET_PDF", regina::PACKET_PDF)
+        .value("PACKET_TRIANGULATION", regina::PACKET_TRIANGULATION)
+        .value("PACKET_ANGLESTRUCTURELIST", regina::PACKET_ANGLESTRUCTURELIST)
+        .value("PACKET_NORMALSURFACELIST", regina::PACKET_NORMALSURFACELIST)
+        .value("PACKET_DIM2TRIANGULATION", regina::PACKET_DIM2TRIANGULATION)
+        .value("PACKET_SURFACEFILTER", regina::PACKET_SURFACEFILTER)
+        .value("PACKET_DIM4TRIANGULATION", regina::PACKET_DIM4TRIANGULATION)
+        .value("PACKET_NORMALHYPERSURFACELIST", regina::PACKET_NORMALHYPERSURFACELIST)
+        ;
 
-#define REGISTER_FILTER(id, class, name) \
-    int class::getFilterID() const { \
-        return id; \
-    } \
-    const int class::filterID = id; \
-    std::string class::getFilterName() const { \
-        return name; \
-    }
-
-#include "surfaces/filterregistry.h"
-
-// Tidy up.
-#undef REGISTER_FILTER
-#undef __FILTER_REGISTRY_BODY
-
-} // namespace regina
+    global.attr("PACKET_CONTAINER") = regina::PACKET_CONTAINER;
+    global.attr("PACKET_TEXT") = regina::PACKET_TEXT;
+    global.attr("PACKET_SCRIPT") = regina::PACKET_SCRIPT;
+    global.attr("PACKET_PDF") = regina::PACKET_PDF;
+    global.attr("PACKET_TRIANGULATION") = regina::PACKET_TRIANGULATION;
+    global.attr("PACKET_ANGLESTRUCTURELIST") = regina::PACKET_ANGLESTRUCTURELIST;
+    global.attr("PACKET_NORMALSURFACELIST") = regina::PACKET_NORMALSURFACELIST;
+    global.attr("PACKET_DIM2TRIANGULATION") = regina::PACKET_DIM2TRIANGULATION;
+    global.attr("PACKET_SURFACEFILTER") = regina::PACKET_SURFACEFILTER;
+    global.attr("PACKET_DIM4TRIANGULATION") = regina::PACKET_DIM4TRIANGULATION;
+    global.attr("PACKET_NORMALHYPERSURFACELIST") = regina::PACKET_NORMALHYPERSURFACELIST;
+}
 

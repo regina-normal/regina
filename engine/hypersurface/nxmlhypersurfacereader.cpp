@@ -38,8 +38,6 @@
 #include "hypersurface/hsflavourregistry.h"
 #include "utilities/stringutils.h"
 
-#define __HSFLAVOUR_REGISTRY_BODY
-
 namespace regina {
 
 void NXMLNormalHypersurfaceReader::startElement(const std::string&,
@@ -49,11 +47,6 @@ void NXMLNormalHypersurfaceReader::startElement(const std::string&,
         vecLen_ = -1;
     name_ = props.lookup("name");
 }
-
-#define REGISTER_HSFLAVOUR(id_name, class, n) \
-    if (flavour_ == id_name) \
-        vec = new class(vecLen_); \
-    else
 
 void NXMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
     if (vecLen_ < 0 || tri_ == 0)
@@ -65,9 +58,11 @@ void NXMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
 
     // Create a new vector and read all non-zero entries.
     // Bring in cases from the flavour registry...
-    NNormalHypersurfaceVector* vec;
-    #include "hypersurface/hsflavourregistry.h"
-        return; // the final "else" clause
+    NNormalHypersurfaceVector* vec =
+        forFlavour(flavour_,
+            NewFunction1<NNormalHypersurfaceVector, size_t>(vecLen_), 0);
+    if (! vec)
+        return;
 
     long pos;
     NLargeInteger value;
@@ -147,10 +142,6 @@ NXMLPacketReader* NNormalHypersurfaceList::getXMLReader(NPacket* parent) {
     return new NXMLNormalHypersurfaceListReader(
         dynamic_cast<Dim4Triangulation*>(parent));
 }
-
-// Tidy up.
-#undef REGISTER_HSFLAVOUR
-#undef __HSFLAVOUR_REGISTRY_BODY
 
 } // namespace regina
 

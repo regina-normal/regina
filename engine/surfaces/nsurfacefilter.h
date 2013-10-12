@@ -43,11 +43,13 @@
 
 #include "regina-core.h"
 #include "packet/npacket.h"
+#include "surfaces/surfacefiltertype.h"
 
 namespace regina {
 
 class NNormalSurface;
 class NNormalSurfaceList;
+class NSurfaceFilter;
 class NXMLPacketReader;
 class NXMLFilterReader;
 
@@ -57,47 +59,123 @@ class NXMLFilterReader;
  */
 
 /**
+ * A template that stores information about a particular type of normal
+ * surface filter.  Much of this information is given in the
+ * form of compile-time constants and types.
+ *
+ * To iterate through cases for a given value of SurfaceFilterInfo that is not
+ * known until runtime, see the various forFilter() routines defined in
+ * filterregistry.h.
+ *
+ * At a bare minimum, each specialisation of this template must provide:
+ *
+ * - a typedef \a Class that represents the corresponding
+ *   NSurfaceFilter descendant class;
+ * - a static function name() that returns a C-style string giving the
+ *   human-readable name of the filter type.
+ *
+ * \ifacespython Not present.
+ */
+template <SurfaceFilterType filterType>
+struct SurfaceFilterInfo;
+
+/**
+ * Defines various constants, types and virtual functions for a
+ * descendant class of NSurfaceFilter.
+ *
+ * Every descendant class of NSurfaceFilter \a must include
+ * REGINA_SURFACE_FILTER at the beginning of the class definition.
+ *
+ * This macro provides the class with:
+ *
+ * - a compile-time enum constant \a filterType, which is equal to the
+ *   corresponding SurfaceFilterType constant;
+ * - a deprecated compile-time enum constant \a filterID, which is
+ *   identical to \a filterType;
+ * - declarations and implementations of the virtual functions
+ *   NSurfaceFilter::getFilterType() and NSurfaceFilter::getFilterTypeName();
+ * - declarations and implementations of the deprecated virtual functions
+ *   NSurfaceFilter::getFilterID() and NSurfaceFilter::getFilterName().
+ *
+ * @param class_ the name of this descendant class of NSurfaceFilter.
+ * @param id the corresponding SurfaceFilterType constant.
+ */
+#define REGINA_SURFACE_FILTER(class_, id) \
+    public: \
+        enum { filterType = id, filterID = id }; \
+        inline virtual SurfaceFilterType getFilterType() const { \
+            return id; \
+        } \
+        inline virtual SurfaceFilterType getFilterID() const { \
+            return id; \
+        } \
+        inline virtual std::string getFilterTypeName() const { \
+            return SurfaceFilterInfo<id>::name(); \
+        } \
+        inline virtual std::string getFilterName() const { \
+            return SurfaceFilterInfo<id>::name(); \
+        }
+
+/**
+ * Stores information about the normal surface filter packet type.
+ * See the general PacketInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct PacketInfo<PACKET_SURFACEFILTER> {
+    typedef NSurfaceFilter Class;
+    inline static const char* name() {
+        return "Surface Filter";
+    }
+};
+
+/**
+ * Stores information about the default accept-all surface filter.
+ * See the general SurfaceFilterInfo template notes for further details.
+ *
+ * \ifacespython Not present.
+ */
+template <>
+struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
+    typedef NSurfaceFilter Class;
+    inline static const char* name() {
+        return "Default filter";
+    }
+};
+
+/**
  * A packet that accepts or rejects normal surfaces.
  * Different subclasses of NSurfaceFilter represent different filtering
  * methods.
  *
  * <b>When deriving classes from NSurfaceFilter:</b>
  * <ul>
- *   <li>The file filterregistry.h must be updated to reflect the new
- *   filter type.</li>
+ *   <li>A new value must be added to the SurfaceFilterType enum in
+ *   surfacefiltertype.h to represent the new filter type.</li>
+ *   <li>The file filterregistry-impl.h must be updated to reflect the new
+ *   filter type (the file itself contains instructions on how to do this).</li>
+ *   <li>A corresponding specialisation of SurfaceFilterInfo<> must be
+ *   defined, typically in the same header as the new filter class.</li>
+ *   <li>The macro REGINA_SURFACE_FILTER must be added to the beginning
+ *   of the new filter class.  This will declare and define various
+ *   constants, typedefs and virtual functions (see the REGINA_SURFACE_FILTER
+ *   macro documentation for details).</li>
  *   <li>A copy constructor <tt>class(const class& cloneMe)</tt> must
  *   be declared and implemented.  You may assume that parameter
  *   \a cloneMe is of the same class as that whose constructor you are
  *   writing.</li>
- *   <li>Virtual functions accept(), writeTextLong() and
+ *   <li>Virtual functions accept(), internalClonePacket(), writeTextLong() and
  *   writeXMLFilterData() must be overridden.</li>
  *   <li>Static function getXMLFilterReader() must be declared and
  *   implemented as described in the documentation below.</li>
- *   <li>Virtual functions getFilterID() and getFilterName()
- *   must be redeclared but not reimplemented.
- *   The registry utilities will take care of their implementation.</li>
- *   <li><tt>public static const int filterID</tt> must be declared.
- *   The registry utilities will take care of assigning it a value.</li>
  * </ul>
  *
  * \todo \feature Implement property \a lastAppliedTo.
  */
 class REGINA_API NSurfaceFilter : public NPacket {
-    public:
-        /**
-         * Contains the integer ID for this type of surface filter.
-         * Each distinct filtering class must have a unique ID, and this
-         * should be a non-negative integer.  See filterregistry.h for
-         * further details.
-         *
-         * This member must be declared for every filtering class that
-         * will be instantiated.  A value need not be assigned;
-         * filterregistry.h will take care of this task when you register
-         * the filtering class.
-         */
-        static const int filterID;
-
-        static const int packetType;
+    REGINA_PACKET(NSurfaceFilter, PACKET_SURFACEFILTER)
+    REGINA_SURFACE_FILTER(NSurfaceFilter, NS_FILTER_DEFAULT)
 
     public:
         /**
@@ -130,20 +208,38 @@ class REGINA_API NSurfaceFilter : public NPacket {
          */
         virtual bool accept(const NNormalSurface& surface) const;
 
+#ifdef __DOXYGEN
         /**
          * Returns the unique integer ID corresponding to the filtering
          * method that is this particular subclass of NSurfaceFilter.
          *
          * @return the unique integer filtering method ID.
          */
-        virtual int getFilterID() const;
+        virtual SurfaceFilterType getFilterType() const;
+        /**
+         * A deprecated alias for getFilterType().
+         * This returns the unique integer ID corresponding to the filtering
+         * method that is this particular subclass of NSurfaceFilter.
+         *
+         * @return the unique integer filtering method ID.
+         */
+        virtual SurfaceFilterType getFilterID() const;
         /**
          * Returns a string description of the filtering method that is
          * this particular subclass of NSurfaceFilter.
          *
          * @return a string description of this filtering method.
          */
+        virtual std::string getFilterTypeName() const;
+        /**
+         * A deprecated alias for getFilterTypeName().
+         * This returns a string description of the filtering method that is
+         * this particular subclass of NSurfaceFilter.
+         *
+         * @return a string description of this filtering method.
+         */
         virtual std::string getFilterName() const;
+#endif
 
         /**
          * Returns a newly created XML filter reader that will read the
@@ -169,8 +265,6 @@ class REGINA_API NSurfaceFilter : public NPacket {
          */
         static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
 
-        virtual int getPacketType() const;
-        virtual std::string getPacketTypeName() const;
         virtual void writeTextShort(std::ostream& out) const;
         static NXMLPacketReader* getXMLReader(NPacket* parent);
         virtual bool dependsOnParent() const;
@@ -211,11 +305,15 @@ inline void NSurfaceFilter::writeXMLFilterData(std::ostream&) const {
 }
 
 inline void NSurfaceFilter::writeTextShort(std::ostream& o) const {
-    o << getFilterName();
+    o << getFilterTypeName();
 }
 
 inline bool NSurfaceFilter::dependsOnParent() const {
     return false;
+}
+
+inline NPacket* NSurfaceFilter::internalClonePacket(NPacket*) const {
+    return new NSurfaceFilter();
 }
 
 } // namespace regina
