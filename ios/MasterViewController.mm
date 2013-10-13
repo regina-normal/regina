@@ -39,7 +39,6 @@
 // TODO: Support user documents.
 // TODO: Support dropbox documents.
 // TODO: Allow adding/reordering/deleting/renaming documents.
-// TODO: Ensure we support iOS6.
 
 @interface MasterViewController () {
     NSMutableArray *_objects;
@@ -52,10 +51,15 @@
 - (void)awakeFromNib
 {
     self.clearsSelectionOnViewWillAppear = NO;
-    // TODO: The following line crashes iOS6 (unrecognised selector).
-    // Stack Overflow says to put it inside:
-    // if ([[[UIDevice currentDevice] systemVersion] compare:@"7" options:NSNumericSearch] != NSOrderedAscending)
-    self.preferredContentSize = CGSizeMake(320.0, 600.0);
+    // Apple tells us that this is how to test for iOS6.x vs iOS 7:
+    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
+        NSLog(@"Running in iOS 6.x");
+        self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
+    } else {
+        NSLog(@"Running in iOS 7 or above");
+        // This method crashes in iOS6 (unrecognised selector).
+        self.preferredContentSize = CGSizeMake(320.0, 600.0);
+    }
     [super awakeFromNib];
 }
 
