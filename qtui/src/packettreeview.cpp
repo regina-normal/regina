@@ -418,3 +418,8 @@ void PacketTreeView::childrenWereReordered(regina::NPacket*) {
     getMainWindow()->setModified(true);
 }
 
+void PacketTreeView::mousePressEvent(QMouseEvent* event) {
+    clearSelection();
+    QTreeView::mousePressEvent(event);
+}
+

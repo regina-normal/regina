@@ -288,6 +288,13 @@ class PacketTreeView : public QTreeWidget, public regina::NPacketListener {
          */
         void customEvent(QEvent* evt);
 
+    private:
+        /**
+         * Allow the user to deselect the current item by clicking on an
+         * empty part of the tree.
+         */
+        virtual void mousePressEvent(QMouseEvent* event);
+
     private slots:
         /**
          * Manual management of expansion states.
