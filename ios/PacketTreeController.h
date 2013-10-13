@@ -33,9 +33,14 @@
 #import <UIKit/UIKit.h>
 #import "Example.h"
 
+namespace regina {
+    class NPacket;
+}
+
 @interface PacketTreeController : UITableViewController
 
 - (void)openExample:(Example*)e;
+- (void)openSubtree:(regina::NPacket*)p root:(regina::NPacket*)r;
 - (void)refreshPackets;
 
 @end

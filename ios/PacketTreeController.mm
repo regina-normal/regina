@@ -84,12 +84,14 @@
     [self configureView];
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    if (! (_node && _node->getTreeParent())) {
-        delete _tree;
-        NSLog(@"Closing file and deleting from memory.");
+- (void)viewWillDisappear:(BOOL)animated {
+    if (_node && ! _node->getTreeParent()) {
+        if ([self.navigationController.viewControllers indexOfObject:self] == NSNotFound) {
+            delete _tree;
+            NSLog(@"Closing file and deleting from memory.");
+        }
     }
+    [super viewDidDisappear:animated];
 }
 
 - (void)openExample:(Example*)e {
@@ -97,6 +99,13 @@
     _filename = e.desc;
     [self loadTreeResource:e.file];
     // TODO: Trap errors.
+}
+
+- (void)openSubtree:(regina::NPacket *)p root:(regina::NPacket*)r {
+    _example = false;
+    _filename = @"Subtree";
+    _tree = r;
+    _node = p;
 }
 
 - (bool)loadTreeResource:(NSString*)filename {
@@ -136,7 +145,7 @@
     regina::NPacket* p;
     for (p = _node->getFirstTreeChild(); p; p = p->getNextTreeSibling()) {
         if (p->getPacketType() == regina::NContainer::packetType) {
-            [_rows addObject:[PacketTreeRow packetTreeRowWithPacket:p subtree:true]];
+            [_rows addObject:[PacketTreeRow packetTreeRowWithPacket:p subtree:false]];
         } else {
             [_rows addObject:[PacketTreeRow packetTreeRowWithPacket:p subtree:false]];
             if (p->getFirstTreeChild()) {
@@ -165,12 +174,27 @@
     PacketTreeRow* r = _rows[indexPath.row];
     if (r.subtree) {
         cell = [tableView dequeueReusableCellWithIdentifier:@"Subtree" forIndexPath:indexPath];
+        cell.textLabel.text = @"Browse subpackets";
+    } else if ([r packet]->getPacketType() == regina::NContainer::packetType) {
+        cell = [tableView dequeueReusableCellWithIdentifier:@"Container" forIndexPath:indexPath];
         cell.textLabel.text = [NSString stringWithUTF8String:[r packet]->getPacketLabel().c_str()];
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu subpackets", [r packet]->getNumberOfDescendants()];
+        unsigned long sub = [r packet]->getNumberOfDescendants();
+        if (sub == 0)
+            cell.detailTextLabel.text = @"";
+        else if (sub == 1)
+            cell.detailTextLabel.text = @"1 subpacket";
+        else
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu subpackets", sub];
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:@"Packet" forIndexPath:indexPath];
         cell.textLabel.text = [NSString stringWithUTF8String:[r packet]->getPacketLabel().c_str()];
-        cell.detailTextLabel.text = [NSString stringWithUTF8String:[r packet]->getPacketTypeName().c_str()];
+        unsigned long sub = [r packet]->getNumberOfDescendants();
+        if (sub == 0)
+            cell.detailTextLabel.text = @"";
+        else if (sub == 1)
+            cell.detailTextLabel.text = @"1 subpacket";
+        else
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu subpackets", sub];
         switch ([r packet]->getPacketType()) {
             case regina::PACKET_ANGLESTRUCTURELIST:
                 cell.imageView.image = [UIImage imageNamed:@"icons/packet/angles-32"];
@@ -207,6 +231,15 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return NO;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"openSubtree"]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        
+        [[segue destinationViewController] openSubtree:[_rows[indexPath.row] packet] root:_tree];
+        [[segue destinationViewController] refreshPackets];
+    }
 }
 
 @end
