@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0513753D1809B8D3002E525B /* coordregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753B1809B8D2002E525B /* coordregistry-impl.h */; };
 		0513753E1809B8D3002E525B /* coordregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753C1809B8D2002E525B /* coordregistry.h */; };
+		0523D88A180B54850094DAAD /* PacketManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManager.mm */; };
 		052F9E83180600FB00FAE4DF /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */; };
 		052F9E84180600FB00FAE4DF /* nabeliangroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C01180600FA00FAE4DF /* nabeliangroup.h */; };
 		052F9E85180600FB00FAE4DF /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C02180600FA00FAE4DF /* ngrouppresentation.cpp */; };
@@ -814,6 +815,8 @@
 /* Begin PBXFileReference section */
 		0513753B1809B8D2002E525B /* coordregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "coordregistry-impl.h"; sourceTree = "<group>"; };
 		0513753C1809B8D2002E525B /* coordregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coordregistry.h; sourceTree = "<group>"; };
+		0523D888180B54850094DAAD /* PacketManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManager.h; sourceTree = "<group>"; };
+		0523D889180B54850094DAAD /* PacketManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManager.mm; sourceTree = "<group>"; };
 		052F9BFF180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
 		052F9C01180600FA00FAE4DF /* nabeliangroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nabeliangroup.h; sourceTree = "<group>"; };
@@ -2443,7 +2446,7 @@
 		052FA12F1806102F00FAE4DF /* ios */ = {
 			isa = PBXGroup;
 			children = (
-				058D0144180B12CA00AC3D11 /* icons */,
+				052FA13B1806103000FAE4DF /* Main.storyboard */,
 				052FA1381806103000FAE4DF /* AppDelegate.h */,
 				052FA1391806103000FAE4DF /* AppDelegate.m */,
 				052FA1411806103000FAE4DF /* DetailViewController.h */,
@@ -2452,10 +2455,12 @@
 				05A47FC61809D1D600F86BFD /* Example.m */,
 				052FA13E1806103000FAE4DF /* MasterViewController.h */,
 				052FA13F1806103000FAE4DF /* MasterViewController.mm */,
-				052FA13B1806103000FAE4DF /* Main.storyboard */,
+				0523D888180B54850094DAAD /* PacketManager.h */,
+				0523D889180B54850094DAAD /* PacketManager.mm */,
 				05F96C111809F59600C99F96 /* PacketTreeController.h */,
 				05F96C121809F59600C99F96 /* PacketTreeController.mm */,
 				052FA1441806103000FAE4DF /* Images.xcassets */,
+				058D0144180B12CA00AC3D11 /* icons */,
 				052FA1301806102F00FAE4DF /* Supporting Files */,
 				05F96C14180A14E600C99F96 /* MBProgressHUD */,
 			);
@@ -3108,6 +3113,7 @@
 				052FA18C1806129B00FAE4DF /* snappea.cpp in Sources */,
 				052FA1991806129B00FAE4DF /* order.cpp in Sources */,
 				052FA1E71806129B00FAE4DF /* nxmlfilterreaders.cpp in Sources */,
+				0523D88A180B54850094DAAD /* PacketManager.mm in Sources */,
 				052FA20F1806129B00FAE4DF /* zstream.cpp in Sources */,
 				052FA1B21806129B00FAE4DF /* nsigcensus.cpp in Sources */,
 				052FA1761806129B00FAE4DF /* dim2triangulation.cpp in Sources */,

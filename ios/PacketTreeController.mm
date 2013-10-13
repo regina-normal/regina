@@ -30,7 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
+#import "PacketManager.h"
 #import "PacketTreeController.h"
+
 #import "file/nxmlfile.h"
 #import "packet/npacket.h"
 #import "packet/ncontainer.h"
@@ -195,35 +197,7 @@
             cell.detailTextLabel.text = @"1 subpacket";
         else
             cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu subpackets", sub];
-        switch ([r packet]->getPacketType()) {
-            case regina::PACKET_ANGLESTRUCTURELIST:
-                cell.imageView.image = [UIImage imageNamed:@"icons/packet/angles-32"];
-                break;
-            case regina::PACKET_CONTAINER:
-                cell.imageView.image = [UIImage imageNamed:@"icons/packet/container-32"];
-                break;
-            case regina::PACKET_DIM2TRIANGULATION:
-                cell.imageView.image = [UIImage imageNamed:@"icons/packet/dim2triangulation-32"];
-                break;
-            case regina::PACKET_NORMALSURFACELIST:
-                cell.imageView.image = [UIImage imageNamed:@"icons/packet/surfaces-32"];
-                break;
-            case regina::PACKET_PDF:
-                cell.imageView.image = [UIImage imageNamed:@"icons/packet/pdf-32"];
-                break;
-            case regina::PACKET_SCRIPT:
-                cell.imageView.image = [UIImage imageNamed:@"icons/packet/script-32"];
-                break;
-            case regina::PACKET_SURFACEFILTER:
-                cell.imageView.image = [UIImage imageNamed:@"icons/packet/filter-32"];
-                break;
-            case regina::PACKET_TEXT:
-                cell.imageView.image = [UIImage imageNamed:@"icons/packet/text-32"];
-                break;
-            case regina::PACKET_TRIANGULATION:
-                cell.imageView.image = [UIImage imageNamed:@"icons/packet/triangulation-32"];
-                break;
-        }
+        cell.imageView.image = [PacketManager iconFor:[r packet]];
     }
     return cell;
 }
