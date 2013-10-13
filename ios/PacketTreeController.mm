@@ -176,7 +176,7 @@
     PacketTreeRow* r = _rows[indexPath.row];
     if (r.subtree) {
         cell = [tableView dequeueReusableCellWithIdentifier:@"Subtree" forIndexPath:indexPath];
-        cell.textLabel.text = @"Browse subpackets";
+        cell.imageView.image = [UIImage imageNamed:@"icons/packet/subtree-32"];
     } else if ([r packet]->getPacketType() == regina::NContainer::packetType) {
         cell = [tableView dequeueReusableCellWithIdentifier:@"Container" forIndexPath:indexPath];
         cell.textLabel.text = [NSString stringWithUTF8String:[r packet]->getPacketLabel().c_str()];
@@ -187,6 +187,7 @@
             cell.detailTextLabel.text = @"1 subpacket";
         else
             cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu subpackets", sub];
+        cell.imageView.image = [UIImage imageNamed:@"icons/packet/container-32"];
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:@"Packet" forIndexPath:indexPath];
         cell.textLabel.text = [NSString stringWithUTF8String:[r packet]->getPacketLabel().c_str()];
