@@ -61,6 +61,13 @@ NPacket::~NPacket() {
     fireDestructionEvent();
 }
 
+std::string NPacket::getFullName() const {
+    if (packetLabel.empty())
+        return "(No label) (" + getPacketTypeName() + ")";
+    else
+        return packetLabel + " (" + getPacketTypeName() + ")";
+}
+
 void NPacket::setPacketLabel(const std::string& newLabel) {
     fireEvent(&NPacketListener::packetToBeRenamed);
     packetLabel = newLabel;
