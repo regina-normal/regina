@@ -32,7 +32,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RAppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

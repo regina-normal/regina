@@ -32,7 +32,7 @@
 
 #import "AppDelegate.h"
 
-@implementation RAppDelegate
+@implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {

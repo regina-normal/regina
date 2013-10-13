@@ -32,10 +32,10 @@
 
 #import <UIKit/UIKit.h>
 
-@class RDetailViewController;
+@class DetailViewController;
 
-@interface RMasterViewController : UITableViewController
+@interface MasterViewController : UITableViewController
 
-@property (strong, nonatomic) RDetailViewController *detailViewController;
+@property (strong, nonatomic) DetailViewController *detailViewController;
 
 @end

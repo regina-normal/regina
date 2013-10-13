@@ -41,13 +41,13 @@
 // TODO: Allow adding/reordering/deleting/renaming documents.
 // TODO: Ensure we support iOS6.
 
-@interface RMasterViewController () {
+@interface MasterViewController () {
     NSMutableArray *_objects;
     NSArray *_examples;
 }
 @end
 
-@implementation RMasterViewController
+@implementation MasterViewController
 
 - (void)awakeFromNib
 {
@@ -71,7 +71,7 @@
     self.navigationItem.rightBarButtonItem = addButton;
      */
 
-    self.detailViewController = (RDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     
     _examples = [Example all];
 }

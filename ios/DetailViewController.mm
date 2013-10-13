@@ -36,12 +36,12 @@
 #import "triangulation/nexampletriangulation.h"
 #import "triangulation/ntriangulation.h"
 
-@interface RDetailViewController ()
+@interface DetailViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
 - (void)configureView;
 @end
 
-@implementation RDetailViewController
+@implementation DetailViewController
 
 #pragma mark - Managing the detail item
 

@@ -32,7 +32,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RDetailViewController : UIViewController <UISplitViewControllerDelegate>
+@interface DetailViewController : UIViewController <UISplitViewControllerDelegate>
 
 @property (strong, nonatomic) id detailItem;
 
