@@ -36,5 +36,6 @@
 @interface PacketTreeController : UITableViewController
 
 - (void)openExample:(Example*)e;
+- (void)refreshPackets;
 
 @end

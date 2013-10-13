@@ -33,8 +33,38 @@
 #import "PacketTreeController.h"
 #import "file/nxmlfile.h"
 #import "packet/npacket.h"
+#import "packet/ncontainer.h"
 
-@interface PacketTreeController ()
+@interface PacketTreeRow : NSObject
+
+@property (assign, nonatomic, readonly) regina::NPacket* packet;
+@property (assign, nonatomic, readonly) bool subtree;
+
+- (id)initWithPacket:(regina::NPacket*)p subtree:(bool)s;
++ (id)packetTreeRowWithPacket:(regina::NPacket*)p subtree:(bool) s;
+
+@end
+
+@implementation PacketTreeRow
+
+- (id)initWithPacket:(regina::NPacket*)p subtree:(bool)s {
+    self = [super init];
+    if (self) {
+        _packet = p;
+        _subtree = s;
+    }
+    return self;
+}
+
++ (id)packetTreeRowWithPacket:(regina::NPacket*)p subtree:(bool) s {
+    return [[PacketTreeRow alloc] initWithPacket:p subtree:s];
+}
+
+@end
+
+@interface PacketTreeController () {
+    NSMutableArray *_rows;
+}
 
 @property (assign, nonatomic) regina::NPacket* tree;
 @property (assign, nonatomic) regina::NPacket* node;
@@ -43,6 +73,7 @@
 
 - (bool)loadTreeResource:(NSString*)filename;
 - (void)configureView;
+- (void)fill;
 
 @end
 
@@ -66,7 +97,6 @@
     _filename = e.desc;
     [self loadTreeResource:e.file];
     // TODO: Trap errors.
-    [self configureView];
 }
 
 - (bool)loadTreeResource:(NSString*)filename {
@@ -95,6 +125,88 @@
 
 - (void)configureView {
     [self setTitle:_filename];
+}
+
+- (void)fill {
+    if (! _node)
+        return;
+    
+    _rows = [NSMutableArray array];
+    
+    regina::NPacket* p;
+    for (p = _node->getFirstTreeChild(); p; p = p->getNextTreeSibling()) {
+        if (p->getPacketType() == regina::NContainer::packetType) {
+            [_rows addObject:[PacketTreeRow packetTreeRowWithPacket:p subtree:true]];
+        } else {
+            [_rows addObject:[PacketTreeRow packetTreeRowWithPacket:p subtree:false]];
+            if (p->getFirstTreeChild()) {
+                [_rows addObject:[PacketTreeRow packetTreeRowWithPacket:p subtree:true]];
+            }
+        }
+    }
+}
+
+- (void)refreshPackets {
+    [self fill];
+    [self.tableView reloadData];
+}
+
+#pragma mark - Table View
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [_rows count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell;
+    
+    PacketTreeRow* r = _rows[indexPath.row];
+    if (r.subtree) {
+        cell = [tableView dequeueReusableCellWithIdentifier:@"Subtree" forIndexPath:indexPath];
+        cell.textLabel.text = [NSString stringWithUTF8String:[r packet]->getPacketLabel().c_str()];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu subpackets", [r packet]->getNumberOfDescendants()];
+    } else {
+        cell = [tableView dequeueReusableCellWithIdentifier:@"Packet" forIndexPath:indexPath];
+        cell.textLabel.text = [NSString stringWithUTF8String:[r packet]->getPacketLabel().c_str()];
+        cell.detailTextLabel.text = [NSString stringWithUTF8String:[r packet]->getPacketTypeName().c_str()];
+        switch ([r packet]->getPacketType()) {
+            case regina::PACKET_ANGLESTRUCTURELIST:
+                cell.imageView.image = [UIImage imageNamed:@"icons/packet/angles-32"];
+                break;
+            case regina::PACKET_CONTAINER:
+                cell.imageView.image = [UIImage imageNamed:@"icons/packet/container-32"];
+                break;
+            case regina::PACKET_DIM2TRIANGULATION:
+                cell.imageView.image = [UIImage imageNamed:@"icons/packet/dim2triangulation-32"];
+                break;
+            case regina::PACKET_NORMALSURFACELIST:
+                cell.imageView.image = [UIImage imageNamed:@"icons/packet/surfaces-32"];
+                break;
+            case regina::PACKET_PDF:
+                cell.imageView.image = [UIImage imageNamed:@"icons/packet/pdf-32"];
+                break;
+            case regina::PACKET_SCRIPT:
+                cell.imageView.image = [UIImage imageNamed:@"icons/packet/script-32"];
+                break;
+            case regina::PACKET_SURFACEFILTER:
+                cell.imageView.image = [UIImage imageNamed:@"icons/packet/filter-32"];
+                break;
+            case regina::PACKET_TEXT:
+                cell.imageView.image = [UIImage imageNamed:@"icons/packet/text-32"];
+                break;
+            case regina::PACKET_TRIANGULATION:
+                cell.imageView.image = [UIImage imageNamed:@"icons/packet/triangulation-32"];
+                break;
+        }
+    }
+    return cell;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return NO;
 }
 
 @end

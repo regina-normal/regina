@@ -178,6 +178,7 @@
             [[segue destinationViewController] openExample:_examples[indexPath.row]];
 
             dispatch_async(dispatch_get_main_queue(), ^{
+                [[segue destinationViewController] refreshPackets];
                 [MBProgressHUD hideHUDForView:rootView animated:YES];
             });
         });
