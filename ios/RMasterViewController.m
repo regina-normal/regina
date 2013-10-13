@@ -36,6 +36,11 @@
 #import "RDetailViewController.h"
 #import "MBProgressHUD.h"
 
+// TODO: Support user documents.
+// TODO: Support dropbox documents.
+// TODO: Allow adding/reordering/deleting/renaming documents.
+// TODO: Ensure we support iOS6.
+
 @interface RMasterViewController () {
     NSMutableArray *_objects;
     NSArray *_examples;
@@ -59,7 +64,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     /**
-     * TODO
+     * TODO: Document add/edit/etc. buttons go here.
      self.navigationItem.leftBarButtonItem = self.editButtonItem;
      
      UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
@@ -77,7 +82,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
+/* TODO: Add functionality goes here.
 - (void)insertNewObject:(id)sender
 {
     if (!_objects) {
@@ -101,7 +106,7 @@
     if (section == 0)
         return [_examples count];
     else
-        return 0; // TODO _objects.count;
+        return 0; // TODO number of user documents.
 }
 
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -129,10 +134,11 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Return NO if you do not want the specified item to be editable.
+    // TODO: Return NO if you do not want the specified item to be editable.
     return NO;
 }
 
+// TODO: Add/remove functionality goes here.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
@@ -144,28 +150,20 @@
 }
 
 /*
-// Override to support rearranging the table view.
+// TODO: Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
 }
 */
 
 /*
-// Override to support conditional rearranging of the table view.
+// TODO: Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the item to be re-orderable.
     return YES;
 }
 */
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    /* TODO
-    NSDate *object = _objects[indexPath.row];
-    self.detailViewController.detailItem = object;
-    */
-}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"openExample"]) {
