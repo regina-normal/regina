@@ -79,6 +79,17 @@ namespace regina {
 class PacketChooser : public QComboBox, public regina::NPacketListener {
     Q_OBJECT
 
+    public:
+        /**
+         * How do we describe the root of the packet (which is hidden to
+         * the user)?
+         */
+        enum RootRole {
+            ROOT_AS_INSERTION_POINT,
+            ROOT_AS_SUBTREE,
+            ROOT_AS_PACKET
+        };
+
     private:
         regina::NPacket* subtree;
             /**< The subtree of packets available for selection. */
@@ -89,6 +100,8 @@ class PacketChooser : public QComboBox, public regina::NPacketListener {
             /**< A list of the packets corresponding to the available
                  entries in the packet chooser. */
 
+        RootRole rootRole;
+            /**< How we describe the root of the packet tree to the user. */
         bool onAutoUpdate;
             /**< Are we listening for changes to the packet tree? */
         bool isUpdating;
@@ -106,12 +119,12 @@ class PacketChooser : public QComboBox, public regina::NPacketListener {
          * passed.
          */
         PacketChooser(regina::NPacket* newSubtree,
-                QWidget* parent);
+                RootRole useRootRole, QWidget* parent);
         PacketChooser(regina::NPacket* newSubtree, PacketFilter* newFilter,
-                QWidget* parent);
-        PacketChooser(regina::NPacket* newSubtree, PacketFilter* newFilter = 0,
-                bool allowNone = false, regina::NPacket* initialSelection = 0,
-                QWidget* parent = 0);
+                RootRole useRootRole, QWidget* parent);
+        PacketChooser(regina::NPacket* newSubtree, PacketFilter* newFilter,
+                RootRole useRootRole, bool allowNone = false,
+                regina::NPacket* initialSelection = 0, QWidget* parent = 0);
         ~PacketChooser();
 
         /**

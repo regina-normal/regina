@@ -64,11 +64,6 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::NPacketListener {
         regina::NPacket* packet;
 
         /**
-         * The packet tree containing this item.
-         */
-        PacketTreeView* tree;
-
-        /**
          * Do we currently believe the underlying packet to be editable?
          * We refer here purely to child packet constraints; whether
          * or not the overall file is read-only is irrelevant here.
@@ -95,8 +90,8 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::NPacketListener {
          * as a friend class.
          */
         PacketTreeItem(PacketTreeView* parent, regina::NPacket* realPacket);
-        PacketTreeItem(PacketTreeItem* parent, regina::NPacket* realPacket);
-        PacketTreeItem(PacketTreeItem* parent, QTreeWidgetItem* after,
+        PacketTreeItem(QTreeWidgetItem* parent, regina::NPacket* realPacket);
+        PacketTreeItem(QTreeWidgetItem* parent, QTreeWidgetItem* after,
                 regina::NPacket* realPacket);
 
         /**
@@ -176,13 +171,18 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::NPacketListener {
  * A visual representation of an entire Regina packet tree.
  *
  * This tree must be filled only with items of type PacketTreeItem.
+ * The item corresponding to the root of the packet tree will \e not be
+ * included in the tree.
  */
-class PacketTreeView : public QTreeWidget {
+class PacketTreeView : public QTreeWidget, public regina::NPacketListener {
     Q_OBJECT
 
     private:
         ReginaMain* mainWindow;
             /**< The main window responsible for this packet tree. */
+
+        regina::NPacket* root;
+            /**< The root of the packet tree. */
 
         regina::NPacket* toSelect;
             /**< If non-zero, this is a packet that will be added to the
@@ -223,6 +223,9 @@ class PacketTreeView : public QTreeWidget {
         /**
          * Finds the item corresponding to the given packet, or 0 if no
          * such item could be found.
+         *
+         * This routine will \e not find the root of the packet tree:
+         * if packet is the tree root then this routine will return 0.
          */
         PacketTreeItem* find(regina::NPacket* packet);
 
@@ -237,27 +240,47 @@ class PacketTreeView : public QTreeWidget {
          * should be used instead of the PacketTreeItem* constructors.
          */
         PacketTreeItem* createAndSelect(regina::NPacket* packet);
-        PacketTreeItem* createAndSelect(PacketTreeItem* parent,
+        PacketTreeItem* createAndSelect(QTreeWidgetItem* parent,
             regina::NPacket* packet);
-        PacketTreeItem* createAndSelect(PacketTreeItem* parent,
+        PacketTreeItem* createAndSelect(QTreeWidgetItem* parent,
             QTreeWidgetItem* after, regina::NPacket* packet);
+
+        /**
+         * Updates this tree to match the underlying packet tree.
+         *
+         * Note that this routine is safe even if some currently
+         * existing tree items correspond to packets that have already
+         * been deleted.
+         */
+        void refreshFullTree();
+        /**
+         * Updates a subtree of this tree to match the underlying packet
+         * subtree.
+         *
+         * PRE: The given packet and the given subtree node correspond.
+         *
+         * The given packet may be 0 (in which case the entire subtree will
+         * be removed, though the subtree root fromItem itself will remain).
+         * The given subtree may not be 0.  It is legitimate to pass the
+         * invisible root item of the tree (in which case fromPacket must
+         * be the tree root).
+         */
+        void refreshSubtree(regina::NPacket* fromPacket,
+            QTreeWidgetItem* fromItem);
+
+        /**
+         * NPacketListener overrides.
+         */
+        void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
+        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
+            bool inParentDestructor);
+        void childrenWereReordered(regina::NPacket* packet);
 
     public slots:
         /**
          * View or edit the packet corresponding to the given list item.
          */
         void packetView(QTreeWidgetItem* packet);
-
-        /**
-         * Updates this tree to match the given packet tree.  The final
-         * result should be the same as for fill(), but if the tree is
-         * already mostly complete then it should be somewhat faster.
-         *
-         * Note that this routine is safe even if some currently
-         * existing tree items correspond to packets that have already
-         * been deleted.
-         */
-        void refresh(regina::NPacket* topPacket);
 
     protected:
         /**
@@ -278,7 +301,7 @@ inline regina::NPacket* PacketTreeItem::getPacket() {
 }
 
 inline ReginaMain* PacketTreeItem::getMainWindow() {
-    return tree->getMainWindow();
+    return static_cast<PacketTreeView*>(treeWidget())->getMainWindow();
 }
 
 inline bool PacketTreeItem::shouldBeExpanded() const {
@@ -287,6 +310,10 @@ inline bool PacketTreeItem::shouldBeExpanded() const {
 
 inline void PacketTreeItem::markShouldBeExpanded(bool state) {
     shouldBeExpanded_ = state;
+}
+
+inline void PacketTreeItem::refreshSubtree() {
+    static_cast<PacketTreeView*>(treeWidget())->refreshSubtree(packet, this);
 }
 
 inline regina::NPacket* PacketTreeView::selectedPacket() {
@@ -298,6 +325,10 @@ inline regina::NPacket* PacketTreeView::selectedPacket() {
 
 inline ReginaMain* PacketTreeView::getMainWindow() {
     return mainWindow;
+}
+
+inline void PacketTreeView::refreshFullTree() {
+    refreshSubtree(root, invisibleRootItem());
 }
 
 #endif

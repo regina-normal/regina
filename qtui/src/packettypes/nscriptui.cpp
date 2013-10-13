@@ -196,8 +196,8 @@ bool ScriptNameDelegate::nameUsedElsewhere(const QString& name, int currRow,
 QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
         const QStyleOptionViewItem&, const QModelIndex&) const {
     PacketChooser* e = new PacketChooser(matriarch_,
-        0 /* filter */, true /* allow "none" */,
-        0 /* initial selection */, parent);
+        0 /* filter */, PacketChooser::ROOT_AS_SUBTREE,
+        true /* allow "none" */, 0 /* initial selection */, parent);
     e->setAutoUpdate(true);
     return e;
 }

@@ -487,7 +487,8 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     label = new QLabel(tr("Apply filter:"));
     hdrLayout->addWidget(label);
     filter = new PacketChooser(surfaces->getTreeMatriarch(),
-        new SingleTypeFilter<regina::NSurfaceFilter>(), true, 0, ui);
+        new SingleTypeFilter<regina::NSurfaceFilter>(),
+        PacketChooser::ROOT_AS_PACKET, true, 0, ui);
     filter->setAutoUpdate(true);
     connect(filter, SIGNAL(activated(int)), this, SLOT(refreshLocal()));
     hdrLayout->addWidget(filter);
