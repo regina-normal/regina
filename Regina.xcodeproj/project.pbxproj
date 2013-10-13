@@ -779,6 +779,7 @@
 		05A47FC71809D1D600F86BFD /* Example.m in Sources */ = {isa = PBXBuildFile; fileRef = 05A47FC61809D1D600F86BFD /* Example.m */; };
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 		05F96C131809F59600C99F96 /* PacketTreeController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C121809F59600C99F96 /* PacketTreeController.mm */; };
+		05F96C17180A153A00C99F96 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C16180A153A00C99F96 /* MBProgressHUD.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1484,6 +1485,8 @@
 		05CA99E518078465006161DC /* registryutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registryutils.h; sourceTree = "<group>"; };
 		05F96C111809F59600C99F96 /* PacketTreeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketTreeController.h; sourceTree = "<group>"; };
 		05F96C121809F59600C99F96 /* PacketTreeController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketTreeController.mm; sourceTree = "<group>"; };
+		05F96C15180A153A00C99F96 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = MBProgressHUD/MBProgressHUD.h; sourceTree = "<group>"; };
+		05F96C16180A153A00C99F96 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = MBProgressHUD/MBProgressHUD.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2451,6 +2454,7 @@
 				052FA1421806103000FAE4DF /* RDetailViewController.mm */,
 				052FA1441806103000FAE4DF /* Images.xcassets */,
 				052FA1301806102F00FAE4DF /* Supporting Files */,
+				05F96C14180A14E600C99F96 /* MBProgressHUD */,
 			);
 			path = ios;
 			sourceTree = "<group>";
@@ -2511,6 +2515,15 @@
 				05A47FA81809CB7600F86BFD /* triangulation.session */,
 			);
 			path = examples;
+			sourceTree = "<group>";
+		};
+		05F96C14180A14E600C99F96 /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				05F96C15180A153A00C99F96 /* MBProgressHUD.h */,
+				05F96C16180A153A00C99F96 /* MBProgressHUD.m */,
+			);
+			name = MBProgressHUD;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3105,6 +3118,7 @@
 				052FA23C180612DD00FAE4DF /* update_shapes.c in Sources */,
 				052FA23A180612DD00FAE4DF /* triangulations.c in Sources */,
 				052FA1BF1806129B00FAE4DF /* nlayeredsolidtorus.cpp in Sources */,
+				05F96C17180A153A00C99F96 /* MBProgressHUD.m in Sources */,
 				05A47FC71809D1D600F86BFD /* Example.m in Sources */,
 				052FA1FD1806129B00FAE4DF /* ntriangle.cpp in Sources */,
 				052FA1C71806129B00FAE4DF /* nsatblockstarter.cpp in Sources */,

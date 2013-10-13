@@ -34,6 +34,7 @@
 #import "PacketTreeController.h"
 #import "RMasterViewController.h"
 #import "RDetailViewController.h"
+#import "MBProgressHUD.h"
 
 @interface RMasterViewController () {
     NSMutableArray *_objects;
@@ -170,10 +171,18 @@
     if ([[segue identifier] isEqualToString:@"openExample"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         
-        // TODO: Activity indicator.
-        // See, perhaps: https://github.com/jdg/MBProgressHUD
-        
-        [[segue destinationViewController] openExample:_examples[indexPath.row]];
+        // We use an activity indicator since files could take some time to load.
+        UIView* rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+        MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:rootView animated:YES];
+        [hud setLabelText:@"Loading"];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            // The real work: load the file.
+            [[segue destinationViewController] openExample:_examples[indexPath.row]];
+
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideHUDForView:rootView animated:YES];
+            });
+        });
     }
 }
 
