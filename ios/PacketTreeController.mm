@@ -66,6 +66,7 @@
 
 @interface PacketTreeController () {
     NSMutableArray *_rows;
+    NSInteger _subtreeRow;
 }
 
 @property (assign, nonatomic) regina::NPacket* tree;
@@ -145,16 +146,8 @@
     _rows = [NSMutableArray array];
     
     regina::NPacket* p;
-    for (p = _node->getFirstTreeChild(); p; p = p->getNextTreeSibling()) {
-        if (p->getPacketType() == regina::NContainer::packetType) {
-            [_rows addObject:[PacketTreeRow packetTreeRowWithPacket:p subtree:false]];
-        } else {
-            [_rows addObject:[PacketTreeRow packetTreeRowWithPacket:p subtree:false]];
-            if (p->getFirstTreeChild()) {
-                [_rows addObject:[PacketTreeRow packetTreeRowWithPacket:p subtree:true]];
-            }
-        }
-    }
+    for (p = _node->getFirstTreeChild(); p; p = p->getNextTreeSibling())
+        [_rows addObject:[PacketTreeRow packetTreeRowWithPacket:p subtree:false]];
 }
 
 - (void)refreshPackets {
@@ -166,40 +159,41 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [_rows count];
+    return (_subtreeRow > 0 ? [_rows count] + 1 : [_rows count]);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell;
     
-    PacketTreeRow* r = _rows[indexPath.row];
-    if (r.subtree) {
+    if (_subtreeRow > 0 && indexPath.row == _subtreeRow) {
         cell = [tableView dequeueReusableCellWithIdentifier:@"Subtree" forIndexPath:indexPath];
         cell.imageView.image = [UIImage imageNamed:@"icons/packet/subtree-32"];
-    } else if ([r packet]->getPacketType() == regina::NContainer::packetType) {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"Container" forIndexPath:indexPath];
-        cell.textLabel.text = [NSString stringWithUTF8String:[r packet]->getPacketLabel().c_str()];
-        unsigned long sub = [r packet]->getNumberOfDescendants();
-        if (sub == 0)
-            cell.detailTextLabel.text = @"";
-        else if (sub == 1)
-            cell.detailTextLabel.text = @"1 subpacket";
-        else
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu subpackets", sub];
-        cell.imageView.image = [UIImage imageNamed:@"icons/packet/container-32"];
-    } else {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"Packet" forIndexPath:indexPath];
-        cell.textLabel.text = [NSString stringWithUTF8String:[r packet]->getPacketLabel().c_str()];
-        unsigned long sub = [r packet]->getNumberOfDescendants();
-        if (sub == 0)
-            cell.detailTextLabel.text = @"";
-        else if (sub == 1)
-            cell.detailTextLabel.text = @"1 subpacket";
-        else
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu subpackets", sub];
-        cell.imageView.image = [PacketManager iconFor:[r packet]];
+        return cell;
     }
+    
+    NSInteger rowIndex;
+    if (_subtreeRow == 0 || _subtreeRow > indexPath.row)
+        rowIndex = indexPath.row;
+    else
+        rowIndex = indexPath.row - 1;
+    
+    PacketTreeRow* r = _rows[rowIndex];
+    regina::NPacket* p = [r packet];
+    if (p->getPacketType() == regina::NContainer::packetType)
+        cell = [tableView dequeueReusableCellWithIdentifier:@"Container" forIndexPath:indexPath];
+    else
+        cell = [tableView dequeueReusableCellWithIdentifier:@"Packet" forIndexPath:indexPath];
+    cell.textLabel.text = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
+    unsigned long sub = p->getNumberOfDescendants();
+    if (sub == 0)
+        cell.detailTextLabel.text = @"";
+    else if (sub == 1)
+        cell.detailTextLabel.text = @"1 subpacket";
+    else
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu subpackets", sub];
+    cell.imageView.image = [PacketManager iconFor:p];
+
     return cell;
 }
 
@@ -208,11 +202,63 @@
     return NO;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (_subtreeRow > 0 && indexPath.row == _subtreeRow) {
+        // The user has selected the existing browse-subtree cell.
+        return;
+    }
+    if (_subtreeRow == indexPath.row + 1) {
+        // The user has selected the packet whose browse-subtree cell is
+        // already visible.
+        return;
+    }
+
+    NSInteger rowIndex;
+    if (_subtreeRow == 0 || _subtreeRow > indexPath.row)
+        rowIndex = indexPath.row;
+    else
+        rowIndex = indexPath.row - 1;
+
+    NSInteger oldSubtreeRow = _subtreeRow;
+    
+    PacketTreeRow* r = _rows[rowIndex];
+    regina::NPacket* p = [r packet];
+    if (p->getPacketType() != regina::NContainer::packetType && p->getFirstTreeChild()) {
+        _subtreeRow = rowIndex + 1;
+        if (oldSubtreeRow == 0) {
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:
+                                               [NSIndexPath indexPathForRow:_subtreeRow inSection:0]]
+                             withRowAnimation:UITableViewRowAnimationTop];
+        } else {
+            [tableView beginUpdates];
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:
+                                               [NSIndexPath indexPathForRow:oldSubtreeRow inSection:0]]
+                             withRowAnimation:UITableViewRowAnimationTop];
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:
+                                               [NSIndexPath indexPathForRow:_subtreeRow inSection:0]]
+                             withRowAnimation:UITableViewRowAnimationTop];
+            [tableView endUpdates];
+        }
+    } else {
+        _subtreeRow = 0;
+        if (oldSubtreeRow > 0)
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:
+                                               [NSIndexPath indexPathForRow:oldSubtreeRow inSection:0]]
+                             withRowAnimation:UITableViewRowAnimationTop];
+    }
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"openSubtree"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+
+        NSInteger packetIndex;
+        if (_subtreeRow <= indexPath.row && _subtreeRow > 0)
+            packetIndex = indexPath.row - 1;
+        else
+            packetIndex = indexPath.row;
         
-        [[segue destinationViewController] openSubtree:[_rows[indexPath.row] packet] root:_tree];
+        [[segue destinationViewController] openSubtree:[_rows[packetIndex] packet] root:_tree];
         [[segue destinationViewController] refreshPackets];
     }
 }
