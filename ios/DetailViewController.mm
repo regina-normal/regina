@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#import "RDetailViewController.h"
+#import "DetailViewController.h"
 
 // TODO: Proof of concept that the engine runs.  Delete this eventually.
 #import "triangulation/nexampletriangulation.h"

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#import "RAppDelegate.h"
+#import "AppDelegate.h"
 
 @implementation RAppDelegate
 

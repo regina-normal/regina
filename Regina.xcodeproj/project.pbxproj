@@ -533,10 +533,10 @@
 		052FA12C1806102F00FAE4DF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA12B1806102F00FAE4DF /* CoreGraphics.framework */; };
 		052FA1341806102F00FAE4DF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 052FA1321806102F00FAE4DF /* InfoPlist.strings */; };
 		052FA1361806103000FAE4DF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1351806102F00FAE4DF /* main.m */; };
-		052FA13A1806103000FAE4DF /* RAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1391806103000FAE4DF /* RAppDelegate.m */; };
+		052FA13A1806103000FAE4DF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1391806103000FAE4DF /* AppDelegate.m */; };
 		052FA13D1806103000FAE4DF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 052FA13B1806103000FAE4DF /* Main.storyboard */; };
-		052FA1401806103000FAE4DF /* RMasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 052FA13F1806103000FAE4DF /* RMasterViewController.m */; };
-		052FA1431806103000FAE4DF /* RDetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1421806103000FAE4DF /* RDetailViewController.mm */; };
+		052FA1401806103000FAE4DF /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 052FA13F1806103000FAE4DF /* MasterViewController.m */; };
+		052FA1431806103000FAE4DF /* DetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1421806103000FAE4DF /* DetailViewController.mm */; };
 		052FA1451806103000FAE4DF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 052FA1441806103000FAE4DF /* Images.xcassets */; };
 		052FA15F1806129B00FAE4DF /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */; };
 		052FA1601806129B00FAE4DF /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C02180600FA00FAE4DF /* ngrouppresentation.cpp */; };
@@ -1442,13 +1442,13 @@
 		052FA1331806102F00FAE4DF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		052FA1351806102F00FAE4DF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		052FA1371806103000FAE4DF /* Regina-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Regina-Prefix.pch"; sourceTree = "<group>"; };
-		052FA1381806103000FAE4DF /* RAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RAppDelegate.h; sourceTree = "<group>"; };
-		052FA1391806103000FAE4DF /* RAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RAppDelegate.m; sourceTree = "<group>"; };
+		052FA1381806103000FAE4DF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		052FA1391806103000FAE4DF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		052FA13C1806103000FAE4DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		052FA13E1806103000FAE4DF /* RMasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMasterViewController.h; sourceTree = "<group>"; };
-		052FA13F1806103000FAE4DF /* RMasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RMasterViewController.m; sourceTree = "<group>"; };
-		052FA1411806103000FAE4DF /* RDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RDetailViewController.h; sourceTree = "<group>"; };
-		052FA1421806103000FAE4DF /* RDetailViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = RDetailViewController.mm; sourceTree = "<group>"; };
+		052FA13E1806103000FAE4DF /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
+		052FA13F1806103000FAE4DF /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
+		052FA1411806103000FAE4DF /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
+		052FA1421806103000FAE4DF /* DetailViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = DetailViewController.mm; sourceTree = "<group>"; };
 		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		052FA23E180613A900FAE4DF /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../../Library/Frameworks/boost.framework; sourceTree = "<group>"; };
 		052FA23F180613A900FAE4DF /* libgmp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmp.framework; path = ../../Library/Frameworks/libgmp.framework; sourceTree = "<group>"; };
@@ -2441,17 +2441,17 @@
 		052FA12F1806102F00FAE4DF /* ios */ = {
 			isa = PBXGroup;
 			children = (
+				052FA1381806103000FAE4DF /* AppDelegate.h */,
+				052FA1391806103000FAE4DF /* AppDelegate.m */,
+				052FA1411806103000FAE4DF /* DetailViewController.h */,
+				052FA1421806103000FAE4DF /* DetailViewController.mm */,
 				05A47FC51809D1D600F86BFD /* Example.h */,
 				05A47FC61809D1D600F86BFD /* Example.m */,
-				052FA1381806103000FAE4DF /* RAppDelegate.h */,
-				052FA1391806103000FAE4DF /* RAppDelegate.m */,
+				052FA13E1806103000FAE4DF /* MasterViewController.h */,
+				052FA13F1806103000FAE4DF /* MasterViewController.m */,
 				052FA13B1806103000FAE4DF /* Main.storyboard */,
 				05F96C111809F59600C99F96 /* PacketTreeController.h */,
 				05F96C121809F59600C99F96 /* PacketTreeController.mm */,
-				052FA13E1806103000FAE4DF /* RMasterViewController.h */,
-				052FA13F1806103000FAE4DF /* RMasterViewController.m */,
-				052FA1411806103000FAE4DF /* RDetailViewController.h */,
-				052FA1421806103000FAE4DF /* RDetailViewController.mm */,
 				052FA1441806103000FAE4DF /* Images.xcassets */,
 				052FA1301806102F00FAE4DF /* Supporting Files */,
 				05F96C14180A14E600C99F96 /* MBProgressHUD */,
@@ -2964,7 +2964,7 @@
 				052FA1631806129B00FAE4DF /* nxmlalgebrareader.cpp in Sources */,
 				052FA1671806129B00FAE4DF /* closedprimemin.cpp in Sources */,
 				052FA1F81806129B00FAE4DF /* nexampletriangulation.cpp in Sources */,
-				052FA1401806103000FAE4DF /* RMasterViewController.m in Sources */,
+				052FA1401806103000FAE4DF /* MasterViewController.m in Sources */,
 				052FA218180612DD00FAE4DF /* close_cusps.c in Sources */,
 				052FA22A180612DD00FAE4DF /* interface.c in Sources */,
 				052FA1EB1806129B00FAE4DF /* sfcombination.cpp in Sources */,
@@ -3023,7 +3023,7 @@
 				052FA234180612DD00FAE4DF /* solve_equations.c in Sources */,
 				052FA1AF1806129B00FAE4DF /* shareableobject.cpp in Sources */,
 				052FA1621806129B00FAE4DF /* nmarkedabeliangroup.cpp in Sources */,
-				052FA1431806103000FAE4DF /* RDetailViewController.mm in Sources */,
+				052FA1431806103000FAE4DF /* DetailViewController.mm in Sources */,
 				052FA1D91806129B00FAE4DF /* ndisc.cpp in Sources */,
 				052FA1A91806129B00FAE4DF /* npdf.cpp in Sources */,
 				052FA22D180612DD00FAE4DF /* o31_matrices.c in Sources */,
@@ -3062,7 +3062,7 @@
 				052FA23B180612DD00FAE4DF /* unix_file_io.c in Sources */,
 				052FA1D41806129B00FAE4DF /* enumerator.cpp in Sources */,
 				052FA18E1806129B00FAE4DF /* ngraphloop.cpp in Sources */,
-				052FA13A1806103000FAE4DF /* RAppDelegate.m in Sources */,
+				052FA13A1806103000FAE4DF /* AppDelegate.m in Sources */,
 				052FA1C31806129B00FAE4DF /* npluggedtorusbundle.cpp in Sources */,
 				052FA1CD1806129B00FAE4DF /* nspiralsolidtorus.cpp in Sources */,
 				052FA230180612DD00FAE4DF /* positioned_tet.c in Sources */,

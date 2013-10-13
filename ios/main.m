@@ -32,7 +32,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "RAppDelegate.h"
+#import "AppDelegate.h"
 
 int main(int argc, char *argv[])
 {
