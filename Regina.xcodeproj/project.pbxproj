@@ -769,6 +769,7 @@
 		057FA7561806184B008E25F6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA7551806184A008E25F6 /* UIKit.framework */; };
 		0588F1181808D43B006BDC79 /* packetregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1161808D43B006BDC79 /* packetregistry-impl.h */; };
 		0588F1191808D43B006BDC79 /* packettype.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1171808D43B006BDC79 /* packettype.h */; };
+		058D0145180B12CA00AC3D11 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 058D0144180B12CA00AC3D11 /* icons */; };
 		05A47FBE1809D11900F86BFD /* closed-hyp-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F971809CB7600F86BFD /* closed-hyp-census.rga */; };
 		05A47FBF1809D11900F86BFD /* closed-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F981809CB7600F86BFD /* closed-nor-census.rga */; };
 		05A47FC01809D11900F86BFD /* closed-or-census-large.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F991809CB7600F86BFD /* closed-or-census-large.rga */; };
@@ -1462,6 +1463,7 @@
 		057FA7551806184A008E25F6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		0588F1161808D43B006BDC79 /* packetregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "packetregistry-impl.h"; sourceTree = "<group>"; };
 		0588F1171808D43B006BDC79 /* packettype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packettype.h; sourceTree = "<group>"; };
+		058D0144180B12CA00AC3D11 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icons; sourceTree = "<group>"; };
 		05A47F971809CB7600F86BFD /* closed-hyp-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census.rga"; sourceTree = "<group>"; };
 		05A47F981809CB7600F86BFD /* closed-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-nor-census.rga"; sourceTree = "<group>"; };
 		05A47F991809CB7600F86BFD /* closed-or-census-large.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census-large.rga"; sourceTree = "<group>"; };
@@ -2441,6 +2443,7 @@
 		052FA12F1806102F00FAE4DF /* ios */ = {
 			isa = PBXGroup;
 			children = (
+				058D0144180B12CA00AC3D11 /* icons */,
 				052FA1381806103000FAE4DF /* AppDelegate.h */,
 				052FA1391806103000FAE4DF /* AppDelegate.m */,
 				052FA1411806103000FAE4DF /* DetailViewController.h */,
@@ -2888,6 +2891,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				052FA1451806103000FAE4DF /* Images.xcassets in Resources */,
+				058D0145180B12CA00AC3D11 /* icons in Resources */,
 				052FA1341806102F00FAE4DF /* InfoPlist.strings in Resources */,
 				052FA13D1806103000FAE4DF /* Main.storyboard in Resources */,
 			);
