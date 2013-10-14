@@ -108,22 +108,22 @@ class NPerm3Test : public CppUnit::TestFixture {
 
         bool looksLikeIdentity(const NPerm3& p) {
             return (p.isIdentity() && p == NPerm3() &&
-                p.getPermCode() == 0 && p.toString() == "012");
+                p.getPermCode() == 0 && p.str() == "012");
         }
 
         bool looksEqual(const NPerm3& p, const NPerm3& q) {
-            return (p == q && (! (p != q)) && p.toString() == q.toString() &&
+            return (p == q && (! (p != q)) && p.str() == q.str() &&
                 p.getPermCode() == q.getPermCode());
         }
 
         bool looksEqual(const NPerm3& p, const NPerm3& q,
                 const std::string& qStr) {
-            return (p == q && (! (p != q)) && p.toString() == q.toString() &&
-                p.getPermCode() == q.getPermCode() && p.toString() == qStr);
+            return (p == q && (! (p != q)) && p.str() == q.str() &&
+                p.getPermCode() == q.getPermCode() && p.str() == qStr);
         }
 
         bool looksDistinct(const NPerm3& p, const NPerm3& q) {
-            return (p != q && (! (p == q)) && p.toString() != q.toString() &&
+            return (p != q && (! (p == q)) && p.str() != q.str() &&
                 p.getPermCode() != q.getPermCode());
         }
 
@@ -290,7 +290,7 @@ class NPerm3Test : public CppUnit::TestFixture {
                 }
             }
 
-            if (p.toString() != name.str()) {
+            if (p.str() != name.str()) {
                 std::ostringstream msg;
                 msg << "The stringification for permutation " << name.str()
                     << " does not appear to be correct.";
@@ -354,7 +354,7 @@ class NPerm3Test : public CppUnit::TestFixture {
                         if (r[x] != p[q[x]]) {
                             std::ostringstream msg;
                             msg << "Multiplication fails for the product "
-                                << p.toString() << " * " << q.toString() << ".";
+                                << p.str() << " * " << q.str() << ".";
                             CPPUNIT_FAIL(msg.str());
                         }
                     }
@@ -387,8 +387,7 @@ class NPerm3Test : public CppUnit::TestFixture {
                                     product3[2] != product4[2]) {
                                 std::ostringstream msg;
                                 msg << "The product is incorrect for "
-                                    << x.toString() << " * "
-                                    << y.toString() << ".";
+                                    << x.str() << " * " << y.str() << ".";
                                 CPPUNIT_FAIL(msg.str());
                             }
                         }
@@ -427,7 +426,7 @@ class NPerm3Test : public CppUnit::TestFixture {
                 if (p.compareWith(p) != 0) {
                     std::ostringstream msg;
                     msg << "Routine compareWith() does not conclude that "
-                        << p.toString() << " == " << p.toString() << ".";
+                        << p.str() << " == " << p.str() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
@@ -440,13 +439,13 @@ class NPerm3Test : public CppUnit::TestFixture {
                     if (p.compareWith(q) != -1) {
                         std::ostringstream msg;
                         msg << "Routine compareWith() does not conclude that "
-                            << p.toString() << " < " << q.toString() << ".";
+                            << p.str() << " < " << q.str() << ".";
                         CPPUNIT_FAIL(msg.str());
                     }
                     if (q.compareWith(p) != 1) {
                         std::ostringstream msg;
                         msg << "Routine compareWith() does not conclude that "
-                            << q.toString() << " > " << p.toString() << ".";
+                            << q.str() << " > " << p.str() << ".";
                         CPPUNIT_FAIL(msg.str());
                     }
                 }

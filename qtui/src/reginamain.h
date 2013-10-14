@@ -99,6 +99,10 @@ class ReginaMain : public QMainWindow {
                  is first opened, which means we show helpful advice, and which
                  also means that opening a file will replace the current
                  (empty) packet tree instead of opening in a new window. */
+        bool fakeRoot_;
+            /**< True if the underlying file had a root packet that
+                 contains real data (is not a container), and so we
+                 added our own "fake" root packet above it. */
 
         /**
          * Actions
@@ -275,9 +279,9 @@ class ReginaMain : public QMainWindow {
         void packetDelete();
 
         /**
-         * Refresh the subtree beneath the currently selected packet.
+         * Refresh the entire packet tree.
          */
-        void subtreeRefresh();
+        void treeRefresh();
 
         /**
          * Packet cloning routines, both with and without cloning the
@@ -414,6 +418,10 @@ class ReginaMain : public QMainWindow {
          * to performing some form of test.  In these cases, the return
          * value can always be cast to a boolean that is true if and
          * only if the test was passed.
+         *
+         * As of Regina 4.95, the root of the packet tree is no longer
+         * visible to the user.  These routines guarantee that the root
+         * packet will not be returned.
          */
         regina::NPacket* checkPacketSelected();
         regina::NPacket* checkSubtreeSelected();

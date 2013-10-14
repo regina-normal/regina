@@ -50,21 +50,20 @@
 using regina::NPacket;
 
 PacketTreeItem::PacketTreeItem(PacketTreeView* parent, NPacket* realPacket) :
-        QTreeWidgetItem(parent), packet(realPacket), tree(parent),
+        QTreeWidgetItem(parent), packet(realPacket),
         shouldBeExpanded_(false) {
     init();
 }
 
-PacketTreeItem::PacketTreeItem(PacketTreeItem* parent,
-        NPacket* realPacket) :
-        QTreeWidgetItem(parent), packet(realPacket), tree(parent->tree),
+PacketTreeItem::PacketTreeItem(QTreeWidgetItem* parent, NPacket* realPacket) :
+        QTreeWidgetItem(parent), packet(realPacket),
         shouldBeExpanded_(false) {
     init();
 }
 
-PacketTreeItem::PacketTreeItem(PacketTreeItem* parent,
+PacketTreeItem::PacketTreeItem(QTreeWidgetItem* parent,
         QTreeWidgetItem* after, NPacket* realPacket) :
-        QTreeWidgetItem(parent, after), packet(realPacket), tree(parent->tree),
+        QTreeWidgetItem(parent, after), packet(realPacket),
         shouldBeExpanded_(false) {
     init();
 }
@@ -88,106 +87,6 @@ void PacketTreeItem::fill() {
                 createAndSelect(this, p);
         childTree->fill();
     }
-}
-
-void PacketTreeItem::refreshSubtree() {
-    // Is this a stale node in the tree?
-    if (! packet) {
-        // Yes, it's a stale node.  Delete all of its children.
-        while (childCount())
-            delete child(0);
-        return;
-    }
-
-    // No, we're looking at a real packet.
-
-    // Before we do anything else: this routine can mess up the current
-    // selection.  Remember it so we can restore it later.
-    regina::NPacket* selected = static_cast<PacketTreeView*>(treeWidget())
-        ->selectedPacket();
-
-    // Run through the child packets and child nodes and ensure they
-    // match up.
-    NPacket* p = packet->getFirstTreeChild();
-    int itemCounter = 0;
-    PacketTreeItem* item = static_cast<PacketTreeItem*>(child(itemCounter));
-    PacketTreeItem* prev = 0;
-    PacketTreeItem* other;
-    for ( ; p; ++itemCounter, p = p->getNextTreeSibling()) {
-        // INV: itemCounter is the current index of p and item.
-        if (! item) {
-            // We've already run out of child nodes.  Add a new one.
-            if (prev)
-                prev = static_cast<PacketTreeView*>(treeWidget())->
-                    createAndSelect(this, prev, p);
-            else
-                prev = static_cast<PacketTreeView*>(treeWidget())->
-                    createAndSelect(this, 0, p);
-            prev->fill();
-
-            // Assume this has come from moving prev to a different
-            // place in the packet tree: always expand.
-            treeWidget()->expandItem(this); // make prev visible;
-            treeWidget()->expandItem(prev); // show prev's children.
-
-            // Variables prev and item are already correct.
-        } else if (item->getPacket() == p) {
-            // They match up.
-            item->refreshSubtree();
-
-            // Update our variables.
-            prev = item;
-            item = static_cast<PacketTreeItem*>(child(itemCounter + 1));
-        } else {
-            int otherCounter;
-            // They both exist but they don't match up.  Hmmm.
-            // Do we have a node for this packet later in the tree?
-            for (otherCounter = itemCounter + 1; otherCounter < childCount();
-                    ++otherCounter) {
-                other = static_cast<PacketTreeItem*>(child(otherCounter));
-                if (other->getPacket() == p) {
-                    // We've found a node for this packet.
-                    // Move it to the correct place.
-                    insertChild(itemCounter, takeChild(otherCounter));
-                    other->refreshSubtree();
-                    other->ensureExpanded();
-
-                    // Update our variables.
-                    // Note that item is already correct.
-                    prev = other;
-                    break;
-                }
-            }
-
-            if (otherCounter == childCount() ) {
-                // We couldn't find a node for this packet anywhere.
-                // Insert a new one.
-                if (prev)
-                    prev = static_cast<PacketTreeView*>(treeWidget())->
-                        createAndSelect(this, prev, p);
-                else
-                    prev = static_cast<PacketTreeView*>(treeWidget())->
-                        createAndSelect(this, 0, p);
-                prev->fill();
-
-                // Assume this has come from moving prev to a different
-                // place in the packet tree: always expand.
-                treeWidget()->expandItem(this); // make prev visible;
-                treeWidget()->expandItem(prev); // show prev's children.
-
-                // Variables prev and item are already correct.
-            }
-        }
-    }
-
-    // Were there any child nodes left over?
-    // Note that childCount() will decrease as we delete children here.
-    while (itemCounter < childCount())
-        delete child(itemCounter);
-
-    // Restore any selection we might have had before.
-    if (selected)
-        static_cast<PacketTreeView*>(treeWidget())->selectPacket(selected);
 }
 
 void PacketTreeItem::refreshLabel() {
@@ -239,7 +138,7 @@ void PacketTreeItem::packetToBeDestroyed(regina::NPacket*) {
 
 void PacketTreeItem::childWasAdded(regina::NPacket*, regina::NPacket*) {
     // Be careful.  We might not be in the GUI thread.
-    QApplication::postEvent(tree, new PacketTreeItemEvent(
+    QApplication::postEvent(treeWidget(), new PacketTreeItemEvent(
         static_cast<QEvent::Type>(EVT_TREE_CHILD_ADDED), this));
 }
 
@@ -260,7 +159,8 @@ void PacketTreeItem::childrenWereReordered(regina::NPacket*) {
 }
 
 PacketTreeView::PacketTreeView(ReginaMain* newMainWindow, QWidget* parent) 
-          : QTreeWidget(parent), mainWindow(newMainWindow), toSelect(0) {
+          : QTreeWidget(parent), mainWindow(newMainWindow),
+          root(0), toSelect(0) {
     setRootIsDecorated(true);
     header()->hide();
     setAlternatingRowColors(false);
@@ -281,7 +181,14 @@ PacketTreeView::PacketTreeView(ReginaMain* newMainWindow, QWidget* parent)
 
 void PacketTreeView::fill(NPacket* topPacket) {
     clear();
-    createAndSelect(topPacket)->fill();
+
+    root = topPacket;
+    root->listen(this);
+
+    // The root packet itself does not appear in the tree.
+    for (NPacket* p = root->getFirstTreeChild();
+            p; p = p->getNextTreeSibling())
+        createAndSelect(p)->fill();
 }
 
 PacketTreeItem* PacketTreeView::find(regina::NPacket* packet) {
@@ -289,7 +196,8 @@ PacketTreeItem* PacketTreeView::find(regina::NPacket* packet) {
         return 0;
 
     // Start at the root of the tree and work down.
-    // Note that the invisible root item might not be a PacketTreeItem,
+    // Note that the root packet itself will not be found by this routine.
+    // Also, note that the invisible root item might not be a PacketTreeItem,
     // and we should not try to cast it as such.
     QTreeWidgetItem* root = invisibleRootItem();
 
@@ -334,14 +242,105 @@ void PacketTreeView::packetView(QTreeWidgetItem* packet) {
             dynamic_cast<PacketTreeItem*>(packet)->getPacket());
 }
 
-void PacketTreeView::refresh(NPacket* topPacket) {
-    if (invisibleRootItem()->childCount() != 1)
-        fill(topPacket);
-    else if (((PacketTreeItem*)invisibleRootItem()->child(0))->
-            getPacket() != topPacket)
-        fill(topPacket);
-    else
-        ((PacketTreeItem*)invisibleRootItem()->child(0))->refreshSubtree();
+void PacketTreeView::refreshSubtree(regina::NPacket* fromPacket,
+        QTreeWidgetItem* fromItem) {
+    // Is this a stale node in the tree?
+    if (! fromPacket) {
+        // Yes, it's a stale node.  Delete all of its children.
+        while (fromItem->childCount())
+            delete fromItem->child(0);
+        return;
+    }
+
+    // No, we're looking at a real packet.
+
+    // Before we do anything else: this routine can mess up the current
+    // selection.  Remember it so we can restore it later.
+    regina::NPacket* selected = selectedPacket();
+
+    // Run through the child packets and child nodes and ensure they
+    // match up.
+    NPacket* p = fromPacket->getFirstTreeChild();
+    int itemCounter = 0;
+    PacketTreeItem* item = static_cast<PacketTreeItem*>(
+        fromItem->child(itemCounter));
+    PacketTreeItem* prev = 0;
+    PacketTreeItem* other;
+    for ( ; p; ++itemCounter, p = p->getNextTreeSibling()) {
+        // INV: itemCounter is the current index of p and item.
+        if (! item) {
+            // We've already run out of child nodes.  Add a new one.
+            if (prev)
+                prev = createAndSelect(fromItem, prev, p);
+            else
+                prev = createAndSelect(fromItem, 0, p);
+            prev->fill();
+
+            // Assume this has come from moving prev to a different
+            // place in the packet tree: always expand.
+            expandItem(fromItem); // make prev visible;
+            expandItem(prev); // show prev's children.
+
+            // Variables prev and item are already correct.
+        } else if (item->getPacket() == p) {
+            // They match up.
+            item->refreshSubtree();
+
+            // Update our variables.
+            prev = item;
+            item = static_cast<PacketTreeItem*>(
+                fromItem->child(itemCounter + 1));
+        } else {
+            int otherCounter;
+            // They both exist but they don't match up.  Hmmm.
+            // Do we have a node for this packet later in the tree?
+            for (otherCounter = itemCounter + 1;
+                    otherCounter < fromItem->childCount();
+                    ++otherCounter) {
+                other = static_cast<PacketTreeItem*>(
+                    fromItem->child(otherCounter));
+                if (other->getPacket() == p) {
+                    // We've found a node for this packet.
+                    // Move it to the correct place.
+                    fromItem->insertChild(itemCounter,
+                        fromItem->takeChild(otherCounter));
+                    other->refreshSubtree();
+                    other->ensureExpanded();
+
+                    // Update our variables.
+                    // Note that item is already correct.
+                    prev = other;
+                    break;
+                }
+            }
+
+            if (otherCounter == fromItem->childCount() ) {
+                // We couldn't find a node for this packet anywhere.
+                // Insert a new one.
+                if (prev)
+                    prev = createAndSelect(fromItem, prev, p);
+                else
+                    prev = createAndSelect(fromItem, 0, p);
+                prev->fill();
+
+                // Assume this has come from moving prev to a different
+                // place in the packet tree: always expand.
+                expandItem(fromItem); // make prev visible;
+                expandItem(prev); // show prev's children.
+
+                // Variables prev and item are already correct.
+            }
+        }
+    }
+
+    // Were there any child nodes left over?
+    // Note that childCount() will decrease as we delete children here.
+    while (itemCounter < fromItem->childCount())
+        delete fromItem->child(itemCounter);
+
+    // Restore any selection we might have had before.
+    if (selected)
+        selectPacket(selected);
 }
 
 PacketTreeItem* PacketTreeView::createAndSelect(regina::NPacket* packet) {
@@ -353,7 +352,7 @@ PacketTreeItem* PacketTreeView::createAndSelect(regina::NPacket* packet) {
     return item;
 }
 
-PacketTreeItem* PacketTreeView::createAndSelect(PacketTreeItem* parent,
+PacketTreeItem* PacketTreeView::createAndSelect(QTreeWidgetItem* parent,
         regina::NPacket* packet) {
     PacketTreeItem* item = new PacketTreeItem(parent, packet);
     if (packet == toSelect) {
@@ -363,7 +362,7 @@ PacketTreeItem* PacketTreeView::createAndSelect(PacketTreeItem* parent,
     return item;
 }
 
-PacketTreeItem* PacketTreeView::createAndSelect(PacketTreeItem* parent,
+PacketTreeItem* PacketTreeView::createAndSelect(QTreeWidgetItem* parent,
         QTreeWidgetItem* after, regina::NPacket* packet) {
     PacketTreeItem* item = new PacketTreeItem(parent, after, packet);
     if (packet == toSelect) {
@@ -378,8 +377,11 @@ void PacketTreeView::customEvent(QEvent* evt) {
         PacketTreeItem* item = static_cast<PacketTreeItemEvent*>(evt)->
             getItem();
 
-        item->refreshSubtree();
-        item->updateEditable();
+        if (item) {
+            item->refreshSubtree();
+            item->updateEditable();
+        } else
+            refreshFullTree();
         mainWindow->setModified(true);
     }
 }
@@ -396,5 +398,28 @@ void PacketTreeView::handleItemCollapsed(QTreeWidgetItem* item) {
     if (! p)
         return;
     p->markShouldBeExpanded(false);
+}
+
+void PacketTreeView::childWasAdded(regina::NPacket*, regina::NPacket*) {
+    // Be careful.  We might not be in the GUI thread.
+    QApplication::postEvent(this, new PacketTreeItemEvent(
+        static_cast<QEvent::Type>(EVT_TREE_CHILD_ADDED), 0 /* root packet */));
+}
+
+void PacketTreeView::childWasRemoved(regina::NPacket*, regina::NPacket*, bool) {
+    // We can't be in the parent destructor, since the tree itself only
+    // listens on the root packet.
+    refreshFullTree();
+    getMainWindow()->setModified(true);
+}
+
+void PacketTreeView::childrenWereReordered(regina::NPacket*) {
+    refreshFullTree();
+    getMainWindow()->setModified(true);
+}
+
+void PacketTreeView::mousePressEvent(QMouseEvent* event) {
+    clearSelection();
+    QTreeView::mousePressEvent(event);
 }
 

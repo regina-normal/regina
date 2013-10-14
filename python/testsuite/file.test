@@ -59,7 +59,7 @@ def dump(tree):
 		print '*'
 		print '************************************************************'
 		print
-		print p.toStringLong()
+		print p.detail()
 		print
 
 		p = p.nextTreePacket()

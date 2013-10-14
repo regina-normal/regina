@@ -53,6 +53,7 @@ void addNSurfaceSubset() {
             init<const regina::NNormalSurfaceList&,
                 const regina::NSurfaceFilter&>())
         .def("getFlavour", &NSurfaceSubset::getFlavour)
+        .def("coords", &NSurfaceSubset::coords)
         .def("allowsAlmostNormal", &NSurfaceSubset::allowsAlmostNormal)
         .def("allowsSpun", &NSurfaceSubset::allowsSpun)
         .def("allowsOriented", &NSurfaceSubset::allowsOriented)

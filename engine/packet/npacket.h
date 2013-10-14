@@ -205,10 +205,6 @@ class REGINA_API NPacket : public ShareableObject {
 
         /*@}*/
         /**
-         * (end: Constructors and Destructors)
-         */
-
-        /**
          * \name Packet Identification
          */
         /*@{*/
@@ -254,6 +250,9 @@ class REGINA_API NPacket : public ShareableObject {
          * Returns a descriptive text string for the packet.
          * The string is of the form <i>label (packet-type)</i>.
          *
+         * If this packet has no label, then the label will be replaced by
+         * the text "(No label)" instead.
+         *
          * @return the descriptive text string.
          */
         std::string getFullName() const;
@@ -296,10 +295,6 @@ class REGINA_API NPacket : public ShareableObject {
         bool makeUniqueLabels(NPacket* reference);
 
         /*@}*/
-        /**
-         * (end: Packet Identification)
-         */
-
         /**
          * \name Tags
          */
@@ -410,10 +405,6 @@ class REGINA_API NPacket : public ShareableObject {
 
         /*@}*/
         /**
-         * (end: Tags)
-         */
-
-        /**
          * \name Event Handling
          */
         /*@{*/
@@ -458,10 +449,6 @@ class REGINA_API NPacket : public ShareableObject {
         bool unlisten(NPacketListener* listener);
 
         /*@}*/
-        /**
-         * (end: Event Handling)
-         */
-
         /**
          * \name Tree Queries
          */
@@ -594,10 +581,6 @@ class REGINA_API NPacket : public ShareableObject {
         unsigned long getTotalTreeSize() const;
 
         /*@}*/
-        /**
-         * (end: Tree Queries)
-         */
-
         /**
          * \name Tree Manipulation
          */
@@ -773,10 +756,6 @@ class REGINA_API NPacket : public ShareableObject {
 
         /*@}*/
         /**
-         * (end: Tree Manipulation)
-         */
-
-        /**
          * \name Searching and Iterating
          */
         /*@{*/
@@ -901,10 +880,6 @@ class REGINA_API NPacket : public ShareableObject {
 
         /*@}*/
         /**
-         * (end: Searching and Iterating)
-         */
-
-        /**
          * \name Packet Dependencies
          */
         /*@{*/
@@ -929,10 +904,6 @@ class REGINA_API NPacket : public ShareableObject {
         bool isPacketEditable() const;
 
         /*@}*/
-        /**
-         * (end: Packet Dependencies)
-         */
-
         /**
          * \name Cloning
          */
@@ -964,10 +935,6 @@ class REGINA_API NPacket : public ShareableObject {
 
         /*@}*/
         /**
-         * (end: Cloning)
-         */
-
-        /**
          * \name File I/O
          */
         /*@{*/
@@ -993,10 +960,6 @@ class REGINA_API NPacket : public ShareableObject {
         void writeXMLFile(std::ostream& out) const;
 
         /*@}*/
-        /**
-         * (end: File I/O)
-         */
-
         /**
          * Returns a newly created XML element reader that will read the
          * contents of a single XML packet element.  You may assume that
@@ -1237,10 +1200,6 @@ inline NPacket::NPacket(NPacket* parent) : firstTreeChild(0), lastTreeChild(0),
 
 inline const std::string& NPacket::getPacketLabel() const {
     return packetLabel;
-}
-
-inline std::string NPacket::getFullName() const {
-    return packetLabel + " (" + getPacketTypeName() + ")";
 }
 
 inline bool NPacket::hasTag(const std::string& tag) const {

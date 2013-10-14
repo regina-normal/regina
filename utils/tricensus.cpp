@@ -225,13 +225,13 @@ template <class CensusType>
 void foundFacePairing(const typename CensusType::Pairing* pairing,
         const typename CensusType::Pairing::IsoList* autos, void* container) {
     if (pairing) {
-        std::cout << pairing->toString() << std::endl;
+        std::cout << pairing->str() << std::endl;
         regina::NPacket* subContainer;
         // If creating a full .rga file, store triangulations for each face
         // pairing in a different container.
         if (subContainers) {
             subContainer = new regina::NContainer();
-            subContainer->setPacketLabel(pairing->toString());
+            subContainer->setPacketLabel(pairing->str());
             static_cast<regina::NPacket*>(container)->insertChildLast(subContainer);
         } else {
             subContainer = static_cast<regina::NPacket*>(container);
@@ -632,10 +632,10 @@ int runCensus() {
                     pairingList += pairingRep;
                     pairingList += '\n';
                 } else {
-                    std::cout << pairing->toString() << std::endl;
+                    std::cout << pairing->str() << std::endl;
                     // TODO: Explicitly generate automorphisms here.
                     foundFacePairing<CensusType>(pairing, 0, census);
-                    pairingList += pairing->toString();
+                    pairingList += pairing->str();
                     pairingList += '\n';
                 }
                 delete pairing;
