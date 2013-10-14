@@ -18,4 +18,14 @@
     [_html loadRequest:request];
 }
 
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
+ navigationType:(UIWebViewNavigationType)navigationType {
+    // Open external links in a real web browser (e.g., Safari)
+    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        [[UIApplication sharedApplication] openURL:[request URL]];
+        return FALSE;
+    }
+    return TRUE;
+}
+
 @end
