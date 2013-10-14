@@ -32,10 +32,6 @@
 
 #import "DetailViewController.h"
 
-// TODO: Proof of concept that the engine runs.  Delete this eventually.
-#import "triangulation/nexampletriangulation.h"
-#import "triangulation/ntriangulation.h"
-
 @interface DetailViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
 - (IBAction)gettingStarted:(id)sender;
@@ -79,12 +75,6 @@
 	// Do any additional setup after loading the view, typically from a nib.
     [self configureView];
 
-    // TODO: Proof of concept that the engine runs.  Delete this eventually.
-    regina::NTriangulation* t = regina::NExampleTriangulation::weberSeifert();
-    NSString *h1 = [NSString stringWithUTF8String:t->getHomologyH1().toString().c_str()];
-    [self.detailDescriptionLabel setText:[NSString stringWithFormat:
-                                          @"Weber-Seifert: H1 = %@", h1]];
-    delete t;
 }
 
 - (void)didReceiveMemoryWarning
@@ -97,7 +87,7 @@
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
 {
-    barButtonItem.title = NSLocalizedString(@"Master", @"Master");
+    barButtonItem.title = NSLocalizedString(@"Documents", @"Documents");
     [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
     self.masterPopoverController = popoverController;
 }
