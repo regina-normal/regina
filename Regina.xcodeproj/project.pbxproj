@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0513753D1809B8D3002E525B /* coordregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753B1809B8D2002E525B /* coordregistry-impl.h */; };
 		0513753E1809B8D3002E525B /* coordregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753C1809B8D2002E525B /* coordregistry.h */; };
+		051E5F7D180C636000C9EF04 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 051E5F7C180C636000C9EF04 /* Settings.bundle */; };
 		0523D88A180B54850094DAAD /* PacketManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManager.mm */; };
 		052F9E83180600FB00FAE4DF /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */; };
 		052F9E84180600FB00FAE4DF /* nabeliangroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C01180600FA00FAE4DF /* nabeliangroup.h */; };
@@ -819,6 +820,7 @@
 /* Begin PBXFileReference section */
 		0513753B1809B8D2002E525B /* coordregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "coordregistry-impl.h"; sourceTree = "<group>"; };
 		0513753C1809B8D2002E525B /* coordregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coordregistry.h; sourceTree = "<group>"; };
+		051E5F7C180C636000C9EF04 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManager.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManager.mm; sourceTree = "<group>"; };
 		052F9BFF180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -2475,6 +2477,7 @@
 				052FA1301806102F00FAE4DF /* Supporting Files */,
 				054F7E2E180B99320090B1F3 /* HTML */,
 				05F96C14180A14E600C99F96 /* MBProgressHUD */,
+				051E5F7C180C636000C9EF04 /* Settings.bundle */,
 			);
 			path = ios;
 			sourceTree = "<group>";
@@ -2917,6 +2920,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				051E5F7D180C636000C9EF04 /* Settings.bundle in Resources */,
 				052FA1451806103000FAE4DF /* Images.xcassets in Resources */,
 				058D0145180B12CA00AC3D11 /* icons in Resources */,
 				05B62166180B9D7300CCB90B /* title.png in Resources */,
