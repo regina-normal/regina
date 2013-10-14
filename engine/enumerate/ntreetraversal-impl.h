@@ -920,7 +920,7 @@ bool NTreeSingleSoln<LPConstraint, BanConstraint, Integer>::find() {
                 lpSlot_[level_ + 1]->extractSolution(*v, type_);
                 NNormalSurface* f = new NNormalSurface(
                     origTableaux_.tri(), v);
-                std::cout << f->toString() << std::endl;
+                std::cout << f->str() << std::endl;
                 delete f;
             }
 #endif

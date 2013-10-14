@@ -65,7 +65,8 @@ ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
     QLabel* l = new QLabel(tr("Import beneath:"));
     l->setWhatsThis(expln);
     hStrip->addWidget(l);
-    chooser = new PacketChooser(tree, useFilter, false, defaultParent);
+    chooser = new PacketChooser(tree, useFilter,
+        PacketChooser::ROOT_AS_INSERTION_POINT, false, defaultParent);
     chooser->setWhatsThis(expln);
     hStrip->addWidget(chooser, 1);
 

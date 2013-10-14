@@ -45,28 +45,28 @@
 using regina::NPacket;
 
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
-        QWidget* parent) :
+        RootRole useRootRole, QWidget* parent) :
         QComboBox(parent), subtree(newSubtree), filter(0),
-        onAutoUpdate(false), isUpdating(false) {
+        rootRole(useRootRole), onAutoUpdate(false), isUpdating(false) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     fill(false, 0);
 }
 
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
-        PacketFilter* newFilter, QWidget* parent) :
+        PacketFilter* newFilter, RootRole useRootRole, QWidget* parent) :
         QComboBox(parent), subtree(newSubtree), filter(newFilter),
-        onAutoUpdate(false), isUpdating(false) {
+        rootRole(useRootRole), onAutoUpdate(false), isUpdating(false) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     fill(false, 0);
 }
 
 PacketChooser::PacketChooser(regina::NPacket* newSubtree,
-        PacketFilter* newFilter, bool allowNone,
+        PacketFilter* newFilter, RootRole useRootRole, bool allowNone,
         regina::NPacket* initialSelection, QWidget* parent) :
         QComboBox(parent), subtree(newSubtree), filter(newFilter),
-        onAutoUpdate(false), isUpdating(false) {
+        rootRole(useRootRole), onAutoUpdate(false), isUpdating(false) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     fill(allowNone, initialSelection);
@@ -205,7 +205,21 @@ void PacketChooser::fill(bool allowNone, NPacket* select) {
     regina::NPacket* p = subtree;
     while (p && subtree->isGrandparentOf(p)) {
         if ((! filter) || (filter->accept(p))) {
-            addItem(PacketManager::icon(p), p->getPacketLabel().c_str());
+            if (p->getTreeParent())
+                addItem(PacketManager::icon(p), p->getPacketLabel().c_str());
+            else switch (rootRole) {
+                case ROOT_AS_INSERTION_POINT:
+                    // No icon for this role.
+                    addItem(tr("<Top level>"));
+                    break;
+                case ROOT_AS_SUBTREE:
+                    // No icon for this role.
+                    addItem(tr("<Entire tree>"));
+                    break;
+                case ROOT_AS_PACKET:
+                    addItem(PacketManager::icon(p), tr("<Root packet>"));
+                    break;
+            }
             packets.push_back(p);
             if (onAutoUpdate)
                 p->listen(this);

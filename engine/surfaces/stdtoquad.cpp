@@ -61,7 +61,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced() const {
     NTriangulation* owner = getTriangulation();
 
     // Basic sanity checks:
-    if (flavour_ != Variant::standardFlavour())
+    if (coords_ != Variant::standardCoords())
         return 0;
     if (which_ != (NS_EMBEDDED_ONLY | NS_VERTEX))
         return 0;
@@ -70,7 +70,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced() const {
 
     // Prepare a final surface list.
     NNormalSurfaceList* ans = new NNormalSurfaceList(
-        Variant::reducedFlavour(), NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM);
+        Variant::reducedCoords(), NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM);
 
     // Get the empty triangulation out of the way now.
     unsigned long n = owner->getNumberOfTetrahedra();
@@ -112,7 +112,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced() const {
             dominates = true;
             strict = false;
             for (tet = 0; tet < n && dominates; ++tet)
-                for (quad = 0; quad < Variant::reducedCoords; ++quad)
+                for (quad = 0; quad < Variant::reducedPerTet; ++quad)
                     if ((*use[i])[Variant::stdPos(tet, 4 + quad)] ==
                                 NLargeInteger::zero &&
                             (*use[j])[Variant::stdPos(tet, 4 + quad)] !=
@@ -137,7 +137,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced() const {
             v = new typename Variant::ReducedVector(Variant::redLen(n));
             pos = 0;
             for (tet = 0; tet < n; ++tet)
-                for (quad = 0; quad < Variant::reducedCoords; ++quad)
+                for (quad = 0; quad < Variant::reducedPerTet; ++quad)
                     v->setElement(pos++,
                         (*use[i])[Variant::stdPos(tet, 4 + quad)]);
             ans->surfaces.push_back(new NNormalSurface(owner, v));

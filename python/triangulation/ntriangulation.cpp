@@ -328,6 +328,7 @@ void addNTriangulation() {
             return_value_policy<manage_new_object>())
         .def("isoSigComponentSize", &NTriangulation::isoSigComponentSize)
         .def("dumpConstruction", &NTriangulation::dumpConstruction)
+        .def("snapPea", &NTriangulation::snapPea)
         .def("enterTextTriangulation", enterTextTriangulation_stdio,
             return_value_policy<manage_new_object>())
         .staticmethod("rehydrate")

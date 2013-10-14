@@ -70,7 +70,7 @@ struct REGINA_API NNormalSurfaceList::NormalSpec {
      * This has been made a routine (not a constant) to ensure the
      * correct return type.  Perhaps this can be changed to an enum some day...
      */
-    inline static NormalCoords standardFlavour() {
+    inline static NormalCoords standardCoords() {
         return NS_STANDARD;
     }
     /**
@@ -79,18 +79,18 @@ struct REGINA_API NNormalSurfaceList::NormalSpec {
      * This has been made a routine (not a constant) to ensure the
      * correct return type.  Perhaps this can be changed to an enum some day...
      */
-    inline static NormalCoords reducedFlavour() {
+    inline static NormalCoords reducedCoords() {
         return NS_QUAD;
     }
 
     /**
      * Returns the number of coordinates per tetrahedron in standard form.
      */
-    static const unsigned totalCoords = 7;
+    static const unsigned totalPerTet = 7;
     /**
      * Returns the number of coordinates per tetrahedron in reduced form.
      */
-    static const unsigned reducedCoords = 3;
+    static const unsigned reducedPerTet = 3;
 
     /**
      * Returns the total length of a vector in standard form for the
@@ -153,7 +153,7 @@ struct REGINA_API NNormalSurfaceList::AlmostNormalSpec {
      * This has been made a routine (not a constant) to ensure the
      * correct return type.  Perhaps this can be changed to an enum some day...
      */
-    inline static NormalCoords standardFlavour() {
+    inline static NormalCoords standardCoords() {
         return NS_AN_STANDARD;
     }
 
@@ -163,18 +163,18 @@ struct REGINA_API NNormalSurfaceList::AlmostNormalSpec {
      * This has been made a routine (not a constant) to ensure the
      * correct return type.  Perhaps this can be changed to an enum some day...
      */
-    inline static NormalCoords reducedFlavour() {
+    inline static NormalCoords reducedCoords() {
         return NS_AN_QUAD_OCT;
     }
 
     /**
      * Returns the number of coordinates per tetrahedron in standard form.
      */
-    static const unsigned totalCoords = 10;
+    static const unsigned totalPerTet = 10;
     /**
      * Returns the number of coordinates per tetrahedron in reduced form.
      */
-    static const unsigned reducedCoords = 6;
+    static const unsigned reducedPerTet = 6;
 
     /**
      * Returns the total length of a vector in standard form for the

@@ -37,13 +37,13 @@
 
 namespace regina {
 
-std::string ShareableObject::toString() const {
+std::string ShareableObject::str() const {
     std::ostringstream out;
     writeTextShort(out);
     return out.str();
 }
 
-std::string ShareableObject::toStringLong() const {
+std::string ShareableObject::detail() const {
     std::ostringstream out;
     writeTextLong(out);
     return out.str();

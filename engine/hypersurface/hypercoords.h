@@ -51,12 +51,12 @@ namespace regina {
  */
 
 /**
- * Represents different flavours of coordinate system that can
+ * Represents different coordinate systems that can
  * be used for enumerating and displaying normal hypersurface
  * within 4-manifold triangulations.
  *
  * IDs 0-9999 are reserved for future use by Regina.  If you are extending
- * Regina to include your own flavour of coordinate system, you should choose
+ * Regina to include your own coordinate system, you should choose
  * an ID >= 10000.
  */
 enum HyperCoords {
@@ -68,8 +68,8 @@ enum HyperCoords {
 
     /**
      * Represents edge weight coordinates for normal hypersurfaces.
-     * This flavour is for representation only; hypersurface
-     * vectors and lists of this flavour cannot be created.
+     * This coordinate system is for representation only; hypersurface
+     * vectors and lists cannot be created in this coordinate system.
      */
     HS_EDGE_WEIGHT = 200
 };

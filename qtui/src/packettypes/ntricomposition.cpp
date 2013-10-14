@@ -117,7 +117,8 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     isoSelectArea->addWidget(label);
     isoTest = new PacketChooser(tri->getTreeMatriarch(),
-        new SingleTypeFilter<NTriangulation>(), true, 0, ui);
+        new SingleTypeFilter<NTriangulation>(),
+        PacketChooser::ROOT_AS_PACKET, true, 0, ui);
     isoTest->setAutoUpdate(true);
     isoTest->setWhatsThis(msg);
     connect(isoTest, SIGNAL(activated(int)), this, SLOT(updateIsoPanel()));
@@ -321,7 +322,7 @@ void NTriCompositionUI::viewIsomorphism() {
             details += QString("%1 (0123)  &rarr;  %2 (%3)").
                 arg(i).
                 arg(isomorphism->tetImage(i)).
-                arg(isomorphism->facePerm(i).toString().c_str())
+                arg(isomorphism->facePerm(i).str().c_str())
                 ;
     } else {
         title = tr("Details of the isomorphism by which "
@@ -339,7 +340,7 @@ void NTriCompositionUI::viewIsomorphism() {
                 details += QString("%1 (0123)  &rarr;  %2 (%3)").
                     arg(i).
                     arg(isomorphism->tetImage(i)).
-                    arg(isomorphism->facePerm(i).toString().c_str())
+                    arg(isomorphism->facePerm(i).str().c_str())
                     ;
         else
             for (unsigned long i = 0;
@@ -347,7 +348,7 @@ void NTriCompositionUI::viewIsomorphism() {
                 details += QString("%2 (%3)  &rarr;  %1 (0123)").
                     arg(i).
                     arg(isomorphism->tetImage(i)).
-                    arg(isomorphism->facePerm(i).toString().c_str())
+                    arg(isomorphism->facePerm(i).str().c_str())
                     ;
     }
 
@@ -523,7 +524,7 @@ void NTriCompositionUI::describeSatRegion(const NSatRegion& region,
                 tr("No reflections"));
 
         (new QTreeWidgetItem(details))->setText(0,
-            spec.block->toString().c_str());
+            spec.block->str().c_str());
     }
 }
 

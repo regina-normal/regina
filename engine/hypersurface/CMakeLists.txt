@@ -20,8 +20,8 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    hsflavourregistry.h
-    hsflavourregistry-impl.h
+    hscoordregistry.h
+    hscoordregistry-impl.h
     hypercoords.h
     nhsmirrored.h
     nhsstandard.h

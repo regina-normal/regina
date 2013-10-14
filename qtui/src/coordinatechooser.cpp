@@ -65,7 +65,7 @@ void CoordinateChooser::insertAllViewers(regina::NNormalSurfaceList* surfaces) {
         // For lists created with Regina 4.5.1 or earlier, we have
         // already taken out surfaces with multiple octagons.  Make this
         // clear to the user.
-        if (surfaces->getFlavour() == regina::NS_AN_LEGACY)
+        if (surfaces->coords() == regina::NS_AN_LEGACY)
             insertSystem(regina::NS_AN_LEGACY);
         else {
             insertSystem(regina::NS_AN_STANDARD);
