@@ -71,11 +71,8 @@
 
 @property (assign, nonatomic) regina::NPacket* tree;
 @property (assign, nonatomic) regina::NPacket* node;
-@property (assign, nonatomic) bool example;
-@property (strong, nonatomic) NSString* filename;
 
 - (bool)loadTreeResource:(NSString*)filename;
-- (void)configureView;
 - (void)fill;
 
 @end
@@ -84,7 +81,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self configureView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -98,17 +94,15 @@
 }
 
 - (void)openExample:(Example*)e {
-    _example = true;
-    _filename = e.desc;
     [self loadTreeResource:e.file];
+    [self setTitle:e.desc];
     // TODO: Trap errors.
 }
 
 - (void)openSubtree:(regina::NPacket *)p root:(regina::NPacket*)r {
-    _example = false;
-    _filename = @"Subtree";
     _tree = r;
     _node = p;
+    [self setTitle:[NSString stringWithUTF8String:p->getPacketLabel().c_str()]];
 }
 
 - (bool)loadTreeResource:(NSString*)filename {
@@ -133,10 +127,6 @@
     NSLog(@"Loaded file: %@", filename);
     _node = _tree;
     return true;
-}
-
-- (void)configureView {
-    [self setTitle:_filename];
 }
 
 - (void)fill {
