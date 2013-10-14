@@ -576,7 +576,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             t.barycentricSubdivision();
             t.intelligentSimplify();
 
-            std::string ans = t.getHomologyH1().toString();
+            std::string ans = t.getHomologyH1().str();
 
             if (ans != h1) {
                 std::ostringstream msg;
@@ -803,7 +803,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             t.barycentricSubdivision();
             t.intelligentSimplify();
 
-            std::string ans = t.getHomologyH1().toString();
+            std::string ans = t.getHomologyH1().str();
 
             if (ans != h1) {
                 std::ostringstream msg;
@@ -920,7 +920,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
         }
 
         void verifyHomologyH1(const Dim4Triangulation& tri, const char* H1) {
-            std::string ans = tri.getHomologyH1().toString();
+            std::string ans = tri.getHomologyH1().str();
             if (ans != H1) {
                 std::ostringstream msg;
                 msg << "Triangulation " << tri.getPacketLabel()
@@ -1002,7 +1002,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
                         << tri.getPacketLabel() << " is non-isomorphic.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (t->toStringLong() != canonical.toStringLong()) {
+                if (t->detail() != canonical.detail()) {
                     std::ostringstream msg;
                     msg << "Canonical form for "
                         << tri.getPacketLabel() << " is inconsistent.";

@@ -41,6 +41,7 @@
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/nxmlpacketreader.h"
+#include "utilities/stringutils.h"
 #include "utilities/zstream.h"
 
 namespace regina {
@@ -55,6 +56,9 @@ namespace {
                 /**< Sits above the entire packet tree read from file. */
             bool isReginaData;
                 /**< Are we actually reading a \<reginadata ...\> element? */
+            std::string version;
+                /**< The version of Regina that created this file, or
+                     the empty string if this is not known. */
 
         public:
             /**
@@ -70,10 +74,21 @@ namespace {
                     return 0;
             }
 
+            const std::string& getVersion() const {
+                return version;
+            }
+
             virtual void startElement(const std::string& n,
-                    const regina::xml::XMLPropertyDict&, NXMLElementReader*) {
-                if (n == "reginadata")
+                    const regina::xml::XMLPropertyDict& props,
+                    NXMLElementReader*) {
+                if (n == "reginadata") {
                     isReginaData = true;
+
+                    regina::xml::XMLPropertyDict::const_iterator it =
+                        props.find("engine");
+                    if (it != props.end())
+                        version = stripWhitespace(it->second);
+                }
             }
 
             virtual void abort(NXMLElementReader*) {

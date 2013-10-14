@@ -32,16 +32,17 @@
 
 /* end stub */
 
-/*! \file surfaces/hsflavourregistry-impl.h
+/*! \file surfaces/hscoordregistry-impl.h
  *  \brief Contains the registry of all coordinate systems that can be used
  *  to create and store normal hypersurfaces in 4-manifold triangulations.
  *
- *  Each time a new flavour is created, this registry must be updated to:
+ *  Each time a new coordinate system is created, this registry must be
+ *  updated to:
  *
  *  - add a #include line for the corresponding vector subclass;
- *  - add a corresponding case to each implementation of forFlavour().
+ *  - add a corresponding case to each implementation of forCoords().
  *
- *  See hsflavourregistry.h for how other routines can use this registry.
+ *  See hscoordregistry.h for how other routines can use this registry.
  */
 
 #ifndef __HSFLAVOURREGISTRY_IMPL_H
@@ -49,24 +50,24 @@
 #define __HSFLAVOURREGISTRY_IMPL_H
 #endif
 
-#include "hypersurface/hsflavourregistry.h"
+#include "hypersurface/hscoordregistry.h"
 #include "hypersurface/nhsstandard.h"
 
 namespace regina {
 
 template <typename FunctionObject>
-inline typename FunctionObject::ReturnType forFlavour(
-        HyperCoords flavour, FunctionObject func,
+inline typename FunctionObject::ReturnType forCoords(
+        HyperCoords coords, FunctionObject func,
         typename FunctionObject::ReturnType defaultReturn) {
-    switch (flavour) {
+    switch (coords) {
         case HS_STANDARD : return func(HyperInfo<HS_STANDARD>());
         default: return defaultReturn;
     }
 }
 
 template <typename VoidFunctionObject>
-inline void forFlavour(HyperCoords flavour, VoidFunctionObject func) {
-    switch (flavour) {
+inline void forCoords(HyperCoords coords, VoidFunctionObject func) {
+    switch (coords) {
         case HS_STANDARD : func(HyperInfo<HS_STANDARD>()); break;
         default: break;
     }

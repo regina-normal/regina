@@ -324,6 +324,11 @@ std::string NGenericTriangulation<dim>::isoSig(const Triangulation& tri,
 
 template <int dim>
 std::string NGenericTriangulation<dim>::isoSig(const Triangulation& tri) {
+    // These typedefs are already present in the class declaration,
+    // but gcc 4.7.3 seem to break unless we include them here also.
+    typedef typename DimTraits<dim>::Perm Perm;
+    typedef typename DimTraits<dim>::Triangulation Triangulation;
+
     if (tri.getSimplices().empty()) {
         char c[2];
         c[0] = SCHAR(0);
@@ -365,8 +370,12 @@ std::string NGenericTriangulation<dim>::isoSig(const Triangulation& tri) {
 }
 
 template <int dim>
-typename NGenericTriangulation<dim>::Triangulation*
+typename DimTraits<dim>::Triangulation*
         NGenericTriangulation<dim>::fromIsoSig(const std::string& sig) {
+    // These typedefs are already present in the class declaration,
+    // but gcc 4.7.3 seem to break unless we include them here also.
+    typedef typename DimTraits<dim>::Perm Perm;
+
     std::auto_ptr<Triangulation> ans(new Triangulation());
 
     NPacket::ChangeEventSpan span(ans.get());

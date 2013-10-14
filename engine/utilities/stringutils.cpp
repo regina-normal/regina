@@ -151,4 +151,20 @@ bool valueOf(const std::string& str, NBoolSet& dest) {
     return true;
 }
 
+std::string stringToToken(const char* str) {
+    std::string ans(str);
+    for (std::string::iterator it = ans.begin(); it != ans.end(); it++)
+        if (isspace(*it))
+            *it = '_';
+    return ans;
+}
+
+std::string stringToToken(const std::string& str) {
+    std::string ans(str);
+    for (std::string::iterator it = ans.begin(); it != ans.end(); it++)
+        if (isspace(*it))
+            *it = '_';
+    return ans;
+}
+
 } // namespace regina

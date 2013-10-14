@@ -94,14 +94,24 @@ class REGINA_API NSurfaceSubset : public ShareableObject {
         virtual ~NSurfaceSubset();
 
         /**
-         * Returns the flavour of coordinate system being used by the
+         * Returns the coordinate system being used by the
          * surfaces stored in this set.
          *
-         * @return the flavour of coordinate system used.
+         * \deprecated Users should switch to the identical routine
+         * coords() instead.
+         *
+         * @return the coordinate system used.
          */
         NormalCoords getFlavour() const;
         /**
-         * Determines if the flavour of coordinate system being used
+         * Returns the coordinate system being used by the
+         * surfaces stored in this set.
+         *
+         * @return the coordinate system used.
+         */
+        NormalCoords coords() const;
+        /**
+         * Determines if the coordinate system being used
          * allows for almost normal surfaces, that is, allows for
          * octagonal discs.
          *
@@ -110,7 +120,7 @@ class REGINA_API NSurfaceSubset : public ShareableObject {
          */
         bool allowsAlmostNormal() const;
         /**
-         * Determines if the flavour of coordinate system being used
+         * Determines if the coordinate system being used
          * allows for spun normal surfaces.
          *
          * @return \c true if and only if spun normal surface are
@@ -118,7 +128,7 @@ class REGINA_API NSurfaceSubset : public ShareableObject {
          */
         bool allowsSpun() const;
         /**
-         * Determines if the flavour of coordinate system being used
+         * Determines if the coordinate system being used
          * allows for transversely oriented normal surfaces.
          *
          * @return \c true if and only if transverse orientations are
@@ -185,7 +195,10 @@ inline NSurfaceSubset::~NSurfaceSubset() {
 }
 
 inline NormalCoords NSurfaceSubset::getFlavour() const {
-    return source.getFlavour();
+    return source.coords();
+}
+inline NormalCoords NSurfaceSubset::coords() const {
+    return source.coords();
 }
 inline bool NSurfaceSubset::allowsAlmostNormal() const {
     return source.allowsAlmostNormal();

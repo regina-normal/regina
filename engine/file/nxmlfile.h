@@ -106,7 +106,7 @@ REGINA_API NPacket* readXMLFile(const char* fileName);
  * will return 0.  If a lower-level packet could not be read, it (and
  * its descendants) will simply be ignored.
  *
- * The given file may be opened and closed multiple times during this routine.
+ * The given file might be opened and closed multiple times during this routine.
  *
  * \i18n This routine makes no assumptions about the
  * \ref i18n "character encoding" used in the given file \e name, and simply

@@ -203,10 +203,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
 
         /*@}*/
         /**
-         * (end: Constructors and Destructors)
-         */
-
-        /**
          * \name Packet Administration
          */
         /*@{*/
@@ -216,10 +212,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
         virtual bool dependsOnParent() const;
 
         /*@}*/
-        /**
-         * (end: Packet Administration)
-         */
-
         /**
          * \name Pentachora
          */
@@ -469,10 +461,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
         void moveContentsTo(Dim4Triangulation& dest);
 
         /*@}*/
-        /**
-         * (end: Pentachora)
-         */
-
         /**
          * \name Skeletal Queries
          */
@@ -791,10 +779,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
 
         /*@}*/
         /**
-         * (end: Skeletal Queries)
-         */
-
-        /**
          * \name Isomorphism Testing
          */
         /*@{*/
@@ -925,10 +909,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
 
         /*@}*/
         /**
-         * (end: Isomorphism Testing)
-         */
-
-        /**
          * \name Basic Properties
          */
         /*@{*/
@@ -1048,10 +1028,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
 
         /*@}*/
         /**
-         * (end: Basic Properties)
-         */
-
-        /**
          * \name Algebraic Properties
          */
         /*@{*/
@@ -1135,10 +1111,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
         const NAbelianGroup& getHomologyH2() const;
 
         /*@}*/
-        /**
-         * (end: Algebraic Properties)
-         */
-
         /**
          * \name Skeletal Transformations
          */
@@ -1513,10 +1485,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
 
         /*@}*/
         /**
-         * (end: Skeletal Transformations)
-         */
-
-        /**
          * \name Subdivisions and Covers
          */
         /*@{*/
@@ -1530,10 +1498,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
         void barycentricSubdivision();
 
         /*@}*/
-        /**
-         * (end: Subdivisions and Covers)
-         */
-
         /**
          * \name Building Triangulations
          */
@@ -1551,56 +1515,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * @param source the triangulation whose copy will be inserted.
          */
         void insertTriangulation(const Dim4Triangulation& source);
-        /**
-         * Constructs the isomorphism signature for this triangulation.
-         *
-         * An <i>isomorphism signature</i> is a compact text representation of
-         * a triangulation.  Unlike dehydrations for 3-manifold triangulations,
-         * an isomorphism signature uniquely determines a triangulation up
-         * to combinatorial isomorphism.  That is, two 4-manifold
-         * triangulations are combinatorially isomorphic if and only if
-         * their isomorphism signatures are the same.
-         *
-         * The isomorphism signature is constructed entirely of
-         * printable characters, and has length proportional to
-         * <tt>n log n</tt>, where \a n is the number of pentachora.
-         *
-         * Isomorphism signatures are more general than dehydrations:
-         * they can be used with any triangulation (including closed, ideal,
-         * bounded, invalid and/or disconnected triangulations, as well
-         * as triangulations with large numbers of pentachora).
-         *
-         * The time required to construct the isomorphism signature of a
-         * triangulation is <tt>O(n^2 log^2 n)</tt>.
-         *
-         * The routine fromIsoSig() can be used to recover a
-         * triangulation from an isomorphism signature.  The triangulation
-         * recovered might not be identical to the original, but it will be
-         * combinatorially isomorphic.
-         *
-         * @return the isomorphism signature of this triangulation.
-         */
-        std::string isoSig() const;
-        /**
-         * Recovers a full triangulation from an isomorphism signature.
-         * See isoSig() for more information on isomorphism signatures.
-         *
-         * The triangulation that is returned will be newly created.
-         *
-         * Calling isoSig() followed by fromIsoSig() is not guaranteed to
-         * produce an identical triangulation to the original, but it
-         * \e is guaranteed to produce a combinatorially isomorphic
-         * triangulation.
-         *
-         * @param signature the isomorphism signature of the
-         * triangulation to construct.  Note that, unlike dehydration
-         * strings for 3-manifold triangulations, case is important for
-         * isomorphism signatures.
-         * @return a newly allocated triangulation if the reconstruction was
-         * successful, or null if the given string was not a valid
-         * isomorphism signature.
-         */
-        static Dim4Triangulation* fromIsoSig(const std::string& signature);
         /**
          * Inserts into this triangulation a set of pentachora and their
          * gluings as described by the given integer arrays.
@@ -1654,6 +1568,44 @@ class REGINA_API Dim4Triangulation : public NPacket,
          */
         void insertConstruction(unsigned long nPentachora,
             const int adjacencies[][5], const int gluings[][5][5]);
+
+        /*@}*/
+        /**
+         * \name Exporting Triangulations
+         */
+        /*@{*/
+
+        /**
+         * Constructs the isomorphism signature for this triangulation.
+         *
+         * An <i>isomorphism signature</i> is a compact text representation of
+         * a triangulation.  Unlike dehydrations for 3-manifold triangulations,
+         * an isomorphism signature uniquely determines a triangulation up
+         * to combinatorial isomorphism.  That is, two 4-manifold
+         * triangulations are combinatorially isomorphic if and only if
+         * their isomorphism signatures are the same.
+         *
+         * The isomorphism signature is constructed entirely of
+         * printable characters, and has length proportional to
+         * <tt>n log n</tt>, where \a n is the number of pentachora.
+         *
+         * Isomorphism signatures are more general than dehydrations:
+         * they can be used with any triangulation (including closed, ideal,
+         * bounded, invalid and/or disconnected triangulations, as well
+         * as triangulations with large numbers of pentachora).
+         *
+         * The time required to construct the isomorphism signature of a
+         * triangulation is <tt>O(n^2 log^2 n)</tt>.
+         *
+         * The routine fromIsoSig() can be used to recover a
+         * triangulation from an isomorphism signature.  The triangulation
+         * recovered might not be identical to the original, but it will be
+         * combinatorially isomorphic.
+         *
+         * @return the isomorphism signature of this triangulation.
+         */
+        std::string isoSig() const;
+        using NGenericTriangulation<4>::isoSigComponentSize;
         /**
          * Returns C++ code that can be used with insertConstruction()
          * to reconstruct this triangulation.
@@ -1678,8 +1630,32 @@ class REGINA_API Dim4Triangulation : public NPacket,
 
         /*@}*/
         /**
-         * (end: Building Triangulations)
+         * \name Importing Triangulations
          */
+        /*@{*/
+
+        /**
+         * Recovers a full triangulation from an isomorphism signature.
+         * See isoSig() for more information on isomorphism signatures.
+         *
+         * The triangulation that is returned will be newly created.
+         *
+         * Calling isoSig() followed by fromIsoSig() is not guaranteed to
+         * produce an identical triangulation to the original, but it
+         * \e is guaranteed to produce a combinatorially isomorphic
+         * triangulation.
+         *
+         * @param signature the isomorphism signature of the
+         * triangulation to construct.  Note that, unlike dehydration
+         * strings for 3-manifold triangulations, case is important for
+         * isomorphism signatures.
+         * @return a newly allocated triangulation if the reconstruction was
+         * successful, or null if the given string was not a valid
+         * isomorphism signature.
+         */
+        static Dim4Triangulation* fromIsoSig(const std::string& signature);
+
+        /*@}*/
 
         static NXMLPacketReader* getXMLReader(NPacket* parent);
 

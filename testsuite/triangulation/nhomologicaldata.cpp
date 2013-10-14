@@ -194,8 +194,8 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
 
             std::string fromStandard, fromDual;
             for (int i = 0; i <= 3; ++i) {
-                fromStandard = dat.getHomology(i).toString();
-                fromDual = dat.getDualHomology(i).toString();
+                fromStandard = dat.getHomology(i).str();
+                fromDual = dat.getDualHomology(i).str();
 
                 if (fromStandard != fromDual) {
                     std::ostringstream msg;
@@ -207,8 +207,8 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
                 }
             }
 
-            std::string fromTri = tri.getHomologyH1().toString();
-            fromDual = dat.getDualHomology(1).toString();
+            std::string fromTri = tri.getHomologyH1().str();
+            fromDual = dat.getDualHomology(1).str();
 
             if (fromTri != fromDual) {
                 std::ostringstream msg;
@@ -257,7 +257,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         void verifyBdryManifoldMapH1(const NTriangulation& tri,
                 const char* name, const char* ans) {
             NHomologicalData dat(tri);
-            std::string val = dat.getBdryHomologyMap(1).toString();
+            std::string val = dat.getBdryHomologyMap(1).str();
             if (val != ans) {
                 std::ostringstream msg;
                 msg << name << ": Map from H1(bdry) to H1(mfd) is "

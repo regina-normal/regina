@@ -113,6 +113,7 @@ void addNFacePairing() {
         .def("isUnmatched", isUnmatched_unsigned)
         .def("isCanonical", &NFacePairing::isCanonical)
         .def("toString", &NFacePairing::toString)
+        .def("str", &NFacePairing::str)
         .def("toTextRep", &NFacePairing::toTextRep)
         .def("fromTextRep", &NFacePairing::fromTextRep,
             return_value_policy<manage_new_object>())
@@ -136,7 +137,7 @@ void addNFacePairing() {
         .def("hasSingleStar", &NFacePairing::hasSingleStar)
         .def("hasDoubleStar", &NFacePairing::hasDoubleStar)
         .def("hasDoubleSquare", &NFacePairing::hasDoubleSquare)
-        .def("__str__", &NFacePairing::toString)
+        .def("__str__", &NFacePairing::str)
         .staticmethod("fromTextRep")
         .staticmethod("writeDotHeader")
         .staticmethod("dotHeader")

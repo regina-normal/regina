@@ -42,7 +42,7 @@ def dumpSurfaces(name, slist):
 
 	# Dump the surfaces in sort order, since we don't really mind if the
 	# ordering changes between releases.
-	surfaces = string.split(slist.toStringLong(), '\n')
+	surfaces = string.split(slist.detail(), '\n')
 	surfaces.sort()
 	# Let the text headers appear up top.
 	surfaces.reverse()
