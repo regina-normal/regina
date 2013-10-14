@@ -116,9 +116,11 @@ BOOST_PYTHON_MODULE(regina) {
             ("ShareableObject", boost::python::no_init)
         .def("writeTextShort", &shareableWriteTextShort)
         .def("writeTextLong", &shareableWriteTextLong)
+        .def("str", &ShareableObject::str)
         .def("toString", &ShareableObject::toString)
+        .def("detail", &ShareableObject::detail)
         .def("toStringLong", &ShareableObject::toStringLong)
-        .def("__str__", &ShareableObject::toString)
+        .def("__str__", &ShareableObject::str)
         .def(self == self)
         .def(self != self)
     ;

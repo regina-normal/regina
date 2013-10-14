@@ -493,8 +493,8 @@ void ReginaMain::setupActions() {
         "in the tree"));
     act->setWhatsThis(tr("Move the currently selected packet "
         "one level higher (shallower) in the packet tree.  The packet will "
-        "abandon its current parent, and move one level closer to the root "
-        "of the tree."));
+        "abandon its current parent, and move one level closer to the "
+        "top level of the tree."));
     connect(act, SIGNAL(triggered()), this, SLOT(moveShallow()) );
     treePacketEditActions.append(act);
     treeNavMenu->addAction(act);
@@ -618,19 +618,16 @@ void ReginaMain::setupActions() {
     treeMenu->addSeparator();
 
     QAction* actRefresh = new QAction(this);
-    actRefresh->setText(tr("Refres&h Subtree"));
+    actRefresh->setText(tr("Refres&h Tree"));
     actRefresh->setIcon(ReginaSupport::themeIcon("view-refresh"));
     actRefresh->setShortcuts(QKeySequence::Refresh);
-    actRefresh->setToolTip(tr("Refresh the subtree beneath the selected packet"));
-    actRefresh->setWhatsThis(tr("Refresh the packet "
-        "currently selected in the tree, as well as all of its descendants "
-        "within the tree.<p>"
+    actRefresh->setToolTip(tr("Refresh the entire packet tree"));
+    actRefresh->setWhatsThis(tr("Refresh the entire packet tree.<p>"
         "This should not normally be necessary, but it is a possible "
         "fix-up in case the tree is out of sync with what is happening "
         "elsewhere.  Note that the file is <i>not</i> reloaded from "
         "disc; the tree is just resynced with packet editors and so on."));
-    connect(actRefresh, SIGNAL(triggered()), this, SLOT(subtreeRefresh()) );
-    treePacketViewActions.append(actRefresh);
+    connect(actRefresh, SIGNAL(triggered()), this, SLOT(treeRefresh()) );
     treeMenu->addAction(actRefresh);
     
     // --- Tools actions ---

@@ -44,6 +44,9 @@ Version 4.95  [ (under development) ]
             - Renamed the class to NTriangleEmbedding, and renamed getFace()
               to getTriangle().  The old names are deprecated but have been
               kept for backward compatibility.
+        Class NGenericFacetPairing:
+            - Renamed toString() to the simpler-to-type str().  The old name
+              has been kept as a deprecated alias.
         Class NGenericTriangulation:
             - New template helper class that allows different triangulation
               classes to share the same implementations of member functions.
@@ -62,6 +65,11 @@ Version 4.95  [ (under development) ]
             - Re-enabled enumeration using NS_HILBERT_FULLCONE, which previously
               returned an empty list.  Users will not be affected unless
               they were explicitly asking for this much slower algorithm.
+            - Routine flavour() has been renamed to coords().  The old
+              name remains for now as a deprecated alias.
+        Class NNormalSurfaceSubset:
+            - Routine getFlavour() has been renamed to coords().  The old
+              name remains for now as a deprecated alias.
         Enum NormalCoords:
             - Renamed NS_FACE_ARCS to NS_TRIANGLE_ARCS.  The old name is
               deprecated but has been kept for backward compatibility.
@@ -83,10 +91,14 @@ Version 4.95  [ (under development) ]
               registry.  See the NPacket class notes for details.
             - The constant packetType is now a compile-time enum constant,
               not a static const int.
+            - Routine getFullName() now replaces an empty label with the text
+              "(No label)", since this is intended for human-readable output.
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic aliases orderedSn, SnIndex() and
               orderedSnIndex().  These all reference existing arrays/routines
               involving S3, S4 or S5 in NPerm3, NPerm4 and NPerm5 respectively.
+            - Renamed toString() to the simper-to-type str().  The old name
+              has been kept as a deprecated alias.
         Class NPillowTwoSphere:
             - Renamed getFace() and getFaceMapping() to getTriangle()
               and getTriangleMapping().  The old names are deprecated but
@@ -114,6 +126,8 @@ Version 4.95  [ (under development) ]
             - Now inherits from the new helper class NGenericTriangulation<3>.
             - New routine isoSigComponentSize() for extracting the number of
               triangles from a signature (inherited from NGenericTriangulation).
+            - New routine snapPea() to export a SnapPea file as a string,
+              without writing to the filesystem.
             - Renamed FaceIterator, faceIndex(), getFace(), getFaces(),
               getNumberOfFaces() and hasBoundaryFaces(), where "face"
               now becomes "triangle".  The old names are deprecated but
@@ -132,6 +146,9 @@ Version 4.95  [ (under development) ]
         Struct Returns:
             - Moved into utilities/registry.h.  However, its contents are
               still included from its previous header surfaces/filterregistry.h.
+        Class ShareableObject:
+            - Renamed toString() and toStringLong() to the simper-to-type str()
+              and detail().  The old names have been kept as deprecated aliases.
         Class SurfaceFilterInfo:
             - Template classes that store traits of the various normal
               surface filter classes.  These are used with the new
@@ -139,6 +156,14 @@ Version 4.95  [ (under development) ]
         Enum SurfaceFilterType:
             - A new enumeration that contains constants for different types of
               normal surface filter.  Include "surfaces/surfacefiltertype.h".
+        Routine forFlavour(), forCoords():
+            - Renamed each variant of forFlavour() to forCoords().  The
+              old names have been kept as deprecated aliases.
+        Routine stringToToken():
+            - Moved from foreign/snappea.h into utilities/stringutils.h.
+        Routine readSnapPea(), writeSnapPea():
+            - Added istream/ostream versions of these routines.
+            - In writeSnapPea(), the NTriangulation& argument is now const.
         Headers dimtraits.h, nfacetspec.h, ngenericisomorphism.{h,tcc}:
             - Moved from triangulation/ to generic/.  The old header locations
               are now deprecated.  They have been kept for backward
@@ -146,9 +171,11 @@ Version 4.95  [ (under development) ]
         Header filterregistry.h:
             - The REGISTER_FILTER macros have been removed.  To iterate through
               surface filter types, use the new forFilter() template functions.
-        Header flavourregistry.h:
+        Header flavourregistry.h, coordregistry.h:
+            - Renamed flavourregistry.h to coordregistry.h.  The old header
+              has been kept as a deprecated alias.
             - The REGISTER_FLAVOUR macros have been removed.  To iterate through
-              coordinate systems, use the forFlavour() template functions.
+              coordinate systems, use the forCoords() template functions.
         Header packetregistry.h:
             - The REGISTER_PACKET macros have been removed.  To iterate through
               packet types, use the new forPacket() template functions.
@@ -156,6 +183,9 @@ Version 4.95  [ (under development) ]
             - All *.tcc headers have been renamed as *-impl.h, to play
               better with development IDEs.  The old header names are now
               deprecated but have likewise been kept for backward compatibility.
+    USER INTERFACE:
+        - The root container packet is now hidden from the user (it still
+          exists internally within the packet tree).
 
 Version 4.94  [ 24 September, 2013 ]
 

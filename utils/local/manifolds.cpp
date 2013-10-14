@@ -190,7 +190,7 @@ bool process(NContainer* c) {
 
             NAbelianGroup* h1 = mfd->getHomologyH1();
             if (h1) {
-                std::cout << ", H1 = " << h1->toString();
+                std::cout << ", H1 = " << h1->str();
                 delete h1;
             }
         } else if (! sortMfds)

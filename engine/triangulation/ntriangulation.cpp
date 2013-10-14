@@ -38,6 +38,7 @@
 #include <sstream>
 #include <stack>
 
+#include "foreign/snappea.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
 
@@ -680,6 +681,12 @@ std::string NTriangulation::dumpConstruction() const {
 "\n";
 
     return ans.str();
+}
+
+std::string NTriangulation::snapPea() const {
+    std::ostringstream out;
+    writeSnapPea(out, *this);
+    return out.str();
 }
 
 } // namespace regina

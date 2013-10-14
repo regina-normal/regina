@@ -6,6 +6,7 @@ SET ( FILES
   nbooleans
   osutils
   pyutilities
+  stringutils
   )
 
 # Prepend folder name
