@@ -33,8 +33,8 @@
 /* end stub */
 
 #include <vector>
+#include "surfaces/coordregistry.h"
 #include "surfaces/nxmlsurfacereader.h"
-#include "surfaces/flavourregistry.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/stringutils.h"
 
@@ -57,12 +57,12 @@ void NXMLNormalSurfaceReader::initialChars(const std::string& chars) {
         return;
 
     // Create a new vector and read all non-zero entries.
-    // Bring in cases from the flavour registry...
+    // Bring in cases from the coordinate system registry...
     NNormalSurfaceVector* vec;
-    if (flavour == NS_AN_LEGACY)
+    if (coords == NS_AN_LEGACY)
         vec = new NNormalSurfaceVectorANStandard(vecLen);
     else
-        vec = forFlavour(flavour,
+        vec = forCoords(coords,
             NewFunction1<NNormalSurfaceVector, size_t>(vecLen), 0);
     if (! vec)
         return;
@@ -128,25 +128,25 @@ NXMLElementReader* NXMLNormalSurfaceListReader::startContentSubElement(
     if (list) {
         // The surface list has already been created.
         if (subTagName == "surface")
-            return new NXMLNormalSurfaceReader(tri, list->flavour_);
+            return new NXMLNormalSurfaceReader(tri, list->coords_);
     } else {
         // The surface list has not yet been created.
         if (subTagName == "params") {
-            long flavour;
+            long coords;
             int listType, algorithm;
             bool embedded;
-            if (valueOf(props.lookup("flavourid"), flavour)) {
+            if (valueOf(props.lookup("flavourid"), coords)) {
                 if (valueOf(props.lookup("type"), listType) &&
                         valueOf(props.lookup("algorithm"), algorithm)) {
                     // Parameters look sane; create the empty list.
                     list = new NNormalSurfaceList(
-                        static_cast<NormalCoords>(flavour),
+                        static_cast<NormalCoords>(coords),
                         NormalList::fromInt(listType),
                         NormalAlg::fromInt(algorithm));
                 } else if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane but use the old format.
                     list = new NNormalSurfaceList(
-                        static_cast<NormalCoords>(flavour),
+                        static_cast<NormalCoords>(coords),
                         NS_LEGACY | (embedded ?
                             NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
                         NS_ALG_LEGACY);

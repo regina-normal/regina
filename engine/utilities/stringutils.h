@@ -277,6 +277,26 @@ REGINA_API bool valueOf(const std::string& str, NBoolSet& dest);
 template <class OutputIterator>
 REGINA_API unsigned basicTokenise(OutputIterator results, const std::string& str);
 
+/**
+ * Returns a token derived from the given string.
+ * All whitespace characters in the given string will be replaced with
+ * an underscore.
+ *
+ * @param str the string on which to base the token.
+ * @return the corresponding token.
+ */
+REGINA_API std::string stringToToken(const char* str);
+
+/**
+ * Returns a token derived from the given string.
+ * All whitespace characters in the given string will be replaced with
+ * an underscore.
+ *
+ * @param str the string on which to base the token.
+ * @return the corresponding token.
+ */
+REGINA_API std::string stringToToken(const std::string& str);
+
 /*@}*/
 
 } // namespace regina

@@ -60,7 +60,8 @@ ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
     QHBoxLayout* hStrip = new QHBoxLayout;
     QLabel* label = new QLabel(tr("Data to export:"));
     hStrip->addWidget(label);
-    chooser = new PacketChooser(tree, useFilter, false, defaultSelection);
+    chooser = new PacketChooser(tree, useFilter,
+        PacketChooser::ROOT_AS_SUBTREE, false, defaultSelection);
     hStrip->addWidget(chooser, 1);
     QString expln = tr("Select the piece of data that you wish to export.");
     label->setWhatsThis(expln);

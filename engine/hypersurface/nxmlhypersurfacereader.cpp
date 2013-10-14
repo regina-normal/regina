@@ -35,7 +35,7 @@
 #include <vector>
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nxmlhypersurfacereader.h"
-#include "hypersurface/hsflavourregistry.h"
+#include "hypersurface/hscoordregistry.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
@@ -57,9 +57,9 @@ void NXMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
         return;
 
     // Create a new vector and read all non-zero entries.
-    // Bring in cases from the flavour registry...
+    // Bring in cases from the coordinate system registry...
     NNormalHypersurfaceVector* vec =
-        forFlavour(flavour_,
+        forCoords(coords_,
             NewFunction1<NNormalHypersurfaceVector, size_t>(vecLen_), 0);
     if (! vec)
         return;
@@ -109,17 +109,17 @@ NXMLElementReader* NXMLNormalHypersurfaceListReader::startContentSubElement(
     if (list_) {
         // The hypersurface list has already been created.
         if (subTagName == "surface")
-            return new NXMLNormalHypersurfaceReader(tri_, list_->flavour_);
+            return new NXMLNormalHypersurfaceReader(tri_, list_->coords_);
     } else {
         // The hypersurface list has not yet been created.
         if (subTagName == "params") {
-            long flavour;
+            long coords;
             bool embedded;
-            if (valueOf(props.lookup("flavourid"), flavour))
+            if (valueOf(props.lookup("flavourid"), coords))
                 if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane; create the empty list.
                     list_ = new NNormalHypersurfaceList();
-                    list_->flavour_ = static_cast<HyperCoords>(flavour);
+                    list_->coords_ = static_cast<HyperCoords>(coords);
                     list_->embedded_ = embedded;
                 }
         }

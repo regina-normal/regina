@@ -38,7 +38,7 @@
 #include "enumerate/nhilbertdual.h"
 #include "enumerate/nhilbertprimal.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
-#include "hypersurface/hsflavourregistry.h"
+#include "hypersurface/hscoordregistry.h"
 #include "maths/nmatrixint.h"
 #include "progress/nprogresstracker.h"
 #include "utilities/xmlutils.h"
@@ -51,16 +51,16 @@ namespace {
 
         ZeroVector(const Dim4Triangulation* tri) : tri_(tri) {}
 
-        template <typename Flavour>
-        inline NNormalHypersurfaceVector* operator() (Flavour f) {
-            return Flavour::Class::makeZeroVector(tri_);
+        template <typename Coords>
+        inline NNormalHypersurfaceVector* operator() (Coords) {
+            return Coords::Class::makeZeroVector(tri_);
         }
     };
 }
 
 NNormalHypersurfaceVector* makeZeroVector(
-        const Dim4Triangulation* triangulation, HyperCoords flavour) {
-    return forFlavour(flavour, ZeroVector(triangulation), 0);
+        const Dim4Triangulation* triangulation, HyperCoords coords) {
+    return forCoords(coords, ZeroVector(triangulation), 0);
 }
 
 namespace {
@@ -69,16 +69,16 @@ namespace {
 
         MatchingEquations(Dim4Triangulation* tri) : tri_(tri) {}
 
-        template <typename Flavour>
-        inline NMatrixInt* operator() (Flavour f) {
-            return Flavour::Class::makeMatchingEquations(tri_);
+        template <typename Coords>
+        inline NMatrixInt* operator() (Coords) {
+            return Coords::Class::makeMatchingEquations(tri_);
         }
     };
 }
 
 NMatrixInt* makeMatchingEquations(Dim4Triangulation* triangulation,
-        HyperCoords flavour) {
-    return forFlavour(flavour, MatchingEquations(triangulation), 0);
+        HyperCoords coords) {
+    return forCoords(coords, MatchingEquations(triangulation), 0);
 }
 
 namespace {
@@ -87,38 +87,38 @@ namespace {
 
         EmbeddedConstraints(Dim4Triangulation* tri) : tri_(tri) {}
 
-        template <typename Flavour>
-        inline NEnumConstraintList* operator() (Flavour f) {
-            return Flavour::Class::makeEmbeddedConstraints(tri_);
+        template <typename Coords>
+        inline NEnumConstraintList* operator() (Coords) {
+            return Coords::Class::makeEmbeddedConstraints(tri_);
         }
     };
 }
 
 NEnumConstraintList* makeEmbeddedConstraints(Dim4Triangulation* triangulation,
-        HyperCoords flavour) {
-    return forFlavour(flavour, EmbeddedConstraints(triangulation), 0);
+        HyperCoords coords) {
+    return forCoords(coords, EmbeddedConstraints(triangulation), 0);
 }
 
 void* NNormalHypersurfaceList::VertexEnumerator::run(void*) {
-    forFlavour(list_->flavour_, *this);
+    forCoords(list_->coords_, *this);
     return 0;
 }
 
-template <typename Flavour>
-void NNormalHypersurfaceList::VertexEnumerator::operator() (Flavour) {
+template <typename Coords>
+void NNormalHypersurfaceList::VertexEnumerator::operator() (Coords) {
     if (tracker_)
         tracker_->newStage("Enumerating vertex hypersurfaces");
 
     // Fetch any necessary validity constraints.
     NEnumConstraintList* constraints = 0;
     if (list_->embedded_)
-        constraints = makeEmbeddedConstraints(triang_, list_->flavour_);
+        constraints = makeEmbeddedConstraints(triang_, list_->coords_);
 
     // Form the matching equations and starting cone.
-    NMatrixInt* eqns = makeMatchingEquations(triang_, list_->flavour_);
+    NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
     // Find the normal hypersurfaces.
-    NDoubleDescription::enumerateExtremalRays<typename Flavour::Class>(
+    NDoubleDescription::enumerateExtremalRays<typename Coords::Class>(
         HypersurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
 
     delete eqns;
@@ -133,19 +133,19 @@ void NNormalHypersurfaceList::VertexEnumerator::operator() (Flavour) {
 }
 
 void* NNormalHypersurfaceList::FundPrimalEnumerator::run(void*) {
-    forFlavour(list_->flavour_, *this);
+    forCoords(list_->coords_, *this);
     return 0;
 }
 
-template <typename Flavour>
-void NNormalHypersurfaceList::FundPrimalEnumerator::operator() (Flavour) {
+template <typename Coords>
+void NNormalHypersurfaceList::FundPrimalEnumerator::operator() (Coords) {
     if (tracker_)
         tracker_->newStage("Initialising Hilbert basis enumeration", 0.1);
 
     // Fetch any necessary validity constraints.
     NEnumConstraintList* constraints = 0;
     if (list_->embedded_)
-        constraints = makeEmbeddedConstraints(triang_, list_->flavour_);
+        constraints = makeEmbeddedConstraints(triang_, list_->coords_);
 
     if (tracker_)
         tracker_->newStage("Enumerating extremal rays", 0.4);
@@ -154,7 +154,7 @@ void NNormalHypersurfaceList::FundPrimalEnumerator::operator() (Flavour) {
     if (! vtxSurfaces_) {
         // Enumerate all vertex normal hypersurfaces using the default
         // (and hopefully best possible) algorithm.
-        useVtxSurfaces = new NNormalHypersurfaceList(list_->flavour_,
+        useVtxSurfaces = new NNormalHypersurfaceList(list_->coords_,
             list_->embedded_);
         VertexEnumerator e(useVtxSurfaces, triang_, 0);
         e.run(0);
@@ -164,7 +164,7 @@ void NNormalHypersurfaceList::FundPrimalEnumerator::operator() (Flavour) {
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
     // Find the normal hypersurfaces.
-    NHilbertPrimal::enumerateHilbertBasis<typename Flavour::Class>(
+    NHilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
         HypersurfaceInserter(*list_, triang_),
         useVtxSurfaces->beginVectors(), useVtxSurfaces->endVectors(),
         constraints, tracker_);
@@ -182,25 +182,25 @@ void NNormalHypersurfaceList::FundPrimalEnumerator::operator() (Flavour) {
 }
 
 void* NNormalHypersurfaceList::FundDualEnumerator::run(void*) {
-    forFlavour(list_->flavour_, *this);
+    forCoords(list_->coords_, *this);
     return 0;
 }
 
-template <typename Flavour>
-void NNormalHypersurfaceList::FundDualEnumerator::operator() (Flavour) {
+template <typename Coords>
+void NNormalHypersurfaceList::FundDualEnumerator::operator() (Coords) {
     if (tracker_)
         tracker_->newStage("Enumerating Hilbert basis\n(dual method)");
 
     // Fetch any necessary validity constraints.
     NEnumConstraintList* constraints = 0;
     if (list_->embedded_)
-        constraints = makeEmbeddedConstraints(triang_, list_->flavour_);
+        constraints = makeEmbeddedConstraints(triang_, list_->coords_);
 
     // Form the matching equations and starting cone.
-    NMatrixInt* eqns = makeMatchingEquations(triang_, list_->flavour_);
+    NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
     // Find the normal hypersurfaces.
-    NHilbertDual::enumerateHilbertBasis<typename Flavour::Class>(
+    NHilbertDual::enumerateHilbertBasis<typename Coords::Class>(
         HypersurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
 
     delete eqns;
@@ -215,10 +215,10 @@ void NNormalHypersurfaceList::FundDualEnumerator::operator() (Flavour) {
 }
 
 NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
-        Dim4Triangulation* owner, HyperCoords flavour, bool embeddedOnly,
+        Dim4Triangulation* owner, HyperCoords coords, bool embeddedOnly,
         NProgressTracker* tracker) {
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
-        flavour, embeddedOnly);
+        coords, embeddedOnly);
     VertexEnumerator* e = new VertexEnumerator(ans, owner, tracker);
 
     if (tracker) {
@@ -235,10 +235,10 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
 }
 
 NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundPrimal(
-        Dim4Triangulation* owner, HyperCoords flavour, bool embeddedOnly,
+        Dim4Triangulation* owner, HyperCoords coords, bool embeddedOnly,
         NNormalHypersurfaceList* vtxSurfaces, NProgressTracker* tracker) {
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
-        flavour, embeddedOnly);
+        coords, embeddedOnly);
     FundPrimalEnumerator* e = new FundPrimalEnumerator(ans, owner, vtxSurfaces,
         tracker);
 
@@ -256,10 +256,10 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundPrimal(
 }
 
 NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundDual(
-        Dim4Triangulation* owner, HyperCoords flavour, bool embeddedOnly,
+        Dim4Triangulation* owner, HyperCoords coords, bool embeddedOnly,
         NProgressTracker* tracker) {
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
-        flavour, embeddedOnly);
+        coords, embeddedOnly);
     FundDualEnumerator* e = new FundDualEnumerator(ans, owner, tracker);
 
     if (tracker) {
@@ -281,8 +281,8 @@ Dim4Triangulation* NNormalHypersurfaceList::getTriangulation() const {
 
 namespace {
     struct NameFunction : public Returns<const char*> {
-        template <typename Flavour>
-        inline const char* operator() (Flavour f) { return f.name(); }
+        template <typename Coords>
+        inline const char* operator() (Coords f) { return f.name(); }
     };
 }
 
@@ -290,7 +290,7 @@ void NNormalHypersurfaceList::writeTextShort(std::ostream& o) const {
     o << surfaces_.size() << " vertex normal hypersurface";
     if (surfaces_.size() != 1)
         o << 's';
-    o << " (" << forFlavour(flavour_, NameFunction(), "Unknown") << ')';
+    o << " (" << forCoords(coords_, NameFunction(), "Unknown") << ')';
 }
 
 void NNormalHypersurfaceList::writeTextLong(std::ostream& o) const {
@@ -299,7 +299,7 @@ void NNormalHypersurfaceList::writeTextLong(std::ostream& o) const {
     else
         o << "Embedded, immersed & singular ";
     o << "vertex normal hypersurfaces\n";
-    o << "Coordinates: " << forFlavour(flavour_, NameFunction(), "Unknown")
+    o << "Coordinates: " << forCoords(coords_, NameFunction(), "Unknown")
         << '\n';
 
     unsigned long n = getNumberOfHypersurfaces();
@@ -313,10 +313,10 @@ void NNormalHypersurfaceList::writeTextLong(std::ostream& o) const {
 void NNormalHypersurfaceList::writeXMLPacketData(std::ostream& out) const {
     // Write the surface list parameters.
     out << "  <params embedded=\"" << (embedded_ ? 'T' : 'F')
-        << "\" flavourid=\"" << flavour_ << "\"\n";
+        << "\" flavourid=\"" << coords_ << "\"\n";
     out << "\tflavour=\""
-        << regina::xml::xmlEncodeSpecialChars(forFlavour(
-           flavour_, NameFunction(), "Unknown")) << "\"/>\n";
+        << regina::xml::xmlEncodeSpecialChars(forCoords(
+           coords_, NameFunction(), "Unknown")) << "\"/>\n";
 
     // Write the individual hypersurfaces.
     std::vector<NNormalHypersurface*>::const_iterator it;
@@ -327,7 +327,7 @@ void NNormalHypersurfaceList::writeXMLPacketData(std::ostream& out) const {
 NPacket* NNormalHypersurfaceList::internalClonePacket(NPacket* /* parent */)
         const {
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList();
-    ans->flavour_ = flavour_;
+    ans->coords_ = coords_;
     ans->embedded_ = embedded_;
     transform(surfaces_.begin(), surfaces_.end(), back_inserter(ans->surfaces_),
         FuncNewClonePtr<NNormalHypersurface>());
