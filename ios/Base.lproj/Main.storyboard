@@ -39,7 +39,6 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="gettingStarted:" destination="JEX-9P-axG" eventType="touchUpInside" id="f4l-Kb-IFo"/>
                                     <segue destination="rTv-SX-fUu" kind="push" id="Wfi-CD-x3Y"/>
                                 </connections>
                             </button>

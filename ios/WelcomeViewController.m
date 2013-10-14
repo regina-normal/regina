@@ -10,9 +10,7 @@
 
 @implementation WelcomeViewController
 
-- (void)viewDidLoad {
-    NSLog(@"Welcome!");
-    
+- (void)viewDidLoad {    
     [super viewDidLoad];
     
     NSURL *url = [[NSBundle mainBundle] URLForResource:@"welcome" withExtension:@"html"];
