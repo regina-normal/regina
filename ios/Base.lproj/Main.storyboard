@@ -43,7 +43,7 @@
                                     <segue destination="rTv-SX-fUu" kind="push" id="Wfi-CD-x3Y"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ReginaLarge" translatesAutoresizingMaskIntoConstraints="NO" id="AZB-5i-qpZ">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="ReginaLarge" translatesAutoresizingMaskIntoConstraints="NO" id="AZB-5i-qpZ">
                                 <rect key="frame" x="375" y="438" width="310" height="310"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -68,10 +68,10 @@
             </objects>
             <point key="canvasLocation" x="448" y="248"/>
         </scene>
-        <!--View Controller - Getting Started-->
+        <!--Welcome View Controller - Getting Started-->
         <scene sceneID="3mb-Ar-8wf">
             <objects>
-                <viewController title="Getting Started" id="rTv-SX-fUu" sceneMemberID="viewController">
+                <viewController title="Getting Started" id="rTv-SX-fUu" customClass="WelcomeViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="kSg-Hu-uiE"/>
                         <viewControllerLayoutGuide type="bottom" id="OFV-K8-Zca"/>
@@ -79,10 +79,27 @@
                     <view key="view" contentMode="scaleToFill" id="Ibu-pJ-tdC">
                         <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0QO-uI-3Lh">
+                                <rect key="frame" x="0.0" y="65" width="703" height="768"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <dataDetectorType key="dataDetectorTypes"/>
+                            </webView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="0QO-uI-3Lh" secondAttribute="trailing" id="7rA-As-rDR"/>
+                            <constraint firstItem="0QO-uI-3Lh" firstAttribute="leading" secondItem="Ibu-pJ-tdC" secondAttribute="leading" id="RaF-LP-ohd"/>
+                            <constraint firstAttribute="bottom" secondItem="0QO-uI-3Lh" secondAttribute="bottom" id="RuZ-dE-YcZ"/>
+                            <constraint firstItem="0QO-uI-3Lh" firstAttribute="top" secondItem="kSg-Hu-uiE" secondAttribute="bottom" id="mDi-o9-qzA"/>
+                        </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <navigationItem key="navigationItem" title="Getting Started" id="Noc-pD-Dih"/>
+                    <connections>
+                        <outlet property="html" destination="0QO-uI-3Lh" id="gt4-ID-mDT"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oRD-aP-dNo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
