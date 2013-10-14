@@ -38,6 +38,7 @@
 
 @interface DetailViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
+- (IBAction)gettingStarted:(id)sender;
 - (void)configureView;
 @end
 
@@ -57,6 +58,10 @@
     if (self.masterPopoverController != nil) {
         [self.masterPopoverController dismissPopoverAnimated:YES];
     }        
+}
+
+- (IBAction)gettingStarted:(id)sender {
+    NSLog(@"Getting started!");
 }
 
 - (void)configureView
