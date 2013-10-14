@@ -39,16 +39,15 @@
 using namespace boost::python;
 
 namespace {
-    std::string (*stringToToken_chars)(const char*) = &regina::stringToToken;
-    std::string (*stringToToken_string)(const std::string&) =
-        &regina::stringToToken;
+    regina::NTriangulation* (*readSnapPea_file)(const char*) =
+        &regina::readSnapPea;
+    bool (*writeSnapPea_file)(const char*, const regina::NTriangulation&) =
+        &regina::writeSnapPea;
 }
 
 void addForeignSnapPea() {
-    def("readSnapPea", regina::readSnapPea,
+    def("readSnapPea", readSnapPea_file,
         return_value_policy<manage_new_object>());
-    def("writeSnapPea", regina::writeSnapPea);
-    def("stringToToken", stringToToken_chars);
-    def("stringToToken", stringToToken_string);
+    def("writeSnapPea", writeSnapPea_file);
 }
 

@@ -92,7 +92,7 @@ void insertTri(const NTriangulation& source) {
     NTriangulation* t = new NTriangulation(source);
     t->setPacketLabel(source.getPacketLabel());
 
-    std::string H1 = t->getHomologyH1().toString();
+    std::string H1 = t->getHomologyH1().str();
 
     HomologyMap::iterator it = H1Map.find(H1);
     if (it == H1Map.end()) {

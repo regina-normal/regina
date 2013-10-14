@@ -308,7 +308,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
     NTriangulation* owner = getTriangulation();
 
     // Basic sanity checks:
-    if (flavour_ != Variant::reducedFlavour())
+    if (coords_ != Variant::reducedCoords())
         return 0;
     if (which_ != (NS_EMBEDDED_ONLY | NS_VERTEX))
         return 0;
@@ -317,7 +317,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
 
     // Prepare a final surface list.
     NNormalSurfaceList* ans = new NNormalSurfaceList(
-        Variant::standardFlavour(), NS_EMBEDDED_ONLY | NS_VERTEX,
+        Variant::standardCoords(), NS_EMBEDDED_ONLY | NS_VERTEX,
         algorithm_ | NS_VERTEX_VIA_REDUCED);
 
     if (owner->getNumberOfTetrahedra() > 0) {
@@ -441,7 +441,7 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
     // And run!
     BitmaskType ignoreFacets(slen);
     for (i = 0; i < slen; ++i)
-        if (i % Variant::totalCoords < 4)
+        if (i % Variant::totalPerTet < 4)
             ignoreFacets.set(i, true);
 
     int workingList = 0;
@@ -464,7 +464,7 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
         delete link[vtx];
 
         list[workingList].push_back(new RaySpec<BitmaskType>(owner, vtx,
-            Variant::totalCoords));
+            Variant::totalPerTet));
 
         const std::vector<NVertexEmbedding>& emb = owner->getVertex(vtx)->
             getEmbeddings();

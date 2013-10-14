@@ -45,7 +45,7 @@ NNormalSurfaceList* NNormalSurfaceList::filterForLocallyCompatiblePairs()
         return 0;
 
     NNormalSurfaceList* ans = new NNormalSurfaceList(
-        flavour_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
+        coords_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
 
     // Find all surfaces that have a compatible partner.
     std::vector<NNormalSurface*>::const_iterator first, second;
@@ -72,7 +72,7 @@ NNormalSurfaceList* NNormalSurfaceList::filterForDisjointPairs() const {
         return 0;
 
     NNormalSurfaceList* ans = new NNormalSurfaceList(
-        flavour_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
+        coords_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
 
     // Collect all the surfaces that we might care about.
     // This means non-empty, connected and compact.
@@ -115,7 +115,7 @@ NNormalSurfaceList* NNormalSurfaceList::filterForPotentiallyIncompressible()
         return 0;
 
     NNormalSurfaceList* ans = new NNormalSurfaceList(
-        flavour_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
+        coords_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
 
     NTriangulation* t;
 #ifdef DEBUG

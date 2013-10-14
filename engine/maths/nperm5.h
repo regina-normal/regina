@@ -423,6 +423,16 @@ class REGINA_API NPerm5 {
         bool isIdentity() const;
 
         /**
+         * A deprecated alias for str(), which returns a string representation
+         * of this permutation.
+         *
+         * \deprecated This routine has (at long last) been deprecated;
+         * use the simpler-to-type str() instead.
+         *
+         * @return a string representation of this permutation.
+         */
+        std::string toString() const;
+        /**
          * Returns a string representation of this permutation.
          * The representation will consist of five adjacent digits
          * representing the images of 0, 1, 2, 3 and 4 respectively.
@@ -430,7 +440,7 @@ class REGINA_API NPerm5 {
          *
          * @return a string representation of this permutation.
          */
-        std::string toString() const;
+        std::string str() const;
 
         /**
          * Returns a string representation of this permutation with only
@@ -525,7 +535,7 @@ class REGINA_API NPerm5 {
 /**
  * Writes a string representation of the given permutation to the given
  * output stream.  The format will be the same as is used by
- * NPerm5::toString().
+ * NPerm5::str().
  *
  * @param out the output stream to which to write.
  * @param p the permutation to write.
@@ -533,7 +543,7 @@ class REGINA_API NPerm5 {
  */
 inline REGINA_API std::ostream& operator << (std::ostream& out,
         const NPerm5& p) {
-    return (out << p.toString());
+    return (out << p.str());
 }
 
 /*@}*/
@@ -623,6 +633,10 @@ inline bool NPerm5::operator == (const NPerm5& other) const {
 
 inline bool NPerm5::operator != (const NPerm5& other) const {
     return (code != other.code);
+}
+
+inline std::string NPerm5::toString() const {
+    return str();
 }
 
 inline bool NPerm5::isIdentity() const {

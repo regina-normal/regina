@@ -34,7 +34,7 @@
 
 /*! \file utilities/registryutils.h
  *  \brief Miscellaneous utility classes for working with registries of
- *  packet types, normal coordinate flavours, and so on.
+ *  packet types, normal coordinate systems, and so on.
  */
 
 #ifndef __REGISTRYUTILS_H
@@ -54,7 +54,7 @@ namespace regina {
  * from the base class \a Returns<T>.  This will ensure that \a F includes a
  * typedef \a F::ReturnType representing type \a T.
  *
- * See the three-argument forFlavour() routine for an example of where
+ * See the three-argument forCoords() routine for an example of where
  * such a function object might be used.
  *
  * \ifacespython Not present.
@@ -78,7 +78,7 @@ struct Returns {
  * where the argument is of type \a Arg.
  *
  * This routine is intended for use with registry routines, such as the
- * three-argument variants of forPacket() and forFlavour().
+ * three-argument variants of forPacket() and forCoords().
  *
  * \ifacespython Not present.
  */

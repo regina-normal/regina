@@ -84,8 +84,8 @@ class REGINA_API ShareableObject : public regina::boost::noncopyable {
 
         /**
          * Writes this object in short text format to the given output stream.
-         * The output should fit on a single line and no newline should
-         * be written.
+         * The output should be human-readable, should fit on a single line,
+         * and should not end with a newline.
          *
          * \ifacespython The parameter \a out does not exist;
          * standard output will be used.
@@ -94,10 +94,11 @@ class REGINA_API ShareableObject : public regina::boost::noncopyable {
          */
         virtual void writeTextShort(std::ostream& out) const = 0;
         /**
-         * Writes this object in long text format to the given output
-         * stream.  The output should provided the user with all the
-         * information they could want.  The output should end with a
-         * newline.
+         * Writes this object in long text format to the given output stream.
+         * The output should provide the user with all the information they
+         * could want.  The output should be human-readable, should not
+         * contain extremely long lines (so users can read the output
+         * in a terminal), and should end with a final newline.
          *
          * The default implementation of this routine merely calls
          * writeTextShort() and adds a newline.
@@ -115,9 +116,29 @@ class REGINA_API ShareableObject : public regina::boost::noncopyable {
          *
          * @return a short text representation of this object.
          */
+        std::string str() const;
+        /**
+         * A deprecated alias for str(), which returns the output from
+         * writeTextShort() as a string.
+         *
+         * \deprecated This routine has (at long last) been deprecated;
+         * use the simpler-to-type str() instead.
+         *
+         * @return a short text representation of this object.
+         */
         std::string toString() const;
         /**
          * Returns the output from writeTextLong() as a string.
+         *
+         * @return a long text representation of this object.
+         */
+        std::string detail() const;
+        /**
+         * A deprecated alias for detail(), which returns the output
+         * from writeTextLong() as a string.
+         *
+         * \deprecated This routine has (at long last) been deprecated;
+         * use the simpler-to-type detail() instead.
          *
          * @return a long text representation of this object.
          */
@@ -136,6 +157,14 @@ inline ShareableObject::~ShareableObject() {
 inline void ShareableObject::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << '\n';
+}
+
+inline std::string ShareableObject::toString() const {
+    return str();
+}
+
+inline std::string ShareableObject::toStringLong() const {
+    return detail();
 }
 
 } // namespace regina

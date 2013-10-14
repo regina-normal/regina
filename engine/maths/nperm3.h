@@ -393,6 +393,16 @@ class REGINA_API NPerm3 {
         bool isIdentity() const;
 
         /**
+         * A deprecated alias for str(), which returns a string representation
+         * of this permutation.
+         *
+         * \deprecated This routine has (at long last) been deprecated;
+         * use the simpler-to-type str() instead.
+         *
+         * @return a string representation of this permutation.
+         */
+        std::string toString() const;
+        /**
          * Returns a string representation of this permutation.
          * The representation will consist of three adjacent digits
          * representing the images of 0, 1 and 2 respectively.  An
@@ -400,7 +410,7 @@ class REGINA_API NPerm3 {
          *
          * @return a string representation of this permutation.
          */
-        std::string toString() const;
+        std::string str() const;
 
         /**
          * Returns a string representation of this permutation with only
@@ -482,7 +492,7 @@ class REGINA_API NPerm3 {
 /**
  * Writes a string representation of the given permutation to the given
  * output stream.  The format will be the same as is used by
- * NPerm3::toString().
+ * NPerm3::str().
  *
  * @param out the output stream to which to write.
  * @param p the permutation to write.
@@ -490,7 +500,7 @@ class REGINA_API NPerm3 {
  */
 inline REGINA_API std::ostream& operator << (std::ostream& out,
         const NPerm3& p) {
-    return (out << p.toString());
+    return (out << p.str());
 }
 
 /*@}*/
@@ -603,6 +613,10 @@ inline int NPerm3::compareWith(const NPerm3& other) const {
 
 inline bool NPerm3::isIdentity() const {
     return (code_ == 0);
+}
+
+inline std::string NPerm3::toString() const {
+    return str();
 }
 
 inline int NPerm3::S3Index() const {

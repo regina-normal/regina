@@ -89,7 +89,7 @@ struct PacketInfo<PACKET_NORMALHYPERSURFACELIST> {
  * changes, the information contained in this packet will become invalid.
  *
  * See the NNormalHypersurfaceVector class notes for details of what to do
- * when introducing a new flavour of coordinate system.
+ * when introducing a new coordinate system.
  *
  * Normal hypersurface lists should be created using the routine enumerate().
  */
@@ -102,8 +102,8 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
     protected:
         std::vector<NNormalHypersurface*> surfaces_;
             /**< Contains the normal hypersurfaces stored in this packet. */
-        HyperCoords flavour_;
-            /**< Stores which flavour of coordinate system is being
+        HyperCoords coords_;
+            /**< Stores which coordinate system is being
              *   used by the normal hypersurfaces in this packet. */
         bool embedded_;
             /**< Stores whether we are only interested in embedded
@@ -117,7 +117,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
 
         /**
          * Enumerates all vertex normal hypersurfaces in the given
-         * triangulation using the given flavour of coordinate system.
+         * triangulation using the given coordinate system.
          * These vertex normal hypersurfaces will be stored in a new normal
          * hypersurface list.  Their representations will
          * use the smallest possible integer coordinates.
@@ -146,7 +146,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          *
          * @param owner the triangulation upon which this list of normal
          * hypersurfaces will be based.
-         * @param flavour the flavour of coordinate system to be used.
+         * @param coords the coordinate system to be used.
          * @param embeddedOnly \c true if only embedded normal hypersurfaces
          * are to be produced, or \c false if immersed and singular
          * normal hypersurfaces are also to be produced; this defaults to
@@ -160,12 +160,12 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * returns 0 (and no normal hypersurface list is created).
          */
         static NNormalHypersurfaceList* enumerate(Dim4Triangulation* owner,
-            HyperCoords flavour, bool embeddedOnly = true,
+            HyperCoords coords, bool embeddedOnly = true,
             NProgressTracker* tracker = 0);
 
         /**
          * Enumerates all fundamental normal hypersurfaces in the given
-         * triangulation using the given flavour of coordinate system,
+         * triangulation using the given coordinate system,
          * using the primal Hilbert basis algorithm.
          * These fundamental normal hypersurfaces will be stored in a new normal
          * hypersurface list.  The option is offered to find only embedded
@@ -211,7 +211,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          *
          * @param owner the triangulation upon which this list of normal
          * hypersurfaces will be based.
-         * @param newFlavour the flavour of coordinate system to be used.
+         * @param coords the coordinate system to be used.
          * @param embeddedOnly \c true if only embedded normal hypersurfaces
          * are to be produced, or \c false if immersed and singular
          * normal hypersurfaces are also to be produced; this defaults to
@@ -228,14 +228,14 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * returns 0 (and no normal hypersurface list is created).
          */
         static NNormalHypersurfaceList* enumerateFundPrimal(
-            Dim4Triangulation* owner, HyperCoords newFlavour,
+            Dim4Triangulation* owner, HyperCoords coords,
             bool embeddedOnly = true,
             NNormalHypersurfaceList* vtxSurfaces = 0,
             NProgressTracker* tracker = 0);
 
         /**
          * Enumerates all fundamental normal hypersurfaces in the given
-         * triangulation using the given flavour of coordinate system,
+         * triangulation using the given coordinate system,
          * using the dual Hilbert basis algorithm.
          * These fundamental normal hypersurfaces will be stored in a new normal
          * hypersurface list.  The option is offered to find only embedded
@@ -272,7 +272,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          *
          * @param owner the triangulation upon which this list of normal
          * hypersurfaces will be based.
-         * @param newFlavour the flavour of coordinate system to be used.
+         * @param coords the coordinate system to be used.
          * @param embeddedOnly \c true if only embedded normal hypersurfaces
          * are to be produced, or \c false if immersed and singular
          * normal hypersurfaces are also to be produced; this defaults to
@@ -286,17 +286,17 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * returns 0 (and no normal hypersurface list is created).
          */
         static NNormalHypersurfaceList* enumerateFundDual(
-            Dim4Triangulation* owner, HyperCoords newFlavour,
+            Dim4Triangulation* owner, HyperCoords coords,
             bool embeddedOnly = true,
             NProgressTracker* tracker = 0);
 
         /**
-         * Returns the flavour of coordinate system being used by the
+         * Returns the coordinate system being used by the
          * hypersurfaces stored in this set.
          *
-         * @return the flavour of coordinate system used.
+         * @return the coordinate system used.
          */
-        virtual HyperCoords getFlavour() const;
+        virtual HyperCoords coords() const;
         /**
          * Returns whether this set is known to contain only embedded normal
          * hypersurfaces.
@@ -599,13 +599,13 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * Creates an empty list of normal hypersurfaces with the given
          * parameters.
          *
-         * @param flavour the flavour of coordinate system to be used
+         * @param coords the coordinate system to be used
          * for filling this list.
          * @param embeddedOnly \c true if only embedded normal hypersurfaces
          * are to be produced, or \c false if immersed and singular
          * normal hypersurfaces are also to be produced.
          */
-        NNormalHypersurfaceList(HyperCoords flavour, bool embeddedOnly);
+        NNormalHypersurfaceList(HyperCoords coords, bool embeddedOnly);
 
         /**
          * A thread class that actually performs the vertex normal
@@ -646,7 +646,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
 
                 /**
                  * Performs the real enumeration work, in a setting
-                 * where the underlying flavour of coordinate system is
+                 * where the underlying coordinate system is
                  * a compile-time constant.
                  *
                  * We assume here that neither list_->which_ nor
@@ -656,8 +656,8 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                  * this is finished it inserts \a list_ into the packet
                  * tree as a child of \a triang_.
                  */
-                template <typename Flavour>
-                void operator() (Flavour);
+                template <typename Coords>
+                void operator() (Coords);
         };
 
         /**
@@ -706,7 +706,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
 
                 /**
                  * Performs the real enumeration work, in a setting
-                 * where the underlying flavour of coordinate system is
+                 * where the underlying coordinate system is
                  * a compile-time constant.
                  *
                  * We assume here that neither list_->which_ nor
@@ -716,8 +716,8 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                  * this is finished it inserts \a list_ into the packet
                  * tree as a child of \a triang_.
                  */
-                template <typename Flavour>
-                void operator() (Flavour);
+                template <typename Coords>
+                void operator() (Coords);
         };
 
         /**
@@ -759,7 +759,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
 
                 /**
                  * Performs the real enumeration work, in a setting
-                 * where the underlying flavour of coordinate system is
+                 * where the underlying coordinate system is
                  * a compile-time constant.
                  *
                  * We assume here that neither list_->which_ nor
@@ -769,8 +769,8 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                  * this is finished it inserts \a list_ into the packet
                  * tree as a child of \a triang_.
                  */
-                template <typename Flavour>
-                void operator() (Flavour);
+                template <typename Coords>
+                void operator() (Coords);
         };
 
     friend class regina::NXMLNormalHypersurfaceListReader;
@@ -778,59 +778,59 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
 
 /**
  * Returns a new normal hypersurface vector of the appropriate length for the
- * given triangulation and the given flavour of coordinate system.
+ * given triangulation and the given coordinate system.
  * All elements of this vector will be initialised to zero.
  *
  * The new vector will be of the subclass of NNormalHypersurfaceVector
- * corresponding to the given flavour of coordinate system.  The caller
+ * corresponding to the given coordinate system.  The caller
  * of this routine is responsible for destroying the new vector.
  *
  * \ifacespython Not present.
  *
  * @param triangulation the triangulation upon which the underlying
  * coordinate system is based.
- * @param flavour the flavour of coordinate system to be used;
+ * @param coords the coordinate system to be used;
  * this must be one of the predefined coordinate system
  * constants in NNormalHypersurfaceList.
  * @return a new zero vector of the correct class and length.
  */
 REGINA_API NNormalHypersurfaceVector* makeZeroVector(
-    const Dim4Triangulation* triangulation, HyperCoords flavour);
+    const Dim4Triangulation* triangulation, HyperCoords coords);
 /**
  * Creates a new set of normal hypersurface matching equations for the
- * given triangulation using the given flavour of coordinate system.
+ * given triangulation using the given coordinate system.
  * The returned matrix will be newly allocated and its destruction will
  * be the responsibility of the caller of this routine.
  *
  * Each equation will be represented as a row of the matrix.
  * Each column of the matrix represents a coordinate in the given
- * flavour of coordinate system.
+ * coordinate system.
  *
  * @param triangulation the triangulation upon which these matching equations
  * will be based.
- * @param flavour the flavour of coordinate system to be used;
+ * @param coords the coordinate system to be used;
  * this must be one of the predefined coordinate system
  * constants in NNormalHypersurfaceList.
  * @return a newly allocated set of matching equations.
  */
 REGINA_API NMatrixInt* makeMatchingEquations(Dim4Triangulation* triangulation,
-    HyperCoords flavour);
+    HyperCoords coords);
 /**
  * Creates a new set of validity constraints representing the condition that
  * normal hypersurfaces be embedded.  The validity constraints will be expressed
- * relative to the given flavour of coordinate system.
+ * relative to the given coordinate system.
  *
  * \ifacespython Not present.
  *
  * @param triangulation the triangulation upon which these validity constraints
  * will be based.
- * @param flavour the flavour of coordinate system to be used;
+ * @param coords the coordinate system to be used;
  * this must be one of the predefined coordinate system
  * constants in NNormalHypersurfaceList.
  * @return a newly allocated set of constraints.
  */
 REGINA_API NEnumConstraintList* makeEmbeddedConstraints(
-    Dim4Triangulation* triangulation, HyperCoords flavour);
+    Dim4Triangulation* triangulation, HyperCoords coords);
 
 /*@}*/
 
@@ -844,8 +844,8 @@ inline NNormalHypersurfaceList::~NNormalHypersurfaceList() {
         FuncDelete<NNormalHypersurface>());
 }
 
-inline HyperCoords NNormalHypersurfaceList::getFlavour() const {
-    return flavour_;
+inline HyperCoords NNormalHypersurfaceList::coords() const {
+    return coords_;
 }
 
 inline bool NNormalHypersurfaceList::isEmbeddedOnly() const {
@@ -866,7 +866,7 @@ inline bool NNormalHypersurfaceList::dependsOnParent() const {
 }
 
 inline NMatrixInt* NNormalHypersurfaceList::recreateMatchingEquations() const {
-    return makeMatchingEquations(getTriangulation(), flavour_);
+    return makeMatchingEquations(getTriangulation(), coords_);
 }
 
 inline NNormalHypersurfaceList::VectorIterator::VectorIterator() {
@@ -987,8 +987,8 @@ inline NNormalHypersurfaceList::HypersurfaceInserter&
     return *this;
 }
 
-inline NNormalHypersurfaceList::NNormalHypersurfaceList(HyperCoords flavour,
-        bool embeddedOnly) : flavour_(flavour), embedded_(embeddedOnly) {
+inline NNormalHypersurfaceList::NNormalHypersurfaceList(HyperCoords coords,
+        bool embeddedOnly) : coords_(coords), embedded_(embeddedOnly) {
 }
 
 inline NNormalHypersurfaceList::VertexEnumerator::VertexEnumerator(

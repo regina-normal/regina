@@ -80,7 +80,7 @@ const unsigned char NPerm3::productTable[6][6] = {
     { 5, 4, 3, 2, 1, 0 }
 };
 
-std::string NPerm3::toString() const {
+std::string NPerm3::str() const {
     char ans[4];
     ans[0] = static_cast<char>('0' + imageTable[code_][0]);
     ans[1] = static_cast<char>('0' + imageTable[code_][1]);

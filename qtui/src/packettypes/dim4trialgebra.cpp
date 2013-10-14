@@ -106,8 +106,8 @@ QWidget* Dim4TriHomologyUI::getInterface() {
 
 void Dim4TriHomologyUI::refresh() {
     if (tri->isValid()) {
-        H1->setText(tri->getHomologyH1().toString().c_str());
-        H2->setText(tri->getHomologyH2().toString().c_str());
+        H1->setText(tri->getHomologyH1().str().c_str());
+        H2->setText(tri->getHomologyH2().str().c_str());
     } else {
         QString msg(QObject::tr("Invalid Triangulation"));
         H1->setText(msg);
@@ -280,7 +280,7 @@ void Dim4TriFundGroupUI::refresh() {
             // This is the default text that comes from the calculation engine.
             for (long i = 0; i < nRels; ++i)
                 new QListWidgetItem(QString("1 = ") +
-                    pres.getRelation(i).toString().c_str(), fundRels);
+                    pres.getRelation(i).str().c_str(), fundRels);
         }
 
         simpDepth = 1;

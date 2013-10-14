@@ -102,6 +102,7 @@ void addDim2EdgePairing() {
         .def("isUnmatched", isUnmatched_unsigned)
         .def("isCanonical", &Dim2EdgePairing::isCanonical)
         .def("toString", &Dim2EdgePairing::toString)
+        .def("str", &Dim2EdgePairing::str)
         .def("toTextRep", &Dim2EdgePairing::toTextRep)
         .def("fromTextRep", &Dim2EdgePairing::fromTextRep,
             return_value_policy<manage_new_object>())
@@ -110,7 +111,7 @@ void addDim2EdgePairing() {
         .def("writeDotHeader", writeDotHeader_stdout, OL_writeDotHeader())
         .def("dotHeader", dotHeader_standalone, OL_dotHeader())
         .def("isClosed", &Dim2EdgePairing::isClosed)
-        .def("__str__", &Dim2EdgePairing::toString)
+        .def("__str__", &Dim2EdgePairing::str)
         .staticmethod("fromTextRep")
         .staticmethod("writeDotHeader")
         .staticmethod("dotHeader")

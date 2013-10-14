@@ -102,6 +102,7 @@ void addDim4FacetPairing() {
         .def("isUnmatched", isUnmatched_unsigned)
         .def("isCanonical", &Dim4FacetPairing::isCanonical)
         .def("toString", &Dim4FacetPairing::toString)
+        .def("str", &Dim4FacetPairing::str)
         .def("toTextRep", &Dim4FacetPairing::toTextRep)
         .def("fromTextRep", &Dim4FacetPairing::fromTextRep,
             return_value_policy<manage_new_object>())
@@ -110,7 +111,7 @@ void addDim4FacetPairing() {
         .def("writeDotHeader", writeDotHeader_stdout, OL_writeDotHeader())
         .def("dotHeader", dotHeader_standalone, OL_dotHeader())
         .def("isClosed", &Dim4FacetPairing::isClosed)
-        .def("__str__", &Dim4FacetPairing::toString)
+        .def("__str__", &Dim4FacetPairing::str)
         .staticmethod("fromTextRep")
         .staticmethod("writeDotHeader")
         .staticmethod("dotHeader")
