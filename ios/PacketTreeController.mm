@@ -175,7 +175,7 @@
     else
         cell = [tableView dequeueReusableCellWithIdentifier:@"Packet" forIndexPath:indexPath];
     cell.textLabel.text = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
-    unsigned long sub = p->getNumberOfDescendants();
+    unsigned long sub = p->getNumberOfChildren();
     if (sub == 0)
         cell.detailTextLabel.text = @"";
     else if (sub == 1)
