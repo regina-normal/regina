@@ -144,7 +144,8 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * successful, or null if the given string was not a valid
          * isomorphism signature.
          */
-        static Triangulation* fromIsoSig(const std::string& sig);
+        static typename DimTraits<dim>::Triangulation* fromIsoSig(
+            const std::string& sig);
 
         /**
          * Deduces the number of top-dimensional simplices in a
