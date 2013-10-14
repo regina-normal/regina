@@ -371,8 +371,8 @@ void processTree() {
 
                 std::ostringstream s;
                 s << "Class " << classNum << " : " <<
-                    cit->first->getHomologyH1().toString() << " ; " <<
-                    cit->first->getHomologyH2().toString();
+                    cit->first->getHomologyH1().str() << " ; " <<
+                    cit->first->getHomologyH2().str();
                 className = s.str();
                 classNum++;
 
