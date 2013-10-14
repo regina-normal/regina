@@ -109,6 +109,8 @@ Version 4.95  [ (under development) ]
               registry.  See the NPacket class notes for details.
             - The constant packetType is now a compile-time enum constant,
               not a static const int.
+            - Routine getFullName() now replaces an empty label with the text
+              "(No label)", since this is intended for human-readable output.
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic aliases orderedSn, SnIndex() and
               orderedSnIndex().  These all reference existing arrays/routines
@@ -199,6 +201,9 @@ Version 4.95  [ (under development) ]
             - All *.tcc headers have been renamed as *-impl.h, to play
               better with development IDEs.  The old header names are now
               deprecated but have likewise been kept for backward compatibility.
+    USER INTERFACE:
+        - The root container packet is now hidden from the user (it still
+          exists internally within the packet tree).
 
 Version 4.94  [ 24 September, 2013 ]
 

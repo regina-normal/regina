@@ -250,6 +250,9 @@ class REGINA_API NPacket : public ShareableObject {
          * Returns a descriptive text string for the packet.
          * The string is of the form <i>label (packet-type)</i>.
          *
+         * If this packet has no label, then the label will be replaced by
+         * the text "(No label)" instead.
+         *
          * @return the descriptive text string.
          */
         std::string getFullName() const;
@@ -1197,10 +1200,6 @@ inline NPacket::NPacket(NPacket* parent) : firstTreeChild(0), lastTreeChild(0),
 
 inline const std::string& NPacket::getPacketLabel() const {
     return packetLabel;
-}
-
-inline std::string NPacket::getFullName() const {
-    return packetLabel + " (" + getPacketTypeName() + ")";
 }
 
 inline bool NPacket::hasTag(const std::string& tag) const {
