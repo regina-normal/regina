@@ -228,7 +228,7 @@ int NPerm5::compareWith(const NPerm5& other) const {
     return 0;
 }
 
-std::string NPerm5::toString() const {
+std::string NPerm5::str() const {
     char ans[6];
     for (int i = 0; i < 5; i++)
         ans[i] = static_cast<char>('0' + imageOf(i));

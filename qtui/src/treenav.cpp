@@ -57,19 +57,11 @@ void ReginaMain::moveShallow() {
     }
 
     regina::NPacket* parent = packet->getTreeParent();
-    if (! parent) {
-        ReginaSupport::info(this,
-            tr("This packet is already at the top of the tree."),
-            tr("I cannot move it to a higher level."));
-        return;
-    }
-
     regina::NPacket* grandparent = parent->getTreeParent();
     if (! grandparent) {
         ReginaSupport::info(this,
-            tr("The root of the packet tree must stay fixed."),
-            tr("I cannot move this packet to the top level to take "
-            "its place."));
+            tr("This is already a top-level packet."),
+            tr("I cannot move it to a higher level in the tree."));
         return;
     }
 
@@ -83,13 +75,6 @@ void ReginaMain::moveDeep() {
     regina::NPacket* packet = checkPacketSelected();
     if (! packet)
         return;
-
-    if (! packet->getTreeParent()) {
-        ReginaSupport::info(this,
-            tr("The root of the packet tree must stay fixed."),
-            tr("I cannot move it to a lower level."));
-        return;
-    }
 
     if (packet->dependsOnParent()) {
         ReginaSupport::info(this,

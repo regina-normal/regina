@@ -176,7 +176,7 @@ bool NPerm4::isPermCode(unsigned char code) {
     return (mask == 15);
 }
 
-std::string NPerm4::toString() const {
+std::string NPerm4::str() const {
     char ans[5];
     for (int i = 0; i < 4; i++)
         ans[i] = static_cast<char>('0' + imageTable[code_][i]);

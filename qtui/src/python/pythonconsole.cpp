@@ -330,13 +330,13 @@ bool PythonConsole::importRegina() {
 void PythonConsole::setRootPacket(regina::NPacket* packet) {
     if (interpreter->setVar("root", packet)) {
         if (packet)
-            addOutput(tr("The root of the packet tree is in the "
+            addOutput(tr("The (invisible) root of the packet tree is in the "
                 "variable [root]."));
     } else {
         ReginaSupport::warn(this,
             tr("<qt>I could not set the <i>root</i> variable.</qt>"),
-            tr("The root of the packet tree will not be available in "
-            "this Python session.  Please report this error to %2.")
+            tr("The (invisible) root of the packet tree will not be available "
+            "in this Python session.  Please report this error to %2.")
             .arg(PACKAGE_BUGREPORT));
         addError(tr("The variable \"root\" has not been set."));
     }

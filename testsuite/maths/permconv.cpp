@@ -67,7 +67,7 @@ class PermConvTest : public CppUnit::TestFixture {
             for (int i = 0; i < 24; ++i) {
                 p = NPerm4::S4[i];
                 q = regina::perm5to4(regina::perm4to5(p));
-                if (! (p == q && p.toString() == q.toString())) {
+                if (! (p == q && p.str() == q.str())) {
                     std::ostringstream msg;
                     msg << "Permutation #" << i << " is changed after "
                         "NPerm4 -> NPerm5 -> NPerm4 conversion.";
@@ -85,7 +85,7 @@ class PermConvTest : public CppUnit::TestFixture {
                     continue;
 
                 q = regina::perm4to5(regina::perm5to4(p));
-                if (! (p == q && p.toString() == q.toString())) {
+                if (! (p == q && p.str() == q.str())) {
                     std::ostringstream msg;
                     msg << "Permutation #" << i << " is changed after "
                         "NPerm5 -> NPerm4 -> NPerm5 conversion.";
@@ -103,7 +103,7 @@ class PermConvTest : public CppUnit::TestFixture {
             for (int i = 0; i < 6; ++i) {
                 p = NPerm3::S3[i];
                 q = regina::perm4to3(regina::perm3to4(p));
-                if (! (p == q && p.toString() == q.toString())) {
+                if (! (p == q && p.str() == q.str())) {
                     std::ostringstream msg;
                     msg << "Permutation #" << i << " is changed after "
                         "NPerm3 -> NPerm4 -> NPerm3 conversion.";
@@ -121,7 +121,7 @@ class PermConvTest : public CppUnit::TestFixture {
                     continue;
 
                 q = regina::perm3to4(regina::perm4to3(p));
-                if (! (p == q && p.toString() == q.toString())) {
+                if (! (p == q && p.str() == q.str())) {
                     std::ostringstream msg;
                     msg << "Permutation #" << i << " is changed after "
                         "NPerm4 -> NPerm3 -> NPerm4 conversion.";
@@ -139,8 +139,8 @@ class PermConvTest : public CppUnit::TestFixture {
             std::string s1, s2;
             for (int i = 0; i < 24; ++i) {
                 p = NPerm4::S4[i];
-                s1 = p.toString() + "4";
-                s2 = regina::perm4to5(p).toString();
+                s1 = p.str() + "4";
+                s2 = regina::perm4to5(p).str();
                 if (s1 != s2) {
                     std::ostringstream msg;
                     msg << "Permutation #" << i << " gives the wrong "
@@ -160,8 +160,8 @@ class PermConvTest : public CppUnit::TestFixture {
                 if (p[4] != 4)
                     continue;
 
-                s1 = p.toString();
-                s2 = regina::perm5to4(p).toString() + "4";
+                s1 = p.str();
+                s2 = regina::perm5to4(p).str() + "4";
                 if (s1 != s2) {
                     std::ostringstream msg;
                     msg << "Permutation #" << i << " gives the wrong "
@@ -181,8 +181,8 @@ class PermConvTest : public CppUnit::TestFixture {
             std::string s1, s2;
             for (int i = 0; i < 6; ++i) {
                 p = NPerm3::S3[i];
-                s1 = p.toString() + "3";
-                s2 = regina::perm3to4(p).toString();
+                s1 = p.str() + "3";
+                s2 = regina::perm3to4(p).str();
                 if (s1 != s2) {
                     std::ostringstream msg;
                     msg << "Permutation #" << i << " gives the wrong "
@@ -202,8 +202,8 @@ class PermConvTest : public CppUnit::TestFixture {
                 if (p[3] != 3)
                     continue;
 
-                s1 = p.toString();
-                s2 = regina::perm4to3(p).toString() + "3";
+                s1 = p.str();
+                s2 = regina::perm4to3(p).str() + "3";
                 if (s1 != s2) {
                     std::ostringstream msg;
                     msg << "Permutation #" << i << " gives the wrong "

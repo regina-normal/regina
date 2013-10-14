@@ -198,15 +198,15 @@ class NXMLNormalSurfaceReader;
 class NMatrixInt;
 
 /**
- * A template that stores information about a particular flavour of
+ * A template that stores information about a particular
  * normal coordinate system.  Much of this information is given in the
  * form of compile-time constants and types.
  *
  * To iterate through cases for a given value of NormalCoords that is not
- * known until runtime, see the various forFlavour() routines defined in
- * flavourregistry.h.
+ * known until runtime, see the various forCoords() routines defined in
+ * coordregistry.h.
  *
- * This NormalInfo template should only be defined for \a flavourType
+ * This NormalInfo template should only be defined for \a coordType
  * arguments that represent coordinate systems in which you can create and
  * store normal surfaces.
  *
@@ -226,7 +226,7 @@ class NMatrixInt;
  *
  * \ifacespython Not present.
  */
-template <NormalCoords flavourType>
+template <NormalCoords coordType>
 struct NormalInfo;
 
 /**
@@ -301,9 +301,9 @@ struct NormalInfo;
  * <b>When deriving classes from NNormalSurfaceVector:</b>
  * <ul>
  *   <li>A new value must must be added to the NormalCoords enum in
- *   normalcoords.h to represent the new flavour of coordinate system.</li>
- *   <li>The file flavourregistry-impl.h must be updated to reflect the new
- *   flavour of coordinate system (the file itself contains instructions
+ *   normalcoords.h to represent the new coordinate system.</li>
+ *   <li>The file coordregistry-impl.h must be updated to reflect the new
+ *   coordinate system (the file itself contains instructions
  *   on how to do this).</li>
  *   <li>A corresponding specialisation of NormalInfo<> must be
  *   defined, typically in the same header as the new vector subclass.</li>
@@ -419,8 +419,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          *
          * \pre At most one octagonal disc \e type exists in this surface.
          * \pre This normal surface vector is using a
-         * flavour of coordinate system that allows for almost normal
-         * surfaces.
+         * coordinate system that allows for almost normal surfaces.
          *
          * @param triang the triangulation in which this normal surface lives.
          * @return \c true if and only if there is an octagonal disc type
@@ -689,7 +688,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
 
         /**
          * Returns a new normal surface vector of the appropriate length
-         * for the given triangulation and for the flavour of coordinate
+         * for the given triangulation and for the coordinate
          * system corresponding to this subclass of NNormalSurfaceVector.
          * All elements of the new vector will be initialised to zero.
          *
@@ -705,7 +704,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
         #endif
         /**
          * Creates a new set of normal surface matching equations for
-         * the given triangulation using the flavour of coordinate
+         * the given triangulation using the coordinate
          * system corresponding to this particular subclass of
          * NNormalSurfaceVector.
          *
@@ -723,7 +722,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * Creates a new set of validity constraints representing
          * the condition that normal surfaces be embedded.  The
          * validity constraints will be expressed relative to the
-         * flavour of coordinate system corresponding to this particular
+         * coordinate system corresponding to this particular
          * subclass of NNormalSurfaceVector.
          *
          * @param triangulation the triangulation upon which these
@@ -744,7 +743,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
  * The information provided by the various query methods is independent
  * of the underlying coordinate system being used.
  * See the NNormalSurfaceVector class notes for details of what to do
- * when introducing a new flavour of coordinate system.
+ * when introducing a new coordinate system.
  *
  * Note that non-compact surfaces (surfaces with infinitely many discs,
  * such as spun-normal surfaces) are allowed; in these cases, the
@@ -1081,7 +1080,8 @@ class REGINA_API NNormalSurface : public ShareableObject {
         /**
          * The text representation will be in standard triangle-quad-oct
          * coordinates.  Octagonal coordinates will only be written if
-         * the surface is of a potentially almost normal flavour.
+         * the surface is stored using a coordinate system that supports
+         * almost normal surfaces.
          *
          * \ifacespython The paramater \a out does not exist, and is
          * taken to be standard output.
@@ -1489,7 +1489,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          *
          * Note that this routine has a number of preconditions.  Most
          * importantly, it will only work if both this and the given
-         * surface use the \e same flavour of coordinate system.
+         * surface use the \e same coordinate system.
          * Running this test over two surfaces with different coordinate
          * systems could give unpredictable results, and might
          * crash the program entirely.
@@ -1497,7 +1497,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * \pre Both this and the given normal surface live within the
          * same 3-manifold triangulation.
          * \pre Both this and the given normal surface are stored using
-         * the same flavour of coordinate system (i.e., the same
+         * the same coordinate system (i.e., the same
          * subclass of NNormalSurfaceVector).
          * \pre Both this and the given surface are compact (have
          * finitely many discs), embedded, non-empty and connected.
