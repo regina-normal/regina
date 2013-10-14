@@ -777,7 +777,7 @@ regina::NPacket* slaveSkeletonTree(
 
     descStream << "Processed a " << WORD_face << " pairing subsearch.\n\n"
         << WORD_Face << " pairing:\n"
-        << CensusType::pairingFor(search)->toString() << "\n\nSubsearch:\n"
+        << CensusType::pairingFor(search)->str() << "\n\nSubsearch:\n"
         << searchRep << "\n\n";
 
     slaveDescribeCensusParameters(descStream);
@@ -811,7 +811,7 @@ regina::NPacket* slaveSkeletonTree(
     std::ostringstream descStream;
 
     descStream << "Processed a single " << WORD_face << " pairing:\n"
-        << pairing->toString() << "\n\n";
+        << pairing->str() << "\n\n";
 
     slaveDescribeCensusParameters(descStream);
 

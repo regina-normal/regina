@@ -63,8 +63,8 @@ class REGINA_API NXMLNormalSurfaceReader : public NXMLElementReader {
             /**< The normal surface currently being read. */
         NTriangulation* tri;
             /**< The triangulation in which this surface lives. */
-        NormalCoords flavour;
-            /**< The flavour of coordinate system used by this surface. */
+        NormalCoords coords;
+            /**< The coordinate system used by this surface. */
         long vecLen;
             /**< The length of corresponding normal surface vector. */
         std::string name;
@@ -75,11 +75,10 @@ class REGINA_API NXMLNormalSurfaceReader : public NXMLElementReader {
          * Creates a new normal surface reader.
          *
          * @param newTri the triangulation in which this normal surface lives.
-         * @param newFlavour the flavour of coordinate system used by
-         * this normal surface.
+         * @param newCoords the coordinate system used by this normal surface.
          */
         NXMLNormalSurfaceReader(NTriangulation* newTri,
-            NormalCoords newFlavour);
+            NormalCoords newCoords);
 
         /**
          * Returns the normal surface that has been read.
@@ -135,8 +134,8 @@ class REGINA_API NXMLNormalSurfaceListReader : public NXMLPacketReader {
 // Inline functions for NXMLNormalSurfaceReader
 
 inline NXMLNormalSurfaceReader::NXMLNormalSurfaceReader(
-        NTriangulation* newTri, NormalCoords newFlavour) :
-        surface(0), tri(newTri), flavour(newFlavour), vecLen(-1) {
+        NTriangulation* newTri, NormalCoords newCoords) :
+        surface(0), tri(newTri), coords(newCoords), vecLen(-1) {
 }
 
 inline NNormalSurface* NXMLNormalSurfaceReader::getSurface() {

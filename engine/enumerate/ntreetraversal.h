@@ -1090,7 +1090,7 @@ inline bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::
         writeSurface(const NTreeEnumeration& tree, void*) {
     std::cout << "SOLN #" << tree.nSolns() << ": ";
     NNormalSurface* f = tree.buildSurface();
-    std::cout << f->toString() << std::endl;
+    std::cout << f->str() << std::endl;
     delete f;
     return true;
 }

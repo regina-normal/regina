@@ -68,7 +68,8 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     QLabel* createBeneath = new QLabel(parentPrompt);
     createBeneath->setWhatsThis(expln);
     parentStrip->addWidget(createBeneath);
-    chooser = new PacketChooser(tree, useFilter, false, defaultParent);
+    chooser = new PacketChooser(tree, useFilter,
+        PacketChooser::ROOT_AS_INSERTION_POINT, false, defaultParent);
     chooser->setWhatsThis(expln);
     parentStrip->addWidget(chooser, 1);
 

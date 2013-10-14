@@ -149,7 +149,7 @@ void NSurfaceHeaderUI::refresh() {
         "<qt>%1<br>Enumerated in %2 coordinates<br>"
         "Triangulation: <a href=\"#\">%3</a></qt>").
         arg(count).
-        arg(header->tr(Coordinates::name(surfaces->getFlavour(), false))).
+        arg(header->tr(Coordinates::name(surfaces->coords(), false))).
         arg(Qt::escape(
             surfaces->getTriangulation()->getPacketLabel().c_str())));
 }

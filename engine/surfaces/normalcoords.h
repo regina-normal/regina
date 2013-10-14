@@ -51,11 +51,11 @@ namespace regina {
  */
 
 /**
- * Represents different flavours of coordinate system that can
+ * Represents different coordinate systems that can
  * be used for enumerating and displaying normal surfaces.
  *
  * IDs 0-9999 are reserved for future use by Regina.  If you are extending
- * Regina to include your own flavour of coordinate system, you should choose
+ * Regina to include your own coordinate system, you should choose
  * an ID >= 10000.
  */
 enum NormalCoords {
@@ -79,9 +79,9 @@ enum NormalCoords {
      * wish to enumerate \e all almost normal surfaces (not just
      * the \e vertex almost normal surfaces).
      *
-     * This flavour is only used with legacy data files; new vectors
-     * and lists of this flavour cannot be created.  The underlying
-     * coordinate system is identical to NS_AN_STANDARD.
+     * This coordinate system is only used with legacy data files; new vectors
+     * and lists cannot be created in this coordinate system.  The underlying
+     * coordinates are identical to those of NS_AN_STANDARD.
      */
     NS_AN_LEGACY = 100,
     /**
@@ -98,14 +98,14 @@ enum NormalCoords {
     NS_AN_STANDARD = 102,
     /**
      * Represents edge weight coordinates for normal surfaces.
-     * This flavour is for display only; surface
-     * vectors and lists of this flavour cannot be created.
+     * This coordinate system is for display only; surface
+     * vectors and lists cannot be created in this coordinate system.
      */
     NS_EDGE_WEIGHT = 200,
     /**
      * Represents triangle arc coordinates for normal surfaces.
-     * This flavour is for display only; surface
-     * vectors and lists of this flavour cannot be created.
+     * This coordinate system is for display only; surface
+     * vectors and lists cannot be created in this coordinate system.
      */
     NS_TRIANGLE_ARCS = 201,
     /**

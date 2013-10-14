@@ -194,12 +194,12 @@ QWidget* NTriHomologyUI::getInterface() {
 }
 
 void NTriHomologyUI::refresh() {
-    H1->setText(tri->getHomologyH1().toString().c_str());
+    H1->setText(tri->getHomologyH1().str().c_str());
 
     if (tri->isValid()) {
-        H1Rel->setText(tri->getHomologyH1Rel().toString().c_str());
-        H1Bdry->setText(tri->getHomologyH1Bdry().toString().c_str());
-        H2->setText(tri->getHomologyH2().toString().c_str());
+        H1Rel->setText(tri->getHomologyH1Rel().str().c_str());
+        H1Bdry->setText(tri->getHomologyH1Bdry().str().c_str());
+        H2->setText(tri->getHomologyH2().str().c_str());
 
         unsigned long coeffZ2 = tri->getHomologyH2Z2();
         if (coeffZ2 == 0)
@@ -369,7 +369,7 @@ void NTriFundGroupUI::refresh() {
             // This is the default text that comes from the calculation engine.
             for (long i = 0; i < nRels; ++i)
                 new QListWidgetItem(QString("1 = ") +
-                    pres.getRelation(i).toString().c_str(), fundRels);
+                    pres.getRelation(i).str().c_str(), fundRels);
         }
 
         simpDepth = 1;
@@ -744,20 +744,20 @@ void NTriCellularInfoUI::refresh() {
         EulerChar->setText(QString::number(Minfo.eulerChar()));
 
         H0H1H2H3->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4").
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(0, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(1, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).            
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(2, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ).           
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(3, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->toString().c_str() ) );          
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(0, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->str().c_str() ).
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(1, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->str().c_str() ).            
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(2, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->str().c_str() ).           
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(3, NCellularData::coVariant, NCellularData::DUAL_coord, 0) )->str().c_str() ) );          
 
          HBdry->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3").
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(0, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ).
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(1, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ).            
-            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(2, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->toString().c_str() ) );          
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(0, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->str().c_str() ).
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(1, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->str().c_str() ).            
+            arg(Minfo.unmarkedGroup( NCellularData::GroupLocator(2, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0) )->str().c_str() ) );          
 
         BdryMap->setText(Minfo.homGroup( NCellularData::HomLocator( 
             NCellularData::GroupLocator( 1, NCellularData::coVariant, NCellularData::STD_BDRY_coord, 0 ), 
             NCellularData::GroupLocator( 1, NCellularData::coVariant, NCellularData::STD_coord, 0 ) ) 
-                        )->toString().c_str() );
+                        )->str().c_str() );
 
         if (! tri->isConnected()) {
             QString msg(QObject::tr("Triangulation is disconnected."));
@@ -796,7 +796,7 @@ void NTriCellularInfoUI::refresh() {
                 for (std::list< NSVPolynomialRing<NLargeInteger> >::iterator i = alex->begin();
                      i != alex->end(); i++)
                   {
-                  aString.append( i->toString() );
+                  aString.append( i->str() );
                   if (i!=alex->end()) aString.append(" ");
                   }
               AlexInv->setText(QObject::tr(aString.c_str()));
