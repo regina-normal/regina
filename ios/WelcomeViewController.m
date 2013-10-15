@@ -10,6 +10,10 @@
 
 @implementation WelcomeViewController
 
+- (IBAction)done:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
 - (void)viewDidLoad {    
     [super viewDidLoad];
     

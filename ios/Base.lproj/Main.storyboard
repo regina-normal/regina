@@ -39,7 +39,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="rTv-SX-fUu" kind="push" id="Wfi-CD-x3Y"/>
+                                    <segue destination="rTv-SX-fUu" kind="modal" modalPresentationStyle="formSheet" modalTransitionStyle="flipHorizontal" id="Wfi-CD-x3Y"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ReginaLarge" translatesAutoresizingMaskIntoConstraints="NO" id="AZB-5i-qpZ">
@@ -76,11 +76,11 @@
                         <viewControllerLayoutGuide type="bottom" id="OFV-K8-Zca"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Ibu-pJ-tdC">
-                        <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0QO-uI-3Lh">
-                                <rect key="frame" x="0.0" y="64" width="703" height="704"/>
+                                <rect key="frame" x="0.0" y="44" width="540" height="576"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <dataDetectorType key="dataDetectorTypes"/>
@@ -88,17 +88,32 @@
                                     <outlet property="delegate" destination="rTv-SX-fUu" id="f81-dg-6HP"/>
                                 </connections>
                             </webView>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7bv-se-VpJ">
+                                <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Welcome" id="hYt-jx-EW7">
+                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="sHM-Cu-cPd">
+                                            <connections>
+                                                <action selector="done:" destination="rTv-SX-fUu" id="KzM-cR-JA8"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="0QO-uI-3Lh" secondAttribute="trailing" id="7rA-As-rDR"/>
                             <constraint firstItem="0QO-uI-3Lh" firstAttribute="leading" secondItem="Ibu-pJ-tdC" secondAttribute="leading" id="RaF-LP-ohd"/>
                             <constraint firstAttribute="bottom" secondItem="0QO-uI-3Lh" secondAttribute="bottom" id="RuZ-dE-YcZ"/>
-                            <constraint firstItem="0QO-uI-3Lh" firstAttribute="top" secondItem="kSg-Hu-uiE" secondAttribute="bottom" id="mDi-o9-qzA"/>
+                            <constraint firstAttribute="trailing" secondItem="7bv-se-VpJ" secondAttribute="trailing" id="TLm-8l-aUV"/>
+                            <constraint firstItem="0QO-uI-3Lh" firstAttribute="top" secondItem="7bv-se-VpJ" secondAttribute="bottom" id="bDX-2D-LEp"/>
+                            <constraint firstItem="7bv-se-VpJ" firstAttribute="leading" secondItem="Ibu-pJ-tdC" secondAttribute="leading" id="ryr-2J-haz"/>
+                            <constraint firstItem="7bv-se-VpJ" firstAttribute="top" secondItem="kSg-Hu-uiE" secondAttribute="bottom" id="uBd-JT-xdQ"/>
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Getting Started" id="Noc-pD-Dih"/>
                     <connections>
                         <outlet property="html" destination="0QO-uI-3Lh" id="gt4-ID-mDT"/>
                     </connections>
