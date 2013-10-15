@@ -2846,9 +2846,9 @@
 			productReference = 052FA0C11806072900FAE4DF /* regtestsuite */;
 			productType = "com.apple.product-type.tool";
 		};
-		052FA1271806102F00FAE4DF /* Regina */ = {
+		052FA1271806102F00FAE4DF /* iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 052FA15D1806103000FAE4DF /* Build configuration list for PBXNativeTarget "Regina" */;
+			buildConfigurationList = 052FA15D1806103000FAE4DF /* Build configuration list for PBXNativeTarget "iOS" */;
 			buildPhases = (
 				052FA1241806102F00FAE4DF /* Sources */,
 				052FA1251806102F00FAE4DF /* Frameworks */,
@@ -2859,7 +2859,7 @@
 			);
 			dependencies = (
 			);
-			name = Regina;
+			name = iOS;
 			productName = Regina;
 			productReference = 052FA1281806102F00FAE4DF /* Regina.app */;
 			productType = "com.apple.product-type.application";
@@ -2910,7 +2910,7 @@
 			targets = (
 				0575E6581805F36D009E3FC4 /* Engine */,
 				052FA0C01806072900FAE4DF /* Test Suite */,
-				052FA1271806102F00FAE4DF /* Regina */,
+				052FA1271806102F00FAE4DF /* iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -3724,7 +3724,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		052FA15D1806103000FAE4DF /* Build configuration list for PBXNativeTarget "Regina" */ = {
+		052FA15D1806103000FAE4DF /* Build configuration list for PBXNativeTarget "iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				052FA1591806103000FAE4DF /* Debug */,

@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "052FA1271806102F00FAE4DF"
                BuildableName = "Regina.app"
-               BlueprintName = "Regina"
+               BlueprintName = "iOS"
                ReferencedContainer = "container:Regina.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,7 +44,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "052FA1271806102F00FAE4DF"
             BuildableName = "Regina.app"
-            BlueprintName = "Regina"
+            BlueprintName = "iOS"
             ReferencedContainer = "container:Regina.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -63,7 +63,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "052FA1271806102F00FAE4DF"
             BuildableName = "Regina.app"
-            BlueprintName = "Regina"
+            BlueprintName = "iOS"
             ReferencedContainer = "container:Regina.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -81,7 +81,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "052FA1271806102F00FAE4DF"
             BuildableName = "Regina.app"
-            BlueprintName = "Regina"
+            BlueprintName = "iOS"
             ReferencedContainer = "container:Regina.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
