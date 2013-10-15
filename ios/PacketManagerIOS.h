@@ -30,43 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketManager.h"
-#import "packet/npacket.h"
+#import <Foundation/Foundation.h>
 
-@implementation PacketManager
-
-+ (UIImage*)iconFor:(regina::NPacket *)p {
-    switch (p->getPacketType()) {
-        case regina::PACKET_ANGLESTRUCTURELIST:
-            return [UIImage imageNamed:@"icons/packet/angles-32"];
-            break;
-        case regina::PACKET_CONTAINER:
-            return [UIImage imageNamed:@"icons/packet/container-32"];
-            break;
-        case regina::PACKET_DIM2TRIANGULATION:
-            return [UIImage imageNamed:@"icons/packet/dim2triangulation-32"];
-            break;
-        case regina::PACKET_NORMALSURFACELIST:
-            return [UIImage imageNamed:@"icons/packet/surfaces-32"];
-            break;
-        case regina::PACKET_PDF:
-            return [UIImage imageNamed:@"icons/packet/pdf-32"];
-            break;
-        case regina::PACKET_SCRIPT:
-            return [UIImage imageNamed:@"icons/packet/script-32"];
-            break;
-        case regina::PACKET_SURFACEFILTER:
-            return [UIImage imageNamed:@"icons/packet/filter-32"];
-            break;
-        case regina::PACKET_TEXT:
-            return [UIImage imageNamed:@"icons/packet/text-32"];
-            break;
-        case regina::PACKET_TRIANGULATION:
-            return [UIImage imageNamed:@"icons/packet/triangulation-32"];
-            break;
-        default:
-            return nil;
-    }
+namespace regina {
+    class NPacket;
 }
+
+@interface PacketManagerIOS : NSObject
+
++ (UIImage*)iconFor:(regina::NPacket*)p;
 
 @end

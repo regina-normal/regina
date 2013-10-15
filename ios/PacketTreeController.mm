@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketManager.h"
+#import "PacketManagerIOS.h"
 #import "PacketTreeController.h"
 
 #import "file/nxmlfile.h"
@@ -182,7 +182,7 @@
         cell.detailTextLabel.text = @"1 subpacket";
     else
         cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu subpackets", sub];
-    cell.imageView.image = [PacketManager iconFor:p];
+    cell.imageView.image = [PacketManagerIOS iconFor:p];
 
     return cell;
 }
