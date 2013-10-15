@@ -179,10 +179,13 @@
         [hud setLabelText:@"Loading"];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             // The real work: load the file.
-            [[segue destinationViewController] openExample:_examples[indexPath.row]];
+            Example* e = _examples[indexPath.row];
+            [[segue destinationViewController] openExample:e];
 
             dispatch_async(dispatch_get_main_queue(), ^{
-                [[segue destinationViewController] refreshPackets];
+                PacketTreeController* c = [segue destinationViewController];
+                [c setTitle:e.desc];
+                [c refreshPackets];
                 [MBProgressHUD hideHUDForView:rootView animated:YES];
             });
         });

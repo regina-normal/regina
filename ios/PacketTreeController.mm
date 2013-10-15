@@ -95,7 +95,6 @@
 
 - (void)openExample:(Example*)e {
     [self loadTreeResource:e.file];
-    [self setTitle:e.desc];
     // TODO: Trap errors.
 }
 
