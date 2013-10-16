@@ -209,7 +209,7 @@ void NCellularData::fillStandardHomologyCC()
     NGroupExpression wordle; // temp
 
     // various useful pointers, index holders.
-    const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL); 
+    const NEdge* edg(NULL);  const NTriangle* fac(NULL); const NTetrahedron* tet(NULL); 
     unsigned long I;
     
     // fill out CC
@@ -439,7 +439,7 @@ void NCellularData::fillDualHomologyCC()
  else // tri3 != NULL
  {
     // various useful pointers, index holders.
-    const NVertex* vrt(NULL);  const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL); 
+    const NVertex* vrt(NULL);  const NEdge* edg(NULL);  const NTriangle* fac(NULL); const NTetrahedron* tet(NULL); 
 
     CC = new ccMapType(2);
     unsigned long D = 1; // outer loop the row parameter. We start with dCC[1]
@@ -815,7 +815,7 @@ void NCellularData::fillMixedHomologyCC()
   else // tri3 != NULL
  {    
    // various useful pointers, index holders.
-    const NVertex* vrt(NULL);  const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL); 
+    const NVertex* vrt(NULL);  const NEdge* edg(NULL);  const NTriangle* fac(NULL); const NTetrahedron* tet(NULL); 
     unsigned long I;
    // we'll also need to remember some placeholder indices
    unsigned long ri1 = numNonIdealCells[0];        unsigned long ri2 = ri1 + numNonIdealCells[1];
@@ -1118,7 +1118,7 @@ void NCellularData::fillBoundaryHomologyCC()
  else // tri3 != NULL
   {
     // various useful pointers, index holders.
-    const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL); 
+    const NEdge* edg(NULL);  const NTriangle* fac(NULL); const NTetrahedron* tet(NULL); 
     unsigned long I;
     
     // now we fill them out, first sbCC.  sbCC[0] is zero, 
@@ -1284,7 +1284,7 @@ void NCellularData::fillRelativeHomologyCC()
   else // tri3 != NULL
   {
     // various useful pointers, index holders.
-    const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL);
+    const NEdge* edg(NULL);  const NTriangle* fac(NULL); const NTetrahedron* tet(NULL);
     unsigned long I;
     
     // now we fill them out, first srCC.  srCC[0] is zero, 

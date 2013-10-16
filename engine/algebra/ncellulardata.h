@@ -854,12 +854,12 @@ private:
       std::vector< NPerm4 > vrtinc; };
 
    struct dim3BoundaryEdgeInclusion
-    { NFace *firstfac, *secondfac;
+    { NTriangle *firstfac, *secondfac;
       unsigned long firstedgnum, secondedgnum; 
       NPerm3 firstperm, secondperm; };
 
    struct dim3BoundaryVertexInclusion
-    { std::vector< NFace* > face;
+    { std::vector< NTriangle* > face;
       std::vector< unsigned long > vrtnum; 
       std::vector< NPerm3 > vrtinc; };
 
@@ -886,7 +886,7 @@ private:
      *
      * normalsDim3BdryEdges is a vector that assigns to the i-th boundary face 
      * [tri3->getEdge(bcIx[1][i])] the two boundary faces that contain it and the edge number 
-     * of the edge in the NFace.  firstperm and secondperm describe where the edge vertices 
+     * of the edge in the NTriangle.  firstperm and secondperm describe where the edge vertices 
      * 0, 1 get sent to in the face, with 2 going to the edge number in the face. 
      *
      * normalsDim3BdryVertices is a vector that assigns to the i-th boundary vertex 
@@ -942,9 +942,9 @@ private:
     /**
      * Same routines for 3-dimensional triangulations.
      */
-    bool inMaximalTree(const NFace* fac) const;
+    bool inMaximalTree(const NTriangle* fac) const;
     bool inMaximalTree(const NEdge* edg) const;
-    bool inMaximalTree(const NFace* fac, unsigned long num) const;
+    bool inMaximalTree(const NTriangle* fac, unsigned long num) const;
     bool inMaximalTree(const NTetrahedron* tet, unsigned long num) const;
     
    /**
@@ -953,7 +953,7 @@ private:
     */ 
    unsigned long nicIxLookup(const NVertex* vrt) const;
    unsigned long nicIxLookup(const NEdge* edg) const;
-   unsigned long nicIxLookup(const NFace* fac) const;
+   unsigned long nicIxLookup(const NTriangle* fac) const;
    unsigned long nicIxLookup(const NTetrahedron* tet) const;
    unsigned long nicIxLookup(const Dim4Vertex* vrt) const;
    unsigned long nicIxLookup(const Dim4Edge* edg) const;
@@ -962,7 +962,7 @@ private:
    unsigned long nicIxLookup(const Dim4Pentachoron* pen) const;
 
    unsigned long icIxLookup(const NEdge* edg, unsigned long i) const;
-   unsigned long icIxLookup(const NFace* fac, unsigned long i) const;
+   unsigned long icIxLookup(const NTriangle* fac, unsigned long i) const;
    unsigned long icIxLookup(const NTetrahedron* tet, unsigned long i) const;
    unsigned long icIxLookup(const Dim4Edge* edg, unsigned long i) const;
    unsigned long icIxLookup(const Dim4Triangle* fac, unsigned long i) const;
@@ -970,7 +970,7 @@ private:
    unsigned long icIxLookup(const Dim4Pentachoron* edg, unsigned long i) const;
 
    unsigned long dcIxLookup(const NTetrahedron* tet) const; 
-   unsigned long dcIxLookup(const NFace* fac) const; 
+   unsigned long dcIxLookup(const NTriangle* fac) const; 
    unsigned long dcIxLookup(const NEdge* edg) const; 
    unsigned long dcIxLookup(const NVertex* vrt) const; 
    unsigned long dcIxLookup(const Dim4Pentachoron* pen) const; 
@@ -981,7 +981,7 @@ private:
 
    unsigned long bcIxLookup(const NVertex* vrt) const; 
    unsigned long bcIxLookup(const NEdge* edg) const; 
-   unsigned long bcIxLookup(const NFace* fac) const; 
+   unsigned long bcIxLookup(const NTriangle* fac) const; 
    unsigned long bcIxLookup(const Dim4Vertex* vrt) const;
    unsigned long bcIxLookup(const Dim4Edge* edg) const;
    unsigned long bcIxLookup(const Dim4Triangle* fac) const;
@@ -989,7 +989,7 @@ private:
 
    unsigned long rIxLookup(const NVertex* vrt) const;
    unsigned long rIxLookup(const NEdge* edg) const;
-   unsigned long rIxLookup(const NFace* fac) const;
+   unsigned long rIxLookup(const NTriangle* fac) const;
    unsigned long rIxLookup(const NTetrahedron* tet) const;
    unsigned long rIxLookup(const Dim4Vertex* vrt) const;
    unsigned long rIxLookup(const Dim4Edge* edg) const;
@@ -1001,9 +1001,9 @@ private:
    unsigned long pi1Lookup(const Dim4Triangle* fac) const;
    unsigned long pi1Lookup(const Dim4Tetrahedron* tet, unsigned long num) const;
    unsigned long pi1Lookup(const Dim4Pentachoron* pen, unsigned long num) const;
-   unsigned long pi1Lookup(const NFace* fac) const;
+   unsigned long pi1Lookup(const NTriangle* fac) const;
    unsigned long pi1Lookup(const NEdge* edg) const;
-   unsigned long pi1Lookup(const NFace* fac, unsigned long num) const;
+   unsigned long pi1Lookup(const NTriangle* fac, unsigned long num) const;
    unsigned long pi1Lookup(const NTetrahedron* tet, unsigned long num) const;
 
    /**

@@ -101,7 +101,7 @@ return true;
 
 
 // dim3 
-bool NCellularData::inMaximalTree(const NFace* fac) const
+bool NCellularData::inMaximalTree(const NTriangle* fac) const
 {
 if (!binary_search( nicIx[2].begin(), nicIx[2].end(), tri3->faceIndex( fac ) ) ) return false; // not in list of faces!
 unsigned long I = lower_bound( nicIx[2].begin(), nicIx[2].end(), tri3->faceIndex( fac ) ) - nicIx[2].begin();
@@ -117,7 +117,7 @@ if (!binary_search( maxTreeStB.begin(), maxTreeStB.end(), I ) ) return false;
 return true; 
 }
 
-bool NCellularData::inMaximalTree(const NFace* fac, unsigned long num) const
+bool NCellularData::inMaximalTree(const NTriangle* fac, unsigned long num) const
 {
 if (!binary_search(icIx[1].begin(), icIx[1].end(), 3*tri3->faceIndex( fac ) + num ) ) return false; // not in list of ideal ends of faces
 unsigned long I = lower_bound( icIx[1].begin(), icIx[1].end(), 3*tri3->faceIndex( fac ) + num ) - icIx[1].begin();
@@ -150,7 +150,7 @@ return true;
      * vrtinc[2], vrtinc[3] forming a normal orientation.
      *
      * normalsDim3BdryEdges is a vector that assigns to the i-th boundary face [tri3->getEdge(bcIx[1][i])]
-     *  the two boundary faces that contain it and the edge number of the edge in the NFace.  
+     *  the two boundary faces that contain it and the edge number of the edge in the NTriangle.  
      *
      * normalsDim3BdryVertices is a vector that assigns to the i-th boundary vertex 
      * [tri3->getVertex(bcIx[0][i])] the circle of faces incident to that vertex, with vrtinc[1] 
@@ -247,7 +247,7 @@ void NCellularData::buildExtraNormalData()
   // std::vector< dim3BoundaryEdgeInclusion >   normalsDim3BdryEdges;
   //
   // struct dim3BoundaryEdgeInclusion
-  //  { NFace *firstfac, *secondfac;
+  //  { NTriangle *firstfac, *secondfac;
   //    unsigned long firstedgnum, secondedgnum; };
   //
   // construct normalsDim3BdryEdges
@@ -261,7 +261,7 @@ void NCellularData::buildExtraNormalData()
 
     const NEdgeEmbedding emb1( edg->getEmbeddings().front() );
     NPerm4 edgPerm( emb1.getVertices() );        const NTetrahedron* tet1( emb1.getTetrahedron() );  
-    NFace* fac1 ( tet1->getFace( edgPerm[3] ) ); NPerm4 facPerm( fac1->getEmbedding(0).getVertices() );
+    NTriangle* fac1 ( tet1->getFace( edgPerm[3] ) ); NPerm4 facPerm( fac1->getEmbedding(0).getVertices() );
     normalsDim3BdryEdges[i].firstfac = fac1;
     normalsDim3BdryEdges[i].firstedgnum = facPerm.preImageOf( edgPerm[2] );
     normalsDim3BdryEdges[i].firstperm = NPerm3( facPerm.preImageOf( edgPerm[0] ), 
@@ -269,14 +269,14 @@ void NCellularData::buildExtraNormalData()
 
     const NEdgeEmbedding emb2( edg->getEmbeddings().back() );
     edgPerm = emb2.getVertices();                 const NTetrahedron* tet2( emb2.getTetrahedron() );  
-    NFace* fac2 ( tet2->getFace( edgPerm[2] ) );  facPerm = fac2->getEmbedding(0).getVertices();
+    NTriangle* fac2 ( tet2->getFace( edgPerm[2] ) );  facPerm = fac2->getEmbedding(0).getVertices();
     normalsDim3BdryEdges[i].secondfac = fac2;
     normalsDim3BdryEdges[i].secondedgnum = facPerm.preImageOf( edgPerm[3] );
     normalsDim3BdryEdges[i].secondperm = NPerm3( facPerm.preImageOf( edgPerm[0] ), 
                facPerm.preImageOf( edgPerm[1] ), facPerm.preImageOf( edgPerm[3] ) );
    }
   // struct dim3BoundaryVertexInclusion
-  //  { std::vector< NFace* > face;
+  //  { std::vector< NTriangle* > face;
   //    std::vector< unsigned long > vrtnum; 
   //    std::vector< NPerm3 > vrtinc; };
   //
@@ -324,7 +324,7 @@ void NCellularData::buildExtraNormalData()
     bool toNextFace=true;
     while (toNextFace)
      {
-        NFace *prevFace, *nextFace;
+        NTriangle *prevFace, *nextFace;
         unsigned long prevVN, nextVN;
         NPerm3 prevPerm, nextPerm;
         prevFace = normalsDim3BdryVertices[i].face.back(); 
@@ -410,7 +410,7 @@ void NCellularData::buildExtraNormalData()
       // run through icIx[1] check to see if the corresponding ideal vertex is in bcomp
       for (unsigned long j=0; j<icIx[1].size(); j++)
        {
-        const NFace* fac( tri3->getFace( icIx[1][j] / 3 ) ); 
+        const NTriangle* fac( tri3->getFace( icIx[1][j] / 3 ) ); 
         const NVertex* vrt( fac->getVertex(icIx[1][j] % 3 ) );
         if (vrt->isIdeal()) if (tri3->boundaryComponentIndex( vrt->getBoundaryComponent() )==i)
          idBdryCompIndexCD1[j] = numIdealBdryComps;
@@ -592,7 +592,7 @@ void NCellularData::buildMaximalTree()
     unexploredV = newVertexListI.begin();
 
     // *unexploredV is the icIx[2]-index of the ideal dual 0-cell
-    const NTetrahedron* tet(NULL); unsigned long idvnum; const NFace* sepfac(NULL); 
+    const NTetrahedron* tet(NULL); unsigned long idvnum; const NTriangle* sepfac(NULL); 
         const NTetrahedron* adjtet(NULL);
     NPerm4 adjglue, facmap;
 
@@ -626,7 +626,7 @@ void NCellularData::buildMaximalTree()
     unexploredV = newVertexListB.begin();
 
     // *unexploredV is the bcIx[3]-index of the standard boundary dual 0-cell
-    const NFace* bfac(NULL); 
+    const NTriangle* bfac(NULL); 
     bfac = tri3 -> getFace( bcIx[2][*unexploredV] ); // bfac
 
     for (unsigned long i=0; i<3; i++) // cross all faces
@@ -687,7 +687,7 @@ void NCellularData::buildMaximalTree()
     // step 2 look for standard boundary connectors. If one found, record and exit loop
     for (unsigned long i=0; i<4; i++) if ( tet -> getFace(int(i)) -> isBoundary() )
      {
-      const NFace* bfac( tet -> getFace(int(i)) );
+      const NTriangle* bfac( tet -> getFace(int(i)) );
       unsigned long I ( bcIxLookup( bfac ) );
       unsigned long J (nicIxLookup( bfac ) );
       if (!binary_search( visitedBd.begin(), visitedBd.end(), I ) ) // not found
@@ -1007,7 +1007,7 @@ void NCellularData::buildFundGrpPres() const
   } // end tri4
  else
   { // tri3 
-   NFace* currFac (NULL); NTetrahedron* currTet (NULL); NFace* fac (NULL); unsigned long currTetFace;
+   NTriangle* currFac (NULL); NTetrahedron* currTet (NULL); NTriangle* fac (NULL); unsigned long currTetFace;
 
    // okay, lets start finding relators. Relators dual to edges. There are two types. 
    //  1) Non-boundary. 
@@ -1108,7 +1108,7 @@ void NCellularData::buildFundGrpPres() const
      // call normalsDim3BdryEdges[i] for bcIx[0][i] normal data.
      for (unsigned long j=0; j<normalsDim3BdryVertices[i].face.size(); j++)
       {
-       const NFace* fac( normalsDim3BdryVertices[i].face[j] );
+       const NTriangle* fac( normalsDim3BdryVertices[i].face[j] );
         // unsigned long edgnum ( normalsDim4BdryEdges[i].edgenum[j] );
        NPerm3 vrtinc ( normalsDim3BdryVertices[i].vrtinc[j] );
        // find the face that edginc[2] [3] comes out of
@@ -1158,7 +1158,7 @@ void NCellularData::buildFundGrpPres() const
        // them appropriately so we find fac's embeddings in pentachoral and look up the relevant ideal tets.  
        // so we are going across the tetrahedron in pen whose vertices are marked by facemb[0][1][2] and [3]
        // ie tetrahedron  labelled by facemb[4]. 
-       const NFace* fac ( tet->getFace( edgemb[3] ) );
+       const NTriangle* fac ( tet->getFace( edgemb[3] ) );
        NPerm4 facemb( tet->getFaceMapping( edgemb[3] ) );
        // vertex idEdg of fac corresponds to tetemb^{-1} facemb[idEdg] of tet.  So let's see if it is in the 
        // maximal tree icIx[2] stored as 4*tetindx + num
@@ -1190,7 +1190,7 @@ void NCellularData::buildFundGrpPres() const
    for (unsigned long i=0; i<icIx[1].size(); i++)
     {
      NGroupExpression relator; 
-     const NFace* fac ( tri3->getFace( icIx[1][i]/3 ) );
+     const NTriangle* fac ( tri3->getFace( icIx[1][i]/3 ) );
      unsigned long idEdg ( icIx[1][i] % 3 );  // ideal end number of tet
 
      // these relators have at most 4 terms depending on how many of the relevant edges are in the maximal

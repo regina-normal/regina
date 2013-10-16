@@ -150,7 +150,7 @@ void fillDualToMixedHomCM( const NTriangulation* tri, const unsigned long numDua
  delta[3] = 0;
 
  // various useful pointers, index holders.
- const NVertex* vrt(NULL);  const NEdge* edg(NULL);  const NFace* fac(NULL); 
+ const NVertex* vrt(NULL);  const NEdge* edg(NULL);  const NTriangle* fac(NULL); 
    const NTetrahedron* tet(NULL); 
  unsigned long J;
 
@@ -335,7 +335,7 @@ void fillDifferentialHomCM( const NTriangulation* tri,     const unsigned long n
 
  unsigned long I;
  // various useful pointers, index holders.
- const NEdge* edg(NULL);  const NFace* fac(NULL); const NTetrahedron* tet(NULL); 
+ const NEdge* edg(NULL);  const NTriangle* fac(NULL); const NTetrahedron* tet(NULL); 
 
  // boundary relative 1-cells
  unsigned long D=1;
@@ -420,7 +420,7 @@ if ( aDim == 3 )
 	}
   else if (domdim == 1) for (unsigned long i=0; i<CM.rows(); i++)
 	{
-	 const NFace* fac( tri3->getFace( dcIx[domdim][i] ) );
+	 const NTriangle* fac( tri3->getFace( dcIx[domdim][i] ) );
          const NTetrahedron* tet( fac->getEmbedding(0).getTetrahedron() );
          NPerm4 emb( fac->getEmbedding(0).getVertices() );
 	 CM.entry( i, i ) = emb.sign()*tet->orientation();  
