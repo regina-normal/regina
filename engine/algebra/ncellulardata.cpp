@@ -386,7 +386,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
      if ( (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 2) )
        for (unsigned long i=0; i<numRelativeCells[2]; i++)
         { // each STD_REL_BDRY cell has <= 3 boundary 1-cells, each one corresponds to a DUAL cell...
-         const NFace* fac( tri3->getFace( rIx[2][i] ) ); const NEdge* edg(NULL);
+         const NTriangle* fac( tri3->getFace( rIx[2][i] ) ); const NEdge* edg(NULL);
          const NTetrahedron* tet( fac->getEmbedding(1).getTetrahedron() );
          for (unsigned long j=0; j<3; j++)
 	  {
@@ -423,7 +423,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
      if ( (f_desc.ldomain.dim == 1) && (f_desc.rdomain.dim == 2) )
        for (unsigned long i=0; i<numRelativeCells[2]; i++)
         {
-         const NFace* fac( tri3->getFace( rIx[2][i] ) ); 
+         const NTriangle* fac( tri3->getFace( rIx[2][i] ) ); 
          const NTetrahedron* tet( fac->getEmbedding(0).getTetrahedron() );
          unsigned long J( lower_bound( dcIx[1].begin(), dcIx[1].end(), rIx[2][i] ) - dcIx[1].begin() );
          NMultiIndex< unsigned long > x(3); x[0] = J; 
@@ -657,7 +657,7 @@ const NBilinearForm* NCellularData::bilinearForm( const FormLocator &f_desc ) co
 	   NLargeInteger sum(NLargeInteger::zero);
        for (unsigned long k=0; k<dual_1vec.size(); k++)
         {
-         const NFace* fac( tri3->getFace( rIx[2][k] ) ); // shouldn't this be k? previously i
+         const NTriangle* fac( tri3->getFace( rIx[2][k] ) ); // shouldn't this be k? previously i
          const NTetrahedron* tet( fac->getEmbedding(0).getTetrahedron() );
          NPerm4 facinc( fac->getEmbedding(0).getVertices() );
          sum += std_rel_bdry_2vec[k]*dual_1vec[k]*facinc.sign()*tet->orientation(); 
