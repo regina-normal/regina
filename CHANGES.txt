@@ -213,6 +213,8 @@ Version 4.95  [ (under development) ]
     USER INTERFACE:
         - The root container packet is now hidden from the user (it still
           exists internally within the packet tree).
+        - The old regina-kde placeholder app (which did nothing but pop up
+          a message directing the user to the new regina-gui) has been removed.
 
 Version 4.94  [ 24 September, 2013 ]
 
