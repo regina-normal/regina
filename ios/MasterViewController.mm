@@ -189,6 +189,9 @@
                 [MBProgressHUD hideHUDForView:rootView animated:YES];
             });
         });
+        
+        UINavigationController* c = [[[self splitViewController] viewControllers] lastObject];
+        [c performSegueWithIdentifier:@"openDocument" sender:self];
     }
 }
 

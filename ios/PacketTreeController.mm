@@ -88,6 +88,9 @@
         if ([self.navigationController.viewControllers indexOfObject:self] == NSNotFound) {
             delete _tree;
             NSLog(@"Closing file and deleting from memory.");
+            
+            UINavigationController* c = [[[self splitViewController] viewControllers] lastObject];
+            [c performSegueWithIdentifier:@"closeDocument" sender:self];
         }
     }
     [super viewDidDisappear:animated];
