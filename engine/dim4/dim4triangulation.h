@@ -1169,57 +1169,6 @@ class REGINA_API Dim4Triangulation : public NPacket,
             bool perform = true);
 
         /**
-         * Checks the eligibility of and/or performs a 1-5 move
-         * about the given facet. 
-         * This involves replacing the one pentachora with five, 
-         * one at each boundary tetrahedron of the original pentachoron.
-         *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
-         *
-         * Note that after performing this move, all skeletal objects
-         * (facets, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a f)
-         * can no longer be used.
-         *
-         * When applying a Pachner move to a triangulated n-manifold, one is
-         * finding a link of a k-facet of your triangulated n-manifold N
-         * which is combinatorially isomorphic to the link of k-facet in 
-         * the boundary of triangulated (n+1)-simplex.  One then replaces
-         * the link of the k-facet in N with the complement of the link of
-         * k-facet in the boundary of the (n+1)-simplex.  The complement of the
-         * link of the k-facet in the boundary of the (n+1)-simplex is the
-         * link of an (n-k)-facet.  We call the k-facet the attaching facet, 
-         * this is the input to a Pachner move.  The corresponding (n-k)-facet
-         * in the new triangulation is the belt facet (in analogy with surgery). 
-         * Since the link of a k-facet in the boundary of an (n+1)-simplex has 
-         * (n+1-k) top dimensional simplices, the link of the belt (n-k)-facet
-         * has (k+1) top dimensional simplices, so in a Pachner move one swaps
-         * (n+1-k) top dimensional simplices for (k+1), provided k is the dimension
-         * of the input facet.  
-         *
-         * In the new triangulation, the belt facet will be:
-         *  getPentachora().back()->getVertex( 4 )
-         * 
-         * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
-         * \pre The given facet is a facet of this triangulation.
-         *
-         * @param f the facet about which to perform the move.
-         * @param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
-         * is \c false, the function simply returns \c true.
-         */
-        bool oneFiveMove(Dim4Pentachoron* pen, bool check = true, 
-            bool perform = true);
-
-
-        /**
          * Checks the eligibility of and/or performs a 4-2 move
          * about the given edge.  This involves replacing the four pentachora 
          * joined at that edge with two pentachora joined along a single facet.
@@ -1370,6 +1319,56 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * is \c false, the function simply returns \c true.
          */
         bool twoFourMove(Dim4Tetrahedron* f, bool check = true,
+            bool perform = true);
+
+        /**
+         * Checks the eligibility of and/or performs a 1-5 move
+         * about the given facet. 
+         * This involves replacing the one pentachora with five, 
+         * one at each boundary tetrahedron of the original pentachoron.
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (facets, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a f)
+         * can no longer be used.
+         *
+         * When applying a Pachner move to a triangulated n-manifold, one is
+         * finding a link of a k-facet of your triangulated n-manifold N
+         * which is combinatorially isomorphic to the link of k-facet in 
+         * the boundary of triangulated (n+1)-simplex.  One then replaces
+         * the link of the k-facet in N with the complement of the link of
+         * k-facet in the boundary of the (n+1)-simplex.  The complement of the
+         * link of the k-facet in the boundary of the (n+1)-simplex is the
+         * link of an (n-k)-facet.  We call the k-facet the attaching facet, 
+         * this is the input to a Pachner move.  The corresponding (n-k)-facet
+         * in the new triangulation is the belt facet (in analogy with surgery). 
+         * Since the link of a k-facet in the boundary of an (n+1)-simplex has 
+         * (n+1-k) top dimensional simplices, the link of the belt (n-k)-facet
+         * has (k+1) top dimensional simplices, so in a Pachner move one swaps
+         * (n+1-k) top dimensional simplices for (k+1), provided k is the dimension
+         * of the input facet.  
+         *
+         * In the new triangulation, the belt facet will be:
+         *  getPentachora().back()->getVertex( 4 )
+         * 
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
+         * \pre The given facet is a facet of this triangulation.
+         *
+         * @param f the facet about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        bool oneFiveMove(Dim4Pentachoron* pen, bool check = true, 
             bool perform = true);
 
         /**
