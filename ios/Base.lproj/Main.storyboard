@@ -39,7 +39,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="rTv-SX-fUu" kind="modal" modalPresentationStyle="formSheet" modalTransitionStyle="flipHorizontal" id="Wfi-CD-x3Y"/>
+                                    <segue destination="rTv-SX-fUu" kind="modal" modalPresentationStyle="formSheet" id="Wfi-CD-x3Y"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ReginaLarge" translatesAutoresizingMaskIntoConstraints="NO" id="AZB-5i-qpZ">
