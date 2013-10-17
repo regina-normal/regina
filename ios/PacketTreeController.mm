@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#import "PacketDetailController.h"
 #import "PacketManagerIOS.h"
 #import "PacketTreeController.h"
 
@@ -147,6 +148,13 @@
     [self.tableView reloadData];
 }
 
+- (void)viewPacket:(regina::NPacket *)p {
+    // TODO: Make this easier to get to.
+    UINavigationController* nav = [[self splitViewController].viewControllers lastObject];
+    PacketDetailController* detail = (PacketDetailController*)nav.topViewController;
+    [detail navigationItem].title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
+}
+
 #pragma mark - Table View
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -160,6 +168,8 @@
     
     if (_subtreeRow > 0 && indexPath.row == _subtreeRow) {
         cell = [tableView dequeueReusableCellWithIdentifier:@"Subtree" forIndexPath:indexPath];
+        // We must set this programmatically, since the storyboard seems to insist on images
+        // living in the root directory.
         cell.imageView.image = [UIImage imageNamed:@"icons/packet/subtree-32"];
         return cell;
     }
@@ -197,11 +207,15 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (_subtreeRow > 0 && indexPath.row == _subtreeRow) {
         // The user has selected the existing browse-subtree cell.
+        // This is already attached to its own segue.
+        // Nothing more to do here.
         return;
     }
     if (_subtreeRow == indexPath.row + 1) {
         // The user has selected the packet whose browse-subtree cell is
         // already visible.
+        PacketTreeRow* r = _rows[indexPath.row];
+        [self viewPacket:r.packet];
         return;
     }
 
@@ -238,6 +252,7 @@
                                                [NSIndexPath indexPathForRow:oldSubtreeRow inSection:0]]
                              withRowAnimation:UITableViewRowAnimationTop];
     }
+    [self viewPacket:r.packet];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
