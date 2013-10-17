@@ -32,6 +32,12 @@
 
 #import <UIKit/UIKit.h>
 
+namespace regina {
+    class NPacket;
+}
+
 @interface PacketDetailController : UIViewController <UISplitViewControllerDelegate>
+
+- (void)viewPacket:(regina::NPacket*)p;
 
 @end

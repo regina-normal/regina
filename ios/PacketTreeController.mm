@@ -152,7 +152,7 @@
     // TODO: Make this easier to get to.
     UINavigationController* nav = [[self splitViewController].viewControllers lastObject];
     PacketDetailController* detail = (PacketDetailController*)nav.topViewController;
-    [detail navigationItem].title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
+    [detail viewPacket:p];
 }
 
 #pragma mark - Table View

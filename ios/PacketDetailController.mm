@@ -31,9 +31,10 @@
  **************************************************************************/
 
 #import "PacketDetailController.h"
+#import "packet/npacket.h"
 
 @interface PacketDetailController ()
-
+@property (weak, nonatomic) IBOutlet UITextView *detail;
 @end
 
 @implementation PacketDetailController
@@ -50,6 +51,11 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)viewPacket:(regina::NPacket *)p {
+    _detail.text = [NSString stringWithUTF8String:p->detail().c_str()];
+    [self navigationItem].title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
 }
 
 #pragma mark - Split view

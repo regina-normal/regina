@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		0513753D1809B8D3002E525B /* coordregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753B1809B8D2002E525B /* coordregistry-impl.h */; };
 		0513753E1809B8D3002E525B /* coordregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753C1809B8D2002E525B /* coordregistry.h */; };
-		0517A156180F760600551DB6 /* PacketDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0517A155180F760600551DB6 /* PacketDetailController.m */; };
+		0517A156180F760600551DB6 /* PacketDetailController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0517A155180F760600551DB6 /* PacketDetailController.mm */; };
 		0517A159180F96CA00551DB6 /* SwitchableDetailNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0517A158180F96CA00551DB6 /* SwitchableDetailNavigationController.m */; };
 		051E5F7D180C636000C9EF04 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 051E5F7C180C636000C9EF04 /* Settings.bundle */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
@@ -823,7 +823,7 @@
 		0513753B1809B8D2002E525B /* coordregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "coordregistry-impl.h"; sourceTree = "<group>"; };
 		0513753C1809B8D2002E525B /* coordregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coordregistry.h; sourceTree = "<group>"; };
 		0517A154180F760600551DB6 /* PacketDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketDetailController.h; sourceTree = "<group>"; };
-		0517A155180F760600551DB6 /* PacketDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PacketDetailController.m; sourceTree = "<group>"; };
+		0517A155180F760600551DB6 /* PacketDetailController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketDetailController.mm; sourceTree = "<group>"; };
 		0517A157180F96CA00551DB6 /* SwitchableDetailNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchableDetailNavigationController.h; sourceTree = "<group>"; };
 		0517A158180F96CA00551DB6 /* SwitchableDetailNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwitchableDetailNavigationController.m; sourceTree = "<group>"; };
 		051E5F7C180C636000C9EF04 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -2473,7 +2473,7 @@
 				052FA13E1806103000FAE4DF /* MasterViewController.h */,
 				052FA13F1806103000FAE4DF /* MasterViewController.mm */,
 				0517A154180F760600551DB6 /* PacketDetailController.h */,
-				0517A155180F760600551DB6 /* PacketDetailController.m */,
+				0517A155180F760600551DB6 /* PacketDetailController.mm */,
 				0523D888180B54850094DAAD /* PacketManagerIOS.h */,
 				0523D889180B54850094DAAD /* PacketManagerIOS.mm */,
 				05F96C111809F59600C99F96 /* PacketTreeController.h */,
@@ -3166,7 +3166,7 @@
 				052FA1D31806129B00FAE4DF /* crushandcut.cpp in Sources */,
 				052FA2081806129B00FAE4DF /* base64.cpp in Sources */,
 				052FA23C180612DD00FAE4DF /* update_shapes.c in Sources */,
-				0517A156180F760600551DB6 /* PacketDetailController.m in Sources */,
+				0517A156180F760600551DB6 /* PacketDetailController.mm in Sources */,
 				052FA23A180612DD00FAE4DF /* triangulations.c in Sources */,
 				052FA1BF1806129B00FAE4DF /* nlayeredsolidtorus.cpp in Sources */,
 				05F96C17180A153A00C99F96 /* MBProgressHUD.m in Sources */,
