@@ -30,8 +30,43 @@
  *                                                                        *
  **************************************************************************/
 
-#import <UIKit/UIKit.h>
+#import "SwitchableDetailNavigationController.h"
 
-@interface DetailViewController : UIViewController <UISplitViewControllerDelegate>
+@interface SwitchableDetailNavigationController ()
+
+@end
+
+@implementation SwitchableDetailNavigationController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view.
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // All segues here should be openDocument or closeDocument.
+    id src = [[segue sourceViewController] topViewController];
+    id dest = [[segue destinationViewController] topViewController];
+    UINavigationItem* srcNav = [src navigationItem];
+    UINavigationItem* destNav = [dest navigationItem];
+    
+    bool open = [[segue identifier] isEqualToString:@"openDocument"];
+    
+    UIBarButtonItem* left = [srcNav leftBarButtonItem];
+    if (left) {
+        [srcNav setLeftBarButtonItem:nil];
+        left.title = (open ? @"Packets" : @"Documents");
+        [destNav setLeftBarButtonItem:left];
+    }
+
+    [self splitViewController].delegate = (UIViewController<UISplitViewControllerDelegate>*)dest;
+}
 
 @end

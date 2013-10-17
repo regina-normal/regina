@@ -32,6 +32,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DetailViewController : UIViewController <UISplitViewControllerDelegate>
+@interface PacketDetailController : UIViewController <UISplitViewControllerDelegate>
 
 @end

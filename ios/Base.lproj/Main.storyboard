@@ -69,10 +69,10 @@
             </objects>
             <point key="canvasLocation" x="558" y="248"/>
         </scene>
-        <!--View Controller-->
+        <!--Packet Detail Controller-->
         <scene sceneID="jal-4E-LI1">
             <objects>
-                <viewController id="ZiU-Qa-ufv" sceneMemberID="viewController">
+                <viewController id="ZiU-Qa-ufv" customClass="PacketDetailController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="tZa-u7-g03"/>
                         <viewControllerLayoutGuide type="bottom" id="F5p-xA-ILQ"/>
@@ -318,10 +318,10 @@
             </objects>
             <point key="canvasLocation" x="1317" y="-630"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Switchable Detail Navigation Controller-->
         <scene sceneID="r7l-gg-dq7">
             <objects>
-                <navigationController id="vC3-pB-5Vb" sceneMemberID="viewController">
+                <navigationController id="vC3-pB-5Vb" customClass="SwitchableDetailNavigationController" sceneMemberID="viewController">
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <splitViewDetailSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <navigationBar key="navigationBar" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="DjV-YW-jjY">
@@ -336,10 +336,10 @@
             </objects>
             <point key="canvasLocation" x="-366" y="248"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Switchable Detail Navigation Controller-->
         <scene sceneID="ohY-6v-FrS">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Zn2-2e-hbq" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Zn2-2e-hbq" customClass="SwitchableDetailNavigationController" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <splitViewDetailSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
