@@ -109,6 +109,8 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(tryReduce<NLargeInteger>);
     CPPUNIT_TEST(makeLarge<NInteger>);
     CPPUNIT_TEST(makeLarge<NLargeInteger>);
+    CPPUNIT_TEST(nativeVsLarge<NInteger>);
+    CPPUNIT_TEST(nativeVsLarge<NLargeInteger>);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -2556,6 +2558,131 @@ class NIntegerTest : public CppUnit::TestFixture {
                 if (x.isNative())
                     CPPUNIT_FAIL("Integer is still native after makeLarge().");
                 shouldBeEqual(x, d.cases[a]);
+            }
+        }
+
+        template <typename IntType>
+        void nativeVsLarge() {
+            unsigned a, b;
+            int lx, ly, op;
+
+            const Data<IntType>& d(data<IntType>());
+
+            // For native integers, try variants in which they are
+            // stored as large GMP integers.
+
+            // Unary operations:
+            for (a = 0; a < d.nCases; ++a) {
+                IntType xOrig(d.cases[a]);
+                xOrig.tryReduce();
+                if (! xOrig.isNative())
+                    continue;
+
+                for (op = 0; op < 2; ++op) {
+                    IntType x(xOrig);
+
+                    IntType x2(xOrig);
+                    x2.makeLarge();
+
+                    switch (op) {
+                        case 0:
+                            shouldBeEqual(-x, -x2); break;
+                        case 1:
+                            shouldBeEqual(x.abs(), x2.abs()); break;
+                    }
+                }
+            }
+
+            // Binary operations:
+            for (a = 0; a < d.nCases; ++a) {
+                IntType xOrig(d.cases[a]);
+                xOrig.tryReduce();
+                for (b = 0; b < d.nCases; ++b) {
+                    IntType yOrig(d.cases[b]);
+                    yOrig.tryReduce();
+                    for (lx = 0; lx < (xOrig.isNative() ? 2 : 1); ++lx) {
+                        for (ly = 0; ly < (yOrig.isNative() ? 2 : 1); ++ly) {
+                            if (lx == 0 && ly == 0)
+                                continue;
+
+                            for (op = 0; op < (yOrig == 0 ? 12 : 15); ++op) {
+                                IntType x(xOrig);
+                                IntType y(yOrig);
+
+                                IntType x2(xOrig);
+                                IntType y2(yOrig);
+                                if (lx == 1)
+                                    x2.makeLarge();
+                                if (ly == 1)
+                                    y2.makeLarge();
+
+                                switch (op) {
+                                    case 0:
+                                        shouldBeEqual(x + y, x2 + y2); break;
+                                    case 1:
+                                        shouldBeEqual(x - y, x2 - y2); break;
+                                    case 2:
+                                        shouldBeEqual(x * y, x2 * y2); break;
+                                    case 3:
+                                        shouldBeEqual(x.gcd(y),
+                                                      x2.gcd(y2)); break;
+                                    case 4:
+                                        {
+                                            IntType g, u, v, g2, u2, v2;
+                                            g = x.gcdWithCoeffs(y, u, v);
+                                            g2 = x2.gcdWithCoeffs(y2, u2, v2);
+                                            shouldBeEqual(g, g2);
+                                            shouldBeEqual(u, u2);
+                                            shouldBeEqual(v, v2);
+                                        }
+                                        break;
+                                    case 5:
+                                        shouldBeEqual(x.lcm(y),
+                                                      x2.lcm(y2)); break;
+                                    case 6:
+                                        if ((x < y) != (x2 < y2))
+                                            CPPUNIT_FAIL("Inconsistent <.");
+                                        break;
+                                    case 7:
+                                        if ((x <= y) != (x2 <= y2))
+                                            CPPUNIT_FAIL("Inconsistent <=.");
+                                        break;
+                                    case 8:
+                                        if ((x > y) != (x2 > y2))
+                                            CPPUNIT_FAIL("Inconsistent >.");
+                                        break;
+                                    case 9:
+                                        if ((x >= y) != (x2 >= y2))
+                                            CPPUNIT_FAIL("Inconsistent >=.");
+                                        break;
+                                    case 10:
+                                        if ((x == y) != (x2 == y2))
+                                            CPPUNIT_FAIL("Inconsistent ==.");
+                                        break;
+                                    case 11:
+                                        if ((x != y) != (x2 != y2))
+                                            CPPUNIT_FAIL("Inconsistent !=.");
+                                        break;
+
+                                    // Operations that require RHS != 0:
+                                    case 12:
+                                        shouldBeEqual(x / y, x2 / y2); break;
+                                    case 13:
+                                        shouldBeEqual(x % y, x2 % y2); break;
+                                    case 14:
+                                        {
+                                            IntType q, r, q2, r2;
+                                            q = x.divisionAlg(y, r);
+                                            q2 = x2.divisionAlg(y2, r2);
+                                            shouldBeEqual(q, q2);
+                                            shouldBeEqual(r, r2);
+                                        }
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 };
