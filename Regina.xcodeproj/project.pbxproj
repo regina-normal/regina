@@ -1179,6 +1179,9 @@
 		0564A99B1811D921002CC2AE /* treenav.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A6161811D921002CC2AE /* treenav.cpp */; };
 		0564A99C1811D921002CC2AE /* x-regina.ico in Resources */ = {isa = PBXBuildFile; fileRef = 0564A6171811D921002CC2AE /* x-regina.ico */; };
 		0564A99D1811D921002CC2AE /* TODO.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0564A6181811D921002CC2AE /* TODO.txt */; };
+		0564A9A01811DB02002CC2AE /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0564A99E1811DB01002CC2AE /* QtCore.framework */; };
+		0564A9A11811DB02002CC2AE /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0564A99F1811DB02002CC2AE /* QtGui.framework */; };
+		0564A9A21811DB2F002CC2AE /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
 		057FA752180615F6008E25F6 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA74F180615F5008E25F6 /* libiconv.dylib */; };
 		057FA753180615F6008E25F6 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA750180615F5008E25F6 /* libxml2.dylib */; };
 		057FA754180615F6008E25F6 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA751180615F5008E25F6 /* libz.dylib */; };
@@ -1196,6 +1199,8 @@
 		05A47FC71809D1D600F86BFD /* Example.m in Sources */ = {isa = PBXBuildFile; fileRef = 05A47FC61809D1D600F86BFD /* Example.m */; };
 		05B62166180B9D7300CCB90B /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B62165180B9D7300CCB90B /* title.png */; };
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
+		05EDF7E71811DCAE00A1618E /* libgmp.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A7180604A100FAE4DF /* libgmp.10.dylib */; };
+		05EDF7E81811DCAE00A1618E /* libgmpxx.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */; };
 		05F96C131809F59600C99F96 /* PacketTreeController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C121809F59600C99F96 /* PacketTreeController.mm */; };
 		05F96C17180A153A00C99F96 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C16180A153A00C99F96 /* MBProgressHUD.m */; };
 /* End PBXBuildFile section */
@@ -2381,6 +2386,8 @@
 		0564A6161811D921002CC2AE /* treenav.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treenav.cpp; sourceTree = "<group>"; };
 		0564A6171811D921002CC2AE /* x-regina.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = "x-regina.ico"; sourceTree = "<group>"; };
 		0564A6181811D921002CC2AE /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
+		0564A99E1811DB01002CC2AE /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../Library/Frameworks/QtCore.framework; sourceTree = "<group>"; };
+		0564A99F1811DB02002CC2AE /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../Library/Frameworks/QtGui.framework; sourceTree = "<group>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		057FA74F180615F5008E25F6 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libiconv.dylib; sourceTree = DEVELOPER_DIR; };
 		057FA750180615F5008E25F6 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libxml2.dylib; sourceTree = DEVELOPER_DIR; };
@@ -2449,6 +2456,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05EDF7E71811DCAE00A1618E /* libgmp.10.dylib in Frameworks */,
+				05EDF7E81811DCAE00A1618E /* libgmpxx.4.dylib in Frameworks */,
+				0564A9A21811DB2F002CC2AE /* libregina-engine.dylib in Frameworks */,
+				0564A9A01811DB02002CC2AE /* QtCore.framework in Frameworks */,
+				0564A9A11811DB02002CC2AE /* QtGui.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3235,6 +3247,8 @@
 		052FA0AF180604A900FAE4DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0564A99E1811DB01002CC2AE /* QtCore.framework */,
+				0564A99F1811DB02002CC2AE /* QtGui.framework */,
 				057FA74F180615F5008E25F6 /* libiconv.dylib */,
 				057FA750180615F5008E25F6 /* libxml2.dylib */,
 				057FA751180615F5008E25F6 /* libz.dylib */,
@@ -5554,14 +5568,34 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Qt/Qt-Prefix.pch";
+				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
+					"NO_SRCHILITE=1",
 					"$(inherited)",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/sw/include,
+					/sw/include/libxml2,
+					"\"$(SRCROOT)/qtui/src\"",
+					/Library/Frameworks/QtCore.framework/Headers,
+					/Library/Frameworks/QtGui.framework/Headers,
+				);
 				INFOPLIST_FILE = "Qt/Qt-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/sw/lib/gmp5,
+				);
 				PRODUCT_NAME = Regina;
 				WRAPPER_EXTENSION = app;
 			};
@@ -5574,10 +5608,30 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Qt/Qt-Prefix.pch";
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = "NO_SRCHILITE=1";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/sw/include,
+					/sw/include/libxml2,
+					"\"$(SRCROOT)/qtui/src\"",
+					/Library/Frameworks/QtCore.framework/Headers,
+					/Library/Frameworks/QtGui.framework/Headers,
+				);
 				INFOPLIST_FILE = "Qt/Qt-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/sw/lib/gmp5,
+				);
 				PRODUCT_NAME = Regina;
 				WRAPPER_EXTENSION = app;
 			};
@@ -5727,6 +5781,7 @@
 				0564A2101811D6FA002CC2AE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0575E6541805F36D009E3FC4 /* Build configuration list for PBXProject "Regina" */ = {
 			isa = XCConfigurationList;
