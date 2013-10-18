@@ -821,9 +821,10 @@
 		054F7E29180B93770090B1F3 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 054F7E28180B93770090B1F3 /* WelcomeViewController.m */; };
 		054F7E2B180B96AC0090B1F3 /* welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2A180B96AC0090B1F3 /* welcome.html */; };
 		054F7E2D180B99270090B1F3 /* regina.css in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2C180B99270090B1F3 /* regina.css */; };
+		05561D1C1811F2C700FD6E2E /* x-regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D191811F27A00FD6E2E /* x-regina.icns */; };
+		05561D1D1811F2CB00FD6E2E /* regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D181811F27A00FD6E2E /* regina.icns */; };
 		055DDCEF1808575300C973FB /* filterregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 055DDCED1808575300C973FB /* filterregistry-impl.h */; };
 		055DDCF01808575300C973FB /* surfacefiltertype.h in Headers */ = {isa = PBXBuildFile; fileRef = 055DDCEE1808575300C973FB /* surfacefiltertype.h */; };
-		0564A1FC1811D6F9002CC2AE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0564A1FB1811D6F9002CC2AE /* Images.xcassets */; };
 		0564A6191811D921002CC2AE /* CMakeLists.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0564A2161811D91C002CC2AE /* CMakeLists.txt */; };
 		0564A7F71811D921002CC2AE /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0564A4071811D91E002CC2AE /* README.txt */; };
 		0564A7F81811D921002CC2AE /* actionspart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4091811D91E002CC2AE /* actionspart.cpp */; };
@@ -1954,10 +1955,11 @@
 		054F7E28180B93770090B1F3 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
 		054F7E2A180B96AC0090B1F3 /* welcome.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = welcome.html; sourceTree = "<group>"; };
 		054F7E2C180B99270090B1F3 /* regina.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = regina.css; sourceTree = "<group>"; };
+		05561D181811F27A00FD6E2E /* regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = regina.icns; path = icons/regina.icns; sourceTree = SOURCE_ROOT; };
+		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "icons/x-regina.icns"; sourceTree = SOURCE_ROOT; };
 		055DDCED1808575300C973FB /* filterregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "filterregistry-impl.h"; sourceTree = "<group>"; };
 		055DDCEE1808575300C973FB /* surfacefiltertype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surfacefiltertype.h; sourceTree = "<group>"; };
 		0564A1DF1811D6F8002CC2AE /* Regina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Regina.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0564A1FB1811D6F9002CC2AE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		0564A2161811D91C002CC2AE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0564A4071811D91E002CC2AE /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		0564A4091811D91E002CC2AE /* actionspart.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = actionspart.cpp; sourceTree = "<group>"; };
@@ -3505,15 +3507,6 @@
 			name = HTML;
 			sourceTree = "<group>";
 		};
-		0564A1E61811D6F9002CC2AE /* Qt */ = {
-			isa = PBXGroup;
-			children = (
-				0543AEC71811E2AD002758F8 /* Regina.entitlements */,
-				0564A1FB1811D6F9002CC2AE /* Images.xcassets */,
-			);
-			path = Qt;
-			sourceTree = "<group>";
-		};
 		0564A2151811D91C002CC2AE /* qtui */ = {
 			isa = PBXGroup;
 			children = (
@@ -3521,6 +3514,9 @@
 				0564A4071811D91E002CC2AE /* README.txt */,
 				0564A4081811D91E002CC2AE /* src */,
 				0564A6181811D921002CC2AE /* TODO.txt */,
+				05561D181811F27A00FD6E2E /* regina.icns */,
+				05561D191811F27A00FD6E2E /* x-regina.icns */,
+				0543AEC71811E2AD002758F8 /* Regina.entitlements */,
 			);
 			path = qtui;
 			sourceTree = "<group>";
@@ -4078,7 +4074,6 @@
 				0564A2151811D91C002CC2AE /* qtui */,
 				052FA12F1806102F00FAE4DF /* ios */,
 				05A47F961809CB7500F86BFD /* examples */,
-				0564A1E61811D6F9002CC2AE /* Qt */,
 				0575E65A1805F36D009E3FC4 /* Products */,
 				052FA0AF180604A900FAE4DF /* Frameworks */,
 			);
@@ -4532,6 +4527,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0564A8A31811D921002CC2AE /* edit-delete-48.png in Resources */,
+				05561D1C1811F2C700FD6E2E /* x-regina.icns in Resources */,
 				0564A8BB1811D921002CC2AE /* edit-table-insert-row-below-48.png in Resources */,
 				0564A8151811D921002CC2AE /* barycentric-16.png in Resources */,
 				0564A8451811D921002CC2AE /* arrow-down-16.png in Resources */,
@@ -4576,7 +4572,6 @@
 				0564A83D1811D921002CC2AE /* application-exit-16.png in Resources */,
 				0564A9241811D921002CC2AE /* packet_view-22.png in Resources */,
 				0564A85B1811D921002CC2AE /* arrow-up-double-32.png in Resources */,
-				0564A1FC1811D6F9002CC2AE /* Images.xcassets in Resources */,
 				0564A9381811D921002CC2AE /* vtxlinks-32.png in Resources */,
 				0564A84A1811D921002CC2AE /* arrow-down-double-22.png in Resources */,
 				0564A8961811D921002CC2AE /* document-sign-32.png in Resources */,
@@ -4794,6 +4789,7 @@
 				0564A94C1811D921002CC2AE /* CMakeLists.txt in Resources */,
 				0564A8A21811D921002CC2AE /* edit-delete-32.png in Resources */,
 				0564A8C91811D921002CC2AE /* help-about-22.png in Resources */,
+				05561D1D1811F2CB00FD6E2E /* regina.icns in Resources */,
 				0564A87A1811D921002CC2AE /* dialog-warning-128.png in Resources */,
 				0564A9131811D921002CC2AE /* packet_filter-32.png in Resources */,
 				0564A8B91811D921002CC2AE /* edit-table-insert-row-below-22.png in Resources */,
@@ -5672,10 +5668,10 @@
 		0564A20F1811D6FA002CC2AE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
-				CODE_SIGN_ENTITLEMENTS = Qt/Regina.entitlements;
+				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5716,10 +5712,10 @@
 		0564A2101811D6FA002CC2AE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
-				CODE_SIGN_ENTITLEMENTS = Qt/Regina.entitlements;
+				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
