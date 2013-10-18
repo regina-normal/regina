@@ -51,6 +51,16 @@ Version 4.95  [ (under development) ]
             - New template helper class that allows different triangulation
               classes to share the same implementations of member functions.
               Currently this class implements isoSig() and fromIsoSig().
+        Class NInteger, NLargeInteger:
+            - Fixed a (thankfully hard-to-trigger) error in the mod operators.
+              The error was triggered on (x % m) or (x %= m) when:
+              (i) x was negative and stored as a native integer;
+              (ii) m could fit into a native integer but was unnecessarily
+              stored as a large GMP integer; (iii) x <= m < |x|.  The result
+              was then reported as x (i.e., the mod operation did nothing).
+            - Fixed a (thankfully even-harder-to-trigger) error in
+              the GCD operation.  This error was triggered only when
+              computing gcd(LONG_MIN, 0), for either order of the operands.
         Class NNormalSurface, NNormalSurfaceVector:
             - Renamed getFaceArcs() to getTriangleArcs().  The old name is
               deprecated but has been kept for backward compatibility.
@@ -191,6 +201,9 @@ Version 4.95  [ (under development) ]
     UTILITIES:
         regmerge:
             - New utility for merging several data files.
+    TEST SUITE:
+        - More NInteger / NLargeInteger tests, this time comparing operations
+          when the same arguments are coerced from natives to GMP integers.
 
 Version 4.94  [ 24 September, 2013 ]
 
