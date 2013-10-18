@@ -1477,7 +1477,7 @@
 		054F7E2C180B99270090B1F3 /* regina.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = regina.css; sourceTree = "<group>"; };
 		055DDCED1808575300C973FB /* filterregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "filterregistry-impl.h"; sourceTree = "<group>"; };
 		055DDCEE1808575300C973FB /* surfacefiltertype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surfacefiltertype.h; sourceTree = "<group>"; };
-		0564A1DF1811D6F8002CC2AE /* Qt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Qt.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0564A1DF1811D6F8002CC2AE /* Regina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Regina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0564A1E81811D6F9002CC2AE /* Qt-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Qt-Info.plist"; sourceTree = "<group>"; };
 		0564A1EA1811D6F9002CC2AE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0564A1FB1811D6F9002CC2AE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -2563,7 +2563,7 @@
 				0575E6591805F36D009E3FC4 /* libregina-engine.dylib */,
 				052FA0C11806072900FAE4DF /* regtestsuite */,
 				052FA1281806102F00FAE4DF /* Regina.app */,
-				0564A1DF1811D6F8002CC2AE /* Qt.app */,
+				0564A1DF1811D6F8002CC2AE /* Regina.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2921,7 +2921,7 @@
 			);
 			name = Qt;
 			productName = Qt;
-			productReference = 0564A1DF1811D6F8002CC2AE /* Qt.app */;
+			productReference = 0564A1DF1811D6F8002CC2AE /* Regina.app */;
 			productType = "com.apple.product-type.application";
 		};
 		0575E6581805F36D009E3FC4 /* Engine */ = {
@@ -2970,8 +2970,8 @@
 			targets = (
 				0575E6581805F36D009E3FC4 /* Engine */,
 				052FA0C01806072900FAE4DF /* Test Suite */,
-				052FA1271806102F00FAE4DF /* iOS */,
 				0564A1DE1811D6F8002CC2AE /* Qt */,
+				052FA1271806102F00FAE4DF /* iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -3695,7 +3695,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "Qt/Qt-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Regina;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -3708,7 +3708,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Qt/Qt-Prefix.pch";
 				INFOPLIST_FILE = "Qt/Qt-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Regina;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
