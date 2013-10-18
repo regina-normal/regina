@@ -823,7 +823,6 @@
 		054F7E2D180B99270090B1F3 /* regina.css in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2C180B99270090B1F3 /* regina.css */; };
 		055DDCEF1808575300C973FB /* filterregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 055DDCED1808575300C973FB /* filterregistry-impl.h */; };
 		055DDCF01808575300C973FB /* surfacefiltertype.h in Headers */ = {isa = PBXBuildFile; fileRef = 055DDCEE1808575300C973FB /* surfacefiltertype.h */; };
-		0564A1EB1811D6F9002CC2AE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0564A1E91811D6F9002CC2AE /* InfoPlist.strings */; };
 		0564A1FC1811D6F9002CC2AE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0564A1FB1811D6F9002CC2AE /* Images.xcassets */; };
 		0564A6191811D921002CC2AE /* CMakeLists.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0564A2161811D91C002CC2AE /* CMakeLists.txt */; };
 		0564A7F71811D921002CC2AE /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0564A4071811D91E002CC2AE /* README.txt */; };
@@ -1958,8 +1957,6 @@
 		055DDCED1808575300C973FB /* filterregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "filterregistry-impl.h"; sourceTree = "<group>"; };
 		055DDCEE1808575300C973FB /* surfacefiltertype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surfacefiltertype.h; sourceTree = "<group>"; };
 		0564A1DF1811D6F8002CC2AE /* Regina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Regina.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0564A1E81811D6F9002CC2AE /* Qt-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Qt-Info.plist"; sourceTree = "<group>"; };
-		0564A1EA1811D6F9002CC2AE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0564A1FB1811D6F9002CC2AE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		0564A2161811D91C002CC2AE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0564A4071811D91E002CC2AE /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
@@ -3513,18 +3510,8 @@
 			children = (
 				0543AEC71811E2AD002758F8 /* Regina.entitlements */,
 				0564A1FB1811D6F9002CC2AE /* Images.xcassets */,
-				0564A1E71811D6F9002CC2AE /* Supporting Files */,
 			);
 			path = Qt;
-			sourceTree = "<group>";
-		};
-		0564A1E71811D6F9002CC2AE /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				0564A1E81811D6F9002CC2AE /* Qt-Info.plist */,
-				0564A1E91811D6F9002CC2AE /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		0564A2151811D91C002CC2AE /* qtui */ = {
@@ -4705,7 +4692,6 @@
 				0564A8611811D921002CC2AE /* clock-128.png in Resources */,
 				0564A8DE1811D921002CC2AE /* list-remove-32.png in Resources */,
 				0564A8531811D921002CC2AE /* arrow-right-32.png in Resources */,
-				0564A1EB1811D6F9002CC2AE /* InfoPlist.strings in Resources */,
 				0564A8921811D921002CC2AE /* document-save-as-32.png in Resources */,
 				0564A8321811D921002CC2AE /* filter_prop-22.png in Resources */,
 				0564A8701811D921002CC2AE /* dialog-information-128.png in Resources */,
@@ -5551,14 +5537,6 @@
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		0564A1E91811D6F9002CC2AE /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0564A1EA1811D6F9002CC2AE /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -5723,7 +5701,9 @@
 					/Library/Frameworks/QtCore.framework/Headers,
 					/Library/Frameworks/QtGui.framework/Headers,
 				);
-				INFOPLIST_FILE = "Qt/Qt-Info.plist";
+				INFOPLIST_FILE = qtui/src/regina.plist;
+				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
+				INFOPLIST_PREPROCESS = YES;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/sw/lib/gmp5,
@@ -5761,7 +5741,9 @@
 					/Library/Frameworks/QtCore.framework/Headers,
 					/Library/Frameworks/QtGui.framework/Headers,
 				);
-				INFOPLIST_FILE = "Qt/Qt-Info.plist";
+				INFOPLIST_FILE = qtui/src/regina.plist;
+				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
+				INFOPLIST_PREPROCESS = YES;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/sw/lib/gmp5,
