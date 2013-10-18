@@ -313,7 +313,6 @@ void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
 
     // The last tetrahedron edge that was successfully processed.
     NTetrahedron* tet;
-    int edge;
     NPerm4 tetVertices;
 
     int exitFace;
@@ -327,8 +326,7 @@ void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
     for (int dir = 0; dir < 2; dir++) {
         // Start at the start and walk in one particular direction.
         tet = firstTet;
-        edge = firstEdge;
-        tetVertices = tet->edgeMapping[edge];
+        tetVertices = tet->edgeMapping[firstEdge];
 
         while (true) {
             // Move through to the next tetrahedron.
@@ -362,7 +360,6 @@ void NTriangulation::labelEdge(NTetrahedron* firstTet, int firstEdge,
                 label->embeddings.push_front(NEdgeEmbedding(nextTet, nextEdge));
 
             tet = nextTet;
-            edge = nextEdge;
             tetVertices = nextVertices;
         }
     }
