@@ -98,7 +98,10 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
 
         if (setLabels) {
             std::ostringstream label;
-            label << getPacketLabel() << " - Cmpt #" << (whichComp + 1);
+            if (getPacketLabel().empty())
+                label << "Cmpt #" << (whichComp + 1);
+            else
+                label << getPacketLabel() << " - Cmpt #" << (whichComp + 1);
             newTris[whichComp]->setPacketLabel(makeUniqueLabel(label.str()));
         }
     }
@@ -241,7 +244,10 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
 
         if (setLabels) {
             std::ostringstream label;
-            label << getPacketLabel() << " - Summand #" << (whichComp + 1);
+            if (getPacketLabel().empty())
+                label << "Summand #" << (whichComp + 1);
+            else
+                label << getPacketLabel() << " - Summand #" << (whichComp + 1);
             (*it)->setPacketLabel(makeUniqueLabel(label.str()));
         }
 
@@ -577,7 +583,10 @@ bool NTriangulation::knowsSolidTorus() const {
 NPacket* NTriangulation::makeZeroEfficient() {
     // Extract a connected sum decomposition.
     NContainer* connSum = new NContainer();
-    connSum->setPacketLabel(getPacketLabel() + " - Decomposition");
+    if (getPacketLabel().empty())
+        connSum->setPacketLabel("Decomposition");
+    else
+        connSum->setPacketLabel(getPacketLabel() + " - Decomposition");
 
     unsigned long ans = connectedSumDecomposition(connSum, true);
     if (ans > 1) {

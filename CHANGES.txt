@@ -105,8 +105,11 @@ Version 4.95  [ (under development) ]
               registry.  See the NPacket class notes for details.
             - The constant packetType is now a compile-time enum constant,
               not a static const int.
-            - Routine getFullName() now replaces an empty label with the text
-              "(No label)", since this is intended for human-readable output.
+            - The new routine getHumanLabel() returns the packet label,
+              but adjusted for human-readable output.  In particular, an
+              empty label will be replaced by "(no label)".
+            - Routine getFullName() now makes labels more suitable for
+              human-readable output as described above.
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic aliases orderedSn, SnIndex() and
               orderedSnIndex().  These all reference existing arrays/routines

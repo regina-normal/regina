@@ -1119,8 +1119,10 @@ void NTriGluingsUI::splitIntoComponents() {
         if (tri->getFirstTreeChild()) {
             base = new regina::NContainer();
             tri->insertChildLast(base);
-            base->setPacketLabel(base->makeUniqueLabel(
-                tri->getPacketLabel() + " - Components"));
+            if (tri->getPacketLabel().empty())
+                base->setPacketLabel("Components");
+            else
+                base->setPacketLabel(tri->getPacketLabel() + " - Components");
         } else
             base = tri;
 
@@ -1165,8 +1167,10 @@ void NTriGluingsUI::connectedSumDecomposition() {
         if (tri->getFirstTreeChild()) {
             base = new regina::NContainer();
             tri->insertChildLast(base);
-            base->setPacketLabel(base->makeUniqueLabel(
-                tri->getPacketLabel() + " - Summands"));
+            if (tri->getPacketLabel().empty())
+                base->setPacketLabel("Summands");
+            else
+                base->setPacketLabel(tri->getPacketLabel() + " - Summands");
         } else
             base = tri;
 
@@ -1469,7 +1473,7 @@ void NTriGluingsUI::censusLookup() {
         regina::NText* text = 
           new regina::NText(detailsText.toAscii().constData());
         text->setPacketLabel(tri->makeUniqueLabel(
-            "ID: " + tri->getPacketLabel()));
+            "ID: " + tri->getHumanLabel()));
         tri->insertChildLast(text);
     }
 }
