@@ -37,6 +37,10 @@ Version 4.95  [ (under development) ]
               template struct NewFunction1<>.  The old type is equivalent to
               NewFunction1<NNormalSurfaceVector, size_t>, and a deprecated
               typedef has been kept for backward compatibility.
+        Class NExampleTriangulation:
+            - Routines weberSeifert() / seifertWeber(), bingsHouse(), weeks()
+              and poincareHomologySphere() all now build oriented
+              triangulations.
         Class NFace:
             - Renamed to NTriangle.  The old name is deprecated but has
               been kept as a typedef for backward compatibility.
