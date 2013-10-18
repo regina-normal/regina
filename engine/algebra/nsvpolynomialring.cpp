@@ -298,12 +298,6 @@ void pauer_unterkircher( std::list< NSVPolynomialRing< NLargeInteger > > &ideal,
  *  Given a finitely-generated ideal in Z[t^\pm 1] this turns the ideal
  * into a Groebner basis for the ideal.  This is specifically for 
  * Laurent polynomial rings. 
- *
- * TODO: Alex< 1, -1+2t > < a >  
- *       isoSig(): gLLAQQabccfdeeffcaca6aPbsbja0bcaFbfb
- *
- *  So the fundamental group is clearly isomorphic to Z, but the Alex ideal hasn't
- *  been fully reduced. Fix!
  */
 void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal, 
                   bool laurentPoly )
@@ -350,7 +344,8 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal,
      if (I2==I1) { I2++; if (I2 == subIdeals.end()) break; }
      // okay, I1 != I2 and neither is at end. Let's reduce I2 by I1
      i = I2->begin();
-     while (i != I2->end()) { if (reduceByIdeal( *I1, *i ) ) I2->erase(i++); else i++; }
+     while (i != I2->end()) { if (reduceByIdeal( *I1, *i ) ) 
+        I2->erase(i++); else i++; }
      // if I2 size zero, erase it.
      if (I2->empty()) subIdeals.erase(I2++); else I2++; 
      if (I2==I1) I2++;
@@ -367,17 +362,22 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal,
   //  ideal at least once.
   if (ideal.size() <= 1) return;
 
-  if ( (subIdeals.size() > 1) || ( (!subIdealSizeOne) && (subIdeals.size()==1) ) )
+  if ( (subIdeals.size() > 1) || 
+       ( (!subIdealSizeOne) && (subIdeals.size()==1) ) )
    {
     if (subIdeals.size()==1) subIdealSizeOne = true;
-    // check to see if any of the subideals have any room for amalgamation, if so great, amalgamate and reloop.
+    // check to see if any of the subideals have any room for amalgamation, 
+    // if so great, amalgamate and reloop.
     // increment partition size if we aren't making progress...
-    if (ideal.size()/cbs + ( (ideal.size() % cbs) == 0 ? 0 : 1 ) >= subIdeals.size() )  cbs++; 
+    if (ideal.size()/cbs + ( (ideal.size() % cbs) == 0 ? 0 : 1 ) >= 
+        subIdeals.size() )  cbs++; 
     subIdeals.clear(); 
     while (!ideal.empty())
      { subIdeal.push_back( ideal.front() ); ideal.pop_front();
-       if (subIdeal.size() >= cbs) { subIdeals.push_back(subIdeal); subIdeal.clear(); } }
-     if (!subIdeal.empty()) subIdeals.push_back(subIdeal); subIdeal.clear(); // ensure the last subideal makes it.
+       if (subIdeal.size() >= cbs) 
+            { subIdeals.push_back(subIdeal); subIdeal.clear(); } }
+     if (!subIdeal.empty()) subIdeals.push_back(subIdeal); 
+     subIdeal.clear(); // ensure the last subideal makes it.
     goto reloop_loop; 
    }
  elementaryReductions(ideal); 
@@ -388,10 +388,12 @@ void reduceIdeal( std::list< NSVPolynomialRing< NLargeInteger > > &ideal,
 bool isSubIdeal( const std::list< NSVPolynomialRing< NLargeInteger > > &idealA,  
                  const std::list< NSVPolynomialRing< NLargeInteger > > &idealB )
 {
- // for every element of idealB, we reduce as much as possible using elements of idealA, see if we get to zero or not...
+ // for every element of idealB, we reduce as much as possible using 
+ //  elements of idealA, see if we get to zero or not...
  std::list< NSVPolynomialRing< NLargeInteger > >::const_iterator j;
  for (j=idealA.begin(); j != idealA.end(); j++) 
-   { NSVPolynomialRing< NLargeInteger > temp(*j); if (!reduceByIdeal( idealB, temp ) ) return false; }
+   { NSVPolynomialRing< NLargeInteger > temp(*j); 
+     if (!reduceByIdeal( idealB, temp ) ) return false; }
  return true;
 }
 
