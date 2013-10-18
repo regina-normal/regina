@@ -1132,32 +1132,39 @@ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > NCellularData
 }
 
 // compute the Alexander ideal of the Alexander module. 
-std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > NCellularData::alexanderIdeal() const
+std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > 
+    NCellularData::alexanderIdeal() const
 {
- std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > aPM(alexanderPresentationMatrix());
+ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > 
+    aPM(alexanderPresentationMatrix());
  std::list< NSVPolynomialRing< NLargeInteger > > alexIdeal;
- // det() does not deal with degenerate matrices properly so let's nip that in the bud. 
- if (aPM->rows()==0) alexIdeal.push_back( NSVPolynomialRing< NLargeInteger >::one );
- else if (aPM->columns()==0) alexIdeal.push_back( NSVPolynomialRing< NLargeInteger >::zero );
+ // degenerate matrices first.
+ if (aPM->rows()==0) 
+    alexIdeal.push_back( NSVPolynomialRing< NLargeInteger >::one );
+ else if (aPM->columns()==0) 
+    alexIdeal.push_back( NSVPolynomialRing< NLargeInteger >::zero );
  else
   {
-  // in general aPM might be wider than it is tall, so we have to keep track of how many columns to erase
+  // in general aPM might be wider than it is tall
   unsigned long colToErase = aPM->columns() - aPM->rows();
-  // so we need to choose numbers 0 <= a1 < ... < ak <=aPM.columns() to erase, 
+  // choose numbers 0 <= a1 < ... < ak <=aPM.columns() to erase, 
   //  then take the determinant of that submatrix. 
   // let's use NPartition to iterate through all such. 
   NPartition skipCols( aPM->columns(), colToErase );
   while ( !skipCols.atEnd() )
    {
-    NMatrixRing< NSVPolynomialRing< NLargeInteger > > sqSubMat( aPM->rows(), aPM->rows() );
+    NMatrixRing< NSVPolynomialRing< NLargeInteger > > 
+        sqSubMat( aPM->rows(), aPM->rows() );
     unsigned long delta=0;
     for (unsigned long j=0; j<sqSubMat.columns(); j++)
      {
       while (skipCols.partition().get(j+delta)) delta++;     
-      for (unsigned long i=0; i<sqSubMat.rows(); i++) sqSubMat.entry(i,j) = aPM->entry( i, j+delta );
+      for (unsigned long i=0; i<sqSubMat.rows(); i++) 
+        sqSubMat.entry(i,j) = aPM->entry( i, j+delta );
      }
 
-    alexIdeal.push_back( sqSubMat.det() );
+    NSVPolynomialRing< NLargeInteger > TEMP(sqSubMat.det());
+    if (!TEMP.isZero()) alexIdeal.push_back( TEMP );
     ++skipCols; // next!
    }
   }
@@ -1169,11 +1176,12 @@ std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > NCellularData::
  for (it = alexIdeal.begin(); it!=alexIdeal.end(); it++)
    { prettifyPolynomial(*it); }
 
- return std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > >(new std::list< NSVPolynomialRing< NLargeInteger > >(alexIdeal));
+ return std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > >
+        (new std::list< NSVPolynomialRing< NLargeInteger > >(alexIdeal));
 }
 
-std::string embeddabilityString(const NTriangulation* tri, const NCellularData* cdat,
-                                const NBilinearForm* tlf); // forward ref
+std::string embeddabilityString(const NTriangulation* tri, 
+    const NCellularData* cdat, const NBilinearForm* tlf); // forward ref
 
 std::string NCellularData::stringInfo( const StringRequest &s_desc ) const
 { //TODO - this routine isn't complete yet. 
@@ -1208,14 +1216,11 @@ std::string NCellularData::stringInfo( const StringRequest &s_desc ) const
  return retval;
 }
 
-// this routine computes a string describing embeddability of the manifold into S^4, 
-//  it assumes cdat is derived from tri, and tlf is the torsion linking form for cdat.
-
-// TODO: edit.  Currently uses TLF to get homology, but this already has the free part of H1 stripped-out.
-//              this makes it think S1xS^2 is a homology sphere!
-
-std::string embeddabilityString(const NTriangulation* tri, const NCellularData* cdat,
-                                const NBilinearForm* tlf) {
+// this routine computes a string describing embeddability of the manifold 
+// into S^4, it assumes cdat is derived from tri, and tlf is the torsion 
+// linking form for cdat.
+std::string embeddabilityString(const NTriangulation* tri, 
+    const NCellularData* cdat,  const NBilinearForm* tlf) {
     // Only do this if we haven't done it already.
     std::string retval;
     unsigned long totbcomp( cdat->components(NCellularData::standard_boundary) + 
@@ -1225,7 +1230,8 @@ std::string embeddabilityString(const NTriangulation* tri, const NCellularData* 
       return std::string("Manifold is empty.");
     
    const NMarkedAbelianGroup* homol( cdat->markedGroup( 
-        NCellularData::GroupLocator(1, NCellularData::coVariant, NCellularData::STD_coord, 0 )
+        NCellularData::GroupLocator(1, NCellularData::coVariant, 
+                                       NCellularData::STD_coord, 0 )
         ) );
 
 
