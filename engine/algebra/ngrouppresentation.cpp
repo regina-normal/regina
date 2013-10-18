@@ -617,7 +617,6 @@ std::auto_ptr<NHomGroupPresentation>
 
    // start (3) - apply shorter relators to longer.
    for (it = relatorList.begin(); it != relatorList.end(); it++)
-    {
      if ( (*it)->wordLength() > 0 ) // don't bother if this is a trivial word.
       {
        std::list< NGroupExpression* >::iterator tit; // target of it manips. 
@@ -699,22 +698,6 @@ std::auto_ptr<NHomGroupPresentation>
     found_a_generator_killer:
     if (word_length_3_trigger) break; 
    } // end (4)
-  // (5) TODO: look for convienient Tietze moves. These are automorphisms of the
-  //     the free group that fix all but one generator, which maps as
-  //     g_i --> g_i g_j^k for some j \neq i, and any k, similarly
-  //     g_i --> g_j^k g_i. 
-  //
-  //     For example,  < a b | b^2a^2, abababab > 
-  //          In this situation if we make f the automorphism of the free group
-  //          with f(a)=ab, f(b)=b, we get f^{-1}(b)=b, f^{-1}(a)=ab^-1, so
-  //          f^{-1}(b^2a^2)=b^2ab^-1ab^-1, f^{-1}(abababab)=a^4. 
-  //          the former cyclically reduces to bab^-1a.  This is good.  
-  //          So how should we weigh the change of coordinates? Probably some 
-  //          strict greedy algorithm for now, just to be safe.  Or perhaps
-  //          only when the move can amalgamate consecutive appearances of
-  //          generators?  Like abababab -> a^4 is good, but
-  //          b^2a^2 -> b^2ab^-1ab^-1 is kind of bad. 
-  // 
   } // end of main_while_loop (6)
  
  // We need to remove the generators that have been killed or expressed
