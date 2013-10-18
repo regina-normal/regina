@@ -174,7 +174,6 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
     std::deque<NEdgeEmbedding>::const_iterator eembit, backupit,
         endit, beginit;
     NTetrahedron* tet;
-    NTetrahedron* adj;
     NPerm4 tetPerm, adjPerm;
     unsigned long tetIndex, adjIndex;
     NLargeInteger expect;
@@ -227,9 +226,8 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
             // vertex.  Run backwards from here and fill in all the
             // holes.
             backupit = eembit;
-            adj = (*eembit).getTetrahedron();
             adjPerm = (*eembit).getVertices();
-            adjIndex = triang->tetrahedronIndex(adj);
+            adjIndex = triang->tetrahedronIndex((*eembit).getTetrahedron());
             while (eembit != beginit) {
                 eembit--;
 
@@ -264,7 +262,6 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
                 if (usedEdges[end].insert(edge).second)
                     examine.push_back(EdgeEnd(edge, end));
 
-                adj = tet;
                 adjPerm = tetPerm;
                 adjIndex = tetIndex;
             }
@@ -274,9 +271,8 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
             // always checking to ensure the
             // matching equations have not been broken.
             eembit = backupit;
-            adj = (*eembit).getTetrahedron();
             adjPerm = (*eembit).getVertices();
-            adjIndex = triang->tetrahedronIndex(adj);
+            adjIndex = triang->tetrahedronIndex((*eembit).getTetrahedron());
             for (eembit++; eembit != endit; eembit++) {
                 // Work out the coordinate for the disc type at eembit.
                 tet = (*eembit).getTetrahedron();
@@ -319,7 +315,6 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
                     }
                 }
 
-                adj = tet;
                 adjPerm = tetPerm;
                 adjIndex = tetIndex;
             }
