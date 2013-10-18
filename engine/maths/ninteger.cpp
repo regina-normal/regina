@@ -539,6 +539,8 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator %=(
         // (ii) |other| == |this|, in which case the result is 0;
         // (iii) |other| < |this|, in which case we can convert
         // everything to native C/C++ integer arithmetic.
+
+        // Test other <=> |this|:
         int res = (small_ >= 0 ?
             mpz_cmp_si(other.large_, small_) :
             mpz_cmp_ui(other.large_, - small_) /* ui cast makes this work
@@ -550,9 +552,10 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator %=(
             return *this;
         }
 
+        // Test other <=> -|this|:
         res = (small_ >= 0 ?
             mpz_cmp_si(other.large_, - small_) :
-            mpz_cmp_ui(other.large_, small_));
+            mpz_cmp_si(other.large_, small_));
 
         if (res < 0)
             return *this;
@@ -564,7 +567,11 @@ NIntegerBase<supportInfinity>& NIntegerBase<supportInfinity>::operator %=(
         // Everything can be made native integer arithmetic.
         // Opportunistically reduce other while we're at it.
         const_cast<NIntegerBase<supportInfinity>&>(other).forceReduce();
-        small_ %= other.small_;
+        // Some compilers will crash on LONG_MIN % -1, sigh.
+        if (other.small_ == -1)
+            small_ = 0;
+        else
+            small_ %= other.small_;
         return *this;
     } else
         return (*this) %= other.small_;
@@ -635,15 +642,16 @@ void NIntegerBase<supportInfinity>::gcdWith(
         long a = small_;
         long b = other.small_;
 
+        if ((a == LONG_MIN && (b == LONG_MIN || b == 0)) ||
+                (b == LONG_MIN && a == 0)) {
+            // gcd(a,b) = LONG_MIN, which means we can't make it
+            // non-negative without switching to large integers.
+            large_ = new mpz_t;
+            mpz_init_set_si(large_, LONG_MIN);
+            mpz_neg(large_, large_);
+            return;
+        }
         if (a == LONG_MIN) {
-            if (b == LONG_MIN) {
-                // gcd(a,b) = LONG_MIN, which means we can't make it
-                // non-negative without switching to large integers.
-                large_ = new mpz_t;
-                mpz_init_set_si(large_, LONG_MIN);
-                mpz_neg(large_, large_);
-                return;
-            }
             a >>= 1; // Won't affect the gcd, but allows us to negate.
         } else if (b == LONG_MIN) {
             b >>= 1; // Won't affect the gcd, but allows us to negate.
