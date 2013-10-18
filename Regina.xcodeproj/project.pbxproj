@@ -765,6 +765,59 @@
 		052FA241180613A900FAE4DF /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23E180613A900FAE4DF /* boost.framework */; };
 		052FA242180613A900FAE4DF /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23F180613A900FAE4DF /* libgmp.framework */; };
 		052FA243180613A900FAE4DF /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA240180613A900FAE4DF /* libgmpxx.framework */; };
+		0543AE911811DE79002758F8 /* packetui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5CB1811D920002CC2AE /* packetui.h */; };
+		0543AE931811E12A002758F8 /* boundarycomponentchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40E1811D91E002CC2AE /* boundarycomponentchooser.h */; };
+		0543AE941811E12A002758F8 /* edgechooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4111811D91E002CC2AE /* edgechooser.h */; };
+		0543AE951811E12A002758F8 /* edgeintchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4131811D91E002CC2AE /* edgeintchooser.h */; };
+		0543AE961811E12A002758F8 /* tetrahedronchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4151811D91E002CC2AE /* tetrahedronchooser.h */; };
+		0543AE971811E12A002758F8 /* trianglechooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4171811D91E002CC2AE /* trianglechooser.h */; };
+		0543AE981811E12A002758F8 /* vertexchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4191811D91E002CC2AE /* vertexchooser.h */; };
+		0543AE991811E12A002758F8 /* coordinatechooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A41E1811D91E002CC2AE /* coordinatechooser.h */; };
+		0543AE9A1811E12A002758F8 /* examplesaction.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4231811D91E002CC2AE /* examplesaction.h */; };
+		0543AE9B1811E12A002758F8 /* exportdialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A42C1811D91E002CC2AE /* exportdialog.h */; };
+		0543AE9C1811E12A002758F8 /* importdialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A42E1811D91E002CC2AE /* importdialog.h */; };
+		0543AE9D1811E12A002758F8 /* introdialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5711811D920002CC2AE /* introdialog.h */; };
+		0543AE9E1811E12A002758F8 /* newpacketdialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5771811D920002CC2AE /* newpacketdialog.h */; };
+		0543AE9F1811E12A002758F8 /* packetchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A57A1811D920002CC2AE /* packetchooser.h */; };
+		0543AEA01811E12A002758F8 /* packeteditiface.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A57E1811D920002CC2AE /* packeteditiface.h */; };
+		0543AEA11811E12A002758F8 /* packettabui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5831811D920002CC2AE /* packettabui.h */; };
+		0543AEA21811E12A002758F8 /* packettreeview.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5851811D920002CC2AE /* packettreeview.h */; };
+		0543AEA31811E12A002758F8 /* dim2trigluings.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58B1811D920002CC2AE /* dim2trigluings.h */; };
+		0543AEA41811E12A002758F8 /* dim2triskeleton.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58D1811D920002CC2AE /* dim2triskeleton.h */; };
+		0543AEA51811E12A002758F8 /* dim2triui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58F1811D920002CC2AE /* dim2triui.h */; };
+		0543AEA61811E12A002758F8 /* eltmovedialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5911811D920002CC2AE /* eltmovedialog.h */; };
+		0543AEA71811E12A002758F8 /* facetgraphtab.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5931811D920002CC2AE /* facetgraphtab.h */; };
+		0543AEA81811E12A002758F8 /* gaprunner.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5951811D920002CC2AE /* gaprunner.h */; };
+		0543AEA91811E12A002758F8 /* nanglestructureui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5991811D920002CC2AE /* nanglestructureui.h */; };
+		0543AEAA1811E12A002758F8 /* ncompatcanvas.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A59B1811D920002CC2AE /* ncompatcanvas.h */; };
+		0543AEAB1811E12A002758F8 /* nnormalsurfaceui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A11811D920002CC2AE /* nnormalsurfaceui.h */; };
+		0543AEAC1811E12A002758F8 /* nscriptui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A51811D920002CC2AE /* nscriptui.h */; };
+		0543AEAD1811E12A002758F8 /* nsurfacecompatui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A71811D920002CC2AE /* nsurfacecompatui.h */; };
+		0543AEAE1811E12A002758F8 /* nsurfacecoordinateui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A91811D920002CC2AE /* nsurfacecoordinateui.h */; };
+		0543AEAF1811E12A002758F8 /* nsurfacefiltercomb.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5AB1811D920002CC2AE /* nsurfacefiltercomb.h */; };
+		0543AEB01811E12A002758F8 /* nsurfacefilterprop.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5AF1811D920002CC2AE /* nsurfacefilterprop.h */; };
+		0543AEB11811E12A002758F8 /* nsurfacematchingui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B11811D920002CC2AE /* nsurfacematchingui.h */; };
+		0543AEB21811E12A002758F8 /* nsurfacesummaryui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B31811D920002CC2AE /* nsurfacesummaryui.h */; };
+		0543AEB31811E12A002758F8 /* ntextui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B51811D920002CC2AE /* ntextui.h */; };
+		0543AEB41811E12A002758F8 /* ntrialgebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B71811D920002CC2AE /* ntrialgebra.h */; };
+		0543AEB51811E12A002758F8 /* ntriangulationui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BB1811D920002CC2AE /* ntriangulationui.h */; };
+		0543AEB61811E12A002758F8 /* ntricomposition.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BD1811D920002CC2AE /* ntricomposition.h */; };
+		0543AEB71811E12A002758F8 /* ntrigluings.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BF1811D920002CC2AE /* ntrigluings.h */; };
+		0543AEB81811E12A002758F8 /* ntriskeleton.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C11811D920002CC2AE /* ntriskeleton.h */; };
+		0543AEB91811E12A002758F8 /* ntrisnappea.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C31811D920002CC2AE /* ntrisnappea.h */; };
+		0543AEBA1811E12A002758F8 /* ntrisurfaces.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C51811D920002CC2AE /* ntrisurfaces.h */; };
+		0543AEBB1811E12A002758F8 /* skeletonwindow.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C71811D920002CC2AE /* skeletonwindow.h */; };
+		0543AEBC1811E12A002758F8 /* snappeacomponents.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C91811D920002CC2AE /* snappeacomponents.h */; };
+		0543AEBD1811E12A002758F8 /* packetwindow.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5CD1811D920002CC2AE /* packetwindow.h */; };
+		0543AEBE1811E12A002758F8 /* patiencedialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5CF1811D920002CC2AE /* patiencedialog.h */; };
+		0543AEBF1811E12A002758F8 /* progressdialogs.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5D11811D920002CC2AE /* progressdialogs.h */; };
+		0543AEC01811E12A002758F8 /* recentfilesaction.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5DF1811D920002CC2AE /* recentfilesaction.h */; };
+		0543AEC11811E12A002758F8 /* reginaabout.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5E71811D920002CC2AE /* reginaabout.h */; };
+		0543AEC21811E12A002758F8 /* reginamain.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5EA1811D920002CC2AE /* reginamain.h */; };
+		0543AEC31811E12A002758F8 /* reginamanager.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5EC1811D920002CC2AE /* reginamanager.h */; };
+		0543AEC41811E12A002758F8 /* reginapref.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5EE1811D920002CC2AE /* reginapref.h */; };
+		0543AEC51811E12A002758F8 /* reginaprefset.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F01811D920002CC2AE /* reginaprefset.h */; };
+		0543AEC61811E12A002758F8 /* shortrunner.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F61811D920002CC2AE /* shortrunner.h */; };
 		054F7E29180B93770090B1F3 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 054F7E28180B93770090B1F3 /* WelcomeViewController.m */; };
 		054F7E2B180B96AC0090B1F3 /* welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2A180B96AC0090B1F3 /* welcome.html */; };
 		054F7E2D180B99270090B1F3 /* regina.css in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2C180B99270090B1F3 /* regina.css */; };
@@ -1204,6 +1257,20 @@
 		05F96C131809F59600C99F96 /* PacketTreeController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C121809F59600C99F96 /* PacketTreeController.mm */; };
 		05F96C17180A153A00C99F96 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C16180A153A00C99F96 /* MBProgressHUD.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		0543AE921811DE96002758F8 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.h";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_moc.cxx",
+			);
+			script = "/Developer/Tools/Qt/moc \\\n-I/Library/Frameworks/QtGui.framework/Headers \\\n-I/Library/Frameworks/QtCore.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}";
+		};
+/* End PBXBuildRule section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		052FA0BF1806072900FAE4DF /* CopyFiles */ = {
@@ -4387,6 +4454,7 @@
 				0564A1DD1811D6F8002CC2AE /* Resources */,
 			);
 			buildRules = (
+				0543AE921811DE96002758F8 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -5073,6 +5141,59 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0543AE931811E12A002758F8 /* boundarycomponentchooser.h in Sources */,
+				0543AE941811E12A002758F8 /* edgechooser.h in Sources */,
+				0543AE951811E12A002758F8 /* edgeintchooser.h in Sources */,
+				0543AE961811E12A002758F8 /* tetrahedronchooser.h in Sources */,
+				0543AE971811E12A002758F8 /* trianglechooser.h in Sources */,
+				0543AE981811E12A002758F8 /* vertexchooser.h in Sources */,
+				0543AE991811E12A002758F8 /* coordinatechooser.h in Sources */,
+				0543AE9A1811E12A002758F8 /* examplesaction.h in Sources */,
+				0543AE9B1811E12A002758F8 /* exportdialog.h in Sources */,
+				0543AE9C1811E12A002758F8 /* importdialog.h in Sources */,
+				0543AE9D1811E12A002758F8 /* introdialog.h in Sources */,
+				0543AE9E1811E12A002758F8 /* newpacketdialog.h in Sources */,
+				0543AE9F1811E12A002758F8 /* packetchooser.h in Sources */,
+				0543AEA01811E12A002758F8 /* packeteditiface.h in Sources */,
+				0543AEA11811E12A002758F8 /* packettabui.h in Sources */,
+				0543AEA21811E12A002758F8 /* packettreeview.h in Sources */,
+				0543AEA31811E12A002758F8 /* dim2trigluings.h in Sources */,
+				0543AEA41811E12A002758F8 /* dim2triskeleton.h in Sources */,
+				0543AEA51811E12A002758F8 /* dim2triui.h in Sources */,
+				0543AEA61811E12A002758F8 /* eltmovedialog.h in Sources */,
+				0543AEA71811E12A002758F8 /* facetgraphtab.h in Sources */,
+				0543AEA81811E12A002758F8 /* gaprunner.h in Sources */,
+				0543AEA91811E12A002758F8 /* nanglestructureui.h in Sources */,
+				0543AEAA1811E12A002758F8 /* ncompatcanvas.h in Sources */,
+				0543AEAB1811E12A002758F8 /* nnormalsurfaceui.h in Sources */,
+				0543AEAC1811E12A002758F8 /* nscriptui.h in Sources */,
+				0543AEAD1811E12A002758F8 /* nsurfacecompatui.h in Sources */,
+				0543AEAE1811E12A002758F8 /* nsurfacecoordinateui.h in Sources */,
+				0543AEAF1811E12A002758F8 /* nsurfacefiltercomb.h in Sources */,
+				0543AEB01811E12A002758F8 /* nsurfacefilterprop.h in Sources */,
+				0543AEB11811E12A002758F8 /* nsurfacematchingui.h in Sources */,
+				0543AEB21811E12A002758F8 /* nsurfacesummaryui.h in Sources */,
+				0543AEB31811E12A002758F8 /* ntextui.h in Sources */,
+				0543AEB41811E12A002758F8 /* ntrialgebra.h in Sources */,
+				0543AEB51811E12A002758F8 /* ntriangulationui.h in Sources */,
+				0543AEB61811E12A002758F8 /* ntricomposition.h in Sources */,
+				0543AEB71811E12A002758F8 /* ntrigluings.h in Sources */,
+				0543AEB81811E12A002758F8 /* ntriskeleton.h in Sources */,
+				0543AEB91811E12A002758F8 /* ntrisnappea.h in Sources */,
+				0543AEBA1811E12A002758F8 /* ntrisurfaces.h in Sources */,
+				0543AEBB1811E12A002758F8 /* skeletonwindow.h in Sources */,
+				0543AEBC1811E12A002758F8 /* snappeacomponents.h in Sources */,
+				0543AE911811DE79002758F8 /* packetui.h in Sources */,
+				0543AEBD1811E12A002758F8 /* packetwindow.h in Sources */,
+				0543AEBE1811E12A002758F8 /* patiencedialog.h in Sources */,
+				0543AEBF1811E12A002758F8 /* progressdialogs.h in Sources */,
+				0543AEC01811E12A002758F8 /* recentfilesaction.h in Sources */,
+				0543AEC11811E12A002758F8 /* reginaabout.h in Sources */,
+				0543AEC21811E12A002758F8 /* reginamain.h in Sources */,
+				0543AEC31811E12A002758F8 /* reginamanager.h in Sources */,
+				0543AEC41811E12A002758F8 /* reginapref.h in Sources */,
+				0543AEC51811E12A002758F8 /* reginaprefset.h in Sources */,
+				0543AEC61811E12A002758F8 /* shortrunner.h in Sources */,
 				0564A95F1811D921002CC2AE /* nsurfacefiltercreator.cpp in Sources */,
 				0564A9561811D921002CC2AE /* ncompatcanvas.cpp in Sources */,
 				0564A9401811D921002CC2AE /* introdialog.cpp in Sources */,
