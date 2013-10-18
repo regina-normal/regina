@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>Qt.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 		<key>iOS.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -28,6 +33,16 @@
 			<true/>
 		</dict>
 		<key>052FA1491806103000FAE4DF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0564A1DE1811D6F8002CC2AE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0564A2001811D6F9002CC2AE</key>
 		<dict>
 			<key>primary</key>
 			<true/>

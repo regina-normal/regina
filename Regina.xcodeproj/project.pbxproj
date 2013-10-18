@@ -770,6 +770,8 @@
 		054F7E2D180B99270090B1F3 /* regina.css in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2C180B99270090B1F3 /* regina.css */; };
 		055DDCEF1808575300C973FB /* filterregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 055DDCED1808575300C973FB /* filterregistry-impl.h */; };
 		055DDCF01808575300C973FB /* surfacefiltertype.h in Headers */ = {isa = PBXBuildFile; fileRef = 055DDCEE1808575300C973FB /* surfacefiltertype.h */; };
+		0564A1EB1811D6F9002CC2AE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0564A1E91811D6F9002CC2AE /* InfoPlist.strings */; };
+		0564A1FC1811D6F9002CC2AE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0564A1FB1811D6F9002CC2AE /* Images.xcassets */; };
 		057FA752180615F6008E25F6 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA74F180615F5008E25F6 /* libiconv.dylib */; };
 		057FA753180615F6008E25F6 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA750180615F5008E25F6 /* libxml2.dylib */; };
 		057FA754180615F6008E25F6 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA751180615F5008E25F6 /* libz.dylib */; };
@@ -1475,6 +1477,10 @@
 		054F7E2C180B99270090B1F3 /* regina.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = regina.css; sourceTree = "<group>"; };
 		055DDCED1808575300C973FB /* filterregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "filterregistry-impl.h"; sourceTree = "<group>"; };
 		055DDCEE1808575300C973FB /* surfacefiltertype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surfacefiltertype.h; sourceTree = "<group>"; };
+		0564A1DF1811D6F8002CC2AE /* Qt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Qt.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0564A1E81811D6F9002CC2AE /* Qt-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Qt-Info.plist"; sourceTree = "<group>"; };
+		0564A1EA1811D6F9002CC2AE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		0564A1FB1811D6F9002CC2AE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		057FA74F180615F5008E25F6 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libiconv.dylib; sourceTree = DEVELOPER_DIR; };
 		057FA750180615F5008E25F6 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libxml2.dylib; sourceTree = DEVELOPER_DIR; };
@@ -1536,6 +1542,13 @@
 				052FA12C1806102F00FAE4DF /* CoreGraphics.framework in Frameworks */,
 				057FA7561806184B008E25F6 /* UIKit.framework in Frameworks */,
 				052FA12A1806102F00FAE4DF /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0564A1DC1811D6F8002CC2AE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2513,6 +2526,24 @@
 			name = HTML;
 			sourceTree = "<group>";
 		};
+		0564A1E61811D6F9002CC2AE /* Qt */ = {
+			isa = PBXGroup;
+			children = (
+				0564A1FB1811D6F9002CC2AE /* Images.xcassets */,
+				0564A1E71811D6F9002CC2AE /* Supporting Files */,
+			);
+			path = Qt;
+			sourceTree = "<group>";
+		};
+		0564A1E71811D6F9002CC2AE /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				0564A1E81811D6F9002CC2AE /* Qt-Info.plist */,
+				0564A1E91811D6F9002CC2AE /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		0575E6501805F36D009E3FC4 = {
 			isa = PBXGroup;
 			children = (
@@ -2520,6 +2551,7 @@
 				052FA0CA1806088B00FAE4DF /* testsuite */,
 				05A47F961809CB7500F86BFD /* examples */,
 				052FA12F1806102F00FAE4DF /* ios */,
+				0564A1E61811D6F9002CC2AE /* Qt */,
 				0575E65A1805F36D009E3FC4 /* Products */,
 				052FA0AF180604A900FAE4DF /* Frameworks */,
 			);
@@ -2531,6 +2563,7 @@
 				0575E6591805F36D009E3FC4 /* libregina-engine.dylib */,
 				052FA0C11806072900FAE4DF /* regtestsuite */,
 				052FA1281806102F00FAE4DF /* Regina.app */,
+				0564A1DF1811D6F8002CC2AE /* Qt.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2874,6 +2907,23 @@
 			productReference = 052FA1281806102F00FAE4DF /* Regina.app */;
 			productType = "com.apple.product-type.application";
 		};
+		0564A1DE1811D6F8002CC2AE /* Qt */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0564A2131811D6FA002CC2AE /* Build configuration list for PBXNativeTarget "Qt" */;
+			buildPhases = (
+				0564A1DB1811D6F8002CC2AE /* Sources */,
+				0564A1DC1811D6F8002CC2AE /* Frameworks */,
+				0564A1DD1811D6F8002CC2AE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Qt;
+			productName = Qt;
+			productReference = 0564A1DF1811D6F8002CC2AE /* Qt.app */;
+			productType = "com.apple.product-type.application";
+		};
 		0575E6581805F36D009E3FC4 /* Engine */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0575E65D1805F36D009E3FC4 /* Build configuration list for PBXNativeTarget "Engine" */;
@@ -2921,6 +2971,7 @@
 				0575E6581805F36D009E3FC4 /* Engine */,
 				052FA0C01806072900FAE4DF /* Test Suite */,
 				052FA1271806102F00FAE4DF /* iOS */,
+				0564A1DE1811D6F8002CC2AE /* Qt */,
 			);
 		};
 /* End PBXProject section */
@@ -2938,6 +2989,15 @@
 				052FA1341806102F00FAE4DF /* InfoPlist.strings in Resources */,
 				052FA13D1806103000FAE4DF /* Main.storyboard in Resources */,
 				054F7E2D180B99270090B1F3 /* regina.css in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0564A1DD1811D6F8002CC2AE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0564A1FC1811D6F9002CC2AE /* Images.xcassets in Resources */,
+				0564A1EB1811D6F9002CC2AE /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3217,6 +3277,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0564A1DB1811D6F8002CC2AE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0575E6551805F36D009E3FC4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3476,6 +3543,14 @@
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
+		0564A1E91811D6F9002CC2AE /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0564A1EA1811D6F9002CC2AE /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -3604,6 +3679,36 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		0564A20F1811D6FA002CC2AE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Qt/Qt-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Qt/Qt-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		0564A2101811D6FA002CC2AE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Qt/Qt-Prefix.pch";
+				INFOPLIST_FILE = "Qt/Qt-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -3744,6 +3849,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		0564A2131811D6FA002CC2AE /* Build configuration list for PBXNativeTarget "Qt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0564A20F1811D6FA002CC2AE /* Debug */,
+				0564A2101811D6FA002CC2AE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		0575E6541805F36D009E3FC4 /* Build configuration list for PBXProject "Regina" */ = {
 			isa = XCConfigurationList;
