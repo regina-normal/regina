@@ -132,7 +132,7 @@ const QString& ReginaSupport::home() {
 
 QIcon ReginaSupport::regIcon(const QString& name) {
     QIcon icon;
-    QString filename = home() + "/icons/regina/" + name + "-%1.png";
+    QString filename = home() + "/icons/" + name + "-%1.png";
     for (int i = 0; iconSizes[i]; ++i)
         icon.addFile(filename.arg(iconSizes[i]));
     return icon;
