@@ -1950,6 +1950,7 @@
 		052FA23E180613A900FAE4DF /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../../Library/Frameworks/boost.framework; sourceTree = "<group>"; };
 		052FA23F180613A900FAE4DF /* libgmp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmp.framework; path = ../../Library/Frameworks/libgmp.framework; sourceTree = "<group>"; };
 		052FA240180613A900FAE4DF /* libgmpxx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmpxx.framework; path = ../../Library/Frameworks/libgmpxx.framework; sourceTree = "<group>"; };
+		0543AEC71811E2AD002758F8 /* Regina.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Regina.entitlements; sourceTree = "<group>"; };
 		054F7E27180B93770090B1F3 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
 		054F7E28180B93770090B1F3 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
 		054F7E2A180B96AC0090B1F3 /* welcome.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = welcome.html; sourceTree = "<group>"; };
@@ -3510,6 +3511,7 @@
 		0564A1E61811D6F9002CC2AE /* Qt */ = {
 			isa = PBXGroup;
 			children = (
+				0543AEC71811E2AD002758F8 /* Regina.entitlements */,
 				0564A1FB1811D6F9002CC2AE /* Images.xcassets */,
 				0564A1E71811D6F9002CC2AE /* Supporting Files */,
 			);
@@ -4491,6 +4493,13 @@
 				TargetAttributes = {
 					052FA1271806102F00FAE4DF = {
 						DevelopmentTeam = 67JTSH67LZ;
+					};
+					0564A1DE1811D6F8002CC2AE = {
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -5688,6 +5697,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
+				CODE_SIGN_ENTITLEMENTS = Qt/Regina.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5728,6 +5739,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
+				CODE_SIGN_ENTITLEMENTS = Qt/Regina.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
