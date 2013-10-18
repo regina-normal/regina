@@ -37,6 +37,10 @@ Version 4.95  [ (under development) ]
               template struct NewFunction1<>.  The old type is equivalent to
               NewFunction1<NNormalSurfaceVector, size_t>, and a deprecated
               typedef has been kept for backward compatibility.
+        Class NExampleTriangulation:
+            - Routines weberSeifert() / seifertWeber(), bingsHouse(), weeks()
+              and poincareHomologySphere() all now build oriented
+              triangulations.
         Class NFace:
             - Renamed to NTriangle.  The old name is deprecated but has
               been kept as a typedef for backward compatibility.
@@ -101,8 +105,11 @@ Version 4.95  [ (under development) ]
               registry.  See the NPacket class notes for details.
             - The constant packetType is now a compile-time enum constant,
               not a static const int.
-            - Routine getFullName() now replaces an empty label with the text
-              "(No label)", since this is intended for human-readable output.
+            - The new routine getHumanLabel() returns the packet label,
+              but adjusted for human-readable output.  In particular, an
+              empty label will be replaced by "(no label)".
+            - Routine getFullName() now makes labels more suitable for
+              human-readable output as described above.
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic aliases orderedSn, SnIndex() and
               orderedSnIndex().  These all reference existing arrays/routines
@@ -196,6 +203,8 @@ Version 4.95  [ (under development) ]
     USER INTERFACE:
         - The root container packet is now hidden from the user (it still
           exists internally within the packet tree).
+        - The triangulation viewer now explicitly states "not oriented"
+          for orientable-but-not-oriented triangulations.
         - The old regina-kde placeholder app (which did nothing but pop up
           a message directing the user to the new regina-gui) has been removed.
     TEST SUITE:
