@@ -923,9 +923,9 @@
 		057FA7561806184B008E25F6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA7551806184A008E25F6 /* UIKit.framework */; };
 		0588F1181808D43B006BDC79 /* packetregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1161808D43B006BDC79 /* packetregistry-impl.h */; };
 		0588F1191808D43B006BDC79 /* packettype.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1171808D43B006BDC79 /* packettype.h */; };
-		058D0145180B12CA00AC3D11 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 058D0144180B12CA00AC3D11 /* icons */; };
 		059101151812F349000A8D16 /* DetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101141812F349000A8D16 /* DetailViewController.mm */; };
 		059101181812F4C9000A8D16 /* PacketSubcontroller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101171812F4C9000A8D16 /* PacketSubcontroller.mm */; };
+		0591011B1813230A000A8D16 /* NewPacketController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0591011A1813230A000A8D16 /* NewPacketController.m */; };
 		05A47FBE1809D11900F86BFD /* closed-hyp-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F971809CB7600F86BFD /* closed-hyp-census.rga */; };
 		05A47FBF1809D11900F86BFD /* closed-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F981809CB7600F86BFD /* closed-nor-census.rga */; };
 		05A47FC01809D11900F86BFD /* closed-or-census-large.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F991809CB7600F86BFD /* closed-or-census-large.rga */; };
@@ -1854,11 +1854,12 @@
 		057FA7551806184A008E25F6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		0588F1161808D43B006BDC79 /* packetregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "packetregistry-impl.h"; sourceTree = "<group>"; };
 		0588F1171808D43B006BDC79 /* packettype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packettype.h; sourceTree = "<group>"; };
-		058D0144180B12CA00AC3D11 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icons; sourceTree = "<group>"; };
 		059101131812F349000A8D16 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		059101141812F349000A8D16 /* DetailViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DetailViewController.mm; sourceTree = "<group>"; };
 		059101161812F4C9000A8D16 /* PacketSubcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketSubcontroller.h; sourceTree = "<group>"; };
 		059101171812F4C9000A8D16 /* PacketSubcontroller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketSubcontroller.mm; sourceTree = "<group>"; };
+		059101191813230A000A8D16 /* NewPacketController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPacketController.h; sourceTree = "<group>"; };
+		0591011A1813230A000A8D16 /* NewPacketController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewPacketController.m; sourceTree = "<group>"; };
 		05A47F971809CB7600F86BFD /* closed-hyp-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census.rga"; sourceTree = "<group>"; };
 		05A47F981809CB7600F86BFD /* closed-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-nor-census.rga"; sourceTree = "<group>"; };
 		05A47F991809CB7600F86BFD /* closed-or-census-large.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census-large.rga"; sourceTree = "<group>"; };
@@ -2881,6 +2882,8 @@
 				05A47FC61809D1D600F86BFD /* Example.m */,
 				052FA13E1806103000FAE4DF /* MasterViewController.h */,
 				052FA13F1806103000FAE4DF /* MasterViewController.mm */,
+				059101191813230A000A8D16 /* NewPacketController.h */,
+				0591011A1813230A000A8D16 /* NewPacketController.m */,
 				0523D888180B54850094DAAD /* PacketManagerIOS.h */,
 				0523D889180B54850094DAAD /* PacketManagerIOS.mm */,
 				059101161812F4C9000A8D16 /* PacketSubcontroller.h */,
@@ -2895,7 +2898,6 @@
 				054F7E28180B93770090B1F3 /* WelcomePopupController.m */,
 				050313BE1812DAC0007F0CBE /* packets */,
 				052FA1441806103000FAE4DF /* Images.xcassets */,
-				058D0144180B12CA00AC3D11 /* icons */,
 				052FA1301806102F00FAE4DF /* Supporting Files */,
 				054F7E2E180B99320090B1F3 /* HTML */,
 				05F96C14180A14E600C99F96 /* MBProgressHUD */,
@@ -3619,7 +3621,6 @@
 			files = (
 				051E5F7D180C636000C9EF04 /* Settings.bundle in Resources */,
 				052FA1451806103000FAE4DF /* Images.xcassets in Resources */,
-				058D0145180B12CA00AC3D11 /* icons in Resources */,
 				05B62166180B9D7300CCB90B /* title.png in Resources */,
 				054F7E2B180B96AC0090B1F3 /* welcome.html in Resources */,
 				052FA1341806102F00FAE4DF /* InfoPlist.strings in Resources */,
@@ -3691,6 +3692,7 @@
 				052FA1691806129B00FAE4DF /* dim2census.cpp in Sources */,
 				052FA1B11806129B00FAE4DF /* uimessages.cpp in Sources */,
 				052FA1681806129B00FAE4DF /* compact.cpp in Sources */,
+				0591011B1813230A000A8D16 /* NewPacketController.m in Sources */,
 				052FA1C41806129B00FAE4DF /* nplugtrisolidtorus.cpp in Sources */,
 				052FA1A21806129B00FAE4DF /* nrational.cpp in Sources */,
 				052FA1A51806129B00FAE4DF /* seedprimes.cpp in Sources */,
