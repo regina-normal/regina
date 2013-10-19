@@ -34,11 +34,7 @@
 
 @implementation WelcomePopupController
 
-- (IBAction)done:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:NULL];
-}
-
-- (void)viewDidLoad {    
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     NSURL *url = [[NSBundle mainBundle] URLForResource:@"welcome" withExtension:@"html"];
