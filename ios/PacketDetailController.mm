@@ -34,7 +34,9 @@
 #import "packet/npacket.h"
 #import "packet/packettype.h"
 
-@interface PacketDetailController ()
+@interface PacketDetailController () {
+    NSString* _menuTitle;
+}
 @property (weak, nonatomic) UIViewController *sub;
 @end
 
@@ -59,18 +61,20 @@
     [self navigationItem].title = @"";
     [_sub performSegueWithIdentifier:@"embedWelcome" sender:nil];
 
+    _menuTitle = @"Documents";
     UIBarButtonItem* left = self.navigationItem.leftBarButtonItem;
     if (left)
-        left.title = @"Documents TODO"; // TODO
+        left.title = _menuTitle;
 }
 
 - (void)viewOpenFile {
     [self navigationItem].title = @"";
     [_sub performSegueWithIdentifier:@"embedEmpty" sender:nil];
     
+    _menuTitle = @"Packets";
     UIBarButtonItem* left = self.navigationItem.leftBarButtonItem;
     if (left)
-        left.title = @"Packets TODO"; // TODO
+        left.title = _menuTitle;
 }
 
 - (void)viewPacket:(regina::NPacket *)p {
@@ -89,7 +93,6 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"embed"]) {
-        NSLog(@"Found sub");
         _sub = segue.destinationViewController;
     }
     
@@ -125,7 +128,7 @@
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
 {
-    barButtonItem.title = @"TODO";
+    barButtonItem.title = _menuTitle;
     [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
 }
 

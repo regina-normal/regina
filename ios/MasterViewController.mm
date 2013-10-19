@@ -191,7 +191,7 @@
             });
         });
         
-        [_detail viewPacket:nil];
+        [_detail viewOpenFile];
     }
 }
 
