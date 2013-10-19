@@ -15,6 +15,7 @@
 		051806D6181202E0008EBB01 /* examples in Resources */ = {isa = PBXBuildFile; fileRef = 051806D5181202E0008EBB01 /* examples */; };
 		051806D7181203BB008EBB01 /* regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D181811F27A00FD6E2E /* regina.icns */; };
 		051806D8181203BB008EBB01 /* x-regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D191811F27A00FD6E2E /* x-regina.icns */; };
+		051806DB18123057008EBB01 /* EmptySegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 051806DA18123057008EBB01 /* EmptySegue.m */; };
 		051E5F7D180C636000C9EF04 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 051E5F7C180C636000C9EF04 /* Settings.bundle */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
 		052F9E83180600FB00FAE4DF /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */; };
@@ -990,6 +991,8 @@
 		0517A158180F96CA00551DB6 /* SwitchableDetailNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwitchableDetailNavigationController.m; sourceTree = "<group>"; };
 		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = src/icons; sourceTree = "<group>"; };
 		051806D5181202E0008EBB01 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = SOURCE_ROOT; };
+		051806D918123057008EBB01 /* EmptySegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmptySegue.h; sourceTree = "<group>"; };
+		051806DA18123057008EBB01 /* EmptySegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmptySegue.m; sourceTree = "<group>"; };
 		051E5F7C180C636000C9EF04 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
@@ -2847,6 +2850,8 @@
 				052FA1391806103000FAE4DF /* AppDelegate.m */,
 				052FA1411806103000FAE4DF /* DetailViewController.h */,
 				052FA1421806103000FAE4DF /* DetailViewController.mm */,
+				051806D918123057008EBB01 /* EmptySegue.h */,
+				051806DA18123057008EBB01 /* EmptySegue.m */,
 				05A47FC51809D1D600F86BFD /* Example.h */,
 				05A47FC61809D1D600F86BFD /* Example.m */,
 				052FA13E1806103000FAE4DF /* MasterViewController.h */,
@@ -3871,6 +3876,7 @@
 				052FA1CC1806129B00FAE4DF /* nsnappedtwosphere.cpp in Sources */,
 				052FA1891806129B00FAE4DF /* orb.cpp in Sources */,
 				052FA16F1806129B00FAE4DF /* ngluingperms.cpp in Sources */,
+				051806DB18123057008EBB01 /* EmptySegue.m in Sources */,
 				052FA1FA1806129B00FAE4DF /* nhomologicaldata.cpp in Sources */,
 				052FA1BC1806129B00FAE4DF /* nlayeredchainpair.cpp in Sources */,
 				052FA1DF1806129B00FAE4DF /* nsoriented.cpp in Sources */,

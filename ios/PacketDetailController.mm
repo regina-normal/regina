@@ -32,6 +32,7 @@
 
 #import "PacketDetailController.h"
 #import "packet/npacket.h"
+#import "packet/packettype.h"
 
 @interface PacketDetailController ()
 @property (weak, nonatomic) IBOutlet UITextView *detail;
@@ -45,6 +46,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    [self performSegueWithIdentifier:@"embedDefault" sender:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -56,6 +58,42 @@
 - (void)viewPacket:(regina::NPacket *)p {
     _detail.text = [NSString stringWithUTF8String:p->detail().c_str()];
     [self navigationItem].title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
+    
+    if (p->getPacketType() == regina::PACKET_TEXT)
+        [self performSegueWithIdentifier:@"embedText" sender:self];
+    else
+        [self performSegueWithIdentifier:@"embedDefault" sender:self];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if (self.childViewControllers.count > 0) {
+        NSLog(@"Swap");
+        UIViewController* from = [self.childViewControllers objectAtIndex:0];
+        UIViewController* to = segue.destinationViewController;
+
+        to.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        
+        [from willMoveToParentViewController:nil];
+        [self addChildViewController:to];
+        [self transitionFromViewController:from
+                          toViewController:to
+                                  duration:0
+                                   options:0
+                                animations:nil
+                                completion:^(BOOL finished) {
+                                    [from removeFromParentViewController];
+                                    [to didMoveToParentViewController:self];
+                                }]; // TODO: Necessary?
+    } else {
+        NSLog(@"Add");
+        UIViewController* to = segue.destinationViewController;
+
+        [self addChildViewController:to];
+        to.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+
+        [self.view addSubview:to.view];
+        [to didMoveToParentViewController:self];
+    }
 }
 
 #pragma mark - Split view
