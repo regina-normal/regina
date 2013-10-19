@@ -30,18 +30,18 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketDetailController.h"
+#import "DetailViewController.h"
 #import "PacketManagerIOS.h"
 #import "packet/npacket.h"
 #import "packet/packettype.h"
 
-@interface PacketDetailController () {
+@interface DetailViewController () {
     NSString* _menuTitle;
 }
 @property (weak, nonatomic) UIViewController *sub;
 @end
 
-@implementation PacketDetailController
+@implementation DetailViewController
 
 #pragma mark - Managing the detail item
 

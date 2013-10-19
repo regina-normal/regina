@@ -36,7 +36,7 @@ namespace regina {
     class NPacket;
 }
 
-@interface PacketDetailController : UIViewController <UISplitViewControllerDelegate>
+@interface DetailViewController : UIViewController <UISplitViewControllerDelegate>
 
 @property (readonly, assign, nonatomic) regina::NPacket* packet;
 

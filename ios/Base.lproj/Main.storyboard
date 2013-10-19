@@ -72,7 +72,7 @@
         <!--Packet Detail Controller-->
         <scene sceneID="jal-4E-LI1">
             <objects>
-                <viewController id="ZiU-Qa-ufv" customClass="PacketDetailController" sceneMemberID="viewController">
+                <viewController id="ZiU-Qa-ufv" customClass="DetailViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="tZa-u7-g03"/>
                         <viewControllerLayoutGuide type="bottom" id="F5p-xA-ILQ"/>

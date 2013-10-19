@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
+#import "DetailViewController.h"
 #import "Example.h"
-#import "PacketDetailController.h"
 #import "PacketTreeController.h"
 #import "MasterViewController.h"
 #import "MBProgressHUD.h"
@@ -43,7 +43,7 @@
 @interface MasterViewController () {
     NSMutableArray *_objects;
     NSArray *_examples;
-    PacketDetailController *_detail;
+    DetailViewController *_detail;
 }
 @end
 
@@ -76,7 +76,7 @@
     self.navigationItem.rightBarButtonItem = addButton;
      */
     
-    _detail = (PacketDetailController*)
+    _detail = (DetailViewController*)
         [[[[self splitViewController] viewControllers] lastObject] topViewController];
     _examples = [Example all];
 }

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketDetailController.h"
+#import "DetailViewController.h"
 #import "PacketViewController.h"
 #import "SwitchableSubcontroller.h"
 
@@ -56,7 +56,7 @@
     UIViewController* to = segue.destinationViewController;
 
     if (sender) {
-        regina::NPacket* p = ((PacketDetailController*)sender).packet;
+        regina::NPacket* p = ((DetailViewController*)sender).packet;
         if (p)
             ((PacketViewController*)to).packet = p;
     }

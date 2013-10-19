@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketDetailController.h"
+#import "DetailViewController.h"
 #import "PacketManagerIOS.h"
 #import "PacketTreeController.h"
 
@@ -68,7 +68,7 @@
 @interface PacketTreeController () {
     NSMutableArray *_rows;
     NSInteger _subtreeRow;
-    PacketDetailController *_detail;
+    DetailViewController *_detail;
 }
 
 @property (assign, nonatomic) regina::NPacket* tree;
@@ -84,7 +84,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    _detail = (PacketDetailController*)
+    _detail = (DetailViewController*)
         [[[[self splitViewController] viewControllers] lastObject] topViewController];
 }
 
@@ -153,7 +153,7 @@
 - (void)viewPacket:(regina::NPacket *)p {
     // TODO: Make this easier to get to.
     UINavigationController* nav = [[self splitViewController].viewControllers lastObject];
-    PacketDetailController* detail = (PacketDetailController*)nav.topViewController;
+    DetailViewController* detail = (DetailViewController*)nav.topViewController;
     [detail viewPacket:p];
 }
 
