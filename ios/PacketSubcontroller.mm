@@ -32,56 +32,22 @@
 
 #import "DetailViewController.h"
 #import "PacketViewController.h"
-#import "SwitchableSubcontroller.h"
+#import "PacketSubcontroller.h"
 
-@interface SwitchableSubcontroller ()
+@interface PacketSubcontroller ()
 
 @end
 
-@implementation SwitchableSubcontroller
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
+@implementation PacketSubcontroller
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    UIViewController* to = segue.destinationViewController;
-
     if (sender) {
         regina::NPacket* p = ((DetailViewController*)sender).packet;
         if (p)
-            ((PacketViewController*)to).packet = p;
+            ((PacketViewController*)segue.destinationViewController).packet = p;
     }
-    
-    to.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
 
-    if (self.childViewControllers.count > 0) {
-        UIViewController* from = [self.childViewControllers objectAtIndex:0];
-        
-        [from willMoveToParentViewController:nil];
-        [self addChildViewController:to];
-        [self transitionFromViewController:from
-                          toViewController:to
-                                  duration:0
-                                   options:0
-                                animations:nil
-                                completion:^(BOOL finished) {
-                                    [from removeFromParentViewController];
-                                    [to didMoveToParentViewController:self];
-                                }]; // TODO: Necessary?
-    } else {
-        [self addChildViewController:to];
-        [self.view addSubview:to.view];
-        [to didMoveToParentViewController:self];
-    }
+    [super prepareForSegue:segue sender:sender];
 }
 
 @end

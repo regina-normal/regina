@@ -925,6 +925,7 @@
 		0588F1191808D43B006BDC79 /* packettype.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1171808D43B006BDC79 /* packettype.h */; };
 		058D0145180B12CA00AC3D11 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 058D0144180B12CA00AC3D11 /* icons */; };
 		059101151812F349000A8D16 /* DetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101141812F349000A8D16 /* DetailViewController.mm */; };
+		059101181812F4C9000A8D16 /* PacketSubcontroller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101171812F4C9000A8D16 /* PacketSubcontroller.mm */; };
 		05A47FBE1809D11900F86BFD /* closed-hyp-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F971809CB7600F86BFD /* closed-hyp-census.rga */; };
 		05A47FBF1809D11900F86BFD /* closed-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F981809CB7600F86BFD /* closed-nor-census.rga */; };
 		05A47FC01809D11900F86BFD /* closed-or-census-large.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F991809CB7600F86BFD /* closed-or-census-large.rga */; };
@@ -934,7 +935,7 @@
 		05A47FC41809D11900F86BFD /* snappea-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47FA41809CB7600F86BFD /* snappea-census.rga */; };
 		05A47FC71809D1D600F86BFD /* Example.m in Sources */ = {isa = PBXBuildFile; fileRef = 05A47FC61809D1D600F86BFD /* Example.m */; };
 		05B62166180B9D7300CCB90B /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B62165180B9D7300CCB90B /* title.png */; };
-		05BC538F1812BEB000FE9217 /* SwitchableSubcontroller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.mm */; };
+		05BC538F1812BEB000FE9217 /* SwitchableSubcontroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */; };
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 		05D0A1101812F0BE005ED097 /* TriangulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */; };
 		05EDF7E71811DCAE00A1618E /* libgmp.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A7180604A100FAE4DF /* libgmp.10.dylib */; };
@@ -1856,6 +1857,8 @@
 		058D0144180B12CA00AC3D11 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icons; sourceTree = "<group>"; };
 		059101131812F349000A8D16 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		059101141812F349000A8D16 /* DetailViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DetailViewController.mm; sourceTree = "<group>"; };
+		059101161812F4C9000A8D16 /* PacketSubcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketSubcontroller.h; sourceTree = "<group>"; };
+		059101171812F4C9000A8D16 /* PacketSubcontroller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketSubcontroller.mm; sourceTree = "<group>"; };
 		05A47F971809CB7600F86BFD /* closed-hyp-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census.rga"; sourceTree = "<group>"; };
 		05A47F981809CB7600F86BFD /* closed-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-nor-census.rga"; sourceTree = "<group>"; };
 		05A47F991809CB7600F86BFD /* closed-or-census-large.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census-large.rga"; sourceTree = "<group>"; };
@@ -1878,7 +1881,7 @@
 		05A47FC61809D1D600F86BFD /* Example.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Example.m; sourceTree = "<group>"; };
 		05B62165180B9D7300CCB90B /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
 		05BC538D1812BEB000FE9217 /* SwitchableSubcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchableSubcontroller.h; sourceTree = "<group>"; };
-		05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwitchableSubcontroller.mm; sourceTree = "<group>"; };
+		05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwitchableSubcontroller.m; sourceTree = "<group>"; };
 		05CA99E518078465006161DC /* registryutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registryutils.h; sourceTree = "<group>"; };
 		05D0A10E1812F0BE005ED097 /* TriangulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriangulationViewController.h; sourceTree = "<group>"; };
 		05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriangulationViewController.mm; sourceTree = "<group>"; };
@@ -2880,12 +2883,14 @@
 				052FA13F1806103000FAE4DF /* MasterViewController.mm */,
 				0523D888180B54850094DAAD /* PacketManagerIOS.h */,
 				0523D889180B54850094DAAD /* PacketManagerIOS.mm */,
+				059101161812F4C9000A8D16 /* PacketSubcontroller.h */,
+				059101171812F4C9000A8D16 /* PacketSubcontroller.mm */,
 				05F96C111809F59600C99F96 /* PacketTreeController.h */,
 				05F96C121809F59600C99F96 /* PacketTreeController.mm */,
 				050313C51812DDF0007F0CBE /* PacketViewController.h */,
 				050313C61812DDF0007F0CBE /* PacketViewController.mm */,
 				05BC538D1812BEB000FE9217 /* SwitchableSubcontroller.h */,
-				05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.mm */,
+				05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */,
 				054F7E27180B93770090B1F3 /* WelcomePopupController.h */,
 				054F7E28180B93770090B1F3 /* WelcomePopupController.m */,
 				050313BE1812DAC0007F0CBE /* packets */,
@@ -3736,6 +3741,7 @@
 				052FA19E1806129B00FAE4DF /* nperm3.cpp in Sources */,
 				052FA211180612DD00FAE4DF /* canonize.c in Sources */,
 				052FA1F51806129B00FAE4DF /* insertlayered.cpp in Sources */,
+				059101181812F4C9000A8D16 /* PacketSubcontroller.mm in Sources */,
 				052FA1981806129B00FAE4DF /* ntorusbundle.cpp in Sources */,
 				052FA210180612C100FAE4DF /* snappy_gluing_equations.c in Sources */,
 				052FA1921806129B00FAE4DF /* nlensspace.cpp in Sources */,
@@ -3796,7 +3802,7 @@
 				052FA1B51806129B00FAE4DF /* naugtrisolidtorus.cpp in Sources */,
 				052FA16D1806129B00FAE4DF /* ncensus.cpp in Sources */,
 				052FA1DC1806129B00FAE4DF /* nnormalsurfacelist.cpp in Sources */,
-				05BC538F1812BEB000FE9217 /* SwitchableSubcontroller.mm in Sources */,
+				05BC538F1812BEB000FE9217 /* SwitchableSubcontroller.m in Sources */,
 				052FA1CB1806129B00FAE4DF /* nsnappedball.cpp in Sources */,
 				052FA1FF1806129B00FAE4DF /* nvertex.cpp in Sources */,
 				052FA1AE1806129B00FAE4DF /* nprogresstypes.cpp in Sources */,

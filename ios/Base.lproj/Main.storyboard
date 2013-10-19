@@ -69,7 +69,7 @@
             </objects>
             <point key="canvasLocation" x="2242" y="-1691"/>
         </scene>
-        <!--Packet Detail Controller-->
+        <!--Detail View Controller-->
         <scene sceneID="jal-4E-LI1">
             <objects>
                 <viewController id="ZiU-Qa-ufv" customClass="DetailViewController" sceneMemberID="viewController">
@@ -488,10 +488,10 @@
             </objects>
             <point key="canvasLocation" x="2242" y="-778"/>
         </scene>
-        <!--Switchable Subcontroller - embedWelcome-->
+        <!--Packet Subcontroller - embedWelcome-->
         <scene sceneID="1NG-xL-6Va">
             <objects>
-                <viewController title="embedWelcome" automaticallyAdjustsScrollViewInsets="NO" id="mgH-6a-27d" customClass="SwitchableSubcontroller" sceneMemberID="viewController">
+                <viewController title="embedWelcome" automaticallyAdjustsScrollViewInsets="NO" id="mgH-6a-27d" customClass="PacketSubcontroller" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Xvx-MX-whK"/>
                         <viewControllerLayoutGuide type="bottom" id="t8H-ZG-SCS"/>
