@@ -37,8 +37,8 @@
 
 @interface DetailViewController () {
     NSString* _menuTitle;
+    UIViewController* _sub;
 }
-@property (weak, nonatomic) UIViewController *sub;
 @end
 
 @implementation DetailViewController
@@ -95,36 +95,8 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"embed"]) {
-        _sub = segue.destinationViewController;
-    }
-    
-    return;
-    if (self.childViewControllers.count > 0) {
-        NSLog(@"Swap");
-        UIViewController* from = [self.childViewControllers objectAtIndex:0];
-        UIViewController* to = segue.destinationViewController;
-
-        [from willMoveToParentViewController:nil];
-        [self addChildViewController:to];
-        [self transitionFromViewController:from
-                          toViewController:to
-                                  duration:0
-                                   options:0
-                                animations:nil
-                                completion:^(BOOL finished) {
-                                    [from removeFromParentViewController];
-                                    [to didMoveToParentViewController:self];
-                                }]; // TODO: Necessary?
-    } else {
-        NSLog(@"Add");
-        UIViewController* to = segue.destinationViewController;
-
-        [self addChildViewController:to];
-        
-        [self.view addSubview:to.view];
-        [to didMoveToParentViewController:self];
-    }
+    // This is the embed segue.
+    _sub = segue.destinationViewController;
 }
 
 #pragma mark - Split view
