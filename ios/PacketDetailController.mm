@@ -46,6 +46,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.edgesForExtendedLayout = UIRectEdgeNone;
     [self performSegueWithIdentifier:@"embedDefault" sender:nil];
 }
 
@@ -71,8 +72,6 @@
         UIViewController* from = [self.childViewControllers objectAtIndex:0];
         UIViewController* to = segue.destinationViewController;
 
-        to.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-        
         [from willMoveToParentViewController:nil];
         [self addChildViewController:to];
         [self transitionFromViewController:from
@@ -89,8 +88,7 @@
         UIViewController* to = segue.destinationViewController;
 
         [self addChildViewController:to];
-        to.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-
+        
         [self.view addSubview:to.view];
         [to didMoveToParentViewController:self];
     }
