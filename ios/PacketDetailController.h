@@ -38,6 +38,8 @@ namespace regina {
 
 @interface PacketDetailController : UIViewController <UISplitViewControllerDelegate>
 
+- (void)viewWelcome;
+- (void)viewOpenFile;
 - (void)viewPacket:(regina::NPacket*)p;
 
 @end

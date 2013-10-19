@@ -56,7 +56,7 @@
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
 {
-    barButtonItem.title = NSLocalizedString(@"Documents", @"Documents");
+    barButtonItem.title = @"TODO:TODO";
     [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
 }
 

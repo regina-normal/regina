@@ -10,7 +10,6 @@
 		0513753D1809B8D3002E525B /* coordregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753B1809B8D2002E525B /* coordregistry-impl.h */; };
 		0513753E1809B8D3002E525B /* coordregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753C1809B8D2002E525B /* coordregistry.h */; };
 		0517A156180F760600551DB6 /* PacketDetailController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0517A155180F760600551DB6 /* PacketDetailController.mm */; };
-		0517A159180F96CA00551DB6 /* SwitchableDetailNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0517A158180F96CA00551DB6 /* SwitchableDetailNavigationController.m */; };
 		051806D4181202BD008EBB01 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 051806D3181202BD008EBB01 /* icons */; };
 		051806D6181202E0008EBB01 /* examples in Resources */ = {isa = PBXBuildFile; fileRef = 051806D5181202E0008EBB01 /* examples */; };
 		051806D7181203BB008EBB01 /* regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D181811F27A00FD6E2E /* regina.icns */; };
@@ -988,8 +987,6 @@
 		0513753C1809B8D2002E525B /* coordregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coordregistry.h; sourceTree = "<group>"; };
 		0517A154180F760600551DB6 /* PacketDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketDetailController.h; sourceTree = "<group>"; };
 		0517A155180F760600551DB6 /* PacketDetailController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketDetailController.mm; sourceTree = "<group>"; };
-		0517A157180F96CA00551DB6 /* SwitchableDetailNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchableDetailNavigationController.h; sourceTree = "<group>"; };
-		0517A158180F96CA00551DB6 /* SwitchableDetailNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwitchableDetailNavigationController.m; sourceTree = "<group>"; };
 		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = src/icons; sourceTree = "<group>"; };
 		051806D5181202E0008EBB01 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = SOURCE_ROOT; };
 		051806D918123057008EBB01 /* EmptySegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmptySegue.h; sourceTree = "<group>"; };
@@ -2865,8 +2862,6 @@
 				0523D889180B54850094DAAD /* PacketManagerIOS.mm */,
 				05F96C111809F59600C99F96 /* PacketTreeController.h */,
 				05F96C121809F59600C99F96 /* PacketTreeController.mm */,
-				0517A157180F96CA00551DB6 /* SwitchableDetailNavigationController.h */,
-				0517A158180F96CA00551DB6 /* SwitchableDetailNavigationController.m */,
 				05BC538D1812BEB000FE9217 /* SwitchableSubcontroller.h */,
 				05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */,
 				054F7E27180B93770090B1F3 /* WelcomeViewController.h */,
@@ -3690,7 +3685,6 @@
 				052FA1401806103000FAE4DF /* MasterViewController.mm in Sources */,
 				052FA218180612DD00FAE4DF /* close_cusps.c in Sources */,
 				052FA22A180612DD00FAE4DF /* interface.c in Sources */,
-				0517A159180F96CA00551DB6 /* SwitchableDetailNavigationController.m in Sources */,
 				052FA1EB1806129B00FAE4DF /* sfcombination.cpp in Sources */,
 				052FA18D1806129B00FAE4DF /* ngenerictriangulation.cpp in Sources */,
 				052FA1771806129B00FAE4DF /* isomorphic.cpp in Sources */,

@@ -68,6 +68,7 @@
 @interface PacketTreeController () {
     NSMutableArray *_rows;
     NSInteger _subtreeRow;
+    PacketDetailController *_detail;
 }
 
 @property (assign, nonatomic) regina::NPacket* tree;
@@ -82,16 +83,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    _detail = (PacketDetailController*)
+        [[[[self splitViewController] viewControllers] lastObject] topViewController];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     if (_node && ! _node->getTreeParent()) {
         if ([self.navigationController.viewControllers indexOfObject:self] == NSNotFound) {
-            delete _tree;
             NSLog(@"Closing file and deleting from memory.");
-            
-            UINavigationController* c = [[[self splitViewController] viewControllers] lastObject];
-            [c performSegueWithIdentifier:@"closeDocument" sender:self];
+            delete _tree;
+            [_detail viewWelcome];
         }
     }
     [super viewDidDisappear:animated];

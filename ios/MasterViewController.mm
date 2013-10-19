@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "Example.h"
+#import "PacketDetailController.h"
 #import "PacketTreeController.h"
 #import "MasterViewController.h"
 #import "DetailViewController.h"
@@ -43,6 +44,7 @@
 @interface MasterViewController () {
     NSMutableArray *_objects;
     NSArray *_examples;
+    PacketDetailController *_detail;
 }
 @end
 
@@ -74,7 +76,9 @@
      UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
     self.navigationItem.rightBarButtonItem = addButton;
      */
-
+    
+    _detail = (PacketDetailController*)
+        [[[[self splitViewController] viewControllers] lastObject] topViewController];
     _examples = [Example all];
 }
 
@@ -188,8 +192,7 @@
             });
         });
         
-        UINavigationController* c = [[[self splitViewController] viewControllers] lastObject];
-        [c performSegueWithIdentifier:@"openDocument" sender:self];
+        [_detail viewPacket:nil];
     }
 }
 

@@ -46,8 +46,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-//    self.edgesForExtendedLayout = UIRectEdgeNone;
-    [_sub performSegueWithIdentifier:@"embedDefault" sender:nil];
+    [self viewWelcome];
 }
 
 - (void)didReceiveMemoryWarning
@@ -56,13 +55,36 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)viewPacket:(regina::NPacket *)p {
-    [self navigationItem].title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
+- (void)viewWelcome {
+    [self navigationItem].title = @"";
+    [_sub performSegueWithIdentifier:@"embedWelcome" sender:nil];
+
+    UIBarButtonItem* left = self.navigationItem.leftBarButtonItem;
+    if (left)
+        left.title = @"Documents TODO"; // TODO
+}
+
+- (void)viewOpenFile {
+    [self navigationItem].title = @"";
+    [_sub performSegueWithIdentifier:@"embedEmpty" sender:nil];
     
-    if (p->getPacketType() == regina::PACKET_TEXT)
-        [_sub performSegueWithIdentifier:@"embedText" sender:self];
-    else
-        [_sub performSegueWithIdentifier:@"embedDefault" sender:self];
+    UIBarButtonItem* left = self.navigationItem.leftBarButtonItem;
+    if (left)
+        left.title = @"Packets TODO"; // TODO
+}
+
+- (void)viewPacket:(regina::NPacket *)p {
+    if (p == nil) {
+        [self navigationItem].title = @"";
+        [_sub performSegueWithIdentifier:@"embedEmpty" sender:nil];
+    } else {
+        [self navigationItem].title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
+    
+        if (p->getPacketType() == regina::PACKET_TEXT)
+            [_sub performSegueWithIdentifier:@"embedText" sender:self];
+        else
+            [_sub performSegueWithIdentifier:@"embedDefault" sender:self];
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -103,7 +125,7 @@
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
 {
-    barButtonItem.title = NSLocalizedString(@"Packets", @"Packets");
+    barButtonItem.title = @"TODO";
     [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
 }
 
