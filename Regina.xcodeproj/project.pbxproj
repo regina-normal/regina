@@ -936,6 +936,7 @@
 		05B62166180B9D7300CCB90B /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B62165180B9D7300CCB90B /* title.png */; };
 		05BC538F1812BEB000FE9217 /* SwitchableSubcontroller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.mm */; };
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
+		05D0A1101812F0BE005ED097 /* TriangulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */; };
 		05EDF7E71811DCAE00A1618E /* libgmp.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A7180604A100FAE4DF /* libgmp.10.dylib */; };
 		05EDF7E81811DCAE00A1618E /* libgmpxx.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */; };
 		05F96C131809F59600C99F96 /* PacketTreeController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C121809F59600C99F96 /* PacketTreeController.mm */; };
@@ -1879,6 +1880,8 @@
 		05BC538D1812BEB000FE9217 /* SwitchableSubcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchableSubcontroller.h; sourceTree = "<group>"; };
 		05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SwitchableSubcontroller.mm; sourceTree = "<group>"; };
 		05CA99E518078465006161DC /* registryutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registryutils.h; sourceTree = "<group>"; };
+		05D0A10E1812F0BE005ED097 /* TriangulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriangulationViewController.h; sourceTree = "<group>"; };
+		05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriangulationViewController.mm; sourceTree = "<group>"; };
 		05F96C111809F59600C99F96 /* PacketTreeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketTreeController.h; sourceTree = "<group>"; };
 		05F96C121809F59600C99F96 /* PacketTreeController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketTreeController.mm; sourceTree = "<group>"; };
 		05F96C15180A153A00C99F96 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = MBProgressHUD/MBProgressHUD.h; sourceTree = "<group>"; };
@@ -1947,6 +1950,8 @@
 				050313C31812DB1E007F0CBE /* DefaultViewController.mm */,
 				050313BF1812DB06007F0CBE /* TextViewController.h */,
 				050313C01812DB06007F0CBE /* TextViewController.mm */,
+				05D0A10E1812F0BE005ED097 /* TriangulationViewController.h */,
+				05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */,
 			);
 			path = packets;
 			sourceTree = "<group>";
@@ -3813,6 +3818,7 @@
 				050313C11812DB06007F0CBE /* TextViewController.mm in Sources */,
 				052FA1641806129B00FAE4DF /* nanglestructure.cpp in Sources */,
 				052FA2071806129B00FAE4DF /* turaevviro.cpp in Sources */,
+				05D0A1101812F0BE005ED097 /* TriangulationViewController.mm in Sources */,
 				052FA1DB1806129B00FAE4DF /* nnormalsurface.cpp in Sources */,
 				052FA21B180612DD00FAE4DF /* current_curve_basis.c in Sources */,
 				052FA1DE1806129B00FAE4DF /* nsanstandard.cpp in Sources */,

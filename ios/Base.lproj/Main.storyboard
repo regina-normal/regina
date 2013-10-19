@@ -199,7 +199,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hKq-Xw-EOh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2242" y="158"/>
+            <point key="canvasLocation" x="3120" y="-282"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="Nki-YV-4Qg">
@@ -426,7 +426,45 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="85i-bO-NXi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2242" y="1094"/>
+            <point key="canvasLocation" x="2242" y="222"/>
+        </scene>
+        <!--Triangulation View Controller-->
+        <scene sceneID="Lab-tB-KKj">
+            <objects>
+                <viewController id="sGX-Lv-zeV" customClass="TriangulationViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Bty-4q-Lb6"/>
+                        <viewControllerLayoutGuide type="bottom" id="hbg-er-Dy8"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="xTO-CH-Gyu">
+                        <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jF5-Gz-ezP">
+                                <rect key="frame" x="0.0" y="719" width="703" height="49"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <items>
+                                    <tabBarItem title="Gluings" id="mna-Z3-7B5"/>
+                                    <tabBarItem title="Algebra" id="GVu-o4-nMw"/>
+                                </items>
+                            </tabBar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="hbg-er-Dy8" firstAttribute="top" secondItem="jF5-Gz-ezP" secondAttribute="bottom" id="Nmv-Wz-dYJ"/>
+                            <constraint firstItem="jF5-Gz-ezP" firstAttribute="leading" secondItem="xTO-CH-Gyu" secondAttribute="leading" id="Zq5-Tn-HYy"/>
+                            <constraint firstAttribute="trailing" secondItem="jF5-Gz-ezP" secondAttribute="trailing" id="qlb-AG-DLv"/>
+                        </constraints>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <splitViewDetailSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vLZ-nP-s34" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3120" y="678"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="9e9-rm-QeU">
@@ -470,6 +508,7 @@
                         <segue destination="2F9-YB-ZKV" kind="custom" identifier="embedText" customClass="EmptySegue" id="UD5-7p-plV"/>
                         <segue destination="9OC-26-L06" kind="custom" identifier="embedEmpty" customClass="EmptySegue" id="S3K-64-3LD"/>
                         <segue destination="JEX-9P-axG" kind="custom" identifier="embedWelcome" customClass="EmptySegue" id="4RS-j4-Kun"/>
+                        <segue destination="sGX-Lv-zeV" kind="custom" identifier="embedTriangulation" customClass="EmptySegue" id="XWw-B2-5Ei"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tpH-CJ-0Y2" userLabel="First Responder" sceneMemberID="firstResponder"/>
