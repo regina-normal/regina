@@ -105,10 +105,10 @@
             </objects>
             <point key="canvasLocation" x="466" y="248"/>
         </scene>
-        <!--Welcome View Controller - Getting Started-->
+        <!--Welcome Popup Controller - Getting Started-->
         <scene sceneID="3mb-Ar-8wf">
             <objects>
-                <viewController title="Getting Started" id="rTv-SX-fUu" customClass="WelcomeViewController" sceneMemberID="viewController">
+                <viewController title="Getting Started" id="rTv-SX-fUu" customClass="WelcomePopupController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="kSg-Hu-uiE"/>
                         <viewControllerLayoutGuide type="bottom" id="OFV-K8-Zca"/>

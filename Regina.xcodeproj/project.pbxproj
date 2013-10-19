@@ -822,7 +822,7 @@
 		0543AEC41811E12A002758F8 /* reginapref.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5EE1811D920002CC2AE /* reginapref.h */; };
 		0543AEC51811E12A002758F8 /* reginaprefset.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F01811D920002CC2AE /* reginaprefset.h */; };
 		0543AEC61811E12A002758F8 /* shortrunner.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F61811D920002CC2AE /* shortrunner.h */; };
-		054F7E29180B93770090B1F3 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 054F7E28180B93770090B1F3 /* WelcomeViewController.m */; };
+		054F7E29180B93770090B1F3 /* WelcomePopupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 054F7E28180B93770090B1F3 /* WelcomePopupController.m */; };
 		054F7E2B180B96AC0090B1F3 /* welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2A180B96AC0090B1F3 /* welcome.html */; };
 		054F7E2D180B99270090B1F3 /* regina.css in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2C180B99270090B1F3 /* regina.css */; };
 		055DDCEF1808575300C973FB /* filterregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 055DDCED1808575300C973FB /* filterregistry-impl.h */; };
@@ -1635,8 +1635,8 @@
 		052FA23F180613A900FAE4DF /* libgmp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmp.framework; path = ../../Library/Frameworks/libgmp.framework; sourceTree = "<group>"; };
 		052FA240180613A900FAE4DF /* libgmpxx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmpxx.framework; path = ../../Library/Frameworks/libgmpxx.framework; sourceTree = "<group>"; };
 		0543AEC71811E2AD002758F8 /* Regina.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Regina.entitlements; sourceTree = "<group>"; };
-		054F7E27180B93770090B1F3 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
-		054F7E28180B93770090B1F3 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
+		054F7E27180B93770090B1F3 /* WelcomePopupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomePopupController.h; sourceTree = "<group>"; };
+		054F7E28180B93770090B1F3 /* WelcomePopupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomePopupController.m; sourceTree = "<group>"; };
 		054F7E2A180B96AC0090B1F3 /* welcome.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = welcome.html; sourceTree = "<group>"; };
 		054F7E2C180B99270090B1F3 /* regina.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = regina.css; sourceTree = "<group>"; };
 		05561D181811F27A00FD6E2E /* regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = regina.icns; path = icons/regina.icns; sourceTree = SOURCE_ROOT; };
@@ -2864,8 +2864,8 @@
 				05F96C121809F59600C99F96 /* PacketTreeController.mm */,
 				05BC538D1812BEB000FE9217 /* SwitchableSubcontroller.h */,
 				05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */,
-				054F7E27180B93770090B1F3 /* WelcomeViewController.h */,
-				054F7E28180B93770090B1F3 /* WelcomeViewController.m */,
+				054F7E27180B93770090B1F3 /* WelcomePopupController.h */,
+				054F7E28180B93770090B1F3 /* WelcomePopupController.m */,
 				052FA1441806103000FAE4DF /* Images.xcassets */,
 				058D0144180B12CA00AC3D11 /* icons */,
 				052FA1301806102F00FAE4DF /* Supporting Files */,
@@ -3855,7 +3855,7 @@
 				052FA1CF1806129B00FAE4DF /* ntrisolidtorus.cpp in Sources */,
 				052FA1BE1806129B00FAE4DF /* nlayeredloop.cpp in Sources */,
 				052FA1AB1806129B00FAE4DF /* ntext.cpp in Sources */,
-				054F7E29180B93770090B1F3 /* WelcomeViewController.m in Sources */,
+				054F7E29180B93770090B1F3 /* WelcomePopupController.m in Sources */,
 				052FA16A1806129B00FAE4DF /* dim2edgepairing.cpp in Sources */,
 				052FA216180612DD00FAE4DF /* chern_simons.c in Sources */,
 				052FA238180612DD00FAE4DF /* tidy_peripheral_curves.c in Sources */,
