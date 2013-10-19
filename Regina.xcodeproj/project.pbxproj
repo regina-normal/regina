@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		050313C11812DB06007F0CBE /* TextViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C01812DB06007F0CBE /* TextViewController.mm */; };
+		050313C41812DB1E007F0CBE /* DefaultViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C31812DB1E007F0CBE /* DefaultViewController.mm */; };
+		050313C71812DDF0007F0CBE /* PacketViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C61812DDF0007F0CBE /* PacketViewController.mm */; };
 		0513753D1809B8D3002E525B /* coordregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753B1809B8D2002E525B /* coordregistry-impl.h */; };
 		0513753E1809B8D3002E525B /* coordregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753C1809B8D2002E525B /* coordregistry.h */; };
 		0517A156180F760600551DB6 /* PacketDetailController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0517A155180F760600551DB6 /* PacketDetailController.mm */; };
@@ -931,7 +934,7 @@
 		05A47FC41809D11900F86BFD /* snappea-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47FA41809CB7600F86BFD /* snappea-census.rga */; };
 		05A47FC71809D1D600F86BFD /* Example.m in Sources */ = {isa = PBXBuildFile; fileRef = 05A47FC61809D1D600F86BFD /* Example.m */; };
 		05B62166180B9D7300CCB90B /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B62165180B9D7300CCB90B /* title.png */; };
-		05BC538F1812BEB000FE9217 /* SwitchableSubcontroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */; };
+		05BC538F1812BEB000FE9217 /* SwitchableSubcontroller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.mm */; };
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 		05EDF7E71811DCAE00A1618E /* libgmp.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A7180604A100FAE4DF /* libgmp.10.dylib */; };
 		05EDF7E81811DCAE00A1618E /* libgmpxx.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */; };
@@ -982,6 +985,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		050313BF1812DB06007F0CBE /* TextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextViewController.h; sourceTree = "<group>"; };
+		050313C01812DB06007F0CBE /* TextViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextViewController.mm; sourceTree = "<group>"; };
+		050313C21812DB1E007F0CBE /* DefaultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultViewController.h; sourceTree = "<group>"; };
+		050313C31812DB1E007F0CBE /* DefaultViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DefaultViewController.mm; sourceTree = "<group>"; };
+		050313C51812DDF0007F0CBE /* PacketViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketViewController.h; sourceTree = "<group>"; };
+		050313C61812DDF0007F0CBE /* PacketViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketViewController.mm; sourceTree = "<group>"; };
 		0513753B1809B8D2002E525B /* coordregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "coordregistry-impl.h"; sourceTree = "<group>"; };
 		0513753C1809B8D2002E525B /* coordregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coordregistry.h; sourceTree = "<group>"; };
 		0517A154180F760600551DB6 /* PacketDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketDetailController.h; sourceTree = "<group>"; };
@@ -1868,7 +1877,7 @@
 		05A47FC61809D1D600F86BFD /* Example.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Example.m; sourceTree = "<group>"; };
 		05B62165180B9D7300CCB90B /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
 		05BC538D1812BEB000FE9217 /* SwitchableSubcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SwitchableSubcontroller.h; path = ../SwitchableSubcontroller.h; sourceTree = "<group>"; };
-		05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SwitchableSubcontroller.m; path = ../SwitchableSubcontroller.m; sourceTree = "<group>"; };
+		05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SwitchableSubcontroller.mm; path = ../SwitchableSubcontroller.mm; sourceTree = "<group>"; };
 		05CA99E518078465006161DC /* registryutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registryutils.h; sourceTree = "<group>"; };
 		05F96C111809F59600C99F96 /* PacketTreeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketTreeController.h; sourceTree = "<group>"; };
 		05F96C121809F59600C99F96 /* PacketTreeController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketTreeController.mm; sourceTree = "<group>"; };
@@ -1931,6 +1940,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		050313BE1812DAC0007F0CBE /* packets */ = {
+			isa = PBXGroup;
+			children = (
+				050313C21812DB1E007F0CBE /* DefaultViewController.h */,
+				050313C31812DB1E007F0CBE /* DefaultViewController.mm */,
+				050313BF1812DB06007F0CBE /* TextViewController.h */,
+				050313C01812DB06007F0CBE /* TextViewController.mm */,
+			);
+			path = packets;
+			sourceTree = "<group>";
+		};
 		052F9BFD180600FA00FAE4DF /* engine */ = {
 			isa = PBXGroup;
 			children = (
@@ -2857,10 +2877,13 @@
 				0523D889180B54850094DAAD /* PacketManagerIOS.mm */,
 				05F96C111809F59600C99F96 /* PacketTreeController.h */,
 				05F96C121809F59600C99F96 /* PacketTreeController.mm */,
+				050313C51812DDF0007F0CBE /* PacketViewController.h */,
+				050313C61812DDF0007F0CBE /* PacketViewController.mm */,
 				05BC538D1812BEB000FE9217 /* SwitchableSubcontroller.h */,
-				05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.m */,
+				05BC538E1812BEB000FE9217 /* SwitchableSubcontroller.mm */,
 				054F7E27180B93770090B1F3 /* WelcomePopupController.h */,
 				054F7E28180B93770090B1F3 /* WelcomePopupController.m */,
+				050313BE1812DAC0007F0CBE /* packets */,
 				052FA1441806103000FAE4DF /* Images.xcassets */,
 				058D0144180B12CA00AC3D11 /* icons */,
 				052FA1301806102F00FAE4DF /* Supporting Files */,
@@ -3768,7 +3791,7 @@
 				052FA1B51806129B00FAE4DF /* naugtrisolidtorus.cpp in Sources */,
 				052FA16D1806129B00FAE4DF /* ncensus.cpp in Sources */,
 				052FA1DC1806129B00FAE4DF /* nnormalsurfacelist.cpp in Sources */,
-				05BC538F1812BEB000FE9217 /* SwitchableSubcontroller.m in Sources */,
+				05BC538F1812BEB000FE9217 /* SwitchableSubcontroller.mm in Sources */,
 				052FA1CB1806129B00FAE4DF /* nsnappedball.cpp in Sources */,
 				052FA1FF1806129B00FAE4DF /* nvertex.cpp in Sources */,
 				052FA1AE1806129B00FAE4DF /* nprogresstypes.cpp in Sources */,
@@ -3787,6 +3810,7 @@
 				052FA1D21806129B00FAE4DF /* components.cpp in Sources */,
 				052FA1861806129B00FAE4DF /* csvsurfacelist.cpp in Sources */,
 				052FA17E1806129B00FAE4DF /* ntreeconstraint.cpp in Sources */,
+				050313C11812DB06007F0CBE /* TextViewController.mm in Sources */,
 				052FA1641806129B00FAE4DF /* nanglestructure.cpp in Sources */,
 				052FA2071806129B00FAE4DF /* turaevviro.cpp in Sources */,
 				052FA1DB1806129B00FAE4DF /* nnormalsurface.cpp in Sources */,
@@ -3805,6 +3829,7 @@
 				052FA19C1806129B00FAE4DF /* ninteger.cpp in Sources */,
 				052FA22C180612DD00FAE4DF /* my_malloc.c in Sources */,
 				052FA225180612DD00FAE4DF /* gcd.c in Sources */,
+				050313C71812DDF0007F0CBE /* PacketViewController.mm in Sources */,
 				052FA1B81806129B00FAE4DF /* nblockedsfspair.cpp in Sources */,
 				052FA226180612DD00FAE4DF /* gluing_equations.c in Sources */,
 				052FA222180612DD00FAE4DF /* filling.c in Sources */,
@@ -3860,6 +3885,7 @@
 				052FA19F1806129B00FAE4DF /* nperm4.cpp in Sources */,
 				052FA1F61806129B00FAE4DF /* isomorphic.cpp in Sources */,
 				052FA1951806129B00FAE4DF /* nsfsaltset.cpp in Sources */,
+				050313C41812DB1E007F0CBE /* DefaultViewController.mm in Sources */,
 				052FA1E11806129B00FAE4DF /* nsquad.cpp in Sources */,
 				052FA223180612DD00FAE4DF /* find_cusp.c in Sources */,
 				052FA1F91806129B00FAE4DF /* nfacepair.cpp in Sources */,

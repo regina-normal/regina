@@ -30,18 +30,26 @@
  *                                                                        *
  **************************************************************************/
 
-#import <UIKit/UIKit.h>
+#import "DefaultViewController.h"
+#import "packet/npacket.h"
 
-namespace regina {
-    class NPacket;
+@interface DefaultViewController ()
+@property (weak, nonatomic) IBOutlet UITextView *detail;
+@end
+
+@implementation DefaultViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view.
+    _detail.text = [NSString stringWithUTF8String:self.packet->detail().c_str()];
 }
 
-@interface PacketDetailController : UIViewController <UISplitViewControllerDelegate>
-
-@property (readonly, assign, nonatomic) regina::NPacket* packet;
-
-- (void)viewWelcome;
-- (void)viewOpenFile;
-- (void)viewPacket:(regina::NPacket*)p;
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 
 @end

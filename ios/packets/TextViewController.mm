@@ -30,50 +30,27 @@
  *                                                                        *
  **************************************************************************/
 
-#import "SwitchableSubcontroller.h"
+#import "TextViewController.h"
+#import "packet/ntext.h"
 
-@interface SwitchableSubcontroller ()
-
+@interface TextViewController ()
+@property (weak, nonatomic) IBOutlet UITextView *detail;
 @end
 
-@implementation SwitchableSubcontroller
+@implementation TextViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    regina::NText* t = (regina::NText*)self.packet;
+    _detail.text = [NSString stringWithUTF8String:t->getText().c_str()];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    UIViewController* to = segue.destinationViewController;
-    
-    to.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-
-    if (self.childViewControllers.count > 0) {
-        UIViewController* from = [self.childViewControllers objectAtIndex:0];
-        
-        [from willMoveToParentViewController:nil];
-        [self addChildViewController:to];
-        [self transitionFromViewController:from
-                          toViewController:to
-                                  duration:0
-                                   options:0
-                                animations:nil
-                                completion:^(BOOL finished) {
-                                    [from removeFromParentViewController];
-                                    [to didMoveToParentViewController:self];
-                                }]; // TODO: Necessary?
-    } else {
-        [self addChildViewController:to];
-        [self.view addSubview:to.view];
-        [to didMoveToParentViewController:self];
-    }
 }
 
 @end

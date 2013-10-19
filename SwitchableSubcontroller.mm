@@ -31,24 +31,19 @@
  **************************************************************************/
 
 #import "PacketDetailController.h"
-#import "packet/npacket.h"
-#import "packet/packettype.h"
+#import "PacketViewController.h"
+#import "SwitchableSubcontroller.h"
 
-@interface PacketDetailController () {
-    NSString* _menuTitle;
-}
-@property (weak, nonatomic) UIViewController *sub;
+@interface SwitchableSubcontroller ()
+
 @end
 
-@implementation PacketDetailController
-
-#pragma mark - Managing the detail item
+@implementation SwitchableSubcontroller
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    [self viewWelcome];
 }
 
 - (void)didReceiveMemoryWarning
@@ -57,57 +52,20 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)viewWelcome {
-    _packet = nil;
-    
-    [self navigationItem].title = @"";
-    [_sub performSegueWithIdentifier:@"embedWelcome" sender:nil];
-
-    _menuTitle = @"Documents";
-    UIBarButtonItem* left = self.navigationItem.leftBarButtonItem;
-    if (left)
-        left.title = _menuTitle;
-}
-
-- (void)viewOpenFile {
-    _packet = nil;
-    
-    [self navigationItem].title = @"";
-    [_sub performSegueWithIdentifier:@"embedEmpty" sender:nil];
-    
-    _menuTitle = @"Packets";
-    UIBarButtonItem* left = self.navigationItem.leftBarButtonItem;
-    if (left)
-        left.title = _menuTitle;
-}
-
-- (void)viewPacket:(regina::NPacket *)p {
-    _packet = p;
-    
-    if (p == nil) {
-        [self navigationItem].title = @"";
-        [_sub performSegueWithIdentifier:@"embedEmpty" sender:nil];
-    } else {
-        [self navigationItem].title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
-    
-        if (p->getPacketType() == regina::PACKET_TEXT)
-            [_sub performSegueWithIdentifier:@"embedText" sender:self];
-        else
-            [_sub performSegueWithIdentifier:@"embedDefault" sender:self];
-    }
-}
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"embed"]) {
-        _sub = segue.destinationViewController;
+    UIViewController* to = segue.destinationViewController;
+
+    if (sender) {
+        regina::NPacket* p = ((PacketDetailController*)sender).packet;
+        if (p)
+            ((PacketViewController*)to).packet = p;
     }
     
-    return;
-    if (self.childViewControllers.count > 0) {
-        NSLog(@"Swap");
-        UIViewController* from = [self.childViewControllers objectAtIndex:0];
-        UIViewController* to = segue.destinationViewController;
+    to.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
 
+    if (self.childViewControllers.count > 0) {
+        UIViewController* from = [self.childViewControllers objectAtIndex:0];
+        
         [from willMoveToParentViewController:nil];
         [self addChildViewController:to];
         [self transitionFromViewController:from
@@ -120,28 +78,10 @@
                                     [to didMoveToParentViewController:self];
                                 }]; // TODO: Necessary?
     } else {
-        NSLog(@"Add");
-        UIViewController* to = segue.destinationViewController;
-
         [self addChildViewController:to];
-        
         [self.view addSubview:to.view];
         [to didMoveToParentViewController:self];
     }
-}
-
-#pragma mark - Split view
-
-- (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
-{
-    barButtonItem.title = _menuTitle;
-    [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
-}
-
-- (void)splitViewController:(UISplitViewController *)splitController willShowViewController:(UIViewController *)viewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
-{
-    // Called when the view is shown again in the split view, invalidating the button and popover controller.
-    [self.navigationItem setLeftBarButtonItem:nil animated:YES];
 }
 
 @end

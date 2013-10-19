@@ -161,10 +161,10 @@
             </objects>
             <point key="canvasLocation" x="3120" y="-1617"/>
         </scene>
-        <!--View Controller-->
+        <!--Default View Controller-->
         <scene sceneID="nOM-NO-E76">
             <objects>
-                <viewController id="3X8-bo-Elp" sceneMemberID="viewController">
+                <viewController id="3X8-bo-Elp" customClass="DefaultViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="YTS-FT-Z8M"/>
                         <viewControllerLayoutGuide type="bottom" id="Bie-zH-G9d"/>
@@ -193,6 +193,9 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <splitViewDetailSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="detail" destination="IuO-fJ-5Sb" id="qcy-Ei-0yg"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hKq-Xw-EOh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -385,10 +388,10 @@
             </objects>
             <point key="canvasLocation" x="-366" y="248"/>
         </scene>
-        <!--View Controller-->
+        <!--Text View Controller-->
         <scene sceneID="V0Z-f1-Z8A">
             <objects>
-                <viewController id="2F9-YB-ZKV" sceneMemberID="viewController">
+                <viewController id="2F9-YB-ZKV" customClass="TextViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Jfp-uK-8WQ"/>
                         <viewControllerLayoutGuide type="bottom" id="LYD-nZ-Mcn"/>
@@ -417,6 +420,9 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <splitViewDetailSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="detail" destination="41Q-ez-CyU" id="thX-OS-hdV"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="85i-bO-NXi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -30,18 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#import <UIKit/UIKit.h>
+#import "PacketViewController.h"
 
-namespace regina {
-    class NPacket;
-}
-
-@interface PacketDetailController : UIViewController <UISplitViewControllerDelegate>
-
-@property (readonly, assign, nonatomic) regina::NPacket* packet;
-
-- (void)viewWelcome;
-- (void)viewOpenFile;
-- (void)viewPacket:(regina::NPacket*)p;
+@interface TextViewController : PacketViewController
 
 @end

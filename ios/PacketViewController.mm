@@ -30,18 +30,24 @@
  *                                                                        *
  **************************************************************************/
 
-#import <UIKit/UIKit.h>
+#import "PacketViewController.h"
 
-namespace regina {
-    class NPacket;
+@interface PacketViewController ()
+
+@end
+
+@implementation PacketViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view.
 }
 
-@interface PacketDetailController : UIViewController <UISplitViewControllerDelegate>
-
-@property (readonly, assign, nonatomic) regina::NPacket* packet;
-
-- (void)viewWelcome;
-- (void)viewOpenFile;
-- (void)viewPacket:(regina::NPacket*)p;
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 
 @end
