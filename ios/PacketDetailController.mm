@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "PacketDetailController.h"
+#import "PacketManagerIOS.h"
 #import "packet/npacket.h"
 #import "packet/packettype.h"
 
@@ -89,11 +90,7 @@
         [_sub performSegueWithIdentifier:@"embedEmpty" sender:nil];
     } else {
         [self navigationItem].title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
-    
-        if (p->getPacketType() == regina::PACKET_TEXT)
-            [_sub performSegueWithIdentifier:@"embedText" sender:self];
-        else
-            [_sub performSegueWithIdentifier:@"embedDefault" sender:self];
+        [_sub performSegueWithIdentifier:[PacketManagerIOS segueFor:p] sender:self];
     }
 }
 

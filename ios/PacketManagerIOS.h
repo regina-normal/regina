@@ -39,5 +39,6 @@ namespace regina {
 @interface PacketManagerIOS : NSObject
 
 + (UIImage*)iconFor:(regina::NPacket*)p;
++ (NSString*)segueFor:(regina::NPacket*)p;
 
 @end

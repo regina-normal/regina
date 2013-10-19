@@ -69,4 +69,12 @@
     }
 }
 
++ (NSString *)segueFor:(regina::NPacket *)p {
+    switch (p->getPacketType()) {
+        case regina::PACKET_TEXT: return @"embedText";
+        case regina::PACKET_TRIANGULATION: return @"embedTriangulation";
+        default: return @"embedDefault";
+    }
+}
+
 @end
