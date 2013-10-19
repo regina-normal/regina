@@ -51,9 +51,12 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    UIViewController* to = segue.destinationViewController;
+    
+    to.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+
     if (self.childViewControllers.count > 0) {
         UIViewController* from = [self.childViewControllers objectAtIndex:0];
-        UIViewController* to = segue.destinationViewController;
         
         [from willMoveToParentViewController:nil];
         [self addChildViewController:to];
@@ -67,8 +70,6 @@
                                     [to didMoveToParentViewController:self];
                                 }]; // TODO: Necessary?
     } else {
-        UIViewController* to = segue.destinationViewController;
-        
         [self addChildViewController:to];
         [self.view addSubview:to.view];
         [to didMoveToParentViewController:self];
