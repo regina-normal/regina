@@ -166,16 +166,9 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell;
-    
-    if (_subtreeRow > 0 && indexPath.row == _subtreeRow) {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"Subtree" forIndexPath:indexPath];
-        // We must set this programmatically, since the storyboard seems to insist on images
-        // living in the root directory.
-        cell.imageView.image = [UIImage imageNamed:@"icons/packet/subtree-32"];
-        return cell;
-    }
-    
+    if (_subtreeRow > 0 && indexPath.row == _subtreeRow)
+        return [tableView dequeueReusableCellWithIdentifier:@"Subtree" forIndexPath:indexPath];
+
     NSInteger rowIndex;
     if (_subtreeRow == 0 || _subtreeRow > indexPath.row)
         rowIndex = indexPath.row;
@@ -184,6 +177,8 @@
     
     PacketTreeRow* r = _rows[rowIndex];
     regina::NPacket* p = [r packet];
+
+    UITableViewCell *cell;
     if (p->getPacketType() == regina::NContainer::packetType)
         cell = [tableView dequeueReusableCellWithIdentifier:@"Container" forIndexPath:indexPath];
     else
