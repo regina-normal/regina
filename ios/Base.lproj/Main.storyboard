@@ -352,7 +352,9 @@
                             <outlet property="delegate" destination="tA5-Tr-Mbx" id="8F9-en-ctI"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="fqi-w2-Wpn"/>
+                    <navigationItem key="navigationItem" id="fqi-w2-Wpn">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="sn9-pd-Fpw"/>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fjY-rQ-nyG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
