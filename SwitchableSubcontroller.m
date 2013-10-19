@@ -30,24 +30,18 @@
  *                                                                        *
  **************************************************************************/
 
-#import "PacketDetailController.h"
-#import "packet/npacket.h"
-#import "packet/packettype.h"
+#import "SwitchableSubcontroller.h"
 
-@interface PacketDetailController ()
-@property (weak, nonatomic) UIViewController *sub;
+@interface SwitchableSubcontroller ()
+
 @end
 
-@implementation PacketDetailController
-
-#pragma mark - Managing the detail item
+@implementation SwitchableSubcontroller
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-//    self.edgesForExtendedLayout = UIRectEdgeNone;
-    [_sub performSegueWithIdentifier:@"embedDefault" sender:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -56,27 +50,11 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)viewPacket:(regina::NPacket *)p {
-    [self navigationItem].title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
-    
-    if (p->getPacketType() == regina::PACKET_TEXT)
-        [_sub performSegueWithIdentifier:@"embedText" sender:self];
-    else
-        [_sub performSegueWithIdentifier:@"embedDefault" sender:self];
-}
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"embed"]) {
-        NSLog(@"Found sub");
-        _sub = segue.destinationViewController;
-    }
-    
-    return;
     if (self.childViewControllers.count > 0) {
-        NSLog(@"Swap");
         UIViewController* from = [self.childViewControllers objectAtIndex:0];
         UIViewController* to = segue.destinationViewController;
-
+        
         [from willMoveToParentViewController:nil];
         [self addChildViewController:to];
         [self transitionFromViewController:from
@@ -89,28 +67,12 @@
                                     [to didMoveToParentViewController:self];
                                 }]; // TODO: Necessary?
     } else {
-        NSLog(@"Add");
         UIViewController* to = segue.destinationViewController;
-
-        [self addChildViewController:to];
         
+        [self addChildViewController:to];
         [self.view addSubview:to.view];
         [to didMoveToParentViewController:self];
     }
-}
-
-#pragma mark - Split view
-
-- (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
-{
-    barButtonItem.title = NSLocalizedString(@"Packets", @"Packets");
-    [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
-}
-
-- (void)splitViewController:(UISplitViewController *)splitController willShowViewController:(UIViewController *)viewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
-{
-    // Called when the view is shown again in the split view, invalidating the button and popover controller.
-    [self.navigationItem setLeftBarButtonItem:nil animated:YES];
 }
 
 @end

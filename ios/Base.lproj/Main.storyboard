@@ -80,22 +80,33 @@
                     <view key="view" contentMode="scaleToFill" id="srr-r2-MQN">
                         <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OdY-kv-Jz0">
+                                <rect key="frame" x="0.0" y="64" width="703" height="704"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <connections>
+                                    <segue destination="mgH-6a-27d" kind="embed" identifier="embed" id="wo4-2O-SI4"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="OdY-kv-Jz0" firstAttribute="top" secondItem="tZa-u7-g03" secondAttribute="bottom" id="1E5-rC-dVA"/>
+                            <constraint firstItem="F5p-xA-ILQ" firstAttribute="top" secondItem="OdY-kv-Jz0" secondAttribute="bottom" id="b2L-v9-Grz"/>
+                            <constraint firstAttribute="trailing" secondItem="OdY-kv-Jz0" secondAttribute="trailing" id="ieg-0Z-0JV"/>
+                            <constraint firstItem="OdY-kv-Jz0" firstAttribute="leading" secondItem="srr-r2-MQN" secondAttribute="leading" id="mUh-7o-7Uq"/>
+                        </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <navigationItem key="navigationItem" id="PoR-wv-FMe"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <splitViewDetailSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <connections>
-                        <segue destination="3X8-bo-Elp" kind="custom" identifier="embedDefault" customClass="EmptySegue" id="DKb-Tb-PBG"/>
-                        <segue destination="2F9-YB-ZKV" kind="custom" identifier="embedText" customClass="EmptySegue" id="wQA-14-dLp"/>
-                        <segue destination="9OC-26-L06" kind="custom" identifier="embedTriangulation" customClass="EmptySegue" id="9qC-0S-P7v"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Uj-1t-low" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1166" y="1237"/>
+            <point key="canvasLocation" x="558" y="1237"/>
         </scene>
         <!--Welcome View Controller - Getting Started-->
         <scene sceneID="3mb-Ar-8wf">
@@ -109,7 +120,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0QO-uI-3Lh">
+                            <webView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0QO-uI-3Lh">
                                 <rect key="frame" x="0.0" y="44" width="540" height="576"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -118,7 +129,7 @@
                                     <outlet property="delegate" destination="rTv-SX-fUu" id="f81-dg-6HP"/>
                                 </connections>
                             </webView>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7bv-se-VpJ">
+                            <navigationBar contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7bv-se-VpJ">
                                 <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
@@ -144,6 +155,7 @@
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
+                    <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="html" destination="0QO-uI-3Lh" id="gt4-ID-mDT"/>
                     </connections>
@@ -458,6 +470,34 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SAa-yu-eUS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2748" y="1422"/>
+        </scene>
+        <!--Switchable Subcontroller-->
+        <scene sceneID="1NG-xL-6Va">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="mgH-6a-27d" customClass="SwitchableSubcontroller" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Xvx-MX-whK"/>
+                        <viewControllerLayoutGuide type="bottom" id="t8H-ZG-SCS"/>
+                    </layoutGuides>
+                    <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Tpl-be-4SR">
+                        <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <toolbarItems/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <splitViewDetailSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <segue destination="3X8-bo-Elp" kind="custom" identifier="embedDefault" customClass="EmptySegue" id="Kku-De-bGf"/>
+                        <segue destination="2F9-YB-ZKV" kind="custom" identifier="embedText" customClass="EmptySegue" id="UD5-7p-plV"/>
+                        <segue destination="9OC-26-L06" kind="custom" identifier="embedTriangulation" customClass="EmptySegue" id="S3K-64-3LD"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tpH-CJ-0Y2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1524" y="1237"/>
         </scene>
     </scenes>
     <resources>
