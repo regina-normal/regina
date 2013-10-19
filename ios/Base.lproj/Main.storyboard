@@ -359,7 +359,7 @@
                     <navigationItem key="navigationItem" id="fqi-w2-Wpn">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="sn9-pd-Fpw">
                             <connections>
-                                <segue destination="9gf-1e-ysj" kind="popover" popoverAnchorBarButtonItem="sn9-pd-Fpw" id="0PZ-dL-dWr">
+                                <segue destination="9gf-1e-ysj" kind="popover" identifier="newPacket" popoverAnchorBarButtonItem="sn9-pd-Fpw" id="0PZ-dL-dWr">
                                     <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                 </segue>
                             </connections>

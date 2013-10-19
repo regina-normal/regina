@@ -68,4 +68,9 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Clear away the popover before we throw up the next (deeper) screen.
+    [_seguePopoverController dismissPopoverAnimated:true];
+}
+
 @end

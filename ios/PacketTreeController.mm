@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "DetailViewController.h"
+#import "NewPacketController.h"
 #import "PacketManagerIOS.h"
 #import "PacketTreeController.h"
 
@@ -264,6 +265,9 @@
         
         [[segue destinationViewController] openSubtree:[_rows[packetIndex] packet] root:_tree];
         [[segue destinationViewController] refreshPackets];
+    } else if ([[segue identifier] isEqualToString:@"newPacket"]) {
+        ((NewPacketController*)segue.destinationViewController).seguePopoverController =
+            [(UIStoryboardPopoverSegue*)segue popoverController];
     }
 }
 

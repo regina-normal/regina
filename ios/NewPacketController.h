@@ -34,4 +34,6 @@
 
 @interface NewPacketController : UITableViewController
 
+@property (weak, nonatomic) UIPopoverController* seguePopoverController;
+
 @end
