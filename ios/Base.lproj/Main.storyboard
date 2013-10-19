@@ -449,11 +449,23 @@
                                     <tabBarItem title="Algebra" id="GVu-o4-nMw"/>
                                 </items>
                             </tabBar>
+                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fKv-vf-i8k">
+                                <rect key="frame" x="0.0" y="0.0" width="703" height="719"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <connections>
+                                    <segue destination="bVZ-NW-daJ" kind="embed" id="8cT-sP-jPg"/>
+                                </connections>
+                            </containerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="hbg-er-Dy8" firstAttribute="top" secondItem="jF5-Gz-ezP" secondAttribute="bottom" id="Nmv-Wz-dYJ"/>
+                            <constraint firstItem="fKv-vf-i8k" firstAttribute="leading" secondItem="xTO-CH-Gyu" secondAttribute="leading" id="XVD-Oc-zu3"/>
                             <constraint firstItem="jF5-Gz-ezP" firstAttribute="leading" secondItem="xTO-CH-Gyu" secondAttribute="leading" id="Zq5-Tn-HYy"/>
+                            <constraint firstItem="jF5-Gz-ezP" firstAttribute="top" secondItem="fKv-vf-i8k" secondAttribute="bottom" id="mgV-BS-T1F"/>
+                            <constraint firstItem="fKv-vf-i8k" firstAttribute="top" secondItem="xTO-CH-Gyu" secondAttribute="top" id="n5B-1v-ns1"/>
+                            <constraint firstAttribute="trailing" secondItem="fKv-vf-i8k" secondAttribute="trailing" id="psn-PV-4WU"/>
                             <constraint firstAttribute="trailing" secondItem="jF5-Gz-ezP" secondAttribute="trailing" id="qlb-AG-DLv"/>
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
@@ -514,6 +526,66 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tpH-CJ-0Y2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1276" y="280"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="1Hk-hZ-xO5">
+            <objects>
+                <viewController id="Z2q-ft-yV7" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="eV1-KJ-fxO"/>
+                        <viewControllerLayoutGuide type="bottom" id="bbk-W5-Bts"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="fnp-AT-qO7">
+                        <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nOz-gJ-hCC">
+                                <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="nOz-gJ-hCC" firstAttribute="top" secondItem="eV1-KJ-fxO" secondAttribute="bottom" id="Ga4-bQ-izh"/>
+                            <constraint firstItem="bbk-W5-Bts" firstAttribute="top" secondItem="nOz-gJ-hCC" secondAttribute="bottom" id="Gq3-MA-dAF"/>
+                            <constraint firstItem="nOz-gJ-hCC" firstAttribute="leading" secondItem="fnp-AT-qO7" secondAttribute="leading" id="Mbx-qn-bXh"/>
+                            <constraint firstAttribute="trailing" secondItem="nOz-gJ-hCC" secondAttribute="trailing" id="X3i-37-J1z"/>
+                        </constraints>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <splitViewDetailSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BkM-o7-cyp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4960" y="72"/>
+        </scene>
+        <!--Switchable Subcontroller-->
+        <scene sceneID="bog-7t-Pmm">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="bVZ-NW-daJ" customClass="SwitchableSubcontroller" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Tmf-YV-wFD"/>
+                        <viewControllerLayoutGuide type="bottom" id="2q9-QR-1hS"/>
+                    </layoutGuides>
+                    <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="wY7-uN-jQf">
+                        <rect key="frame" x="0.0" y="0.0" width="703" height="719"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <toolbarItems/>
+                    <connections>
+                        <segue destination="Z2q-ft-yV7" kind="custom" identifier="triGluings" customClass="EmptySegue" id="yYW-ah-xda"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Snk-cm-ck3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4014" y="702"/>
         </scene>
     </scenes>
     <resources>

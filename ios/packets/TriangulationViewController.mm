@@ -33,7 +33,9 @@
 #import "TriangulationViewController.h"
 #import "triangulation/ntriangulation.h"
 
-@interface TriangulationViewController ()
+@interface TriangulationViewController () {
+    UIViewController *_sub;
+}
 @end
 
 @implementation TriangulationViewController
@@ -43,12 +45,19 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     regina::NTriangulation* t = (regina::NTriangulation*)self.packet;
+
+    [_sub performSegueWithIdentifier:@"triGluings" sender:nil];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // This is the embed segue.
+    _sub = segue.destinationViewController;
 }
 
 @end
