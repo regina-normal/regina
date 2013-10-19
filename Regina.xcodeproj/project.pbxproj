@@ -544,7 +544,7 @@
 		052FA13A1806103000FAE4DF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1391806103000FAE4DF /* AppDelegate.m */; };
 		052FA13D1806103000FAE4DF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 052FA13B1806103000FAE4DF /* Main.storyboard */; };
 		052FA1401806103000FAE4DF /* MasterViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052FA13F1806103000FAE4DF /* MasterViewController.mm */; };
-		052FA1431806103000FAE4DF /* DetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1421806103000FAE4DF /* DetailViewController.mm */; };
+		052FA1431806103000FAE4DF /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1421806103000FAE4DF /* DetailViewController.m */; };
 		052FA1451806103000FAE4DF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 052FA1441806103000FAE4DF /* Images.xcassets */; };
 		052FA15F1806129B00FAE4DF /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */; };
 		052FA1601806129B00FAE4DF /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C02180600FA00FAE4DF /* ngrouppresentation.cpp */; };
@@ -1629,7 +1629,7 @@
 		052FA13E1806103000FAE4DF /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		052FA13F1806103000FAE4DF /* MasterViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MasterViewController.mm; sourceTree = "<group>"; };
 		052FA1411806103000FAE4DF /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
-		052FA1421806103000FAE4DF /* DetailViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = DetailViewController.mm; sourceTree = "<group>"; };
+		052FA1421806103000FAE4DF /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		052FA23E180613A900FAE4DF /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../../Library/Frameworks/boost.framework; sourceTree = "<group>"; };
 		052FA23F180613A900FAE4DF /* libgmp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmp.framework; path = ../../Library/Frameworks/libgmp.framework; sourceTree = "<group>"; };
@@ -2849,7 +2849,7 @@
 				052FA1381806103000FAE4DF /* AppDelegate.h */,
 				052FA1391806103000FAE4DF /* AppDelegate.m */,
 				052FA1411806103000FAE4DF /* DetailViewController.h */,
-				052FA1421806103000FAE4DF /* DetailViewController.mm */,
+				052FA1421806103000FAE4DF /* DetailViewController.m */,
 				051806D918123057008EBB01 /* EmptySegue.h */,
 				051806DA18123057008EBB01 /* EmptySegue.m */,
 				05A47FC51809D1D600F86BFD /* Example.h */,
@@ -3741,7 +3741,7 @@
 				052FA234180612DD00FAE4DF /* solve_equations.c in Sources */,
 				052FA1AF1806129B00FAE4DF /* shareableobject.cpp in Sources */,
 				052FA1621806129B00FAE4DF /* nmarkedabeliangroup.cpp in Sources */,
-				052FA1431806103000FAE4DF /* DetailViewController.mm in Sources */,
+				052FA1431806103000FAE4DF /* DetailViewController.m in Sources */,
 				052FA1D91806129B00FAE4DF /* ndisc.cpp in Sources */,
 				052FA1A91806129B00FAE4DF /* npdf.cpp in Sources */,
 				052FA22D180612DD00FAE4DF /* o31_matrices.c in Sources */,

@@ -34,7 +34,6 @@
 #import "PacketDetailController.h"
 #import "PacketTreeController.h"
 #import "MasterViewController.h"
-#import "DetailViewController.h"
 #import "MBProgressHUD.h"
 
 // TODO: Support user documents.
