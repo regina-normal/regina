@@ -683,6 +683,11 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <splitViewDetailSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="algebraTab" destination="GVu-o4-nMw" id="X5y-hU-gST"/>
+                        <outlet property="gluingTab" destination="mna-Z3-7B5" id="mVi-Wk-xCD"/>
+                        <outlet property="tabs" destination="jF5-Gz-ezP" id="csh-PY-oy5"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vLZ-nP-s34" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -737,10 +742,10 @@
             </objects>
             <point key="canvasLocation" x="-366" y="2528"/>
         </scene>
-        <!--View Controller-->
+        <!--Tri Gluings View Controller-->
         <scene sceneID="1Hk-hZ-xO5">
             <objects>
-                <viewController id="Z2q-ft-yV7" sceneMemberID="viewController">
+                <viewController id="Z2q-ft-yV7" customClass="TriGluingsViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="eV1-KJ-fxO"/>
                         <viewControllerLayoutGuide type="bottom" id="bbk-W5-Bts"/>
@@ -769,15 +774,18 @@
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <splitViewDetailSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="detail" destination="nOz-gJ-hCC" id="BeV-Yq-oYE"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BkM-o7-cyp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3840" y="3144"/>
         </scene>
-        <!--Switchable Subcontroller-->
+        <!--Triangulation Subcontroller-->
         <scene sceneID="bog-7t-Pmm">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="bVZ-NW-daJ" customClass="SwitchableSubcontroller" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="bVZ-NW-daJ" customClass="TriangulationSubcontroller" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Tmf-YV-wFD"/>
                         <viewControllerLayoutGuide type="bottom" id="2q9-QR-1hS"/>

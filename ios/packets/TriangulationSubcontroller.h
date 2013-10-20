@@ -30,40 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#import "TriangulationViewController.h"
-#import "triangulation/ntriangulation.h"
+#import <UIKit/UIKit.h>
+#import "SwitchableSubcontroller.h"
 
-@interface TriangulationViewController () {
-    UIViewController *_sub;
-}
-@property (weak, nonatomic) IBOutlet UITabBar *tabs;
-@property (weak, nonatomic) IBOutlet UITabBarItem *gluingTab;
-@property (weak, nonatomic) IBOutlet UITabBarItem *algebraTab;
-@end
-
-@implementation TriangulationViewController
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    // regina::NTriangulation* t = (regina::NTriangulation*)self.packet;
-
-    _gluingTab.selectedImage = [UIImage imageNamed:@"Gluings-Bold"];
-    _tabs.selectedItem = _gluingTab;
-    
-    [_sub performSegueWithIdentifier:@"triGluings" sender:nil];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // This is the embed segue.
-    _sub = segue.destinationViewController;
-}
+@interface TriangulationSubcontroller : SwitchableSubcontroller
 
 @end

@@ -30,40 +30,22 @@
  *                                                                        *
  **************************************************************************/
 
-#import "TriangulationViewController.h"
-#import "triangulation/ntriangulation.h"
+#import "DetailViewController.h"
+#import "PacketViewController.h"
+#import "TriangulationSubcontroller.h"
 
-@interface TriangulationViewController () {
-    UIViewController *_sub;
-}
-@property (weak, nonatomic) IBOutlet UITabBar *tabs;
-@property (weak, nonatomic) IBOutlet UITabBarItem *gluingTab;
-@property (weak, nonatomic) IBOutlet UITabBarItem *algebraTab;
+@interface TriangulationSubcontroller ()
+
 @end
 
-@implementation TriangulationViewController
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    // regina::NTriangulation* t = (regina::NTriangulation*)self.packet;
-
-    _gluingTab.selectedImage = [UIImage imageNamed:@"Gluings-Bold"];
-    _tabs.selectedItem = _gluingTab;
-    
-    [_sub performSegueWithIdentifier:@"triGluings" sender:nil];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
+@implementation TriangulationSubcontroller
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // This is the embed segue.
-    _sub = segue.destinationViewController;
+    UIViewController* src = segue.sourceViewController; // This subcontroller
+    regina::NPacket* p = ((PacketViewController*)src.parentViewController).packet;
+    ((PacketViewController*)segue.destinationViewController).packet = p;
+
+    [super prepareForSegue:segue sender:sender];
 }
 
 @end

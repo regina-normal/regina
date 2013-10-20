@@ -923,6 +923,8 @@
 		057FA7561806184B008E25F6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA7551806184A008E25F6 /* UIKit.framework */; };
 		0588F1181808D43B006BDC79 /* packetregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1161808D43B006BDC79 /* packetregistry-impl.h */; };
 		0588F1191808D43B006BDC79 /* packettype.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1171808D43B006BDC79 /* packettype.h */; };
+		0589FAC3181484860064CD57 /* TriGluingsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0589FAC2181484860064CD57 /* TriGluingsViewController.mm */; };
+		0589FAC61814862B0064CD57 /* TriangulationSubcontroller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0589FAC51814862B0064CD57 /* TriangulationSubcontroller.mm */; };
 		059101151812F349000A8D16 /* DetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101141812F349000A8D16 /* DetailViewController.mm */; };
 		059101181812F4C9000A8D16 /* PacketSubcontroller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101171812F4C9000A8D16 /* PacketSubcontroller.mm */; };
 		0591011B1813230A000A8D16 /* NewPacketMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011A1813230A000A8D16 /* NewPacketMenu.mm */; };
@@ -1856,6 +1858,10 @@
 		057FA7551806184A008E25F6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		0588F1161808D43B006BDC79 /* packetregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "packetregistry-impl.h"; sourceTree = "<group>"; };
 		0588F1171808D43B006BDC79 /* packettype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packettype.h; sourceTree = "<group>"; };
+		0589FAC1181484860064CD57 /* TriGluingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriGluingsViewController.h; sourceTree = "<group>"; };
+		0589FAC2181484860064CD57 /* TriGluingsViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriGluingsViewController.mm; sourceTree = "<group>"; };
+		0589FAC41814862B0064CD57 /* TriangulationSubcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriangulationSubcontroller.h; sourceTree = "<group>"; };
+		0589FAC51814862B0064CD57 /* TriangulationSubcontroller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriangulationSubcontroller.mm; sourceTree = "<group>"; };
 		059101131812F349000A8D16 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		059101141812F349000A8D16 /* DetailViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DetailViewController.mm; sourceTree = "<group>"; };
 		059101161812F4C9000A8D16 /* PacketSubcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketSubcontroller.h; sourceTree = "<group>"; };
@@ -1962,8 +1968,12 @@
 				0591011D181364BB000A8D16 /* NewSurfacesController.mm */,
 				050313BF1812DB06007F0CBE /* TextViewController.h */,
 				050313C01812DB06007F0CBE /* TextViewController.mm */,
+				0589FAC41814862B0064CD57 /* TriangulationSubcontroller.h */,
+				0589FAC51814862B0064CD57 /* TriangulationSubcontroller.mm */,
 				05D0A10E1812F0BE005ED097 /* TriangulationViewController.h */,
 				05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */,
+				0589FAC1181484860064CD57 /* TriGluingsViewController.h */,
+				0589FAC2181484860064CD57 /* TriGluingsViewController.mm */,
 			);
 			path = packets;
 			sourceTree = "<group>";
@@ -3832,6 +3842,7 @@
 				052FA17B1806129B00FAE4DF /* cone_property.cpp in Sources */,
 				052FA1D21806129B00FAE4DF /* components.cpp in Sources */,
 				052FA1861806129B00FAE4DF /* csvsurfacelist.cpp in Sources */,
+				0589FAC3181484860064CD57 /* TriGluingsViewController.mm in Sources */,
 				052FA17E1806129B00FAE4DF /* ntreeconstraint.cpp in Sources */,
 				050313C11812DB06007F0CBE /* TextViewController.mm in Sources */,
 				052FA1641806129B00FAE4DF /* nanglestructure.cpp in Sources */,
@@ -3914,6 +3925,7 @@
 				050313C41812DB1E007F0CBE /* DefaultViewController.mm in Sources */,
 				052FA1E11806129B00FAE4DF /* nsquad.cpp in Sources */,
 				052FA223180612DD00FAE4DF /* find_cusp.c in Sources */,
+				0589FAC61814862B0064CD57 /* TriangulationSubcontroller.mm in Sources */,
 				052FA1F91806129B00FAE4DF /* nfacepair.cpp in Sources */,
 				052FA1EA1806129B00FAE4DF /* quadtostd.cpp in Sources */,
 				052FA1F71806129B00FAE4DF /* nedge.cpp in Sources */,
