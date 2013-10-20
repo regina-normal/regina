@@ -566,6 +566,7 @@
                     </view>
                     <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
+                        <outlet property="cancelButton" destination="Wvx-Ri-dAI" id="MAx-0i-dav"/>
                         <outlet property="coordControl" destination="jv6-fh-9j0" id="4lq-kJ-2sC"/>
                         <outlet property="coordDesc" destination="CPa-3Z-jgI" id="wTS-Fk-ubC"/>
                         <outlet property="embControl" destination="SrG-Gg-yut" id="bd8-Iz-SRk"/>

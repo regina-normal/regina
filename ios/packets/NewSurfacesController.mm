@@ -34,6 +34,8 @@
 #import "progress/nprogresstracker.h"
 #import "surfaces/nnormalsurfacelist.h"
 
+using regina::NNormalSurfaceList;
+
 NSArray* whichText;
 NSArray* coordText;
 NSArray* embText;
@@ -54,6 +56,7 @@ NSArray* embText;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressControl;
 @property (weak, nonatomic) IBOutlet UILabel *progressLabel;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *enumerateButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
 - (IBAction)whichChanged:(id)sender;
 - (IBAction)coordChanged:(id)sender;
 - (IBAction)embChanged:(id)sender;
@@ -71,7 +74,6 @@ NSArray* embText;
     if (self.createBeneath)
         _triangulation.text = [NSString stringWithUTF8String:self.createBeneath->getPacketLabel().c_str()];
     
-    // TODO: Check for invalid parent.
     // Update the description labels.
     [self whichChanged:nil];
     [self coordChanged:nil];
@@ -91,8 +93,16 @@ NSArray* embText;
 }
 
 - (IBAction)cancel:(id)sender {
-    // TODO: Get this working.
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if (_running) {
+        _cancelButton.enabled = NO;
+        _progressLabel.text = @"Cancelling...";
+        _tracker.cancel();
+    } else
+        [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)updateProgress {
+    _progressControl.progress = _tracker.percent() / 100;
 }
 
 - (IBAction)enumerate:(id)sender {
@@ -101,8 +111,6 @@ NSArray* embText;
         // TODO: Bail.
         return;
     }
-    
-    _running = true;
     
     _whichControl.enabled = NO;
     _coordControl.enabled = NO;
@@ -114,19 +122,41 @@ NSArray* embText;
     _progressLabel.hidden = NO;
     _progressControl.hidden = NO;
 
-    // TODO: Run!
     // TODO: Fix arguments.
-    regina::NNormalSurfaceList* ans = regina::NNormalSurfaceList::enumerate(                                                            (regina::NTriangulation*)self.createBeneath, regina::NS_STANDARD,
-        regina::NS_VERTEX, regina::NS_ALG_DEFAULT, &_tracker);
-    
-    while (! _tracker.isFinished()) {
-        if (_tracker.percentChanged())
-            _progressControl.progress = _tracker.percent();
-        [NSThread sleepForTimeInterval:0.1];
-    }
-    
-    ans->setPacketLabel("Normal surfaces");
-    [self dismissViewControllerAnimated:YES completion:nil];
+
+    _running = true;
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NNormalSurfaceList* ans =
+            NNormalSurfaceList::enumerate((regina::NTriangulation*)self.createBeneath,
+                                          regina::NS_STANDARD,
+                                          regina::NS_VERTEX,
+                                          regina::NS_ALG_DEFAULT,
+                                          &_tracker);
+        while (! _tracker.isFinished()) {
+            if (_tracker.percentChanged()) {
+                // This operation blocks until the UI is updated:
+                [self performSelectorOnMainThread:@selector(updateProgress) withObject:nil waitUntilDone:YES];
+            }
+            [NSThread sleepForTimeInterval:0.1];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (_tracker.isCancelled()) {
+                delete ans;
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enumeration cancelled."
+                                                                message:@"The normal surface enumeration was cancelled."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Close"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            } else {
+                ans->setPacketLabel("Normal surfaces");
+                // TODO: View the results in the packet tree / detail area.
+            }
+            [self dismissViewControllerAnimated:YES completion:nil];
+        });
+    });
 }
 
 + (void)initArrays {
