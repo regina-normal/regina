@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "NewSurfacesController.h"
+#import "progress/nprogresstracker.h"
 #import "surfaces/nnormalsurfacelist.h"
 
 NSArray* whichText;
@@ -41,6 +42,7 @@ NSArray* embText;
 
 @interface NewSurfacesController () {
     bool _running;
+    regina::NProgressTracker _tracker;
 }
 @property (weak, nonatomic) IBOutlet UILabel *triangulation;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *whichControl;
@@ -107,10 +109,24 @@ NSArray* embText;
     _embControl.enabled = NO;
     _enumerateButton.enabled = NO;
     
+    _progressControl.progress = 0.0;
+    
     _progressLabel.hidden = NO;
     _progressControl.hidden = NO;
-    
+
     // TODO: Run!
+    // TODO: Fix arguments.
+    regina::NNormalSurfaceList* ans = regina::NNormalSurfaceList::enumerate(                                                            (regina::NTriangulation*)self.createBeneath, regina::NS_STANDARD,
+        regina::NS_VERTEX, regina::NS_ALG_DEFAULT, &_tracker);
+    
+    while (! _tracker.isFinished()) {
+        if (_tracker.percentChanged())
+            _progressControl.progress = _tracker.percent();
+        [NSThread sleepForTimeInterval:0.1];
+    }
+    
+    ans->setPacketLabel("Normal surfaces");
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 + (void)initArrays {
