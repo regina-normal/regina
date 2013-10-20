@@ -164,8 +164,25 @@
     [detail viewPacket:p];
 }
 
-- (void)dismissNewPacketPopover {
-    [_newPacketPopover dismissPopoverAnimated:NO];
+- (void)newPacket:(regina::PacketType)type {
+    if (_newPacketPopover)
+        [_newPacketPopover dismissPopoverAnimated:NO];
+
+    // TODO: pick a segue identifier to match the cell that was selected.
+    // TODO: Trap situations where we can't create the new packet.
+    switch (type) {
+        case regina::PACKET_NORMALSURFACELIST:
+            [self performSegueWithIdentifier:@"newSurfaces" sender:self];
+            break;
+        default:
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not yet implemented"
+                                                            message:@"I do not know how to create this type of packet.  The iOS version of Regina is still under development; please be patient!"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Close"
+                                                  otherButtonTitles:nil];
+            [alert show];
+            break;
+    }
 }
 
 #pragma mark - Table View
@@ -262,6 +279,8 @@
     }
     [self viewPacket:r.packet];
 }
+
+#pragma mark Segues
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
     // Note that _newPacketPopover is a zeroing weak reference, and will

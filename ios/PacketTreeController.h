@@ -32,6 +32,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Example.h"
+#import "packet/packettype.h"
 
 namespace regina {
     class NPacket;
@@ -43,6 +44,6 @@ namespace regina {
 - (void)openSubtree:(regina::NPacket*)p root:(regina::NPacket*)r;
 - (void)refreshPackets;
 - (void)viewPacket:(regina::NPacket*)p;
-- (void)dismissNewPacketPopover;
+- (void)newPacket:(regina::PacketType)type;
 
 @end

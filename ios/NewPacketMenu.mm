@@ -158,11 +158,9 @@ static NSArray* _allRows;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [_packetTree dismissNewPacketPopover];
-
-    // TODO: pick a segue identifier to match the cell that was selected.
-    // TODO: Trap situations where we can't create the new packet.
-    [_packetTree performSegueWithIdentifier:@"newSurfaces" sender:self];
+    // By the time we reach this point, the global array will have already been created.
+    NewPacketRow* row = _allRows[indexPath.row];
+    [_packetTree newPacket:row.type];
 }
 
 @end
