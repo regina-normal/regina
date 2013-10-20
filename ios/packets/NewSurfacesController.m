@@ -32,11 +32,99 @@
 
 #import "NewSurfacesController.h"
 
+NSArray* whichText;
+NSArray* coordText;
+NSArray* embText;
+
+// TODO: Put together a proper coordinates class, and so on.
+
+@interface NewSurfacesController () {
+    bool _running;
+}
+@property (weak, nonatomic) IBOutlet UILabel *triangulation;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *whichControl;
+@property (weak, nonatomic) IBOutlet UILabel *whichDesc;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *coordControl;
+@property (weak, nonatomic) IBOutlet UILabel *coordDesc;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *embControl;
+@property (weak, nonatomic) IBOutlet UILabel *embDesc;
+@property (weak, nonatomic) IBOutlet UIProgressView *progressControl;
+@property (weak, nonatomic) IBOutlet UILabel *progressLabel;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *enumerateButton;
+- (IBAction)whichChanged:(id)sender;
+- (IBAction)coordChanged:(id)sender;
+- (IBAction)embChanged:(id)sender;
+- (IBAction)cancel:(id)sender;
+- (IBAction)enumerate:(id)sender;
++ (void)initArrays;
+@end
+
 @implementation NewSurfacesController
 
+- (void)viewDidLoad {
+    if (! whichText)
+        [NewSurfacesController initArrays];
+    
+    // TODO: Check for invalid parent.
+    // TODO: Collect the triangulation label.
+    // Update the description labels.
+    [self whichChanged:nil];
+    [self coordChanged:nil];
+    [self embChanged:nil];
+}
+
+- (IBAction)whichChanged:(id)sender {
+    _whichDesc.text = whichText[_whichControl.selectedSegmentIndex];
+}
+
+- (IBAction)coordChanged:(id)sender {
+    _coordDesc.text = coordText[_coordControl.selectedSegmentIndex];
+}
+
+- (IBAction)embChanged:(id)sender {
+    _embDesc.text = embText[_embControl.selectedSegmentIndex];
+}
+
 - (IBAction)cancel:(id)sender {
-    NSLog(@"Dismiss");
+    // TODO: Get this working.
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (IBAction)enumerate:(id)sender {
+    // TODO: Make this test more robust against GUI changes.
+    if (_coordControl.selectedSegmentIndex >= 2 && _embControl.selectedSegmentIndex == 1) {
+        // TODO: Bail.
+        return;
+    }
+    
+    _running = true;
+    
+    _whichControl.enabled = NO;
+    _coordControl.enabled = NO;
+    _embControl.enabled = NO;
+    _enumerateButton.enabled = NO;
+    
+    _progressLabel.hidden = NO;
+    _progressControl.hidden = NO;
+    
+    // TODO: Run!
+}
+
++ (void)initArrays {
+    whichText = [NSArray arrayWithObjects:
+                 @"Vertex surfaces (extreme rays)",
+                 @"Fundamental surfaces (Hilbert basis)",
+                 nil];
+    coordText = [NSArray arrayWithObjects:
+                 @"Normal coordinates: triangles and quadrilaterals",
+                 @"Normal coordinates: quadrilaterals only",
+                 @"Almost normal coordinates: triangles, quadrilaterals, octagons",
+                 @"Almost normal coordinates: quadrilaterals and octagons only",
+                 nil];
+    embText = [NSArray arrayWithObjects:
+               @"Properly embedded surfaces only",
+               @"Include immersed and/or singular surfaces",
+               nil];
 }
 
 @end

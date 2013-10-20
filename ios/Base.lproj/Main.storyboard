@@ -559,7 +559,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YoD-Ho-5ZX">
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YoD-Ho-5ZX">
                                 <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
@@ -572,28 +572,31 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Triangulation:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WyM-Bd-lJy">
-                                <rect key="frame" x="20" y="62" width="103" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Triangulation:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WyM-Bd-lJy">
+                                <rect key="frame" x="20" y="60" width="103" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dyR-O7-7Ym">
-                                <rect key="frame" x="131" y="62" width="42" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dyR-O7-7Ym">
+                                <rect key="frame" x="131" y="60" width="5" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="EnD-Bl-G0J">
-                                <rect key="frame" x="20" y="149" width="178" height="29"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="EnD-Bl-G0J">
+                                <rect key="frame" x="20" y="149" width="187" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
                                     <segment title="Vertex"/>
                                     <segment title="Fundamental"/>
                                 </segments>
+                                <connections>
+                                    <action selector="whichChanged:" destination="iJb-vO-RRQ" eventType="valueChanged" id="T4F-AM-5Z4"/>
+                                </connections>
                             </segmentedControl>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="jv6-fh-9j0">
-                                <rect key="frame" x="20" y="237" width="500" height="29"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="jv6-fh-9j0">
+                                <rect key="frame" x="20" y="246" width="407" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
                                     <segment title="Standard"/>
@@ -601,56 +604,108 @@
                                     <segment title="Almost normal"/>
                                     <segment title="Quad-oct"/>
                                 </segments>
+                                <connections>
+                                    <action selector="coordChanged:" destination="iJb-vO-RRQ" eventType="valueChanged" id="b7i-tM-GYw"/>
+                                </connections>
                             </segmentedControl>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="1uZ-dU-XT9">
-                                <rect key="frame" x="20" y="598" width="500" height="2"/>
+                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="1uZ-dU-XT9">
+                                <rect key="frame" x="40" y="534" width="460" height="2"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </progressView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Enumerating..." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="snu-8l-dY6">
-                                <rect key="frame" x="214" y="569" width="112" height="21"/>
+                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enumerating..." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="snu-8l-dY6">
+                                <rect key="frame" x="214" y="505" width="112" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Standard coordinates (tri-quad)" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CPa-3Z-jgI">
-                                <rect key="frame" x="20" y="208" width="240" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CPa-3Z-jgI">
+                                <rect key="frame" x="20" y="217" width="5" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="SrG-Gg-yut">
-                                <rect key="frame" x="20" y="346" width="161" height="29"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="SrG-Gg-yut">
+                                <rect key="frame" x="20" y="343" width="161" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
                                     <segment title="Embedded"/>
                                     <segment title="All"/>
                                 </segments>
+                                <connections>
+                                    <action selector="embChanged:" destination="iJb-vO-RRQ" eventType="valueChanged" id="AmS-sP-eiw"/>
+                                </connections>
                             </segmentedControl>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Properly embedded surfaces only" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3UB-0k-A7c">
-                                <rect key="frame" x="20" y="317" width="258" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3UB-0k-A7c">
+                                <rect key="frame" x="20" y="314" width="5" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="All vertex surfaces" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bXx-26-Rkh">
-                                <rect key="frame" x="20" y="120" width="141" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bXx-26-Rkh">
+                                <rect key="frame" x="20" y="120" width="5" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tl0-Tt-394">
-                                <rect key="frame" x="200" y="427" width="141" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <state key="normal" title="Enumerate!">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="isF-FG-zAW">
+                                <rect key="frame" x="0.0" y="576" width="540" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="D2b-Jp-DsJ"/>
+                                    <barButtonItem title="Enumerate!" id="0aP-oi-ppe">
+                                        <connections>
+                                            <action selector="enumerate:" destination="iJb-vO-RRQ" id="Dx3-gq-6VS"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="dWM-2G-w1h"/>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="3UB-0k-A7c" firstAttribute="leading" secondItem="jv6-fh-9j0" secondAttribute="leading" id="32N-wH-gga"/>
+                            <constraint firstItem="SrG-Gg-yut" firstAttribute="top" secondItem="3UB-0k-A7c" secondAttribute="bottom" constant="8" id="4e6-QB-IhV"/>
+                            <constraint firstItem="isF-FG-zAW" firstAttribute="leading" secondItem="tuP-cn-Lom" secondAttribute="leading" id="7qP-pJ-Fis"/>
+                            <constraint firstItem="bXx-26-Rkh" firstAttribute="top" secondItem="dyR-O7-7Ym" secondAttribute="bottom" constant="39" id="BVy-27-dtn"/>
+                            <constraint firstItem="3UB-0k-A7c" firstAttribute="leading" secondItem="SrG-Gg-yut" secondAttribute="leading" id="Cpq-tA-YJb"/>
+                            <constraint firstItem="WyM-Bd-lJy" firstAttribute="top" secondItem="YoD-Ho-5ZX" secondAttribute="bottom" constant="16" id="EzV-1e-fuY"/>
+                            <constraint firstItem="EnD-Bl-G0J" firstAttribute="leading" secondItem="CPa-3Z-jgI" secondAttribute="leading" id="GlP-Yo-ROa"/>
+                            <constraint firstItem="EnD-Bl-G0J" firstAttribute="top" secondItem="bXx-26-Rkh" secondAttribute="bottom" constant="8" id="LlJ-rp-Ebp"/>
+                            <constraint firstItem="1uZ-dU-XT9" firstAttribute="top" secondItem="snu-8l-dY6" secondAttribute="bottom" constant="8" id="MWV-VX-Guc"/>
+                            <constraint firstItem="6pZ-eB-4Kr" firstAttribute="top" secondItem="isF-FG-zAW" secondAttribute="bottom" id="N1z-ue-6PK"/>
+                            <constraint firstItem="CPa-3Z-jgI" firstAttribute="top" secondItem="EnD-Bl-G0J" secondAttribute="bottom" constant="40" id="NWZ-aa-DDA"/>
+                            <constraint firstAttribute="trailing" secondItem="1uZ-dU-XT9" secondAttribute="trailing" constant="40" id="OVa-xw-ONK"/>
+                            <constraint firstItem="YoD-Ho-5ZX" firstAttribute="top" secondItem="7o9-wz-P6o" secondAttribute="bottom" id="Qeq-Nc-IFe"/>
+                            <constraint firstItem="snu-8l-dY6" firstAttribute="centerX" secondItem="1uZ-dU-XT9" secondAttribute="centerX" id="Unm-hu-rIk"/>
+                            <constraint firstItem="isF-FG-zAW" firstAttribute="top" secondItem="1uZ-dU-XT9" secondAttribute="bottom" constant="40" id="VIT-ON-NQ0"/>
+                            <constraint firstItem="jv6-fh-9j0" firstAttribute="top" secondItem="CPa-3Z-jgI" secondAttribute="bottom" constant="8" id="aHh-fA-siL"/>
+                            <constraint firstItem="dyR-O7-7Ym" firstAttribute="leading" secondItem="WyM-Bd-lJy" secondAttribute="trailing" constant="8" id="aip-xn-5OR"/>
+                            <constraint firstItem="1uZ-dU-XT9" firstAttribute="leading" secondItem="tuP-cn-Lom" secondAttribute="leading" constant="40" id="dsw-Ga-jtC"/>
+                            <constraint firstItem="YoD-Ho-5ZX" firstAttribute="leading" secondItem="tuP-cn-Lom" secondAttribute="leading" id="ey6-wt-Rhv"/>
+                            <constraint firstItem="WyM-Bd-lJy" firstAttribute="leading" secondItem="bXx-26-Rkh" secondAttribute="leading" id="gmB-n1-lU8"/>
+                            <constraint firstItem="dyR-O7-7Ym" firstAttribute="baseline" secondItem="WyM-Bd-lJy" secondAttribute="baseline" id="iJp-mS-uq4"/>
+                            <constraint firstItem="CPa-3Z-jgI" firstAttribute="leading" secondItem="jv6-fh-9j0" secondAttribute="leading" id="j1c-5P-NzC"/>
+                            <constraint firstItem="WyM-Bd-lJy" firstAttribute="leading" secondItem="tuP-cn-Lom" secondAttribute="leading" constant="20" id="l0f-yZ-O73"/>
+                            <constraint firstAttribute="trailing" secondItem="YoD-Ho-5ZX" secondAttribute="trailing" id="mK6-o4-4qc"/>
+                            <constraint firstItem="EnD-Bl-G0J" firstAttribute="leading" secondItem="bXx-26-Rkh" secondAttribute="leading" id="sSL-fB-30i"/>
+                            <constraint firstAttribute="trailing" secondItem="isF-FG-zAW" secondAttribute="trailing" id="seD-44-WIW"/>
+                            <constraint firstItem="3UB-0k-A7c" firstAttribute="top" secondItem="jv6-fh-9j0" secondAttribute="bottom" constant="40" id="xKy-rs-uZj"/>
+                        </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="coordControl" destination="jv6-fh-9j0" id="4lq-kJ-2sC"/>
+                        <outlet property="coordDesc" destination="CPa-3Z-jgI" id="wTS-Fk-ubC"/>
+                        <outlet property="embControl" destination="SrG-Gg-yut" id="bd8-Iz-SRk"/>
+                        <outlet property="embDesc" destination="3UB-0k-A7c" id="xXs-FY-UEW"/>
+                        <outlet property="enumerateButton" destination="0aP-oi-ppe" id="K9T-CB-wWC"/>
+                        <outlet property="progressControl" destination="1uZ-dU-XT9" id="6SL-ki-L4A"/>
+                        <outlet property="progressLabel" destination="snu-8l-dY6" id="Cgl-Q9-xGq"/>
+                        <outlet property="triangulation" destination="dyR-O7-7Ym" id="Iam-vW-s4V"/>
+                        <outlet property="whichControl" destination="EnD-Bl-G0J" id="D90-0g-FNJ"/>
+                        <outlet property="whichDesc" destination="bXx-26-Rkh" id="DWj-sn-Y9l"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Ec-eG-cfa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
