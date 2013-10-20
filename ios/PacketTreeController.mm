@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #import "DetailViewController.h"
+#import "NewPacketController.h"
 #import "NewPacketMenu.h"
-#import "NewSurfacesController.h"
 #import "PacketManagerIOS.h"
 #import "PacketTreeController.h"
 
@@ -41,7 +41,93 @@
 #import "packet/ncontainer.h"
 #import "packet/ntext.h"
 
-#pragma mark Packet tree row
+#pragma mark - New packet specification
+
+@interface NewPacketSpec : NSObject
+
+/**
+ * The type of packet to create.
+ */
+@property (assign, nonatomic, readonly) regina::PacketType type;
+/**
+ * The subtree that is currently open in the master packet tree view.
+ */
+@property (assign, nonatomic, readonly) regina::NPacket* subtree;
+/**
+ * The packet that we are currently viewing in the detail view.
+ */
+@property (assign, nonatomic, readonly) regina::NPacket* viewing;
+
+- (id)initFor:(regina::PacketType)t subtree:(regina::NPacket*)s viewing:(regina::NPacket*)v;
++ (id)specFor:(regina::PacketType)t subtree:(regina::NPacket*)s viewing:(regina::NPacket*)v;
+
+- (regina::NPacket*)parent;
+- (regina::NPacket*)parentWithAlert:(BOOL)alert;
+
+@end
+
+@interface NewPacketSpec () {
+    regina::NPacket* _parent;
+}
+@end
+
+@implementation NewPacketSpec
+
+- (id)initFor:(regina::PacketType)t subtree:(regina::NPacket *)s viewing:(regina::NPacket *)v {
+    self = [super init];
+    if (self) {
+        _type = t;
+        _subtree = s;
+        _viewing = v;
+    }
+    return self;
+}
+
++ (id)specFor:(regina::PacketType)t subtree:(regina::NPacket *)s viewing:(regina::NPacket *)v {
+    return [[NewPacketSpec alloc] initFor:t subtree:s viewing:v];
+}
+
+- (regina::NPacket*)parent {
+    if (_parent)
+        return _parent;
+    else
+        return [self parentWithAlert:NO];
+}
+
+- (regina::NPacket*)parentWithAlert:(BOOL)alert {
+    if (_type == regina::PACKET_NORMALSURFACELIST || _type == regina::PACKET_ANGLESTRUCTURELIST) {
+        if (_viewing && _viewing->getPacketType() == regina::PACKET_TRIANGULATION)
+            _parent = _viewing;
+        else if (_subtree->getPacketType() == regina::PACKET_TRIANGULATION)
+            _parent = _subtree;
+        else {
+            if (alert) {
+                NSString *title, *msg;
+                if (_type == regina::PACKET_NORMALSURFACELIST) {
+                    title = @"Surfaces need a triangulation.";
+                    msg = @"Please select the triangulation in which I should enumerate normal surfaces.";
+                } else {
+                    title = @"Angle structures need a triangulation.";
+                    msg = @"Please select the triangulation in which I should enumerate angle structures.";
+                }
+                _parent = 0;
+                UIAlertView *a = [[UIAlertView alloc] initWithTitle:title
+                                                            message:msg
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Close"
+                                                  otherButtonTitles:nil];
+                [a show];
+            }
+        }
+    } else
+        _parent = _subtree;
+    
+    return _parent;
+}
+
+@end
+
+#pragma mark - Packet tree row
 
 @interface PacketTreeRow : NSObject
 
@@ -75,12 +161,13 @@
 @interface PacketTreeController () {
     NSMutableArray *_rows;
     NSInteger _subtreeRow;
-    DetailViewController *_detail;
+    NewPacketSpec *_newPacketSpec;
     __weak UIPopoverController* _newPacketPopover;
 }
 
 @property (assign, nonatomic) regina::NPacket* tree;
 @property (assign, nonatomic) regina::NPacket* node;
+@property (weak, nonatomic) DetailViewController *detail;
 
 - (bool)loadTreeResource:(NSString*)filename;
 - (void)fill;
@@ -89,11 +176,26 @@
 
 @implementation PacketTreeController
 
+- (DetailViewController *)detail {
+    // Sometimes this is initialised in viewDidLoad, but sometimes not..
+    // in deeper levels of the tree it seems that viewDidLoad cannot
+    // access the split view controller (in particular
+    // [self splitViewController] returns nil).  Better re-initialise it
+    // here if necessary.
+    if (! _detail) {
+        UISplitViewController* s = [self splitViewController];
+        UINavigationController* nav = [s.viewControllers lastObject];
+        _detail = (DetailViewController*)nav.topViewController;
+    }
+    return _detail;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    _detail = (DetailViewController*)
-        [[[[self splitViewController] viewControllers] lastObject] topViewController];
+    UISplitViewController* s = [self splitViewController];
+    UINavigationController* nav = [s.viewControllers lastObject];
+    _detail = (DetailViewController*)nav.topViewController;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -101,7 +203,7 @@
         if ([self.navigationController.viewControllers indexOfObject:self] == NSNotFound) {
             NSLog(@"Closing file and deleting from memory.");
             delete _tree;
-            [_detail viewWelcome];
+            [self.detail viewWelcome];
         }
     }
     [super viewDidDisappear:animated];
@@ -159,17 +261,17 @@
 }
 
 - (void)viewPacket:(regina::NPacket *)p {
-    // TODO: Make this easier to get to.
-    UINavigationController* nav = [[self splitViewController].viewControllers lastObject];
-    DetailViewController* detail = (DetailViewController*)nav.topViewController;
-    [detail viewPacket:p];
+    [self.detail viewPacket:p];
 }
 
 - (void)newPacket:(regina::PacketType)type {
     if (_newPacketPopover)
         [_newPacketPopover dismissPopoverAnimated:NO];
+    
+    _newPacketSpec = [NewPacketSpec specFor:type subtree:_node viewing:self.detail.packet];
+    if (! [_newPacketSpec parentWithAlert:YES])
+        return;
 
-    // TODO: Trap situations where we can't create the new packet.
     // TODO: View the new packet immediately.
     // TODO: Replace calls to refreshPackets with a listener-based mechanism.
     switch (type) {
@@ -196,8 +298,8 @@
             [self performSegueWithIdentifier:@"newSurfaces" sender:self];
             break;
         default:
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not yet implemented"
-                                                            message:@"I do not know how to create this type of packet.  The iOS version of Regina is still under development; please be patient!"
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not yet implemented."
+                                                            message:@"I do not know how to create this type of packet.  The iOS version of Regina is still under development – please be patient!"
                                                            delegate:self
                                                   cancelButtonTitle:@"Close"
                                                   otherButtonTitles:nil];
@@ -334,8 +436,7 @@
     } else {
         // This must be one of the new packet segues.
         // Pass through the parent packet.
-        // TODO: Decide whether the "right" parent is the tree, or the visible packet.
-        ((NewSurfacesController*)segue.destinationViewController).createBeneath = _node;
+        ((NewPacketController*)segue.destinationViewController).createBeneath = [_newPacketSpec parent];
     }
 }
 
