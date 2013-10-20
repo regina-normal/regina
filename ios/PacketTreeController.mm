@@ -32,6 +32,7 @@
 
 #import "DetailViewController.h"
 #import "NewPacketController.h"
+#import "NewSurfacesController.h" // TODO: Subclass
 #import "PacketManagerIOS.h"
 #import "PacketTreeController.h"
 
@@ -163,6 +164,10 @@
     [detail viewPacket:p];
 }
 
+- (void)dismissNewPacketPopover {
+    [_newPacketPopover dismissPopoverAnimated:NO];
+}
+
 #pragma mark - Table View
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -285,7 +290,13 @@
         [[segue destinationViewController] refreshPackets];
     } else if ([[segue identifier] isEqualToString:@"newPacket"]) {
         _newPacketPopover = [(UIStoryboardPopoverSegue*)segue popoverController];
-        ((NewPacketController*)segue.destinationViewController).seguePopoverController = _newPacketPopover;
+        ((NewPacketController*)segue.destinationViewController).packetTree = self;
+    } else {
+        // This must be one of the new packet segues.
+        // Pass through the parent packet.
+        // TODO: Decide whether the "right" parent is the tree, or the visible packet.
+        // TODO: Introduce a common base class.
+        ((NewSurfacesController*)segue.destinationViewController).parentPacket = _node;
     }
 }
 

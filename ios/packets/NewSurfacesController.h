@@ -32,6 +32,12 @@
 
 #import <Foundation/Foundation.h>
 
+namespace regina {
+    class NPacket;
+}
+
 @interface NewSurfacesController : UIViewController
+
+@property (assign, nonatomic) regina::NPacket* parentPacket;
 
 @end

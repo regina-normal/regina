@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "NewSurfacesController.h"
+#import "surfaces/nnormalsurfacelist.h"
 
 NSArray* whichText;
 NSArray* coordText;
@@ -65,8 +66,10 @@ NSArray* embText;
     if (! whichText)
         [NewSurfacesController initArrays];
     
+    if (_parentPacket)
+        _triangulation.text = [NSString stringWithUTF8String:_parentPacket->getPacketLabel().c_str()];
+    
     // TODO: Check for invalid parent.
-    // TODO: Collect the triangulation label.
     // Update the description labels.
     [self whichChanged:nil];
     [self coordChanged:nil];

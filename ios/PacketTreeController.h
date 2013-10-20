@@ -43,5 +43,6 @@ namespace regina {
 - (void)openSubtree:(regina::NPacket*)p root:(regina::NPacket*)r;
 - (void)refreshPackets;
 - (void)viewPacket:(regina::NPacket*)p;
+- (void)dismissNewPacketPopover;
 
 @end

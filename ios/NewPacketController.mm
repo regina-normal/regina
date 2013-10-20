@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "NewPacketController.h"
+#import "PacketTreeController.h"
 
 @interface NewPacketController ()
 
@@ -68,9 +69,12 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Clear away the popover before we throw up the next (deeper) screen.
-    [_seguePopoverController dismissPopoverAnimated:true];
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [_packetTree dismissNewPacketPopover];
+
+    // TODO: pick a segue identifier to match the cell that was selected.
+    // TODO: Trap situations where we can't create the new packet.
+    [_packetTree performSegueWithIdentifier:@"newSurfaces" sender:self];
 }
 
 @end

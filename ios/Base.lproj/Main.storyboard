@@ -365,6 +365,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="iJb-vO-RRQ" kind="modal" identifier="newSurfaces" modalPresentationStyle="formSheet" id="TCf-VP-Yq2"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fjY-rQ-nyG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -465,9 +468,6 @@
                                                 </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="iJb-vO-RRQ" kind="modal" modalPresentationStyle="formSheet" id="Czd-kQ-wYH"/>
-                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="349-H2-PSA" imageView="FWw-ub-8JH" style="IBUITableViewCellStyleDefault" id="EN6-jg-ThV">
                                         <rect key="frame" x="0.0" y="176" width="250" height="44"/>
@@ -545,7 +545,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VH4-aJ-vAd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1796" y="-647"/>
+            <point key="canvasLocation" x="1883" y="-921"/>
         </scene>
         <!--New Surfaces Controller-->
         <scene sceneID="mJp-7s-7fF">

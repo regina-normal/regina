@@ -32,8 +32,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class PacketTreeController;
+
 @interface NewPacketController : UITableViewController
 
-@property (weak, nonatomic) UIPopoverController* seguePopoverController;
+@property (weak, nonatomic) PacketTreeController* packetTree;
 
 @end
