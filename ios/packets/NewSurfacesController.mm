@@ -66,8 +66,8 @@ NSArray* embText;
     if (! whichText)
         [NewSurfacesController initArrays];
     
-    if (_parentPacket)
-        _triangulation.text = [NSString stringWithUTF8String:_parentPacket->getPacketLabel().c_str()];
+    if (self.createBeneath)
+        _triangulation.text = [NSString stringWithUTF8String:self.createBeneath->getPacketLabel().c_str()];
     
     // TODO: Check for invalid parent.
     // Update the description labels.

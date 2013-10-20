@@ -31,8 +31,13 @@
  **************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "NewPacketController.h"
 
-@interface NewSurfacesController : NewPacketController
+namespace regina {
+    class NPacket;
+}
+
+@interface NewPacketController : UIViewController
+
+@property (assign, nonatomic) regina::NPacket* createBeneath;
 
 @end

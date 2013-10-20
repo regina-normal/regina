@@ -927,6 +927,7 @@
 		059101181812F4C9000A8D16 /* PacketSubcontroller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101171812F4C9000A8D16 /* PacketSubcontroller.mm */; };
 		0591011B1813230A000A8D16 /* NewPacketMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011A1813230A000A8D16 /* NewPacketMenu.mm */; };
 		0591011E181364BB000A8D16 /* NewSurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011D181364BB000A8D16 /* NewSurfacesController.mm */; };
+		0591012118141996000A8D16 /* NewPacketController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591012018141996000A8D16 /* NewPacketController.mm */; };
 		05A47FBE1809D11900F86BFD /* closed-hyp-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F971809CB7600F86BFD /* closed-hyp-census.rga */; };
 		05A47FBF1809D11900F86BFD /* closed-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F981809CB7600F86BFD /* closed-nor-census.rga */; };
 		05A47FC01809D11900F86BFD /* closed-or-census-large.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F991809CB7600F86BFD /* closed-or-census-large.rga */; };
@@ -1863,6 +1864,8 @@
 		0591011A1813230A000A8D16 /* NewPacketMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewPacketMenu.mm; sourceTree = "<group>"; };
 		0591011C181364BB000A8D16 /* NewSurfacesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewSurfacesController.h; sourceTree = "<group>"; };
 		0591011D181364BB000A8D16 /* NewSurfacesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewSurfacesController.mm; sourceTree = "<group>"; };
+		0591011F18141996000A8D16 /* NewPacketController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPacketController.h; sourceTree = "<group>"; };
+		0591012018141996000A8D16 /* NewPacketController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewPacketController.mm; sourceTree = "<group>"; };
 		05A47F971809CB7600F86BFD /* closed-hyp-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census.rga"; sourceTree = "<group>"; };
 		05A47F981809CB7600F86BFD /* closed-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-nor-census.rga"; sourceTree = "<group>"; };
 		05A47F991809CB7600F86BFD /* closed-or-census-large.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census-large.rga"; sourceTree = "<group>"; };
@@ -2887,6 +2890,8 @@
 				05A47FC61809D1D600F86BFD /* Example.m */,
 				052FA13E1806103000FAE4DF /* MasterViewController.h */,
 				052FA13F1806103000FAE4DF /* MasterViewController.mm */,
+				0591011F18141996000A8D16 /* NewPacketController.h */,
+				0591012018141996000A8D16 /* NewPacketController.mm */,
 				059101191813230A000A8D16 /* NewPacketMenu.h */,
 				0591011A1813230A000A8D16 /* NewPacketMenu.mm */,
 				0523D888180B54850094DAAD /* PacketManagerIOS.h */,
@@ -3838,6 +3843,7 @@
 				052FA1831806129B00FAE4DF /* nglobaldirs.cpp in Sources */,
 				052FA1FC1806129B00FAE4DF /* ntetrahedron.cpp in Sources */,
 				052FA1611806129B00FAE4DF /* nhomgrouppresentation.cpp in Sources */,
+				0591012118141996000A8D16 /* NewPacketController.mm in Sources */,
 				052FA2021806129B00FAE4DF /* simplify.cpp in Sources */,
 				052FA1731806129B00FAE4DF /* dim2exampletriangulation.cpp in Sources */,
 				052FA1A71806129B00FAE4DF /* npacketlistener.cpp in Sources */,

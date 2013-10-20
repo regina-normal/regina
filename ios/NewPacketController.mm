@@ -30,9 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#import <Foundation/Foundation.h>
 #import "NewPacketController.h"
 
-@interface NewSurfacesController : NewPacketController
+@implementation NewPacketController
 
 @end

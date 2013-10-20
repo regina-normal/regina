@@ -295,8 +295,7 @@
         // This must be one of the new packet segues.
         // Pass through the parent packet.
         // TODO: Decide whether the "right" parent is the tree, or the visible packet.
-        // TODO: Introduce a common base class.
-        ((NewSurfacesController*)segue.destinationViewController).parentPacket = _node;
+        ((NewSurfacesController*)segue.destinationViewController).createBeneath = _node;
     }
 }
 
