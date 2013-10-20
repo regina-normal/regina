@@ -373,10 +373,10 @@
             </objects>
             <point key="canvasLocation" x="1317" y="-630"/>
         </scene>
-        <!--New Packet Controller-->
+        <!--New Packet Menu-->
         <scene sceneID="ULi-i1-42j">
             <objects>
-                <tableViewController id="9gf-1e-ysj" customClass="NewPacketController" sceneMemberID="viewController">
+                <tableViewController id="9gf-1e-ysj" customClass="NewPacketMenu" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="vYV-XT-ab6">
                         <rect key="frame" x="0.0" y="0.0" width="250" height="350"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

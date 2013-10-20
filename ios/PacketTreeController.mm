@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #import "DetailViewController.h"
-#import "NewPacketController.h"
+#import "NewPacketMenu.h"
 #import "NewSurfacesController.h" // TODO: Subclass
 #import "PacketManagerIOS.h"
 #import "PacketTreeController.h"
@@ -290,7 +290,7 @@
         [[segue destinationViewController] refreshPackets];
     } else if ([[segue identifier] isEqualToString:@"newPacket"]) {
         _newPacketPopover = [(UIStoryboardPopoverSegue*)segue popoverController];
-        ((NewPacketController*)segue.destinationViewController).packetTree = self;
+        ((NewPacketMenu*)segue.destinationViewController).packetTree = self;
     } else {
         // This must be one of the new packet segues.
         // Pass through the parent packet.

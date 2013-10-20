@@ -30,12 +30,51 @@
  *                                                                        *
  **************************************************************************/
 
-#import <UIKit/UIKit.h>
+#import "NewPacketMenu.h"
+#import "PacketTreeController.h"
 
-@class PacketTreeController;
+@interface NewPacketMenu ()
 
-@interface NewPacketController : UITableViewController
+@end
 
-@property (weak, nonatomic) PacketTreeController* packetTree;
+@implementation NewPacketMenu
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    // Resize the popover to fit the available cells exactly.
+    NSInteger nRows = [self.tableView numberOfRowsInSection:0];
+    NSInteger height = nRows * [self.tableView rowHeight];
+    
+    CGFloat maxWidth = 0;
+    UITableViewCell* currCell;
+    NSString *currLabel;
+    CGFloat currWidth;
+    for (NSInteger i = 0; i < nRows; ++i) {
+        currCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        currLabel = currCell.textLabel.text;
+        currWidth = [currLabel sizeWithFont:currCell.textLabel.font].width;
+        if (maxWidth < currWidth)
+            maxWidth = currWidth;
+    }
+    CGFloat width = maxWidth + 80; // Room for 32x32 icon plus some padding.
+    
+    self.contentSizeForViewInPopover = CGSizeMake(width, height);
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [_packetTree dismissNewPacketPopover];
+
+    // TODO: pick a segue identifier to match the cell that was selected.
+    // TODO: Trap situations where we can't create the new packet.
+    [_packetTree performSegueWithIdentifier:@"newSurfaces" sender:self];
+}
 
 @end
