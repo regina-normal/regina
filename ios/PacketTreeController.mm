@@ -43,31 +43,20 @@
 
 #pragma mark - New packet specification
 
-@interface NewPacketSpec : NSObject
-
-/**
- * The type of packet to create.
- */
-@property (assign, nonatomic, readonly) regina::PacketType type;
-/**
- * The subtree that is currently open in the master packet tree view.
- */
-@property (assign, nonatomic, readonly) regina::NPacket* subtree;
-/**
- * The packet that we are currently viewing in the detail view.
- */
-@property (assign, nonatomic, readonly) regina::NPacket* viewing;
-
-- (id)initFor:(regina::PacketType)t subtree:(regina::NPacket*)s viewing:(regina::NPacket*)v;
-+ (id)specFor:(regina::PacketType)t subtree:(regina::NPacket*)s viewing:(regina::NPacket*)v;
-
-- (regina::NPacket*)parent;
-- (regina::NPacket*)parentWithAlert:(BOOL)alert;
-
-@end
-
 @interface NewPacketSpec () {
+    /**
+     * The parent beneath which the new packet should be created.
+     * This will be set by parent or parentWithAlert.
+     */
     regina::NPacket* _parent;
+    /**
+     * The subtree that is currently open in the master packet tree view.
+     */
+    regina::NPacket* _subtree;
+    /**
+     * The packet that we are currently viewing in the detail view.
+     */
+    regina::NPacket* _viewing;
 }
 @end
 
