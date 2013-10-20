@@ -40,8 +40,6 @@ NSArray* whichText;
 NSArray* coordText;
 NSArray* embText;
 
-// TODO: Put together a proper coordinates class, and so on.
-
 @interface NewSurfacesController () {
     bool _running;
     regina::NProgressTracker _tracker;
@@ -106,9 +104,47 @@ NSArray* embText;
 }
 
 - (IBAction)enumerate:(id)sender {
-    // TODO: Make this test more robust against GUI changes.
-    if (_coordControl.selectedSegmentIndex >= 2 && _embControl.selectedSegmentIndex == 1) {
-        // TODO: Bail.
+    regina::NormalCoords coords;
+    regina::NormalList which;
+    regina::NormalAlg alg;
+    
+    // TODO: Replace these switch statements with something more robust against GUI changes.
+    bool broken = false;
+    bool almostNormal = false;
+    switch (_whichControl.selectedSegmentIndex) {
+        case 0: which = regina::NS_VERTEX; break;
+        case 1: which = regina::NS_FUNDAMENTAL; break;
+        default: broken = true; break;
+    }
+    switch (_embControl.selectedSegmentIndex) {
+        case 0: which |= regina::NS_EMBEDDED_ONLY; break;
+        case 1: which |= regina::NS_IMMERSED_SINGULAR; break;
+        default: broken = true; break;
+    }
+    switch (_coordControl.selectedSegmentIndex) {
+        case 0: coords = regina::NS_STANDARD; break;
+        case 1: coords = regina::NS_QUAD; break;
+        case 2: coords = regina::NS_AN_STANDARD; almostNormal = true; break;
+        case 3: coords = regina::NS_AN_QUAD_OCT; almostNormal = true; break;
+        default: broken = true; break;
+    }
+    if (broken) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No selection made."
+                                                        message:@"Please select an option for each of the three parameters: (i) surface type; (ii) coordinate system; and (iii) embedded vs immersed and/or singular."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    if (almostNormal && which.has(regina::NS_IMMERSED_SINGULAR)) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Selection not supported."
+                                                        message:@"At present, I cannot enumerate immersed and/or singular surfaces in an almost normal coordinate system.  Please select a different combination of options."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
         return;
     }
     
@@ -122,17 +158,12 @@ NSArray* embText;
     _progressLabel.hidden = NO;
     _progressControl.hidden = NO;
 
-    // TODO: Fix arguments.
-
     _running = true;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NNormalSurfaceList* ans =
             NNormalSurfaceList::enumerate((regina::NTriangulation*)self.createBeneath,
-                                          regina::NS_STANDARD,
-                                          regina::NS_VERTEX,
-                                          regina::NS_ALG_DEFAULT,
-                                          &_tracker);
+                                          coords, which, regina::NS_ALG_DEFAULT, &_tracker);
         while (! _tracker.isFinished()) {
             if (_tracker.percentChanged()) {
                 // This operation blocks until the UI is updated:
