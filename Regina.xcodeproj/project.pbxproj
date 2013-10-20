@@ -926,6 +926,7 @@
 		059101151812F349000A8D16 /* DetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101141812F349000A8D16 /* DetailViewController.mm */; };
 		059101181812F4C9000A8D16 /* PacketSubcontroller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101171812F4C9000A8D16 /* PacketSubcontroller.mm */; };
 		0591011B1813230A000A8D16 /* NewPacketController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0591011A1813230A000A8D16 /* NewPacketController.m */; };
+		0591011E181364BB000A8D16 /* NewSurfacesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0591011D181364BB000A8D16 /* NewSurfacesController.m */; };
 		05A47FBE1809D11900F86BFD /* closed-hyp-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F971809CB7600F86BFD /* closed-hyp-census.rga */; };
 		05A47FBF1809D11900F86BFD /* closed-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F981809CB7600F86BFD /* closed-nor-census.rga */; };
 		05A47FC01809D11900F86BFD /* closed-or-census-large.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05A47F991809CB7600F86BFD /* closed-or-census-large.rga */; };
@@ -1860,6 +1861,8 @@
 		059101171812F4C9000A8D16 /* PacketSubcontroller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketSubcontroller.mm; sourceTree = "<group>"; };
 		059101191813230A000A8D16 /* NewPacketController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPacketController.h; sourceTree = "<group>"; };
 		0591011A1813230A000A8D16 /* NewPacketController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewPacketController.m; sourceTree = "<group>"; };
+		0591011C181364BB000A8D16 /* NewSurfacesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewSurfacesController.h; sourceTree = "<group>"; };
+		0591011D181364BB000A8D16 /* NewSurfacesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewSurfacesController.m; sourceTree = "<group>"; };
 		05A47F971809CB7600F86BFD /* closed-hyp-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census.rga"; sourceTree = "<group>"; };
 		05A47F981809CB7600F86BFD /* closed-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-nor-census.rga"; sourceTree = "<group>"; };
 		05A47F991809CB7600F86BFD /* closed-or-census-large.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census-large.rga"; sourceTree = "<group>"; };
@@ -1952,6 +1955,8 @@
 			children = (
 				050313C21812DB1E007F0CBE /* DefaultViewController.h */,
 				050313C31812DB1E007F0CBE /* DefaultViewController.mm */,
+				0591011C181364BB000A8D16 /* NewSurfacesController.h */,
+				0591011D181364BB000A8D16 /* NewSurfacesController.m */,
 				050313BF1812DB06007F0CBE /* TextViewController.h */,
 				050313C01812DB06007F0CBE /* TextViewController.mm */,
 				05D0A10E1812F0BE005ED097 /* TriangulationViewController.h */,
@@ -3884,6 +3889,7 @@
 				052FA1CE1806129B00FAE4DF /* nstandardtri.cpp in Sources */,
 				052FA1F21806129B00FAE4DF /* homology.cpp in Sources */,
 				052FA1A41806129B00FAE4DF /* numbertheory.cpp in Sources */,
+				0591011E181364BB000A8D16 /* NewSurfacesController.m in Sources */,
 				052FA1911806129B00FAE4DF /* nhandlebody.cpp in Sources */,
 				052FA1CF1806129B00FAE4DF /* ntrisolidtorus.cpp in Sources */,
 				052FA1BE1806129B00FAE4DF /* nlayeredloop.cpp in Sources */,
