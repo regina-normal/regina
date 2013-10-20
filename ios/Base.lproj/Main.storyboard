@@ -723,15 +723,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jF5-Gz-ezP">
-                                <rect key="frame" x="0.0" y="719" width="703" height="49"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <items>
-                                    <tabBarItem title="Gluings" id="mna-Z3-7B5"/>
-                                    <tabBarItem title="Algebra" id="GVu-o4-nMw"/>
-                                </items>
-                            </tabBar>
                             <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fKv-vf-i8k">
                                 <rect key="frame" x="0.0" y="0.0" width="703" height="719"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -740,6 +731,15 @@
                                     <segue destination="bVZ-NW-daJ" kind="embed" id="8cT-sP-jPg"/>
                                 </connections>
                             </containerView>
+                            <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jF5-Gz-ezP">
+                                <rect key="frame" x="0.0" y="719" width="703" height="49"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <items>
+                                    <tabBarItem title="Gluings" image="Gluings" id="mna-Z3-7B5"/>
+                                    <tabBarItem title="Algebra" image="Algebra" id="GVu-o4-nMw"/>
+                                </items>
+                            </tabBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -872,10 +872,12 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Algebra" width="25" height="25"/>
         <image name="Angles" width="32" height="32"/>
         <image name="Container" width="32" height="32"/>
         <image name="Dim2Triangulation" width="32" height="32"/>
         <image name="Filter" width="32" height="32"/>
+        <image name="Gluings" width="25" height="25"/>
         <image name="ReginaLarge" width="310" height="310"/>
         <image name="Subtree" width="32" height="32"/>
         <image name="Surfaces" width="32" height="32"/>
