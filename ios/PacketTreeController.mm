@@ -32,13 +32,14 @@
 
 #import "DetailViewController.h"
 #import "NewPacketMenu.h"
-#import "NewSurfacesController.h" // TODO: Subclass
+#import "NewSurfacesController.h"
 #import "PacketManagerIOS.h"
 #import "PacketTreeController.h"
 
 #import "file/nxmlfile.h"
 #import "packet/npacket.h"
 #import "packet/ncontainer.h"
+#import "packet/ntext.h"
 
 #pragma mark Packet tree row
 
@@ -168,9 +169,29 @@
     if (_newPacketPopover)
         [_newPacketPopover dismissPopoverAnimated:NO];
 
-    // TODO: pick a segue identifier to match the cell that was selected.
     // TODO: Trap situations where we can't create the new packet.
+    // TODO: View the new packet immediately.
+    // TODO: Replace calls to refreshPackets with a listener-based mechanism.
     switch (type) {
+        case regina::PACKET_CONTAINER:
+        {
+            // We can do this immediately, no input required.
+            regina::NContainer* c = new regina::NContainer();
+            c->setPacketLabel("Container");
+            _node->insertChildLast(c);
+            [self refreshPackets];
+            break;
+        }
+        case regina::PACKET_TEXT:
+        {
+            // We can do this immediately, no input required.
+            regina::NText* t = new regina::NText();
+            t->setPacketLabel("Text");
+            t->setText("Type your text here...");
+            _node->insertChildLast(t);
+            [self refreshPackets];
+            break;
+        }
         case regina::PACKET_NORMALSURFACELIST:
             [self performSegueWithIdentifier:@"newSurfaces" sender:self];
             break;
