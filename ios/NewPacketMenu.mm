@@ -32,6 +32,74 @@
 
 #import "NewPacketMenu.h"
 #import "PacketTreeController.h"
+#import "packet/packettype.h"
+
+#pragma mark - NewPacketRow
+
+// The internal global array of all available packet types.
+// This will be created the first time it is required.
+static NSArray* _allRows;
+
+@interface NewPacketRow : NSObject 
+
+@property (strong, nonatomic, readonly) NSString* label;
+@property (strong, nonatomic, readonly) NSString* icon;
+@property (assign, nonatomic, readonly) regina::PacketType type;
+
+- (id)initFor:(regina::PacketType)type label:(NSString*)l icon:(NSString*)i;
++ (id)rowFor:(regina::PacketType)type label:(NSString*)l icon:(NSString*)i;
++ (NSArray*)all;
+
+@end
+
+@implementation NewPacketRow
+
+- (id)initFor:(regina::PacketType)type label:(NSString *)l icon:(NSString *)i {
+    self = [super init];
+    if (self) {
+        _type = type;
+        _label = l;
+        _icon = i;
+    }
+    return self;
+}
+
++ (id)rowFor:(regina::PacketType)type label:(NSString *)l icon:(NSString *)i {
+    return [[NewPacketRow alloc] initFor:type label:l icon:i];
+}
+
++ (NSArray *)all {
+    if (! _allRows)
+        _allRows = [NSArray arrayWithObjects:
+                    [NewPacketRow rowFor:regina::PACKET_CONTAINER
+                                   label:@"Container"
+                                    icon:@"Container"],
+                    [NewPacketRow rowFor:regina::PACKET_DIM2TRIANGULATION
+                                   label:@"2-D triangulation"
+                                    icon:@"Dim2Triangulation"],
+                    [NewPacketRow rowFor:regina::PACKET_TRIANGULATION
+                                   label:@"3-D triangulation"
+                                    icon:@"Triangulation"],
+                    [NewPacketRow rowFor:regina::PACKET_NORMALSURFACELIST
+                                   label:@"Normal surfaces"
+                                    icon:@"Surfaces"],
+                    [NewPacketRow rowFor:regina::PACKET_ANGLESTRUCTURELIST
+                                   label:@"Angle structures"
+                                    icon:@"Angles"],
+                    [NewPacketRow rowFor:regina::PACKET_SURFACEFILTER
+                                   label:@"Surface filter"
+                                    icon:@"Filter"],
+                    [NewPacketRow rowFor:regina::PACKET_TEXT
+                                   label:@"Text"
+                                    icon:@"Text"],
+                    nil];
+    return _allRows;
+}
+
+@end
+
+
+#pragma mark - NewPacketMenu
 
 @interface NewPacketMenu ()
 
@@ -67,6 +135,26 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark Table view
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [NewPacketRow all].count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    // By the time we reach this point, the global array will have already been created.
+    NewPacketRow* row = _allRows[indexPath.row];
+
+    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"Entry" forIndexPath:indexPath];
+    cell.textLabel.text = row.label;
+    cell.imageView.image = [UIImage imageNamed:row.icon];
+    return cell;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
