@@ -39,6 +39,8 @@
 #import "packet/npacket.h"
 #import "packet/ncontainer.h"
 
+#pragma mark Packet tree row
+
 @interface PacketTreeRow : NSObject
 
 @property (assign, nonatomic, readonly) regina::NPacket* packet;
@@ -66,10 +68,13 @@
 
 @end
 
+#pragma mark - Packet tree controller
+
 @interface PacketTreeController () {
     NSMutableArray *_rows;
     NSInteger _subtreeRow;
     DetailViewController *_detail;
+    __weak UIPopoverController* _newPacketPopover;
 }
 
 @property (assign, nonatomic) regina::NPacket* tree;
@@ -253,6 +258,19 @@
     [self viewPacket:r.packet];
 }
 
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    // Note that _newPacketPopover is a zeroing weak reference, and will
+    // automagically return to nil when the popover is dismissed.
+    if ([identifier isEqualToString:@"newPacket"] && _newPacketPopover) {
+        // The popover is already visible.
+        // Instead of showing it, we should dismiss it (since the button
+        // was pressed a second time).
+        [_newPacketPopover dismissPopoverAnimated:NO];
+        return NO;
+    }
+    return YES;
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"openSubtree"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
@@ -266,8 +284,8 @@
         [[segue destinationViewController] openSubtree:[_rows[packetIndex] packet] root:_tree];
         [[segue destinationViewController] refreshPackets];
     } else if ([[segue identifier] isEqualToString:@"newPacket"]) {
-        ((NewPacketController*)segue.destinationViewController).seguePopoverController =
-            [(UIStoryboardPopoverSegue*)segue popoverController];
+        _newPacketPopover = [(UIStoryboardPopoverSegue*)segue popoverController];
+        ((NewPacketController*)segue.destinationViewController).seguePopoverController = _newPacketPopover;
     }
 }
 
