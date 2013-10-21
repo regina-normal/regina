@@ -50,10 +50,23 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)addAutoLayoutConstraints:(UIView*)subView {
+    NSDictionary *views = NSDictionaryOfVariableBindings(subView);
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[subView]|"
+                                                                      options:0
+                                                                      metrics:nil
+                                                                        views:views]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subView]|"
+                                                                      options:0
+                                                                      metrics:nil
+                                                                        views:views]];
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     UIViewController* to = segue.destinationViewController;
-
-    to.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    
+    // Switch off autoresizing now, so we can safely add autolayout constraints later.
+    to.view.translatesAutoresizingMaskIntoConstraints = NO;
 
     if (self.childViewControllers.count > 0) {
         UIViewController* from = [self.childViewControllers objectAtIndex:0];
@@ -67,11 +80,13 @@
                                 animations:nil
                                 completion:^(BOOL finished) {
                                     [from removeFromParentViewController];
+                                    [self addAutoLayoutConstraints:to.view];
                                     [to didMoveToParentViewController:self];
-                                }]; // TODO: Necessary?
+                                }];
     } else {
         [self addChildViewController:to];
         [self.view addSubview:to.view];
+        [self addAutoLayoutConstraints:to.view];
         [to didMoveToParentViewController:self];
     }
 }
