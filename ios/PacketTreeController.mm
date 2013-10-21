@@ -33,6 +33,7 @@
 #import "DetailViewController.h"
 #import "NewPacketController.h"
 #import "NewPacketMenu.h"
+#import "PacketListenerIOS.h"
 #import "PacketManagerIOS.h"
 #import "PacketTreeController.h"
 
@@ -145,11 +146,36 @@
 
 @end
 
+#pragma mark - Custom packet listener
+
+@interface PacketTreeListener : PacketListenerIOS {
+    PacketTreeController* _tree;
+}
+- (id)initWithTree:(PacketTreeController*)tree;
+@end
+
+@implementation PacketTreeListener
+
+- (id)initWithTree:(PacketTreeController *)tree {
+    self = [super init];
+    if (self)
+        _tree = tree;
+    return self;
+}
+
+- (void)childWasAddedTo:(regina::NPacket*)packet child:(regina::NPacket*)child {
+    // TODO
+    [_tree refreshPackets];
+}
+
+@end
+
 #pragma mark - Packet tree controller
 
 @interface PacketTreeController () {
     NSMutableArray *_rows;
     NSInteger _subtreeRow;
+    PacketListenerIOS* _listener;
     NewPacketSpec *_newPacketSpec;
     __weak UIPopoverController* _newPacketPopover;
 }
@@ -201,12 +227,18 @@
 - (void)openExample:(Example*)e {
     [self loadTreeResource:e.file];
     // TODO: Trap errors.
+
+    _listener = [[PacketTreeListener alloc] initWithTree:self];
+    [_listener listen:_node];
 }
 
 - (void)openSubtree:(regina::NPacket *)p root:(regina::NPacket*)r {
     _tree = r;
     _node = p;
     [self setTitle:[NSString stringWithUTF8String:p->getPacketLabel().c_str()]];
+
+    _listener = [[PacketTreeListener alloc] initWithTree:self];
+    [_listener listen:_node];
 }
 
 - (bool)loadTreeResource:(NSString*)filename {
@@ -270,7 +302,6 @@
             regina::NContainer* c = new regina::NContainer();
             c->setPacketLabel("Container");
             _node->insertChildLast(c);
-            [self refreshPackets];
             break;
         }
         case regina::PACKET_TEXT:
@@ -280,7 +311,6 @@
             t->setPacketLabel("Text");
             t->setText("Type your text here...");
             _node->insertChildLast(t);
-            [self refreshPackets];
             break;
         }
         case regina::PACKET_NORMALSURFACELIST:

@@ -927,6 +927,7 @@
 		0589FAC61814862B0064CD57 /* TriangulationSubcontroller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0589FAC51814862B0064CD57 /* TriangulationSubcontroller.mm */; };
 		0589FAC818148F700064CD57 /* sample-ios.rga in Resources */ = {isa = PBXBuildFile; fileRef = 0589FAC718148F700064CD57 /* sample-ios.rga */; };
 		0589FAC918148FFC0064CD57 /* sample-ios.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0589FAC718148F700064CD57 /* sample-ios.rga */; };
+		0589FACC1814BECF0064CD57 /* PacketListenerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0589FACB1814BECF0064CD57 /* PacketListenerIOS.mm */; };
 		059101151812F349000A8D16 /* DetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101141812F349000A8D16 /* DetailViewController.mm */; };
 		059101181812F4C9000A8D16 /* PacketSubcontroller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101171812F4C9000A8D16 /* PacketSubcontroller.mm */; };
 		0591011B1813230A000A8D16 /* NewPacketMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011A1813230A000A8D16 /* NewPacketMenu.mm */; };
@@ -1863,7 +1864,9 @@
 		0589FAC2181484860064CD57 /* TriGluingsViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriGluingsViewController.mm; sourceTree = "<group>"; };
 		0589FAC41814862B0064CD57 /* TriangulationSubcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriangulationSubcontroller.h; sourceTree = "<group>"; };
 		0589FAC51814862B0064CD57 /* TriangulationSubcontroller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriangulationSubcontroller.mm; sourceTree = "<group>"; };
-		0589FAC718148F700064CD57 /* sample-ios.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "sample-ios.rga"; sourceTree = "<group>"; };
+		0589FAC718148F700064CD57 /* sample-ios.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-ios.rga"; sourceTree = "<group>"; };
+		0589FACA1814BECF0064CD57 /* PacketListenerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketListenerIOS.h; sourceTree = "<group>"; };
+		0589FACB1814BECF0064CD57 /* PacketListenerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketListenerIOS.mm; sourceTree = "<group>"; };
 		059101131812F349000A8D16 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		059101141812F349000A8D16 /* DetailViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DetailViewController.mm; sourceTree = "<group>"; };
 		059101161812F4C9000A8D16 /* PacketSubcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketSubcontroller.h; sourceTree = "<group>"; };
@@ -2906,6 +2909,8 @@
 				0591012018141996000A8D16 /* NewPacketController.mm */,
 				059101191813230A000A8D16 /* NewPacketMenu.h */,
 				0591011A1813230A000A8D16 /* NewPacketMenu.mm */,
+				0589FACA1814BECF0064CD57 /* PacketListenerIOS.h */,
+				0589FACB1814BECF0064CD57 /* PacketListenerIOS.mm */,
 				0523D888180B54850094DAAD /* PacketManagerIOS.h */,
 				0523D889180B54850094DAAD /* PacketManagerIOS.mm */,
 				059101161812F4C9000A8D16 /* PacketSubcontroller.h */,
@@ -3765,6 +3770,7 @@
 				052FA1961806129B00FAE4DF /* nsimplesurfacebundle.cpp in Sources */,
 				052FA2051806129B00FAE4DF /* subdivide.cpp in Sources */,
 				052FA19E1806129B00FAE4DF /* nperm3.cpp in Sources */,
+				0589FACC1814BECF0064CD57 /* PacketListenerIOS.mm in Sources */,
 				052FA211180612DD00FAE4DF /* canonize.c in Sources */,
 				052FA1F51806129B00FAE4DF /* insertlayered.cpp in Sources */,
 				059101181812F4C9000A8D16 /* PacketSubcontroller.mm in Sources */,
