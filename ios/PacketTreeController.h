@@ -38,6 +38,8 @@ namespace regina {
     class NPacket;
 }
 
+@class DetailViewController;
+
 @interface NewPacketSpec : NSObject
 
 @property (assign, nonatomic, readonly) regina::PacketType type;
@@ -52,6 +54,10 @@ namespace regina {
 
 @interface PacketTreeController : UITableViewController
 
+@property (assign, nonatomic, readonly) regina::NPacket* tree;
+@property (assign, nonatomic, readonly) regina::NPacket* node;
+
+- (DetailViewController *)detail;
 - (void)openExample:(Example*)e;
 - (void)openSubtree:(regina::NPacket*)p root:(regina::NPacket*)r;
 - (void)refreshPackets;

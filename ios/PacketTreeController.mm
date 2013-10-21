@@ -158,12 +158,26 @@
 
 - (id)initWithTree:(PacketTreeController *)tree {
     self = [super init];
-    if (self)
+    if (self) {
         _tree = tree;
+        
+        // Listen on both the subtree root and its immediate children.
+        [self listen:_tree.node];
+        
+        for (regina::NPacket* p = _tree.node->getFirstTreeChild(); p; p = p->getNextTreeSibling())
+            [self listen:p];
+    }
     return self;
 }
 
 - (void)childWasAddedTo:(regina::NPacket*)packet child:(regina::NPacket*)child {
+    // TODO
+    [_tree refreshPackets];
+    if (packet == _tree.node)
+        [self listen:child];
+}
+
+- (void)packetWasRenamed:(regina::NPacket *)packet {
     // TODO
     [_tree refreshPackets];
 }
@@ -177,12 +191,9 @@
     NSInteger _subtreeRow;
     PacketListenerIOS* _listener;
     NewPacketSpec *_newPacketSpec;
+    __weak DetailViewController* _detail;
     __weak UIPopoverController* _newPacketPopover;
 }
-
-@property (assign, nonatomic) regina::NPacket* tree;
-@property (assign, nonatomic) regina::NPacket* node;
-@property (weak, nonatomic) DetailViewController *detail;
 
 - (bool)loadTreeResource:(NSString*)filename;
 - (void)fill;
@@ -229,7 +240,6 @@
     // TODO: Trap errors.
 
     _listener = [[PacketTreeListener alloc] initWithTree:self];
-    [_listener listen:_node];
 }
 
 - (void)openSubtree:(regina::NPacket *)p root:(regina::NPacket*)r {
@@ -238,7 +248,6 @@
     [self setTitle:[NSString stringWithUTF8String:p->getPacketLabel().c_str()]];
 
     _listener = [[PacketTreeListener alloc] initWithTree:self];
-    [_listener listen:_node];
 }
 
 - (bool)loadTreeResource:(NSString*)filename {
