@@ -10,6 +10,10 @@
 		050313C11812DB06007F0CBE /* TextViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C01812DB06007F0CBE /* TextViewController.mm */; };
 		050313C41812DB1E007F0CBE /* DefaultViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C31812DB1E007F0CBE /* DefaultViewController.mm */; };
 		050313C71812DDF0007F0CBE /* PacketViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C61812DDF0007F0CBE /* PacketViewController.mm */; };
+		05062FB618169F06008A20A5 /* nboundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB418169F06008A20A5 /* nboundarycomponent.cpp */; };
+		05062FB718169F06008A20A5 /* nboundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB418169F06008A20A5 /* nboundarycomponent.cpp */; };
+		05062FB818169F06008A20A5 /* ncomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB518169F06008A20A5 /* ncomponent.cpp */; };
+		05062FB918169F06008A20A5 /* ncomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB518169F06008A20A5 /* ncomponent.cpp */; };
 		0513753D1809B8D3002E525B /* coordregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753B1809B8D2002E525B /* coordregistry-impl.h */; };
 		0513753E1809B8D3002E525B /* coordregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753C1809B8D2002E525B /* coordregistry.h */; };
 		051806D4181202BD008EBB01 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 051806D3181202BD008EBB01 /* icons */; };
@@ -999,6 +1003,8 @@
 		050313C31812DB1E007F0CBE /* DefaultViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DefaultViewController.mm; sourceTree = "<group>"; };
 		050313C51812DDF0007F0CBE /* PacketViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketViewController.h; sourceTree = "<group>"; };
 		050313C61812DDF0007F0CBE /* PacketViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketViewController.mm; sourceTree = "<group>"; };
+		05062FB418169F06008A20A5 /* nboundarycomponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nboundarycomponent.cpp; sourceTree = "<group>"; };
+		05062FB518169F06008A20A5 /* ncomponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ncomponent.cpp; sourceTree = "<group>"; };
 		0513753B1809B8D2002E525B /* coordregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "coordregistry-impl.h"; sourceTree = "<group>"; };
 		0513753C1809B8D2002E525B /* coordregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coordregistry.h; sourceTree = "<group>"; };
 		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = src/icons; sourceTree = "<group>"; };
@@ -2664,7 +2670,9 @@
 				052F9E37180600FB00FAE4DF /* hydrate.cpp */,
 				052F9E38180600FB00FAE4DF /* insertlayered.cpp */,
 				052F9E39180600FB00FAE4DF /* isomorphic.cpp */,
+				05062FB418169F06008A20A5 /* nboundarycomponent.cpp */,
 				052F9E3A180600FB00FAE4DF /* nboundarycomponent.h */,
+				05062FB518169F06008A20A5 /* ncomponent.cpp */,
 				052F9E3B180600FB00FAE4DF /* ncomponent.h */,
 				052F9E3C180600FB00FAE4DF /* nedge.cpp */,
 				052F9E3D180600FB00FAE4DF /* nedge.h */,
@@ -3755,6 +3763,7 @@
 				052FA1E31806129B00FAE4DF /* nsstandard.cpp in Sources */,
 				052FA1E61806129B00FAE4DF /* nxmlfilterreader.cpp in Sources */,
 				052FA1811806129B00FAE4DF /* ntypetrie.cpp in Sources */,
+				05062FB718169F06008A20A5 /* nboundarycomponent.cpp in Sources */,
 				052FA1D11806129B00FAE4DF /* ntxicore.cpp in Sources */,
 				052FA1751806129B00FAE4DF /* dim2triangle.cpp in Sources */,
 				052FA1E01806129B00FAE4DF /* nsorientedquad.cpp in Sources */,
@@ -3790,6 +3799,7 @@
 				052FA21E180612DD00FAE4DF /* cusp_shapes.c in Sources */,
 				052FA231180612DD00FAE4DF /* precision.c in Sources */,
 				052FA1871806129B00FAE4DF /* dehydration.cpp in Sources */,
+				05062FB918169F06008A20A5 /* ncomponent.cpp in Sources */,
 				052FA21D180612DD00FAE4DF /* cusp_neighborhoods.c in Sources */,
 				052FA1EC1806129B00FAE4DF /* sfproperties.cpp in Sources */,
 				052FA1E91806129B00FAE4DF /* orientable.cpp in Sources */,
@@ -4195,6 +4205,7 @@
 				052F9F34180600FB00FAE4DF /* ntorusbundle.cpp in Sources */,
 				052F9F6C180600FB00FAE4DF /* canonize.c in Sources */,
 				052F9FFA180600FB00FAE4DF /* nlayeredsolidtorus.cpp in Sources */,
+				05062FB818169F06008A20A5 /* ncomponent.cpp in Sources */,
 				052F9FDE180600FB00FAE4DF /* snappy_gluing_equations.c in Sources */,
 				052F9FFC180600FB00FAE4DF /* nlayeredsurfacebundle.cpp in Sources */,
 				052F9F89180600FB00FAE4DF /* interface.c in Sources */,
@@ -4240,6 +4251,7 @@
 				052F9F88180600FB00FAE4DF /* identify_solution_type.c in Sources */,
 				052F9F82180600FB00FAE4DF /* finite_vertices.c in Sources */,
 				052F9F8A180600FB00FAE4DF /* intersection_numbers.c in Sources */,
+				05062FB618169F06008A20A5 /* nboundarycomponent.cpp in Sources */,
 				052F9F7A180600FB00FAE4DF /* cusp_neighborhoods.c in Sources */,
 				052F9F27180600FB00FAE4DF /* nlensspace.cpp in Sources */,
 				052F9F14180600FB00FAE4DF /* recogniser.cpp in Sources */,
