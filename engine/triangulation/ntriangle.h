@@ -353,6 +353,7 @@ class REGINA_API NTriangle : public ShareableObject, public NMarkedElement {
         NPerm4 getEdgeMapping(int edge) const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
