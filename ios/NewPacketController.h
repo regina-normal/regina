@@ -44,8 +44,8 @@ namespace regina {
 @property (weak, nonatomic, readonly) PacketTreeController* tree;
 @property (assign, nonatomic, readonly) regina::PacketType type;
 
-- (id)initFor:(regina::PacketType)t tree:(PacketTreeController*)t;
-+ (id)specFor:(regina::PacketType)t tree:(PacketTreeController*)t;
+- (id)initWithType:(regina::PacketType)t tree:(PacketTreeController*)t;
++ (id)specWithType:(regina::PacketType)t tree:(PacketTreeController*)t;
 - (regina::NPacket*)parent;
 - (regina::NPacket*)parentWithAlert:(BOOL)alert;
 

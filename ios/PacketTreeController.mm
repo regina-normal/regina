@@ -223,7 +223,7 @@
     if (_newPacketPopover)
         [_newPacketPopover dismissPopoverAnimated:NO];
 
-    _newPacketSpec = [NewPacketSpec specFor:type tree:self];
+    _newPacketSpec = [NewPacketSpec specWithType:type tree:self];
     if (! [_newPacketSpec parentWithAlert:YES]) {
         [self newPacketCancelled:_newPacketSpec];
         return;

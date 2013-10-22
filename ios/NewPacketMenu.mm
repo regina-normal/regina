@@ -46,15 +46,15 @@ static NSArray* _allRows;
 @property (strong, nonatomic, readonly) NSString* icon;
 @property (assign, nonatomic, readonly) regina::PacketType type;
 
-- (id)initFor:(regina::PacketType)type label:(NSString*)l icon:(NSString*)i;
-+ (id)rowFor:(regina::PacketType)type label:(NSString*)l icon:(NSString*)i;
+- (id)initWithType:(regina::PacketType)type label:(NSString*)l icon:(NSString*)i;
++ (id)rowWithType:(regina::PacketType)type label:(NSString*)l icon:(NSString*)i;
 + (NSArray*)all;
 
 @end
 
 @implementation NewPacketRow
 
-- (id)initFor:(regina::PacketType)type label:(NSString *)l icon:(NSString *)i {
+- (id)initWithType:(regina::PacketType)type label:(NSString *)l icon:(NSString *)i {
     self = [super init];
     if (self) {
         _type = type;
@@ -64,34 +64,34 @@ static NSArray* _allRows;
     return self;
 }
 
-+ (id)rowFor:(regina::PacketType)type label:(NSString *)l icon:(NSString *)i {
-    return [[NewPacketRow alloc] initFor:type label:l icon:i];
++ (id)rowWithType:(regina::PacketType)type label:(NSString *)l icon:(NSString *)i {
+    return [[NewPacketRow alloc] initWithType:type label:l icon:i];
 }
 
 + (NSArray *)all {
     if (! _allRows)
         _allRows = [NSArray arrayWithObjects:
-                    [NewPacketRow rowFor:regina::PACKET_CONTAINER
-                                   label:@"Container"
-                                    icon:@"Container"],
-                    [NewPacketRow rowFor:regina::PACKET_DIM2TRIANGULATION
-                                   label:@"2-D triangulation"
-                                    icon:@"Dim2Triangulation"],
-                    [NewPacketRow rowFor:regina::PACKET_TRIANGULATION
-                                   label:@"3-D triangulation"
-                                    icon:@"Triangulation"],
-                    [NewPacketRow rowFor:regina::PACKET_NORMALSURFACELIST
-                                   label:@"Normal surfaces"
-                                    icon:@"Surfaces"],
-                    [NewPacketRow rowFor:regina::PACKET_ANGLESTRUCTURELIST
-                                   label:@"Angle structures"
-                                    icon:@"Angles"],
-                    [NewPacketRow rowFor:regina::PACKET_SURFACEFILTER
-                                   label:@"Surface filter"
-                                    icon:@"Filter"],
-                    [NewPacketRow rowFor:regina::PACKET_TEXT
-                                   label:@"Text"
-                                    icon:@"Text"],
+                    [NewPacketRow rowWithType:regina::PACKET_CONTAINER
+                                        label:@"Container"
+                                         icon:@"Container"],
+                    [NewPacketRow rowWithType:regina::PACKET_DIM2TRIANGULATION
+                                        label:@"2-D triangulation"
+                                         icon:@"Dim2Triangulation"],
+                    [NewPacketRow rowWithType:regina::PACKET_TRIANGULATION
+                                        label:@"3-D triangulation"
+                                         icon:@"Triangulation"],
+                    [NewPacketRow rowWithType:regina::PACKET_NORMALSURFACELIST
+                                        label:@"Normal surfaces"
+                                        icon:@"Surfaces"],
+                    [NewPacketRow rowWithType:regina::PACKET_ANGLESTRUCTURELIST
+                                        label:@"Angle structures"
+                                         icon:@"Angles"],
+                    [NewPacketRow rowWithType:regina::PACKET_SURFACEFILTER
+                                        label:@"Surface filter"
+                                         icon:@"Filter"],
+                    [NewPacketRow rowWithType:regina::PACKET_TEXT
+                                        label:@"Text"
+                                         icon:@"Text"],
                     nil];
     return _allRows;
 }

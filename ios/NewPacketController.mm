@@ -56,7 +56,7 @@
 
 @implementation NewPacketSpec
 
-- (id)initFor:(regina::PacketType)type tree:(PacketTreeController *)t {
+- (id)initWithType:(regina::PacketType)type tree:(PacketTreeController *)t {
     self = [super init];
     if (self) {
         _type = type;
@@ -67,8 +67,8 @@
     return self;
 }
 
-+ (id)specFor:(regina::PacketType)type tree:(PacketTreeController *)t {
-    return [[NewPacketSpec alloc] initFor:type tree:t];
++ (id)specWithType:(regina::PacketType)type tree:(PacketTreeController *)t {
+    return [[NewPacketSpec alloc] initWithType:type tree:t];
 }
 
 - (regina::NPacket*)parent {
