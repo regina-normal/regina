@@ -39,6 +39,7 @@
 @property (weak, nonatomic) IBOutlet UITabBar *tabs;
 @property (weak, nonatomic) IBOutlet UITabBarItem *gluingTab;
 @property (weak, nonatomic) IBOutlet UITabBarItem *algebraTab;
+@property (weak, nonatomic) IBOutlet UITabBarItem *snapPeaTab;
 @end
 
 @implementation TriangulationViewController
@@ -50,6 +51,8 @@
     // regina::NTriangulation* t = (regina::NTriangulation*)self.packet;
 
     _gluingTab.selectedImage = [UIImage imageNamed:@"Gluings-Bold"];
+    _snapPeaTab.selectedImage = [UIImage imageNamed:@"SnapPea-Bold"];
+    
     _tabs.selectedItem = _gluingTab;
     
     [_sub performSegueWithIdentifier:@"triGluings" sender:nil];

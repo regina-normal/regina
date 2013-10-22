@@ -665,6 +665,7 @@
                                 <items>
                                     <tabBarItem title="Gluings" image="Gluings" id="mna-Z3-7B5"/>
                                     <tabBarItem title="Algebra" image="Algebra" id="GVu-o4-nMw"/>
+                                    <tabBarItem title="SnapPea" image="SnapPea" id="ckS-BX-sXn"/>
                                 </items>
                             </tabBar>
                         </subviews>
@@ -686,6 +687,7 @@
                     <connections>
                         <outlet property="algebraTab" destination="GVu-o4-nMw" id="X5y-hU-gST"/>
                         <outlet property="gluingTab" destination="mna-Z3-7B5" id="mVi-Wk-xCD"/>
+                        <outlet property="snapPeaTab" destination="ckS-BX-sXn" id="u0K-Ln-9Ew"/>
                         <outlet property="tabs" destination="jF5-Gz-ezP" id="csh-PY-oy5"/>
                     </connections>
                 </viewController>
@@ -811,6 +813,7 @@
         <image name="Container" width="32" height="32"/>
         <image name="Gluings" width="25" height="25"/>
         <image name="ReginaLarge" width="310" height="310"/>
+        <image name="SnapPea" width="25" height="25"/>
         <image name="Subtree" width="32" height="32"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
