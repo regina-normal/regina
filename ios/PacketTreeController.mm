@@ -42,81 +42,6 @@
 #import "packet/ncontainer.h"
 #import "packet/ntext.h"
 
-#pragma mark - New packet specification
-
-@interface NewPacketSpec () {
-    /**
-     * The parent beneath which the new packet should be created.
-     * This will be set by parent or parentWithAlert.
-     */
-    regina::NPacket* _parent;
-    /**
-     * The subtree that is currently open in the master packet tree view.
-     */
-    regina::NPacket* _subtree;
-    /**
-     * The packet that we are currently viewing in the detail view.
-     */
-    regina::NPacket* _viewing;
-}
-@end
-
-@implementation NewPacketSpec
-
-- (id)initFor:(regina::PacketType)t subtree:(regina::NPacket *)s viewing:(regina::NPacket *)v {
-    self = [super init];
-    if (self) {
-        _type = t;
-        _subtree = s;
-        _viewing = v;
-    }
-    return self;
-}
-
-+ (id)specFor:(regina::PacketType)t subtree:(regina::NPacket *)s viewing:(regina::NPacket *)v {
-    return [[NewPacketSpec alloc] initFor:t subtree:s viewing:v];
-}
-
-- (regina::NPacket*)parent {
-    if (_parent)
-        return _parent;
-    else
-        return [self parentWithAlert:NO];
-}
-
-- (regina::NPacket*)parentWithAlert:(BOOL)alert {
-    if (_type == regina::PACKET_NORMALSURFACELIST || _type == regina::PACKET_ANGLESTRUCTURELIST) {
-        if (_viewing && _viewing->getPacketType() == regina::PACKET_TRIANGULATION)
-            _parent = _viewing;
-        else if (_subtree->getPacketType() == regina::PACKET_TRIANGULATION)
-            _parent = _subtree;
-        else {
-            if (alert) {
-                NSString *title, *msg;
-                if (_type == regina::PACKET_NORMALSURFACELIST) {
-                    title = @"Surfaces need a triangulation.";
-                    msg = @"Please select the triangulation in which I should enumerate normal surfaces.";
-                } else {
-                    title = @"Angle structures need a triangulation.";
-                    msg = @"Please select the triangulation in which I should enumerate angle structures.";
-                }
-                _parent = 0;
-                UIAlertView *a = [[UIAlertView alloc] initWithTitle:title
-                                                            message:msg
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"Close"
-                                                  otherButtonTitles:nil];
-                [a show];
-            }
-        }
-    } else
-        _parent = _subtree;
-    
-    return _parent;
-}
-
-@end
-
 #pragma mark - Packet tree row
 
 @interface PacketTreeRow : NSObject
@@ -297,10 +222,12 @@
 - (void)newPacket:(regina::PacketType)type {
     if (_newPacketPopover)
         [_newPacketPopover dismissPopoverAnimated:NO];
-    
-    _newPacketSpec = [NewPacketSpec specFor:type subtree:_node viewing:self.detail.packet];
-    if (! [_newPacketSpec parentWithAlert:YES])
+
+    _newPacketSpec = [NewPacketSpec specFor:type tree:self];
+    if (! [_newPacketSpec parentWithAlert:YES]) {
+        [self newPacketCancelled:_newPacketSpec];
         return;
+    }
 
     // TODO: View the new packet immediately.
     // TODO: Replace calls to refreshPackets with a listener-based mechanism.
@@ -311,6 +238,7 @@
             regina::NContainer* c = new regina::NContainer();
             c->setPacketLabel("Container");
             _node->insertChildLast(c);
+            [self newPacketCreated:_newPacketSpec packet:c];
             break;
         }
         case regina::PACKET_TEXT:
@@ -320,6 +248,7 @@
             t->setPacketLabel("Text");
             t->setText("Type your text here...");
             _node->insertChildLast(t);
+            [self newPacketCreated:_newPacketSpec packet:t];
             break;
         }
         case regina::PACKET_NORMALSURFACELIST:
@@ -332,8 +261,19 @@
                                                   cancelButtonTitle:@"Close"
                                                   otherButtonTitles:nil];
             [alert show];
+            [self newPacketCancelled:_newPacketSpec];
             break;
     }
+}
+
+- (void)newPacketCreated:(NewPacketSpec *)spec packet:(regina::NPacket *)p {
+    if (p->getPacketType() != regina::PACKET_CONTAINER)
+        [_detail viewPacket:p];
+    _newPacketSpec = nil;
+}
+
+- (void)newPacketCancelled:(NewPacketSpec *)spec {
+    _newPacketSpec = nil;
 }
 
 #pragma mark - Table View
@@ -464,7 +404,7 @@
     } else {
         // This must be one of the new packet segues.
         // Pass through the parent packet.
-        ((NewPacketController*)segue.destinationViewController).createBeneath = [_newPacketSpec parent];
+        ((NewPacketController*)segue.destinationViewController).spec = _newPacketSpec;
     }
 }
 

@@ -31,13 +31,31 @@
  **************************************************************************/
 
 #import <Foundation/Foundation.h>
+#import "packet/packettype.h"
 
 namespace regina {
     class NPacket;
 }
 
+@class PacketTreeController;
+
+@interface NewPacketSpec : NSObject
+
+@property (weak, nonatomic, readonly) PacketTreeController* tree;
+@property (assign, nonatomic, readonly) regina::PacketType type;
+
+- (id)initFor:(regina::PacketType)t tree:(PacketTreeController*)t;
++ (id)specFor:(regina::PacketType)t tree:(PacketTreeController*)t;
+- (regina::NPacket*)parent;
+- (regina::NPacket*)parentWithAlert:(BOOL)alert;
+
+@end
+
 @interface NewPacketController : UIViewController
 
-@property (assign, nonatomic) regina::NPacket* createBeneath;
+@property (strong, nonatomic) NewPacketSpec* spec;
+
+- (void)reportCreated:(regina::NPacket*)p;
+- (void)reportCancelled;
 
 @end

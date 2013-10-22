@@ -69,8 +69,8 @@ NSArray* embText;
     if (! whichText)
         [NewSurfacesController initArrays];
     
-    if (self.createBeneath)
-        _triangulation.text = [NSString stringWithUTF8String:self.createBeneath->getPacketLabel().c_str()];
+    if (self.spec.parent)
+        _triangulation.text = [NSString stringWithUTF8String:self.spec.parent->getPacketLabel().c_str()];
     
     // Update the description labels.
     [self whichChanged:nil];
@@ -97,6 +97,8 @@ NSArray* embText;
         _tracker.cancel();
     } else
         [self dismissViewControllerAnimated:YES completion:nil];
+    
+    [self reportCancelled];
 }
 
 - (void)updateProgress {
@@ -162,7 +164,7 @@ NSArray* embText;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NNormalSurfaceList* ans =
-            NNormalSurfaceList::enumerate((regina::NTriangulation*)self.createBeneath,
+            NNormalSurfaceList::enumerate((regina::NTriangulation*)self.spec.parent,
                                           coords, which, regina::NS_ALG_DEFAULT, &_tracker);
         while (! _tracker.isFinished()) {
             if (_tracker.percentChanged()) {
@@ -181,9 +183,10 @@ NSArray* embText;
                                                       cancelButtonTitle:@"Close"
                                                       otherButtonTitles:nil];
                 [alert show];
+                [self reportCancelled];
             } else {
                 ans->setPacketLabel("Normal surfaces");
-                // TODO: View the results in the packet tree / detail area.
+                [self reportCreated:ans];
             }
             [self dismissViewControllerAnimated:YES completion:nil];
         });

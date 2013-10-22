@@ -30,8 +30,97 @@
  *                                                                        *
  **************************************************************************/
 
+#import "DetailViewController.h"
 #import "NewPacketController.h"
+#import "PacketTreeController.h"
+#import "packet/npacket.h"
+
+#pragma mark - New packet specification
+
+@interface NewPacketSpec () {
+    /**
+     * The parent beneath which the new packet should be created.
+     * This will be set by parent or parentWithAlert.
+     */
+    regina::NPacket* _parent;
+    /**
+     * The subtree that is currently open in the master packet tree view.
+     */
+    regina::NPacket* _subtree;
+    /**
+     * The packet that we are currently viewing in the detail view.
+     */
+    regina::NPacket* _viewing;
+}
+@end
+
+@implementation NewPacketSpec
+
+- (id)initFor:(regina::PacketType)type tree:(PacketTreeController *)t {
+    self = [super init];
+    if (self) {
+        _type = type;
+        _tree = t;
+        _subtree = t.node;
+        _viewing = t.detail.packet;
+    }
+    return self;
+}
+
++ (id)specFor:(regina::PacketType)type tree:(PacketTreeController *)t {
+    return [[NewPacketSpec alloc] initFor:type tree:t];
+}
+
+- (regina::NPacket*)parent {
+    if (_parent)
+        return _parent;
+    else
+        return [self parentWithAlert:NO];
+}
+
+- (regina::NPacket*)parentWithAlert:(BOOL)alert {
+    if (_type == regina::PACKET_NORMALSURFACELIST || _type == regina::PACKET_ANGLESTRUCTURELIST) {
+        if (_viewing && _viewing->getPacketType() == regina::PACKET_TRIANGULATION)
+            _parent = _viewing;
+        else if (_subtree->getPacketType() == regina::PACKET_TRIANGULATION)
+            _parent = _subtree;
+        else {
+            if (alert) {
+                NSString *title, *msg;
+                if (_type == regina::PACKET_NORMALSURFACELIST) {
+                    title = @"Surfaces need a triangulation.";
+                    msg = @"Please select the triangulation in which I should enumerate normal surfaces.";
+                } else {
+                    title = @"Angle structures need a triangulation.";
+                    msg = @"Please select the triangulation in which I should enumerate angle structures.";
+                }
+                _parent = 0;
+                UIAlertView *a = [[UIAlertView alloc] initWithTitle:title
+                                                            message:msg
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Close"
+                                                  otherButtonTitles:nil];
+                [a show];
+            }
+        }
+    } else
+        _parent = _subtree;
+    
+    return _parent;
+}
+
+@end
+
+#pragma mark - New packet controller
 
 @implementation NewPacketController
+
+- (void)reportCreated:(regina::NPacket *)p {
+    [_spec.tree newPacketCreated:_spec packet:p];
+}
+
+- (void)reportCancelled {
+    [_spec.tree newPacketCancelled:_spec];
+}
 
 @end

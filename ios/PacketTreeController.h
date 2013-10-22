@@ -39,18 +39,7 @@ namespace regina {
 }
 
 @class DetailViewController;
-
-@interface NewPacketSpec : NSObject
-
-@property (assign, nonatomic, readonly) regina::PacketType type;
-
-- (id)initFor:(regina::PacketType)t subtree:(regina::NPacket*)s viewing:(regina::NPacket*)v;
-+ (id)specFor:(regina::PacketType)t subtree:(regina::NPacket*)s viewing:(regina::NPacket*)v;
-- (regina::NPacket*)parent;
-- (regina::NPacket*)parentWithAlert:(BOOL)alert;
-
-@end
-
+@class NewPacketSpec;
 
 @interface PacketTreeController : UITableViewController
 
@@ -63,5 +52,8 @@ namespace regina {
 - (void)refreshPackets;
 - (void)viewPacket:(regina::NPacket*)p;
 - (void)newPacket:(regina::PacketType)type;
+
+- (void)newPacketCreated:(NewPacketSpec*)spec packet:(regina::NPacket*)p;
+- (void)newPacketCancelled:(NewPacketSpec*)spec;
 
 @end
