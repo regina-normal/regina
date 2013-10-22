@@ -28,10 +28,17 @@ Version 4.95  [ (under development) ]
             - Renamed getFace() and getNumberOfFaces() to getTriangle()
               and getNumberOfTriangles().  The old names are deprecated but
               have been kept for backward compatibility.
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of the constituent triangles or vertex.
         Class NComponent:
             - Renamed getFace() and getNumberOfFaces() to getTriangle()
               and getNumberOfTriangles().  The old names are deprecated but
               have been kept for backward compatibility.
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of the constituent tetrahedra.
+        Class NEdge:
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of where the edge appears in each tetrahedron.
         Struct NewNormalSurfaceVector:
             - Moved into registryutils.h and redesigned as the more general
               template struct NewFunction1<>.  The old type is equivalent to
@@ -134,6 +141,9 @@ Version 4.95  [ (under development) ]
             - Renamed getFace() and getFaceMapping() to getTriangle()
               and getTriangleMapping().  The old names are deprecated but
               have been kept for backward compatibility.
+        Class NTriangle:
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of where the triangle appears in each tetrahedron.
         Class NTriangulation:
             - New routines getNumberOfSimplices() and getSimplex(), which are
               dimension-agnostic aliases for getNumberOfTetrahedra() and
@@ -154,6 +164,8 @@ Version 4.95  [ (under development) ]
         Class NVertex:
             - Added buildLinkDetail(), which returns details of how triangles
               of the vertex link are embedded within individual tetrahedra.
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of where the vertex appears in each tetrahedron.
         Class PacketInfo:
             - Template classes that store traits of the various packet types.
               These are used with the new forPacket() template functions.

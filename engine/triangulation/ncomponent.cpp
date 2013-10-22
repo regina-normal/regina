@@ -32,54 +32,27 @@
 
 /* end stub */
 
-#include "triangulation/nedge.h"
+#include "triangulation/ncomponent.h"
+#include "triangulation/ntetrahedron.h"
 
 namespace regina {
 
-const int edgeNumber[4][4] = {
-    { -1, 0, 1, 2 },
-    {  0,-1, 3, 4 },
-    {  1, 3,-1, 5 },
-    {  2, 4, 5,-1 }};
+void NComponent::writeTextShort(std::ostream& out) const {
+    if (tetrahedra.size() == 1)
+        out << "Component with 1 tetrahedron";
+    else
+        out << "Component with " << getNumberOfTetrahedra() << " tetrahedra";
+}
 
-const int edgeStart[6] =
-    { 0, 0, 0, 1, 1, 2 };
-
-const int edgeEnd[6] =
-    { 1, 2, 3, 2, 3, 3 };
-
-const int NEdge::edgeNumber[4][4] = {
-    { -1, 0, 1, 2 },
-    {  0,-1, 3, 4 },
-    {  1, 3,-1, 5 },
-    {  2, 4, 5,-1 }};
-
-const int NEdge::edgeVertex[6][2] = {
-    { 0, 1 },
-    { 0, 2 },
-    { 0, 3 },
-    { 1, 2 },
-    { 1, 3 },
-    { 2, 3 }};
-
-const NPerm4 NEdge::ordering[6] = {
-    NPerm4(0, 1, 2, 3),
-    NPerm4(0, 2, 3, 1),
-    NPerm4(0, 3, 1, 2),
-    NPerm4(1, 2, 0, 3),
-    NPerm4(1, 3, 2, 0),
-    NPerm4(2, 3, 0, 1)
-};
-
-void NEdge::writeTextLong(std::ostream& out) const {
+void NComponent::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 
-    out << "Appears as:" << std::endl;
-    std::deque<NEdgeEmbedding>::const_iterator it;
-    for (it = embeddings.begin(); it != embeddings.end(); ++it)
-        out << "  " << it->getTetrahedron()->markedIndex()
-            << " (" << it->getVertices().trunc2() << ')' << std::endl;
+    out << (tetrahedra.size() == 1 ? "Tetrahedron" : "Tetrahedra:");
+    std::vector<NTetrahedron*>::const_iterator it;
+    for (it = tetrahedra.begin(); it != tetrahedra.end(); ++it)
+        out << ' ' << (*it)->markedIndex();
+    out << std::endl;
 }
 
 } // namespace regina
