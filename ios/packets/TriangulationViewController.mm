@@ -55,7 +55,7 @@
     
     _tabs.selectedItem = _gluingTab;
     
-    [_sub performSegueWithIdentifier:@"triGluings" sender:nil];
+    [_sub performSegueWithIdentifier:@"triDefault" sender:nil];
 }
 
 - (void)didReceiveMemoryWarning
