@@ -744,10 +744,10 @@
             </objects>
             <point key="canvasLocation" x="-366" y="2528"/>
         </scene>
-        <!--Tri Gluings View Controller-->
+        <!--Default View Controller-->
         <scene sceneID="1Hk-hZ-xO5">
             <objects>
-                <viewController id="Z2q-ft-yV7" customClass="TriGluingsViewController" sceneMemberID="viewController">
+                <viewController id="Z2q-ft-yV7" customClass="DefaultViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="eV1-KJ-fxO"/>
                         <viewControllerLayoutGuide type="bottom" id="bbk-W5-Bts"/>
