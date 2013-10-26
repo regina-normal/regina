@@ -32,6 +32,7 @@
  &data-angleparams;
  &data-compact-filter;
  &data-compact-surface;
+ &data-compressingdisc;
  &data-connected;
  &data-euler-filter;
  &data-euler-surface;
@@ -45,6 +46,7 @@
  &data-H1Bdry;
  &data-H1Rel;
  &data-H2;
+ &data-haken;
  &data-line;
  &data-op;
  &data-orbl-filter;
@@ -65,6 +67,7 @@
  &data-realbdry-surface;
  &data-reginadata;
  &data-reln;
+ &data-solidtorus;
  &data-spanstrict;
  &data-spantaut;
  &data-splitsfce;

@@ -216,6 +216,13 @@ class REGINA_API NTriangulation : public NPacket,
             /**< Is this a triangulation of a 3-dimensional ball? */
         mutable NProperty<bool> solidTorus;
             /**< Is this a triangulation of the solid torus? */
+        mutable NProperty<bool> compressingDisc;
+            /**< Does this 3-manifold contain a compressing disc? */
+        mutable NProperty<bool> haken;
+            /**< Is this 3-manifold Haken?
+                 This property must only be stored for triangulations
+                 that are known to represent closed, connected,
+                 orientable, irreducible 3-manifolds. */
 
         mutable TuraevViroSet turaevViroCache;
             /**< The set of Turaev-Viro invariants that have already
@@ -2416,15 +2423,21 @@ class REGINA_API NTriangulation : public NPacket,
          *
          * This routine will first call the heuristic routine
          * hasSimpleCompressingDisc() in the hope of obtaining a fast
-         * answer.  If this fails, it will run a full enumeration of
-         * vertex normal surfaces, which could be extremely slow.
-         * For further details on the underlying algorithms, see
-         * "The Weber-Seifert dodecahedral space is non-Haken",
-         * Benjamin A. Burton, J. Hyam Rubinstein and Stephan Tillmann,
-         * Trans. Amer. Math. Soc. 364:2 (2012), pp. 911-932; and
-         * "Algorithms for the complete decomposition of a closed 3-manifold",
-         * William Jaco and Jeffrey L. Tollefson, Illinois J. Math. 39 (1995),
-         * 358-406.
+         * answer.  If this fails, it will do one of two things:
+         *
+         * - If the triangulation is orientable and 1-vertex, it will
+         *   use the linear programming and crushing machinery outlined in
+         *   "Computing closed essential surfaces in knot complements",
+         *   Burton, Coward and Tillmann, SCG '13, p405-414, 2013.
+         *   This is often extremely fast, even for triangulations with
+         *   many tetrahedra.
+         *
+         * - If the triangulation is non-orientable or has multiple vertices
+         *   then it will run a full enumeration of
+         *   vertex normal surfaces, as described in "Algorithms for the
+         *   complete decomposition of a closed 3-manifold",
+         *   Jaco and Tollefson, Illinois J. Math. 39 (1995), 358-406.
+         *   As the number of tetrahedra grows, this can become extremely slow.
          *
          * This routine will work on a copy of this triangulation, not
          * the original.  In particular, the copy will be simplified, which
@@ -2438,16 +2451,84 @@ class REGINA_API NTriangulation : public NPacket,
          * \pre The underlying 3-manifold is irreducible.
          *
          * \warning This routine can be infeasibly slow for large
-         * triangulations, since it may need to perform a full enumeration
-         * of vertex normal surfaces, and since it might perform "large"
-         * operations on these surfaces such as cutting along them.
-         * See hasSimpleCompressingDisc() for a "heuristic shortcut"
+         * triangulations (particularly those that are non-orientable
+         * or have multiple vertices), since it may need to perform a
+         * full enumeration of vertex normal surfaces, and since it might
+         * perform "large" operations on these surfaces such as cutting along
+         * them.  See hasSimpleCompressingDisc() for a "heuristic shortcut"
          * that is faster but might not give a definitive answer.
          *
          * @return \c true if the underlying 3-manifold contains a
          * compressing disc, or \c false if it does not.
          */
         bool hasCompressingDisc() const;
+        /**
+         * Is it already known (or trivial to determine) whether or not
+         * the underlying 3-manifold contains a compressing disc?
+         * See hasCompressingDisc() for further details.
+         *
+         * If this property is indeed already known, future calls to
+         * hasCompressingDisc() will be very fast (simply returning the
+         * precalculated value).
+         *
+         * If this property is not already known, this routine will
+         * nevertheless run some very fast preliminary tests to see if the
+         * answer is obviously no.  If so, it will store \c false as the
+         * precalculated value for hasCompressingDisc() and this routine will
+         * return \c true.
+         *
+         * Otherwise a call to hasCompressingDisc() may potentially require more
+         * significant work, and so this routine will return \c false.
+         *
+         * \warning This routine does not actually tell you \e whether
+         * the underlying 3-manifold has a compressing disc; it merely tells
+         * you whether the answer has already been computed (or is very
+         * easily computed).
+         *
+         * \pre This triangulation is valid and is not ideal.
+         * \pre The underlying 3-manifold is irreducible.
+         *
+         * @return \c true if and only if this property is already known
+         * or trivial to calculate.
+         */
+        bool knowsCompressingDisc() const;
+
+        /**
+         * Determines whether the underlying 3-manifold (which
+         * must be closed and orientable) is Haken.  In other words, this
+         * routine determines whether the underlying 3-manifold contains an
+         * embedded closed incompressible surface.
+         *
+         * Currently Hakenness testing is available only for irreducible
+         * manifolds.  This routine will first test whether the manifold is
+         * irreducible and, if it is not, will return \c false immediately.
+         *
+         * \pre This triangulation is valid, closed, orientable and connected.
+         *
+         * \warning This routine could be very slow for larger triangulations.
+         *
+         * @return \c true if and only if the underlying 3-manifold is
+         * irreducible and Haken.
+         */
+        bool isHaken() const;
+        /**
+         * Is it already known (or trivial to determine) whether or not the
+         * underlying 3-manifold is Haken?  See isHaken() for further details.
+         *
+         * If this property is indeed already known, future calls to
+         * isHaken() will be very fast (simply returning the
+         * precalculated value).
+         *
+         * \warning This routine does not actually tell you \e whether
+         * the underlying 3-manifold is Haken; it merely tells you whether
+         * the answer has already been computed (or is very easily computed).
+         *
+         * \pre This triangulation is valid, closed, orientable and connected.
+         *
+         * @return \c true if and only if this property is already known
+         * or trivial to calculate.
+         */
+        bool knowsHaken() const;
 
         /**
          * Searches for a "simple" compressing disc inside this
@@ -2465,7 +2546,7 @@ class REGINA_API NTriangulation : public NPacket,
          * torus, or a compressing disc formed from a single internal triangle
          * surrounded by three boundary edges.
          *
-         * The purpose of this routine is to avoid enumerating normal
+         * The purpose of this routine is to avoid working with normal
          * surfaces within a large triangulation where possible.  This
          * routine is relatively fast, and if it returns \c true then this
          * 3-manifold definitely contains a compressing disc.  If this

@@ -8,6 +8,7 @@
 <!ENTITY data-angleparams SYSTEM "data-angleparams.docbook">
 <!ENTITY data-compact-filter SYSTEM "data-compact-filter.docbook">
 <!ENTITY data-compact-surface SYSTEM "data-compact-surface.docbook">
+<!ENTITY data-compressingdisc SYSTEM "data-compressingdisc.docbook">
 <!ENTITY data-connected SYSTEM "data-connected.docbook">
 <!ENTITY data-euler-filter SYSTEM "data-euler-filter.docbook">
 <!ENTITY data-euler-surface SYSTEM "data-euler-surface.docbook">
@@ -21,6 +22,7 @@
 <!ENTITY data-H1Bdry SYSTEM "data-H1Bdry.docbook">
 <!ENTITY data-H1Rel SYSTEM "data-H1Rel.docbook">
 <!ENTITY data-H2 SYSTEM "data-H2.docbook">
+<!ENTITY data-haken SYSTEM "data-haken.docbook">
 <!ENTITY data-line SYSTEM "data-line.docbook">
 <!ENTITY data-op SYSTEM "data-op.docbook">
 <!ENTITY data-orbl-filter SYSTEM "data-orbl-filter.docbook">
@@ -41,6 +43,7 @@
 <!ENTITY data-realbdry-surface SYSTEM "data-realbdry-surface.docbook">
 <!ENTITY data-reginadata SYSTEM "data-reginadata.docbook">
 <!ENTITY data-reln SYSTEM "data-reln.docbook">
+<!ENTITY data-solidtorus SYSTEM "data-solidtorus.docbook">
 <!ENTITY data-spanstrict SYSTEM "data-spanstrict.docbook">
 <!ENTITY data-spantaut SYSTEM "data-spantaut.docbook">
 <!ENTITY data-splitsfce SYSTEM "data-splitsfce.docbook">
@@ -71,6 +74,8 @@
  '<link linkend="data-compact-filter"><sgmltag>compact</sgmltag> (filter)</link>'>
 <!ENTITY xml-compact-surface
  '<link linkend="data-compact-surface"><sgmltag>compact</sgmltag> (surface)</link>'>
+<!ENTITY xml-compressingdisc
+ '<link linkend="data-compressingdisc"><sgmltag>compressingdisc</sgmltag></link>'>
 <!ENTITY xml-connected
  '<link linkend="data-connected"><sgmltag>connected</sgmltag></link>'>
 <!ENTITY xml-packet-dim2triangulation
@@ -102,6 +107,8 @@
  '<link linkend="data-H1Rel"><sgmltag>H1Rel</sgmltag></link>'>
 <!ENTITY xml-H2
  '<link linkend="data-H2"><sgmltag>H2</sgmltag></link>'>
+<!ENTITY xml-haken
+ '<link linkend="data-haken"><sgmltag>haken</sgmltag></link>'>
 <!ENTITY xml-line
  '<link linkend="data-line"><sgmltag>line</sgmltag></link>'>
 <!ENTITY xml-op
@@ -138,6 +145,8 @@
  '<link linkend="data-reginadata"><sgmltag>reginadata</sgmltag></link>'>
 <!ENTITY xml-reln
  '<link linkend="data-reln"><sgmltag>reln</sgmltag></link>'>
+<!ENTITY xml-solidtorus
+ '<link linkend="data-solidtorus"><sgmltag>solidtorus</sgmltag></link>'>
 <!ENTITY xml-spanstrict
  '<link linkend="data-spanstrict"><sgmltag>spanstrict</sgmltag></link>'>
 <!ENTITY xml-spantaut

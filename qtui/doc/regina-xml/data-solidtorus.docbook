@@ -1,0 +1,85 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-solidtorus">
+ <refmeta>
+  <refentrytitle>solidtorus</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>solidtorus</refname>
+  <refpurpose>Does a triangulation represent the solid torus?</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+solidtorus ::=</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>value</sgmltag></entry>
+      <entry><type>CDATA</type> (required)</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-solidtorus; element stores whether or not the parent
+   triangulation is in fact a triangulation of the solid torus.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>solidtorus</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-packet-dim3triangulation;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    Element <sgmltag>solidtorus</sgmltag> has no children.
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>value</sgmltag></term>
+    <listitem>
+     <para>
+      Either <literal>T</literal> or <literal>F</literal>, according to
+      whether the parent triangulation does or does not represent the
+      solid torus.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </refsect1>
+</refentry>

@@ -1439,8 +1439,9 @@ namespace {
                 }
 
                 // The LP-and-crush method is only suitable for
-                // orientable triangulations.
-                if (! t_->isOrientable()) {
+                // orientable triangulations with a single boundary component.
+                if (t_->getNumberOfBoundaryComponents() > 1 ||
+                        ! t_->isOrientable()) {
                     // Fall back to the slow and non-cancellable method.
                     if (t_->hasCompressingDisc())
                         ss_.markFound();

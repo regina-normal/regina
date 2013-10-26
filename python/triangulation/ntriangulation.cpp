@@ -300,8 +300,11 @@ void addNTriangulation() {
         .def("isSolidTorus", &NTriangulation::isSolidTorus)
         .def("knowsSolidTorus", &NTriangulation::knowsSolidTorus)
         .def("hasCompressingDisc", &NTriangulation::hasCompressingDisc)
+        .def("knowsCompressingDisc", &NTriangulation::knowsCompressingDisc)
         .def("hasSimpleCompressingDisc",
             &NTriangulation::hasSimpleCompressingDisc)
+        .def("isHaken", &NTriangulation::isHaken)
+        .def("knowsHaken", &NTriangulation::knowsHaken)
         .def("makeDoubleCover", &NTriangulation::makeDoubleCover)
         .def("idealToFinite", &NTriangulation::idealToFinite,
             OL_idealToFinite())
