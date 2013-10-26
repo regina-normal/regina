@@ -78,7 +78,7 @@ turaevviro ::=</synopsis>
    <para>
     The following elements contain <sgmltag>turaevviro</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-triangulation;</member>
+     <member>&xml-packet-dim3triangulation;</member>
     </simplelist>.
    </para>
   </refsect2>

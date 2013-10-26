@@ -4,12 +4,12 @@
 
 <refentry id="data-packet-triangulation">
  <refmeta>
-  <refentrytitle>packet (triangulation)</refentrytitle>
+  <refentrytitle>packet (3-manifold triangulation)</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>packet (triangulation)</refname>
+  <refname>packet (3-manifold triangulation)</refname>
   <refpurpose>A 3-manifold triangulation packet</refpurpose>
  </refnamediv>
 
@@ -73,7 +73,7 @@ packet ::= (&xml-tetrahedra;,
    <title>Children</title>
    <para>
     The following elements occur in <sgmltag>packet</sgmltag> for
-    a triangulation packet:
+    a 3-manifold triangulation packet:
     <simplelist type="inline">
      <member>&xml-fundgroup;</member>
      <member>&xml-H1;</member>

@@ -50,6 +50,8 @@
  &data-orbl-filter;
  &data-orbl-surface;
  &data-packet;
+ &data-packet-dim2triangulation;
+ &data-packet-triangulation;
  &data-packet-anglestructurelist;
  &data-packet-container;
  &data-packet-normalsurfacelist;
@@ -57,7 +59,6 @@
  &data-packet-script;
  &data-packet-surfacefilter;
  &data-packet-text;
- &data-packet-triangulation;
  &data-params;
  &data-pdf;
  &data-realbdry-filter;
@@ -75,6 +76,8 @@
  &data-text;
  &data-threeball;
  &data-threesphere;
+ &data-triangle;
+ &data-triangles;
  &data-turaevviro;
  &data-twosided;
  &data-var;
