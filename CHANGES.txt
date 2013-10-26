@@ -141,6 +141,8 @@ Version 4.95  [ (under development) ]
             - Renamed getFace() and getFaceMapping() to getTriangle()
               and getTriangleMapping().  The old names are deprecated but
               have been kept for backward compatibility.
+        Class NThread:
+            - New routine join() to wait for threads to finish.
         Class NTriangle:
             - Detailed string output (via detail() / toStringLong()) now
               outputs details of where the triangle appears in each tetrahedron.
