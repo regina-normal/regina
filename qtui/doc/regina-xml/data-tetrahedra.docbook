@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>tetrahedra</refname>
-  <refpurpose>The tetrahedra forming a triangulation</refpurpose>
+  <refpurpose>The tetrahedra forming a 3-manifold triangulation</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>

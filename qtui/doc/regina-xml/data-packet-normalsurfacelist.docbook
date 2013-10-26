@@ -43,7 +43,7 @@ packet ::= (&xml-params;, &xml-surface;*,
   <para>
    A <emphasis>normal surface list</emphasis>
    packet stores a list of normal surfaces in a particular
-   triangulation.  Generally this list will contain the vertex
+   3-manifold triangulation.  Generally this list will contain the vertex
    surfaces whose convex span is the set of all normal surfaces in the
    triangulation satisfying a particular set of constraints.
   </para>

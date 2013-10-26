@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>tet</refname>
-  <refpurpose>A single tetrahedron in a triangulation</refpurpose>
+  <refpurpose>A single tetrahedron in a 3-manifold triangulation</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>

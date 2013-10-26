@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>packet (triangulation)</refname>
-  <refpurpose>A triangulation packet</refpurpose>
+  <refpurpose>A 3-manifold triangulation packet</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
