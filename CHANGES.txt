@@ -75,6 +75,8 @@ Version 4.95  [ (under development) ]
         Class NNormalSurface, NNormalSurfaceVector:
             - Renamed getFaceArcs() to getTriangleArcs().  The old name is
               deprecated but has been kept for backward compatibility.
+            - Incorporated the new fast branch-and-bound machinery into
+              NNormalSurface::isIncompressible().
             - All normal surface vector classes have now gained the enum
               constant coordType (representing the corresponding NormalCoords
               constant), and the typedef Info (representing the

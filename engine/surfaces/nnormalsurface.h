@@ -1324,8 +1324,8 @@ class REGINA_API NNormalSurface : public ShareableObject {
         /**
          * Determines whether this is an incompressible surface within
          * the surrounding 3-manifold.  At present, this routine is only
-         * implemented for surfaces embedded within \e closed 3-manifold
-         * triangulations.
+         * implemented for surfaces embedded within \e closed and
+         * \e irreducible 3-manifold triangulations.
          *
          * Let \a D be some disc embedded in the underlying 3-manifold,
          * and let \a B be the boundary of \a D.  We call \a D a
@@ -1343,16 +1343,16 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * If this surface is one-sided, the incompressibility test will
          * be run on its two-sided double cover.
          *
-         * \warning This routine can become \e extremely slow, to the
-         * point of infeasibility.  This is because the underlying
-         * algorithm cuts along this surface, retriangulates (possibly
-         * using a very large number of tetrahedra), and then runs a new
-         * (exponentially slow) normal surface enumeration.
+         * \warning This routine may in some circumstances be extremely slow.
+         * This is because the underlying algorithm cuts along this surface,
+         * retriangulates (possibly using a very large number of tetrahedra),
+         * and then searches for a normal compressing disc in each
+         * component of the cut-open triangulation.
          *
-         * \pre The underlying 3-manifold triangulation is valid and closed.
-         * \pre The underlying 3-manifold is irreducible.
-         * \pre This normal surface is compact, embedded and connected.
-         * \pre This normal surface contains no octagonal discs.
+         * \pre The underlying triangulation is valid and closed, and
+         * represents an irreducible 3-manifold.
+         * \pre This normal surface is compact, embedded and connected,
+         * and contains no octagonal discs.
          *
          * @return \c true if this surface is incompressible, or \c false if
          * this surface is not incompressible (or if it is a sphere).
