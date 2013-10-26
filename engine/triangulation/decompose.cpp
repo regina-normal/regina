@@ -616,6 +616,9 @@ NPacket* NTriangulation::makeZeroEfficient() {
 }
 
 bool NTriangulation::isIrreducible() const {
+    if (irreducible.known())
+        return irreducible.value();
+
     // Precondition checks.
     if (! (isValid() && isClosed() && isOrientable() && isConnected()))
         return 0;
@@ -1069,27 +1072,16 @@ bool NTriangulation::isHaken() const {
     if (! (isValid() && isOrientable() && isClosed() && isConnected()))
         return false;
 
-    // Work on a copy of the triangulation.
-    NTriangulation t(*this);
-
-    // Make sure we are irreducible.
-    // std::cout << "Making 0-efficient..." << std::endl;
-    NPacket* p = t.makeZeroEfficient();
-    if (p) {
-        // No: we found a connected sum decomposition.
-        delete p;
-        return (haken = false);
-    }
-
-    // S2xS1 gets past makeZeroEfficient(), but will always be converted
-    // into a (minimal) 2-tetrahedron triangulation.  This is easily
-    // tested since S2xS1 is the only closed orientable 2-tetrahedron
-    // triangulation with first homology Z.
-    if (t.getNumberOfTetrahedra() == 2 && t.getHomologyH1().isZ()) {
-        return (haken = false);
-    }
+    // Irreducibility is not a precondition, but we promise to return
+    // false immediately if the triangulation is not irreducible.
+    // Do not set the property in this situation.
+    if (! isIrreducible())
+        return false;
 
     // Okay: we are closed, connected, orientable and irreducible.
+    // Move to a copy of this triangulation, which we can mess with.
+    NTriangulation t(*this);
+
     // First check for an easy answer via homology:
     if (t.getHomologyH1().getRank() > 0)
         return (haken = true);
