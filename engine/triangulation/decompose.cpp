@@ -615,6 +615,142 @@ NPacket* NTriangulation::makeZeroEfficient() {
     }
 }
 
+bool NTriangulation::isIrreducible() const {
+    // Precondition checks.
+    if (! (isValid() && isClosed() && isOrientable() && isConnected()))
+        return 0;
+
+    // We will essentially carry out a connected sum decomposition, but
+    // instead of keeping prime summands we will just count them and
+    // throw them away.
+    unsigned long summands = 0;
+
+    // Make a working copy, simplify and record the initial homology.
+    NTriangulation* working = new NTriangulation(*this);
+    working->intelligentSimplify();
+
+    unsigned long Z, Z2, Z3;
+    {
+        const NAbelianGroup& homology = working->getHomologyH1();
+        Z = homology.getRank();
+        Z2 = homology.getTorsionRank(2);
+        Z3 = homology.getTorsionRank(3);
+    }
+
+    // Start crushing normal spheres.
+    NContainer toProcess;
+    toProcess.insertChildLast(working);
+
+    unsigned long whichComp = 0;
+
+    NTriangulation* processing;
+    NTriangulation* crushed;
+    NNormalSurface* sphere;
+    while ((processing = static_cast<NTriangulation*>(
+            toProcess.getFirstTreeChild()))) {
+        // INV: Our triangulation is the connected sum of all the
+        // children of toProcess, all the prime components that we threw away,
+        // and possibly some copies of S2xS1, RP3 and/or L(3,1).
+
+        // Work with the last child.
+        processing->makeOrphan();
+
+        // Find a normal 2-sphere to crush.
+        sphere = processing->hasNonTrivialSphereOrDisc();
+        if (sphere) {
+            crushed = sphere->crush();
+            delete sphere;
+            delete processing;
+
+            crushed->intelligentSimplify();
+
+            // Insert each component of the crushed triangulation back
+            // into the list to process.
+            if (crushed->getNumberOfComponents() == 0)
+                delete crushed;
+            else if (crushed->getNumberOfComponents() == 1)
+                toProcess.insertChildLast(crushed);
+            else {
+                crushed->splitIntoComponents(&toProcess, false);
+                delete crushed;
+            }
+        } else {
+            // We have no non-trivial normal 2-spheres!
+            // The triangulation is 0-efficient (and prime).
+            // Is it a 3-sphere?
+            if (processing->getNumberOfVertices() > 1) {
+                // Proposition 5.1 of Jaco & Rubinstein's 0-efficiency
+                // paper:  If a closed orientable triangulation T is
+                // 0-efficient then either T has one vertex or T is a
+                // 3-sphere with precisely two vertices.
+                //
+                // It follows then that this is a 3-sphere.
+                // Toss it away.
+                delete sphere;
+                delete processing;
+            } else {
+                // Now we have a closed orientable one-vertex 0-efficient
+                // triangulation.
+                // We have to look for an almost normal sphere.
+                //
+                // From the proof of Proposition 5.12 in Jaco & Rubinstein's
+                // 0-efficiency paper, we see that we can restrict our
+                // search to octagonal almost normal surfaces.
+                // Furthermore, from the result in the quadrilateral-octagon
+                // coordinates paper, we can restrict this search further
+                // to vertex octagonal almost normal surfaces in
+                // quadrilateral-octagonal space.
+                sphere = processing->hasOctagonalAlmostNormalSphere();
+                if (sphere) {
+                    // It's a 3-sphere.  Toss this component away.
+                    delete sphere;
+                    delete processing;
+                } else {
+                    // It's a non-trivial prime component!
+                    // Note that this will never be an S2xS1 summand;
+                    // those get crushed away entirely (we account for
+                    // them later).
+                    if (summands > 0) {
+                        delete processing;
+                        return (irreducible = false);
+                    }
+                    ++summands;
+
+                    // Note which parts of our initial homology we have
+                    // now accounted for.
+                    const NAbelianGroup& h1 = processing->getHomologyH1();
+                    Z -= h1.getRank();
+                    Z2 -= h1.getTorsionRank(2);
+                    Z3 -= h1.getTorsionRank(3);
+
+                    // Toss away our prime summand and keep going.
+                    delete processing;
+                }
+            }
+        }
+    }
+
+    // Run a final homology check: were there any additional S2xS1, RP3
+    // or L(3,1) terms?
+    if (Z > 0) {
+        // There were S2xS1 summands that were crushed away.
+        // The manifold must be reducible.
+        return (irreducible = false);
+    }
+    if (summands + Z2 + Z3 > 1) {
+        // At least two summands were found and/or crushed away: the
+        // manifold must be composite.
+        return (irreducible = false);
+    }
+
+    // There are no S2xS1 summands, and the manifold is prime.
+    return (irreducible = true);
+}
+
+bool NTriangulation::knowsIrreducible() const {
+    return irreducible.known();
+}
+
 bool NTriangulation::hasCompressingDisc() const {
     if (compressingDisc.known())
         return compressingDisc.value();

@@ -23,6 +23,7 @@
 <!ENTITY data-H1Rel SYSTEM "data-H1Rel.docbook">
 <!ENTITY data-H2 SYSTEM "data-H2.docbook">
 <!ENTITY data-haken SYSTEM "data-haken.docbook">
+<!ENTITY data-irreducible SYSTEM "data-irreducible.docbook">
 <!ENTITY data-line SYSTEM "data-line.docbook">
 <!ENTITY data-op SYSTEM "data-op.docbook">
 <!ENTITY data-orbl-filter SYSTEM "data-orbl-filter.docbook">
@@ -109,6 +110,8 @@
  '<link linkend="data-H2"><sgmltag>H2</sgmltag></link>'>
 <!ENTITY xml-haken
  '<link linkend="data-haken"><sgmltag>haken</sgmltag></link>'>
+<!ENTITY xml-irreducible
+ '<link linkend="data-irreducible"><sgmltag>irreducible</sgmltag></link>'>
 <!ENTITY xml-line
  '<link linkend="data-line"><sgmltag>line</sgmltag></link>'>
 <!ENTITY xml-op

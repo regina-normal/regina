@@ -149,7 +149,8 @@ Version 4.95  [ (under development) ]
             - Detailed string output (via detail() / toStringLong()) now
               outputs details of where the triangle appears in each tetrahedron.
         Class NTriangulation:
-            - New routines isHaken(), knowsHaken() and knowsCompressingDisc().
+            - New routines isIrreducible(), knowsIrreducible(),
+              isHaken(), knowsHaken(), and knowsCompressingDisc().
             - Routine hasCompressingDisc() has been updated to use the new
               fast branch-and-bound machinery.
             - New routines getNumberOfSimplices() and getSimplex(), which are

@@ -153,6 +153,7 @@ void NTriangulation::clearAllProperties() {
     threeSphere.clear();
     threeBall.clear();
     solidTorus.clear();
+    irreducible.clear();
     compressingDisc.clear();
     haken.clear();
 
@@ -311,9 +312,12 @@ void NTriangulation::writeXMLPacketData(std::ostream& out) const {
         out << "  " << xmlValueTag("threeball", threeBall.value()) << '\n';
     if (solidTorus.known())
         out << "  " << xmlValueTag("solidtorus", solidTorus.value()) << '\n';
+    if (irreducible.known())
+        out << "  " << xmlValueTag("irreducible", irreducible.value())
+            << '\n';
     if (compressingDisc.known())
-        out << "  " << xmlValueTag("compressingdisc",
-            compressingDisc.value()) << '\n';
+        out << "  " << xmlValueTag("compressingdisc", compressingDisc.value())
+            << '\n';
     if (haken.known())
         out << "  " << xmlValueTag("haken", haken.value()) << '\n';
     if (! turaevViroCache.empty()) {
@@ -532,6 +536,7 @@ void NTriangulation::cloneFrom(const NTriangulation& X) {
     threeSphere = X.threeSphere;
     threeBall = X.threeBall;
     solidTorus = X.solidTorus;
+    irreducible = X.irreducible;
     compressingDisc = X.compressingDisc;
     haken = X.haken;
 

@@ -234,6 +234,10 @@ NXMLElementReader* NXMLTriangulationReader::startContentSubElement(
         bool b;
         if (valueOf(props.lookup("value"), b))
             tri->solidTorus = b;
+    } else if (subTagName == "irreducible") {
+        bool b;
+        if (valueOf(props.lookup("value"), b))
+            tri->irreducible = b;
     } else if (subTagName == "compressingdisc") {
         bool b;
         if (valueOf(props.lookup("compressingdisc"), b))

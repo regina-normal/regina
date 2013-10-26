@@ -299,6 +299,8 @@ void addNTriangulation() {
         .def("knowsBall", &NTriangulation::knowsBall)
         .def("isSolidTorus", &NTriangulation::isSolidTorus)
         .def("knowsSolidTorus", &NTriangulation::knowsSolidTorus)
+        .def("isIrreducible", &NTriangulation::isIrreducible)
+        .def("knowsIrreducible", &NTriangulation::knowsIrreducible)
         .def("hasCompressingDisc", &NTriangulation::hasCompressingDisc)
         .def("knowsCompressingDisc", &NTriangulation::knowsCompressingDisc)
         .def("hasSimpleCompressingDisc",

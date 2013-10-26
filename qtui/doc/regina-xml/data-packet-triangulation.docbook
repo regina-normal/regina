@@ -28,7 +28,7 @@ packet ::= (&xml-tetrahedra;,
             &xml-fundgroup;?, &xml-H1;?, &xml-H1Bdry;?, &xml-H1Rel;?, &xml-H2;?,
             &xml-splitsfce;?, &xml-zeroeff;?,
             &xml-threesphere;?, &xml-threeball;?, &xml-solidtorus;?,
-            &xml-compressingdisc;?, &xml-haken;?,
+            &xml-irreducible;?, &xml-compressingdisc;?, &xml-haken;?,
             &xml-turaevviro;*,
             &xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
@@ -84,6 +84,7 @@ packet ::= (&xml-tetrahedra;,
      <member>&xml-H1Rel;</member>
      <member>&xml-H2;</member>
      <member>&xml-haken;</member>
+     <member>&xml-irreducible;</member>
      <member>&xml-packet;</member>
      <member>&xml-splitsfce;</member>
      <member>&xml-solidtorus;</member>

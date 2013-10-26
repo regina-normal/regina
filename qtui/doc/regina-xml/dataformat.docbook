@@ -47,6 +47,7 @@
  &data-H1Rel;
  &data-H2;
  &data-haken;
+ &data-irreducible;
  &data-line;
  &data-op;
  &data-orbl-filter;

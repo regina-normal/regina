@@ -216,6 +216,8 @@ class REGINA_API NTriangulation : public NPacket,
             /**< Is this a triangulation of a 3-dimensional ball? */
         mutable NProperty<bool> solidTorus;
             /**< Is this a triangulation of the solid torus? */
+        mutable NProperty<bool> irreducible;
+            /**< Is this 3-manifold irreducible? */
         mutable NProperty<bool> compressingDisc;
             /**< Does this 3-manifold contain a compressing disc? */
         mutable NProperty<bool> haken;
@@ -2411,6 +2413,46 @@ class REGINA_API NTriangulation : public NPacket,
          * or trivial to calculate.
          */
         bool knowsSolidTorus() const;
+
+        /**
+         * Determines whether the underlying 3-manifold (which must be
+         * closed) is irreducible.  In other words, this routine determines
+         * whether every embedded sphere in the underlying 3-manifold
+         * bounds a ball.
+         *
+         * If the underlying 3-manifold is orientable, this routine will
+         * use fast crushing and branch-and-bound methods.  If the
+         * underlying 3-manifold is non-orientable, it will use a
+         * (much slower) full enumeration of vertex normal surfaces.
+         *
+         * \warning The algorithms used in this routine rely on normal
+         * surface theory and might be slow for larger triangulations.
+         *
+         * \pre This triangulation is valid, closed, orientable and connected.
+         *
+         * @return \c true if and only if the underlying 3-manifold is
+         * irreducible.
+         */
+        bool isIrreducible() const;
+        /**
+         * Is it already known (or trivial to determine) whether or not the
+         * underlying 3-manifold is irreducible?  See isIrreducible() for
+         * further details.
+         *
+         * If this property is indeed already known, future calls to
+         * isIrreducible() will be very fast (simply returning the
+         * precalculated value).
+         *
+         * \warning This routine does not actually tell you \e whether
+         * the underlying 3-manifold is irreducible; it merely tells you whether
+         * the answer has already been computed (or is very easily computed).
+         *
+         * \pre This triangulation is valid, closed, orientable and connected.
+         *
+         * @return \c true if and only if this property is already known
+         * or trivial to calculate.
+         */
+        bool knowsIrreducible() const;
 
         /**
          * Searches for a compressing disc within the underlying
