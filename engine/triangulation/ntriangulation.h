@@ -2539,7 +2539,7 @@ class REGINA_API NTriangulation : public NPacket,
          * Determines whether the underlying 3-manifold (which
          * must be closed and orientable) is Haken.  In other words, this
          * routine determines whether the underlying 3-manifold contains an
-         * embedded closed incompressible surface.
+         * embedded closed two-sided incompressible surface.
          *
          * Currently Hakenness testing is available only for irreducible
          * manifolds.  This routine will first test whether the manifold is
