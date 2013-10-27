@@ -72,7 +72,7 @@ class REGINA_API NGlobalDirs {
     public:
         /**
          * Returns Regina's primary home directory on the system.  This
-         * directory should contains subdirectories \e scripts/, \e icons/,
+         * directory should contains subdirectories \e icons/,
          * \e examples/ and so on.
          *
          * \warning If Regina is not installed in the exact location

@@ -291,7 +291,7 @@
      <listitem>
       <para>
        The directory in which &regina;'s data files are installed.  This
-       should be the directory containing the <filename>internal/</filename>
+       should be the directory containing the <filename>icons/</filename>
        subdirectory, the <filename>examples/</filename> subdirectory and so on.
       </para>
       <para>

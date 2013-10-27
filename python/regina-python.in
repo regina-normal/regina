@@ -411,7 +411,7 @@ sub setReginaHome() {
         # This makes sense when running out of a standard installation.
         &info("I: Setting Regina home directory to $_[0].\n");
         $regina_home = $_[0];
-        $runscript_py = "$_[0]/internal/scripts/runscript.py";
+        $runscript_py = "$_[0]/scripts/runscript.py";
     }
 
     # Sanity test.
