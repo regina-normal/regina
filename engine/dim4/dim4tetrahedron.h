@@ -345,6 +345,7 @@ class REGINA_API Dim4Tetrahedron :
         bool inDualMaximalForest() const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
