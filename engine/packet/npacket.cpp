@@ -62,10 +62,7 @@ NPacket::~NPacket() {
 }
 
 std::string NPacket::getFullName() const {
-    if (packetLabel.empty())
-        return "(No label) (" + getPacketTypeName() + ")";
-    else
-        return packetLabel + " (" + getPacketTypeName() + ")";
+    return getHumanLabel() + " (" + getPacketTypeName() + ")";
 }
 
 void NPacket::setPacketLabel(const std::string& newLabel) {

@@ -287,6 +287,7 @@ class REGINA_API Dim4BoundaryComponent :
         bool isInvalidVertex() const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**

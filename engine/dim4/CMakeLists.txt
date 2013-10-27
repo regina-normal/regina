@@ -4,6 +4,7 @@
 SET ( FILES
   canonical
   dim4boundarycomponent
+  dim4component
   dim4edge
   dim4exampletriangulation
   dim4triangle

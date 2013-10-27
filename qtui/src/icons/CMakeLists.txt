@@ -40,7 +40,7 @@ foreach (IMG_CLASS ${IMGS})
   endforeach (IMG_SIZE ${SIZES})
 endforeach (IMG_CLASS ${IMGS})
 
-INSTALL (FILES ${IMG_FILES} SOURCES DESTINATION ${PKGDATADIR}/icons/regina)
+INSTALL (FILES ${IMG_FILES} SOURCES DESTINATION ${PKGDATADIR}/icons)
 
 if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   # Install application icons for freedesktop.org.
