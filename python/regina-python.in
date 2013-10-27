@@ -331,8 +331,8 @@ if ($install_type eq 'Source') {
         &extendEnvVar('LD_LIBRARY_PATH', "$regina_home/engine/");
     }
 } elsif ($install_type eq 'Bundle') {
-    # Make sure we can find the libraries shipped with the bundle.
-    &extendEnvVar('DYLD_LIBRARY_PATH', $prog_dir);
+    # All libraries shipped in the bundle should be found automatically
+    # via @loader_path.  Nothing to do here.
 } elsif ($install_type eq 'Windows') {
     # Make sure we can find the libraries shipped with the application.
     &extendEnvVar('PATH', $prog_dir);

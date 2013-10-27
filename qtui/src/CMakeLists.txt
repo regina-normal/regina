@@ -147,6 +147,12 @@ if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
       " COMPONENT Runtime)
   ENDIF (BOOST_PYTHON_FOUND)
 
+  SET(FIX_BUNDLE_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/fix-bundle-paths)
+  INSTALL(CODE "
+    execute_process(COMMAND
+      \"${FIX_BUNDLE_PATHS}\" \"${BUNDLEDIR_ESCAPED}\")
+    " COMPONENT Runtime)
+
   # On MacOSX we need a qt.conf file in our bundle; otherwise the system
   # may load both the bundle and system Qt libraries and give unpredictable
   # results.
