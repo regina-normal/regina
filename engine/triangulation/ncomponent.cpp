@@ -48,7 +48,7 @@ void NComponent::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 
-    out << (tetrahedra.size() == 1 ? "Tetrahedron" : "Tetrahedra:");
+    out << (tetrahedra.size() == 1 ? "Tetrahedron:" : "Tetrahedra:");
     std::vector<NTetrahedron*>::const_iterator it;
     for (it = tetrahedra.begin(); it != tetrahedra.end(); ++it)
         out << ' ' << (*it)->markedIndex();

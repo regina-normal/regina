@@ -32,50 +32,21 @@
 
 /* end stub */
 
-#include "utilities/nthread.h"
+#include "dim2/dim2boundarycomponent.h"
+#include "dim2/dim2edge.h"
 
 namespace regina {
 
-namespace {
-    struct NThreadRuntimeArgs {
-        NThread* thread;
-        void* args;
-        bool deleteAfterwards;
+void Dim2BoundaryComponent::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << std::endl;
 
-        NThreadRuntimeArgs(NThread* newThread, void* newArgs,
-                bool newDeleteAfterwards) : thread(newThread), args(newArgs),
-                deleteAfterwards(newDeleteAfterwards) {
-        }
-    };
-
-    void* NThreadRuntime(void* runtimeArgs) {
-        // Get the arguments.
-        NThread* thread =
-            static_cast<NThreadRuntimeArgs*>(runtimeArgs)->thread;
-        void* args = static_cast<NThreadRuntimeArgs*>(runtimeArgs)->args;
-        bool deleteAfterwards =
-            static_cast<NThreadRuntimeArgs*>(runtimeArgs)->deleteAfterwards;
-        delete static_cast<NThreadRuntimeArgs*>(runtimeArgs);
-
-        // Do the work.
-        void* ans = thread->run(args);
-        if (deleteAfterwards)
-            delete thread;
-        return ans;
-    }
-}
-
-bool NThread::start(void* args, bool deleteAfterwards) {
-    return (pthread_create(&id_, 0, NThreadRuntime,
-        new NThreadRuntimeArgs(this, args, deleteAfterwards)) == 0);
-}
-
-bool NThread::start(void* (*routine)(void*), void* args, NThreadID* id) {
-    if (id)
-        return (pthread_create(id, 0, routine, args) == 0);
-    else {
-        NThreadID tmpID;
-        return (pthread_create(&tmpID, 0, routine, args) == 0);
+    out << (edges_.size() == 1 ? "Edge:" : "Edges:") << std::endl;
+    std::vector<Dim2Edge*>::const_iterator it;
+    for (it = edges_.begin(); it != edges_.end(); ++it) {
+        const Dim2EdgeEmbedding& emb((*it)->getEmbedding(0));
+        out << "  " << emb.getTriangle()->markedIndex() << " ("
+            << emb.getVertices().trunc2() << ')' << std::endl;
     }
 }
 

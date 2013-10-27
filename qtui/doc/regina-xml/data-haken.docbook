@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-zeroeff">
+<refentry id="data-haken">
  <refmeta>
-  <refentrytitle>zeroeff</refentrytitle>
+  <refentrytitle>haken</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>zeroeff</refname>
-  <refpurpose>Is a triangulation 0-efficient?</refpurpose>
+  <refname>haken</refname>
+  <refpurpose>Does a triangulation represent a Haken 3-manifold?</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-zeroeff ::=</synopsis>
+haken ::=</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
@@ -45,19 +45,19 @@ zeroeff ::=</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   A &xml-zeroeff; element stores whether or not the parent
-   triangulation is 0-efficient.
+   A &xml-haken; element stores whether or not the parent
+   triangulation represents a Haken manifold; that is, whether it
+   contains an embedded closed incompressible surface.
   </para>
   <para>
-   A <firstterm>0-efficient</firstterm> triangulation is one with no
-   2-sphere boundary components whose normal spheres and discs are all
-   vertex linking.
+   This element should only be stored beneath triangulations that represent
+   closed, connected, orientable and irreducible 3-manifolds.
   </para>
 
   <refsect2>
    <title>Parents</title>
    <para>
-    The following elements contain <sgmltag>zeroeff</sgmltag>:
+    The following elements contain <sgmltag>haken</sgmltag>:
     <simplelist type="inline">
      <member>&xml-packet-dim3triangulation;</member>
     </simplelist>.
@@ -67,7 +67,7 @@ zeroeff ::=</synopsis>
   <refsect2>
    <title>Children</title>
    <para>
-    Element <sgmltag>zeroeff</sgmltag> has no children.
+    Element <sgmltag>haken</sgmltag> has no children.
    </para>
   </refsect2>
  </refsect1>
@@ -80,7 +80,8 @@ zeroeff ::=</synopsis>
     <listitem>
      <para>
       Either <literal>T</literal> or <literal>F</literal>, according to
-      whether the parent triangulation is or is not 0-efficient.
+      whether the parent triangulation does or does not represent a
+      Haken 3-manifold.
      </para>
     </listitem>
    </varlistentry>

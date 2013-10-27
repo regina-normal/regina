@@ -113,5 +113,20 @@ void NTetrahedron::joinTo(int myFace, NTetrahedron* you, NPerm4 gluing) {
         tri->clearAllProperties();
 }
 
+void NTetrahedron::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << std::endl;
+    for (int i = 3; i >= 0; --i) {
+        out << NTriangle::ordering[i].trunc3() << " -> ";
+        if (! tetrahedra[i])
+            out << "boundary";
+        else
+            out << tetrahedra[i]->markedIndex() << " ("
+                << (tetrahedronPerm[i] * NTriangle::ordering[i]).trunc3()
+                << ')';
+        out << std::endl;
+    }
+}
+
 } // namespace regina
 

@@ -35,10 +35,12 @@
 #include <list>
 #include <sstream>
 
+#include "enumerate/ntreetraversal.h"
 #include "packet/ncontainer.h"
 #include "subcomplex/nsnappedball.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
+#include "triangulation/nboundarycomponent.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
 
@@ -613,40 +615,286 @@ NPacket* NTriangulation::makeZeroEfficient() {
     }
 }
 
+bool NTriangulation::isIrreducible() const {
+    if (irreducible.known())
+        return irreducible.value();
+
+    // Precondition checks.
+    if (! (isValid() && isClosed() && isOrientable() && isConnected()))
+        return 0;
+
+    // We will essentially carry out a connected sum decomposition, but
+    // instead of keeping prime summands we will just count them and
+    // throw them away.
+    unsigned long summands = 0;
+
+    // Make a working copy, simplify and record the initial homology.
+    NTriangulation* working = new NTriangulation(*this);
+    working->intelligentSimplify();
+
+    unsigned long Z, Z2, Z3;
+    {
+        const NAbelianGroup& homology = working->getHomologyH1();
+        Z = homology.getRank();
+        Z2 = homology.getTorsionRank(2);
+        Z3 = homology.getTorsionRank(3);
+    }
+
+    // Start crushing normal spheres.
+    NContainer toProcess;
+    toProcess.insertChildLast(working);
+
+    unsigned long whichComp = 0;
+
+    NTriangulation* processing;
+    NTriangulation* crushed;
+    NNormalSurface* sphere;
+    while ((processing = static_cast<NTriangulation*>(
+            toProcess.getFirstTreeChild()))) {
+        // INV: Our triangulation is the connected sum of all the
+        // children of toProcess, all the prime components that we threw away,
+        // and possibly some copies of S2xS1, RP3 and/or L(3,1).
+
+        // Work with the last child.
+        processing->makeOrphan();
+
+        // Find a normal 2-sphere to crush.
+        sphere = processing->hasNonTrivialSphereOrDisc();
+        if (sphere) {
+            crushed = sphere->crush();
+            delete sphere;
+            delete processing;
+
+            crushed->intelligentSimplify();
+
+            // Insert each component of the crushed triangulation back
+            // into the list to process.
+            if (crushed->getNumberOfComponents() == 0)
+                delete crushed;
+            else if (crushed->getNumberOfComponents() == 1)
+                toProcess.insertChildLast(crushed);
+            else {
+                crushed->splitIntoComponents(&toProcess, false);
+                delete crushed;
+            }
+        } else {
+            // We have no non-trivial normal 2-spheres!
+            // The triangulation is 0-efficient (and prime).
+            // Is it a 3-sphere?
+            if (processing->getNumberOfVertices() > 1) {
+                // Proposition 5.1 of Jaco & Rubinstein's 0-efficiency
+                // paper:  If a closed orientable triangulation T is
+                // 0-efficient then either T has one vertex or T is a
+                // 3-sphere with precisely two vertices.
+                //
+                // It follows then that this is a 3-sphere.
+                // Toss it away.
+                delete sphere;
+                delete processing;
+            } else {
+                // Now we have a closed orientable one-vertex 0-efficient
+                // triangulation.
+                // We have to look for an almost normal sphere.
+                //
+                // From the proof of Proposition 5.12 in Jaco & Rubinstein's
+                // 0-efficiency paper, we see that we can restrict our
+                // search to octagonal almost normal surfaces.
+                // Furthermore, from the result in the quadrilateral-octagon
+                // coordinates paper, we can restrict this search further
+                // to vertex octagonal almost normal surfaces in
+                // quadrilateral-octagonal space.
+                sphere = processing->hasOctagonalAlmostNormalSphere();
+                if (sphere) {
+                    // It's a 3-sphere.  Toss this component away.
+                    delete sphere;
+                    delete processing;
+                } else {
+                    // It's a non-trivial prime component!
+                    // Note that this will never be an S2xS1 summand;
+                    // those get crushed away entirely (we account for
+                    // them later).
+                    if (summands > 0) {
+                        delete processing;
+                        return (irreducible = false);
+                    }
+                    ++summands;
+
+                    // Note which parts of our initial homology we have
+                    // now accounted for.
+                    const NAbelianGroup& h1 = processing->getHomologyH1();
+                    Z -= h1.getRank();
+                    Z2 -= h1.getTorsionRank(2);
+                    Z3 -= h1.getTorsionRank(3);
+
+                    // Toss away our prime summand and keep going.
+                    delete processing;
+                }
+            }
+        }
+    }
+
+    // Run a final homology check: were there any additional S2xS1, RP3
+    // or L(3,1) terms?
+    if (Z > 0) {
+        // There were S2xS1 summands that were crushed away.
+        // The manifold must be reducible.
+        return (irreducible = false);
+    }
+    if (summands + Z2 + Z3 > 1) {
+        // At least two summands were found and/or crushed away: the
+        // manifold must be composite.
+        return (irreducible = false);
+    }
+
+    // There are no S2xS1 summands, and the manifold is prime.
+    return (irreducible = true);
+}
+
+bool NTriangulation::knowsIrreducible() const {
+    return irreducible.known();
+}
+
 bool NTriangulation::hasCompressingDisc() const {
+    if (compressingDisc.known())
+        return compressingDisc.value();
+
     // Some sanity checks; also enforce preconditions.
     if (! hasBoundaryTriangles())
-        return false;
+        return (compressingDisc = false);
     if ((! isValid()) || isIdeal())
-        return false;
+        return (compressingDisc = false);
+
+    long minBdryEuler = 2;
+    for (BoundaryComponentIterator it = boundaryComponents.begin();
+            it != boundaryComponents.end(); ++it) {
+        if ((*it)->getEulerCharacteristic() < minBdryEuler)
+            minBdryEuler = (*it)->getEulerCharacteristic();
+    }
+    if (minBdryEuler == 2)
+        return (compressingDisc = false);
 
     // Off we go.
     // Work with a simplified triangulation.
-    NTriangulation use(*this);
-    use.intelligentSimplify();
+    NTriangulation* use = new NTriangulation(*this);
+    use->intelligentSimplify();
 
     // Try for a fast answer first.
-    if (use.hasSimpleCompressingDisc())
-        return true;
-
-    // Sigh.  Enumerate all vertex normal surfaces.
-    //
-    // Hum, are we allowed to do this in quad space?  Jaco and Tollefson
-    // use standard coordinates.  Jaco, Letscher and Rubinstein mention
-    // quad space, but don't give details (which I'd prefer to see).
-    // Leave it in standard coordinates for now.
-    NNormalSurfaceList* q = NNormalSurfaceList::enumerate(&use, NS_STANDARD);
-
-    // Run through all vertex surfaces looking for a compressing disc.
-    unsigned long nSurfaces = q->getNumberOfSurfaces();
-    for (unsigned long i = 0; i < nSurfaces; ++i) {
-        // Use the fact that all vertex normal surfaces are connected.
-        if (q->getSurface(i)->isCompressingDisc(true))
-            return true;
+    if (use->hasSimpleCompressingDisc()) {
+        delete use;
+        return (compressingDisc = true);
     }
 
-    // No compressing discs!
-    return false;
+    // Nope.  Decide whether we can use the fast linear programming
+    // machinery or whether we need to do a full vertex surface enumeration.
+    if (use->isOrientable() && use->getNumberOfBoundaryComponents() == 1) {
+        NNormalSurface* ans;
+        NTriangulation* crush;
+        NTriangulation* comp;
+        unsigned nComp;
+
+        while (true) {
+            use->intelligentSimplify();
+
+            if (use->getNumberOfVertices() > 1) {
+                // Try harder.
+                use->barycentricSubdivision();
+                use->intelligentSimplify();
+                if (use->getNumberOfVertices() > 1) {
+                    // Fall back to a full vertex enumeration.
+                    // This mirrors the code for non-orientable
+                    // triangulations; see that later block for details.
+                    NNormalSurfaceList* q = NNormalSurfaceList::enumerate(
+                        use, NS_STANDARD);
+
+                    unsigned long nSurfaces = q->getNumberOfSurfaces();
+                    for (unsigned long i = 0; i < nSurfaces; ++i) {
+                        if (q->getSurface(i)->isCompressingDisc(true)) {
+                            delete use;
+                            return (compressingDisc = true);
+                        }
+                    }
+
+                    // No compressing discs!
+                    delete use;
+                    return (compressingDisc = false);
+                }
+            }
+
+            NTreeSingleSoln<LPConstraintEuler> search(use, NS_STANDARD);
+            if (! search.find()) {
+                // No compressing discs!
+                delete use;
+                return (compressingDisc = false);
+            }
+
+            ans = search.buildSurface();
+            crush = ans->crush();
+            delete ans;
+            delete use;
+
+            nComp = crush->splitIntoComponents();
+            comp = static_cast<NTriangulation*>(crush->getFirstTreeChild());
+            while (comp) {
+                if (comp->getNumberOfBoundaryComponents() == 1 &&
+                        comp->getBoundaryComponent(0)->getEulerCharacteristic()
+                        == minBdryEuler) {
+                    // This must be our original manifold.
+                    comp->makeOrphan();
+                    break;
+                }
+
+                comp = static_cast<NTriangulation*>(comp->getNextTreeSibling());
+            }
+
+            delete crush;
+
+            if (! comp) {
+                // We must have compressed.
+                return (compressingDisc = true);
+            }
+
+            // Around we go again, but this time with a smaller triangulation.
+            use = comp;
+        }
+    } else {
+        // Sigh.  Enumerate all vertex normal surfaces.
+        //
+        // Hum, are we allowed to do this in quad space?  Jaco and Tollefson
+        // use standard coordinates.  Jaco, Letscher and Rubinstein mention
+        // quad space, but don't give details (which I'd prefer to see).
+        // Leave it in standard coordinates for now.
+        NNormalSurfaceList* q = NNormalSurfaceList::enumerate(use, NS_STANDARD);
+
+        // Run through all vertex surfaces looking for a compressing disc.
+        unsigned long nSurfaces = q->getNumberOfSurfaces();
+        for (unsigned long i = 0; i < nSurfaces; ++i) {
+            // Use the fact that all vertex normal surfaces are connected.
+            if (q->getSurface(i)->isCompressingDisc(true)) {
+                delete use;
+                return (compressingDisc = true);
+            }
+        }
+
+        // No compressing discs!
+        delete use;
+        return (compressingDisc = false);
+    }
+}
+
+bool NTriangulation::knowsCompressingDisc() const {
+    if (compressingDisc.known())
+        return true;
+
+    // Quickly check for non-spherical boundary components before we give up.
+    for (BoundaryComponentIterator it = boundaryComponents.begin();
+            it != boundaryComponents.end(); ++it) {
+        if ((*it)->getEulerCharacteristic() < 2)
+            return false;
+    }
+
+    // All boundary components are 2-spheres.
+    compressingDisc = false;
+    return true;
 }
 
 bool NTriangulation::hasSimpleCompressingDisc() const {
@@ -669,7 +917,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
                 (*cit)->getNumberOfVertices() == 1) {
             // Because we know the triangulation is valid, this rules out
             // all one-tetrahedron triangulations except for LST(1,2,3).
-            return true;
+            return (compressingDisc = true);
         }
 
     // Open up as many boundary triangles as possible (to make it easier to
@@ -723,7 +971,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         // non-trivial curve.
         if (cut.getNumberOfBoundaryComponents() ==
                 use.getNumberOfBoundaryComponents())
-            return true;
+            return (compressingDisc = true);
 
         newSphereCount = 0;
         for (bit = cut.getBoundaryComponents().begin(); bit !=
@@ -733,7 +981,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
 
         // Was the boundary of the disc non-trivial?
         if (newSphereCount == origSphereCount)
-            return true;
+            return (compressingDisc = true);
     }
 
     // Look for a tetrahedron with two faces folded together, giving a
@@ -780,7 +1028,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         // non-trivial curve.
         if (cut.getNumberOfBoundaryComponents() ==
                 use.getNumberOfBoundaryComponents())
-            return true;
+            return (compressingDisc = true);
 
         newSphereCount = 0;
         for (bit = cut.getBoundaryComponents().begin(); bit !=
@@ -790,11 +1038,85 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
 
         // Was the boundary of the disc non-trivial?
         if (newSphereCount == origSphereCount)
-            return true;
+            return (compressingDisc = true);
     }
 
     // Nothing found.
     return false;
+}
+
+namespace {
+    /**
+     * Used to sort candidate incompressible surfaces by Euler characteristic.
+     * Surfaces with smaller genus (i.e., larger Euler characteristic)
+     * are to be processed first.
+     */
+    struct SurfaceID {
+        long index;
+            /**< Which surface in the list are we referring to? */
+        long euler;
+            /**< What is its Euler characteristic? */
+
+        inline bool operator < (const SurfaceID& rhs) const {
+            return (euler > rhs.euler ||
+                (euler == rhs.euler && index < rhs.index));
+        }
+    };
+}
+
+bool NTriangulation::isHaken() const {
+    if (haken.known())
+        return haken.value();
+
+    // Check basic preconditions.
+    if (! (isValid() && isOrientable() && isClosed() && isConnected()))
+        return false;
+
+    // Irreducibility is not a precondition, but we promise to return
+    // false immediately if the triangulation is not irreducible.
+    // Do not set the property in this situation.
+    if (! isIrreducible())
+        return false;
+
+    // Okay: we are closed, connected, orientable and irreducible.
+    // Move to a copy of this triangulation, which we can mess with.
+    NTriangulation t(*this);
+
+    // First check for an easy answer via homology:
+    if (t.getHomologyH1().getRank() > 0)
+        return (haken = true);
+
+    // Enumerate vertex normal surfaces in quad coordinates.
+    // std::cout << "Enumerating surfaces..." << std::endl;
+    NNormalSurfaceList* list = NNormalSurfaceList::enumerate(&t, NS_QUAD);
+
+    // Run through each surface, one at a time.
+    // Sort them first however, so we process the (easier) smaller genus
+    // surfaces first.
+    SurfaceID* id = new SurfaceID[list->getNumberOfSurfaces()];
+    unsigned i;
+    for (i = 0; i < list->getNumberOfSurfaces(); ++i) {
+        id[i].index = i;
+        id[i].euler = list->getSurface(i)->getEulerCharacteristic().longValue();
+    }
+    std::sort(id, id + list->getNumberOfSurfaces());
+
+    const NNormalSurface* f;
+    unsigned long discs;
+    for (unsigned i = 0; i < list->getNumberOfSurfaces(); ++i) {
+        // std::cout << "Testing surface " << i << "..." << std::endl;
+        if (list->getSurface(id[i].index)->isIncompressible()) {
+            delete[] id;
+            return (haken = true);
+        }
+    }
+
+    delete[] id;
+    return (haken = false);
+}
+
+bool NTriangulation::knowsHaken() const {
+    return haken.known();
 }
 
 } // namespace regina

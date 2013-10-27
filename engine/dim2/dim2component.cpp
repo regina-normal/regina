@@ -32,51 +32,27 @@
 
 /* end stub */
 
-#include "utilities/nthread.h"
+#include "dim2/dim2component.h"
+#include "dim2/dim2triangle.h"
 
 namespace regina {
 
-namespace {
-    struct NThreadRuntimeArgs {
-        NThread* thread;
-        void* args;
-        bool deleteAfterwards;
-
-        NThreadRuntimeArgs(NThread* newThread, void* newArgs,
-                bool newDeleteAfterwards) : thread(newThread), args(newArgs),
-                deleteAfterwards(newDeleteAfterwards) {
-        }
-    };
-
-    void* NThreadRuntime(void* runtimeArgs) {
-        // Get the arguments.
-        NThread* thread =
-            static_cast<NThreadRuntimeArgs*>(runtimeArgs)->thread;
-        void* args = static_cast<NThreadRuntimeArgs*>(runtimeArgs)->args;
-        bool deleteAfterwards =
-            static_cast<NThreadRuntimeArgs*>(runtimeArgs)->deleteAfterwards;
-        delete static_cast<NThreadRuntimeArgs*>(runtimeArgs);
-
-        // Do the work.
-        void* ans = thread->run(args);
-        if (deleteAfterwards)
-            delete thread;
-        return ans;
-    }
+void Dim2Component::writeTextShort(std::ostream& out) const {
+    if (triangles_.size() == 1)
+        out << "Component with 1 triangle";
+    else
+        out << "Component with " << getNumberOfTriangles() << " triangles";
 }
 
-bool NThread::start(void* args, bool deleteAfterwards) {
-    return (pthread_create(&id_, 0, NThreadRuntime,
-        new NThreadRuntimeArgs(this, args, deleteAfterwards)) == 0);
-}
+void Dim2Component::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << std::endl;
 
-bool NThread::start(void* (*routine)(void*), void* args, NThreadID* id) {
-    if (id)
-        return (pthread_create(id, 0, routine, args) == 0);
-    else {
-        NThreadID tmpID;
-        return (pthread_create(&tmpID, 0, routine, args) == 0);
-    }
+    out << (triangles_.size() == 1 ? "Triangle:" : "Triangles:");
+    std::vector<Dim2Triangle*>::const_iterator it;
+    for (it = triangles_.begin(); it != triangles_.end(); ++it)
+        out << ' ' << (*it)->markedIndex();
+    out << std::endl;
 }
 
 } // namespace regina
