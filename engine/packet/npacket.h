@@ -237,6 +237,20 @@ class REGINA_API NPacket : public ShareableObject {
         const std::string& getPacketLabel() const;
 
         /**
+         * Returns the label associated with this individual packet,
+         * adjusted if necessary for human-readable output.
+         *
+         * In particular, if the packet has no label assigned then this
+         * routine will return "(no label)", not the empty string.
+         *
+         * \warning The method by which this routine adjusts packet labels
+         * is subject to change in future versions of Regina.
+         *
+         * @return this individual packet's label.
+         */
+        std::string getHumanLabel() const;
+
+        /**
          * Sets the label associated with this individual packet.
          *
          * \pre No other packet in the overall tree
@@ -250,8 +264,8 @@ class REGINA_API NPacket : public ShareableObject {
          * Returns a descriptive text string for the packet.
          * The string is of the form <i>label (packet-type)</i>.
          *
-         * If this packet has no label, then the label will be replaced by
-         * the text "(No label)" instead.
+         * The packet label will be adjusted for human-readable output
+         * according to the behaviour of getHumanLabel().
          *
          * @return the descriptive text string.
          */
@@ -1199,6 +1213,12 @@ inline NPacket::NPacket(NPacket* parent) : firstTreeChild(0), lastTreeChild(0),
 }
 
 inline const std::string& NPacket::getPacketLabel() const {
+    return packetLabel;
+}
+
+inline std::string NPacket::getHumanLabel() const {
+    if (packetLabel.empty())
+        return "(no label)";
     return packetLabel;
 }
 

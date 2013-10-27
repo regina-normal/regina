@@ -73,6 +73,8 @@ packet ::= (<replaceable>type-specific content</replaceable>,
    These type-specific content models are individually documented on
    the following reference pages.
    <itemizedlist>
+    <listitem><para>&xml-packet-dim2triangulation;</para></listitem>
+    <listitem><para>&xml-packet-dim3triangulation;</para></listitem>
     <listitem><para>&xml-packet-anglestructurelist;</para></listitem>
     <listitem><para>&xml-packet-container;</para></listitem>
     <listitem><para>&xml-packet-normalsurfacelist;</para></listitem>
@@ -80,7 +82,6 @@ packet ::= (<replaceable>type-specific content</replaceable>,
     <listitem><para>&xml-packet-script;</para></listitem>
     <listitem><para>&xml-packet-surfacefilter;</para></listitem>
     <listitem><para>&xml-packet-text;</para></listitem>
-    <listitem><para>&xml-packet-triangulation;</para></listitem>
    </itemizedlist>
   </para>
   <para>

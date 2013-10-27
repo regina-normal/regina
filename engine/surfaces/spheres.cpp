@@ -129,9 +129,8 @@ NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
                             if (octCoord > 1) {
                                 // Too many octagons.  Move along.
                                 // Bail out of all our loops.
-                                oct = 3;
-                                tet = nTets;
-                                break;
+                                tet = nTets; // To escape tet loop
+                                break; // To escape oct loop
                             } else {
                                 // This is our almost normal 2-sphere!
                                 // Clone the surface for our return value.

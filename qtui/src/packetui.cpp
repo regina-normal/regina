@@ -294,7 +294,7 @@ bool PacketPane::queryClose() {
             tr("Do you wish to commit these changes now?"));
         //msgBox.setDetailedText(
         //    tr("The packet in question is: %1").
-        //    arg(mainUI->getPacket()->getPacketLabel().c_str()));
+        //    arg(mainUI->getPacket()->getHumanLabel().c_str()));
         QPushButton* discardBtn = msgBox.addButton(tr("Discard"),
             QMessageBox::DestructiveRole);
         QPushButton* commitBtn = msgBox.addButton(tr("Commit"),
@@ -412,7 +412,7 @@ void PacketPane::packetWasRenamed(regina::NPacket*) {
     refreshHeader();
 
     if (frame)
-        frame->setWindowTitle(getPacket()->getPacketLabel().c_str());
+        frame->setWindowTitle(getPacket()->getHumanLabel().c_str());
 }
 
 void PacketPane::packetToBeDestroyed(regina::NPacket*) {

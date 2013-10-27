@@ -266,6 +266,7 @@ class REGINA_API NComponent : public ShareableObject, public NMarkedElement {
         bool isClosed() const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
@@ -354,10 +355,6 @@ inline bool NComponent::isOrientable() const {
 
 inline bool NComponent::isClosed() const {
     return (boundaryComponents.empty());
-}
-
-inline void NComponent::writeTextShort(std::ostream& out) const {
-    out << "Component with " << getNumberOfTetrahedra() << " tetrahedra";
 }
 
 } // namespace regina

@@ -359,6 +359,7 @@ class REGINA_API Dim4Triangle : public ShareableObject, public NMarkedElement {
         bool isValid() const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**

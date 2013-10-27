@@ -121,6 +121,7 @@ class REGINA_API Dim2BoundaryComponent :
         Dim2Vertex* getVertex(unsigned long index) const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
