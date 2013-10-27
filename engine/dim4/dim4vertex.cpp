@@ -53,4 +53,15 @@ void Dim4Vertex::writeTextShort(std::ostream& out) const {
     out << "vertex of degree " << emb_.size();
 }
 
+void Dim4Vertex::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << std::endl;
+
+    out << "Appears as:" << std::endl;
+    std::vector<Dim4VertexEmbedding>::const_iterator it;
+    for (it = emb_.begin(); it != emb_.end(); ++it)
+        out << "  " << it->getPentachoron()->markedIndex()
+            << " (" << it->getVertex() << ')' << std::endl;
+}
+
 } // namespace regina

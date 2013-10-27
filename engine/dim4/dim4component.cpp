@@ -32,72 +32,27 @@
 
 /* end stub */
 
+#include "dim4/dim4component.h"
 #include "dim4/dim4pentachoron.h"
-#include "dim4/dim4triangulation.h"
-#include <algorithm>
 
 namespace regina {
 
-Dim4Pentachoron::Dim4Pentachoron(Dim4Triangulation* tri) : tri_(tri) {
-    std::fill(adj_, adj_ + 5, static_cast<Dim4Pentachoron*>(0));
+void Dim4Component::writeTextShort(std::ostream& out) const {
+    if (pentachora_.size() == 1)
+        out << "Component with 1 pentachoron";
+    else
+        out << "Component with " << getNumberOfPentachora() << " pentachora";
 }
 
-Dim4Pentachoron::Dim4Pentachoron(const std::string& desc,
-        Dim4Triangulation* tri) : desc_(desc), tri_(tri) {
-    std::fill(adj_, adj_ + 5, static_cast<Dim4Pentachoron*>(0));
-}
-
-bool Dim4Pentachoron::hasBoundary() const {
-    for (int i=0; i<5; ++i)
-        if (adj_[i] == 0)
-            return true;
-    return false;
-}
-
-void Dim4Pentachoron::joinTo(int myFacet, Dim4Pentachoron* you, NPerm5 gluing) {
-    NPacket::ChangeEventSpan span(tri_);
-
-    adj_[myFacet] = you;
-    adjPerm_[myFacet] = gluing;
-    int yourFacet = gluing[myFacet];
-    you->adj_[yourFacet] = this;
-    you->adjPerm_[yourFacet] = gluing.inverse();
-
-    tri_->clearAllProperties();
-}
-
-Dim4Pentachoron* Dim4Pentachoron::unjoin(int myFacet) {
-    NPacket::ChangeEventSpan span(tri_);
-
-    Dim4Pentachoron* you = adj_[myFacet];
-    int yourFacet = adjPerm_[myFacet][myFacet];
-    you->adj_[yourFacet] = 0;
-    adj_[myFacet] = 0;
-
-    tri_->clearAllProperties();
-
-    return you;
-}
-
-void Dim4Pentachoron::isolate() {
-    for (int i=0; i<5; ++i)
-        if (adj_[i])
-            unjoin(i);
-}
-
-void Dim4Pentachoron::writeTextLong(std::ostream& out) const {
+void Dim4Component::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
-    for (int i = 4; i >= 0; --i) {
-        out << Dim4Tetrahedron::ordering[i].trunc4() << " -> ";
-        if (! adj_[i])
-            out << "boundary";
-        else
-            out << adj_[i]->markedIndex() << " ("
-                << (adjPerm_[i] * Dim4Tetrahedron::ordering[i]).trunc4()
-                << ')';
-        out << std::endl;
-    }
+
+    out << (pentachora_.size() == 1 ? "Pentachoron:" : "Pentachora:");
+    std::vector<Dim4Pentachoron*>::const_iterator it;
+    for (it = pentachora_.begin(); it != pentachora_.end(); ++it)
+        out << ' ' << (*it)->markedIndex();
+    out << std::endl;
 }
 
 } // namespace regina

@@ -389,6 +389,7 @@ class REGINA_API Dim4Edge : public ShareableObject, public NMarkedElement {
         std::auto_ptr< Dim2Triangulation > buildLink(Dim4Isomorphism* inc=NULL) const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
