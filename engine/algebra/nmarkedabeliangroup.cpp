@@ -38,20 +38,23 @@
 
 namespace regina {
 
-NMarkedAbelianGroup::NMarkedAbelianGroup(unsigned long rk, const NLargeInteger &p) : 
-    OM(rk, rk), ON(rk,rk), OMR(rk,rk), OMC(rk,rk), OMRi(rk, rk), OMCi(rk, rk), rankOM(0), 
-    ornR(0), ornC(0), ornRi(0), ornCi(0), otR(0), otC(0), otRi(0), otCi(0), 
-    InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0), 
-    coeff(NLargeInteger::zero), TORLoc(0), TORVec(0), tensorIfLoc(0), tensorIfNum(0), 
-    tensorInvFacList(0)
+NMarkedAbelianGroup::NMarkedAbelianGroup(unsigned long rk, 
+                                         const NLargeInteger &p) : 
+    OM(rk, rk), ON(rk,rk), OMR(rk,rk), OMC(rk,rk), OMRi(rk, rk), OMCi(rk, rk), 
+    rankOM(0), ornR(0), ornC(0), ornRi(0), ornCi(0), otR(0), otC(0), otRi(0), 
+    otCi(0), InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0), 
+    coeff(NLargeInteger::zero), TORLoc(0), TORVec(0), tensorIfLoc(0), 
+    tensorIfNum(0), tensorInvFacList(0)
 {
     // special case p==1 trivial group
     ornR.reset(new NMatrixInt(rk, rk)); ornRi.reset(new NMatrixInt(rk, rk)); 
     ornC.reset(new NMatrixInt(rk, rk)); ornCi.reset(new NMatrixInt(rk, rk));
     for (unsigned long i=0; i<rk; i++) ON.entry(i,i) = p;
     // everything is already in SNF, so these are identity matrices
-    OMR.makeIdentity();OMC.makeIdentity(); OMRi.makeIdentity();OMCi.makeIdentity(); 
-    ornR->makeIdentity(); ornRi->makeIdentity(); ornC->makeIdentity(); ornCi->makeIdentity(); 
+    OMR.makeIdentity();OMC.makeIdentity(); 
+    OMRi.makeIdentity();OMCi.makeIdentity(); 
+    ornR->makeIdentity(); ornRi->makeIdentity(); 
+    ornC->makeIdentity(); ornCi->makeIdentity(); 
     if ( (p != 0 ) && ( p != 1 ) ) ifNum=rk;
     if (ifNum != 0) InvFacList.resize(ifNum);
     for (unsigned long i=0; i<InvFacList.size(); i++) InvFacList[i] = p;
@@ -74,8 +77,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
 
     for (unsigned long i=0; (i<tM.rows()) && (i<tM.columns()); i++)
         if (tM.entry(i,i) != 0) rankOM++;
-    TORLoc = rankOM; // various routines need this to be true later -- only important
-    // to keep the mod-p calculations happy. 
+    TORLoc = rankOM; // to keep mod-p calculations happy. 
 
     // construct the internal presentation matrix.
     std::auto_ptr<NMatrixRing<NLargeInteger> > prod=OMRi*ON;
@@ -85,7 +87,8 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
     ornC.reset( new NMatrixInt( ORN.rows(), ORN.rows() ) );
     ornCi.reset(new NMatrixInt( ORN.rows(), ORN.rows() ) );
 
-    for (unsigned long i=0;i<ORN.rows();i++) for (unsigned long j=0;j<ORN.columns();j++)
+    for (unsigned long i=0;i<ORN.rows();i++) 
+        for (unsigned long j=0;j<ORN.columns();j++)
         ORN.entry(i,j) = prod->entry(i+rankOM,j);
 
     // put the presentation matrix in Smith normal form, and
@@ -106,26 +109,32 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M,
 
 }
 
-// We'll store H_k(M;Z_p) internally in two different ways.  The reason boils down to the pleasant version
-// of the universal coefficient theorem that you see using Smith normal forms. 
-// Summary:  if Z^a --N--> Z^b --M--> Z^c is a chain complex for H_k(M;Z) and p>0 an integer, put M into SNF(M), 
-//  this gives SNF(M) == OMC*M*OMR. Let SNF(M) == diag[s_0, ..., s_{k-1}, 0, ... 0] and suppose
-//  only entries s_i, ..., s_{k-1} share common factors with p.   Then you immediately get the 
-//  presentation matrix for H_k(M;Z_p) which is a product of the two matrices:
-//  [ trunc_top_k_rows[OMRi*N], diag(p,p,...,p) ] \times [ diag(gcd(s_i,p), ..., gcd(s_{k-1},p) ]
-//  here trunc_top_k_rows means remove the first k rows from [OMRi*N].  The left matrix is basically
-//  by design the presentation matrix for H_k(M;Z)\times Z_p, and the right matrix the presentation
-//  matrix for TOR(H_{k-1}(M;Z), Z_p).   The 2nd matrix is already in SNF.  We apply SNF to the first, 
-//  and store the change-of-basis matrices in otR, otC, otRi, otCi.  We then concatenate these two
-//  diagonal matrices and apply SNF to them to get a situation NMarkedAbelianGroup will be happy with. 
-//  This has the added advantage of us being able to later easily implement the NHomMarkedAbelianGroup
-//  maps for UCT later when we're interested in that kind of stuff. 
-NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N, const NLargeInteger &pcoeff):
+// We'll store H_k(M;Z_p) internally in two different ways.  The reason boils 
+// down to the pleasant version of the universal coefficient theorem that you 
+// see using Smith normal forms. Summary:  if Z^a --N--> Z^b --M--> Z^c is a 
+// chain complex for H_k(M;Z) and p>0 an integer, put M into SNF(M), this gives 
+// SNF(M) == OMC*M*OMR. Let SNF(M) == diag[s_0, ..., s_{k-1}, 0, ... 0] and 
+// suppose only entries s_i, ..., s_{k-1} share common factors with p.   Then 
+// you immediately get the presentation matrix for H_k(M;Z_p) which is a 
+// product of the two matrices: [ trunc_top_k_rows[OMRi*N], diag(p,p,...,p) ] 
+//  \times [ diag(gcd(s_i,p), ..., gcd(s_{k-1},p) ] here trunc_top_k_rows means 
+// remove the first k rows from [OMRi*N].  The left matrix is basically by 
+// design the presentation matrix for H_k(M;Z)\times Z_p, and the right matrix 
+// the presentation matrix for TOR(H_{k-1}(M;Z), Z_p).   The 2nd matrix is 
+// already in SNF.  We apply SNF to the first, and store the change-of-basis 
+// matrices in otR, otC, otRi, otCi.  We then concatenate these two diagonal 
+// matrices and apply SNF to them to get a situation NMarkedAbelianGroup will 
+// be happy with. This has the added advantage of us being able to later easily 
+// implement the NHomMarkedAbelianGroup maps for UCT later when we're interested
+//  in that kind of stuff. 
+NMarkedAbelianGroup::NMarkedAbelianGroup(const NMatrixInt& M, 
+            const NMatrixInt& N, const NLargeInteger &pcoeff):
     OM(M), ON(N), OMR(M.columns(),M.columns()),
     OMC(M.rows(),M.rows()), OMRi(M.columns(),M.columns()),
     OMCi(M.rows(),M.rows()),
-    rankOM(0),  ornR(0), ornC(0), ornRi(0), ornCi(0), otR(0), otC(0), otRi(0), otCi(0),
-    InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0), coeff(pcoeff), 
+    rankOM(0),  ornR(0), ornC(0), ornRi(0), ornCi(0), otR(0), otC(0), 
+    otRi(0), otCi(0), InvFacList(0), snfrank(0), snffreeindex(0), 
+    ifNum(0), ifLoc(0), coeff(pcoeff), 
     TORLoc(0), TORVec(0), tensorIfLoc(0), tensorInvFacList(0)
 {
     // find SNF(M).
