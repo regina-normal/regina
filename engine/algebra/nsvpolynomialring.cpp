@@ -57,7 +57,8 @@ bool ideal_comparison( const NSVPolynomialRing< NLargeInteger > &first,
  if (first.lastTerm().first<second.lastTerm().first) return true; 
   if (first.lastTerm().first>second.lastTerm().first) return false;
  if (first.lastTerm().second.abs()<second.lastTerm().second.abs()) return true; 
-  if (first.lastTerm().second.abs()>second.lastTerm().second.abs()) return false; 
+  if (first.lastTerm().second.abs()>second.lastTerm().second.abs()) 
+   return false; 
 
  const std::map< signed long, NLargeInteger* > fTerms(first.allTerms()); 
  const std::map< signed long, NLargeInteger* > sTerms(second.allTerms());
@@ -77,8 +78,9 @@ bool ideal_comparison( const NSVPolynomialRing< NLargeInteger > &first,
 
 /**
  *  Computes the GCD of elements in input, output is a vector such that the sum
- *  over i, input[i]*outputG[i] == GCD.  We assume output is initialized to the size
- *  of input.  Sum over i, input[i]*outputN[i] == 0 (for a non-trivial outputN)
+ *  over i, input[i]*outputG[i] == GCD.  We assume output is initialized to the 
+ *  size of input.  Sum over i, 
+ *    input[i]*outputN[i] == 0 (for a non-trivial outputN)
  *  Assumes input.size()>=1. If input.size()==1, outputN will be zero. 
  */
 NLargeInteger gcd(const std::vector< NLargeInteger > &input,
