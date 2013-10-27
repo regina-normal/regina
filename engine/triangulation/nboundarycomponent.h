@@ -228,6 +228,7 @@ class REGINA_API NBoundaryComponent :
         bool isOrientable() const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**

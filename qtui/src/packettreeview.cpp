@@ -91,7 +91,7 @@ void PacketTreeItem::fill() {
 
 void PacketTreeItem::refreshLabel() {
     if (packet) {
-        QString newLabel = packet->getPacketLabel().c_str();
+        QString newLabel = packet->getHumanLabel().c_str();
         if (packet->hasTags())
             newLabel += " (+)";
         if (text(0) != newLabel)

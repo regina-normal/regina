@@ -1,0 +1,108 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-triangles">
+ <refmeta>
+  <refentrytitle>triangles</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>triangles</refname>
+  <refpurpose>The triangles forming a 2-manifold triangulation</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+triangles ::= (&xml-triangle;*)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>ntriangles</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-triangles; element stores the entire set of triangles forming a
+   2-manifold triangulation.
+  </para>
+  <para>
+   The total number of triangles must be specified by the
+   <sgmltag>ntriangles</sgmltag> attribute.  The individual triangles are
+   numbered 0, 1, 2, etc., and their edge gluings are described by the
+   corresponding child &xml-triangle; elements.  There must be precisely
+   <replaceable>ntriangles</replaceable> child &xml-triangle; elements in total.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>triangles</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-packet-dim2triangulation;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    The following elements occur in <sgmltag>triangles</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-triangle;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>ntriangles</sgmltag></term>
+    <listitem>
+     <para>
+      The total number of triangles in this set.  Note that there must
+      be precisely this many child &xml-triangle; elements.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </refsect1>
+
+ <refsect1>
+  <title>Example</title>
+  <para>
+   The following &xml; snippet represents a triangulation of the
+   Klein bottle with two triangles.
+  </para>
+  <programlisting>
+&lt;triangles ntriangles=&quot;2&quot;&gt;
+  &lt;triangle> 1 1 1 5 1 0 &lt;/triangle&gt;
+  &lt;triangle> 0 1 0 5 0 0 &lt;/triangle&gt;
+&lt;/triangles&gt;
+  </programlisting>
+ </refsect1>
+</refentry>
