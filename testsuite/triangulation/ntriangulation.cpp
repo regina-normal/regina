@@ -81,6 +81,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(fundGroupVsH1);
     CPPUNIT_TEST(zeroEfficiency);
+    CPPUNIT_TEST(irreducibility);
     CPPUNIT_TEST(threeSphereRecognition);
     CPPUNIT_TEST(threeSphereRecognitionLarge);
     CPPUNIT_TEST(threeBallRecognition);
@@ -1806,6 +1807,35 @@ class NTriangulationTest : public CppUnit::TestFixture {
             runCensusAllClosed(testZeroEfficiency);
             runCensusAllBounded(testZeroEfficiency);
             runCensusAllIdeal(testZeroEfficiency);
+        }
+
+        void irreducibility() {
+            CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not "
+                "irreducible.", empty.isIrreducible());
+            CPPUNIT_ASSERT_MESSAGE("S^3 is not irreducible.",
+                s3.isIrreducible());
+            CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is irreducible.",
+                ! s2xs1.isIrreducible());
+            CPPUNIT_ASSERT_MESSAGE("RP^3 (1 vtx) is not irreducible.",
+                rp3_1.isIrreducible());
+            CPPUNIT_ASSERT_MESSAGE("RP^3 (2 vtx) is not irreducible.",
+                rp3_2.isIrreducible());
+            CPPUNIT_ASSERT_MESSAGE("L(3,1) is not irreducible.",
+                lens3_1.isIrreducible());
+            CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) is not irreducible.",
+                lens7_1_loop.isIrreducible());
+            CPPUNIT_ASSERT_MESSAGE("L(8,3) is not irreducible.",
+                lens8_3.isIrreducible());
+            CPPUNIT_ASSERT_MESSAGE("Large L(8,3) is not irreducible.",
+                lens8_3_large.isIrreducible());
+                // Contains a non-vertex-linking 2-sphere.
+            CPPUNIT_ASSERT_MESSAGE("RP^3 # RP^3 is irreducible.",
+                ! rp3rp3.isIrreducible());
+                // Contains a pair of one-sided projective planes.
+            CPPUNIT_ASSERT_MESSAGE("S^3 / Q_28 is not irreducible.",
+                q28.isIrreducible());
+            CPPUNIT_ASSERT_MESSAGE("S^3 / Q_32 x Z_3 is not irreducible.",
+                q32xz3.isIrreducible());
         }
 
         NTriangulation* verifyThreeSphere(NTriangulation* tri,

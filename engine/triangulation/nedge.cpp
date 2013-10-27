@@ -71,5 +71,16 @@ const NPerm4 NEdge::ordering[6] = {
     NPerm4(2, 3, 0, 1)
 };
 
+void NEdge::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << std::endl;
+
+    out << "Appears as:" << std::endl;
+    std::deque<NEdgeEmbedding>::const_iterator it;
+    for (it = embeddings.begin(); it != embeddings.end(); ++it)
+        out << "  " << it->getTetrahedron()->markedIndex()
+            << " (" << it->getVertices().trunc2() << ')' << std::endl;
+}
+
 } // namespace regina
 

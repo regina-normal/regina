@@ -166,6 +166,9 @@ class REGINA_API NTriangle : public ShareableObject, public NMarkedElement {
          * are, in canonical order, <tt>ordering[i][0..2]</tt>.  As an
          * immediate consequence, we obtain <tt>ordering[i][3] == i</tt>.
          *
+         * Regina defines canonical order to be \e increasing order.
+         * That is, <tt>ordering[i][0] &lt; ... &lt; ordering[i][2]</tt>.
+         *
          * This table does \e not describe the mapping from specific
          * triangles within a triangulation into individual tetrahedra (for
          * that, see NTetrahedron::getTriangleMapping() instead).  This table
@@ -353,6 +356,7 @@ class REGINA_API NTriangle : public ShareableObject, public NMarkedElement {
         NPerm4 getEdgeMapping(int edge) const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
