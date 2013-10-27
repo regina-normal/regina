@@ -223,7 +223,7 @@ void Dim2Triangulation::calculateVertices() const {
 
     Dim2Vertex* label;
     Dim2Triangle *loopTri, *tri, *adjTri;
-    int vertex, adjVertex;
+    int adjVertex;
     NPerm3 map, adjMap;
     int dir, exitEdge;
     for (it = triangles_.begin(); it != triangles_.end(); ++it) {
@@ -249,8 +249,7 @@ void Dim2Triangulation::calculateVertices() const {
             for (dir = 0; dir < 2; ++dir) {
                 // Start at the start and walk in one particular direction.
                 tri = loopTri;
-                vertex = loopVtx;
-                map = tri->vertexMapping_[vertex];
+                map = tri->vertexMapping_[loopVtx];
 
                 while (true) {
                     // Move through to the next triangle.
@@ -280,7 +279,6 @@ void Dim2Triangulation::calculateVertices() const {
                             adjTri, adjVertex));
 
                     tri = adjTri;
-                    vertex = adjVertex;
                     map = adjMap;
                 }
             }

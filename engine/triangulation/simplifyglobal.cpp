@@ -211,7 +211,6 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
     VertexIterator vit;
     BoundaryComponentIterator bit;
     NEdge* edge;
-    NBoundaryComponent* bc;
     unsigned long nTriangles;
     unsigned long iTriangle;
     // unsigned long nEdges;
@@ -291,8 +290,6 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
             if (hasBoundaryTriangles()) {
                 for (bit = boundaryComponents.begin();
                         bit != boundaryComponents.end(); bit++) {
-                    bc = *bit;
-
                     // Run through triangles of this boundary component looking
                     // for shell boundary moves.
                     nTriangles = (*bit)->getNumberOfTriangles();

@@ -379,6 +379,7 @@ class REGINA_API Dim2Triangle : public ShareableObject, public NMarkedElement {
         int orientation() const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
@@ -484,7 +485,7 @@ inline int Dim2Triangle::orientation() const {
 inline void Dim2Triangle::writeTextShort(std::ostream& out) const {
     out << "Triangle";
     if (desc_.length() > 0)
-        out << " " << desc_;
+        out << ": " << desc_;
 }
 
 } // namespace regina

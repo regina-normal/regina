@@ -677,6 +677,7 @@ class REGINA_API NTetrahedron : public ShareableObject, public NMarkedElement {
         int orientation() const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     friend class NTriangulation;
         /**< Allow access to private members. */
@@ -800,7 +801,7 @@ inline int NTetrahedron::orientation() const {
 inline void NTetrahedron::writeTextShort(std::ostream& out) const {
     out << "Tetrahedron";
     if (description.length() > 0)
-        out << " " << description;
+        out << ": " << description;
 }
 
 } // namespace regina
