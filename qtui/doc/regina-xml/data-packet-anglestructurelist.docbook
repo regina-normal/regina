@@ -45,7 +45,7 @@ packet ::= (&xml-angleparams;?, &xml-struct;*,
   <para>
    An <emphasis>angle structure list</emphasis> packet
    stores a list of angle structures on a particular
-   triangulation.  Generally this list will contain the vertex
+   3-manifold triangulation.  Generally this list will contain the vertex
    structures whose convex span is the set of all angle structures on
    the triangulation.
   </para>
@@ -74,7 +74,7 @@ packet ::= (&xml-angleparams;?, &xml-struct;*,
     The following elements contain <sgmltag>packet</sgmltag> for
     an angle structure list packet:
     <simplelist type="inline">
-     <member>&xml-packet-triangulation;</member>
+     <member>&xml-packet-dim3triangulation;</member>
     </simplelist>.
    </para>
   </refsect2>

@@ -52,15 +52,18 @@ using regina::NBoundaryComponent;
 using regina::NComponent;
 using regina::NEdge;
 using regina::NTriangle;
+using regina::NTriangleEmbedding;
 using regina::NVertex;
 using regina::Dim2BoundaryComponent;
 using regina::Dim2Component;
 using regina::Dim2Edge;
+using regina::Dim2EdgeEmbedding;
 using regina::Dim2Vertex;
 using regina::Dim4BoundaryComponent;
 using regina::Dim4Component;
 using regina::Dim4Edge;
 using regina::Dim4Tetrahedron;
+using regina::Dim4TetrahedronEmbedding;
 using regina::Dim4Triangle;
 using regina::Dim4Vertex;
 
@@ -570,7 +573,7 @@ QString BoundaryComponentModel::overview() const {
         "The different boundary components are numbered from 0 upwards.  "
         "Each row describes properties of the boundary component, as "
         "well as which tetrahedron faces (for a real boundary component) "
-        "or which tetrahedron vertex (for an ideal boundary component) "
+        "or which tetrahedron vertices (for an ideal boundary component) "
         "it is formed from.<p>"
         "See the users' handbook for further details on what each "
         "column of the table means.</qt>");
@@ -598,19 +601,31 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
             case 2:
                 // Note that we can't have just one triangle
                 // (by a parity argument).
-                return (item->isIdeal() ? tr("1 vertex") :
+                return (item->isIdeal() ?
+                    tr("Degree %1").arg(item->getVertex(0)->getDegree()) :
                     tr("%1 triangles").arg(item->getNumberOfTriangles()));
             case 3:
-                if (item->isIdeal())
-                    return tr("Vertex %1").arg(tri->vertexIndex(
-                        item->getVertex(0)));
-                else {
+                if (item->isIdeal()) {
+                    NVertex* v = item->getVertex(0);
+                    QString ans;
+                    std::vector<regina::NVertexEmbedding>::const_iterator it;
+                    for (it = v->getEmbeddings().begin();
+                            it != v->getEmbeddings().end(); it++)
+                        appendToList(ans, QString("%1 (%2)").
+                            arg(tri->tetrahedronIndex((*it).getTetrahedron())).
+                            arg(it->getVertex()));
+                    return tr("Vertex %1 = ").arg(tri->vertexIndex(v)) + ans;
+                } else {
                     QString ans;
                     for (unsigned long i = 0;
-                            i < item->getNumberOfTriangles(); i++)
-                        appendToList(ans, QString::number(tri->triangleIndex(
-                            item->getTriangle(i))));
-                    return tr("Triangles ") + ans;
+                            i < item->getNumberOfTriangles(); ++i) {
+                        const NTriangleEmbedding& emb =
+                            item->getTriangle(i)->getEmbedding(0);
+                        appendToList(ans, QString("%1 (%2)").
+                            arg(tri->tetrahedronIndex(emb.getTetrahedron())).
+                            arg(emb.getVertices().trunc3().c_str()));
+                    }
+                    return ans;
                 }
         }
         return QString();
@@ -648,11 +663,13 @@ QString BoundaryComponentModel::toolTipForCol(int column) {
             "boundary component.</qt>");
         case 2: return tr("<qt>Gives the size of this boundary component, "
             "i.e., the number of triangles (for a real boundary component) "
-            "or the number of vertices (which is always one for an ideal "
+            "or the degree of the vertex (for an ideal "
             "boundary component).</qt>");
-        case 3: return tr("<qt>Identifies the individual triangles for a real "
-            "boundary component, or the individual vertex for an ideal "
-            "boundary component.</qt>");
+        case 3: return tr("<qt>For a real boundary component, this column "
+            "lists the individual triangles that it contains.<p>"
+            "For an ideal boundary component, this column "
+            "lists the individual tetrahedron vertices that are identified "
+            "to form the overall vertex of the triangulation.</qt>");
         default: return QString();
     }
 }
@@ -954,11 +971,14 @@ QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
                     tr("%1 edges").arg(item->getNumberOfEdges()));
             case 2:
                 QString ans;
-                for (unsigned long i = 0; i < item->getNumberOfEdges(); ++i)
-                    appendToList(ans, QString::number(tri->edgeIndex(
-                        item->getEdge(i))));
-                return (item->getNumberOfEdges() == 1 ?
-                    tr("Edge ") : tr("Edges ")) + ans;
+                for (unsigned long i = 0; i < item->getNumberOfEdges(); ++i) {
+                    const Dim2EdgeEmbedding& emb =
+                        item->getEdge(i)->getEmbedding(0);
+                    appendToList(ans, QString("%1 (%2)").
+                        arg(tri->triangleIndex(emb.getTriangle())).
+                        arg(emb.getVertices().trunc2().c_str()));
+                }
+                return ans;
         }
         return QString();
     } else if (role == Qt::ToolTipRole) {
@@ -1472,7 +1492,7 @@ QString Dim4BoundaryComponentModel::overview() const {
         "The different boundary components are numbered from 0 upwards.  "
         "Each row describes properties of the boundary component, as "
         "well as which pentachoron facets (for a real boundary component) "
-        "or which pentachoron vertex (for an ideal boundary component or "
+        "or which pentachoron vertices (for an ideal boundary component or "
         "an invalid vertex) it is formed from.<p>"
         "See the users' handbook for further details on what each "
         "column of the table means.</qt>");
@@ -1501,21 +1521,32 @@ QVariant Dim4BoundaryComponentModel::data(const QModelIndex& index,
                     tr("Real"));
             case 2:
                 return ((item->isIdeal() || item->isInvalidVertex()) ?
-                    tr("1 vertex") :
-                    item->getNumberOfTetrahedra() == 1 ?  tr("1 tetrahedron") :
+                    tr("Degree %1").arg(item->getVertex(0)->getDegree()):
+                    item->getNumberOfTetrahedra() == 1 ? tr("1 tetrahedron") :
                     tr("%1 tetrahedra").arg(item->getNumberOfTetrahedra()));
             case 3:
-                if (item->isIdeal() || item->isInvalidVertex())
-                    return tr("Vertex %1").arg(tri->vertexIndex(
-                        item->getVertex(0)));
-                else {
+                if (item->isIdeal() || item->isInvalidVertex()) {
+                    Dim4Vertex* v = item->getVertex(0);
+                    QString ans;
+                    std::vector<regina::Dim4VertexEmbedding>::const_iterator it;
+                    for (it = v->getEmbeddings().begin();
+                            it != v->getEmbeddings().end(); it++)
+                        appendToList(ans, QString("%1 (%2)").
+                            arg(tri->pentachoronIndex((*it).getPentachoron())).
+                            arg((*it).getVertex()));
+                    return tr("Vertex %1 = ").arg(tri->vertexIndex(v)) + ans;
+                } else {
                     QString ans;
                     for (unsigned long i = 0;
-                            i < item->getNumberOfTetrahedra(); i++)
-                        appendToList(ans,
-                            QString::number(tri->tetrahedronIndex(
-                            item->getTetrahedron(i))));
-                    return tr("Tetrahedra ") + ans;
+                            i < item->getNumberOfTetrahedra(); i++) {
+                        const Dim4TetrahedronEmbedding& emb =
+                            item->getTetrahedron(i)->getEmbedding(0);
+                        appendToList(ans, QString("%1 (%2)").
+                            arg(tri->pentachoronIndex(
+                                emb.getPentachoron())).
+                            arg(emb.getVertices().trunc4().c_str()));
+                    }
+                    return ans;
                 }
         }
         return QString();
@@ -1553,11 +1584,13 @@ QString Dim4BoundaryComponentModel::toolTipForCol(int column) {
             "boundary component, or an invalid vertex.</qt>");
         case 2: return tr("<qt>Gives the size of this boundary component, "
             "i.e., the number of tetrahedra (for a real boundary component) "
-            "or the number of vertices (which is always one for an ideal "
+            "or the degree of the vertex (for an ideal "
             "boundary component or an invalid vertex).</qt>");
-        case 3: return tr("<qt>Identifies the individual tetrahedra for a real "
-            "boundary component, or the individual vertex for an ideal "
-            "boundary component or an invalid vertex.</qt>");
+        case 3: return tr("<qt>For a real boundary component, this column "
+            "lists the individual tetrahedra that it contains.<p>"
+            "For an ideal boundary component or an invalid vertex, this column "
+            "lists the individual pentachoron vertices that are identified "
+            "to form the overall vertex of the triangulation.</qt>");
         default: return QString();
     }
 }

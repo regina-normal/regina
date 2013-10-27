@@ -153,6 +153,9 @@ class REGINA_API Dim4Tetrahedron :
          * are, in canonical order, <tt>ordering[i][0..3]</tt>.  As an
          * immediate consequence, we obtain <tt>ordering[i][4] == i</tt>.
          *
+         * Regina defines canonical order to be \e increasing order.
+         * That is, <tt>ordering[i][0] &lt; ... &lt; ordering[i][3]</tt>.
+         *
          * This table does \e not describe the mapping from specific
          * tetrahedra within a triangulation into individual pentachora
          * (for that, see Dim4Pentachoron::getTetrahedronMapping() instead).
@@ -342,6 +345,7 @@ class REGINA_API Dim4Tetrahedron :
         bool inDualMaximalForest() const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**

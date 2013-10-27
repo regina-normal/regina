@@ -10,6 +10,8 @@ SET ( FILES
   hydrate
   insertlayered
   isomorphic
+  nboundarycomponent
+  ncomponent
   nedge
   nexampletriangulation
   nfacepair
