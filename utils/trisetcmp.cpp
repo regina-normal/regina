@@ -80,9 +80,9 @@ void runMatches(NPacket* tree1, NPacket* tree2, std::ostream& out) {
                 if (p2->getPacketType() == NTriangulation::packetType)
                     if (compare(static_cast<NTriangulation*>(p1),
                             static_cast<NTriangulation*>(p2))) {
-                        out << "    " << p1->getPacketLabel()
+                        out << "    " << p1->getHumanLabel()
                             << (subcomplexTesting ? "  <=  " : "  ==  ")
-                            << p2->getPacketLabel() << std::endl;
+                            << p2->getHumanLabel() << std::endl;
                         nMatches++;
                     }
 
@@ -112,7 +112,7 @@ void runNonMatches(const std::string& file1, NPacket* tree1,
                             static_cast<NTriangulation*>(p2)))
                         matched = true;
             if (! matched) {
-                out << "    " << p1->getPacketLabel() << std::endl;
+                out << "    " << p1->getHumanLabel() << std::endl;
                 nMissing++;
             }
         }

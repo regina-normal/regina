@@ -8,6 +8,7 @@
 <!ENTITY data-angleparams SYSTEM "data-angleparams.docbook">
 <!ENTITY data-compact-filter SYSTEM "data-compact-filter.docbook">
 <!ENTITY data-compact-surface SYSTEM "data-compact-surface.docbook">
+<!ENTITY data-compressingdisc SYSTEM "data-compressingdisc.docbook">
 <!ENTITY data-connected SYSTEM "data-connected.docbook">
 <!ENTITY data-euler-filter SYSTEM "data-euler-filter.docbook">
 <!ENTITY data-euler-surface SYSTEM "data-euler-surface.docbook">
@@ -21,6 +22,8 @@
 <!ENTITY data-H1Bdry SYSTEM "data-H1Bdry.docbook">
 <!ENTITY data-H1Rel SYSTEM "data-H1Rel.docbook">
 <!ENTITY data-H2 SYSTEM "data-H2.docbook">
+<!ENTITY data-haken SYSTEM "data-haken.docbook">
+<!ENTITY data-irreducible SYSTEM "data-irreducible.docbook">
 <!ENTITY data-line SYSTEM "data-line.docbook">
 <!ENTITY data-op SYSTEM "data-op.docbook">
 <!ENTITY data-orbl-filter SYSTEM "data-orbl-filter.docbook">
@@ -28,6 +31,7 @@
 <!ENTITY data-packet SYSTEM "data-packet.docbook">
 <!ENTITY data-packet-anglestructurelist SYSTEM "data-packet-anglestructurelist.docbook">
 <!ENTITY data-packet-container SYSTEM "data-packet-container.docbook">
+<!ENTITY data-packet-dim2triangulation SYSTEM "data-packet-dim2triangulation.docbook">
 <!ENTITY data-packet-normalsurfacelist SYSTEM "data-packet-normalsurfacelist.docbook">
 <!ENTITY data-packet-pdf SYSTEM "data-packet-pdf.docbook">
 <!ENTITY data-packet-script SYSTEM "data-packet-script.docbook">
@@ -40,6 +44,7 @@
 <!ENTITY data-realbdry-surface SYSTEM "data-realbdry-surface.docbook">
 <!ENTITY data-reginadata SYSTEM "data-reginadata.docbook">
 <!ENTITY data-reln SYSTEM "data-reln.docbook">
+<!ENTITY data-solidtorus SYSTEM "data-solidtorus.docbook">
 <!ENTITY data-spanstrict SYSTEM "data-spanstrict.docbook">
 <!ENTITY data-spantaut SYSTEM "data-spantaut.docbook">
 <!ENTITY data-splitsfce SYSTEM "data-splitsfce.docbook">
@@ -51,6 +56,8 @@
 <!ENTITY data-text SYSTEM "data-text.docbook">
 <!ENTITY data-threeball SYSTEM "data-threeball.docbook">
 <!ENTITY data-threesphere SYSTEM "data-threesphere.docbook">
+<!ENTITY data-triangles SYSTEM "data-triangles.docbook">
+<!ENTITY data-triangle SYSTEM "data-triangle.docbook">
 <!ENTITY data-turaevviro SYSTEM "data-turaevviro.docbook">
 <!ENTITY data-twosided SYSTEM "data-twosided.docbook">
 <!ENTITY data-var SYSTEM "data-var.docbook">
@@ -68,8 +75,15 @@
  '<link linkend="data-compact-filter"><sgmltag>compact</sgmltag> (filter)</link>'>
 <!ENTITY xml-compact-surface
  '<link linkend="data-compact-surface"><sgmltag>compact</sgmltag> (surface)</link>'>
+<!ENTITY xml-compressingdisc
+ '<link linkend="data-compressingdisc"><sgmltag>compressingdisc</sgmltag></link>'>
 <!ENTITY xml-connected
  '<link linkend="data-connected"><sgmltag>connected</sgmltag></link>'>
+<!ENTITY xml-packet-dim2triangulation
+ '<link linkend="data-packet-dim2triangulation"><sgmltag>packet</sgmltag>
+ (2-manifold triangulation)</link>'>
+<!ENTITY xml-packet-dim3triangulation
+ '<link linkend="data-packet-triangulation"><sgmltag>packet</sgmltag> (3-manifold triangulation)</link>'>
 <!ENTITY xml-euler-filter
  '<link linkend="data-euler-filter"><sgmltag>euler</sgmltag> (filter)</link>'>
 <!ENTITY xml-euler-surface
@@ -94,6 +108,10 @@
  '<link linkend="data-H1Rel"><sgmltag>H1Rel</sgmltag></link>'>
 <!ENTITY xml-H2
  '<link linkend="data-H2"><sgmltag>H2</sgmltag></link>'>
+<!ENTITY xml-haken
+ '<link linkend="data-haken"><sgmltag>haken</sgmltag></link>'>
+<!ENTITY xml-irreducible
+ '<link linkend="data-irreducible"><sgmltag>irreducible</sgmltag></link>'>
 <!ENTITY xml-line
  '<link linkend="data-line"><sgmltag>line</sgmltag></link>'>
 <!ENTITY xml-op
@@ -118,8 +136,6 @@
  '<link linkend="data-packet-surfacefilter"><sgmltag>packet</sgmltag> (surface filter)</link>'>
 <!ENTITY xml-packet-text
  '<link linkend="data-packet-text"><sgmltag>packet</sgmltag> (text)</link>'>
-<!ENTITY xml-packet-triangulation
- '<link linkend="data-packet-triangulation"><sgmltag>packet</sgmltag> (triangulation)</link>'>
 <!ENTITY xml-params
  '<link linkend="data-params"><sgmltag>params</sgmltag></link>'>
 <!ENTITY xml-pdf
@@ -132,6 +148,8 @@
  '<link linkend="data-reginadata"><sgmltag>reginadata</sgmltag></link>'>
 <!ENTITY xml-reln
  '<link linkend="data-reln"><sgmltag>reln</sgmltag></link>'>
+<!ENTITY xml-solidtorus
+ '<link linkend="data-solidtorus"><sgmltag>solidtorus</sgmltag></link>'>
 <!ENTITY xml-spanstrict
  '<link linkend="data-spanstrict"><sgmltag>spanstrict</sgmltag></link>'>
 <!ENTITY xml-spantaut
@@ -154,6 +172,10 @@
  '<link linkend="data-threeball"><sgmltag>threeball</sgmltag></link>'>
 <!ENTITY xml-threesphere
  '<link linkend="data-threesphere"><sgmltag>threesphere</sgmltag></link>'>
+<!ENTITY xml-triangles
+ '<link linkend="data-triangles"><sgmltag>triangles</sgmltag></link>'>
+<!ENTITY xml-triangle
+ '<link linkend="data-triangle"><sgmltag>triangle</sgmltag></link>'>
 <!ENTITY xml-turaevviro
  '<link linkend="data-turaevviro"><sgmltag>turaevviro</sgmltag></link>'>
 <!ENTITY xml-twosided

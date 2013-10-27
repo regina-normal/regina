@@ -273,7 +273,7 @@ void NAngleStructureUI::refreshHeader() {
         arg(count).
         arg(span).
         arg(Qt::escape(model->structures()->getTriangulation()->
-            getPacketLabel().c_str())));
+            getHumanLabel().c_str())));
 }
 
 void NAngleStructureUI::viewTriangulation() {
