@@ -61,7 +61,7 @@ std::string NGlobalDirs::engineDocs() {
 }
 
 std::string NGlobalDirs::data() {
-    return home_ + "/internal/data";
+    return home_ + "/data";
 }
 
 void NGlobalDirs::setDirs(const std::string& homeDir,

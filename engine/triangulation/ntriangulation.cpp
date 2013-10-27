@@ -703,5 +703,10 @@ std::string NTriangulation::snapPea() const {
     return out.str();
 }
 
+NTriangulation* NTriangulation::fromSnapPea(const std::string& snapPeaData) {
+    std::istringstream in(snapPeaData);
+    return readSnapPea(in);
+}
+
 } // namespace regina
 
