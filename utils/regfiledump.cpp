@@ -65,13 +65,6 @@ void usage(const char* progName, const std::string& error = std::string()) {
 static const char* separator =
     "************************************************************";
 
-const char* fixLabel(const std::string& label) {
-    if (label.empty())
-        return "(No label)";
-    else
-        return label.c_str();
-}
-
 void dumpNoPacket(std::ostream& out, const std::string& packetLabel,
         char dumpOpt) {
     if (dumpOpt == 'l')
@@ -90,10 +83,10 @@ void dumpNoPacket(std::ostream& out, const std::string& packetLabel,
 void dumpPacketHeader(std::ostream& out, NPacket* p) {
     out << separator << '\n';
     out << "*\n";
-    out << "* Label: " << fixLabel(p->getPacketLabel()) << '\n';
+    out << "* Label: " << p->getHumanLabel() << '\n';
     out << "* Type: " << p->getPacketTypeName() << '\n';
     out << "* Parent: " << (p->getTreeParent() ?
-        fixLabel(p->getTreeParent()->getPacketLabel()) : "(none)") << '\n';
+        p->getTreeParent()->getHumanLabel() : "(none)") << '\n';
     if (p->hasTags()) {
         out << "* Tags: ";
         const std::set<std::string>& tags = p->getTags();

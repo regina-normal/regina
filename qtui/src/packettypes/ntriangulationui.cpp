@@ -157,7 +157,7 @@ QString NTriHeaderUI::summaryInfo(regina::NTriangulation* tri) {
         if (tri->isOriented())
             msg += QObject::tr("orientable and oriented, ");
         else
-            msg += QObject::tr("orientable, ");
+            msg += QObject::tr("orientable but not oriented, ");
     } else
         msg += QObject::tr("non-orientable, ");
 

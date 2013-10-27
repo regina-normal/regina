@@ -85,5 +85,19 @@ void Dim2Triangle::isolate() {
             unjoin(i);
 }
 
+void Dim2Triangle::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << std::endl;
+    for (int i = 2; i >= 0; --i) {
+        out << Dim2Edge::ordering[i].trunc2() << " -> ";
+        if (! adj_[i])
+            out << "boundary";
+        else
+            out << adj_[i]->markedIndex() << " ("
+                << (adjPerm_[i] * Dim2Edge::ordering[i]).trunc2() << ')';
+        out << std::endl;
+    }
+}
+
 } // namespace regina
 

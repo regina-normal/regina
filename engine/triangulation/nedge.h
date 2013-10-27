@@ -378,6 +378,7 @@ class REGINA_API NEdge : public ShareableObject, public NMarkedElement {
         bool isValid() const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**

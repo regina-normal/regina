@@ -168,18 +168,26 @@ typedef pthread_t NThreadID;
 /**
  * Provides very basic thread handling.
  *
+ * Throughout this documentation, "thread object" refers to an instance
+ * of an NThread subclass, and otherwise "thread" has its usual meaning
+ * as a thread executing code in the underlying operating system.
+ *
  * Each subclass of NThread represents a specific task that new
- * threads should perform.
+ * threads can perform.  Each subclass should override run() to perform
+ * its corresponding task.  The user may then create a thread object
+ * and call start() upon it, which will spawn a new thread that executes run().
  *
- * A subclass should override run() so that it performs whatever task is
- * required of each new thread.  Then start() may be called whenever a
- * new thread is required.
+ * A thread object is called \e running if its corresponding thread is
+ * running.  You must not call start() on a thread object that is already
+ * running.  Instead, if you wish to run multiple instances of the same task
+ * in parallel, you must start these from different thread objects.
  *
- * \warning Qt and KDE have only limited support for multithreading.  When
- * working with an existing packet tree in a new thread, the \e only
- * modification that you may make is to insert new packets.
+ * \warning At the time of writing (admittedly long ago now), Qt has only
+ * limited support for multithreading.  When working with an existing packet
+ * tree in a new thread, the \e only modification that you may make is to
+ * insert new packets.
  * Modifications of any other type (such as changing, renaming, deleting
- * or reordering existing packets) may lead to a crash within Qt or Xlib
+ * or reordering existing packets) could lead to a crash within Qt or Xlib
  * when running the GUI.
  * Of course, a new thread may create, modify and delete its own temporary
  * packet trees as it chooses (and it may in fact insert them into a
@@ -188,6 +196,10 @@ typedef pthread_t NThreadID;
  * \ifacespython Not present.
  */
 class REGINA_API NThread {
+    private:
+        NThreadID id_;
+            /**< The system ID of the running thread, or 0 if this
+                 thread is not running. */
     public:
         /**
          * Destroys this thread.
@@ -195,8 +207,15 @@ class REGINA_API NThread {
         virtual ~NThread();
 
         /**
-         * Starts a new thread that performs the run() routine.
-         * The return value of run() is currently ignored.
+         * Starts a new thread and performs run() within this new thread.
+         * The return value of run() is ignored.
+         *
+         * \pre This thread object is not already running.
+         *
+         * \warning If you pass \a deleteAfterwards as \c true, you must
+         * not attempt to access this thread object again (since it
+         * could be deleted at any time).  In particular, you will not
+         * be able to call join() to wait for the new thread to terminate.
          *
          * @param args the arguments to pass to run() when it is started.
          * @param deleteAfterwards \c true if this NThread object should be
@@ -205,9 +224,35 @@ class REGINA_API NThread {
          * successfully started.
          */
         bool start(void* args = 0, bool deleteAfterwards = false);
+
+        /**
+         * Waits for a previously-started thread to terminate.
+         *
+         * Once this function returns, it is guaranteed that the thread
+         * is no longer running.
+         *
+         * \pre This thread was started by calling the non-static
+         * start(), and with \a deleteAfterwards set to \c false (the default).
+         *
+         * \pre You have not already called join() on the same thread.
+         * However, you \e may repeatedly call start() and then join() on
+         * the same thread \e object (i.e., the same instance of your
+         * NThread subclass), as long as each call to start() occurs
+         * after the previous thread has finished execution.
+         *
+         * \pre You are not calling join() from within the thread that
+         * you are waiting to terminate.  That is, you are not calling
+         * join() from within run().
+         */
+        void join();
+
         /**
          * Starts a new thread that performs the given routine.
          * The return value of the given routine is currently ignored.
+         *
+         * \deprecated This variant of start() is deprecated.  You
+         * should instead create a new thread object and call the
+         * non-static start() on that objet.
          *
          * @param routine the routine to run in the new thread.
          * @param args the arguments to pass to \a routine when it is
@@ -226,15 +271,18 @@ class REGINA_API NThread {
          * Causes the currently running thread to voluntarily relinquish
          * the processor.  Another thread of equal or higher priority
          * will be given a turn instead.
+         *
+         * \deprecated Use of this routine within Regina is not advised,
+         * and this routine will be removed in some future release.
          */
         static void yield();
 
         /**
          * The routine to run in the new thread
-         * when start(void*) is called.
+         * when start(void*, bool) is called.
          *
-         * @param args the argument passed to start(void*).
-         * @return the return value is currently ignored.
+         * @param args the argument passed to start(void*, bool).
+         * @return the return value will be ignored.
          */
         virtual void* run(void* args) = 0;
 };
@@ -278,6 +326,11 @@ inline NThread::~NThread() {
 
 inline void NThread::yield() {
     sched_yield();
+}
+
+inline void NThread::join() {
+    pthread_join(id_, 0);
+    id_ = 0;
 }
 
 } // namespace regina

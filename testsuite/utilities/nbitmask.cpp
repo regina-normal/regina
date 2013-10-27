@@ -45,6 +45,7 @@ class NBitmaskTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(assignment);
     CPPUNIT_TEST(sizes);
     CPPUNIT_TEST(firstLastBit);
+    CPPUNIT_TEST(bits);
     CPPUNIT_TEST(truncate);
     CPPUNIT_TEST(lexOrder);
 
@@ -154,6 +155,58 @@ class NBitmaskTest : public CppUnit::TestFixture {
             testFirstLastBit<regina::NBitmask2<unsigned long, unsigned char> >
                 ("ulong,uchar", 8 + 8 * sizeof(unsigned long));
             testFirstLastBit<regina::NBitmask>("pieces", 128);
+        }
+
+        template <typename BitmaskType>
+        void testBits(const char* typeDesc, int length) {
+            {
+                BitmaskType b(length);
+                for (int i = 0; i <= length; ++i) {
+                    if (b.bits() != i) {
+                        std::ostringstream out;
+                        out << "Bitmask using type " << typeDesc
+                            << ", len=" << length
+                            << " with T at first " << i << " positions"
+                            << " reports bits != " << i << ".";
+                        CPPUNIT_FAIL(out.str());
+                    }
+                    if (i < length)
+                        b.set(i, true);
+                }
+            }
+
+            {
+                BitmaskType b(length);
+                for (int i = 0; i <= length; ++i) {
+                    if (b.bits() != i) {
+                        std::ostringstream out;
+                        out << "Bitmask using type " << typeDesc
+                            << ", len=" << length
+                            << " with T at last " << i << " positions"
+                            << " reports bits != " << i << ".";
+                        CPPUNIT_FAIL(out.str());
+                    }
+                    if (i < length)
+                        b.set(length - i - 1, true);
+                }
+            }
+        }
+
+        void bits() {
+            testBits<regina::NBitmaskLen8>("len8", 8);
+            testBits<regina::NBitmaskLen16>("len16", 16);
+            testBits<regina::NBitmaskLen32>("len32", 32);
+            testBits<regina::NBitmaskLen64>("len64", 64);
+            testBits<regina::NBitmask1<unsigned char> >("uchar", 8);
+            testBits<regina::NBitmask1<unsigned long> >
+                ("ulong", 8 * sizeof(unsigned long));
+            testBits<regina::NBitmask2<unsigned char, unsigned char> >
+                ("uchar,uchar", 16);
+            testBits<regina::NBitmask2<unsigned char, unsigned long> >
+                ("uchar,ulong", 8 + 8 * sizeof(unsigned long));
+            testBits<regina::NBitmask2<unsigned long, unsigned char> >
+                ("ulong,uchar", 8 + 8 * sizeof(unsigned long));
+            testBits<regina::NBitmask>("pieces", 128);
         }
 
         template <typename BitmaskType>
