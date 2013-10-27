@@ -14,16 +14,27 @@ Version 4.95  [ (under development) ]
         - All 2-faces of a triangulation are now called "triangles" (not
           just "faces" as before).  This is to avoid ambiguity in dimension.
     ENGINE:
+        Class Dim2BoundaryComponent:
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of the constituent edges.
         Class Dim2Component:
             - New routines getNumberOfSimplices() and getSimplex(), which are
               dimension-agnostic aliases for getNumberOfTriangles() and
               getTriangle().
             - New template routine getNumberOfFaces<dim>(), which is a
               dimension-agnostic routine for counting faces of any dimension.
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of the constituent triangles.
+        Class Dim2Edge:
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of where the edge appears in each triangle.
         Class Dim2Triangulation:
             - Now inherits from the new helper class NGenericTriangulation<2>.
             - New routine isoSigComponentSize() for extracting the number of
               triangles from a signature (inherited from NGenericTriangulation).
+        Class Dim2Vertex:
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of where the vertex appears in each triangle.
         Class NBoundaryComponent:
             - Renamed getFace() and getNumberOfFaces() to getTriangle()
               and getNumberOfTriangles().  The old names are deprecated but

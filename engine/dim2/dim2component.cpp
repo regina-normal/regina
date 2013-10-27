@@ -32,24 +32,27 @@
 
 /* end stub */
 
-#include "dim2/dim2edge.h"
+#include "dim2/dim2component.h"
+#include "dim2/dim2triangle.h"
 
 namespace regina {
 
-const NPerm3 Dim2Edge::ordering[3] = {
-    NPerm3(1,2,0),
-    NPerm3(0,2,1),
-    NPerm3(0,1,2),
-};
+void Dim2Component::writeTextShort(std::ostream& out) const {
+    if (triangles_.size() == 1)
+        out << "Component with 1 triangle";
+    else
+        out << "Component with " << getNumberOfTriangles() << " triangles";
+}
 
-void Dim2Edge::writeTextLong(std::ostream& out) const {
+void Dim2Component::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 
-    out << "Appears as:" << std::endl;
-    for (int i = 0; i < nEmb_; ++i)
-        out << "  " << emb_[i].getTriangle()->markedIndex()
-            << " (" << emb_[i].getVertices().trunc2() << ')' << std::endl;
+    out << (triangles_.size() == 1 ? "Triangle:" : "Triangles:");
+    std::vector<Dim2Triangle*>::const_iterator it;
+    for (it = triangles_.begin(); it != triangles_.end(); ++it)
+        out << ' ' << (*it)->markedIndex();
+    out << std::endl;
 }
 
 } // namespace regina

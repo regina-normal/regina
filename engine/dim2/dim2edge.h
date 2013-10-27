@@ -237,6 +237,7 @@ class REGINA_API Dim2Edge : public ShareableObject, public NMarkedElement {
         bool isBoundary() const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**

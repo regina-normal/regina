@@ -32,25 +32,19 @@
 
 /* end stub */
 
-#include "dim2/dim2edge.h"
+#include "dim2/dim2vertex.h"
 
 namespace regina {
 
-const NPerm3 Dim2Edge::ordering[3] = {
-    NPerm3(1,2,0),
-    NPerm3(0,2,1),
-    NPerm3(0,1,2),
-};
-
-void Dim2Edge::writeTextLong(std::ostream& out) const {
+void Dim2Vertex::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 
     out << "Appears as:" << std::endl;
-    for (int i = 0; i < nEmb_; ++i)
-        out << "  " << emb_[i].getTriangle()->markedIndex()
-            << " (" << emb_[i].getVertices().trunc2() << ')' << std::endl;
+    std::deque<Dim2VertexEmbedding>::const_iterator it;
+    for (it = emb_.begin(); it != emb_.end(); ++it)
+        out << "  " << it->getTriangle()->markedIndex()
+            << " (" << it->getVertex() << ')' << std::endl;
 }
 
 } // namespace regina
-

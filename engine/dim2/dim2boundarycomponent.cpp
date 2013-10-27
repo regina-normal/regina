@@ -32,24 +32,22 @@
 
 /* end stub */
 
+#include "dim2/dim2boundarycomponent.h"
 #include "dim2/dim2edge.h"
 
 namespace regina {
 
-const NPerm3 Dim2Edge::ordering[3] = {
-    NPerm3(1,2,0),
-    NPerm3(0,2,1),
-    NPerm3(0,1,2),
-};
-
-void Dim2Edge::writeTextLong(std::ostream& out) const {
+void Dim2BoundaryComponent::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 
-    out << "Appears as:" << std::endl;
-    for (int i = 0; i < nEmb_; ++i)
-        out << "  " << emb_[i].getTriangle()->markedIndex()
-            << " (" << emb_[i].getVertices().trunc2() << ')' << std::endl;
+    out << (edges_.size() == 1 ? "Edge:" : "Edges:") << std::endl;
+    std::vector<Dim2Edge*>::const_iterator it;
+    for (it = edges_.begin(); it != edges_.end(); ++it) {
+        const Dim2EdgeEmbedding& emb((*it)->getEmbedding(0));
+        out << "  " << emb.getTriangle()->markedIndex() << " ("
+            << emb.getVertices().trunc2() << ')' << std::endl;
+    }
 }
 
 } // namespace regina
