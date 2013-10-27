@@ -3068,7 +3068,6 @@ class REGINA_API NTriangulation : public NPacket,
          * @see fromIsoSig
          */
         std::string isoSig() const;
-        using NGenericTriangulation<3>::isoSigComponentSize;
         /**
          * Returns C++ code that can be used with insertConstruction()
          * to reconstruct this triangulation.
