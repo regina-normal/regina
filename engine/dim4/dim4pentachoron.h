@@ -509,6 +509,7 @@ class REGINA_API Dim4Pentachoron :
         int orientation() const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
@@ -634,7 +635,7 @@ inline int Dim4Pentachoron::orientation() const {
 inline void Dim4Pentachoron::writeTextShort(std::ostream& out) const {
     out << "Pentachoron";
     if (desc_.length() > 0)
-        out << " " << desc_;
+        out << ": " << desc_;
 }
 
 } // namespace regina

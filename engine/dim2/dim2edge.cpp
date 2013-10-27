@@ -42,5 +42,15 @@ const NPerm3 Dim2Edge::ordering[3] = {
     NPerm3(0,1,2),
 };
 
+void Dim2Edge::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << std::endl;
+
+    out << "Appears as:" << std::endl;
+    for (int i = 0; i < nEmb_; ++i)
+        out << "  " << emb_[i].getTriangle()->markedIndex()
+            << " (" << emb_[i].getVertices().trunc2() << ')' << std::endl;
+}
+
 } // namespace regina
 

@@ -114,5 +114,16 @@ NPerm5 Dim4Triangle::getEdgeMapping(int edge) const {
         edge, 3, 4);
 }
 
+void Dim4Triangle::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << std::endl;
+
+    out << "Appears as:" << std::endl;
+    std::deque<Dim4TriangleEmbedding>::const_iterator it;
+    for (it = emb_.begin(); it != emb_.end(); ++it)
+        out << "  " << it->getPentachoron()->markedIndex()
+            << " (" << it->getVertices().trunc3() << ')' << std::endl;
+}
+
 } // namespace regina
 

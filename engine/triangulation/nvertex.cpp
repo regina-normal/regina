@@ -63,6 +63,17 @@ void NVertex::writeTextShort(std::ostream& out) const {
     out << "vertex of degree " << getNumberOfEmbeddings();
 }
 
+void NVertex::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << std::endl;
+
+    out << "Appears as:" << std::endl;
+    std::vector<NVertexEmbedding>::const_iterator it;
+    for (it = embeddings.begin(); it != embeddings.end(); ++it)
+        out << "  " << it->getTetrahedron()->markedIndex()
+            << " (" << it->getVertex() << ')' << std::endl;
+}
+
 Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
         NIsomorphism** inclusion) const {
     // Build the triangulation.
