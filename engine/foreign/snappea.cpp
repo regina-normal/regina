@@ -165,7 +165,7 @@ bool writeSnapPea(const char* filename, const NTriangulation& tri) {
 void writeSnapPea(std::ostream& out, const NTriangulation& tri) {
     // Write header information.
     out << "% Triangulation\n";
-    if (tri.getPacketLabel().length() == 0)
+    if (tri.getPacketLabel().empty())
         out << "Regina_Triangulation\n";
     else
         out << stringToToken(tri.getPacketLabel()) << '\n';

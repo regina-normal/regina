@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>tetrahedra</refname>
-  <refpurpose>The tetrahedra forming a triangulation</refpurpose>
+  <refpurpose>The tetrahedra forming a 3-manifold triangulation</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -61,7 +61,7 @@ tetrahedra ::= (&xml-tet;*)</synopsis>
    <para>
     The following elements contain <sgmltag>tetrahedra</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-triangulation;</member>
+     <member>&xml-packet-dim2triangulation;</member>
     </simplelist>.
    </para>
   </refsect2>

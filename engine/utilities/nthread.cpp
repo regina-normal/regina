@@ -66,8 +66,7 @@ namespace {
 }
 
 bool NThread::start(void* args, bool deleteAfterwards) {
-    NThreadID tmpID;
-    return (pthread_create(&tmpID, 0, NThreadRuntime,
+    return (pthread_create(&id_, 0, NThreadRuntime,
         new NThreadRuntimeArgs(this, args, deleteAfterwards)) == 0);
 }
 

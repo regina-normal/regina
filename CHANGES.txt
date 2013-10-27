@@ -32,29 +32,51 @@ Version 4.95  [ (under development) ]
         - All 2-faces of a triangulation are now called "triangles" (not
           just "faces" as before).  This is to avoid ambiguity in dimension.
     ENGINE:
+        Class Dim2BoundaryComponent:
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of the constituent edges.
         Class Dim2Component:
             - New routines getNumberOfSimplices() and getSimplex(), which are
               dimension-agnostic aliases for getNumberOfTriangles() and
               getTriangle().
             - New template routine getNumberOfFaces<dim>(), which is a
               dimension-agnostic routine for counting faces of any dimension.
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of the constituent triangles.
+        Class Dim2Edge:
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of where the edge appears in each triangle.
         Class Dim2Triangulation:
             - Now inherits from the new helper class NGenericTriangulation<2>.
             - New routine isoSigComponentSize() for extracting the number of
               triangles from a signature (inherited from NGenericTriangulation).
+        Class Dim2Vertex:
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of where the vertex appears in each triangle.
         Class NBoundaryComponent:
             - Renamed getFace() and getNumberOfFaces() to getTriangle()
               and getNumberOfTriangles().  The old names are deprecated but
               have been kept for backward compatibility.
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of the constituent triangles or vertex.
         Class NComponent:
             - Renamed getFace() and getNumberOfFaces() to getTriangle()
               and getNumberOfTriangles().  The old names are deprecated but
               have been kept for backward compatibility.
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of the constituent tetrahedra.
+        Class NEdge:
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of where the edge appears in each tetrahedron.
         Struct NewNormalSurfaceVector:
             - Moved into registryutils.h and redesigned as the more general
               template struct NewFunction1<>.  The old type is equivalent to
               NewFunction1<NNormalSurfaceVector, size_t>, and a deprecated
               typedef has been kept for backward compatibility.
+        Class NExampleTriangulation:
+            - Routines weberSeifert() / seifertWeber(), bingsHouse(), weeks()
+              and poincareHomologySphere() all now build oriented
+              triangulations.
         Class NFace:
             - Renamed to NTriangle.  The old name is deprecated but has
               been kept as a typedef for backward compatibility.
@@ -82,6 +104,8 @@ Version 4.95  [ (under development) ]
         Class NNormalSurface, NNormalSurfaceVector:
             - Renamed getFaceArcs() to getTriangleArcs().  The old name is
               deprecated but has been kept for backward compatibility.
+            - Incorporated the new fast branch-and-bound machinery into
+              NNormalSurface::isIncompressible().
             - All normal surface vector classes have now gained the enum
               constant coordType (representing the corresponding NormalCoords
               constant), and the typedef Info (representing the
@@ -119,8 +143,11 @@ Version 4.95  [ (under development) ]
               registry.  See the NPacket class notes for details.
             - The constant packetType is now a compile-time enum constant,
               not a static const int.
-            - Routine getFullName() now replaces an empty label with the text
-              "(No label)", since this is intended for human-readable output.
+            - The new routine getHumanLabel() returns the packet label,
+              but adjusted for human-readable output.  In particular, an
+              empty label will be replaced by "(no label)".
+            - Routine getFullName() now makes labels more suitable for
+              human-readable output as described above.
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic aliases orderedSn, SnIndex() and
               orderedSnIndex().  These all reference existing arrays/routines
@@ -145,7 +172,16 @@ Version 4.95  [ (under development) ]
             - Renamed getFace() and getFaceMapping() to getTriangle()
               and getTriangleMapping().  The old names are deprecated but
               have been kept for backward compatibility.
+        Class NThread:
+            - New routine join() to wait for threads to finish.
+        Class NTriangle:
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of where the triangle appears in each tetrahedron.
         Class NTriangulation:
+            - New routines isIrreducible(), knowsIrreducible(),
+              isHaken(), knowsHaken(), and knowsCompressingDisc().
+            - Routine hasCompressingDisc() has been updated to use the new
+              fast branch-and-bound machinery.
             - New routines getNumberOfSimplices() and getSimplex(), which are
               dimension-agnostic aliases for getNumberOfTetrahedra() and
               getTetrahedron().
@@ -160,11 +196,15 @@ Version 4.95  [ (under development) ]
               getNumberOfFaces() and hasBoundaryFaces(), where "face"
               now becomes "triangle".  The old names are deprecated but
               have been kept for backward compatibility.
+            - Results from hasCompressingDisc() and isHaken() are now
+              stored in data files.
             - The output from getPacketTypeName() has changed from
               "Triangulation" to "3-Manifold Triangulation".
         Class NVertex:
             - Added buildLinkDetail(), which returns details of how triangles
               of the vertex link are embedded within individual tetrahedra.
+            - Detailed string output (via detail() / toStringLong()) now
+              outputs details of where the vertex appears in each tetrahedron.
         Class PacketInfo:
             - Template classes that store traits of the various packet types.
               These are used with the new forPacket() template functions.
@@ -214,6 +254,8 @@ Version 4.95  [ (under development) ]
     USER INTERFACE:
         - The root container packet is now hidden from the user (it still
           exists internally within the packet tree).
+        - The triangulation viewer now explicitly states "not oriented"
+          for orientable-but-not-oriented triangulations.
         - The old regina-kde placeholder app (which did nothing but pop up
           a message directing the user to the new regina-gui) has been removed.
     TEST SUITE:

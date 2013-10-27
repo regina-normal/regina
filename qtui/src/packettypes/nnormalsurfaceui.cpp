@@ -151,7 +151,7 @@ void NSurfaceHeaderUI::refresh() {
         arg(count).
         arg(header->tr(Coordinates::name(surfaces->coords(), false))).
         arg(Qt::escape(
-            surfaces->getTriangulation()->getPacketLabel().c_str())));
+            surfaces->getTriangulation()->getHumanLabel().c_str())));
 }
 
 void NSurfaceHeaderUI::viewTriangulation() {

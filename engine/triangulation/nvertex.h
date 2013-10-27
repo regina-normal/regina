@@ -426,6 +426,7 @@ class REGINA_API NVertex : public ShareableObject, public NMarkedElement {
         long getLinkEulerCharacteristic() const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**

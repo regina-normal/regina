@@ -331,7 +331,6 @@ std::string NTriangulation::dehydrate() const {
         // We're partway through a bitset; assume it's finished and
         // point to the next unused slot in the array.
         newTetPos++;
-        newTetBit = 0;
     }
 
     // At this stage we should have currGluingPos == nTets + 1.
