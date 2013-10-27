@@ -47,7 +47,7 @@ Don't forget:
     debian-based packages (debian/ubuntu)
     rpm-based packages (fedora/mandriva/suse)
     windows installer
-    macos DMG
+    macos DMG (purge libiconv-dev, libxml2 from fink first)
     update tips for building on different platforms
     update debian/ubuntu/fink READMEs as required (both text and html)
     copy fink info file(s) beneath www/
