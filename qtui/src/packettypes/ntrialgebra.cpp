@@ -796,7 +796,7 @@ void NTriCellularInfoUI::refresh() {
                 for (std::list< NSVPolynomialRing<NLargeInteger> >::iterator i = alex->begin();
                      i != alex->end(); i++)
                   {
-                  aString.append( i->str() );
+                  aString.append( i->toString() );
                   if (i!=alex->end()) aString.append(" ");
                   }
               AlexInv->setText(QObject::tr(aString.c_str()));
