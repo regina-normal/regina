@@ -92,8 +92,7 @@ void fillDualToMixedHomCM( const Dim4Triangulation* tri, const unsigned long num
 
  for (unsigned long j=0; j<numNonIdealCells[4]; j++)
   {
-    pen = tri->getPentachoron(j);
-    // dmCM[0]
+    pen = tri->getPentachoron(j); // dmCM[0]
     dmCM[0]->entry( delta[0] + j, j ) += 1;
 
     // dmCM[1]
