@@ -509,8 +509,6 @@
 		052FA0A61806047E00FAE4DF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
 		052FA0AB180604A100FAE4DF /* libgmp.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A7180604A100FAE4DF /* libgmp.10.dylib */; };
 		052FA0AC180604A100FAE4DF /* libgmpxx.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */; };
-		052FA0AD180604A100FAE4DF /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A9180604A100FAE4DF /* libiconv.2.dylib */; };
-		052FA0AE180604A100FAE4DF /* libxml2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0AA180604A100FAE4DF /* libxml2.2.dylib */; };
 		052FA1031806088B00FAE4DF /* nanglestructurelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0CD1806088B00FAE4DF /* nanglestructurelist.cpp */; };
 		052FA1041806088B00FAE4DF /* dim2census.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D11806088B00FAE4DF /* dim2census.cpp */; };
 		052FA1051806088B00FAE4DF /* dim2edgepairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D21806088B00FAE4DF /* dim2edgepairing.cpp */; };
@@ -836,6 +834,8 @@
 		055B7314181D7CF800449D14 /* dim2component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055B730F181D7CF800449D14 /* dim2component.cpp */; };
 		055B7315181D7CF800449D14 /* dim2vertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055B7310181D7CF800449D14 /* dim2vertex.cpp */; };
 		055B7316181D7CF800449D14 /* dim2vertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055B7310181D7CF800449D14 /* dim2vertex.cpp */; };
+		055B7318181D7F2500449D14 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
+		055B731A181D7F2C00449D14 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
 		055DDCEF1808575300C973FB /* filterregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 055DDCED1808575300C973FB /* filterregistry-impl.h */; };
 		055DDCF01808575300C973FB /* surfacefiltertype.h in Headers */ = {isa = PBXBuildFile; fileRef = 055DDCEE1808575300C973FB /* surfacefiltertype.h */; };
 		0564A7F81811D921002CC2AE /* actionspart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4091811D91E002CC2AE /* actionspart.cpp */; };
@@ -1590,8 +1590,6 @@
 		052FA0A51806047E00FAE4DF /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		052FA0A7180604A100FAE4DF /* libgmp.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgmp.10.dylib; path = /sw/lib/gmp5/libgmp.10.dylib; sourceTree = "<absolute>"; };
 		052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgmpxx.4.dylib; path = /sw/lib/gmp5/libgmpxx.4.dylib; sourceTree = "<absolute>"; };
-		052FA0A9180604A100FAE4DF /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = /sw/lib/libiconv.2.dylib; sourceTree = "<absolute>"; };
-		052FA0AA180604A100FAE4DF /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.2.dylib; path = /sw/lib/libxml2.2.dylib; sourceTree = "<absolute>"; };
 		052FA0C11806072900FAE4DF /* regtestsuite */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = regtestsuite; sourceTree = BUILT_PRODUCTS_DIR; };
 		052FA0CC1806088B00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052FA0CD1806088B00FAE4DF /* nanglestructurelist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nanglestructurelist.cpp; sourceTree = "<group>"; };
@@ -1668,6 +1666,8 @@
 		055B730E181D7CF800449D14 /* dim2boundarycomponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2boundarycomponent.cpp; sourceTree = "<group>"; };
 		055B730F181D7CF800449D14 /* dim2component.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2component.cpp; sourceTree = "<group>"; };
 		055B7310181D7CF800449D14 /* dim2vertex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2vertex.cpp; sourceTree = "<group>"; };
+		055B7317181D7F2400449D14 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		055B7319181D7F2B00449D14 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		055DDCED1808575300C973FB /* filterregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "filterregistry-impl.h"; sourceTree = "<group>"; };
 		055DDCEE1808575300C973FB /* surfacefiltertype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surfacefiltertype.h; sourceTree = "<group>"; };
 		0564A1DF1811D6F8002CC2AE /* Regina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Regina.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1970,8 +1970,8 @@
 			files = (
 				052FA0AB180604A100FAE4DF /* libgmp.10.dylib in Frameworks */,
 				052FA0AC180604A100FAE4DF /* libgmpxx.4.dylib in Frameworks */,
-				052FA0AD180604A100FAE4DF /* libiconv.2.dylib in Frameworks */,
-				052FA0AE180604A100FAE4DF /* libxml2.2.dylib in Frameworks */,
+				055B7318181D7F2500449D14 /* libiconv.dylib in Frameworks */,
+				055B731A181D7F2C00449D14 /* libxml2.dylib in Frameworks */,
 				052FA0A61806047E00FAE4DF /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2782,8 +2782,8 @@
 				052FA12218060AA700FAE4DF /* libcppunit-1.12.1.0.0.dylib */,
 				052FA0A7180604A100FAE4DF /* libgmp.10.dylib */,
 				052FA0A8180604A100FAE4DF /* libgmpxx.4.dylib */,
-				052FA0A9180604A100FAE4DF /* libiconv.2.dylib */,
-				052FA0AA180604A100FAE4DF /* libxml2.2.dylib */,
+				055B7317181D7F2400449D14 /* libiconv.dylib */,
+				055B7319181D7F2B00449D14 /* libxml2.dylib */,
 				052FA0A51806047E00FAE4DF /* libz.dylib */,
 				052FA1291806102F00FAE4DF /* Foundation.framework */,
 				057FA7551806184A008E25F6 /* UIKit.framework */,
@@ -4410,7 +4410,7 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/sw/include,
-					/sw/include/libxml2,
+					/usr/include/libxml2,
 					"\"$(SRCROOT)\"",
 				);
 				LIBRARY_SEARCH_PATHS = (
@@ -4434,7 +4434,7 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/sw/include,
-					/sw/include/libxml2,
+					/usr/include/libxml2,
 					"\"$(SRCROOT)\"",
 				);
 				LIBRARY_SEARCH_PATHS = (
@@ -4474,7 +4474,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/engine\"",
 					/sw/include,
-					/sw/include/libxml2,
+					/usr/include/libxml2,
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
@@ -4510,7 +4510,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/engine\"",
 					/sw/include,
-					/sw/include/libxml2,
+					/usr/include/libxml2,
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
@@ -4551,7 +4551,7 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/sw/include,
-					/sw/include/libxml2,
+					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
 					/Library/Frameworks/QtCore.framework/Headers,
 					/Library/Frameworks/QtGui.framework/Headers,
@@ -4594,7 +4594,7 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/sw/include,
-					/sw/include/libxml2,
+					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
 					/Library/Frameworks/QtCore.framework/Headers,
 					/Library/Frameworks/QtGui.framework/Headers,
@@ -4648,7 +4648,7 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/sw/include,
-					/sw/include/libxml2,
+					/usr/include/libxml2,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
@@ -4688,7 +4688,7 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/sw/include,
-					/sw/include/libxml2,
+					/usr/include/libxml2,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
