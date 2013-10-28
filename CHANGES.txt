@@ -245,6 +245,8 @@ Version 4.95  [ (under development) ]
         - More NInteger / NLargeInteger tests, this time comparing operations
           when the same arguments are coerced from natives to GMP integers.
         - NBitmask tests for the bits() function.
+        - Added python tests for the Orb import filter; thanks to
+          Craig Hodgson for the sample files.
 
 Version 4.94  [ 24 September, 2013 ]
 
