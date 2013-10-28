@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="12F37" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="H1p-Uh-vWS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="12F45" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
         <deployment defaultVersion="1536" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3746"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -664,6 +664,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
                                     <tabBarItem title="Gluings" image="Gluings" id="mna-Z3-7B5"/>
+                                    <tabBarItem title="Skeleton" image="Skeleton" id="Zpk-LL-Ley"/>
                                     <tabBarItem title="Algebra" image="Algebra" id="GVu-o4-nMw"/>
                                     <tabBarItem title="SnapPea" image="SnapPea" id="ckS-BX-sXn"/>
                                 </items>
@@ -687,6 +688,7 @@
                     <connections>
                         <outlet property="algebraTab" destination="GVu-o4-nMw" id="X5y-hU-gST"/>
                         <outlet property="gluingTab" destination="mna-Z3-7B5" id="mVi-Wk-xCD"/>
+                        <outlet property="skeletonTab" destination="Zpk-LL-Ley" id="vxW-cm-pCc"/>
                         <outlet property="snapPeaTab" destination="ckS-BX-sXn" id="u0K-Ln-9Ew"/>
                         <outlet property="tabs" destination="jF5-Gz-ezP" id="csh-PY-oy5"/>
                     </connections>
@@ -907,6 +909,7 @@
         <image name="Container" width="32" height="32"/>
         <image name="Gluings" width="25" height="25"/>
         <image name="ReginaLarge" width="310" height="310"/>
+        <image name="Skeleton" width="25" height="25"/>
         <image name="SnapPea" width="25" height="25"/>
         <image name="Subtree" width="32" height="32"/>
     </resources>

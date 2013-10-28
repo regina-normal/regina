@@ -38,6 +38,7 @@
 }
 @property (weak, nonatomic) IBOutlet UITabBar *tabs;
 @property (weak, nonatomic) IBOutlet UITabBarItem *gluingTab;
+@property (weak, nonatomic) IBOutlet UITabBarItem *skeletonTab;
 @property (weak, nonatomic) IBOutlet UITabBarItem *algebraTab;
 @property (weak, nonatomic) IBOutlet UITabBarItem *snapPeaTab;
 @end
@@ -51,6 +52,7 @@
     // regina::NTriangulation* t = (regina::NTriangulation*)self.packet;
 
     _gluingTab.selectedImage = [UIImage imageNamed:@"Gluings-Bold"];
+    _skeletonTab.selectedImage = [UIImage imageNamed:@"Skeleton-Bold"];
     _snapPeaTab.selectedImage = [UIImage imageNamed:@"SnapPea-Bold"];
     
     _tabs.selectedItem = _gluingTab;
