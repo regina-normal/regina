@@ -71,31 +71,28 @@ lDomain(ldomain), rDomain(rdomain), Range(range)
 }
 
 NBilinearForm::NBilinearForm(const NBilinearForm& cloneMe) : ShareableObject(),
-reducedPairing(clonePtr(cloneMe.reducedPairing)), 
-unreducedPairing(clonePtr(cloneMe.unreducedPairing)),
-lDomain(cloneMe.lDomain), 
-rDomain(cloneMe.rDomain), 
-Range(cloneMe.Range), 
-KKinvariantsComputed(cloneMe.KKinvariantsComputed), 
-torsionLinkingFormIsSplit(cloneMe.torsionLinkingFormIsSplit), 
-torsionLinkingFormIsHyperbolic(cloneMe.torsionLinkingFormIsHyperbolic), 
-torsionLinkingFormKKTTC(cloneMe.torsionLinkingFormKKTTC),  
-torsionRankString(cloneMe.torsionRankString), 
-torsionSigmaString(cloneMe.torsionSigmaString), 
-torsionLegendreString(cloneMe.torsionLegendreString) {}
+ reducedPairing(clonePtr(cloneMe.reducedPairing)), 
+ unreducedPairing(clonePtr(cloneMe.unreducedPairing)),
+ lDomain(cloneMe.lDomain),  rDomain(cloneMe.rDomain), 
+ Range(cloneMe.Range),  KKinvariantsComputed(cloneMe.KKinvariantsComputed), 
+ torsionLinkingFormIsSplit(cloneMe.torsionLinkingFormIsSplit), 
+ torsionLinkingFormIsHyperbolic(cloneMe.torsionLinkingFormIsHyperbolic), 
+ torsionLinkingFormKKTTC(cloneMe.torsionLinkingFormKKTTC),  
+ torsionRankString(cloneMe.torsionRankString), 
+ torsionSigmaString(cloneMe.torsionSigmaString), 
+ torsionLegendreString(cloneMe.torsionLegendreString) {}
 
 NBilinearForm::~NBilinearForm()
 { if (reducedPairing) delete reducedPairing;
   if (unreducedPairing) delete unreducedPairing; }
 
 const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & 
-NBilinearForm::unreducedMap() const
-{ return unreducedPairing->getGrid(); }
+ NBilinearForm::unreducedMap() const
+ { return unreducedPairing->getGrid(); }
 
 const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & 
-NBilinearForm::reducedMap() const
-{ return reducedPairing->getGrid(); }
-
+ NBilinearForm::reducedMap() const
+ { return reducedPairing->getGrid(); }
 
 std::vector<NLargeInteger> NBilinearForm::evalCC(
     std::vector<NLargeInteger> &lcc, std::vector<NLargeInteger> &rcc) const
@@ -122,9 +119,9 @@ unsigned long NBilinearForm::rank() const
  for (i = reducedPairing->getGrid().begin(); 
       i!=reducedPairing->getGrid().end(); i++)
   { 
-  if ( (i->first.entry(0) >= lDomain.getNumberOfInvariantFactors()) &&
+   if ( (i->first.entry(0) >= lDomain.getNumberOfInvariantFactors()) &&
        (i->first.entry(1) >= rDomain.getNumberOfInvariantFactors()) )
-  cM.entry( i->first.entry(0) - lDomain.getNumberOfInvariantFactors() , 
+   cM.entry( i->first.entry(0) - lDomain.getNumberOfInvariantFactors() , 
             i->first.entry(1) - rDomain.getNumberOfInvariantFactors() ) = 
             (*i->second); 
   }
@@ -475,46 +472,47 @@ NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
                rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
  NMatrixInt N( rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(),  
                rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() ); 
-
  for (unsigned long i=0; i<rDomain.minNumberOfGenerators(); i++) 
   for (unsigned long j=0; j<Range.minNumberOfGenerators(); j++)
-   { 
-     unsigned long k(i*Range.minNumberOfGenerators() + j);
-     if ( i < rDomain.getNumberOfInvariantFactors() )
-      { 
-        if ( j < Range.getNumberOfInvariantFactors() ) 
-         N.entry( k, k ) = rDomain.getInvariantFactor( i ).gcd( 
-                           Range.getInvariantFactor( j ) );
-        else N.entry( k, k ) = NLargeInteger::one;
-      } 
-     else
-      { 
-         if ( j < Range.getNumberOfInvariantFactors() ) 
-          N.entry( k, k ) = Range.getInvariantFactor( j );
-	 else N.entry( k, k ) = NLargeInteger::zero;
-      } 
-   }
+  { 
+   unsigned long k(i*Range.minNumberOfGenerators() + j);
+   if ( i < rDomain.getNumberOfInvariantFactors() )
+    { 
+      if ( j < Range.getNumberOfInvariantFactors() ) 
+       N.entry( k, k ) = rDomain.getInvariantFactor( i ).gcd( 
+                         Range.getInvariantFactor( j ) );
+      else N.entry( k, k ) = NLargeInteger::one;
+    } 
+    else
+    { 
+     if ( j < Range.getNumberOfInvariantFactors() ) 
+        N.entry( k, k ) = Range.getInvariantFactor( j );
+     else N.entry( k, k ) = NLargeInteger::zero;
+    } 
+  }
  NMarkedAbelianGroup HOM(M,N);
 
  // step 2: find matrix A --> Hom(B,C)
- NMatrixInt adjmat( rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(),
-                    lDomain.minNumberOfGenerators() );
+ NMatrixInt adjmat( 
+    rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(),
+    lDomain.minNumberOfGenerators() );
  std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator I;
- for (I=reducedPairing->getGrid().begin(); I!=reducedPairing->getGrid().end(); I++)
-        {
-        if ( ( I->first.entry(2) < Range.getNumberOfInvariantFactors() ) && 
-             ( I->first.entry(1) < rDomain.getNumberOfInvariantFactors() ) )
-         {
-	  NLargeInteger P( rDomain.getInvariantFactor(I->first.entry(1)) );
-	  NLargeInteger Q( Range.getInvariantFactor(I->first.entry(2)) );
-	  NLargeInteger divBy( Q.divExact( P.gcd(Q) ) ); 
-          adjmat.entry( I->first.entry(1)*Range.minNumberOfGenerators() + 
-          I->first.entry(2), I->first.entry(0) ) = I->second->divExact( divBy ); 
-         } 
-	else
-	  adjmat.entry( I->first.entry(1)*Range.minNumberOfGenerators() + 
-       I->first.entry(2), I->first.entry(0) ) = (*I->second); 
-        }
+ for (I=reducedPairing->getGrid().begin(); 
+      I!=reducedPairing->getGrid().end(); I++)
+  {
+   if ( ( I->first.entry(2) < Range.getNumberOfInvariantFactors() ) && 
+        ( I->first.entry(1) < rDomain.getNumberOfInvariantFactors() ) )
+    {
+     NLargeInteger P( rDomain.getInvariantFactor(I->first.entry(1)) );
+     NLargeInteger Q( Range.getInvariantFactor(I->first.entry(2)) );
+     NLargeInteger divBy( Q.divExact( P.gcd(Q) ) ); 
+     adjmat.entry( I->first.entry(1)*Range.minNumberOfGenerators() + 
+     I->first.entry(2), I->first.entry(0) ) = I->second->divExact( divBy ); 
+    } 
+   else
+    adjmat.entry( I->first.entry(1)*Range.minNumberOfGenerators() + 
+      I->first.entry(2), I->first.entry(0) ) = (*I->second); 
+   }
 
  // step 3: return the adjoint
  //         for this we need the SNF presentation of lDomain. 
@@ -524,7 +522,7 @@ NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
                 lDomain.minNumberOfGenerators() );
 
  for (unsigned long i=0; i<lDomain.getNumberOfInvariantFactors(); i++)
-	lN.entry(i,i) = lDomain.getInvariantFactor(i);
+   lN.entry(i,i) = lDomain.getInvariantFactor(i);
 
  NMarkedAbelianGroup simpleLdomain( lM, lN );
 
@@ -566,20 +564,20 @@ NHomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
  std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator I;
  for (I=reducedPairing->getGrid().begin(); 
       I!=reducedPairing->getGrid().end(); I++)
-	{
-	 if ( ( I->first.entry(2) < Range.getNumberOfInvariantFactors() ) &&
-              ( I->first.entry(0) < lDomain.getNumberOfInvariantFactors() ) )
-	  {
-	   NLargeInteger P( lDomain.getInvariantFactor( I->first.entry(0) ) );
-	   NLargeInteger Q( Range.getInvariantFactor( I->first.entry(2) ) );
-	   NLargeInteger divBy( Q.divExact( P.gcd(Q) ) );
-         adjmat.entry( I->first.entry(0)*Range.minNumberOfGenerators() + 
-          I->first.entry(2), I->first.entry(1) ) = I->second->divExact( divBy );
-	  }
-	 else
-	   adjmat.entry( I->first.entry(0)*Range.minNumberOfGenerators() + 
-        I->first.entry(2), I->first.entry(1) ) = (*I->second);
-	}
+  {
+   if ( ( I->first.entry(2) < Range.getNumberOfInvariantFactors() ) &&
+        ( I->first.entry(0) < lDomain.getNumberOfInvariantFactors() ) )
+   {
+    NLargeInteger P( lDomain.getInvariantFactor( I->first.entry(0) ) );
+    NLargeInteger Q( Range.getInvariantFactor( I->first.entry(2) ) );
+    NLargeInteger divBy( Q.divExact( P.gcd(Q) ) );
+    adjmat.entry( I->first.entry(0)*Range.minNumberOfGenerators() + 
+     I->first.entry(2), I->first.entry(1) ) = I->second->divExact( divBy );
+   }
+  else
+   adjmat.entry( I->first.entry(0)*Range.minNumberOfGenerators() + 
+    I->first.entry(2), I->first.entry(1) ) = (*I->second);
+  }
  // step 3: return the adjoint
  //	    simplified SNF pres of rDomain
  NMatrixInt rM( 1, rDomain.minNumberOfGenerators() );
@@ -587,14 +585,12 @@ NHomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
                 rDomain.minNumberOfGenerators() );
 
  for (unsigned long i=0; i<rDomain.getNumberOfInvariantFactors(); i++)
-	rN.entry(i,i) = rDomain.getInvariantFactor(i);
+  rN.entry(i,i) = rDomain.getInvariantFactor(i);
 
  NMarkedAbelianGroup simpleRdomain( rM, rN );
 
  return NHomMarkedAbelianGroup( simpleRdomain, HOM, adjmat );
 }
-
-
 
 void NBilinearForm::writeTextShort(std::ostream& out) const
 {
@@ -602,11 +598,6 @@ void NBilinearForm::writeTextShort(std::ostream& out) const
  lDomain.writeTextShort(out); out<<" x ";
  rDomain.writeTextShort(out); out<<" --> ";
  Range.writeTextShort(out);   out<<"]";
-}
-
-std::string dumpMatrix(const NMatrixRing< NRational > &mat)
-{
- return std::string("blah");
 }
 
 void NBilinearForm::writeTextLong(std::ostream& out) const
@@ -918,8 +909,8 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
                     incrun=true; // tells while loop to increment at incind
 
                     while (incrun) {
-			groupV[incind] += NLargeInteger::one;
-			groupV[incind] %= ProperPrimePower[incind];
+                        groupV[incind] += NLargeInteger::one;
+                        groupV[incind] %= ProperPrimePower[incind];
                         if (groupV[incind] == 0) {
                             incind++;
                         } else {
@@ -930,7 +921,6 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
                             notatend=false;
                         }
                     }
-
                 }
                 // this sum is either zero or a multiple of e^{2pi i sigma /8}
                 // and we now we need to determine if (xlD,ylD) is 0 or

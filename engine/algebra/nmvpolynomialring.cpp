@@ -47,23 +47,31 @@ namespace regina {
 /**
  *  Comparison function for polynomials in NMVPolynomialRing< NLargeInteger >
  */
-bool MV_polynomial_comparison( const NMVPolynomialRing< NLargeInteger > &first, const NMVPolynomialRing< NLargeInteger > &second)
+bool MV_polynomial_comparison( const NMVPolynomialRing< NLargeInteger > &first, 
+                               const NMVPolynomialRing< NLargeInteger > &second)
 {
  // first, number of non-zero terms.
- if (first.degree() < second.degree()) return true; if (first.degree() > second.degree()) return false;
+ if (first.degree() < second.degree()) return true; 
+ if (first.degree() > second.degree()) return false;
 
- // perhaps add a sort on the size of the bounding diamond. Diameter than lexico on side lengths in decreasing
- // order??  TODO
+ // perhaps add a sort on the size of the bounding diamond. Diameter than 
+ // lexico on side lengths in decreasing
 
  // other things to sort on: ?vertices on the boundary? (expensive?), volume? 
- const std::map< NPolynomialIndex< signed long >, NLargeInteger* > fTerms(first.allTerms()); 
- const std::map< NPolynomialIndex< signed long >, NLargeInteger* > sTerms(second.allTerms());
- std::map< NPolynomialIndex< signed long >, NLargeInteger* >::const_iterator fI(fTerms.begin()); 
- std::map< NPolynomialIndex< signed long >, NLargeInteger* >::const_iterator sI(sTerms.begin()); 
+ const std::map< NPolynomialIndex< signed long >, NLargeInteger* > 
+    fTerms(first.allTerms()); 
+ const std::map< NPolynomialIndex< signed long >, NLargeInteger* > 
+    sTerms(second.allTerms());
+ std::map< NPolynomialIndex< signed long >, NLargeInteger* >::const_iterator 
+    fI(fTerms.begin()); 
+ std::map< NPolynomialIndex< signed long >, NLargeInteger* >::const_iterator 
+    sI(sTerms.begin()); 
  while ( (fI != fTerms.end()) || (sI != sTerms.end()) )
   {
-   if (fI->first < sI->first) return true;  if (fI->first != sI->first) return false;
-   if ( *(fI->second) < *(sI->second) ) return true;  if ( *(fI->second) > *(sI->second) ) return false;
+   if (fI->first < sI->first) return true;  
+   if (fI->first != sI->first) return false;
+   if ( *(fI->second) < *(sI->second) ) return true;  
+   if ( *(fI->second) > *(sI->second) ) return false;
    fI++; sI++;
   }
  // iterate and check how they compare...
@@ -71,14 +79,17 @@ bool MV_polynomial_comparison( const NMVPolynomialRing< NLargeInteger > &first, 
 }
 
 /**
- * Given a polynomial in n variables, compute the maximum of \pm x1 + ... + \pm xn for all possible \pm
+ * Given a polynomial in n variables, compute the maximum of
+ *  \pm x1 + ... + \pm xn for all possible \pm
  * signs, indexed by NPartitions of n-element sets.   
- */ // TODO this is presently antiquated.  Delete unless there's a purpose for it.
+ * // TODO this is presently antiquated.  
+ * Delete unless there's a purpose for it. */
 void buildBoundingDiamond( const NMVPolynomialRing< NLargeInteger > &poly, 
                            std::map< NPartition, signed long > &boundDiamond )
 {
  if (poly.degree() == 0) return; boundDiamond.clear();
- std::map< NPolynomialIndex< signed long >, NLargeInteger* >::const_iterator I(poly.allTerms().begin());
+ std::map< NPolynomialIndex< signed long >, NLargeInteger* >::const_iterator 
+    I(poly.allTerms().begin());
  unsigned long DIM(I->first.dim());
  NPartition P( DIM, 0, false );
  // initialize using first term of poly
@@ -98,8 +109,9 @@ void buildBoundingDiamond( const NMVPolynomialRing< NLargeInteger > &poly,
    while (!P.atEnd())
     {
      signed long sum(0); 
-     for (unsigned long i=0; i<DIM; i++) // error, should be taking ? max ? min ? something, not sum
-      { sum += ( P.partition().get(i) ? -I->first.entry(i) : I->first.entry(i)); }
+     for (unsigned long i=0; i<DIM; i++) 
+     // error, should be taking ? max ? min ? something, not sum
+     { sum += ( P.partition().get(i) ? -I->first.entry(i) : I->first.entry(i));}
      boundDiamond[P] = std::max( sum, boundDiamond[P] );
      ++P;
     }
@@ -108,27 +120,39 @@ void buildBoundingDiamond( const NMVPolynomialRing< NLargeInteger > &poly,
 }  
 
 /**
- * Given a multi-variable polynomial, multiply it appropriately by \pm 1 t^I so that its terms
- * are as small as possible in the taxicab metric (i1,...,in) --> |i1| + ... + |in|
+ * Given a multi-variable polynomial, multiply it appropriately by
+ *  \pm 1 t^I so that its terms
+ * are as small as possible in the taxicab metric 
+ * (i1,...,in) --> |i1| + ... + |in|
  */
-void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly, bool plusBias )
+void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly,
+     bool plusBias )
 {
  // let's get rid of the silly cases
  if (poly.degree() == 0) return; 
- if (poly.degree() == 1) { poly = poly*NMVPolynomialRing< NLargeInteger >(NLargeInteger::one, -poly.allTerms().begin()->first);
-                          return; }
+ if (poly.degree() == 1) 
+  { poly = poly*NMVPolynomialRing< NLargeInteger >(NLargeInteger::one, 
+           -poly.allTerms().begin()->first);
+    return; 
+  }
  std::map< NPolynomialIndex< signed long >, NLargeInteger* >::const_iterator ci;
- //okay, we're past the trivial cases. let's figure out the radius of this polynomial. 
+ //okay, we're past the trivial cases. 
+ // let's figure out the radius of this polynomial. 
  unsigned long dim( poly.allTerms().begin()->first.dim() );
  dim = poly.allTerms().begin()->first.dim();
  // Step 1: let's find R  add up abs of last term of polynomial
  unsigned long R(0); 
- for (unsigned long i=0; i<dim; i++) R += abs(poly.allTerms().rbegin()->first.entry(i));
+ for (unsigned long i=0; i<dim; i++) R += 
+    abs(poly.allTerms().rbegin()->first.entry(i));
 
  // Step 2: support hits which faces? Possible loop-back point.
  std::vector< signed long > delta( dim, 0 );
- find_bdry_faces: // loop to here if we need to re-determine which boundary faces the support touches
- std::vector< bool > touchBdry( 2*dim, false ); // entry [2*i + j] rep whether or not there is element on (top/bot (j)) of i-th bdry face 
+ find_bdry_faces: 
+ // loop to here if we need to re-determine which
+ //  boundary faces the support touches
+ std::vector< bool > touchBdry( 2*dim, false ); 
+ // entry [2*i + j] rep whether or not there is element on
+ //  (top/bot (j)) of i-th bdry face 
  std::vector< bool > besideBdry( 2*dim, false ); 
  for (ci=poly.allTerms().begin(); ci!=poly.allTerms().end(); ci++)
   {
@@ -146,26 +170,31 @@ void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly, bool plusBias 
     }
   }
 
- // Step 3: Find pair of opp faces where you're touching outside of one and not the inside of the other.
- //         if so, shift, reduce R and loop back to find_bdry_faces, if not continue.
+ // Step 3: Find pair of opp faces where you're touching outside of
+ //         one and not the inside of the other. if so, shift, reduce R and 
+ //         loop back to find_bdry_faces, if not continue.
  for (unsigned long i=0; i<dim; i++)
   {
-   if (touchBdry[2*i]  && !touchBdry[2*i+1] && !besideBdry[2*i+1]) // touch + side, not beside - side
+   if (touchBdry[2*i]  && !touchBdry[2*i+1] && !besideBdry[2*i+1]) 
+   // touch + side, not beside - side
     {// touches the + side not the - side
         delta[i]++; R--;
         goto find_bdry_faces;
     } else
-   if (!touchBdry[2*i] && touchBdry[2*i+1] && !besideBdry[2*i]) // touch - side, not beside + side
+   if (!touchBdry[2*i] && touchBdry[2*i+1] && !besideBdry[2*i]) 
+     // touch - side, not beside + side
     {// touches the - side, not the + side
         delta[i]--;  R--;
         goto find_bdry_faces;
     } else
-   if ( plusBias && !touchBdry[2*i]) // does not touch + side and we don't like that
+   if ( plusBias && !touchBdry[2*i])
+    // does not touch + side and we don't like that
     {
         delta[i]++; // normalize to the + side if possible, i.e. 
         goto find_bdry_faces; // favour 1 + x over x^{-1} + 1
     } else
-   if ( !plusBias && !touchBdry[2*i+1]) // does not touch the - side and we don't like that
+   if ( !plusBias && !touchBdry[2*i+1]) 
+   // does not touch the - side and we don't like that
     {
         delta[i]--; // normalize to the + side if possible, i.e. 
         goto find_bdry_faces; // favour 1 + x over x^{-1} + 1
@@ -183,9 +212,10 @@ void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly, bool plusBias 
 }
 
 // TODO this will be the remainder / division algorithm. 
-// To implement this we need to know which elements from the ideal can be translated to be inside the bounding
-// diamong for elt. 
-bool reduceByIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &ideal, NMVPolynomialRing< NLargeInteger > &elt )
+// To implement this we need to know which elements from the ideal can be
+//  translated to be inside the bounding diamong for elt. 
+bool reduceByIdeal( const std::list<NMVPolynomialRing< NLargeInteger > > &ideal, 
+                    NMVPolynomialRing< NLargeInteger > &elt )
 {
  if (elt.isZero()) return true; 
  if (ideal.size()==0) return false;
