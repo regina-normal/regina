@@ -149,8 +149,15 @@ namespace {
 }
 
 template <int dim>
-std::string NGenericTriangulation<dim>::isoSig(const Triangulation& tri,
-        unsigned simp, const Perm& vertices) {
+std::string NGenericTriangulation<dim>::isoSig(
+        const typename DimTraits<dim>::Triangulation& tri,
+        unsigned simp,
+        const typename DimTraits<dim>::Perm& vertices) {
+    // These typedefs are already present in the class declaration,
+    // but gcc 4.4 seems to break unless we include them here also.
+    typedef typename DimTraits<dim>::Perm Perm;
+    typedef typename DimTraits<dim>::Simplex Simplex;
+
     // Only process the component that simp belongs to.
 
     // ---------------------------------------------------------------------
@@ -323,9 +330,10 @@ std::string NGenericTriangulation<dim>::isoSig(const Triangulation& tri,
 }
 
 template <int dim>
-std::string NGenericTriangulation<dim>::isoSig(const Triangulation& tri) {
+std::string NGenericTriangulation<dim>::isoSig(
+        const typename DimTraits<dim>::Triangulation& tri) {
     // These typedefs are already present in the class declaration,
-    // but gcc 4.7.3 seem to break unless we include them here also.
+    // but gcc 4.7.3 seems to break unless we include them here also.
     typedef typename DimTraits<dim>::Perm Perm;
     typedef typename DimTraits<dim>::Triangulation Triangulation;
 
@@ -373,8 +381,10 @@ template <int dim>
 typename DimTraits<dim>::Triangulation*
         NGenericTriangulation<dim>::fromIsoSig(const std::string& sig) {
     // These typedefs are already present in the class declaration,
-    // but gcc 4.7.3 seem to break unless we include them here also.
+    // but gcc 4.4 seems to break unless we include them here also.
     typedef typename DimTraits<dim>::Perm Perm;
+    typedef typename DimTraits<dim>::Simplex Simplex;
+    typedef typename DimTraits<dim>::Triangulation Triangulation;
 
     std::auto_ptr<Triangulation> ans(new Triangulation());
 

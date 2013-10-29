@@ -68,5 +68,16 @@ const NPerm5 Dim4Edge::ordering[10] = {
     NPerm5(3, 4, 0, 1, 2)
 };
 
+void Dim4Edge::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << std::endl;
+
+    out << "Appears as:" << std::endl;
+    std::vector<Dim4EdgeEmbedding>::const_iterator it;
+    for (it = emb_.begin(); it != emb_.end(); ++it)
+        out << "  " << it->getPentachoron()->markedIndex()
+            << " (" << it->getVertices().trunc2() << ')' << std::endl;
+}
+
 } // namespace regina
 

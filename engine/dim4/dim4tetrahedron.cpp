@@ -92,5 +92,16 @@ NPerm5 Dim4Tetrahedron::getTriangleMapping(int tri) const {
         tri, 4);
 }
 
+void Dim4Tetrahedron::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << std::endl;
+
+    out << "Appears as:" << std::endl;
+    for (int i = 0; i < nEmb_; ++i)
+        out << "  " << emb_[i].getPentachoron()->markedIndex()
+            << " (" << emb_[i].getVertices().trunc4() << ')'
+            << std::endl;
+}
+
 } // namespace regina
 

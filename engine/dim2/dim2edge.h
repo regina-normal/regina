@@ -145,6 +145,9 @@ class REGINA_API Dim2Edge : public ShareableObject, public NMarkedElement {
          * are, in canonical order, <tt>ordering[i][0,1]</tt>.  As an
          * immediate consequence, we obtain <tt>ordering[i][2] == i</tt>.
          *
+         * Regina defines canonical order to be \e increasing order.
+         * That is, <tt>ordering[i][0] &lt; ordering[i][1]</tt>.
+         *
          * This table does \e not describe the mapping from specific
          * edges within a triangulation into individual triangles
          * (for that, see Dim2Triangle::getEdgeMapping() instead).
@@ -237,6 +240,7 @@ class REGINA_API Dim2Edge : public ShareableObject, public NMarkedElement {
         bool isBoundary() const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**

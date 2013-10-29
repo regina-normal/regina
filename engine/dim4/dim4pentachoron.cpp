@@ -85,5 +85,20 @@ void Dim4Pentachoron::isolate() {
             unjoin(i);
 }
 
+void Dim4Pentachoron::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << std::endl;
+    for (int i = 4; i >= 0; --i) {
+        out << Dim4Tetrahedron::ordering[i].trunc4() << " -> ";
+        if (! adj_[i])
+            out << "boundary";
+        else
+            out << adj_[i]->markedIndex() << " ("
+                << (adjPerm_[i] * Dim4Tetrahedron::ordering[i]).trunc4()
+                << ')';
+        out << std::endl;
+    }
+}
+
 } // namespace regina
 

@@ -115,7 +115,8 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * computed.
          * @return the isomorphism signature of the given triangulation.
          */
-        static std::string isoSig(const Triangulation& tri);
+        static std::string isoSig(
+            const typename DimTraits<dim>::Triangulation& tri);
 
         /**
          * Recovers a full triangulation from an isomorphism signature.
@@ -203,8 +204,10 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * given tetrahedron.
          * @return the candidate isomorphism signature.
          */
-        static std::string isoSig(const Triangulation& tri,
-            unsigned simp, const Perm& vertices);
+        static std::string isoSig(
+            const typename DimTraits<dim>::Triangulation& tri,
+            unsigned simp,
+            const typename DimTraits<dim>::Perm& vertices);
 };
 
 /*@}*/

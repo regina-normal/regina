@@ -53,7 +53,7 @@ PacketWindow::PacketWindow(PacketPane* newPane, ReginaMain* parent) :
     // Set destructive close
     setAttribute(Qt::WA_DeleteOnClose);
 
-    setWindowTitle(heldPane->getPacket()->getPacketLabel().c_str());
+    setWindowTitle(heldPane->getPacket()->getHumanLabel().c_str());
     
     // Set up the widgets and menu bar.
     heldPane->setParent(this);
