@@ -37,25 +37,30 @@
 namespace regina {
 
 //chain complex stuff
-NCellularData::ChainComplexLocator::ChainComplexLocator(unsigned long newDim, homology_coordinate_system useHcs)
+NCellularData::ChainComplexLocator::ChainComplexLocator(unsigned long newDim, 
+    homology_coordinate_system useHcs)
 { dim = newDim; hcs = useHcs; }
 
-NCellularData::ChainComplexLocator::ChainComplexLocator(const ChainComplexLocator &cloneMe)
+NCellularData::ChainComplexLocator::ChainComplexLocator(const 
+    ChainComplexLocator &cloneMe)
 { dim = cloneMe.dim; hcs = cloneMe.hcs; }
 
-bool NCellularData::ChainComplexLocator::operator<(const ChainComplexLocator &rhs) const
+bool NCellularData::ChainComplexLocator::operator<(const 
+    ChainComplexLocator &rhs) const
 {
  if (dim < rhs.dim) return true; if (dim > rhs.dim) return false; 
  if (hcs < rhs.hcs) return true; if (hcs > rhs.hcs) return false; 
  return false; 
 }
 
-bool NCellularData::ChainComplexLocator::operator==(const ChainComplexLocator &rhs) const
+bool NCellularData::ChainComplexLocator::operator==(const 
+    ChainComplexLocator &rhs) const
 {
  return ( (dim == rhs.dim) && (hcs == rhs.hcs) ); 
 }
 
-bool NCellularData::ChainComplexLocator::operator!=(const ChainComplexLocator &rhs) const
+bool NCellularData::ChainComplexLocator::operator!=(const 
+    ChainComplexLocator &rhs) const
 {
  return ( (dim != rhs.dim) || (hcs != rhs.hcs) );
 }
@@ -80,11 +85,12 @@ void NCellularData::ChainComplexLocator::writeTextLong(std::ostream& out) const
 }
 
 // chain map stuff
-NCellularData::ChainMapLocator::ChainMapLocator(const ChainComplexLocator &Domain, 
-                                                const ChainComplexLocator &Range) :
+NCellularData::ChainMapLocator::ChainMapLocator(
+    const ChainComplexLocator &Domain, const ChainComplexLocator &Range) :
  domain(Domain), range(Range) {}
 
-NCellularData::ChainMapLocator::ChainMapLocator(const ChainMapLocator &cloneMe) :
+NCellularData::ChainMapLocator::ChainMapLocator(
+    const ChainMapLocator &cloneMe) :
  domain(cloneMe.domain), range(cloneMe.range) {}
 
 bool NCellularData::ChainMapLocator::operator<(const ChainMapLocator &rhs) const
@@ -94,10 +100,12 @@ bool NCellularData::ChainMapLocator::operator<(const ChainMapLocator &rhs) const
  return false; 
 }
 
-bool NCellularData::ChainMapLocator::operator==(const ChainMapLocator &rhs) const
+bool NCellularData::ChainMapLocator::operator==(
+    const ChainMapLocator &rhs) const
 { return ( (domain==rhs.domain) && (range==rhs.range) ); }
 
-bool NCellularData::ChainMapLocator::operator!=(const ChainMapLocator &rhs) const
+bool NCellularData::ChainMapLocator::operator!=(
+    const ChainMapLocator &rhs) const
 { return ( (domain!=rhs.domain) || (range!=rhs.range) ); }
     
 void NCellularData::ChainMapLocator::writeTextShort(std::ostream& out) const
@@ -108,9 +116,9 @@ void NCellularData::ChainMapLocator::writeTextLong(std::ostream& out) const
 { //TODO
 }  
 
-
 // groupLocator
-NCellularData::GroupLocator::GroupLocator(unsigned long newDim, variance_type newVar,
+NCellularData::GroupLocator::GroupLocator(
+     unsigned long newDim, variance_type newVar,
 	 homology_coordinate_system useHcs, unsigned long useCof) :
  dim(newDim), var(newVar), hcs(useHcs), cof(useCof) {}
 
@@ -119,24 +127,34 @@ NCellularData::GroupLocator::GroupLocator(const GroupLocator &cloneMe) :
 
 void NCellularData::GroupLocator::writeTextShort(std::ostream& out) const
 {
-if ( (hcs == STD_coord) || (hcs == STD_BDRY_coord) || (hcs == STD_REL_BDRY_coord) ) out<<"(std)"; else
-if ( (hcs == DUAL_coord) || (hcs == DUAL_BDRY_coord) || (hcs == DUAL_REL_BDRY_coord) ) out<<"(dual)"; else 
-if ( (hcs == MIX_coord) || (hcs == MIX_BDRY_coord) || (hcs == MIX_REL_BDRY_coord) ) out<<"(mix)"; 
+if ( (hcs == STD_coord) || (hcs == STD_BDRY_coord) || 
+     (hcs == STD_REL_BDRY_coord) ) out<<"(std)"; else
+if ( (hcs == DUAL_coord) || (hcs == DUAL_BDRY_coord) || 
+     (hcs == DUAL_REL_BDRY_coord) ) out<<"(dual)"; else 
+if ( (hcs == MIX_coord) || (hcs == MIX_BDRY_coord) || 
+     (hcs == MIX_REL_BDRY_coord) ) out<<"(mix)"; 
 out<<"H"<<( var==coVariant ? "_" : "^" )<<dim;
-if ( (hcs == STD_BDRY_coord) || (hcs == DUAL_BDRY_coord) || (hcs == MIX_BDRY_coord) ) out<<"(bM;"; else 
-if ( (hcs == STD_REL_BDRY_coord) || (hcs == DUAL_REL_BDRY_coord) || (hcs == MIX_REL_BDRY_coord) ) out<<"(M,bM;";
+if ( (hcs == STD_BDRY_coord) || (hcs == DUAL_BDRY_coord) || 
+     (hcs == MIX_BDRY_coord) ) out<<"(bM;"; else 
+if ( (hcs == STD_REL_BDRY_coord) || (hcs == DUAL_REL_BDRY_coord) || 
+     (hcs == MIX_REL_BDRY_coord) ) out<<"(M,bM;";
 else out<<"(M;";
 if (cof == 0) out<<"Z)"; else out<<"Z_"<<cof<<")";
 }
 
 void NCellularData::GroupLocator::writeTextLong(std::ostream& out) const
 { // at present this is the same as writeTextShort
-if ( (hcs == STD_coord) || (hcs == STD_BDRY_coord) || (hcs == STD_REL_BDRY_coord) ) out<<"(std)"; else
-if ( (hcs == DUAL_coord) || (hcs == DUAL_BDRY_coord) || (hcs == DUAL_REL_BDRY_coord) ) out<<"(dual)"; else 
-if ( (hcs == MIX_coord) || (hcs == MIX_BDRY_coord) || (hcs == MIX_REL_BDRY_coord) ) out<<"(mix)"; 
+if ( (hcs == STD_coord) || (hcs == STD_BDRY_coord) || 
+     (hcs == STD_REL_BDRY_coord) ) out<<"(std)"; else
+if ( (hcs == DUAL_coord) || (hcs == DUAL_BDRY_coord) || 
+     (hcs == DUAL_REL_BDRY_coord) ) out<<"(dual)"; else 
+if ( (hcs == MIX_coord) || (hcs == MIX_BDRY_coord) || 
+     (hcs == MIX_REL_BDRY_coord) ) out<<"(mix)"; 
 out<<"H"<<( var==coVariant ? "_" : "^" )<<dim;
-if ( (hcs == STD_BDRY_coord) || (hcs == DUAL_BDRY_coord) || (hcs == MIX_BDRY_coord) ) out<<"(bM;"; else 
-if ( (hcs == STD_REL_BDRY_coord) || (hcs == DUAL_REL_BDRY_coord) || (hcs == MIX_REL_BDRY_coord) ) out<<"(M,bM;";
+if ( (hcs == STD_BDRY_coord) || (hcs == DUAL_BDRY_coord) || 
+     (hcs == MIX_BDRY_coord) ) out<<"(bM;"; else 
+if ( (hcs == STD_REL_BDRY_coord) || (hcs == DUAL_REL_BDRY_coord) || 
+     (hcs == MIX_REL_BDRY_coord) ) out<<"(M,bM;";
 else out<<"(M;";
 if (cof == 0) out<<"Z)"; else out<<"Z_"<<cof<<")";
 }
@@ -151,23 +169,28 @@ return false;
 }
 
 bool NCellularData::GroupLocator::operator==(const GroupLocator &rhs) const
-{ return ( (var==rhs.var) && (dim == rhs.dim) && (cof == rhs.cof) && (hcs == rhs.hcs) ); }
+{ return ( (var==rhs.var) && (dim == rhs.dim) && 
+           (cof == rhs.cof) && (hcs == rhs.hcs) ); }
 
 bool NCellularData::GroupLocator::operator!=(const GroupLocator &rhs) const
-{ return ( (var!=rhs.var) || (dim != rhs.dim) || (cof != rhs.cof) || (hcs != rhs.hcs) ); }
+{ return ( (var!=rhs.var) || (dim != rhs.dim) || 
+         (cof != rhs.cof) || (hcs != rhs.hcs) ); }
 
 // homLocator
-NCellularData::HomLocator::HomLocator(const GroupLocator &newDomain, const GroupLocator &newRange) : 
+NCellularData::HomLocator::HomLocator(
+     const GroupLocator &newDomain, const GroupLocator &newRange) : 
   domain( newDomain ), range( newRange ) {}
 
 NCellularData::HomLocator::HomLocator(const HomLocator &cloneMe) :
   domain( cloneMe.domain ), range( cloneMe.range ) {}
 
 void NCellularData::HomLocator::writeTextShort(std::ostream& out) const
-{ out<<"map["; domain.writeTextShort(out); out<<"-->"; range.writeTextShort(out); out<<"]"; }
+{ out<<"map["; domain.writeTextShort(out); out<<"-->"; 
+  range.writeTextShort(out); out<<"]"; }
 
 void NCellularData::HomLocator::writeTextLong(std::ostream& out) const
-{ out<<"map["; domain.writeTextShort(out); out<<"-->"; range.writeTextShort(out); out<<"]"; }
+{ out<<"map["; domain.writeTextShort(out); out<<"-->";
+  range.writeTextShort(out); out<<"]"; }
 
 bool NCellularData::HomLocator::operator<(const HomLocator &rhs) const
 {
@@ -192,12 +215,15 @@ return false;
 }
 
 bool NCellularData::FormLocator::operator==(const FormLocator &rhs) const
-{ return ( (ft == rhs.ft) && (ldomain==rhs.ldomain) && (rdomain == rhs.rdomain) ); }
+{ return ( (ft == rhs.ft) && (ldomain==rhs.ldomain) && 
+           (rdomain == rhs.rdomain) ); }
 
 bool NCellularData::FormLocator::operator!=(const FormLocator &rhs) const
-{ return ( (ft != rhs.ft) || (ldomain!=rhs.ldomain) || (rdomain != rhs.rdomain) ); }
+{ return ( (ft != rhs.ft) || (ldomain!=rhs.ldomain) || 
+           (rdomain != rhs.rdomain) ); }
 
-NCellularData::FormLocator::FormLocator( form_type FT, const GroupLocator &newLdomain, const GroupLocator &newRdomain) :
+NCellularData::FormLocator::FormLocator( 
+ form_type FT, const GroupLocator &newLdomain, const GroupLocator &newRdomain) :
  ldomain( newLdomain ), rdomain( newRdomain ), ft(FT)  {}
 
 NCellularData::FormLocator::FormLocator( const FormLocator &cloneMe ) :
@@ -210,32 +236,43 @@ void NCellularData::FormLocator::writeTextLong(std::ostream&) const
 {} // TODO
 
 // groupPresLocator
-NCellularData::GroupPresLocator::GroupPresLocator( submanifold_type ST, unsigned long CI ) :
+NCellularData::GroupPresLocator::GroupPresLocator(
+     submanifold_type ST, unsigned long CI ) :
  sub_man( ST ), component_index( CI ) {}
 
-NCellularData::GroupPresLocator::GroupPresLocator( const GroupPresLocator &cloneMe ) :
+NCellularData::GroupPresLocator::GroupPresLocator( 
+     const GroupPresLocator &cloneMe ) :
  sub_man( cloneMe.sub_man ), component_index( cloneMe.component_index ) {}
 
-bool NCellularData::GroupPresLocator::operator<(const GroupPresLocator &rhs) const
- { if ( sub_man < rhs.sub_man ) return true;                 if ( sub_man > rhs.sub_man ) return false;
-   if ( component_index < rhs.component_index ) return true; if ( component_index > rhs.component_index ) return false;
+bool NCellularData::GroupPresLocator::operator<(
+     const GroupPresLocator &rhs) const
+ { if ( sub_man < rhs.sub_man ) return true;                 
+   if ( sub_man > rhs.sub_man ) return false;
+   if ( component_index < rhs.component_index ) return true; 
+   if ( component_index > rhs.component_index ) return false;
    return false;
  }
 
-bool NCellularData::GroupPresLocator::operator==(const GroupPresLocator &rhs) const
- { if ( (sub_man == rhs.sub_man) && (component_index == rhs.component_index) ) return true;
+bool NCellularData::GroupPresLocator::operator==(
+     const GroupPresLocator &rhs) const
+ { if ( (sub_man == rhs.sub_man) && 
+        (component_index == rhs.component_index) ) return true;
     else return false;
  }
 
-bool NCellularData::GroupPresLocator::operator!=(const GroupPresLocator &rhs) const
- { if ( (sub_man != rhs.sub_man) || (component_index != rhs.component_index) ) return true;
+bool NCellularData::GroupPresLocator::operator!=(
+     const GroupPresLocator &rhs) const
+ { if ( (sub_man != rhs.sub_man) || 
+        (component_index != rhs.component_index) ) return true;
     else return false;
  }
 
 void NCellularData::GroupPresLocator::writeTextShort(std::ostream& out) const
 {
- if (sub_man == standard_boundary) out<<"Standard boundary "<<component_index<<" component Pi1.";
- else  if (sub_man == ideal_boundary) out<<"Ideal boundary "<<component_index<<" component Pi1.";
+ if (sub_man == standard_boundary) out<<"Standard boundary "<<
+    component_index<<" component Pi1.";
+ else  if (sub_man == ideal_boundary) out<<"Ideal boundary "<<
+     component_index<<" component Pi1.";
  else  if (sub_man == whole_manifold) out<<"Whole manifold Pi1.";
  else out<<"Unknown type.";
 } 
@@ -244,13 +281,17 @@ void NCellularData::GroupPresLocator::writeTextLong(std::ostream& out) const
 { writeTextShort(out); } 
 
 // homGroupPresLocator
-NCellularData::HomGroupPresLocator::HomGroupPresLocator( submanifold_type ST, unsigned long CI ) :
+NCellularData::HomGroupPresLocator::HomGroupPresLocator( 
+    submanifold_type ST, unsigned long CI ) :
  inclusion_sub_man( ST ), subman_component_index( CI ) {}
 
-NCellularData::HomGroupPresLocator::HomGroupPresLocator( const HomGroupPresLocator &cloneMe ) :
- inclusion_sub_man( cloneMe.inclusion_sub_man ), subman_component_index( cloneMe.subman_component_index ) {}
+NCellularData::HomGroupPresLocator::HomGroupPresLocator(
+     const HomGroupPresLocator &cloneMe ) :
+ inclusion_sub_man( cloneMe.inclusion_sub_man ), 
+ subman_component_index( cloneMe.subman_component_index ) {}
 
-bool NCellularData::HomGroupPresLocator::operator<(const HomGroupPresLocator &rhs) const
+bool NCellularData::HomGroupPresLocator::operator<(
+     const HomGroupPresLocator &rhs) const
  { if ( inclusion_sub_man < rhs.inclusion_sub_man ) return true; 
    if ( inclusion_sub_man > rhs.inclusion_sub_man ) return false;
    if ( subman_component_index < rhs.subman_component_index ) return true; 
@@ -258,27 +299,34 @@ bool NCellularData::HomGroupPresLocator::operator<(const HomGroupPresLocator &rh
    return false;
  }
 
-bool NCellularData::HomGroupPresLocator::operator==(const HomGroupPresLocator &rhs) const
- { if ( (inclusion_sub_man == rhs.inclusion_sub_man) && (subman_component_index == rhs.subman_component_index) ) 
+bool NCellularData::HomGroupPresLocator::operator==(
+ const HomGroupPresLocator &rhs) const
+ { if ( (inclusion_sub_man == rhs.inclusion_sub_man) && 
+        (subman_component_index == rhs.subman_component_index) ) 
    return true; else return false;
  }
 
-bool NCellularData::HomGroupPresLocator::operator!=(const HomGroupPresLocator &rhs) const
- { if ( (inclusion_sub_man != rhs.inclusion_sub_man) || (subman_component_index != rhs.subman_component_index) ) 
+bool NCellularData::HomGroupPresLocator::operator!=(
+     const HomGroupPresLocator &rhs) const
+ { if ( (inclusion_sub_man != rhs.inclusion_sub_man) || 
+        (subman_component_index != rhs.subman_component_index) ) 
    return true; else return false;
  }
 
 void NCellularData::HomGroupPresLocator::writeTextShort(std::ostream& out) const
 {
- if (inclusion_sub_man == ideal_boundary) out<<"Ideal component "<<subman_component_index<<" Pi1 inclusion.";
- else if (inclusion_sub_man == standard_boundary) out<<"Standard component "<<subman_component_index<<" Pi1 inclusion.";
+ if (inclusion_sub_man == ideal_boundary) out<<"Ideal component "<<
+     subman_component_index<<" Pi1 inclusion.";
+ else if (inclusion_sub_man == standard_boundary) out<<"Standard component "<<
+          subman_component_index<<" Pi1 inclusion.";
  else out<<"Unknown type.";
 } 
 
 void NCellularData::HomGroupPresLocator::writeTextLong(std::ostream& out) const
 { writeTextShort(out); } 
 
-NCellularData::coverFacetData::coverFacetData( unsigned long cellN, signed long Sig, const NGroupExpression& word )
+NCellularData::coverFacetData::coverFacetData( unsigned long cellN, 
+ signed long Sig, const NGroupExpression& word )
 {  
  cellNo = cellN; 
  sig = Sig; 
@@ -292,7 +340,8 @@ NCellularData::coverFacetData::coverFacetData( const coverFacetData& cloneMe )
  trans.addTermsLast( cloneMe.trans );
 }
 
-NCellularData::coverFacetData NCellularData::coverFacetData::operator=(const coverFacetData &rhs)
+NCellularData::coverFacetData NCellularData::coverFacetData::operator=(
+     const coverFacetData &rhs)
 {
  cellNo = rhs.cellNo;
  sig = rhs.sig; 

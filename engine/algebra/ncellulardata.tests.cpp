@@ -50,16 +50,18 @@ template <class Enum>
 Enum & enum_increment(Enum & value, Enum begin, Enum end)
 { return value = (value == end) ? begin : Enum(value + 1); }
 
-NCellularData::homology_coordinate_system & operator++ (NCellularData::homology_coordinate_system & cs)
-{ return enum_increment(cs, NCellularData::first_coord, NCellularData::last_implemented_coord); }
+NCellularData::homology_coordinate_system & operator++ 
+ (NCellularData::homology_coordinate_system & cs)
+{ return enum_increment(cs, NCellularData::first_coord, 
+                        NCellularData::last_implemented_coord); }
 
 bool NCellularData::chainComplexesVerified() const
 {
 unsigned long aDim( (tri4 != NULL) ? 4 : 3 );
 for (homology_coordinate_system i=first_coord; i != last_implemented_coord; ++i) 
  {
-  unsigned long maxDim( ((i == STD_BDRY_coord) || (i == MIX_BDRY_coord) || (i == DUAL_BDRY_coord)) ?
-                        aDim - 1 : aDim );
+  unsigned long maxDim( ((i == STD_BDRY_coord) || (i == MIX_BDRY_coord) || 
+                        (i == DUAL_BDRY_coord)) ? aDim - 1 : aDim );
   for (unsigned long j=1; j<maxDim; j++)
   {
    const NMatrixInt* A = integerChainComplex( ChainComplexLocator( j, i) );
@@ -85,50 +87,62 @@ for (unsigned long i=0; i<aDim; i++)
  }
 
 // verify mCC[i]*smCM[i] == smCM[i-1]*sCC[i]
-for (unsigned long i=1; i<smCM.size(); i++) if (smCM[i] && smCM[i-1] && mCC[i] && sCC[i])
+for (unsigned long i=1; i<smCM.size(); i++) 
+    if (smCM[i] && smCM[i-1] && mCC[i] && sCC[i])
  {
-  if ( (mCC[i]->columns() != smCM[i]->rows()) || (smCM[i-1]->columns() != sCC[i]->rows()) ) return false;
+  if ( (mCC[i]->columns() != smCM[i]->rows()) || 
+       (smCM[i-1]->columns() != sCC[i]->rows()) ) return false;
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*mCC[i])*(*smCM[i]);
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*smCM[i-1])*(*sCC[i]);
   if ( (*prod1) != (*prod2) ) return false; 
  }
 // verify mCC[i]*dmCM[i] == dmCM[i-1]*dCC[i]
-for (unsigned long i=1; i<dmCM.size(); i++) if (dmCM[i] && dmCM[i-1] && mCC[i] && dCC[i])
+for (unsigned long i=1; i<dmCM.size(); i++) 
+    if (dmCM[i] && dmCM[i-1] && mCC[i] && dCC[i])
  {
-  if ( (mCC[i]->columns() != dmCM[i]->rows()) || (dmCM[i-1]->columns() != dCC[i]->rows()) ) return false;
+  if ( (mCC[i]->columns() != dmCM[i]->rows()) || 
+       (dmCM[i-1]->columns() != dCC[i]->rows()) ) return false;
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*mCC[i])*(*dmCM[i]);
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*dmCM[i-1])*(*dCC[i]);
   if ( (*prod1) != (*prod2) ) return false; 
  }
 // verify srCC[i]*strCM[i] == strCM[i-1]*sCC[i]
-for (unsigned long i=1; i<strCM.size(); i++) if (strCM[i] && strCM[i-1] && sCC[i] && srCC[i])
+for (unsigned long i=1; i<strCM.size(); i++) 
+     if (strCM[i] && strCM[i-1] && sCC[i] && srCC[i])
  { // srCC 
-  if ( (srCC[i]->columns() != strCM[i]->rows()) || (strCM[i-1]->columns() != sCC[i]->rows()) ) return false;
+  if ( (srCC[i]->columns() != strCM[i]->rows()) || 
+       (strCM[i-1]->columns() != sCC[i]->rows()) ) return false;
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*srCC[i])*(*strCM[i]);
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*strCM[i-1])*(*sCC[i]);
   if ( (*prod1) != (*prod2) ) return false;
  }
 // verify sCC[i]*sbiCM[i] == sbiCM[i-1]*sbCC[i]
-for (unsigned long i=1; i<sbiCM.size(); i++) if (sbiCM[i] && sbiCM[i-1] && sCC[i] && sbCC[i])
+for (unsigned long i=1; i<sbiCM.size(); i++) 
+    if (sbiCM[i] && sbiCM[i-1] && sCC[i] && sbCC[i])
  {
-  if ( (sCC[i]->columns() != sbiCM[i]->rows()) || (sbiCM[i-1]->columns() != sbCC[i]->rows()) ) return false;
+  if ( (sCC[i]->columns() != sbiCM[i]->rows()) || 
+       (sbiCM[i-1]->columns() != sbCC[i]->rows()) ) return false;
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*sCC[i])*(*sbiCM[i]);
   std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*sbiCM[i-1])*(*sbCC[i]);
   if ( (*prod1) != (*prod2) ) return false; 
  }
 // verify sbCC[i]*schCM[i] == (-1)*schCM[i-1]*srCC[i+1]
-for (unsigned long i=1; i<schCM.size(); i++) if (schCM[i] && schCM[i-1] && srCC[i+1] && sbCC[i])
+for (unsigned long i=1; i<schCM.size(); i++) 
+     if (schCM[i] && schCM[i-1] && srCC[i+1] && sbCC[i])
  { 
-  if ( (sbCC[i]->columns() != schCM[i]->rows()) || (schCM[i-1]->columns() != srCC[i+1]->rows()) ) return false;
-  std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*sbCC[i])*(*schCM[i]);
-  std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*schCM[i-1])*(*srCC[i+1]);
-  for (unsigned long j=0; j<prod1->rows(); j++) for (unsigned long k=0; k<prod1->columns(); k++)
+  if ( (sbCC[i]->columns() != schCM[i]->rows()) || 
+       (schCM[i-1]->columns() != srCC[i+1]->rows()) ) return false;
+  std::auto_ptr< NMatrixRing<NLargeInteger> > prod1= (*sbCC[i])*(*schCM[i]);
+  std::auto_ptr< NMatrixRing<NLargeInteger> > prod2= (*schCM[i-1])*(*srCC[i+1]);
+  for (unsigned long j=0; j<prod1->rows(); j++) 
+   for (unsigned long k=0; k<prod1->columns(); k++)
 	if (prod1->entry(j,k) + prod2->entry(j,k) != 0) return false; 
  } 
 return true;
 }
 
-bool NCellularData::coordinateIsomorphismsVerified(variance_type var, unsigned long coef) const
+bool NCellularData::coordinateIsomorphismsVerified(
+     variance_type var, unsigned long coef) const
 {
 unsigned long aDim = ( tri3 ? 3 : 4 );
 // dual to mixed, homology
@@ -152,28 +166,39 @@ bool NCellularData::homologyLESVerified(variance_type var, unsigned long coef) c
 {
 unsigned long aDim = ( tri3 ? 3 : 4 );
 unsigned long flag = 0;
-// exactness at H_i M:                   H_i (\partial M) --> H_i M --> H_i(M,\partial M),       i == 0, ..., aDim-1
-for (unsigned long i=0; i<aDim; i++) //  H^i (\partial M) <-- H^i M <-- H^i(M,\partial M)
+// exactness at H_i M: H_i (\partial M) --> H_i M --> H_i(M,\partial M), 
+//      i == 0, ..., aDim-1
+for (unsigned long i=0; i<aDim; i++) 
+//  H^i (\partial M) <-- H^i M <-- H^i(M,\partial M)
  {
   GroupLocator middleG( i, var, STD_coord, coef );
-  GroupLocator rightG( i, var, (var == coVariant ? STD_REL_BDRY_coord : STD_BDRY_coord), coef);
-  GroupLocator leftG( i, var, (var == coVariant ? STD_BDRY_coord : STD_REL_BDRY_coord), coef);
+  GroupLocator rightG( i, var, (var == coVariant ? 
+        STD_REL_BDRY_coord : STD_BDRY_coord), coef);
+  GroupLocator leftG( i, var, (var == coVariant ? 
+        STD_BDRY_coord : STD_REL_BDRY_coord), coef);
   HomLocator secondMapLoc( middleG, rightG );
   HomLocator firstMapLoc( leftG, middleG );
   const NHomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
   const NHomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
   if (!(secondMap*firstMap)->isZero()) flag=1;
-  if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) flag = 2; 
-  if ( (i==0) && (var==coVariant) ) if (!secondMap.isEpic()) flag = 3;  // rightmost term in LES, covariant case
-  if ( (i==0) && (var==contraVariant) ) if (!firstMap.isMonic()) flag = 4; // leftmost in LES, contravariant case
+  if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) 
+    flag = 2; 
+  if ( (i==0) && (var==coVariant) ) if (!secondMap.isEpic()) flag = 3;  
+    // rightmost term in LES, covariant case
+  if ( (i==0) && (var==contraVariant) ) if (!firstMap.isMonic()) flag = 4; 
+    // leftmost in LES, contravariant case
  } 
 
-// exactness at H_i(\partial M):          H_i(M,\partial M) --> H_{i-1} \partial M --> H_{i-1} M, i == 1, ..., aDim
-for (unsigned long i=1; i<=aDim; i++) //  H^i(M,\partial M) <-- H^{i-1} \partial M <-- H^{i-1} M
+// at H_i(\partial M): H_i(M,\partial M)-->H_{i-1}\partial M-->H_{i-1} M, 
+//  i == 1, ..., aDim
+for (unsigned long i=1; i<=aDim; i++) 
+//  H^i(M,\partial M) <-- H^{i-1} \partial M <-- H^{i-1} M
  {
   GroupLocator middleG( i-1, var, STD_BDRY_coord, coef );
-  GroupLocator rightG( (var == coVariant ? i-1 : i), var, (var == coVariant ? STD_coord : STD_REL_BDRY_coord), coef );
-  GroupLocator leftG( (var == coVariant ? i : i-1), var, (var == coVariant ? STD_REL_BDRY_coord : STD_coord), coef );
+  GroupLocator rightG( (var == coVariant ? i-1 : i), var, 
+    (var == coVariant ? STD_coord : STD_REL_BDRY_coord), coef );
+  GroupLocator leftG( (var == coVariant ? i : i-1), var, 
+    (var == coVariant ? STD_REL_BDRY_coord : STD_coord), coef );
   HomLocator secondMapLoc( middleG, rightG );
   HomLocator firstMapLoc( leftG, middleG );
   const NHomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
@@ -182,28 +207,35 @@ for (unsigned long i=1; i<=aDim; i++) //  H^i(M,\partial M) <-- H^{i-1} \partial
   if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) flag=6;
  } 
 
-// exactness at H_i(M, \partial M):       H_i M --> H_i(M, \partial M) --> H_{i-1} \partial M     i == 1, ..., aDim
-for (unsigned long i=1; i<=aDim; i++) //  H^i M <-- H^i(M, \partial M) <-- H^{i-1} \partial M
+// exact at H_i(M, \partial M):H_i M-->H_i(M, \partial M)-->H_{i-1} \partial M    
+//    i == 1, ..., aDim
+for (unsigned long i=1; i<=aDim; i++) 
+//  H^i M <-- H^i(M, \partial M) <-- H^{i-1} \partial M
  {
   GroupLocator middleG( i, var, STD_REL_BDRY_coord, coef );
-  GroupLocator rightG( (var == coVariant ? i-1 : i), var, (var == coVariant ? STD_BDRY_coord : STD_coord), coef );
-  GroupLocator leftG( (var == coVariant ? i : i-1), var, (var == coVariant ? STD_coord : STD_BDRY_coord), coef );
+  GroupLocator rightG( (var == coVariant ? i-1 : i), var, 
+     (var == coVariant ? STD_BDRY_coord : STD_coord), coef );
+  GroupLocator leftG( (var == coVariant ? i : i-1), var, 
+     (var == coVariant ? STD_coord : STD_BDRY_coord), coef );
   HomLocator secondMapLoc( middleG, rightG );
   HomLocator firstMapLoc( leftG, middleG );
   const NHomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
   const NHomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
   if (!(secondMap*firstMap)->isZero()) flag=7;
   if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) flag=8;
-  if ( (i == aDim) && (var == coVariant) ) if (!firstMap.isMonic()) flag=9; // leftmost term in LES, coVariant case
-  if ( (i == aDim) && (var == contraVariant) ) if (!secondMap.isEpic()) flag=10; // rightmost term, contravariant case
+  if ( (i == aDim) && (var == coVariant) ) if (!firstMap.isMonic()) flag=9; 
+     // leftmost term in LES, coVariant case
+  if ( (i == aDim) && (var == contraVariant) ) if (!secondMap.isEpic()) flag=10; 
+    // rightmost term, contravariant case
  } 
 
 return (flag==0);
 }
 
 bool NCellularData::poincareDualityVerified() const
-{ // at present this only checks to see if H_i(M) and H^{n-i}(M, boundary) are isomorphic.  Later
-  // I'll add the appropriate map and this will check that that map is an isomorphism. 
+{ // at present this only checks to see if H_i(M) and H^{n-i}(M, boundary) are 
+  // isomorphic.  Later I'll add the appropriate map and this will check 
+  // that that map is an isomorphism. 
 unsigned long aDim = 3;
 unsigned long coeff = 0;
 if (tri4) { aDim = 4; if (!tri4->isOrientable()) coeff = 2; }
@@ -213,7 +245,8 @@ for (unsigned long i=0; i <= aDim; i++)
  {
   GroupLocator homoL( i, coVariant, DUAL_coord, coeff );
   GroupLocator cohomoL( aDim-i, contraVariant, STD_REL_BDRY_coord, coeff);
-  const NHomMarkedAbelianGroup duality( *homGroup( HomLocator(homoL, cohomoL) ) );
+  const NHomMarkedAbelianGroup duality( 
+     *homGroup( HomLocator(homoL, cohomoL) ) );
   if (!duality.isIsomorphism()) return false;
  }
 
@@ -221,7 +254,8 @@ for (unsigned long i=0; i <= aDim; i++)
  {
   GroupLocator cohomoL( i, contraVariant, DUAL_coord, coeff );
   GroupLocator homoL( aDim-i, coVariant, STD_REL_BDRY_coord, coeff);
-  const NHomMarkedAbelianGroup duality( *homGroup( HomLocator(cohomoL, homoL) ) );
+  const NHomMarkedAbelianGroup duality( 
+     *homGroup( HomLocator(cohomoL, homoL) ) );
   if (!duality.isIsomorphism()) return false;
  }
 
@@ -236,8 +270,8 @@ unsigned long coeff = 0;
 if (tri4) { aDim = 4; if (!tri4->isOrientable()) coeff = 2; }
  else { if (!tri3->isOrientable()) coeff = 2; }
 // for a n-manifold we need to check if (dual)H_1 x (std_rel_bdry)H_2 --> Z
-//  has leftadj (dual)H_i --> Hom(H_{n-i}, Z) ker is torsion subgroup, and should be onto
-//
+//  has leftadj (dual)H_i --> Hom(H_{n-i}, Z) ker is torsion subgroup, 
+// and should be onto
 for (unsigned long i=1; i<=(aDim/2); i++)
  {
   GroupLocator LDom( i, coVariant, DUAL_coord, coeff );
@@ -253,16 +287,17 @@ for (unsigned long i=1; i<=(aDim/2); i++)
   else 
    {
     if (ker.getRank()!= 0) { retval=false; }
-    if (ker.getNumberOfInvariantFactors() == intF.ldomain().getNumberOfInvariantFactors())
+    if (ker.getNumberOfInvariantFactors() == 
+      intF.ldomain().getNumberOfInvariantFactors())
      {
       for (unsigned long j=0; j<ker.getNumberOfInvariantFactors(); j++)
- 	{
-	 if (ker.getInvariantFactor(j) !=intF.ldomain().getInvariantFactor(j))
-		{ retval = false; }
-	}
+      {
+       if (ker.getInvariantFactor(j) !=intF.ldomain().getInvariantFactor(j))
+	    { retval = false; }
+      }
      }
-    else { retval = false;  }
-   }
+   else { retval = false;  }
+  }
  }
 return retval;
 }
