@@ -49,7 +49,7 @@
 #include <QToolTip>
 #include <QWhatsThis>
 
-#define THREE_SPHERE_AUTO_CALC_ADJUSTMENT 2
+#define HAKEN_AUTO_CALC_ADJUSTMENT 2
 
 using regina::NPacket;
 using regina::NTriangulation;
@@ -124,6 +124,29 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     splitting->setWhatsThis(msg);
 
+    titleIrreducible = new QLabel(tr("Irreducible?"), ui);
+    grid->addWidget(titleIrreducible, 5, 1);
+    irreducible = new QLabel(ui);
+    grid->addWidget(irreducible, 5, 3);
+    msg = tr("<qt>Does this triangulation represent an "
+        "irreducible 3-manifold?  A closed orientable 3-manifold is "
+        "<i>irreducible</i> if every embedded sphere bounds a ball.</qt>");
+    titleIrreducible->setWhatsThis(msg);
+    irreducible->setWhatsThis(msg);
+
+    titleHaken = new QLabel(tr("Haken?"), ui);
+    grid->addWidget(titleHaken, 6, 1);
+    haken = new QLabel(ui);
+    grid->addWidget(haken, 6, 3);
+    msg = tr("<qt>Does this triangulation represent a Haken 3-manifold?  "
+        "A closed orientable irreducible 3-manifold is "
+        "<i>Haken</i> if it contains an embedded closed two-sided "
+        "incompressible surface.<p>"
+        "Hakenness testing is only available for irreducible "
+        "3-manifolds.</qt>");
+    titleHaken->setWhatsThis(msg);
+    haken->setWhatsThis(msg);
+
     btnThreeSphere = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"), ui);
     btnThreeSphere->setToolTip(tr("Calculate whether this is a 3-sphere"));
@@ -186,6 +209,31 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
         "surface is not always determined automatically).</qt>"));
     grid->addWidget(btnSplitting, 4, 5);
     connect(btnSplitting, SIGNAL(clicked()), this, SLOT(calculateSplitting()));
+
+    btnIrreducible = new QPushButton(ReginaSupport::themeIcon("system-run"),
+        tr("Calculate"), ui);
+    btnIrreducible->setToolTip(tr("Calculate whether this 3-manifold "
+        "is irreducible"));
+    btnIrreducible->setWhatsThis(tr("<qt>Calculate whether this "
+        "triangulation represents an irreducible 3-manifold.<p>"
+        "<b>Warning:</b> This calculation can be quite slow for larger "
+        "triangulations (which is why irreducibility is not always "
+        "tested automatically).</qt>"));
+    grid->addWidget(btnIrreducible, 5, 5);
+    connect(btnIrreducible, SIGNAL(clicked()), this,
+        SLOT(calculateIrreducible()));
+
+    btnHaken = new QPushButton(ReginaSupport::themeIcon("system-run"),
+        tr("Calculate"), ui);
+    btnHaken->setToolTip(tr("Calculate whether this 3-manifold is Haken"));
+    btnHaken->setWhatsThis(tr("<qt>Calculate whether this "
+        "triangulation represents a Haken 3-manifold.<p>"
+        "Hakenness testing is only available for irreducible 3-manifolds.<p>"
+        "<b>Warning:</b> This calculation can be quite slow for larger "
+        "triangulations (which is why Hakenness is not always "
+        "tested automatically).</qt>"));
+    grid->addWidget(btnHaken, 6, 5);
+    connect(btnHaken, SIGNAL(clicked()), this, SLOT(calculateHaken()));
 
     layout->addStretch(1);
 
@@ -284,8 +332,7 @@ void NTriSurfacesUI::refresh() {
     }
 
     if (tri->knowsThreeSphere() ||
-            tri->getNumberOfTetrahedra() + THREE_SPHERE_AUTO_CALC_ADJUSTMENT
-            <= autoCalcThreshold) {
+            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
         if (tri->isThreeSphere()) {
             threeSphere->setText(tr("True"));
             QPalette pal = threeSphere->palette();
@@ -307,10 +354,8 @@ void NTriSurfacesUI::refresh() {
         btnThreeSphere->setEnabled(true);
     }
 
-    // Use the same threshold adjustment as for 3-sphere recognition.
     if (tri->knowsBall() ||
-            tri->getNumberOfTetrahedra() + THREE_SPHERE_AUTO_CALC_ADJUSTMENT
-            <= autoCalcThreshold) {
+            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
         if (tri->isBall()) {
             threeBall->setText(tr("True"));
             QPalette pal = threeBall->palette();
@@ -332,10 +377,8 @@ void NTriSurfacesUI::refresh() {
         btnThreeBall->setEnabled(true);
     }
 
-    // Use the same threshold adjustment as for 3-sphere recognition.
     if (tri->knowsSolidTorus() ||
-            tri->getNumberOfTetrahedra() + THREE_SPHERE_AUTO_CALC_ADJUSTMENT
-            <= autoCalcThreshold) {
+            tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
         if (tri->isSolidTorus()) {
             solidTorus->setText(tr("True"));
             QPalette pal = solidTorus->palette();
@@ -357,6 +400,80 @@ void NTriSurfacesUI::refresh() {
         btnSolidTorus->setEnabled(true);
     }
 
+    if (tri->isOrientable() && tri->isClosed() && tri->isValid() &&
+            tri->isConnected()) {
+        titleIrreducible->setVisible(true);
+        irreducible->setVisible(true);
+        btnIrreducible->setVisible(true);
+
+        if (tri->knowsIrreducible() ||
+                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+            if (tri->isIrreducible()) {
+                irreducible->setText(tr("True"));
+                QPalette pal = irreducible->palette();
+                pal.setColor(irreducible->foregroundRole(), Qt::darkGreen);
+                irreducible->setPalette(pal);
+            } else {
+                irreducible->setText(tr("False"));
+                QPalette pal = irreducible->palette();
+                pal.setColor(irreducible->foregroundRole(), Qt::darkRed);
+                irreducible->setPalette(pal);
+            }
+            btnIrreducible->setEnabled(false);
+        } else {
+            irreducible->setText(tr("Unknown"));
+            irreducible->setPalette(QPalette());
+            btnIrreducible->setEnabled(true);
+        }
+    } else {
+        titleIrreducible->setVisible(false);
+        irreducible->setVisible(false);
+        btnIrreducible->setVisible(false);
+    }
+
+    // Use the same threshold adjustment as for 3-sphere recognition.
+    if (tri->isOrientable() && tri->isClosed() && tri->isValid() &&
+            tri->isConnected()) {
+        titleHaken->setVisible(true);
+        haken->setVisible(true);
+        btnHaken->setVisible(true);
+
+        if (tri->knowsIrreducible() && ! tri->isIrreducible()) {
+            // We are not allowed to test Hakenness in this situation.
+            haken->setText(tr("N/A"));
+            QPalette pal = haken->palette();
+            pal.setColor(haken->foregroundRole(), Qt::darkYellow);
+            haken->setPalette(pal);
+            btnHaken->setEnabled(false);
+        } else if (tri->knowsHaken() ||
+                tri->getNumberOfTetrahedra() + HAKEN_AUTO_CALC_ADJUSTMENT
+                <= autoCalcThreshold) {
+            // This will not trigger new knowledge about irreducibility,
+            // since if the triangulation has few tetrahedra we would
+            // have just run an irreducibility test in the previous section.
+            if (tri->isHaken()) {
+                haken->setText(tr("True"));
+                QPalette pal = haken->palette();
+                pal.setColor(haken->foregroundRole(), Qt::darkGreen);
+                haken->setPalette(pal);
+            } else {
+                haken->setText(tr("False"));
+                QPalette pal = haken->palette();
+                pal.setColor(haken->foregroundRole(), Qt::darkRed);
+                haken->setPalette(pal);
+            }
+            btnHaken->setEnabled(false);
+        } else {
+            haken->setText(tr("Unknown"));
+            haken->setPalette(QPalette());
+            btnHaken->setEnabled(true);
+        }
+    } else {
+        titleHaken->setVisible(false);
+        haken->setVisible(false);
+        btnHaken->setVisible(false);
+    }
+
     if (! name.empty()) {
         manifold->setText(tr("Manifold:  %1").arg(name.c_str()));
     } else {
@@ -376,6 +493,10 @@ void NTriSurfacesUI::editingElsewhere() {
     threeBall->setPalette(QPalette());
     solidTorus->setText(msg);
     solidTorus->setPalette(QPalette());
+    irreducible->setText(msg);
+    irreducible->setPalette(QPalette());
+    haken->setText(msg);
+    haken->setPalette(QPalette());
     manifold->setText(msg);
 
     btnZeroEff->setEnabled(false);
@@ -383,6 +504,8 @@ void NTriSurfacesUI::editingElsewhere() {
     btnThreeSphere->setEnabled(false);
     btnThreeBall->setEnabled(false);
     btnSolidTorus->setEnabled(false);
+    btnIrreducible->setEnabled(false);
+    btnHaken->setEnabled(false);
 }
 
 void NTriSurfacesUI::calculateZeroEff() {
@@ -435,6 +558,28 @@ void NTriSurfacesUI::calculateSolidTorus() {
         "for larger triangulations.\n\n"
         "Please be patient."), ui);
     tri->isSolidTorus();
+    delete dlg;
+
+    refresh();
+}
+
+void NTriSurfacesUI::calculateIrreducible() {
+    PatienceDialog* dlg = PatienceDialog::warn(tr(
+        "Testing irreducibility can be quite slow\n"
+        "for larger triangulations.\n\n"
+        "Please be patient."), ui);
+    tri->isIrreducible();
+    delete dlg;
+
+    refresh();
+}
+
+void NTriSurfacesUI::calculateHaken() {
+    PatienceDialog* dlg = PatienceDialog::warn(tr(
+        "Hakenness testing can be quite slow\n"
+        "for larger triangulations.\n\n"
+        "Please be patient."), ui);
+    tri->isHaken();
     delete dlg;
 
     refresh();

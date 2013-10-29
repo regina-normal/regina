@@ -234,6 +234,7 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
         bool isClosed() const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
@@ -316,10 +317,6 @@ inline bool Dim2Component::isOrientable() const {
 
 inline bool Dim2Component::isClosed() const {
     return (boundaryComponents_.empty());
-}
-
-inline void Dim2Component::writeTextShort(std::ostream& out) const {
-    out << "Component with " << getNumberOfTriangles() << " triangles";
 }
 
 } // namespace regina

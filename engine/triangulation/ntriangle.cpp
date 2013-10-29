@@ -129,5 +129,16 @@ NPerm4 NTriangle::getEdgeMapping(int edge) const {
         triPerm.preImageOf(edgePerm[1]), edge, 3);
 }
 
+void NTriangle::writeTextLong(std::ostream& out) const {
+    writeTextShort(out);
+    out << std::endl;
+
+    out << "Appears as:" << std::endl;
+    for (int i = 0; i < nEmbeddings; ++i)
+        out << "  " << embeddings[i]->getTetrahedron()->markedIndex()
+            << " (" << embeddings[i]->getVertices().trunc3() << ')'
+            << std::endl;
+}
+
 } // namespace regina
 

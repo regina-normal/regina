@@ -262,6 +262,7 @@ class REGINA_API Dim4Component : public ShareableObject, public NMarkedElement {
         bool isClosed() const;
 
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
@@ -354,10 +355,6 @@ inline bool Dim4Component::isOrientable() const {
 
 inline bool Dim4Component::isClosed() const {
     return (boundaryComponents_.empty());
-}
-
-inline void Dim4Component::writeTextShort(std::ostream& out) const {
-    out << "Component with " << getNumberOfPentachora() << " pentachora";
 }
 
 } // namespace regina

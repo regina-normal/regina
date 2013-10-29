@@ -234,6 +234,18 @@ NXMLElementReader* NXMLTriangulationReader::startContentSubElement(
         bool b;
         if (valueOf(props.lookup("value"), b))
             tri->solidTorus = b;
+    } else if (subTagName == "irreducible") {
+        bool b;
+        if (valueOf(props.lookup("value"), b))
+            tri->irreducible = b;
+    } else if (subTagName == "compressingdisc") {
+        bool b;
+        if (valueOf(props.lookup("compressingdisc"), b))
+            tri->compressingDisc = b;
+    } else if (subTagName == "haken") {
+        bool b;
+        if (valueOf(props.lookup("haken"), b))
+            tri->haken = b;
     } else if (subTagName == "H1")
         return new NAbelianGroupPropertyReader(tri->H1);
     else if (subTagName == "H1Rel")
