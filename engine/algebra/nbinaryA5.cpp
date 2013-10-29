@@ -91,50 +91,95 @@ const std::string NBinaryA5::names[120] = { "1", "-1", "(234)", "-(234)",
 
 const unsigned long long NBinaryA5::floormask = ( ~((unsigned long long) 1) );
 
-const std::string NBinaryA5::spinornames[120] = { "\\left[1, 1\\right]", 
-"\\left[-1, -1\\right]",
-"\\left[\\frac{1}{2}-\\frac{1}{2}i+\\frac{1}{2}j+\\frac{1}{2}k, \\frac{1}{2}+\\frac{1}{2}i-\\frac{1}{2}j-\\frac{1}{2}k\\right]", 
-"\\left[\\frac{-1}{2}+\\frac{1}{2}i-\\frac{1}{2}j-\\frac{1}{2}k, \\frac{-1}{2}-\\frac{1}{2}i+\\frac{1}{2}j+\\frac{1}{2}k\\right]",
-"\\left[\\frac{1}{2}+\\frac{1}{2}i-\\frac{1}{2}j-\\frac{1}{2}k, \\frac{1}{2}-\\frac{1}{2}i+\\frac{1}{2}j+\\frac{1}{2}k\\right]",
- "\\left[\\frac{-1}{2}-\\frac{1}{2}i+\\frac{1}{2}j+\\frac{1}{2}k, \\frac{-1}{2}+\\frac{1}{2}i-\\frac{1}{2}j-\\frac{1}{2}k\\right]",
-"\\left[-1k, 1k\\right]",
- "\\left[1k, -1k\\right]",
-"\\left[\\frac{1}{2}+\\frac{1}{2}i+\\frac{1}{2}j+\\frac{1}{2}k, \\frac{1}{2}-\\frac{1}{2}i-\\frac{1}{2}j-\\frac{1}{2}k\\right]",
- "\\left[\\frac{-1}{2}-\\frac{1}{2}i-\\frac{1}{2}j-\\frac{1}{2}k, \\frac{-1}{2}+\\frac{1}{2}i+\\frac{1}{2}j+\\frac{1}{2}k\\right]",
-"\\left[\\frac{1}{2}+\\frac{1}{2}i+\\frac{1}{2}j-\\frac{1}{2}k, \\frac{1}{2}-\\frac{1}{2}i-\\frac{1}{2}j+\\frac{1}{2}k\\right]",
- "\\left[\\frac{-1}{2}-\\frac{1}{2}i-\\frac{1}{2}j+\\frac{1}{2}k, \\frac{-1}{2}+\\frac{1}{2}i+\\frac{1}{2}j-\\frac{1}{2}k\\right]",
-"\\left[\\frac{1}{2}-\\frac{1}{2}i-\\frac{1}{2}j-\\frac{1}{2}k, \\frac{1}{2}+\\frac{1}{2}i+\\frac{1}{2}j+\\frac{1}{2}k\\right]",
- "\\left[\\frac{-1}{2}+\\frac{1}{2}i+\\frac{1}{2}j+\\frac{1}{2}k, \\frac{-1}{2}-\\frac{1}{2}i-\\frac{1}{2}j-\\frac{1}{2}k\\right]",
-"\\left[\\frac{1}{2}-\\frac{1}{2}i+\\frac{1}{2}j-\\frac{1}{2}k, \\frac{1}{2}+\\frac{1}{2}i-\\frac{1}{2}j+\\frac{1}{2}k\\right]",
- "\\left[\\frac{-1}{2}+\\frac{1}{2}i-\\frac{1}{2}j+\\frac{1}{2}k, \\frac{-1}{2}-\\frac{1}{2}i+\\frac{1}{2}j-\\frac{1}{2}k\\right]",
-"\\left[-1j, 1j\\right]",
- "\\left[1j, -1j\\right]",
-"\\left[\\frac{1}{2}-\\frac{1}{2}i-\\frac{1}{2}j+\\frac{1}{2}k, \\frac{1}{2}+\\frac{1}{2}i+\\frac{1}{2}j-\\frac{1}{2}k\\right]",
- "\\left[\\frac{-1}{2}+\\frac{1}{2}i+\\frac{1}{2}j-\\frac{1}{2}k, \\frac{-1}{2}-\\frac{1}{2}i-\\frac{1}{2}j+\\frac{1}{2}k\\right]",
-"\\left[\\frac{1}{2}+\\frac{1}{2}i-\\frac{1}{2}j+\\frac{1}{2}k, \\frac{1}{2}-\\frac{1}{2}i+\\frac{1}{2}j-\\frac{1}{2}k\\right]",
- "\\left[\\frac{-1}{2}-\\frac{1}{2}i+\\frac{1}{2}j-\\frac{1}{2}k, \\frac{-1}{2}+\\frac{1}{2}i-\\frac{1}{2}j+\\frac{1}{2}k\\right]",
-"\\left[-1i, 1i\\right]",
- "\\left[1i, -1i\\right]",
-"\\left[(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})i+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})j-\\frac{1}{2}k, (\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})i+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})j+\\frac{1}{2}k\\right]",
- "\\left[(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})i+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})j+\\frac{1}{2}k, (\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})i+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})j-\\frac{1}{2}k\\right]",
-"\\left[-\\frac{1}{2}i+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})j+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})k, \\frac{1}{2}i+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})j+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})k\\right]",
- "\\left[\\frac{1}{2}i+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})j+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})k, -\\frac{1}{2}i+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})j+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})k\\right]",
-"\\left[(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})i+\\frac{1}{2}j+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})k, (\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})i-\\frac{1}{2}j+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})k\\right]",
- "\\left[(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})i-\\frac{1}{2}j+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})k, (\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})i+\\frac{1}{2}j+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})k\\right]",
-"\\left[\\frac{1}{2}+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})i+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})j, \\frac{1}{2}+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})i+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})j\\right]",
- "\\left[\\frac{-1}{2}+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})i+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})j, \\frac{-1}{2}+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})i+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})j\\right]",
-"\\left[\\frac{1}{4}-\\frac{1}{4}\\sqrt{5}+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})j+\\frac{1}{2}k, \\frac{1}{4}+\\frac{1}{4}\\sqrt{5}+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})j-\\frac{1}{2}k\\right]",
- "\\left[\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5}+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})j-\\frac{1}{2}k, \\frac{-1}{4}-\\frac{1}{4}\\sqrt{5}+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})j+\\frac{1}{2}k\\right]",
-
-"\\left[\\frac{1}{4}+\\frac{1}{4}\\sqrt{5}+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})i-\\frac{1}{2}k, \\frac{1}{4}-\\frac{1}{4}\\sqrt{5}+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})i+\\frac{1}{2}k\\right]",
- "\\left[\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5}+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})i+\\frac{1}{2}k, \\frac{-1}{4}+\\frac{1}{4}\\sqrt{5}+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})i-\\frac{1}{2}k\\right]",
-"\\left[\\frac{1}{4}-\\frac{1}{4}\\sqrt{5}+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})i+\\frac{1}{2}j, \\frac{1}{4}+\\frac{1}{4}\\sqrt{5}+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})i-\\frac{1}{2}j\\right]",
- "\\left[\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5}+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})i-\\frac{1}{2}j, \\frac{-1}{4}-\\frac{1}{4}\\sqrt{5}+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})i+\\frac{1}{2}j\\right]",
-"\\left[\\frac{1}{2}+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})i+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})k, \\frac{1}{2}+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})i+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})k\\right]",
- "\\left[\\frac{-1}{2}+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})i+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})k, \\frac{-1}{2}+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})i+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})k\\right]",
-"\\left[\\frac{1}{4}+\\frac{1}{4}\\sqrt{5}-\\frac{1}{2}j+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})k, \\frac{1}{4}-\\frac{1}{4}\\sqrt{5}+\\frac{1}{2}j+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})k\\right]",
- "\\left[\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5}+\\frac{1}{2}j+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})k, \\frac{-1}{4}+\\frac{1}{4}\\sqrt{5}-\\frac{1}{2}j+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})k\\right]",
-"\\left[\\frac{1}{4}+\\frac{1}{4}\\sqrt{5}+\\frac{1}{2}i+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})j, \\frac{1}{4}-\\frac{1}{4}\\sqrt{5}-\\frac{1}{2}i+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})j\\right]",
+const std::string NBinaryA5::spinornames[120] = { 
+"\\left[1, 1\\right]", "\\left[-1, -1\\right]",
+"\\left[\\frac{1}{2}-\\frac{1}{2}i+\\frac{1}{2}j+\\frac{1}{2}k, "
+"\\frac{1}{2}+\\frac{1}{2}i-\\frac{1}{2}j-\\frac{1}{2}k\\right]", 
+"\\left[\\frac{-1}{2}+\\frac{1}{2}i-\\frac{1}{2}j-\\frac{1}{2}k, "
+"\\frac{-1}{2}-\\frac{1}{2}i+\\frac{1}{2}j+\\frac{1}{2}k\\right]",
+"\\left[\\frac{1}{2}+\\frac{1}{2}i-\\frac{1}{2}j-\\frac{1}{2}k, "
+"\\frac{1}{2}-\\frac{1}{2}i+\\frac{1}{2}j+\\frac{1}{2}k\\right]",
+ "\\left[\\frac{-1}{2}-\\frac{1}{2}i+\\frac{1}{2}j+\\frac{1}{2}k, "
+"\\frac{-1}{2}+\\frac{1}{2}i-\\frac{1}{2}j-\\frac{1}{2}k\\right]",
+"\\left[-1k, 1k\\right]", "\\left[1k, -1k\\right]",
+"\\left[\\frac{1}{2}+\\frac{1}{2}i+\\frac{1}{2}j+\\frac{1}{2}k, "
+"\\frac{1}{2}-\\frac{1}{2}i-\\frac{1}{2}j-\\frac{1}{2}k\\right]",
+"\\left[\\frac{-1}{2}-\\frac{1}{2}i-\\frac{1}{2}j-\\frac{1}{2}k, "
+"\\frac{-1}{2}+\\frac{1}{2}i+\\frac{1}{2}j+\\frac{1}{2}k\\right]",
+"\\left[\\frac{1}{2}+\\frac{1}{2}i+\\frac{1}{2}j-\\frac{1}{2}k, "
+"\\frac{1}{2}-\\frac{1}{2}i-\\frac{1}{2}j+\\frac{1}{2}k\\right]",
+"\\left[\\frac{-1}{2}-\\frac{1}{2}i-\\frac{1}{2}j+\\frac{1}{2}k, "
+"\\frac{-1}{2}+\\frac{1}{2}i+\\frac{1}{2}j-\\frac{1}{2}k\\right]",
+"\\left[\\frac{1}{2}-\\frac{1}{2}i-\\frac{1}{2}j-\\frac{1}{2}k, "
+"\\frac{1}{2}+\\frac{1}{2}i+\\frac{1}{2}j+\\frac{1}{2}k\\right]",
+"\\left[\\frac{-1}{2}+\\frac{1}{2}i+\\frac{1}{2}j+\\frac{1}{2}k, "
+"\\frac{-1}{2}-\\frac{1}{2}i-\\frac{1}{2}j-\\frac{1}{2}k\\right]",
+"\\left[\\frac{1}{2}-\\frac{1}{2}i+\\frac{1}{2}j-\\frac{1}{2}k, "
+"\\frac{1}{2}+\\frac{1}{2}i-\\frac{1}{2}j+\\frac{1}{2}k\\right]",
+"\\left[\\frac{-1}{2}+\\frac{1}{2}i-\\frac{1}{2}j+\\frac{1}{2}k, "
+"\\frac{-1}{2}-\\frac{1}{2}i+\\frac{1}{2}j-\\frac{1}{2}k\\right]",
+"\\left[-1j, 1j\\right]","\\left[1j, -1j\\right]",
+"\\left[\\frac{1}{2}-\\frac{1}{2}i-\\frac{1}{2}j+\\frac{1}{2}k, "
+"\\frac{1}{2}+\\frac{1}{2}i+\\frac{1}{2}j-\\frac{1}{2}k\\right]",
+"\\left[\\frac{-1}{2}+\\frac{1}{2}i+\\frac{1}{2}j-\\frac{1}{2}k, "
+"\\frac{-1}{2}-\\frac{1}{2}i-\\frac{1}{2}j+\\frac{1}{2}k\\right]",
+"\\left[\\frac{1}{2}+\\frac{1}{2}i-\\frac{1}{2}j+\\frac{1}{2}k, "
+"\\frac{1}{2}-\\frac{1}{2}i+\\frac{1}{2}j-\\frac{1}{2}k\\right]",
+"\\left[\\frac{-1}{2}-\\frac{1}{2}i+\\frac{1}{2}j-\\frac{1}{2}k, "
+"\\frac{-1}{2}+\\frac{1}{2}i-\\frac{1}{2}j+\\frac{1}{2}k\\right]",
+"\\left[-1i, 1i\\right]","\\left[1i, -1i\\right]",
+"\\left[(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})i+(\\frac{1}{4}-"
+"\\frac{1}{4}\\sqrt{5})j-\\frac{1}{2}k, (\\frac{1}{4}-\\frac{1}{4}"
+"\\sqrt{5})i+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})j+\\frac{1}{2}k\\right]",
+"\\left[(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})i+(\\frac{-1}{4}+\\frac{1}{4}"
+"\\sqrt{5})j+\\frac{1}{2}k, (\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})i+"
+"(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})j-\\frac{1}{2}k\\right]",
+"\\left[-\\frac{1}{2}i+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})j+(\\frac{-1}{4}+"
+"\\frac{1}{4}\\sqrt{5})k, \\frac{1}{2}i+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})j+"
+"(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})k\\right]","\\left[\\frac{1}{2}i+"
+"(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})j+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})k, "
+"-\\frac{1}{2}i+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})j+(\\frac{-1}{4}-"
+"\\frac{1}{4}\\sqrt{5})k\\right]","\\left[(\\frac{1}{4}-\\frac{1}{4}"
+"\\sqrt{5})i+\\frac{1}{2}j+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})k, "
+"(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})i-\\frac{1}{2}j+(\\frac{1}{4}-"
+"\\frac{1}{4}\\sqrt{5})k\\right]", "\\left[(\\frac{-1}{4}+\\frac{1}{4}"
+"\\sqrt{5})i-\\frac{1}{2}j+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})k, "
+"(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})i+\\frac{1}{2}j+(\\frac{-1}{4}+"
+"\\frac{1}{4}\\sqrt{5})k\\right]","\\left[\\frac{1}{2}+(\\frac{1}{4}-"
+"\\frac{1}{4}\\sqrt{5})i+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})j, "
+"\\frac{1}{2}+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})i+(\\frac{-1}{4}+"
+"\\frac{1}{4}\\sqrt{5})j\\right]", "\\left[\\frac{-1}{2}+(\\frac{-1}{4}+"
+"\\frac{1}{4}\\sqrt{5})i+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})j, "
+"\\frac{-1}{2}+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})i+(\\frac{1}{4}-"
+"\\frac{1}{4}\\sqrt{5})j\\right]","\\left[\\frac{1}{4}-\\frac{1}{4}\\sqrt{5}+"
+"(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})j+\\frac{1}{2}k, \\frac{1}{4}+"
+"\\frac{1}{4}\\sqrt{5}+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})j-"
+"\\frac{1}{2}k\\right]", "\\left[\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5}+"
+"(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})j-\\frac{1}{2}k, \\frac{-1}{4}-"
+"\\frac{1}{4}\\sqrt{5}+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})j+"
+"\\frac{1}{2}k\\right]","\\left[\\frac{1}{4}+\\frac{1}{4}\\sqrt{5}+"
+"(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})i-\\frac{1}{2}k, \\frac{1}{4}-"
+"\\frac{1}{4}\\sqrt{5}+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})i+"
+"\\frac{1}{2}k\\right]", "\\left[\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5}+"
+"(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})i+\\frac{1}{2}k, \\frac{-1}{4}+"
+"\\frac{1}{4}\\sqrt{5}+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})i-"
+"\\frac{1}{2}k\\right]","\\left[\\frac{1}{4}-\\frac{1}{4}\\sqrt{5}+"
+"(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})i+\\frac{1}{2}j, \\frac{1}{4}+"
+"\\frac{1}{4}\\sqrt{5}+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})i-\\frac{1}{2}j"
+"\\right]", "\\left[\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5}+(\\frac{1}{4}+"
+"\\frac{1}{4}\\sqrt{5})i-\\frac{1}{2}j, \\frac{-1}{4}-\\frac{1}{4}\\sqrt{5}+"
+"(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})i+\\frac{1}{2}j\\right]",
+"\\left[\\frac{1}{2}+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})i+(\\frac{-1}{4}+"
+"\\frac{1}{4}\\sqrt{5})k, \\frac{1}{2}+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})i+"
+"(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})k\\right]", "\\left[\\frac{-1}{2}+"
+"(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})i+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})k,"
+" \\frac{-1}{2}+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})i+(\\frac{-1}{4}-"
+"\\frac{1}{4}\\sqrt{5})k\\right]","\\left[\\frac{1}{4}+\\frac{1}{4}\\sqrt{5}-"
+"\\frac{1}{2}j+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})k, \\frac{1}{4}-"
+"\\frac{1}{4}\\sqrt{5}+\\frac{1}{2}j+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})k"
+"\\right]", "\\left[\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5}+\\frac{1}{2}j+"
+"(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})k, \\frac{-1}{4}+\\frac{1}{4}\\sqrt{5}-"
+"\\frac{1}{2}j+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})k\\right]","\\left[\\frac{1}{4}+\\frac{1}{4}\\sqrt{5}+\\frac{1}{2}i+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})j, \\frac{1}{4}-\\frac{1}{4}\\sqrt{5}-\\frac{1}{2}i+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})j\\right]",
  "\\left[\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5}-\\frac{1}{2}i+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})j, \\frac{-1}{4}+\\frac{1}{4}\\sqrt{5}+\\frac{1}{2}i+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})j\\right]",
 "\\left[\\frac{1}{2}+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})j+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})k, \\frac{1}{2}+(\\frac{1}{4}+\\frac{1}{4}\\sqrt{5})j+(\\frac{-1}{4}+\\frac{1}{4}\\sqrt{5})k\\right]",
  "\\left[\\frac{-1}{2}+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})j+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})k, \\frac{-1}{2}+(\\frac{-1}{4}-\\frac{1}{4}\\sqrt{5})j+(\\frac{1}{4}-\\frac{1}{4}\\sqrt{5})k\\right]",

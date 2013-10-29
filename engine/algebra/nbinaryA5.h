@@ -59,21 +59,21 @@ namespace regina {
  */
 
 /**
- * This is the fast class for dealing with elements in the binary alternating group on
- * 5 elements.  The `slow but versatile' class is nspin4simplex. 
+ * This is the fast class for dealing with elements in the binary alternating 
+ * group on 5 elements.  The `slow but versatile' class is nspin4simplex. 
  *
  * @author Ryan Budney
  */
 class REGINA_API NBinaryA5 {
     private:
-        /**
-         * The internal code representing this permutation. At present this
-	 * is implemented as even n corresponds the triv lift of NPerm5::S5[n]
-	 * odd n corresponds to the non-trivial lift of NPerm5::S5[n-1].  So code
-         * ranges from 0 to 119 inclusive, 0 representing the identity and 1 the
-         * central element. 
-         */
-        unsigned code;
+    /**
+     * The internal code representing this permutation. At present this
+     * is implemented as even n corresponds the triv lift of NPerm5::S5[n]
+     * odd n corresponds to the non-trivial lift of NPerm5::S5[n-1].  So code
+     * ranges from 0 to 119 inclusive, 0 representing the identity and 1 the
+     * central element. 
+     */
+    unsigned code;
 
 	static const unsigned long long mult_table[60];
 	static const std::string names[120];
@@ -102,7 +102,7 @@ class REGINA_API NBinaryA5 {
          */
         NBinaryA5(int a, int b, int c, int d, int e, bool lift);
 
-        /**
+       /**
          * Creates a permutation mapping
          * (<i>a0</i>,<i>b0</i>,<i>c0</i>,<i>d0</i>,<i>e0</i>) to
          * (<i>a1</i>,<i>b1</i>,<i>c1</i>,<i>d1</i>,<i>e1</i>) respectively.
@@ -121,7 +121,7 @@ class REGINA_API NBinaryA5 {
          * @param c1 the desired image of <i>c0</i>.
          * @param d1 the desired image of <i>d0</i>.
          * @param e1 the desired image of <i>e0</i>.
-	 * @param lift
+	     * @param lift
          */
         NBinaryA5(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1,
             int e0, int e1, bool lift);
@@ -355,19 +355,18 @@ inline NBinaryA5& NBinaryA5::operator = (const NBinaryA5& cloneMe) {
 
 inline NBinaryA5 NBinaryA5::operator *(const NBinaryA5& q) const {
 	return NBinaryA5( 
-          (NPerm5::S5[code & floormask] * NPerm5::S5[q.code & floormask]).S5Index() + 
-	  ((code + q.code + (mult_table[code >> 1] >> (q.code >> 1) )) % 2)
-			);
+  (NPerm5::S5[code & floormask] * NPerm5::S5[q.code & floormask]).S5Index() + 
+   ((code + q.code + (mult_table[code >> 1] >> (q.code >> 1) )) % 2) );
 }
 
 inline NBinaryA5 NBinaryA5::inverse() const {
-	// e_1 + f(a_1,a_1^-1) mod 2 is the lift code...
-	// f(a_1,a_1^{-1}) is mult_table[code >> 1]
-	// NPerm5::invS5[code & floormask] code for underlying A5 inverse elt.
-	//  ((mult_table[code >> 1] >> (NPerm5::invS5[code & floormask] >> 1)) % 2)
-	return NBinaryA5( NPerm5::invS5[code & floormask] + 
-                         ( ((mult_table[code >> 1] >> (NPerm5::invS5[code & floormask] >> 1)) + code) % 2) 
-                        );
+// e_1 + f(a_1,a_1^-1) mod 2 is the lift code...
+// f(a_1,a_1^{-1}) is mult_table[code >> 1]
+// NPerm5::invS5[code & floormask] code for underlying A5 inverse elt.
+//  ((mult_table[code >> 1] >> (NPerm5::invS5[code & floormask] >> 1)) % 2)
+return NBinaryA5( NPerm5::invS5[code & floormask] + 
+ ( ((mult_table[code >> 1] >> 
+    (NPerm5::invS5[code & floormask] >> 1)) + code) % 2) );
 }
 
 inline int NBinaryA5::operator[](int source) const {
@@ -408,7 +407,6 @@ inline std::ostream& NBinaryA5::writeTeX(std::ostream &out) const
 
 inline std::string NBinaryA5::toTeX() const
 { return spinornames[code]; }
-
 
 } // namespace regina
 

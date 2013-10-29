@@ -64,15 +64,12 @@ namespace regina {
  */
 
 /**
- * This class holds general bilinear forms -- homomorphisms from a tensor product of abelian
- * groups, to an abelian group. It allows for the computation of things such as the signature
- * and Kawauchi-Kojima invariants of the bilinear forms coming from Poincare duality on a 4 or
+ * This class holds general bilinear forms -- homomorphisms from a tensor
+ * product of abelian groups, to an abelian group. It allows for the 
+ * computation of things such as the signature and Kawauchi-Kojima invariants 
+ * of the bilinear forms coming from Poincare duality on a 4 or
  * 3-manifold respectively. 
  *
- * TODO: currently there's an error in the torsion linking form test, in the Legendre symbol
- *   computation. isoSig(): gLLPQaceedffjkxknnn and isoSig(): nLvAAAvPQkcffggghjlkmmlmaaaaaoskkvxisp
- *   compare with nhomologicaldata, embedding tests, etc. 
- * 
  * @author Ryan Budney
  */
 class REGINA_API NBilinearForm : public ShareableObject {
@@ -106,13 +103,16 @@ class REGINA_API NBilinearForm : public ShareableObject {
 
     public:
         /**
-         * Creates the bilinear form as a map ldomain \otimes rdomain --> range, where the map
-         * is described by pairing, a nxmxk-sparse grid where n is the rank of
-         * the chain complex for ldomain, m the rank of the chain complex for rdomain, and k the
-         * rank of the chain complex for range. 
+         * Creates the bilinear form as a map ldomain \otimes rdomain --> range,
+         * where the map is described by pairing, a nxmxk-sparse grid where n 
+         * is the rank of the chain complex for ldomain, m the rank of the 
+         * chain complex for rdomain, and k the rank of the chain complex 
+         * for range. 
          */
-        NBilinearForm(const NMarkedAbelianGroup &ldomain, const NMarkedAbelianGroup &rdomain, 
-		      const NMarkedAbelianGroup &range,   const NSparseGridRing< NLargeInteger > &pairing);
+        NBilinearForm(const NMarkedAbelianGroup &ldomain, 
+              const NMarkedAbelianGroup &rdomain, 
+		      const NMarkedAbelianGroup &range,   
+              const NSparseGridRing< NLargeInteger > &pairing);
 
         /**
          * Creates a clone of the given bilinear form.
@@ -127,29 +127,31 @@ class REGINA_API NBilinearForm : public ShareableObject {
         ~NBilinearForm();
 
         /**
-         * Evaluates the bilinear form on an element of ldomain and rdomain respectively, all in the chain
-         * complex coordinates.
+         * Evaluates the bilinear form on an element of ldomain and rdomain 
+         * respectively, all in the chain complex coordinates.
          *
          * @param lcc chain complex representative in ldomain
          * @param rcc chain complex representative in rdomain
          * @returns chain complex representative in range. 
          */
         std::vector<NLargeInteger> evalCC(std::vector<NLargeInteger> &lcc, 
-                                          std::vector<NLargeInteger> &rcc) const;
+                                      std::vector<NLargeInteger> &rcc) const;
 
     	/**
 	     * Access to the unreducedPairing map.
     	 */
-        const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & unreducedMap() const;
+        const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & 
+            unreducedMap() const;
 
         /**
-         * Access to the reducedPairing map.  So if you wanted to iterate through the
-         * values of the bilinear form evaluated on the generators of the homology of
-         * ldomain and rdomain, you'd construct an iterator to a 
-         *  std::map< NMultiIndex< unsigned long >, NLargeInteger* > type and iterate 
-         *  through reducedMap(). 
+         * Access to the reducedPairing map.  So if you wanted to iterate 
+         * through the values of the bilinear form evaluated on the generators 
+         * of the homology of ldomain and rdomain, you'd construct an iterator 
+         * to a std::map< NMultiIndex< unsigned long >, NLargeInteger* > type 
+         * and iterate through reducedMap(). 
          */
-        const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & reducedMap() const;
+        const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & 
+            reducedMap() const;
 
         /**
          * reducedPairing access as an NSparseGridRing
@@ -157,71 +159,83 @@ class REGINA_API NBilinearForm : public ShareableObject {
         const NSparseGridRing< NLargeInteger >* reducedSparseGrid() const;
  
         /**
-         *  Given a bilinear form whose range is the integers, we can ask for the 
-         * maximal dimension (rank) of a subspace on which it is non-degenerate. 
-         * This is that number.  Returns zero if your target space is not the integers.
+         *  Given a bilinear form whose range is the integers, we can ask 
+         * for the maximal dimension (rank) of a subspace on which it is 
+         * non-degenerate. This is that number.  Returns zero if your target 
+         * space is not the integers.
          */
         unsigned long rank() const;
 
         /**
-         * If this is a symmetric bilinear form with range the integers, we can ask for its 
-         * signature.  This routine computes said signature. 
+         * If this is a symmetric bilinear form with range the integers, we
+         * can ask for its  signature.  This routine computes said signature. 
          */
         long int signature() const;
 
     	/**
-          * Kawauchi-Kojima vector describing the torsion ranks, as prime powers.
+          * Kawauchi-Kojima vector describing the torsion ranks, as prime
+          *  powers.
           *
-          * Returns the torsion form rank vector. This is one of the three Kawauchi-Kojima invariants
-          * of a torsion linking form.  It is a notation for the prime power decomposition of the
-          * torsion subgroup of H1.  Z_8 would be 2(0 0 1), Z_8 + Z_8 would be 2(0 0 2).  Z_12 would be
-          * 2(0 1) 3(1), etc.  It is a list consisting of p(a b c ... ) elements, meaning the prime p
-          * appears in several ways: there are a summands of Z_p, b of Z_{p^2}, c of Z_{p^3}, etc. 
-          * It can also be seen as the dimension over Z_(p^k) of G_(p,k) described above.   This 
-          * is orientation-independent, as it only depends on H1 of the manifold. 
+          * Returns the torsion form rank vector. This is one of the three 
+          * Kawauchi-Kojima invariants of a torsion linking form.  It is a 
+          * notation for the prime power decomposition of the
+          * torsion subgroup of H1.  Z_8 would be 2(0 0 1), Z_8 + Z_8 
+          * would be 2(0 0 2).  Z_12 would be 2(0 1) 3(1), etc.  It is a 
+          * list consisting of p(a b c ... ) elements, meaning the prime p
+          * appears in several ways: there are a summands of Z_p, b of Z_{p^2},
+          * c of Z_{p^3}, etc.  It can also be seen as the dimension over 
+          * Z_(p^k) of G_(p,k) described above.   This is 
+          * orientation-independent, as it only depends on H1 of the manifold. 
           */
     	const std::string& kkTorRank() const;
 
          /**
           * Kawauchi-Kojima sigma vector.
           *
-          * Returns the 2-torsion sigma vector.  This is an object that takes values in the set
-          * {0,1,2,3,4,5,6,7,inf}, i.e. Z_8 \cup {inf}.  It is only relevant if H1 has 2-torsion. 
-          * Torsion linking forms with only odd torsion are classified by the power decomposition
-          * and the Legendre symbol vector.  This is the part of the classification of torsion
-          * linking forms due to Kawauchi and Kojima. 
+          * Returns the 2-torsion sigma vector.  This is an object that takes
+          * values in the set {0,1,2,3,4,5,6,7,inf}, i.e. Z_8 \cup {inf}.  It 
+          * is only relevant if H1 has 2-torsion.  Torsion linking forms with 
+          * only odd torsion are classified by the power decomposition
+          * and the Legendre symbol vector.  This is the part of the 
+          * classification of torsion linking forms due to Kawauchi and Kojima. 
           *
-          * A characteristic element of f_(2,k) is an element q so that f_(2,k)(q,x)=f_(2,k)(x,x)
-          * for all x in G_(2,k).  It's a fact that this element exists and it is unique, so we
-          * denote it by c_(f,k).   If c_(f,k) is zero, we make the k-th element of the sigma
-          * string infinity.  Otherwise, consider the function q_k : G_2 / G_2,k--> Q/Z defined
+          * A characteristic element of f_(2,k) is an element q so that 
+          * f_(2,k)(q,x)=f_(2,k)(x,x) for all x in G_(2,k).  It's a fact that 
+          * this element exists and it is unique, so we denote it by c_(f,k).  
+          *  If c_(f,k) is zero, we make the k-th element of the sigma
+          * string infinity.  Otherwise, consider the function 
+          * q_k : G_2 / G_2,k--> Q/Z defined
           * by q_k([x]) = 2^(k-1)f(x,x).  It's a fact that the sum 
           *
           *       GS_k := \Sum_{x in G_2/G_2,k} exp(2\pi iq_k(x))
           *
-          * satisfies GS_k = |GS_k| e^{2 \pi i \sigma / 8} for some integer j.  This the 
-          * \sigma_k. 
+          * satisfies GS_k = |GS_k| e^{2 \pi i \sigma / 8} for some integer j. 
+          * This the \sigma_k. 
           *
-          * Notice that under an orientation reversal, inf is fixed, but GS_k is modified by
-          * conjugation, which on sigma is the involution 0<->0, 1<->7, 2<->6, 3<->5, 4<->4. 
+          * Notice that under an orientation reversal, inf is fixed, but GS_k 
+          * is modified by conjugation, which on sigma is the 
+          * involution 0<->0, 1<->7, 2<->6, 3<->5, 4<->4. 
           */
 	    const std::string& kkTorSigma() const;
 
     	/**
           * Kawauchi-Kojima Legendre symbol vector
           *
-          * Returns the odd p-torsion Legendre symbol vector. This is the part of the Kawauchi-Kojima
-          * classification that's due to Seifert.  If G_(p,k) is a trivial group this is defined as
-          * zero, if G_(p,k) is non-trivial the idea is to think of f_(p,k) as a symmetric bilinear
-          * form on G_(p,k).  Plugging in a basis for G_(p,k) you get a square matrix whose entries are
-          * elements of Z_p.  We take the Legendre symbol of the determinant of this matrix.  This is
-          * a number -1, 0 or 1.   You get 1 if the determinant is a quadratic residue mod p (i.e. if
-          * its congruent mod p to the square of a non-zero integer), 0 if its congruent to 0 mod p, 
-          * and -1 otherwise, sometimes called "a quadratic non-residue mod p". 
-          * We do this for all k so that Z_p^k is a subgroup of G. 
+          * Returns the odd p-torsion Legendre symbol vector. This is the part 
+          * of the Kawauchi-Kojima classification that's due to Seifert.  If
+          * G_(p,k) is a trivial group this is defined as zero, if G_(p,k) is 
+          * non-trivial the idea is to think of f_(p,k) as a symmetric bilinear
+          * form on G_(p,k).  Plugging in a basis for G_(p,k) you get a square 
+          * matrix whose entries are elements of Z_p.  We take the Legendre 
+          * symbol of the determinant of this matrix.  This is a number 
+          * -1, 0 or 1.   You get 1 if the determinant is a quadratic residue 
+          * mod p (i.e. if its congruent mod p to the square of a non-zero 
+          * integer), 0 if its congruent to 0 mod p, and -1 otherwise, sometimes
+          *  called "a quadratic non-residue mod p". We do this for all k so 
+          * that Z_p^k is a subgroup of G. 
           *
-          * Under an orientation reversal, at most the sign can change.  And it does so by a factor
-          * of (-1)^{(p-1)rank(G_(p,k))/2}.            
+          * Under an orientation reversal, at most the sign can change.  And 
+          * it does so by a factor of (-1)^{(p-1)rank(G_(p,k))/2}.            
           */
 	    const std::string& kkTorLegendre() const;
 
@@ -314,52 +328,63 @@ class REGINA_API NBilinearForm : public ShareableObject {
 
 
 /**
- *  This procedure takes as input the NBilinearForm intP which is required to be a torsion linking 
- * form on an abelian group.  Specifically, it's assumed the map A x A --> Q/Z is symmetric, and 
- * the range is a trivially presented Z/nZ. 
+ *  This procedure takes as input the NBilinearForm intP which is required to 
+ * be a torsion linking form on an abelian group.  Specifically, it's assumed 
+ * the map A x A --> Q/Z is symmetric, and the range is a trivially 
+ * presented Z/nZ. 
  *
- * The procedure outputs the complete Kawauchi-Kojima invariants of the form, which are:
+ * The procedure outputs the complete Kawauchi-Kojima invariants of the form, 
+ * which are:
  *
  * 1) The prime power decomposition of A, as ppVec.
  *
- * 2) The classification of the 2-torsion linking pairing.  This invariant takes the form of a vector 
- *    with n elements, where 2^n is the order of the largest subgroup of A whose order is a power of 
- *    two.  The entries of the vector represent which the angle of a certain vector V in the complex 
- *    plane -- this vector can either be at the origin (8), or it is a non-zero vector along the line 
- *    of angle 2(pi)i/8*k, k=0,1,2,3,4,5,6,7.  Kawauchi and Kojima use the symbol infinity to represent
- *    zero-sums, but we use 8. The vector V is the sum of e^{ 2^{i+1} pi i form(x,x) } where x ranges 
- *    over ?? read KK paper again...  So this invariant is orientation-sensitive.  In particular if you 
- *    reverse the orientation, the elements of the vector negate mod 8 (except for 8, which remains 
- *    fixed).  So a vector (1 3 8 7 8) is turned to (7 5 8 1 8) on reversal of orientation. 
- *    TODO: supply more details
+ * 2) The classification of the 2-torsion linking pairing.  This invariant 
+ *    takes the form of a vector with n elements, where 2^n is the order of 
+ *    the largest subgroup of A whose order is a power of two.  The entries
+ *    of the vector represent which the angle of a certain vector V in the 
+ *    complex plane -- this vector can either be at the origin (8), or it is 
+ *    a non-zero vector along the line of angle 2(pi)i/8*k, k=0,1,2,3,4,5,6,7. 
+ *    Kawauchi and Kojima use the symbol infinity to represent zero-sums, but 
+ *    we use 8. The vector V is the sum of e^{ 2^{i+1} pi i form(x,x) } 
+ *    where x ranges over ?? read KK paper again...  So this invariant is 
+ *    orientation-sensitive.  In particular if you reverse the orientation, the 
+ *    elements of the vector negate mod 8 (except for 8, which remains 
+ *    fixed).  So a vector (1 3 8 7 8) is turned to (7 5 8 1 8) on reversal of
+ *    orientation.  TODO: supply more details
  *
- * 3) The classification of the odd p-torsion linking pairing.  Given a prime power p^k, you consider 
- *    the induced linking form on the quotient of elements of order p^k modulo p^{k-1}.  The determinant 
- *    you can consider as an element of the field Z_p, and then you take the legendre symbol (whether or 
- *    not the determinant is a square mod p).  This is the invariant, as a list for all p^k dividing the 
- *    order of A, with p odd.  This invariant is also orientation-sensitive, since when you change the 
- *    orientation you negate the relevant matrices, so the legendre symbol changes if and 
- *    only if the rank n of the p^k-torsion mod p^(k-1) is odd and p | n^2 + 1. 
+ * 3) The classification of the odd p-torsion linking pairing.  Given a prime 
+ *    power p^k, you consider the induced linking form on the quotient of 
+ *    elements of order p^k modulo p^{k-1}.  The determinant you can consider 
+ *    as an element of the field Z_p, and then you take the legendre symbol
+ *    (whether or not the determinant is a square mod p).  This is the 
+ *    invariant, as a list for all p^k dividing the order of A, with p odd. 
+ *    This invariant is also orientation-sensitive, since when you change the 
+ *    orientation you negate the relevant matrices, so the legendre symbol 
+ *    changes if and only if the rank n of the p^k-torsion mod p^(k-1) is 
+ *    odd and p | n^2 + 1. 
  *
- * The routine also outputs linkingFormPD, which is the restriction of the torsion linking form to the 
- *   subgroups of A divisible by all the prime factors of the order of A. 
+ *   The routine also outputs linkingFormPD, which is the restriction of the 
+ *   torsion linking form to the subgroups of A divisible by all the prime 
+ *   factors of the order of A. 
  */
 REGINA_API void computeTorsionLinkingFormInvariants(const NBilinearForm &intP, 
-	std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec, 
-    std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,
-    std::vector<unsigned long> &ttVec, 
-    std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
-    std::vector< NMatrixRing<NRational>* > &linkingFormPD );
+std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec, 
+std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,
+std::vector<unsigned long> &ttVec, 
+std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
+std::vector< NMatrixRing<NRational>* > &linkingFormPD );
 
 /**
- * Function takes as input the output of computeTorsionLinkingFormInvariants, and returns various text
- * human-readable strings that interpret the result.
+ * Function takes as input the output of computeTorsionLinkingFormInvariants, 
+ * and returns various text human-readable strings that interpret the result.
  */
 REGINA_API void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, 
-                                                    std::vector< unsigned long > > > &ppVec,
-        const std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,
+                                     std::vector< unsigned long > > > &ppVec,
+        const std::vector< std::pair< NLargeInteger, 
+                           std::vector< unsigned long > > > &ppList,
         const std::vector<unsigned long> &ttVec, 
-        const std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
+        const std::vector< std::pair< unsigned long, 
+                           std::vector< int > > > &ptVec, 
         const std::vector< NMatrixRing<NRational>* > &linkingFormPD, 
         bool orientable, 
         bool* torsionLinkingFormIsSplit, bool* torsionLinkingFormIsHyperbolic, 
@@ -370,8 +395,10 @@ REGINA_API void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger,
 
 /*@}*/
 
-inline REGINA_API const NSparseGridRing< NLargeInteger >* NBilinearForm::reducedSparseGrid() const
+inline REGINA_API const NSparseGridRing< NLargeInteger >* 
+ NBilinearForm::reducedSparseGrid() const
 { return reducedPairing; }
+
 inline REGINA_API const NMarkedAbelianGroup& NBilinearForm::ldomain() const
 { return lDomain; }
 inline REGINA_API const NMarkedAbelianGroup& NBilinearForm::rdomain() const
