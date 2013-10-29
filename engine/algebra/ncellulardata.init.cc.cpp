@@ -852,7 +852,8 @@ void NCellularData::fillMixedHomologyCC()
           tetinc.sign(), wordle ) ); 
 	    // part dual to edges 0,i
 	    edg = pen->getEdge( Dim4Edge::edgeNumber[j%5][(i+j)%5] );
-	    NPerm5 edginc( pen->getEdgeMapping( Dim4Edge::edgeNumber[j%5][(i+j)%5] ) );
+	    NPerm5 edginc( pen->getEdgeMapping( 
+                       Dim4Edge::edgeNumber[j%5][(i+j)%5] ) );
         // TODO fill wordle
         CC->setEntry( NMultiIndex< unsigned long >( j, 5+(i%5) ), 
          coverFacetData( ri1 + 10*(j/5) + Dim4Edge::edgeNumber[j%5][(i+j)%5], 
@@ -994,7 +995,8 @@ void NCellularData::fillMixedHomologyCC()
                  coverFacetData( ri3 + I, 1, wordle ) );
      }
     }
-   for (unsigned long j=0; j<6*numNonIdealCells[3]; j++)  // 6 facets in a tetrahedron
+   for (unsigned long j=0; j<6*numNonIdealCells[3]; j++) 
+      // 6 facets in a tetrahedron
     { // j%6,  mCC[D]->entry( *, ci1+j )
      tet = tri3->getTetrahedron(nicIx[3][j/6]); 
      NPerm4 edginc = tet->getEdgeMapping( j%6 ); 
@@ -1027,7 +1029,8 @@ void NCellularData::fillMixedHomologyCC()
        unsigned long iX( (D+1)*tri3->faceIndex( tet->getFace( 
         (icIx[D][j] + i) % (D+2) ) ) + ( 
          facinc.preImageOf(icIx[D][j] % (D+2)) ) );
-       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), iX ) - icIx[D-1].begin();
+       I = lower_bound( icIx[D-1].begin(), icIx[D-1].end(), iX ) - 
+                        icIx[D-1].begin();
        // TODO fill wordle
        CC->setEntry( NMultiIndex< unsigned long >( ci2 + j, i ),
         coverFacetData( ri3 + I, -facinc.sign(), wordle ) );
@@ -1256,8 +1259,8 @@ void NCellularData::fillBoundaryHomologyCC()
    genCC.insert( std::pair< ChainComplexLocator, ccMapType* >
        (ChainComplexLocator(D, STD_BDRY_coord), CC ) );
    CC = new ccMapType(2);
-   D = 2; // sbCC[2]
-   for (unsigned long j=0; j<numNonIdealBdryCells[D]; j++) // sbCC[D]->entry( *,j )
+   D = 2; // sbCC[2]   // sbCC[D]->entry( *,j )
+   for (unsigned long j=0; j<numNonIdealBdryCells[D]; j++) 
     {
      fac = tri3->getFace(bcIx[D][j]);
      for (unsigned long i=0; i < D+1; i++) 

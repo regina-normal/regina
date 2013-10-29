@@ -59,7 +59,8 @@ bool written=false;
 	 written = true;
         }
  std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator mabi;
- for (mabi = markedAbelianGroups.begin(); mabi != markedAbelianGroups.end(); mabi++)
+ for (mabi = markedAbelianGroups.begin(); 
+      mabi != markedAbelianGroups.end(); mabi++)
 	{
 	 if (written) out<<" ";
 	 mabi->first.writeTextShort(out);
@@ -68,7 +69,8 @@ bool written=false;
 	 written = true;
         }
  std::map< HomLocator, NHomMarkedAbelianGroup* >::const_iterator hmabi;
- for (hmabi = homMarkedAbelianGroups.begin(); hmabi != homMarkedAbelianGroups.end(); hmabi++)
+ for (hmabi = homMarkedAbelianGroups.begin(); 
+      hmabi != homMarkedAbelianGroups.end(); hmabi++)
 	{
 	 if (written) out<<" ";
 	 hmabi->first.writeTextShort(out);
@@ -96,7 +98,8 @@ bool written=false;
 	 written = true;
 	}
  std::map< HomGroupPresLocator, NHomGroupPresentation* >::const_iterator hit;
- for (hit = homGroupPresentations.begin(); hit != homGroupPresentations.end(); hit++)
+ for (hit = homGroupPresentations.begin(); 
+      hit != homGroupPresentations.end(); hit++)
  	{
 	 if (written) out<<" ";
 	 hit->first.writeTextShort(out);
@@ -107,81 +110,84 @@ bool written=false;
 	}
 }
 
-// TODO go through this again using coordinate systems as the index, not markedAbelianGroups, 
-//  etc
+// TODO go through this again using coordinate systems as the index, 
+//  not markedAbelianGroups, 
 void NCellularData::writeTextLong(std::ostream& out) const
 {
 // list basics of manifold -- dimension, boundary types, orientable, etc.
 if (tri3) out<<"3"; else out<<"4";
 out<<"-manifold triangulation";
-if (tri3) { out<<" named \""; tri3->writeTextShort(out); out<<"\" is"; // use writeTextLong?
-	    if (tri3->isOrientable()) out<<" orientable"; else out<<" non-orientable"; 
-	    if (tri3->isIdeal() && tri3->hasBoundaryFaces()) out<<" has ideal and standard boundary";
-            else if (tri3->isIdeal()) out<<" has ideal boundary";
-            else if (tri3->hasBoundaryFaces()) out<<" has standard boundary";
-            else out<<" no boundary";
-          }
-else {
- out<<" named \""; tri4->writeTextShort(out); out<<"\" is"; // use writeTextLong?
-	    if (tri4->isOrientable()) out<<" orientable"; else out<<" non-orientable"; 
-	    if (tri4->isIdeal() && tri4->hasBoundaryTetrahedra()) out<<" has ideal and standard boundary";
-            else if (tri4->isIdeal()) out<<" has ideal boundary";
-            else if (tri4->hasBoundaryTetrahedra()) out<<" has standard boundary";
-            else out<<" no boundary";
-     }
+if (tri3) { 
+ out<<" named \""; tri3->writeTextShort(out); 
+ out<<"\" is"; // use writeTextLong?
+ if (tri3->isOrientable()) out<<" orientable"; else out<<" non-orientable"; 
+ if (tri3->isIdeal() && tri3->hasBoundaryFaces()) 
+    out<<" has ideal and standard boundary";
+ else if (tri3->isIdeal()) out<<" has ideal boundary";
+ else if (tri3->hasBoundaryFaces()) out<<" has standard boundary";
+ else out<<" no boundary";
+}
+else 
+{
+ out<<" named \""; tri4->writeTextShort(out); out<<"\" is"; 
+ if (tri4->isOrientable()) out<<" orientable"; 
+  else out<<" non-orientable"; 
+ if (tri4->isIdeal() && tri4->hasBoundaryTetrahedra()) 
+  out<<" has ideal and standard boundary";
+ else if (tri4->isIdeal()) out<<" has ideal boundary";
+ else if (tri4->hasBoundaryTetrahedra()) out<<" has standard boundary";
+ else out<<" no boundary";
+}
 // run through list of everything computed, and print. 
  std::map< GroupLocator, NAbelianGroup* >::const_iterator abi;
  for (abi = abelianGroups.begin(); abi != abelianGroups.end(); abi++)
-	{
-	 out<<" ";
-	 abi->first.writeTextShort(out);
-         out<<" is ";
-	 abi->second->writeTextShort(out);
-         out<<", ";
-        }
+  {
+   out<<" ";
+   abi->first.writeTextShort(out); out<<" is ";
+   abi->second->writeTextShort(out); out<<", ";
+  }
  std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator mabi;
- for (mabi = markedAbelianGroups.begin(); mabi != markedAbelianGroups.end(); mabi++)
-	{
-	 out<<" ";
-	 mabi->first.writeTextShort(out);
-	 out<<" is ";
-	 mabi->second->writeTextShort(out);
-         out<<", ";
-        }
+ for (mabi = markedAbelianGroups.begin(); 
+      mabi != markedAbelianGroups.end(); mabi++)
+  {
+   out<<" "; mabi->first.writeTextShort(out);
+   out<<" is "; mabi->second->writeTextShort(out);
+   out<<", ";
+  }
  std::map< HomLocator, NHomMarkedAbelianGroup* >::const_iterator hmabi;
- for (hmabi = homMarkedAbelianGroups.begin(); hmabi != homMarkedAbelianGroups.end(); hmabi++)
-	{
-	 out<<" ";
-	 hmabi->first.writeTextShort(out);
-	 out<<" is ";
-	 hmabi->second->writeTextShort(out);
-         out<<", ";
-        }
+ for (hmabi = homMarkedAbelianGroups.begin(); 
+      hmabi != homMarkedAbelianGroups.end(); hmabi++)
+  {
+   out<<" "; hmabi->first.writeTextShort(out);
+   out<<" is "; hmabi->second->writeTextShort(out);
+   out<<", ";
+  }
  std::map< FormLocator, NBilinearForm* >::const_iterator fmit;
  for (fmit = bilinearForms.begin(); fmit != bilinearForms.end(); fmit++)
- 	{
-	 out<<" ";
-	 fmit->first.writeTextShort(out);
-	 out<<" is ";
-	 fmit->second->writeTextShort(out);
-	 out<<", ";
-	}
+  {
+   out<<" ";
+   fmit->first.writeTextShort(out);
+   out<<" is ";
+   fmit->second->writeTextShort(out);
+   out<<", ";
+  }
  std::map< GroupPresLocator, NGroupPresentation* >::const_iterator git;
  for (git = groupPresentations.begin(); git != groupPresentations.end(); git++)
- 	{
-	 out<<" ";
-	 git->first.writeTextShort(out);
-	 out<<" is ";
-	 git->second->writeTextLong(out);
-	}
+  {
+   out<<" ";
+   git->first.writeTextShort(out);
+   out<<" is ";
+   git->second->writeTextLong(out);
+  }
  std::map< HomGroupPresLocator, NHomGroupPresentation* >::const_iterator hit;
- for (hit = homGroupPresentations.begin(); hit != homGroupPresentations.end(); hit++)
- 	{
-	 out<<" ";
-	 hit->first.writeTextShort(out);
-	 out<<" is ";
-	 hit->second->writeTextLong(out);
-	}
+ for (hit = homGroupPresentations.begin(); 
+      hit != homGroupPresentations.end(); hit++)
+  {
+   out<<" ";
+   hit->first.writeTextShort(out);
+   out<<" is ";
+   hit->second->writeTextLong(out);
+  }
 
  out<<" Euler Char == "<<eulerChar();
  out<<" Poincare Polynomial == "<<poincarePolynomial();

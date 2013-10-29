@@ -335,7 +335,8 @@ const NHomMarkedAbelianGroup* NCellularData::homGroup(
     std::map< HomLocator, NHomMarkedAbelianGroup* > *hmabgptr = 
      const_cast< std::map< HomLocator, NHomMarkedAbelianGroup* > *> 
       (&homMarkedAbelianGroups);
-    hmabgptr->insert(std::pair<HomLocator,NHomMarkedAbelianGroup*>(h_desc,hmgptr)); 
+    hmabgptr->insert(std::pair<HomLocator,NHomMarkedAbelianGroup*>
+        (h_desc,hmgptr)); 
     delete CM;
     return hmgptr;
    }
@@ -728,8 +729,8 @@ const NBilinearForm* NCellularData::bilinearForm(
       ( f_desc.rdomain.cof == 0 ) && 
       ( f_desc.ldomain.hcs == DUAL_coord ) && 
       ( f_desc.rdomain.hcs == STD_REL_BDRY_coord) )
-  { // TLF step 1: construct range, ldomain and rdomain.  We'll make range Z_n where n=the 
-    // gcd of the order of the torsion subgroups of ldomain and rdomain respectively... 
+  { // TLF step 1: construct range, ldomain and rdomain.  Make range Z_n 
+    // where n=gcd of the order of the torsion subgroups of ldomain and rdomain
     // ie: n == gcd(a,b) a, b largest inv. facs ldomain,rdomain.
    GroupLocator ldd( f_desc.ldomain.dim, f_desc.ldomain.var, 
      f_desc.ldomain.hcs, f_desc.ldomain.cof );
@@ -1264,12 +1265,14 @@ const NMatrixRing< NSVPolynomialRing< NLargeInteger > >*
  *  Given integers n != 0 and m, this routine computes d and r so that
  *   m = dn + r with 0 <= r < |n|
  */
-void signedLongDivAlg( signed long n, signed long m, signed long &d, signed long &r )
+void signedLongDivAlg( signed long n, signed long m, 
+                       signed long &d, signed long &r )
 {
  d = m/n; r = m-d*n; if (r<0) { r += abs(n); d += ( (n>0) ? -1 : 1 ); } 
 }
 
-std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > NCellularData::alexanderPresentationMatrix() const
+std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > 
+  NCellularData::alexanderPresentationMatrix() const
 {
  const NMatrixRing<NSVPolynomialRing< NLargeInteger > >* 
   M( alexanderChainComplex( ChainComplexLocator(1, NCellularData::DUAL_coord)));
