@@ -42,7 +42,6 @@
 #include "maths/numbertheory.h"
 #include "utilities/boostutils.h"
 #include "utilities/stlutils.h"
-#include "maths/matrixops.h"
 
 namespace regina {
 
@@ -496,7 +495,7 @@ namespace {
             inv_reducer[(subData.start_from + i) % word_length] : 
                 reducer[(subData.start_from + i) % word_length] );
      rep_word.simplify(); del_word.simplify();
-     retval = del_word.toString()+" -> "+rep_word.toString();
+     retval = del_word.str()+" -> "+rep_word.str();
      return retval;
     }
     */
@@ -544,30 +543,12 @@ void NGroupExpression::cycleLeft()
   }
 }
 
-bool NGroupPresentation::simplifyWord( NGroupExpression &input ) const
- {
-  bool retval(false);
-  for (unsigned long i=0; i<relations.size(); i++)
-   { // apply relations[i] to input word.
-     std::set< NWordSubstitutionData > sub_list;
-     dehnAlgorithmSubMetric( input, *relations[i], sub_list );
-     if (sub_list.size() != 0) if ( (*sub_list.begin()).score > 0 )
-        {
-        applySubstitution( input, *relations[i], *sub_list.begin() );
-        retval = true; 
-        }
-   }
-  return retval;
- }
-
 bool NGroupPresentation::intelligentSimplify() {
     // This is not inline because it needs the NHomGroupPresentation
     // class definition, so that the auto_ptr destructor works correctly.
     return intelligentSimplifyDetail().get();
 }
 
-// TODO: we should make this routine more modular, calling simpler more "canned" 
-//  group modification routines in a more transparent way. 
 std::auto_ptr<NHomGroupPresentation>
         NGroupPresentation::intelligentSimplifyDetail() {
  bool didSomething(false);
@@ -617,12 +598,13 @@ std::auto_ptr<NHomGroupPresentation>
 
    // start (3) - apply shorter relators to longer.
    for (it = relatorList.begin(); it != relatorList.end(); it++)
+    {
      if ( (*it)->wordLength() > 0 ) // don't bother if this is a trivial word.
       {
        std::list< NGroupExpression* >::iterator tit; // target of it manips. 
        tit = it; tit++;
        while (tit != relatorList.end())
- 	   {// attempt to apply *it to *tit
+ 	{// attempt to apply *it to *tit
           std::set< NWordSubstitutionData > sub_list; 
           dehnAlgorithmSubMetric( **tit, **it, sub_list );
           // for now let's just choose the first suggested substitution, 
@@ -633,8 +615,9 @@ std::auto_ptr<NHomGroupPresentation>
              we_value_iteration = true;
              didSomething = true;
 	    }
-	   tit++;
-	   }
+	  tit++;
+	}
+      }
     } // end (3) - application of shorter to longer relators.
 
   // (4) Build and sort a list (by length) of generator-killing relations. 
@@ -680,24 +663,43 @@ std::auto_ptr<NHomGroupPresentation>
               { if (before_flag) prefix.addTermLast( (*tit) );
                 else complement.addTermLast( (*tit) ); }
            } 
-          complement.addTermsLast(prefix);
+	  complement.addTermsLast(prefix);
           if (!inv) complement.invert();
-	      // sub gi --> complement, in both substitutionTable and relatorList
+	  // so we sub gi --> complement, in both substitutionTable and relatorList
          for (unsigned long j=0; j<substitutionTable.size(); j++)
 	    substitutionTable[j].substitute( i, complement );
-	    for (std::list< NGroupExpression* >::iterator pit = relatorList.begin(); 
+	  for (std::list< NGroupExpression* >::iterator pit = relatorList.begin(); 
                pit != relatorList.end(); pit++)
-	     (*pit)->substitute( i, complement );
-	    we_value_iteration = true;
-        didSomething = true;
-	    if (WL>3) word_length_3_trigger=true;
-  	    goto found_a_generator_killer;
+	     { // aha! using it in a nested way!!
+	     (*pit)->substitute( i, complement ); // except this
+	     }
+	  we_value_iteration = true;
+          didSomething = true;
+	  if (WL>3) word_length_3_trigger=true;
+
+  	  goto found_a_generator_killer;
         }
-     } // the look through genUsage loop
+     } // end (4)
 
     found_a_generator_killer:
     if (word_length_3_trigger) break; 
    } // end (4)
+  // (5) TODO: look for convienient Tietze moves. These are automorphisms of the
+  //     the free group that fix all but one generator, which maps as
+  //     g_i --> g_i g_j^k for some j \neq i, and any k, similarly
+  //     g_i --> g_j^k g_i. 
+  //
+  //     For example,  < a b | b^2a^2, abababab > 
+  //          In this situation if we make f the automorphism of the free group
+  //          with f(a)=ab, f(b)=b, we get f^{-1}(b)=b, f^{-1}(a)=ab^-1, so
+  //          f^{-1}(b^2a^2)=b^2ab^-1ab^-1, f^{-1}(abababab)=a^4. 
+  //          the former cyclically reduces to bab^-1a.  This is good.  
+  //          So how should we weigh the change of coordinates? Probably some 
+  //          strict greedy algorithm for now, just to be safe.  Or perhaps
+  //          only when the move can amalgamate consecutive appearances of
+  //          generators?  Like abababab -> a^4 is good, but
+  //          b^2a^2 -> b^2ab^-1ab^-1 is kind of bad. 
+  // 
   } // end of main_while_loop (6)
  
  // We need to remove the generators that have been killed or expressed
@@ -710,7 +712,8 @@ std::auto_ptr<NHomGroupPresentation>
   if ( substitutionTable[i].getGenerator(0) == i ) nGenerators++;
 
  // now we can build up a mapping of where the current generators get sent to.  
- // make it a std::vector.
+ // make it a std::vector, I suppose.  This will suffice for a looped substitute
+ //  call. 
 
  std::vector< unsigned long > genReductionMapping( nGenerators );
  unsigned long indx(0);
@@ -738,15 +741,10 @@ std::auto_ptr<NHomGroupPresentation>
  for (it = relatorList.begin(); it != relatorList.end(); it++) 
   { relations.push_back( (*it) ); }
 
- // and build the reverse isomorphism from the new group to the old
- std::vector< NGroupExpression > revMap(nGenerators);
- for (unsigned long i=0; i<revMap.size(); i++)
-  revMap[i].addTermFirst( genReductionMapping[i], 1 );
-
  if (didSomething) {
    // now we can initialize reductionMap 
    return std::auto_ptr<NHomGroupPresentation>(new NHomGroupPresentation(
-    oldGroup, *this, substitutionTable, revMap));
+    oldGroup, *this, substitutionTable));
  } else
    return std::auto_ptr<NHomGroupPresentation>();
 }// end dehnAlgorithm()
@@ -761,427 +759,6 @@ NGroupPresentation& NGroupPresentation::operator=(
         relations[i] = new NGroupExpression( *copyMe.relations[i] );
     return *this;
 }
-
-/**
- *  This routine attempts to rewrite the presentation so that generators
- * of the group map to generators of the abelianization, with any
- * left-over generators mapping to zero. 
- */
-bool NGroupPresentation::linearRewriting()
-{
- // step 1: compute abelianization and how generators map to abelianization.
- std::auto_ptr< NMarkedAbelianGroup > abelianized( markedAbelianisation() );
- NMatrixInt abMat( abelianized->minNumberOfGenerators(), getNumberOfGenerators() );
- for (unsigned long j=0; j<getNumberOfGenerators(); j++)
-  {
-  std::vector<NLargeInteger> epsilon( getNumberOfGenerators() );
-  epsilon[j] = 1;
-  std::vector<NLargeInteger> temp( abelianized->snfRep(epsilon) );
-  for (unsigned long i=0; i<abelianized->minNumberOfGenerators(); i++)
-    abMat.entry(i,j) = temp[i];   
-  }
-
- unsigned long SR( abelianized->getNumberOfInvariantFactors() );
-
- // step 2: we will mimic the simple smith normal form algorithm algorithm 
- //         here, using corresponding moves on the group presentation. 
- for (unsigned long i=abelianized->getNumberOfInvariantFactors(); 
-      i<abelianized->minNumberOfGenerators(); i++)
-  { // in row i we will eliminate all but one entry using column
-    // operations.  Now we need to do a while loop -- find any two non-zero
-    // entries in the row, and reduce.  If there's only one non-zero entry, 
-    // we're done. 
-    unsigned long j0=0, j1=abMat.columns()-1;
-    while (j0 < j1)
-    { // if at j0 its zero, inc, if at j1 zero, dec
-      if (abMat.entry(i,j0).isZero()) { j0++; continue; } 
-      if (abMat.entry(i,j1).isZero()) { j1--; continue; }
-      // column op! 
-      if (abMat.entry(i,j0).abs() < abMat.entry(i,j1).abs())
-       { NLargeInteger q = abMat.entry(i,j1) / abMat.entry(i,j0); 
-         // subtract q times column j0 from column j1 
-         for (unsigned long r=0; r<abMat.rows(); r++)
-          { abMat.entry(r,j1) -= abMat.entry(r,j0)*q; }
-            nielsenCombine(j1, j0, -q.longValue() );
-       }
-      else // (i,j0).abs >= (i,j1).abs()
-       { NLargeInteger q = abMat.entry(i,j0) / abMat.entry(i,j1); 
-         // substract q times column j1 from column j0 
-         for (unsigned long r=0; r<abMat.rows(); r++)
-          { abMat.entry(r,j0) -= abMat.entry(r,j1)*q; }
-          nielsenCombine(j0, j1, -q.longValue() );
-       }
-    }
-   // okay j0 and j1 should be equal.  Let's permute and change sign if appropriate. 
-        { nielsenTransposition(i, j1); abMat.swapColumns(i, j1); }
-   // TODO signs
-  }
-
- // step 3: kill the free parts of the abelianizations of the other generators.
- //         these are row ops. 
- // TODO the torsion part...
-
- // step 4: reduce the torsion part to generators modulo invariant factors.
-}
-
-// TODO: we should probably make this more sophisticated at some point.  For
-//  example < a, b : a^2, abaB > it would not detect as abelian. 
-bool NGroupPresentation::isAbelian() const
- {
-  // The idea will be to take all commutators of the generators, and see if
-  //  the relators can kill them. 
-  for (unsigned long i=0; i<nGenerators; i++)
-   for (unsigned long j=i+1; j<nGenerators; j++)
-    {
-     NGroupExpression COM; // commutator [gi,gj]
-     COM.addTermLast( i, 1 );   COM.addTermLast( j, 1 );
-     COM.addTermLast( i, -1 );  COM.addTermLast( j, -1 );
-     // reduce! We use dehnAlgorithmSubMetric
-     std::set< NWordSubstitutionData > sub_list;
-     // loop through all relators in the group, X. 
-     bool commute(false);
-     for (unsigned long k=0; (k<relations.size()) && (!commute); k++)
-      {
-       dehnAlgorithmSubMetric( COM, *relations[k], sub_list, 1 ); 
-       // check to see if sub_list has a score=4 move.
-       for (std::set< NWordSubstitutionData >::iterator I=sub_list.begin();
-            I!=sub_list.end(); I++)
-        if (I->score == 4) { commute = true; break; }
-      }
-     if (!commute) return false; 
-    }
-  return true;
- }
-
-bool NGroupPresentation::nielsenTransposition(const unsigned long &i, 
-                                              const unsigned long &j)
-{
-    if (i==j) return false;
-    bool retval=false;
-    for (unsigned long l=0; l<relations.size(); l++)
-     {
-      std::list<NGroupExpressionTerm>& terms( relations[l]->getTerms() );
-      for (std::list<NGroupExpressionTerm>::iterator k=terms.begin(); 
-           k!=terms.end(); k++)
-        { 
-          if (k->generator == i) { k->generator = j; retval = true; }
-          else if (k->generator == j) { k->generator = i; retval = true; } 
-        }
-     }
-    return retval;
-}
-
-bool NGroupPresentation::nielsenInvert(const unsigned long &i)
-{
-    bool retval=false;
-    for (unsigned long l=0; l<relations.size(); l++)
-     {
-      std::list<NGroupExpressionTerm>& terms(relations[l]->getTerms());
-      for (std::list<NGroupExpressionTerm>::iterator k=terms.begin(); 
-           k!=terms.end(); k++)
-        {
-        if (k->generator == i) { k->exponent=(-k->exponent); retval = true; }
-        }
-     }
-    return retval;
-}
-
-bool NGroupPresentation::nielsenCombine(const unsigned long &i, 
-    const unsigned long &j, const signed long &k,  const bool &flag)
-{ // replace ri with (ri)(rj)^(-k)
-    bool retval(false);
-    NGroupExpression let;
-    if (flag) { let.addTermFirst(i, 1); let.addTermLast(j, -k); }
-    else { let.addTermLast(i, 1); let.addTermFirst(j, -k); }
-    for (unsigned long k=0; k<relations.size(); k++)
-          if (relations[k]->substitute(i, let, true)) retval = true;
-    return retval;
-}
-
-
-// these macros are used only in the identify_extension_over_Z routine below.
-#define idx(gen, cov) ((unsigned long)(gen-1)+nGm1*cov)
-#define unidx(dat) std::pair<unsigned long, unsigned long>((dat % nGm1)+1, dat/nGm1)
-
-// if presentation is of a group that can bet written as an extension
-//  0 --> A --> G --> Z --> 0
-// this routine is to change the presentation to appear to be such a split
-//  extension. 
-std::auto_ptr< NHomGroupPresentation > NGroupPresentation::identify_extension_over_Z()
-{
- // step 1: let's build the abelianization homomorphism. 
- linearRewriting();
- std::auto_ptr< NMarkedAbelianGroup > abelianized( markedAbelianisation() );
- if (abelianized->getRank() != 1) return std::auto_ptr< NHomGroupPresentation >(NULL);
- if (abelianized->getNumberOfInvariantFactors()>0)  // put Z generator at 0-th
-    nielsenTransposition(0, abelianized->getNumberOfInvariantFactors() );
-
- // We have the presentation of this group in the form
- // < a, g1, g2, ..., gn | r1, ..., rm > with a->1, gi->0 under abelianization
- // 
- // step 2: An infinite presentation of the kernel of the map to Z is given
- //  by < g1i, g2i, ..., gni | r1i, ..., rmi > for all lifts i of the generators
- //  and relators above, after collapsing "a". We can collapse this to a finite
- //  presentation if and only if unique max and minima (in the Z cover) exist
- //  among the lifted relators.  So we check for that. 
- 
- // lifts stores the lifts of the ri's, after crushing the lifts of the a's. 
- std::vector< std::list< std::pair< NGroupExpressionTerm, signed long > > > 
-    lifts( relations.size() );
-
- // the following max/minKiller give a list of the found pairs
- //  (generator index, relator index) to keep track of which relators we can 
- //  use to kill generators (in the covering space).
- std::map< unsigned long, unsigned long > maxKiller;
- std::map< unsigned long, unsigned long > minKiller;
- std::map< unsigned long, unsigned long > cellWidth; // 2-cell width in cover
-
- for (unsigned long l=0; l<relations.size(); l++)
-     { // for each relator determine highest and lowest lifts, and if they
-       // are unique or not.
-
-      signed long lift=0;
-      signed long maxLift(0), minLift(0);   // sheet index
-      unsigned long maxCell(0), minCell(0); // generator's index in presentation
-      bool dupMax(false), dupMin(false);    // have we found duplicate lift height?
-      std::list<NGroupExpressionTerm>& terms(relations[l]->getTerms());
-      for (std::list<NGroupExpressionTerm>::reverse_iterator k=terms.rbegin(); 
-           k!=terms.rend(); k++)
-        { // right to left through the relator
-          if (k->generator > 0) {
-            lifts[l].push_back( std::pair< NGroupExpressionTerm, signed long >
-              ( *k, lift ) ); 
-            // special case if maxCell and minCell not yet initialized.
-            if (maxCell==0) { maxLift = lift; minLift = lift; maxCell = k->generator;
-                              minCell = k->generator; 
-              dupMax = (labs(k->exponent)==1) ? false : true;
-              dupMin = (labs(k->exponent)==1) ? false : true; }
-            else { // back to regular case
-              if (lift > maxLift) { maxLift = lift; dupMax = (labs(k->exponent)==1) ?
-               false : true; maxCell = k->generator; } 
-              else if (lift==maxLift) { dupMax = true; }
-               if (lift < minLift) { minLift = lift; dupMin = (labs(k->exponent)==1) ?
-                false : true; minCell = k->generator; }
-              else if (lift==minLift) { dupMin = true; }
-                 }
-             }
-          else lift += k->exponent;
-        }
-      // maxCell and minCell have to be non-zero at this point.
-      cellWidth[l] = (unsigned long)(maxLift - minLift); 
-
-      if ( (maxCell!=0) && (!dupMax) ) 
-       { 
-         std::map< unsigned long, unsigned long>::iterator I=maxKiller.find(maxCell);
-         if (I!=maxKiller.end()) // compare the current maxKiller[maxCell] to l. 
-           { if (cellWidth[l] > cellWidth[ I->second ]) maxKiller[maxCell]=l; }
-         else maxKiller[maxCell]=l; 
-       }
-      if ( (minCell!=0) && (!dupMin) ) 
-       { 
-         std::map< unsigned long, unsigned long>::iterator I=minKiller.find(minCell);
-         if (I!=minKiller.end()) // compare the current maxKiller[minCell] to l. 
-           { if (cellWidth[l] > cellWidth[ I->second ]) minKiller[minCell]=l; }
-         minKiller[minCell]=l; 
-       }      
-      // now let's readjust the relator so that its minLift is at level 0.
-      if (minLift != 0)
-       {
-         relations[l]->addTermFirst(0, minLift);
-         relations[l]->addTermLast(0, -minLift);
-         relations[l]->simplify();
-         for (std::list< std::pair< NGroupExpressionTerm, signed long > >::iterator I=
-          lifts[l].begin(); I!=lifts[l].end(); I++)
-           I->second -= minLift; // adjust the lifts to have min lift 0
-       }
-      // cyclically permute lifts so that the max-weight rep appears first
-      while (lifts[l].front().second != cellWidth[l])
-       { std::pair< NGroupExpressionTerm, signed long > temp(lifts[l].front());
-         lifts[l].pop_front();
-         lifts[l].push_back( temp ); 
-       }
-      // ensure word starts with highest-weight element as inverted.
-      if (lifts[l].front().first.exponent == 1)
-         {
-           std::pair< NGroupExpressionTerm, signed long > temp(lifts[l].front());
-           lifts[l].pop_front();
-           lifts[l].reverse();
-           lifts[l].push_front(temp); // now run and change the exponents
-           for (std::list< std::pair< NGroupExpressionTerm, signed long > 
-            >::iterator I=lifts[l].begin(); I!=lifts[l].end(); I++)
-            I->first.exponent = -I->first.exponent;
-         }
-     }
- // this is the test for whether or not we can find a finite collection of
- // generators
- unsigned long nGm1( nGenerators - 1 );
- if ( (maxKiller.size() != nGm1) || (minKiller.size() != nGm1) )
-    return std::auto_ptr< NHomGroupPresentation >(NULL); 
-
- unsigned long maxWidth(0);
- unsigned long liftCount(0); // how many lifts of our generators do we need?
- for (unsigned long i=0; i<maxKiller.size(); i++)
-  {
-  if (cellWidth[maxKiller[i]]>liftCount) liftCount = cellWidth[maxKiller[i]];
-  if (cellWidth[minKiller[i]]>liftCount) liftCount = cellWidth[minKiller[i]];
-  }
- for (std::map< unsigned long, unsigned long>::iterator I=cellWidth.begin(); 
-      I!=cellWidth.end(); I++)
-  if (I->second > maxWidth) maxWidth = I->second;
- // we need liftCount lifts of our generators and relators.  Perhaps we should
- // either cite something in Magnus-Karass-Solitar for this or put in a proof.
- // let's build a vector that describes the relationa a(gi)a^-1 = ...
-
-// NOTE: presentations like < a | > are fine with liftCount==0. 
-// if (liftCount==0) { std::cout<<"identify_extension_over_Z() error: liftcount is zero.\n";
-//   std::cout<<"Group: "<<this->toStringCompact()<<"\n";
-//   std::cout.flush(); exit(1); }
-
- // build table of reductions of the liftCount==M lift of generators.  
- // the indexing of the generators of the kernel of G --> Z will be handled
- // by the above idx and unidx macros.
- std::map<unsigned long, NGroupExpression> genKiller;
- // start with the liftCount lift, i.e. the first order reducers a^-Mg_ia^M =...
- for (unsigned long i=1; i<getNumberOfGenerators(); i++)
-  {
-    NGroupExpression temp;
-    // maxKiller[i] is the index in lifts of the relator that kills generator gi
-    // i is a liftIdx
-    unsigned long delta(0);
-    for (std::list< std::pair< NGroupExpressionTerm, signed long > 
-            >::iterator I=lifts[maxKiller[i]].begin(); I!=lifts[maxKiller[i]].end();
-             I++)
-    { 
-     if (I==lifts[maxKiller[i]].begin()) 
-       { // push up delta sheets so that it kills appropriately
-        delta = (unsigned long)(liftCount - I->second);
-        continue;
-       }  
-     temp.addTermFirst( NGroupExpressionTerm( 
-        idx( I->first.generator, I->second + delta ), I->first.exponent ) );
-    }
-   genKiller.insert( std::pair< unsigned long, NGroupExpression >
-                     (idx(i,liftCount),temp) );
-  }
-
- // extra genKillers -- sometimes there are wider words than the killing words. 
- //  like with presentations such as:
- //   < a b | b a^-1 b a^-1 b^-1 a^2, a^-3 b^2 a^3 b^2 >
- // We could alternatively use the genKiller to reduce the width of the other
- // relators.  But for now we use this less-sophisticated work-around. 
- for (unsigned long j=liftCount; j<maxWidth; j++)
-  { 
-    for (unsigned long i=1; i<getNumberOfGenerators(); i++)
-     { // bump-up lift of each genKiller then apply previous genKillers to them 
-       // to create word in the fibre group.
-       NGroupExpression tempW( genKiller[idx(i, j)] );
-       for (std::list<NGroupExpressionTerm>::iterator I=tempW.getTerms().begin();
-            I!=tempW.getTerms().end(); I++) I->generator += nGm1;
-       for (std::map<unsigned long, NGroupExpression>::iterator J=genKiller.begin();
-         J!=genKiller.end(); J++)
-            tempW.substitute( J->first, J->second, false );
-       genKiller.insert( std::pair< unsigned long, NGroupExpression >
-                (idx(i,j+1), tempW) );
-     }
-  }
-
- //  initialize tempTable with the 0-th lifts of the relators. 
- std::list< NGroupExpression > tempTable;
- NGroupPresentation kerPres;
- kerPres.addGenerator( liftCount * nGm1 );
-
- for (unsigned long i=0; i<lifts.size(); i++)
- {
-  NGroupExpression temp;
-  for (std::list< std::pair< NGroupExpressionTerm, signed long > 
-            >::iterator I=lifts[i].begin(); I!=lifts[i].end(); I++)
-     temp.addTermFirst( NGroupExpressionTerm( 
-        idx( I->first.generator, I->second ), I->first.exponent ) );
-  for (std::map<unsigned long, NGroupExpression>::iterator J=genKiller.begin();
-         J!=genKiller.end(); J++)
-      temp.substitute( J->first, J->second, false );
-  temp.simplify(); 
-  if (temp.wordLength()>0)
-    {
-    tempTable.push_back(temp);
-    kerPres.addRelation( new NGroupExpression(temp) );
-    }
- }
- if (!kerPres.isValid()) { std::cout<<"identify_extension_over_Z() error: out of bounds relator in kerPres.\n";
-  std::cout.flush();   exit(1); }
- // now we build the reductions of the {0,1,...,liftCount-1} translates of **all**
- // the relators from the group, and assemble them into the relators of the
- // kernel.
- for (unsigned long M=0; M<liftCount; M++)
-  { // increment the words in tempTable
-   for ( std::list< NGroupExpression >::iterator I=tempTable.begin(); 
-         I != tempTable.end(); I++)
-   { 
-    std::list< NGroupExpressionTerm >& It(I->getTerms() );
-    for (std::list<NGroupExpressionTerm>::iterator J=It.begin();
-         J!=It.end(); J++)
-      J->generator += nGm1; // this depends on choice of idx function
-    for (std::map<unsigned long, NGroupExpression>::iterator J=genKiller.begin();
-         J!=genKiller.end(); J++)
-      I->substitute( J->first, J->second, false );
-    // apply genKiller to reduce the words, and push to presentation
-    kerPres.addRelation( new NGroupExpression( *I ) );   
-   }
-  }
-  // replace this presentation by the semi-direct product presentation.
-  std::vector<NGroupExpression> autVec;
-
-  autVec.resize( nGm1*liftCount );
-  for (unsigned long i=0; i<autVec.size(); i++) // this part depends on idx
-   if ( i >= nGm1*(liftCount-1) ) 
-     autVec[i] = genKiller[i+nGm1]; 
-   else 
-     { 
-     NGroupExpression temp;
-     temp.addTermFirst( i+nGm1, 1 );
-     autVec[i] = temp;
-     }
-
-  std::auto_ptr< NHomGroupPresentation > retval(new NHomGroupPresentation( kerPres, kerPres, autVec ) );
-  retval->intelligentSimplify();
-
-  // Modify this presentation to reflect the semi-direct product
-  //        structure we've discovered! 
-  // now deallocate relations, and resize and repopulate with copies of kerPres's
-  //  relations. 
-
-  nGenerators = retval->getDomain().nGenerators + 1;
-  for (unsigned long i=0; i<relations.size(); i++)
-   delete relations[i];
-  relations.resize( retval->getDomain().nGenerators + retval->getDomain().relations.size() );
-
-  for (unsigned long i=0; i<retval->getDomain().relations.size(); i++)
-   relations[i] = new NGroupExpression( *retval->getDomain().relations[i] );
-
-  // And now all the b^-1g_ib = genKiller(i) and b^-1g_ib = g_{i+1} relations.
-  for (unsigned long i=0; i<retval->getDomain().nGenerators; i++)
-   {
-    NGroupExpression* temp;
-    temp = new NGroupExpression( retval->evaluate(i) );
-    temp->addTermFirst( retval->getDomain().nGenerators, 1);
-    temp->addTermFirst( i, -1);
-    temp->addTermFirst( retval->getDomain().nGenerators, -1); 
-    relations[ i+retval->getDomain().relations.size() ] = temp;
-   }
-
- return std::auto_ptr< NHomGroupPresentation >( retval );
-}
-
-bool NGroupPresentation::isValid() const
- {
-    for (unsigned long i=0; i<relations.size(); i++)
-     for (std::list<NGroupExpressionTerm>::const_iterator 
-            j=relations[i]->getTerms().begin(); 
-            j!=relations[i]->getTerms().end(); j++)
-      if (j->generator >= nGenerators) return false;
-    return true;
- }
-
 
 ////////////////// ALL INPUT / OUTPUT routines below //////////////////////
 

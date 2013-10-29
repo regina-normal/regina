@@ -60,8 +60,8 @@ namespace regina {
  */
 
 /**
- * This is the fast class for dealing with elements in the binary symmetric group on
- * 4 elements.  The slow but versatile class is ??
+ * This is the fast class for dealing with elements in the binary symmetric 
+ * group on 4 elements.  The slow but versatile class is ??
  *
  * @author Ryan Budney
  */
@@ -94,7 +94,7 @@ class REGINA_API NBinaryS4 {
          * @param b the desired image of 1.
          * @param c the desired image of 2.
          * @param d the desired image of 3.
-	 * @param lift specifies which lift of this permutation to take.
+         * @param lift specifies which lift of this permutation to take.
          */
         NBinaryS4(int a, int b, int c, int d, bool lift);
 
@@ -117,10 +117,10 @@ class REGINA_API NBinaryS4 {
          * @param c1 the desired image of <i>c0</i>.
          * @param d1 the desired image of <i>d0</i>.
          * @param e1 the desired image of <i>e0</i>.
-	 * @param lift
+         * @param lift
          */
-        NBinaryS4(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1,
-            bool lift);
+        NBinaryS4(int a0, int a1, int b0, int b1, int c0, int c1, 
+            int d0, int d1, bool lift);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -357,9 +357,8 @@ inline NBinaryS4 NBinaryS4::operator * (const NBinaryS4& q) const {
 }
 
 inline NBinaryS4 NBinaryS4::inverse() const {
-	return NBinaryS4( (NPerm4::invS4[code >> 1] << 1) + 
-			  ( (code + (mult_table[code >> 1] >> NPerm4::invS4[code >> 1])) % 2 )
-                        );
+ return NBinaryS4( (NPerm4::invS4[code >> 1] << 1) + 
+ ( (code + (mult_table[code >> 1] >> NPerm4::invS4[code >> 1])) % 2 ) );
 }
 
 inline int NBinaryS4::operator[](int source) const {

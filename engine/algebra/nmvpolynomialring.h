@@ -61,8 +61,8 @@ namespace regina {
  */
 
 /**
- * This is a class for dealing with elements of a multi-variable polynomial ring, 
- * implemented sparsely.  
+ * This is a class for dealing with elements of a multi-variable polynomial 
+ * ring, implemented sparsely.  
  *
  * @pre The template class must be of a "ring" type, meaning T must contain:
  *  1) A copy constructor. 
@@ -74,8 +74,8 @@ namespace regina {
  *
  * \testpart
  *
- * \todo Test variations of the Groebner basis algorithm: ones with more vs. less
- *   clean-up routines, see how they compare speed-wise. 
+ * \todo Test variations of the Groebner basis algorithm: ones with more vs. 
+ *   less clean-up routines, see how they compare speed-wise. 
  *
  * @author Ryan Budney
  */
@@ -94,8 +94,8 @@ class NMVPolynomialRing {
         NMVPolynomialRing();
 
         /**
-         * Creates an element of the polynomial ring, of the form at_I, where say
-         * if I = (2,3,4) then t_I == t_1^2t_2^3t_3^4 
+         * Creates an element of the polynomial ring, of the form at_I, 
+         * where say if I = (2,3,4) then t_I == t_1^2t_2^3t_3^4 
          */
         NMVPolynomialRing(const T &a, const NPolynomialIndex< signed long >& I);
 
@@ -117,49 +117,51 @@ class NMVPolynomialRing {
          */
         NMVPolynomialRing<T>& operator = (const NMVPolynomialRing<T>& cloneMe);
 
-        /**
-	 * Set a coefficient.
-         */
-        void setCoefficient (const NPolynomialIndex< signed long >& i, const T& c);
+       /**
+        * Set a coefficient.
+        */
+        void setCoefficient (const NPolynomialIndex< signed long >& i, 
+                             const T& c);
 
         /**
-	 * Returns the product of two polynomials.
+         * Returns the product of two polynomials.
          */
         NMVPolynomialRing<T> operator * (const NMVPolynomialRing<T>& q) const;
 
         /**
-	 * Scalar multiplication of a polynomial.
+         * Scalar multiplication of a polynomial.
          */
         template <class F>
-        friend NMVPolynomialRing<F> operator * (const F &k, const NMVPolynomialRing<F>& q);
-
-	/**
-	 * Returns the sum of two polynomials.
-	 */
-	NMVPolynomialRing<T> operator + (const NMVPolynomialRing<T>& q) const;
-	/**
-	 * Returns the difference of two polynomials.
-	 */
-	NMVPolynomialRing<T> operator - (const NMVPolynomialRing<T>& q) const;
-	/**
-	 * Subtract q from this polynomial.
-	 */
-	NMVPolynomialRing<T>& operator -=(const NMVPolynomialRing<T>& q);
-	/**
-	 * Add q to this polynomial.
-	 */
-	NMVPolynomialRing<T>& operator +=(const NMVPolynomialRing<T>& q);
-	/**
-	 * Negate this polynomial.
-	 */
-	NMVPolynomialRing<T> operator -() const;
-	/**
-	 * Multiply this polynomial by a scalar.
-	 */
-	NMVPolynomialRing<T>& operator *=(const T& q);
+        friend NMVPolynomialRing<F> operator * (const F &k, 
+                const NMVPolynomialRing<F>& q);
 
         /**
-	 * Returns the the coefficient of t^i for this polynomial.
+         * Returns the sum of two polynomials.
+         */
+        NMVPolynomialRing<T> operator + (const NMVPolynomialRing<T>& q) const;
+        /**
+         * Returns the difference of two polynomials.
+         */
+        NMVPolynomialRing<T> operator - (const NMVPolynomialRing<T>& q) const;
+        /**
+         * Subtract q from this polynomial.
+         */
+        NMVPolynomialRing<T>& operator -=(const NMVPolynomialRing<T>& q);
+        /**
+         * Add q to this polynomial.
+         */
+        NMVPolynomialRing<T>& operator +=(const NMVPolynomialRing<T>& q);
+        /**
+         * Negate this polynomial.
+         */
+        NMVPolynomialRing<T> operator -() const;
+        /**
+         * Multiply this polynomial by a scalar.
+         */
+        NMVPolynomialRing<T>& operator *=(const T& q);
+
+        /**
+         * Returns the the coefficient of t^i for this polynomial.
          */
         const T& operator[](const NPolynomialIndex< signed long >& i) const;
 
@@ -168,16 +170,16 @@ class NMVPolynomialRing {
          */
         bool operator == (const NMVPolynomialRing<T>& other) const;
         /**
-	 * Determines if two polynomials are not equal.
+         * Determines if two polynomials are not equal.
          */
         bool operator != (const NMVPolynomialRing<T>& other) const;
 
         /**
-         * Determines if this polynomial is equal to the multiplicative identity
-         * element.
+         * Determines if this polynomial is equal to the multiplicative 
+         * identity element.
          */
         bool isIdentity() const;
-       /**
+        /**
          * Determines if this polynomial is equal to the additive identity
          * element.
          */
@@ -200,64 +202,78 @@ class NMVPolynomialRing {
 
         /**
          * Returns a string representation of this polynomial.
-	 * <tt>a_I t^I</tt>
+         * <tt>a_I t^I</tt>
          */
         std::string toString() const;
-	/**
+        /**
          * Stream version of toString()
          */
         void writeTextShort(std::ostream& out) const;
-	/**
-	 * Returns TeX string formatting of toString()
-	 */
-	std::ostream& writeTeX(std::ostream &out) const;
-	/**
+        /**
+         * Returns TeX string formatting of toString()
+         */
+        std::ostream& writeTeX(std::ostream &out) const;
+        /**
          * string version of writeTeX.
-	 */
+         */
         std::string texString() const;
 };
 
 /**
- * Given a polynomial in n variables, compute the maximum of \pm x1 + ... + \pm xn for all possible \pm
- * signs, indexed by NPartitions of n-element sets.   
+ * Given a polynomial in n variables, compute the maximum of
+ *  \pm x1 + ... + \pm xn for all possible \pm signs, indexed by 
+ * NPartitions of n-element sets.   
  */
 //void buildBoundingDiamond( const NMVPolynomialRing< NLargeInteger > &poly, 
-//                           std::map< NPartition, signed long > &boundDiamond );
+//                       std::map< NPartition, signed long > &boundDiamond );
 
 /**
- * Given a multi-variable polynomial, multiply it appropriately by \pm 1 t^I so that its terms
- * are as small as possible in the taxicab metric (i1,...,in) --> |i1| + ... + |in|
+ * Given a multi-variable polynomial, multiply it appropriately by \pm 1 t^I 
+ * so that its terms are as small as possible in the taxicab metric 
+ * (i1,...,in) --> |i1| + ... + |in|
  *
  * Given a polynomial like x^5-x^4 the bias is towards presenting it as
  * 1-x, but setting plusBias=false would give you x^{-1}-1
  */
-REGINA_API void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly, bool plusBias=true );
+REGINA_API void recentreNormalize( NMVPolynomialRing< NLargeInteger > &poly, 
+                                   bool plusBias=true );
 
 /**
- * Produces a Groebner basis for the ideal.  Set laurentPoly=false to work in Z[t] rather than Z[t^\pm]
+ * Produces a Groebner basis for the ideal.  Set laurentPoly=false to work in
+ *  Z[t] rather than Z[t^\pm]
  */ // TODO
-REGINA_API void reduceIdeal( std::list< NMVPolynomialRing< NLargeInteger > > &ideal, bool laurentPoly=true );
+REGINA_API void reduceIdeal( 
+ std::list< NMVPolynomialRing< NLargeInteger > > &ideal, 
+ bool laurentPoly=true );
 /**
- * Given an element elt of NMVPolynomialRing, this algorithm checks to see if it reduces to 0 by taking remainders
- * via division by elements of ideal.   laurentPoly allows one to assume in Laurent polynomial ring. Set it to false
+ * Given an element elt of NMVPolynomialRing, this algorithm checks to see 
+ * if it reduces to 0 by taking remainders via division by elements of ideal.
+ * laurentPoly allows one to assume in Laurent polynomial ring. Set it to false
  * if you want to be in Z[t]. 
  */ // TODO
-REGINA_API bool reduceByIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &ideal, NMVPolynomialRing< NLargeInteger > &elt,
-                    bool laurentPoly=true );
+REGINA_API bool reduceByIdeal( 
+ const std::list< NMVPolynomialRing< NLargeInteger > > &ideal, 
+ NMVPolynomialRing< NLargeInteger > &elt, bool laurentPoly=true );
 /**
  *  Some kind of ordering < on ideals.  Useful? 
  */
-REGINA_API bool MV_polynomial_comparison( const NMVPolynomialRing< NLargeInteger > &first, const NMVPolynomialRing< NLargeInteger > &second);
+REGINA_API bool MV_polynomial_comparison(
+ const NMVPolynomialRing< NLargeInteger > &first, 
+ const NMVPolynomialRing< NLargeInteger > &second);
 /**
- *  Check if idealA is contained in idealB. Assumes you've run them through reduceIdeal -- that they have 
- * their Groebner basis. 
+ * Check if idealA is contained in idealB. Assumes you've run them through 
+ * reduceIdeal -- that they have their Groebner basis. 
  */ // TODO
-REGINA_API bool isSubIdeal( const std::list< NMVPolynomialRing< NLargeInteger > > &idealA,  const std::list< NMVPolynomialRing< NLargeInteger > > &idealB );
+REGINA_API bool isSubIdeal( 
+ const std::list< NMVPolynomialRing< NLargeInteger > > &idealA,  
+ const std::list< NMVPolynomialRing< NLargeInteger > > &idealB );
 
 /** // TODO
- *  Checks to see if elements of the ideal can be expressed in terms of others, if so erases them. 
+ * Checks to see if elements of the ideal can be expressed in terms of 
+ * others, if so erases them. 
  */
-REGINA_API void elementaryReductions( std::list< NMVPolynomialRing< NLargeInteger > > &ideal );
+REGINA_API void elementaryReductions( 
+    std::list< NMVPolynomialRing< NLargeInteger > > &ideal );
 
 
 /*@}*/
@@ -270,8 +286,10 @@ inline NMVPolynomialRing<T>::NMVPolynomialRing() {}
 
 // monomial constructor at_n^k
 template <class T>
-inline NMVPolynomialRing<T>::NMVPolynomialRing(const T &a, const NPolynomialIndex< signed long >& I)
-{ if (a != T::zero) cof.insert(std::pair< NPolynomialIndex< signed long >, T*>( I, new T(a) ) ); }
+inline NMVPolynomialRing<T>::NMVPolynomialRing(
+    const T &a, const NPolynomialIndex< signed long >& I)
+{ if (a != T::zero) cof.insert(std::pair< NPolynomialIndex< signed long >, T*>
+    ( I, new T(a) ) ); }
 
 // destructor
 template <class T>
@@ -285,16 +303,19 @@ inline NMVPolynomialRing<T>::~NMVPolynomialRing()
 
 // copy constructor
 template <class T>
-inline NMVPolynomialRing<T>::NMVPolynomialRing(const NMVPolynomialRing<T>& cloneMe)
+inline NMVPolynomialRing<T>::NMVPolynomialRing(
+    const NMVPolynomialRing<T>& cloneMe)
 {
  typename std::map< NPolynomialIndex< signed long >, T* >::const_iterator ci;
  for (ci = cloneMe.cof.begin(); ci != cloneMe.cof.end(); ci++) cof.insert( 
-  std::pair< NPolynomialIndex< signed long >, T* >( ci->first, clonePtr(ci->second) ) );
+  std::pair< NPolynomialIndex< signed long >, T* >
+    ( ci->first, clonePtr(ci->second) ) );
 }
 
 // assignment
 template <class T>
-inline NMVPolynomialRing<T>& NMVPolynomialRing<T>::operator = (const NMVPolynomialRing<T>& cloneMe)
+inline NMVPolynomialRing<T>& NMVPolynomialRing<T>::operator = 
+    (const NMVPolynomialRing<T>& cloneMe)
 {
  // deallocate everything
  typename std::map< NPolynomialIndex< signed long >, T* >::iterator ci;
@@ -305,17 +326,20 @@ inline NMVPolynomialRing<T>& NMVPolynomialRing<T>::operator = (const NMVPolynomi
  ci = cof.begin();
  typename std::map< NPolynomialIndex< signed long >, T* >::const_iterator Ci;
  for (Ci = cloneMe.cof.begin(); Ci != cloneMe.cof.end(); Ci++)
-	ci = cof.insert(ci, std::pair< NPolynomialIndex< signed long >, T* >( Ci->first, clonePtr(Ci->second) ));
+	ci = cof.insert(ci, std::pair< NPolynomialIndex< signed long >, T* >
+      ( Ci->first, clonePtr(Ci->second) ));
  return (*this);
 }
 
 template <class T>
-inline const std::map< NPolynomialIndex< signed long >, T* >& NMVPolynomialRing<T>::allTerms() const
+inline const std::map< NPolynomialIndex< signed long >, T* >& 
+    NMVPolynomialRing<T>::allTerms() const
 { return cof; }
 
 
 template <class T>
-inline const T& NMVPolynomialRing<T>::operator[](const NPolynomialIndex< signed long > &i) const
+inline const T& NMVPolynomialRing<T>::operator[](
+    const NPolynomialIndex< signed long > &i) const
 {
  // is t^i in cof?  if so return coefficient, if not, return 0.
  typename std::map< NPolynomialIndex< signed long >, T* >::const_iterator p;
@@ -325,11 +349,13 @@ inline const T& NMVPolynomialRing<T>::operator[](const NPolynomialIndex< signed 
 }
 
 template <class T>
-inline bool NMVPolynomialRing<T>::operator == (const NMVPolynomialRing<T>& other) const
+inline bool NMVPolynomialRing<T>::operator == (
+    const NMVPolynomialRing<T>& other) const
 {
  // verify equal...
  if (cof.size() != other.cof.size()) return false;
- typename std::map< NPolynomialIndex< signed long >, T* >::const_iterator p1, p2;
+ typename std::map< NPolynomialIndex< signed long >, 
+    T* >::const_iterator p1, p2;
  p1 = cof.begin(); p2 = other.cof.begin();
  while (p1 != cof.end() )
   {
@@ -341,7 +367,8 @@ inline bool NMVPolynomialRing<T>::operator == (const NMVPolynomialRing<T>& other
 }
 
 template <class T>
-inline bool NMVPolynomialRing<T>::operator != (const NMVPolynomialRing<T>& other) const
+inline bool NMVPolynomialRing<T>::operator != (
+    const NMVPolynomialRing<T>& other) const
 { return ( !((*this)==other) ); }
 
 template <class T>
@@ -364,14 +391,16 @@ inline signed long NMVPolynomialRing<T>::degree() const
 { return cof.size(); }
 
 template <class T>
-inline NMVPolynomialRing<T> operator * (const T &k, const NMVPolynomialRing<T>& q)
+inline NMVPolynomialRing<T> operator * (const T &k, 
+                                        const NMVPolynomialRing<T>& q)
 {
  NMVPolynomialRing<T> retval;
  if (k != T::zero)
   {
   typename std::map< NPolynomialIndex< signed long >, T* >::iterator ci;
   for (ci = q.cof.begin(); ci != q.cof.end(); ci++)
-	retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >( ci->first, new T( (*ci->second)*k ) ) );
+	retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >
+      ( ci->first, new T( (*ci->second)*k ) ) );
   }
  return retval;
 }
@@ -395,43 +424,51 @@ inline	NMVPolynomialRing<T>& NMVPolynomialRing<T>::operator *=(const T& q)
 
 
 template <class T>
-inline std::ostream& operator << (std::ostream& out, const NMVPolynomialRing<T>& p)
+inline std::ostream& operator << (std::ostream& out, 
+        const NMVPolynomialRing<T>& p)
 { p.writeTextShort(out); return out; }
 
 template <class T>
 const NMVPolynomialRing<T> NMVPolynomialRing<T>::zero;
 
 template <class T>
-inline void NMVPolynomialRing<T>::setCoefficient (const NPolynomialIndex< signed long > &i, const T & c) 
+inline void NMVPolynomialRing<T>::setCoefficient (
+    const NPolynomialIndex< signed long > &i, const T & c) 
 {
  if (c==T::zero)
   {
-   typename std::map< NPolynomialIndex< signed long >, T* >::iterator it(cof.find(i)); // look for t^i
+   typename std::map< NPolynomialIndex< signed long >, T* >::iterator 
+     it(cof.find(i)); // look for t^i
    if (it != cof.end()) cof.erase(it); return;
   }
  T* P(new T(c));
- std::pair< typename std::map< NPolynomialIndex< signed long >, T* >::iterator, bool > res = 
+ std::pair< typename std::map< NPolynomialIndex< signed long >, T* >::iterator,
+     bool > res = 
   cof.insert(std::pair< NPolynomialIndex< signed long >, T* >( i, P ) );
  if (res.second == false) { (*res.first->second) = (*P); delete P; }
 }
 
 template <class T>
-inline NMVPolynomialRing<T> NMVPolynomialRing<T>::operator * (const NMVPolynomialRing<T>& q) const
+inline NMVPolynomialRing<T> NMVPolynomialRing<T>::operator * (
+    const NMVPolynomialRing<T>& q) const
 {
  // There's a faster way to do polynomial multiplication using the FFT. See
  // http://www.cs.iastate.edu/~cs577/handouts/polymultiply.pdf
- // Fateman 2005 indicates nobody has implemented such algorithms in any major package, and that
- //  the asymptotic advantage only appears for extremely large polynomials, a problem being that
- //  roots of unity are required so they seem to think arbitrary precision complex numbers are
- //  required, which is slow.  Can we avoid this using exact arithmetic? 
+ // Fateman 2005 indicates nobody has implemented such algorithms in any 
+ // major package, and that the asymptotic advantage only appears for extremely
+ // large polynomials, a problem being that roots of unity are required so 
+ // they seem to think arbitrary precision complex numbers are required, which 
+ // is slow.  Can we avoid this using exact arithmetic? 
  typename std::map< NPolynomialIndex< signed long >, T* >::const_iterator I, J;
  NMVPolynomialRing<T> retval;
 
- for (I = cof.begin(); I!=cof.end(); I++) for (J=q.cof.begin(); J!=q.cof.end(); J++)
+ for (I = cof.begin(); I!=cof.end(); I++) 
+    for (J=q.cof.begin(); J!=q.cof.end(); J++)
   {
    // lets multiply *I->second and *J->second
    T* P(new NLargeInteger( (*I->second)*(*J->second) ) );
-   std::pair< typename std::map< NPolynomialIndex< signed long >, T* >::iterator, bool > res = 
+   std::pair< typename std::map< 
+              NPolynomialIndex< signed long >, T* >::iterator, bool > res = 
     retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* > (
     I->first + J->first, P ) );
    if (res.second == false) { (*res.first->second) += (*P); delete P; }
@@ -440,40 +477,48 @@ inline NMVPolynomialRing<T> NMVPolynomialRing<T>::operator * (const NMVPolynomia
  //  now run through find zero coefficients and deallocate.
  typename std::map< NPolynomialIndex< signed long >, T* >::iterator K;
  for (K = retval.cof.begin(); K!=retval.cof.end(); K++)
-   while ( (*K->second) == NLargeInteger::zero ) { delete K->second; retval.cof.erase(K++);  
-                                                   if (K==retval.cof.end()) continue; }
+   while ( (*K->second) == NLargeInteger::zero ) 
+  { delete K->second; retval.cof.erase(K++);  
+    if (K==retval.cof.end()) continue; }
  return retval;
 }
 
 template <class T>
-inline NMVPolynomialRing<T> NMVPolynomialRing<T>::operator + (const NMVPolynomialRing<T>& q) const
+inline NMVPolynomialRing<T> NMVPolynomialRing<T>::operator + (
+    const NMVPolynomialRing<T>& q) const
 {
  NMVPolynomialRing<T> retval;
- // two iterators, one for this->cof, one for q.cof, start at beginning for both, 
- // smallest we add, if only one then that's okay. We increment smallest, repeat...
+ // two iterators, one for this->cof, one for q.cof, start at beginning
+ // for both, smallest we add, if only one then that's okay. We increment 
+ // smallest, repeat...
  typename std::map< NPolynomialIndex< signed long >, T* >::const_iterator i,j;
  i = cof.begin(); j = q.cof.begin();
  while ( (i != cof.end()) || (j != q.cof.end()) )
  {
   if (i == cof.end())
    { // only j relevant
-     retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >(j->first, new T(*j->second) ) );
+     retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >
+      (j->first, new T(*j->second) ) );
      j++; }
   else if (j == q.cof.end())
    { // only i relevant
-     retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >(i->first, new T(*i->second) ) );
+     retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >
+      (i->first, new T(*i->second) ) );
      i++; }
   else
    {if ( i->first < j->first )
-     { retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >(i->first, new T(*i->second) ) );
+     { retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >
+        (i->first, new T(*i->second) ) );
        i++; }
     else if ( i->first != j->first )
-     { retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >(j->first, new T(*j->second) ) );
+     { retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >
+        (j->first, new T(*j->second) ) );
        j++; }
     else
      { T* temp(new T( (*i->second) + (*j->second) ) );
        if ( (*temp) != T::zero )
-       retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >(i->first, temp ) );
+       retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >
+        (i->first, temp ) );
 	else delete temp;
        i++; j++; } 
    }
@@ -482,34 +527,41 @@ inline NMVPolynomialRing<T> NMVPolynomialRing<T>::operator + (const NMVPolynomia
 }
 
 template <class T>
-inline NMVPolynomialRing<T> NMVPolynomialRing<T>::operator - (const NMVPolynomialRing<T>& q) const
+inline NMVPolynomialRing<T> NMVPolynomialRing<T>::operator - (
+    const NMVPolynomialRing<T>& q) const
 {
  NMVPolynomialRing<T> retval;
- // two iterators, one for this->cof, one for q.cof, start at beginning for both, 
- // smallest we add, if only one then that's okay. We increment smallest, repeat...
+ // two iterators, one for this->cof, one for q.cof, start at beginning for 
+ // both, smallest we add, if only one then that's okay. We increment
+ // smallest, repeat...
  typename std::map< NPolynomialIndex< signed long >, T* >::const_iterator i,j;
  i = cof.begin(); j = q.cof.begin();
  while ( (i != cof.end()) || (j != q.cof.end()) )
  {
   if (i == cof.end())
    { // only j relevant
-     retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >(j->first, new T(-(*j->second) ) ) );
+     retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >
+      (j->first, new T(-(*j->second) ) ) );
      j++; }
   else if (j == q.cof.end())
    { // only i relevant
-     retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >(i->first, new T(*i->second) ) );
+     retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >
+      (i->first, new T(*i->second) ) );
      i++; }
   else
    {if ( i->first < j->first )
-     { retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >(i->first, new T(*i->second) ) );
+     { retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >
+        (i->first, new T(*i->second) ) );
        i++; }
     else if ( i->first != j->first )
-     { retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >(j->first, new T(-(*j->second) ) ) );
+     { retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >
+        (j->first, new T(-(*j->second) ) ) );
        j++; }
     else
      { T* temp(new NLargeInteger( (*i->second) - (*j->second) ) );
        if ( (*temp) != T::zero )
-       retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >(i->first, temp ) );
+       retval.cof.insert( std::pair< NPolynomialIndex< signed long >, T* >
+        (i->first, temp ) );
 	else delete temp;
        i++; j++; } 
    }
@@ -518,20 +570,26 @@ inline NMVPolynomialRing<T> NMVPolynomialRing<T>::operator - (const NMVPolynomia
 }
 
 template <class T>
-inline NMVPolynomialRing<T>& NMVPolynomialRing<T>::operator -=(const NMVPolynomialRing<T>& q)
+inline NMVPolynomialRing<T>& NMVPolynomialRing<T>::operator -=(
+       const NMVPolynomialRing<T>& q)
 { // todo: redo using insert w/iterator
  typename std::map< NPolynomialIndex< signed long >, T* >::iterator i;
  typename std::map< NPolynomialIndex< signed long >, T* >::const_iterator j;
  i = cof.begin(); j = q.cof.begin();
  while ( (i != cof.end()) || (j != q.cof.end()) )
-  { if (i == cof.end()) { cof.insert( std::pair< NPolynomialIndex< signed long >, T* >(j->first, new T(-(*j->second) ) ) ); j++; }
+  { if (i == cof.end()) { 
+     cof.insert( std::pair< NPolynomialIndex< signed long >, T* >
+      (j->first, new T(-(*j->second) ) ) ); j++; }
     else if (j == q.cof.end()) i++;  
     else if ( i->first < j->first ) i++;
     else if ( i->first != j->first ) 
-      { cof.insert( std::pair< NPolynomialIndex< signed long >, T* >(j->first, new T(-(*j->second) ) ) ); j++; }
+      { cof.insert( std::pair< NPolynomialIndex< signed long >, T* >
+         (j->first, new T(-(*j->second) ) ) ); j++; }
     else
       { (*i->second) -= (*j->second); 
-        if (*i->second == T::zero) // we have to deallocate the pointer, remove *i from cof, and move i and j up the cof list.
+        if (*i->second == T::zero) 
+        // we have to deallocate the pointer, remove *i from cof,
+        //  and move i and j up the cof list.
           { delete i->second; cof.erase(i++); j++; } 
         else { i++; j++; }
       }
@@ -541,20 +599,25 @@ inline NMVPolynomialRing<T>& NMVPolynomialRing<T>::operator -=(const NMVPolynomi
 }
 
 template <class T>
-inline NMVPolynomialRing<T>& NMVPolynomialRing<T>::operator +=(const NMVPolynomialRing<T>& q)
+inline NMVPolynomialRing<T>& NMVPolynomialRing<T>::operator +=
+     (const NMVPolynomialRing<T>& q)
 { // todo: redo using insert w/iterator
  typename std::map< NPolynomialIndex< signed long >, T* >::iterator i;
  typename std::map< NPolynomialIndex< signed long >, T* >::const_iterator j;
  i = cof.begin(); j = q.cof.begin();
  while ( (i != cof.end()) || (j != q.cof.end()) )
-  { if (i == cof.end()) { cof.insert( std::pair< NPolynomialIndex< signed long >, T* >(j->first, new T( (*j->second) ) ) ); j++; }
+  { if (i == cof.end()) { 
+     cof.insert( std::pair< NPolynomialIndex< signed long >, T* >
+       (j->first, new T( (*j->second) ) ) ); j++; }
     else if (j == q.cof.end()) i++; 
     else if ( i->first < j->first ) i++; 
     else if ( i->first != j->first ) 
-      { cof.insert( std::pair< NPolynomialIndex< signed long >, T* >(j->first, new T( (*j->second) ) ) ); j++; }
+      { cof.insert( std::pair< NPolynomialIndex< signed long >, T* >
+         (j->first, new T( (*j->second) ) ) ); j++; }
     else
       { (*i->second) += (*j->second); 
-        if (*i->second == T::zero) // we have to deallocate the pointer, remove *i from cof, and move i and j up the cof list.
+        if (*i->second == T::zero) // we have to deallocate the pointer,
+         // remove *i from cof, and move i and j up the cof list.
           { delete i->second; cof.erase(i++); j++; } 
         else { i++; j++; }
       }
@@ -578,10 +641,12 @@ inline std::string NMVPolynomialRing<T>::toString() const
 // run through cof, assemble into string
 std::string retval; std::stringstream ss;
 typename std::map< NPolynomialIndex< signed long >, T* >::const_iterator p;
-bool outputSomething = false; // keep track of whether or not we've output anything
+bool outputSomething = false; 
+// keep track of whether or not we've output anything
 for (p = cof.begin(); p != cof.end(); p++)
  {
-  T mag( p->second->abs() );  bool pos( ((*p->second) > 0) ? true : false );  NPolynomialIndex< signed long > exp( p->first );
+  T mag( p->second->abs() );  bool pos( ((*p->second) > 0) ? true : false );  
+  NPolynomialIndex< signed long > exp( p->first );
   ss.str(""); 
   // ensure sensible output, eg:  t^(-5) + 5 - t + 3t^2 + t^3 - t^(12), etc...
   if (mag != T::zero) 
@@ -590,7 +655,8 @@ for (p = cof.begin(); p != cof.end(); p++)
    outputSomething = true;
    if (mag != 1) ss<<mag.stringValue();
    // okay let's output t_a^bt_c^d blah blah... depending on what exp is. 
-   for (unsigned long i=0; i<exp.dim(); i++) if (exp.entry(i) != 0) // t_k^0 erase...
+   for (unsigned long i=0; i<exp.dim(); i++) if (exp.entry(i) != 0) 
+    // t_k^0 erase...
     {
      ss<<"t_";
      if (i>9) ss<<"("; ss<<i; if (i>9) ss<<")"; 
@@ -620,10 +686,11 @@ inline std::string NMVPolynomialRing<T>::texString() const
 // run through cof, assemble into string
 std::string retval; std::stringstream ss;
 typename std::map< NPolynomialIndex< signed long >, T* >::const_iterator p;
-bool outputSomething = false; // keep track of whether or not we've output anything
+bool outputSomething = false; 
 for (p = cof.begin(); p != cof.end(); p++)
  {
-  T mag( p->second->abs() );  bool pos( ((*p->second) > 0) ? true : false );  NPolynomialIndex< signed long > exp( p->first );
+  T mag( p->second->abs() );  bool pos( ((*p->second) > 0) ? true : false );  
+  NPolynomialIndex< signed long > exp( p->first );
   ss.str(""); 
   // ensure sensible output, eg:  t^(-5) + 5 - t + 3t^2 + t^3 - t^(12), etc...
   if (mag != T::zero) 
@@ -632,7 +699,8 @@ for (p = cof.begin(); p != cof.end(); p++)
    outputSomething = true;
    if (mag != 1) ss<<mag.stringValue();
    // okay let's output t_a^bt_c^d blah blah... depending on what exp is. 
-   for (unsigned long i=0; i<exp.dim(); i++) if (exp.entry(i) != 0) // t_k^0 erase...
+   for (unsigned long i=0; i<exp.dim(); i++) if (exp.entry(i) != 0) 
+   // t_k^0 erase...
     {
      ss<<"t_";
      if (i>9) ss<<"("; ss<<i; if (i>9) ss<<")"; 
@@ -651,7 +719,8 @@ return retval;
 template <class T>
 signed long NMVPolynomialRing<T>::dimNewton() const
 { 
-  if (cof.size()==0) return -1; if (cof.size()==1) return 0; if (cof.size()==2) return 1;
+  if (cof.size()==0) return -1; if (cof.size()==1) return 0; 
+  if (cof.size()==2) return 1;
   // those were the easy cases. 
   // form a matrix whose entries are the differences from the first term to
   // remaining terms of the polynomial
