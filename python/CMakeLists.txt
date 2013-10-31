@@ -1,5 +1,3 @@
-# Engine
-
 SET ( SOURCES globalarray modulemain )
 ADD_SUBDIRECTORY("algebra")
 ADD_SUBDIRECTORY("angle")
@@ -22,35 +20,9 @@ ADD_SUBDIRECTORY("triangulation")
 ADD_SUBDIRECTORY("utilities")
 ADD_SUBDIRECTORY("testsuite")
 
-
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/engine ${CMAKE_BINARY_DIR}/engine ${Boost_INCLUDE_DIR} ${PYTHON_INCLUDE_DIRS})
-ADD_LIBRARY("regina" MODULE ${SOURCES} )
-
-# Python modules on linux should not have the "lib" prefix
-# (windows doesn't have a prefix anyway).
-SET_TARGET_PROPERTIES(regina PROPERTIES PREFIX "")
-
-# Enforce a non-standard suffix if we have one.
-IF (REGINA_PYTHON_EXTENSION_NONSTANDARD)
-  SET_TARGET_PROPERTIES(regina PROPERTIES SUFFIX ".${REGINA_PYTHON_EXTENSION}")
-ENDIF (REGINA_PYTHON_EXTENSION_NONSTANDARD)
-
-IF (APPLE)
-  # Avoid linking with ${PYTHON_LIBRARIES} so we can load the module in a
-  # different python build if we so desire.
-  # On MacOS this requires the "-undefined dynamic_lookup" linker flag.
-  SET_TARGET_PROPERTIES(regina PROPERTIES LINK_FLAGS
-    "-undefined dynamic_lookup")
-  TARGET_LINK_LIBRARIES(regina ${ENGINE_LIBRARY} ${Boost_LIBRARIES})
-ELSEIF (WIN32)
-  # On Windows, just link everything in; the boost.python build scripts
-  # do this also.
-  TARGET_LINK_LIBRARIES(regina ${ENGINE_LIBRARY} ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
-ELSE ()
-  # On Linux and relations, again do not link with ${PYTHON_LIBRARIES}.
-  # This should not require any special linker flags.
-  TARGET_LINK_LIBRARIES(regina ${ENGINE_LIBRARY} ${Boost_LIBRARIES})
-ENDIF ()
+# The module itself is built in the regina/ subdirectory, so that we can
+# import the module directly from the source tree if we like.
+ADD_SUBDIRECTORY("regina")
 
 # regina-python needs special environment variables when running on a
 # 64-bit mac with a 32-bit build.
@@ -61,15 +33,12 @@ IF (APPLE)
   ENDIF (CMAKE_OSX_ARCHITECTURES STREQUAL "i386")
 ENDIF (APPLE)
 
-# regina-python script
+# The startup script for useres:
 CONFIGURE_FILE (
   "${PROJECT_SOURCE_DIR}/python/regina-python.in"
   "${PROJECT_BINARY_DIR}/python/regina-python"
   @ONLY
 )
 
-INSTALL(TARGETS regina LIBRARY DESTINATION ${PYLIBDIR} COMPONENT Runtime)
 INSTALL(PROGRAMS ${PROJECT_BINARY_DIR}/python/regina-python DESTINATION ${BINDIR} COMPONENT Runtime)
-
-INSTALL(FILES runscript.py DESTINATION ${PKGDATADIR}/scripts COMPONENT Runtime)
 
