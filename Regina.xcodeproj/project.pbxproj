@@ -4644,7 +4644,7 @@
 					/sw/include,
 					/usr/include/libxml2,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = "";
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -4684,7 +4684,7 @@
 					/sw/include,
 					/usr/include/libxml2,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = "";
 				SDKROOT = macosx;
 			};
 			name = Release;
