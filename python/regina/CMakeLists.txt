@@ -39,17 +39,16 @@ ELSE ()
 ENDIF ()
 
 IF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+  # Install the module in python's standard site-packages location.
+  # However, we do it directly ourselves (not via distutils), since we
+  # want the files to show up in cmake's install_manifest.txt.
   # TODO: DESTDIR
-  # TODO: Make sure import works
-  # Use python's distutils to put the module in a standard location.
-  INSTALL(CODE "
-    execute_process(COMMAND \"${PYTHON_EXECUTABLE}\" setup.py install
-      WORKING_DIRECTORY \"${CMAKE_BINARY_DIR}/python\")
-    " COMPONENT Runtime)
+  # TODO: NGlobalDirs ; test all imports!
+  SET(MODULEDIR ${SITE_PACKAGES}/regina)
 ELSE (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   # Install the module directly ourselves.
   SET(MODULEDIR ${PYLIBDIR}/regina)
-  INSTALL(FILES __init__.py DESTINATION ${MODULEDIR} COMPONENT Runtime)
-  INSTALL(TARGETS engine LIBRARY DESTINATION ${MODULEDIR} COMPONENT Runtime)
 ENDIF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
 
+INSTALL(FILES __init__.py DESTINATION ${MODULEDIR} COMPONENT Runtime)
+INSTALL(TARGETS engine LIBRARY DESTINATION ${MODULEDIR} COMPONENT Runtime)
