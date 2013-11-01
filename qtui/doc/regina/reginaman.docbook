@@ -329,6 +329,12 @@
        corresponding installation directory.
       </para>
       <para>
+       If you have installed &regina;'s &python; module in a standard
+       &python; location (i.e., &python; can import it directly without
+       extending <literal>sys.path</literal>), then
+       <parameter>REGINA_PYLIBDIR</parameter> should be left empty or undefined.
+      </para>
+      <para>
        In normal situations you should never need to set this option yourself.
       </para>
       <warning>

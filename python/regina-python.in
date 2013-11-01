@@ -247,13 +247,15 @@ if (! $python_lib_dir) {
         # Use the build directory.
         &setPythonLibDir("$prog_dir");
     } else {
-        &setPythonLibDir("$libdir/$package/python");
+        # We have installed the module in a standard Python location.
     }
 }
 
 # --- Go ahead and run the application. ---
 
-&extendEnvVar('PYTHONPATH', $python_lib_dir);
+if ($python_lib_dir) {
+    &extendEnvVar('PYTHONPATH', $python_lib_dir);
+}
 
 if ($install_type eq 'Source') {
     # Since we're running from the source tree, we need to ensure that

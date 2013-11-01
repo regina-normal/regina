@@ -59,13 +59,13 @@ for file in *.dylib; do
     fi
 done
 
-cd python
-file=regina.so
+cd python/regina
+file=engine.so
 libs=`otool -L "$file" | grep '@executable_path' | cut -d' ' -f1`
 echo "Processing: $file"
 for old in $libs; do
     echo "Fixing: $old"
-    new=`echo "$old" | sed -e 's#@executable_path/../MacOS#@loader_path/..#'`
+    new=`echo "$old" | sed -e 's#@executable_path/../MacOS#@loader_path/../..#'`
     install_name_tool -change "$old" "$new" "$file"
 done
 

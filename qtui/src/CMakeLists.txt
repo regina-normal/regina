@@ -138,7 +138,7 @@ if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   IF (BOOST_PYTHON_FOUND)
     INSTALL(CODE "
       include(BundleUtilities)
-      fixup_bundle(\"${BUNDLEDIR_ESCAPED}\" \"python/regina.so\" \"${BUNDLE_LIBDIRS}\")
+      fixup_bundle(\"${BUNDLEDIR_ESCAPED}\" \"python/regina/engine.so\" \"${BUNDLE_LIBDIRS}\")
       " COMPONENT Runtime)
   ELSE (BOOST_PYTHON_FOUND)
     INSTALL(CODE "

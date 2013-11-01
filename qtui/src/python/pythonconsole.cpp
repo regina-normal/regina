@@ -314,15 +314,22 @@ bool PythonConsole::importRegina() {
             "namespace=globals())");
         return true;
     } else {
+        QString installationMsg;
+        std::string regModuleDir = regina::NGlobalDirs::pythonModule().c_str();
+        if (! regModuleDir.empty())
+            installationMsg = tr("The module 'regina' should be installed "
+                "beneath the directory <tt>%1/</tt>.  ")
+                .arg(Qt::escape(QFile::decodeName(regModuleDir.c_str())));
+        else
+            installationMsg = tr("The module 'regina' should be installed "
+                "in Python's standard site-packages directory.  ");
         ReginaSupport::warn(this,
             tr("Regina's Python module could not be loaded."),
-            tr("<qt>The module should be installed as the file "
-            "<tt>%1/regina.so</tt>.  Please write to %2 if you require "
+            tr("<qt>%1Please write to %2 if you require "
             "further assistance.<p>"
             "None of Regina's functions will "
             "be available during this Python session.</qt>")
-            .arg(Qt::escape(QFile::decodeName(
-                regina::NGlobalDirs::pythonModule().c_str())))
+            .arg(installationMsg)
             .arg(PACKAGE_BUGREPORT));
         addError(tr("Unable to load module \"regina\"."));
         return false;

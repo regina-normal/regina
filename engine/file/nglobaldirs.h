@@ -87,7 +87,9 @@ class REGINA_API NGlobalDirs {
         static std::string home();
 
         /**
-         * Returns the directory in which Regina's python module is installed.
+         * Returns the directory in which Regina's python module is installed,
+         * or the empty string if the module is installed in python's
+         * standard site-packages directory.
          *
          * \warning If Regina is not installed in the exact location
          * configured at compile time (e.g., if you are running a MacOSX
@@ -168,10 +170,12 @@ class REGINA_API NGlobalDirs {
          * configured by \e cmake at build time (e.g., if you are
          * running a MacOSX app bundle).
          *
-         * @param homeDir Regina's primary home directory, which will be
+         * @param homeDir Regina's primary home directory; this will be
          * returned by homeDir().
          * @param pythonModuleDir the directory containing Regina's
-         * python module, which will be returned by pythonModule().
+         * python module, or the empty string if the module has been
+         * installed in python's standard site-packages directory;
+         * this will be returned by pythonModule().
          */
         static void setDirs(const std::string& homeDir,
                 const std::string& pythonModuleDir);
