@@ -13,6 +13,9 @@ Version 4.95  [ (under development) ]
         - Updated the bundled copy of Normaliz to version 2.10.1 (27 June 2013).
         - All 2-faces of a triangulation are now called "triangles" (not
           just "faces" as before).  This is to avoid ambiguity in dimension.
+        - Regina and SnapPy can now talk directly via python: on many
+          systems, 'import snappy' from either a GUI python console or
+          the command-line regina-python tool should work out of the box.
     ENGINE:
         Class Dim2BoundaryComponent:
             - Detailed string output (via detail() / toStringLong()) now
@@ -76,6 +79,10 @@ Version 4.95  [ (under development) ]
             - New template helper class that allows different triangulation
               classes to share the same implementations of member functions.
               Currently this class implements isoSig() and fromIsoSig().
+        Class NGlobalDirs:
+            - Routine pythonModule() now returns an empty string if the
+              module is installed in the standard python site-packages
+              directory (now the default for an XDG install).
         Class NInteger, NLargeInteger:
             - Fixed a (thankfully hard-to-trigger) error in the mod operators.
               The error was triggered on (x % m) or (x %= m) when:
@@ -244,6 +251,14 @@ Version 4.95  [ (under development) ]
         - The old regina-kde placeholder app (which did nothing but pop up
           a message directing the user to the new regina-gui) has been removed.
         - The boundary component viewer now displays more detailed information.
+    PYTHON:
+        - The python module 'regina' now has its own __init__.py, and loads
+          'regina.engine' as an extension submodule.  All symbols from
+          regina.engine are imported directly into 'regina', so users can
+          continue to work directly with the 'regina' namespace as before.
+        - For an XDG build (e.g., on GNU/Linux), the python module is now
+          installed in the standard python site-packages directory, which
+          means you can easily import the module from a normal python session.
     TEST SUITE:
         - More NInteger / NLargeInteger tests, this time comparing operations
           when the same arguments are coerced from natives to GMP integers.
