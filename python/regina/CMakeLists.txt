@@ -42,9 +42,7 @@ IF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   # Install the module in python's standard site-packages location.
   # However, we do it directly ourselves (not via distutils), since we
   # want the files to show up in cmake's install_manifest.txt.
-  # TODO: DESTDIR
-  # TODO: NGlobalDirs ; test all imports!
-  SET(MODULEDIR ${SITE_PACKAGES}/regina)
+  SET(MODULEDIR $ENV{DESTDIR}${SITE_PACKAGES}/regina)
 ELSE (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   # Install the module directly ourselves.
   SET(MODULEDIR ${PYLIBDIR}/regina)
