@@ -38,7 +38,18 @@ ELSE ()
   TARGET_LINK_LIBRARIES(engine ${ENGINE_LIBRARY} ${Boost_LIBRARIES})
 ENDIF ()
 
-SET(MODULEDIR ${PYLIBDIR}/regina)
-INSTALL(FILES __init__.py DESTINATION ${MODULEDIR} COMPONENT Runtime)
-INSTALL(TARGETS engine LIBRARY DESTINATION ${MODULEDIR} COMPONENT Runtime)
+IF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+  # TODO: DESTDIR
+  # TODO: Make sure import works
+  # Use python's distutils to put the module in a standard location.
+  INSTALL(CODE "
+    execute_process(COMMAND \"${PYTHON_EXECUTABLE}\" setup.py install
+      WORKING_DIRECTORY \"${CMAKE_BINARY_DIR}/python\")
+    " COMPONENT Runtime)
+ELSE (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+  # Install the module directly ourselves.
+  SET(MODULEDIR ${PYLIBDIR}/regina)
+  INSTALL(FILES __init__.py DESTINATION ${MODULEDIR} COMPONENT Runtime)
+  INSTALL(TARGETS engine LIBRARY DESTINATION ${MODULEDIR} COMPONENT Runtime)
+ENDIF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
 

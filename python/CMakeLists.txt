@@ -33,7 +33,7 @@ IF (APPLE)
   ENDIF (CMAKE_OSX_ARCHITECTURES STREQUAL "i386")
 ENDIF (APPLE)
 
-# The startup script for useres:
+# The startup script for users:
 CONFIGURE_FILE (
   "${PROJECT_SOURCE_DIR}/python/regina-python.in"
   "${PROJECT_BINARY_DIR}/python/regina-python"
@@ -41,4 +41,12 @@ CONFIGURE_FILE (
 )
 
 INSTALL(PROGRAMS ${PROJECT_BINARY_DIR}/python/regina-python DESTINATION ${BINDIR} COMPONENT Runtime)
+
+# A setup script for installing the python module via distutils.
+# We do the installation itself from within the regina/ subdirectory.
+CONFIGURE_FILE (
+  "${PROJECT_SOURCE_DIR}/python/setup.py.in"
+  "${PROJECT_BINARY_DIR}/python/setup.py"
+  @ONLY
+)
 
