@@ -195,7 +195,7 @@ def __execScript(namespace = None):
     """
 
     script = sys.argv[1]
-    sys.argv = sys.argv[2:]
+    sys.argv = sys.argv[1:]
     if namespace:
         execfile(script, namespace)
     else:
