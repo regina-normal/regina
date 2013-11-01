@@ -121,6 +121,7 @@ void addNPerm4() {
             .def("orderedS4Index", &NPerm4::orderedS4Index)
             .def("orderedSnIndex", &NPerm4::orderedS4Index)
             .def("__str__", &NPerm4::str)
+            .def("__repr__", &NPerm4::str)
             .staticmethod("fromPermCode")
             .staticmethod("fromPermCode2")
             .staticmethod("isPermCode")
