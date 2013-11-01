@@ -278,12 +278,13 @@ if ($script) {
         &usage("E: The script $script could not be found.");
     }
 
-    my $cmd = 'import regina; regina.reginaSetup(banner=False';
+    my $cmd = 'import regina; ';
+    $autoImport and $cmd .= 'from regina import *; ';
+    $cmd .= 'regina.reginaSetup(banner=False';
     $interactive and $cmd .= ', readline=True';
     $quiet and $cmd .= ', quiet=True';
     $nolibs and $cmd .= ', libs=False';
-    $cmd .= '); regina.__execScript()';
-    $autoImport and $cmd .= '; from regina import *';
+    $cmd .= ', namespace=globals()); regina.__execScript(globals())';
 
     my @fullCommandLine = ($python_cmd);
     $interactive and push @fullCommandLine, '-i';
@@ -291,11 +292,12 @@ if ($script) {
     push @fullCommandLine, @script_args;
     exec @fullCommandLine or &execError();
 } else {
-    my $cmd = 'import regina; regina.reginaSetup(banner=True, readline=True';
+    my $cmd = 'import regina; ';
+    $autoImport and $cmd .= 'from regina import *; ';
+    $cmd .= 'regina.reginaSetup(banner=True, readline=True';
     $quiet and $cmd .= ', quiet=True';
     $nolibs and $cmd .= ', libs=False';
-    $cmd .= ')';
-    $autoImport and $cmd .= '; from regina import *';
+    $cmd .= ', namespace=globals())';
     exec ($python_cmd, '-i', '-c', $cmd) or &execError();
 }
 

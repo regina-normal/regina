@@ -309,7 +309,9 @@ void PythonConsole::allowInput(bool primaryPrompt,
 
 bool PythonConsole::importRegina() {
     if (interpreter->importRegina()) {
-        executeLine("from regina import *");
+        executeLine("from regina import *; "
+            "regina.reginaSetup(banner=True, readline=False, "
+            "namespace=globals())");
         return true;
     } else {
         ReginaSupport::warn(this,
@@ -371,26 +373,6 @@ void PythonConsole::setVar(const QString& name, regina::NPacket* value) {
 
         addError(tr("Could not set variable %1 to %2.").arg(name)
             .arg(pktName));
-    }
-}
-
-void PythonConsole::loadAllLibraries() {
-    foreach (const ReginaFilePref& f, ReginaPrefSet::global().pythonLibraries) {
-        if (! f.isActive())
-            continue;
-
-        QString shortName = f.shortDisplayName();
-        addOutput(tr("Loading %1...").arg(shortName));
-        if (! interpreter->runScript(
-                static_cast<const char*>(f.encodeFilename()),
-                shortName.toAscii())) {
-            if (! f.exists())
-                addError(tr("The library %1 does not exist.").
-                    arg(f.longDisplayName()));
-            else
-                addError(tr("The library %1 could not be loaded.").
-                    arg(shortName));
-        }
     }
 }
 

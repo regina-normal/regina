@@ -27,10 +27,10 @@
 #
 
 import sys, os
-from .regina import *
+from .engine import *
 
 def reginaSetup(quiet = False, readline = True, banner = False,
-                snappyPath = True, libs = True):
+                snappyPath = True, libs = True, namespace = None):
     """
     Initialise a Regina python session.
 
@@ -48,6 +48,9 @@ def reginaSetup(quiet = False, readline = True, banner = False,
                      to include the location of SnapPy's python module and its
                      dependencies.
         banner     : If true, print a welcome banner to standard output.
+        namespace  : The global namespace in which the start-up library scripts
+                     (if any) will be executed.  This may be None, in which
+                     case the caller's global namespace will be used.
     """
 
     if readline:
@@ -97,19 +100,30 @@ def reginaSetup(quiet = False, readline = True, banner = False,
                     sys.path.append(snappyLib + '/site-packages.zip')
 
     if libs:
-        __execLibs(quiet)
+        if __execLibs(namespace, quiet):
+            # We tried to import something...
+            if not quiet:
+                # ... and we wrote some messages about it.
+                print
 
     if banner:
-        print regina.welcome()
+        print engine.welcome()
 
-def __execLibs(quiet = False):
+def __execLibs(namespace = None, quiet = False):
     """
     For internal use by this module.
     Executes all of the user's start-up libraries in the global namespace.
 
     Arguments:
-        quiet: If true, do not print information about which libraries
-               are being loaded.
+        namespace : The global namespace in which the library scripts will be
+                    executed.  This may be None, in which case the caller's
+                    global namespace will be used.
+        quiet:      If true, do not print information about which libraries
+                    are being loaded.
+
+    Returns:
+        True if there was at least one library that we tried to import,
+        or False if there were none.
     """
 
     libConfig = os.path.expanduser('~/.regina-libs')
@@ -129,6 +143,7 @@ def __execLibs(quiet = False):
 
     # If something goes wrong whilst reading the file, let the exception
     # fall through to the user.
+    triedImport = False
     for line in f:
         lib = line.strip()
         if len(lib) == 0:
@@ -136,6 +151,7 @@ def __execLibs(quiet = False):
         if lib[0] == '#':
             continue
 
+        triedImport = True
         if codeset:
             lib = lib.decode('UTF-8').encode(codeset)
 
@@ -148,29 +164,40 @@ def __execLibs(quiet = False):
         if not quiet:
             print 'Running ' + lib + '...'
         try:
-            execfile(lib, globals())
+            if namespace:
+                execfile(lib, namespace)
+            else:
+                execfile(lib)
         except SystemExit:
             pass
         except:
             sys.excepthook(*sys.exc_info())
             print 'ERROR: Could not execute user library:', lib
-            sys.exit(1)
 
     f.close()
+    return triedImport
 
-def __execScript():
+def __execScript(namespace = None):
     """
     For internal use by regina-python.
-    Executes a given python script in the global namespace.
+    Executes a given python script.
 
     The filename of the script must be in sys.argv[1], and
     any arguments to the script must be in sys.argv[2:].
 
     SIDE-EFFECT: sys.argv will be truncated to include the script
     arguments only (i.e., sys.argv[0] and sys.argv[1] will be removed).
+
+    Arguments:
+        namespace : The global namespace in which the script will be executed.
+                    This may be None, in which case the caller's global
+                    namespace will be used.
     """
 
     script = sys.argv[1]
     sys.argv = sys.argv[2:]
-    execfile(script, globals())
+    if namespace:
+        execfile(script, namespace)
+    else:
+        execfile(script)
 
