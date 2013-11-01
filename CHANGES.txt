@@ -259,6 +259,8 @@ Version 4.95  [ (under development) ]
         - For an XDG build (e.g., on GNU/Linux), the python module is now
           installed in the standard python site-packages directory, which
           means you can easily import the module from a normal python session.
+        - Added a useful __repr__ for the core types NInteger, NLargeInteger,
+          NRational, NPerm3, NPerm4 and NPerm5.
     TEST SUITE:
         - More NInteger / NLargeInteger tests, this time comparing operations
           when the same arguments are coerced from natives to GMP integers.

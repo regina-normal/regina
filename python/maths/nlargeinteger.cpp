@@ -130,6 +130,7 @@ void addNLargeInteger() {
         .def(long() + self)
         .def(long() * self)
         .def(self_ns::str(self))
+        .def(self_ns::repr(self))
         .staticmethod("randomBinary")
         .staticmethod("randomCornerBinary")
     ;
