@@ -10,14 +10,14 @@
 #
 # Verifies that a tarball formed using "make dist" contains all the
 # files it should.  This script outputs a list of files contained in
-# the subversion source tree that are missing from the tarball.
+# the git source tree that are missing from the tarball.
 #
 # Files that are not necessary for inclusion in the tarball (such as
 # auto-generated files or the Regina website) are not included in this
 # output.
 #
 # This script must be run from either the top-level source directory within
-# the subversion source tree, or from the admin/ directory beneath it.
+# the git source tree, or from the admin/ directory beneath it.
 #
 # Requires: diff, find, grep, mktemp, sed, sort, tar
 #
@@ -50,25 +50,19 @@ if [ "$#" != 1 ]; then
   exit 1
 fi
 
-# Locate the top of the subversion source tree.
-if [ ! -d .svn ]; then
-  echo "This script must be run from within the subversion source tree."
-  exit 1
-fi
-
+# Locate the top of the git source tree.
 if [ -d admin -a -f HIGHLIGHTS.txt ]; then
-  svntree=.
+  gittree=.
 elif [ -d ../admin -a -f ../HIGHLIGHTS.txt ]; then
-  svntree=..
+  gittree=..
 else
   echo "This script must be run from either the top-level source directory"
-  echo "within the subversion source tree, or from the admin/ directory"
-  echo "beneath it."
+  echo "within the git source tree, or from the admin/ directory beneath it."
   exit 1
 fi
 
 # Find any builddirs that should be ignored.
-builddirs=`find "$svntree" -mindepth 2 -name CMakeCache.txt | \
+builddirs=`find "$gittree" -mindepth 2 -name CMakeCache.txt | \
 	sed -e 's%^[^/]*/%%' -e 's%/CMakeCache.txt$%%'`
 
 display_builddirs=
@@ -90,9 +84,9 @@ else
 fi
 
 # Prepare the two temporary file lists.
-svnlist="`mktemp -t svnlist.XXXXXXXXXX`" || svnlist=
+gitlist="`mktemp -t gitlist.XXXXXXXXXX`" || gitlist=
 distlist="`mktemp -t distlist.XXXXXXXXXX`" || distlist=
-if [ -z "$svnlist" -o -z "$distlist" ]; then
+if [ -z "$gitlist" -o -z "$distlist" ]; then
   echo "Error creating temporary files."
   exit 1
 fi
@@ -133,23 +127,22 @@ fi
 # Make a list of files in the subversion source tree.
 echo "Analysing subversion source tree..."
 
-if ! find "$svntree" -type f | sed -e 's%^[^/]*/%%' | \
+if ! find "$gittree" -type f | sed -e 's%^[^/]*/%%' | \
     grep -v "$grep_builddirs" | \
-    grep -v '\(^\|/\)\.svn$' | \
-    grep -v '\.svn/' | \
+    grep -v '\.git/' | \
     grep -v '\.DS_Store$' | \
     grep -v '^engine/snappea/kernel/unused\(/\|$\)' | \
     grep -v '^regina-[0-9.]\+\.tar\.gz$' | \
     grep -v '^sfdist\(/\|$\)' | \
     grep -v '^utils/local\(/\|$\)' | \
     grep -v '^utils/snappea\(/\|$\)' | \
-    sort > "$svnlist" ; then
+    sort > "$gitlist" ; then
   echo "The contents of the subversion source tree could not be listed."
   exit 1
 fi
 
 # Output the differences.
-diff -B "$svnlist" "$distlist" | grep -v '^[0-9]'
+diff -B "$gitlist" "$distlist" | grep -v '^[0-9]'
 
 # Clean up.
-rm "$svnlist" "$distlist"
+rm "$gitlist" "$distlist"

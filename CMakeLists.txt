@@ -513,6 +513,7 @@ set(CPACK_SOURCE_IGNORE_FILES
   "^${PROJECT_SOURCE_DIR}/utils/local/"
   "^${PROJECT_SOURCE_DIR}/utils/snappea/"
   "^${PROJECT_SOURCE_DIR}/www/"
+  "^${PROJECT_SOURCE_DIR}/\\\\.git/"
   "^${PROJECT_SOURCE_DIR}.*/\\\\.svn/"
   "\\\\.DS_Store$"
 )
