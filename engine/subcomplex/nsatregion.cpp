@@ -153,8 +153,8 @@ NSFSpace* NSatRegion::createSFS(bool reflect) const {
     // the number of punctures.
 
     NSFSpace* sfs = new NSFSpace(baseClass,
-        (baseOrbl_ ?  (2 - twisted - untwisted - baseEuler_) / 2 :
-            (2 - twisted - untwisted - baseEuler_)),
+        (baseOrbl_ ? ((2 - baseEuler_) - twisted - untwisted) / 2 :
+            ((2 - baseEuler_) - twisted - untwisted)),
         untwisted /* untwisted punctures */, twisted /* twisted punctures */,
         0 /* untwisted reflectors */, twistedBlocks_ /* twisted reflectors */);
 
