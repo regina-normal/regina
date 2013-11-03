@@ -17,5 +17,4 @@ tabs :
 	cd $(srcdir); ./replacetabs ../qtui/doc/regina/*.docbook
 	cd $(srcdir); ./replacetabs ../qtui/doc/regina-xml/*.docbook
 	cd $(srcdir); ./replacetabs ../pylib/*.py
-	cd $(srcdir); ./replacetabs ../scripts/*.py
 

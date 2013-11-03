@@ -163,7 +163,7 @@ else ()
   SET (DATADIR ${CMAKE_INSTALL_PREFIX}/share)
   SET (INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include/${PACKAGE_NAME})
   SET (PKGDATADIR ${DATADIR}/${PACKAGE_NAME})
-  SET (PYLIBDIR ${LIBDIR}/${PACKAGE_NAME}/python)
+  UNSET (PYLIBDIR)
 endif ()
 SET (HTMLDIR ${PKGDATADIR}/docs)
 SET (ICONDIR ${DATADIR}/icons)
@@ -376,9 +376,24 @@ ENDIF(NOT DISABLE_PYTHON)
 
 IF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
   # We can support python.
+
+  # Find the site-packages location in which the XDG build needs to put
+  # the python module.
+  EXECUTE_PROCESS(COMMAND
+    "${PYTHON_EXECUTABLE}" -c "import distutils.sysconfig; print distutils.sysconfig.get_python_lib()"
+    OUTPUT_VARIABLE SITE_PACKAGES
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE DISTUTILS_RESULT)
+  IF ((NOT DISTUTILS_RESULT) AND IS_DIRECTORY "${SITE_PACKAGES}")
+    MESSAGE(STATUS "Python site-packages directory: ${SITE_PACKAGES}")
+  ELSE ()
+    MESSAGE(FATAL_ERROR "Could not query the python site-packages directory.  Please either set the correct python interpreter (-DPYTHON_EXECUTABLE=...), or else disable python bindings (-DDISABLE_PYTHON).")
+  ENDIF ()
+
   ADD_SUBDIRECTORY(pylib)
   ADD_SUBDIRECTORY(python)
   SET(BOOST_PYTHON_FOUND TRUE)
+
   MESSAGE(STATUS "Python bindings enabled")
 ELSEIF(Boost_FOUND)
   # Boost itself is mandatory - if it was not found then we have
@@ -498,6 +513,7 @@ set(CPACK_SOURCE_IGNORE_FILES
   "^${PROJECT_SOURCE_DIR}/utils/local/"
   "^${PROJECT_SOURCE_DIR}/utils/snappea/"
   "^${PROJECT_SOURCE_DIR}/www/"
+  "^${PROJECT_SOURCE_DIR}/\\\\.git/"
   "^${PROJECT_SOURCE_DIR}.*/\\\\.svn/"
   "\\\\.DS_Store$"
 )
