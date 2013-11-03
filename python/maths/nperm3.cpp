@@ -79,6 +79,7 @@ void addNPerm3() {
         .def("orderedS3Index", &NPerm3::orderedS3Index)
         .def("orderedSnIndex", &NPerm3::orderedS3Index)
         .def("__str__", &NPerm3::str)
+        .def("__repr__", &NPerm3::str)
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
     ;

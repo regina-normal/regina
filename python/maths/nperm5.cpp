@@ -86,6 +86,7 @@ void addNPerm5() {
         .def("orderedS5Index", &NPerm5::orderedS5Index)
         .def("orderedSnIndex", &NPerm5::orderedS5Index)
         .def("__str__", &NPerm5::str)
+        .def("__repr__", &NPerm5::str)
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
     ;

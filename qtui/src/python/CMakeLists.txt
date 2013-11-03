@@ -1,5 +1,3 @@
-# Engine
-
 SET ( FILES
   commandedit
   pythonconsole
