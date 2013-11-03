@@ -5,4 +5,4 @@ INSTALL(FILES
   python.lang
   script_comment.lang
   symbols.lang
-  DESTINATION ${PKGDATADIR}/gui-resources)
+  DESTINATION ${PKGDATADIR}/syntax)

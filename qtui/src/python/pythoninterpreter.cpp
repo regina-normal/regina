@@ -281,14 +281,17 @@ bool PythonInterpreter::executeLine(const std::string& command) {
 bool PythonInterpreter::importRegina() {
     PyEval_RestoreThread(state);
 
-    // Adjust the python path.
-    PyObject* path = PySys_GetObject(
-        const_cast<char*>("path")); // Borrowed reference.
-    if (path) {
-        PyObject* regModuleDir = PyString_FromString(
-            regina::NGlobalDirs::pythonModule().c_str());
-        PyList_Append(path, regModuleDir);
-        Py_DECREF(regModuleDir);
+    // Adjust the python path if we need to.
+    std::string regModuleDir = regina::NGlobalDirs::pythonModule();
+    if (! regModuleDir.empty()) {
+        PyObject* path = PySys_GetObject(
+            const_cast<char*>("path")); // Borrowed reference.
+        if (path) {
+            PyObject* regModuleDirPy =
+                PyString_FromString(regModuleDir.c_str());
+            PyList_Append(path, regModuleDirPy);
+            Py_DECREF(regModuleDirPy);
+        }
     }
 
     // Import the module.

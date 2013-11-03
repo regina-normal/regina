@@ -8,6 +8,7 @@ SET ( FILES
   dim2edgepairing
   dim2gluingperms
   dim2gluingpermsearcher
+  euler
   ncensus
   nfacepairing
   ngluingperms
