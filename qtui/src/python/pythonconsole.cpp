@@ -309,18 +309,27 @@ void PythonConsole::allowInput(bool primaryPrompt,
 
 bool PythonConsole::importRegina() {
     if (interpreter->importRegina()) {
-        executeLine("from regina import *");
+        executeLine("from regina import *; "
+            "regina.reginaSetup(banner=True, readline=False, "
+            "namespace=globals())");
         return true;
     } else {
+        QString installationMsg;
+        std::string regModuleDir = regina::NGlobalDirs::pythonModule().c_str();
+        if (! regModuleDir.empty())
+            installationMsg = tr("The module 'regina' should be installed "
+                "beneath the directory <tt>%1/</tt>.  ")
+                .arg(Qt::escape(QFile::decodeName(regModuleDir.c_str())));
+        else
+            installationMsg = tr("The module 'regina' should be installed "
+                "in Python's standard site-packages directory.  ");
         ReginaSupport::warn(this,
             tr("Regina's Python module could not be loaded."),
-            tr("<qt>The module should be installed as the file "
-            "<tt>%1/regina.so</tt>.  Please write to %2 if you require "
+            tr("<qt>%1Please write to %2 if you require "
             "further assistance.<p>"
             "None of Regina's functions will "
             "be available during this Python session.</qt>")
-            .arg(Qt::escape(QFile::decodeName(
-                regina::NGlobalDirs::pythonModule().c_str())))
+            .arg(installationMsg)
             .arg(PACKAGE_BUGREPORT));
         addError(tr("Unable to load module \"regina\"."));
         return false;
@@ -371,26 +380,6 @@ void PythonConsole::setVar(const QString& name, regina::NPacket* value) {
 
         addError(tr("Could not set variable %1 to %2.").arg(name)
             .arg(pktName));
-    }
-}
-
-void PythonConsole::loadAllLibraries() {
-    foreach (const ReginaFilePref& f, ReginaPrefSet::global().pythonLibraries) {
-        if (! f.isActive())
-            continue;
-
-        QString shortName = f.shortDisplayName();
-        addOutput(tr("Loading %1...").arg(shortName));
-        if (! interpreter->runScript(
-                static_cast<const char*>(f.encodeFilename()),
-                shortName.toAscii())) {
-            if (! f.exists())
-                addError(tr("The library %1 does not exist.").
-                    arg(f.longDisplayName()));
-            else
-                addError(tr("The library %1 could not be loaded.").
-                    arg(shortName));
-        }
     }
 }
 

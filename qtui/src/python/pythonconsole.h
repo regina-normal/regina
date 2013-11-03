@@ -138,7 +138,6 @@ class PythonConsole : public QMainWindow {
         void setRootPacket(regina::NPacket* packet);
         void setSelectedPacket(regina::NPacket* packet);
         void setVar(const QString& name, regina::NPacket* value);
-        void loadAllLibraries();
         void executeLine(const QString& line);
         void executeLine(const std::string& line);
         void executeLine(const char* line);

@@ -40,6 +40,9 @@ Version 4.95  [ (under development) ]
         - Updated the bundled copy of Normaliz to version 2.10.1 (27 June 2013).
         - All 2-faces of a triangulation are now called "triangles" (not
           just "faces" as before).  This is to avoid ambiguity in dimension.
+        - Regina and SnapPy can now talk directly via python: on many
+          systems, 'import snappy' from either a GUI python console or
+          the command-line regina-python tool should work out of the box.
     ENGINE:
         Class Dim2BoundaryComponent:
             - Detailed string output (via detail() / toStringLong()) now
@@ -77,6 +80,9 @@ Version 4.95  [ (under development) ]
         Class NEdge:
             - Detailed string output (via detail() / toStringLong()) now
               outputs details of where the edge appears in each tetrahedron.
+        Class NEulerSearcher:
+            - A new subclass of NGluingPermSearcher that can enforce an
+              arbitrary fixed Euler characteristic on the vertex links.
         Struct NewNormalSurfaceVector:
             - Moved into registryutils.h and redesigned as the more general
               template struct NewFunction1<>.  The old type is equivalent to
@@ -100,6 +106,10 @@ Version 4.95  [ (under development) ]
             - New template helper class that allows different triangulation
               classes to share the same implementations of member functions.
               Currently this class implements isoSig() and fromIsoSig().
+        Class NGlobalDirs:
+            - Routine pythonModule() now returns an empty string if the
+              module is installed in the standard python site-packages
+              directory (now the default for an XDG install).
         Class NInteger, NLargeInteger:
             - Fixed a (thankfully hard-to-trigger) error in the mod operators.
               The error was triggered on (x % m) or (x %= m) when:
@@ -199,8 +209,8 @@ Version 4.95  [ (under development) ]
             - Now inherits from the new helper class NGenericTriangulation<3>.
             - New routine isoSigComponentSize() for extracting the number of
               triangles from a signature (inherited from NGenericTriangulation).
-            - New routine snapPea() to export a SnapPea file as a string,
-              without writing to the filesystem.
+            - New routines snapPea() and fromSnapPea() to import and export
+              SnapPea data using strings, without writing to the filesystem.
             - Renamed FaceIterator, faceIndex(), getFace(), getFaces(),
               getNumberOfFaces() and hasBoundaryFaces(), where "face"
               now becomes "triangle".  The old names are deprecated but
@@ -268,6 +278,16 @@ Version 4.95  [ (under development) ]
         - The old regina-kde placeholder app (which did nothing but pop up
           a message directing the user to the new regina-gui) has been removed.
         - The boundary component viewer now displays more detailed information.
+    PYTHON:
+        - The python module 'regina' now has its own __init__.py, and loads
+          'regina.engine' as an extension submodule.  All symbols from
+          regina.engine are imported directly into 'regina', so users can
+          continue to work directly with the 'regina' namespace as before.
+        - For an XDG build (e.g., on GNU/Linux), the python module is now
+          installed in the standard python site-packages directory, which
+          means you can easily import the module from a normal python session.
+        - Added a useful __repr__ for the core types NInteger, NLargeInteger,
+          NRational, NPerm3, NPerm4 and NPerm5.
     UTILITIES:
         regmerge:
             - New utility for merging several data files.
@@ -275,6 +295,8 @@ Version 4.95  [ (under development) ]
         - More NInteger / NLargeInteger tests, this time comparing operations
           when the same arguments are coerced from natives to GMP integers.
         - NBitmask tests for the bits() function.
+        - Added python tests for the Orb import filter; thanks to
+          Craig Hodgson for the sample files.
 
 Version 4.94  [ 24 September, 2013 ]
 

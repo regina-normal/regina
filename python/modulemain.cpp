@@ -95,7 +95,7 @@ namespace regina {
     }
 }
 
-BOOST_PYTHON_MODULE(regina) {
+BOOST_PYTHON_MODULE(engine) {
     // Welcome string:
 
     boost::python::def("welcome", welcome);

@@ -12,6 +12,7 @@ SET ( FILES
   dim4facetpairing
   dim4gluingperms
   dim4gluingpermsearcher
+  euler
   ncensus
   nfacepairing
   ngluingperms

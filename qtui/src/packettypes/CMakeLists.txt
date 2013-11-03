@@ -1,5 +1,3 @@
-# Engine
-
 SET ( FILES
   dim2tricreator
   dim2trigluings
