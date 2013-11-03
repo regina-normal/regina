@@ -89,6 +89,7 @@ void addNRational() {
         .def("getTeX", &NRational::getTeX)
         .def("writeTeX", writeTeX_stdio)
         .def(self_ns::str(self))
+        .def(self_ns::repr(self))
     ;
 
     // Apparently there is no way in python to make a module attribute
