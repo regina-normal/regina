@@ -93,14 +93,13 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     // First set up completion
     ans->executeLine("import rlcompleter");
     ans->executeLine("__regina_tab_completion = rlcompleter.Completer()");
-    
+
     // Initialise the python interpreter.
     if (ans->importRegina()) {
-        ans->executeLine("print regina.welcome() + '\\n'");
+        ans->executeLine("print");
         ans->setRootPacket(tree);
         ans->setSelectedPacket(selectedPacket);
     }
-    ans->loadAllLibraries();
 
     // All ready!
     ans->addOutput(parent->QObject::tr("Ready."));
@@ -121,11 +120,10 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     // First set up completion
     ans->executeLine("import rlcompleter");
     ans->executeLine("__regina_tab_completion = rlcompleter.Completer()");
-    
+
     // Initialise the python interpreter.
     if (ans->importRegina())
-        ans->executeLine("print regina.welcome() + '\\n'");
-    ans->loadAllLibraries();
+        ans->executeLine("print");
     for (PythonVariableList::const_iterator it = initialVars.begin();
             it != initialVars.end(); it++)
         ans->setVar((*it).name, (*it).value);

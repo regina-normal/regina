@@ -153,10 +153,7 @@ REGINA_API bool writeSnapPea(const char* filename, const NTriangulation& tri);
  * \pre The given triangulation is not invalid, and does not contain any
  * boundary triangles.
  *
- * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and
- * simply passes it through unchanged to low-level C/C++ file I/O routines.
- * The \e contents of the file will be written using UTF-8.
+ * \i18n The contents of the SnapPea file will be written using UTF-8.
  *
  * \ifacespython Not present, although the filesystem variant
  * writeSnapPea(const char*, NTriangulation&) is available.

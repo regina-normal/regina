@@ -334,10 +334,14 @@ void addNTriangulation() {
         .def("isoSigComponentSize", &NTriangulation::isoSigComponentSize)
         .def("dumpConstruction", &NTriangulation::dumpConstruction)
         .def("snapPea", &NTriangulation::snapPea)
+        .def("fromSnapPea", &NTriangulation::fromSnapPea,
+            return_value_policy<manage_new_object>())
         .def("enterTextTriangulation", enterTextTriangulation_stdio,
             return_value_policy<manage_new_object>())
         .staticmethod("rehydrate")
         .staticmethod("fromIsoSig")
+        .staticmethod("isoSigComponentSize")
+        .staticmethod("fromSnapPea")
         .staticmethod("enterTextTriangulation")
     ;
 
