@@ -3068,7 +3068,6 @@ class REGINA_API NTriangulation : public NPacket,
          * @see fromIsoSig
          */
         std::string isoSig() const;
-        using NGenericTriangulation<3>::isoSigComponentSize;
         /**
          * Returns C++ code that can be used with insertConstruction()
          * to reconstruct this triangulation.
@@ -3095,6 +3094,11 @@ class REGINA_API NTriangulation : public NPacket,
          * data file that describes this triangulation.  This string
          * can, for instance, be used to pass the triangulation to SnapPy
          * without writing to the filesystem.
+         *
+         * If you wish to export a triangulation to a SnapPea \e file,
+         * you should use the global function writeSnapPea() instead
+         * (which has better performance, and does not require you to
+         * construct an enormous intermediate string).
          *
          * For details on how the SnapPea file will be constructed and
          * what will be included, see the documentation for writeSnapPea().
@@ -3181,6 +3185,35 @@ class REGINA_API NTriangulation : public NPacket,
          * isomorphism signature.
          */
         static NTriangulation* fromIsoSig(const std::string& signature);
+        using NGenericTriangulation<3>::isoSigComponentSize;
+        /**
+         * Extracts a triangulation from a string that contains the
+         * full contents of a SnapPea data file.  This routine could,
+         * for instance, be used to receive a triangulation from SnapPy
+         * without writing to the filesystem.
+         *
+         * If you wish to read a triangulation from a SnapPea \e file,
+         * you should use the global function readSnapPea() instead
+         * (which has better performance, and does not require you to
+         * construct an enormous intermediate string).
+         *
+         * For details on how the triangulation will be extracted,
+         * see the documentation for readSnapPea().
+         *
+         * The triangulation that is returned will be newly created.
+         * If the SnapPea data is not in the correct format, this
+         * routine will return 0 instead.
+         *
+         * \pre The first two lines of the SnapPea file each contain at
+         * most 1000 characters.
+         *
+         * @param snapPeaData a string containing the full contents of a
+         * SnapPea data file.
+         * @return a new triangulation extracted from the given data,
+         * or 0 on error.
+         */
+        static NTriangulation* fromSnapPea(const std::string& snapPeaData);
+
 
         /*@}*/
 
