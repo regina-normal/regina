@@ -291,7 +291,7 @@
      <listitem>
       <para>
        The directory in which &regina;'s data files are installed.  This
-       should be the directory containing the <filename>internal/</filename>
+       should be the directory containing the <filename>icons/</filename>
        subdirectory, the <filename>examples/</filename> subdirectory and so on.
       </para>
       <para>
@@ -327,6 +327,12 @@
        defaults to a directory within this source tree.  If you are
        running &regina; from a proper installation, this defaults to the
        corresponding installation directory.
+      </para>
+      <para>
+       If you have installed &regina;'s &python; module in a standard
+       &python; location (i.e., &python; can import it directly without
+       extending <literal>sys.path</literal>), then
+       <parameter>REGINA_PYLIBDIR</parameter> should be left empty or undefined.
       </para>
       <para>
        In normal situations you should never need to set this option yourself.

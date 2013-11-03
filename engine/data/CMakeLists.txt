@@ -1,5 +1,5 @@
 
-SET(INTERNALDATADIR ${PKGDATADIR}/internal/data)
+SET(INTERNALDATADIR ${PKGDATADIR}/data)
 
 SET(internaldata_DATA
   snappea-census-sec5.dat
