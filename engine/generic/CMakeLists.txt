@@ -16,6 +16,7 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     dimtraits.h
+    isosig-impl.h
     nfacetspec.h
     ngenericisomorphism-impl.h
     ngenericisomorphism.h
