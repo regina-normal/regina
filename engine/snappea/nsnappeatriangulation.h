@@ -164,6 +164,9 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * You should always test isNull() to determine whether the
          * conversion was successful.
          *
+         * If the conversion is successful, this constructor will immediately
+         * ask SnapPea to try to find a complete hyperbolic structure.
+         *
          * SnapPea is designed primarily to work with ideal
          * triangulations only.  Passing closed triangulations can
          * occasionally cause the SnapPea kernel to raise a fatal error,

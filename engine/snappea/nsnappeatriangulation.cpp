@@ -71,6 +71,9 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
 NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri,
         bool allowClosed) {
     snappeaData = reginaToSnapPea(tri, allowClosed);
+    if (snappeaData) {
+        ::find_complete_hyperbolic_structure(snappeaData);
+    }
 }
 
 NSnapPeaTriangulation::~NSnapPeaTriangulation() {
