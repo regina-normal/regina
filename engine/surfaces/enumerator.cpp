@@ -117,20 +117,6 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
         NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT |
         NS_VERTEX_TREE | NS_VERTEX_DD);
 
-    // Choose between double description and tree traversal.
-    // Note: This line is where we make the "default" decision for the user.
-    list_->algorithm_.ensureOne(NS_VERTEX_TREE, NS_VERTEX_DD);
-
-    // Check whether tree traversal supports our enumeration arguments.
-    // If not, switch back to double description.
-    // The integer template argument for NTreeTraversal::supported()
-    // is unimportant here; we just use NInteger.
-    if (list_->algorithm_.has(NS_VERTEX_TREE) &&
-            ! (list_->which_.has(NS_EMBEDDED_ONLY) &&
-                NTreeTraversal<LPConstraintNone, BanNone, NInteger>::supported(
-                list_->coords_)))
-        list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
-
     // For standard normal / almost normal coordinates, choose between
     // standard-direct vs standard-via-reduced.
     if (list_->coords_ == NS_STANDARD || list_->coords_ == NS_AN_STANDARD) {
@@ -149,6 +135,29 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
         // Standard-direct vs standard-via-reduced is not relevant here.
         list_->algorithm_.clear(NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT);
     }
+
+    // Choose between double description and tree traversal.
+    // Which is the default will depend upon the underlying coordinate system.
+    if (list_->algorithm_.has(NS_VERTEX_STD_DIRECT)) {
+        // Tree traversal is at its best when every coordinate is involved
+        // in branching decisions (i.e., we are in quad or quad-oct
+        // coordinates).  It can be slower when working with triangles,
+        // so default to the older double description method.
+        list_->algorithm_.ensureOne(NS_VERTEX_DD, NS_VERTEX_TREE);
+    } else {
+        // Use the new technology.
+        list_->algorithm_.ensureOne(NS_VERTEX_TREE, NS_VERTEX_DD);
+    }
+
+    // Check whether tree traversal supports our enumeration arguments.
+    // If not, switch back to double description.
+    // The integer template argument for NTreeTraversal::supported()
+    // is unimportant here; we just use NInteger.
+    if (list_->algorithm_.has(NS_VERTEX_TREE) &&
+            ! (list_->which_.has(NS_EMBEDDED_ONLY) &&
+                NTreeTraversal<LPConstraintNone, BanNone, NInteger>::supported(
+                list_->coords_)))
+        list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
 
     // ----- Run the enumeration algorithm -----
 
