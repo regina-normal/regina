@@ -168,22 +168,12 @@ void addNGroupPresentation() {
         .def("getNumberOfRelations", &NGroupPresentation::getNumberOfRelations)
         .def("getRelation", &NGroupPresentation::getRelation,
             return_internal_reference<>())
-        .def("isValid", &NGroupPresentation::isValid)
         .def("intelligentSimplify", &NGroupPresentation::intelligentSimplify)
         .def("intelligentSimplifyDetail",
             intelligentSimplifyDetail_ptr,
             return_value_policy<manage_new_object>())
         .def("proliferateRelators", &NGroupPresentation::proliferateRelators,
             OL_proliferateRelators())
-        .def("smallCancellation", &NGroupPresentation::smallCancellation)
-        .def("intelligentNielsen", &NGroupPresentation::intelligentNielsen)
-        .def("nielsenTransposition", &NGroupPresentation::nielsenTransposition)
-        .def("nielsenInvert", &NGroupPresentation::nielsenInvert)
-        .def("nielsenCombine", &NGroupPresentation::nielsenCombine)
-        .def("homologicalAlignment", &NGroupPresentation::homologicalAlignment)
-        .def("prettyRewriting", &NGroupPresentation::prettyRewriting)
-        .def("identify_extension_over_Z", &NGroupPresentation::identify_extension_over_Z)
-        .def("isAbelian", &NGroupPresentation::isAbelian)
         .def("recogniseGroup", &NGroupPresentation::recogniseGroup)
         .def("relatorLength", &NGroupPresentation::relatorLength)
         .def("abelianisation", abelianisation_ptr,
