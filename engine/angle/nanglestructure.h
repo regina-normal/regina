@@ -170,8 +170,7 @@ class REGINA_API NAngleStructure : public ShareableObject {
          * @param edgePair the number of the vertex splitting
          * representing the pair of edges holding the requested angle;
          * this should be between 0 and 2 inclusive.  See ::vertexSplit
-         * and ::vertexSplitDefn for details regarding vertex
-         * splittings.
+         * and ::vertexSplitDefn for details regarding vertex splittings.
          * @return the requested angle scaled down by <i>pi</i>.
          */
         NRational getAngle(unsigned long tetIndex, int edgePair) const;

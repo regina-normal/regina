@@ -68,7 +68,7 @@ int uQuery(const char *message, const int num_responses,
     return default_response;
 }
 
-void uFatalError(char *function, char *file) {
+void uFatalError(const char *function, const char *file) {
     std::cerr << "FATAL ERROR: " << file << ", " << function << std::endl;
     exit(1);
 }

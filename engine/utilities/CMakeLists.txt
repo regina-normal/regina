@@ -46,6 +46,7 @@ if (${REGINA_INSTALL_DEV})
     registryutils.h
     stlutils.h
     stringutils.h
+    stringutils-impl.h
     stringutils.tcc
     xmlutils.h
     zstream.h
