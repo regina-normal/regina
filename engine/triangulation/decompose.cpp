@@ -228,6 +228,7 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
         working->insertLayeredLensSpace(0, 1);
         primeComponents.push_back(working);
         irreducible = false; // Implied by the S2xS1 summand.
+        zeroEfficient = false; // Implied by the S2xS1 summand.
     }
     while (finalZ2++ < initZ2) {
         working = new NTriangulation();
@@ -258,14 +259,23 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
     }
 
     // Set irreducibility while we're at it.
-    if (whichComp > 1)
+    if (whichComp > 1) {
+        threeSphere = false;
         irreducible = false;
-    else if (whichComp == 1 && ! irreducible.known()) {
-        // If our manifold is S2xS1 then it is *not* irreducible;
-        // however, in this case we will have already set irreducible
-        // to false when putting back the S2xS1 summands above (and
-        // therefore irreducible.known() will be true).
+        zeroEfficient = false;
+    } else if (whichComp == 1) {
+        threeSphere = false;
+        if (! irreducible.known()) {
+            // If our manifold is S2xS1 then it is *not* irreducible;
+            // however, in this case we will have already set irreducible
+            // to false when putting back the S2xS1 summands above (and
+            // therefore irreducible.known() will be true).
+            irreducible = true;
+        }
+    } else if (whichComp == 0) {
+        threeSphere = true;
         irreducible = true;
+        haken = false;
     }
 
     return whichComp;
@@ -744,7 +754,9 @@ bool NTriangulation::isIrreducible() const {
                     // those get crushed away entirely (we account for
                     // them later).
                     if (summands > 0) {
+                        // We have found more than one prime component.
                         threeSphere = false; // Implied by reducibility.
+                        zeroEfficient = false; // Implied by reducibility.
                         delete processing;
                         return (irreducible = false);
                     }
@@ -770,12 +782,14 @@ bool NTriangulation::isIrreducible() const {
         // There were S2xS1 summands that were crushed away.
         // The manifold must be reducible.
         threeSphere = false; // Implied by reducibility.
+        zeroEfficient = false; // Implied by reducibility.
         return (irreducible = false);
     }
     if (summands + Z2 + Z3 > 1) {
         // At least two summands were found and/or crushed away: the
         // manifold must be composite.
         threeSphere = false; // Implied by reducibility.
+        zeroEfficient = false; // Implied by reducibility.
         return (irreducible = false);
     }
 
