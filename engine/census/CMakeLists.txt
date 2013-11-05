@@ -38,8 +38,10 @@ if (${REGINA_INSTALL_DEV})
     ncensus.h
     nfacepairing.h
     ngenericfacetpairing.h
+    ngenericfacetpairing-impl.h
     ngenericfacetpairing.tcc
     ngenericgluingperms.h
+    ngenericgluingperms-impl.h
     ngenericgluingperms.tcc
     ngluingperms.h
     ngluingpermsearcher.h
