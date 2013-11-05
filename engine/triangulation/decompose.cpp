@@ -227,6 +227,8 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
         working = new NTriangulation();
         working->insertLayeredLensSpace(0, 1);
         primeComponents.push_back(working);
+        irreducible = false; // Implied by the S2xS1 summand.
+        zeroEfficient = false; // Implied by the S2xS1 summand.
     }
     while (finalZ2++ < initZ2) {
         working = new NTriangulation();
@@ -256,6 +258,26 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
         whichComp++;
     }
 
+    // Set irreducibility while we're at it.
+    if (whichComp > 1) {
+        threeSphere = false;
+        irreducible = false;
+        zeroEfficient = false;
+    } else if (whichComp == 1) {
+        threeSphere = false;
+        if (! irreducible.known()) {
+            // If our manifold is S2xS1 then it is *not* irreducible;
+            // however, in this case we will have already set irreducible
+            // to false when putting back the S2xS1 summands above (and
+            // therefore irreducible.known() will be true).
+            irreducible = true;
+        }
+    } else if (whichComp == 0) {
+        threeSphere = true;
+        irreducible = true;
+        haken = false;
+    }
+
     return whichComp;
 }
 
@@ -269,11 +291,24 @@ bool NTriangulation::isThreeSphere() const {
         return false;
     }
 
-    // Check homology.
+    // Check homology and fundamental group.
     // Better simplify first, which means we need a clone.
     NTriangulation* working = new NTriangulation(*this);
     working->intelligentSimplify();
 
+    // The Poincare conjecture!
+    if (working->getFundamentalGroup().getNumberOfGenerators() == 0) {
+        threeSphere = true;
+
+        // Some other things that come for free:
+        irreducible = true;
+        haken = false;
+
+        return true;
+    }
+
+    // We could still have a trivial group but not know it.
+    // At least we can at least check homology precisely.
     if (! working->getHomologyH1().isTrivial()) {
         threeSphere = false;
         delete working;
@@ -359,6 +394,11 @@ bool NTriangulation::isThreeSphere() const {
 
     // Our triangulation is the connected sum of 0 components!
     threeSphere = true;
+
+    // Some other things that we get for free:
+    irreducible = true;
+    haken = false;
+
     return true;
 }
 
@@ -714,6 +754,9 @@ bool NTriangulation::isIrreducible() const {
                     // those get crushed away entirely (we account for
                     // them later).
                     if (summands > 0) {
+                        // We have found more than one prime component.
+                        threeSphere = false; // Implied by reducibility.
+                        zeroEfficient = false; // Implied by reducibility.
                         delete processing;
                         return (irreducible = false);
                     }
@@ -738,11 +781,15 @@ bool NTriangulation::isIrreducible() const {
     if (Z > 0) {
         // There were S2xS1 summands that were crushed away.
         // The manifold must be reducible.
+        threeSphere = false; // Implied by reducibility.
+        zeroEfficient = false; // Implied by reducibility.
         return (irreducible = false);
     }
     if (summands + Z2 + Z3 > 1) {
         // At least two summands were found and/or crushed away: the
         // manifold must be composite.
+        threeSphere = false; // Implied by reducibility.
+        zeroEfficient = false; // Implied by reducibility.
         return (irreducible = false);
     }
 
@@ -1083,8 +1130,10 @@ bool NTriangulation::isHaken() const {
     NTriangulation t(*this);
 
     // First check for an easy answer via homology:
-    if (t.getHomologyH1().getRank() > 0)
+    if (t.getHomologyH1().getRank() > 0) {
+        threeSphere = false; // Implied by Hakenness.
         return (haken = true);
+    }
 
     // Enumerate vertex normal surfaces in quad coordinates.
     // std::cout << "Enumerating surfaces..." << std::endl;
@@ -1107,6 +1156,7 @@ bool NTriangulation::isHaken() const {
         // std::cout << "Testing surface " << i << "..." << std::endl;
         if (list->getSurface(id[i].index)->isIncompressible()) {
             delete[] id;
+            threeSphere = false; // Implied by Hakenness.
             return (haken = true);
         }
     }
