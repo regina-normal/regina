@@ -226,8 +226,13 @@ bool NTriangulation::isZeroEfficient() {
             if (s) {
                 zeroEfficient = false;
                 delete s;
-            } else
+            } else {
                 zeroEfficient = true;
+
+                // Things implied by 0-efficiency:
+                if (isValid() && isClosed() && isConnected())
+                    irreducible = true;
+            }
         }
     }
     return zeroEfficient.value();
