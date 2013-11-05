@@ -164,6 +164,9 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * You should always test isNull() to determine whether the
          * conversion was successful.
          *
+         * If the conversion is successful, this constructor will immediately
+         * ask SnapPea to try to find a complete hyperbolic structure.
+         *
          * SnapPea is designed primarily to work with ideal
          * triangulations only.  Passing closed triangulations can
          * occasionally cause the SnapPea kernel to raise a fatal error,
@@ -324,7 +327,26 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * @return the canonical triangulation of the canonical cell
          * decomposition, or 0 if this could not be constructed.
          */
-        NTriangulation* canonize();
+        NTriangulation* canonize() const;
+
+        /**
+         * Asks SnapPea to randomly retriangulate its internal
+         * representation of the manifold.  This can help when SnapPea
+         * is having difficulty finding a complete hyperbolic structure.
+         *
+         * This routine uses SnapPea's own retriangulation code.  It is highly
+         * likely that, after calling randomize(), the internal SnapPea
+         * representation of the manifold will \e not match the original
+         * triangulation passed from Regina.  In other words, calling
+         * verifyTriangulation() with your original Regina triangulation
+         * will most likely return \c false.
+         *
+         * After randomizing, this routine will immediately ask SnapPea
+         * to try to find a complete hyperbolic structure.
+         *
+         * If this is a null SnapPea triangulation, this routine does nothing.
+         */
+        void randomize();
 
         /**
          * Verifies that the tetrahedron face gluings from this SnapPea

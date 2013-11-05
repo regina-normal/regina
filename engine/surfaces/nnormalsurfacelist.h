@@ -1072,6 +1072,20 @@ class REGINA_API NNormalSurfaceList : public NPacket {
         };
 
     protected:
+        /**
+         * Creates an empty list of normal surfaces with the given
+         * parameters.
+         *
+         * @param coords the coordinate system to be used
+         * for filling this list.
+         * @param which indicates which normal surfaces these will
+         * represent within the underlying triangulation.
+         * @param algorithm details of the enumeration algorithm that
+         * will be used to fill this list.
+         */
+        NNormalSurfaceList(NormalCoords coords, NormalList which,
+            NormalAlg algorithm);
+
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
@@ -1203,20 +1217,6 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * The full definition of this class is in the file normalspec-impl.h .
          */
         struct AlmostNormalSpec;
-
-        /**
-         * Creates an empty list of normal surfaces with the given
-         * parameters.
-         *
-         * @param coords the coordinate system to be used
-         * for filling this list.
-         * @param which indicates which normal surfaces these will
-         * represent within the underlying triangulation.
-         * @param algorithm details of the enumeration algorithm that
-         * will be used to fill this list.
-         */
-        NNormalSurfaceList(NormalCoords coords, NormalList which,
-            NormalAlg algorithm);
 
         /**
          * Converts a set of embedded vertex normal surfaces in

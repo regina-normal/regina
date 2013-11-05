@@ -111,6 +111,7 @@
 #include "kernel.h"
 
 #define EPSILON (1e5 * DBL_EPSILON)
+#define MAXITER 20000
 
 
 Complex cusp_modulus(
@@ -137,9 +138,7 @@ void shortest_cusp_basis(
             mod_v,              /*  of the preceding variables.     */
             mod_u_plus_v,
             mod_u_minus_v;
-    int     i,
-            j,
-            temp_int;
+    int     i, j, temp_int, iterations;
     Boolean progress;
 
     /*
@@ -167,6 +166,7 @@ void shortest_cusp_basis(
         for (j = 0; j < 2; j++)
             basis_change[i][j] = (i == j);
 
+    iterations = 0;
     do
     {
         progress = FALSE;
@@ -209,7 +209,8 @@ void shortest_cusp_basis(
             progress = TRUE;
         }
 
-    } while (progress);
+	iterations += 1;
+    } while (progress & iterations < MAXITER);
 
     if (mod_u > mod_v + EPSILON)
     {
@@ -227,8 +228,11 @@ void shortest_cusp_basis(
 
     cusp_modulus = complex_div(v,u);
 
-    if (cusp_modulus.imag < 0)
-        uFatalError("cusp_modulus", "shortest_cusp_basis");
+    if (cusp_modulus.imag < 0){
+	/* Things have gone very wrong, bailing with garbage answer */
+	cusp_modulus.imag = 0;
+	cusp_modulus.real = 0;
+    }
 
     if (cusp_modulus.real < -0.5 + EPSILON)
     {
