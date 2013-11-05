@@ -73,6 +73,7 @@ namespace regina {
 template <int dim>
 class REGINA_API NGenericTriangulation : public DimTraits<dim> {
     public:
+        using typename DimTraits<dim>::Isomorphism;
         using typename DimTraits<dim>::Perm;
         using typename DimTraits<dim>::Simplex;
         using typename DimTraits<dim>::Triangulation;
@@ -106,6 +107,19 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * recovered might not be identical to the original, but it will be
          * combinatorially isomorphic.
          *
+         * If \a relabelling is non-null (i.e., it points to some
+         * Isomorphism pointer \a p), then it will be modified to point
+         * to a new isomorphism that describes the precise relationship
+         * between this triangulation and the reconstruction from fromIsoSig().
+         * Specifically, the triangulation that is reconstructed from
+         * fromIsoSig() will be combinatorially identical to
+         * <tt>relabelling.apply(this)</tt>.
+         *
+         * \pre If \a relabelling is non-null, then this triangulation
+         * must be non-empty and connected.  The facility to return a
+         * relabelling for disconnected triangulations may be added to
+         * Regina in a later release.
+         *
          * \warning Do not mix isomorphism signatures between dimensions!
          * It is possible that the same string could corresponding to both a
          * \a p-dimensional triangulation and a \a q-dimensional triangulation
@@ -113,10 +127,15 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          *
          * @param tri the triangulation whose isomorphism signature will be
          * computed.
+         * @param relabelling if non-null, this will be modified to point to a
+         * new isomorphism describing the relationship between this
+         * triangulation and that reconstructed from fromIsoSig(), as
+         * described above.
          * @return the isomorphism signature of the given triangulation.
          */
         static std::string isoSig(
-            const typename DimTraits<dim>::Triangulation& tri);
+            const typename DimTraits<dim>::Triangulation& tri,
+            typename DimTraits<dim>::Isomorphism** relabelling = 0);
 
         /**
          * Recovers a full triangulation from an isomorphism signature.
@@ -202,12 +221,16 @@ class REGINA_API NGenericTriangulation : public DimTraits<dim> {
          * @param simp the index of some simplex in this triangulation.
          * @param vertices some ordering of the vertices of the
          * given tetrahedron.
+         * @param if this is non-null, it will be filled with the canonical
+         * isomorphism; in this case it must already have been constructed
+         * for the correct number of simplices.
          * @return the candidate isomorphism signature.
          */
         static std::string isoSig(
             const typename DimTraits<dim>::Triangulation& tri,
             unsigned simp,
-            const typename DimTraits<dim>::Perm& vertices);
+            const typename DimTraits<dim>::Perm& vertices,
+            typename DimTraits<dim>::Isomorphism* relabelling);
 };
 
 /*@}*/

@@ -52,8 +52,6 @@ namespace {
         &NTriangulation::twoZeroMove;
     bool (NTriangulation::*twoZeroMove_edge)(regina::NEdge*, bool, bool) =
         &NTriangulation::twoZeroMove;
-    std::string (NTriangulation::*isoSig_void)() const =
-        &NTriangulation::isoSig;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         NTriangulation::simplifyToLocalMinimum, 0, 1);
@@ -158,6 +156,20 @@ namespace {
                 t.getTriangles().begin(); it != t.getTriangles().end(); it++)
             ans.append(boost::python::ptr(*it));
         return ans;
+    }
+
+    std::string isoSig_void(const NTriangulation& t) {
+        return t.isoSig();
+    }
+
+    boost::python::tuple isoSig_relabelling(const NTriangulation& t) {
+        regina::NIsomorphism* iso;
+        std::string sig = t.isoSig(&iso);
+        return make_tuple(
+            sig,
+            boost::python::object(boost::python::handle<>(
+                boost::python::manage_new_object::
+                apply<regina::NIsomorphism*>::type()(iso))));
     }
 }
 
@@ -329,6 +341,7 @@ void addNTriangulation() {
         .def("rehydrate", &NTriangulation::rehydrate,
             return_value_policy<manage_new_object>())
         .def("isoSig", isoSig_void)
+        .def("isoSigDetail", isoSig_relabelling)
         .def("fromIsoSig", &NTriangulation::fromIsoSig,
             return_value_policy<manage_new_object>())
         .def("isoSigComponentSize", &NTriangulation::isoSigComponentSize)
