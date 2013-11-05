@@ -187,6 +187,8 @@ Version 4.95  [ (under development) ]
               triangles from a signature (inherited from NGenericTriangulation).
             - New routines snapPea() and fromSnapPea() to import and export
               SnapPea data using strings, without writing to the filesystem.
+            - Routine isThreeSphere() now includes a fast check for an
+              "obviously" trivial fundamental group.
             - Renamed FaceIterator, faceIndex(), getFace(), getFaces(),
               getNumberOfFaces() and hasBoundaryFaces(), where "face"
               now becomes "triangle".  The old names are deprecated but

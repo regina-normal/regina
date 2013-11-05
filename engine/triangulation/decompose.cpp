@@ -281,11 +281,24 @@ bool NTriangulation::isThreeSphere() const {
         return false;
     }
 
-    // Check homology.
+    // Check homology and fundamental group.
     // Better simplify first, which means we need a clone.
     NTriangulation* working = new NTriangulation(*this);
     working->intelligentSimplify();
 
+    // The Poincare conjecture!
+    if (working->getFundamentalGroup().getNumberOfGenerators() == 0) {
+        threeSphere = true;
+
+        // Some other things that come for free:
+        irreducible = true;
+        haken = false;
+
+        return true;
+    }
+
+    // We could still have a trivial group but not know it.
+    // At least we can at least check homology precisely.
     if (! working->getHomologyH1().isTrivial()) {
         threeSphere = false;
         delete working;
