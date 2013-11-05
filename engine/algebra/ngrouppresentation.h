@@ -484,11 +484,6 @@ class REGINA_API NGroupExpression : public ShareableObject {
  * If there are \a g generators, they will be numbered 0, 1, ..., <i>g</i>-1.
  *
  * \testpart
- *
- * \todo Modularize the simplification routines.  Have a routine that just
- *   does things like 2-cell moves.  Another routine that kills/creates 1-cells.
- *   another routine that only does tietze moves. The homological alignment
- *   routine.  A few "high level" routines like small cancellation theory. 
  */
 class REGINA_API NGroupPresentation : public ShareableObject {
     protected:
@@ -622,6 +617,38 @@ class REGINA_API NGroupPresentation : public ShareableObject {
          * changed.
          */
         std::auto_ptr<NHomGroupPresentation> intelligentSimplifyDetail();
+
+        /**
+         * Attempts to simplify the group presentation using only small 
+         * cancellation theory. 
+         *
+         * See smallCancellationDetail() for further details on how
+         * the simplification is done.
+         *
+         * @return \c true if and only if the group presentation was changed.
+         */
+        bool smallCancellation();
+        /**
+         * Attempts to simplify the group presentation using small cancellation
+         * theory. The simplification method is based on the Dehn algorithm
+         * for hyperbolic groups, i.e. small cancellation theory.   This means
+         * we look to see if part of one relator can be used to simplify
+         * others.  If so, make the substitution and simplify.  We continue
+         * until no more presentation-shortening substitutions are available.
+         * We follow that by killing any available generators using words
+         * where generators appear a single time.
+         *
+         * \todo \optlong This routine could use some small tweaks --
+         * recognition of utility of some score==0 moves, such as
+         * commutators, for example.
+         *
+         * @return a newly allocated homomorphism describing the
+         * reduction map from the original presentation to the new
+         * presentation, or a null pointer if this presentation was not
+         * changed.
+         */
+        std::auto_ptr<NHomGroupPresentation> 
+            smallCancellationDetail();
 
         /**
          * Using the current presentation of the group, this routine uses
@@ -783,12 +810,65 @@ class REGINA_API NGroupPresentation : public ShareableObject {
                 const signed long &k, const bool &flag=true);
 
         /**
+         *  Looks for Nielsen moves that will simplify the presentation.  
+         * Performs one of the most-effective ones, if it can find any.  
+         *
+         * @returns true if and only if it performed a Nielsen move. 
+         */
+        bool intelligentNielsen();
+
+        /**
+         *  Looks for Nielsen moves that will simplify the presentation.  
+         * Performs one of the most-effective ones, if it can find any.  
+         *
+         * @returns the allocated NHomGroupPresentation auto pointer 
+         *  which is the isomorphism from the old presentation to the 
+         *  new one. 
+         */
+        std::auto_ptr<NHomGroupPresentation> intelligentNielsenDetail();
+
+        /**
          *  This routine attempts to rewrite the presentation so that generators
          * of the group map to generators of the abelianization, with any
          * left-over generators mapping to zero (if possible).  Consider this a
          * homological-alignment of the generators. 
+         *
+         * @returns true if presentation has changed
          */
-        bool linearRewriting();
+        bool homologicalAlignment();
+
+        /**
+         * Same a the previous homologicalAlignment() routine but returns an
+         * allocated NHomGroupPresentation auto_ptr giving the reduction map
+         * from the old presentation to the new, if any change is detected.
+         *
+         * @returns allocated auto_ptr if presentation has changed. 
+         */
+        std::auto_ptr<NHomGroupPresentation> homologicalAlignmentDetail();
+
+        /**
+         * This is an entirely cosmetic re-writing of the presentation, is
+         * fast and superficial.   
+         *  1) If there are any length 1 relators, those generators are
+         *     deleted, and the remaining relators simplified. 
+         *  2) It sorts the relators by number of generator indices that
+         *     appear, followed by relator numbers (lexico) followed by 
+         *     relator length. 
+         *  3) inverts relators if net sign of the generators is negative.
+         *  4) Given each generator, it looks for the smallest word where that
+         *     generator appears with non-zero weight.  If negative weight,
+         *     it inverts that generator. 
+         *  5) It cyclically permutes relators to start with smallest gen.
+         *  6) TODO: Makes elementary simplifications to aid in seeing standard
+         *     relators like commutators. 
+         *
+         * @returns true if and only if the choice of generators for the group
+         *  has changed.  You can call prettyRewritingDetail to get the
+         *  the isomorphism.
+         */
+        bool prettyRewriting();
+
+        std::auto_ptr<NHomGroupPresentation> prettyRewritingDetail();
 
         /**
          *  This routine attempts to re-write the presentation as a group
@@ -1014,7 +1094,8 @@ inline NGroupExpression::NGroupExpression(const NGroupExpression& cloneMe) :
         ShareableObject(), terms(cloneMe.terms) {
 }
 
-inline NGroupExpression& NGroupExpression::operator=(const NGroupExpression& copyMe)
+inline NGroupExpression& NGroupExpression::operator=(
+    const NGroupExpression& copyMe)
 {
  for (std::list<NGroupExpressionTerm>::const_iterator I=copyMe.terms.begin();
       I!=copyMe.terms.end(); I++)

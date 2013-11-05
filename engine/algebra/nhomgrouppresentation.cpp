@@ -81,7 +81,8 @@ NGroupExpression NHomGroupPresentation::invEvaluate(
 
 }
 
-std::auto_ptr< NHomMarkedAbelianGroup > NHomGroupPresentation::markedAbelianisation() const
+std::auto_ptr< NHomMarkedAbelianGroup > 
+    NHomGroupPresentation::markedAbelianisation() const
 {
  std::auto_ptr<NMarkedAbelianGroup> DOM( domain_->markedAbelianisation() );
  std::auto_ptr<NMarkedAbelianGroup> RAN( range_->markedAbelianisation() );
@@ -130,8 +131,113 @@ void NHomGroupPresentation::writeTextLong(std::ostream& out) const
     out<<std::endl;
 }
 
-// TODO: in the test suite we can create some good tests for this by checking
-//  identity maps reduce to identity maps, etc.  Abelianization maps reduce, etc.
+bool NHomGroupPresentation::smallCancellation()
+{
+ std::auto_ptr<regina::NHomGroupPresentation> rangeMap =
+    range_->smallCancellationDetail();
+ std::auto_ptr<regina::NHomGroupPresentation> domainMap =
+    domain_->smallCancellationDetail();
+ if (! domainMap.get())
+    domainMap.reset(new NHomGroupPresentation(*domain_));
+ if (! rangeMap.get())
+    rangeMap.reset(new NHomGroupPresentation(*range_));
+ NGroupPresentation *oldDom(domainMap->domain_), *oldRan(rangeMap->domain_), 
+                    *newDom(domain_), *newRan(range_);
+ domain_ = oldDom; range_ = oldRan;// we need to call this->evaluate but our map
+ bool retval = rangeMap.get() || domainMap.get();
+ std::vector< NGroupExpression > newMap( newDom->getNumberOfGenerators() );
+ for (unsigned long i=0; i<newMap.size(); i++)
+  newMap[i].addTermsLast( rangeMap->evaluate( 
+    evaluate( domainMap->invEvaluate(i) ) ) );
+ std::vector< NGroupExpression > newInvMap;
+ if (map2_.size() > 0) newInvMap.resize( newRan->getNumberOfGenerators() );
+ for (unsigned long i=0; i<newInvMap.size(); i++)
+   newInvMap[i].addTermsLast( domainMap->evaluate( 
+     invEvaluate( rangeMap->invEvaluate(i) ) ) );
+ domain_ = newDom; range_ = newRan;
+ for (unsigned long i=0; i<map_.size(); i++) delete map_[i];
+ for (unsigned long i=0; i<map2_.size(); i++) delete map2_[i];
+ map_.resize( newMap.size() );
+ map2_.resize( newInvMap.size() );
+
+ for (unsigned long i=0; i<map_.size(); i++) 
+       {
+        map_[i] = new NGroupExpression(newMap[i]);
+        range_->simplifyWord(*map_[i]);
+       }
+ for (unsigned long i=0; i<map2_.size(); i++)
+       {
+        map2_[i] = new NGroupExpression(newInvMap[i]);
+        domain_->simplifyWord(*map2_[i]);
+       }
+
+ return retval;
+}
+
+std::auto_ptr<NHomGroupPresentation> NHomGroupPresentation::composeWith(
+            const NHomGroupPresentation& input) const
+{
+ std::vector<NGroupExpression> evalVec(input.domain_->getNumberOfGenerators());
+ for (unsigned long i=0; i<evalVec.size(); i++)
+  evalVec[i] = evaluate( input.evaluate(i) );
+ if ( (map2_.size()==0) || (input.map2_.size()==0) )
+  return std::auto_ptr<NHomGroupPresentation>(new NHomGroupPresentation(
+    *input.domain_, *range_, evalVec) );
+ else 
+  {
+    std::vector<NGroupExpression> invVec( range_->getNumberOfGenerators());
+    for (unsigned long i=0; i<invVec.size(); i++)
+     invVec[i] = input.invEvaluate( invEvaluate(i) );
+    return std::auto_ptr<NHomGroupPresentation>(new NHomGroupPresentation(
+        *input.domain_, *range_, evalVec, invVec ) );
+  }
+}
+
+
+
+bool NHomGroupPresentation::intelligentNielsen()
+{ // modelled on intelligentSimplify
+ std::auto_ptr<regina::NHomGroupPresentation> rangeMap =
+    range_->intelligentNielsenDetail();
+ std::auto_ptr<regina::NHomGroupPresentation> domainMap =
+    domain_->intelligentNielsenDetail();
+ if (! domainMap.get())
+    domainMap.reset(new NHomGroupPresentation(*domain_));
+ if (! rangeMap.get())
+    rangeMap.reset(new NHomGroupPresentation(*range_));
+ NGroupPresentation *oldDom(domainMap->domain_), *oldRan(rangeMap->domain_), 
+                    *newDom(domain_), *newRan(range_);
+ domain_ = oldDom; range_ = oldRan;// we need to call this->evaluate but our map
+ bool retval = rangeMap.get() || domainMap.get();
+ std::vector< NGroupExpression > newMap( newDom->getNumberOfGenerators() );
+ for (unsigned long i=0; i<newMap.size(); i++)
+  newMap[i].addTermsLast( rangeMap->evaluate( 
+     evaluate( domainMap->invEvaluate(i) ) ) );
+ std::vector< NGroupExpression > newInvMap;
+ if (map2_.size() > 0) newInvMap.resize( newRan->getNumberOfGenerators() );
+ for (unsigned long i=0; i<newInvMap.size(); i++)
+   newInvMap[i].addTermsLast( domainMap->evaluate( invEvaluate( 
+      rangeMap->invEvaluate(i) ) ) );
+ domain_ = newDom; range_ = newRan;
+ for (unsigned long i=0; i<map_.size(); i++) delete map_[i];
+ for (unsigned long i=0; i<map2_.size(); i++) delete map2_[i];
+ map_.resize( newMap.size() );
+ map2_.resize( newInvMap.size() );
+
+ for (unsigned long i=0; i<map_.size(); i++) 
+       {
+        map_[i] = new NGroupExpression(newMap[i]);
+        range_->simplifyWord(*map_[i]);
+       }
+ for (unsigned long i=0; i<map2_.size(); i++)
+       {
+        map2_[i] = new NGroupExpression(newInvMap[i]);
+        domain_->simplifyWord(*map2_[i]);
+       }
+
+ return retval;
+}
+
 bool NHomGroupPresentation::intelligentSimplify()
 {
  // step 1: simplify presentation of domain and range 
@@ -148,8 +254,7 @@ bool NHomGroupPresentation::intelligentSimplify()
  NGroupPresentation *oldDom(domainMap->domain_), *oldRan(rangeMap->domain_), 
                     *newDom(domain_), *newRan(range_);
 
- domain_ = oldDom; range_ = oldRan;  // we need to call this->evaluate but our map
-  // vector has not been updated, so we temporarily go back to the old presentations.
+ domain_ = oldDom; range_ = oldRan;// we need to call this->evaluate but our map
  
  // step 2: compute rangeMap*(*oldthis)*domainMap.inverse()
  //         and replace "map" appropriately.  Simplify the words in the range.
@@ -157,11 +262,13 @@ bool NHomGroupPresentation::intelligentSimplify()
  bool retval = rangeMap.get() || domainMap.get();
  std::vector< NGroupExpression > newMap( newDom->getNumberOfGenerators() );
  for (unsigned long i=0; i<newMap.size(); i++)
-  newMap[i].addTermsLast( rangeMap->evaluate( evaluate( domainMap->invEvaluate(i) ) ) );
+  newMap[i].addTermsLast( rangeMap->evaluate( 
+     evaluate( domainMap->invEvaluate(i) ) ) );
  std::vector< NGroupExpression > newInvMap;
  if (map2_.size() > 0) newInvMap.resize( newRan->getNumberOfGenerators() );
  for (unsigned long i=0; i<newInvMap.size(); i++)
-   newInvMap[i].addTermsLast( domainMap->evaluate( invEvaluate( rangeMap->invEvaluate(i) ) ) );
+   newInvMap[i].addTermsLast( domainMap->evaluate( 
+      invEvaluate( rangeMap->invEvaluate(i) ) ) );
  domain_ = newDom; range_ = newRan;
 
  // step 3: rewrite this map, and simplify

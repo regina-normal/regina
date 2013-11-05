@@ -197,11 +197,40 @@ class REGINA_API NHomGroupPresentation : public ShareableObject {
          * - the presentation of the range;
          * - the description of the map.
          *
-         * Uses Dehn's algorithm / "small cancellation theory".
+         * Uses the underlying NGroupPresentation::intelligentSimplify.
+         * See those routines for details.
          *
          * @return true if the presentations or map have changed.
          */
         bool intelligentSimplify();
+
+        /**
+         * Simplifies the domain and range using only nielsen moves, keeping
+         * track of the resulting map in the progress.
+         *
+         * @return true if and only if the presentations have changed. 
+         */
+        bool intelligentNielsen();
+
+        /**
+         *  Simplifies the domain and range using only small cancellation
+         * theory. 
+         *
+         * @return true if and only if the presentations have changed. 
+         */
+        bool smallCancellation();
+
+        /**
+         * Composes the current homomorphism with the input homomorphism.  
+         * 
+         * @pre the range of the input must equal the domain of this. 
+         *
+         * @return an auto_ptr<NHomGroupPresentation> to the composition. 
+         *  evaluating the return on an element is the same as evaluating
+         *  this out the evalution of input. 
+         */
+        std::auto_ptr<NHomGroupPresentation> composeWith(
+            const NHomGroupPresentation& input) const;
 
         /**
          *  Computes the induced map on the abelianizations.
@@ -270,12 +299,11 @@ inline const NGroupPresentation& NHomGroupPresentation::getRange() const {
     return *range_;
 }
 
-inline NGroupExpression NHomGroupPresentation::evaluate(unsigned long i) const {
-    return (*(map_[i]));
-}
-inline NGroupExpression NHomGroupPresentation::invEvaluate(unsigned long i) const {
-    return (*(map2_[i]));
-}
+inline NGroupExpression NHomGroupPresentation::evaluate(unsigned long i) 
+ const { return (*(map_[i])); }
+
+inline NGroupExpression NHomGroupPresentation::invEvaluate(unsigned long i) 
+ const { return (*(map2_[i])); }
 
 
 } // namespace regina
