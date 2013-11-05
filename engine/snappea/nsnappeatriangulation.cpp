@@ -99,7 +99,7 @@ double NSnapPeaTriangulation::volume(int& precision) const {
     return ::volume(snappeaData, &precision);
 }
 
-NTriangulation* NSnapPeaTriangulation::canonize() {
+NTriangulation* NSnapPeaTriangulation::canonize() const {
     if (! snappeaData)
         return 0;
 
@@ -114,6 +114,14 @@ NTriangulation* NSnapPeaTriangulation::canonize() {
     NTriangulation* ans = snapPeaToRegina(tmp);
     ::free_triangulation(tmp);
     return ans;
+}
+
+void NSnapPeaTriangulation::randomize() {
+    if (! snappeaData)
+        return;
+
+    ::randomize_triangulation(snappeaData);
+    ::find_complete_hyperbolic_structure(snappeaData);
 }
 
 /**
