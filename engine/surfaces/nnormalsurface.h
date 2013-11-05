@@ -76,7 +76,7 @@ namespace regina {
 REGINA_API extern const int vertexSplit[4][4];
 /**
  * Lists which vertex splits meet which edges.
- * See \a vertexSplit for details on what a vertex split is.
+ * See ::vertexSplit for details on what a vertex split is.
  * <tt>vertexSplitMeeting[i][j][0,1]</tt> are the numbers of the two
  * vertex splits that meet the edge joining tetrahedron vertices
  * <tt>i</tt> and <tt>j</tt>.
@@ -85,7 +85,7 @@ REGINA_API extern const int vertexSplitMeeting[4][4][2];
 
 /**
  * Lists the vertices which each vertex split splits.
- * See \a vertexSplit for details on what a vertex split is.
+ * See ::vertexSplit for details on what a vertex split is.
  * Vertex split number \c i splits the vertex pairs
  * <tt>vertexSplitDefn[i][0,1]</tt> and
  * <tt>vertexSplitDefn[i][2,3]</tt>.
@@ -103,7 +103,7 @@ REGINA_API extern const int vertexSplitDefn[3][4];
 /**
  * Lists the second vertex with which each vertex is paired under each
  * vertex split.
- * See \a vertexSplit for details on what a vertex split is.
+ * See ::vertexSplit for details on what a vertex split is.
  * Vertex split number \c i pairs vertex \c v with
  * vertex <tt>vertexSplitPartner[i][v]</tt>.
  */
@@ -111,7 +111,7 @@ REGINA_API extern const int vertexSplitPartner[3][4];
 
 /**
  * Contains strings describing which vertices each vertex split splits.
- * See \a vertexSplit for details on what a vertex split is.
+ * See ::vertexSplit for details on what a vertex split is.
  * The string describing vertex split number \c i is
  * <tt>vertexSplitString[i]</tt> and is of the form <tt>02/13</tt>,
  * which in this case is the vertex split that splits vertices 0,2 from
@@ -892,8 +892,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * A quadrilateral disc type is identified by specifying a
          * tetrahedron and a vertex splitting of that tetrahedron that
          * describes how the quadrilateral partitions the tetrahedron
-         * vertices.  See \a vertexSplit for more details on vertex
-         * splittings.
+         * vertices.  See ::vertexSplit for more details on vertex splittings.
          *
          * If you are using a coordinate system that adorns discs with
          * additional information (such as orientation), this routine
@@ -957,8 +956,7 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * An octagonal disc type is identified by specifying a
          * tetrahedron and a vertex splitting of that tetrahedron that
          * describes how the octagon partitions the tetrahedron
-         * vertices.  See \a vertexSplit for more details on vertex
-         * splittings.
+         * vertices.  See ::vertexSplit for more details on vertex splittings.
          *
          * If you are using a coordinate system that adorns discs with
          * additional information (such as orientation), this routine
