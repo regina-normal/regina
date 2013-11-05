@@ -52,6 +52,7 @@ if (${REGINA_INSTALL_DEV})
     nnormalsurfacelist.h
     normalcoords.h
     normalflags.h
+    normalspec-impl.h
     normalspec.tcc
     nprism.h
     nsanstandard.h

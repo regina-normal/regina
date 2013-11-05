@@ -103,6 +103,52 @@ class NStandardTriangulationTest : public CppUnit::TestFixture {
             delete std;
         }
 
+        void testRecognitionSig(const char* isoSig,
+                const char* triName, const char* mfdName) {
+            NTriangulation* t = NTriangulation::fromIsoSig(isoSig);
+            if (! t) {
+                std::ostringstream msg;
+                msg << "The standard triangulation " << triName
+                    << " could not be constructed from its dehydration.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NStandardTriangulation* std =
+                NStandardTriangulation::isStandardTriangulation(t);
+            if (! std) {
+                std::ostringstream msg;
+                msg << "The standard triangulation " << triName
+                    << " was not recognised at all.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (std->getName() != triName) {
+                std::ostringstream msg;
+                msg << "The standard triangulation " << triName
+                    << " was instead recognised as "
+                    << std->getName() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NManifold* mfd = std->getManifold();
+            if (! mfd) {
+                std::ostringstream msg;
+                msg << "The 3-manifold for the standard triangulation "
+                    << triName << " was not recognised at all.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (mfd->getName() != mfdName) {
+                std::ostringstream msg;
+                msg << "The 3-manifold for the standard triangulation "
+                    << triName << " was recognised as " << mfd->getName()
+                    << ", not the expected " << mfdName << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            delete mfd;
+            delete std;
+            delete t;
+        }
+
         void recognition() {
             // Closed orientable triangulations:
             testRecognition("baaaawr", "C(1)", "S3");
@@ -135,6 +181,11 @@ class NStandardTriangulationTest : public CppUnit::TestFixture {
                 "SFS [D: (2,1) (2,1)] U/m SFS [A: (2,1)] U/n "
                     "SFS [D: (2,1) (2,1)], m = [ 0,1 | 1,0 ], "
                     "n = [ 1,1 | 1,0 ]");
+
+            // Bounded orientable triangulations:
+            testRecognitionSig("pfLPILKfLAPidedffhikmlnoorawhwnxlkcahr",
+                "Blocked SFS [Tri, Tri, Tri, Tri, Tri]",
+                "SFS [Or, g=0 + 3 punctures: (1,2)]");
 
             // Closed non-orientable triangulations:
             testRecognition("dafbcccxbqg", "N(3,2)", "RP2 x S1");
