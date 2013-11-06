@@ -115,8 +115,10 @@ class REGINA_API NXMLFilterPacketReader : public NXMLPacketReader {
          *
          * @param newParent the parent packet of the filter to be read,
          * or 0 if this filter is to be tree matriarch.
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
          */
-        NXMLFilterPacketReader(NPacket* newParent);
+        NXMLFilterPacketReader(NPacket* newParent, NXMLTreeResolver& resolver);
 
         virtual NPacket* getPacket();
         virtual NXMLElementReader* startContentSubElement(
@@ -139,8 +141,9 @@ inline NSurfaceFilter* NXMLFilterReader::getFilter() {
 
 // Inline functions for NXMLFilterPacketReader
 
-inline NXMLFilterPacketReader::NXMLFilterPacketReader(NPacket* newParent) :
-        filter(0), parent(newParent) {
+inline NXMLFilterPacketReader::NXMLFilterPacketReader(NPacket* newParent,
+        NXMLTreeResolver& resolver) :
+        NXMLPacketReader(resolver), filter(0), parent(newParent) {
 }
 
 inline NPacket* NXMLFilterPacketReader::getPacket() {

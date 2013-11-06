@@ -78,8 +78,9 @@ void NXMLFilterPacketReader::endContentSubElement(
             filter = dynamic_cast<NXMLFilterReader*>(subReader)->getFilter();
 }
 
-NXMLPacketReader* NSurfaceFilter::getXMLReader(NPacket* parent) {
-    return new NXMLFilterPacketReader(parent);
+NXMLPacketReader* NSurfaceFilter::getXMLReader(NPacket* parent,
+        NXMLTreeResolver& resolver) {
+    return new NXMLFilterPacketReader(parent, resolver);
 }
 
 } // namespace regina

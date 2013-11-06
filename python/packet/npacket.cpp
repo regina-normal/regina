@@ -157,6 +157,7 @@ void addNPacket() {
         .def("isPacketEditable", &NPacket::isPacketEditable)
         .def("clone", &NPacket::clone, OL_clone()[
             return_value_policy<reference_existing_object>()])
+        .def("internalID", &NPacket::internalID);
     ;
 }
 

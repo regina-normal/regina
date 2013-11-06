@@ -56,6 +56,7 @@ namespace regina {
 
 class NPacketListener;
 class NXMLPacketReader;
+class NXMLTreeResolver;
 
 /**
  * \addtogroup packet Basic Packet Types
@@ -132,7 +133,8 @@ struct PacketInfo;
  *   <li>All abstract functions must be implemented, except for those
  *     already provided by REGINA_PACKET.</li>
  *   <li>A public function
- *     <tt>static NXMLPacketReader* getXMLReader(NPacket* parent)</tt>
+ *     <tt>static NXMLPacketReader* getXMLReader(NPacket* parent,
+ *     NXMLTreeResolver& resolver)</tt>
  *     must be declared and implemented.  See the notes for getXMLReader()
  *     for further details.</li>
  *   <li>Whenever the contents of the packet are changed, a local
@@ -280,6 +282,9 @@ class REGINA_API NPacket : public ShareableObject {
          * The new label will consist of the given base, possibly
          * followed by a space and a number.
          *
+         * \deprecated This routine is deprecated, since (as of Regina 4.95)
+         * packet labels in a data file are no longer required to be distinct.
+         *
          * @param base a string upon which the new label will be based.
          * @return a new unique label.
          */
@@ -297,6 +302,9 @@ class REGINA_API NPacket : public ShareableObject {
          *
          * The given packet tree may be \c null, in which case only this
          * tree will be examined.
+         *
+         * \deprecated This routine is deprecated, since (as of Regina 4.95)
+         * packet labels in a data file are no longer required to be distinct.
          *
          * \pre This and the given packet belong to different packet
          * trees, and are each matriarchs in their respective trees.
@@ -973,6 +981,29 @@ class REGINA_API NPacket : public ShareableObject {
          */
         void writeXMLFile(std::ostream& out) const;
 
+        /**
+         * Returns a unique string ID that identifies this packet.
+         *
+         * The user has no control over this ID, and it is not human
+         * readable.  It is guaranteed to remain fixed throughout
+         * the lifetime of the program for a given packet, and it is
+         * guaranteed not to clash with the ID of any other packet.
+         *
+         * If you change the contents of a packet, its ID will not change.
+         *
+         * If you clone a packet, the new clone will receive a different ID.
+         * If you save and then load a packet to/from file, the ID will change.
+         * These behaviours are necessary to ensure that IDs remain unique
+         * (since, for instance, you could load several copies of the same
+         * data file into memory simultaneously).
+         *
+         * The ID is implemented as an encoding of the underlying C++ pointer.
+         * This encoding is subject to change in later versions of Regina.
+         *
+         * @return a unique ID that identifies this packet.
+         */
+        std::string internalID() const;
+
         /*@}*/
         /**
          * Returns a newly created XML element reader that will read the
@@ -992,6 +1023,14 @@ class REGINA_API NPacket : public ShareableObject {
          * however that \a parent will be 0 if the new packet is to
          * become a tree matriarch.
          *
+         * If the new packet needs to store pointers to other packets that
+         * might not have been read yet (such as a script packet that
+         * needs pointers to its variables), then it should queue a new
+         * NXMLTreeResolutionTask to the given NXMLTreeResolver.  After the
+         * complete data file has been read, NXMLTreeResolver::resolve()
+         * will run all of its queued tasks, at which point the new packet can
+         * resolve any dangling references.
+         *
          * This routine is not actually provided for NPacket itself, but
          * must be declared and implemented for every packet subclass that
          * will be instantiated.
@@ -1001,10 +1040,13 @@ class REGINA_API NPacket : public ShareableObject {
          * @param parent the packet which will become the new packet's
          * parent in the tree structure, or 0 if the new packet is to be
          * tree matriarch.
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
          * @return the newly created XML element reader.
          */
         #ifdef __DOXYGEN
-        static NXMLPacketReader* getXMLReader(NPacket* parent);
+        static NXMLPacketReader* getXMLReader(NPacket* parent,
+            NXMLTreeResolver& resolver);
         #endif
 
         /**

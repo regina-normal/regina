@@ -214,8 +214,6 @@ int main(int argc, char* argv[]) {
 
     // Save the data file if required.
     if (saveChanges) {
-        tree->makeUniqueLabels(0);
-
         std::cerr << "WARNING: The data file " << argv[i]
             << " will be overwritten.\n";
         std::cerr << "Proceed? (y/n) ";
