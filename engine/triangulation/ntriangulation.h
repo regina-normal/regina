@@ -3058,16 +3058,38 @@ class REGINA_API NTriangulation : public NPacket,
          * recovered might not be identical to the original, but it will be
          * combinatorially isomorphic.
          *
+         * If \a relabelling is non-null (i.e., it points to some
+         * NIsomorphism pointer \a p), then it will be modified to point
+         * to a new NIsomorphism that describes the precise relationship
+         * between this triangulation and the reconstruction from fromIsoSig().
+         * Specifically, the triangulation that is reconstructed from
+         * fromIsoSig() will be combinatorially identical to
+         * <tt>relabelling.apply(this)</tt>.
+         *
          * For a full and precise description of the isomorphism signature
          * format, see <i>Simplification paths in the Pachner graphs of
          * closed orientable 3-manifold triangulations</i>, Burton, 2011,
          * <tt>arXiv:1110.6080</tt>.
          *
+         * \ifacespython The isomorphism argument is not present.
+         * Instead there are two routines: fromIsoSig(), which returns a
+         * string only, and fromIsoSigDetail(), which returns a pair
+         * (signature, relabelling).
+         *
+         * \pre If \a relabelling is non-null, then this triangulation
+         * must be non-empty and connected.  The facility to return a
+         * relabelling for disconnected triangulations may be added to
+         * Regina in a later release.
+         *
+         * @param relabelling if non-null, this will be modified to point to a
+         * new isomorphism describing the relationship between this
+         * triangulation and that reconstructed from fromIsoSig(), as
+         * described above.
          * @return the isomorphism signature of this triangulation.
          *
          * @see fromIsoSig
          */
-        std::string isoSig() const;
+        std::string isoSig(NIsomorphism** relabelling = 0) const;
         /**
          * Returns C++ code that can be used with insertConstruction()
          * to reconstruct this triangulation.
@@ -3821,8 +3843,8 @@ inline void NTriangulation::writeTextShort(std::ostream& out) const {
     out << "Triangulation with " << tetrahedra.size() << " tetrahedra.";
 }
 
-inline std::string NTriangulation::isoSig() const {
-    return NGenericTriangulation<3>::isoSig(*this);
+inline std::string NTriangulation::isoSig(NIsomorphism** relabelling) const {
+    return NGenericTriangulation<3>::isoSig(*this, relabelling);
 }
 
 inline NTriangulation* NTriangulation::fromIsoSig(
