@@ -802,7 +802,7 @@
         <para>
          Triangle numbers and the tetrahedron faces to which they
          correspond can be found in the
-         <link linkend="tri-faces">triangle viewer</link>,
+         <link linkend="tri-triangles">triangle viewer</link>,
          under the triangulation's <guilabel>Skeleton</guilabel> tab.
          The three vertices 0,1,2 of each triangle correspond to the
          ordering of tetrahedron vertices that you see in the rightmost

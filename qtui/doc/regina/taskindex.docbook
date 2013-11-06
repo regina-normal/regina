@@ -679,6 +679,11 @@
  </indexdiv><indexdiv id='taskindex-H'><title>&mdash; H &mdash;</title>
 
  <indexentry>
+  <primaryie><link linkend="tri-haken">Hakenness,
+   testing</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="tri-algebra-homology">homology
    groups</link></primaryie>
   <secondaryie><link linkend="tri-algebra-cellular">all homology
@@ -731,6 +736,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="tri-haken">incompressible surfaces,
+   testing for</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>induced homology map</primaryie>
   <seeie>See: homology groups</seeie>
  </indexentry>
@@ -748,6 +758,11 @@
  <indexentry>
   <primaryie>invalid</primaryie>
   <seeie>See: valid</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-irreducible">irreducibility,
+   testing</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1116,6 +1131,11 @@
  <indexentry>
   <primaryie><link linkend="tri-composition-name">recognising
    triangulations</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-irreducible">reducibility,
+   testing</link></primaryie>
  </indexentry>
 
  <indexentry>

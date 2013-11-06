@@ -453,7 +453,8 @@
      <glossentry id="tri-proporient">
       <glossterm><guilabel>Orientable</guilabel> /
        <guilabel>non-orientable</guilabel> /
-       <guilabel>oriented</guilabel></glossterm>
+       <guilabel>oriented</guilabel> /
+       <guilabel>not oriented</guilabel></glossterm>
       <glossdef>
        <para>
         The words <guilabel>orientable</guilabel>
@@ -462,15 +463,16 @@
         3-manifold.
        </para>
        <para>
-        If the words <guilabel>orientable and oriented</guilabel> appear,
-        this indicates that the vertex labels 0, 1, 2 and 3 on each
+        If the triangulation is orientable, &regina; will also tell you
+        whether or not it is <firstterm>oriented</firstterm>; that is, whether
+        the vertex labels 0, 1, 2 and 3 on each
         tetrahedron induce a consistent orientation for all tetrahedra
         in the entire triangulation.
        </para>
        <para>
         If you need a consistent orientation for all tetrahedra but you
-        only see <guilabel>orientable</guilabel> (not
-        <guilabel>orientable and oriented</guilabel>), you can fix this by
+        see <guilabel>orientable but not oriented</guilabel> instead,
+        you can fix this by
         <link linkend="tri-orient">orienting your triangulation</link>.
        </para>
       </glossdef>
@@ -1046,14 +1048,16 @@
         <glossdef>
          <para>
           For a real boundary component, this lists the individual
-          boundary triangles that make up the component.  For an ideal
-          boundary component, this lists the specific vertex involved.
+          boundary triangles that it contains.  For an ideal
+          boundary component, this lists the individual tetrahedron
+          vertices that are identified to form the overall ideal
+          vertex of the triangulation.
          </para>
          <para>
-          Triangles are identified using the individual triangle
-          numbers that you see in the first column of the
-          <link linkend="tri-triangles">triangle viewer</link>, and likewise
-          for <link linkend="tri-vertices">vertices</link>.
+          Triangles and vertices are described in the same manner as
+          in the the individual
+          <link linkend="tri-triangles">triangle</link> and
+          for <link linkend="tri-vertices">vertex</link> viewers.
          </para>
         </glossdef>
        </glossentry>
@@ -1815,6 +1819,31 @@
        normal surface consisting of precisely one quad per tetrahedron
        and no other normal (or almost normal) discs.
        See <xref linkend="bib-burton-phd"/> for details.
+      </para></glossdef>
+     </glossentry>
+     <glossentry id="tri-irreducible">
+      <glossterm><guilabel>Irreducible</guilabel></glossterm>
+      <glossdef><para>
+       Determines whether the triangulation represents an
+       irreducible manifold.
+       A closed 3-manifold is <firstterm>irreducible</firstterm> if every
+       embedded sphere bounds a ball.
+      </para><para>
+       This test is only available for valid triangulations of closed,
+       orientable and connected 3-manifolds.
+      </para></glossdef>
+     </glossentry>
+     <glossentry id="tri-haken">
+      <glossterm><guilabel>Haken</guilabel></glossterm>
+      <glossdef><para>
+       Determines whether the triangulation represents an
+       Haken manifold.
+       A closed orientable irreducible 3-manifold is
+       <firstterm>Haken</firstterm> if it contains an embedded closed
+       two-sided incompressible surface.
+      </para><para>
+       This test is only available for valid triangulations of closed,
+       orientable, connected and irreducible 3-manifolds.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-manifold">
