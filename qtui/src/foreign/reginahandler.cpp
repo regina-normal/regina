@@ -35,6 +35,7 @@
 #include "file/nxmlfile.h"
 
 #include "reginahandler.h"
+#include "reginamain.h"
 #include "reginasupport.h"
 #include "../packetfilter.h"
 
@@ -42,7 +43,7 @@
 #include <QTextDocument>
 
 regina::NPacket* ReginaHandler::importData(const QString& fileName,
-        QWidget* parentWidget) const {
+        ReginaMain* parentWidget) const {
     regina::NPacket* ans = regina::readFileMagic(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)

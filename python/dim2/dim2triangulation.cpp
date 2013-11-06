@@ -47,8 +47,6 @@ namespace {
         const std::string&) = &Dim2Triangulation::newTriangle;
     regina::Dim2Triangle* (Dim2Triangulation::*getTriangle_non_const)(
         unsigned long) = &Dim2Triangulation::getTriangle;
-    std::string (Dim2Triangulation::*isoSig_void)() const =
-        &Dim2Triangulation::isoSig;
 
     boost::python::list Dim2_getTriangles_list(Dim2Triangulation& t) {
         boost::python::list ans;
@@ -99,6 +97,20 @@ namespace {
     regina::Dim2Isomorphism* isContainedIn_ptr(Dim2Triangulation& t,
             Dim2Triangulation& s) {
         return t.isContainedIn(s).release();
+    }
+
+    std::string isoSig_void(const Dim2Triangulation& t) {
+        return t.isoSig();
+    }
+
+    boost::python::tuple isoSig_relabelling(const Dim2Triangulation& t) {
+        regina::Dim2Isomorphism* iso;
+        std::string sig = t.isoSig(&iso);
+        return make_tuple(
+            sig,
+            boost::python::object(boost::python::handle<>(
+                boost::python::manage_new_object::
+                apply<regina::Dim2Isomorphism*>::type()(iso))));
     }
 }
 
@@ -169,6 +181,7 @@ void addDim2Triangulation() {
         .def("isMinimal", &Dim2Triangulation::isMinimal)
         .def("insertTriangulation", &Dim2Triangulation::insertTriangulation)
         .def("isoSig", isoSig_void)
+        .def("isoSigDetail", isoSig_relabelling)
         .def("fromIsoSig", &Dim2Triangulation::fromIsoSig,
             return_value_policy<manage_new_object>())
         .def("isoSigComponentSize", &Dim2Triangulation::isoSigComponentSize)

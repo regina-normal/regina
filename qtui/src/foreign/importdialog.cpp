@@ -78,8 +78,7 @@ ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
     l = new QLabel(tr("Label:"));
     l->setWhatsThis(expln);
     hStrip->addWidget(l);
-    label = new QLineEdit(
-        tree->makeUniqueLabel(newTree->getPacketLabel()).c_str());
+    label = new QLineEdit(newTree->getPacketLabel().c_str());
     label->setWhatsThis(expln);
     hStrip->addWidget(label, 1);
 
@@ -148,18 +147,9 @@ void ImportDialog::slotOk() {
             tr("Please enter a label for the new packet."));
         return;
     }
-    if (tree->findPacketLabel(ascii.constData())) {
-        ReginaSupport::sorry(this,
-            tr("Another packet is already using this label."),
-            tr("Each packet in your data file must have its own unique "
-            "label.  I will suggest a different label that is not in use."));
-        label->setText(tree->makeUniqueLabel(ascii.constData()).c_str());
-        return;
-    }
 
     // Insert the imported data into the packet tree.
     newTree->setPacketLabel(ascii.constData());
-    newTree->makeUniqueLabels(tree);
     parentPacket->insertChildLast(newTree);
 
     accept();

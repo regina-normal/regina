@@ -205,7 +205,8 @@ class REGINA_API NPDF : public NPacket {
         void reset(char* data, size_t size, OwnershipPolicy alloc);
 
         virtual void writeTextShort(std::ostream& out) const;
-        static NXMLPacketReader* getXMLReader(NPacket* parent);
+        static NXMLPacketReader* getXMLReader(NPacket* parent,
+            NXMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
     protected:
