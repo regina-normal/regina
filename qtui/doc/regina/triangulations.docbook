@@ -425,7 +425,7 @@
      <glossentry id="tri-propclosed">
       <glossterm><guilabel>Closed</guilabel></glossterm>
       <glossdef><para>
-       Signifies that the triangulation has no boundary faces and no
+       Signifies that the triangulation has no boundary triangles and no
        ideal vertices.  In other words, the link of every vertex is a
        2-sphere.
       </para></glossdef>
@@ -447,13 +447,14 @@
      <glossentry id="tri-propbdry">
       <glossterm><guilabel>Real bdry</guilabel></glossterm>
       <glossdef><para>
-       Signifies that the triangulation contains one or more boundary faces.
+       Signifies that the triangulation contains one or more boundary triangles.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-proporient">
       <glossterm><guilabel>Orientable</guilabel> /
        <guilabel>non-orientable</guilabel> /
-       <guilabel>oriented</guilabel></glossterm>
+       <guilabel>oriented</guilabel> /
+       <guilabel>not oriented</guilabel></glossterm>
       <glossdef>
        <para>
         The words <guilabel>orientable</guilabel>
@@ -462,15 +463,16 @@
         3-manifold.
        </para>
        <para>
-        If the words <guilabel>orientable and oriented</guilabel> appear,
-        this indicates that the vertex labels 0, 1, 2 and 3 on each
+        If the triangulation is orientable, &regina; will also tell you
+        whether or not it is <firstterm>oriented</firstterm>; that is, whether
+        the vertex labels 0, 1, 2 and 3 on each
         tetrahedron induce a consistent orientation for all tetrahedra
         in the entire triangulation.
        </para>
        <para>
         If you need a consistent orientation for all tetrahedra but you
-        only see <guilabel>orientable</guilabel> (not
-        <guilabel>orientable and oriented</guilabel>), you can fix this by
+        see <guilabel>orientable but not oriented</guilabel> instead,
+        you can fix this by
         <link linkend="tri-orient">orienting your triangulation</link>.
        </para>
       </glossdef>
@@ -522,7 +524,7 @@
     tetrahedron faces are glued to each other in pairs.
     The face gluings are presented in a table:
     each row represents a tetrahedron, and the four columns on the right
-    represent the four faces of each tetrahedron.
+    represent the four triangular faces of each tetrahedron.
     Tetrahedra are numbered 0,1,2,..., and
     the four vertices of each tetrahedron are numbered 0,1,2,3.
    </para>
@@ -552,7 +554,7 @@
    <para>
     An empty cell indicates that a face is not glued to anything at all;
     that is, the face forms part of the <emphasis>boundary</emphasis> of
-    the 3-manifold.  In the table above there are two boundary faces:
+    the 3-manifold.  In the table above there are two boundary triangles:
     face&nbsp;123 of tetrahedron&nbsp;0, and face&nbsp;123 of
     tetrahedron&nbsp;4.  In our example these join together to form the torus
     boundary of the figure eight knot complement.
@@ -579,8 +581,8 @@
     <para>
      In the
      <guilabel>Skeleton</guilabel>&rarr;<guilabel>Skeletal Components</guilabel>
-     tab you will see the total number of vertices, edges, faces, tetrahedra,
-     components and boundary components in the triangulation.
+     tab you will see the total number of vertices, edges, triangles,
+     tetrahedra, components and boundary components in the triangulation.
      Beside each number is a <guibutton>View</guibutton> button that
      lets you view explicit structural details about each object in the class.
     </para>
@@ -731,7 +733,7 @@
            <glossterm><guilabel>Bdry</guilabel></glossterm>
            <glossdef><para>
             Indicates a boundary edge (i.e., an edge that lies on some
-            boundary face of the triangulation).
+            boundary triangle of the triangulation).
            </para></glossdef>
           </glossentry>
           <glossentry>
@@ -789,12 +791,12 @@
       </glosslist>
      </para>
     </sect4>
-    <sect4 id="tri-faces">
-     <title>Viewing Faces</title>
+    <sect4 id="tri-triangles">
+     <title>Viewing Triangles</title>
      <para>
       If you click on the <guibutton>View</guibutton> button beside the
-      face count, you will see a table listing the individual
-      faces of the triangulation.
+      triangle count, you will see a table listing the individual
+      triangles (i.e., 2-faces) of the triangulation.
      </para>
      <para>
       <inlinemediaobject>
@@ -807,10 +809,10 @@
       The columns in this table are:
       <glosslist>
        <glossentry>
-        <glossterm><guilabel>Face #</guilabel></glossterm>
+        <glossterm><guilabel>Triangle #</guilabel></glossterm>
         <glossdef><para>
-         Identifies each face with an
-         individual <firstterm>face number</firstterm>, starting from 0
+         Identifies each triangle with an
+         individual <firstterm>triangle number</firstterm>, starting from 0
          and counting upwards.
         </para></glossdef>
        </glossentry>
@@ -818,33 +820,33 @@
         <glossterm><guilabel>Type</guilabel></glossterm>
         <glossdef><para>
          Gives some information about the <firstterm>shape</firstterm>
-         of the face in the triangulation, according to how its
+         of the triangle within the triangulation, according to how its
          edges and vertices are identified together.
          Text you might see here includes:
          <glosslist>
           <glossentry>
            <glossterm><guilabel>Triangle</guilabel></glossterm>
            <glossdef><para>
-            No vertices or edges of the face are identified.
+            No vertices or edges of the triangle are identified.
            </para></glossdef>
           </glossentry>
           <glossentry>
            <glossterm><guilabel>Scarf</guilabel></glossterm>
            <glossdef><para>
-            Two vertices of the face are identified; all edges are distinct.
+            Two vertices of the triangle are identified; all edges are distinct.
            </para></glossdef>
           </glossentry>
           <glossentry>
            <glossterm><guilabel>Parachute</guilabel></glossterm>
            <glossdef><para>
-            All three vertices of the face are identified; all edges are
+            All three vertices of the triangle are identified; all edges are
             distinct.
            </para></glossdef>
           </glossentry>
           <glossentry>
            <glossterm><guilabel>&mobius; band</guilabel></glossterm>
            <glossdef><para>
-            Two edges of the face are identified to form a &mobius; band
+            Two edges of the triangle are identified to form a &mobius; band
             (causing all three vertices to be identified); the third edge
             remains distinct.
            </para></glossdef>
@@ -852,7 +854,7 @@
           <glossentry>
            <glossterm><guilabel>Cone</guilabel></glossterm>
            <glossdef><para>
-            Two edges of the face are identified to form a cone (causing
+            Two edges of the triangle are identified to form a cone (causing
             two vertices to be identified); the third edge and third vertex
             remain distinct.
            </para></glossdef>
@@ -860,7 +862,7 @@
           <glossentry>
            <glossterm><guilabel>Horn</guilabel></glossterm>
            <glossdef><para>
-            Two edges of the face are identified to form a cone and all
+            Two edges of the triangle are identified to form a cone and all
             the third vertex is identified with the others; the third edge
             remains distinct.
            </para></glossdef>
@@ -868,32 +870,33 @@
           <glossentry>
            <glossterm><guilabel>Dunce hat</guilabel></glossterm>
            <glossdef><para>
-            All three edges of the face are identified, some with
+            All three edges of the triangle are identified, some with
             orientable and some with non-orientable gluings.
            </para></glossdef>
           </glossentry>
           <glossentry>
            <glossterm><guilabel>L(3,1)</guilabel></glossterm>
            <glossdef><para>
-            All three edges of the face are identified using non-orientable
+            All three edges of the triangle are identified using non-orientable
             gluings; note that this forms a spine for the lens space L(3,1).
            </para></glossdef>
           </glossentry>
          </glosslist>
          In addition to the shape, you will also see the text
-         <guilabel>(Bdry)</guilabel> for each boundary face
-         (i.e., each face that lies entirely within the boundary of the
+         <guilabel>(Bdry)</guilabel> for each boundary triangle
+         (i.e., each triangle that lies entirely within the boundary of the
          triangulation).
         </para></glossdef>
        </glossentry>
        <glossentry>
         <glossterm><guilabel>Degree</guilabel></glossterm>
         <glossdef><para>
-         Lists the <firstterm>degree</firstterm> of each face,
+         Lists the <firstterm>degree</firstterm> of each triangle,
          i.e., the number of individual tetrahedron faces that are
-         identified together to make this face of the triangulation.
-         This is always 1 for a boundary face, or 2 for an internal
-         face.
+         identified together to make this triangle within the overall
+         triangulation.
+         This is always 1 for a boundary triangle, or 2 for an internal
+         triangle.
         </para></glossdef>
        </glossentry>
        <glossentry>
@@ -902,16 +905,16 @@
          <para>
           Lists precisely which faces
           of which tetrahedra come together to
-          form each overall face of the triangulation.  An example is
+          form each overall triangle within the triangulation.  An example is
           <literal>2&nbsp;(123), 3&nbsp;(120)</literal>,
-          indicating an internal face obtained by gluing
+          indicating an internal triangle obtained by gluing
           faces&nbsp;123 of tetrahedron&nbsp;2 with
           faces&nbsp;120 of tetrahedron&nbsp;3.
          </para>
          <para>
           Again, the order of vertices is important: this example also shows
           that vertex&nbsp;3 of tetrahedron&nbsp;2 represents the
-          <emphasis>same corner</emphasis> of the face as
+          <emphasis>same corner</emphasis> of the triangle as
           vertex&nbsp;0 of tetrahedron&nbsp;3.
          </para>
         </glossdef>
@@ -1001,7 +1004,7 @@
       component count, you will see a table listing the individual
       boundary components of the triangulation.
       This includes <firstterm>real</firstterm> boundary components
-      (consisting of several boundary faces), and also
+      (consisting of several boundary triangles), and also
       <firstterm>ideal</firstterm> boundary components (each of which
       consists of a single ideal vertex).
      </para>
@@ -1035,24 +1038,26 @@
         <glossterm><guilabel>Size</guilabel></glossterm>
         <glossdef><para>
          For a real boundary component, this gives the number of
-         boundary faces that make up the component.
+         boundary triangles that make up the component.
          For an ideal boundary component, this will always state
          <literal>1&nbsp;vertex</literal>.
         </para></glossdef>
        </glossentry>
        <glossentry>
-        <glossterm><guilabel>Faces / Vertex</guilabel></glossterm>
+        <glossterm><guilabel>Triangles / Vertex</guilabel></glossterm>
         <glossdef>
          <para>
           For a real boundary component, this lists the individual
-          boundary faces that make up the component.  For an ideal
-          boundary component, this lists the specific vertex involved.
+          boundary triangles that it contains.  For an ideal
+          boundary component, this lists the individual tetrahedron
+          vertices that are identified to form the overall ideal
+          vertex of the triangulation.
          </para>
          <para>
-          Faces are identified using the individual face
-          numbers that you see in the first column of the
-          <link linkend="tri-faces">face viewer</link>, and likewise
-          for <link linkend="tri-vertices">vertices</link>.
+          Triangles and vertices are described in the same manner as
+          in the the individual
+          <link linkend="tri-triangles">triangle</link> and
+          for <link linkend="tri-vertices">vertex</link> viewers.
          </para>
         </glossdef>
        </glossentry>
@@ -1303,7 +1308,7 @@
         </para>
         <para>
          For a closed triangulation (no ideal vertices), this is simply
-         the number of vertices, edges, faces and tetrahedra.  For an
+         the number of vertices, edges, triangles and tetrahedra.  For an
          ideal triangulation this takes into account the truncation of
          ideal vertices, and is therefore a little more complex.
         </para>
@@ -1645,7 +1650,7 @@
       Like isomorphism signatures, a <emphasis>dehydration string</emphasis>
       is a short sequence of letters from which you can reconstruct
       your triangulation.  Only some triangulations have dehydration
-      strings (they must be connected with no boundary faces and
+      strings (they must be connected with no boundary triangles and
       &le;&nbsp;25 tetrahedra), and they are not unique up to isomorphism
       (so relabelling tetrahedra might change the dehydration string).
       If it exists, the dehydration string will be reported here.
@@ -1786,7 +1791,7 @@
        Determines whether this is a triangulation of the solid torus,
        or equivalently, the unknot complement.
        This will work with ideal triangulations as well as
-       triangulations with real boundary faces (if the
+       triangulations with real boundary triangles (if the
        triangulation is ideal, any ideal vertices will be treated as
        though they were truncated).
        Once again this uses a complete, exact algorithm that guarantees to
@@ -1814,6 +1819,31 @@
        normal surface consisting of precisely one quad per tetrahedron
        and no other normal (or almost normal) discs.
        See <xref linkend="bib-burton-phd"/> for details.
+      </para></glossdef>
+     </glossentry>
+     <glossentry id="tri-irreducible">
+      <glossterm><guilabel>Irreducible</guilabel></glossterm>
+      <glossdef><para>
+       Determines whether the triangulation represents an
+       irreducible manifold.
+       A closed 3-manifold is <firstterm>irreducible</firstterm> if every
+       embedded sphere bounds a ball.
+      </para><para>
+       This test is only available for valid triangulations of closed,
+       orientable and connected 3-manifolds.
+      </para></glossdef>
+     </glossentry>
+     <glossentry id="tri-haken">
+      <glossterm><guilabel>Haken</guilabel></glossterm>
+      <glossdef><para>
+       Determines whether the triangulation represents an
+       Haken manifold.
+       A closed orientable irreducible 3-manifold is
+       <firstterm>Haken</firstterm> if it contains an embedded closed
+       two-sided incompressible surface.
+      </para><para>
+       This test is only available for valid triangulations of closed,
+       orientable, connected and irreducible 3-manifolds.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-manifold">
@@ -1874,7 +1904,7 @@
     &snappea; calculations are not available for all triangulations.
     Amongst other constraints, your triangulation
     must be connected with no boundary
-    faces, and every vertex must have a torus or Klein bottle link.
+    triangles, and every vertex must have a torus or Klein bottle link.
     If your triangulation is unsuitable, the
     <guilabel>&snappea;</guilabel> tab will give you at
     least one reason why.
@@ -2242,7 +2272,7 @@
    </para>
    <para>
     If your triangulation has boundary, this routine will also try to
-    make the number of boundary faces as small as it can (but again
+    make the number of boundary triangles as small as it can (but again
     there is no guarantee of reaching a global minimum).
    </para>
   </sect2>
@@ -2306,13 +2336,13 @@
       <glossterm><guilabel>3-2 Move</guilabel></glossterm>
       <glossdef><para>
        Replaces three tetrahedra joined along a degree&nbsp;3 edge
-       with two tetrahedra joined along a face.
+       with two tetrahedra joined along a triangle.
       </para></glossdef>
      </glossentry>
      <glossentry>
       <glossterm><guilabel>2-3 Move</guilabel></glossterm>
       <glossdef><para>
-       Replaces two tetrahedra joined along a face
+       Replaces two tetrahedra joined along a triangle
        with three tetrahedra joined along a degree&nbsp;3 edge.
       </para></glossdef>
      </glossentry>
@@ -2348,15 +2378,15 @@
      <glossentry>
       <glossterm><guilabel>Open Book</guilabel></glossterm>
       <glossdef><para>
-       Takes an internal face with two boundary edges and
-       &ldquo;unglues&rdquo; that face, creating two new boundary
-       faces and exposing the tetrahedra inside to the boundary.
+       Takes an internal triangle with two boundary edges and
+       &ldquo;unglues&rdquo; that triangle, creating two new boundary
+       triangles and exposing the tetrahedra inside to the boundary.
       </para></glossdef>
      </glossentry>
      <glossentry>
       <glossterm><guilabel>Close Book</guilabel></glossterm>
       <glossdef><para>
-       Folds together two adjacent boundary faces around a common
+       Folds together two adjacent boundary triangles around a common
        boundary edge, with the result of simplifying the boundary.
       </para></glossdef>
      </glossentry>
@@ -2441,7 +2471,7 @@
 
    <para>
     You can convert between <firstterm>real</firstterm> boundary
-    components (formed from boundary faces of tetrahedra) and
+    components (formed from boundary triangles) and
     <firstterm>ideal</firstterm> boundary components (formed from
     individual vertices with closed non-spherical vertex links).
    </para>
@@ -2487,7 +2517,7 @@
    </para>
    <para>
     Each real boundary component will be &ldquo;coned&rdquo; using new
-    tetrahedra (one for each boundary face).  Your boundary components
+    tetrahedra (one for each boundary triangle).  Your boundary components
     will all become ideal, but there are some caveats:
     <itemizedlist>
      <listitem><para>
@@ -2516,7 +2546,7 @@
     </menuchoice>.
     This involves splitting each original tetrahedron into 24 smaller
     tetrahedra, adding new vertices at the
-    centroid of each tetrahedron, the centroid of each face, and the
+    centroid of each tetrahedron, the centroid of each triangle, and the
     midpoint of each edge.
    </para>
    <para>
