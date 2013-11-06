@@ -66,7 +66,7 @@ class REGINA_API NXMLDim4TriangulationReader : public NXMLPacketReader {
         /**
          * Creates a new triangulation reader.
          */
-        NXMLDim4TriangulationReader();
+        NXMLDim4TriangulationReader(NXMLTreeResolver& resolver);
 
         virtual NPacket* getPacket();
         virtual NXMLElementReader* startContentSubElement(
@@ -80,8 +80,9 @@ class REGINA_API NXMLDim4TriangulationReader : public NXMLPacketReader {
 
 // Inline functions for NXMLDim4TriangulationReader
 
-inline NXMLDim4TriangulationReader::NXMLDim4TriangulationReader() :
-        tri_(new Dim4Triangulation()) {
+inline NXMLDim4TriangulationReader::NXMLDim4TriangulationReader(
+        NXMLTreeResolver& resolver) :
+        NXMLPacketReader(resolver), tri_(new Dim4Triangulation()) {
 }
 
 inline NPacket* NXMLDim4TriangulationReader::getPacket() {

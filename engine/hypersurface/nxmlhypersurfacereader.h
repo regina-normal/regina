@@ -120,7 +120,8 @@ class REGINA_API NXMLNormalHypersurfaceListReader : public NXMLPacketReader {
          * @param tri the triangulation in which these normal hypersurfaces
          * live.
          */
-        NXMLNormalHypersurfaceListReader(Dim4Triangulation* tri);
+        NXMLNormalHypersurfaceListReader(Dim4Triangulation* tri,
+            NXMLTreeResolver& resolver);
 
         virtual NPacket* getPacket();
         virtual NXMLElementReader* startContentSubElement(
@@ -146,7 +147,8 @@ inline NNormalHypersurface* NXMLNormalHypersurfaceReader::getHypersurface() {
 // Inline functions for NXMLNormalHypersurfaceListReader
 
 inline NXMLNormalHypersurfaceListReader::NXMLNormalHypersurfaceListReader(
-        Dim4Triangulation* tri) : list_(0), tri_(tri) {
+        Dim4Triangulation* tri, NXMLTreeResolver& resolver) :
+        NXMLPacketReader(resolver), list_(0), tri_(tri) {
 }
 
 inline NPacket* NXMLNormalHypersurfaceListReader::getPacket() {
