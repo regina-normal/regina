@@ -360,9 +360,10 @@ class REGINA_API NNormalSurfaceList : public NPacket {
         /**
          * Deprecated method that enumerates all fundamental normal surfaces
          * in the given triangulation using the primal Hilbert basis algorithm.
-         * For details of the algorithm, see B. A. Burton, "Fundamental normal
-         * surfaces and the enumeration of Hilbert bases", arXiv:1111.7055,
-         * Nov 2011.
+         * For details of the algorithm, see B. A. Burton, "Enumerating
+         * fundamental normal surfaces: Algorithms, experiments and invariants",
+         * to appear in ALENEX 2014: Proceedings of the Meeting on
+         * Algorithm Engineering & Experiments, arXiv:1111.7055.
          *
          * Users can still access this procedure if they need to;
          * however, they should do this via enumerate(NTriangulation*,
@@ -406,9 +407,10 @@ class REGINA_API NNormalSurfaceList : public NPacket {
         /**
          * Deprecated method that enumerates all fundamental normal surfaces
          * in the given triangulation using the dual Hilbert basis algorithm.
-         * For details of the algorithm, see B. A. Burton, "Fundamental normal
-         * surfaces and the enumeration of Hilbert bases", arXiv:1111.7055,
-         * Nov 2011.
+         * For details of the algorithm, see B. A. Burton, "Enumerating
+         * fundamental normal surfaces: Algorithms, experiments and invariants",
+         * to appear in ALENEX 2014: Proceedings of the Meeting on
+         * Algorithm Engineering & Experiments, arXiv:1111.7055.
          *
          * Users can still access this procedure if they need to;
          * however, they should do this via enumerate(NTriangulation*,
@@ -478,7 +480,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * Contejean-Devie procedure to enumerate all embedded fundamental
          * surfaces in the given triangulation.  For details of the
          * algorithm, see B. A. Burton, "Fundamental normal surfaces and the
-         * enumeration of Hilbert bases", arXiv:1111.7055, Nov 2011.
+         * enumeration of Hilbert bases", arXiv:1111.7055v1, Nov 2011.
          *
          * Users can still access this slower procedure if they need to;
          * however, they should do this via enumerate(NTriangulation*,
