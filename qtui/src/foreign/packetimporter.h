@@ -42,7 +42,7 @@
 
 class QString;
 class QTextCodec;
-class QWidget;
+class ReginaMain;
 
 namespace regina {
     class NPacket;
@@ -74,7 +74,7 @@ class PacketImporter {
          * imported tree.
          */
         virtual regina::NPacket* importData(const QString& fileName,
-            QWidget* parentWidget) const = 0;
+            ReginaMain* parentWidget) const = 0;
 
         /**
          * Should the GUI inform the user that their preferred codec

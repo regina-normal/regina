@@ -3239,7 +3239,8 @@ class REGINA_API NTriangulation : public NPacket,
 
         /*@}*/
 
-        static NXMLPacketReader* getXMLReader(NPacket* parent);
+        static NXMLPacketReader* getXMLReader(NPacket* parent,
+            NXMLTreeResolver& resolver);
 
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;

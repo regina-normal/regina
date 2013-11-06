@@ -47,6 +47,7 @@
 namespace regina {
 
 class NPacket;
+class NXMLTreeResolver;
 
 /**
  * \weakgroup packet
@@ -84,12 +85,23 @@ class REGINA_API NXMLPacketReader : public NXMLElementReader {
         std::string childLabel;
             /**< The packet label to give the child packet currently
                  being read. */
+        std::string childID;
+            /**< The internal ID stored in the data file for the child packet
+                 currently being read. */
+
+    protected:
+        NXMLTreeResolver& resolver_;
+            /**< The master resolver that will be used to fix dangling packet
+                 references after the entire XML file has been read. */
 
     public:
         /**
          * Creates a new packet element reader.
+         *
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
          */
-        NXMLPacketReader();
+        NXMLPacketReader(NXMLTreeResolver& resolver);
 
         /**
          * Returns the newly allocated packet that has been read by
@@ -170,7 +182,8 @@ class REGINA_API NXMLPacketReader : public NXMLElementReader {
 
 // Inline functions for NXMLPacketReader
 
-inline NXMLPacketReader::NXMLPacketReader() {
+inline NXMLPacketReader::NXMLPacketReader(NXMLTreeResolver& resolver) :
+        resolver_(resolver) {
 }
 
 inline NPacket* NXMLPacketReader::getPacket() {

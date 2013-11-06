@@ -104,7 +104,7 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
                 label << "Cmpt #" << (whichComp + 1);
             else
                 label << getPacketLabel() << " - Cmpt #" << (whichComp + 1);
-            newTris[whichComp]->setPacketLabel(makeUniqueLabel(label.str()));
+            newTris[whichComp]->setPacketLabel(label.str());
         }
     }
 
@@ -252,7 +252,7 @@ unsigned long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
                 label << "Summand #" << (whichComp + 1);
             else
                 label << getPacketLabel() << " - Summand #" << (whichComp + 1);
-            (*it)->setPacketLabel(makeUniqueLabel(label.str()));
+            (*it)->setPacketLabel(label.str());
         }
 
         whichComp++;

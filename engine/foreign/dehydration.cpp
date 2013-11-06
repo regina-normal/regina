@@ -116,7 +116,6 @@ NContainer* readDehydrationList(const char *filename,
         ans->insertChildLast(errPkt);
     }
 
-    ans->makeUniqueLabels(0);
     return ans;
 }
 

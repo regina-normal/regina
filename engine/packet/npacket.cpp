@@ -37,6 +37,8 @@
 #include "engine.h"
 #include "packet/npacket.h"
 #include "packet/npacketlistener.h"
+#include "packet/nscript.h"
+#include "utilities/base64.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
@@ -510,7 +512,7 @@ NPacket* NPacket::clone(bool cloneDescendants, bool end) const {
     if (treeParent == 0)
         return 0;
     NPacket* ans = internalClonePacket(treeParent);
-    ans->setPacketLabel(makeUniqueLabel(packetLabel + " - clone"));
+    ans->setPacketLabel(packetLabel + " - clone");
     if (end)
         treeParent->insertChildLast(ans);
     else
@@ -525,8 +527,7 @@ void NPacket::internalCloneDescendants(NPacket* parent) const {
     NPacket* clone;
     while (child) {
         clone = child->internalClonePacket(parent);
-        clone->setPacketLabel(makeUniqueLabel(child->packetLabel
-            + " - clone"));
+        clone->setPacketLabel(child->packetLabel + " - clone");
         parent->insertChildLast(clone);
         child->internalCloneDescendants(clone);
         child = child->nextTreeSibling;
@@ -688,6 +689,18 @@ void NPacket::writeXMLPacketTree(std::ostream& out) const {
     out << "<packet label=\"" << xmlEncodeSpecialChars(packetLabel) << "\"\n";
     out << "\ttype=\"" << getPacketTypeName() << "\" typeid=\""
         << getPacketType() << "\"\n";
+
+    // If we appear as a variable in a script packet, then write an ID that the
+    // script can reference.  We can look through our packet listeners to see
+    // if this is necessary, since an NScript always listens to its variables.
+    if (listeners.get())
+        for (std::set<NPacketListener*>::const_iterator it = listeners->begin();
+                it != listeners->end(); ++it)
+            if (dynamic_cast<NScript*>(*it)) {
+                out << "\tid=\"" << internalID() << "\"\n";
+                break;
+            }
+
     out << "\tparent=\"";
     if (treeParent)
         out << xmlEncodeSpecialChars(treeParent->packetLabel);
@@ -709,6 +722,18 @@ void NPacket::writeXMLPacketTree(std::ostream& out) const {
     // Write the packet closing tag.
     out << "</packet> <!-- " << xmlEncodeComment(packetLabel)
         << " (" << xmlEncodeComment(getPacketTypeName()) << ") -->\n";
+}
+
+std::string NPacket::internalID() const {
+    char ptrAsBytes[sizeof(NPacket*)];
+    *(reinterpret_cast<const NPacket**>(&ptrAsBytes)) = this;
+
+    char* id = 0;
+    base64Encode(ptrAsBytes, sizeof(NPacket*), &id);
+
+    std::string ans = id;
+    delete[] id;
+    return ans;
 }
 
 } // namespace regina
