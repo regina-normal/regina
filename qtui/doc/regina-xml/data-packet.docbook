@@ -135,8 +135,7 @@ packet ::= (<replaceable>type-specific content</replaceable>,
     <term><sgmltag>label</sgmltag></term>
     <listitem><para>
      The label of this particular packet, i.e., the name associated
-     with this packet in the overall packet tree.  No two packets in a
-     packet tree should have the same label.
+     with this packet in the overall packet tree.
     </para></listitem>
    </varlistentry>
    <varlistentry>

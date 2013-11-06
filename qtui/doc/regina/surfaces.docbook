@@ -783,34 +783,34 @@
         </para>
        </glossdef>
       </glossentry>
-      <glossentry id="surfaces-deffacearc">
-       <glossterm><guilabel>Face arc</guilabel></glossterm>
+      <glossentry id="surfaces-deftrianglearc">
+       <glossterm><guilabel>Triangle arc</guilabel></glossterm>
        <glossdef>
         <para>
-         This system has three coordinates for each face of the
+         This system has three coordinates for each triangle (2-face) of the
          triangulation.
          The coordinates are labelled
          <guilabel>0:0</guilabel>, <guilabel>0:1</guilabel>,
          <guilabel>0:2</guilabel>,
          <guilabel>1:0</guilabel>, etc., where coordinate
-         <replaceable>f</replaceable>:<replaceable>v</replaceable>
-         represents the number of times the surface slices through face
-         <replaceable>f</replaceable> of the triangulation in an arc
-         that truncates vertex <replaceable>v</replaceable> of that face.
+         <replaceable>t</replaceable>:<replaceable>v</replaceable>
+         represents the number of times the surface slices through triangle
+         <replaceable>t</replaceable> of the triangulation in an arc
+         that truncates vertex <replaceable>v</replaceable> of that triangle.
          Here <replaceable>v</replaceable>&nbsp;&isin;&nbsp;{0,1,2}.
         </para>
         <para>
-         Face numbers and the tetrahedron faces to which they
+         Triangle numbers and the tetrahedron faces to which they
          correspond can be found in the
-         <link linkend="tri-faces">face viewer</link>,
+         <link linkend="tri-faces">triangle viewer</link>,
          under the triangulation's <guilabel>Skeleton</guilabel> tab.
-         The three vertices 0,1,2 of each face correspond to the
+         The three vertices 0,1,2 of each triangle correspond to the
          ordering of tetrahedron vertices that you see in the rightmost
-         column of the face viewer.
+         column of the triangle viewer.
         </para>
         <para>
-         Face arc coordinates are likewise offered for viewing only.
-         You cannot enumerate surfaces in face arc coordinates.
+         Triangle arc coordinates are likewise offered for viewing only.
+         You cannot enumerate surfaces in triangle arc coordinates.
         </para>
        </glossdef>
       </glossentry>
@@ -1112,8 +1112,8 @@
         This constraint is independent of whether the surface is spun
         (non-compact).  Typical spun-normal surfaces do not have real
         boundary, since they live in ideal triangulations with no
-        boundary faces.  However, if your triangulation has both ideal
-        vertices and boundary faces, then it is possible for
+        boundary triangles.  However, if your triangulation has both ideal
+        vertices and boundary triangles, then it is possible for
         a spun-normal surface to have real boundary also.
        </para>
       </listitem>

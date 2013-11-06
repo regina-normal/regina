@@ -59,7 +59,8 @@
      <listitem><para>
       detailed combinatorial information about the skeleton and
       boundary components, including triangulations of the vertex links
-      and the shapes formed by the various triangulation faces;
+      and the shapes formed by the various triangles (2-faces)
+      within the triangulation;
      </para></listitem>
      <listitem><para>
       a variety of homology and homotopy groups;
