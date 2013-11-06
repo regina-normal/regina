@@ -1,5 +1,5 @@
 example$ regina-python
-Regina 4.94
+Regina 4.95
 Software for 3-manifold topology and normal surface theory
 Copyright (c) 1999-2013, The Regina development team
 &gt;&gt;&gt; ################################
@@ -52,12 +52,12 @@ Item 16: Z_2
 ...         tri.makeOrphan()
 ...     tri = next
 ... 
-&lt;regina.NTriangulation object at 0x1088396e0&gt;
-&lt;regina.NTriangulation object at 0x108839670&gt;
-&lt;regina.NTriangulation object at 0x1088397c0&gt;
-&lt;regina.NTriangulation object at 0x108839520&gt;
-&lt;regina.NTriangulation object at 0x108839750&gt;
-&lt;regina.NTriangulation object at 0x108839670&gt;
+&lt;regina.engine.NTriangulation object at 0x1088396e0&gt;
+&lt;regina.engine.NTriangulation object at 0x108839670&gt;
+&lt;regina.engine.NTriangulation object at 0x1088397c0&gt;
+&lt;regina.engine.NTriangulation object at 0x108839520&gt;
+&lt;regina.engine.NTriangulation object at 0x108839750&gt;
+&lt;regina.engine.NTriangulation object at 0x108839670&gt;
 &gt;&gt;&gt; 
 &gt;&gt;&gt; # Print the homology of each remaining triangulation.
 ... tri = census.getFirstTreeChild()

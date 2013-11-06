@@ -1226,6 +1226,10 @@ void NTriGluingsUI::connectedSumDecomposition() {
                     tr("This manifold decomposes into %1 prime summands.").
                     arg(nSummands));
         }
+
+        // We might have learned something new for the recognition tab
+        // to show.
+        parentUI->refresh();
     }
 }
 
@@ -1266,7 +1270,6 @@ void NTriGluingsUI::makeZeroEfficient() {
     if (decomp) {
         // Composite 3-manifold.
         tri->insertChildLast(decomp);
-        decomp->getTreeMatriarch()->makeUniqueLabels(0);
         enclosingPane->getMainWindow()->ensureVisibleInTree(
             decomp->getLastTreeChild());
 
@@ -1470,10 +1473,9 @@ void NTriGluingsUI::censusLookup() {
             detailsHTML, searched);
 
         // Store the hits as a text packet also.
-        regina::NText* text = 
-          new regina::NText(detailsText.toAscii().constData());
-        text->setPacketLabel(tri->makeUniqueLabel(
-            "ID: " + tri->getHumanLabel()));
+        regina::NText* text =
+            new regina::NText(detailsText.toAscii().constData());
+        text->setPacketLabel("ID: " + tri->getHumanLabel());
         tri->insertChildLast(text);
     }
 }

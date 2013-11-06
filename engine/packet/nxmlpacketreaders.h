@@ -68,8 +68,11 @@ class REGINA_API NXMLContainerReader : public NXMLPacketReader {
     public:
         /**
          * Creates a new container reader.
+         *
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
          */
-        NXMLContainerReader();
+        NXMLContainerReader(NXMLTreeResolver& resolver);
 
         virtual NPacket* getPacket();
 };
@@ -87,8 +90,11 @@ class REGINA_API NXMLPDFReader : public NXMLPacketReader {
     public:
         /**
          * Creates a new PDF reader.
+         *
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
          */
-        NXMLPDFReader();
+        NXMLPDFReader(NXMLTreeResolver& resolver);
 
         virtual NPacket* getPacket();
         virtual NXMLElementReader* startContentSubElement(
@@ -111,8 +117,11 @@ class REGINA_API NXMLScriptReader : public NXMLPacketReader {
     public:
         /**
          * Creates a new script reader.
+         *
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
          */
-        NXMLScriptReader();
+        NXMLScriptReader(NXMLTreeResolver& resolver);
 
         virtual NPacket* getPacket();
         virtual NXMLElementReader* startContentSubElement(
@@ -135,8 +144,11 @@ class REGINA_API NXMLTextReader : public NXMLPacketReader {
     public:
         /**
          * Creates a new text packet reader.
+         *
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
          */
-        NXMLTextReader();
+        NXMLTextReader(NXMLTreeResolver& resolver);
 
         virtual NPacket* getPacket();
         virtual NXMLElementReader* startContentSubElement(
@@ -150,7 +162,8 @@ class REGINA_API NXMLTextReader : public NXMLPacketReader {
 
 // Inline functions for NXMLContainerReader
 
-inline NXMLContainerReader::NXMLContainerReader() : container(new NContainer()) {
+inline NXMLContainerReader::NXMLContainerReader(NXMLTreeResolver& resolver) :
+        NXMLPacketReader(resolver), container(new NContainer()) {
 }
 
 inline NPacket* NXMLContainerReader::getPacket() {
@@ -159,7 +172,8 @@ inline NPacket* NXMLContainerReader::getPacket() {
 
 // Inline functions for NXMLPDFReader
 
-inline NXMLPDFReader::NXMLPDFReader() : pdf(new NPDF()) {
+inline NXMLPDFReader::NXMLPDFReader(NXMLTreeResolver& resolver) :
+        NXMLPacketReader(resolver), pdf(new NPDF()) {
 }
 
 inline NPacket* NXMLPDFReader::getPacket() {
@@ -168,7 +182,8 @@ inline NPacket* NXMLPDFReader::getPacket() {
 
 // Inline functions for NXMLScriptReader
 
-inline NXMLScriptReader::NXMLScriptReader() : script(new NScript()) {
+inline NXMLScriptReader::NXMLScriptReader(NXMLTreeResolver& resolver) :
+        NXMLPacketReader(resolver), script(new NScript()) {
 }
 
 inline NPacket* NXMLScriptReader::getPacket() {
@@ -177,7 +192,8 @@ inline NPacket* NXMLScriptReader::getPacket() {
 
 // Inline functions for NXMLTextReader
 
-inline NXMLTextReader::NXMLTextReader() : text(new NText()) {
+inline NXMLTextReader::NXMLTextReader(NXMLTreeResolver& resolver) :
+        NXMLPacketReader(resolver), text(new NText()) {
 }
 
 inline NPacket* NXMLTextReader::getPacket() {

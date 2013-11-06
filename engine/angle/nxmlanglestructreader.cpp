@@ -126,9 +126,10 @@ void NXMLAngleStructureListReader::endContentSubElement(
             list->structures.push_back(s);
 }
 
-NXMLPacketReader* NAngleStructureList::getXMLReader(NPacket* parent) {
+NXMLPacketReader* NAngleStructureList::getXMLReader(NPacket* parent,
+        NXMLTreeResolver& resolver) {
     return new NXMLAngleStructureListReader(
-        dynamic_cast<NTriangulation*>(parent));
+        dynamic_cast<NTriangulation*>(parent), resolver);
 }
 
 } // namespace regina
