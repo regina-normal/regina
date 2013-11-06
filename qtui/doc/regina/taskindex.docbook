@@ -564,7 +564,7 @@
 
  <indexentry>
   <primaryie>face arc normal coordinates</primaryie>
-  <seeie>See: coordinate systems</seeie>
+  <seeie>See: triangle arc normal coordinates</seeie>
  </indexentry>
 
  <indexentry>
@@ -579,8 +579,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-faces">faces, viewing
-   in a triangulation</link></primaryie>
+  <primaryie>faces, viewing in a triangulation</primaryie>
+  <seeie>See: triangles (2-faces), viewing in a triangulation</seeie>
  </indexentry>
 
  <indexentry>
@@ -679,6 +679,11 @@
  </indexdiv><indexdiv id='taskindex-H'><title>&mdash; H &mdash;</title>
 
  <indexentry>
+  <primaryie><link linkend="tri-haken">Hakenness,
+   testing</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="tri-algebra-homology">homology
    groups</link></primaryie>
   <secondaryie><link linkend="tri-algebra-cellular">all homology
@@ -731,6 +736,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="tri-haken">incompressible surfaces,
+   testing for</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>induced homology map</primaryie>
   <seeie>See: homology groups</seeie>
  </indexentry>
@@ -748,6 +758,11 @@
  <indexentry>
   <primaryie>invalid</primaryie>
   <seeie>See: valid</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-irreducible">irreducibility,
+   testing</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1119,6 +1134,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="tri-irreducible">reducibility,
+   testing</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>rehydrating triangulations</primaryie>
   <seeie>See: dehydrated triangulations</seeie>
  </indexentry>
@@ -1380,6 +1400,16 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>triangle arc normal coordinates</primaryie>
+  <seeie>See: coordinate systems</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-triangles">triangles (2-faces), viewing
+   in a triangulation</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>triangulation, 2-manifold</primaryie>
   <secondaryie><link linkend="dim2-identify">Euler
    characteristic</link></secondaryie>
@@ -1431,7 +1461,7 @@
    external files</link></secondaryie>
   <secondaryie><link linkend="tri-skeleton-facegraph">face pairing
    graphs</link></secondaryie>
-  <secondaryie><link linkend="tri-faces">faces,
+  <secondaryie><link linkend="tri-triangles">faces,
    viewing shapes</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-fundgroup">fundamental
    group</link></secondaryie>
@@ -1469,6 +1499,8 @@
    testing for</link></secondaryie>
   <secondaryie><link linkend="tri-editgluings">tetrahedron face
    gluings, editing</link></secondaryie>
+  <secondaryie><link linkend="tri-triangles">triangles,
+   viewing shapes</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-turaevviro">Turaev-Viro
    invariants</link></secondaryie>
   <secondaryie><link linkend="tri-propsolidtorus">unknot complement

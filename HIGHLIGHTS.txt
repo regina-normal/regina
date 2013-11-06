@@ -8,6 +8,20 @@ Regina - A Normal Surface Theory Calculator
 
 Version 4.95  [ 12 November, 2013 ]
 
+    Features:
+        - Hakenness and irreducibility tests for triangulations.
+        - On many GNU/Linux and MacOS systems, Regina and SnapPy can now talk
+          directly via python.  Try running 'import snappy' from one of
+          Regina's python environments, and see the user handbook for
+          sample python sessions that show them working together.
+        - Many example triangulations are now oriented by default.
+        - You are no longer required to give each packet a unique label.
+    Optimisations:
+        - More widespread use of the new and faster branch-and-bound machinery.
+        - Large-scale cleanups and improvements to the API.
+    Bug Fixes:
+        - TODO: %, GCD.
+
 Version 4.94  [ 24 September, 2013 ]
 
     Features:
