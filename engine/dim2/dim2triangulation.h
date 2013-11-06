@@ -960,10 +960,31 @@ class REGINA_API Dim2Triangulation : public NPacket,
          * recovered might not be identical to the original, but it will be
          * combinatorially isomorphic.
          *
+         * If \a relabelling is non-null (i.e., it points to some
+         * Dim2Isomorphism pointer \a p), then it will be modified to point
+         * to a new Dim2Isomorphism that describes the precise relationship
+         * between this triangulation and the reconstruction from fromIsoSig().
+         * Specifically, the triangulation that is reconstructed from
+         * fromIsoSig() will be combinatorially identical to
+         * <tt>relabelling.apply(this)</tt>.
+         *
+         * \ifacespython The isomorphism argument is not present.
+         * Instead there are two routines: fromIsoSig(), which returns a
+         * string only, and fromIsoSigDetail(), which returns a pair
+         * (signature, relabelling).
+         *
+         * \pre If \a relabelling is non-null, then this triangulation
+         * must be non-empty and connected.  The facility to return a
+         * relabelling for disconnected triangulations may be added to
+         * Regina in a later release.
+         *
+         * @param relabelling if non-null, this will be modified to point to a
+         * new isomorphism describing the relationship between this
+         * triangulation and that reconstructed from fromIsoSig(), as
+         * described above.
          * @return the isomorphism signature of this triangulation.
          */
-        std::string isoSig() const;
-        using NGenericTriangulation<2>::isoSigComponentSize;
+        std::string isoSig(Dim2Isomorphism** relabelling = 0) const;
         /**
          * Returns C++ code that can be used with insertConstruction()
          * to reconstruct this triangulation.
@@ -1012,6 +1033,7 @@ class REGINA_API Dim2Triangulation : public NPacket,
          * isomorphism signature.
          */
         static Dim2Triangulation* fromIsoSig(const std::string& signature);
+        using NGenericTriangulation<2>::isoSigComponentSize;
 
         /*@}*/
 
@@ -1435,8 +1457,9 @@ inline NPacket* Dim2Triangulation::internalClonePacket(NPacket*) const {
     return new Dim2Triangulation(*this);
 }
 
-inline std::string Dim2Triangulation::isoSig() const {
-    return NGenericTriangulation<2>::isoSig(*this);
+inline std::string Dim2Triangulation::isoSig(Dim2Isomorphism** relabelling)
+        const {
+    return NGenericTriangulation<2>::isoSig(*this, relabelling);
 }
 
 inline Dim2Triangulation* Dim2Triangulation::fromIsoSig(

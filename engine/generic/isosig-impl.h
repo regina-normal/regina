@@ -152,7 +152,8 @@ template <int dim>
 std::string NGenericTriangulation<dim>::isoSig(
         const typename DimTraits<dim>::Triangulation& tri,
         unsigned simp,
-        const typename DimTraits<dim>::Perm& vertices) {
+        const typename DimTraits<dim>::Perm& vertices,
+        typename DimTraits<dim>::Isomorphism* relabelling) {
     // These typedefs are already present in the class declaration,
     // but gcc 4.4 seems to break unless we include them here also.
     typedef typename DimTraits<dim>::Perm Perm;
@@ -318,6 +319,13 @@ std::string NGenericTriangulation<dim>::isoSig(
     for (i = 0; i < joinPos; ++i)
         SAPPEND(ans, joinGluing[i], CHARS_PER_PERM(dim));
 
+    // Record the canonical isomorphism if required.
+    if (relabelling)
+        for (i = 0; i < nCompSimp; ++i) {
+            relabelling->simpImage(i) = image[i];
+            relabelling->facetPerm(i) = vertexMap[i];
+        }
+
     // Done!
     delete[] image;
     delete[] vertexMap;
@@ -331,11 +339,25 @@ std::string NGenericTriangulation<dim>::isoSig(
 
 template <int dim>
 std::string NGenericTriangulation<dim>::isoSig(
-        const typename DimTraits<dim>::Triangulation& tri) {
+        const typename DimTraits<dim>::Triangulation& tri,
+        typename DimTraits<dim>::Isomorphism** relabelling) {
     // These typedefs are already present in the class declaration,
     // but gcc 4.7.3 seems to break unless we include them here also.
     typedef typename DimTraits<dim>::Perm Perm;
     typedef typename DimTraits<dim>::Triangulation Triangulation;
+    typedef typename DimTraits<dim>::Isomorphism Isomorphism;
+
+    // Make sure the user is not trying to do something illegal.
+    if (relabelling && tri.getNumberOfComponents() != 1) {
+        *relabelling = 0; // Return 0 to the user...
+        relabelling = 0;  // ... and forget they ever asked for an isomorphism.
+    }
+
+    Isomorphism* currRelabelling = 0;
+    if (relabelling) {
+        *relabelling = new Isomorphism(tri.getNumberOfSimplices());
+        currRelabelling = new Isomorphism(tri.getNumberOfSimplices());
+    }
 
     if (tri.getSimplices().empty()) {
         char c[2];
@@ -360,9 +382,12 @@ std::string NGenericTriangulation<dim>::isoSig(
         for (simp = 0; simp < (*it)->getNumberOfSimplices(); ++simp)
             for (perm = 0; perm < Perm::nPerms; ++perm) {
                 curr = isoSig(tri, (*it)->getSimplex(simp)->markedIndex(),
-                    Perm::orderedSn[perm]);
-                if ((simp == 0 && perm == 0) || (curr < comp[i]))
+                    Perm::orderedSn[perm], currRelabelling);
+                if ((simp == 0 && perm == 0) || (curr < comp[i])) {
                     comp[i].swap(curr);
+                    if (relabelling)
+                        std::swap(*relabelling, currRelabelling);
+                }
             }
     }
 
@@ -374,6 +399,7 @@ std::string NGenericTriangulation<dim>::isoSig(
         ans += comp[i];
 
     delete[] comp;
+    delete currRelabelling;
     return ans;
 }
 
