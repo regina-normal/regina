@@ -55,6 +55,10 @@ packet ::= (<replaceable>type-specific content</replaceable>,
       <entry><sgmltag>typeid</sgmltag></entry>
       <entry><type>NUMBER</type> (required)</entry>
      </row>
+     <row>
+      <entry><sgmltag>id</sgmltag></entry>
+      <entry><type>CDATA</type></entry>
+     </row>
     </tbody>
    </tgroup>
   </informaltable>
@@ -131,8 +135,7 @@ packet ::= (<replaceable>type-specific content</replaceable>,
     <term><sgmltag>label</sgmltag></term>
     <listitem><para>
      The label of this particular packet, i.e., the name associated
-     with this packet in the overall packet tree.  No two packets in a
-     packet tree should have the same label.
+     with this packet in the overall packet tree.
     </para></listitem>
    </varlistentry>
    <varlistentry>
@@ -157,6 +160,30 @@ packet ::= (<replaceable>type-specific content</replaceable>,
      The packet type expressed as an internal
      identification code.  This will be a positive integer.
     </para></listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>id</sgmltag></term>
+    <listitem>
+     <para>
+      A unique identifier for this packet.  Packets are not required to
+      have IDs, but when they are present they must be distinct (i.e.,
+      no packets in the same file may share the same ID).  IDs do not need to
+      be human-readable, must not contain leading or trailing whitespace,
+      and must not be empty strings.
+      As of &regina;&nbsp;4.95, IDs are built from base&nbsp;64 hashes
+      of the underlying <application>C++</application> pointers.
+     </para>
+     <para>
+      The purpose of these packet IDs is to allow other packets to reference
+      this packet (for instance, so that a script packet can store
+      references to its variables).
+     </para>
+     <para>
+      IDs are not required to stay the same across subsequent loads and
+      saves of the same file.  In other words, if you load a file and
+      save it again, the packet IDs are allowed to change.
+     </para>
+    </listitem>
    </varlistentry>
   </variablelist>
  </refsect1>
