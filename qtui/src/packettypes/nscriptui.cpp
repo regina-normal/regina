@@ -105,8 +105,11 @@ void ScriptVarValueItem::packetToBeDestroyed(regina::NPacket* p) {
 }
 
 void ScriptVarValueItem::updateData() {
-    if (packet_ && ! packet_->getPacketLabel().empty()) {
-        setText(packet_->getPacketLabel().c_str());
+    if (packet_) {
+        if (packet_->getPacketLabel().empty())
+            setText("(no label)");
+        else
+            setText(packet_->getPacketLabel().c_str());
         setIcon(PacketManager::icon(packet_));
     } else {
         setText("<None>");

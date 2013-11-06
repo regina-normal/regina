@@ -25,7 +25,7 @@ Version 5.0  [ (under development) ]
               it does not identify when a 3-manifold triangulation
               appears as a subcomplex of a 4-manifold triangulation).
 
-Version 4.95  [ (under development) ]
+Version 4.95  [ 12 November, 2013 ]
 
     GENERAL:
         - Updated the bundled copy of Normaliz to version 2.10.1 (27 June 2013).
@@ -234,7 +234,7 @@ Version 4.95  [ (under development) ]
               of the vertex link are embedded within individual tetrahedra.
             - Detailed string output (via detail() / toStringLong()) now
               outputs details of where the vertex appears in each tetrahedron.
-        Class NXMLPacketReader, NXMLTreeResolver:
+        Class NXMLPacketReader, NXMLTreeResolver, NXMLTreeResolutionTask:
             - The API for reading packets from an XML data file has changed to
               incorporate the new NXMLTreeResolver class, which allows the
               resolution of dangling packet references after an entire
