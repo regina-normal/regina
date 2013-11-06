@@ -212,17 +212,18 @@
  </biblioentry>
 
  <biblioentry id="bib-burton-fund">
-  <abbrev>Bur11d</abbrev>
+  <abbrev>Bur14</abbrev>
   <authorgroup><author>
    <firstname>Benjamin</firstname>
    <othername>A.</othername>
    <surname>Burton</surname>
   </author></authorgroup>
-  <title>Fundamental normal surfaces and the enumeration of Hilbert
-   bases</title>
-  <edition>Preprint</edition>
+  <title>Enumerating fundamental normal surfaces:
+   Algorithms, experiments and invariants</title>
+  <edition>ALENEX 2014: Proceedings of the Meeting on
+   Algorithm Engineering &amp; Experiments</edition>
   <issuenum>arXiv:1111.7055</issuenum>
-  <date>November 2011</date>
+  <date>To appear</date>
  </biblioentry>
 
  <biblioentry id="bib-burton-hyamfest">
