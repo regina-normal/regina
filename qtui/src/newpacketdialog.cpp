@@ -79,8 +79,7 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     QLabel* newlabel = new QLabel(tr("Label:"));
     newlabel->setWhatsThis(expln);
     labelStrip->addWidget(newlabel);
-    label = new QLineEdit(tree->makeUniqueLabel(
-        suggestedLabel.toAscii().constData()).c_str());
+    label = new QLineEdit(suggestedLabel);
     label->setWhatsThis(expln);
     labelStrip->addWidget(label, 1);
 
@@ -141,18 +140,8 @@ void NewPacketDialog::slotOk() {
             tr("Please enter a label for the new packet."));
         return;
     }
-    if (tree->findPacketLabel(std::string(useLabel.toAscii().constData()))) {
-        ReginaSupport::info(this,
-            tr("Another packet is already using this label."),
-            tr("Each packet in your data file must have its own unique "
-            "label.  I will suggest a different label that is not in use."));
-        label->setText(tree->makeUniqueLabel(
-            useLabel.toAscii().constData()).c_str());
-        return;
-    }
 
-    // Create the new packet.  Hide ourselves since this could take a
-    // while.
+    // Create the new packet.  Hide ourselves since this could take a while.
     newPacket = creator->createPacket(parentPacket, this);
     if (! newPacket)
         return;

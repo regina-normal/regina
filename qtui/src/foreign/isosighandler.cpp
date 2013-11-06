@@ -37,6 +37,7 @@
 #include "packet/ntext.h"
 
 #include "isosighandler.h"
+#include "reginamain.h"
 #include "reginasupport.h"
 #include "../packetfilter.h"
 
@@ -47,7 +48,7 @@ const IsoSigHandler IsoSigHandler::instance2(2);
 const IsoSigHandler IsoSigHandler::instance3(3);
 
 regina::NPacket* IsoSigHandler::importData(const QString& fileName,
-        QWidget* parentWidget) const {
+        ReginaMain* parentWidget) const {
     QString explnSuffix = QObject::tr("<p>The file should be a plain text file "
         "containing one %1-manifold isomorphism signature per line.  "
         "Isomorphism signatures are described in detail in "

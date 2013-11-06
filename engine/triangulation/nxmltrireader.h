@@ -65,8 +65,11 @@ class REGINA_API NXMLTriangulationReader : public NXMLPacketReader {
     public:
         /**
          * Creates a new triangulation reader.
+         *
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
          */
-        NXMLTriangulationReader();
+        NXMLTriangulationReader(NXMLTreeResolver& resolver);
 
         virtual NPacket* getPacket();
         virtual NXMLElementReader* startContentSubElement(
@@ -80,8 +83,9 @@ class REGINA_API NXMLTriangulationReader : public NXMLPacketReader {
 
 // Inline functions for NXMLTriangulationReader
 
-inline NXMLTriangulationReader::NXMLTriangulationReader() :
-        tri(new NTriangulation()) {
+inline NXMLTriangulationReader::NXMLTriangulationReader(
+        NXMLTreeResolver& resolver) :
+        NXMLPacketReader(resolver), tri(new NTriangulation()) {
 }
 
 inline NPacket* NXMLTriangulationReader::getPacket() {

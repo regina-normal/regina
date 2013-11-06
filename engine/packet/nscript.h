@@ -72,17 +72,28 @@ struct PacketInfo<PACKET_SCRIPT> {
 };
 
 /**
- * A packet representing a script that can be run.
+ * A packet representing a Python script that can be run.
  * Accessor methods for a script work a line at a time.
+ *
+ * As of Regina 4.95, variables are now stored as pointers to packets, not
+ * packet labels.  This affects how variables react to changes in the
+ * packets that they point to.  In particular, if a variable \a V points to
+ * some packet \a P, then as of Regina 4.95:
+ *
+ * - if \a P is renamed then \a V will still point to it and the script will
+ *   \e not notify listeners of any changes (though of course \a P will
+ *   still notify its own listeners);
+ * - if \a P is deleted then \a V will take the value \c None, and the script
+ *   \e will notify listeners of the change.
  */
-class REGINA_API NScript : public NPacket {
+class REGINA_API NScript : public NPacket, public NPacketListener {
     REGINA_PACKET(NScript, PACKET_SCRIPT)
 
     private:
         std::vector<std::string> lines;
             /**< An array storing the lines of this script; none of
              *   these strings should contain newlines. */
-        std::map<std::string, std::string> variables;
+        std::map<std::string, NPacket*> variables;
             /**< A map storing the variables with which this script
              *   is to be run.  Variable names are mapped to their
              *   corresponding values. */
@@ -166,29 +177,25 @@ class REGINA_API NScript : public NPacket {
         const std::string& getVariableName(unsigned long index) const;
         /**
          * Returns the value of the requested variable associated with
-         * this script.
-         *
-         * If the value is a packet, the packet label will be returned.
-         * If the value is \c null, the empty string will be returned.
+         * this script.  Variables may take the value \c null.
          *
          * @param index the index of the requested variable; this must
          * be between 0 and getNumberOfVariables()-1 inclusive.
          * @return the value of the requested variable.
          */
-        const std::string& getVariableValue(unsigned long index) const;
+        NPacket* getVariableValue(unsigned long index) const;
         /**
          * Returns the value of the variable stored with the given
-         * name.  The return strings are as described in
-         * getVariableValue(unsigned long).
+         * name.  Variables may take the value \c null.
          *
-         * If no variable is stored with the given name, the empty
-         * string will be returned.
+         * If no variable is stored with the given name, then \c null
+         * will likewise be returned.
          *
          * @param name the name of the requested variable; note that
          * names are case sensitive.
          * @return the value of the requested variable.
          */
-        const std::string& getVariableValue(const std::string& name) const;
+        NPacket* getVariableValue(const std::string& name) const;
 
         /**
          * Adds a new variable to be associated with this script.
@@ -196,12 +203,12 @@ class REGINA_API NScript : public NPacket {
          * routine will do nothing.
          *
          * @param name the name of the new variable.
-         * @param value the value of the new variable, as described in
-         * the notes for getVariableValue().
+         * @param value the value of the new variable; this is allowed
+         * to be \c null.
          * @return \c true if the variable was successfully added, or
          * \c false if a variable with the given name was already stored.
          */
-        bool addVariable(const std::string& name, const std::string& value);
+        bool addVariable(const std::string& name, NPacket* value);
         /**
          * Removes the variable stored with the given name.
          * Note that the indices of other variables may change as a
@@ -221,8 +228,11 @@ class REGINA_API NScript : public NPacket {
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static NXMLPacketReader* getXMLReader(NPacket* parent);
+        static NXMLPacketReader* getXMLReader(NPacket* parent,
+            NXMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
+
+        virtual void packetToBeDestroyed(NPacket* packet);
 
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
@@ -273,17 +283,16 @@ inline void NScript::removeAllLines() {
 inline unsigned long NScript::getNumberOfVariables() const {
     return variables.size();
 }
-inline bool NScript::addVariable(const std::string& name,
-        const std::string& value) {
+inline bool NScript::addVariable(const std::string& name, NPacket* value) {
     ChangeEventSpan span(this);
     bool ans = variables.insert(std::make_pair(name, value)).second;
+    if (value)
+        value->listen(this);
     return ans;
 }
-inline void NScript::removeVariable(const std::string& name) {
-    ChangeEventSpan span(this);
-    variables.erase(name);
-}
 inline void NScript::removeAllVariables() {
+    unregisterFromAllPackets();
+
     ChangeEventSpan span(this);
     variables.clear();
 }

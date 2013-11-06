@@ -17,7 +17,7 @@ t.insertLayeredSolidTorus(3,4)
 print t
 
 # Print the full skeleton of the triangulation.
-print t.toStringLong()
+print t.detail()
 
 # Calculate some algebraic properties of the triangulation.
 print t.getHomologyH1()
@@ -40,7 +40,7 @@ else:
 
 
 # Print the full list of vertex normal surfaces.
-print surfaces.toStringLong()
+print surfaces.detail()
 
 # Print the Euler characteristic and orientability of each surface.
 for i in range(surfaces.getNumberOfSurfaces()):
