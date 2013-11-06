@@ -59,7 +59,8 @@
      <listitem><para>
       detailed combinatorial information about the skeleton and
       boundary components, including triangulations of the vertex links
-      and the shapes formed by the various triangulation faces;
+      and the shapes formed by the various triangles (2-faces)
+      within the triangulation;
      </para></listitem>
      <listitem><para>
       a variety of homology and homotopy groups;
@@ -75,8 +76,8 @@
      </para></listitem>
      <listitem><para>
       3-sphere, 3-ball, solid torus and unknot recognition,
-      as well as a full connected sum
-      decomposition for closed orientable triangulations;
+      as well as connected sum decomposition,
+      irreducibility testing and Hakenness testing;
      </para></listitem>
      <listitem><para>
       triangulation attributes relating to the existence of particular
@@ -342,6 +343,12 @@
    Scripts can be embedded in &regina; data files or run from the
    command line, and custom libraries of
    routines can be written to share code between files.
+  </para>
+  <para>
+   On many systems, default installations of &regina; and &snappy; can
+   communicate with each other inside the same &python; session.
+   See the <link linkend="python-snappy">&python; chapter</link>
+   for details.
   </para>
  </sect2>
 
