@@ -1037,7 +1037,8 @@ class REGINA_API Dim2Triangulation : public NPacket,
 
         /*@}*/
 
-        static NXMLPacketReader* getXMLReader(NPacket* parent);
+        static NXMLPacketReader* getXMLReader(NPacket* parent,
+            NXMLTreeResolver& resolver);
 
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;

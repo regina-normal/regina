@@ -329,8 +329,6 @@ int main(int argc, char* argv[]) {
 
     // Save the data file if required.
     if (saveChanges) {
-        tree->makeUniqueLabels(0);
-
         std::cerr << std::endl;
         if (totMfdsRenamed == 0 && ! sortMfds)
             std::cerr << "No 3-manifolds were renamed; not saving data.\n";

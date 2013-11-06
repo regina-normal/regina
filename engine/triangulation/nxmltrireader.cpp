@@ -271,8 +271,9 @@ void NXMLTriangulationReader::endContentSubElement(const std::string&,
         NXMLElementReader*) {
 }
 
-NXMLPacketReader* NTriangulation::getXMLReader(NPacket*) {
-    return new NXMLTriangulationReader();
+NXMLPacketReader* NTriangulation::getXMLReader(NPacket*,
+        NXMLTreeResolver& resolver) {
+    return new NXMLTriangulationReader(resolver);
 }
 
 } // namespace regina

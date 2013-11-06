@@ -3407,6 +3407,26 @@ class NTriangulationTest : public CppUnit::TestFixture {
                 delete other;
                 delete iso;
             }
+
+            if (tri.getNumberOfComponents() == 1) {
+                NIsomorphism* relabelling;
+                tri.isoSig(&relabelling);
+
+                NTriangulation* rebuild = NTriangulation::fromIsoSig(sig);
+                NTriangulation* relabel = relabelling->apply(&tri);
+
+                if (relabel->detail() != rebuild->detail()) {
+                    std::ostringstream msg;
+                    msg << name << ": relabelling returned from "
+                        "isoSig() does not recover fromIsoSig(\""
+                        << sig << "\")." << std::endl;
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                delete relabelling;
+                delete rebuild;
+                delete relabel;
+            }
         }
 
         void isomorphismSignature() {
