@@ -441,8 +441,7 @@ void NScriptUI::commit() {
         value = dynamic_cast<ScriptVarValueItem*>(varTable->item(i, 1))->
             getPacket();
         script->addVariable(
-            varTable->item(i, 0)->text().toAscii().constData(),
-            value ? value->getPacketLabel() : std::string());
+            varTable->item(i, 0)->text().toAscii().constData(), value);
     }
 
     setDirty(false);
@@ -458,7 +457,7 @@ void NScriptUI::refresh() {
         varTable->setItem(i, 0, new QTableWidgetItem(
             script->getVariableName(i).c_str()));
         varTable->setItem(i, 1, new ScriptVarValueItem(
-            matriarch->findPacketLabel(script->getVariableValue(i).c_str())));
+            script->getVariableValue(i)));
     }
 
     // Refresh the lines.

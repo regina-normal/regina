@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,49 +32,97 @@
 
 /* end stub */
 
-/*! \file reginahandler.h
- *  \brief Allows interaction with other Regina data files.
+/*! \file packet/nxmltreeresolver.h
+ *  \brief Support for resolving dangling packet references after a
+ *  complete packet tree has been read from file.
  */
 
-#ifndef __REGINAHANDLER_H
-#define __REGINAHANDLER_H
+#ifndef __NXMLTREERESOLVER_H
+#ifndef __DOXYGEN
+#define __NXMLTREERESOLVER_H
+#endif
 
-#include "packetexporter.h"
-#include "packetimporter.h"
+#include "regina-core.h"
+#include <list>
+#include <map>
+
+namespace regina {
+
+class NPacket;
 
 /**
- * An object responsible for importing and export data to and from
- * other Regina data files.
+ * \weakgroup packet
+ * @{
  */
-class ReginaHandler : public PacketImporter, public PacketExporter {
-    using PacketExporter::exportData;
-    using PacketImporter::importData;
-    private:
-        bool compressed;
-            /**< Should exported data files be compressed? */
 
+class NXMLTreeResolver;
+
+class REGINA_API NXMLTreeResolutionTask {
     public:
-        /**
-         * Constructor.
-         */
-        ReginaHandler(bool newCompressed = true);
-
-        /**
-         * PacketImporter overrides:
-         */
-        virtual regina::NPacket* importData(const QString& fileName,
-            ReginaMain* parentWidget) const;
-
-        /**
-         * PacketExporter overrides:
-         */
-        virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::NPacket* data,
-            const QString& fileName, QWidget* parentWidget) const;
+        virtual ~NXMLTreeResolutionTask();
+        virtual void resolve(const NXMLTreeResolver& resolver) = 0;
 };
 
-inline ReginaHandler::ReginaHandler(bool newCompressed) :
-        compressed(newCompressed) {
+class REGINA_API NXMLTreeResolver {
+    public:
+        typedef std::map<std::string, NPacket*> IDMap;
+
+    private:
+        IDMap ids_;
+        std::list<NXMLTreeResolutionTask*> tasks_;
+
+    public:
+        NXMLTreeResolver();
+        ~NXMLTreeResolver();
+
+        void queueTask(NXMLTreeResolutionTask* task);
+        void storeID(const std::string& id, NPacket* packet);
+
+        const IDMap& ids() const;
+
+        void resolve();
+};
+
+/*@}*/
+
+// Inline functions for NXMLTreeResolutionTask
+
+inline NXMLTreeResolutionTask::~NXMLTreeResolutionTask() {
 }
 
+// Inline functions for NXMLTreeResolver
+
+inline NXMLTreeResolver::NXMLTreeResolver() {
+}
+
+inline NXMLTreeResolver::~NXMLTreeResolver() {
+    for (std::list<NXMLTreeResolutionTask*>::iterator it = tasks_.begin();
+            it != tasks_.end(); ++it)
+        delete *it;
+}
+
+inline void NXMLTreeResolver::queueTask(NXMLTreeResolutionTask* task) {
+    tasks_.push_back(task);
+}
+
+inline void NXMLTreeResolver::storeID(const std::string& id, NPacket* packet) {
+    ids_.insert(std::make_pair(id, packet));
+}
+
+inline const NXMLTreeResolver::IDMap& NXMLTreeResolver::ids() const {
+    return ids_;
+}
+
+inline void NXMLTreeResolver::resolve() {
+    for (std::list<NXMLTreeResolutionTask*>::iterator it = tasks_.begin();
+            it != tasks_.end(); ++it) {
+        (*it)->resolve(*this);
+        delete *it;
+    }
+    tasks_.clear();
+}
+
+} // namespace regina
+
 #endif
+

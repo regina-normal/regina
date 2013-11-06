@@ -36,6 +36,7 @@
 #include "utilities/stringutils.h"
 
 #include "pythonhandler.h"
+#include "reginamain.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
 #include "../packetfilter.h"
@@ -55,7 +56,7 @@ namespace {
 const PythonHandler PythonHandler::instance;
 
 regina::NPacket* PythonHandler::importData(const QString& fileName,
-        QWidget* parentWidget) const {
+        ReginaMain* parentWidget) const {
     QFile f(fileName);
     if (! f.open(QIODevice::ReadOnly)) {
         ReginaSupport::warn(parentWidget,
@@ -96,7 +97,9 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
                 if (pos >= 0) {
                     ans->addVariable(
                         metadata.left(pos).trimmed().toAscii().constData(),
-                        metadata.mid(pos + 1).trimmed().toAscii().constData());
+                        parentWidget->getPacketTree()->findPacketLabel(
+                            metadata.mid(pos + 1).trimmed().
+                            toAscii().constData()));
                 } else {
                     // Hmm, it wasn't a script variable after all.
                     readingMetadata = false;
@@ -151,9 +154,12 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
 
     // Output the value of each variable.
     unsigned long i;
+    regina::NPacket* value;
     for (i = 0; i < script->getNumberOfVariables(); i++) {
-        out << "### " << varMarker << QString(script->getVariableName(i).c_str())
-            << ": " << QString(script->getVariableValue(i).c_str());
+        value = script->getVariableValue(i);
+        out << "### " << varMarker
+            << QString(script->getVariableName(i).c_str())
+            << ": " << (value ? QString(value->getPacketLabel().c_str()) : "");
         endl(out);
     }
 

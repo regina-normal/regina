@@ -36,6 +36,7 @@
 #include "triangulation/ntriangulation.h"
 
 #include "orbhandler.h"
+#include "reginamain.h"
 #include "reginasupport.h"
 #include "../packetfilter.h"
 
@@ -45,7 +46,7 @@
 const OrbHandler OrbHandler::instance;
 
 regina::NPacket* OrbHandler::importData(const QString& fileName,
-        QWidget* parentWidget) const {
+        ReginaMain* parentWidget) const {
     regina::NPacket* ans = regina::readOrb(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)

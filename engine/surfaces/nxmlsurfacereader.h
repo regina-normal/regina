@@ -116,10 +116,12 @@ class REGINA_API NXMLNormalSurfaceListReader : public NXMLPacketReader {
         /**
          * Creates a new normal surface list reader.
          *
-         * @param newTri the triangulation in which these normal surfaces
-         * live.
+         * @param newTri the triangulation in which these normal surfaces live.
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
          */
-        NXMLNormalSurfaceListReader(NTriangulation* newTri);
+        NXMLNormalSurfaceListReader(NTriangulation* newTri,
+            NXMLTreeResolver& resolver);
 
         virtual NPacket* getPacket();
         virtual NXMLElementReader* startContentSubElement(
@@ -145,7 +147,8 @@ inline NNormalSurface* NXMLNormalSurfaceReader::getSurface() {
 // Inline functions for NXMLNormalSurfaceListReader
 
 inline NXMLNormalSurfaceListReader::NXMLNormalSurfaceListReader(
-        NTriangulation* newTri) : list(0), tri(newTri) {
+        NTriangulation* newTri, NXMLTreeResolver& resolver) :
+        NXMLPacketReader(resolver), list(0), tri(newTri) {
 }
 
 inline NPacket* NXMLNormalSurfaceListReader::getPacket() {

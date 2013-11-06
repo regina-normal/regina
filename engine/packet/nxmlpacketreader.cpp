@@ -34,6 +34,7 @@
 
 #include "packet/npacket.h"
 #include "packet/nxmlpacketreader.h"
+#include "packet/nxmltreeresolver.h"
 #include "packet/packetregistry.h"
 #include "utilities/stringutils.h"
 
@@ -42,12 +43,14 @@ namespace regina {
 namespace {
     struct XMLReaderFunction : public Returns<NXMLElementReader*> {
         NPacket* me_;
+        NXMLTreeResolver& resolver_;
 
-        XMLReaderFunction(NPacket* me) : me_(me) {}
+        XMLReaderFunction(NPacket* me, NXMLTreeResolver& resolver) :
+            me_(me), resolver_(resolver) {}
 
         template <typename Packet>
         inline NXMLElementReader* operator() (Packet) {
-            return Packet::Class::getXMLReader(me_);
+            return Packet::Class::getXMLReader(me_, resolver_);
         }
     };
 }
@@ -58,32 +61,38 @@ NXMLElementReader* NXMLPacketReader::startSubElement(
     if (subTagName == "packet") {
         NPacket* me = getPacket();
         if (! me)
-            return new NXMLPacketReader();
+            return new NXMLPacketReader(resolver_);
 
         regina::xml::XMLPropertyDict::const_iterator it =
             subTagProps.find("label");
         if (it == subTagProps.end())
             childLabel = "";
         else
-            childLabel = (*it).second;
+            childLabel = it->second;
+
+        it = subTagProps.find("id");
+        if (it == subTagProps.end())
+            childID = "";
+        else
+            childID = it->second;
 
         it = subTagProps.find("typeid");
         if (it == subTagProps.end())
-            return new NXMLPacketReader();
+            return new NXMLPacketReader(resolver_);
 
         long typeID;
         if (! valueOf((*it).second, typeID))
-            return new NXMLPacketReader();
+            return new NXMLPacketReader(resolver_);
         if (typeID <= 0)
-            return new NXMLPacketReader();
+            return new NXMLPacketReader(resolver_);
 
         NXMLElementReader* ans = forPacket(
             static_cast<PacketType>(typeID),
-            XMLReaderFunction(me), 0);
+            XMLReaderFunction(me, resolver_), 0);
         if (ans)
             return ans;
         else
-            return new NXMLPacketReader();
+            return new NXMLPacketReader(resolver_);
     } else if (subTagName == "tag") {
         if (NPacket* me = getPacket()) {
             std::string packetTag = subTagProps.lookup("name");
@@ -104,6 +113,8 @@ void NXMLPacketReader::endSubElement(const std::string& subTagName,
             NPacket* me = getPacket();
             if (me) {
                 child->setPacketLabel(childLabel);
+                if (! childID.empty())
+                    resolver_.storeID(childID, child);
                 if (! child->getTreeParent())
                     me->insertChildLast(child);
             } else

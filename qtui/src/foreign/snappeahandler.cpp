@@ -35,6 +35,7 @@
 #include "foreign/snappea.h"
 #include "triangulation/ntriangulation.h"
 
+#include "reginamain.h"
 #include "reginasupport.h"
 #include "snappeahandler.h"
 #include "../packetfilter.h"
@@ -45,7 +46,7 @@
 const SnapPeaHandler SnapPeaHandler::instance;
 
 regina::NPacket* SnapPeaHandler::importData(const QString& fileName,
-        QWidget* parentWidget) const {
+        ReginaMain* parentWidget) const {
     regina::NPacket* ans = regina::readSnapPea(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)
