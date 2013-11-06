@@ -30,6 +30,7 @@ if (${REGINA_INSTALL_DEV})
     ntext.h
     nxmlpacketreader.h
     nxmlpacketreaders.h
+    nxmltreeresolver.h
     packetregistry.h
     packetregistry-impl.h
     packettype.h

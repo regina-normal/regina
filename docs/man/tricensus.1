@@ -3,13 +3,13 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "TRICENSUS" "1" "16 September 2013" "" "The Regina Handbook"
+.TH "TRICENSUS" "1" "06 November 2013" "" "The Regina Handbook"
 
 .SH NAME
 tricensus \- Form a census of 3-manifold triangulations
 .SH SYNOPSIS
 
-\fBtricensus\fR [ \fB-t, --tetrahedra=\fItetrahedra\fB\fR ] [ \fB-2, --dim2\fR ] [ \fB-b, --boundary\fR | \fB-i, --internal\fR | \fB-B, --bdryfaces=\fIfaces\fB\fR ] [ \fB-o, --orientable\fR | \fB-n, --nonorientable\fR ] [ \fB-f, --finite\fR | \fB-d, --ideal\fR ] [ \fB-m, --minimal\fR | \fB-M, --minprime\fR | \fB-N, --minprimep2\fR ] [ \fB-s, --sigs\fR | \fB-c, --subcontainers\fR ] [ \fB-p, --genpairs\fR | \fB-P, --usepairs\fR ] \fB\fIoutput-file\fB\fR
+\fBtricensus\fR [ \fB-t, --tetrahedra=\fItetrahedra\fB\fR ] [ \fB-2, --dim2\fR ] [ \fB-b, --boundary\fR | \fB-i, --internal\fR | \fB-B, --bdryfaces=\fItriangles\fB\fR ] [ \fB-o, --orientable\fR | \fB-n, --nonorientable\fR ] [ \fB-f, --finite\fR | \fB-d, --ideal\fR ] [ \fB-m, --minimal\fR | \fB-M, --minprime\fR | \fB-N, --minprimep2\fR ] [ \fB-s, --sigs\fR | \fB-c, --subcontainers\fR ] [ \fB-p, --genpairs\fR | \fB-P, --usepairs\fR ] \fB\fIoutput-file\fB\fR
 
 
 \fBtricensus\fR \fB--help\fR
@@ -75,21 +75,21 @@ See each individual option for details on how it interacts with
 \fB--dim2\fR\&.
 .TP
 \fB-b, --boundary\fR
-Only produce triangulations with at least one boundary face.
+Only produce triangulations with at least one boundary triangle.
 
 If \fB--dim2\fR is passed, this specifies at least one
 boundary edge.
 .TP
 \fB-i, --internal\fR
-Only produce triangulations with all faces internal (i.e., with no
-boundary faces).
+Only produce triangulations with all triangles internal (i.e., with no
+boundary triangles).
 
 If \fB--dim2\fR is passed, this indicates that all
 edges must be internal.
 .TP
-\fB-B, --bdryfaces=\fIfaces\fB\fR
+\fB-B, --bdryfaces=\fItriangles\fB\fR
 Only produce triangulations with the precise number of boundary
-faces specified.
+triangles specified.
 
 If \fB--dim2\fR is passed, this specifies the number
 of boundary edges.
@@ -237,7 +237,7 @@ or
 which can coordinate this process using MPI on a
 high-performance cluster.
 
-Options for tetrahedra or boundary faces cannot be used with
+Options for tetrahedra or boundary triangles cannot be used with
 \fB--usepairs\fR; instead you should pass them earlier
 along with \fB--genpairs\fR when you split the original
 census into pieces.
@@ -249,7 +249,7 @@ pairings accordingly.
 The following command forms a census of all 3-tetrahedron closed
 non-orientable triangulations and puts the results in the file
 \fIresults.rga\fR\&.  To ensure that triangulations are
-closed we use the options \fB-i\fR (no boundary faces)
+closed we use the options \fB-i\fR (no boundary triangles)
 and \fB-f\fR (no ideal vertices).
 
 .nf
@@ -284,7 +284,7 @@ non-minimal triangulations in the census also.
 .PP
 The following command generates all face pairings for a
 5-tetrahedron census in which all triangulations have precisely two
-boundary faces.  The face pairings will be written to
+boundary triangles.  The face pairings will be written to
 \fIpairings.txt\fR, whereupon they can be broken up
 and distributed for processing at a later date.
 
@@ -296,8 +296,8 @@ and distributed for processing at a later date.
 .PP
 The face pairings generated in the previous example can then be fleshed
 out into a full census of all 3-manifold triangulations with five
-tetrahedra, precisely two boundary faces and no ideal vertices as
-follows.  The number of tetrahedra and boundary faces were
+tetrahedra, precisely two boundary triangles and no ideal vertices as
+follows.  The number of tetrahedra and boundary triangles were
 already specified in the previous command, and cannot be
 supplied here.  The face pairings will be read from
 \fIpairings.txt\fR, and the final census will be
@@ -328,7 +328,7 @@ The command-line utilities are installed beneath the
 machines this directory is called
 \fIProgram\~Files\~(x86)\fR\&.
 You can start this utility by running
-c:\\Program\~Files\\Regina\\Regina\~4.94\\bin\\tricensus.exe\&.
+c:\\Program\~Files\\Regina\\Regina\~4.95\\bin\\tricensus.exe\&.
 .SH "SEE ALSO"
 .PP
 sigcensus,
