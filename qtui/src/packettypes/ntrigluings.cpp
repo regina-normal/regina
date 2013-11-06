@@ -1226,6 +1226,10 @@ void NTriGluingsUI::connectedSumDecomposition() {
                     tr("This manifold decomposes into %1 prime summands.").
                     arg(nSummands));
         }
+
+        // We might have learned something new for the recognition tab
+        // to show.
+        parentUI->refresh();
     }
 }
 
