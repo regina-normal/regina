@@ -40,37 +40,49 @@
 
 namespace regina {
 
-namespace {
-    const std::string emptyString;
-}
-
 const std::string& NScript::getVariableName(unsigned long index) const {
-    std::map<std::string, std::string>::const_iterator it = variables.begin();
+    std::map<std::string, NPacket*>::const_iterator it = variables.begin();
     advance(it, index);
     return (*it).first;
 }
 
-const std::string& NScript::getVariableValue(unsigned long index) const {
-    std::map<std::string, std::string>::const_iterator it = variables.begin();
+NPacket* NScript::getVariableValue(unsigned long index) const {
+    std::map<std::string, NPacket*>::const_iterator it = variables.begin();
     advance(it, index);
     return (*it).second;
 }
 
-const std::string& NScript::getVariableValue(const std::string& name) const {
-    std::map<std::string, std::string>::const_iterator it =
-        variables.find(name);
+NPacket* NScript::getVariableValue(const std::string& name) const {
+    std::map<std::string, NPacket*>::const_iterator it = variables.find(name);
     if (it == variables.end())
-        return emptyString;
+        return 0;
     return (*it).second;
+}
+
+void NScript::removeVariable(const std::string& name) {
+    std::map<std::string, NPacket*>::iterator it = variables.find(name);
+    if (it == variables.end())
+        return;
+
+    if (it->second)
+        it->second->unlisten(this);
+
+    ChangeEventSpan span(this);
+    variables.erase(it);
 }
 
 void NScript::writeTextLong(std::ostream& o) const {
     if (variables.empty())
         o << "No variables.\n";
     else {
-        for (std::map<std::string, std::string>::const_iterator vit =
-                variables.begin(); vit != variables.end(); vit++)
-            o << "Variable: " << (*vit).first << " = " << (*vit).second << '\n';
+        for (std::map<std::string, NPacket*>::const_iterator vit =
+                variables.begin(); vit != variables.end(); vit++) {
+            o << "Variable: " << vit->first << " = ";
+            if (vit->second)
+                o << vit->second->getPacketLabel() << '\n';
+            else
+                o << "(null)" << '\n';
+        }
     }
     o << '\n';
     copy(lines.begin(), lines.end(),
@@ -87,15 +99,31 @@ NPacket* NScript::internalClonePacket(NPacket*) const {
 void NScript::writeXMLPacketData(std::ostream& out) const {
     using regina::xml::xmlEncodeSpecialChars;
 
-    for (std::map<std::string, std::string>::const_iterator vit =
-            variables.begin(); vit != variables.end(); vit++)
+    for (std::map<std::string, NPacket*>::const_iterator vit =
+            variables.begin(); vit != variables.end(); vit++) {
         out << "  <var name=\"" << xmlEncodeSpecialChars((*vit).first)
-            << "\" value=\"" << xmlEncodeSpecialChars((*vit).second)
-            << "\"/>\n";
+            << "\" valueid=\"";
+        if (vit->second)
+            out << vit->second->internalID();
+        out << "\" value=\"";
+        if (vit->second)
+            out << xmlEncodeSpecialChars(vit->second->getPacketLabel());
+        out << "\"/>\n";
+    }
 
     for (std::vector<std::string>::const_iterator it = lines.begin();
             it != lines.end(); it++)
         out << "  <line>" << xmlEncodeSpecialChars(*it) << "</line>\n";
+}
+
+void NScript::packetToBeDestroyed(NPacket* packet) {
+    // We know the script will change, because one of our variables is
+    // listening on this packet.
+    ChangeEventSpan span(this);
+    for (std::map<std::string, NPacket*>::iterator vit =
+            variables.begin(); vit != variables.end(); vit++)
+        if (vit->second == packet)
+            vit->second = 0;
 }
 
 } // namespace regina

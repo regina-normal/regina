@@ -668,6 +668,7 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
 </packet> <!-- LaTeX Document (PDF) -->
 <packet label="3-Manifolds"
 	type="Container" typeid="1"
+	id="gJQKAABgAAA="
 	parent="Sample Data File">
 <packet label="Figure 8 Knot Complement"
 	type="3-Manifold Triangulation" typeid="3"
@@ -1217,7 +1218,7 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
 <packet label="Python Script"
 	type="Script" typeid="7"
 	parent="Sample Data File">
-  <var name="tri" value="3-Manifolds"/>
+  <var name="tri" valueid="gJQKAABgAAA=" value="3-Manifolds"/>
   <line># This Python script runs through all 3-manifold triangulations in this file</line>
   <line># and prints the first homology of each.</line>
   <line>#</line>

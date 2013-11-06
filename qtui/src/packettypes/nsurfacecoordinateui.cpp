@@ -686,9 +686,9 @@ void NSurfaceCoordinateUI::cutAlong() {
     if (surfaces->getTriangulation()->getPacketLabel().empty())
         ans->setPacketLabel("Cut-open");
     else
-        ans->setPacketLabel(surfaces->makeUniqueLabel(tr("Cut-open %1").arg(
+        ans->setPacketLabel(tr("Cut-open %1").arg(
             surfaces->getTriangulation()->getPacketLabel().c_str())
-              .toAscii().constData()));
+              .toAscii().constData());
     surfaces->insertChildLast(ans);
 
     enclosingPane->getMainWindow()->packetView(ans, true, true);
@@ -715,9 +715,9 @@ void NSurfaceCoordinateUI::crush() {
     if (surfaces->getTriangulation()->getPacketLabel().empty())
         ans->setPacketLabel("Crushed");
     else
-        ans->setPacketLabel(surfaces->makeUniqueLabel(tr("Crushed %1").arg(
+        ans->setPacketLabel(tr("Crushed %1").arg(
             surfaces->getTriangulation()->getPacketLabel().c_str())
-              .toAscii().constData()));
+              .toAscii().constData());
     surfaces->insertChildLast(ans);
 
     enclosingPane->getMainWindow()->packetView(ans, true, true);
