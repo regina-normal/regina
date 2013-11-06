@@ -286,7 +286,8 @@ bool NTriangulation::isThreeSphere() const {
         return threeSphere.value();
 
     // Basic property checks.
-    if (! (isValid() && isClosed() && isOrientable() && isConnected())) {
+    if (! (isValid() && isClosed() && isOrientable() && isConnected() &&
+            getNumberOfTetrahedra() > 0)) {
         threeSphere = false;
         return false;
     }

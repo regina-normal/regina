@@ -62,6 +62,8 @@ Version 4.95  [ (under development) ]
             - Now inherits from the new helper class NGenericTriangulation<2>.
             - New routine isoSigComponentSize() for extracting the number of
               triangles from a signature (inherited from NGenericTriangulation).
+            - Routine isoSig() now takes an optional argument that returns
+              the isomorphism with the reconstruction from fromIsoSig().
         Class Dim2Vertex:
             - Detailed string output (via detail() / toStringLong()) now
               outputs details of where the vertex appears in each triangle.
@@ -212,6 +214,8 @@ Version 4.95  [ (under development) ]
             - Now inherits from the new helper class NGenericTriangulation<3>.
             - New routine isoSigComponentSize() for extracting the number of
               triangles from a signature (inherited from NGenericTriangulation).
+            - Routine isoSig() now takes an optional argument that returns
+              the isomorphism with the reconstruction from fromIsoSig().
             - New routines snapPea() and fromSnapPea() to import and export
               SnapPea data using strings, without writing to the filesystem.
             - Routine isThreeSphere() now includes a fast check for an
