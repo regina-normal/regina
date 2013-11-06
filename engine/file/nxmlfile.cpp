@@ -41,6 +41,7 @@
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/nxmlpacketreader.h"
+#include "packet/nxmltreeresolver.h"
 #include "utilities/stringutils.h"
 #include "utilities/zstream.h"
 
@@ -64,7 +65,9 @@ namespace {
             /**
              * Create a new top-level reader.
              */
-            ReginaDataReader() : isReginaData(false) {
+            ReginaDataReader(NXMLTreeResolver& resolver) :
+                    NXMLPacketReader(resolver),
+                    isReginaData(false) {
             }
 
             virtual NPacket* getPacket() {
@@ -136,7 +139,9 @@ NPacket* readXMLFile(const char* fileName) {
     if (! in)
         return 0;
 
-    ReginaDataReader reader;
+    NXMLTreeResolver resolver;
+
+    ReginaDataReader reader(resolver);
     regina::NXMLCallback callback(reader, std::cerr);
 
     // Instead of using the ready-made regina::xml::XMLParser::parse_stream(),
@@ -256,6 +261,10 @@ NPacket* readXMLFile(const char* fileName) {
         p = p->getFirstTreeChild();
         if (p)
             p->makeOrphan();
+
+        // Resolve any dangling packet references.
+        resolver.resolve();
+
         return p;
     } else
         return 0;

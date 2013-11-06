@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 4.95  [ (under development) ]
+Version 4.95  [ 12 November, 2013 ]
 
     GENERAL:
         - Updated the bundled copy of Normaliz to version 2.10.1 (27 June 2013).
@@ -16,6 +16,7 @@ Version 4.95  [ (under development) ]
         - Regina and SnapPy can now talk directly via python: on many
           systems, 'import snappy' from either a GUI python console or
           the command-line regina-python tool should work out of the box.
+        - Packets in a data file are no longer required to have unique labels.
     ENGINE:
         Class Dim2BoundaryComponent:
             - Detailed string output (via detail() / toStringLong()) now
@@ -142,6 +143,8 @@ Version 4.95  [ (under development) ]
               empty label will be replaced by "(no label)".
             - Routine getFullName() now makes labels more suitable for
               human-readable output as described above.
+            - New routine internalID() to produce a string that uniquely
+              identifies the packet (which nowadays the packet label does not).
         Class NPerm3, NPerm4, NPerm5:
             - New dimension-agnostic aliases orderedSn, SnIndex() and
               orderedSnIndex().  These all reference existing arrays/routines
@@ -152,6 +155,13 @@ Version 4.95  [ (under development) ]
             - Renamed getFace() and getFaceMapping() to getTriangle()
               and getTriangleMapping().  The old names are deprecated but
               have been kept for backward compatibility.
+        Class NScript:
+            - Variables are now stored as pointers to packets, not string-based
+              packet labels.  This affects the API (in a non-backward-
+              compatible way), the behaviour (e.g., renaming a packet will
+              not affect any script variable that references it), and the
+              data file format (packets now have IDs that scripts can use to
+              reference them).
         Class NSnapPeaTriangulation:
             - Updated the SnapPea kernel to the one shipped with SnapPy 2.0.3.
             - New routine randomize() to randomly retriangulate.
@@ -206,6 +216,11 @@ Version 4.95  [ (under development) ]
               of the vertex link are embedded within individual tetrahedra.
             - Detailed string output (via detail() / toStringLong()) now
               outputs details of where the vertex appears in each tetrahedron.
+        Class NXMLPacketReader, NXMLTreeResolver, NXMLTreeResolutionTask:
+            - The API for reading packets from an XML data file has changed to
+              incorporate the new NXMLTreeResolver class, which allows the
+              resolution of dangling packet references after an entire
+              data file has been read.
         Class PacketInfo:
             - Template classes that store traits of the various packet types.
               These are used with the new forPacket() template functions.

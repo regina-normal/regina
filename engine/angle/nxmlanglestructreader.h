@@ -113,8 +113,11 @@ class REGINA_API NXMLAngleStructureListReader : public NXMLPacketReader {
          *
          * @param newTri the triangulation on which these angle
          * structures are placed.
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
          */
-        NXMLAngleStructureListReader(NTriangulation* newTri);
+        NXMLAngleStructureListReader(NTriangulation* newTri,
+            NXMLTreeResolver& resolver);
 
         virtual NPacket* getPacket();
         virtual NXMLElementReader* startContentSubElement(
@@ -139,8 +142,9 @@ inline NAngleStructure* NXMLAngleStructureReader::getStructure() {
 // Inline functions for NXMLAngleStructureListReader
 
 inline NXMLAngleStructureListReader::NXMLAngleStructureListReader(
-        NTriangulation* newTri) : list(new NAngleStructureList(false)),
-        tri(newTri) {
+        NTriangulation* newTri, NXMLTreeResolver& resolver) :
+        NXMLPacketReader(resolver),
+        list(new NAngleStructureList(false)), tri(newTri) {
 }
 
 inline NPacket* NXMLAngleStructureListReader::getPacket() {
