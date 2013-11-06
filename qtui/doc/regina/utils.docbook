@@ -526,7 +526,7 @@
     <group>
      <arg><option>-b, --boundary</option></arg>
      <arg><option>-i, --internal</option></arg>
-     <arg><option>-B, --bdryfaces=</option><replaceable>faces</replaceable></arg>
+     <arg><option>-B, --bdryfaces=</option><replaceable>triangles</replaceable></arg>
     </group>
     <group>
      <arg><option>-o, --orientable</option></arg>
@@ -644,7 +644,7 @@
      <term><option>-b, --boundary</option></term>
      <listitem>
       <para>
-       Only produce triangulations with at least one boundary face.
+       Only produce triangulations with at least one boundary triangle.
       </para>
       <para>
        If <option>--dim2</option> is passed, this specifies at least one
@@ -656,8 +656,8 @@
      <term><option>-i, --internal</option></term>
      <listitem>
       <para>
-       Only produce triangulations with all faces internal (i.e., with no
-       boundary faces).
+       Only produce triangulations with all triangles internal (i.e., with no
+       boundary triangles).
       </para>
       <para>
        If <option>--dim2</option> is passed, this indicates that all
@@ -667,11 +667,11 @@
     </varlistentry>
     <varlistentry>
      <term><option>-B,
-      --bdryfaces=</option><replaceable>faces</replaceable></term>
+      --bdryfaces=</option><replaceable>triangles</replaceable></term>
      <listitem>
       <para>
        Only produce triangulations with the precise number of boundary
-       faces specified.
+       triangles specified.
       </para>
       <para>
        If <option>--dim2</option> is passed, this specifies the number
@@ -897,7 +897,7 @@
        high-performance cluster.
       </para>
       <para>
-       Options for tetrahedra or boundary faces cannot be used with
+       Options for tetrahedra or boundary triangles cannot be used with
        <option>--usepairs</option>; instead you should pass them earlier
        along with <option>--genpairs</option> when you split the original
        census into pieces.
@@ -918,7 +918,7 @@
     The following command forms a census of all 3-tetrahedron closed
     non-orientable triangulations and puts the results in the file
     <filename>results.rga</filename>.  To ensure that triangulations are
-    closed we use the options <option>-i</option> (no boundary faces)
+    closed we use the options <option>-i</option> (no boundary triangles)
     and <option>-f</option> (no ideal vertices).
    </para>
 
@@ -957,7 +957,7 @@
    <para>
     The following command generates all face pairings for a
     5-tetrahedron census in which all triangulations have precisely two
-    boundary faces.  The face pairings will be written to
+    boundary triangles.  The face pairings will be written to
     <filename>pairings.txt</filename>, whereupon they can be broken up
     and distributed for processing at a later date.
    </para>
@@ -971,8 +971,8 @@
    <para>
     The face pairings generated in the previous example can then be fleshed
     out into a full census of all 3-manifold triangulations with five
-    tetrahedra, precisely two boundary faces and no ideal vertices as
-    follows.  The number of tetrahedra and boundary faces were
+    tetrahedra, precisely two boundary triangles and no ideal vertices as
+    follows.  The number of tetrahedra and boundary triangles were
     already specified in the previous command, and cannot be
     supplied here.  The face pairings will be read from
     <filename>pairings.txt</filename>, and the final census will be

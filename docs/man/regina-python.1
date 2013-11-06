@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGINA-PYTHON" "1" "16 September 2013" "" "The Regina Handbook"
+.TH "REGINA-PYTHON" "1" "06 November 2013" "" "The Regina Handbook"
 
 .SH NAME
 regina-python \- Regina's command-line Python interface
@@ -171,6 +171,11 @@ If you are running Regina directly out of the source tree, this
 defaults to a directory within this source tree.  If you are
 running Regina from a proper installation, this defaults to the
 corresponding installation directory.
+
+If you have installed Regina's Python module in a standard
+Python location (i.e., Python can import it directly without
+extending sys.path), then
+\fIREGINA_PYLIBDIR\fR should be left empty or undefined.
 
 In normal situations you should never need to set this option yourself.
 .sp

@@ -480,7 +480,6 @@
       <glossterm><guilabel>Label:</guilabel></glossterm>
       <glossdef><para>
        This will be the label (i.e., the name) of the new packet.
-       No two packets in the same data file may have the same label.
       </para></glossdef>
      </glossentry>
     </glosslist>
@@ -549,7 +548,6 @@
     </menuchoice>
     from the menu (or the corresponding toolbar button),
     you can give the selected packet a new label.
-    Note that no two packets in the same data file may have the same label.
    </para>
    <para>
     <inlinemediaobject>

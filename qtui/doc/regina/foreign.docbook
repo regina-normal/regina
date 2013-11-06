@@ -87,7 +87,6 @@
      <glossdef><para>
       This will be the label (i.e., the name) of the new packet containing
       the imported data.
-      No two packets in the same data file may have the same label.
      </para></glossdef>
     </glossentry>
    </glosslist>
@@ -501,7 +500,7 @@
     Not every data file can be exported to &snappea; format.
     For instance, the triangulation cannot be
     <link linkend="tri-propvalid">invalid</link>,
-    and it may not have any boundary faces.
+    and it may not have any boundary triangles.
     &regina; will tell you if your triangulation cannot be exported.
    </para>
    <para>
@@ -522,7 +521,7 @@
     the &recogniser;.
     In particular, the triangulation cannot be
     <link linkend="tri-propvalid">invalid</link>,
-    and it may not have any boundary faces.
+    and it may not have any boundary triangles.
     &regina; will tell you if your triangulation cannot be exported.
    </para>
   </sect2>
