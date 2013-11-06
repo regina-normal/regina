@@ -36,6 +36,7 @@
 #include "packet/npdf.h"
 
 #include "pdfhandler.h"
+#include "reginamain.h"
 #include "reginasupport.h"
 #include "../packetfilter.h"
 
@@ -45,7 +46,7 @@
 const PDFHandler PDFHandler::instance;
 
 regina::NPacket* PDFHandler::importData(const QString& fileName,
-        QWidget* parentWidget) const {
+        ReginaMain* parentWidget) const {
     regina::NPacket* ans = regina::readPDF(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)

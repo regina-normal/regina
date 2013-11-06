@@ -117,7 +117,6 @@ NContainer* readIsoSigList(const char *filename, unsigned dimension,
         ans->insertChildLast(errPkt);
     }
 
-    ans->makeUniqueLabels(0);
     return ans;
 }
 

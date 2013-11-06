@@ -465,28 +465,15 @@ void ReginaMain::packetRename() {
 
     bool ok;
     QString suggest = packet->getPacketLabel().c_str();
-    while (true) {
-        QString newLabel = QInputDialog::getText(this,
-            tr("Rename Packet"), tr("New label:"), QLineEdit::Normal,
-                suggest, &ok).trimmed();
-        if ((! ok) || (newLabel == packet->getPacketLabel().c_str()))
-            return;
 
-        // Has this label already been used?
-        if (packetTree->findPacketLabel(newLabel.toAscii().constData())) {
-            ReginaSupport::info(this,
-                tr("Another packet is already using this label."),
-                tr("Each packet in your data file must have its own "
-                    "unique label.  I will suggest a different label "
-                    "that is not in use."));
-            suggest = packetTree->makeUniqueLabel(
-                newLabel.toAscii().constData()).c_str();
-        } else {
-            // It's a unique label; we can rename it!
-            packet->setPacketLabel(newLabel.toAscii().constData());
-            return;
-        }
-    }
+    QString newLabel = QInputDialog::getText(this,
+        tr("Rename Packet"), tr("New label:"), QLineEdit::Normal,
+            suggest, &ok).trimmed();
+    if ((! ok) || (newLabel == packet->getPacketLabel().c_str()))
+        return;
+
+    packet->setPacketLabel(newLabel.toAscii().constData());
+    return;
 }
 
 void ReginaMain::packetDelete() {

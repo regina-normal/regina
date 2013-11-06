@@ -37,6 +37,7 @@
 #include "packet/ntext.h"
 
 #include "dehydrationhandler.h"
+#include "reginamain.h"
 #include "reginasupport.h"
 #include "../packetfilter.h"
 
@@ -46,7 +47,7 @@
 const DehydrationHandler DehydrationHandler::instance;
 
 regina::NPacket* DehydrationHandler::importData(const QString& fileName,
-        QWidget* parentWidget) const {
+        ReginaMain* parentWidget) const {
     QString explnSuffix = QObject::tr("<p>The file should be a plain text "
         "file containing one dehydration string per line.  "
         "Dehydration strings are described in detail in "

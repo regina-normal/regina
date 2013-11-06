@@ -103,8 +103,7 @@ void processAlt(NTriangulation* t) {
     nonMin = true;
 
     NTriangulation* final = new NTriangulation(*t);
-    final->setPacketLabel(tree->makeUniqueLabel(orig->getPacketLabel() +
-        " - reduced"));
+    final->setPacketLabel(orig->getPacketLabel() + " - reduced");
 
     // Insert as the first child so it doesn't get processed.
     orig->insertChildFirst(final);
