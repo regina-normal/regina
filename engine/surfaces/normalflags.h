@@ -251,10 +251,11 @@ enum NormalAlgFlags {
      * use it if possible unless a different method is explicitly requested.
      * This method uses code from Normaliz for parts of its processing.
      *
-     * For details and comparisons of the various options for
-     * enumerating fundamental normal surfaces, see B. A. Burton,
-     * "Fundamental normal surfaces and the enumeration of Hilbert bases",
-     * arXiv:1111.7055, Nov 2011.
+     * For details and comparisons of the various options for enumerating
+     * fundamental normal surfaces, see B. A. Burton, "Enumerating
+     * fundamental normal surfaces: Algorithms, experiments and invariants",
+     * to appear in ALENEX 2014: Proceedings of the Meeting on
+     * Algorithm Engineering & Experiments, arXiv:1111.7055.
      *
      * This flag is incompatible with NS_HILBERT_DUAL,
      * NS_HILBERT_CD and NS_HILBERT_FULLCONE.
@@ -272,10 +273,11 @@ enum NormalAlgFlags {
      * method for situations in which Normaliz is not available for some
      * reason.
      *
-     * For details and comparisons of the various options for
-     * enumerating fundamental normal surfaces, see B. A. Burton,
-     * "Fundamental normal surfaces and the enumeration of Hilbert bases",
-     * arXiv:1111.7055, Nov 2011.
+     * For details and comparisons of the various options for enumerating
+     * fundamental normal surfaces, see B. A. Burton, "Enumerating
+     * fundamental normal surfaces: Algorithms, experiments and invariants",
+     * to appear in ALENEX 2014: Proceedings of the Meeting on
+     * Algorithm Engineering & Experiments, arXiv:1111.7055.
      *
      * This flag is incompatible with NS_HILBERT_PRIMAL,
      * NS_HILBERT_CD and NS_HILBERT_FULLCONE.
@@ -290,10 +292,11 @@ enum NormalAlgFlags {
      * than either the primal or dual method, and users should only
      * request it if they have some specialised need.
      *
-     * For details and comparisons of the various options for
-     * enumerating fundamental normal surfaces, see B. A. Burton,
-     * "Fundamental normal surfaces and the enumeration of Hilbert bases",
-     * arXiv:1111.7055, Nov 2011.
+     * For details and comparisons of the various options for enumerating
+     * fundamental normal surfaces, see B. A. Burton, "Enumerating
+     * fundamental normal surfaces: Algorithms, experiments and invariants",
+     * to appear in ALENEX 2014: Proceedings of the Meeting on
+     * Algorithm Engineering & Experiments, arXiv:1111.7055.
      *
      * This flag is incompatible with NS_HILBERT_PRIMAL,
      * NS_HILBERT_DUAL and NS_HILBERT_FULLCONE.
@@ -310,10 +313,11 @@ enum NormalAlgFlags {
      * then this procedure \e extremely slow, and users should only
      * request it if they have some specialised need.
      *
-     * For details and comparisons of the various options for
-     * enumerating fundamental normal surfaces, see B. A. Burton,
-     * "Fundamental normal surfaces and the enumeration of Hilbert bases",
-     * arXiv:1111.7055, Nov 2011.
+     * For details and comparisons of the various options for enumerating
+     * fundamental normal surfaces, see B. A. Burton, "Enumerating
+     * fundamental normal surfaces: Algorithms, experiments and invariants",
+     * to appear in ALENEX 2014: Proceedings of the Meeting on
+     * Algorithm Engineering & Experiments, arXiv:1111.7055.
      *
      * This flag is incompatible with NS_HILBERT_PRIMAL,
      * NS_HILBERT_DUAL and NS_HILBERT_CD.
