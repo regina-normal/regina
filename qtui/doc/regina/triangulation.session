@@ -1,5 +1,5 @@
 example$ regina-python
-Regina 4.94
+Regina 4.95
 Software for 3-manifold topology and normal surface theory
 Copyright (c) 1999-2013, The Regina development team
 &gt;&gt;&gt; ################################
@@ -18,15 +18,15 @@ Copyright (c) 1999-2013, The Regina development team
 ... # triangulation of a solid torus.
 ... t = NTriangulation()
 &gt;&gt;&gt; t.insertLayeredSolidTorus(3,4)
-&lt;regina.NTetrahedron object at 0x10f671520&gt;
+&lt;regina.engine.NTetrahedron object at 0x10c5221a0&gt;
 &gt;&gt;&gt; print t
 Triangulation with 3 tetrahedra.
 &gt;&gt;&gt; 
 &gt;&gt;&gt; # Print the full skeleton of the triangulation.
-... print t.toStringLong()
+... print t.detail()
 Size of the skeleton:
   Tetrahedra: 3
-  Faces: 7
+  Triangles: 7
   Edges: 5
   Vertices: 1
 
@@ -51,7 +51,7 @@ Edges:
     1  |           1   2   3   3   2   4
     2  |           2   4   3   3   4   3
 
-Faces:
+Triangles:
   Tet  |  face:  012 013 023 123
   -----+------------------------
     0  |           0   1   2   3
@@ -85,7 +85,7 @@ False
 OK: Parent-child relationship is correct.
 &gt;&gt;&gt; 
 &gt;&gt;&gt; # Print the full list of vertex normal surfaces.
-... print surfaces.toStringLong()
+... print surfaces.detail()
 Embedded, vertex surfaces
 Coordinates: Standard normal (tri-quad)
 Number of surfaces is 9
