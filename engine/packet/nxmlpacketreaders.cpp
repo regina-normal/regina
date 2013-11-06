@@ -33,6 +33,7 @@
 /* end stub */
 
 #include "packet/nxmlpacketreaders.h"
+#include "packet/nxmltreeresolver.h"
 #include "utilities/base64.h"
 #include <cctype>
 #include <string>
@@ -48,22 +49,64 @@ namespace {
      */
     class NScriptVarReader : public NXMLElementReader {
         private:
-            std::string name, value;
+            std::string name, valueID, valueLabel;
 
         public:
-            virtual void startElement(const std::string& /* tagName */,
+            inline void startElement(const std::string& /* tagName */,
                     const regina::xml::XMLPropertyDict& props,
                     NXMLElementReader*) {
                 name = props.lookup("name");
-                value = props.lookup("value");
+                valueID = props.lookup("valueid");
+                valueLabel = props.lookup("value");
             }
 
-            const std::string& getName() {
+            inline const std::string& getName() {
                 return name;
             }
 
-            const std::string& getValue() {
-                return value;
+            inline const std::string& getValueID() {
+                return valueID;
+            }
+
+            inline const std::string& getValueLabel() {
+                return valueLabel;
+            }
+    };
+
+    /**
+     * A resolution task that, after the entire XML file has been read,
+     * will bind a script variable to its corresponding packet reference.
+     */
+    class VariableResolutionTask : public NXMLTreeResolutionTask {
+        private:
+            NScript* script_;
+            std::string name_;
+            std::string valueID_;
+                /**< An internal packet ID.  Used by Regina >= 4.95. */
+            std::string valueLabel_;
+                /**< A packet label.  Used by Regina <= 4.94. */
+
+        public:
+            inline VariableResolutionTask(NScript* script,
+                    const std::string& name,
+                    const std::string& valueID,
+                    const std::string& valueLabel) :
+                    script_(script), name_(name), valueID_(valueID),
+                    valueLabel_(valueLabel) {
+            }
+
+            inline void resolve(const NXMLTreeResolver& resolver) {
+                NPacket* resolution = 0;
+                if (! valueID_.empty()) {
+                    NXMLTreeResolver::IDMap::const_iterator it =
+                        resolver.ids().find(valueID_);
+                    resolution = (it == resolver.ids().end() ? 0 : it->second);
+                }
+                if ((! resolution) && (! valueLabel_.empty()))
+                    resolution = script_->getTreeMatriarch()->
+                        findPacketLabel(valueLabel_);
+
+                script_->addVariable(name_, resolution);
             }
     };
 }
@@ -131,24 +174,27 @@ void NXMLScriptReader::endContentSubElement(const std::string& subTagName,
     else if (subTagName == "var") {
         NScriptVarReader* var = dynamic_cast<NScriptVarReader*>(subReader);
         if (! var->getName().empty())
-            script->addVariable(var->getName(), var->getValue());
+            resolver_.queueTask(new VariableResolutionTask(
+                script, var->getName(),
+                var->getValueID(), var->getValueLabel()));
     }
 }
 
-NXMLPacketReader* NContainer::getXMLReader(NPacket*) {
-    return new NXMLContainerReader();
+NXMLPacketReader* NContainer::getXMLReader(NPacket*,
+        NXMLTreeResolver& resolver) {
+    return new NXMLContainerReader(resolver);
 }
 
-NXMLPacketReader* NPDF::getXMLReader(NPacket*) {
-    return new NXMLPDFReader();
+NXMLPacketReader* NPDF::getXMLReader(NPacket*, NXMLTreeResolver& resolver) {
+    return new NXMLPDFReader(resolver);
 }
 
-NXMLPacketReader* NScript::getXMLReader(NPacket*) {
-    return new NXMLScriptReader();
+NXMLPacketReader* NScript::getXMLReader(NPacket*, NXMLTreeResolver& resolver) {
+    return new NXMLScriptReader(resolver);
 }
 
-NXMLPacketReader* NText::getXMLReader(NPacket*) {
-    return new NXMLTextReader();
+NXMLPacketReader* NText::getXMLReader(NPacket*, NXMLTreeResolver& resolver) {
+    return new NXMLTextReader(resolver);
 }
 
 } // namespace regina

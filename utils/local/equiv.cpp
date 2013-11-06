@@ -142,8 +142,7 @@ void sameSize(NTriangulation* t) {
 
     if (! found) {
         found = new NTriangulation(*t);
-        found->setPacketLabel(orig->makeUniqueLabel(
-            orig->getPacketLabel() + " - New"));
+        found->setPacketLabel(orig->getPacketLabel() + " - New");
         orig->insertChildLast(found);
         nNew++;
     }

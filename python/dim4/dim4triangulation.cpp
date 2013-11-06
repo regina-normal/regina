@@ -140,6 +140,20 @@ namespace {
             std::auto_ptr<regina::NGroupPresentation> group) {
         tri.simplifiedFundamentalGroup(group.release());
     }
+
+    std::string isoSig_void(const Dim4Triangulation& t) {
+        return t.isoSig();
+    }
+
+    boost::python::tuple isoSig_relabelling(const Dim4Triangulation& t) {
+        regina::Dim4Isomorphism* iso;
+        std::string sig = t.isoSig(&iso);
+        return make_tuple(
+            sig,
+            boost::python::object(boost::python::handle<>(
+                boost::python::manage_new_object::
+                apply<regina::Dim4Isomorphism*>::type()(iso))));
+    }
 }
 
 void addDim4Triangulation() {
@@ -243,7 +257,8 @@ void addDim4Triangulation() {
         .def("barycentricSubdivision",
             &Dim4Triangulation::barycentricSubdivision)
         .def("insertTriangulation", &Dim4Triangulation::insertTriangulation)
-        .def("isoSig", &Dim4Triangulation::isoSig)
+        .def("isoSig", isoSig_void)
+        .def("isoSigDetail", isoSig_relabelling)
         .def("fromIsoSig", &Dim4Triangulation::fromIsoSig,
             return_value_policy<manage_new_object>())
         .def("dumpConstruction", &Dim4Triangulation::dumpConstruction)

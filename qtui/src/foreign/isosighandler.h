@@ -72,7 +72,7 @@ class IsoSigHandler : public PacketImporter {
          * PacketImporter overrides:
          */
         virtual regina::NPacket* importData(const QString& fileName,
-            QWidget* parentWidget) const;
+            ReginaMain* parentWidget) const;
 
     private:
         /**

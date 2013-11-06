@@ -266,7 +266,8 @@ class REGINA_API NSurfaceFilter : public NPacket {
         static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
 
         virtual void writeTextShort(std::ostream& out) const;
-        static NXMLPacketReader* getXMLReader(NPacket* parent);
+        static NXMLPacketReader* getXMLReader(NPacket* parent,
+            NXMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
     protected:

@@ -203,8 +203,6 @@ int main(int argc, char* argv[]) {
             all->insertChildLast(it->second);
         }
 
-    all->makeUniqueLabels(0);
-
     // Final statistics and output.
     std::cerr << std::endl;
     std::cerr << "Final statistics:" << std::endl;
