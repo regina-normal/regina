@@ -216,7 +216,7 @@ Version 4.95  [ (under development) ]
               of the vertex link are embedded within individual tetrahedra.
             - Detailed string output (via detail() / toStringLong()) now
               outputs details of where the vertex appears in each tetrahedron.
-        Class NXMLPacketReader, NXMLTreeResolver:
+        Class NXMLPacketReader, NXMLTreeResolver, NXMLTreeResolutionTask:
             - The API for reading packets from an XML data file has changed to
               incorporate the new NXMLTreeResolver class, which allows the
               resolution of dangling packet references after an entire
