@@ -104,7 +104,6 @@ int main(int argc, char* argv[]) {
     }
 
     // Tidy up the final data file and write it.
-    ans->makeUniqueLabels(0);
     if (outputFile.empty())
         ans->writeXMLFile(std::cout);
     else if (! regina::writeXMLFile(outputFile.c_str(), ans))
