@@ -3863,7 +3863,8 @@ inline const NTriangulation::TuraevViroSet&
 }
 
 inline void NTriangulation::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << tetrahedra.size() << " tetrahedra.";
+    out << "Triangulation with " << tetrahedra.size()
+        << (tetrahedra.size() == 1 ? " tetrahedron" : " tetrahedra");
 }
 
 inline std::string NTriangulation::isoSig(NIsomorphism** relabelling) const {

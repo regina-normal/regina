@@ -1215,7 +1215,8 @@ inline Dim2Triangulation::~Dim2Triangulation() {
 }
 
 inline void Dim2Triangulation::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << triangles_.size() << " triangles.";
+    out << "Triangulation with " << triangles_.size()
+        << (triangles_.size() == 1 ? " triangle" : " triangles");
 }
 
 inline bool Dim2Triangulation::dependsOnParent() const {
