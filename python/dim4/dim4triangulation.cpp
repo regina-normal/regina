@@ -161,6 +161,7 @@ void addDim4Triangulation() {
             std::auto_ptr<Dim4Triangulation>,
             boost::noncopyable>("Dim4Triangulation")
         .def(init<const Dim4Triangulation&>())
+        .def(init<const std::string&>())
         .def("getNumberOfPentachora", &Dim4Triangulation::getNumberOfPentachora)
         .def("getNumberOfSimplices", &Dim4Triangulation::getNumberOfSimplices)
         .def("getPentachora", Dim4_getPentachora_list)
