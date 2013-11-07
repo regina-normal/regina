@@ -119,6 +119,7 @@ void addDim2Triangulation() {
             std::auto_ptr<Dim2Triangulation>,
             boost::noncopyable>("Dim2Triangulation")
         .def(init<const Dim2Triangulation&>())
+        .def(init<const std::string&>())
         .def("getNumberOfTriangles", &Dim2Triangulation::getNumberOfTriangles)
         .def("getNumberOfSimplices", &Dim2Triangulation::getNumberOfSimplices)
         .def("getTriangles", Dim2_getTriangles_list)
@@ -187,6 +188,7 @@ void addDim2Triangulation() {
         .def("isoSigComponentSize", &Dim2Triangulation::isoSigComponentSize)
         .def("dumpConstruction", &Dim2Triangulation::dumpConstruction)
         .staticmethod("fromIsoSig")
+        .staticmethod("isoSigComponentSize")
     ;
 
     s.attr("packetType") = regina::PacketType(Dim2Triangulation::packetType);
