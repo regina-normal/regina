@@ -36,6 +36,10 @@ Version 4.95  [ 12 November, 2013 ]
             - Now inherits from the new helper class NGenericTriangulation<2>.
             - New routine isoSigComponentSize() for extracting the number of
               triangles from a signature (inherited from NGenericTriangulation).
+            - New "magic constructor" that attempts to interpret a given
+              string as a 2-manifold triangulation under several possible
+              encodings (currently only isomorphism signatures are supported
+              for 2-manifolds, but this list may grow in the future).
             - Routine isoSig() now takes an optional argument that returns
               the isomorphism with the reconstruction from fromIsoSig().
         Class Dim2Vertex:
@@ -204,6 +208,9 @@ Version 4.95  [ 12 November, 2013 ]
               the isomorphism with the reconstruction from fromIsoSig().
             - New routines snapPea() and fromSnapPea() to import and export
               SnapPea data using strings, without writing to the filesystem.
+            - New "magic constructor" that attempts to interpret a given
+              string as a 3-manifold triangulation under several possible
+              encodings.
             - Routine isThreeSphere() now includes a fast check for an
               "obviously" trivial fundamental group.
             - Renamed FaceIterator, faceIndex(), getFace(), getFaces(),

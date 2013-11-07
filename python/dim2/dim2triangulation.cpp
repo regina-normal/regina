@@ -119,6 +119,7 @@ void addDim2Triangulation() {
             std::auto_ptr<Dim2Triangulation>,
             boost::noncopyable>("Dim2Triangulation")
         .def(init<const Dim2Triangulation&>())
+        .def(init<const std::string&>())
         .def("getNumberOfTriangles", &Dim2Triangulation::getNumberOfTriangles)
         .def("getNumberOfSimplices", &Dim2Triangulation::getNumberOfSimplices)
         .def("getTriangles", Dim2_getTriangles_list)

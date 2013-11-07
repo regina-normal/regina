@@ -252,6 +252,28 @@ class REGINA_API NTriangulation : public NPacket,
          */
         NTriangulation(const NTriangulation& cloneMe);
         /**
+         * "Magic" constructor that tries to find some way to interpret
+         * the given string as a triangulation.
+         *
+         * At present, Regina understands the following types of strings
+         * (and attempts to parse them in the following order):
+         *
+         * - isomorphism signatures (see fromIsoSig());
+         * - dehydration strings (see rehydrate());
+         * - the contents of a SnapPea data file (see fromSnapPea()).
+         *
+         * This list may grow in future versions of Regina.
+         *
+         * Regina will also set the packet label accordingly.
+         *
+         * If Regina cannot interpret the given string, this will be
+         * left as the empty triangulation.
+         *
+         * @param description a string that describes a 3-manifold
+         * triangulation.
+         */
+        NTriangulation(const std::string& description);
+        /**
          * Destroys this triangulation.
          *
          * The constituent tetrahedra, the cellular structure and all other

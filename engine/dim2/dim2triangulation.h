@@ -160,6 +160,26 @@ class REGINA_API Dim2Triangulation : public NPacket,
          */
         Dim2Triangulation(const Dim2Triangulation& cloneMe);
         /**
+         * "Magic" constructor that tries to find some way to interpret
+         * the given string as a triangulation.
+         *
+         * At present, Regina understands the following types of strings
+         * (and attempts to parse them in the following order):
+         *
+         * - isomorphism signatures (see fromIsoSig()).
+         *
+         * This list may grow in future versions of Regina.
+         *
+         * Regina will also set the packet label accordingly.
+         *
+         * If Regina cannot interpret the given string, this will be
+         * left as the empty triangulation.
+         *
+         * @param description a string that describes a 2-manifold
+         * triangulation.
+         */
+        Dim2Triangulation(const std::string& description);
+        /**
          * Destroys this triangulation.
          *
          * The constituent triangles, the cellular structure and all other
