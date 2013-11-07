@@ -183,7 +183,7 @@ class REGINA_API NXMLTreeResolver {
          *
          * Packets in a data file may have individual string IDs stored
          * alongside them, in the \a id attribute of the
-         * <tt>&lt;packet&rt;</tt> tag.  These strings are optional,
+         * <tt>&lt;packet&gt;</tt> tag.  These strings are optional,
          * and do not need to be human-readable.
          * Although packets are not required to have IDs, any IDs that \e are
          * stored must be unique (i.e., two different packets cannot

@@ -922,7 +922,7 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the index of the specified triangle, where 0 is the first
          * triangle, 1 is the second and so on.
          */
-        long triangleIndex(const NTriangle* tri) const;
+        long triangleIndex(const NTriangle* triangle) const;
         /**
          * A deprecated alias for triangleIndex().
          *
@@ -937,7 +937,7 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the index of the specified triangle, where 0 is the first
          * triangle, 1 is the second and so on.
          */
-        long faceIndex(const NTriangle* tri) const;
+        long faceIndex(const NTriangle* triangle) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -1951,7 +1951,7 @@ class REGINA_API NTriangulation : public NPacket,
          * is legal.
          * \pre The given triangle is a triangle of this triangulation.
          *
-         * @param f the triangle about which to perform the move.
+         * @param t the triangle about which to perform the move.
          * @param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * @param perform \c true if we are to perform the move
