@@ -42,6 +42,18 @@
 
 namespace regina {
 
+Dim4Triangulation::Dim4Triangulation(const std::string& description) :
+        calculatedSkeleton_(false), knownSimpleLinks_(false) {
+    Dim4Triangulation* attempt;
+
+    if ((attempt = fromIsoSig(description))) {
+        cloneFrom(*attempt);
+        setPacketLabel(description);
+    }
+
+    delete attempt;
+}
+
 void Dim4Triangulation::swapContents(Dim4Triangulation& other) {
     ChangeEventSpan span1(this);
     ChangeEventSpan span2(&other);
