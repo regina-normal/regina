@@ -182,6 +182,7 @@ void addNGroupPresentation() {
             return_value_policy<manage_new_object>())
         .def("toTeX", &NGroupPresentation::toTeX)
         .def("toStringCompact", &NGroupPresentation::toStringCompact)
+        .def("compact", &NGroupPresentation::compact)
         .def("writeTeX", presentationWriteTeX)
         .def("writeTextCompact", presentationWriteTextCompact)
     ;
