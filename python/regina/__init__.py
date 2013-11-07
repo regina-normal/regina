@@ -182,17 +182,33 @@ def __execScript(namespace = None):
     For internal use by regina-python.
     Executes a given python script.
 
-    The filename of the script must be in sys.argv[1], and
-    any arguments to the script must be in sys.argv[2:].
+    The filename of the script should be in sys.argv[1], and
+    any arguments to the script should be in sys.argv[2:].
+    However, ipython sets things up a little differently (it includes two
+    additional arguments), and we attempt to compensate for this here.
 
-    SIDE-EFFECT: sys.argv will be truncated to include the script
-    arguments only (i.e., sys.argv[0] and sys.argv[1] will be removed).
+    SIDE-EFFECT: sys.argv will be truncated to include the script and
+    its arguments only (i.e., sys.argv[0] will be removed).
 
     Arguments:
         namespace : The global namespace in which the script will be executed.
                     This may be None, in which case the caller's global
                     namespace will be used.
     """
+
+    try:
+        __IPYTHON__
+        # Although python sets sys.argv = [ '-c', script, arg, ... ],
+        # ipython sets sys.argv as the full original command line:
+        #   [ ipython, '-c', command, script, arg, ... ], or
+        #   [ ipython, '-i', '-c', command, script, arg, ... ].
+        # Repair things here.
+        if len(sys.argv) >= 3 and sys.argv[1] == '-c':
+            sys.argv = [ '-c' ] + sys.argv[3:]
+        elif len(sys.argv) >= 4 and sys.argv[1:3] == ['-i', '-c']:
+            sys.argv = [ '-c' ] + sys.argv[4:]
+    except:
+        pass
 
     script = sys.argv[1]
     sys.argv = sys.argv[1:]

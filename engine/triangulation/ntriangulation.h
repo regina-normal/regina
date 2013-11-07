@@ -252,6 +252,28 @@ class REGINA_API NTriangulation : public NPacket,
          */
         NTriangulation(const NTriangulation& cloneMe);
         /**
+         * "Magic" constructor that tries to find some way to interpret
+         * the given string as a triangulation.
+         *
+         * At present, Regina understands the following types of strings
+         * (and attempts to parse them in the following order):
+         *
+         * - isomorphism signatures (see fromIsoSig());
+         * - dehydration strings (see rehydrate());
+         * - the contents of a SnapPea data file (see fromSnapPea()).
+         *
+         * This list may grow in future versions of Regina.
+         *
+         * Regina will also set the packet label accordingly.
+         *
+         * If Regina cannot interpret the given string, this will be
+         * left as the empty triangulation.
+         *
+         * @param description a string that describes a 3-manifold
+         * triangulation.
+         */
+        NTriangulation(const std::string& description);
+        /**
          * Destroys this triangulation.
          *
          * The constituent tetrahedra, the cellular structure and all other
@@ -922,7 +944,7 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the index of the specified triangle, where 0 is the first
          * triangle, 1 is the second and so on.
          */
-        long triangleIndex(const NTriangle* tri) const;
+        long triangleIndex(const NTriangle* triangle) const;
         /**
          * A deprecated alias for triangleIndex().
          *
@@ -937,7 +959,7 @@ class REGINA_API NTriangulation : public NPacket,
          * @return the index of the specified triangle, where 0 is the first
          * triangle, 1 is the second and so on.
          */
-        long faceIndex(const NTriangle* tri) const;
+        long faceIndex(const NTriangle* triangle) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -1951,7 +1973,7 @@ class REGINA_API NTriangulation : public NPacket,
          * is legal.
          * \pre The given triangle is a triangle of this triangulation.
          *
-         * @param f the triangle about which to perform the move.
+         * @param t the triangle about which to perform the move.
          * @param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * @param perform \c true if we are to perform the move
@@ -3841,7 +3863,8 @@ inline const NTriangulation::TuraevViroSet&
 }
 
 inline void NTriangulation::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << tetrahedra.size() << " tetrahedra.";
+    out << "Triangulation with " << tetrahedra.size()
+        << (tetrahedra.size() == 1 ? " tetrahedron" : " tetrahedra");
 }
 
 inline std::string NTriangulation::isoSig(NIsomorphism** relabelling) const {
