@@ -1661,6 +1661,12 @@ std::string NGroupPresentation::toStringCompact() const {
     return out.str();
 }
 
+std::string NGroupPresentation::compact() const {
+    std::ostringstream out;
+    writeTextCompact(out);
+    return out.str();
+}
+
 void NGroupPresentation::writeTextCompact(std::ostream& out) const {
     if (nGenerators == 0) {
         out << "< >";
