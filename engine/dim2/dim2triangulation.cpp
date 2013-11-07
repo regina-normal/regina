@@ -41,6 +41,18 @@
 
 namespace regina {
 
+Dim2Triangulation::Dim2Triangulation(const std::string& description) :
+        calculatedSkeleton_(false) {
+    Dim2Triangulation* attempt;
+
+    if ((attempt = fromIsoSig(description))) {
+        cloneFrom(*attempt);
+        setPacketLabel(description);
+    }
+
+    delete attempt;
+}
+
 bool Dim2Triangulation::isMinimal() const {
     // 2-sphere:
     if (getEulerChar() == 2)
