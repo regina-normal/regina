@@ -12,15 +12,22 @@ Version 4.95  [ 12 November, 2013 ]
         - Hakenness and irreducibility tests for triangulations.
         - On many GNU/Linux and MacOS systems, Regina and SnapPy can now talk
           directly via python.  Try running 'import snappy' from one of
-          Regina's python environments, and see the user handbook for
-          sample python sessions that show them working together.
+          Regina's python environments, or see the python chapter in the
+          user handbook for examples.
         - Many example triangulations are now oriented by default.
         - You are no longer required to give each packet a unique label.
     Optimisations:
         - More widespread use of the new and faster branch-and-bound machinery.
-        - Large-scale cleanups and improvements to the API.
+        - Large-scale cleanups and improvements to the API for both C++
+          and python, plus additional niceities for the python bindings.
     Bug Fixes:
-        - TODO: %, GCD.
+        - Fixed two numerical bugs in the arbitrary precision arithmetic code
+          that were (i) only present in the last release (4.94, September 2013);
+          (ii) quite difficult to trigger; and (iii) had relatively benign
+          impacts, unless you were working with experimental code direct from
+          the repository.  We have audited the entire codebase to analyse what
+          could have been affected, so please contact the authors if you need
+          more information.
 
 Version 4.94  [ 24 September, 2013 ]
 
