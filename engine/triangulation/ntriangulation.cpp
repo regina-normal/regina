@@ -56,6 +56,24 @@
 
 namespace regina {
 
+NTriangulation::NTriangulation(const std::string& description) :
+        calculatedSkeleton(false) {
+    NTriangulation* attempt;
+
+    if ((attempt = fromIsoSig(description))) {
+        cloneFrom(*attempt);
+        setPacketLabel(description);
+    } else if ((attempt = rehydrate(description))) {
+        cloneFrom(*attempt);
+        setPacketLabel(description);
+    } else if ((attempt = fromSnapPea(description))) {
+        cloneFrom(*attempt);
+        setPacketLabel(attempt->getPacketLabel());
+    }
+
+    delete attempt;
+}
+
 void NTriangulation::addTetrahedron(NTetrahedron* t) {
     // Make this a no-op if the tetrahedron has already been added.
     if (t->tri == this)
