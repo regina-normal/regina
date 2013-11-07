@@ -86,6 +86,9 @@ Version 4.95  [ 12 November, 2013 ]
             - Routine pythonModule() now returns an empty string if the
               module is installed in the standard python site-packages
               directory (now the default for an XDG install).
+        Class NGroupPresentation:
+            - Renamed toStringCompact() to compact().  The old name has
+              been kept as a deprecated alias.
         Class NInteger, NLargeInteger:
             - Fixed a (thankfully hard-to-trigger) error in the mod operators.
               The error was triggered on (x % m) or (x %= m) when:
