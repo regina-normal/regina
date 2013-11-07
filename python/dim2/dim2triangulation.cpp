@@ -187,6 +187,7 @@ void addDim2Triangulation() {
         .def("isoSigComponentSize", &Dim2Triangulation::isoSigComponentSize)
         .def("dumpConstruction", &Dim2Triangulation::dumpConstruction)
         .staticmethod("fromIsoSig")
+        .staticmethod("isoSigComponentSize")
     ;
 
     s.attr("packetType") = regina::PacketType(Dim2Triangulation::packetType);
