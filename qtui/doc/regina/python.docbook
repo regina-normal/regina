@@ -431,12 +431,12 @@ TypeError: bad argument type for built-in operation
    Simply type <userinput>import snappy</userinput> from within any of
    &regina;'s &python; environments.  You can use
    &regina;'s functions
-   <function>NTriangulation.fromSnapPea()</function> and
-   <function>NTriangulation.snapPea()</function> to send information in
-   and out of &regina; as strings, and you can hook these
-   up to &snappy;'s functions
-   <function>Manifold._to_string()</function> and
-   <function>Manifold()</function> at the other end.
+   <function>NTriangulation.snapPea()</function> and
+   <function>NTriangulation()</function>
+   to get information out of and into
+   &regina; as strings, and you can hook these up to &snappy;'s functions
+   <function>Manifold()</function> and
+   <function>Manifold._to_string()</function> at the other end.
   </para>
   <programlisting>
 bab@ember:~$ regina-python 
@@ -445,7 +445,7 @@ Software for 3-manifold topology and normal surface theory
 Copyright (c) 1999-2013, The Regina development team
 &gt;&gt;&gt; import snappy
 &gt;&gt;&gt; m = snappy.Manifold('m001')
-&gt;&gt;&gt; t = NTriangulation.fromSnapPea(m._to_string())
+&gt;&gt;&gt; t = NTriangulation(m._to_string())
 &gt;&gt;&gt; print t.detail()
 Size of the skeleton:
   Tetrahedra: 2

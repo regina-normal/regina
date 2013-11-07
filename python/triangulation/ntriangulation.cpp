@@ -178,6 +178,7 @@ void addNTriangulation() {
             std::auto_ptr<NTriangulation>,
             boost::noncopyable>("NTriangulation")
         .def(init<const NTriangulation&>())
+        .def(init<const std::string&>())
         .def("getNumberOfTetrahedra", &NTriangulation::getNumberOfTetrahedra)
         .def("getNumberOfSimplices", &NTriangulation::getNumberOfSimplices)
         .def("getTetrahedra", getTetrahedra_list)
