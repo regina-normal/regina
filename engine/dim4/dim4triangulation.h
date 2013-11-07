@@ -194,6 +194,26 @@ class REGINA_API Dim4Triangulation : public NPacket,
          */
         Dim4Triangulation(const Dim4Triangulation& cloneMe);
         /**
+         * "Magic" constructor that tries to find some way to interpret
+         * the given string as a triangulation.
+         *
+         * At present, Regina understands the following types of strings
+         * (and attempts to parse them in the following order):
+         *
+         * - isomorphism signatures (see fromIsoSig()).
+         *
+         * This list may grow in future versions of Regina.
+         *
+         * Regina will also set the packet label accordingly.
+         *
+         * If Regina cannot interpret the given string, this will be
+         * left as the empty triangulation.
+         *
+         * @param description a string that describes a 4-manifold
+         * triangulation.
+         */
+        Dim4Triangulation(const std::string& description);
+        /**
          * Destroys this triangulation.
          *
          * The constituent pentachora, the cellular structure and all other
@@ -1856,7 +1876,8 @@ inline Dim4Triangulation::~Dim4Triangulation() {
 }
 
 inline void Dim4Triangulation::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << pentachora_.size() << " pentachora.";
+    out << "Triangulation with " << pentachora_.size()
+        << (pentachora_.size() == 1 ? " pentachoron" : " pentachora");
 }
 
 inline bool Dim4Triangulation::dependsOnParent() const {
