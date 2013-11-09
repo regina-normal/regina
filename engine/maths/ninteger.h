@@ -43,6 +43,7 @@
 
 #include <boost/static_assert.hpp>
 #include <climits>
+#include <stdint.h> // Required for SAGE compatibility
 #include <gmp.h>
 #include <iostream>
 #include <string>
