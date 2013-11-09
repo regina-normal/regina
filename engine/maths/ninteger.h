@@ -43,7 +43,7 @@
 
 #include <boost/static_assert.hpp>
 #include <climits>
-#include <stdint.h> // Required for SAGE compatibility
+#include <stdint.h> // MPIR (and thus SAGE) needs this *before* gmp.h.
 #include <gmp.h>
 #include <iostream>
 #include <string>
