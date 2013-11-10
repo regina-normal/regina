@@ -76,7 +76,9 @@ namespace {
         if (len != v->size()) {
             delete v;
 
-            // TODO: Throw an exception here.
+            PyErr_SetString(PyExc_ValueError,
+                "Incorrect number of normal coordinates");
+            ::boost::python::throw_error_already_set();
         }
 
         for (long i = 0; i < len; i++) {
