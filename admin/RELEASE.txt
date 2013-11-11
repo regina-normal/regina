@@ -52,7 +52,7 @@ Don't forget:
     update debian/ubuntu/fink READMEs as required (both text and html)
     copy fink info file(s) beneath www/
     update census download file sizes if there have been changes
-    tag the subversion repository (svn copy between two remote URLs)
+    tag the git repository
     upload new data files, both from examples/ and the large data repository
     update docs/ and engine-docs/ on the website
     update the citation years if necessary in private BibTeX databases
