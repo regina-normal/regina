@@ -37,6 +37,7 @@
 #include <boost/python.hpp>
 #include "maths/nmatrixint.h"
 #include "surfaces/nnormalsurface.h"
+#include "surfaces/nnormalsurfacelist.h" // for makeZeroVector()
 #include "triangulation/ntriangulation.h"
 #include "../globalarray.h"
 
@@ -62,6 +63,49 @@ namespace {
     GlobalArray2D<regina::NPerm4> triDiscArcs_arr(regina::__triDiscArcs, 4, 3);
     GlobalArray2D<regina::NPerm4> quadDiscArcs_arr(regina::__quadDiscArcs, 3, 4);
     GlobalArray2D<regina::NPerm4> octDiscArcs_arr(regina::__octDiscArcs, 3, 8);
+
+    /**
+     * A python-only constructor that lets users build a normal surface
+     * from a hand-crafted list of integers.
+     */
+    NNormalSurface* fromCoordinates(NTriangulation* t,
+            regina::NormalCoords coords, boost::python::list values) {
+        regina::NNormalSurfaceVector* v = regina::makeZeroVector(t, coords);
+
+        long len = boost::python::len(values);
+        if (len != v->size()) {
+            delete v;
+
+            PyErr_SetString(PyExc_ValueError,
+                "Incorrect number of normal coordinates");
+            ::boost::python::throw_error_already_set();
+        }
+
+        for (long i = 0; i < len; i++) {
+            // Accept any type that we know how to convert to a large
+            // integer.
+            extract<regina::NLargeInteger&> x_large(values[i]);
+            if (x_large.check()) {
+                v->setElement(i, x_large());
+                continue;
+            }
+            extract<long> x_long(values[i]);
+            if (x_long.check()) {
+                v->setElement(i, x_long());
+                continue;
+            }
+            extract<const char*> x_str(values[i]);
+            if (x_str.check()) {
+                v->setElement(i, x_str());
+                continue;
+            }
+
+            // Throw an exception.
+            x_large();
+        }
+
+        return new NNormalSurface(t, v);
+    }
 
     void writeTextShort_stdio(const NNormalSurface& s) {
         s.writeTextShort(std::cout);
@@ -91,6 +135,7 @@ void addNNormalSurface() {
     class_<NNormalSurface, bases<regina::ShareableObject>,
             std::auto_ptr<NNormalSurface>, boost::noncopyable>
             ("NNormalSurface", no_init)
+        .def("__init__", make_constructor(fromCoordinates))
         .def("clone", &NNormalSurface::clone,
             return_value_policy<manage_new_object>())
         .def("doubleSurface", &NNormalSurface::doubleSurface,
