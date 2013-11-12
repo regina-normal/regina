@@ -36,7 +36,6 @@
 #include <cstdlib>
 #include "maths/ninteger.h"
 #include "maths/numbertheory.h"
-#include "utilities/intutils.h"
 #include "utilities/nthread.h"
 
 // We instantiate both variants of the NIntegerBase template at the bottom
