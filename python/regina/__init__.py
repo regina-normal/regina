@@ -81,7 +81,7 @@ def reginaSetup(quiet = False, readline = True, banner = False,
     if snappyPath:
         # For the time being, only find SnapPy on MacOS.
         if sys.platform == 'darwin':
-            if sys.version_info.major == 2 and sys.version_info.minor == 7:
+            if sys.version_info[:2] == (2, 7):
                 # Ask MacOS where SnapPy lives.
                 import subprocess
                 try:
