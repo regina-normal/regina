@@ -65,6 +65,7 @@
   <!ENTITY ccpp "&c;/&cpp;">
   <!ENTITY cpp "<application>C++</application>">
   <!ENTITY csv "<acronym>CSV</acronym>">
+  <!ENTITY cython "<application>Cython</application>">
   <!ENTITY debian "<application>Debian</application>">
   <!ENTITY evince "<application>Evince</application>">
   <!ENTITY fedora "<application>Fedora</application>">
