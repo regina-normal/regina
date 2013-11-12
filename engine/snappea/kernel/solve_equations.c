@@ -41,6 +41,7 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
 
 FuncResult solve_complex_equations(
     Complex **complex_equations,
@@ -397,3 +398,5 @@ FuncResult solve_real_equations(
 
     return func_OK;
 }
+
+} } // namespaces

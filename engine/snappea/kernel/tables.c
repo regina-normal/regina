@@ -30,6 +30,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 /*
  *  edge3[i] is the index of the complex edge parameter associated with
  *  the edge of EdgeIndex i.  Opposite edges have equal complex edge
@@ -226,3 +228,5 @@ const char index_by_permutation[256] = {
     -1, -1,  2, -1, -1, -1, -1, -1,  3, -1, -1, -1, -1, -1, -1, -1,
     -1,  1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+
+} } // namespaces

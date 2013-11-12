@@ -23,6 +23,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 FuncResult change_peripheral_curves(
           Triangulation *manifold,
     CONST MatrixInt22   change_matrices[])
@@ -234,3 +236,5 @@ FuncResult change_peripheral_curves(
 
     return func_OK;
 }
+
+} } // namespaces

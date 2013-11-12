@@ -95,6 +95,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 
 static void    initialize_flags(Triangulation *manifold);
 static void visit_tetrahedra(Triangulation *manifold, Boolean compute_corners, Boolean centroid_at_origin);
@@ -1050,3 +1052,5 @@ static void eliminate_empty_relations(Triangulation *manifold)
         if (edge->num_incident_generators == 0)
             edge->active_relation = FALSE;
 }
+
+} } // namespaces

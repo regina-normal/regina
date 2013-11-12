@@ -225,6 +225,7 @@
  */
 #define DUPLICATE_RADIUS_EPSILON    1e-3
 
+namespace regina { namespace snappea {
 
 typedef int MinDistanceType;
 enum
@@ -357,7 +358,7 @@ static void                 add_horoball_if_necessary(TilingTet *tiling_tet, Til
 static Boolean              contains_north_pole(TilingTet *tiling_tet, VertexIndex v);
 static void                 free_tiling_tet_tree(TilingTet *tiling_tree_root);
 static CuspNbhdHoroballList *transfer_horoballs(TilingHoroball **horoball_linked_list);
-static int CDECL            compare_horoballs(const void *horoball0, const void *horoball1);
+static int                  compare_horoballs(const void *horoball0, const void *horoball1);
 static void                 cull_duplicate_horoballs(Cusp *cusp, CuspNbhdHoroballList *aHoroballList);
 
 /*
@@ -3765,7 +3766,7 @@ void free_cusp_neighborhood_horoball_list(
 }
 
 
-static int CDECL compare_horoballs(
+static int compare_horoballs(
     const void  *horoball0,
     const void  *horoball1)
 {
@@ -4233,3 +4234,5 @@ CuspNbhdSegmentList *get_cusp_neighborhood_Ford_domain(
 
     return theSegmentList;
 }
+
+} } // namespaces

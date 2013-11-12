@@ -22,6 +22,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 #define ERROR_EPSILON   1e-3
 
 
@@ -95,3 +97,5 @@ double arccosh(
 
     return log(x + sqrt(x*x - 1.0));
 }
+
+} } // namespaces

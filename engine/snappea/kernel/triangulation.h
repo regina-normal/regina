@@ -51,6 +51,8 @@
 #include "SnapPea.h"
 #include "kernel_typedefs.h"
 
+namespace regina { namespace snappea {
+
 /*
  *  Forward declarations.
  */
@@ -246,5 +248,7 @@ struct Triangulation
     Cusp                cusp_list_begin,/* header node for doubly linked list of Cusps      */
                         cusp_list_end;  /* tailer node for doubly linked list of Cusps      */
 };
+
+} } // namespaces
 
 #endif

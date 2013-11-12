@@ -15,6 +15,8 @@
 #ifndef _winged_edge_
 #define _winged_edge_
 
+namespace regina { namespace snappea {
+
 #define INFINITE_RADIUS     1e20
 #define INFINITE_DISTANCE   1e20
 #define INFINITE_LENGTH     1e20
@@ -696,5 +698,7 @@ struct WEPolyhedron
                     face_class_end;
 
 };
+
+} } // namespaces
 
 #endif

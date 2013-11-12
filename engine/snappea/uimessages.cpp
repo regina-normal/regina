@@ -40,15 +40,13 @@
 
 bool regina::NSnapPeaTriangulation::kernelMessages = false;
 
+namespace regina { namespace snappea {
+
 /**
  * Supply bare-bones UI messaging functions for the SnapPea kernel to use.
  *
  * See snappea/kernel/SnapPea.h for details on what each function should do.
  */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 void uAcknowledge(const char *message) {
     if (regina::NSnapPeaTriangulation::kernelMessagesEnabled())
@@ -96,7 +94,4 @@ FuncResult uLongComputationContinues() {
 void uLongComputationEnds() {
 }
 
-#ifdef __cplusplus
-} // extern "C"
-#endif
-
+} } // namespaces

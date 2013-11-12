@@ -20,6 +20,7 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
 
 int decimal_places_of_accuracy(
     double  x,
@@ -64,3 +65,5 @@ int complex_decimal_places_of_accuracy(
 
     return MIN(real_precision, imag_precision);
 }
+
+} } // namespaces

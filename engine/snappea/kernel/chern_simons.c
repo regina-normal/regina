@@ -103,6 +103,8 @@
 
 #define LOG_TWO_PI  1.83787706640934548356
 
+namespace regina { namespace snappea {
+
 static FuncResult   compute_CS(Triangulation *manifold, double value[2]);
 static FuncResult   algorithm_one(Triangulation *manifold, double value[2]);
 static Complex      alg1_compute_Fu(Triangulation *manifold, int which_approximation, Boolean *Li2_error_flag);
@@ -978,3 +980,5 @@ static int get_wide_angle(
 
     return z_history->wide_angle;
 }
+
+} } // namespaces

@@ -110,6 +110,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 #define EPSILON (1e5 * DBL_EPSILON)
 #define MAXITER 20000
 
@@ -358,3 +360,5 @@ void install_shortest_bases(
 
     my_free(change_matrices);
 }
+
+} } // namespaces

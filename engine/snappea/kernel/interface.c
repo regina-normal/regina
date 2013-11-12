@@ -64,6 +64,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 static int  longest_side(Tetrahedron *tet);
 
 
@@ -533,3 +535,5 @@ int get_num_edge_classes(
 
     return count;
 }
+
+} } // namespaces

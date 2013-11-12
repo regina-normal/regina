@@ -61,6 +61,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 /*
  *  The entries in allowable_change must not exceed 0.5.
  *  See explanation above.
@@ -271,3 +273,5 @@ static void recompute_shapes(
         }
     }
 }
+
+} } // namespaces

@@ -50,6 +50,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 static void copy_holonomies_ultimate_to_penultimate(Triangulation *manifold);
 
 
@@ -258,3 +260,5 @@ void compute_edge_angle_sums(
                     -= tet->shape[filled]->cwl[ultimate][edge3[e]].log.real;
         }
 }
+
+} } // namespaces

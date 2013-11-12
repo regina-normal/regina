@@ -65,6 +65,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 static Boolean  check_fill_cusp_array(Triangulation *manifold, Boolean fill_cusp[]);
 static Boolean  cusp_is_fillable_x(Cusp *cusp);
 static Boolean  no_cusps_to_be_filled(int num_cusps, Boolean fill_cusp[]);
@@ -300,3 +302,5 @@ Boolean is_closed_manifold(
     return (all_cusps_are_filled(manifold)
      && all_Dehn_coefficients_are_relatively_prime_integers(manifold));
 }
+
+} } // namespaces

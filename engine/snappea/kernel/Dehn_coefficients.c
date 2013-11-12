@@ -16,6 +16,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 
 Boolean all_Dehn_coefficients_are_integers(
     Triangulation   *manifold)
@@ -114,3 +116,5 @@ Boolean all_cusps_are_filled(
 
     return TRUE;
 }
+
+} } // namespaces

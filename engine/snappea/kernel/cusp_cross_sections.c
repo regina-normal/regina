@@ -84,6 +84,8 @@
 
 #define CIRCUMRADIUS_EPSILON    1e-10
 
+namespace regina { namespace snappea {
+
 typedef struct ideal_vertex
 {
     Tetrahedron         *tet;
@@ -605,3 +607,5 @@ void compute_tilts_for_one_tet(
 
     }
 }
+
+} } // namespaces

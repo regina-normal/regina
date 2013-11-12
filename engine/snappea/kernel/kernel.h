@@ -5,13 +5,6 @@
  *  It should be #included in all kernel .c files, but nowhere else.
  */
 
-/* 
- *  Allow inclusion of this header in c++ projects.
- */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef _kernel_
 #define _kernel_
 
@@ -42,8 +35,4 @@ extern "C" {
 #include "kernel_prototypes.h"
 #include "tables.h"
 
-#endif
-
-#ifdef __cplusplus
-}
 #endif

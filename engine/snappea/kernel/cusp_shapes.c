@@ -61,6 +61,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 static void             compute_the_cusp_shapes(Triangulation *manifold, FillingStatus which_structure);
 static void             set_all_shapes_to_zero(Triangulation *manifold, FillingStatus which_structure);
 static void             compute_one_cusp_shape(Triangulation *manifold, Cusp *cusp, FillingStatus which_structure);
@@ -461,3 +463,5 @@ static PositionedTet find_start(
     ptet.orientation    = unknown_orientation;
     return ptet;
 }
+
+} } // namespaces

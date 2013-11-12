@@ -66,6 +66,8 @@
  *  in SnapPea.h.  It depends on some of the typedefs there.
  */
 
+namespace regina { namespace snappea {
+
 typedef struct TriangulationData    TriangulationData;
 typedef struct CuspData             CuspData;
 typedef struct TetrahedronData      TetrahedronData;
@@ -103,3 +105,6 @@ struct TetrahedronData
     int             curve[2][2][4][4];
     Complex         filled_shape;
 };
+
+} } // namespaces
+

@@ -100,6 +100,8 @@
 #include "kernel.h"
 #include "canonize.h"
 
+namespace regina { namespace snappea {
+
 
 static void     remove_vertex_cross_sections(Triangulation *manifold);
 static void     attach_canonize_info(Triangulation *manifold);
@@ -626,3 +628,5 @@ static Boolean eliminate_opaque_face(
 
     return FALSE;
 }
+
+} } // namespaces

@@ -195,6 +195,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 struct extra
 {
     VertexIndex ideal_vertex_index;
@@ -1543,3 +1545,5 @@ static void renumber_real_cusps(
 
             cusp->index = cusp_count++;
 }
+
+} } // namespaces

@@ -8,16 +8,12 @@
 
 #include "../kernel/SnapPea.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace regina { namespace snappea {
 
-extern int* get_cusp_equation(Triangulation* manifold, int cusp_num,
-    int m, int l, int* numRows);
+extern int* get_cusp_equation(regina::snappea::Triangulation* manifold,
+    int cusp_num, int m, int l, int* numRows);
 extern void free_cusp_equation(int *equation);
 
-#ifdef __cplusplus
-}
-#endif
+} } // namespaces
 
 #endif

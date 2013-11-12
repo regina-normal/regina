@@ -17,6 +17,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 static void initialize_gluing_equations(Triangulation *manifold);
 static void compute_derivative(Triangulation *manifold);
 static void compute_rhs(Triangulation *manifold);
@@ -512,3 +514,5 @@ static void compute_rhs(
 
     }
 }
+
+} } // namespaces

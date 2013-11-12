@@ -14,6 +14,7 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
 
 void veer_left(
     PositionedTet   *ptet)
@@ -104,3 +105,5 @@ void set_left_edge(
     ptet->bottom_face   = remaining_face[ptet->near_face][ptet->left_face];
     ptet->orientation   = right_handed;
 }
+
+} } // namespaces

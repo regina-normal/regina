@@ -33,6 +33,7 @@
 
 #include "SnapPea.h"
 
+namespace regina { namespace snappea {
 
 #define NEW_STRUCT(struct_type)     (struct_type *) my_malloc((size_t) sizeof(struct_type))
 #define NEW_ARRAY(n, struct_type)   (struct_type *) my_malloc((size_t) (n) * sizeof(struct_type))
@@ -437,39 +438,6 @@ typedef struct
 typedef struct extra Extra;
 
 
-/*
- *  Normally one expects all the code to be compiled with the same set
- *  of calling conventions.  An exception arises when using C++
- *  in conjunction with ANSI library routines that require callback functions.
- *  Specifically, qsort() wants a comparision function declared using
- *  C calling conventions.  Typically this requires that the C++ code
- *  declare the callback function as cdecl or _cdecl ("C declaration").
- *  If this doesn't work, try the following syntax (which will require
- *  something like "#define CDECL_END }" to provide the closing bracket).
- *      
- *      extern "C"
- *      {
- *          int comp(const void *a, const void *b)
- *          {
- *              ...
- *          }
- *      }
- *
- *  If all else fails, read the documentation for your C++ compiler,
- *  and contact weeks@northnet.org if you have problems.   If this
- *  gets to be a headache, I can replace the standard library's qsort()
- *  with a hard-coded qsort (such as the one on page 120 of K&R 2nd ed.).
- */
-
-#ifdef __cplusplus
-
-#define CDECL   _cdecl
-//#define CDECL cdecl
-
-#else
-
-#define CDECL   /* We're not using C++, so CDECL may be empty. */
-
-#endif
+} } // namespaces
 
 #endif

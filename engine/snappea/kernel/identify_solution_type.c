@@ -48,6 +48,8 @@
 #define FLAT_EPSILON        1e-2
 
 
+namespace regina { namespace snappea {
+
 static Boolean  solution_is_flat(Triangulation *manifold);
 static Boolean  solution_is_geometric(Triangulation *manifold);
 
@@ -193,3 +195,5 @@ Boolean tetrahedron_is_geometric(
 
     return TRUE;
 }
+
+} } // namespaces

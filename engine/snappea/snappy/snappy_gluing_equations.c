@@ -1,5 +1,7 @@
 #include "../kernel/kernel.h"
 
+namespace regina { namespace snappea {
+
 /*
  * This file was originally named "gluing_equations.c" when distributed with
  * SnapPy, but has been renamed here to avoid conflict. 
@@ -153,3 +155,4 @@ void free_cusp_equation(int* equation){
   my_free(equation);
 }
   
+} } // namespaces

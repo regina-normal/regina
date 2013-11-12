@@ -26,6 +26,8 @@
 #ifndef _SnapPea_
 #define _SnapPea_
 
+namespace regina { namespace snappea {
+
 /*
  *  Note:  values of the SolutionType enum are stored as integers in
  *  the triangulation.doc file format.  Changing the order of the
@@ -411,6 +413,7 @@ typedef struct GroupPresentation            GroupPresentation;
 typedef struct CuspNeighborhoods            CuspNeighborhoods;
 typedef struct NormalSurfaceList            NormalSurfaceList;
 
+} } // namespaces
 
 /*
  *  winged_edge.h describes the winged edge data structure used
@@ -468,10 +471,7 @@ typedef struct NormalSurfaceList            NormalSurfaceList;
 #define CONST
 /* #define CONST const */
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace regina { namespace snappea {
 
 /************************************************************************/
 
@@ -2551,8 +2551,6 @@ extern double volume(Triangulation *manifold, int *precision);
  *  variable *precision.
  */
 
-#ifdef __cplusplus
-}
-#endif
+} } // namespaces
 
 #endif

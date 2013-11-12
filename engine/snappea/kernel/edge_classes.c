@@ -51,6 +51,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 static void initialize_tet_edge_classes(Triangulation *manifold);
 static void create_one_edge_class(Triangulation *manifold, Tetrahedron *tet, EdgeIndex e);
 
@@ -272,3 +274,5 @@ void orient_edge_classes(
         }
     }
 }
+
+} } // namespaces

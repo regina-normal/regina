@@ -21,6 +21,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 FuncResult canonize(
     Triangulation   *manifold)
 {
@@ -45,3 +47,5 @@ FuncResult canonize(
 
     return func_OK;
 }
+
+} } // namespaces

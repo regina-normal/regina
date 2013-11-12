@@ -14,6 +14,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 Cusp *find_cusp(
     Triangulation   *manifold,
     int             cusp_index)
@@ -39,3 +41,5 @@ Cusp *find_cusp(
      */
     return NULL;
 }
+
+} } // namespaces

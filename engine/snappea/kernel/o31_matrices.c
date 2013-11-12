@@ -23,6 +23,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 /*
  *  gl4R_invert will consider a matrix to be singular iff one of the
  *  absolute value of one of the pivots is less than SINGULAR_MATRIX_EPSILON.
@@ -584,3 +586,5 @@ void o31_vector_diff(
     for (i = 0; i < 4; i++)
         diff[i] = a[i] - b[i];
 }
+
+} } // namespaces

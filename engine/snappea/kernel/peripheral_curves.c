@@ -235,6 +235,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 typedef struct PerimeterPiece   PerimeterPiece;
 
 struct extra
@@ -1435,3 +1437,5 @@ static void restore_scratch_curves(
                             tet->scratch_curve[g][h][i][j][k]
                             = tet->extra->scratch_curve_backup[g][h][i][j][k];
 }
+
+} } // namespaces

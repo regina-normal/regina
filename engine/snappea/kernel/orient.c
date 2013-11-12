@@ -84,6 +84,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 static void             reverse_orientation(Tetrahedron *tet);
 static void             renumber_neighbors_and_gluings(Tetrahedron *tet);
 static void             renumber_cusps(Tetrahedron *tet);
@@ -864,3 +866,5 @@ void fix_peripheral_orientations(
     if( reversed_meridian ) 
         uAcknowledge("Meridians have been reversed to ensure right-handed {M,L} pairs.");
 }
+
+} } // namespaces

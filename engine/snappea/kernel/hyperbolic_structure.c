@@ -91,6 +91,7 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
 
 const static ComplexWithLog regular_shape = {
                                                 {0.5, ROOT_3_OVER_2},
@@ -1478,3 +1479,5 @@ extern SolutionType remove_Dehn_fillings(Triangulation *manifold)
      */
     return do_Dehn_filling(manifold);
 }
+
+} } // namespaces

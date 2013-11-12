@@ -21,6 +21,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 Complex Zero        = { 0.0, 0.0};
 Complex One         = { 1.0, 0.0};
 Complex Two         = { 2.0, 0.0};
@@ -207,3 +209,5 @@ Boolean complex_infinite(
 {
     return (z.real == Infinity.real && z.imag == Infinity.imag);
 }
+
+} } // namespaces

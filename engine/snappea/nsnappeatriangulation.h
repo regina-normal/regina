@@ -46,10 +46,12 @@
 #include "regina-core.h"
 #include "shareableobject.h"
 
-// Forward declaration of SnapPea structures.
-struct Triangulation;
-
 namespace regina {
+
+// Forward declaration of SnapPea structures.
+namespace snappea {
+    struct Triangulation;
+}
 
 class NMatrixInt;
 class NTriangulation;
@@ -128,7 +130,7 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
         } SolutionType;
 
     private:
-        ::Triangulation* snappeaData;
+        regina::snappea::Triangulation* snappeaData;
             /**< The triangulation stored in SnapPea's native format. */
         static bool kernelMessages;
             /**< Should the SnapPea kernel write diagnostic messages to
@@ -495,8 +497,8 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * @return a corresponding SnapPea structure, or 0 if the
          * conversion was unsuccessful.
          */
-        static ::Triangulation* reginaToSnapPea(const NTriangulation& tri,
-            bool allowClosed);
+        static regina::snappea::Triangulation* reginaToSnapPea(
+            const NTriangulation& tri, bool allowClosed);
 
         /**
          * Creates a new native Regina triangulation that mirrors the
@@ -509,7 +511,8 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * @return a corresponding Regina triangulation, or 0 if
          * \a tri is a null pointer.
          */
-        static NTriangulation* snapPeaToRegina(::Triangulation* tri);
+        static NTriangulation* snapPeaToRegina(
+            regina::snappea::Triangulation* tri);
 };
 
 /*@}*/

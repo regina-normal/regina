@@ -24,6 +24,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 static double   Lobachevsky(double theta);
 
 
@@ -284,3 +286,5 @@ double birectangular_tetrahedron_volume(
 
     return tetrahedron_volume;
 }
+
+} } // namespaces

@@ -99,6 +99,8 @@
 
 #define TORSION_EPSILON 1e-5
 
+namespace regina { namespace snappea {
+
 
 void core_geodesic(
     Triangulation   *manifold,
@@ -230,3 +232,5 @@ void compute_core_geodesic(
 
     }
 }
+
+} } // namespaces

@@ -12,6 +12,8 @@
 #ifndef _link_projection_
 #define _link_projection_
 
+namespace regina { namespace snappea {
+
 typedef struct KLPCrossing      KLPCrossing;
 typedef struct KLPProjection    KLPProjection;
 
@@ -154,5 +156,7 @@ struct KLPCrossing
 
   int      label[2][2];
 };
+
+} } // namespaces
 
 #endif

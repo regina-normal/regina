@@ -52,6 +52,8 @@
 #include <stdlib.h> /* needed for malloc()  */
 #include <stdio.h>  /* needed for sprintf() */
 
+namespace regina { namespace snappea {
+
 static int  net_malloc_calls = 0;
 
 /*
@@ -211,3 +213,5 @@ void verify_my_malloc_usage()
         uAcknowledge(the_message);
     }
 }
+
+} } // namespaces

@@ -167,6 +167,8 @@
 #include "kernel.h"
 #include <stdlib.h>     /* needed for rand() */
 
+namespace regina { namespace snappea {
+
 /*
  *  ORDER_FOUR_ITERATIONS_IN_SIMPLIFY tells how many times
  *  basic_simplification() should pass unsuccessfully down
@@ -2620,3 +2622,5 @@ static void set_inverse_neighbor_and_gluing(
     tet->neighbor[f]->gluing  [EVALUATE(tet->gluing[f], f)]
         = inverse_permutation[tet->gluing[f]];
 }
+
+} } // namespaces

@@ -115,6 +115,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 /*
  *  If you are not familiar with SnapPea's "Extra" field in
  *  the Tetrahedron data structure, please see the explanation
@@ -693,3 +695,5 @@ static void create_real_cusps(
 
             old_tet->extra->outer_vertex_tet[i]->cusp[i] = old_tet->cusp[i]->matching_cusp; 
 }
+
+} } // namespaces

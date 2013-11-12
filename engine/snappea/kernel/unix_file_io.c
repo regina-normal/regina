@@ -10,6 +10,8 @@
 #include <string.h>
 #include "unix_file_io.h"
 
+namespace regina { namespace snappea {
+
 #define READ_OLD_FILE_FORMAT 0
 
 #define FALSE   0
@@ -145,7 +147,7 @@ Triangulation *read_triangulation(
 	     fseek(fp, 0, SEEK_SET) != 0     )
 	    uFatalError("read_triangulation", "unix file io");
 
-	buffer = malloc(filesize + 1);
+	buffer = (char*)malloc(filesize + 1);
 	if ( buffer == NULL)
 	    uFatalError("read_triangulation", "unix file io");
 	if ( fread(buffer, filesize, 1, fp) != 1 )
@@ -591,7 +593,7 @@ static char *StringNewFileFormat(
     char *p;
 
     size = 100*(10 + data->num_or_cusps + data->num_nonor_cusps + 8*data->num_tetrahedra);
-    buffer = malloc(size);
+    buffer = (char*)malloc(size);
     if ( buffer == NULL)
       uFatalError("StringNewFileFormat", "unix file io");
     p = buffer;
@@ -700,3 +702,5 @@ static char *StringNewFileFormat(
    }
    return buffer;
 }
+
+} } // namespaces

@@ -21,6 +21,8 @@
 #include "kernel.h"
 #include "canonize.h"
 
+namespace regina { namespace snappea {
+
 
 Boolean is_canonical_triangulation(
     Triangulation   *manifold)
@@ -71,3 +73,5 @@ Boolean is_canonical_triangulation(
 
     return result;
 }
+
+} } // namespaces

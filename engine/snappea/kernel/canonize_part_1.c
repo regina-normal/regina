@@ -89,6 +89,8 @@
 #define MAX_MOVES   1000
 #define ANGLE_EPSILON           1e-6
 
+namespace regina { namespace snappea {
+
 static FuncResult   validate_hyperbolic_structure(Triangulation *manifold);
 static Boolean      attempt_cancellation(Triangulation *manifold);
 static Boolean      attempt_three_to_two(Triangulation *manifold);
@@ -561,3 +563,5 @@ static Boolean validate_canonical_triangulation(
 
     return TRUE;
 }
+
+} } // namespaces

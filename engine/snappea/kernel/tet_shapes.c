@@ -39,6 +39,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 /*
  *  CANCELLATION_EPSILON says how close the logs of two complex
  *  numbers must be to be considered equal.
@@ -213,3 +215,5 @@ static void normalize_angle(
     while (*angle < - PI_OVER_2)
         *angle += TWO_PI;
 }
+
+} } // namespaces

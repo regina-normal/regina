@@ -34,6 +34,7 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
 
 /*
  *  scratch_curves[0] will store the original peripheral curves.
@@ -107,3 +108,5 @@ static void compute_new_curves(
                             + tet->cusp[j]->intersection_number[h][M]
                                 * tet->scratch_curve[nice_curves][L][i][j][k];
 }
+
+} } // namespaces

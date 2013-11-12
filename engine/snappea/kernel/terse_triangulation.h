@@ -93,6 +93,8 @@
 
 #include "kernel.h"
 
+namespace regina { namespace snappea {
+
 struct TerseTriangulation
 {
     /*
@@ -111,5 +113,7 @@ struct TerseTriangulation
     double      CS_value;
 
 };
+
+} } // namespaces
 
 #endif
