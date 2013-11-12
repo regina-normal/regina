@@ -133,6 +133,8 @@ Version 4.95  [ 12 November, 2013 ]
             - The requirements for new vector subclasses have changed, since the
               old macro-based registry was replaced with the new template-based
               registry.  See the NNormalSurfaceVector class notes for details.
+            - Python users can now create a normal surface by hand, e.g.,:
+              NNormalSurface(tri, NS_STANDARD, [ 1, 2, 0, ... ]).
         Class NNormalSurfaceList:
             - Re-enabled enumeration using NS_HILBERT_FULLCONE, which previously
               returned an empty list.  Users will not be affected unless
