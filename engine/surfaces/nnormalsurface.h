@@ -799,13 +799,40 @@ class REGINA_API NNormalSurface : public ShareableObject {
          *
          * \ifacespython Not present.
          *
-         * @param triang the triangulation in which this normal surface
-         * resides.
+         * @param triang the triangulation in which this normal surface resides.
          * @param newVector a vector containing the coordinates of the
          * normal surface in whichever space is appropriate.
          */
         NNormalSurface(NTriangulation* triang,
             NNormalSurfaceVector* newVector);
+
+
+        /**
+         * A Python-only routine that creates a new normal surface
+         * inside the given triangulation with the given coordinate vector.
+         *
+         * \pre The given coordinate system is one in which Regina is
+         * able to enumerate and store normal surfaces (not a system
+         * like ::NS_EDGE_WEIGHT, which is for viewing purposes only).
+         * \pre The given coordinate vector represents a normal surface
+         * inside the given triangulation (in particular, it satisfies the
+         * relevant system of matching equations).  This will not be checked,
+         * and things \e will go wrong if you break it.
+         *
+         * \ifacescpp Not available; this routine is for Python only.
+         *
+         * @param triang the triangulation in which this normal surface resides.
+         * @param coordSystem the coordinate system used by this normal surface.
+         * @param allCoords the corresponding vector of normal coordinates,
+         * expressed as a Python list.  The list elements will be
+         * converted internally to NLargeInteger objects.
+         */
+        #ifdef __DOXYGEN
+        NNormalSurface(NTriangulation* triang, NormalCoords coordSystem,
+            List allCoords);
+        #endif
+
+
         /**
          * Destroys this normal surface.
          * The underlying vector of coordinates will also be

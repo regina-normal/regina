@@ -437,7 +437,16 @@ TypeError: bad argument type for built-in operation
    &regina; as strings, and you can hook these up to &snappy;'s functions
    <function>Manifold()</function> and
    <function>Manifold._to_string()</function> at the other end.
+   See the example below.
   </para>
+  <warning><para>
+   At present, &snappy; (version&nbsp;2.0.3) is not compatible with
+   multiple &python; interpreters.  If you import &snappy; into more than one
+   &python;
+   console in the graphical user interface, &snappy; may stop working.
+   See <link linkend="trouble-python-snappy">this troubleshooting entry</link>
+   for details.
+  </para></warning>
   <programlisting>
 bab@ember:~$ regina-python 
 Regina 4.95
