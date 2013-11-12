@@ -198,7 +198,7 @@ typedef pthread_t NThreadID;
 class REGINA_API NThread {
     private:
         NThreadID id_;
-            /**< The system ID of the running thread, or 0 if this
+            /**< The system ID of the running thread, or undefined if this
                  thread is not running. */
     public:
         /**
@@ -330,7 +330,6 @@ inline void NThread::yield() {
 
 inline void NThread::join() {
     pthread_join(id_, 0);
-    id_ = 0;
 }
 
 } // namespace regina
