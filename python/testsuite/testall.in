@@ -78,7 +78,7 @@ for i in `find "$testdir" -name "*.test" | sort`; do
 	echo -n "Running $testname ... "
 
 	output="${i/.test/.out}"
-	if ! ( "$executable" -n "$i" "$testdir" > "$tmpout" 2>&1 ); then
+	if ! ( TERM= "$executable" -n "$i" "$testdir" > "$tmpout" 2>&1 ); then
 		echo "COULD NOT RUN"
 		broken=1
 	else

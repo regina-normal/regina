@@ -271,6 +271,44 @@
      </para>
     </answer>
    </qandaentry>
+
+   <qandaentry id="trouble-python-snappy">
+    <question><para>
+     &snappy; has stopped working in the graphical user interface.
+     When I import &snappy; and try to create a manifold, I receive a
+     <exceptionname>TypeError</exceptionname> with the message
+     &quot;isinstance() arg 2 must be a class, type, or tuple
+     of classes and types&quot;.
+    </para></question>
+    <answer>
+     <para>
+      At the time of writing, &snappy; (version&nbsp;2.0.3) is not
+      compatible with multiple interpreters.  If you run the graphical
+      user interface and import the <parameter>snappy</parameter> module
+      in more than one &python; console, &snappy; will stop working.
+     </para>
+     <para>
+      A workaround is to open one console, import
+      <parameter>snappy</parameter> within it, and then <emphasis>leave that
+      console open</emphasis>.  You can then use &snappy; in as many
+      different consoles as you like: &snappy; will only break after you
+      close that first console.
+     </para>
+     <para>
+      If you are not working directly with a data file, another option
+      is to use the
+      <link linkend="man-regina-python"><command>regina-python</command></link>
+      command-line tool.  This only runs one instance of &python;, and
+      so avoids the problem.
+     </para>
+     <para>
+      The problem appears to be rooted in &cython;, which &snappy; uses
+      for its &python; bindings.
+      The &snappy; and &regina; authors are currently working to find a
+      suitable workaround.
+     </para>
+    </answer>
+   </qandaentry>
   </qandadiv>
 
   <qandadiv id="trouble-misc"><title>Miscellaneous</title>
