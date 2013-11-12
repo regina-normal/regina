@@ -124,8 +124,8 @@ if ! tar "$taropts" "$1" | sed -e 's%^[^/]*/%%' -e 's%/$%%' | \
   exit 1
 fi
 
-# Make a list of files in the subversion source tree.
-echo "Analysing subversion source tree..."
+# Make a list of files in the git source tree.
+echo "Analysing git source tree..."
 
 if ! find "$gittree" -type f | sed -e 's%^[^/]*/%%' | \
     grep -v "$grep_builddirs" | \
@@ -137,7 +137,7 @@ if ! find "$gittree" -type f | sed -e 's%^[^/]*/%%' | \
     grep -v '^utils/local\(/\|$\)' | \
     grep -v '^utils/snappea\(/\|$\)' | \
     sort > "$gitlist" ; then
-  echo "The contents of the subversion source tree could not be listed."
+  echo "The contents of the git source tree could not be listed."
   exit 1
 fi
 
