@@ -300,6 +300,7 @@ bool NTriangulation::isThreeSphere() const {
     // The Poincare conjecture!
     if (working->getFundamentalGroup().getNumberOfGenerators() == 0) {
         threeSphere = true;
+        delete working;
 
         // Some other things that come for free:
         irreducible = true;
