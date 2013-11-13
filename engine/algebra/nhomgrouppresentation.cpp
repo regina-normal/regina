@@ -75,7 +75,7 @@ NGroupExpression NHomGroupPresentation::invEvaluate(
    unsigned long N( domain_->getNumberOfGenerators() );
    for (unsigned long i=0; i<retval.getNumberOfTerms(); i++)
        retval.getTerm(i).generator += N; 
-   for (unsigned long i=0; i<map_.size(); i++)
+   for (unsigned long i=0; i<map2_.size(); i++)
        retval.substitute( N+i, *map2_[i] );
    return retval; 
 

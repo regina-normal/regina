@@ -305,6 +305,7 @@ bool NTriangulation::isThreeSphere() const {
         irreducible = true;
         haken = false;
 
+        delete working;
         return true;
     }
 
