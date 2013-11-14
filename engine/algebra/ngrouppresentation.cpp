@@ -1452,7 +1452,7 @@ std::auto_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail()
    for (std::set<unsigned long>::iterator i=newGenDel.begin(); 
         i!=newGenDel.end(); i++)
     for (it=relatorPile.begin(); it!=relatorPile.end(); it++)
-     reloopFlag = reloopFlag || (*it)->substitute(*i, NGroupExpression(), true );
+     if ((*it)->substitute(*i, NGroupExpression(), true )) reloopFlag=true;
   }
 
   relations.clear();
