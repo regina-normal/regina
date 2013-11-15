@@ -2446,6 +2446,137 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
         void splitEdgeClasses();
 };
 
+/**
+ * A gluing permutation search class that offers a specialised search
+ * algorithm for when only minimal ideal triangulations of finite-volume
+ * hyperbolic 3-manifolds are required.
+ *
+ * Note that additional unwanted triangulations (e.g., non-hyperbolic or
+ * non-minimal triangulations) may still be produced by this search.
+ * However, significantly fewer unwanted triangulations will be produced
+ * when using this class instead of NGluingPermSearcher.
+ *
+ * \ifacespython Not present.
+ */
+class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
+    private:
+        static const char ECLASS_TWISTED;
+            /**< Signifies that an edge has been identified with itself
+                 in reverse. */
+        static const char ECLASS_LOWDEG;
+            /**< Signifies that a set of tetrahedron edges have been
+                 identified to form an internal edge of low degree
+                 (degree 1 or 2 of any type, or degree 3 with three
+                 distinct tetrahedra). */
+
+    public:
+        static const char dataTag_;
+            /**< A character used to identify this class when reading
+                 and writing tagged data in text format. */
+
+    public:
+        /**
+         * Creates a new search manager for use when only minimal ideal
+         * triangulations of finite-volume hyperbolic 3-manifolds are required.
+         * Note that other unwanted triangulations may still be produced (e.g.,
+         * non-hyperbolic or non-minimal triangulations), but there will be
+         * far fewer of these than when using the NGluingPermSearcher
+         * class directly.
+         *
+         * For details on how a search manager is used, see the
+         * NGluingPermSearcher documentation.
+         *
+         * All constructor arguments are the same as for the
+         * NGluingPermSearcher constructor, though some arguments (such as
+         * \a finiteOnly and \a whichPurge) are not needed here since they
+         * are already implied by the specialised search context.
+         *
+         * \pre The given face pairing is connected, i.e., it is possible
+         * to reach any tetrahedron from any other tetrahedron via a
+         * series of matched face pairs.
+         * \pre The given face pairing is in canonical form as described
+         * by NFacePairing::isCanonical().  Note that all face pairings
+         * constructed by NFacePairing::findAllPairings() are of this form.
+         * \pre The given face pairing has no boundary faces.
+         */
+        NHyperbolicMinSearcher(const NFacePairing* pairing,
+                const NFacePairing::IsoList* autos,
+                bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
+
+        /**
+         * Initialises a new search manager based on data read from the
+         * given input stream.  This may be a new search or a partially
+         * completed search.
+         *
+         * This routine reads data in the format written by dumpData().
+         * If you wish to read data whose precise class is unknown,
+         * consider using dumpTaggedData() and readTaggedData() instead.
+         *
+         * If the data found in the input stream is invalid or incorrectly
+         * formatted, the routine inputError() will return \c true but
+         * the contents of this object will be otherwise undefined.
+         *
+         * The arguments \a use and \a useArgs are the same as for the
+         * NGluingPermSearcher constructor.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * @param in the input stream from which to read.
+         */
+        NHyperbolicMinSearcher(std::istream& in,
+            UseGluingPerms use, void* useArgs = 0);
+
+        // Overridden methods:
+        virtual void dumpData(std::ostream& out) const;
+        virtual void runSearch(long maxDepth = -1);
+
+    protected:
+        // Overridden methods:
+        virtual char dataTag() const;
+
+    private:
+        /**
+         * Merge the classes of tetrahedron edges as required by the
+         * new gluing made at stage \a orderElt of the search.
+         *
+         * This overrides NEulerSearcher::mergeEdgeClasses(), and
+         * tests for additional structures that, whilst valid, cannot
+         * appear in a minimal ideal triangulation of a finite-volume
+         * hyperbolic manifold.
+         *
+         * This routine returns a bitwise (OR) combination of the
+         * ECLASS_... flags defined earlier in this class.  These
+         * flags describe what happened to the edge classes during
+         * this particular merge.  In particular, they note when edge
+         * identifications form a structure that cannot possibly appear
+         * in the types of triangulations for which we are searching.
+         *
+         * Note that, if multiple ECLASS_... flags are appropriate, only
+         * a subset of these flags might be returned.  This is because
+         * this routine might exit early after one bad structure has been
+         * detected, without spending time testing for others.  It is
+         * guaranteed that if at least one such flag is appropriate then
+         * at least one such flag will be returned.
+         *
+         * @return a combination of ECLASS_... flags describing how
+         * the edge links were changed, or 0 if none of the changes
+         * described by these flags were observed.
+         */
+        int mergeEdgeClasses();
+
+        /**
+         * Split the classes of tetrahedron edges to mirror the undoing
+         * of the gluing at stage \a orderElt of the search.
+         *
+         * This overrides NEulerSearcher::splitEdgeClasses(), so that
+         * we can undo the additional work performed in the overridden
+         * mergeEdgeClasses().
+         */
+        void splitEdgeClasses();
+};
+
 /*@}*/
 
 // Inline functions for NGluingPermSearcher
@@ -2747,6 +2878,12 @@ inline NClosedPrimeMinSearcher::~NClosedPrimeMinSearcher() {
 
 inline char NClosedPrimeMinSearcher::dataTag() const {
     return NClosedPrimeMinSearcher::dataTag_;
+}
+
+// Inline functions for NHyperbolicMinSearcher
+
+inline char NHyperbolicMinSearcher::dataTag() const {
+    return NHyperbolicMinSearcher::dataTag_;
 }
 
 } // namespace regina
