@@ -7,6 +7,15 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Version 4.96  [ (under development) ]
+
+    ENGINE:
+        Class NSnapPeaTriangulation:
+            - Fatal errors in the SnapPea kernel are now handled by throwing
+              exceptions, instead of quitting abruptly.
+        Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:
+            - New exceptions to be thrown by the SnapPea kernel.
+
 Version 4.95  [ 12 November, 2013 ]
 
     GENERAL:

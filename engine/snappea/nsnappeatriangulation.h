@@ -62,6 +62,44 @@ class NTriangulation;
 #ifndef EXCLUDE_SNAPPEA
 
 /**
+ * A base class for all exceptions that are thrown from within the
+ * SnapPea kernel.
+ */
+struct SnapPeaException {
+};
+
+/**
+ * An exception that is thrown when the SnapPea kernel encounters a
+ * fatal error.
+ */
+struct SnapPeaFatalError : public SnapPeaException {
+    std::string function;
+        /**< The function from the SnapPea kernel in which the
+             fatal error occurred. */
+    std::string file;
+        /**< The source file from the SnapPea kernel in which the
+             fatal error occurred. */
+
+    /**
+     * Creates a new exception, indicating where in the SnapPea kernel
+     * the error occurred.
+     *
+     * @param fromFunction the function from the SnapPea kernel in which
+     * the error occurred.
+     * @param fromFile the source file from the SnapPea kernel in which
+     * the error occurred.
+     */
+    SnapPeaFatalError(const char* fromFunction, const char* fromFile);
+};
+
+/**
+ * An exception that is thrown when the SnapPea kernel finds that all
+ * available memory has been exhausted.
+ */
+struct SnapPeaMemoryFull : public SnapPeaException {
+};
+
+/**
  * Offers direct access to the SnapPea kernel from within Regina.
  *
  * An object of this class represents a 3-manifold triangulation, stored in
@@ -76,6 +114,11 @@ class NTriangulation;
  * This class is designed to act as the sole conduit between the Regina
  * calculation engine and the SnapPea kernel.  Regina code should not
  * interact with the SnapPea kernel other than through this class.
+ *
+ * There are many places in the SnapPea kernel where SnapPea throws a
+ * fatal error.  As of Regina 4.96, these fatal errors are converted
+ * into exceptions (subclassed from SnapPeaException), which can be caught
+ * and handled politely.
  *
  * Regina uses the variant of the SnapPea kernel that is shipped with
  * SnapPy, as well as some additional code written explicitly for SnapPy.
@@ -513,6 +556,13 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
 };
 
 /*@}*/
+
+// Inline functions for SnapPeaFatalError
+
+inline SnapPeaFatalError::SnapPeaFatalError(
+        const char* fromFunction, const char* fromFile) :
+        function(fromFunction), file(fromFile) {
+}
 
 // Inline functions for NSnapPeaTriangulation
 
