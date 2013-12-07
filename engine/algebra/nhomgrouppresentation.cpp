@@ -238,6 +238,7 @@ bool NHomGroupPresentation::intelligentNielsen()
  return retval;
 }
 
+// TODO: simplify this code using invert() and composeWith()
 bool NHomGroupPresentation::intelligentSimplify()
 {
  // step 1: simplify presentation of domain and range 
