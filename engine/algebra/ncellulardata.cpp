@@ -1067,7 +1067,7 @@ long int NCellularData::signature() const
  const NBilinearForm* b = bilinearForm( 
   FormLocator( intersectionForm, GroupLocator(2, coVariant, DUAL_coord, 0), 
                                  GroupLocator(2, coVariant, DUAL_coord, 0) ) );
- return b->signature();
+ return b->zFormSignature();
 }
 
 

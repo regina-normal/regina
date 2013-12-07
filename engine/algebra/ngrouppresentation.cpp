@@ -1268,7 +1268,7 @@ std::auto_ptr< NHomGroupPresentation >
     }
  }
  if (!kerPres.isValid()) 
-  { std::cout<<"identify_extension_over_Z() error:"<<
+  { std::cout<<"identify_extension_over_Z() error (1):"<<
      " out of bounds relator in kerPres.\n";
      std::cout.flush();   exit(1); }
  // build the reductions of the {0,1,...,liftCount-1} translates of **all**
@@ -1290,6 +1290,11 @@ std::auto_ptr< NHomGroupPresentation >
     kerPres.addRelation( new NGroupExpression( *I ) );   
    }
   }
+ if (!kerPres.isValid()) 
+  { std::cout<<"identify_extension_over_Z() error (2):"<<
+     " out of bounds relator in kerPres.\n";
+     std::cout.flush();   exit(1); }
+
   // replace this presentation by the semi-direct product presentation.
   std::vector<NGroupExpression> autVec;
 

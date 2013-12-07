@@ -114,7 +114,7 @@ class NBilinearFormTest : public CppUnit::TestFixture {
 	  if (!innP.rightAdjoint().isIsomorphism()) 
            CPPUNIT_FAIL("Right-adjoint to standard inner product on R^n is not isomorphism.");
           if (!innP.isSymmetric()) CPPUNIT_FAIL("Standard inner product isn't symmetric.");
-          if (innP.signature() != dim) CPPUNIT_FAIL("Standard inner product doesn't have full signature.");
+          if (innP.zFormSignature() != dim) CPPUNIT_FAIL("Standard inner product doesn't have full signature.");
 	  }
         // ??
 	};
