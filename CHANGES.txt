@@ -34,6 +34,8 @@ Version 5.0  [ (under development) ]
 Version 4.96  [ (under development) ]
 
     ENGINE:
+        Class NAbelianGroup:
+            - New convenience operator !=.
         Class NNormalSurface:
             - Routine boundarySlopes() now uses (shortest, second-shortest)
               curves on the cusp as its (meridian, longitude) basis.

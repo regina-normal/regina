@@ -46,6 +46,8 @@
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
+
+#include "testsuite/exhaustive.h"
 #include "testsuite/dim4/testdim4.h"
 
 using regina::Dim4BoundaryComponent;
@@ -1243,76 +1245,75 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyBary(pillow_fourCycle);
         }
 
-        void verifyEltmove15(const Dim4Triangulation& tri) {
-            unsigned long n = tri.getNumberOfPentachora();
+        static void verifyEltmove15(Dim4Triangulation* tri) {
+            unsigned long n = tri->getNumberOfPentachora();
             for (unsigned long i = 0; i < n; ++i) {
-                Dim4Triangulation large(tri);
+                Dim4Triangulation large(*tri);
                 large.oneFiveMove(large.getPentachoron(i));
 
                 if (large.getNumberOfPentachora() != n + 4) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->getPacketLabel() << ", pent " << i << ": "
                         << "1-5 move gives wrong # pentachora.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (large.isValid() != tri.isValid()) {
+                if (large.isValid() != tri->isValid()) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->getPacketLabel() << ", pent " << i << ": "
                         << "1-5 move changes validity.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (large.isOrientable() != tri.isOrientable()) {
+                if (large.isOrientable() != tri->isOrientable()) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->getPacketLabel() << ", pent " << i << ": "
                         << "1-5 move changes orientability.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (large.isClosed() != tri.isClosed()) {
+                if (large.isClosed() != tri->isClosed()) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->getPacketLabel() << ", pent " << i << ": "
                         << "1-5 move changes closedness.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (large.getNumberOfBoundaryComponents() !=
-                        tri.getNumberOfBoundaryComponents()) {
+                        tri->getNumberOfBoundaryComponents()) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->getPacketLabel() << ", pent " << i << ": "
                         << "1-5 move changes # boundary components.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (large.getEulerCharTri() !=
-                        tri.getEulerCharTri()) {
+                if (large.getEulerCharTri() != tri->getEulerCharTri()) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->getPacketLabel() << ", pent " << i << ": "
                         << "1-5 move changes Euler characteristic.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (tri.isValid()) {
-                    if (! (large.getHomologyH1() == tri.getHomologyH1())) {
+                if (tri->isValid()) {
+                    if (! (large.getHomologyH1() == tri->getHomologyH1())) {
                         std::ostringstream msg;
-                        msg << tri.getPacketLabel() << ", pent " << i << ": "
+                        msg << tri->getPacketLabel() << ", pent " << i << ": "
                             << "1-5 move changes H1.";
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    if (! (large.getHomologyH2() == tri.getHomologyH2())) {
+                    if (! (large.getHomologyH2() == tri->getHomologyH2())) {
                         std::ostringstream msg;
-                        msg << tri.getPacketLabel() << ", pent " << i << ": "
+                        msg << tri->getPacketLabel() << ", pent " << i << ": "
                             << "1-5 move changes H2.";
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
 
                 // Shrink.
-                if (large.isIsomorphicTo(tri).get()) {
+                if (large.isIsomorphicTo(*tri).get()) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->getPacketLabel() << ", pent " << i << ": "
                         << "1-5 move: result is isomorphic.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -1323,14 +1324,14 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
 
                 if (! res) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->getPacketLabel() << ", pent " << i << ": "
                         << "1-5 move: could not recollapse edge.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (! large.isIsomorphicTo(tri).get()) {
+                if (! large.isIsomorphicTo(*tri).get()) {
                     std::ostringstream msg;
-                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->getPacketLabel() << ", pent " << i << ": "
                         << "1-5 move: recollapse is not isomorphic.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -1338,23 +1339,26 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
         }
 
         void eltmove15() {
-            verifyEltmove15(empty);
-            verifyEltmove15(s4_id);
-            verifyEltmove15(s4_doubleConeS3);
-            verifyEltmove15(s3xs1);
-            verifyEltmove15(rp4);
-            verifyEltmove15(s3xs1Twisted);
-            verifyEltmove15(ball_singlePent);
-            verifyEltmove15(ball_foldedPent);
-            verifyEltmove15(ball_singleConeS3);
-            verifyEltmove15(ball_layerAndFold);
-            verifyEltmove15(idealPoincareProduct);
-            verifyEltmove15(mixedPoincareProduct);
-            verifyEltmove15(idealFigEightProduct);
-            verifyEltmove15(mixedFigEightProduct);
-            verifyEltmove15(pillow_twoCycle);
-            verifyEltmove15(pillow_threeCycle);
-            verifyEltmove15(pillow_fourCycle);
+            verifyEltmove15(&empty);
+            verifyEltmove15(&s4_id);
+            verifyEltmove15(&s4_doubleConeS3);
+            verifyEltmove15(&s3xs1);
+            verifyEltmove15(&rp4);
+            verifyEltmove15(&s3xs1Twisted);
+            verifyEltmove15(&ball_singlePent);
+            verifyEltmove15(&ball_foldedPent);
+            verifyEltmove15(&ball_singleConeS3);
+            verifyEltmove15(&ball_layerAndFold);
+            verifyEltmove15(&idealPoincareProduct);
+            verifyEltmove15(&mixedPoincareProduct);
+            verifyEltmove15(&idealFigEightProduct);
+            verifyEltmove15(&mixedFigEightProduct);
+            verifyEltmove15(&pillow_twoCycle);
+            verifyEltmove15(&pillow_threeCycle);
+            verifyEltmove15(&pillow_fourCycle);
+
+            runCensusAllBounded(verifyEltmove15);
+            runCensusAllNoBdry(verifyEltmove15);
         }
 };
 
