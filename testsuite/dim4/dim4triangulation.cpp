@@ -78,6 +78,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(barycentricSubdivision);
+    CPPUNIT_TEST(eltmove15);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1240,6 +1241,120 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyBary(pillow_twoCycle);
             verifyBary(pillow_threeCycle);
             verifyBary(pillow_fourCycle);
+        }
+
+        void verifyEltmove15(const Dim4Triangulation& tri) {
+            unsigned long n = tri.getNumberOfPentachora();
+            for (unsigned long i = 0; i < n; ++i) {
+                Dim4Triangulation large(tri);
+                large.oneFiveMove(large.getPentachoron(i));
+
+                if (large.getNumberOfPentachora() != n + 4) {
+                    std::ostringstream msg;
+                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                        << "1-5 move gives wrong # pentachora.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.isValid() != tri.isValid()) {
+                    std::ostringstream msg;
+                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                        << "1-5 move changes validity.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.isOrientable() != tri.isOrientable()) {
+                    std::ostringstream msg;
+                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                        << "1-5 move changes orientability.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.isClosed() != tri.isClosed()) {
+                    std::ostringstream msg;
+                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                        << "1-5 move changes closedness.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.getNumberOfBoundaryComponents() !=
+                        tri.getNumberOfBoundaryComponents()) {
+                    std::ostringstream msg;
+                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                        << "1-5 move changes # boundary components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.getEulerCharTri() !=
+                        tri.getEulerCharTri()) {
+                    std::ostringstream msg;
+                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                        << "1-5 move changes Euler characteristic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (tri.isValid()) {
+                    if (! (large.getHomologyH1() == tri.getHomologyH1())) {
+                        std::ostringstream msg;
+                        msg << tri.getPacketLabel() << ", pent " << i << ": "
+                            << "1-5 move changes H1.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if (! (large.getHomologyH2() == tri.getHomologyH2())) {
+                        std::ostringstream msg;
+                        msg << tri.getPacketLabel() << ", pent " << i << ": "
+                            << "1-5 move changes H2.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                // Shrink.
+                if (large.isIsomorphicTo(tri).get()) {
+                    std::ostringstream msg;
+                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                        << "1-5 move: result is isomorphic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                bool res =
+                    large.collapseEdge(large.getPentachoron(n + 3)->getEdge(
+                    regina::Dim4Edge::edgeNumber[0][4]), true, true);
+
+                if (! res) {
+                    std::ostringstream msg;
+                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                        << "1-5 move: could not recollapse edge.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! large.isIsomorphicTo(tri).get()) {
+                    std::ostringstream msg;
+                    msg << tri.getPacketLabel() << ", pent " << i << ": "
+                        << "1-5 move: recollapse is not isomorphic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void eltmove15() {
+            verifyEltmove15(empty);
+            verifyEltmove15(s4_id);
+            verifyEltmove15(s4_doubleConeS3);
+            verifyEltmove15(s3xs1);
+            verifyEltmove15(rp4);
+            verifyEltmove15(s3xs1Twisted);
+            verifyEltmove15(ball_singlePent);
+            verifyEltmove15(ball_foldedPent);
+            verifyEltmove15(ball_singleConeS3);
+            verifyEltmove15(ball_layerAndFold);
+            verifyEltmove15(idealPoincareProduct);
+            verifyEltmove15(mixedPoincareProduct);
+            verifyEltmove15(idealFigEightProduct);
+            verifyEltmove15(mixedFigEightProduct);
+            verifyEltmove15(pillow_twoCycle);
+            verifyEltmove15(pillow_threeCycle);
+            verifyEltmove15(pillow_fourCycle);
         }
 };
 
