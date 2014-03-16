@@ -46,14 +46,20 @@
  */
 
 namespace regina {
+    class Dim4Triangulation;
     class NTriangulation;
 }
 
+typedef void (*Dim4TriangulationTestFunction)(regina::Dim4Triangulation*);
 typedef void (*NTriangulationTestFunction)(regina::NTriangulation*);
 
 void runCensusMinClosed(NTriangulationTestFunction f, bool small_ = false);
 void runCensusAllClosed(NTriangulationTestFunction f, bool small_ = false);
 void runCensusAllBounded(NTriangulationTestFunction f, bool small_ = false);
 void runCensusAllIdeal(NTriangulationTestFunction f, bool small_ = false);
+
+void runCensusAllClosed(Dim4TriangulationTestFunction f);
+void runCensusAllBounded(Dim4TriangulationTestFunction f);
+void runCensusAllNoBdry(Dim4TriangulationTestFunction f);
 
 #endif
