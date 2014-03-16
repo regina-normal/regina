@@ -1552,10 +1552,13 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * The rational boundary slope is therefore <tt>-L/M</tt>, and
          * there are <tt>gcd(L,M)</tt> boundary curves with this slope.
          *
-         * This code makes use of the \e SnapPy kernel, and the choice of
-         * meridian and longitude on each cusp follows \e SnapPy's conventions.
-         * In particular, we use the orientations for meridian and longitude
-         * from \e SnapPy. The orientations of the boundary curves of a
+         * The meridian and longitude are chosen to be the shortest and
+         * second shortest basis on each cusp, and their orientations
+         * follow the convention used by the \e SnapPy kernel.  Be warned,
+         * however, that this choice might not be unique for some cusp shapes,
+         * and the resolution of such ambiguities might be machine-dependent.
+         *
+         * The orientations of the boundary curves of a
          * spun-normal surface are chosen so that \e if meridian and
          * longitude are a positive basis as vieved from the cusp, then
          * as one travels along an oriented boundary curve, the
