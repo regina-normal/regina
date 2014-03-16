@@ -319,6 +319,14 @@ class REGINA_API NAbelianGroup : public ShareableObject {
          * @return \c true if and only if the two groups are isomorphic.
          */
         bool operator == (const NAbelianGroup& other) const;
+        /**
+         * Determines whether this and the given abelian group are
+         * non-isomorphic.
+         *
+         * @param other the group with which this should be compared.
+         * @return \c true if and only if the two groups are non-isomorphic.
+         */
+        bool operator != (const NAbelianGroup& other) const;
 
         /**
          * Writes a chunk of XML containing this abelian group.
@@ -411,6 +419,10 @@ inline bool NAbelianGroup::isZn(unsigned long n) const {
 
 inline bool NAbelianGroup::operator == (const NAbelianGroup& other) const {
     return (rank == other.rank && invariantFactors == other.invariantFactors);
+}
+
+inline bool NAbelianGroup::operator != (const NAbelianGroup& other) const {
+    return (rank != other.rank || invariantFactors != other.invariantFactors);
 }
 
 } // namespace regina
