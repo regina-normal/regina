@@ -547,6 +547,7 @@ void NGroupExpression::cycleLeft()
 
 bool NGroupPresentation::simplifyWord( NGroupExpression &input ) const
  {
+  input.simplify(false);
   bool retval(false);
   for (unsigned long i=0; i<relations.size(); i++)
    { // apply relations[i] to input word.
@@ -1267,7 +1268,7 @@ std::auto_ptr< NHomGroupPresentation >
     }
  }
  if (!kerPres.isValid()) 
-  { std::cout<<"identify_extension_over_Z() error:"<<
+  { std::cout<<"identify_extension_over_Z() error (1):"<<
      " out of bounds relator in kerPres.\n";
      std::cout.flush();   exit(1); }
  // build the reductions of the {0,1,...,liftCount-1} translates of **all**
@@ -1289,6 +1290,11 @@ std::auto_ptr< NHomGroupPresentation >
     kerPres.addRelation( new NGroupExpression( *I ) );   
    }
   }
+ if (!kerPres.isValid()) 
+  { std::cout<<"identify_extension_over_Z() error (2):"<<
+     " out of bounds relator in kerPres.\n";
+     std::cout.flush();   exit(1); }
+
   // replace this presentation by the semi-direct product presentation.
   std::vector<NGroupExpression> autVec;
 
@@ -1415,67 +1421,87 @@ bool compare_words(const NGroupExpression* first,
 bool NGroupPresentation::prettyRewriting()
 { return prettyRewritingDetail().get(); }
 
+// this routine iteratively finds length 1 relators, and uses them to simplify
+// other relators.  In the end it deletes all length 0 relators and re-indexes. 
 std::auto_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail()
 {
  // keep the relators in a list for now. 
  std::list<NGroupExpression*> relatorPile;
  for (unsigned long i=0; i<relations.size(); i++)
   relatorPile.push_back( relations[i] );
+ NGroupPresentation oldPres(*this); // copy this presentation for return constructor
+
+ // begin the loop: find length 1, simplify others, delete length 0... repeat
+ //  if we did simplify any relators. 
 
  // step 1: cyclic reduce relators. Delete length 0 relators. 
  //         delete generators corresponding to length 1 relators
  std::list<NGroupExpression*>::iterator it;
  for ( it = relatorPile.begin(); it != relatorPile.end(); it++ ) 
     (*it)->simplify(true);
- it = relatorPile.begin();
- while ( it != relatorPile.end() ) 
-   { if ( (*it)->getNumberOfTerms() == 0 ) { 
-     delete (*it); it = relatorPile.erase(it);  }  else it++; } 
- std::set<unsigned long> deletables;
- for ( it = relatorPile.begin(); it != relatorPile.end(); it++ )
+
+ std::set<unsigned long> genToDel; // keep track of which generators we've eliminated
+ bool reloopFlag(true);
+ while (reloopFlag)
   {
-   if ( (*it)->getNumberOfTerms() == 1) 
+   reloopFlag=false;
+   std::set<unsigned long> newGenDel;
+   for ( it = relatorPile.begin(); it != relatorPile.end(); it++ )
+    {
+    if ((*it)->getNumberOfTerms() == 1) 
     if ( abs( (*it)->getTerms().front().exponent ) == 1 ) // a killer!
-     { deletables.insert( (*it)->getTerms().front().generator ); }
+     { newGenDel.insert( (*it)->getTerms().front().generator ); }
+    }
+   genToDel.insert( newGenDel.begin(), newGenDel.end() );
+
+   for (std::set<unsigned long>::iterator i=newGenDel.begin(); 
+        i!=newGenDel.end(); i++)
+    for (it=relatorPile.begin(); it!=relatorPile.end(); it++)
+     if ((*it)->substitute(*i, NGroupExpression(), true )) reloopFlag=true;
   }
 
- std::auto_ptr<NHomGroupPresentation> redMap(NULL);
- if (deletables.size()>0)
-  { // we need a reducing isomorphism, first keep track of this group
-    NGroupPresentation oldPres(*this);
-    // let's build the complementary set to deletables
-    std::set< unsigned long > interval, compDelete;
+  relations.clear();
+  relations.reserve( relatorPile.size() - genToDel.size() );
+  for (it = relatorPile.begin(); it!=relatorPile.end(); it++)
+   {
+    if ( (*it)->getNumberOfTerms()>0 )
+      relations.push_back( *it );
+    else delete (*it);
+   }
+  relatorPile.clear();
+  for (unsigned long i=0; i<relations.size(); i++)
+   relatorPile.push_back( relations[i] );
+
+  std::auto_ptr< NHomGroupPresentation > redMap;
+  if (genToDel.size()>0)
+   { 
+    std::set< unsigned long > interval, compDelete; // complement
     for (unsigned long i=0; i<nGenerators; i++) 
         interval.insert(interval.end(), i);
     std::set_difference( interval.begin(), interval.end(), 
-                         deletables.begin(), deletables.end(), 
+                         genToDel.begin(), genToDel.end(), 
                          std::inserter(compDelete, compDelete.end() ) );
-    // then reduce the group, run through deletables and do gi->1 subs on all
+
+    // then reduce the group, run through genToDel and do gi->1 subs on all
     //  relators, and gk --> gk-1 for larger generators. 
     std::vector< NGroupExpression > downSub(nGenerators);
-    std::vector< NGroupExpression > upSub(nGenerators - deletables.size());
+    std::vector< NGroupExpression > upSub(nGenerators - genToDel.size());
     unsigned long i=0;
     for (std::set<unsigned long>::iterator I=compDelete.begin();
          I!=compDelete.end(); I++)
      {
       upSub[i].addTermFirst( NGroupExpressionTerm( (*I), 1 ) );
       downSub[*I].addTermFirst( NGroupExpressionTerm( i, 1 ) );
+      // might as well perform downSub now on all relators.
+      for (it=relatorPile.begin(); it!=relatorPile.end(); it++)
+       (*it)->substitute( *I, downSub[*I], true);
       i++;
      }    
-    // perform all subs on all words
-    for (it=relatorPile.begin(); it!=relatorPile.end(); it++)
-     for (i=(*deletables.begin()); i<nGenerators; i++)
-      (*it)->substitute(i, downSub[i], true);
-    nGenerators -= deletables.size();
-    // finish off by deleting and removing length 0 relators. 
-    it = relatorPile.begin();
-    while ( it != relatorPile.end() ) 
-     { if ( (*it)->getNumberOfTerms() == 0 ) { 
-       delete (*it); it = relatorPile.erase(it);  }  else it++; } 
+    nGenerators -= genToDel.size();
     // assemble the reduction map
     redMap.reset( new NHomGroupPresentation( oldPres, *this, 
-                        downSub, upSub ) );
-  }
+                          downSub, upSub ) );
+   }
 
  // step 2: sort by number of letters present, followed by word length
  //         to do this, we build a list of relators and a sorting criterion. 
@@ -1516,11 +1542,6 @@ std::auto_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail()
      relations[i]->cycleRight();
   }
 
- for (unsigned long i=0; i<relations.size(); i++)
-  {
-    relations[i] = relatorPile.front();
-    relatorPile.pop_front();
-  }
  // step 6: TODO keep track of 1 and 2 letter words in relators, try to clean
  //         up as much as possible so that commutators are identified and
  //         written in the form aba^-1b^-1

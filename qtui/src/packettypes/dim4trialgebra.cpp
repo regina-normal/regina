@@ -477,7 +477,7 @@ void Dim4TriCellularInfoUI::refresh() {
                 std::stringstream ts;
               // we need to record more than signature if the manifold has boundary since the
               // intersection form is likely degenerate.  Let's record its rank. 
-                ts << bil->signature() ;
+                ts << bil->zFormSignature() ;
                unsigned long rk (bil->rank());
                if (rk != bil->ldomain().getRank()) 
                 ts << " [rank == "<<rk<<"]";
