@@ -134,7 +134,7 @@ unsigned long NBilinearForm::rank() const
  return rk;
 }
 
-long int NBilinearForm::signature() const 
+long int NBilinearForm::zFormSignature() const 
 {
  if (!isSymmetric()) return 0; 
  if (!Range.isIsomorphicTo(NMarkedAbelianGroup(1, NLargeInteger::zero))) 
@@ -159,6 +159,34 @@ long int NBilinearForm::signature() const
  // to get number of pos - neg roots. 
  NSVPolynomialRing< NLargeInteger > charPoly(cM.det());
  return charPoly.descartesNo();
+}
+
+std::pair< bool, int > NBilinearForm::zFormType() const
+{
+ NMatrixInt cM( lDomain.getRank(), rDomain.getRank() );
+
+ std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator i;
+ for (i = reducedPairing->getGrid().begin(); 
+      i!=reducedPairing->getGrid().end(); i++)
+  { 
+   if ( (i->first.entry(0) >= lDomain.getNumberOfInvariantFactors()) &&
+       (i->first.entry(1) >= rDomain.getNumberOfInvariantFactors()) )
+   cM.entry( i->first.entry(0) - lDomain.getNumberOfInvariantFactors() , 
+            i->first.entry(1) - rDomain.getNumberOfInvariantFactors() ) = 
+            (*i->second); 
+  }
+ // even/odd can be settled by the values mu(e_i,e_i) for the standard basis
+ bool evOdd( false );
+ for (unsigned long j=0; j<cM.rows(); j++)
+  if (cM.entry(j,j) % 2 != 0) { evOdd=true; break; }
+
+ // definiteness? 
+ long int zFSig( zFormSignature() );
+ int zFdef(0);
+ if (zFSig == lDomain.getRank()) zFdef = 1;
+ else if (-zFSig == lDomain.getRank()) zFdef = -1;
+
+ return std::pair< bool, int >(evOdd, zFdef); 
 }
 
 const std::string& NBilinearForm::kkTorRank() const

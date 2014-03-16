@@ -169,8 +169,23 @@ class REGINA_API NBilinearForm : public ShareableObject {
         /**
          * If this is a symmetric bilinear form with range the integers, we
          * can ask for its  signature.  This routine computes said signature. 
+         * See Freedman-Quinn section 10.2 for how rank, signature and type 
+         * classify Z forms provided the form is indefinite. For definite forms
+         * see the Milnor-Husemoller book for details on enumeration of types.
+         * Generally zFormSignature and zFormType are not enough in this case.
          */
-        long int signature() const;
+        long int zFormSignature() const;
+
+        /**
+         * Computes the form type.  This applies to symmetric Z-valued forms.
+         * There are two primary invariants, whether the form is even or odd,
+         * and the definiteness, i.e. the sign-values achieved by mu(x,x).
+         * The bool return value will be false for even, and true for odd. 
+         * The int return value will be 1 for positive definite, 
+         * -1 for negative-definite, and 0 for indefinite.  Positive definite
+         * means mu(x,x) >= 0 for all x in the domain. 
+         */
+        std::pair< bool, int > zFormType() const;
 
     	/**
           * Kawauchi-Kojima vector describing the torsion ranks, as prime
