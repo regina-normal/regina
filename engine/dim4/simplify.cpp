@@ -467,6 +467,67 @@ bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
     return true;
 }
 
+bool Dim4Triangulation::oneFiveMove(Dim4Pentachoron* pen, bool /* check */,
+        bool perform) {
+    if ( !perform )
+        return true; // You can always do this move.
+
+    bool rememberSimpleLinks = knownSimpleLinks_;
+
+    ChangeEventSpan span(this);
+
+    // Before we unglue, record how the adjacent pentachora are glued to pen.
+    Dim4Pentachoron* adjPen[5];
+    NPerm5 adjGlue[5];
+    unsigned i, j;
+    for (i=0; i<5; i++) {
+        adjPen[i] = pen->adjacentPentachoron(i);
+        if (adjPen[i])
+            adjGlue[i] = pen->adjacentGluing(i);
+    }
+
+    // Unglue the old pentachoron.
+    pen->isolate();
+
+    // The new pentachora.
+    // Facet i of the old pentachoron will become a facet of newPen[i].
+    // Vertex i of newPen[i] will become the new internal vertex, and
+    // the other four vertices of newPen[i] will keep the same vertex numbers
+    // that they had in the old pentachoron.
+    Dim4Pentachoron* newPen[5];
+    for (i = 0; i < 5; ++i)
+        newPen[i] = newPentachoron();
+
+    // Glue the new pentachora to each other internally.
+    for (i = 0; i < 5; ++i)
+        for (j = i + 1; j < 5; ++j)
+            newPen[i]->joinTo(j, newPen[j], NPerm5(i, j));
+
+    // Attach the new pentachora to the old triangulation.
+    for (i = 0; i < 5; ++i) {
+        if (adjPen[i] == pen) {
+            // The old pentachoron was glued to itself.
+
+            // We might have already made this gluing from the other side:
+            if (newPen[i]->adjacentPentachoron(i))
+                continue;
+
+            // Nope, do it now.
+            newPen[i]->joinTo(i, newPen[adjGlue[i][i]], adjGlue[i]);
+        } else if (adjPen[i]) {
+            // The old pentachoron was glued elsewhere.
+            newPen[i]->joinTo(i, adjPen[i], adjGlue[i]);
+        }
+    }
+
+    // Delete the old pentachoron.
+    removePentachoron(pen);
+
+    // All done!
+    knownSimpleLinks_ = rememberSimpleLinks;
+    return true;
+}
+
 bool Dim4Triangulation::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
     if (check) {
         if (t->isBoundary() || ! t->isValid())
