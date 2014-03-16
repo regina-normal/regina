@@ -291,6 +291,41 @@ bool NHomGroupPresentation::intelligentSimplify()
  return retval;
 }
 
+bool NHomGroupPresentation::invert()
+{
+ if (map2_.size() == range_->getNumberOfGenerators())
+  {
+   NGroupPresentation* temp( domain_ );
+   domain_ = range_; range_ = temp; 
+   map_.swap( map2_ );
+   return true;
+  }
+ return false; 
+}
+
+bool NHomGroupPresentation::isAutomorphism() const
+{
+ if (map2_.size() != range_->getNumberOfGenerators()) return false;
+ // for every generator in the domain compute f^-1(f(x))x^-1 and reduce
+ for (unsigned long i=0; i<domain_->getNumberOfGenerators(); i++)
+  {
+   NGroupExpression tempW( invEvaluate(evaluate(i)) );
+   tempW.addTermLast( i, -1 );
+   domain_->simplifyWord(tempW);
+   if (tempW.getNumberOfTerms()>0) return false;
+  }
+ // for every generator in the range compute f(f^-1(x))x^-1 and reduce
+ for (unsigned long i=0; i<range_->getNumberOfGenerators(); i++)
+  {
+   NGroupExpression tempW( evaluate(invEvaluate(i)) );
+   tempW.addTermLast( i, -1 );
+   range_->simplifyWord(tempW);
+   if (tempW.getNumberOfTerms()>0) return false;
+  }
+ return true;
+}
+
+
 
 } // namespace regina
 
