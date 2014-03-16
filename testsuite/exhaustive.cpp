@@ -42,91 +42,99 @@
 // #define LARGE_CENSUS
 
 #ifdef LARGE_CENSUS
-    #define MIN_CLOSED_CENSUS_SIZE 6
-    #define CLOSED_CENSUS_SIZE 4
-    #define BOUNDED_CENSUS_SIZE 3
-    #define IDEAL_CENSUS_SIZE 4
+    #define DIM3_MIN_CLOSED_CENSUS_SIZE 6
+    #define DIM3_CLOSED_CENSUS_SIZE 4
+    #define DIM3_BOUNDED_CENSUS_SIZE 3
+    #define DIM3_IDEAL_CENSUS_SIZE 4
 
-    #define SMALL_MIN_CLOSED_CENSUS_SIZE 4
-    #define SMALL_CLOSED_CENSUS_SIZE 3
-    #define SMALL_BOUNDED_CENSUS_SIZE 2
-    #define SMALL_IDEAL_CENSUS_SIZE 3
+    #define DIM3_SMALL_MIN_CLOSED_CENSUS_SIZE 4
+    #define DIM3_SMALL_CLOSED_CENSUS_SIZE 3
+    #define DIM3_SMALL_BOUNDED_CENSUS_SIZE 2
+    #define DIM3_SMALL_IDEAL_CENSUS_SIZE 3
 #else
-    #define MIN_CLOSED_CENSUS_SIZE 4
-    #define CLOSED_CENSUS_SIZE 3
-    #define BOUNDED_CENSUS_SIZE 2
-    #define IDEAL_CENSUS_SIZE 3
+    #define DIM3_MIN_CLOSED_CENSUS_SIZE 4
+    #define DIM3_CLOSED_CENSUS_SIZE 3
+    #define DIM3_BOUNDED_CENSUS_SIZE 2
+    #define DIM3_IDEAL_CENSUS_SIZE 3
 
-    #define SMALL_MIN_CLOSED_CENSUS_SIZE 3
-    #define SMALL_CLOSED_CENSUS_SIZE 2
-    #define SMALL_BOUNDED_CENSUS_SIZE 1
-    #define SMALL_IDEAL_CENSUS_SIZE 2
+    #define DIM3_SMALL_MIN_CLOSED_CENSUS_SIZE 3
+    #define DIM3_SMALL_CLOSED_CENSUS_SIZE 2
+    #define DIM3_SMALL_BOUNDED_CENSUS_SIZE 1
+    #define DIM3_SMALL_IDEAL_CENSUS_SIZE 2
 #endif
 
 using regina::NBoolSet;
 using regina::NCensus;
 
 namespace {
-    struct TestFunctionHolder {
+    template <int dim>
+    struct TestFunctionHolder;
+
+    template <>
+    struct TestFunctionHolder<3> {
         // Work around the fact that we cannot cast between function
         // pointers and void*.
+        typedef regina::NTriangulation Triangulation;
         NTriangulationTestFunction f_;
         TestFunctionHolder(NTriangulationTestFunction f) : f_(f) {}
     };
 
-    bool testCensusTriangulation(regina::NTriangulation* tri,
+    template <int dim>
+    bool testCensusTriangulation(
+            typename TestFunctionHolder<dim>::Triangulation* tri,
             void* testFunctionHolder) {
         tri->setPacketLabel(tri->isoSig());
-        (*(static_cast<TestFunctionHolder*>(testFunctionHolder)->f_))(tri);
+        (*(static_cast<TestFunctionHolder<dim>*>(testFunctionHolder)->f_))(tri);
         return false;
     }
 }
 
 void runCensusMinClosed(NTriangulationTestFunction testFunction, bool small_) {
     regina::NContainer parent;
-    TestFunctionHolder f(testFunction);
+    TestFunctionHolder<3> f(testFunction);
     NCensus::formCensus(&parent,
-        (small_ ? SMALL_MIN_CLOSED_CENSUS_SIZE : MIN_CLOSED_CENSUS_SIZE),
+        (small_ ? DIM3_SMALL_MIN_CLOSED_CENSUS_SIZE :
+            DIM3_MIN_CLOSED_CENSUS_SIZE),
         NBoolSet::sTrue /* finite */,
         NBoolSet::sBoth /* orientable */,
         NBoolSet::sFalse /* bounded */,
         -1, /* bdry faces */
         NCensus::PURGE_NON_MINIMAL_PRIME | NCensus::PURGE_P2_REDUCIBLE,
-        &testCensusTriangulation, &f);
+        &testCensusTriangulation<3>, &f);
 }
 
 void runCensusAllClosed(NTriangulationTestFunction testFunction, bool small_) {
     regina::NContainer parent;
-    TestFunctionHolder f(testFunction);
+    TestFunctionHolder<3> f(testFunction);
     NCensus::formCensus(&parent,
-        (small_ ? SMALL_CLOSED_CENSUS_SIZE : CLOSED_CENSUS_SIZE),
+        (small_ ? DIM3_SMALL_CLOSED_CENSUS_SIZE : DIM3_CLOSED_CENSUS_SIZE),
         NBoolSet::sTrue /* finite */,
         NBoolSet::sBoth /* orientable */,
         NBoolSet::sFalse /* bounded */,
         -1 /* bdry faces */, 0 /* purge */,
-        &testCensusTriangulation, &f);
+        &testCensusTriangulation<3>, &f);
 }
 
 void runCensusAllBounded(NTriangulationTestFunction testFunction, bool small_) {
     regina::NContainer parent;
-    TestFunctionHolder f(testFunction);
+    TestFunctionHolder<3> f(testFunction);
     NCensus::formCensus(&parent,
-        (small_ ? SMALL_BOUNDED_CENSUS_SIZE : BOUNDED_CENSUS_SIZE),
+        (small_ ? DIM3_SMALL_BOUNDED_CENSUS_SIZE : DIM3_BOUNDED_CENSUS_SIZE),
         NBoolSet::sTrue /* finite */,
         NBoolSet::sBoth /* orientable */,
         NBoolSet::sTrue /* bounded */,
         -1 /* bdry faces */, 0 /* purge */,
-        &testCensusTriangulation, &f);
+        &testCensusTriangulation<3>, &f);
 }
 
 void runCensusAllIdeal(NTriangulationTestFunction testFunction, bool small_) {
     regina::NContainer parent;
-    TestFunctionHolder f(testFunction);
+    TestFunctionHolder<3> f(testFunction);
     NCensus::formCensus(&parent,
-        (small_ ? SMALL_IDEAL_CENSUS_SIZE : IDEAL_CENSUS_SIZE),
+        (small_ ? DIM3_SMALL_IDEAL_CENSUS_SIZE : DIM3_IDEAL_CENSUS_SIZE),
         NBoolSet::sFalse /* finite */,
         NBoolSet::sBoth /* orientable */,
         NBoolSet::sFalse /* bounded */,
         -1 /* bdry faces */, 0 /* purge */,
-        &testCensusTriangulation, &f);
+        &testCensusTriangulation<3>, &f);
 }
