@@ -33,6 +33,8 @@
 /* end stub */
 
 #include "exhaustive.h"
+#include "dim4/dim4triangulation.h"
+#include "census/dim4census.h"
 #include "census/ncensus.h"
 #include "packet/ncontainer.h"
 #include "triangulation/ntriangulation.h"
@@ -63,20 +65,32 @@
     #define DIM3_SMALL_IDEAL_CENSUS_SIZE 2
 #endif
 
+#define DIM4_CLOSED_CENSUS_SIZE 2
+#define DIM4_BOUNDED_CENSUS_SIZE 2
+#define DIM4_IDEAL_CENSUS_SIZE 2
+
+using regina::Dim4Census;
 using regina::NBoolSet;
 using regina::NCensus;
 
 namespace {
+    // Work around the fact that we cannot cast between function
+    // pointers and void*.
     template <int dim>
     struct TestFunctionHolder;
 
     template <>
     struct TestFunctionHolder<3> {
-        // Work around the fact that we cannot cast between function
-        // pointers and void*.
         typedef regina::NTriangulation Triangulation;
         NTriangulationTestFunction f_;
         TestFunctionHolder(NTriangulationTestFunction f) : f_(f) {}
+    };
+
+    template <>
+    struct TestFunctionHolder<4> {
+        typedef regina::Dim4Triangulation Triangulation;
+        Dim4TriangulationTestFunction f_;
+        TestFunctionHolder(Dim4TriangulationTestFunction f) : f_(f) {}
     };
 
     template <int dim>
@@ -137,4 +151,40 @@ void runCensusAllIdeal(NTriangulationTestFunction testFunction, bool small_) {
         NBoolSet::sFalse /* bounded */,
         -1 /* bdry faces */, 0 /* purge */,
         &testCensusTriangulation<3>, &f);
+}
+
+void runCensusAllClosed(Dim4TriangulationTestFunction testFunction) {
+    regina::NContainer parent;
+    TestFunctionHolder<4> f(testFunction);
+    Dim4Census::formCensus(&parent,
+        DIM4_CLOSED_CENSUS_SIZE,
+        NBoolSet::sTrue /* finite */,
+        NBoolSet::sBoth /* orientable */,
+        NBoolSet::sFalse /* bounded */,
+        -1 /* bdry faces */,
+        &testCensusTriangulation<4>, &f);
+}
+
+void runCensusAllBounded(Dim4TriangulationTestFunction testFunction) {
+    regina::NContainer parent;
+    TestFunctionHolder<4> f(testFunction);
+    Dim4Census::formCensus(&parent,
+        DIM4_BOUNDED_CENSUS_SIZE,
+        NBoolSet::sTrue /* finite */,
+        NBoolSet::sBoth /* orientable */,
+        NBoolSet::sTrue /* bounded */,
+        -1 /* bdry faces */,
+        &testCensusTriangulation<4>, &f);
+}
+
+void runCensusAllNoBdry(Dim4TriangulationTestFunction testFunction) {
+    regina::NContainer parent;
+    TestFunctionHolder<4> f(testFunction);
+    Dim4Census::formCensus(&parent,
+        DIM4_IDEAL_CENSUS_SIZE,
+        NBoolSet::sBoth /* finite */,
+        NBoolSet::sBoth /* orientable */,
+        NBoolSet::sFalse /* bounded */,
+        -1 /* bdry faces */,
+        &testCensusTriangulation<4>, &f);
 }
