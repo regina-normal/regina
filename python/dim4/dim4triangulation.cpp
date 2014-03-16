@@ -60,6 +60,8 @@ namespace {
         Dim4Triangulation::threeThreeMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoFourMove,
         Dim4Triangulation::twoFourMove, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneFiveMove,
+        Dim4Triangulation::oneFiveMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoZeroMove,
         Dim4Triangulation::twoZeroMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_openBook,
@@ -248,6 +250,7 @@ void addDim4Triangulation() {
         .def("threeThreeMove", &Dim4Triangulation::threeThreeMove,
             OL_threeThreeMove())
         .def("twoFourMove", &Dim4Triangulation::twoFourMove, OL_twoFourMove())
+        .def("oneFiveMove", &Dim4Triangulation::oneFiveMove, OL_oneFiveMove())
         .def("twoZeroMove", twoZeroMove_triangle, OL_twoZeroMove())
         .def("twoZeroMove", twoZeroMove_edge, OL_twoZeroMove())
         .def("openBook", &Dim4Triangulation::openBook, OL_openBook())
