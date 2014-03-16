@@ -26,6 +26,10 @@ Version 4.96  [ (under development) ]
               caused by the recent sync with the SnapPy 2.0.3 kernel.
         Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:
             - New exceptions to be thrown by the SnapPea kernel.
+    USER INTERFACE:
+        - Boundary slopes for spun-normal surfaces must now be explicitly
+          enabled in preferences, since the (meridian, longitude) basis might
+          not be what the user expects.
 
 Version 4.95  [ 12 November, 2013 ]
 
