@@ -1186,9 +1186,8 @@ class REGINA_API Dim4Triangulation : public NPacket,
 
         /**
          * Checks the eligibility of and/or performs a 4-2 move
-         * about the given edge.
-         * This involves replacing the four pentachora joined at that
-         * edge with two pentachora joined along a single facet.
+         * about the given edge.  This involves replacing the four pentachora
+         * joined at that edge with two pentachora joined along a single facet.
          * This can be done iff (i) the edge is valid and non-boundary,
          * (ii) the four pentachora are distinct, and (iii) the pentachora
          * are joined in such a way that the link of the edge is the
@@ -1201,6 +1200,10 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * (facets, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
+         *
+         * See the page on \ref pachner for definitions and terminology
+         * relating to Pachner moves.  After the move, the new belt
+         * face will be <tt>getPentachora().back()->getTetrahedron(4)</tt>.
          *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
@@ -1233,6 +1236,10 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * any pointers to old skeletal objects (such as the argument \a f)
          * can no longer be used.
          *
+         * See the page on \ref pachner for definitions and terminology
+         * relating to Pachner moves.  After the move, the new belt face will be
+         * <tt>getPentachora().back()->getTriangle(Dim4Triangle::triangleNumber[0][1][2])</tt>.
+         *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
          * \pre The given triangle is a triangle of this triangulation.
@@ -1264,6 +1271,10 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * any pointers to old skeletal objects (such as the argument \a f)
          * can no longer be used.
          *
+         * See the page on \ref pachner for definitions and terminology
+         * relating to Pachner moves.  After the move, the new belt face will be
+         * <tt>getPentachora().back()->getEdge(Dim4Edge::edgeNumber[0][1])</tt>.
+         *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
          * \pre The given facet is a facet of this triangulation.
@@ -1280,6 +1291,42 @@ class REGINA_API Dim4Triangulation : public NPacket,
          */
         bool twoFourMove(Dim4Tetrahedron* f, bool check = true,
             bool perform = true);
+
+        /**
+         * Checks the eligibility of and/or performs a 1-5 move
+         * about the given facet.
+         * This involves replacing one pentachora with five pentachora:
+         * each new pentachoron runs from one boundary tetrahedron of
+         * the original pentachoron to a new common internal degree five vertex.
+         *
+         * This move can always be performed.  The \a check argument is
+         * present (as for other moves), but is simply ignored (since
+         * the move is always legal).  The \a perform argument is also
+         * present for consistency with other moves, but if it is set to
+         * \c false then this routine does nothing and returns no useful
+         * information.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (facets, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a p)
+         * can no longer be used.
+         *
+         * See the page on \ref pachner for definitions and terminology
+         * relating to Pachner moves.  After the move, the new belt face will be
+         * <tt>getPentachora().back()->getVertex(4)</tt>.
+         *
+         * \pre The given pentachoron is a pentachoron of this triangulation.
+         *
+         * @param p the pentachoron about which to perform the move.
+         * @param check this argument is ignored, since this move is
+         * always legal (see the notes above).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return \c true always.
+         */
+        bool oneFiveMove(Dim4Pentachoron* p, bool check = true,
+            bool perform = true);
+
         /**
          * Checks the eligibility of and/or performs a 2-0 move about
          * the given triangle of degree 2.

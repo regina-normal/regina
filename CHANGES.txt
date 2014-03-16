@@ -31,6 +31,24 @@ Version 5.0  [ (under development) ]
               it does not identify when a 3-manifold triangulation
               appears as a subcomplex of a 4-manifold triangulation).
 
+Version 4.96  [ (under development) ]
+
+    ENGINE:
+        Class NNormalSurface:
+            - Routine boundarySlopes() now uses (shortest, second-shortest)
+              curves on the cusp as its (meridian, longitude) basis.
+              This reverts a change in behaviour from the previous release
+              caused by the recent sync with the SnapPy 2.0.3 kernel.
+        Class NSnapPeaTriangulation:
+            - Fatal errors in the SnapPea kernel are now handled by throwing
+              exceptions, instead of quitting abruptly.
+            - Routine slopeEquations() now uses (shortest, second-shortest)
+              curves on the cusp as its (meridian, longitude) basis.
+              This reverts a change in behaviour from the previous release
+              caused by the recent sync with the SnapPy 2.0.3 kernel.
+        Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:
+            - New exceptions to be thrown by the SnapPea kernel.
+
 Version 4.95  [ 12 November, 2013 ]
 
     GENERAL:
