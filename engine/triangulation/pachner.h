@@ -32,71 +32,30 @@
 
 /* end stub */
 
-#include <cstdlib>
-#include <iostream>
-
-#include "snappea/nsnappeatriangulation.h"
-#include "snappea/kernel/SnapPea.h"
-
-bool regina::NSnapPeaTriangulation::kernelMessages = false;
-
-/**
- * Supply bare-bones UI messaging functions for the SnapPea kernel to use.
- *
- * See snappea/kernel/SnapPea.h for details on what each function should do.
+/*! \file triangulation/pachner.h
+ *  \brief Explains terminology used with Pachner moves on triangulations.
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void uAcknowledge(const char *message) {
-    if (regina::NSnapPeaTriangulation::kernelMessagesEnabled())
-        std::cout << message << std::endl;
-}
-
-int uQuery(const char *message, const int num_responses,
-        const char *responses[], const int default_response) {
-    if (regina::NSnapPeaTriangulation::kernelMessagesEnabled()) {
-        std::cout << message << std::endl;
-        for (int i = 0; i < num_responses; i++) {
-            std::cout << i << ". " << responses[i] << std::endl;
-        }
-        std::cout << "Responding with default (" << default_response << ')'
-            << std::endl;
-    }
-    return default_response;
-}
-
-void uFatalError(const char *function, const char *file) {
-    std::cerr << "FATAL ERROR: " << file << ", " << function << std::endl;
-    throw regina::SnapPeaFatalError(function, file);
-}
-
-void uAbortMemoryFull(void) {
-    std::cerr << "FATAL ERROR: Available memory has been exhausted."
-        << std::endl;
-    throw regina::SnapPeaMemoryFull();
-}
-
-
-void uPrepareMemFullMessage() {
-    // Do nothing for now.
-}
-
-void uLongComputationBegins(char *message, Boolean /* is_abortable */) {
-    if (regina::NSnapPeaTriangulation::kernelMessagesEnabled())
-        std::cout << message << std::endl;
-}
-
-FuncResult uLongComputationContinues() {
-    return func_OK;
-}
-
-void uLongComputationEnds() {
-}
-
-#ifdef __cplusplus
-} // extern "C"
-#endif
+/*! \page pachner Pachner moves on triangulations
+ *
+ * A Pachner move on a triangulated \a n-manifold \a N works as follows:
+ *
+ * - One finds a \a k-face \a F of \a N whose link is combinatorially
+ *   isomorphic to the link of a \a k-face in the boundary of triangulated
+ *   (\a n+1)-simplex.
+ *
+ * - One then replaces the star of \a F with the complement of the star of
+ *   a \a k-face in the boundary of the (\a n+1)-simplex.  This complement
+ *   is the star of an (\a n-\a k)-face.
+ *
+ * We call the \a k-face the \e attaching face; this is the input to
+ * the Pachner move.  The corresponding (\a n-\a k)-face in the
+ * new triangulation is called the \e belt face (in analogy with surgery).
+ *
+ * Since the star of a \a k-face in the boundary of an (\a n+1)-simplex has
+ * (\a n+1-\a k) top-dimensional simplices, the star of the belt
+ * (\a n-\a k)-face has (\a k+1) top-dimensional simplices.
+ * The Pachner move therefore swaps (\a n+1-\a k) top-dimensional simplices
+ * for (\a k+1).
+ */
 

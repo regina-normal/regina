@@ -490,9 +490,15 @@
             <replaceable>q</replaceable> times around the longitude.
            </para>
            <para>
-            &regina; uses &snappy;'s conventions for the meridian and
-            longitude on each cusp.  If there are multiple cusps,
-            these pairs will be ordered by vertex number.
+            The meridian and longitude are chosen to be the shortest and
+            second shortest basis on each cusp, and their orientations
+            follow the convention used by the &snappy; kernel.  Be warned,
+            however, that this choice might not be unique for some cusp shapes,
+            and the resolution of such ambiguities might be machine-dependent.
+           </para>
+           <para>
+            If there are multiple cusps, these boundary slopes
+            will be ordered by vertex number.
            </para>
           </glossdef>
          </glossentry>
