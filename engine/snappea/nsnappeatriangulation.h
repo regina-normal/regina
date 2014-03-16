@@ -62,6 +62,44 @@ class NTriangulation;
 #ifndef EXCLUDE_SNAPPEA
 
 /**
+ * A base class for all exceptions that are thrown from within the
+ * SnapPea kernel.
+ */
+struct SnapPeaException {
+};
+
+/**
+ * An exception that is thrown when the SnapPea kernel encounters a
+ * fatal error.
+ */
+struct SnapPeaFatalError : public SnapPeaException {
+    std::string function;
+        /**< The function from the SnapPea kernel in which the
+             fatal error occurred. */
+    std::string file;
+        /**< The source file from the SnapPea kernel in which the
+             fatal error occurred. */
+
+    /**
+     * Creates a new exception, indicating where in the SnapPea kernel
+     * the error occurred.
+     *
+     * @param fromFunction the function from the SnapPea kernel in which
+     * the error occurred.
+     * @param fromFile the source file from the SnapPea kernel in which
+     * the error occurred.
+     */
+    SnapPeaFatalError(const char* fromFunction, const char* fromFile);
+};
+
+/**
+ * An exception that is thrown when the SnapPea kernel finds that all
+ * available memory has been exhausted.
+ */
+struct SnapPeaMemoryFull : public SnapPeaException {
+};
+
+/**
  * Offers direct access to the SnapPea kernel from within Regina.
  *
  * An object of this class represents a 3-manifold triangulation, stored in
@@ -76,6 +114,11 @@ class NTriangulation;
  * This class is designed to act as the sole conduit between the Regina
  * calculation engine and the SnapPea kernel.  Regina code should not
  * interact with the SnapPea kernel other than through this class.
+ *
+ * There are many places in the SnapPea kernel where SnapPea throws a
+ * fatal error.  As of Regina 4.96, these fatal errors are converted
+ * into exceptions (subclassed from SnapPeaException), which can be caught
+ * and handled politely.
  *
  * Regina uses the variant of the SnapPea kernel that is shipped with
  * SnapPy, as well as some additional code written explicitly for SnapPy.
@@ -271,10 +314,13 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
          * To compute these slopes directly from a normal surface, see
          * NNormalSurface::boundarySlopes().
          *
-         * This code makes use of the \e SnapPy kernel, and the choice
-         * of meridian and longitude on each cusp follows \e SnapPy's
-         * conventions.  In particular, we use the orientations for
-         * meridian and longitude from \e SnapPy. The orientations of the
+         * The meridian and longitude are chosen to be the shortest and
+         * second shortest basis on each cusp, and their orientations
+         * follow the convention used by the \e SnapPy kernel.  Be warned,
+         * however, that this choice might not be unique for some cusp shapes,
+         * and the resolution of such ambiguities might be machine-dependent.
+         *
+         * The orientations of the
          * boundary curves of a spun-normal surface are chosen so
          * that \e if meridian and longitude are a positive basis as
          * vieved from the cusp, then as one travels along an oriented
@@ -513,6 +559,13 @@ class REGINA_API NSnapPeaTriangulation : public ShareableObject {
 };
 
 /*@}*/
+
+// Inline functions for SnapPeaFatalError
+
+inline SnapPeaFatalError::SnapPeaFatalError(
+        const char* fromFunction, const char* fromFile) :
+        function(fromFunction), file(fromFile) {
+}
 
 // Inline functions for NSnapPeaTriangulation
 
