@@ -1575,6 +1575,13 @@ class REGINA_API NNormalSurface : public ShareableObject {
          * is for normal surfaces (not almost normal surfaces).  If these
          * conditions are not met, this routine will return 0.
          *
+         * \warning If this triangulation originated from SnapPea, Regina
+         * cannot tell what meridian and longitude SnapPea was originally using
+         * (since Regina does not keep track of peripheral curves on cusps).
+         * Therefore Regina will always give boundary slopes relative to the
+         * shortest and second-shortest basis, as described above, which
+         * might not be what you expect.
+         *
          * @author William Pettersson and Stephan Tillmann
          *
          * @return a newly allocated matrix with \a number_of_vertices
