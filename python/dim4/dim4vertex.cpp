@@ -55,6 +55,23 @@ namespace {
             ans.append(*it);
         return ans;
     }
+
+    boost::python::tuple vertex_buildLinkDetail_bool(const Dim4Vertex* v,
+            bool labels = true) {
+        regina::Dim4Isomorphism* iso;
+        regina::NTriangulation* link = v->buildLinkDetail(labels, &iso);
+        return make_tuple(
+            boost::python::object(boost::python::handle<>(
+                boost::python::manage_new_object::
+                apply<regina::NTriangulation*>::type()(link))),
+            boost::python::object(boost::python::handle<>(
+                boost::python::manage_new_object::
+                apply<regina::Dim4Isomorphism*>::type()(iso))));
+    }
+
+    boost::python::tuple vertex_buildLinkDetail_void(const Dim4Vertex* v) {
+        return vertex_buildLinkDetail_bool(v);
+    }
 }
 
 void addDim4Vertex() {
@@ -87,6 +104,8 @@ void addDim4Vertex() {
             return_value_policy<reference_existing_object>())
         .def("buildLink", &Dim4Vertex::buildLink,
             return_value_policy<reference_existing_object>())
+        .def("buildLinkDetail", vertex_buildLinkDetail_void)
+        .def("buildLinkDetail", vertex_buildLinkDetail_bool)
         .def("isValid", &Dim4Vertex::isValid)
         .def("isIdeal", &Dim4Vertex::isIdeal)
         .def("isBoundary", &Dim4Vertex::isBoundary)
