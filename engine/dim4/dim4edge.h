@@ -138,18 +138,6 @@ class REGINA_API Dim4EdgeEmbedding {
          * vertices of getPentachoron().
          */
         NPerm5 getVertices() const;
-
-        /**
-         *  Equality operator for Dim4EdgeEmbeddings, allows for
-         *  find() lookups in getEmbeddings(). 
-         */
-        bool operator==(const Dim4EdgeEmbedding &oth) const;
-
-        /**
-         *  Inequality operator for Dim4EdgeEmbeddings.
-         */
-        bool operator!=(const Dim4EdgeEmbedding &oth) const;
-
 };
 
 /**
@@ -445,15 +433,6 @@ inline int Dim4EdgeEmbedding::getEdge() const {
 inline NPerm5 Dim4EdgeEmbedding::getVertices() const {
     return pent_->getEdgeMapping(edge_);
 }
-
-inline bool Dim4EdgeEmbedding::operator==(const Dim4EdgeEmbedding &oth) const {
-    return ( (pent_ == oth.pent_) && (edge_ == oth.edge_) );
-}
-
-inline bool Dim4EdgeEmbedding::operator!=(const Dim4EdgeEmbedding &oth) const {
-    return ( (pent_ != oth.pent_) || (edge_ != oth.edge_) );
-}
-
 
 // Inline functions for Dim4Edge
 
