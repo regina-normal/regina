@@ -391,6 +391,11 @@ class ReginaPrefSet : public QObject {
         bool surfacesSupportOriented;
             /**< Should we offer support for transversely oriented
                  normal surfaces?  This is still highly experimental. */
+        bool surfacesSupportSpunBdry;
+            /**< Should we offer support for boundary slopes with spun
+                 normal surfaces?  This is stable but might cause
+                 confusion because it works with shortest-basis framings,
+                 which might or might not be what the user expects. */
         unsigned tabDim2Tri;
             /**< The index of the initial tab to open in a 2-manifold
                  triangulation viewer. */
