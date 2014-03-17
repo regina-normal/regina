@@ -120,7 +120,7 @@ NTriangulation* Dim4Vertex::buildLinkDetail(bool labels,
             adjVertex = pent->adjacentGluing(exitTet)[v];
 
             // TODO: We need to find which *embedding* corresponds to
-            // the adjacent tetrahedron/vertex pair.
+            // the adjacent pentachoron/vertex pair.
             // Currently we do a simple linear scan, which makes the
             // overall link construction quadratic.  This can surely be
             // made linear(ish) with the right data structure and/or algorithm.

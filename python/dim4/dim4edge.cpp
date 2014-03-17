@@ -61,6 +61,23 @@ namespace {
             ans.append(*it);
         return ans;
     }
+
+    boost::python::tuple edge_buildLinkDetail_bool(const Dim4Edge* e,
+            bool labels = true) {
+        regina::Dim4Isomorphism* iso;
+        regina::Dim2Triangulation* link = e->buildLinkDetail(labels, &iso);
+        return make_tuple(
+            boost::python::object(boost::python::handle<>(
+                boost::python::manage_new_object::
+                apply<regina::Dim2Triangulation*>::type()(link))),
+            boost::python::object(boost::python::handle<>(
+                boost::python::manage_new_object::
+                apply<regina::Dim4Isomorphism*>::type()(iso))));
+    }
+
+    boost::python::tuple edge_buildLinkDetail_void(const Dim4Edge* e) {
+        return edge_buildLinkDetail_bool(e);
+    }
 }
 
 void addDim4Edge() {
@@ -94,6 +111,10 @@ void addDim4Edge() {
         .def("isValid", &Dim4Edge::isValid)
         .def("hasBadIdentification", &Dim4Edge::hasBadIdentification)
         .def("hasBadLink", &Dim4Edge::hasBadLink)
+        .def("buildLink", &Dim4Edge::buildLink,
+            return_value_policy<reference_existing_object>())
+        .def("buildLinkDetail", edge_buildLinkDetail_void)
+        .def("buildLinkDetail", edge_buildLinkDetail_bool)
     ;
 
     s.attr("edgeNumber") = &Dim4Edge_edgeNumber;
