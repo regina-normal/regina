@@ -54,6 +54,8 @@ Version 4.96  [ (under development) ]
             - New convenience operators == and !=.
         Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:
             - New exceptions to be thrown by the SnapPea kernel.
+        Header permconv.h:
+            - New conversion routines perm3to5() and perm5to3().
     USER INTERFACE:
         - Boundary slopes for spun-normal surfaces must now be explicitly
           enabled in preferences, since the (meridian, longitude) basis might
