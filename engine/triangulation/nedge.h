@@ -183,6 +183,26 @@ class REGINA_API NEdgeEmbedding {
          * vertices of getTetrahedron().
          */
         NPerm4 getVertices() const;
+
+        /**
+         * Tests whether this and the given embedding are identical.
+         * Here "identical" means that they refer to the same edge of
+         * the same tetrahedron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator == (const NEdgeEmbedding& rhs) const;
+
+        /**
+         * Tests whether this and the given embedding are different.
+         * Here "different" means that they do not refer to the same edge of
+         * the same tetrahedron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator != (const NEdgeEmbedding& rhs) const;
 };
 
 /**
@@ -484,6 +504,14 @@ inline int NEdgeEmbedding::getEdge() const {
 
 inline NPerm4 NEdgeEmbedding::getVertices() const {
     return tetrahedron->getEdgeMapping(edge);
+}
+
+inline bool NEdgeEmbedding::operator == (const NEdgeEmbedding& other) const {
+    return ((tetrahedron == other.tetrahedron) && (edge == other.edge));
+}
+
+inline bool NEdgeEmbedding::operator != (const NEdgeEmbedding& other) const {
+    return ((tetrahedron != other.tetrahedron) || (edge != other.edge));
 }
 
 } // namespace regina

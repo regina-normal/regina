@@ -81,6 +81,8 @@ void addNEdge() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &NEdgeEmbedding::getEdge)
         .def("getVertices", &NEdgeEmbedding::getVertices)
+        .def(self == self)
+        .def(self != self)
     ;
 
     scope s = class_<NEdge, bases<regina::ShareableObject>,
