@@ -33,6 +33,7 @@
 /* end stub */
 
 #include <boost/python.hpp>
+#include "dim2/dim2triangulation.h"
 #include "dim4/dim4boundarycomponent.h"
 #include "dim4/dim4component.h"
 #include "dim4/dim4edge.h"
