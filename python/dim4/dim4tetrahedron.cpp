@@ -61,6 +61,8 @@ void addDim4Tetrahedron() {
             return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &Dim4TetrahedronEmbedding::getTetrahedron)
         .def("getVertices", &Dim4TetrahedronEmbedding::getVertices)
+        .def(self == self)
+        .def(self != self)
     ;
 
     scope s = class_<Dim4Tetrahedron, bases<regina::ShareableObject>,

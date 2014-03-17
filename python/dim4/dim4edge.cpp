@@ -71,6 +71,8 @@ void addDim4Edge() {
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim4EdgeEmbedding::getEdge)
         .def("getVertices", &Dim4EdgeEmbedding::getVertices)
+        .def(self == self)
+        .def(self != self)
     ;
 
     scope s = class_<Dim4Edge, bases<regina::ShareableObject>,
