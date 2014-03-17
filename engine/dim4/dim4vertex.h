@@ -133,6 +133,26 @@ class REGINA_API Dim4VertexEmbedding {
          * is this vertex.
          */
         NPerm5 getVertices() const;
+
+        /**
+         * Tests whether this and the given embedding are identical.
+         * Here "identical" means that they refer to the same vertex of
+         * the same pentachoron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator == (const Dim4VertexEmbedding& rhs) const;
+
+        /**
+         * Tests whether this and the given embedding are different.
+         * Here "different" means that they do not refer to the same vertex of
+         * the same pentachoron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator != (const Dim4VertexEmbedding& rhs) const;
 };
 
 /**
@@ -390,6 +410,16 @@ inline Dim4Pentachoron* Dim4VertexEmbedding::getPentachoron() const {
 
 inline int Dim4VertexEmbedding::getVertex() const {
     return vertex_;
+}
+
+inline bool Dim4VertexEmbedding::operator == (const Dim4VertexEmbedding& other)
+        const {
+    return ((pent_ == other.pent_) && (vertex_ == other.vertex_));
+}
+
+inline bool Dim4VertexEmbedding::operator != (const Dim4VertexEmbedding& other)
+        const {
+    return ((pent_ != other.pent_) || (vertex_ != other.vertex_));
 }
 
 // Inline functions for Dim4Vertex

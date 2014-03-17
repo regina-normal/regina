@@ -134,6 +134,26 @@ class REGINA_API Dim4TetrahedronEmbedding {
          * vertices of getPentachoron().
          */
         NPerm5 getVertices() const;
+
+        /**
+         * Tests whether this and the given embedding are identical.
+         * Here "identical" means that they refer to the same facet of
+         * the same pentachoron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator == (const Dim4TetrahedronEmbedding& rhs) const;
+
+        /**
+         * Tests whether this and the given embedding are different.
+         * Here "different" means that they do not refer to the same facet of
+         * the same pentachoron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator != (const Dim4TetrahedronEmbedding& rhs) const;
 };
 
 /**
@@ -400,6 +420,16 @@ inline int Dim4TetrahedronEmbedding::getTetrahedron() const {
 
 inline NPerm5 Dim4TetrahedronEmbedding::getVertices() const {
     return pent_->getTetrahedronMapping(tet_);
+}
+
+inline bool Dim4TetrahedronEmbedding::operator ==
+        (const Dim4TetrahedronEmbedding& other) const {
+    return ((pent_ == other.pent_) && (tet_ == other.tet_));
+}
+
+inline bool Dim4TetrahedronEmbedding::operator !=
+        (const Dim4TetrahedronEmbedding& other) const {
+    return ((pent_ != other.pent_) || (tet_ != other.tet_));
 }
 
 // Inline functions for Dim4Tetrahedron

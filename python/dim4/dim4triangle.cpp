@@ -75,6 +75,8 @@ void addDim4Triangle() {
             return_value_policy<reference_existing_object>())
         .def("getTriangle", &Dim4TriangleEmbedding::getTriangle)
         .def("getVertices", &Dim4TriangleEmbedding::getVertices)
+        .def(self == self)
+        .def(self != self)
     ;
 
     scope s = class_<Dim4Triangle, bases<regina::ShareableObject>,

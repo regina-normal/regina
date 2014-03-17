@@ -28,8 +28,14 @@ Version 5.0  [ (under development) ]
 Version 4.96  [ (under development) ]
 
     ENGINE:
+        Class Dim2EdgeEmbedding:
+            - New convenience operators == and !=.
+        Class Dim2VertexEmbedding:
+            - New convenience operators == and !=.
         Class NAbelianGroup:
             - New convenience operator !=.
+        Class NFaceEmbedding:
+            - New convenience operators == and !=.
         Class NNormalSurface:
             - Routine boundarySlopes() now uses (shortest, second-shortest)
               curves on the cusp as its (meridian, longitude) basis.
@@ -42,6 +48,10 @@ Version 4.96  [ (under development) ]
               curves on the cusp as its (meridian, longitude) basis.
               This reverts a change in behaviour from the previous release
               caused by the recent sync with the SnapPy 2.0.3 kernel.
+        Class NTriangleEmbedding:
+            - New convenience operators == and !=.
+        Class NVertexEmbedding:
+            - New convenience operators == and !=.
         Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:
             - New exceptions to be thrown by the SnapPea kernel.
     USER INTERFACE:

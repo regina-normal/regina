@@ -138,6 +138,26 @@ class REGINA_API Dim4EdgeEmbedding {
          * vertices of getPentachoron().
          */
         NPerm5 getVertices() const;
+
+        /**
+         * Tests whether this and the given embedding are identical.
+         * Here "identical" means that they refer to the same edge of
+         * the same pentachoron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator == (const Dim4EdgeEmbedding& rhs) const;
+
+        /**
+         * Tests whether this and the given embedding are different.
+         * Here "different" means that they do not refer to the same edge of
+         * the same pentachoron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator != (const Dim4EdgeEmbedding& rhs) const;
 };
 
 /**
@@ -432,6 +452,16 @@ inline int Dim4EdgeEmbedding::getEdge() const {
 
 inline NPerm5 Dim4EdgeEmbedding::getVertices() const {
     return pent_->getEdgeMapping(edge_);
+}
+
+inline bool Dim4EdgeEmbedding::operator == (const Dim4EdgeEmbedding& other)
+        const {
+    return ((pent_ == other.pent_) && (edge_ == other.edge_));
+}
+
+inline bool Dim4EdgeEmbedding::operator != (const Dim4EdgeEmbedding& other)
+        const {
+    return ((pent_ != other.pent_) || (edge_ != other.edge_));
 }
 
 // Inline functions for Dim4Edge
