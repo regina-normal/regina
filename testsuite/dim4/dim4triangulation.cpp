@@ -1388,22 +1388,40 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                // TODO: Checks for invalid links.
+                if (! link->isConnected()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", edge " << i << ": "
+                        << "link of edge is not connected.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
                 if (e->isBoundary()) {
-                    if (e->isValid()) {
-                        if (! ((! link->isClosed()) && link->isConnected() &&
-                                link->getEulerChar() == 1)) {
+                    if (link->isClosed()) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", edge " << i << ": "
+                            << "link of boundary edge is closed.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } else {
+                    if (! link->isClosed()) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", edge " << i << ": "
+                            << "link of internal edge is not closed.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                if (e->isValid()) {
+                    if (e->isBoundary()) {
+                        if (link->getEulerChar() != 1) {
                             std::ostringstream msg;
                             msg << tri->getPacketLabel() << ", edge "
                                 << i << ": "
                                 << "link of boundary edge is not a disc.";
                             CPPUNIT_FAIL(msg.str());
                         }
-                    }
-                } else {
-                    if (e->isValid()) {
-                        if (! (link->isClosed() && link->isConnected() &&
-                                link->getEulerChar() == 2)) {
+                    } else {
+                        if (link->getEulerChar() != 2) {
                             std::ostringstream msg;
                             msg << tri->getPacketLabel() << ", edge "
                                 << i << ": "
@@ -1413,10 +1431,24 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
                     }
                 }
 
-                unsigned j, k;
+                // Make sure the edge link matches what happens on
+                // the vertex links.
+                unsigned j;
                 Dim4Pentachoron* p;
-                const regina::Dim2Triangle *t, *adj;
                 NPerm5 perm;
+                const NTriangulation* vLink;
+                for (j = 0; j < 2; ++j) {
+                    p = e->getEmbeddings().front().getPentachoron();
+                    perm = e->getEmbeddings().front().getVertices();
+
+                    // In the vertex link at the jth end of this edge,
+                    // find the vertex that this edge projects down to.
+                    vLink = p->getVertex(perm[j])->buildLink();
+                    // TODO.
+                }
+
+                unsigned k;
+                const regina::Dim2Triangle *t, *adj;
                 unsigned eNum;
                 for (j = 0; j < e->getDegree(); ++j) {
                     p = tri->getPentachoron(iso->pentImage(j));
