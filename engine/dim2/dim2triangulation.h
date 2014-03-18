@@ -668,6 +668,36 @@ class REGINA_API Dim2Triangulation : public NPacket,
         /*@{*/
 
         /**
+         * Determines if this triangulation is combinatorially identical
+         * to the given triangulation.
+         *
+         * Here "identical" means that the triangulations have the same
+         * number of triangles, with gluings between the same pairs
+         * of numbered triangles using the same gluing permutations.
+         * In other words, "identical" means that the triangulations
+         * are isomorphic via the identity isomorphism.
+         *
+         * To test for the less strict combinatorial isomorphism (which
+         * allows relabelling of the triangles and their vertices),
+         * see isIsomorphicTo() instead.
+         *
+         * This test does \e not examine the textual triangle descriptions,
+         * as seen in Dim2Triangle::getDescription(); these may still differ.
+         * It also does not test the numbering of vertices and edges of
+         * the triangulation, as used by getVertex() and getEdge();
+         * although at the time of writing these will always be
+         * numbered the same for identical triangulations, it is
+         * conceivable that in future versions of Regina there may
+         * be situations in which identical triangulations can acquire
+         * different vertex and edge numberings.
+         *
+         * @param other the triangulation to compare with this one.
+         * @return \c true if and only if the two triangulations are
+         * combinatorially identical.
+         */
+        bool isIdenticalTo(const Dim2Triangulation& other) const;
+
+        /**
          * Determines if this triangulation is combinatorially
          * isomorphic to the given triangulation.
          *
@@ -680,6 +710,9 @@ class REGINA_API Dim2Triangulation : public NPacket,
          * In particular, note that this triangulation and \a other must
          * contain the same number of triangles for such an isomorphism
          * to exist.
+         *
+         * If you need to ensure that triangles are labelled the same in both
+         * triangulations, see the stricter test isIdenticalTo() instead.
          *
          * If a boundary complete isomorphism is found, the details of
          * this isomorphism are returned.  The isomorphism is newly

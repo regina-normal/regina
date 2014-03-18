@@ -30,6 +30,8 @@ Version 4.96  [ (under development) ]
     ENGINE:
         Class Dim2EdgeEmbedding:
             - New convenience operators == and !=.
+        Class Dim2Triangulation:
+            - New routine isIdenticalTo().
         Class Dim2VertexEmbedding:
             - New convenience operators == and !=.
         Class NAbelianGroup:
@@ -50,6 +52,8 @@ Version 4.96  [ (under development) ]
               caused by the recent sync with the SnapPy 2.0.3 kernel.
         Class NTriangleEmbedding:
             - New convenience operators == and !=.
+        Class NTriangulation:
+            - New routine isIdenticalTo().
         Class NVertexEmbedding:
             - New convenience operators == and !=.
         Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:

@@ -804,6 +804,37 @@ class REGINA_API Dim4Triangulation : public NPacket,
         /*@{*/
 
         /**
+         * Determines if this triangulation is combinatorially identical
+         * to the given triangulation.
+         *
+         * Here "identical" means that the triangulations have the same
+         * number of pentachora, with gluings between the same pairs
+         * of numbered pentachora using the same gluing permutations.
+         * In other words, "identical" means that the triangulations
+         * are isomorphic via the identity isomorphism.
+         *
+         * To test for the less strict combinatorial isomorphism (which
+         * allows relabelling of the pentachora and their vertices),
+         * see isIsomorphicTo() instead.
+         *
+         * This test does \e not examine the textual pentachoron descriptions,
+         * as seen in Dim4Pentachoron::getDescription(); these may still differ.
+         * It also does not test the numbering of vertices, edges, triangles
+         * and tetrahedra of the triangulation, as used by
+         * getVertex(), getEdge(), getTriangle() and getTetrahedron();
+         * although at the time of writing these will always be
+         * numbered the same for identical triangulations, it is
+         * conceivable that in future versions of Regina there may
+         * be situations in which identical triangulations can acquire
+         * different vertex, edge, triangle and/or tetrahedron numberings.
+         *
+         * @param other the triangulation to compare with this one.
+         * @return \c true if and only if the two triangulations are
+         * combinatorially identical.
+         */
+        bool isIdenticalTo(const Dim4Triangulation& other) const;
+
+        /**
          * Determines if this triangulation is combinatorially
          * isomorphic to the given triangulation.
          *
@@ -820,6 +851,9 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * \todo \opt Improve the complexity by choosing a pentachoron
          * mapping from each component and following gluings to
          * determine the others.
+         *
+         * If you need to ensure that pentachora are labelled the same in both
+         * triangulations, see the stricter test isIdenticalTo() instead.
          *
          * If a boundary complete isomorphism is found, the details of
          * this isomorphism are returned.  The isomorphism is newly
