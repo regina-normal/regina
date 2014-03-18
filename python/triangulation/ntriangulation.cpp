@@ -239,6 +239,7 @@ void addNTriangulation() {
         .def("edgeIndex", &NTriangulation::edgeIndex)
         .def("faceIndex", &NTriangulation::faceIndex)
         .def("triangleIndex", &NTriangulation::triangleIndex)
+        .def("isIdenticalTo", &NTriangulation::isIdenticalTo)
         .def("isIsomorphicTo", isIsomorphicTo_ptr,
             return_value_policy<manage_new_object>())
         .def("isContainedIn", isContainedIn_ptr,

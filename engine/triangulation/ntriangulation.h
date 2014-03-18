@@ -985,6 +985,37 @@ class REGINA_API NTriangulation : public NPacket,
         /*@{*/
 
         /**
+         * Determines if this triangulation is combinatorially identical
+         * to the given triangulation.
+         *
+         * Here "identical" means that the triangulations have the same
+         * number of tetrahedra, with gluings between the same pairs
+         * of numbered tetrahedra using the same gluing permutations.
+         * In other words, "identical" means that the triangulations
+         * are isomorphic via the identity isomorphism.
+         *
+         * To test for the less strict combinatorial isomorphism (which
+         * allows relabelling of the tetrahedra and their vertices),
+         * see isIsomorphicTo() instead.
+         *
+         * This test does \e not examine the textual tetrahedron descriptions,
+         * as seen in NTetrahedron::getDescription(); these may still differ.
+         * It also does not test the numbering of vertices, edges and
+         * triangles of the triangulation, as used by
+         * getVertex(), getEdge() and getTriangle();
+         * although at the time of writing these will always be
+         * numbered the same for identical triangulations, it is
+         * conceivable that in future versions of Regina there may
+         * be situations in which identical triangulations can acquire
+         * different vertex, edge and/or triangle numberings.
+         *
+         * @param other the triangulation to compare with this one.
+         * @return \c true if and only if the two triangulations are
+         * combinatorially identical.
+         */
+        bool isIdenticalTo(const NTriangulation& other) const;
+
+        /**
          * Determines if this triangulation is combinatorially
          * isomorphic to the given triangulation.
          *
@@ -998,9 +1029,8 @@ class REGINA_API NTriangulation : public NPacket,
          * contain the same number of tetrahedra for such an isomorphism
          * to exist.
          *
-         * \todo \opt Improve the complexity by choosing a tetrahedron
-         * mapping from each component and following gluings to
-         * determine the others.
+         * If you need to ensure that triangles are labelled the same in both
+         * triangulations, see the stricter test isIdenticalTo() instead.
          *
          * If a boundary complete isomorphism is found, the details of
          * this isomorphism are returned.  The isomorphism is newly
@@ -1011,6 +1041,10 @@ class REGINA_API NTriangulation : public NPacket,
          * <tt>if (isIsomorphicTo(other).get())</tt> and the newly
          * created isomorphism (if it exists) will be automatically
          * destroyed.
+         *
+         * \todo \opt Improve the complexity by choosing a tetrahedron
+         * mapping from each component and following gluings to
+         * determine the others.
          *
          * @param other the triangulation to compare with this one.
          * @return details of the isomorphism if the two triangulations

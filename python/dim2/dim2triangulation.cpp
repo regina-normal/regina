@@ -168,6 +168,7 @@ void addDim2Triangulation() {
             &Dim2Triangulation::boundaryComponentIndex)
         .def("vertexIndex", &Dim2Triangulation::vertexIndex)
         .def("edgeIndex", &Dim2Triangulation::edgeIndex)
+        .def("isIdenticalTo", &Dim2Triangulation::isIdenticalTo)
         .def("isIsomorphicTo", isIsomorphicTo_ptr,
             return_value_policy<manage_new_object>())
         .def("makeCanonical", &Dim2Triangulation::makeCanonical)
