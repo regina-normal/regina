@@ -1380,7 +1380,12 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                // TODO: Test identical.
+                if (! link2->isIdenticalTo(*link)) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", edge " << i << ": "
+                        << "variants of buildLink() give different results.";
+                    CPPUNIT_FAIL(msg.str());
+                }
 
                 if (e->isBoundary()) {
                     if (! ((! link->isClosed()) && link->isConnected() &&
@@ -1420,11 +1425,11 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyEdgeLinksValid(&ball_layerAndFold);
             verifyEdgeLinksValid(&idealPoincareProduct);
             verifyEdgeLinksValid(&mixedPoincareProduct);
-            //verifyEltmove15(&idealFigEightProduct);
-            //verifyEltmove15(&mixedFigEightProduct);
+            //verifyEltmove15(&idealFigEightProduct); -> torus
+            //verifyEltmove15(&mixedFigEightProduct); -> torus
             //verifyEltmove15(&pillow_twoCycle);
             verifyEdgeLinksValid(&pillow_threeCycle);
-            // GAAverifyEdgeLinksValid(&pillow_fourCycle);
+            // GAAverifyEdgeLinksValid(&pillow_fourCycle); -> PP
 
             runCensusAllBounded(verifyEdgeLinksValid);
             runCensusAllNoBdry(verifyEdgeLinksValid);
