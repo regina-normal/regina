@@ -1029,7 +1029,7 @@ class REGINA_API NTriangulation : public NPacket,
          * contain the same number of tetrahedra for such an isomorphism
          * to exist.
          *
-         * If you need to ensure that triangles are labelled the same in both
+         * If you need to ensure that tetrahedra are labelled the same in both
          * triangulations, see the stricter test isIdenticalTo() instead.
          *
          * If a boundary complete isomorphism is found, the details of
