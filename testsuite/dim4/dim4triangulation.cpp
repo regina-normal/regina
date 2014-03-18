@@ -36,6 +36,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
+#include "dim2/dim2triangulation.h"
 #include "dim4/dim4boundarycomponent.h"
 #include "dim4/dim4exampletriangulation.h"
 #include "dim4/dim4isomorphism.h"
@@ -50,7 +51,9 @@
 #include "testsuite/exhaustive.h"
 #include "testsuite/dim4/testdim4.h"
 
+using regina::Dim2Triangulation;
 using regina::Dim4BoundaryComponent;
+using regina::Dim4Edge;
 using regina::Dim4ExampleTriangulation;
 using regina::Dim4Isomorphism;
 using regina::Dim4Pentachoron;
@@ -81,6 +84,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(barycentricSubdivision);
     CPPUNIT_TEST(eltmove15);
+    CPPUNIT_TEST(edgeLinks);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1359,6 +1363,71 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
 
             runCensusAllBounded(verifyEltmove15);
             runCensusAllNoBdry(verifyEltmove15);
+        }
+
+        static void verifyEdgeLinksValid(Dim4Triangulation* tri) {
+            for (unsigned long i = 0; i < tri->getNumberOfEdges(); ++i) {
+                Dim4Edge* e = tri->getEdge(i);
+                Dim4Isomorphism* iso;
+
+                const Dim2Triangulation* link = e->buildLink();
+                Dim2Triangulation* link2 = e->buildLinkDetail(true, &iso);
+
+                if (link->getNumberOfTriangles() != e->getDegree()) {
+                    std::ostringstream msg;
+                    msg << tri->getPacketLabel() << ", edge " << i << ": "
+                        << "link has incorrect number of triangles.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                // TODO: Test identical.
+
+                if (e->isBoundary()) {
+                    if (! ((! link->isClosed()) && link->isConnected() &&
+                            link->getEulerChar() == 1)) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", edge " << i << ": "
+                            << "link of boundary edge is not a disc.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } else {
+                    if (! (link->isClosed() && link->isConnected() &&
+                            link->getEulerChar() == 2)) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", edge " << i << ": "
+                            << "link of internal edge is not a sphere.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                // TODO: Test properties of the isomorphism.
+
+                delete link2;
+                delete iso;
+            }
+        }
+
+        void edgeLinks() {
+            verifyEdgeLinksValid(&empty);
+            verifyEdgeLinksValid(&s4_id);
+            verifyEdgeLinksValid(&s4_doubleConeS3);
+            verifyEdgeLinksValid(&s3xs1);
+            verifyEdgeLinksValid(&rp4);
+            verifyEdgeLinksValid(&s3xs1Twisted);
+            verifyEdgeLinksValid(&ball_singlePent);
+            verifyEdgeLinksValid(&ball_foldedPent);
+            verifyEdgeLinksValid(&ball_singleConeS3);
+            verifyEdgeLinksValid(&ball_layerAndFold);
+            verifyEdgeLinksValid(&idealPoincareProduct);
+            verifyEdgeLinksValid(&mixedPoincareProduct);
+            //verifyEltmove15(&idealFigEightProduct);
+            //verifyEltmove15(&mixedFigEightProduct);
+            //verifyEltmove15(&pillow_twoCycle);
+            verifyEdgeLinksValid(&pillow_threeCycle);
+            // GAAverifyEdgeLinksValid(&pillow_fourCycle);
+
+            runCensusAllBounded(verifyEdgeLinksValid);
+            runCensusAllNoBdry(verifyEdgeLinksValid);
         }
 };
 
