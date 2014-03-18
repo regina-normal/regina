@@ -375,9 +375,9 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyValid(mixedPoincareProduct);
             verifyInvalid(idealFigEightProduct, 3, 2, 2, 0, 0);
             verifyInvalid(mixedFigEightProduct, 2, 1, 1, 0, 0);
-            verifyInvalid(pillow_twoCycle, 2, 2, 1, 1, 2);
+            verifyInvalid(pillow_twoCycle, 2, 2, 2, 1, 2);
             verifyInvalid(pillow_threeCycle, 0, 0, 0, 0, 1);
-            verifyInvalid(pillow_fourCycle, 0, 1, 0, 1, 0);
+            verifyInvalid(pillow_fourCycle, 0, 1, 1, 1, 0);
         }
 
         void verifyConnected(const Dim4Triangulation& tri) {

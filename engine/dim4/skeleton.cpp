@@ -398,6 +398,11 @@ void Dim4Triangulation::calculateEdges() const {
                                     adjMap[0]) {
                                 label->invalid_ |=
                                     Dim4Edge::INVALID_IDENTIFICATION;
+                                // A bad self-identification means that
+                                // the link has a non-trivial closed
+                                // curve, so the link cannot be S^2 or D^2.
+                                label->invalid_ |=
+                                    Dim4Edge::INVALID_LINK;
                                 valid_ = false;
                             }
                         } else {
@@ -809,6 +814,10 @@ void Dim4Triangulation::calculateVertexLinks() const {
         // to the vertex linking 3-manifold at the endpoint of the edge,
         // where we will find that this 3-manifold has a corresponding
         // invalid vertex link.
+        // As an exception, edges with reverse self-identifications will also
+        // have invalid links, but these might not translate to invalid vertex
+        // links; however, we pick up these invalid edge links elsewhere (at the
+        // same time as we detect reverse self-identifications).
         if (! vertex->valid_) {
             NTriangulation::VertexIterator linkit;
             int type;
