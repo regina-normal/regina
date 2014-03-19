@@ -125,6 +125,26 @@ class REGINA_API NTriangleEmbedding {
          * vertices of getTetrahedron().
          */
         NPerm4 getVertices() const;
+
+        /**
+         * Tests whether this and the given embedding are identical.
+         * Here "identical" means that they refer to the same face of
+         * the same tetrahedron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator == (const NTriangleEmbedding& rhs) const;
+
+        /**
+         * Tests whether this and the given embedding are different.
+         * Here "different" means that they do not refer to the same
+         * face of the same tetrahedron.
+         *
+         * @param rhs the embedding to compare with this.
+         * @return \c true if and only if both embeddings are identical.
+         */
+        bool operator != (const NTriangleEmbedding& rhs) const;
 };
 
 /**
@@ -463,6 +483,16 @@ inline int NTriangleEmbedding::getFace() const {
 
 inline NPerm4 NTriangleEmbedding::getVertices() const {
     return tetrahedron_->getTriangleMapping(tri_);
+}
+
+inline bool NTriangleEmbedding::operator == (const NTriangleEmbedding& other)
+        const {
+    return ((tetrahedron_ == other.tetrahedron_) && (tri_ == other.tri_));
+}
+
+inline bool NTriangleEmbedding::operator != (const NTriangleEmbedding& other)
+        const {
+    return ((tetrahedron_ != other.tetrahedron_) || (tri_ != other.tri_));
 }
 
 } // namespace regina
