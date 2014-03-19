@@ -4129,7 +4129,7 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyEltMove14(&q28);
             verifyEltMove14(&q20_large);
             verifyEltMove14(&weberSeifert);
-            verifyEltMove14(&lens100_1);
+            //verifyEltMove14(&lens100_1); Too slow.
             verifyEltMove14(&ball_large);
             verifyEltMove14(&ball_large_pillows);
             verifyEltMove14(&ball_large_snapped);
@@ -4146,9 +4146,9 @@ class NTriangulationTest : public CppUnit::TestFixture {
             verifyEltMove14(&pinchedSolidTorus);
             verifyEltMove14(&pinchedSolidKB);
 
-            runCensusAllClosed(verifyEltMove14);
-            runCensusAllBounded(verifyEltMove14);
-            runCensusAllIdeal(verifyEltMove14);
+            runCensusAllClosed(verifyEltMove14, true);
+            runCensusAllBounded(verifyEltMove14, true);
+            runCensusAllIdeal(verifyEltMove14, true);
         }
 };
 
