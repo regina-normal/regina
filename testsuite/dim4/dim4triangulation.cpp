@@ -1398,45 +1398,91 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                // TODO: This bit
-                /*
-                if (v->isBoundary() &&
-                        v->getBoundaryComponent()->getNumberOfTetrahedra() > 0) {
-                    if (link->hasBoundaryFaces()) {
-                        std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
-                            << "link of boundary vertex is closed.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
-                } else {
-                    if (! link->hasBoundaryFaces()) {
-                        std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
-                            << "link of internal/ideal vertex is not closed.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
-                }
-
                 if (v->isValid()) {
-                    if (v->isBoundary()) {
-                        if (link->getEulerChar() != 1) {
+                    if (v->isBoundary() && v->getBoundaryComponent()->
+                            getNumberOfTetrahedra() > 0) {
+                        if (! link->isBall()) {
                             std::ostringstream msg;
-                            msg << tri->getPacketLabel() << ", edge "
+                            msg << tri->getPacketLabel() << ", vertex "
                                 << i << ": "
-                                << "link of boundary edge is not a disc.";
+                                << "link of real boundary vertex "
+                                "is not a 3-ball.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } else if (v->isBoundary()) {
+                        if (! link->isClosed()) {
+                            std::ostringstream msg;
+                            msg << tri->getPacketLabel() << ", vertex "
+                                << i << ": "
+                                << "link of ideal boundary vertex "
+                                "is not a closed 3-manifold.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                        if (link->isThreeSphere()) {
+                            std::ostringstream msg;
+                            msg << tri->getPacketLabel() << ", vertex "
+                                << i << ": "
+                                << "link of ideal boundary vertex "
+                                "is a 3-sphere.";
                             CPPUNIT_FAIL(msg.str());
                         }
                     } else {
-                        if (link->getEulerChar() != 2) {
+                        if (! link->isThreeSphere()) {
                             std::ostringstream msg;
-                            msg << tri->getPacketLabel() << ", edge "
+                            msg << tri->getPacketLabel() << ", vertex "
                                 << i << ": "
-                                << "link of internal edge is not a sphere.";
+                                << "link of internal edge is not a 3-sphere.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
+                } else {
+                    // Invalid vertex.
+                    if (! v->isBoundary()) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", vertex "
+                            << i << ": "
+                            << "invalid vertex is not marked as boundary.";
+                        CPPUNIT_FAIL(msg.str());
+                    } else if (v->getBoundaryComponent()->
+                            getNumberOfTetrahedra() > 0) {
+                        // Link should have boundary faces but not be a 3-ball.
+                        if (! link->hasBoundaryFaces()) {
+                            std::ostringstream msg;
+                            msg << tri->getPacketLabel() << ", vertex "
+                                << i << ": "
+                                << "link of invalid real boundary vertex "
+                                "has no boundary faces.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                        if (link->isBall()) {
+                            std::ostringstream msg;
+                            msg << tri->getPacketLabel() << ", vertex "
+                                << i << ": "
+                                << "link of invalid real boundary vertex "
+                                "is a 3-ball.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } else {
+                        // Link should have no boundary faces, but not
+                        // be a closed 3-manifold.
+                        if (link->hasBoundaryFaces()) {
+                            std::ostringstream msg;
+                            msg << tri->getPacketLabel() << ", vertex "
+                                << i << ": "
+                                << "link of invalid ideal vertex "
+                                "has boundary faces.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                        if (link->isClosed()) {
+                            std::ostringstream msg;
+                            msg << tri->getPacketLabel() << ", vertex "
+                                << i << ": "
+                                << "link of invalid ideal vertex "
+                                "is a closed 3-manifold.";
                             CPPUNIT_FAIL(msg.str());
                         }
                     }
                 }
-                */
 
                 // Make sure the edge link matches what happens on
                 // the vertex links.
