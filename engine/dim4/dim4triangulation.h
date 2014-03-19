@@ -1853,6 +1853,11 @@ class REGINA_API Dim4Triangulation : public NPacket,
          * calculateSkeleton() for precisely what this routine does.
          */
         void calculateVertexLinks() const;
+        /**
+         * Internal to calculateSkeleton().  See the comments within
+         * calculateSkeleton() for precisely what this routine does.
+         */
+        void calculateEdgeLinks() const;
 
         /**
          * Determines if an isomorphic copy of this triangulation is

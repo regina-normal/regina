@@ -35,6 +35,7 @@
 #include <algorithm>
 #include <queue>
 #include <utility>
+#include "dim2/dim2triangulation.h"
 #include "dim4/dim4triangulation.h"
 #include "maths/permconv.h"
 #include "triangulation/ntriangulation.h"
@@ -106,12 +107,17 @@ void Dim4Triangulation::calculateSkeleton() const {
         // - Dim4 [ Tetrahedron, Triangle, Edge, Vertex ]::boundaryComponent_
         // - all Dim4BoundaryComponent members
 
-    calculateVertexLinks(); 
+    calculateVertexLinks();
         // Sets:
         // - Dim4Vertex::link_
         // - valid_ and Dim4Vertex::valid_ in the case of bad vertex links
         // - valid_ and Dim4Edge::invalid_ in the case of bad edge links
         // - ideal_, Dim4Vertex::ideal_ and Dim4Component::ideal_
+
+    if (! valid_)
+        calculateEdgeLinks();
+        // Sets:
+        // - Dim4Edge::link_, but only for edges with bad self-identifications
 
     // Recall that for 4-manifolds we restrict "ideal" to only include
     // valid triangulations.
@@ -398,11 +404,6 @@ void Dim4Triangulation::calculateEdges() const {
                                     adjMap[0]) {
                                 label->invalid_ |=
                                     Dim4Edge::INVALID_IDENTIFICATION;
-                                // A bad self-identification means that
-                                // the link has a non-trivial closed
-                                // curve, so the link cannot be S^2 or D^2.
-                                label->invalid_ |=
-                                    Dim4Edge::INVALID_LINK;
                                 valid_ = false;
                             }
                         } else {
@@ -814,10 +815,11 @@ void Dim4Triangulation::calculateVertexLinks() const {
         // to the vertex linking 3-manifold at the endpoint of the edge,
         // where we will find that this 3-manifold has a corresponding
         // invalid vertex link.
-        // As an exception, edges with reverse self-identifications will also
-        // have invalid links, but these might not translate to invalid vertex
-        // links; however, we pick up these invalid edge links elsewhere (at the
-        // same time as we detect reverse self-identifications).
+        // As an exception, edges with reverse self-identifications might also
+        // have invalid links, but these might not translate up to the vertex
+        // link (e.g., a projective plane edge link might become the
+        // spherical double cover at the vertex link).  We detect these
+        // cases separately under calculateEdgeLinks() below.
         if (! vertex->valid_) {
             NTriangulation::VertexIterator linkit;
             int type;
@@ -859,6 +861,19 @@ void Dim4Triangulation::calculateVertexLinks() const {
     // future optimisations.
     if (! foundNonSimpleLink)
         knownSimpleLinks_ = true;
+}
+
+void Dim4Triangulation::calculateEdgeLinks() const {
+    for (EdgeIterator it = edges_.begin(); it != edges_.end(); ++it)
+        if (((*it)->invalid_ & Dim4Edge::INVALID_IDENTIFICATION) &&
+                ! ((*it)->invalid_ & Dim4Edge::INVALID_LINK)) {
+            // Calling buildLink() causes the edge link to be cached by
+            // Dim4Edge.
+            const Dim2Triangulation* link = (*it)->buildLink();
+            if ((link->isClosed() && link->getEulerChar() != 2) ||
+                    ((! link->isClosed()) && link->getEulerChar() != 1))
+                (*it)->invalid_ |= Dim4Edge::INVALID_LINK;
+        }
 }
 
 } // namespace regina

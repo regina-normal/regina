@@ -60,6 +60,7 @@ using regina::Dim4Isomorphism;
 using regina::Dim4Pentachoron;
 using regina::Dim4Tetrahedron;
 using regina::Dim4Triangulation;
+using regina::Dim4Vertex;
 using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
@@ -67,6 +68,7 @@ using regina::NPerm5;
 using regina::NStandardTriangulation;
 using regina::NTetrahedron;
 using regina::NTriangulation;
+using regina::NVertex;
 
 class Dim4TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(Dim4TriangulationTest);
@@ -376,7 +378,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyValid(mixedPoincareProduct);
             verifyInvalid(idealFigEightProduct, 3, 2, 2, 0, 0);
             verifyInvalid(mixedFigEightProduct, 2, 1, 1, 0, 0);
-            verifyInvalid(pillow_twoCycle, 2, 2, 2, 1, 2);
+            verifyInvalid(pillow_twoCycle, 2, 2, 1, 1, 2);
             verifyInvalid(pillow_threeCycle, 0, 0, 0, 0, 1);
             verifyInvalid(pillow_fourCycle, 0, 1, 1, 1, 0);
         }
@@ -1433,8 +1435,9 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
 
                 // Make sure the edge link matches what happens on
                 // the vertex links.
-                unsigned j;
+                unsigned j, k;
                 Dim4Pentachoron* p;
+                Dim4Vertex* v;
                 NPerm5 perm;
                 const NTriangulation* vLink;
                 for (j = 0; j < 2; ++j) {
@@ -1443,11 +1446,46 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
 
                     // In the vertex link at the jth end of this edge,
                     // find the vertex that this edge projects down to.
-                    vLink = p->getVertex(perm[j])->buildLink();
-                    // TODO.
+                    v = p->getVertex(perm[j]);
+                    vLink = v->buildLink();
+
+                    for (k = 0; k < v->getDegree(); ++k)
+                        if (v->getEmbedding(k).getPentachoron() == p &&
+                                v->getEmbedding(k).getVertex() == perm[j])
+                            break;
+                    if (k == v->getDegree()) {
+                        std::ostringstream msg;
+                        msg << tri->getPacketLabel() << ", edge " << i << ": "
+                            << "misconstructed vertex link.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    NVertex* match = vLink->getTetrahedron(k)->getVertex(
+                        p->getTetrahedronMapping(perm[j]).preImageOf(
+                        perm[1-j]));
+
+                    if (! e->hasBadIdentification()) {
+                        if (! match->buildLink()->isIsomorphicTo(*link).get()) {
+                            std::ostringstream msg;
+                            msg << tri->getPacketLabel() << ", edge "
+                                << i << ": "
+                                << "non-isomorphic 2-D triangulations in "
+                                "edge vs vertex links.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    } else {
+                        if (match->getDegree() != 2 * e->getDegree()) {
+                            std::ostringstream msg;
+                            msg << tri->getPacketLabel() << ", edge " << i << ": "
+                                << "mismatched degrees in edge vs vertex links.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+
+                        // It's hard to guarantee anything about Euler
+                        // characteristic in this setting, sigh.
+                    }
                 }
 
-                unsigned k;
                 const regina::Dim2Triangle *t, *adj;
                 unsigned eNum;
                 for (j = 0; j < e->getDegree(); ++j) {
