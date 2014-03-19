@@ -1579,6 +1579,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             runCensusAllBounded(verifyVertexLinks);
             runCensusAllNoBdry(verifyVertexLinks);
         }
+
         static void verifyEdgeLinks(Dim4Triangulation* tri) {
             for (unsigned long i = 0; i < tri->getNumberOfEdges(); ++i) {
                 Dim4Edge* e = tri->getEdge(i);
