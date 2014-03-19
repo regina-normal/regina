@@ -86,7 +86,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(barycentricSubdivision);
-    CPPUNIT_TEST(eltmove15);
+    CPPUNIT_TEST(eltMove15);
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(edgeLinks);
 
@@ -1253,7 +1253,7 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             verifyBary(pillow_fourCycle);
         }
 
-        static void verifyEltmove15(Dim4Triangulation* tri) {
+        static void verifyEltMove15(Dim4Triangulation* tri) {
             unsigned long n = tri->getNumberOfPentachora();
             for (unsigned long i = 0; i < n; ++i) {
                 Dim4Triangulation large(*tri);
@@ -1346,27 +1346,27 @@ class Dim4TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        void eltmove15() {
-            verifyEltmove15(&empty);
-            verifyEltmove15(&s4_id);
-            verifyEltmove15(&s4_doubleConeS3);
-            verifyEltmove15(&s3xs1);
-            verifyEltmove15(&rp4);
-            verifyEltmove15(&s3xs1Twisted);
-            verifyEltmove15(&ball_singlePent);
-            verifyEltmove15(&ball_foldedPent);
-            verifyEltmove15(&ball_singleConeS3);
-            verifyEltmove15(&ball_layerAndFold);
-            verifyEltmove15(&idealPoincareProduct);
-            verifyEltmove15(&mixedPoincareProduct);
-            verifyEltmove15(&idealFigEightProduct);
-            verifyEltmove15(&mixedFigEightProduct);
-            verifyEltmove15(&pillow_twoCycle);
-            verifyEltmove15(&pillow_threeCycle);
-            verifyEltmove15(&pillow_fourCycle);
+        void eltMove15() {
+            verifyEltMove15(&empty);
+            verifyEltMove15(&s4_id);
+            verifyEltMove15(&s4_doubleConeS3);
+            verifyEltMove15(&s3xs1);
+            verifyEltMove15(&rp4);
+            verifyEltMove15(&s3xs1Twisted);
+            verifyEltMove15(&ball_singlePent);
+            verifyEltMove15(&ball_foldedPent);
+            verifyEltMove15(&ball_singleConeS3);
+            verifyEltMove15(&ball_layerAndFold);
+            verifyEltMove15(&idealPoincareProduct);
+            verifyEltMove15(&mixedPoincareProduct);
+            verifyEltMove15(&idealFigEightProduct);
+            verifyEltMove15(&mixedFigEightProduct);
+            verifyEltMove15(&pillow_twoCycle);
+            verifyEltMove15(&pillow_threeCycle);
+            verifyEltMove15(&pillow_fourCycle);
 
-            runCensusAllBounded(verifyEltmove15);
-            runCensusAllNoBdry(verifyEltmove15);
+            runCensusAllBounded(verifyEltMove15);
+            runCensusAllNoBdry(verifyEltMove15);
         }
 
         static void verifyVertexLinks(Dim4Triangulation* tri) {
