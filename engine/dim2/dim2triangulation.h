@@ -1131,45 +1131,6 @@ class REGINA_API Dim2Triangulation : public NPacket,
 
         /*@}*/
 
-        /**
-         * \name Skeletal Transformations
-         */
-        /*@{*/
-
-        /**
-         * Checks the eligibility of and/or performs a 1-3 move
-         * about the given triangle.
-         *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
-         *
-         * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a e)
-         * can no longer be used.
-         *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
-         * \pre The given edge is an edge of this triangulation.
-         *
-         * @param e the edge about which to perform the move.
-         * @param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
-         * is \c false, the function simply returns \c true.
-         */
-        bool oneThreeMove(Dim2Triangle *t, bool check=true, bool perform=true);
-
-        /*@}*/
-        /**
-         * (end: Skeletal Transformations)
-         */
-
         static NXMLPacketReader* getXMLReader(NPacket* parent,
             NXMLTreeResolver& resolver);
 
