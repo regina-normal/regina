@@ -48,6 +48,9 @@ namespace {
     regina::Dim2Triangle* (Dim2Triangulation::*getTriangle_non_const)(
         unsigned long) = &Dim2Triangulation::getTriangle;
 
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneThreeMove,
+        Dim2Triangulation::oneThreeMove, 1, 3);
+
     boost::python::list Dim2_getTriangles_list(Dim2Triangulation& t) {
         boost::python::list ans;
         for (Dim2Triangulation::TriangleIterator it =
@@ -181,6 +184,8 @@ void addDim2Triangulation() {
         .def("isIdeal", &Dim2Triangulation::isIdeal)
         .def("isConnected", &Dim2Triangulation::isConnected)
         .def("isMinimal", &Dim2Triangulation::isMinimal)
+        .def("oneThreeMove", &Dim2Triangulation::oneThreeMove,
+            OL_oneThreeMove())
         .def("insertTriangulation", &Dim2Triangulation::insertTriangulation)
         .def("isoSig", isoSig_void)
         .def("isoSigDetail", isoSig_relabelling)

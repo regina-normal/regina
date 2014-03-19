@@ -1786,7 +1786,7 @@ class REGINA_API NTriangulation : public NPacket,
         bool twoThreeMove(NTriangle* t, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 1-4 move
-         * about the given tetrahedron.
+         * upon the given tetrahedron.
          * This involves replacing one tetrahedron with four tetrahedra:
          * each new tetrahedron runs from one face of
          * the original tetrahedron to a new common internal degree four vertex.
